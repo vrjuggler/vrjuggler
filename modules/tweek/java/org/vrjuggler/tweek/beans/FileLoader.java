@@ -79,6 +79,28 @@ public interface FileLoader
    public boolean openRequested();
 
    /**
+    * Determines if the file loading Bean can save files.  Those Beans capable
+    * of saving files should return true.  Other Beans should return false.  If
+    * this behavior is not followed, the results are undefined.
+    *
+    * @pre The Bean will correctly return its ability to save files.
+    *
+    * @return true is returned if the Bean can save file.<br>
+    *         false is returned otherwise.
+    */
+   public boolean canSave();
+
+   /**
+    * Informs an instance of the implementing class that the user has requested
+    * the saving of a file.  It is up to the implementing class to take
+    * appropriate actions.
+    *
+    * @return true is returned if a file was saved successfully.<br>
+    *         false is returned if the file saving failed.
+    */
+   public boolean saveRequested();
+
+   /**
     * Informs an instance of the implementing class that the user has requested
     * to close a file.  It is up to the implementing class to take appropriate
     * actions.
