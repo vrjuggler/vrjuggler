@@ -63,18 +63,32 @@ public:
       /* Do nothing. */ ;
    }
 
+   /**
+    * This will destroy the Subject Manager associated with this CORBA
+    * Manager (if there is one), and it will shut down the ORB.  These steps
+    * may be performed manually using destroySubjectManager() and shutdown()
+    * respectively.
+    *
+    * @post The activated Subject Manager is deactivated, unbound in the Naming
+    *       Service, and destroyed.  The ORB is shut down, and its thread
+    *       stopped.
+    */
    ~CorbaManager (void)
    {
       // If the Subject Manager exists, we need to deactivate it, remove it
       // from the Naming Service, and free its memory.
       if ( m_subj_mgr != NULL )
       {
-         m_child_poa->deactivate_object(m_subj_mgr_id);
-         delete m_subj_mgr;
-         m_subj_mgr = NULL;
+         destroySubjectManager();
       }
 
       shutdown();
+
+      if ( m_my_thread != NULL )
+      {
+         delete m_my_thread;
+         m_my_thread = NULL;
+      }
    }
 
    /**
@@ -122,6 +136,18 @@ public:
    vpr::ReturnStatus createSubjectManager(void);
 
    /**
+    * Removes the Subject Manager created for use with this CORBA Manager
+    * object.  The servant memory is released, the servant is deactivated in
+    * the local POA, and the reference is unbound from the Naming Service.
+    * All of this is done if and only if the Subject Manager was created
+    * successfully in createSubjectManager().
+    *
+    * @return vpr::ReturnStatus::Fail will be returned if the servant could not
+    *         be destroyed successfully.
+    */
+   vpr::ReturnStatus destroySubjectManager(void);
+
+   /**
     * Returns this CORBA managaer's SubjectManagerImpl instance to the caller.
     * Users will need this so that they may register subjects.
     */
@@ -165,6 +191,7 @@ private:
 
    tweek::SubjectManagerImpl*   m_subj_mgr;
    PortableServer::ObjectId_var m_subj_mgr_id;
+   CosNaming::Name              m_subj_mgr_name;
 };
 
 } // End of tweek namespace
