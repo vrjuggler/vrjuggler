@@ -16,13 +16,20 @@
    </bookinfo>
    <preface>
       <title>Prefrace</title>
-      <para>This book is the programmer's guide for Tweek. The main focus is how to use the features and capabilities of Tweek to enable cross-platform Java <glossterm linkend="gloss.gui">graphical user interfaces</glossterm> (GUIs) to communicate with C++ applications.</para>
+      <para>This book is the programmer's guide for Tweek. The main focus is how to use the features and capabilities of Tweek to enable cross-platform Java graphical user interfaces (GUIs) to communicate with C++ applications.</para>
+      <para>The history of Tweek dates back to April 2000, though the basis for its existence comes from circa 1997. At Iowa State University's Virtual Reality Applications Center, the idea of using a Java GUI to communicate with, and possibly perform manipulations on, C++ applications is the foundation for dynamic reconfiguration of VR Juggler. To that end, the Java application VjControl was developed specifically for that purose. VjControl was started in 1997 and has been under development ever since.</para>
+      <para>Building on the basic idea of a Java GUI that could communicate with a C++ application, a viewer was written for the Distributed Shared Object (DSO) software system written in April 2000. This iteration of DSO was for a class project (Computer Science 552 taught by Dr. Johnny Wong). At the time, we (Allen Bierbaum and I) felt that CORBA could be used as a way to share arbitrary object-based informtation between applications on a network. The Java GUI was used to visualize the network of CORBA-connected nodes and to manipulate the network by disconnecting and reconnecting the nodes. In the end, CORBA was not the right solution to this problem, but the basis for network visualization was founded. Using CORBA for communication between the C++ code and Java code was relatively easy, however.</para>
+      <para>In April 2001, we were again faced with a class project. Based on the results of the CORBA-based DSO, we felt that it would be best to implement a peer-to-peer software multicasting system that would be more efficient than CORBA. This new system, called Plexus, would still offer the same capabilities of cross-platform data distribution, but we had to give up the inherent cross-language support offered by CORBA. Again, we wanted a Java GUI for visualizing the network, and we started with the DSO viewer code. Instead of using CORBA, which we had had some difficulties with the previous year, we chose to use Java's built-in Remote Method Invocation (RMI) system. While RMI is very easy to use between two Java applications, Java to C++ communication is difficult. It requires the use of the Java Native Interface (JNI) so that natively compiled C++ code can communicate in memory with a loaded Java virtual machine (JVM). All of the Java code and RMI was collected into a package called PlxView (<quote>plex-view</quote>).</para>
+      <para>Despite the difficulty of writing JNI code, the RMI solution was effective, for the most part. In September 2001, yet another project loomed. By this time, we were fed up with RMI, and we decided to go back to CORBA solely for communicating between Java and C++. Indeed, by using CORBA, we could write network visualization software in <emphasis>any</emphasis> language and communicate through the same channels.</para>
+      <para>Beyond just communicating with the C++ applications, we had high hopes for using RMI to download Java code at run time to add custom visualization panels to the Java GUI dynamically. The Java code would come in the form of JavaBeans. While PlxView was designed to be modular from the start, we had not implemented the code for downloading the JavaBeans. To begin that work, I started writing code on a flight from Dallas/Ft. Worth to London, England, the evening of October 1, 2001. While at a CAVE workshop in Stockholm, Switzerland, I took advantage of down time and late nights to extend PlxView to load and use JavaBeans.</para>
+      <para>When I returned to the United States after the week in Stockholm, PlxView had evolved into what could be called version 0.0.0 of the Tweek Java GUI (sans CORBA, however). Its primary purpose was still Plexus network visualization. Design discussions with other members of the Juggler Team evolved the code into what is now the Tweek Java API. The Plexus-specific parts were separted into what is now the PlxView Bean, and the remaining code was moved into the new Tweek soure tree.</para>
+      <para>The only remaining piece was CORBA support. Another student, Andrew Schwantes, had been experimenting with CORBA in a smaller system, and his C++ CORBA code was used as a starting point for the Tweek C++ API. After much discussion with Allen Bierbaum, the code was re-implementing to implement the subject/observer design pattern, and the Subject Manager was added. After all of that, the Java CORBA code was relatively trivial to add. And thus, the foundation for Tweek was in place by November 2001. By this time, it was already in use by the Fall 2001 Plexus class project.</para>
    </preface>
    <part>
       <title>Introduction</title>
       <chapter id="intro.tweek.chapter">
          <title>Tweek</title>
-         <para>Programmers using Tweek must first understand what it is and what at does, at least at a conceptual level. Tweek has two parts: a Java <glossterm linkend="gloss.api">API</glossterm> and a C++ API. The two provide very distinct functionality, but they share a common bond through the use of remote method calls on shared objects. Objects defined in the C++ programming language can be accessed by objects defined in the Java programming language. This functionality is achieved through the use of remote method calls.</para>
+         <para>Programmers using Tweek must first understand what it is and what at does, at least at a conceptual level. Tweek has two parts: a Java <glossterm linkend="gloss.api">API</glossterm> and a C++ API. The two provide very distinct functionality, but they share a common bond through the use of remote method calls on shared objects. Objects defined in the C++ programming language can be accessed by objects defined in the Java programming language. The C++ objects may be visualized and manipulated using the Tweek Java <glossterm linkend="gloss.gui">graphical user interface</glossterm> (GUI), a tool written using the Tweek Java API. This cross-language functionality is achieved through the use of remote method calls.</para>
          <para>Some readers may be familiar with remote procedure calls (RPC), a remote programming system that uses the procedural programming paradigm. Remote method calls differ primarily through the use of the object-oriented programming paradigm. Tweek is implemented in two object-oriented languages and thus lends itself very well to a system implementing remote method calls.</para>
          <para>In the remainder of this chapter, we present a high-level description of the Tweek C++ API. The Java API design is much more complex and is not included in this revision. Most users of Tweek need to know much more about the C++ side of Tweek than the Java side.</para>
          <section id="intro.design.section">
@@ -38,7 +45,7 @@
                   <primary>subject</primary>
                   <secondary>design and use</secondary>
                </indexterm>
-               <para>The subjects in Tweek are part of the C++ applications. The communication interface is defined by the subject interface. An observer is attached to a subject. Whenever the state of a subject changes, it notifies all of its attached observers.</para>
+               <para>The subjects in Tweek are part of the C++ applications. The communication interface is defined by the subject interface. An observer is attached to a subject, and whenever the state of a subject changes, it notifies all of its attached observers.</para>
                <para>The Tweek C++ API defines the basic subject interface (<classname>tweek::Subject</classname><indexterm>
                      <primary>classes</primary>
                      <secondary>tweek::Subject</secondary>
@@ -61,7 +68,9 @@
                   <primary>CORBA Manager</primary>
                   <secondary>design and use</secondary>
                </indexterm>
-               <para></para>
+               <para><glossterm linkend="gloss.corba">CORBA</glossterm> tends to have a high learning curve. It is a very powerful system, but that power leads to a lot of complexity. To reduce the complexity of starting an <glossterm linkend="gloss.orb">ORB</glossterm>, Tweek provides a CORBA Manager. Its primary function is to initialize a local ORB. It does this by creating the <glossterm linkend="gloss.poa">Portable Object Adapter</glossterm> (POA), resolving the initial reference to the Naming Service, and starting a thread for the ORB to handle requests.</para>
+               <para>Once the local ORB is initialized, the Subject Manager (discussed next) must be created. This is also done through the CORBA Manager because the Subject Manager is a CORBA object. The Subject Manager created will be a <glossterm linkend="gloss.servant">servant</glossterm> object to which CORBA references can be created.</para>
+               <para>Refer to <xref linkend="intro.corba.section"/> for more information about CORBA and its use in Tweek. For the most part, the use of CORBA is an implementation detail. Users of the Tweek C++ API must initialize the CORBA manager, however, and it is important to understand its place in the overall system.</para>
             </section>
             <section>
                <title>Subject Manager</title>
@@ -69,32 +78,37 @@
                   <primary>Subject Manager</primary>
                   <secondary>design and use</secondary>
                </indexterm>
-               <para></para>
+               <para>The Tweek Subject Manager exists to simplify the use of CORBA further. At a very high level, it acts as a simplified, specialized CORBA Naming Service. Users of Tweek register subject servants with the Subject Manager. The Subject Manager handles the CORBA registration and activation of the servants. After being registered, subjects are accessed using symbolic strings. The strings are user-defined and do not necessarily conform to any CORBA-related standard. They are, in essence, identifiers used to look up the subject within the Subject Manager's collection of known subjects.</para>
             </section>
          </section>
          <section id="intro.corba.section">
             <title>CORBA</title>
-            <para></para>
+            <indexterm>
+               <primary>CORBA</primary>
+               <secondary>use in Tweek</secondary>
+            </indexterm>
+            <para>CORBA, the <glossterm linkend="gloss.corba">Common Object Request Broker Architecture</glossterm>, is a powerful tool for <glossterm linkend="gloss.distrib-programming">distributed programming</glossterm>. It is a <emphasis>language-independent</emphasis> standard specified by the <ulink url="http://www.omg.org/">Object Management Group</ulink> (OMG). Many CORBA implementations, both free and commercial, exist for a wide variety of languages (e.g., C, C++, Java, Perl, Python, and Smalltalk). CORBA allows communication between software written in any programming language running on any operating system on any hardware architecture. It handles all serialization and de-serialization of objects and method parameters so that programmers do not have to worry about endian issues and other system incompatibilities.</para>
+            <para>In CORBA, the physical object to which references are made is called a <glossterm linkend="gloss.servant">servant</glossterm>. The servant is an instance of some class that implements an interface and derives from <classname>CORBA::Object</classname> (or <classname>CORBA.Object</classname> in Java). The actual details of servant implementations are postponed for later sections.For now, it is important to remember that there will be an object located in physical memory on some machine, and <emphasis>references</emphasis> will be made to that object through CORBA. The reference is acquired by looking up the object by name in what is known as the CORBA <firstterm>Naming Service</firstterm>. The Naming Service has objects registered within its database, and clients request references from the database. When the reference is available, methods are invoked on it. Since the physical object resides in another memory space, this will create network traffic, though it is entirely transparent to the programmer.</para>
+            <para>CORBA is used in Tweek to enable communication between C++ applications and the Tweek Java GUI. C++ objects registered with a local ORB are made available to the Java GUI through the Subject Manager. Beyond this, CORBA exists mostly "behind the scenes" so that developers of Tweek-based software do not have to learn very much about CORBA. Programmers must understand the Interfact Definition Language, however, and this is explained next.</para>
             <section id="intro.corba.idl.section">
                <title>Interface Definition Language</title>
                <para>The <glossterm linkend="gloss.idl">Interface Definition Language</glossterm> (IDL)<indexterm>
                      <primary>IDL</primary>
-                  </indexterm> is ..</para>
+                  </indexterm> is used by the CORBA standard to define the interfaces for remotely accessible objetcs. An IDL file looks very much like a simple C++ class declaration in a header file, though data members are not allowed in the interface. Thus, IDL is used exclusively to define the methods of the objects and external data structures that may be passed as arguments to those methods.</para>
+               <para>The interfaces alone are not sufficient to implement objects that may be handled by CORBA. A language-specific implementation must be written so that servants can be instantiated and registered with an ORB. To implement an interface, an <glossterm linkend="gloss.idl-compiler">IDL compiler</glossterm> must first be used to generate code for a specific language from the IDL file. Using the generated code, an implementation is then written. In <xref linkend="prog.idl.chapter"/>, we explain in more detail how to use IDL to define interfaces.</para>
             </section>
             <section>
                <title>Supported Languages</title>
-               <para></para>
+               <para>As discussed above, a very powerful feature of CORBA is its language independence. Tweek itself supports only C++ and Java as of this writing. There is no restriction, other than time and resources, that prevents the addition of support for other languages. In this section, we explain how C++ and Java are used in Tweek.</para>
                <section>
                   <title>C++</title>
-                  <para></para>
+                  <para>A key part of the overall Tweek design is that complex, high-performance applications will be written in C++. While this may not necessarily be the case in every situation, this is the assumption made for the design and implementation of the Tweek C++ API. As mentioned previously, support could be added for other languages so that they too may fulfill the role of C++ in Tweek.</para>
+                  <para>Using the C++ API, programmers activate a local ORB. Once an ORB is available, servants that will act as subjects can be registered with the Subject Manager. The subjects are activated within the local POA by the Subject Manager, thus alleviating some work for programmers. Once activated, the subjects may be accessed remotely through CORBA by objects written in any language--including C++.</para>
                </section>
                <section>
                   <title>Java</title>
-                  <para></para>
-               </section>
-               <section>
-                  <title>Others</title>
-                  <para></para>
+                  <para>In the Java programming language, the Swing API provides developers with a very nice suite of classes for writing cross-platform GUIs. When developing Tweek, we took advantage of Swing and JavaBeans technology to write a generalized GUI framework. Users can plug components (Beans) into this framework at runtime to extend its functionality. The Beans can get access to remote C++ objects through the CORBA services provided by the Tweek Java API. Similar to the C++ API, the use of CORBA in Java has been simplified so that programmers can use it with little effort and without a comprehensive understanding of CORBA in general.</para>
+                  <para>Programmers will use Java as part of their Tweek programming to write JavaBeans. Compared to the potential complexity of the GUI code for Beans, little CORBA programming must be done in Java. Beans may be as simple or as complex as necessary to meet the needs of individual projetcs. More information about JavaBeans is provided in <xref linkend="intro.javabeans.chapter"/>.</para>
                </section>
             </section>
          </section>
@@ -103,8 +117,55 @@
          <title>JavaBeans</title>
          <para></para>
          <section>
-            <title>Bean Types</title>
-            <para>There are four types of Beans that may be loaded by the Tweek Java GUI.</para>
+            <title>Bean Categories</title>
+            <para>There are four types of Beans that may be loaded by the Tweek Java GUI. They are categorized based on functionality and what is known about them in advance. The following lists the four categories in order of decreasing <foreignphrase>a priori</foreignphrase> knowledge.</para>
+            <orderedlist>
+               <listitem>
+                  <para>Service Beans</para>
+               </listitem>
+               <listitem>
+                  <para>Viewer Beans</para>
+               </listitem>
+               <listitem>
+                  <para>Panel Beans</para>
+               </listitem>
+               <listitem>
+                  <para>Generic Beans</para>
+               </listitem>
+            </orderedlist>
+            <section>
+               <title>Service Beans</title>
+               <indexterm>
+                  <primary>Service Beans</primary>
+               </indexterm>
+               <para>Services encapsulate functionality that may be useful to other parts of the Tweek system or dynamically loaded code. The entire interface for Service Beans must be known when the code using the service is compiled. This is because the using code needs to be able to take advantage of the service. Because Service Beans may be loaded dynamically, using code must be prepared for the case when the Bean containing the service was not found. In other words, code that uses services cannot necessarily assume that the service will be available.</para>
+               <para>Not all services are loaded dynamically as Beans. Some services are loaded statically because they are needed by core components. These include the Environment Service and the Global Preferences Service. There is a guarantee that the code for these services will always be available. This guarantee is especially important because the Tweek core needs to add information to the Environment Service at startup. The Global Preferences Service is needed to configure the overall behavior of the Tweek GUI.</para>
+            </section>
+            <section>
+               <title>Viewer Beans</title>
+               <indexterm>
+                  <primary>Viewer Beans</primary>
+               </indexterm>
+               <para>Viewer Beans provide a rendering of the tree of Panel Beans (discussed next). They provide the viewer component of the model/view pattern. All Viewer Beans are loaded dynamically, and the active viewer can be changed at runtime by editing the global preferences. This feature is realized through the flexibility of the model/view pattern.</para>
+               <para>Viewer Beans must implement the <classname>org.vrjuggler.tweek.beans.BeanModelViewer</classname> interface. To simplify implementation, they may be derived from <classname>org.vrjuggler.tweek.beans.DefaultBeanModelViewer</classname>, a class that implements aspects of the interface that are unlikely to vary between viewer implementations. The use of the interface is needed so that the GUI can assume certain behaviors about the viewer.</para>
+            </section>
+            <section>
+               <title>Panel Beans</title>
+               <indexterm>
+                  <primary>Panel Beans</primary>
+               </indexterm>
+               <para>Panel Beans are what most Tweek GUI users will write. These provide custom interfaces for whatever users need. In most cases, a Panel Bean will provide a graphical interface that can manipulate and/or control a C++ application.</para>
+               <para>Only one assumption is made about Panel Beans: the primary class for the Bean must be a subclass of <classname>javax.swing.JComponent</classname>. Optionally, the primary class may implement one or more publicly provided interfaces that provide the Java GUI with more information about the capabilities of the Bean. When loaded, the GUI checks to see what, if any, interfaces are implemented by the Bean. Based on the checks, the special actions may be taken to provide the Bean with extended functionality.</para>
+               <para>For example, Beans that can load files should implement <classname>org.vrjuggler.tweek.beans.FileLoader</classname>. When the Bean is focused in the viewer, the <guimenu>File</guimenu> menu will be modified to enable the <guimenuitem>Open</guimenuitem>, <guimenuitem>Save</guimenuitem>, and <guimenuitem>Close</guimenuitem> items. If the user selects one of these items, the Bean is informed and can take appropriate customized actions. The result in this case is context-specific loading and unloading of files.</para>
+            </section>
+            <section>
+               <title>Generic Beans</title>
+               <indexterm>
+                  <primary>Generic Beans</primary>
+               </indexterm>
+               <para>Nothing at all is assumed about Generic Beans. This Bean category is provided so that other Beans can do their own dynamic code loading. For example, a Bean that uses a factory pattern may want to have the <quote>workers</quote> loaded dynamically based on some criteria. Thus, the functionality of the factory can be changed dynamically.</para>
+               <para>The Tweek Java GUI does not use Generic Beans itself. These are provided more for users of the Tweek Java API. It is up to those programmers to decide how to handle the Generic Beans on a case-by-case basis.</para>
+            </section>
          </section>
          <section>
             <title>XML</title>
@@ -120,17 +181,59 @@
    </part>
    <part>
       <title>Programming</title>
-      <preface>
+      <chapter>
          <title>Programming Basics</title>
          <para>In the following chapters, we present the basic information needed to start programming with Tweek. There will be discussion covering IDL, C++, Java, and CORBA. To use Tweek effectively, a good understand of C++ and Java is required. The IDL aspect of Tweek is minimal, and programmers familiar with basic object-oriented concepts should be able to understand IDL code easily. Discussion related to CORBA is based on the brief introduction given in <xref linkend="intro.corba.section"/>. The Tweek Java and C++ APIs are designed to hide most CORBA details. Whenever possible, references are given to good sources of information on all of the aforementioned topics.</para>
-      </preface>
+      </chapter>
       <chapter id="prog.idl.chapter">
          <title>IDL</title>
-         <para>In this chapter, we present the basic information needed to define interfaces that will be used by Tweek. This is not an introduction to IDL programming. Readers are referred to <xref linkend="Hen99"/>.</para>
+         <para>In this chapter, we present the basic information needed to define interfaces that will be used by Tweek. This is not a detailed introduction to IDL programming. Readers are referred to <xref linkend="Hen99"/>.</para>
+         <para>IDL <quote>programming</quote> means defining <glossterm linkend="gloss.interface">interfaces</glossterm>. In the scope of Tweek and CORBA, the interfaces declare what operations may be performed on CORBA references. The arguments and return values may be of several basic types including, but not limitd to, <type>string</type>, <type>int</type>, <type>long</type>, and <type>float</type>. These types are specified in a language-independent manner. When the IDL compiler generates the code for a specific language, the langauge-specific types that correspond to the IDL types are used.</para>
+         <para>In <xref linkend="Subject.idl.example"/>, we show the Tweek <classname>Subject</classname> interface. Note the similarity to a C++ header file. The IDL file can be included by other IDL files, and thus it must <quote>protect</quote> the contents in the same manner as a header file. The actual <classname>Subject</classname> interface is defined within the <literal>tweek</literal> module. An IDL module corresponds to a C++ namespace or to a Java package. The interface itself has three methods: <methodname>attach()</methodname>, <methodname>detach()</methodname>, and <methodname>notify()</methodname>. The first two take a read-only argument of type <classname>Observer</classname>. The fact that the argument is read-only is specified by the <literal>in</literal> modifier. Other modifiers are <literal>out</literal> (write-only) and <literal>inout</literal> (read/write). The third method, <methodname>notify()</methodname>, takes no arguments, and none of the methods have a return type.</para>
+         <example id="Subject.idl.example">
+            <title>Subject.idl</title>
+            <indexterm>
+               <primary>tweek::Subject</primary>
+               <secondary>IDL definition</secondary>
+            </indexterm>
+            <programlisting>#ifndef _TWEEK_SUBJECT_IDL_
+#define _TWEEK_SUBJECT_IDL_
+
+#include &lt;tweek/idl/Observer.idl&gt;
+
+
+module tweek
+{
+
+interface Subject
+{
+   void attach(in Observer o);
+   void detach(in Observer o);
+   void notify();
+};
+
+};
+
+#endif</programlisting>
+         </example>
+         <para>All parameters are passed by reference by definition in CORBA. The modifier stating the readability and/or writability in the IDL file determines how the referenced object may be modified, if at all, within the method.</para>
+         <remark> This explanation is missing what is required by the using code when out and inout are used.</remark>
       </chapter>
       <chapter id="prog.cplusplus.chapter">
          <title>C++</title>
          <para></para>
+         <section>
+            <title>Deriving from <classname>tweek::SubjectImpl</classname></title>
+            <para></para>
+         </section>
+         <section>
+            <title>Using the CORBA Manager</title>
+            <para></para>
+         </section>
+         <section>
+            <title>Using the Subject Manager</title>
+            <para></para>
+         </section>
       </chapter>
       <chapter id="prog.java.chapter">
          <title>Java</title>
@@ -1166,54 +1269,58 @@ clobber:
    </part>
    <bibliography>
       <biblioentry id="Gam95">
-         <authorgroup>
-            <author>
-               <firstname>Erich</firstname>
-               <surname>Gamma</surname>
-            </author>
-            <author>
-               <firstname>Richard</firstname>
-               <surname>Helm</surname>
-            </author>
-            <author>
-               <firstname>Ralph</firstname>
-               <surname>Johnson</surname>
-            </author>
-            <author>
-               <firstname>John</firstname>
-               <surname>Vlissides</surname>
-            </author>
-         </authorgroup>
-         <copyright>
-            <year>1995</year>
-            <holder>Addison Wesley Longman, Inc.</holder>
-         </copyright>
-         <isbn>0-201-63361-2</isbn>
-         <publisher>
-            <publishername>Addison-Wesley</publishername>
-         </publisher>
-         <title>Design Patterns</title>
+         <biblioset relation="book">
+            <authorgroup>
+               <author>
+                  <firstname>Erich</firstname>
+                  <surname>Gamma</surname>
+               </author>
+               <author>
+                  <firstname>Richard</firstname>
+                  <surname>Helm</surname>
+               </author>
+               <author>
+                  <firstname>Ralph</firstname>
+                  <surname>Johnson</surname>
+               </author>
+               <author>
+                  <firstname>John</firstname>
+                  <surname>Vlissides</surname>
+               </author>
+            </authorgroup>
+            <title>Design Patterns</title>
+            <copyright>
+               <year>1995</year>
+               <holder>Addison Wesley Longman, Inc.</holder>
+            </copyright>
+            <isbn>0-201-63361-2</isbn>
+            <publisher>
+               <publishername>Addison-Wesley</publishername>
+            </publisher>
+         </biblioset>
       </biblioentry>
       <biblioentry id="Hen99">
-         <authorgroup>
-            <author>
-               <firstname>Michi</firstname>
-               <surname>Henning</surname>
-            </author>
-            <author>
-               <firstname>Steve</firstname>
-               <surname>Vinoski</surname>
-            </author>
-         </authorgroup>
-         <copyright>
-            <year>1999</year>
-            <holder>Addison Wesley Longman, Inc.</holder>
-         </copyright>
-         <isbn>0-201-37927-9</isbn>
-         <publisher>
-            <publishername>Addison Wesley Longman, Inc.</publishername>
-         </publisher>
-         <title>Advanced CORBA Programming with C++</title>
+         <biblioset relation="book">
+            <authorgroup>
+               <author>
+                  <firstname>Michi</firstname>
+                  <surname>Henning</surname>
+               </author>
+               <author>
+                  <firstname>Steve</firstname>
+                  <surname>Vinoski</surname>
+               </author>
+            </authorgroup>
+            <title>Advanced CORBA Programming with C++</title>
+            <copyright>
+               <year>1999</year>
+               <holder>Addison Wesley Longman, Inc.</holder>
+            </copyright>
+            <isbn>0-201-37927-9</isbn>
+            <publisher>
+               <publishername>Addison Wesley Longman, Inc.</publishername>
+            </publisher>
+         </biblioset>
       </biblioentry>
    </bibliography>
    <glossary>
@@ -1239,6 +1346,15 @@ clobber:
          </glossentry>
       </glossdiv>
       <glossdiv>
+         <title>D</title>
+         <glossentry id="gloss.distrib-programming">
+            <glossterm>distributed programming</glossterm>
+            <glossdef>
+               <para>Distributed programming is a paradigm in which software componenets are installed on physically separated computers and accessed remotely though a network. Examples of distributed programming include Sun's Remote Procedure Calls (RPC), Java's Remote Method Invocation (RMI), Microsoft's Component Object Model (COM), and the Common Object Request Broker Architcture (CORBA). RPC is based on the procedural programming paradigm used by languages such as C and Pascal. With RPC, procedures residing in memory on remote machines are accessed. The other examples listed are based on the object-oriented programming paradigm used by languages such as C++, Java, Smalltalk, and Python. In this case, software objects and their methods are accessed remotely.</para>
+            </glossdef>
+         </glossentry>
+      </glossdiv>
+      <glossdiv>
          <title>E</title>
          <glossentry id="gloss.xml.main">
             <glossterm>Extensible Markup Language</glossterm>
@@ -1254,7 +1370,7 @@ clobber:
             <glossterm>graphical user interface</glossterm>
             <acronym>GUI</acronym>
             <glossdef>
-               <para></para>
+               <para>Graphical user interfaces are used in modern operating systems that support the concept of <quote>windows</quote>. The windows provide a visual representation of an application and usually have a border and a title to distinguish one window from another. Within the window, there are graphical elements known as <quote>widgets</quote> that make up the full interface. Widgets include pull-down menus, clickable buttons, and scroll bars.</para>
             </glossdef>
          </glossentry>
       </glossdiv>
@@ -1266,7 +1382,7 @@ clobber:
                <para>A software tool that reads an IDL file and generates code in a specific language (e.g., Java, C++, Smalltalk, etc.). This code may be anything, but typically, it is stub or skeleton code that is extended by user-defined code that completes the interface implementation.</para>
             </glossdef>
          </glossentry>
-         <glossentry>
+         <glossentry id="gloss.interface">
             <glossterm>interface</glossterm>
             <glossdef>
                <para>Several types of <quote>interfaces</quote> exist within the scope of Tweek:</para>
@@ -1287,7 +1403,7 @@ clobber:
             <glossterm>Interface Definition Language</glossterm>
             <acronym>IDL</acronym>
             <glossdef>
-               <para>It's this thing.</para>
+               <para>The Interface Definition Language is a simple language used to define the interface (or signature) an object will have. An interface is composed solely of methods (functions) that may be invoked on an object (data element). No data members are present in the interface definition. IDL is not tied to a specific language but instead must be compiled into another language where the interface will be implemented.</para>
             </glossdef>
          </glossentry>
          <glossentry id="gloss.iiop">
@@ -1326,7 +1442,7 @@ clobber:
       </glossdiv>
       <glossdiv>
          <title>P</title>
-         <glossentry>
+         <glossentry id="gloss.poa">
             <glossterm>Portable Object Adapter</glossterm>
             <acronym>POA</acronym>
             <glossdef>
