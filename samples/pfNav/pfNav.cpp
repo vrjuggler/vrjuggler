@@ -253,11 +253,11 @@ public:
       {
          // output FPS...
          cout<<"FPS: "<<stopWatch.fpsAverage<<"\n"<<flush;
-         
+
          // Output current position in environment
-         vjVec3 cur_pos = mNavigator.getTrans();
+         vjVec3 cur_pos = mNavigator.getCurPos().getTrans();
          cout << "Cur pos:" << cur_pos << endl;
-         
+
          mStatusMessageEmitCount = 0;
       }
 
