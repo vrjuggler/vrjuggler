@@ -207,8 +207,8 @@ BOOL DirectXJoystickStandalone::enumerateAxes(const DIDEVICEOBJECTINSTANCE* doi)
    diprg.diph.dwHeaderSize = sizeof(DIPROPHEADER);
    diprg.diph.dwHow        = DIPH_BYOFFSET;
    diprg.diph.dwObj        = doi->dwOfs; // Specify the enumerated axis
-   diprg.lMin              = -100;
-   diprg.lMax              = +100;
+   diprg.lMin              = getAxisMin();
+   diprg.lMax              = getAxisMax();
 
    // Set the range for the axis
    if( FAILED(mDxJoystick->SetProperty(DIPROP_RANGE, &diprg.diph)) )
