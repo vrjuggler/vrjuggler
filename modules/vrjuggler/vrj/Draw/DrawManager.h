@@ -44,59 +44,74 @@ namespace vrj
 class DisplayManager;
 class App;
 class Display;
-//--------------------------------------------------------
-//: Abstract base class for API specific Draw Manager.
-//
-// Concrete classes are resonsible for all rendering.
-//
-// @author Allen Bierbaum
-//  Date: 9-7-97
-//--------------------------------------------------------
+
+/**
+ * Abstract base class for API specific Draw Manager.
+ *
+ * Concrete classes are resonsible for all rendering.
+ *
+ * @date 9-7-97
+ */
 class VJ_CLASS_API DrawManager : public jccl::ConfigChunkHandler
 {
 public:
-   DrawManager (void) {
+   DrawManager (void)
+   {
       mDisplayManager = NULL;
    }
 
-   //: Function to initialy config API specific stuff.
-   // Takes a chunkDB and extracts API specific stuff
+   /**
+    * Function to initialy config API specific stuff.
+    * Takes a chunkDB and extracts API specific stuff
+    */
    //**//virtual void configInitial(jccl::ConfigChunkDB*  chunkDB) = 0;
 
-   //: Enable a frame to be drawn
+   /// Enable a frame to be drawn
    virtual void draw() = 0;
 
-   //: Blocks until the end of the frame
-   //! POST: The frame has been drawn
+   /**
+    * Blocks until the end of the frame.
+    * @post The frame has been drawn.
+    */
    virtual void sync() = 0;
 
-   //: Set the app the draw whould interact with.
-   //! NOTE: The member variable is not in the base class
-   //+    because it's "real" type is only known in the derived classes
+   /**
+    * Sets the app the draw whould interact with.
+    *
+    * @note The member variable is not in the base class because its "real"
+    * type is only known in the derived classes.
+    */
    virtual void setApp(App* _app) = 0;
 
-   //: Initialize the drawing API (if not already running)
-   //! NOTE: If the draw manager should be an active object,
-   //        start the process here.
+   /**
+    * Initializes the drawing API (if not already running).
+    *
+    * @note If the draw manager should be an active object, start the process
+    *       here.
+    */
    virtual void initAPI() = 0;
 
-   //: Callback when display is added to display manager
+   /// Callback when display is added to display manager
    virtual void addDisplay(Display* disp) = 0;
 
-   //: Callback when display is removed to display manager
+   /// Callback when display is removed to display manager
    virtual void removeDisplay(Display* disp) = 0;
 
-   //: Shutdown the drawing API
-   //! NOTE: If it was an active object, kill process here
+   /**
+    * Shutdown the drawing API.
+    *
+    * @note If it was an active object, kill process here.
+    */
    virtual void closeAPI() = 0;
 
-   //: Called when projections change
-   // Called by display manager when projections change
-   // Should do any API specific stuff.
+   /**
+    * Called when projections change.  Called by display manager when
+    * projections change.  Should do any API specific stuff.
+    */
    virtual void updateProjections()
    {;}
 
-   // Setter for display manager variable
+   /// Setter for display manager variable
    void setDisplayManager(DisplayManager* _dispMgr);
 
    friend VJ_API(std::ostream&) operator<<(std::ostream& out,
@@ -105,7 +120,7 @@ public:
    { out << "vjDrawManager: outstream\n"; }  // Set a default
 
 protected:
-   DisplayManager* mDisplayManager;  //: The display manager dealing with
+   DisplayManager* mDisplayManager;  /**< The display manager dealing with */
 };
 
 };
