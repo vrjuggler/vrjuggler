@@ -112,8 +112,8 @@ DPP_WITH_GCC(no)
 DPP_ABI_SETUP
 
 # Specify where JDOM is located
-AC_ARG_WITH(jdom, [  --with-jdom=<PATH>      Path to JDOM JAR file(s) ],
-            JDOM_JAR="$withval", JDOM_JAR='none')
+#AC_ARG_WITH(jdom, [  --with-jdom=<PATH>      Path to JDOM JAR file(s) ],
+#            JDOM_JAR="$withval", JDOM_JAR='none')
 
 # Specify where JUnit is located
 AC_ARG_WITH(junit,
@@ -165,13 +165,14 @@ if test "x$JAVAC" = "xno" ; then
     AC_MSG_WARN([*** Editor JavaBeans require javac -- they will not be built ***])
     BUILD_JAVA='N'
 else
-    # Check for JDOM.
-    DPP_CHECK_JAVA_STATIC_METHOD([org.jdom.Namespace],
-       [getNamespace(uri)], [String uri = new String("test")],
-       [BUILD_JAVA='Y'],
-       [ AC_MSG_WARN([*** JDOM required for editor JavaBeans ***])
-         BUILD_JAVA='N' ],
-       [$JDOM_JAR])
+    BUILD_JAVA='Y'
+#    # Check for JDOM.
+#    DPP_CHECK_JAVA_STATIC_METHOD([org.jdom.Namespace],
+#       [getNamespace(uri)], [String uri = new String("test")],
+#       [BUILD_JAVA='Y'],
+#       [ AC_MSG_WARN([*** JDOM required for editor JavaBeans ***])
+#         BUILD_JAVA='N' ],
+#       [$JDOM_JAR])
 fi
 
 # If we're building the editor JavaBeans, we should build the test cases too.
@@ -432,7 +433,7 @@ AC_SUBST(EXTRA_LDFLAGS)
 AC_SUBST(RM_LN)
 
 AC_SUBST(BUILD_JAVA)
-AC_SUBST(JDOM_JAR)
+#AC_SUBST(JDOM_JAR)
 
 AC_SUBST(BUILD_JAVA_TEST_SUITE)
 AC_SUBST(JUNIT_JAR)
