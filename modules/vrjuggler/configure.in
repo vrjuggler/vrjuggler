@@ -357,12 +357,8 @@ VJ_STRIP_DUPLICATE_ARGS(CFLAGS, [$CFLAGS])
 VJ_STRIP_DUPLICATE_ARGS(CXXFLAGS, [$CXXFLAGS])
 VJ_STRIP_DUPLICATE_ARGS(DEPEND_FLAGS, [$DEPEND_FLAGS])
 VJ_STRIP_DUPLICATE_ARGS(DEPEND_EXTRAS, [$DEPEND_EXTRAS])
-
-# XXX: The macro does not handle spaces in paths correctly.
-if test "x$OS_TYPE" != "xWin32" ; then
-   VJ_STRIP_DUPLICATE_ARGS(INCLUDES, [$INCLUDES])
-   VJ_STRIP_DUPLICATE_ARGS(vrj_cxxflags, [$vrj_cxxflags])
-fi
+VJ_STRIP_DUPLICATE_ARGS(INCLUDES, [$INCLUDES])
+VJ_STRIP_DUPLICATE_ARGS(vrj_cxxflags, [$vrj_cxxflags])
 
 VJ_APP_CXXFLAGS='$(VRJ_CXX_FLAGS)'
 VJ_APP_EXTRA_LIBS='$(VRJ_EXTRA_LIBS_STATIC)'
@@ -381,8 +377,8 @@ fi
 #       OpenGL API.
 #     * APP_EXTRA_LIBS_PF: The Performer libraries needed for compiling with
 #       the Performer API.
-#     * APP_EXTRA_LIBS_OSG: The OpenSceneGraph libraries needed for compiling with
-#       the OpenSceneGraph.
+#     * APP_EXTRA_LIBS_OSG: The OpenSceneGraph libraries needed for compiling
+#       with the Open Scene Graph.
 
 # Put together the basic information needed to compile VR Juggler applications.
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $VJ_APP_CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
