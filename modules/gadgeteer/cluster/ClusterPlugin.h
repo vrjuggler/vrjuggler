@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _CLUSTER_MANAGER_INTERFACE_H
-#define _CLUSTER_MANAGER_INTERFACE_H
+#ifndef _CLUSTER_PLUGIN_H
+#define _CLUSTER_PLUGIN_H
 
 #include <gadget/gadgetConfig.h>
 
@@ -52,11 +52,17 @@ public:
    void setActive(bool active);
    bool isActive();
 
+   
    virtual void preDraw() = 0;
    virtual void postPostFrame() = 0;
    virtual std::string getManagerName() = 0;
+   
+   virtual bool createBarrier()
+   {
+      return false;
+   }
+   
    virtual bool isPluginReady() = 0;
-
    virtual bool configCanHandle(jccl::ConfigChunkPtr chunk) = 0;
    virtual bool configAdd(jccl::ConfigChunkPtr chunk) = 0;
    virtual bool configRemove(jccl::ConfigChunkPtr chunk) = 0;
