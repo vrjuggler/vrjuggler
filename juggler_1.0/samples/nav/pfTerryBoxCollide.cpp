@@ -81,18 +81,24 @@ void pfTerryBoxCollide::setRadius( float radius )
 void pfTerryBoxCollide::setVelocity( pfVec3 velocityVec )
 {
    int i;
-   
-   for (i = 0; i < COLLIDE_SEGMENTS; i++)
+   float velocity_length = velocityVec.length();
+   float minimum_dist_to_outside_box = 0.3f; // I guessed...
+   float fudge = 2.0;
+   if (velocity_length > minimum_dist_to_outside_box)
    {
-      pfVec3 warpedBox;
-      warpedBox[0] = (mUnitBox[i])[0] * velocityVec[0];
-      warpedBox[1] = (mUnitBox[i])[1] * velocityVec[1];
-      warpedBox[2] = (mUnitBox[i])[2] * velocityVec[2];
-      float warpedBoxLength = warpedBox.length();
-      warpedBox.normalize(); // normalize, mCollideVolume uses warpedLength, 
-                             // so we only need the unit vector.
-      mCollideVolume.segs[i].dir = warpedBox;
-      mCollideVolume.segs[i].length = warpedBoxLength;
+      for (i = 0; i < COLLIDE_SEGMENTS; ++i)
+      {
+         pfVec3 warpedBox;
+         warpedBox[0] = (mUnitBox[i])[0] + velocityVec[0]*fudge;
+         warpedBox[1] = (mUnitBox[i])[1] + velocityVec[1]*fudge;
+         warpedBox[2] = (mUnitBox[i])[2] + velocityVec[2]*fudge;
+         float warpedBoxLength = warpedBox.length();
+         warpedBox.normalize(); // normalize, mCollideVolume uses warpedLength, 
+                                // so we only need the unit vector.
+         mCollideVolume.segs[i].dir = warpedBox;
+         mCollideVolume.segs[i].length = warpedBoxLength;
+      }
+      //cout<<velocity_length<<"\n"<<flush;
    }
 }
 

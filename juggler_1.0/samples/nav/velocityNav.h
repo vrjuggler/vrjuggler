@@ -109,6 +109,13 @@ protected:
    // Rotate the environment
    void scaled_rotate(vjMatrix rot_mat);
 
+   // util func... used to convert gravity from meters...
+   inline float meters2feet( const float& meters )
+   {
+      float convtofeet = (meters / .3048 * 100) * .01;
+      return convtofeet;
+   }
+
 private:
    vjVec3 mVelocity;
    vjVec3 mVelocityFromGravityAccumulator;
@@ -270,7 +277,7 @@ void velocityNav::update()
    vjVec3         trackerZaxis(0.0f, 0.0f, 1.0f);
    vjVec3         trackerXaxis(1.0f, 0.0f, 0.0f);
    vjVec3         trackerYaxis(0.0f, 1.0f, 0.0f);
-   const vjVec3   gravity( 0.0f, -9.8f, 0.0f ); //9.8 m/s (METERS), this should be differnet for apps in FEET!
+   const vjVec3   gravity( 0.0f, meters2feet(-9.8f), 0.0f ); //9.8 m/s (METERS)
 
    if ((mAllowRot) && (mRotating))
    {
