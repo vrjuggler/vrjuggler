@@ -49,40 +49,21 @@ public class FileDataSource
    public static final int ELEMENTS    = 2;
 
    /**
-    * Creates a data source for a new file. The resulting data source is empty.
+    * Creates a data source for a file. If the file exists, the resulting data
+    * source will contain the contents of the file. If the file does not exist,
+    * a new data source of the given type will be created
     */
-   public FileDataSource(int type)
-      throws IOException
-   {
-      setFilename(null);
-      mType = type;
-   }
-
-   /**
-    * Creates a data source for an existing file. The resulting data source will
-    * contain the contents of the file.
-    */
-   public FileDataSource(String filename)
+   public FileDataSource(String filename, int type)
       throws IOException
    {
       setFilename(filename);
-   }
-
-   /**
-    * Sets the filename this data source is operating on. The current data will
-    * be cleared and the new data will be retrieved from the file.
-    */
-   public void setFilename(String filename)
-      throws IOException
-   {
-      if (filename != null)
+      if (mFile.exists())
       {
-         mFile = new File(filename);
          reload();
       }
       else
       {
-         mFile = null;
+         createNewResource(type);
       }
    }
 
@@ -117,15 +98,46 @@ public class FileDataSource
    }
 
    /**
+    * Creates a new file of the given type in memory. It is not saved to the
+    * disk.
+    */
+   private void createNewResource(int type)
+   {
+      switch (type)
+      {
+      case DEFINITIONS:
+         mDefinitions = new ChunkDescDB();
+         break;
+      case ELEMENTS:
+         mElements = new ConfigChunkDB();
+         break;
+      default:
+         throw new IllegalArgumentException("Invalid type: "+type);
+      }
+
+      mType = type;
+   }
+
+   /**
+    * Sets the filename this data source is operating on. The current data will
+    * be cleared and the new data will be retrieved from the file.
+    */
+   public void setFilename(String filename)
+      throws IOException
+   {
+      if (filename == null)
+      {
+         throw new IllegalArgumentException("filename cannot be null");
+      }
+      mFile = new File(filename);
+   }
+
+   /**
     * Gets the name of the file this datasource is operating on.
     */
    public String getFilename()
    {
-      if (mFile != null)
-      {
-         return mFile.getAbsolutePath();
-      }
-      return null;
+      return mFile.getAbsolutePath();
    }
 
    /**
@@ -141,7 +153,7 @@ public class FileDataSource
       }
       else
       {
-         throw new UnsupportedOperationException("Not a .config file");
+         throw new UnsupportedOperationException(mFile.getAbsolutePath()+" is not a .config file");
       }
    }
 
@@ -158,7 +170,7 @@ public class FileDataSource
       }
       else
       {
-         throw new UnsupportedOperationException("Not a .desc file");
+         throw new UnsupportedOperationException(mFile.getAbsolutePath()+" is not a .desc file");
       }
    }
 
@@ -175,7 +187,7 @@ public class FileDataSource
       }
       else
       {
-         throw new UnsupportedOperationException("Not a .config file");
+         throw new UnsupportedOperationException(mFile.getAbsolutePath()+" is not a .config file");
       }
    }
 
@@ -192,7 +204,7 @@ public class FileDataSource
       }
       else
       {
-         throw new UnsupportedOperationException("Not a .desc file");
+         throw new UnsupportedOperationException(mFile.getAbsolutePath()+" is not a .desc file");
       }
    }
 
@@ -207,7 +219,7 @@ public class FileDataSource
       }
       else
       {
-         throw new UnsupportedOperationException("Not a .config file");
+         throw new UnsupportedOperationException(mFile.getAbsolutePath()+" is not a .config file");
       }
    }
 
@@ -222,7 +234,7 @@ public class FileDataSource
       }
       else
       {
-         throw new UnsupportedOperationException("Not a .desc file");
+         throw new UnsupportedOperationException(mFile.getAbsolutePath()+" is not a .desc file");
       }
    }
 
@@ -282,10 +294,10 @@ public class FileDataSource
     */
    public boolean isReadOnly()
    {
-      boolean read_only = false;
-      if (mFile != null)
+      boolean read_only = true;
+      if ((!mFile.exists()) || mFile.canWrite())
       {
-         read_only = !mFile.canWrite();
+         read_only = false;
       }
       return read_only;
    }
