@@ -22,6 +22,9 @@ ifdef CLASSPATH
     GUI_CLASSPATH	:= ${CLASSPATH}:${GUI_CLASSPATH}
 endif
 
+# Prevent anything in this file from being built in parallel.
+MAKEFLAGS	+= -j 1
+
 # Include common definitions.
 include @topdir@/Makefile.base
 
