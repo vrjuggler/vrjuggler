@@ -86,7 +86,7 @@ public:  // ---- Thread CREATION and SPAWNING -----
     * This will actually start a new thread that will execute the specified
     * function.
     */
-   ThreadPosix(thread_func_t func, void* arg = 0,
+   ThreadPosix(thread_func_t func, void* arg = NULL,
                VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
                VPRThreadScope scope = VPR_LOCAL_THREAD,
                VPRThreadState state = VPR_JOINABLE_THREAD,
