@@ -76,13 +76,13 @@ Getting the Source Code
        cvs-gather.pl, found in the top-level juggler directory.
 
        The syntax will be similar to the following (you may have to edit the
-       file deps.esrc, see also the section called "Aquire third-party
+       file Gatherrc, see also the section called "Aquire third-party
        packages"):
 
- ./cvs-gather.pl --verbose --cfg=deps.esrc
+ ./cvs-gather.pl --verbose
 
-       You can use the cvs-gather tool, or you can read the file deps.esrc
-       and get the packages manually. For more details about this, see the
+       You can use the cvs-gather tool, or you can read the file Gatherrc and
+       get the packages manually. For more details about this, see the
        section called "Aquire third-party packages".
 
   Aquire third-party packages
@@ -104,7 +104,7 @@ Getting the Source Code
    convenience.
 
    For a list of these package dependencies, you can look in the file
-   deps.esrc to determine what packages you need to download manually.
+   Gatherrc to determine what packages you need to download manually.
 
    For cvs-gather to work, it uses a .gatherrc file. The .gatherrc file is
    used to specify the external project CVS locations. cvs-gather reads these
@@ -119,14 +119,14 @@ Getting the Source Code
    To simplify shared use of a single configuration file, the contents of the
    file may be overridden on the command line or using an "overrides" file.
    The following shows such a file that overrides the CVSROOT settings in
-   deps.esrc:
+   Gatherrc:
 
        #JugglerBaseStuff.CVSROOT=patrickh@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler
        Doozer.CVSROOT = patrickh@cvs.doozer.sourceforge.net:/cvsroot/doozer
        Doozer++.CVSROOT = patrickh@cvs.doozer.sourceforge.net:/cvsroot/doozer
        GMTL.CVSROOT = patrickh@cvs.ggt.sourceforge.net:/cvsroot/ggt                 
 
-   The current deps.esrc only allows anonymous CVS access. To override that,
+   The current Gatherrc only allows anonymous CVS access. To override that,
    we suggest making per-user override files. To use the override file, just
    add the argument --override=<filename> when running cvs-gather.
 
