@@ -52,6 +52,7 @@
 #include <gadget/RemoteInputManager/NetDevice.h>
 #include <gadget/Type/BaseTypeFactory.h>
 #include <gadget/RemoteInputManager/ClusterBarrier.h>
+#include <algorithm>
 
 namespace gadget{
 
