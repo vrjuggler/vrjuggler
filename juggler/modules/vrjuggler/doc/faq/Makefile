@@ -2,11 +2,13 @@
 
 default: html
 
-XML_FILES=	faq.xml
-HTML_FILES=	faq.html
-PDF_FILES=	faq.pdf
+NAME=		faq
 
-faq.html: faq.xml
-faq.pdf: faq.xml faq.fo # faq.tex
+XML_FILES=	$(NAME).xml
+HTML_FILES=	$(NAME).html
+PDF_FILES=	$(NAME).pdf
+
+$(NAME).html: $(NAME).xml
+$(NAME).pdf: $(NAME).xml $(NAME).fo
 
 include ../../../../docs/docbook.mk
