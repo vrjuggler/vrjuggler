@@ -38,11 +38,12 @@
 #include <string>
 
 #include <md/POSIX/SocketImpBSD.h>
+#include <IO/Socket/SocketStreamOpt.h>
 
 
 namespace vpr {
 
-class SocketStreamImpBSD : public SocketImpBSD {
+class SocketStreamImpBSD : public SocketStreamOpt, public SocketImpBSD {
 public:
     // ========================================================================
     // vpr::SocketStreamImp implementation.
@@ -147,6 +148,24 @@ protected:
     //                   are connected.
     // ------------------------------------------------------------------------
     SocketStreamImpBSD(const int sock, const InetAddr& remote_addr);
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual int
+    getOption (const SocketOptions::Types option,
+               struct SocketOptions::Data& data)
+    {
+        return SocketImpBSD::getOption(option, data);
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual int
+    setOption (const SocketOptions::Types option,
+               const struct SocketOptions::Data& data)
+    {
+        return SocketImpBSD::setOption(option, data);
+    }
 };
 
 }; // End of vpr namespace

@@ -41,7 +41,7 @@
 #include <IO/BlockIO.h>
 #include <md/POSIX/FileHandleUNIX.h>
 #include <IO/Socket/InetAddr.h>
-#include <IO/Socket/SocketOptions.h>
+#include <IO/Socket/SocketIpOpt.h>
 
 /*
 #if defined(sgi) && defined(host_mips) && !defined(socklen_t)
@@ -52,7 +52,7 @@ typedef int socklen_t;
 
 namespace vpr {
 
-class SocketImpBSD : public BlockIO
+class SocketImpBSD : public BlockIO, public SocketIpOpt
 {
 public:
     // ========================================================================
@@ -196,18 +196,6 @@ public:
        return true;
     }
 
-    /**
-     *
-     */
-    int getOption(const SocketOptions::Types option,
-                  struct SocketOptions::Data& data);
-
-    /**
-     *
-     */
-    int setOption(const SocketOptions::Types option,
-                  const struct SocketOptions::Data& data);
-
 protected:
     // ------------------------------------------------------------------------
     // Default constructor.  This just initializes member variables to
@@ -271,6 +259,18 @@ protected:
     write_i (const void* buffer, const size_t length) {
         return m_handle->write(buffer, length);
     }
+
+    /**
+     *
+     */
+    virtual int getOption(const SocketOptions::Types option,
+                          struct SocketOptions::Data& data);
+
+    /**
+     *
+     */
+    virtual int setOption(const SocketOptions::Types option,
+                          const struct SocketOptions::Data& data);
 
     FileHandleUNIX*   m_handle;      //:
     InetAddr          m_local_addr;  //: The local site's address structure
