@@ -238,8 +238,8 @@ aMotionStar::aMotionStar(const char* address, const unsigned short port,
       m_birds_active(0), m_unit_conv(1.0)
 {
     union {
-        char	c[sizeof(short)];
-        short	value;
+        char   c[sizeof(short)];
+        short  value;
     } endian;
 
     // Initialize member variables using passed parameters.
@@ -275,11 +275,11 @@ aMotionStar::~aMotionStar () {
     }
 
     for ( i = 0; i < m_erc_vec.size(); i++ ) {
-        delete m_erc_vec[i];
+        //**//delete m_erc_vec[i];
     }
 
     for ( i = 0; i < m_birds.size(); i++ ) {
-        delete m_birds[i];
+        //**//delete m_birds[i];
     }
 }
 
@@ -457,7 +457,7 @@ aMotionStar::start () {
 
                         if ( sys_status != NULL ) {
                             printSystemStatus(sys_status);
-                            delete sys_status;
+                            //**//delete sys_status;
                         }
 
                         printDeviceStatus();
@@ -1349,7 +1349,7 @@ aMotionStar::configureBirds () {
             setBirdStatus(bird, bird_status);
 
             bird_count++;
-            delete bird_status;
+            //XXX//delete bird_status;
         }
     }
 
@@ -1619,8 +1619,8 @@ aMotionStar::setContinuous () {
 short
 aMotionStar::toShort (const char high_byte, const char low_byte) const {
     union {
-        char	c[sizeof(short)];
-        short	value;
+        char   c[sizeof(short)];
+        short  value;
     } result;
 
     // If this is a big-endian host, put the high byte in the first byte of
