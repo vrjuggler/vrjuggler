@@ -63,15 +63,15 @@ typedef char*   ibox2_result;
 
 /* Result Codes for which there are error handlers
  */
-char    TIMED_OUT[29] = "Timed out waiting for packet";
-char    BAD_PORT_NUM[25] = "Port number out of range";
-char    BAD_PACKET[17] = "Corrupted packet";
-char    NO_HCI[19] = "Unable to find HCI";
-char    CANT_BEGIN[34] = "Found HCI but can't begin session";
-char    CANT_OPEN_PORT[27] = "Unable to open serial port";
-char    BAD_PASSWORD[40] = "Password rejected during config command";
-char    BAD_VERSION[47] = "Firmware version does not support this feature";
-char    BAD_FORMAT[34] = "Unknown firmware parameter format";
+static char    TIMED_OUT[29] = "Timed out waiting for packet";
+static char    BAD_PORT_NUM[25] = "Port number out of range";
+static char    BAD_PACKET[17] = "Corrupted packet";
+static char    NO_HCI[19] = "Unable to find HCI";
+static char    CANT_BEGIN[34] = "Found HCI but can't begin session";
+static char    CANT_OPEN_PORT[27] = "Unable to open serial port";
+static char    BAD_PASSWORD[40] = "Password rejected during config command";
+static char    BAD_VERSION[47] = "Firmware version does not support this feature";
+static char    BAD_FORMAT[34] = "Unknown firmware parameter format";
 
 /* Shorthand for a byte */
 typedef unsigned char   byte;
@@ -278,7 +278,7 @@ public:
      * 
      * @param cmnd the byte that is being written.
      */
-     */
+
     void            simple_cfg_cmd(byte cmnd);
 
     /**
