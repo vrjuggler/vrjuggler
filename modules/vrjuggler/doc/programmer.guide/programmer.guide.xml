@@ -175,7 +175,8 @@
           interface implementation methods.</para>
 
           <para>In traditional programs, the <function>main()</function>
-          function defines the point where the <firstterm>thread of control</firstterm>
+          function defines the point where the <glossterm
+          linkend="gloss.thread.of.control">thread of control</glossterm>
           enters the application. After the <function>main()</function>
           function is called, the application starts performing any necessary
           processing. When the operating system (OS) starts the program, it
@@ -2508,8 +2509,8 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
           <function>glMultMatrixf()</function>), the <classname>gmtl::Matrix44f</classname>
           class maintains its internal matrix in column-major order. Note that
           in the following table, the given indices are what the cells have to
-          be called in C/C++ notation because we are putting them
-          back-to-back. This is illustrated in <xref
+          be called in C/C++ notation because we are putting them back to
+          back. This is illustrated in <xref
           linkend="table.column-major.access" />.</para>
 
           <table id="table.column-major.access">
@@ -3351,12 +3352,13 @@ public:
         <methodname>draw()</methodname>, <methodname>contextInit()</methodname>,
         and <methodname>contextPreDraw()</methodname><indexterm><primary>vrj::GlApp</primary><secondary>extensions
         to vrj::App</secondary></indexterm>. These methods deal with OpenGL
-        drawing and managing context-specific data (do not worry what context
-        data is right now—we cover that in detail later). There are a few
-        other member functions in the interface, but these cover 99% of the
-        issues that most developers face. In the following sections, we will
-        describe how to add OpenGL drawing to an application and how to handle
-        context-specific data. There is a tutorial for each topic.</para>
+        drawing and managing <glossterm linkend="gloss.csdata">context-specific
+        data</glossterm> (do not worry what context data is right now—we cover
+        that in detail later). There are a few other member functions in the
+        interface, but these cover 99% of the issues that most developers
+        face. In the following sections, we will describe how to add OpenGL
+        drawing to an application and how to handle context-specific data.
+        There is a tutorial for each topic.</para>
 
         <section id="section.clear.buffers">
           <title>Clearing the Color and Depth Buffers</title>
@@ -3388,7 +3390,7 @@ public:
           application to work with multiple viewports, the color and depth
           buffers need to be cleared at the correct times.</para>
 
-          <para>In a user applcation, the method <methodname>vrj::GlApp::bufferPreDraw()</methodname>
+          <para>In a user application, the method <methodname>vrj::GlApp::bufferPreDraw()</methodname>
           is overridden so that it clears the color buffer. For example, the
           following code clears the color buffer using black:</para>
 
@@ -3638,17 +3640,18 @@ void simpleApp::draw()
 
           <para>Many readers may already be familiar with the specifics of
           OpenGL. In this section, we provide a very brief introduction to
-          <firstterm>context-specific data</firstterm> within OpenGL, and we
-          proceed to explain how it is used by VR Juggler. Those who are
-          already familiar with context-specific data may skip ahead to <xref
-          linkend="section.need.for.csdata" /> or to <xref
-          linkend="section.using.csdata" />.</para>
+          <glossterm linkend="gloss.csdata">context-specific data</glossterm>
+          within OpenGL, and we proceed to explain how it is used by VR
+          Juggler. Those who are already familiar with context-specific data
+          may skip ahead to <xref linkend="section.need.for.csdata" /> or to
+          <xref linkend="section.using.csdata" />.</para>
 
           <para>The OpenGL graphics API operates using a state machine that
           tracks the current settings and attributes set by the OpenGL code.
           Each window in which we render using OpenGL has a state machine
           associated with it. The state machines associated with these windows
-          are referred to as <firstterm>OpenGL rendering contexts</firstterm><indexterm><primary>OpenGL
+          are referred to as <glossterm
+          linkend="gloss.opengl.rendering.context">OpenGL rendering contexts</glossterm><indexterm><primary>OpenGL
           rendering contexts</primary></indexterm>.</para>
 
           <para>Each context stores the current state of an OpenGL renderer
@@ -3910,11 +3913,12 @@ userApp::draw()
               model. In this case, <methodname>vrj::GlApp::contextInit()</methodname>
               cannot be used because it is only called when a new context is
               created. Here, all the windows have already been created. What
-              we need, then, is a callback that is called once per existing
-              context so that we can add and change the context-specific data.
-              That is what <methodname>contextPreDraw()</methodname> does. It
-              is called once per context for each VR Juggler frame with the
-              current context active.</para>
+              we need, then, is a <glossterm linkend="gloss.callback">callback</glossterm>
+              that is called once per existing context so that we can add and
+              change the context-specific data. That is what
+              <methodname>contextPreDraw()</methodname> does. It is called
+              once per context for each VR Juggler frame with the current
+              context active.</para>
 
               <para>Please notice, however, that since this method is called
               often and is called in performance-critical areas, you should
@@ -4176,7 +4180,7 @@ void contextApp::draw()
 
             <secondary>OpenGL Performer</secondary>
 
-            <tertiary>scenegraph initialization</tertiary>
+            <tertiary>scene graph initialization</tertiary>
           </indexterm>
 
           <para>In an application using OpenGL Performer, the scene graph must
@@ -4208,7 +4212,7 @@ void contextApp::draw()
 
             <secondary>OpenGL Performer</secondary>
 
-            <tertiary>scenegraph access</tertiary>
+            <tertiary>scene graph access</tertiary>
           </indexterm>
 
           <para>In order for Performer to render the application scene graph,
@@ -4553,7 +4557,7 @@ pfDraw();</programlisting>
         </indexterm>
 
         <para>This section explains how to use the OpenSG scene graph in a VR
-        Juggler application. OpenSG is an open source scenegraph that is
+        Juggler application. OpenSG is an open source scene graph that is
         available at <ulink url="http://www.opensg.org/">www.opensg.org</ulink>.</para>
 
         <para>An OpenSG-based VR Juggler application must derive from
@@ -4604,7 +4608,7 @@ pfDraw();</programlisting>
 
             <secondary>OpenSG</secondary>
 
-            <tertiary>scenegraph initialization</tertiary>
+            <tertiary>scene graph initialization</tertiary>
           </indexterm>
 
           <para>In an application using OpenSG, the scene graph must be
@@ -4616,7 +4620,7 @@ pfDraw();</programlisting>
           accomplishing this will vary depending on what the application will
           do.</para>
 
-          <para>During the api initialization, <methodname>vrj::OpenSGApp::initScene()</methodname>
+          <para>During the API initialization, <methodname>vrj::OpenSGApp::initScene()</methodname>
           is invoked. This happens after <methodname>OSG::osgInit()</methodname>
           has been called, so OpenSG should be fully initialized and ready to
           be used.</para>
@@ -4636,7 +4640,7 @@ pfDraw();</programlisting>
 
             <secondary>OpenSG</secondary>
 
-            <tertiary>scenegraph access</tertiary>
+            <tertiary>scene graph access</tertiary>
           </indexterm>
 
           <para>In order for OpenSG to render the application scene graph, it
@@ -4970,7 +4974,7 @@ id="OpenSGNav.add.light.co" linkends="OpenSGNav.add.light.desc" />
         <title>The Initialize, Draw, and Frame Routines</title>
 
         <para>In the <trademark>CAVElib</trademark>, the initialize, draw, and
-        frame routines are known as <firstterm>callbacks</firstterm>
+        frame routines are known as <glossterm linkend="gloss.callback">callbacks</glossterm>
         implemented with C function pointers. In VR juggler, the equivalent
         routines are <quote>called back</quote> using an application object.
         An application object is a C++ class that defines methods to
@@ -5058,8 +5062,9 @@ id="OpenSGNav.add.light.co" linkends="OpenSGNav.add.light.desc" />
               <para>Init: There is an initialization member function for data
               and an initialization member function for creating
               context-specific data (display lists, texture objects). The
-              latter is called for each display context in the system. These
-              two member functions are:</para>
+              latter is called for each <glossterm
+              linkend="gloss.display.context">display context</glossterm> in
+              the system. These two member functions are:</para>
 
               <orderedlist>
                 <listitem>
@@ -5225,16 +5230,16 @@ id="OpenSGNav.add.light.co" linkends="OpenSGNav.add.light.desc" />
           Juggler has different requirements for context-specific data than
           the <trademark>CAVElib</trademark> software. Information such as
           display lists and texture objects must be managed using
-          context-specific data. A <firstterm>display context</firstterm> is
-          the location to which OpenGL rendering commands draw. Compiled
-          OpenGL commands such as display lists do not get shared across
-          multiple contexts (or windows), and thus, they must be initialized
-          once per display context. In a VR Juggler application, these OpenGL
-          initializations must be placed in <methodname>vrj::GlApp::contextInit()</methodname>.
-          It is called once per display context after each context has become
-          active. For a more detailed description of these concepts and a
-          tutorial on how to use them, please refer to <xref
-          linkend="section.csdata.intro" />.</para>
+          context-specific data. A <glossterm linkend="gloss.display.context">display
+          context</glossterm> is the location to which OpenGL rendering
+          commands draw. Compiled OpenGL commands such as display lists do not
+          get shared across multiple contexts (or windows), and thus, they
+          must be initialized once per display context. In a VR Juggler
+          application, these OpenGL initializations must be placed in
+          <methodname>vrj::GlApp::contextInit()</methodname>. It is called
+          once per display context after each context has become active. For a
+          more detailed description of these concepts and a tutorial on how to
+          use them, please refer to <xref linkend="section.csdata.intro" />.</para>
         </section>
       </section>
 
@@ -5355,10 +5360,10 @@ int main(int argc, char* argv[])
           <title>In GLUT</title>
 
           <para>In GLUT, the initialize, draw, and frame routines are known as
-          <firstterm>callbacks</firstterm> implemented with C function
-          pointers. In VR juggler, the equivalent routines are
-          <firstterm>called back</firstterm> using an application object. An
-          application object is a C++ class that defines methods to
+          <glossterm linkend="gloss.callback">callbacks</glossterm>
+          implemented with C function pointers. In VR juggler, the equivalent
+          routines are <firstterm>called back</firstterm> using an application
+          object. An application object is a C++ class that defines methods to
           encapsulate the functionality of the application within a single C++
           object.</para>
 
@@ -5602,12 +5607,13 @@ int main(int argc, char* argv[])
           <para>As a result of the shared memory model described above, VR
           Juggler has different requirements for context-specific data than
           GLUT. Information such as display lists and texture objects must be
-          managed using context-specific data. A <firstterm>display context</firstterm>
-          is the location to which OpenGL rendering commands draw. Compiled
-          OpenGL commands such as display lists do not get shared across
-          multiple contexts (or windows), and thus, they must be initialized
-          once per display context. In a VR Juggler application, these OpenGL
-          initializations must be placed in <methodname>vrj::GlApp::contextInit()</methodname>.
+          managed using context-specific data. A <glossterm
+          linkend="gloss.callback">display context</glossterm> is the location
+          to which OpenGL rendering commands draw. Compiled OpenGL commands
+          such as display lists do not get shared across multiple contexts (or
+          windows), and thus, they must be initialized once per display
+          context. In a VR Juggler application, these OpenGL initializations
+          must be placed in <methodname>vrj::GlApp::contextInit()</methodname>.
           It is called once per display context after each context has become
           active. For a more detailed description of these concepts and a
           tutorial on how to use them, please refer to <xref
@@ -6124,11 +6130,12 @@ void MPApp::draw()
         <methodname>draw()</methodname>. When the mesh is rendered, some
         tearing will almost certainly be seen. This happens as a result of
         data changing during the rendering of the data. In other words, access
-        to a <firstterm>critical section</firstterm> of code not being
-        controlled. To prevent tearing, we need to protect the internal mesh
-        data. However, using a mutex to control access to the mesh will result
-        in the computation and rendering being serialized. In so doing, we
-        lose the value of parallelizing the computation and rendering.</para>
+        to a <glossterm linkend="gloss.critical.section">critical section</glossterm>
+        of code not being controlled. To prevent tearing, we need to protect
+        the internal mesh data. However, using a mutex to control access to
+        the mesh will result in the computation and rendering being
+        serialized. In so doing, we lose the value of parallelizing the
+        computation and rendering.</para>
 
         <section id="section.triple.buffering">
           <title>Triple Buffering</title>
@@ -6142,15 +6149,15 @@ void MPApp::draw()
           <para>To work around this, we can use multiple buffers. More
           specifically, we will use three buffers: one for reading, one for
           writing, and one as temporary storage of the most recently completed
-          write(s). This is called <firstterm>triple buffering</firstterm>,
-          and it allows us to perform computation and rendering in parallel
-          without causing one process to wait on the other. The rendering
-          buffer can be accessed without locking, as can the computation
-          buffer. The only time a lock must be held is when the latest
-          computations are copied into the temporary storage buffer or when
-          the contents of the temporary storage buffer are copied into the
-          rendering buffer. Thus, the key to triple buffering is the temporary
-          storage buffer.</para>
+          write(s). This is called <glossterm linkend="gloss.triple.buffering">triple
+          buffering</glossterm>, and it allows us to perform computation and
+          rendering in parallel without causing one process to wait on the
+          other. The rendering buffer can be accessed without locking, as can
+          the computation buffer. The only time a lock must be held is when
+          the latest computations are copied into the temporary storage buffer
+          or when the contents of the temporary storage buffer are copied into
+          the rendering buffer. Thus, the key to triple buffering is the
+          temporary storage buffer.</para>
 
           <para>Implementing triple buffering is relatively straightforward,
           once the basic idea is understood. For this discussion we will refer
@@ -6353,293 +6360,295 @@ Unlock Working Copy Mutex</programlisting>
         </indexterm>
 
         <para>There are four steps involved in adding run-time reconfiguration
-        to a VR Juggler application. We describe each of them in detail here.</para>
+        to a VR Juggler application. We describe each of them in detail here
+        in the following subsections.</para>
 
-        <orderedlist>
-          <listitem>
-            <para>Define application chunk descriptions (ChunkDescs)</para>
+        <section>
+          <title>Create Application-Specific Configuration Definitions</title>
 
-            <para>The first step in adding dynamic reconfiguration
-            capabilities to an application is to decide what aspects of the
-            application should be configurable. Naturally, this is very
-            application-specific, but some of the following choices are
-            common:</para>
+          <para>The first step in adding dynamic reconfiguration capabilities
+          to an application is to decide what aspects of the application
+          should be configurable. Naturally, this is very
+          application-specific, but some of the following choices are common:</para>
 
-            <itemizedlist>
-              <listitem>
-                <para>Initial parameters (position, color, etc.) of objects in
-                the environment</para>
-              </listitem>
+          <itemizedlist>
+            <listitem>
+              <para>Initial parameters (position, color, etc.) of objects in
+              the environment</para>
+            </listitem>
 
-              <listitem>
-                <para>Navigational position</para>
-              </listitem>
+            <listitem>
+              <para>Navigational position</para>
+            </listitem>
 
-              <listitem>
-                <para>Global settings such as difficulty level of a game, or
-                network settings for a distributed application</para>
-              </listitem>
-            </itemizedlist>
+            <listitem>
+              <para>Global settings such as difficulty level of a game, or
+              network settings for a distributed application</para>
+            </listitem>
+          </itemizedlist>
 
-            <para>Once decisions are made regarding configuration information,
-            it is time to define the kinds of ConfigChunks that will contain
-            it. This essentially means creating a file containing one or more
-            ChunkDescs. To understand this better, consider the following
-            example. One might define an <quote>Object</quote> ChunkDesc in an
-            application. The ChunkDesc would have properties that include the
-            name and type of an object, its color and size, and so forth.</para>
+          <para>Once decisions are made regarding configuration information,
+          it is time to define the kinds of configuration elements that will
+          contain it. This essentially means creating a file containing one or
+          more configuration definitions. To understand this better, consider
+          the following example. One might define an <quote>Object</quote>
+          definition in an application. The definition would have properties
+          that include the name and type of an object, its color and size, and
+          so forth.</para>
 
-            <para>There are several ways to ensure that custom ChunkDescs are
-            read by the application. One way is to load the ChunkDesc file
-            explicitly (described below), but the simplest way is to include
-            the custom ChunkDesc file from one of the configuration files the
-            application loads at startup. Instructions for editing ChunkDesc
-            files and creating new kinds of ChunkDescs are included in the
-            <emphasis>VRJConfig User&#39;s Guide</emphasis>.</para>
-          </listitem>
+          <para>There are several ways to ensure that custom configuration
+          definitions are read by the application. One way is to load the
+          definition file explicitly (described below), but the simplest way
+          is to include the custom definition file from one of the
+          configuration files the application loads at startup. Instructions
+          for editing configuration definition files and creating new kinds of
+          definitions are included in the <emphasis>VRJConfig User&#39;s Guide</emphasis>.</para>
+        </section>
 
-          <listitem>
-            <para>Implement dynamic reconfiguration interface</para>
+        <section>
+          <title>Implement the Dynamic Reconfiguration Interface</title>
 
-            <para>The next step is to implement the dynamic reconfiguration
-            interface for the application object. This interface is defined by
-            the <classname>jccl::ConfigChunkHandler</classname><indexterm><primary>classes</primary><secondary>jccl::ConfigChunkHandler</secondary></indexterm>
-            class and consists of three methods:</para>
+          <para>The next step is to implement the dynamic reconfiguration
+          interface for the application object. This interface is defined by
+          the <classname>jccl::ConfigChunkHandler</classname><indexterm><primary>classes</primary><secondary>jccl::ConfigChunkHandler</secondary></indexterm>
+          class and consists of three methods:</para>
 
-            <orderedlist>
-              <listitem>
-                <methodsynopsis>
-                  <modifier>virtual</modifier>
+          <orderedlist>
+            <listitem>
+              <methodsynopsis>
+                <modifier>virtual</modifier>
 
-                  <type>bool</type>
+                <type>bool</type>
 
-                  <methodname>configCanHandle</methodname>
+                <methodname>configCanHandle</methodname>
 
-                  <methodparam>
-                    <type>jccl::ConfigChunkPtr</type>
+                <methodparam>
+                  <type>jccl::ConfigChunkPtr</type>
 
-                    <parameter>chunk</parameter>
-                  </methodparam>
-                </methodsynopsis>
+                  <parameter>element</parameter>
+                </methodparam>
+              </methodsynopsis>
 
-                <indexterm>
-                  <primary>vrj::App</primary>
+              <indexterm>
+                <primary>vrj::App</primary>
 
-                  <secondary>configCanHandle() method</secondary>
-                </indexterm>
+                <secondary>configCanHandle() method</secondary>
+              </indexterm>
 
-                <para>This function should simply return a Boolean (true or
-                false) depending on whether this object knows how to deal with
-                the ConfigChunk passed to it. If this Chunk uses an
-                application-custom ChunkDescs, this should return true. For
-                example:</para>
+              <para>This function should simply return a Boolean (true or
+              false) depending on whether this object knows how to deal with
+              the configuration element passed to it. If this element uses an
+              application-custom definition, this should return
+              <constant>true</constant>. For example:</para>
 
-                <programlisting>std::string s = chunk-&#62;getType();
+              <programlisting>std::string s = element-&#62;getType();
 
-if ( !jccl::strcasecmp(s, &#34;my_custom_chunk_type&#34;) )
+if ( !jccl::strcasecmp(s, &#34;my_custom_element_type&#34;) )
 {
    return true;
 }</programlisting>
-              </listitem>
+            </listitem>
 
-              <listitem>
-                <methodsynopsis>
-                  <modifier>virtual</modifier>
+            <listitem>
+              <methodsynopsis>
+                <modifier>virtual</modifier>
 
-                  <type>bool</type>
+                <type>bool</type>
 
-                  <methodname>configAdd</methodname>
+                <methodname>configAdd</methodname>
 
-                  <methodparam>
-                    <type>jccl::ConfigChunkPtr</type>
+                <methodparam>
+                  <type>jccl::ConfigChunkPtr</type>
 
-                    <parameter>chunk</parameter>
-                  </methodparam>
-                </methodsynopsis>
+                  <parameter>element</parameter>
+                </methodparam>
+              </methodsynopsis>
 
-                <indexterm>
-                  <primary>vrj::App</primary>
+              <indexterm>
+                <primary>vrj::App</primary>
 
-                  <secondary>configAdd() method</secondary>
-                </indexterm>
+                <secondary>configAdd() method</secondary>
+              </indexterm>
 
-                <para>This method is called whenever a ConfigChunk is added to
-                the application, whether by loading a configuration file or
-                through a dynamic reconfiguration event. Prior to this, the
-                chunk will have been passed through the application
-                object&#39;s <methodname>configCanHandle()</methodname>
-                method. Thus, when <methodname>configAdd()</methodname> is
-                called, the chunk is destined for the application object.</para>
+              <para>This method is called whenever an element is added to the
+              application, whether by loading a configuration file or through
+              a dynamic reconfiguration event. Prior to this, the element will
+              have been passed through the application object&#39;s
+              <methodname>configCanHandle()</methodname> method. Thus, when
+              <methodname>configAdd()</methodname> is called, the element is
+              destined for the application object.</para>
 
-                <para>When <methodname>configAdd()</methodname> is called, the
-                application should look at the chunk passed to it and decide
-                what to do. This might involve creating a new object, changing
-                the configuration of an already extant object, changing the
-                values of certain variables, or any number of other
-                possibilities. This flexibility is part of the power of
-                dynamic reconfiguration with VR Juggler.</para>
-              </listitem>
+              <para>When <methodname>configAdd()</methodname> is called, the
+              application should look at the element passed to it and decide
+              what to do. This might involve creating a new object, changing
+              the configuration of an extant object, changing the values of
+              certain variables, or any number of other possibilities. This
+              flexibility is part of the power of dynamic reconfiguration with
+              VR Juggler.</para>
+            </listitem>
 
-              <listitem>
-                <methodsynopsis>
-                  <modifier>virtual</modifier>
+            <listitem>
+              <methodsynopsis>
+                <modifier>virtual</modifier>
 
-                  <type>bool</type>
+                <type>bool</type>
 
-                  <methodname>configRemove</methodname>
+                <methodname>configRemove</methodname>
 
-                  <methodparam>
-                    <type>jccl::ConfigChunkPtr</type>
+                <methodparam>
+                  <type>jccl::ConfigChunkPtr</type>
 
-                    <parameter>chunk</parameter>
-                  </methodparam>
-                </methodsynopsis>
+                  <parameter>element</parameter>
+                </methodparam>
+              </methodsynopsis>
 
-                <indexterm>
-                  <primary>vrj::App</primary>
+              <indexterm>
+                <primary>vrj::App</primary>
 
-                  <secondary>configRemove() method</secondary>
-                </indexterm>
+                <secondary>configRemove() method</secondary>
+              </indexterm>
 
-                <para>This method is analogous to <methodname>configAdd()</methodname>.
-                It is called when VR Juggler receives a command to remove a
-                particular ConfigChunk. If the ConfigChunk refers to a
-                specific object in the application, the most obvious behavior
-                would be to remove that particular object. If the ConfigChunk
-                refers to some other properties of the application, there are
-                several choices for the correct behavior. For example, one
-                might choose to reset those properties to their default
-                values. In some cases, it may be desirable or necessary to
-                ignore the remove request.</para>
-              </listitem>
-            </orderedlist>
-          </listitem>
+              <para>This method is analogous to <methodname>configAdd()</methodname>.
+              It is called when VR Juggler receives a command to remove a
+              particular configuration element. If the element refers to a
+              specific object in the application, the most obvious behavior
+              would be to remove that particular object. If the element refers
+              to some other properties of the application, there are several
+              choices for the correct behavior. For example, one might choose
+              to reset those properties to their default values. In some
+              cases, it may be desirable or necessary to ignore the remove
+              request.</para>
+            </listitem>
+          </orderedlist>
+        </section>
 
-          <listitem>
-            <para>Processing ConfigChunks</para>
+        <section>
+          <title>Procesing Configuration Elements</title>
 
-            <para>When an application receives a ConfigChunk to process via
-            <methodname>configAdd()</methodname> or <methodname>configRemove()</methodname>,
-            it needs to retrieve the data in that Chunk in order to decide
-            what to do. ConfigChunks can be very complex, but the interface
-            has been designed to be as simple as possible. We now describe a
-            few of the most important methods in the ConfigChunk API.</para>
+          <para>When an application receives a configuration element to
+          process via <methodname>configAdd()</methodname> or
+          <methodname>configRemove()</methodname>, it needs to retrieve the
+          data in that element in order to decide what to do. Configuration
+          elements can be very complex, but the interface has been designed to
+          be as simple as possible. We now describe a few of the most
+          important methods in the <classname>jccl::ConfigChunk</classname>
+          API.</para>
 
-            <itemizedlist>
-              <listitem>
-                <methodsynopsis>
-                  <type>std::string</type>
+          <itemizedlist>
+            <listitem>
+              <methodsynopsis>
+                <type>std::string</type>
 
-                  <methodname>jccl::ConfigChunk::getDescToken</methodname>
+                <methodname>jccl::ConfigChunk::getDescToken</methodname>
 
-                  <void />
+                <void />
 
-                  <modifier>const</modifier>
-                </methodsynopsis>
+                <modifier>const</modifier>
+              </methodsynopsis>
 
-                <indexterm>
-                  <primary>jccl::ConfigChunk</primary>
+              <indexterm>
+                <primary>jccl::ConfigChunk</primary>
 
-                  <secondary>getDescToken() method</secondary>
-                </indexterm>
+                <secondary>getDescToken() method</secondary>
+              </indexterm>
 
-                <para>This method returns the token of the ChunkDesc which
-                describes this ConfigChunk. This is useful if an application
-                uses several kinds of custom ConfigChunk types. With this
-                method, it is possible to distinguish one from another.</para>
-              </listitem>
+              <para>This method returns the token of the configuration
+              definition which describes this element. This is useful if an
+              application uses several kinds of custom element types. With
+              this method, it is possible to distinguish one from another.</para>
+            </listitem>
 
-              <listitem>
-                <methodsynopsis>
-                  <type>T</type>
+            <listitem>
+              <methodsynopsis>
+                <type>T</type>
 
-                  <methodname>jccl::ConfigChunk::getProperty&#60;T&#62;</methodname>
+                <methodname>jccl::ConfigChunk::getProperty&#60;T&#62;</methodname>
 
-                  <methodparam>
-                    <type>std::string&#38;</type>
+                <methodparam>
+                  <type>std::string&#38;</type>
 
-                    <parameter>propertyToken</parameter>
-                  </methodparam>
+                  <parameter>propertyToken</parameter>
+                </methodparam>
 
-                  <methodparam>
-                    <type>int</type>
-
-                    <parameter>num</parameter>
-                  </methodparam>
-                </methodsynopsis>
-
-                <indexterm>
-                  <primary>jccl::ConfigChunk</primary>
-
-                  <secondary>getProperty() method</secondary>
-                </indexterm>
-
-                <para>This is the key method for getting the information
-                contained in a ConfigChunk. Its arguments are the token
-                associated with a property and a numeric index. For example, a
-                property might store a coordinate with three values, each of
-                which can be accessed separately by using the numbers 0, 1, or
-                2 for the <varname>num</varname> parameter.</para>
-
-                <para>The return value and the template paramter for this
-                method need some explanation. Basically, the return value of
-                <methodname>getProperty()</methodname> is cast to whichever
-                type the caller expects to receive. This type is named using
-                the template paramter. (It is assumed that the caller knows
-                the types of values stored in a given property.) The use of
-                the template paramter allows any type to be used through the
-                type-specific specialization performed by the C++ compiler.
-                The following code fragment gives a few examples of this
-                usage:</para>
-
-                <programlisting>std::string s1 = chunk-&#62;getProperty&#60;std::string&#62;(&#34;name&#34;, 0);
-
-bool b = chunk-&#62;getProperty&#60;bool&#62;(&#34;enabled&#34;);
-std::string s3 = chunk-&#62;getProperty&#60;std::string&#62;(&#34;enabled&#34;);
-// s3 will be one of the strings &#34;0&#34; or &#34;1&#34;
-
-jccl::ConfigChunkPtr ch = chunk-&#62;getProperty&#60;jccl::ConfigChunkPtr&#62;(&#34;embedded_chunk&#34;, 2);</programlisting>
-              </listitem>
-
-              <listitem>
-                <methodsynopsis>
+                <methodparam>
                   <type>int</type>
 
-                  <methodname>jccl::ConfigChunk::getNum</methodname>
+                  <parameter>num</parameter>
+                </methodparam>
+              </methodsynopsis>
 
-                  <methodparam>
-                    <modifier>const</modifier>
+              <indexterm>
+                <primary>jccl::ConfigChunk</primary>
 
-                    <type>std::string&#38;</type>
+                <secondary>getProperty&#60;T&#62;() method</secondary>
+              </indexterm>
 
-                    <parameter>propertyToken</parameter>
-                  </methodparam>
+              <para>This is the key method for getting the information
+              contained in a configuration element. Its arguments are the
+              token associated with a property and a numeric index. For
+              example, a property might store a coordinate with three values,
+              each of which can be accessed separately by using the numbers 0,
+              1, or 2 for the <varname>num</varname> parameter.</para>
 
+              <para>The return value and the template parameter for this
+              method need some explanation. Basically, the return value of
+              <methodname>getProperty()</methodname> is cast to whichever type
+              the caller expects to receive. This type is named using the
+              template paramter. (It is assumed that the caller knows the
+              types of values stored in a given property.) The use of the
+              template paramter allows any type to be used through the
+              type-specific specialization performed by the C++ compiler. The
+              following code fragment gives a few examples of this usage:</para>
+
+              <programlisting>std::string s1 = element-&#62;getProperty&#60;std::string&#62;(&#34;name&#34;, 0);
+
+bool b = element-&#62;getProperty&#60;bool&#62;(&#34;enabled&#34;);
+std::string s3 = element-&#62;getProperty&#60;std::string&#62;(&#34;enabled&#34;);
+// s3 will be one of the strings &#34;0&#34; or &#34;1&#34;
+
+jccl::ConfigChunkPtr ch = element-&#62;getProperty&#60;jccl::ConfigChunkPtr&#62;(&#34;embedded_element&#34;, 2);</programlisting>
+            </listitem>
+
+            <listitem>
+              <methodsynopsis>
+                <type>int</type>
+
+                <methodname>jccl::ConfigChunk::getNum</methodname>
+
+                <methodparam>
                   <modifier>const</modifier>
-                </methodsynopsis>
 
-                <indexterm>
-                  <primary>jccl::ConfigChunk</primary>
+                  <type>std::string&#38;</type>
 
-                  <secondary>getNum() method</secondary>
-                </indexterm>
+                  <parameter>propertyToken</parameter>
+                </methodparam>
 
-                <para>Sometimes properties of a ConfigChunk can have a
-                variable number of values. A good example is a property that
-                lists a set of files to be loaded. The
-                <methodname>getNum()</methodname> method returns the actual
-                number of values of the named property.</para>
-              </listitem>
-            </itemizedlist>
+                <modifier>const</modifier>
+              </methodsynopsis>
 
-            <para>For definitive information about the ConfigChunk API, refer
-            to the JCCL <emphasis>Programmer&#39;s Reference</emphasis>.</para>
-          </listitem>
+              <indexterm>
+                <primary>jccl::ConfigChunk</primary>
 
-          <listitem>
-            <para>Loading and saving configurations</para>
-          </listitem>
-        </orderedlist>
+                <secondary>getNum() method</secondary>
+              </indexterm>
+
+              <para>Sometimes properties of a configuration element can have a
+              variable number of values. A good example is a property that
+              lists a set of files to be loaded. The <methodname>getNum()</methodname>
+              method returns the actual number of values of the named
+              property.</para>
+            </listitem>
+          </itemizedlist>
+
+          <para>For definitive information about the <classname>jccl::ConfigChunk</classname>
+          API, refer to the JCCL <emphasis>Programmer&#39;s Reference</emphasis>.</para>
+        </section>
+
+        <section>
+          <title>Loading and Saving Configurations</title>
+
+          <para></para>
+        </section>
       </section>
 
       <section id="section.app.specific.config">
@@ -6739,7 +6748,7 @@ public:
 
           <para>In the example application ConfigApp, we will see how to
           configure the color of the ground in the 3D scene using JCCL. The
-          configuration is based on a configuration element defition that
+          configuration is based on a configuration element definition that
           defines four properties, each with three values. The ground is
           defined as a rectangular polygon, and each property corresponds to
           one of the corners of the rectangle. The values of the property are
@@ -6919,15 +6928,48 @@ public:
     </glossdiv>
 
     <glossdiv>
+      <title>C</title>
+
+      <glossentry id="gloss.callback">
+        <glossterm>callback</glossterm>
+
+        <glosssee>In the C programming language, a function pointer that is
+        invoked to <quote>call back</quote> to some other code. Usually, a
+        function pointer is passed as an argument to some function that stores
+        the pointer for later use.</glosssee>
+      </glossentry>
+
+      <glossentry id="gloss.csdata">
+        <glossterm>context-specific data</glossterm>
+
+        <glosssee>In OpenGL terms, some information that is associated with a
+        specific OpenGL context.</glosssee>
+      </glossentry>
+
+      <glossentry id="gloss.critical.section">
+        <glossterm>critical section</glossterm>
+
+        <glosssee>In multi-threaded programming, a block of code that reads
+        from or writes to data that is shared across multiple threads.</glosssee>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
       <title>D</title>
 
       <glossentry id="gloss.daemon">
         <glossterm>daemon</glossterm>
 
-        <glosssee>In UNIX-baed operating systems, a background process that
+        <glosssee>In UNIX-based operating systems, a background process that
         performs some job continuously while the computer is running. For
         example, a web server runs a daemon (often called <command>httpd</command>)
         that manages incoming HTTP requests.</glosssee>
+      </glossentry>
+
+      <glossentry id="gloss.display.context">
+        <glossterm>display context</glossterm>
+
+        <glosssee>The location to which OpenGL rendering commands draw.</glosssee>
       </glossentry>
     </glossdiv>
 
@@ -6959,6 +7001,16 @@ public:
     </glossdiv>
 
     <glossdiv>
+      <title>O</title>
+
+      <glossentry id="gloss.opengl.rendering.context">
+        <glossterm>OpenGL rendering context</glossterm>
+
+        <glosssee>An OpenGL state machine associated with a display window.</glosssee>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
       <title>P</title>
 
       <glossentry id="gloss.proxy">
@@ -6975,9 +7027,34 @@ public:
         <glossterm>smart pointer</glossterm>
 
         <glosssee>In C++ terminology, a smart pointer is a pointer-like object
-        where the pointer derference operators (-&#62; and *) are overloaded
+        where the pointer dereference operators (-&#62; and *) are overloaded
         to perform special functionality. This takes advantage of C++ operator
         overloading to hide extra processing steps behind a familiar syntax.</glosssee>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>T</title>
+
+      <glossentry id="gloss.thread.of.control">
+        <glossterm>thread of control</glossterm>
+
+        <glosssee>In a multi-threaded application, a single sequence of
+        execution. Each thread in a multi-threaded application has its own
+        thread of control that can execute in parallel with the other threads
+        of control.</glosssee>
+      </glossentry>
+
+      <glossentry id="gloss.triple.buffering">
+        <glossterm>triple buffering</glossterm>
+
+        <glosssee>An extension to double buffering that uses three data
+        buffers instead of two. Triple buffering minimizes the time that two
+        threads have to wait to access shared data. At most, one thread will
+        wait while another thread copies no more than four bytes of data. That
+        is, regardless of the size of a single data buffer, the amount of
+        memory copied to swap buffers is no more than four bytes (the size of
+        a 32-bit memory address).</glosssee>
       </glossentry>
     </glossdiv>
 
@@ -6987,7 +7064,10 @@ public:
       <glossentry id="gloss.virtual.platform">
         <glossterm>virtual platform</glossterm>
 
-        <glosssee></glosssee>
+        <glosssee>An abstraction of the operating system and hardware (both
+        the computer architecture and the input devices) that comprise a VR
+        system. A virtual platform provides a cross-platform and cross-VR
+        system layer upon which portable VR applications can be written.</glosssee>
       </glossentry>
     </glossdiv>
   </glossary>
