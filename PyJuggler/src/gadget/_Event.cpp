@@ -27,6 +27,8 @@
 
 // Includes ====================================================================
 #include <boost/python.hpp>
+#include <vpr/IO/ObjectReader.h>
+#include <vpr/IO/ObjectWriter.h>
 #include <gadget/Type/EventWindow/Event.h>
 
 // Using =======================================================================
