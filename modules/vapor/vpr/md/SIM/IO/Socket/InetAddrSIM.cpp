@@ -89,14 +89,14 @@ namespace vpr
 
       union
       {
-         char bytes[sizeof(vpr::Uint32)];
+         vpr::Uint8 bytes[sizeof(vpr::Uint32)];
          vpr::Uint32 value;
       } addr;
 
-      addr.value = vpr::System::Htonl(mAddress);
+      addr.value = mAddress;
       memset(buffer, '\0', sizeof(buffer));
-      sprintf(buffer, "%hu.%hu.%hu.%hu", addr.bytes[0], addr.bytes[1],
-              addr.bytes[2], addr.bytes[3]);
+      sprintf(buffer, "%u.%u.%u.%u", addr.bytes[3], addr.bytes[2],
+              addr.bytes[1], addr.bytes[0]);
       std::string result = buffer;
 
       return result;
