@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jun-21-2002 allenb    Simplified XWin keyboard by removing old unneeded update
+                      flag.  Also corrected a couple of potential bugs.
 Jun-20-2002 allenb    XWin keyboard now only lock the mouse when Alt, Ctrl, 
                       or Shift is pressed (or the lock toggle key)
 May-30-2002 patrickh  Enabled the Fakespace Pinch Glove and 5DT Data Glove
