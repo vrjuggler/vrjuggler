@@ -189,6 +189,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
                   </listitem>
                </orderedlist>
                <para>By default, the configuration process will configure VR Juggler and all of its dependencies. This includes Sonix, which is an interesting special case. Sonix can make use of OpenAL or AudioWorks to provide spatialized sound in VR Juggler applications. If neither of those packages is found, Sonix will <quote>stub out</quote> its sound APIs. This means that Sonix and the VR Juggler Sound Manager can still be used in applications, but no audio will be heard at run time. See <xref linkend="sonix.compile.section"/> for more information about how to configure Sonix to use OpenAL or AudioWorks.</para>
+               <para>For example uses of <command>configure.pl</command>, take a look at the Wiki page relating to building from CVS (<ulink url="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs</ulink>). It is not a replacement for this document, but it shows how some members of the Juggler team configure VR Juggler. It also has information on more advanced uses of <command>configure.pl</command> that are beyond the scope of this document.</para>
             </section>
             <section>
                <title>Using locally installed software</title>
