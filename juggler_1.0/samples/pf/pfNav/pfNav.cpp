@@ -101,6 +101,7 @@ public:
       // Initialize loaders
       //pfdInitConverter("terrain.flt");
 
+      pfNavDCS::init();
       mStats.preForkInit();
    }
 
