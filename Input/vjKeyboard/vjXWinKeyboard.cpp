@@ -120,20 +120,28 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
    while(!mExitFlag)
    {
       sample();
-      long sleep_time = mSleepTimeMS*1000;
+      long usleep_time; // to be set...
 
       //KEVIN:
       // from the IRIX usleep man page:
       // "...The seconds argument must be less than 1,000,000.  
       //     If the value of seconds is 0, the call has no effect...."
       //
-      // So... I will make sure this is at least usleep(1);
-      //
-      if (sleep_time < 1)
+      // So... sleep_time is at least usleep(1);
+      // NOTE: I could have put this into the config() function, 
+      //       so it didn't happen each frame, but then we'd be 
+      //       doing a usleep( 1000 ), not a 1.
+      if (1 > usleep_time)
       {
-         sleep_time = 1;
+         usleep_time = 1;
       }
-      usleep(sleep_time);
+      
+      else
+      {
+         usleep_time = mSleepTimeMS*1000;
+      }
+      
+      usleep(usleep_time);
       //vjDEBUG(vjDBG_ALL,0) << "xwinKeyboard: loop\n" << vjDEBUG_FLUSH;
    }
 
