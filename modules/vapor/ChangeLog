@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-12-07 allenb   GUID now has a constructor that can use a dispatch tag
+                    to specify that it should generate a new id an init time.
 2001-12-05 allenb   GUID's default constructor now initialized it to NullGUID.
 2001-11-21 allenb   Modified StatCollector to allow for time based and discrete
                     stat collection.
