@@ -39,14 +39,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_BUFFER_OBJECT_WRITER_H
-#define _VPR_BUFFER_OBJECT_WRITER_H
+#ifndef _VPR_XML_OBJECT_WRITER_H
+#define _VPR_XML_OBJECT_WRITER_H
 
 #include <vpr/vprConfig.h>
 #include <vector>
 
-#include <boost/static_assert.hpp>
 #include <vpr/IO/ObjectWriter.h>
+#include <string>
+#include <sstream>
 
 namespace vpr
 {
@@ -57,27 +58,22 @@ namespace vpr
 *
 * @todo: Add smart buffering for type sizes
 */
-class BufferObjectWriter : public ObjectWriter
+class XMLObjectWriter : public ObjectWriter
 {
 public:
-   BufferObjectWriter()
+   XMLObjectWriter()
    {
       mData = new std::vector<vpr::Uint8>;
       mCurHeadPos = 0;
    }
 
-   BufferObjectWriter(std::vector<vpr::Uint8>* data, unsigned curPos=0)
+   XMLObjectWriter(std::vector<vpr::Uint8>* data, unsigned curPos=0)
    {
       mData = data;
       mCurHeadPos = curPos;
    }
 
-   void setCurPos(unsigned val)
-   { mCurHeadPos = val; }
-   unsigned getCurPos()
-   { return mCurHeadPos; }
-
-   std::vector<vpr::Uint8>* getData()
+   std::vector<vpr::Uint8> getData()
    { return mData; }
 
    /** @name Tag and attribute handling */
@@ -113,8 +109,8 @@ public:
    vpr::ReturnStatus writeRaw(vpr::Uint8* data, unsigned len=1);
 
 public:
-   std::vector<vpr::Uint8>*   mData;
-   unsigned                   mCurHeadPos;
+   std::stringstream    mStringData;
+   
 };
 
 /* Write out the single byte.

@@ -102,6 +102,8 @@ vpr::ReturnStatus SocketImplNSPR::open ()
          mHandle = new_sock;
          mOpen = true;
 
+         //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Socket open: handle:[" << mHandle << "]\n" << vprDEBUG_FLUSH;
+
          if ( ! mOpenBlocking )
          {
             enableNonBlocking();
@@ -122,6 +124,8 @@ vpr::ReturnStatus SocketImplNSPR::close ()
 
    if(NULL != mHandle)
    {
+      //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Socket close: handle:[" << mHandle << "] (Socket now invalid)\n" << vprDEBUG_FLUSH;
+
       status = PR_Close(mHandle);
 
       mHandle = NULL;                // mHandle points to shrapnel now, so write over it
