@@ -614,7 +614,6 @@ AC_OUTPUT(Makefile
           vrj/Sound/Makefile
           vrj/Sound/pf/Makefile
           vrj/Util/Makefile
-          doc/Makefile
           samples/Makefile
           samples/OGL/Makefile
           samples/OGL/glove/Makefile
