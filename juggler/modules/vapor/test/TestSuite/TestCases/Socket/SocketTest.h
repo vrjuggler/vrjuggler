@@ -100,18 +100,18 @@ public:
       for (int x = 0; x < num_of_times_to_test; ++x)
       {
          // open socket
-         result = connector_socket.open();
+         result = connector_socket.open().success();
          threadAssertTest( (result != false) && "Socket::open() failed" );
 
          // connect to the acceptor
-         result = connector_socket.connect();
+         result = connector_socket.connect().success();
          threadAssertTest( result != false && "Socket::connect() failed" );
 
          // let acceptor accept it before closing
          vpr::System::msleep( 50 );
          
          // close the socket
-         result = connector_socket.close();
+         result = connector_socket.close().success();
          threadAssertTest( result != false && "Socket::close() failed" );
 
          // let the acceptor get a chance to start before connecting (sleep a while)
@@ -122,7 +122,6 @@ public:
    {
       int num_of_times_to_test = 3;
       vpr::Uint16 port = 6970;
-      const int backlog = 5;
       bool result = 0;
 
       vpr::InetAddr local_addr;
@@ -137,17 +136,19 @@ public:
          //std::cout << "[acceptor open]" << std::flush;
 
          // open socket
-         result = acceptor_socket.open();
+         result = acceptor_socket.open().success();
          threadAssertTest( result != false && "Socket::open() failed" );
 
-         result = acceptor_socket.bind();
+         result = acceptor_socket.bind().success();
          threadAssertTest( result != false && "Socket::bind() failed" );
 
          // set the socket to listen
-         result = acceptor_socket.listen( backlog );
+         result = acceptor_socket.listen().success();
          threadAssertTest( result != false && "Socket::listen() failed" );
 
          //std::cout << "[accepting "<<num_of_times_to_test<<" connections]" << std::flush;
+
+         vpr::SocketStream child_socket;
 
          // start/stop the child socket many times...
          for (int xx = 0; xx < num_of_times_to_test; ++xx)
@@ -158,20 +159,16 @@ public:
             // wait for a connect (blocking)
             // when someone connects to the server, and we accept the connection, 
             // spawn a child socket to deal with the connection
-            vpr::SocketStream* child_socket = acceptor_socket.accept();
-            threadAssertTest( child_socket != NULL && "Socket::accept() failed" );
+            result = acceptor_socket.accept(child_socket).success();
+            threadAssertTest( result && "Socket::accept() failed" );
 
             // close the child socket
-            result = child_socket->close();
+            result = child_socket.close().success();
             threadAssertTest( result != false && "Socket::close() failed" );
-
-            // clean up any memory i've made...
-            delete child_socket;
-            child_socket = NULL;
          }
 
          // close the socket
-         result = acceptor_socket.close();
+         result = acceptor_socket.close().success();
          threadAssertTest( result != false && "Socket::close() failed" );
 
          //std::cout << "[acceptor close]\n" << std::flush;
@@ -230,30 +227,34 @@ public:
       for (int x = 0; x < num_of_times_to_test; ++x)
       {
          // open socket
-         result = connector_socket.open();
+         result = connector_socket.open().success();
          threadAssertTest( result != false && "Socket::open() failed" );
 
          // connect to the acceptor
-         result = connector_socket.connect();
+         result = connector_socket.connect().success();
          threadAssertTest( result != false && "Socket::connect() failed" );
 
             // find out how much data is coming...
             int size_of_data;
-            int amount_read;
-            amount_read = connector_socket.readn( &size_of_data, sizeof( int ) );
+            ssize_t amount_read;
+            result = connector_socket.readn(&size_of_data, sizeof(int),
+                                            amount_read).success();
+            threadAssertTest( result && "readn didn't read" );
             threadAssertTest( amount_read == sizeof( int ) && "readn didn't read all" );
             
             // get that amount of data...
             std::string buffer;
             buffer.resize( size_of_data );
-            amount_read = connector_socket.readn( &buffer[0], size_of_data );
+            result = connector_socket.readn(&buffer[0], size_of_data,
+                                            amount_read).success();
+            threadAssertTest( result && "readn didn't read" );
             threadAssertTest( amount_read == size_of_data && "readn didn't read all" );
             
             //std::cout<<"Recieved buffer: "<<buffer<<"\n"<<std::flush;
             threadAssertTest( buffer == testSendRecv_buffer && "didn't recieve the right data" );
             
          // close the socket
-         result = connector_socket.close();
+         result = connector_socket.close().success();
          threadAssertTest( result != false && "Socket::close() failed" );
 
          // let the acceptor get a chance to start before connecting (sleep a while)
@@ -264,7 +265,6 @@ public:
    {
       int num_of_times_to_test = 10;
       vpr::Uint16 port = 6940;
-      const int backlog = 5;
       bool result = 0;
       vpr::InetAddr local_addr;
 
@@ -273,15 +273,17 @@ public:
       vpr::SocketStream	acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
       
       // open socket
-      result = acceptor_socket.open();
+      result = acceptor_socket.open().success();
       threadAssertTest( result != false && "Socket::open() failed" );
 
-      result = acceptor_socket.bind();
+      result = acceptor_socket.bind().success();
       threadAssertTest( result != false && "Socket::bind() failed" );
 
       // set the socket to listen
-      result = acceptor_socket.listen( backlog );
+      result = acceptor_socket.listen().success();
       threadAssertTest( result != false && "Socket::listen() failed" );
+
+      vpr::SocketStream child_socket;
 
       // start/stop the child socket many times...
       for (int xx = 0; xx < num_of_times_to_test; ++xx)
@@ -289,33 +291,32 @@ public:
          // wait for a connect (blocking)
          // when someone connects to the server, and we accept the connection, 
          // spawn a child socket to deal with the connection
-         vpr::SocketStream* child_socket = acceptor_socket.accept();
-         threadAssertTest( child_socket != NULL && "Socket::accept() failed" );
+         result = acceptor_socket.accept(child_socket).success();
+         threadAssertTest( result && "Socket::accept() failed" );
 
             // send the size of the data to be sent
-            int amount_sent;
+            ssize_t amount_sent;
             std::string buffer = testSendRecv_buffer;
             int size = buffer.size();
-            amount_sent = child_socket->write( &size, sizeof( int ) );
+            result = child_socket.write( &size, sizeof( int ), amount_sent ).success();
+            threadAssertTest( result && "write didn't send" );
             threadAssertTest( amount_sent == sizeof( int ) && "write didn't send all" );
             
             // send the data...
-            amount_sent = child_socket->write( &buffer[0], buffer.size() );
+            result = child_socket.write( &buffer[0], buffer.size(), amount_sent).success();
+            threadAssertTest( result && "write didn't send" );
             threadAssertTest( amount_sent == (int)buffer.size() && "write didn't send all" );
             
             //std::cout<<"Sent buffer: "<<buffer<<"\n"<<std::flush;
             //std::cout<<"+"<<std::flush;
          
          // close the child socket
-         result = child_socket->close();
+         result = child_socket.close().success();
          threadAssertTest( result != false && "Socket::close() failed" );
-
-         // clean up any memory i've made...
-         delete child_socket;
       }
 
       // close the socket
-      result = acceptor_socket.close();
+      result = acceptor_socket.close().success();
       threadAssertTest( result != false && "Socket::close() failed" );
    }
    void testSendRecv()
@@ -364,12 +365,12 @@ public:
 
       local_addr.setAddress("localhost", port);
       sock = new vpr::SocketStream(local_addr, vpr::InetAddr::AnyAddr);	
-      openSuccess=sock->open();
+      openSuccess=sock->open().success();
       if (openSuccess){
          //std::cout<< " Open...";
-         bindSuccess=(sock->bind());
+         bindSuccess=(sock->bind().success());
       }
-      closeSuccess=sock->close();
+      closeSuccess=sock->close().success();
       
       assertTest( openSuccess && "Socket can not be opened!");
       assertTest( bindSuccess && "Socket can not be bound!");
@@ -394,19 +395,19 @@ public:
       vpr::SocketStream sock( local_addr, vpr::InetAddr::AnyAddr );	
       
       // make sure aditional calls to bind() fails...
-      openSuccess = sock.open();
+      openSuccess = sock.open().success();
       assertTest( openSuccess == true && "open() failed");
       
-      bindSuccess = sock.bind();
+      bindSuccess = sock.bind().success();
       assertTest( bindSuccess == true && "bind() failed");
       
       for (int x = 0; x < 2; ++x)
       {
-         bindSuccess = sock.bind();
+         bindSuccess = sock.bind().success();
          assertTest( bindSuccess == false && "Socket was able to bind again, this is bad.");
       }
       
-      closeSuccess = sock.close();
+      closeSuccess = sock.close().success();
       assertTest( closeSuccess == true && "close() failed");
    }
    // =========================================================================
@@ -429,9 +430,9 @@ public:
       const int runs = 10;
       for (int xx = 0; xx < runs; ++xx)
       {
-         openSuccess += sock.open() ? 1 : 0;
-         bindSuccess += sock.bind() ? 1 : 0;
-         closeSuccess += sock.close() ? 1 : 0;
+         openSuccess += sock.open().success() ? 1 : 0;
+         bindSuccess += sock.bind().success() ? 1 : 0;
+         closeSuccess += sock.close().success() ? 1 : 0;
       }
       const int success_percent = 80;
       int minimum_for_success = runs * success_percent / 100;
@@ -463,9 +464,9 @@ public:
 
          vpr::SocketStream sock( local_addr, vpr::InetAddr::AnyAddr );	
       
-         openSuccess += sock.open() ? 1 : 0;
-         bindSuccess += sock.bind() ? 1 : 0;
-         closeSuccess += sock.close() ? 1 : 0;
+         openSuccess += sock.open().success() ? 1 : 0;
+         bindSuccess += sock.bind().success() ? 1 : 0;
+         closeSuccess += sock.close().success() ? 1 : 0;
       }
       const int success_percent = 80;
       int minimum_for_success = runs * success_percent / 100;
@@ -494,17 +495,17 @@ public:
       sock1 = new vpr::SocketStream(addr1, vpr::InetAddr::AnyAddr);
       sock2 = new vpr::SocketStream(addr1, vpr::InetAddr::AnyAddr);
       sock3 = new vpr::SocketStream(addr1, vpr::InetAddr::AnyAddr);
-      if (sock1->open()){
+      if (sock1->open().success()){
          sock1->setReuseAddr(true);
-         assertTest(sock1->bind());
+         assertTest(sock1->bind().success());
       }
       else assert(false && "Cannot open sock1");
-      if (sock2->open()){
-         assertTest(sock2->bind() && "Cannot bind second socket re-using addr");
+      if (sock2->open().success()){
+         assertTest(sock2->bind().success() && "Cannot bind second socket re-using addr");
       }
       else assert(false && "Cannot open sock2");
-      if (sock3->open())
-         assertTest(sock3->bind() && "Cannot bind third socket re-using addr");
+      if (sock3->open().success())
+         assertTest(sock3->bind().success() && "Cannot bind third socket re-using addr");
       sock1->close();
       sock2->close();
       sock3->close();
@@ -528,15 +529,15 @@ public:
       vpr::SocketStream	connector_socket( vpr::InetAddr::AnyAddr, remote_addr );
 
       // open socket
-      result = connector_socket.open();
+      result = connector_socket.open().success();
       threadAssertTest( result != false && "Socket::open() failed" );
 
       // connect to the acceptor
-      result = connector_socket.connect();
+      result = connector_socket.connect().success();
       threadAssertTest( result != false && "Socket::connect() failed" );
 
       // close the socket
-      result = connector_socket.close();
+      result = connector_socket.close().success();
       threadAssertTest( result != false && "Socket::close() failed" );
    }   
    void reuseAddrTest_acceptor( void* data )
@@ -548,30 +549,28 @@ public:
       vpr::SocketStream sock1( addr1, vpr::InetAddr::AnyAddr );
       vpr::SocketStream sock2( addr1, vpr::InetAddr::AnyAddr );
 
-      assertTest( sock1.open() && "server Socket::open() failed" );
+      assertTest( sock1.open().success() && "server Socket::open() failed" );
       sock1.setReuseAddr( true );
-      threadAssertTest( sock1.bind() && "server Socket::bind() failed" );
-      threadAssertTest( sock1.listen( 5 ) && "server Socket::listen() failed" );
+      threadAssertTest( sock1.bind().success() && "server Socket::bind() failed" );
+      threadAssertTest( sock1.listen().success() && "server Socket::listen() failed" );
       
-      vpr::SocketStream* child_socket = sock1.accept();
-      threadAssertTest( child_socket != NULL && "child didn't spawn" );
+      vpr::SocketStream child_socket;
+      vpr::Status status = sock1.accept(child_socket);
+      threadAssertTest( status.success() && "child didn't spawn" );
 
          // assume server crashes, so lets restart it.
-         threadAssertTest( sock2.open() && "open(): server restart" );
+         threadAssertTest( sock2.open().success() && "open(): server restart" );
          sock1.setReuseAddr( true ); // set the opt in-between for bind() to succeed
-         bool result = sock2.bind();
+         bool result = sock2.bind().success();
          //std::cout<<"::::::::: " << result<<"\n"<<std::flush;
          threadAssertTest( result == true && "bind(): server restart" );
          //std::cout<<"::::::::: " << result<<"\n"<<std::flush;
          
       // close the child socket
-      threadAssertTest( child_socket->close() && "child Socket::close() failed" );
+      threadAssertTest( child_socket.close().success() && "child Socket::close() failed" );
 
-      // clean up any memory i've made...
-      delete child_socket;
-
-      threadAssertTest( sock2.close() && "restarted server Socket::close() failed" );
-      threadAssertTest( sock1.close() && "server Socket::close failed");
+      threadAssertTest( sock2.close().success() && "restarted server Socket::close() failed" );
+      threadAssertTest( sock1.close().success() && "server Socket::close failed");
    }
    
    // XXX: Fails due to crashing thread (I think it is the connector thread)
@@ -615,10 +614,10 @@ public:
 
       //keep testing until acceptor says finish
       while (mFinishFlag == false) {
-         char  buffer[40];
-         bool  result = 0;
-         char  buffer2[]="Oops!";
-         int   amount_read;
+         char    buffer[40];
+         bool    result = 0;
+         char    buffer2[]="Oops!";
+         ssize_t amount_read, amount_written;
          
          // make a new socket that will connect to port "port"
          vpr::SocketStream connector_socket(vpr::InetAddr::AnyAddr,
@@ -626,11 +625,11 @@ public:
       
          // open socket
          connector_socket.setOpenBlocking();
-         result = connector_socket.open();
+         result = connector_socket.open().success();
          threadAssertTest( result != false && "Socket::open() failed when test blocking" );
 
          // connect to the acceptor
-         result = connector_socket.connect();
+         result = connector_socket.connect().success();
          threadAssertTest( result != false && "Socket::connect() failed when test blocking" );
          
          connector_socket.setNoDelay(true);
@@ -648,22 +647,22 @@ public:
          
          //if the the flag of readn is true, use readn(), otherwise use read().
          if (mReadnFlag == true)
-            amount_read=connector_socket.readn(buffer, 20);
+            connector_socket.readn(buffer, 20, amount_read);
          else
-            amount_read=connector_socket.read(buffer, 20);
+            connector_socket.read(buffer, 20, amount_read);
             
          if (amount_read>=0) {
-            connector_socket.write(buffer, amount_read);
+            connector_socket.write(buffer, amount_read, amount_written);
          }
          else {
-            connector_socket.write(buffer2, sizeof(buffer2));
+            connector_socket.write(buffer2, sizeof(buffer2), amount_written);
          }
          
          while (mStartFlag == true){
             vpr::System::usleep(50);
          }
          
-         result = connector_socket.close();
+         result = connector_socket.close().success();
          threadAssertTest( result != false && "Socket::close() failed when test blocking" );         
       }
 
@@ -675,12 +674,11 @@ public:
    {
       int num_of_times_to_test = 20;
       vpr::Uint16 port = 7001;
-      const int backlog = 5;
       bool  result = 0;
       char  buffer[40];
       char  buffer1[]="Hello, there!";
       char  buffer2[]="Hello";
-      int   amount_read (0);
+      ssize_t amount_read (0), amount_written;
       vpr::InetAddr local_addr;
 
       local_addr.setPort(port);
@@ -690,20 +688,22 @@ public:
       acceptor_socket.setOpenBlocking();
       
       // open socket
-      result = acceptor_socket.open();
+      result = acceptor_socket.open().success();
 
       threadAssertTest( result != false && "Socket::open() failed in blocking test" );
 
-      result = acceptor_socket.bind();
+      result = acceptor_socket.bind().success();
       threadAssertTest( result != false && "Socket::bind() failed in blocking test" );
       
       mFinishFlag = false;
       
       // set the socket to listen
-      result = acceptor_socket.listen( backlog );
+      result = acceptor_socket.listen().success();
       threadAssertTest( result != false && "Socket::listen() failed in blocking test" );
       
       
+      vpr::SocketStream child_socket;
+
       // switch between blocking/nonblocking and read/readn many times...
       for (int xx = 0; xx < num_of_times_to_test; xx++)
       {
@@ -713,8 +713,8 @@ public:
          
          int yy=xx%4;
          
-         vpr::SocketStream* child_socket = acceptor_socket.accept();
-         threadAssertTest( child_socket != NULL && "Socket::accept() failed in blocking test" );
+         result = acceptor_socket.accept(child_socket).success();
+         threadAssertTest( result && "Socket::accept() failed in blocking test" );
          
          mFlagProtectionMutex.acquire();
             if(yy==0 || yy==2)
@@ -729,15 +729,15 @@ public:
                  
          vpr::System::msleep(50);
          
-         child_socket->write(buffer1, sizeof(buffer1));
+         child_socket.write(buffer1, sizeof(buffer1), amount_written);
          
          vpr::System::msleep(5);
          
-         child_socket->write(buffer2, sizeof(buffer2));
+         child_socket.write(buffer2, sizeof(buffer2), amount_written);
          
-         child_socket->enableNonBlocking();
-         amount_read=child_socket->read(buffer, 40);
-         child_socket->enableBlocking();
+         child_socket.enableNonBlocking();
+         child_socket.read(buffer, 40, amount_read);
+         child_socket.enableBlocking();
 
          switch (yy) {
          case 0:
@@ -757,18 +757,15 @@ public:
          mStartFlag=false;
          mFlagProtectionMutex.release();
          
-         result = child_socket->close();
+         result = child_socket.close().success();
          threadAssertTest( result != false && "Socket::close() failed in blocking test" );
-
-         // clean up any memory i've made...
-         delete child_socket;
       }
       
       // close the socket
       mFlagProtectionMutex.acquire();
          mFinishFlag = true;
       mFlagProtectionMutex.release();
-      result = acceptor_socket.close();
+      result = acceptor_socket.close().success();
       threadAssertTest( result != false && "Socket::close() failed" );
    }  
    
@@ -847,14 +844,14 @@ public:
       local_addr.setPort(port);
       vpr::SocketStream*	sock;
       sock = new vpr::SocketStream(local_addr, vpr::InetAddr::AnyAddr);	
-      if ( sock->openServer() ) {
-         vpr::SocketStream* client_sock;
+      if ( sock->openServer().success() ) {
+         vpr::SocketStream client_sock;
          thread_args_t* tArgs;
 
          while ( num<mNumSServer) {
-            client_sock = sock->accept();
+            sock->accept(client_sock);
             tArgs = new thread_args_t;
-            tArgs->mSock=client_sock;
+            tArgs->mSock= new vpr::SocketStream(client_sock);
 
             sServerFunctors[num]=new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::sServerFunc, tArgs);
             sServerFunctors[num]->setArg(tArgs);
@@ -879,14 +876,14 @@ public:
 
       remote_addr.setAddress("localhost", 15432);
       sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr, remote_addr);
-      if ( sock->open() ) {
+      if ( sock->open().success() ) {
          char buffer1[40];
          //char buffer2[] = "What's up?";
-         if ( sock->connect() ) {
-            ssize_t bytes;
-            bytes = sock->read(buffer1, 40);
-         //sock->write(buffer2, sizeof(buffer2));
-            sock->write(buffer1, bytes);
+         if ( sock->connect().success() ) {
+            ssize_t bytes, bytes_written;
+            sock->read(buffer1, 40, bytes);
+         //sock->write(buffer2, sizeof(buffer2), bytes_written);
+            sock->write(buffer1, bytes, bytes_written);
             mItemProtectionMutex.acquire();
             mClientCounter++;
             mItemProtectionMutex.release();
@@ -903,14 +900,14 @@ public:
       _thread_args* tArg=(_thread_args *) arg;
       char buffer1[] = "Hello there!";
       char buffer2[40];
-      ssize_t bytes;
+      ssize_t bytes, bytes_written;
 
       vpr::SocketStream* ss_sock;
       ss_sock=tArg->mSock;
       //send a string to client
-      ss_sock->write(buffer1, sizeof(buffer1));
+      ss_sock->write(buffer1, sizeof(buffer1), bytes_written);
       //receive a string from client
-      bytes=ss_sock->read(buffer2,40);
+      ss_sock->read(buffer2,40, bytes);
       long compareString=strcmp(buffer1,buffer2);
       if (compareString!=0) {
          mServerCheck=1;
@@ -933,9 +930,10 @@ public:
       vpr::SocketStream client_sock(vpr::InetAddr::AnyAddr, remote_addr);
       char buffer[20];
 
-      threadAssertTest(client_sock.open() && "Client socket open failed");
-      threadAssertTest(client_sock.connect() && "Client could not connect");
-      ssize_t bytes = client_sock.readn(buffer, sizeof(buffer));
+      threadAssertTest(client_sock.open().success() && "Client socket open failed");
+      threadAssertTest(client_sock.connect().success() && "Client could not connect");
+      ssize_t bytes;
+      client_sock.readn(buffer, sizeof(buffer), bytes);
       threadAssertTest((bytes == sizeof(buffer)) && "readn didn't read enough!");
       client_sock.close();
    }
@@ -953,9 +951,9 @@ public:
       //          << std::flush; 
       //std::cout <<" Readn Test:\n" << std::flush; 
 
-      assertTest(server_sock.open() && "Server socket open failed");
-      assertTest(server_sock.bind() && "Server socket bind failed");
-      assertTest(server_sock.listen() && "Server socket listen failed");
+      assertTest(server_sock.open().success() && "Server socket open failed");
+      assertTest(server_sock.bind().success() && "Server socket bind failed");
+      assertTest(server_sock.listen().success() && "Server socket listen failed");
 
       // Start the client thread.
       vpr::ThreadMemberFunctor<SocketTest> func =
@@ -964,19 +962,19 @@ public:
       vpr::Thread* client_thread = new vpr::Thread(&func);
       assertTest(client_thread->valid() && "Server could not create client thread");
 
-      vpr::SocketStream* client_sock = server_sock.accept();
-      assertTest(client_sock != NULL && "Server could not accept connection");
+      vpr::SocketStream client_sock;
+      vpr::Status status = server_sock.accept(client_sock);
+      assertTest(status.success() && "Server could not accept connection");
 
       for ( unsigned int i = 0; i < 20; i += pkt_size ) {
           memset((void*) buffer, 0, sizeof(buffer));
           snprintf(buffer, sizeof(buffer), "%04d", i);
 
-          bytes = client_sock->write(buffer, pkt_size);
+          client_sock.write(buffer, pkt_size, bytes);
           assertTest(bytes != -1 && "Server could not write to client");
       }
 
-      client_sock->close();
-      delete client_sock;
+      client_sock.close();
       delete client_thread;
       server_sock.close();
    }
