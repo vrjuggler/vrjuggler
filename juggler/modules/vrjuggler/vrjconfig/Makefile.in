@@ -94,6 +94,8 @@ java_afterbuild:
 
 _clean:
 	$(ANT) clean
+	$(MAKE) -C commoneditors clean
+	$(MAKE) -C customeditors clean
 
 # -----------------------------------------------------------------------------
 # Extra targets.
