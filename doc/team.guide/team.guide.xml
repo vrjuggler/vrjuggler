@@ -8,27 +8,27 @@
       <releaseinfo>2.0.0</releaseinfo>
       <pubdate>$Date$</pubdate>
    </bookinfo>
+   <preface>
+      <title>Welcome</title>
+      <para>Do you want to contribute to a cool project? Want to learn more about VR, cross platform techniques, and system abstractions? This is your guide. This book is for those people who wish to go further with their VR Juggler work by contributing to the project and even becoming full-fledged developers with commit access.</para>
+      <para>This document is different from the VR Juggler 1.0 Team Guide. That document relates only to VR Juggler whereas this covers the Juggler Suite of Tools as a (unified) whole.</para>
+      <section>
+         <title>Required Reading</title>
+         <para>By now you should have read the <emphasis>Getting Started Guide</emphasis> so that you know about environment variables and about compiling VR Juggler applications. It is expected that you already know about compilers and linkers and shells and most everything else developers of UNIX and Windows software deal with on a regular basis.</para>
+      </section>
+      <section>
+         <title>Introduction to the Juggler Development Team</title>
+         <para>To become a developer with commit access on the Juggler opensource project, refer to <xref linkend="get-commit-access-sect"/>.</para>
+         <para>As a member of the Juggler Development Team, you will work on extremely scalable and extensible VR system software, use modern software engineering techiniques such as UML and Design Patterns, and gain exposure within the VR development community. It is your contributions that will run on some of the worlds most powerful VR configurations, as well as smaller single-user PC workstations.</para>
+         <para>We don't require much, but in order to coexist happily, we ask that you please refer <xref linkend="intro-req-reading"/> which lists required background information. We appreciate your effort on the team.</para>
+         <para>Sincerely, The Juggler Development Team</para>
+      </section>
+   </preface>
    <part>
       <title>Introduction</title>
       <chapter>
-         <title>Welcome</title>
-         <para>Do you want to contribute to a cool project? Want to learn more about VR, cross platform techniques, and system abstractions? This is your guide. This book is for those people who wish to go further with their VR Juggler work by contributing to the project and even becoming full-fledged developers with commit access.</para>
-         <para>This document is different from the VR Juggler 1.0 Team Guide. That document relates only to VR Juggler whereas this covers the Juggler Suite of Tools as a (unified) whole.</para>
-         <section>
-            <title>Required Reading</title>
-            <para>By now you should have read the <emphasis>Getting Started Guide</emphasis> so that you know about environment variables and about compiling VR Juggler applications. It is expected that you already know about compilers and linkers and shells and most everything else developers of UNIX and Windows software deal with on a regular basis.</para>
-         </section>
-         <section>
-            <title>Introduction to the Juggler Development Team</title>
-            <para>To become a developer with commit access on the Juggler opensource project, refer to <xref linkend="get-commit-access-sect"/>.</para>
-            <para>As a member of the Juggler Development Team, you will work on extremely scalable and extensible VR system software, use modern software engineering techiniques such as UML and Design Patterns, and gain exposure within the VR development community. It is your contributions that will run on some of the worlds most powerful VR configurations, as well as smaller single-user PC workstations.</para>
-            <para>We don't require much, but in order to coexist happily, we ask that you please refer <xref linkend="intro-req-reading"/> which lists required background information. We appreciate your effort on the team.</para>
-            <para>Sincerely, The Juggler Development Team</para>
-         </section>
-      </chapter>
-      <chapter>
          <title>Background Information</title>
-         <para></para>
+         <para>Before diving into development tasks, we present some background information. This is to help newcomers understand the project and its goals, and it serves to keep existing develoers on track and up to speed.</para>
          <section id="intro-req-reading">
             <title>Required Reading</title>
             <itemizedlist>
