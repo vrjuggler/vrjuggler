@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <sys/types.h>
 
 #include <X11/Intrinsic.h>
 
@@ -38,10 +39,10 @@ vt_next_index(int current_index, int numelems)
 int
 vt_get_index(void *baseofarray, void *thiselem, int sizeof_elem)
 {
-  int base,elem;
+  addr_t base,elem;
 
-  base = (int) baseofarray;
-  elem = (int) thiselem;
+  base = (addr_t) baseofarray;
+  elem = (addr_t) thiselem;
 
   return ((elem-base)/sizeof_elem);
 }
