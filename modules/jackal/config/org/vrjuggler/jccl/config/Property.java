@@ -367,14 +367,20 @@ public class Property {
 	    }
 	    return null;
 	}
-	else try {
-	    return (desc.getEnumValue(st.sval));
-	}
-	catch (NoSuchElementException e) {
-	    VarValue v = createVarValue(-1);
-	    v.set(st.sval);
-	    return v;
-	}
+        else {
+            VarValue v = desc.getEnumValue (st.sval);
+            if (v == null) {
+                v = new VarValue (valtype);
+                try {
+                    v.set (st.sval);
+                }
+                catch (Exception e) {
+                    System.out.println ("Error: " + e.toString());
+                    //e.printStackTrace();
+                }
+            }
+            return v;
+        }
     }
 
 

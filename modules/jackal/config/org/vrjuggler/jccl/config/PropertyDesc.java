@@ -440,6 +440,10 @@ public class PropertyDesc implements Cloneable {
 
 
 
+    /** Maps a string to an enumeration value.
+     *  @return The VarValue which is mapped by val, or null if no such
+     *          mapping exists.
+     */
     public VarValue getEnumValue(String val) {
 	/* returns the value associated with this enum el */
 	DescEnum t;
@@ -452,9 +456,7 @@ public class PropertyDesc implements Cloneable {
 		return v;
 	    }
 	}
-	v = new VarValue (valtype);
-	v.set(val);
-	return v;
+        return null;
     }
 
 
