@@ -152,6 +152,10 @@ void NetworkLine::addMessageToQueue (vpr::sim::MessagePtr msg, msg_queue_t& queu
 #ifdef VPR_DEBUG
    if ( ! queue.empty() )
    {
+      vpr::Interval back_time = queue.back().first;
+      vpr::Interval new_arrive_time = msg->whenArrivesFully();
+      bool ordered = (back_time < new_arrive_time);
+      bool ordered2 = (back_time < new_arrive_time);
       vprASSERT(queue.back().first < msg->whenArrivesFully() && "Message queued out of order");
    }
 #endif
