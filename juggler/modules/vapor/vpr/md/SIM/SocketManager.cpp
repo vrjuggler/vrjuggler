@@ -125,7 +125,7 @@ namespace sim
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                << "vpr::sim::SocketManager: Cannot connect, no one listening on "
                << remoteName << std::endl << vprDEBUG_FLUSH;
-            
+
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "--------- Listening list ---------\n" << vprDEBUG_FLUSH;
             for(listener_map_t::iterator i=mListenerList.begin();
                 i != mListenerList.end(); ++i)
@@ -194,7 +194,7 @@ namespace sim
 
       vprASSERT( handle->isBound() && "Can't unbind and unbound handle");
 
-      vprDEBUG(vprDBG_ALL, 0)
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
            << "Unbinding handle(" << handle << ": << " << handle->getLocalAddr() << ")\n" << vprDEBUG_FLUSH;
 
       // -- Unassign from node
@@ -210,20 +210,18 @@ namespace sim
    {
       vpr::ReturnStatus status;
 
-      vprDEBUG(vprDBG_ALL, 0) <<"SocketManager::listen: Added listner: " << handle->getLocalAddr() << std::endl
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) <<"SocketManager::listen: Added listner: " << handle->getLocalAddr() << std::endl
                                              << vprDEBUG_FLUSH;
       vprASSERT( handle->isBound() && "Can't listen on unbound socket");
       vprASSERT( handle->getType() == vpr::SocketTypes::STREAM && "Trying to listen with not stream socket");
 
       // enter self into list for accepting connections.
       mListenerListMutex.acquire();
-      {         
+      {
          mListenerList[handle->getLocalAddr()] = handle;
-         //std::pair<listener_map_t::iterator, bool> ret_val =
-         //   mListenerList.insert(listener_map_t::value_type( local_addr, handle))        
       }
       mListenerListMutex.release();
-      
+
       vprASSERT( isListening(handle->getLocalAddr()) && "Didn't add listener" );
 
       return status;
@@ -325,16 +323,7 @@ namespace sim
       vpr::sim::NetworkGraph& net_graph =
          vpr::sim::Controller::instance()->getNetworkGraph();
 
-      /*
-      if ( LocalHostIpAddrValue == dest_addr.getAddressValue() )
-      {
-         dest_node = getLocalhostVertex();
-      }
-      else
-      {
-      */
-         status = net_graph.getNodeWithAddr(dest_addr.getAddressValue(), dest_node);
-      //}
+      status = net_graph.getNodeWithAddr(dest_addr.getAddressValue(), dest_node);
 
       if ( status.success() )
       {
@@ -391,14 +380,10 @@ namespace sim
       local_addr = handle->getLocalAddr();
 
       // If any addr, then set it to local host
-      // Case localAddr = InetAddr::Any  ==> "localhost" with random port      
-      //if((local_addr == vpr::InetAddr::AnyAddr) ||
-      //   (local_addr.getAddressValue() == LocalHostIpAddrValue) )
+      // Case localAddr = InetAddr::Any  ==> "localhost" with random port
       if(local_addr == vpr::InetAddr::AnyAddr )
       {
-         //local_addr.setAddress(LocalHostIpAddrValue, 0);
-         //local_addr.setAddress(getLocalhostIpAddrValue(), local_addr.getPort());
-         local_addr.setAddress(LocalHostIpAddrValue, 0);     
+         local_addr.setAddress(LocalHostIpAddrValue, 0);
       }
 
       // Make sure that we know about the node of the given address
@@ -433,7 +418,7 @@ namespace sim
       vprASSERT(status.success());
       handle->setNetworkNode( node_vertex );
 
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
          << "SocketManager::assignToNode(): Assigned node:  local_addr:" << local_addr
          << "   type: " << ((handle->getType()==vpr::SocketTypes::STREAM) ? "STREAM" : "DATAGRAM")
          << "  --> node: " << net_node->getIpAddressString() << std::endl <<  vprDEBUG_FLUSH;
@@ -477,7 +462,7 @@ vpr::ReturnStatus SocketManager::ensureNetworkNodeIsRegistered(const vpr::Uint32
 
    return ret_stat;
 }
-   
+
 
 } // End of sim namespace
 
