@@ -49,7 +49,7 @@
 
 #if defined(VPR_OS_Win32)
 #  include <gadget/Devices/EventWindow/EventWindowWin32.h>
-#elif defined(VPR_OS_Darwin)
+#elif defined(VPR_OS_Darwin) && ! defined(GADGET_USE_X11)
 #  include <gadget/Devices/EventWindow/EventWindowOSX.h>
 #else
 #  include <gadget/Devices/EventWindow/EventWindowXWin.h>
@@ -125,7 +125,7 @@ void DeviceFactory::loadKnownDevices()
          << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n"
          << vprDEBUG_FLUSH;
    }
-#elif defined(VPR_OS_Darwin)
+#elif defined(VPR_OS_Darwin) && ! defined(GADGET_USE_X11)
    DeviceConstructor<EventWindowOSX>* osx_keyboard =
       new DeviceConstructor<EventWindowOSX>(input_mgr);
    if( (NULL == osx_keyboard) )
