@@ -29,12 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package org.vrjuggler.jccl.wizard.panes;
+package org.vrjuggler.tweek.wizard.panes;
 
 import javax.swing.*;
 import java.awt.*;
 
-import org.vrjuggler.jccl.wizard.*;
+import org.vrjuggler.tweek.wizard.*;
 
 /**
  * A pane used to welcome the user to a wizard. This is generally the first

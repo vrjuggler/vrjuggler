@@ -29,15 +29,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package org.vrjuggler.jccl.wizard.builder;
+package org.vrjuggler.tweek.wizard.builder;
 
 import java.io.*;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.tree.*;
 
-import org.vrjuggler.jccl.wizard.*;
-import org.vrjuggler.jccl.wizard.panes.*;
+import org.vrjuggler.tweek.wizard.*;
+import org.vrjuggler.tweek.wizard.panes.*;
 import java.awt.event.*;
 import javax.swing.event.*;
 
