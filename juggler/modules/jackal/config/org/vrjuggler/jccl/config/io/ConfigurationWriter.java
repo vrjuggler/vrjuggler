@@ -81,12 +81,14 @@ public class ConfigurationWriter
          ConfigElement elt = (ConfigElement)itr.next();
          addElement(elt, elements_elt);
       }
+      doc.getRootElement().addContent(elements_elt);
 
       // Write the document out to the stream
       XMLOutputter out = new XMLOutputter();
       out.setTextNormalize(true);
       out.setIndent("   ");
       out.setNewlines(true);
+      out.setLineSeparator(System.getProperty("line.separator"));
       out.output(doc, this);
    }
 
@@ -139,6 +141,7 @@ public class ConfigurationWriter
             // If the property is a simple type, add it as text
             if (prop_def.getType() != ConfigElement.class)
             {
+               System.out.println("   With value '" + prop_value.toString() + "'");
                prop_elt.setText(prop_value.toString());
             }
             // Otherwise, recurse on the embedded element
@@ -152,7 +155,7 @@ public class ConfigurationWriter
       }
    }
 
-   private static final Namespace XSI_NS = Namespace.getNamespace("http://www.w3.org/2001/XMLSchema-instance");
+   private static final Namespace XSI_NS = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
 
    private static final String CONFIGURATION                = "configuration";
    private static final String ELEMENTS                     = "elements";
