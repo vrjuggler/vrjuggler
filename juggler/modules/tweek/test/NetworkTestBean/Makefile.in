@@ -69,6 +69,7 @@ all:
 	$(MAKE) server
 	$(MAKE) java
 	$(MAKE) NetworkTestBean.jar
+	-$(MAKE) install
 
 cxx_idl: $(IDL_CXX_FILES)
 
@@ -83,6 +84,10 @@ server@EXEEXT@: $(OBJS)
 
 NetworkTestBean.jar: $(CLASSES)
 	$(JAR) cvfm $@ $(srcdir)/networktest.MF $(NETWORK_TEST_CLASSES)
+
+install:
+	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/bin/beans
+	cp $(srcdir)/NetworkTestBean.xml $(TWEEK_BASE_DIR)/bin/beans
 
 # Suffix rules for building object files.
 .SUFFIXES: .cpp .@OBJEXT@ .java .class .idl .h
