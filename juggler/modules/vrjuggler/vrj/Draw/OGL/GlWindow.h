@@ -68,11 +68,15 @@ public:
       // XXX: Sync problem on window id value assignment
       mWindowId = getNextWindowId();
       in_stereo = false;
+      border = false;
       window_is_open = false;
       mDirtyContext = true;      // Always dirty when window first created
       mDirtyViewport = true;
 
       mDisplay = NULL;
+
+      window_width = window_height = 0;
+      origin_x = origin_y = 0;
    }
 
    // Cirtual destructor
@@ -199,9 +203,9 @@ public:
    /** Return the origin and size of the current window */
    void getOriginSize(unsigned& o_x, unsigned& o_y, unsigned& width, unsigned& height) const
    {
-      o_x = origin_x;  
+      o_x = origin_x;
       o_y = origin_y;
-      width = window_width; 
+      width = window_width;
       height = window_height;
    }
 
