@@ -632,7 +632,7 @@ case $target_os in
         dnl # somewhat annoying names.
         case ${_sys_name} in
             dnl # Windows NT 4.0.
-            *NT-[[45]].0)
+            *NT-[[45]].*)
                 PLATFORM='WinNT'
                 ;;
             dnl # Windows 95 and 98.
@@ -810,13 +810,22 @@ AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 ac_ext='cpp'
 
-AC_CACHE_CHECK([whether the C++ compiler handles templates properly],
-    [ac_cv_CXX_is_current],
-    [AC_TRY_COMPILE([#include <map> ],
-                    [ std::map<const char*, int> test_map; ],
-                    [ ac_cv_CXX_is_current='yes' ; rm -rf ./ii_files ],
-                    [ ac_cv_CXX_is_current='no' ;
-                      AC_MSG_ERROR([*** The library requires a current C++ compiler]) ])])
+AC_CACHE_CHECK([for C++ template support],
+   [vj_cv_CXX_handles_templates],
+   [AC_TRY_COMPILE([template<class T> class Test {
+public:
+Test() {;}
+};
+template<class T> void f (const Test<T>&){;}],
+                  [
+Test<double> d;
+Test<int> i;
+f(d);
+f(i);
+return 0; ],
+                  [ vj_cv_CXX_handles_templates='yes'
+                    rm -rf ./ii_files ],
+                  [vj_cv_CXX_handles_templates='no'])])
 
 AC_LANG_RESTORE
 
