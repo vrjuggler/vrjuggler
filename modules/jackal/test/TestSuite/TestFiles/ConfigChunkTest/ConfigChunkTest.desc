@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ChunkDescDB>
+  <ChunkDesc token="config-chuck-the-beaver" name="chuck">
+    <help>wood chuckin'</help>
+    <PropertyDesc token="test prop int" type="Int" num="1">
+        <help>discrete beaver</help>
+    </PropertyDesc>
+    <PropertyDesc token="test prop float" type="Float" num="1">
+        <help>variable beaver</help>
+    </PropertyDesc>
+    <PropertyDesc token="test prop string" type="String" num="1">
+        <help>string bikini beaver</help>
+    </PropertyDesc>
+    <PropertyDesc token="test prop multi" type="String" num="1">
+        <help>multi beaver</help>
+    </PropertyDesc>
+  </ChunkDesc>
   <ChunkDesc token="chunk_type_1" name="ChunkType1">
     <help>Chunk Type 1</help>
     <PropertyDesc token="Name" name="Name" type="String" num="1">
