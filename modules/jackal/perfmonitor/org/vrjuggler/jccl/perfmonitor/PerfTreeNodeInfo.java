@@ -25,6 +25,7 @@ public class PerfTreeNodeInfo implements ActionListener {
     public LabeledPerfDataCollector.IndexInfo ii; // null for folders
     protected LabeledPerfDataCollector mCollector;
     protected JComponent mComponent;
+    protected JLabel mValueLabel;
 
     public PerfTreeNodeInfo (String _sublabel, LabeledPerfDataCollector.IndexInfo _ii, LabeledPerfDataCollector col) {
 	sublabel = _sublabel;
@@ -38,8 +39,8 @@ public class PerfTreeNodeInfo implements ActionListener {
 	    JLabel l = new JLabel(_sublabel);
 	    mComponent.add (l);
             mComponent.add (Box.createHorizontalGlue());
-	    l = new JLabel (padFloat(ii.getAverage()/1000.0), JLabel.RIGHT);
-	    mComponent.add (l);
+	    mValueLabel = new JLabel (padFloat(ii.getAverage()/1000.0), JLabel.RIGHT);
+	    mComponent.add (mValueLabel);
 	    JButton b = new LabeledPanelButton (col, ii, "Graph");
 	    b.setActionCommand ("Graph");
 	    b.addActionListener (this);
@@ -75,6 +76,13 @@ public class PerfTreeNodeInfo implements ActionListener {
 
     public LabeledPerfDataCollector getCollector() {
 	return mCollector;
+    }
+
+    public void update() {
+	if (ii != null) {
+	    if (mValueLabel != null)
+		mValueLabel.setText (padFloat(ii.getAverage()/1000.0));
+	}
     }
 
     /** Utility method for various printing routines. */

@@ -9,7 +9,6 @@ import java.awt.event.*;
 public class PanelTreeFolder extends JPanel implements ActionListener {
 
     JPanel mNorth;
-    //Component mWest;
     JComponent mCenter;
     JButton mExpandButton;
     boolean mExpanded;
@@ -49,17 +48,21 @@ public class PanelTreeFolder extends JPanel implements ActionListener {
     }
 
     public void actionPerformed (ActionEvent e) {
-	if (mExpanded) {
-	    mExpanded = false;
-	    remove (mCenter);
+	if (e.getSource() == mExpandButton) {
+	    if (mExpanded) {
+		mExpanded = false;
+		remove (mCenter);
+	    }
+	    else {
+		mExpanded = true;
+		add (mCenter, BorderLayout.CENTER);
+	    }
+	    mCenter.revalidate();
+	    repaint();
 	}
-	else {
-	    mExpanded = true;
-	    add (mCenter, BorderLayout.CENTER);
-	}
-	mCenter.revalidate();
-	repaint();
     }
+
+
 }
 
 
