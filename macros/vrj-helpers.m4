@@ -209,7 +209,7 @@ dnl Variables set in Makefiles found in the application trees.  All variables
 dnl listed are for use only in the Makefile.in's found in that tree unless
 dnl otherwise noted.  They are used in the following way:
 dnl
-dnl     * APP_EXTRA_FLAGS: Extra flags for the compiler and linker.
+dnl     * APP_EXTRA_CFLAGS: Extra flags for the compiler.
 dnl
 dnl Usage
 dnl     VJ_APP_COMPILER(C-compiler, C-flags, C++-compiler, C++-flags, debug-flags, optimization-flags, base-dir, defs, includes, extra-flags)
@@ -235,7 +235,7 @@ AC_DEFUN(VJ_APP_COMPILER,
     APP_OPTIM_CFLAGS="$6"
     APP_DEFS="$8"
     APP_INCLUDES=ifelse([$7], , "$9", "-I\$($7)/include $9")
-    APP_EXTRA_FLAGS="$10"
+    APP_EXTRA_CFLAGS="$10"
 
     AC_SUBST(APP_CC)
     AC_SUBST(APP_CFLAGS)
@@ -253,6 +253,7 @@ dnl Variables set in Makefiles found in the application trees.  All variables
 dnl listed are for use only in the Makefile.in's found in that tree unless
 dnl otherwise noted.  They are used in the following way:
 dnl
+dnl     * APP_EXTRA_LFLAGS: Extra flags for the linker.
 dnl     * APP_BASIC_LIBS: The basic libraries being built in this system.
 dnl     * APP_EXTRA_LIBS_BEGIN: Options used at the beginning of the list of
 dnl       extra libraries.
