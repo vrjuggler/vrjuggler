@@ -16,7 +16,7 @@ namespace networktest
 /**
  */
 class SliderSubjectImpl : public POA_networktest::SliderSubject,
-                          virtual public tweek::SubjectImpl
+                          public tweek::SubjectImpl
 {
 public:
    SliderSubjectImpl (void)
