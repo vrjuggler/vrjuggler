@@ -182,7 +182,7 @@ public:
 
 public:
    /**
-    * Determine if the given jccl::ConfigElement is a MachineSpecific element.
+    * Determine if the given jccl::ConfigElement is a cluster_node element.
     */
    bool recognizeClusterMachineConfig(jccl::ConfigElementPtr element);
 
@@ -195,22 +195,23 @@ public:
     * Configure the given jccl::ConfigElement because it was just added to
     * the active configuration.
     * 
-    * @return true  If we successfully configured the given MachineSpecific element.
-    * @return false If we failed to configure the given MachineSpecific element.
+    * @return true  If we successfully configured the given cluster_node
+    *               element.
+    * @return false If we failed to configure the given cluster_node element.
     */
    bool configAdd(jccl::ConfigElementPtr element);
 
    /**
-    * Return the element type for MachineSpecific element that we configure
+    * Return the element type for cluster_node element that we configure
     * here.
     */
-   static std::string getMachineSpecificElementType();
+   static std::string getClusterNodeElementType();
    
    /**
     * Remove the given jccl::ConfigElement from the active configuration .
     * 
-    * @return true  If we successfully removed the given MachineSpecific element.
-    * @return false If we failed to removed the given MachineSpecific element.
+    * @return true  If we successfully removed the given cluster_node element.
+    * @return false If we failed to removed the given cluster_node element.
     */
    bool configRemove(jccl::ConfigElementPtr element);
    

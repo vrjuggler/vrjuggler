@@ -47,7 +47,7 @@ namespace cluster
 
 bool ClusterDepChecker::depSatisfied(jccl::ConfigElementPtr element)
 {
-   if (element->getID() == ClusterNetwork::getMachineSpecificElementType())
+   if (element->getID() == ClusterNetwork::getClusterNodeElementType())
    {
       // Machine Specific elements should have no dependencies since we are
       // simply inserting the child elements into the pending list. This is
@@ -119,7 +119,7 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigElementPtr element)
       // - All Devices configured
 
       // HERE
-      // - No MachineSpecific elements Pending
+      // - No clsuter_node elements Pending
 
 
       int number_nodes = element->getNum("cluster_node");
@@ -167,7 +167,7 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigElementPtr element)
 // dependencies.
 bool ClusterDepChecker::canHandle(jccl::ConfigElementPtr element)
 {
-   return (element->getID() == ClusterNetwork::getMachineSpecificElementType() ||
+   return (element->getID() == ClusterNetwork::getClusterNodeElementType() ||
            cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(element) /*||
            cluster::ClusterManager::instance()->recognizeClusterManagerConfig(element)*/ );
 }
@@ -177,11 +177,11 @@ void ClusterDepChecker::debugOutDependencies(jccl::ConfigElementPtr element,
 {
    boost::ignore_unused_variable_warning(dbg_lvl);
 
-   if (element->getID() == ClusterNetwork::getMachineSpecificElementType())
+   if (element->getID() == ClusterNetwork::getClusterNodeElementType())
    {
       // Machine Specific element should have no dependencies since we are
       // simply inserting the child elements into the pending list.
-      //vprDEBUG(vprDBG_ALL,dbg_lvl) << "MachineSpecific elements have NO Deps!!!\n" << vprDEBUG_FLUSH;
+      //vprDEBUG(vprDBG_ALL,dbg_lvl) << "clsuter_node elements have NO Deps!!!\n" << vprDEBUG_FLUSH;
    }
    else if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(element))
    {
