@@ -30,12 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Group manager for vj input devices and proxies
-//
-////////////////////////////////////////////////////////////////////////////
 #ifndef GADGET_INPUT_MANAGER_H
 #define GADGET_INPUT_MANAGER_H
 
@@ -100,9 +94,10 @@ public:
    friend GADGET_API(std::ostream&) operator<<(std::ostream& out,
                                                InputManager& iMgr);
 
- //---------------------------//
- //      CONFIG               //
- //---------------------------//
+      //------------------------//
+      //       CONFIG API       //
+      //------------------------//
+   
    /**
     * Adds the element to the configuration.
     * @pre configCanHandle(element) == true
@@ -129,7 +124,6 @@ public:
 
    jccl::ConfigElementPtr getDisplaySystemElement();
 
-// MOVE FOR RIM's USE private:
    /**
     * Loads the device for the given element.
     * @return true if the device was configured and added.
@@ -214,9 +208,9 @@ public:
    */
    bool removeDevice(const Input* devPtr);
 
-   /*********************************************************
-    *          PROXIES                                      *
-    *********************************************************/
+   // ------------------------------- //
+   //          PROXIES API            //
+   // ------------------------------- //
 public:
 
    /**
@@ -258,11 +252,13 @@ protected:
    tDevTableType                        mDevTable;
    std::map<std::string, Proxy*>        mProxyTable;    /**< list of proxies in the system */
 
-   /** List of alias names for proxies.
-   * The mProxyAlias table serves as a secondary lookup for proxies.  ie. if
-   * the proxy name is not found in mProxyTable, then search mProxyAliases
-   * for it.
-   */
+   /** 
+    * List of alias names for proxies.
+    * 
+    * The mProxyAlias table serves as a secondary lookup for proxies.  ie. if
+    * the proxy name is not found in mProxyTable, then search mProxyAliases
+    * for it.
+    */
    std::map<std::string, std::string>   mProxyAliases;
 
    jccl::ConfigElementPtr mDisplaySystemElement; /**< Config element for the displaySystem */
