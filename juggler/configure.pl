@@ -252,7 +252,10 @@ sub loadDefaultArgs ($)
             s/^\s+//;
             s/\s+$//;
             next if /^$/;   # Just to be safe...
-            push(@ARGV, "$_");
+            
+            # Only add the argument if it is not already on the command line.
+            m/^(--[^=]+)/;
+            push(@ARGV, "$_") unless grep(/$1/, @ARGV);
          }
       }
    }
