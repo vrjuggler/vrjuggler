@@ -1413,6 +1413,7 @@ dnl # Variables set in Makefiles found in the test tree.  All variables
 dnl # listed are for use only in the Makefile.in's found in that tree unless
 dnl # otherwise noted.  They are used in the following way:
 dnl #
+dnl #     * TEST_EXTRA_FLAGS: Extra flags for the compiler and linker.
 dnl #     * TEST_VJ_LIBS_BASIC: The basic VR Juggler library.
 dnl #     * TEST_VJ_LIBS_BASIC_INST: Same as the above but is for installed
 dnl #       Makefiles.
@@ -1428,6 +1429,8 @@ dnl #       the OpenGL API.
 dnl #     * TEST_VJ_LIBS_PF: The Performer libraries needed for compiling
 dnl #       with the Performer API.
 dnl #
+TEST_EXTRA_FLAGS="${_EXTRA_FLAGS}"
+
 if test "$OS_TYPE" = "UNIX" ; then
     if test "$PLATFORM" = "IRIX" ; then
         TEST_VJ_LIBS_BASIC="-B static -L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
@@ -1540,6 +1543,7 @@ AC_SUBST(SHMEM_SYS)
 AC_SUBST(MUTEX_SYS)
 AC_SUBST(THREAD_SYS)
 
+AC_SUBST(TEST_EXTRA_FLAGS)
 AC_SUBST(TEST_VJ_LIBS_BASIC)
 AC_SUBST(TEST_VJ_LIBS_BASIC_INST)
 AC_SUBST(TEST_VJ_LIBS_GL)
