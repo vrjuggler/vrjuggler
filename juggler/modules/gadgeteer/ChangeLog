@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-01-2004 patrickh    Fixed MotionStar crashing bugs on Windows and array
+            aronb       initialization problems in gadget::EventWindow on all
+                        platforms.
+                        NEW VERSION: 0.14.3
 Mar-02-2004 aronb       ClusterPlugins are now dynamically loaded in a manner 
                         more like device drivers.
 Feb-05-2004 patrickh    gadget::DigitalProxy::getData() now returns a
