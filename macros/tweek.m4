@@ -160,21 +160,26 @@ AC_DEFUN(TWEEK_PATH_CXX,
 
          if test "x$tweek_version_okay" = "xyes" ; then
             TWEEK_CXXFLAGS=`$TWEEK_CONFIG $tweek_config_args --cxxflags $ABI`
-            TWEEK_CXXFLAGS_MIN=`$TWEEK_CONFIG $tweek_config_args --cxxflags $ABI --min`
             TWEEK_EXTRA_LIBS_CC=`$TWEEK_CONFIG $tweek_config_args --extra-libs $ABI`
             TWEEK_EXTRA_LIBS_LD=`$TWEEK_CONFIG $tweek_config_args --extra-libs $ABI --linker`
-            TWEEK_LIBS_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker` $TWEEK_EXTRA_LIBS_LD"
-            TWEEK_LIBS_LD_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --min` $TWEEK_EXTRA_LIBS_LD"
-            TWEEK_LIBS_STATIC_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static` $TWEEK_EXTRA_LIBS_LD"
-            TWEEK_LIBS_STATIC_LD_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static --min` $TWEEK_EXTRA_LIBS_LD"
             TWEEK_LIBS_CC="`$TWEEK_CONFIG $tweek_config_args --libs $ABI` $TWEEK_EXTRA_LIBS_CC"
-            TWEEK_LIBS_CC_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --min` $TWEEK_EXTRA_LIBS_CC"
+            TWEEK_LIBS_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker` $TWEEK_EXTRA_LIBS_LD"
             TWEEK_LIBS_STATIC_CC="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static` $TWEEK_EXTRA_LIBS_CC"
-            TWEEK_LIBS_STATIC_CC_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static --min` $TWEEK_EXTRA_LIBS_CC"
+            TWEEK_LIBS_STATIC_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static` $TWEEK_EXTRA_LIBS_LD"
+
             TWEEK_CXX_IDL="`$TWEEK_CONFIG $tweek_config_args --idl cxx`"
             TWEEK_CXX_IDL_OPTS="`$TWEEK_CONFIG $tweek_config_args --idlflags cxx`"
             TWEEK_CXX_IDL_GENDIR_OPT="`$TWEEK_CONFIG $tweek_config_args --idlgendir cxx`"
             TWEEK_CXX_IDL_INCFLAG="`$TWEEK_CONFIG $tweek_config_args --idlincflag cxx`"
+
+            TWEEK_CXXFLAGS_MIN=`$TWEEK_CONFIG $tweek_config_args --cxxflags $ABI --min`
+            TWEEK_EXTRA_LIBS_CC_MIN=`$TWEEK_CONFIG $tweek_config_args --extra-libs $ABI --min`
+            TWEEK_EXTRA_LIBS_LD_MIN=`$TWEEK_CONFIG $tweek_config_args --extra-libs $ABI --linker --min`
+            TWEEK_LIBS_CC_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --min` $TWEEK_EXTRA_LIBS_CC_MIN"
+            TWEEK_LIBS_LD_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --min` $TWEEK_EXTRA_LIBS_LD_MIN"
+            TWEEK_LIBS_LD_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --min` $TWEEK_EXTRA_LIBS_LD_MIN"
+            TWEEK_LIBS_STATIC_CC_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static --min` $TWEEK_EXTRA_LIBS_CC_MIN"
+            TWEEK_LIBS_STATIC_LD_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static --min` $TWEEK_EXTRA_LIBS_LD_MIN"
 
             ifelse([$2], , :, [$2])
          fi
@@ -185,19 +190,21 @@ AC_DEFUN(TWEEK_PATH_CXX,
    fi
 
    AC_SUBST([TWEEK_CXXFLAGS])
-   AC_SUBST([TWEEK_CXXFLAGS_MIN])
-   AC_SUBST([TWEEK_LIBS_LD])
-   AC_SUBST([TWEEK_LIBS_LD_MIN])
-   AC_SUBST([TWEEK_LIBS_STATIC_LD])
-   AC_SUBST([TWEEK_LIBS_STATIC_LD_MIN])
    AC_SUBST([TWEEK_LIBS_CC])
-   AC_SUBST([TWEEK_LIBS_CC_MIN])
+   AC_SUBST([TWEEK_LIBS_LD])
+   AC_SUBST([TWEEK_LIBS_STATIC_LD])
    AC_SUBST([TWEEK_LIBS_STATIC_CC])
-   AC_SUBST([TWEEK_LIBS_STATIC_CC_MIN])
+
    AC_SUBST([TWEEK_CXX_IDL])
    AC_SUBST([TWEEK_CXX_IDL_OPTS])
    AC_SUBST([TWEEK_CXX_IDL_GENDIR_OPT])
    AC_SUBST([TWEEK_CXX_IDL_INCFLAG])
+
+   AC_SUBST([TWEEK_CXXFLAGS_MIN])
+   AC_SUBST([TWEEK_LIBS_CC_MIN])
+   AC_SUBST([TWEEK_LIBS_LD_MIN])
+   AC_SUBST([TWEEK_LIBS_STATIC_CC_MIN])
+   AC_SUBST([TWEEK_LIBS_STATIC_LD_MIN])
 ])
 
 dnl ---------------------------------------------------------------------------
