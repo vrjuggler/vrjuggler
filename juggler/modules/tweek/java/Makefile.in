@@ -113,6 +113,10 @@ include $(MKPATH)/dpp.obj.mk
 # Extra targets.
 # -----------------------------------------------------------------------------
 jars: $(JARS) $(addsuffix .jar, $(BEANS))
+ifdef GLOBAL_BUILD
+	@$(MKINSTALLDIRS) $(top_srcdir)/bin
+	cp $(JARS) $(addsuffix .jar, $(BEANS)) $(top_srcdir)/bin
+endif
 
 Observer.java: Observer.idl
 	$(JAVA_IDL) $(JAVA_IDL_OPTS) -fserver $(JAVA_IDL_INCLUDES) $<
@@ -211,5 +215,8 @@ CLEAN_FILES	+= $(JARS) $(TWEEK_CLASSES) $(BEANS_CLASSES)		\
                    $(VIEWERS_CLASSES)
 CLEAN_DIRS	+= tweek $(srcdir)/tweek
 
+ifdef GLOBAL_BUILD
+    CLEAN_DIRS	+= $(top_srcdir)/bin
+endif
 
 include Makefile.inc
