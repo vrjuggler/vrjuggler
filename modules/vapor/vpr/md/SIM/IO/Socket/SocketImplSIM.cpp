@@ -46,6 +46,7 @@
 
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
+#include <vpr/md/SIM/Controller.h>
 #include <vpr/md/SIM/SocketManager.h>
 #include <vpr/md/SIM/IO/Socket/SocketImplSIM.h>
 
@@ -66,7 +67,7 @@ vpr::ReturnStatus SocketImplSIM::close ()
       mPeer = NULL;
    }
 
-   status = vpr::sim::SocketManager::instance()->unbind(this);
+   status = vpr::sim::Controller::instance()->getSocketManager().unbind(this);
    mOpen  = false;
    mBound = false;
 
@@ -79,16 +80,16 @@ vpr::ReturnStatus SocketImplSIM::bind ()
 
    if ( mLocalAddr.getPort() == 0 )
    {
-      status = vpr::sim::SocketManager::instance()->bindUnusedPort(this,
+      status = vpr::sim::Controller::instance()->getSocketManager().bindUnusedPort(this,
                                                                    mLocalAddr);
       vprASSERT(status.success() && "Failed to assign port number to socket");
    }
 
-   status = vpr::sim::SocketManager::instance()->assignToNode(this,
+   status = vpr::sim::Controller::instance()->getSocketManager().assignToNode(this,
                                                               mLocalAddr);
    vprASSERT(status.success() && "Failed to assign socket to a node");
 
-   status = vpr::sim::SocketManager::instance()->bind(this, mLocalAddr);
+   status = vpr::sim::Controller::instance()->getSocketManager().bind(this, mLocalAddr);
    mBound = status.success();
 
    return status;
@@ -103,17 +104,17 @@ vpr::ReturnStatus SocketImplSIM::connect (vpr::Interval timeout)
    {
       if ( mLocalAddr.getPort() == 0 )
       {
-         status = vpr::sim::SocketManager::instance()->bindUnusedPort(this,
+         status = vpr::sim::Controller::instance()->getSocketManager().bindUnusedPort(this,
                                                                       mLocalAddr);
          vprASSERT(status.success() && "Failed to assign port number to socket");
       }
 
-      status = vpr::sim::SocketManager::instance()->assignToNode(this,
+      status = vpr::sim::Controller::instance()->getSocketManager().assignToNode(this,
                                                                  mLocalAddr);
    }
 
    vprASSERT(mNodeAssigned && "A node-less socket cannot connect");
-   status = vpr::sim::SocketManager::instance()->connect(this, &mPeer,
+   status = vpr::sim::Controller::instance()->getSocketManager().connect(this, &mPeer,
                                                          mRemoteAddr,
                                                          mPathToPeer, timeout);
    mBound = mConnected = status.success();
@@ -198,7 +199,7 @@ vpr::ReturnStatus SocketImplSIM::write_i (const void* buffer,
 
       vpr::sim::MessagePtr msg(new vpr::sim::Message(buffer, length));
       msg->setPath(mPathToPeer, this, mPeer);
-      vpr::sim::SocketManager::instance()->sendMessage(msg);
+      vpr::sim::Controller::instance()->getSocketManager().sendMessage(msg);
    }
 
    return status;
@@ -292,7 +293,7 @@ SocketImplSIM::SocketImplSIM (const vpr::SocketTypes::Type sock_type)
 {
    /* Do nothing. */ ;
 //   vpr::ReturnStatus status;
-//   status = vpr::sim::SocketManager::instance()->assignToNode(this);
+//   status = vpr::sim::Controller::instance()->getSocketManager().assignToNode(this);
 //
 //   vprASSERT(status.success() && "Failed to assign new socket to a node");
 }
@@ -306,7 +307,7 @@ SocketImplSIM::SocketImplSIM (const vpr::InetAddr& local_addr,
 {
    /* Do nothing. */ ;
 //   vpr::ReturnStatus status;
-//   status = vpr::sim::SocketManager::instance()->assignToNode(this, local_addr);
+//   status = vpr::sim::Controller::instance()->getSocketManager().assignToNode(this, local_addr);
 //
 //   vprASSERT(status.success() && "Failed to assign new socket to a node");
 }

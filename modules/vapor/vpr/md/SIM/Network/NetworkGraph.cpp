@@ -83,7 +83,7 @@ vpr::ReturnStatus NetworkGraph::construct (const std::string& path)
       for ( vpr::Uint32 i = 0; i < node_count; i++ )
       {
          vpr::Uint32 index;
-         vpr::Uint8 node_type;
+         vpr::Uint16 node_type;
          std::string node_ip;
 
          input_file >> index >> node_type >> node_ip;
@@ -111,16 +111,24 @@ vpr::ReturnStatus NetworkGraph::construct (const std::string& path)
          double length, bw;
          vpr::Uint32 from_node, to_node, delay;
          std::string net_type, net_ip;
-         vpr::Uint8 net_id;
+         vpr::Uint16 net_id;
 
          input_file >> from_node >> to_node >> length >> delay >> bw
                     >> net_type >> net_id >> net_ip;
 
+         // This is here mainly for debugging this clunky "parser".
+         vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+            << "Loading edge #" << i << ": (" << from_node << " --> "
+            << to_node << ", " << length << " miles, " << delay << " us, "
+            << bw << " Mbps, type: " << net_type << ", ID: " << net_id << ", "
+            << net_ip << ")\n" << vprDEBUG_FLUSH;
+
          // Now add the edge to the graph.
          NetworkLine line(length, bw, delay, net_type, net_id, net_ip);
-         tie(new_edge, added) = boost::add_edge(vertex_map[from_node],
-                                                vertex_map[to_node],
-                                                LineProperty(line), mGraph);
+         boost::tie(new_edge, added) = boost::add_edge(vertex_map[from_node],
+                                                       vertex_map[to_node],
+                                                       LineProperty(line),
+                                                       mGraph);
 
          if ( added )
          {

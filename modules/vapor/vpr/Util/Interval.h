@@ -45,10 +45,12 @@
 #include <vpr/vprConfig.h>
 #include <vpr/Util/Assert.h>
 
-#if defined(VPR_USE_NSPR)
-#  include <prinrval.h>
-#else
-#  include <vpr/System.h>
+#ifndef VPR_SIMULATOR
+#  if defined(VPR_USE_NSPR)
+#     include <prinrval.h>
+#  else
+#     include <vpr/System.h>
+#  endif
 #endif
 
 namespace vpr
@@ -138,7 +140,10 @@ public:
     * Set the interval to the current time.  This can them be used to compute a time
     * interval by subtracting two intervals from each other.
     */
-   inline void setNow();
+#ifndef VPR_SIMULATOR
+   inline
+#endif
+   void setNow();
 
    void sec(const vpr::Uint32 num)
    { set(num, Interval::Sec); }
@@ -181,6 +186,11 @@ public:
       return ( (mTensOfUsecs+(0xffffffffUL/2)) < (r.mTensOfUsecs+(0xffffffffUL/2)) );
    }
 
+   bool operator<= (const Interval& r) const
+   {
+      return ( (mTensOfUsecs+(0xffffffffUL/2)) <= (r.mTensOfUsecs+(0xffffffffUL/2)) );
+   }
+
    Interval& operator+=(const Interval& r)
    { mTensOfUsecs += r.mTensOfUsecs; return *this; }
 
@@ -214,6 +224,12 @@ private:
    vpr::Uint32 mTensOfUsecs;
 }; // class Interval
 
+// In the non-simulator case, we want setNow() to be fast, so it should be
+// inlined.  In the simulator case, we cannot inline it due to circular
+// include problems (vpr::sim::Controller needs vpr::Interval, and
+// vpr::Interval needs vpr::sim::Controller's vpr::sim::Clock instance).  Thus,
+// the simulator version of setNow() is in Interval.cpp.
+#ifndef VPR_SIMULATOR
 inline void Interval::setNow()
 {
 #if defined(VPR_USE_NSPR)
@@ -231,9 +247,9 @@ inline void Interval::setNow()
    mTensOfUsecs = (cur_time.tv_usec + (1000000 * cur_time.tv_sec)) / 10;
 #endif
 }
+#endif /* ifndef VPR_SIMULATOR */
 
 }; // namespace vpr
 
 
 #endif
-

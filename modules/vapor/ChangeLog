@@ -1,5 +1,10 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-12-10 patrickh The simulation controller is now a thread-specific
+                    singleton with a clock.  The clock is used for keeping
+                    track of time in the simulation.  The Socket Manager is no
+                    longer a singleton so that there may be one associated with
+                    each simulation controller instance.
 2001-12-09 patrickh Added socket/network simulator code.  This can be
                     compiled instead of "real" sockets using the new
                     --enable-simuatlor configure option.

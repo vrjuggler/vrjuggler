@@ -47,9 +47,13 @@
 #include <queue>
 #include <utility>
 #include <map>
-#include <vpr/vpr.h>
-#include <vpr/Util/Interval.h>
+#include <vpr/vprTypes.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/Guard.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/Thread/TSObjectProxy.h>
 
+#include <vpr/md/SIM/Clock.h>
 #include <vpr/md/SIM/SocketManager.h>
 #include <vpr/md/SIM/Network/NetworkGraph.h>
 
@@ -57,12 +61,18 @@
 namespace vpr
 {
 
+class Interval;
+
 namespace sim
 {
 
 /**
  * Socket simulation controller.  This is used to step through a simulation
- * being controlled by the Sim Socket Manager.
+ * being controlled by the Sim Socket Manager.  This class is a thread-specific
+ * singleton so that each running thread can have its own unique instance.  It
+ * can also be used as a traditional global singleton.  To use it as a
+ * thread-specific singleton, call setInstance() as the first step of a newly
+ * spawned thread.  This is crucial to its functionality.
  */
 class VPR_CLASS_API Controller
 {
@@ -73,11 +83,7 @@ public:
     * @post An instance of the Sim Socket Manager is retrieved, and the
     *       simulation state is set to not started.
     */
-   Controller (void)
-      : m_started(false)
-   {
-      vpr::sim::SocketManager::instance()->setController(this);
-   }
+   Controller(void);
 
    /**
     * Resets the Sim Socket Manager's clock to 0.
@@ -87,7 +93,41 @@ public:
     */
    ~Controller (void)
    {
-      vpr::sim::SocketManager::instance()->setTime(0);
+      /* Do nothing. */ ;
+   }
+
+   static void setInstance (Controller* c)
+   {
+      mInstance->setObject(c);
+   }
+
+   static Controller* instance (void)
+   {
+      // WARNING! race condition possibility, creation of static vars
+      // are not thread safe.  This is only an issue when creating
+      // your first thread, since it uses a singleton thread manager,
+      // the two threads might both try to call instance at the same time
+      // which then the creation of the following mutex would not be certain.
+      static vpr::Mutex singleton_lock;
+
+      if ( mInstance->getObject() == NULL )
+      {
+         vpr::Guard<vpr::Mutex> guard(singleton_lock);
+
+         if ( mPrimordialInstance == NULL )
+         {
+            mPrimordialInstance = new Controller;
+         }
+
+         if ( mInstance->getObject() == NULL )
+         {
+            mInstance->setObject(mPrimordialInstance);
+         }
+
+         vprASSERT(mInstance->getObject() != NULL && "No instance defined");
+      }
+
+      return mInstance->getObject();
    }
 
    vpr::ReturnStatus constructNetwork(const std::string& graph_file);
@@ -103,7 +143,6 @@ public:
    void start (void)
    {
       vprASSERT((mGraph.isValid() && ! m_started) && "Simulation already running!");
-      vpr::sim::SocketManager::instance()->setTime(0);
       m_started = true;
    }
 
@@ -118,6 +157,7 @@ public:
     *                     will occur.  This is an optional, and it defaults
     *                     to 1 (take only a single step).
     */
+/*
    void step (vpr::Uint32 max_interval = 1)
    {
       if ( ! m_started )
@@ -125,8 +165,9 @@ public:
          start();
       }
 
-      vpr::sim::SocketManager::instance()->step(max_interval);
+      vpr::sim::Controller::instance()->getSocketManager().step(max_interval);
    }
+*/
 
    /**
     * Queries the running state of this socket simulation.  The simulation is
@@ -137,27 +178,66 @@ public:
     */
    bool isRunning (void)
    {
-      return m_started && vpr::sim::SocketManager::instance()->hasActiveSockets();
+      return m_started && mSocketManager.hasActiveSockets();
    }
 
    /**
     * Adds an event scheduled to occur at the given time to the queue of
     * upcoming events.
     */
-   void addEvent (const vpr::Interval& event_time,
-                  const NetworkGraph::net_edge_t edge)
-   {
-      mEvents.insert(std::pair<vpr::Interval, NetworkGraph::net_edge_t>(event_time, edge));
-   }
+   void addEvent(const vpr::Interval& event_time,
+                 const NetworkGraph::net_edge_t edge);
 
    void processNextEvent(void);
+
+   const vpr::sim::Clock& getClock (void) const
+   {
+      return mClock;
+   }
+
+   vpr::sim::SocketManager& getSocketManager (void)
+   {
+      return mSocketManager;
+   }
+
+   vpr::sim::NetworkGraph& getNetworkGraph (void)
+   {
+      return mGraph;
+   }
 
 private:
    void moveMessage(vpr::sim::MessagePtr, const vpr::Interval& cur_time);
 
+   class ControllerTS
+   {
+   public:
+      ControllerTS (void) : mObj(NULL)
+      {
+         /* Do nothing. */ ;
+      }
+
+      Controller* getObject (void) const
+      {
+         return mObj;
+      }
+
+      void setObject (Controller* c)
+      {
+         mObj = c;
+      }
+
+   private:
+      Controller* mObj;
+   };
+
+   static Controller* mPrimordialInstance;
+   static vpr::TSObjectProxy<ControllerTS> mInstance;
+
    bool m_started; /**< Flag telling the running state of the simulation */
 
-   vpr::sim::NetworkGraph mGraph;
+   vpr::sim::Clock         mClock;
+   vpr::sim::SocketManager mSocketManager;
+   vpr::sim::NetworkGraph  mGraph;
 
    // This map of intervals to events is always sorted so that we can
    // iterate over it in increasing order of event times.
