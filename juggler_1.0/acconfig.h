@@ -73,6 +73,14 @@
 #undef VJ_OS_RELEASE_MAJOR
 #undef VJ_OS_RELEASE_MINOR
 
+/* Define to unique values used for defining VJ_PERFORMANCE. */
+#undef VJ_PERF_NONE
+#undef VJ_PERF_SGI
+#undef VJ_PERF_POSIX
+
+/* Define to one of the above values to enable performance testing. */
+#undef VJ_PERFORMANCE
+
 /* Define to `unsigned int' if the u_int type is not available. */
 #undef u_int
 
