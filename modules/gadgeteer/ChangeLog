@@ -1,5 +1,9 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jan-21-2002 allenb    Fixed various bugs associated with the SampleBuffer
+                      conversion.
+Jan-18-2002 allenb    Converted all input to use SampleBuffer to track
+                      data history and allow for filtering.
 Oct-23-2001 allenb    Converted InputManager to a singleton
 Oct-23-2001 ALL       First successful compile of the new system
 Oct-16-2001           ChangeLog started
