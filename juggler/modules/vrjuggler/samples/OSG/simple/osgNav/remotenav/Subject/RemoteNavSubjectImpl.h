@@ -35,11 +35,16 @@ public:
                        CORBA::Float& roll)
    {
       gmtl::Matrix44f pos = mNavigater->getCurPos();
-      pitch = gmtl::makeXRot(pos);
-      heading = gmtl::makeYRot(pos);
-      roll = gmtl::makeZRot(pos);
+      gmtl::EulerAngleXYZf euler;
+      gmtl::set(euler,pos);
+      pitch = euler[0];
+      heading = euler[1];
+      roll = euler[2];
+      //pitch = gmtl::makeXRot(pos);
+      //heading = gmtl::makeYRot(pos);
+      //roll = gmtl::makeZRot(pos);
    }
-   
+
    void setOrientation(CORBA::Float pitch, CORBA::Float heading,
                        CORBA::Float roll)
    {
@@ -52,9 +57,9 @@ public:
    void setVelocity(CORBA::Float xDelta, CORBA::Float yDelta,
                     CORBA::Float zDelta)
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Getting Trans Vel: " 
-                        << "X: " << xDelta 
-                        << "Y: " << yDelta 
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Getting Trans Vel: "
+                        << "X: " << xDelta
+                        << "Y: " << yDelta
                         << "Z: " << zDelta << std::endl << vprDEBUG_FLUSH;
       mNavigater->setVelocity(gmtl::Vec3f(xDelta, yDelta, zDelta));
    }
@@ -62,12 +67,12 @@ public:
    void setRotationalVelocity(CORBA::Float pitchDelta,
                               CORBA::Float headingDelta, CORBA::Float rollDelta)
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Getting Rotation Vel: " 
-                        << "X: " << pitchDelta 
-                        << "Y: " << headingDelta 
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Getting Rotation Vel: "
+                        << "X: " << pitchDelta
+                        << "Y: " << headingDelta
                         << "Z: " << rollDelta << std::endl << vprDEBUG_FLUSH;
       gmtl::EulerAngleXYZf euler( pitchDelta, headingDelta, rollDelta );
-      gmtl::Matrix44f real = gmtl::makeRot<gmtl::Matrix44f>( euler ); 
+      gmtl::Matrix44f real = gmtl::makeRot<gmtl::Matrix44f>( euler );
       mNavigater->setRotationalVelocity(real);
    }
 
