@@ -366,6 +366,76 @@ public class ConfigToolbar
    }
 
    /**
+    * Programmatically executes an open action on configuration files
+    * passed on the command line.
+    */
+   public boolean doOpenCmdArgs(ConfigContext ctx)
+   {
+      try
+      {
+         EnvironmentServiceProxy env_service = new EnvironmentServiceProxy();
+         
+         String[] args = env_service.getCommandLineArgs();
+         if (null == args)
+         {
+            return false;
+         }
+         for (int i = 0 ; i < args.length ; ++i)
+         {
+            // Check if this part of the path is a valid directory we can read
+            String file_name = args[i];
+            File file = new File(file_name);
+            if (file.exists() && file.isFile() && file.canRead() && file_name.endsWith(".jconf"))
+            {
+               System.out.println("Found configuration file in args: " + file);
+
+               ConfigBroker broker = new ConfigBrokerProxy();
+
+               // We want to automatically follow include directives. Keep track of
+               // all the URLs on a stack and read them one at a time in the order
+               // that we come across them
+               Stack urls = new Stack();
+               urls.push(file);
+               while (! urls.isEmpty())
+               {
+                  // Expand env vars in the URL
+                  File res_file = (File)urls.pop();
+                  String res_name = expandEnvVars(res_file.getAbsolutePath());
+                  System.out.println("Opening included resource: "+res_name);
+
+                  FileDataSource data_source = FileDataSource.open(res_name, getBroker().getRepository());
+                  broker.add(res_name, data_source);
+                  ctx.add(res_name);
+
+                  // Look through the elements in the newly loaded file and see if
+                  // any of them are include directives
+                  java.util.List includes = data_source.getIncludes();
+                  for (Iterator itr = includes.iterator(); itr.hasNext(); )
+                  {
+                     // Make sure the file reference it created relative to the
+                     // current file
+                     urls.push(new File(res_file.getParentFile().getAbsolutePath(),
+                                        (String)itr.next()));
+                  }
+               }
+            }
+         }
+         setConfigContext(ctx);
+         fireAction("Open");
+         return true;
+      }
+      catch(Exception ex)
+      {
+         System.out.println(ex);
+         ex.printStackTrace();
+      }
+
+      return false;
+   }
+
+
+
+   /**
     * Adds a RTRCDataSource into the given context.
     */
    public boolean doRTRC(ConfigContext ctx)
