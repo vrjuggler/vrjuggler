@@ -308,21 +308,7 @@ AC_CHECK_HEADERS(fcntl.h strings.h sys/time.h unistd.h)
 # Checks for typedefs, structures, and compiler characteristics.
 # -----------------------------------------------------------------------------
 AC_TYPE_SIZE_T
-
-# The following checks for availability of the socklen_t type.  Since it is
-# supposed to be defined in sys/socket.h, the usual AC_CHECK_TYPE method will
-# not work.
-AC_CACHE_CHECK(for socklen_t, ac_cv_has_socklen_t,
-    AC_TRY_COMPILE([#include <sys/types.h>
-                    #include<sys/socket.h> ],
-                   [ socklen_t var; ],
-                   ac_cv_has_socklen_t='yes',
-                   ac_cv_has_socklen_t='no'))
-
-if test "x$ac_cv_has_socklen_t" = "xno" ; then
-    AC_DEFINE(socklen_t, int)
-fi
-
+DPP_TYPE_SOCKLEN_T
 #DPP_CHECK_TYPE_POSIX
 
 # -----------------------------------------------------------------------------
