@@ -36,6 +36,13 @@ public:
    {
       //myThread = NULL; -- Should be done in base constructore
       oldMouseX = 0; oldMouseY = 0;
+
+      // -1 is used to indicate that these are not grabbed.  A value of
+      // GrabSuccess (returned by XGrab{Pointer,Keyboard} upon successful
+      // grabbing) is used to indicate that they are grabbed.  BadValue might
+      // be a better choice for this.
+      m_keyboard_grabbed = -1;
+      m_pointer_grabbed = -1;
    }
    ~vjXWinKeyboard() { StopSampling();}
 
@@ -94,6 +101,12 @@ private:
    /* Keyboard state holders */
    int m_keys[256];     // The keyboard state during an UpdateData, without KeyUp events included
    int m_realkeys[256]; // The real keyboard state, all events processed
+
+   /*
+    * State holders for whether or not the keyboard and/or mouse are grabbed.
+    */
+   int m_keyboard_grabbed;	// The keyboard grab state
+   int m_pointer_grabbed;	// The mouse pointer grab state
 
    float m_mouse_sensitivity;
    int   oldMouseX, oldMouseY;
