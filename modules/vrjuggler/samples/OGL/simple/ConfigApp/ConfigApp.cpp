@@ -162,8 +162,8 @@ void ConfigApp::draw()
 
    // Draw the surface.
    glPushMatrix();
-      const GLfloat mat_ambient[]   = { 0.7, 0.7, 0.7, 1.0 };
-      const GLfloat mat_diffuse[]   = { 1.0, 0.5, 0.8, 1.0 };
+      const GLfloat mat_ambient[]   = { 0.7f, 0.7f, 0.7f, 1.0f };
+      const GLfloat mat_diffuse[]   = { 1.0f, 0.5f, 0.8f, 1.0f };
       const GLfloat mat_specular[]  = { 1.0, 1.0, 1.0, 1.0 };
       const GLfloat mat_shininess[] = { 75.0 };
       const GLfloat no_mat[]        = { 0.0, 0.0, 0.0, 1.0 };
