@@ -360,7 +360,7 @@ private:
     */
    static void setLocalThreadPtr(ThreadSGI* threadPtr)
    {
-      ((ThreadInfo*)PRDA->usr_prda.fill)->mThreadPtr = threadPtr;
+      ((ThreadInfo*)PRDA->usr2_prda.fill)->mThreadPtr = threadPtr;
    }
 
    /**
@@ -368,7 +368,7 @@ private:
     */
    static ThreadSGI* getLocalThreadPtr()
    {
-      return ((ThreadInfo*)PRDA->usr_prda.fill)->mThreadPtr;
+      return ((ThreadInfo*)PRDA->usr2_prda.fill)->mThreadPtr;
    }
 
    /**
