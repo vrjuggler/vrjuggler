@@ -97,6 +97,9 @@ JAVA_AFTERBUILD = jars
 
 include $(MKPATH)/dpp.obj.mk
 
+# Hack to get java to compile the classes into the current dir
+override OBJDIR=.
+
 # -----------------------------------------------------------------------------
 # Extra targets.
 # -----------------------------------------------------------------------------
