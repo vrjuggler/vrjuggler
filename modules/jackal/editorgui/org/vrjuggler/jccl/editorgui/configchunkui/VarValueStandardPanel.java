@@ -101,6 +101,7 @@ public class VarValueStandardPanel
             if (desc.getValType() == ValType.CHUNK) {
                 /* we build up a choice of all chunks in the db of allowed types */
                 choice = new JComboBox ();
+                choice.setEditable (true);
                 add (choice, "Center");
 
                 if (uihelper_module != null) {
@@ -115,9 +116,9 @@ public class VarValueStandardPanel
                 //bm.addObject ("<No Selection>"); may not be safe for enums
                 DescEnum[] e = desc.getEnumerations();
                 for (i = 0; i < e.length; i++)
-                    bm.addObject(e[i].str);
+                    bm.addElement(e[i].str);
                 choice.setModel(bm);
-                choice.setSelectedItem ("<No Selection>");
+                choice.setSelectedIndex (0);
                 add(choice, "Center");
             }
             else if (desc.getValType() == ValType.BOOL) {
@@ -158,7 +159,7 @@ public class VarValueStandardPanel
         for (int i = 0; i < v.size(); i++) {
             ch2 = (ConfigChunk)v.get(i);
             if (matchesTypes (ch2, chunktypes))
-                bm.addObject (ch2.getName());
+                bm.addElement (ch2.getName());
             addEmbeddedChunks (bm, ch2, chunktypes);
         }
     }
@@ -173,13 +174,13 @@ public class VarValueStandardPanel
 
         ConfigModule config_module = uihelper_module.getConfigModule();
 
-        bm.addObject ("<No Selection>");
+        bm.addElement ("<No Selection>");
         for (i = 0; i < config_module.chunkdbs.size(); i++) {
             db = (ConfigChunkDB)config_module.chunkdbs.elementAt(i);
             for (j = 0; j < db.size(); j++) {
                 ch = db.get(j);
                 if (matchesTypes(ch, chunktypes))
-                    bm.addObject (db.getName() + ": " + ch.getName());
+                    bm.addElement (db.getName() + ": " + ch.getName());
                 addEmbeddedChunks (bm, ch, chunktypes);
             }
         }
