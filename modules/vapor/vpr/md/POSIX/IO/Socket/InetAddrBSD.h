@@ -44,10 +44,8 @@
 
 #include <vpr/vprConfig.h>
 
-#include <string.h>
 #include <sys/types.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
 #include <string>
 #include <vector>
 
@@ -82,13 +80,7 @@ public:
     * @post The mAddr structure has its memory zeroed, and the port and
     *       internet address are set to wildcard values.
     */
-   InetAddrBSD ()
-   {
-      memset(&mAddr, 0, sizeof(mAddr));
-      setAddressValue(INADDR_ANY);
-      setPort(0);
-      setFamily(SocketTypes::INET);
-   }
+   InetAddrBSD();
 
    /**
     * Copy constructor.
@@ -134,16 +126,7 @@ public:
     *                address).
     * @param port    The port to associate with the IP address.
     */
-   vpr::ReturnStatus setAddress (const std::string& address, const Uint16 port)
-   {
-      vpr::ReturnStatus retval;
-
-      retval = lookupAddress(address);
-      setPort(port);
-      setFamily(SocketTypes::INET);
-
-      return retval;
-   }
+   vpr::ReturnStatus setAddress(const std::string& address, const Uint16 port);
 
    /**
     * Sets the address for this object using the given address and port
@@ -152,14 +135,8 @@ public:
     * @param address A 32-bit integer IP address.
     * @param port    The port to associate with the IP address.
     */
-   vpr::ReturnStatus setAddress (const vpr::Uint32 address,
-                                 const vpr::Uint16 port)
-   {
-      setAddressValue(address);
-      setPort(port);
-      setFamily(SocketTypes::INET);
-      return ReturnStatus();
-   }
+   vpr::ReturnStatus setAddress(const vpr::Uint32 address,
+                                const vpr::Uint16 port);
 
    /**
     * Gets the length of the address structure (if supported by the host OS).
@@ -172,14 +149,7 @@ public:
     *         encapsulated address.  0 is returned if the OS does not support
     *         address structure length.
     */
-   unsigned char getLength (void) const
-   {
-#ifdef _HAVE_SIN_LEN
-      return mAddr.sin_len;
-#else
-      return 0;
-#endif
-   }
+   unsigned char getLength() const;
 
    /**
     * Sets the length of the address structure (if the host OS allows such an
@@ -191,12 +161,7 @@ public:
     *
     * @param length The length of the address structure.
     */
-   void setLength (const unsigned char length)
-   {
-#ifdef _HAVE_SIN_LEN
-      mAddr.sin_len = length;
-#endif
-   }
+   void setLength(const unsigned char length);
 
    /**
     * Gets the protocol family of this address.
@@ -232,10 +197,7 @@ public:
     * @return An unsigned 16-bit integer  giving the port for this address
     *         in host byte order.
     */
-   vpr::Uint16 getPort (void) const
-   {
-      return ntohs(mAddr.sin_port);
-   }
+   vpr::Uint16 getPort() const;
 
    /**
     * Sets this address' port.  The given port must be in host byte order.
@@ -246,10 +208,7 @@ public:
     * @param port An unsigned 16-bit integer port number for this address in
     *             host byte order.
     */
-   void setPort (const vpr::Uint16 port)
-   {
-      mAddr.sin_port = htons(port);
-   }
+   void setPort(const vpr::Uint16 port);
 
    /**
     * Gets this address's Internet address in host byte order.
@@ -262,10 +221,7 @@ public:
     * @return An unsigned 32-bit integer giving the IP address for this
     *         object in host byte order.
     */
-   vpr::Uint32 getAddressValue (void) const
-   {
-      return ntohl(mAddr.sin_addr.s_addr);
-   }
+   vpr::Uint32 getAddressValue() const;
 
    /**
     * Gets the IP address associated with this object as a human-readable
@@ -359,12 +315,7 @@ protected:
     * @param addr_value The A record contianing an IP address in network
     *                   byte order.
     */
-   void copyAddressValue (const char* addr_value)
-   {
-      vprASSERT(addr_value != NULL);
-      memcpy((void*) &mAddr.sin_addr.s_addr, (void*) addr_value,
-             sizeof(mAddr.sin_addr.s_addr));
-   }
+   void copyAddressValue(const char* addr_value);
 
    /**
     * Sets this objects's IP address.  The given address must be in host byte
@@ -376,10 +327,7 @@ protected:
     * @param port An unsigned 32-bit integer IP address for this object in
     *             host byte order.
     */
-   void setAddressValue (const vpr::Uint32 addr_value)
-   {
-      mAddr.sin_addr.s_addr = htonl(addr_value);
-   }
+   void setAddressValue(const vpr::Uint32 addr_value);
 
    /**
     * Gets the size of this object's encapsulated address structure.
@@ -390,10 +338,7 @@ protected:
     * @return A value of type size_t giving the size of the encapsualted
     *         address structure.
     */
-   size_t size (void) const
-   {
-      return sizeof(mAddr);
-   }
+   size_t size() const;
 
    /**
     * Gets the size of this object's IP address value.
@@ -404,10 +349,7 @@ protected:
     * @return A value of type size_t giving the size of this object's IP
     *         address.
     */
-   size_t addressSize (void) const
-   {
-      return sizeof(mAddr.sin_addr.s_addr);
-   }
+   size_t addressSize() const;
 
    /**
     * Initializes the internal socket address structure using the given
@@ -419,10 +361,7 @@ protected:
     * @param addr A pointer to the sockaddr object being used to initialize
     *             this object's address.
     */
-   void setSockaddr (const struct sockaddr* addr)
-   {
-      memcpy((void*) &mAddr, (void*) addr, sizeof(mAddr));
-   }
+   void setSockaddr(const struct sockaddr* addr);
 
    /**
     * Converts this object to a sockaddr_in struct.
@@ -431,10 +370,7 @@ protected:
     * @post A copy of a sockaddr_in struct equivalent to this object is
     *       returned to the caller.
     */
-   struct sockaddr_in toSockaddrInet (void)
-   {
-      return mAddr;
-   }
+   struct sockaddr_in toSockaddrInet();
 
    /**
     * Makes a copy of the given vpr::InetAddrBSD object in this object.
@@ -445,10 +381,7 @@ protected:
     *
     * @param addr The vpr::InetAddrBSD object to be copied into this object.
     */
-   void copy (const InetAddrBSD& addr)
-   {
-      memcpy((void*) &mAddr, (void*) &addr.mAddr, sizeof(mAddr));
-   }
+   void copy(const InetAddrBSD& addr);
 
    /**
     * Looks up the given address and store the value in mAddr.
