@@ -420,7 +420,7 @@ FileHandleImplUNIX::read_i (void* buffer, const vpr::Uint32 length,
         else if ( bytes == 0 && errno != 0 ) {
             bytes_read = 0;
 //        errno != ENOENT
-            vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
                 << "[vpr::FileHandleImplUNIX] Nothing read from " << m_name
                 << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
         }
