@@ -95,6 +95,18 @@ public class UnitTypeHelpers
       return types;
    }
 
+   /**
+    * Returns the corresponding unit type constant for the given "type token"
+    * string.  The type token must have been registered internally with this
+    * class.  The collection of registered type tokens is the set of input
+    * device types known to Gadgeteeer and defined as string constants in
+    * <code>org.vrjuggler.vrjconfig.commoneditors.EditorConstants</code>.
+    *
+    * @param typeToken  the config definition token for the Gadgeteer input
+    *                   device type of interest
+    *
+    * @see org.vrjuggler.vrjconfig.commoneditors.EditorConstants
+    */
    public static Integer getUnitType(String typeToken)
    {
       for ( Iterator i = mUnitTypeMap.keySet().iterator(); i.hasNext(); )
@@ -108,5 +120,47 @@ public class UnitTypeHelpers
 
       throw new IllegalArgumentException("Type " + typeToken +
                                          " is not a known device type");
+   }
+
+   /**
+    * Returns a human-readable name for the given unit type value.  The name
+    * returned is capitalized using English title conventions.  Calling code
+    * can easily convert this form to all uppper case or all lower case as
+    * necessary.
+    */
+   public static String getUnitTypeName(Integer unitType)
+   {
+      String type_str = "Unknown";
+
+      if ( unitType.equals(ANALOG) )
+      {
+         type_str = "Analog";
+      }
+      else if ( unitType.equals(COMMAND) )
+      {
+         type_str = "Command";
+      }
+      else if ( unitType.equals(DIGITAL) )
+      {
+         type_str = "Digital";
+      }
+      else if ( unitType.equals(GLOVE) )
+      {
+         type_str = "Glove";
+      }
+      else if ( unitType.equals(KEYBOARD_MOUSE) )
+      {
+         type_str = "Keyboard/Mouse";
+      }
+      else if ( unitType.equals(POSITION) )
+      {
+         type_str = "Position";
+      }
+      else if ( unitType.equals(STRING) )
+      {
+         type_str = "String";
+      }
+
+      return type_str;
    }
 }

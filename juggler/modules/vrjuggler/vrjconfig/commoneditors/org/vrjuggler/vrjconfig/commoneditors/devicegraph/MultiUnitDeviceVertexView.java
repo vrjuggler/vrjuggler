@@ -193,9 +193,11 @@ public class MultiUnitDeviceVertexView
                         "Add a new input source for this device"
                      );
 
-                     add_button.setText("Create " +
-                                        getUnitTypeName(unit_type) +
-                                        " Input Source");
+                     add_button.setText(
+                        "Create " +
+                        UnitTypeHelpers.getUnitTypeName(unit_type) +
+                        " Input Source"
+                     );
                      add_button.setMargin(new Insets(3, 0, 0, 0));
                      add_button.setBorderPainted(false);
                      add_button.setFont(new Font("Dialog", Font.PLAIN, 10));
@@ -384,42 +386,6 @@ public class MultiUnitDeviceVertexView
          return port;
       }
 
-      private String getUnitTypeName(Integer unitType)
-      {
-         String type_str = "Unknown";
-
-         if ( unitType.equals(UnitConstants.ANALOG) )
-         {
-            type_str = "Analog";
-         }
-         else if ( unitType.equals(UnitConstants.COMMAND) )
-         {
-            type_str = "Command";
-         }
-         else if ( unitType.equals(UnitConstants.DIGITAL) )
-         {
-            type_str = "Digital";
-         }
-         else if ( unitType.equals(UnitConstants.GLOVE) )
-         {
-            type_str = "Glove";
-         }
-         else if ( unitType.equals(UnitConstants.KEYBOARD_MOUSE) )
-         {
-            type_str = "Keyboard/Mouse";
-         }
-         else if ( unitType.equals(UnitConstants.POSITION) )
-         {
-            type_str = "Position";
-         }
-         else if ( unitType.equals(UnitConstants.STRING) )
-         {
-            type_str = "String";
-         }
-
-         return type_str;
-      }
-
       /**
        * Adds a new row for the given port that represents the input source
        * (device unit) for the input device represented by our vertex.
@@ -588,8 +554,10 @@ public class MultiUnitDeviceVertexView
 
       private void setLabelText(JLabel label, UnitInfo unitInfo)
       {
-         label.setText(getUnitTypeName(unitInfo.getUnitType()) + " Unit: " +
-                       unitInfo.getUnitNumber());
+         label.setText(
+            UnitTypeHelpers.getUnitTypeName(unitInfo.getUnitType()) +
+            " Unit " + unitInfo.getUnitNumber()
+         );
       }
 
       /**
