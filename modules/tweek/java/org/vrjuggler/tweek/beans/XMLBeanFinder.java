@@ -105,6 +105,7 @@ public class XMLBeanFinder
       }
 
       SAXBuilder builder = new SAXBuilder();
+      builder.setErrorHandler(new BestSAXChecker());
       File xml_file;
 
       // Check each XML file for beans
