@@ -417,6 +417,8 @@ tweek_idlflags_cxx="$CXX_IDL_OPTS ${CXX_IDL_INCFLAG}\${prefix}/include"
 tweek_idlflags_java="$JAVA_IDL_OPTS ${JAVA_IDL_INCFLAG}\${prefix}/include"
 tweek_idlgendir_cxx="$CXX_IDL_GENDIR_OPT"
 tweek_idlgendir_java="$JAVA_IDL_GENDIR_OPT"
+tweek_idl_incflag_cxx="$CXX_IDL_INCFLAG"
+tweek_idl_incflag_java="$JAVA_IDL_INCFLAG"
 
 idl_gen_dirs="tweek/CORBA"
 #idl_src_dirs=''
@@ -616,8 +618,10 @@ AC_SUBST(tweek_extra_libs)
 AC_SUBST(tweek_n32_flags)
 AC_SUBST(tweek_64_flags)
 AC_SUBST(tweek_idlflags_cxx)
-AC_SUBST(tweek_idlflags_java)
+AC_SUBST(tweek_idl_incflag_cxx)
 AC_SUBST(tweek_idlgendir_cxx)
+AC_SUBST(tweek_idlflags_java)
+AC_SUBST(tweek_idl_incflag_java)
 AC_SUBST(tweek_idlgendir_java)
 AC_SUBST(tweek_java_api_jars)
 

@@ -100,6 +100,8 @@ Options:
         [--idlflags cxx|java]   Print flags passed to the IDL compiler for
                                 generating C++ or Java based on the given
                                 parameter
+        [--idlincflag cxx|java] Print flag passed to IDL compiler to specify
+                                where to look for other IDL files
         [--idlgendir cxx|java]  Print flag passed to IDL compiler to specify
                                 where the generated files (either C++ or Java
                                 based on the given parameter) are written
@@ -230,6 +232,10 @@ while test $# -gt 0; do
             echo_idlflags="$2"
             shift
             ;;
+        --idlincflag)
+            echo_idlincflag="$2"
+            shift
+            ;;
         --idlgendir)
             echo_idlgendir="$2"
             shift
@@ -330,6 +336,17 @@ if test "x$echo_idlflags" != "x" ; then
        echo "@tweek_idlflags_java@"
     else
        echo "ERROR: Unrecognized IDL flag type '$echo_idlflags'!"
+       usage 1 1>&2
+    fi
+fi
+
+if test "x$echo_idlincflag" != "x" ; then
+    if test "$echo_idlincflag" = "cxx" ; then
+       echo "@tweek_idl_incflag_cxx@"
+    elif test "$echo_idlincflag" = "java" ; then
+       echo "@tweek_idl_incflag_java@"
+    else
+       echo "ERROR: Unrecognized IDL flag type '$echo_idlincflag'!"
        usage 1 1>&2
     fi
 fi

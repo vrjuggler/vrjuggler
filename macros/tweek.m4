@@ -108,9 +108,11 @@ AC_DEFUN(TWEEK_PATH,
         TWEEK_CXX_IDL="`$TWEEK_CONFIG $tweek_config_args --idl cxx`"
         TWEEK_CXX_IDL_OPTS="`$TWEEK_CONFIG $tweek_config_args --idlflags cxx`"
         TWEEK_CXX_IDL_GENDIR_OPT="`$TWEEK_CONFIG $tweek_config_args --idlgendir cxx`"
+        TWEEK_CXX_IDL_INCFLAG="`$TWEEK_CONFIG $tweek_config_args --idlincflag cxx`"
         TWEEK_JAVA_IDL="`$TWEEK_CONFIG $tweek_config_args --idl java`"
         TWEEK_JAVA_IDL_OPTS="`$TWEEK_CONFIG $tweek_config_args --idlflags java`"
         TWEEK_JAVA_IDL_GENDIR_OPT="`$TWEEK_CONFIG $tweek_config_args --idlgendir java`"
+        TWEEK_JAVA_IDL_INCFLAG="`$TWEEK_CONFIG $tweek_config_args --idlincflag java`"
         TWEEK_JARS="`$TWEEK_CONFIG $tweek_config_args --jars`"
 
         TWEEK_VERSION=`$TWEEK_CONFIG --version`
@@ -133,9 +135,11 @@ AC_DEFUN(TWEEK_PATH,
         TWEEK_CXX_IDL=""
         TWEEK_CXX_IDL_OPTS=""
         TWEEK_CXX_IDL_GENDIR_OPT=""
+        TWEEK_CXX_IDL_INCFLAG=""
         TWEEK_JAVA_IDL=""
         TWEEK_JAVA_IDL_OPTS=""
         TWEEK_JAVA_IDL_GENDIR_OPT=""
+        TWEEK_JAVA_IDL_INCFLAG=""
         TWEEK_JARS=""
         ifelse([$3], , :, [$3])
     fi
@@ -149,7 +153,9 @@ AC_DEFUN(TWEEK_PATH,
     AC_SUBST(TWEEK_JAVA_IDL)
     AC_SUBST(TWEEK_CXX_IDL_OPTS)
     AC_SUBST(TWEEK_CXX_IDL_GENDIR_OPT)
+    AC_SUBST(TWEEK_CXX_IDL_INCFLAG)
     AC_SUBST(TWEEK_JAVA_IDL_OPTS)
     AC_SUBST(TWEEK_JAVA_IDL_GENDIR_OPT)
+    AC_SUBST(TWEEK_JAVA_IDL_INCFLAG)
     AC_SUBST(TWEEK_JARS)
 ])
