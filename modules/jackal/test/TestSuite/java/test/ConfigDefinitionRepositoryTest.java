@@ -26,6 +26,7 @@ import org.vrjuggler.jccl.config.event.*;
                                   name.toLowerCase(),
                                   "",
                                   version,
+                                  new ArrayList(),
                                   "Some Help",
                                   new ArrayList(),
                                   new ArrayList());

@@ -69,10 +69,13 @@ import org.vrjuggler.jccl.config.event.*;
       prop_defs.add(mAgePropDef);
       prop_defs.add(mFriendsPropDef);
 
+      List parents = new ArrayList();
+
       return new ConfigDefinition("Person",
                                   "person",
                                   "",
                                   1,
+                                  parents,
                                   "A person on the VR Juggler team.",
                                   categories,
                                   prop_defs);

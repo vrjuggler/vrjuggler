@@ -63,10 +63,13 @@ import org.vrjuggler.jccl.config.*;
 
       List categories = new ArrayList();
       categories.add("VRAC");
+
+      List parents = new ArrayList();
       return new ConfigDefinition("Person",
                                   "person",
                                   "",
                                   1,
+                                  parents,
                                   "A person",
                                   categories,
                                   prop_defs);
@@ -96,10 +99,13 @@ import org.vrjuggler.jccl.config.*;
 
       List categories = new ArrayList();
       categories.add("VR");
+
+      List parents = new ArrayList();
       return new ConfigDefinition("Wall",
                                   "wall",
                                   "",
                                   1,
+                                  parents,
                                   "A wall in 3D space.",
                                   categories,
                                   prop_defs);
@@ -125,10 +131,13 @@ import org.vrjuggler.jccl.config.*;
 
       List categories = new ArrayList();
       categories.add("VR");
+
+      List parents = new ArrayList();
       return new ConfigDefinition("Corner",
                                   "corner",
                                   "",
                                   1,
+                                  parents,
                                   "A corner of a wall in 3D space.",
                                   categories,
                                   prop_defs);
