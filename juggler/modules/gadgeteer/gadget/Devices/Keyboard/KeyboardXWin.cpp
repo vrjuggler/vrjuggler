@@ -130,7 +130,8 @@ int vjXWinKeyboard::startSampling()
 {
    if(myThread != NULL)
    {
-      vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjXWinKeyboard: startSampling called, when already sampling.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
+                                              << "vjXWinKeyboard: startSampling called, when already sampling.\n" << vjDEBUG_FLUSH;
       vjASSERT(false);
    }
 
@@ -523,7 +524,7 @@ int vjXWinKeyboard::openTheWindow()
    m_display = XOpenDisplay(mXDisplayString.c_str());    // Open display on given XDisplay
    if (m_display == NULL)
    {
-      cerr << "vjKeyboard::StartSampling() : failed to open display" << endl;
+      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:") << "vjKeyboard::StartSampling() : failed to open display" << endl;
       return 0;
    }
    m_screen = DefaultScreen(m_display);
@@ -546,7 +547,7 @@ int vjXWinKeyboard::openTheWindow()
 
    if (i == nVisuals)
    {
-      cerr << "vjKeyboard::startSampling() : find visual failed" << endl;
+      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:") << "vjKeyboard::startSampling() : find visual failed" << endl;
       return 0;
    }
 

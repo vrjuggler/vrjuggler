@@ -365,7 +365,7 @@ bool vjKernel::addUser(vjConfigChunk* chunk)
    if(!success)
    {
       vjDEBUG(vjDBG_CONFIG,vjDBG_CRITICAL_LVL)
-                     << "ERROR: Failed to add new vjUser: "
+                     << clrOutNORM(clrRED,"ERROR:") << "Failed to add new vjUser: "
                      << chunk->getProperty("name") << endl << vjDEBUG_FLUSH;
       delete new_user;
    }
