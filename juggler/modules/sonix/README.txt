@@ -147,60 +147,67 @@ Table of contents:
 ==============================================================================
 
    A. Details
+      i.  The following script should give you an idea of how to configure
+          and build sonix right now (yes, it is very ugly).  This script
+          was written under redhat 7.2
 
-        i. Choose a directory to put the downloaded sonix source code
-           (referred to as <JUGGLER_DIR> from now on).
+      # you need to change these to your setup...
+      set HOSTTYPE=linux
+      set juggler_root=/root/src/juggler/modules
+      set install_dir=/root/software/$HOSTTYPE
+      setenv OALROOT $HOME/software/$HOSTTYPE
+      setenv XERCESROOT /root/software/src/xerces-c-src1_5_1 
 
-       ii. Go to that directory and checkout sonix using CVS
-           NOTE: make sure CVS is set up, and pointing to the sonix
-           repository.  
 
-           The simple version is:
+      # base directories (shouldn't need to change)
+      setenv VPR_BASE_DIR $juggler_root/vapor/build.$HOSTTYPE/instlinks
+      setenv GADGET_BASE_DIR $juggler_root/gadgeteer/build.$HOSTTYPE/instlinks
+      setenv JCCL_BASE_DIR $juggler_root/jackal/build.$HOSTTYPE/instlinks
+      setenv VJ_BASE_DIR $juggler_root/vrjuggler/build.$HOSTTYPE/instlinks
+      setenv SNX_BASE_DIR $juggler_root/sonix/build.$HOSTTYPE/install-clone
 
-            cd <JUGGLER_DIR>
-            cvs checkout sonix
+      # make sure all directories exist...
+      mkdir install_dir
+      mkdir $juggler_root/vapor/build.$HOSTTYPE
+      mkdir $juggler_root/gadgeteer/build.$HOSTTYPE
+      mkdir $juggler_root/jackal/build.$HOSTTYPE
+      mkdir $juggler_root/vrjuggler/build.$HOSTTYPE
+      mkdir $juggler_root/sonix/build.$HOSTTYPE
 
-      iii. Enter the newly checked out sonix source directory
+      # configure all projects needed to make sonix...
+      cd $juggler_root/vapor
+      autogen.sh
+      cd $juggler_root/vapor/build.$HOSTTYPE
+      ../configure  --prefix=$install_dir 
+      gmake -j 2
 
-            cd <JUGGLER_DIR>/sonix
+      cd $juggler_root/jackal
+      autogen.sh
+      cd $juggler_root/jackal/build.$HOSTTYPE
+      ../configure  --prefix=$install_dir --with-xercesroot=$XERCESROOT
+      gmake -j 2
 
-       iv. Compile sonix (using the Autoconf system and GNU make)
+      cd $juggler_root/vrjuggler
+      autogen.sh
+      cd $juggler_root/vrjuggler/build.$HOSTTYPE
+      ../configure  
+      gmake links
 
-           a. Generate aclocal.m4, header template (vjDefines.h.in), and
-              the configure script
+      cd $juggler_root/gadgeteer
+      autogen.sh
+      cd $juggler_root/gadgeteer/build.$HOSTTYPE
+      ../configure  
+      gmake -j2
 
-               ./autogen.sh
-   
-           b. Probe the system for capabilities, generate Makefiles, etc.
-              (this configures the source tree for the current system)
+      cd $juggler_root/vrjuggler/build.$HOSTTYPE
+      gmake -j2
 
-               ./configure
-
-           c. Make the distribution using GNU make.  This compiles, links,
-              and creates the final distribution tree (in the form of
-              symlinks)
-
-               gmake
-
-        v. Set the environment variable $SNX_BASE_DIR.  This is *required*
-          by sonix's application makefiles and runtime environment.
-
-          NOTES:
-             1. The directory "instlinks" is semi-important. 
-                It is a working distribution of the sonix library.
-                After "gmake" is done, you'll be able to use this
-                directory to compile and link your application code.
-                This will not work on Win32, so a full installation
-                must be performed.
-             2. It is helpful to have something similar to the following
-                line your $HOME/.tcshrc or $HOME/.cshrc file (assuming
-                the use of tcsh for your shell):
-
-                   setenv SNX_BASE_DIR [JUGGLER_DIR]/sonix/instlinks
-
-                Use whatever is appropriate for your shell (BASH, ksh,
-                DOS, etc.)
-
+      cd $juggler_root/sonix
+      autogen.sh
+      cd $juggler_root/sonix/build.$HOSTTYPE
+      ../configure  --with-oalroot=$OALROOT --prefix=$install_dir 
+      gmake -j 2
+      
    C. Advanced topics
 
       Sending compiler output to a different directory than the source
