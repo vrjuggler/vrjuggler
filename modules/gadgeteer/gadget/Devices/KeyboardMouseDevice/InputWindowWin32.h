@@ -84,21 +84,21 @@ public:
    bool startSampling();
    bool stopSampling();
 
-	/**
+   /**
     * Process the current window events.
     *
     * @note - Called repeatedly by the controlLoop.
     */
    bool sample();
    
-	/**
-	 * Do nothing since we are only sending events to
-	 * a KeyboardMouseDevice.
-	 */
-	void updateData()
-	{;}
+   /**
+    * Do nothing since we are only sending events to
+    * a KeyboardMouseDevice.
+    */
+   void updateData()
+   {;}
    
-	static std::string getElementType();
+   static std::string getElementType();
 
    /**
     * Invokes the global scope delete operator.  This is required for proper
@@ -123,7 +123,7 @@ protected:
    {
    }
 
-	/** 
+   /** 
     * Window function for the main application window. Processes all 
     * the menu selections and oter messages.
     */
