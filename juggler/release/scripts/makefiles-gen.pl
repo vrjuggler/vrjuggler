@@ -76,18 +76,6 @@ $Win32 = 1 if $ENV{'OS'} =~ /Windows/;
 # Turn off case insensitivity when parsing command-line options.
 $Getopt::Long::ignorecase = 0;
 
-if ( $#ARGV < 5 ) {
-    die <<USAGE_EOF;
-Usage:
-    $0
-        --vars=<Path to a Perl file containing @..@ substitution values>
-        --srcdir=<Location of source code>
-        --prefix=<Base directory where Makefile will go>
-        --startdir=<Directory where search begins>
-      [ --uname=<Owner's user name> --gname=<Group name> --mode=<Mode bits> ]
-USAGE_EOF
-}
-
 # Initialize variables passed (by reference) to GetOptions();
 %VARS = ();
 @files = ();
@@ -100,6 +88,19 @@ GetOptions("vars=s", \$var_file, "srcdir=s" => \$VARS{'srcdir'},
 	   "prefix=s" => \$prefix, "startdir=s" => \$startdir,
 	   'files=s' => \@files,
 	   "uname=s" => \$uname, "gname=s" => \$gname, "mode=s" => \$mode);
+
+if ( ! ($var_file && exists($VARS{'srcdir'}) && $prefix) )
+{
+   die <<USAGE_EOF;
+Usage:
+    $0
+        --vars=<Path to a Perl file containing @..@ substitution values>
+        --srcdir=<Location of source code>
+        --prefix=<Base directory where Makefile will go>
+      [ --startdir=<Directory where search begins>
+        --uname=<Owner's user name> --gname=<Group name> --mode=<Mode bits> ]
+USAGE_EOF
+}
 
 die "ERROR: Cannot specify file and directory recursion together!\n"
    if $#files != -1 && $startdir;
