@@ -56,7 +56,6 @@ SUBDIR=		doc/build.system				\
 		modules/vrjuggler/doc/configuration.guide	\
 		modules/vrjuggler/doc/doxy			\
 		modules/vrjuggler/doc/getting.started.guide	\
-		modules/vrjuggler/doc/porting.guide		\
 		modules/vrjuggler/doc/programmer.guide
 
 all:
