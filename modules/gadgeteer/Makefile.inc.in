@@ -116,14 +116,15 @@ $(PARAM_HEADER): $(GADGETROOT_ABS)/$(PARAM_HEADER).in $(GADGETROOT_ABS)/VERSION
 
 # Things to do after the object files and library are built.
 afterbuild:
+ifdef GLOBAL_BUILD
 	@$(MAKE) links
+endif
 	@$(MAKE) drivers
 	@echo ""
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$GADGET_BASE_DIR to:'
 	@cd $(instlinks) && echo "  `pwd`"
 	@echo "---------------------------------------------------------------"
-
 
 # -----------------------------------------------
 # Construct the static version of the libraries.
