@@ -182,6 +182,25 @@ private:
    vpr::SerialPort*     mSerialPort;
 };
 
+class ClusterBarrierWired : public ClusterBarrier
+{
+public:
+   ClusterBarrierWired();
+   virtual ~ClusterBarrierWired();
+   virtual vpr::ReturnStatus Init();
+
+   virtual void AddBarrierSlave(vpr::SocketStream* sock_stream);
+   vpr::ReturnStatus ConnectToWiredParallel();
+
+   virtual void MasterSend();
+   virtual void MasterReceive();
+   virtual void SlaveSend();
+   virtual void SlaveReceive();
+   
+private:
+   int mWire;
+};
+
 }; // namespace gadget
 
 
