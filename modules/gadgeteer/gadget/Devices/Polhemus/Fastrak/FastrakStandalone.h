@@ -36,11 +36,9 @@
 // driver R.E.
 
 #include <stdio.h>
-#include <fcntl.h>
-#include <termios.h>
-#include <sys/prctl.h>
-#include <sys/wait.h>
-#include <signal.h>
+#include <vpr/vpr.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/IO/Port/SerialPort.h>
 
 #define NSTATION 4
 #define XYZ 3
@@ -49,12 +47,82 @@
 // 2 first letters forced in lower case
 #define LC2(x) (0x2020|(((x)[0]<<8)|(x)[1]))
 
-// C driver (R.E.) functions and procedures
-extern "C" void trackerInit(char *configfile);
-extern "C" void getNewCoords(unsigned int station, float *vecXYZ, float *vecAER);
-extern "C" int getCoords(unsigned int stations, float *vecXYZ, float *vecAER);
-extern "C" int getNewButtonStatus(unsigned int station);
-extern "C" void trackerFinish();
+
+
+struct perstation
+{
+   int begin;
+   int posoff;
+   int angoff;
+   int quatoff;
+   int butoff;
+   int rec;
+   float tip[XYZ];
+   float inc;
+   float hem[XYZ];
+   float arf[3*XYZ];
+   float tmf[XYZ];
+};
+
+struct FastrackConfig
+{
+   int found;         // flags: one bit for each feature found in the chunk
+   int len;           // total length of a message sent by the tracker
+   char port[20];     // port the tracker is attached to
+   int baud;          // port speed
+   char button;
+   char cont;
+   struct perstation perstation[NSTATION];
+};
+
+class FastrackStandalone
+{
+public:
+   FastrackStandalone()
+      : mSerialPort(NULL), mReadThread(NULL), mDoFlush(false)
+   {
+      ;
+   }
+
+   void setConfig(const FastrackConfig& conf)
+   {
+      mConf = conf;
+   }
+
+   const FastrackConfig& getConfig() const
+   {
+      return mConf;
+   }
+
+   /**
+    * Opens the port to which the device is connected.
+    *
+    * @pre The configuration must have been set using setConfig().
+    */
+   vpr::ReturnStatus open();
+
+   vpr::ReturnStatus trackerInit();
+
+   void getNewCoords(unsigned int station, float *vecXYZ, float *vecAER);
+   int getNewButtonStatus(unsigned int station);
+   void trackerFinish();
+
+   int getCoords(unsigned int stations, float *vecXYZ, float *vecAER);
+
+private:
+   int Read(int len);
+   void readloop(void* unused);
+   void checkchild();
+   void getTrackerInfo(struct perstation* psp, unsigned char c);
+   void getTrackerBuf();
+
+   vpr::SerialPort* mSerialPort;
+   vpr::Thread* mReadThread;
+   unsigned char mTrackerBuf[256];
+   bool mDoFlush;
+
+   FastrackConfig mConf;
+};
 
 // bits positions of bits in flag word "config.found"
 enum conf
@@ -74,38 +142,6 @@ enum rec
 {
    Pos, Ang, Quat, But
 };
-
-static int trackerfd;
-
-static volatile unsigned char TrackerBuf[256];
-static volatile int DoFlush;
-static pid_t ReadPid;
-
-struct perstation
-{
-   int begin;
-   int posoff;
-   int angoff;
-   int quatoff;
-   int butoff;
-   int rec;
-   float tip[XYZ];
-   float inc;
-   float hem[XYZ];
-   float arf[3*XYZ];
-   float tmf[XYZ];
-};
-
-static struct
-{
-   int found;         // flags: one bit for each feature found in the chunk
-   int len;           // total length of a message sent by the tracker
-   char port[20];     // port the tracker is attached to
-   int baud;          // port speed
-   char button;
-   char cont;
-   struct perstation perstation[NSTATION];
-} conf;
 
 // end driver R.E.
 
