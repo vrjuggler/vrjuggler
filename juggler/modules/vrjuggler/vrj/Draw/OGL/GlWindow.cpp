@@ -143,10 +143,11 @@ void GlWindow::finishSetup()
                   << "event window proxy.  Check for a unique name."
                   << std::endl << vprDEBUG_FLUSH;
                vprASSERT(false && "Failed to add sim wind kb proxy: Check for unique name");
-
+            }
+            else
+            {
                gadget::EventWindowInterface kb_interface;
                kb_interface.setProxy(kb_proxy);
-
                gl_draw_sim->setEventWindow(kb_interface); // Initialize the simulator
             }
          }
