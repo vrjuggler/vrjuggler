@@ -39,10 +39,10 @@ void isIntersense::init()
   mBaudRate = 9600;
   mPort = 0;
   mPortName = NULL;
-  mVerbose = true;
+  mVerbose = false;
   mHandle = 0;
   mActive = false;
-  mNumStations = 2;
+  mNumStations = 0;
   script = NULL;
 }
 
@@ -57,11 +57,6 @@ bool isIntersense::open()
   if (-1 != mHandle) {
     tracker_connect = true;    
     sendScript();
-    getConfigState(1);
-    rAngleFormat(1) = ISD_EULER;
-    rButtons(1) = 1;
-    rAnalogData(1) = 1;
-    setConfigState(1);
   }
   
   mActive = true;
@@ -103,14 +98,16 @@ float& isIntersense::yQuat( const int& i ) { return mData.Station[i].Orientation
 float& isIntersense::zQuat( const int& i ) { return mData.Station[i].Orientation[0]; }
 float& isIntersense::wQuat( const int& i ) { return mData.Station[i].Orientation[3]; }
 
-int& isIntersense::buttonState(const int& i, const int& f) 
+int isIntersense::buttonState(const int& i, const int& f) 
 {
   if(f < MAX_NUM_BUTTONS && i < mNumStations) return mData.Station[i].ButtonState[f];
+  return 0;
 }
 
 
 int isIntersense::analogData(const int& i, const int& j) {  
-  if(j < MAX_ANALOG_CHANNELS && i < mNumStations) return mData.Station[i].AnalogData[j]; 
+  if(j < MAX_ANALOG_CHANNELS && i < mNumStations) return mData.Station[i].AnalogData[j];
+  return 0;
 }
 
 

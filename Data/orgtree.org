@@ -26,6 +26,7 @@ Begin "Zelda"
             "Flock of Birds"
             "PinchGlove"
             "MotionStar"
+            "Isense"
         End
         Begin "Simulated Devices"
             "SimDigitalGlove"
