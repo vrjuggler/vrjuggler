@@ -83,6 +83,10 @@ public class SimAnalogUnitPropertyHandler
 
    public void propertyValueOrderChanged(ConfigElementEvent evt)
    {
+      System.err.println(
+         "WARNING: SimAnalogUnitPropertyHandler.propertyValueOrderChanged() " +
+         "is not implemented!  Complain about this."
+      );
    }
 
    /**
