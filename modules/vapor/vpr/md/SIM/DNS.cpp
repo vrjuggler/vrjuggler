@@ -35,8 +35,6 @@ vpr::Uint32 DNS::lookupAddress (const std::string& addr_str)
       retval = sscanf(addr_str.c_str(), "%3u.%3u.%3u.%3u", &addr.bytes[0],
                       &addr.bytes[1], &addr.bytes[2], &addr.bytes[3]);
 
-      vprDEBUG(vprDBG_ALL, 0) << "retval: " << retval << "\n" << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL, 0) << "addr.value: " << addr.value << "\n" << vprDEBUG_FLUSH;
       if ( retval == 4 )
       {
          found_addr = vpr::System::Ntohl(addr.value);
