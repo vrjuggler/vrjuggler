@@ -60,6 +60,8 @@ vpr::ReturnStatus SocketDatagramImplSIM::recvfrom (void* msg,
                                                    const vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
+   vprASSERT(mBound && "Can recvfrom if we are not bound so they can send to us");
+
    vpr::Guard<vpr::Mutex> guard(mArrivedQueueMutex);
 
    if ( ! mArrivedQueue.empty() )
@@ -104,10 +106,12 @@ vpr::ReturnStatus SocketDatagramImplSIM::sendto (const void* msg,
    vpr::sim::SocketManager& sock_mgr =
       vpr::sim::Controller::instance()->getSocketManager();
 
-   if ( ! mNodeAssigned )
+   if ( ! mBound )
    {
-      sock_mgr.assignToNode(this, mLocalAddr);
+      bind();      
    }
+
+   vprASSERT( mBound && "Must be bound before sending");
 
    bytes_sent = length;
    vpr::sim::MessagePtr net_msg(new vpr::sim::Message(msg, length));
@@ -116,60 +120,26 @@ vpr::ReturnStatus SocketDatagramImplSIM::sendto (const void* msg,
    return status;
 }
 
-vpr::ReturnStatus SocketDatagramImplSIM::isReadReady (const vpr::Interval timeout)
-   const
+vpr::ReturnStatus SocketDatagramImplSIM::isReadReady () const
 {
    vpr::ReturnStatus status;
 
-   if ( vpr::Interval::NoWait == timeout )
+   if ( ! mOpen || mArrivedQueue.empty() )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "SocketDatagramImplSIM::isReadReady(): Timeouts not supported "
-         << "with sim sockets--yet\n" << vprDEBUG_FLUSH;
+      status.setCode(vpr::ReturnStatus::Fail);
    }
-
-//   if ( vpr::Interval::NoWait == timeout )
-//   {
-      if ( ! mOpen || mArrivedQueue.empty() )
-      {
-         status.setCode(vpr::ReturnStatus::Fail);
-      }
-//   }
-/*
-   XXX: Will there be a way to handle waiting until the timeout expires?
-   else
-   {
-   }
-*/
 
    return status;
 }
 
-vpr::ReturnStatus SocketDatagramImplSIM::isWriteReady (const vpr::Interval timeout)
-   const
+vpr::ReturnStatus SocketDatagramImplSIM::isWriteReady () const
 {
    vpr::ReturnStatus status;
 
-   if ( vpr::Interval::NoWait == timeout )
+   if ( ! mOpen )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "SocketDatagramImplSIM::isWriteReady(): Timeouts not supported with "
-         << "sim sockets--yet\n" << vprDEBUG_FLUSH;
+      status.setCode(vpr::ReturnStatus::Fail);
    }
-
-//   if ( vpr::Interval::NoWait == timeout )
-//   {
-      if ( ! mOpen )
-      {
-         status.setCode(vpr::ReturnStatus::Fail);
-      }
-//   }
-/*
-   XXX: Will there be a way to handle waiting until the timeout expires?
-   else
-   {
-   }
-*/
 
    return status;
 }

@@ -49,6 +49,7 @@
 #include <vpr/vpr.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/IO/Socket/SocketTypes.h>
+#include <boost/smart_ptr.hpp>
 
 
 namespace vpr
@@ -98,7 +99,7 @@ public:
                   const vpr::SocketTypes::Type type) const;
 
    vpr::SocketImplSIM* getSocket(const vpr::Uint32 port,
-                                 const vpr::SocketTypes::Type type) const;
+                                 const vpr::SocketTypes::Type type);
 
    const vpr::Uint32& getIndex (void) const
    {
@@ -151,6 +152,9 @@ private:
    socket_map_t mStreamSocketMap;   /**< Map of all the TCP type sockets on this node */
    socket_map_t mDgramSocketMap;    /**< Map of all the UDP type sockets on this node */
 };
+
+
+typedef boost::shared_ptr<NetworkNode> NetworkNodePtr;
 
 } // End of sim namespace
 

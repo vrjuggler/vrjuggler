@@ -87,8 +87,7 @@ class VPR_CLASS_API SocketImplSIM
 {
 public:
    /**
-    * Destructor.  This will unbind the socket from its network node if it was
-    * previously bound to a node.
+    * Destructor.  This will close the socket.
     */
    virtual ~SocketImplSIM(void);
 
@@ -170,6 +169,9 @@ public:
    {
       return mOpen;
    }
+
+   bool isBound() const
+   {  return mBound; }
 
    /**
     * Closes the socket.
@@ -330,6 +332,7 @@ public:
 
      if ( mBound == true )
      {
+        vprASSERT(false && "Can't change address of a bound socket");
         status.setCode(vpr::ReturnStatus::Fail);
      }
      else
@@ -516,7 +519,7 @@ public:
    vpr::ReturnStatus setOption(const vpr::SocketOptions::Types option,
                                const struct vpr::SocketOptions::Data& data);
 
-   virtual vpr::ReturnStatus addConnector(const vpr::SocketImplSIM* local,
+   virtual vpr::ReturnStatus addConnector(vpr::SocketImplSIM* local,
                                           vpr::SocketImplSIM** remote)
    {
       vprASSERT(false && "I shouldn't ever be called!");
@@ -529,11 +532,6 @@ public:
     * @post Depending on the state of the socket, the caller is informed if
     *       a read will block or not.
     *
-    * @param timeout The timeout interval to wait for this socket to be ready
-    *                for reading.  This is optional, and it defaults to
-    *                vpr::Interval::NoWait (poll the socket and return
-    *                immediately).
-    *
     * @return vpr::ReturnStatus::Succeed is returned if this socket can read
     *         without blocking.  That is, there is data waiting to be read from
     *         its arrival queue.<br>
@@ -543,18 +541,13 @@ public:
     *         ready for reading.  This can happen if the socket is not open,
     *         not connected, or without any received data.
     */
-   virtual vpr::ReturnStatus isReadReady(const vpr::Interval timeout = vpr::Interval::NoWait) const = 0;
+   virtual vpr::ReturnStatus isReadReady() const = 0;
 
    /**
     * Tests if this socket can write without blocking.
     *
     * @post Depending on the state of the socket, the caller is informed if
     *       a write will succeed or not.
-    *
-    * @param timeout The timeout interval to wait for this socket to be ready
-    *                for writing.  This is optional, and it defaults to
-    *                vpr::Interval::NoWait (poll the socket and return
-    *                immediately).
     *
     * @return vpr::ReturnStatus::Succeed is returned if this socket can write
     *         without blocking.  That is, this socket is in a connected state,
@@ -565,7 +558,7 @@ public:
     *         ready for writing.  This can happen if the socket is not open or
     *         not connected.
     */
-   virtual vpr::ReturnStatus isWriteReady(const vpr::Interval timeout = vpr::Interval::NoWait) const = 0;
+   virtual vpr::ReturnStatus isWriteReady() const = 0;
 
    /**
     * Tests if this socket is in an exceptional state.
@@ -579,11 +572,6 @@ public:
     */
    vpr::ReturnStatus inExceptState(void);
 
-   const vpr::sim::NetworkGraph::net_vertex_t& getNetworkNode (void) const
-   {
-      return mNetworkNode;
-   }
-
    void addArrivedMessage (vpr::sim::MessagePtr msg)
    {
       vprASSERT(msg->getDestinationSocket() == this && "Message delivered to incorrect destination");
@@ -596,18 +584,19 @@ public:
       mPathToPeer = path;
    }
 
-protected:
-   friend class vpr::sim::SocketManager;
-
-   /**
-    * @param node The node in the network graph to be asociated with this
-    *             socket.
-    */
    void setNetworkNode (const vpr::sim::NetworkGraph::net_vertex_t& node)
    {
-      mNetworkNode  = node;
-      mNodeAssigned = true;
+      mNetworkNode  = node;      
    }
+
+   vpr::sim::NetworkGraph::net_vertex_t getNetworkNode() const
+   {
+      return mNetworkNode;
+   }
+
+
+protected:
+   friend class vpr::sim::SocketManager;   
 
    void disconnect(void);
 
@@ -645,7 +634,7 @@ protected:
    vpr::InetAddr mLocalAddr;  /**< The local site's address structure */
    vpr::InetAddr mRemoteAddr; /**< The remote site's address structure */
 
-   vpr::SocketTypes::Type mType;       /**< STREAM, DATAGRAM, or RAW */
+   const vpr::SocketTypes::Type mType;       /**< STREAM, DATAGRAM, or RAW */
 
    bool mReuseAddr;  /**< reuse this address? */
 
@@ -657,8 +646,7 @@ protected:
    vpr::Mutex mArrivedQueueMutex; /**< Mutex for the arrived message queue */
 
    vpr::sim::NetworkGraph::net_vertex_t mNetworkNode;
-   bool mNodeAssigned;
-
+   
    ///
    vpr::sim::NetworkGraph::VertexListPtr mPathToPeer;
 };
