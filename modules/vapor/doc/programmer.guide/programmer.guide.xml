@@ -2732,11 +2732,16 @@ private:
       precision timer available to the VPR.</para>
 
       <para>An iterator class is provided to allow the user to use the
-      captured data for statistics, printing out, etc. For profiles that
-      contain more than one sample there are functions provided to get the
-      short term average. Also, to quickly just print out the statistics at
-      any point the user may call <function>VPR_PROFILE_RESULTS()</function>
-      and the current status of all profiles will be printed out.</para>
+      captured data for statistic calculations, overloaded output stream
+      operator for printing out, etc. The iterator class is what the user can
+      use to collect information about the tree structure and interpreting the
+      tree structure for hierarchical calls within the profiles. For profiles
+      that contain more than one sample there are functions provided to get
+      the short term average. Also, to quickly just print out the statistics
+      at any point the user may call
+      <function>VPR_PROFILE_RESULTS()</function> and the current status of all
+      profiles will be printed out via
+      <classname>vpr::DEBUG</classname>.</para>
     </chapter>
   </part>
 
