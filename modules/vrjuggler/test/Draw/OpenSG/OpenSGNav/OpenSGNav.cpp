@@ -6,6 +6,8 @@
 
 #include <vrj/Math/Vec3.h>
 #include <vrj/Math/Coord.h>
+#include <vrj/Display/Projection.h>
+#include <vrj/Display/CameraProjection.h>
 
 #include <OpenSGNav.h>
 
@@ -18,6 +20,7 @@
 #include <OpenSG/OSGLogoData.h>
 #include <OpenSG/OSGThread.h>
 #include <OpenSG/OSGMPBase.h>
+#include <OpenSG/OSGMatrixUtility.h>
 
 OSG::UInt32 OpenSGNav::OSG_MAIN_ASPECT_ID=0;
 
@@ -25,6 +28,8 @@ OSG::UInt32 OpenSGNav::OSG_MAIN_ASPECT_ID=0;
 void OpenSGNav::init()
 {
    vrj::OpenSGApp::init();      // Call base class init
+
+   vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::init: Called.\n" << vprDEBUG_FLUSH;
 
    // XXX: Complete
    // if(!osgInitAlreadyCalled())
@@ -34,6 +39,8 @@ void OpenSGNav::init()
 
 void OpenSGNav::contextInit()
 {
+   vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::contextInit: Called.\n" << vprDEBUG_FLUSH;
+
    context_data* c_data = &(*mContextData);
 
    // Check for thread initialized
@@ -70,50 +77,88 @@ void OpenSGNav::contextInit()
    initGLState();
 }
 
+void OpenSGNav::contextPreDraw()
+{
+   /*
+   context_data* c_data = &(*mContextData);
+   c_data->mWin->frameInit();
+   */
+}
+
+void OpenSGNav::contextPostDraw()
+{
+   /*
+   context_data* c_data = &(*mContextData);
+   c_data->mWin->frameExit();
+   */
+}
+
+
+
 
 void OpenSGNav::draw()
 {
-   /*
-    std::cout << "OpenSGNav::draw called\n";
-    vrj::GlDrawManager* drawMan = dynamic_cast<vrj::GlDrawManager*> ( this->getDrawManager() );
-    vprASSERT(drawMan != NULL);
-    vrj::GlUserData* userData = drawMan->currentUserData();
+   context_data* c_data = &(*mContextData);
 
-    // Copy the matrix
-    vrj::Projection* project = userData->getProjection();
-    float * vj_proj_view_mat = project->mViewMat.getFloatPtr();
-    OSGMat.setValue(vj_proj_view_mat);
-    */
+   vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::draw: Called.\n" << vprDEBUG_FLUSH;
+   vrj::GlDrawManager* drawMan = dynamic_cast<vrj::GlDrawManager*> ( this->getDrawManager() );
+   vprASSERT(drawMan != NULL);
+   vrj::GlUserData* userData = drawMan->currentUserData();
 
-/*	//Get the frustrum
-	vjFrustum frustum = project->mFrustum;
-	
-    //Reset the camera
-    the_cam->home();
+   // Copy the matrix
+   vrj::Projection* project = userData->getProjection();
+   vrj::Frustum vrj_frustum = userData->getProjection()->mFrustum;
 
-    //Set the frustrum (this is set with the matrix below)
-    float near_val = frustum[vjFrustum::VJ_NEAR];
-    the_cam->setFrustum(frustum[vjFrustum::VJ_LEFT]*near_val,   frustum[vjFrustum::VJ_RIGHT]*near_val,
-                      frustum[vjFrustum::VJ_BOTTOM]*near_val,  frustum[vjFrustum::VJ_TOP]*near_val,
-                      frustum[vjFrustum::VJ_NEAR],             frustum[vjFrustum::VJ_FAR]);
-	
-    //Set the look at
-    the_cam->attachTransform(osg::Camera::MODEL_TO_EYE, &osgMat);*/
-    /*
-    OSGMat.setValue(1.0f,0.0f,0.0f,0.0f,
-                    0.0f,1.0f,0.0f,0.0f,
-                    0.0f,0.0f,1.0f,0.0f,
-                    0.0f,0.0f,0.0f,1.0f);
-                    */
+   float * vj_proj_view_mat = project->mViewMat.getFloatPtr();
+   OSG::Matrix frustum_matrix, view_xform_mat;
+   view_xform_mat.setValue(vj_proj_view_mat);
+   osg::MatrixFrustum(frustum_matrix, vrj_frustum[vrj::Frustum::VJ_LEFT], vrj_frustum[vrj::Frustum::VJ_RIGHT],
+                                      vrj_frustum[vrj::Frustum::VJ_BOTTOM], vrj_frustum[vrj::Frustum::VJ_TOP],
+                                      vrj_frustum[vrj::Frustum::VJ_NEAR], vrj_frustum[vrj::Frustum::VJ_FAR]);
 
-    /*
-    _cart->getSFMatrix()->setValue(OSGMat);
-    updateHighlight();
-    */
-    //vjOSGApp::draw();
-    std::cout << "OpenSGNav::draw called\n";
+   // ---- SETUP CAMERA --- //
+   // Get the viewport
+   vrj::Viewport* vp = userData->getViewport();
+   vrj::CameraProjection* sim_cam_proj(NULL);
 
-    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   switch(vp->getType())
+   {
+   case vrj::Viewport::SURFACE:
+      vprASSERT(false);
+      /*
+      the_cam->home();
+      the_cam->setAdjustAspectRatioMode(osg::Camera::ADJUST_NONE);      // Tell it not to adjust the aspect ratio at all
+
+      //Set the frustrum (this is set with the matrix below)
+      //float near_val = frustum[Frustum::VJ_NEAR];
+      the_cam->setFrustum(frustum[Frustum::VJ_LEFT],   frustum[Frustum::VJ_RIGHT],
+                          frustum[Frustum::VJ_BOTTOM],  frustum[Frustum::VJ_TOP],
+                          frustum[Frustum::VJ_NEAR],             frustum[Frustum::VJ_FAR]);
+      */
+      break;
+
+   case vrj::Viewport::SIM:
+      sim_cam_proj = dynamic_cast<vrj::CameraProjection*>(project);
+      vprASSERT(sim_cam_proj != NULL && "Trying to use non-camera projection for simulator");
+      c_data->mCamera->setNear(vrj_frustum[vrj::Frustum::VJ_NEAR]);
+      c_data->mCamera->setFar(vrj_frustum[vrj::Frustum::VJ_FAR]);
+      c_data->mCamera->setFov(sim_cam_proj->mVertFOV);
+      break;
+
+   default:
+      vprASSERT(false);
+      break;
+   }
+
+   // --- Trigger the draw --- //
+   mRenderAction->setWindow(c_data->mWin.getCPtr());
+   mRenderAction->setViewport(NULL);
+   mRenderAction->setCamera(c_data->mCamera.getCPtr());
+   mRenderAction->setFrustumCulling(false);    // Turn off culling for now because I don't trust the frustum setup
+
+   mRenderAction->apply(mRoot);                // Actually do the rendering
+
+   //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
      // Set material color
    float onyx_red = 59.0f/255.0f;
    float onyx_blue = 57.0f/255.0f;
@@ -128,7 +173,7 @@ void OpenSGNav::draw()
    glMaterialfv( GL_FRONT,  GL_SHININESS, mat_shininess );
    //glColor4f(1.0, 1.0, 1.0, 1.0);
 
-    //glLoadIdentity();
+   //glLoadIdentity();
    glPushMatrix();
       glTranslatef(-1.5f,0.0f,6.0f);
        glBegin(GL_TRIANGLES);
@@ -182,10 +227,11 @@ void OpenSGNav::initGLState()
 
 void OpenSGNav::initRenderer()
 {
-   std::cout << "OpenSGNav::initRenderer called\n";
+   vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::initRenderer: Called.\n" << vprDEBUG_FLUSH;
 
     //the rendering action
     mRenderAction = OSG::RenderAction::create();
+    mRenderAction->setAutoFrustum(false);         // Turn off auto frustum
 
     mRoot = OSG::Node::create();
     mRootGroupCore = OSG::Group::create();
@@ -200,7 +246,8 @@ void OpenSGNav::initRenderer()
 
 void OpenSGNav::initScene(void)
 {
-   std::cout << "OpenSGNav::initScene called\n";
+   vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::initScene: Called.\n" << vprDEBUG_FLUSH;
+
    std::string wand("VJWand");
    mWand.init(wand);
 
