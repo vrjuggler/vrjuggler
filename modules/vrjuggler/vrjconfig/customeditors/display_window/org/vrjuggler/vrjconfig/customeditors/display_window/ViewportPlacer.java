@@ -69,16 +69,9 @@ public class ViewportPlacer
          e.printStackTrace();
       }
 
-      ClassLoader loader = getClass().getClassLoader();
-      URL surface_icon_path =
-         loader.getResource(EditorConstants.imageBase +
-                            "/vrjuggler-surface-viewport.png");
-      URL sim_icon_path = loader.getResource(EditorConstants.imageBase +
-                                             "/vrjuggler-sim-viewport.png");
       // Setup the viewport placer.
       wndPlacer.setModel(model);
-      wndPlacer.setRenderer(new ViewportRenderer(surface_icon_path,
-                                                 sim_icon_path));
+      wndPlacer.setRenderer(new ViewportRenderer());
    }
 
    public void setDesktopSize(Dimension desktopSize)
@@ -144,13 +137,20 @@ public class ViewportPlacer
       private Placer placer;
       private int index;
       private boolean selected;
-      private ImageIcon surfaceIcon, simIcon, scaledIcon;
+      private ImageIcon surfaceIcon, scaledSurfaceIcon;
+      private ImageIcon simIcon, scaledSimIcon;
 
-      public ViewportRenderer(URL surfaceIconPath, URL simIconPath)
+      public ViewportRenderer()
       {
-         surfaceIcon = new ImageIcon(surfaceIconPath);
-         simIcon     = new ImageIcon(simIconPath);
-         scaledIcon  = new ImageIcon();
+         ClassLoader loader = getClass().getClassLoader();
+         surfaceIcon =
+            new ImageIcon(loader.getResource(EditorConstants.imageBase +
+                                             "/vrjuggler-surface-viewport.png"));
+         simIcon =
+            new ImageIcon(loader.getResource(EditorConstants.imageBase +
+                                             "/vrjuggler-sim-viewport.png"));
+         scaledSurfaceIcon = new ImageIcon();
+         scaledSimIcon     = new ImageIcon();
       }
 
       public Component getPlacerRendererComponent(Placer placer,
@@ -183,26 +183,28 @@ public class ViewportPlacer
          {
             Dimension dim = placer.getModel().getSizeOf(index);
 
-            ImageIcon icon;
+            ImageIcon icon, scaled_icon;
 
             // XXX: Come up with a cleaner way to do this.
             if ( ((ConfigElement) placer.getModel().getElement(index)).getDefinition().getToken().equals("surface_viewport") )
             {
                icon = surfaceIcon;
+               scaled_icon = scaledSurfaceIcon;
             }
             else
             {
                icon = simIcon;
+               scaled_icon = scaledSimIcon;
             }
 
             // Check if we need to update the scaled image
-            Image img = scaledIcon.getImage();
-            if ((scaledIcon.getIconWidth() != dim.width) ||
-                (scaledIcon.getIconHeight() != dim.height))
+            Image img = scaled_icon.getImage();
+            if ((scaled_icon.getIconWidth() != dim.width) ||
+                (scaled_icon.getIconHeight() != dim.height))
             {
                img = icon.getImage().getScaledInstance(dim.width, dim.height,
                                                        Image.SCALE_DEFAULT);
-               scaledIcon.setImage(img);
+               scaled_icon.setImage(img);
             }
 
             // Sanity check in case our scale failed
