@@ -133,7 +133,7 @@ $(LIBDIR)/$(GADGET_LIB_STATIC) $(LIBDIR)/$(GADGET_PROF_LIB_STATIC): $(OBJDIR)/*.
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
 	$(RANLIB) $@
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
@@ -148,7 +148,11 @@ $(LIBDIR)/$(GADGET_LIB_DYNAMIC) $(LIBDIR)/$(GADGET_PROF_LIB_DYNAMIC): $(OBJDIR)/
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEPS)
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/* .
+else
+	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
+endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
@@ -159,7 +163,6 @@ $(LIBDIR)/$(GADGET_LIB_DYNAMIC) $(LIBDIR)/$(GADGET_PROF_LIB_DYNAMIC): $(OBJDIR)/
 # $GADGET_BASE_DIR should be set to $(instlinks).
 # =============================================================================
 links:
-ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation links"
 	@echo "------------------------------------------------"
@@ -167,14 +170,14 @@ ifneq (@OS_TYPE@, Win32)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
 	@$(MAKE) -C gadget instlinks=$(instlinks) links
 	for lib in $(LIBS) ; do 					\
-            cd $(instlinks)/$(LIBDIR_NAME) && rm -f $$lib* &&		\
+            cd $(instlinks)/$(LIBDIR_NAME) && $(RM_LN) $$lib* &&	\
               $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
           done
-	cd $(instlinks)/include/gadget && rm -f ./*.h &&		\
+	cd $(instlinks)/include/gadget && $(RM_LN) ./*.h &&		\
           $(LN_S) $(GADGETROOT_ABS)/gadget/*.h ./
-	cd $(instlinks)/include/gadget && rm -f ./gadgetDefines.h &&	\
+	cd $(instlinks)/include/gadget && $(RM_LN) ./gadgetDefines.h &&	\
           $(LN_S) $(topdir)/gadget/gadgetDefines.h ./gadgetDefines.h
-	cd $(instlinks)/include/gadget && rm -f ./gadgetParam.h &&	\
+	cd $(instlinks)/include/gadget && $(RM_LN) ./gadgetParam.h &&	\
           $(LN_S) $(topdir)/gadget/gadgetParam.h ./gadgetParam.h
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
@@ -186,12 +189,6 @@ ifneq (@OS_TYPE@, Win32)
 	@echo 'You should now set $$GADGET_BASE_DIR to:'
 	@cd $(instlinks) && echo "  `pwd`"
 	@echo "---------------------------------------------------------------"
-else
-	@echo "---------------------------------------------------------------"
-	@echo 'You must now install Gadgeteer and set %GADGET_BASE_DIR% to:'
-	@echo "  $(prefix)"
-	@echo "---------------------------------------------------------------"
-endif
 
 # Remove the links in $(instlinks).
 clean-links:

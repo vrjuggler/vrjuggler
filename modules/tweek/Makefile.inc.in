@@ -138,7 +138,7 @@ ifneq ($(OS_TYPE), Win32)
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
 	$(RANLIB) $@
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
@@ -153,7 +153,11 @@ $(LIBDIR)/$(TWEEK_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEPS)
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/* .
+else
+	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
+endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
@@ -188,7 +192,6 @@ endif	# ifndef NO_JAVA
 # $TWEEK_BASE_DIR should be set to $(instlinks).
 # =============================================================================
 links:
-ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation links"
 	@echo "------------------------------------------------"
@@ -196,20 +199,20 @@ ifneq (@OS_TYPE@, Win32)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
 	@$(MAKE) -C tweek instlinks="$(instlinks)" links
 	for lib in $(LIBS) ; do 					\
-            cd $(instlinks)/$(LIBDIR_NAME) && rm -f $$lib* &&		\
+            cd $(instlinks)/$(LIBDIR_NAME) && $(RM_LN) $$lib* &&	\
               $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
           done
-	cd $(instlinks)/include/tweek && rm -f ./*.h &&			\
+	cd $(instlinks)/include/tweek && $(RM_LN) ./*.h &&		\
           $(LN_S) $(TWEEKROOT_ABS)/tweek/*.h ./
-	cd $(instlinks)/include/tweek && rm -f ./tweekDefines.h &&	\
-          $(LN_S) $(topdir)/tweek/tweekDefines.h ./tweekDefines.h
-	cd $(instlinks)/include/tweek && rm -f ./tweekParam.h &&	\
-          $(LN_S) $(topdir)/tweek/tweekParam.h ./tweekParam.h
+	cd $(instlinks)/include/tweek && $(RM_LN) ./tweekDefines.h &&	\
+          $(LN_S) $(topdir)/tweek/tweekDefines.h ./
+	cd $(instlinks)/include/tweek && $(RM_LN) ./tweekParam.h &&	\
+          $(LN_S) $(topdir)/tweek/tweekParam.h ./
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 ifndef NO_JAVA
 ifeq ($(BUILD_JAVA), Y)
 	@$(MAKE) -C java instlinks="$(instlinks)" tweek-gui-links
-	cd $(instlinks)/bin && rm -f ./idl* &&				\
+	cd $(instlinks)/bin && $(RM_LN) ./idl* &&			\
           $(LN_S) $(JUGGLERROOT_ABS)/external/JacORB/idl* ./
 endif
 endif
@@ -222,12 +225,6 @@ endif
 	@echo 'You should now set $$TWEEK_BASE_DIR to:'
 	@cd $(instlinks) && echo "  `pwd`"
 	@echo "---------------------------------------------------------------"
-else
-	@echo "---------------------------------------------------------------"
-	@echo 'You must now install TWEEK and set %TWEEK_BASE_DIR% to:'
-	@echo "  $(prefix)"
-	@echo "---------------------------------------------------------------"
-endif
 
 # Remove the links in $(instlinks).
 clean-links:
