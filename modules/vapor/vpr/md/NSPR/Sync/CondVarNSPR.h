@@ -61,6 +61,7 @@
 #include <vpr/md/NSPR/Sync/MutexNSPR.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
+#include <vpr/md/NSPR/NSPRHelpers.h>
 
 
 namespace vpr {
@@ -118,11 +119,11 @@ public:
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
     inline int
-    wait (void) {
+    wait ( vpr::Interval timeToWait = vpr::Interval::NoTimeout) {
         PRStatus retval;
 
         // ASSERT:  We have been locked.
-        retval = PR_WaitCondVar(mCondVar, PR_INTERVAL_NO_TIMEOUT);
+        retval = PR_WaitCondVar(mCondVar, NSPR_getInterval(timeToWait));
 
         // XXX: Use error status to print a message before the assertion.
         vprASSERT(retval != PR_FAILURE);
