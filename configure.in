@@ -1563,6 +1563,7 @@ else
     AC_CHECK_LIB([m], [acosf], [AC_DEFINE(HAVE_ACOSF)])
     AC_CHECK_LIB([m], [atan2f], [AC_DEFINE(HAVE_ATAN2F)])
     AC_CHECK_LIB([m], [fabsf], [AC_DEFINE(HAVE_FABSF)])
+    AC_CHECK_LIB([m], [trunc], [AC_DEFINE(HAVE_TRUNC)])
 fi
 
 dnl # All of the above function checks may not be necessary ...
