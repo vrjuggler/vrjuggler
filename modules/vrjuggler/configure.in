@@ -472,7 +472,7 @@ if test "x$THREADS" = "xPOSIX" ; then
     dnl # This step and the following addition to $LIBS are necessary for
     dnl # properly testing for working POSIX semaphores.
     if test "x$CC_ACCEPTS_PTHREAD" = "xyes" ; then
-        CFLAGS="$CFLAGS -pthread"
+        LDFLAGS="$LDFLAGS -pthread"
     fi
 
     LIBS="$LIBS $PTHREAD_LIB"
