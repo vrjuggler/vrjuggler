@@ -72,10 +72,10 @@ SRCS		= vjAPI.cpp			\
                   vjFrustum.cpp			\
                   vjKernel.cpp			\
                   vjProjection.cpp		\
-									vjSurfaceViewport.cpp \
+                  vjSurfaceViewport.cpp		\
                   vjTrackedWallProjection.cpp	\
                   vjUser.cpp			\
-									vjViewport.cpp		\
+                  vjViewport.cpp		\
                   vjWallProjection.cpp
 
 ifeq (@OS_TYPE@, Win32)
