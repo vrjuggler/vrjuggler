@@ -1,9 +1,9 @@
-dnl **************** <VPR heading BEGIN do not edit this line> ****************
+dnl **************** <JCCL heading BEGIN do not edit this line> ****************
 dnl
-dnl Juggler Application Control & Configuration Language.
+dnl Juggler Application Configuration & Control Library
 dnl
 dnl Original Authors:
-dnl   Christopher Just
+dnl   Christopher Just, Carolina Cruz-Neira
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          $RCSfile$
@@ -11,7 +11,7 @@ dnl Date modified: $Date$
 dnl Version:       $Revision$
 dnl -----------------------------------------------------------------
 dnl
-dnl ***************** <VPR heading END do not edit this line> *****************
+dnl ***************** <JCCL heading END do not edit this line> *****************
 
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
 dnl
@@ -42,20 +42,23 @@ dnl ************** <auto-copyright.pl END do not edit this line> **************
 dnl ---------------------------------------------------------------------------
 dnl JCCL_PATH([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
 dnl
-dnl Test for JCCL and then define JCCL_CXXFLAGS, JCCL_LIBS, and 
-dnl JCCL_LIBS_STATIC.
+dnl Test for JCCL and then define JCCL_CXXFLAGS, JCCL_LIBS, and JCCL_LIBS_STATIC.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(JCCL_PATH,
 [
     dnl Get the cflags and libraries from the jccl-config script
     AC_ARG_WITH(jccl-prefix,
-                [  --with-jccl-prefix=PFX   Prefix where JCCL is installed (optional)],
+                [  --with-jccl-prefix=<PATH> Prefix where JCCL is installed
+                          (optional)                      [No default]],
                 jccl_config_prefix="$withval", jccl_config_prefix="")
     AC_ARG_WITH(jccl-exec-prefix,
-                [  --with-jccl-exec-prefix=PFX Exec prefix where JCCL is installed (optional)],
+                [  --with-jccl-exec-prefix=<PATH>
+                          Exec prefix where JCCL is
+                          installed (optional)            [No default]],
                 jccl_config_exec_prefix="$withval", jccl_config_exec_prefix="")
-    AC_ARG_ENABLE(jccltest, [  --disable-jccltest       Do not try to compile and run a test JCCL program],
-                    , enable_jccltest=yes)
+    AC_ARG_ENABLE(jccltest,
+                  [  --disable-jccltest       Do not try to compile and run a
+                          test JCCL program], , enable_jccltest=yes)
 
     if test "x$jccl_config_exec_prefix" != "x" ; then
         jccl_config_args="$jccl_config_args --exec-prefix=$jccl_config_exec_prefix"
@@ -95,8 +98,10 @@ AC_DEFUN(JCCL_PATH,
     else
         JCCL_CXXFLAGS=`$JCCL_CONFIG $jccl_config_args --cxxflags $ABI`
         JCCL_EXTRA_LIBS=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI`
-        JCCL_LIBS="`$JCCL_CONFIG $jccl_config_args --libs $ABI` $JCCL_EXTRA_LIBS"
-        JCCL_LIBS_STATIC="`$JCCL_CONFIG $jccl_config_args --libs $ABI --static` $JCCL_EXTRA_LIBS"
+        JCCL_LIBS_LD="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker` $JCCL_EXTRA_LIBS"
+        JCCL_LIBS_STATIC_LD="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static` $JCCL_EXTRA_LIBS"
+        JCCL_LIBS_CC="`$JCCL_CONFIG $jccl_config_args --libs $ABI` $JCCL_EXTRA_LIBS"
+        JCCL_LIBS_STATIC_CC="`$JCCL_CONFIG $jccl_config_args --libs $ABI --static` $JCCL_EXTRA_LIBS"
         JCCL_VERSION=`$JCCL_CONFIG --version`
         DPP_VERSION_CHECK_MSG(JCCL, $JCCL_VERSION, $min_jccl_version,
                               jccl_cv_jccl_version, $2, $3)
@@ -116,6 +121,8 @@ AC_DEFUN(JCCL_PATH,
     fi
 
     AC_SUBST(JCCL_CXXFLAGS)
-    AC_SUBST(JCCL_LIBS)
-    AC_SUBST(JCCL_LIBS_STATIC)
+    AC_SUBST(JCCL_LIBS_LD)
+    AC_SUBST(JCCL_LIBS_STATIC_LD)
+    AC_SUBST(JCCL_LIBS_CC)
+    AC_SUBST(JCCL_LIBS_STATIC_CC)
 ])
