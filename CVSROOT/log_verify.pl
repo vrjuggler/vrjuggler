@@ -2,15 +2,7 @@
 #
 # $Id$
 
-#
-#
-# Expected format:
-# 
-# COMMAND
-# username@email.com, username2@email.com
-# <the rest is commands>
-
-require 5.003;	# to be sure.  log_accum needs perl5
+require 5.003;	# This script needs perl5
 
 use File::Find ();
 use strict qw(vars);
@@ -29,7 +21,8 @@ use vars qw/*name *dir *prune/;
 
 sub validUser();
 
-my $CVSROOT = $ENV{'CVSROOT'} || "/cvsroot/vrjuggler";
+#my $CVSROOT = $ENV{'CVSROOT'} || "/cvsroot/vrjuggler";
+my $CVSROOT = "/cvsroot/vrjuggler";
 
 sub print_exit_message {
     print "** NOTE: Add entry to ChangeLog for major changes **\n";
