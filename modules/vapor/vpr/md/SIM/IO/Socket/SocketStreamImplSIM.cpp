@@ -61,26 +61,23 @@ vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
 {
    vpr::ReturnStatus status;
 
-   vpr::Uint32 queue_size;
-
    mConnectorQueueMutex.acquire();
-   {
-      queue_size = mConnectorQueue.size();
-   }
-   mConnectorQueueMutex.release();
 
-   if ( queue_size > 0 )
+   if ( mConnectorQueue.size() > 0 )
    {
       SocketStreamImplSIM* peer_ptr;
       SocketStreamImplSIM** peer_remote_ptr;
 
-      mConnectorQueueMutex.acquire();
-      {
-         peer_ptr        = mConnectorQueue.front().first;
-         peer_remote_ptr = mConnectorQueue.front().second;
-         mConnectorQueue.pop();
-      }
+      peer_ptr        = mConnectorQueue.front().first;
+      peer_remote_ptr = mConnectorQueue.front().second;
+      mConnectorQueue.pop();
+
       mConnectorQueueMutex.release();
+
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+         << "SocketStreamImplSIM::accept() [" << mLocalAddr
+         << "]: Got pending connector from " << peer_ptr->getLocalAddr()
+         << "\n" << vprDEBUG_FLUSH;
 
       client_sock.mRemoteAddr = peer_ptr->mLocalAddr;
       client_sock.mOpen       = true;
@@ -109,6 +106,7 @@ vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
    }
    else
    {
+      mConnectorQueueMutex.release();
       status.setCode(vpr::ReturnStatus::WouldBlock);
    }
 
@@ -121,6 +119,11 @@ vpr::ReturnStatus SocketStreamImplSIM::addConnector ( const vpr::SocketImplSIM* 
    vpr::SocketImplSIM* non_const_local;
    SocketStreamImplSIM* stream_local;
    SocketStreamImplSIM** stream_remote;
+
+   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+      << "SocketStreamImplSIM::addConnector() [" << mLocalAddr
+      << "]: Adding connector from " << local->getLocalAddr() << "\n"
+      << vprDEBUG_FLUSH;
 
    non_const_local = const_cast<vpr::SocketImplSIM*>(local);
    stream_local    = dynamic_cast<SocketStreamImplSIM*>(non_const_local);
