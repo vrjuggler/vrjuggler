@@ -139,51 +139,6 @@ void GlWindow::setProjection(vrj::Projection* proj)
 }
 
 
-
-/** Sets the projection matrix for this window to draw the camera eye frame */
-void GlWindow::setCameraProjection(vrj::CameraProjection* camProj)
-{
-   if (!window_is_open)
-      return;
-
-   vprASSERT(camProj != NULL && "Trying to use a non-camera projection with a sim view");
-   float* frust = camProj->mFrustum.frust;
-
-   vprDEBUG(vrjDBG_DRAW_MGR,7)  << "---- Camera Frustrum ----\n"
-               << camProj->mFrustum.frust << std::endl
-               << vprDEBUG_FLUSH;
-
-      // --- Set to the correct buffer --- //
-   glDrawBuffer(GL_BACK);
-
-      // --- Set up the projection --- //
-   glMatrixMode(GL_PROJECTION);
-   {
-      glLoadIdentity();             // Load identity matrix
-      /*
-      glFrustum(frust[Frustum::LEFT],frust[Frustum::RIGHT],
-                 frust[Frustum::BOTTOM],frust[Frustum::TOP],
-                 frust[Frustum::NEAR],frust[Frustum::FAR]);
-      */
-
-      /*
-      gluPerspective(camProj->mVertFOV, camProj->mAspectRatio*((window_width)/float(window_height)),
-                     frust[Frustum::VJ_NEAR], frust[Frustum::VJ_FAR]);
-                     */
-#ifdef USE_PROJECTION_MATRIX
-       // Set camera rotation and position
-   glMultMatrixf(camProj->mViewMat.getFloatPtr());
-#endif
-   }
-   glMatrixMode(GL_MODELVIEW);
-
-#ifndef USE_PROJECTION_MATRIX
-      // Set camera rotation and position
-   glLoadIdentity();
-   glMultMatrixf(camProj->mViewMat.getFloatPtr());
-#endif
-}
-
 int GlWindow::getNextWindowId()
 {
 vpr::Guard<vpr::Mutex> guard(mWinIdMutex);      // Protect the id
