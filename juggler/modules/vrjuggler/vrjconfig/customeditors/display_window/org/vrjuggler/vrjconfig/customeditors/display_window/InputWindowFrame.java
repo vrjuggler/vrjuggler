@@ -59,8 +59,10 @@ public class InputWindowFrame
       {
          jbInit();
 
-         mKbdEditor = new KeyboardChooserPanel(ctx, elt, allowKbdEdit);
-         this.getContentPane().add(mKbdEditor, BorderLayout.NORTH);
+         if ( allowKbdEdit )
+         {
+            this.getContentPane().add(mEditButton, BorderLayout.NORTH);
+         }
 
          placeMyself();
 
@@ -122,7 +124,6 @@ public class InputWindowFrame
    }
 
    private InputWindowFrame_this_configElementAdapter mElementListener = null;
-   private KeyboardChooserPanel mKbdEditor = null;
 
    private BorderLayout mMainLayout = new BorderLayout();
    private JLabel mIcon = new JLabel();
