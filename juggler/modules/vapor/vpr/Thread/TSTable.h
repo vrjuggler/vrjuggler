@@ -50,7 +50,7 @@ namespace vpr {
 // in the system for a specific thread.
 // Only the owning thread may actually access the table
 //-----------------------------------------------------------------
-class TSTable
+class VPR_CLASS_API TSTable
 {
 public:
    TSTable()

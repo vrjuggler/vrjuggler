@@ -94,7 +94,7 @@ namespace vpr
    // class myClass : public vpr::Singleton<myClass>
    //
    template< class singleClass >
-   class Singleton
+   class VPR_CLASS_API Singleton
    {
    public:
       // use the macro from above... kludgy yeah, but...

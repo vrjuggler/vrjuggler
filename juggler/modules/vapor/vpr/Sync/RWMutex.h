@@ -61,7 +61,7 @@ namespace vpr {
 // Date: 1-31-97
 //-----------------------------------------------
 //!PUBLIC_API:
-class RWMutex
+class VPR_CLASS_API RWMutex
 {
 public:
     RWMutex () : waitingReaders(&stateLock),

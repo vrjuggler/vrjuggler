@@ -45,7 +45,7 @@ namespace vpr {
 // NOTES:
 //    - This is used as the base class for all thread classes.
 // -------------------------------------------------------------------------- 
-class BaseThread
+class VPR_CLASS_API BaseThread
 {
 public:
    enum VPRThreadPriority {
@@ -295,7 +295,7 @@ private:
 // Used internally because we can have many types of indexes for the thread
 // list depending upon the type of threads being used.
 template <class IdxType>
-class ThreadTable
+class VPR_CLASS_API ThreadTable
 {
 public:
    // -----------------------------------------------------------------------

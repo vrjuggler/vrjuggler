@@ -72,7 +72,7 @@ namespace vpr {
 // Date: 1-29-97
 //!PUBLIC_API:
 //-----------------------------------------------
-class CondVarGeneric
+class VPR_CLASS_API CondVarGeneric
 {
 public:
    //: Constructor

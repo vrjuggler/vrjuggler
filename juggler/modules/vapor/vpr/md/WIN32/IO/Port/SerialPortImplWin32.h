@@ -17,7 +17,7 @@ namespace vpr {
 // ----------------------------------------------------------------------------
 //: vpr::SerialPort implementation for Win32.
 // ----------------------------------------------------------------------------
-class SerialPortImplWin32 : public Port {
+class VPR_CLASS_API SerialPortImplWin32 : public Port {
 public:
     // ------------------------------------------------------------------------
     //: Constructor.  This creates a file handle object connected to the given

@@ -1,9 +1,12 @@
 #ifndef STATUS_VPR_ERROR_CODE
 #define STATUS_VPR_ERROR_CODE
 
+#include <vpr/vprConfig.h>
+
+
 namespace vpr
 {
-   class Status
+   class VPR_CLASS_API Status
    {
    public:
       enum Code

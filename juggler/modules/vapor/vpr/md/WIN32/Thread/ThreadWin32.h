@@ -54,7 +54,7 @@ namespace vpr {
 //: Wrapper for Win32 thread handling functions.
 //-----------------------------------------------
 //!PUBLIC_API:
-class ThreadWin32 : public BaseThread
+class VPR_CLASS_API ThreadWin32 : public BaseThread
 {
 public:
     // -----------------------------------------------------------------------

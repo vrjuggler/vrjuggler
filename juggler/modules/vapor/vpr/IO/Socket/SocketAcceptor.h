@@ -43,7 +43,7 @@ namespace vpr
 
 // Socket connection acceptor factory
 // Wraps all the nitty-gritty details of accepting a connection
-class SocketAcceptor
+class VPR_CLASS_API SocketAcceptor
 {
 public:
     // Default constructor

@@ -53,7 +53,7 @@ namespace vpr {
 //: Block-style (as opposed to streaming) I/O interface.
 // ----------------------------------------------------------------------------
 //!PUBLIC_API:
-class BlockIO {
+class VPR_CLASS_API BlockIO {
 public:
     enum _open_mode {
         READ_ONLY,        // Open read-only
