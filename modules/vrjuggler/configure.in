@@ -373,17 +373,15 @@ fi
 # DTK
 # ----
 try_dtk='no'
+vpr_subsystem=`$VPR_CONFIG --subsystem`
 
-# XXX/TODO: broken...
-#
 # We can use DTK in one of the following two situations:
 #     1) If the NSPR subsystem is enabled, the target platform is UNIX-based,
 #        and NSPR threads are not being used.
 #     2) If the POSIX subsystem is enabled.
-case $SUBSYSTEM in
+case $vpr_subsystem in
     NSPR)
-        if test "x$OS_TYPE" = "xUNIX" -a "x$NSPR_THREADS_ENABLED" != "xyes"
-        then
+        if test "x$OS_TYPE" = "xUNIX"; then
             try_dtk='yes'
         fi
         ;;
