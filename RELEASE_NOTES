@@ -8,11 +8,24 @@ For all versions:
     - See the Known Bugs page on the VR Juggler website (www.vrjuggler.org)
       for the current list of bugs.
 
+Version 1.0.6
+Released: July 1, 2002
+
+   Major bug fixes:
+       * Stereo rendering works correctly with OpenSceneGraph 0.8.45.
+       * Stereo rendering works on Win32.
+       * Dynamic, user-defined device registration works.
+       * The Ascension Flock of Birds driver initializes birds correctly
+         when the transmitter is not the last device on the bird bus.
+       * Analog data collection with the Immersion Interface Box works.
+
+==============================================================================
+
 Version: 1.0.5
 Released: February 8, 2002
 
     Major bug fixes:
-        * vjGlOsgApp class now works correctly in simulator and in
+        * vjOsgApp class now works correctly in simulator and in
           multi-pipe setups.  The backport released in v1.0.4 was
           incomplete and non-functional.
 
