@@ -1,5 +1,7 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+[1.0 Beta 1 released - 12.24.2004]=============================================
+2004-12-22 patrickh    NEW VERSION: 0.91.0
 2004-12-22 patrickh    EnvironmentService.getenv() now falls back on
                        System.getProperty() as a last resort attempt to give
                        back a non-default value.
