@@ -123,4 +123,11 @@ public interface DataSource
     * Checks if this data source can accept configuration definitions.
     */
    public boolean acceptsDefinitions();
+
+   /**
+    * Gets a list of the URLs for the resources included by this data source.
+    *
+    * @return  a list of URLs for the included resources
+    */
+   public List getIncludes();
 }
