@@ -45,11 +45,74 @@
 // Declare my application class
 class simplePfNavApp : public vjPfApp
 {
+public: // Model and sound member classes
+   class Model
+   {
+   public:
+      Model() : description( "no description" ),
+         filename( "no name" ),
+         scale( 1.0f ),
+         pos( 0.0f, 0.0f, 0.0f ),
+         rot( 0.0f, 0.0f, 0.0f ),
+         isCollidable( true ),
+         modelDCS(NULL),
+         modelNode(NULL)
+      {
+      }
+
+      Model(std::string desc, std::string file_name, float s, vjVec3 position, vjVec3 rotation, bool collidable)
+      {
+         description = desc;
+         filename = file_name;
+         scale = s;
+         pos = position;
+         rot = rotation;
+         isCollidable = collidable;
+      }
+
+      // Config parameters
+      std::string description;
+      std::string filename;
+      float       scale;
+      vjVec3      pos;
+      vjVec3      rot;
+      bool        isCollidable;
+
+      // Run-time information
+      // --- modelDCS -- modelNode --- (Model info)
+      pfDCS*      modelDCS;
+      pfNode*     modelNode;
+   };
+
+   class Sound
+   {
+    public:
+      Sound() : name( "no name" ),
+          alias( "no alias set" ),
+          positional( "false" ),
+          pos( 0.0f, 0.0f, 0.0f )
+      {
+      }
+
+      Sound(std::string sound_name, std::string alias_name, bool isPositional, vjVec3 position)
+      {
+         name = sound_name;
+         alias = alias_name;
+         positional = isPositional;
+         pos = position;
+      }
+
+      std::string name;
+      std::string alias;
+      bool positional;
+      vjVec3 pos;
+   };
+
 public:
    simplePfNavApp() : mStatusMessageEmitCount(0),// mWorldDcsTrans( 0.0f, 0.0f, 0.0f ),
       mInitialNavPos( 0.0f, 0.0f, 0.0f ),
       mUseDriveMode( true ),
-      mUCmodels( NULL ), 
+      mUCmodels( NULL ),
       mSoundNodes( NULL ),
       mUnCollidableModelGroup( NULL )
    {
@@ -58,7 +121,7 @@ public:
       mWorldModel = NULL;
       //mWorldDCS = NULL;
       mCollidableModelGroup = NULL;
-      mUseDriveMode = true;
+      mUseDriveMode = false;
 
       mVelNavDrive = NULL;
       mNavigationDCS = NULL;
@@ -88,15 +151,15 @@ public:
       for (int x = 0; x < mModelList.size(); ++x)
       {
          cout<<"initing converter for types like: "<<mModelList[x].filename<<"\n"<<flush;
-      
+
          if (!mModelList[x].filename.empty())
             pfdInitConverter( mModelList[x].filename.c_str() );
       }
-            
+
       pfNavDCS::init();
       if(mUseStats)
          mStats.preForkInit();
-      
+
       pjSoundReplaceTrav::preForkInit();
    }
 
@@ -155,17 +218,23 @@ public:
 
 public:  // Configure the application
    // These must be set before the kernel starts calling the application
-   void addModel( const std::string filename ) 
-   { 
-      cout<<"Adding model: "<<filename<<"\n"<<flush;
-      model m;
+   void addModelFile( const std::string filename )
+   {
+      vjDEBUG(vjDBG_ALL,0) <<"Adding model file: "<<filename<<"\n" << vjDEBUG_FLUSH;
+      Model m;
       m.filename = filename;
       m.description = filename;
-      mModelList.push_back( m );
+      addModel(m);
    }
+
+   // Add a model to the model list
+   void addModel(Model m)
+   { mModelList.push_back(m); }
+
+   void addSound(Sound s)
+   { mSoundList.push_back(s); }
+
    void setFilePath(const std::string path)     { mFilePath = path;}
-   //void setWorldDcsScale(const float scale)     {mWorldDcsScale = scale;}
-   //void setWorldDcsTrans(const vjVec3 trans)       {mWorldDcsTrans = trans;}
    void setInitialNavPos(const vjVec3 initialPos)  { mInitialNavPos = initialPos; }
    void setUseDriveMode(const bool val=true)  { mUseDriveMode = val;}
 
@@ -174,47 +243,12 @@ public:  // Configure the application
 
 // models and sounds.
 public:
-   class model
-   {
-    public:
-      model() : description( "no description" ),
-         filename( "no name" ),
-         scale( 1.0f ),
-         pos( 0.0f, 0.0f, 0.0f ),
-         rot( 0.0f, 0.0f, 0.0f ),
-         isCollidable( true )
-      {
-      }    
-      std::string description;
-      std::string filename;
-      float scale;
-      vjVec3 pos;
-      vjVec3 rot;
-      bool isCollidable;
-   };
-   std::vector< model > mModelList;
-   class sound
-   {
-    public:
-      sound() : name( "no name" ),
-          alias( "no alias set" ),
-          positional( "false" ),
-          pos( 0.0f, 0.0f, 0.0f )
-      {
-      }    
-      std::string name;
-      std::string alias;
-      bool positional;
-      vjVec3 pos;
-   };
-   std::vector< sound > mSoundList;
+   std::vector< Model > mModelList;
+   std::vector< Sound > mSoundList;
 
 public:
    // CONFIG PARAMS
-   //std::string    mModelFileName;
    std::string    mFilePath;
-   //float          mWorldDcsScale;
-   //vjVec3         mWorldDcsTrans;
    vjVec3         mInitialNavPos;
    bool           mUseDriveMode;
 
@@ -230,12 +264,11 @@ public:
    // SCENE GRAPH NODES
    pfLightSource* mSun;                      // Sun to light the environment
    pfGroup*       mRootNode;                 // The root of the scene graph
-   pfGroup*        mWorldModel;               // The model of the world
-   pfGroup*        mUCmodels;               // The model of the world
-   pfGroup*        mSoundNodes;               // The sounds of the world
-   //pfDCS*         mWorldDCS;                 // DCS to transform the world
+   pfGroup*       mWorldModel;               // Collidable model of the world
+   pfGroup*       mUCmodels;                 // UnCollidable model of the world
+   pfGroup*       mSoundNodes;               // The sounds of the world
    pfGroup*       mCollidableModelGroup;     // Part of the world that is collidable
-   pfGroup*       mUnCollidableModelGroup;     // Part of the world that is collidable
+   pfGroup*       mUnCollidableModelGroup;   // Part of the world that is collidable
 };
 
 // ------- SCENE GRAPH ----
@@ -255,12 +288,12 @@ void simplePfNavApp::initializeModels()
    // REMOVE old Models
    if(mWorldModel != NULL)
    {
-      mCollidableModelGroup->removeChild(mWorldModel);  
+      mCollidableModelGroup->removeChild(mWorldModel);
    }
    if (mUCmodels != NULL)
    {
       mUnCollidableModelGroup->removeChild(mUCmodels);
-   }   
+   }
 
    // FIXME: Destory any old data
    // XXX: Delete old stuff
@@ -272,33 +305,33 @@ void simplePfNavApp::initializeModels()
 
    mWorldModel = new pfGroup;
    mUCmodels = new pfGroup;
-   
+
    for (int x = 0; x < mModelList.size(); ++x)
    {
-      pfDCS* nextModelDCS = new pfDCS();
+      mModelList[x].modelDCS = new pfDCS();
 
       // set trans
       pfVec3 pf_nextModelDcsTrans;
-      pf_nextModelDcsTrans = vjGetPfVec( mModelList[x].pos );
-      nextModelDCS->setTrans( pf_nextModelDcsTrans[0], 
-            pf_nextModelDcsTrans[1], 
-            pf_nextModelDcsTrans[2]);
-      
+      pfVec3 pf_model_trans = vjGetPfVec( mModelList[x].pos );
+      mModelList[x].modelDCS->setTrans( pf_model_trans[0],
+                                          pf_model_trans[1],
+                                          pf_model_trans[2]);
+
       // FIXME: do rotation...
-      
-      nextModelDCS->setScale( mModelList[x].scale );
-      cout<<"Adding "<<mModelList[x].filename<<"\n"<<flush;
-      pfNode* nextModel = pfFileIO::autoloadFile( mModelList[x].filename, pfFileIO::NOCONVERT );
-      
-      assert( nextModel != NULL );
-      
-      nextModelDCS->addChild( nextModel );
+      mModelList[x].modelDCS->setScale( mModelList[x].scale );
+
+      vjDEBUG(vjDBG_ALL,0) << "pfNavApp: Adding " << mModelList[x].filename << "\n" <<flush;
+      mModelList[x].modelNode = pfFileIO::autoloadFile( mModelList[x].filename, pfFileIO::NOCONVERT );
+
+      assert( mModelList[x].modelNode != NULL );
+
+      mModelList[x].modelDCS->addChild( mModelList[x].modelNode );      // Add model to the DCS
       if (mModelList[x].isCollidable == true)
-         mWorldModel->addChild( nextModelDCS );
+         mWorldModel->addChild( mModelList[x].modelDCS );
       else
-         mUCmodels->addChild( nextModelDCS );
-   }   
-   
+         mUCmodels->addChild( mModelList[x].modelDCS );
+   }
+
    // --- CONSTRUCT SCENE GRAPH --- //
    mCollidableModelGroup->addChild( mWorldModel );
    mUnCollidableModelGroup->addChild( mUCmodels );
@@ -317,11 +350,11 @@ void simplePfNavApp::initializeSounds()
    // REMOVE old sounds
    if(mSoundNodes != NULL)
    {
-      mUnCollidableModelGroup->removeChild( mSoundNodes );  
+      mUnCollidableModelGroup->removeChild( mSoundNodes );
    }
-   
+
    mSoundNodes = new pfGroup();
-   
+
    for (int x = 0; x < mSoundList.size(); ++x)
    {
       pfDCS* nextSoundDCS = new pfDCS();
@@ -329,18 +362,18 @@ void simplePfNavApp::initializeSounds()
       // set trans
       pfVec3 pf_nextSoundDcsTrans;
       pf_nextSoundDcsTrans = vjGetPfVec( mSoundList[x].pos );
-      nextSoundDCS->setTrans( pf_nextSoundDcsTrans[0], 
-            pf_nextSoundDcsTrans[1], 
+      nextSoundDCS->setTrans( pf_nextSoundDcsTrans[0],
+            pf_nextSoundDcsTrans[1],
             pf_nextSoundDcsTrans[2]);
-      
+
       vjSound* vjs = vjSoundManager::instance()->getHandle( mSoundList[x].alias.c_str() );
       pjSoundNode* nextSound = new pjSoundNode( vjs, mSoundList[x].positional );
       vjs->trigger();  //make sure it's playing..
-      
+
       nextSoundDCS->addChild( nextSound );
       mSoundNodes->addChild( nextSoundDCS );
    }
-   
+
    mUnCollidableModelGroup->addChild( mSoundNodes );
 }
 
@@ -364,7 +397,7 @@ void simplePfNavApp::initScene()
    mSun->setColor( PFLT_SPECULAR, 1.0f, 1.0f, 1.0f );
    mSun->on();
 
-   
+
 
    // --- CONSTRUCT STATIC Structure of SCENE GRAPH -- //
    mRootNode->addChild( mNavigationDCS );
@@ -372,11 +405,11 @@ void simplePfNavApp::initScene()
    mNavigationDCS->addChild(mCollidableModelGroup);
    mNavigationDCS->addChild(mUnCollidableModelGroup);
    //mNavigationDCS->addChild( pfFileIO::autoloadFile( "terrain.flt", pfFileIO::FEET ) );
-   
+
    // --- Load the model (if it is configured) --- //
    initializeModels();
    initializeSounds();
-      
+
    // Configure the Navigator DCS node:
    vjMatrix initial_nav;              // Initial navigation position
    initial_nav.setTrans(mInitialNavPos);
@@ -403,11 +436,11 @@ void simplePfNavApp::initScene()
 
    // make sure config is processed, before doing sound replace traversal.
    this->configProcessPending();
-   
+
    // replace all nodes with _Sound_ with pjSoundNodes...
    std::string extension = "_Sound_";
    pjSoundReplaceTrav::traverse( mRootNode, extension );
-   
+
 
    // load these files into perfly to see just what your scenegraph
    // looked like. . . . .useful for debugging.
