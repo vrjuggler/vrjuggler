@@ -68,7 +68,7 @@ vpr::ReturnStatus LibraryUNIX::load()
    {
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
          << clrOutNORM(clrYELLOW, "WARNING:")
-         << " Failed to load '" << mName << "' -- " << dlerror() << std::endl
+         << " Could not load '" << mName << "' -- " << dlerror() << std::endl
          << vprDEBUG_FLUSH;
       status.setCode(vpr::ReturnStatus::Fail);
    }
