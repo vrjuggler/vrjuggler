@@ -394,7 +394,7 @@ public:
       {
          if (selector.getOut( selector.getHandle(j) ) & (vpr::Selector::Read | vpr::Selector::Except))
          {
-            assertTestThread( handle == selector.getHandle( j )
+            CPPUNIT_ASSERT( handle == selector.getHandle( j )
                   && "Handle doesn't match" );
          }
       }
@@ -411,24 +411,24 @@ public:
       std::string message = "Hi Maynard, My leg hurts";
       vpr::Uint32 bytes_written;
       status = spawned_socket.write( message, message.size(), bytes_written );
-      assertTestThread( status.success() && "Problem writing in acceptor" );
+      CPPUNIT_ASSERT( status.success() && "Problem writing in acceptor" );
 
       // s:    write the max size...
       int size;
       status = spawned_socket.getSendBufferSize( size );
-      assertTestThread( status.success() && "couldn't get the max size for sending data with socket" );
+      CPPUNIT_ASSERT( status.success() && "couldn't get the max size for sending data with socket" );
       message.resize( size );
       status = spawned_socket.write( message, message.size(), bytes_written );
-      assertTestThread( status.success() && "maxsize test failed" );
+      CPPUNIT_ASSERT( status.success() && "maxsize test failed" );
 
       // block until data is sent
-      /*
+/*
       status = selector.select( num_events, 50000 );
       for (int j = 0; j < selector.getNumHandles(); ++j)
       {
          if (selector.getOut( selector.getHandle(j) ) & (vpr::Selector::Read | vpr::Selector::Except))
          {
-            threadAssertTest( handle == selector.getHandle( j )
+            CPPUNIT_ASSERT( handle == selector.getHandle( j )
                   && "Handle doesn't match" );
          }
       }
@@ -436,8 +436,8 @@ public:
 
       // c:     read
       status = connector_socket.read( message, message.size(), bytes_written );
-      threadAssertTest( status.success(), "read test failed" );
-      */
+      CPPUNIT_ASSERT( status.success() && "read test failed" );
+*/
 
       // a/c/s: Close
       status = acceptor_socket.close();
