@@ -98,7 +98,7 @@ void ConfigManager::addPendingAdds(ConfigChunkDB* db)
       mPendingConfig.push_back(pending);
 
       // Begin Machine Specific Code
-      if ( (*i)->getDescToken() == std::string("cluster_machine") )
+      if ( (*i)->getDescToken() == std::string("MachineSpecific") )
       {
          if ( (*i)->getProperty<std::string>("host_name") == mCachedLocalHostName ||
               (*i)->getProperty<std::string>("host_name") == "localhost")
