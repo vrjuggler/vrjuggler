@@ -410,7 +410,11 @@ public class PropertyDefinition
     */
    public boolean equals(Object obj)
    {
-      if (obj instanceof PropertyDefinition)
+      if (obj == this)
+      {
+         return true;
+      }
+      else if (obj instanceof PropertyDefinition)
       {
          PropertyDefinition d = (PropertyDefinition)obj;
          if (mName.equals(d.mName) &&
