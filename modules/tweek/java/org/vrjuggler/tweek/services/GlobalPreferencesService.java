@@ -62,10 +62,6 @@ public interface GlobalPreferencesService
    public static final int MIN_USER_LEVEL = 1;
    public static final int MAX_USER_LEVEL = 10;
 
-   public static final int WINDOWS_CHOOSER = 0;
-   public static final int EMACS_CHOOSER   = 1;
-   public static final int DEFAULT_CHOOSER = WINDOWS_CHOOSER;
-
    public static final String CWD_START     = "<cwd>";
    public static final String HOME_START    = "<home>";
    public static final String DEFAULT_START = CWD_START;
@@ -117,16 +113,6 @@ public interface GlobalPreferencesService
     * one of the default list, or it may be a user-defined setting.
     */
    public String getChooserStartDir();
-
-   /**
-    * Sets the user's current preferred file chooser "open style".  This
-    * defines how file choosers should behave with respect to the directory
-    * they use when first opening.  It is up to the code that opens the file
-    * choosers to act on this preference.
-    */
-   public void setChooserOpenStyle(int style);
-
-   public int getChooserOpenStyle();
 
    /**
     * Sets the user's preference for lazy Panel Bean instantiation.  This
