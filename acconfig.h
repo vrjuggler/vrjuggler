@@ -111,8 +111,18 @@
 /* Define to one of the above values to enable performance testing. */
 #undef VJ_PERFORMANCE
 
-/* Define to `unsigned int' if the u_int type is not available. */
+/*
+ * Define to `unsigned int' if the u_int type is not available.  On Windows
+ * when using Visual C++, define to UINT.
+ */
 #undef u_int
+
+/* 
+ * On Windows when using Visual C++, define to __int32 and __int64
+ * respectively if these two are not available..
+ */
+#undef int32_t
+#undef int64_t
 
 /* Define if you have the sinf function.  */
 #undef HAVE_SINF
