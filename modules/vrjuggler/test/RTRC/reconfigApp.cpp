@@ -331,6 +331,24 @@ bool reconfigApp::removeChunkFile( std::string filename )
    }
 }
 
+bool reconfigApp::swapChunkFiles( std::string remove_file, std::string add_file )
+{
+   if (!removeChunkFile( remove_file ))
+   {
+      std::cout << "\tError: Could not remove config file " << remove_file << "\n" << std::flush;
+      return false;
+   }
+
+   if (!addChunkFile( add_file ))
+   {
+      std::cout << "\tError: Could not add config file " << add_file << "\n" << std::flush;
+      return false;
+   }
+
+   return true;
+
+}
+
 bool reconfigApp::removeRecentChunkDB()
 {
    if (mNewChunkDB != NULL)
@@ -1094,19 +1112,7 @@ bool reconfigApp::reconfigSimPos_exec()
 {
    std::cout << "Beginning test for reconfiguring a sim position device...\n" << std::flush;
 
-   if (!removeChunkFile( "./Chunks/startup/sim.simheadpos.config" ))
-   {
-      std::cout << "\tError: Could not remove the head position file\n" << std::flush;
-      return false;
-   }
-
-   if (!addChunkFile( "./Chunks/sim.simheadpos.reconfig.config" ))
-   {
-      std::cout << "\tError: Could not add the head position reconfiguration file\n" << std::flush;
-      return false;
-   }
-
-   return true;
+   return swapChunkFiles( "./Chunks/startup/sim.simheadpos.config", "./Chunks/sim.simheadpos.reconfig.config" );
 }
 
 bool reconfigApp::reconfigSimPos_check()
@@ -1135,11 +1141,59 @@ bool reconfigApp::reconfigSimPos_check()
 bool reconfigApp::reconfigSimDigital_exec()
 {
    std::cout << "Beginning test for reconfiguring a sim digital device...\n" << std::flush;
-   return true;
+
+   return swapChunkFiles( "./Chunks/startup/sim.wandbuttonsdigital02.config", 
+                          "./Chunks/sim.wandbuttonsdigital02.reconfig.config" );
 }
 
 bool reconfigApp::reconfigSimDigital_check()
 {
+   //Get the sim digital pointer
+   gadget::SimDigital* device = (gadget::SimDigital*)gadget::InputManager::instance()->getDevice( "SimWandButtons02" );
+
+   if ( device == NULL )
+   {
+      std::cout << "\tError: Could not find the sim digital device\n" << std::flush;
+      return false;      
+   }
+
+   //Get the vector of keymodpairs
+   std::vector<gadget::SimInput::KeyModPair> keypairs = device->getKeys();
+
+   //Load up the config file.
+   jccl::ConfigChunkDB fileDB ; fileDB.load( "./Chunks/sim.wandbuttonsdigital02.reconfig.config" );
+   std::vector<jccl::ConfigChunkPtr> fileChunks;
+   fileDB.getByType( "SimDigital", fileChunks );
+
+   bool key_status;
+   //For each keymodpair that was defined in the device...
+   for (int i=0; i < keypairs.size(); i++)
+   {
+      key_status = false;
+
+      //Scan the sim digital config chunk to see if was defined there
+      for ( int i=0; i < fileChunks[0]->getNum("keyPairs"); i++ )
+      {
+         jccl::ConfigChunkPtr key_mod_pair = fileChunks[0]->getProperty<jccl::ConfigChunkPtr>("keyPairs", i);
+
+         //If they are the same..
+         if (( keypairs[0].mModifier == key_mod_pair->getProperty<int>("modKey", 0))
+            && keypairs[1].mKey == key_mod_pair->getProperty<int>("key", 0))
+         {
+            key_status = true;
+            continue;
+         }
+      }  
+
+      //If we have not found a key that matches...
+      if (key_status == false)
+      {
+         std::cout << "\tError: One or more of the key pair definitions are incorrect\n" << std::flush;
+         return false;
+      }
+
+   }
+
    return true;
 }
 
@@ -1250,19 +1304,7 @@ bool reconfigApp::reconfigAnalogProxy_exec()
 {
    std::cout << "Beginning test for reconfiguring an analog proxy...\n" << std::flush;
 
-   if (!removeChunkFile( "./Chunks/sim.analogproxy01.config" ))
-   {
-      std::cout << "\tError: Could not remove the analog proxy file\n" << std::flush;
-      return false;
-   }
-
-   if (!addChunkFile( "./Chunks/sim.analogproxy01.reconfig.config" ))
-   {
-      std::cout << "\tError: Could not add the analog proxy reconfiguration file\n" << std::flush;
-      return false;
-   }
-
-   return true;
+   return swapChunkFiles( "./Chunks/sim.analogproxy01.config", "./Chunks/sim.analogproxy01.reconfig.config" );
 }
 
 bool reconfigApp::reconfigAnalogProxy_check()
@@ -1321,19 +1363,7 @@ bool reconfigApp::reconfigPosProxy_exec()
 {
    std::cout << "Beginning test for reconfiguring a position proxy...\n" << std::flush;
 
-   if (!removeChunkFile( "./Chunks/sim.simcam1proxy02.config" ))
-   {
-      std::cout << "\tError: Could not remove the position proxy file\n" << std::flush;
-      return false;
-   }
-
-   if (!addChunkFile( "./Chunks/sim.simcam1proxy02.reconfig.config" ))
-   {
-      std::cout << "\tError: Could not add the position proxy reconfiguration file\n" << std::flush;
-      return false;
-   }
-
-   return true;
+   return swapChunkFiles( "./Chunks/sim.simcam1proxy02.config", "./Chunks/sim.simcam1proxy02.reconfig.config");
 }
 
 bool reconfigApp::reconfigPosProxy_check()
@@ -1391,19 +1421,7 @@ bool reconfigApp::reconfigDigitalProxy_exec()
 {
    std::cout << "Beginning test for reconfiguring a digital proxy...\n" << std::flush;
 
-   if (!removeChunkFile( "./Chunks/sim.button0proxy02.config" ))
-   {
-      std::cout << "\tError: Could not remove the digital proxy file\n" << std::flush;
-      return false;
-   }
-
-   if (!addChunkFile( "./Chunks/sim.button0proxy02.reconfig.config" ))
-   {
-      std::cout << "\tError: Could not add the digital proxy reconfiguration file\n" << std::flush;
-      return false;
-   }
-
-   return true;
+   return swapChunkFiles( "./Chunks/sim.button0proxy02.config", "./Chunks/sim.button0proxy02.reconfig.config");
 }
 
 bool reconfigApp::reconfigDigitalProxy_check()
@@ -1460,19 +1478,8 @@ bool reconfigApp::addKeyboardProxy_check()
 bool reconfigApp::reconfigKeyboardProxy_exec()
 {
    std::cout << "Beginning test for reconfiguring a keyboard proxy...\n" << std::flush;
-   if (!removeChunkFile( "./Chunks/sim.wandkeyboardproxy02.config" ))
-   {
-      std::cout << "\tError: Could not remove the keyboard proxy file\n" << std::flush;
-      return false;
-   }
 
-   if (!addChunkFile( "./Chunks/sim.wandkeyboardproxy02.reconfig.config" ))
-   {
-      std::cout << "\tError: Could not add the keyboard proxy reconfiguration file\n" << std::flush;
-      return false;
-   }
-
-   return true;
+   return swapChunkFiles( "./Chunks/sim.wandkeyboardproxy02.config", "./Chunks/sim.wandkeyboardproxy02.reconfig.config");
 }
 
 bool reconfigApp::reconfigKeyboardProxy_check()
