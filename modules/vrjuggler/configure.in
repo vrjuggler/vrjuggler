@@ -224,7 +224,6 @@ case $host_os in
         CFLAGS="$CFLAGS"
         CXXFLAGS="-ptv $CXXFLAGS"
         DBG_FLAGS="-g -gslim"
-        INCLUDES="$INCLUDES -I/usr/include/CC -I/usr/include"
         LD='${CXX} -shared'
         LDFLAGS="$LDFLAGS"
         _LD_REGOPTS='-check_registry ${DSOREGFILE}'
@@ -774,8 +773,8 @@ dnl # -------------------------------------------------------------------------
 dnl # Do Makefile substitutions.
 dnl # -------------------------------------------------------------------------
 if test "$PLATFORM" = "SGI" ; then
-    CFLAGS="$CFLAGS -nostdinc -woff 1685,515,608,658,799,803,852,1048,1233,1499"
-    CXXFLAGS="$CXXFLAGS -nostdinc -woff 3322 -w2"
+    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
+    CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
 fi
 
 DEPENDFLAGS=""
