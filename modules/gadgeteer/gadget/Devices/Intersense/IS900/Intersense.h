@@ -88,34 +88,33 @@ typedef struct {
 // XXX: It should be virtual public, but that causes an assertion failure.  This needs to be debugged
 //class Intersense : virtual public Position, virtual public Digital, virtual public Analog
 
-//----------------------------------------------------------------------------
-//: Position derived class for running an IS900 tracking system.
-//
-//  Wraps the IntersenseStandalone driver.
-//
-//  Intersense is a positional device driver for the Flock of Birds, the config
-//  chunk in the constructor should set up all the settings, for these to be
-//  changed the Flock has to be deleted and a new instance created with an
-//  updated configchunk.
-//  <br>
-//! NOTE: Intersense inherits from Digital and Analog.  These base classes,
-//+ however, can not handle multiple receivers in the same way as
-//+ Position.  Therefore, to access buttons 0-3 on station 0,
-//+ call for button 0-3. but to access buttons 0-3 on station 1,
-//+ you must ask for units 4-7, and so on.
-//! NOTE: Some functions still remain for changing the options of
-//+    the flock when its not in Sampling mode, but in order to stay
-//+    consistent with the Input/vjPosition functionality these
-//+    are only left for building apps without jccl::ConfigChunks
-//! NOTE: A note on receiver access:
-//+  Clients of juggler should access tracker recievers as [0-n]
-//+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
-//+  then you can access the data, in order, as 0,1,2.
-//
-// See also: Position
-//---------------------------------------------------------------------------
-//!PUBLIC_API:
-//class Intersense :  public Input, public Position,  public Digital,  public Analog
+/**
+ * Position derived class for running an IS900 tracking system.
+ *
+ * Wraps the IntersenseStandalone driver.
+ *
+ * Intersense is a positional device driver for the Flock of Birds, the config
+ * chunk in the constructor should set up all the settings, for these to be
+ * changed the Flock has to be deleted and a new instance created with an
+ * updated configchunk.
+ *
+ * @note Intersense inherits from Digital and Analog.  These base classes,
+ *       however, can not handle multiple receivers in the same way as
+ *       gadget::Position.  Therefore, to access buttons 0-3 on station 0,
+ *       call for button 0-3. but to access buttons 0-3 on station 1,
+ *       you must ask for units 4-7, and so on.
+ * @note Some functions still remain for changing the options of
+ *       the flock when its not in Sampling mode, but in order to stay
+ *       consistent with the Input/vjPosition functionality these
+ *       are only left for building apps without jccl::ConfigChunks
+ * @note A note on receiver access:
+ *   Clients of juggler should access tracker recievers as [0-n]
+ *   For example, if you have recievers 1,2, and 4 with transmitter on 3,
+ *   then you can access the data, in order, as 0,1,2.
+ *
+ * See also: Position
+ *class Intersense :  public Input, public Position,  public Digital,  public Analog
+ */
 class Intersense : public InputMixer<InputMixer<InputMixer<Input,Digital>,Analog>,Position>
 {
 protected:
@@ -149,60 +148,60 @@ public:
    Intersense();
    virtual ~Intersense();
 
+   /** Configures the device with a config chunk. */
+   virtual bool config(jccl::ConfigChunkPtr c);
 
-//: configure the flock with a config chunk
-    virtual bool config(jccl::ConfigChunkPtr c);
+   /** Begins sampling. */
+   int startSampling();
 
-//: begin sampling
-    int startSampling();
+   /** Main thread of control for this active object. */
+   void controlLoop(void* nullParam);
 
-// Main thread of control for this active object
-    void controlLoop(void* nullParam);
+   /** Stops sampling. */
+   int stopSampling();
 
-//: stop sampling
-    int stopSampling();
+   /** Samples data. */
+   int sample();
 
-//: sample data
-    int sample();
+   /** Updates to the sampled data. */
+   void updateData();
 
-//: update to the sampled data.
-    void updateData();
+   /** Returns what chunk type is associated with this class. */
+   static std::string getChunkType() { return std::string("Intersense");}
 
-//: return what chunk type is associated with this class.
-    static std::string getChunkType() { return std::string("Intersense");}
-
-    /** Get current data from the receiver.
-     *  @arg dev - the receiver number.  Clients of juggler should access
-     *             tracker receivers as [0-n].  For example, if you have
-     *             receivers 1, 2, and 4, with transmitter on 3, then
-     *             you can access them as devs 0, 1, and 2.
-     *  @return a pointer to the receiver's current PositionData, or NULL
-     *          if the device is not active.
-     */
-    // PositionData* getPositionData (int dev=0);
-
+   /** Gets current data from the receiver.
+    *  @arg dev The receiver number.  Clients of juggler should access
+    *           tracker receivers as [0-n].  For example, if you have
+    *           receivers 1, 2, and 4, with transmitter on 3, then
+    *           you can access them as devs 0, 1, and 2.
+    *  @return a pointer to the receiver's current PositionData, or NULL
+    *          if the device is not active.
+    */
+   // PositionData* getPositionData (int dev=0);
 
 
-//: Get the digital and analog data
-//! ARGS: d - the button number
-//! POST: returns a boolean value where 0 = false and 1 = true
-//! NOTE: Since the tracker has multiple possible devices but digital
-//+   devices assume only one device, the buttons are layed out as
-//+   d = MAX_NUM_BUTTONS*(device number) + (button number)
-//+   device number is zero based
-//+   button number is zero based
-//
-//+     ex.  for button number 4 of device 1
-//+   buttonValue = getDigitalData( 1*MAX_NUM_BUTTONS + 4);
-//+   Most configurations have the wand on port 2... so the device number is 1
-//+   The rest button layout is described in the Intersense Manual
-//+     (this value is set in the juggler config files)
-//    DigitalData* getDigitalData(int d = 0);
-//    AnalogData* getAnalogData(int d = 0);
 
+   /**
+    * Gets the digital and analog data.
+    * @param d  The button number.
+    * @post returns a boolean value where 0 = false and 1 = true
+    * @note Since the tracker has multiple possible devices but digital
+    *       devices assume only one device, the buttons are layed out as
+    *       d = MAX_NUM_BUTTONS*(device number) + (button number)
+    *       device number is zero based
+    *       button number is zero based
+    */
+    // ex.  for button number 4 of device 1
+    // buttonValue = getDigitalData( 1*MAX_NUM_BUTTONS + 4);
+    // Most configurations have the wand on port 2... so the device number is 1
+    // The rest button layout is described in the Intersense Manual
+    // (this value is set in the juggler config files)
+    //
+//   DigitalData* getDigitalData(int d = 0);
+//   AnalogData* getAnalogData(int d = 0);
 
-//: see if the flock is active or not
-    inline bool isActive() { return mTracker.isActive(); };
+   /** Checks if the device is active. */
+   bool isActive() { return mTracker.isActive(); };
 
    /**
     * Invokes the global scope delete operator.  This is required for proper
