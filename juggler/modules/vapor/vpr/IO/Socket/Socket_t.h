@@ -307,12 +307,13 @@ public:
      *
      * @return <code>vpr::Status::Success</code> is returned if the read
      *         operation completed successfully.<br>
-     *         <code>vpr::Status::Success</code> is returned if the read
+     *         <code>vpr::Status::Failure</code> is returned if the read
      *         operation failed.<br>
-     *         <code>vpr::Status::InProgress</code> if the device is in
-     *         non-blocking mode, and the read operation is in progress.<br>
+     *         <code>vpr::Status::WouldBlock</code> if the device is in
+     *         non-blocking mode, and there is no data to receive.<br>
      *         <code>vpr::Status::Timeout</code> is returned if the read
      *         could not begin within the timeout interval.
+     *
      * @param buffer     A pointer to the buffer where the socket's buffer
      * contents are to be stored.
      * @param length     The number of bytes to be read.
@@ -349,10 +350,10 @@ public:
      *
      * @return <code>vpr::Status::Success</code> is returned if the read
      *         operation completed successfully.<br>
-     *         <code>vpr::Status::Success</code> is returned if the read
+     *         <code>vpr::Status::Failure</code> is returned if the read
      *         operation failed.<br>
-     *         <code>vpr::Status::InProgress</code> if the device is in
-     *         non-blocking mode, and the read operation is in progress.<br>
+     *         <code>vpr::Status::WouldBlock</code> if the device is in
+     *         non-blocking mode, and there is no data to receive.<br>
      *         <code>vpr::Status::Timeout</code> is returned if the read
      *         could not begin within the timeout interval.
      */
@@ -384,10 +385,10 @@ public:
      *
      * @return <code>vpr::Status::Success</code> is returned if the read
      *         operation completed successfully.<br>
-     *         <code>vpr::Status::Success</code> is returned if the read
+     *         <code>vpr::Status::Failure</code> is returned if the read
      *         operation failed.<br>
-     *         <code>vpr::Status::InProgress</code> if the device is in
-     *         non-blocking mode, and the read operation is in progress.<br>
+     *         <code>vpr::Status::WouldBlock</code> if the device is in
+     *         non-blocking mode, and there is no data to receive.<br>
      *         <code>vpr::Status::Timeout</code> is returned if the read
      *         could not begin within the timeout interval.
      */
@@ -419,10 +420,10 @@ public:
      *
      * @return <code>vpr::Status::Success</code> is returned if the read
      *         operation completed successfully.<br>
-     *         <code>vpr::Status::Success</code> is returned if the read
+     *         <code>vpr::Status::Failure</code> is returned if the read
      *         operation failed.<br>
-     *         <code>vpr::Status::InProgress</code> if the device is in
-     *         non-blocking mode, and the read operation is in progress.
+     *         <code>vpr::Status::WouldBlock</code> if the device is in
+     *         non-blocking mode, and there is no data to receive.
      */
     inline vpr::Status
     recvn (void* buffer, const size_t length, ssize_t& bytes_read,
@@ -452,10 +453,10 @@ public:
      *
      * @return <code>vpr::Status::Success</code> is returned if the read
      *         operation completed successfully.
-     *         <code>vpr::Status::Success</code> is returned if the read
-     *         operation failed.  <code>vpr::Status::InProgress</code> if the
-     *         device is in non-blocking mode, and the read operation is in
-     *         progress.
+     *         <code>vpr::Status::Failure</code> is returned if the read
+     *         operation failed.  <code>vpr::Status::WouldBlock</code> if the
+     *         device is in non-blocking mode, and there is no data to
+     *         receive.
      */
     inline vpr::Status
     recvn (std::string& buffer, const size_t length, ssize_t& bytes_read,
@@ -485,10 +486,10 @@ public:
      *
      * @return <code>vpr::Status::Success</code> is returned if the read
      *         operation completed successfully.<br>
-     *         <code>vpr::Status::Success</code> is returned if the read
+     *         <code>vpr::Status::Failure</code> is returned if the read
      *         operation failed.<br>
-     *         <code>vpr::Status::InProgress</code> if the device is in
-     *         non-blocking mode, and the read operation is in progress.<br>
+     *         <code>vpr::Status::WouldBlock</code> if the device is in
+     *         non-blocking mode, and there is no data to receive.<br>
      *         <code>vpr::Status::Timeout</code> is returned if the read
      *         could not begin within the timeout interval.
      */
@@ -520,9 +521,9 @@ public:
      *         operation completed successfully.<br>
      *         <code>vpr::Status::Failure</code> is returned if the write
      *         operation failed.
-     *         <code>vpr::Status::InProgress</code> is returned if the handle
-     *         is in non-blocking mode, and the write operation is in
-     *         progress.<br>
+     *         <code>vpr::Status::WouldBlock</code> is returned if the handle
+     *         is in non-blocking mode, and the write operation could not be
+     *         completed.<br>
      *         <code>vpr::Status::Timeout</code> is returned if the write
      *         could not begin within the timeout interval.
      */
@@ -554,9 +555,9 @@ public:
      *         operation completed successfully.<br>
      *         <code>vpr::Status::Failure</code> is returned if the write
      *         operation failed.
-     *         <code>vpr::Status::InProgress</code> is returned if the handle
-     *         is in non-blocking mode, and the write operation is in
-     *         progress.<br>
+     *         <code>vpr::Status::WouldBlock</code> is returned if the handle
+     *         is in non-blocking mode, and the send operation could not be
+     *         completed.<br>
      *         <code>vpr::Status::Timeout</code> is returned if the write
      *         could not begin within the timeout interval.
      */
@@ -590,32 +591,9 @@ public:
      *         operation completed successfully.<br>
      *         <code>vpr::Status::Failure</code> is returned if the write
      *         operation failed.
-     *         <code>vpr::Status::InProgress</code> is returned if the handle
-     *         is in non-blocking mode, and the write operation is in
-     *         progress.<br>
-     *         <code>vpr::Status::Timeout</code> is returned if the write
-     *         could not begin within the timeout interval.
-     * @pre The device is open for writing.
-     * @post The given buffer is written to the I/O device, and the number of
-     *       bytes written successfully is returned to the caller via the
-     *       <code>bytes_written</code> parameter.
-     *
-     * @param buffer        A pointer to the buffer (a vector of chars) to
-     *                      be written.
-     * @param length        The length of the buffer.
-     * @param bytes_written The number of bytes written to the device.
-     * @param timeout       The maximum amount of time to wait for data to be
-     *                      available for writing.  This argument is optional
-     *                      and defaults to
-     *                      <code>vpr::Interval::NoTimeout</code>.
-     *
-     * @return <code>vpr::Status::Success</code> is returned if the write
-     *         operation completed successfully.<br>
-     *         <code>vpr::Status::Failure</code> is returned if the write
-     *         operation failed.
-     *         <code>vpr::Status::InProgress</code> is returned if the handle
-     *         is in non-blocking mode, and the write operation is in
-     *         progress.<br>
+     *         <code>vpr::Status::WoudlBlock</code> is returned if the handle
+     *         is in non-blocking mode, and the send operation could not be
+     *         completed.<br>
      *         <code>vpr::Status::Timeout</code> is returned if the write
      *         could not begin within the timeout interval.
      */
@@ -741,8 +719,8 @@ protected:
      *
      * @return vpr::Status::Success is returned if the read operation
      *         completed successfully.<br>
-     *         vpr::Status::InProgress if the device is in non-blocking mode,
-     *         and the read operation is in progress.<br>
+     *         vpr::Status::WouldBlock if the device is in non-blocking mode,
+     *         and there is no data to read.<br>
      *         vpr::Status::Timeout is returned if the read could not begin
      *         within the timeout interval.<br>
      *         vpr::Status::Failure is returned if the read operation failed.
@@ -776,8 +754,8 @@ protected:
      *
      * @return vpr::Status::Success is returned if the read operation
      *         completed successfully.<br>
-     *         vpr::Status::InProgress if the device is in non-blocking mode,
-     *         and the read operation is in progress.<br>
+     *         vpr::Status::WouldBlock if the device is in non-blocking mode,
+     *         and there is no data to read.<br>
      *         vpr::Status::Timeout is returned if the read could not begin
      *         within the timeout interval.<br>
      *         vpr::Status::Failure is returned if the read operation failed.
@@ -808,8 +786,8 @@ protected:
      *
      * @return vpr::Status::Success is returned if the write operation
      *         completed successfully.<br>
-     *         vpr::Status::InProgress is returned if the handle is in
-     *         non-blocking mode, and the write operation is in progress.<br>
+     *         vpr::Status::WouldBlock is returned if the handle is in
+     *         non-blocking mode, and the write could not be completed.<br>
      *         vpr::Status::Timeout is returned if the write could not begin
      *         within the timeout interval.<br>
      *         vpr::Status::Failure is returned if the write operation failed.
