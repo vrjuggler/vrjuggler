@@ -1,4 +1,3 @@
-
 # ***************** <SNX heading BEGIN do not edit this line> *****************
 #
 # sonix
@@ -146,14 +145,16 @@ links:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
-	$(SHELL) $(MKINSTALLDIRS) $(LIBDIR_BASE)
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_BASE)
 	cd $(instlinks)/include &&                                      \
           for dir in $(SUBDIR) ; do                                     \
               rm -f ./$$dir ;                                           \
               ln -s $(ROOT_ABS)/$$dir ./$$dir ;                       \
           done
-	cd $(instlinks) && rm -f $(LIBDIR_NAME) &&                    \
-      	  ln -s $(LIBDIR_BASE) ./$(LIBDIR_NAME)
+	for lib in $(LIBS) ; do 					\
+            cd $(instlinks)/$(LIBDIR_NAME) && rm -f $$lib* &&		\
+              $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
+          done
 	cd $(instlinks) && rm -rf ./share &&                  \
        	  $(SHELL) $(MKINSTALLDIRS) ./share/sonix && \
            ln -s $(ROOT_ABS)/data ./share/sonix/data
