@@ -65,6 +65,8 @@
  // -grow the vector to however many values we need
  bool vjTrackdSensor::config(vjConfigChunk* c)
  {
+    vjPosition::config(c);
+
     // Create sensor
     int shm_key = (int)c->getProperty("shm_key");
     if(shm_key == 0)
