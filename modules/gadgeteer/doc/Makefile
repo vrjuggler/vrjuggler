@@ -14,7 +14,7 @@ LATEX_OUTPUT_DIR=	latex
 
 # Fill these in!!  Together, they form the installation prefix.
 webroot=	$(HOME)/public_html/phpjug
-instdir=	gadget/0.1/programmer.reference
+instdir=	gadgeteer/0.1/programmer.reference
 
 prefix=		$(webroot)/$(instdir)
 
