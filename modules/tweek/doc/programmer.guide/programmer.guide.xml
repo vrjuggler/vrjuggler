@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../../../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="../../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <book>
    <bookinfo>
@@ -193,7 +193,7 @@
                   <primary>XML</primary>
                </indexterm>. The XML file can contain information about many Beans or about a single Bean. The XML file itself is a <quote>beanlist</quote> document. The four Bean categories, described above, each have an XML element that has children giving information about the specific Bean. The elements are <sgmltag>&lt;service&gt;</sgmltag>, <sgmltag>&lt;viewer&gt;</sgmltag>, <sgmltag>&lt;guipanel&gt;</sgmltag>, and <sgmltag>&lt;generic&gt;</sgmltag>.</para>
             <para>All Bean XML entries must contain a <sgmltag>&lt;file&gt;</sgmltag> element. Through its <literal>source</literal> attribute, this element provides the path to the JAR file that contains the full Bean code. When specifying the JAR file path, environment variables may be used. They must use the syntax <varname>${ENV_VAR}</varname> (the curly braces are required). The <literal>class</literal> element gives the fully qualified name of the class stored within the JAR file that will be instantiated. The extension <filename>.class</filename> must not be specified. This is to allow the use of serialized classes which have the extension <filename>.ser</filename>. The Tweek Bean-loading code will figure out what is available and take the right actions.</para>
-            <para>In addition to the <sgmltag>&lt;file&gt;</sgmltag> element, there may be zero or more <sgmltag>&lt;dependency&gt;</sgmltag> elements. These list dependencies of the Bean named as other external JAR files. The <sgmltag>&lt;dependency&gt;</sgmltag> element has two attributes: <literal>file</literal> and <literal>path</literal>. The attribute <literal>file</literal> names the JAR file; <literal>path</literal> gives the path (a semi-colon separated list of directories) where the JAR file may be found.</para>
+            <para>In addition to the <sgmltag>&lt;file&gt;</sgmltag> element, a &lt;depedencies&gt; element may be specified. Dependecies of the Bean named as external JAR files or other beans may be listed therein. The &lt;dependencies&gt; element may contain zero of more elements of type &lt;jar&gt; and &lt;bean&gt;. The &lt;jar&gt; element has a single attribute, <literal>path</literal>, which gives the path (a semi-colon separated list of directories) where the JAR file may be found. The contents of the &lt;jar&gt; element defines the name of the JAR file. The &lt;bean&gt; element's contents defines the name of the bean that the current bean depends on.</para>
             <para>Of the four Bean categories, the XML for Panel Beans can contain the most information. In addition to the previously mentioned elements, Panel Bean entries may have two optional elements: <sgmltag>&lt;tree&gt;</sgmltag> and <sgmltag>&lt;icon&gt;</sgmltag>. The element <sgmltag>&lt;tree&gt;</sgmltag> specifies the path within the Bean tree hierarchy where the Panel Bean will be placed. The path is given as a /-separated list of directories. If the named path does not exist when the Bean is loaded, it will be created. The element <sgmltag>&lt;icon&gt;</sgmltag> names a custom icon for the Bean and a tool-tip. An example of a Panel Bean XML entry is shown in <xref linkend="PlexusGraphView.xml.example"/>. Note that this is not the full file--it is only the <sgmltag>&lt;guipanel&gt;</sgmltag> element for a single Bean.</para>
             <example id="PlexusGraphView.xml.example">
                <title>PlexusGraphView.xml snippet</title>
@@ -201,9 +201,11 @@
   &lt;file name="${PLX_BASE_DIR}/bin/beans/PlexusGraphView.jar" 
         class="plx.graphview.GraphView" /&gt;
   &lt;tree path="/" /&gt;
-  &lt;dependency file="openjgraph.jar" path="${PLX_BASE_DIR}/bin" /&gt;
-  &lt;dependency file="jgraph.jar" path="${PLX_BASE_DIR}/bin" /&gt;
-  &lt;dependency file="PlexusComm.jar" path="${PLX_BASE_DIR}/bin" /&gt;
+  &lt;depedencies&gt;
+    &lt;jar path="${PLX_BASE_DIR}/bin"&gt;openjgraph.jar&lt;/jar&gt;
+    &lt;jar path="${PLX_BASE_DIR}/bin"&gt;jgraph.jar&lt;/jar&gt;
+    &lt;jar path="${PLX_BASE_DIR}/bin"&gt;PlexusComm.jar&lt;/jar&gt;
+  &lt;/depedencies&gt;
   &lt;icon source="jar:file:${PLX_BASE_DIR}/bin/beans/PlexusGraphView.jar!/plx/graphview/icon.gif"
         tooltip="Plexus Network Graph Visualization" /&gt;
 &lt;/guipanel&gt;</programlisting>
@@ -1119,11 +1121,11 @@ public void connectionStateChanged(CommunicationEvent e)
                         <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.0/beanlist.xsd"&gt;
-&lt;guipanel name="Network Tester"&gt;
-&lt;file name="${TWEEK_BASE_DIR}/bin/beans/NetworkTestBean.jar"
-      class="networktest.NetworkTest" /&gt;
-&lt;tree path="/Beans" /&gt;
-&lt;/guipanel&gt;
+  &lt;guipanel name="Network Tester"&gt;
+    &lt;file name="${TWEEK_BASE_DIR}/bin/beans/NetworkTestBean.jar"
+          class="networktest.NetworkTest" /&gt;
+    &lt;tree path="/Beans" /&gt;
+  &lt;/guipanel&gt;
 &lt;/beanlist&gt;</programlisting>
                         <calloutlist>
                            <callout arearefs="NetworkTestBean.xml.version">
