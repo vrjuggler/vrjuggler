@@ -303,7 +303,7 @@ public class ChunkDBPanel extends JPanel
 	    tp = current_treemodel.tree.getSelectionPaths();
 	    if (tp == null)
 		return;
-	    v = new ConfigChunkDB(Core.descdb);
+	    v = new ConfigChunkDB();
 	    if (tp != null) {
 		for (i = 0; i < tp.length; i++) {
 		    ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)tp[i].getLastPathComponent()).getUserObject());
@@ -317,7 +317,7 @@ public class ChunkDBPanel extends JPanel
 	    Core.ui.configure_pane.sendAcross (current_treemodel.chunkdb, this);
 	}
 	else if (source == new_button) {
-	    selectDB (Core.addChunkDB (new ConfigChunkDB (Core.descdb)));
+	    selectDB (Core.addChunkDB (new ConfigChunkDB()));
 	}
 	else if (source == close_button) {
 	    Core.closeChunkDB (current_treemodel);
@@ -340,7 +340,7 @@ public class ChunkDBPanel extends JPanel
 	    if (tp == null)
 		return;
 	    if (current_treemodel == Core.active_treemodel) {
-		ConfigChunkDB db = new ConfigChunkDB (Core.descdb);
+		ConfigChunkDB db = new ConfigChunkDB ();
 		for (i = 0; i < tp.length; i++) {
 		    ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)tp[i].getLastPathComponent()).getUserObject());
 		    if (ni.ch != null) {
@@ -414,7 +414,7 @@ public class ChunkDBPanel extends JPanel
 	    ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent()).getUserObject());
 	    if (ni.isChunkNode()) {
 		if (current_treemodel == Core.active_treemodel) {
-		    ConfigChunkDB db = new ConfigChunkDB (Core.descdb);
+		    ConfigChunkDB db = new ConfigChunkDB();
 		    db.addElement (ni.ch);
 		    Core.net.removeChunks (db);
 		} 

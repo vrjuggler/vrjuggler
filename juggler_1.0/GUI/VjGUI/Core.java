@@ -85,11 +85,11 @@ public class Core {
 	perf_collection = new PerfDataCollection();
 	chunkorgtree = new ChunkOrgTree();
 	descdb = new ChunkDescDB();
-	default_chunkdb = new ConfigChunkDB (descdb);
+	default_chunkdb = new ConfigChunkDB();
 	ChunkFactory.setDefaultChunkDB (default_chunkdb);
 	ChunkFactory.setChunkDescDB (descdb);
-	gui_chunkdb = new ConfigChunkDB (descdb);
-	db = new ConfigChunkDB(descdb);
+	gui_chunkdb = new ConfigChunkDB ();
+	db = new ConfigChunkDB();
 	db.setName ("Active Configuration");
 	active_treemodel = new ChunkDBTreeModel (db, chunkorgtree);
 	net = new NetControl();

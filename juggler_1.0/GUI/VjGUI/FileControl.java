@@ -245,7 +245,7 @@ public class FileControl {
 	try {
 	    r = new FileReader (f);
 	    st = new ConfigStreamTokenizer(r);
-	    ConfigChunkDB chunkdb = new ConfigChunkDB(Core.descdb);
+	    ConfigChunkDB chunkdb = new ConfigChunkDB();
 	    chunkdb.setName(f.getName());
 	    chunkdb.setFile(f);
 	    chunkdb.read(st);
