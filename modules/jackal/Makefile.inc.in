@@ -50,6 +50,8 @@ top_srcdir=	@top_srcdir@
 DBG_FLAGS=	-D_DEBUG @DBG_FLAGS@
 OPT_FLAGS=	-D_OPT @OPT_FLAGS@
 
+HAVE_TWEEK_CXX=	@HAVE_TWEEK_CXX@
+
 BUILD_JAVA=	@BUILD_JAVA@
 JDOM_JAR=	@JDOM_JAR@
 
@@ -109,7 +111,17 @@ BEFOREBUILD=	beforebuild
 AFTERBUILD=	afterbuild
 
 # Things to do before the object files and library are built.
-beforebuild: $(PARAM_HEADER)
+beforebuild:
+	@$(MAKE) $(PARAM_HEADER)
+ifeq ($(HAVE_TWEEK_CXX), Y)
+	@echo "------------------------------------------------"
+	@echo "IDL code generation phase"
+	@echo "------------------------------------------------"
+	@$(MAKE) cxx-idl
+endif
+
+cxx-idl:
+	@$(MAKE) RECTARGET="cxx_idl" DO_IDL=1 recursive
 
 $(PARAM_HEADER):
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
