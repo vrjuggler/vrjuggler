@@ -8,7 +8,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 				link="${PROGRAMMERREF}/index.html"
 				info="Quick reference for developers using the Juggler virtual platform."
 				target="Body" 
-				image="Book_Closed.gif" 
+				image="GreenBook_Closed.gif" 
 				imagetwo="Book_Open.gif">
 
 			< item title="Classes A-Z"
