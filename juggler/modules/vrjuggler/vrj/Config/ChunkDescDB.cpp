@@ -169,8 +169,7 @@ bool vjChunkDescDB::load (const std::string& filename, const std::string& parent
 
     if (!in) {
         vjDEBUG(vjDBG_ERROR, vjDBG_CRITICAL_LVL)
-            << clrSetNORM(clrRED)
-            << "WARNING: vjChunkDescDB::load(): Unable to open file\n"
+            << clrOutNORM(clrYELLOW, "WARNING:") << " vjChunkDescDB::load(): Unable to open file\n"
             << vjDEBUG_FLUSH;
         vjDEBUG_NEXT(vjDBG_ERROR, vjDBG_CRITICAL_LVL)
             << "'" << fname.c_str() << "'" << clrRESET << std::endl
