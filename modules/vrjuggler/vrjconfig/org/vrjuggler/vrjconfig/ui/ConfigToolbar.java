@@ -431,7 +431,7 @@ public class ConfigToolbar
          ConnectionDialog dialog =
             new ConnectionDialog((Frame) getParentFrame(),
                                  "Remote Run-Time Reconfiguration Connections");
-         dialog.show();
+         dialog.setVisible(true);
 
          if ( dialog.getStatus() == ConnectionDialog.OK_OPTION )
          {
