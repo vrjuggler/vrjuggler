@@ -54,11 +54,11 @@ import org.vrjuggler.tweek.beans.BeanPathException;
 import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.beans.FileLoader;
 import org.vrjuggler.tweek.beans.HelpProvider;
+import org.vrjuggler.tweek.beans.UndoHandler;
 import org.vrjuggler.tweek.beans.XMLBeanFinder;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
-import org.vrjuggler.tweek.services.GlobalPreferencesService;
-import org.vrjuggler.tweek.services.GlobalPreferencesServiceProxy;
+import org.vrjuggler.tweek.text.MessageDocument;
 import org.vrjuggler.tweek.wizard.*;
 
 import org.vrjuggler.vrjconfig.VrjConfigConstants;
@@ -72,10 +72,11 @@ public class ControlPanelView
    extends JPanel
    implements HelpProvider
             , FileLoader
+            , UndoHandler
 {
    public ControlPanelView()
    {
-      mToolbar = new ConfigToolbar(this);
+      mToolbar = new ControlPanelToolbar(mContext, this, this);
 
       // Make sure all editors are registered.
       PropertyEditorManager.registerEditor(Boolean.class, BooleanEditor.class);
@@ -83,27 +84,32 @@ public class ControlPanelView
       PropertyEditorManager.registerEditor(Integer.class, IntegerEditor.class);
       PropertyEditorManager.registerEditor(Float.class, FloatEditor.class);
 
+      EnvironmentServiceProxy env_svc = new EnvironmentServiceProxy();
+
       // This needs to be the first step to ensure that all the basic services
       // and viewers get loaded.
-      String default_path = System.getProperty("VJ_BASE_DIR") +
+      String default_path = env_svc.getenv("VJ_BASE_DIR") +
                             File.separator + "share" +
                             File.separator + "vrjuggler" +
                             File.separator + "beans" +
                             File.separator + "customeditors";
 
+      MessageDocument doc = TweekCore.instance().getMessageDocument();
+
       try
       {
-         // Get the beans in the given path and add them to the dependency manager
+         // Get the beans in the given path and add them to the dependency
+         // manager.
          XMLBeanFinder finder = new XMLBeanFinder(false);
          List beans = finder.find(default_path);
-         System.out.println(beans);
-         
+         doc.printStatusnl(beans.toString());
+
          TweekCore tc = TweekCore.instance();
          tc.loadBeans(beans);
       }
       catch (BeanPathException e)
       {
-         System.out.println("WARNING: Invalid path " + default_path);
+         doc.printWarningnl("WARNING: Invalid path " + default_path);
       }
       
       try
@@ -119,21 +125,6 @@ public class ControlPanelView
       mHelpBrowserFrame.setSize(new java.awt.Dimension(640, 480));
       mHelpBrowserFrame.setTitle("VR Juggler Configuration Help Browser");
       mHelpBrowserFrame.validate();
-
-      try
-      {
-         GlobalPreferencesService prefs = new GlobalPreferencesServiceProxy();
-
-         // Using the global user preferences from Tweek, set the start
-         // directory for mFileChooser.
-         File f = new File(prefs.getChooserStartDir());
-         mFileChooser.setCurrentDirectory(f);
-      }
-      catch(Exception ex)
-      {
-         System.err.println("ControlPanelView(): WARNING: Failed to set file chooser start directory: " +
-                            ex.getMessage());
-      }
 
       // Add forward and back buttons to the toolbar
       mToolbar.addToToolbar(Box.createHorizontalStrut(8));
@@ -158,19 +149,14 @@ public class ControlPanelView
       mToolbar.addToToolbar(mBackBtn);
       mToolbar.addToToolbar(mForwardBtn);
 
-      // Make sure the toolbar is using our context whenever we become active.
-      addComponentListener(new ComponentAdapter()
-      {
-         public void componentShown(ComponentEvent evt)
-         {
-            mToolbar.setConfigContext(mContext);
-         }
-      });
-
       // Load the ControlPanel model from XML file.
       EnvironmentServiceProxy env_service = new EnvironmentServiceProxy();
-      String controlpanel_path = env_service.expandEnvVars("${VJ_BASE_DIR}/share/vrjuggler/data/ControlPanel.xml");
-      ControlPanelViewModel model = new ControlPanelViewModel(controlpanel_path);
+      String controlpanel_path =
+         env_service.expandEnvVars(
+            "${VJ_BASE_DIR}/share/vrjuggler/data/ControlPanel.xml"
+         );
+      ControlPanelViewModel model =
+         new ControlPanelViewModel(controlpanel_path);
       showCategoryPanel((CategoryNode)model.getRoot());
    }
 
@@ -186,7 +172,7 @@ public class ControlPanelView
 
    public boolean canOpenMultiple()
    {
-      return false;
+      return true;
    }
 
    public boolean openRequested()
@@ -206,22 +192,37 @@ public class ControlPanelView
 
    public boolean saveRequested()
    {
-      return mToolbar.doSaveAll();
+      return mToolbar.doSave();
    }
 
    public boolean saveAsRequested()
    {
-      return false;
+      return mToolbar.doSaveAs();
    }
 
    public boolean saveAllRequested()
    {
-      return mToolbar.doSaveAll();
+      return mToolbar.doSave();
    }
 
    public boolean closeRequested()
    {
       return true;
+   }
+
+   public javax.swing.undo.UndoManager getUndoManager()
+   {
+      return mContext.getConfigUndoManager();
+   }
+
+   public void undoRequested()
+   {
+      mToolbar.doUndo();
+   }
+
+   public void redoRequested()
+   {
+      mToolbar.doRedo();
    }
 
    public int getOpenFileCount()
@@ -275,7 +276,16 @@ public class ControlPanelView
                //if(null != editor)
                if(null == list || list.size() == 0)
                {
-                  System.out.println("No CustomEditors registered for token: " + token);
+                  Frame parent = 
+                     (Frame) SwingUtilities.getAncestorOfClass(Frame.class,
+                                                               ControlPanelView.this);
+                  JOptionPane.showMessageDialog(
+                     parent,
+                     "No Custom Editor registered for config element type '" +
+                        token + "'",
+                     "VRJConfig Control Panel",
+                     JOptionPane.WARNING_MESSAGE
+                  );
                }
                else if(null != list && list.size() > 0)
                {
@@ -327,6 +337,7 @@ public class ControlPanelView
       });
       pushCurrentBack(ctl);
    }
+
    private void showEditorPanel(EditorNode root)
    {
       System.out.println("Editor Node: " + root.getClassName());
@@ -627,39 +638,13 @@ public class ControlPanelView
    }
 
    /**
-    * Responding to notification that from the toolbar that a configuration has
-    * been opened or a new configuration has been created, this method creates
-    * a new main panel to hold that configuration.
-    */
-   private void toolbarContextChanged()
-   {
-      mContext = mToolbar.getConfigContext();
-
-      EnvironmentServiceProxy env_service = new EnvironmentServiceProxy();
-      String controlpanel_path = env_service.expandEnvVars("${VJ_BASE_DIR}/share/vrjuggler/data/ControlPanel.xml");
-      ControlPanelViewModel model = new ControlPanelViewModel(controlpanel_path);
-      showCategoryPanel((CategoryNode)model.getRoot());
-   }
-
-   /**
     * Autogenerated code for the JBuilder GUI.
     */
    private void jbInit()
       throws Exception
    {
       this.setLayout(mBaseLayout);
-      mToolbar.addActionListener(new ActionListener()
-      {
-         public void actionPerformed(ActionEvent evt)
-         {
-            String cmd = evt.getActionCommand();
-            if (cmd.equals("New") || cmd.equals("Open"))
-            {
-               toolbarContextChanged();
-            }
-         }
-      });
-      this.add(mToolbar,  BorderLayout.NORTH);
+      this.add(mToolbar, BorderLayout.NORTH);
    }
 
    private TinyBrowser mHelpBrowser      = new TinyBrowser();
@@ -667,8 +652,7 @@ public class ControlPanelView
 
    //--- JBuilder GUI variables ---//
    private BorderLayout mBaseLayout = new BorderLayout();
-   private ConfigToolbar mToolbar = null;
-   private JFileChooser mFileChooser = new JFileChooser();
+   private ControlPanelToolbar mToolbar = null;
 
    /**
     * The context providing a view into the current configuration.
