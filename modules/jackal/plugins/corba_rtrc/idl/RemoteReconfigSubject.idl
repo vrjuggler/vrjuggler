@@ -1,6 +1,6 @@
 #include <tweek/idl/Subject.idl>
 
-module RTRCInterface
+module jccl
 {
 
    interface RTRCInterfaceSubject : tweek::Subject
