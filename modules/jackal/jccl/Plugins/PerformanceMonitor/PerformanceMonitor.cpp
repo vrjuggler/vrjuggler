@@ -33,7 +33,6 @@
 
 // implementation of Performance Monitor
 //
-// author: Christopher Just
 
 
 #include <jccl/Plugins/PerformanceMonitor/PerformanceMonitor.h>
@@ -46,6 +45,9 @@
 
 
 namespace jccl {
+
+vprSingletonImp(PerformanceMonitor);
+
 
 PerformanceMonitor::PerformanceMonitor():
                           perf_buffers(),

@@ -41,6 +41,7 @@
 #include <jccl/Config/ConfigChunk.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Sync/Mutex.h>
+#include <vpr/Util/Singleton.h>
 
 namespace jccl {
 
@@ -123,6 +124,8 @@ private:
     // These are needed to appease Visual C++ in its creation of DLLs.
     PerformanceMonitor(const PerformanceMonitor&) {;}
     void operator=(const PerformanceMonitor&) {;}
+
+    vprSingletonHeader(PerformanceMonitor);
 
 }; // end PerformanceMonitor
 
