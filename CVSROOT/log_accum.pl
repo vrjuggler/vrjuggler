@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 #
 # $FreeBSD: /c/ncvs/CVSROOT/log_accum.pl,v 1.73 2001/05/07 20:31:12 joe Exp $
 #
