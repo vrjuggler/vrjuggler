@@ -239,6 +239,7 @@ esac
 # -----------------------------------------------------------------------------
 # Path setup.
 # -----------------------------------------------------------------------------
+DPP_WIN32_SETUP
 
 # $srcdir is the root directory of the juggler source tree.  To get a value
 # for $VPRROOT_ABS, we cd there and save the value of running pwd.  Then
@@ -247,8 +248,14 @@ cd "$srcdir"
 VPRROOT_ABS=`pwd`
 
 cd "$VPRROOT_ABS/../.."
-JUGGLERROOT_ABS=`pwd`
+UNIX_JUGGLERROOT_ABS=`pwd`
 cd "$topdir"
+
+if test "x$CYGPATH" != "xno" ; then
+   JUGGLERROOT_ABS=`cygpath -w "$UNIX_JUGGLERROOT_ABS" | sed -e 's/\\\\/\\//g'`
+else
+   JUGGLERROOT_ABS="$UNIX_JUGGLER_ROOT"
+fi
 
 # -----------------------------------------------------------------------------
 # Checks for programs.
@@ -559,7 +566,6 @@ fi
 # Define the base path to the source directory using $VPRROOT_ABS as an
 # alternative to using $srcdir.
 UNIX_VPRROOT_ABS="$VPRROOT_ABS"
-UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 # Put together the basic information needed to compile VPR applications.
 if test "x$OS_TYPE" = "xWin32" ; then
