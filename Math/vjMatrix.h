@@ -455,4 +455,22 @@ public:
    //vjMatrix&  operator-=( const vjMatrix&  _m );
 };
 
+inline vjMatrix operator* (float _s, const vjMatrix& _m)
+{
+   vjMatrix dst;
+   dst.scale(_s, _m); return dst;
+}
+
+inline vjMatrix operator* (const vjMatrix& _m, float _s)
+{
+   vjMatrix dst;
+   dst.scale(_s, _m); return dst;
+}
+
+inline vjMatrix operator/ (const vjMatrix& _m, float _s)
+{
+   vjMatrix dst;
+   dst.scale(1.0f/_s, _m); return dst;
+}
+
 #endif

@@ -631,18 +631,6 @@ void vjMatrix::postScale(const vjMatrix&  _m, float _xs, float _ys, float _zs)
     *this = scaleMat;
 }
 
-inline vjMatrix operator *(float _s, const vjMatrix& _m) {
-    vjMatrix dst; dst.scale(_s, _m); return dst;
-}
-
-inline vjMatrix operator *(const vjMatrix& _m, float _s) {
-    vjMatrix dst; dst.scale(_s, _m); return dst;
-}
-
-inline vjMatrix operator /(const vjMatrix& _m, float _s) {
-    vjMatrix dst; dst.scale(1.0f/_s, _m); return dst;
-}
-
     // Matrix Multiplication of A:(nxl) B:(lxm) ==> C:(nxm)
     //   Cij = Sum(k=1,l) (Aik)(Bkj)
     /// mat = mat * m
