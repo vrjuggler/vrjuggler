@@ -8,9 +8,9 @@
 SHELL		= /bin/sh
 
 bindir		= @bindir@
+includedir	= @includedir@/Config
 datadir		= @datadir@
 exec_prefix	= @exec_prefix@
-includedir	= @includedir@
 libdir		= @libdir@
 libexecdir	= @libexecdir@
 prefix		= @prefix@
@@ -58,6 +58,9 @@ default: all
 
 all dbg opt dso ddso obj: ${CONFIG_OBJECTS}
 
+install:
+	${top_srcdir}/mkinstalldirs ${includedir}
+	cp ${srcdir}/*.h ${includedir}
 
 depend: .depend_done
 

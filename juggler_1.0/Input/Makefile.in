@@ -8,7 +8,7 @@ SHELL		= /bin/sh
 bindir		= @bindir@
 datadir		= @datadir@
 exec_prefix	= @exec_prefix@
-includedir	= @includedir@
+includedir	= @includedir@/Input
 libdir		= @libdir@
 libexecdir	= @libexecdir@
 prefix		= @prefix@
@@ -77,6 +77,8 @@ depend: depend-recursive
 newdepend: newdepend-recursive
 
 all: dbg opt dso ddso
+
+install: install-recursive
 
 # -----------------------------------------------------------------------------
 # Clean-up.
