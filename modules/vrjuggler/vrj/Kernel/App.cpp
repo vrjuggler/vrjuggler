@@ -38,13 +38,13 @@ namespace vrj
 App::App(Kernel* kern)
 {
    vprASSERT(kern != NULL);    // We don't want a NULL Kernel
-   kernel = kern;
+   mKernel = kern;
    mHaveFocus = true;
 }
 
 App::App()
 {
-   kernel = Kernel::instance();
+   mKernel = Kernel::instance();
    mHaveFocus = true;
 }
 
