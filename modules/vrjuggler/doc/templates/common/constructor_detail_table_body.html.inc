@@ -1,8 +1,6 @@
 <!--
   This file is specific to the VR Juggler documentation layout and is used
   for filling in the body of the table describing each class constructor.
-
-  $Id$
  -->
 
 <TR>
