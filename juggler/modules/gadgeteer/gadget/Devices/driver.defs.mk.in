@@ -48,7 +48,11 @@ EXTRA_DEFS=	-D_GADGET_DRIVER_BUILD_
 # -----------------------------------------------------------------------------
 # Common code for driver DSOs.
 # -----------------------------------------------------------------------------
-DRIVER_DSO=	$(DRIVER_NAME)_drv.$(DYNAMICLIB_EXT)
+ifeq ($(BUILD_TYPE), dbg)
+   BUILD_TYPE_EXT=	_d
+endif
+
+DRIVER_DSO=	$(DRIVER_NAME)_drv$(BUILD_TYPE_EXT).$(DYNAMICLIB_EXT)
 DYLIB_DEPS=	$(PRE_DSO_DRIVER_DEPS) @DSO_DRIVER_DEPS@ $(POST_DSO_DRIVER_DEPS)
 
 driver-dso: $(DSO_DRIVER_DIR)/$(DRIVER_DSO)

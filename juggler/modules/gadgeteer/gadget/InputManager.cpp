@@ -38,7 +38,6 @@
 #include <vpr/DynLoad/LibraryFinder.h>
 #include <vpr/Util/FileUtils.h>
 
-#include <gadget/InputManager.h> // my header...
 #include <gadget/Type/Proxy.h>
 #include <gadget/Type/DeviceFactory.h>
 #include <gadget/ProxyFactory.h>
@@ -51,8 +50,10 @@
 
 #include <cluster/ClusterManager.h>
 #include <gadget/Type/BaseTypeFactory.h>
-
 #include <gadget/InputLogger.h>
+
+#include <gadget/InputManager.h> // my header...
+
 
 namespace gadget
 {
@@ -154,6 +155,16 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                                        std::string("Handling InputManager element:\n"),
                                        std::string("-- end state -- \n"));
 
+      const std::string driver_path_prop_name("driver_path");
+      int path_count = element->getNum(driver_path_prop_name);
+      std::vector<std::string> search_path(path_count);
+
+      for ( unsigned int i = 0; i < search_path.size(); ++i )
+      {
+         search_path[i] =
+            vpr::replaceEnvVars(element->getProperty<std::string>(driver_path_prop_name, i));
+      }
+
       // --- Load device driver dsos -- //
       // - Load individual drivers
       const std::string driver_prop_name("driver");
@@ -163,31 +174,32 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
       for ( int i = 0; i < driver_count; ++i )
       {
-         driver_dso =
-            vpr::replaceEnvVars(element->getProperty<std::string>(driver_prop_name, i));
-         if(!driver_dso.empty())
+         driver_dso = element->getProperty<std::string>(driver_prop_name, i);
+
+         if ( ! driver_dso.empty() )
          {
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-               << "InputMgr::config: Loading driver DSO '" << driver_dso << "'\n" << vprDEBUG_FLUSH;
+               << "InputMgr::config: Loading driver DSO '" << driver_dso
+               << "'\n" << vprDEBUG_FLUSH;
 
-            // If any part of the driver loading fails, the object driver_library
-            // will go out of scope at the end of this iteration, thereby freeing
-            // the allocated memory.
-            vpr::LibraryPtr driver_library =
-               vpr::LibraryPtr(new vpr::Library(driver_dso));
             Callable functor(this);
-            mDriverLoader.loadAndInitDSO(driver_library, driver_init_func,
-                                         functor);
+            mDriverLoader.findAndInitDSO(driver_dso, search_path,
+                                         driver_init_func, functor);
          }
       }
 
       // - Load driver directory
-      const std::string dir_prop_name("driver_directory");
-      const std::string dso_ext_name("dso_file_extension");
+      const std::string dir_prop_name("driver_scan_path");
       int dir_count = element->getNum(dir_prop_name);
       std::string driver_dir;
 
-      const std::string driver_ext = element->getProperty<std::string>(dso_ext_name);
+#if defined(VPR_OS_Win32)
+      const std::string driver_ext("dll");
+#elif defined(VPR_OS_Darwin)
+      const std::string driver_ext("dylib");
+#else
+      const std::string driver_ext("so");
+#endif
 
       for ( int i = 0; i < dir_count; ++i )
       {
