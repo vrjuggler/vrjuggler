@@ -103,7 +103,7 @@ int vjKeyboardWin32::startSampling()
                  << "vjWin32Keyboard::startSampling() : ready to go.."
                  << std::endl << vjDEBUG_FLUSH;
 
-      vjKeyboard* devicePtr = this;
+      vjKeyboardWin32* devicePtr = this;
 
       if (0 == (myThread = new vjThread(samplem_keys,(void*)devicePtr)))
          return 0; //fail
