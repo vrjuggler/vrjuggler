@@ -1,0 +1,513 @@
+<?xml version='1.0'?>
+<!-- XML Schema schema for XML Schemas: Part 1: Structures -->
+<!-- Note this schema is NOT the normative structures schema - - the
+     prose copy in the structures REC is the normative version (which
+     shouldn't differ from this one except for this comment and entity
+     expansions, but just in case -->
+<!DOCTYPE schema PUBLIC "-//W3C//DTD XMLSCHEMA 19991216//EN" "XMLSchema.dtd" >
+<schema xmlns="http://www.w3.org/1999/XMLSchema" targetNamespace="http://www.w3.org/1999/XMLSchema" blockDefault="#all" elementFormDefault="qualified" version="$Id$">
+
+  <!-- The simpleType element and all of its members are defined
+       in XML Schema: Part 2: Datatypes -->
+
+  <include schemaLocation="part2.xsd"/>
+
+  <element name="schemaTop" abstract="true" type="annotated">
+   <annotation>
+    <documentation>This abstract element defines an equivalence class over the
+          elements which occur freely at the top level of schemas.
+          These are: datatype, type, element, attributeGroup, group, notation
+          All of their types are based on the "annotated" type
+          by extension.</documentation>
+   </annotation>
+  </element>
+
+  <!-- schema element -->
+
+  <simpleType name="formChoice" base="NMTOKEN">
+   <annotation>
+    <documentation>A utility type, not for public use</documentation>
+   </annotation>
+   <enumeration value="qualified"/>
+   <enumeration value="unqualified"/>
+  </simpleType>
+
+  <element name="schema">
+    <complexType base="openAttrs" derivedBy="extension" content="elementOnly">
+      <sequence>
+       <choice minOccurs="0" maxOccurs="unbounded">
+        <element ref="include"/>
+        <element ref="import"/>
+        <element ref="annotation"/>
+       </choice>
+      <sequence minOccurs="1" maxOccurs="unbounded">
+	 <element ref="schemaTop"/>
+	 <element ref="annotation" minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+    </sequence>
+    <attribute name="targetNamespace" type="uriReference"/>
+    <attribute name="version" type="string"/>
+    <attribute name="finalDefault" type="derivationSet" use="default" value=""/>
+    <attribute name="blockDefault" type="blockSet" use="default" value=""/>
+    <attribute name="attributeFormDefault" type="formChoice" use="default" value="unqualified"/>
+    <attribute name="elementFormDefault" type="formChoice" use="default" value="unqualified"/>
+    <attribute name="id" type="ID"/>
+   </complexType>
+
+   <key name="element">
+    <selector>element</selector>
+    <field>@name</field>
+   </key>
+
+   <key name="attribute">
+    <selector>attribute</selector>
+    <field>@name</field>
+   </key>
+
+   <key name="type">
+    <selector>complexType|simpleType</selector>
+    <field>@name</field>
+   </key>
+ 
+   <key name="group">
+    <selector>group</selector>
+    <field>@name</field>
+   </key>
+ 
+   <key name="attributeGroup">
+    <selector>attributeGroup</selector>
+    <field>@name</field>
+   </key>
+ 
+   <key name="notation">
+    <selector>notation</selector>
+    <field>@name</field>
+   </key>
+
+   <key name="identityConstraint">
+    <selector>.//key|.//unique|.//keyref</selector>
+    <field>@name</field>
+   </key>
+
+  </element>
+
+  <!-- for all particles -->
+  <attributeGroup name="occurs">
+    <attribute name="minOccurs" type="nonNegativeInteger" use="default" value="1"/>
+    <attribute name="maxOccurs" type="string">
+     <annotation>
+      <documentation>allows 'unbounded', so integer won't do</documentation>
+     </annotation>
+    </attribute>
+  </attributeGroup>
+
+  <!-- for element, group and attributeGroup,
+               which both define and reference -->
+  <attributeGroup name="defRef">
+   <attribute name="name" type="NCName"/>
+   <attribute name="ref" type="QName"/>
+  </attributeGroup>
+ 
+ 
+
+  <!-- 'complexType' and 'group' use this -->
+  <group name="particle">
+   <choice>
+   <element name="element" type="localElement"/>
+   <element name="group" type="groupRef"/>
+   <element ref="all"/>
+   <element ref="choice"/>
+   <element ref="sequence"/>
+   <element ref="any"/>
+   </choice>
+  </group>
+
+  <group name="nestedParticle">
+   <choice>
+   <element name="element" type="localElement"/>
+   <element name="group" type="groupRef"/>
+   <element ref="choice"/>
+   <element ref="sequence"/>
+   <element ref="any"/>
+   </choice>
+  </group>
+ 
+  <complexType base="annotated" derivedBy="extension" name="attribute" abstract="true">
+   <element name="simpleType" minOccurs="0" type="localSimpleType"/>
+   <attributeGroup ref="defRef"/>
+   <attribute name="type" type="QName"/>
+   <attribute name="use" use="default" value="optional">
+    <simpleType base="NMTOKEN">
+     <enumeration value="prohibited"/>
+     <enumeration value="optional"/>
+     <enumeration value="required"/>
+     <enumeration value="default"/>
+     <enumeration value="fixed"/>
+    </simpleType>
+   </attribute>
+   <attribute name="value" use="optional" type="string"/>
+   <attribute name="form" type="formChoice"/>
+  </complexType>
+ 
+ <complexType name="topLevelAttribute" base="attribute" derivedBy="restriction">
+  <element ref="annotation" minOccurs="0"/>
+  <element name="simpleType" minOccurs="0" type="localSimpleType"/>
+  <attribute name="ref" use="prohibited"/>
+  <attribute name="form" use="prohibited"/>
+  <attribute name="use" use="prohibited"/>
+  <attribute name="name" use="required" type="NCName"/>
+ </complexType>
+
+  <group name="attrDecls">
+   <sequence>
+    <choice minOccurs="0" maxOccurs="unbounded">
+     <element name="attribute" type="attribute"/>
+     <element name="attributeGroup" type="attributeGroupRef"/>
+    </choice>
+    <element ref="anyAttribute" minOccurs="0"/>
+   </sequence>
+  </group>
+
+ <element name="anyAttribute" type="wildcard"/>
+
+  <!-- types for type -->
+
+  <complexType name="complexType" base="annotated" derivedBy="extension" abstract="true">
+   <sequence>
+    <choice>
+     <element ref="facet" minOccurs="0" maxOccurs="unbounded"/>
+         <!-- max 1, min 0, for each facet except pattern, period-->
+     <group ref="particle" minOccurs="0" maxOccurs="unbounded"/>
+    </choice>
+    <group ref="attrDecls"/>
+   </sequence>
+   <attribute name="name" type="NCName">
+    <annotation>
+     <documentation>Will be restricted to required or forbidden</documentation>
+    </annotation>
+   </attribute>
+   <attribute name="content">
+    <simpleType base="NMTOKEN">
+     <enumeration value="elementOnly"/>
+     <enumeration value="textOnly"/>
+     <enumeration value="mixed"/>
+     <enumeration value="empty"/>
+    </simpleType>
+   </attribute>
+   <attribute name="base" type="QName"/>
+   <attribute name="derivedBy" type="derivationChoice"/>
+   <attribute name="abstract" type="boolean" use="default" value="false"/>
+   <attribute name="final" type="derivationSet"/>
+   <attribute name="block" type="derivationSet" use="default" value=""/>
+  </complexType>
+ 
+  <complexType name="topLevelComplexType" base="complexType" derivedBy="restriction">
+   <sequence>
+    <element ref="annotation" minOccurs="0"/>
+    <choice>
+     <element ref="facet" minOccurs="0" maxOccurs="unbounded"/>
+         <!-- max 1, min 0, for each facet except pattern, period-->
+     <group ref="particle" minOccurs="0" maxOccurs="unbounded"/>
+    </choice>
+    <group ref="attrDecls"/>
+   </sequence>
+   <attribute name="name" type="NCName" use="required"/>
+  </complexType>
+ 
+  <complexType name="localComplexType" base="complexType" derivedBy="restriction">
+   <sequence>
+    <element ref="annotation" minOccurs="0"/>
+    <choice>
+     <element ref="facet" minOccurs="0" maxOccurs="unbounded"/>
+         <!-- max 1, min 0, for each facet except pattern, period-->
+     <group ref="particle" minOccurs="0" maxOccurs="unbounded"/>
+    </choice>
+    <group ref="attrDecls"/>
+   </sequence>
+   <attribute name="name" use="prohibited"/>
+  </complexType>
+ 
+  <!-- Top level type element, daughter of schema -->
+  <element name="complexType" equivClass="schemaTop" type="topLevelComplexType"/> 
+ 
+  <simpleType name="derivationControls" base="string">
+   <enumeration value="#all"/>
+   <enumeration value="equivClass"/>
+   <enumeration value="extension"/>
+   <enumeration value="restriction"/>
+  </simpleType>
+
+  <simpleType name="derivationChoiceOrAll" base="derivationControls">
+   <annotation>
+    <documentation>A utility type, not for public use</documentation>
+   </annotation>
+   <enumeration value="#all"/>
+   <enumeration value="extension"/>
+   <enumeration value="restriction"/>
+  </simpleType>
+
+  <simpleType name="derivationChoice" base="derivationChoiceOrAll">
+   <annotation>
+    <documentation>A utility type, not for public use</documentation>
+   </annotation>
+   <enumeration value="extension"/>
+   <enumeration value="restriction"/>
+  </simpleType>
+
+  <simpleType name="blockSet" base="derivationControls" derivedBy="list">
+   <annotation>
+    <documentation>#all or (possibly empty) subset of {equivClass,
+extension, restriction}</documentation>
+    <documentation>A utility type, not for public use</documentation>
+   </annotation>
+  </simpleType>
+
+  <simpleType name="derivationSet" base="derivationChoiceOrAll" derivedBy="list">
+   <annotation>
+    <documentation>#all or (possibly empty) subset of {extension,
+restriction}</documentation>
+    <documentation>A utility type, not for public use</documentation>
+   </annotation>
+  </simpleType>
+
+  <!-- The element element can be used either
+        at the toplevel to define an element-type binding globally,
+        or within a content model to either reference a globally-defined
+        element or type or declare an element-type binding locally.
+       The ref form is not allowed at the top level -->
+
+  <complexType name="element" base="annotated" derivedBy="extension" abstract="true">
+     <choice minOccurs="0">
+      <element name="simpleType" type="localSimpleType"/>
+      <element name="complexType" type="localComplexType"/>
+     </choice>
+     <element ref="identityConstraint" minOccurs="0" maxOccurs="unbounded"/>
+     <attributeGroup ref="defRef"/>
+     <attribute name="type" type="QName"/>
+     <attribute name="equivClass" type="QName"/>
+     <attributeGroup ref="occurs"/>
+     <attribute name="default" type="string"/>
+     <attribute name="fixed" type="string"/>
+     <attribute name="nullable" type="boolean" use="default" value="false"/>
+     <attribute name="abstract" type="boolean" use="default" value="false"/>
+     <attribute name="final" type="derivationSet" use="default" value=""/>
+     <attribute name="block" type="blockSet" use="default" value=""/>
+     <attribute name="form" type="formChoice"/>
+  </complexType>
+ 
+  <complexType name="topLevelElement" base="element" derivedBy="restriction">
+   <element ref="annotation" minOccurs="0"/>
+   <choice minOccurs="0">
+      <element name="simpleType" type="localSimpleType"/>
+      <element name="complexType" type="localComplexType"/>
+   </choice>
+   <element ref="identityConstraint" minOccurs="0" maxOccurs="unbounded"/>
+   <attribute name="ref" use="prohibited"/>
+   <attribute name="form" use="prohibited"/>
+   <attribute name="minOccurs" use="prohibited"/>
+   <attribute name="maxOccurs" use="prohibited"/>
+   <attribute name="name" use="required" type="NCName"/>
+  </complexType>
+ 
+  <complexType name="localElement" base="element" derivedBy="restriction">
+   <element ref="annotation" minOccurs="0"/>
+   <choice minOccurs="0">
+      <element name="simpleType" type="localSimpleType"/>
+      <element name="complexType" type="localComplexType"/>
+   </choice>
+   <element ref="identityConstraint" minOccurs="0" maxOccurs="unbounded"/>
+   <attribute name="equivClass" use="prohibited"/>
+   <attribute name="final" use="prohibited"/>
+  </complexType>
+
+  <element name="element" type="topLevelElement" equivClass="schemaTop"/>
+
+  <!-- group type for named top-level groups and group references -->
+  <complexType name="group" base="annotated" derivedBy="extension" abstract="true">
+    <group ref="particle" minOccurs="0" maxOccurs="unbounded"/>
+    <attributeGroup ref="defRef"/>
+    <attributeGroup ref="occurs"/>
+  </complexType>
+
+  <complexType name="namedGroup" base="group" derivedBy="restriction">
+    <element ref="annotation" minOccurs="0"/>
+    <group ref="particle" minOccurs="0" maxOccurs="unbounded"/>
+    <attribute name="name" use="required" type="NCName"/>
+    <attribute name="ref" use="prohibited"/>
+    <attribute name="minOccurs" use="prohibited"/>
+    <attribute name="maxOccurs" use="prohibited"/>
+  </complexType>
+
+  <complexType name="groupRef" base="group" derivedBy="restriction">
+    <element ref="annotation" minOccurs="0"/>
+    <attribute name="ref" use="required" type="QName"/>
+    <attribute name="name" use="prohibited"/>
+  </complexType>
+
+  <!-- group type for the three kinds of group -->
+  <complexType name="explicitGroup" base="group" derivedBy="restriction">
+    <element ref="annotation" minOccurs="0"/>
+    <group ref="nestedParticle" minOccurs="0" maxOccurs="unbounded"/>
+    <attribute name="name" type="NCName" use="prohibited"/>
+    <attribute name="ref" type="QName" use="prohibited"/>
+  </complexType>
+
+  <!-- there's a bug here - - all/choice/sequence inside group
+       must have no min/max -->
+  <element name="all" type="explicitGroup"/>
+  <element name="choice" type="explicitGroup"/>
+  <element name="sequence" type="explicitGroup"/>
+
+  <element name="group" equivClass="schemaTop" type="namedGroup"/>
+
+  <!-- The wildcard specifier in content models -->
+
+  <complexType name="wildcard" base="annotated" derivedBy="extension">
+    <attribute name="namespace" type="namespaceList" use="default" value="##any"/>
+    <attribute name="processContents" use="default" value="strict">
+     <simpleType base="NMTOKEN">
+      <enumeration value="skip"/>
+      <enumeration value="lax"/>
+      <enumeration value="strict"/>
+     </simpleType>
+    </attribute>
+  </complexType>
+
+  <element name="any">
+   <complexType base="wildcard" derivedBy="extension">
+    <attributeGroup ref="occurs"/>
+   </complexType>
+  </element>
+
+  <!-- simple type for the value of the 'namespace' attr of 'any' and
+       'anyAttribute' -->
+  <!-- Value is
+                  ##any      - - any non-conflicting WFXML/attribute at all
+
+                  ##other    - - any non-conflicting WFXML/attribute from
+                                  namespace other than targetNS
+
+                  ##local    - - any unqualified non-conflicting WFXML/attribute 
+
+                  one or     - - any non-conflicting WFXML/attribute from
+                  more URI        the listed namespaces
+                  references
+                  (space separated)
+
+                ##targetNamespace or ##local may appear in the above list, to
+                    refer to the targetNamespace of the enclosing
+                    schema or an absent targetNamespace respectively -->
+
+  <simpleType name="namespaceList" base="string">
+   <annotation>
+    <documentation>##any | ##other | list of {uri, ##targetNamespace, ##local}</documentation>
+   <documentation>A utility type, not for public use</documentation>
+   </annotation>
+  </simpleType>
+
+  <!-- the attribute element declares attributes -->
+
+  <element name="attribute" equivClass="schemaTop" type="topLevelAttribute"/>
+
+  <!-- attributeGroup element -->
+
+  <complexType name="attributeGroup" base="annotated" derivedBy="extension" abstract="true">
+     <choice minOccurs="0" maxOccurs="unbounded">
+      <element name="attribute" type="attribute"/>
+      <element name="attributeGroup" type="attributeGroupRef"/>
+     </choice>
+     <element ref="anyAttribute" minOccurs="0"/>
+     <attributeGroup ref="defRef"/>
+    </complexType>
+ 
+  <complexType name="namedAttributeGroup" base="attributeGroup" derivedBy="restriction">
+    <element ref="annotation" minOccurs="0"/>
+    <choice minOccurs="0" maxOccurs="unbounded">
+      <element name="attribute" type="attribute"/>
+      <element name="attributeGroup" type="attributeGroupRef"/>
+    </choice>
+    <element ref="anyAttribute" minOccurs="0"/>
+    <attribute name="name" use="required" type="NCName"/>
+    <attribute name="ref" use="prohibited"/>
+  </complexType>
+
+  <complexType name="attributeGroupRef" base="attributeGroup" derivedBy="restriction">
+    <element ref="annotation" minOccurs="0"/>
+    <attribute name="ref" use="required" type="QName"/>
+    <attribute name="name" use="prohibited"/>
+  </complexType>
+
+ <element name="attributeGroup" type="namedAttributeGroup" equivClass="schemaTop"/>
+
+ <element name="include">
+  <complexType base="annotated" derivedBy="extension">
+   <attribute name="schemaLocation" type="uriReference" use="required"/>
+  </complexType>
+ </element>
+
+ <element name="import">
+  <complexType base="annotated" derivedBy="extension">
+   <attribute name="namespace" type="uriReference"/>
+   <attribute name="schemaLocation" type="uriReference"/>
+  </complexType>
+ </element>
+ 
+ <!-- Better reference mechanisms -->
+
+ <simpleType name="XPathExprApprox" base="string">
+  <annotation>
+   <documentation>An XPath expression</documentation>
+   <documentation>A utility type, not for public use</documentation>
+  </annotation>
+  <pattern value="(/|//|\.|\.\.|:|::|\||(\c-[.:/|])+)+">
+   <annotation>
+    <documentation>A VERY permissive definition,
+                   probably not even right
+    </documentation>
+   </annotation>
+  </pattern>
+ </simpleType>
+ 
+ <element name="selector" type="XPathExprApprox"/>
+ <element name="field" type="XPathExprApprox"/>
+
+ <complexType name="keybase" base="annotated" derivedBy="extension">
+  <sequence>
+   <element ref="selector"/>
+   <element ref="field" minOccurs="1" maxOccurs="unbounded"/>
+  </sequence>
+  <attribute name="name" type="NCName" use="required"/>
+ </complexType>
+
+ <element name="identityConstraint" type="keybase" abstract="true"/>
+
+ <element name="unique" equivClass="identityConstraint"/>
+ <element name="key" equivClass="identityConstraint"/>
+ <element name="keyref" equivClass="identityConstraint">
+  <complexType base="keybase" derivedBy="extension">
+   <attribute name="refer" type="QName" use="required"/>
+  </complexType>
+ </element>
+
+  <!-- notation element type -->
+
+  <element name="notation" equivClass="schemaTop">
+   <complexType base="annotated" derivedBy="extension">
+    <attribute name="name" type="NCName" use="required"/>
+    <attribute name="public" type="public" use="required"/>
+    <attribute name="system" type="uriReference"/>
+   </complexType>
+  </element>
+
+  <simpleType name="public" base="string">
+   <annotation>
+   <documentation>A public identifier, per ISO 8879</documentation>
+   <documentation>A utility type, not for public use</documentation>
+   </annotation>
+  </simpleType>
+
+  <!-- notations for use within XML Schema schemas      -->
+
+  <notation name="XMLSchemaStructures" public="structures" system="http://www.w3.org/1999/XMLSchema.xsd"/>
+  <notation name="XML" public="REC-xml-19980210" system="http://www.w3.org/TR/1998/REC-xml-19980210"/>
+</schema>

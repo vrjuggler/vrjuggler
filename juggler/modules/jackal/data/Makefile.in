@@ -30,29 +30,31 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# This file defines the specification for the Data directory tree for the VR
-# Juggler installation.
-#
-# $Id$
+include @topdir@/make.defs.mk
 
-/set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
-.
-    data
-        schema
-            www.w3.org
-                1999
-                ..
-            ..
-            www.vrjuggler.org
-                jccl
-                    xsd
-                        3.0
-                        ..
-                        3.1
-                        ..
-                    ..
-                ..
-            ..
-        ..
-    ..
-..
+schemadir=	$(projdatadir)/data/schema
+srcdir=		@srcdir@
+INSTALL=	@INSTALL@
+
+CFG_SCHEMA_VER=		3.0
+DEF_SCHEMA_VER=		3.1
+XML_SCHEMA_VER=		1999
+
+JCCL_SCHEMA_DIR=	www.vrjuggler.org/jccl/xsd
+W3_SCHEMA_DIR=		www.w3.org
+
+install:
+	@echo "------------------------------------------------"
+	@echo "Installing XML Schemas"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.data.dist -p $(projdatadir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(srcdir)/configuration.xsd		\
+          $(schemadir)/$(JCCL_SCHEMA_DIR)/$(CFG_SCHEMA_VER)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(srcdir)/definition.xsd		\
+          $(schemadir)/$(JCCL_SCHEMA_DIR)/$(DEF_SCHEMA_VER)
+	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) -i $(srcdir)/stdschemas/$(W3_SCHEMA_DIR)	\
+          -o $(schemadir)/$(W3_SCHEMA_DIR)
