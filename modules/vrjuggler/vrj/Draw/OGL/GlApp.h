@@ -38,7 +38,6 @@
 #include <vrj/Kernel/App.h>
 
 #include <vrj/Draw/OGL/GlDrawManager.h>
-#include <gadget/Type/Position/PositionUnitConversion.h>
 
 //#include <vrj/Kernel/Kernel.h>
 #include <vrj/Kernel/User.h>
@@ -60,10 +59,10 @@ namespace vrj
  *  NOTE: One time through the loop is a Juggler Frame <br>
  *
  * \code
- *  contextInit();                 // called for each context                 
- *  while (drawing)                                 
- *  {                                               
- *     preFrame();                 
+ *  contextInit();                 // called for each context
+ *  while (drawing)
+ *  {
+ *     preFrame();
  *     bufferPreDraw();            // called for each draw buffer
  *     contextPreDraw();           // called for each context
  *     draw();                     // called for each surfacewindow
@@ -73,8 +72,8 @@ namespace vrj
  *     postFrame();
  *
  *     UpdateTrackers();
- *  }                                               
- *                                                  
+ *  }
+ *
  *  contextClose();                // called for each context
  * \endcode
  *
@@ -93,19 +92,6 @@ public:
    virtual ~GlApp()
    {
       /* Do nothing. */ ;
-   }
-
-   /** Return scale scale factor to get from Juggler units (meters) to application units.
-   * Internally VR Juggler stores and processes all position values
-   * in meters.  The scale factor returned by this method is
-   * used by VR Juggler to scale the OpenGL drawing state from meters to
-   * whatever local units the application wants to use
-   *
-   * Example: to use feet as local app unit, return 3.28;
-   */
-   virtual float getDrawScaleFactor()
-   {
-      return gadget::PositionUnitConversion::ConvertToFeet;
    }
 
    /** Function to draw the scene.
@@ -136,7 +122,7 @@ public:
     *   to only be executed once per context, per frame.
     * @note This function can be used for things that need to happen
     *       every frame, but only once per context.
-    *  <br> 
+    *  <br>
     * Ex: Dynamically Create display lists.
     */
    virtual void contextPreDraw()
@@ -156,7 +142,7 @@ public:
     * @post User application has executed any commands that need
     *   to only be executed once per context, per buffer, per frame
     * @note This function is designed to be used when you want to do something
-    *       only once per frame buffer (i.e. once for left buffer, once for 
+    *       only once per frame buffer (i.e. once for left buffer, once for
     *       right buffer)
     * <br>
     * Ex: glClear's need to be done in this method
@@ -174,17 +160,17 @@ public:
    virtual void pipePreDraw()
    {;}
 
-public:  
-   /** @name Factory functions 
+public:
+   /** @name Factory functions
     * @{
     */
-          
+
    /** Get the DrawManager to use.
    * Returns the OpenGL Draw Manager.
    */
    virtual DrawManager*    getDrawManager()
    { return GlDrawManager::instance(); }
-    
+
     /** @} */
 };
 
