@@ -40,12 +40,12 @@
 #include <Config/vjConfigTokens.h>
 
 vjVarValue* vjVarValue::invalid_instance = NULL;
-const std::string vjVarValue::using_invalid_msg = "Casting from T_INVALID VarValue - this may mean we're confused";
+const std::string vjVarValue::using_invalid_msg = "Casting from VJ_T_INVALID VarValue - this may mean we're confused";
 
 
 /*static*/ vjVarValue& vjVarValue::getInvalidInstance () {
     if (invalid_instance == NULL)
-        invalid_instance = new vjVarValue (T_INVALID);
+        invalid_instance = new vjVarValue (VJ_T_INVALID);
     return *invalid_instance;
 }
 
@@ -180,7 +180,7 @@ vjVarValue::operator int() const {
         return boolval;
     case T_FLOAT:
         return (int)floatval;
-    case T_INVALID:
+    case VJ_T_INVALID:
         vjDEBUG(vjDBG_CONFIG,4) << using_invalid_msg.c_str() << 1
                                 << std::endl << vjDEBUG_FLUSH;
         return 0;
@@ -205,7 +205,7 @@ vjVarValue::operator vjConfigChunk*() const {
         else {
             return NULL;
         }
-    case T_INVALID:
+    case VJ_T_INVALID:
         vjDEBUG(vjDBG_CONFIG,4) << using_invalid_msg.c_str() << 2
                  << std::endl << vjDEBUG_FLUSH;
         return NULL;
@@ -229,7 +229,7 @@ vjVarValue::operator bool() const {
         return (bool)intval;
     case T_FLOAT:
         return (bool)floatval;
-    case T_INVALID:
+    case VJ_T_INVALID:
         vjDEBUG(vjDBG_CONFIG,4) << using_invalid_msg.c_str() << 3
                                 << std::endl << vjDEBUG_FLUSH;
         return false;
@@ -252,7 +252,7 @@ vjVarValue::operator float () const {
         return (float)intval;
     case T_BOOL:
         return (float)boolval;
-    case T_INVALID:
+    case VJ_T_INVALID:
         vjDEBUG(vjDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 4
                                 << std::endl << vjDEBUG_FLUSH;
         return 0.0f;
@@ -271,7 +271,7 @@ char* vjVarValue::cstring () const {
     case T_STRING:
     case T_CHUNK:
         return strdup (strval.c_str());
-    case T_INVALID:
+    case VJ_T_INVALID:
         vjDEBUG(vjDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 5
                                 << std::endl << vjDEBUG_FLUSH;
         return strdup("");
@@ -290,7 +290,7 @@ vjVarValue::operator std::string () const {
     case T_STRING:
     case T_CHUNK:
         return strval;
-    case T_INVALID:
+    case VJ_T_INVALID:
         vjDEBUG(vjDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 6
                                 << std::endl << vjDEBUG_FLUSH;
         return (std::string)"";

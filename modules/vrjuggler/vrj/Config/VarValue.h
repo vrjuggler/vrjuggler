@@ -38,9 +38,17 @@
 #include <vjConfig.h>
 #include <ctype.h>
 
-
+/**********************************************************
 typedef enum { T_INT, T_FLOAT, T_BOOL, T_STRING, T_DISTANCE, 
 	       T_CHUNK, T_EMBEDDEDCHUNK, T_INVALID } VarType;
+
+Had to rename T_INVALID due to a conflict of names with some
+Mac OS X variables.  This could be avoided, but just changing
+it here is much much easier.  Places which used T_INVALID have
+also been changed to VJ_T_INVALID.
+************************************************************/
+typedef enum { T_INT, T_FLOAT, T_BOOL, T_STRING, T_DISTANCE, 
+	       T_CHUNK, T_EMBEDDEDCHUNK, VJ_T_INVALID} VarType;
 
 typedef enum {U_Feet, U_Inches, U_Meters, U_Centimeters, U_BadUnit}
               CfgUnit;

@@ -43,7 +43,7 @@ vjPropertyDesc::vjPropertyDesc () : valuelabels(), enumv() {
     name = "";
     token = "";
     num = 0;
-    type = T_INVALID;
+    type = VJ_T_INVALID;
     help = "";
 }
 
