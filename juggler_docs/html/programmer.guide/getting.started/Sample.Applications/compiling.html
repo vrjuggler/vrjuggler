@@ -5,9 +5,20 @@
 </head>
 
 <body>
-<h2><img border=0 src="${IMAGES}/classes.gif"> Compiling </h2>
+<h2><img border=0 src="${IMAGES}/classes.gif"> Compiling Applications</h2>
 
-<h3>Linking to Dynamic Shared Objects</h3>
+<h3> Making a sample application: OpenGL Cubes </h3>
+<blockquote>
+	<TT>cd $VJ_BASE_DIR\samples\ogl\cubes</TT><BR>
+	<TT>gmake</TT><BR>
+</blockquote>
+
+<img border=0 src="${IMAGES}/Icons/24x24_Images/Inform.gif"> If your compiler gave you an error, make sure you followed every step of "Getting Started".  If this doesn't help, check the "Troubleshooting" part of the <A HREF="${FAQ}">Juggler FAQ</a>
+<BR>
+
+<h3> Other useful information </h3>
+<blockquote>
+<h2>Linking to Dynamic Shared Objects</h2>
 
 <blockquote>
   <p>By default Juggler is setup to link to dynamic shared object libraries. (dso's) what
@@ -17,11 +28,13 @@
   <p>In order for dynamic linking to work, there are some environment variables that need to
   be set to tell the dynamic linker where to look for the dso's.  These are called LD_LIBRARY paths.</p>
   <blockquote>
-    <img border=0 src="${IMAGES}/Icons/24x24_Images/Caution.gif"> <b>IMPORTANT!</b> &nbsp;&nbsp; Be sure to set up your <a href="paths.html">LD library paths</a>, or Juggler may not run (even though it will compile!)<BR>
+    <img border=0 src="${IMAGES}/Icons/24x24_Images/Caution.gif"> <b>IMPORTANT!</b> &nbsp;&nbsp; Be sure to set up your <a href="environment.variables.html">LD library paths</a>, or Juggler may not run (even though it will compile!)<BR>
     <img border=0 src="${IMAGES}/Icons/24x24_Images/Inform.gif"> Click the <b>paths</b> topic on your left.<BR>
     </blockquote>
   <p>Once these variables are set, the dynamic linker will be able to find where the Juggler
   libraries are located.</p>
+</blockquote>
+
 </blockquote>
 </body>
 </html>
