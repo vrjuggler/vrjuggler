@@ -46,6 +46,15 @@ import javax.swing.event.ListSelectionListener;
 import org.vrjuggler.jccl.config.*;
 
 
+/**
+ * A simple component for managing the editing of device proxies.  It does not
+ * provide a means to change the relationships of proxies to devices and hence
+ * should not be confused with <code>DeviceProxyGraphEditor</code> or
+ * <code>ProxyEditorUI</code>, both of which are based on
+ * <a href="http://www.jgraph.com/">JGraph</a>.  This editor uses standard
+ * Swing components and provides an interface for editing the properties of
+ * proxy config elements.
+ */
 public class ProxyEditor
    extends JSplitPane
    implements EditorConstants
