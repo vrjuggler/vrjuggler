@@ -26,6 +26,7 @@ def usage():
    --test=output - Just print the data read from the bird for fob test output
           echo - Take line of input, send to bird and then read it back
           host_data_read - Perform the host data read bird test.
+   --set_rts=<new val>
     """
 
 def openBirdConnection():
@@ -96,10 +97,18 @@ def test_host_data_read():
         
     fob.close()
     
+    
+def set_rts(arg):
+    ser = serial.Serial(0)
+    print "Port: ", ser
+    print "  Setting rts: ", arg
+    ser.setRTS(arg)
+    ser.close()    
 
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "h", ["test=", "help"])
+        opts, args = getopt.getopt(sys.argv[1:], "h", 
+                                   ["test=", "help", "set_rts="])
     except getopt.GetoptError:
         # print help information and exit:
         usage()
@@ -118,6 +127,11 @@ def main():
                 test_echo()
             elif "host_data_read" == a:
                 test_host_data_read()
+        if o in ("--set_rts",):
+            if "0" == a:
+                set_rts(0)
+            else:
+                set_rts(1)
 
 if __name__=='__main__':
     #print "Found ports:"
