@@ -40,7 +40,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vpr.  It requires GNU make.
+# Makefile.in for vapor/vpr.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -48,15 +48,29 @@
 # Include common definitions.
 include @topdir@/make.defs.mk
 
+includedir=	@includedir@/vpr
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(VPR_LIBRARY)
+
 # Prefix for recursive stuff.
-DIRPRFX		= vpr/
+DIRPRFX=	vpr/
 
-SUBDIR		= IO		\
-                  Sync		\
-                  Thread	\
-                  Util		\
-                  md
+SUBDIR=		DynLoad		\
+		IO		\
+		Sync		\
+		Thread		\
+		Util		\
+		md
 
-$(RECTARGET): recursive
+include $(MKPATH)/dpp.obj-subdir.mk
 
-include $(MKPATH)/dpp.subdir.mk
+# -----------------------------------------------------------------------------
+# Include dependencies generated automatically.
+# -----------------------------------------------------------------------------
+#ifndef DO_CLEANDEPEND
+#ifndef DO_BEFOREBUILD
+#   -include $(DEPEND_FILES)
+#endif
+#endif
