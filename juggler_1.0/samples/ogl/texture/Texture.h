@@ -1,7 +1,12 @@
 
+//////////////////////////////////////////////////////////////////////////////
+//
+//                          -=     Texture     =-
+//
+// Description: "Texture class: aggregates Image and other texturing parameters"
 // This code contributed from software located:
 // http://www.bigfoot.com/~KevinMeinert/html/software/index.html
-// Kevin Meinert
+// -- Kevin Meinert, kevinmeinert@bigfoot.com
 //////////////////////////////////////////////////////////////////////////////
 #ifndef TEXTURE_INCLUDED
 #define TEXTURE_INCLUDED

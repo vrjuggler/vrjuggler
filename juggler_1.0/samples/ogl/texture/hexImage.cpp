@@ -1,4 +1,7 @@
 // CppImageExporter written by Kevin Meinert KevinMeinert@bigfoot.com
+// find it at: http://www.bigfoot.com/~KevinMeinert/html/software/index.html
+//////////////////////////////////////////////////////////////////////////////
+
 // Image name = ground-hex.tga
 
 
