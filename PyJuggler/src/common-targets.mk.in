@@ -55,8 +55,7 @@ else
    MODEXT_OPT=	
 endif
 
-CXXFLAGS+=	@PYTHON_INCLUDES@ -I$(top_srcdir) -I$(top_srcdir)/src	\
-		-I$(srcdir) $(DEFS)
+CXXFLAGS+=	@PYTHON_INCLUDES@ $(INCLUDES) $(DEFS)
 CXX_PLUGIN=	@CXX_PLUGIN@
 #DEFS=		@DEFS@
 INCLUDES=	-I$(top_srcdir) -I$(top_srcdir)/src -I$(srcdir)		\
