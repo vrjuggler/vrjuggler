@@ -55,7 +55,7 @@ bool RmtMgrDepChecker::depSatisfied(jccl::ConfigChunkPtr chunk)
    {
       return false;
    }*/
-   return true;
+   return false;
 }
 
 
@@ -65,6 +65,7 @@ bool RmtMgrDepChecker::canHandle(jccl::ConfigChunkPtr chunk)
    /*std::string chunk_type = chunk->getDescToken();
    return (chunk_type == KeyboardXWin::getChunkType());      // Return true if we have a KeyboardXWin chunk type
    */
+   return false;
 }
 
 void RmtMgrDepChecker::debugOutDependencies(jccl::ConfigChunkPtr chunk,int dbg_lvl)
