@@ -1,8 +1,0 @@
-Name: prefstestbean/PrefsTestBean.class
-Java-Bean: True
-Specification-Title: Prefs Test Bean
-Specification-Version: 0.1.0
-Specification-Vendor: vrjuggler.org
-Implementation-Title: prefstestbean.PrefsTestBean
-Implementation-Version: 1.0 alpha1
-Implementation-Vendor: vrjuggler.org
