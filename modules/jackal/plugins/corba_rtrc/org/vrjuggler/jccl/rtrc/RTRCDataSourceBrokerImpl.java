@@ -77,15 +77,15 @@ public class RTRCDataSourceBrokerImpl
       CorbaService corba_service = e.getCorbaService();
       SubjectManager mgr         = corba_service.getSubjectManager();
 
-      Subject subject = mgr.getSubject("RTRCInterface");
-      
+      Subject subject = mgr.getSubject("CorbaRemoteReconfig");
 
       // Try to narrow the Subjet object to a SliderSubject object.  If this
       // fails, it throws a CORBA BAD_PARAM exception.  In that case, we open
       // a dialog box saying that the narrowing failed.
       try
       {
-         RTRCInterfaceSubject temp = RTRCInterfaceSubjectHelper.narrow(subject);
+         RemoteReconfigSubject temp =
+            RemoteReconfigSubjectHelper.narrow(subject);
          add(temp);
       }
       catch (BAD_PARAM narrow_ex)
@@ -120,10 +120,10 @@ public class RTRCDataSourceBrokerImpl
    }
    
    /**
-    * Create a new RTRCDataSource for a new RTRCInterfaceSubject. And add it to
-    * the list of active RTRCDataSources.
+    * Create a new RTRCDataSource for a new RemoteReconfigSubject. And add it
+    * to the list of active RTRCDataSources.
     */
-   private void add(RTRCInterfaceSubject subject)
+   private void add(RemoteReconfigSubject subject)
    {
       System.out.println("Adding a new RTRC Interface.");
       

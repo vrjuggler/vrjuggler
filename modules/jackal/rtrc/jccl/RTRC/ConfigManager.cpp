@@ -32,18 +32,17 @@
 
 #include <jccl/jcclConfig.h>
 
+#include <vpr/vpr.h>
+#include <vpr/System.h>
 #include <vpr/IO/Socket/InetAddr.h>
 
-#include <jccl/RTRC/ConfigManager.h>
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/Config/ElementFactory.h>
 #include <jccl/RTRC/DependencyManager.h>
 #include <jccl/RTRC/ConfigElementHandler.h>
 #include <jccl/Util/Debug.h>
-
-#ifdef HAVE_TWEEK_CXX
-#  include <jccl/RTRC/RTRCInterface.h>
-#endif
+#include <jccl/RTRC/RemoteReconfig.h>
+#include <jccl/RTRC/ConfigManager.h>
 
 
 namespace jccl
@@ -53,54 +52,154 @@ vprSingletonImp(ConfigManager);
 
 
 ConfigManager::ConfigManager()
-#ifdef HAVE_TWEEK_CXX
    : mReconfigIf(NULL)
-#endif
 {
    mPendingCheckCount = 0;
    mLastPendingSize = 0;
 
-   enableReconfigInterface();
+   loadRemoteReconfig();
 }
 
-void ConfigManager::enableReconfigInterface()
+/**
+ * This struct implements a callable object (a functor, basically).  An
+ * instance can be passed in where a boost::function1<bool, void*> is expected.
+ * In jccl::ConfigManager::loadRemoteReconfig(), instances are used to handle
+ * dynamic loading of plug-ins via vpr::LibraryLoader.
+ */
+struct Callable
 {
-#ifdef HAVE_TWEEK_CXX
+   Callable(jccl::ConfigManager* cfgMgr) : mgr(cfgMgr)
+   {
+   }
+
+   /**
+    * This will be invoked as a callback by methods of vpr::LibraryLoader.
+    *
+    * @param func A function pointer for the entry point in a dynamically
+    *             loaded plug-in.  This must be cast to the correct siggntaure
+    *             before being invoked.
+    */
+   bool operator()(void* func)
+   {
+      jccl::RemoteReconfig* (*init_func)();
+
+      // Cast the entry point function to the correct signature so that we can
+      // call it.  All dynamically plug-ins must have an entry point function
+      // that takes no argument and returns a pointer to an implementation of
+      // the jccl::RemoteReconfig interface.
+      init_func = (jccl::RemoteReconfig* (*)()) func;
+
+      // Call the entry point function.
+      jccl::RemoteReconfig* plugin = (*init_func)();
+
+      if ( NULL != plugin )
+      {
+         mgr->setRemoteReconfigPlugin(plugin);
+         return true;
+      }
+      else
+      {
+         return false;
+      }
+   }
+
+   jccl::ConfigManager* mgr;
+};
+
+void ConfigManager::loadRemoteReconfig()
+{
    vprASSERT(NULL == mReconfigIf && "RTRC interface object already instantiated.");
 
-   mReconfigIf = new RTRCInterface();
+#if defined(VPR_OS_Win32)
+   const std::string plugin_ext("dll");
+#elif defined(VPR_OS_Darwin)
+   const std::string plugin_ext("dylib");
+#else
+   const std::string plugin_ext("so");
+#endif
 
-   if ( mReconfigIf->init().success() )
+   const std::string jccl_base_dir("JCCL_BASE_DIR");
+   const std::string vj_base_dir("VJ_BASE_DIR");
+   std::string base_dir;
+
+   if ( ! vpr::System::getenv(jccl_base_dir, base_dir).success() )
    {
-      if ( ! mReconfigIf->enable().success() )
+      if ( ! vpr::System::getenv(vj_base_dir, base_dir).success() )
       {
+         return;
+      }
+   }
+
+   // XXX: This should not be hard-coded.
+   std::vector<std::string> search_path(1);
+   search_path[0] = base_dir + std::string("/lib/jccl/plugins");
+
+   const std::string reconfig_dso("corba_rtrc");
+   const std::string init_func("initPlugin");
+   Callable functor(this);
+   mPluginLoader.findAndInitDSO(reconfig_dso, search_path, init_func, functor);
+}
+
+void ConfigManager::setRemoteReconfigPlugin(jccl::RemoteReconfig* plugin)
+{
+   // If we already have a remote reconfig plug-in, discard it first.
+   if ( NULL != mReconfigIf && NULL != plugin )
+   {
+      vprDEBUG(jcclDBG_RECONFIGURATION, vprDBG_STATE_LVL)
+         << "[ConfigManager::setRemoteReconfigPlugin()] "
+         << "Removing old remote reconfig plug-in\n" << vprDEBUG_FLUSH;
+
+      if ( mReconfigIf->isEnabled() )
+      {
+         mReconfigIf->disable();
+      }
+
+      delete mReconfigIf;
+   }
+
+   vprDEBUG(jcclDBG_RECONFIGURATION, vprDBG_VERB_LVL)
+      << "[ConfigManager::setRemoteReconfigPlugin()] "
+      << "Enabling new remote reconfig plug-in\n" << vprDEBUG_FLUSH;
+   mReconfigIf = plugin;
+
+   if ( NULL != mReconfigIf )
+   {
+      // Attempt to initialize the remote run-time reconfiguration component.
+      if ( mReconfigIf->init().success() )
+      {
+         // Now, attempt to enable remote run-time reconfiguration.
+         if ( ! mReconfigIf->enable().success() )
+         {
+            vprDEBUG(jcclDBG_RECONFIGURATION, vprDBG_WARNING_LVL)
+               << clrOutBOLD(clrYELLOW, "WARNING:")
+               << " Failed to enable remote run-time reconfiguration.\n"
+               << vprDEBUG_FLUSH;
+            delete mReconfigIf;
+            mReconfigIf = NULL;
+         }
+      }
+      // Initialization failed.
+      else
+      {
+         vprDEBUG(jcclDBG_RECONFIGURATION, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Failed to initialize remote run-time reconfiguration.\n"
+            << vprDEBUG_FLUSH;
          delete mReconfigIf;
          mReconfigIf = NULL;
       }
    }
-   else
-   {
-      delete mReconfigIf;
-      mReconfigIf = NULL;
-   }
-#else
-   /* Do nothing. */ ;
-#endif
 }
 
 ConfigManager::~ConfigManager()
 {
-#ifdef HAVE_TWEEK_CXX
-   if ( NULL != mReconfigIf )
+   if ( NULL != mReconfigIf && mReconfigIf->isEnabled() )
    {
       mReconfigIf->disable();
 
       delete mReconfigIf;
       mReconfigIf = NULL;
    }
-#else
-   /* Do nothing. */ ;
-#endif
 }
 
 //-------------------- Pending List Stuff -------------------------------
@@ -523,26 +622,5 @@ int ConfigManager::attemptReconfiguration()
 
    return elements_processed;
 }
-
-enum PendItemResult
-{
-   SUCCESS, FAILED, NEED_DEPS
-};
-
-/*
-//------------------ JackalControl Stuff --------------------------------
-
-void ConfigManager::addConnect(Connect *c)
-{
-   c->addCommunicator(mConfigCommunicator);
-   //addActive(new ConfigElement(*(c->getConfiguration())));
-   addActive(c->getConfiguration());
-}
-
-void ConfigManager::removeConnect(Connect* c)
-{
-   removeActive(c->getConfiguration()->getName());
-}
-*/
 
 } // namespace jccl

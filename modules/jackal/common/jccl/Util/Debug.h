@@ -44,5 +44,6 @@ const vpr::DebugCategory jcclDBG_SERVER(vpr::GUID("1ca1e39f-d798-47f5-acd6-105c4
 const vpr::DebugCategory jcclDBG_PERFORMANCE(vpr::GUID("02acc29d-6f09-4498-bf38-23b02cd39084"), "DBG_JACKAL_PERFORMANCE", "JCCL_PERF:");
 const vpr::DebugCategory jcclDBG_CONFIG(vpr::GUID("a0b2de1f-ce63-489b-8248-f03ef56d36f7"), "DBG_CONFIGDB", "JCCL-CFG:");
 const vpr::DebugCategory jcclDBG_RECONFIGURATION(vpr::GUID("94a6e028-b810-40e5-b6fd-e41b1a74db0e"), "DBG_RECONFIGURATION", "JCCL-RCFG:");
+const vpr::DebugCategory jcclDBG_PLUGIN(vpr::GUID("810faef0-12fb-11d8-88d1-00045a86e9cd"), "DBG_JCCL_PLUGIN", "JCCL-PLUGIN:");
 
 #endif

@@ -30,57 +30,80 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _JCCL_RTRC_INTERFACE_H_
-#define _JCCL_RTRC_INTERFACE_H_
+#ifndef _JCCL_REMOTE_RECONFIG_H_
+#define _JCCL_REMOTE_RECONFIG_H_
 
 #include <jccl/jcclConfig.h>
 
-#include <stdlib.h>
-#include <string>
-
 #include <vpr/Util/ReturnStatus.h>
-#include <tweek/CORBA/CorbaManager.h>
 
 
 namespace jccl 
 {
 
-class RTRCInterfaceSubjectImpl;
-
-/** CORBA RTRC interface object. Handles configuration of the Tweek corba
- *  manager and creation of the interface subject.
- *
- *  @date July 31, 2002
- */
-
-class JCCL_CLASS_API RTRCInterface
+/** */
+class RemoteReconfig
 {
-
 public:
-   RTRCInterface();
-
-   ~RTRCInterface();
+   virtual ~RemoteReconfig()
+   {
+      /* Do nothing. */ ;
+   }
 
    /**
-    * Initializes the RTRC interface.
+    * Initializes the remote reconfiguration interface.
     */
-   vpr::ReturnStatus init();
+   virtual vpr::ReturnStatus init() = 0;
 
    /**
-    * Turns on the interface to RTRC (allow incoming connections).
+    * Turns on the interface to remote reconfiguration (allow incoming
+    * connections).
     */   
-   vpr::ReturnStatus enable();
+   virtual vpr::ReturnStatus enable() = 0;
+
+   /** Indicates whether this remote reconfiguration object is active. */
+   virtual bool isEnabled() const = 0;
 
    /**
-    * Turns off the interface to RTRC (disallow incoming connections).
+    * Turns off the interface to remote reconfiguration (disallow incoming
+    * connections).
     */
-   void disable();
+   virtual void disable() = 0;
 
-private:
-   tweek::CorbaManager* mCorbaManager;
-   RTRCInterfaceSubjectImpl* mInterface;
-   std::string mInterfaceName;
+#ifdef VPR_OS_Win32
+   /**
+    * Overlaod delete so that we can delete our memory correctly.  This is
+    * necessary for DLLs on Win32 to release memory from the correct memory
+    * space.  All subclasses must overload delete similarly.
+    */
+   void operator delete(void* p)
+   {
+      if ( NULL != p )
+      {
+         RemoteReconfig* obj_ptr = static_cast<RemoteReconfig*>(p);
+         obj_ptr->destroy();
+      }
+   }
+#endif
+ 
+protected:
+   /**
+    * Subclasses must implement this so that dynamically loaded device drivers
+    * delete themselves in the correct memory space.  This uses a template
+    * pattern.
+    */
+   virtual void destroy() = 0;
 
+protected:
+   RemoteReconfig()
+   {
+      /* Do nothing. */ ;
+   }
+
+   RemoteReconfig(const RemoteReconfig& o)
+   {
+      /* Do nothing. */ ;
+   }
 };
 
 } // namespace jccl
