@@ -50,10 +50,9 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vpr/Util/md5
 srcdir		= @srcdir@/../../../../../external/md5-c
 top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
+INSTALL_FILES	=
 SUBOBJDIR	= $(VPR_LIBRARY)
 
 SRCS		= md5c.c
