@@ -234,7 +234,7 @@ else
               $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
           done
 endif
-	cd $(instlinks)/$(VJ_SHARE_DIR) &&  $(RM_LN) /.vrj.appdefs.mk && \
+	cd $(instlinks)/$(VJ_SHARE_DIR) &&  $(RM_LN) ./vrj.appdefs.mk && \
           $(LN_S) $(topdir)/vrj.appdefs.mk ./vrj.appdefs.mk
 	cd $(instlinks)/$(VJ_SHARE_DIR) && $(RM_LN) ./data &&		\
           $(LN_S) $(VJROOT_ABS)/data ./data
