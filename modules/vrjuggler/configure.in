@@ -1366,6 +1366,8 @@ dnl # listed are for use only in the Makefile.in's found in that tree unless
 dnl # otherwise noted.  They are used in the following way:
 dnl #
 dnl #     * TEST_VJ_LIBS_BASIC: The basic VR Juggler library.
+dnl #     * TEST_VJ_LIBS_BASIC_INST: Same as the above but is for installed
+dnl #       Makefiles.
 dnl #     * TEST_VJ_LIBS_GL: The VR Juggler OpenGL API library.
 dnl #     * TEST_VJ_LIBS_PF: The VR Juggler Performer API library.
 dnl #     * TEST_LIBS_BASIC: The _most basic_ basic libraries needed for
@@ -1381,12 +1383,14 @@ dnl #
 if test "$OS_TYPE" = "UNIX" ; then
     if test "$PLATFORM" = "IRIX" ; then
         TEST_VJ_LIBS_BASIC="-B static -L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
+        TEST_VJ_LIBS_BASIC_INST="-B dynamic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
         TEST_LIBS_BASIC="-B dynamic -lm -lC"
     else
         dnl # For now, we are disabling static linking for the sample
         dnl # applications when compiled in a developer's build tree.  This
         dnl # is only the case on non-IRIX platforms.
         TEST_VJ_LIBS_BASIC="-L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
+        TEST_VJ_LIBS_BASIC_INST="$TEST_VJ_LIBS_BASIC"
         TEST_LIBS_BASIC="-lm"
     fi
 
@@ -1397,6 +1401,7 @@ if test "$OS_TYPE" = "UNIX" ; then
     TEST_EXTRA_LIBS_PF="${_PFOGLLIB}"
 elif test "$OS_TYPE" = "Win32" ; then
     TEST_VJ_LIBS_BASIC="-link -libpath:\$(VJ_BASE_DIR)/lib/debug Juggler.lib"
+    TEST_VJ_LIBS_BASIC_INST="$TEST_VJ_LIBS_BASIC"
     TEST_LIBS_BASIC='comctl32.lib user32.lib gdi32.lib ws2_32.lib'
     TEST_VJ_LIBS_GL='Juggler_ogl.lib'
     TEST_VJ_LIBS_PF='Juggler_pf.lib'
@@ -1488,6 +1493,7 @@ AC_SUBST(MUTEX_SYS)
 AC_SUBST(THREAD_SYS)
 
 AC_SUBST(TEST_VJ_LIBS_BASIC)
+AC_SUBST(TEST_VJ_LIBS_BASIC_INST)
 AC_SUBST(TEST_VJ_LIBS_GL)
 AC_SUBST(TEST_VJ_LIBS_PF)
 AC_SUBST(TEST_LIBS_BASIC)
