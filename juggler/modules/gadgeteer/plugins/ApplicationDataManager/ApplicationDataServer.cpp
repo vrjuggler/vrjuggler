@@ -30,9 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <cluster/PluginConfig.h>
+
 #include <gadget/Util/Debug.h>
 
-#include <cluster/PluginConfig.h>
 #include <plugins/ApplicationDataManager/ApplicationDataServer.h> // my header...
 #include <plugins/ApplicationDataManager/ApplicationData.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
