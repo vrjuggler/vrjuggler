@@ -358,8 +358,9 @@ public class VrjConfig
    /**
     * The special internal frame used to hold configuration editors.
     */
-   public class ConfigIFrame
-      extends JInternalFrame implements ActionListener
+   private class ConfigIFrame
+      extends JInternalFrame
+      implements ActionListener
    {
       public ConfigIFrame(File curDir, ConfigContext ctx,
                           FileLoader fileLoader, UndoHandler undoHandler)
@@ -370,8 +371,8 @@ public class VrjConfig
                true,
                true);
          getContentPane().setLayout(new BorderLayout());
-         mContextToolbar = new ContextToolbar(curDir, ctx, this, fileLoader,
-                                              undoHandler);
+         mContextToolbar = new ConfigIFrameToolbar(curDir, ctx, this,
+                                                   fileLoader, undoHandler);
 
          mToolbar.addActionListener(this);
          addActionListener(editor.getContextEditor().getElementTree());
@@ -483,8 +484,93 @@ public class VrjConfig
          }
       }
 
-      private ContextToolbar        mContextToolbar = null;
+      private ConfigIFrameToolbar   mContextToolbar = null;
       private GenericConfigEditor   editor   = new GenericConfigEditor();
+   }
+
+   private class ConfigIFrameToolbar
+      extends ContextToolbar
+   {
+      private static final String SAVED_TITLE   = "Configuration Editor";
+      private static final String UNSAVED_TITLE = SAVED_TITLE + " < Unsaved >";
+
+      public ConfigIFrameToolbar(File curDir, ConfigContext ctx,
+                                 ConfigIFrame frame, FileLoader fileLoader,
+                                 UndoHandler undoHandler)
+      {
+         super(curDir, ctx, fileLoader, undoHandler);
+         mConfigIFrame = frame;
+
+         toolbar.add(newBtn, null);
+         toolbar.add(openBtn, null);
+         toolbar.add(saveBtn, null);
+         toolbar.add(saveAsBtn, null);
+         toolbar.addSeparator();
+         toolbar.add(undoBtn, null);
+         toolbar.add(redoBtn, null);
+         toolbar.addSeparator();
+         toolbar.add(Box.createHorizontalGlue(), null);
+         toolbar.add(expandBtn, null);
+      }
+
+      public void undoableEditHappened(UndoableEditEvent e)
+      {
+         super.undoableEditHappened(e);
+         mConfigIFrame.setTitle(UNSAVED_TITLE);
+      }
+
+      public boolean doSave()
+      {
+         boolean saved = super.doSave();
+
+         if ( saved )
+         {
+            mConfigIFrame.setTitle(SAVED_TITLE);
+         }
+
+         return saved;
+      }
+
+      public void doUndo()
+      {
+         super.doUndo();
+
+         if (context.getConfigUndoManager().getUnsavedChanges())
+         {
+            mConfigIFrame.setTitle(UNSAVED_TITLE);
+         }
+         else
+         {
+            mConfigIFrame.setTitle(SAVED_TITLE);
+         }
+      }
+
+      public void doRedo()
+      {
+         super.doRedo();
+         if (context.getConfigUndoManager().getUnsavedChanges())
+         {
+            mConfigIFrame.setTitle(UNSAVED_TITLE);
+         }
+         else
+         {
+            mConfigIFrame.setTitle(SAVED_TITLE);
+         }
+      }
+
+      public boolean doSaveAs()
+      {
+         boolean saved = super.doSaveAs();
+
+         if ( saved )
+         {
+            mConfigIFrame.setTitle(SAVED_TITLE);
+         }
+
+         return saved;
+      }
+
+      private ConfigIFrame mConfigIFrame = null;
    }
 
    /**
