@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChunkDescDB>
+  <ChunkDesc token="TestChunk" name="TestChunk">
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+        <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+    <PropertyDesc token="eChunkProp" name="Embedded Chunk Prop" type="EmbeddedChunk" num="1">
+        <enumeration name="EmbeddedTestChunk"/>
+    </PropertyDesc>
+    <PropertyDesc token="chunkPtrProp" name="Chunk Ptr Prop" type="Chunk" num="1">
+        <enumeration name="DependentChunk2"/>
+    </PropertyDesc>
+    <PropertyDesc token="embChunkWithPtrProp" name="Yet Another Embedded Chunk" type="EmbeddedChunk" num="1">
+        <enumeration name="EmbeddedTestChunk3"/>
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="EmbeddedTestChunk" name="EmbeddedTestChunk">
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+        <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+    <PropertyDesc token="prop1" name="Int Property" type="Int" num="1">
+    </PropertyDesc>
+    <Defaults>
+      <EmbeddedTestChunk name="prop1">
+        <prop1>"251" </prop1>
+      </EmbeddedTestChunk>
+    </Defaults>
+  </ChunkDesc>
+  <ChunkDesc token="DependentChunk2" name="DependentChunk2">
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+        <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+    <PropertyDesc token="stringProp" name="String Prop" type="String" num="1">
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="EmbeddedTestChunk3" name="EmbeddedTestChunk3">
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+        <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+    <PropertyDesc token="otherChunkProp" name="Other Chunk" type="Chunk" num="1">
+        <enumeration name="DependentChunk"/>
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="DependentChunk" name="DependentChunk">
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+        <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+    <PropertyDesc token="boolProp" name="Bool Prop" type="Bool" num="1">
+    </PropertyDesc>
+  </ChunkDesc>
+</ChunkDescDB>
