@@ -34,39 +34,12 @@
 
 package VjConfig;
 
-import java.io.*;
-//import java.io.DataOutputStream;
-//import java.io.FileNotFoundException;
-//import java.io.File;
+import java.lang.RuntimeException;
 
-import VjConfig.ConfigChunkDB;
-import VjConfig.ChunkDescDB;
-//import VjConfig.ConfigChunk;
-import VjConfig.ChunkFactory;
-import VjConfig.ConfigParserException;
+public class ConfigParserException extends RuntimeException {
 
-public interface ConfigIOHandler {
-
-    public void readConfigChunkDB (File file, ConfigChunkDB db) throws IOException, ConfigParserException;
-
-
-    public void readConfigChunkDB (InputStream in, ConfigChunkDB db) throws IOException, ConfigParserException;
-
-
-    public boolean writeConfigChunkDB (DataOutputStream out, ConfigChunkDB db);
-
-    public boolean writeConfigChunkDB (File file, ConfigChunkDB db);
-
-
-    public void readChunkDescDB (File file, ChunkDescDB db) throws IOException, ConfigParserException;
-
-
-    public void readChunkDescDB (InputStream in, ChunkDescDB db) throws IOException, ConfigParserException;
-
-
-    public boolean writeChunkDescDB (DataOutputStream out, ChunkDescDB db);
-
-    public boolean writeChunkDescDB (File file, ChunkDescDB db);
-
+  public ConfigParserException(String s) {
+    super(s);
+  }
 
 }

@@ -110,8 +110,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
     }
 
 
-    public boolean readConfigChunkDB (File file, ConfigChunkDB db) throws FileNotFoundException {
-        boolean retval = false;
+    public void readConfigChunkDB (File file, ConfigChunkDB db) throws IOException, ConfigParserException {
         Document doc;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         
@@ -119,20 +118,19 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
             doc = builder.parse (file);
-            retval = buildChunkDB (db, doc);
+            if (!buildChunkDB (db, doc))
+                throw new ConfigParserException ("buildChunkDB failed.");
         }
-        catch (FileNotFoundException e) {
-            throw e;
+        catch (javax.xml.parsers.ParserConfigurationException e1) {
+            throw new ConfigParserException (e1.getMessage());
         }
-        catch (Exception e) {
-            //Core.consoleErrorMessage ("XML configuration loader", "JAXP parser error.");
-            e.printStackTrace();
+        catch (org.xml.sax.SAXException e2) {
+            throw new ConfigParserException (e2.getMessage());
         }
-        return retval;
     }
 
 
-    public boolean readConfigChunkDB (InputStream in, ConfigChunkDB db) {
+    public void readConfigChunkDB (InputStream in, ConfigChunkDB db) throws IOException, ConfigParserException {
         boolean retval = false;
         Document doc;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -141,13 +139,15 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
             doc = builder.parse (in);
-            retval = buildChunkDB (db, doc);
+            if (!buildChunkDB (db, doc))
+                throw new ConfigParserException ("buildChunkDB failed.");
         }
-        catch (Exception e) {
-            //Core.consoleErrorMessage ("XML configuration loader", "JAXP parser error.");
-            e.printStackTrace();
+        catch (javax.xml.parsers.ParserConfigurationException e1) {
+            throw new ConfigParserException (e1.getMessage());
         }
-        return retval;
+        catch (org.xml.sax.SAXException e2) {
+            throw new ConfigParserException (e2.getMessage());
+        }
     }
     
 
@@ -210,13 +210,15 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                 child = doc.getFirstChild();
                 while (/*retval &&*/ (child != null)) {
                     //System.out.println ("got a child of ConfigChunkDB");
-                    ch = buildConfigChunk (child, true);
-                    if (ch != null) {
-                        db.add (ch);
-                        //System.out.println ("read chunk: " + ch);
+                    if (child.getNodeType() == Node.ELEMENT_NODE) {
+                        ch = buildConfigChunk (child, true);
+                        if (ch != null) {
+                            db.add (ch);
+                            //System.out.println ("read chunk: " + ch);
+                        }
+                        else
+                            retval = false;
                     }
-                    else
-                        retval = false;
                     child = child.getNextSibling();
                 }
             }
@@ -423,7 +425,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
 
     //------------------------ ChunkDescDB Methods --------------------------
     
-    public boolean readChunkDescDB (File file, ChunkDescDB db) throws FileNotFoundException {
+    public void readChunkDescDB (File file, ChunkDescDB db) throws IOException, ConfigParserException {
         boolean retval = false;
         Document doc;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -433,22 +435,21 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
             DocumentBuilder builder = factory.newDocumentBuilder();
             doc = builder.parse (file);
             long time = System.currentTimeMillis();
-            retval = buildChunkDescDB (db, doc);
+            if (!buildChunkDescDB (db, doc))
+                throw new ConfigParserException ("buildChunkDescDB failed.");
             time = System.currentTimeMillis()-time;
             System.out.println ("buildChunkDescDB took " + time + " ms.");
         }
-        catch (FileNotFoundException e) {
-            throw e;
+        catch (javax.xml.parsers.ParserConfigurationException e1) {
+            throw new ConfigParserException (e1.getMessage());
         }
-        catch (Exception e) {
-            //Core.consoleErrorMessage ("XML configuration loader", "JAXP parser error.");
-            e.printStackTrace();
+        catch (org.xml.sax.SAXException e2) {
+            throw new ConfigParserException (e2.getMessage());
         }
-        return retval;
     }
 
 
-    public boolean readChunkDescDB (InputStream in, ChunkDescDB db) {
+    public void readChunkDescDB (InputStream in, ChunkDescDB db) throws IOException, ConfigParserException {
         boolean retval = false;
         Document doc;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -457,13 +458,15 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
             doc = builder.parse (in);
-            retval = buildChunkDescDB (db, doc);
+            if (!buildChunkDescDB (db, doc))
+                throw new ConfigParserException ("buildChunkDescDB failed.");
         }
-        catch (Exception e) {
-            //Core.consoleErrorMessage ("XML configuration loader", "JAXP parser error.");
-            e.printStackTrace();
+        catch (javax.xml.parsers.ParserConfigurationException e1) {
+            throw new ConfigParserException (e1.getMessage());
         }
-        return retval;
+        catch (org.xml.sax.SAXException e2) {
+            throw new ConfigParserException (e2.getMessage());
+        }
     }
     
 
@@ -525,14 +528,16 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
             if (name.equalsIgnoreCase ("ChunkDescDB")) {
                 child = doc.getFirstChild();
                 while (/*retval &&*/ (child != null)) {
-                    //System.out.println ("got a child of ChunkDescDB");
-                    desc = buildChunkDesc (child);
-                    if (desc != null) {
-                        db.add (desc);
-                        //System.out.println ("read desc: " + desc);
+                    if (child.getNodeType() == Node.ELEMENT_NODE) {
+                        //System.out.println ("got a child of ChunkDescDB");
+                        desc = buildChunkDesc (child);
+                        if (desc != null) {
+                            db.add (desc);
+                            //System.out.println ("read desc: " + desc);
+                        }
+                        else
+                            retval = false;
                     }
-                    else
-                        retval = false;
                     child = child.getNextSibling();
                 }
             }

@@ -61,6 +61,7 @@ VJCONFIG_SOURCES = \
         VjConfig/DescDBListener.java		\
         VjConfig/XMLConfigIOHandler.java	\
         VjConfig/ConfigIO.java			\
-        VjConfig/StandardConfigIOHandler.java
+        VjConfig/StandardConfigIOHandler.java	\
+	VjConfig/ConfigParserException.java
 
 VJCONFIG_OBJS = $(VJCONFIG_SOURCES:.java=.class)

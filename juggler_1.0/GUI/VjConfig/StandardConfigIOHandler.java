@@ -40,34 +40,25 @@ import VjConfig.ConfigIOHandler;
 import VjConfig.ConfigChunkDB;
 import VjConfig.ConfigChunk;
 import VjConfig.ChunkFactory;
+import VjConfig.ConfigParserException;
 
 public class StandardConfigIOHandler implements ConfigIOHandler {
 
     //----------------- ConfigChunkDB Methods ------------------------
 
-    public boolean readConfigChunkDB (File file, ConfigChunkDB db) {
-        try {
-	    FileReader r = new FileReader (file);
-	    ConfigStreamTokenizer st = new ConfigStreamTokenizer(r);
-            db.read (st);
-            return true;
-        }
-        catch (Exception e) {
-            return false;
-        }
+    public void readConfigChunkDB (File file, ConfigChunkDB db) throws IOException, ConfigParserException {
+        FileReader r = new FileReader (file);
+        ConfigStreamTokenizer st = new ConfigStreamTokenizer(r);
+        if (!db.read (st))
+            throw new ConfigParserException ("Standard Parser failed.");
     }
                
 
-    public boolean readConfigChunkDB (InputStream in, ConfigChunkDB db) {
-        try {
-	    InputStreamReader r = new InputStreamReader (in);
-	    ConfigStreamTokenizer st = new ConfigStreamTokenizer(r);
-            db.read (st);
-            return true;
-        }
-        catch (Exception e) {
-            return false;
-        }
+    public void readConfigChunkDB (InputStream in, ConfigChunkDB db) throws IOException, ConfigParserException {
+        InputStreamReader r = new InputStreamReader (in);
+        ConfigStreamTokenizer st = new ConfigStreamTokenizer(r);
+        if (!db.read (st))
+            throw new ConfigParserException ("Standard Parser failed.");
     }
 
     
@@ -96,29 +87,19 @@ public class StandardConfigIOHandler implements ConfigIOHandler {
 
     //----------------- ChunkDescDB Methods ----------------------------
 
-    public boolean readChunkDescDB (File file, ChunkDescDB db) {
-        try {
-	    FileReader r = new FileReader (file);
-	    ConfigStreamTokenizer st = new ConfigStreamTokenizer(r);
-            db.read (st);
-            return true;
-        }
-        catch (Exception e) {
-            return false;
-        }
+    public void readChunkDescDB (File file, ChunkDescDB db) throws IOException, ConfigParserException {
+        FileReader r = new FileReader (file);
+        ConfigStreamTokenizer st = new ConfigStreamTokenizer(r);
+        if (!db.read (st))
+            throw new ConfigParserException ("Standard Parser failed.");
     }
                
 
-    public boolean readChunkDescDB (InputStream in, ChunkDescDB db) {
-        try {
-	    InputStreamReader r = new InputStreamReader (in);
-	    ConfigStreamTokenizer st = new ConfigStreamTokenizer(r);
-            db.read (st);
-            return true;
-        }
-        catch (Exception e) {
-            return false;
-        }
+    public void readChunkDescDB (InputStream in, ChunkDescDB db) throws IOException, ConfigParserException {
+        InputStreamReader r = new InputStreamReader (in);
+        ConfigStreamTokenizer st = new ConfigStreamTokenizer(r);
+        if (!db.read (st))
+            throw new ConfigParserException ("Standard Parser failed.");
     }
 
     
