@@ -59,10 +59,9 @@
 /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 
 
-static struct termio termiotemplate = { 0, 0, CS8|CREAD|CLOCAL, 0, LDISC1, 0 };
+static struct termios termiotemplate = { 0, 0, CS8|CREAD|CLOCAL, 0, LDISC1, 0 };
+static struct termios old_termio[MAXNUMFILEDESCR];
 
-
-static struct termio old_termio[MAXNUMFILEDESCR];
 static char open_port_names[MAXNUMFILEDESCR][15];
 static int num_open_ports = 0;
 static char failed_routine_name[256];
@@ -152,7 +151,7 @@ baud_from_int(int baudrate)
 int
 CyberGloveBasic::vt_serial_open(char *devname, int baudrate)
 {
-  struct termio temp_termio;
+  struct termios temp_termio;
   int portfd;
   //Boolean first_open = FALSE;
 
@@ -195,18 +194,19 @@ CyberGloveBasic::vt_serial_open(char *devname, int baudrate)
   temp_termio.c_cc[VTIME] = 1;	/* timeout (in tenths of a second) */
 
   /* save old tty state */
-  if (ioctl(portfd, TCGETA, &old_termio[portfd]) == -1)
+  if (tcgetattr(portfd, &old_termio[portfd]) == -1)
   {
-    sprintf(failed_routine_name,"ioctl(%d,TCGETA,%#x)",
-	    portfd,&old_termio[portfd]);
-    vt_fatal_unix_error("vt_serial_open",failed_routine_name);
+    sprintf(failed_routine_name, "tcgetattr(%d, %#x)", portfd,
+            &old_termio[portfd]);
+    vt_fatal_unix_error("vt_serial_open", failed_routine_name);
   }
 
   /* enact new tty state: */
-  if (ioctl(portfd, TCSETA, &temp_termio) == -1)
+  if (tcsetattr(portfd, TCSANOW, &temp_termio) == -1)
   {
-    sprintf(failed_routine_name,"ioctl(%d,TCSETA,%#x)",portfd,&temp_termio);
-    vt_fatal_unix_error("vt_serial_open",failed_routine_name);
+    sprintf(failed_routine_name, "tcsetattr(%d, TCSANOW, %#x)", portfd,
+            temp_termio);
+    vt_fatal_unix_error("vt_serial_open", failed_routine_name);
   }
 
   return (portfd);
@@ -220,11 +220,11 @@ CyberGloveBasic::vt_serial_close(int portfd)
   num_open_ports--;
   strcpy(open_port_names[portfd],"");
 
-  if (ioctl(portfd, TCSETA, &old_termio[portfd]) == -1)
+  if (tcsetattr(portfd, TCSANOW, &old_termio[portfd]) == -1)
   {
-    sprintf(failed_routine_name,"ioctl(%d,TCSETA,%#x)",
-	    portfd,&old_termio[portfd]);
-    returnval = vt_print_unix_error("vt_serial_close",failed_routine_name);
+    sprintf(failed_routine_name, "tcsetattr(%d, TCSANOW, %#x)", portfd,
+            &old_termio[portfd]);
+    returnval = vt_print_unix_error("vt_serial_close", failed_routine_name);
   }
 
   if (::close(portfd) == -1)
@@ -257,11 +257,12 @@ int
 CyberGloveBasic::vt_serial_flush_in(int portfd)
 {
   /* flush the input buffer immediately without waiting for more input */
-  if (ioctl(portfd, TCFLSH, TCIFLUSH) == -1)
+  if (tcflush(portfd, TCIFLUSH) == -1)
   {
-    sprintf(failed_routine_name,"ioctl(%d,TCFLSH,TCIFLUSH)",portfd);
-    return (vt_print_unix_error("vt_serial_flush_in",failed_routine_name));
+    sprintf(failed_routine_name, "tcflush(%d, TCIFLUSH)", portfd);
+    return (vt_print_unix_error("vt_serial_flush_in", failed_routine_name));
   }
+
   return (Ok);
 }
 
