@@ -128,7 +128,13 @@ public class ConfigChunkFrame extends Frame
 	setVisible(true);
 	Dimension d = properties.getPreferredSize();
 	setSize(d.width + 50, 600);
+	validate();
 	c.ui.waitdialog.hide();
+
+	Point pr = getLocationOnScreen();
+	//System.out.println ("position is " + pr);
+	if (pr.x <= 0 || pr.y <= 0)
+	    setLocation (25,35);
 
   }
 
