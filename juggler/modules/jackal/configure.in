@@ -566,6 +566,11 @@ AC_OUTPUT(jccl-config
           perfmonitor/Makefile.inc
           perfmonitor/jccl/Makefile
           perfmonitor/jccl/PerfMonitor/Makefile
+          test/Makefile
+          test/TestSuite/Makefile
+          test/TestSuite/test.defs.mk
+          test/TestSuite/TestCases/Makefile
+          test/TestSuite/java/Makefile
           tools/Makefile
           tools/ConfigUpdater/Makefile
           mtree/JCCL.data.dist
