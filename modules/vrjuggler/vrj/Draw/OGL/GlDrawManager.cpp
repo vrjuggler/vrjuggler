@@ -192,9 +192,9 @@ void GlDrawManager::main(void* nullParam)
 
 void GlDrawManager::drawAllPipes()
 {
-   vprD#EBUG_OutputGuard(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL,
-                         "vrj::GLDrawManager::drawAllPipes()\n",
-                         "vrj::GLDrawManager::drawAllPipes() done.\n");
+   vprDEBUG_OutputGuard(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL,
+                        "vrj::GLDrawManager::drawAllPipes()\n",
+                        "vrj::GLDrawManager::drawAllPipes() done.\n");
    unsigned int pipe_num;
 
    // RENDER
