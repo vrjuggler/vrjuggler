@@ -154,8 +154,8 @@ usage(0) if $script_help;
 # Determine which library's linker options will be printed.
 %LIBS = ();
 
-# Use what is left on the command line.  Ultimately, only "vrj", "Juggler",
-# "Juggler_ogl", and "Juggler_pf" will be recognized.
+# Use what is left on the command line.  Ultimately, only "vrj", "vrj_ogl",
+# and "vrj_pf" will be recognized.
 if ( $#ARGV != -1 )
 {
    foreach ( @ARGV )
@@ -209,10 +209,9 @@ sub usage ($)
 Usage: $0 [LIBRARIES] [OPTIONS]
 
 Libraries (prints the linker options for one or more of these libraries):
-        vrj (all basic libraries)
-        Juggler
-        Juggler_ogl
-        Juggler_pf
+        vrj (base library)
+        vrj_ogl (OpenGL Draw Manager)
+        vrj_pf (Performer Draw Manager)
 
 Options:
         [--prefix[=DIR]]        Print the installation prefix or set an
@@ -342,27 +341,19 @@ sub make_LDFLAGS ($;$$$)
 
    if ( $LIBS{'vrj'} )
    {
-      $vrj_libs = ($echo_profiled ? qq(@vrj_prof_libs@) : qq(@vrj_libs@));
+      $vrj_libs = ($echo_profiled ? qq(@vrj_prof_lib@) : qq(@vrj_lib@));
    }
-   else
+
+   if ( $LIBS{'vrj_ogl'} )
    {
-      if ( $LIBS{'Juggler'} )
-      {
-         $vrj_libs = ($echo_profiled ? qq(@Juggler_prof_lib@)
-                                     : qq(@Juggler_lib@));
-      }
+      $vrj_libs .= ($echo_profiled ? qq( @vrj_ogl_prof_lib@)
+                                   : qq( @vrj_ogl_lib@));
+   }
 
-      if ( $LIBS{'Juggler_ogl'} )
-      {
-         $vrj_libs .= ($echo_profiled ? qq( @Juggler_ogl_prof_lib@)
-                                      : qq( @Juggler_ogl_lib@));
-      }
-
-      if ( $LIBS{'Juggler_pf'} )
-      {
-         $vrj_libs .= ($echo_profiled ? qq( @Juggler_pf_prof_lib@)
-                                      : qq( @Juggler_pf_lib@));
-      }
+   if ( $LIBS{'vrj_pf'} )
+   {
+      $vrj_libs .= ($echo_profiled ? qq( @vrj_pf_prof_lib@)
+                                   : qq( @vrj_pf_lib@));
    }
 
    my $full_ldflags = "$ldflags $static_begin $vrj_libs $static_end";
@@ -419,26 +410,26 @@ sub make_EXTRA_LDFLAGS ($;$$$)
    {
       # This one is first because it depends on libraries returned by the
       # following two.
-      if ( $LIBS{'Juggler_pf'} )
+      if ( $LIBS{'vrj_pf'} )
       {
-         $extra_libs = qq(@Juggler_pf_extra_libs@);
+         $extra_libs = qq(@vrj_pf_extra_libs@);
       }
 
-      if ( $LIBS{'Juggler_ogl'} || $LIBS{'Juggler_pf'} )
+      if ( $LIBS{'vrj_ogl'} || $LIBS{'vrj_pf'} )
       {
-         $extra_libs .= qq( @Juggler_ogl_extra_libs@);
+         $extra_libs .= qq( @vrj_ogl_extra_libs@);
       }
 
       # This one is last because it will probably contain things such as the
       # X11 libraries and the math library.
-      if ( $LIBS{'Juggler'} || $LIBS{'Juggler_pf'} )
+      if ( $LIBS{'vrj'} || $LIBS{'vrj_pf'} )
       {
-         $extra_libs .= qq( @Juggler_extra_libs@);
+         $extra_libs .= qq( @vrj_extra_libs@);
       }
 
-      # Only add the "internal" dependencies when we want the basic Juggler
+      # Only add the "internal" dependencies when we want the basic vrj
       # library.
-      if ( $LIBS{'Juggler'} )
+      if ( $LIBS{'vrj'} )
       {
          $extra_libs = "$dep_libs $extra_libs";
       }

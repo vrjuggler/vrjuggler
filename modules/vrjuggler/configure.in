@@ -404,8 +404,8 @@ fi
 if test "$OS_TYPE" = "UNIX" ; then
     REQ_EXTRA_LIBS="$LDFLAGS $GADGET_LIBS_CC_MIN $JCCL_LIBS_CC_MIN $JCCL_EXTRA_LIBS_CC $LIBS -lm"
     DYLIB_DEPS_VJ="$SNX_LIBS_CC $REQ_EXTRA_LIBS"
-    DYLIB_DEPS_GL="-L\$(LIBDIR) -lJuggler $REQ_EXTRA_LIBS"
-    DYLIB_DEPS_PF="-L\$(LIBDIR) -lJuggler $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_LIBS"
+    DYLIB_DEPS_GL="-L\$(LIBDIR) -lvrj $REQ_EXTRA_LIBS"
+    DYLIB_DEPS_PF="-L\$(LIBDIR) -lvrj $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_LIBS"
 
     osx_frameworks='-framework AGL -framework ApplicationServices'
 
@@ -425,8 +425,8 @@ if test "$OS_TYPE" = "UNIX" ; then
 
     REQ_EXTRA_PROF_LIBS="$LDFLAGS $GADGET_PROF_LIBS_CC_MIN $JCCL_PROF_LIBS_CC_MIN $JCCL_EXTRA_LIBS_CC $LIBS -lm"
     DYLIB_PROF_DEPS_VJ="$SNX_PROF_LIBS_CC $REQ_EXTRA_PROF_LIBS"
-    DYLIB_PROF_DEPS_GL="-L\$(LIBDIR) -lJuggler_p $OGL_LDFLAGS $LIBOPENGL $REQ_EXTRA_PROF_LIBS"
-    DYLIB_PROF_DEPS_PF="-L\$(LIBDIR) -lJuggler_p $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_PROF_LIBS"
+    DYLIB_PROF_DEPS_GL="-L\$(LIBDIR) -lvrj_p $OGL_LDFLAGS $LIBOPENGL $REQ_EXTRA_PROF_LIBS"
+    DYLIB_PROF_DEPS_PF="-L\$(LIBDIR) -lvrj_p $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_PROF_LIBS"
 
     if test "x$GADGET_USE_X11" = "xyes" ; then
         APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11"
@@ -458,8 +458,8 @@ elif test "$OS_TYPE" = "Win32" ; then
     BASIC_WIN32_LIBS='comctl32.lib user32.lib gdi32.lib'
     DYLIB_DEPS_BASIC="$REQ_EXTRA_LIBS $BASIC_WIN32_LIBS"
     DYLIB_DEPS_VJ="/libpath:\$(LIBDIR) $DYLIB_DEPS_BASIC"
-    DYLIB_DEPS_GL="/libpath:\$(LIBDIR) Juggler.lib $DYLIB_DEPS_BASIC $OGL_LDFLAGS $LIBOPENGL"
-    DYLIB_DEPS_PF="/libpath:\$(LIBDIR) Juggler.lib $PF_LDFLAGS_LINK_EXE $LIBPERFORMER_LINK_EXE $OGL_LDFLAGS $LIBOPENGL $REQ_EXTRA_LIBS"
+    DYLIB_DEPS_GL="/libpath:\$(LIBDIR) vrj.lib $DYLIB_DEPS_BASIC $OGL_LDFLAGS $LIBOPENGL"
+    DYLIB_DEPS_PF="/libpath:\$(LIBDIR) vrj.lib $PF_LDFLAGS_LINK_EXE $LIBPERFORMER_LINK_EXE $OGL_LDFLAGS $LIBOPENGL $REQ_EXTRA_LIBS"
     DYLIB_PROF_DEPS_VJ="$DYLIB_DEPS_VJ"
     DYLIB_PROF_DEPS_GL="$DYLIB_DEPS_GL"
     DYLIB_PROF_DEPS_PF="$DYLIB_DEPS_PF"
@@ -530,43 +530,39 @@ case $OS_TYPE in
     UNIX)
         vrj_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
         vrj_ldflags_linker="$vrj_ldflags_compiler"
-        vrj_libs='-lJuggler -lJuggler_ogl'
-        vrj_prof_libs='-lJuggler_p -lJuggler_ogl_p'
         vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_X11 $LIBS"
 
-        Juggler_lib='-lJuggler'
-        Juggler_prof_lib='-lJuggler_p'
-        Juggler_ogl_lib='-lJuggler_ogl'
-        Juggler_ogl_prof_lib='-lJuggler_ogl_p'
+        vrj_lib='-lvrj'
+        vrj_prof_lib='-lvrj_p'
+        vrj_ogl_lib='-lvrj_ogl'
+        vrj_ogl_prof_lib='-lJvrj_ogl_p'
 
         if test "x$PERFORMER_API" = "xY" ; then
-            Juggler_pf_lib='-lJuggler_pf'
-            Juggler_pf_prof_lib='-lJuggler_pf_p'
-            Juggler_pf_extra_libs="$APP_EXTRA_LIBS_PF"
+            vrj_pf_lib='-lvrj_pf'
+            vrj_pf_prof_lib='-lvrj_pf_p'
+            vrj_pf_extra_libs="$APP_EXTRA_LIBS_PF"
         fi
 
         # XXX: Ideally, -lm would not be added "manually" like this.
-        Juggler_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_X11 $LIBS -lm"
-        Juggler_ogl_extra_libs="$APP_EXTRA_LIBS_GL"
+        vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_X11 $LIBS -lm"
+        vrj_ogl_extra_libs="$APP_EXTRA_LIBS_GL"
         ;;
     Win32)
         vrj_ldflags_compiler="/link /libpath:\$prefix/lib/debug "
         vrj_ldflags_linker="/libpath:\$prefix/lib/debug "
-        vrj_libs='Juggler.lib Juggler_ogl.lib'
-        vrj_prof_libs="$vrj_libs"
         vrj_extra_libs="$LDFLAGS $APP_EXTRA_LIBS_GL $BASIC_WIN32_LIBS $LIBS"
 
-        Juggler_lib='Juggler.lib'
-        Juggler_prof_lib='Juggler.lib'
-        Juggler_ogl_lib='Juggler_ogl.lib'
-        Juggler_ogl_prof_lib='Juggler_ogl.lib'
-        Juggler_extra_libs="$LDFLAGS $BASIC_WIN32_LIBS $LIBS"
-        Juggler_ogl_extra_libs="$APP_EXTRA_LIBS_GL"
+        vrj_lib='vrj.lib'
+        vrj_prof_lib='vrj.lib'
+        vrj_ogl_lib='vrj_ogl.lib'
+        vrj_ogl_prof_lib='vrj_ogl.lib'
+        vrj_extra_libs="$LDFLAGS $BASIC_WIN32_LIBS $LIBS"
+        vrj_ogl_extra_libs="$APP_EXTRA_LIBS_GL"
 
         if test "x$PERFORMER_API" = "xY" ; then
-            Juggler_pf_lib='Juggler_pf.lib'
-            Juggler_pf_prof_lib='Juggler_pf.lib'
-            Juggler_pf_extra_libs="$APP_EXTRA_LIBS_PF"
+            vrj_pf_lib='vrj_pf.lib'
+            vrj_pf_prof_lib='vrj_pf.lib'
+            vrj_pf_extra_libs="$APP_EXTRA_LIBS_PF"
         fi
 
         ;;
@@ -627,23 +623,21 @@ AC_SUBST(vrj_cxxflags)
 AC_SUBST(vrj_extra_cxxflags)
 AC_SUBST(vrj_ldflags_compiler)
 AC_SUBST(vrj_ldflags_linker)
-AC_SUBST(vrj_libs)
-AC_SUBST(vrj_prof_libs)
 AC_SUBST(vrj_extra_ldflags_compiler)
 AC_SUBST(vrj_extra_ldflags_linker)
 AC_SUBST(vrj_extra_libs)
 AC_SUBST(vrj_n32_flags)
 AC_SUBST(vrj_64_flags)
 
-AC_SUBST(Juggler_lib)
-AC_SUBST(Juggler_ogl_lib)
-AC_SUBST(Juggler_pf_lib)
-AC_SUBST(Juggler_prof_lib)
-AC_SUBST(Juggler_ogl_prof_lib)
-AC_SUBST(Juggler_pf_prof_lib)
-AC_SUBST(Juggler_extra_libs)
-AC_SUBST(Juggler_ogl_extra_libs)
-AC_SUBST(Juggler_pf_extra_libs)
+AC_SUBST(vrj_lib)
+AC_SUBST(vrj_ogl_lib)
+AC_SUBST(vrj_pf_lib)
+AC_SUBST(vrj_prof_lib)
+AC_SUBST(vrj_ogl_prof_lib)
+AC_SUBST(vrj_pf_prof_lib)
+AC_SUBST(vrj_extra_libs)
+AC_SUBST(vrj_ogl_extra_libs)
+AC_SUBST(vrj_pf_extra_libs)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
