@@ -102,14 +102,32 @@ public:
    //@}
 
 
-   virtual vpr::Uint8 readUint8();
-   virtual vpr::Uint16 readUint16();
-   virtual vpr::Uint32 readUint32();
-   virtual vpr::Uint64 readUint64();
-   virtual float readFloat();
-   virtual double readDouble();
-   virtual std::string readString();
-   virtual bool readBool();
+   inline virtual vpr::Uint8 readUint8();
+   inline virtual vpr::Uint16 readUint16();
+   inline virtual vpr::Uint32 readUint32();
+   inline virtual vpr::Uint64 readUint64();
+   inline virtual float readFloat();
+   inline virtual double readDouble();
+   inline virtual std::string readString();
+   inline virtual bool readBool();
+
+   /* Helper methods */
+   virtual void readUint8(vpr::Uint8& val)
+   { val = this->readUint8(); }
+   virtual void readUint16(vpr::Uint16& val)
+   { val = this->readUint16(); }
+   virtual void readUint32(vpr::Uint32& val)
+   { val = this->readUint32(); }
+   virtual void readUint64(vpr::Uint64& val)
+   { val = this->readUint64(); }
+   virtual void readFloat(float& val)
+   { val = this->readFloat(); }
+   virtual void readDouble(double& val)
+   { val = this->readDouble(); }
+   virtual void readString(std::string& str)
+   { str = this->readString(); }
+   virtual void readBool(bool& val)
+   { val = this->readBool(); }
 
    /* Read raw data of length len
    * POST: Pointer to data returned
@@ -126,14 +144,14 @@ public:
 /* Read out the single byte.
 * @post: data = old(data)+val, mCurHeadPos advaced 1
 */
-inline vpr::Uint8 BufferObjectReader::readUint8()
+vpr::Uint8 BufferObjectReader::readUint8()
 {
    vpr::Uint8 temp_data;
    memcpy(&temp_data, readRaw(1), 1);
    return temp_data;
 }
 
-inline vpr::Uint16 BufferObjectReader::readUint16()
+vpr::Uint16 BufferObjectReader::readUint16()
 {
    vpr::Uint16 nw_val;
    memcpy(&nw_val, readRaw(2), 2);
@@ -141,7 +159,7 @@ inline vpr::Uint16 BufferObjectReader::readUint16()
    return vpr::System::Ntohs(nw_val);
 }
 
-inline vpr::Uint32 BufferObjectReader::readUint32()
+vpr::Uint32 BufferObjectReader::readUint32()
 {
    vpr::Uint32 nw_val;
    memcpy(&nw_val, readRaw(4), 4);
@@ -149,7 +167,7 @@ inline vpr::Uint32 BufferObjectReader::readUint32()
    return vpr::System::Ntohl(nw_val);
 }
 
-inline vpr::Uint64 BufferObjectReader::readUint64()
+vpr::Uint64 BufferObjectReader::readUint64()
 {
    vpr::Uint64 nw_val;
    memcpy(&nw_val, readRaw(8), 8);
@@ -158,7 +176,7 @@ inline vpr::Uint64 BufferObjectReader::readUint64()
    return h_val;
 }
 
-inline float BufferObjectReader::readFloat()
+float BufferObjectReader::readFloat()
 {
    // We are reading the float as a 4 byte value
    BOOST_STATIC_ASSERT(sizeof(float) == 4);
@@ -170,7 +188,7 @@ inline float BufferObjectReader::readFloat()
    return *((float*)&h_val);
 }
 
-inline double BufferObjectReader::readDouble()
+double BufferObjectReader::readDouble()
 {
    // We are reading the double as a 8 byte value
    BOOST_STATIC_ASSERT(sizeof(double) == 8);
@@ -184,7 +202,7 @@ inline double BufferObjectReader::readDouble()
 }
 
 
-inline std::string BufferObjectReader::readString()
+std::string BufferObjectReader::readString()
 {
    vpr::Uint16 str_len = readUint16();
    std::string ret_val;
@@ -197,13 +215,13 @@ inline std::string BufferObjectReader::readString()
    return ret_val;
 }
 
-inline bool BufferObjectReader::readBool()
+bool BufferObjectReader::readBool()
 {
    return (bool)*(readRaw(1));
 }
 
 
-inline vpr::Uint8* BufferObjectReader::readRaw(unsigned len)
+vpr::Uint8* BufferObjectReader::readRaw(unsigned len)
 {
    mCurHeadPos += len;
    vprASSERT((mCurHeadPos-len) < mData->size());
