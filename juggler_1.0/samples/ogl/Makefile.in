@@ -14,7 +14,8 @@ WORKDIR		= ${topdir}/test/ogl
 
 include @topdir@/Makefile.base
 
-SUBDIRS		= cubes
+SUBDIRS		= cubes \
+		  wand
 
 @SET_MAKE@
 
