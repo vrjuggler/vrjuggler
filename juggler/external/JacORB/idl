@@ -2,6 +2,11 @@
 
 : ${JACORB_PATH=.}
 
+if test "x$JAVA_HOME" = "x" ; then
+   echo "ERROR: JAVA_HOME environment variable not set!"
+   exit 1
+fi
+
 # Converts path to a Win32 style path if we're in Cygwin
 fixpath()
 {
