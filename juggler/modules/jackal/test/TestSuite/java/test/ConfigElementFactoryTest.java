@@ -172,7 +172,7 @@ import org.vrjuggler.jccl.config.*;
 
       // Lower left corner
       corner = (ConfigElement)e.getProperty("corners", 0);
-      assertEquals(corner.getName(), "Corners 0");
+      assertEquals(corner.getName(), "corners 0");
       assertEquals(corner.getDefinition(), mDefs.get(2));
       assertEquals(corner.getProperty("position", 0), new Float(0.0f));
       assertEquals(corner.getProperty("position", 1), new Float(0.0f));
@@ -180,7 +180,7 @@ import org.vrjuggler.jccl.config.*;
 
       // Lower right corner
       corner = (ConfigElement)e.getProperty("corners", 1);
-      assertEquals(corner.getName(), "Corners 1");
+      assertEquals(corner.getName(), "corners 1");
       assertEquals(corner.getDefinition(), mDefs.get(2));
       assertEquals(corner.getProperty("position", 0), new Float(0.0f));
       assertEquals(corner.getProperty("position", 1), new Float(0.0f));
@@ -188,7 +188,7 @@ import org.vrjuggler.jccl.config.*;
 
       // Upper right corner
       corner = (ConfigElement)e.getProperty("corners", 2);
-      assertEquals(corner.getName(), "Corners 2");
+      assertEquals(corner.getName(), "corners 2");
       assertEquals(corner.getDefinition(), mDefs.get(2));
       assertEquals(corner.getProperty("position", 0), new Float(0.0f));
       assertEquals(corner.getProperty("position", 1), new Float(0.0f));
@@ -196,7 +196,7 @@ import org.vrjuggler.jccl.config.*;
 
       // Upper left corner
       corner = (ConfigElement)e.getProperty("corners", 3);
-      assertEquals(corner.getName(), "Corners 3");
+      assertEquals(corner.getName(), "corners 3");
       assertEquals(corner.getDefinition(), mDefs.get(2));
       assertEquals(corner.getProperty("position", 0), new Float(0.0f));
       assertEquals(corner.getProperty("position", 1), new Float(0.0f));
