@@ -14,6 +14,7 @@
 #include <Kernel/vjSystemData.h>
 
 	// --- HACK --- //
+	// Is this really needed??
 #include <Kernel/vjSGISystemFactory.h>
 
     // Config stuff
