@@ -34,10 +34,10 @@
             icon="org/vrjuggler/vrjconfig/images/positional_devices64.png"/>
    </category>
    <category label="Proxies" title="Choose a proxy type"
-             icon="org/vrjuggler/vrjconfig/images/devices64.png">
+             icon="org/vrjuggler/vrjconfig/images/proxies64.png">
       <editor label="All Proxies"
               class="org.vrjuggler.vrjconfig.customeditors.proxyeditor.Editor"
-              icon="org/vrjuggler/vrjconfig/images/devices64.png" />
+              icon="org/vrjuggler/vrjconfig/images/proxies64.png" />
       <type label="Analog" title="Choose an analog proxy"
             token="analog_proxy"
             icon="org/vrjuggler/vrjconfig/images/analog_proxies64.png"/>
