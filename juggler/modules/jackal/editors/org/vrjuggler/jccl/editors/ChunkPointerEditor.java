@@ -99,7 +99,7 @@ public class ChunkPointerEditor
          for (Iterator chk_itr = chunks.iterator(); chk_itr.hasNext(); )
          {
             ConfigChunk chunk = (ConfigChunk)chk_itr.next();
-            mTags.add(chunk.getName());
+            mTags.add(chunk.getFullName());
          }
       }
    }
@@ -114,27 +114,61 @@ public class ChunkPointerEditor
    private List getChunksWithDescToken(String token)
    {
       List matches = new ArrayList();
+      List all_chunks = new ArrayList();
 
       ConfigBroker broker = new ConfigBrokerProxy();
       // XXX: ACK! We really should look only in the current context, not all resources
       for (Iterator itr = broker.getResourceNames().iterator(); itr.hasNext(); )
       {
          List chunks = broker.getChunksIn((String)itr.next());
-         matches.addAll(ConfigUtilities.getChunksWithDescToken(chunks, token));
+
+         // Get the chunks embedded within the current chunk
+         for (Iterator chk_itr = chunks.iterator(); chk_itr.hasNext(); )
+         {
+            ConfigChunk chunk = (ConfigChunk)chk_itr.next();
+            all_chunks.add(chunk);
+            all_chunks.addAll(getEmbeddedChunksRecursive(chunk));
+         }
+
+         // Cull out the chunks that use the given desc token
+         matches.addAll(ConfigUtilities.getChunksWithDescToken(all_chunks, token));
       }
 
+      // Sort alphabetically
       Collections.sort(matches, new Comparator()
       {
          public int compare(Object a, Object b)
          {
             if (a instanceof ConfigChunk && b instanceof ConfigChunk)
             {
-               return ((ConfigChunk)a).getName().compareTo(((ConfigChunk)b).getName());
+               return ((ConfigChunk)a).getFullName().compareTo(((ConfigChunk)b).getFullName());
             }
             return 0;
          }
       });
       return matches;
+   }
+
+   /**
+    * Gets all embedded chunks within the given chunk recursively.
+    *
+    * @param srcChunk      the chunk in which to retrieve embedded chunks
+    */
+   private List getEmbeddedChunksRecursive(ConfigChunk srcChunk)
+   {
+      List results = new ArrayList();
+
+      List emb_chunks = srcChunk.getEmbeddedChunks();
+      for (Iterator itr = emb_chunks.iterator(); itr.hasNext(); )
+      {
+         ConfigChunk chunk = (ConfigChunk)itr.next();
+         results.add(chunk);
+
+         // Look for embedded chunks within the current config chunk
+         results.addAll(getEmbeddedChunksRecursive(chunk));
+      }
+
+      return results;
    }
 
    /**
