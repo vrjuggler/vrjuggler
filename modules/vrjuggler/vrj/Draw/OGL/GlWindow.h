@@ -106,7 +106,7 @@ public:
     * Configures the window.
     * @post this is configured based on the data in display.
     */
-   virtual void config(vrj::Display* displayWindow);
+   virtual void configWindow(vrj::Display* displayWindow);
 
    /**
     * Performs an OpenGL swap buffers command.

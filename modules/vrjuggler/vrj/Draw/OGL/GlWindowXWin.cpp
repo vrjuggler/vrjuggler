@@ -339,10 +339,10 @@ bool GlWindowXWin::makeCurrent()
    return glXMakeCurrent(mXDisplay, mXWindow, mGlxContext);
 }
 
-void GlWindowXWin::config(vrj::Display* disp)
+void GlWindowXWin::configWindow(vrj::Display* disp)
 {
    const char neg_one_STRING[] = "-1";
-   vrj::GlWindow::config(disp);
+   vrj::GlWindow::configWindow(disp);
 
    // Get the vector of display chunks
    jccl::ConfigChunkPtr dispSysChunk = DisplayManager::instance()->getDisplaySystemChunk();
