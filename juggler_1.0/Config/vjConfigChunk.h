@@ -68,7 +68,7 @@ public:
 
     //: Constructs a vjConfigChunk matching the given description.
     //!PRE: desc points to a valid vjChunkDesc
-    //!POST: self has been created, and all its vjPropertys 
+    //!POST: self has been created, and all its vjPropertys
     //+      initialized to their default values.
     vjConfigChunk (vjChunkDesc *desc);
 
@@ -81,9 +81,7 @@ public:
     ~vjConfigChunk ();
 
 
-
     vjConfigChunk (vjConfigChunk& c);
-
 
 
     vjConfigChunk& operator = (vjConfigChunk& c);
@@ -144,7 +142,7 @@ public:
     //: Sets a value for the given property.
     //!PRE:  property is a non-null string, ind >= 0.
     //!POST: If the named property is in self,  and if the index
-    //+      given is valid, and the types match, then val is 
+    //+      given is valid, and the types match, then val is
     //+      assigned to that value of that property
     //!RETURNS: true - succesful assignment
     //!RETURNS: false - failed assignment (type mismatch,
@@ -166,16 +164,20 @@ public:
     //+      "setValue (property, val, getNum(property))"
     //!ARGS: property - non-NULL C string, token for a property.
     //!ARGS: val - a value to be appended to the named property.
-    //!POST: The given vjProperty has the new value appended to 
-    //+      the end of its list of values.  
+    //!POST: The given vjProperty has the new value appended to
+    //+      the end of its list of values.
     //!RETURNS: true - success
-    //!RETURNS: false - failure. (no such property, or it 
+    //!RETURNS: false - failure. (no such property, or it
     //+         does exist but has a fixed number of values
     bool addValue (char *property, int val);
     bool addValue (char *property, float val);
     bool addValue (char *property, char* val);
 
 
+    //: Return a list of chunk names dependant upon this one
+    // Returns a list of the names of all the chunks
+    // that are pointed to by chunk ptrs of this chunk
+    vector<string> getDependencies();
 
 private:
   vjProperty *getPropertyPtr (char *name);

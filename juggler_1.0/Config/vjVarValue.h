@@ -18,23 +18,23 @@ typedef enum {U_Feet, U_Inches, U_Meters, U_Centimeters, U_BadUnit}
  * internally as feet.
  */
 
-/** A vjVarValue is an object that knows it's own type even if we don't.
- *  More seriously, it's the value storage unit and value return type
- *  for a ConfigChunk.
- *  Currently, vjVarValues can be of types int, FLOAT, boolean, string
- *  (char*), distance(essentially FLOAT), as defined by the VarType
- *  enumeration in vjVarValue.h.
- *  When you get a vjVarValue, you can do just a few things with it:
- *    1. assign it to a variable and then use it.  Note that there is
- *       type checking here: if you try assigning a string vjVarValue to
- *       an int, you'll get an error.
- *    2. Cast it to the right type and use it.  
- *    3. print it - vjVarValues have overloaded << so you can print them
- *       without having to cast to the right value.
- *  Note that it's generally incumbent upon the client to know what
- *  kind of vjVarValue he's getting and what it can do.  Hey, you're
- *  the one who queryed the ConfigChunk, not me.
- */
+//: A vjVarValue is an object that knows it's own type even if we don't.
+//  More seriously, it's the value storage unit and value return type
+//  for a ConfigChunk. <br>
+//  Currently, vjVarValues can be of types int, FLOAT, boolean, string
+//  (char*), distance(essentially FLOAT), as defined by the VarType
+//  enumeration in vjVarValue.h. <br>
+//  When you get a vjVarValue, you can do just a few things with it: <br>
+//    1. assign it to a variable and then use it.  Note that there is
+//       type checking here: if you try assigning a string vjVarValue to
+//       an int, you'll get an error. <br>
+//    2. Cast it to the right type and use it. <br>
+//    3. print it - vjVarValues have overloaded << so you can print them
+//       without having to cast to the right value. <br>
+//  Note that it's generally incumbent upon the client to know what
+//  kind of vjVarValue he's getting and what it can do.  Hey, you're
+//  the one who queryed the ConfigChunk, not me. <br>
+//
 class vjVarValue {
 
   /* general question of using objects in here.
@@ -42,7 +42,7 @@ class vjVarValue {
    * to be able to use classes that have constructors inside
    * the union.
    * When should we copy?  Seems like the objects we store should
-   * be fresh copies of whatever's given to us, and probably so 
+   * be fresh copies of whatever's given to us, and probably so
    * should the objects we return, just for safety's sake.
    * would it be ok to receive and return pointers to objects?
    * What objects would we need to store? mebbe a string class?
@@ -62,11 +62,10 @@ private:
 
 public:
 
-  /// Copy constructor.  
+  //: Copy constructor.
   vjVarValue (vjVarValue &v) {
     *this = v;
   }
-
 
 
     vjVarValue& operator= (vjVarValue &v) {
@@ -101,11 +100,11 @@ public:
 	}
 	return *this;
     }
-  
 
-  /** Creates a new vjVarValue of type t.  Note that once a vjVarValue object
-   *  has been created, the type cannot be changed.
-   */
+
+  //: Creates a new vjVarValue of type t.
+  //! NOTE: Note that once a vjVarValue object has
+  // been created,the type cannot be changed.
   vjVarValue ( VarType t ) {
     type = t;
     switch (type) {
@@ -125,13 +124,13 @@ public:
     }
   }
 
-  /// Destroys self and all associated memory.
+  //: Destroys self and all associated memory.
   ~vjVarValue() {
     if (((type == T_STRING) || (type == T_CHUNK)) && val.strval)
       delete val.strval;
   }
 
-  
+
   /** @name Cast Operators
    *  These operators are used whenever a vjVarValue is cast to another
    *  type.  They do some amount of type checking and coercion,
@@ -232,7 +231,7 @@ public:
       return *this;
     }
   }
-  /** Note that the string assignment makes a copy of the string that 
+  /** Note that the string assignment makes a copy of the string that
    *  belongs to the vjVarValue - you can do with the original string
    *  what you want.
    */
@@ -242,7 +241,7 @@ public:
 	delete val.strval;
       if (s)
 	  val.strval = strdup(s);
-      else 
+      else
 	  val.strval = NULL;
       return *this;
     } else {

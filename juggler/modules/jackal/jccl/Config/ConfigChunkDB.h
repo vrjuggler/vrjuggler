@@ -11,9 +11,9 @@
 //------------------------------------------------------------------
 //: Database of ConfigChunks
 //
-// The vjConfigChunkDB is a general-purpose container for 
-// ConfigChunks, with functionality for reading/writing 
-// files of ConfigChunks and querying for sets of configchunks 
+// The vjConfigChunkDB is a general-purpose container for
+// ConfigChunks, with functionality for reading/writing
+// files of ConfigChunks and querying for sets of configchunks
 // with specific properties.
 //
 // @author Christopher Just
@@ -21,7 +21,6 @@
 //
 //------------------------------------------------------------------
 class vjConfigChunkDB {
-
 
 private:
 
@@ -65,7 +64,7 @@ public:
     //! NOTE: Using this function on a nonempty ConfigChunkDB
     //+       might be dangerous.
     void setChunkDescDB (vjChunkDescDB *d);
-  
+
 
 
     //: Returns a pointer to self's ChunkDescDB
@@ -161,7 +160,7 @@ public:
     //: Removes all chunks with a matching property and value
     //! PRE: true
     //! POST: All selected ConfigChunks in self are removed and
-    //+       their memory freed.  The selection criteria is 
+    //+       their memory freed.  The selection criteria is
     //+       the same as for getMatching(property, value)
     //! ARGS: property - Name of a property. Non-NULL C string.
     //! ARGS: value - value to match.  If char*, must be non-NULL
@@ -171,6 +170,16 @@ public:
     int removeMatching (char *property, float value);
     int removeMatching (char *property, char *value);
 
+    //: Sorts the chunks based on dependencies
+    //! PRE: true
+    //! MODIFIES: self.  In place sort of the config chunks
+    //! POST: (if returns != -1)
+    //+     for( i>=0 && i<chunks.size()) <br>
+    //+        chunks[i] dependent only of chunks[0...(i-1)] <br>
+    //+     This is a topological sorting of the dependencies. <br>
+    //+     informally( forall elts in the chunks list ) <br>
+    //! RETURNS: -1 - Failed to complete sort
+    int dependencySort();
 
 
     /* IO functions: */
@@ -192,7 +201,7 @@ public:
     //+       unless they have the same name as a newly read chunk
     //+       in which case they are replaced by the newer chunks.
     friend istream& operator >> (istream& in, vjConfigChunkDB& self);
-    
+
 
 
     //: loads ConfigChunks from the given file
@@ -201,7 +210,7 @@ public:
     //! RETURNS: false - otherwise.
     //! NOTE: This function calls operator >> to do its work.
     //! NOTE: The return value only considers opening the file,
-    //+       and does not account for parsing or other reading 
+    //+       and does not account for parsing or other reading
     //+       errors.
     bool load (const char *fname);
 
@@ -213,7 +222,7 @@ public:
     //! RETURNS: false - otherwise.
     //! NOTE: This function calls operator << to do its work.
     bool save (const char *fname);
-    
+
 };
 
 

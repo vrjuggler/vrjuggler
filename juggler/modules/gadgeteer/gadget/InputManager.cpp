@@ -84,6 +84,8 @@ int vjInputManager::FNewInput(vjConfigChunkDB *cdb)
 
    ConfigureInputManager(cdb);
 
+   cdb->dependencySort();
+
 #ifndef WIN32
    ConfigureFlock(cdb);
    ConfigureIbox(cdb);
