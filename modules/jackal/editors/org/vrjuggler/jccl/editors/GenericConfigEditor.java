@@ -57,14 +57,28 @@ public class GenericConfigEditor
       setConfigContext(new ConfigContext());
    }
 
+   /**
+    * Set the ConfigContext to use for this ConfigEditor.
+    */
    public void setConfigContext(ConfigContext context)
    {
       mContextEditor.setContext(context);
    }
 
+   /**
+    * Get a handle to the ConfigContext used in this ConfigEditor.
+    */
    public ConfigContext getConfigContext()
    {
       return mContextEditor.getContext();
+   }
+
+   /**
+    * Get a handle to the ConfigContextEditor for this ConfigEditor.
+    */
+   public ConfigContextEditor getContextEditor()
+   {
+      return mContextEditor;
    }
 
    private void jbInit()
