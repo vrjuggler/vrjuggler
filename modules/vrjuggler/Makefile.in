@@ -166,7 +166,7 @@ ifndef NO_CLEAN
 endif
 	@$(MAKE) $(BEFOREBUILD)
 	@$(MAKE) libs
-	@$(MAKE) BUILD_TYPE=opt CALLER=world $(AFTERBUILD)
+	@$(MAKE) BUILD_TYPE=all $(AFTERBUILD)
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning VR Juggler installation process"
 	@echo "---------------------------------------------------------------"
@@ -195,7 +195,7 @@ endif
             echo "------------------------------------------------" ;	\
             $(MAKE) vjABI=$$abi libs ;					\
           done
-	@$(MAKE) BUILD_TYPE=opt CALLER=world $(AFTERBUILD)
+	@$(MAKE) BUILD_TYPE=all $(AFTERBUILD)
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning VR Juggler installation process"
 	@echo "---------------------------------------------------------------"
