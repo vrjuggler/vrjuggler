@@ -66,6 +66,12 @@ public:
    // PRE: updateInteraction must have been called
    virtual void update() = 0;
 
+   /// how many colliders?
+   int numColliders() const { return mCorrections.size(); }
+   
+   /// get the correction that happened for collider x...
+   gmtl::Vec3f getCorrection( int x ) const { assert( x < mCorrections.size() ); return mCorrections[x]; }
+   
   void setRotAxis(bool allowX, bool allowY, bool allowZ);
 
    void allowTrans( const bool& state = true ){mAllowTrans = state;}
@@ -143,6 +149,7 @@ protected:
    bool              mIsActive;     // Is the navigator currently active in the environment
 
    std::vector<collider*>  mColliders;    // The collidors in the system
+   std::vector<gmtl::Vec3f> mCorrections; // a list of corrections for the last frame for use by the application
 };
 
 
@@ -230,6 +237,8 @@ inline void navigator::navCollideTransCorrect(gmtl::Point3f& trans, bool& didCol
    ////////////////////////////////////////////////////////////
    // Test for collisions with all registered colliders
    ////////////////////////////////////////////////////////////
+   mCorrections.clear();
+   mCorrections.resize( mColliders.size() );
    for (unsigned x = 0; x < mColliders.size(); x++)
    {
       // If collision, then ...
@@ -239,6 +248,9 @@ inline void navigator::navCollideTransCorrect(gmtl::Point3f& trans, bool& didCol
          trans += local_correction;
          totalCorrection += local_correction;
 
+         // store the correction in case the application wants to use it for sounds or whatever...
+         mCorrections[x] = local_correction;
+         
          // HACK(!) - use the correction vectors to decide how much velocity from gravity to remove
          //        here i'm just zeroing it out... sometimes many times per frame!!! (real bad)
          //    this should really only be affected by the Y component of the correction vector.
