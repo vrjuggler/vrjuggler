@@ -59,7 +59,7 @@
 // I don't know why this is necessary, but I think something is being defined
 // incorrectly somewhere.
 #ifdef VPR_OS_IRIX
-#include <sys/endian.h>
+#  include <sys/endian.h>
 #endif
 
 #include <sys/types.h>
@@ -69,72 +69,76 @@
 #include <vpr/Util/ReturnStatus.h>
 #include <vpr/SystemBase.h>
 
-namespace vpr {
 
-class SystemPosix : public SystemBase {
+namespace vpr
+{
+
+class SystemPosix : public SystemBase
+{
 public:
-    inline static int
-    gettimeofday (struct timeval* tp, struct timezone* tzp = NULL) {
-        return ::gettimeofday(tp, tzp);
-    }
+   static int gettimeofday (struct timeval* tp, struct timezone* tzp = NULL)
+   {
+      return ::gettimeofday(tp, tzp);
+   }
 
-    // ----- Host to network byte order conversions ---- //
-    inline static vpr::Uint16
-    Ntohs (vpr::Uint32 conversion) {
-        return ntohs(conversion);
-    }
+   // ----- Host to network byte order conversions ---- //
+   static vpr::Uint16 Ntohs (vpr::Uint32 conversion)
+   {
+      return ntohs(conversion);
+   }
 
-    inline static vpr::Uint32
-    Ntohl (vpr::Uint32 conversion) {
-        return ntohl(conversion);
-    }
+   static vpr::Uint32 Ntohl (vpr::Uint32 conversion)
+   {
+      return ntohl(conversion);
+   }
 
-    static vpr::Uint64 Ntohll(vpr::Uint64 conversion)
-    {
-       vpr::Uint64 ret_val;
-       *((vpr::Uint32*)(&ret_val)) = SystemPosix::Ntohl(*((vpr::Uint32*)(&conversion)));
-       *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemPosix::Ntohl( *( ((vpr::Uint32*)(&conversion))+1) );
-       return ret_val;
-    }
+   static vpr::Uint64 Ntohll(vpr::Uint64 conversion)
+   {
+      vpr::Uint64 ret_val;
+      *((vpr::Uint32*)(&ret_val)) = SystemPosix::Ntohl(*((vpr::Uint32*)(&conversion)));
+      *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemPosix::Ntohl( *( ((vpr::Uint32*)(&conversion))+1) );
+      return ret_val;
+   }
 
-    inline static vpr::Uint16
-    Htons (vpr::Uint16 conversion) {
-        return htons(conversion);
-    }
+   static vpr::Uint16 Htons (vpr::Uint16 conversion)
+   {
+      return htons(conversion);
+   }
 
-    inline static vpr::Uint32
-    Htonl (vpr::Uint32 conversion) {
-        return htonl(conversion);
-    }
+   static vpr::Uint32 Htonl (vpr::Uint32 conversion)
+   {
+      return htonl(conversion);
+   }
 
-    static vpr::Uint64 Htonll(vpr::Uint64 conversion)
-    {
-     vpr::Uint64 ret_val;
+   static vpr::Uint64 Htonll(vpr::Uint64 conversion)
+   {
+      vpr::Uint64 ret_val;
       *((vpr::Uint32*)(&ret_val)) = SystemPosix::Htonl(*((vpr::Uint32*)(&conversion)));
       *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemPosix::Htonl( *( ((vpr::Uint32*)(&conversion))+1) );
       return ret_val;
-    }
+   }
 
+   static ReturnStatus getenv (const std::string& name, std::string& result)
+   {
+      char* val;
+      ReturnStatus status;
 
-    inline static ReturnStatus
-    getenv (const std::string& name, std::string& result) {
-        char* val;
-        ReturnStatus status;
+      val = ::getenv(name.c_str());
 
-        val = ::getenv(name.c_str());
+      if ( val != NULL )
+      {
+         result = val;
+      }
+      else
+      {
+         status.setCode(ReturnStatus::Fail);
+      }
 
-        if ( val != NULL ) {
-            result = val;
-        }
-        else {
-            status.setCode(ReturnStatus::Fail);
-        }
-
-        return status;
-    }
+      return status;
+   }
 };
 
-};
+} // End of vpr namespace
 
 
 #endif   /* _VPR_SYSTEM_POSIX_H_ */
