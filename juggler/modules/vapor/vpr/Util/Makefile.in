@@ -59,7 +59,7 @@ INSTALL=		@INSTALL@
 SUBOBJDIR=		$(VPR_LIBRARY)
 
 DIRPRFX=		vpr/Util/
-SUBDIR=			boost_fs md5
+SUBDIR=			md5
 
 ifeq (@USE_LEACH_UUID@, Y)
 EXTRA_DEPEND_FLAGS=	-I$(JUGGLERROOT_ABS)/external/leach-uuid
