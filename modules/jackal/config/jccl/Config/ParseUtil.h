@@ -34,41 +34,78 @@
 #define _JCCL_PARSEUTIL_H_
 
 #include <jccl/jcclConfig.h>
-#include <vpr/vpr.h>
+#include <vector>
+#include <string>
 
 
 namespace jccl
 {
 
-/** Demangle a filename so that it can be passed to open().
- *  @param n A filename.
- *  @param parentfile The name of the file that n is being loaded
- *         relative to.
- *  @return A demangled version of the string n.  All environment variables
- *          are expanded.  If n is not an absolute path and parentfile
- *          is not "", the path part of parentfile will be prepended to
- *          the result.  Note that parentfile is always assumed to refer
- *          to a file, so if n is "included_file" and parentfile is
- *          "mydir/including_file", the result will be "mydir/included_file".
- */
-std::string demangleFileName(const std::string& n, std::string parentfile);
+class JCCL_CLASS_API ParseUtil
+{
+public:
+   /**
+    * Expands a filename to a string capable of being passed to an I/O system
+    * call.  The result may be an absolute path depending on various factors.
+    *
+    * @post All environment variables used in name are expanded.  If name is
+    *       not an absolute path and parentFile is not an empty string, the
+    *       path of parentFile will be prepended to the result.  If parentFile
+    *       is an empty string, the search path will be used to try to find
+    *       the named file.
+    *
+    * @param name       The name to expand.
+    * @param parentFile The name of the file that n is being loaded
+    *                   relative to.
+    *
+    * @return An expanded version of the string name.  All environment
+    *
+    * @note parentFile is always assumed to refer to a file, so if name is
+    *       "included_file" and parentFile is "mydir/including_file", the
+    *       result will be "mydir/included_file".
+    */
+   static std::string expandFileName(const std::string& name,
+                                     const std::string& parentFile);
 
-/** Looks for a file in a path, and opens it if found.
- *
- *  @param file_name     The name of a file to search for.
- *  @param env_name      The environment variable containing a path.  The
- *                       path is a set of directories separated by a delimiter
- *                       character (';' on windows, ':' on real operating
- *                       systems).
- *  @param absolute_file Storage for the absolute path to the file if it was
- *                       found in the path.
- *
- *  @return vpr::ReturnStatus::Succeed is returned if a file is found in the
- *          path; vpr::ReturnStatus::Fail otherwise.
- */
-JCCL_API(vpr::ReturnStatus) findFileUsingPathVar(const std::string& file_name,
-                                                 const std::string& env_name,
-                                                 std::string& absolute_file);
+   /**
+    * Replaces the current configuration file search path with the given
+    * string.
+    *
+    * @param path A string of directories separted by a platform-specific
+    *             path separation character.  On Windows, this character is
+    *             ';', and on UNIX and Mac OS X, this character is ':'.
+    */
+   static void setCfgSearchPath(const std::string& path);
+
+private:
+   /**
+    * Looks for a file in a path and opens it if found.
+    *
+    * @param fileName     The name of a file to search for.
+    * @param absoluteFile Storage for the absolute path to the file if it was
+    *                     found in the path.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if a file is found in the
+    *         path; vpr::ReturnStatus::Fail otherwise.
+    */
+   static vpr::ReturnStatus findFileUsingPath(const std::string& fileName,
+                                              std::string& absoluteFile);
+
+   /**
+    * Simple helper type to ensure that the static data in this class is
+    * initialized at the same time.
+    */
+   struct SearchPathData
+   {
+      SearchPathData();
+
+      void setSearchPath(const std::string& path);
+
+      std::vector<std::string> mPath;
+   };
+
+   static SearchPathData mSearchInfo;
+};
 
 } // End of jccl namespace
 
