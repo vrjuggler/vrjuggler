@@ -31,60 +31,188 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.jccl.config;
 
+import java.beans.*;
+import org.jdom.Element;
+import org.jdom.output.XMLOutputter;
+
 /** DescEnum -- an entry in the enum vector of a PropertyDesc */
 public class DescEnum
    implements Cloneable
 {
-   public String str;
-   public VarValue val;
-
-   public String toString()
+   /**
+    * Creates a new, empty enumeration.
+    */
+   public DescEnum()
    {
-      if (val != null)
-      {
-         return new String(str + "=" + val);
-      }
-      else
-      {
-         return new String(str);
-      }
+      this("", new VarValue(ValType.STRING));
    }
 
+   /**
+    * Creates a new enumeration with the given name and no value.
+    */
+   public DescEnum(String name, ValType type)
+   {
+      this(name, new VarValue(type));
+      setName(name);
+   }
+
+   /**
+    * Creates a new enumeration with the given name and value.
+    */
+   public DescEnum(String name, VarValue value)
+   {
+      this(new Element(ConfigTokens.prop_enum_TOKEN), value.getValType());
+      setName(name);
+      setValue(value);
+   }
+
+   /**
+    * Creates an enumeration object for the given DOM element.
+    *
+    * @param element    the DOM element containing the enumeration in question
+    */
+   public DescEnum(Element element, ValType type)
+   {
+      mDomElement = element;
+      changeSupport = new PropertyChangeSupport(this);
+      mValType = type;
+   }
+
+   /**
+    * Makes a deep copy of this enumeration.
+    */
    public Object clone()
       throws CloneNotSupportedException
    {
-      DescEnum e = (DescEnum)super.clone();
-      e.val = new VarValue(val);
-      return e;
+      DescEnum de = (DescEnum)super.clone();
+      de.mDomElement = (Element)mDomElement.clone();
+      return de;
    }
 
-   public DescEnum(DescEnum other)
+   /**
+    * Sets the name of this enumeration to the given value.
+    *
+    * @param name    the new name for this enumeration.
+    */
+   public void setName(String name)
    {
-      str = other.str;
-      val = new VarValue(other.val);
+      String old = getName();
+      mDomElement.setAttribute("name", name);
+      changeSupport.firePropertyChange("name,", old, name);
    }
 
-   public DescEnum(String s, VarValue v)
+   /**
+    * Gets the name of this enumeration. If it does not have a name, it is
+    * lazily initialized to the empty string.
+    *
+    * @return     the name of this enumeration
+    */
+   public String getName()
    {
-      str = s;
-      val = new VarValue(v);
-      //System.out.println(toString());
+      String name = "";
+      if (mDomElement.getAttribute("name") != null)
+      {
+         name = mDomElement.getAttribute("name").getValue();
+      }
+      return name;
    }
 
-   public boolean equals(DescEnum d)
+   /**
+    * Sets the value of this enumeration to the given value.
+    *
+    * @param value      the new value for this enumeration
+    */
+   public void setValue(VarValue value)
    {
-      if (d == null)
+      // Make sure we don't try to set a value for an embedded chunk
+      if (getValType() != ValType.EMBEDDEDCHUNK)
+      {
+         VarValue old = getValue();
+         mDomElement.setAttribute("value", value.toString());
+         changeSupport.firePropertyChange("value", old, value);
+      }
+   }
+
+   /**
+    * Gets the value of this enumeration. If it does not have a value, null is
+    * returned.
+    *
+    * @return  the value of this enumeration, null if it has no value
+    */
+   public VarValue getValue()
+   {
+      VarValue value = null;
+      if (mDomElement.getAttribute("value") != null)
+      {
+         value = new VarValue(mValType);
+         value.set(mDomElement.getAttribute("value").getValue());
+      }
+      return value;
+   }
+
+   /**
+    * Gets the type of the value stored in this enumeration.
+    */
+   public ValType getValType()
+   {
+      return mValType;
+   }
+
+   /**
+    * Allows access to the internal DOM node. This should generally only be used
+    * by the PropertyDesc class.
+    */
+   protected Element getNode()
+   {
+      return mDomElement;
+   }
+
+   /**
+    * Tests if the given enumeration is equal to this enumeration.
+    */
+   public boolean equals(DescEnum descEnum)
+   {
+      if (descEnum == null)
       {
          return false;
       }
-      if (!str.equalsIgnoreCase(d.str))
-      {
-         return false;
-      }
-      if (!val.equals(d.val))
-      {
-         return false;
-      }
-      return true;
+
+      return mDomElement == descEnum.mDomElement;
    }
+
+   /**
+    * Registers the given listener to receive notifications when this object's
+    * properties change.
+    */
+   public void addPropertyChangeListener(PropertyChangeListener listener)
+   {
+      changeSupport.addPropertyChangeListener(listener);
+   }
+
+   /**
+    * Unregisters the given listener so that it no longer receives notifications
+    * when this object's properties change.
+    */
+   public void removePropertyChangeListener(PropertyChangeListener listener)
+   {
+      changeSupport.removePropertyChangeListener(listener);
+   }
+
+   /**
+    * Gets the string representation of this enumeration.
+    */
+   public String toString()
+   {
+      XMLOutputter outputter = new XMLOutputter("   ", true);
+      outputter.setLineSeparator(System.getProperty("line.separator"));
+      return outputter.outputString(mDomElement);
+   }
+
+   private Element mDomElement;
+   private ValType mValType;
+
+   /**
+    * Helper object for manager property changes.
+    */
+   private PropertyChangeSupport changeSupport;
 }

@@ -125,7 +125,7 @@ endif
 # =============================================================================
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR = common config net rtrc vjcontrol editorgui perfmonitor
+SUBDIR = common config editors net rtrc perfmonitor
 
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.

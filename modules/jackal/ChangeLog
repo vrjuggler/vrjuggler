@@ -3,10 +3,14 @@ DATE        AUTHOR      CHANGE
 Jul-12-2002 patrickh    jccl::ConfigChunkDB no longer derives from std::vector.
                         jccl::ChunkDescDB no longer derives from std::map.
                         NEW VERSION: 0.4.0
+Jul-02-2002 nonchocoboy New ConfigChunkDB editor edits ConfigChunks through the
+                        property sheet UI model.
 Jun-24-2002 patrickh    The jccl-config script is now written in Perl.  It is
                         capable of determining its installation path at
                         runtime.
+Jun-19-2002 nonchocoboy ChunkDescs now have category information.
 Jun-16-2002 nonchocoboy NEW VERSION: 0.3.0
+Jun-16-2002 nonchocoboy NEW VERSION: 0.2.2
 Jun-11-2002 nonchocoboy VjControl now runs as a Tweek bean.
 Jun-10-2002 nonchocoboy Ported generic editor panel creation for ChunkDescs and
                         ConfigChunks to a Tweek service.

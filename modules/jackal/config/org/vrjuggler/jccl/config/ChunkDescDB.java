@@ -31,8 +31,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.jccl.config;
 
+import java.beans.*;
 import java.io.*;
 import java.util.*;
+import javax.swing.event.EventListenerList;
 import org.jdom.*;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
@@ -42,6 +44,8 @@ import org.jdom.output.XMLOutputter;
  * grouped together logically.
  */
 public class ChunkDescDB
+   implements PropertyChangeListener
+            , ChunkDescListener
 {
    /**
     * Creates a new ChunkDesc database with initially no ChunkDescs contained
@@ -49,6 +53,7 @@ public class ChunkDescDB
     */
    public ChunkDescDB()
    {
+      changeSupport = new PropertyChangeSupport(this);
    }
 
    /**
@@ -191,6 +196,14 @@ public class ChunkDescDB
       return (ChunkDesc)descs.get(idx);
    }
 
+   /**
+    * Gets a list of all the ChunkDescs in this database.
+    */
+   public final synchronized List getAll()
+   {
+      return descs;
+   }
+
    public void fireDescDBUpdate (String origName, ChunkDesc updatedDesc)
    {
       notifyDescDBTargets(new DescDBEvent(this, DescDBEvent.REPLACE, origName,
@@ -204,6 +217,14 @@ public class ChunkDescDB
    {
       synchronized(this)
       {
+         // Make sure we remove ourself as a listener
+         for (Iterator itr = descs.iterator(); itr.hasNext(); )
+         {
+            ChunkDesc desc = (ChunkDesc)itr.next();
+            desc.removePropertyChangeListener(this);
+            desc.removeChunkDescListener(this);
+         }
+         // Now we can remove all the descs
          descs.clear();
       }
       notifyDescDBTargets(new DescDBEvent(this, DescDBEvent.REMOVEALL, null));
@@ -241,6 +262,9 @@ public class ChunkDescDB
             d = (ChunkDesc)descs.get(i);
             if (d.getToken().equals(tok))
             {
+               // Remove ourself as a listener
+               d.removePropertyChangeListener(this);
+               d.removeChunkDescListener(this);
                retval = d;
                descs.remove(i);
                break;
@@ -274,6 +298,9 @@ public class ChunkDescDB
             d = (ChunkDesc)descs.get(i);
             if ( d.getName().equals(name) )
             {
+               // Remofe ourself as a listener
+               d.removePropertyChangeListener(this);
+               d.removeChunkDescListener(this);
                retval = d;
                descs.remove(i);
                break;
@@ -435,6 +462,10 @@ public class ChunkDescDB
             d = (ChunkDesc)d.clone();
             d.setName(generateUniqueName(d.getName()));
          }
+
+         // Make ourself a listener for changes
+         d.addPropertyChangeListener(this);
+         d.addChunkDescListener(this);
 
          // do the deed
          descs.add(d);
@@ -624,6 +655,100 @@ public class ChunkDescDB
    }
 
    /**
+    * All we do when we find out that a desc has changed is pass it on to our
+    * listeners.
+    */
+   public void propertyChange(PropertyChangeEvent evt)
+   {
+      System.out.println("ChunkDescDB.propertyChange for property "+evt.getPropertyName());
+      changeSupport.firePropertyChange(evt);
+   }
+
+   /**
+    * Adds the given listener to be notified whenever a ChunkDesc within this
+    * database has changed.
+    */
+   public void addPropertyChangeListener(PropertyChangeListener listener)
+   {
+      changeSupport.addPropertyChangeListener(listener);
+   }
+
+   /**
+    * Removes the given listener that was notified whenever a ChunkDesc within
+    * this database had changed.
+    */
+   public void removePropertyChangeListener(PropertyChangeListener listener)
+   {
+      changeSupport.removePropertyChangeListener(listener);
+   }
+
+   /**
+    * Adds the given listener to be notified when this ChunkDesc has been
+    * modified.
+    */
+   public void addChunkDescListener(ChunkDescListener listener)
+   {
+      listenerList.add(ChunkDescListener.class, listener);
+   }
+
+   /**
+    * Removes the given listener from this ChunkDesc.
+    */
+   public void removeChunkDescListener(ChunkDescListener listener)
+   {
+      listenerList.remove(ChunkDescListener.class, listener);
+   }
+
+   /**
+    * Forwards the given event from the contained chunk descs to listeners of this
+    * database.
+    */
+   public void propertyDescChanged(ChunkDescEvent evt)
+   {
+      System.out.println("ChunkDescDB.propertyDescChanged");
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ChunkDescListener.class)
+         {
+            ((ChunkDescListener)listeners[i+1]).propertyDescChanged(evt);
+         }
+      }
+   }
+
+   /**
+    * Forwards the given event from the contained chunk descs to listeners of this
+    * database.
+    */
+   public void propertyDescAdded(ChunkDescEvent evt)
+   {
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ChunkDescListener.class)
+         {
+            ((ChunkDescListener)listeners[i+1]).propertyDescAdded(evt);
+         }
+      }
+   }
+
+   /**
+    * Forwards the given event from the contained chunk descs to listeners of this
+    * database.
+    */
+   public void propertyDescRemoved(ChunkDescEvent evt)
+   {
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ChunkDescListener.class)
+         {
+            ((ChunkDescListener)listeners[i+1]).propertyDescRemoved(evt);
+         }
+      }
+   }
+
+   /**
     * The name of this ChunkDescDB.
     */
    private String name = "Unnamed";
@@ -634,4 +759,12 @@ public class ChunkDescDB
    private List descs   = new ArrayList();
 
    private boolean mNeedToSave = false;
+
+   /**
+    * Property change support for notification of listeners that a desc inside
+    * this desc db has changed.
+    */
+   private PropertyChangeSupport changeSupport = null;
+
+   private EventListenerList listenerList = new EventListenerList();
 }

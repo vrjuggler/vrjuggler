@@ -581,7 +581,7 @@ public class ConfigChunkDB
 
          if ( prop_desc.getValType() == ValType.CHUNK )
          {
-            prop_count = ch.getPropertyCount(prop_desc.getToken());
+            prop_count = ch.getNumPropertyValues(prop_desc.getToken());
 
             for ( int j = 0; j < prop_count; ++j )
             {
@@ -611,7 +611,7 @@ public class ConfigChunkDB
          }
          else if ( prop_desc.getValType() == ValType.EMBEDDEDCHUNK )
          {
-            prop_count = ch.getPropertyCount(prop_desc.getToken());
+            prop_count = ch.getNumPropertyValues(prop_desc.getToken());
             ConfigChunk child_chunk;
 
             for ( int j = 0; j < prop_count; ++j )
