@@ -113,6 +113,10 @@ public class ContextToolbar
             {
                return doClose();
             }
+            public void frameFocused(TweekFrameEvent e)
+            {
+               doCheckReload();
+            }
          };
      
       System.out.println("Registering listener");
@@ -389,6 +393,52 @@ public class ContextToolbar
             mConfigIFrame.setTitle("Configuration Editor");
          }
       }
+   }
+
+   public boolean doCheckReload()
+   {
+      ConfigBroker broker = new ConfigBrokerProxy();
+      java.util.List resources = getConfigContext().getResources();
+
+      for (Iterator itr = resources.iterator() ; itr.hasNext() ; )
+      {
+         String ds_name = (String)itr.next();
+         DataSource ds = broker.get(ds_name);
+         if ( ds instanceof FileDataSource )
+         {
+            FileDataSource fds = (FileDataSource)ds;
+            
+            if ( fds.isOutOfDate() )
+            {
+               int result = JOptionPane.showConfirmDialog(
+                  SwingUtilities.getAncestorOfClass(Frame.class, this),
+                  "DataSource \"" + ds_name +
+                  "\" has been changed by an external program. Do you want " +
+                  "to reload the file?",
+                  "VRJConfig", JOptionPane.YES_NO_OPTION);
+
+               if(JOptionPane.YES_OPTION == result)
+               {
+                  try
+                  {
+                     fds.rollback();
+                  }
+                  catch (IOException ex)
+                  {
+                     System.out.println(ex);
+                     ex.printStackTrace();
+                  }
+               }
+               else
+               {
+                  fds.resetLastModified();
+               }
+            }
+         }
+      }
+      
+      System.out.println("Reload?");
+      return false;
    }
 
    /**

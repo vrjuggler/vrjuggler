@@ -270,7 +270,83 @@ public class ControlPanelView
    }
    private void showEditorPanel(EditorNode root)
    {
-      System.out.println("Editor Node");
+      System.out.println("Editor Node: " + root.getClassName());
+      
+      try
+      {
+         ClassLoader loader = getClass().getClassLoader();
+
+         final Class jogl_editor_class = loader.loadClass( root.getClassName() );
+         
+         try
+         {
+            CustomEditor pos_editor = (CustomEditor)jogl_editor_class.newInstance();
+            JDialog dlg = new JDialog(
+               (Frame)SwingUtilities.getAncestorOfClass(Frame.class, ControlPanelView.this),
+               "Positional Device Editor",
+               true);
+            
+            // This editor actually edits a context, so pass null for the ConfigElement.
+            pos_editor.setConfig(mContext, null);
+
+            dlg.getContentPane().add( pos_editor.getPanel() );
+            dlg.setTitle( pos_editor.getTitle() );
+            dlg.pack();
+            dlg.setVisible( true );
+            //frame.setSize(750, 750);
+            //frame.show();
+         }
+         catch(InstantiationException e)
+         {
+            System.out.println(e);
+            e.printStackTrace();
+         }
+         catch(IllegalAccessException e)
+         {
+            System.out.println(e);
+            e.printStackTrace();
+         }
+         
+         /*
+         mTopSectionPanel.add(mVisualizeBtn);
+
+         mVisualizeBtn.addActionListener(new ActionListener()
+            {
+               public void actionPerformed(ActionEvent evt)
+               {
+                  try
+                  {
+                     CustomEditor pos_editor = (CustomEditor)jogl_editor_class.newInstance();
+                     JDialog dlg = new JDialog(
+                        (Frame)SwingUtilities.getAncestorOfClass(Frame.class, IntersensePanel.this),
+                        "3D Visualization", true);
+
+                     pos_editor.setConfig(mConfigContext, mConfigElement);
+
+                     dlg.getContentPane().add((JPanel)pos_editor);
+                     dlg.pack();
+                     dlg.setVisible(true);
+                     //frame.setSize(750, 750);
+                     //frame.show();
+                  }
+                  catch(InstantiationException e)
+                  {
+                     System.out.println(e);
+                     e.printStackTrace();
+                  }
+                  catch(IllegalAccessException e)
+                  {
+                     System.out.println(e);
+                     e.printStackTrace();
+                  }
+               }
+            });
+         */
+      }
+      catch(ClassNotFoundException e)
+      {
+         System.out.println("*** Could not find the PositionalDeviceEditor, JOGL must not be availible. ***");
+      }
    }
 
    private void showWizardPanel(WizardNode root)
