@@ -37,7 +37,7 @@
 #include <stdlib.h> 	// for system
 #include <unistd.h> 	// for sleep
 
-#include <Input/vjPosition/aFlock.h>
+#include <vrj/Input/Devices/Ascension/FlockStandalone.h>
 
 int main()
 {
@@ -52,16 +52,8 @@ int main()
     const int blocking = 0;
     const char report = 'R';
     const int transmitter = 3; 
-    aFlock flock(   port, 
-		    baud, 
-		    sync, 
-		    blocking, 
-		    numBirds, 
-		    transmitter, 
-		    hemi, 
-		    filt, 
-		    report, 
-		    calfile );
+    FlockStandalone flock( port, baud, sync, blocking, numBirds, transmitter, 
+                           hemi, filt, report, calfile );
     
     char achar;
     

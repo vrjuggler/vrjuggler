@@ -42,7 +42,7 @@
 #include <sys/schedctl.h>
 #include <unistd.h>
 
-#include <Input/Multi/trackdmem.h>
+#include <vrj/Input/Devices/Open/Trackd/trackdmem.h>
 
 #define TRACKD_MAX_SENSORS  30
 #define CAVE_MAX_VALUATORS  20

@@ -33,7 +33,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sys/types.h>
-#include <Input/vjPosition/aMotionStar.h>
+#include <vrj/Input/Devices/Ascension/MotionStarStandalone.h>
 
 
 int
@@ -60,11 +60,11 @@ main () {
   std::cout << "\nRequesting POSITION_ANGLES data" << std::flush;
   std::cout << "\nReading continuous data" << std::flush;
 
-  aMotionStar* motionstar = new aMotionStar(addr.c_str(), port, BIRDNET::TCP,
-                                            true, FLOCK::FRONT_HEMISPHERE,
-                                            FLOCK::POSITION_ANGLES,
-                                            BIRDNET::CONTINUOUS, 1,
-                                            measurement_rate, birdsRequired);
+  MotionStarStandalone* motionstar =
+     new MotionStarStandalone(addr.c_str(), port, BIRDNET::TCP, true,
+                              FLOCK::FRONT_HEMISPHERE, FLOCK::POSITION_ANGLES,
+                              BIRDNET::CONTINUOUS, 1, measurement_rate,
+                              birdsRequired);
 
    char achar;
    bool birds_running(false);      // Are the birds currently running
@@ -112,7 +112,7 @@ main () {
          for (long z = 0; z < num_samples; z++)
          {
             motionstar->sample();
-            //std::cout << "-------- aMotionStar: Sampling (" << z << " of " << num_samples << ") -------" << std::endl;
+            //std::cout << "-------- MotionStarStandalone: Sampling (" << z << " of " << num_samples << ") -------" << std::endl;
             std::cout << z << ":\n";
             std::cout << "\t      X\t\t  Y\t     Z\t\tA\t    E\t\tR\n";
             for ( int bird=0; bird < motionstar->getNumBirds(); bird++ ) {

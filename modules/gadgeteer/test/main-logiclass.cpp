@@ -32,19 +32,14 @@
 
 #include <iostream>
 #include <iomanip>
-#include <VPR/SharedMem/vjMemPool.h>
-//#include <VPR/SharedMem/vjSharedType.h>
-#include <Input/vjPosition/logiclass.h>
-//#include <Input/ibox/ibox.h>
+#include <vrj/Input/Devices/Logitech/logiclass.h>
 #include <vpr/System.h>
 
 int main()
 {
-  MemPool* anSgiPool = new SharedPool(1024*1024);
-  
-  ThreeDMouse* t1 = new(anSgiPool) ThreeDMouse;
+  ThreeDMouse* t1 = new ThreeDMouse;
 
-  POS_DATA *data;
+  vrj::POS_DATA *data;
 
   char achar;
   std::cout << "U - Update\n"
@@ -63,7 +58,7 @@ int main()
      case 'o':case 'O': 
      for(int z = 0; z < 10; z++){
          t1->updateData();
-         t1->getData(data);
+         t1->getPosData(data);
 
          std::cout << std::endl 
                    << "Data: x:" << std::setw(10) << data->pos.vec[0] << std::endl
@@ -84,6 +79,5 @@ int main()
   t1->stopSampling();
   
   delete t1;
-  delete anSgiPool;
   return 0;
 }
