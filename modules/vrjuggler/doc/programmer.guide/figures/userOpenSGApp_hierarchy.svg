@@ -142,7 +142,7 @@
     <g style="font-family:sans-serif; font-style:italic;">
       <text x="286" y="378" style="clip-path:url(#clipPath13); stroke:none;">+initScene:void
       </text>
-      <text x="286" y="400" style="clip-path:url(#clipPath13); stroke:none;">+getSceneRoot:OSG::NodePtr
+      <text x="286" y="400" style="clip-path:url(#clipPath13); stroke:none;">+getScene:OSG::NodePtr
       </text>
     </g>
     <g>
@@ -166,7 +166,7 @@
       </text>
       <text x="26" y="390" style="clip-path:url(#clipPath17); stroke:none;">+initScene:void
       </text>
-      <text x="26" y="412" style="clip-path:url(#clipPath17); stroke:none;">+getSceneRoot:OSG::NodePtr
+      <text x="26" y="412" style="clip-path:url(#clipPath17); stroke:none;">+getScene:OSG::NodePtr
       </text>
       <text x="26" y="434" style="clip-path:url(#clipPath17); stroke:none;">+preFrame:void
       </text>
