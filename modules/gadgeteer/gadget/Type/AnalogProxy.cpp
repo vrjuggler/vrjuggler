@@ -40,9 +40,9 @@ namespace gadget
 
 bool AnalogProxy::config(jccl::ConfigChunkPtr chunk)
 {
-   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-      << "----------- configuring ANALOG PROXY -----------------\n"
-      << vprDEBUG_FLUSH;
+vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+                                 std::string("----------- configuring ANALOG PROXY -----------------\n"),
+                                 std::string("----------- exit: configuring analog proxy -----------\n"));
    vprASSERT(chunk->getDescToken() == "AnaProxy");
 
    m_unitNum = chunk->getProperty<int>("unit");

@@ -40,8 +40,10 @@ namespace gadget
 
 bool DigitalProxy::config(jccl::ConfigChunkPtr chunk)
 {
-   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,3)
-      << "----------- configuring DIGITAL proxy ----\n" << vprDEBUG_FLUSH;
+vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+                              std::string("----------- configuring DIGITAL PROXY -----------------\n"),
+                              std::string("----------- exit: configuring digital proxy -----------\n"));
+
    vprASSERT(chunk->getDescToken() == "DigProxy");
 
    // if we are going to be receiving remote data, we need to connect to the remote device through a NetInput
