@@ -929,7 +929,7 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -MTd"
 fi
 
-DPP_SYSTEM_SUBST($PLATFORM, $OS_TYPE)
+DPP_SYSTEM_SUBST
 DPP_PTHREAD_FINISH
 
 dnl # If we are using pthreads, add the library containing the pthread calls to
