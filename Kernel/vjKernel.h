@@ -24,6 +24,7 @@ class vjApp;
 
     // Config stuff
 #include <Config/vjConfigChunkDB.h>
+#include <Config/vjChunkDescDB.h>
 
 
 //-------------------------------------------------------
