@@ -76,6 +76,13 @@ void SubjectImpl::detach (Observer_ptr o)
 
    i = remove_if(m_observers.begin(), m_observers.end(),
                  RemovePred<Observer_ptr>(o));
+
+   if ( i != m_observers.end() )
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "Removing observer\n"
+                                             << vprDEBUG_FLUSH;
+   }
+
    m_observers.erase(i, m_observers.end());
 }
 
