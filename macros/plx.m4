@@ -42,8 +42,17 @@ dnl ************** <auto-copyright.pl END do not edit this line> **************
 dnl ---------------------------------------------------------------------------
 dnl PLEXUS_PATH([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
 dnl
-dnl Test for Plexus and then define PLEXUS_CXXFLAGS, PLEXUS_LIBS, and
-dnl PLEXUS_LIBS_STATIC.
+dnl Test for Plexus and then define the following variables:
+dnl     PLEXUS_CXXFLAGS
+dnl     PLEXUS_CXXFLAGS_ALL
+dnl     PLEXUS_LIBS_LD
+dnl     PLEXUS_LIBS_LD_ALL
+dnl     PLEXUS_LIBS_STATIC_LD
+dnl     PLEXUS_LIBS_STATIC_LD_ALL
+dnl     PLEXUS_LIBS_CC
+dnl     PLEXUS_LIBS_CC_ALL
+dnl     PLEXUS_LIBS_STATIC_CC
+dnl     PLEXUS_LIBS_STATIC_CC_ALL
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(PLEXUS_PATH,
 [
@@ -100,11 +109,16 @@ AC_DEFUN(PLEXUS_PATH,
         no_plexus=yes
     else
         PLEXUS_CXXFLAGS=`$PLEXUS_CONFIG $plexus_config_args --cxxflags $ABI`
+        PLEXUS_CXXFLAGS_ALL=`$PLEXUS_CONFIG $plexus_config_args --cxxflags $ABI --all`
         PLEXUS_EXTRA_LIBS=`$PLEXUS_CONFIG $plexus_config_args --extra-libs $ABI`
         PLEXUS_LIBS_LD="`$PLEXUS_CONFIG $plexus_config_args --linker --libs $ABI` $PLEXUS_EXTRA_LIBS"
+        PLEXUS_LIBS_LD_ALL="`$PLEXUS_CONFIG $plexus_config_args --linker --libs $ABI --all` $PLEXUS_EXTRA_LIBS"
         PLEXUS_LIBS_STATIC_LD="`$PLEXUS_CONFIG $plexus_config_args --linker --libs $ABI --static` $PLEXUS_EXTRA_LIBS"
+        PLEXUS_LIBS_STATIC_LD_ALL="`$PLEXUS_CONFIG $plexus_config_args --linker --libs $ABI --static --all` $PLEXUS_EXTRA_LIBS"
         PLEXUS_LIBS_CC="`$PLEXUS_CONFIG $plexus_config_args --libs $ABI` $PLEXUS_EXTRA_LIBS"
+        PLEXUS_LIBS_CC_ALL="`$PLEXUS_CONFIG $plexus_config_args --libs $ABI --all` $PLEXUS_EXTRA_LIBS"
         PLEXUS_LIBS_STATIC_CC="`$PLEXUS_CONFIG $plexus_config_args --libs $ABI --static` $PLEXUS_EXTRA_LIBS"
+        PLEXUS_LIBS_STATIC_CC_ALL="`$PLEXUS_CONFIG $plexus_config_args --libs $ABI --static --all` $PLEXUS_EXTRA_LIBS"
         PLEXUS_VERSION=`$PLEXUS_CONFIG --version`
         DPP_VERSION_CHECK_MSG(Plexus, $PLEXUS_VERSION, $min_plexus_version,
                               plexus_cv_plexus_version, $2, $3)
@@ -118,16 +132,26 @@ AC_DEFUN(PLEXUS_PATH,
             echo "*** full path to plexus-config."
         fi
         PLEXUS_CXXFLAGS=""
+        PLEXUS_CXXFLAGS_ALL=""
         PLEXUS_LIBS_LD=""
+        PLEXUS_LIBS_LD_ALL=""
         PLEXUS_LIBS_STATIC_LD=""
+        PLEXUS_LIBS_STATIC_LD_ALL=""
         PLEXUS_LIBS_CC=""
+        PLEXUS_LIBS_CC_ALL=""
         PLEXUS_LIBS_STATIC_CC=""
+        PLEXUS_LIBS_STATIC_CC_ALL=""
         ifelse([$3], , :, [$3])
     fi
 
     AC_SUBST(PLEXUS_CXXFLAGS)
+    AC_SUBST(PLEXUS_CXXFLAGS_ALL)
     AC_SUBST(PLEXUS_LIBS_LD)
+    AC_SUBST(PLEXUS_LIBS_LD_ALL)
     AC_SUBST(PLEXUS_LIBS_STATIC_LD)
+    AC_SUBST(PLEXUS_LIBS_STATIC_LD_ALL)
     AC_SUBST(PLEXUS_LIBS_CC)
+    AC_SUBST(PLEXUS_LIBS_CC_ALL)
     AC_SUBST(PLEXUS_LIBS_STATIC_CC)
+    AC_SUBST(PLEXUS_LIBS_STATIC_CC_ALL)
 ])

@@ -35,10 +35,15 @@ dnl TWEEK_PATH([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODU
 dnl
 dnl Test for Tweek and then define the following variables:
 dnl     TWEEK_CXXFLAGS
+dnl     TWEEK_CXXFLAGS_ALL
 dnl     TWEEK_LIBS_LD
+dnl     TWEEK_LIBS_LD_ALL
 dnl     TWEEK_LIBS_STATIC_LD
+dnl     TWEEK_LIBS_STATIC_LD_ALL
 dnl     TWEEK_LIBS_CC
+dnl     TWEEK_LIBS_CC_ALL
 dnl     TWEEK_LIBS_STATIC_CC
+dnl     TWEEK_LIBS_STATIC_CC_ALL
 dnl     TWEEK_CXX_IDL_OPTS
 dnl     TWEEK_CXX_IDL_GENDIR_OPT
 dnl     TWEEK_JAVA_IDL_OPTS
@@ -100,11 +105,16 @@ AC_DEFUN(TWEEK_PATH,
         no_tweek=yes
     else
         TWEEK_CXXFLAGS=`$TWEEK_CONFIG $tweek_config_args --cxxflags $ABI`
+        TWEEK_CXXFLAGS_ALL=`$TWEEK_CONFIG $tweek_config_args --cxxflags $ABI --all`
         TWEEK_EXTRA_LIBS=`$TWEEK_CONFIG $tweek_config_args --extra-libs $ABI`
         TWEEK_LIBS_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker` $TWEEK_EXTRA_LIBS"
+        TWEEK_LIBS_LD_ALL="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --all` $TWEEK_EXTRA_LIBS"
         TWEEK_LIBS_STATIC_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static` $TWEEK_EXTRA_LIBS"
+        TWEEK_LIBS_STATIC_LD_ALL="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static --all` $TWEEK_EXTRA_LIBS"
         TWEEK_LIBS_CC="`$TWEEK_CONFIG $tweek_config_args --libs $ABI` $TWEEK_EXTRA_LIBS"
+        TWEEK_LIBS_CC_ALL="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --all` $TWEEK_EXTRA_LIBS"
         TWEEK_LIBS_STATIC_CC="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static` $TWEEK_EXTRA_LIBS"
+        TWEEK_LIBS_STATIC_CC_ALL="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static --all` $TWEEK_EXTRA_LIBS"
         TWEEK_CXX_IDL="`$TWEEK_CONFIG $tweek_config_args --idl cxx`"
         TWEEK_CXX_IDL_OPTS="`$TWEEK_CONFIG $tweek_config_args --idlflags cxx`"
         TWEEK_CXX_IDL_GENDIR_OPT="`$TWEEK_CONFIG $tweek_config_args --idlgendir cxx`"
@@ -130,10 +140,15 @@ AC_DEFUN(TWEEK_PATH,
             echo "*** full path to tweek-config."
         fi
         TWEEK_CXXFLAGS=""
+        TWEEK_CXXFLAGS_ALL=""
         TWEEK_LIBS_LD=""
+        TWEEK_LIBS_LD_ALL=""
         TWEEK_LIBS_STATIC_LD=""
+        TWEEK_LIBS_STATIC_LD_ALL=""
         TWEEK_LIBS_CC=""
+        TWEEK_LIBS_CC_ALL=""
         TWEEK_LIBS_STATIC_CC=""
+        TWEEK_LIBS_STATIC_CC_ALL=""
         TWEEK_CXX_IDL=""
         TWEEK_CXX_IDL_OPTS=""
         TWEEK_CXX_IDL_GENDIR_OPT=""
@@ -147,10 +162,15 @@ AC_DEFUN(TWEEK_PATH,
     fi
 
     AC_SUBST(TWEEK_CXXFLAGS)
+    AC_SUBST(TWEEK_CXXFLAGS_ALL)
     AC_SUBST(TWEEK_LIBS_LD)
+    AC_SUBST(TWEEK_LIBS_LD_ALL)
     AC_SUBST(TWEEK_LIBS_STATIC_LD)
+    AC_SUBST(TWEEK_LIBS_STATIC_LD_ALL)
     AC_SUBST(TWEEK_LIBS_CC)
+    AC_SUBST(TWEEK_LIBS_CC_ALL)
     AC_SUBST(TWEEK_LIBS_STATIC_CC)
+    AC_SUBST(TWEEK_LIBS_STATIC_CC_ALL)
     AC_SUBST(TWEEK_CXX_IDL)
     AC_SUBST(TWEEK_JAVA_IDL)
     AC_SUBST(TWEEK_CXX_IDL_OPTS)
