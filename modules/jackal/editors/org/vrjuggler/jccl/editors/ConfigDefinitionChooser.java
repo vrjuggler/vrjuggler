@@ -110,6 +110,13 @@ public class ConfigDefinitionChooser
       searchList.setCellRenderer(new ConfigDefinitionCellRenderer());
    }
 
+   /**
+    * Pops up a custom ConfigDefinition chooser dialog.
+    *
+    * @param parent        the parent component of the dialog; can be null
+    *
+    * @see #showDialog(Component,String)
+    */
    public int showDialog(Component parent)
    {
       return showDialog(parent, null);
