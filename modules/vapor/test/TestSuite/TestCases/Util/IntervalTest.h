@@ -29,13 +29,13 @@ public:
 
    void construction()
    {
-      vpr::Interval val1(21,vpr::Interval::VPR_SEC);
+      vpr::Interval val1(21,vpr::Interval::Sec);
       assertTest(val1.sec() == 21);
 
-      vpr::Interval val2(21,vpr::Interval::VPR_MSEC);
+      vpr::Interval val2(21,vpr::Interval::Msec);
       assertTest(val2.msec() == 21);
 
-      vpr::Interval val3(21,vpr::Interval::VPR_USEC);
+      vpr::Interval val3(21,vpr::Interval::Usec);
       assertTest(val3.usec() == 21);
    }
 
@@ -43,13 +43,13 @@ public:
    {
       vpr::Interval val;
 
-      val.set(21,vpr::Interval::VPR_SEC);
+      val.set(21,vpr::Interval::Sec);
       assertTest(val.sec() == 21);
 
-      val.set(21,vpr::Interval::VPR_MSEC);
+      val.set(21,vpr::Interval::Msec);
       assertTest(val.msec() == 21);
 
-      val.set(21,vpr::Interval::VPR_USEC);
+      val.set(21,vpr::Interval::Usec);
       assertTest(val.usec() == 21);
    }
 
@@ -57,13 +57,13 @@ public:
    {
       vpr::Interval val;
 
-      val.setf(12.75f, vpr::Interval::VPR_SEC);
+      val.setf(12.75f, vpr::Interval::Sec);
       assertTest(val.msec() == 12750);
 
-      val.setf(12.75f, vpr::Interval::VPR_MSEC);
+      val.setf(12.75f, vpr::Interval::Msec);
       assertTest(val.usec() == 12750);
 
-      val.setf(12.75f, vpr::Interval::VPR_USEC);
+      val.setf(12.75f, vpr::Interval::Usec);
       assertTest(val.usec() == 12);
    }
 

@@ -76,7 +76,7 @@ main (int argc, char* argv[]) {
 
             // Read from teh server.
             status = sock->read(buffer, 40, bytes,
-                                vpr::Interval(5, vpr::Interval::VPR_SEC));
+                                vpr::Interval(5, vpr::Interval::Sec));
 
             if ( status.success() ) {
                 // If we read anything, print it.
