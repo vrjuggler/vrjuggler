@@ -176,12 +176,17 @@ void vjPfAppStats::preFrame()
       vjPfAppStats::statMode cur_stat_mode = getStatsMode();
       switch(cur_stat_mode)
       {
+      /*
       case vjPfAppStats::NONE: setStatsMode(vjPfAppStats::FrameTime); break;
       case vjPfAppStats::FrameTime: setStatsMode(vjPfAppStats::Gfx); break;
       case vjPfAppStats::Gfx: setStatsMode(vjPfAppStats::Pipe); break;
       case vjPfAppStats::Pipe: setStatsMode(vjPfAppStats::MPipe); break;
       case vjPfAppStats::MPipe: setStatsMode(vjPfAppStats::Fill); break;     // setStatsMode initializes it
       case vjPfAppStats::Fill: setStatsMode(vjPfAppStats::NONE); break;
+      */
+      case vjPfAppStats::NONE: setStatsMode(vjPfAppStats::FrameTime); break;
+      case vjPfAppStats::FrameTime: setStatsMode(vjPfAppStats::Gfx); break;
+      case vjPfAppStats::Gfx: setStatsMode(vjPfAppStats::NONE); break;
       default: setStatsMode(vjPfAppStats::NONE); break;
       }
    }
