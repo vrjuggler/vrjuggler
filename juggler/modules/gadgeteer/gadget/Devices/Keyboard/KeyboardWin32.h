@@ -61,13 +61,11 @@
 #include <gadget/Util/Debug.h>
 #include <gadget/InputManager.h>
 
-#include <gadget/Devices/Keyboard/KeyboardWin32.h> // my header
-
 
 namespace gadget
 {
 
-class GADGET_CLASS_API KeyboardWin32 : public InputMixer<Input,Keyboard>
+class KeyboardWin32 : public InputMixer<Input,Keyboard>
 {
 public:
    // Enum to keep track of current lock state for state machine
@@ -110,8 +108,6 @@ public:
    // pressed at all, or if you are doing processing based on this
    // catch the actual number..
    int isKeyPressed( int Key );
-   virtual int keyPressed( int keyId );
-   virtual bool modifierOnly( int modKey );
 
 protected:
    virtual void processEvent( UINT message, UINT wParam, LONG lParam ){}
