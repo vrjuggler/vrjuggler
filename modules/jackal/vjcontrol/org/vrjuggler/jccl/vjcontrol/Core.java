@@ -128,6 +128,7 @@ public class Core
         pending_chunks = new Vector();
         pending_wrong_profile_chunks = new Vector();
         registered_components = new Vector();
+        registered_components.add (this);
 
         command_line = new String[0];
 
@@ -161,9 +162,6 @@ public class Core
 	vjcontrol_chunkdb = new ConfigChunkDB ();
 
 	vjcontrol_chunkdb.addChunkDBListener (instance);
-
-        registerComponent (instance);
-
     }
 
 
@@ -276,15 +274,11 @@ public class Core
         try {
             Property p = ch.getPropertyFromToken ("parentcomp");
             String parentname = p.getValue(0).getString();
-            VjComponent vjc = getComponentFromRegistry (parentname);
-            if (vjc.addConfig (ch))
-                return true;
-            else {
-                consoleErrorMessage (component_name, 
-                                     "Creating component failed: " 
-                                     + ch.getName());
-                return false;
-            }
+            VjComponent parent = getComponentFromRegistry (parentname);
+            VjComponent child = parent.addConfig (ch);
+            if (child != null)
+                registered_components.add (child);
+            return true;
         }
         catch (Exception e) {
             consoleErrorMessage (component_name, "Creating component failed: " 
@@ -304,7 +298,6 @@ public class Core
      *  @return true if all dependencies were met.
      */
     protected boolean checkDependencies (ConfigChunk ch) {
-
         String cn = ch.getValueFromToken ("classname", 0).getString();
         if (!component_factory.isRegistered (cn))
             return false;
@@ -312,27 +305,16 @@ public class Core
         List v = ch.getDependencyNames();
         for (int i = 0; i < v.size(); i++) {
             String s = (String)v.get(i);
-            if (getComponentFromRegistry(s) == null) {
+            if (getComponentFromRegistry(s) == null)
                 return false;
-            }
         }
+
         return true;
     }
 
 
-    /** Adds vjc to a list of components that are part of VjControl.
-     *  When addConfig is called on a component chunk's "parent"
-     *  component, the parent should generally call Core.registerComponent()
-     *  to make the new child visible.
-     *  Components must be registered with this method if they are 
-     *  to be parents or dependencies of other components.
-     */
-    static public void registerComponent (VjComponent vjc) {
-        instance.registered_components.add (vjc);
-    }
 
-
-    /** Finds a component that has been added with registerComponent().
+    /** Finds a component in registered_components.
      */
     static public VjComponent getComponentFromRegistry (String name) {
         VjComponent vjc;
@@ -343,12 +325,6 @@ public class Core
                 return vjc;
         }
 
-//          int i, n = registered_components.size();
-//          for (i = 0; i < n; i++) {
-//              vjc = (VjComponent)registered_components.get(i);
-//              if (vjc.getComponentName().equalsIgnoreCase (name))
-//                  return vjc;
-//          }
         return null;
     }
 
@@ -518,20 +494,14 @@ public class Core
     }
 
 
-    public boolean addConfig (ConfigChunk ch) {
-        try {
-            String classname = ch.getValueFromToken ("classname", 0).getString();
-            VjComponent vjc = component_factory.createComponent(classname);
-            vjc.setConfiguration (ch);
-            vjc.initialize ();
-            modules.add (vjc);
-            registerComponent (vjc);
-            return true;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+    public VjComponent addConfig (ConfigChunk ch) throws VjComponentException {
+        String classname = ch.getValueFromToken ("classname", 0).getString();
+        VjComponent vjc = component_factory.createComponent(classname);
+        vjc.setConfiguration (ch);
+        vjc.initialize ();
+        modules.add (vjc);
+        //registerComponent (vjc);
+        return vjc;
     }
 
 

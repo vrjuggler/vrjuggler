@@ -320,8 +320,8 @@ public class ChunkDescPanel
     }
 
 
-    public boolean addConfig (ConfigChunk ch) {
-        return false;
+    public VjComponent addConfig (ConfigChunk ch) throws VjComponentException {
+        throw new VjComponentException ("ChunkDescPanel does not support child component: " + ch.getName());
     }
 
 
