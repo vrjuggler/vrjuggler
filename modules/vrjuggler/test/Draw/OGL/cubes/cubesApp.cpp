@@ -280,21 +280,6 @@ void cubesApp::myDraw(vrj::User* user)
    //static const float SCALE = 10;
    static const float INCR = 0.1;
 
-   gmtl::Vec3f apex, ur, lr, ul, ll;
-   vrj::Projection* proj = user_data->getProjection();
-   proj->getFrustumApexAndCorners(apex, ur, lr, ul, ll);
-
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "apex: " << apex << std::endl
-                                             << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "ur: " << ur << std::endl
-                                             << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "lr: " << lr << std::endl
-                                             << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "ul: " << ul << std::endl
-                                             << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "ll: " << ll << std::endl
-                                             << vprDEBUG_FLUSH;
-
    /*
    if(cur_eye == vrj::Projection::LEFT)
    {
