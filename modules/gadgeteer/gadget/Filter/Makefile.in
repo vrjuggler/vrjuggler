@@ -51,11 +51,9 @@ SUBOBJDIR=	$(GADGET_LIBRARY)
 DIRPRFX=	gadget/Filter/
 
 # Subdirectories to compile.
-SUBDIR=		Position	\
-		Analog		\
-		Digital
+SUBDIR=		Position
 
-SRCS=		Nothing.cpp
+SRCS=
 
 include $(MKPATH)/dpp.obj-subdir.mk
 
