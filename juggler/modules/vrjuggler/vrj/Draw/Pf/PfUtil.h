@@ -6,7 +6,7 @@
 ***************************************************/
 
 vjMatrix vjGetVJMatrix(pfMatrix& perfMat);
-pfMatrix getPfMatrix(vjMatrix& mat);
+pfMatrix vjGetPfMatrix(vjMatrix& mat);
 
 
 //: Convert Performer matrix to Juggler matrix
