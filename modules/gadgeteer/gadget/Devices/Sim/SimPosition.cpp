@@ -101,57 +101,55 @@ bool SimPosition::config(jccl::ConfigChunkPtr chunk)
 
 void SimPosition::updateData()
 {
-   int amt = 0;      // Number of times key pressed
+   float amt(0);      // Number of times key pressed
                      // Used to keep from calling checkKey twice on success
       // NOTE: Could have implemented using side effects of assignment
       //       and used less lines, but this is more explicit
 
    //Get the current time in seconds and use it to find the elapsed seconds
    //from the elapsed frame.
-   vpr::Interval nowTime;
-   nowTime.setNow();
-   nowTime -= mPos.getTime();
-   //Modify the distance and rotation amount by the time factor
-   float delta_dist = nowTime.secf() * mDTrans;
-   float delta_rot = nowTime.secf() * mDRot;
+   vpr::Interval delta_time(vpr::Interval::now() - mPos.getTime());
 
+   //Modify the distance and rotation amount by the time factor
    amt = checkKeyPair(mSimKeys[FORWARD]);
+   amt *= delta_time.secf();                     // Comput amount/per sec
+
    if(amt)
-      moveFor( 1 * amt * delta_dist);
+      moveFor( 1 * amt);
    amt = checkKeyPair(mSimKeys[BACK]);
    if(amt)
-      moveFor( -1 * amt * delta_dist);
+      moveFor( -1 * amt);
    amt = checkKeyPair(mSimKeys[LEFT]);
    if(amt)
-      moveLeft( 1 * amt * delta_dist);
+      moveLeft( 1 * amt);
    amt = checkKeyPair(mSimKeys[RIGHT]);
    if(amt)
-      moveLeft( -1 * amt * delta_dist);
+      moveLeft( -1 * amt);
    amt = checkKeyPair(mSimKeys[UP]);
    if(amt)
-      moveUp ( 1 * amt * delta_dist);
+      moveUp ( 1 * amt);
    amt = checkKeyPair(mSimKeys[DOWN]);
    if(amt)
-      moveUp (-1 * amt * delta_dist);
+      moveUp (-1 * amt);
 
    amt = checkKeyPair(mSimKeys[ROTR]);
    if(amt)
-      rotLeft( -1 * amt * delta_rot);
+      rotLeft( -1 * amt);
    amt = checkKeyPair(mSimKeys[ROTL]);
    if(amt)
-      rotLeft( 1  * amt * delta_rot);
+      rotLeft( 1  * amt);
    amt = checkKeyPair(mSimKeys[ROTU]);
    if(amt)
-      rotUp( 1 * amt * delta_rot);
+      rotUp( 1 * amt);
    amt = checkKeyPair(mSimKeys[ROTD]);
    if(amt)
-      rotUp( -1 * amt * delta_rot);
+      rotUp( -1 * amt);
    amt = checkKeyPair(mSimKeys[ROT_ROLL_CCW]);
    if(amt)
-      rotRollCCW( 1 * amt * delta_rot);
+      rotRollCCW( 1 * amt);
    amt = checkKeyPair(mSimKeys[ROT_ROLL_CW]);
    if(amt)
-      rotRollCCW( -1 * amt * delta_rot);
+      rotRollCCW( -1 * amt);
 
    // Debug output
    //vjCoord pos_data(mPos);
