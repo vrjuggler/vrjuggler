@@ -35,7 +35,6 @@
 #include <iomanip>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>    /* Needed for bzero(3) on some platforms */
 #include <math.h>
 
 #include <vpr/vpr.h>
@@ -46,13 +45,17 @@
 
 #include <gadget/Devices/Ascension/MotionStarStandalone.h>
 
+#ifdef VPR_OS_Win32
+#define M_PI   3.14159265358979323846
+#endif
+
 #define RAD2DEG(x) ((x) * 180.0 / M_PI)
 
 
 namespace FLOCK
 {
 
-const unsigned char ERROR               = 0x80;
+const unsigned char ERR_STATE           = 0x80;
 const unsigned char RUNNING             = 0x40;
 //const unsigned char RESERVED1           = 0x20;
 //const unsigned char RESERVED2           = 0x10;
@@ -1740,7 +1743,11 @@ void MotionStarStandalone::convertMeasurementRate (const double rate,
 {
    char rate_a[7];
 
+#ifdef HAVE_SNPRINTF
    snprintf(rate_a, 7, "%06.0f", rate * 1000.0);
+#else
+   sprintf(rate_a, "%06.0f", rate * 1000.0);
+#endif
    str_rate = rate_a;
 }
 
