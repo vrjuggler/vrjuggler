@@ -728,6 +728,11 @@ sub parseOutput ($$)
       {
          $string = $';
       }
+      # Match anything else and strip it from the output.
+      elsif ( $string =~ /^.*$/m )
+      {
+         $string = $';
+      }
 
       $string =~ s/^\s*//s;
    }
