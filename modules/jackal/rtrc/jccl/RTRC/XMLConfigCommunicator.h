@@ -34,7 +34,7 @@
 #define _JCCL_XMLCONFIGCOMMUNICATOR_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/JackalServer/NetCommunicator.h>
+#include <jccl/Net/NetCommunicator.h>
 #include <jccl/XMLUtil/XercesXMLParser.h>
 
 namespace jccl

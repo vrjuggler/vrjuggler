@@ -31,13 +31,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Plugins/ConfigManager/ConfigManager.h>
+#include <jccl/RTRC/ConfigManager.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ChunkFactory.h>
-#include <jccl/Plugins/ConfigManager/DependencyManager.h>
-#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
-#include <jccl/JackalServer/JackalServer.h>
-#include <jccl/JackalServer/Connect.h>
+#include <jccl/RTRC/DependencyManager.h>
+#include <jccl/RTRC/ConfigChunkHandler.h>
+#include <jccl/Net/JackalServer.h>
+#include <jccl/Net/Connect.h>
 #include <jccl/Util/Debug.h>
 
 
