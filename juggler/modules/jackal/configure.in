@@ -41,7 +41,7 @@ AC_REVISION($Revision$)
 AC_INIT(common/jccl/jcclConfig.h)
 AC_CONFIG_AUX_DIR(../../share/config)
 AC_CONFIG_HEADER(common/jccl/jcclDefines.h)
-DPP_PREREQ([1.4.106])
+DPP_PREREQ([1.4.107])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -344,8 +344,6 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     OPT_FLAGS="$OPT_FLAGS /MD"
     jccl_cxxflags="$vc_flags $jccl_cxxflags"
 fi
-
-DPP_SYSTEM_SUBST
 
 # For makedepend(1) to work properly on HP-UX with aCC, we have to include
 # these extra paths.
