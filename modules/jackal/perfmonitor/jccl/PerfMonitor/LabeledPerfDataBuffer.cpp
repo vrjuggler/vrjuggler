@@ -84,7 +84,7 @@ void LabeledPerfDataBuffer::setBufferSize (int n)
 
 
 
-void LabeledPerfDataBuffer::set (const vpr::GUID &category,
+void LabeledPerfDataBuffer::set (PerformanceCategory &category,
                                  const std::string& index_name)
 {
 #ifdef USE_JCCL_PERF
@@ -122,7 +122,7 @@ void LabeledPerfDataBuffer::set (const vpr::GUID &category,
 
 
 
-void LabeledPerfDataBuffer::set (const vpr::GUID &category,
+void LabeledPerfDataBuffer::set (PerformanceCategory &category,
                                  char* index_name)
 {
 #ifdef USE_JCCL_PERF
@@ -163,7 +163,7 @@ void LabeledPerfDataBuffer::set (const vpr::GUID &category,
 
 
 
-void LabeledPerfDataBuffer::set (const vpr::GUID &category,
+void LabeledPerfDataBuffer::set (PerformanceCategory &category,
                                  const std::string& index_name,
                                  vpr::Interval& value)
 {
@@ -205,7 +205,7 @@ void LabeledPerfDataBuffer::set (const vpr::GUID &category,
 
 
 
-void LabeledPerfDataBuffer::set (const vpr::GUID &category,
+void LabeledPerfDataBuffer::set (PerformanceCategory &category,
                                  char* index_name,
                                  vpr::Interval& value)
 {

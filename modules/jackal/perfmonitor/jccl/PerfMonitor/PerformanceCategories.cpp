@@ -41,66 +41,93 @@ namespace jccl
 PerformanceCategories::PerformanceCategories ()
 {
    mActive = false;
-
-   addCategory (jcclPERF_ALL, "PERF_ALL");
-   activateCategory ("PERF_ALL");
-}
-
-void PerformanceCategories::addCategory (const vpr::GUID& catId, const std::string& name)
-{
-   // can't use vprDEBUG here, because this may get called before
-   // the debug categories are fully initialized.
-//          std::cout << "Adding category named '" << name << "' at " << &catId 
-//              << ".\n";
-   mCategories.insert( std::pair<vpr::GUID, CategoryInfo>(catId,
-                                                          CategoryInfo(name, false)));
-   //updateAllowedCategories();   
 }
 
 
 
 void PerformanceCategories::activateCategory (const std::string& catname)
 {
-   category_map_t::iterator cat = mCategories.begin();
-   while (cat != mCategories.end())
+   mCategoriesMutex.acquire();
+   
+   category_map_t::iterator cat = mCategories.find (catname);
+   if (cat != mCategories.end())
    {
-      if (cat->second.mName == catname)
-      {
-         cat->second.mActive = true;
-         return;
-      }
-      cat++;
+      *(cat->second->mActive) = true;
    }
+   else
+   {
+      // the category hasn't been registered yet, but we need to do
+      // something to store the fact that it's been activated,
+      // so we create a temporary category object.
+      PerformanceCategory* tempcat = new PerformanceCategory (vpr::GUID::NullGUID, catname);
+      tempcat->mActive = new bool();
+      *(tempcat->mActive) = true;
+      mCategories[catname] = tempcat;
+   }
+   
+   mCategoriesMutex.release();
 }
 
 
 
 void PerformanceCategories::deactivateCategory (const std::string& catname)
 {
-   category_map_t::iterator cat = mCategories.begin();
-   while (cat != mCategories.end())
+   mCategoriesMutex.acquire();
+   
+   category_map_t::iterator cat = mCategories.find (catname);
+   if (cat != mCategories.end())
    {
-      if (cat->second.mName == catname)
-      {
-         cat->second.mActive = false;
-         return;
-      }
-      cat++;
+      *(cat->second->mActive) = false;
    }
+
+   mCategoriesMutex.release();
 }
 
 
 
-bool PerformanceCategories::isCategoryActive (const vpr::GUID& category)
+bool PerformanceCategories::isCategoryActive (PerformanceCategory& category)
 {
    if (!mActive) 
    {
       return false;
    }
+
+   if (!category.mRegistered)
+   {
+      // first time we've encountered this category. register it so that
+      // we'll be able to lock/unlock it.
+      mCategoriesMutex.acquire();
+      if (!category.mRegistered)
+      {
+         // there might already be a temp category in place, if the
+         // cat was configured before it was registered.  Grab the
+         // configured activation state from the temp and then destroy
+         // it.
+         category_map_t::iterator cat = mCategories.find (category.mName);
+         if (cat != mCategories.end())
+         {
+            category.mActive = cat->second->mActive;
+            if (cat->second->mCategory == vpr::GUID::NullGUID)
+            {
+               delete (cat->second);
+            }
+         }
+         else
+         {
+            category.mActive = new bool();
+            *(category.mActive) = false;
+         }
+
+         // add in the real category
+         mCategories[category.mName] = &category;
+         category.mRegistered = true;
+      }
+      mCategoriesMutex.release();
+   }
+
+   vprASSERT (category.mActive != NULL);
+   return *(category.mActive);
    
-   category_map_t::iterator cat = mCategories.find(category);
-   vprASSERT(cat != mCategories.end());  // cat is valid
-   return (*cat).second.mActive;   
 }
 
 
@@ -181,7 +208,8 @@ void PerformanceCategories::writeAllBuffers (std::ostream& out,
 
 vprSingletonImp (PerformanceCategories);
 
-jcclREGISTER_PERF_CATEGORY(jcclPERF_JACKAL, PERF_JACKAL);
-
 
 } // namespace jccl
+
+jccl::PerformanceCategory jcclPERF_JACKAL("29ecd55b-e68e-40ce-9db2-99e7682b36b4", "PERF_JACKAL");
+jccl::PerformanceCategory jcclPERF_ALL("0b6b599c-f90c-43f6-8fbb-08454dd78872", "PERF_ALL");
