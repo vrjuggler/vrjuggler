@@ -53,7 +53,7 @@ ifeq (${CC}, cl)
                        ${DEPENDFLAGS} -- ${DEPEND_EXTRAS} -- $< |	\
                        sed ${_MKDEP_SED_EXP} > $@ ; [ -s $@ ] || rm -f $@'
 else
-	@${SHELL} -ec '${C_COMPILE} ${DEP_GEN_FLAG} $< |		\
+	@${SHELL} -ec '${MK_DEPS_C_COMPILE} ${DEP_GEN_FLAG} $< |		\
                        sed ${_CC_SED_EXP} > $@ ; [ -s $@ ] || rm -f $@'
 endif
 
@@ -64,6 +64,6 @@ ifeq (${CC}, cl)
                        ${DEPENDFLAGS} -- ${DEPEND_EXTRAS} -- $< |	\
                        sed ${_MKDEP_SED_EXP} > $@ ; [ -s $@ ] || rm -f $@'
 else
-	@${SHELL} -ec '${CXX_COMPILE} ${DEP_GEN_FLAG} $< |		\
+	@${SHELL} -ec '${MKDEPS_CXX_COMPILE} ${DEP_GEN_FLAG} $< |		\
                        sed ${_CC_SED_EXP} > $@ ; [ -s $@ ] || rm -f $@'
 endif
