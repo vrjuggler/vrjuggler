@@ -247,7 +247,7 @@ public class PropertySheetFactory extends PropertyComponent
     */
    private void addDeleteButton(PropertySheet sheet, ConfigContext ctx,
                                 ConfigElement elm, PropertyDefinition propDef,
-                                int row, JComponent label, JComponent editor)
+                                int row)
    {
       ClassLoader loader = getClass().getClassLoader();
       Icon remove_icon =
@@ -270,13 +270,6 @@ public class PropertySheetFactory extends PropertyComponent
          final ConfigContext temp_ctx = ctx;
          final ConfigElement temp_elm = elm;
 
-         // XXX: Having to store the label and the editor this way is really
-         // pathetic, but it is not clear how to acquire the component
-         // references that need to be removed when the "delete" button is
-         // clicked.  This is such a hack.
-         final JComponent saved_label  = label;
-         final JComponent saved_editor = editor;
-
          remove_button.addActionListener(new ActionListener()
          {
             public void actionPerformed(ActionEvent evt)
@@ -289,20 +282,31 @@ public class PropertySheetFactory extends PropertyComponent
                TableLayoutConstraints tlc = tl.getConstraints(source);
                int row = tlc.row1;
 
+               Component[] components = sheet.getComponents();
+
+               List row_components = new ArrayList();
+               for ( int i = 0; i < components.length; ++i )
+               {
+                  if ( components[i] != source )
+                  {
+                     TableLayoutConstraints cur_tlc =
+                        tl.getConstraints(components[i]);
+                     if ( cur_tlc != null && cur_tlc.row1 == row )
+                     {
+                        row_components.add(components[i]);
+                     }
+                  }
+               }
+
                // Calculate the property index on the fly bsaed on our row.
                int value_index = row - PropertySheet.VAR_LIST_VALUE_START_ROW;
                temp_elm.removeProperty(temp_string, value_index, temp_ctx);
 
                // The components in this row have to be removed from the
                // container.
-               if ( saved_label != null )
+               for ( Iterator c = row_components.iterator(); c.hasNext(); )
                {
-                  sheet.remove(saved_label);
-               }
-
-               if ( saved_editor != null )
-               {
-                  sheet.remove(saved_editor);
+                  sheet.remove((Component) c.next());
                }
 
                sheet.remove(source);
@@ -369,7 +373,7 @@ public class PropertySheetFactory extends PropertyComponent
       JLabel label = new JLabel(labelText);
       sheet.add(label, PropertySheet.LABEL_COLUMN + "," + row + ",F,F");
 
-      addDeleteButton(sheet, ctx, elm, propDef, row, label, editor);
+      addDeleteButton(sheet, ctx, elm, propDef, row);
 
       revalidate();
       repaint();
@@ -394,7 +398,7 @@ public class PropertySheetFactory extends PropertyComponent
                                     TableLayout.FULL, TableLayout.FULL);
       sheet.add(editor_list, c);
 
-      addDeleteButton(sheet, ctx, elm, propDef, row, null, editor_list);
+      addDeleteButton(sheet, ctx, elm, propDef, row);
 
       revalidate();
       repaint();
