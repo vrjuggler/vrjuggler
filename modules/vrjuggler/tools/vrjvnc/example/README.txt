@@ -9,7 +9,7 @@ interactively.
 This is not meant to be a full application but is only meant to show how
 VNC could be used inside a user application.
 
-Please note that vrj_vnc_app.jdef configuration description file in the
+Please note that vrj_vnc_app.jdef configuration definition file in the
 local directory.  It is used to create a config element that is needed to
 configure the application with the correct VNC desktop parameters.  This
 is optional in end-user applications, but is provided with this sample to
