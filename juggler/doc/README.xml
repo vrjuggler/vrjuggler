@@ -122,8 +122,8 @@
          </section>
       </section>
    </section>
-   <section>
-      <title id="modules-section">Modules</title>
+   <section id="modules-section">
+      <title>Modules</title>
       <para>The Juggler Project is made up of several modules that have evolved from the original VR Juggler source tree. Within this section, we describe each of the modules, what they are used for, and, when possible, how they relate to VR Juggler 1.0.</para>
       <section>
          <title>VR Juggler Portable Runtime (VPR)</title>
