@@ -67,6 +67,7 @@ GMTL_SRCS=	\
 	gmtl/_EulerAngle_float_gmtl_ZXY.cpp	\
 	gmtl/_EulerAngle_float_gmtl_ZYX.cpp	\
 	gmtl/_gmtl_Defines_h.cpp		\
+	gmtl/_gmtl_Math_h.cpp		        \
 	gmtl/_gmtl_functions_h.cpp		\
 	gmtl/_gmtl_wrappers_h.cpp		\
 	gmtl/_LineSeg_double.cpp		\
