@@ -400,11 +400,6 @@ if (mAccelerateButton-&gt;getData() == gadget::Digital::TOGGLE_ON)
 }</programlisting>
             </listitem>
             <listitem>
-               <para>Your configuration file formats have changed to XML. This allows you to use standard XML editors as well as the included VjControl configuration editor. We have included a converter from VR Juggler 1.0 format to 1.1/2.0 format. You can find the source in <filename>juggler/modules/jackal/tools/ConfigUpdater</filename>. If you have a binary distribution of VR Juggler, a compiled version can be run using the script <command>cfgupdater</command>, found in <filename>$VJ_BASE_DIR/bin</filename>. It is run as follows:</para>
-               <screen>cfgupdater file1 file2 ...</screen>
-               <para>The listed files can be config chunks (those with the extension <filename>.cfg</filename> or <filename>.config</filename>) or chunk descriptions (<filename>.desc</filename>). The utility figures out the file type and makes the appropriate conversions.</para>
-            </listitem>
-            <listitem>
                <para>In application configuration, the VR Juggler 1.0 use of <classname>vjConfigChunk*</classname> is shown below:</para>
                <programlisting>bool myapp::configAdd(vjConfigChunk* chunk)</programlisting>
                <para>For VR juggler 1.1, you'll change the "vj" to <classname>jccl::</classname>, and the * to a <classname>Ptr</classname>:</para>
@@ -440,6 +435,94 @@ if (mAccelerateButton-&gt;getData() == gadget::Digital::TOGGLE_ON)
                <para>The JCCL library is located in <filename>libjccl</filename>, and the headers are in <filename>include/jccl</filename>.</para>
             </listitem>
          </itemizedlist>
+      </section>
+      <section>
+         <title>Configuration Files</title>
+         <para>The configuration files used by VR Juggler have gone through quite a lot of changes since VR Juggler 1.0. The old formats used by description files and configuration files have been replaced completely by a new XML format. This means that the old formats are no longer supported by the Java or C++ code, so conversions must be made externally to VRJConfig and VR Juggler before trying to use existing configuration files. In this section, we explain some brief background information regarding the conversion to XML, and we then explain how to update existing configuration files to the latest format.</para>
+         <section>
+            <title>History</title>
+            <para>The configuration files used by VR Juggler have undergone two overhauls since version 1.0. In August 2001, the first pass at converting to XML was made. In the configuration description files, the complex format was replaced by very straightforward XML. The job done by the description files was already very hierarchical in nature, so the transition to a standard, inherently hierarchical file format was a natural progression. In the actual configuration files, the changes made were not so elegant. Essentially, the key tokens were replaced by XML elements, but the actual values were left as specially formatted strings that required extra parsing <emphasis>after</emphasis> the XML parser had done its job.</para>
+            <para>In May 2002, the second version of the XML configuration file formats were devised. Little changed in the description file format, but the configuration files were redesigned so that no extra parsing step was required. With no user-level parsing required, we are now able to use XSLT stylesheets to process and update files easily. Other critical changes included breaking a circular dependency between the description file format and the configuration file format. Versioning was also added to both file formats as part of this change.</para>
+         </section>
+         <section>
+            <title>Description File Versions</title>
+            <para>The versions of the configuration description files are as follows:</para>
+            <itemizedlist>
+               <listitem>
+                  <para>1.0: The VR Juggler 1.0 custom file format. This format has no version number information.</para>
+               </listitem>
+               <listitem>
+                  <para>1.9: The first iteration on the XML format, in use between August 2001 and May 23, 2002. This format has no version number information.</para>
+               </listitem>
+               <listitem>
+                  <para>2.0: The revamped XML format, in use between May 24, 2002, and July 17, 2002. Any description files created using VjControl during that time period qualify as version 2.0, though they may lack the version number information. If a version number is missing, add the following as the second line of the file:</para>
+                  <programlisting>&lt;?org-vrjuggler-jccl-settings desc.db.version="2.0"?&gt;</programlisting>
+               </listitem>
+               <listitem>
+                  <para>2.1: An iteration on 2.0 that removed some unnecessary complexity in dealing with the number of property values for a given configuration element. This version has been in use since July 18, 2002, and all files should have the following as the second line of the file:</para>
+                  <programlisting>&lt;?org-vrjuggler-jccl-settings desc.db.version="2.1"?&gt;</programlisting>
+               </listitem>
+            </itemizedlist>
+         </section>
+         <section>
+            <title>Configuration File Versions</title>
+            <para>The versions of the configuration files are as follows:</para>
+            <itemizedlist>
+               <listitem>
+                  <para>1.0: The VR Juggler 1.0 custom file format. This format has no version number information.</para>
+               </listitem>
+               <listitem>
+                  <para>1.9: The first iteration on the XML format, in use between August 2001 and May 23, 2002. This format has no version number information.</para>
+               </listitem>
+               <listitem>
+                  <para>2.0: The revamped XML format, in use between May 24, 2002, and September 11, 2002. Any configuration files created using VjControl or VRJConfig during that time period qualify as version 2.0, though they may lack the version number information. If a version number is missing, add the following as the second line of the file:</para>
+                  <programlisting>&lt;?org-vrjuggler-jccl-settings config.db.version="2.0"?&gt;</programlisting>
+               </listitem>
+               <listitem>
+                  <para>2.1: An iteration on 2.0 that changed the way external files are included. This version has been in use since September 12, 2002, and all files should have the following as the second line of the file:</para>
+                  <programlisting>&lt;?org-vrjuggler-jccl-settings config.db.version="2.1"?&gt;</programlisting>
+               </listitem>
+            </itemizedlist>
+         </section>
+         <section>
+            <title>Updating</title>
+            <para>We now explain how to update from one version of a file format to another. We begin with the first step: updating from the (versionless) VR Juggler 1.0 formats to version 2.0 of the description file format and version 2.0 of the configuration file format. We then move on to explain how to do iterative updates once you have converted to the base XML format.</para>
+            <section>
+               <title>Version 1.0 to 2.0 (Description Files and Configuration Files)</title>
+               <para>We have included a converter from VR Juggler 1.0 format to version 2.0 of the description file format and version 2.0 of the configuration file format. You can find the source in <filename>juggler/modules/jackal/tools/ConfigUpdater</filename>. If you have a binary distribution of VR Juggler, a compiled version can be run using the script <command>cfgupdater</command>, found in <filename>$VJ_BASE_DIR/bin</filename>. It is run as follows:</para>
+               <screen>cfgupdater file1 file2 ...</screen>
+               <para>The listed files can be config chunks (those with the extension <filename>.cfg</filename> or <filename>.config</filename>) or chunk descriptions (<filename>.desc</filename>). The utility figures out the file type and makes the appropriate conversions.</para>
+            </section>
+            <section>
+               <title>Version 1.9 to 2.0 (Configuration Files)</title>
+               <para>A Python 2 script has been written to update from the so-called 1.9 configuration file format version to 2.0. You can find it in <filename>juggler/modules/jackal/tools/xmlupdate</filename> or in <filename>$VJ_BASE_DIR/share/jccl/tools/xmlupdate</filename> depending on whether you have a source or a binary distribution of VR Juggler. The script is called <command>xmlupdate.py</command>, and it is run as follows:</para>
+               <screen>./xmlupdate.py file1.config file2.config
+./xmlupdate.py *.config</screen>
+               <para>The updated files will have the same base name as the original file but with the extension <quote>.new</quote>. The original files will not be modified.</para>
+               <para>As of this writing (September 19, 2002), the JCCL C++ code does not support evaluating symbolic enumeration strings. In other words, strings such as <literal>MOUSE_NEGX</literal> that may appear as property values have no meaning in the C++ context. The procedure to work around this is to load the generated file with VRJConfig and save it back to disk. This will convert all the symbolic enumeration strings to the equivalent constant value.</para>
+               <note>
+                  <para>This script cannot process configuration description files. As of this writing, we have no automated way to update from version 1.9 of the description file format to version 2.0.</para>
+               </note>
+            </section>
+            <section>
+               <title>Version 2.0 to 2.1 (Description Files)</title>
+               <para>Updating to version 2.1 of the description file format can be done through the use of an XSLT stylesheet. This stylesheet is found in <filename>juggler/modules/jackal/tools/xmlupdate</filename> or in <filename>$VJ_BASE_DIR/share/jccl/tools/xmlupdate</filename>, depending on whether you have a source or a binary distribution of VR Juggler. The stylesheet is named <filename>desc_2.0-2.1.xsl</filename>, and it can be used with any XSLT 1.0 processor. For example, if you have <command>xsltproc</command> available, you can use it to update a description file as follows:</para>
+               <screen>xsltproc -o output.desc desc_2.0-2.1.xsl input.desc</screen>
+               <para>This will generate a new file, <filename>output.desc</filename>, based on <filename>input.desc</filename> that uses version 2.1 of the description file format.</para>
+               <para>We also provide a simple makefile in the <filename>xmlupdate</filename> directory for using this stylesheet with <command>xsltproc</command> or with the Xalan command-line utility. The purpose of the makefile is to hide the details of executing the actual commands. To do the above conversion, simply enter the following:</para>
+               <screen>make INPUT_FILE=input.desc OUTPUT_FILE=output.desc desc-update-2.0-2.1</screen>
+               <para>At this time, the makefile only supports the use of <command>xsltproc</command> and the Xalan command-line utility. It defaults to using <command>xsltproc</command>. If that tool is not available, line 38 of the makefile so that the value of <varname>$(XSLT_TARGET)</varname> is '<literal>update-xalan</literal>'. If neither Xalan nor <command>xsltproc</command> is available, you will have to use whatever XSLT processor is available on your system.</para>
+            </section>
+            <section>
+               <title>Version 2.0 to 2.1 (Configuration Files)</title>
+               <para>Updating to version 2.1 of the configuration file format can be done through the use of an XSLT stylesheet. This stylesheet is found in <filename>juggler/modules/jackal/tools/xmlupdate</filename> or in <filename>$VJ_BASE_DIR/share/jccl/tools/xmlupdate</filename>, depending on whether you have a source or a binary distribution of VR Juggler. The stylesheet is named <filename>cfg_2.0-2.1.xsl</filename>, and it can be used with any XSLT 1.0 processor. For example, if you have <command>xsltproc</command> available, you can use it to update a description file as follows:</para>
+               <screen>xsltproc -o output.config cfg_2.0-2.1.xsl input.config</screen>
+               <para>This will generate a new file, <filename>output.config</filename>, based on <filename>input.config</filename> that uses version 2.1 of the description file format.</para>
+               <para>We also provide a simple makefile in the <filename>xmlupdate</filename> directory for using this stylesheet with <command>xsltproc</command> or with the Xalan command-line utility. The purpose of the makefile is to hide the details of executing the actual commands. To do the above conversion, simply enter the following:</para>
+               <screen>make INPUT_FILE=input.config OUTPUT_FILE=output.config cfg-update-2.0-2.1</screen>
+               <para>At this time, the makefile only supports the use of <command>xsltproc</command> and the Xalan command-line utility. It defaults to using <command>xsltproc</command>. If that tool is not available, line 38 of the makefile so that the value of <varname>$(XSLT_TARGET)</varname> is '<literal>update-xalan</literal>'. If neither Xalan nor <command>xsltproc</command> is available, you will have to use whatever XSLT processor is available on your system.</para>
+            </section>
+         </section>
       </section>
    </section>
 </article>
