@@ -212,7 +212,7 @@ dnl # Major and minor version numbers from ${_OS_REL_NUM} separated for use
 dnl # with the C preprocessor.  Using cut(1) is kind of a hack, but at least
 dnl # it's a clean one.
 _OS_REL_NUM_MAJOR=`echo "${_OS_REL_NUM}" | cut -f1 -d'.'`
-_OS_REL_NUM_MINOR=`echo "${_OS_REL_NUM}" | cut -f2 -d'.'`
+_OS_REL_NUM_MINOR=`echo "${_OS_REL_NUM}" | cut -f1 -d' ' | cut -f2 -d'.'`
 
 dnl # These are used on all platforms.
 AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "${_OS_REL_STR}")
