@@ -73,23 +73,40 @@ class myApplication : public vrj::GlApp</programlisting>
 #include &lt;gmtl/Vec.h&gt;
 #include &lt;gmtl/Generate.h&gt;
 
-// make a rotation
-vrj::Quatf q;
-gmtl::setRot( q, gmtl::Math::deg2Rad( 90.0f ), 0.0f, 1.0f, 0.0f );
+// make a rotation quaternion from an axis angle
+gmtl::Quatf q;
+gmtl::setRot( q, gmtl::AxisAnglef( gmtl::Math::deg2Rad( 90.0f ), 0.0f, 1.0f, 0.0f ) );
 
-// set the matrix to that rotation
+// make a rotation quaternion from euler angles
+gmtl::setRot( q, gmtl::EulerAngleXYZf( 0.0f, gmtl::Math::deg2Rad( 90.0f ), 0.0f ) );
+
+// set the rotation part of the matrix to the rotation defined by the quaternion
 gmtl::Matrix44f mat;
-gmtl::convert( mat, q );
+gmtl::setRot( mat, q );
 
 // set the translation of the matrix
 gmtl::Vec3f vec( 1.0f, 3.0f, -5.0f );
 gmtl::setTrans( mat, vec );
 
+// set the matrix to the rotation defined by the quaternion (eliminates any other transform in the mat)
+gmtl::Matrix44f rot_mat;
+gmtl::set( rot_mat, q );
+
 // transform the vector (the mathematical definition of Mat * Vec is that it only does rotation)
 gmtl::Vec3f result_v = mat * vec;
 
 // transform a point (the mathematical definition of Mat * Pnt is that does a full transform)
-gmtl::Point3f result_p = mat * point;</programlisting>
+gmtl::Point3f result_p = mat * point;
+
+// init the matrix using the quaternion
+gmtl::Matrix44f rot_mat( gmtl::make<gmtl::Matrix44f>( q ) );
+
+// get the length of the vector
+float length = gmtl::length( vec );
+
+// get the cross product
+gmtl::Vec3f result_cross = gmtl::cross( vec1, vec2 );
+</programlisting>
             </listitem>
             <listitem>
                <para>Common C preprocessor symbols such as <symbol>VJ_DEG2RAD</symbol>, <symbol>VJ_RAD2DEG</symbol> found in <filename>vjConfig.h</filename> are now located as inline functions in <filename>gmtl/Math.h</filename>. These are listed in the <classname>gmtl::Math</classname> namespace. For example, <symbol>VJ_DEG2RAD</symbol> is now <function>gmtl::Math::deg2Rad()</function>. The following illustrates the new use:</para>
