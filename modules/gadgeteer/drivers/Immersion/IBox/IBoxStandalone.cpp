@@ -37,6 +37,8 @@
 #include <vpr/System.h>
 #include <gadget/Devices/Immersion/IBox/IBoxStandalone.h>
 
+#include <boost/concept_check.hpp>
+
 // ----------------------------------------------------------------------------
 // Constructor:  This sets all the default values for the ibox.
 // ----------------------------------------------------------------------------
@@ -82,8 +84,8 @@ vpr::ReturnStatus IboxStandalone::connect(const std::string& port_name,
 {
 	mPortName=port_name;
 	mBaudRate = baud;
-    
-	port = new vpr::SerialPort(mPortName);    
+
+	port = new vpr::SerialPort(mPortName);
     port->setOpenReadWrite();
     if ( !port->open().success() )
 	{
@@ -102,12 +104,12 @@ vpr::ReturnStatus IboxStandalone::connect(const std::string& port_name,
 	port->setInputBaudRate(mBaudRate);
     port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
     port->enableRead();
-	std::cerr << "[IBox] Changed all of the port Settings." << std::endl;           
+	std::cerr << "[IBox] Changed all of the port Settings." << std::endl;
 	if ( autosynch()!=vpr::ReturnStatus::Succeed )
 	{
 		return(vpr::ReturnStatus::Fail);
 	}
-	std::cerr << "[IBox] Done with Autosync." << std::endl;         
+	std::cerr << "[IBox] Done with Autosync." << std::endl;
 	begin();
 	getInfo();
 	return(vpr::ReturnStatus::Succeed);
@@ -116,8 +118,8 @@ vpr::ReturnStatus IboxStandalone::connect()
 {
 	if(mPortName.empty()) mPortName = std::string("/dev/ttyd4");
 	if(mBaudRate==0) mBaudRate = 9600;
-    
-	port = new vpr::SerialPort(mPortName);    
+
+	port = new vpr::SerialPort(mPortName);
     port->setOpenReadWrite();
     if ( !port->open().success() )
 	{
@@ -136,12 +138,12 @@ vpr::ReturnStatus IboxStandalone::connect()
 	port->setInputBaudRate(mBaudRate);
     port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
     port->enableRead();
-	std::cerr << "[IBox] Changed all of the port Settings." << std::endl;           
+	std::cerr << "[IBox] Changed all of the port Settings." << std::endl;
 	if ( autosynch()!=vpr::ReturnStatus::Succeed )
 	{
 		return(vpr::ReturnStatus::Fail);
 	}
-	std::cerr << "[IBox] Done with Autosync." << std::endl;         
+	std::cerr << "[IBox] Done with Autosync." << std::endl;
 	begin();
 	getInfo();
 	return(vpr::ReturnStatus::Succeed);
@@ -209,7 +211,7 @@ vpr::ReturnStatus IboxStandalone::getInfo()
 	}
 	else
 	{
-		std::cerr << "	[IBox] Product Name: " << mProduct_name << std::endl;            
+		std::cerr << "	[IBox] Product Name: " << mProduct_name << std::endl;
 	}
 	//Get Product ID
 	if ( string_cmd(GET_PROD_ID) != vpr::ReturnStatus::Succeed )
@@ -219,7 +221,7 @@ vpr::ReturnStatus IboxStandalone::getInfo()
 	}
 	else
 	{
-		std::cerr << "	[IBox] Product ID: " << mProduct_id << std::endl;            
+		std::cerr << "	[IBox] Product ID: " << mProduct_id << std::endl;
 	}
 	//Get Model Name
 	if ( string_cmd(GET_MODEL_NAME) != vpr::ReturnStatus::Succeed )
@@ -229,7 +231,7 @@ vpr::ReturnStatus IboxStandalone::getInfo()
 	}
 	else
 	{
-		std::cerr << "	[IBox] Model Name: " << mModel_name << std::endl;            
+		std::cerr << "	[IBox] Model Name: " << mModel_name << std::endl;
 	}
 	//Get Serial Number
 	if ( string_cmd(GET_SERNUM) != vpr::ReturnStatus::Succeed )
@@ -239,7 +241,7 @@ vpr::ReturnStatus IboxStandalone::getInfo()
 	}
 	else
 	{
-		std::cerr << "	[IBox] Serial Number: " << mSerial_number << std::endl;          
+		std::cerr << "	[IBox] Serial Number: " << mSerial_number << std::endl;
 	}
 	//Get Device Comments
 	if ( string_cmd(GET_COMMENT) != vpr::ReturnStatus::Succeed )
@@ -249,7 +251,7 @@ vpr::ReturnStatus IboxStandalone::getInfo()
 	}
 	else
 	{
-		std::cerr << "	[IBox] Comment: " << mComment << std::endl;          
+		std::cerr << "	[IBox] Comment: " << mComment << std::endl;
 	}
 
 	//Get Parameter Format
@@ -260,7 +262,7 @@ vpr::ReturnStatus IboxStandalone::getInfo()
 	}
 	else
 	{
-		std::cerr << "	[IBox] Parameter Format: " << mParam_format << std::endl;            
+		std::cerr << "	[IBox] Parameter Format: " << mParam_format << std::endl;
 	}
 
 	//Get Version
@@ -271,7 +273,7 @@ vpr::ReturnStatus IboxStandalone::getInfo()
 	}
 	else
 	{
-		std::cerr << "	[IBox] Version: " << mVersion << std::endl;          
+		std::cerr << "	[IBox] Version: " << mVersion << std::endl;
 	}
 	return(status);
 }
@@ -301,11 +303,11 @@ vpr::ReturnStatus IboxStandalone::autosynch()
 	vpr::Uint32 written;
 	unsigned char temp[4];
 	int trys = 0;
-    
+
 	end();
     port->write(SIGNON_STR, sizeof(SIGNON_STR) - 1, written);
 	vpr::System::msleep(150); /* XXX: Artificial pause */
-    
+
 	port->read(&temp, 1, written, slowTimeOut);
 	//Try for a specified numer of times
 	while ( trys < 10 )
@@ -383,7 +385,7 @@ vpr::ReturnStatus IboxStandalone::string_cmd(byte cmnd)
         port->write(buffer, 1, written);
         if ( (port->read(ch, 1, written,slowTimeOut) != vpr::ReturnStatus::Succeed) || (ch[0]!=*buffer) )
 		{
-			return(vpr::ReturnStatus::Fail);       
+			return(vpr::ReturnStatus::Fail);
 		}
 	}
     switch ( cmnd )
@@ -476,7 +478,7 @@ vpr::ReturnStatus IboxStandalone::passwd_cmd(byte cmnd)
 	port->write(buffer, 1, written);
     port->read(ch, 1, written, fastTimeOut);
 	while ( ch[0]!=cmnd )
-	{   
+	{
 		if ( port->getBufferSize(size).failure() )
 		{
 			return(vpr::ReturnStatus::Fail);
@@ -575,7 +577,7 @@ vpr::ReturnStatus    IboxStandalone::factory_settings()
 
 void IboxStandalone::report_motion(int timer_flag, int analog_reports, int encoder_reports, int delay, byte active_btns, int *analog_deltas, int *encoder_deltas)
 {
-
+   boost::ignore_unused_variable_warning(active_btns);
 	int i;
 	vpr::Uint32 written;
 	char temp;

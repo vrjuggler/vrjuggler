@@ -38,6 +38,8 @@
 
 #include <gadget/Devices/Polhemus/Fastrak/FastrakStandalone.h>
 
+#include <boost/concept_check.hpp>
+
 vpr::ReturnStatus FastrakStandalone::open()
 {
    vpr::ReturnStatus status;
@@ -130,6 +132,7 @@ int FastrakStandalone::Read(int len)
 
 void FastrakStandalone::readloop(void *unused)
 {
+   boost::ignore_unused_variable_warning(unused);
    vpr::Uint32 bytes_written;
    vpr::Uint32 sleep_time(10000000/mConf.baud);
 

@@ -297,6 +297,7 @@ gmtl::Matrix44f Glove::getGlovePos(GloveData::GloveComponent component, int devN
 GloveData Glove::getGloveData(int devNum)
 {
    // Temporarily removed
+   boost::ignore_unused_variable_warning(devNum);
    //return mTheData[devNum][current];
    return mTheData[0][0];
 }
