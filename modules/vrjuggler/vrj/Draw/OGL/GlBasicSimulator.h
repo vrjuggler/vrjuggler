@@ -71,7 +71,7 @@ public:
    * @pre chunk is a valid chunk.
    * @post It should be configured
    */
-   virtual void config(jccl::ConfigChunkPtr chunk);
+   virtual bool config(jccl::ConfigChunkPtr chunk);
 
    static std::string getChunkType()
    {

@@ -58,7 +58,7 @@ namespace vrj
       * @pre chunk is a valid chunk.
       * @post It should be configured
       */
-      virtual void config(jccl::ConfigChunkPtr chunk) = 0;
+      virtual bool config(jccl::ConfigChunkPtr chunk) = 0;
 
       /** Called as part of the viewports updateProjection call */
       virtual void updateProjectionData(const float positionScale, Projection* leftProj, Projection* rightProj)

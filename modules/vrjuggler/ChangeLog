@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-14-2003 patrickh    Changed the return type of the member function
+                        vrj::DrawSimInterface::config() to be bool.
+                        NEW VERSION: 1.1.139
 Apr-13-2003 patrickh    Introduced vrj::DrawSimInterfaceFactory which creates
                         vrj::DrawSimInterface instances based on configuration
                         information.
