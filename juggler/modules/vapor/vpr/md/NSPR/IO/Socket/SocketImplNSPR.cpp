@@ -411,46 +411,60 @@ vpr::ReturnStatus SocketImplNSPR::readn_i (void* buffer,
       return vpr::ReturnStatus::Fail;
 
    vpr::ReturnStatus retval;
-   PRInt32 bytes;
+   PRInt32 bytes;            // Number of bytes read each time
+   vpr::Uint32 bytes_left(length);
 
+   bytes_read = 0;
    mBlockingFixed = true;
 
-   bytes = PR_Recv(mHandle, buffer, length, 0, NSPR_getInterval(timeout));
-
-
-   if ( bytes > 0 )     // Successfull read
+   while ( bytes_left > 0 )
    {
-      bytes_read = bytes;
-   }
-   else if ( bytes == -1 )   // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
-   {
-      PRErrorCode err_code = PR_GetError();
+      bytes = PR_Recv(mHandle, buffer, length, 0, NSPR_getInterval(timeout));
 
-      bytes_read = 0;
+      // We are in an error state.
+      if ( bytes > 0 )
+      {
+         buffer = (void*) ((char*) buffer + bytes);
+         bytes_left -= bytes;
+         bytes_read += bytes;
+      }
+      else if ( bytes < 0 )
+      {
+         PRErrorCode err_code = PR_GetError();
 
-      if ( err_code == PR_WOULD_BLOCK_ERROR )
-      {
-         retval.setCode(vpr::ReturnStatus::WouldBlock);
+         // Non-blocking socket, but this is basically a blocking call.  We
+         // just keep reading.
+         if ( err_code == PR_WOULD_BLOCK_ERROR )
+         {
+            continue;
+         }
+         // The last read took longer than we wanted.
+         else if ( err_code == PR_IO_TIMEOUT_ERROR )
+         {
+            retval.setCode(vpr::ReturnStatus::Timeout);
+            return retval;
+         }
+         // We lost the connection.  We're done.
+         else if ( err_code == PR_CONNECT_RESET_ERROR ||
+                   err_code == PR_SOCKET_SHUTDOWN_ERROR ||
+                   err_code == PR_CONNECT_ABORTED_ERROR )
+         {
+            retval.setCode(vpr::ReturnStatus::NotConnected);
+            return retval;
+         }
+         // Unrecognized error.
+         else
+         {
+            retval.setCode(vpr::ReturnStatus::Fail);
+            return retval;
+         }
       }
-      else if ( err_code == PR_IO_TIMEOUT_ERROR )
-      {
-         retval.setCode(vpr::ReturnStatus::Timeout);
-      }
-      else if ( err_code == PR_CONNECT_RESET_ERROR ||
-                err_code == PR_SOCKET_SHUTDOWN_ERROR ||
-                err_code == PR_CONNECT_ABORTED_ERROR )
-      {
-         retval.setCode(vpr::ReturnStatus::NotConnected);
-      }
+      // Read 0 bytes.
       else
       {
-         retval.setCode(vpr::ReturnStatus::Fail);
+         retval.setCode(vpr::ReturnStatus::NotConnected);    // Set status to indicate connection is closed
+         return retval;
       }
-   }
-   else if( bytes == 0)    // Indicates that the network connection is closed
-   {
-      bytes_read = bytes;
-      retval.setCode(vpr::ReturnStatus::NotConnected);    // Set status to indicate connection is closed
    }
 
    return retval;
