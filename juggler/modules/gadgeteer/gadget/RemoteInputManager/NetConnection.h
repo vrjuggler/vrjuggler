@@ -64,6 +64,8 @@ namespace gadget
       MsgPackage mMsgPackage;                      /**< packet building/parsing class*/
       bool mAllPacketsReceived;                    /**< flag for when all packets are recieved*/
       vpr::GUID mManagerId;                        /**< remote RIM manager ID */
+      
+      IdGenerator<VJ_NETID_TYPE>    mLocalIdGen;            /**< keeps track of used/free network ids */
 
    public:
       int mSendIterations;  // for debugging
@@ -76,7 +78,37 @@ namespace gadget
 
       void debugDump();
 
-      bool validateConnection();
+      VJ_NETID_TYPE generateLocalId()
+      { return mLocalIdGen.generateNewId(); }
+
+      /**
+       * Configures a new NetDevice for a device on a remote machine.
+       *
+       * @param   chunk    configuration chunk for the device that 
+       *                   we are trying to access
+       * @param   connection  NetConnection that the NetDevice is using to 
+       *                      connect to the remote device
+       * @return  TRUE  - if the configuration was successful
+       *          FALSE - if the configuration was un-successful
+       */
+      bool configureReceivingNetDevice(jccl::ConfigChunkPtr chunk);
+      
+      /**
+       * Configures a new NetDevice for sending data from a local device.
+       *
+       * @param   device_name       name of the local device
+       * @param   requester_device_id  the unique ID for this device on the
+       *                               remote machine
+       * @param   net_connection    NetConnection that the NetDevice is using
+       */
+      bool configureTransmittingNetDevice(std::string device_name, VJ_NETID_TYPE requester_device_id);
+
+      /**
+       * Parse incoming packets.
+       *
+       * @param net_connection   NetConnection that it is getting the packets on.
+       */
+      void receiveNetworkPacket();
 
       std::string getName()
       { return mName; }
