@@ -53,7 +53,7 @@ class DOM_Node;
 //
 //!PUBLIC_API:
 //------------------------------------------------------------------------
-class vjChunkDesc {
+class VJ_CLASS_API vjChunkDesc {
 
 public:
 
@@ -196,11 +196,13 @@ public:
 
  
     //: Writes self to the given output stream
-    friend std::ostream& operator << (std::ostream& out, const vjChunkDesc& self);
+    friend VJ_API(std::ostream&) operator << (std::ostream& out,
+                                              const vjChunkDesc& self);
 
 
     //: Reads self's value from the given input stream
-    friend std::istream& operator >> (std::istream& in, vjChunkDesc& self);
+    friend VJ_API(std::istream&) operator >> (std::istream& in,
+                                              vjChunkDesc& self);
 
 };
 

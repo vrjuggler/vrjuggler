@@ -224,7 +224,9 @@ bool vjChunkDesc::remove (const std::string& _token)
 
 
 
-std::ostream& operator << (std::ostream& out, const vjChunkDesc& self) {
+VJ_IMPLEMENT(std::ostream&) operator << (std::ostream& out,
+                                         const vjChunkDesc& self)
+{
     self.assertValid();
 
     out << self.token.c_str() << " \"" << self.name.c_str() << "\" \"" 
@@ -236,7 +238,7 @@ std::ostream& operator << (std::ostream& out, const vjChunkDesc& self) {
 }
 
 
-std::istream& operator >> (std::istream& in, vjChunkDesc& self)
+VJ_IMPLEMENT(std::istream&) operator >> (std::istream& in, vjChunkDesc& self)
 {
     self.assertValid();
 

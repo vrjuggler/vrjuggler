@@ -114,7 +114,7 @@ public:
    vjConfigChunk* getConfigChunk()
    { return mDisplayChunk; }
 
-   friend std::ostream& operator<<(std::ostream& out, vjDisplay& disp);
+   friend VJ_API(std::ostream&) operator<<(std::ostream& out, vjDisplay& disp);
 
    // --- Viewport handling --- //
    unsigned getNumViewports()

@@ -116,7 +116,7 @@ const unsigned int DEVICE_GROW2    = 128;
 //+       it is being updated to the most recent copy.
 //-----------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjInput
+class VJ_CLASS_API vjInput
 {
 public:
    //: Default Constructor
@@ -236,6 +236,9 @@ protected:
 
    vjMutex lock;        //: Mutex for swapping the pointers.
    int baudRate;        //: Baud rate of the device (if it is serial device)
+
+   vjInput (const vjInput& o) {;}
+   void operator= (const vjInput& o) {;}
 };
 
 #endif   /* VJ_INPUT_H */

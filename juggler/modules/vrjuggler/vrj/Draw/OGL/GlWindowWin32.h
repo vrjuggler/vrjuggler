@@ -40,7 +40,7 @@
 #include <GL/gl.h>
 #include <Kernel/GL/vjGlWindow.h>
 
-class vjGlWinWin32 : public vjGlWindow
+class VJ_CLASS_API vjGlWinWin32 : public vjGlWindow
 {
 public:
    vjGlWinWin32()

@@ -132,7 +132,7 @@ void vjDisplay::configViewports(vjConfigChunk* chunk)
 }
 
 
-std::ostream& operator<<(std::ostream& out, vjDisplay& disp)
+VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, vjDisplay& disp)
 {
    out << std::setw(15) << disp.mName.c_str() << std::endl
         << "  org:" << disp._xo << ", " << disp._yo

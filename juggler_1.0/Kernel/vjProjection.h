@@ -52,7 +52,7 @@
 // @author Allen Bierbaum
 //  Date: 9-8-97
 //------------------------------------------------------------------
-class vjProjection
+class VJ_CLASS_API vjProjection
 {
 public:
    // Eye and type
@@ -89,7 +89,7 @@ public:
    // the opertetor<< will "just work"
    virtual std::ostream& outStream(std::ostream& out);
 
-   friend std::ostream& operator<<(std::ostream& out, vjProjection& proj);
+   friend VJ_API(std::ostream&) operator<<(std::ostream& out, vjProjection& proj);
 
 
 public:

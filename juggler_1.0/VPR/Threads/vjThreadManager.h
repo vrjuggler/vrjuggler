@@ -54,7 +54,7 @@
 //
 //-----------------------------------------------------
 //!PUBLIC_API:
-class vjThreadManager
+class VJ_CLASS_API vjThreadManager
 {
 public:
    //-----------------------------------------------------
@@ -126,6 +126,9 @@ protected:
    //-----------------------------------------------------
    vjThreadManager() : mNextTSObjectKey(0)
    {;}
+
+   vjThreadManager (const vjThreadManager& o) {;}
+   void operator= (const vjThreadManager& o) {;}
 
 vjSingletonHeader(vjThreadManager);
 /*

@@ -82,7 +82,7 @@ class vjConfigChunk;
 //!PUBLIC_API:
 //--------------------------------------------------
 
-class vjVarValue {
+class VJ_CLASS_API vjVarValue {
 
 private:
 

@@ -55,7 +55,7 @@ class vjCameraProjection;
 // in order to keep all platform specific code in this
 // one class.
 //-------------------------------------------------------
-class vjGlWindow
+class VJ_CLASS_API vjGlWindow
 {
 public:
    vjGlWindow()
