@@ -63,15 +63,17 @@ public:
    
    virtual void pitchBend( float amount = 1.0 );
    
-   // allows a user to enable or disable a sound without worring about its state set by start or stop.
+   // allows a user to enable (restart) or disable (pause) a sound 
+   // without worring about its state set by start or stop.
    // NOTE: to hear a sound enable() and play() must be active.
-   //       default is ON
-   virtual void enable( vjSound::BinaryState state = vjSound::ON );
+   //       default is true
+   virtual void enable( const bool& state = true );
     
+   // trigger (play) the sound
    virtual void trigger();
    
    // stop the sound.
-   // useful when a sound has been set to LOOP, this will stop it
+   // stops the sound before it finishes playing
    virtual void stop();
    
    // change the position of the sound.

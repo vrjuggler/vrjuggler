@@ -124,22 +124,25 @@ void AwSound::pitchBend( float amount )
    awProp( mSound, AWSND_PBEND, amount );
 }   
 
-// allows a user to enable or disable a sound without worring about its state set by start or stop.
+// allows a user to enable (restart) or disable (pause) a sound 
+// without worring about its state set by start or stop.
 // NOTE: to hear a sound enable() and play() must be active.
 //       default is ON
-void AwSound::enable( vjSound::BinaryState state )
+void AwSound::enable( const bool& state )
 {
    assert( mSound != NULL );
-   switch (state)
+   vjSound::enable( state );
+   
+   switch (this->isEnabled())
    {
-      case vjSound::ON:
-         cout<<"[aw] awProp( mSoundPlayer, AWSND_ENABLED, "<<AWSND_ON<<" )\n"<<flush;
+      case true:
+         cout<<"[aw] Enabling sound: "<<mSoundName.c_str()<<"\n"<<flush;
          if (mSoundPlayer != NULL)
             awProp( mSoundPlayer, AWSND_ENABLED, AWSND_ON );
          awProp( mSound, AWSND_ENABLED, AWSND_ON );
          break;
-      case vjSound::OFF:
-         cout<<"[aw] awProp( mSoundPlayer, AWSND_ENABLED, "<<AWSND_OFF<<" )\n"<<flush;
+      case false:
+         cout<<"[aw] Disabling sound: "<<mSoundName.c_str()<<"\n"<<flush;
          if (mSoundPlayer != NULL)
             awProp( mSoundPlayer, AWSND_ENABLED, AWSND_OFF );
          awProp( mSound, AWSND_ENABLED, AWSND_OFF );
@@ -155,7 +158,7 @@ void AwSound::trigger()
    switch (mLooping)
    {
       case 0:
-         cout<<"[aw] Playing audio "<<mSoundName.c_str()<<"\n"<<flush;
+         cout<<"[aw] Playing sound: "<<mSoundName.c_str()<<"\n"<<flush;
          if (mSoundPlayer != NULL)
             awProp( mSoundPlayer, AWPLYR_STATE, AWSND_ON );
          awProp( mSound, AWSND_STATE, AWSND_ON );
