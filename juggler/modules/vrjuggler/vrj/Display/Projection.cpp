@@ -68,11 +68,11 @@ void Projection::getFrustumApexAndCorners(gmtl::Vec3f& apex,
    float right = mFrustum[Frustum::VJ_RIGHT]*mult_factor;
 
    // Create points in clip space
-   gmtl::Vec3f apexClip(0.0f, 0.0f, 0.0f);
-   gmtl::Vec3f urClip(right, top, -mFocusPlaneDist);
-   gmtl::Vec3f lrClip(right, bot, -mFocusPlaneDist);
-   gmtl::Vec3f ulClip(left, top, -mFocusPlaneDist);
-   gmtl::Vec3f llClip(left, bot, -mFocusPlaneDist);
+   gmtl::Point3f apexClip(0.0f, 0.0f, 0.0f);
+   gmtl::Point3f urClip(right, top, -mFocusPlaneDist);
+   gmtl::Point3f lrClip(right, bot, -mFocusPlaneDist);
+   gmtl::Point3f ulClip(left, top, -mFocusPlaneDist);
+   gmtl::Point3f llClip(left, bot, -mFocusPlaneDist);
 
    apex = view_mat_inv * apexClip;
    ur = view_mat_inv * urClip;
