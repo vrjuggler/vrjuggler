@@ -30,21 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-//===============================================================
-// DataGloveStandalone
-//
-// Purpose:
-//    software interface to 5DT Dataglove hardware
-//
-// Author:
-//	Chang Kim
-//
-// NOTES: The 5DT wireless DataGlove is a transmit-only device.
-//        The glove continuously emits a glove data packet.       
-//
-// Date: 4-25-02
-//===============================================================
-
 #ifndef _GADGET_DATA_GLOVE_STANDALONE_H_
 #define _GADGET_DATA_GLOVE_STANDALONE_H_
 
@@ -59,8 +44,8 @@
  * Submitted by: Chang Kim
  *
  * @note The 5DT wireless DataGlove is a transmit-only device.
- * @note The glove continuously emits a glove data packet.  
- *       
+ * @note The glove continuously emits a glove data packet.
+ *
  * @date 4-25-02
  */
 class DataGloveStandalone
@@ -68,22 +53,25 @@ class DataGloveStandalone
 public:
    /** Default constructor. */
    DataGloveStandalone();
-   
+
    /** Default destructor. */
    ~DataGloveStandalone();
-   
+
    /** Connects to the data glove hardware */
-   bool    connectToHardware( const std::string& ttyPort, int mBaudRate );
-   
+   bool connectToHardware( const std::string& ttyPort, int mBaudRate );
+
    /** Reads data from the DataGlove hardware  */
-   int 	   ReadRecordsFromHardware(float *ch0, float *ch1, float *ch2, float *ch3, float *ch4, float *ch5, float *ch6, int *ch7, int *ch8 );
-    
+   int ReadRecordsFromHardware(float *ch0, float *ch1, float *ch2, float *ch3,
+                               float *ch4, float *ch5, float *ch6, int *ch7,
+                               int *ch8 );
+
 protected:
 
    // Port pointer
    vpr::SerialPort     *port;
-   int	    mConnectToHardware( const std::string& ttyPort , int baud);
-   
+
+   int mConnectToHardware( const std::string& ttyPort , int baud);
+
 };
 
 #endif
