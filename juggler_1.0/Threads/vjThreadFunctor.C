@@ -10,6 +10,7 @@
 
 #include <config.h>
 #include <Threads/vjThreadFunctor.h>
+#include <Threads/vjThreadManager.h>
 
 
 //--------------------------------------------
@@ -37,7 +38,15 @@
         void*
 #   endif
         ThreadFunctorFunction (void* args) {
-            vjBaseThreadFunctor& func = *(vjBaseThreadFunctor*)args;
+            vjThreadManager* vj_tm_inst;
+            vjBaseThreadFunctor& func = *((vjBaseThreadFunctor*) args);
+
+            // Wait until this thread has been registered with the thread
+            // manager before continuing execution.
+            vj_tm_inst = vjThreadManager::instance();
+            vj_tm_inst->lock();
+            vj_tm_inst->unlock();
+
             func();
         }
 
