@@ -199,25 +199,21 @@ void Controller::processNextEvent ()
    }
 }
 
-void Controller::processNextEvent (const vpr::Uint32 time_step)
+void Controller::processEvents (const vpr::Uint32 time_step)
 {
    vpr::Interval event_time(mClock.getCurrentTime() + time_step,
                             vpr::Interval::Base);
+   event_map_t::iterator next_event;
 
    mClock.setCurrentTime(event_time);
-   event_map_t::iterator next_event = mEvents.begin();
 
-   if ( next_event != mEvents.end() )
+   // The current time based on the time step is the same as or greater than
+   // the time of the next event in the queue.  That means that that event is
+   // eligible for processing.
+   while ( (next_event = mEvents.begin()) != mEvents.end() &&
+           (*next_event).first <= event_time )
    {
-      vpr::Interval next_event_time = (*next_event).first;
-
-      // The current time based on the time step is the same as or greater than
-      // the time of the next event in the queue.  That means that that event
-      // is eligible for processing.
-      if ( next_event_time <= event_time )
-      {
-         processNextEvent();
-      }
+      processNextEvent();
    }
 }
 
