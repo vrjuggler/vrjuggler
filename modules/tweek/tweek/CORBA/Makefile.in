@@ -45,36 +45,36 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir		= @includedir@/tweek/CORBA
-srcdir			= @srcdir@
-top_srcdir		= @top_srcdir@
-CXX_IDL_OPTS		= @CXX_IDL_OPTS@ @CXX_IDL_GENDIR_OPT@$(srcdir)
-CXX_IDL_INCLUDES	= @CXX_IDL_INCFLAG@$(top_srcdir)
-EXTRA_INCLUDES		+= -I$(srcdir)
-EXTRA_SRCS_PATH		= $(srcdir)/../idl
-INSTALL			= @INSTALL@
-SUBOBJDIR		= $(TWEEK_LIBRARY)
+includedir=		@includedir@/tweek/CORBA
+srcdir=			@srcdir@
+top_srcdir=		@top_srcdir@
+CXX_IDL_OPTS=		@CXX_IDL_OPTS@ @CXX_IDL_GENDIR_OPT@$(srcdir)
+CXX_IDL_INCLUDES=	@CXX_IDL_INCFLAG@$(top_srcdir)
+EXTRA_INCLUDES+=	-I$(srcdir)
+EXTRA_SRCS_PATH=	$(srcdir)/../idl
+INSTALL=		@INSTALL@
+SUBOBJDIR=		$(TWEEK_LIBRARY)
 
-IDL_CXX_FILES	= SubjectManager.cpp SubjectManager.h	\
-                  Subject.cpp Subject.h			\
-                  Observer.cpp Observer.h
+IDL_CXX_FILES=	SubjectManager.cpp SubjectManager.h	\
+		Subject.cpp Subject.h			\
+		Observer.cpp Observer.h
 
-SRCS		= CorbaManager.cpp		\
-                  Observer.cpp			\
-                  SubjectManager.cpp		\
-                  SubjectManagerImpl.cpp	\
-                  Subject.cpp			\
-                  SubjectImpl.cpp
+SRCS=		CorbaManager.cpp		\
+		Observer.cpp			\
+		SubjectManager.cpp		\
+		SubjectManagerImpl.cpp		\
+		Subject.cpp			\
+		SubjectImpl.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
-CLEAN_FILES	+= $(addprefix $(srcdir)/, $(IDL_CXX_FILES))
+CLEAN_FILES+=	$(addprefix $(srcdir)/, $(IDL_CXX_FILES))
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
 ifndef DO_IDL
-    -include $(DEPEND_FILES)
+   -include $(DEPEND_FILES)
 endif
 endif
