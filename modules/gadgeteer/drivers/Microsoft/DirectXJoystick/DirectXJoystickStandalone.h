@@ -117,12 +117,12 @@ public:
 
    static int getAxisMin()
    {
-      return -100;
+      return -1000;
    }
 
    static int getAxisMax()
    {
-      return 100;
+      return 1000;
    }
 
 private:
