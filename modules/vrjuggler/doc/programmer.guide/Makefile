@@ -5,7 +5,7 @@ default: html
 docs: html chunk-html pdf
 install-docs: install-html install-chunk-html install-pdf
 
-NAME=		guide
+NAME=		programmer.guide
 
 XML_FILES=	$(NAME).xml
 HTML_FILES=	$(NAME).html
