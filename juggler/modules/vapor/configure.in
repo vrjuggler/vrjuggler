@@ -509,12 +509,16 @@ fi
 # return to the directory where configure is being run ($topdir).
 cd "$srcdir"
 VPRROOT_ABS=`pwd`
+
+cd "$VPRROOT_ABS/../.."
+JUGGLERROOT_ABS=`pwd`
 cd "$topdir"
 
 # Define the base path to the source directory using $VPRROOT_ABS as an
 # alternative to using $srcdir.
 VPR_SRCDIR='$(VPRROOT_ABS)'
 UNIX_VPRROOT_ABS="$VPRROOT_ABS"
+UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 # Variables set in Makefiles found in the application trees.  All variables
 # listed are for use only in the Makefile.in's found in that tree unless
@@ -595,6 +599,7 @@ fi
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
     SAFE_VPRROOT_ABS=`unix2dos -p "$VPRROOT_ABS"`
+    SAFE_JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
     VPR_SRCDIR=`unix2dos "$VPR_SRCDIR"`
 
     if test "x$DEPEND_EXTRAS" != "x" ; then
@@ -615,6 +620,7 @@ if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS_BASIC=`unix2dos "$APP_EXTRA_LIBS_BASIC"`
 else
     SAFE_VPRROOT_ABS="$VPRROOT_ABS"
+    SAFE_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 fi
 
 # Information needed to generate vpr-config.
@@ -684,7 +690,9 @@ DPP_SUBST
 
 AC_SUBST(topdir)
 AC_SUBST(UNIX_VPRROOT_ABS)
+AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(SAFE_VPRROOT_ABS)
+AC_SUBST(SAFE_JUGGLERROOT_ABS)
 AC_SUBST(VPR_SRCDIR)
 AC_SUBST(VPR_SHARE_DIR)
 
@@ -772,9 +780,9 @@ AC_OUTPUT(Makefile
           test/Socket/Makefile
           test/Sync/Makefile
           test/Thread/Makefile
-          release/mtree/VPR.include.dist
-          release/mtree/VPR.install.dist
-          release/mtree/VPR.test.dist
+          mtree/VPR.include.dist
+          mtree/VPR.install.dist
+          mtree/VPR.test.dist
           VARS.pl)
 
 cat <<BUILD_INFO
