@@ -1,1 +1,1 @@
-reconfigApp ./Chunks/reconfig.start.config
+reconfigApp $PWD/Chunks

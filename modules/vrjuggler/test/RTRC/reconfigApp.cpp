@@ -289,6 +289,13 @@ void reconfigApp::initGLState()
 /********************************************************************
 UTILITY FUNCTIONS
 ********************************************************************/
+
+void reconfigApp::setPath( std::string path )
+{
+   mPath = path;
+}
+
+
 bool reconfigApp::addChunkFile( std::string filename )
 {
    //Attempt to load a new config chunk
@@ -760,12 +767,12 @@ TEST SUITE FUNCTIONS
 bool reconfigApp::addGFXWindow_exec()
 {
    std::cout << "Beginning test for adding a graphics window...\n" << std::flush;
-   return addChunkFile( "./Chunks/sim.extradisplay.01.config" );
+   return addChunkFile( mPath + "sim.extradisplay.01.config" );
 }
 
 bool reconfigApp::addGFXWindow_check()
 {
-   return verifyDisplayFile( "./Chunks/sim.extradisplay.01.config" );
+   return verifyDisplayFile( mPath + "sim.extradisplay.01.config" );
 }
 
 
@@ -773,14 +780,14 @@ bool reconfigApp::addGFXWindow_check()
 bool reconfigApp::removeGFXWindow_exec()
 {
    std::cout << "Beginning test for removing a graphics window...\n" << std::flush;
-   return removeChunkFile( "./Chunks/sim.extradisplay.01.config" );
+   return removeChunkFile( mPath + "sim.extradisplay.01.config" );
 }
 
 bool reconfigApp::removeGFXWindow_check()
 {
 
    //Load up the given file 
-   jccl::ConfigChunkDB fileDB ; fileDB.load( "./Chunks/sim.extradisplay.01.config" );
+   jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "sim.extradisplay.01.config" );
    std::vector<jccl::ConfigChunkPtr> windowChunks;
    fileDB.getByType( "displayWindow", windowChunks );
 
@@ -805,109 +812,109 @@ bool reconfigApp::readdGFXWindow_exec()
 {
    std::cout << "Beginning test for readding a graphics window...\n" << std::flush;
 
-   return (   addChunkFile( "./Chunks/sim.extradisplay.01.config" )
-           && addChunkFile( "./Chunks/sim.extradisplay.02.config" ));
+   return (   addChunkFile( mPath + "sim.extradisplay.01.config" )
+           && addChunkFile( mPath + "sim.extradisplay.02.config" ));
 }
 
 bool reconfigApp::readdGFXWindow_check()
 {
-   return verifyDisplayFile( "./Chunks/sim.extradisplay.01.config" ) &&
-          verifyDisplayFile( "./Chunks/sim.extradisplay.02.config" );
+   return verifyDisplayFile( mPath + "sim.extradisplay.01.config" ) &&
+          verifyDisplayFile( mPath + "sim.extradisplay.02.config" );
 }
 
 bool reconfigApp::resizeGFXWindow_exec()
 {
    std::cout << "Beginning test for resizing a graphics window...\n" << std::flush;
 
-   return swapChunkFiles( "./Chunks/sim.extradisplay.02.config",
-                          "./Chunks/sim.extradisplay.02.resize.config" );
+   return swapChunkFiles( mPath + "sim.extradisplay.02.config",
+                          mPath + "sim.extradisplay.02.resize.config" );
 
 }
 
 bool reconfigApp::resizeGFXWindow_check()
 {
-   return verifyDisplayFile( "./Chunks/sim.extradisplay.02.resize.config" );
+   return verifyDisplayFile( mPath + "sim.extradisplay.02.resize.config" );
 }
 
 bool reconfigApp::moveGFXWindow_exec()
 {
    std::cout << "Beginning test for moving a graphics window...\n" << std::flush;
   
-   return swapChunkFiles( "./Chunks/sim.extradisplay.01.config",
-                          "./Chunks/sim.extradisplay.01.move.config" );
+   return swapChunkFiles( mPath + "sim.extradisplay.01.config",
+                          mPath + "sim.extradisplay.01.move.config" );
 }
 
 bool reconfigApp::moveGFXWindow_check()
 {
-   return verifyDisplayFile( "./Chunks/sim.extradisplay.01.move.config" );
+   return verifyDisplayFile( mPath + "sim.extradisplay.01.move.config" );
 }
 
 bool reconfigApp::addViewport_exec()
 {
    std::cout << "Beginning test for adding a viewport to a display window...\n" << std::flush;
 
-   return swapChunkFiles( "./Chunks/sim.extradisplay.02.resize.config",
-                          "./Chunks/sim.extradisplay.02.twoviews.config" );
+   return swapChunkFiles( mPath + "sim.extradisplay.02.resize.config",
+                          mPath + "sim.extradisplay.02.twoviews.config" );
 }
 
 bool reconfigApp::addViewport_check()
 {
-   return verifyDisplayFile( "./Chunks/sim.extradisplay.02.twoviews.config" );
+   return verifyDisplayFile( mPath + "sim.extradisplay.02.twoviews.config" );
 }
 
 bool reconfigApp::removeViewport_exec()
 {
    std::cout << "Beginning test for removing a viewport from a graphics window...\n" << std::flush;
 
-   return swapChunkFiles( "./Chunks/sim.extradisplay.02.twoviews.config",
-                          "./Chunks/sim.extradisplay.02.oneview.config" );
+   return swapChunkFiles( mPath + "sim.extradisplay.02.twoviews.config",
+                          mPath + "sim.extradisplay.02.oneview.config" );
 }
 
 bool reconfigApp::removeViewport_check()
 {
-   return verifyDisplayFile( "./Chunks/sim.extradisplay.02.oneview.config" );
+   return verifyDisplayFile( mPath + "sim.extradisplay.02.oneview.config" );
 }
 
 bool reconfigApp::resizeViewport_exec()
 {
    std::cout << "Beginning test for resizing a viewport...\n" << std::flush;
 
-   return swapChunkFiles( "./Chunks/sim.extradisplay.02.oneview.config",
-                          "./Chunks/sim.extradisplay.02.largerview.config" );
+   return swapChunkFiles( mPath + "sim.extradisplay.02.oneview.config",
+                          mPath + "sim.extradisplay.02.largerview.config" );
 }
 
 bool reconfigApp::resizeViewport_check()
 {
-   return verifyDisplayFile( "./Chunks/sim.extradisplay.02.largerview.config" );;
+   return verifyDisplayFile( mPath + "sim.extradisplay.02.largerview.config" );;
 }
 
 bool reconfigApp::moveViewport_exec()
 {
    std::cout << "Beginning test for moving a viewport...\n" << std::flush;
 
-   return swapChunkFiles( "./Chunks/sim.extradisplay.02.largerview.config",
-                          "./Chunks/sim.extradisplay.02.moveview.config" );
+   return swapChunkFiles( mPath + "sim.extradisplay.02.largerview.config",
+                          mPath + "sim.extradisplay.02.moveview.config" );
 }
 
 bool reconfigApp::moveViewport_check()
 {
-   return verifyDisplayFile( "./Chunks/sim.extradisplay.02.moveview.config" );
+   return verifyDisplayFile( mPath + "sim.extradisplay.02.moveview.config" );
 }
 
 bool reconfigApp::enableStereoSurface_exec()
 {
    std::cout << "Beginning test for enabling stereo on a surface display...\n" << std::flush;
 
-   return        removeChunkFile( "./Chunks/sim.extradisplay.02.moveview.config" )
-              && removeChunkFile( "./Chunks/sim.extradisplay.01.move.config" )
-              && addChunkFile( "./Chunks/sim.surfacedisplay.01.stereo.config" );
+   return        removeChunkFile( mPath + "sim.extradisplay.02.moveview.config" )
+              && removeChunkFile( mPath + "sim.extradisplay.01.move.config" )
+              && addChunkFile( mPath + "sim.surfacedisplay.01.stereo.config" );
 
 }
 
 bool reconfigApp::enableStereoSurface_check()
 {
    //Load up the given file 
-   jccl::ConfigChunkDB fileDB ; fileDB.load( "./Chunks/sim.surfacedisplay.01.stereo.config" );
+   jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "sim.surfacedisplay.01.stereo.config" );
    std::vector<jccl::ConfigChunkPtr> windowChunks;
    fileDB.getByType( "displayWindow", windowChunks );
 
@@ -950,14 +957,14 @@ bool reconfigApp::disableStereoSurface_exec()
 {
    std::cout << "Beginning test for disabling stereo on a surface display...\n" << std::flush;
 
-   return swapChunkFiles( "./Chunks/sim.surfacedisplay.01.stereo.config",
-                          "./Chunks/sim.surfacedisplay.01.mono.config" );
+   return swapChunkFiles( mPath + "sim.surfacedisplay.01.stereo.config",
+                          mPath + "sim.surfacedisplay.01.mono.config" );
 }
 
 bool reconfigApp::disableStereoSurface_check()
 {
    //Load up the given file 
-   jccl::ConfigChunkDB fileDB ; fileDB.load( "./Chunks/sim.surfacedisplay.01.mono.config" );
+   jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "sim.surfacedisplay.01.mono.config" );
    std::vector<jccl::ConfigChunkPtr> windowChunks;
    fileDB.getByType( "displayWindow", windowChunks );
 
@@ -1004,13 +1011,13 @@ bool reconfigApp::removeKeyboardWin_exec()
    //Note that we are assuming ./Chunks/startup/sim.wandkeyboardproxy.config has 
    //already been loaded
 
-   return removeChunkFile( "./Chunks/startup/sim.wandkeyboard.config" );
+   return removeChunkFile( mPath + "startup/sim.wandkeyboard.config" );
 }
 
 bool reconfigApp::removeKeyboardWin_check()
 {
    //First check that the keyboard device no longer exists
-   jccl::ConfigChunkDB fileDB ; fileDB.load( "./Chunks/startup/sim.wandkeyboard.config" );
+   jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "startup/sim.wandkeyboard.config" );
    std::vector<jccl::ConfigChunkPtr> fileChunks;
    fileDB.getByType( "Keyboard", fileChunks );
 
@@ -1025,7 +1032,7 @@ bool reconfigApp::removeKeyboardWin_check()
    }
 
    //Check the wand keyboard proxy that is supposed to point to it is stupified
-   jccl::ConfigChunkDB fileDB2 ; fileDB2.load( "./Chunks/startup/sim.wandkeyboardproxy.config" );
+   jccl::ConfigChunkDB fileDB2 ; fileDB2.load( mPath + "startup/sim.wandkeyboardproxy.config" );
    fileChunks.clear();
    fileDB2.getByType( "KeyboardProxy", fileChunks );
 
@@ -1063,7 +1070,7 @@ bool reconfigApp::removeKeyboardWin_check()
 bool reconfigApp::readdKeyboardWin_exec()
 {
    std::cout << "Beginning test for readding a keyboard window...\n" << std::flush;
-   return addChunkFile( "./Chunks/startup/sim.wandkeyboard.config" );
+   return addChunkFile( mPath + "startup/sim.wandkeyboard.config" );
 }
 
 bool reconfigApp::readdKeyboardWin_check()
@@ -1071,7 +1078,7 @@ bool reconfigApp::readdKeyboardWin_check()
    //Check the wand keyboard proxy that is supposed to point to it
 
    //First check that the keyboard device exists again
-   jccl::ConfigChunkDB fileDB ; fileDB.load( "./Chunks/startup/sim.wandkeyboard.config" );
+   jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "startup/sim.wandkeyboard.config" );
    std::vector<jccl::ConfigChunkPtr> fileChunks;
    fileDB.getByType( "Keyboard", fileChunks );
 
@@ -1086,7 +1093,7 @@ bool reconfigApp::readdKeyboardWin_check()
    }
 
    //Check the wand keyboard proxy that is supposed to point to it is stupified
-   jccl::ConfigChunkDB fileDB2 ; fileDB2.load( "./Chunks/startup/sim.wandkeyboardproxy.config" );
+   jccl::ConfigChunkDB fileDB2 ; fileDB2.load( mPath + "startup/sim.wandkeyboardproxy.config" );
    fileChunks.clear();
    fileDB2.getByType( "KeyboardProxy", fileChunks );
 
@@ -1131,8 +1138,8 @@ bool reconfigApp::readdKeyboardWin_check()
 bool reconfigApp::addSimPos_exec()
 {
    std::cout << "Beginning test for adding a sim position device and pointing proxies at it...\n" << std::flush;
-   return (  addChunkFile( "./Chunks/sim.positiondevice.config" ) 
-          && addChunkFile( "./Chunks/sim.positiondeviceproxy.config" ));
+   return (  addChunkFile( mPath + "sim.positiondevice.config" ) 
+          && addChunkFile( mPath + "sim.positiondeviceproxy.config" ));
 }
 
 bool reconfigApp::addSimPos_check()
@@ -1145,7 +1152,7 @@ bool reconfigApp::addSimPos_check()
 bool reconfigApp::removeSimPos_exec()
 {
    std::cout << "Beginning test for removing a sim position device and checking its proxies...\n" << std::flush;
-   return removeChunkFile( "./Chunks/sim.positiondevice.config" );
+   return removeChunkFile( mPath + "sim.positiondevice.config" );
 }
 
 bool reconfigApp::removeSimPos_check()
@@ -1174,7 +1181,7 @@ bool reconfigApp::removeSimPos_check()
 bool reconfigApp::readdSimPos_exec()
 {
    std::cout << "Beginning test for readding a sim position device and checking its proxies...\n" << std::flush;
-   return addChunkFile( "./Chunks/sim.positiondevice.config" );
+   return addChunkFile( mPath + "sim.positiondevice.config" );
 }
 
 bool reconfigApp::readdSimPos_check()
@@ -1188,15 +1195,15 @@ bool reconfigApp::repointProxy_exec()
 {
    std::cout << "Beginning test for repointing a proxy to something else...\n" << std::flush;
 
-   return swapChunkFiles( "./Chunks/sim.positiondeviceproxy.config",
-                          "./Chunks/sim.positiondeviceproxy.repoint.config" );
+   return swapChunkFiles( mPath + "sim.positiondeviceproxy.config",
+                          mPath + "sim.positiondeviceproxy.repoint.config" );
 }
 
 bool reconfigApp::repointProxy_check()
 {
    //Load the repoint config file, get its device property, match that name
    //with the gadget::Proxy's instance name
-   jccl::ConfigChunkDB fileDB ; fileDB.load( "./Chunks/sim.positiondeviceproxy.repoint.config" );
+   jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "sim.positiondeviceproxy.repoint.config" );
    std::vector<jccl::ConfigChunkPtr> fileChunks;
    fileDB.getByType( "PosProxy", fileChunks );
 
@@ -1239,7 +1246,7 @@ bool reconfigApp::reconfigSimPos_exec()
 {
    std::cout << "Beginning test for reconfiguring a sim position device...\n" << std::flush;
 
-   return swapChunkFiles( "./Chunks/startup/sim.simheadpos.config", "./Chunks/sim.simheadpos.reconfig.config" );
+   return swapChunkFiles( mPath + "startup/sim.simheadpos.config", mPath + "sim.simheadpos.reconfig.config" );
 }
 
 bool reconfigApp::reconfigSimPos_check()
@@ -1270,8 +1277,8 @@ bool reconfigApp::reconfigSimDigital_exec()
 {
    std::cout << "Beginning test for reconfiguring a sim digital device...\n" << std::flush;
 
-   return swapChunkFiles( "./Chunks/startup/sim.wandbuttonsdigital02.config", 
-                          "./Chunks/sim.wandbuttonsdigital02.reconfig.config" );
+   return swapChunkFiles( mPath + "startup/sim.wandbuttonsdigital02.config", 
+                          mPath + "sim.wandbuttonsdigital02.reconfig.config" );
 }
 
 bool reconfigApp::reconfigSimDigital_check()
@@ -1290,7 +1297,7 @@ bool reconfigApp::reconfigSimDigital_check()
    std::vector<gadget::SimInput::KeyModPair> keypairs = device->getKeys();
 
    //Load up the config file.
-   jccl::ConfigChunkDB fileDB ; fileDB.load( "./Chunks/sim.wandbuttonsdigital02.reconfig.config" );
+   jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "sim.wandbuttonsdigital02.reconfig.config" );
    std::vector<jccl::ConfigChunkPtr> fileChunks;
    fileDB.getByType( "SimDigital", fileChunks );
 
@@ -1332,8 +1339,8 @@ bool reconfigApp::reconfigSimAnalog_exec()
 {
    std::cout << "Beginning test for reconfiguring a sim analog device...\n" << std::flush;
 
-   return swapChunkFiles( "./Chunks/startup/sim.analogdevice1.config",
-                          "./Chunks/sim.analogdevice1.reconfig.config" );
+   return swapChunkFiles( mPath + "startup/sim.analogdevice1.config",
+                          mPath + "sim.analogdevice1.reconfig.config" );
 }
 
 bool reconfigApp::reconfigSimAnalog_check()
@@ -1353,7 +1360,7 @@ bool reconfigApp::reconfigSimAnalog_check()
    std::vector<gadget::SimInput::KeyModPair> keypairsdown = device->getDownKeys();
 
    //Load up the config file.
-   jccl::ConfigChunkDB fileDB ; fileDB.load( "./Chunks/sim.analogdevice1.reconfig.config" );
+   jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "sim.analogdevice1.reconfig.config" );
    std::vector<jccl::ConfigChunkPtr> fileChunks;
    fileDB.getByType( "SimAnalog", fileChunks );
 
@@ -1406,8 +1413,8 @@ bool reconfigApp::addSimDigital_exec()
 {
    std::cout << "Beginning test for adding a sim digital device and pointing proxies at it...\n" << std::flush;   
 
-   return (  addChunkFile( "./Chunks/sim.digitaldevice.config" )
-          && addChunkFile( "./Chunks/sim.digitalproxy.config"  ));
+   return (  addChunkFile( mPath + "sim.digitaldevice.config" )
+          && addChunkFile( mPath + "sim.digitalproxy.config"  ));
 }
 
 bool reconfigApp::addSimDigital_check()
@@ -1419,7 +1426,7 @@ bool reconfigApp::addSimDigital_check()
 bool reconfigApp::removeSimDigital_exec()
 {
    std::cout << "Beginning test for removing a sim digital device...\n" << std::flush;
-   return removeChunkFile( "./Chunks/startup/sim.wandbuttonsdigital.config" );
+   return removeChunkFile( mPath + "startup/sim.wandbuttonsdigital.config" );
 }
 
 bool reconfigApp::removeSimDigital_check()
@@ -1447,7 +1454,7 @@ bool reconfigApp::readdSimDigital_exec()
 {
    std::cout << "Beginning test for readding a sim digital device and checking the proxies pointing at it...\n" << std::flush;
    
-   return addChunkFile( "./Chunks/startup/sim.wandbuttonsdigital.config" );
+   return addChunkFile( mPath + "startup/sim.wandbuttonsdigital.config" );
 }
 
 bool reconfigApp::readdSimDigital_check()
@@ -1464,8 +1471,8 @@ bool reconfigApp::addSimAnalog_exec()
 {
    std::cout << "Beginning test for adding a sim analog device and pointing proxies at it...\n" << std::flush;   
 
-   return (  addChunkFile( "./Chunks/sim.extraanalogdevice.config" )
-          && addChunkFile( "./Chunks/sim.extraanalogproxy.config"  ));
+   return (  addChunkFile( mPath + "sim.extraanalogdevice.config" )
+          && addChunkFile( mPath + "sim.extraanalogproxy.config"  ));
 }
 
 bool reconfigApp::addSimAnalog_check()
@@ -1477,7 +1484,7 @@ bool reconfigApp::addSimAnalog_check()
 bool reconfigApp::removeSimAnalog_exec()
 {
    std::cout << "Beginning test for removing a sim analog device and checking the proxies that point at it...\n" << std::flush;
-   return removeChunkFile( "./Chunks/sim.extraanalogdevice.config" );
+   return removeChunkFile( mPath + "sim.extraanalogdevice.config" );
 }
 
 bool reconfigApp::removeSimAnalog_check()
@@ -1504,7 +1511,7 @@ bool reconfigApp::removeSimAnalog_check()
 bool reconfigApp::readdSimAnalog_exec()
 {
    std::cout << "Beginning test for readding a sim analog device and checking the old proxies...\n" << std::flush;
-   return addChunkFile( "./Chunks/sim.extraanalogdevice.config" ) ;
+   return addChunkFile( mPath + "sim.extraanalogdevice.config" ) ;
 }
 
 bool reconfigApp::readdSimAnalog_check()
@@ -1515,7 +1522,7 @@ bool reconfigApp::readdSimAnalog_check()
 bool reconfigApp::addAnalogProxy_exec()
 {
    std::cout << "Beginning test for adding an analog proxy...\n" << std::flush;
-   return addChunkFile( "./Chunks/sim.analogproxy01.config" ) ;
+   return addChunkFile( mPath + "sim.analogproxy01.config" ) ;
 }
 
 bool reconfigApp::addAnalogProxy_check()
@@ -1527,7 +1534,7 @@ bool reconfigApp::addAnalogProxy_check()
 bool reconfigApp::reconfigAnalogProxy_exec()
 {
    std::cout << "Beginning test for reconfiguring an analog proxy...\n" << std::flush;
-   return swapChunkFiles( "./Chunks/sim.analogproxy01.config", "./Chunks/sim.analogproxy01.reconfig.config" );
+   return swapChunkFiles( mPath + "sim.analogproxy01.config", mPath + "sim.analogproxy01.reconfig.config" );
 }
 
 bool reconfigApp::reconfigAnalogProxy_check()
@@ -1539,7 +1546,7 @@ bool reconfigApp::reconfigAnalogProxy_check()
 bool reconfigApp::removeAnalogProxy_exec()
 {
    std::cout << "Beginning test for removing an analog proxy...\n" << std::flush;
-   return removeChunkFile( "./Chunks/sim.analogproxy01.reconfig.config" );
+   return removeChunkFile( mPath + "sim.analogproxy01.reconfig.config" );
 }
 
 bool reconfigApp::removeAnalogProxy_check()
@@ -1560,7 +1567,7 @@ bool reconfigApp::removeAnalogProxy_check()
 bool reconfigApp::addPosProxy_exec()
 {
    std::cout << "Beginning test for adding a sim digital device...\n" << std::flush;
-   return addChunkFile( "./Chunks/sim.simcam1proxy02.config" );
+   return addChunkFile( mPath + "sim.simcam1proxy02.config" );
 }
 
 bool reconfigApp::addPosProxy_check()
@@ -1572,7 +1579,7 @@ bool reconfigApp::addPosProxy_check()
 bool reconfigApp::reconfigPosProxy_exec()
 {
    std::cout << "Beginning test for reconfiguring a position proxy...\n" << std::flush;
-   return swapChunkFiles( "./Chunks/sim.simcam1proxy02.config", "./Chunks/sim.simcam1proxy02.reconfig.config");
+   return swapChunkFiles( mPath + "sim.simcam1proxy02.config", mPath + "sim.simcam1proxy02.reconfig.config");
 }
 
 bool reconfigApp::reconfigPosProxy_check()
@@ -1584,7 +1591,7 @@ bool reconfigApp::reconfigPosProxy_check()
 bool reconfigApp::removePosProxy_exec()
 {
    std::cout << "Beginning test for removing a position proxy...\n" << std::flush;
-   return removeChunkFile( "./Chunks/sim.simcam1proxy02.reconfig.config" );
+   return removeChunkFile( mPath + "sim.simcam1proxy02.reconfig.config" );
 }
 
 bool reconfigApp::removePosProxy_check()
@@ -1604,7 +1611,7 @@ bool reconfigApp::removePosProxy_check()
 bool reconfigApp::addDigitalProxy_exec()
 {
    std::cout << "Beginning test for adding a digital proxy...\n" << std::flush;
-   return addChunkFile( "./Chunks/sim.button0proxy02.config" );
+   return addChunkFile( mPath + "sim.button0proxy02.config" );
 }
 
 bool reconfigApp::addDigitalProxy_check()
@@ -1616,7 +1623,7 @@ bool reconfigApp::addDigitalProxy_check()
 bool reconfigApp::reconfigDigitalProxy_exec()
 {
    std::cout << "Beginning test for reconfiguring a digital proxy...\n" << std::flush;
-   return swapChunkFiles( "./Chunks/sim.button0proxy02.config", "./Chunks/sim.button0proxy02.reconfig.config");
+   return swapChunkFiles( mPath + "sim.button0proxy02.config", mPath + "sim.button0proxy02.reconfig.config");
 }
 
 bool reconfigApp::reconfigDigitalProxy_check()
@@ -1628,7 +1635,7 @@ bool reconfigApp::reconfigDigitalProxy_check()
 bool reconfigApp::removeDigitalProxy_exec()
 {
    std::cout << "Beginning test for removing a digital proxy...\n" << std::flush;
-   return removeChunkFile( "./Chunks/sim.button0proxy02.reconfig.config" );
+   return removeChunkFile( mPath + "sim.button0proxy02.reconfig.config" );
 }
 
 bool reconfigApp::removeDigitalProxy_check()
@@ -1648,7 +1655,7 @@ bool reconfigApp::removeDigitalProxy_check()
 bool reconfigApp::addKeyboardProxy_exec()
 {
    std::cout << "Beginning test for adding a keyboard proxy...\n" << std::flush;
-   return addChunkFile( "./Chunks/sim.wandkeyboardproxy02.config" );
+   return addChunkFile( mPath + "sim.wandkeyboardproxy02.config" );
 }
 
 bool reconfigApp::addKeyboardProxy_check()
@@ -1660,7 +1667,7 @@ bool reconfigApp::addKeyboardProxy_check()
 bool reconfigApp::reconfigKeyboardProxy_exec()
 {
    std::cout << "Beginning test for reconfiguring a keyboard proxy...\n" << std::flush;
-   return swapChunkFiles( "./Chunks/sim.wandkeyboardproxy02.config", "./Chunks/sim.wandkeyboardproxy02.reconfig.config");
+   return swapChunkFiles( mPath + "sim.wandkeyboardproxy02.config", mPath + "sim.wandkeyboardproxy02.reconfig.config");
 }
 
 bool reconfigApp::reconfigKeyboardProxy_check()
@@ -1672,7 +1679,7 @@ bool reconfigApp::reconfigKeyboardProxy_check()
 bool reconfigApp::removeKeyboardProxy_exec()
 {
    std::cout << "Beginning test for removing a keyboard proxy...\n" << std::flush;
-   return removeChunkFile( "./Chunks/sim.wandkeyboardproxy02.reconfig.config" );
+   return removeChunkFile( mPath + "sim.wandkeyboardproxy02.reconfig.config" );
 }
 
 bool reconfigApp::removeKeyboardProxy_check()

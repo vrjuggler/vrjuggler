@@ -84,6 +84,7 @@ public:
 
 //UTILITIES
 
+   void setPath( std::string path );
    bool addChunkFile( std::string filename );
    bool removeChunkFile( std::string filename );
    bool swapChunkFiles( std::string remove_file, std::string add_file );
@@ -234,6 +235,7 @@ private:
    bool mFinished;
 
    //Chunk loading items
+   std::string mPath;
    jccl::ConfigChunkDB* mNewChunkDB;
 
    void initGLState();
