@@ -8,12 +8,15 @@
 
 int main(int argc, char* argv[])
 {
-    std::cout<<"osgInit begin\n";
+    std::cout << "osgInit begin\n";
+
     OSG::osgInit(argc,argv);
     OpenSGNav::OSG_MAIN_ASPECT_ID = OSG::Thread::getAspect();
-    std::cout<<"osgInit end\n";
+    std::cout << "osgInit end\n";
+
     vrj::Kernel* kernel = vrj::Kernel::instance();
-    std::cout<<"vjKernel instantiated\n";
+    std::cout << "vjKernel instantiated\n";
+
     OpenSGNav* application = new OpenSGNav(kernel);
 
     if (argc <= 2)
@@ -30,7 +33,6 @@ int main(int argc, char* argv[])
 
     application->setModelFileName(std::string(argv[1]));
 
-    std::cout<<"inp man: "<<kernel->getInputManager()<<"\n";
     // Load any config files specified on the command line
     std::cout<<"loading config files\n";
     for(int i=2;i<argc;i++)
@@ -40,10 +42,7 @@ int main(int argc, char* argv[])
 
     kernel->setApplication(application);
 
-    printf("entering infinite while\n");
-    while(1)
-    {
-        usleep(250000);
-    }
-    return (1);
+    kernel->waitForKernelStop();
+
+    return 1;
 }

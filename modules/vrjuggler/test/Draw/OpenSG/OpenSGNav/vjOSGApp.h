@@ -14,12 +14,15 @@
 
 #include <vrj/Draw/OGL/GlApp.h>
 
-class /*VJ_CLASS_API*/ vjOSGApp : public vrj::GlApp
+namespace vrj
+{
+
+class /*VJ_CLASS_API*/ OpenSGApp : public vrj::GlApp
 {
   public:
-    vjOSGApp(vrj::Kernel* kern) : GlApp(kern) { }
+    OpenSGApp(vrj::Kernel* kern) : GlApp(kern) { }
 
-    virtual ~vjOSGApp() { }
+    virtual ~OpenSGApp() { }
 
     virtual void initScene() = 0;
     virtual OSG::RenderAction * getAction() = 0;
@@ -31,9 +34,10 @@ class /*VJ_CLASS_API*/ vjOSGApp : public vrj::GlApp
     virtual void init()
     {
         std::cout << "vjOSGApp::init called\n";
-        initScene();
+        // initScene();
     }
 
+    /*
     virtual void contextInit()    { }
 
     virtual void contextClose()   { }
@@ -43,16 +47,23 @@ class /*VJ_CLASS_API*/ vjOSGApp : public vrj::GlApp
     virtual void bufferPreDraw()  { }
 
     virtual void pipePreDraw()    { }
+    */
 
   protected:
     OSG::PassiveWindowPtr            _win; //the renderer!!!
 
 };
 
-inline void vjOSGApp::draw()
+inline void OpenSGApp::draw()
 {
+   std::cout << "vjOSGApp::draw called\n";
+
+    /*
     std::cout << "vjOSGApp::draw called\n";
     _win->render(getAction());
+    */
 }
+
+};
 
 #endif
