@@ -25,19 +25,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_NET_GMTL_FUNCTIONS_H_
-#define _VRJ_NET_GMTL_FUNCTIONS_H_
+#ifndef _VRJ_NET_GMTL_SPHERE_OPS_H_
+#define _VRJ_NET_GMTL_SPHERE_OPS_H_
 
-#include <gmtl-AABoxOps.h>
-#include <gmtl-AxisAngleOps.h>
-#include <gmtl-CoordOps.h>
-#include <gmtl-EulerAngleOps.h>
-#include <gmtl-LineSegOps.h>
-#include <gmtl-MatrixOps.h>
-#include <gmtl-PlaneOps.h>
-#include <gmtl-QuatOps.h>
-#include <gmtl-SphereOps.h>
-#include <gmtl-TriOps.h>
-#include <gmtl-VecOps.h>
+#include <gmtl/Sphere.h>
+#include <gmtl/SphereOps.h>
 
-#endif /* _VRJ_NET_GMTL_FUNCTIONS_H_ */
+
+namespace gmtl
+{
+   template bool isEqual(const gmtl::Spheref&, const gmtl::Spheref&,
+                         const float&);
+   template bool isEqual(const gmtl::Sphered&, const gmtl::Sphered&,
+                         const double&);
+}
+
+
+#endif /* _VRJ_NET_GMTL_SPHERE_OPS_H_ */

@@ -25,19 +25,25 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_NET_GMTL_FUNCTIONS_H_
-#define _VRJ_NET_GMTL_FUNCTIONS_H_
+#ifndef _VRJ_NET_GMTL_LINE_SEG_OPS_H_
+#define _VRJ_NET_GMTL_LINE_SEG_OPS_H_
 
-#include <gmtl-AABoxOps.h>
-#include <gmtl-AxisAngleOps.h>
-#include <gmtl-CoordOps.h>
-#include <gmtl-EulerAngleOps.h>
-#include <gmtl-LineSegOps.h>
-#include <gmtl-MatrixOps.h>
-#include <gmtl-PlaneOps.h>
-#include <gmtl-QuatOps.h>
-#include <gmtl-SphereOps.h>
-#include <gmtl-TriOps.h>
-#include <gmtl-VecOps.h>
+#include <gmtl/LineSeg.h>
+#include <gmtl/LineSegOps.h>
 
-#endif /* _VRJ_NET_GMTL_FUNCTIONS_H_ */
+
+namespace gmtl
+{
+   template float distanceSquared(const gmtl::LineSegf&, const gmtl::Point3f&);
+   template double distanceSquared(const gmtl::LineSegd&, const gmtl::Point3d&);
+
+   template gmtl::Point3f findNearestPt(const gmtl::LineSegf&,
+                                        const gmtl::Point3f&);
+   template gmtl::Point3d findNearestPt(const gmtl::LineSegd&,
+                                        const gmtl::Point3d&);
+
+   template float distance(const gmtl::LineSegf&, const gmtl::Point3f&);
+   template double distance(const gmtl::LineSegd&, const gmtl::Point3d&);
+}
+
+#endif /* _VRJ_NET_GMTL_LINE_SEG_OPS_H_ */
