@@ -98,7 +98,10 @@ public class ConfigContextEditor
                {
                   mElementPropSheet.finalize();
                }
-               
+
+               ConfigDefinition def = elt.getDefinition();
+               mElementTypeLabel.setText(def.getName() + " <" +
+                                         def.getToken() + ">");
                mElementPropSheet =
                   PropertySheetFactory.instance().makeSheet(elt, start_color);
                mElementPropSheetScrollPane.getViewport().removeAll();
@@ -219,11 +222,24 @@ public class ConfigContextEditor
       mBaseSplitPane.add(treePane, JSplitPane.LEFT);
       mBaseSplitPane.add(propsSplitPane, JSplitPane.RIGHT);
 
+      mElementTypeLabel.setBackground(UIManager.getColor("textHighlight"));
+      mElementTypeLabel.setFont(new java.awt.Font("SansSerif",
+                                                  java.awt.Font.BOLD, 14));
+      mElementTypeLabel.setForeground(Color.black);
+      mElementTypeLabel.setBorder(BorderFactory.createRaisedBevelBorder());
+      mElementTypeLabel.setOpaque(true);
+      mElementTypeLabel.setHorizontalAlignment(SwingConstants.LEFT);
+
+      mElementPropSheetPanel.setLayout(mElementPropSheetLayout);
+      mElementPropSheetPanel.add(mElementTypeLabel, BorderLayout.NORTH);
+      mElementPropSheetPanel.add(mElementPropSheetScrollPane,
+                                 BorderLayout.CENTER);
+
       propsSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
       propsSplitPane.setOneTouchExpandable(true);
-     
+
       helpScrollPane.setViewportView(helpPane);
-      propsSplitPane.add(mElementPropSheetScrollPane, JSplitPane.TOP);
+      propsSplitPane.add(mElementPropSheetPanel, JSplitPane.TOP);
       propsSplitPane.add(helpScrollPane, JSplitPane.BOTTOM);
       
       mElementPropSheetScrollPane.getViewport().add(mElementPropSheet, null);
@@ -342,6 +358,9 @@ public class ConfigContextEditor
    private JSplitPane mBaseSplitPane = new JSplitPane();
    private JScrollPane mElementTreeScrollPane = new JScrollPane();
    private ElementTree mElementTree = new ElementTree();
+   private JLabel mElementTypeLabel = new JLabel();
+   private JPanel mElementPropSheetPanel = new JPanel();
+   private BorderLayout mElementPropSheetLayout = new BorderLayout();
    private JScrollPane mElementPropSheetScrollPane = new JScrollPane();
 
    // CustomEditor stuff
