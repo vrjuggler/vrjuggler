@@ -87,6 +87,7 @@ public class DisplayWindowStartDialog
       {
          jbInit();
          setupButtonPanel();
+         addResources(ctx);
 
          setSpinnerModel(mRedDepthSpinner, 1, 1, 8);
          setSpinnerModel(mGreenDepthSpinner, 1, 1, 8);
@@ -138,6 +139,10 @@ public class DisplayWindowStartDialog
       {
          jbInit();
          setupButtonPanel();
+         addResources(ctx);
+
+         mResourceLabel.setEnabled(false);
+         mResourceChooser.setEnabled(false);
 
          mNameField.setText(winElt.getName());
 
@@ -199,6 +204,12 @@ public class DisplayWindowStartDialog
       return status;
    }
 
+   public DataSource getResource()
+   {
+      String resource_name = (String) mResourceChooser.getSelectedItem();
+      return (new ConfigBrokerProxy()).get(resource_name);
+   }
+
    public String getDisplayWindowTitle()
    {
       return mNameField.getText();
@@ -206,10 +217,10 @@ public class DisplayWindowStartDialog
 
    public Rectangle getDisplayWindowBounds()
    {
-      int x = ((Integer) mPositionXField.getValue()).intValue();
-      int y = ((Integer) mPositionYField.getValue()).intValue();
-      int width = ((Integer) mWidthField.getValue()).intValue();
-      int height = ((Integer) mHeightField.getValue()).intValue();
+      int x = ((Number) mPositionXField.getValue()).intValue();
+      int y = ((Number) mPositionYField.getValue()).intValue();
+      int width = ((Number) mWidthField.getValue()).intValue();
+      int height = ((Number) mHeightField.getValue()).intValue();
       return new Rectangle(x, y, width, height);
    }
 
@@ -299,13 +310,15 @@ public class DisplayWindowStartDialog
       //    0 -> panel start
       //    1 -> window name label
       //    2 -> spacer between window name label and window name field
-      //    3 -> window name field
-      //    4 -> panel end
+      //    3 -> window name field start, lame space for mResourceChooser
+      //    4 -> window name field end
+      //    5 -> panel end
       double[][] main_size =
          {
-            {5, TableLayout.MINIMUM, 5, TableLayout.FILL, 5},
+            {5, TableLayout.MINIMUM, 5, 300, TableLayout.FILL, 5},
             {TableLayout.PREFERRED, TableLayout.PREFERRED,
-             TableLayout.PREFERRED, TableLayout.PREFERRED}
+             TableLayout.PREFERRED, TableLayout.PREFERRED,
+             TableLayout.PREFERRED}
          };
       mMainLayout = new TableLayout(main_size);
 
@@ -370,6 +383,9 @@ public class DisplayWindowStartDialog
          new EtchedBorder(EtchedBorder.RAISED, Color.white,
                           new Color(142, 142, 142));
       mMainPanel.setLayout(mMainLayout);
+      mResourceLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mResourceLabel.setLabelFor(mResourceChooser);
+      mResourceLabel.setText("Resource");
       mNameLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mNameLabel.setLabelFor(mNameField);
       mNameLabel.setText("Window Name");
@@ -586,24 +602,32 @@ public class DisplayWindowStartDialog
                             new TableLayoutConstraints(5, 5, 5, 5,
                                                        TableLayoutConstraints.LEFT,
                                                        TableLayoutConstraints.CENTER));
-      mMainPanel.add(mNameLabel,
+      mMainPanel.add(mResourceLabel,
                      new TableLayoutConstraints(1, 0, 1, 0,
                                                 TableLayout.RIGHT,
                                                 TableLayout.CENTER));
-      mMainPanel.add(mNameField,
+      mMainPanel.add(mResourceChooser,
                      new TableLayoutConstraints(3, 0, 3, 0,
+                                                TableLayout.LEFT,
+                                                TableLayout.CENTER));
+      mMainPanel.add(mNameLabel,
+                     new TableLayoutConstraints(1, 1, 1, 1,
+                                                TableLayout.RIGHT,
+                                                TableLayout.CENTER));
+      mMainPanel.add(mNameField,
+                     new TableLayoutConstraints(3, 1, 4, 1,
                                                 TableLayout.FULL,
                                                 TableLayout.CENTER));
       mMainPanel.add(mBoundsPanel,
-                     new TableLayoutConstraints(0, 1, 4, 1,
+                     new TableLayoutConstraints(0, 2, 5, 2,
                                                 TableLayout.FULL,
                                                 TableLayout.FULL));
       mMainPanel.add(mFrameBufferPanel,
-                     new TableLayoutConstraints(0, 2, 4, 2,
+                     new TableLayoutConstraints(0, 3, 5, 3,
                                                 TableLayout.FULL,
                                                 TableLayout.FULL));
       mMainPanel.add(mWindowPropsPanel,
-                     new TableLayoutConstraints(0, 3, 4, 3,
+                     new TableLayoutConstraints(0, 4, 5, 4,
                                                 TableLayout.FULL,
                                                 TableLayout.FULL));
       this.getContentPane().add(mButtonPanel, BorderLayout.SOUTH);
@@ -627,12 +651,23 @@ public class DisplayWindowStartDialog
       }
    }
 
+   private void addResources(ConfigContext ctx)
+   {
+      for ( java.util.Iterator i = ctx.getResources().iterator();
+            i.hasNext(); )
+      {
+         mResourceChooser.addItem(i.next());
+      }
+   }
+
    private int status = CANCEL_OPTION;
    private ConfigElement mWinElement = null;
    private Dimension mResolution = null;
 
    private JPanel mMainPanel = new JPanel();
    private TableLayout mMainLayout = null;
+   private JLabel mResourceLabel = new JLabel();
+   private JComboBox mResourceChooser = new JComboBox();
    private JLabel mNameLabel = new JLabel();
    private JTextField mNameField = new JTextField();
    private JPanel mBoundsPanel = new JPanel();
