@@ -178,13 +178,9 @@ int vjGlxWindow::open() {
    return true;
 }
 
-
+//: Closes the window given
+//! NOTE: this function mucks with the current rendering context */
 int vjGlxWindow::close() {
-   /* closes the window.
-    * always returns true
-    */
-   /* note: this function mucks with the current rendering context */
-
    if (!window_is_open)
       return true;
 

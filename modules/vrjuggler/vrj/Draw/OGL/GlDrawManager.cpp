@@ -155,9 +155,10 @@ void vjGlDrawManager::initDrawing()
 //+      We will most likely be waiting for a render trigger.
 void vjGlDrawManager::addDisplay(vjDisplay* disp)
 {
+   vjASSERT(disp != NULL);    // Can't add a null display
 //**//   vjGuard<vjSemaphore> runtime_guard(mRuntimeConfigSema);     // Have to hold to configure
 
-   vjDEBUG(vjDBG_DRAW_MGR,0) << "vjGlDrawManager:addDisplay\n" << *disp << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,0) << "vjGlDrawManager:addDisplay: " << disp << endl << vjDEBUG_FLUSH;
 
    //	-- Create a window for new display
    //	-- Store the window in the wins vector
@@ -449,7 +450,7 @@ void vjGlDrawManager::outStream(ostream& out)
 
     for(std::vector<vjGlWindow*>::iterator i = wins.begin(); i != wins.end(); i++)
     {
-	   out << "\n\t\tvjGlWindow:\n" << *(*i) << endl;
+	   out << "\n\t\tvjGlWindow:\n" << (*i) << endl;
     }
     out << "=======================================" << endl;
 }

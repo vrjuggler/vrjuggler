@@ -13,11 +13,26 @@
 class vjKeyboardInterface : public vjDeviceInterface
 {
 public:
+   vjKeyboardInterface() : mKeyProxy(NULL)
+   {;}
+
    vjKeyboardProxy* operator->()
-   { return vjKernel::instance()->getInputManager()->GetKeyboardProxy(mProxyIndex); }
+   { return mKeyProxy; }
 
    vjKeyboardProxy& operator*()
-   { return *(vjKernel::instance()->getInputManager()->GetKeyboardProxy(mProxyIndex)); }
+   { return *(mKeyProxy); }
+
+   virtual void refresh()
+   {
+      vjDeviceInterface::refresh();
+      if(mProxyIndex != -1)
+         mKeyProxy = vjKernel::instance()->getInputManager()->GetKeyboardProxy(mProxyIndex);
+      else
+         mKeyProxy = NULL;
+   }
+
+private:
+   vjKeyboardProxy* mKeyProxy;     // The proxy that is being wrapped
 };
 
 #endif

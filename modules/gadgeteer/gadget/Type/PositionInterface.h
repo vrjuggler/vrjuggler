@@ -11,8 +11,16 @@
 class vjPosInterface : public vjDeviceInterface
 {
 public:
+   vjPosInterface() : mPosProxy(NULL)
+   {;}
+
    vjPosProxy* operator->();
    vjPosProxy& operator*();
+
+   virtual void refresh();
+
+private:
+   vjPosProxy* mPosProxy;     // The proxy that is being wrapped
 };
 
 #endif
