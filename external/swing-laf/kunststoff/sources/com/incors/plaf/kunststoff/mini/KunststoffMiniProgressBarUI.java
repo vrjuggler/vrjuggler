@@ -23,6 +23,20 @@ public class KunststoffMiniProgressBarUI extends BasicProgressBarUI
    // Creates the UI
    public static ComponentUI createUI(JComponent x)
    {
+      JProgressBar prog_bar = (JProgressBar) x;
+      Dimension pref_size = prog_bar.getPreferredSize();
+
+      if ( prog_bar.getOrientation() == JProgressBar.HORIZONTAL )
+      {
+         pref_size.height = 8;
+      }
+      else
+      {
+         pref_size.width = 8;
+      }
+
+      prog_bar.setPreferredSize(pref_size);
+
       return new KunststoffMiniProgressBarUI();
    }
 
