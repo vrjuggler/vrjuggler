@@ -254,12 +254,61 @@ private:
    {
       ImplSoundInfo()
       {
+         this->init();
       }
+      
+      void init()
+      {
+         syn::InstrumentModule* i = new syn::InstrumentModule;
+         inst = syn::ModulePtr( i );
+         
+         syn::ModulePtr source = syn::ModulePtr( new syn::WaveTableOscModule );
+         syn::ModulePtr velocity = syn::ModulePtr( new syn::MultModule );
+         syn::ModulePtr filter = syn::ModulePtr( new syn::FilterModule );
+         source->setInstanceName( "source" );
+         velocity->setInstanceName( "velocity" );
+         filter->setInstanceName( "filter" );
+         
+         // connect them like so...
+         // source --> gain --> filter -->
+         syn::TerminalPtr output, input;
+         result = source->getOutput( "mono audio", output );
+         result = velocity->getInput( "mono audio0", input );
+         syn::Terminal::connect( input, output );
+
+         result = velocity->getOutput( "mono audio", input );
+         result = filter->getInput( "mono audio", input );
+         syn::Terminal::connect( input, output );
+         
+         inst->addModule( source );
+         inst->addModule( velocity );
+         inst->addModule( filter );
+
+         // these are the params we care about
+         inst->exposeParam( "freq", source, "freq" );
+         inst->exposeParam( "loop", source, "loop" );
+         inst->exposeParam( "samplebased", source, "samplebased" );
+         inst->exposeParam( "basefreq", source, "basefreq" );
+         inst->exposeParam( "retrig", source, "retrig" );
+         inst->exposeParam( "interp", source, "interp" );
+         inst->exposeParam( "freqcontrol", source, "freqcontrol" );
+         inst->exposeParam( "trigger", source, "trigger" );
+         inst->exposeParam( "release", source, "release" );
+         inst->exposeParam( "filename", source, "filename" );
+         inst->exposeParam( "velocity", velocity, "constant" );
+         inst->exposeParam( "cutoff", filter, "cutoff" );
+         inst->exposeParam( "cutoffLo", filter, "cutoffLo" );
+         inst->exposeParam( "cutoffHi", filter, "cutoffHi" );
+         inst->exposeOutput( "mono audio", filter, "mono audio" );
+      }
+
+      syn::ModulePtr inst;
    };
    std::map< std::string, ImplSoundInfo > mBindLookup;
 
    syn::ModulePtr mSink;
-   
+   void reschedule();
+
    /** @link dependency */
    /*#  snx::SoundAPIInfo lnksnx::SoundAPIInfo; */
 };
