@@ -7,40 +7,43 @@ import java.util.Vector;
 
 public class ListBoxModel implements ComboBoxModel  {
 
-  Vector v;
-  Object selected;
+    Vector v;
+    Object selected;
 
-  ListBoxModel() {
-    v = new Vector();
-    selected = null;
-  }
+    ListBoxModel() {
+	v = new Vector();
+	selected = null;
+    }
 
-  public void addObject (Object a) {
-    v.addElement(a);
-  }
+    public void addObject (Object a) {
+	v.addElement(a);
+    }
 
-  public Object getSelectedItem() {
-    return selected;
-  }
+    public Object getSelectedItem() {
+	return selected;
+    }
 
-  public void setSelectedItem (Object s) {
-    selected = s;
-  }
+    public void setSelectedItem (Object s) {
+	if (((String)s).equals(""))
+	    selected = "<No Selection>";
+	else
+	    selected = s;
+    }
+    
+    public void addListDataListener (ListDataListener l) {
+	//System.out.println ("addListDataListener not implemented yet");
+    }
 
-  public void addListDataListener (ListDataListener l) {
-    //System.out.println ("addListDataListener not implemented yet");
-  }
+    public Object getElementAt (int i) {
+	return v.elementAt(i);
+    }
 
-  public Object getElementAt (int i) {
-    return v.elementAt(i);
-  }
-
-  public int getSize() {
-    return v.size();
-  }
-
-  public void removeListDataListener (ListDataListener l) {
-  }
+    public int getSize() {
+	return v.size();
+    }
+    
+    public void removeListDataListener (ListDataListener l) {
+    }
 
 }
 
