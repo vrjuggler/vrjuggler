@@ -43,40 +43,29 @@
 const size_t sockstreambuf::BUFSIZE = 128;
 
 
-sockstreambuf::sockstreambuf (int _sock/*, char* c, int l*/):streambuf() {
+sockstreambuf::sockstreambuf (int _sock): streambuf() {
     sock = _sock;
-    buf = 0;
-    allocate();
-}
-
-
-sockstreambuf::sockstreambuf ():streambuf() {
-    sock = -1;
-}
-
-
-int sockstreambuf::doallocate (){
-    // return 1 on allocation and 0 if there is no need
-    
-    //          if (!base ()) {
-    buf = new char[2*BUFSIZE];  //allocate a buffer
-    setb (buf, buf+BUFSIZE, 0);       //set the reserve area
+    buf = new char[2*BUFSIZE +2];  //allocate a buffer
     setg (buf, buf, buf);            //set the get area
-    //              setg (buf, buf+BUFSIZE, buf+BUFSIZE);
-    
-    //buf += BUFSIZE;
     setp (buf+BUFSIZE, buf+2*BUFSIZE);          //set the put area
-    return 1;
-    //         }
-    //          return 0;
+
+
 }
+
+
+sockstreambuf::sockstreambuf (): streambuf() {
+    sock = -1;
+    buf = new char[2*BUFSIZE +2];  //allocate a buffer
+    setg (buf, buf, buf);            //set the get area
+    setp (buf+BUFSIZE, buf+2*BUFSIZE);          //set the put area
+}
+
 
 
 int sockstreambuf::overflow (int c) {
     //cout << "overflow: pbase is " << (int)pbase() << " and msg size is " << (int)(pptr()-pbase()) << endl;
     
     send (sock, pbase(), pptr()-pbase(), 0);
-    //setp (pbase(), epptr());
     setp (buf+BUFSIZE, buf+2*BUFSIZE);          //set the put area
     if (c != EOF)
         sputc(c);
@@ -95,11 +84,11 @@ int sockstreambuf::underflow () {
         return c;
     }
     else {
-        int nread = recv (sock, base(), BUFSIZE, 0);
+        int nread = recv (sock, /*base()*/eback(), BUFSIZE, 0);
         //cout << "nread = " << nread << endl;
         if (nread > 0) {
-            setg (base(), base(), base()+nread);
-            return *base();
+            setg (eback(), eback(), eback()+nread/*base(), base(), base()+nread*/);
+            return *eback()/**base()*/;
         }
         else {
             setg (buf, buf, buf);
