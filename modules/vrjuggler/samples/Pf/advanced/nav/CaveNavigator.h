@@ -46,7 +46,7 @@
 //  The matrix is in the OpenGL form,
 //  For performer, convert this matrix,
 //  and copy it to a DCS node once per frame as well.
-class CaveNavigator : public vjMatrix
+class CaveNavigator : public Matrix
 {
 public:
    CaveNavigator();
@@ -95,7 +95,7 @@ public:
    }
 
    //: tell the navigator the matrix that reset() uses as it's origin.
-   virtual void setOrigin( const vjMatrix& matrix )
+   virtual void setOrigin( const Matrix& matrix )
    {
       mVNav.setOrigin( matrix );
    }
@@ -128,8 +128,8 @@ public:
 
    //: tell the navigator what the pointing device's matrix is.
    //  you can usually do this to get that matrix
-   //  vjMatrix* wand_mat = mWand->getData();
-   virtual void setMatrix( const vjMatrix& matrix )
+   //  Matrix* wand_mat = mWand->getData();
+   virtual void setMatrix( const Matrix& matrix )
    {
       mDeviceMatrix = matrix;
    }
@@ -138,7 +138,7 @@ private:
    velocityNav          mVNav;      // My navigator
 
 protected:
-   vjMatrix mDeviceMatrix;
+   Matrix mDeviceMatrix;
    bool     mNowAccelerating;
    bool     mNowRotating;
    bool     mNowStopping;
@@ -149,7 +149,7 @@ protected:
 
 
 
-CaveNavigator::CaveNavigator() : vjMatrix(), mNowReversing(false), mNowStopping(false), mNowAccelerating( false ), mNowRotating( false )
+CaveNavigator::CaveNavigator() : Matrix(), mNowReversing(false), mNowStopping(false), mNowAccelerating( false ), mNowRotating( false )
 {
    mVNav.setRotAxis(false, true, false);
    this->setGravity( ON );
@@ -164,7 +164,7 @@ int CaveNavigator::update()
    if (true == mNowAccelerating)
    {
       // magic number!  acceleration of 10 units per second
-      mVNav.accelerate( vjVec3(0,0,-10.0f) );
+      mVNav.accelerate( Vec3(0,0,-10.0f) );
    }
 
    if (true == mNowStopping)
@@ -196,9 +196,9 @@ int CaveNavigator::update()
    }
 
    // Set the matrix to the navigation matrix
-   vjMatrix cur_pos,world_pos;
+   Matrix cur_pos,world_pos;
    cur_pos = mVNav.getCurPos();  // Invert because we want to move the world
-   //cerr << "Set Pos: " << vjCoord(cur_pos).pos << endl;
+   //cerr << "Set Pos: " << Coord(cur_pos).pos << endl;
    world_pos.invert( cur_pos );
    this->copy( world_pos );
 

@@ -44,7 +44,7 @@
 
 int main(int argc, char* argv[])
 {
-   vjKernel* kernel = vjKernel::instance();           // Get the kernel
+   Kernel* kernel = Kernel::instance();           // Get the kernel
    wandApp* application = new wandApp(kernel);       // Instantiate an instance of the app
 
    if (argc <= 1)

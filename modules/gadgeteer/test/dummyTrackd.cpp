@@ -149,7 +149,7 @@ void initController()
 }
 
 
-void getTimeStamp(uint32_t stamp[2])
+void getTimeStaMp(uint32_t stamp[2])
 {
  struct timeval curtime;
  gettimeofday(&curtime,NULL);
@@ -272,11 +272,11 @@ main(int argc,char **argv)
    while (1)
    {
       setNewTrackerData(numSensors);
-      getTimeStamp(tracker->header.timestamp);
+      getTimeStaMp(tracker->header.timestamp);
 
       if (get_new_controller_data(numButtons,numValuators))
       {
-         getTimeStamp(controller->header.timestamp);
+         getTimeStaMp(controller->header.timestamp);
       }
       usleep(100);
    }

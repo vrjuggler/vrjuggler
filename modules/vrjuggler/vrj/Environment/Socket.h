@@ -37,27 +37,31 @@
 #include <vjConfig.h>
 #include <iostream>
 #include <vpr/IO/Socket/Socket.h>
+
+namespace vrj
+{
+
+
 #ifndef VJ_OS_Win32
 
+typedef int SocketIDPosix;
+extern const int SOCKID_INVALID;
 
-typedef int vjSocketIDPosix;
-extern const int vjSOCKID_INVALID;
-
-class vjSocketPosix {
+class SocketPosix {
 
 private:
 
     std::ostream* out;
     std::istream* in;
-    vjSocketIDPosix sockid;
+    SocketIDPosix sockid;
 
 public:
 
-    vjSocketPosix();
+    SocketPosix();
     
-    vjSocketPosix(vjSocketIDPosix id);
+    SocketPosix(SocketIDPosix id);
 
-    ~vjSocketPosix ();
+    ~SocketPosix ();
 
 //    std::string getName ();
     int getID () {
@@ -71,7 +75,7 @@ public:
 
 
     // must be called after listen
-    vjSocketPosix* accept ();
+    SocketPosix* accept ();
 
     inline std::ostream* getOutputStream () {
         return out;
@@ -84,8 +88,8 @@ public:
 };
 
 
-typedef vjSocketPosix vjSocket;
-typedef vjSocketIDPosix vjSocketID;
+typedef SocketPosix Socket;
+typedef SocketIDPosix SocketID;
 
 
 #else
@@ -95,24 +99,24 @@ typedef vjSocketIDPosix vjSocketID;
 #include <winsock2.h>
 //#include <Environment/sockstream.h>
 
-typedef SOCKET vjSocketIDWin32;
-extern const int vjSOCKID_INVALID;
+typedef SOCKET SocketIDWin32;
+extern const int SOCKID_INVALID;
 
-class VJ_CLASS_API vjSocketWin32 {
+class VJ_CLASS_API SocketWin32 {
 
 private:
 
     std::ostream* out;
     std::istream* in;
-    vjSocketIDWin32 sockid;
+    SocketIDWin32 sockid;
 
 public:
 
-    vjSocketWin32();
+    SocketWin32();
 
-    vjSocketWin32(vjSocketIDWin32& id);
+    SocketWin32(SocketIDWin32& id);
 
-    ~vjSocketWin32 ();
+    ~SocketWin32 ();
 
 	int getID () {
 		return (int)sockid;
@@ -123,7 +127,7 @@ public:
     bool listen (int port);
 
     // must be called after listen
-    vjSocketWin32* accept ();
+    SocketWin32* accept ();
 
 
     inline std::ostream* getOutputStream () {
@@ -137,11 +141,12 @@ public:
 };
 
 
-typedef vjSocketWin32 vjSocket;
-typedef vjSocketIDWin32 vjSocketID;
+typedef SocketWin32 Socket;
+typedef SocketIDWin32 SocketID;
+
 
 
 #endif //ifndef VJ_OS_Win32
-
+};
 #endif
 

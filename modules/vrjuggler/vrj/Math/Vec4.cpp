@@ -34,7 +34,10 @@
 #include <vjConfig.h>
 #include <Math/vjVec4.h>
 
-void vjVec4::xform(const vjMatrix& _m, vjVec4 _v)
+namespace vrj
+{
+   
+void Vec4::xform(const Matrix& _m, Vec4 _v)
 {
 	// Take _v by value in case it is me
 	// Treating Vector like a column vector
@@ -48,21 +51,21 @@ void vjVec4::xform(const vjMatrix& _m, vjVec4 _v)
 		   vec[j] += (_v[k] * _m[k][j]);
 }
 
-inline vjVec4 operator *(float _s, const vjVec4& _v) {
-    return vjVec4(_v[0]*_s, _v[1]*_s, _v[2]*_s, _v[3]*_s);
+inline Vec4 operator *(float _s, const Vec4& _v) {
+    return Vec4(_v[0]*_s, _v[1]*_s, _v[2]*_s, _v[3]*_s);
 }
 
-inline vjVec4 operator *(const vjVec4& _v, float _s) {
-    return vjVec4(_v[0]*_s, _v[1]*_s, _v[2]*_s, _v[3]*_s);
+inline Vec4 operator *(const Vec4& _v, float _s) {
+    return Vec4(_v[0]*_s, _v[1]*_s, _v[2]*_s, _v[3]*_s);
 }
 
-inline vjVec4 operator /(const vjVec4& _v, float _s) {
+inline Vec4 operator /(const Vec4& _v, float _s) {
     _s = 1.0f/_s;
-    return vjVec4(_v[0]*_s, _v[1]*_s, _v[2]*_s, _v[3]*_s);
+    return Vec4(_v[0]*_s, _v[1]*_s, _v[2]*_s, _v[3]*_s);
 }
 
 
-std::ostream& operator<<(std::ostream& out, vjVec4& _v)
+std::ostream& operator<<(std::ostream& out, Vec4& _v)
 {
     for(int j=0;j<4;j++)
     {
@@ -71,3 +74,6 @@ std::ostream& operator<<(std::ostream& out, vjVec4& _v)
 
     return out;	
 }
+
+
+};

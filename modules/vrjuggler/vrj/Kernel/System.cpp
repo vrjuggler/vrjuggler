@@ -35,5 +35,11 @@
 
 #include <Kernel/vjSystem.h>
 
-vpr::System* vpr::System::_instance = NULL;
-vjSharedPool* vpr::System::baseMemPool = NULL;
+
+namespace vrj
+{
+   vpr::System* vpr::System::_instance = NULL;
+SharedPool* vpr::System::baseMemPool = NULL;
+
+
+};

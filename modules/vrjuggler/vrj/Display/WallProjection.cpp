@@ -48,14 +48,17 @@
 
 #include <Config/vjConfigChunk.h>
 
+namespace vrj
+{
+   
 
 // Just call the base class constructor
-void vjWallProjection::config(vjConfigChunk* chunk)
+void WallProjection::config(ConfigChunk* chunk)
 {
-   vjASSERT( ((std::string)chunk->getType() == std::string("surfaceDisplay")) ||
+   vprASSERT( ((std::string)chunk->getType() == std::string("surfaceDisplay")) ||
              ((std::string)chunk->getType() == std::string("surfaceViewport")) );
 
-   vjProjection::config(chunk);        // Call base class config first
+   Projection::config(chunk);        // Call base class config first
 }
 
 //: Recalculate the projection matrix
@@ -68,12 +71,12 @@ void vjWallProjection::config(vjConfigChunk* chunk)
 //
 //! PRE: WallRotation matrix must be set correctly
 //! PRE: mOrigin*'s must all be set correctly
-void vjWallProjection::calcViewMatrix(vjMatrix& eyePos)
+void WallProjection::calcViewMatrix(Matrix& eyePos)
 {
    calcViewFrustum(eyePos);
 
-   vjCoord eye_coord(eyePos);
-   vjVec3   eye_pos;             // Non-xformed pos
+   Coord eye_coord(eyePos);
+   Vec3   eye_pos;             // Non-xformed pos
    eye_pos = eye_coord.pos;
 
    // Need to post translate to get the view matrix at the position of the eye
@@ -91,7 +94,7 @@ void vjWallProjection::calcViewMatrix(vjMatrix& eyePos)
 //
 //! PRE: WallRotation matrix must be set correctly
 //! PRE: mOrigin*'s must all be set correctly
-void vjWallProjection::calcViewFrustum(vjMatrix& eyePos)
+void WallProjection::calcViewFrustum(Matrix& eyePos)
 {
    float near_dist, far_dist;
    near_dist = mNearDist;
@@ -106,10 +109,10 @@ void vjWallProjection::calcViewFrustum(vjMatrix& eyePos)
    float n_eye_to_right, n_eye_to_left, n_eye_to_top, n_eye_to_bottom;
 
 
-   vjCoord eye_coord(eyePos);
-   vjVec3   eye_pos;             // Non-xformed pos
+   Coord eye_coord(eyePos);
+   Vec3   eye_pos;             // Non-xformed pos
    eye_pos = eye_coord.pos;
-   vjVec3   eye_xformed;         // Xformed position of eyes
+   Vec3   eye_xformed;         // Xformed position of eyes
 
    vjDEBUG(vjDBG_DISP_MGR,7)
       << "vjWallProjection::calcWallProjection:  Wall Proj:\n" << *this
@@ -155,11 +158,12 @@ void vjWallProjection::calcViewFrustum(vjMatrix& eyePos)
 }
 
 
-std::ostream& vjWallProjection::outStream(std::ostream& out)
+std::ostream& WallProjection::outStream(std::ostream& out)
 {
    out << "vjWallProjection: ";
 
-   return vjProjection::outStream(out);
+   return Projection::outStream(out);
 }
 
 
+};

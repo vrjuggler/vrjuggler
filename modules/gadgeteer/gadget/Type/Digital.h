@@ -41,26 +41,29 @@
 
 #include <vjConfig.h>
 
+namespace vrj
+{
+   
 //-----------------------------------------------------------------------------
-//: vjDigital is the abstract base class that devices with digital data derive
+//: Digital is the abstract base class that devices with digital data derive
 //+ from.
 //
-//  vjDigital is the base class that digital devices must derive from.
-//  vjDigital inherits from vjInput, so it has pure virtual function
-//  constraints from vjInput in the following functions: StartSampling,
+//  Digital is the base class that digital devices must derive from.
+//  Digital inherits from Input, so it has pure virtual function
+//  constraints from Input in the following functions: StartSampling,
 //  StopSampling, Sample, and UpdateData. <br>
-//  vjDigital adds one new pure virtual function, GetDigitalData for
-//  retreiving the digital data, similar to the addition for vjPosition and
-//  vjAnalog.
+//  Digital adds one new pure virtual function, GetDigitalData for
+//  retreiving the digital data, similar to the addition for Position and
+//  Analog.
 //
-// See also: vjInput
+// See also: Input
 //!PUBLIC_API:
 //-----------------------------------------------------------------------------
-class vjDigital
+class Digital
 {
 public:
    //: Enum for the state of the digital buttons
-   // Used in vjDigitalProxy
+   // Used in DigitalProxy
    enum State
    {
       OFF=0, ON=1, TOGGLE_ON=2, TOGGLE_OFF=3
@@ -68,18 +71,18 @@ public:
 
 public:
    /* Constructor/Destructors */
-   vjDigital()
+   Digital()
    {
-      //vjDEBUG(vjDBG_ALL,4)<<"*** vjDigital::vjDigital()\n"<< vjDEBUG_FLUSH;
+      //vjDEBUG(vjDBG_ALL,4)<<"*** Digital::Digital()\n"<< vjDEBUG_FLUSH;
    }
 
-   virtual ~vjDigital()
+   virtual ~Digital()
    {
    }
 
-   virtual bool config(vjConfigChunk* c)
+   virtual bool config(ConfigChunk* c)
    {
-      //vjDEBUG(vjDBG_ALL,4)<<"*** vjDigital::config()\n"<< vjDEBUG_FLUSH;
+      //vjDEBUG(vjDBG_ALL,4)<<"*** Digital::config()\n"<< vjDEBUG_FLUSH;
       return true;;
    }
 
@@ -89,6 +92,8 @@ public:
    //  NOTE: If devNum is out of range, function will fail, possibly issueing
    //  an error to a log or console - but will not ASSERT.<BR>
    virtual int getDigitalData(int devNum = 0) = 0;
+};
+
 };
 
 #endif   /* _VJ_DIGITAL_H_ */

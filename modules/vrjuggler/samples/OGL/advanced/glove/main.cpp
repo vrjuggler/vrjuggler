@@ -44,7 +44,7 @@
 
 int main(int argc, char* argv[])
 {
-   vjKernel* kernel = vjKernel::instance();           // Get the kernel
+   Kernel* kernel = Kernel::instance();           // Get the kernel
    gloveApp* application = new gloveApp(kernel);       // Declare an instance of the app
 
    // Load any config files specified on the command line

@@ -37,7 +37,11 @@
 
 #include <vjConfig.h>
 #include <Math/vjVec3.h>
-class vjMatrix;
+
+namespace vrj
+{
+   
+class Matrix;
 
 //---------------------------------------------------
 //: Spatial coordinate with position and orientation
@@ -46,21 +50,22 @@ class vjMatrix;
 // Orientation is XYZ Euler angles <br>
 //!PUBLIC_API:
 //---------------------------------------------------
-class VJ_CLASS_API vjCoord
+class VJ_CLASS_API Coord
 {
 public:
-   vjCoord()
+   Coord()
    {;}
 
    //: Construct from a matrix
    //! ARGS: mat - A matrix used to construct the coord
    //! POST: this is constructed with pos and orientation
    //+       specified by the matrix.
-   vjCoord(vjMatrix mat);
+   Coord(Matrix mat);
 
 public:
-   vjVec3   pos;        //: The position    - XYZ position
-   vjVec3   orient;     //: The orientation - XYZ Euler angles
+   Vec3   pos;        //: The position    - XYZ position
+   Vec3   orient;     //: The orientation - XYZ Euler angles
 };
 
+};
 #endif

@@ -34,14 +34,18 @@
 #include <vjConfig.h>
 #include <Kernel/vjDrawManager.h>
 #include <Kernel/vjDisplayManager.h>
-
-void vjDrawManager::setDisplayManager(vjDisplayManager* _dispMgr)
+namespace vrj
+{
+   
+void DrawManager::setDisplayManager(DisplayManager* _dispMgr)
 { mDisplayManager = _dispMgr; }
 
 
 VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out,
-                                       vjDrawManager& drawMgr)
+                                       DrawManager& drawMgr)
 {
    drawMgr.outStream(out);
    return out;
 }
+
+};

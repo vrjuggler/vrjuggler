@@ -44,20 +44,22 @@
 #include <Input/vjGlove/vjFinger.h>
 #include <Input/vjGlove/vjHand.h>
 
-
+namespace vrj
+{
+   
 //: Fakespace Pinchglove Device
 //!PUBLIC_API:
-class vjPinchGlove : virtual public vjInput, public vjGlove, public vjDigital
+class PinchGlove : virtual public Input, public Glove, public Digital
 {
 public:
    //: Construct
-   vjPinchGlove() : mGlove( NULL )
+   PinchGlove() : mGlove( NULL )
    {;}
 
    //: Destroy the glove
-   virtual ~vjPinchGlove();
+   virtual ~PinchGlove();
 
-   virtual bool config( vjConfigChunk* c );
+   virtual bool config( ConfigChunk* c );
 
    static std::string getChunkType() { return std::string("PinchGlove");}
 
@@ -74,8 +76,8 @@ public:
    //  0 == open, 1 == contact.
    //
    //  Use one of these indices to get the glove's digital data<BR>
-   //  EX: int result = mGlove.getDigitalData( vjPinchGlove::LTHUMB );
-   enum vjFinger
+   //  EX: int result = mGlove.getDigitalData( PinchGlove::LTHUMB );
+   enum Finger
    {
       LTHUMB = 0, LINDEX = 1, LMIDDLE = 2, LRING = 3, LPINKY = 4,
       RTHUMB = 6, RINDEX = 7, RMIDDLE = 8, RRING = 9, RPINKY = 10
@@ -93,8 +95,10 @@ protected:
    //vjThread*         mControlThread;      // The thread of control for the object
    fsPinchGlove*      mGlove;              // The actual glove
 
-   vjHand left, right;
+   Hand left, right;
 };
 
+
+};
 
 #endif   /* _VJ_PINCH_GLOVE_H_ */

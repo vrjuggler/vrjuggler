@@ -39,29 +39,32 @@
 //#include <iostream.h>
 //#include <string>
 
-class vjConnect;
+namespace vrj
+{
+   
+class Connect;
 
 //---------------------------------------------------------------
 //: Communications protocol handler for the Environment Manager.
 //  This design is based off of VjControl's 
-//  vjComponents/Network/NetCommunicator pluggable communications
+//  Components/Network/NetCommunicator pluggable communications
 //  interface.
 //
 // @author Christopher Just
 //---------------------------------------------------------------
-class vjNetCommunicator {
+class NetCommunicator {
 protected:
 
-    //: The vjConnect this communicator is servicing. Initially NULL.
-    vjConnect* connection;
+    //: The Connect this communicator is servicing. Initially NULL.
+    Connect* connection;
 
 public:
 
     //: Constructor
-    vjNetCommunicator ();
+    NetCommunicator ();
 
     //: Destructor
-    virtual ~vjNetCommunicator ();
+    virtual ~NetCommunicator ();
 
     //: Called when a new connection is established.
     //  Used to send any initial messages on a new connection.
@@ -72,7 +75,7 @@ public:
     //! PRE: _connection is open & valid for writing to; connection
     //+      is NULL.
     //! POST: true.
-    virtual void initConnection(vjConnect* _connection);
+    virtual void initConnection(Connect* _connection);
 
 
     //: Called when the connection is shut down.
@@ -94,7 +97,7 @@ public:
 
 
     //: Reads data from a communications stream.
-    //  This should only be called by the vjConnect object self is
+    //  This should only be called by the Connect object self is
     //  owned by.
     //  The Communicator should read data until it reaches the end of
     //  the protocol stream (signified by the character string
@@ -104,10 +107,11 @@ public:
     //! PRE: connection != NULL;
     //! RETURNS: true - if reading the protocol stream was succesful.
     //! RETURNS: false - if EOF or a fatal error occurs.  This will
-    //+                  kill the vjConnect.
+    //+                  kill the Connect.
     virtual bool readStream (std::istream& instream, const std::string& id);
 
 };
 
 
+};
 #endif

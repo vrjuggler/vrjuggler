@@ -39,7 +39,10 @@
 #include <Performer/pfutil.h>
 #include <pfMPStats.h>
 
-class vjPfAppStats
+namespace vrj
+{
+   
+class PfAppStats
 {
 public:
    enum statMode {
@@ -51,14 +54,14 @@ public:
    {
    public:
       statsSharedData()
-      { mDrawStatsMode = vjPfAppStats::NONE;}
+      { mDrawStatsMode = PfAppStats::NONE;}
 
       int mDrawStatsMode;              // Should we draw the stats
    };
 
 public:
    // Empty virtual destructor to make GCC happy.
-   virtual ~vjPfAppStats (void) {
+   virtual ~PfAppStats (void) {
       /* Do nothing. */ ;
    }
 
@@ -87,12 +90,12 @@ public:
    // Also updates MPStats if that is turned on
    void preFrame();
 
-   vjPfAppStats::statMode getStatsMode()
+   PfAppStats::statMode getStatsMode()
    { return mStatsMode; }
 
    // Set the new statistics mode
    // Must be called during preFrame() processing either by local preFrame or user's preFrame()
-   void setStatsMode(vjPfAppStats::statMode mode);
+   void setStatsMode(PfAppStats::statMode mode);
 
    void setToggleButton(std::string button_name)
    {
@@ -110,9 +113,9 @@ protected:  // -- Helper functions --- //
 
 private:
    // Stats info
-   vjDigitalInterface      mStatsButton;           // Button used to cycle the stats info
+   DigitalInterface      mStatsButton;           // Button used to cycle the stats info
    bool                    mStatsConfigChange;     // Has the stats stuff been change
-   vjPfAppStats::statMode  mStatsMode;             // The current stats mode
+   PfAppStats::statMode  mStatsMode;             // The current stats mode
    pfMPStats               mMPStats;               // The Multi-pipe stats
    statsSharedData*        mSharedData;            // The shared data
 
@@ -121,29 +124,29 @@ private:
 
 // Set the new statistics mode
 // Must be called during preFrame() processing either by local preFrame or user's preFrame()
-inline void vjPfAppStats::setStatsMode(vjPfAppStats::statMode mode)
+inline void PfAppStats::setStatsMode(PfAppStats::statMode mode)
 {
    mStatsConfigChange = true;
    mStatsMode = mode;
 
    switch(mode)
    {
-      case vjPfAppStats::NONE:
+      case PfAppStats::NONE:
          vjDEBUG(vjDBG_ALL,0) << "vjPfAppStats: Switching to NONE Stats mode.\n" << vjDEBUG_FLUSH;
          break;
-      case vjPfAppStats::FrameTime:
+      case PfAppStats::FrameTime:
          vjDEBUG(vjDBG_ALL,0) << "vjPfAppStats: Switching to FrameTime Stats mode.\n" << vjDEBUG_FLUSH;
          break;
-      case vjPfAppStats::Gfx:
+      case PfAppStats::Gfx:
          vjDEBUG(vjDBG_ALL,0) << "vjPfAppStats: Switching to Gfx Stats mode.\n" << vjDEBUG_FLUSH;
          break;
-      case vjPfAppStats::Pipe:
+      case PfAppStats::Pipe:
          vjDEBUG(vjDBG_ALL,0) << "vjPfAppStats: Switching to Pipe Stats mode.\n" << vjDEBUG_FLUSH;
          break;
-      case vjPfAppStats::MPipe:
+      case PfAppStats::MPipe:
          vjDEBUG(vjDBG_ALL,0) << "vjPfAppStats: Switching to MPipe Stats mode.\n" << vjDEBUG_FLUSH;
          break;
-      case vjPfAppStats::Fill:
+      case PfAppStats::Fill:
          vjDEBUG(vjDBG_ALL,0) << "vjPfAppStats: Switching to Fill Stats mode.\n" << vjDEBUG_FLUSH;
          break;
       default:
@@ -152,7 +155,7 @@ inline void vjPfAppStats::setStatsMode(vjPfAppStats::statMode mode)
    }
 
    // if it is MPStats, then we need to init
-   if(mStatsMode == vjPfAppStats::MPipe)
+   if(mStatsMode == PfAppStats::MPipe)
    {
       mMPStats.init(120,1);
       vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrGREEN,"--> MP Stats mode starting!")
@@ -162,28 +165,28 @@ inline void vjPfAppStats::setStatsMode(vjPfAppStats::statMode mode)
 
 //: Set the statistic info for the given channel
 // This function must be called from the app process
-inline void vjPfAppStats::setChanStatsState(pfChannel* chan)
+inline void PfAppStats::setChanStatsState(pfChannel* chan)
 {
    pfFrameStats* fstats = chan->getFStats();    // Get stats structure
 
-   if(mStatsMode == vjPfAppStats::MPipe)
+   if(mStatsMode == PfAppStats::MPipe)
    {
       /* Do Nothing */
    }
-   else if(mStatsMode != vjPfAppStats::NONE)
+   else if(mStatsMode != PfAppStats::NONE)
    {
       mSharedData->mDrawStatsMode = mStatsMode;        // We want to draw stats now
 
       int stats_enable(0);
 	  
       // Perfly stat modes
-      if(mStatsMode == vjPfAppStats::FrameTime)
+      if(mStatsMode == PfAppStats::FrameTime)
          stats_enable = PFFSTATS_ENPFTIMES;
-      if(mStatsMode == vjPfAppStats::Gfx)
+      if(mStatsMode == PfAppStats::Gfx)
          stats_enable = PFFSTATS_ENPFTIMES | PFSTATS_ENGFX | PFSTATS_ENTEXLOAD | PFFSTATS_ENDB | PFFSTATS_ENCULL;
-      if(mStatsMode == vjPfAppStats::Pipe)
+      if(mStatsMode == PfAppStats::Pipe)
          stats_enable = PFFSTATS_ENGFXPFTIMES;
-      if(mStatsMode == vjPfAppStats::Fill)
+      if(mStatsMode == PfAppStats::Fill)
          stats_enable = PFSTATSHW_ENGFXPIPE_FILL | PFFSTATS_ENPFTIMES;
 
 
@@ -215,7 +218,7 @@ inline void vjPfAppStats::setChanStatsState(pfChannel* chan)
    }
    else
    {
-      mSharedData->mDrawStatsMode = vjPfAppStats::NONE;
+      mSharedData->mDrawStatsMode = PfAppStats::NONE;
       chan->setStatsMode(PFCSTATS_DRAW,0);
       fstats->setClass(PFSTATS_ALL, PFSTATS_DEFAULT); // Set to default
       fstats->setClassMode(PFFSTATS_PFTIMES, PFFSTATS_PFTIMES_BASIC, PFSTATS_SET);   /* set the fast process timing stats */
@@ -226,18 +229,18 @@ inline void vjPfAppStats::setChanStatsState(pfChannel* chan)
 // Must be called in preForkInit
 // -Allocates the shared data buffer
 // -Initializes stats mode
-inline void vjPfAppStats::preForkInit()
+inline void PfAppStats::preForkInit()
 {
    // Allocate space for shared data buffer
    void* myAppDataBuffer = pfCalloc(1,sizeof(statsSharedData),pfGetSharedArena());
    mSharedData = new(myAppDataBuffer) statsSharedData();
 
-   setStatsMode(vjPfAppStats::NONE);
+   setStatsMode(PfAppStats::NONE);
 }
 
 // Must be called as part of postFrame
 // -Reset change trigger flag
-inline void vjPfAppStats::postFrame()
+inline void PfAppStats::postFrame()
 {
    if(mStatsConfigChange)        // We just updated this during previous frame
       mStatsConfigChange = false;
@@ -247,7 +250,7 @@ inline void vjPfAppStats::postFrame()
 // -Sets the stats state for each channel for next frame
 // Called immediately before draw (pfFrame()) for each channel
 // This tells the channel to collect stats
-inline void vjPfAppStats::appChanFunc(pfChannel* chan)
+inline void PfAppStats::appChanFunc(pfChannel* chan)
 {
    // Set the statistics collection state
    if(mStatsConfigChange)
@@ -256,10 +259,10 @@ inline void vjPfAppStats::appChanFunc(pfChannel* chan)
 
 // Must be called as part of preDrawChan in application
 // POST: Stats draw trigger set
-inline void vjPfAppStats::preDrawChan(pfChannel* chan, void* chandata)
+inline void PfAppStats::preDrawChan(pfChannel* chan, void* chandata)
 {
-   if(mSharedData->mDrawStatsMode != vjPfAppStats::NONE &&
-      mSharedData->mDrawStatsMode != vjPfAppStats::Pipe)
+   if(mSharedData->mDrawStatsMode != PfAppStats::NONE &&
+      mSharedData->mDrawStatsMode != PfAppStats::Pipe)
       chan->drawStats();
 }
 
@@ -267,43 +270,45 @@ inline void vjPfAppStats::preDrawChan(pfChannel* chan, void* chandata)
 // Must be called at some point in app preFrame
 // Updates the stats state based upon pressing the mStatsButton
 // Also updates MPStats if that is turned on
-inline void vjPfAppStats::preFrame()
+inline void PfAppStats::preFrame()
 {
    // If we are using MPipe Stats, then we have to update the params
-   if(mStatsMode == vjPfAppStats::MPipe)
+   if(mStatsMode == PfAppStats::MPipe)
    {
       if(0 == mMPStats.update())       // Is it done updating
       {
          vjDEBUG(vjDBG_ALL,0) << "vjPfAppStats: MP Stats mode done!\n" << vjDEBUG_FLUSH;
-         setStatsMode(vjPfAppStats::Fill);    // Go to next mode
+         setStatsMode(PfAppStats::Fill);    // Go to next mode
       } else { std::cout << ".." <<std::flush; }
    }
 
    // Check for STATS CYCLE Button
-   if(mStatsButton->getData() == vjDigital::TOGGLE_ON)
+   if(mStatsButton->getData() == Digital::TOGGLE_ON)
    {
       vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrGREEN,"vjPfAppStats: mStatsButton pressed. Turning on or cycling stats.\n") << vjDEBUG_FLUSH;
 
-      vjPfAppStats::statMode cur_stat_mode = getStatsMode();
+      PfAppStats::statMode cur_stat_mode = getStatsMode();
       switch(cur_stat_mode)
       {
       /*
-      case vjPfAppStats::NONE: setStatsMode(vjPfAppStats::FrameTime); break;
-      case vjPfAppStats::FrameTime: setStatsMode(vjPfAppStats::Gfx); break;
-      case vjPfAppStats::Gfx: setStatsMode(vjPfAppStats::Pipe); break;
-      case vjPfAppStats::Pipe: setStatsMode(vjPfAppStats::MPipe); break;
-      case vjPfAppStats::MPipe: setStatsMode(vjPfAppStats::Fill); break;     // setStatsMode initializes it
-      case vjPfAppStats::Fill: setStatsMode(vjPfAppStats::NONE); break;
+      case PfAppStats::NONE: setStatsMode(PfAppStats::FrameTime); break;
+      case PfAppStats::FrameTime: setStatsMode(PfAppStats::Gfx); break;
+      case PfAppStats::Gfx: setStatsMode(PfAppStats::Pipe); break;
+      case PfAppStats::Pipe: setStatsMode(PfAppStats::MPipe); break;
+      case PfAppStats::MPipe: setStatsMode(PfAppStats::Fill); break;     // setStatsMode initializes it
+      case PfAppStats::Fill: setStatsMode(PfAppStats::NONE); break;
       */
-      case vjPfAppStats::NONE: setStatsMode(vjPfAppStats::FrameTime); break;
-      case vjPfAppStats::FrameTime: setStatsMode(vjPfAppStats::Gfx); break;
-      case vjPfAppStats::Gfx: setStatsMode(vjPfAppStats::NONE); break;
-      default: setStatsMode(vjPfAppStats::NONE); break;
+      case PfAppStats::NONE: setStatsMode(PfAppStats::FrameTime); break;
+      case PfAppStats::FrameTime: setStatsMode(PfAppStats::Gfx); break;
+      case PfAppStats::Gfx: setStatsMode(PfAppStats::NONE); break;
+      default: setStatsMode(PfAppStats::NONE); break;
       }
    }
 }
 
 
 
+
+};
 
 #endif

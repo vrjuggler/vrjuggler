@@ -62,26 +62,29 @@
 #include <Kernel/vjWin32SystemFactory.h>
 #endif
 
-//vjKernel* vjKernel::_instance = NULL;
-vjSingletonImp(vjKernel);
+namespace vrj
+{
+   
+//vjKernel* Kernel::_instance = NULL;
+vprSingletonImp(Kernel);
 
 //: Start the Kernel loop running
-int vjKernel::start()
+int Kernel::start()
 {
    if(mControlThread != NULL) // Have already started
    {
       vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "vjKernel::start called when kernel already running\n" << vjDEBUG_FLUSH;
-      vjASSERT(false);
+      vprASSERT(false);
       exit(0);
    }
 
    // Create a new thread to handle the control
-   vpr::ThreadMemberFunctor<vjKernel>* memberFunctor =
-   new vpr::ThreadMemberFunctor<vjKernel>(this, &vjKernel::controlLoop, NULL);
+   vpr::ThreadMemberFunctor<Kernel>* memberFunctor =
+   new vpr::ThreadMemberFunctor<Kernel>(this, &Kernel::controlLoop, NULL);
 
-   vpr::Thread* new_thread;   // I set mControlThread in vjKernel::controlLoop
+   vpr::Thread* new_thread;   // I set mControlThread in Kernel::controlLoop
    new_thread = new vpr::Thread(memberFunctor);
-   //vjASSERT(new_thread->valid());
+   //vprASSERT(new_thread->valid());
 
    vjDEBUG(vjDBG_KERNEL,vjDBG_STATE_LVL) << "vjKernel::start: Just started control loop.  "
                                          << std::endl << vjDEBUG_FLUSH;
@@ -90,7 +93,7 @@ int vjKernel::start()
 }
 
 /// The Kernel loop
-void vjKernel::controlLoop(void* nullParam)
+void Kernel::controlLoop(void* nullParam)
 {
    vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::controlLoop: Started.\n" << vjDEBUG_FLUSH;
 
@@ -101,12 +104,12 @@ void vjKernel::controlLoop(void* nullParam)
    }
    mControlThread = (vpr::Thread*) vpr::Thread::self();
 
-   vjTimeStamp::initialize();
+   TimeStaMp::initialize();
    // Do any initial configuration
    initConfig();
 
    // setup performance buffer
-   perfBuffer = new vjPerfDataBuffer ("Kernel loop", 500, 8);
+   perfBuffer = new PerfDataBuffer ("Kernel loop", 500, 8);
    environmentManager->addPerfDataBuffer (perfBuffer);
 
    //while(!Exit)
@@ -137,7 +140,7 @@ void vjKernel::controlLoop(void* nullParam)
       else
       {
          // ??? Should we do this, or just grind up the CPU as fast as possible
-         vjASSERT(NULL != mControlThread);      // If control thread is not set correctly, it will seg fault here
+         vprASSERT(NULL != mControlThread);      // If control thread is not set correctly, it will seg fault here
          vpr::Thread::yield();   // Give up CPU
       }
 
@@ -157,7 +160,7 @@ void vjKernel::controlLoop(void* nullParam)
 
 // Set the application to run
 // XXX: Should have protection here
-void vjKernel::setApplication(vjApp* _app)
+void Kernel::setApplication(App* _app)
 {
    vjDEBUG(vjDBG_KERNEL,vjDBG_CONFIG_LVL) << "vjKernel::setApplication: New application set\n" << vjDEBUG_FLUSH;
    mNewApp = _app;
@@ -169,9 +172,9 @@ void vjKernel::setApplication(vjApp* _app)
 //: Checks to see if there is reconfiguration to be done
 //! POST: Any reconfiguration needed has been completed
 //! NOTE: Can only be called by the kernel thread
-void vjKernel::checkForReconfig()
+void Kernel::checkForReconfig()
 {
-   vjASSERT(vpr::Thread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
+   vprASSERT(vpr::Thread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
 
    // ---- RECONFIGURATION --- //
    int total_chunks_processed(0);
@@ -219,12 +222,12 @@ void vjKernel::checkForReconfig()
 //             Get the draw manager needed
 //             Start it
 //             Give it the application
-void vjKernel::changeApplication(vjApp* _app)
+void Kernel::changeApplication(App* _app)
 {
    vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::changeApplication: Changing to:"
                            << _app << std::endl << vjDEBUG_FLUSH;
 
-   vjASSERT(vpr::Thread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
+   vprASSERT(vpr::Thread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
 
    // EXIT Previous application
    if(mApp != NULL)
@@ -234,8 +237,8 @@ void vjKernel::changeApplication(vjApp* _app)
    if(_app != NULL)        // We were given an app
    {
       mApp = _app;
-      vjDrawManager* new_draw_mgr = mApp->getDrawManager();
-      vjASSERT(NULL != new_draw_mgr);
+      DrawManager* new_draw_mgr = mApp->getDrawManager();
+      vprASSERT(NULL != new_draw_mgr);
 
       if (new_draw_mgr != mDrawManager)      // Have NEW draw manager
       {
@@ -264,42 +267,42 @@ void vjKernel::changeApplication(vjApp* _app)
 //!NOTE: Does initial configuration and then sends config file to configAdd
 //!POST: config is init'd
 //----------------------------------------------
-void vjKernel::initConfig()
+void Kernel::initConfig()
 {
    vjDEBUG_BEGIN(vjDBG_KERNEL,3) << "vjKernel::initConfig: Setting initial config.\n" << vjDEBUG_FLUSH;
 
    // ---- ALLOCATE MANAGERS --- //
    //initialSetupInputManager();
-   mInputManager = new vjInputManager;
+   mInputManager = new InputManager;
 
    //initialSetupDisplayManager();
-   mDisplayManager = vjDisplayManager::instance();  // Get display manager
-   vjASSERT(mDisplayManager != NULL);                 // Did we get an object
+   mDisplayManager = DisplayManager::instance();  // Get display manager
+   vprASSERT(mDisplayManager != NULL);                 // Did we get an object
 
    //setupEnvironmentManager();
-   environmentManager = new vjEnvironmentManager();
+   environmentManager = new EnvironmentManager();
 
    //??// processPending() // Should I do this here
 
 #ifdef VJ_OS_IRIX
-   mSysFactory = vjSGISystemFactory::instance(); // XXX: Should not be system specific
+   mSysFactory = SGISystemFactory::instance(); // XXX: Should not be system specific
 #elif defined(VJ_OS_Linux) || defined(VJ_OS_Solaris) || defined(VJ_OS_AIX) || \
       defined(VJ_OS_FreeBSD) || defined(VJ_OS_HPUX)
-   mSysFactory = vjSGISystemFactory::instance(); // HACK - this could be trouble, using SGI factory
+   mSysFactory = SGISystemFactory::instance(); // HACK - this could be trouble, using SGI factory
 #elif defined(VJ_OS_Darwin)
-   mSysFactory = vjOSXSystemFactory::instance();
+   mSysFactory = OSXSystemFactory::instance();
 #elif defined(VJ_OS_Win32)
-   mSysFactory = vjWin32SystemFactory::instance();
+   mSysFactory = Win32SystemFactory::instance();
 #else
    //vjDEBUG(0,0) << "ERROR!: Don't know how to create System Factory!\n" << vjDEBUG_FLUSH;
-   vjASSERT(false);
+   vprASSERT(false);
 #endif
 
    vjDEBUG_END(vjDBG_KERNEL,3) << "vjKernel::initConfig: Done.\n" << vjDEBUG_FLUSH;
 }
 
 
-void vjKernel::updateFrameData()
+void Kernel::updateFrameData()
 {
    // When we have a draw manager, tell it to update it's projections
    mDisplayManager->updateProjections();
@@ -313,16 +316,16 @@ void vjKernel::updateFrameData()
 //
 //  For all dependant managers, call process pending.
 //  and call it on our selves
-int vjKernel::configProcessPending(bool lockIt)
+int Kernel::configProcessPending(bool lockIt)
 {
    int chunks_processed(0);     // Needs to return this value
 
-   vjConfigManager* cfg_mgr = vjConfigManager::instance();
+   ConfigManager* cfg_mgr = ConfigManager::instance();
    if(cfg_mgr->pendingNeedsChecked())
    {
       vjDEBUG_BEGIN(vjDBG_ALL,vjDBG_STATE_LVL) << "vjKernel::configProcessPending: Examining pending list.\n" << vjDEBUG_FLUSH;
 
-      chunks_processed += vjConfigChunkHandler::configProcessPending(lockIt);      // Process kernels pending chunks
+      chunks_processed += ConfigChunkHandler::configProcessPending(lockIt);      // Process kernels pending chunks
       chunks_processed += getInputManager()->configProcessPending(lockIt);
       chunks_processed += mDisplayManager->configProcessPending(lockIt);
       if(NULL != mSoundManager)
@@ -341,7 +344,7 @@ int vjKernel::configProcessPending(bool lockIt)
 }
 
 
-bool vjKernel::configCanHandle(vjConfigChunk* chunk)
+bool Kernel::configCanHandle(ConfigChunk* chunk)
 {
    std::string chunk_type = (std::string)chunk->getType();
 
@@ -351,11 +354,11 @@ bool vjKernel::configCanHandle(vjConfigChunk* chunk)
       return false;
 }
 
-bool vjKernel::configAdd(vjConfigChunk* chunk)
+bool Kernel::configAdd(ConfigChunk* chunk)
 {
    std::string chunk_type = (std::string)chunk->getType();
 
-   vjASSERT(configCanHandle(chunk));
+   vprASSERT(configCanHandle(chunk));
 
    if(std::string("JugglerUser") == chunk_type)
    {
@@ -365,11 +368,11 @@ bool vjKernel::configAdd(vjConfigChunk* chunk)
       return false;
 }
 
-bool vjKernel::configRemove(vjConfigChunk* chunk)
+bool Kernel::configRemove(ConfigChunk* chunk)
 {
    std::string chunk_type = (std::string)chunk->getType();
 
-   vjASSERT(configCanHandle(chunk));
+   vprASSERT(configCanHandle(chunk));
 
    if(std::string("JugglerUser") == chunk_type)
    {
@@ -380,17 +383,17 @@ bool vjKernel::configRemove(vjConfigChunk* chunk)
 }
 
 //: Add a new user to the kernel
-bool vjKernel::addUser(vjConfigChunk* chunk)
+bool Kernel::addUser(ConfigChunk* chunk)
 {
-   vjASSERT((std::string)chunk->getType() == std::string("JugglerUser"));
+   vprASSERT((std::string)chunk->getType() == std::string("JugglerUser"));
 
-   vjUser* new_user = new vjUser;
+   User* new_user = new User;
    bool success = new_user->config(chunk);
 
    if(!success)
    {
       vjDEBUG(vjDBG_CONFIG,vjDBG_CRITICAL_LVL)
-                     << clrOutNORM(clrRED,"ERROR:") << "Failed to add new vjUser: "
+                     << clrOutNORM(clrRED,"ERROR:") << "Failed to add new User: "
                      << chunk->getProperty("name") << std::endl
                      << vjDEBUG_FLUSH;
       delete new_user;
@@ -398,7 +401,7 @@ bool vjKernel::addUser(vjConfigChunk* chunk)
    else
    {
       vjDEBUG(vjDBG_CONFIG,vjDBG_STATE_LVL)
-                             << "vjKernel: Added new vjUser: "
+                             << "vjKernel: Added new User: "
                              << new_user->getName().c_str() << std::endl
                              << vjDEBUG_FLUSH;
       mUsers.push_back(new_user);
@@ -408,18 +411,18 @@ bool vjKernel::addUser(vjConfigChunk* chunk)
 }
 
 // XXX: Not implemented
-bool vjKernel::removeUser(vjConfigChunk* chunk)
+bool Kernel::removeUser(ConfigChunk* chunk)
 {
    return false;
 }
 
 // --- STARTUP ROUTINES --- //
-void vjKernel::loadConfigFile(std::string filename)
+void Kernel::loadConfigFile(std::string filename)
 {
    vjDEBUG(vjDBG_KERNEL,vjDBG_CONFIG_LVL) << "Loading config file: "
                            << filename << std::endl << vjDEBUG_FLUSH;
 
-   vjConfigChunkDB* chunk_db = new vjConfigChunkDB;
+   ConfigChunkDB* chunk_db = new ConfigChunkDB;
 
    // ------- OPEN Program specified Config file ------ //
    if(filename.empty())   // We have a filename
@@ -435,7 +438,7 @@ void vjKernel::loadConfigFile(std::string filename)
    }
 
    // Put them all in pending
-   vjConfigManager::instance()->addChunkDB(chunk_db);
+   ConfigManager::instance()->addChunkDB(chunk_db);
 
    //vjDEBUG(vjDBG_KERNEL,5) << "------------  Loaded Config Chunks ----------" << vjDEBUG_FLUSH;
    //vjDEBUG(vjDBG_KERNEL,5) << (*mInitialChunkDB) << vjDEBUG_FLUSH;
@@ -443,18 +446,18 @@ void vjKernel::loadConfigFile(std::string filename)
 
 //: Load a chunk description file
 //! POST: The chunk factory can now manage chunks with the given types
-void vjKernel::loadChunkDescFile(std::string filename)
+void Kernel::loadChunkDescFile(std::string filename)
 {
-   vjChunkFactory::instance()->loadDescs(filename);
+   ChunkFactory::instance()->loadDescs(filename);
 }
 
 
 
 // This starts up the draw manager given
 //!POST: All processes and data should have been created by draw manager
-void vjKernel::startDrawManager(bool newMgr)
+void Kernel::startDrawManager(bool newMgr)
 {
-   vjASSERT((mApp != NULL) && (mDrawManager != NULL) && (mDisplayManager != NULL));
+   vprASSERT((mApp != NULL) && (mDrawManager != NULL) && (mDisplayManager != NULL));
 
    if(newMgr)
    {
@@ -477,7 +480,7 @@ void vjKernel::startDrawManager(bool newMgr)
 // Stop the draw manager and close it's resources, then delete it
 //! POST: draw mgr resources are closed
 //+       draw mgr is deleted, display manger set to NULL draw mgr
-void vjKernel::stopDrawManager()
+void Kernel::stopDrawManager()
 {
    if(mDrawManager != NULL)
    {
@@ -490,11 +493,11 @@ void vjKernel::stopDrawManager()
 
 
 //: Get the input manager
-vjInputManager* vjKernel::getInputManager()
+InputManager* Kernel::getInputManager()
 { return mInputManager; }
 
 
-vjUser* vjKernel::getUser(std::string userName)
+User* Kernel::getUser(std::string userName)
 {
    for(unsigned int i=0;i<mUsers.size();i++)
       if(userName == mUsers[i]->getName())
@@ -503,7 +506,7 @@ vjUser* vjKernel::getUser(std::string userName)
    return NULL;
 }
 
-vjKernel::vjKernel()
+Kernel::Kernel()
 {
    mApp = NULL;
    mNewApp = NULL;
@@ -531,3 +534,4 @@ vjKernel::vjKernel()
                           << std::endl << vjDEBUG_FLUSH;
 }
 
+};

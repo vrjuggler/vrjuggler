@@ -27,7 +27,7 @@ void contextApp::draw()
    glMatrixMode(GL_MODELVIEW);
 
    // -- Get Wand matrix --- //
-   vjMatrix wand_matrix;
+   Matrix wand_matrix;
    wand_matrix = *(mWand->getData());
 
    // --- Create a color for the wand --- //
@@ -154,10 +154,10 @@ void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
 
 void drawAxis()
 {
-   vjVec3 x_axis(7.0f,0.0f,0.0f);
-   vjVec3 y_axis(0.0f, 7.0f, 0.0f);
-   vjVec3 z_axis(0.0f, 0.0f, 7.0f);
-   vjVec3 origin(0.0f, 0.0f, 0.0f);
+   Vec3 x_axis(7.0f,0.0f,0.0f);
+   Vec3 y_axis(0.0f, 7.0f, 0.0f);
+   Vec3 z_axis(0.0f, 0.0f, 7.0f);
+   Vec3 origin(0.0f, 0.0f, 0.0f);
 
    glBegin(GL_LINES);
       glColor3f(1.0f, 0.0f, 0.0f);

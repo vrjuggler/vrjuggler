@@ -77,16 +77,16 @@ public:
       roll = -roll;
    }
 
-   vjMatrix getCurPos() const
+   Matrix getCurPos() const
    { return mCurPos; }
 
-   void setCurPos(vjMatrix pos)
+   void setCurPos(Matrix pos)
    { mCurPos = pos; }
 
-   void setHomePosition(vjMatrix pos)
+   void setHomePosition(Matrix pos)
    {
       mHomePos = pos;
-      vjVec3 hpos = mHomePos.getTrans();
+      Vec3 hpos = mHomePos.getTrans();
       vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"navigator: HomePosition = ")
                            << hpos << std::endl << vjDEBUG_FLUSH;
     }
@@ -114,26 +114,26 @@ protected:
    // NOTE: the direction "forward" would be relative to current user position
    // ARGS: didCollide - true - The navigator collided with the model
    //       totalCorrection - The actual amount moved given the correction (in modelspace)
-   void navTranslate( const vjVec3 trans, bool& didCollide, vjVec3& totalCorrection);
+   void navTranslate( const Vec3 trans, bool& didCollide, Vec3& totalCorrection);
 
-   void navRotate( vjMatrix rot_mat );
+   void navRotate( Matrix rot_mat );
 
    // Correct the given attempted translation
    // Checks the given translation (in model cordinate space) against
    // the collidors given
    // Returns the corrected trans in trans, also returns the totalCorrection used
-   void navCollideTransCorrect(vjVec3& trans, bool& didCollide, vjVec3& totalCorrection);
+   void navCollideTransCorrect(Vec3& trans, bool& didCollide, Vec3& totalCorrection);
 
    // HELPER
    // returns true if the action state is true
-   bool checkForAction(std::vector<vjDigitalInterface*> btns, std::vector<ActionState> state_combo);
+   bool checkForAction(std::vector<DigitalInterface*> btns, std::vector<ActionState> state_combo);
 
 protected:
    std::string       mName;         // Name of the collidor
    bool mAllowRot,   mAllowTrans;
-   vjMatrix          mCurPos;       // (modelspace_M_user) The current position or the user- In Juggler coords
+   Matrix          mCurPos;       // (modelspace_M_user) The current position or the user- In Juggler coords
                                     // Moves the "user" from the models origin to the user's navigated origin (coord system)
-   vjMatrix          mHomePos;      // Resets to this location
+   Matrix          mHomePos;      // Resets to this location
 
    bool              allowAxis[3];  // Which axes are we allowed to rotate on
    bool              mIsActive;     // Is the navigator currently active in the environment
@@ -142,10 +142,10 @@ protected:
 };
 
 
-void navigator::navTranslate(vjVec3 trans, bool& didCollide, vjVec3& totalCorrection)
+void navigator::navTranslate(Vec3 trans, bool& didCollide, Vec3& totalCorrection)
 {
    /*
-   vjCoord cur_pos(mCurPos);
+   Coord cur_pos(mCurPos);
    std::cerr << "Cur P: " << cur_pos.pos << std::endl << "Trans: " << trans
              << std::endl
              << "    =: " << cur_pos.pos+trans << std::endl;
@@ -154,9 +154,9 @@ void navigator::navTranslate(vjVec3 trans, bool& didCollide, vjVec3& totalCorrec
    // convert the info to model coordinates, since that's what the nav routines take.
    // trans is in local (user) coordinates,  xform it to model coordinates (since we are testing against virtual world (model))
    // Mtrans_model = model_M_user * Mtrans_user
-   vjMatrix cur_rotation = mCurPos;             // Get rotation only part of model_M_user
+   Matrix cur_rotation = mCurPos;             // Get rotation only part of model_M_user
    cur_rotation.setTrans( 0.0f, 0.0f, 0.0f );   // zero out the translation...
-   vjVec3 trans_in_modelspace;
+   Vec3 trans_in_modelspace;
    trans_in_modelspace.xformFull( cur_rotation, trans );
 
    // Get correction for collision detection
@@ -165,19 +165,19 @@ void navigator::navTranslate(vjVec3 trans, bool& didCollide, vjVec3& totalCorrec
    navCollideTransCorrect( trans_in_modelspace, didCollide, totalCorrection );
 
    // Convert back to trans_in_modelspace back into local space
-   vjMatrix inv_cur_rotation;
+   Matrix inv_cur_rotation;
    inv_cur_rotation.invert(cur_rotation);
    trans.xformFull(inv_cur_rotation, trans_in_modelspace);
 
    // Post mult cur_mat by the trans we need to do
    // model_M_new-user = model_M_user*user_M_new-user
-   vjMatrix user_M_newUser;
+   Matrix user_M_newUser;
    user_M_newUser.makeTrans(trans);
    mCurPos.postMult(user_M_newUser);
 }
 
 
-void navigator::navRotate( vjMatrix rot_mat )
+void navigator::navRotate( Matrix rot_mat )
 {
    //rot_mat.constrainRotAxis( allowAxis[0], allowAxis[1], allowAxis[2], rot_mat );
 
@@ -185,7 +185,7 @@ void navigator::navRotate( vjMatrix rot_mat )
    
    //mCurPos.constrainRotAxis( allowAxis[0], allowAxis[1], allowAxis[2], mCurPos );
 
-   vjMatrix old_pos = mCurPos;
+   Matrix old_pos = mCurPos;
    float x_pos, y_pos, z_pos;
    old_pos.getTrans(x_pos,y_pos,z_pos);
    mCurPos.makeXYZEuler(0,old_pos.getYRot(),0);     // Only allow Yaw (rot y)
@@ -203,14 +203,14 @@ void navigator::navRotate( vjMatrix rot_mat )
 // Checks the given translation (in model cordinate space) against
 // the collidors given
 // returns the modified trans, and the total correction that was applied
-void navigator::navCollideTransCorrect(vjVec3& trans, bool& didCollide, vjVec3& totalCorrection)
+void navigator::navCollideTransCorrect(Vec3& trans, bool& didCollide, Vec3& totalCorrection)
 {
    didCollide = false;
    totalCorrection.set(0,0,0);
 
    // mCurPos (model_M_user) is already in model coordinates,
    // since it is used to move the geometry from modelspace to userSpace
-   vjVec3 whereYouAre = vjCoord(mCurPos).pos;
+   Vec3 whereYouAre = Coord(mCurPos).pos;
    //vjCoord cur_pos(mCurPos);
    //whereYouAre = cur_pos.pos;
 
@@ -219,7 +219,7 @@ void navigator::navCollideTransCorrect(vjVec3& trans, bool& didCollide, vjVec3& 
 
    // the collider will return a correction vector in modelspace coordinates
    // add this to correct your distance requested to move.
-   vjVec3 local_correction;
+   Vec3 local_correction;
    totalCorrection.set(0.0,0.0,0.0);
 
    ////////////////////////////////////////////////////////////
@@ -253,7 +253,7 @@ void navigator::setRotAxis(bool allowX, bool allowY, bool allowZ)
 
 // HELPER
 // returns true if the action state is true
-bool navigator::checkForAction( std::vector<vjDigitalInterface*> btns, std::vector<navigator::ActionState> state_combo)
+bool navigator::checkForAction( std::vector<DigitalInterface*> btns, std::vector<navigator::ActionState> state_combo)
 {
    bool ret_val( true );
 

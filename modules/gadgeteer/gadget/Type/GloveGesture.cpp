@@ -33,11 +33,13 @@
 
 #include <vjConfig.h>
 #include <Input/vjGesture/vjGloveGesture.h>
-
+namespace vrj
+{
+   
 //: Get a gesture name
 //! RETURNS: (gestureId in range) - string desc of gesture
 //! RETURNS: (gesture not in range) - empty string
-std::string vjGloveGesture::getGestureString(int gestureId)
+std::string GloveGesture::getGestureString(int gestureId)
 {
    if(gestureId < 0)
       return getGestureString(this->getGesture());    // Get string of current gesture
@@ -50,11 +52,11 @@ std::string vjGloveGesture::getGestureString(int gestureId)
 //: Create a new gesture
 // Pushes the gesture onto the list of gesture names
 // Also pushes an example on the vector
-int vjGloveGesture::createGesture(std::string gestureName)
+int GloveGesture::createGesture(std::string gestureName)
 {
    mGestureNames.push_back(gestureName);        // Push it back
-   mGestureExamples.push_back(vjGloveData());  // Push back an empty vector of floats
-   vjASSERT(mGestureNames.size() == mGestureExamples.size());
+   mGestureExamples.push_back(GloveData());  // Push back an empty vector of floats
+   vprASSERT(mGestureNames.size() == mGestureExamples.size());
 
    return (mGestureExamples.size() -1);
 }
@@ -70,7 +72,7 @@ int vjGloveGesture::createGesture(std::string gestureName)
 // infile is a file that is already open and ready for reading.
 // After running, this routines will leave the file pointer immedately after
 // the header.
-void vjGloveGesture::loadFileHeader(std::ifstream& infile)
+void GloveGesture::loadFileHeader(std::ifstream& infile)
 {
    // skip comments
    while(infile.peek() == '#')
@@ -93,7 +95,7 @@ void vjGloveGesture::loadFileHeader(std::ifstream& infile)
       mGestureNames[i] = std::string(gest_name);
    }
 
-   mGestureExamples = std::vector<vjGloveData>(num_gestures);
+   mGestureExamples = std::vector<GloveData>(num_gestures);
 
    // Get gesture data
    for(i=0;i<num_gestures;i++)
@@ -104,12 +106,12 @@ void vjGloveGesture::loadFileHeader(std::ifstream& infile)
 //: Save a file header
 //! NOTE: The client of this routine may add their own initial lines to the
 //+ header as long as they remove them before calling loadFileHeader.
-void vjGloveGesture::saveFileHeader(std::ofstream& outFile)
+void GloveGesture::saveFileHeader(std::ofstream& outFile)
 {
-   vjASSERT(mGestureNames.size() == mGestureExamples.size());     // The must be same size
+   vprASSERT(mGestureNames.size() == mGestureExamples.size());     // The must be same size
 
-   outFile << "# vjGloveGesture v1.0" << std::endl
-           << "#       vjGloveGesture Header" << std::endl
+   outFile << "# GloveGesture v1.0" << std::endl
+           << "#       GloveGesture Header" << std::endl
            << "#  Contains gesture names and examples" << std::endl
            << "#  As well and trainer information" << std::endl;
 
@@ -127,7 +129,7 @@ void vjGloveGesture::saveFileHeader(std::ofstream& outFile)
 }
 
 //: Return the gesture identifier of the gesture.
-int vjGloveGesture::getGestureIndex(std::string gestureName)
+int GloveGesture::getGestureIndex(std::string gestureName)
 {
    unsigned i = 0;
    int found = -1;
@@ -140,3 +142,5 @@ int vjGloveGesture::getGestureIndex(std::string gestureName)
 
    return found;
 }
+
+};

@@ -54,12 +54,12 @@ void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
 //
 // This application simply renders a box on the wand
 //----------------------------------------------------
-class wandApp : public vjGlApp
+class wandApp : public GlApp
 {
 public:
    // Constructor.
-   wandApp(vjKernel* kern)
-      : vjGlApp(kern)         // Initialize base class
+   wandApp(Kernel* kern)
+      : GlApp(kern)         // Initialize base class
    {;}
 
    // Destructor.
@@ -180,14 +180,14 @@ private:
    }
 
 public:
-   vjPosInterface    mWand;      // the Wand
-   vjPosInterface    mHead;      // the head
-   vjDigitalInterface   mButton0;
-   vjDigitalInterface   mButton1;
-   vjDigitalInterface   mButton2;
-   vjDigitalInterface   mButton3;
-   vjDigitalInterface   mButton4;
-   vjDigitalInterface   mButton5;
+   PosInterface    mWand;      // the Wand
+   PosInterface    mHead;      // the head
+   DigitalInterface   mButton0;
+   DigitalInterface   mButton1;
+   DigitalInterface   mButton2;
+   DigitalInterface   mButton3;
+   DigitalInterface   mButton4;
+   DigitalInterface   mButton5;
 };
 
 

@@ -147,7 +147,7 @@ public:
 
 
 protected:
-   // triggers every vjSound in the graph.
+   // triggers every Sound in the graph.
    static int soundNodesTrigger( pfuTraverser* trav )
    {
       pfNode* currentNode = trav->node;
@@ -179,7 +179,7 @@ protected:
       return PFTRAV_CONT;      // Return continue
    }
 
-   // stops every vjSound in the graph.
+   // stops every Sound in the graph.
    static int soundNodesStop( pfuTraverser* trav )
    {
       pfNode* currentNode = trav->node;
@@ -212,7 +212,7 @@ protected:
       return PFTRAV_CONT;      // Return continue
    }
 
-   // enables every vjSound in the graph.
+   // enables every Sound in the graph.
    static int soundNodesEnable( pfuTraverser* trav )
    {
       pfNode* currentNode = trav->node;
@@ -246,7 +246,7 @@ protected:
       return PFTRAV_CONT;      // Return continue
    }
 
-   // disables every vjSound in the graph.
+   // disables every Sound in the graph.
    static int soundNodesDisable( pfuTraverser* trav )
    {
       pfNode* currentNode = trav->node;

@@ -40,10 +40,13 @@
 #include <GL/gl.h>
 #include <Kernel/GL/vjGlWindow.h>
 
-class VJ_CLASS_API vjGlWinWin32 : public vjGlWindow
+namespace vrj
+{
+   
+class VJ_CLASS_API GlWinWin32 : public GlWindow
 {
 public:
-   vjGlWinWin32()
+   GlWinWin32()
    {
 		match = NULL;		// Initialize all values to null
 		hWnd = NULL;
@@ -107,13 +110,13 @@ protected:
 	// message handler for each window
 
 	// Add a window to the map
-	static void addWindow(HWND handle, vjGlWinWin32* glWin);
+	static void addWindow(HWND handle, GlWinWin32* glWin);
 	// Remove a window from the map
 	static void removeWindow(HWND handle);
 	// Get the glWin we are dealing with
-	static vjGlWinWin32* getGlWin(HWND handle);
+	static GlWinWin32* getGlWin(HWND handle);
 
-   static std::map<HWND, vjGlWinWin32*>		glWinMap;
+   static std::map<HWND, GlWinWin32*>		glWinMap;
 
 public:
 	HWND	hWnd;		// Window handle
@@ -126,5 +129,7 @@ public:
 
 
 
+
+};
 #endif
 

@@ -42,8 +42,12 @@
 #include <Environment/vjEnvironmentManager.h>
 #include <Performance/vjPerfDataBuffer.h>
 
+
+namespace vrj
+{
+   
 // Config stuff
-class vjConfigChunk;
+class ConfigChunk;
 
 
 //---------------------------------------------------------------------
@@ -56,17 +60,17 @@ class vjConfigChunk;
 // @author Allen Bierbaum
 //  Date: 3-5-2001
 //-----------------------------------------------------------------------
-class vjViewport
+class Viewport
 {
 public:
-   vjViewport() : mUser(NULL), mViewportChunk(NULL)
+   Viewport() : mUser(NULL), mViewportChunk(NULL)
    {
       mXorigin = mYorigin = mXsize = mYsize = -1.0f;
-      mType = vjViewport::UNDEFINED;
+      mType = Viewport::UNDEFINED;
       mActive = false;
    }
 
-   virtual ~vjViewport()
+   virtual ~Viewport()
    {;}
 
 
@@ -81,14 +85,14 @@ public:
       //+       and "fix" the error.
       //! NOTE: All derived viewport classes MUST call this function
       //+       after doing local configuration.
-   virtual void config(vjConfigChunk* chunk);
+   virtual void config(ConfigChunk* chunk);
 
    //: Updates the projection data for this display
    // Uses the data for the head position for this window
    virtual void updateProjections() = 0;
 
 public:
-   vjViewport::Type getType()
+   Viewport::Type getType()
    { return mType;}
 
    bool isSimulator()
@@ -112,7 +116,7 @@ public:
    { return (mView == STEREO); }
 
    // Which view are we supposed to render
-   vjViewport::View getView()
+   Viewport::View getView()
    { return mView; }
 
    void setOriginAndSize(float xo, float yo, float xs, float ys)
@@ -123,27 +127,29 @@ public:
    }
 
    //: Get the config chunk that configured this display
-   vjConfigChunk* getConfigChunk()
+   ConfigChunk* getConfigChunk()
    { return mViewportChunk; }
 
    //: Get the user associated with this display
-   vjUser*  getUser()
+   User*  getUser()
    { return mUser;}
 
    virtual std::ostream& outStream(std::ostream& out);
-   friend std::ostream& operator<<(std::ostream& out, vjViewport& viewport);
+   friend std::ostream& operator<<(std::ostream& out, Viewport& viewport);
 
 protected:
    std::string       mName;               //: The name of the viewport being displayed
-   vjUser*           mUser;               //: The user being rendered by this window
-   vjViewport::Type  mType;               //: The type of display
-   vjViewport::View  mView;               //: Which buffer(s) to display (left, right, stereo)
+   User*           mUser;               //: The user being rendered by this window
+   Viewport::Type  mType;               //: The type of display
+   Viewport::View  mView;               //: Which buffer(s) to display (left, right, stereo)
    bool              mActive;             //: Is this viewport active
 
-   vjConfigChunk* mViewportChunk;        //: The chunk data for this display
+   ConfigChunk* mViewportChunk;        //: The chunk data for this display
    float          mXorigin, mYorigin, mXsize, mYsize;    // Location and size of viewport
                                                          // ASSERT: all values are >= 0.0 and <= 1.0
 };
 
+
+};
 
 #endif

@@ -37,13 +37,16 @@
 #include <vjConfig.h>
 #include <vpr/Sync/Mutex.h>
 
+namespace vrj
+{
+   
 //------------------------------------------------------
 //:  This class holds the state of the library system
 //
 //-------------------------------------------------------
 class vpr::System
 {
-// ----------- Base vjMemPool Stuff    --------- //
+// ----------- Base MemPool Stuff    --------- //
 //  Since we need to put the singleton in Shared memory
 // Nothing in this section is safe after any forking !!!
 // Must be set BEFORE instance is created.
@@ -55,7 +58,7 @@ public:
     { baseNumProcs = numProcs; }
 
 private:
-    static vjSharedPool*  baseMemPool;
+    static SharedPool*  baseMemPool;
     static size_t baseMemPoolSize;
     static int    baseNumProcs;
 
@@ -73,8 +76,8 @@ public:
     static vpr::System* getInstance()
     {
    if (_instance == NULL) {
-       // Called automatically --- vjSharedPool::init();   // Initialize the vjMemPoolStuff
-       baseMemPool = new vjSharedPool(baseMemPoolSize, baseNumProcs);
+       // Called automatically --- SharedPool::init();   // Initialize the MemPoolStuff
+       baseMemPool = new SharedPool(baseMemPoolSize, baseNumProcs);
        _instance = new vpr::System(baseMemPool);
    }
    return _instance;
@@ -90,4 +93,5 @@ private:
     static vpr::System* _instance;
 };
 
+};
 #endif  /* _VJ_SYSTEM_H_ */

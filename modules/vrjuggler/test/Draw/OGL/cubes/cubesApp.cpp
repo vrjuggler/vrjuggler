@@ -47,17 +47,17 @@
 // Uses a quaternion to do rotation in the environment
 void UserData::updateNavigation()
 {
-   vjVec3 xyzAngles;
-   vjVec3 xyzTrans;
+   Vec3 xyzAngles;
+   Vec3 xyzTrans;
 
    // Cur*Transform = New Location
-   vjMatrix    transform, transformIdent;
-   vjQuat      source_rot, goal_rot, slerp_rot;
+   Matrix    transform, transformIdent;
+   Quat      source_rot, goal_rot, slerp_rot;
 
    transformIdent.makeIdent();            // Create an identity matrix to rotate from
    source_rot.makeRot(transformIdent);
 
-   vjMatrix* wand_matrix;
+   Matrix* wand_matrix;
    wand_matrix = mWand->getData();
    wand_matrix->getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
 
@@ -104,20 +104,20 @@ void UserData::updateNavigation()
       vjDEBUG(vjDBG_ALL,6) << "Velocity: " << mCurVelocity << std::endl
                            << vjDEBUG_FLUSH;
 
-   if(mIncVelocityButton->getData() == vjDigital::TOGGLE_ON)
+   if(mIncVelocityButton->getData() == Digital::TOGGLE_ON)
       vjDEBUG(vjDBG_ALL,2) << "-- Toggle ON --" << std::endl << vjDEBUG_FLUSH;
-   if(mIncVelocityButton->getData() == vjDigital::TOGGLE_OFF)
+   if(mIncVelocityButton->getData() == Digital::TOGGLE_OFF)
       vjDEBUG(vjDBG_ALL,2) << "-- Toggle OFF --" << std::endl << vjDEBUG_FLUSH;
-   if(mIncVelocityButton->getData() == vjDigital::ON)
+   if(mIncVelocityButton->getData() == Digital::ON)
       vjDEBUG(vjDBG_ALL,2) << "-- ON --" << std::endl << vjDEBUG_FLUSH;
-//   if(mIncVelocityButton->getData() == vjDigital::OFF)
+//   if(mIncVelocityButton->getData() == Digital::OFF)
 //      vjDEBUG(vjDBG_ALL,) << "-- OFF --" << std::endl << vjDEBUG_FLUSH;
 
    // Find direction vector
-   vjVec3   forward(0.0f, 0.0f, -1.0f);
+   Vec3   forward(0.0f, 0.0f, -1.0f);
    forward *= mCurVelocity;
 
-   vjMatrix rot_mat, local_xform;
+   Matrix rot_mat, local_xform;
    rot_mat.invert(transform);
 
    local_xform.makeTrans(0, 0, mCurVelocity);
@@ -145,9 +145,9 @@ void cubesApp::init()
 {
    vjDEBUG(vjDBG_ALL,0) << "---------- cubes:App:init() ---------------"
                         << std::endl << vjDEBUG_FLUSH;
-   std::vector<vjUser*> users = kernel->getUsers();
+   std::vector<User*> users = kernel->getUsers();
    int num_users = users.size();
-   vjASSERT(num_users > 0);      // Make sure that we actually have users defined
+   vprASSERT(num_users > 0);      // Make sure that we actually have users defined
 
    UserData* new_user=NULL;
    mUserData = std::vector<UserData*>(num_users);
@@ -158,12 +158,12 @@ void cubesApp::init()
       new_user = new UserData(users[1],"VJWand1", "VJButton0_1", "VJButton1_1",
                               "VJButton2_1");
       mUserData[1] = new_user;
-      vjASSERT(users[1]->getId() == 1);
+      vprASSERT(users[1]->getId() == 1);
    case (1):
       new_user = new UserData(users[0],"VJWand", "VJButton0", "VJButton1",
                               "VJButton2");
       mUserData[0] = new_user;
-      vjASSERT(users[0]->getId() == 0);
+      vprASSERT(users[0]->getId() == 0);
       break;
    default:
       vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrRED, "ERROR:") << " Bad number of users." << vjDEBUG_FLUSH;
@@ -187,7 +187,7 @@ void cubesApp::contextInit()
 
    // Verify that we got a valid display list index.
    if ( glIsList(mDlData->dlIndex) == GL_FALSE ) {
-       vjASSERT(false && "glGenLists() returned an invalid display list!");
+       vprASSERT(false && "glGenLists() returned an invalid display list!");
    }
    else {
        glNewList(mDlData->dlIndex, GL_COMPILE);
@@ -225,7 +225,7 @@ void cubesApp::contextClose()
 // Draw the scene.  A bunch of boxes of
 // differing color and stuff.
 //----------------------------------------------
-void cubesApp::myDraw(vjUser* user)
+void cubesApp::myDraw(User* user)
 {
    vjDEBUG(vjDBG_ALL,5) << "\n--- myDraw() ---\n" << vjDEBUG_FLUSH;
 
@@ -236,7 +236,7 @@ void cubesApp::myDraw(vjUser* user)
    glPushMatrix();
          // --- Push on Navigation matrix for the user --- //
 
-      vjMatrix nav_matrix = mUserData[user->getId()]->mNavMatrix;
+      Matrix nav_matrix = mUserData[user->getId()]->mNavMatrix;
       glMultMatrixf(nav_matrix.getFloatPtr());
 
 

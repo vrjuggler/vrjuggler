@@ -35,26 +35,28 @@
 #include <Input/vjSim/vjSimDigital.h>
 #include <Config/vjConfigChunk.h>
 
-
-//: Default Constructor
-vjSimDigital::vjSimDigital() : vjDigital(), vjSimInput()
+namespace vrj
 {
-   vjDEBUG(vjDBG_ALL,4)<<"*** vjSimDigital::vjSimDigital()\n"<< vjDEBUG_FLUSH;
+   
+//: Default Constructor
+SimDigital::SimDigital() : Digital(), SimInput()
+{
+   vjDEBUG(vjDBG_ALL,4)<<"*** SimDigital::SimDigital()\n"<< vjDEBUG_FLUSH;
 }
 
 //: Destructor
-vjSimDigital::~vjSimDigital()
+SimDigital::~SimDigital()
 {
-   //vjDEBUG(vjDBG_ALL,4)<<"*** vjSimDigital::~vjSimDigital()\n"<< vjDEBUG_FLUSH;
+   //vjDEBUG(vjDBG_ALL,4)<<"*** SimDigital::~SimDigital()\n"<< vjDEBUG_FLUSH;
 }
 
-bool vjSimDigital::config(vjConfigChunk* chunk)
+bool SimDigital::config(ConfigChunk* chunk)
 {
-   //vjDEBUG(vjDBG_ALL,4)<<"*** vjSimDigital::config()\n"<< vjDEBUG_FLUSH;
-   if(! (vjInput::config(chunk) && vjDigital::config(chunk) && vjSimInput::config(chunk)))
+   //vjDEBUG(vjDBG_ALL,4)<<"*** SimDigital::config()\n"<< vjDEBUG_FLUSH;
+   if(! (Input::config(chunk) && Digital::config(chunk) && SimInput::config(chunk)))
       return false;
 
-   std::vector<vjVarValue*> key_list = chunk->getAllProperties("keyPairs");
+   std::vector<VarValue*> key_list = chunk->getAllProperties("keyPairs");
    mSimKeys = readKeyList(key_list);
 
    int num_pairs = mSimKeys.size();
@@ -67,9 +69,9 @@ bool vjSimDigital::config(vjConfigChunk* chunk)
 //
 // NOTE: Digital is on when key is held down
 //+     When key is release, digital goes to off state
-void vjSimDigital::updateData()
+void SimDigital::updateData()
 {
-   //vjDEBUG(vjDBG_ALL,4)<<"*** vjSimDigital::updateData()\n"<< vjDEBUG_FLUSH;
+   //vjDEBUG(vjDBG_ALL,4)<<"*** SimDigital::updateData()\n"<< vjDEBUG_FLUSH;
 
    // -- Update digital data --- //
    for (unsigned int i = 0; i < mSimKeys.size(); i++)
@@ -80,3 +82,5 @@ void vjSimDigital::updateData()
          mDigitalData[i] = 0;
    }
 }
+
+};

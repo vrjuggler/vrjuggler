@@ -38,13 +38,14 @@
 
 #include <Kernel/GL/vjGlWindow.h>
 #include <Kernel/GL/vjGlDrawManager.h>
-class vjGlDrawManager;
-
 #include <vpr/Sync/CondVar.h>
 #include <vpr/Sync/Semaphore.h>
 
 #include <Performance/vjPerfDataBuffer.h>
 
+namespace vrj
+{
+   class GlDrawManager;
 
 //--------------------------------------------------------------------------------------
 //: Handles the rendering on multiple GLWindows in a single process.
@@ -55,13 +56,13 @@ class vjGlDrawManager;
 // @author Allen Bierbaum
 //  Date: 1-12-98
 //---------------------------------------------------------------------------------------
-class VJ_CLASS_API vjGlPipe
+class VJ_CLASS_API GlPipe
 {
 public:
       //: Constructor
       //!ARGS: _num - The id number of the pipe.
       //!NOTE: All contained windows SHOULD have the same pipe number
-   vjGlPipe(int num, vjGlDrawManager* glMgr)
+   GlPipe(int num, GlDrawManager* glMgr)
       : mActiveThread(NULL), mPipeNum(num), controlExit(0), glManager(glMgr),
         renderTriggerSema(0), renderCompleteSema(0), swapTriggerSema(0), swapCompleteSema(0)
    {
@@ -70,9 +71,9 @@ public:
 
       sprintf( namebuf, "vjGlPipe %d", mPipeNum );
 
-      // we need to check if we should be enabled... It looks like vjGlPipe
+      // we need to check if we should be enabled... It looks like GlPipe
       // is gonna need a configure method, though...
-      mPerfBuffer = new vjPerfDataBuffer( namebuf, 500, 40 );
+      mPerfBuffer = new PerfDataBuffer( namebuf, 500, 40 );
 
     }
 
@@ -121,11 +122,11 @@ public: // --- Window Management ----- //
 
    //: Add a GLWindow to the new window list
    // Control loop must now open the window on the next frame
-   void addWindow(vjGlWindow* win);
+   void addWindow(GlWindow* win);
 
    //: Remove a GLWindow from the window list
    //! NOTE: The window is not actually removed until the next draw trigger
-   void removeWindow(vjGlWindow* win);
+   void removeWindow(GlWindow* win);
 
 
    //: Returns true if pipe has any windows
@@ -134,7 +135,7 @@ public: // --- Window Management ----- //
 
 
    //: Return a list of open windows
-   std::vector<vjGlWindow*> getOpenWindows()
+   std::vector<GlWindow*> getOpenWindows()
    { return openWins; }
 
 private:
@@ -148,13 +149,13 @@ private:
 
    //:   Renders the window using OpenGL
    //!POST: win is rendered (In stereo if it is a stereo window)
-   void renderWindow(vjGlWindow* win);
+   void renderWindow(GlWindow* win);
 
    //: Swaps the buffers of the given window
-   void swapWindowBuffers(vjGlWindow* win);
+   void swapWindowBuffers(GlWindow* win);
 
-   vjGlPipe(const vjGlPipe& o) {;}
-   void operator=(const vjGlPipe& o) {;}
+   GlPipe(const GlPipe& o) {;}
+   void operator=(const GlPipe& o) {;}
 
 private:
    vpr::Thread*   mActiveThread;      //: The thread running this object
@@ -162,18 +163,18 @@ private:
 
    int   mPipeNum;                     //: The id of the pipe
 
-   std::vector<vjGlWindow*> newWins;  //: List of windows still to be opened on current pipe
+   std::vector<GlWindow*> newWins;  //: List of windows still to be opened on current pipe
    vpr::Mutex newWinLock;                //: Lock for accessing the newWin list
 
-   std::vector<vjGlWindow*> openWins; //: List of current open windows to render
+   std::vector<GlWindow*> openWins; //: List of current open windows to render
    vpr::Mutex openWinLock;               //: Lock for accessing the openWinList
 
-   std::vector<vjGlWindow*> mClosingWins; //: List of windows to close
+   std::vector<GlWindow*> mClosingWins; //: List of windows to close
    vpr::Mutex mClosingWinLock;               //: Lock for access the windows to close
 
    int         controlExit;         //: Flag for when to exit the control loop
 
-   vjGlDrawManager*    glManager;    //: The openlGL manager that we are rendering for
+   GlDrawManager*    glManager;    //: The openlGL manager that we are rendering for
                                      //: Needed to get app, etc.
 
    vpr::Semaphore    renderTriggerSema;   //: Signals render trigger
@@ -181,8 +182,10 @@ private:
    vpr::Semaphore    swapTriggerSema;     //: Signals a swap to happen
    vpr::Semaphore    swapCompleteSema;    //: Signals a swap has been completed
 
-    vjPerfDataBuffer* mPerfBuffer;  //: Performance data for this pipe
+    PerfDataBuffer* mPerfBuffer;  //: Performance data for this pipe
     int mPerfPhase;                 //: utility var for perf measurement
+};
+
 };
 
 #endif

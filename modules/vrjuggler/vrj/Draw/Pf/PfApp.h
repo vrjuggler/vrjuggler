@@ -41,10 +41,13 @@
 #include <Kernel/vjApp.h>
 #include <Kernel/vjDrawManager.h>
 //#include <Kernel/vjKernel.h>
-class vjKernel;
 #include <Kernel/Pf/vjPfDrawManager.h>
 #include <Kernel/Pf/vjPfUtil.h>
 
+namespace vrj
+{
+   class Kernel;
+   
 //-------------------------------------------------------------
 //: Encapulates an actual Performer application.
 //
@@ -57,15 +60,15 @@ class vjKernel;
 //  Date: 9-8-97
 //-------------------------------------------------------------
 //!PUBLIC_API:
-class vjPfApp : public vjApp
+class PfApp : public App
 {
 public:
-   vjPfApp(vjKernel* kern) : vjApp(kern)
+   PfApp(Kernel* kern) : App(kern)
    {
       //api.setPerformer();  // Tell everyone that we are Performer
    }
 
-   vjPfApp() {;}
+   PfApp() {;}
 
    //: Initialize the scene graph
    // Called after pfInit & pfConfig but before apiInit
@@ -139,8 +142,10 @@ public:
 public: // -- Factory Function -- //
    //: Get the DrawManager to use
    // Returns the ogl draw manager
-   virtual vjDrawManager* getDrawManager()
-   { return vjPfDrawManager::instance(); }
+   virtual DrawManager* getDrawManager()
+   { return PfDrawManager::instance(); }
+
+};
 
 };
 

@@ -37,17 +37,20 @@
 #include <Math/vjMath.h>
 
 
+namespace vrj
+{
+   
 //: Finds the point on the seg nearest to pt.
 // Returns the nearest point in nearPt
 //
 // Makes assumptions that all pt dir is normalized
-void vjSeg::findNearestPt(const vjVec3& pt, vjVec3& nearPt)
+void Seg::findNearestPt(const Vec3& pt, Vec3& nearPt)
 {
    // GGI Pg. 300
    // Find plane through point pt normal to line
    // Isect the line with this plane
-   vjASSERT(dir.isNormalized());
-   vjPlane J;
+   vprASSERT(dir.isNormalized());
+   Plane J;
    J.normal = dir;         // Plane normal
    J.offset = -(pt.dot(dir));
    float tDist;         // tDist along seg
@@ -62,15 +65,15 @@ void vjSeg::findNearestPt(const vjVec3& pt, vjVec3& nearPt)
       nearPt = pos + (dir*tDist);
 }
 
-bool vjSeg::isectTriangle(const vjVec3 _v1, const vjVec3 _v2, const vjVec3 _v3, float* t)
+bool Seg::isectTriangle(const Vec3 _v1, const Vec3 _v2, const Vec3 _v3, float* t)
 {
    // Graphic Gems I: Page 392
    int i0, i1, i2;      // Axis indices
    float u0, u1, u2, v0, v1, v2, alpha, beta;
    i0 = 0;
-   vjPlane triPlane;   // The plane the triangle is in
+   Plane triPlane;   // The plane the triangle is in
    float   tDist;      // Dist hit is along the seg
-   vjVec3  hitPt;      // Point hit on the plane
+   Vec3  hitPt;      // Point hit on the plane
 
    triPlane.makePts(_v1, _v2, _v3);
    if (triPlane.isect(*this, &tDist))    // Does the seg hit the plane?
@@ -80,7 +83,7 @@ bool vjSeg::isectTriangle(const vjVec3 _v1, const vjVec3 _v2, const vjVec3 _v3, 
       // Find max index
       // Note: I added the abs because of bug in code.  NOT IN GGI
       for (int index=0;index<3;index++)
-         if (vjMath::abs(triPlane.normal.vec[index]) > vjMath::abs(triPlane.normal.vec[i0]))
+         if (Math::abs(triPlane.normal.vec[index]) > Math::abs(triPlane.normal.vec[i0]))
             i0 = index;
 
       if (i0 == 0)
@@ -129,3 +132,5 @@ bool vjSeg::isectTriangle(const vjVec3 _v1, const vjVec3 _v2, const vjVec3 _v3, 
    else
       return false;
 }
+
+};

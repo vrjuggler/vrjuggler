@@ -51,7 +51,7 @@ public:
     // is loaded.
     //       Ex. The Init function
     // ------------------------------------------------------------------------
-    UserData(vjUser* user, std::string wandName, std::string incButton,
+    UserData(User* user, std::string wandName, std::string incButton,
              std::string decButton, std::string stopButton);
 
     // ------------------------------------------------------------------------
@@ -61,17 +61,17 @@ public:
     void updateNavigation(void);
 
     // Devices to use for the given user.
-    vjPosInterface       mWand;                  // the Wand
-    vjDigitalInterface   mIncVelocityButton;     // Button for velocity
-    vjDigitalInterface   mDecVelocityButton;
-    vjDigitalInterface   mStopButton;            // Button to stop
+    PosInterface       mWand;                  // the Wand
+    DigitalInterface   mIncVelocityButton;     // Button for velocity
+    DigitalInterface   mDecVelocityButton;
+    DigitalInterface   mStopButton;            // Button to stop
 
       // Navigation info for the user
     float                mCurVelocity; // The current velocity
-    vjMatrix             mNavMatrix;   // Matrix for navigation in the
+    Matrix             mNavMatrix;   // Matrix for navigation in the
                                        // application
 
-    vjUser*              mUser;        // The user we hold data for
+    User*              mUser;        // The user we hold data for
 };
 
 

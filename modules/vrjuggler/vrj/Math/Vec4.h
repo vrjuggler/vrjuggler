@@ -40,7 +40,6 @@
 
 #include <Math/vjMatrix.h>
 #include <Math/vjMath.h>
-class vjMatrix;
 
 // --- Define access reps --- //
 #define VJ_X 0
@@ -48,15 +47,19 @@ class vjMatrix;
 #define VJ_Z 2
 #define VJ_W 3
 
+namespace vrj
+{
+   class Matrix;
+
 //: Vector of length 4
 //!PUBLIC_API:
-class VJ_CLASS_API vjVec4
+class VJ_CLASS_API Vec4
 {
 public:
    // Constructor
-   vjVec4(float _x, float _y, float _z, float _w)
+   Vec4(float _x, float _y, float _z, float _w)
    { set(_x, _y, _z, _w);}
-   vjVec4() { set(0.0f,0.0f,0.0f,0.0f);}
+   Vec4() { set(0.0f,0.0f,0.0f,0.0f);}
 
 public:
    //: Set value of Vector
@@ -69,14 +72,14 @@ public:
 
 public:
    //: Are we equal
-   bool equal(const vjVec4&  _v) const {
+   bool equal(const Vec4&  _v) const {
       return (vec[0] == _v[0] &&
                vec[1] == _v[1] &&
                vec[2] == _v[2] &&
                vec[3] == _v[3]);
    }
 
-   float dot(const vjVec4&  _v) const
+   float dot(const Vec4&  _v) const
    {
       return (vec[0] * _v[0] +
                vec[1] * _v[1] +
@@ -85,7 +88,7 @@ public:
 
    inline float length() const
    {
-      return vjMath::sqrt((vec[0]*vec[0])+
+      return Math::sqrt((vec[0]*vec[0])+
                             (vec[1]*vec[1])+
                             (vec[2]*vec[2])+
                             (vec[3]*vec[3]));
@@ -102,68 +105,68 @@ public:
 
    //: Xform the vector
    // Set vec = (Mat)(Vec)
-   void xform(const vjMatrix& _m, vjVec4 _v);
+   void xform(const Matrix& _m, Vec4 _v);
 
 public:
    /// Operators
    float&  operator [](int i) { return vec[i];}
    const float&  operator [](int i) const { return vec[i];}
 
-   int operator ==(const vjVec4& _v) const {
+   int operator ==(const Vec4& _v) const {
       return (vec[0] == _v[0] &&
               vec[1] == _v[1] &&
               vec[2] == _v[2] &&
               vec[3] == _v[3]);
    }
 
-   int operator !=(const vjVec4& _v) const {
+   int operator !=(const Vec4& _v) const {
       return !(*this == _v);
    }
 
 public:
-   // vjVec4 operators, return by value could be slow
-   vjVec4 operator -() const {
-      return vjVec4(-vec[0], -vec[1], -vec[2], -vec[3]);
+   // Vec4 operators, return by value could be slow
+   Vec4 operator -() const {
+      return Vec4(-vec[0], -vec[1], -vec[2], -vec[3]);
    }
 
-   vjVec4 operator +(const vjVec4& _v) const {
-      return vjVec4(vec[0]+_v[0], vec[1]+_v[1], vec[2]+_v[2], vec[3]+_v[3]);
+   Vec4 operator +(const Vec4& _v) const {
+      return Vec4(vec[0]+_v[0], vec[1]+_v[1], vec[2]+_v[2], vec[3]+_v[3]);
    }
 
-   vjVec4 operator -(const vjVec4& _v) const {
-      return vjVec4(vec[0]-_v[0], vec[1]-_v[1], vec[2]-_v[2], vec[3]-_v[3]);
+   Vec4 operator -(const Vec4& _v) const {
+      return Vec4(vec[0]-_v[0], vec[1]-_v[1], vec[2]-_v[2], vec[3]-_v[3]);
    }
 
-   friend inline vjVec4 operator *(float _s, const vjVec4&);
-   friend inline vjVec4 operator *(const vjVec4& _v, float _s);
-   friend inline vjVec4 operator /(const vjVec4& _v, float _s);
+   friend inline Vec4 operator *(float _s, const Vec4&);
+   friend inline Vec4 operator *(const Vec4& _v, float _s);
+   friend inline Vec4 operator /(const Vec4& _v, float _s);
 
 public:
    //: Assignment Operators
-   vjVec4&  operator =(const vjVec4& _v) {
+   Vec4&  operator =(const Vec4& _v) {
       vec[0] = _v[0]; vec[1] = _v[1];
       vec[2] = _v[2]; vec[3] = _v[3];
       return *this;
    }
 
-   vjVec4& operator *=(float _s) {
+   Vec4& operator *=(float _s) {
       vec[0] *= _s; vec[1] *= _s;
       vec[2] *= _s; vec[3] *= _s;
       return *this;
    }
 
-   vjVec4& operator /=(float _s) {
+   Vec4& operator /=(float _s) {
       _s = 1.0/_s;
       return *this *= _s;
    }
 
-   vjVec4& operator +=(const vjVec4& _v) {
+   Vec4& operator +=(const Vec4& _v) {
       vec[0] += _v[0]; vec[1] += _v[1];
       vec[2] += _v[2]; vec[3] += _v[3];
       return *this;
    }
 
-   vjVec4& operator -=(const vjVec4& _v) {
+   Vec4& operator -=(const Vec4& _v) {
       vec[0] -= _v[0]; vec[1] -= _v[1];
       vec[2] -= _v[2]; vec[3] -= _v[3];
       return *this;
@@ -173,9 +176,10 @@ public:
    float vec[4];        //: The vector data
 };
 
-inline vjVec4 operator *(float _s, const vjVec4& _v);
-inline vjVec4 operator *(const vjVec4& _v, float _s);
-inline vjVec4 operator /(const vjVec4& _v, float _s);
-std::ostream& operator<<(std::ostream& out, vjVec4& _v);
+inline Vec4 operator *(float _s, const Vec4& _v);
+inline Vec4 operator *(const Vec4& _v, float _s);
+inline Vec4 operator /(const Vec4& _v, float _s);
+std::ostream& operator<<(std::ostream& out, Vec4& _v);
 
+};
 #endif

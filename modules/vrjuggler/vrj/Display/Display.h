@@ -34,13 +34,16 @@
 #ifndef _VJ_DISPLAY_WINDOW_H_
 #define _VJ_DISPLAY_WINDOW_H_
 
-#include <vjConfig.h>
-
-#include <Kernel/vjViewport.h>
 #include <vector>
 
+#include <vjConfig.h>
+#include <Kernel/vjViewport.h>
+
+namespace vrj
+{
+   
     // Config stuff
-class vjConfigChunk;
+class ConfigChunk;
 
 
 //---------------------------------------------------------------------
@@ -51,16 +54,16 @@ class vjConfigChunk;
 // @author Allen Bierbaum
 //  Date: 3-5-2001
 //-----------------------------------------------------------------------
-class vjDisplay
+class Display
 {
 public:
-   vjDisplay() : mDisplayChunk(NULL)
+   Display() : mDisplayChunk(NULL)
    {
       _xo = _yo = _xs = _ys = -1;
       mPipe = -1;
    }
 
-   virtual ~vjDisplay()
+   virtual ~Display()
    {;}
 
 public:
@@ -71,10 +74,10 @@ public:
       //+       and "fix" the error.
       //! NOTE: All derived display classes MUST call this function
       //+       after doing local configuration.
-   virtual void config(vjConfigChunk* chunk);
+   virtual void config(vrj::ConfigChunk* chunk);
 
-   void configDisplayWindow(vjConfigChunk* chunk);
-   void configViewports(vjConfigChunk* chunk);
+   void configDisplayWindow(vrj::ConfigChunk* chunk);
+   void configViewports(vrj::ConfigChunk* chunk);
 
    //: Updates the projection data for each contained viewport
    void updateProjections();
@@ -97,7 +100,7 @@ public:
    { _xo = xo; _yo = yo; _xs = xs; _ys = ys;}
    void getOriginAndSize(int& xo, int& yo, int& xs, int& ys)
    {
-      vjASSERT(xo != -1);     // Make sure we have been configured
+      vprASSERT(xo != -1);     // Make sure we have been configured
       xo = _xo; yo = _yo; xs = _xs; ys = _ys;
    }
 
@@ -111,16 +114,16 @@ public:
    { return mInStereo; }
 
    //: Get the config chunk that configured this display window
-   vjConfigChunk* getConfigChunk()
+   vrj::ConfigChunk* getConfigChunk()
    { return mDisplayChunk; }
 
-   friend VJ_API(std::ostream&) operator<<(std::ostream& out, vjDisplay& disp);
+   friend VJ_API(std::ostream&) operator<<(std::ostream& out, vrj::Display& disp);
 
    // --- Viewport handling --- //
    unsigned getNumViewports()
    { return mViewports.size(); }
 
-   vjViewport* getViewport(int vpNum)
+   vrj::Viewport* getViewport(int vpNum)
    { return mViewports[vpNum]; }
 
 protected:
@@ -130,11 +133,12 @@ protected:
    int            mPipe;                  //: Hardware pipe. Index of the rendering hardware
    bool           mActive;                //: Is the display active or not
    bool           mInStereo;              //: Is the window in stereo mode?
-   vjConfigChunk* mDisplayChunk;          //: The chunk data for this display
+   vrj::ConfigChunk* mDisplayChunk;       //: The chunk data for this display
 
-   std::vector<vjViewport*>   mViewports;    //: Contained viewports
+   std::vector<vrj::Viewport*>   mViewports;    //: Contained viewports
 };
 
-VJ_API(std::ostream&) operator<<(std::ostream& out, vjDisplay& disp);
+VJ_API(std::ostream&) operator<<(std::ostream& out, vrj::Display& disp);
 
+} // end namespace
 #endif

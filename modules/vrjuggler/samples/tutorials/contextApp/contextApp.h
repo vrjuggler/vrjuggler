@@ -27,7 +27,7 @@ void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
 // It also has basic code that draws a box centered on
 // the origin
 //----------------------------------------------------
-class contextApp : public vjGlApp
+class contextApp : public GlApp
 {
 public:
    contextApp()
@@ -118,12 +118,12 @@ private:
    }
 
 public:
-   vjGlContextData<GLuint>  mCubeDlId;       // Id of the cube display list
+   GlContextData<GLuint>  mCubeDlId;       // Id of the cube display list
 
-   vjPosInterface    mWand;         // Positional interface for Wand position
-   vjPosInterface    mHead;         // Positional interface for Head position
-   vjDigitalInterface   mButton0;   // Digital interface for button 0
-   vjDigitalInterface   mButton1;   // Digital interface for button 1v
+   PosInterface    mWand;         // Positional interface for Wand position
+   PosInterface    mHead;         // Positional interface for Head position
+   DigitalInterface   mButton0;   // Digital interface for button 0
+   DigitalInterface   mButton1;   // Digital interface for button 1v
 };
 
 

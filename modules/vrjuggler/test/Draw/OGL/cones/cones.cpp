@@ -41,12 +41,12 @@
 
 int
 main (int argc, char* argv[]) {
-    vjProjection::setNearFar(0.01, 10000.0f);
+    Projection::setNearFar(0.01, 10000.0f);
 
-    vjKernel* kernel;
+    Kernel* kernel;
     ConesApp* application;
 
-    kernel      = vjKernel::instance();   // Get the kernel
+    kernel      = Kernel::instance();   // Get the kernel
 
     if ( argc <= 1 ) {
         // Display some usage info (holding the user by the hand stuff).

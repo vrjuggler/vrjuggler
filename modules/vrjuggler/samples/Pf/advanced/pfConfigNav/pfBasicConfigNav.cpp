@@ -41,7 +41,7 @@
 
 int main(int argc, char* argv[])
 {
-   vjKernel* kernel = vjKernel::instance();                             // Declare a new Kernel
+   Kernel* kernel = Kernel::instance();                             // Declare a new Kernel
    pfBasicConfigNavApp* application = new pfBasicConfigNavApp();  // Delcare an instance of my application
 
    // Load config information

@@ -39,7 +39,12 @@
 #include <string>
 #include <vector>
 
-class VJ_CLASS_API vjFileIO
+
+namespace vrj
+{
+  
+   
+class VJ_CLASS_API FileIO
 {
 public:
    // == "." by default
@@ -87,6 +92,7 @@ public:
 };
 
 
+};
 
 
 #endif

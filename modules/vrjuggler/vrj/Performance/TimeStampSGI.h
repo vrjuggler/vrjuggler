@@ -38,23 +38,26 @@
 #include <vjConfig.h>
 #include <sys/types.h>
 
+namespace vrj
+{
+ 
 //-----------------------------------------
 //:Time recorder for SGI systems
 //
-//     This version of vjTimeStamp uses the SGI system cycle
+//     This version of TimeStaMp uses the SGI system cycle
 //     counter to collect timing information.  The precision
 //     of this hardware timer varies on different machines.
 //     For example, on an SGI Onyx it's 21 nanoseconds, while
 //     it's 80 ns on an Octane.
 //
-//     vjTimeStampPosix should never be instantiated directly.
-//     Instead, use vjTimeStamp, which will be typedefed to
+//     TimeStaMpPosix should never be instantiated directly.
+//     Instead, use TimeStaMp, which will be typedefed to
 //     the correct implementation.
 //
 // @author  Christopher Just
 //-----------------------------------------
 
-class vjTimeStampSGI {
+class TimeStaMpSGI {
 
 public:
 
@@ -71,7 +74,7 @@ public:
     //: Constructor
     //! PRE: initialize() has been called.
     //! POST: self is created and set to the current counter val.
-    vjTimeStampSGI();
+    TimeStaMpSGI();
 
 
 
@@ -90,7 +93,7 @@ public:
 
 
     //: assignment operator
-    vjTimeStampSGI& operator= (const vjTimeStampSGI& t2) {
+    TimeStaMpSGI& operator= (const TimeStaMpSGI& t2) {
 	val = t2.val;
 	return *this;
     }
@@ -100,13 +103,13 @@ public:
     //: returns number of microseconds between self and t2
     //! PRE: t2 is stamped with an earlier time than self
     //! 
-    float operator - (const vjTimeStampSGI& t2) const;
+    float operator - (const TimeStaMpSGI& t2) const;
 
 
 
     float usecs();
 
-    friend std::ostream& operator << (std::ostream& out, vjTimeStampSGI& ts);
+    friend std::ostream& operator << (std::ostream& out, TimeStaMpSGI& ts);
 
     //: returns resolution of timer in microseconds
     float getResolution();
@@ -123,6 +126,8 @@ private:
     static long long maxval;
 
     long long val; // (in clockticks; resolution*clocktics = time in usecs
+
+};
 
 };
 

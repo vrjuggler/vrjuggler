@@ -41,6 +41,9 @@
 #include <Input/Multi/aTrackdController.h>
 #include <vector>
 
+namespace vrj
+{
+   
 
 //-----------------------------------------------------------------------------
 //: Class interfacing with trackd sensor data
@@ -51,17 +54,17 @@
 //+  example, if you have recievers 1,2, and 4 with transmitter on 3, then
 //+  you can access the data, in order, as 0, 1, 2.
 //
-// See also: vjDigital, vjAnalog
+// See also: Digital, Analog
 //-----------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjTrackdController : public vjInput, public vjDigital, public vjAnalog
+class TrackdController : public Input, public Digital, public Analog
 {
 public:
 
    // ------------------------------------------------------------------------
    //: Constructor.
    // ------------------------------------------------------------------------
-   vjTrackdController();
+   TrackdController();
 
    // ------------------------------------------------------------------------
    //: Destructor.
@@ -69,7 +72,7 @@ public:
    //! PRE: None.
    //! POST: Shared memory is released
    // ------------------------------------------------------------------------
-   ~vjTrackdController();
+   ~TrackdController();
 
    // ------------------------------------------------------------------------
    //: Configure the trackd controller with the given config chunk.
@@ -84,7 +87,7 @@ public:
    //! RETURNS: true - The device was configured succesfully.
    //! RETURNS: false - The config chunk is invalid.
    // ------------------------------------------------------------------------
-   virtual bool config(vjConfigChunk* c);
+   virtual bool config(ConfigChunk* c);
 
    //: Begin sampling
    int startSampling() { return 1;}
@@ -112,7 +115,7 @@ public:
    //: Return digital data
    virtual int getDigitalData(int devNum=0)
    {
-      vjASSERT(devNum < (int)mCurButtons.size() && "Digital index out of range");    // Make sure we have enough space
+      vprASSERT(devNum < (int)mCurButtons.size() && "Digital index out of range");    // Make sure we have enough space
       return mCurButtons[devNum];
    }
 
@@ -122,18 +125,18 @@ public:
    //! PRE: give the device number you wish to access.
    //! POST: returns a value that ranges from 0.0f to 1.0f
    //! NOTE: for example, if you are sampling a potentiometer, and it returns reading from
-   //        0, 255 - this function will normalize those values (using vjAnalog::normalizeMinToMax())
+   //        0, 255 - this function will normalize those values (using Analog::normalizeMinToMax())
    //        for another example, if your potentiometer's turn radius is limited mechanically to return
    //        say, the values 176 to 200 (yes this is really low res), this function will still return
    //        0.0f to 1.0f.
-   //! NOTE: to specify these min/max values, you must set in your vjAnalog (or analog device) config
+   //! NOTE: to specify these min/max values, you must set in your Analog (or analog device) config
    //        file the field "min" and "max".  By default (if these values do not appear),
    //        "min" and "max" are set to 0.0f and 1.0f respectivly.
    //! NOTE: TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your data using
-   //        vjAnalog::normalizeMinToMax()
+   //        Analog::normalizeMinToMax()
    virtual float getAnalogData(int devNum=0)
    {
-      vjASSERT(devNum < (int)mCurValuators.size() && "Analog index out of range");    // Make sure we have enough space
+      vprASSERT(devNum < (int)mCurValuators.size() && "Analog index out of range");    // Make sure we have enough space
       float normalized;
       this->normalizeMinToMax( mCurValuators[devNum], normalized );
       return normalized;
@@ -143,6 +146,8 @@ private:
    aTrackdController*      mTrackdController;      // The controller we are dealing with
    std::vector<float>      mCurValuators;          // The current (up-to-date) values
    std::vector<bool>       mCurButtons;            // The current button states
+};
+
 };
 
 #endif

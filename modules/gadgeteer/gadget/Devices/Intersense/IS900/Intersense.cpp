@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 //===============================================================
-// vjIsense (a Wrapper for isIntersense)
+// Isense (a Wrapper for isIntersense)
 //
 // Purpose:
 //      VR Juggler Intersense tracking class
@@ -52,6 +52,9 @@
 #include <Utils/vjDebug.h>
 #include <Config/vjConfigChunk.h>
 
+namespace vrj
+{
+   
 // Helper to return the index for theData array
 // given the stationNum we are dealing with and the bufferIndex
 // to get
@@ -60,43 +63,43 @@
 // XXX: We are going to say the cubes are 0 based
 
 
-int vjIsense::getStationIndex(int stationNum, int bufferIndex)
+int Isense::getStationIndex(int stationNum, int bufferIndex)
 {
     int ret_val = (stationNum*3)+bufferIndex;
-    vjASSERT((ret_val >= 0) && (ret_val < ((mTracker.NumStations()+1)*3)));
+    vprASSERT((ret_val >= 0) && (ret_val < ((mTracker.NumStations()+1)*3)));
     return ret_val;
 }
 
 
 
-vjIsense::vjIsense()
+Isense::Isense()
 {
-    vjDEBUG(vjDBG_INPUT_MGR,1) << "*** vjIsense::vjIsense() ***\n" << vjDEBUG_FLUSH;
-    //vjDEBUG(vjDBG_INPUT_MGR,1) << "*** vjIsense::deviceAbilities = " << deviceAbilities << " ***\n" << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_INPUT_MGR,1) << "*** Isense::Isense() ***\n" << vjDEBUG_FLUSH;
+    //vjDEBUG(vjDBG_INPUT_MGR,1) << "*** Isense::deviceAbilities = " << deviceAbilities << " ***\n" << vjDEBUG_FLUSH;
 }
 
-bool vjIsense::config(vjConfigChunk *c)
+bool Isense::config(ConfigChunk *c)
 {
-    vjDEBUG(vjDBG_INPUT_MGR,1) << "         vjIsense::vjIsense(vjConfigChunk*)"
+    vjDEBUG(vjDBG_INPUT_MGR,1) << "         Isense::Isense(ConfigChunk*)"
                                << std::endl << vjDEBUG_FLUSH;
 
-// read in vjPosition's, vjDigital's, and vjAnalog's config stuff,
+// read in Position's, Digital's, and Analog's config stuff,
 // --> this will be the port and baud fields
-   if(! (vjInput::config(c) && vjPosition::config(c) && vjDigital::config(c) && vjAnalog::config(c) ))
+   if(! (Input::config(c) && Position::config(c) && Digital::config(c) && Analog::config(c) ))
       return false;
 
-// keep isIntersense's port and baud members in sync with vjInput's port and baud members.
-    vjDEBUG(vjDBG_INPUT_MGR,1) << "   vjIsense::vjIsense(vjConfigChunk*) -> vjInput::getPort() = " << vjInput::getPort() << std::endl << vjDEBUG_FLUSH;
-    mTracker.setPortName( vjInput::getPort() );
-    mTracker.rBaudRate() = vjInput::getBaudRate();
+// keep isIntersense's port and baud members in sync with Input's port and baud members.
+    vjDEBUG(vjDBG_INPUT_MGR,1) << "   Isense::Isense(ConfigChunk*) -> Input::getPort() = " << Input::getPort() << std::endl << vjDEBUG_FLUSH;
+    mTracker.setPortName( Input::getPort() );
+    mTracker.rBaudRate() = Input::getBaudRate();
     mTracker.rNumStations() = c->getNum("stations");
 
     if(stations != NULL) delete [] stations;
-    stations = new vjISStationConfig[mTracker.rNumStations()];
-    vjConfigChunk* stationConfig = NULL;
+    stations = new ISStationConfig[mTracker.rNumStations()];
+    ConfigChunk* stationConfig = NULL;
     for( int i = 0; i < mTracker.rNumStations(); i++)
     {
-    stationConfig = static_cast<vjConfigChunk*>(c->getProperty("stations", i));
+    stationConfig = static_cast<ConfigChunk*>(c->getProperty("stations", i));
     stations[i].enabled = static_cast<bool>(stationConfig->getProperty("enabled"));
     stations[i].stationIndex = static_cast<int>(stationConfig->getProperty("stationIndex"));
     stations[i].useDigital = static_cast<bool>(stationConfig->getProperty("useDigital"));
@@ -121,7 +124,7 @@ bool vjIsense::config(vjConfigChunk *c)
     return true;
 }
 
-vjIsense::~vjIsense()
+Isense::~Isense()
 {
     this->stopSampling();
     if (stations != NULL)
@@ -133,7 +136,7 @@ vjIsense::~vjIsense()
 }
 
 // Main thread of control for this active object
-void vjIsense::controlLoop(void* nullParam)
+void Isense::controlLoop(void* nullParam)
 {
 
     if (theData != NULL)
@@ -142,8 +145,8 @@ void vjIsense::controlLoop(void* nullParam)
         delete mDataTimes;
 
     int numbuffs = (mTracker.NumStations())*3;
-    theData = (vjMatrix*) new vjMatrix[numbuffs];
-    mDataTimes = new vjTimeStamp[numbuffs];
+    theData = (Matrix*) new Matrix[numbuffs];
+    mDataTimes = new TimeStaMp[numbuffs];
 
 // Configure the stations used by the configuration
     int j = 0;
@@ -169,7 +172,7 @@ void vjIsense::controlLoop(void* nullParam)
     }
 }
 
-int vjIsense::startSampling()
+int Isense::startSampling()
 {
 // make sure inertia cubes aren't already started
     if (this->isActive() == true)
@@ -185,7 +188,7 @@ int vjIsense::startSampling()
         vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
                                                 << "vjIsense: startSampling called, when already sampling.\n"
                                                 << vjDEBUG_FLUSH;
-        vjASSERT(false);
+        vprASSERT(false);
     } else {
 
 // open the tracker connection
@@ -198,8 +201,8 @@ int vjIsense::startSampling()
       }
 
 // Create a new thread to handle the control
-        vpr::ThreadMemberFunctor<vjIsense>* memberFunctor =
-            new vpr::ThreadMemberFunctor<vjIsense>(this, &vjIsense::controlLoop, NULL);
+        vpr::ThreadMemberFunctor<Isense>* memberFunctor =
+            new vpr::ThreadMemberFunctor<Isense>(this, &Isense::controlLoop, NULL);
         vpr::Thread* new_thread;
         new_thread = new vpr::Thread(memberFunctor);
         myThread = new_thread;
@@ -216,13 +219,13 @@ int vjIsense::startSampling()
     return 0;
 }
 
-int vjIsense::sample()
+int Isense::sample()
 {
     if (this->isActive() == false)
         return 0;
 
     int i,  j;
-    vjTimeStamp sampletime;
+    TimeStaMp sampletime;
 
 
     sampletime.set();
@@ -250,7 +253,7 @@ int vjIsense::sample()
                                mTracker.zPos( stationIndex ));
    } else {
 
-       vjQuat quatValue(mTracker.xQuat( stationIndex ),
+       Quat quatValue(mTracker.xQuat( stationIndex ),
               mTracker.yQuat( stationIndex ),
               mTracker.zQuat( stationIndex ),
               mTracker.wQuat( stationIndex ));
@@ -259,7 +262,7 @@ int vjIsense::sample()
    mDataTimes[index] = sampletime;
 
 // We start at the index of the first digital item (set in the config files)
-// and we copy the digital data from this station to the vjIsense device for range (min -> min+count-1)
+// and we copy the digital data from this station to the Isense device for range (min -> min+count-1)
    min = stations[i].dig_min;
    num = min + stations[i].dig_num;
    if(stations[i].useDigital) {
@@ -279,7 +282,7 @@ int vjIsense::sample()
 // Since we want the reciver in the world system, Rw
 // wTr = wTt*tTr
 
-        vjMatrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
+        Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
 
         world_T_transmitter = xformMat;                    // Set transmitter offset from local info
         transmitter_T_reciever = theData[index];           // Get reciever data from sampled data
@@ -294,7 +297,7 @@ int vjIsense::sample()
     return 1;
 }
 
-int vjIsense::stopSampling()
+int Isense::stopSampling()
 {
     if (this->isActive() == false)
         return 0;
@@ -325,7 +328,7 @@ int vjIsense::stopSampling()
 
 
 //d == station#
-vjMatrix* vjIsense::getPosData( int d )
+Matrix* Isense::getPosData( int d )
 {
     if (this->isActive() == false)
         return NULL;
@@ -334,7 +337,7 @@ vjMatrix* vjIsense::getPosData( int d )
 }
 
 
-int vjIsense::getDigitalData( int d )
+int Isense::getDigitalData( int d )
 {
     if(this->isActive() == false)
         return 0;
@@ -342,16 +345,16 @@ int vjIsense::getDigitalData( int d )
     return mInput[current].digital[d];
 }
 
-float vjIsense::getAnalogData( int d )
+float Isense::getAnalogData( int d )
 {
     float newValue;
     if(this->isActive() == false)
    return 0.0;
-    vjAnalog::normalizeMinToMax(mInput[current].analog[d], newValue);
+    Analog::normalizeMinToMax(mInput[current].analog[d], newValue);
     return newValue;
 }
 
-vjTimeStamp* vjIsense::getPosUpdateTime (int d)
+TimeStaMp* Isense::getPosUpdateTime (int d)
 {
     if (this->isActive() == false)
         return NULL;
@@ -359,7 +362,7 @@ vjTimeStamp* vjIsense::getPosUpdateTime (int d)
     return (&mDataTimes[getStationIndex(d,current)]);
 }
 
-void vjIsense::updateData()
+void Isense::updateData()
 {
     if (this->isActive() == false)
    return;
@@ -383,3 +386,4 @@ void vjIsense::updateData()
 }
 
 
+};

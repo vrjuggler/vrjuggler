@@ -37,24 +37,27 @@
 #include <Input/vjSim/vjSimGloveGesture.h>
 #include <Config/vjConfigChunk.h>
 
-//: Construct the vjSimGloveGesture
+namespace vrj
+{
+   
+//: Construct the SimGloveGesture
 // -Set the keyboard key pairs <b>
 // -Load the sample file
 // -Trim the smallest so they are same length
 // -Find/Set pos proxy for glove
-bool vjSimGloveGesture::config(vjConfigChunk* chunk)
+bool SimGloveGesture::config(ConfigChunk* chunk)
 {
-   if((!vjGloveGesture::config(chunk)) || (!vjSimInput::config(chunk)))
+   if((!GloveGesture::config(chunk)) || (!SimInput::config(chunk)))
       return false;
 
    mCurGesture = 0;     // We are in no gesture yet
 
-   std::vector<vjVarValue*> key_list = chunk->getAllProperties("keyPairs");
+   std::vector<VarValue*> key_list = chunk->getAllProperties("keyPairs");
    mSimKeys = readKeyList(key_list);
 
    // Get sample filename
    std::string sample_file = chunk->getProperty("trainedFilename");
-   loadTrainedFile(vjFileIO::replaceEnvVars(sample_file));
+   loadTrainedFile(FileIO::replaceEnvVars(sample_file));
 
    // Trim the lengths
    unsigned int num_gestures = getNumGestures();
@@ -70,18 +73,18 @@ bool vjSimGloveGesture::config(vjConfigChunk* chunk)
    std::string glove_pos_proxy = chunk->getProperty("glovePos");    // Get the name of the pos_proxy
    if(glove_pos_proxy == std::string(""))
    {
-      vjDEBUG(vjDBG_INPUT_MGR,0) << clrOutNORM(clrRED, "ERROR:") << " vjSimGloveGesture has no posProxy."
+      vjDEBUG(vjDBG_INPUT_MGR,0) << clrOutNORM(clrRED, "ERROR:") << " SimGloveGesture has no posProxy."
                                  << std::endl << vjDEBUG_FLUSH;
       return false;
    }
    // init glove proxy interface
    /*
-   int proxy_index = vjKernel::instance()->getInputManager()->getProxyIndex(glove_pos_proxy);
+   int proxy_index = Kernel::instance()->getInputManager()->getProxyIndex(glove_pos_proxy);
    if(proxy_index != -1)
-      mGlovePos[0] = vjKernel::instance()->getInputManager()->getPosProxy(proxy_index);
+      mGlovePos[0] = Kernel::instance()->getInputManager()->getPosProxy(proxy_index);
    else
       vjDEBUG(vjDBG_INPUT_MGR,0)
-         << clrOutNORM(clrRED, "ERROR:") << " vjSimGloveGesture::vjCyberGlove: Can't find posProxy."
+         << clrOutNORM(clrRED, "ERROR:") << " SimGloveGesture::CyberGlove: Can't find posProxy."
          << std::endl << std::endl << vjDEBUG_FLUSH;
    */
 
@@ -96,7 +99,7 @@ bool vjSimGloveGesture::config(vjConfigChunk* chunk)
 //  Returns -1 if function fails or if devNum is out of range.<BR>
 //  NOTE: If devNum is out of range, function will fail, possibly issueing
 //  an error to a log or console - but will not ASSERT.<BR>
-int vjSimGloveGesture::getDigitalData(int devNum)
+int SimGloveGesture::getDigitalData(int devNum)
 {
    int openLookupTable[] = { 0,0,0,0,0,-1,0,0,0,0,0 };
    int closedLookupTable[] = { 1,1,1,1,1,-1,1,1,1,1,1 };
@@ -120,13 +123,13 @@ int vjSimGloveGesture::getDigitalData(int devNum)
 
 //: Get the current gesture.
 //! RETURNS: id of current gesture
-int vjSimGloveGesture::getGesture()
+int SimGloveGesture::getGesture()
 { return mCurGesture; }
 
 //: Update the device data
 // -Get the gesture id
 // -Set the glove params
-void vjSimGloveGesture::updateData()
+void SimGloveGesture::updateData()
 {
    // Get the current gesture
    for(unsigned int i=0;i<mSimKeys.size();i++)
@@ -149,7 +152,7 @@ void vjSimGloveGesture::updateData()
 
 //: Load trained data for the gesture object
 // Loads the file for trained data
-void vjSimGloveGesture::loadTrainedFile(std::string fileName)
+void SimGloveGesture::loadTrainedFile(std::string fileName)
 {
    std::ifstream inFile(fileName.c_str());
 
@@ -166,3 +169,4 @@ void vjSimGloveGesture::loadTrainedFile(std::string fileName)
    }
 }
 
+};

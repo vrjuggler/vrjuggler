@@ -38,15 +38,18 @@
 #include <vjConfig.h>
 #include <Kernel/GL/vjGlDrawManager.h>
 
+namespace vrj
+{
+   
 //! NOTE: This class for internal use only
-// This class is needed as a base class for vjGlContextData
+// This class is needed as a base class for GlContextData
 // because of dificulties making friends with a template.
-class vjGlContextDataBase
+class GlContextDataBase
 {
 protected:
    int getCurContext()
    {
-      return vjGlDrawManager::instance()->getCurrentContext();
+      return GlDrawManager::instance()->getCurrentContext();
    }
 };
 
@@ -67,7 +70,7 @@ protected:
 // data to use. <br> <br>
 //
 // Ex: <br>
-//   vjGlContextData<myStruct>   myData; <br>
+//   GlContextData<myStruct>   myData; <br>
 //   myData->dlSphere = 0;
 //
 //! NOTE: Requires that the type of the context data provide a default
@@ -75,10 +78,10 @@ protected:
 //-----------------------------------------------------------------------
 //!PUBLIC_API:
 template<class ContextDataType = int>
-class vjGlContextData : private vjGlContextDataBase
+class GlContextData : private GlContextDataBase
 {
 public:
-   vjGlContextData()
+   GlContextData()
    {;}
 
    //: Returns reference to user data for the current context
@@ -129,6 +132,8 @@ protected:
 
 private:
    std::vector<ContextDataType> mContextDataVector;   //: Vector of user data
+};
+
 };
 
 #endif

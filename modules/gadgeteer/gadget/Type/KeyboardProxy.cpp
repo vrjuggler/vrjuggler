@@ -35,11 +35,13 @@
 #include <Kernel/vjKernel.h>
 #include <Input/InputManager/vjKeyboardProxy.h>
 #include <Config/vjConfigChunk.h>
-
-bool vjKeyboardProxy::config(vjConfigChunk* chunk)
+namespace vrj
+{
+   
+bool KeyboardProxy::config(ConfigChunk* chunk)
 {
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "------------------ KEYBOARD PROXY config()-----------------\n" << vjDEBUG_FLUSH;
-   vjASSERT(((std::string)chunk->getType()) == "KeyboardProxy");
+   vprASSERT(((std::string)chunk->getType()) == "KeyboardProxy");
 
    mDeviceName = (std::string)chunk->getProperty("device");
 
@@ -47,3 +49,5 @@ bool vjKeyboardProxy::config(vjConfigChunk* chunk)
 
    return true;
 }
+
+};

@@ -39,13 +39,15 @@
 #include <Kernel/vjDisplayManager.h>
 #include <Kernel/vjDepChecker.h>
 
-//: Dependency checker for XWin keyboard
+namespace vrj
+{
+   //: Dependency checker for XWin keyboard
 // Implement the basic stuff plus a check for wether
 // the system knows about the system display windows yet
-class vjXWinKBDepChecker : public vjDepChecker
+class XWinKBDepChecker : public DepChecker
 {
 public:
-   vjXWinKBDepChecker()
+   XWinKBDepChecker()
    {;}
 
    //: Return a string name of the checker
@@ -54,30 +56,30 @@ public:
    { return std::string("vjXWinKeyboard Checker"); }
 
    // We can handle only keyboard configuration information
-   virtual bool canHandle(vjConfigChunk* chunk)
+   virtual bool canHandle(ConfigChunk* chunk)
    {
       std::string chunk_type = (std::string)chunk->getType();
-      return (chunk_type == vjXWinKeyboard::getChunkType());      // Return true if we have a vjXWinKeyboard chunk type
+      return (chunk_type == XWinKeyboard::getChunkType());      // Return true if we have a XWinKeyboard chunk type
    }
 
    //: Are the dependencies satisfied?
    //! RETURNS: true - default dependencies are satisfied && display manager has display system chunk
    // Check wether the display system chunk is in the active config
-   virtual bool depSatisfied(vjConfigChunk* chunk)
+   virtual bool depSatisfied(ConfigChunk* chunk)
    {
-      bool pass = vjDepChecker::depSatisfied(chunk);   // Run default check
+      bool pass = DepChecker::depSatisfied(chunk);   // Run default check
 
       // If we can pass normal check and we have a display system chunk
-      if(vjDisplayManager::instance()->getDisplaySystemChunk() != NULL)
+      if(DisplayManager::instance()->getDisplaySystemChunk() != NULL)
          return pass;
       else
          return false;
    }
 
    // Write out the dependencies to the vjDEBUG macro
-   virtual void debugOutDependencies(vjConfigChunk* chunk,int dbg_lvl=vjDBG_WARNING_LVL)
+   virtual void debugOutDependencies(ConfigChunk* chunk,int dbg_lvl=vjDBG_WARNING_LVL)
    {
-      vjDepChecker::debugOutDependencies(chunk,dbg_lvl);
+      DepChecker::debugOutDependencies(chunk,dbg_lvl);
 
       vjDEBUG_NEXT_BEGIN(vjDBG_ALL,dbg_lvl) << "Extra Dependency: Dependent upon getting DisplaySystemChunk from displayManager: " << vjDEBUG_FLUSH;
       if(depSatisfied(chunk) == false)
@@ -96,6 +98,8 @@ public:
 
       vjDEBUG_NEXT_END(vjDBG_ALL,dbg_lvl) << std::endl << vjDEBUG_FLUSH;
    }
+};
+
 };
 
 #endif

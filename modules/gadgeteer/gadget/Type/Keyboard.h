@@ -96,27 +96,29 @@ const int VJMBUTTON2   = LAST_KEY + 6;
 const int VJMBUTTON3   = LAST_KEY + 7;
 
 
-
+namespace vrj
+{
+   
 //----------------------------------------------------------------------------
-//: vjKeyboard is an abstract class for interfacing with keyboard (and other
+//: Keyboard is an abstract class for interfacing with keyboard (and other
 //+ keybased) devices.
 //
 // Informally, a keyboard can be thought of as map of keys to number of times
 // prseed since last update.
 //
-// That is to say, that vjKeyboard counts the number of keypresses between
+// That is to say, that Keyboard counts the number of keypresses between
 // updates.  Updates in Juggler occur once per frame.
 //-----------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjKeyboard
+class Keyboard
 {
 public:
-   vjKeyboard()
+   Keyboard()
    { ; }
 
-   virtual ~vjKeyboard() {;}
+   virtual ~Keyboard() {;}
 
-   virtual bool config(vjConfigChunk* chunk)
+   virtual bool config(ConfigChunk* chunk)
    { return true; }
 
       //: Is the given key pressed.
@@ -191,5 +193,7 @@ public:
 };
 
 
+
+} // end namespace
 
 #endif

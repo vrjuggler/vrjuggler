@@ -51,7 +51,7 @@ public:
    //!ARGS: correction - The amount to correct the movement so that we do not collide
    //!ARGS: curPosWithDelta - Does the curPos already have delta added in?
    //!RETURNS: true - There was a hit.
-   virtual bool testMove(vjVec3 curPos, vjVec3 delta, vjVec3& correction, bool curPosWithDelta = false) = 0;
+   virtual bool testMove(Vec3 curPos, Vec3 delta, Vec3& correction, bool curPosWithDelta = false) = 0;
 
    // Did it collide in the last frame
    // API specific functions could return more info about the collision

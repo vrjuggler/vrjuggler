@@ -43,11 +43,11 @@
 
 int main()
 {
-  vjMemPool* anSgiPool = new vjSharedPool(1024*1024);
+  MemPool* anSgiPool = new SharedPool(1024*1024);
   
-  vjIBox* t1 = new(anSgiPool) vjIBox;
+  IBox* t1 = new(anSgiPool) IBox;
  
-  vjIBOX_DATA *data;
+  IBOX_DATA *data;
 
   char achar;
   std::cout << "U - Update\n"

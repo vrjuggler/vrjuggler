@@ -36,8 +36,11 @@
 
 #include <vjConfig.h>
 #include <Kernel/vjSystemFactory.h>
-#include <Utils/vjSingleton.h>
+#include <vpr/Util/Singleton.h>
 
+namespace vrj
+{
+   
 //---------------------------------------------------
 //: Concrete class for SGI System specific Factory.
 //
@@ -46,17 +49,18 @@
 // @author Allen Bierbaum
 //  Date: 9-9-97
 //----------------------------------------------------
-class vjSGISystemFactory : public vjSystemFactory
+class SGISystemFactory : public SystemFactory
 {
 public:
 
       // --- Singleton stuff --- //
 protected:
    /// Constructor:  Hidden, so no instantiation is allowed
-   vjSGISystemFactory()   // Do nothing, but hide
+   SGISystemFactory()   // Do nothing, but hide
    {;}
 
-   vjSingletonHeader(vjSGISystemFactory);
+   vprSingletonHeader(SGISystemFactory);
 };
 
+};
 #endif

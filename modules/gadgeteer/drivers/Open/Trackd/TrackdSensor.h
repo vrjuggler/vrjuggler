@@ -40,8 +40,11 @@
 #include <vector>
 
 
+namespace vrj
+{
+   
 //-----------------------------------------------------------------------------
-//: vjPosition-derived class for interfacing with trackd sensor data
+//: Position-derived class for interfacing with trackd sensor data
 //+ located on the local machine in a shared memory arena
 //
 //! NOTE: A note on reciever access:
@@ -49,17 +52,17 @@
 //+  example, if you have recievers 1,2, and 4 with transmitter on 3, then
 //+  you can access the data, in order, as 0, 1, 2.
 //
-// See also: vjPosition
+// See also: Position
 //-----------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjTrackdSensor : public vjInput, public vjPosition
+class TrackdSensor : public Input, public Position
 {
 public:
 
     // ------------------------------------------------------------------------
     //: Constructor.
     // ------------------------------------------------------------------------
-    vjTrackdSensor();
+    TrackdSensor();
 
     // ------------------------------------------------------------------------
     //: Destructor.
@@ -67,7 +70,7 @@ public:
     //! PRE: None.
     //! POST: Shared memory is released
     // ------------------------------------------------------------------------
-    ~vjTrackdSensor();
+    ~TrackdSensor();
 
     // ------------------------------------------------------------------------
     //: Configure the trackd sensor with the given config chunk.
@@ -77,12 +80,12 @@ public:
     //+       contents.  Otherwise, configuration fails and false is returned
     //+       to the caller.
     //
-    //! ARGS: c - A pointer to a vjTrackdSensor config chunk.
+    //! ARGS: c - A pointer to a TrackdSensor config chunk.
     //
     //! RETURNS: true - The device was configured succesfully.
     //! RETURNS: false - The config chunk is invalid.
     // ------------------------------------------------------------------------
-    virtual bool config(vjConfigChunk* c);
+    virtual bool config(ConfigChunk* c);
 
    //: Begin sampling
    int startSampling() { return 1; }
@@ -117,11 +120,13 @@ public:
     //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
     //+  then you can access them, in order, as 0,1,2.
     // ------------------------------------------------------------------------
-    vjMatrix* getPosData(int dev = 0);
+    Matrix* getPosData(int dev = 0);
 
 private:
     aTrackdSensor*         mTrackdSensors;      // The sensors that we are dealing with
-    std::vector<vjMatrix>   mCurSensorValues; // The current (up-to-date) values
+    std::vector<Matrix>   mCurSensorValues; // The current (up-to-date) values
+};
+
 };
 
 #endif

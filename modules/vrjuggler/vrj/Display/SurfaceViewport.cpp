@@ -39,20 +39,23 @@
 #include <Math/vjVec4.h>
 #include <Config/vjConfigChunk.h>
 
-void vjSurfaceViewport::config(vjConfigChunk *chunk)
+namespace vrj
 {
-   vjASSERT(chunk != NULL);
-   vjASSERT((std::string)chunk->getType() == std::string("surfaceViewport"));
+   
+void SurfaceViewport::config(ConfigChunk *chunk)
+{
+   vprASSERT(chunk != NULL);
+   vprASSERT((std::string)chunk->getType() == std::string("surfaceViewport"));
 
-   vjViewport::config(chunk);     // Call base class config
+   Viewport::config(chunk);     // Call base class config
 
    mType = SURFACE;
 
    // Read in the corners
-   vjConfigChunk* ll_corner_chunk = chunk->getProperty("corners",0);
-   vjConfigChunk* lr_corner_chunk = chunk->getProperty("corners",1);
-   vjConfigChunk* ur_corner_chunk = chunk->getProperty("corners",2);
-   vjConfigChunk* ul_corner_chunk = chunk->getProperty("corners",3);
+   ConfigChunk* ll_corner_chunk = chunk->getProperty("corners",0);
+   ConfigChunk* lr_corner_chunk = chunk->getProperty("corners",1);
+   ConfigChunk* ur_corner_chunk = chunk->getProperty("corners",2);
+   ConfigChunk* ul_corner_chunk = chunk->getProperty("corners",3);
    mLLCorner.set(ll_corner_chunk->getProperty("x"),
                  ll_corner_chunk->getProperty("y"),
                  ll_corner_chunk->getProperty("z"));
@@ -82,38 +85,38 @@ void vjSurfaceViewport::config(vjConfigChunk *chunk)
    //rot_inv.invert(mSurfaceRotation);
    if(!mTracked)
    {
-      mLeftProj = new vjWallProjection(mSurfaceRotation,-mxLLCorner[VJ_Z],
+      mLeftProj = new WallProjection(mSurfaceRotation,-mxLLCorner[VJ_Z],
                                     mxLRCorner[VJ_X],-mxLLCorner[VJ_X],
                                     mxURCorner[VJ_Y],-mxLRCorner[VJ_Y]);
-      mRightProj = new vjWallProjection(mSurfaceRotation,-mxLLCorner[VJ_Z],
+      mRightProj = new WallProjection(mSurfaceRotation,-mxLLCorner[VJ_Z],
                                     mxLRCorner[VJ_X],-mxLLCorner[VJ_X],
                                     mxURCorner[VJ_Y],-mxLRCorner[VJ_Y]);
    }
    else
    {
-      mLeftProj = new vjTrackedWallProjection(mSurfaceRotation,-mxLLCorner[VJ_Z],
+      mLeftProj = new TrackedWallProjection(mSurfaceRotation,-mxLLCorner[VJ_Z],
                                     mxLRCorner[VJ_X],-mxLLCorner[VJ_X],
                                     mxURCorner[VJ_Y],-mxLRCorner[VJ_Y],
                                               mTrackerProxyName);
-      mRightProj = new vjTrackedWallProjection(mSurfaceRotation,-mxLLCorner[VJ_Z],
+      mRightProj = new TrackedWallProjection(mSurfaceRotation,-mxLLCorner[VJ_Z],
                                     mxLRCorner[VJ_X],-mxLLCorner[VJ_X],
                                     mxURCorner[VJ_Y],-mxLRCorner[VJ_Y],
                                                mTrackerProxyName);
    }
    // Configure the projections
    mLeftProj->config(chunk);
-   mLeftProj->setEye(vjProjection::LEFT);
+   mLeftProj->setEye(Projection::LEFT);
    mRightProj->config(chunk);
-   mRightProj->setEye(vjProjection::RIGHT);
+   mRightProj->setEye(Projection::RIGHT);
 }
 
-void vjSurfaceViewport::updateProjections()
+void SurfaceViewport::updateProjections()
 {
-   vjMatrix left_eye_pos, right_eye_pos;     // NOTE: Eye coord system is -z forward, x-right, y-up
+   Matrix left_eye_pos, right_eye_pos;     // NOTE: Eye coord system is -z forward, x-right, y-up
 
    // -- Calculate Eye Positions -- //
-   vjMatrix cur_head_pos = *(mUser->getHeadPos());
-   vjCoord  head_coord(cur_head_pos);       // Create a user readable version
+   Matrix cur_head_pos = *(mUser->getHeadPos());
+   Coord  head_coord(cur_head_pos);       // Create a user readable version
 
    vjDEBUG(vjDBG_ALL,5)
       << "vjDisplay::updateProjections: Getting head position" << std::endl
@@ -133,13 +136,13 @@ void vjSurfaceViewport::updateProjections()
    mRightProj->calcViewMatrix(right_eye_pos);
 }
 
-void vjSurfaceViewport::calculateSurfaceRotation()
+void SurfaceViewport::calculateSurfaceRotation()
 {
    assertPtsLegal();
 
    // Find the base vectors for the surface axiis (in terms of the base coord system)
    // With z out, x to the right, and y up
-   vjVec3 x_base, y_base, z_base;
+   Vec3 x_base, y_base, z_base;
    x_base = (mLRCorner-mLLCorner);
    y_base = (mURCorner-mLRCorner);
    z_base = x_base.cross(y_base);
@@ -152,7 +155,7 @@ void vjSurfaceViewport::calculateSurfaceRotation()
    //mSurfaceRotation.invert(mSurfRotInv);              // baseMsurf
 }
 
-void vjSurfaceViewport::calculateCornersInBaseFrame()
+void SurfaceViewport::calculateCornersInBaseFrame()
 {
    mxLLCorner.xformFull(mSurfaceRotation,mLLCorner);
    mxLRCorner.xformFull(mSurfaceRotation,mLRCorner);
@@ -162,8 +165,9 @@ void vjSurfaceViewport::calculateCornersInBaseFrame()
    // Verify that they are all in the same x,y plane
    vjDEBUG(vjDBG_ALL,5) << mxLLCorner[VJ_Z]  << " " << mxLRCorner[VJ_Z]
                       << " " <<  mxURCorner[VJ_Z]  << " " <<  mxULCorner[VJ_Z] << "\n" << vjDEBUG_FLUSH;
-   vjASSERT((mxLLCorner[VJ_Z] == mxLRCorner[VJ_Z]) &&
+   vprASSERT((mxLLCorner[VJ_Z] == mxLRCorner[VJ_Z]) &&
             (mxURCorner[VJ_Z] == mxULCorner[VJ_Z]) &&
             (mxLLCorner[VJ_Z] == mxULCorner[VJ_Z]));
 }
 
+};

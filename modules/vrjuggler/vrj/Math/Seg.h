@@ -38,29 +38,32 @@
 #include <vjConfig.h>
 #include <Math/vjVec3.h>
 
-//: vjSeg: A ray segment.
+namespace vrj
+{
+   
+//: Seg: A ray segment.
 //
 // Used for intersections.
 //
 // NOTE: Results are undefined if dir is not normalized at all times.
-class VJ_CLASS_API vjSeg
+class VJ_CLASS_API Seg
 {
 public:
-	vjSeg()
+	Seg()
 	{}
 	
 	//: Sets the segment to be one that starts at _p1 and ends at _p2
-	void makePts(const vjVec3& _p1, const vjVec3& _p2);
+	void makePts(const Vec3& _p1, const Vec3& _p2);
 	
 	//: Finds the point on the seg nearest to pt.
 	// Returns the nearest point in nearPt
 	//
 	// Makes assumptions that all pt dir is normalized
-	void findNearestPt(const vjVec3& pt, vjVec3& nearPt);
+	void findNearestPt(const Vec3& pt, Vec3& nearPt);
 	
    //: Does the segment hit the triangle
    //!NOTE: Triangle uses CCW vertex ordering
-   bool isectTriangle(const vjVec3 _v1, const vjVec3 _v2, const vjVec3 _v3, float* t);
+   bool isectTriangle(const Vec3 _v1, const Vec3 _v2, const Vec3 _v3, float* t);
 
 	//: Is the tValue in the range of the seg
    //! RETURNS: true if tDist > 0 and tDist < length
@@ -68,13 +71,13 @@ public:
 	{ return ((tDist >= 0.0) && (tDist <= length));}
 	
 	//: Set equal to seg transformed by mat
-   void xform(const vjMatrix& mat, vjSeg& seg);
+   void xform(const Matrix& mat, Seg& seg);
 	
-	vjVec3	startPt()
+	Vec3	startPt()
 	{ return pos; }
 	
 	// PRE: dir MUST be normalized
-	vjVec3	endPt()
+	Vec3	endPt()
 	{ return pos + (dir*length);}
 
    float getLength()
@@ -82,18 +85,18 @@ public:
 
    //: Get the pt at the given t_value
    //! NOTE: t_val is a multiple of the direction
-   vjVec3 getPt(const float& t_val)
+   Vec3 getPt(const float& t_val)
    { return (pos + (dir*t_val)); }
 	
 	
 public:
-	vjVec3  pos;
-	vjVec3  dir;      //: Direction: Assumed to be normalized
+	Vec3  pos;
+	Vec3  dir;      //: Direction: Assumed to be normalized
    float   length;   //: Length of the segment
 };
 
 inline
-void vjSeg::makePts(const vjVec3& _p1, const vjVec3& _p2)
+void Seg::makePts(const Vec3& _p1, const Vec3& _p2)
 {
    dir = _p2 - _p1;
    pos = _p1;
@@ -106,7 +109,7 @@ void vjSeg::makePts(const vjVec3& _p1, const vjVec3& _p2)
 }
 
 inline
-void vjSeg::xform(const vjMatrix& mat, vjSeg& seg)
+void Seg::xform(const Matrix& mat, Seg& seg)
 {
 	/*
 	pos.xformFull(mat, seg.pos);	    // c = Mo
@@ -115,7 +118,7 @@ void vjSeg::xform(const vjMatrix& mat, vjSeg& seg)
 	length = seg.length;
 	*/
 
-	vjVec3 pt1, pt2, diff;
+	Vec3 pt1, pt2, diff;
 	pt1.xformFull(mat, seg.startPt());
 	pt2.xformFull(mat, seg.endPt());
 	diff = pt2-pt1;
@@ -125,5 +128,5 @@ void vjSeg::xform(const vjMatrix& mat, vjSeg& seg)
 	dir = (diff / length);
 }
 
-
+};
 #endif

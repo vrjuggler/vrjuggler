@@ -58,7 +58,7 @@ public:
    //!ARGS: delta - The amount we want to move
    //!ARGS: correction - The amount to correct the movement so that we do not collide
    //!RETURNS: true - There was a hit.
-   virtual bool testMove( vjVec3 whereYouAre, vjVec3 delta, vjVec3& correction, bool whereYouAreWithDelta = false );
+   virtual bool testMove( Vec3 whereYouAre, Vec3 delta, Vec3& correction, bool whereYouAreWithDelta = false );
 
    // general ray collision routine with a scene.
    // correctionVector - should be added to whereYouWantToBe after calling this function
@@ -142,10 +142,10 @@ bool pfRayCollider::testRayCollision( pfVec3& intersectionPt, pfVec3& whereYouRe
 }
 
 
-bool pfRayCollider::testMove(vjVec3 _whereYouAre, vjVec3 _delta, vjVec3& correction, bool whereYouAreWithDelta)
+bool pfRayCollider::testMove(Vec3 _whereYouAre, Vec3 _delta, Vec3& correction, bool whereYouAreWithDelta)
 {
-   pfVec3 whereYouAre = vjGetPfVec(_whereYouAre);
-   pfVec3 delta = vjGetPfVec(_delta);
+   pfVec3 whereYouAre = GetPfVec(_whereYouAre);
+   pfVec3 delta = GetPfVec(_delta);
    pfVec3 whereYouWantToBe = whereYouAre + delta;
 
    pfVec3 intersectionPt;
@@ -153,7 +153,7 @@ bool pfRayCollider::testMove(vjVec3 _whereYouAre, vjVec3 _delta, vjVec3& correct
    if (this->testRayCollision(intersectionPt, whereYouReallyAre, mWorldNode,0x1, whereYouAre, whereYouWantToBe))
    {
       pfVec3 pf_correction = (whereYouReallyAre - whereYouWantToBe);
-      correction = vjGetVjVec( pf_correction);
+      correction = GetVjVec( pf_correction);
 
       std::cout<<"pfRayCollider: Collided "<<correction<<"\n"<<std::flush;
 

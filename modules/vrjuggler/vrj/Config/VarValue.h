@@ -38,6 +38,9 @@
 #include <vjConfig.h>
 #include <ctype.h>
 
+namespace vrj
+{
+   
 /**********************************************************
 typedef enum { T_INT, T_FLOAT, T_BOOL, T_STRING, T_DISTANCE, 
 	       T_CHUNK, T_EMBEDDEDCHUNK, T_INVALID } VarType;
@@ -53,28 +56,28 @@ typedef enum { T_INT, T_FLOAT, T_BOOL, T_STRING, T_DISTANCE,
 typedef enum {U_Feet, U_Inches, U_Meters, U_Centimeters, U_BadUnit}
               CfgUnit;
 
-class vjConfigChunk;
+class ConfigChunk;
 
 /* note for myself as I'm adding T_DISTANCE - everything gets stored
  * internally as feet.
  */
 
 //-------------------------------------------------
-//: A vjVarValue is an object that knows its own type even if we don't.
+//: A VarValue is an object that knows its own type even if we don't.
 //  More seriously, it's the value storage unit and value return type
 //  for a ConfigChunk. <br>
-//  Currently, vjVarValues can be of types int, FLOAT, boolean, string
+//  Currently, VarValues can be of types int, FLOAT, boolean, string
 //  (char*), distance(essentially FLOAT), as defined by the VarType
-//  enumeration in vjVarValue.h. <br>
-//  When you get a vjVarValue, you can do just a few things with it: <br>
+//  enumeration in VarValue.h. <br>
+//  When you get a VarValue, you can do just a few things with it: <br>
 //    1. assign it to a variable and then use it.  Note that there is
-//       type checking here: if you try assigning a string vjVarValue to
+//       type checking here: if you try assigning a string VarValue to
 //       an int, you'll get an error. <br>
 //    2. Cast it to the right type and use it. <br>
-//    3. print it - vjVarValues have overloaded << so you can print them
+//    3. print it - VarValues have overloaded << so you can print them
 //       without having to cast to the right value. <br>
 //  Note that it's generally incumbent upon the client to know what
-//  kind of vjVarValue he's getting and what it can do.  Hey, you're
+//  kind of VarValue he's getting and what it can do.  Hey, you're
 //  the one who queried the ConfigChunk, not me. <br>
 //
 // @author  Christopher Just
@@ -82,7 +85,7 @@ class vjConfigChunk;
 //!PUBLIC_API:
 //--------------------------------------------------
 
-class VJ_CLASS_API vjVarValue {
+class VJ_CLASS_API VarValue {
 
 private:
 
@@ -93,23 +96,23 @@ private:
     float        floatval;
     std::string  strval;
     bool         boolval;
-    vjConfigChunk *embeddedchunkval;
+    ConfigChunk *embeddedchunkval;
     unsigned int validation;
 
-    static vjVarValue* invalid_instance;
+    static VarValue* invalid_instance;
     static const std::string using_invalid_msg;
 
 public:
 
-    //:Gets a reference to a global "invalid" vjVarValue
+    //:Gets a reference to a global "invalid" VarValue
     //!NOTE: This is mainly useful for returning an invalid VarValue in
     //+      case of an error, and is used internally by some Config/*
     //+      classes.
     //!NOTE: There is a fairly harmless race condition where an extra
-    //+      invalid vjVarValue gets created & not deleted.  This is 
+    //+      invalid VarValue gets created & not deleted.  This is 
     //+      very unlikely, and would only result in losing a few bytes
     //+      anyway.
-    static vjVarValue& getInvalidInstance ();
+    static VarValue& getInvalidInstance ();
 
 
     inline VarType getType () const {
@@ -117,29 +120,29 @@ public:
     }
 
     //: Copy constructor.
-    vjVarValue (const vjVarValue &v);
+    VarValue (const VarValue &v);
 
 
-    //: Constructor - creates a T_EMBEDDEDCHUNK vjVarValue containing ch
+    //: Constructor - creates a T_EMBEDDEDCHUNK VarValue containing ch
     //!NOTE: This is explicit for safety's sake.  I already encountered a bug
     //+      where some chunkdb code was interpreting
-    //+          vjVarValue v1 = chunk.getProperty(blah)
+    //+          VarValue v1 = chunk.getProperty(blah)
     //+      as casting the result of getProperty to a chunk* and then calling
-    //+      this constructor instead of using the vjVarValue copy constructor
-    //+      becuase getProperty returns a const vjVarValue and the copy const
+    //+      this constructor instead of using the VarValue copy constructor
+    //+      becuase getProperty returns a const VarValue and the copy const
     //+      didn't expect a const (since fixed).
-    explicit vjVarValue (const vjConfigChunk* ch);
+    explicit VarValue (const ConfigChunk* ch);
 
 
-    //: Creates a new vjVarValue of type t.
-    //! NOTE: Note that once a vjVarValue object has been created, the type
+    //: Creates a new VarValue of type t.
+    //! NOTE: Note that once a VarValue object has been created, the type
     //+ cannot be changed.
-    vjVarValue ( VarType t );
+    VarValue ( VarType t );
 
 
 
     //: Destroys self and all associated memory.
-    ~vjVarValue();
+    ~VarValue();
 
 
     #ifdef VJ_DEBUG
@@ -153,19 +156,19 @@ public:
 
 
     //: Assignment Operator
-    vjVarValue& operator= (const vjVarValue &v);
+    VarValue& operator= (const VarValue &v);
 
 
 
     //: Equality Operator
-    bool operator == (const vjVarValue& v) const;
-    inline bool operator != (const vjVarValue& v) const {
+    bool operator == (const VarValue& v) const;
+    inline bool operator != (const VarValue& v) const {
 	return !(*this == v);
     }
 
 
     /*  Cast Operators
-     *  These operators are used whenever a vjVarValue is cast to another
+     *  These operators are used whenever a VarValue is cast to another
      *  type.  They do some amount of type checking and coercion,
      *  eventually returning the data stored within the config itself.
      *  Right now, in event of an error we only write a message to cerr
@@ -181,7 +184,7 @@ public:
     //: cast to ConfigChunk
     //!NOTE: Returns a copy of the contained chunk which must be
     //+      freed.
-    operator vjConfigChunk*() const;
+    operator ConfigChunk*() const;
 
 
     //: Cast to bool
@@ -203,21 +206,21 @@ public:
 
 
     //: Assignment overload 
-    //!NOTE: type of a vjVarValue is immutable, so a type mismatch here
+    //!NOTE: type of a VarValue is immutable, so a type mismatch here
     //+      can cause an error (in which case the assignment fails)
-    vjVarValue& operator = (int i);
-    vjVarValue& operator = (bool i);
-    vjVarValue& operator = (float i);
-    vjVarValue& operator = (const std::string& i);
+    VarValue& operator = (int i);
+    VarValue& operator = (bool i);
+    VarValue& operator = (float i);
+    VarValue& operator = (const std::string& i);
 
     //: Assignment overload 
-    //!NOTE: type of a vjVarValue is immutable, so a type mismatch here
+    //!NOTE: type of a VarValue is immutable, so a type mismatch here
     //+      can cause an error (in which case the assignment fails)
-    //!NOTE: the vjVarValue makes a copy of the string - you can do with
+    //!NOTE: the VarValue makes a copy of the string - you can do with
     //+      the original as you please.
-    vjVarValue &operator = (const char *s);
+    VarValue &operator = (const char *s);
 
-    vjVarValue &operator = (const vjConfigChunk *s);
+    VarValue &operator = (const ConfigChunk *s);
 
 
 
@@ -226,8 +229,9 @@ public:
     //+      in a reasonable way.  ints & floats are printed as numbers,
     //+      bools as the strings "true" and "false", strings and 
     //+      chunks as their string reps, etc.
-    friend std::ostream& operator << (std::ostream& out, const vjVarValue& v);
+    friend std::ostream& operator << (std::ostream& out, const VarValue& v);
     
 };
 
+};
 #endif

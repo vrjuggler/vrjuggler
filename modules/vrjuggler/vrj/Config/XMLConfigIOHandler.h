@@ -46,65 +46,68 @@
 #include <Config/vjConfigChunkDB.h>
 //#include <Config/vjChunkFactory.h>
 
+namespace vrj
+{
+   
 //: Config IO handler for the new XML-based cfgfile format.
 //  This particular class is dependent on the Xerces representation of
-//  DOM_Nodes.  (It should probably be renamed vjXercesXMLConfigIOHandler
+//  DOM_Nodes.  (It should probably be renamed XercesXMLConfigIOHandler
 //  but that's a little long).
-class vjXMLConfigIOHandler: public vjConfigIOHandler {
+class XMLConfigIOHandler: public ConfigIOHandler {
 
 public:
 
-    vjXMLConfigIOHandler ();
+    XMLConfigIOHandler ();
 
-    virtual ~vjXMLConfigIOHandler ();
+    virtual ~XMLConfigIOHandler ();
 
     //----------------- ConfigChunkDB Methods --------------------------
 
-    virtual bool readConfigChunkDB (const std::string& filename, vjConfigChunkDB& db);
+    virtual bool readConfigChunkDB (const std::string& filename, ConfigChunkDB& db);
 
-    virtual bool readConfigChunkDB (std::istream& input, vjConfigChunkDB& db);
+    virtual bool readConfigChunkDB (std::istream& input, ConfigChunkDB& db);
 
-    virtual bool writeConfigChunkDB (std::ostream& output, const vjConfigChunkDB& db);
+    virtual bool writeConfigChunkDB (std::ostream& output, const ConfigChunkDB& db);
 
-    virtual bool writeConfigChunk (std::ostream& output, const vjConfigChunk& ch, const std::string& pad);
+    virtual bool writeConfigChunk (std::ostream& output, const ConfigChunk& ch, const std::string& pad);
 
-    virtual bool writeConfigChunk (XMLFormatter* formatter, const vjConfigChunk& ch, const std::string& pad);
+    virtual bool writeConfigChunk (XMLFormatter* formatter, const ConfigChunk& ch, const std::string& pad);
 
-    bool buildChunkDB (vjConfigChunkDB& db, const DOM_Node& doc);
+    bool buildChunkDB (ConfigChunkDB& db, const DOM_Node& doc);
 
-    bool buildProperty (vjConfigChunk* ch, const DOM_Node& doc, bool use_defaults = true);
+    bool buildProperty (ConfigChunk* ch, const DOM_Node& doc, bool use_defaults = true);
 
-    vjConfigChunk* buildConfigChunk (const DOM_Node& doc, bool use_defaults = true);
+    ConfigChunk* buildConfigChunk (const DOM_Node& doc, bool use_defaults = true);
 
 private:
 
-    bool writeProperty (XMLFormatter* formatter, const vjProperty& p, const std::string& pad);
+    bool writeProperty (XMLFormatter* formatter, const Property& p, const std::string& pad);
 
-    bool parseTextValues (vjProperty* p, int& startval, char* text);
+    bool parseTextValues (Property* p, int& startval, char* text);
 
 
     //--------------------- ChunkDescDB Methods -----------------------------
 
 public:
 
-    virtual bool readChunkDescDB (const std::string& filename, vjChunkDescDB& db);
+    virtual bool readChunkDescDB (const std::string& filename, ChunkDescDB& db);
 
-    virtual bool readChunkDescDB (std::istream& input, vjChunkDescDB& db);
+    virtual bool readChunkDescDB (std::istream& input, ChunkDescDB& db);
 
-    virtual bool writeChunkDescDB (std::ostream& output, const vjChunkDescDB& db);
+    virtual bool writeChunkDescDB (std::ostream& output, const ChunkDescDB& db);
 
-    virtual bool writeChunkDesc (std::ostream& output, const vjChunkDesc& ch, const std::string& pad = "");
+    virtual bool writeChunkDesc (std::ostream& output, const ChunkDesc& ch, const std::string& pad = "");
 
 
-    bool buildChunkDescDB (vjChunkDescDB& db, const DOM_Node& doc);
-    vjChunkDesc* buildChunkDesc (const DOM_Node& doc);
+    bool buildChunkDescDB (ChunkDescDB& db, const DOM_Node& doc);
+    ChunkDesc* buildChunkDesc (const DOM_Node& doc);
 
 private:
 
-    bool writeChunkDesc (XMLFormatter* f, const vjChunkDesc& ch, const std::string& pad);
-    bool writePropertyDesc (XMLFormatter* f, const vjPropertyDesc& p, const std::string& pad);
-    bool parseChunkDescChildElement (vjChunkDesc& desc, const DOM_Node doc);
-    bool parsePropertyDescChildElement (vjPropertyDesc &p, const DOM_Node doc);
+    bool writeChunkDesc (XMLFormatter* f, const ChunkDesc& ch, const std::string& pad);
+    bool writePropertyDesc (XMLFormatter* f, const PropertyDesc& p, const std::string& pad);
+    bool parseChunkDescChildElement (ChunkDesc& desc, const DOM_Node doc);
+    bool parsePropertyDescChildElement (PropertyDesc &p, const DOM_Node doc);
 
 
     //------------------ private parser functions ------------------------
@@ -123,4 +126,5 @@ private:
 };
 
 
+};
 #endif

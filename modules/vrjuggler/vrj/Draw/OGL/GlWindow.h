@@ -34,20 +34,24 @@
 #ifndef _VJ_GL_WINDOW_H_
 #define _VJ_GL_WINDOW_H_
 
-#include <vjConfig.h>
 #include <stdio.h>
-
 #ifdef VJ_OS_Darwin
 #   include <OpenGL/gl.h>
 #else
 #   include <GL/gl.h>
 #endif
 
+#include <vjConfig.h>
 #include <Kernel/vjDisplay.h>
 #include <Kernel/vjViewport.h>
-class vjProjection;
-class vjCameraProjection;
 
+
+namespace vrj
+{
+
+class Projection;
+class CameraProjection;
+   
 //-------------------------------------------------------
 //: Represent cross-platform interface to OpenGL windows
 //-------------------------------------------------------
@@ -55,10 +59,10 @@ class vjCameraProjection;
 // in order to keep all platform specific code in this
 // one class.
 //-------------------------------------------------------
-class VJ_CLASS_API vjGlWindow
+class VJ_CLASS_API GlWindow
 {
 public:
-   vjGlWindow()
+   GlWindow()
    {
       mWindowId = getNextWindowId();
       in_stereo = false;
@@ -70,7 +74,7 @@ public:
    }
 
    // Cirtual destructor
-   virtual ~vjGlWindow()
+   virtual ~GlWindow()
    {;}
 
 public:
@@ -88,7 +92,7 @@ public:
 
    //: Configure the window
    //! POST: this' is configured based on the data in display
-   virtual void config(vjDisplay* displayWindow);
+   virtual void config(vrj::Display* displayWindow);
 
    //: Performs an OpenGL swap buffers command
    //! POST: a glFlush must be called explicitly by the implementation
@@ -101,7 +105,7 @@ public:
 
 public:
    //: Sets the projection matrix for this window to proj
-   void setProjection(vjProjection* proj);
+   void setProjection(vrj::Projection* proj);
 
    //: Sets the projection matrix for this window to draw the left eye frame
    // If the window is in stereo, it changes to the left buffer
@@ -112,10 +116,10 @@ public:
    void setRightEyeProjection();
 
    // Set the view buffer for the window (issues glDrawBuffer command)
-   void setViewBuffer(vjViewport::View view);
+   void setViewBuffer(vrj::Viewport::View view);
 
    //: Sets the projection matrix for this window to the one for simulator
-   void setCameraProjection(vjCameraProjection* camProj);
+   void setCameraProjection(vrj::CameraProjection* camProj);
 
    //: Set the viewport in the GL window based on float values
    //! ARGS: xo,yo - origin
@@ -153,7 +157,7 @@ public:
    bool isStereo()
    { return in_stereo;}
 
-   vjDisplay* getDisplay()
+   vrj::Display* getDisplay()
    { return mDisplay;}
 
    //!RETURNS: A unique window id
@@ -161,7 +165,7 @@ public:
    { return mWindowId; }
 
    // Called by event function to update size info
-   // XXX: Should update vjDisplay chunk in some way
+   // XXX: Should update Display chunk in some way
    void updateOriginSize(int o_x, int o_y, int width, int height)
    {
       origin_x = o_x; origin_y = o_y;
@@ -169,10 +173,10 @@ public:
 
    }
 
-   friend std::ostream& operator<<(std::ostream& out, vjGlWindow* win);
+   friend std::ostream& operator<<(std::ostream& out, GlWindow* win);
 
 public:  /**** Static Helpers *****/
-   /* static */ virtual bool createHardwareSwapGroup(std::vector<vjGlWindow*> wins)
+   /* static */ virtual bool createHardwareSwapGroup(std::vector<GlWindow*> wins)
    {
       vjDEBUG(vjDBG_ALL,0) << "WARNING: hardware swap not supported.\n" << vjDEBUG_FLUSH;
       return false;
@@ -182,7 +186,7 @@ protected:
      // we store a pointer to the display that we're
      // created from, to config & to get the viewing
      // transforms from.
-   vjDisplay* mDisplay;
+   vrj::Display* mDisplay;
 
    bool mDirtyContext;  //: The context is dirty.  We need to (re)initialize it next draw
    bool mDirtyViewport; //: The gl window setup (viewport, etc) is dirty and needs to be reinited.
@@ -202,6 +206,8 @@ private:
    static int getNextWindowId();
 };
 
-// ostream& operator<<(ostream& out, vjGlWindow& win);
+// ostream& operator<<(ostream& out, GlWindow& win);
 
+
+} // end namespace
 #endif

@@ -39,8 +39,10 @@
 //#include <Input/vjPosition/vjPosition.h>
 //#include <Math/vjCoord.h>
 
-
-class vjMatrix;
+namespace vrj
+{
+   
+class Matrix;
 
 //-----------------------------------------------------------------
 //: Wall specific class for viewport definitions.
@@ -48,19 +50,19 @@ class vjMatrix;
 //  Responsible for storing and computing projection
 //  information of a surface specified.
 //
-// XXX: This should be renamed vjSurfaceProjection
+// XXX: This should be renamed SurfaceProjection
 //
 // @author Allen Bierbaum
 //  Date: 10-5-97
 //----------------------------------------------------------------
-class vjWallProjection : public vjProjection
+class WallProjection : public Projection
 {
 public:
-   vjWallProjection(vjMatrix surfaceRot, float toScr,
+   WallProjection(Matrix surfaceRot, float toScr,
                     float toRight, float toLeft,
                     float toTop, float toBottom)
    {
-      mType = vjProjection::SURFACE;
+      mType = Projection::SURFACE;
 
       mWallRotationMatrix = surfaceRot;
       mOriginToScreen = toScr;
@@ -71,26 +73,27 @@ public:
    }
 
    //: Configure the projection using the chunk given
-   virtual void config(vjConfigChunk* chunk);
+   virtual void config(ConfigChunk* chunk);
 
    //: Recalculate the projection matrix
    //! PRE: WallRotation matrix must be set correctly
    //! PRE: mOrigin*'s must all be set correctly
    //!POST: frustum has been recomputed for given eyePos
-   virtual void calcViewMatrix(vjMatrix& eyePos);
+   virtual void calcViewMatrix(Matrix& eyePos);
 
    //: Calculate the frustum needed for the view matrix
    //! NOTE: This function is called as part of calcViewMatrix
-   virtual void calcViewFrustum(vjMatrix& eyePos);
+   virtual void calcViewFrustum(Matrix& eyePos);
 
    std::ostream& outStream(std::ostream& out);
 
 protected:
    // Rotation of the screen
-   vjMatrix   mWallRotationMatrix;
+   Matrix   mWallRotationMatrix;
 
    // Screen configuration
    float mOriginToScreen, mOriginToRight, mOriginToLeft, mOriginToTop, mOriginToBottom;
 };
 
+};
 #endif

@@ -54,7 +54,7 @@ extern int AppNotifyPostTrav( pfTraverser* trav, void* data );
 // but really hard to understand.
 // - i.e. don't use this to learn vrjuggler or performer!
 //        you've been warned...
-class simplePfNavApp : public vjPfApp
+class simplePfNavApp : public PfApp
 {
 public: 
    // Model and sound member classes
@@ -63,15 +63,15 @@ public:
    public:
       Model();
       Model( const std::string& desc, const std::string& file_name,
-            const float& s, const vjVec3& position, const vjVec3& rotation, 
+            const float& s, const Vec3& position, const Vec3& rotation, 
             const bool& collidable );
 
       // Config parameters
       std::string description;
       std::string filename;
       float       scale;
-      vjVec3      pos;
-      vjVec3      rot;
+      Vec3      pos;
+      Vec3      rot;
       bool        isCollidable;
 
       // Run-time information
@@ -85,12 +85,12 @@ public:
     public:
       Sound();
       Sound( const std::string& sound_name, const std::string& alias_name, 
-            const bool& isPositional, const vjVec3& position );
+            const bool& isPositional, const Vec3& position );
       
       std::string name;
       std::string alias;
       bool        positional;
-      vjVec3      pos;
+      Vec3      pos;
    };
 
 // application callbacks:
@@ -155,7 +155,7 @@ public:
 
    void addFilePath( const std::string& path );
    void setFilePath( const std::string& path );
-   void setInitialNavPos( const vjVec3& initialPos );
+   void setInitialNavPos( const Vec3& initialPos );
 
    // Go to the next navigator
    void cycleNavigator();
@@ -186,19 +186,19 @@ public:
    
    // CONFIG PARAMS
    std::string    mFilePath;
-   vjVec3         mInitialNavPos;
+   Vec3         mInitialNavPos;
    float          mBoundingSize;       // XXX: This is a hack and should be refactored
 
    int            mStatusMessageEmitCount;
 
    bool           mUseStats;
-   vjPfAppStats   mStats;
+   PfAppStats   mStats;
 
    // navigation objects.
    std::vector<navigator*>    mNavigators;      // A list of the navigators in the system
    unsigned                   mCurNavIndex;     // Index of the current navigator
    pfNavDCS*                  mNavigationDCS;
-   vjDigitalInterface         mNavCycleButton;  // Button to cycle the navigation
+   DigitalInterface         mNavCycleButton;  // Button to cycle the navigation
 
    // SCENE GRAPH NODES
    pfGroup*       mLightGroup;

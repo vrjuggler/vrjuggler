@@ -37,15 +37,19 @@
 #include <Config/vjConfigChunkDB.h>
 #include <Config/vjChunkDescDB.h>
 #include <Config/vjConfigIO.h>
+#include <Performance/vjTimeStamp.h>
 
-// generic vjCommand
+// generic Command
 
-void vjCommand::resetFireTime (vjTimeStamp& ts) {
+namespace vrj
+{
+   
+void Command::resetFireTime (TimeStaMp& ts) {
     next_fire_time = ts.usecs()/1000 + refresh_time;
 }
 
 
-int vjCommand::operator < (const vjCommand& cmd2) const {
+int Command::operator < (const Command& cmd2) const {
     // used in priority queue
     // true if self should be called _after_ cmd2
     return (next_fire_time < cmd2.next_fire_time);
@@ -54,52 +58,52 @@ int vjCommand::operator < (const vjCommand& cmd2) const {
 
 
 
-// vjCommandRefresh
+// CommandRefresh
 
-/*static*/ const std::string vjCommandRefresh::command_name ("Refresh Command");
+/*static*/ const std::string CommandRefresh::command_name ("Refresh Command");
 
 
-vjCommandRefresh::vjCommandRefresh() {
+CommandRefresh::CommandRefresh() {
     next_fire_time = refresh_time = 0.0;
 }
 
     
-/*virtual*/ void vjCommandRefresh::call (std::ostream& out) const {
+/*virtual*/ void CommandRefresh::call (std::ostream& out) const {
     out << "<protocol handler=\"xml_config\">\n"
         "<refresh_all/>\n"
         "</protocol>\n" << std::flush;
 }
 
 
-/*virtual*/ const std::string& vjCommandRefresh::getName () const {
+/*virtual*/ const std::string& CommandRefresh::getName () const {
     return command_name;
 }
 
 
 
-// vjCommandSendChunkDB
+// CommandSendChunkDB
 
-/*static*/ const std::string vjCommandSendChunkDB::command_name ("Send ChunkDB Command");
+/*static*/ const std::string CommandSendChunkDB::command_name ("Send ChunkDB Command");
 
 
-vjCommandSendChunkDB::vjCommandSendChunkDB (vjConfigChunkDB* _db, bool _all) {
+CommandSendChunkDB::CommandSendChunkDB (ConfigChunkDB* _db, bool _all) {
     db = _db;
     all = _all;
 }
 
 
-/*virtual*/ void vjCommandSendChunkDB::call (std::ostream& out) const {
+/*virtual*/ void CommandSendChunkDB::call (std::ostream& out) const {
     out << "<protocol handler=\"xml_config\">\n";
     if (all)
         out << "<apply_chunks all=\"true\">\n";
     else
         out << "<apply_chunks>\n";
-    vjConfigIO::instance()->writeConfigChunkDB (out, *db, "xml_config");
+    ConfigIO::instance()->writeConfigChunkDB (out, *db, "xml_config");
     out << "</apply_chunks>\n</protocol>\n" << std::flush;
 }
 
 
-/*virtual*/ const std::string& vjCommandSendChunkDB::getName () const {
+/*virtual*/ const std::string& CommandSendChunkDB::getName () const {
     return command_name;
 }
 
@@ -107,46 +111,46 @@ vjCommandSendChunkDB::vjCommandSendChunkDB (vjConfigChunkDB* _db, bool _all) {
 
 //vjCommandSendDescDB
 
-/*static*/ const std::string vjCommandSendDescDB::command_name ("Send DescDB Command");
+/*static*/ const std::string CommandSendDescDB::command_name ("Send DescDB Command");
 
 
-vjCommandSendDescDB::vjCommandSendDescDB (vjChunkDescDB* _db, bool _all) {
+CommandSendDescDB::CommandSendDescDB (ChunkDescDB* _db, bool _all) {
     db = _db;
     all = _all;
 }
 
     
-/*virtual*/ void vjCommandSendDescDB::call (std::ostream& out) const {
+/*virtual*/ void CommandSendDescDB::call (std::ostream& out) const {
 
     out << "<protocol handler=\"xml_config\">\n";
     if (all)
         out << "<apply_descs all=\"true\">\n";
     else
         out << "<apply_descs>\n";
-    vjConfigIO::instance()->writeChunkDescDB (out, *db, "xml_config");
+    ConfigIO::instance()->writeChunkDescDB (out, *db, "xml_config");
     out << "</apply_descs>\n</protocol>\n" << std::flush;
 }
 
 
-/*virtual*/ const std::string& vjCommandSendDescDB::getName () const {
+/*virtual*/ const std::string& CommandSendDescDB::getName () const {
     return command_name;
 }
 
 
 
-// vjCommandTimedUpdate
+// CommandTimedUpdate
 
-/*static*/ const std::string vjCommandTimedUpdate::command_name ("Timed Update Command");
+/*static*/ const std::string CommandTimedUpdate::command_name ("Timed Update Command");
 
 
-vjCommandTimedUpdate::vjCommandTimedUpdate (vjTimedUpdate* _tu, float _refresh_time) {
+CommandTimedUpdate::CommandTimedUpdate (TimedUpdate* _tu, float _refresh_time) {
     timed_update = _tu;
     refresh_time = _refresh_time;
     next_fire_time = 0;
 }
 
     
-/*virtual*/ void vjCommandTimedUpdate::call (std::ostream& out) const {
+/*virtual*/ void CommandTimedUpdate::call (std::ostream& out) const {
     out << "<protocol handler=\"" << timed_update->getProtocolHandlerName()
         << "\">\n";
     timed_update->write (out);
@@ -154,7 +158,8 @@ vjCommandTimedUpdate::vjCommandTimedUpdate (vjTimedUpdate* _tu, float _refresh_t
 }
 
 
-/*virtual*/ const std::string& vjCommandTimedUpdate::getName () const {
+/*virtual*/ const std::string& CommandTimedUpdate::getName () const {
     return command_name;
 }
 
+};

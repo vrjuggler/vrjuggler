@@ -31,8 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#include <vjConfig.h>
-
 #ifdef VJ_OS_Darwin
 #   include <OpenGL/gl.h>
 #   include <OpenGL/glu.h>
@@ -40,6 +38,9 @@
 #   include <GL/gl.h>
 #   include <GL/glu.h>
 #endif
+
+
+#include <vjConfig.h>
 
 #include <Kernel/GL/vjGlWindow.h>
 #include <Kernel/vjProjection.h>
@@ -56,13 +57,15 @@
 #define USE_PROJECTION_MATRIX 1  /* Should we put the camera transforms on the
                                    Projection or modelview matrix */
 
-
-int vjGlWindow::mCurMaxWinId = 0;
-
-
-void vjGlWindow::config(vjDisplay* displayWindow)
+namespace vrj
 {
-   vjASSERT(displayWindow != NULL);      // We can't config to a NULL display
+   
+int GlWindow::mCurMaxWinId = 0;
+
+
+void GlWindow::config(vrj::Display* displayWindow)
+{
+   vprASSERT(displayWindow != NULL);      // We can't config to a NULL display
    mDisplay = displayWindow;
    mDisplay->getOriginAndSize( origin_x, origin_y, window_width, window_height);
    border = mDisplay->shouldDrawBorder();
@@ -71,16 +74,16 @@ void vjGlWindow::config(vjDisplay* displayWindow)
 }
 
 
-void vjGlWindow::updateViewport()
+void GlWindow::updateViewport()
 {
    glViewport(0,0, window_width, window_height);
    setDirtyViewport(false);
 }
 
-void vjGlWindow::setViewport(float xo, float yo, float xSize, float ySize)
+void GlWindow::setViewport(float xo, float yo, float xSize, float ySize)
 {
-   vjASSERT( ((xo+xSize) <= 1.0f) && "X viewport sizes are out of range");
-   vjASSERT( ((yo+ySize) <= 1.0f) && "Y viewport sizes are out of range");
+   vprASSERT( ((xo+xSize) <= 1.0f) && "X viewport sizes are out of range");
+   vprASSERT( ((yo+ySize) <= 1.0f) && "Y viewport sizes are out of range");
 
    unsigned ll_x = unsigned(xo*float(window_width));
    unsigned ll_y = unsigned(yo*float(window_height));
@@ -91,17 +94,17 @@ void vjGlWindow::setViewport(float xo, float yo, float xSize, float ySize)
 }
 
 
-void vjGlWindow::setViewBuffer(vjViewport::View view)
+void GlWindow::setViewBuffer(vrj::Viewport::View view)
 {
    if(!isStereo())
       glDrawBuffer(GL_BACK);
-   else if(vjViewport::LEFT_EYE == view)
+   else if(Viewport::LEFT_EYE == view)
       glDrawBuffer(GL_BACK_LEFT);
-   else if(vjViewport::RIGHT_EYE == view)
+   else if(Viewport::RIGHT_EYE == view)
       glDrawBuffer(GL_BACK_RIGHT);
 }
 
-void vjGlWindow::setProjection(vjProjection* proj)
+void GlWindow::setProjection(vrj::Projection* proj)
 {
    if (!window_is_open)
       return;
@@ -116,9 +119,9 @@ void vjGlWindow::setProjection(vjProjection* proj)
    glMatrixMode(GL_PROJECTION);
    {
       glLoadIdentity();             // Load identity matrix
-      glFrustum(frust[vjFrustum::VJ_LEFT],frust[vjFrustum::VJ_RIGHT],
-                 frust[vjFrustum::VJ_BOTTOM],frust[vjFrustum::VJ_TOP],
-                 frust[vjFrustum::VJ_NEAR],frust[vjFrustum::VJ_FAR]);
+      glFrustum(frust[Frustum::VJ_LEFT],frust[Frustum::VJ_RIGHT],
+                 frust[Frustum::VJ_BOTTOM],frust[Frustum::VJ_TOP],
+                 frust[Frustum::VJ_NEAR],frust[Frustum::VJ_FAR]);
 #ifdef USE_PROJECTION_MATRIX
          // Set camera rotation and position
       glMultMatrixf(proj->mViewMat.getFloatPtr());
@@ -135,12 +138,12 @@ void vjGlWindow::setProjection(vjProjection* proj)
 
 
 /** Sets the projection matrix for this window to draw the camera eye frame */
-void vjGlWindow::setCameraProjection(vjCameraProjection* camProj)
+void GlWindow::setCameraProjection(vrj::CameraProjection* camProj)
 {
    if (!window_is_open)
       return;
 
-   vjASSERT(camProj != NULL && "Trying to use a non-camera projection with a sim view");
+   vprASSERT(camProj != NULL && "Trying to use a non-camera projection with a sim view");
    float* frust = camProj->mFrustum.frust;
 
    vjDEBUG(vjDBG_DRAW_MGR,7)  << "---- Camera Frustrum ----\n"
@@ -155,13 +158,13 @@ void vjGlWindow::setCameraProjection(vjCameraProjection* camProj)
    {
       glLoadIdentity();             // Load identity matrix
       /*
-      glFrustum(frust[vjFrustum::LEFT],frust[vjFrustum::RIGHT],
-                 frust[vjFrustum::BOTTOM],frust[vjFrustum::TOP],
-                 frust[vjFrustum::NEAR],frust[vjFrustum::FAR]);
+      glFrustum(frust[Frustum::LEFT],frust[Frustum::RIGHT],
+                 frust[Frustum::BOTTOM],frust[Frustum::TOP],
+                 frust[Frustum::NEAR],frust[Frustum::FAR]);
       */
 
       gluPerspective(camProj->mVertFOV, camProj->mAspectRatio*((window_width)/float(window_height)),
-                     frust[vjFrustum::VJ_NEAR], frust[vjFrustum::VJ_FAR]);
+                     frust[Frustum::VJ_NEAR], frust[Frustum::VJ_FAR]);
 #ifdef USE_PROJECTION_MATRIX
        // Set camera rotation and position
    glMultMatrixf(camProj->mViewMat.getFloatPtr());
@@ -176,19 +179,21 @@ void vjGlWindow::setCameraProjection(vjCameraProjection* camProj)
 #endif
 }
 
-int vjGlWindow::getNextWindowId()
+int GlWindow::getNextWindowId()
 {
    return mCurMaxWinId++;
 }
 
-std::ostream& operator<<(std::ostream& out, vjGlWindow* win)
+std::ostream& operator<<(std::ostream& out, GlWindow* win)
 {
-   vjASSERT(win != NULL);
-   vjASSERT(win->mDisplay != NULL);
+   vprASSERT(win != NULL);
+   vprASSERT(win->mDisplay != NULL);
 
-   //out << "-------- vjGlWindow --------" << endl;
+   //out << "-------- GlWindow --------" << endl;
    out << "Open: " << (win->window_is_open ? "Y" : "N") << std::endl;
    out << "Display:" << *(win->mDisplay) << std::endl;
    out << "Stereo:" << (win->in_stereo ? "Y" : "N") << std::endl;
    return out;
 }
+
+} // end namespace

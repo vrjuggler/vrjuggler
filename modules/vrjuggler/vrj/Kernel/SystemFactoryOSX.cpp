@@ -41,7 +41,10 @@
 #include <stdio.h>
 #include <CoreFoundation/CFString.h>
 
-vjSingletonImp(vjOSXSystemFactory);
+namespace vrj
+{
+   
+vprSingletonImp(OSXSystemFactory);
 
 // This function comes from Carbon SetupGL 1.5 distributed by Apple
 // Corporation.  Its use is here is permitted by the license.
@@ -58,7 +61,7 @@ static Boolean PreflightGL (Boolean checkFullscreen)
    return true;
 }
 
-void vjOSXSystemFactory::CarbonApplicationThread(void* nullData)
+void OSXSystemFactory::CarbonApplicationThread(void* nullData)
 {
     Initialize();
     PreflightGL (false);
@@ -67,11 +70,11 @@ void vjOSXSystemFactory::CarbonApplicationThread(void* nullData)
     EventLoop(); // This is where we will put the main loop to retrieve events from carbon
 }
 
-vjOSXSystemFactory::vjOSXSystemFactory()
+OSXSystemFactory::OSXSystemFactory()
 {
     InitComplete = false; //We haven't initialized yet!
 
-    vpr::ThreadMemberFunctor<vjOSXSystemFactory>* memberFunctor = new vpr::ThreadMemberFunctor<vjOSXSystemFactory>(this, &vjOSXSystemFactory::CarbonApplicationThread, NULL);
+    vpr::ThreadMemberFunctor<OSXSystemFactory>* memberFunctor = new vpr::ThreadMemberFunctor<OSXSystemFactory>(this, &OSXSystemFactory::CarbonApplicationThread, NULL);
     vpr::Thread* new_thread;
     new_thread = new vpr::Thread(memberFunctor);
 
@@ -106,11 +109,11 @@ vjOSXSystemFactory::vjOSXSystemFactory()
 
 static OSErr QuitAppleEventHandler( const AppleEvent *appleEvt, AppleEvent* reply, UInt32 refcon )
 {
-    vjOSXSystemFactory::instance()->setQuitFlag(true);
+    OSXSystemFactory::instance()->setQuitFlag(true);
     return noErr;
 }
 
-void vjOSXSystemFactory::Initialize()
+void OSXSystemFactory::Initialize()
 {
     OSErr	err;
 
@@ -167,7 +170,7 @@ void vjOSXSystemFactory::Initialize()
     DrawMenuBar();
 }
 
-void vjOSXSystemFactory::EventLoop()
+void OSXSystemFactory::EventLoop()
 {
     Boolean	gotEvent;
     EventRecord	event;
@@ -188,7 +191,7 @@ void vjOSXSystemFactory::EventLoop()
     ExitToShell();					
 }
 
-void vjOSXSystemFactory::DoEvent(EventRecord *event)
+void OSXSystemFactory::DoEvent(EventRecord *event)
 {
     char	key;
     short	part;
@@ -219,7 +222,7 @@ void vjOSXSystemFactory::DoEvent(EventRecord *event)
     }
 }
 
-void vjOSXSystemFactory::DoMenuCommand(long menuResult)
+void OSXSystemFactory::DoMenuCommand(long menuResult)
 {
     short	menuID;		/* the resource ID of the selected menu */
     short	menuItem;	/* the item number of the selected menu */
@@ -254,3 +257,5 @@ void vjOSXSystemFactory::DoMenuCommand(long menuResult)
 
     HiliteMenu(0);	/* unhighlight what MenuSelect (or MenuKey) hilited */
 }
+
+};

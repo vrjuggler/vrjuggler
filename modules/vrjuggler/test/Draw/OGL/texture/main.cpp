@@ -42,10 +42,10 @@
 //: executable entry point
 int main( int argc, char* argv[] )
 {
-   vjProjection::setNearFar( 0.01f, 10000.0f );
+   Projection::setNearFar( 0.01f, 10000.0f );
    
    // Get the kernel
-   vjKernel* kernel = vjKernel::instance();        
+   Kernel* kernel = Kernel::instance();        
    
    // Create an instance of the application
    TextureDemoApplication* application = new TextureDemoApplication( kernel );   

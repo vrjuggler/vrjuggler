@@ -78,24 +78,24 @@
 
 
 
-//: vjThreeDMouse a positional device driver for the Logitech ThreeD mouse.
+//: ThreeDMouse a positional device driver for the Logitech ThreeD mouse.
 //
 //  This is a vj hack of Allen's standalone driver for the ThreeD mouse.
 //
 //  Digital driver support could/should be added in the future.
 //
 //!PUBLIC_API:
-class vjThreeDMouse : public vjInput, public vjPosition
+class ThreeDMouse : public vrj::Input, public vrj::Position
 {
 public:
    //: Default constructor
-   vjThreeDMouse() {
+   ThreeDMouse() {
       myThreadID = NULL;
    }
 
-   virtual bool config(vjConfigChunk* c);
+   virtual bool config(vrj::ConfigChunk* c);
 
-   /** vjInput pure virtual functions **/
+   /** Input pure virtual functions **/
    int startSampling();
    int stopSampling();
    void updateData();
@@ -104,9 +104,9 @@ public:
 
    static std::string getChunkType() { return std::string("ThreeDMouse");}
 
-   /** vjPosition pure virtual functions **/
-   vjMatrix* getPosData(int devNum = 0);
-   void getPosData(vjPOS_DATA* &data);
+   /** Position pure virtual functions **/
+   vrj::Matrix* getPosData(int devNum = 0);
+   void getPosData(vrj::POS_DATA* &data);
 
    /** @name Internal functions from original implementation
     *
@@ -128,7 +128,7 @@ public:
    void cuResetControlUnit ();
 
    void getDiagnostics (char data[]);
-   int  getRecord (vjPOS_DATA *data);
+   int  getRecord (vrj::POS_DATA *data);
    void resetControlUnit ();
 
 
@@ -144,7 +144,7 @@ public:
    float getPitch()    { return theData[current].orient[0]; }
    float getYaw()     { return theData[current].orient[1]; }
    float getRoll()       { return theData[current].orient[2]; }
-// vjVec3 getLocation() { return SbVec3f(GetX(), GetY(), GetZ()); }
+// Vec3 getLocation() { return SbVec3f(GetX(), GetY(), GetZ()); }
 
 // int buttonPressed() { return currentMouseReadings.buttons; }
        // PURPOSE: Examine what buttons are pressed
@@ -155,15 +155,15 @@ public:
    //@}
     private:
    int mouseFD;
-   vjPOS_DATA theData[3];
+   vrj::POS_DATA theData[3];
 
    vpr::Thread*   myThreadID; // Ptr to the thread object
-   vjVec3      baseVector; // Used to store the base location tooffset from
+   vrj::Vec3      baseVector; // Used to store the base location tooffset from
             // Originally set to 0,0,0
 
    int  logitechOpen (char *port_name);
 
-   void eulerToAbsolute (byte record[], vjPOS_DATA * data);
+   void eulerToAbsolute (byte record[], vrj::POS_DATA * data);
    void printBin (char a);
 };
 

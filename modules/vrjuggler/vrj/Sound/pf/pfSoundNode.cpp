@@ -50,7 +50,7 @@ int pfSoundNode::app(pfTraverser *trav)
       pfVec3 pf_soundPosition = coord.xyz;
 
       // set my sound's position.
-      vjVec3 soundPosition = vjGetVjVec( pf_soundPosition );
+      vrj::Vec3 soundPosition = vrj::GetVjVec( pf_soundPosition );
       #ifdef USE_AUDIOJUGGLER
       AudioJuggler::instance().setPosition( mSound, soundPosition[0], soundPosition[1], soundPosition[2] );
       #endif

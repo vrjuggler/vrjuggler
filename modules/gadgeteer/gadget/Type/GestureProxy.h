@@ -32,9 +32,9 @@
 
 
 /////////////////////////////////////////////////////////////////////////
-// vjGestureProxy.h
+// GestureProxy.h
 //
-// vjGesture proxy class
+// Gesture proxy class
 //
 ////////////////////////////////////////////////////////////////////////
 #ifndef _VJ_GESTURE_PROXY_H_
@@ -46,8 +46,10 @@
 #include <Input/vjGesture/vjGesture.h>
 #include <Input/InputManager/vjProxy.h>
 
-
-//: Proxy to vjGesture object
+namespace vrj
+{
+   
+//: Proxy to Gesture object
 //
 // A proxy is used by the user to actually acces the gesture data.
 // The proxy allows the user to query the current gesture information.
@@ -55,16 +57,16 @@
 // Once the client has the current gesture, they should test it
 // against the gestures they want to respond to.
 //
-// See also: vjGesture
+// See also: Gesture
 //!PUBLIC_API:
-class VJ_CLASS_API vjGestureProxy : public vjTypedProxy<vjGesture>
+class VJ_CLASS_API GestureProxy : public TypedProxy<Gesture>
 {
 public:
    //: Construct the proxy to point to the given gesture device.
-   vjGestureProxy()
+   GestureProxy()
    { ;}
 
-   virtual ~vjGestureProxy()
+   virtual ~GestureProxy()
    {}
 
    //: Get the current gesture.
@@ -103,7 +105,7 @@ public:
    }
 
    //: Returns a pointer to the device held by this proxy.
-   vjGesture* getGesturePtr()
+   Gesture* getGesturePtr()
    {
       if(mStupified)
          return NULL;
@@ -113,17 +115,17 @@ public:
 
    static std::string getChunkType() { return "GestureProxy"; }
 
-   bool config(vjConfigChunk* chunk);
+   bool config(ConfigChunk* chunk);
 
-   virtual vjInput* getProxiedInputDevice()
+   virtual Input* getProxiedInputDevice()
    {
       if(NULL == mTypedDevice)
          return NULL;
 
-      vjInput* ret_val = dynamic_cast<vjInput*>(mTypedDevice);
-      vjASSERT(ret_val != NULL);
+      Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
+      vprASSERT(ret_val != NULL);
       return ret_val;
    }
 };
-
+};
 #endif

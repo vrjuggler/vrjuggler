@@ -32,41 +32,44 @@
 
 
 #include <vjConfig.h>
-#include <Kernel/vjAssert.h>
+#include <vpr/Util/Assert.h>
 #include <Input/vjSim/vjSimDigitalGlove.h>
 #include <Config/vjConfigChunk.h>
 
-//: Default Constructor
-vjSimDigitalGlove::vjSimDigitalGlove() : vjDigital(), vjSimInput(), vjGlove()
+namespace vrj
 {
-   //vjDEBUG(vjDBG_ALL,3)<<"*** vjSimDigitalGlove::vjSimDigitalGlove()\n"<< vjDEBUG_FLUSH;
+   
+//: Default Constructor
+SimDigitalGlove::SimDigitalGlove() : Digital(), SimInput(), Glove()
+{
+   //vjDEBUG(vjDBG_ALL,3)<<"*** SimDigitalGlove::SimDigitalGlove()\n"<< vjDEBUG_FLUSH;
 }
 
 //: Destructor
-vjSimDigitalGlove::~vjSimDigitalGlove()
+SimDigitalGlove::~SimDigitalGlove()
 {
-  // vjDEBUG(vjDBG_ALL,3)<<"*** vjSimDigitalGlove::~vjSimDigitalGlove()\n"<< vjDEBUG_FLUSH;
+  // vjDEBUG(vjDBG_ALL,3)<<"*** SimDigitalGlove::~SimDigitalGlove()\n"<< vjDEBUG_FLUSH;
 }
 
-bool vjSimDigitalGlove::config( vjConfigChunk* chunk )
+bool SimDigitalGlove::config( ConfigChunk* chunk )
 {
-   //vjDEBUG(vjDBG_ALL,3)<<"*** vjSimDigitalGlove::config\n"<< vjDEBUG_FLUSH;
-   if(! (vjInput::config(chunk) && vjDigital::config(chunk) && vjSimInput::config(chunk) && vjGlove::config(chunk)))
+   //vjDEBUG(vjDBG_ALL,3)<<"*** SimDigitalGlove::config\n"<< vjDEBUG_FLUSH;
+   if(! (Input::config(chunk) && Digital::config(chunk) && SimInput::config(chunk) && Glove::config(chunk)))
       return false;
 
    //mCurGesture = 0;     // We are in no gesture yet
 
-   //if ((!vjDigital::config( chunk )) || (!vjSimInput::config( chunk )))
+   //if ((!Digital::config( chunk )) || (!SimInput::config( chunk )))
    //   return false;
 
-   std::vector< vjVarValue* > key_list = chunk->getAllProperties( "keyPairs" );
+   std::vector< VarValue* > key_list = chunk->getAllProperties( "keyPairs" );
    mSimKeys = readKeyList( key_list );
 
    int num_pairs = mSimKeys.size();
    mDigitalData = std::vector< int >( num_pairs, 0 );      // Initialize to all zeros
 
    ////////////////  left posProxy
-   vjASSERT( VJ_MAX_GLOVE_DEVS >= 2 );
+   vprASSERT( VJ_MAX_GLOVE_DEVS >= 2 );
    const int LEFT_INDEX = 0, RIGHT_INDEX = 1;
    if (LEFT_INDEX < VJ_MAX_GLOVE_DEVS)
    {
@@ -74,19 +77,19 @@ bool vjSimDigitalGlove::config( vjConfigChunk* chunk )
       if (glove_pos_proxy == std::string(""))
       {
          vjDEBUG( vjDBG_INPUT_MGR, 0 )
-            << "[ERROR]: vjSimPinchglove has no posProxy, config fails."
+            << "[ERROR]: SimPinchglove has no posProxy, config fails."
             << std::endl << vjDEBUG_FLUSH;
          return false;
       }
 
       // init glove pos proxy interface
       /*
-      int proxy_index = vjKernel::instance()->getInputManager()->getProxyIndex( glove_pos_proxy );
+      int proxy_index = Kernel::instance()->getInputManager()->getProxyIndex( glove_pos_proxy );
       if (proxy_index != -1)
-         mGlovePos[LEFT_INDEX] = vjKernel::instance()->getInputManager()->getPosProxy( proxy_index );
+         mGlovePos[LEFT_INDEX] = Kernel::instance()->getInputManager()->getPosProxy( proxy_index );
       else
          vjDEBUG( vjDBG_INPUT_MGR, 0 )
-            << "[ERROR]: vjSimPinchglove::config(): Can't find posProxy, config fails."
+            << "[ERROR]: SimPinchglove::config(): Can't find posProxy, config fails."
             << std::endl << std::endl << vjDEBUG_FLUSH;
       */
    }
@@ -100,19 +103,19 @@ bool vjSimDigitalGlove::config( vjConfigChunk* chunk )
       if (glove_pos_proxy == std::string(""))
       {
          vjDEBUG( vjDBG_INPUT_MGR, 0 )
-            << "[ERROR]: vjSimPinchglove has no rightPosProxy, config fails."
+            << "[ERROR]: SimPinchglove has no rightPosProxy, config fails."
             << std::endl << vjDEBUG_FLUSH;
          return false;
       }
 
       // init right glove pos proxy interface
       /*
-      int proxy_index = vjKernel::instance()->getInputManager()->getProxyIndex( glove_pos_proxy );
+      int proxy_index = Kernel::instance()->getInputManager()->getProxyIndex( glove_pos_proxy );
       if (proxy_index != -1)
-         mGlovePos[RIGHT_INDEX] = vjKernel::instance()->getInputManager()->getPosProxy( proxy_index );
+         mGlovePos[RIGHT_INDEX] = Kernel::instance()->getInputManager()->getPosProxy( proxy_index );
       else
          vjDEBUG( vjDBG_INPUT_MGR, 0 )
-            << "[ERROR]: vjSimPinchglove::config(): Can't find posProxy, config fails."
+            << "[ERROR]: SimPinchglove::config(): Can't find posProxy, config fails."
             << std::endl << std::endl << vjDEBUG_FLUSH;
             */
    }
@@ -125,7 +128,7 @@ bool vjSimDigitalGlove::config( vjConfigChunk* chunk )
 //
 // NOTE: Digital is on when key is held down
 //+     When key is release, digital goes to off state
-void vjSimDigitalGlove::updateData()
+void SimDigitalGlove::updateData()
 {
    // this unlocks when this object is destructed (upon return of the function)
    vpr::Guard<vpr::Mutex> updateGuard(lock);
@@ -172,16 +175,16 @@ void vjSimDigitalGlove::updateData()
    return;
 }
 
-//TODO: move this function up the hierarchy, since vjPinchGlove also has this one.
+//TODO: move this function up the hierarchy, since PinchGlove also has this one.
 //NOTE: this function *is* slightly different...
-void vjSimDigitalGlove::updateFingerAngles()
+void SimDigitalGlove::updateFingerAngles()
 {
     const int LEFT_HAND = 0;
     const int RIGHT_HAND = 1;
 
-    vjASSERT( progress < 3 && progress >= 0 );
-    vjASSERT( LEFT_HAND < VJ_MAX_GLOVE_DEVS );
-    vjASSERT( RIGHT_HAND < VJ_MAX_GLOVE_DEVS );
+    vprASSERT( progress < 3 && progress >= 0 );
+    vprASSERT( LEFT_HAND < VJ_MAX_GLOVE_DEVS );
+    vprASSERT( RIGHT_HAND < VJ_MAX_GLOVE_DEVS );
 
     // use the digital data set the angles for each joint.
     mLeftHand.setFingers( mDigitalData[LPINKY] == 1,
@@ -202,38 +205,38 @@ void vjSimDigitalGlove::updateFingerAngles()
     {
        //vjDEBUG(vjDBG_ALL,0)<<"Lpinky:"<<mLeftHand.pinky().mpj()<<","<<mLeftHand.pinky().pij()<<","<<mLeftHand.pinky().dij()<<","<<mLeftHand.pinky().abduct()<<"\n"<<vjDEBUG_FLUSH;
        // Left Pinky
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::PINKY][vjGloveData::MPJ] = mLeftHand.pinky().mpj();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::PINKY][vjGloveData::PIJ] = mLeftHand.pinky().pij();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::PINKY][vjGloveData::DIJ] = mLeftHand.pinky().dij();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::PINKY][vjGloveData::ABDUCT] = mLeftHand.pinky().abduct();
+       mTheData[LEFT_HAND][progress].angles[GloveData::PINKY][GloveData::MPJ] = mLeftHand.pinky().mpj();
+       mTheData[LEFT_HAND][progress].angles[GloveData::PINKY][GloveData::PIJ] = mLeftHand.pinky().pij();
+       mTheData[LEFT_HAND][progress].angles[GloveData::PINKY][GloveData::DIJ] = mLeftHand.pinky().dij();
+       mTheData[LEFT_HAND][progress].angles[GloveData::PINKY][GloveData::ABDUCT] = mLeftHand.pinky().abduct();
 
        // Left Ring
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::RING][vjGloveData::MPJ] = mLeftHand.ring().mpj();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::RING][vjGloveData::PIJ] = mLeftHand.ring().pij();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::RING][vjGloveData::DIJ] = mLeftHand.ring().dij();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::RING][vjGloveData::ABDUCT] = mLeftHand.ring().abduct();
+       mTheData[LEFT_HAND][progress].angles[GloveData::RING][GloveData::MPJ] = mLeftHand.ring().mpj();
+       mTheData[LEFT_HAND][progress].angles[GloveData::RING][GloveData::PIJ] = mLeftHand.ring().pij();
+       mTheData[LEFT_HAND][progress].angles[GloveData::RING][GloveData::DIJ] = mLeftHand.ring().dij();
+       mTheData[LEFT_HAND][progress].angles[GloveData::RING][GloveData::ABDUCT] = mLeftHand.ring().abduct();
 
        // Left Middle
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::MIDDLE][vjGloveData::MPJ] = mLeftHand.middle().mpj();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::MIDDLE][vjGloveData::PIJ] = mLeftHand.middle().pij();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::MIDDLE][vjGloveData::DIJ] = mLeftHand.middle().dij();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::MIDDLE][vjGloveData::ABDUCT] = mLeftHand.middle().abduct();
+       mTheData[LEFT_HAND][progress].angles[GloveData::MIDDLE][GloveData::MPJ] = mLeftHand.middle().mpj();
+       mTheData[LEFT_HAND][progress].angles[GloveData::MIDDLE][GloveData::PIJ] = mLeftHand.middle().pij();
+       mTheData[LEFT_HAND][progress].angles[GloveData::MIDDLE][GloveData::DIJ] = mLeftHand.middle().dij();
+       mTheData[LEFT_HAND][progress].angles[GloveData::MIDDLE][GloveData::ABDUCT] = mLeftHand.middle().abduct();
 
        // Left Index
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::INDEX][vjGloveData::MPJ] = mLeftHand.index().mpj();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::INDEX][vjGloveData::PIJ] = mLeftHand.index().pij();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::INDEX][vjGloveData::DIJ] = mLeftHand.index().dij();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::INDEX][vjGloveData::ABDUCT] = mLeftHand.index().abduct();
+       mTheData[LEFT_HAND][progress].angles[GloveData::INDEX][GloveData::MPJ] = mLeftHand.index().mpj();
+       mTheData[LEFT_HAND][progress].angles[GloveData::INDEX][GloveData::PIJ] = mLeftHand.index().pij();
+       mTheData[LEFT_HAND][progress].angles[GloveData::INDEX][GloveData::DIJ] = mLeftHand.index().dij();
+       mTheData[LEFT_HAND][progress].angles[GloveData::INDEX][GloveData::ABDUCT] = mLeftHand.index().abduct();
 
        // Left Thumb
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::THUMB][vjGloveData::MPJ] = mLeftHand.thumb().mpj();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::THUMB][vjGloveData::PIJ] = mLeftHand.thumb().pij();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::THUMB][vjGloveData::DIJ] = mLeftHand.thumb().dij();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::THUMB][vjGloveData::ABDUCT] = mLeftHand.thumb().abduct();
+       mTheData[LEFT_HAND][progress].angles[GloveData::THUMB][GloveData::MPJ] = mLeftHand.thumb().mpj();
+       mTheData[LEFT_HAND][progress].angles[GloveData::THUMB][GloveData::PIJ] = mLeftHand.thumb().pij();
+       mTheData[LEFT_HAND][progress].angles[GloveData::THUMB][GloveData::DIJ] = mLeftHand.thumb().dij();
+       mTheData[LEFT_HAND][progress].angles[GloveData::THUMB][GloveData::ABDUCT] = mLeftHand.thumb().abduct();
 
        // Left Wrist
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::WRIST][vjGloveData::YAW] = mLeftHand.yaw();
-       mTheData[LEFT_HAND][progress].angles[vjGloveData::WRIST][vjGloveData::PITCH] = mLeftHand.pitch();
+       mTheData[LEFT_HAND][progress].angles[GloveData::WRIST][GloveData::YAW] = mLeftHand.yaw();
+       mTheData[LEFT_HAND][progress].angles[GloveData::WRIST][GloveData::PITCH] = mLeftHand.pitch();
     }
 
     // if that assert failed, then at least the code will still run...
@@ -241,38 +244,38 @@ void vjSimDigitalGlove::updateFingerAngles()
     {
        //vjDEBUG(vjDBG_ALL,0)<<"Rpinky:"<<mRightHand.pinky().mpj()<<","<<mRightHand.pinky().pij()<<","<<mRightHand.pinky().dij()<<","<<mRightHand.pinky().abduct()<<"   "<<vjDEBUG_FLUSH;
        // Right Pinky
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::PINKY][vjGloveData::MPJ] = mRightHand.pinky().mpj();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::PINKY][vjGloveData::PIJ] = mRightHand.pinky().pij();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::PINKY][vjGloveData::DIJ] = mRightHand.pinky().dij();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::PINKY][vjGloveData::ABDUCT] = mRightHand.pinky().abduct();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::PINKY][GloveData::MPJ] = mRightHand.pinky().mpj();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::PINKY][GloveData::PIJ] = mRightHand.pinky().pij();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::PINKY][GloveData::DIJ] = mRightHand.pinky().dij();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::PINKY][GloveData::ABDUCT] = mRightHand.pinky().abduct();
 
        // Right Ring
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::RING][vjGloveData::MPJ] = mRightHand.ring().mpj();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::RING][vjGloveData::PIJ] = mRightHand.ring().pij();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::RING][vjGloveData::DIJ] = mRightHand.ring().dij();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::RING][vjGloveData::ABDUCT] = mRightHand.ring().abduct();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::RING][GloveData::MPJ] = mRightHand.ring().mpj();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::RING][GloveData::PIJ] = mRightHand.ring().pij();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::RING][GloveData::DIJ] = mRightHand.ring().dij();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::RING][GloveData::ABDUCT] = mRightHand.ring().abduct();
 
        // Right Middle
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::MIDDLE][vjGloveData::MPJ] = mRightHand.middle().mpj();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::MIDDLE][vjGloveData::PIJ] = mRightHand.middle().pij();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::MIDDLE][vjGloveData::DIJ] = mRightHand.middle().dij();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::MIDDLE][vjGloveData::ABDUCT] = mRightHand.middle().abduct();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::MIDDLE][GloveData::MPJ] = mRightHand.middle().mpj();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::MIDDLE][GloveData::PIJ] = mRightHand.middle().pij();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::MIDDLE][GloveData::DIJ] = mRightHand.middle().dij();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::MIDDLE][GloveData::ABDUCT] = mRightHand.middle().abduct();
 
        // Right Index
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::INDEX][vjGloveData::MPJ] = mRightHand.index().mpj();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::INDEX][vjGloveData::PIJ] = mRightHand.index().pij();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::INDEX][vjGloveData::DIJ] = mRightHand.index().dij();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::INDEX][vjGloveData::ABDUCT] = mRightHand.index().abduct();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::INDEX][GloveData::MPJ] = mRightHand.index().mpj();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::INDEX][GloveData::PIJ] = mRightHand.index().pij();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::INDEX][GloveData::DIJ] = mRightHand.index().dij();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::INDEX][GloveData::ABDUCT] = mRightHand.index().abduct();
 
        // Right Thumb
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::THUMB][vjGloveData::MPJ] = mRightHand.thumb().mpj();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::THUMB][vjGloveData::PIJ] = mRightHand.thumb().pij();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::THUMB][vjGloveData::DIJ] = mRightHand.thumb().dij();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::THUMB][vjGloveData::ABDUCT] = mRightHand.thumb().abduct();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::THUMB][GloveData::MPJ] = mRightHand.thumb().mpj();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::THUMB][GloveData::PIJ] = mRightHand.thumb().pij();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::THUMB][GloveData::DIJ] = mRightHand.thumb().dij();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::THUMB][GloveData::ABDUCT] = mRightHand.thumb().abduct();
 
        // Right Wrist
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::WRIST][vjGloveData::YAW] = mRightHand.yaw();
-       mTheData[RIGHT_HAND][progress].angles[vjGloveData::WRIST][vjGloveData::PITCH] = mRightHand.pitch();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::WRIST][GloveData::YAW] = mRightHand.yaw();
+       mTheData[RIGHT_HAND][progress].angles[GloveData::WRIST][GloveData::PITCH] = mRightHand.pitch();
     }
 
     //vjDEBUG(vjDBG_ALL,0)<<"out\n"<<std::flush<<vjDEBUG_FLUSH;
@@ -281,12 +284,12 @@ void vjSimDigitalGlove::updateFingerAngles()
 /*
 //: Get the current gesture.
 //! RETURNS: id of current gesture
-int vjSimDigitalGlove::getGesture()
+int SimDigitalGlove::getGesture()
 { return mCurGesture; }
 
 //: Load trained data for the gesture object
 // Loads the file for trained data
-void vjSimDigitalGlove::loadTrainedFile(std::string fileName)
+void SimDigitalGlove::loadTrainedFile(std::string fileName)
 {
    ifstream inFile(fileName.c_str());
 
@@ -303,3 +306,5 @@ void vjSimDigitalGlove::loadTrainedFile(std::string fileName)
    }
 }
 */
+
+};

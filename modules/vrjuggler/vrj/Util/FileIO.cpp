@@ -33,16 +33,19 @@
 #include <Utils/vjDebug.h>
 #include <Utils/vjFileIO.h>
 
-std::vector<std::string> vjFileIO::mPaths;
+namespace vrj
+{
+   
+std::vector<std::string> FileIO::mPaths;
 
-void vjFileIO::addFilePath( const std::string& filepath )
+void FileIO::addFilePath( const std::string& filepath )
 {
    std::string demangled = replaceEnvVars( filepath );
    mPaths.push_back( demangled );
 }
 
 //: true - 
-bool vjFileIO::fileExists( const char* const name )
+bool FileIO::fileExists( const char* const name )
 {
    std::string stdstring_name = name;
    std::string demangled_name = demangleFileName( stdstring_name, "" );
@@ -59,31 +62,31 @@ bool vjFileIO::fileExists( const char* const name )
 	}
 }
 
-bool vjFileIO::fileExists( const std::string& name )
+bool FileIO::fileExists( const std::string& name )
 {
    return fileExists( name.c_str() );
 }
 
-bool vjFileIO::fileExistsResolvePath( const char* const filename, std::string& realPath )
+bool FileIO::fileExistsResolvePath( const char* const filename, std::string& realPath )
 {
    realPath = resolvePathForName( filename );
    return fileExists( realPath.c_str() );
 }
 
-bool vjFileIO::fileExistsResolvePath( const std::string& filename, std::string& realPath )
+bool FileIO::fileExistsResolvePath( const std::string& filename, std::string& realPath )
 {
    return fileExistsResolvePath( filename.c_str(), realPath );
 }
 
-std::string vjFileIO::resolvePathForName( const char* const filename )
+std::string FileIO::resolvePathForName( const char* const filename )
 {
    std::string stdstring_name = filename;
    std::string demangled_name = demangleFileName( stdstring_name, "" );
 	
-   for (unsigned int x = 0; x < vjFileIO::mPaths.size(); ++x)
+   for (unsigned int x = 0; x < FileIO::mPaths.size(); ++x)
    {
       std::string slash = "/";
-      std::string temp  = vjFileIO::mPaths[x] + slash + demangled_name;
+      std::string temp  = FileIO::mPaths[x] + slash + demangled_name;
       
       // if this path works, then return it.
       if (fileExists( temp ))
@@ -102,7 +105,7 @@ std::string vjFileIO::resolvePathForName( const char* const filename )
 
 //: Returns a copy of s with all environment variable names replaced
 //+ with their values.
-std::string vjFileIO::replaceEnvVars( const std::string& s ) 
+std::string FileIO::replaceEnvVars( const std::string& s ) 
 {
     unsigned int i, j;
     int lastpos = 0;
@@ -163,7 +166,7 @@ std::string vjFileIO::replaceEnvVars( const std::string& s )
 
 
 //: is n an absolute path name?
-bool vjFileIO::isAbsolutePathName (const std::string& n) 
+bool FileIO::isAbsolutePathName (const std::string& n) 
 {
 #ifdef WIN32
     return ((n.length() > 0) && (n[0] == '\\'))
@@ -175,7 +178,7 @@ bool vjFileIO::isAbsolutePathName (const std::string& n)
 
 
 
-std::string vjFileIO::demangleFileName (const std::string& n, std::string parentfile) 
+std::string FileIO::demangleFileName (const std::string& n, std::string parentfile) 
 {
 
    std::string fname = replaceEnvVars (n);
@@ -205,3 +208,5 @@ std::string vjFileIO::demangleFileName (const std::string& n, std::string parent
 
    return fname;
 }
+
+};

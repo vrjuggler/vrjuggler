@@ -13,7 +13,7 @@ class VJ_CLASS_API SoundManagerFactory
 public:
    // singleton function to get an instance of a soundmanager
    // returns whichever was configured at build time.
-   static vrj::SoundManager& get();
+   static SoundManager& get();
 };
 
 };

@@ -25,7 +25,7 @@ public:
    int numSensors();
 
    // Return the position of the given sensor
-   vjMatrix getSensorPos(int sensorNum);
+   vrj::Matrix getSensorPos(int sensorNum);
 
 protected:
    //: Attach to the memory segment with key (mShmKey)

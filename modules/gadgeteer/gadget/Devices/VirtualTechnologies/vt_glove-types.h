@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 /*                                                              */
 /*  Type declarations and constant definitions for vt_glove.c:  */
-/*  vjCyberGlove communications                                   */
+/*  CyberGlove communications                                   */
 /*                                                              */
 /*  ==========================================================  */
 /*  --  Copyright (C) 1990,91,92,93 Virtual Technologies    --  */

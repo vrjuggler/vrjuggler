@@ -40,11 +40,13 @@
 #include <Math/vjVec3.h>
 #include <Math/vjMatrix.h>
 #include <Math/vjMath.h>
-#include <Kernel/vjAssert.h>
+#include <vpr/Util/Assert.h>
 
 
 #define VJ_QUAT_EPSILON     0.00001f
 
+namespace vrj
+{
 //: Quaternion
 //  A quaternion is a data structure used to store arbitrary rotation
 //  in 3space.  It is useful in robotics and animation, and is much faster
@@ -68,18 +70,18 @@
 //    Or search on google....
 //
 //!PUBLIC_API:
-class VJ_CLASS_API vjQuat
+class VJ_CLASS_API Quat
 {
 public:
    //: default constructor
    //!POST: initialize self to identity
-   vjQuat();
+   Quat();
    
-   //: Construct self from another vjQuat 
-   vjQuat( const vjQuat& quat );
+   //: Construct self from another Quat 
+   Quat( const Quat& quat );
 
    //: Construct Quat from 4 floats
-   vjQuat( const float w,
+   Quat( const float w,
            const float x,
            const float y,
            const float z );
@@ -96,7 +98,7 @@ public:
    // not be changed.
    // returns quaternion set to 0 rotation [1,0,0,0]
    // NOTE: addition identity is [0,0,0,0]
-   static const vjQuat& identity();
+   static const Quat& identity();
    
    //: copy the quaternion data from scalar: [w]  vec: [x y z]
    //!POST: self = {w,x,y,z}
@@ -104,23 +106,23 @@ public:
    
    //: copy the quaternion to self
    //!POST: self = quat
-   void copy( const vjQuat& quat );
+   void copy( const Quat& quat );
    
    //: Copy a pure quaternion to self
    //!POST: self = [0,p]
-   void makePure( const vjVec3& p );
+   void makePure( const Vec3& p );
    
    //: return the scalar component
    const float& scalar() const;
 
    //: return the vector component
-   const vjVec3 vector() const;
+   const Vec3 vector() const;
    
    //: set the scalar component
    void setScalar( float s );
    
    //: set the vector component
-   void setVector( const vjVec3& vec );
+   void setVector( const Vec3& vec );
          
    //: returns the quaternion's norm (dot product)
    // defined as sum of squares of all quat components
@@ -134,7 +136,7 @@ public:
    void conj();
    
    //: set self to the complex conjugate of quat.
-   void conj( const vjQuat& quat );
+   void conj( const Quat& quat );
   
    //: normalize without the square root.  faster but not precise...
    //!POST: self = self / norm()
@@ -142,17 +144,17 @@ public:
    void normalizeFast();
    
    //: set self to the unit quaternion of quat. fast, imprecise
-   void normalizeFast( const vjQuat& quat );
+   void normalizeFast( const Quat& quat );
    
    // jdsfjdfdsj
-   void normalizeVec();
+   //void normalizeVec();
    
    //: set self to the normalized quaternion of self.
    //!POST: self = normalize(self), where normalize makes quat.length() == 1
    void normalize();
    
    //: set self to the normalized quaternion of quat.
-   void normalize( const vjQuat& quat );
+   void normalize( const Quat& quat );
   
    //: set self to the multiplicative inverse of self
    //!POST: self becomes the multiplicative inverse of self
@@ -160,53 +162,53 @@ public:
    
    //: set self to the multiplicative inverse of quat
    //!POST: self becomes the multiplicative inverse of quat
-   void invert( const vjQuat& quat );
+   void invert( const Quat& quat );
 
 public:
    //: product of two quaternions (quaternion product)
    //!POST: this' = q1 * q2
-   void mult( const vjQuat& q1, const vjQuat& q2 );
+   void mult( const Quat& q1, const Quat& q2 );
 
    //: scalar multiplication 
    // each element (4 total) scaled by s
    //!POST: this' = q1 * s
-   void mult( const vjQuat& q1, const float& s );
+   void mult( const Quat& q1, const float& s );
 
    //: scale the rotation angle
    // [angle,x,y,z] = [angle*s,x,y,z]
    // NOTE: this function will probably fail in certain cases...
-   void scaleAngle( const vjQuat& q1, const float& s );
+   void scaleAngle( const Quat& q1, const float& s );
    
    //: quotient of two quaternions
    //!POST: this' = q1 / q2
-   void div( const vjQuat& q1, const vjQuat& q2 );
+   void div( const Quat& q1, const Quat& q2 );
 
    // do an "add" of all quat components
    // TODO: add description for what this means geometrically
-   void add( const vjQuat& quat1, const vjQuat& quat2 );
+   void add( const Quat& quat1, const Quat& quat2 );
    
    // set self to quat1 - quat2
    // TODO: add description for what this means geometrically
-   void sub( const vjQuat& quat1, const vjQuat& quat2 );
+   void sub( const Quat& quat1, const Quat& quat2 );
    
    //: complex exponentiation 
    //!POST: sets self to the exponentiation of quat
    // NOTE: safe to pass self as argument
-   void exp( const vjQuat& quat );
+   void exp( const Quat& quat );
    
    //: complex logarithm
    //!POST: sets self to the log of quat
-   void log( const vjQuat& quat );
+   void log( const Quat& quat );
    
    //: check if self is equal to quat within some tolerance 'tol'
    //!PRE:  give one quaternion to test for equality, and a tolerance
    //!PRE:  tolerance defaults to VJ_QUAT_EPSILON if none given.
    //!POST: returns true if the two quats are almost equal
-   bool isEqual( const vjQuat& quat, float tol = VJ_QUAT_EPSILON ) const;
+   bool isEqual( const Quat& quat, float tol = VJ_QUAT_EPSILON ) const;
    
    //: Set self to the rotation component contained 
    //:  within the given rotation matrix
-   void makeRot( const vjMatrix& mat );
+   void makeRot( const Matrix& mat );
    
    //: make a quat from a twist (radians) about a vector (normalized)
    void makeRot( const float& rad, const float& x, const float& y, const float& z );
@@ -218,10 +220,10 @@ public:
    // WARNING: not implemented (do not use)
    // Spherical quadratic interpolation is provided by squad and its
    // helper function, meanTangent.
-   void squad( float t, const vjQuat& q1, const vjQuat& q2, const vjQuat& a, const vjQuat& b );
+   void squad( float t, const Quat& q1, const Quat& q2, const Quat& a, const Quat& b );
 
    // WARNING: not implemented (do not use)
-   void meanTangent( const vjQuat &q1, const vjQuat &q2, const vjQuat &q3 );
+   void meanTangent( const Quat &q1, const Quat &q2, const Quat &q3 );
    
    //: spherical linear interpolation
    // set self to the interpolated quat                             <BR>
@@ -229,59 +231,59 @@ public:
    //!POST: if t == 0.0, then self is set to q1                     <BR>
    //!POST: if 0 < t < 1, then self is set to interpolated result   <BR>
    //!POST: if t == 1.0, then self is set to q2                     <BR>
-   void slerp( float t, const vjQuat& q1, const vjQuat& q2 );
+   void slerp( float t, const Quat& q1, const Quat& q2 );
    
    
 public:
    //: compose two rotations (multiplication operator) 
    //!POST: temporary return value = self * quat 
-   vjQuat operator*( const vjQuat& quat ) const;
+   Quat operator*( const Quat& quat ) const;
    
    //: rotate a vector
    //  returns a vector rotated by "self" as a temporary object     <BR>
    //!PRE: give a vector
    //!POST: vector' = self * vector
-   vjVec3 operator*( const vjVec3& vector ) const;
+   Vec3 operator*( const Vec3& vector ) const;
    
    //: mult by scalar (order independant)
    // NOTE: less efficient (returns a copy), use mult() instead (faster)
-   vjQuat operator*( float s ) const;
+   Quat operator*( float s ) const;
    
    //: multiply by inverse quat.
    // NOTE: less efficient, use div() instead
-   vjQuat operator/( const vjQuat& quat ) const;
+   Quat operator/( const Quat& quat ) const;
    
    //: mult by inverse scalar.
    //!POST: returns a temporary == self scaled by s
-   vjQuat operator/( float s ) const;
+   Quat operator/( float s ) const;
 
    //: do an "add" of all quat components
    // TODO: add description for what this means geometrically
-   vjQuat operator+( const vjQuat& quat ) const;
+   Quat operator+( const Quat& quat ) const;
    
    //: do a "subtract" of all quat components
    // TODO: add description for what this means geometrically
-   vjQuat operator-( const vjQuat& quat ) const;
+   Quat operator-( const Quat& quat ) const;
    
 public:
    //: Assignment operator *=
-   vjQuat& operator*=( const vjQuat& quat );
+   Quat& operator*=( const Quat& quat );
 
    //: Assignment operator /=
-   vjQuat& operator/=( const vjQuat& quat );
+   Quat& operator/=( const Quat& quat );
    
    //: does self == quat?
    //  return true if self == quat                                 <BR>
    //  return false if self != quat
-   bool operator==( const vjQuat& quat );
+   bool operator==( const Quat& quat );
    
    //: does self != quat?
    // return true if self != quat                                  <BR>
    // return false if self == quat
-   bool operator!=( const vjQuat& quat );
+   bool operator!=( const Quat& quat );
    
    //: set self to quat
-   vjQuat& operator=( const vjQuat& quat );
+   Quat& operator=( const Quat& quat );
    
    //: output method
    std::ostream& outStreamRaw( std::ostream& out ) const;
@@ -290,7 +292,7 @@ public:
    std::ostream& outStreamReadable( std::ostream& out ) const;
    
    //: output operator
-   friend VJ_API(std::ostream&) operator<<( std::ostream& out, const vjQuat& q );
+   friend VJ_API(std::ostream&) operator<<( std::ostream& out, const Quat& q );
    
    //: quaternion data access for external function use (like quat to matrix)
    // non-const version                                           <BR>
@@ -303,7 +305,7 @@ public:
    const float& operator[]( int x ) const;
    
 private:
-   vjVec4 vec;
+   Vec4 vec;
 };
 
 
@@ -313,19 +315,19 @@ private:
 
 
 //: return the scalar component
-inline const float& vjQuat::scalar() const { return vec[VJ_W]; }
+inline const float& Quat::scalar() const { return vec[VJ_W]; }
 
 //: return the vector component
-inline const vjVec3 vjQuat::vector() const { return vjVec3( vec[VJ_X], vec[VJ_Y], vec[VJ_Z] ); }
+inline const Vec3 Quat::vector() const { return Vec3( vec[VJ_X], vec[VJ_Y], vec[VJ_Z] ); }
 
 //: set the scalar component
-inline void vjQuat::setScalar( float s )
+inline void Quat::setScalar( float s )
 {
    vec[VJ_W] = s;
 }
 
 //: set the vector component
-inline void vjQuat::setVector( const vjVec3& vector )
+inline void Quat::setVector( const Vec3& vector )
 {
    this->vec[VJ_X] = vector[VJ_X];
    this->vec[VJ_Y] = vector[VJ_Y];
@@ -336,7 +338,7 @@ inline void vjQuat::setVector( const vjVec3& vector )
 // non-const version
 // use VJ_W, VJ_X, VJ_Y, or VJ_Z to access each component
 //
-inline float& vjQuat::operator[]( int x )
+inline float& Quat::operator[]( int x )
 { 
    return vec[x]; 
 }
@@ -345,7 +347,7 @@ inline float& vjQuat::operator[]( int x )
 // const version
 // use VJ_W, VJ_X, VJ_Y, or VJ_Z to access each component
 //
-inline const float& vjQuat::operator[]( int x ) const 
+inline const float& Quat::operator[]( int x ) const 
 { 
    return vec[x];
 }
@@ -356,7 +358,7 @@ inline const float& vjQuat::operator[]( int x ) const
 
 //: copy the quaternion data from scalar: [w]  vec: [x y z]
 //!POST: self = {w,x,y,z}
-inline void vjQuat::copy( float w, float x, float y, float z )
+inline void Quat::copy( float w, float x, float y, float z )
 {
    vec[VJ_W] = w;
    vec[VJ_X] = x;
@@ -366,13 +368,13 @@ inline void vjQuat::copy( float w, float x, float y, float z )
 
 //: copy the quaternion to self
 //!POST: self = quat
-inline void vjQuat::copy( const vjQuat& quat )
+inline void Quat::copy( const Quat& quat )
 {
    vec = quat.vec;
 }   
 
 //: Construct Quat from 4 floats
-inline vjQuat::vjQuat( const float w,
+inline Quat::Quat( const float w,
         const float x,
         const float y,
         const float z ) : vec()
@@ -385,10 +387,10 @@ inline vjQuat::vjQuat( const float w,
 // not be changed.
 // returns quaternion set to 0 rotation [1,0,0,0]
 // NOTE: addition identity is [0,0,0,0]
-inline const vjQuat& vjQuat::identity()
+inline const Quat& Quat::identity()
 {
    // [0 deg, 1, 0, 0]  or  [cos(0deg) == 1, sin(0deg)==0 * [1,0,0]]
-   static const vjQuat ____identity___quaternion( 1.0f, 0.0f, 0.0f, 0.0f );
+   static const Quat ____identity___quaternion( 1.0f, 0.0f, 0.0f, 0.0f );
    return ____identity___quaternion;
 }
    
@@ -397,16 +399,16 @@ inline const vjQuat& vjQuat::identity()
 // not be changed.
 // sets self to 0 rotation [1,0,0,0]
 // NOTE: addition identity is [0,0,0,0]
-inline void vjQuat::makeIdent()
+inline void Quat::makeIdent()
 {
-   this->copy( vjQuat::identity() );
+   this->copy( Quat::identity() );
 }
 
 //: Copy a pure quaternion to self
 // quat = [0,w] 
 //      = [0,w0,w1,w2]
 //!POST: self = pure_quat
-inline void vjQuat::makePure( const vjVec3& pure_quat )
+inline void Quat::makePure( const Vec3& pure_quat )
 {
    vec[VJ_W] = 0.0f; // by definition of pure quat == [0,w]
    vec[VJ_X] = pure_quat[0];
@@ -416,30 +418,30 @@ inline void vjQuat::makePure( const vjVec3& pure_quat )
 
 //: default constructor
 //!POST: initialize self to identity
-inline vjQuat::vjQuat() : vec()
+inline Quat::Quat() : vec()
 {
    this->makeIdent();
 }
 
-//: Construct self from another vjQuat 
-inline vjQuat::vjQuat( const vjQuat& quat ) : vec()
+//: Construct self from another Quat 
+inline Quat::Quat( const Quat& quat ) : vec()
 {
    this->copy( quat );
 }
 
 //: returns the quaternion's norm (dot product)
 // defined as sum of squares of components
-inline float vjQuat::norm() const
+inline float Quat::norm() const
 {
    return ((vec[0]*vec[0])+(vec[1]*vec[1])+(vec[2]*vec[2])+(vec[3]*vec[3]));
 }
 
 //: returns the quaternion's magnitude (also called absolute)
 // defined as the norm of all four quaternion components
-inline float vjQuat::length() const { return vjMath::sqrt( this->norm() ); }
+inline float Quat::length() const { return Math::sqrt( this->norm() ); }
 
 //: set self to the complex conjugate of self.
-inline void vjQuat::conj()
+inline void Quat::conj()
 { 
    vec[VJ_X] = -vec[VJ_X];
    vec[VJ_Y] = -vec[VJ_Y];
@@ -447,7 +449,7 @@ inline void vjQuat::conj()
 }
 
 //: set self to the complex conjugate of quat.
-inline void vjQuat::conj( const vjQuat& quat )
+inline void Quat::conj( const Quat& quat )
 { 
    this->copy( quat );
    this->conj();
@@ -457,7 +459,7 @@ inline void vjQuat::conj( const vjQuat& quat )
 //!PRE: magnitude must be > 0
 //!POST: self = self / norm()
 //       normalizeFast() makes quat.norm() == 1
-inline void vjQuat::normalizeFast()
+inline void Quat::normalizeFast()
 { 
    float n = this->norm();
    
@@ -477,7 +479,8 @@ inline void vjQuat::normalizeFast()
 //!PRE: magnitude must be > 0
 //!POST: self = self / norm()
 //       normalizeFast() makes quat.norm() == 1
-inline void vjQuat::normalizeVec()
+/*
+inline void Quat::normalizeVec()
 { 
    float n = vec[VJ_X] * vec[VJ_X] + vec[VJ_Y] * vec[VJ_Y] + vec[VJ_Z] * vec[VJ_Z];
    // return if no magnitude (already as normalized as possible)
@@ -490,9 +493,10 @@ inline void vjQuat::normalizeVec()
    vec[VJ_Y] *= n_inv; 
    vec[VJ_Z] *= n_inv;
 }
+*/
 
 //: set self to the unit quaternion of quat. fast, imprecise
-inline void vjQuat::normalizeFast( const vjQuat& quat )
+inline void Quat::normalizeFast( const Quat& quat )
 { 
    this->copy( quat );
    this->normalizeFast();
@@ -501,7 +505,7 @@ inline void vjQuat::normalizeFast( const vjQuat& quat )
 //: set self to the normalized quaternion of self.
 //!PRE: magnitude must be > 0
 //!POST: self = normalize(self), where normalize makes quat.length() == 1
-inline void vjQuat::normalize()
+inline void Quat::normalize()
 { 
    float l = this->length();
    
@@ -517,7 +521,7 @@ inline void vjQuat::normalize()
 }
 
 //: set self to the normalized quaternion of quat.
-inline void vjQuat::normalize( const vjQuat& quat )
+inline void Quat::normalize( const Quat& quat )
 { 
    this->copy( quat );
    this->normalize();
@@ -525,7 +529,7 @@ inline void vjQuat::normalize( const vjQuat& quat )
 
 //: set self to the multiplicative inverse of self
 //!POST: self becomes the multiplicative inverse of self
-inline void vjQuat::invert()
+inline void Quat::invert()
 {
    this->conj(); 
    this->normalizeFast();
@@ -533,7 +537,7 @@ inline void vjQuat::invert()
 
 //: set self to the multiplicative inverse of quat
 //!POST: self becomes the multiplicative inverse of quat
-inline void vjQuat::invert( const vjQuat& quat )
+inline void Quat::invert( const Quat& quat )
 { 
    this->copy( quat );
    this->invert();
@@ -541,7 +545,7 @@ inline void vjQuat::invert( const vjQuat& quat )
 
 //: scalar multiplication
 //!POST: this' = q1 * s
-inline void vjQuat::mult( const vjQuat& q1, const float& s )
+inline void Quat::mult( const Quat& q1, const float& s )
 {
    vec[VJ_W] = q1.vec[VJ_W] * s;
    vec[VJ_X] = q1.vec[VJ_X] * s;
@@ -555,7 +559,7 @@ inline void vjQuat::mult( const vjQuat& q1, const float& s )
 //        more robust way?  pretty sure we can... rewrite scaleAngle to use this
 //        method instead....
 // NOTE: this function will probably fail in certain cases...
-inline void vjQuat::scaleAngle( const vjQuat& q1, const float& s )
+inline void Quat::scaleAngle( const Quat& q1, const float& s )
 {
    float rad, x, y, z;
    q1.getRot( rad, x, y, z );
@@ -564,9 +568,9 @@ inline void vjQuat::scaleAngle( const vjQuat& q1, const float& s )
 
 //: quotient of two quaternions
 //!POST: this' = q1 / q2
-inline void vjQuat::div( const vjQuat& q1, const vjQuat& q2 )
+inline void Quat::div( const Quat& q1, const Quat& q2 )
 {
-   vjQuat q2_inv, r, s;
+   Quat q2_inv, r, s;
 
    // invert the vector component
    q2_inv.conj( q2 );
@@ -582,12 +586,12 @@ inline void vjQuat::div( const vjQuat& q1, const vjQuat& q2 )
 
 //: check if two quaternions are equal within some tolerance 'tol'
 // WARNING: not implemented (do not use)
-inline bool vjQuat::isEqual( const vjQuat& quat, float tol ) const
+inline bool Quat::isEqual( const Quat& quat, float tol ) const
 {
-   if (vjMath::isEqual( vec[0], quat.vec[0], tol ) && 
-       vjMath::isEqual( vec[1], quat.vec[1], tol ) &&
-       vjMath::isEqual( vec[2], quat.vec[2], tol ) &&
-       vjMath::isEqual( vec[3], quat.vec[3], tol ) )
+   if (Math::isEqual( vec[0], quat.vec[0], tol ) && 
+       Math::isEqual( vec[1], quat.vec[1], tol ) &&
+       Math::isEqual( vec[2], quat.vec[2], tol ) &&
+       Math::isEqual( vec[3], quat.vec[3], tol ) )
    {
       return true;
    }
@@ -598,16 +602,16 @@ inline bool vjQuat::isEqual( const vjQuat& quat, float tol ) const
 }
 
 // WARNING: not implemented (do not use)
-inline void vjQuat::meanTangent( const vjQuat &q1, const vjQuat &q2, const vjQuat &q3 )
+inline void Quat::meanTangent( const Quat &q1, const Quat &q2, const Quat &q3 )
 {
-   vjASSERT( false && "not implemented" ); 
+   vprASSERT( false && "not implemented" ); 
 }   
 
 //: compose two rotations (multiplication operator) 
 //!POST: temporary return value = self * quat 
-inline vjQuat vjQuat::operator*( const vjQuat& quat ) const 
+inline Quat Quat::operator*( const Quat& quat ) const 
 {
-   vjQuat dst; 
+   Quat dst; 
    dst.mult( *this, quat ); 
    return dst;
 }
@@ -616,14 +620,14 @@ inline vjQuat vjQuat::operator*( const vjQuat& quat ) const
 //  returns a vector rotated by this.  result returned is a temporary
 //!PRE: give a vector
 //!POST: vector = self * vector 
-inline vjVec3 vjQuat::operator*( const vjVec3& vector ) const
+inline Vec3 Quat::operator*( const Vec3& vector ) const
 {
    // convert the vec3 to a pure quat
-   vjQuat pure_quat;
+   Quat pure_quat;
    pure_quat.makePure( vector );
 
    // get the inverse of self
-   vjQuat self_inv;
+   Quat self_inv;
    self_inv.invert( *this );
 
    // do the multiplication, and return
@@ -632,42 +636,42 @@ inline vjVec3 vjQuat::operator*( const vjVec3& vector ) const
    //vjQuat result = self_inv * pure_quat * (*this);
    
    // shoemake recent version (right hand rule):
-   vjQuat result = (*this) * pure_quat * self_inv;
+   Quat result = (*this) * pure_quat * self_inv;
    
-   return vjVec3( result.vec[VJ_X], result.vec[VJ_Y], result.vec[VJ_Z] );
+   return Vec3( result.vec[VJ_X], result.vec[VJ_Y], result.vec[VJ_Z] );
 }
 
 // mult by scalar 
 // NOTE: less efficient, use mult() instead
-inline vjQuat vjQuat::operator*( float s ) const
+inline Quat Quat::operator*( float s ) const
 {
-   vjQuat result;
+   Quat result;
    result.mult( *this, s );
    return result;
 }
 
 // multiply by inverse quat.
 // NOTE: less efficient, use div() instead
-inline vjQuat vjQuat::operator/( const vjQuat& quat ) const 
+inline Quat Quat::operator/( const Quat& quat ) const 
 {
-   vjQuat dst; 
+   Quat dst; 
    dst.div( *this, quat );
    return dst;
 }
 
 // mult by inverse scalar.
 //!POST: returns a temporary == self scaled by s
-inline vjQuat vjQuat::operator/( float s ) const
+inline Quat Quat::operator/( float s ) const
 {
    s = 1.0f / s;
-   vjQuat result;
+   Quat result;
    result.mult( *this, s );
    return result;
 }   
 
 // do an "add" of all quat components
 // TODO: add description for what this means geometrically
-inline void vjQuat::add( const vjQuat& quat1, const vjQuat& quat2 )
+inline void Quat::add( const Quat& quat1, const Quat& quat2 )
 {
    vec[VJ_W] = quat1.vec[VJ_W] + quat2.vec[VJ_W];
    vec[VJ_X] = quat1.vec[VJ_X] + quat2.vec[VJ_X];
@@ -677,7 +681,7 @@ inline void vjQuat::add( const vjQuat& quat1, const vjQuat& quat2 )
 
 // set self to quat1 - quat2
 // TODO: add description for what this means geometrically
-inline void vjQuat::sub( const vjQuat& quat1, const vjQuat& quat2 )
+inline void Quat::sub( const Quat& quat1, const Quat& quat2 )
 {
    vec[VJ_W] = quat1.vec[VJ_W] - quat2.vec[VJ_W];
    vec[VJ_X] = quat1.vec[VJ_X] - quat2.vec[VJ_X];
@@ -687,30 +691,30 @@ inline void vjQuat::sub( const vjQuat& quat1, const vjQuat& quat2 )
 
 // do an "add" of all quat components
 // TODO: add description for what this means geometrically
-inline vjQuat vjQuat::operator+( const vjQuat& quat ) const
+inline Quat Quat::operator+( const Quat& quat ) const
 {
-   vjQuat result;
+   Quat result;
    result.add( *this, quat );
    return result;
 }
 
 // do a "subtract" of all quat components
 // TODO: add description for what this means geometrically
-inline vjQuat vjQuat::operator-( const vjQuat& quat ) const
+inline Quat Quat::operator-( const Quat& quat ) const
 {
-   vjQuat result;
+   Quat result;
    result.sub( *this, quat );
    return result;
 }   
 
 // Assignment operator *=
-inline vjQuat& vjQuat::operator*=( const vjQuat& quat )
+inline Quat& Quat::operator*=( const Quat& quat )
 {
    this->mult( *this, quat );
    return *this;
 }
 // Assignment operator /=
-inline vjQuat& vjQuat::operator/=( const vjQuat& quat ) 
+inline Quat& Quat::operator/=( const Quat& quat ) 
 {
    this->div( *this, quat );
    return *this;
@@ -719,7 +723,7 @@ inline vjQuat& vjQuat::operator/=( const vjQuat& quat )
 // does self == quat?
 // return true if self == quat
 // return false if self != quat
-inline bool vjQuat::operator==( const vjQuat& quat )
+inline bool Quat::operator==( const Quat& quat )
 {
    if (quat.scalar() == this->scalar() &&
        quat.vector() == this->vector())
@@ -735,7 +739,7 @@ inline bool vjQuat::operator==( const vjQuat& quat )
 // does self != quat?
 // return true if self != quat
 // return false if self == quat
-inline bool vjQuat::operator!=( const vjQuat& quat )
+inline bool Quat::operator!=( const Quat& quat )
 {
    if (quat.scalar() == this->scalar() &&
        quat.vector() == this->vector())
@@ -749,10 +753,11 @@ inline bool vjQuat::operator!=( const vjQuat& quat )
 }
 
 //: set self to quat
-inline vjQuat& vjQuat::operator=( const vjQuat& quat )
+inline Quat& Quat::operator=( const Quat& quat )
 {
    this->copy( quat );
    return *this;
 }
 
+};
 #endif

@@ -39,12 +39,15 @@
 #include <Utils/vjDebug.h>
 #include <Input/InputManager/vjPosInterface.h>
 
-class vjMatrix;
+namespace vrj
+{
+   
+class Matrix;
 
 //-----------------------------------------------------------------
 //: Wall specific class for viewport definitions.
 //
-//  This class behaves the same as the vjWallProjection class
+//  This class behaves the same as the WallProjection class
 //  except that it is tracked.
 //
 //  This means that all parameters are relative to a tracked (moving)
@@ -53,16 +56,16 @@ class vjMatrix;
 // @author Allen Bierbaum
 //  Date: 10-5-97
 //----------------------------------------------------------------
-class vjTrackedWallProjection : public vjWallProjection
+class TrackedWallProjection : public WallProjection
 {
 public:
 
    //: Construct a Tracked wall projections
    //!ARGS: tracker_name - Name of the tracker tracking the screen
-   vjTrackedWallProjection(vjMatrix surfaceRot, float toScr,
+   TrackedWallProjection(Matrix surfaceRot, float toScr,
                     float toRight, float toLeft,
                     float toTop, float toBottom, std::string tracker_name)
-      : vjWallProjection(surfaceRot, toScr, toRight, toLeft, toTop, toBottom)
+      : WallProjection(surfaceRot, toScr, toRight, toLeft, toTop, toBottom)
    {
       // --- Backup some parameters --- //
       mOriginToScreen_bak = toScr;
@@ -77,16 +80,16 @@ public:
       mTracker.init(tracker_name);              // Intialize the tracker
    }
 
-   virtual ~vjTrackedWallProjection() {}
+   virtual ~TrackedWallProjection() {}
 
-   virtual void config(vjConfigChunk* chunk)
+   virtual void config(ConfigChunk* chunk)
    {
-      vjProjection::config(chunk);        // Call base class config first
+      Projection::config(chunk);        // Call base class config first
    }
 
    //: Recalculate the projection matrix
    //!POST: frustum has been recomputed for given eyePos
-   virtual void calcViewMatrix(vjMatrix& eyePos)
+   virtual void calcViewMatrix(Matrix& eyePos)
    {
       updateWallParams();
 
@@ -103,12 +106,12 @@ public:
 
 private:
    // ---- Original parameters ------/
-   vjMatrix   mWallRotationMatrix_bak;       // Rotation of the screen
+   Matrix   mWallRotationMatrix_bak;       // Rotation of the screen
    // Screen configuration
    float mOriginToScreen_bak, mOriginToRight_bak, mOriginToLeft_bak, mOriginToTop_bak, mOriginToBottom_bak;
 
-   vjPosInterface    mTracker;
+   PosInterface    mTracker;
 };
 
-
+};
 #endif

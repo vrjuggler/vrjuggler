@@ -36,6 +36,9 @@
 
 #include <vjConfig.h>
 
+namespace vrj
+{
+   
 //------------------------------------------------------------
 //: Abstract base class for system specific Factory.
 //
@@ -45,10 +48,11 @@
 // @author Allen Bierbaum
 //  Date: 9-7-97
 //
-class vjSystemFactory
+class SystemFactory
 {
 public:
 	
 };
 
+};
 #endif

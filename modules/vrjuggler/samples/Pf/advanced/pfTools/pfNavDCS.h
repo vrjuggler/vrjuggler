@@ -74,7 +74,7 @@ public:
    // Reset the navigation DCS to the navigators "home" position
    void reset()
    {
-      vjASSERT(mNaver != NULL);
+      vprASSERT(mNaver != NULL);
       mNaver->reset();
       updateTransformMatrix();
    }
@@ -83,10 +83,10 @@ private:
    bool                 mActive;     // Are we active
    navigator*           mNaver;      // My navigator
 
-   vjPosInterface       mWand;
-   vjDigitalInterface   mButton0;
-   vjDigitalInterface   mButton1;
-   vjDigitalInterface   mButton2;
+   PosInterface       mWand;
+   DigitalInterface   mButton0;
+   DigitalInterface   mButton1;
+   DigitalInterface   mButton2;
 
 public:  // APP traversal
    virtual int app(pfTraverser*);
@@ -114,14 +114,14 @@ pfNavDCS::pfNavDCS() : pfDCS()
 // and set the DCS with it
 void pfNavDCS::updateTransformMatrix()
 {
-   vjASSERT(mNaver != NULL);     // We mut have a naver
+   vprASSERT(mNaver != NULL);     // We mut have a naver
 
    // Set the navigation DCS to the new navigation matrix
    // cur_pos = modelspace_M_user
-   vjMatrix cur_pos_inv, cur_pos;
+   Matrix cur_pos_inv, cur_pos;
    cur_pos = mNaver->getCurPos();
    cur_pos_inv.invert(cur_pos);
-   pfMatrix model_move = vjGetPfMatrix( cur_pos_inv );
+   pfMatrix model_move = GetPfMatrix( cur_pos_inv );
    this->setMat( model_move );
 }
 

@@ -38,13 +38,16 @@
 #include <vpr/System.h>
 #include <ApplicationServices/ApplicationServices.h>
 
-//: Constructor
-bool vjOSXKeyboard::config(vjConfigChunk *c)
+namespace vrj
 {
-   if(! (vjInput::config(c) && vjKeyboard::config(c)))
+   
+   //: Constructor
+bool OSXKeyboard::config(ConfigChunk *c)
+{
+   if(! (Input::config(c) && Keyboard::config(c)))
       return false;
 
-   // Done in vjInput --- myThread = NULL;
+   // Done in Input --- myThread = NULL;
    int i;
    for (i =0; i < 256; i++)
       m_realkeys[i] = m_keys[i] = 0;
@@ -86,7 +89,7 @@ bool vjOSXKeyboard::config(vjConfigChunk *c)
 }
 
 // Main thread of control for this active object
-void vjOSXKeyboard::controlLoop(void* nullParam)
+void OSXKeyboard::controlLoop(void* nullParam)
 {
     Point	mouseLoc;
     Rect	win_rect;
@@ -139,20 +142,20 @@ void vjOSXKeyboard::controlLoop(void* nullParam)
 }
 
 
-int vjOSXKeyboard::startSampling()
+int OSXKeyboard::startSampling()
 {
    if(myThread != NULL)
    {
       vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
                                               << "vjOSXKeyboard: startSampling called, when already sampling.\n" << vjDEBUG_FLUSH;
-      vjASSERT(false);
+      vprASSERT(false);
    }
 
    resetIndexes();      // Reset the buffering variables
       
    // Create a new thread to handle the control
-   vpr::ThreadMemberFunctor<vjOSXKeyboard>* memberFunctor =
-      new vpr::ThreadMemberFunctor<vjOSXKeyboard>(this, &vjOSXKeyboard::controlLoop, NULL);
+   vpr::ThreadMemberFunctor<OSXKeyboard>* memberFunctor =
+      new vpr::ThreadMemberFunctor<OSXKeyboard>(this, &OSXKeyboard::controlLoop, NULL);
 
    vpr::Thread* new_thread;
    new_thread = new vpr::Thread(memberFunctor);
@@ -161,7 +164,7 @@ int vjOSXKeyboard::startSampling()
    return 1;
 }
 
-int vjOSXKeyboard::onlyModifier(int mod)
+int OSXKeyboard::onlyModifier(int mod)
 {
   switch (mod) {
      case VJKEY_NONE:
@@ -173,12 +176,12 @@ int vjOSXKeyboard::onlyModifier(int mod)
      case VJKEY_ALT:
         return (!m_curKeys[VJKEY_SHIFT] && !m_keys[VJKEY_CTRL] && m_curKeys[VJKEY_ALT]);
      default:
-       vjASSERT(false);
+       vprASSERT(false);
        return 0;
   }
 }
 
-void vjOSXKeyboard::updateData()
+void OSXKeyboard::updateData()
 {
     vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
     // Scale mouse values based on sensitivity
@@ -202,11 +205,11 @@ void vjOSXKeyboard::updateData()
    
 }
 
-void vjOSXKeyboard::HandleEvents()
+void OSXKeyboard::HandleEvents()
 {
     vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array for the duration of this function
     int vj_key = 255;
-    int vjOSXKey = -1;
+    int OSXKey = -1;
     int i = 0, j = 0;
     KeyMap	myKeys;
     
@@ -216,8 +219,8 @@ void vjOSXKeyboard::HandleEvents()
     
     GetKeys(myKeys);
     for(i = 0; i < 4; i++) for(j = 31; j >= 0; j--) {
-        vjOSXKey = (32*i+32-j)-1;		// Find out an index value for the key pressed (unique)
-        vj_key = OSXKeyTovjKey(vjOSXKey);	//Remap the value to the VR Juggler Keymap Values
+        OSXKey = (32*i+32-j)-1;		// Find out an index value for the key pressed (unique)
+        vj_key = OSXKeyToKey(OSXKey);	//Remap the value to the VR Juggler Keymap Values
         
         // Now test to see if the key is pressed.
         if((myKeys[i]>>j)&0x0001) {
@@ -325,7 +328,7 @@ void vjOSXKeyboard::HandleEvents()
     mHandleEventsHasBeenCalled = true;
 }
 
-int vjOSXKeyboard::stopSampling()
+int OSXKeyboard::stopSampling()
 {
   if (myThread != NULL)
   {
@@ -342,7 +345,7 @@ int vjOSXKeyboard::stopSampling()
 /*****************************************************************/
 /*****************************************************************/
 // Open the X window to sample from
-int vjOSXKeyboard::openTheWindow()
+int OSXKeyboard::openTheWindow()
 {
     vjDEBUG(vjDBG_INPUT_MGR,0) << "vjOSXKeyboard::open()" << std::endl << vjDEBUG_FLUSH;
     rectWin.top = m_y;
@@ -365,7 +368,7 @@ int vjOSXKeyboard::openTheWindow()
 
 // Called when locking states
 // - Recenter the mouse
-void vjOSXKeyboard::lockMouse()
+void OSXKeyboard::lockMouse()
 {
     CGPoint new_loc;
     vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjOSXKeyboard: LOCKING MOUSE..." << vjDEBUG_FLUSH;
@@ -375,75 +378,76 @@ void vjOSXKeyboard::lockMouse()
 }
 
 // Called when locking ends
-void vjOSXKeyboard::unlockMouse()
+void OSXKeyboard::unlockMouse()
 {
    vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjOSXKeyboard: UN-LOCKING MOUSE..." << vjDEBUG_FLUSH;
 }
 
-int vjOSXKeyboard::OSXKeyTovjKey(int xKey)
+int OSXKeyboard::OSXKeyToKey(int xKey)
 {
    switch (xKey)
    {
-   case vjOSX_KEY_UP			: return VJKEY_UP;
-   case vjOSX_KEY_DOWN			: return VJKEY_DOWN;
-   case vjOSX_KEY_LEFT			: return VJKEY_LEFT;
-   case vjOSX_KEY_RIGHT			: return VJKEY_RIGHT;
-   case vjOSX_KEY_CONTROL		: return VJKEY_CTRL;
-   case vjOSX_KEY_SHIFT			: return VJKEY_SHIFT;
-   case vjOSX_KEY_COMMAND		: return VJKEY_ALT;
+   case OSX_KEY_UP			: return VJKEY_UP;
+   case OSX_KEY_DOWN			: return VJKEY_DOWN;
+   case OSX_KEY_LEFT			: return VJKEY_LEFT;
+   case OSX_KEY_RIGHT			: return VJKEY_RIGHT;
+   case OSX_KEY_CONTROL		: return VJKEY_CTRL;
+   case OSX_KEY_SHIFT			: return VJKEY_SHIFT;
+   case OSX_KEY_COMMAND		: return VJKEY_ALT;
 
 // Map all number keys
 // Note we map keypad and normal keys making no distinction
-   case vjOSX_KEYPAD_1			: return VJKEY_1;
-   case vjOSX_KEY_1			: return VJKEY_1;
-   case vjOSX_KEYPAD_2			: return VJKEY_2;
-   case vjOSX_KEY_2			: return VJKEY_2;
-   case vjOSX_KEYPAD_3			: return VJKEY_3;
-   case vjOSX_KEY_3			: return VJKEY_3;
-   case vjOSX_KEYPAD_4			: return VJKEY_4;
-   case vjOSX_KEY_4			: return VJKEY_4;
-   case vjOSX_KEYPAD_5			: return VJKEY_5;
-   case vjOSX_KEY_5			: return VJKEY_5;
-   case vjOSX_KEYPAD_6			: return VJKEY_6;
-   case vjOSX_KEY_6			: return VJKEY_6;
-   case vjOSX_KEYPAD_7			: return VJKEY_7;
-   case vjOSX_KEY_7			: return VJKEY_7;
-   case vjOSX_KEYPAD_8			: return VJKEY_8;
-   case vjOSX_KEY_8			: return VJKEY_8;
-   case vjOSX_KEYPAD_9			: return VJKEY_9;
-   case vjOSX_KEY_9			: return VJKEY_9;
-   case vjOSX_KEYPAD_0			: return VJKEY_0;
-   case vjOSX_KEY_0			: return VJKEY_0;
+   case OSX_KEYPAD_1			: return VJKEY_1;
+   case OSX_KEY_1			: return VJKEY_1;
+   case OSX_KEYPAD_2			: return VJKEY_2;
+   case OSX_KEY_2			: return VJKEY_2;
+   case OSX_KEYPAD_3			: return VJKEY_3;
+   case OSX_KEY_3			: return VJKEY_3;
+   case OSX_KEYPAD_4			: return VJKEY_4;
+   case OSX_KEY_4			: return VJKEY_4;
+   case OSX_KEYPAD_5			: return VJKEY_5;
+   case OSX_KEY_5			: return VJKEY_5;
+   case OSX_KEYPAD_6			: return VJKEY_6;
+   case OSX_KEY_6			: return VJKEY_6;
+   case OSX_KEYPAD_7			: return VJKEY_7;
+   case OSX_KEY_7			: return VJKEY_7;
+   case OSX_KEYPAD_8			: return VJKEY_8;
+   case OSX_KEY_8			: return VJKEY_8;
+   case OSX_KEYPAD_9			: return VJKEY_9;
+   case OSX_KEY_9			: return VJKEY_9;
+   case OSX_KEYPAD_0			: return VJKEY_0;
+   case OSX_KEY_0			: return VJKEY_0;
 
-   case vjOSX_KEY_A         : return VJKEY_A;
-   case vjOSX_KEY_B         : return VJKEY_B;
-   case vjOSX_KEY_C         : return VJKEY_C;
-   case vjOSX_KEY_D         : return VJKEY_D;
-   case vjOSX_KEY_E         : return VJKEY_E;
-   case vjOSX_KEY_F         : return VJKEY_F;
-   case vjOSX_KEY_G         : return VJKEY_G;
-   case vjOSX_KEY_H         : return VJKEY_H;
-   case vjOSX_KEY_I         : return VJKEY_I;
-   case vjOSX_KEY_J         : return VJKEY_J;
-   case vjOSX_KEY_K         : return VJKEY_K;
-   case vjOSX_KEY_L         : return VJKEY_L;
-   case vjOSX_KEY_M         : return VJKEY_M;
-   case vjOSX_KEY_N         : return VJKEY_N;
-   case vjOSX_KEY_O         : return VJKEY_O;
-   case vjOSX_KEY_P         : return VJKEY_P;
-   case vjOSX_KEY_Q         : return VJKEY_Q;
-   case vjOSX_KEY_R         : return VJKEY_R;
-   case vjOSX_KEY_S         : return VJKEY_S;
-   case vjOSX_KEY_T         : return VJKEY_T;
-   case vjOSX_KEY_U         : return VJKEY_U;
-   case vjOSX_KEY_V         : return VJKEY_V;
-   case vjOSX_KEY_W         : return VJKEY_W;
-   case vjOSX_KEY_X         : return VJKEY_X;
-   case vjOSX_KEY_Y         : return VJKEY_Y;
-   case vjOSX_KEY_Z         : return VJKEY_Z;
-   case vjOSX_KEY_ESCAPE    : return VJKEY_ESC;
+   case OSX_KEY_A         : return VJKEY_A;
+   case OSX_KEY_B         : return VJKEY_B;
+   case OSX_KEY_C         : return VJKEY_C;
+   case OSX_KEY_D         : return VJKEY_D;
+   case OSX_KEY_E         : return VJKEY_E;
+   case OSX_KEY_F         : return VJKEY_F;
+   case OSX_KEY_G         : return VJKEY_G;
+   case OSX_KEY_H         : return VJKEY_H;
+   case OSX_KEY_I         : return VJKEY_I;
+   case OSX_KEY_J         : return VJKEY_J;
+   case OSX_KEY_K         : return VJKEY_K;
+   case OSX_KEY_L         : return VJKEY_L;
+   case OSX_KEY_M         : return VJKEY_M;
+   case OSX_KEY_N         : return VJKEY_N;
+   case OSX_KEY_O         : return VJKEY_O;
+   case OSX_KEY_P         : return VJKEY_P;
+   case OSX_KEY_Q         : return VJKEY_Q;
+   case OSX_KEY_R         : return VJKEY_R;
+   case OSX_KEY_S         : return VJKEY_S;
+   case OSX_KEY_T         : return VJKEY_T;
+   case OSX_KEY_U         : return VJKEY_U;
+   case OSX_KEY_V         : return VJKEY_V;
+   case OSX_KEY_W         : return VJKEY_W;
+   case OSX_KEY_X         : return VJKEY_X;
+   case OSX_KEY_Y         : return VJKEY_Y;
+   case OSX_KEY_Z         : return VJKEY_Z;
+   case OSX_KEY_ESCAPE    : return VJKEY_ESC;
    default: return 255;
    }
 
 }
 
+};

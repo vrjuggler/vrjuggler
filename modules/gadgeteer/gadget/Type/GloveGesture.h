@@ -42,19 +42,22 @@
 #include <Input/InputManager/vjGloveProxy.h>
 #include <Config/vjConfigChunk.h>
 
+namespace vrj
+{
+   
 //: Abstract base class for all glove gesture recognition
 //
 //
 //!PUBLIC_API:
-class vjGloveGesture : public vjGesture
+class GloveGesture : public Gesture
 {
 public:
-   vjGloveGesture() {
+   GloveGesture() {
       mGloveProxy = NULL;
    }
 
-   virtual bool config(vjConfigChunk* c)
-   { return vjGesture::config(c);}
+   virtual bool config(ConfigChunk* c)
+   { return Gesture::config(c);}
 
 public:
    //: Get a gesture name
@@ -98,8 +101,10 @@ public:
 protected:
    // mGestureNames and mGestureExamples MUST always be same size
    std::vector<std::string> mGestureNames;      //: List of all gesture names
-   std::vector<vjGloveData> mGestureExamples;   //: Examples of all gestures
-   vjGloveProxy*            mGloveProxy;        //: Proxy to the glove
+   std::vector<GloveData> mGestureExamples;   //: Examples of all gestures
+   GloveProxy*            mGloveProxy;        //: Proxy to the glove
+};
+
 };
 
 #endif

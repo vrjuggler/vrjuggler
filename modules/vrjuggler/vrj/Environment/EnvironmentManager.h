@@ -40,9 +40,12 @@
 #include <Environment/vjSocket.h>
 #include <vpr/Sync/Mutex.h>
 
-class vjConnect;
-class vjPerfDataBuffer;
-class vjConfigChunkDB;
+namespace vrj
+{
+   
+class Connect;
+class PerfDataBuffer;
+class ConfigChunkDB;
 
 
 //-------------------------------------
@@ -51,7 +54,7 @@ class vjConfigChunkDB;
 //      The Environment Manager handles communications between
 //      Juggler and UI elements.  This includes data logging and
 //      interactive connections to the VR Juggler control program,
-//      vjControl.
+//      Control.
 //      The EM's most important function is to communicate 
 //      configuration information and changes between the GUI and
 //      the Kernel.  It is also the owner and manager of Juggler
@@ -60,25 +63,25 @@ class vjConfigChunkDB;
 // 
 //      Which means that its main duties are:
 //         - handle file and socket connections
-//         - handle vjPerfDataBuffers
+//         - handle PerfDataBuffers
 //
 // @author  Christopher Just
 //
 // Date 2-27-98
 //---------------------------------------
 
-class VJ_CLASS_API vjEnvironmentManager: public vjConfigChunkHandler {
+class VJ_CLASS_API EnvironmentManager: public ConfigChunkHandler {
 
 public:
 
     //: constructor
     //! PRE: None
     //! POST: Object is constructed
-    vjEnvironmentManager();
+    EnvironmentManager();
 
 
 
-    virtual ~vjEnvironmentManager();
+    virtual ~EnvironmentManager();
 
 
 
@@ -90,16 +93,16 @@ public:
 
 
     //: registers a buffer containing perf data... 
-    void addPerfDataBuffer (vjPerfDataBuffer *v);
+    void addPerfDataBuffer (PerfDataBuffer *v);
 
 
     //: unregisters a buffer of perf data
-    void removePerfDataBuffer (vjPerfDataBuffer *v);
+    void removePerfDataBuffer (PerfDataBuffer *v);
 
 
 
     //: tells EM that a connection has died (ie by gui disconnecting)
-    void connectHasDied (vjConnect* con);
+    void connectHasDied (Connect* con);
 
 
     //: sends a 'refresh' message to all open connections
@@ -110,35 +113,35 @@ public:
     //: ConfigChunkHandler stuff
     //! PRE: configCanHandle(chunk) == true
     //! RETURNS: success
-    virtual bool configAdd(vjConfigChunk* chunk);
+    virtual bool configAdd(ConfigChunk* chunk);
 
 
 
     //: Remove the chunk from the current configuration
     //! PRE: configCanHandle(chunk) == true
     //!RETURNS: success
-    virtual bool configRemove(vjConfigChunk* chunk);
+    virtual bool configRemove(ConfigChunk* chunk);
 
 
     
     //: Can the handler handle the given chunk?
     //! RETURNS: true - Can handle it
     //+          false - Can't handle it
-    virtual bool configCanHandle(vjConfigChunk* chunk);
+    virtual bool configCanHandle(ConfigChunk* chunk);
 
 
 
 private:
     std::string               perf_target_name;
-    std::vector<vjConnect*>   connections;
-    std::vector<vjPerfDataBuffer*> perf_buffers;
+    std::vector<Connect*>   connections;
+    std::vector<PerfDataBuffer*> perf_buffers;
     vpr::Thread*                 listen_thread;
     int                       Port;
-    vjSocket*                 listen_socket;
-    vjConnect*                perf_target;
+    Socket*                 listen_socket;
+    Connect*                perf_target;
     float                     perf_refresh_time;  // in milliseconds
     bool                      configured_to_accept;
-    vjConfigChunk*            current_perf_config;
+    ConfigChunk*            current_perf_config;
     vpr::Mutex                   connections_mutex;
     vpr::Mutex                   perf_buffers_mutex;
 
@@ -149,12 +152,12 @@ private:
     void activatePerfBuffers();
     void deactivatePerfBuffers();
 
-    void setPerformanceTarget (vjConnect* con);
+    void setPerformanceTarget (Connect* con);
 
-    void removeConnect (vjConnect* con);
+    void removeConnect (Connect* con);
 
     //: returns a pointer to a connection with the given name
-    vjConnect* getConnect (const std::string& _name);
+    Connect* getConnect (const std::string& _name);
 
 
     //: allows the Environment Manager to accept connections.
@@ -174,11 +177,12 @@ private:
     void killConnections();
 
     // These are needed to appease Visual C++ in its creation of DLLs.
-    vjEnvironmentManager(const vjEnvironmentManager&) {;}
-    void operator=(const vjEnvironmentManager&) {;}
+    EnvironmentManager(const EnvironmentManager&) {;}
+    void operator=(const EnvironmentManager&) {;}
 
-}; // end vjEnvironmentManager
+}; // end EnvironmentManager
 
 
 
+};
 #endif

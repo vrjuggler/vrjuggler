@@ -41,6 +41,9 @@
 #include <Math/vjVec3.h>
 #include <Input/vjPosition/vjPosition.h>
 
+namespace vrj
+{
+   
 //------------------------------------------------------------------
 //: Pure virtual base class for viewport definitions.
 //
@@ -52,7 +55,7 @@
 // @author Allen Bierbaum
 //  Date: 9-8-97
 //------------------------------------------------------------------
-class VJ_CLASS_API vjProjection
+class VJ_CLASS_API Projection
 {
 public:
    // Eye and type
@@ -60,14 +63,14 @@ public:
    {LEFT = 1, RIGHT = 2, SURFACE, SIM};
 
 public:
-   vjProjection()
+   Projection()
    {
       mType = -1;
       mEye = 0;
       mFocusPlaneDist = 1.0f;
    }
 
-   virtual void config(vjConfigChunk* chunk)
+   virtual void config(ConfigChunk* chunk)
    {;}
 
    void setEye(int _eye)
@@ -76,25 +79,25 @@ public:
    int getEye()
    { return mEye;}
 
-   virtual void calcViewMatrix(vjMatrix& eyePos) = 0;
+   virtual void calcViewMatrix(Matrix& eyePos) = 0;
 
    //: Helper to the frustum apex and corners in model coordinates
    //!NOTE: This function is meant for debugging purposes
    //!POST: The given vars contain the values of the frustums
    //+ corners in model space.
-   void getFrustumApexAndCorners(vjVec3& apex, vjVec3& ur, vjVec3& lr, vjVec3& ul, vjVec3& ll);
+   void getFrustumApexAndCorners(Vec3& apex, Vec3& ur, Vec3& lr, Vec3& ul, Vec3& ll);
 
    //: Virtual output oporators.
    // Every class derived from us shoudl just define this, and
    // the opertetor<< will "just work"
    virtual std::ostream& outStream(std::ostream& out);
 
-   friend VJ_API(std::ostream&) operator<<(std::ostream& out, vjProjection& proj);
+   friend VJ_API(std::ostream&) operator<<(std::ostream& out, Projection& proj);
 
 
 public:
-   vjMatrix    mViewMat;
-   vjFrustum   mFrustum;
+   Matrix    mViewMat;
+   Frustum   mFrustum;
 
 protected:
    int mEye;
@@ -110,6 +113,6 @@ public:
    static void setNearFar(float near_val, float far_val);
 };
 
-
+};
 
 #endif

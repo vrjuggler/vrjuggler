@@ -54,7 +54,7 @@
 class pfSoundNode : public pfDCS
 {
 public:
-   // TODO: the constructor takes a vjSound, which does not
+   // TODO: the constructor takes a Sound, which does not
    //       mean that it was aquired with a getHandle function... fixme..
    //  who manages this memory?  should be sound manager... but...
    //  what if it wasn't created by the manager?

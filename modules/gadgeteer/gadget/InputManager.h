@@ -39,14 +39,17 @@
 #ifndef VJ_INPUT_MANAGER_H
 #define VJ_INPUT_MANAGER_H
 
-#include <vjConfig.h>
 #include <map>
+#include <vjConfig.h>
 
 #include <Kernel/vjConfigChunkHandler.h>
 
+namespace vrj
+{
+   
 // Proxies
-class vjProxy;
-class vjInput;
+class Proxy;
+class Input;
 
 //: The InputManager holds an manages all vj Input devices.
 //
@@ -61,14 +64,14 @@ class vjInput;
 //  (for speed)
 //-------------------------------------------------------------------------------
 //!PUBLIC_API:
-class VJ_CLASS_API vjInputManager : public vjConfigChunkHandler
+class VJ_CLASS_API InputManager : public ConfigChunkHandler
 {
 public:
-   vjInputManager();
-   virtual ~vjInputManager();
+   InputManager();
+   virtual ~InputManager();
 
    friend VJ_API(std::ostream&) operator<<(std::ostream& out,
-                                           vjInputManager& iMgr);
+                                           InputManager& iMgr);
 
  //---------------------------//
  //      CONFIG               //
@@ -76,7 +79,7 @@ public:
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
    //! RETURNS: success
-   bool configAdd(vjConfigChunk* chunk);
+   bool configAdd(ConfigChunk* chunk);
 
    //: Remove the chunk from the current configuration
    //! PRE: configCanHandle(chunk) == true
@@ -84,25 +87,25 @@ public:
    //+       (chunk is device) ==> (devices is removed && proxies are stupified)
    //+       (chunk is proxyAlias) ==> (proxyAlias is removed && devInterfaces.refreshAll())
    //!RETURNS: success
-   bool configRemove(vjConfigChunk* chunk);
+   bool configRemove(ConfigChunk* chunk);
 
    //: Can the handler handle the given chunk?
    //! RETURNS: true - Can handle it
    //+          false - Can't handle it
-   bool configCanHandle(vjConfigChunk* chunk);
+   bool configCanHandle(ConfigChunk* chunk);
 
 private:
    //: Load the device for the given chunk
    //!RETURNS: true - Device was configured and added
-   bool configureDevice(vjConfigChunk* chunk);
+   bool configureDevice(ConfigChunk* chunk);
 
    //: Load the Proxy for the given chunk
    //!RETURNS: true - Proxy was configured and added
-   bool configureProxy(vjConfigChunk* chunk);
+   bool configureProxy(ConfigChunk* chunk);
 
    //: Remove the device associated with the given chunk
    //!RETURNS: true - Device was removed
-   bool removeDevice(vjConfigChunk* chunk);
+   bool removeDevice(ConfigChunk* chunk);
 
 
    // ------------------------------- //
@@ -118,11 +121,11 @@ public:
    void updateAllData();
 
 public:
-   // Return a vjInput ptr to a deviced named
+   // Return a Input ptr to a deviced named
    //!RETURN: NULL - Not found
-   vjInput* getDevice(std::string deviceName);
+   Input* getDevice(std::string deviceName);
 
-   //: Add a device to vjInputManager.
+   //: Add a device to InputManager.
    //
    // Add the devPtr to the device Array, devPtr should
    // not already be in the array.  Returns -1 on failure
@@ -131,17 +134,17 @@ public:
    //! POST: mDevTable' = mDevTable \/ devPtr
    //+       return = devNum (position in the array)
    //                or -1 for fail
-   bool addDevice(vjInput* devPtr);
+   bool addDevice(Input* devPtr);
 
 private:
-   //: Remove a device from the vjInputManager.
+   //: Remove a device from the InputManager.
    // Remove the device at position devNum from the
    // device Array.  Returns true on success.
    //
    //! MODIFIES: self
    //! POST: mDevTable[devNum]' = NULL
    bool removeDevice(std::string instName);
-   bool removeDevice(const vjInput* devPtr);
+   bool removeDevice(const Input* devPtr);
 
    /*********************************************************
     *          PROXIES                                      *
@@ -150,24 +153,24 @@ public:
 
    //: Add a proxy to the proxy table
    //! RETURN: true - added correctly
-   bool addProxy(std::string proxyName, vjProxy* proxy);
+   bool addProxy(std::string proxyName, Proxy* proxy);
 
    //: Get a proxy for the given proxy name (or alias)
    //! RETURNS: NULL - Not found
-   vjProxy* getProxy(std::string proxyName);
+   Proxy* getProxy(std::string proxyName);
 
    // Refresh all the proxies to have then update what device they are pointing at
    void refreshAllProxies();
 
 protected:
    bool removeProxy(std::string proxyName);
-   bool removeProxy(vjConfigChunk* chunk);
+   bool removeProxy(ConfigChunk* chunk);
 
 protected:
-   typedef std::map<std::string,vjInput*> tDevTableType;
+   typedef std::map<std::string,Input*> tDevTableType;
 
    tDevTableType                          mDevTable;
-   std::map<std::string, vjProxy*>        mProxyTable;      // list of proxies in the system
+   std::map<std::string, Proxy*>        mProxyTable;      // list of proxies in the system
    std::map<std::string, std::string>     mProxyAliases;    // List of alias names for proxies
 
    // The mProxyAlias table serves as a secondary lookup for proxies.  ie. if the proxy name is not
@@ -175,16 +178,18 @@ protected:
 
 private:
    //: Function to configure the proxy Alias array
-   bool configureProxyAlias(vjConfigChunk* chunk);
+   bool configureProxyAlias(ConfigChunk* chunk);
 
    //: Remove a proxy alias
-   bool removeProxyAlias(vjConfigChunk* chunk);
+   bool removeProxyAlias(ConfigChunk* chunk);
 
    //: Add a proxy alias
    void addProxyAlias(std::string alias_name, std::string proxy_name);
 };
 
 // Write out the status of the input manager
-VJ_API(std::ostream&) operator<<(std::ostream& out, vjInputManager& iMgr);
+VJ_API(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr);
+
+} // end namespace
 
 #endif

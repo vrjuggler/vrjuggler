@@ -34,33 +34,38 @@
 #ifndef _VJ_PROXY_H_
 #define _VJ_PROXY_H_
 
+#include <typeinfo>
+
 #include <vjConfig.h>
 #include <Kernel/vjKernel.h>
 #include <Input/InputManager/vjInputManager.h>
 #include <Input/vjInput/vjInput.h>
 #include <Config/vjConfigChunk.h>
-#include <typeinfo>
+#include <Utils/vjDebug.h>
 
-//class vjInput;
-//class vjKernel;
+//class Input;
+//class Kernel;
 
+namespace vrj
+{
+   
 //: Base class for all input proxies
-// TODO rename to vjInputProxy
+// TODO rename to InputProxy
 //
 //!PUBLIC_API:
-class VJ_CLASS_API vjProxy
+class VJ_CLASS_API Proxy
 {
 public:
-   vjProxy()
+   Proxy()
    { mStupified = true;}
 
-   virtual ~vjProxy() {;}
+   virtual ~Proxy() {;}
 
    //: Configure the proxy
    //! POST:
    //+  Proxy is configured (it is not registered yet though)
    //! RETURNS: success
-   virtual bool config(vjConfigChunk* chunk)
+   virtual bool config(ConfigChunk* chunk)
    {
       mName = (std::string)chunk->getProperty("name");
       return true;
@@ -75,7 +80,7 @@ public:
 
    //: Return a pointer to the base class of the devices being proxied
    //! RETURN: NULL - No device proxied
-   virtual vjInput* getProxiedInputDevice() = 0;
+   virtual Input* getProxiedInputDevice() = 0;
 
    //: Returns the string rep of the chunk type used to config this device
    // Used by input manager to find chunks that construct devices
@@ -94,10 +99,10 @@ protected:
 
 
 template <class DEV_TYPE>
-class VJ_CLASS_API vjTypedProxy : public vjProxy
+class VJ_CLASS_API TypedProxy : public Proxy
 {
 public:
-   vjTypedProxy() : mDeviceName("Unknown"), mTypedDevice(NULL)
+   TypedProxy() : mDeviceName("Unknown"), mTypedDevice(NULL)
    {;}
 
    //: Set the proxy to point to the given type specific device
@@ -112,7 +117,7 @@ public:
 
    virtual bool refresh()
    {
-      vjInput* input_dev = vjKernel::instance()->getInputManager()->getDevice(mDeviceName);
+      Input* input_dev = Kernel::instance()->getInputManager()->getDevice(mDeviceName);
       if(NULL == input_dev)       // Not found, so stupify
       {
          vjDEBUG(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "vjTypedProxy::refresh: Could not find device: " << mDeviceName << std::endl << vjDEBUG_FLUSH;
@@ -142,5 +147,7 @@ protected:
    std::string    mDeviceName;      // Name of the device to link up with
    DEV_TYPE*      mTypedDevice;  // The device (type specific pointer)
 };
+
+} // end namespace
 
 #endif

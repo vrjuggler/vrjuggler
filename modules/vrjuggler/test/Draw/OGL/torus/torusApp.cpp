@@ -48,7 +48,7 @@ void torusApp::bufferPreDraw()
 //----------------------------------------------
 void torusApp::draw()
 {
-   vjCoord wand_pos(*mWand->getData());
+   Coord wand_pos(*mWand->getData());
 
    // Set light position
    GLfloat light0_position[] = {6.0, 6,0, 6.0, 1.0};

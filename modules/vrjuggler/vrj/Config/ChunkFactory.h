@@ -40,32 +40,34 @@
 #include <Config/vjChunkDescDB.h>
 #include <Utils/vjDebug.h>
 #include <vpr/Sync/Mutex.h>
-#include <Utils/vjSingleton.h>
+#include <vpr/Util/Singleton.h>
 
-
+namespace vrj
+{
+   
 
 //------------------------------------------------------------------
 //: Generator of ConfigChunks...  (singleton)
 //
 //        The notion of embedded chunks complicated the configuration
 //        system - suddenly a chunk needs to be able to find an
-//        arbitrary vjChunkDesc in order to instantiate embedded chunks,
+//        arbitrary ChunkDesc in order to instantiate embedded chunks,
 //        which may themselves embed chunks.
-//        We needed a simpler way to generate vjConfigChunks on-the-fly
-//        inside Juggler apps.  The singleton vjChunkFactory is a way to
+//        We needed a simpler way to generate ConfigChunks on-the-fly
+//        inside Juggler apps.  The singleton ChunkFactory is a way to
 //        do that.  Note that it relies on the notion that there will be
-//        only one vjChunkDescDB in the Juggler app, and that it gets
+//        only one ChunkDescDB in the Juggler app, and that it gets
 //        told what it is.
 //
 // @author  Christopher Just
 // February 1999
 //------------------------------------------------------------------
 
-class vjChunkFactory {
+class ChunkFactory {
 
 public:
     //: Adds descriptions in _descdb to the factory
-    void addDescs (vjChunkDescDB* _descdb) {
+    void addDescs (ChunkDescDB* _descdb) {
         descdb.insert (_descdb);
     }
 
@@ -78,25 +80,25 @@ public:
 
 
     // we actually do need this so that the EM can send the descdb to the gui...
-    vjChunkDescDB* getChunkDescDB () {
+    ChunkDescDB* getChunkDescDB () {
          return &descdb;
     }
 
-    vjChunkDesc* getChunkDesc (const std::string& token) {
+    ChunkDesc* getChunkDesc (const std::string& token) {
         return descdb.getChunkDesc (token);
     }
 
     //: Creates a Chunk using the named description
-    //! RETURNS: chunk - a vjConfigChunk based on a vjChunkDesc
+    //! RETURNS: chunk - a ConfigChunk based on a ChunkDesc
     //+          whose token matches the argument.  If no such
-    //+          vjChunkDesc is found, an "empty" vjChunkDesc,
-    //+          containing only a Name vjPropertyDesc, is used.
-    vjConfigChunk* createChunk (const std::string& desctoken, bool use_defaults = true) {
+    //+          ChunkDesc is found, an "empty" ChunkDesc,
+    //+          containing only a Name PropertyDesc, is used.
+    ConfigChunk* createChunk (const std::string& desctoken, bool use_defaults = true) {
         return createChunk (descdb.getChunkDesc (desctoken), use_defaults);
     }
 
     //: Creates a Chunk using the given description
-    vjConfigChunk* createChunk (vjChunkDesc* d, bool use_defaults = true);
+    ConfigChunk* createChunk (ChunkDesc* d, bool use_defaults = true);
 
 
 protected:
@@ -108,34 +110,34 @@ protected:
 
 
 private:
-   vjChunkFactory()
+   ChunkFactory()
    {
       setupInitialEnvironment();
    }
 
 private:
-    vjChunkDescDB descdb;
+    ChunkDescDB descdb;
 
-vjSingletonHeader(vjChunkFactory);
+vprSingletonHeader(ChunkFactory);
 /*
 public:
    //: Get instance of singleton object
-   static vjChunkFactory* instance()
+   static ChunkFactory* instance()
    {
       if(_instance == NULL)                     // First check
       {
          vpr::Guard<vpr::Mutex> guard(_inst_lock);    // Serial critical section
          if (_instance == NULL)                 // Second check
-            _instance = new vjChunkFactory;
+            _instance = new ChunkFactory;
       }
-      vjASSERT(_instance != NULL && "vjChunkFactory has NULL _instance");
+      vprASSERT(_instance != NULL && "vjChunkFactory has NULL _instance");
       return _instance;
    }
 
 private:
-   static vjChunkFactory* _instance;   //: The instance
+   static ChunkFactory* _instance;   //: The instance
    static vpr::Mutex _inst_lock;
    */
 };
-
+};
 #endif

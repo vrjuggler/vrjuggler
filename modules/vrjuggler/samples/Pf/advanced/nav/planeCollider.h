@@ -44,18 +44,18 @@ public:
    {
    }
 
-   bool testMove(vjVec3 curPos, vjVec3 delta, vjVec3& correction, bool curPosWithDelta = false);
+   bool testMove(Vec3 curPos, Vec3 delta, Vec3& correction, bool curPosWithDelta = false);
 
 private:
    float mHeight;    // Height of the plane
 };
 
 
-bool planeCollider::testMove(vjVec3 curPos, vjVec3 delta, vjVec3& correction, bool curPosWithDelta)
+bool planeCollider::testMove(Vec3 curPos, Vec3 delta, Vec3& correction, bool curPosWithDelta)
 {
    correction.set(0,0,0);
 
-   vjVec3 target_pos = curPos+delta;
+   Vec3 target_pos = curPos+delta;
    if(target_pos[1] < mHeight)
    {
       correction[1] = (mHeight-target_pos[1]);  // Get it back up there

@@ -12,7 +12,7 @@
 int main(int argc, char* argv[])
 {
    // Allocate the kernel object and the application object
-   vjKernel* kernel = vjKernel::instance();           // Get the kernel
+   Kernel* kernel = Kernel::instance();           // Get the kernel
    MPApp* application = new MPApp();          // Instantiate an instance of the app
 
    // IF not args passed to the program

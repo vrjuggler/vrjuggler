@@ -32,30 +32,41 @@
 
 
 
-/* vjTimeStamp... a simple class to enclose a timestamp */
+/* TimeStaMp... a simple class to enclose a timestamp */
 
+   
 
-#ifndef _VJ_TIMESTAMP_
-#define _VJ_TIMESTAMP_
+#ifndef _VJ_TIMESTAMPPPPPP_
+#define _VJ_TIMESTAMPPPPPP_
 
 #include <vjConfig.h>
 
-#if VJ_PERFORMANCE == VJ_PERF_SGI
 
+
+
+#if VJ_PERFORMANCE == VJ_PERF_SGI
 #include <Performance/vjTimeStampSGI.h>
-typedef class vjTimeStampSGI vjTimeStamp;
+namespace vrj
+{
+   typedef TimeStaMpSGI TimeStaMp;
+};
+
 
 #elif VJ_PERFORMANCE == VJ_PERF_POSIX
-
 #include <Performance/vjTimeStampPosix.h>
-typedef class vjTimeStampPosix vjTimeStamp;
+namespace vrj
+{
+   typedef TimeStaMpPosix TimeStaMp;
+}
+
 
 #else
-
 #include <Performance/vjTimeStampNone.h>
-typedef class vjTimeStampNone vjTimeStamp;
+namespace vrj
+{
+   typedef TimeStaMpNone TimeStaMp;
+};
 
 #endif
-
 
 #endif

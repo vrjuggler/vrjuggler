@@ -37,10 +37,13 @@
 #include <vjConfig.h>
 #include <Kernel/vjConfigChunkHandler.h>
 
-class vjDisplayManager;
-class vjApp;
-class vjConfigChunkDB;
-class vjDisplay;
+namespace vrj
+{
+   
+class DisplayManager;
+class App;
+class ConfigChunkDB;
+class Display;
 //--------------------------------------------------------
 //: Abstract base class for API specific Draw Manager.
 //
@@ -49,16 +52,16 @@ class vjDisplay;
 // @author Allen Bierbaum
 //  Date: 9-7-97
 //--------------------------------------------------------
-class VJ_CLASS_API vjDrawManager : public vjConfigChunkHandler
+class VJ_CLASS_API DrawManager : public ConfigChunkHandler
 {
 public:
-   vjDrawManager (void) {
+   DrawManager (void) {
       mDisplayManager = NULL;
    }
 
    //: Function to initialy config API specific stuff.
    // Takes a chunkDB and extracts API specific stuff
-   //**//virtual void configInitial(vjConfigChunkDB*  chunkDB) = 0;
+   //**//virtual void configInitial(ConfigChunkDB*  chunkDB) = 0;
 
    //: Enable a frame to be drawn
    virtual void draw() = 0;
@@ -70,7 +73,7 @@ public:
    //: Set the app the draw whould interact with.
    //! NOTE: The member variable is not in the base class
    //+    because it's "real" type is only known in the derived classes
-   virtual void setApp(vjApp* _app) = 0;
+   virtual void setApp(App* _app) = 0;
 
    //: Initialize the drawing API (if not already running)
    //! NOTE: If the draw manager should be an active object,
@@ -78,10 +81,10 @@ public:
    virtual void initAPI() = 0;
 
    //: Callback when display is added to display manager
-   virtual void addDisplay(vjDisplay* disp) = 0;
+   virtual void addDisplay(Display* disp) = 0;
 
    //: Callback when display is removed to display manager
-   virtual void removeDisplay(vjDisplay* disp) = 0;
+   virtual void removeDisplay(Display* disp) = 0;
 
    //: Shutdown the drawing API
    //! NOTE: If it was an active object, kill process here
@@ -94,15 +97,16 @@ public:
    {;}
 
    // Setter for display manager variable
-   void setDisplayManager(vjDisplayManager* _dispMgr);
+   void setDisplayManager(DisplayManager* _dispMgr);
 
    friend VJ_API(std::ostream&) operator<<(std::ostream& out,
-                                           vjDrawManager& drawMgr);
+                                           DrawManager& drawMgr);
    virtual void outStream(std::ostream& out)
    { out << "vjDrawManager: outstream\n"; }  // Set a default
 
 protected:
-   vjDisplayManager* mDisplayManager;  //: The display manager dealing with
+   DisplayManager* mDisplayManager;  //: The display manager dealing with
 };
 
+};
 #endif

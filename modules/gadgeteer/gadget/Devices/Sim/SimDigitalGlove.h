@@ -43,6 +43,9 @@
 #include <Input/vjGlove/vjFinger.h>
 #include <Input/vjGlove/vjHand.h>
 
+namespace vrj
+{
+   
 //: Simulated digital device
 // Simulates a digital device from a keyboard device.
 // It allows any number of simulated digital devices to be created.
@@ -52,18 +55,18 @@
 //
 // This class should not be used directly by the user.
 //!PUBLIC_API:
-class vjSimDigitalGlove : virtual public vjInput, public vjDigital, public vjSimInput, public vjGlove
+class SimDigitalGlove : virtual public Input, public Digital, public SimInput, public Glove
 {
 public:
    //: Default Constructor
-   vjSimDigitalGlove();
+   SimDigitalGlove();
 
    //: Destructor
-   virtual ~vjSimDigitalGlove();
+   virtual ~SimDigitalGlove();
 
    //: Takes a config chunk
    //  The Juggler API calls this
-   virtual bool config( vjConfigChunk* chunk );
+   virtual bool config( ConfigChunk* chunk );
 
    //: Get the digital data for the given "finger"
    //  Returns digital 0 or 1, if "finger" makes sense.<BR>
@@ -73,8 +76,8 @@ public:
    //  Return Value: 0 == open, 1 == contact.
    //
    //  Use one of these indices to get the glove's digital data<BR>
-   //  EX: int result = mGlove.getDigitalData( vjSimDigitalGlove::LTHUMB );
-   //  NOTE: These should be the same integers as vjPinchGlove's
+   //  EX: int result = mGlove.getDigitalData( SimDigitalGlove::LTHUMB );
+   //  NOTE: These should be the same integers as PinchGlove's
    enum finger
    {
       LTHUMB = 0, LINDEX = 1, LMIDDLE = 2, LRING = 3, LPINKY = 4,
@@ -83,8 +86,8 @@ public:
    // dev = finger (see finger enum above)
    virtual int getDigitalData( int dev = 0 )
    {
-      //vjDEBUG(vjDBG_ALL,0)<<"*** vjSimDigitalGlove::getDigitalData("<<dev<<")\n"<< vjDEBUG_FLUSH;
-      vjASSERT( dev < (int)mDigitalData.size() );    // Make sure we have enough space
+      //vjDEBUG(vjDBG_ALL,0)<<"*** SimDigitalGlove::getDigitalData("<<dev<<")\n"<< vjDEBUG_FLUSH;
+      vprASSERT( dev < (int)mDigitalData.size() );    // Make sure we have enough space
       return mDigitalData[dev];
    }
 
@@ -112,7 +115,7 @@ public:
 
    static std::string getChunkType() { return std::string("SimDigitalGlove");}
 
-// vjGesture stuff:
+// Gesture stuff:
    //: Load trained data for the gesture object
    // Loads the file for trained data
    //void loadTrainedFile(std::string fileName);
@@ -123,11 +126,13 @@ public:
 
 private:
    std::vector<int>          mDigitalData;   //: The digital data that we have
-   std::vector<vjKeyModPair> mSimKeys;       //: The keys to press for digital simulation
+   std::vector<KeyModPair> mSimKeys;       //: The keys to press for digital simulation
 
-   vjHand                     mLeftHand, mRightHand;
+   Hand                     mLeftHand, mRightHand;
 
    //int                     mCurGesture;   //: The current gesture id
+};
+
 };
 
 #endif

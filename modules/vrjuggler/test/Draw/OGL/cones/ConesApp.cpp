@@ -36,7 +36,7 @@
 
 #include <Math/vjMatrix.h>
 #include <Utils/vjDebug.h>
-#include <Kernel/vjAssert.h>
+#include <vpr/Util/Assert.h>
 
 #include <ConesApp.h>
 
@@ -70,11 +70,11 @@ ConesApp::init () {
     vjDEBUG(vjDBG_ALL, 0) << "---------- Cones:App:init() ---------------"
                           << std::endl << vjDEBUG_FLUSH;
 
-    std::vector<vjUser*> users = kernel->getUsers();
+    std::vector<User*> users = kernel->getUsers();
     int num_users = users.size();
 
     // Make sure that we actually have users defined.
-    vjASSERT(num_users > 0);
+    vprASSERT(num_users > 0);
 
     UserData* new_user=NULL;
     mUserData = std::vector<UserData*>(num_users);
@@ -84,12 +84,12 @@ ConesApp::init () {
         new_user = new UserData(users[1],"VJWand1", "VJButton0_1",
                                 "VJButton1_1", "VJButton2_1");
         mUserData[1] = new_user;
-        vjASSERT(users[1]->getId() == 1);
+        vprASSERT(users[1]->getId() == 1);
       case (1):
         new_user = new UserData(users[0],"VJWand", "VJButton0", "VJButton1",
                                 "VJButton2");
         mUserData[0] = new_user;
-        vjASSERT(users[0]->getId() == 0);
+        vprASSERT(users[0]->getId() == 0);
         break;
       default:
         vjDEBUG(vjDBG_ALL, 0) << clrOutNORM(clrRED, "ERROR:") << " Bad number of users."
@@ -179,7 +179,7 @@ void
 ConesApp::draw () {
     initGLState();    // This should really be in another function
 
-    myDraw(vjGlDrawManager::instance()->currentUserData()->getUser());
+    myDraw(GlDrawManager::instance()->currentUserData()->getUser());
 }
 
 // ----------------------------------------------------------------------------
@@ -203,13 +203,13 @@ ConesApp::postFrame () {
 
 // ----------------------------------------------------------------------------
 // Make sure that all our dependencies are satisfied and make sure that there.
-// are vjUsers registered with the system.
+// are Users registered with the system.
 // ----------------------------------------------------------------------------
 bool
 ConesApp::depSatisfied () {
     // We can't start until there are users registered wth the system.
     // We rely upon users to keep track of the multi-user data structure.
-    int num_users = vjKernel::instance()->getUsers().size();
+    int num_users = Kernel::instance()->getUsers().size();
     return (num_users > 0);
 }
 
@@ -221,7 +221,7 @@ ConesApp::depSatisfied () {
 // Draw the scene.  A bunch of cones of differing color and stuff.
 // ----------------------------------------------------------------------------
 void
-ConesApp::myDraw (vjUser* user) {
+ConesApp::myDraw (User* user) {
     vjDEBUG(vjDBG_ALL, 2) << "\n--- myDraw() ---\n" << vjDEBUG_FLUSH;
 
     static const float SCALE = 100;
@@ -233,7 +233,7 @@ ConesApp::myDraw (vjUser* user) {
 
     glPushMatrix();
         // Push on Navigation matrix for the user.
-        vjMatrix nav_matrix = mUserData[user->getId()]->mNavMatrix;
+        Matrix nav_matrix = mUserData[user->getId()]->mNavMatrix;
         glMultMatrixf(nav_matrix.getFloatPtr());
 
         // Main cone loop.

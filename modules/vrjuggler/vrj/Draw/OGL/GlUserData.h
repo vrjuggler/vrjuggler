@@ -39,6 +39,9 @@
 #include <Kernel/vjProjection.h>
 #include <Kernel/vjViewport.h>
 
+namespace vrj
+{
+   
 //---------------------------------------------------
 //: Holds data about gl users for draw process
 //
@@ -47,34 +50,36 @@
 // about the user.
 //---------------------------------------------------
 //!PUBLIC_API:
-class vjGlUserData
+class GlUserData
 {
 public:
-   vjGlUserData()
+   GlUserData()
    {
       mUser = NULL;
       mProj = NULL;
    }
 
-   vjUser* getUser()
+   User* getUser()
       { return mUser; }
-   void setUser(vjUser* user)
+   void setUser(User* user)
       { mUser = user; }
 
-   vjProjection* getProjection()
+   Projection* getProjection()
       { return mProj; }
-   void setProjection(vjProjection* proj)
+   void setProjection(Projection* proj)
       { mProj = proj; }
 
-   vjViewport* getViewport()
+   Viewport* getViewport()
       { return mViewport; }
-   void setViewport(vjViewport* vp)
+   void setViewport(Viewport* vp)
       { mViewport = vp; }
 
 protected:
-   vjUser*        mUser;
-   vjProjection*  mProj;
-   vjViewport*    mViewport;
+   User*        mUser;
+   Projection*  mProj;
+   Viewport*    mViewport;
 };
 
+
+};
 #endif

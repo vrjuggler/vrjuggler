@@ -38,7 +38,10 @@
 #include <Input/vjInput/vjInput.h>
 #include <Input/vjPosition/vjPosition.h>
 #include <Input/InputManager/vjPosInterface.h>
-class vjConfigChunk;
+
+namespace vrj
+{
+   class ConfigChunk;
 
 //: Simulated a position device by making
 // An existing device behave relative to another one.
@@ -50,22 +53,22 @@ class vjConfigChunk;
 //
 // This class should not be used directly by the user.
 //!PUBLIC_API:
-class vjSimRelativePosition : public vjInput, public vjPosition
+class SimRelativePosition : public Input, public Position
 {
 public:
-   vjSimRelativePosition() {;}
-   virtual ~vjSimRelativePosition() {;}
+   SimRelativePosition() {;}
+   virtual ~SimRelativePosition() {;}
 
-   virtual bool config(vjConfigChunk* chunk);
+   virtual bool config(ConfigChunk* chunk);
 
    //: Return position data
-   vjMatrix* getPosData(int devNum=0)
+   Matrix* getPosData(int devNum=0)
    {
-      vjASSERT(devNum == 0);    // Make sure we have a valid dev
+      vprASSERT(devNum == 0);    // Make sure we have a valid dev
       return &mPos;
    }
 
-   vjTimeStamp* getPosUpdateTime (int devNum = 0) {
+   TimeStaMp* getPosUpdateTime (int devNum = 0) {
       return &mUpdateTime;
     }
 
@@ -80,11 +83,13 @@ public:
    static std::string getChunkType() { return std::string("SimRelativePosition"); }
 
 private:
-   vjMatrix          mPos;                         //: The current position being simulated
-   vjPosInterface    mBaseFrame;                   //: The base frame of reference
-   vjPosInterface    mRelativePos;                 //: the relative position
+   Matrix          mPos;                         //: The current position being simulated
+   PosInterface    mBaseFrame;                   //: The base frame of reference
+   PosInterface    mRelativePos;                 //: the relative position
 
-   vjTimeStamp   mUpdateTime;                  //: Time of last update
+   TimeStaMp   mUpdateTime;                  //: Time of last update
+};
+
 };
 
 #endif

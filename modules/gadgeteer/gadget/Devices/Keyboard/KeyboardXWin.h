@@ -32,16 +32,20 @@
 #ifndef _VJ_XWIN_KEYBOARD_H_
 #define _VJ_XWIN_KEYBOARD_H_
 
-#include <vjConfig.h>
-#include <vpr/Sync/Mutex.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
 
+#include <vpr/Sync/Mutex.h>
+
+#include <vjConfig.h>
 #include <Input/vjInput/vjInput.h>
 #include <Input/vjInput/vjKeyboard.h>
 
-class vjConfigChunk;
+namespace vrj
+{
+   
+   class ConfigChunk;
 
 //---------------------------------------------------------------
 //: XWin Keyboard class
@@ -59,9 +63,9 @@ class vjConfigChunk;
 //  CASE 2: The user can toggle locking using a special "locking" key
 //           defined in the configuration chunk.
 //
-// See also: vjKeyboard, vjKeyboardProxy
+// See also: Keyboard, KeyboardProxy
 //--------------------------------------------------------------
-class vjXWinKeyboard : public vjInput, public vjKeyboard
+class XWinKeyboard : public Input, public Keyboard
 {
 public:
    // Enum to keep track of current lock state for state machine
@@ -70,7 +74,7 @@ public:
    // Lock_LockKeyDown - The mouse is locked due to a key being held down
    enum lockState { Unlocked, Lock_LockKey, Lock_KeyDown};
 
-   vjXWinKeyboard()
+   XWinKeyboard()
    {
       m_visual = NULL;
       m_display = NULL;
@@ -82,14 +86,14 @@ public:
       mHandleEventsHasBeenCalled = false;      // Initialize it to not being called yet
       mWeOwnTheWindow = true;
    }
-   ~vjXWinKeyboard() { stopSampling();}
+   ~XWinKeyboard() { stopSampling();}
 
-   virtual bool config(vjConfigChunk* c);
+   virtual bool config(ConfigChunk* c);
 
    // Main thread of control for this active object
    void controlLoop(void* nullParam);
 
-   /* Pure Virtuals required by vjInput */
+   /* Pure Virtuals required by Input */
    int startSampling();
    int stopSampling();
 
@@ -104,8 +108,8 @@ public:
    // last frame, so you can put this in an if to check if was
    // pressed at all, or if you are doing processing based on this
    // catch the actual number..
-   int isKeyPressed(int vjKey)
-   {  return m_curKeys[vjKey];}
+   int isKeyPressed(int Key)
+   {  return m_curKeys[Key];}
 
    virtual int keyPressed(int keyId)
    { return isKeyPressed(keyId); }
@@ -128,16 +132,16 @@ private:
    void HandleEvents();
 
    /* X-Windows utility functions */
-   //: Convert XKey to vjKey
+   //: Convert XKey to Key
    //! NOTE: Keypad keys are transformed ONLY to number keys
-   int xKeyTovjKey(KeySym xKey);
+   int xKeyToKey( ::KeySym xKey );
 
    // Open the X window to sample from
    int openTheWindow();
 
-   Window   createWindow (Window parent, unsigned int border, unsigned long
+   ::Window   createWindow (::Window parent, unsigned int border, unsigned long
                         fore, unsigned long back, unsigned long event_mask);
-   void     setHints(Window window, char*  window_name, char*  icon_name,
+   void     setHints(::Window window, char*  window_name, char*  icon_name,
                  char* class_name, char* class_type);
 
    //: Perform anything that must be done when state switches
@@ -148,10 +152,10 @@ protected:
    bool         mWeOwnTheWindow;       // True if this class owns the window (is reposible for opening and closing)
                                        // NOTE: In a case where it does not, then the window vars must be set prior
                                        //    to starting the controlLoop (startSampling)
-   Window       m_window;
-   XVisualInfo* m_visual;
-   Display*     m_display;
-   XSetWindowAttributes m_swa;
+   ::Window       m_window;
+   ::XVisualInfo* m_visual;
+   ::Display*     m_display;
+   ::XSetWindowAttributes m_swa;
    int          m_screen, m_x, m_y;    // screen id, x_origin, y_origin
    unsigned int m_width,m_height;
 
@@ -176,5 +180,7 @@ protected:
    int   mSleepTimeMS;            // Amount of time to sleep in milliseconds between updates
    int   mPrevX, mPrevY;          // Previous mouse location
 };
+
+} // end namespace
 
 #endif

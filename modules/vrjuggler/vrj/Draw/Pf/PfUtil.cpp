@@ -35,12 +35,14 @@
 #include <Kernel/Pf/vjPfUtil.h>
 #include <Math/vjVec3.h>
 
-
-//: Convert Performer matrix to Juggler matrix
-vjMatrix vjGetVjMatrix( const pfMatrix& perfMat )
+namespace vrj
 {
-   vjMatrix mat;
-   vjVec3 x_axis( 1,0,0 );
+   
+//: Convert Performer matrix to Juggler matrix
+Matrix GetVjMatrix( const pfMatrix& perfMat )
+{
+   Matrix mat;
+   Vec3 x_axis( 1,0,0 );
    mat.set( &(perfMat.mat[0][0]) );
    mat.preRot( 90, x_axis, mat );
    mat.postRot( mat, -90, x_axis );
@@ -49,7 +51,7 @@ vjMatrix vjGetVjMatrix( const pfMatrix& perfMat )
 }
 
 //: Convert Juggler Matrix to Pf Matrix
-pfMatrix vjGetPfMatrix( const vjMatrix& mat )
+pfMatrix GetPfMatrix( const Matrix& mat )
 {
    pfMatrix perf_mat;
 
@@ -69,14 +71,16 @@ pfMatrix vjGetPfMatrix( const vjMatrix& mat )
 
 
 
-vjVec3 vjGetVjVec( const pfVec3& vec )
+Vec3 GetVjVec( const pfVec3& vec )
 {
    //     Perf     x       z       -y
-   return vjVec3( vec[0], vec[2], -vec[1] );
+   return Vec3( vec[0], vec[2], -vec[1] );
 }
 
-pfVec3 vjGetPfVec( const vjVec3& vec )
+pfVec3 GetPfVec( const Vec3& vec )
 {
    //   Juggler   x        -z       y
    return pfVec3( vec[0], -vec[2], vec[1] );
 }
+
+};

@@ -62,11 +62,11 @@
 
 //: VR Juggler application demonstration to show you 
 //  how to do texturing in an OpenGL juggler application
-class TextureDemoApplication : public vjGlApp
+class TextureDemoApplication : public GlApp
 {
 public:
    //: Constructor
-   TextureDemoApplication( vjKernel* kern );
+   TextureDemoApplication( Kernel* kern );
 
    //: destructor
    virtual ~TextureDemoApplication();
@@ -95,9 +95,9 @@ public:
 private:
    float x;
 
-   // use the type: vjGlContextData<ResourceID>
+   // use the type: GlContextData<ResourceID>
    // to store your OpenGL texture object and display list IDs
-   // i.e. vjGlContextData<ResourceID>  mTexObj;
+   // i.e. GlContextData<ResourceID>  mTexObj;
    class ResourceID
    {
    public:
@@ -109,29 +109,29 @@ private:
    
    // helper functions to make your code easier to read
    // i.e. hides all the static_cast and template lengthyness
-   static void setTexObjID( Texture& t, vjGlContextData<ResourceID>& texObjectID )
+   static void setTexObjID( Texture& t, GlContextData<ResourceID>& texObjectID )
    {
       void* data = reinterpret_cast<void*>( &texObjectID );
       t.setUserData( data );
    }   
    static int& getTexObjID( Texture& t ) 
    { 
-      vjGlContextData<ResourceID>* texObject = static_cast<vjGlContextData<ResourceID>* >( t.userData() );
+      GlContextData<ResourceID>* texObject = static_cast<GlContextData<ResourceID>* >( t.userData() );
       return (*texObject)->id;
    }
    
    // Cube objects:
    Texture                       mCubeTexture;
-   vjGlContextData<ResourceID>   mCubeTextureObj;
+   GlContextData<ResourceID>   mCubeTextureObj;
    cubeGeometry                  mCubeGeometry;
-   vjGlContextData<ResourceID>   mCubeDisplayList;
+   GlContextData<ResourceID>   mCubeDisplayList;
    
    // Floor:
    Texture                       mFloorTexture;
-   vjGlContextData<ResourceID>   mFloorTextureObj;
+   GlContextData<ResourceID>   mFloorTextureObj;
    
    // timer
-   vjTimer timer;
+   Timer timer;
 };
 
 

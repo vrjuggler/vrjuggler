@@ -48,15 +48,17 @@ void samplem_keys(void*);
 #ifndef GET_Y_LPARAM
 #define GET_Y_LPARAM(lp)   ((int)(short)HIWORD(lp))
 #endif
-
-bool vjKeyboardWin32::config(vjConfigChunk *c)
+namespace vrj
+{
+   
+bool KeyboardWin32::config(ConfigChunk *c)
 {
     vjDEBUG_BEGIN(vjDBG_INPUT_MGR, vjDBG_STATE_LVL)
                      << "vjKeyboardWin32::config " << std::endl
                      << vjDEBUG_FLUSH;
 
     // Call base class config function first
-    if(! (vjInput::config(c) && vjKeyboard::config(c)))
+    if(! (Input::config(c) && Keyboard::config(c)))
       return false;
 
     int i;
@@ -91,7 +93,7 @@ bool vjKeyboardWin32::config(vjConfigChunk *c)
 
 // Create a win32 window and start a thread
 // processing it's messages
-int vjKeyboardWin32::startSampling()
+int KeyboardWin32::startSampling()
 {
    if (myThread == NULL) {
       resetIndexes();
@@ -100,7 +102,7 @@ int vjKeyboardWin32::startSampling()
                  << "vjWin32Keyboard::startSampling() : ready to go.."
                  << std::endl << vjDEBUG_FLUSH;
 
-      vjKeyboardWin32* devicePtr = this;
+      KeyboardWin32* devicePtr = this;
 
       if (0 == (myThread = new vpr::Thread(samplem_keys,(void*)devicePtr)))
          return 0; //fail
@@ -120,7 +122,7 @@ void samplem_keys(void* devPtr)
         // dispatched are dispatched to the thread that created
         // the window.  (And we want to receive the messages
         // in the spawned thread)
-    vjKeyboardWin32* keyboard = (vjKeyboardWin32*)devPtr;
+    KeyboardWin32* keyboard = (KeyboardWin32*)devPtr;
     keyboard->createWindowWin32 ();
 
     // When there are messages, process them all.  Otherwise,
@@ -141,7 +143,7 @@ void samplem_keys(void* devPtr)
 
 }
 
-int vjKeyboardWin32::onlyModifier(int mod)
+int KeyboardWin32::onlyModifier(int mod)
 {
   switch (mod) {
      case VJKEY_NONE:
@@ -158,7 +160,7 @@ int vjKeyboardWin32::onlyModifier(int mod)
   }
 }
 
-void vjKeyboardWin32::updateData()
+void KeyboardWin32::updateData()
 {
    //  UpdKeys();
    // update what the last mouse x/y values were.
@@ -190,9 +192,9 @@ void vjKeyboardWin32::updateData()
 // UpdKeys: translates windows message into key updates
 // The WNDPROC uses its USERDATA pointer to the keyboard
 // to forward on messages to be handled from in the keyboard object.
-void vjKeyboardWin32::updKeys(UINT message, UINT wParam, LONG lParam)
+void KeyboardWin32::updKeys(UINT message, UINT wParam, LONG lParam)
 {
-   //vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << instName << ": vjKeyWin32::updKeys: Processing keys.\n" << vjDEBUG_FLUSH;
+   //vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << instName << ": KeyWin32::updKeys: Processing keys.\n" << vjDEBUG_FLUSH;
 
    int key;
    //static HWND lCapture;
@@ -216,7 +218,7 @@ void vjKeyboardWin32::updKeys(UINT message, UINT wParam, LONG lParam)
 
                 break;
         case  WM_KEYDOWN:
-                key = VKKeyTovjKey(wParam);
+                key = VKKeyToKey(wParam);
                 m_realkeys[key] = 1;
                 m_framekeys[key] += 1;
                 vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << instName
@@ -226,7 +228,7 @@ void vjKeyboardWin32::updKeys(UINT message, UINT wParam, LONG lParam)
                 break;
 
         case WM_KEYUP:
-                key = VKKeyTovjKey(wParam);
+                key = VKKeyToKey(wParam);
                 m_realkeys[key] = 0;
                 vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << instName
                            << ": WM_KEYUP: " << key << std::endl
@@ -335,7 +337,7 @@ void vjKeyboardWin32::updKeys(UINT message, UINT wParam, LONG lParam)
 }
 
 
-int vjKeyboardWin32::stopSampling()
+int KeyboardWin32::stopSampling()
 {
    if (myThread != NULL)
    {
@@ -347,7 +349,7 @@ int vjKeyboardWin32::stopSampling()
 
 }
 
-int vjKeyboardWin32::VKKeyTovjKey(int vkKey)
+int KeyboardWin32::VKKeyToKey(int vkKey)
 {
    switch (vkKey)
    {
@@ -358,7 +360,7 @@ int vjKeyboardWin32::VKKeyTovjKey(int vkKey)
      case VK_CONTROL  : return VJKEY_CTRL;
      case VK_SHIFT    : return VJKEY_SHIFT;
      case VK_TAB      : return VJKEY_ALT;
-//     case VK_ALT      : return vjKEY_ALT;
+//     case VK_ALT      : return KEY_ALT;
      case /*VK_1*/0x31  : return VJKEY_1;
      case VK_NUMPAD1    : return VJKEY_1;
      case /*VK_2*/0x32  : return VJKEY_2;
@@ -446,7 +448,7 @@ VOID APIENTRY HandlePaint (HWND hwnd)
 {
     HDC         hdc;
     PAINTSTRUCT ps;
-    vjKeyboard* devPtr = (vjKeyboard*)GetWindowLong(hwnd,GWL_USERDATA);
+    Keyboard* devPtr = (Keyboard*)GetWindowLong(hwnd,GWL_USERDATA);
 
     if (!devPtr)
         return;
@@ -457,14 +459,14 @@ VOID APIENTRY HandlePaint (HWND hwnd)
     char ln4[255] = "line4";
     char ln5[255] = "line5";
     char ln6[255] = "line6";
-    //vjMatrix* vjMcurrData = devPtr->GetPosData();
+    //vjMatrix* McurrData = devPtr->GetPosData();
 
-    //vjCoord coord(*vjMcurrData);
+    //vjCoord coord(*McurrData);
     //ThreeDouble2String(ln1, coord.pos[0], coord.pos[1], coord.pos[2]);
     //ThreeDouble2String(ln2, coord.orient[0], coord.orient[1], coord.orient[2]);
 
     //vjMcurrData = devPtr->GetPosData(1);
-    //vjCoord coord2(*vjMcurrData);
+    //vjCoord coord2(*McurrData);
     //ThreeDouble2String(ln3, coord2.pos[0], coord2.pos[1], coord2.pos[2]);
     //ThreeDouble2String(ln4, coord2.orient[0], coord2.orient[1], coord2.orient[2]);
 
@@ -528,7 +530,7 @@ LONG APIENTRY MenuWndProc (HWND hWnd, UINT message, UINT wParam, LONG lParam)
             break;
 
         default:
-            vjKeyboardWin32* devPtr = (vjKeyboardWin32*)GetWindowLong(hWnd,GWL_USERDATA);
+            KeyboardWin32* devPtr = (KeyboardWin32*)GetWindowLong(hWnd,GWL_USERDATA);
             if (devPtr)
                 devPtr->updKeys(message, wParam,lParam);
             return DefWindowProc(hWnd, message, wParam, lParam);
@@ -537,7 +539,7 @@ LONG APIENTRY MenuWndProc (HWND hWnd, UINT message, UINT wParam, LONG lParam)
 }
 
 
-void vjKeyboardWin32::createWindowWin32 ()
+void KeyboardWin32::createWindowWin32 ()
 {
    int root_height;
 
@@ -566,7 +568,7 @@ void vjKeyboardWin32::createWindowWin32 ()
 
 } /*CreateWindow*/
 
-BOOL vjKeyboardWin32::MenuInit (HINSTANCE hInstance)
+BOOL KeyboardWin32::MenuInit (HINSTANCE hInstance)
 {
     HANDLE    hMemory;
     PWNDCLASS pWndClass;
@@ -597,3 +599,6 @@ BOOL vjKeyboardWin32::MenuInit (HINSTANCE hInstance)
 
     return bSuccess;
 }
+
+
+};
