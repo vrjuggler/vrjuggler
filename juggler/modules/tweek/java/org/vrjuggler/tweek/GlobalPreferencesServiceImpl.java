@@ -86,8 +86,22 @@ class GlobalPreferencesServiceImpl
       }
 
       verifyPrefsDirExistence(data_dir_name);
+      prefsDir = data_dir_name;
       mPrefsFile = new File(data_dir_name + File.separator + "tweekrc");
       BeanRegistry.instance().addBeanRegistrationListener(this);
+   }
+
+   /**
+    * Returns the name of the directory where Tweek-specific data files and
+    * preferences should be stored.  This will be rooted under the
+    * platform-specific application data directory, as returned by
+    * EnvironmentService.getAppDataDir().
+    *
+    * @see EnvironmentService
+    */
+   public String getPrefsDir()
+   {
+      return prefsDir;
    }
 
    /**
@@ -705,6 +719,8 @@ class GlobalPreferencesServiceImpl
    private File     mPrefsFile    = null;
    private Document mPrefsDoc     = null;
    private Element  mPrefsDocRoot = null;
+
+   private String prefsDir = null;
 
    private Vector beanViewers = new Vector();
 
