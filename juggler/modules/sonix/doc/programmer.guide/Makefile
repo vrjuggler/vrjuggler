@@ -9,7 +9,7 @@ install-docs: install-html install-chunk-html install-pdf
 
 # Fill these in!!  Together, they make up the installation prefix.
 webroot=	$(HOME)/public_html/jugglerweb
-instdir=	sonix/0.1/programmer.guide
+instdir=	sonix/$(PROJECT_NUMBER)/programmer.guide
 
 prefix=		$(webroot)/$(instdir)
 #INSTALL_DIRS=	figures
@@ -31,3 +31,4 @@ ${NAME}.html: ${NAME}.xml
 ${NAME}.pdf:  ${NAME}.xml ${NAME}.fo # README.tex
 
 include ${MK_PATH}/docbook.mk
+include ../version.mk
