@@ -35,7 +35,6 @@
 
 #include <jccl/jcclConfig.h>
 #include <vpr/vpr.h>
-#include <jccl/Config/ConfigTokens.h>
 
 
 namespace jccl
@@ -70,15 +69,6 @@ std::string demangleFileName(const std::string& n, std::string parentfile);
 JCCL_API(vpr::ReturnStatus) findFileUsingPathVar(const std::string& file_name,
                                                  const std::string& env_name,
                                                  std::string& absolute_file);
-
-/** Does the given path have a separator */
-bool hasSeparator(const std::string& path);
-
-/** Get the part of the path after the separator */
-std::string getRemainder(const std::string& path);
-
-/** Get the part of the path before the separator */
-std::string getFirstNameComponent(const std::string& path);
 
 } // End of jccl namespace
 
