@@ -1,105 +1,41 @@
 # -----------------------------------------------------------------------------
-# Makefile.in for c2lib/Input
+# Makefile.in for juggler/Input.  It requires GNU make.
 # $Id$
-# -----------------------------------------------------------------------------
-
-SHELL		= /bin/sh
-
-bindir		= @bindir@
-datadir		= @datadir@
-exec_prefix	= @exec_prefix@
-includedir	= @includedir@/Input
-libdir		= @libdir@
-libexecdir	= @libexecdir@
-prefix		= @prefix@
-sbindir		= @sbindir@
-srcdir		= @srcdir@
-sysconfdir	= @sysconfdir@
-topdir		= @topdir@
-top_srcdir	= @top_srcdir@
-wwwdir		= ${srcdir}/Doc
-VJROOT		= ${top_srcdir}
-VJROOT_ABS	= @VJROOT_ABS@
-VJ_SRCDIR	= @VJ_SRCDIR@/Input
-WORKDIR		= ${topdir}/Input
-
-# Include commom definitions
-include @topdir@/Makefile.base
-
-
-#--- Search path -------
-vpath
-vpath %.c @srcdir@
-vpath %.C @srcdir@
-vpath %.o ${OBJDIR}
-#------------------------
-
-
-LIBRARY		= libJuggler
-SUBDIRS		= vjGlove vjInput vjPosition InputManager ibox
-
-@SET_MAKE@
-
-# -----------------------------------------------------------------------------
-# Library targets.
 # -----------------------------------------------------------------------------
 
 default: all
 
-all-recursive install-recursive dbg-recursive opt-recursive		\
-dso-recursive ddso-recursive obj-recursive depend-recursive		\
-newdepend-recursive:
-	@set fnord ${MAKEFLAGS}; amf=$$2;				\
-            list='${SUBDIRS}';						\
-            for subdir in $$list; do					\
-                target=`echo $@ | sed s/-recursive//`;			\
-                echo "Making $$target in Input/$$subdir";		\
-                (cd $$subdir && ${MAKE} OPTIMIZER="${OPTIMIZER}"	\
-                                    OBJDIR=${OBJDIR} $$target)		\
-                    || case "$$amf" in					\
-                         *=*) exit 1;;					\
-                         *k*) fail=yes;;				\
-                         *) exit 1;; esac;				\
-            done && test -z "$$fail"
+includedir	= @includedir@/Input
+srcdir		= @srcdir@
+topdir		= @topdir@
+top_srcdir	= @top_srcdir@
+wwwdir		= ${srcdir}/Doc
+VJROOT		= ${top_srcdir}
+VJ_SRCDIR	= @VJ_SRCDIR@/Input
+WORKDIR		= ${topdir}/Input
 
-dbg: dbg-recursive
+# Define ${_LOCAL_CLEAN} to inform the shared clean target that there is a
+# '_clean' target to be run besides the standard 'clean' target.
+_LOCAL_CLEAN	= 1
 
-opt: opt-recursive
+# Include common definitions.
+include ${topdir}/Makefile.base
+include ${MKPATH}/vj.rec.mk
 
-dso: dso-recursive
+SUBDIRS		= vjGlove vjInput vjPosition InputManager ibox
 
-ddso: ddso-recursive
-
-obj: obj-recursive
-
-depend: depend-recursive
-
-newdepend: newdepend-recursive
-
+# -----------------------------------------------------------------------------
+# Library targets.
+# -----------------------------------------------------------------------------
 all: dbg opt dso ddso
 
-install: install-recursive
+dbg opt dso ddso obj depend newdepend install:
+	${MAKE} RECTARGET="$@" OPTIMIZER="${OPTIMIZER}"		\
+            OBJDIR="${OBJDIR}" recursive
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-clean-recursive:
-	@set fnord ${MAKEFLAGS}; amf=$$2;		\
-            rev=''; list='${SUBDIRS}';			\
-            for subdir in $$list; do			\
-                rev="$$subdir $$rev";			\
-            done;					\
-            for subdir in $$rev; do			\
-                target=`echo $@ | sed s/-recursive//`;	\
-                echo "Making $$target in $$subdir";	\
-                (cd $$subdir && ${MAKE} $$target)	\
-                    || case "$$amf" in			\
-                         *=*) exit 1;;			\
-                         *k*) fail=yes;;		\
-                         *) exit 1;;			\
-                       esac;				\
-            done && test -z "$$fail"
-
-clean: clean-recursive
-
-clobber: clean
+_clean:
+	${MAKE} RECTARGET="clean" OPTIMIZER="${OPTIMIZER}"	\
+            OBJDIR="${OBJDIR}" recursive
