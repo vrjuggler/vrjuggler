@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# Base configure.in for c2lib.
+# Base configure.in for VR Juggler.
 # $Date$
 # -----------------------------------------------------------------------------
 # This file is "compiled" by GNU autoconf to generate the configure script
@@ -156,7 +156,7 @@ case $host in
 
         PLATFORM='SGI'
 
-        AC_DEFINE(VJ_OS_SGI)
+        AC_DEFINE(VJ_OS_SGI,)
         AC_DEFINE(_BSD_TYPES,)
         ;;
     # HP PA-RISC machine running HP-UX 10.20.
@@ -179,7 +179,7 @@ case $host in
 
         PLATFORM='HP'
 
-        AC_DEFINE(VJ_OS_HPUX)
+        AC_DEFINE(VJ_OS_HPUX,)
         AC_DEFINE(_HPUX_SOURCE,)
         AC_DEFINE(_INCLUDE_TERMIO,)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
@@ -187,17 +187,17 @@ case $host in
         ;;
     # DEC Alpha running Digital UNIX 4.0.
     alpha-[a-z]*-osf4.0)
-        AC_DEFINE(VJ_OS_DUX)
+        AC_DEFINE(VJ_OS_DUX,)
         PLATFORM='alpha-DUX'
         ;;
     # i386-class machine running FreeBSD.
     i386-[a-z]*-freebsd*)
-        AC_DEFINE(VJ_OS_FreeBSD)
+        AC_DEFINE(VJ_OS_FreeBSD,)
         PLATFORM='i386-FBSD'
         ;;
     # Unkown operating system (to config.guess).
     *-unknown)
-        AC_DEFINE(VJ_OS_GENERIC)
+        AC_DEFINE(VJ_OS_GENERIC,)
         PLATFORM='UNKNOWN'
         ;;
 esac
@@ -240,8 +240,8 @@ if test "x$thread_pkg" = "xPOSIX" ; then
         AC_CHECK_HEADER(pthread.h,
             [ THREADS='POSIX'; LIBS="$LIBS -lpthread";
               AC_CHECK_LIB(pthread, pthread_kill,
-                  AC_DEFINE(_PTHREADS_DRAFT_10),
-                  AC_DEFINE(_PTHREADS_DRAFT_4)) ],
+                  AC_DEFINE(_PTHREADS_DRAFT_10,),
+                  AC_DEFINE(_PTHREADS_DRAFT_4,)) ],
             AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)))
 
     # On HP-UX 10.20, the pthreads library is in the cma library rather than
@@ -251,8 +251,8 @@ if test "x$thread_pkg" = "xPOSIX" ; then
             AC_CHECK_HEADER(pthread.h,
                 [ THREADS='POSIX'; LIBS="$LIBS -lcma";
                   AC_CHECK_LIB(cma, pthread_kill,
-                      AC_DEFINE(_PTHREADS_DRAFT_10),
-                      AC_DEFINE(_PTHREADS_DRAFT_4)) ],
+                      AC_DEFINE(_PTHREADS_DRAFT_10,),
+                      AC_DEFINE(_PTHREADS_DRAFT_4,)) ],
                 AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)),
             AC_MSG_WARN(*** POSIX threads will not be used (no library found) ***))
     fi
@@ -260,7 +260,7 @@ if test "x$thread_pkg" = "xPOSIX" ; then
 # we test $thread_pkg just to be sure it is set right.
 elif test "x$thread_pkg" = "xSGI_IPC" ; then
     AC_CHECK_HEADERS(sys/prctl.h,
-        THREADS='SGI_IPC'; AC_DEFINE(VJ_SGI_IPC),
+        THREADS='SGI_IPC',
         AC_MSG_WARN(*** SGI IPC threading will not be used (no headers found) ***))
 fi
 
@@ -279,7 +279,7 @@ if test "$THREADS" = "POSIX" ; then
     # Do not define _POSIX_C_SOURCE here because it will cause problems when
     # compiling on IRIX.  Instead, define that in the source files where
     # appropriate.
-    AC_DEFINE(VJ_USE_PTHREADS)
+    AC_DEFINE(VJ_USE_PTHREADS,)
     AC_DEFINE(_THREAD_SAFE,)
     AC_DEFINE(RWSTD_MULTI_THREAD,)
     AC_DEFINE(RW_MULTI_THREAD,)
@@ -292,7 +292,7 @@ if test "$THREADS" = "POSIX" ; then
     SYNC_SYS='POSIX'
     SHMEM_SYS=''
 elif test "$THREADS" = "SGI_IPC" ; then
-    AC_DEFINE(VJ_SGI_IPC)
+    AC_DEFINE(VJ_SGI_IPC,)
 
     # Set to SGI_IPC threading
     THREAD_SYS="SGI_IPC"
@@ -359,7 +359,7 @@ if test "x$enable_opengl" = "xyes" ; then
         # files to be compiled and enable the OpenGL API compile-time option.
         if test "$ac_cv_glEnable_available" = "yes" ; then
             OPENGL_API="Y"
-            AC_DEFINE(VJ_API_OPENGL)
+            AC_DEFINE(VJ_API_OPENGL,)
         fi
 
         CC="$vjsave_CC"
@@ -369,7 +369,7 @@ if test "x$enable_opengl" = "xyes" ; then
         AC_CHECK_LIB(GL, glEnable,
             AC_CHECK_HEADER(GL/gl.h,
                 [ OPENGL_API="Y";
-                  AC_DEFINE(VJ_API_OPENGL) ],
+                  AC_DEFINE(VJ_API_OPENGL,) ],
                 AC_MSG_ERROR(*** OpenGL API will not be used (header not found) ***)),
             AC_MSG_ERROR(*** OpenGL API will not be used (library not found) ***))
     fi
@@ -427,7 +427,7 @@ if test "x$enable_perf" = "xyes" ; then
         AC_CHECK_HEADER(Performer/pf.h,
             PERFORMER_API="Y";	\
             OGLLIB='-ignore_unresolved -lpf_ogl -lpfdu_ogl -lpfui -lpfutil_ogl'; \
-            AC_DEFINE(VJ_API_PERFORMER),
+            AC_DEFINE(VJ_API_PERFORMER,),
             AC_MSG_WARN(*** Performer API will not be used (pfChannel.h not found) ***)),
         AC_MSG_WARN(*** Performer API will not be used (library not found) ***))
 
