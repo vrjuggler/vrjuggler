@@ -6,7 +6,7 @@
 # project name...
 PROJECT_NAME = runner
 
-default: $(PROJECT_NAME)
+default: echo_info $(PROJECT_NAME)
 
 srcdir		= @srcdir@
 topdir		= @topdir@
@@ -80,6 +80,12 @@ $(PROJECT_NAME): $(OBJS)
 	@echo "-------------------------------------------"
 	@echo "$(PROJECT_NAME) done"
 	@echo "-------------------------------------------"
+
+echo_info:
+	@echo ""
+	@echo "Building $(PROJECT_NAME)"
+	@echo "Using VPR_BASE_DIR: $(VPR_BASE_DIR)"
+	@echo ""
 
 # Remove the compiled stuff from the system
 clean:
