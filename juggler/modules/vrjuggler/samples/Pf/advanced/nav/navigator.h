@@ -70,7 +70,11 @@ public:
    int numColliders() const { return mCorrections.size(); }
    
    /// get the correction that happened for collider x...
-   gmtl::Vec3f getCorrection( int x ) const { assert( x < mCorrections.size() ); return mCorrections[x]; }
+   gmtl::Vec3f getCorrection(unsigned int x) const
+   {
+      vprASSERT(x < mCorrections.size());
+      return mCorrections[x];
+   }
    
   void setRotAxis(bool allowX, bool allowY, bool allowZ);
 

@@ -84,14 +84,15 @@
 
 #include "simplePfNavApp.h" // My header file
 
-simplePfNavApp::Model::Model() : description( "no description" ),
-   filename( "no name" ),
-   scale( 1.0f ),
-   pos( 0.0f, 0.0f, 0.0f ),
-   rot( 0.0f, 0.0f, 0.0f ),
-   isCollidable( true ),
-   modelDCS( NULL ),
-   modelNode( NULL )
+simplePfNavApp::Model::Model()
+   : description("no description")
+   , filename("no name")
+   , scale(1.0f)
+   , pos(0.0f, 0.0f, 0.0f)
+   , rot(0.0f, 0.0f, 0.0f)
+   , isCollidable(true)
+   , modelDCS(NULL)
+   , modelNode(NULL)
 {
 }
 
@@ -108,10 +109,11 @@ simplePfNavApp::Model::Model( const std::string& desc, const std::string& file_n
 }
 
 
-simplePfNavApp::Sound::Sound() : name( "no name" ),
-    alias( "no alias set" ),
-    positional( "false" ),
-    pos( 0.0f, 0.0f, 0.0f )
+simplePfNavApp::Sound::Sound()
+   : name("no name")
+   , alias("no alias set")
+   , positional("false")
+   , pos(0.0f, 0.0f, 0.0f)
 {
 }
 
@@ -127,28 +129,28 @@ simplePfNavApp::Sound::Sound( const std::string& sound_name,
 }
 
 //: default application constructor
-simplePfNavApp::simplePfNavApp() : mDisableNav( false ),
-                                   mInitialNavPos( 0.0f, 0.0f, 0.0f ),
-                                   mBoundingSize(0.0f),
-                                   mStatusMessageEmitCount(0),
-                                   mCurNavIndex(0),
-                                   mLightGroup( NULL ),
-                                   mConfiguredCollideModels( NULL ),
-                                   mConfiguredNoCollideModels( NULL ),
-                                   mSoundNodes( NULL ),
-                                   mCollidableModelGroup( NULL ),
-                                   mUnCollidableModelGroup( NULL ),
-                                   mColliding( false ), mRiding( false ),
-                                   mWalkingCount( 0 ),
-                                   mRideCount( 0 )
+simplePfNavApp::simplePfNavApp()
+   : mDisableNav(false)
+   , mAnimDCS(NULL)
+   , mInitialNavPos(0.0f, 0.0f, 0.0f)
+   , mBoundingSize(0.0f)
+   , mStatusMessageEmitCount(0)
+   , mCurNavIndex(0)
+   , mNavigationDCS(NULL)
+   , mLightGroup(NULL)
+   , mSun(NULL)
+   , mRootNode(NULL)
+   , mConfiguredCollideModels(NULL)
+   , mConfiguredNoCollideModels(NULL)
+   , mSoundNodes(NULL)
+   , mCollidableModelGroup(NULL)
+   , mUnCollidableModelGroup(NULL)
+   , mWalkingCount(0)
+   , mRideCount(0)
+   , mColliding(false)
+   , mRiding(false)
+//   , mWorldDCS(NULL)
 {
-   mSun = NULL;
-   mRootNode = NULL;
-   //mWorldDCS = NULL;
-   mCollidableModelGroup = NULL;
-
-   mNavigationDCS = NULL;
-
    //enableStats();
 }
 
