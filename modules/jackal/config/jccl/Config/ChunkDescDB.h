@@ -52,7 +52,7 @@ namespace jccl {
 //-----------------------------------------------------------------
 
 
-class ChunkDescDB {
+class VJ_CLASS_API ChunkDescDB {
 private:
 
     //:Internal storage of ChunkDescs

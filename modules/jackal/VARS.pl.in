@@ -81,7 +81,18 @@ $VARS{'JAVAC'}           = '@JAVAC@';
 
 # Jackal stuff.
 $VARS{'JCCL_SHARE_DIR'}       = '@JCCL_SHARE_DIR@';
-#$VARS{'APP_VJ_LIBS_X11'}    = '@APP_VJ_LIBS_X11@';
-#$VARS{'APP_VJ_LIBS_UTILS'}  = '@APP_VJ_LIBS_UTILS@';
+
+$VARS{'DEPEND_EXTRAS'}        = '@DEPEND_EXTRAS@';
+$VARS{'DEPEND_FLAGS'}         = '@DEPEND_FLAGS@';
+$VARS{'EXTRA_LINK_FLAGS'}     = '@EXTRA_LINK_FLAGS@';
+
+$VARS{'LD'}                   = '@LD@';
+$VARS{'LDFLAGS'}              = '@LDFLAGS@';
+$VARS{'LIBS'}                 = '@LIBS@';
+$VARS{'OS_TYPE'}              = '@OS_TYPE@';
+$VARS{'MAKEDEPEND'}           = '@MAKEDEPEND@';
+$VARS{'USE_MAKEDEPEND'}       = '@USE_MAKEDEPEND@';
+
+$VARS{'APP_BASE_DIR'}         = '@APP_BASE_DIR_INST@';
 
 1;
