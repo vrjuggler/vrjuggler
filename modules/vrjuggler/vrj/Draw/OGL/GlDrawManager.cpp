@@ -346,7 +346,7 @@ void vjGlDrawManager::drawProjections(vjSimDisplay* sim)
 {
    const float ALPHA_VALUE(0.25f);
 
-   std::vector<vjDisplay*> disps = displayManager->getAllDisplays();
+   std::vector<vjDisplay*> disps = mDisplayManager->getAllDisplays();
 
    vjVec3 apex, ur, lr, ul, ll;
    vjProjection* proj; proj = NULL;

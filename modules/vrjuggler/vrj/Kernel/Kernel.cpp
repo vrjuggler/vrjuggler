@@ -138,13 +138,24 @@ void vjKernel::checkForReconfig()
    vjASSERT(vjThread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
 
    // ---- RECONFIGURATION --- //
-   int num_chunks_processed(0);
-   num_chunks_processed = configProcessPending();             // Process pending config
-   if((num_chunks_processed > 0) && (environmentManager != NULL))
+   int total_chunks_processed(0);
+   int local_chunks_processed(0);
+   
+   // This loop will keep processing the pending list
+   // until there is an iteration where no chunks are processed.
+   do
+   {
+      local_chunks_processed = configProcessPending();
+      total_chunks_processed += local_chunks_processed;
+   }
+   while(local_chunks_processed > 0);
+   
+   // If we changed the active configuration, then the environment manager needs to refresh
+   if((total_chunks_processed > 0) && (environmentManager != NULL))
    {
       environmentManager->sendRefresh();
    }
-
+      
    // ---- APP SWITCH ---- //
    // check for a new applications
    if(mNewAppSet)
@@ -224,9 +235,14 @@ void vjKernel::initConfig()
    vjSharedPool::init();         // Try to init the pool stuff
    sharedMemPool = new vjSharedPool(1024*1024);      // Create shared memory pool
    
-   initialSetupInputManager();
-   initialSetupDisplayManager();
-   setupEnvironmentManager();
+   // ---- ALLOCATE MANAGERS --- //
+   //initialSetupInputManager();
+   mInputManager = new (sharedMemPool) vjInputManager;
+   //initialSetupDisplayManager();
+   mDisplayManager = vjDisplayManager::instance();  // Get display manager
+   vjASSERT(mDisplayManager != NULL);                 // Did we get an object
+   //setupEnvironmentManager();
+   environmentManager = new vjEnvironmentManager();
 
    //??// processPending() // Should I do this here   
 
@@ -263,6 +279,7 @@ void vjKernel::updateFrameData()
 int vjKernel::configProcessPending(bool lockIt)
 {
    int chunks_processed(0);     // Needs to return this value
+   
    if(vjConfigManager::instance()->pendingNeedsChecked())
    {
       vjDEBUG_BEGIN(vjDBG_ALL,vjDBG_CONFIG_LVL) << "vjKernel::configProcessPending: Examining pending list.\n" << vjDEBUG_FLUSH;
@@ -378,18 +395,6 @@ void vjKernel::loadConfigFile(std::string filename)
 }
 
 
-void vjKernel::initialSetupInputManager()
-{
-   mInputManager = new (sharedMemPool) vjInputManager;
-   //**//mInputManager->configureInitial(mInitialChunkDB);
-}
-
-
-void vjKernel::initialSetupDisplayManager()
-{
-   mDisplayManager = vjDisplayManager::instance();  // Get display manager
-   vjASSERT(mDisplayManager != NULL);                 // Did we get an object
-}
 
 
 // This starts up the draw manager given
@@ -429,11 +434,6 @@ void vjKernel::stopDrawManager()
    }
 }
 
-
-void vjKernel::setupEnvironmentManager()
-{
-    environmentManager = new vjEnvironmentManager();
-}
 
 vjUser* vjKernel::getUser(std::string userName)
 {

@@ -84,24 +84,6 @@ public:
    //! NOTE: Designed ONLY to specify initial configuration
    void loadConfigFile(std::string filename);
 
-public:  // --- Config interface --- //
-   //: Get the chunks that are actually running in the system
-   //vjConfigChunkDB* getChunkDB()
-   //{
-   //   vjASSERT(NULL != mChunkDB);
-   //   return mChunkDB;
-   //}
-
-   //: Get the initial chunk database
-   // Returns the chunks that were originally used to configure
-   // the system.
-   //! NOTE: This may contain chunks that are not currently running.
-   //vjConfigChunkDB* getInitialChunkDB()
-   //{
-   //   vjASSERT(NULL != mInitialChunkDB);
-   //   return mInitialChunkDB;
-   //}
-
 protected:  // -- CHUNK HANDLER
    //: Can the handler handle the given chunk?
    //! RETURNS: true - Can handle it
@@ -153,12 +135,7 @@ protected:
    //! NOTE: This can only be called from the kernel thread
    void changeApplication(vjApp* _app);
 
-protected:      // --- STARTUP ROUTINES --- //
-         // --- Manager Initial setup functions ---- //
-   void initialSetupInputManager();
-   void setupEnvironmentManager();
-   void initialSetupDisplayManager();
-
+protected:      // --- DRAW MGR ROUTINES --- //       
    // Starts the draw manager running
    // Calls the app callbacks for the draw manager
    //! ARGS: newMgr - Is this a new manager, or the same one
