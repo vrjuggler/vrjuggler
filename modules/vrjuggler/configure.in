@@ -41,7 +41,7 @@ AC_REVISION($Revision$)
 AC_INIT(vrj/vrjConfig.h)
 AC_CONFIG_AUX_DIR(../../share/config)
 AC_CONFIG_HEADER(vrj/vrjDefines.h)
-DPP_PREREQ([1.4.107])
+DPP_PREREQ([1.4.108])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -573,8 +573,6 @@ vrj_extra_ldflags_linker="$vrj_extra_ldflags_compiler"
 # -----------------------------------------------------------------------------
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
-
-DPP_SYSTEM_SUBST
 
 VJ_VERSION_GROK(VERSION)
 
