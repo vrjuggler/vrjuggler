@@ -43,6 +43,8 @@
 #ifndef SNXSTUBSOUNDIMPLEMENTATION_H
 #define SNXSTUBSOUNDIMPLEMENTATION_H
 
+#include <snx/snxConfig.h>
+
 #include <string>
 #include <boost/concept_check.hpp>
 #include <gmtl/Math.h>
@@ -66,18 +68,12 @@ public:
    /**
     * Constructor for the Stub sound implementation.
     */
-   StubSoundImplementation()
-      : snx::SoundImplementation()
-   {
-      this->setName("Stub");
-   }
+   StubSoundImplementation();
 
    /**
     * Destructor for the Stub sound implementation.
     */
-   virtual ~StubSoundImplementation()
-   {
-   }
+   virtual ~StubSoundImplementation();
 
    /**
      * Every implementation can return a new copy of itself.
