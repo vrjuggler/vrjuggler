@@ -68,12 +68,12 @@ public:
 
    void testAddressLookup () {
       vpr::InetAddr addr1("192.49.3.2", 13768);
-      vpr::InetAddr addr2(3224437506, 13768);
+      vpr::InetAddr addr2( vpr::System::ntohl((vpr::Uint32)3224437506), 13768);
       vpr::InetAddr addr3("cruncher.vrac.iastate.edu", 13768);
       vpr::InetAddr addr4("129.186.232.58", 13768);
       vpr::InetAddr addr5("cruncher.vrac.iastate.edu:13768");
 
-      assertTest(addr1.getAddressValue() == 3224437506);
+      assertTest(addr1.getAddressValue() == vpr::System::ntohl(3224437506));
       assertTest(addr1 == addr2);
       assertTest(addr3.getAddressValue() == addr4.getAddressValue());
       assertTest(addr3.getAddressString() == addr4.getAddressString());
