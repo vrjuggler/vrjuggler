@@ -64,7 +64,7 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const vjMatrix& mat )
+   virtual void setListenerPosition( const ajMatrix44& mat )
    {
       ajSoundImplementation::setListenerPosition( mat );
    }
@@ -72,7 +72,7 @@ public:
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( vjMatrix& mat ) const
+   virtual void getListenerPosition( ajMatrix44& mat ) const
    {
       ajSoundImplementation::getListenerPosition( mat );
    }

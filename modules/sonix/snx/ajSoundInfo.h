@@ -25,7 +25,7 @@ struct ajSoundInfo
    std::string filename;
    std::string data; // TODO: i'll probably want to double buffer this...
 
-   vjMatrix position;
+   ajMatrix44 position;
    
    bool ambient;  // is the sound ambient (true) or positional (false)?
    
