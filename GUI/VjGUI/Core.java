@@ -53,6 +53,7 @@ import VjPerf.*;
 
 public class Core implements NetControlListener, ChunkDBListener {
 
+    static public ComponentFactory factory;
 
     // main components that the GUI elements are allowed to access
     static public ChunkOrgTree chunkorgtree;
@@ -115,6 +116,15 @@ public class Core implements NetControlListener, ChunkDBListener {
 
 	instance = new Core();
 	
+        factory = new ComponentFactory();
+        factory.registerPanel ("VjGUI.ConfigurePane", "");
+        factory.registerPanel ("VjGUI.ConnectionPane", "");
+        factory.registerPanel ("VjGUI.DescDBPanel", "");
+        factory.registerPanel ("VjGUI.ChunkOrgTreePane", "");
+        factory.registerPanel ("VjGUI.ConsolePane", "");
+        factory.registerPanel ("VjPerf.PerfAnalyzerPanel", "");
+
+
 	window_pos_kludge = false;
 	screenWidth = 800;
 	screenHeight = 600;

@@ -130,7 +130,7 @@ public class ControlUI
         for (int i = 0; i < panelclasses.size(); i++) {
 
             try {
-                p = (JComponent)ClassLoader.getSystemClassLoader().loadClass((String)panelclasses.elementAt(i)).newInstance();
+                p = (JComponent)Core.factory.createPlugPanel((String)panelclasses.elementAt(i));
                 tabpane.add (p.getName(), p);
             }
             catch (Exception e) {

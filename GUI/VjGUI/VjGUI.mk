@@ -11,6 +11,7 @@
 # -----------------------------------------------------------------------------
 
 VJGUI_SOURCES = VjGUI/VjControl.java		\
+		VjGUI/ComponentFactory.java  	\
                 VjGUI/FileControl.java		\
                 VjGUI/NetControl.java		\
 		VjGUI/ChunkDBPanel.java         \
