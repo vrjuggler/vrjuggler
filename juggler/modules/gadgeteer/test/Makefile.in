@@ -3,6 +3,8 @@
 # $Id$
 # -----------------------------------------------------------------------------
 
+.SUFFIXES: .cpp
+
 srcdir		= @srcdir@
 
 COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
@@ -52,8 +54,6 @@ vjFlockTest: vjFlockTest.o
 	${COMPILE} -o $@ vjFlockTest.o ${VJ_LIBS} ${EXTRA_LIBS}
 
 vjFlockTest.o: vjFlockTest.cpp
-	${COMPILE} -woff 3303 -c -o $@ ${srcdir}/vjFlockTest.cpp
-
 
 # ----------------
 # new
@@ -62,7 +62,6 @@ new: new.o
 	${COMPILE} -o $@ new.o ${VJ_LIBS} ${EXTRA_LIBS}
 
 new.o: new.cpp
-	${COMPILE} -c -o $@ ${srcdir}/new.cpp
 
 # ----------------
 # go
@@ -71,7 +70,6 @@ go: main.o
 	${COMPILE} -o $@ main.o ${VJ_LIBS} ${EXTRA_LIBS}
 
 main.o: main.cpp
-	${COMPILE} -c -o $@ ${srcdir}/main.cpp
 
 # ----------------
 # go-ibox
@@ -80,7 +78,6 @@ go-ibox: main-ibox.o
 	${COMPILE} -o $@ main-ibox.o ${VJ_LIBS} ${EXTRA_LIBS}
 
 main-ibox.o: main-ibox.cpp
-	${COMPILE} -c -o $@ ${srcdir}/main-ibox.cpp
 
 # ----------------
 # go-inputgroup
@@ -89,7 +86,6 @@ go-inputgroup: main-inputgroup.o
 	${COMPILE} -o $@ main-inputgroup.o ${VJ_LIBS} ${EXTRA_LIBS}
 
 main-inputgroup.o: main-inputgroup.cpp
-	${COMPILE} -c -o $@ ${srcdir}/main-inputgroup.cpp
 
 # ----------------
 # go-logiclass
@@ -98,7 +94,9 @@ go-logiclass: main-logiclass.o
 	${COMPILE} -o $@ main-logiclass.o ${VJ_LIBS} ${EXTRA_LIBS}
 
 main-logiclass.o: main-logiclass.cpp
-	${COMPILE} -c -o $@ ${srcdir}/main-logiclass.cpp
+
+.cpp.o:
+	${COMPILE} -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
