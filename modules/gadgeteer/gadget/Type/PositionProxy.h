@@ -44,7 +44,7 @@
 
 #include <gadget/Type/Position.h>
 #include <gadget/Type/Proxy.h>
-#include <gadget/Type/PositionFilter.h>
+#include <gadget/Filter/Position/PositionFilter.h>
 #include <gadget/Type/PositionData.h>
 
 #include <gmtl/Matrix.h>
