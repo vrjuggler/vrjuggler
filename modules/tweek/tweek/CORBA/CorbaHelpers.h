@@ -1,6 +1,3 @@
-#ifndef _TWEEK_CORBA_HELPERS_H_
-#define _TWEEK_CORBA_HELPERS_H_
-
 /***************** <Tweek heading BEGIN do not edit this line> ****************
  * Tweek
  *
@@ -36,6 +33,9 @@
  * Boston, MA 02111-1307, USA.
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#ifndef _TWEEK_CORBA_HELPERS_H_
+#define _TWEEK_CORBA_HELPERS_H_
 
 #include <tweek/tweekConfig.h>
 
