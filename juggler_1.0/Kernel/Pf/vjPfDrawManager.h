@@ -102,6 +102,10 @@ public:
    //: Callback when display is added to display manager
    virtual void addDisplay(vjDisplay* disp);
 
+   //: Callback when display is removed to display manager
+   virtual void removeDisplay(vjDisplay* disp)
+   {;}
+
       //: Shutdown the drawing API
    virtual void closeAPI();
 

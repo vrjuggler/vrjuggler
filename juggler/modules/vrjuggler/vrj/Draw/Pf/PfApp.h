@@ -26,7 +26,7 @@ class vjPfApp : public vjApp
 public:
    vjPfApp(vjKernel* kern) : vjApp(kern)
    {
-      api.setPerformer();  // Tell everyone that we are Performer
+      //api.setPerformer();  // Tell everyone that we are Performer
    }
 
    //: Initialize the scene graph

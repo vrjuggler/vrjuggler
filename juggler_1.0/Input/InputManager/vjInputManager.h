@@ -48,12 +48,7 @@ public:
    vjInputManager();
    ~vjInputManager();
 
-
-   //: Dump the status of the Input manager.
-   //
-   //  This will output dumb info on all the devices in the Input Manager,
-   //  and all of the proxies.
-   void DumpStatus();
+   friend ostream& operator<<(ostream& out, vjInputManager& iMgr);
 
  //---------------------------//
  //      CONFIG               //
@@ -71,7 +66,7 @@ public:
    //! PRE: configCanHandle(chunk) == true
    //!RETURNS: success
    bool configRemove(vjConfigChunk* chunk)
-   { return true;}
+   { return false;}
 
    //: Can the handler handle the given chunk?
    //! RETURNS: true - Can handle it
@@ -358,5 +353,8 @@ private:
    //: Add a proxy alias
    void AddProxyAlias(std::string str, int proxyIndex);
 };
+
+// Write out the status of the input manager
+ostream& operator<<(ostream& out, vjInputManager& iMgr);
 
 #endif

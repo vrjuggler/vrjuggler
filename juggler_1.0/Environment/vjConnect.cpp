@@ -214,131 +214,143 @@ void vjConnect::controlLoop(void* nullParam) {
 
 
 void vjConnect::readCommand(ifstream& fin) {
-    // reads one command.  called from controlloop
-    const int   buflen = 512;
-    char        rbuf[buflen];    // HACK! can't handle lines longer than buflen
-    char        c;
-    char*       s;
+   // reads one command.  called from controlloop
+   const int   buflen = 512;
+   char        rbuf[buflen];    // HACK! can't handle lines longer than buflen
+   char        c;
+   char*       s;
 
-    if (!fin.get(rbuf,buflen,'\n')) {
-	//vjDEBUG(0) << "Couldn't read command for connection " << name << endl
-	//	   << vjDEBUG_FLUSH;
-	return;
-    }
-    vjDEBUG(vjDBG_ALL,0) << "vjConnect:: read: '" << rbuf
-	       << "'.\n" << vjDEBUG_FLUSH;
-    fin.get(c);
-    if (c != '\n')
-	vjDEBUG(vjDBG_ALL,1) << "Error: vjConnect:: oops - "
-	    "didn't completely get command line\n"
-	    "from the socket.  This is a bug!\n"
-		   << vjDEBUG_FLUSH;
+   if (!fin.get(rbuf,buflen,'\n'))
+   {
+      //vjDEBUG(0) << "Couldn't read command for connection " << name << endl
+      //	   << vjDEBUG_FLUSH;
+      return;
+   }
+   vjDEBUG(vjDBG_ALL,0) << "vjConnect:: read: '" << rbuf
+   << "'.\n" << vjDEBUG_FLUSH;
+   fin.get(c);
+   if (c != '\n')
+      vjDEBUG(vjDBG_ALL,1) << "Error: vjConnect:: oops - "
+      "didn't completely get command line\n"
+      "from the socket.  This is a bug!\n"
+      << vjDEBUG_FLUSH;
 
-    s = strtok (rbuf, " \t\n");
+   s = strtok (rbuf, " \t\n");
 
-    if (!strcasecmp (s, "get")) {
-	s = strtok (NULL, " \t\n");
-	if (!strcasecmp (s, "descriptions")) {
-	    vjChunkDescDB* db = vjKernel::instance()->getInitialChunkDB()->getChunkDescDB();
-	    //cout << "Sending descDB:\n" << *db << endl << flush;
-            sendDescDB (db);
-	}
-	else if (!strcasecmp (s,"chunks")) {
-	    vjConfigChunkDB* db = vjKernel::instance()->getInitialChunkDB();
-            //cout << "Sending chunkdb:\n" << *db << endl << flush;
-            sendChunkDB (db, true);
-	}
-	else {
-            vjDEBUG(vjDBG_ALL,1) << "Error: vjConnect:: Received "
-		"unknown GET " << s << endl << vjDEBUG_FLUSH;
-	}
-    }
+   if (!strcasecmp (s, "get"))
+   {
+      s = strtok (NULL, " \t\n");
+      if (!strcasecmp (s, "descriptions"))
+      {
+         vjChunkDescDB* db = vjKernel::instance()->getInitialChunkDB()->getChunkDescDB();
+         //cout << "Sending descDB:\n" << *db << endl << flush;
+         sendDescDB (db);
+      }
+      else if (!strcasecmp (s,"chunks"))
+      {
+         vjConfigChunkDB* db = vjKernel::instance()->getChunkDB();
+         //cout << "Sending chunkdb:\n" << *db << endl << flush;
+         sendChunkDB (db, true);
+      }
+      else
+      {
+         vjDEBUG(vjDBG_ALL,1) << "Error: vjConnect:: Received "
+         "unknown GET " << s << endl << vjDEBUG_FLUSH;
+      }
+   }
 
-    else if (!strcasecmp (s, "descriptions")) {
-	/* message contains one or more descriptions, to
-	 * be read in just like a ChunkDescDB.  If the
-	 * descriptions line itself contains the word
-	 * "all", then we should clear the db first.
-	 */
-	// XXX: Hack!!! We need to change this. We should not
-	// change the dbs outside of kernel
-	//s = strtok (NULL, " \t\n");
-	vjDEBUG(vjDBG_ALL,0) << "EM Receive descriptions disabled!!!\n" << vjDEBUG_FLUSH;
-	//if (!strcasecmp (s, "all") && (cachedChunkdb->isEmpty()))
-        //    cachedDescdb->removeAll();
-	//fin >> *cachedDescdb;
-    }
+   else if (!strcasecmp (s, "descriptions"))
+   {
+      /* message contains one or more descriptions, to
+       * be read in just like a ChunkDescDB.  If the
+       * descriptions line itself contains the word
+       * "all", then we should clear the db first.
+       */
+      // XXX: Hack!!! We need to change this. We should not
+      // change the dbs outside of kernel
+      //s = strtok (NULL, " \t\n");
+      vjDEBUG(vjDBG_ALL,0) << "EM Receive descriptions disabled!!!\n" << vjDEBUG_FLUSH;
+      //if (!strcasecmp (s, "all") && (cachedChunkdb->isEmpty()))
+      //    cachedDescdb->removeAll();
+      //fin >> *cachedDescdb;
+   }
 
-    else if (!strcasecmp (s, "chunks")) {
-	/* message contains one or more chunks.  If the
-	 * descriptions line contains "all", we should
-	 * clear the db first
-	 */
-	s = strtok (NULL, " \t\n");
-	// chunks 'all' option disabled for now...
-	//if (!strcasecmp (s, "all"))
-	//	chunkdb->removeAll();
-	//fin >> *chunkdb;
-	vjConfigChunkDB newchunkdb (vjKernel::instance()->getInitialChunkDB()->getChunkDescDB());
-	fin >> newchunkdb;
-	vjDEBUG(vjDBG_ALL,0) << "READ CHUNKS:\n" << newchunkdb << vjDEBUG_FLUSH;
-	// ALLEN: PUT A FUNCTION HERE FOR THE KERNEL TO LOOK AT NEWCHUNKDB
-	vjKernel::instance()->configAdd(&newchunkdb);      // Add new chunks
-    }
+   else if (!strcasecmp (s, "chunks"))
+   {
+      /* message contains one or more chunks.  If the
+       * descriptions line contains "all", we should
+       * clear the db first
+       */
+      s = strtok (NULL, " \t\n");
+      // chunks 'all' option disabled for now...
+      //if (!strcasecmp (s, "all"))
+      //	chunkdb->removeAll();
+      //fin >> *chunkdb;
+      vjConfigChunkDB newchunkdb (vjKernel::instance()->getInitialChunkDB()->getChunkDescDB());
+      fin >> newchunkdb;
+      vjDEBUG(vjDBG_ALL,0) << "READ CHUNKS:\n" << newchunkdb << vjDEBUG_FLUSH;
+      // ALLEN: PUT A FUNCTION HERE FOR THE KERNEL TO LOOK AT NEWCHUNKDB
+      vjKernel::instance()->configAdd(&newchunkdb);      // Add new chunks
+   }
 
-    else if (!strcasecmp (s, "remove")) {
-	cerr << "rec'd remove message" << endl;
-	s = strtok (NULL, " \t\n");
-	if (!strcasecmp (s, "descriptions")) {
-            while (s = strtok (NULL, " \t\n")) {
-		// BUG! - what if chunks exist in db using the desc we're removing?
-		//cachedDescdb->remove(s);
-		vjDEBUG(vjDBG_ALL,0) << "EM Remove Descriptions disabled!\n" << vjDEBUG_FLUSH;
-            }
-	}
-	else if (!strcasecmp (s, "chunks")) {
-	    vjConfigChunkDB db (vjKernel::instance()->getInitialChunkDB()->getChunkDescDB());
-	    fin >> db;
-	    vjDEBUG(vjDBG_ALL,0) << "EM: message to remove chunks:\n" << db 
-				 << vjDEBUG_FLUSH;
-	    // ALLEN: THIS IS WHERE THE GUI HAS SENT A COMMAND TO
-	    // REMOVE A CHUNK - S IS THE NAME OF THE CHUNK
-	    //chunkdb->removeNamed(s);
+   else if (!strcasecmp (s, "remove"))
+   {
+      cerr << "rec'd remove message" << endl;
+      s = strtok (NULL, " \t\n");
+      if (!strcasecmp (s, "descriptions"))
+      {
+         while (s = strtok (NULL, " \t\n"))
+         {
+            // BUG! - what if chunks exist in db using the desc we're removing?
+            //cachedDescdb->remove(s);
+            vjDEBUG(vjDBG_ALL,0) << "EM Remove Descriptions disabled!\n" << vjDEBUG_FLUSH;
+         }
+      }
+      else if (!strcasecmp (s, "chunks"))
+      {
+         vjConfigChunkDB remove_chunk_db (vjKernel::instance()->getInitialChunkDB()->getChunkDescDB());
+         fin >> remove_chunk_db;
+         vjDEBUG(vjDBG_ALL,0) << "EM: message to remove chunks:\n" << remove_chunk_db
+         << vjDEBUG_FLUSH;
+         // ALLEN: THIS IS WHERE THE GUI HAS SENT A COMMAND TO
+         // REMOVE A CHUNK - S IS THE NAME OF THE CHUNK
+         vjKernel::instance()->configRemove(&remove_chunk_db);
 
-	}
-	else
-            vjDEBUG(vjDBG_ALL,1) << "Error: vjConnect: Unknown remove type: "
-		       << s << endl << vjDEBUG_FLUSH;
-    }
+      }
+      else
+         vjDEBUG(vjDBG_ALL,1) << "Error: vjConnect: Unknown remove type: "
+         << s << endl << vjDEBUG_FLUSH;
+   }
 #if 0
-    // obsolete timed update stuff
-    else if (!strncasecmp (s, "update", 5))
-	{
-	    s = strtok (NULL, " \t\n");
-	    if (!strcasecmp (s, "start"))
-		{
-		    s = strtok (NULL, "\n");
-		    //vjTimedUpdate *t = vjTimedUpdateFactory::generate(this, s);
-		    //updates.push_back(t);
-		    //t->startProcess();
-		    cerr << "got timedupdate start cmd" << endl;
-		}
-	    else if (!strcasecmp (s, "stop"))
-		{
-		    cerr << "got a request to stop updates. not implemented yet" << endl;
-		    s = strtok (NULL, " \t\n");
-		    /*		if (!strcasecmp(s, "all")) {
-				stopAllUpdates();
-				}
-				else
-				stopUpdate(s);
-		    */
-            cerr << "got timedupdate stop cmd" << endl;
-		}
-	}
+   // obsolete timed update stuff
+   else if (!strncasecmp (s, "update", 5))
+   {
+      s = strtok (NULL, " \t\n");
+      if (!strcasecmp (s, "start"))
+      {
+         s = strtok (NULL, "\n");
+         //vjTimedUpdate *t = vjTimedUpdateFactory::generate(this, s);
+         //updates.push_back(t);
+         //t->startProcess();
+         cerr << "got timedupdate start cmd" << endl;
+      }
+      else if (!strcasecmp (s, "stop"))
+      {
+         cerr << "got a request to stop updates. not implemented yet" << endl;
+         s = strtok (NULL, " \t\n");
+         /*		if (!strcasecmp(s, "all")) {
+           stopAllUpdates();
+           }
+           else
+           stopUpdate(s);
+         */
+         cerr << "got timedupdate stop cmd" << endl;
+      }
+   }
 #endif
-    else {
-	cerr << "Error: vjConnect:: Unknown command '"
-	     << s << "'" << endl;
-    }
+   else
+   {
+      cerr << "Error: vjConnect:: Unknown command '"
+      << s << "'" << endl;
+   }
 }

@@ -37,15 +37,7 @@ void vjKernel::controlLoop(void* nullParam)
    initConfig();
 
    // setup performance buffer
-   performanceEnabled = 0;
-   std::vector<vjConfigChunk*>* perfchunks = mInitialChunkDB->getMatching ("PerfMeasure");
-   if (perfchunks->size() > 0) {
-       vjConfigChunk* perfchunk = (*perfchunks)[0];
-       performanceEnabled = (*perfchunks)[0]->getProperty ("KernelEnabled");
-       delete perfchunks;
-   }
-   perfBuffer = new vjPerfDataBuffer ("Kernel loop",
-				      500, 7 );
+   perfBuffer = new vjPerfDataBuffer ("Kernel loop", 500, 7);
    environmentManager->addPerfDataBuffer (perfBuffer);
 
 
@@ -215,12 +207,12 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB, bool guarded)
          added_chunk = this->configKernelAdd(chunks[i]);
       if(getInputManager()->configCanHandle(chunks[i]))  // inputMgr
          added_chunk = getInputManager()->configAdd(chunks[i]);
-     if(mDisplayManager->configCanHandle(chunks[i]))     // displayMgr
+      if(mDisplayManager->configCanHandle(chunks[i]))     // displayMgr
          added_chunk = mDisplayManager->configAdd(chunks[i]);
       if((mDrawManager != NULL) && (mDrawManager->configCanHandle(chunks[i])))   // drawMgr
          added_chunk = mDrawManager->configAdd(chunks[i]);
-      if (environmentManager->configCanHandle (chunks[i]))
-	  added_chunk = environmentManager->configAdd(chunks[i]);  // EM
+      if(environmentManager->configCanHandle(chunks[i]))                   // envMgr
+	      added_chunk = environmentManager->configAdd(chunks[i]);
       if((mApp != NULL) && (mApp->configCanHandle(chunks[i])))                // App
          added_chunk = mApp->configAdd(chunks[i]);
 
@@ -241,15 +233,60 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB, bool guarded)
    }
 
    // Dump status
-   getInputManager()->DumpStatus();
+   vjDEBUG(vjDBG_ALL,0) << (*getInputManager()) << endl << vjDEBUG_FLUSH;
 
-    if(guarded)
+   if(guarded)
       mRuntimeConfigSema.release();
 }
 
 void vjKernel::configRemove(vjConfigChunkDB* chunkDB)
 {
-   ;
+vjGuard<vjSemaphore> runtimeSem(mRuntimeConfigSema);
+
+   //XXX: Should do some dependency checking
+
+   // Get list of chunks to remove
+   std::vector<vjConfigChunk*> chunks = chunkDB->getChunks();
+
+   // For each element in chunk list
+   for(int i=0;i<chunks.size();i++)
+   {
+      bool removed_chunk = false;        // Flag: true - chunk was removed
+
+      vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::configREmove: chunk: " << chunks[i]->getProperty("name") << endl << vjDEBUG_FLUSH;
+
+      // Find manager to handle them
+      if(this->configKernelHandle(chunks[i]))                                 // Kernel
+         removed_chunk = this->configKernelRemove(chunks[i]);
+      if(getInputManager()->configCanHandle(chunks[i]))                          // inputMgr
+         removed_chunk = getInputManager()->configRemove(chunks[i]);
+      if(mDisplayManager->configCanHandle(chunks[i]))                            // displayMgr
+         removed_chunk = mDisplayManager->configRemove(chunks[i]);
+      if((mDrawManager != NULL) && (mDrawManager->configCanHandle(chunks[i])))   // drawMgr
+         removed_chunk = mDrawManager->configRemove(chunks[i]);
+      if(environmentManager->configCanHandle(chunks[i]))                      // envMgr
+	      removed_chunk = environmentManager->configRemove(chunks[i]);
+      if((mApp != NULL) && (mApp->configCanHandle(chunks[i])))                // App
+         removed_chunk = mApp->configRemove(chunks[i]);
+
+
+      // --- Check for removal from active config --- //
+      if(removed_chunk)      // if removed => remove from config database
+      {
+         vjASSERT(mChunkDB != NULL);
+         mChunkDB->removeNamed(chunks[i]->getProperty("name"));
+         int num_chunks = mChunkDB->getChunks().size();
+         vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::configAdd: Removeded chunk: Now have " << num_chunks << " chunks.\n" << vjDEBUG_FLUSH;
+      }
+      else                 // Else: Give unrecognized error
+      {
+         vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::configRemove: Unrecognized chunk.\n"
+                    << "   type: " << chunks[i]->getType() << endl << vjDEBUG_FLUSH;
+      }
+   }
+
+   // Dump status
+   vjDEBUG(vjDBG_ALL,0) << (*getInputManager()) << endl << vjDEBUG_FLUSH;
 }
 
 

@@ -52,6 +52,9 @@ public:
    //: Callback when display is added to display manager
    virtual void addDisplay(vjDisplay* disp) = 0;
 
+   //: Callback when display is removed to display manager
+   virtual void removeDisplay(vjDisplay* disp) = 0;
+
    //: Shutdown the drawing API
    //! NOTE: If it was an active object, kill process here
    virtual void closeAPI() = 0;
@@ -62,7 +65,18 @@ public:
    virtual void updateProjections()
    {;}
 
+   friend ostream& operator<<(ostream& out, vjDrawManager& drawMgr);
+   virtual void outStream(ostream& out)
+   { out << "vjDrawManager: outstream\n"; }  // Set a default
+
 protected:
    vjDisplayManager* displayManager;  //: The display manager dealing with
 };
+
+ostream& operator<<(ostream& out, vjDrawManager& drawMgr)
+{
+   drawMgr.outStream(out);
+   return out;
+}
+
 #endif

@@ -83,8 +83,14 @@ public:
    //+      We will most likely be waiting for a render trigger.
    virtual void addDisplay(vjDisplay* disp);
 
+   //: Callback when display is removed to display manager
+   virtual void removeDisplay(vjDisplay* disp);
+
    //: Shutdown the drawing API
    virtual void closeAPI();
+
+   //: Output some debug info
+   virtual void outStream(ostream& out);
 
    //: Draw all the ogl pipes/windows
    void drawAllPipes();
@@ -113,7 +119,6 @@ public: // Chunk handlers
    //+          false - Can't handle it
    virtual bool configCanHandle(vjConfigChunk* chunk);
 
-   void debugDump();
 
 public:  // Drawing functions used by library
    //: Draw any objects that the manager needs to display

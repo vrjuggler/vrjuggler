@@ -148,6 +148,7 @@ void vjGlDrawManager::initDrawing()
 	
 
 //: Callback when display is added to display manager
+//! PRE: Must be in kernel controlling thread
 //! NOTE: This function can only be called by the display manager
 //+      functioning in the kernel thread to signal a new display added
 //+      This guarantees that we are not rendering currently.
@@ -186,10 +187,37 @@ void vjGlDrawManager::addDisplay(vjDisplay* disp)
    pipe->addWindow(new_win);             // Window has been added
 
    // Dump the state
-   debugDump();
+   vjDEBUG(vjDBG_ALL, 0) << (*this) << vjDEBUG_FLUSH;
 }
 
-    /// Shutdown the drawing API
+
+//: Callback when display is removed to display manager
+void vjGlDrawManager::removeDisplay(vjDisplay* disp)
+{
+   vjGlPipe*   pipe(NULL); // The pipe to remove it from
+   vjGlWindow* win(NULL);  // Window to remove
+
+   for(int i=0;i<wins.size();i++)
+   {
+      if(wins[i]->getDisplay() == disp)      // FOUND it
+      {
+         win = wins[i];
+         pipe = pipes[win->getDisplay()->getPipe()];
+      }
+   }
+
+   // Remove the window from the pipe
+   if(win != NULL)
+   {
+      vjASSERT(pipe != NULL);
+
+      pipe->removeWindow(win);
+   }
+
+}
+
+
+/// Shutdown the drawing API
 void vjGlDrawManager::closeAPI()
 {
    vjDEBUG(vjDBG_DRAW_MGR,0) << "vjGlDrawManager::closeAPI: Closing.\n" << vjDEBUG_FLUSH;
@@ -419,17 +447,17 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
 }
 
     /// dumps the object's internal state
-void vjGlDrawManager::debugDump()
+void vjGlDrawManager::outStream(ostream& out)
 {
-    vjDEBUG(vjDBG_DRAW_MGR,0) << "-- DEBUG DUMP --------- vjGlDrawManager: " << (void*)this << " ------------" << endl
-	         << "\tapp:" << (void*)mApp << endl << vjDEBUG_FLUSH;
-    vjDEBUG(vjDBG_DRAW_MGR,0) << "\tWins:" << wins.size() << endl << vjDEBUG_FLUSH;
+    out     << "========== vjGlDrawManager: " << (void*)this << " =========" << endl
+	         << "\tapp:" << (void*)mApp << endl
+            << "\tWins:" << wins.size();
 
     for(std::vector<vjGlWindow*>::iterator i = wins.begin(); i != wins.end(); i++)
     {
-	   vjDEBUG(vjDBG_DRAW_MGR,0) << "\n\t\tvjGlWindow:\n" << *(*i) << endl << vjDEBUG_FLUSH;
+	   out << "\n\t\tvjGlWindow:\n" << *(*i) << endl;
     }
-    vjDEBUG(vjDBG_DRAW_MGR,0) << flush << vjDEBUG_FLUSH;
+    out << "=======================================" << endl;
 }
 
 void vjGlDrawManager::initQuadObj()

@@ -85,27 +85,16 @@ public:
    int getPipe()
    { return mPipe; }
 
+   //: Get the config chunk that configured this display
    vjConfigChunk* getConfigChunk()
-   { return displayChunk; }
+   { return mDisplayChunk; }
 
+   //: Get the user associated with this display
    vjUser*  getUser()
    { return mUser;}
 
    friend ostream& operator<<(ostream& out, vjDisplay& disp);
 
-// <<<<<<< vjDisplay.h
-// public:
-//    /// Defines the projection for this window. Ex. RIGHT, LEFT, FRONT
-//    vjProjection*   leftProj;              // Left eye
-//    vjProjection*   rightProj;             // Right eye
-//    vjProjection*   cameraProj;            // Camera projection. (For sim, etc.)
-
-//    vjSimulator*      mSim;                // Simulator. if we are one.
-//    //vjPosInterface    mHeadInterface;      //: The proxy interface for the head
-//     vjTimeStamp*       mHeadUpdateTime;        //: When head pos was updated.
-//    vjUser*           mUser;               //: The user being rendered by this window
-
-// =======
 protected:
    vjUser*           mUser;         //: The user being rendered by this window
 
@@ -118,7 +107,7 @@ protected:
    bool        mStereo;                //: Do we want stereo
    bool        mActive;                //: Is the display active or not
 
-   vjConfigChunk* displayChunk;        //: The chunk data for this display
+   vjConfigChunk* mDisplayChunk;        //: The chunk data for this display
 };
 
 ostream& operator<<(ostream& out,  vjDisplay& disp);

@@ -6,6 +6,7 @@
 #include <Kernel/GL/vjGlWindow.h>
 #include <Kernel/GL/vjGlDrawManager.h>
 class vjGlDrawManager;
+class vjDisplay;
 
 #include <Sync/vjCond.h>
 #include <Sync/vjSemaphore.h>
@@ -90,12 +91,9 @@ public: // --- Window Management ----- //
    void addWindow(vjGlWindow* win);
 
    //: Remove a GLWindow from the window list
-   void removeWindow(vjGlWindow* win)
-   {
-      // XXX: Need to implement
-         // Erase the window from the list
-      //windows.erase(remove(windows.begin(), windows.end(), win), windows.end());
-   }
+   //! NOTE: The window is not actually removed until the next draw trigger
+   void removeWindow(vjGlWindow* win);
+
 
    //: Returns true if pipe has any windows
    int hasWindows()
@@ -111,18 +109,16 @@ private:
       //! POST: Any new windows will be opened and added to the pipe's rendering list
    void checkForNewWindows();
 
-   void checkForWindowsToClose()
-   {;}
+   //: Check for any windows that need closed
+   //! POST: Any windows to close will be closed and removed from the pipe's rendering list
+   void checkForWindowsToClose();
 
-      //:   Renders the window using OpenGL
-      //!POST: win is rendered (In stereo if it is a stereo window)
+   //:   Renders the window using OpenGL
+   //!POST: win is rendered (In stereo if it is a stereo window)
    void renderWindow(vjGlWindow* win);
 
    //: Swaps the buffers of the given window
    void swapWindowBuffers(vjGlWindow* win);
-
-public:
-   enum RenderState {RENDERING, WAITING};    // Type to delineate the current rendering state
 
 private:
    int   mPipeNum;                     //: The id of the pipe
@@ -133,11 +129,12 @@ private:
    std::vector<vjGlWindow*> openWins; //: List of current open windows to render
    vjMutex openWinLock;               //: Lock for accessing the openWinList
 
+   std::vector<vjGlWindow*> mClosingWins; //: List of windows to close
+   vjMutex mClosingWinLock;               //: Lock for access the windows to close
+
    vjGlDrawManager*    glManager;    //: The openlGL manager that we are rendering for
                                      //: Needed to get app, etc.
 
-   //vjCond      renderCond;          //: Condition variable for Render state
-   //RenderState renderState;         //: The current render state.
    vjSemaphore    renderCompleteSema;  //: signals render completed
    vjSemaphore    renderTriggerSema;   //: Signals render trigger
    vjSemaphore    swapTriggerSema;     //: Signals a swap to happen

@@ -185,111 +185,111 @@ bool vjInputManager::ConfigureProxy(vjConfigChunk* chunk)
 
 
 /**********************************************************
-  vjInputManager::DumpStatus()
+  operator<<()
 
   Dump the current Status of the vjInputManager, listing all
   the devices, proxies and internal settings
 
 *********************************************** ahimberg */
-void vjInputManager::DumpStatus()
+ostream& operator<<(ostream& out, vjInputManager& iMgr)
 {
-  int i;
-  cout << "**vjInputManager Status: " << endl;
+  int i,d;
+  out << "\n=============== vjInputManager Status: ===============================" << endl;
 
-  for (i = 0; i < m_devVector.size(); i++)      // Dump DEVICES
-     if (m_devVector[i] != NULL)
-       cout << "  Device #" << setw(2) << i << ":"
-            << "  Instance Name: " << setw(10) << m_devVector[i]->GetInstanceName()
-	    << " "
-	    << "   Device Type: " << m_devVector[i]->GetDeviceName() << endl
-	    << "      on Port : " << setw(10) << m_devVector[i]->GetPort()
-	    << "         baud : " << m_devVector[i]->GetBaudRate() << endl;
+  out << "Devices:\n";
 
-  cout << endl;
+  for (i = 0; i < iMgr.m_devVector.size(); i++)      // Dump DEVICES
+     if (iMgr.m_devVector[i] != NULL)
+       out << setw(2) << i << ":"
+           << "  name:" << setw(30) << iMgr.m_devVector[i]->GetInstanceName()
+	        << "  type:" << setw(12) << iMgr.m_devVector[i]->GetDeviceName()
+	        << "  port:" << setw(10) << iMgr.m_devVector[i]->GetPort()
+	        << "  baud:" << iMgr.m_devVector[i]->GetBaudRate() << endl;
 
-  int d;
-  for (i = 0; i < m_posProxyVector.size(); i++)    // DUMP PosProxies
+  out << "\nPos Proxies:\n";
+  for (i = 0; i < iMgr.m_posProxyVector.size(); i++)    // DUMP PosProxies
   {
-     d = FindDeviceNum( (m_posProxyVector[i]->GetPositionPtr())->GetInstanceName() );
+     d = iMgr.FindDeviceNum( (iMgr.m_posProxyVector[i]->GetPositionPtr())->GetInstanceName() );
      if (d != -1)
-       cout << "  PosProxy#" << setw(2) << i << ":"
-            << "   Proxies Device: "
-	    << setw(10)
-	    << (m_posProxyVector[i]->GetPositionPtr())->GetInstanceName()
-	    << "  sub-unit number: " <<
-	             m_posProxyVector[i]->GetUnit() << endl;
+       out << setw(2) << i << ":"
+           << "   Proxies:"
+	        << setw(10)
+	        << (iMgr.m_posProxyVector[i]->GetPositionPtr())->GetInstanceName()
+	        << "  unit:" <<
+	             iMgr.m_posProxyVector[i]->GetUnit() << endl;
   }
 
-  cout << endl;
-
-  for (i = 0; i < m_digProxyVector.size(); i++)                // Dump DigitalProxies
+  out << "\nDigital Proxies\n";
+  for (i = 0; i < iMgr.m_digProxyVector.size(); i++)                // Dump DigitalProxies
   {
-     d = FindDeviceNum( (m_digProxyVector[i]->GetDigitalPtr())->GetInstanceName() );
+     d = iMgr.FindDeviceNum( (iMgr.m_digProxyVector[i]->GetDigitalPtr())->GetInstanceName() );
      if (d != -1)
-       cout << "  DigProxy#" << setw(2) << i << ":"
-            << "   Proxies Device: "
-	    << setw(10)
-	    << (m_digProxyVector[i]->GetDigitalPtr())->GetInstanceName()
-	    << "  sub-unit number: " <<
-	             m_digProxyVector[i]->GetUnit() << endl;
-  }
-
-  cout << endl;
-
-  for (i = 0; i < m_anaProxyVector.size(); i++)                 // Dump Analog Proxies
-  {
-     d = FindDeviceNum( (m_anaProxyVector[i]->GetAnalogPtr())->GetInstanceName() );
-     if (d != -1)
-       cout << "  AnaProxy#" << setw(2) << i << ":"
-            << "   Proxies Device: "
-	    << setw(10)
-	    << (m_anaProxyVector[i]->GetAnalogPtr())->GetInstanceName()
-	    << "  sub-unit number: " <<
-	             m_anaProxyVector[i]->GetUnit() << endl;
-  }
-
-  for (i = 0; i < m_gloveProxyVector.size(); i++)                 // Dump Glove Proxies
-  {
-     d = FindDeviceNum( (m_gloveProxyVector[i]->getGlovePtr())->GetInstanceName() );
-     if (d != -1)
-       cout << "  GloveProxy#" << setw(2) << i << ":"
-            << "   Proxies Device: "
+       out << setw(2) << i << ":"
+            << "   Proxies:"
 	         << setw(10)
-	         << (m_gloveProxyVector[i]->getGlovePtr())->GetInstanceName()
-	         << "  sub-unit number: " <<
-	             m_gloveProxyVector[i]->getUnit() << endl;
+	         << (iMgr.m_digProxyVector[i]->GetDigitalPtr())->GetInstanceName()
+            << "  unit:" <<
+	             iMgr.m_digProxyVector[i]->GetUnit() << endl;
   }
 
-  for (i = 0; i < m_keyboardProxyVector.size(); i++)                 // Dump Keyboard Proxies
+  out << "\nAnalog Proxies\n";
+  for (i = 0; i < iMgr.m_anaProxyVector.size(); i++)                 // Dump Analog Proxies
   {
-     d = FindDeviceNum( (m_keyboardProxyVector[i]->getKeyboardPtr())->GetInstanceName() );
+     d = iMgr.FindDeviceNum( (iMgr.m_anaProxyVector[i]->GetAnalogPtr())->GetInstanceName() );
      if (d != -1)
-       cout << "  KeyboardProxy#" << setw(2) << i << ":"
-            << "   Proxies Device: "
+       out << setw(2) << i << ":"
+            << "   Proxies:"
 	         << setw(10)
-	         << (m_keyboardProxyVector[i]->getKeyboardPtr())->GetInstanceName()
+	         << (iMgr.m_anaProxyVector[i]->GetAnalogPtr())->GetInstanceName()
+            << "  unit:" <<
+	             iMgr.m_anaProxyVector[i]->GetUnit() << endl;
+  }
+
+  out << "\nGlove Proxies:\n";
+  for (i = 0; i < iMgr.m_gloveProxyVector.size(); i++)                 // Dump Glove Proxies
+  {
+     d = iMgr.FindDeviceNum( (iMgr.m_gloveProxyVector[i]->getGlovePtr())->GetInstanceName() );
+     if (d != -1)
+       out << setw(2) << i << ":"
+            << "   Proxies:"
+	         << setw(10)
+	         << (iMgr.m_gloveProxyVector[i]->getGlovePtr())->GetInstanceName()
+        << "  unit:" <<
+	             iMgr.m_gloveProxyVector[i]->getUnit() << endl;
+  }
+
+  out << "\nKeyboard Proxies\n";
+  for (i = 0; i < iMgr.m_keyboardProxyVector.size(); i++)                 // Dump Keyboard Proxies
+  {
+     d = iMgr.FindDeviceNum( (iMgr.m_keyboardProxyVector[i]->getKeyboardPtr())->GetInstanceName() );
+     if (d != -1)
+       out << setw(2) << i << ":"
+            << "   Proxies:"
+	         << setw(10)
+	         << (iMgr.m_keyboardProxyVector[i]->getKeyboardPtr())->GetInstanceName()
 	         << endl;
   }
 
-  for (i = 0; i < m_gestureProxyVector.size(); i++)                 // Dump Gesture Proxies
+  out << "\nGesture Proxies\n";
+  for (i = 0; i < iMgr.m_gestureProxyVector.size(); i++)                 // Dump Gesture Proxies
   {
-     d = FindDeviceNum( (m_gestureProxyVector[i]->getGesturePtr())->GetInstanceName() );
+     d = iMgr.FindDeviceNum( (iMgr.m_gestureProxyVector[i]->getGesturePtr())->GetInstanceName() );
      if (d != -1)
-       cout << "  GestureProxy#" << setw(2) << i << ":"
-            << "   Proxies Device: "
+       out << setw(2) << i << ":"
+            << "   Proxies:"
 	         << setw(10)
-	         << (m_gestureProxyVector[i]->getGesturePtr())->GetInstanceName()
+	         << (iMgr.m_gestureProxyVector[i]->getGesturePtr())->GetInstanceName()
 	         << endl;
   }
 
-  cout << endl;
+  out << endl;
 
       // Dump Alias list
-  cout << "   Alias List:" << endl;
-  for(std::map<std::string, int>::iterator cur_alias = proxyAliases.begin(); cur_alias != proxyAliases.end(); cur_alias++)
-     cout << "      Alias:" << (*cur_alias).first << "  index:" << (*cur_alias).second << endl;
+  out << "Alias List:" << endl;
+  for(std::map<std::string, int>::iterator cur_alias = iMgr.proxyAliases.begin(); cur_alias != iMgr.proxyAliases.end(); cur_alias++)
+     out << "    " << (*cur_alias).first << "  index:" << (*cur_alias).second << endl;
 	
-  cout << "  vjInputManager Status**" << endl << flush;
+  out << "=============== vjInputManager Status =========================" << endl;
 }
 
 /**********************************************************
