@@ -1005,6 +1005,15 @@ void FlockStandalone::printFlockStatus()
                                  % (bool) unit.mHasError
                                  % (bool) unit.mHasBeenInitialized
                 << std::endl;
+#else
+      std::cout << label << ": "
+                << " master: " << (bool) unit.mIsMaster
+                << " asssessible: " << (bool) unit.mAccessible
+                << " running: " << (bool) unit.mIsRunning
+                << " error: " <<  (bool) unit.mHasError
+                << " init: " << (bool) unit.mHasBeenInitialized
+                << std::endl;
+
 #endif
    }
 
