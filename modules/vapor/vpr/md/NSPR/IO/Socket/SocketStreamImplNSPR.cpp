@@ -129,7 +129,7 @@ SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock, vpr::Interval timeout)
 
        if (NULL == accept_sock) {
           if ( PR_GetError() == PR_WOULD_BLOCK_ERROR ) {
-             retval.setCode(Status::InProgress);
+             retval.setCode(Status::WouldBlock);
           }
           else {
              NSPR_PrintError("SocketStreamImplNSPR::accept: Cannot accept on socket: ");
