@@ -257,7 +257,7 @@
         appropriate for each shell type.</para>
       </section>
 
-      <section>
+      <section id="section.envvar.csh">
         <title>C-Style Shells (csh, tcsh)</title>
 
         <para>In a C-style shell (i.e., one whose interface is based on the C
@@ -298,7 +298,7 @@
         instance.</para>
       </section>
 
-      <section>
+      <section id="section.envvar.sh">
         <title>sh-Derived Shells (sh, ksh, bash, zsh, etc.)</title>
 
         <para>In a shell based on sh, setting environment variables is done
@@ -476,6 +476,24 @@ C:\WINDOWS;C:\bin;C:\</screen>
           if you have the access privileges, for all users. The GUI is similar
           to that shown above for Windows 2000.</para>
         </section>
+      </section>
+
+      <section>
+        <title>Mac OS X</title>
+
+        <para>On Mac OS X, environment variables can be set in two different
+        ways, just as on Windows. They can be set as <quote>global</quote>
+        environment variables available to all applications launched from the
+        Finder, or they can be set within a Terminal window for use within
+        that shell and by all applications launched from that shell. Refer to
+        Apple's Technical Q&amp;A <ulink
+        url="http://developer.apple.com/qa/qa2001/qa1067.html">QA1067</ulink>
+        document for details on how to set global environment variables for
+        use by the Mac OS X desktop interface. To set an environment variable
+        within a Terminal window, refer to either <xref
+        linkend="section.envvar.csh" /> or <xref
+        linkend="section.envvar.sh" /> depending on the user's chosen shell
+        (the default is tcsh).</para>
       </section>
 
       <section>
