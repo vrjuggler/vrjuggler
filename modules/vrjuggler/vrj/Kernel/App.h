@@ -63,16 +63,16 @@ class Kernel;
  *  The control loop will look similar to this: <br> <br>
  *  NOTE: One time through the loop is a Juggler Frame <br>
  *
- *  while (drawing)          <br>
- *  {                        <br>
+ *  while (drawing)           <br>
+ *  {                         <br>
  *       <b>preFrame()</b>;   <br>
- *       draw();             <br>
- *       <b>intraFrame()</b>;  <br>
- *       sync();             <br>
+ *       draw();              <br>
+ *       <b>intraFrame()</b>; <br>
+ *       sync();              <br>
  *       <b>postFrame()</b>;  <br>
- *                           <br>
- *       UpdateTrackers();   <br>
- *  }                        <br>
+ *                            <br>
+ *       UpdateTrackers();    <br>
+ *  }                         <br>
  */
 class VJ_CLASS_API App : public jccl::ConfigChunkHandler
 {
