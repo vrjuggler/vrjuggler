@@ -29,21 +29,20 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
 package VjConfig;
 
 import java.lang.RuntimeException;
 
-public class VarValueException extends RuntimeException {
+public class VarValueException
+   extends RuntimeException
+{
+   public VarValueException()
+   {
+      super();
+   }
 
-    public VarValueException() {
-        super();
-    }
-
-    public VarValueException(String s) {
-        super(s);
-    }
-
+   public VarValueException(String s)
+   {
+      super(s);
+   }
 }
