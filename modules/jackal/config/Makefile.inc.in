@@ -56,4 +56,4 @@ config-pkg-links:
 	@$(MAKE) instlinks="$(instlinks)" links
 
 config-pkg-install:
-	@$(MAKE) tweek-install
+	@$(MAKE) config-install
