@@ -18,6 +18,9 @@ public:
       : vrj::test::TestCase("FailureTestCase")
    {;}
 
+   virtual ~FailureTestCase()
+   {;}
+
    /** Do any setup needed before the test starts */
    virtual void setUp()
    {
