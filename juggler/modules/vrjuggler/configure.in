@@ -860,7 +860,9 @@ AC_PROG_MAKE_SET
 
 dnl # While ranlib(1) is not part of the base IRIX installation, the VRAC SGIs
 dnl # have a ranlib(1) installed that does very bad things to ar archives.
-if test "$PLATFORM" = "IRIX" ; then
+dnl # We also do not want to use the Cygwin ranlib(1) with the Visual C++
+dnl # LINK.EXE command.
+if test "$PLATFORM" = "IRIX" -o "$OS_TYPE" = "Win32" ; then
     RANLIB=':'
 else
     AC_PROG_RANLIB
