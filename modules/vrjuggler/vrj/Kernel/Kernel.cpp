@@ -35,7 +35,7 @@
 #include <vrj/vrjParam.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Util/Debug.h>
-#include <vrj/Kernel/ConfigManager.h>
+//#include <vrj/Kernel/ConfigManager.h>
 #include <vrj/Draw/DrawManager.h>
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Kernel/App.h>
@@ -48,8 +48,8 @@
 
 #include <vrj/Input/InputManager.h>
 
-#include <vrj/Config/ConfigChunk.h>
-#include <vrj/Config/ChunkFactory.h>
+#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ChunkFactory.h>
 
 
 // Get the system factory we need
@@ -104,13 +104,14 @@ void Kernel::controlLoop(void* nullParam)
    }
    mControlThread = (vpr::Thread*) vpr::Thread::self();
 
-   TimeStamp::initialize();
+   //jccl::TimeStamp::initialize();
    // Do any initial configuration
    initConfig();
 
    // setup performance buffer
-   perfBuffer = new PerfDataBuffer ("Kernel loop", 500, 8);
-   environmentManager->addPerfDataBuffer (perfBuffer);
+   perfBuffer = environmentManager->getPerformanceMonitor()->getPerfDataBuffer ("Kernel Loop", 500, 8);
+   //perfBuffer = new jccl::PerfDataBuffer ("Kernel loop", 500, 8);
+   //environmentManager->addPerfDataBuffer (perfBuffer);
 
    //while(!Exit)
    while (1)
@@ -176,24 +177,17 @@ void Kernel::checkForReconfig()
 {
    vprASSERT(vpr::Thread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
 
+
    // ---- RECONFIGURATION --- //
-   int total_chunks_processed(0);
-   int local_chunks_processed(0);
+   jccl::ConfigManager* cfg_mgr = environmentManager->getConfigManager();
+   while (cfg_mgr->attemptReconfiguration())
+       ;
 
-   // This loop will keep processing the pending list
-   // until there is an iteration where no chunks are processed.
-   do
-   {
-      local_chunks_processed = configProcessPending();
-      total_chunks_processed += local_chunks_processed;
-   }
-   while(local_chunks_processed > 0);
-
-   // If we changed the active configuration, then the environment manager needs to refresh
-   if((total_chunks_processed > 0) && (environmentManager != NULL))
-   {
-      environmentManager->sendRefresh();
-   }
+//     // If we changed the active configuration, then the environment manager needs to refresh
+//     if((total_chunks_processed > 0) && (environmentManager != NULL))
+//     {
+//        environmentManager->sendRefresh();
+//     }
 
    // ---- APP SWITCH ---- //
    // check for a new applications
@@ -229,9 +223,15 @@ void Kernel::changeApplication(App* _app)
 
    vprASSERT(vpr::Thread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
 
+   vprASSERT (environmentManager != NULL && "EnvManager exists");
+
+   jccl::ConfigManager* cfg_mgr = environmentManager->getConfigManager();
+
    // EXIT Previous application
-   if(mApp != NULL)
+   if(mApp != NULL) {
+       cfg_mgr->removeConfigChunkHandler (mApp);
       mApp->exit();
+   }
 
    // SET NEW APPLICATION
    if(_app != NULL)        // We were given an app
@@ -243,14 +243,19 @@ void Kernel::changeApplication(App* _app)
       if (new_draw_mgr != mDrawManager)      // Have NEW draw manager
       {
          stopDrawManager();                           // Stop old one
+         cfg_mgr->removeConfigChunkHandler (mDrawManager);
          mDrawManager = mApp->getDrawManager();       // Get the new one
          mSoundManager = mApp->getSoundManager();       // Get the new one
+         cfg_mgr->addConfigChunkHandler (mDrawManager);
+         cfg_mgr->addConfigChunkHandler (mSoundManager);
          startDrawManager(true);                      // Start the new one
       }
       else     // SAME draw manager
       {
          startDrawManager(false);                     // Start new app
       }
+
+      cfg_mgr->addConfigChunkHandler (mApp);
    }
    else                 // No app, clear to NULL
    {
@@ -296,6 +301,12 @@ void Kernel::initConfig()
    vprASSERT(false);
 #endif
 
+   // hook dynamically-reconfigurable managers up to config manager...
+   jccl::ConfigManager* cfg_mgr = environmentManager->getConfigManager();
+   cfg_mgr->addConfigChunkHandler (this);
+   cfg_mgr->addConfigChunkHandler (mInputManager);
+   cfg_mgr->addConfigChunkHandler (mDisplayManager);
+
    vprDEBUG_END(vrjDBG_KERNEL,3) << "vjKernel::initConfig: Done.\n" << vprDEBUG_FLUSH;
 }
 
@@ -307,42 +318,42 @@ void Kernel::updateFrameData()
 }
 
 
-// -------------------------------
-// CHUNK Handler
-// -------------------------------
-//: Process any pending reconfiguration that we can deal with
-//
-//  For all dependant managers, call process pending.
-//  and call it on our selves
-int Kernel::configProcessPending(bool lockIt)
-{
-   int chunks_processed(0);     // Needs to return this value
+//  // -------------------------------
+//  // CHUNK Handler
+//  // -------------------------------
+//  //: Process any pending reconfiguration that we can deal with
+//  //
+//  //  For all dependant managers, call process pending.
+//  //  and call it on our selves
+//  int Kernel::configProcessPending(bool lockIt)
+//  {
+//     int chunks_processed(0);     // Needs to return this value
 
-   ConfigManager* cfg_mgr = ConfigManager::instance();
-   if(cfg_mgr->pendingNeedsChecked())
-   {
-      vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_STATE_LVL) << "vjKernel::configProcessPending: Examining pending list.\n" << vprDEBUG_FLUSH;
+//     ConfigManager* cfg_mgr = ConfigManager::instance();
+//     if(cfg_mgr->pendingNeedsChecked())
+//     {
+//        vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_STATE_LVL) << "vjKernel::configProcessPending: Examining pending list.\n" << vprDEBUG_FLUSH;
 
-      chunks_processed += ConfigChunkHandler::configProcessPending(lockIt);      // Process kernels pending chunks
-      chunks_processed += getInputManager()->configProcessPending(lockIt);
-      chunks_processed += mDisplayManager->configProcessPending(lockIt);
-      if(NULL != mSoundManager)
-         chunks_processed += mSoundManager->configProcessPending(lockIt);
-      if(NULL != mDrawManager)
-         chunks_processed += mDrawManager->configProcessPending(lockIt);              // XXX: We should not necessarily do this for all draw mgrs
-      if (NULL != environmentManager)
-         chunks_processed += environmentManager->configProcessPending(lockIt);
-      if(NULL != mApp)
-         chunks_processed += mApp->configProcessPending(lockIt);
+//        chunks_processed += jccl::ConfigChunkHandler::configProcessPending(lockIt);      // Process kernels pending chunks
+//        chunks_processed += getInputManager()->configProcessPending(lockIt);
+//        chunks_processed += mDisplayManager->configProcessPending(lockIt);
+//        if(NULL != mSoundManager)
+//           chunks_processed += mSoundManager->configProcessPending(lockIt);
+//        if(NULL != mDrawManager)
+//           chunks_processed += mDrawManager->configProcessPending(lockIt);              // XXX: We should not necessarily do this for all draw mgrs
+//        if (NULL != environmentManager)
+//           chunks_processed += environmentManager->configProcessPending(lockIt);
+//        if(NULL != mApp)
+//           chunks_processed += mApp->configProcessPending(lockIt);
 
-      vprDEBUG_CONT_END(vprDBG_ALL,vprDBG_CONFIG_LVL) << std::endl
-                                                   << vprDEBUG_FLUSH;
-   }
-   return chunks_processed;
-}
+//        vprDEBUG_CONT_END(vprDBG_ALL,vprDBG_CONFIG_LVL) << std::endl
+//                                                     << vprDEBUG_FLUSH;
+//     }
+//     return chunks_processed;
+//  }
 
 
-bool Kernel::configCanHandle(ConfigChunk* chunk)
+bool Kernel::configCanHandle(jccl::ConfigChunk* chunk)
 {
    std::string chunk_type = (std::string)chunk->getType();
 
@@ -352,7 +363,7 @@ bool Kernel::configCanHandle(ConfigChunk* chunk)
       return false;
 }
 
-bool Kernel::configAdd(ConfigChunk* chunk)
+bool Kernel::configAdd(jccl::ConfigChunk* chunk)
 {
    std::string chunk_type = (std::string)chunk->getType();
 
@@ -366,7 +377,7 @@ bool Kernel::configAdd(ConfigChunk* chunk)
       return false;
 }
 
-bool Kernel::configRemove(ConfigChunk* chunk)
+bool Kernel::configRemove(jccl::ConfigChunk* chunk)
 {
    std::string chunk_type = (std::string)chunk->getType();
 
@@ -381,7 +392,7 @@ bool Kernel::configRemove(ConfigChunk* chunk)
 }
 
 //: Add a new user to the kernel
-bool Kernel::addUser(ConfigChunk* chunk)
+bool Kernel::addUser(jccl::ConfigChunk* chunk)
 {
    vprASSERT((std::string)chunk->getType() == std::string("JugglerUser"));
 
@@ -390,7 +401,7 @@ bool Kernel::addUser(ConfigChunk* chunk)
 
    if(!success)
    {
-      vprDEBUG(vrjDBG_CONFIG,vprDBG_CRITICAL_LVL)
+      vprDEBUG(vrjDBG_KERNEL,vprDBG_CRITICAL_LVL)
                      << clrOutNORM(clrRED,"ERROR:") << "Failed to add new User: "
                      << chunk->getProperty("name") << std::endl
                      << vprDEBUG_FLUSH;
@@ -398,7 +409,7 @@ bool Kernel::addUser(ConfigChunk* chunk)
    }
    else
    {
-      vprDEBUG(vrjDBG_CONFIG,vprDBG_STATE_LVL)
+      vprDEBUG(vrjDBG_KERNEL,vprDBG_STATE_LVL)
                              << "vjKernel: Added new User: "
                              << new_user->getName().c_str() << std::endl
                              << vprDEBUG_FLUSH;
@@ -409,7 +420,7 @@ bool Kernel::addUser(ConfigChunk* chunk)
 }
 
 // XXX: Not implemented
-bool Kernel::removeUser(ConfigChunk* chunk)
+bool Kernel::removeUser(jccl::ConfigChunk* chunk)
 {
    return false;
 }
@@ -420,7 +431,7 @@ void Kernel::loadConfigFile(std::string filename)
    vprDEBUG(vrjDBG_KERNEL,vprDBG_CONFIG_LVL) << "Loading config file: "
                            << filename << std::endl << vprDEBUG_FLUSH;
 
-   ConfigChunkDB* chunk_db = new ConfigChunkDB;
+   jccl::ConfigChunkDB* chunk_db = new jccl::ConfigChunkDB;
 
    // ------- OPEN Program specified Config file ------ //
    if(filename.empty())   // We have a filename
@@ -436,7 +447,7 @@ void Kernel::loadConfigFile(std::string filename)
    }
 
    // Put them all in pending
-   ConfigManager::instance()->addChunkDB(chunk_db);
+   jccl::ConfigManager::instance()->addPendingAdds(chunk_db);
 
    //vprDEBUG(vrjDBG_KERNEL,5) << "------------  Loaded Config Chunks ----------" << vprDEBUG_FLUSH;
    //vprDEBUG(vrjDBG_KERNEL,5) << (*mInitialChunkDB) << vprDEBUG_FLUSH;
@@ -446,7 +457,7 @@ void Kernel::loadConfigFile(std::string filename)
 //! POST: The chunk factory can now manage chunks with the given types
 void Kernel::loadChunkDescFile(std::string filename)
 {
-   ChunkFactory::instance()->loadDescs(filename);
+   jccl::ChunkFactory::instance()->loadDescs(filename);
 }
 
 
@@ -459,9 +470,12 @@ void Kernel::startDrawManager(bool newMgr)
 
    if(newMgr)
    {
-      //mDrawManager->configInitial(mInitialChunkDB);     // Give it the chunk DB to extract API specific info
       mDrawManager->setDisplayManager(mDisplayManager);
-      mDrawManager->configProcessPending(true);           // See if there are any config chunks for us
+      //mDrawManager->configProcessPending(environmentManager->getConfigManager());           // See if there are any config chunks for us
+      jccl::ConfigManager* cfg_mgr = environmentManager->getConfigManager();
+      cfg_mgr->lockPending();
+      mDrawManager->configProcessPending(cfg_mgr);
+      cfg_mgr->unlockPending();
    }
    mDrawManager->setApp(mApp);
 
@@ -530,6 +544,9 @@ Kernel::Kernel()
                           << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL, 0) << std::string(strlen(VJ_VERSION) + 12, '=')
                           << std::endl << vprDEBUG_FLUSH;
+
+   jccl::ChunkFactory::instance()->loadDescs 
+       ("${VJ_BASE_DIR}/share/data/vrj-chunks.desc");
 }
 
 };

@@ -36,7 +36,7 @@
 #include <vrj/vrjConfig.h>
 #include <vpr/Util/Assert.h>
 #include <vrj/Util/Debug.h>
-#include <vrj/Kernel/ConfigChunkHandler.h>
+#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
 #include <vrj/Sound/SoundManagerFactory.h>
 
 
@@ -79,7 +79,7 @@ class Kernel;
 //  Date: 9-8-97
 //!PUBLIC_API:
 //------------------------------------------------------------------
-class VJ_CLASS_API App : public ConfigChunkHandler
+class VJ_CLASS_API App : public jccl::ConfigChunkHandler
 {
 public:
    //: Constructor
@@ -148,9 +148,9 @@ public:
       }
    }
 
-public:  // --- DEfault config handlers: (inherited from ConfigChunkHandler) --- //
+public:  // --- DEfault config handlers: (inherited from jccl::ConfigChunkHandler) --- //
    // Default to not handling anything
-   virtual bool configCanHandle(ConfigChunk* chunk)
+   virtual bool configCanHandle(jccl::ConfigChunk* chunk)
    { return false; }
 
    //: Are any application dependencies satisfied
@@ -162,11 +162,11 @@ public:  // --- DEfault config handlers: (inherited from ConfigChunkHandler) ---
    { return true; }
 
 protected:
-   //! NOTE: Inherited from ConfigChunkHandler
-   virtual bool configAdd(ConfigChunk* chunk)
+   //! NOTE: Inherited from jccl::ConfigChunkHandler
+   virtual bool configAdd(jccl::ConfigChunk* chunk)
    { vprASSERT(false);  return false; }
-   //! NOTE: INherited from ConfigChunkHandler
-   virtual bool configRemove(ConfigChunk* chunk)
+   //! NOTE: INherited from jccl::ConfigChunkHandler
+   virtual bool configRemove(jccl::ConfigChunk* chunk)
    { vprASSERT(false); return false; }
 
 public:

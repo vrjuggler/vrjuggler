@@ -53,7 +53,7 @@
 #include <vrj/Display/SimViewport.h>
 #include <vrj/Display/SurfaceViewport.h>
 
-#include <vrj/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunk.h>
 
 #include <vrj/Util/FileIO.h>
 
@@ -74,7 +74,7 @@ vprSingletonImp(PfDrawManager);
 //: Can the handler handle the given chunk?
 //! RETURNS: true - Can handle it
 //+          false - Can't handle it
-bool PfDrawManager::configCanHandle(ConfigChunk* chunk)
+bool PfDrawManager::configCanHandle(jccl::ConfigChunk* chunk)
 {
    std::string chunk_type = chunk->getType();
    return ( chunk_type == std::string("apiPerformer"));
@@ -83,7 +83,7 @@ bool PfDrawManager::configCanHandle(ConfigChunk* chunk)
 //: Add the chunk to the configuration
 //! PRE: configCanHandle(chunk) == true
 //! RETURNS: success
-bool PfDrawManager::configAdd(ConfigChunk* chunk)
+bool PfDrawManager::configAdd(jccl::ConfigChunk* chunk)
 {
    vprASSERT(configCanHandle(chunk));
 
@@ -101,7 +101,7 @@ bool PfDrawManager::configAdd(ConfigChunk* chunk)
 // Configure the Performer display settings that are needed
 // - Number of pipes to allow
 // - The xpipe strings to use
-bool PfDrawManager::configDisplaySystem(ConfigChunk* chunk)
+bool PfDrawManager::configDisplaySystem(jccl::ConfigChunk* chunk)
 {
    vprASSERT(chunk != NULL);
    vprASSERT((std::string)chunk->getType() == std::string("displaySystem"));
@@ -136,7 +136,7 @@ bool PfDrawManager::configDisplaySystem(ConfigChunk* chunk)
 }
 
 //: Configure the performer api stuff
-bool PfDrawManager::configPerformerAPI(ConfigChunk* chunk)
+bool PfDrawManager::configPerformerAPI(jccl::ConfigChunk* chunk)
 {
    vprASSERT((std::string)chunk->getType() == std::string("apiPerformer"));
 

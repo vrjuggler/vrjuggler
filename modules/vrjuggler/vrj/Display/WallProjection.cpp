@@ -45,14 +45,14 @@
 #include <vrj/Math/Coord.h>
 #include <vrj/Util/Debug.h>
 
-#include <vrj/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunk.h>
 
 namespace vrj
 {
 
 
 // Just call the base class constructor
-void WallProjection::config(ConfigChunk* chunk)
+void WallProjection::config(jccl::ConfigChunk* chunk)
 {
    vprASSERT( ((std::string)chunk->getType() == std::string("surfaceDisplay")) ||
              ((std::string)chunk->getType() == std::string("surfaceViewport")) );

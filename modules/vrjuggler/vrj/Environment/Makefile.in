@@ -47,13 +47,7 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VJ_LIBRARY)
 
-SRCS		= Command.cpp			\
-                  Connect.cpp			\
-                  EnvironmentManager.cpp	\
-                  Socket.cpp			\
-                  SockStream.cpp		\
-		  NetCommunicator.cpp		\
-		  XMLConfigCommunicator.cpp	
+SRCS		= EnvironmentManager.cpp	
 
 include $(MKPATH)/dpp.obj.mk
 

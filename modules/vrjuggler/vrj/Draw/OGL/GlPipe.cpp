@@ -49,7 +49,7 @@
 
 #include <vrj/Display/SurfaceViewport.h>
 #include <vrj/Display/SimViewport.h>
-#include <vrj/Environment/EnvironmentManager.h>
+//#include <vrj/Environment/EnvironmentManager.h>
 
 namespace vrj
 {
@@ -146,8 +146,10 @@ void GlPipe::removeWindow(GlWindow* win)
 void GlPipe::controlLoop(void* nullParam)
 {
    mThreadRunning = true;     // We are running so set flag
-   // this should really not be here...
-   Kernel::instance()->getEnvironmentManager()->addPerfDataBuffer (mPerfBuffer);
+
+   char namebuf[42];  // careful with that buffer, eugene
+   sprintf( namebuf, "vjGlPipe %d", mPipeNum );
+   mPerfBuffer = Kernel::instance()->getEnvironmentManager()->getPerformanceMonitor()->getPerfDataBuffer (namebuf, 500, 40);
 
    while (!controlExit)
    {
@@ -194,6 +196,9 @@ void GlPipe::controlLoop(void* nullParam)
    }
 
    mThreadRunning = false;     // We are not running
+
+   Kernel::instance()->getEnvironmentManager()->getPerformanceMonitor()->releasePerfDataBuffer (mPerfBuffer);
+
 }
 
 // Closes all the windows in the list of windows to close

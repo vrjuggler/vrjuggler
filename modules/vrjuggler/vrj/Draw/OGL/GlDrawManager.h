@@ -55,10 +55,13 @@
 #include <vrj/Draw/OGL/GlPipe.h>
 #include <vrj/Draw/OGL/GlUserData.h>
 
+namespace jccl {
+    class ConfigChunkDB;
+};
+
 namespace vrj
 {
    class GlApp;
-   class ConfigChunkDB;
    class GloveProxy;
    class SimViewport;
 
@@ -90,7 +93,7 @@ public:
 
     //: Function to config API specific stuff.
     // Takes a chunkDB and extracts API specific stuff
-   //**//virtual void configInitial(ConfigChunkDB*  chunkDB);
+   //**//virtual void configInitial(jccl::ConfigChunkDB*  chunkDB);
 
    //: Start the control loop
    virtual void start();
@@ -139,17 +142,17 @@ public: // Chunk handlers
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
    //! RETURNS: success
-   virtual bool configAdd(ConfigChunk* chunk);
+   virtual bool configAdd(jccl::ConfigChunk* chunk);
 
    //: Remove the chunk from the current configuration
    //! PRE: configCanHandle(chunk) == true
    //!RETURNS: success
-   virtual bool configRemove(ConfigChunk* chunk);
+   virtual bool configRemove(jccl::ConfigChunk* chunk);
 
    //: Can the handler handle the given chunk?
    //! RETURNS: true - Can handle it
    //+          false - Can't handle it
-   virtual bool configCanHandle(ConfigChunk* chunk);
+   virtual bool configCanHandle(jccl::ConfigChunk* chunk);
 
 
 public:  // Drawing functions used by library

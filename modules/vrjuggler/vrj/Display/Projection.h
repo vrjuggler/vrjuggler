@@ -69,7 +69,7 @@ public:
       mFocusPlaneDist = 1.0f;
    }
 
-   virtual void config(ConfigChunk* chunk)
+   virtual void config(jccl::ConfigChunk* chunk)
    {;}
 
    void setEye(int _eye)

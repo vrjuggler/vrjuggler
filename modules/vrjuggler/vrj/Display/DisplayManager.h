@@ -39,7 +39,7 @@
 
 #include <vrj/Input/Type/Position.h>
 #include <vrj/Util/Debug.h>
-#include <vrj/Kernel/ConfigChunkHandler.h>
+#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
 
 namespace vrj
 {
@@ -59,21 +59,21 @@ class Display;
 // @author Allen Bierbaum
 //  Date: 9-7-97
 //-----------------------------------------------------------------------------
-class VJ_CLASS_API DisplayManager : public ConfigChunkHandler
+class VJ_CLASS_API DisplayManager : public jccl::ConfigChunkHandler
 {
 public:     // --- Config stuff -- //
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
-   virtual bool configAdd(ConfigChunk* chunk);
+   virtual bool configAdd(jccl::ConfigChunk* chunk);
 
    //: Remove the chunk from the current configuration
    //! PRE: configCanHandle(chunk) == true
-   virtual bool configRemove(ConfigChunk* chunk);
+   virtual bool configRemove(jccl::ConfigChunk* chunk);
 
    //: Can the handler handle the given chunk?
    //! RETURNS: true - Can handle it
    //+          false - Can't handle it
-   virtual bool configCanHandle(ConfigChunk* chunk);
+   virtual bool configCanHandle(jccl::ConfigChunk* chunk);
 
 public:
    //: This function updates the projections for all contained displays.
@@ -100,7 +100,7 @@ public:
    //! NOTE: DO NOT EDIT THE DISPLAYS
    std::vector<vrj::Display*> getAllDisplays();
 
-   ConfigChunk* getDisplaySystemChunk()
+   jccl::ConfigChunk* getDisplaySystemChunk()
    {return mDisplaySystemChunk;}
 
 private:
@@ -109,12 +109,12 @@ private:
    //! POST: (display of same name already loaded) ==> old display closed, new one opened
    //+       (display is new) ==> (new display is added)
    //+       draw manager is notified of the display change
-   bool configAddDisplay(ConfigChunk* chunk);
+   bool configAddDisplay(jccl::ConfigChunk* chunk);
 
    //: Remove the chunk from the current configuration
    //! PRE: configCanHandle(chunk) == true
    //!RETURNS: success
-   bool configRemoveDisplay(ConfigChunk* chunk);
+   bool configRemoveDisplay(jccl::ConfigChunk* chunk);
 
 
    //: Add a display to the current system
@@ -144,7 +144,7 @@ public:
 
 protected:
    DrawManager*    mDrawManager;           //: The current drawManager to communicate with
-   ConfigChunk*    mDisplaySystemChunk;    //: Config chunk for the displaySystem
+   jccl::ConfigChunk*    mDisplaySystemChunk;    //: Config chunk for the displaySystem
 
 
 

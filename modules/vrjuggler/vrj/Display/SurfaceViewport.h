@@ -40,10 +40,13 @@
 #include <vrj/Display/Projection.h>
 #include <vrj/Math/Vec3.h>
 
+namespace jccl {
+    class ConfigChunk;
+};
+
 namespace vrj
 {
 
-class ConfigChunk;
 
 //: Defines a display surface an associated projections
 //
@@ -64,7 +67,7 @@ public:
    //+       and "fix" the error.
    //! NOTE: All derived display classes MUST call this function
    //+       after doing local configuration.
-   virtual void config(ConfigChunk *chunk);
+   virtual void config(jccl::ConfigChunk *chunk);
 
    virtual void updateProjections();
 

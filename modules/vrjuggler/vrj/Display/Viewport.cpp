@@ -5,7 +5,7 @@
 namespace vrj
 {
 
-void Viewport::config(ConfigChunk* chunk)
+void Viewport::config(jccl::ConfigChunk* chunk)
 {
    vprASSERT(chunk != NULL);
 
