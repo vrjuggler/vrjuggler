@@ -100,7 +100,7 @@
   </P>
 
     <DL>
-      <DT><TT>PATH</TT>
+      <DT><TT>%PATH%</TT>
         <DD>All users must have the <TT>juggler-tools</TT> directory in
             their path.  If the Cygwin utilities are installed, it is
             especially important that <TT>juggler-tools</TT> be listed
@@ -113,7 +113,7 @@
             C++ executables must also be in the path.  The configure script
             needs this so that it can find <TT>CL.EXE</TT> when it is
             setting up the C and C++ compilers.
-      <DT><TT>INCLUDE</TT>
+      <DT><TT>%INCLUDE%</TT>
         <DD>This should also be set for all users.  It provides paths to
             the Visual C++ include directories that <TT>CL.EXE</TT> needs
             when compiling.  On Windows NT, it is set only for the user
@@ -125,12 +125,12 @@
             does not get the environment changes made by the batch file.
             The batch file also uses ``8.3'' names which may confuse the
             Cygwin tools.
-      <DT><TT>LIB</TT>
+      <DT><TT>%LIB%</TT>
         <DD>This is another Visual C++ environment variable that needs to
-            be set in the same manner as <TT>INCLUDE</TT>.  Again, this is
+            be set in the same manner as <TT>%INCLUDE%</TT>.  Again, this is
             initially set only for the user who installed Visual C++ and
             should be changed so that it is set for all users.
-      <DT><TT>VJ_BASE_DIR</TT>
+      <DT><TT>%VJ_BASE_DIR%</TT>
         <DD>The value for this should be set using <TT>/</TT>'s as the path
             separator rather than <TT>\</TT>'s as would normally be the
             case with DOS/Win32 paths.  It just simplifies things all
