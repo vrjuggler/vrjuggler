@@ -51,9 +51,9 @@ int main(int argc, char* argv[])
    vrj::Projection::setNearFar(0.01, 10000.0f);
 
    vrj::Kernel* kernel = vrj::Kernel::instance();        // Get the kernel
-   torusApp* torus_app = new torusApp(kernel);   // Declare an instance of the app
-   wandApp*  wand_app = new wandApp(kernel);
-   cubesApp* cubes_app = new cubesApp(kernel);
+   vrjTest::torusApp* torus_app = new vrjTest::torusApp(kernel);   // Declare an instance of the app
+   vrjTest::wandApp*  wand_app  = new vrjTest::wandApp(kernel);
+   cubesApp* cubes_app          = new cubesApp(kernel);
 
    if (argc <= 1)
    {
