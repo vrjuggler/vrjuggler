@@ -38,7 +38,13 @@ my $html_comment_begin = "<!--";
 my $html_comment_end = "-->";
 my $usedebugoutput = "0";
 my $levels_of_recursion_allowed = 4; # you may have to change this to get deeper recursion
-   
+
+my $use_abs_paths_within_jit = "1";
+my $use_http_paths_within_jit = "0";
+
+my $use_abs_paths = "1";
+my $use_http_paths = "0";
+
 # to be set by the application
 my $src_dir = "unknown";
 my $dest_dir = "unknown";
@@ -284,7 +290,7 @@ sub htmlFilter($)
    }
    else
    { 
-      replaceTagsRecursive( $file_contents );
+      replaceTagsRecursive( $file_contents, $use_http_paths );
    }
    #
    ################# end of search and replace (tags and includes) ##################
@@ -371,7 +377,7 @@ sub htmlFilter($)
    }
    else
    { 
-      replaceTagsRecursive( $file_contents );
+      replaceTagsRecursive( $file_contents, $use_http_paths );
    }
    #
    ################# end of search and replace (tags and includes) ##################
@@ -394,12 +400,13 @@ sub outputDebug($)
 #     $filecontents (string reference): The contents of the file to run the filter on
 #     $relpath (string): The relative path to the given file-contents from the "root" web dir
 #
-sub xmlFilter($$$)
+sub xmlFilter($$$$)
 {
    outputDebug( "==> xmlFilter\n" );
    my $file_contents = shift;
    my $rel_path = shift;
-   my $nohttp = shift;
+   my $path_replace_method = shift;
+   my $path_replace_method_within_jit = shift;
  
    processIncludesRecursive( $file_contents );
 
@@ -414,7 +421,11 @@ sub xmlFilter($$$)
    $$file_contents =~ s/(linkurl)(\s*?)=(\s*?)\"(?!\$)/$1=\"$html_install_prefix\/$rel_path\//gis;
 
    ## REPLACE TAGS
-   replaceTagsRecursive( $file_contents, $nohttp );
+   if ($path_replace_method_within_jit != $path_replace_method)
+   {
+      replaceTagsRecursive_withinJit( $file_contents, $path_replace_method_within_jit );
+   }
+   replaceTagsRecursive( $file_contents, $path_replace_method );
 
    ## Replace white space
    processRemoveWhitespace( $file_contents );
@@ -425,6 +436,29 @@ sub xmlFilter($$$)
    outputDebug( "<== xmlFilter\n" );
 }
 
+sub replaceTagsRecursive_withinJit($$)
+{
+   my $file_contents = shift;
+   my $file_path_replace_method = shift;
+   
+   my $whats_left = $$file_contents;
+   while ($whats_left =~ m/jit[ ]*?=[ ]*?"(.*?)"/gs)
+   {
+      $whats_left = $';
+      my $jitTag = $1;
+      
+      # replace any tags within the jit tag
+      my $jitTagFixed = $jitTag;
+      replaceTagsRecursive( \$jitTagFixed, $file_path_replace_method );
+      
+      # change all $ to \$ so regex doesn't think they are "endline" characters...
+      $jitTag =~ s/\$/\\\$/gs;
+      
+      # do a search and replace on the file contents for the old jit="" tag with the new jit="" tag
+      $$file_contents =~ s/jit[ ]*?=[ ]*?"$jitTag"/jit="$jitTagFixed"/gs;
+   }
+}
+
 #  replaceTags Recursive version (see other for documentation)
 #
 sub replaceTagsRecursive($$)
@@ -432,14 +466,14 @@ sub replaceTagsRecursive($$)
    outputDebug( "==> replaceTagsRecursive\n" );
    
    my $contents_ref = shift;
-   my $in_include = shift;
+   my $file_path_replace_method = shift;
    
    # fix filename, if it contains a tag
    my $found_a_tag = 1;
    my $levels_of_recursion = 0;
    while( $found_a_tag == 1 )
    {
-      $found_a_tag = replaceTags( $contents_ref, $in_include );
+      $found_a_tag = replaceTags( $contents_ref, $file_path_replace_method );
       
       # bail if too many recursions.
       $levels_of_recursion = $levels_of_recursion + 1;
@@ -465,7 +499,7 @@ sub replaceTags($$)
 {
    outputDebug( "==> replaceTags\n" );
    my $contents_ref = shift;
-   my $in_include = shift;
+   my $file_path_replace_method = shift;
    my $found_a_tag = 0;
   
    # find subst tags and replace with <html_inst_dir>/<tag value>
@@ -478,7 +512,7 @@ sub replaceTags($$)
          
          #print "Checking web subst: $tag ==> $tag_value\n";
          # Look for ${tag} or $(tag)
-         if ($in_include == 0)
+         if ($file_path_replace_method == $use_http_paths)
          {
             $$contents_ref =~ s/(\$)[{(]$tag[})]/$html_install_prefix$tag_value/gis;
          }
@@ -589,6 +623,8 @@ sub processIncludesRecursive($)
    }
 }
 
+
+
 # One process include
 #
 # Check for includes and do them
@@ -614,7 +650,7 @@ sub processIncludes($)
       
       # fix filename, if it contains tag(s)
       my $expandvars_filename = $orig_filename;
-      replaceTagsRecursive( \$expandvars_filename, "1" );
+      replaceTagsRecursive( \$expandvars_filename, $use_abs_paths );
       $expandvars_filename =~ s/"//g;
       
       # fix the $ char so the regex doesn't think its an end-line char.
@@ -632,7 +668,10 @@ sub processIncludes($)
          print "[including TOC: \"$expandvars_filename\" ";
          if (xmlToc::load( \$xmltoc_data, $expandvars_filename ))
          {
-            xmlFilter( \$xmltoc_data, "", "1" );  # must filter the loaded xml file...
+            # "1" - jit file links are absolute because xmlToc then uses the path to 
+            #       include the file
+            # "0" - all other links are http, since we want the final html output
+            xmlFilter( \$xmltoc_data, "", $use_http_paths, $use_abs_paths_within_jit );  
             xmlToc_htmlTocActions::useme();
             xmlToc::traverse( \$htmltoc_data, $xmltoc_data );
          }
@@ -653,7 +692,7 @@ sub processIncludes($)
       {
          my $text_data = "";
          print "[including: \"$expandvars_filename\" ";
-         InstallWeb::load( \$text_data, $expandvars_filename, "include text from $expandvars_filename", "1" );
+         InstallWeb::load( \$text_data, $expandvars_filename, "include text", "1" );
 
          $$contents_ref =~ s/$include_statement/$text_data/is;
 
@@ -791,7 +830,7 @@ sub recurseAction($)
           my $file_contents = "";
           
           InstallWeb::load( \$file_contents, $curfile, "recurse", "0" );
-          xmlFilter( \$file_contents, "$rel_path", "0" );
+          xmlFilter( \$file_contents, "$rel_path", $use_http_paths, $use_http_paths_within_jit );
           installContents( $file_contents, "$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
           
           #print "$file_contents\n crap!\n================\n";

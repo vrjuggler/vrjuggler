@@ -51,12 +51,13 @@ $path_subst{"LEGAL"} = 'html/legal';
 $path_subst{"MISC"} = 'html/misc';
 $path_subst{"NEWS"} = 'html/news';
 $path_subst{"PUBLICATIONS"} = 'html/publications';
-$path_subst{"FAQ"} = 'html/misc/FAQ.html';
+$path_subst{"FAQ"} = 'html/misc/faq.html';
 
 
 # html files
 $path_subst{"JUGGLER_USER_COMMUNITY"} = 'html/contact.info/usercommunity.html';
 $path_subst{"SITEMAP"} = 'html/misc/sitemap.html';
+$path_subst{"USERSITEMAP"} = 'html/misc/usertype.sitemap.html';
 
 
 
