@@ -13,16 +13,15 @@
 #include <GL/gl.h>
 
 
-/** Start the pipe running
- * POST: The pipe has it's own thread of control and is ready to operate
- */
+//: Start the pipe running
+//! POST: The pipe has it's own thread of control and is ready to operate
 int vjGlPipe::start()
 {
     vjASSERT(mThreadRunning == false);        // We should not be running yet
 
     // Create a new thread to handle the control loop
     vjThreadMemberFunctor<vjGlPipe>* memberFunctor =
-	new vjThreadMemberFunctor<vjGlPipe>(this, &vjGlPipe::controlLoop, NULL);
+	      new vjThreadMemberFunctor<vjGlPipe>(this, &vjGlPipe::controlLoop, NULL);
 
     mActiveThread = new vjThread(memberFunctor, 0);
 
@@ -37,7 +36,7 @@ void vjGlPipe::triggerRender()
    //vjASSERT(mThreadRunning == true);      // We must be running
    while(!mThreadRunning)
    {
-      vjDEBUG(vjDBG_ALL,1) << "Waiting in triggerRender.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,1) << "Waiting in for thread to start triggerRender.\n" << vjDEBUG_FLUSH;
    }
 
    renderTriggerSema.release();
@@ -114,17 +113,17 @@ void vjGlPipe::controlLoop(void* nullParam)
             // --- Call the pipe pre-draw function --- //
          vjGlApp* theApp = glManager->getApp();
 
-	 mPerfBuffer->set(mPerfPhase = 0);
+	         mPerfBuffer->set(mPerfPhase = 0);
             // Can't get a context since I may not be guaranteed a window
          theApp->pipePreDraw();                    // Call pipe pre-draw function
-	 mPerfBuffer->set(++mPerfPhase);
+	         mPerfBuffer->set(++mPerfPhase);
 
          // Render the windows
          for (int winId=0;winId < openWins.size();winId++)
             renderWindow(openWins[winId]);
 
          renderCompleteSema.release();
-	 mPerfBuffer->set(35);
+	         mPerfBuffer->set(35);
       }
 
       // ----- SWAP the windows ------ //
@@ -143,6 +142,8 @@ void vjGlPipe::controlLoop(void* nullParam)
 }
 
 // Closes all the windows in the list of windows to close
+//! POST: The window to close is removed from the list of open windows
+//+       and the list of newWins
 void vjGlPipe::checkForWindowsToClose()
 {
    if(mClosingWins.size() > 0)   // If there are windows to close
@@ -179,16 +180,14 @@ void vjGlPipe::checkForWindowsToClose()
       }
 
       mClosingWins.erase(mClosingWins.begin(), mClosingWins.end());
+      vjASSERT(mClosingWins.size() == 0);;
    }
 }
 
-/**  Checks for any new windows to add to the pipe
- * POST: Any new windows will be opened and added to the pipe's rendering list
- */
+//:  Checks for any new windows to add to the pipe
+//! POST: Any new windows will be opened and added to the pipe's rendering list
 void vjGlPipe::checkForNewWindows()
 {
-   //vjGlApp* theApp = glManager->getApp();    // Get the application
-
    if (newWins.size() > 0)  // If there are new windows added
    {
       vjGuard<vjMutex> guardNew(newWinLock);
@@ -203,6 +202,7 @@ void vjGlPipe::checkForNewWindows()
       }
 
       newWins.erase(newWins.begin(), newWins.end());
+      vjASSERT(newWins.size() == 0);
    }
 }
 
@@ -210,7 +210,6 @@ void vjGlPipe::checkForNewWindows()
 //! POST: win is rendered (In stereo if it is a stereo window)
 void vjGlPipe::renderWindow(vjGlWindow* win)
 {
-
    vjGlApp* theApp = glManager->getApp();       // Get application for easy access
    vjDisplay* theDisplay = win->getDisplay();   // Get the display for easy access
 
@@ -236,12 +235,9 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
       win->setDirtyContext(false);        // All clean now
    }
 
-   mPerfBuffer->set(++mPerfPhase);
-
+      mPerfBuffer->set(++mPerfPhase);
    theApp->contextPreDraw();                 // Do any context pre-drawing
-
-   mPerfBuffer->set(++mPerfPhase);
-
+      mPerfBuffer->set(++mPerfPhase);
 
    // ---- SURFACE --- //
    if (theDisplay->isSurface())
@@ -269,16 +265,14 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
          glManager->currentUserData()->setUser(surface_disp->getUser());         // Set user data
          glManager->currentUserData()->setProjection(surface_disp->getRightProj());
 
-	 mPerfBuffer->set(++mPerfPhase);
-
+	         mPerfBuffer->set(++mPerfPhase);
          theApp->draw();
-
-	 mPerfBuffer->set(++mPerfPhase);
+	         mPerfBuffer->set(++mPerfPhase);
 
          glManager->drawObjects();
       }
       else
-	  mPerfPhase += 2;
+	      mPerfPhase += 2;
    }
    // ---- SIMULATOR ---------- //
    else if(theDisplay->isSimulator())
@@ -289,12 +283,10 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
       glManager->currentUserData()->setUser(sim_disp->getUser());         // Set user data
       glManager->currentUserData()->setProjection(sim_disp->getCameraProj());
 
-      mPerfBuffer->set(++mPerfPhase);
-
+         mPerfBuffer->set(++mPerfPhase);
       theApp->draw();
-
-      mPerfBuffer->set(++mPerfPhase);
-      mPerfPhase += 2;
+         mPerfBuffer->set(++mPerfPhase);
+         mPerfPhase += 2;
 
       glManager->drawObjects();
       glManager->drawSimulator(sim_disp);
@@ -309,5 +301,4 @@ void vjGlPipe::swapWindowBuffers(vjGlWindow* win)
    win->swapBuffers();           // Implicitly calls a glFlush
    //vjTimeStamp* stamp = win->getDisplay()->getUser()->getHeadUpdateTime();
    //cout << "timestamp time is: " << stamp->usecs() << " usecs" << endl;
-
 }

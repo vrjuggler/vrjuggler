@@ -64,7 +64,7 @@ public:
    // Stops the current application but leaves the kernel running.
    // It closes all API specific stuff (DrawManager,  etc.)
    //! RETURNS: success
-   bool stopApplication();
+   void stopApplication();
 
    //: Load configuration data for Kernel
    //! POST: Config data has been read into initial buffer
@@ -134,9 +134,8 @@ public:      // Global "get" interface
    { return mInputManager; }
 
     //: Get the Environment Manager
-    vjEnvironmentManager* getEnvironmentManager() {
-	return environmentManager;
-    }
+    vjEnvironmentManager* getEnvironmentManager()
+    { return environmentManager; }
 
    //: Get the user associated with given name
    //! RETURNS: NULL - Not found
@@ -146,12 +145,18 @@ public:      // Global "get" interface
    std::vector<vjUser*> getUsers()
    { return mUsers; }
 
+   const vjThread* getThread()
+   { return mControlThread; }
+
 private:
    vjSystemData    data;   //: Global system data
 
 protected:
 
    vjApp*      mApp;                        //: The app object
+   vjApp*      mNewApp;                      //: New application to set
+   bool        mNewAppSet;                   //: Flag to notify that a new application should be set
+
    vjThread*   mControlThread;             //: The thread in control of me.
 
    /// Factories and Managers
