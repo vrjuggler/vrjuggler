@@ -229,14 +229,15 @@ public class ControlPanelView
             }
             else if (item.equals("D i s p l a y"))
             {
-               CustomEditor editor = CustomEditorRegistry.findEditor("display_window");
-               editor.setContext(context);
-               pushCurrentBack(editor.getPanel());
+               //CustomEditor editor = CustomEditorRegistry.findEditor("display_window");
+
+               //editor.setContext(context);
+               //pushCurrentBack(editor.getPanel());
             }
             else if (item.equals("S i m u l a t o r"))
             {
-               DisplayEditor display_editor = new DisplayEditor();
-               display_editor.setContext(context);
+               SimDisplayEditor display_editor = new SimDisplayEditor();
+               //display_editor.setContext(context);
                pushCurrentBack(display_editor);
             }
             else if (item.equals("C l u s t e r"))
