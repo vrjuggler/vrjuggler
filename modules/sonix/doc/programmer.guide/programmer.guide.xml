@@ -12,7 +12,7 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article lang="en">
    <articleinfo>
-      <title>Travel Systems for Virtual Environments</title>
+      <title>Sonix: The Juggler High Level Simple Sound Abstraction</title>
       <subtitle>Course notes for Open source VR - IEEEVR2002</subtitle>
       <authorgroup>
          <author>
@@ -25,32 +25,129 @@
    </articleinfo>
    <section>
       <title>Introduction</title>
-      <para>The concepts discussed here can also apply to 3rd person control, even though certain groups of Virtual Reality (VR) users focus mainly on 1st person travel methods.</para>
+      <para>Sonix is a high level abstraction for audio hardware or audio APIs, The interface to sonix is kept very very simple in order to get people up and running with sound as fast as possible... </para>
+      <para>Sonix is reconfigurable allowing audio APIs to be safely swapped out at runtime without the dependant systems noticing. systems using this layer expect to be completely portable. changing sound APIs at run time will be useful so that the user can play with quality and latency differences of different hardware and different soud APIs </para>
+      <para>Here is an overview of Sonix capabilities: <itemizedlist>
+            <listitem>
+               <para>Very simple interface.</para>
+               <para>Enables people to get up and running with sound quickly.</para>
+            </listitem>
+            <listitem>
+               <para>Sound abstraction supports reconfigurability.</para>
+               <para>Reconfigurations of sound resources are protected (i.e. does not break application).</para>
+               <para>Changing a sound resource reflects properly in all other handles to the same resource (resources allow multiple users) </para>
+            </listitem>
+         </itemizedlist></para>
+   </section>
+   <section>
+      <title>Simple Minimalist Interface</title>
+      <para></para>
+   </section>
+   <section>
+      <title>Reconfiguration</title>
+      <para>Audio API abstraction for audio sound objects ontop of hardware or audio APIs, reconfigurable allowing audio APIs to be safely swapped out at runtime without the dependant systems noticing. systems using this layer expect to be completely portable. changing sound APIs at run time will be useful so that the user can play with quality and latency differences of different hardware and different soud APIs</para>
+      <para></para>
+   </section>
+   <section>
+      <title>Techinical Details / Internal Implementation</title>
+      <para></para>
       <section>
-         <title>Why Travel?</title>
-         <para>Travel allows users to gain access to areas or regions of their environment otherwise not available to them. This is, of course, also true in real life. Humans travel every day using methods such as walking, driving, flying, clicking, and typing. In VR and other 3D interactive applications we need many of the same travel methods as we do in real life, along with additional methods that cannot exist in the physical world, but which allow easier access.</para>
+         <title>Design Patterns Overview</title>
+         <para>Design patterns describe simple and elegant solutions to specific problems in object oriented software design <xref linkend="Patterns"/>. When designing sonix, we used many design patterns, which were appropriate to a simple audio system <xref linkend="Gems2"/>.</para>
+         <itemizedlist>
+            <listitem>
+               <para>Adaptor (<classname>snx::SoundImplementation</classname>) provides a common interface to the underlying sound API. </para>
+            </listitem>
+            <listitem>
+               <para>Prototype (<classname>snx::SoundImplementation</classname>) each sound implementation can be cloned, preserving its engine setup state </para>
+            </listitem>
+            <listitem>
+               <para>Store/plugin-method (<classname>snx::SoundFactory</classname>) each sound impl is registered with a Store. The Store allows users to select items from its inventory. The Store is also an "Abstract Factory" </para>
+            </listitem>
+            <listitem>
+               <para>Abstract Factory (<classname>snx::SoundFactory</classname>) The Store can create new instances of the requested sound implementation. The Abstract Factory consults its Store of registered objects, and if found, makes a clone of that object (Prototype pattern). The Abstract Factory is used to configure the Bridge. </para>
+            </listitem>
+            <listitem>
+               <para>Bridge (sonix interface class / <classname>snx::SoundImplementation</classname>) sonix class is the audio system abstraction which is decoupled from its implementation SoundImplementation. This way the two can vary independently. Bridge also facilitates run-time configuration of the sound API. </para>
+            </listitem>
+            <listitem>
+               <para>Proxy (<classname>std::string</classname>) refer to actual sounds with a <classname>std::string</classname> Proxy. This allows you to generically control a sound for any sound API. The sonix class acts as Mediator between every Proxy method and the actual SoundImplementation Adaptor. </para>
+            </listitem>
+         </itemizedlist>
       </section>
    </section>
    <bibliography>
       <title>References</title>
       <biblioentry
-        id = "watt93"
+        id = "Gems2"
       >
-         <abbrev>watt93</abbrev>
+         <abbrev>Gems2</abbrev>
+         <biblioset
+           relation = "article"
+         >
+            <author>
+               <surname>Patterson</surname>
+               <firstname>Scott</firstname>
+            </author>
+            <title>Game Audio Design Patterns</title>
+            <pagenums>514</pagenums>
+         </biblioset>
+         <biblioset
+           relation = "article"
+         >
+            <author>
+               <surname>Lewis</surname>
+               <firstname>Ian</firstname>
+            </author>
+            <title>A Low-Level Sound API</title>
+            <pagenums>559 </pagenums>
+         </biblioset>
          <biblioset
            relation = "book"
          >
             <author>
-               <surname>Watt</surname>
-               <firstname>Alan</firstname>
+               <surname>Deloura</surname>
+               <firstname>Mark</firstname>
             </author>
-            <title>3D Computer Graphics (second ed.)</title>
-            <publishername>Addison Wesley Publishing Company Inc.</publishername>
-            <pubdate>1996</pubdate>
-            <pagenums>10</pagenums>
+            <title>Game Programming Gems 2</title>
+            <publishername>Charles River Media </publishername>
+            <pubdate>2001</pubdate>
             <copyright>
-               <year>1993</year>
-               <holder>Addison Wesley Publishing Company Inc.</holder>
+               <year>2001</year>
+               <holder>Charles River Media Inc.</holder>
+            </copyright>
+         </biblioset>
+      </biblioentry>
+      <biblioentry
+        id = "Patterns"
+      >
+         <abbrev>Patterns</abbrev>
+         <biblioset
+           relation = "book"
+         >
+            <author>
+               <surname>Gamma</surname>
+               <firstname>Erich</firstname>
+            </author>
+            <author>
+               <surname>Helm</surname>
+               <firstname>Richard</firstname>
+            </author>
+            <author>
+               <surname>Johnson</surname>
+               <firstname>Ralph</firstname>
+            </author>
+            <author>
+               <surname>Vlissides</surname>
+               <firstname>John</firstname>
+            </author>
+            <title>Design Patterns</title>
+            <subtitle>Elements of Reusable Object-Oriented Software</subtitle>
+            <publishername>Addison Wesley </publishername>
+            <pubdate>1995</pubdate>
+            <copyright>
+               <year>1995</year>
+               <holder>Addison Wesley Longman, Inc</holder>
             </copyright>
          </biblioset>
       </biblioentry>
