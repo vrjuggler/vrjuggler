@@ -34,6 +34,7 @@
 
 #include <stdlib.h>
 #include <ctype.h>
+#include <boost/concept_check.hpp>
 
 #include <jccl/Util/Debug.h>
 #include <jccl/Config/ParseUtil.h>
