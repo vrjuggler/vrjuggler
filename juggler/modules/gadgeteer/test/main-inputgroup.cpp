@@ -31,23 +31,21 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <iostream>
-#include <Input/InputManager/vjInputManager.h>
-#include <Input/ibox/hci.h>
-#include <Input/ibox/ibox.h>
-#include <Input/vjPosition/vjFlock.h>
-#include <Input/vjInput/vjIbox.h>
-#include <VPR/SharedMem/vjMemPool.h>
+#include <vrj/Input/InputManager.h>
+#include <vrj/Input/Devices/Immersion/hci.h>
+#include <vrj/Input/Devices/Immersion/iboxStandalone.h>
+#include <vrj/Input/Devices/Ascension/Flock.h>
+#include <vrj/Input/Devices/Immersion/Ibox.h>
 #include <vpr/System.h>
 
 int main()
 {
-   MemPool* shared_pool = new SharedPool(1024*1024);
-   Matrix pos_data;
-   InputManager* input_manager = new(shared_pool) InputManager ;
+   vrj::Matrix pos_data;
+   vrj::InputManager* input_manager = new vrj::InputManager ;
 
       // --- Create Dummy -- //
    std::cout << "\nCreating myDummy: DummyPosition w/X=5.0" << std::endl;
-   DummyPosition* myDummy = new(shared_pool) DummyPosition;
+   vrj::DummyPosition* myDummy = new vrj::DummyPosition;
    myDummy->SetX(5.0);
 
       // -- get default pos data -- //
@@ -90,7 +88,7 @@ int main()
    std::cin.get();
 
 #ifdef TRACKERS
-   Flock* aFlock = new (shared_pool) Flock;
+   vrj::Flock* aFlock = new vrj::Flock;
    aFlock->startSampling();
    devNum = input_manager->fAddDevice(aFlock);
    input_manager->SetPosProxy(1,devNum,0);
@@ -119,8 +117,8 @@ int main()
    aFlock->stopSampling();
 #endif
    
-   IBox *myibox = new (shared_pool) IBox;
-   myibox->StartSampling();
+   vrj::IBox *myibox = new vrj::IBox;
+   myibox->startSampling();
    std::cout << "ibox is: " << myibox->getDeviceName();
    C2Dinput_manageritalProxy dp1(myibox,0);
    devNum = input_manager->FAddDevice(myibox);
@@ -147,7 +145,6 @@ int main()
    delete myDummy;
 
    delete input_manager;
-   delete shared_pool;
 
    return 0;
 } 

@@ -32,12 +32,12 @@
 
 #include <iostream>
 
-#include <VPR/SharedMem/vjMemPool.h>
-#include <Config/vjChunkDescDB.h>
-#include <Config/vjChunkFactory.h>
-#include <Input/InputManager/vjInputManager.h>
-#include <Input/InputManager/vjPosInterface.h>
-#include <Math/vjCoord.h>
+#include <vrj/Config/ChunkDescDB.h>
+#include <vrj/Config/ChunkFactory.h>
+#include <vrj/Config/ConfigChunkDB.h>
+#include <vrj/Input/InputManager.h>
+#include <vrj/Input/Type/PosInterface.h>
+#include <vrj/Math/Coord.h>
 #include <vpr/System.h>
 
 
@@ -47,10 +47,9 @@
 int main()
 {
    // --- Load chunk database -- //
-   MemPool* shared_pool = new SharedPool(1024*1024);
-   ChunkDescDB desc;
+   vrj::ChunkDescDB desc;
    bool load_worked = desc.load(CHUNK_DESC_LOCATION);
-   ChunkFactory::setChunkDescDB(&desc);
+   vrj::ChunkFactory::instance()->addDescs(&desc);
 
    if(!load_worked)
       std::cerr << "Could not load chunkDesc's\n" << std::flush;
@@ -59,7 +58,7 @@ int main()
              << std::endl;
 
    // -- Load config -- //
-   ConfigChunkDB *chunkdb = new ConfigChunkDB();
+   vrj::ConfigChunkDB *chunkdb = new vrj::ConfigChunkDB();
    load_worked = chunkdb->load(CONFIG_LOCATION);
    if(!load_worked)
       std::cerr << "Could not load config file\n" << std::flush;
@@ -68,11 +67,17 @@ int main()
    std::cout << (*chunkdb);
    std::cout << "endochunks" << std::endl;
 
-   InputManager *input_manager = new(shared_pool)InputManager;
+   vrj::InputManager *input_manager = new vrj::InputManager;
    std::cout << "vjInputManager created" << std::endl;
 
    // --- configure the input manager -- //
-   input_manager->configureInitial(chunkdb);
+   for ( vrj::ConfigChunkDB::iterator i = chunkdb->begin();
+         i != chunkdb->end();
+         i++ )
+   {
+      input_manager->configAdd(*i);
+   }
+
    std::cout << "new devices have been added..\n\n";
 
    std::cout << input_manager << std::endl;
@@ -82,8 +87,10 @@ int main()
    std::cout << "awake." << std::endl << std::flush;
 
       // get the indices for the devices
-   int head_index = input_manager->getProxyIndex("VJHead");
-   int wand_index = input_manager->getProxyIndex("VJWand");
+   vrj::PosProxy* head_proxy =
+      dynamic_cast<vrj::PosProxy*>(input_manager->getProxy("VJHead"));
+   vrj::PosProxy* wand_proxy =
+      dynamic_cast<vrj::PosProxy*>(input_manager->getProxy("VJWand"));
 
    for (int l = 0; l <30; l++)
    {
@@ -92,17 +99,17 @@ int main()
       input_manager->updateAllData();
 
 
-      Matrix* pd_head = input_manager->getPosProxy(head_index)->getData();
-      Matrix* pd_wand = input_manager->getPosProxy(wand_index)->getData();
+      vrj::Matrix* pd_head = head_proxy->getData();
+      vrj::Matrix* pd_wand = wand_proxy->getData();
 
       std::cout << "-------------------------------------\n";
       std::cout << "head:\n" << *pd_head << std::endl;
-      Coord head_coord(*pd_head);
+      vrj::Coord head_coord(*pd_head);
       std::cout << "\tpos:" << head_coord.pos << std::endl;
       std::cout << "\tor:" << head_coord.orient << std::endl;
 
       std::cout << "wand:\n" << *pd_wand << std::endl << std::flush;
-      Coord wand_coord(*pd_wand);
+      vrj::Coord wand_coord(*pd_wand);
       std::cout << "\tpos:" << wand_coord.pos << std::endl;
       std::cout << "\tor:" << wand_coord.orient << std::endl;
       std::cout << "-------------------------------------\n\n";
@@ -111,7 +118,6 @@ int main()
 
    // -- Delete the garabage --- //
    delete input_manager;
-   delete shared_pool;
 
    return 0;
 }
