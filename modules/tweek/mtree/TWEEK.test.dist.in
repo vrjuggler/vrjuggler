@@ -62,6 +62,14 @@
             testbean
             ..
         ..
+        TestSuite
+            java
+                tweektest
+                    beans
+                    ..
+                ..
+            ..
+        ..
         corba
         ..
     ..
