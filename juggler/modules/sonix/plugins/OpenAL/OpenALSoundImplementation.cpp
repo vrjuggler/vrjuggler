@@ -180,7 +180,12 @@ bool OpenALSoundImplementation::isPlaying( const std::string& alias )
       vprASSERT(alIsSource(mBindLookup[alias].source) != AL_FALSE && "weird, shouldn't happen...\n");
 
       ALint state( AL_INITIAL ); // initialized
-      alGetSourceiv( mBindLookup[alias].source, AL_SOURCE_STATE, &state );
+
+#if defined(VPR_OS_Win32) || defined(VPR_OS_Darwin)
+      alGetSourcei(mBindLookup[alias].source, AL_SOURCE_STATE, &state);
+#else
+      alGetSourceiv(mBindLookup[alias].source, AL_SOURCE_STATE, &state);
+#endif
 
       switch(state) 
       {
@@ -205,7 +210,11 @@ bool OpenALSoundImplementation::isPaused( const std::string& alias )
    {
       vprASSERT(alIsSource(mBindLookup[alias].source) != AL_FALSE && "weird, shouldn't happen...\n");
       ALint state( AL_INITIAL ); // initialized
-      alGetSourceiv( mBindLookup[alias].source, AL_SOURCE_STATE, &state );
+#if defined(VPR_OS_Win32) || defined(VPR_OS_Darwin)
+      alGetSourcei(mBindLookup[alias].source, AL_SOURCE_STATE, &state);
+#else
+      alGetSourceiv(mBindLookup[alias].source, AL_SOURCE_STATE, &state);
+#endif
       //std::cout<<"state: "<<state<<(AL_PAUSED == state)<<(AL_PLAYING == state)<<(AL_STOPPED == state)<<std::endl;
       return bool( AL_PAUSED == state );
    }
@@ -440,7 +449,8 @@ int OpenALSoundImplementation::startAPI()
       if (mContextId == NULL) 
       {
          std::string err = (char*)alGetString( alcGetError( mDev ) );
-         vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| ERROR:") << "Could not open context: " << err.c_str() << "\n" << vprDEBUG_FLUSH;
+         vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| ERROR:")
+            << "Could not open context: " << err << "\n" << vprDEBUG_FLUSH;
          return 0;
       }
 
@@ -556,61 +566,110 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          // open the file as readonly binary
          if (!snxFileIO::fileExists( soundInfo.filename.c_str() )) 
          {
-         vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "ERROR:") <<" OpenAL| alias '" << alias << "', file '"<<soundInfo.filename<<"' doesn't exist\n" << vprDEBUG_FLUSH;
+            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+               << clrOutNORM(clrYELLOW, "ERROR:") <<" OpenAL| alias '"
+               << alias << "', file '" <<soundInfo.filename
+               << "' doesn't exist\n" << vprDEBUG_FLUSH;
             break;
          }
 
          // read the data from the file.
-         vpr::DebugOutputGuard output1(snxDBG, vprDBG_CONFIG_LVL, std::string("[snx]OpenAL| NOTIFY: loading: ")+soundInfo.filename+std::string("... \n"), std::string("\n"));
+         vpr::DebugOutputGuard output1(snxDBG, vprDBG_CONFIG_LVL,
+                                       std::string("[snx]OpenAL| NOTIFY: loading: ") +
+                                          soundInfo.filename+std::string("... \n"),
+                                       std::string("\n"));
+
+         // This file loading bit is complicated because only the Linux version of
+         // OpenAL defines AL_FORMAT_WAVE_EXT.  Other platforms set the format
+         // specifier in alut helper functions.
+         ALenum format;
+#if defined(VPR_OS_Win32) || defined(VPR_OS_Darwin)
+         ALvoid* data;
+         ALsizei size, freq;
+
+         // Macintosh does not have the loop parameter in its alutLoadWAVFile().
+#if defined(VPR_OS_Win32)
+         ALboolean loop;
+         alutLoadWAVFile((ALbyte*) soundInfo.filename.c_str(), &format, &data, &size, &freq, &loop);
+#elif defined(VPR_OS_Darwin)
+         alutLoadWAVFile((ALbyte*) soundInfo.filename.c_str(), &format, &data, &size, &freq);
+#endif
+
+         // Copy the memory in data into mBindLookup[alias].data.
+         mBindLookup[alias].data.resize(size);
+         // XXX: The memory allocated for data by alutLoadWAVFile() is leaked.
+         memcpy(&mBindLookup[alias].data[0], data, size);
+#else
+         format = AL_FORMAT_WAVE_EXT;
          snxFileIO::fileLoad( soundInfo.filename.c_str(), mBindLookup[alias].data );
+#endif
 
          // create a new buffer to put our loaded data into...
          alGenBuffers( 1, &bufferID );
          err = alGetError();
          if (err != AL_NO_ERROR)
          {
-            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "ERROR:") << "Could not gen a buffer [err="<<err<<"]\n" << vprDEBUG_FLUSH;
+            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+               << clrOutNORM(clrYELLOW, "ERROR:") << "Could not gen a buffer [err="
+               << err << "]\n" << vprDEBUG_FLUSH;
             switch (err)
             {
                case AL_INVALID_VALUE:
-                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "       invalid value < 0\n") << vprDEBUG_FLUSH;
+                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+                     << clrOutNORM(clrYELLOW, "       invalid value < 0\n")
+                     << vprDEBUG_FLUSH;
                   break;
                case AL_OUT_OF_MEMORY:
-                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "       out of memory\n") << vprDEBUG_FLUSH;
+                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+                     << clrOutNORM(clrYELLOW, "       out of memory\n")
+                     << vprDEBUG_FLUSH;
                   break;
                default:
-                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "       unknown error\n") << vprDEBUG_FLUSH;
+                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+                     << clrOutNORM(clrYELLOW, "       unknown error\n")
+                     << vprDEBUG_FLUSH;
+                  break;
             }
          }
-         
+
          // put the data into an OpenAL buffer
-         alBufferData( bufferID, AL_FORMAT_WAVE_EXT, &(mBindLookup[alias].data[0]), mBindLookup[alias].data.size(), 0 );
+         alBufferData(bufferID, format, &(mBindLookup[alias].data[0]), mBindLookup[alias].data.size(), 0);
          err = alGetError();
          if (err != AL_NO_ERROR)
          {
-            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| ERROR:") <<" Could not buffer data [bufferID=" << bufferID << ",err=" << err << "]\n" << vprDEBUG_FLUSH;
+            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+               << clrOutNORM(clrYELLOW, "OpenAL| ERROR:") <<" Could not buffer data [bufferID="
+               << bufferID << ",err=" << err << "]\n" << vprDEBUG_FLUSH;
             switch (err)
             {
                case AL_ILLEGAL_COMMAND:
-                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) <<  clrOutNORM(clrYELLOW, "Streaming buffers cannot use alBufferData\n") << vprDEBUG_FLUSH;
+                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+                     <<  clrOutNORM(clrYELLOW, "Streaming buffers cannot use alBufferData\n")
+                     << vprDEBUG_FLUSH;
                   break;
                case AL_INVALID_NAME:
-                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "bufferID is not a valid buffer name\n") << vprDEBUG_FLUSH;
+                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+                     << clrOutNORM(clrYELLOW, "bufferID is not a valid buffer name\n")
+                     << vprDEBUG_FLUSH;
                   break;
                //case AL_INVALID_ENUM:
                //   std::cout<<"       format is invalid\n"<<std::flush;
                //   break;
                case AL_OUT_OF_MEMORY:
-                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "not enough memory is available to make a copy of this data\n") << vprDEBUG_FLUSH;
+                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+                     << clrOutNORM(clrYELLOW, "not enough memory is available to make a copy of this data\n")
+                     << vprDEBUG_FLUSH;
                   break;
                default:
-                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "       unknown error\n") << vprDEBUG_FLUSH;
+                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+                     << clrOutNORM(clrYELLOW, "       unknown error\n")
+                     << vprDEBUG_FLUSH;
+                  break;
             }            
             alDeleteBuffers( 1, &bufferID );
             mBindLookup.erase( alias );
             break;
          }
-         
          else
          {
             //std::cerr << "DEBUG: buffered data success [bufferID="<<bufferID<<"]\n" << std::flush;
