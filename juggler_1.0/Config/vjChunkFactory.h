@@ -118,13 +118,15 @@ protected:
          vjDEBUG(vjDBG_ERROR,0) << "vjChunkFactory::setupInitialEnvironment: Env var VJ_BASE_DIR not defined." << endl << vjDEBUG_FLUSH;
          exit(1);
       }
-   
+
       char chunk_desc_file[250];
       strcpy(chunk_desc_file, vj_base_dir);
       strcat(chunk_desc_file, "/Data/chunksDesc");
       vjDEBUG(vjDBG_ALL,0) << "vjChunkFactory::setupInitialEnvironment: Loading chunk description file: ["
                            << chunk_desc_file << "]\n" << vjDEBUG_FLUSH;
 
+      this->loadDescs(std::string(chunk_desc_file));
+      /*
       vjChunkDescDB* cfg_desc = new vjChunkDescDB;
       if (!cfg_desc->load(chunk_desc_file))
       {
@@ -132,7 +134,8 @@ protected:
          exit(1);
       }
       this->addDescs(cfg_desc);
-   
+      */
+
    }
 
 private:
