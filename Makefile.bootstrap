@@ -1,0 +1,17 @@
+ifdef NSPR
+    CFG_ARGS	= --with-nspr=$(NSPR)
+endif
+
+ifdef prefix
+    CFG_ARGS	+= --prefix=$(prefix)
+endif
+
+WRKDIR	= $(shell pwd)
+LIBIDL	= external/Equator/libIDL/libIDL-0.6.8
+EQ_VJ	= external/Equator/vj_standalone
+
+dso-bootstrap:
+	cd $(LIBIDL) && ./configure $(CFG_ARGS)
+	cd $(LIBIDL) && $(MAKE) clean all
+	cd $(EQ_VJ) && ./configure $(CFG_ARGS)
+	cd $(EQ_VJ) && $(MAKE) clobber buildme
