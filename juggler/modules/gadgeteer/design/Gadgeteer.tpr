@@ -60,7 +60,7 @@ Developer.DesignWorkspace={{0,2,-1,0,0,0,0,1,0,1,0,50,75,22,-1,-1,-1,-1}${0,1,-1
 Developer.Gadgeteer={{0,2,-1,0,0,0,0,1,0,1,1,71,75,25,-1,-1,-1,-1}${0,1,-1,0,0,0,0,1,0,1,0,71,75,25,-1,-1,-1,-1}${0,3,-1,0,0,0,0,1,0,1,0,50,50,25,-1,-1,-1,-1}${0,3,-1,0,0,0,0,1,0,1,0,50,50,25,-1,-1,-1,-1}${0,-1,-1,0,0,0,0,0,0,1,0,5,5,5,-1,-1,-1,-1}${0,4,-1,0,0,0,0,1,0,1,0,50,50,25,-1,-1,-1,-1}${0,0,-1,0,0,0,0,1,0,1,0,75,5,5,-1,-1,-1,-1}${0,7,-1,0,0,0,0,0,0,1,0,50,50,75,-1,-1,-1,-1}}
 names.Developer={Gadgeteer,DesignWorkspace,CodingWorkspace,DebugWorkspace}
 [editor]
-recent.file.0=/home9/users/patrick/src/Juggler/main/juggler/modules/gadgeteer/gadget/InputManager.h
+recent.file.0=/home9/users/patrick/src/Juggler/main/juggler/modules/gadgeteer/gadget/Type/DeviceFactory.h
 recent.file.1=/home9/users/patrick/src/Juggler/main/juggler/modules/gadgeteer/gadget/ProxyFactory.h
 recent.file.2=/home9/users/patrick/src/Juggler/main/juggler/modules/gadgeteer/gadget/Type/Input.h
 recent.file.3=/home9/users/patrick/src/Juggler/main/juggler/modules/gadgeteer/gadget/Type/PositionProxy.h
@@ -68,8 +68,8 @@ recent.file.4=/home9/users/patrick/src/Juggler/main/juggler/modules/gadgeteer/ga
 recent.file.5=/home9/users/patrick/src/Juggler/main/juggler/modules/gadgeteer/gadget/RemoteInputManager/RemoteInputManager.h
 recent.file.6=/home9/users/patrick/src/Juggler/main/juggler/modules/gadgeteer/gadget/gadgetConfig.h
 recent.file.7=/home9/users/patrick/src/Juggler/main/juggler/modules/gadgeteer/acconfig.h
-recent.file.8=/home9/users/patrick/src/Juggler/main/juggler/modules/gadgeteer/gadget/Type/InputMixer.h
-recent.file.9=/home9/users/patrick/src/Juggler/main/juggler/modules/gadgeteer/gadget/Devices/Open/Trackd/trackdmem.cpp
+recent.file.8=/home9/users/patrick/src/Juggler/main/juggler/modules/gadgeteer/gadget/InputManager.h
+recent.file.9=/home9/users/patrick/src/Juggler/main/juggler/modules/gadgeteer/gadget/Type/InputMixer.h
 [lastOpenProjectName]
 Developer=Gadgeteer
 [newDiagramExpert]
