@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>232</width>
-            <height>359</height>
+            <width>291</width>
+            <height>421</height>
         </rect>
     </property>
     <property name="caption">
@@ -45,12 +45,6 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <property name="margin">
-                        <number>5</number>
-                    </property>
-                    <property name="spacing">
-                        <number>0</number>
-                    </property>
                     <widget class="QGroupBox">
                         <property name="name">
                             <cstring>transGroupBox</cstring>
@@ -62,90 +56,83 @@
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
+                            <property name="margin">
+                                <number>4</number>
+                            </property>
+                            <widget class="QLabel">
+                                <property name="name">
+                                    <cstring>mNavTransPix</cstring>
+                                </property>
+                                <property name="pixmap">
+                                    <pixmap>image0</pixmap>
+                                </property>
+                                <property name="scaledContents">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>Translate user. Up/down is forward/back. Left/right is left/right.</string>
+                                </property>
+                            </widget>
                             <widget class="QLayoutWidget">
                                 <property name="name">
-                                    <cstring>layout16</cstring>
+                                    <cstring>layout15</cstring>
                                 </property>
-                                <hbox>
+                                <vbox>
                                     <property name="name">
                                         <cstring>unnamed</cstring>
                                     </property>
-                                    <widget class="QLabel">
+                                    <widget class="QCheckBox">
                                         <property name="name">
-                                            <cstring>mNavTransPix</cstring>
+                                            <cstring>mAllowXTransChk</cstring>
                                         </property>
-                                        <property name="pixmap">
-                                            <pixmap>image0</pixmap>
+                                        <property name="text">
+                                            <string>Allow X</string>
                                         </property>
-                                        <property name="scaledContents">
+                                        <property name="checked">
                                             <bool>true</bool>
                                         </property>
-                                        <property name="toolTip" stdset="0">
-                                            <string>Translate user. Up/down is forward/back. Left/right is left/right.</string>
+                                    </widget>
+                                    <widget class="QCheckBox">
+                                        <property name="name">
+                                            <cstring>mAllowYTransChk</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Allow Y</string>
+                                        </property>
+                                        <property name="checked">
+                                            <bool>true</bool>
                                         </property>
                                     </widget>
-                                    <widget class="QLayoutWidget">
+                                    <widget class="QCheckBox">
                                         <property name="name">
-                                            <cstring>layout15</cstring>
+                                            <cstring>mAllowZTransChk</cstring>
                                         </property>
-                                        <vbox>
-                                            <property name="name">
-                                                <cstring>unnamed</cstring>
-                                            </property>
-                                            <widget class="QCheckBox">
-                                                <property name="name">
-                                                    <cstring>mAllowXTransChk</cstring>
-                                                </property>
-                                                <property name="text">
-                                                    <string>Allow X</string>
-                                                </property>
-                                                <property name="checked">
-                                                    <bool>true</bool>
-                                                </property>
-                                            </widget>
-                                            <widget class="QCheckBox">
-                                                <property name="name">
-                                                    <cstring>mAllowYTransChk</cstring>
-                                                </property>
-                                                <property name="text">
-                                                    <string>Allow Y</string>
-                                                </property>
-                                                <property name="checked">
-                                                    <bool>true</bool>
-                                                </property>
-                                            </widget>
-                                            <widget class="QCheckBox">
-                                                <property name="name">
-                                                    <cstring>mAllowZTransChk</cstring>
-                                                </property>
-                                                <property name="text">
-                                                    <string>Allow Z</string>
-                                                </property>
-                                                <property name="checked">
-                                                    <bool>true</bool>
-                                                </property>
-                                            </widget>
-                                        </vbox>
+                                        <property name="text">
+                                            <string>Allow Z</string>
+                                        </property>
+                                        <property name="checked">
+                                            <bool>true</bool>
+                                        </property>
                                     </widget>
-                                    <spacer>
-                                        <property name="name">
-                                            <cstring>spacer7</cstring>
-                                        </property>
-                                        <property name="orientation">
-                                            <enum>Horizontal</enum>
-                                        </property>
-                                        <property name="sizeType">
-                                            <enum>Expanding</enum>
-                                        </property>
-                                        <property name="sizeHint">
-                                            <size>
-                                                <width>40</width>
-                                                <height>20</height>
-                                            </size>
-                                        </property>
-                                    </spacer>
-                                </hbox>
+                                </vbox>
                             </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer7</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>16</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
                         </hbox>
                     </widget>
                     <widget class="QGroupBox">
@@ -158,6 +145,9 @@
                         <hbox>
                             <property name="name">
                                 <cstring>unnamed</cstring>
+                            </property>
+                            <property name="margin">
+                                <number>5</number>
                             </property>
                             <widget class="QLayoutWidget">
                                 <property name="name">
@@ -193,12 +183,68 @@
                                         </property>
                                         <property name="sizeHint">
                                             <size>
-                                                <width>40</width>
+                                                <width>114</width>
                                                 <height>20</height>
                                             </size>
                                         </property>
                                     </spacer>
                                 </hbox>
+                            </widget>
+                        </hbox>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout16</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLayoutWidget">
+                                <property name="name">
+                                    <cstring>layout15</cstring>
+                                </property>
+                                <vbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>textLabel3</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Factor</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>mFactorValLabel</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>1.0</string>
+                                        </property>
+                                        <property name="alignment">
+                                            <set>AlignVCenter</set>
+                                        </property>
+                                    </widget>
+                                </vbox>
+                            </widget>
+                            <widget class="QSlider">
+                                <property name="name">
+                                    <cstring>mFactorSlider</cstring>
+                                </property>
+                                <property name="minValue">
+                                    <number>1</number>
+                                </property>
+                                <property name="maxValue">
+                                    <number>100</number>
+                                </property>
+                                <property name="value">
+                                    <number>10</number>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
                             </widget>
                         </hbox>
                     </widget>
@@ -462,7 +508,7 @@
 </toolbars>
 <images>
     <image name="image0">
-        <data format="XPM.GZ" length="17150">789ccd9ad76e1cc99286efe72984c9bb83459e76e5b0d80b7ad3f46cdac55ea4a922d9f46cfac5befb7e1951234db746331a8d132840159526fef09159fdef7f7d38ded9fcf0af7fff3079748f17e14338770f1ffe159faeafdffefb7ffeeb7f7ff8b1e87de0dfa0d3ffd0fbf13f7ef871f7f143f8b0757b5327a23e833075dde9743b890e2ed1cda0d3e9b844db81d00e7a20f4bed00db4ccaf657e1d59df95f51d19ef321c65fec2ccfa9b99f542d79ef5fd44bb6c9abf39123a872e855e9f5e1f4b591f582fc2c517a1d37823fcae67f81ba1c1db11bcf558e633de9571bf388ddf3ccff03f9f597f2beb2bc84cf02bde1ee341683b23cff1ccfa30bd3eaccde0df9be66f151ffaea88beea3b995fb23e17f98b6979e2c2b47edcf5343e7b2534eb3bb2deba697d39d517eb3bb2bebe9fe6579b19fcd5b43fb8f7197ef333f2dccef0bb9991ef7c9a9fef4eebc79ccdf86b36b3be9e5e1faea6fdddf667d68fa6f1d497321fbc5dc11bf3197dafcff8cffdf4fe666d261e64bf2683ae84f6d3fa37e2bf0dfaec883e6bf19f9af95d991fb3193cdb3378cea6ed61e764bf3efb79a1c733f286193c77d3f6a9fd34ffb037b3ffee8c7c4b33eb55dff0ef0a7f5f4fc7bb399cd1d77066fdc5f4fa3898d1c7685a1f7e7bda1ee669269e2e66fc31cec4e7c50c7f19af99df95f951fca5667e57e6c7e319fdbc4edbc3f666f89fcfe8ab9ec173308da76e643df3bb323f98e9fd4d33e3cff9ccfaebe9f5b19a91a737a3dfce8c7cb7d3f2b9c1b4fd4d356d4ffb3e236f3323effdb43f9a93197f14ffed747ecaeffef827ba917ae5b396ee36b29f3f69e97ea3fe75dad25923787da7a5f346ec199a962e1bcd07ef2d5d35228fcf5bda35e23f61bda57d23f285fb968e8de4375fb434220b5d2addedd68aaf6ae97e2df8826de9412df286fd96ce6af59f56fe6e511742cfb574556b7e7d6869572bbef396f6b5e21bb674a8255f878b96c645841e2bddeb44d167b86ce95e147f089396cea2e2996fe9222a9e6e4b9751f5f7d8d255547c4f2d1da2f25f68e918b53f786e694a84d02f2ddd04f1973052badf098a6fb1a57b41f16db4743fa83e975a3a0f6adf83962e83e25b6ee92a28be5e4bfba0fa5a69e91014ef6a4bc7a078375bbaf18a6f4be941df6bbcb4f61c645ef575d8d2b9573cdb2d5d78d5df4e4b575ef1ecb6b4f782279a9626a4846eed3b689cf23f523aeb38d54fbfa57b4ef5d3c64b36701abfaea573a778da78c90aa778062d5d3ad5571b3f59e5145f1b6f5974a28fe85b9a142be36dbce4dd4af3cb5d4bf72bb54f1b1ff9a0527f6fe323cf2bad5fad7fe65525fc6268695769ffd2c65b1e2aedef624b37a5e823b6fe5c744be55fb774afd4fcd6c67b3128551f6dfc1459a9f5e3b5a5f352f1b4f15014a5e8275eb5742895ff754b3785f2bf51baec15caaf8d9fb25fa87fbcb57459687d6ee3a5ac0a95b7f5efd2152a6f1b3f652c54df6dbc90ae945febef553fd7fddbfc55e5b9e26ff345e572ddaff5ffcae7ea5f6d3c5731d7fd5bff77bd4cf1b7f9c3e599eed7c6832b32d5c75a4bfb4cf76be3d15122846efddb77076a8f367efc60a0fa6fe3c79703d547ebffde0d14ef9ed2a1dbd7f56d3c87415fd7b7f932e47dc5d7c65b887d95a78d8fd8efa97e5a7f8f654ff9b5fe5d9311856ef359edb57e05f55fea555b5f743fea6523faf11a2fd42fad3741fd8dfad8d61bc543ffa0f5c6abbc05b4e8cfab3ea8df6dfd91fadaa19eb6f547f549ffa2f5c7abfcd457ad3f5eed433fde883f7aad4f4d2a40424bfe4ce5b6d6fc20fed7e585d6a320feda459e5ae5117b76fb4903322ef1d5a51e6b7df292bfbbc8a7f5c98bff7491af56f9c4dfbac8a7f5ca8bbf7491afd67e5dfcb38b3c6dbd92f8e9228fd62b2ff6ec228fd62baf78393fd45a5f25bf759b54708596784ded92d62f2ff6eaf142eb97177df690276a3f20f2f6c0dfd633c92fbd3c79848c0b9e1ef8b5be7989871ef8b5be79a94f3deca3f5cd4b3ee8214f54fb88bff67cf238a1257ff4e8c7b4be7989df1ef8b5be79d16f6a7fb4be79c1d3ef260f165af2591f79b4de79c9b77d1668bdf392cffbc813d41e923ffbc8a3f5cf4bfde8234fd0fcaeebcb1431322ef5af8f3c5a0fbdd4af3ef8b51e3ad1771ffc41f03b9ddfa40648688997d4ae79c52ff569007e2ff89df45b03f07b3dff4aff3300bfd64b27f13700bfd64b2ff96990a78c20b4f43f03f06bbd7412bf03f07bc52ff971007ead9f4ee26d80ff783ddf4abc0cc0aff5d3493ca4e38dd64b2ff93703af53bce27f1978b57e3aa94f19026afd7462df8c0d9ce2957c958157eba9977c9c152943ca7c89df0c7c5a3f9dc46b86bf383ddf4abc6621655ca125fe32fc5debab97fc9935a921957189a7741ca904bf937a9a775306175af0e4e0af14bff86fde4f195ff693fa970f52459071d177ce865a7f9dc45b0efe4af14b7ce565aa28428bffe7c8a3f5d989bc39f2687d76e2dfb94f154968c19f239fd66b27f6ca91afd2fb00a97779932a9ad0628f2235e42a9ff44b05f268fdf6524f0be429d57f941ea48a29b4c46391a58a2ab4c45f91a78a2bb4c4530103ade74ee2a5409e52e511ff2d7caad8424b7f508454d185bfd2e02f15bff867817f95ea5f921f8b267504424bbf928ef385ca23fa2fb157a1f749e25f25f2687f60c49e25f80bc16fa49f2ac15f287ea91f65913a12a175bc4c1d8bcc97feacac524723b4d4a712790a9547ea5319538724e312df25f80b3d6f4bbca4eb865cf01a89970abcb9e295f8a87aa90393fda4bfacc0affd8791f8a806a963135afcb102bff6234ef25d55a68e4fc6c53f2a18e68a57f24be5528728b4d8bf42ffb9e8df88ff57e0cd15aff877d5a4039ed0e2cfe9ba26537d4b7d72ddd4b1cab8f8ab03bff63746f4e9c09f297ef14707fe4cfd49ea89cb52072ce3625f97a70e5968a9dfae481db4d0ca0f79329547f2a373a903175afcdb85d4a10b2dfeebb047a6f610ff7275eae88516ff714deaf88596fa9aaeb3066a1fc1e7914ffb2b23f5ce835ffb2b23f9d78377a078a5fef9229d40443ea937be4c27141997faecab7482115afcc5835ffb3123f6f3e01f287e5d0ffe81e297fce1c13f50fc526f7c934e4cc24fe8747dd857fc52bf42379db084967c13fae94426b4d4af803cdaef39912f64e90427e352af439e4e78424bfd0ac8d717f9ace83f94e94428b4e823205f5fefaba4fe049f4e90b2bfe8378474c29471a93701f9b49fb4e2efa1492754e127f9265ddff6441e2bfd61eca613aed052ef22f268ffe9c45f22f2f4f47e43fc3f66e9c42cb4f87bccd3895a68f1cf58a413b7d0ba1e79b47fb5525f22f6e9a97d24df45e4e9e9fd8bd49b18d2895e68c93711c03db597aeafd30d808c4b3d8a4dba50115aefe3d2058bda4befc73fde1f59bd9ffe787f64c5fe9fee8facde7f7dbc3fb27a1ffff1fec84abdf8745f67f57eeed37d99c4fbcfee17257e7e769f27f6fbd97d93c4d3a7fb6d2bf9e1d3fdb3d5fbf04ff763126f3fbb9f92fcf1e97ecae9fdf7c7fbb8ddc76ffbb3c63aeb6db0d1d6b6b167fc35f6dc5ed8b1bdb457f6fa5bf7fd164cf6c6deda3b7b6f1fecc43eda27fb6c5fecab607ae3ff17e827de4fecbb9db3f376e1afc66417ed925db62b7615de6b76dd0eed86ddb45b765b30edf0ff16f406efd7197f61de8addb57b7f0d26bb6f47f600dd243487f0dc04c1913db627f6d4766c573075f9eb409ff0fe88f14de61d0ab29eeddbc19f8bc96636b7053659b3259c2a789e1a6b8c71c69b60a2a9132653f317a13def8db1a03b66ee266bd6ec9369ccd99f85c99c9b0bf4f364c6e6d2ee982bd05cc333c0ffc6dc9a3b736f1ecc44303d9a09cff7bcbb65ac668e33d7ccbf62dda519b3c79379fee398cc0bfef388f70eb1c5b1ed9857f366dee139078279b36016cd9259362b8269d5acf0bcc4bb05c61e9973cbdc37f38a458f593f649f47b3f64730997533c462cf66c36e216bc21391ff0e6e9b660bfedb66c7ec9a3db36f4682e9c08c78dee3dd0e632bccd964ee1d6b62c2c51e5becf56c0ecdd1b76132c7e6c49cda372c56a17f83253a48de450b2ba607df7dd337039399dc14a6144c257f0574c6fb3ee3bbcc5b617e97751dd61b3cac62bf37da35fbfb3139ba22bb8a0f6c225dd779179037e15975d1ecbb1abe856bdc993b77176eec2e132677e52e79bee0dd996b4097316f9ff9ab82ebce05e76d97fd36d977d57d21ab7e0993bb01d1133966db9eb85b347f6b26ee4ef08cd041eeeedd03dc27eed13db967f7e22467ba37f7caf333ef1e191b33e71ead0dcc28e162fd847da2bb25576cb3f7937bff7a4ca2a3272cbfe3e6f0a11a0dcdbb79ecb0cffe855b401313b7e896dcb25b71ab6ecdadbba160da70439ed778b7c2d8127326cc5d406303d6f6d8639ebd6af3eae688c40d50fd82ae7e09933956446e132f72d8ec9e285ac537fa6e4bf06cbb1d34b20bef0db7e7f6ddc81db843c174c8df01f43eef3718df65de0ef3c1e5b6f0b05df65930f7ece9eca9db14549f79fbe79888b513f2ee3a910b2222e6019d6fbb63242df193097659460f43b88e4070e24e1d676bd7134c7dd7e3b9c3bb13c646cc193277993513778eff0fd8679bfd1ed81754f058770397fd26a6a139c503b7b15a4234c13b7bf843f2a0315ef2ea0af89468e3c455aee7ada7c3f6de8784c9471f7876bcb3a0ab9873c0dc216b5e593b668f1c7fecb1e724a1c282db66eceb5fc744862cc86b9bf6049b07e449880eb0598aa91ddfe02d7beec09ff973d05cf8b1bff457fedadff85bc174e76f79bee6dd256317cc39f767e0da73ebacdd618f336c7820a81ed8ff156fdfb46ffefecb98cc3939fb992a7045acd5d8fd2e2132b97ff0133c76d76df847ffe43af072fed9bfc0ffd5bff9773fe7e705d3829fe7f99d77af8cbd3087e067fe937fc4bf76dd929ff8072211542ed5a41a3e57e4ab67bff8454c1764fe0d326497e8bfc31bb7b1da96207a71ab7e090d2dbb3ef23ffb1574f2e657fd9a5ff743bfe13705d396dfe479c8bb35c6de98b3c2dc0bd62cb37609df7a49a8d0d588bd17e011e9242ab3e1b77f1913b5ff01bb6d11119e3c324f4639c68fce1222bfe377f1da0a0d79bf8785f6d1c8c81ff8437fe48ffd893f154c1d7fcaf331ef0e191b31679fb97bacb178d7a1dff53b091516ccf1f65578dca2c85378bef9eee798e88f72b2e4105d728e2543ce13b903bcf20aabad0aa28eefe1c5d7be8f0e46e863e03350e4bef0a5af12a6607dc573c1bb0e6303e68c98db674df43de21154e86a893def89e35d784ce065c8ecc36082fb0cd3c816c4db8e4d75e94e3ca94ff48ff1cc5db40e2242ea3904ff16a21f86da67a1817b15cec279b80863c17419c63c9f8733b0158c67cc1b32ff8d75cfc10baae4973b6e4c66e88b57dd9940d7b063c6e1ea334c07e4c94b7b4cdeee509b56a9535be4a347e26583c8a9d0d1b3bf09d7e126dc863bdf09f7c18607304cc263780acf82e9253cf3fcc8bb316336dc33ef8ef9acc3e79f7dca0f07444a436638c7abf6e1d385df2b7c2fc3eb3426faec077ac1a4a5480d5fa43e0dc8bd13f2ca3ab1b68c1fc51040f486171f87775f8639f8ce8785b01896c27290fe29ac86159e9778b7c0d838cc31ef1dffda0c6fac0d58d0b2d72319e595bd17e011c90a73783a9ab26b616d0ad312b9bbc4975ec965494b23eada05f9b7707b447f1f2fbdc6023720cac23a1a18a28ba7b00182cdb015b6c38e60da0d3b3c6ff16e99b127e60c99bb8e6f6db2f68d3d3c7b3d91af0af6bea00e8e445337f0bdb265d8fb8489d3d1329d7caa6f6fd8f7272d6d531586e8ba43f4eff97e88e1161dad877d7c663e8cc201bc0fc171148ec389603a0d273c1ff1ee90b103e6cc33771f54c75830e2ed7b64860e7b0ed97bfba3a6eecc1bd1b7695f42e723a65b4e3c87e4896b3ad547bab07dba910b3c71d595e46c8b27dc123f437ce31db92f4217ebf4d0c76ee88741c8421e0ac1548682e78c777dc6b698b3c8dc0bd6bce38343f6b8652f4b6e2fd97b074de5f05a81e73b7d7b650f43f511d31d961be2678ebcb44934d4e48009351d2d511d1c996fdf8f88a10efe3144f6c5b0126da415a2c01531c418e5dc129b58f31c78e719c34df0af45e60fc9101dd68fd86785fdce45536ff0b8a7ebebc1f3969a7c6c87f1ec23a6fbd672017fdb222f6574638bc4ec9e3b112ddd91fd36f0a47b3c7b82457a203ac75279bc88e37819afe2b560ba89d73c5ff2ee027d9dc67350f5983f61dd3d5eb5c13e77495354e73df65f740ff4abbbf09c232360bd78ab9838f74bcc715eab5bcb15e4a525fa9f1139e082baf5868483d06083319e7b10b638c49dc6bb781f1fc030898ff149303dc7279e27bc7b60ec8e39060b1eb066ccda862c3a62af177caa62ef35788cf173b55ecd7990d88b2f82c971b65fb747e4d31bb2fd36bd5b835697c94b8774236332cb2a9522230b3e60870dbc77373a74741f5fd1cb1b48dee39c609a8f733c3ff3ee9ab17be638fc6a9335f3e1810c9bb1cf2afb8de9640ed97f193e0db9731bbe379c208eec7a5c104c9ef3db4fdeb4c02968403d7aa47b55cb5d52e3d7a85f1d72f698bcb34c4cf5f1970b74711d17e3525c8e2b715530adc5559e9779b7c8d803733cde7ec89a853026b777d8678dfd2e5bebadc0e78c2ab303df9f3c6a5d3005eadc061d934f7940bce99cecb14a077b4a777685b6d7a9aa39556482c7a225e2aac067aed0c712ba19c68d287d41dc8a9b3c0f79b7c4d8551c138703d1d4226bcfa88347ecf5c69e865e741f1e4ff49fc9a3523ef074531b715b3045fbdc7af83d67d83dc903cfe24d1d62e49a7e68482e2ea8638fe4e82df24f46ac5de237cfe8641877e26edc134cfb718fe71dde2d3336614e20331cb16689b5e758ef98bdded9d391a592473d4b3ed883ef7debe523c15413755b52551e3859ab87bf90ff0f5c97fc7d4397b641075292679eb0c236593127e2aff0e6772cb5018a8328678478140f79dee5dd0a638fcc89c4df316b96597b41463861af39f6f4f4ed07f07869bd7c19dea9c26cc563c1d4d857ce5b5d3c7f42048ce8062ea94743f1f040969ba7a29c8a373d936f76c8d50579e89a189bc37f36d1cd61943c1e4fe309cf7bbc5b65ec893935d63b61cd0a6b93479db2d73c7b06f1f2217c2ee91046f09d989afe6e5bbffdcacdd177f4f7dd626ae87877c4768f54e9036c7745de4fd9a94f777147e7bf4565b0746c2f7423bbe4ef922a728317cf13fd5b78f65194de3776b1de11f416efe719bf890d35f09435abacbda40fedb0d7027b46ce822943bdb92b6c7700df47b1dd8efe6ecd9e7f57fea477dd17df55dce9efe9c7df557ed26f0697df551ed7ef1a57df55bdd36f4bd7df555f50b63dddfbf7d23fc54fbdefdcf7d267d6f623a6f9efa51fafcd474c0bdfcbb9a5763f3b73ee7e0fe7bbda4f9d83f7be8773701d66ee307afff47d411d3fbb57e9ffd3f72a75fd19a68169fec9fba7baa9cf3ebf3b3467ffe43d5d7dfe853bd6a77fea3eb3bef8e2bdeff33f75ef5b8f7fe5ce7eed9fb81faf2f7fe3dbc6e1dffd1da1befacdef2d47a6fa3bbfb7d4d7f5cd6f61da7d74f6effc2e55dfcef2ffc237c5ebbfebfb5d7df739f72f7e7b7dff3bbe73d6f7bfc4fb57be515fffd5df837f4947bf8e0954476ef0577d37c7b33ff3a3afc104aaccd77fc5ef0beaabd958fb7a4ce9cfdfffd9bfc398ce90df8209548b7efbcffabd4a7df1f32af2ed98045717c5ffc1dff5d08d9c7f0dafafff4d5670e12abc7eebef9fea58d7f557fdfae9f7ff762dac85bddffb3bb1da6b9ffdb57fdff21bbfd009553c8bb7bff57bba58d516c5b9dfbbff1ff92d647c890b713d6ec7513c8e1d3973f6623f0e6216f358c4f25bf7fdf1fffef387ff07d9d4d34b</data>
+        <data format="XPM.GZ" length="15646">789cd59a5973e4388ec7dffb535434df3a3638a954a68ed8d807dfb79de9dbded80792927c66fa4c5f13fbddf74780d5d33b5dd5754c1f9e7647942092c01f20f007a5d4df7efa703cdafaf0d3df7e7878748f17e1433877f71f7e6a6693c9eb7fffcf7ffdfd871fcbfe07fecf7bf587fe8ffff1c38fe3c70fe1c3f6cdb48d823d43303df92fcade7d943b19f7e749ceba46649fe4bcf32287240fbb5ae426c94557897c9fe4aa2b445e4f72dd0d45be48b2eb0622ef25d977b9c8f3496eba4ce4cb24b79de2bd5239cb5ac5779de4bc557c93240f5a27722fc9c356f13e24b96c4b9137925cb78a6f21c9ae557c8f49f6ade2db4f726825b87e96e4b6557c4f2af77b8dc6f339c9fd2688bc98e461a37836935c368aa74a72d568fc96925c378a6f39c9a151fb5b496e1a8dd74a92db46f1ac26b90b9dc899ca792f28beed24f783e23b48721e349e3b492e82ee6f3fc955507ca324d741f1d549f641e3354e72088a7737c94d50bc8749eebce23b5279907bb11fda240fbdc62b4f72e115cf71924baff13b4972ed15cf6992bd173ca14b72eb253e21e5cba0736a7fa0f2b0e7243ec126b9ef343ec3240f9ce45748f5342c9ce229925c3ac1134c922ba7f12a935c3bc11752fd0d1b27f108a9fe86ad537ca9fe8aac967c0f291f8bbcd6f8a47a2c06b5e249f55814b5e009d324d7b5da4bf557b85af23ba4fc2d422dfb1352bd51ce128f70a37299556a3fd55fd9af241e21d55f39a8d47ecaff7258c97e85b9241795e2b94d7259697cee921c2ab59ff8a3ec4ab59feab5ea976a2fd5539597ea7fe28baa2a25bee125c975a9fea67aa95ca9febe26b92935de6f49ee0ab597eaa7ce0bd59ff8a02e0ac59feab77685ea4bf555fb42f32bd56bdd14aa7f4d65d71f2afe54efae18aabec48fae1c6a3c121f393f547da9be5d3bd47c48f5e6b381ee47aa5f3f1868fc53bdfa6aa0f148f5e7dd40f1a6fa0b59aeeb139f8541aeeb131f8722577c890f4293ab3fa95e9bbcaff149f5da547db597eab18511454ef5d8fa4cf940f321a3df287f6b7df491b5beb49e7264e51fcd8f21b2d6bfd663812cf89cf241892cf173ca4f15b2d69bee6f8d2cf9e094ff1cb2c4c3295f7964c1e7b45f0464c947a7fcd1c50624b2f073161b92f2a7ec6fc68dd48f24bf32fc69c51f27fe67798c808c4bfe67036489b793f867f8a7fdc949fc33fc6bd53fd9af0cffb45f39896f867fadf8e7647f33fc49fd4af23fc31fed574ef826c31fed574ef2276b90957f850fb32e365c1997fce9c7062cfe39c9ef3e37b47f39a98f3efe34e28f93faea833ff533e18b7e113342c6a51efae0d7fee6245ffae0d7fee6247ffbec8ff63727f5d5c79f46f747f8b4ef63c6892cf5d86f91a51e9cd4471ffcdadf9cf003f0527f73c2477916335864e18b1c7fb4df39e1bf9c05daef9cf06b8e3f41f743f235c71fed7f4ef828c79fa0fd46f835af62c5882cfd2ac71fed874ef82c07bff64327fd26077f50fcc29f79170f40220bbf0ee28148f14bfe0ec0ef15bff0f300fc5ef14b7d0cc0affdd209bf0fc0affdd249bd0e8ac808224b7e0ec0affdd249bf1980dfeb7e083f0dc0affdd3497e0cc81faff923fe0dc0affdd349bf19c6039de215fe1a82d7295ee94f43f06aff7492ff431cd4fee9a4bf0d51e014aff4d72178b59f3ae19f61191932ca46f279083eed9f46f26348be38c917a3eb43645c91a59f0fc977edaf4ee52e1e48655cf8a3880754c52ff95b6491c14596fe5c80bf16fc46f8a5c823e3cbb8d45b31881d41c6855f0a146aff3512ff02fcb5e2177f8a2a761491a5fe0bfcd1fe6c847f0afcd1fe6c840f0a1f3b92d813be2cf04ffbb5117e28f0af16ff8cf055d1c58e26b2f043190fe4ea9ff067893fdabf9df49f127f2af1c7083f9483d8314596fd2c87b1a38aacf38bd8714516fe2b31a0fddc085f94f853a93fc217a58f1d5b64e19732c48e2ef6753df82bc52f7c52925f95e49711fe2cbb78221059f882f0f54af1c708bf54ec5729fb6524bf2bfcd1f38191fda9c05f2a7ee1870afca5e217feafca7822113c52cf55154f2c322efc51d5f14423b2f045853fa5fa237c5535f18424b2f04705fe52f14b3ed5f10149f18afe1abc85e2153ea8fbf10426f6a5ffd5e0d7f387117ea807f1c426b2f0430d7e3d8f18e1c3ba8a273e91851f6a0c168a57f8aa76f18428b2f0434dfc0bcd1fa9e71abc85e2957aaebbf88027b2d4af8b0f7c8a5ffa8fcbe2895564a95f077e3ddf18e11307fea1e297fa71e01f2a7ee16b378c276091259f5d114fc8228bffae8c276891255f1dfe0cd51fe153e7e2093cca56ead98578421759ead9b11f43d90f2bf5eada78a21759ead375f1c42fb2ec3fdbc91381c8527f1efff47c65a59e3cf8f57c65846f3d780782d74a7efa323e81c8b8f4175fc527141997f382afe3138cc852ef1efc7a1eb352df1efc03c52ff5ecc13f50fcc2771efc03c52ff5ecbbf8c424f6a43f85f880aef8a57e43169fb044167e0c797c221359ea2fe08f9ef78cf07d18c627381997fd0d457cc21359ea2de05f2efe59a9ff50c5274291a57e03fee5ea9fd47ff0f10952f44bbf0f213e61cab8f041c03f3d4f5aa9f7d0c5275491653ec33cc18a2cf5dd64f1095764c99f067ff4fc6924be0dfef4c51f2bf5d00ce313b3c8b21f4d119fa845967835657ce21659fa6b833f7a7eb5c21f0dfbd3d7fd11fe6ef0a72ffe58e19326c4277a91257e0d80fb5affd22f9b36be019071e19ba68b2f544416be68e30b16f54ffa418b7f99fa277cd3f6e31b069125dfdb3cbe811059f2af1dc43714224b3fe5e1a097a9bfc2372dfe66eaaff04d8b7f99fa27fcd5d6f18d88c8c23f3c6cf632e507d5e7e31b151917fe69f137537f85dfda26be811159fa438b4399fa2bfcd476f18592c8128f2e1e98d53fe19b2e1e30d53fe1ab2e1ed8d43fe19f2e1e80d43fe19f2e1e30d43fe1af2e366cf54ff8a78b0d41fd93fedf45c255ff847fba4860ba9fc2875d2c78cd4fd9ff2e1690fa277cd4c50454ff84cfbaeee3fbb2f1e3f7fd59639df536d8c6b6b6b367fc75fcb5c881fbee7bf57e0f267b0e960b7b69afecb59dd8a9bdb1b7f64e30ddf3ef2df294fbd78c5f32ef9bb17d2b26fb8095ce3eda19b69fecb37db1aff6cdced979c1b4c0bf73c8afdc7f66fc96798fccbff8633049741a7c8f6816b1f9068225bb6c57ecaa5db3eb82699dbf35e415ee2f31fec6bc454176c5daaf8cd8d762223e8ddd604f9eec2696b6b0b96ab7ed8e1dd9b1ddb57b765f30edf3b7873ce6fe0ee3abccdb62fe26eba6ac6f7e2f4ce4f2057e4eed813dc4f7232c1d637317fb27f6d4f66c66fb36174c03feed23f7b87fc2f82ef38e997fc4ba43d64fd1f3c57dfc32263b241f2664ef0b7a97d999c296b6c2666d07c61a639cf12698266232ad69b8f6dc33c682b0665ec5fc8275cbac7f41cfc476ff0a2672e88288df988ecc3d123c7bf8df03cd9939c7fe85b93457e6da4ccc5430dd9829d7d7dcbb64ac614e8c5d8f357b82ebc8cea1eb069dbf11addfc2c49e35e616cf0ec98955f263d7dcd9dadc1385c63c6077621ecdcc3c9967f3625e05d32b7f2fc84fdc7f64fc8a790df3ef5977c74eeea0670b7df7e8fd6c6e7d1e937983fd66e4c01bdead9b39336f7b82a7350b585bc4ee8b5932cb66c5ac9a3523756736cc3ad7abdc5b66ec85398bcc5d604dc4d533f3668eca3c42e701badb6fc3449db564e4337cb3623689fca9cdcd96e099128367b36d76b03e3263b36bf6ccbe39104c87e680eb3dee8d195b63ce367367ac89b8b6a88053bb87be15f43ea3ff93a83e8d49623465e717cc1179b08f87d61cb30f13f4bf9813223132a7a66732d337b91998a1290453690aae07dceb33d663ce88b927ac99b1f6011d96ecdab7057a17d0ff49549fc2441e092253b1fb23f62ca38a5a72e3d1d4118fb394d5a173d82e9d77c135ae75d2ef5cc75f8b1c9c07df803987ce382bb86ad65fa1c7a06f1e8e5835d5a751fd1a13b5d6b0d7cf542e88a8983e7b76e1cef0f4953c19b12f19712840d380e0dc5db84b77e5ae05d3c45d737dc9bd73c61a9015cccd583362edab99a1e7823deca31754d878c656f3454c17d4c4819d27ba11514e763e98a99b92196b64c981bb01cf2dd138777720b8770feed1cddc93607a764f5c3f72ef9eb13be6b4ee96f937e4d998f5dbe899a2cf9159a0c2c6bc3d30b7bf8d0986dca0fadfc8c28208f705d10d715f361becc28b19129fd6bdba37acceb979b7e016dd925b762b8269d5ad70bdc4bd05c6e698f3c6dc96780ddd0b3bbe819e1a7d11551ffd0576deb0b7f1794c645264b4437b446decb3ef5b82e8d9adb975d3233b4ab7e136d99b7b62b1e5b6b1bfe3466eec76dd9e60da777b5c8fb9b7c3d836731e997bc99a0dd63a74acbb352a31a2daa207ed63e7087b37bfe4f67fc2746127e4dd161cb247ad19f67ecac37344b46f727780c787e4cc1cb68e88c9c81dbb1377ea7a2e737dc194bb3ed73dee9d303662ce1173e75873c8da03726b5f50d5e8bd20db7bd859b75bd89c7c1a139c74451ce7a888397b4af5b7ee8cfd5f8e88dcc00dc9da3bbc9eb9821d2a8948e56a6f3d4f98defb1031f9c607aed92a8e9935e37bcc5b61fe8c7577ac1fba414485cea98bddd162077bd8bcb757bfc624f536a54b1ed91d763a874baea8b56d72a0478c22a24bdf92c54bbe230695cbfc993f07c585bff4575eeace4ffc35d797dc6b183b2366953b66fe927b66ed654445ac7ae8dc46f79539c6ce3c1de708bbd38ff5f70b4c8eec3ea03ad7e84b3dc9a447aa778dcc76ec5a4434755bfec68dfcadebf93b6cde63fdda3ff8473ff35277fed93f71fdc8bd6bc6ee9973c7dc5bd6dcb0762aa80ed067a8c157f4c7acea616f0dbb071f33fd179862940e395114e68ebed6c2bb359c32a6d64a72e10e3fb7dcb27ff1affecdcf118779a2b2008645bfe497bdd49d5ff52b5c2f71ef89b109731ae6beb1e6859cdf42c79d6bd1f70233aca07f829d7bba7381dd433bfdff9824979e244a7bf470477f9ac1bd23786548ad1d920fcffe06446bae4fbeacb3431bd8ddf45b7edbeff8911f0ba65d3fe67a877b5b8c3d31e78ab98e356bacbd61e7efd1b541ff3940f709361660851a9b31524f9a533f63ba804f635d16f644a234a547ad9a5d77031f6d5237337262e45fd17eeef788c03eb158f6072038f447fed89f08a6537fc2f511f7468c2d33679fb97bfe9c75afd4e1127a26e8f3b0e82efa5fb043a4e0cf02db9b76f60f4ce477c749fe8d0a28c9a51425fa540607c7dc9c7385effc2dbbe0b0d02367367de6fbd8cec131f0432f3dd897bee07ac0bd9cb13e733699db638d63ed2dd95ea0eb92fd2b4c86fe8f91ea617715fbb791a71226c713cf22bc74cc4975c0296c02afad9289395de495786f51d1c764eb1c3b31c14ac5eed4c4e334d860820b3e0817842604ae1df72cb88e98b3cddc196bd6fd1cbc758c9e2df4bdd27172f4af6267c2b97980dd63ec2fda7fc429eedc0b7936822fcea886456a75c4692846e90d2e3e82672a6aad213ff6f17ddb8f431bba7016ce4171112ec39560ba0e575c5f70ef9cb12eb4e4d736f3f759d75083157a8ed0f726913ac4c636b61e38219f627b190cb39f315da69ddb25bfcfe18d274e63a7d4aca78bc628adc27e1999344fd62eb223358826be2426d370136ec35db8174c0fe19eeb5bee4d21cf324c4055337f9175f36455869e5589d439ba1de7ab1d6c5d9973f27c57774f31d1e5b4e6b6e971ba732ff0478ff34f43edced1b74644e90cbe99504bcbe4c951e8b0f81866e1090ccfe125c8793cbc8557ae9fb9f7c4d823733a76b0cf9a27d6dec3a215bab6d179e71ace5f3decbca4dddbc7bed49ebe13e1d9fe99e7d61d6aced2871e394b8fc8ef1286bba6bf2f93073551ba847336a9a743f2e88c18cdc21c719907c94258144c4b6191eb37eedd3336634eacc543d66cb2f69248d5e85a46e7b5eb38f565d859c2de055de604fb4be0b8d6f7383c737dcc26c353d08c13c5d8f4d3ce2dd0e34fe86b0ddcfc04ef8c7c4e669fb33b4f585e0e2b6135ac057946081b619deb55ee2d33f6c49c73b23d67cd166bafd161e9ce3be894dde3843cc6d60c9be6e78c9ae8bb2718fc9593cc58782066d30aec917382bde074b648b44fe9aa17748c45323646c990c537ecd03cd697c266d80adb8269276c73bdc9bd15c6ee981378048d91da66ed033a0c6786113a1fd01de87dbbd88a1915f9600c86573bd5f7639c5f34c3339e61af230ff0ec11b3e9921a59e23cd4835f2ee9634b70f4911f50ed1764f233bbb40a825118875dc1b41776b91e716f95b167e65c70341fb06687b58fe87030c2189d8fe88e19b5277c70cd41224b597ea3eff4a8ba39e92a7d9eac35c3f7e9292d67eb19bbbf4bcd79aa7946ae8ee0e921797249145ec89d35e2320efb419ea5c26138e07accbd35c65e987349fd0d593362ed0c1d9edadb45e70cdd2d3d663f6579e08c1e3bcc9cbdd5f78ef68e73f13a999f5375533af63afda8900c7f82e5f6e80c41b26905be39f1053b7245bebc92d1ebecd62e488e04d37138e27a977beb8cbd32e70a122d5833666dcca8c0a96f0f9d4f92e50576d6b137a5f272ecaf83e34e309dbdafbf778ba9e3e4b9207b37a04bdf10cb0d783fb2d384d3c52a27ff9c2a9e70625be534720a1336749107b27889eadf21b30fc371d4164ed8bd43e41dee2f31fec0bc86ce7ccaba55d64f7cc3997d1f9dcfe88e0c7588ad576cb6c29aebe0b87fb7f9f41eebee3df2d37be4f1f7d8efdee1b98033dd3b3a3fbddf73e63b3d8fbfc3e796f1e37b79be7bdfcfc182ea1dbc2f78ffef55dee7fba714a9bff03ddd67deb1fe85ef33ff7ddefb269efa4bde8f7fe1b78dbfe077847fbfdf5b52fdfda9bf4bfdb3fd4fffa6f867fe7ef76beb9ffdedf54ffa9df353b63fff1bf59ff17bf0a72dffe66ff97ff0efe69fb3fb856f1efec0ef0b3e6ff52bbe0df903bec3f86d8b5ff50dcdeffcbdca97ec7df5b746bfd3773d5f63eb1bbec9fa1dbe7ffa3a4bdffcedda777e27f62d36beeb1bbf6ffc9eee5bf5ff4bdf427ee1bbc3efd5fbe3fffee70fff075fbc204d</data>
     </image>
 </images>
 <connections>
@@ -472,10 +518,17 @@
         <receiver>MainWindowBase</receiver>
         <slot>resetClicked()</slot>
     </connection>
+    <connection>
+        <sender>mFactorSlider</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>MainWindowBase</receiver>
+        <slot>factorChanged(int)</slot>
+    </connection>
 </connections>
 <slots>
     <slot>helpAbout()</slot>
     <slot>resetClicked()</slot>
+    <slot>factorChanged(int)</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

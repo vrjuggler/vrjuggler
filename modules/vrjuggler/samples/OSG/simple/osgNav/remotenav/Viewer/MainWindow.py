@@ -25,6 +25,12 @@ class MainWindow(MainWindowBase):
       self.mFacade.setPosition(0.0,0.0,0.0)
       self.mFacade.setOrientation(0.0,0.0,0.0)
       self.reloadGuiView()
+      
+   # public slot
+   def factorChanged(self,newVal):
+      factor_val = float(newVal)/10.0
+      self.mFactorValLabel.setText(str(factor_val))
+
 
    # ------- NON-slot methods -------- #
    def check(self, cond, desc="no description"):
@@ -117,9 +123,9 @@ class MainWindow(MainWindowBase):
       outside_dist = 0.45                  # Outside range for backwards
       forward_break = 0.34                 # Break dist for forward and back
       
-      slide_angle_factor = 1.54            # Magic number
-      slide_back_fwd_factor = 3.45
-      slide_back_factor = 1.06
+      trans_angle_factor = 1.5             # Factor for x,y trans when at angle
+      trans_back_fwd_factor = 3.5
+      total_trans_factor = float(self.mFactorSlider.value())/10.0
       
       if (dist <= center_only_dist ):      # Center circle
          print "center"
@@ -128,25 +134,21 @@ class MainWindow(MainWindowBase):
          print "outside"
          zin_trans = -1.0 ;
 
-      elif (dist <= forward_break):                   # Forward angle
-         print "Inside break"
-         zin_trans = 1 - (slide_angle_factor * dist) ;       # slide forward
-         y_trans = slide_angle_factor * abs(my)            # Slide up
-         x_trans = slide_angle_factor * abs(mx)         # Slide right
+      else:     # Translating at an angle either in or out
+         y_trans = trans_angle_factor * my                # Slide up
+         x_trans = trans_angle_factor * mx                # Slide right
 
-         if my < 0:
-            y_trans *= -1.0
-         if mx < 0:
-            slide_right *= -1.0
-      else:
-         print "outside break"
-         zin_trans = -1 + (slide_back_fwd_factor * (outside_dist - dist)) ;
-         y_trans = slide_back_factor * abs(my) ;
-         x_trans = slide_back_factor * abs(mx) ;
-         if my < 0:
-            y_trans *= -1.0
-         if mx < 0:
-            x_trans *= -1.0
+         if (dist <= forward_break):    # Moving forward
+            print "Inside break"
+            zin_trans = 1 - (trans_angle_factor * dist)      # slide forward
+         else:
+            print "outside break"
+            zin_trans = -1 + (trans_back_fwd_factor * (outside_dist - dist)) ;
+            
+      # Apply overall scale
+      x_trans *= total_trans_factor
+      y_trans *= total_trans_factor
+      zin_trans *= total_trans_factor
             
       # Check the allow check boxes
       if not self.mAllowXTransChk.isChecked():
@@ -189,7 +191,7 @@ class MainWindow(MainWindowBase):
             rot_heading = 0;
             rot_pitch = 0;
 
-      self.mFacade.setRotationalVelocity(rot_heading, rot_pitch, rot_roll)
+      self.mFacade.setRotationalVelocity(rot_pitch, rot_heading, rot_roll)
       self.updatePosRotLabel()
 
          
