@@ -40,8 +40,12 @@ dnl     JCCL_INCLUDES
 dnl     JCCL_INCLUDES_MIN
 dnl     JCCL_LIBS_CC
 dnl     JCCL_LIBS_LD
+dnl     JCCL_PROF_LIBS_CC
+dnl     JCCL_PROF_LIBS_LD
 dnl     JCCL_LIBS_STATIC_CC
 dnl     JCCL_LIBS_STATIC_LD
+dnl     JCCL_PROF_LIBS_STATIC_CC
+dnl     JCCL_PROF_LIBS_STATIC_LD
 dnl     JCCL_EXTRA_LIBS_CC
 dnl     JCCL_EXTRA_LIBS_LD
 dnl     JCCL_EXTRA_LIBS_CC_MIN
@@ -104,8 +108,12 @@ dnl                          test JCCL program], , enable_jccltest=yes)
         JCCL_INCLUDES=`$JCCL_CONFIG $jccl_config_args --includes`
         JCCL_LIBS_CC="`$JCCL_CONFIG $jccl_config_args --libs $ABI`"
         JCCL_LIBS_LD="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker`"
+        JCCL_PROF_LIBS_CC="`$JCCL_CONFIG $jccl_config_args --libs $ABI --profiled`"
+        JCCL_PROF_LIBS_LD="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --profiled`"
         JCCL_LIBS_STATIC_CC="`$JCCL_CONFIG $jccl_config_args --libs $ABI --static`"
         JCCL_LIBS_STATIC_LD="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static`"
+        JCCL_PROF_LIBS_STATIC_CC="`$JCCL_CONFIG $jccl_config_args --libs $ABI --static --profiled`"
+        JCCL_PROF_LIBS_STATIC_LD="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static --profiled`"
         JCCL_EXTRA_LIBS_CC=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI`
         JCCL_EXTRA_LIBS_LD=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI --linker`
         JCCL_VERSION=`$JCCL_CONFIG --version`
@@ -114,6 +122,12 @@ dnl                          test JCCL program], , enable_jccltest=yes)
         JCCL_INCLUDES_MIN=`$JCCL_CONFIG $jccl_config_args --includes --min`
         JCCL_LIBS_CC_MIN="`$JCCL_CONFIG $jccl_config_args --libs $ABI --min`"
         JCCL_LIBS_LD_MIN="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --min`"
+        JCCL_PROF_LIBS_CC_MIN="`$JCCL_CONFIG $jccl_config_args --libs $ABI --min --profiled`"
+        JCCL_PROF_LIBS_LD_MIN="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --min --profiled`"
+        JCCL_LIBS_STATIC_CC_MIN="`$JCCL_CONFIG $jccl_config_args --libs $ABI --static --min`"
+        JCCL_LIBS_STATIC_LD_MIN="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static --min`"
+        JCCL_PROF_LIBS_STATIC_CC_MIN="`$JCCL_CONFIG $jccl_config_args --libs $ABI --static --profiled --min`"
+        JCCL_PROF_LIBS_STATIC_LD_MIN="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static --profiled --min`"
         JCCL_EXTRA_LIBS_CC_MIN=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI --min`
         JCCL_EXTRA_LIBS_LD_MIN=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI --min --linker`
 
@@ -137,6 +151,10 @@ dnl                          test JCCL program], , enable_jccltest=yes)
         JCCL_LIBS_STATIC_LD=""
         JCCL_LIBS_CC=""
         JCCL_LIBS_STATIC_CC=""
+        JCCL_PROF_LIBS_LD=""
+        JCCL_PROF_LIBS_STATIC_LD=""
+        JCCL_PROF_LIBS_CC=""
+        JCCL_PROF_LIBS_STATIC_CC=""
         JCCL_EXTRA_LIBS_CC=""
         JCCL_EXTRA_LIBS_LD=""
         JCCL_EXTRA_LIBS_CC_MIN=""
@@ -150,8 +168,12 @@ dnl                          test JCCL program], , enable_jccltest=yes)
     AC_SUBST(JCCL_INCLUDES)
     AC_SUBST(JCCL_LIBS_CC)
     AC_SUBST(JCCL_LIBS_LD)
+    AC_SUBST(JCCL_PROF_LIBS_CC)
+    AC_SUBST(JCCL_PROF_LIBS_LD)
     AC_SUBST(JCCL_LIBS_STATIC_CC)
     AC_SUBST(JCCL_LIBS_STATIC_LD)
+    AC_SUBST(JCCL_PROF_LIBS_STATIC_CC)
+    AC_SUBST(JCCL_PROF_LIBS_STATIC_LD)
     AC_SUBST(JCCL_EXTRA_LIBS_CC)
     AC_SUBST(JCCL_EXTRA_LIBS_LD)
     AC_SUBST(JCCL_VERSION)
@@ -160,6 +182,12 @@ dnl                          test JCCL program], , enable_jccltest=yes)
     AC_SUBST(JCCL_INCLUDES_MIN)
     AC_SUBST(JCCL_LIBS_CC_MIN)
     AC_SUBST(JCCL_LIBS_LD_MIN)
+    AC_SUBST(JCCL_PROF_LIBS_CC_MIN)
+    AC_SUBST(JCCL_PROF_LIBS_LD_MIN)
+    AC_SUBST(JCCL_LIBS_STATIC_CC_MIN)
+    AC_SUBST(JCCL_LIBS_STATIC_LD_MIN)
+    AC_SUBST(JCCL_PROF_LIBS_STATIC_CC_MIN)
+    AC_SUBST(JCCL_PROF_LIBS_STATIC_LD_MIN)
     AC_SUBST(JCCL_EXTRA_LIBS_CC_MIN)
     AC_SUBST(JCCL_EXTRA_LIBS_LD_MIN)
 ])
