@@ -92,6 +92,13 @@ inline void VJ_LERP( float& result, const float& lerp, const float& a,
     float size = b - a;
     result = a + (size * lerp);
 }
+
+template <typename DataType>
+bool vjIsEqual (const DataType& a, const DataType& b, const DataType& tolerance)
+{
+   return fabs(a - b) <= tolerance;
+}
+
 /* #include <Kernel/vjDebug.h> */
 #endif   /* __cplusplus */
 
