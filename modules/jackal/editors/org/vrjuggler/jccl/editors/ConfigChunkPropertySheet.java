@@ -381,6 +381,14 @@ public class ConfigChunkPropertySheet
     */
    public void setConfigChunk(ConfigChunk chunk)
    {
+      // If the user is currently editing a property, force the editor to stop
+      // editing first.
+      TableCellEditor editor = getCellEditor();
+      if (editor != null)
+      {
+         editor.stopCellEditing();
+      }
+
       // Modify the config chunk in the data model
       tableModel.setConfigChunk(chunk);
 
