@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings desc.db.version="2.1"?>
+<ChunkDescDB>
+  <ChunkDesc token="opensg_viewer_file_info" name="OpenSG Viewer File Info">
+    <category>OpenSG Viewer</category>
+    <PropertyDesc name="Filename" token="filename" type="string" variable="0">
+      <help>The name of the file to load.</help>
+    </PropertyDesc>
+    <PropertyDesc name="Grabbable" token="grabbable" type="bool" variable="0">
+      <help>Is the file supposed to be a grabbable node?</help>
+    </PropertyDesc>
+    <PropertyDesc name="Rotation" token="trans" type="float" variable="0">
+      <help>The rotation offset of the model loaded.</help>
+      <item label="xrot:" defaultvalue="" />
+      <item label="yrot:" defaultvalue="" />
+      <item label="zrot:" defaultvalue="" />
+    </PropertyDesc>
+    <PropertyDesc name="Translation" token="undefined" type="float" variable="0">
+      <item label="x:" defaultvalue="0.0" />
+      <item label="y:" defaultvalue="0.0" />
+      <item label="z:" defaultvalue="" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="opensg_viewer_app" name="OpenSGViewer App">
+    <help>Configuration for Logitech 3d mouse</help>
+    <PropertyDesc token="port" name="Files" type="string" variable="0">
+      <help>Serial port this device is connected to</help>
+    </PropertyDesc>
+    <category>OpenSG Viewer</category>
+  </ChunkDesc>
+</ChunkDescDB>
+

@@ -108,6 +108,29 @@ public:
         mFileToLoad = filename;
     }
 
+public:     // RECONFIG STUFF
+   virtual bool configCanHandle(jccl::ConfigChunkPtr chunk)
+   {  return configCanHandleChunk(chunk); }
+
+   // This function is so that others can query this object to
+   // see if it can be configured with the given information
+   static bool configCanHandleChunk(jccl::ConfigChunkPtr chunk)
+   {
+      std::string chunk_type = chunk->getDescToken();
+      return (std::string("opensg_viewer_app") == chunk_type);         
+   }
+     
+   //: Are any application dependencies satisfied
+   virtual bool depSatisfied()
+   { return true; }
+
+   //! NOTE: Inherited from jccl::ConfigChunkHandler
+   virtual bool configAdd(jccl::ConfigChunkPtr chunk);
+
+   //! NOTE: INherited from jccl::ConfigChunkHandler
+   virtual bool configRemove(jccl::ConfigChunkPtr chunk)
+   { vprASSERT(false); return false; }
+
   private:
     void initGLState();
 
