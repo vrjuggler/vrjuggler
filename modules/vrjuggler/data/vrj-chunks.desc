@@ -210,7 +210,7 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="default_simulator" name="DefaultSimulator">
+  <ChunkDesc token="default_simulator" name="DefaultSimulator" version="1.0">
     <category>Display/Simulator</category>
     <help />
     <PropertyDesc token="cameraPos" name="cameraPos" type="chunk" variable="0">
