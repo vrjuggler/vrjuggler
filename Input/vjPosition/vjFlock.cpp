@@ -69,12 +69,12 @@ vjFlock::vjFlock(const char* const port,
 						    report,
 						    calfile)
 {
+   myThread = NULL;
 }
 
 bool vjFlock::config(vjConfigChunk *c)
 {
    port_id = -1;
-   myThread = NULL;
 
    vjDEBUG(vjDBG_ALL,0) << "	 vjFlock::vjFlock(vjConfigChunk*)" << endl << vjDEBUG_FLUSH;
 
@@ -300,14 +300,14 @@ vjMatrix* vjFlock::GetPosData( int d ) // d is 0 based
 {
     if (this->isActive() == false)
 	return NULL;
-	
+
     return (&theData[getBirdIndex(d,current)]);
 }
 
 vjTimeStamp* vjFlock::getPosUpdateTime (int d) {
     if (this->isActive() == false)
 	   return NULL;
-	
+
     return (&mDataTimes[getBirdIndex(d,current)]);
 }
 
