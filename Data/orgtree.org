@@ -1,0 +1,35 @@
+begin Zelda
+	begin Display
+		Display
+		DisplaySystem
+		end
+	begin Input
+		begin "Proxies and Aliases"
+			ProxyAlias
+			PosProxy
+			AnaProxy
+			DigProxy
+			end
+		begin "Input Devices"
+			"Keyboard"
+			"flock"
+			"ibox"
+			"Cyberglove"
+			"ThreeDMouse"
+			"DummyPosition"
+			end
+		end
+	begin "Expert Only"
+	  	begin "Performer API"
+			ApiPerformer
+		end
+		begin "Environment Manager"
+			"Environment Manager"
+			"EM File Output"
+		end
+	end
+	begin "*"
+	end
+end
+
+		
