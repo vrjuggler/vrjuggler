@@ -218,10 +218,14 @@ private:
 
 } // End of vpr namespace
 
+namespace std {
+
 inline std::ostream& operator<<(std::ostream& out, const vpr::GUID& guid)
 {
    out << guid.toString();
    return out;
+}
+
 }
 
 // --- HASH Functions ---- //
