@@ -37,7 +37,7 @@ SAXON_VERSION?=	6.5.2
 
 DVIPDF?=	dvipdf
 DVIPS?=		dvips
-FOP?=		sh $(DOCBOOK_ROOT)/fop/fop.sh
+FOP?=		sh $(DOCBOOK_ROOT)/xml-fop/fop.sh
 HTML2TXT?=	/usr/bin/links
 HTML2TXTOPTS?=	-dump
 JADE?=		openjade -V tex-backend
@@ -93,7 +93,7 @@ SGML_ROOT?=	/usr/share/sgml/docbook
 
 DB_SGML_DTD?=	$(DOCBOOK_ROOT)/docbook-sgml-4.1.dtd
 DSSSL_DIR?=	$(DOCBOOK_ROOT)/docbook-dsssl-1.76
-XSL_DIR?=	$(DOCBOOK_ROOT)/docbook-xsl-1.49
+XSL_DIR?=	$(DOCBOOK_ROOT)/docbook-xsl-1.50.0
 
 ifdef NEED_DB_IMAGES
 LINK_DEPS=	images
@@ -112,12 +112,12 @@ chunk-html:
             $(SAXON) -i $$cur_dir/$$file -xsl $(XSL_DIR)/html/chunk.xsl \
               $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS) ; \
             cd $$cur_dir ; \
-ifdef INSTALL_FILES
-            cp $(INSTALL_FILES) $$dir ; \
-endif
-ifdef INSTALL_DIRS
-            cp -r $(INSTALL_DIRS) $$dir ; \
-endif
+            if [ ! -z "$(INSTALL_FILES)" ]; then \
+                cp $(INSTALL_FILES) $(prefix)/$$dir ; \
+            fi ; \
+            if [ ! -z "$(INSTALL_DIRS)" ]; then \
+                cp $(INSTALL_DIRS) $(prefix)/$$dir ; \
+            fi ; \
         done
 
 pdf: $(LINK_DEPS) $(PDF_FILES)
