@@ -517,7 +517,14 @@ void _Export_GlApp()
          "Note: One time through the loop is a Juggler Frame.\n\n"
          "See also: vrj.App, vrj.Kernel"
          ,
-         init<  >()
+         init<  >(
+            "__init__()\n"
+            "Default constructor.  Uses vrj.Kernel.instance().\n\n"
+            "__init__(kernel)\n"
+            "Arguments:\n"
+            "kernel -- The vrj.Kernel instance that is active (so the\n"
+            "          application has easy access to the kernel)."
+         )
         )
         .def(init< vrj::Kernel* >())
         .def("draw", pure_virtual(&vrj::GlApp::draw),
