@@ -201,13 +201,9 @@ public class BeanJarClassLoader extends ClassLoader
       return path;
    }
 
-   public URL getResource(String name) {
-      URL url = null;
-
-      if ( this.getParent() != null )
-      {
-         url = this.getParent().getResource(name);
-      }
+   public URL getResource(String name)
+   {
+      URL url = super.getResource(name);
 
       if (url == null)
       {
