@@ -48,7 +48,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2003 by Iowa State University])
 AC_CONFIG_SRCDIR([tweek/tweekConfig.h])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../share/config])
-DPP_PREREQ([1.5.1])
+DPP_PREREQ([1.99.15])
 DPP_INIT
 
 DPP_GEN_RECONFIG
@@ -571,7 +571,11 @@ setup_omniORB_cxx ( )
       DPP_LANG_CPLUSPLUS
 
       tweek_save_CPPFLAGS="$CPPFLAGS"
+      tweek_save_CFLAGS="$CFLAGS"
+
       CPPFLAGS="$CPPFLAGS -I$cxx_orb_root/include $EXTRA_DEFS"
+      CFLAGS="$CFLAGS $ABI_FLAGS"
+      LDFLAGS="$LDFLAGS $ABI_FLAGS"
 
       AC_CACHE_CHECK([for CORBA::ORB_init in -l$tweek_omni_lib],
          [tweek_cv_CORBA__ORB_init_in_omniORB],
@@ -589,6 +593,7 @@ int omni_main_i(int argc, char** const argv)
                      [tweek_cv_CORBA__ORB_init_in_omniORB='no'])])
 
       # We're done testing things now, so we can restore the original flags.
+      CFLAGS="$tweek_save_CFLAGS"
       CPPFLAGS="$tweek_save_CPPFLAGS"
       LDFLAGS="$tweek_save_LDFLAGS"
       LIBS="$tweek_save_LIBS"
@@ -1013,7 +1018,7 @@ fi
 # Put together the basic information needed to compile Tweek applications.
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS $IDL_GEN_INCLUDES, $DBG_FLAGS,
                 $OPT_FLAGS, TWEEK_BASE_DIR, $DEFS $EXTRA_DEFS, $INCLUDES,
-                ${_EXTRA_FLAGS})
+                $ABI_FLAGS)
 VJ_APP_LINKER_DOOZER([$CXX], [$BASE_APP_LINK_FLAGS], [$LDOPTS_DBG],
                      [$LDOPTS_OPT], ['$(TWEEK_LIBS_MIN)'],
                      [$APP_EXTRA_LIBS])
