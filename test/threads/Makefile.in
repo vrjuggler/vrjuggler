@@ -35,7 +35,7 @@ default: all
 
 all: test
 
-test: ${TEST_OBJECTS}
+test: test.o
 	${COMPILE} -o $@ ${TEST_OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
 test.o: test.cpp
@@ -51,7 +51,7 @@ testPool: testPool.o
 testPool.o: testPool.cpp
 
 .cpp.o:
-	${COMPILE} -c -o $@ ${srcdir}/$<
+	${COMPILE} -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
