@@ -70,11 +70,17 @@ void wandApp::myDraw()
          float wand_color[3];
          wand_color[0] = wand_color[1] = wand_color[2] = 0.0f;
          if(mButton0->getData() == vjDigital::ON)
-            wand_color[0] = 1.0f;
+            wand_color[0] += 0.5f;
          if(mButton1->getData() == vjDigital::ON)
-            wand_color[1] = 1.0f;
+            wand_color[1] += 0.5f;
          if(mButton2->getData() == vjDigital::ON)
-            wand_color[2] = 1.0f;
+            wand_color[2] += 0.5f;
+         if(mButton3->getData() == vjDigital::ON)
+            wand_color[0] += 0.5f;
+         if(mButton4->getData() == vjDigital::ON)
+            wand_color[1] += 0.5f;
+         if(mButton5->getData() == vjDigital::ON)
+            wand_color[2] += 0.5f;
          glColor3fv(wand_color);
          glScalef(0.25f, 0.25f, 0.25f);
          drawCube();
