@@ -104,6 +104,13 @@ public class VrjConfig
             saveBtn_actionPerformed(evt);
          }
       });
+      saveAsBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            saveAsBtn_actionPerformed(evt);
+         }
+      });
       newBtn.setToolTipText("New Configuration");
       newBtn.setActionCommand("New");
       saveBtn.setToolTipText("Save Configuration");
@@ -139,7 +146,7 @@ public class VrjConfig
 
    void openBtn_actionPerformed(ActionEvent e)
    {
-      int result = fileChooser.showOpenDialog(JOptionPane.getFrameForComponent(this));
+      int result = fileChooser.showOpenDialog(this);
       if (result == JFileChooser.APPROVE_OPTION)
       {
          try
@@ -205,38 +212,88 @@ public class VrjConfig
          {
             ConfigChunkDBEditorIFrame frame = (ConfigChunkDBEditorIFrame)sel_frame;
             ConfigChunkDB chunk_db = frame.getEditor().getConfigChunkDB();
-            String file = frame.getFilename();
+            saveConfigChunkDB(chunk_db, frame.getFilename());
+         }
+         else if (sel_frame instanceof ChunkDescDBEditorIFrame)
+         {
+            ChunkDescDBEditorIFrame frame = (ChunkDescDBEditorIFrame)sel_frame;
+            ChunkDescDB desc_db = frame.getEditor().getChunkDescDB();
+            saveChunkDescDB(desc_db, frame.getFilename());
+         }
+      }
+   }
 
-            // Get the config service
-            ConfigService config = (ConfigService)BeanRegistry.instance().getBean("Config").getBean();
-            try
+   void saveAsBtn_actionPerformed(ActionEvent evt)
+   {
+      JInternalFrame sel_frame = desktop.getSelectedFrame();
+      if (sel_frame != null)
+      {
+         if (sel_frame instanceof ConfigChunkDBEditorIFrame)
+         {
+            ConfigChunkDBEditorIFrame frame = (ConfigChunkDBEditorIFrame)sel_frame;
+            ConfigChunkDB chunk_db = frame.getEditor().getConfigChunkDB();
+            fileChooser.setSelectedFile(new File(frame.getFilename()));
+            int result = fileChooser.showSaveDialog(this);
+
+            if (result == JFileChooser.APPROVE_OPTION)
             {
-               OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
-               config.saveConfigChunks(out, chunk_db);
-            }
-            catch (IOException ioe)
-            {
-               ioe.printStackTrace();
+               String filename = fileChooser.getSelectedFile().getPath();
+               if (saveConfigChunkDB(chunk_db, filename))
+               {
+                  frame.setFilename(filename);
+               }
             }
          }
          else if (sel_frame instanceof ChunkDescDBEditorIFrame)
          {
             ChunkDescDBEditorIFrame frame = (ChunkDescDBEditorIFrame)sel_frame;
             ChunkDescDB desc_db = frame.getEditor().getChunkDescDB();
-            String file = frame.getFilename();
+            fileChooser.setSelectedFile(new File(frame.getFilename()));
+            int result = fileChooser.showSaveDialog(this);
 
-            // Get the config service
-            ConfigService config = (ConfigService)BeanRegistry.instance().getBean("Config").getBean();
-            try
+            if (result == JFileChooser.APPROVE_OPTION)
             {
-               OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
-               config.saveChunkDescs(out, desc_db);
-            }
-            catch (IOException ioe)
-            {
-               ioe.printStackTrace();
+               String filename = fileChooser.getSelectedFile().getPath();
+               if (saveChunkDescDB(desc_db, filename))
+               {
+                  frame.setFilename(filename);
+               }
             }
          }
       }
+   }
+
+   private boolean saveChunkDescDB(ChunkDescDB db, String file)
+   {
+      // Get the config service
+      ConfigService config = (ConfigService)BeanRegistry.instance().getBean("Config").getBean();
+      try
+      {
+         OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+         config.saveChunkDescs(out, db);
+      }
+      catch (IOException ioe)
+      {
+         ioe.printStackTrace();
+         return false;
+      }
+      return true;
+   }
+
+   private boolean saveConfigChunkDB(ConfigChunkDB db, String file)
+   {
+      // Get the config service
+      ConfigService config = (ConfigService)BeanRegistry.instance().getBean("Config").getBean();
+      try
+      {
+         OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+         config.saveConfigChunks(out, db);
+      }
+      catch (IOException ioe)
+      {
+         ioe.printStackTrace();
+         return false;
+      }
+      return true;
    }
 }
