@@ -83,7 +83,7 @@ SerialPortImplTermios::open () {
     status = m_handle->open();
 
     // If the serial port could not be opened, print an error message.
-    if ( status == vpr::ReturnStatus::Failure ) {
+    if ( status == vpr::ReturnStatus::Fail ) {
         fprintf(stderr,
                 "[vpr::SerialPortImplTermios] Could not open serial port %s: %s\n",
                 getName().c_str(), strerror(errno));
@@ -103,7 +103,7 @@ SerialPortImplTermios::open () {
             // If we cannot set the initialized attribute flags on the port,
             // then we are not considered open.
             if ( ! setAttrs(&term, "Could not initialize flags").success() ) {
-                status.setCode(ReturnStatus::Failure);
+                status.setCode(ReturnStatus::Fail);
             }
         }
     }
@@ -683,7 +683,7 @@ fprintf(stderr, "Setting input baud rate to %d\n", new_rate);
             fprintf(stderr,
                     "Failed to set the input baud rate to %u on port %s: %s\n",
                     baud, getName().c_str(), strerror(errno));
-            retval.setCode(ReturnStatus::Failure);
+            retval.setCode(ReturnStatus::Fail);
         }
         else {
             std::string msg;
@@ -734,7 +734,7 @@ fprintf(stderr, "Setting output baud rate to %d\n", new_rate);
             fprintf(stderr,
                     "Failed to set the output baud rate to %u on port %s: %s\n",
                     baud, getName().c_str(), strerror(errno));
-            retval.setCode(ReturnStatus::Failure);
+            retval.setCode(ReturnStatus::Fail);
         }
         else {
             std::string msg;
@@ -759,7 +759,7 @@ SerialPortImplTermios::drainOutput () {
         fprintf(stderr,
                 "[vpr::SerialPortImplTermios] Failed to drain output on port %s: %s\n",
                 getName().c_str(), strerror(errno));
-        retval.setCode(ReturnStatus::Failure);
+        retval.setCode(ReturnStatus::Fail);
     }
 
     return retval;
@@ -795,7 +795,7 @@ SerialPortImplTermios::controlFlow (SerialTypes::FlowActionOption opt) {
         fprintf(stderr,
                 "[vpr::SerialPortImplTermios] Failed to alter flow control on "
                 "port %s: %s\n", getName().c_str(), strerror(errno));
-        retval.setCode(ReturnStatus::Failure);
+        retval.setCode(ReturnStatus::Fail);
     }
 
     return retval;
@@ -841,7 +841,7 @@ SerialPortImplTermios::flushQueue (SerialTypes::FlushQueueOption vpr_queue) {
         fprintf(stderr,
                 "[vpr::SerialPortImplTermios] Failed to flush %s on port %s: %s\n",
                 queue_name.c_str(), getName().c_str(), strerror(errno));
-        retval.setCode(ReturnStatus::Failure);
+        retval.setCode(ReturnStatus::Fail);
     }
 
     return retval;
@@ -861,7 +861,7 @@ SerialPortImplTermios::sendBreak (const Int32 duration) {
         fprintf(stderr,
                 "[vpr::SerialPortImplTermios] Failed to send break on port %s: %s\n",
                 getName().c_str(), strerror(errno));
-        retval.setCode(ReturnStatus::Failure);
+        retval.setCode(ReturnStatus::Fail);
     }
 
     return retval;
@@ -934,7 +934,7 @@ SerialPortImplTermios::getAttrs (struct termios* term) {
         fprintf(stderr,
                 "[vpr::SerialPortImplTermios] Could not get attributes for port %s: %s\n",
                 getName().c_str(), strerror(errno));
-        retval.setCode(ReturnStatus::Failure);
+        retval.setCode(ReturnStatus::Fail);
     }
 
     return retval;
@@ -984,7 +984,7 @@ SerialPortImplTermios::setAttrs (struct termios* term, const char* err_msg,
 
         fprintf(stderr, "\n");
 
-        retval.setCode(ReturnStatus::Failure);
+        retval.setCode(ReturnStatus::Fail);
     }
 
     return retval;

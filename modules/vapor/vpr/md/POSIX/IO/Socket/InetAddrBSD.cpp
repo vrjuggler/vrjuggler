@@ -219,7 +219,7 @@ InetAddrBSD::lookupAddress (const std::string& address) {
             fprintf(stderr,
                     "[vpr::InetAddrBSD] Could not find address for '%s': %s\n",
                     address.c_str(), strerror(errno));
-            retval.setCode(ReturnStatus::Failure);
+            retval.setCode(ReturnStatus::Fail);
         }
         // Otherwise, we found the integer address successfully.
         else {

@@ -223,7 +223,7 @@ SelectorImplBSD::select (vpr::Uint16& numWithEvents, const vpr::Interval timeout
       fprintf(stderr, "SelectorImplBSD::select: Error selecting: %s\n",
               strerror(errno));
       numWithEvents = 0;
-      ret_val.setCode(ReturnStatus::Failure);
+      ret_val.setCode(ReturnStatus::Fail);
    }
    // Timeout.
    else if ( 0 == result ) {
