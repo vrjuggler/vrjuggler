@@ -36,10 +36,9 @@
 
 /*
  * ----------------------------------------------------------------------------
- * This file (vjConfig.h) includes header files common to most, if not all,
- * files in the VR Juggler source tree.  It must be included at the top of
- * every .h and .cpp file before any other headers because it includes system
- * headers.
+ * This file (jcclConfig.h) includes header files common to most, if not all,
+ * files in the JCCL source tree.  It must be included at the top of every .h,
+ * and .cpp file before any other headers because it includes system headers.
  * ----------------------------------------------------------------------------
  */
 
@@ -67,8 +66,6 @@
 #define strcasecmp _stricmp
 #endif
 
-
-/* extern HINSTANCE g_hInst = NULL; */
 #endif   /* WIN32 */
 
 
@@ -79,20 +76,9 @@
 #include <iomanip>
 #include <fstream>
 #include <vector>
-#include <map>
 #include <string>
-#include <algorithm>
-#include <math.h>
 
 #endif   /* __cplusplus */
-
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-
-#ifdef HAVE_STRINGS_H
-#include <strings.h>
-#endif
 
 /*
  * ----------------------------------------------------------------------------

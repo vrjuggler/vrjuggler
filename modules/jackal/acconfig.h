@@ -42,9 +42,6 @@
 
 @TOP@
 
-/* Define all of the following if building on IRIX or darwin. */
-#undef _BSD_TYPES
-
 /* Define the following if building on HP-UX. */
 #undef _CMA_NOWRAPPERS_
 
