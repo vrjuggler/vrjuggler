@@ -46,7 +46,7 @@
 # that is actually run.
 # -----------------------------------------------------------------------------
 
-AC_INIT([VR Juggler Portable Runtime], [0.33],
+AC_INIT([VR Juggler Portable Runtime], [0.34],
         [vrjuggler-devel@lists.sourceforge.net])
 AC_CONFIG_HEADERS([vpr/vprDefines.h])
 AC_PREREQ([2.53])
@@ -140,8 +140,8 @@ fi
 DPP_ABI_SETUP
 
 AC_ARG_WITH(cppdom,
-            [  --with-cppdom=<PATH>    CppDOM installation directory   [default=$JUGGLERROOT_ABS/external/cppdom]],
-            CPPDOM_ROOT="$withval", CPPDOM_ROOT="$JUGGLERROOT_ABS/external/cppdom")
+            [  --with-cppdom=<PATH>    CppDOM installation directory   [default=/usr/local]],
+            cppdom_root="$withval", cppdom_root="/usr/local")
 
 # -----------------------------------------------------------------------------
 # System-dependent stuff.
@@ -311,53 +311,6 @@ DPP_PROG_LINKER
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-
-# -----------
-# cppdom
-# -----------
-_vpr_save_CFLAGS="$CFLAGS"
-_vpr_save_CPPFLAGS="$CPPFLAGS"
-_vpr_save_INCLUDES="$INCLUDES"
-_vpr_save_LDFLAGS="$LDFLAGS"
-
-# XXX: There are problems with the use of $CPPDOM_ROOT for installed versions
-# of cppdom!!!
-
-# Ensure that /usr/include and /usr/lib are not included multiple times
-# if $CPPDOM_ROOT is "/usr".
-# XXX: Should be -I$CPPDOM_ROOT/include
-if test "x$CPPDOM_ROOT" != "x/usr" ; then
-    CPPFLAGS="$STDFLAGS -I$CPPDOM_ROOT $CPPFLAGS"
-    LDFLAGS="-L$CPPDOM_ROOT/lib $LDFLAGS"
-fi
-
-CXXFLAGS="$CXXFLAGS $STDFLAGS $INCLUDES ${_EXTRA_FLAGS}"
-
-DPP_LANG_SAVE
-DPP_LANG_CPLUSPLUS
-
-# XXX: $cppdom_include should be set to $CPPDOM_ROOT/include.
-AC_CHECK_HEADER([cppdom/config.h],
-    [cppdom_include="$CPPDOM_ROOT"],
-    [AC_MSG_ERROR([*** CppDOM is required for VPR ***])])
-
-DPP_LANG_RESTORE
-
-CPPDOM_INCLUDES="-I$cppdom_include"
-
-if test "x$CPPDOM_ROOT" != "x$JUGGLERROOT_ABS/external/cppdom" ; then
-    LOCAL_CPPDOM='Y'
-fi
-
-if test "x$CYGPATH" != "xno" ; then
-   UNIX_CPPDOM_ROOT=`cygpath -u $CPPDOM_ROOT`
-else
-   UNIX_CPPDOM_ROOT="$CPPDOM_ROOT"
-fi
-
-CFLAGS="${_vpr_save_CFLAGS}"
-CPPFLAGS="${_vpr_save_CPPFLAGS}"
-LDFLAGS="${_vpr_save_LDFLAGS}"
 
 DPP_CHECK_DYNLOAD_LIB
 DPP_HAVE_CPPUNIT([1.9.10])
@@ -695,6 +648,47 @@ CPPFLAGS="$vprsave_CPPFLAGS"
 LIBS="$vprsave_LIBS"
 LDFLAGS="$vprsave_LDFLAGS"
 
+# -----------
+# CppDOM
+# -----------
+_vpr_save_CXXFLAGS="$CXXFLAGS"
+_vpr_save_CPPFLAGS="$CPPFLAGS"
+_vpr_save_LDFLAGS="$LDFLAGS"
+
+# Ensure that /usr/include and /usr/lib are not included multiple times
+# if $cppdom_root is "/usr".
+if test "x$cppdom_root" != "x" ; then
+   cppdom_path="$cppdom_root/bin:$PATH"
+else
+   cppdom_path="$PATH"
+fi
+
+AC_PATH_PROG(CPPDOM_CONFIG, [cppdom-config], [no], [$cppdom_path])
+
+if test "x$CPPDOM_CONFIG" != "xno" ; then
+   CPPDOM_CXXFLAGS=`$CPPDOM_CONFIG --cxxflags`
+   CPPDOM_LIBS=`$CPPDOM_CONFIG --libs`
+else
+   AC_MSG_ERROR([*** CppDOM is required for VPR ***])
+fi
+
+CXXFLAGS="$CPPDOM_CXXFLAGS $CXXFLAGS $STDFLAGS ${_EXTRA_FLAGS}"
+CPPFLAGS="$CPPDOM_CXXFLAGS $CPPFLAGS"
+LDFLAGS="$CPPDOM_LIBS $LDFLAGS"
+
+DPP_LANG_SAVE
+DPP_LANG_CPLUSPLUS
+
+# XXX: We should test for linking features too.
+AC_CHECK_HEADER([cppdom/config.h], ,
+    [AC_MSG_ERROR([*** CppDOM is required for VPR ***])])
+
+DPP_LANG_RESTORE
+
+CXXFLAGS="${_vpr_save_CXXFLAGS}"
+CPPFLAGS="${_vpr_save_CPPFLAGS}"
+LDFLAGS="${_vpr_save_LDFLAGS}"
+
 # -----------------------------------------------------------------------------
 # Miscellaneous checks.
 # -----------------------------------------------------------------------------
@@ -705,19 +699,7 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
 
-vpr_cxxflags="$STDFLAGS"
-
-if test "x$CPPDOM_INCLUDES" != "x" ; then
-   INCLUDES="$INCLUDES $CPPDOM_INCLUDES"
-fi
-
-# If the user has a local copy of CppDOM, add its path to the C++ flags.
-if test "x$LOCAL_CPPDOM" = "xY" ; then
-   vpr_cxxflags="$vpr_cxxflags $CPPDOM_INCLUDES"
-fi
-
-# If the user has a local copy of Boost, add its path to the C++ flags.
-vpr_cxxflags="$vpr_cxxflags $BOOST_INCLUDES"
+vpr_cxxflags="$STDFLAGS $BOOST_INCLUDES $CPPDOM_CXXFLAGS"
 
 # Add these C++ options when compiling with G++.
 if test "x$GXX" = "xyes" ; then
@@ -794,9 +776,9 @@ UNIX_VPRROOT_ABS="$VPRROOT_ABS"
 
 # Put together the basic information needed to compile VPR applications.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $LIBS $BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
+    APP_EXTRA_LIBS="$LDFLAGS $LIBS $CPPDOM_LIBS $BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $BOOST_LDFLAGS -l$boost_fs_name $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
+    APP_EXTRA_LIBS="$LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS -l$boost_fs_name $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
 fi
 
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
@@ -835,7 +817,7 @@ fi
 
 # Dependencies for dynamic/shared libraries.
 if test "x$OS_TYPE" = "xWin32" ; then
-    DYLIB_DEPS="$BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
+    DYLIB_DEPS="$CPPDOM_LIBS $BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
 else
     DYLIB_DEPS="$APP_EXTRA_LIBS"
 fi
@@ -849,7 +831,7 @@ case $SUBSYSTEM in
         static_end="-B dynamic"
         vpr_ldflags_compiler="-L\${prefix}/lib\${LIBBITSUF}"
         vpr_ldflags_linker="$vpr_ldflags_compiler"
-        vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $BOOST_LDFLAGS -l$boost_fs_name"
+        vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS -l$boost_fs_name"
         vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
         vpr_libs='-lvpr'
         vpr_prof_libs='-lvpr_p'
@@ -870,7 +852,7 @@ case $SUBSYSTEM in
 
         vpr_ldflags_compiler="-L\${prefix}/lib\${LIBBITSUF}"
         vpr_ldflags_linker="$vpr_ldflags_compiler"
-        vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $BOOST_LDFLAGS -l$boost_fs_name"
+        vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS -l$boost_fs_name"
         vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
         vpr_libs='-lvpr'
         vpr_prof_libs='-lvpr_p'
@@ -881,8 +863,8 @@ case $SUBSYSTEM in
             subsystem_libs="$NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
             vpr_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
             vpr_ldflags_linker="/libpath:\$prefix/lib/debug"
-            vpr_extra_ldflags_compiler="/link $BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE"
-            vpr_extra_ldflags_linker="$BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE"
+            vpr_extra_ldflags_compiler="/link $CPPDOM_LIBS $BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE"
+            vpr_extra_ldflags_linker="$CPPDOM_LIBS $BOOST_LDFLAGS_LINK_EXE $boost_fs_name.lib $NSPR_LDFLAGS_LINK_EXE"
             vpr_libs='vpr.lib'
             vpr_prof_libs='vpr.lib'
         else
@@ -890,7 +872,7 @@ case $SUBSYSTEM in
             subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
             vpr_ldflags_compiler="-L\${prefix}/lib\${LIBBITSUF}"
             vpr_ldflags_linker="$vpr_ldflags_compiler"
-            vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $BOOST_LDFLAGS -l$boost_fs_name"
+            vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $CPPDOM_LIBS $BOOST_LDFLAGS -l$boost_fs_name"
             vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
             vpr_libs='-lvpr'
             vpr_prof_libs='-lvpr_p'
@@ -940,10 +922,8 @@ AC_SUBST(HANDLE_ABS)
 AC_SUBST(SERIAL_PORT_ABS)
 AC_SUBST(SOCKET_ABS)
 
-#AC_SUBST(CPPDOM_ROOT)
-#AC_SUBST(CPPDOM_INCLUDES)
-AC_SUBST(UNIX_CPPDOM_ROOT)
-AC_SUBST(LOCAL_CPPDOM)
+AC_SUBST(CPPDOM_CXXFLAGS)
+AC_SUBST(CPPDOM_LIBS)
 
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
@@ -982,8 +962,6 @@ AC_CONFIG_FILES([
    Makefile.inc
    common.defs.mk
    make.defs.mk
-   external/Makefile
-   external/cppdom/Makefile
    vpr/Makefile
    vpr/md/Makefile
    vpr/md/NSPR/Makefile
