@@ -50,7 +50,7 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-BOOST_FS_DIR=		@srcdir@/../../../../external/boost
+BOOST_FS_DIR=		@BOOST_ROOT@
 
 srcdir=			$(BOOST_FS_DIR)/libs/filesystem/src
 top_srcdir=		@top_srcdir@
