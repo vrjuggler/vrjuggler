@@ -350,7 +350,7 @@ ifeq ($(BUILD_JAVA), Y)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(JACORB_DIR)/idl.jar $(bindir)
 ifeq (@OS_TYPE@, Win32)
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(JACORB_DIR)/idl.bat $(bindir)
 else
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
