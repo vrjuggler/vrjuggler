@@ -36,8 +36,8 @@
 
 #include <vpr/vprConfig.h>
 
-// base bridge class..
-#include <vpr/IO/Socket/Socket_t.h>
+#include <vpr/Util/Status.h>
+#include <vpr/IO/Socket/Socket_t.h> /* base bridge class.. */
 
 namespace vpr {
 
