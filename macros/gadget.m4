@@ -82,7 +82,9 @@ AC_DEFUN(GADGETEER_PATH,
     min_gadget_version=ifelse([$1], , 0.0.1, $1)
 
     dnl Do a sanity check to ensure that $GADGETEER_CONFIG actually works.
-    if ! eval `$GADGETEER_CONFIG --cxxflags >/dev/null 2>&1` ; then
+    if test ! -x "$GADGETEER_CONFIG" ; then
+        GADGETEER_CONFIG='no'
+    elif ! eval `$GADGETEER_CONFIG --cxxflags >/dev/null 2>&1` ; then
         GADGETEER_CONFIG='no'
     fi
 
