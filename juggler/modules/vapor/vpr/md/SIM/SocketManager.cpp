@@ -42,6 +42,7 @@
 #include <vpr/vprConfig.h>
 
 #include <stdlib.h>
+#include <boost/concept_check.hpp>
 #include <boost/utility.hpp>
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
@@ -85,6 +86,7 @@ namespace sim
                                              NetworkGraph::VertexListPtr& path,
                                              vpr::Interval timeout )
    {
+      boost::ignore_unused_variable_warning(timeout);
       vprASSERT(mActive && "Socket manager not activated yet");
       vprASSERT(localSock->isBound() && "Precondition is that socket is bound");
       vprASSERT(localSock->mLocalAddr != vpr::InetAddr::AnyAddr && "Must be bound to an address");
@@ -214,6 +216,7 @@ namespace sim
    vpr::ReturnStatus SocketManager::listen( vpr::SocketStreamImplSIM* handle,
                                             const int backlog )
    {
+      boost::ignore_unused_variable_warning(backlog);
       vpr::ReturnStatus status;
 
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) <<"SocketManager::listen: Added listner: " << handle->getLocalAddr() << std::endl
