@@ -249,14 +249,13 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status getCharacterSize(Uint16& size);
+    Status getCharacterSize(SerialTypes::CharacterSizeOption& size);
 
     // ------------------------------------------------------------------------
     //: Set the character size for both reading and writing on this port.
-    //+ This size does not include the parity bit if any.  Possible values are
-    //+ 5, 6, 7 or 8 bits per byte.
+    //+ This size does not include the parity bit if any.
     // ------------------------------------------------------------------------
-    Status setCharacterSize(const Uint16 bpb);
+    Status setCharacterSize(const SerialTypes::CharacterSizeOption bpb);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
