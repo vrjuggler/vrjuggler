@@ -210,7 +210,7 @@ public class CoordinateFrameEditor
 
       // Using the object returned by source.getValue() seems to be safe
       // because every change in the spinner's value creates a new object.
-      mElement.setProperty("pre_rotation", value_index, source.getValue(),
+      mElement.setProperty(mRotateProp, value_index, source.getValue(),
                            mContext);
    }
 
@@ -226,19 +226,18 @@ public class CoordinateFrameEditor
       mContext = ctx;
       mElement = elt;
 
-      String prop;
       if ( mCoordinateType == TRANSMITTER )
       {
-         prop = EditorConstants.pre_rotation_prop;
+         mRotateProp = EditorConstants.pre_rotation_prop;
       }
       else
       {
-         prop = EditorConstants.post_rotation_prop;
+         mRotateProp = EditorConstants.post_rotation_prop;
       }
 
-      float x_rot = ((Number) elt.getProperty(prop, 0)).floatValue();
-      float y_rot = ((Number) elt.getProperty(prop, 1)).floatValue();
-      float z_rot = ((Number) elt.getProperty(prop, 2)).floatValue();
+      float x_rot = ((Number) elt.getProperty(mRotateProp, 0)).floatValue();
+      float y_rot = ((Number) elt.getProperty(mRotateProp, 1)).floatValue();
+      float z_rot = ((Number) elt.getProperty(mRotateProp, 2)).floatValue();
 
       mTrackerXRotSpinner.setValue(new Float(x_rot));
       mTrackerYRotSpinner.setValue(new Float(y_rot));
@@ -529,9 +528,10 @@ public class CoordinateFrameEditor
                                       -66, -89));
    }
 
-   private int mCoordinateType;
    private ConfigContext mContext;
    private ConfigElement mElement;
+   private int mCoordinateType;
+   private String mRotateProp;
 
    private CoordFrame[]      mCoordFrames      = new CoordFrame[24];
    private EventListenerList mJugglerListeners = new EventListenerList();
