@@ -82,7 +82,7 @@ public:
     *
     * @param proxyName String name of the proxy to connect to.
     */
-   void init(const std::string proxyName);
+   void init(const std::string& proxyName);
 
    /**
     * Refreshes the interface based on the current configuration.
@@ -94,13 +94,13 @@ public:
    virtual void refresh();
 
    /** Returns the name of the proxy. */
-   std::string getProxyName()
+   std::string getProxyName() const
    {
       return mProxyName;
    }
 
    /** Identifies whether this device interface is connected to a proxy. */
-   bool isConnected()
+   bool isConnected() const
    {
       return (NULL != mProxyPtr);
    }
