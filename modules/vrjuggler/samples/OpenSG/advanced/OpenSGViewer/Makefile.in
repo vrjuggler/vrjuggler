@@ -43,7 +43,10 @@ APP_NAME=	OpenSGViewer@EXEEXT@
 srcdir=		@srcdir@
 SRCS=		OpenSGViewer.cpp \
          app.cpp \
-         User.cpp
+         User.cpp \
+         ViewPlatform.cpp
+
+EXTRA_PATH_FOR_SOURCES = $(srcdir)/Common $(srcdir)/OpenSG
 
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
