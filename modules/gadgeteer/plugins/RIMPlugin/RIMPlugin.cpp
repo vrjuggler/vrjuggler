@@ -145,7 +145,7 @@ namespace cluster
                << clrOutBOLD(clrCYAN,"[RIMPlugin] ")
                << clrOutBOLD(clrRED, "WARNING:") << " Cluster node: " << device_host
                << " does not exist, there must be an error in the ClusterDepChecker."
-               << std::cout << vprDEBUG_FLUSH;
+               << std::endl << vprDEBUG_FLUSH;
             return false;
          }
          else if ( !node->isConnected() )
@@ -154,7 +154,7 @@ namespace cluster
                << clrOutBOLD(clrCYAN,"[RIMPlugin] ")
                << clrOutBOLD(clrRED, "WARNING:") << " Cluster node: " << device_host
                << " is not connected, there must be an error in the ClusterDepChecker."
-               << std::cout << vprDEBUG_FLUSH;
+               << std::endl << vprDEBUG_FLUSH;
             return false;
          }
 
@@ -169,7 +169,7 @@ namespace cluster
             << clrOutBOLD(clrCYAN,"[RIMPlugin] ")
             << clrOutBOLD(clrRED, "ERROR: ")
             << "recognizeRemoteDeviceConfig is broken."
-            << std::cout << vprDEBUG_FLUSH;
+            << std::endl << vprDEBUG_FLUSH;
          return(false);
       }
    }
