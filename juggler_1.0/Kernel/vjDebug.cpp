@@ -47,7 +47,6 @@ vjSingletonImp(vjDebug);
 
 #include <vjConfig.h>
 #include <stdlib.h>
-#include <assert.h>
 
 #include <Sync/vjMutex.h>
 #include <Threads/vjThread.h>

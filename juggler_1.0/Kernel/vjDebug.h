@@ -39,7 +39,6 @@
 // #define VJ_DEBUG  Defined in vjConfig.h
 #include <vjConfig.h>
 #include <stdlib.h>
-#include <assert.h>
 
 #include <Sync/vjMutex.h>
 #include <Sync/vjGuard.h>
