@@ -46,10 +46,6 @@ class vjQuat;
 class vjVec3;
 class vjCoord;
 
-#ifdef VJ_API_PERFORMER
-   #include <Performer/pr/pfLinMath.h>
-#endif
-
 // Andy: M_PI not defined in win32
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
