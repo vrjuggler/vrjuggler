@@ -17,7 +17,6 @@ MOD_NAME=		snx
 
 SRCS= \
 	_SoundAPIInfo.cpp		\
-	_SoundFactory.cpp		\
 	_SoundHandle.cpp		\
 	_SoundImplementation.cpp	\
 	_SoundInfo.cpp			\
