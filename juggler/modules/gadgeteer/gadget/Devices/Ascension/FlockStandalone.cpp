@@ -166,16 +166,16 @@ void FlockStandalone::setBaudRate(const int& baud)
 
 //: call this to connect to the flock device.
 //  NOTE: flock.isActive() must be false to use this function
-int FlockStandalone::start()
+vpr::ReturnStatus FlockStandalone::start()
 {
    int retval;
    
    if ( ! mActive )
    {
-      if ( openPort() == -1 )
+      if ( openPort() == vpr::ReturnStatus::Fail )
       {
          vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << " [FlockStandalone] **** ERROR, can't open serial port: " <<  mPort << " ****\n" << vprDEBUG_FLUSH;
-         retval = 0;
+         return(vpr::ReturnStatus::Fail);
       }
       else
       {
@@ -206,10 +206,10 @@ int FlockStandalone::start()
          vpr::System::sleep(3);
       }
       
-      if ( openPort() == -1 )
+      if ( openPort() == vpr::ReturnStatus::Fail )
       {
          vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << " [FlockStandalone] **** ERROR, can't open serial port: " <<  mPort << " ****\n" << vprDEBUG_FLUSH;
-         retval = 0;
+         return(vpr::ReturnStatus::Fail);
       }
       else
       {
@@ -266,14 +266,14 @@ int FlockStandalone::start()
          mActive = true;
 
          // return success
-         retval = 1;
+         return(vpr::ReturnStatus::Succeed);
       }
    }
    else
    {
+      return(vpr::ReturnStatus::Succeed);
       retval = 0; // already sampling
    }
-   return retval;
 }
 
 //: call this repeatedly to update the data from the birds.
@@ -1097,10 +1097,8 @@ void FlockStandalone::pickBird (const int birdID)
 //  returns portId twice (created by the open function)
 //  NOTE: portId is returned from both ends of this function.
 //  if portId == -1 then function failed to open the port.
-int FlockStandalone::openPort ()
+vpr::ReturnStatus FlockStandalone::openPort ()
 {
-   int retval;
-
    ///////////////////////////////////////////////////////////////////
    // Open and close the port to reset the tracker, then
    // Open the port
@@ -1112,13 +1110,7 @@ int FlockStandalone::openPort ()
       
       mSerialPort->setOpenReadWrite();
       
-      if ( ! mSerialPort->open().success() )
-      {
-         vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "Port reset failed (because port "
-                  << "open failed)\n" << vprDEBUG_FLUSH;
-         retval = -1;
-      }
-      else
+      if (mSerialPort->open().success() )
       {
          vpr::System::msleep(500);
          mSerialPort->close();
@@ -1126,55 +1118,58 @@ int FlockStandalone::openPort ()
          vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Port reset successfully (port was "
                    << "opened then closed)\n" << vprDEBUG_FLUSH;
 
-         if ( ! mSerialPort->open().success() )
+         if ( mSerialPort->open().success() )
          {
-            vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "Port open failed\n" << vprDEBUG_FLUSH;
-            retval = -1;
-         }
-         else
-         {
-            mSerialPort->clearAll();
-            mSerialPort->enableRead();
-            mSerialPort->enableLocalAttach();
-            mSerialPort->enableBreakByteIgnore();
-
             vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Port opened successfully\n"
-                      << vprDEBUG_FLUSH;
+               << vprDEBUG_FLUSH;
 
+            mSerialPort->clearAll();
+            
+            vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting read stuff\n" << vprDEBUG_FLUSH;
+            mSerialPort->enableRead();
+            
+            vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting local attachment\n" << vprDEBUG_FLUSH;
+            mSerialPort->enableLocalAttach();
+
+            vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting Break Byte ignore\n" << vprDEBUG_FLUSH;
+            mSerialPort->enableBreakByteIgnore();
+            
             mSerialPort->setUpdateAction(vpr::SerialTypes::NOW);
 
             // Setup the port.
-            vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Setting new baud rate: "
+            vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Setting new Input baud rate: "
                       << mBaud << " bits per second\n" << vprDEBUG_FLUSH;
             mSerialPort->setInputBaudRate(mBaud);
 
-            vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Setting output baud rate\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Setting new Output baud rate: "
+                      << mBaud << " bits per second\n" << vprDEBUG_FLUSH;
             mSerialPort->setOutputBaudRate(mBaud);
-
+            
             vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Setting character size\n" << vprDEBUG_FLUSH;
             mSerialPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
-/*
-                std::cout << "Setting local attachment\n" << std::flush;
-                mSerialPort->enableLocalAttach();
-*/
-/*            vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting read stuff\n" << vprDEBUG_FLUSH;
-            if ( mSerialPort->enableRead().failure() )
-            {
-               retval = -1;
-            }
-*/
+            
             vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Port setup correctly\n" << vprDEBUG_FLUSH;
+            return(vpr::ReturnStatus::Succeed);
          }
+         else
+         {
+            vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "Port open failed\n" << vprDEBUG_FLUSH;
+            return(vpr::ReturnStatus::Fail);
+         }
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "Port reset failed (because port "
+            << "open failed)\n" << vprDEBUG_FLUSH;
+         return(vpr::ReturnStatus::Fail);
       }
    }
    else
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "ERROR -- No port has been set in FlockStandalone::open_port()!\n" << vprDEBUG_FLUSH;
-      retval = -1;
+      return(vpr::ReturnStatus::Fail);
    }
-
    vprDEBUG_END(vprDBG_ALL,vprDBG_CONFIG_LVL) << "====================================================\n" << vprDEBUG_FLUSH;
-   return retval;
 }
 
 void FlockStandalone::setBlocking ()

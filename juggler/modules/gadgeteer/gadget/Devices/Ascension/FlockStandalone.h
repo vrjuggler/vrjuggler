@@ -100,7 +100,7 @@ public:
     *  call this to connect to the flock device.
     *  @note flock.isActive() must be false to use this function
     */
-   int start();
+   vpr::ReturnStatus start();
 
    /**  stop the flock */
    int stop();
@@ -444,7 +444,7 @@ private:
    const int mSleepFactor;
 
 private:
-   int openPort(void);
+   vpr::ReturnStatus openPort(void);
    void setBlocking(void);
    void sendSync(void);
    void sendGroup(void);
