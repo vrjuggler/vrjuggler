@@ -1,6 +1,24 @@
+dnl #
+dnl #  File:	       $RCSfile$
+dnl #  Date modified:  $Date$
+dnl #  Version:	       $Revision$
+dnl #
+dnl #
+dnl #                                VR Juggler
+dnl #                                    by
+dnl #                              Allen Bierbaum
+dnl #                             Christopher Just
+dnl #                             Patrick Hartling
+dnl #                            Carolina Cruz-Neira
+dnl #                               Albert Baker
+dnl #
+dnl #                  Copyright (C) - 1997, 1998, 1999, 2000
+dnl #              Iowa State University Research Foundation, Inc.
+dnl #                            All Rights Reserved
+dnl #
+
 dnl # -------------------------------------------------------------------------
 dnl # Base configure.in for VR Juggler.
-dnl # $Date$
 dnl # -------------------------------------------------------------------------
 dnl # This file is "compiled" by GNU autoconf to generate the configure script
 dnl # that is actually run.
