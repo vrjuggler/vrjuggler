@@ -5,9 +5,11 @@
 
 default: all
 
+# Include common definitions.
+include @topdir@/Makefile.base
+
 includedir	= @includedir@/Input
 srcdir		= @srcdir@
-topdir		= @topdir@
 top_srcdir	= @top_srcdir@
 wwwdir		= ${srcdir}/Doc
 VJROOT		= ${top_srcdir}
@@ -18,8 +20,7 @@ WORKDIR		= ${topdir}/Input
 # '_clean' target to be run besides the standard 'clean' target.
 _LOCAL_CLEAN	= 1
 
-# Include common definitions.
-include ${topdir}/Makefile.base
+# Include the recursive target code.
 include ${MKPATH}/vj.rec.mk
 
 SUBDIRS		= vjGlove vjInput vjPosition InputManager ibox
