@@ -36,7 +36,7 @@
 # -----------------------------------------------------------------------------
 
 
-APP_NAME=	wand$(OS_EXE_EXT)
+APP_NAME=	vncapp$(OS_EXE_EXT)
 
 all: $(APP_NAME)
 
@@ -49,7 +49,7 @@ SRCS=		d3des.c			\
 		VNCDesktop.cpp		\
 		VNCInterface.cpp	\
 		main.cpp		\
-		wandApp.cpp
+		vncApp.cpp
 
 
 EXTRA_PATH_FOR_SOURCES=	$(srcdir)/..
