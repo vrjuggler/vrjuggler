@@ -264,7 +264,7 @@ public:
     //
     //! ARGS: n - The new value for the server address.
     // ------------------------------------------------------------------------
-    void setAddress(const char* n);
+    void setAddressName(const char* n);
 
     // ------------------------------------------------------------------------
     //: Get the current server address for the device.
@@ -275,8 +275,8 @@ public:
     //! RETURNS: A character array naming the server address.
     // ------------------------------------------------------------------------
     inline std::string
-    getAddress (void) const {
-        return m_motion_star.getAddress();
+    getAddressName (void) const {
+        return m_motion_star.getAddressName();
     }
 
     // ------------------------------------------------------------------------

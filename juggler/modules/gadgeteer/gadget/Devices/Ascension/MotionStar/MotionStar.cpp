@@ -116,7 +116,7 @@ MotionStar::config (ConfigChunk* c) {
          << "       MotionStar::config(ConfigChunk*)\n" << vprDEBUG_FLUSH;
 
       // Configure m_motion_star with the config info.
-      setAddress(static_cast<std::string>(c->getProperty("address")).c_str());
+      setAddressName(static_cast<std::string>(c->getProperty("address")).c_str());
       setServerPort((unsigned short) static_cast<int>(c->getProperty("serverPort")));
       setMasterStatus(static_cast<bool>(c->getProperty("serverType")));
       setHemisphere((unsigned char) static_cast<int>(c->getProperty("hemisphere")));
@@ -288,8 +288,8 @@ MotionStar::sample () {
 
    if ( isActive() == false ) {
        vprDEBUG(vprDBG_ALL, 0) << clrSetNORM(clrRED) << "MotionStar ("
-                             << getAddress() << ") NOT ACTIVE IN SAMPLE\n"
-                             << clrRESET << vprDEBUG_FLUSH;
+                               << getAddressName() << ") NOT ACTIVE IN SAMPLE\n"
+                               << clrRESET << vprDEBUG_FLUSH;
    }
    else {
       int index;
@@ -391,8 +391,9 @@ MotionStar::updateData () {
    // If the device is not active, we cannot update the data.
    if ( isActive() == false ) {
       vprDEBUG(vprDBG_ALL, 0) << clrSetNORM(clrRED) << "MotionStar ("
-                            << getAddress() << ") not active in updateData()\n"
-                            << clrRESET << vprDEBUG_FLUSH;
+                              << getAddressName()
+                              << ") not active in updateData()\n" << clrRESET
+                              << vprDEBUG_FLUSH;
    }
    // Otherwise, go through with the update.
    else {
@@ -433,14 +434,14 @@ MotionStar::getPosUpdateTime (int d) {
 // Set the address (either IP address or hostname) for the server.
 // ----------------------------------------------------------------------------
 void
-MotionStar::setAddress (const char* n) {
+MotionStar::setAddressName (const char* n) {
    // If the device active, we cannot change the server address.
    if ( isActive() ) {
       vprDEBUG(vrjDBG_INPUT_MGR, 2)
          << "vjMotionStar: Cannot change server address while active\n"
          << vprDEBUG_FLUSH;
    } else {
-      m_motion_star.setAddress(n);
+      m_motion_star.setAddressName(n);
    }
 }
 
