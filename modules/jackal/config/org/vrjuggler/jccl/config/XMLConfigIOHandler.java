@@ -153,29 +153,19 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
     }
     
 
-    public boolean writeConfigChunkDB (DataOutputStream out, ConfigChunkDB db) {
-        try {
-            out.writeBytes (db.xmlRep());
-            return true;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }    
+    public void writeConfigChunkDB (DataOutputStream out, ConfigChunkDB db) 
+        throws IOException {
+
+        out.writeBytes (db.xmlRep());
     }
 
 
-    public boolean writeConfigChunkDB (File out, ConfigChunkDB db) {
-        try {
-            DataOutputStream ostream = new DataOutputStream (new FileOutputStream (out));
-            ostream.writeBytes ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-            ostream.writeBytes (db.xmlRep());
-            return true;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+    public void writeConfigChunkDB (File out, ConfigChunkDB db) 
+        throws IOException {
+
+        DataOutputStream ostream = new DataOutputStream (new FileOutputStream (out));
+        ostream.writeBytes ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        ostream.writeBytes (db.xmlRep());
     }
 
 
@@ -476,28 +466,18 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
     }
     
 
-    public boolean writeChunkDescDB (DataOutputStream out, ChunkDescDB db) {
-        try {
-            out.writeBytes (db.xmlRep());
-            return true;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }    
+    public void writeChunkDescDB (DataOutputStream out, ChunkDescDB db) 
+        throws IOException {
+
+        out.writeBytes (db.xmlRep());
     }
 
-    public boolean writeChunkDescDB (File out, ChunkDescDB db) {
-        try {
-            DataOutputStream ostream = new DataOutputStream (new FileOutputStream (out));
-            ostream.writeBytes ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-            ostream.writeBytes (db.xmlRep());
-            return true;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+    public void writeChunkDescDB (File out, ChunkDescDB db) 
+        throws IOException {
+
+        DataOutputStream ostream = new DataOutputStream (new FileOutputStream (out));
+        ostream.writeBytes ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        ostream.writeBytes (db.xmlRep());
     }
 
 
