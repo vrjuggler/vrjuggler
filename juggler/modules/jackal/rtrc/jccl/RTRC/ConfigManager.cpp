@@ -91,7 +91,7 @@ bool vjConfigManager::pendingNeedsChecked()
                 << "      This may be an error in the configuration OR\n"
                 << vjDEBUG_FLUSH;
             vjDEBUG_NEXT(vjDBG_ALL, vjDBG_CRITICAL_LVL)
-                << "      it may be waiting for more configuration information.\n" 
+                << "      it may be waiting for more configuration information.\n"
                 << vjDEBUG_FLUSH;
 //            vjDEBUG(vjDBG_ALL, vjDBG_CRITICAL_LVL) << vjDEBUG_FLUSH;
 
@@ -134,7 +134,6 @@ void vjConfigManager::addChunkDB(vjConfigChunkDB* db)
    mPendingCountMutex.acquire();
    mPendingCheckCount = 0;
    mPendingCountMutex.release();
-
 }
 
 void vjConfigManager::removeChunkDB(vjConfigChunkDB* db)
@@ -157,7 +156,6 @@ void vjConfigManager::removeChunkDB(vjConfigChunkDB* db)
    mPendingCountMutex.acquire();
    mPendingCheckCount = 0;
    mPendingCountMutex.release();
-
 }
 
 // Look for items in the active list that don't have their dependencies filled anymore
@@ -169,7 +167,7 @@ int vjConfigManager::scanForLostDependencies()
 {
    vjASSERT(0 == mActiveLock.test());        // We can't hold the lock upon entry
 
-   vjDEBUG_BEGIN(vjDBG_ALL,1) << "vjConfigManager::scanForLostDependencies: Entered: \n" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_ALL,vjDBG_CONFIG_LVL) << "vjConfigManager::scanForLostDependencies: Entered: \n" << vjDEBUG_FLUSH;
 
    vjDependencyManager* dep_mgr = vjDependencyManager::instance();
    std::vector<vjConfigChunk*> chunks;
