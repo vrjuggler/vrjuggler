@@ -56,7 +56,7 @@ public class TweekAppListener extends ApplicationAdapter
          new GlobalPreferencesServiceProxy();
          app.setEnabledPreferencesMenu(true);
       }
-      catch(Exception)
+      catch(Exception ex)
       {
          app.setEnabledPreferencesMenu(false);
       }
