@@ -38,7 +38,8 @@ OGL_API		:= @OPENGL_API@
 ifeq ($(OGL_API),Y)
     GL_SRCS 	:= vjGlDrawManager.cpp	\
                    vjGlPipe.cpp		\
-                   vjGlWindow.cpp
+                   vjGlWindow.cpp       \
+		   vjGlxWindow.cpp
 endif
 
 GL_OBJECTS	:= ${addprefix ${OBJDIR}/,${GL_SRCS:.cpp=.o}}

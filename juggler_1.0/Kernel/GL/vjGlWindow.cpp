@@ -6,20 +6,27 @@
 #include <Kernel/vjProjection.h>
 #include <Kernel/vjFrustum.h>
 #include <Kernel/vjDebug.h>
+#include <Kernel/vjSimDisplay.h>
+#include <Kernel/vjSurfaceDisplay.h>
 
-#define USE_PROJECTION_MATRIX 1        // Should we put the camera transforms on the 
+#define USE_PROJECTION_MATRIX 1        // Should we put the camera transforms on the
                                        // Projection or modelview matrix
 
 int vjGlWindow::mCurMaxWinId = 0;
 
-void vjGlWindow::setLeftEye() {
+void vjGlWindow::setLeftEyeProjection()
+{
+   vjASSERT(mDisplay->getType() == vjDisplay::SURFACE);
+   vjSurfaceDisplay* surf_display = dynamic_cast<vjSurfaceDisplay*>(mDisplay);
+
    if (!window_is_open)
       return;
 
-   float* frust = display->leftProj->frustum.frust;
+   vjProjection* left_proj = surf_display->getLeftProj();
+   float* frust = left_proj->frustum.frust;
 
    vjDEBUG(2)  << "---- Left Frustum ----\n"
-               << display->leftProj->frustum.frust << endl << vjDEBUG_FLUSH;
+               << surf_display->getLeftProj()->frustum.frust << endl << vjDEBUG_FLUSH;
 
       // --- Set to the correct buffer --- //
    if(isStereo())
@@ -36,27 +43,31 @@ void vjGlWindow::setLeftEye() {
                  frust[vjFrustum::NEAR],frust[vjFrustum::FAR]);
 #ifdef USE_PROJECTION_MATRIX
          // Set camera rotation and position
-      glMultMatrixf(display->leftProj->viewMat.getFloatPtr());
+      glMultMatrixf(left_proj->viewMat.getFloatPtr());
 #endif
    }
    glMatrixMode(GL_MODELVIEW);
 #ifndef USE_PROJECTION_MATRIX
       // Set camera rotation and position
    glLoadIdentity();
-   glMultMatrixf(display->leftProj->viewMat.getFloatPtr());
+   glMultMatrixf(left_proj->viewMat.getFloatPtr());
 #endif
 }
 
 /** Sets the projection matrix for this window to draw the right eye frame */
-void vjGlWindow::setRightEye()
+void vjGlWindow::setRightEyeProjection()
 {
+   vjASSERT(mDisplay->getType() == vjDisplay::SURFACE);
+   vjSurfaceDisplay* surf_display = dynamic_cast<vjSurfaceDisplay*>(mDisplay);
+
    if (!window_is_open)
       return;
 
-   float* frust = display->rightProj->frustum.frust;
-   
+   vjProjection* right_proj = surf_display->getRightProj();
+   float* frust = right_proj->frustum.frust;
+
    vjDEBUG(2)  << "---- Right Frustum ----\n"
-               << display->rightProj->frustum.frust << endl << vjDEBUG_FLUSH;
+               << *frust << endl << vjDEBUG_FLUSH;
 
       // --- Set to the correct buffer --- //
    if(isStereo())
@@ -73,7 +84,7 @@ void vjGlWindow::setRightEye()
                  frust[vjFrustum::NEAR],frust[vjFrustum::FAR]);
 #ifdef USE_PROJECTION_MATRIX
        // Set camera rotation and position
-   glMultMatrixf(display->rightProj->viewMat.getFloatPtr());
+   glMultMatrixf(right_proj->viewMat.getFloatPtr());
 #endif
    }
    glMatrixMode(GL_MODELVIEW);
@@ -81,21 +92,24 @@ void vjGlWindow::setRightEye()
 #ifndef USE_PROJECTION_MATRIX
       // Set camera rotation and position
    glLoadIdentity();
-   glMultMatrixf(display->rightProj->viewMat.getFloatPtr());
+   glMultMatrixf(right_proj->viewMat.getFloatPtr());
 #endif
 }
 
 
 /** Sets the projection matrix for this window to draw the camera eye frame */
-void vjGlWindow::setCameraEye()
+void vjGlWindow::setCameraProjection()
 {
+   vjASSERT(mDisplay->getType() == vjDisplay::SIM);
+   vjSimDisplay* sim_display = dynamic_cast<vjSimDisplay*>(mDisplay);
+
    if (!window_is_open)
       return;
 
    //float* frust = display->cameraProj->frustum.frust;
-   
+
    vjDEBUG(2)  << "---- Camera Frustrum ----\n"
-               << display->cameraProj->frustum.frust << endl << vjDEBUG_FLUSH;
+               << sim_display->getCameraProj()->frustum.frust << endl << vjDEBUG_FLUSH;
 
       // --- Set to the correct buffer --- //
    glDrawBuffer(GL_BACK);
@@ -112,7 +126,7 @@ void vjGlWindow::setCameraEye()
       gluPerspective(80.0f, 1.0f, 0.1, 1000);
 #ifdef USE_PROJECTION_MATRIX
        // Set camera rotation and position
-   glMultMatrixf(display->cameraProj->viewMat.getFloatPtr());
+   glMultMatrixf(sim_display->getCameraProj()->viewMat.getFloatPtr());
 #endif
    }
    glMatrixMode(GL_MODELVIEW);
@@ -120,7 +134,7 @@ void vjGlWindow::setCameraEye()
 #ifndef USE_PROJECTION_MATRIX
       // Set camera rotation and position
    glLoadIdentity();
-   glMultMatrixf(display->cameraProj->viewMat.getFloatPtr());
+   glMultMatrixf(sim_display->getCameraProj()->viewMat.getFloatPtr());
 #endif
 }
 
@@ -129,7 +143,7 @@ ostream& operator<<(ostream& out, vjGlWindow& win)
 {
    out << "-------- vjGlWindow --------" << endl;
    out << "Open: " << win.window_is_open << endl;
-   out << "Display:" << *(win.display) << endl;
+   out << "Display:" << *(win.mDisplay) << endl;
    out << "Stereo:" << win.in_stereo << endl;
    return out;
 }
