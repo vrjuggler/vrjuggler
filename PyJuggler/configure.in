@@ -178,7 +178,7 @@ AC_PATH_PROG(PYTHON, python, no, [$PYTHON_ROOT/bin:$PATH])
 if test "x$PYTHON" = "xno" ; then
    AC_MSG_WARN([*** python is required to run Pyste ***])
 else
-   AC_CHECK_FILE([$PYSTE], , [AC_MSG_WARN([*** $PYSTE does not exist ***])])
+   AC_CHECK_FILE([$PYSTE], , [AC_MSG_WARN([*** pyste.py does not exist ***])])
 fi
 
 
