@@ -50,7 +50,8 @@ VPRROOT		= $(top_srcdir)
 VPR_SRCDIR	= @VPR_SRCDIR@/md/WIN32
 
 ifeq (@SUBSYSTEM@, WIN32)
-SRCS		= MemPoolWin32.cpp		\
+SRCS		= InetAddrWinSock.cpp		\
+                  MemPoolWin32.cpp		\
                   SocketDatagramImpWinSock.cpp	\
                   SocketImpWinSock.cpp		\
                   SocketStreamImpWinSock.cpp	\

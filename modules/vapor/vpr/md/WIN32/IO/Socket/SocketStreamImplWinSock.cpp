@@ -66,7 +66,7 @@ SocketStreamImpWinSock::SocketStreamImpWinSock (const InetAddr& local_addr,
                                                 const InetAddr& remote_addr)
     : SocketImpWinSock(local_addr, remote_addr, SocketTypes::STREAM)
 {
-fprintf(stderr, "vpr::SocketStreamImpWinSock(address, port) constructor\n");
+fprintf(stderr, "vpr::SocketStreamImpWinSock(local, remote) constructor\n");
 fprintf(stderr, "    Local Address: %s -> %s\n",
         local_addr.getAddressString().c_str(),
         m_local_addr.getAddressString().c_str());

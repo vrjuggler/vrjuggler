@@ -54,13 +54,10 @@ SRCS		= MutexPosix.cpp	\
           ThreadPosix.cpp
 endif
 
-ifneq (@SUBSYSTEM@, NSPR)
-SRCS += InetAddrBSD.cpp
-endif
-
 ifneq (@SUBSYSTEM@, WIN32)
 ifneq (@SUBSYSTEM@, NSPR)
     SRCS	+= FileHandleUNIX.cpp		\
+                   InetAddrBSD.cpp		\
                    SerialPortImpTermios.cpp	\
                    SocketDatagramImpBSD.cpp	\
                    SocketImpBSD.cpp		\
