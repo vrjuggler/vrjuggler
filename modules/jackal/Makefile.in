@@ -91,7 +91,7 @@
 # version of the libraries.
 # -----------------------------------------------------------------------------
 
-default: debug
+default: all
 
 # This is a hack to deal with GNU make's ignorance about defined targets.
 # Without this, the 'default' set in dpp.subdir.mk becomes the default
