@@ -66,12 +66,14 @@ public:
    {
       mData = new std::vector<vpr::Uint8>;
       mCurHeadPos = 0;
+      mIsBinary = true;
    }
 
    BufferObjectWriter(std::vector<vpr::Uint8>* data, unsigned curPos=0)
    {
       mData = data;
       mCurHeadPos = curPos;
+      mIsBinary = true;
    }
 
    void setCurPos(unsigned val)

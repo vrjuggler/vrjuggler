@@ -56,16 +56,23 @@ class ObjectReader : public AttributeMapBase
 {
 protected:
    ObjectReader()
+      : mIsBinary(false)
    {;}
 
    ObjectReader(const ObjectReader& o)
-      : AttributeMapBase(o)
+      : AttributeMapBase(o), mIsBinary(false)
    {;}
 
 public:
    virtual ~ObjectReader()
    {;}
 
+   /** Returns true if the writer is a binary based format. 
+    * This can be used to choose wether to use human-readable forms of serialization.
+    */
+   bool isBinary()
+   { return mIsBinary; }
+    
    /** @name Tag and attribute handling.
     * ObjectReader and ObjectWriter support an interface that allows for using
     * tags and attributes in the written output data.  This allows support
@@ -138,6 +145,9 @@ public:
    { str = this->readString(); }
    virtual void readBool(bool& val)
    { val = this->readBool(); }
+
+protected:
+   bool mIsBinary;   /**< Is this a binary serializer. */
 };
 
 } // namespace vpr

@@ -65,6 +65,7 @@ class BufferObjectReader : public ObjectReader
 public:
    BufferObjectReader(std::vector<vpr::Uint8>* data, unsigned curPos=0)
    {
+      mIsBinary = true;
       mData = data;
       mCurHeadPos = curPos;
    }
