@@ -55,8 +55,6 @@ namespace vpr {
 
 /**
  * Options for datagram sockets.
- *
- * @author Patrick Hartling
  */
 class VPR_CLASS_API SocketDatagramOpt : public vpr::SocketOptionWrapper {
 public:

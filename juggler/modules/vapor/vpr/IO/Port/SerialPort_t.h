@@ -48,8 +48,6 @@ namespace vpr {
 /**
  * Cross-platform serial port interface.
  *
- * @author Patrick Hartling
- *
  * @see vpr::SerialPortImplTermios
  * @see vpr::SerialPortImplWin32
  */

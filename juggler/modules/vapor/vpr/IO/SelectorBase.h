@@ -49,8 +49,6 @@ namespace vpr {
 
 /**
  * Common base for all selectors and imp's   
- *
- * @author Allen Bierbaum
  */
 class VPR_CLASS_API SelectorBase
 {

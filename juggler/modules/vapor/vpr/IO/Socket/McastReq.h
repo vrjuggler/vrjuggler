@@ -50,8 +50,6 @@ namespace vpr {
 
 /**
  * Multicast request wrapper.
- *
- * @author Patrick Hartling
  */
 class VPR_CLASS_API McastReq {
 public:

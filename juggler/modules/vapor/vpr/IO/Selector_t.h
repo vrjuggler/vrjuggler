@@ -59,8 +59,6 @@ namespace vpr
  * Cross-platform selection interface.
  * A selector is used to wait on a set of Handles untils any of the
  * events occur that the user is interested in.
- *
- * @author Allen Bierbaum
  */
 template<class RealSelectorImp>
 class Selector_t : public SelectorBase

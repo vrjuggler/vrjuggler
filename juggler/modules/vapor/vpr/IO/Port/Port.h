@@ -54,8 +54,6 @@ namespace vpr {
 /**
  * A cross-platform interface to using a computer's I/O ports (serial,
  * parallel, IR, etc.).
- *
- * @author Patrick Hartling
  */
 class VPR_CLASS_API Port : public BlockIO {
 public:

@@ -55,10 +55,6 @@ namespace vpr {
 
 /**
  * Datagram socket interface.
- *
- * @author Patrick Hartling
- * @author Allen Bierbaum
- * @author Kevin Meinert
  */
 template<class SocketConfig_>
 class SocketDatagram_t : public Socket_t<SocketConfig_>,
