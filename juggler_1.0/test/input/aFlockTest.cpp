@@ -39,7 +39,7 @@
 
 #include <Input/vjPosition/aFlock.h>
 
-void main()
+int main()
 {
     
     const char* port = "/dev/ttyd3";
@@ -125,4 +125,6 @@ void main()
     } while ((achar != 'q') && (achar != 'Q'));
     
     flock.stop();
+
+    return 0;
 }

@@ -44,7 +44,7 @@ char spin()
 	return spinner[ static_cast<int>(spinCounter) % spinner.size() ];	
 }
 
-void main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
 	if (argc == 2)
 	{
@@ -83,7 +83,7 @@ void main(int argc, char* argv[])
 			std::cout<<"["<<spin()<<"] Sampled "<<gestureString<<"\r"<<std::flush;
 		}
 
-		return;
+		return 1;
 	} 
 	
 	else 
@@ -95,4 +95,6 @@ void main(int argc, char* argv[])
 		std::cout<<"Example (WIN):  "<<argv[0]<<" COM1\n"<<std::flush;
 		std::cout<<"\n"<<std::flush;
 	}
+
+	return 0;
 }
