@@ -134,7 +134,7 @@ dnl # Name the group used for setting ownership on installed files.
 AC_ARG_WITH(install-group,
             [  --with-install-group=<GROUP NAME>
                           Installed file group name       [default=vrjuggler]],
-	    _install_group="$withval", _install_group='vrjuggler')
+            _install_group="$withval", _install_group='vrjuggler')
 
 dnl # ------------------------------------------------------ #
 dnl # --enable-feature[=arg] and --disable-feature arguments #
@@ -403,13 +403,13 @@ case $target_os in
         fi
 
         AR='ar -r'
-	CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
+        CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
         INCLUDES="$INCLUDES -I/usr/include"
         LD='${CXX} -shared'
         LDFLAGS="$LDFLAGS -L/usr/X11R6/lib"
         LDOPTS=''
         OPT_FLAGS='-O2'
-	DBG_FLAGS='-g'
+        DBG_FLAGS='-g'
         SHAREDLIB_EXT='so'
 
         dnl # We have to use POSIX threads on Linux.
@@ -932,7 +932,7 @@ if test "x${_enable_gl_api}" = "xyes" ; then
             _x_lib_path="-L$x_libraries"
         fi
 
-	if test "$OS_TYPE" = "UNIX" ;  then
+        if test "$OS_TYPE" = "UNIX" ;  then
             _LIBOPENGL="-L${OGLROOT} -lGLU -lGL ${_x_lib_path} -lX11 -lXext"
         else
             _LIBOPENGL='opengl32.lib glu32.lib'
