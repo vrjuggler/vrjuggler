@@ -246,7 +246,7 @@ public:
     */
    bool getBlocking (void) const
    {
-      return mBlocking;
+      return ! (mBlocking & FILE_FLAG_OVERLAPPED);
    }
 
    /**
@@ -259,7 +259,7 @@ public:
     */
    bool getNonBlocking (void) const
    {
-      return ! mBlocking;
+      return (mBlocking & FILE_FLAG_OVERLAPPED);
    }
 
    /**

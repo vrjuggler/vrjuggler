@@ -59,7 +59,7 @@ SerialPortImplWin32::SerialPortImplWin32 (const std::string& port_name)
 : mName(port_name), mHandle(NULL)
 {
    mOpenFlag = GENERIC_READ | GENERIC_WRITE;
-   mBlocking = true;
+   mBlocking = 0;
    mParityMark = false;
    mCurrentTimeout=0;
 }
@@ -93,8 +93,9 @@ vpr::ReturnStatus SerialPortImplWin32::open ()
 
    if ( mHandle == INVALID_HANDLE_VALUE )
    {  // Handle the error.
-      printf ("CreateFile failed with error %d.\n", GetLastError());
+      std::cout << "CreateFile failed with error: " << GetLastError() << std::endl;
       status.setCode(vpr::ReturnStatus::Fail);
+	  return status;
    }
    gct.ReadIntervalTimeout =0;
    gct.ReadTotalTimeoutConstant=0;
@@ -103,7 +104,7 @@ vpr::ReturnStatus SerialPortImplWin32::open ()
    gct.WriteTotalTimeoutMultiplier=0;
    if ( !SetCommTimeouts(mHandle,&gct) )
    {
-      printf("Timeout initialization failed.");
+      std::cout << "Timeout initialization failed." << std::endl;
       status.setCode(vpr::ReturnStatus::Fail);
    }
    DCB dcb;
@@ -544,11 +545,12 @@ vpr::ReturnStatus SerialPortImplWin32::read_i(void* buffer, const vpr::Uint32 le
    if ( !ReadFile( mHandle, buffer, length, &bytes,NULL) )
    {
       s.setCode(vpr::ReturnStatus::Fail);
-      bytes_read = bytes;
    }
-   
+
+   bytes_read = bytes;
+
    if(bytes==0){
-	   s.setCode(vpr::ReturnStatus::Timeout);
+      s.setCode(vpr::ReturnStatus::Timeout);
    }
 
    //Now set the timeout back
