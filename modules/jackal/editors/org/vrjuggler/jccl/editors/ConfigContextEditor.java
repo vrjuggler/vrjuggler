@@ -85,11 +85,7 @@ public class ConfigContextEditor
                   (DefaultMutableTreeNode)mElementTree.getLastSelectedPathComponent();
                if(null == node)
                {
-                  // Empty the property sheet.
-                  mElementPropSheet.finalize();
-                  mElementPropSheet.revalidate();
-                  mElementPropSheet.repaint();
-                  
+                  emptyPropertySheet();
                   return;
                }
 
@@ -98,11 +94,7 @@ public class ConfigContextEditor
                if (value == null || !(value instanceof ConfigElement))
                {
                   System.out.println("Selecting a node that is not a ConfigElement");
-                  
-                  // Empty the property sheet.
-                  mElementPropSheet.finalize();
-                  mElementPropSheet.revalidate();
-                  mElementPropSheet.repaint();
+                  emptyPropertySheet();
                   // Empty the help information
                   getHelpPane().setText("");
 
@@ -383,6 +375,14 @@ public class ConfigContextEditor
    public JEditorPane getHelpPane()
    {
       return helpPane;
+   }
+
+   private void emptyPropertySheet()
+   {
+      mElementTypeLabel.setText("");
+      mElementPropSheet.finalize();
+      mElementPropSheet.revalidate();
+      mElementPropSheet.repaint();
    }
     
    private BorderLayout mBaseLayout = new BorderLayout();
