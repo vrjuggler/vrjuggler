@@ -397,6 +397,7 @@ void PfDrawManager::addDisplay(Display* disp)
    vprASSERT(NULL != pf_disp.pWin);
 
    disp->getOriginAndSize(xo, yo, xs, ys);
+   
    pf_disp.pWin->setOriginSize(xo, yo, xs, ys);
 
    // Setup window border
@@ -563,7 +564,16 @@ void PfDrawManager::addDisplay(Display* disp)
    // Call pfFrame to cause the pipeWindow configured to be opened and setup.
    pfFrame();
 
+   if(pf_disp.disp->shouldHideMouse())
+   {
+      //pfuCursorSel(pfuGetInvisibleCursor());
+      //pfuInit();
+      pfuLoadPWinCursor(pf_disp.pWin, PFU_CURSOR_OFF);
+   }
+
+/*    this never worked for some reason......but it works when pf is an event window..
 #ifndef VPR_OS_Win32
+   
    // ----------- Register this window with XEvent Device registry --------- //
    gadget::EventWindowXWin::WindowRegistry::WindowInfo xwin_info;
    xwin_info.displayName = mPipeStrs[disp->getPipe()];
@@ -571,14 +581,52 @@ void PfDrawManager::addDisplay(Display* disp)
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL) << "PfDrawManager::addDisplay: window id: " << int(xwin_info.xWindow) << "\n" << vprDEBUG_FLUSH;
 
    gadget::EventWindowXWin::WindowRegistry::instance()->addWindow(disp->getName(), xwin_info);
-#endif
 
+   // ------------ Hide mouse pointer as neccesary -------------- //
+   if(pf_disp.disp->shouldHideMouse())
+   {
+      std::cout << "I am really getting noticed!!!!!" << std::endl;
+      ::Display* x_disp = XOpenDisplay( xwin_info.displayName.c_str());
+      createEmptyCursor(x_disp, xwin_info.xWindow);
+      XDefineCursor(x_disp, xwin_info.xWindow, mEmptyCursor);
+   }
+#endif
+   */
+   
    // Dump the state
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
       << "Reconfiged the pfDrawManager.\n" << vprDEBUG_FLUSH;
    //vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL) << (*this) << vprDEBUG_FLUSH;
    debugDump(vprDBG_CONFIG_LVL);
 }
+
+
+
+/*
+#ifndef VPR_OS_Win32
+void PfDrawManager::createEmptyCursor(::Display* display, ::Window root)
+{
+   Pixmap cursormask;
+   XGCValues xgc;
+   GC gc;
+   XColor dummycolour;
+
+   cursormask = XCreatePixmap(display, root, 1, 1, 1);
+   xgc.function = GXclear;
+   gc =  XCreateGC(display, cursormask, GCFunction, &xgc);
+   XFillRectangle(display, cursormask, gc, 0, 0, 1, 1);
+   dummycolour.pixel = 0;
+   dummycolour.red = 0;
+   dummycolour.flags = 04;
+   mEmptyCursor = XCreatePixmapCursor(display, cursormask, cursormask,
+                                      &dummycolour,&dummycolour, 0,0);
+   XFreePixmap(display,cursormask);
+   XFreeGC(display,gc);
+}
+#endif
+*/
+
+
 
 
 /**
