@@ -35,6 +35,7 @@
 //#pragma once
 
 #include <vrj/vrjConfig.h>
+#include <vpr/Util/Assert.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Math/Vec3.h>
 #include <vrj/Math/Seg.h>

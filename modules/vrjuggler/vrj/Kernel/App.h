@@ -34,6 +34,7 @@
 #define _VRJ_APP_H_
 
 #include <vrj/vrjConfig.h>
+#include <vpr/Util/Assert.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Kernel/ConfigChunkHandler.h>
 #include <vrj/Sound/SoundManagerFactory.h>
