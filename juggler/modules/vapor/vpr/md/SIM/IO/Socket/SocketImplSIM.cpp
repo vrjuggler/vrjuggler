@@ -58,11 +58,17 @@ static const vpr::Uint32 SOCK_MAX_BUFFER_SIZE = 65536;
 
 SocketImplSIM::~SocketImplSIM ()
 {
+vpr::DebugOutputGuard dbg_output(vprDBG_ALL, vprDBG_STATE_LVL,
+                                 std::string("SocketImplSIM destructor: Deleting socket\n"),
+                                 std::string("Done deleting socket.\n"));
    close();
 }
 
 vpr::ReturnStatus SocketImplSIM::close ()
 {
+vpr::DebugOutputGuard dbg_output(vprDBG_ALL, vprDBG_STATE_LVL,
+                                 std::string("SocketImplSIM::close(): Closing socket ...\n"),
+                                 std::string("Done closing socket.\n"));
    vpr::ReturnStatus status;
 
    vprDEBUG_BEGIN(vprDBG_ALL, vprDBG_STATE_LVL) << "SocketImplSIM::close: " << mLocalAddr << std::endl << vprDEBUG_FLUSH;
@@ -135,6 +141,46 @@ vpr::ReturnStatus SocketImplSIM::completeConnection( SocketImplSIM* connectedPee
    mConnected = true;
 
    return vpr::ReturnStatus::Succeed;
+}
+
+vpr::ReturnStatus SocketImplSIM::setLocalAddr(const vpr::InetAddr& addr)
+{
+   vpr::ReturnStatus status;
+
+   if ( mBound )
+   {
+      vprASSERT(false && "Can't change address of a bound socket");
+      status.setCode(vpr::ReturnStatus::Fail);
+   }
+   else
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+         << "SocketImplSIM::setLocalAddr(): Changing local address from "
+         << mLocalAddr << " to " << addr << std::endl << vprDEBUG_FLUSH;
+      mLocalAddr = addr;
+   }
+
+   return status;
+}
+
+vpr::ReturnStatus SocketImplSIM::setRemoteAddr(const vpr::InetAddr& addr)
+{
+   vpr::ReturnStatus status;
+
+   // If we are connected, we cannot change our remote address.
+   if ( mConnected )
+   {
+      status.setCode(vpr::ReturnStatus::Fail);
+   }
+   else
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+         << "SocketImplSIM::setLocalAddr(): Changing remote address from "
+         << mRemoteAddr << " to " << addr << std::endl << vprDEBUG_FLUSH;
+      mRemoteAddr = addr;
+   }
+
+   return status;
 }
 
 vpr::Uint32 SocketImplSIM::availableBytes ()
