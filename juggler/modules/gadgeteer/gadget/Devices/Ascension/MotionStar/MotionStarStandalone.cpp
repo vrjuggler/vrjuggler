@@ -477,7 +477,7 @@ vpr::ReturnStatus MotionStarStandalone::start()
                if ( sys_status != NULL )
                {
                    printSystemStatus(sys_status);
-                   delete sys_status;
+//                   delete sys_status;
                }
 
                printDeviceStatus();
@@ -1569,7 +1569,7 @@ unsigned int MotionStarStandalone::configureBirds()
          setBirdStatus(bird, bird_status);
 
          bird_count++;
-         delete bird_status;
+//         delete bird_status;
       }
    }
 
