@@ -59,6 +59,8 @@
 
 #include <gadget/gadgetConfig.h>
 #include <stdio.h>
+#include <vpr/vpr.h>
+#include <vpr/System.h>
 #include <gadget/Devices/Fakespace/PinchGloveStandalone.h>
 
 const std::string PinchGloveStandalone::mOpenHandString = "00000.00000";
@@ -162,7 +164,7 @@ int PinchGloveStandalone::mConnectToHardware(const std::string& ttyPort, int bau
         std::cout<<"[pinch] Port ("<<ttyPort<<") successfully changed the port settings\n"<<std::flush;
     }
 
-    usleep(450000);
+    vpr::System::usleep(450000);
 
     port->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
@@ -178,7 +180,7 @@ int PinchGloveStandalone::mConnectToHardware(const std::string& ttyPort, int bau
         std::cout<<"[pinch] Turned time stamps on.\n";
     }
     /* Version compatability */
-    usleep(450000);
+    vpr::System::usleep(450000);
     mSendCommandToHardware("V1", buf);
     if (buf[1] != '1')
     {
@@ -191,22 +193,22 @@ int PinchGloveStandalone::mConnectToHardware(const std::string& ttyPort, int bau
     }
     /* Get the configuration information and print it */
     printf("[pinch] Configuration:\n");
-    usleep(450000);
+    vpr::System::usleep(450000);
     cnt = mSendCommandToHardware("CP", buf);
     buf[cnt-1] = 0; /* get rid of 0x8F */
     printf("\t%s\n",&buf[1]);
 
-    usleep(450000);
+    vpr::System::usleep(450000);
     cnt = mSendCommandToHardware("CL", buf);
     buf[cnt-1] = 0; /* get rid of 0x8F */
     printf("\t%s\n",&buf[1]);
 
-    usleep(450000);
+    vpr::System::usleep(450000);
     cnt = mSendCommandToHardware("CR", buf);
     buf[cnt-1] = 0; /* get rid of 0x8F */
     printf("\t%s\n",&buf[1]);
 
-    usleep(450000);
+    vpr::System::usleep(450000);
     cnt = mSendCommandToHardware("CT", buf);
     buf[cnt-1] = 0; /* get rid of 0x8F */
     printf("\t%s\n",&buf[1]);
@@ -228,12 +230,12 @@ int PinchGloveStandalone::mSendCommandToHardware(const char* const command, unsi
     {
         first = 0;
         port->write("*", 1, written);
-        usleep(450000);
+        vpr::System::usleep(450000);
         status = port->read(&buf[0], 3, written, vpr::Interval::NoWait);
         if (status!=vpr::ReturnStatus::Succeed)
         {
             port->write("*", 1, written);
-            usleep(450000);
+            vpr::System::usleep(450000);
             port->read(&buf[0], 3,written, vpr::Interval::NoWait);
         }
     }
@@ -243,11 +245,11 @@ int PinchGloveStandalone::mSendCommandToHardware(const char* const command, unsi
 
     port->write(&command[0], 1, written);
     port->flushQueue(vpr::SerialTypes::OUTPUT_QUEUE);
-    usleep(450000);
+    vpr::System::usleep(450000);
 
     port->write(&command[1], 1, written);
     port->flushQueue(vpr::SerialTypes::OUTPUT_QUEUE);
-    usleep(450000);
+    vpr::System::usleep(450000);
 
     return(mReadRecordsFromHardware(100,reply));
 }
@@ -270,7 +272,7 @@ int PinchGloveStandalone::mReadRecordsFromHardware(const int& rec_max_len, unsig
     records[0] = 0;
     written = 0;
 
-    //usleep(150000);
+    //vpr::System::usleep(150000);
 
     status = port->read(&buf[0], 1, written, vpr::Interval::NoWait);
 
@@ -304,7 +306,7 @@ int PinchGloveStandalone::mReadRecordsFromHardware(const int& rec_max_len, unsig
            t1 = t2;
 		   t2 = clock();
         }
-        //usleep(150000);
+        //vpr::System::usleep(150000);
     }
     return numbytes;
 }
