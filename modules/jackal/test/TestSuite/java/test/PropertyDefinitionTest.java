@@ -25,6 +25,7 @@ import org.vrjuggler.jccl.config.event.*;
                                     Integer.class,
                                     "The age of a person.",
                                     prop_value_defs,
+                                    false,
                                     new TreeMap(),
                                     new ArrayList(),
                                     false);
