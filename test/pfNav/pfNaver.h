@@ -67,15 +67,17 @@ int pfNaver::app(pfTraverser *trav)
    int button0_state = mButton0->GetData();
    int button1_state = mButton1->GetData();
 
-   vjDEBUG(2) << "b0: " << button0_state << "\t" << vjDEBUG_FLUSH;
-   vjDEBUG(2) << "b1: " << button1_state << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDEBUG_ALL, 2) << "b0: " << button0_state << "\t" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDEBUG_ALL, 2) << "b1: " << button1_state << endl << vjDEBUG_FLUSH;
 
    vjMatrix* wandMatrix;
    wandMatrix = mWand->GetData();
 
    vjCoord wand_coord(*wandMatrix);
-   vjDEBUG(2) << "Wand pos:" << wand_coord.pos << endl << vjDEBUG_FLUSH;
-   vjDEBUG(2) << "      or:" << wand_coord.orient << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDEBUG_ALL, 2) << "Wand pos:" << wand_coord.pos << endl
+                           << vjDEBUG_FLUSH;
+   vjDEBUG(vjDEBUG_ALL, 2) << "      or:" << wand_coord.orient << endl
+                           << vjDEBUG_FLUSH;
 
    if(1 == button0_state)   // Translation
    {

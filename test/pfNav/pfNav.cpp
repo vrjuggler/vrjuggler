@@ -29,18 +29,18 @@ public:
 
    virtual void init()
    {
-      vjDEBUG(1) << "app::init\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL, 1) << "app::init\n" << vjDEBUG_FLUSH;
    }
 
    virtual void apiInit()
    {
-      vjDEBUG(1) << "app::apiInit\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL, 1) << "app::apiInit\n" << vjDEBUG_FLUSH;
    }
 
    /// Initialize the scene graph
    virtual void initScene()
    {
-      vjDEBUG(0) << "app::initScene\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL, 0) << "app::initScene\n" << vjDEBUG_FLUSH;
       rootNode = new pfScene;
       naver = new pfNaver();
       pfLightSource* sun = new pfLightSource;
@@ -69,26 +69,26 @@ public:
    /// Return the current scene graph
    virtual pfScene* getScene()
    {
-      vjDEBUG(0) << "app::getScene\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDEBUG_ALL, 0) << "app::getScene\n" << vjDEBUG_FLUSH;
       return rootNode;
    }
 
    /// Function called before pfSync
    virtual void preSync()
    {
-      vjDEBUG(1) << "app::preSync\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDEBUG_ALL, 1) << "app::preSync\n" << vjDEBUG_FLUSH;
    }
 
    /// Function called after pfSync and before pfDraw
    virtual void preDraw()
    {
-      vjDEBUG(1) << "app::preDraw\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDEBUG_ALL, 1) << "app::preDraw\n" << vjDEBUG_FLUSH;
    }
 
    /// Function called after pfDraw
    virtual void postDraw()
    {
-      vjDEBUG(1) << "app::postDraw\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDEBUG_ALL, 1) << "app::postDraw\n" << vjDEBUG_FLUSH;
    }
 
 public:
@@ -109,12 +109,12 @@ int main(int argc, char* argv[])
     vjKernel* kernel = vjKernel::instance();	// Declare a new Kernel
     myApp* application = new myApp(kernel);	// Delcare an instance of my application
 
-    kernel->setApplication(application);    // Set up the kernel
-
-    if(argc > 1)
-       kernel->setProgramSpecifiedConfigFile(argv[1]);
+    for ( int i = 1; i < argc; i++ ) {
+        kernel->loadConfigFile(argv[i]);
+    }
 
     kernel->start();
+    kernel->setApplication(application);    // Set up the kernel
 
     //while(!kernel->done())
     while(1)
