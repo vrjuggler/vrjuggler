@@ -144,9 +144,10 @@ void vjMatrix::makeZXYEuler(float zRot, float xRot, float yRot)
 
 //: extract the yaw information from the matrix
 //  returned value is from -180 to 180, where 0 is none
-float vjMatrix::getYaw() const
+// Rotation around Y axis
+float vjMatrix::getYRot() const
 {
-   const vjVec3 forwardPoint( 0, 0, -1 );
+   const vjVec3 forwardPoint( 0, 0, -1 );       // -Z
    const vjVec3 originPoint( 0, 0, 0 );
    vjVec3 endPoint, startPoint;
    endPoint.xformFull( *this, forwardPoint );
@@ -154,21 +155,22 @@ float vjMatrix::getYaw() const
    vjVec3 directionVector = endPoint - startPoint;
 
    // constrain the direction to x/z plane only
-   directionVector[1] = 0.0f;
+   directionVector[VJ_Y] = 0.0f;                   // Eliminate Y value
    directionVector.normalize();
-   float yaw = VJ_RAD2DEG( acosf(directionVector.dot( forwardPoint )) );
-   vjVec3 whichSide = directionVector.cross( forwardPoint );
-   if (whichSide[1] > 0.0f)
-      yaw = -yaw;
+   float y_rot = VJ_RAD2DEG( acosf(directionVector.dot( forwardPoint )) );
+   vjVec3 whichSide = forwardPoint.cross(directionVector);
+   if (whichSide[VJ_Y] < 0.0f)   // If dir vector to "right" (negative) side of forward
+      y_rot = -y_rot;
 
-   return yaw;
+   return y_rot;
 }
 
 //: extract the pitch information from the matrix
 //  returned value is from -180 to 180, where 0 none
-float vjMatrix::getPitch() const
+// Rotation around X axis
+float vjMatrix::getXRot() const
 {
-   const vjVec3 forwardPoint( 0, 0, -1 );
+   const vjVec3 forwardPoint( 0, 0, -1 );    // -Z
    const vjVec3 originPoint( 0, 0, 0 );
    vjVec3 endPoint, startPoint;
    endPoint.xformFull( *this, forwardPoint );
@@ -176,54 +178,55 @@ float vjMatrix::getPitch() const
    vjVec3 directionVector = endPoint - startPoint;
 
    // constrain the direction to y/z plane only
-   directionVector[0] = 0.0f;
+   directionVector[VJ_X] = 0.0f;                // Eliminate X value
    directionVector.normalize();
-   float yaw = VJ_RAD2DEG( acosf(directionVector.dot( forwardPoint )) );
-   vjVec3 whichSide = directionVector.cross( forwardPoint );
-   if (whichSide[1] > 0.0f)
-      yaw = -yaw;
+   float x_rot = VJ_RAD2DEG( acosf(directionVector.dot( forwardPoint )) );
+   vjVec3 whichSide = forwardPoint.cross(directionVector);
+   if (whichSide[VJ_X] < 0.0f)      // If dir vector to "bottom" (negative) side of forward
+      x_rot = -x_rot;
 
-   return yaw;
+   return x_rot;
 }
 
 //: extract the roll information from the matrix
 //  returned value is from -180 to 180, where 0 is no roll
-float vjMatrix::getRoll() const
+// Rotation around Z axis
+float vjMatrix::getZRot() const
 {
-   const vjVec3 upPoint( 0, 1, 1 );
-   const vjVec3 originPoint( 0, 0, 0 );
-   vjVec3 endPoint, startPoint;
-   endPoint.xformFull( *this, upPoint );
-   startPoint.xformFull( *this, originPoint );
-   vjVec3 directionVector = endPoint - startPoint;
+   const vjVec3 up_point( 0, 1, 0 );          // straight up (+Y)
+   const vjVec3 origin_point( 0, 0, 0 );
+   vjVec3 end_point, start_point;
+   end_point.xformFull( *this, up_point );
+   start_point.xformFull( *this, origin_point );
+   vjVec3 direction_vector = end_point - start_point;
 
    // constrain the direction to x/y plane only
-   directionVector[2] = 0.0f;
-   directionVector.normalize();
-   float yaw = VJ_RAD2DEG( acosf(directionVector.dot( upPoint )) );
-   vjVec3 whichSide = directionVector.cross( upPoint );
-   if (whichSide[1] > 0.0f)
-      yaw = -yaw;
+   direction_vector[VJ_Z] = 0.0f;                    // Eliminate Z component
+   direction_vector.normalize();
+   float z_rot = VJ_RAD2DEG( acosf(direction_vector.dot( up_point )) );
+   vjVec3 which_side = up_point.cross(direction_vector);
+   if (which_side[VJ_Z] < 0.0f)                          // If dirVec it to right (neg side) of up_point
+      z_rot = -z_rot;
 
-   return yaw;
+   return z_rot;
 }
 
 // constrain the matrix rotation to a certain axis or axes
 // result returned is a constrained matrix.
-void vjMatrix::constrainRotAxis( const bool& usePitch, const bool& useYaw, const bool& useRoll, vjMatrix& result )
+void vjMatrix::_kevn_constrainRotAxis( const bool& usePitch, const bool& useYaw, const bool& useRoll, vjMatrix& result )
 {
    // temporary matrix
    vjMatrix constrainedMatrix;
-   
+
    // Restrict the rotation to only the axis specified
    float xRot, yRot, zRot;
    vjVec3 xAxis( 1, 0, 0 ), yAxis( 0, 1, 0 ), zAxis( 0, 0, 1 );
-   
+
    // Add back the translation:
    vjVec3 trans;
    this->getTrans( trans[0],trans[1],trans[2] );
    constrainedMatrix.makeTrans( trans[0],trans[1],trans[2] );
-   
+
    // Add back pure pitch
    if (usePitch) // allow rotation about X
    {
@@ -232,7 +235,7 @@ void vjMatrix::constrainRotAxis( const bool& usePitch, const bool& useYaw, const
       mx.makeRot( xRot, xAxis );
       constrainedMatrix.preMult( mx );
    }
-   
+
    // Add back pure yaw
    if (useYaw) // allow rotation about Y
    {
@@ -241,7 +244,7 @@ void vjMatrix::constrainRotAxis( const bool& usePitch, const bool& useYaw, const
       my.makeRot( yRot, yAxis );
       constrainedMatrix.postMult( my );
    }
-   
+
    // Add back pure roll
    if (useRoll) // allow rotation about Z
    {
@@ -250,8 +253,93 @@ void vjMatrix::constrainRotAxis( const bool& usePitch, const bool& useYaw, const
       mz.makeRot( zRot, zAxis );
       constrainedMatrix.preMult( mz );
    }
-   
+
    result.copy( constrainedMatrix );
+}
+
+// constrain the matrix rotation to a certain axis or axes
+// result returned is a constrained matrix.
+void vjMatrix::constrainRotAxis( const bool& allowXRot, const bool& allowYRot, const bool& allowZRot, vjMatrix& result )
+{
+   // temporary matrix
+   vjMatrix constrainedMatrix;
+   constrainedMatrix = *this;
+   vjMatrix inv_mat;
+
+   // Restrict the rotation to only the axis specified
+   float xRot, yRot, zRot;
+   vjVec3 xAxis( 1, 0, 0 ), yAxis( 0, 1, 0 ), zAxis( 0, 0, 1 );
+
+   // Add back the translation:
+   /*
+   vjVec3 trans;
+   this->getTrans( trans[0],trans[1],trans[2] );
+   constrainedMatrix.makeTrans( trans[0],trans[1],trans[2] );
+   */
+
+
+   this->getXYZEuler(xRot,yRot,zRot);
+   constrainedMatrix.makeXYZEuler(((allowXRot)?xRot:0.0f),((allowYRot)?yRot:0.0f),((allowZRot)?zRot:0.0f));
+
+
+   // Add back pure pitch
+   if (!allowXRot) // do not allow rotation about X
+   {
+      /*
+      vjMatrix mx;
+      xRot = constrainedMatrix.getXRot();
+      mx.makeRot( xRot, xAxis );
+      inv_mat.invert(mx);
+      constrainedMatrix.preMult( inv_mat );
+      */
+      /*
+      vjMatrix mx,mxInv;
+      constrainedMatrix.getXYZEuler(xRot,yRot,zRot);
+      mx.makeRot(xRot,xAxis);
+      mxInv.invert(mx);
+      constrainedMatrix.preMult(mxInv);                // Now we don't have X???
+      */
+   }
+
+   // Add back pure yaw
+   if (!allowYRot) // do not allow rotation about Y
+   {
+      /*
+      vjMatrix my;
+      yRot = constrainedMatrix.getYRot();
+      my.makeRot( yRot, yAxis );
+      inv_mat.invert(my);
+      constrainedMatrix.preMult( inv_mat );
+      */
+      /*
+      vjMatrix my,myInv;
+      constrainedMatrix.getZXYEuler(zRot,xRot,yRot);
+      my.makeRot(yRot,yAxis);
+      myInv.invert(my);
+      constrainedMatrix.postMult(myInv);                // Now we don't have Y???
+      */
+   }
+
+   // Add back pure roll
+   if (!allowZRot) // do not allow rotation about Z
+   {
+      /*
+      vjMatrix mz;
+      zRot = constrainedMatrix.getZRot();
+      mz.makeRot( zRot, zAxis );
+      inv_mat.invert(mz);
+      constrainedMatrix.preMult( inv_mat );
+      */
+      /*
+      vjMatrix mz,mzInv;
+      constrainedMatrix.getZYXEuler(zRot,yRot,xRot);
+      mz.makeRot(zRot,zAxis);
+      mzInv.invert(mz);
+      constrainedMatrix.preMult(mzInv);                // Now we don't have Z???
+      */
+   }
+
+   result = constrainedMatrix;
 }
 
 void vjMatrix::getZXYEuler(float& zRot, float& xRot, float& yRot)
@@ -360,10 +448,10 @@ void    vjMatrix::makeQuaternion(float* q)
 void vjMatrix::makeQuaternion(vjQuat& q)
 {makeQuaternion(q.vec);}
 
-void	vjMatrix::makeRot(float _degrees, vjVec3 _axis)
+void  vjMatrix::makeRot(float _degrees, vjVec3 _axis)
 {
-    _axis.normalize();	// NOTE: This could be eliminated by passing normalized
-			    //       vector.  This could be by ref to make even faster
+    _axis.normalize();  // NOTE: This could be eliminated by passing normalized
+             //       vector.  This could be by ref to make even faster
     // GGI: pg 466
     float s = sin(VJ_DEG2RAD(_degrees));
     float c = cos(VJ_DEG2RAD(_degrees));
@@ -410,7 +498,7 @@ void vjMatrix::getTrans(float& _x, float& _y, float& _z)
    _z = mat[3][2];
 }
 
-void	vjMatrix::makeScale(float _x, float _y, float _z)
+void  vjMatrix::makeScale(float _x, float _y, float _z)
 {
     makeIdent();
     mat[0][0] = _x;
@@ -423,7 +511,7 @@ void vjMatrix::preTrans(float _x, float _y, float _z, vjMatrix&  _m)
     vjMatrix transMat;
     transMat.makeTrans(_x, _y, _z);
     transMat.postMult(_m);
-    *this = transMat;	
+    *this = transMat;
 }
 
 //: Pre translate a matrix
@@ -445,15 +533,15 @@ void vjMatrix::postTrans(const vjMatrix&  _m, float _x, float _y, float _z)
 void vjMatrix::postTrans(const vjMatrix&  _m, vjVec3& _trans)
 { postTrans(_m, _trans.vec[0], _trans.vec[1], _trans.vec[2]); }
 
-void vjMatrix::preRot(float _degrees, vjVec3& axis, vjMatrix&  _m)
+void vjMatrix::preRot(const float& _degrees, const vjVec3& axis, vjMatrix&  _m)
 {
     vjMatrix rotMat;
     rotMat.makeRot(_degrees, axis);
     rotMat.postMult(_m);
-    *this = rotMat;	
+    *this = rotMat;
 }
 
-void vjMatrix::postRot(const vjMatrix&  _m, float _degrees, vjVec3& axis)
+void vjMatrix::postRot(const vjMatrix&  _m, const float& _degrees, const vjVec3& axis)
 {
     vjMatrix rotMat;
     rotMat.makeRot(_degrees, axis);
@@ -512,25 +600,25 @@ inline vjMatrix operator /(const vjMatrix& _m, float _s) {
     // NOTE: All accesses in the function are using the C/C++ indexing method
 void vjMatrix::postMult(const vjMatrix&  _m)
 {
-    vjMatrix prevMat = *this;	    // May be sloooow!!!
+    vjMatrix prevMat = *this;     // May be sloooow!!!
     zero();
 
     for(int i=0;i<4;i++)
-	for(int j=0;j<4;j++)
-	    for(int k=0;k<4;k++)
-		mat[j][i] += ( prevMat.mat[k][i] * _m.mat[j][k]);
+   for(int j=0;j<4;j++)
+       for(int k=0;k<4;k++)
+      mat[j][i] += ( prevMat.mat[k][i] * _m.mat[j][k]);
 }
 
     // mat = m * mat
 void vjMatrix::preMult(const vjMatrix&  _m)
 {
-    vjMatrix prevMat = *this;	    // May be sloooow!!!
+    vjMatrix prevMat = *this;     // May be sloooow!!!
     zero();
 
     for(int i=0;i<4;i++)
-	for(int j=0;j<4;j++)
-	    for(int k=0;k<4;k++)
-		mat[i][j] += ( prevMat.mat[i][k] * _m.mat[k][j]);;
+   for(int j=0;j<4;j++)
+       for(int k=0;k<4;k++)
+      mat[i][j] += ( prevMat.mat[i][k] * _m.mat[k][j]);;
 }
 
 
@@ -553,15 +641,15 @@ int vjMatrix::invert(vjMatrix& _m)
 
 {
         float*  a = _m.getFloatPtr();
-	float*  b = getFloatPtr();
-	
-	int	n = 4;
-	//int      is, js;      // Was never referenced
+   float*  b = getFloatPtr();
+
+   int   n = 4;
+   //int      is, js;      // Was never referenced
    int     i, j, k;
         int     r[ 4], c[ 4], row[ 4], col[ 4];
         float  m[ 4][ 4*2], pivot, max_m, tmp_m, fac;
 
-	
+
         /* Initialization */
         for ( i = 0; i < n; i ++ )
         {
@@ -606,7 +694,7 @@ int vjMatrix::invert(vjMatrix& _m)
                 {
                         cerr << "*** pivot = %f in mat_inv. ***\n";
                         //exit( 0);
-			return -1;
+         return -1;
                 }
 
                 /* Normalization */
@@ -642,11 +730,11 @@ int vjMatrix::invert(vjMatrix& _m)
         for ( i = 0; i < n; i++ )
                 for ( j = 0; j < n; j++ )
                         b[ i * n +  j] = m[ row[ i]][ j + n];
-			
-	return 1;   // It worked
+
+   return 1;   // It worked
 }
 
-	// ---- FRIEND FUNCTIONS ---- //
+   // ---- FRIEND FUNCTIONS ---- //
 ostream& operator<<(ostream& out, vjMatrix& _mat)
 {
    for(int j=0;j<4;j++)
@@ -656,6 +744,6 @@ ostream& operator<<(ostream& out, vjMatrix& _mat)
       out << endl;
    }
 
-   return out;	
+   return out;
 }
 
