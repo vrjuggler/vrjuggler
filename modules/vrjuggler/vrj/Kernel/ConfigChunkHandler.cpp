@@ -83,7 +83,7 @@ int vjConfigChunkHandler::configProcessPending(bool lockIt)
                      current++;                          // Goto next item
                      cfg_mgr->removePending(remove_me);  // Delete previous item
                      cfg_mgr->addActive(cur_chunk);      // Add it to the current config
-                     vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL)
+                     vjDEBUG_NEXT(vjDBG_ALL,vjDBG_CONFIG_LVL)
                                                  << "Pending item [ADD]: " << cur_chunk->getProperty("name")
                                                  << " type: " << ((std::string)cur_chunk->getType()).c_str()
                                                  << "  --> Successfully added.\n\n"
@@ -91,7 +91,7 @@ int vjConfigChunkHandler::configProcessPending(bool lockIt)
                   }
                   else  // Failed to add
                   {
-                     vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL)
+                     vjDEBUG_NEXT(vjDBG_ALL,vjDBG_CONFIG_LVL)
                                                  << "Pending item [ADD]: " << cur_chunk->getProperty("name")
                                                  << " type: " << ((std::string)cur_chunk->getType()).c_str()
                                                  << "  --> failed to add correctly.\n\n" << vjDEBUG_FLUSH;
@@ -100,10 +100,10 @@ int vjConfigChunkHandler::configProcessPending(bool lockIt)
                }
                else     // Dependency failed
                {
-                  vjDEBUG(vjDBG_ALL,vjDBG_WARNING_LVL)
+                  vjDEBUG_NEXT(vjDBG_ALL,vjDBG_WARNING_LVL)
                                                  << "Pending item [ADD]: " << cur_chunk->getProperty("name")
                                                  << " type: " << ((std::string)cur_chunk->getType()).c_str()
-                                                 << "  -->  Config Add: Dependencies are not loaded yet.\n\n" << vjDEBUG_FLUSH;
+                                                 << "  -->  Config Add: Dependencies are not loaded yet.\n" << vjDEBUG_FLUSH;
                   dep_mgr->debugOutDependencies(cur_chunk,vjDBG_WARNING_LVL);
                   current++;
                }
@@ -135,7 +135,7 @@ int vjConfigChunkHandler::configProcessPending(bool lockIt)
          // ---- CAN'T HANDLE THE CHUNK --- //
          else           // if(can_handle)
          {
-            vjDEBUGlg(vjDBG_ALL,vjDBG_STATE_LVL,false,true)
+            vjDEBUG_NEXT(vjDBG_ALL,vjDBG_STATE_LVL)
                                                  << "Pending item: " << cur_chunk->getProperty("name")
                                                  << " type: " << ((std::string)cur_chunk->getType()).c_str()
                                                  << " --> Not handled by this handler.\n" << vjDEBUG_FLUSH;
