@@ -38,17 +38,6 @@ gmtl::Matrix44f TrackdSensorStandalone::getSensorPos(int sensorNum)
    gmtl::setRot( ret_val, rt );
    gmtl::setTrans( ret_val, gmtl::Vec3f( sensor_val->x, sensor_val->y, sensor_val->z) );
 
-   /*
-   // XXX: This is untested and is probably wrong. :(
-   gmtl::Matrix44f ret_val;
-
-   gmtl::EulerAngleXYZf euler( gmtl::Math::deg2Rad(sensor_val->elev),
-                               gmtl::Math::deg2Rad(sensor_val->azim),
-                               gmtl::Math::deg2Rad(sensor_val->roll) );
-   gmtl::setRot( ret_val, euler );
-   gmtl::setTrans( ret_val, gmtl::Vec3f( sensor_val->x, sensor_val->y, sensor_val->z) );
-   */
-
    return ret_val;
 }
 
