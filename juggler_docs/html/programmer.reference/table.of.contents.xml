@@ -13,7 +13,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 
 			< item title="Classes A-Z"
 				link="${PROGRAMMERREF}/classes/index.html" 
-				info="A complete reference to every Juggler class." 
+				info="A complete reference to every Juggler pubic API class." 
 				image="Leaf.gif" >
 
 			<!-- install-web include ${PROGRAMMERREF}/classes/index.xml -->		
