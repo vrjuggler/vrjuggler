@@ -35,9 +35,8 @@
 #include <math.h>
 
 //: x-platform standard math routines.
-class ajMath 
+namespace ajMath 
 {
-public:
    //: sin returns the trigonometric sin of the radian argument x
    inline static double sin( const double x ) 
    {
@@ -242,8 +241,6 @@ public:
       return ajMath::Max( ajMath::Max( w, x ), ajMath::Max( y, z ) );
    }
 
-// non-standard but useful math funcs
-public:
    //: Linear Interpolation between number [a] and [b]
    // use double or float only...
    template <class dataType>

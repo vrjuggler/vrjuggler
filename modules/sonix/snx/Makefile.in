@@ -2,7 +2,7 @@ default: kevin
 
 include @topdir@/make.defs.mk
 
-SRCS = ajOpenALSoundImplementation.cpp ajSoundFactory.cpp
+SRCS = ajMatrix44.cpp ajOpenALSoundImplementation.cpp ajSoundFactory.cpp 
 
 
 # ABI            - Application Binary Interface type.  This may be used for
@@ -30,7 +30,7 @@ INSTALL		= @INSTALL@
 ROOT_DIR		= $(top_srcdir)
 
 EXTRA_SRCS_PATH =
-EXTRA_INCLUDES = @AL_INCLUDES@
+EXTRA_INCLUDES = @AL_INCLUDES@ -I$(srcdir) -I$(AJ_BASE_DIR)
 LIBS = @AL_LDFLAGS@ @LIBOPENAL@ -lm
 
 

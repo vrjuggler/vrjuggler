@@ -1,10 +1,7 @@
 #include <string>
 #include "ajSoundImplementation.h"
 
-// hard coded for now... TODO: registration system...
-#include "ajOpenALSoundImplementation.h"
-#include "ajAudioWorksSoundImplementation.h"
-#include "ajStubSoundImplementation.h"
+#include "ajStubSoundImplementation.h" // in case lookup fails...
 
 #include "ajSoundFactory.h" // my header.
 
@@ -17,15 +14,11 @@
 void ajSoundFactory::createImplementation( const std::string& apiName,
                            ajSoundImplementation* &mImplementation )
 {
-   // hard coded for now... TODO: registration system...
-   if (apiName == "OpenAL")
+   if (mRegisteredImplementations.count( apiName ) > 0)
    {
-      mImplementation = new ajOpenALSoundImplementation;
+      mRegisteredImplementations[apiName]->clone( mImplementation );
    }
-   else if (apiName == "Audioworks")
-   {
-      mImplementation = new ajAudioWorksSoundImplementation;
-   }
+
    else
    {
       mImplementation = new ajStubSoundImplementation;

@@ -1,7 +1,6 @@
 
-#include <assert.h>
-#include "ajMath.h"
-#include "ajMatrix44.h"
+#include "aj/ajMath.h"
+#include "aj/ajMatrix44.h"
 
 //: set the matrix with 16 floats
 void ajMatrix44::set( float a0, float a4, float a8,  float a12,
@@ -101,7 +100,7 @@ bool ajMatrix44::invertFull( const ajMatrix44& mat )
                   for (j = 0; j < n; j++ )
                   {
                         if (col[ j] )        continue;
-                        tmpmData = kev::ABS( m[ i][ j]);
+                        tmpmData = ajMath::abs( m[ i][ j]);
                         if (tmpmData > maxmData)
                         {
                               maxmData = tmpmData;
@@ -158,37 +157,36 @@ bool ajMatrix44::invertFull( const ajMatrix44& mat )
    return true;   // It worked   
 }
 
+// takes angles in radians..
 void ajMatrix44::getEulerXYZ( float& xRot, float& yRot, float& zRot ) const
 {
    float cz;
 
-   zRot = kev::ATAN2( -mData[4], mData[0] );
-   yRot = kev::ATAN2( mData[8], mData[0]/cz );
-
-   xRot = TO_DEG_F * xRot;
-   yRot = TO_DEG_F * yRot;
-   zRot = TO_DEG_F * zRot;
+   zRot = ajMath::atan2(-mData[4], mData[0]);     // -(-cy*sz)/(cy*cz) - cy falls out
+   xRot = ajMath::atan2(-mData[9], mData[10]);     // -(sx*cy)/(cx*cy) - cy falls out
+   cz   = ajMath::cos( zRot );
+   yRot = ajMath::atan2(mData[8], mData[0]/cz);   // (sy)/((cy*cz)/cz)
 }   
 
+// takes angles in radians..
 void ajMatrix44::getEulerZYX(  float& zRot, float& yRot, float& xRot ) const
 {
    float sx;
 
-   zRot = kev::ATAN2( mData[1], mData[0] );
-   yRot = kev::ATAN2( -mData[2], (mData[6]/sx) );
-
-   xRot = TO_DEG_F * xRot;
-   yRot = TO_DEG_F * yRot;
-   zRot = TO_DEG_F * zRot;
+   zRot = ajMath::atan2( mData[1], mData[0]);      // (cy*sz)/(cy*cz) - cy falls out
+   xRot = ajMath::atan2( mData[6], mData[10]);      // (sx*cy)/(cx*cy) - cy falls out
+   sx   = ajMath::sin( xRot );
+   yRot = ajMath::atan2( -mData[2],(mData[6]/sx) );   // -(-sy)/((sx*cy)/sx)
 }  
 
+// takes angles in radians..
 void ajMatrix44::makeEulerXYZ( const float& xRot, const float& yRot, const float& zRot )
 {
-   float sx = kev::SIN(TO_RAD_F * xRot);  float cx = kev::COS(TO_RAD_F * xRot);
-   float sy = kev::SIN(TO_RAD_F * yRot);  float cy = kev::COS(TO_RAD_F * yRot);
-   float sz = kev::SIN(TO_RAD_F * zRot);  float cz = kev::COS(TO_RAD_F * zRot);
+   float sx = ajMath::sin( xRot );  float cx = ajMath::cos( xRot );
+   float sy = ajMath::sin( yRot );  float cy = ajMath::cos( yRot );
+   float sz = ajMath::sin( zRot );  float cz = ajMath::cos( zRot );
 
-   // Derived by simply multing out the matrices by hand
+   // Derived by multiplying the matrices by hand
    // X*Y*Z
    mData[0] = cy*cz;             mData[4] = -cy*sz;            mData[8]  = sy;     mData[12] = 0.0f;
    mData[1] = sx*sy*cz + cx*sz;  mData[5] = -sx*sy*sz + cx*cz; mData[9]  = -sx*cy; mData[13] = 0.0f;
@@ -196,12 +194,14 @@ void ajMatrix44::makeEulerXYZ( const float& xRot, const float& yRot, const float
    mData[3] = 0.0f;              mData[7] = 0.0f;              mData[11] = 0.0f;   mData[15] = 1.0f;
 }   
 
-void ajMatrix44::makeEulerZYX( const float& xRot, const float& yRot, const float& zRot )
+// takes angles in radians..
+void ajMatrix44::makeEulerZYX( const float& zRot, const float& yRot, const float& xRot )
 {
-   float sx = kev::SIN(TO_RAD_F * xRot);  float cx = kev::COS(TO_RAD_F * xRot);
-   float sy = kev::SIN(TO_RAD_F * yRot);  float cy = kev::COS(TO_RAD_F * yRot);
-   float sz = kev::SIN(TO_RAD_F * zRot);  float cz = kev::COS(TO_RAD_F * zRot);
+   float sz = ajMath::sin( zRot);  float cz = ajMath::cos( zRot );
+   float sy = ajMath::sin( yRot);  float cy = ajMath::cos( yRot );
+   float sx = ajMath::sin( xRot);  float cx = ajMath::cos( xRot );
 
+   // Derived by multiplying the matrices by hand
    // Z*Y*Z
    mData[0] = cy*cz; mData[4] = -cx*sz + sx*sy*cz; mData[8]  = sx*sz + cx*sy*cz;  mData[12] = 0.0f;
    mData[1] = cy*sz; mData[5] = cx*cz + sx*sy*sz;  mData[9]  = -sx*cz + cx*sy*sz; mData[13] = 0.0f;
@@ -280,8 +280,8 @@ void ajMatrix44::postMult( const ajMatrix44& mat )
 // NOTE: this erases any translation in this matrix
 void ajMatrix44::makeRot( const float& rad, const float& x, const float& y, const float& z )
 {
-   float cosine = cosf( rad );
-   float sine = sinf( rad );
+   float cosine = ajMath::cos( rad );
+   float sine = ajMath::sin( rad );
    float one_minus_cosine = 1 - cosine;
 
    // rotation part   

@@ -9,12 +9,20 @@
 #include <AL/alext.h>
 #include <AL/alut.h>
 
-#include "CFileIO.h"
+#include "aj/ajMatrix44.h"
+#include "aj/ajVec3.h"
+#include "aj/ajMatVec.h"
 
-#include "ajSoundImplementation.h"
-#include "ajSoundInfo.h"
+#include "aj/CFileIO.h"
 
-#include "ajOpenALSoundImplementation.h"
+#include "aj/ajSoundImplementation.h"
+#include "aj/ajSoundInfo.h"
+
+#include "aj/ajOpenALSoundImplementation.h"
+
+
+#include "ajSoundFactory.h"
+ajSoundFactoryReg<ajOpenALSoundImplementation> openAlRegistrator( "OpenAL" );
 
 void ajOpenALSoundImplementation::step( const float & timeElapsed )
 {
@@ -22,6 +30,8 @@ void ajOpenALSoundImplementation::step( const float & timeElapsed )
    
    ajSoundImplementation::step( timeElapsed );
 }
+
+
 void ajOpenALSoundImplementation::remove( const std::string alias )
 {
    ajSoundImplementation::remove( alias );
@@ -109,9 +119,9 @@ void ajOpenALSoundImplementation::stop( const std::string& alias )
  * @postconditions alias will point to loaded sound data
  * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
  */
-void ajOpenALSoundImplementation::associate( const std::string& alias, const ajSoundInfo& description )
+void ajOpenALSoundImplementation::configure( const std::string& alias, const ajSoundInfo& description )
 {
-   ajSoundImplementation::associate( alias, description );
+   ajSoundImplementation::configure( alias, description );
 }
 
 /**
@@ -153,11 +163,11 @@ void ajOpenALSoundImplementation::setListenerPosition( const ajMatrix44& mat )
    mat.getTrans( position[0], position[1], position[2] );
 
    // extract orientation from the matrix
-   const vjVec3 forward( 0.0f, 0.0f, -1.0f );
-   const vjVec3 up( 0.0f, 1.0f, 0.0f );
-   vjVec3 forward_modified, up_modified;
-   forward_modified.xformVec( mat, forward );
-   up_modified.xformVec( mat, up );
+   const ajVec3 forward( 0.0f, 0.0f, -1.0f );
+   const ajVec3 up( 0.0f, 1.0f, 0.0f );
+   ajVec3 forward_modified, up_modified;
+   forward_modified = ajMath::xformVec( mat, forward );
+   up_modified = ajMath::xformVec( mat, up );
 
    // openal wants a pair of 3 tuples: { forward, up }
    ALfloat orientation[]  = { forward_modified[0], forward_modified[1], forward_modified[2],
@@ -173,7 +183,7 @@ void ajOpenALSoundImplementation::setListenerPosition( const ajMatrix44& mat )
 /**
  * get the position of the listener
  */
-void ajOpenALSoundImplementation::getListenerPosition( ajMatrix44& mat ) const
+void ajOpenALSoundImplementation::getListenerPosition( ajMatrix44& mat )
 {
    ajSoundImplementation::getListenerPosition( mat );
 }
@@ -219,8 +229,7 @@ void ajOpenALSoundImplementation::startAPI()
    }      
 
    // init the listener...
-
-   this->setListenerPosition( mat );
+   this->setListenerPosition( mListenerPos );
 
    // ALfloat velocity[] = { 0.0f, 0.0f,  0.0f };
 	// alListenerfv( AL_VELOCITY, velocity );

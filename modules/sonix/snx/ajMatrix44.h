@@ -1,10 +1,10 @@
 
-#ifndef _32BIT_4X4_MATRIX
-#define _32BIT_4X4_MATRIX
+#ifndef AUDIOJUGGLER_32BIT_4X4_MATRIX
+#define AUDIOJUGGLER_32BIT_4X4_MATRIX
 
 
 //: 4x4 matrix oriented in columnar order
-class  ajMatrix44
+class ajMatrix44
 {
 // Constructors
 public:
@@ -25,19 +25,21 @@ public:
 // Matrix methods
 public:
 	//: get a pointer to the matrix data
-	float *			   data() { return _m; }
+	float *			   data() { return mData; }
 	
 	//: get a const pointer to the matrix data
-	const float *		data() const { return _m; }
+	const float *		data() const { return mData; }
 	
 	//: get the inverse of this matrix
    // TODO: invertAff, invertOrtho, invertOrthoN, invertIdent
 	bool			invertFull( const ajMatrix44& M );
 	
+   
+   // all euler funcs take and return angles in radians
 	void			getEulerXYZ( float& xRot, float& yRot, float& zRot ) const;
    void        getEulerZYX(  float& zRot, float& yRot, float& xRot ) const;
    void	      makeEulerXYZ( const float& xRot, const float& yRot, const float& zRot );
-   void	      makeEulerZYX( const float& xRot, const float& yRot, const float& zRot );
+   void	      makeEulerZYX( const float& zRot, const float& yRot, const float& xRot );
 
 	//: get the translation component of this matrix
 	void			getTrans( float& tx, float& ty, float& tz ) const;
@@ -66,16 +68,16 @@ public:
 	void                    postMult( const ajMatrix44& M );
 	
 	//: returns memory element i(out of [0..15])
-	inline float&           operator[]( int i ) { return _m[i]; }
+	inline float&           operator[]( int i ) { return mData[i]; }
 	
 	//: returns memory element i(out of [0..15])
-	inline const float&     operator[]( int i ) const { return _m[i]; }
+	inline const float&     operator[]( int i ) const { return mData[i]; }
 	
 	//: returns element i, j
-	inline float&           operator()( const int& i, const int& j ) { return _m[i*4+j]; }
+	inline float&           operator()( const int& i, const int& j ) { return mData[i*4+j]; }
 	
 	//: returns element i, j
-	inline const float&     operator()( const int& i, const int& j ) const { return _m[i*4+j]; }
+	inline const float&     operator()( const int& i, const int& j ) const { return mData[i*4+j]; }
 
 	//: this = M
 	ajMatrix44&               operator=( const ajMatrix44& M );
@@ -95,11 +97,17 @@ public:
    // required: float pointer must point to a user-allocated array of 16 floats
    // WARNING: This function is dangerous since you could pass a bad pointer, use at your own risk
    void              set( const float* mat );
+   
+   // set each element in the matrix
+   void              set( float a0, float a4, float a8,  float a12,
+                          float a1, float a5, float a9,  float a13,
+                          float a2, float a6, float a10, float a14,
+                          float a3, float a7, float a11, float a15 );
 
 //: Data members
 private:
 	// the matrix data.
-	float _m[16];
+	float mData[16];
 };
 
 #endif

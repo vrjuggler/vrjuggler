@@ -4,8 +4,9 @@
 #define AJSOUNDIMPLEMENTATION_H
 #include <string>
 #include <map>
-#include "ajSoundInfo.h"
-#include "ajSoundAPIInfo.h"
+#include "aj/ajMatrix44.h"
+#include "aj/ajSoundInfo.h"
+#include "aj/ajSoundAPIInfo.h"
 
 class ajSoundImplementation
 {
@@ -20,6 +21,11 @@ public:
       mListenerPos[2] = 0.0f;
    }
 
+   /**
+     * every implementation can return a new copy of itself
+     */
+   virtual void clone( ajSoundImplementation* &newCopy ) = 0; 
+   
    /**
     * @semantics destructor 
     */
@@ -37,6 +43,8 @@ public:
    {
       // copy over the current state
       mSounds = si.mSounds;
+      mListenerPos = si.mListenerPos;
+      mSoundAPIInfo = si.mSoundAPIInfo;
    }
 
 public:
@@ -73,7 +81,7 @@ public:
     * when listener moves...
     * or is the sound positional - changes volume as listener nears or retreats..
     */
-   void setAmbient( const std::string& alias, bool setting = false )
+   virtual void setAmbient( const std::string& alias, bool setting = false )
    {
    }
 
@@ -102,7 +110,7 @@ public:
     */
    virtual void unpause( const std::string& alias )
    {
-      this->play( alias, 1 );
+      this->trigger( alias, 1 );
    }
 
    /**
@@ -150,22 +158,17 @@ public:
    virtual void setListenerPosition( const ajMatrix44& mat )
    {
       assert( this->isStarted() == true && "must call startAPI prior to this function" );
-      
-      mListenerPos[0] = x;
-      mListenerPos[1] = y;
-      mListenerPos[2] = z;
+      mListenerPos.copy( mat );
    }
 
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( ajMatrix44& mat ) const
+   virtual void getListenerPosition( ajMatrix44& mat )
    {
       assert( this->isStarted() == true && "must call startAPI prior to this function" );
       
-      x = mListenerPos[0];
-      y = mListenerPos[1];
-      z = mListenerPos[2];
+      mat.copy( mListenerPos );
    }
 
    /**
@@ -277,13 +280,11 @@ public:
 protected:
    ajSoundAPIInfo mSoundAPIInfo;
    std::map<std::string, ajSoundInfo> mSounds;
-
-private:
    /*
     * position of the observer/listener
     */
-   float mListenerPos[3];
-
+   ajMatrix44 mListenerPos;
+   
    /** This class uses a std::map of sound infos for alias lookup
     * @link aggregation
     * @supplierCardinality 0..*

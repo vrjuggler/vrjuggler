@@ -3,9 +3,9 @@
 #ifndef AJAUDIOWORKSSOUNDIMPLEMENTATION_H
 #define AJAUDIOWORKSSOUNDIMPLEMENTATION_H
 #include <string>
-#include "ajSoundImplementation.h"
-#include "ajSoundInfo.h"
-#include "ajSoundAPIInfo.h"
+#include "aj/ajSoundImplementation.h"
+#include "aj/ajSoundInfo.h"
+#include "aj/ajSoundAPIInfo.h"
 
 class ajAudioWorksSoundImplementation : public ajSoundImplementation
 {
@@ -26,6 +26,17 @@ public:
    {
    }
 
+   /**
+     * every implementation can return a new copy of itself
+     */
+   virtual void clone( ajSoundImplementation* &newCopy )
+   {
+      newCopy = new ajAudioWorksSoundImplementation;
+      
+      // copy state, so that we return a true "clone"
+      newCopy->copy( *this );
+   }
+   
    /**
     * @input alias of the sound to trigger, and number of times to play
     * @preconditions alias does not have to be associated with a loaded sound.
@@ -66,7 +77,7 @@ public:
     * when listener moves...
     * or is the sound positional - changes volume as listener nears or retreats..
     */
-   void setAmbient( const std::string& alias, bool isAmbient = false )
+   virtual void setAmbient( const std::string& alias, bool isAmbient = false )
    {
       ajSoundImplementation::setRetriggerable( alias, onOff );
 
@@ -168,7 +179,7 @@ public:
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( ajMatrix44& mat ) const
+   virtual void getListenerPosition( ajMatrix44& mat )
    {
       ajSoundImplementation::getListenerPosition( mat );
    }

@@ -3,11 +3,11 @@
 #ifndef AUDIOJUGGLER_H
 #define AUDIOJUGGLER_H
 #include <string>
-#include "ajSoundInfo.h"
-#include "IAudioJuggler.h"
-#include "ajSoundFactory.h"
-#include "ajSoundImplementation.h"
-#include "ajSoundAPIInfo.h"
+#include "aj/ajSoundInfo.h"
+#include "aj/IAudioJuggler.h"
+#include "aj/ajSoundFactory.h"
+#include "aj/ajSoundImplementation.h"
+#include "aj/ajSoundAPIInfo.h"
 
 class AudioJuggler : public IAudioJuggler
 {
@@ -59,7 +59,7 @@ public:
     * when listener moves...
     * or is the sound positional - changes volume as listener nears or retreats..
     */
-   void setAmbient( const std::string& alias, bool setting = false )
+   virtual void setAmbient( const std::string& alias, bool setting = false )
    {
       this->impl().setAmbient( alias, setting );
    }
@@ -135,7 +135,7 @@ public:
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( ajMatrix44& mat ) const
+   virtual void getListenerPosition( ajMatrix44& mat )
    {
       this->impl().getListenerPosition( mat );
    }
@@ -194,7 +194,7 @@ public:
      */
    virtual void configure( const std::string& alias, const ajSoundInfo& description )
    {
-      this->impl().associate( alias, description );
+      this->impl().configure( alias, description );
    }   
 
    /**
