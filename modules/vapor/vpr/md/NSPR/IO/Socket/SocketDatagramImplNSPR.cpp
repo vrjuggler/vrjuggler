@@ -57,7 +57,6 @@ namespace vpr
 
 vpr::ReturnStatus SocketDatagramImplNSPR::recvfrom(void* msg,
                                                    const vpr::Uint32 length,
-                                                   const int flags,
                                                    vpr::InetAddr& from,
                                                    vpr::Uint32& bytes_read,
                                                    const vpr::Interval timeout)
@@ -65,7 +64,7 @@ vpr::ReturnStatus SocketDatagramImplNSPR::recvfrom(void* msg,
    ReturnStatus retval;
    PRInt32 bytes;
 
-   bytes = PR_RecvFrom(mHandle, msg, length, flags, from.getPRNetAddr(),
+   bytes = PR_RecvFrom(mHandle, msg, length, 0, from.getPRNetAddr(),
                        NSPR_getInterval(timeout));
 
    if ( bytes > 0 )
@@ -104,7 +103,6 @@ vpr::ReturnStatus SocketDatagramImplNSPR::recvfrom(void* msg,
 
 vpr::ReturnStatus SocketDatagramImplNSPR::sendto(const void* msg,
                                                  const vpr::Uint32 length,
-                                                 const int flags,
                                                  const vpr::InetAddr& to,
                                                  vpr::Uint32& bytes_sent,
                                                  const vpr::Interval timeout)
@@ -112,7 +110,7 @@ vpr::ReturnStatus SocketDatagramImplNSPR::sendto(const void* msg,
    ReturnStatus retval;
    PRInt32 bytes;
 
-   bytes = PR_SendTo(mHandle, msg, length, flags, to.getPRNetAddr(),
+   bytes = PR_SendTo(mHandle, msg, length, 0, to.getPRNetAddr(),
                      NSPR_getInterval(timeout));
 
    if ( bytes == -1 )
