@@ -40,6 +40,72 @@
       <title>Interface Changes at a Glance</title>
       <para>If you've looked at the new VR Juggler 1.1, you'll notice that much has changed since 1.0. Of particular note is the directory structure. In the source code, you'll see many standalone modules where before they were mixed. The installation of Juggler has more directories in the <filename>include</filename> directory (<filename>vrj</filename>, <filename>snx</filename>, <filename>plx</filename>, <filename>vpr</filename>, <filename>gadget</filename>, and <filename>jccl</filename>). Below is a step-by-step list of the things you will need to port and how to do it.</para>
       <section>
+         <title>Modules and Namespaces</title>
+         <para>In VR Juggler 1.0, every object that was part of the Juggler API started withthe prefix "vj". Since Juggler 1.1 has been broken up into distinct functional modules, there needed to be a way to differentiate between their respective objects. All of the classes and objects that used to start with "vj" now instead have a namespace designating which module they belong to.</para>
+         <para>But what exactly is a namespace? In short, it's a mechanism in C++ that defines a new scope and helps to avoid naming collisions. For instance, you could define two classes both called "Foo", put them in different namespaces, and use them both in the same program. Say you have them in namespaces spaceOne and spaceTwo. Then you could reference the different classes with "spaceOne::Foo" and "spaceTwo::Foo".</para>
+         <para>For the purposes of Juggler 1.1, namespaces are used as a way to make it clear which module an object belongs to. As stated before, these modules are roughly defined along the lines of their functionality:</para>
+         <para>Vapor (namespace vpr): system-level functionality and utilities</para>
+         <para>Jackal (namespace jccl): application configuration and performance monitoring</para>
+         <para>GMTL (namespace gmtl): general math library</para>
+         <para>Gadgeteer (namespace gadget): device input and management</para>
+         <para>VR Juggler (namespace vrj): VR development platform that ties everything together</para>
+         <para>Tweek (namespace tweek): Java GUI interface for remote connection to C++ applications</para>
+         <para>Sonix (namespace snx): audio library</para>
+         <para>Plexus (namespace plx): networking for multiuser environments</para>
+         <para>To create and run VR Juggler applications, you only need to use the first five modules listed. The others are optional for Juggler 1.1, but can be extremely useful depending on your needs. These modules can also be used independent of Juggler for purposes other than VR applications.</para>
+         <para>Now you know about namespaces, but how does that help you port from 1.0 to 1.1? Well, you'll find that most of Juggler's "vj" classes you used in 1.0 haven't changed much at all other than getting put into a module's namespace. Here are some common changes made when porting 1.0 applications to Juggler 1.1:</para>
+         <programlisting>//Declaring input device objects in 1.0
+vjPosInterface posInt;
+vjDigitalInterface button1;
+
+//Declaring input device objects in 1.1
+gadget::PositionInterface posInt;
+gadget::DigitalInterface button1;</programlisting>
+         <para></para>
+         <programlisting>//Initializing devices in 1.0
+posInt.init( "VJHead" );
+button1.init( "VJButton" );
+
+//Initializing devices in 1.1 (no change)
+posInt.init( "VJHead" );
+button1.init( "VJButton" );</programlisting>
+         <para></para>
+         <programlisting>//Checking position device values in 1.0
+vjMatrix* mat = posInt.getData();
+
+//Checking position device values in 1.1
+gmtl::Matrix44f* mat = posInt.getData();</programlisting>
+         <para> </para>
+         <programlisting>//Checking digital device values in 1.0
+if (button1.getData() == vjDigital::ON) { ... }
+
+//Checking digital device values in 1.1
+if (button1.getData() == gadget::Digital::ON) { ... }</programlisting>
+         <para> </para>
+         <programlisting>//Declaring math objects in 1.0
+vjMatrix mat;
+vjVec3 vec;
+vjQuat q;
+
+//Declaring math objects in 1.1
+//(See section below for more info on GMTL)
+gmtl::Matrix44f mat;
+gmtl::Vec3f vec;
+gmtl::Quatf q;</programlisting>
+         <para> </para>
+         <programlisting>//Passing a Juggler 1.0 matrix to an OpenGL function call
+vjMatrix mat;
+ ... //Do stuff to mat
+glMultMatrixf( mat.getFloatPtr() );
+
+//Passing a Juggler 1.1 matrix to an OpenGL function call
+gmtl::Matrix44f mat;
+ ... //Do stuff to mat
+glMultMatrixf( mat.getData() );
+</programlisting>
+         <para>This is by no means a complete list of changes necessary for every VR application. Read on for module-specific information regarding their header files and other porting changes.</para>
+      </section>
+      <section>
          <title>Base Application Object</title>
          <orderedlist>
             <listitem>
@@ -108,6 +174,7 @@ class myApplication : public vrj::GlApp
    }
    ...
 };</programlisting>
+         <para>Clearing in the bufferPreDraw function also allows multiple viewports to be properly drawn in the same window. If the window is cleared in the draw function, it's possible that a viewport may be drawn incorrectly. </para>
       </section>
       <section>
          <title>Math Library</title>
