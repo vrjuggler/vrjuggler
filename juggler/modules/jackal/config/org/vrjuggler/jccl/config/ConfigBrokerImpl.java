@@ -754,12 +754,22 @@ public class ConfigBrokerImpl
             {
                return new Task(dialog);
             }
+
+            public void finished()
+            {
+               mTaskFinished = true;
+            }
          };
          worker.start();
 
-         dialog.pack();
-         dialog.setLocationRelativeTo(null);
-         dialog.show();
+         // Don't bother to display the JDialog if the task is already done
+         // by this point.
+         if ( ! mTaskFinished )
+         {
+            dialog.pack();
+            dialog.setLocationRelativeTo(null);
+            dialog.show();
+         }
       }
 
       private class Task
@@ -808,5 +818,6 @@ public class ConfigBrokerImpl
 
       private JLabel mFileNameLabel = new JLabel();
       private JProgressBar mProgressBar;
+      private boolean mTaskFinished = false;
    }
 }
