@@ -131,7 +131,6 @@ vpr::ReturnStatus CorbaService::init(int& argc, char* argv[])
          new vpr::ThreadMemberFunctor<CorbaService>(this, &CorbaService::run);
 
       mOrbThread = new vpr::Thread(corba_run);
-      mOrbThread->start();
    }
    catch (CORBA::SystemException& sysEx)
    {
