@@ -9,6 +9,9 @@ class RemoteNavFacade:
    
    def setPosition(self,x,y,z):
       assert(false)
+
+   def setOrientation(self,h,p,r):
+      pass
       
    def getPosition(self):
       assert(false)
@@ -36,6 +39,11 @@ class TestRemoteNavFacade(RemoteNavFacade):
    def setPosition(self,x,y,z):
       self.pos = (float(x),float(y),float(z))
       print "Set pos:", (x,y,z), " -- ", self.pos
+      
+   def setOrientation(self,h,p,r):
+      self.rot = (float(h),float(p),float(r))
+      print "Set rot:", (h,p,r), " -- ", self.pos
+
       
    def getPosition(self):
       return self.pos
