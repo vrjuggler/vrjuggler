@@ -34,7 +34,6 @@
 #include <cluster/Packets/DeviceAck.h>
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
-#include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
 #include <gadget/InputManager.h>
 #include <jccl/RTRC/ConfigManager.h>
 #include <gadget/Util/Debug.h>

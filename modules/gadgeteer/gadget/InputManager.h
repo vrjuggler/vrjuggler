@@ -59,7 +59,6 @@ namespace gadget
 // Proxies
 class Proxy;
 class Input;
-//class RemoteInputManager;
 class DeviceFactory;
 
 /**
@@ -182,7 +181,7 @@ public:
     */
    bool addRemoteDevice(Input* devPtr, const std::string& device_name);
 
-private:
+public:
    /**
     * Removes a device from the InputManager.
     * Remove the named device from the device table.
@@ -193,6 +192,8 @@ private:
     * @return true on success.
     */
    bool removeDevice(std::string mInstName);
+
+private:
    bool removeDevice(const Input* devPtr);
 
    /*********************************************************
@@ -270,15 +271,6 @@ private:
    /** Configure/create a logger for the system */
    bool configureInputLogger(jccl::ConfigChunkPtr chunk);
 
-public:
-//   RemoteInputManager* getRemoteInputManager(){ return mRemoteInputManager; }
-
-protected:
-//   bool configureRemoteInputManager(jccl::ConfigChunkPtr chunk);
-//   bool configureRemoteConnection(jccl::ConfigChunkPtr chunk);
-
-private:
-//   RemoteInputManager* mRemoteInputManager;
 };
 
 /** Writes out the status of the Input Manager. */

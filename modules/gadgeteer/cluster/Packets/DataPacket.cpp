@@ -34,15 +34,11 @@
 #include <gadget/Util/Debug.h>
 
 #include <cluster/Packets/DataPacket.h>
-#include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
 #include <cluster/ClusterManager.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
-#include <cluster/Plugins/ApplicationDataManager/ApplicationDataManager.h>
-#include <cluster/Plugins/ApplicationDataManager/ApplicationData.h>
-//#include <gadget/RemoteInputManager/VirtualDevice.h>
 #include <gadget/Type/Input.h>
 
-
+#include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/System.h>
 #include <vpr/Util/Assert.h>
 

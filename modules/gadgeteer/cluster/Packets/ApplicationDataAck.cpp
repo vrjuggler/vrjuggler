@@ -32,12 +32,7 @@
 
 //#include <gadget/gadgetConfig.h>
 #include <cluster/Packets/ApplicationDataAck.h>
-#include <cluster/ClusterNetwork/ClusterNetwork.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
-#include <cluster/ClusterManager.h>
-#include <cluster/Plugins/ApplicationDataManager/ApplicationDataManager.h>
-#include <gadget/InputManager.h>
-#include <jccl/RTRC/ConfigManager.h>
 #include <gadget/Util/Debug.h>
 
 namespace cluster

@@ -46,7 +46,6 @@
 #include <cluster/Packets/EndBlock.h>
 #include <cluster/Packets/PacketFactory.h>
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
-#include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
 #include <cluster/ClusterManager.h>
 #include <cluster/ClusterDelta.h>
 
@@ -193,7 +192,7 @@ namespace cluster
       // of in configuration but in all reality the remote machine does not have to have the 
       // machine specific chunk for this machine
       ConnectionRequest request(ClusterNetwork::instance()->getLocalHostname(),0/*Might be needed, look above*/, 
-                                   std::string("We need to add this to the RemoteInputManager"));
+                                   std::string("We do not use the managerID anymore"));
       
       // THIS COULD BREAK IN THE FUTURE
       // We may need to convert this over to
@@ -296,9 +295,7 @@ namespace cluster
             //mSockStream = NULL;
          }
          */
-         RemoteInputManager::instance()->removeVirtualDevicesOnHost(mHostname);
-         RemoteInputManager::instance()->removeDeviceClientsForHost(mHostname);
-         gadget::InputManager::instance()->refreshAllProxies();
+         ClusterManager::instance()->recoverFromLostNode(this);
       }
       if (connect == CONNECTED)
       {
@@ -350,12 +347,7 @@ namespace cluster
          setConnected(DISCONNECTED);
          setUpdated(true);
          debugDump(vprDBG_CONFIG_LVL);
-         
-         // We do NOT want to add Pending connection here since we do not know if it is
-         // a device server or a device client. We can simply let reconfiguration take 
-         // care of it in depManager
-         RemoteInputManager::instance()->setReconfigurationNeededOnConnection(true);
-           
+                    
          // Clean up after oursleves
          if (temp_packet != NULL)
          {

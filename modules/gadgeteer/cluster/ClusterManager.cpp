@@ -34,6 +34,8 @@
 
 #include <cluster/ClusterManager.h> // my header...
 
+#include <vpr/IO/Socket/SocketStream.h>
+
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
 
@@ -77,6 +79,17 @@ namespace cluster
    ClusterManager::~ClusterManager()
    {
       ;
+   }
+
+   void ClusterManager::recoverFromLostNode(ClusterNode* lost_node)
+   {
+      vpr::Guard<vpr::Mutex> guard(mPluginsLock);
+
+      for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
+           i != mPlugins.end() ; i++)
+      {
+         (*i)->recoverFromLostNode(lost_node);
+      }
    }
 
    void ClusterManager::handlePacket(Packet* packet, ClusterNode* node)

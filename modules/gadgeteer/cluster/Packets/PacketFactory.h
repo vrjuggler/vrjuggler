@@ -34,6 +34,8 @@
 #define _GADGET_Packet_FACTORY_H_
 //#pragma once
 
+#include <vpr/IO/Socket/SocketStream.h>
+
 #include <gadget/gadgetConfig.h>
 //#include <gadget/Type/Input.h>
 #include <cluster/Packets/Packet.h>

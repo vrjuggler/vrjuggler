@@ -59,6 +59,7 @@ public:
 
    // ClusterPlugin Interface
 public:
+   void recoverFromLostNode(ClusterNode* lost_node);
    void handlePacket(Packet* packet, ClusterNode* node);
    void addPlugin(ClusterPlugin* new_manager);
    void removePlugin(ClusterPlugin* old_manager);

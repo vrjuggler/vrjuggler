@@ -38,16 +38,6 @@
 #include <vpr/Sync/Semaphore.h>
 #include <vpr/Thread/Thread.h>
 
-//#include <gadget/RemoteInputManager/MsgPackage.h>
-
-// TODO: Remove this header by moving all needed data to a new location
-//#include <gadget/RemoteInputManager/NetUtils.h>
-//#include <gadget/RemoteInputManager/NetDevice.h>
-//#include <vpr/IO/BufferObjectWriter.h>
-//#include <vpr/IO/BufferObjectReader.h>
-//#include <jccl/RTRC/ConfigChunkHandler.h>
-//#include <gadget/RemoteInputManager/ClusterSync.h>
-
 namespace cluster
 {
 
@@ -266,6 +256,8 @@ private:
       vpr::Mutex           mSockReadLock;       /**< Lock reading from the SocketStream */
       vpr::Mutex           mSockWriteLock;      /**< Lock writing to the SocketStream */
 
+      // NOT NEEDED ANY MORE
+      // XXX: REMOVE
       vpr::GUID            mRemoteManagerId;    /**< Remote ClusterNodes RemoteInputManager GUID */
       
       vpr::Mutex           mConnectedLock;      /**< Lock the isConnected value */
