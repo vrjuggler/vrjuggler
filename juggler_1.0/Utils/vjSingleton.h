@@ -10,7 +10,7 @@
 // Double checked locking version
 //
 
-/*
+
 #define vjSingletonHeader(TYPE) \
 public:                                        \
    static TYPE* instance(void)                 \
@@ -19,23 +19,43 @@ public:                                        \
       {                                        \
          vjGuard<vjMutex> guard(_inst_lock);   \
          if (_instance == NULL)                \
-            _instance = new TYPE;              \
+         { _instance = new TYPE; }             \
       }                                        \
       return _instance;                        \
    }                                           \
 private:                                       \
    static vjMutex _inst_lock;                  \
-   static TYPE* _instance;
+   static TYPE* _instance
+
+#define vjSingletonHeaderWithInitFunc(TYPE, INIT_FUNC_NAME) \
+public:                                        \
+   static TYPE* instance(void)                 \
+   {                                           \
+      if(_instance == NULL)                    \
+      {                                        \
+         vjGuard<vjMutex> guard(_inst_lock);   \
+         if (_instance == NULL)                \
+         {                                     \
+            _instance = new TYPE;              \
+            _instance->INIT_FUNC_NAME();       \
+         }                                     \
+      }                                        \
+      return _instance;                        \
+   }                                           \
+private:                                       \
+   static vjMutex _inst_lock;                  \
+   static TYPE* _instance
+
 
 #define vjSingletonImp(TYPE) \
             TYPE* TYPE::_instance = NULL; \
-            vjMutex  TYPE::_inst_lock;
-*/
+            vjMutex  TYPE::_inst_lock
+
 
 //
 // Non-locking version
 //
-
+/*
 #define vjSingletonHeader(TYPE) \
 public:                                        \
    static TYPE* instance(void)                 \
@@ -48,9 +68,25 @@ public:                                        \
       return _instance;                        \
    }                                           \
 private:                                       \
-   static TYPE* _instance;
+   static TYPE* _instance
+
+#define vjSingletonHeaderWithInitFunc(TYPE, INIT_FUNC_NAME) \
+public:                                        \
+   static TYPE* instance(void)                 \
+   {                                           \
+      if (_instance == NULL)                   \
+      {                                        \
+         std::cout << "Creating instance of: TYPE" << std::endl; \
+         _instance = new TYPE;                 \
+         _instance->INIT_FUNC_NAME();          \
+      }                                        \
+      return _instance;                        \
+   }                                           \
+private:                                       \
+   static TYPE* _instance
 
 #define vjSingletonImp(TYPE) \
-            TYPE* TYPE::_instance = NULL;
+            TYPE* TYPE::_instance = NULL
+*/
 
 #endif
