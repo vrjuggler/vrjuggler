@@ -47,5 +47,6 @@ cubes.o cubesApp.o: cubesApp.h
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend cubes ${OBJECTS} *core so_locations vc60.*
+	rm -f Makedepend cubes cubes.exe cubes.ilk ${OBJECTS} *core	\
+          so_locations *.?db
 	rm -rf ./ii_files
