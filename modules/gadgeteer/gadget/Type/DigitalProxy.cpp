@@ -31,7 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <vrj/Kernel/Kernel.h>
 #include <gadget/Type/DigitalProxy.h>
 #include <jccl/Config/ConfigChunk.h>
 

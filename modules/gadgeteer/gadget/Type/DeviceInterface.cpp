@@ -32,7 +32,6 @@
 
 #include <gadget/gadgetConfig.h>
 #include <gadget/Type/DeviceInterface.h>
-#include <vrj/Kernel/Kernel.h>
 #include <gadget/InputManager.h>
 
 namespace gadget
@@ -67,7 +66,7 @@ void BaseDeviceInterface::refresh()
    if(!mNameSet)
    { return; }
 
-   mProxyPtr = NULL; //XXX: Kernel::instance()->getInputManager()->getProxy(mProxyName);
+   mProxyPtr = InputManager::instance()->getProxy(mProxyName); //XXX: Kernel::instance()->getInputManager()->getProxy(mProxyName);
 
    if (NULL == mProxyPtr)
    {

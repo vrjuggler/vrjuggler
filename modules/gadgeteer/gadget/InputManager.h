@@ -41,9 +41,10 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <vpr/Util/Singleton.h>
+#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
 #include <map>
 
-#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
 
 namespace gadget
 {
@@ -67,6 +68,7 @@ class Input;
 //!PUBLIC_API:
 class GADGET_CLASS_API InputManager : public jccl::ConfigChunkHandler
 {
+   vprSingletonHeader( InputManager );    // Make it a singleton
 public:
    InputManager();
    virtual ~InputManager();
