@@ -122,6 +122,8 @@ public:
     virtual ~LabeledPerfDataBuffer ();
 
 
+    void setBufferSize (int n);
+
     /** Returns the name of this instance. */
     virtual const std::string& getName() const {
         return name;
