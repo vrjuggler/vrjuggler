@@ -250,11 +250,31 @@ class GlobalPreferencesServiceImpl
 
    /**
     * Returns the user's current preferred starting directory.  This may be
-    * one of the default list, or it may be a user-defined setting.
+    * one of the default list, or it may be a user-defined setting.  The path
+    * itself is returned as the actual preferred path rather than the
+    * internal preference setting.
+    *
+    * @return A string that represents a path on the local system.  This can
+    *         be passed directly to the java.io.File constructor, for example.
     */
    public String getChooserStartDir()
    {
-      return chooserStartDir;
+      String start_dir = chooserStartDir;
+
+      // If either the user's home directory or the application's current
+      // working directory is the preferred start directory, convert that
+      // into a real path string.  Otherwise, return whatever string the user
+      // specified in the Tweek configuration file.
+      if ( start_dir.equals(GlobalPreferencesService.HOME_START) )
+      {
+         start_dir = this.getUserHome();
+      }
+      else if ( start_dir.equals(GlobalPreferencesService.CWD_START) )
+      {
+         start_dir = System.getProperty("user.dir");
+      }
+
+      return start_dir;
    }
 
    /**
