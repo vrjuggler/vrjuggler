@@ -73,8 +73,6 @@ SHLIB_MINOR	= 0
 
 GL_API		= @OPENGL_API@
 PF_API		= @PERFORMER_API@
-AUDIO_WORKS	= @AUDIO_WORKS@
-SL		= @SL@
 
 STATICLIB_EXT	= @STATICLIB_EXT@
 DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
@@ -91,14 +89,6 @@ ifeq ($(PF_API), Y)
     LIBS	+= $(PF_LIBRARY)
 endif
 
-ifeq ($(AUDIO_WORKS), Y)
-    LIBS	+= $(AW_LIBRARY)
-endif
-
-ifeq ($(SL), Y)
-    LIBS	+= $(SL_LIBRARY)
-endif
-
 STATIC_LIBS	= $(LIBS)
 
 # We cannot build dynamic libraries on Win32 yet.
@@ -111,8 +101,6 @@ DYLIB_DEPS_VJ		= @DYLIB_DEPS_VJ@
 DYLIB_DEPS_UTILS	= @DYLIB_DEPS_UTILS@
 DYLIB_DEPS_GL		= @DYLIB_DEPS_GL@
 DYLIB_DEPS_PF		= @DYLIB_DEPS_PF@
-DYLIB_DEPS_AW		= @DYLIB_DEPS_AW@
-DYLIB_DEPS_SL		= @DYLIB_DEPS_SL@
 
 VJ_LIB_STATIC		= $(VJ_LIBRARY).$(STATICLIB_EXT)
 VJ_LIB_DYNAMIC		= $(VJ_LIBRARY).$(DYNAMICLIB_EXT)
@@ -122,10 +110,6 @@ GL_LIB_STATIC		= $(GL_LIBRARY).$(STATICLIB_EXT)
 GL_LIB_DYNAMIC		= $(GL_LIBRARY).$(DYNAMICLIB_EXT)
 PF_LIB_STATIC		= $(PF_LIBRARY).$(STATICLIB_EXT)
 PF_LIB_DYNAMIC		= $(PF_LIBRARY).$(DYNAMICLIB_EXT)
-AW_LIB_STATIC		= $(AW_LIBRARY).$(STATICLIB_EXT)
-AW_LIB_DYNAMIC		= $(AW_LIBRARY).$(DYNAMICLIB_EXT)
-SL_LIB_STATIC		= $(SL_LIBRARY).$(STATICLIB_EXT)
-SL_LIB_DYNAMIC		= $(SL_LIBRARY).$(DYNAMICLIB_EXT)
 
 # On Linux, we have to compile the Performer library with -O for things to
 # link properly.
@@ -166,8 +150,7 @@ afterbuild:
 # Construct the static version of the libraries.
 # -----------------------------------------------
 $(LIBDIR)/$(VJ_LIB_STATIC) $(LIBDIR)/$(UTILS_LIB_STATIC)		\
-$(LIBDIR)/$(GL_LIB_STATIC) $(LIBDIR)/$(PF_LIB_STATIC)			\
-$(LIBDIR)/$(AW_LIB_STATIC) $(LIBDIR)/$(SL_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(GL_LIB_STATIC) $(LIBDIR)/$(PF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -225,30 +208,6 @@ $(LIBDIR)/$(PF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
             $(DYLIB_DEPS_PF)
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
-	@echo "------------------------------------------------"
-	@echo "$@ done"
-	@echo "------------------------------------------------"
-
-$(LIBDIR)/$(AW_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
-	@echo "------------------------------------------------"
-	@echo "Creating $@"
-	@echo "------------------------------------------------"
-	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
-            $(DYLIB_DEPS_AW)
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
-	@echo "------------------------------------------------"
-	@echo "$@ done"
-	@echo "------------------------------------------------"
-
-$(LIBDIR)/$(SL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
-	@echo "------------------------------------------------"
-	@echo "Creating $@"
-	@echo "------------------------------------------------"
-	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
-            $(DYLIB_DEPS_SL)
 	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
