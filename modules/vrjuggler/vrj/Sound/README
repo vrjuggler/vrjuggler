@@ -1,26 +1,24 @@
-VR Juggler Audio System --> (sonix)
+VR Juggler Audio System --> (Sonix)
 
-NOTE: see the sonix directory for more information and a
+NOTE: see the Sonix directory for more information and a
 more complete README including description and APIs supported.
 
 
 
-VR juggler audio system is implemented with a module called sonix.
+VR Juggler audio system is implemented with a module called Sonix.
 
-If you need to add an API or fix something you do it in the sonix
-module.  VR Juggler depends on sonix, but not the other way.
+If you need to add an API or fix something you do it in the Sonix
+module.  VR Juggler depends on Sonix, but not the other way.
 
-The code in this directory is simply some "glue" to make sonix work
+The code in this directory is simply some "glue" to make Sonix work
 better with VR Juggler.  You don't need to compile VR juggler with this
 glue, but without it you will need to configure AJ completely yourself as
 well as call update yourself.
 
-This "glue" allows VR Juggler to sync, update, and configure sonix
+This "glue" allows VR Juggler to sync, update, and configure Sonix
 through the VR juggler Kernel and config chunks, allowing audio to
 seemingly be controlled by VR juggler. 
 
 
-Direct comments questions to Kevin Meinert (kevn@vrac.iastate.edu) or the
-VR Juggler team.
-
-
+Send comments and questions to VR Juggler developer mailing list
+(vrjuggler-devel@lists.sourceforge.net).
