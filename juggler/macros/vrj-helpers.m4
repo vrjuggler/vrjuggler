@@ -124,12 +124,10 @@ AC_DEFUN(VJ_COMPILER_SETUP,
     # If no alternate C compiler was specified, check to see if it is
     # necessary to force the use of a specific compiler on a given platform.
     if test "x${_alt_cc}" = "xnone" ; then
-        CC_IRIX='cc'
-        CC_PIC_IRIX='-KPIC'
-
-        dnl # On IRIX, we have to use cc (not gcc).
-        if test "$PLATFORM" = "IRIX" ; then
-            CC_ERR='*** The library requires the IRIX MIPSpro C compiler ***'
+        # On IRIX, we can use MIPSpro or GCC.  We default to MIPSpro.
+        if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
+            CC_IRIX='cc'
+            CC_PIC_IRIX='-KPIC'
         fi
     # Otherwise, force the use of the alternate C compiler.
     else
@@ -140,8 +138,6 @@ AC_DEFUN(VJ_COMPILER_SETUP,
     # necessary to force the use of a specific compiler on a given platform.
     if test "x${_alt_cxx}" = "xnone" ; then
         CXX_HP='aCC'
-        CXX_IRIX='CC'
-        CXX_PIC_IRIX='-KPIC'
 
         # On HP-UX, we have to use the aCC C++ compiler.
         if test "$PLATFORM" = "HP" ; then
@@ -150,23 +146,24 @@ AC_DEFUN(VJ_COMPILER_SETUP,
         elif test "$OS_TYPE" = "Win32" -a "x$USE_GCC" != "xyes" ; then
             DPP_PROG_MSVCCC
             CXX_ERR='*** The library requires the MS Visual C++ compiler ***'
-        # On IRIX, we have to use CC (not g++).
-        elif test "x$PLATFORM" = "xIRIX" ; then
-            CXX_ERR='*** The library requires the IRIX MIPSpro C++ compiler ***'
+        # On IRIX, we can use MIPSpro or GCC.  We default to MIPSpro.
+        elif test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
+            CXX_IRIX='CC'
+            CXX_PIC_IRIX='-KPIC'
         fi
     # Otherwise, force the use of the alternate C++ compiler.
     else
         CXX="${_alt_cxx}"
     fi
 
-    DPP_PROG_CC($CC, , AC_MSG_ERROR($CC_ERR))
-    DPP_PROG_CXX($CXX, , AC_MSG_ERROR($CXX_ERR))
+    DPP_PROG_CC([$CC], , [AC_MSG_ERROR($CC_ERR)])
+    DPP_PROG_CXX([$CXX], , [AC_MSG_ERROR($CXX_ERR)])
     DPP_GET_EXT
 
     if test "x$GXX" = "xyes" ; then
         # If we are using GCC as the compiler, we need to be using at least
         # egcs 1.1.2.  A newer version (e.g., 2.95.2) is even better.
-        DPP_GPLUSPLUS_MODERN(AC_MSG_ERROR(*** VR Juggler requires a modern G++ ***))
+        DPP_GPLUSPLUS_MODERN([AC_MSG_ERROR([*** VR Juggler requires a modern G++ ***])])
     fi
 
     if test "x$GCC" = "xyes" ; then
@@ -175,7 +172,7 @@ AC_DEFUN(VJ_COMPILER_SETUP,
 
     # Ensure that the C++ compiler we've found is capable of compiling the
     # newer C++ features that we need.
-    DPP_CXX_TEMPLATES(AC_MSG_ERROR(*** The library requires C++ template support ***))
+    DPP_CXX_TEMPLATES([AC_MSG_ERROR([*** The library requires C++ template support ***])])
 ])
 
 dnl ---------------------------------------------------------------------------
@@ -362,7 +359,7 @@ AC_DEFUN(VJ_APP_LINKER,
 
         APP_EXTRA_LIBS="$7"
 
-        if test "$PLATFORM" = "IRIX" ; then
+        if test "x$PLATFORM" = "xIRIX" -a "x$GXX" != "xyes" ; then
             APP_LINKALL_ON='-all'
             APP_LINKALL_OFF=''
 
