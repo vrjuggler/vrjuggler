@@ -191,7 +191,8 @@ public class PropertySheet extends PropertyComponent
       add(name_label, "0, 0, F, F");
       add(value_label, "1, 0, F, F");
    }
-   
+  
+   // This is the special case where we actually have a Variable list of values.
    public PropertySheet(ConfigElement elm, PropertyDefinition prop_def, List props, Color color)
    {
       mConfigElement = elm;
@@ -226,6 +227,8 @@ public class PropertySheet extends PropertyComponent
          {
             public void actionPerformed(ActionEvent evt)
             {
+               //XXX: This should add a new variable list value not an embedded
+               //list.
                addNewEmbeddedElement(temp_elm, temp_prop_def);
             }
          });
@@ -246,9 +249,17 @@ public class PropertySheet extends PropertyComponent
          }
          else
          {
-            // Normal Property.
-            String label =
-               prop_def.getPropertyValueDefinition(list_number).getLabel();
+            String label = null;
+            // If it is variable then there will only be one label for the
+            // property. Otherwise there will be one for each value.
+            if(prop_def.isVariable())
+            {
+               label = prop_def.getPropertyValueDefinition(0).getLabel();
+            }
+            else
+            {
+               label = prop_def.getPropertyValueDefinition(list_number).getLabel();
+            }
             
             addNormalEditor(value, prop_def, label, row, list_number);
             ++list_number;
@@ -259,13 +270,7 @@ public class PropertySheet extends PropertyComponent
    
    private void addVarList(ConfigElement elm, List props, PropertyDefinition prop_def, int row)
    {
-      // Variable Property List.
-      PropertySheet new_sheet = new PropertySheet(elm, prop_def, props, getNextColor());
-      
-      new_sheet.setColor(getNextColor());
-      new_sheet.setBorder(BorderFactory.createEtchedBorder());
-      // Adding a List
-      ExpandablePanel editor_list = new ExpandablePanel(new_sheet, "NONE", prop_def.getToken(), mColor, prop_def.isVariable(), false);
+      VarListPanel editor_list = new VarListPanel(elm, prop_def, props, mColor);
       
       ((TableLayout)this.getLayout()).insertRow(row, TableLayout.PREFERRED);
       
@@ -274,7 +279,6 @@ public class PropertySheet extends PropertyComponent
       
       this.refresh();
       editor_list.refresh();
-      new_sheet.refresh();
    }
    
    private void addNormalEditor(Object value, PropertyDefinition prop_def, String label, int row, int list_num)
@@ -284,14 +288,15 @@ public class PropertySheet extends PropertyComponent
       
       if(null != editor)
       {
-         editor.set(value, prop_def, mConfigElement, list_num);
-               
          ((TableLayout)this.getLayout()).insertRow(row, TableLayout.PREFERRED);
       
          // Add both columns to this row.
          TableLayoutConstraints c = new TableLayoutConstraints(1, row, 1, row, TableLayout.FULL, TableLayout.FULL);
          this.add(editor, c);
          this.add(new JLabel(label), "0," + Integer.toString(row) + ",F,F");
+         
+         // Make sure to set the properties after adding it to the correct panel.
+         editor.set(value, prop_def, mConfigElement, list_num);
 
          // If this property has variable length we must allow the user to
          // add/remove them.
@@ -353,11 +358,7 @@ public class PropertySheet extends PropertyComponent
    {
       // Embedded Element
       // Adding a List
-      PropertySheet new_sheet = new PropertySheet((ConfigElement)value, getNextColor());
-      new_sheet.setColor(getNextColor());
-      new_sheet.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
-                  BorderFactory.createLoweredBevelBorder()));
-      ExpandablePanel editor_list = new ExpandablePanel(new_sheet, prop_def.getToken(), ((ConfigElement)value).getName(), mColor, false, true);
+      EmbeddedElementPanel editor_list = new EmbeddedElementPanel((ConfigElement)value, mColor);
       
       ((TableLayout)this.getLayout()).insertRow(row, TableLayout.PREFERRED);
       
@@ -408,7 +409,6 @@ public class PropertySheet extends PropertyComponent
       
       this.refresh();
       editor_list.refresh();
-      new_sheet.refresh();
    }
 
    public void addNewEmbeddedElement(ConfigElement elm, PropertyDefinition prop_def)
