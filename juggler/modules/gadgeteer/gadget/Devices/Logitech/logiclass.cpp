@@ -39,7 +39,6 @@
 #include <sys/stat.h>	 // for open(2)
 #include <fcntl.h>	 // for open(2)
 #include <termios.h>	 // for tcsetattr(3T)
-#include <limits.h>	 // for sginap(2)
 #include <unistd.h>	 // for close()
 #include <sys/time.h>
 
@@ -407,7 +406,7 @@ int vjThreeDMouse::getRecord ( vjPOS_DATA* data)
 void vjThreeDMouse::resetControlUnit ()
 {
   vjThreeDMouse::cuDemandReporting ();	/* make sure control unit is processing */
-  sginap ((long) 10);		/* wait 10 clock ticks = 100 ms */
+  usleep ((long) 100000);		/* wait 10 clock ticks = 100 ms */
   vjThreeDMouse::cuResetControlUnit ();	/* command a reset */
   sleep(1);
   //sginap ((long) 100);		/* wait 1 second */

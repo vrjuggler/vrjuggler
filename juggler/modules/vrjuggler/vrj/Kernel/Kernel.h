@@ -1,7 +1,7 @@
 /*
- *  File:	    $RCSfile$
+ *  File:       $RCSfile$
  *  Date modified:  $Date$
- *  Version:	    $Revision$
+ *  Version:       $Revision$
  *
  *
  *                                VR Juggler
@@ -47,10 +47,10 @@ class vjApp;
 //-------------------------------------------------------
 //: Main control class for all vj applications.
 //
-//	Takes care of all initialization and object creation
-//	for the system.
-//	This class is the only class that MUST be instantiated
-//	for all applications.
+// Takes care of all initialization and object creation
+// for the system.
+// This class is the only class that MUST be instantiated
+// for all applications.
 //
 // @author  Allen Bierbaum
 //

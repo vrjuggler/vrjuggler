@@ -188,7 +188,8 @@ int vjIBox::stopSampling()
     delete(myThread);
     myThread = NULL;
 
-    sginap(1);
+    //sginap(1);
+    usleep(100);        // 100 uSec pause
 
     hci_disconnect(&thingie);
     cout << "stopping the ibox.." << endl;

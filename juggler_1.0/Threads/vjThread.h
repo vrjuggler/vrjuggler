@@ -50,7 +50,9 @@ typedef void (*THREAD_FUNC)(void *);
 #elif defined(VJ_USE_PTHREADS)
     typedef int		cancel_state_t;
 
+#ifndef _POSIX_C_SOURCE
 #   define _POSIX_C_SOURCE VJ_POSIX_C_SOURCE
+#endif
 
 #   include <Threads/vjThreadPosix.h>
 #   include <Threads/vjThreadKeyPosix.h>

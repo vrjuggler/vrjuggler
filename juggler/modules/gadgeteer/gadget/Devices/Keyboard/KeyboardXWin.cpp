@@ -249,23 +249,23 @@ void vjXWinKeyboard::updKeys()
 
          // Positive movement in the x direction.
          if ( delta_x > 0 ) {
-            m_keys[VJMOUSE_POSX] = delta_x * m_mouse_sensitivity;
+            m_keys[VJMOUSE_POSX] = int(delta_x * m_mouse_sensitivity);
             m_keys[VJMOUSE_NEGX] = 0;
          }
          // Negative movement in the x direction.
          else if ( delta_x < 0 ) {
-            m_keys[VJMOUSE_NEGX] = -delta_x * m_mouse_sensitivity;
+            m_keys[VJMOUSE_NEGX] = int(-delta_x * m_mouse_sensitivity);
             m_keys[VJMOUSE_POSX] = 0;
          }
 
          // Positive movement in the y direction.
          if ( delta_y > 0 ) {
-            m_keys[VJMOUSE_POSY] = delta_y * m_mouse_sensitivity;
+            m_keys[VJMOUSE_POSY] = int(delta_y * m_mouse_sensitivity);
             m_keys[VJMOUSE_NEGY] = 0;
          }
          // Negative movement in the y direction.
          else {
-            m_keys[VJMOUSE_NEGY] = -delta_y * m_mouse_sensitivity;
+            m_keys[VJMOUSE_NEGY] = int(-delta_y * m_mouse_sensitivity);
             m_keys[VJMOUSE_POSY] = 0;
          }
 

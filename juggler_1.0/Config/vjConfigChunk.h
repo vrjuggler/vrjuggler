@@ -1,7 +1,7 @@
 /*
- *  File:	    $RCSfile$
+ *  File:       $RCSfile$
  *  Date modified:  $Date$
- *  Version:	    $Revision$
+ *  Version:       $Revision$
  *
  *
  *                                VR Juggler
@@ -84,7 +84,7 @@ public:
 
     //: tests for inequality of two vjConfigChunks
     inline bool operator != (const vjConfigChunk& c) const {
-	return !(*this == c);
+   return !(*this == c);
     }
 
 
@@ -186,10 +186,10 @@ public:
     bool addValue (const std::string& property, vjConfigChunk* val);
 
 
-    //: Return a list of chunk names dependant upon this one
+    //: Return a list of chunk names dependant based on chunk ptrs
     // Returns a list of the names of all the chunks
     // that are pointed to by chunk ptrs of this chunk
-    std::vector<std::string> getDependencies() const;
+    std::vector<std::string> getChunkPtrDependencies() const;
 
 private:
     vjProperty *getPropertyPtrFromName (const std::string& name) const;

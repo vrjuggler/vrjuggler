@@ -277,13 +277,13 @@ int aFlock::stop()
 
     tcflush(_portId, TCIOFLUSH);
 
-    sginap( 5 );
+    usleep( 500 );
     bird_command[0] = 'G';
     write( _portId, bird_command, 1 );
 
     tcflush(_portId, TCIOFLUSH);
 
-    sleep( 2 );
+    usleep( 200 );
     close( _portId );
     _portId = -1;
 
@@ -529,7 +529,7 @@ int aFlock::getReading( const int& n, const int& port,
 	
 	while ((read( port,&group,1 ) == 0) && c < 99999)
 	{
-	    sginap(1);
+	    usleep(100);
 	    c++;
 	}
 	
@@ -572,7 +572,7 @@ void  aFlock::pickBird( const int& birdID, const int& port )
 
     tcflush(port, TCIOFLUSH);
 
-    sginap( 1 );
+    usleep ( 100 );
 }
 
 //: Open the port.
@@ -722,7 +722,7 @@ void aFlock::set_blocking( const int& port, const int& blocking )
 
     tcflush(port, TCIOFLUSH);
 
-    sginap( 10 );
+    usleep( 1000 );
 
     // read 1kb of junk
     char junk[1024];
@@ -802,7 +802,7 @@ void aFlock::set_hemisphere( const int& port,
 
         tcflush(port, TCIOFLUSH);
 
-	sginap( 5 );
+	usleep( 500 );
     }
 }
 
@@ -821,7 +821,7 @@ void aFlock::set_rep_and_stream(const int& port, const char& reportRate)
 
     tcflush(port, TCIOFLUSH);
 
-    sginap( 20 );
+    usleep( 2000 );
 
     ////////////////////////////////////////////////////////////////
     // set stream mode
@@ -831,7 +831,7 @@ void aFlock::set_rep_and_stream(const int& port, const char& reportRate)
 
     tcflush(port, TCIOFLUSH);
 
-    sginap( 5 );
+    usleep( 500 );
 }
 
 void aFlock::set_pos_angles(const int& port, const int& transmitter, const int& numbirds)
@@ -850,7 +850,7 @@ void aFlock::set_pos_angles(const int& port, const int& transmitter, const int& 
 
         tcflush(port, TCIOFLUSH);
 
-	sginap( 5 );
+	usleep( 500 );
     }
 }
 
@@ -872,7 +872,7 @@ void aFlock::set_filter(const int& port, const BIRD_FILT& filter)
     tcflush(port, TCIOFLUSH);
 
     //TODO: Do I need to sleep here?
-    sginap(120);
+    usleep(12000);
 }
 
 void aFlock::set_transmitter(const int& port, const int& transmitter)
@@ -888,7 +888,7 @@ void aFlock::set_transmitter(const int& port, const int& transmitter)
 
     tcflush(port, TCIOFLUSH);
 
-    sginap(120);
+    usleep(12000);
 }
 
 
