@@ -49,8 +49,15 @@ public class PerfTreeNodeInfo implements ActionListener {
 	    mComponent.add (b);
 	}
 	else {
-	    mComponent.add(new JLabel (sublabel));
+	    mComponent.add(new JLabel ("<i>" + sublabel + "</i>"));
             mComponent.add (Box.createHorizontalGlue());
+	    JButton b = new LabeledPanelButton (col, null, "Graph");
+	    b.setActionCommand ("Graph");
+	    b.addActionListener (this);
+	    //b.addActionListener (PerfAnalyzerPanel.this);
+	    Insets insets = new Insets (1,1,1,1);
+	    b.setMargin(insets);
+	    mComponent.add (b);
 	}
     }
 
