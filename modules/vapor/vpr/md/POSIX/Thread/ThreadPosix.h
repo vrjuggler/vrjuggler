@@ -362,9 +362,17 @@ public:  // ----- Various other thread functions ------
     *
     * @param milli The number of milliseconds to sleep.
     */
-   static int msleep (Uint32 milli)
+   static int msleep(Uint32 milli)
    {
-      return ThreadPosix::usleep(milli * 1000);
+      // usleep() cannot sleep for more than 1 second, so we have to work
+      // around that here.  First, we sleep for N seconds.
+      if ( milli >= 1000 )
+      {
+         ThreadPosix::sleep(milli / 1000);
+      }
+
+      // Then we finish off by sleeping for (N mod 1000) milliseconds.
+      return ThreadPosix::usleep((milli % 1000) * 1000);
    }
 
    /**
