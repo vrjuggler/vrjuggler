@@ -194,8 +194,10 @@ protected:
     * Changes the application in use.
     * If there is another application object active, it has to stop that
     * application first then restart all API-specific Managers.
-    * @param   newApp - If NULL, stops current application.
-    * @note    This can only be called from the kernel thread.
+    *
+    * @param newApp If NULL, stops current application.
+    *
+    * @note This can only be called from the kernel thread.
     */
    void changeApplication(vrj::App* newApp);
 
@@ -207,9 +209,14 @@ protected:
 
 protected:      // --- DRAW MGR ROUTINES --- //
    /**
-    * Starts the draw manager running.
+    * Starts the Draw Manager running.
     * Calls the app callbacks for the Draw Manager.
-    * param newMgr Is this a new manager or the same one.
+    *
+    * @pre The application object, current Draw Manager, and current Display
+    *      Manager have all been set.
+    * @post All processes and data should have been created by Draw Manager.
+    *
+    * @param newMgr Is this a new manager or the same one.
     */
    void startDrawManager(bool newMgr);
 
