@@ -4,8 +4,8 @@ Organization Credits: Iowa State University
                       Virtual Reality Applications Center (VRAC)
 
 Contributors (Alphabetically): 
-              Allen Bierbaum, Josh Brown, Carolina Cruz-Neira, 
-              Patrick Hartling, Kevin Meinert, Zheng Min
+   Allen Bierbaum, Aron Bierbaum, Josh Brown, Carolina Cruz-Neira,
+   Patrick Hartling, Kevin Meinert, Zheng Min
 
 ------------------
 Table of contents:
