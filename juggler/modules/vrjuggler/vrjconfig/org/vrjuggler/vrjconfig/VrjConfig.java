@@ -87,75 +87,16 @@ public class VrjConfig
    }
 
    /**
-    * Creates a new configuration window.
+    * Responding to notification that from the toolbar that a configuration has
+    * been opened or a new configuration has been created, this * method creates
+    * a new configuration window to hold it.
     */
-   private ConfigIFrame createNewConfiguration()
+   private ConfigIFrame toolbarContextChanged()
    {
       ConfigIFrame frame = new ConfigIFrame();
-
-      // Add the VR Juggler definitions into the context
-      String default_desc_file = "${VJ_BASE_DIR}/share/vrjuggler/data/vrj-chunks.desc";
-      default_desc_file = expandEnvVars(default_desc_file);
-      if (getConfigBroker().containsDataSource(default_desc_file))
-      {
-         frame.getEditor().getConfigContext().add(default_desc_file);
-      }
-
-      // Create a new data source and add it to the broker
-      try
-      {
-         String filename = askUserForNewConfigFile();
-         FileDataSource new_data_source = new FileDataSource(filename,
-                                                             FileDataSource.ELEMENTS);
-         getConfigBroker().add(filename, new_data_source);
-         frame.getEditor().getConfigContext().add(filename);
-      }
-      catch (IOException ioe)
-      {
-         ioe.printStackTrace();
-      }
-      
+      frame.getEditor().setConfigContext(toolbar.getConfigContext());
       addFrame(frame);
       return frame;
-   }
-
-   /**
-    * Asks the user for a new config filename. If the user does not pick a
-    * unique name, they are scolded and told to try again.
-    */
-   private String askUserForNewConfigFile()
-   {
-      boolean cancelled = false;
-      String name = null;
-      do
-      {
-         JFileChooser chooser = new JFileChooser();
-         int result = chooser.showSaveDialog(this);
-         if (result == JFileChooser.APPROVE_OPTION)
-         {
-            File file = chooser.getSelectedFile();
-            String filename = file.getAbsolutePath();
-            if (! getConfigBroker().containsDataSource(filename))
-            {
-               name = filename;
-            }
-            else
-            {
-               JOptionPane.showMessageDialog(this,
-                                             "That resource is already open",
-                                             "Oops!",
-                                             JOptionPane.ERROR_MESSAGE);
-            }
-         }
-         else
-         {
-            // The user cancelled the new
-            cancelled = true;
-         }
-      }
-      while (name == null && !cancelled);
-
-      return name;
    }
 
    /**
@@ -213,9 +154,9 @@ public class VrjConfig
          public void actionPerformed(ActionEvent evt)
          {
             String cmd = evt.getActionCommand();
-            if (cmd.equals("New"))
+            if (cmd.equals("New") || cmd.equals("Open"))
             {
-               createNewConfiguration();
+               toolbarContextChanged();
             }
          }
       });
