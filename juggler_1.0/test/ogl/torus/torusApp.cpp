@@ -20,6 +20,9 @@ void torusApp::draw()
    //glLightfv(GL_LIGHT0, GL_POSITION,  light0_position);
    glLightfv(GL_LIGHT0, GL_POSITION,  wand_pos.pos.vec);
 
+   //// Draw a doughnut on the wand
+
+
    // Set material color
    float onyx_red = 59.0f/255.0f;
    float onyx_blue = 57.0f/255.0f;
@@ -34,6 +37,7 @@ void torusApp::draw()
    glMaterialfv( GL_FRONT,  GL_SHININESS, mat_shininess );
 
    glPushMatrix();
+
       glTranslatef(-6.0f, 0.0f, -6.0f);
       glRotatef(30, 0,1,0);         // Around Y
       glRotatef(-30, 1,0,0);        // Around X

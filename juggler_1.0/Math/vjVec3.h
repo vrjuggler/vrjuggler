@@ -55,9 +55,10 @@ public:
    void normalize()
    {
       float len = length();
-      vec[0] = vec[0] / len;
-      vec[1] = vec[1] / len;
-      vec[2] = vec[2] / len;
+      float len_inv = 1.0f/len;
+      vec[0] *= len_inv;
+      vec[1] *= len_inv;
+      vec[2] *= len_inv;
    }
 
    //: Is the vector normalized
@@ -74,9 +75,9 @@ public:
    //+ routines
    float lengthSquared() const
    {
-      return (vec[0]*vec[0])+
+      return ((vec[0]*vec[0])+
              (vec[1]*vec[1])+
-             (vec[2]*vec[2]);
+             (vec[2]*vec[2]));
    }
 
    //: Return vector's length

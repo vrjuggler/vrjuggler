@@ -56,7 +56,7 @@ chunk PosProxy "PosProxy" "A Pos Proxy points to position data to use"
   end
 chunk surfaceDisplay "surfaceDisplay" "This is a surface that images are projected onto."
   Name String 1 "Name" "Unique name of an instance of this chunk type"
-  origin Int 2 "origin" vj_valuelabels { "X" "Y" } "Window origin (upper left is 0,0)"
+  origin Int 2 "origin" vj_valuelabels { "X" "Y" } "Window origin (lower left corner) (upper left screen is 0,0)"
   size Int 2 "size" vj_valuelabels { "Width" "Height" } "Window size"
   pipe Int 1 "pipe" "Graphics pipe"
   stereo Bool 1 "stereo" ""
@@ -163,7 +163,7 @@ chunk KeyModPair "KeyModPair" "This chunk holds a key and a modifier key.  It is
   end
 chunk simDisplay "simDisplay" "This is a surface that images are projected on."
   Name String 1 "Name" "Unique name of an instance of this chunk type"
-  origin Int 2 "origin" vj_valuelabels { "X" "Y" } "Window origin (upper left is 0,0)"
+  origin Int 2 "origin" vj_valuelabels { "X" "Y" } "Window origin (lower left corner) (upper left display is 0,0)"
   size Int 2 "size" vj_valuelabels { "Width" "Height" } "Window size"
   pipe Int 1 "pipe" "Graphics pipe"
   stereo Bool 1 "stereo" ""

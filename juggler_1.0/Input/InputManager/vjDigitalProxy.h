@@ -30,6 +30,7 @@ public:
    vjDigitalProxy() {
       m_digPtr = NULL;
       m_unitNum = -1;
+      m_data = 0;
    }
 
    ~vjDigitalProxy() {}

@@ -318,23 +318,16 @@ void vjFlock::UpdateData()
    if (this->isActive() == false)
       return;
 
-   lock.acquire();
-      // For each bird, ensure that we never swap an old value (stored in
-      // valid) over a newer value (presently in current).
-      for ( int i = 1; i <= mFlockOfBirds.getNumBirds(); i++ ) {
-         if (i == mFlockOfBirds.getTransmitter())
-            continue;
+   vjGuard<vjMutex> updateGuard(lock);
 
-         new_index = getBirdIndex(i, valid);
-         old_index = getBirdIndex(i, current);
-         theData[old_index] = theData[new_index];
-      }
+   // Copy the valid data to the current data so that both are valid
+   for(int i=0;i<getNumBirds();i++)
+      theData[getBirdIndex(i,current)] = theData[getBirdIndex(i,valid)];   // first hand
 
-      // This is copied from vjInput::swapCurrentIndexes().
-      tmp = current;
-      current = valid;
-      valid = tmp;
-   lock.release();
+
+   // Locks and then swap the indicies
+   swapCurrentIndexes();
+
 
    return;
 }
