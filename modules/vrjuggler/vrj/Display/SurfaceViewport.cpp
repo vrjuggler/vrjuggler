@@ -35,6 +35,7 @@
 #include <vrj/Display/SurfaceViewport.h>
 #include <vrj/Display/WallProjection.h>
 #include <vrj/Display/TrackedWallProjection.h>
+#include <vrj/Math/Math.h>
 #include <vrj/Math/Coord.h>
 #include <vrj/Math/Vec3.h>
 #include <vrj/Math/Vec4.h>
@@ -164,11 +165,18 @@ void SurfaceViewport::calculateCornersInBaseFrame()
    mxULCorner.xformFull(mSurfaceRotation,mULCorner);
 
    // Verify that they are all in the same x,y plane
-   vprDEBUG(vprDBG_ALL,5) << mxLLCorner[VJ_Z]  << " " << mxLRCorner[VJ_Z]
-                      << " " <<  mxURCorner[VJ_Z]  << " " <<  mxULCorner[VJ_Z] << "\n" << vprDEBUG_FLUSH;
-   vprASSERT((mxLLCorner[VJ_Z] == mxLRCorner[VJ_Z]) &&
-            (mxURCorner[VJ_Z] == mxULCorner[VJ_Z]) &&
-            (mxLLCorner[VJ_Z] == mxULCorner[VJ_Z]));
+   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << std::setprecision(10)
+                                          << mxLLCorner[VJ_Z] << " "
+                                          << mxLRCorner[VJ_Z] << " "
+                                          << mxURCorner[VJ_Z] << " "
+                                          << mxULCorner[VJ_Z] << "\n"
+                                          << vprDEBUG_FLUSH;
+#ifdef VJ_DEBUG
+   const float epsilon = 1e-6;
+#endif
+   vprASSERT(vrj::Math::isEqual(mxLLCorner[VJ_Z], mxLRCorner[VJ_Z], epsilon) &&
+             vrj::Math::isEqual(mxURCorner[VJ_Z], mxULCorner[VJ_Z], epsilon) &&
+             vrj::Math::isEqual(mxLLCorner[VJ_Z], mxULCorner[VJ_Z], epsilon));
 }
 
 };
