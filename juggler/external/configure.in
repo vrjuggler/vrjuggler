@@ -200,26 +200,52 @@ fi
 case $CXX_ORB_NAME in
    omniORB3)
       have_cxx_orb='Y'
+      orb='omniORB'
       ;;
    omniORB4)
       have_cxx_orb='Y'
+      orb='omniORB'
       ;;
    *)
       have_cxx_orb='N'
+      orb='unknown'
       ;;
 esac
+
+USE_OMNIPYTHON='N'
+OMNIPYTHON=''
 
 if test "x$have_cxx_orb" = "xY" ; then
    if test -d "$CXX_ORB_ROOT/include/$CXX_ORB_NAME" ; then
       TARGETS="$TARGETS $CXX_ORB_NAME"
-      OMNIORB_CMDS='catior convertior genior nameclt omkdepend omniMapper omniNames omnicpp omniidl omniidlrun.py'
 
-      if test "x$CXX_ORB_BIN_DIR" = "xnone" ; then
-         CXX_ORB_BIN_DIR="$CXX_ORB_ROOT/bin"
-      fi
+      if test "x$orb" = "xomniORB" ; then
+         OMNIORB_CMDS='catior convertior genior nameclt omkdepend omniMapper omniNames omnicpp omniidl omniidlrun.py'
 
-      if test "x$CXX_ORB_LIB_DIR" = "xnone" ; then
-         CXX_ORB_LIB_DIR="$CXX_ORB_ROOT/lib"
+         if test "x$CXX_ORB_BIN_DIR" = "xnone" ; then
+            CXX_ORB_BIN_DIR="$CXX_ORB_ROOT/bin"
+         fi
+
+         omniidl_python=`grep -e '#!.*python' $CXX_ORB_BIN_DIR/omniidl | sed -e 's/^#!\(.*\)$/\1/'`
+         changequote(<<, >>)
+         OMNI_PYTHON_VERSION=`$omniidl_python -c "import sys; print sys.version[:3]"`
+         changequote([, ])
+
+         case $omniidl_python in
+            *omnipython)
+               USE_OMNIPYTHON='Y'
+               OMNIPYTHON="$omniidl_python"
+               OMNIPYTHON_HOME=`echo $OMNIPYTHON | sed -e 's|^\(.*\)/bin/.*omnipython|\1|'`
+               ;;
+         esac
+
+         OMNI_PYTHON_DIR="python$OMNI_PYTHON_VERSION"
+
+         if test "x$CXX_ORB_LIB_DIR" = "xnone" ; then
+            CXX_ORB_LIB_DIR="$CXX_ORB_ROOT/lib"
+         fi
+      else
+         AC_MSG_ERROR([*** We have a C++ ORB, but we don't know its name! ***])
       fi
    fi
 fi
@@ -262,6 +288,12 @@ AC_SUBST(OPENAL_ROOT)
 AC_SUBST(OMNIORB_CMDS)
 AC_SUBST(PYTHON_DIR)
 AC_SUBST(PYTHON_VERSION)
+AC_SUBST(OMNI_PYTHON_DIR)
+AC_SUBST(OMNI_PYTHON_VERSION)
+
+AC_SUBST(USE_OMNIPYTHON)
+AC_SUBST(OMNIPYTHON)
+AC_SUBST(OMNIPYTHON_HOME)
 
 AC_CONFIG_FILES(Makefile)
 
