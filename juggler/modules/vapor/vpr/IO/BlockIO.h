@@ -386,7 +386,7 @@ public:
     //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status
-    readn (std::vector<vpr::Uint8>& buffer, const size_t length
+    readn (std::vector<vpr::Uint8>& buffer, const size_t length,
            ssize_t& bytes_read)
     {
         Status status;
