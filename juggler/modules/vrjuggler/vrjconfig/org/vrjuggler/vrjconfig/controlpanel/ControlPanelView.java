@@ -304,33 +304,12 @@ public class ControlPanelView
                      // XXX: How do we undo all of the changes that the user
                      // made?
                   }
-                  // Save the user's changes.
                   else
                   {
-                     ConfigBroker broker = new ConfigBrokerProxy();
-                     for ( Iterator itr = mContext.getResources().iterator();
-                           itr.hasNext(); )
-                     {
-                        DataSource data_source = broker.get((String)itr.next());
-                        if (! data_source.isReadOnly())
-                        {
-                           try
-                           {
-                              data_source.commit();
-                           }
-                           catch(IOException ioe)
-                           {
-                              JOptionPane.showMessageDialog(parent,
-                                                            ioe.getMessage(),
-                                                            "Error",
-                                                            JOptionPane.ERROR_MESSAGE);
-                           }
-                        }
-                     }
+                     // This handles informing the ConfigUndoManager of a
+                     // successful save operation.
+                     mToolbar.doSave();
                   }
-
-                  // Inform the ConfigUndoManager that we have saved changes.
-                  mContext.getConfigUndoManager().saveHappened();
                }
             }
          }
