@@ -41,6 +41,7 @@
 #include <gadget/gadgetConfig.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <vrj/Util/Debug.h>
+#include <gadget/Type/AnalogData.h>
 
 namespace gadget
 {
@@ -98,7 +99,7 @@ public:
    //        "min" and "max" are set to 0.0f and 1.0f respectivly.
    //! NOTE: TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your data using
    //        Analog::normalizeMinToMax()
-   virtual float getAnalogData(int devNum = 0) = 0;
+   virtual AnalogData* getAnalogData(int devNum = 0) = 0;
 
 protected:
    // give a value that will range from [min() <= n <= max()]

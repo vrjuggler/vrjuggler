@@ -46,7 +46,7 @@ public:
 
     /** Constructor. */
     AnalogData (): InputData() {
-
+        mAnalogData = 0.0f;
     }
 
 
@@ -66,6 +66,15 @@ public:
         return *this;
     }
 
+
+    AnalogData& operator= (float f) {
+        mAnalogData = f;
+        return *this;
+    }
+
+    operator float() const {
+        return mAnalogData;
+    }
 
 protected:
 

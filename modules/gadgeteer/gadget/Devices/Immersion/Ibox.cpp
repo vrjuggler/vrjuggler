@@ -187,10 +187,18 @@ int IBox::sample()
       theData[progress].button[1] = thingie.buttonFunc(1);
       theData[progress].button[2] = thingie.buttonFunc(2);
       theData[progress].button[3] = thingie.buttonFunc(3);
-      theData[progress].analog[0] = thingie.analogFunc(0);
-      theData[progress].analog[1] = thingie.analogFunc(1);
-      theData[progress].analog[2] = thingie.analogFunc(2);
-      theData[progress].analog[3] = thingie.analogFunc(3);
+
+      // we really need to do normalization here instead of in getData.
+      // need this so we return consistent AnalogData. -cj
+      float f;
+      this->normalizeMinToMax( thingie.analogFunc(0), f );
+      theData[progress].analog[0] = f;
+      this->normalizeMinToMax( thingie.analogFunc(1), f );
+      theData[progress].analog[1] = f;
+      this->normalizeMinToMax( thingie.analogFunc(2), f );
+      theData[progress].analog[2] = f;
+      this->normalizeMinToMax( thingie.analogFunc(3), f );
+      theData[progress].analog[3] = f;
 
       swapValidIndexes();     // Swap the buffers since we just read in a complete value
    }
@@ -240,12 +248,12 @@ int IBox::stopSampling()
 //        "min" and "max" are set to 0.0f and 1.0f respectivly.
 //! NOTE: TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your data using
 //        Analog::normalizeMinToMax()
-float IBox::getAnalogData( int d )
+AnalogData* IBox::getAnalogData( int d )
 {
-    float value = static_cast<float>( theData[current].analog[d] );
-    float normalized;
-    this->normalizeMinToMax( value, normalized );
-    return normalized;
+//      float value = static_cast<float>( theData[current].analog[d] );
+//      float normalized;
+//      this->normalizeMinToMax( value, normalized );
+    return &(theData[current].analog[d]);
 }
 
 /**********************************************************
