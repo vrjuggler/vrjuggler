@@ -112,28 +112,6 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline virtual ssize_t
-    read (void* buffer, const size_t length)
-    {
-        return PR_Recv(m_handle, buffer, length, 0, PR_INTERVAL_NO_WAIT);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline virtual ssize_t
-    readn (void* buffer, const size_t length) {
-        return PR_Recv(m_handle, buffer, length, 0, PR_INTERVAL_NO_TIMEOUT);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    inline virtual ssize_t
-    write (const void* buffer, const size_t length) {
-        return PR_Send(m_handle, buffer, length, 0, PR_INTERVAL_NO_TIMEOUT);
-    }
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
     inline virtual bool
     enableBlocking (void) {
        PRStatus status;
@@ -289,6 +267,27 @@ protected:
     virtual ~SocketImpNSPR(void);
 
 protected:
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual ssize_t
+    read_i (void* buffer, const size_t length)
+    {
+        return PR_Recv(m_handle, buffer, length, 0, PR_INTERVAL_NO_WAIT);
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual ssize_t
+    readn_i (void* buffer, const size_t length) {
+        return PR_Recv(m_handle, buffer, length, 0, PR_INTERVAL_NO_TIMEOUT);
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual ssize_t
+    write_i (const void* buffer, const size_t length) {
+        return PR_Send(m_handle, buffer, length, 0, PR_INTERVAL_NO_TIMEOUT);
+    }
 
     PRFileDesc*       m_handle;      //: Handle to the socket
     InetAddr          m_local_addr;  //: The local site's address structure

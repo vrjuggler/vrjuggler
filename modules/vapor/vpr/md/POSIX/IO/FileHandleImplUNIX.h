@@ -120,62 +120,6 @@ public:
     // ------------------------------------------------------------------------
     virtual bool enableNonBlocking(void);
 
-    // ------------------------------------------------------------------------
-    //! Read the specified number of bytes from the file handle into the given
-    //+ buffer.
-    //
-    //! PRE: The file descriptor is valid, and the buffer is at least length
-    //+       bytes long.
-    //! POST: The given buffer has length bytes copied into it from the file
-    //+       handle, and the number of bytes read successfully is returned
-    //+       to the caller.
-    //
-    //! ARGS: buffer - A pointer to the buffer where the file contents are to
-    //+                be stored.
-    //! ARGS: length - The number of bytes to be read.
-    //
-    //! RETURNS: >-1 - The number of bytes successfully read from the file
-    //+                handle.
-    //! RETURNS:  -1 - An error occurred when reading.
-    // ------------------------------------------------------------------------
-    virtual ssize_t read(void* buffer, const size_t length);
-
-    // ------------------------------------------------------------------------
-    //! Read exactly the specified number of bytes from the file handle into
-    //+ the given buffer.
-    //
-    //! PRE: The file descriptor is valid, and the buffer is at least length
-    //+      bytes long.
-    //! POST: The given buffer has length bytes copied into it from the file
-    //+       handle, and the number of bytes read successfully is returned to
-    //+       the caller.
-    //
-    //! ARGS: buffer - A pointer to the buffer where the file contents are to
-    //                 be stored.
-    //! ARGS: length - The number of bytes to be read.
-    //
-    //! RETURNS: >-1 - The number of bytes successfully read from the file
-    //+                handle.
-    //! RETURNS:  -1 - An error occurred when reading.
-    // ------------------------------------------------------------------------
-    virtual ssize_t readn(void* buffer, const size_t length);
-
-    // ------------------------------------------------------------------------
-    //: Write the buffer to the file handle.
-    //
-    //! PRE: The file descriptor is valid.
-    //! POST: The given buffer is written to the file handle, and the number
-    //+       of bytes written successfully is returned to the caller.
-    //
-    //! ARGS: buffer - A pointer to the buffer to be written.
-    //! ARGS: length - The length of the buffer.
-    //
-    //! RETURNS: >-1 - The number of bytes successfully written to the file
-    //+                handle.
-    //! RETURNS:  -1 - An error occurred when writing.
-    // ------------------------------------------------------------------------
-    virtual ssize_t write(const void* buffer, const size_t length);
-
     // ========================================================================
     // vpr::FileHandle implementation.
     // ========================================================================
@@ -230,6 +174,62 @@ protected:
     friend class SocketDatagramImpBSD;
     friend class SocketImpBSD;
     friend class SocketStreamImpBSD;
+
+    // ------------------------------------------------------------------------
+    //! Read the specified number of bytes from the file handle into the given
+    //+ buffer.
+    //
+    //! PRE: The file descriptor is valid, and the buffer is at least length
+    //+       bytes long.
+    //! POST: The given buffer has length bytes copied into it from the file
+    //+       handle, and the number of bytes read successfully is returned
+    //+       to the caller.
+    //
+    //! ARGS: buffer - A pointer to the buffer where the file contents are to
+    //+                be stored.
+    //! ARGS: length - The number of bytes to be read.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully read from the file
+    //+                handle.
+    //! RETURNS:  -1 - An error occurred when reading.
+    // ------------------------------------------------------------------------
+    virtual ssize_t read_i(void* buffer, const size_t length);
+
+    // ------------------------------------------------------------------------
+    //! Read exactly the specified number of bytes from the file handle into
+    //+ the given buffer.
+    //
+    //! PRE: The file descriptor is valid, and the buffer is at least length
+    //+      bytes long.
+    //! POST: The given buffer has length bytes copied into it from the file
+    //+       handle, and the number of bytes read successfully is returned to
+    //+       the caller.
+    //
+    //! ARGS: buffer - A pointer to the buffer where the file contents are to
+    //                 be stored.
+    //! ARGS: length - The number of bytes to be read.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully read from the file
+    //+                handle.
+    //! RETURNS:  -1 - An error occurred when reading.
+    // ------------------------------------------------------------------------
+    virtual ssize_t readn_i(void* buffer, const size_t length);
+
+    // ------------------------------------------------------------------------
+    //: Write the buffer to the file handle.
+    //
+    //! PRE: The file descriptor is valid.
+    //! POST: The given buffer is written to the file handle, and the number
+    //+       of bytes written successfully is returned to the caller.
+    //
+    //! ARGS: buffer - A pointer to the buffer to be written.
+    //! ARGS: length - The length of the buffer.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully written to the file
+    //+                handle.
+    //! RETURNS:  -1 - An error occurred when writing.
+    // ------------------------------------------------------------------------
+    virtual ssize_t write_i(const void* buffer, const size_t length);
 
     // ------------------------------------------------------------------------
     //: Get the current file handle flags.

@@ -257,94 +257,6 @@ FileHandleUNIX::enableNonBlocking () {
 }
 
 // ----------------------------------------------------------------------------
-// Read the specified number of bytes from the file handle into the given
-// bufer.
-// ----------------------------------------------------------------------------
-ssize_t
-FileHandleUNIX::read (void* buffer, const size_t length) {
-    ssize_t bytes;
-
-    bytes = ::read(m_fdesc, buffer, length);
-
-    // Something went wrong while attempting to read from the file.
-    if ( bytes < 0 ) {
-        // If the error is EAGAIN and we are in non-blocking mode, we do not
-        // bother to print the message.
-        if ( ! (errno == EAGAIN && ! m_blocking) ) {
-            fprintf(stderr, "[vpr::FileHandleUNIX] Error reading from %s: %s\n",
-                    m_name.c_str(), strerror(errno));
-        }
-    }
-    // If 0 bytes were read or an error was returned, we print an error
-    // message.
-    else if ( bytes == 0 && errno != 0 ) {
-//    errno != ENOENT
-        fprintf(stderr, "[vpr::FileHandleUNIX] Nothing read from %s: %s\n",
-                m_name.c_str(), strerror(errno));
-    }
-
-    return bytes;
-}
-
-// ----------------------------------------------------------------------------
-// Read exactly the specified number of bytes from the file handle into the
-// given buffer.  This is baesd on the readn() function given on pages 51-2 of
-// _Effective TCP/IP Programming_ by Jon D. Snader.
-// ----------------------------------------------------------------------------
-ssize_t
-FileHandleUNIX::readn (void* buffer, const size_t length) {
-    size_t count;
-    ssize_t bytes;
-
-    count = length;
-
-    while ( count > 0 ) {
-        bytes = ::read(m_fdesc, buffer, length);
-
-        // Read error.
-        if ( bytes < 0 ) {
-            // Restart the read process if we were interrupted by the OS.
-            if ( errno == EINTR ) {
-                continue;
-            }
-            // Otherwise, we have an error situation, so return the value
-            // returned by read(2).
-            else  {
-                break;
-            }
-        }
-        // May have read EOF, so return bytes read so far.
-        else if ( bytes == 0 ) {
-            bytes = length - count;
-        }
-        else {
-            buffer = (void*) ((char*) buffer + bytes);
-            count  -= bytes;
-        }
-    }
-
-    return bytes;
-}
-
-// ----------------------------------------------------------------------------
-// Write the buffer to the file handle.
-// ----------------------------------------------------------------------------
-ssize_t
-FileHandleUNIX::write (const void* buffer, const size_t length) {
-    ssize_t bytes;
-
-    bytes = ::write(m_fdesc, buffer, length);
-
-    if ( bytes <= 0 ) {
-        fprintf(stderr,
-                "[vpr::FileHandleUNIX] Error writing to %s: %s\n",
-                m_name.c_str(), strerror(errno));
-    }
-
-    return bytes;
-}
-
-// ----------------------------------------------------------------------------
 // Reconfigure the file handle to be in append mode.
 // ----------------------------------------------------------------------------
 bool
@@ -463,6 +375,94 @@ FileHandleUNIX::enableAsynchronousWrite () {
 // ============================================================================
 // Protected methods.
 // ============================================================================
+
+// ----------------------------------------------------------------------------
+// Read the specified number of bytes from the file handle into the given
+// bufer.
+// ----------------------------------------------------------------------------
+ssize_t
+FileHandleUNIX::read_i (void* buffer, const size_t length) {
+    ssize_t bytes;
+
+    bytes = ::read(m_fdesc, buffer, length);
+
+    // Something went wrong while attempting to read from the file.
+    if ( bytes < 0 ) {
+        // If the error is EAGAIN and we are in non-blocking mode, we do not
+        // bother to print the message.
+        if ( ! (errno == EAGAIN && ! m_blocking) ) {
+            fprintf(stderr, "[vpr::FileHandleUNIX] Error reading from %s: %s\n",
+                    m_name.c_str(), strerror(errno));
+        }
+    }
+    // If 0 bytes were read or an error was returned, we print an error
+    // message.
+    else if ( bytes == 0 && errno != 0 ) {
+//    errno != ENOENT
+        fprintf(stderr, "[vpr::FileHandleUNIX] Nothing read from %s: %s\n",
+                m_name.c_str(), strerror(errno));
+    }
+
+    return bytes;
+}
+
+// ----------------------------------------------------------------------------
+// Read exactly the specified number of bytes from the file handle into the
+// given buffer.  This is baesd on the readn() function given on pages 51-2 of
+// _Effective TCP/IP Programming_ by Jon D. Snader.
+// ----------------------------------------------------------------------------
+ssize_t
+FileHandleUNIX::readn_i (void* buffer, const size_t length) {
+    size_t count;
+    ssize_t bytes;
+
+    count = length;
+
+    while ( count > 0 ) {
+        bytes = ::read(m_fdesc, buffer, length);
+
+        // Read error.
+        if ( bytes < 0 ) {
+            // Restart the read process if we were interrupted by the OS.
+            if ( errno == EINTR ) {
+                continue;
+            }
+            // Otherwise, we have an error situation, so return the value
+            // returned by read(2).
+            else  {
+                break;
+            }
+        }
+        // May have read EOF, so return bytes read so far.
+        else if ( bytes == 0 ) {
+            bytes = length - count;
+        }
+        else {
+            buffer = (void*) ((char*) buffer + bytes);
+            count  -= bytes;
+        }
+    }
+
+    return bytes;
+}
+
+// ----------------------------------------------------------------------------
+// Write the buffer to the file handle.
+// ----------------------------------------------------------------------------
+ssize_t
+FileHandleUNIX::write_i (const void* buffer, const size_t length) {
+    ssize_t bytes;
+
+    bytes = ::write(m_fdesc, buffer, length);
+
+    if ( bytes <= 0 ) {
+        fprintf(stderr,
+                "[vpr::FileHandleUNIX] Error writing to %s: %s\n",
+                m_name.c_str(), strerror(errno));
+    }
+
+    return bytes;
+}
 
 // ----------------------------------------------------------------------------
 // Get the current file handle flags.

@@ -213,68 +213,6 @@ public:
         return m_socket_imp->bind();
     }
 
-    // ------------------------------------------------------------------------
-    //: Read at most the specified number of bytes from the socket into the
-    //+ given buffer.
-    //
-    //! PRE: The socket implementation pointer is valid, and the buffer is at
-    //+      least length bytes long.
-    //! POST: The given buffer has length bytes copied into it from the socket
-    //+       bufffer, and the number of bytes read successfully is returned to
-    //+       the caller.
-    //
-    //! ARGS: buffer - A pointer to the buffer where the socket's buffer
-    //+                contents are to be stored.
-    //! ARGBS: length - The number of bytes to be read.
-    //
-    //! RETURNS: >-1 - The number of bytes successfully read from the socket.
-    //! RETURNS:  -1 - An error occurred when reading.
-    // ------------------------------------------------------------------------
-    inline ssize_t
-    read (void* buffer, const size_t length) {
-        return m_socket_imp->read(buffer, length);
-    }
-
-    // ------------------------------------------------------------------------
-    //: Read exactly the specified number of bytes from the socket into the
-    //+ given buffer.
-    //
-    //! PRE: The socket implementation pointer is valid, and the buffer is at
-    //+      least length bytes long.
-    //! POST: The given buffer has length bytes copied into it from the socket
-    //+       buffer, and the number of bytes read successfully is returned to
-    //+       the caller.
-    //
-    //! ARGS: buffer - A pointer to the buffer where the socket's buffer
-    //+                contents are to be stored.
-    //! ARGS: length - The number of bytes to be read.
-    //
-    //! RETURNS: >-1 - The number of bytes successfully read from the socket.
-    //! RETURNS:  -1 - An error occurred when reading.
-    // ------------------------------------------------------------------------
-    inline ssize_t
-    readn (void* buffer, const size_t length) {
-        return m_socket_imp->readn(buffer, length);
-    }
-
-    // ------------------------------------------------------------------------
-    //: Write the buffer to the socket.
-    //
-    //! PRE: The socket implementation pointer is valid.
-    //! POST: The given buffer is written to the socket, and the number of
-    //+       bytes written successfully is returned to the caller.
-    //
-    //! ARGS: buffer - A pointer to the buffer to be written.
-    //! ARGS: length - The length of the buffer.
-    //
-    //! RETURNS: >-1 - The number of bytes successfully written to the socket.
-    //! RETURNS:  -1 - An error occurred when writing.
-    // ------------------------------------------------------------------------
-    inline ssize_t
-    write (const void* buffer, const size_t length) {
-        return m_socket_imp->write(buffer, length);
-    }
-
     // ========================================================================
     // Socket interface.
     // ========================================================================
@@ -581,6 +519,68 @@ protected:
     // ------------------------------------------------------------------------
     virtual ~Socket_t (void) {
         /* Do nothing. */ ;
+    }
+
+    // ------------------------------------------------------------------------
+    //: Read at most the specified number of bytes from the socket into the
+    //+ given buffer.
+    //
+    //! PRE: The socket implementation pointer is valid, and the buffer is at
+    //+      least length bytes long.
+    //! POST: The given buffer has length bytes copied into it from the socket
+    //+       bufffer, and the number of bytes read successfully is returned to
+    //+       the caller.
+    //
+    //! ARGS: buffer - A pointer to the buffer where the socket's buffer
+    //+                contents are to be stored.
+    //! ARGBS: length - The number of bytes to be read.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully read from the socket.
+    //! RETURNS:  -1 - An error occurred when reading.
+    // ------------------------------------------------------------------------
+    virtual ssize_t
+    read_i (void* buffer, const size_t length) {
+        return m_socket_imp->read(buffer, length);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Read exactly the specified number of bytes from the socket into the
+    //+ given buffer.
+    //
+    //! PRE: The socket implementation pointer is valid, and the buffer is at
+    //+      least length bytes long.
+    //! POST: The given buffer has length bytes copied into it from the socket
+    //+       buffer, and the number of bytes read successfully is returned to
+    //+       the caller.
+    //
+    //! ARGS: buffer - A pointer to the buffer where the socket's buffer
+    //+                contents are to be stored.
+    //! ARGS: length - The number of bytes to be read.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully read from the socket.
+    //! RETURNS:  -1 - An error occurred when reading.
+    // ------------------------------------------------------------------------
+    virtual ssize_t
+    readn_i (void* buffer, const size_t length) {
+        return m_socket_imp->readn(buffer, length);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Write the buffer to the socket.
+    //
+    //! PRE: The socket implementation pointer is valid.
+    //! POST: The given buffer is written to the socket, and the number of
+    //+       bytes written successfully is returned to the caller.
+    //
+    //! ARGS: buffer - A pointer to the buffer to be written.
+    //! ARGS: length - The length of the buffer.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully written to the socket.
+    //! RETURNS:  -1 - An error occurred when writing.
+    // ------------------------------------------------------------------------
+    virtual ssize_t
+    write_i (const void* buffer, const size_t length) {
+        return m_socket_imp->write(buffer, length);
     }
 
     RealSocketImp* m_socket_imp; //: Platform-specific socket implementation
