@@ -99,7 +99,7 @@ WORKDIR		= ${topdir}
 
 # Extra compiler and linker options needed only by this file.
 DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
-OPT_FLAGS	= -D_OPT -O @OPT_FLAGS@
+OPT_FLAGS	= -D_OPT @OPT_FLAGS@
 
 # SGI-specific dynamic-shared-object information.
 DSOREGFILE	= @DSOREGFILE@
