@@ -1,0 +1,10 @@
+#include <tweek/idl/Subject.idl>
+
+module networktest
+{
+   interface WhiteboardSubject : tweek::Subject
+   {
+      void addText(in string text);
+      string getAllText();
+   };
+};

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beanlist>
+  <guipanel name="Network Tester">
+    <file name="${TWEEK_BASE_DIR}/bin/beans/NetworkTestBean.jar" 
+          entry="networktest/NetworkTest" />
+    <tree path="/Beans" />
+  </guipanel>
+</beanlist>
