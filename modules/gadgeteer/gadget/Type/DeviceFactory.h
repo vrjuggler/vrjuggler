@@ -99,7 +99,7 @@ public:
  * Object used for creating devices.
  * @note Singleton
  */
-class DeviceFactory
+class GADGET_CLASS_API DeviceFactory
 {
 private:
    // Singleton so must be private

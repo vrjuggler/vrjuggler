@@ -111,7 +111,7 @@ private:    // Static information
 // ---- Type specific interfaces ----
 
 template<class PROXY_TYPE>
-class GADGET_CLASS_API DeviceInterface : public BaseDeviceInterface
+class DeviceInterface : public BaseDeviceInterface
 {
 protected:
    DeviceInterface(DeviceInterface& other) {;}
