@@ -296,9 +296,9 @@ public:
    void openCloseTest()
    { 
       std::cout<<" Open/Close Test: "; 
-      bool openSuccess=false;
-      bool closeSuccess=false;
-      bool bindSuccess=false;
+      bool openSuccess( false );
+      bool closeSuccess( false );
+      bool bindSuccess( false );
       
       vpr::Uint16 port=5432;
       vpr::SocketStream*	sock;
@@ -314,6 +314,88 @@ public:
       assertTest( bindSuccess && "Socket can not be bound!");
       assertTest( closeSuccess && "Socket can not be closed!");
       delete sock;
+   }
+   // =========================================================================
+   // bind again should fail test
+   // =========================================================================
+   void bindAgainFailTest()
+   { 
+      std::cout<<" bind again fails Test: \n"<<std::flush; 
+      bool openSuccess( false );
+      bool closeSuccess( false );
+      bool bindSuccess( false );
+      
+      vpr::Uint16 port = 6976;
+      vpr::SocketStream sock( vpr::InetAddr("localhost",port), vpr::InetAddr::AnyAddr );	
+      
+      // make sure aditional calls to bind() fails...
+      openSuccess = sock.open();
+      assertTest( openSuccess == true && "open() failed");
+      
+      bindSuccess = sock.bind();
+      assertTest( bindSuccess == true && "bind() failed");
+      
+      for (int x = 0; x < 100; ++x)
+      {
+         bindSuccess = sock.bind();
+         assertTest( bindSuccess == false && "Socket was able to bind again, this is bad.");
+      }
+      
+      closeSuccess = sock.close();
+      assertTest( closeSuccess == true && "close() failed");
+   }
+   // =========================================================================
+   // same-address-open-bind-close test
+   // =========================================================================
+   void sameAddressOpenBindCloseTest()
+   { 
+      std::cout<<" same-address-open-bind-close Test: \n"<<std::flush; 
+      bool openSuccess( false );
+      bool closeSuccess( false );
+      bool bindSuccess( false );
+      
+      vpr::Uint16 port = 6977;
+      vpr::SocketStream sock( vpr::InetAddr("localhost",port), vpr::InetAddr::AnyAddr );	
+      
+      // same address, open-bind-close
+      for (int xx = 0; xx < 100; ++xx)
+      {
+         std::cout<<xx<<"\r"<<std::flush;
+         openSuccess = sock.open();
+         assertTest( openSuccess == true && "open() failed");
+
+         bindSuccess = sock.bind();
+         assertTest( bindSuccess == true && "bind() failed");
+
+         closeSuccess = sock.close();
+         assertTest( closeSuccess == true && "close() failed");
+      }
+   }
+   // =========================================================================
+   // different-address-open-bind-close test
+   // =========================================================================
+   void differentAddressOpenBindCloseTest()
+   { 
+      std::cout<<" different-address-open-bind-close Test: \n"<<std::flush; 
+      bool openSuccess( false );
+      bool closeSuccess( false );
+      bool bindSuccess( false );
+      
+      // same address, open-bind-close
+      for (int xx = 0; xx < 100; ++xx)
+      {
+         vpr::Uint16 port = 5977 + xx;
+         vpr::SocketStream sock( vpr::InetAddr("localhost", port), vpr::InetAddr::AnyAddr );	
+      
+         openSuccess = sock.open();
+         assertTest( openSuccess == true && "open() failed");
+
+         bindSuccess = sock.bind();
+         assertTest( bindSuccess == true && "bind() failed");
+
+         closeSuccess = sock.close();
+         assertTest( closeSuccess == true && "close() failed");
+      }
    }
    // =========================================================================
    // reuse address test
@@ -470,6 +552,11 @@ public:
    {
       TestSuite *test_suite = new TestSuite ("SocketTest");
       test_suite->addTest( new TestCaller<SocketTest>("Open/CloseTest", &SocketTest::openCloseTest));
+      
+      test_suite->addTest( new TestCaller<SocketTest>("bind-Again Failure Test", &SocketTest::bindAgainFailTest));
+      test_suite->addTest( new TestCaller<SocketTest>("same-Address-Open-Bind-Close Test", &SocketTest::sameAddressOpenBindCloseTest));
+      test_suite->addTest( new TestCaller<SocketTest>("different-Address-Open-Bind-Close Test", &SocketTest::differentAddressOpenBindCloseTest));
+      
       test_suite->addTest( new TestCaller<SocketTest>("ReuseAddrTest", &SocketTest::reuseAddrTest));
       test_suite->addTest( new TestCaller<SocketTest>("testOpenCloseOpen", &SocketTest::testOpenCloseOpen));
       test_suite->addTest( new TestCaller<SocketTest>("testSendRecv", &SocketTest::testSendRecv));
