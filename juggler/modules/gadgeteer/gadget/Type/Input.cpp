@@ -27,10 +27,12 @@ vjInput::vjInput( vjConfigChunk *c)
 
 vjInput::vjInput()
 {
-  cout << "  vjInput::vjInput() " << endl;
-  deviceAbilities = 0;
+   cout << "  vjInput::vjInput() " << endl;
+   deviceAbilities = 0;
    instName = NULL;
    sPort = NULL;
+   myThread = NULL;
+   active = 0;
 }
 
 vjInput::~vjInput()
