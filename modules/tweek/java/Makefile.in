@@ -77,6 +77,7 @@ JAVA_SRCS	= org/vrjuggler/tweek/Tweek.java			\
 
 JARS		= Tweek.jar		\
                   TweekBeans.jar	\
+                  TweekEvents.jar	\
                   TweekNet.jar		\
                   TweekServices.jar
 BEANS		= Viewers
@@ -95,6 +96,8 @@ NET_CLASSES	= org/vrjuggler/tweek/net/*.class		\
                   org/vrjuggler/tweek/net/corba/*.class		\
                   tweek/*.class					\
                   tweek/SubjectManagerPackage/*.class
+
+EVENT_CLASSES	= org/vrjuggler/tweek/event/*.class
 
 SERVICE_MF	= $(srcdir)/services.MF
 SERVICE_CLASSES	= org/vrjuggler/tweek/services/*.class
@@ -123,6 +126,9 @@ TweekNet.jar: $(NET_CLASSES)
 
 TweekBeans.jar: $(BEANS_MF) $(BEANS_CLASSES)
 	$(JAR) cvfm $@ $(BEANS_MF) $(BEANS_CLASSES)
+
+TweekEvents.jar: $(EVENT_CLASSES)
+	$(JAR) cvf $@ $(EVENT_CLASSES)
 
 TweekServices.jar: $(SERVICE_CLASSES)
 	$(JAR) cvfm $@ $(SERVICE_MF) $(SERVICE_CLASSES)

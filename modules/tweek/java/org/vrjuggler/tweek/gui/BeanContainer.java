@@ -42,6 +42,7 @@ import java.util.Vector;
 import javax.swing.*;
 import javax.swing.tree.TreeModel;
 import org.vrjuggler.tweek.beans.*;
+import org.vrjuggler.tweek.event.*;
 import org.vrjuggler.tweek.net.CommunicationEvent;
 import org.vrjuggler.tweek.net.CommunicationListener;
 import org.vrjuggler.tweek.net.corba.*;
