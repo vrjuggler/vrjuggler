@@ -8,7 +8,7 @@ srcdir		= .
 
 COMPILE		= CC -DHAVE_CONFIG_H ${VJ_INCLUDES}  -ptv  -nostdinc -woff 3322 -w2 -g
 VJ_INCLUDES	=  -I/usr/include/CC -I/usr/include -I${VJ_BASE_DIR}/include -I${srcdir}
-VJ_LIBS		= -B static -L${VJ_BASE_DIR}/lib32 -lJuggler -lJuggler_ogl -B dynamic -lm -lC
+VJ_LIBS		= -B dynamic -L${VJ_BASE_DIR}/lib32 -lJuggler -lJuggler_ogl -B dynamic -lm -lC
 VPATH		= .
 
 # This test program requires the following libraries to be linked:
