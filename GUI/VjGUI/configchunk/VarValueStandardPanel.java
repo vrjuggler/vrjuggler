@@ -80,7 +80,7 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 	    }
 	    else {
 		for (i = 0; i < Core.chunkdbs.size(); i++) {
-		    db = ((ChunkDBTreeModel)Core.chunkdbs.elementAt(i)).chunkdb;
+		    db = (ConfigChunkDB)Core.chunkdbs.elementAt(i);
 		    for (j = 0; j < db.size(); j++) {
 			ch = (ConfigChunk)db.elementAt(j);
 			for (k = 0; k < desc.enums.size(); k++) {

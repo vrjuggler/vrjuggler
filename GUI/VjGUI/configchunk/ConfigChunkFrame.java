@@ -128,7 +128,8 @@ public class ConfigChunkFrame extends JFrame
 	d.width = Math.min (d.width + 20, Core.screenWidth);
 	setSize(d);
 
-	setVisible(true);
+	show();
+	//setVisible(true);
 
 // no good - you just can't tell java to relocate a window...
 // 	if (Core.window_pos_kludge == true) {

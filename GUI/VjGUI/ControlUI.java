@@ -192,16 +192,6 @@ public class ControlUI
 
 	// --------------------- FINAL WIN STUFF ---------------------------------
 
- 	for (int i = 0; i < Core.descdb.size(); i++) {
-	    JMenuItem newmenu;
- 	    ChunkDesc d = (ChunkDesc)Core.descdb.elementAt(i);
- 	    helpdesc_menu.add (newmenu = new JMenuItem (d.getName()));
- 	    newmenu.addActionListener(this);
-	}
-
-	
-// 	totalSetFont ("", 12);
-
 	addWindowListener (this);
 	setSize(750,550);
 
@@ -211,26 +201,6 @@ public class ControlUI
 	Core.addLogMessageListener (this);
 	Core.descdb.addDescDBListener (this);
     }
-
-
-
-
-
-//      public void addDescDB (ChunkDescDB db) {
-//  	int i;
-//  	ChunkDesc d;
-//  	JMenuItem newmenu;
-
-//  	descdb_pane.addDescDB (db.name);
-//  	configure_pane.updateInsertTypes();
-//  	orgtree_pane.updateInsertTypes();
-//  	// update our helpdesc_menu
-//  	for (i = 0; i < db.size(); i++) {
-//  	    d = (ChunkDesc)db.elementAt(i);
-//  	    helpdesc_menu.add (newmenu = new JMenuItem (d.getName()));
-//  	    newmenu.addActionListener(this);
-//  	}
-//      }
 
 
 
@@ -350,6 +320,7 @@ public class ControlUI
 
 	
 
+    //: Creates an HTML frame displaying the named helpfile
     public void loadHelp (String s) {
 	//System.out.println ("loadhelp: " + s);
 	URL url = ClassLoader.getSystemResource (s);
@@ -359,6 +330,7 @@ public class ControlUI
     }
     
 
+    //: Callback when one of ControlUI's children is closed (this sucks)
     public void closedChild (JFrame f, boolean ok) {
 	if (f instanceof HTMLFrame) {
 	    help_frames.removeElement (f);
@@ -496,10 +468,6 @@ public class ControlUI
     }
 
 
-    public void refreshPerfData() {
-	perfanalyze_pane.refresh();
-    }
-
     public static void changeFont(Component cmp, Font font) {
 	cmp.setFont(font);
 	cmp.invalidate();
@@ -510,6 +478,11 @@ public class ControlUI
 	    }
 	}
 	return;
+    }
+
+
+    public void refreshPerfData() {
+	perfanalyze_pane.refresh();
     }
 
 
@@ -556,6 +529,9 @@ public class ControlUI
 
 
     /************************ DescDBListener stuff *************************/
+
+    //: When the global descDB adds an item, add it to the chunk-specific-
+    //+ help menu
     public void addDesc (DescDBEvent e) { 
 	JMenuItem newmenu;
 	ChunkDesc d = e.getNewDesc();
