@@ -221,8 +221,9 @@ bool XMLConfigCommunicator::interpretDOM_Node (Connect* con, DOM_Node& doc) {
 
         std::vector<Connect*>& connections 
             = JackalServer::instance()->getConnections();
-        for (unsigned int i = 0, n = connections.size(); i < n; i++)
-            connections[i]->addCommand (new CommandSendChunkDB (db, true));
+        for (unsigned int i = 0, n = connections.size(); i < n; i++) 
+            if (connections[i]->getConnectMode() == INTERACTIVE_CONNECT)
+                connections[i]->addCommand (new CommandSendChunkDB (db, true));
         JackalServer::instance()->releaseConnections();
     }
 
