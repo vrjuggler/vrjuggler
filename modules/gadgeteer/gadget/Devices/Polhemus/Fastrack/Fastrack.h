@@ -51,8 +51,10 @@
 #include <vpr/Thread/Thread.h>
 #include <jccl/Config/ConfigChunk.h>
 
+#include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Position.h>
+#include <gadget/Type/InputMixer.h>
 
 #include <gadget/Devices/Polhemus/FastrackStandalone.h>
 
@@ -60,7 +62,7 @@
 namespace gadget
 {
 
-class Fastrack : public Position, public Digital
+class Fastrack : public InputMixer<InputMixer<Input,Digital>, Position>
 {
 public:
    Fastrack();                                  // must call vjAnalog()? see vjAnalog.h
