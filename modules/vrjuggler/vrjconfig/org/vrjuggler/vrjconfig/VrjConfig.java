@@ -43,10 +43,11 @@ import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.*;
 import org.vrjuggler.jccl.editors.net.TinyBrowser;
 
-import org.vrjuggler.tweek.TweekCore;
 import org.vrjuggler.tweek.beans.BeanRegistry;
+import org.vrjuggler.tweek.beans.ClipboardUser;
 import org.vrjuggler.tweek.beans.FileLoader;
 import org.vrjuggler.tweek.beans.HelpProvider;
+import org.vrjuggler.tweek.beans.UndoHandler;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.event.*;
 import org.vrjuggler.tweek.services.EnvironmentService;
@@ -60,10 +61,11 @@ public class VrjConfig
    extends JPanel
    implements FileLoader
             , HelpProvider
+            , ClipboardUser
+            , UndoHandler
 {
    public VrjConfig()
    {
-      TweekCore.instance().registerFileActionGenerator(mFileActionGen);
       mToolbar = new ConfigToolbar(this);
 
       // Init the GUI
@@ -111,9 +113,6 @@ public class VrjConfig
       mEnvService = new EnvironmentServiceProxy();
    }
 
-   //--------------------------------------------------------------------------
-   // FileLoader implementation
-   //--------------------------------------------------------------------------
    public String getFileType()
    {
       return "VR Juggler Configuration";
@@ -187,6 +186,11 @@ public class VrjConfig
       return true;
    }
 
+   public int getOpenFileCount()
+   {
+      return mDesktop.getAllFrames().length;
+   }
+
    public String getHelpDescription()
    {
       return "VR Juggler Configuration Help ...";
@@ -208,9 +212,47 @@ public class VrjConfig
       mHelpBrowserFrame.setVisible(true);
    }
 
-   public int getOpenFileCount()
+   public void cutRequested()
    {
-      return mDesktop.getAllFrames().length;
+      mToolbar.fireAction(ConfigToolbar.CUT_ACTION);
+   }
+
+   public void copyRequested()
+   {
+      mToolbar.fireAction(ConfigToolbar.COPY_ACTION);
+   }
+
+   public void pasteRequested()
+   {
+      mToolbar.fireAction(ConfigToolbar.PASTE_ACTION);
+   }
+
+   public javax.swing.undo.UndoManager getUndoManager()
+   {
+      if ( mCurContextFrame == null )
+      {
+         return null;
+      }
+      else
+      {
+         return mCurContextFrame.getConfigContext().getConfigUndoManager();
+      }
+   }
+
+   public void undoRequested()
+   {
+      if ( mCurContextFrame != null )
+      {
+         mCurContextFrame.doUndo();
+      }
+   }
+
+   public void redoRequested()
+   {
+      if ( mCurContextFrame != null )
+      {
+         mCurContextFrame.doRedo();
+      }
    }
 
    /**
@@ -221,7 +263,8 @@ public class VrjConfig
    private ConfigIFrame toolbarContextChanged()
    {
       ConfigIFrame frame = new ConfigIFrame(mToolbar.getCurrentDirectory(),
-                                            mToolbar.getConfigContext(), this);
+                                            mToolbar.getConfigContext(), this,
+                                            this);
       frame.getEditor().setConfigContext(mToolbar.getConfigContext());
       addFrame(frame);
       return frame;
@@ -301,8 +344,6 @@ public class VrjConfig
 
    private ConfigIFrame mCurContextFrame = null;
 
-   private FileActionGenerator mFileActionGen = new FileActionGenerator();
-
    // JBuilder GUI variables
    private BorderLayout mBaseLayout = new BorderLayout();
    private ConfigToolbar mToolbar = null;
@@ -321,7 +362,7 @@ public class VrjConfig
       extends JInternalFrame implements ActionListener
    {
       public ConfigIFrame(File curDir, ConfigContext ctx,
-                          FileLoader fileLoader)
+                          FileLoader fileLoader, UndoHandler undoHandler)
       {
          super("Configuration Editor",
                true,
@@ -329,7 +370,8 @@ public class VrjConfig
                true,
                true);
          getContentPane().setLayout(new BorderLayout());
-         mContextToolbar = new ContextToolbar(curDir, ctx, this, fileLoader);
+         mContextToolbar = new ContextToolbar(curDir, ctx, this, fileLoader,
+                                              undoHandler);
 
          mToolbar.addActionListener(this);
          addActionListener(editor.getContextEditor().getElementTree());
@@ -367,6 +409,15 @@ public class VrjConfig
       public boolean doSaveAs()
       {
          return mContextToolbar.doSaveAs();
+      }
+
+      public void doUndo()
+      {
+         mContextToolbar.doUndo();
+      }
+      public void doRedo()
+      {
+         mContextToolbar.doRedo();
       }
 
       /**

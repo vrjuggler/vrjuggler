@@ -43,6 +43,7 @@ import javax.swing.event.UndoableEditListener;
 
 import org.vrjuggler.tweek.TweekCore;
 import org.vrjuggler.tweek.beans.FileLoader;
+import org.vrjuggler.tweek.beans.UndoHandler;
 import org.vrjuggler.tweek.event.*;
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
@@ -66,14 +67,18 @@ public class ContextToolbar
    extends JComponent
    implements VrjConfigConstants, UndoableEditListener
 {
+   private static final String SAVED_TITLE   = "Configuration Editor";
+   private static final String UNSAVED_TITLE = SAVED_TITLE + " < Unsaved >";
+
    public ContextToolbar(File curDir, ConfigContext ctx,
-                         VrjConfig.ConfigIFrame frame, FileLoader fileLoader)
+                         VrjConfig.ConfigIFrame frame, FileLoader fileLoader,
+                         UndoHandler undoHandler)
    {
       mConfigIFrame = frame;
 
-      // Set up file handling stuff needed for communication with the Tweek
-      // Java GUI.
-      mFileLoaderBean = fileLoader;
+      // Set up the stuff needed for communication with the Tweek Java GUI.
+      mFileLoaderBean  = fileLoader;
+      mUndoHandlerBean = undoHandler;
 
       try
       {
@@ -143,11 +148,13 @@ public class ContextToolbar
    {
       super.addNotify();
       TweekCore.instance().registerFileActionGenerator(mFileActionGen);
+      TweekCore.instance().registerUndoActionGenerator(mUndoActionGen);
    }
 
    public void removeNotify()
    {
       TweekCore.instance().unregisterFileActionGenerator(mFileActionGen);
+      TweekCore.instance().unregisterUndoActionGenerator(mUndoActionGen);
       super.removeNotify();
    }
 
@@ -156,8 +163,9 @@ public class ContextToolbar
       undoBtn.setEnabled(true);
       saveBtn.setEnabled(true);
       redoBtn.setEnabled(false);
-      mConfigIFrame.setTitle("Configuration Editor < Unsaved >");
-      mFileActionGen.fireChangePerformed(mFileLoaderBean);
+      mConfigIFrame.setTitle(UNSAVED_TITLE);
+      mFileActionGen.fireChangePerformed(e.getSource(), mFileLoaderBean);
+      mUndoActionGen.fireUndoActionPerformed(e.getSource(), mUndoHandlerBean);
    }
 
    public void addToToolbar(Component comp)
@@ -376,7 +384,7 @@ public class ContextToolbar
 
          // Inform the ConfigUndoManager that we have saved changes.
          context.getConfigUndoManager().saveHappened();
-         mConfigIFrame.setTitle("Configuration Editor");
+         mConfigIFrame.setTitle(SAVED_TITLE);
 
          // Disable the save button now that the save operation is done.
          saveBtn.setEnabled(false);
@@ -403,12 +411,12 @@ public class ContextToolbar
          redoBtn.setEnabled(true);
          if (context.getConfigUndoManager().getUnsavedChanges())
          {
-            mConfigIFrame.setTitle("Configuration Editor < Unsaved >");
+            mConfigIFrame.setTitle(UNSAVED_TITLE);
             saveBtn.setEnabled(true);
          }
          else
          {
-            mConfigIFrame.setTitle("Configuration Editor");
+            mConfigIFrame.setTitle(SAVED_TITLE);
             saveBtn.setEnabled(false);
          }
       }
@@ -426,11 +434,11 @@ public class ContextToolbar
          redoBtn.setEnabled(context.getConfigUndoManager().canRedo());
          if (context.getConfigUndoManager().getUnsavedChanges())
          {
-            mConfigIFrame.setTitle("Configuration Editor < Unsaved >");
+            mConfigIFrame.setTitle(UNSAVED_TITLE);
          }
          else
          {
-            mConfigIFrame.setTitle("Configuration Editor");
+            mConfigIFrame.setTitle(SAVED_TITLE);
          }
       }
    }
@@ -685,7 +693,7 @@ public class ContextToolbar
                // Indicate that a save operation was completed successfully.
                // We only do this here because we can guarantee that a child
                // of this component is the true source of the save event.
-               mFileActionGen.fireSavePerformed(mFileLoaderBean);
+               mFileActionGen.fireSavePerformed(saveBtn, mFileLoaderBean);
             }
          }
       });
@@ -699,7 +707,7 @@ public class ContextToolbar
                // Indicate that a save-as operation was completed successfully.
                // We only do this here because we can guarantee that a child
                // of this component is the true source of the save event.
-               mFileActionGen.fireSaveAsPerformed(mFileLoaderBean);
+               mFileActionGen.fireSaveAsPerformed(saveAsBtn, mFileLoaderBean);
             }
          }
       });
@@ -709,7 +717,8 @@ public class ContextToolbar
          public void actionPerformed(ActionEvent evt)
          {
             doUndo();
-            mFileActionGen.fireChangePerformed(mFileLoaderBean);
+            mFileActionGen.fireChangePerformed(undoBtn, mFileLoaderBean);
+            mUndoActionGen.fireUndoActionPerformed(undoBtn, mUndoHandlerBean);
          }
       });
 
@@ -718,7 +727,8 @@ public class ContextToolbar
          public void actionPerformed(ActionEvent evt)
          {
             doRedo();
-            mFileActionGen.fireChangePerformed(mFileLoaderBean);
+            mFileActionGen.fireChangePerformed(redoBtn, mFileLoaderBean);
+            mUndoActionGen.fireUndoActionPerformed(redoBtn, mUndoHandlerBean);
          }
       });
 
@@ -833,7 +843,7 @@ public class ContextToolbar
 
             // Inform the ConfigUndoManager that we have saved changes.
             context.getConfigUndoManager().saveHappened();
-            mConfigIFrame.setTitle("Configuration Editor");
+            mConfigIFrame.setTitle(SAVED_TITLE);
 
             status = true;
          }
@@ -1038,6 +1048,8 @@ public class ContextToolbar
 
    private FileLoader          mFileLoaderBean = null;
    private FileActionGenerator mFileActionGen = new FileActionGenerator();
+   private UndoHandler         mUndoHandlerBean = null;
+   private UndoActionGenerator mUndoActionGen = new UndoActionGenerator();
 
    /**
     * Our special context change listener used to toggle the save and expand
