@@ -83,8 +83,8 @@ vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
 
       // Get an address for the new socket, bind it, and attach the socket to
       // the correct node.
-      vpr::sim::SocketManager& sock_mgr =
-         vpr::sim::Controller::instance()->getSocketManager();
+      vpr::sim::Controller* controller = vpr::sim::Controller::instance();
+      vpr::sim::SocketManager& sock_mgr = controller->getSocketManager();
       client_sock.mLocalAddr  = mLocalAddr;              // Start with local socket's address
       client_sock.mLocalAddr.setPort(0);                 // Clear port so that we get a unique one
       client_sock.bind();                                // Bind to a port (and assign to net node)
@@ -94,6 +94,9 @@ vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
       sock_mgr.findRoute(peer_ptr, client_sock.getHandle());
 
       peer_ptr->completeConnection( client_sock.getHandle() );
+
+      controller->addConnectionCompletionEvent(controller->getClock().getCurrentTime(),
+                                               peer_ptr);
 
       // Make sure the peer's remote address has the right address.
       // Prior to this point, it has the port of the accepting socket.
