@@ -37,6 +37,9 @@ XALAN=		xalan.sh
 # use Xalan, change the value to 'update-xalan'.
 XSLT_TARGET=	update-xsltproc
 
+cfg-update-2.0-2.1:
+	$(MAKE) XSL_FILE=cfg_2.0-2.1.xsl $(XSLT_TARGET)
+
 desc-update-2.0-2.1:
 	$(MAKE) XSL_FILE=desc_2.0-2.1.xsl $(XSLT_TARGET)
 
