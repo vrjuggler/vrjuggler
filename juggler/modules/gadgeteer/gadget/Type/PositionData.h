@@ -42,12 +42,6 @@ namespace gadget
 /** InputData subclass for positional data. */
 class PositionData : public InputData
 {
-   // Hack around a GCC 3.3 bug on Mac OS X 10.3 that shows up with
-   // boost::is_polymorphic.
-#if defined(__MACH__) && defined(__APPLE_CC__) && __APPLE_CC__ <= 1666
-   bool dummy_;
-#endif
-
 public:
    /** Constructor. */
    PositionData()
