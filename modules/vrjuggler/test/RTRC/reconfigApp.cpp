@@ -1253,9 +1253,9 @@ bool reconfigApp::reconfigSimPos_check()
       return false;      
    }
 
-   vrj::Matrix mat = *(device->getPositionData().getPosition());
+   gmtl::Matrix44f mat = *(device->getPositionData().getPosition());
 
-   vrj::Vec3 pos = mat.getTrans();
+   gmtl::Vec3f pos = gmtl::makeTrans<gmtl::Vec3f>(mat);
 
    if ((pos[0] != 1.0) || (pos[1] != 2.0) || (pos[2] != 3.0))
    {
