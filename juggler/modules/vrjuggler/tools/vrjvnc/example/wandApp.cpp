@@ -177,8 +177,11 @@ void wandApp::myDraw()
    glMatrixMode(GL_MODELVIEW);
 
    // -- Draw box on wand --- //
-   gmtl::Matrix44f* wandMatrix;
-   wandMatrix = mWand->getData();      // Get the wand matrix
+   gmtl::Matrix44f wand_world = *(mWand->getData());
+   gmtl::Matrix44f wand_mat;
+   gmtl::Matrix44f inv_nav;
+   gmtl::invert(inv_nav, mNavMat);
+   wand_mat = inv_nav * wand_world;
 
    glPushMatrix();
    {
@@ -186,9 +189,8 @@ void wandApp::myDraw()
       glMultMatrixf(mNavMat.mData);
 
       // cout << "wand:\n" << *wandMatrix << endl;
-      /*
       glPushMatrix();
-         glMultMatrixf(wandMatrix->mData);  // Push the wand matrix on the stack
+         glMultMatrixf(wand_mat.mData);  // Push the wand matrix on the stack
 
          float wand_color[3];
          wand_color[0] = wand_color[1] = wand_color[2] = 0.0f;
@@ -207,7 +209,6 @@ void wandApp::myDraw()
          glColor3fv(wand_color);
          drawCube();
       glPopMatrix();
-      */
 
       // Draw a floor
       drawFloor();
