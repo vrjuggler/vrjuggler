@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../../../../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="http://www.vrjuggler.org/docbook_ab.css" type="text/css"?>
+<?morphon-document-settings
+  morphon.document.settings.whitespaces.amount="3"
+  morphon.document.settings.print.fixed.attributes="true"
+  morphon.document.settings.stylesheetpi.autoupdate="true"
+  morphon.document.settings.print.defaultvalues.attributes="false"
+  morphon.document.settings.relative.systemids="0"
+  morphon.document.settings.endofline.type="2"
+  morphon.document.settings.whitespaces.type="indent"
+?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <book>
    <bookinfo>
       <title>VR Juggler</title>
       <subtitle>The Programmer's Guide</subtitle>
-      <releaseinfo>Version 1.0.5</releaseinfo>
+      <releaseinfo>Version 1.0.6</releaseinfo>
       <pubdate>$Date$</pubdate>
    </bookinfo>
    <part id="intro.part">
@@ -127,7 +136,7 @@
                   <title><classname>vjApp</classname> hierarchy</title>
                   <mediaobject>
                      <imageobject>
-                        <imagedata align="center" fileref="figures/userOglApp_hierarchy.png" format="PNG" scalefit="1"/>
+                        <imagedata fileref="figures/userOglApp_hierarchy.png" format="PNG" align="center" scalefit="1"/>
                      </imageobject>
                   </mediaobject>
                </figure>
@@ -234,7 +243,7 @@ int main (int argc, char* argv[])
                <title>Kernel loop sequence</title>
                <mediaobject>
                   <imageobject>
-                     <imagedata align="center" fileref="figures/Kernel_Loop_Call_Sequence.png" format="PNG" scalefit="1"/>
+                     <imagedata fileref="figures/Kernel_Loop_Call_Sequence.png" format="PNG" align="center" scalefit="1"/>
                   </imageobject>
                </mediaobject>
             </figure>
@@ -284,7 +293,7 @@ int main (int argc, char* argv[])
                <title>Application object interface</title>
                <mediaobject>
                   <imageobject>
-                     <imagedata align="center" fileref="figures/userOglApp_hierarchy.png" format="PNG" scalefit="1"/>
+                     <imagedata fileref="figures/userOglApp_hierarchy.png" format="PNG" align="center" scalefit="1"/>
                   </imageobject>
                </mediaobject>
             </figure>
@@ -395,7 +404,7 @@ int main (int argc, char* argv[])
                   <title><classname>vjGlApp</classname> interface extensions to <classname>vjApp</classname></title>
                   <mediaobject>
                      <imageobject>
-                        <imagedata align="center" fileref="figures/userOglApp_hierarchy.png" format="PNG" scalefit="1"/>
+                        <imagedata fileref="figures/userOglApp_hierarchy.png" format="PNG" align="center" scalefit="1"/>
                      </imageobject>
                   </mediaobject>
                </figure>
@@ -419,7 +428,7 @@ int main (int argc, char* argv[])
                   <title><classname>vjPfApp</classname> interface extensions to <classname>vjApp</classname></title>
                   <mediaobject>
                      <imageobject>
-                        <imagedata align="center" fileref="figures/userPfApp_hierarchy.png" format="PNG" scalefit="1"/>
+                        <imagedata fileref="figures/userPfApp_hierarchy.png" format="PNG" align="center" scalefit="1"/>
                      </imageobject>
                   </mediaobject>
                </figure>
@@ -1225,7 +1234,7 @@ mat1.preMult(mat2);</programlisting>
               3.8, 0.9, 2.1, 0.1);
 vjMatrix mat2;
 
-mat2 = mat1.scale(3.0);</programlisting>
+mat2.scale(3.0, mat1);</programlisting>
                <para>Using the overloaded * operator works as:</para>
                <programlisting>vjMatrix mat1(0.0, 1.0, 2.3, 4.1, 8.3, 9.0, 2.2, 1.0, 5.6, 9.9, 9.7, 8.2,
               3.8, 0.9, 2.1, 0.1);
@@ -1519,7 +1528,7 @@ vj_mat = vjGetVjMatrix(pf_mat);</programlisting>
                <para>C, C++, and mathematics use matrices in row-major order. Access indices are shown in <xref linkend="Row-maj-table"/></para>
                <table id="Row-maj-table">
                   <title>Row-major access indices</title>
-                  <tgroup align="left" cols="5" colsep="1" rowsep="1">
+                  <tgroup cols="5" colsep="1" rowsep="1" align="left">
                      <tbody>
                         <row>
                            <entry align="center">(0,0)</entry>
@@ -1555,7 +1564,7 @@ vj_mat = vjGetVjMatrix(pf_mat);</programlisting>
                <para>OpenGL ordering specifies that the matrix has to be column-major in memory. Thus, to provide programmers with a way to pass a transformation matrix to OpenGL in one step (via <function>glMultMatrixf()</function>), the <classname>vjMatrix</classname> class maintains its internal matrix in column-major order. Note that in the following table, the given indices are what the cells have to be called in C/C++ notation because we are putting them back-to-back. This is illustrated in <xref linkend="Col-maj-table"/>.</para>
                <table id="Col-maj-table">
                   <title>Column-major access indices</title>
-                  <tgroup align="left" cols="4" colsep="1" rowsep="1">
+                  <tgroup cols="4" colsep="1" rowsep="1" align="left">
                      <tbody>
                         <row>
                            <entry align="center">(0,0)</entry>
@@ -1840,7 +1849,7 @@ wand_pos = *(mWand-&gt;getData());
                   <title>VR Juggler kernel control loop</title>
                   <mediaobject>
                      <imageobject>
-                        <imagedata align="center" fileref="figures/Kernel_Loop_Call_Sequence.png" format="PNG" scalefit="1"/>
+                        <imagedata fileref="figures/Kernel_Loop_Call_Sequence.png" format="PNG" align="center" scalefit="1"/>
                      </imageobject>
                   </mediaobject>
                </figure>
@@ -1996,7 +2005,7 @@ public:
                <title><classname>vjGlApp</classname> application class</title>
                <mediaobject>
                   <imageobject>
-                     <imagedata align="center" fileref="figures/userOglApp_hierarchy.png" format="PNG" scalefit="1"/>
+                     <imagedata fileref="figures/userOglApp_hierarchy.png" format="PNG" align="center" scalefit="1"/>
                   </imageobject>
                </mediaobject>
             </figure>
@@ -2288,7 +2297,7 @@ userApp::draw()
                   <title>VR Juggler OpenGL system</title>
                   <mediaobject>
                      <imageobject>
-                        <imagedata align="center" fileref="JugglerOGLSystemChart.png" format="PNG" scalefit="1"/>
+                        <imagedata fileref="JugglerOGLSystemChart.png" format="PNG" align="center" scalefit="1"/>
                      </imageobject>
                   </mediaobject>
                </figure>
@@ -2418,7 +2427,7 @@ public:
                <title><classname>vjPfApp</classname> application class</title>
                <mediaobject>
                   <imageobject>
-                     <imagedata align="center" fileref="figures/userPfApp_hierarchy.png" format="PNG" scalefit="1"/>
+                     <imagedata fileref="figures/userPfApp_hierarchy.png" format="PNG" align="center" scalefit="1"/>
                   </imageobject>
                </mediaobject>
             </figure>
