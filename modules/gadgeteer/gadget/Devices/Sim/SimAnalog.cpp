@@ -38,6 +38,8 @@ namespace gadget
 
 /** Default Constructor */
 SimAnalog::SimAnalog()
+   : mAnaStep(0.0f)
+   , mInitialValue(0.0f)
 {
    //vprDEBUG(vprDBG_ALL,4)<<"*** SimAnalog::SimPinchGlove()\n"<< vprDEBUG_FLUSH;
 }
@@ -73,10 +75,17 @@ bool SimAnalog::config(jccl::ConfigChunkPtr chunk)
    mSimKeysUp = readKeyList(key_inc_list);
    mSimKeysDown = readKeyList(key_dec_list);
 
-   int num_pairs = mSimKeysUp.size();
-
-   mAnaData = std::vector<AnalogData>( num_pairs ); // Initialize to all zeros
    mAnaStep = chunk->getProperty<float>( "anastep" );
+   mInitialValue = chunk->getProperty<float>("inital_value");
+
+   // Initialize all the data to the inital_value
+   size_t num_pairs = mSimKeysUp.size();
+   for (size_t i=0; i<num_pairs; ++i)
+   {
+      AnalogData data;
+      data.setAnalog(mInitialValue);
+      mAnaData.push_back(data);
+   }
 
    return true;
 }
