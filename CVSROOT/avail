@@ -8,8 +8,7 @@
 group|meisters|patrickh,allenb,subatomic
 
 unavail
-#avail|:meisters|CVSROOT
-avail||CVSROOT
+avail|:meisters|CVSROOT
 avail||juggler_1.0
 avail||juggler_docs
 avail||juggler
