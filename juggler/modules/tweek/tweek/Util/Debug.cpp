@@ -34,16 +34,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _TWEEK_DEBUG_H_
-#define _TWEEK_DEBUG_H_
-
 #include <tweek/tweekConfig.h>
 
-#include <vpr/Util/Debug.h>
+#include <tweek/Util/Debug.h>
 
-// Tweek debugging categories.
-
-// CORBA stuff.
-const vpr::GUID tweekDBG_CORBA("19138b82-ae13-4474-b0ee-4094c1c619a5");
-
-#endif /* _TWEEK_DEBUG_H_ */
+vprREGISTER_DBG_CATEGORY(DBG_CORBA, tweekDBG_CORBA);
