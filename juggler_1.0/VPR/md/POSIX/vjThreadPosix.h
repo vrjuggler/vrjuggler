@@ -54,6 +54,9 @@
 #include <signal.h>
 #include <sched.h>
 
+#ifdef HAVE_INTTYPES_H
+#include <inttypes.h>
+#endif
 
 #ifdef VJ_OS_Solaris
 typedef unsigned int thread_id_t;
