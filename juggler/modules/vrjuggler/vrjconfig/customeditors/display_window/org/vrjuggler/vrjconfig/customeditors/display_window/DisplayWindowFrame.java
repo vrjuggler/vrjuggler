@@ -237,20 +237,6 @@ public class DisplayWindowFrame
       mWinStereoItem.setSelected(stereo);
    }
 
-   /**
-    * Positions the given Dialog object relative to this window frame.
-    */
-   private void positionDialog(Dialog dialog, Container parent)
-   {
-      Dimension dlg_size   = dialog.getPreferredSize();
-      Dimension frame_size = parent.getSize();
-      Point loc            = parent.getLocation();
-
-      // Set the location of the dialog so that it is centered with respect
-      // to this frame.
-      dialog.setLocation((frame_size.width - dlg_size.width) / 2 + loc.x,
-                         (frame_size.height - dlg_size.height) / 2 + loc.y);
-   }
 
    private DisplayWindowFrame_this_configElementAdapter mElementListener = null;
    private boolean mHideMouse = false;
@@ -298,12 +284,13 @@ public class DisplayWindowFrame
 
    void windowPropsEditSelected(ActionEvent e)
    {
+      Container parent =
+         (Container) SwingUtilities.getAncestorOfClass(Container.class, this);
       DisplayWindowStartDialog dlg =
-         new DisplayWindowStartDialog(mElement, mDesktopSize);
-      positionDialog(dlg, (Container) SwingUtilities.getRoot(this));
-      dlg.setVisible(true);
+         new DisplayWindowStartDialog(parent, mContext, mElement,
+                                      mDesktopSize);
 
-      if ( dlg.getStatus() == DisplayWindowStartDialog.OK_OPTION )
+      if ( dlg.showDialog() == DisplayWindowStartDialog.OK_OPTION )
       {
          Rectangle bounds  = dlg.getDisplayWindowBounds();
          mElement.setProperty("origin", 0, new Integer(bounds.x), mContext);
@@ -370,13 +357,13 @@ public class DisplayWindowFrame
 
       if ( mSelectedViewport.getDefinition().getToken().equals(EditorConstants.surfaceViewportType) )
       {
+         Container parent =
+            (Container) SwingUtilities.getAncestorOfClass(Container.class,
+                                                          this);
          SurfaceViewportCreateDialog dlg =
-            new SurfaceViewportCreateDialog(mContext, mSelectedViewport);
-         positionDialog(dlg, owner);
-         dlg.setVisible(true);
+            new SurfaceViewportCreateDialog(parent, mContext, mSelectedViewport);
 
-         status = dlg.getStatus();
-         if ( status == DisplayWindowStartDialog.OK_OPTION )
+         status = dlg.showDialog();
          {
             Rectangle bounds = dlg.getViewportBounds();
             origin_x = (float) bounds.x / 100.0f;
@@ -434,12 +421,14 @@ public class DisplayWindowFrame
       }
       else
       {
+         Container parent =
+            (Container) SwingUtilities.getAncestorOfClass(Container.class,
+                                                          this);
          SimulatorViewportCreateDialog dlg =
-            new SimulatorViewportCreateDialog(mContext, mSelectedViewport);
-         positionDialog(dlg, owner);
-         dlg.setVisible(true);
+            new SimulatorViewportCreateDialog(parent, mContext,
+                                              mSelectedViewport);
 
-         status = dlg.getStatus();
+         status = dlg.showDialog();
          if ( status == DisplayWindowStartDialog.OK_OPTION )
          {
             Rectangle bounds = dlg.getViewportBounds();

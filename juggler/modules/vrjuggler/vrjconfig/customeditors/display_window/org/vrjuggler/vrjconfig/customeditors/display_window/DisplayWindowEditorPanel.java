@@ -373,35 +373,17 @@ public class DisplayWindowEditorPanel
 
    private Container getOwner()
    {
-      Object owner = SwingUtilities.getRoot(this);
-      System.out.println("owner class: " + owner.getClass());
-      return (Container) owner;
-   }
-
-   /**
-    * Positions the given Dialog object relative to this window frame.
-    */
-   private void positionDialog(Dialog dialog, Container parent)
-   {
-      Dimension dlg_size   = dialog.getPreferredSize();
-      Dimension frame_size = parent.getSize();
-      Point loc            = parent.getLocation();
-
-      // Set the location of the dialog so that it is centered with respect
-      // to this frame.
-      dialog.setLocation((frame_size.width - dlg_size.width) / 2 + loc.x,
-                         (frame_size.height - dlg_size.height) / 2 + loc.y);
+      return (Container) SwingUtilities.getAncestorOfClass(Container.class,
+                                                           this);
    }
 
    void createDisplayClicked(ActionEvent e)
    {
-      Container owner = getOwner();
       DisplayWindowStartDialog dlg =
-         new DisplayWindowStartDialog(mCurrentResolution);
-      positionDialog(dlg, owner);
-      dlg.setVisible(true);
+         new DisplayWindowStartDialog(getOwner(), mContext,
+                                      mCurrentResolution);
 
-      if ( dlg.getStatus() == DisplayWindowStartDialog.OK_OPTION )
+      if ( dlg.showDialog() == DisplayWindowStartDialog.OK_OPTION )
       {
          ConfigBrokerProxy broker = new ConfigBrokerProxy();
          ConfigDefinition window_def =
@@ -506,12 +488,10 @@ public class DisplayWindowEditorPanel
 
    void addSurfaceViewportClicked(ActionEvent e)
    {
-      Container owner = getOwner();
-      SurfaceViewportCreateDialog dlg = new SurfaceViewportCreateDialog();
-      positionDialog(dlg, owner);
-      dlg.setVisible(true);
+      SurfaceViewportCreateDialog dlg =
+         new SurfaceViewportCreateDialog(getOwner());
 
-      if ( dlg.getStatus() == DisplayWindowStartDialog.OK_OPTION )
+      if ( dlg.showDialog() == DisplayWindowStartDialog.OK_OPTION )
       {
          ConfigBrokerProxy broker = new ConfigBrokerProxy();
          ConfigDefinition vp_def =
@@ -575,12 +555,10 @@ public class DisplayWindowEditorPanel
 
    void addSimulatorViewportClicked(ActionEvent e)
    {
-      Container owner = getOwner();
-      SimulatorViewportCreateDialog dlg = new SimulatorViewportCreateDialog();
-      positionDialog(dlg, owner);
-      dlg.setVisible(true);
+      SimulatorViewportCreateDialog dlg =
+         new SimulatorViewportCreateDialog(getOwner());
 
-      if ( dlg.getStatus() == DisplayWindowStartDialog.OK_OPTION )
+      if ( dlg.showDialog() == DisplayWindowStartDialog.OK_OPTION )
       {
          ConfigBrokerProxy broker = new ConfigBrokerProxy();
          ConfigDefinition vp_def =

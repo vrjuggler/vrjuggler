@@ -35,19 +35,22 @@ package org.vrjuggler.vrjconfig.customeditors.display_window;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import info.clearthought.layout.*;
-import javax.swing.border.*;
 
-import org.vrjuggler.jccl.config.ConfigElement;
+import org.vrjuggler.tweek.services.EnvironmentService;
+import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
+import org.vrjuggler.jccl.config.*;
 
 
 public class DisplayWindowStartDialog
    extends JDialog
 {
-   public DisplayWindowStartDialog(Dimension resolution)
+   public DisplayWindowStartDialog(Container parent, ConfigContext ctx,
+                                   Dimension resolution)
       throws HeadlessException
    {
       super();
@@ -61,6 +64,8 @@ public class DisplayWindowStartDialog
       try
       {
          jbInit();
+         setupButtonPanel();
+
          setSpinnerModel(mRedDepthSpinner, 1, 1, 8);
          setSpinnerModel(mGreenDepthSpinner, 1, 1, 8);
          setSpinnerModel(mBlueDepthSpinner, 1, 1, 8);
@@ -77,9 +82,11 @@ public class DisplayWindowStartDialog
 
       this.setResizable(false);
       this.pack();
+      this.setLocationRelativeTo(parent);
    }
 
-   public DisplayWindowStartDialog(ConfigElement winElt, Dimension resolution)
+   public DisplayWindowStartDialog(Container parent, ConfigContext ctx,
+                                   ConfigElement winElt, Dimension resolution)
       throws HeadlessException
    {
       super();
@@ -93,6 +100,7 @@ public class DisplayWindowStartDialog
       try
       {
          jbInit();
+         setupButtonPanel();
 
          mNameField.setText(winElt.getName());
 
@@ -133,6 +141,7 @@ public class DisplayWindowStartDialog
 
       this.setResizable(false);
       this.pack();
+      this.setLocationRelativeTo(parent);
    }
 
    private void setSpinnerModel(JSpinner spinner, int value, int min, int max)
@@ -143,8 +152,9 @@ public class DisplayWindowStartDialog
       spinner.setModel(model);
    }
 
-   public int getStatus()
+   public int showDialog()
    {
+      setVisible(true);
       return status;
    }
 
@@ -472,6 +482,24 @@ public class DisplayWindowStartDialog
       mButtonPanel.add(mOkButton, null);
       mButtonPanel.add(mCancelButton, null);
       mButtonPanel.add(mHelpButton, null);
+   }
+
+   private void setupButtonPanel()
+   {
+      if ( (new EnvironmentServiceProxy()).getOS() == EnvironmentService.Windows )
+      {
+         mButtonPanelLayout.setAlignment(FlowLayout.CENTER);
+         mButtonPanel.add(mOkButton, null);
+         mButtonPanel.add(mCancelButton, null);
+         mButtonPanel.add(mHelpButton, null);
+      }
+      else
+      {
+         mButtonPanelLayout.setAlignment(FlowLayout.RIGHT);
+         mButtonPanel.add(mHelpButton, null);
+         mButtonPanel.add(mCancelButton, null);
+         mButtonPanel.add(mOkButton, null);
+      }
    }
 
    private int status = CANCEL_OPTION;
