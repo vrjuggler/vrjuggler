@@ -1848,7 +1848,7 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           samples/ogl/digitalGlove/Makefile samples/ogl/simpleGlove/Makefile
           samples/ogl/torus/Makefile samples/ogl/wand/Makefile
           samples/pf/Makefile samples/pf/pfConfigNav/Makefile
-          samples/pf/pfNav/Makefile samples/pf/pfSwitcher/Makefile
+          samples/pf/pfNav/Makefile
           tools/Makefile Doc/Makefile
           release/mtree/VJ.data.dist release/mtree/VJ.include.dist
           release/mtree/VJ.install.dist release/mtree/VJ.samples.dist

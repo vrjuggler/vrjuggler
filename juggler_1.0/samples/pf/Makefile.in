@@ -10,9 +10,9 @@
 # -----------------------------------------------------------------------------
 default: all
 
-all: pfConfigNav pfNav pfSwitcher
+all: pfConfigNav pfNav
 
-pfConfigNav pfNav pfSwitcher::
+pfConfigNav pfNav::
 	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
@@ -21,4 +21,3 @@ pfConfigNav pfNav pfSwitcher::
 clean:
 	-cd pfConfigNav && $(MAKE) clean
 	-cd pfNav       && $(MAKE) clean
-	-cd pfSwitcher  && $(MAKE) clean
