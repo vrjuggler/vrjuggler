@@ -47,6 +47,9 @@
 //!PUBLIC_API:
 class vjDigitalInterface : public vjDeviceInterface
 {
+protected:
+   vjDigitalInterface(vjDigitalInterface& other) {;}
+
 public:
    vjDigitalInterface() : mDigProxy(NULL)
    {;}
