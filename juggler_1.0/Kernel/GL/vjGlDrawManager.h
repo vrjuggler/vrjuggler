@@ -98,7 +98,7 @@ public:
    //: Set the app the draw should interact with.
    virtual void setApp(vjApp* _app);
 
-   //: Return the app we are rednering
+   //: Return the app we are rendering
    vjGlApp* getApp();
 
    void setDisplayManager(vjDisplayManager* _dispMgr);
@@ -165,6 +165,9 @@ protected:
    //: Set the dirty bits off all the gl windows
    void dirtyAllWindows();
 
+   //: Is the window a valid window for the draw manager
+   bool isValidWindow(vjGlWindow* win);
+
 
 protected:
    // --- Config Data --- //
@@ -172,7 +175,7 @@ protected:
 
    // --- API data --- //
    vjGlApp*                 mApp;      //: The OpenGL application
-   std::vector<vjGlWindow*> wins;     //: A list of the windows in the system
+   std::vector<vjGlWindow*> mWins;     //: A list of the windows in the system
    std::vector<vjGlPipe*>   pipes;    //: A list of the pipes in the system
 
    // --- Helper field data --- //

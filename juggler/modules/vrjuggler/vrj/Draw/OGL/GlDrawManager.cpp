@@ -150,13 +150,13 @@ void vjGlDrawManager::initDrawing()
 //: Callback when display is added to display manager
 //! PRE: Must be in kernel controlling thread
 //! NOTE: This function can only be called by the display manager
-//+      functioning in the kernel thread to signal a new display added
+//+      functioning on behalf of a thread the holds the kernel
+//+      reconfiguration lock.
 //+      This guarantees that we are not rendering currently.
 //+      We will most likely be waiting for a render trigger.
 void vjGlDrawManager::addDisplay(vjDisplay* disp)
 {
    vjASSERT(disp != NULL);    // Can't add a null display
-//**//   vjGuard<vjSemaphore> runtime_guard(mRuntimeConfigSema);     // Have to hold to configure
 
    vjDEBUG(vjDBG_DRAW_MGR,0) << "vjGlDrawManager:addDisplay: " << disp << endl << vjDEBUG_FLUSH;
 
@@ -164,7 +164,7 @@ void vjGlDrawManager::addDisplay(vjDisplay* disp)
    //	-- Store the window in the wins vector
    vjGlWindow* new_win = vjKernel::instance()->getSysFactory()->getGLWindow();   // Create gl window
    new_win->config(disp);                                            // Configure it
-   wins.push_back(new_win);                                          // Add to our local window list
+   mWins.push_back(new_win);                                          // Add to our local window list
 
    // -- Create any needed Pipes & Start them
    int pipe_num = new_win->getDisplay()->getPipe();    // Find pipe to add it too
@@ -176,40 +176,46 @@ void vjGlDrawManager::addDisplay(vjDisplay* disp)
          vjGlPipe* new_pipe = new vjGlPipe(pipe_num, this);  // Create a new pipe to use
          pipes.push_back(new_pipe);                          // Add the pipe
          new_pipe->start();                                  // Start the pipe running
-                                                            // NOTE: Run pipe even if now windows.  Then it waits for windows.
+                                                             // NOTE: Run pipe even if now windows.  Then it waits for windows.
       }
    }
 
    // -- Add window to the correct pipe
    vjGlPipe* pipe;                           // The pipe to assign it to
    pipe = pipes[pipe_num];                    // ASSERT: pipeNum is in the valid range
-   pipe->addWindow(new_win);             // Window has been added
+   pipe->addWindow(new_win);              // Window has been added
 
+   vjASSERT(isValidWindow(new_win));      // Make sure it was added to draw manager
    // Dump the state
    vjDEBUG(vjDBG_ALL, 0) << (*this) << vjDEBUG_FLUSH;
 }
 
 
 //: Callback when display is removed to display manager
+//! PRE: disp must be a valid display that we have
+//! POST: window for disp is removed from the draw manager and child pipes
 void vjGlDrawManager::removeDisplay(vjDisplay* disp)
 {
    vjGlPipe*   pipe(NULL); // The pipe to remove it from
    vjGlWindow* win(NULL);  // Window to remove
 
-   for(int i=0;i<wins.size();i++)
+   for(int i=0;i<mWins.size();i++)
    {
-      if(wins[i]->getDisplay() == disp)      // FOUND it
+      if(mWins[i]->getDisplay() == disp)      // FOUND it
       {
-         win = wins[i];
+         win = mWins[i];
          pipe = pipes[win->getDisplay()->getPipe()];
       }
    }
 
-   // Remove the window from the pipe
+   // Remove the window from the pipe and our local list
    if(win != NULL)
    {
       vjASSERT(pipe != NULL);
-      pipe->removeWindow(win);
+      vjASSERT(isValidWindow(win));
+      pipe->removeWindow(win);                                                   // Remove from pipe
+      mWins.erase(std::remove(mWins.begin(),mWins.end(),win), mWins.end());      // Remove from draw manager
+      vjASSERT(!isValidWindow(win));
    }
    else
    {
@@ -261,10 +267,21 @@ bool vjGlDrawManager::configCanHandle(vjConfigChunk* chunk)
 void vjGlDrawManager::dirtyAllWindows()
 {
     // Create Pipes & Add all windows to the correct pipe
-   for(int winId=0;winId<wins.size();winId++)   // For each window we created
+   for(int winId=0;winId<mWins.size();winId++)   // For each window we created
    {
-      wins[winId]->setDirtyContext(true);
+      mWins[winId]->setDirtyContext(true);
    }
+}
+
+
+bool vjGlDrawManager::isValidWindow(vjGlWindow* win)
+{
+   bool ret_val = false;
+   for(int i=0;i<mWins.size();i++)
+      if(mWins[i] == win)
+         ret_val = true;
+
+   return ret_val;
 }
 
 
@@ -448,11 +465,11 @@ void vjGlDrawManager::outStream(ostream& out)
 {
     out     << "========== vjGlDrawManager: " << (void*)this << " =========" << endl
 	         << "\tapp:" << (void*)mApp << endl
-            << "\tWins:" << wins.size();
+            << "\tWins:" << mWins.size();
 
-    for(std::vector<vjGlWindow*>::iterator i = wins.begin(); i != wins.end(); i++)
+    for(int i = 0; i < mWins.size(); i++)
     {
-	   out << "\n\t\tvjGlWindow:\n" << (*i) << endl;
+	   out << "\n\t\tvjGlWindow:\n" << mWins[i] << endl;
     }
     out << "=======================================" << endl;
 }

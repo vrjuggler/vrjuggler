@@ -34,7 +34,7 @@
 //! NOTE: A note on reciever access:
 //+  Clients of juggler should access tracker recievers as [0-n]
 //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
-//+  then you can access them, in order, as 0,1,2.
+//+  then you can access the data, in order, as 0,1,2.
 //
 // See also: vjPosition
 //---------------------------------------------------------------------------
@@ -68,8 +68,8 @@ class vjFlock : public vjPosition {
 	~vjFlock();
 
 
-   //: configure the flock with a config chunk
-   virtual bool config(vjConfigChunk* c);
+    //: configure the flock with a config chunk
+    virtual bool config(vjConfigChunk* c);
 
     //: begin sampling
     int startSampling();
@@ -110,12 +110,12 @@ class vjFlock : public vjPosition {
     //  ex: unix - "/dev/ttyd3", win32 - "COM3" <BR>
     //! PRE: flock.isActive() must be false to use this function
     void	    setPort( const char* const serialPort );
-    
+
     //: get the port used
     //  this will be a string in the form of the native OS descriptor <BR>
     //  ex: unix - "/dev/ttyd3", win32 - "COM3"
     inline const char*  getPort() const { return mFlockOfBirds.getPort(); }
-    
+
 	
     //: set the baud rate
     //  this is generally 38400, consult flock manual for other rates. <BR>
@@ -199,7 +199,6 @@ class vjFlock : public vjPosition {
 
     //: Set the report rate that the flock uses
     inline const char& getReportRate() const {return mFlockOfBirds.getReportRate(); }
-
 
 
 	//: get the x position of the i'th reciever

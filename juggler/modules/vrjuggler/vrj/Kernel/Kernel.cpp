@@ -133,10 +133,9 @@ vjGuard<vjSemaphore> runtime_guard(mRuntimeConfigSema);     // Have to hold to c
    }
 }
 
-bool vjKernel::stopApplication()
+void vjKernel::stopApplication()
 {
    setApplication(NULL);
-   return true;
 }
 
 //-----------------------------------------------

@@ -26,7 +26,7 @@
 // to get
 //! ARGS: birdNum - The number of the bird we care about
 //! ARGS:bufferIndex - the value of current, progress, or valid (it is an offset in the array)
-// XXX: We are going to say the birds are 1 based
+// XXX: We are going to say the birds are 0 based
 int vjFlock::getBirdIndex(int birdNum, int bufferIndex)
 {
    int ret_val = (birdNum*3)+bufferIndex;
@@ -158,20 +158,17 @@ int vjFlock::startSampling()
       if (theData != NULL)
          getMyMemPool()->deallocate((void*)theData);
       if (mDataTimes != NULL)
-	  delete mDataTimes;
+	      delete mDataTimes;
 
-      // XXX: What is the +1 for
-      // +1 is because birds are 1 based, not zero based
+      // Allocate buffer space for birds
       int numbuffs = (mFlockOfBirds.getNumBirds()+1)*3;
       theData = (vjMatrix*) new vjMatrix[numbuffs];
       mDataTimes = new vjTimeStamp[numbuffs];
 
-      // Reset current, progress, and valid
+      // Reset current, progress, and valid indices
       resetIndexes();
 
-      vjDEBUG(vjDBG_ALL,0) << "    Getting flock ready....\n" << vjDEBUG_FLUSH;
-
-
+         vjDEBUG(vjDBG_ALL,0) << "    Getting flock ready....\n" << vjDEBUG_FLUSH;
       mFlockOfBirds.start();
 
       //sanity check.. make sure birds actually started
@@ -206,35 +203,21 @@ int vjFlock::sample()
       return 0;
 
    int i;
-   //int tmp;
-
-   vjTimeStamp sampletime;
+      vjTimeStamp sampletime;
    sampletime.set();
    mFlockOfBirds.sample();
 
-   //: XXX: +1 for the transmitter???
+   // For each bird
    for (i=0; i < (mFlockOfBirds.getNumBirds()); i++)
    {
-      // int index = progress*(mFlockOfBirds.getNumBirds()+1)+i-1;
+      // Get the index to the current read buffer
       int index = getBirdIndex(i,progress);
-
-      // Sets index to current read buffer
 
 
       // We add 1 to "i" to account for the fact that aFlock is 1-based
-
       theData[index].makeZYXEuler(mFlockOfBirds.zRot( i+1 ),
                                   mFlockOfBirds.yRot( i+1 ),
                                   mFlockOfBirds.xRot( i+1 ));
-
-
-
-      /*
-      theData[index].makeXYZEuler(mFlockOfBirds.xRot( i ),
-                                  mFlockOfBirds.yRot( i ),
-                                  mFlockOfBirds.zRot( i ));
-                                  */
-
 
       theData[index].setTrans(mFlockOfBirds.xPos( i+1 ),
                               mFlockOfBirds.yPos( i+1 ),
@@ -257,7 +240,7 @@ int vjFlock::sample()
       theData[index] = world_T_reciever;                                     // Store corrected xform back into data
 
 
-    //if (i == 1)
+      //if (i == 1)
          //vjDEBUG(vjDBG_ALL,2) << "Flock: bird1: xformed:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
    }
 
@@ -300,7 +283,7 @@ int vjFlock::stopSampling()
 vjMatrix* vjFlock::getPosData( int d ) // d is 0 based
 {
     if (this->isActive() == false)
-	return NULL;
+   	return NULL;
 
     return (&theData[getBirdIndex(d,current)]);
 }
@@ -325,32 +308,30 @@ void vjFlock::updateData()
    for(int i=0;i<getNumBirds();i++)
       theData[getBirdIndex(i,current)] = theData[getBirdIndex(i,valid)];   // first hand
 
-
    // Locks and then swap the indicies
    swapCurrentIndexes();
-
 
    return;
 }
 
 void vjFlock::setHemisphere(const BIRD_HEMI& h)
 {
-    if (this->isActive())
-    {
-	vjDEBUG(vjDBG_ALL,0) << "Cannot change the hemisphere while active\n" << vjDEBUG_FLUSH;
-	return;
-    }
-    mFlockOfBirds.setHemisphere( h );
+   if (this->isActive())
+   {
+      vjDEBUG(vjDBG_ALL,0) << "Cannot change the hemisphere while active\n" << vjDEBUG_FLUSH;
+      return;
+   }
+   mFlockOfBirds.setHemisphere( h );
 }
 
 void vjFlock::setFilterType(const BIRD_FILT& f)
 {
-  if (this->isActive())
-  {
+   if (this->isActive())
+   {
       vjDEBUG(vjDBG_ALL,0) << "Cannot change filters while active\n" << vjDEBUG_FLUSH;
       return;
-  }
-  mFlockOfBirds.setFilterType( f );
+   }
+   mFlockOfBirds.setFilterType( f );
 }
 
 void vjFlock::setReportRate(const char& rRate)
