@@ -38,7 +38,9 @@ top_srcdir	= @top_srcdir@
 # Prefix for recursive stuff.
 DIRPRFX		= TestCases/
 
+ifeq (@PERFORMER_API@, Y)
 SUBDIR		= Pf
+endif
 
 $(RECTARGET): recursive
 
