@@ -44,6 +44,7 @@ public interface ConfigTokens
 {
    public static final String SETTINGS_INSTRUCTION  = "org-vrjuggler-jccl-settings";
    public static final String INCLUDE_INSTRUCTION   = "org-vrjuggler-jccl-include";
+   public static final String INCLUDE_DESC_INSTRUCTION   = "org-vrjuggler-jccl-includedesc";
 
    public static final String int_TOKEN           = "int";
    public static final String float_TOKEN         = "float";

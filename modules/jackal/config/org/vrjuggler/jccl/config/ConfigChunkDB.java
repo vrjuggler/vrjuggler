@@ -63,7 +63,6 @@ public class ConfigChunkDB
    public ConfigChunkDB()
    {
       super();
-      chunks = new Vector();
       targets = new ArrayList();
       name = "Untitled";
 
@@ -83,14 +82,7 @@ public class ConfigChunkDB
       {
          ConfigChunkDB db = (ConfigChunkDB)super.clone();
          db.targets = (ArrayList)targets.clone();
-         ConfigChunk ch;
-         int i, n = chunks.size();
-         db.chunks = new Vector(n);
-         for (i = 0; i < n; i++)
-         {
-            ch = (ConfigChunk)chunks.get(i);
-            db.chunks.add (new ConfigChunk(ch));
-         }
+         db.mDoc = (Document)mDoc.clone();
          return db;
       }
       catch (CloneNotSupportedException e)
@@ -100,13 +92,13 @@ public class ConfigChunkDB
    }
 
    /** Sets the identifier string for this DB */
-   public final void setName(String name)
+   public void setName(String name)
    {
       this.name = name;
    }
 
    /** Returns the identifier string for this DB */
-   public final String getName()
+   public String getName()
    {
       return name;
    }
@@ -151,7 +143,6 @@ public class ConfigChunkDB
       {
          SAXBuilder builder = new SAXBuilder();
          mDoc = builder.build(stream);
-         loadChunks(mDoc.getRootElement());
       }
       catch (JDOMException e)
       {
@@ -172,7 +163,6 @@ public class ConfigChunkDB
       throws IOException
    {
       mDoc = document;
-      loadChunks(mDoc.getRootElement());
    }
 
    public void build(Element elem)
@@ -180,7 +170,6 @@ public class ConfigChunkDB
    {
       // XXX: Is this right?
       mDoc.getRootElement().addContent(elem);
-      loadChunks(elem);
    }
 
    public void write(File file)
@@ -220,58 +209,36 @@ public class ConfigChunkDB
     * Populates the internal collection of chunks with ConfigChunk objects
     * created from the children of docRoot.
     */
-   private void loadChunks(Element docRoot)
-      throws IOException
-   {
-      if ( docRoot.getName().equals(chunk_db_TOKEN) )
-      {
-         List children = docRoot.getChildren();
-         Iterator i    = children.iterator();
-
-         while ( i.hasNext() )
-         {
-            Element chunk_elem = (Element) i.next();
-
-            // We call insertOrdered() directly here because we already have
-            // chunk_elem as a child of our DOM tree.
-            insertOrdered(new ConfigChunk(chunk_elem));
-         }
-      }
-      else
-      {
-         throw new IOException("Unrecognized element '" +
-                               docRoot.getName() + "'.");
-      }
-   }
-
-   /** Returns the difference between self and db.
-    *  Build a new ConfigChunkDB that's a "difference" of its arguments -
-    *  the returned db contains every chunk in db that isn't in self,
-    *  or that differs from the same-named chunk in self.
-    */
-   public ConfigChunkDB diff(ConfigChunkDB d)
-   {
-      ConfigChunk c1, c2;
-      ConfigChunkDB newdb = new ConfigChunkDB();
-
-      for (int i = 0; i < d.size(); i++)
-      {
-         c1 = (ConfigChunk)d.chunks.get(i);
-         c2 = get(c1.getName());
-         if ((c2 == null) || (!c1.equals(c2)))
-         {
-            newdb.insertOrdered(c1);
-         }
-      }
-      return newdb;
-   }
+//   private void loadChunks(Element docRoot)
+//      throws IOException
+//   {
+//      if ( docRoot.getName().equals(chunk_db_TOKEN) )
+//      {
+//         List children = docRoot.getChildren();
+//         Iterator i    = children.iterator();
+//
+//         while ( i.hasNext() )
+//         {
+//            Element chunk_elem = (Element) i.next();
+//
+//            // We call insertOrdered() directly here because we already have
+//            // chunk_elem as a child of our DOM tree.
+//            insertOrdered(new ConfigChunk(chunk_elem));
+//         }
+//      }
+//      else
+//      {
+//         throw new IOException("Unrecognized element '" +
+//                               docRoot.getName() + "'.");
+//      }
+//   }
 
    /**
     * Gets the number of ConfigChunks in this database.
     */
-   public final int size()
+   public int size()
    {
-      return chunks.size();
+      return mDoc.getRootElement().getChildren().size();
    }
 
    /**
@@ -282,33 +249,43 @@ public class ConfigChunkDB
    public ConfigChunk get(int idx)
       throws IndexOutOfBoundsException
    {
-      return(ConfigChunk)chunks.get(idx);
+      Element chunk_elt = (Element)mDoc.getRootElement().getChildren().get(idx);
+      return new ConfigChunk(chunk_elt);
    }
 
    /** Removed all ConfigChunks from self and notifies ChunkDBListeners. */
    public void clear()
    {
-      chunks.clear();
+      mDoc.getRootElement().removeChildren();
       notifyChunkDBTargets(new ChunkDBEvent(this, ChunkDBEvent.REMOVEALL, null));
    }
 
    /** Removes the ConfigChunk at index i and notifies ChunkDBListeners.
     *  @return The object that was removed
     */
-   public ConfigChunk remove(int i)
+   public ConfigChunk remove(int idx)
       throws IndexOutOfBoundsException
    {
-      ConfigChunk ch = (ConfigChunk)chunks.get(i);
-      ChunkDBEvent e = new ChunkDBEvent(this, ChunkDBEvent.REMOVE, ch);
+      // Remove the chunk
+      Element chunk_elt = (Element)mDoc.getRootElement().getChildren().get(idx);
+      return remove(chunk_elt);
+   }
 
-      // We have to remove the chunk's node from our DOM tree.
-      Element chunk_elem = ch.getNode();
-      mDoc.getRootElement().removeContent(chunk_elem);
+   /**
+    * Removes the ConfigChunk that has the given element.
+    *
+    * @return  The object that was removed; null if it wasn't found.
+    */
+   public ConfigChunk remove(Element elt)
+   {
+      mDoc.getRootElement().removeContent(elt);
 
-      chunks.remove(i);
+      // Notify listeners of the removal
+      ConfigChunk chunk = new ConfigChunk(elt);
+      ChunkDBEvent e = new ChunkDBEvent(this, ChunkDBEvent.REMOVE, chunk);
       notifyChunkDBTargets(e);
 
-      return ch;
+      return chunk;
    }
 
    /** Removes the ConfigChunk in self whose name == name.
@@ -316,22 +293,14 @@ public class ConfigChunkDB
     */
    public ConfigChunk remove(String name)
    {
-      ConfigChunk ch;
-      ListIterator i = chunks.listIterator();
-      while (i.hasNext())
+      // Iterate over the chunk elements looking for the matching config chunk
+      for (Iterator itr = mDoc.getRootElement().getChildren().iterator(); itr.hasNext(); )
       {
-         ch = (ConfigChunk)i.next();
-         if ( ch.getName().equals(name) )
+         Element elt = (Element)itr.next();
+         String chunk_name = elt.getAttributeValue("name");
+         if (name.equals(chunk_name))
          {
-            ChunkDBEvent e = new ChunkDBEvent(this, ChunkDBEvent.REMOVE, ch);
-            i.remove();
-
-            // We have to remove the chunk's node from our DOM tree.
-            Element chunk_elem = ch.getNode();
-            mDoc.getRootElement().removeContent(chunk_elem);
-
-            notifyChunkDBTargets(e);
-            return ch;
+            return remove(elt);
          }
       }
       return null;
@@ -340,26 +309,9 @@ public class ConfigChunkDB
    /** Removes a ConfigChunk with the same name as ch.
     *  @return The object that was removed, or null if it wasn't found.
     */
-   public final ConfigChunk remove(ConfigChunk ch)
+   public ConfigChunk remove(ConfigChunk ch)
    {
       return remove(ch.getName());
-   }
-
-   /** Removes any ConfigChunks in self with the same name as any Chunk
-    *  in db.
-    *  @return True if any ConfigChunks were removed, else false.
-    */
-   public boolean removeAll(ConfigChunkDB db)
-   {
-      boolean retval = false;
-      ConfigChunk ch;
-      ListIterator i = db.chunks.listIterator();
-      while (i.hasNext())
-      {
-         ch = (ConfigChunk)i.next();
-         retval |= (null != remove(ch));
-      }
-      return retval;
    }
 
    /**
@@ -371,9 +323,9 @@ public class ConfigChunkDB
     */
    public boolean contains(ConfigChunk chunk)
    {
-      for (Iterator itr = chunks.iterator(); itr.hasNext(); )
+      for (Iterator itr = mDoc.getRootElement().getChildren().iterator(); itr.hasNext(); )
       {
-         if (itr.next() == chunk)
+         if (itr.next() == chunk.getNode())
          {
             return true;
          }
@@ -381,7 +333,9 @@ public class ConfigChunkDB
       return false;
    }
 
-   /** Find the named ConfigChunk.
+   /**
+    * Find the named ConfigChunk.
+    *
     * @return A ConfigChunk in self whose name matches the parameter, or
     *         null if none is found.
     */
@@ -400,38 +354,22 @@ public class ConfigChunkDB
     */
    public List getAll()
    {
-      return chunks;
-   }
-
-
-   /** Gets all ConfigChunks using a particular ChunkDesc.
-    *  @param typename A ChunkDesc name.
-    *  @return A list of all ConfigChunks in self using the named ChunkDesc.
-    *          List may be empty, but is never null.  The list is not
-    *          synchronized.
-    */
-   public List getOfDescName(String typename)
-   {
-      List v = new ArrayList();
-      ConfigChunk ch;
-      Iterator i = chunks.iterator();
-      while (i.hasNext())
+      List chunks = new ArrayList();
+      for (Iterator itr = mDoc.getRootElement().getChildren().iterator(); itr.hasNext(); )
       {
-         ch = (ConfigChunk)i.next();
-         if ( ch.getDescName().equals(typename) )
-         {
-            v.add (ch);
-         }
+         chunks.add(new ConfigChunk((Element)itr.next()));
       }
-      return v;
+      return chunks;
    }
 
    /**
     * Inserts ch into self.  Any same-named Chunk already in self is removed.
     * The DOM tree node associated with the given chunk is added as a child
     * of this DB's tree node.
+    *
+    * @param ch      the chunk to add to this database
     */
-   public final void add(ConfigChunk ch)
+   public void add(ConfigChunk ch)
    {
       ConfigChunk insert_chunk;
 
@@ -457,75 +395,8 @@ public class ConfigChunkDB
       // so this just gets added to the end of the list.
       mDoc.getRootElement().addContent(insert_chunk.getNode());
 
-      insertOrdered(insert_chunk);
-   }
-
-   /** Inserts all Chunks in db into self.
-    *  Any same-named Chunks already in self are removed.
-    */
-   public void addAll(ConfigChunkDB db)
-   {
-      Iterator i = db.chunks.iterator();
-      while (i.hasNext())
-      {
-         add((ConfigChunk)i.next());
-      }
-   }
-
-   /** Inserts c into self.
-    *  Adds a Chunk into self, with the constraint that it's stored with
-    *  adjacent to all other Chunks using the same ChunkDesc.
-    */
-   public void insertOrdered(ConfigChunk c)
-   {
-      remove(c.getName());
-
-      String desc_token = c.getDescToken();
-
-      // If the chunk being inserted does not have a description, it is an
-      // unknown chunk type.  We will hang onto it instead of just tossing it
-      // aside, but there is nothing we can do with it.
-      if ( null == desc_token )
-      {
-         chunks.add(c);
-      }
-      else
-      {
-         // Desription includes are forced to be first in the chunk collection.
-         if ( desc_token.equals(vj_include_desc_file_TOKEN) )
-         {
-            chunks.add(0, c);
-         }
-         // This appears to add a config file include "chunk" before the first
-         // element of the chunk collection that is not an include directive.
-         // I suppose this is to ensure that includes always come before loaded
-         // chunks.
-         else if ( desc_token.equals(vj_include_file_TOKEN) )
-         {
-            int i;
-            String desc_token2;
-
-            for ( i = 0; i < chunks.size(); ++i )
-            {
-               // Get the chunk description type of a previously loaded chunk.
-               desc_token2 = ((ConfigChunk) chunks.get(i)).getDescToken();
-
-               if ( ! desc_token2.equals(vj_include_desc_file_TOKEN) &&
-                    ! desc_token2.equals(vj_include_file_TOKEN) )
-               {
-                  break;
-               }
-            }
-            chunks.add(i, c);
-         }
-         else
-         {
-            chunks.add(c);
-         }
-
-         ChunkDBEvent e = new ChunkDBEvent(this, ChunkDBEvent.INSERT, c);
-         notifyChunkDBTargets(e);
-      }
+      ChunkDBEvent evt = new ChunkDBEvent(this, ChunkDBEvent.INSERT, insert_chunk);
+      notifyChunkDBTargets(evt);
    }
 
    /**
@@ -553,7 +424,8 @@ public class ConfigChunkDB
          {
             // Found a processing instruction, see if it's of the correct type
             ProcessingInstruction pi = (ProcessingInstruction)next;
-            if (pi.getTarget().equals(INCLUDE_INSTRUCTION))
+            if (pi.getTarget().equals(INCLUDE_INSTRUCTION) ||
+                pi.getTarget().equals(INCLUDE_DESC_INSTRUCTION))
             {
                // If this PI is an include for the target file, remove it
                if (pi.getValue(FILE_ATTR).equals(url))
@@ -581,7 +453,8 @@ public class ConfigChunkDB
          {
             // Found a processing instruction, see if it's of the correct type
             ProcessingInstruction pi = (ProcessingInstruction)next;
-            if (pi.getTarget().equals(INCLUDE_INSTRUCTION))
+            if (pi.getTarget().equals(INCLUDE_INSTRUCTION) ||
+                pi.getTarget().equals(INCLUDE_DESC_INSTRUCTION))
             {
                result.add(pi.getValue(FILE_ATTR));
             }
@@ -639,153 +512,6 @@ public class ConfigChunkDB
    {
       notifyChunkDBTargets(new ChunkDBEvent(this, ChunkDBEvent.REPLACE,
                                             origName, updatedChunk));
-   }
-
-   /** Utility for getDependencies. */
-   protected void addDependsForChunk(ConfigChunk ch, List v, String nameprefix)
-   {
-      // returns vector of pde's
-      // finds dependencies in ch and adds 'em to v.
-      int prop_count;
-
-      Iterator i = ch.getDesc().getPropertyDescs().iterator();
-
-      while ( i.hasNext() )
-      {
-         PropertyDesc prop_desc = (PropertyDesc) i.next();
-
-         if ( prop_desc.getValType() == ValType.CHUNK )
-         {
-            prop_count = ch.getNumPropertyValues(prop_desc.getToken());
-
-            for ( int j = 0; j < prop_count; ++j )
-            {
-               VarValue val = ch.getProperty(prop_desc.getToken(), j);
-               String chunk_name = val.getString();
-
-               if ( ! chunk_name.equals("") )
-               {
-                  ConfigChunk dep_chunk = this.get(chunk_name);
-                  if ( null == dep_chunk )
-                  {
-                     PropDependEntry pde = new PropDependEntry();
-                     pde.propertyname = nameprefix + chunk_name;
-
-                     // XXX: I'm not sure if prop_count is the right variable
-                     // to look at here...
-                     if ( prop_count > 1 )
-                     {
-                        pde.propertyname += "[" + j + "]";
-                     }
-
-                     pde.dependency_name = chunk_name;
-                     v.add(pde);
-                  }
-               }
-            }
-         }
-         else if ( prop_desc.getValType() == ValType.EMBEDDEDCHUNK )
-         {
-            prop_count = ch.getNumPropertyValues(prop_desc.getToken());
-            ConfigChunk child_chunk;
-
-            for ( int j = 0; j < prop_count; ++j )
-            {
-               child_chunk =
-                  ch.getProperty(prop_desc.getToken(), j).getEmbeddedChunk();
-               String prefix = nameprefix + child_chunk.getName();
-
-               if ( prop_count > 1 )
-               {
-                  prefix += "[" + j + "].";
-               }
-               else
-               {
-                  prefix += ".";
-               }
-
-               addDependsForChunk(child_chunk, v, nameprefix + prefix);
-            }
-         }
-      }
-   }
-
-   /** Gets dependencies of all ConfigChunks in self.
-    *  Includes only dependencies that aren't satisfied by self.
-    *  @return a List of ChunkDependEntries.
-    */
-   public List getDependencies()
-   {
-      // gets the dependencies of _this_chunkdb_only_
-      int i;
-      ConfigChunk ch;
-      ChunkDependEntry cde;
-
-      List dep = new ArrayList();
-
-      for (i = 0; i < chunks.size(); i++)
-      {
-         cde = null;
-         ch = (ConfigChunk)chunks.get(i);
-         cde = new ChunkDependEntry();
-         cde.chunk = ch;
-         addDependsForChunk(ch, cde.propdepends, "");
-         if (cde.propdepends.size() > 0)
-         {
-            dep.add(cde);
-         }
-      }
-      return dep;
-   }
-
-   /** Searches self for Chunks that satisfy dependencies.
-    *  @param v A vector of ChunkDependEntries, assumably generated by
-    *           getDependencies called on another ChunkDB.  searchDependencies
-    *           modifies the DependEntries with new information.
-    */
-   public void searchDependencies(List v)
-   {
-      ChunkDependEntry cde;
-      PropDependEntry pde;
-      ConfigChunk ch;
-      int i, j;
-
-      for (i = 0; i < v.size(); i++)
-      {
-         cde = (ChunkDependEntry)v.get(i);
-         for (j = 0; j < cde.propdepends.size(); j++)
-         {
-            pde = (PropDependEntry)cde.propdepends.get(j);
-            //ch = get (pde.dependency_name);
-            ch = searchDependency(pde.dependency_name);
-            if (ch != null)
-            {
-               pde.other_files.add(getName());
-            }
-         }
-      }
-   }
-
-   private ConfigChunk searchDependency(String dep_name)
-   {
-      if (!ConfigChunk.hasSeparator(dep_name))
-      {
-         return get(dep_name);
-      }
-      else
-      {
-         // embedded chunk dependency
-         String first = ConfigChunk.getFirstNameComponent(dep_name);
-         ConfigChunk ch = get(first);
-         if (ch == null)
-         {
-            return null;
-         }
-         else
-         {
-            return ch.getEmbeddedChunk(dep_name);
-         }
-      }
    }
 
    public String toString()
@@ -857,9 +583,6 @@ public class ConfigChunkDB
          new ProcessingInstruction(SETTINGS_INSTRUCTION, pi_attrs);
       doc.addContent(ver);
    }
-
-   /** Vector of ConfigChunks. */
-   private List chunks;
 
    /** Targets for ChunkDBEvents. */
    private ArrayList targets;
