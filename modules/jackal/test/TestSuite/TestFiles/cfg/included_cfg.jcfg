@@ -5,8 +5,11 @@
                xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd"
                xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
    <elements>
-      <includetest name="Superceding Test" version="1">
+      <include_test name="Superceding Test" version="1">
          <int_prop>1</int_prop>
-      </includetest>
+      </include_test>
+      <include_test name="Test 2" version="1">
+         <int_prop>100</int_prop>
+      </include_test>
    </elements>
 </configuration>
