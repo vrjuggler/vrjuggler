@@ -628,15 +628,15 @@ void vjMatrix::postScale(const vjMatrix&  _m, float _xs, float _ys, float _zs)
     *this = scaleMat;
 }
 
-inline vjMatrix operator *(float _s, const vjMatrix& _m) {
+VJ_IMPLEMENT(vjMatrix) operator *(float _s, const vjMatrix& _m) {
     vjMatrix dst; dst.scale(_s, _m); return dst;
 }
 
-inline vjMatrix operator *(const vjMatrix& _m, float _s) {
+VJ_IMPLEMENT(vjMatrix) operator *(const vjMatrix& _m, float _s) {
     vjMatrix dst; dst.scale(_s, _m); return dst;
 }
 
-inline vjMatrix operator /(const vjMatrix& _m, float _s) {
+VJ_IMPLEMENT(vjMatrix) operator /(const vjMatrix& _m, float _s) {
     vjMatrix dst; dst.scale(1.0f/_s, _m); return dst;
 }
 
@@ -781,7 +781,7 @@ int vjMatrix::invert(const vjMatrix& _m)
 }
 
    // ---- FRIEND FUNCTIONS ---- //
-std::ostream& operator<<(std::ostream& out, const vjMatrix& _mat)
+VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, const vjMatrix& _mat)
 {
    for(int j=0;j<4;j++)
    {
