@@ -28,8 +28,8 @@ enum BIRD_FILT  {AC_NARROW, AC_WIDE, DC_FILTER};
 //
 //  vjFlock is a positional device driver for the Flock of Birds, the config
 //  chunk in the constructor should set up all the settings, for these to be
-//  changed the Flock has to be deleted and a new instance created with an 
-//  updated configchunk.  
+//  changed the Flock has to be deleted and a new instance created with an
+//  updated configchunk.
 //  <br>
 //  Note: Some functions still remain for changing the options of
 //    the flock when its not in Sampling mode, but in order to stay
@@ -47,7 +47,7 @@ class vjFlock : public vjPosition {
 	//@}
 
 	/** @name vjInput pure virtual functions
-	 *  
+	 *
 	 *  pure virtual functions required from vjInput
 	 */
 	//@{
@@ -81,37 +81,37 @@ class vjFlock : public vjPosition {
 	 */
 	//@{
 	void SetTransmitter(int Transmit);
-	int  GetTransmitter() 
+	int  GetTransmitter()
                 { return theTransmitter; }
 
 	void SetNumBirds(int n);
 	int GetNumBirds() { return numBirds; }
 
 	void SetSync(int sync);
-	int  GetSync() 
+	int  GetSync()
                 {return syncStyle; }
 
 	void SetBlocking(int blVal);
-	int  GetBlocking() 
+	int  GetBlocking()
                 { return blocking; }
 
 	void SetFilters(BIRD_FILT f);
-	int  GetFilters() 
+	int  GetFilters()
                 { return filter; }
 
 	void SetHemisphere(BIRD_HEMI h);
-	int  GetHemisphere() 
+	int  GetHemisphere()
                 {return hemisphere; }
 
 	void SetReportRate(char rRate);
-        char GetReportRate() 
+        char GetReportRate()
                 {return repRate; }
 	//@}
 
      private:
-	void Position_Correct(float&x,float&y,float&z); 
-	void InitCorrectionTable(char*); 
-	vjThreadId* myThreadID;
+	void Position_Correct(float&x,float&y,float&z);
+	void InitCorrectionTable(char*);
+	vjThread*   myThread;      // The thread doing the flock sampling
 	CalStruct caltable;
    int theTransmitter, syncStyle, blocking;
 	int numBirds;
