@@ -294,7 +294,7 @@ int rs232InChar(COMM_PORT *port, char *c, int flush)
         }
 
         /* Issue read operation.  */
-        if (!ReadFile(port->portHandle, port->rxbuf, port->rx_bufsize, &(port->dwRead), &(port->osReader)))
+        if (!ReadFile(port->portHandle, port->rxbuf, port->rx_bufsize, (LPDWORD)&(port->dwRead), &(port->osReader)))
         {
             if (GetLastError() != ERROR_IO_PENDING)  /* read not delayed? */
             {
@@ -318,7 +318,7 @@ int rs232InChar(COMM_PORT *port, char *c, int flush)
         switch(dwRes)
         {
             case WAIT_OBJECT_0:
-                if (!GetOverlappedResult(port->portHandle, &(port->osReader), &(port->dwRead), FALSE))
+                if (!GetOverlappedResult(port->portHandle, &(port->osReader), (LPDWORD)&(port->dwRead), FALSE))
                 {
                     /* function failed */
                     if (GetLastError() != ERROR_IO_INCOMPLETE) /* comm error; abort */
