@@ -58,7 +58,7 @@ public:
    { set(_x, _y, _z);}
 
    //: Default constructor
-   vjVec3() {};
+   vjVec3() { set(0.0f,0.0f,0.0f); }
 
 public:
    //: Set value of Vector

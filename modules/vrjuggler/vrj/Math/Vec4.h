@@ -56,7 +56,7 @@ public:
    // Constructor
    vjVec4(float _x, float _y, float _z, float _w)
    { set(_x, _y, _z, _w);}
-   vjVec4() {};
+   vjVec4() { set(0.0f,0.0f,0.0f,0.0f);}
 
 public:
    //: Set value of Vector
