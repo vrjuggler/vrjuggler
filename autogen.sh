@@ -5,13 +5,19 @@
 
 DIE=0
 
-dpp_path=${DPP_PATH-`pwd`/Doozer++}
+: ${DPP_PATH=`pwd`/Doozer++}
+: ${MACRO_PATH=`pwd`/macros}
+: ${GGT_MACRO_PATH=`pwd`/macros.GGT}
 
-if [ -n "$dpp_path" ]; then
-	ACLOCAL_FLAGS="-I $dpp_path/config -I `pwd`/macros -I `pwd`/macros.GGT $ACLOCAL_FLAGS"
+if [ -n "$DPP_PATH" ]; then
+   ACLOCAL_FLAGS="-I $DPP_PATH/config -I $MACRO_PATH -I $GGT_MACRO_PATH $ACLOCAL_FLAGS"
 fi
 
-(autoconf --version) < /dev/null > /dev/null 2>&1 || {
+: ${AUTOCONF=autoconf}
+: ${AUTOHEADER=autoheader}
+: ${ACLOCAL=aclocal}
+
+($AUTOCONF --version) < /dev/null > /dev/null 2>&1 || {
   echo
   echo "**Error**: You must have \`autoconf' installed to compile VR Juggler."
   echo "Download the appropriate package for your distribution,"
@@ -19,7 +25,7 @@ fi
   DIE=1
 }
 
-(aclocal --version) < /dev/null > /dev/null 2>&1 || {
+($ACLOCAL --version) < /dev/null > /dev/null 2>&1 || {
   echo
   echo "**Error**: Missing \`aclocal'.  The version of \`automake'"
   echo "installed doesn't appear recent enough."
@@ -46,15 +52,15 @@ do
 #      done
 
       aclocalinclude="$ACLOCAL_FLAGS"
-      echo "Running aclocal $aclocalinclude ..."
-      aclocal $aclocalinclude
+      echo "Running $ACLOCAL $aclocalinclude ..."
+      $ACLOCAL $aclocalinclude
       if grep "^AC_CONFIG_HEADER" configure.in >/dev/null
       then
-	echo "Running autoheader..."
-	autoheader
+	echo "Running $AUTOHEADER..."
+	$AUTOHEADER
       fi
-      echo "Running autoconf ..."
-      autoconf
+      echo "Running $AUTOCONF ..."
+      $AUTOCONF
     )
   fi
 done
