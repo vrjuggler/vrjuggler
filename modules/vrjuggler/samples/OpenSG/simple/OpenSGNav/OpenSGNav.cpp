@@ -148,27 +148,27 @@ void OpenSGNav::initScene(void)
    if (mFileToLoad ==  std::string("none"))
    {
       std::cout << "OpenSGNave::initScene: No model specified!!! Loading torus.\n";
-      mModelRoot = OSG::makeTorus(.5, 2, 16, 16);      
+      mModelRoot = osg::makeTorus(.5, 2, 16, 16);      
    }
    else
    {
       std::cout << "OpenSGNav::initScene: Loading [" << mFileToLoad.c_str() << "]\n";
-      mModelRoot = OSG::SceneFileHandler::the().read((OSG::Char8 *)(mFileToLoad.c_str()));
+      mModelRoot = osg::SceneFileHandler::the().read((osg::Char8 *)(mFileToLoad.c_str()));
    }
 
    // --- Light setup --- //
    // - Add directional light for scene
    // - Create a beacon for it and connect to that beacon
-   mLightNode   = OSG::Node::create();
-   mLightBeacon = OSG::Node::create();
-   OSG::DirectionalLightPtr light_core = OSG::DirectionalLight::create();
-   OSG::TransformPtr light_beacon_core = OSG::Transform::create();
+   mLightNode   = osg::Node::create();
+   mLightBeacon = osg::Node::create();
+   osg::DirectionalLightPtr light_core = osg::DirectionalLight::create();
+   osg::TransformPtr light_beacon_core = osg::Transform::create();
    
    // Setup light beacon
    osg::Matrix light_pos;
    light_pos.setTransform(osg::Vec3f( 2.0f, 5.0f, 4.0f));
    
-   osg::beginEditCP(light_beacon_core, OSG::Transform::MatrixFieldMask);
+   osg::beginEditCP(light_beacon_core, osg::Transform::MatrixFieldMask);
       light_beacon_core->setMatrix(light_pos);
    osg::endEditCP(light_beacon_core, osg::Transform::MatrixFieldMask);
    
@@ -199,9 +199,9 @@ void OpenSGNav::initScene(void)
    osg::endEditCP(mLightNode);
    
    // create the root part of the scene
-   mRootNode = OSG::Node::create();
-   mSceneRoot = OSG::Node::create();
-   mSceneTransform = OSG::Transform::create();
+   mRootNode = osg::Node::create();
+   mSceneRoot = osg::Node::create();
+   mSceneTransform = osg::Transform::create();
 
    // Set the root node
    osg::beginEditCP(mRootNode);

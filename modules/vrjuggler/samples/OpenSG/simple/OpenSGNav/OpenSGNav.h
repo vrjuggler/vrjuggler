@@ -79,7 +79,7 @@ public:
    virtual void initScene();
 
    /** Returns the scene root for this application. */
-   virtual OSG::NodePtr getScene()
+   virtual osg::NodePtr getScene()
    {  return mRootNode; }
 
    void initRenderer();
@@ -115,13 +115,13 @@ private:
    //   mLightBeacon:[Transform]
    //         |
    //     mModelRoot
-   OSG::NodePtr        mRootNode;        /**< The root node of the entire tree */
-   OSG::NodePtr        mSceneRoot;       /**< The root of the scene */
-   OSG::TransformPtr   mSceneTransform;  /**< Transform core */
-   OSG::NodePtr        mModelRoot;       /**< Root of the loaded model */
+   osg::NodePtr        mRootNode;        /**< The root node of the entire tree */
+   osg::NodePtr        mSceneRoot;       /**< The root of the scene */
+   osg::TransformPtr   mSceneTransform;  /**< Transform core */
+   osg::NodePtr        mModelRoot;       /**< Root of the loaded model */
 
-   OSG::NodePtr  mLightNode;       /**< Light node to use */
-   OSG::NodePtr  mLightBeacon;     /**< A beacon for the light */
+   osg::NodePtr  mLightNode;       /**< Light node to use */
+   osg::NodePtr  mLightBeacon;     /**< A beacon for the light */
 
 public:
    gadget::PositionInterface  mWandPos;     /**< The position of the wand */
