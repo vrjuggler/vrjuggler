@@ -199,9 +199,27 @@ void OpenSGNav::initScene(void)
       mLightNode->addChild(mModelRoot);
    osg::endEditCP(mLightNode);
    
-   // create the root.
+   // create the root part of the scene
+   mRootNode = OSG::Node::create();
+   mSceneScale = OSG::Transform::create();
    mSceneRoot = OSG::Node::create();
    mSceneTransform = OSG::Transform::create();
+
+   float scene_scale = 1.0f/gadget::PositionUnitConversion::ConvertToFeet;    // Scene uses feet as units
+
+   osg::Matrix scene_scale_mat;
+   scene_scale_mat.setScale(scene_scale);
+
+   // Set the scale for the scene
+   osg::beginEditCP(mSceneScale);
+      mSceneScale->setMatrix(scene_scale_mat);
+   osg::endEditCP(mSceneScale);
+
+   // Set the root node
+   osg::beginEditCP(mRootNode)
+      mRootNode->setCore(mSceneScale);
+      mRootNode->addChild(mSceneRoot);
+   ost::endEditCP(mRootNode);
    
    osg::beginEditCP(mSceneRoot);
       mSceneRoot->setCore(mSceneTransform);
