@@ -46,17 +46,24 @@
 namespace vrjTest
 {
 
-class MatrixTest : public CppUnit::TestCase, public JugglerTest
+class MatrixTest : public CppUnit::TestCase
 {
 public:
+   MatrixTest (std::string name) : CppUnit::TestCase(name),
+      x_axis( 1.0f, 0.0f, 0.0f ),
+      y_axis( 0.0f, 1.0f, 0.0f ),
+      z_axis( 0.0f, 0.0f, 1.0f ),
+   {;}
+
    MatrixTest() : CppUnit::TestCase (), 
       x_axis( 1.0f, 0.0f, 0.0f ),
       y_axis( 0.0f, 1.0f, 0.0f ),
       z_axis( 0.0f, 0.0f, 1.0f ),
       tests_pass( false )
-   {
-   }
-   virtual ~MatrixTest() {}
+   {;}
+
+   virtual ~MatrixTest() {;}
+
    virtual void setUp()
    {
    }
@@ -79,9 +86,12 @@ public:
       std::cout << "Matrix:" << std::endl << testMat << std::endl;
    }
 
-   void registerTests (CppUnit::TestSuite* suite)
+   static CppUnit::Test* suite()
    {
+      CppUnit::TestSuite* suite = new CppUnit::TestSuite ("MatrixTest");
       suite->addTest( new CppUnit::TestCaller<MatrixTest>( "setmatrix", setmatrix ));
+
+      return suite;
    }
 
 /*
