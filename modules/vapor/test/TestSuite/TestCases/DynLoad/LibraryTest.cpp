@@ -1,6 +1,7 @@
 #include <fstream>
 #include <string>
 
+#include <vpr/vpr.h>
 #include <vpr/DynLoad/Library.h>
 #include <vpr/System.h>
 #include <TestCases/DynLoad/modules/TestInterface.h>
@@ -12,7 +13,16 @@ namespace vprTest
 {
 CPPUNIT_TEST_SUITE_REGISTRATION( LibraryTest );
 
+#if defined(VPR_OS_Win32)
+static const std::string C_MOD("cmod.dll");
+static const std::string CXX_MOD("cxxmod.dll");
+#elif defined(VPR_OS_Darwin)
+static const std::string C_MOD("libcmod.dylib");
+static const std::string CXX_MOD("libcxxmod.dylib");
+#else
 static const std::string C_MOD("libcmod.so");
+static const std::string CXX_MOD("libcxxmod.so");
+#endif
 
 void LibraryTest::setUp()
 {
@@ -21,7 +31,7 @@ void LibraryTest::setUp()
    mCModuleName = c_lib_path;
 
    std::string cxx_lib_path(MODULE_DIR);
-   cxx_lib_path += "/libcxxmod.so";
+   cxx_lib_path += "/" + CXX_MOD;
    mCxxModuleName = cxx_lib_path;
 }
 

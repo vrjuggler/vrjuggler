@@ -47,6 +47,9 @@ srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 SUBOBJDIR=	modules
 
+LIB_PREFIX=	@LIB_PREFIX@
+DYNAMICLIB_EXT=	@DYNAMICLIB_EXT@
+
 SRCS=		DsoLoaderModule1.c	\
 		DsoLoaderModule2.c	\
 		c_module.c		\
@@ -56,17 +59,20 @@ include $(MKPATH)/dpp.obj.mk
 
 libs:
 	-mkdir -p $(OBJDIR)
-	$(MAKE) libdsomod1.so libdsomod2.so libcmod.so libcxxmod.so
+	$(MAKE) $(LIB_PREFIX)dsomod1.$(DYNAMICLIB_EXT)		\
+          $(LIB_PREFIX)dsomod2.$(DYNAMICLIB_EXT)		\
+          $(LIB_PREFIX)cmod.$(DYNAMICLIB_EXT)			\
+          $(LIB_PREFIX)cxxmod.$(DYNAMICLIB_EXT)
 
-libdsomod1.so: $(OBJDIR)/DsoLoaderModule1.o
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/DsoLoaderModule1.o
+$(LIB_PREFIX)dsomod1.$(DYNAMICLIB_EXT): $(OBJDIR)/DsoLoaderModule1.$(OBJEXT)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/DsoLoaderModule1.$(OBJEXT)
 
-libdsomod2.so: $(OBJDIR)/DsoLoaderModule2.o
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/DsoLoaderModule2.o
+$(LIB_PREFIX)dsomod2.$(DYNAMICLIB_EXT): $(OBJDIR)/DsoLoaderModule2.$(OBJEXT)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/DsoLoaderModule2.$(OBJEXT)
 
-libcmod.so: $(OBJDIR)/c_module.o
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/c_module.o
+$(LIB_PREFIX)cmod.$(DYNAMICLIB_EXT): $(OBJDIR)/c_module.$(OBJEXT)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/c_module.$(OBJEXT)
 
-libcxxmod.so: $(OBJDIR)/cxx_module.o
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/cxx_module.o
+$(LIB_PREFIX)cxxmod.$(DYNAMICLIB_EXT): $(OBJDIR)/cxx_module.$(OBJEXT)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/cxx_module.$(OBJEXT)
 
