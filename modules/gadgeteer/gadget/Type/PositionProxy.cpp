@@ -80,8 +80,10 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       unsigned num_filters = chunk->getNum("position_filters");
    
       vprDEBUG_OutputGuard(vprDBG_ALL, 0,
-                           std::string("PositionProxy::config: ") + chunk->getName() + std::string(":") + chunk->getDescToken(),
-                           std::string("Positionproxy::config: done.\n") );
+                           std::string("PositionProxy::config: ") +
+                              chunk->getName() + std::string(":") +
+                              chunk->getDescToken() + std::string("\n"),
+                           std::string("PositionProxy::config: done.\n") );
    
       vprDEBUG( vprDBG_ALL, 0) << "Num filters: " << num_filters << std::endl << vprDEBUG_FLUSH;
    
