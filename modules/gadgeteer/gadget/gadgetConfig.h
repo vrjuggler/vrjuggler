@@ -63,25 +63,6 @@
 
 #endif   /* WIN32 */
 
-
-/* Common C++ includes. */
-/* Put here for pre-compiled headers. */
-#ifdef __cplusplus
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <vector>
-#include <map>
-#include <string>
-#include <algorithm>
-#include <math.h>
-
-#endif   /* __cplusplus */
-
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-
 /*
  * ----------------------------------------------------------------------------
  * DLL-related macros.  These are based on the macros used by NSPR.  Use
