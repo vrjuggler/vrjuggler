@@ -37,109 +37,28 @@
 package org.vrjuggler.tweek.gui;
 
 import java.awt.event.*;
-import java.awt.Color;
-import java.util.Vector;
 import javax.swing.*;
-import javax.swing.text.*;
-import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
+import org.vrjuggler.tweek.text.MessageDocument;
 
 
 /**
- *
+ * A GUI panel that displays messages written to the encapsulated
+ * MessagePanelDocument instance.
  */
-public class MessagePanel
+public class MessagePanel extends JScrollPane
 {
-   public static final int STATUS  = 0;
-   public static final int WARNING = 1;
-   public static final int ERROR   = 2;
-
-   // This must be kept in sync with the above styles.
-   private static final int MSG_TYPE_COUNT = 3;
-
-   public static MessagePanel instance ()
+   public MessagePanel(MessageDocument document)
    {
-      if ( mInstance == null )
-      {
-         mInstance = new MessagePanel();
-      }
-
-      return mInstance;
-   }
-
-   public void addMessageAdditionListener (MessageAdditionListener l)
-   {
-      mListeners.add(l);
-   }
-
-   public void removeMessageAdditionListener (MessageAdditionListener l)
-   {
-      mListeners.remove(l);
-   }
-
-   public void printStatus (String msg)
-   {
-      print(msg, STATUS);
-   }
-
-   public void printWarning (String msg)
-   {
-      print(msg, WARNING);
-   }
-
-   public void printError (String msg)
-   {
-      print(msg, ERROR);
-   }
-
-   public void clear ()
-   {
-      try
-      {
-         mTextPane.getDocument().remove(0, mLastIndex);
-         mLastIndex = 0;
-      }
-      catch (BadLocationException ex)
-      {
-         System.err.println("Failed to clear message panel through position " + mLastIndex);
-      }
-   }
-
-   // =========================================================================
-   // Package-visible methods.
-   // =========================================================================
-
-   /**
-    * Returns the internal JPanel object that contains all the current
-    * messages.  This is package visible so that user code cannot get access
-    * to the JPanel object.  The Tweek GUI code does need access to it,
-    * however.
-    */
-   JComponent getPanel ()
-   {
-      return panel;
-   }
-
-   // =========================================================================
-   // Protected methods.
-   // =========================================================================
-
-   protected MessagePanel ()
-   {
+      mMsgDocument = document;
+      mTextPane.setDocument(document);
       jbInit();
-      initStyles();
    }
-
-   // =========================================================================
-   // Protected member variables.
-   // =========================================================================
-
-   protected static MessagePanel mInstance = null;
 
    // =========================================================================
    // Private methods.
    // =========================================================================
 
-   private void jbInit ()
+   private void jbInit()
    {
       mTextPane.setEditable(false);
       mTextPane.addMouseListener(new PopupListener());
@@ -151,97 +70,13 @@ public class MessagePanel
             popupClearSelected(e);
          }
       });
-      panel.getViewport().add(mTextPane, null);
+      this.getViewport().add(mTextPane, null);
       mMsgPanelMenu.add(mPopupClearItem);
    }
 
-   private void initStyles ()
+   private void popupClearSelected(ActionEvent e)
    {
-      for ( int i = 0; i < mTextStyles.length; i++ )
-      {
-         mTextStyles[i] = new SimpleAttributeSet();
-         mIconStyles[i] = new SimpleAttributeSet();
-      }
-
-      StyleConstants.setForeground(mTextStyles[STATUS], Color.black);
-      StyleConstants.setForeground(mTextStyles[WARNING],
-                                   new Color(255, 115, 0));
-      StyleConstants.setForeground(mTextStyles[ERROR], Color.red);
-      StyleConstants.setBold(mTextStyles[ERROR], true);
-
-      try
-      {
-         StyleConstants.setIcon(mIconStyles[STATUS],
-                                new ImageIcon(BeanJarClassLoader.instance().getResource("org/vrjuggler/tweek/gui/status.gif")));
-      }
-      catch (NullPointerException e)
-      {;}
-
-      try
-      {
-         StyleConstants.setIcon(mIconStyles[WARNING],
-                                new ImageIcon(BeanJarClassLoader.instance().getResource("org/vrjuggler/tweek/gui/warning.gif")));
-      }
-      catch (NullPointerException e)
-      {;}
-
-      try
-      {
-         StyleConstants.setIcon(mIconStyles[ERROR],
-                                new ImageIcon(BeanJarClassLoader.instance().getResource("org/vrjuggler/tweek/gui/error.gif")));
-      }
-      catch (NullPointerException e)
-      {;}
-   }
-
-   private void print (String text, int type)
-   {
-      StyledDocument doc = (StyledDocument) mTextPane.getDocument();
-
-      try
-      {
-         if ( StyleConstants.getIcon(mIconStyles[type]) != null )
-         {
-            String icon_pad = " ";
-            doc.insertString(mLastIndex, icon_pad, mIconStyles[type]);
-            mLastIndex += icon_pad.length();
-         }
-
-         doc.insertString(mLastIndex, text, mTextStyles[type]);
-         mLastIndex += text.length();
-
-         fireMessageAddition(text, type);
-      }
-      catch (BadLocationException loc_ex)
-      {
-         System.err.println("WARNING: Failed to insert message '" + text +
-                            "' of type " + type + " at location " +
-                            mLastIndex);
-      }
-   }
-
-   private void fireMessageAddition (String msg, int type)
-   {
-      MessageAdditionEvent e = new MessageAdditionEvent(this, msg, type);
-
-      MessageAdditionListener l = null;
-      Vector listeners;
-
-      synchronized (this)
-      {
-         listeners = (Vector) mListeners.clone();
-      }
-
-      for ( int i = 0; i < listeners.size(); i++ )
-      {
-         l = (MessageAdditionListener) listeners.elementAt(i);
-         l.messageAdded(e);
-      }
-   }
-
-   void popupClearSelected (ActionEvent e)
-   {
-      clear();
+      mMsgDocument.clear();
    }
 
    // =========================================================================
@@ -268,14 +103,8 @@ public class MessagePanel
    // Private member variables.
    // =========================================================================
 
-   private Vector mListeners = new Vector();
-
-   private JTextPane   mTextPane  = new JTextPane();
-   private JScrollPane panel      = new JScrollPane();
-   private int         mLastIndex = 0;
-
-   private SimpleAttributeSet[] mTextStyles = new SimpleAttributeSet[MSG_TYPE_COUNT];
-   private SimpleAttributeSet[] mIconStyles = new SimpleAttributeSet[MSG_TYPE_COUNT];
+   private MessageDocument mMsgDocument = null;
+   private JTextPane       mTextPane    = new JTextPane();
 
    private JPopupMenu mMsgPanelMenu   = new JPopupMenu();
    private JMenuItem  mPopupClearItem = new JMenuItem();

@@ -34,7 +34,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-package org.vrjuggler.tweek.gui;
+package org.vrjuggler.tweek.text;
 
 import java.util.EventListener;
 
