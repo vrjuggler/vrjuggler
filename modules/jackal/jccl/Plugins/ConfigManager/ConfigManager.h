@@ -280,8 +280,9 @@ protected:
     ConfigManager();
     virtual ~ConfigManager ();
 
+#if 1
     vprSingletonHeader(ConfigManager);
-
+#endif
 
 }; // class ConfigManager
 
