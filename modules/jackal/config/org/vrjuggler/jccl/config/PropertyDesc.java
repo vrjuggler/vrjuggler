@@ -70,6 +70,8 @@ public class PropertyDesc
       changeSupport = new PropertyChangeSupport(this);
       setName("");
       setToken("");
+      setValType(ValType.STRING);
+      addItem(new Item(getValType()));
    }
 
    public Object clone()
