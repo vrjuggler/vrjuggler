@@ -1,6 +1,6 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
-2002-06-23 patrickh   The gadgeteer-config script is now written in Perl.  It
+Jun-24-2002 patrickh  The gadgeteer-config script is now written in Perl.  It
                       is capable of determining its installation path at
                       runtime.
 Jun-21-2002 allenb    Simplified XWin keyboard by removing old unneeded update
