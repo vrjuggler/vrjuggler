@@ -120,6 +120,6 @@ public:
    }
 };
 
-};
+} // End of gadget namespace
 
 #endif

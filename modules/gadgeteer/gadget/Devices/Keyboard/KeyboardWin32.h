@@ -76,16 +76,16 @@ public:
    // Lock_LockKeyDown - The mouse is locked due to a key being held down
    enum lockState { Unlocked, Lock_LockKey, Lock_KeyDown};
 
-   KeyboardWin32() : mControlLoopDone( false ), 
-                     mPrevX( 0 ), 
-                     mPrevY( 0 ), 
+   KeyboardWin32() : mControlLoopDone( false ),
+                     mPrevX( 0 ),
+                     mPrevY( 0 ),
                      mLockState( Unlocked ),
                      mExitFlag( false ),
                      mWeOwnTheWindow( true )
    {
    }
-   virtual ~KeyboardWin32() 
-   { 
+   virtual ~KeyboardWin32()
+   {
       stopSampling();
    }
 
@@ -142,7 +142,7 @@ protected:
    BOOL MenuInit( HINSTANCE hInstance );
    //@}
 
-   bool         mWeOwnTheWindow;       // True if this class owns the window (is reposible for opening, closing, and event processing)                      
+   bool         mWeOwnTheWindow;       // True if this class owns the window (is reposible for opening, closing, and event processing)
    int          m_screen, m_x, m_y;    // screen id, x_origin, y_origin
    unsigned int m_width,m_height;
 
@@ -165,6 +165,6 @@ protected:
    bool  mControlLoopDone;
 };
 
-};
+} // End of gadget namespace
 
 #endif

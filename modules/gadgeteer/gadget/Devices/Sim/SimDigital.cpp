@@ -61,7 +61,7 @@ bool SimDigital::config(jccl::ConfigChunkPtr chunk)
    {
       key_list.push_back(chunk->getProperty<jccl::ConfigChunkPtr>("keyPairs", i));
    }
-   mSimKeys = readKeyList(key_list);   
+   mSimKeys = readKeyList(key_list);
 
    return true;
 }
@@ -95,4 +95,4 @@ void SimDigital::updateData()
    mDigitalSamples.swapBuffers();
 }
 
-};
+} // End of gadget namespace

@@ -124,6 +124,6 @@ private:
     char  *charData;
 };
 
-};
+} // End of gadget namespace
 
 #endif

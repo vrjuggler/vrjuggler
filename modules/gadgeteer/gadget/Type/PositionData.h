@@ -50,7 +50,7 @@ public:
 
     gmtl::Matrix44f* getPosition()
     { return &mPosData; }
-    
+
     void setPosition(gmtl::Matrix44f posMatrix)
     { mPosData = posMatrix; }
 
@@ -66,8 +66,7 @@ protected:
 
 }; // class PositionData
 
-
-}; // namespace gadget
+} // namespace gadget
 
 
 #endif

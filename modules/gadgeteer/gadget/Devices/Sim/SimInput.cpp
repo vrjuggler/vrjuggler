@@ -94,4 +94,4 @@ int SimInput::checkKey(int keyId)
    return mKeyboard->keyPressed(keyId);
 }
 
-};
+} // End of gadget namespace

@@ -79,8 +79,7 @@ protected:
 
 }; // class AnalogData
 
-
-}; // namespace gadget
+} // namespace gadget
 
 
 #endif

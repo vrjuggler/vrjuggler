@@ -80,7 +80,7 @@ public:
       RTHUMB = 6, RINDEX = 7, RMIDDLE = 8, RRING = 9, RPINKY = 10
    };
 
-   
+
 protected:
    /** The main control loop for this device. */
    void controlLoop( void* nullParam );
@@ -99,7 +99,7 @@ protected:
    int            mBaudRate;
 };
 
+} // End of gadget namespace
 
-};
 
 #endif   /* _GADGET_PINCH_GLOVE_H_ */

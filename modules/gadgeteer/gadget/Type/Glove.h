@@ -152,11 +152,11 @@ public:  // ---- GLOVE INTERFACE ---- //
 
    /** Returns a copy of the glove data struct. */
    GloveData getGloveData(int devNum);
-	
-	virtual std::string getBaseType()
-	{
-		return std::string("Glove");
-	}
+
+    virtual std::string getBaseType()
+    {
+        return std::string("Glove");
+    }
 
 
 protected:
@@ -178,6 +178,6 @@ protected:
 
 };
 
-};
+} // End of gadget namespace
 
 #endif

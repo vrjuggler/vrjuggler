@@ -93,12 +93,12 @@ void BaseDeviceInterface::addDevInterface(BaseDeviceInterface* dev)
 { mAllocatedDevices.push_back(dev); }
 
 void BaseDeviceInterface::removeDevInterface(BaseDeviceInterface* dev)
-{ 
+{
    // Attempt to find the device, if found, erase it, if not, then assert
-   std::vector<BaseDeviceInterface*>::iterator found_dev 
+   std::vector<BaseDeviceInterface*>::iterator found_dev
          = std::find(mAllocatedDevices.begin(), mAllocatedDevices.end(), dev);
    vprASSERT(found_dev != mAllocatedDevices.end() && "Tried to remove non-registered interface");
-         
+
    if(mAllocatedDevices.end() != found_dev)
       mAllocatedDevices.erase(found_dev);
 }
@@ -114,4 +114,4 @@ void BaseDeviceInterface::refreshAllDevices()
 
 std::vector<BaseDeviceInterface*> BaseDeviceInterface::mAllocatedDevices = std::vector<BaseDeviceInterface*>();
 
-};
+} // End of gadget namespace

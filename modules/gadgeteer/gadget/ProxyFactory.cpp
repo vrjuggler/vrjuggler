@@ -141,4 +141,4 @@ int ProxyFactory::findConstructor(jccl::ConfigChunkPtr chunk)
    return -1;
 }
 
-};
+} // End of gadget namespace

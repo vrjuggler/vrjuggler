@@ -118,12 +118,12 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       ret_val = true;
    }
 
-   //DumpStatus();                      // Dump the status   
+   //DumpStatus();                      // Dump the status
    {
       vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                               std::string("New Input Manager state:\n"),
                               std::string("-- end state -- \n"));
-      vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_VERB_LVL) << (*this) << vprDEBUG_FLUSH;   
+      vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_VERB_LVL) << (*this) << vprDEBUG_FLUSH;
    }
 
    if(ret_val)
@@ -133,7 +133,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
          << "Updated all devices" << std::endl << vprDEBUG_FLUSH;
    }
-   
+
    return ret_val;         // Return the success flag if we added at all
 }
 
@@ -150,8 +150,8 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
    bool ret_val = false;      // Flag to return success
 
-   if (mRemoteInputManager->configCanHandle(chunk)) 
-		ret_val = mRemoteInputManager->configRemove(chunk);
+   if (mRemoteInputManager->configCanHandle(chunk))
+        ret_val = mRemoteInputManager->configRemove(chunk);
    else if(DeviceFactory::instance()->recognizeDevice(chunk))
       ret_val = removeDevice(chunk);
    else if(recognizeProxyAlias(chunk))
@@ -175,7 +175,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
          << "InputManager::configRemove(): Updated all data" << std::endl
          << vprDEBUG_FLUSH;
    }
-   
+
    return ret_val;         // Return the success flag if we added at all
 }
 
@@ -221,7 +221,7 @@ bool InputManager::configureDevice(jccl::ConfigChunkPtr chunk)
 {
    bool ret_val;
    std::string dev_name = chunk->getFullName();
-   
+
    vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                                  std::string("InputManager::configureDevice: dev[") + dev_name + std::string("]\n"),
                                  std::string("done configuring device\n"));
@@ -232,19 +232,19 @@ bool InputManager::configureDevice(jccl::ConfigChunkPtr chunk)
    if ((new_device != NULL) && (new_device->startSampling()))
    {
       addDevice(new_device);
-	  ret_val = true;
-	  vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-	     << "   Successfully added dev: " << dev_name.c_str() << std::endl
-		 << vprDEBUG_FLUSH;
+      ret_val = true;
+      vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+         << "   Successfully added dev: " << dev_name.c_str() << std::endl
+         << vprDEBUG_FLUSH;
    }
    else
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
-	   				<< "new dev " << clrSetBOLD(clrCYAN) << dev_name.c_str() << clrRESET << " failed to start.. deleting instance" << std::endl << vprDEBUG_FLUSH;
-	  delete new_device;
-	  ret_val = false;
+                    << "new dev " << clrSetBOLD(clrCYAN) << dev_name.c_str() << clrRESET << " failed to start.. deleting instance" << std::endl << vprDEBUG_FLUSH;
+      delete new_device;
+      ret_val = false;
    }
-   
+
    return ret_val;
 }
 
@@ -252,7 +252,7 @@ bool InputManager::configureDevice(jccl::ConfigChunkPtr chunk)
 bool InputManager::configureProxy(jccl::ConfigChunkPtr chunk)
 {
    std::string proxy_name = chunk->getFullName();
-   
+
 vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                                  std::string("vjInputManager::configureProxy: Named: ") + proxy_name + std::string("\n"),
                                  std::string("done configuring proxy\n"));
@@ -272,7 +272,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
    // -- Add to proxy table
    if(false == addProxy(proxy_name, new_proxy))
-   { 
+   {
       return false;
    }
 
@@ -362,7 +362,7 @@ void InputManager::updateAllData()
    for (tDevTableType::iterator i = mDevTable.begin(); i != mDevTable.end(); i++)      // all DEVICES
      if ((*i).second != NULL)
          i->second->updateData();
-   
+
      // send and receive net device messages
    if (mRemoteInputManager->isActive())
    {
@@ -518,7 +518,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       << "   alias:" << alias_name.c_str() << "   index:"
       << mProxyAliases[proxy_name] << "  has been removed." << std::endl
       << vprDEBUG_FLUSH;
-      
+
    return true;
 }
 
@@ -624,4 +624,4 @@ bool InputManager::removeProxy(jccl::ConfigChunkPtr chunk)
    return removeProxy(proxy_name);
 }
 
-};
+} // End of gadget namespace

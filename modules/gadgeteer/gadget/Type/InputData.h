@@ -77,8 +77,7 @@ protected:
 
 }; // class InputData
 
-
-}; // namespace gadget
+} // namespace gadget
 
 
 #endif

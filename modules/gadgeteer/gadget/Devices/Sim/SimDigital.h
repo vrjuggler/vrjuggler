@@ -60,7 +60,7 @@ public:
    virtual ~SimDigital();
 
    virtual bool config(jccl::ConfigChunkPtr chunk);
-   
+
    /** These functions don't do anything. */
    virtual int startSampling() { return 1; }
    virtual int stopSampling() { return 1; }
@@ -73,10 +73,10 @@ public:
 
    virtual std::vector<KeyModPair> getKeys() { return mSimKeys; }
 
-private:   
+private:
    std::vector<KeyModPair> mSimKeys;       /**< The keys to press for digital simulation */
 };
 
-};
+} // End of gadget namespace
 
 #endif

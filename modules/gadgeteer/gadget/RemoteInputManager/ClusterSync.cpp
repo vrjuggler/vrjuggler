@@ -45,7 +45,7 @@
 
 namespace gadget
 {
-   
+
    ClusterSync::ClusterSync() : syncPacket(12)
    {
       mTol = 2;
@@ -63,7 +63,7 @@ namespace gadget
          createHandshake();
          recieveExpectedTime();
          createResponce();
-      }     
+      }
    }
    vpr::Interval ClusterSync::getClusterSync(vpr::SocketStream* socket_stream)
    {
@@ -109,36 +109,36 @@ namespace gadget
    {
                      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[SYNC] Calculate Expected Time: " << mRemoteSendTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
       mLatencyTime.set( (mLocalReceiveTime.getBaseVal()-mLocalSendTime.getBaseVal())/2, vpr::Interval::Base);
-                     vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[SYNC] 	Latency: " << mLatencyTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
-      
+                     vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[SYNC]     Latency: " << mLatencyTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
+
       mDelta=(mRemoteSendTime-mLocalSendTime-mLatencyTime);
-      
-      std::cout << "   " << mRemoteSendTime.getBaseVal() << std::endl; 
-      std::cout << " - " << mRemoteSendTime.getBaseVal() << std::endl; 
+
+      std::cout << "   " << mRemoteSendTime.getBaseVal() << std::endl;
+      std::cout << " - " << mRemoteSendTime.getBaseVal() << std::endl;
       std::cout << " - " << mRemoteSendTime.getBaseVal() << std::endl;
       std::cout << " = " << mRemoteSendTime.getBaseVal() - mRemoteSendTime.getBaseVal() - mRemoteSendTime.getBaseVal() << std::endl;
-      
+
       vpr::Int64 mNewDelta = mRemoteSendTime.getBaseVal() - mRemoteSendTime.getBaseVal() - mRemoteSendTime.getBaseVal();
-      
+
       std::cout << "New Delta: " << mNewDelta << std::endl;
-      
+
       std::cout << "mDelta" << mDelta.getBaseVal() << std::endl;
 
-                     vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[SYNC] 	Delta: " << mDelta.getBaseVal() << "\n" << vprDEBUG_FLUSH;
+                     vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[SYNC]     Delta: " << mDelta.getBaseVal() << "\n" << vprDEBUG_FLUSH;
       mLocalSendTime.setNow();
-      mExpectedRemoteTime = mLocalSendTime + mDelta + mLatencyTime;     
-                     vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[SYNC] 	Sent Expected Time: " << mExpectedRemoteTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
+      mExpectedRemoteTime = mLocalSendTime + mDelta + mLatencyTime;
+                     vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[SYNC]     Sent Expected Time: " << mExpectedRemoteTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
       mWriter.writeUint64(mExpectedRemoteTime.getBaseVal());
       sendAndClear();
    }
    void ClusterSync::recieveExpectedTime()
    {
-                     
+
       getPacket(8);
       mLocalReceiveTime.setNow();
-                     vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[SYNC] 	Got Expected Time at: " << mLocalReceiveTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
+                     vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[SYNC]     Got Expected Time at: " << mLocalReceiveTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
       mExpectedRemoteTime.set(mReader->readUint64(), vpr::Interval::Base);
-                     vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[SYNC] 	Got Expected Time: " << mExpectedRemoteTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
+                     vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[SYNC]     Got Expected Time: " << mExpectedRemoteTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
       if (mExpectedRemoteTime > mLocalReceiveTime)
       {
          mErrorTime = mExpectedRemoteTime - mLocalReceiveTime;
@@ -147,8 +147,8 @@ namespace gadget
       {
          mErrorTime = mLocalReceiveTime - mExpectedRemoteTime;
       }
-      
-                     vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[SYNC] 	Error of: " << mErrorTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
+
+                     vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[SYNC]     Error of: " << mErrorTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
 
       if ( mErrorTime.getBaseVal() < mTol )
       {
@@ -163,7 +163,7 @@ namespace gadget
    void ClusterSync::createResponce()
    {
                      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[SYNC] Createing Responce" << "\n" << vprDEBUG_FLUSH;
-                     vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[SYNC] 	mTol: " << mTol << " Accept?: " << mAccept << "\n" << vprDEBUG_FLUSH;
+                     vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[SYNC]     mTol: " << mTol << " Accept?: " << mAccept << "\n" << vprDEBUG_FLUSH;
       mWriter.writeBool(mAccept);
       sendAndClear();
    }
@@ -207,4 +207,5 @@ namespace gadget
       mDelta.set(0,vpr::Interval::Base);
       mErrorTime.set(0,vpr::Interval::Base);
    }
-};
+
+} // End of gadget namespace

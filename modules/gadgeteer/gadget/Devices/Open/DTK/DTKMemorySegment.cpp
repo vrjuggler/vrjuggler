@@ -187,4 +187,4 @@ DTKMemorySegment::operator char*() const
     }
 }
 
-};
+} // End of gadget namespace
