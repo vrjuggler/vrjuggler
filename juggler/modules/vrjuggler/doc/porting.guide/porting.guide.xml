@@ -1052,21 +1052,14 @@ gmtl::Matrix44f mat = posInt.getData(gadget::PositionUnitConversion::ConvertToFe
         <section>
           <title>Version 1.0 to 2.0 (Definition Files and Configuration Files)</title>
 
-          <para>We have included a converter from VR Juggler 1.0 format to
-          version 2.0 of the definition file format and version 2.0 of the
-          configuration file format. You can find the source in
-          <filename>juggler/modules/jackal/tools/ConfigUpdater</filename>. If
-          you have a binary distribution of VR Juggler, a compiled version can
-          be run using the script <command>cfgupdater</command>, found in
-          <filename>$VJ_BASE_DIR/bin</filename>. It is run as follows:</para>
-
-          <screen>cfgupdater file1 file2 ...</screen>
-
-          <para>The listed files can contain configuration elements (those
-          with the extension <filename>.cfg</filename> or
-          <filename>.config</filename>) or configuration definitions (<filename>.desc</filename>).
-          The utility figures out the file type and makes the appropriate
-          conversions.</para>
+          <para>At this time, there is no automated way to update VR Juggler
+          1.0 configuration files to the 2.0 format.  Extensive changes
+          have been made in the basic structure and the content of the
+          files.  It is recommended that users run VRJConfig and create new 
+          VR Juggler 2.0 configurations from scratch.  This offers a chance
+          to get familiar with the new configuration editor.  We hope to
+          offer an automated update mechanism in time for the full
+          VR Juggler 2.0.0 release.</para>
         </section>
 
         <section>
