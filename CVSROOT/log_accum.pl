@@ -322,13 +322,13 @@ sub mail_notification {
 	    die "ERROR: Could not open pipe to /usr/sbin/sendmail: $!\n";
     }
 
-#    print(MAIL 'To: cvs-committers' . $dom . ", cvs-all" . $dom);
-    print(MAIL 'To: ');
-    foreach $line (@mailaddrs) {
-	next if ($unique{$line});
-	$unique{$line} = 1;
-	print(MAIL ", " . $line . $dom);
-    }
+    print(MAIL 'To: vrjuggler-checkins@lists.sourceforge.net');
+#    print(MAIL 'To: ');
+#    foreach $line (@mailaddrs) {
+#	next if ($unique{$line});
+#	$unique{$line} = 1;
+#	print(MAIL ", " . $line . $dom);
+#    }
     print(MAIL "\n");
 
     $subject = 'Subject: cvs commit:';
