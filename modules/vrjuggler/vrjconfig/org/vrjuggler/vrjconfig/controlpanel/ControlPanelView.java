@@ -75,10 +75,11 @@ public class ControlPanelView
 
       // This needs to be the first step to ensure that all the basic services
       // and viewers get loaded.
-      String default_path = System.getProperty("VJ_BASE_DIR")
-                            + File.separator + "lib"
-                            + File.separator + "vrjuggler"
-                            + File.separator + "customeditors";
+      String default_path = System.getProperty("VJ_BASE_DIR") +
+                            File.separator + "share" +
+                            File.separator + "vrjuggler" +
+                            File.separator + "beans" +
+                            File.separator + "customeditors";
 
       try
       {

@@ -90,6 +90,8 @@ ifeq ($(HAVE_TWEEK_CXX), Y)
 endif
 
 ifeq ($(HAVE_TWEEK_JAVA), Y)
+   javadir=		$(projdatadir)/java
+
    EXTRA_JAVA_SRCS_PATH=vrj
 
    IDL_JAVA_FILES=	PerformanceMonitorSubject.java
@@ -97,7 +99,7 @@ ifeq ($(HAVE_TWEEK_JAVA), Y)
    JARS=		PerformanceMonitor.jar
    POST_INSTALL=	install-bean
    BEAN_INSTALL_FILES=	$(JARS) $(addprefix $(srcdir)/, $(JARS:.jar=.xml))
-   BEAN_INSTALL_PATH=	$(bindir)/beans
+   BEAN_INSTALL_PATH=	$(projdatadir)/beans
 
    AFTERBUILD=		java-build
 endif
@@ -121,7 +123,7 @@ install-bean:
 	for jar in $(JFREECHART_JARS) ;					\
           do								\
               $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
-                $(GROUP_OPT_UNIX) $$jar $(bindir) ;			\
+                $(GROUP_OPT_UNIX) $$jar $(javadir) ;			\
           done
 
 _LOCAL_CLEAN=	_clean

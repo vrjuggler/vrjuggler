@@ -2,7 +2,7 @@
 <beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd">
    <service name="SurfaceDisplayEditor">
-      <file name="${VJ_BASE_DIR}/bin/beans/SurfaceDisplayEditor.jar"
+      <file name="${VJ_BASE_DIR}/share/vrjuggler/beans/customeditors/SurfaceDisplayEditor.jar"
             class="org.vrjuggler.vrjconfig.customeditors.surfacedisplayeditor.SurfaceDisplayEditor"/>
       <dependencies>
          <bean>ConfigBroker</bean>
