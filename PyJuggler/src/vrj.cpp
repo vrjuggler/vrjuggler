@@ -25,9 +25,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <iostream>
-#include <iomanip>
-
 // Includes ====================================================================
 #include <boost/python.hpp>
 #include <vrj/Kernel/User.h>
@@ -46,6 +43,8 @@
 using namespace boost::python;
 
 // Declarations ================================================================
+
+
 namespace  {
 
 
@@ -70,11 +69,11 @@ struct vrj_Display_Wrapper: vrj::Display
 
 struct vrj_Projection_Wrapper: vrj::Projection
 {
-    vrj_Projection_Wrapper(PyObject* self_, const vrj::Projection & p0):
-        vrj::Projection(p0), self(self_) {}
-
     vrj_Projection_Wrapper(PyObject* self_):
         vrj::Projection(), self(self_) {}
+
+    vrj_Projection_Wrapper(PyObject* self_, const vrj::Projection & p0):
+        vrj::Projection(p0), self(self_) {}
 
     void config(boost::shared_ptr<jccl::ConfigChunk> p0) {
         call_method< void >(self, "config", p0);
@@ -109,11 +108,11 @@ struct vrj_User_Wrapper: vrj::User
 
 struct vrj_Viewport_Wrapper: vrj::Viewport
 {
-    vrj_Viewport_Wrapper(PyObject* self_, const vrj::Viewport & p0):
-        vrj::Viewport(p0), self(self_) {}
-
     vrj_Viewport_Wrapper(PyObject* self_):
         vrj::Viewport(), self(self_) {}
+
+    vrj_Viewport_Wrapper(PyObject* self_, const vrj::Viewport & p0):
+        vrj::Viewport(p0), self(self_) {}
 
     void config(boost::shared_ptr<jccl::ConfigChunk> p0) {
         call_method< void >(self, "config", p0);
@@ -125,97 +124,6 @@ struct vrj_Viewport_Wrapper: vrj::Viewport
 
     void updateProjections(const float p0) {
         call_method< void >(self, "updateProjections", p0);
-    }
-
-    PyObject* self;
-};
-
-struct vrj_CameraProjection_Wrapper: vrj::CameraProjection
-{
-    vrj_CameraProjection_Wrapper(PyObject* self_, const vrj::CameraProjection & p0):
-        vrj::CameraProjection(p0), self(self_) {}
-
-    vrj_CameraProjection_Wrapper(PyObject* self_):
-        vrj::CameraProjection(), self(self_) {}
-
-    void config(boost::shared_ptr<jccl::ConfigChunk> p0) {
-        call_method< void >(self, "config", p0);
-    }
-
-    void default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
-        vrj::CameraProjection::config(p0);
-    }
-
-    void calcViewMatrix(gmtl::Matrix<float,4,4> & p0, const float p1) {
-        call_method< void >(self, "calcViewMatrix", p0, p1);
-    }
-
-    void default_calcViewMatrix(gmtl::Matrix<float,4,4> & p0, const float p1) {
-        vrj::CameraProjection::calcViewMatrix(p0, p1);
-    }
-
-    PyObject* self;
-};
-
-struct vrj_Kernel_Wrapper: vrj::Kernel
-{
-    bool configCanHandle(boost::shared_ptr<jccl::ConfigChunk> p0) {
-        return call_method< bool >(self, "configCanHandle", p0);
-    }
-
-    bool configAdd(boost::shared_ptr<jccl::ConfigChunk> p0) {
-        return call_method< bool >(self, "configAdd", p0);
-    }
-
-    bool configRemove(boost::shared_ptr<jccl::ConfigChunk> p0) {
-        return call_method< bool >(self, "configRemove", p0);
-    }
-
-    int configProcessPending() {
-        return call_method< int >(self, "configProcessPending");
-    }
-
-    int default_configProcessPending() {
-        return vrj::Kernel::configProcessPending();
-    }
-
-    PyObject* self;
-};
-
-void vrj_Kernel_waitForKernelStop(vrj::Kernel* kernel)
-{
-   // A VR Juggler application written entirely in Python will call
-   // vrj.Kernel.waitForKernelStop() and block until the kernel shuts down.
-   // This is definitely a blocking I/O kind of case, so we need to release
-   // the global interpreter lock before we block on the kernel shutdown
-   // condition.
-   Py_BEGIN_ALLOW_THREADS;
-      kernel->waitForKernelStop();
-   Py_END_ALLOW_THREADS;
-}
-
-struct vrj_SimViewport_Wrapper: vrj::SimViewport
-{
-    vrj_SimViewport_Wrapper(PyObject* self_, const vrj::SimViewport & p0):
-        vrj::SimViewport(p0), self(self_) {}
-
-    vrj_SimViewport_Wrapper(PyObject* self_):
-        vrj::SimViewport(), self(self_) {}
-
-    void config(boost::shared_ptr<jccl::ConfigChunk> p0) {
-        call_method< void >(self, "config", p0);
-    }
-
-    void default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
-        vrj::SimViewport::config(p0);
-    }
-
-    void updateProjections(const float p0) {
-        call_method< void >(self, "updateProjections", p0);
-    }
-
-    void default_updateProjections(const float p0) {
-        vrj::SimViewport::updateProjections(p0);
     }
 
     PyObject* self;
@@ -402,6 +310,97 @@ struct vrj_App_Wrapper: vrj::App
 
     int default_configProcessPending() {
         return vrj::App::configProcessPending();
+    }
+
+    PyObject* self;
+};
+
+struct vrj_CameraProjection_Wrapper: vrj::CameraProjection
+{
+    vrj_CameraProjection_Wrapper(PyObject* self_, const vrj::CameraProjection & p0):
+        vrj::CameraProjection(p0), self(self_) {}
+
+    vrj_CameraProjection_Wrapper(PyObject* self_):
+        vrj::CameraProjection(), self(self_) {}
+
+    void config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+        call_method< void >(self, "config", p0);
+    }
+
+    void default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+        vrj::CameraProjection::config(p0);
+    }
+
+    void calcViewMatrix(gmtl::Matrix<float,4,4> & p0, const float p1) {
+        call_method< void >(self, "calcViewMatrix", p0, p1);
+    }
+
+    void default_calcViewMatrix(gmtl::Matrix<float,4,4> & p0, const float p1) {
+        vrj::CameraProjection::calcViewMatrix(p0, p1);
+    }
+
+    PyObject* self;
+};
+
+struct vrj_Kernel_Wrapper: vrj::Kernel
+{
+    bool configCanHandle(boost::shared_ptr<jccl::ConfigChunk> p0) {
+        return call_method< bool >(self, "configCanHandle", p0);
+    }
+
+    bool configAdd(boost::shared_ptr<jccl::ConfigChunk> p0) {
+        return call_method< bool >(self, "configAdd", p0);
+    }
+
+    bool configRemove(boost::shared_ptr<jccl::ConfigChunk> p0) {
+        return call_method< bool >(self, "configRemove", p0);
+    }
+
+    int configProcessPending() {
+        return call_method< int >(self, "configProcessPending");
+    }
+
+    int default_configProcessPending() {
+        return vrj::Kernel::configProcessPending();
+    }
+
+    PyObject* self;
+};
+
+void vrj_Kernel_waitForKernelStop(vrj::Kernel* kernel)
+{
+   // A VR Juggler application written entirely in Python will call
+   // vrj.Kernel.waitForKernelStop() and block until the kernel shuts down.
+   // This is definitely a blocking I/O kind of case, so we need to release
+   // the global interpreter lock before we block on the kernel shutdown
+   // condition.
+   Py_BEGIN_ALLOW_THREADS;
+      kernel->waitForKernelStop();
+   Py_END_ALLOW_THREADS;
+}
+
+struct vrj_SimViewport_Wrapper: vrj::SimViewport
+{
+    vrj_SimViewport_Wrapper(PyObject* self_):
+        vrj::SimViewport(), self(self_) {}
+
+    vrj_SimViewport_Wrapper(PyObject* self_, const vrj::SimViewport & p0):
+        vrj::SimViewport(p0), self(self_) {}
+
+    void config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+        call_method< void >(self, "config", p0);
+    }
+
+    void default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+        vrj::SimViewport::config(p0);
+    }
+
+    void updateProjections(const float p0) {
+        call_method< void >(self, "updateProjections", p0);
+    }
+
+    void default_updateProjections(const float p0) {
+        vrj::SimViewport::updateProjections(p0);
     }
 
     PyObject* self;
@@ -767,6 +766,26 @@ BOOST_PYTHON_MODULE(vrj)
 
     delete vrj_Viewport_scope;
 
+    class_< vrj::App, boost::noncopyable, vrj_App_Wrapper >("App", init<  >())
+        .def(init< vrj::Kernel * >())
+        .def_readwrite("mKernel", &vrj::App::mKernel)
+        .def_readwrite("mHaveFocus", &vrj::App::mHaveFocus)
+        .def("haveFocus", &vrj::App::haveFocus)
+        .def("setFocus", &vrj::App::setFocus)
+        .def("init", &vrj::App::init, &vrj_App_Wrapper::default_init)
+        .def("apiInit", &vrj::App::apiInit, &vrj_App_Wrapper::default_apiInit)
+        .def("exit", &vrj::App::exit, &vrj_App_Wrapper::default_exit)
+        .def("preFrame", &vrj::App::preFrame, &vrj_App_Wrapper::default_preFrame)
+        .def("intraFrame", &vrj::App::intraFrame, &vrj_App_Wrapper::default_intraFrame)
+        .def("postFrame", &vrj::App::postFrame, &vrj_App_Wrapper::default_postFrame)
+        .def("reset", &vrj::App::reset, &vrj_App_Wrapper::default_reset)
+        .def("focusChanged", &vrj::App::focusChanged, &vrj_App_Wrapper::default_focusChanged)
+        .def("getDrawScaleFactor", &vrj::App::getDrawScaleFactor, &vrj_App_Wrapper::default_getDrawScaleFactor)
+        .def("configCanHandle", &vrj::App::configCanHandle, &vrj_App_Wrapper::default_configCanHandle)
+        .def("depSatisfied", &vrj::App::depSatisfied, &vrj_App_Wrapper::default_depSatisfied)
+        .def("configProcessPending", &vrj::App::configProcessPending, &vrj_App_Wrapper::default_configProcessPending)
+    ;
+
     class_< vrj::CameraProjection, bases< vrj::Projection > , vrj_CameraProjection_Wrapper >("CameraProjection", init<  >())
         .def(init< const vrj::CameraProjection & >())
         .def_readwrite("mVertFOV", &vrj::CameraProjection::mVertFOV)
@@ -797,26 +816,6 @@ BOOST_PYTHON_MODULE(vrj)
         .def("getDrawSimInterface", &vrj::SimViewport::getDrawSimInterface, return_internal_reference< 1 >())
         .def("config", &vrj::SimViewport::config, &vrj_SimViewport_Wrapper::default_config)
         .def("updateProjections", &vrj::SimViewport::updateProjections, &vrj_SimViewport_Wrapper::default_updateProjections)
-    ;
-
-    class_< vrj::App, boost::noncopyable, vrj_App_Wrapper >("App", init<  >())
-        .def(init< vrj::Kernel * >())
-        .def_readwrite("mKernel", &vrj::App::mKernel)
-        .def_readwrite("mHaveFocus", &vrj::App::mHaveFocus)
-        .def("haveFocus", &vrj::App::haveFocus)
-        .def("setFocus", &vrj::App::setFocus)
-        .def("init", &vrj::App::init, &vrj_App_Wrapper::default_init)
-        .def("apiInit", &vrj::App::apiInit, &vrj_App_Wrapper::default_apiInit)
-        .def("exit", &vrj::App::exit, &vrj_App_Wrapper::default_exit)
-        .def("preFrame", &vrj::App::preFrame, &vrj_App_Wrapper::default_preFrame)
-        .def("intraFrame", &vrj::App::intraFrame, &vrj_App_Wrapper::default_intraFrame)
-        .def("postFrame", &vrj::App::postFrame, &vrj_App_Wrapper::default_postFrame)
-        .def("reset", &vrj::App::reset, &vrj_App_Wrapper::default_reset)
-        .def("focusChanged", &vrj::App::focusChanged, &vrj_App_Wrapper::default_focusChanged)
-        .def("getDrawScaleFactor", &vrj::App::getDrawScaleFactor, &vrj_App_Wrapper::default_getDrawScaleFactor)
-        .def("configCanHandle", &vrj::App::configCanHandle, &vrj_App_Wrapper::default_configCanHandle)
-        .def("depSatisfied", &vrj::App::depSatisfied, &vrj_App_Wrapper::default_depSatisfied)
-        .def("configProcessPending", &vrj::App::configProcessPending, &vrj_App_Wrapper::default_configProcessPending)
     ;
 
     class_< vrj::GlApp, bases< vrj::App > , boost::noncopyable, vrj_GlApp_Wrapper >("GlApp", init<  >())
