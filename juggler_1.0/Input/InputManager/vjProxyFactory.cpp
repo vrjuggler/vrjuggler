@@ -72,7 +72,8 @@ void vjProxyFactory::registerProxy(vjProxyConstructorBase* constructor)
    vjDEBUG(vjDBG_INPUT_MGR,1) << "vjProxyFactory::registerProxy: Constructor registered for: "
               << constructor->getChunkType().c_str()
               << "   :" << (void*)constructor
-              << " type:" << typeid(*constructor).name() << endl << vjDEBUG_FLUSH;
+              << " type:" << typeid(*constructor).name() << std::endl
+              << vjDEBUG_FLUSH;
 }
 
 // Simply query all proxy constructors registered looking
@@ -102,7 +103,7 @@ vjProxy* vjProxyFactory::loadProxy(vjConfigChunk* chunk)
 
    vjDEBUG(vjDBG_INPUT_MGR,3) << "vjProxyFactory::loadProxy: Loading proxy: "
               << chunk->getType() << "  with: "
-              << typeid(*constructor).name() << endl << vjDEBUG_FLUSH;
+              << typeid(*constructor).name() << std::endl << vjDEBUG_FLUSH;
    new_dev = constructor->createProxy(chunk);
    return new_dev;
 }

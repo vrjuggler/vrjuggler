@@ -36,7 +36,7 @@
 #ifndef _VJ_TIMESTAMP_POSIX_
 #define _VJ_TIMESTAMP_POSIX_
 
-#include <iostream.h>
+#include <vjConfig.h>
 #include <sys/time.h>
 
 //-----------------------------------------
@@ -105,7 +105,7 @@ public:
 
 
 
-    friend ostream& operator << (ostream& out, vjTimeStampPosix& ts) {
+    friend std::ostream& operator << (std::ostream& out, vjTimeStampPosix& ts) {
 	out << ts.usecs();
 	return out;
     }

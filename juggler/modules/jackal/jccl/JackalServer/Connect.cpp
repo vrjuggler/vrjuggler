@@ -37,8 +37,7 @@
 // author: Christopher Just
 
 
-#include <iostream.h>
-#include <fstream.h>
+#include <vjConfig.h>
 
 #include <Environment/vjConnect.h>
 #include <Config/vjChunkDescDB.h>
@@ -93,29 +92,31 @@ vjConnect::vjConnect(vjConfigChunk* c): commands_mutex() {
 
     switch (mode) {
     case VJC_OUTPUT:
-        outstream = new ofstream (filename.c_str(), ios::out, 0660);
+        outstream = new std::ofstream (filename.c_str(), std::ios::out);
         if (!outstream)
             vjDEBUG(vjDBG_ALL,0) << "ERROR: file open failed for \"" << filename.c_str()
                                  << "\"\n" << vjDEBUG_FLUSH;
         break;
     case VJC_INPUT:
-        instream = new ifstream (filename.c_str(), ios::in, 0);
+        instream = new std::ifstream (filename.c_str(), std::ios::in);
         if (!instream)
             vjDEBUG(vjDBG_ALL,0) << "ERROR: file open failed for \"" << filename.c_str()
                                  << "\"\n" << vjDEBUG_FLUSH;
         break;
     case VJC_INTERACTIVE:
-        instream = new fstream (filename.c_str(), ios::in | ios::out, 0660);
+        instream = new std::fstream (filename.c_str(),
+                                     std::ios::in | std::ios::out);
         if (!instream)
             vjDEBUG(vjDBG_ALL,0) << "ERROR: file open failed for \"" << filename.c_str()
                                  << "\"\n" << vjDEBUG_FLUSH;
-        outstream = (fstream*)instream;
+        outstream = (std::fstream*)instream;
         break;
     }
 
     // logging information to output file...
     if (mode == VJC_OUTPUT)
-        *outstream << "VR Juggler FileConnect output " << name.c_str() << endl;
+        *outstream << "VR Juggler FileConnect output " << name.c_str()
+                   << std::endl;
 }
 
 
@@ -170,7 +171,7 @@ bool vjConnect::stopProcess() {
     }
     if (write_connect_thread) {
         while (write_alive)
-            cout << "waiting for write to die" << endl;
+            std::cout << "waiting for write to die" << std::endl;
         //write_connect_thread->kill();
         delete write_connect_thread;
         write_connect_thread = NULL;
@@ -197,7 +198,7 @@ void vjConnect::sendDescDB (vjChunkDescDB* db) {
 
 
 void vjConnect::sendDisconnect () {
-    cerr << "vjConnect::sendDisconnect not implemented!!!" << endl;
+    std::cerr << "vjConnect::sendDisconnect not implemented!!!" << std::endl;
     //    if (mode != VJC_INPUT)
     //   commands.push (new vjCommandDisconnect());
 }
@@ -327,7 +328,7 @@ void vjConnect::writeControlLoop(void* nullParam) {
 
 
 
-bool vjConnect::readCommand(istream& fin) {
+bool vjConnect::readCommand(std::istream& fin) {
     // reads one command.  called from controlloop
     const int   buflen = 512;
     char        rbuf[buflen];    // HACK! can't handle lines longer than buflen
@@ -351,7 +352,7 @@ bool vjConnect::readCommand(istream& fin) {
         if (!strcasecmp (s, "descriptions")) {
             vjChunkDescDB* db = vjChunkFactory::instance()->getChunkDescDB();
             vjDEBUG(vjDBG_ENV_MGR,4) << "vjConnect: Sending (requested) chunkdesc.\n" << vjDEBUG_FLUSH;
-            vjDEBUG(vjDBG_ENV_MGR,5) << *db << endl << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_ENV_MGR,5) << *db << std::endl << vjDEBUG_FLUSH;
             sendDescDB (db);
         }
         else if (!strcasecmp (s,"chunks")) {
@@ -360,11 +361,13 @@ bool vjConnect::readCommand(istream& fin) {
             vjConfigManager::instance()->unlockActive();
             
             vjDEBUG(vjDBG_ENV_MGR,4) << "vjConnect: Sending (requested) chunkdb.\n" << vjDEBUG_FLUSH;
-            vjDEBUG(vjDBG_ENV_MGR,5) << *db << endl << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_ENV_MGR,5) << *db << std::endl << vjDEBUG_FLUSH;
             sendChunkDB (db, true);
         }
         else {
-            vjDEBUG(vjDBG_ERROR,1) << "Error: vjConnect:: Received unknown GET: " << s << endl << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_ERROR,1)
+               << "Error: vjConnect:: Received unknown GET: " << s
+               << std::endl << vjDEBUG_FLUSH;
         }
     }
 
@@ -396,7 +399,7 @@ bool vjConnect::readCommand(istream& fin) {
         
         vjConfigChunkDB* newchunkdb = new vjConfigChunkDB;
         fin >> *newchunkdb;
-        vjDEBUG(vjDBG_ENV_MGR,5) << *newchunkdb << endl << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_ENV_MGR,5) << *newchunkdb << std::endl << vjDEBUG_FLUSH;
         vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect:: Read: chunks: Completed\n" << vjDEBUG_FLUSH;
         // ALLEN: PUT A FUNCTION HERE FOR THE KERNEL TO LOOK AT NEWCHUNKDB
         vjConfigManager::instance()->addChunkDB(newchunkdb);    // Adds chunks to the pending list
@@ -419,7 +422,8 @@ bool vjConnect::readCommand(istream& fin) {
             
             fin >> *remove_chunk_db;       // Read in the chunks to remove
             
-            vjDEBUG(vjDBG_ENV_MGR,5) << *remove_chunk_db << endl << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_ENV_MGR,5) << *remove_chunk_db << std::endl
+                                     << vjDEBUG_FLUSH;
             
             // Tell config manager to remove the chunks
             vjConfigManager::instance()->removeChunkDB(remove_chunk_db);     // Add chunks to pending list as removes
@@ -427,7 +431,7 @@ bool vjConnect::readCommand(istream& fin) {
         }
         else
             vjDEBUG(vjDBG_ERROR,3) << "Error: vjConnect: Unknown remove type: "
-                                   << s << endl << vjDEBUG_FLUSH;
+                                   << s << std::endl << vjDEBUG_FLUSH;
     }
     else {
         vjDEBUG(vjDBG_ERROR,0) << "Error: vjConnect:: Unknown command '"

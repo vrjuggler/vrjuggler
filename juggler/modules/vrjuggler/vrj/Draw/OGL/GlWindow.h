@@ -129,7 +129,7 @@ public:
    int getId()
    { return mWindowId; }
 
-   friend ostream& operator<<(ostream& out, vjGlWindow* win);
+   friend std::ostream& operator<<(std::ostream& out, vjGlWindow* win);
 
 public:  /**** Static Helpers *****/
    /* static */ virtual bool createHardwareSwapGroup(std::vector<vjGlWindow*> wins)

@@ -84,8 +84,8 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
        m_mouse_sensitivity = 0.5;
 
     vjDEBUG(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "Mouse Sensititivty: "
-               << m_mouse_sensitivity << endl << vjDEBUG_FLUSH;
-    vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << endl << vjDEBUG_FLUSH;
+               << m_mouse_sensitivity << std::endl << vjDEBUG_FLUSH;
+    vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << std::endl << vjDEBUG_FLUSH;
 
     mSleepTimeMS = c->getProperty("sleep_time");
 
@@ -202,7 +202,8 @@ vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array
                              << "mouse_keys: px:" << m_keys[VJMOUSE_POSX]
                                         << " nx:" << m_keys[VJMOUSE_NEGX]
                                         << " py:" << m_keys[VJMOUSE_POSY]
-                                        << " ny:" << m_keys[VJMOUSE_NEGY] << endl << vjDEBUG_FLUSH;
+                                        << " ny:" << m_keys[VJMOUSE_NEGY]
+                                        << std::endl << vjDEBUG_FLUSH;
       */
 
       // Copy over values
@@ -294,9 +295,10 @@ vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array for t
             unlockMouse();
          }
 
-         vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "KeyPress:  " << hex
+         vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "KeyPress:  " << std::hex
                     << key << " state:" << ((XKeyEvent*)&event)->state
-                    << " ==> " << xKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
+                    << " ==> " << xKeyTovjKey(key) << std::endl
+                    << vjDEBUG_FLUSH;
          break;
 
       // A KeyRelease event occurred.  Flag the key that was released (as a
@@ -317,9 +319,10 @@ vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array for t
          }
 
 
-         vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "KeyRelease:" << hex
+         vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "KeyRelease:" << std::hex
                     << key << " state:" << ((XKeyEvent*)&event)->state
-                    << " ==> " << xKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
+                    << " ==> " << xKeyTovjKey(key) << std::endl
+                    << vjDEBUG_FLUSH;
          break;
 
       // A MotionNotify event (mouse pointer movement) occurred.
@@ -337,9 +340,9 @@ vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array for t
             cur_y = event.xmotion.y;
 
             vjDEBUG(vjDBG_ALL,vjDBG_HVERB_LVL) << "MotionNotify: x:"
-                                               << setw(6) << cur_x << "  y:"
-                                               << setw(6) << cur_y << endl
-                                               << vjDEBUG_FLUSH;
+                                               << std::setw(6) << cur_x << "  y:"
+                                               << std::setw(6) << cur_y
+                                               << std::endl << vjDEBUG_FLUSH;
 
             if(mLockState == Unlocked)
             {
@@ -361,9 +364,9 @@ vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array for t
                if((dx != 0) || (dy != 0))
                {
                   vjDEBUG(vjDBG_ALL,vjDBG_HVERB_LVL) << "CORRECTING: x:"
-                                                     << setw(6) << dx
-                                                     << "  y:" << setw(6)
-                                                     << dy << endl
+                                                     << std::setw(6) << dx
+                                                     << "  y:" << std::setw(6)
+                                                     << dy << std::endl
                                                      << vjDEBUG_FLUSH;
                   XWarpPointer(m_display, None, m_window, 0,0, 0,0,
                                win_center_x, win_center_y);
@@ -545,8 +548,10 @@ int vjXWinKeyboard::openTheWindow()
    m_display = XOpenDisplay(mXDisplayString.c_str());    // Open display on given XDisplay
    if (m_display == NULL)
    {
-      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:")
-                     << "vjKeyboard::StartSampling() : failed to open display" << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL)
+         <<  clrOutNORM(clrRED,"ERROR:")
+         << "vjKeyboard::StartSampling() : failed to open display"
+         << std::endl << vjDEBUG_FLUSH;
       return 0;
    }
    m_screen = DefaultScreen(m_display);
@@ -570,7 +575,8 @@ int vjXWinKeyboard::openTheWindow()
    if (i == nVisuals)
    {
       vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:")
-                  << "vjKeyboard::startSampling() : find visual failed" << endl << vjDEBUG_FLUSH;
+                  << "vjKeyboard::startSampling() : find visual failed"
+                  << std::endl << vjDEBUG_FLUSH;
       return 0;
    }
 
@@ -599,7 +605,7 @@ int vjXWinKeyboard::openTheWindow()
    XClearWindow(m_display,m_window);    // Try to clear the background
 
    vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CONFIG_LVL)
-              << "vjXWinKeyboard::openTheWindow() : done." << endl
+              << "vjXWinKeyboard::openTheWindow() : done." << std::endl
               << vjDEBUG_FLUSH;
 
    XFree (vis_infos);
@@ -732,7 +738,7 @@ char* vjXWinKeyboard::checkArgs(char* look_for)
     if (i < argc) {
        return argv[i];
     } else {
-      cerr << "ERROR: Usage is:\n" << look_for << " value\n";
+      std::cerr << "ERROR: Usage is:\n" << look_for << " value\n";
     }
    }
    i++;

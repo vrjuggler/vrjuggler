@@ -49,16 +49,16 @@
 vjMatrix vjGetVjMatrix(pfMatrix& perfMat); //TODO!!! FIXME!!! change VJ to Vj
 
 #define featureChange(var)\
-   cout<<"  !!!!!!!!!!!!\n"<<flush;\
-   cout<<" !!!!!!!!!!!!!!\n"<<flush;\
-   cout<<"!!!!!!!!!!!!!!!!\n"<<flush;\
-   cout<<"              \n"<<flush;\
-   cout<<"FEATURE CHANGED:  "<<var<<"\n"<<flush;\
-   cout<<"              \n"<<flush;\
-   cout<<"!!!!!!!!!!!!!!!!\n"<<flush;\
-   cout<<" !!!!!!!!!!!!!!\n"<<flush;\
-   cout<<"  !!!!!!!!!!!!\n"<<flush;\
-   cout<<"Exiting...\n"<<flush;\
+   std::cout<<"  !!!!!!!!!!!!\n"<<std::flush;\
+   std::cout<<" !!!!!!!!!!!!!!\n"<<std::flush;\
+   std::cout<<"!!!!!!!!!!!!!!!!\n"<<std::flush;\
+   std::cout<<"              \n"<<std::flush;\
+   std::cout<<"FEATURE CHANGED:  "<<var<<"\n"<<std::flush;\
+   std::cout<<"              \n"<<std::flush;\
+   std::cout<<"!!!!!!!!!!!!!!!!\n"<<std::flush;\
+   std::cout<<" !!!!!!!!!!!!!!\n"<<std::flush;\
+   std::cout<<"  !!!!!!!!!!!!\n"<<std::flush;\
+   std::cout<<"Exiting...\n"<<std::flush;\
    exit(-1);
    
 inline vjMatrix vjGetVJMatrix(pfMatrix& perfMat)

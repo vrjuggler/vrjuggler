@@ -124,7 +124,7 @@ public:
    virtual void closeAPI();
 
    //: Output some debug info
-   virtual void outStream(ostream& out);
+   virtual void outStream(std::ostream& out);
 
    //: Draw all the ogl pipes/windows
    void drawAllPipes();

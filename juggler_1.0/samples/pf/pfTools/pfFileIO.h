@@ -58,7 +58,7 @@ public:
    {
       std::string demangled_path = vjFileIO::replaceEnvVars( filepath );
       filePath = demangled_path;
-      //cout << "pfFileIO::setFilePath: path now: " << filePath << endl;
+      //std::cout << "pfFileIO::setFilePath: path now: " << filePath << std::endl;
    }
 
    static void addFilePath( const std::string& filepath)
@@ -66,7 +66,7 @@ public:
       std::string demangled_path = vjFileIO::replaceEnvVars( filepath );
       filePath += demangled_path;
       filePath += std::string(":");    // Add on trailing seperator
-      //cout << "pfFileIO::addFilePath: path now: " << filePath << endl;
+      //std::cout << "pfFileIO::addFilePath: path now: " << filePath << std::endl;
    }
 
    //: Load geometry from File

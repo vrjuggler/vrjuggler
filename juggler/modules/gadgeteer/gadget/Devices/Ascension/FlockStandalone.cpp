@@ -31,8 +31,8 @@
  * -----------------------------------------------------------------
  */
 
-#include <iostream.h>      // for cout
-#include <fstream.h>       // for ifstream
+#include <iostream>        // for std::cout
+#include <fstream>         // for std::ifstream
 #include <string.h>
 		
 #include <fcntl.h>         // for open
@@ -130,7 +130,7 @@ void aFlock::setPort(const char* const serialPort)
 {
     if (_active)
     {
-	cout << "Flock: Cannot change the serial Port while active\n";
+	std::cout << "Flock: Cannot change the serial Port while active\n";
 	return;
     }
     if (serialPort != NULL)
@@ -152,7 +152,7 @@ void aFlock::setBaudRate(const int& baud)
 {
     if (_active)
     {
-	cerr << "Flock: Cannot change the baud rate while active\n";
+	std::cerr << "Flock: Cannot change the baud rate while active\n";
 	return;
     } else {
 	_baud = baud;
@@ -165,44 +165,44 @@ int aFlock::start()
 {
     if (!_active)
     {
-      cout << "aFlock: Getting ready....\n\n" << flush;
+      std::cout << "aFlock: Getting ready....\n\n" << std::flush;
 
-      cout<<"aFlock: Opening port\n"<<flush;
+      std::cout<<"aFlock: Opening port\n"<<std::flush;
       aFlock::open_port( _port, _baud, _portId );
       if (_portId == -1)
 	       return 0;
 
-      cout<<"aFlock: Setting blocking\n"<<flush;
+      std::cout<<"aFlock: Setting blocking\n"<<std::flush;
       aFlock::set_blocking( _portId, _blocking );
 
-      cout<<"aFlock: Setting sync\n"<<flush;
+      std::cout<<"aFlock: Setting sync\n"<<std::flush;
       aFlock::set_sync( _portId, _syncStyle );
 
-      cout<<"aFlock: Setting group\n"<<flush;
+      std::cout<<"aFlock: Setting group\n"<<std::flush;
       aFlock::set_group( _portId );
 
-      cout<<"aFlock: Setting autoconfig\n"<<flush;
+      std::cout<<"aFlock: Setting autoconfig\n"<<std::flush;
       aFlock::set_autoconfig( _portId, _numBirds );
 
-      cout<<"aFlock: Setting transmitter\n"<<flush;
+      std::cout<<"aFlock: Setting transmitter\n"<<std::flush;
       aFlock::set_transmitter( _portId, _xmitterUnitNumber );
 
-      cout<<"aFlock: Setting filter\n"<<flush;
+      std::cout<<"aFlock: Setting filter\n"<<std::flush;
       aFlock::set_filter( _portId, _filter );
 
-      cout<<"aFlock: Setting hemisphere\n"<<flush;
+      std::cout<<"aFlock: Setting hemisphere\n"<<std::flush;
       aFlock::set_hemisphere( _portId, _hemisphere, _xmitterUnitNumber, _numBirds );
 
-      cout<<"aFlock: Setting pos_angles\n"<<flush;
+      std::cout<<"aFlock: Setting pos_angles\n"<<std::flush;
       aFlock::set_pos_angles( _portId, _xmitterUnitNumber, _numBirds );
 
-      cout<<"aFlock: Setting pickBird\n"<<flush;
+      std::cout<<"aFlock: Setting pickBird\n"<<std::flush;
       aFlock::pickBird( _xmitterUnitNumber,_portId );
 
-      cout<<"aFlock: Setting rep_and_stream\n"<<flush;
+      std::cout<<"aFlock: Setting rep_and_stream\n"<<std::flush;
       aFlock::set_rep_and_stream( _portId, _reportRate );
 
-      cout  << "aFlock: ready to go.." << endl << flush;
+      std::cout  << "aFlock: ready to go.." << std::endl << std::flush;
 
       // flock is active.
       _active = true;
@@ -269,7 +269,7 @@ int aFlock::stop()
 {
     char   bird_command[4];
 
-    cout << "Flock: Stopping the flock..." << flush;
+    std::cout << "Flock: Stopping the flock..." << std::flush;
 
     bird_command[0] = 'B';
     write( _portId, bird_command, 1 );
@@ -289,7 +289,7 @@ int aFlock::stop()
     // flock is not active now.
     _active = false;
 
-    cout << "stopped." << endl << flush;
+    std::cout << "stopped." << std::endl << std::flush;
 
     return 1;
 }
@@ -300,7 +300,7 @@ void aFlock::setHemisphere( const BIRD_HEMI& h )
 {
     if (_active)
     {
-	cout << "Flock: Cannot change the hemisphere\n" << flush;
+	std::cout << "Flock: Cannot change the hemisphere\n" << std::flush;
 	return;
     } else {
 	// Set it.
@@ -314,7 +314,8 @@ void aFlock::setFilterType( const BIRD_FILT& f )
 {
     if (_active)
     {
-	cout << "Flock: Cannot change filter type while active\n" << flush;
+	std::cout << "Flock: Cannot change filter type while active\n"
+                  << std::flush;
 	return;
     } else {
 	// Set it.
@@ -328,7 +329,8 @@ void aFlock::setReportRate( const char& rRate )
 {
     if (_active)
     {
-	cout << "Flock: Cannot change report rate while active\n" << flush;
+	std::cout << "Flock: Cannot change report rate while active\n"
+                  << std::flush;
 	return;
     } else {
 	// Set it.
@@ -344,7 +346,8 @@ void aFlock::setTransmitter( const int& Transmit )
 {
   if (_active)
   {
-      cout << "Flock: Cannot change transmitter while active\n" << flush;
+      std::cout << "Flock: Cannot change transmitter while active\n"
+                << std::flush;
       return;
   } else {
       // Set it.
@@ -360,7 +363,8 @@ void aFlock::setNumBirds( const int& n )
 {
     if (_active)
     {
-	cout << "Flock: Cannot change num birds while active\n" << flush;
+	std::cout << "Flock: Cannot change num birds while active\n"
+                  << std::flush;
 	return;
     } else {
 	// Set it.
@@ -378,7 +382,8 @@ void aFlock::setSync(const int& sync)
 {
   if (_active)
   {
-      cout << "Flock: Cannot change report rate while active\n" << flush;
+      std::cout << "Flock: Cannot change report rate while active\n"
+                << std::flush;
       return;
   } else {
       // Set it.
@@ -393,7 +398,7 @@ void aFlock::setBlocking( const int& blVal )
 {
   if (_active)
   {
-      cout << "Flock: Cannot change blocking while active\n" << flush;
+      std::cout << "Flock: Cannot change blocking while active\n" << std::flush;
       return;
   } else {
       // Set it.
@@ -454,17 +459,18 @@ void aFlock::initCorrectionTable( const char* const fName )
 {
   int i,j,k, xsize,ysize,zsize;
   float dump;
-  ifstream inFile;
+  std::ifstream inFile;
 
-  cout << "	  Initializing calibration table ... " << endl
-             << "	    " << fName << endl << flush;
+  std::cout << "	  Initializing calibration table ... " << std::endl
+            << "	    " << fName << std::endl << std::flush;
   inFile.open( fName );
   if (!inFile)
   {
-	cout << "Unable to open calibration.table\n" << flush;
+	std::cout << "Unable to open calibration.table\n" << std::flush;
         return;
   } else {
-     cout << "   Calibration table opened sucessfully." << endl << flush;
+     std::cout << "   Calibration table opened sucessfully." << std::endl
+               << std::flush;
   }
 
   inFile >> caltable.xmin >> caltable.xmax
@@ -533,12 +539,13 @@ int aFlock::getReading( const int& n, const int& port,
 	}
 	
 	if (c >= 5000)
-	    cout << "aFlock: tracker timeout (" << c << ")" << endl << flush;
+	    std::cout << "aFlock: tracker timeout (" << c << ")" << std::endl
+                      << std::flush;
 	
 	addr = group;
     } while (addr != n);
 
-    //cout << "addr: " << addr << endl;
+    //std::cout << "addr: " << addr << std::endl;
 
     // Position
     xPos = rawToFloat(buff[1],buff[0])   * POSITION_RANGE;
@@ -591,22 +598,24 @@ int aFlock::open_port( const char* const serialPort,
     portId = open( serialPort, O_RDWR | O_NDELAY);
     if (portId == -1)
     {
-	cout << "  port reset failed (because port open failed)\n" << flush ;
+	std::cout << "  port reset failed (because port open failed)\n"
+                  << std::flush;
 	return portId;
     } else {
 	sleep(2);
 	close( portId );
-	cout << "  port reset successfully (port was opened then closed)\n" << flush;
+	std::cout << "  port reset successfully (port was opened then closed)\n"
+                  << std::flush;
     }
 
     portId = open( serialPort, O_RDWR | O_NDELAY);
 
     if (portId == -1)
     {
-	cout << "  port open failed\n" << flush;
+	std::cout << "  port open failed\n" << std::flush;
 	return portId;
     } else {
-	cout << "  port open successfully\n" << flush;
+	std::cout << "  port open successfully\n" << std::flush;
     }
 
     //////////////////////////////////////////////////////////////////
@@ -614,7 +623,7 @@ int aFlock::open_port( const char* const serialPort,
     //
     //////////////////////////////////////////////////////////////////
 
-    cout << "  Getting current term setting\n" << flush;
+    std::cout << "  Getting current term setting\n" << std::flush;
     termios termIoPort;
     tcgetattr(portId, &termIoPort);
 
@@ -661,14 +670,14 @@ int aFlock::open_port( const char* const serialPort,
 
     // Set the new attributes
     int result = 0;
-    cout << "  Setting new term setting: "<<baud<<" baud..." << flush;
+    std::cout << "  Setting new term setting: "<<baud<<" baud..." << std::flush;
     result = tcsetattr(portId, TCSANOW, &termIoPort);
 
     // did it succeed?
     if (result == 0)
-	cout<<" success\n"<<flush;
+	std::cout<<" success\n"<<std::flush;
     else
-	cout<<" failed\n"<<flush;
+	std::cout<<" failed\n"<<std::flush;
 
     // return the portID
     return portId;

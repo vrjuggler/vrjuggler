@@ -75,7 +75,7 @@ public:
    // Initialize interfaces
    virtual void init()
    {
-      //cout<<"digitalGloveApp::init()"<<flush;
+      //std::cout<<"digitalGloveApp::init()"<<std::flush;
       
       mGlove.init("VJGlove");
       
@@ -91,14 +91,14 @@ public:
       mRightRing.init("RightRing");
       mRightPinky.init("RightPinky");
       
-      //cout<<" --- done\n"<<flush;
+      //std::cout<<" --- done\n"<<std::flush;
    }
 
    // Execute any initialization needed after API is started
    //  but before the drawManager starts the drawing loops.
    virtual void apiInit()
    {
-      //cout<<"digitalGloveApp::apiInit()\n"<<flush; 
+      //std::cout<<"digitalGloveApp::apiInit()\n"<<std::flush; 
    }
 
    //: Function to draw the scene
@@ -106,7 +106,7 @@ public:
    //! POST: The current scene has been drawn
    virtual void draw()
    {
-      //cout<<"digitalGloveApp::draw()\n"<<flush; 
+      //std::cout<<"digitalGloveApp::draw()\n"<<std::flush; 
       
       initGLState();    // This should really be in another function
       myDraw();
@@ -135,18 +135,18 @@ public:
    /// Function called after tracker update but before start of drawing
    virtual void preFrame()
    {
-     //cout<<"digitalGloveApp::preFrame()\n"<<flush; 
+     //std::cout<<"digitalGloveApp::preFrame()\n"<<std::flush; 
       
-       cout<<mLeftThumb->getData()
-          <<mLeftIndex->getData()
-          <<mLeftMiddle->getData()
-          <<mLeftRing->getData()
-          <<mLeftPinky->getData()<<"."
-          <<mRightThumb->getData()
-          <<mRightIndex->getData()
-          <<mRightMiddle->getData()
-          <<mRightRing->getData()
-          <<mRightPinky->getData()<<"\n"<<flush;
+       std::cout<<mLeftThumb->getData()
+                <<mLeftIndex->getData()
+                <<mLeftMiddle->getData()
+                <<mLeftRing->getData()
+                <<mLeftPinky->getData()<<"."
+                <<mRightThumb->getData()
+                <<mRightIndex->getData()
+                <<mRightMiddle->getData()
+                <<mRightRing->getData()
+                <<mRightPinky->getData()<<"\n"<<std::flush;
    }
 
    /// Function called after drawing has been triggered but BEFORE it completes

@@ -56,7 +56,7 @@ void main(int argc, char** argv)
     
     for (int y = 0; y < 500000; ++y)
     {
-	cout<<"."<<flush;
+	std::cout<<"."<<std::flush;
 	sUtil.collectIncomingData();
 	
 	for (int x = 0; sUtil.queueSize(); ++x)
@@ -66,10 +66,10 @@ void main(int argc, char** argv)
 	    switch(message.messageType)
 	    {
 	    case socketUtil::STRING:
-		cout<< "STRING: "<<message.data<<"\n"<<flush;
+		std::cout<< "STRING: "<<message.data<<"\n"<<std::flush;
 		break;
 	    case socketUtil::COMMAND:
-		cout<< "COMMAND: "<<message.data<<"\n"<<flush;
+		std::cout<< "COMMAND: "<<message.data<<"\n"<<std::flush;
 		break;
 	    }
 	}

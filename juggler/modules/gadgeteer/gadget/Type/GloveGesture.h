@@ -80,12 +80,12 @@ public:
    //!POST: After running, this routines will leave the file pointer immedately after
    // the header.
    //!POST: mGestureNames & mGestureExamples will be filled with correct data
-   virtual void loadFileHeader(ifstream& infile);
+   virtual void loadFileHeader(std::ifstream& infile);
 
    //: Save a file header
    //! NOTE: The client of this routine may add their own initial lines to the
    //+ header as long as they remove them before calling loadFileHeader.
-   virtual void saveFileHeader(ofstream& outFile);
+   virtual void saveFileHeader(std::ofstream& outFile);
 
    //: Return the identifier of the string gesture.
    //! RETURNS: -1 if not found

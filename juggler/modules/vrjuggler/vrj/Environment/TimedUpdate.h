@@ -54,7 +54,7 @@ class vjTimedUpdate {
 public:
 
     //: writes the current contents of this vjTimedUpdate to out
-    virtual void write (ostream& out);
+    virtual void write (std::ostream& out);
 
     //: gets a name associated with this object
     virtual std::string getName ();

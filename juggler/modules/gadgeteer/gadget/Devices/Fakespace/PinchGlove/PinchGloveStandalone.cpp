@@ -51,8 +51,8 @@
 #include <string.h> // for strcpy();
 #include <stdio.h>
 #include <stdlib.h>
-#include <iostream.h>      // for cout
-#include <fstream.h>       // for ifstream
+#include <iostream>        // for std::cout
+#include <fstream>         // for ifstream
 #include <string.h>
 
 #include <fcntl.h>         // for open
@@ -85,16 +85,16 @@ fsPinchGlove::fsPinchGlove() : pinchfd( -1 )
 // Connect to the pinch glove hardware
 bool fsPinchGlove::connectToHardware(const char* const ttyPort)
 {
-    cout<<"\n[pinch] Connecting To Fakespace Hardware\n"<<flush;
+    std::cout<<"\n[pinch] Connecting To Fakespace Hardware\n"<<std::flush;
     
     int result = mConnectToHardware( ttyPort );    
    
     if (result == 1)
-		cout<<"[pinch] Connected to pinch glove hardware on port "<<ttyPort<<"\n"<<flush;
+		std::cout<<"[pinch] Connected to pinch glove hardware on port "<<ttyPort<<"\n"<<std::flush;
     else
-		cout<<"[pinch] connectToHardware(\""<<ttyPort<<"\") returned "<<(result == 1 ? "true":"false")<<"\n"<<flush;
+		std::cout<<"[pinch] connectToHardware(\""<<ttyPort<<"\") returned "<<(result == 1 ? "true":"false")<<"\n"<<std::flush;
     
-	cout<<"\n"<<flush;
+	std::cout<<"\n"<<std::flush;
     return result == 1 ? true:false;
 }
 
@@ -144,7 +144,7 @@ int fsPinchGlove::mConnectToHardware(const char* const ttyPort)
 	int fileDescriptor = -1;
     if ((fileDescriptor = open(ttyPort, O_RDWR | O_NDELAY)) == -1) 
     {
-    	cout<<"[pinch] Port ("<<ttyPort<<") open failed\n"<<flush;
+    	std::cout<<"[pinch] Port ("<<ttyPort<<") open failed\n"<<std::flush;
 		close( pinchfd );
 		return 0;
 	} else
@@ -152,7 +152,7 @@ int fsPinchGlove::mConnectToHardware(const char* const ttyPort)
 	
     if (tcsetattr(pinchfd, TCSAFLUSH, &data) < 0) 
     {
-    	cout<<"[pinch] tcsetattr failed\n"<<flush;
+    	std::cout<<"[pinch] tcsetattr failed\n"<<std::flush;
 		return 0;
 	}
 	
@@ -160,7 +160,7 @@ int fsPinchGlove::mConnectToHardware(const char* const ttyPort)
 
     if (tcflush(pinchfd, TCIOFLUSH) < 0)
 	{
-    	cout<<"[pinch] tcflush failed\n"<<flush;
+    	std::cout<<"[pinch] tcflush failed\n"<<std::flush;
 		return 0;
 	}
 	
@@ -170,7 +170,7 @@ int fsPinchGlove::mConnectToHardware(const char* const ttyPort)
     mSendCommandToHardware("T1", buf);
     if (buf[1] != '1') 
     {
-    	cout<<"[pinch] could not turn time stamps on, result should == '1' but result == '"<<buf[1]<<"'\n";
+    	std::cout<<"[pinch] could not turn time stamps on, result should == '1' but result == '"<<buf[1]<<"'\n";
     	return 0;   
     }
     /* Version compatability */

@@ -31,9 +31,7 @@
  * -----------------------------------------------------------------
  */
 
-/// TOP OF TEST_C
-
-#include <iostream.h>
+#include <iostream>
 #include <stdio.h>
 #include <ulocks.h>
 #include <math.h>
@@ -54,8 +52,8 @@ vjBarrier myBarrier(NUMTHREADS);
 void main()
 {
     float x;
-    cout << "Hello there\n\n" << flush;
-    cout << "Start:\n\n";
+    std::cout << "Hello there\n\n" << std::flush;
+    std::cout << "Start:\n\n";
 
     
     sprocInit(NULL);
@@ -84,13 +82,14 @@ void main()
     endSecond = endTime.tv_sec + (endTime.tv_usec * 0.000001);
     totalSeconds = (endSecond - startSecond);
     
-    cout << "\nDone: It took... " << totalSeconds << " seconds" << flush;
+    std::cout << "\nDone: It took... " << totalSeconds << " seconds"
+              << std::flush;
 //---------------------------------------------------------
     
     sginap(100);
     
-    cout << "End:\n\n";
-    cout << "\n" << flush;
+    std::cout << "End:\n\n";
+    std::cout << "\n" << std::flush;
     
     // -- Clean up --- //
     //    delete mySemaphore;

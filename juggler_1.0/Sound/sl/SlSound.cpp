@@ -31,6 +31,7 @@
  * -----------------------------------------------------------------
  */
 
+#include <iostream>
 #include <assert.h>
 #include <stdio.h>
 #include <string>
@@ -52,7 +53,7 @@ bool SlSound::load( const char* const filename )
 {   
    mSoundName = filename;
    
-   cout<<"[SL] "<<mSoundName.c_str()<<"\n"<<flush;
+   std::cout<<"[SL] "<<mSoundName.c_str()<<"\n"<<std::flush;
    SlSoundEngine& engine = dynamic_cast<SlSoundEngine&> (*mEngine);
    mSample = new slSample( const_cast<char*>(mSoundName.c_str()), &engine.mScheduler );
 
@@ -71,7 +72,7 @@ SlSound::~SlSound() {}
 void SlSound::pitchBend( float amount )
 {
    assert( mSample != NULL );
-   cout<<"[SL] Not implemented: pitchBend\n"<<flush;
+   std::cout<<"[SL] Not implemented: pitchBend\n"<<std::flush;
 }   
 
 // allows a user to enable or disable a sound without worring about its state set by start or stop.
@@ -81,7 +82,7 @@ void SlSound::enable( const bool& state )
 {
    vjSound::enabled( state );
    assert( mSample != NULL );
-   cout<<"[SL] Not implemented: enable\n"<<flush;
+   std::cout<<"[SL] Not implemented: enable\n"<<std::flush;
 }
 
 void SlSound::trigger()
@@ -99,13 +100,15 @@ void SlSound::trigger()
          //mSample->adjustVolume( volume );
 
          case 0:
-            cout<<"[SL] Playing audio "<<mSoundName.data()<<"\n"<<flush;
+            std::cout<<"[SL] Playing audio "<<mSoundName.data()<<"\n"
+                     <<std::flush;
             engine.mScheduler.playSample( mSample );
             break;
 
          default:
          case -1:
-            cout<<"[SL] Looping audio "<<mSoundName.data()<<"\n"<<flush;
+            std::cout<<"[SL] Looping audio "<<mSoundName.data()<<"\n"
+                     <<std::flush;
             engine.mScheduler.loopSample( mSample );
             break;
       }
@@ -126,12 +129,12 @@ void SlSound::setPosition( float x, float y, float z )
 {
    vjSound::setPosition( x, y, z ); //base functionality
    assert( mSample != NULL );
-   cout<<"[SL] Not implemented: setposition\n"<<flush;
+   std::cout<<"[SL] Not implemented: setposition\n"<<std::flush;
 }
 
 // output to stdout, useful for debugging.
 void SlSound::print()
 {
-   cout<<"[SL] Stevebaker's plib SL sound engine: \n"
-       <<"[SL] Sound name: "<<mSoundName.data()<<"\n\n"<<flush;
+   std::cout<<"[SL] Stevebaker's plib SL sound engine: \n"
+       <<"[SL] Sound name: "<<mSoundName.data()<<"\n\n"<<std::flush;
 }

@@ -58,7 +58,7 @@ public:
     vjSemaphore threadWait;	      //: thread waits for work here
 };
 
-ostream& operator<< (ostream&, vjOneThread&);
+std::ostream& operator<< (std::ostream&, vjOneThread&);
 
 
 //----------------------------------------------

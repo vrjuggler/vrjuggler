@@ -59,8 +59,8 @@ vjCommandRefresh::vjCommandRefresh() {
     next_fire_time = refresh_time = 0.0;
 }
     
-void vjCommandRefresh::call (ostream& out) {
-    out << "Refresh all" << endl;
+void vjCommandRefresh::call (std::ostream& out) {
+    out << "Refresh all" << std::endl;
 }
 
 
@@ -72,12 +72,12 @@ vjCommandSendChunkDB::vjCommandSendChunkDB (vjConfigChunkDB* _db, bool _all) {
     all = _all;
 }
 
-void vjCommandSendChunkDB::call (ostream& out) {
+void vjCommandSendChunkDB::call (std::ostream& out) {
     if (all)
 	out << "chunks all\n";
     else
 	out << "chunks\n";
-    out << *db << flush;
+    out << *db << std::flush;
 }
 
 std::string vjCommandSendChunkDB::getName () {
@@ -92,12 +92,12 @@ vjCommandSendDescDB::vjCommandSendDescDB (vjChunkDescDB* _db, bool _all) {
     all = _all;
 }
     
-void vjCommandSendDescDB::call (ostream& out) {
+void vjCommandSendDescDB::call (std::ostream& out) {
     if (all)
-	out << "descriptions all\n" << flush;
+	out << "descriptions all\n" << std::flush;
     else
-	out << "descriptions\n" << flush;
-    out << *db << flush;
+	out << "descriptions\n" << std::flush;
+    out << *db << std::flush;
 }
 
 std::string vjCommandSendDescDB::getName () {
@@ -113,7 +113,7 @@ vjCommandTimedUpdate::vjCommandTimedUpdate (vjTimedUpdate* _tu, float _refresh_t
     next_fire_time = 0;
 }
     
-void vjCommandTimedUpdate::call (ostream& out) {
+void vjCommandTimedUpdate::call (std::ostream& out) {
     timed_update->write (out);
 }
 

@@ -44,8 +44,9 @@ char* vjMemPoolSGI::arenaForMemPoolsFileName = NULL;
 vjMemPoolSGI::vjMemPoolSGI (size_t initialSize, int numProcs,
                             char* staticTempName)
 {
-   cerr << "\n\nMemPoolSGI: Allocating Arena." << "\n\tSize: " << initialSize
-        << "\n\tnProcs: " << numProcs << "\n" << flush;
+   std::cerr << "\n\nMemPoolSGI: Allocating Arena." << "\n\tSize: "
+             << initialSize << "\n\tnProcs: " << numProcs << "\n"
+             << std::flush;
 
    usconfig(CONF_INITUSERS, numProcs);
    usconfig(CONF_INITSIZE, initialSize);
@@ -68,18 +69,18 @@ vjMemPoolSGI::vjMemPoolSGI (size_t initialSize, int numProcs,
       perror("ERROR: vjMemPoolSGI::MemPoolSGI");
    }
 
-   cerr << "\tfile: " << arenaFileName << endl;
-   cerr << "\tpool: " << this << endl;
-   cerr << "\tarena: " << arena << endl;
+   std::cerr << "\tfile: " << arenaFileName << std::endl;
+   std::cerr << "\tpool: " << this << std::endl;
+   std::cerr << "\tarena: " << arena << std::endl;
 }
 
 void
 vjMemPoolSGI::init (size_t initialSize, int numProcs, char* staticTempName) {
    if (arenaForMemPools == NULL)
    {
-      cerr << "\n\nMemPoolSGI: Allocating Base Arena for ALL vjMemPoolSGI's."
-           << "\n\tSize: " << initialSize << "\n\tnProcs: " << numProcs
-           << "\n" << flush;
+      std::cerr << "\n\nMemPoolSGI: Allocating Base Arena for ALL vjMemPoolSGI's."
+                << "\n\tSize: " << initialSize << "\n\tnProcs: " << numProcs
+                << "\n" << std::flush;
    
       usconfig(CONF_INITUSERS, numProcs);
       usconfig(CONF_INITSIZE, initialSize);
@@ -99,9 +100,10 @@ vjMemPoolSGI::init (size_t initialSize, int numProcs, char* staticTempName) {
       arenaForMemPoolsFileName = (char*)usmalloc(strlen(staticTempName+1), arenaForMemPools);
       strcpy(arenaForMemPoolsFileName, tempName);
    
-      cerr << "\tfile: " << arenaForMemPoolsFileName << endl;
-      cerr << "\tarena: " << arenaForMemPools << endl;
+      std::cerr << "\tfile: " << arenaForMemPoolsFileName << std::endl;
+      std::cerr << "\tarena: " << arenaForMemPools << std::endl;
    } else {
-      cerr << "Tried to re-init the Base Arena for ALL vjMemPoolSGI's" << endl;
+      std::cerr << "Tried to re-init the Base Arena for ALL vjMemPoolSGI's"
+                << std::endl;
    }
 }

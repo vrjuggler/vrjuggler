@@ -75,7 +75,7 @@ int vjThreeDMouse::startSampling()
    if ( !myThread->valid() ) {
       return -1;
    } else {
-      cout << "going " << endl;
+      std::cout << "going " << std::endl;
       return 1;
    }
   } else {
@@ -98,11 +98,7 @@ void sampleMouse(void* pointer) {
 
      gettimeofday(&tv,0);
      stop_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
-     cout << 1/((stop_time-start_time) / 60)
-          << "  " << endl;
-
-
-
+     std::cout << 1/((stop_time-start_time) / 60) << "  " << std::endl;
     }
 }
 
@@ -113,7 +109,7 @@ int vjThreeDMouse::stopSampling()
 
     myThreadID = NULL;
 //    sginap(1);
-    cout << "stopping the vjThreeDMouse.." << endl;
+    std::cout << "stopping the vjThreeDMouse.." << std::endl;
    }
    return 1;
 }

@@ -68,7 +68,7 @@ public:
 //      *attachedCounter = *attachedCounter + 1;      // Track how many semaphores are allocated
 
       //DebugLock.acquire();
-      //cerr << vjThread::self() << " vjSemaphoreWin32::vjSemaphoreWin32: attachedCounter: " << *attachedCounter << endl;
+      //std::cerr << vjThread::self() << " vjSemaphoreWin32::vjSemaphoreWin32: attachedCounter: " << *attachedCounter << std::endl;
       //DebugLock.release();
 
       // ----- Allocate the semaphore ----- //
@@ -84,7 +84,7 @@ public:
 //      *attachedCounter = *attachedCounter - 1;     // Track how many Semaphore are allocated
 
       //DebugLock.acquire();
-      //cerr << vjThread::self() << " vjSemaphoreWin32::~vjSemaphoreWin32: attachedCounter: " << *attachedCounter << endl;
+      //std::cerr << vjThread::self() << " vjSemaphoreWin32::~vjSemaphoreWin32: attachedCounter: " << *attachedCounter << std::endl;
       //DebugLock.release();
 
 //      if (*attachedCounter == 0)
@@ -195,7 +195,8 @@ public:
    //---------------------------------------------------------
    void dump (FILE* dest = stderr, const char* message = "\n------ Semaphore Dump -----\n") const
    {
-      cout << "vjSemaphoreWin32::dump() \nNot implemented on Win32" << endl;
+       std::cout << "vjSemaphoreWin32::dump() \nNot implemented on Win32"
+                 << std::endl;
    }
 
 protected:

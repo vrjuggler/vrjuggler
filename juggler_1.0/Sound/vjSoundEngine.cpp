@@ -82,7 +82,7 @@ vjSound* vjSoundEngine::getHandle( const char* const alias )
 // memory managed by engine
 vjSound* vjSoundEngine::newSound()
 {
-   cout<<"new Sound()\n"<<flush;
+   std::cout<<"new Sound()\n"<<std::flush;
    return new vjSound( *this );
 }
 

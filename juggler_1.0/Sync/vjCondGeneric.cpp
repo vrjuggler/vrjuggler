@@ -42,10 +42,11 @@
 // NOTE: The call blocks until a condition has been signaled
 int
 vjCondGeneric::wait () {
-   cerr << setw(5) << getpid() << "  Wait: Begin:" << endl;
+   std::cerr << std::setw(5) << getpid() << "  Wait: Begin:" << std::endl;
    // ASSERT:  We have been locked
    if (condMutex->test() == 0)    // Not locked
-      cerr << " vjCondGeneric::wait: INCORRECT USAGE: Mutex was not locked when wait invoked!!!" << endl;
+      std::cerr << " vjCondGeneric::wait: INCORRECT USAGE: Mutex was not locked when wait invoked!!!"
+                << std::endl;
 
    waiters++;              // We have lock already
 
@@ -59,6 +60,6 @@ vjCondGeneric::wait () {
    condMutex->acquire();
    waiters--;
 
-   cerr << setw(5) << getpid() << "  Wait: end:" << endl;
+   std::cerr << std::setw(5) << getpid() << "  Wait: end:" << std::endl;
    return 0;
 }

@@ -89,7 +89,9 @@ public:
     }
 
 
-    inline friend ostream& operator << (ostream& out, vjTimeStampNone& ts) {
+    inline friend std::ostream& operator << (std::ostream& out,
+                                             vjTimeStampNone& ts)
+    {
 	return out;
     }
 

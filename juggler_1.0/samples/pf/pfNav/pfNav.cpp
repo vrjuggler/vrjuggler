@@ -31,7 +31,7 @@
  * -----------------------------------------------------------------
  */
 
-#include <iostream.h>
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,11 +42,11 @@
 
 void usage(char** argv)
 {
-   cout<<"_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/\n"<<flush;
-   cout<<"\n"<<flush;
-   cout<<"Usage:\n";
-   cout<<"      "<<argv[0]<<" modelfile.flt vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n] (for plib's SL library)\n";
-   cout<<"_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/\n"<<flush;
+   std::cout<<"_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/\n"<<std::flush;
+   std::cout<<"\n"<<std::flush;
+   std::cout<<"Usage:\n";
+   std::cout<<"      "<<argv[0]<<" modelfile.flt vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n] (for plib's SL library)\n";
+   std::cout<<"_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/\n"<<std::flush;
 }
 
 // The app class we want to use
@@ -75,26 +75,26 @@ void main(int argc, char* argv[])
    if (argc < 2)
    {
       usage( argv );
-      cout<<"\n\n[ERROR!!!] you must supply a model database (then config files)\n\n"<<flush;
+      std::cout<<"\n\n[ERROR!!!] you must supply a model database (then config files)\n\n"<<std::flush;
       return;
    }
 
    std::string model_filename = argv[1];
-   cout<<"Will load: "<<model_filename.c_str()<<"\n"<<flush;
+   std::cout<<"Will load: "<<model_filename.c_str()<<"\n"<<std::flush;
 
    if (argc < 3)
    {
-      cout<<"\n\n[ERROR!!!] you must supply config files after the model file...\n\n"<<flush;
+      std::cout<<"\n\n[ERROR!!!] you must supply config files after the model file...\n\n"<<std::flush;
       return;
    }
 
-   cout<<"==========\n"<<flush;
+   std::cout<<"==========\n"<<std::flush;
    for ( int i = 2; i < argc; ++i )
    {
-      cout<<"Loading Config File: "<<argv[i]<<"\n"<<flush;
+      std::cout<<"Loading Config File: "<<argv[i]<<"\n"<<std::flush;
      kernel->loadConfigFile(argv[i]);
    }
-   cout<<"===========\n"<<flush;
+   std::cout<<"===========\n"<<std::flush;
 
     kernel->start();
 

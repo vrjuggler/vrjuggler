@@ -70,7 +70,7 @@ public:
          *attachedCounter = 0;
       }
       *attachedCounter = *attachedCounter + 1;      // Track how many mutexes are allocated
-      //vjDEBUG << " vjBarrierSGI:: vjBarrierSGI: attachedCounter: " << *attachedCounter << endl << vjDEBUG_FLUSH;
+      //vjDEBUG << " vjBarrierSGI:: vjBarrierSGI: attachedCounter: " << *attachedCounter << std::endl << vjDEBUG_FLUSH;
 
       // ----- Allocate the mutex ----- //
       theBarrier = new_barrier(barrierPool->getArena());
@@ -84,7 +84,7 @@ public:
       // ---- Deal with the pool --- //
       *attachedCounter = *attachedCounter - 1;     // Track how many mutexes are allocated
 
-      //vjDEBUG << " vjBarrierSGI::~ vjBarrierSGI: attachedCounter: " << *attachedCounter << endl << vjDEBUG_FLUSH;
+      //vjDEBUG << " vjBarrierSGI::~ vjBarrierSGI: attachedCounter: " << *attachedCounter << std::endl << vjDEBUG_FLUSH;
 
       if (*attachedCounter == 0)
       {
@@ -139,7 +139,7 @@ public:
 
    void dump (void) const
    {
-      cerr << "\n vjBarrierSGI::dump: Not implemented.\n";
+      std::cerr << "\n vjBarrierSGI::dump: Not implemented.\n";
    }
 
 protected:

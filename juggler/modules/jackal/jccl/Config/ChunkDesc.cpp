@@ -149,18 +149,18 @@ bool vjChunkDesc::remove (const std::string& _token) {
 
 
 
-ostream& operator << (ostream& out, vjChunkDesc& self) {
+std::ostream& operator << (std::ostream& out, vjChunkDesc& self) {
     out << self.token.c_str() << " \"" << self.name.c_str() << "\" \"" 
-   << self.help.c_str() << '"' << endl;
+   << self.help.c_str() << '"' << std::endl;
     for (unsigned int i = 0; i < self.plist.size(); i++)
-   out << "  " << *(self.plist[i]) << endl;
-    out << "  end" <<endl;
+   out << "  " << *(self.plist[i]) << std::endl;
+    out << "  end" << std::endl;
     return out;
 }
 
 
 
-istream& operator >> (istream& in, vjChunkDesc& self) {
+std::istream& operator >> (std::istream& in, vjChunkDesc& self) {
     const int buflen = 512;
     char str[buflen];
     vjPropertyDesc *p;

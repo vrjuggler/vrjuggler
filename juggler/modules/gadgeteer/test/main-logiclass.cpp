@@ -31,8 +31,8 @@
  * -----------------------------------------------------------------
  */
 
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
 #include <SharedMem/vjMemPool.h>
 //#include <SharedMem/vjSharedType.h>
 #include <Input/vjPosition/logiclass.h>
@@ -47,15 +47,15 @@ int main()
   vjPOS_DATA *data;
 
   char achar;
-  cout << "U - Update\n"
-       << "S - Start\n"
-       << "X - Stop\n"
-       << "Q - Quit\n"
-       << "O - Output\n";
+  std::cout << "U - Update\n"
+            << "S - Start\n"
+            << "X - Stop\n"
+            << "Q - Quit\n"
+            << "O - Output\n";
   do {
-   cin >> achar;
+   std::cin >> achar;
 
-   cout << flush;
+   std::cout << std::flush;
    switch(achar) {
      case 'u':case 'U': t1->UpdateData(); break;
      case 's':case 'S': t1->StartSampling(); break;
@@ -64,21 +64,21 @@ int main()
      for(int z = 0; z < 10; z++){
          t1->UpdateData();
          t1->GetData(data);
-         
-         cout << endl 
-              << "Data: x:" << setw(10) << data->pos.vec[0] << endl
-              << "      y:" << setw(10) << data->pos.vec[1] << endl
-              << "      z:" << setw(10) << data->pos.vec[2] << endl
-              << "    azi:" << setw(10) << data->orient.vec[0]  << endl //lr
-              << "   elev:" << setw(10) << data->orient.vec[1]  << endl //ud
-              << "   roll:" << setw(10) <<data->orient.vec[2] << endl
-              << endl;
-         cout << endl; 
+
+         std::cout << std::endl 
+                   << "Data: x:" << std::setw(10) << data->pos.vec[0] << std::endl
+                   << "      y:" << std::setw(10) << data->pos.vec[1] << std::endl
+                   << "      z:" << std::setw(10) << data->pos.vec[2] << std::endl
+                   << "    azi:" << std::setw(10) << data->orient.vec[0] << std::endl //lr
+                   << "   elev:" << std::setw(10) << data->orient.vec[1] << std::endl //ud
+                   << "   roll:" << std::setw(10) <<data->orient.vec[2] << std::endl
+                   << std::endl;
+         std::cout << std::endl;
          sleep(2);
     }
      break;
    }
-   cout << achar;
+   std::cout << achar;
   } while ((achar != 'q') && (achar != 'Q'));
   
   t1->StopSampling();

@@ -70,7 +70,7 @@ void vjProjection::getFrustumApexAndCorners(vjVec3& apex, vjVec3& ur, vjVec3& lr
 }
 
 
-ostream& vjProjection::outStream(ostream& out)
+std::ostream& vjProjection::outStream(std::ostream& out)
 {
    out << "eye: ";
    switch(mEye)
@@ -86,7 +86,7 @@ ostream& vjProjection::outStream(ostream& out)
    return out;
 }
 
-ostream& operator<<(ostream& out, vjProjection& proj)
+std::ostream& operator<<(std::ostream& out, vjProjection& proj)
 {
    return proj.outStream(out);
 }

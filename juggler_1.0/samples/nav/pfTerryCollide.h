@@ -39,7 +39,7 @@
 #include <Performer/pr.h>
 #include <Performer/pr/pfGeoSet.h>
 #include <Performer/pfutil.h>
-#include <iostream.h>
+#include <iostream>
 #include <math.h>
 
 ///////////////////////////////////////////////////////////////////////////////////

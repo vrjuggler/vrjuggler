@@ -219,6 +219,6 @@ public:
 vjVec3 operator *(float _s, const vjVec3& _v);
 vjVec3 operator *(const vjVec3& _v, float _s);
 vjVec3 operator /(const vjVec3& _v, float _s);
-ostream& operator<<(ostream& out, vjVec3& _v);
+std::ostream& operator<<(std::ostream& out, vjVec3& _v);
 
 #endif

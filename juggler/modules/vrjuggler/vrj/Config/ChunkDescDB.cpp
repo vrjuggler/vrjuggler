@@ -127,16 +127,16 @@ int vjChunkDescDB::size () {
 
 
 
-ostream& operator << (ostream& out, vjChunkDescDB& self) {
+std::ostream& operator << (std::ostream& out, vjChunkDescDB& self) {
     for (unsigned int i = 0; i < self.descs.size(); i++)
-        out << "Chunk " << *(self.descs[i]) << endl;
-    out << "End" <<endl;
+        out << "Chunk " << *(self.descs[i]) << std::endl;
+    out << "End" << std::endl;
     return out;
 }
 
 
 
-istream& operator >> (istream& in, vjChunkDescDB& self) {
+std::istream& operator >> (std::istream& in, vjChunkDescDB& self) {
     const int buflen = 512;
     char str[buflen];
     vjChunkDesc *ch;
@@ -153,11 +153,11 @@ istream& operator >> (istream& in, vjChunkDescDB& self) {
             break;
         else {
             vjDEBUG(vjDBG_ERROR,1) << "Unexpected symbol parsing vjChunkDescDB: '"
-                       << str <<"'"<< endl << vjDEBUG_FLUSH;
+                       << str <<"'"<< std::endl << vjDEBUG_FLUSH;
         }
     }
     vjDEBUG(vjDBG_CONFIG,3) << "vjChunkDescDB::>> : Finished - " << self.descs.size()
-               << " descriptions read." << endl << vjDEBUG_FLUSH;
+               << " descriptions read." << std::endl << vjDEBUG_FLUSH;
     return in;
 }
 
@@ -165,11 +165,11 @@ istream& operator >> (istream& in, vjChunkDescDB& self) {
 
 bool vjChunkDescDB::load (const std::string& filename, const std::string& parentfile) {
     std::string fname = demangleFileName (filename, parentfile);
-    ifstream in(fname.c_str());
+    std::ifstream in(fname.c_str());
 
     if (!in) {
         vjDEBUG(vjDBG_ERROR,0) << "vjChunkDescDB::load(): Unable to open file '"
-                   << fname.c_str() << "'" << endl << vjDEBUG_FLUSH;
+                   << fname.c_str() << "'" << std::endl << vjDEBUG_FLUSH;
         return false;
     }
     in >> *this;
@@ -179,10 +179,10 @@ bool vjChunkDescDB::load (const std::string& filename, const std::string& parent
 
 
 bool vjChunkDescDB::save (const char *fname) {
-    ofstream out(fname);
+    std::ofstream out(fname);
     if (!out) {
         vjDEBUG(vjDBG_ERROR,0) << "vjChunkDescDB::save(): Unable to open file '"
-                   << fname << "'" << endl << vjDEBUG_FLUSH;
+                   << fname << "'" << std::endl << vjDEBUG_FLUSH;
         return false;
     }
     out << *this;

@@ -119,7 +119,7 @@ public:
     //!RETURNS: out
     //!NOTE: The output format is zero or more vjChunkDescs
     //+      followed by "end"
-    friend ostream& operator << (ostream& out, vjChunkDescDB& self);
+    friend std::ostream& operator << (std::ostream& out, vjChunkDescDB& self);
 
 
     //:Reads from in
@@ -127,7 +127,7 @@ public:
     //+      vjChunkDescs previously in self are retained.
     //!NOTE: input format is zero or more vjChunkDescs followed
     //+      by "End" or eof.
-    friend istream& operator >> (istream& in, vjChunkDescDB& self);
+    friend std::istream& operator >> (std::istream& in, vjChunkDescDB& self);
 
 
     //:Loads a chunkdesc file

@@ -138,8 +138,8 @@ public:
    vjUser*  getUser()
    { return mUser;}
 
-   virtual ostream& outStream(ostream& out);
-   friend ostream& operator<<(ostream& out, vjDisplay& disp);
+   virtual std::ostream& outStream(std::ostream& out);
+   friend std::ostream& operator<<(std::ostream& out, vjDisplay& disp);
 
 protected:
    vjUser*           mUser;         //: The user being rendered by this window
@@ -156,6 +156,6 @@ protected:
    vjConfigChunk* mDisplayChunk;        //: The chunk data for this display
 };
 
-//ostream& operator<<(ostream& out, vjDisplay* disp);
+//std::ostream& operator<<(std::ostream& out, vjDisplay* disp);
 
 #endif

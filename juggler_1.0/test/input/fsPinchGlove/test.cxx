@@ -1,4 +1,4 @@
-#include <iostream.h>
+#include <iostream>
 #include <string>
 #include <unistd.h> // for usleep
 
@@ -21,13 +21,13 @@ void main(int argc, char* argv[])
 		std::string port;
 		port = argv[1];
 		
-		cout<<"====================================================\n"<<flush;
-		cout<<"\n"<<flush;
-		cout<<"Test driver for pinch glove on port: "<<port.data()<<"\n"<<flush;
-		cout<<"Hit Ctrl-C to Exit\n"<<flush;
-		cout<<"\n"<<flush;
-		cout<<"====================================================\n"<<flush;
-		cout<<"\n\n\n"<<flush;
+		std::cout<<"====================================================\n"<<std::flush;
+		std::cout<<"\n"<<std::flush;
+		std::cout<<"Test driver for pinch glove on port: "<<port.data()<<"\n"<<std::flush;
+		std::cout<<"Hit Ctrl-C to Exit\n"<<std::flush;
+		std::cout<<"\n"<<std::flush;
+		std::cout<<"====================================================\n"<<std::flush;
+		std::cout<<"\n\n\n"<<std::flush;
 		
 		// Connect to the pinch glove hardware, keep trying
 		bool result = false;
@@ -37,8 +37,8 @@ void main(int argc, char* argv[])
 			//usleep( 50000 );
 		}
 		
-		cout<<"\n"<<flush;
-		cout<<"            Left |Right\n";
+		std::cout<<"\n"<<std::flush;
+		std::cout<<"            Left |Right\n";
 		std::string gestureString = "00000|00000";
 		while (1)
 		{
@@ -48,7 +48,7 @@ void main(int argc, char* argv[])
 			// get the last sampled string, 
 			// NOTE: call reSampleData to get most current pinch data.
 			pinchGlove.getSampledString( gestureString );
-			cout<<"["<<spin()<<"] Sampled "<<gestureString<<"\r"<<flush;
+			std::cout<<"["<<spin()<<"] Sampled "<<gestureString<<"\r"<<std::flush;
 		}
 
 		return;
@@ -56,11 +56,11 @@ void main(int argc, char* argv[])
 	
 	else 
 	{	
-		cout<<"\n"<<flush;
-		cout<<argv[0]<<" by Kevin Meinert - kevn@vrjuggler.org\n"<<flush;
-		cout<<"Usage:   "<<argv[0]<<"   <port>\n"<<flush;
-		cout<<"Example (UNIx): "<<argv[0]<<" /dev/ttyd2\n"<<flush;
-		cout<<"Example (WIN):  "<<argv[0]<<" COM1\n"<<flush;
-		cout<<"\n"<<flush;
+		std::cout<<"\n"<<std::flush;
+		std::cout<<argv[0]<<" by Kevin Meinert - kevn@vrjuggler.org\n"<<std::flush;
+		std::cout<<"Usage:   "<<argv[0]<<"   <port>\n"<<std::flush;
+		std::cout<<"Example (UNIx): "<<argv[0]<<" /dev/ttyd2\n"<<std::flush;
+		std::cout<<"Example (WIN):  "<<argv[0]<<" COM1\n"<<std::flush;
+		std::cout<<"\n"<<std::flush;
 	}
 }

@@ -154,7 +154,8 @@ vjRWMutex::release () {
     else if (refCount == -1)	// We have writer
         refCount = 0;
     else			// We have an error
-        cerr << "vjRWMutex::release: Should not have refCount of 0!!!" << endl;
+        std::cerr << "vjRWMutex::release: Should not have refCount of 0!!!"
+                  << std::endl;
 
     // Preference to writers
     if (numWaitingWriters > 0)

@@ -68,7 +68,7 @@ public:
 	return val;
     }
 
-    friend ostream& operator << (ostream& out, vjEnumEntry& e) {
+    friend std::ostream& operator << (std::ostream& out, vjEnumEntry& e) {
 	switch (e.val.getType()) {
 	case T_INT:
 	case T_FLOAT:

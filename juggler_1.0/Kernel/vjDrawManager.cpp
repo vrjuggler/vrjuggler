@@ -40,7 +40,7 @@ void vjDrawManager::setDisplayManager(vjDisplayManager* _dispMgr)
 { mDisplayManager = _dispMgr; }
 
 
-ostream& operator<<(ostream& out, vjDrawManager& drawMgr)
+std::ostream& operator<<(std::ostream& out, vjDrawManager& drawMgr)
 {
    drawMgr.outStream(out);
    return out;

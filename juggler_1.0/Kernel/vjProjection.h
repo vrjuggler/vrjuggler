@@ -88,9 +88,9 @@ public:
    //: Virtual output oporators.
    // Every class derived from us shoudl just define this, and
    // the opertetor<< will "just work"
-   virtual ostream& outStream(ostream& out);
+   virtual std::ostream& outStream(std::ostream& out);
 
-   friend ostream& operator<<(ostream& out, vjProjection& proj);
+   friend std::ostream& operator<<(std::ostream& out, vjProjection& proj);
 
 
 public:
@@ -110,7 +110,9 @@ protected:     // Statics
 public:
    static void setNearFar(float near_val, float far_val)
    {
-      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"vjProjection::setNearFar:") << "near: " << near_val << " far:" << far_val << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"vjProjection::setNearFar:")
+                           << "near: " << near_val << " far:" << far_val
+                           << std::endl << vjDEBUG_FLUSH;
       mNearDist = near_val;
       mFarDist = far_val;
    }

@@ -111,7 +111,7 @@ bool pfRayCollider::testRayCollision( pfVec3& intersectionPt, pfVec3& whereYouRe
    // Query for collision data
    if (objNode->isect(&segset, hit) > 0)
    {
-      cout<<"testRayCollision: Collided\n"<<flush;
+      std::cout<<"testRayCollision: Collided\n"<<std::flush;
 
       pfHitQueryResult isectResult;
       uint query[] = {PFQHIT_FLAGS, PFQHIT_SEGNUM, PFQHIT_POINT, PFQHIT_NORM, NULL};
@@ -156,7 +156,7 @@ bool pfRayCollider::testMove(vjVec3 _whereYouAre, vjVec3 _delta, vjVec3& correct
       pfVec3 pf_correction = (whereYouReallyAre - whereYouWantToBe);
       correction = vjGetVjVec( pf_correction);
 
-      cout<<"pfRayCollider: Collided "<<correction<<"\n"<<flush;
+      std::cout<<"pfRayCollider: Collided "<<correction<<"\n"<<std::flush;
 
       setDidCollide(true);
       return true;

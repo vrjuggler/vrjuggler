@@ -76,7 +76,7 @@ public:
    // Initialize interfaces
    virtual void init()
    {
-      //cout<<"simpleGloveApp::init()"<<flush;
+      //std::cout<<"simpleGloveApp::init()"<<std::flush;
       
       // use this interface for the position of the glove.
       mGlove.init("VJGlove");
@@ -84,14 +84,14 @@ public:
       // use this interface if you want to use *gestures*
       mGesture.init("VJGesture");
       
-      //cout<<" --- done\n"<<flush;
+      //std::cout<<" --- done\n"<<std::flush;
    }
 
    // Execute any initialization needed after API is started
    //  but before the drawManager starts the drawing loops.
    virtual void apiInit()
    {
-      //cout<<"simpleGloveApp::apiInit()\n"<<flush; 
+      //std::cout<<"simpleGloveApp::apiInit()\n"<<std::flush;
    }
 
    //: Function to draw the scene
@@ -99,7 +99,7 @@ public:
    //! POST: The current scene has been drawn
    virtual void draw()
    {
-      //cout<<"simpleGloveApp::draw()\n"<<flush; 
+      //std::cout<<"simpleGloveApp::draw()\n"<<std::flush;
       
       initGLState();    // This should really be in another function
       myDraw();
@@ -128,32 +128,32 @@ public:
    /// Function called after tracker update but before start of drawing
    virtual void preFrame()
    {
-     //cout<<"simpleGloveApp::preFrame()\n"<<flush; 
+     //std::cout<<"simpleGloveApp::preFrame()\n"<<std::flush;
       
        // what gesture is happening??
        int currentGesture = mGesture->getGesture();
        
        // lookup the name of that gesture, and output it.
-       cout << "gestureID[" << currentGesture << "]:"
-            << mGesture->getGestureString(currentGesture).c_str()
-            << "\n" <<flush;
+       std::cout << "gestureID[" << currentGesture << "]:"
+                 << mGesture->getGestureString(currentGesture).c_str()
+                 << "\n" << std::flush;
    
        if (mGesture->getGesture() == mGesture->getGestureIndex("Open Hand"))
        {
           // do openhand stuff.
-          //cout<<"OpenHand\n"<<flush;
+          //std::cout<<"OpenHand\n"<<std::flush;
        }
        
        if (mGesture->getGesture() == mGesture->getGestureIndex("Closed Fist"))
        {
           // do closed fist stuff.
-          //cout<<"Closed Fist\n"<<flush;
+          //std::cout<<"Closed Fist\n"<<std::flush;
        }  
        
        if (mGesture->getGesture() == mGesture->getGestureIndex("Pointing"))
        {
           // do pointing stuff.
-          //cout<<"Pointing\n"<<flush;
+          //std::cout<<"Pointing\n"<<std::flush;
        }  
        
    }

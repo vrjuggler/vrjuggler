@@ -31,8 +31,8 @@
  * -----------------------------------------------------------------
  */
 
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
 #include <SharedMem/vjMemPool.h>
 //#include <SharedMem/vjSharedType.h>
 #include <Input/vjPosition/vjFlock.h>
@@ -54,27 +54,28 @@ int main()
   char report = 'R';
   int transmitter = 3;
 
-  cout << "-------- Bird Test program -------\n"
-       << "First we need some config info:\n"
-       << "NOTE: Sample values are in ()'s\n" << flush;
+  std::cout << "-------- Bird Test program -------\n"
+            << "First we need some config info:\n"
+            << "NOTE: Sample values are in ()'s\n" << std::flush;
 
-  cout << "\nEnter port (/dev/ttyd3): " << flush;
-  cin >> port;
-  cout << "\nEnter baud rate (38400): " << flush;
-  cin >> baud;
-  cout << "\nHow many birds (2): " << flush;
-  cin >> numBirds;
-  cout << "\nNot using calibration file." << flush;
-  cout << "\nUsing LOWER_HEM" << flush;
-  cout << "\nUsing AC_NARROW filter" << flush;
-  cout << "\nEnter Sync (0 or 1): " << flush;
-  cin >> sync;
-  cout << "\nBlocking port? (0 or 1): " << flush;
-  cin >> blocking;
-  cout << "\nWhat report rate (Q-every cycle, R-every other, S-every 8, T-every 32): " << flush;
-  cin >> report;
-  cout << "\nWhat is the transmitter id (1-based numbering): " << flush;
-  cin >> transmitter;
+  std::cout << "\nEnter port (/dev/ttyd3): " << std::flush;
+  std::cin >> port;
+  std::cout << "\nEnter baud rate (38400): " << std::flush;
+  std::cin >> baud;
+  std::cout << "\nHow many birds (2): " << std::flush;
+  std::cin >> numBirds;
+  std::cout << "\nNot using calibration file." << std::flush;
+  std::cout << "\nUsing LOWER_HEM" << std::flush;
+  std::cout << "\nUsing AC_NARROW filter" << std::flush;
+  std::cout << "\nEnter Sync (0 or 1): " << std::flush;
+  std::cin >> sync;
+  std::cout << "\nBlocking port? (0 or 1): " << std::flush;
+  std::cin >> blocking;
+  std::cout << "\nWhat report rate (Q-every cycle, R-every other, S-every 8, T-every 32): " << std::flush;
+  std::cin >> report;
+  std::cout << "\nWhat is the transmitter id (1-based numbering): "
+            << std::flush;
+  std::cin >> transmitter;
 
 
     vjFlock* flock = new(aMemPool) vjFlock
@@ -94,35 +95,35 @@ int main()
 
    do
    {
-      cout  << "\n----- Bird Test Program ----\n"
-            << "----- Main Menu ----\n"
-            << "Cur State:\n"
-            << "   running:" << birds_running
-            << "\n\nCommands:\n"
-            << "   U - Update\n"
-            << "   S - Start\n"
-            << "   X - Stop\n"
-            << "   Q - Quit\n"
-            << "   O - Output\n"
-            << "\nCommand:" << flush;
-      cin >> achar;        // Get next command
+      std::cout  << "\n----- Bird Test Program ----\n"
+                 << "----- Main Menu ----\n"
+                 << "Cur State:\n"
+                 << "   running:" << birds_running
+                 << "\n\nCommands:\n"
+                 << "   U - Update\n"
+                 << "   S - Start\n"
+                 << "   X - Stop\n"
+                 << "   Q - Quit\n"
+                 << "   O - Output\n"
+                 << "\nCommand:" << std::flush;
+      std::cin >> achar;        // Get next command
 
-      cout << "\nGot command: " << achar << endl << flush;
+      std::cout << "\nGot command: " << achar << std::endl << std::flush;
       switch (achar)
       {
       case 'u':
       case 'U':
-         cout << "---- Updating (not implemented) ---\n" << flush;
+         std::cout << "---- Updating (not implemented) ---\n" << std::flush;
          break;
       case 's':
       case 'S':
-         cout << "---- Starting Flock ---\n" << flush;
+         std::cout << "---- Starting Flock ---\n" << std::flush;
          flock->startSampling();
          birds_running = true;
          break;
       case 'x':
       case 'X':
-         cout << "---- Stoping flock ---\n" << flush;
+         std::cout << "---- Stoping flock ---\n" << std::flush;
          flock->stopSampling();
          birds_running = false;
          break;
@@ -133,19 +134,26 @@ int main()
          {
             flock->updateData();
             system("clear");
-            cout << "-------- vjFlock: Sampling (" << z << " of " << num_samples << ") -------" << endl;
+            std::cout << "-------- vjFlock: Sampling (" << z << " of "
+                      << num_samples << ") -------" << std::endl;
             for(int bird=0;bird<numBirds;bird++)
             {
                vjVec3 pos0 = vjCoord( *flock->getPosData(bird) ).pos;
                vjVec3 ori0 = vjCoord( *flock->getPosData(bird) ).orient;
-               cout << "Bird " << bird << ":\n"
-                 << setiosflags(ios::right | ios::fixed | ios::showpoint)
-                 << "Data: x:" << setprecision(2) << setw(10) << pos0[0] << endl
-                 << "      y:" << setprecision(2) << setw(10) << pos0[1] << endl
-                 << "      z:" << setprecision(2) << setw(10) << pos0[2] << endl
-                 << "    azi:" << setprecision(2) << setw(10) << ori0[0] << endl
-                 << "   elev:" << setprecision(2) << setw(10) << ori0[1] << endl
-                 << "   roll:" << setprecision(2) << setw(10) << ori0[2] << endl << endl;
+               std::cout << "Bird " << bird << ":\n"
+                 << std::setiosflags(std::ios::right | std::ios::fixed | std::ios::showpoint)
+                 << "Data: x:" << std::setprecision(2) << std::setw(10)
+                 << pos0[0] << std::endl
+                 << "      y:" << std::setprecision(2) << std::setw(10)
+                 << pos0[1] << std::endl
+                 << "      z:" << std::setprecision(2) << std::setw(10)
+                 << pos0[2] << std::endl
+                 << "    azi:" << std::setprecision(2) << std::setw(10)
+                 << ori0[0] << std::endl
+                 << "   elev:" << std::setprecision(2) << std::setw(10)
+                 << ori0[1] << std::endl
+                 << "   roll:" << std::setprecision(2) << std::setw(10)
+                 << ori0[2] << std::endl << std::endl;
             }
             sleep(2);
          }
@@ -153,8 +161,8 @@ int main()
       }
    } while ((achar != 'q') && (achar != 'Q'));
 
-   cout << "---- Quiting -----\n"
-        << "Stoping birds.....\n" << flush;
+   std::cout << "---- Quiting -----\n"
+             << "Stoping birds.....\n" << std::flush;
 
   flock->stopSampling();
 

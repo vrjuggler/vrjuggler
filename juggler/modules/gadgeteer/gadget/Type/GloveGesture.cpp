@@ -71,7 +71,7 @@ int vjGloveGesture::createGesture(std::string gestureName)
 // infile is a file that is already open and ready for reading.
 // After running, this routines will leave the file pointer immedately after
 // the header.
-void vjGloveGesture::loadFileHeader(ifstream& infile)
+void vjGloveGesture::loadFileHeader(std::ifstream& infile)
 {
    // skip comments
    while(infile.peek() == '#')
@@ -105,25 +105,25 @@ void vjGloveGesture::loadFileHeader(ifstream& infile)
 //: Save a file header
 //! NOTE: The client of this routine may add their own initial lines to the
 //+ header as long as they remove them before calling loadFileHeader.
-void vjGloveGesture::saveFileHeader(ofstream& outFile)
+void vjGloveGesture::saveFileHeader(std::ofstream& outFile)
 {
    vjASSERT(mGestureNames.size() == mGestureExamples.size());     // The must be same size
 
-   outFile << "# vjGloveGesture v1.0" << endl
-           << "#       vjGloveGesture Header" << endl
-           << "#  Contains gesture names and examples" << endl
-           << "#  As well and trainer information" << endl;
+   outFile << "# vjGloveGesture v1.0" << std::endl
+           << "#       vjGloveGesture Header" << std::endl
+           << "#  Contains gesture names and examples" << std::endl
+           << "#  As well and trainer information" << std::endl;
 
-   outFile << mGestureNames.size() << endl;
+   outFile << mGestureNames.size() << std::endl;
 
    unsigned int i;
    for(i =0;i<mGestureNames.size();i++)
-      outFile << mGestureNames[i].c_str() << endl;
+      outFile << mGestureNames[i].c_str() << std::endl;
 
    for(i=0;i<mGestureExamples.size();i++)
    {
       mGestureExamples[i].outputAngles(outFile);
-      outFile << endl;
+      outFile << std::endl;
    }
 }
 

@@ -34,7 +34,7 @@
 #ifndef _SIMPLE_PF_NAV_APP_H_
 #define _SIMPLE_PF_NAV_APP_H_
 
-#include <iostream.h>
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -189,8 +189,8 @@ public:
       // Initialize loaders
       for (int x = 0; x < mModelList.size(); ++x)
       {
-         cout << "simplePfNavAPP: Initializing performer file loaders for types like: "
-              << mModelList[x].filename.c_str() << "\n" << flush;
+         std::cout << "simplePfNavAPP: Initializing performer file loaders for types like: "
+                   << mModelList[x].filename.c_str() << "\n" << std::flush;
 
          if (!mModelList[x].filename.empty())
             pfdInitConverter( mModelList[x].filename.c_str() );
@@ -254,7 +254,7 @@ public:
          {
             vjVec3 cur_pos;
             cur_pos = mNavigationDCS->getNavigator()->getCurPos().getTrans();
-            cout << "Cur pos:" << cur_pos << endl;
+            std::cout << "Cur pos:" << cur_pos << std::endl;
          }
       }
 
@@ -288,7 +288,7 @@ public:
    /*
    virtual void focusChanged()
    {
-      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"simplePfNavApp::focusChanged") << "Focus now: " << haveFocus() << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"simplePfNavApp::focusChanged") << "Focus now: " << haveFocus() << std::endl << vjDEBUG_FLUSH;
 
       if(mNavigationDCS != NULL)
       {
@@ -298,7 +298,7 @@ public:
          { mNavigationDCS->setActive(false); }
       }
       else
-         vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"   focusChanged:NavDCS == NULL") << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrCYAN,"   focusChanged:NavDCS == NULL") << std::endl << vjDEBUG_FLUSH;
    }
    */
 
@@ -375,7 +375,7 @@ public:  // Configure the application
          vjDEBUG(vjDBG_ALL,0) << "simplePfNavApp: Navigation switched to: "
                               << clrSetNORM(clrGREEN)
                               << mNavigators[mCurNavIndex]->getName().c_str()
-                              << clrRESET << endl << vjDEBUG_FLUSH;
+                              << clrRESET << std::endl << vjDEBUG_FLUSH;
       }
    }
 
@@ -630,7 +630,7 @@ void simplePfNavApp::initScene()
 
    // load these files into perfly to see just what your scenegraph
    // looked like. . . . .useful for debugging.
-   //cout<<"[pfNav] Saving entire scene into lastscene.pfb, COULD TAKE A WHILE!\n"<<flush;
+   //std::cout<<"[pfNav] Saving entire scene into lastscene.pfb, COULD TAKE A WHILE!\n"<<std::flush;
    /*
    pfuTravPrintNodes( mRootNode, "lastscene.out" );
    pfdStoreFile( mRootNode, "lastscene.pfb" );
@@ -639,13 +639,21 @@ void simplePfNavApp::initScene()
 
 int AppNotifyPreTrav(pfTraverser* trav, void* data)
 {
-   vjDEBUG(vjDBG_ALL,0) << "Traversing app (pre): " << "chan: " << (void*)trav->getChan() << " node:" << (void*)trav->getNode() << ": " << trav->getNode()->getName() << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,0) << "Traversing app (pre): "
+                        << "chan: " << (void*)trav->getChan()
+                        << " node:" << (void*)trav->getNode() << ": "
+                        << trav->getNode()->getName() << std::endl
+                        << vjDEBUG_FLUSH;
    return PFTRAV_CONT;
 }
 
 int AppNotifyPostTrav(pfTraverser* trav, void* data)
 {
-   vjDEBUG(vjDBG_ALL,0) << "Traversing app (post): " << "chan: " << (void*)trav->getChan() << " node:" << (void*)trav->getNode() << ": " << trav->getNode()->getName() << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,0) << "Traversing app (post): "
+                        << "chan: " << (void*)trav->getChan()
+                        << " node:" << (void*)trav->getNode() << ": "
+                        << trav->getNode()->getName() << std::endl
+                        << vjDEBUG_FLUSH;
    return PFTRAV_CONT;
 }
 

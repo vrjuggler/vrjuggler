@@ -92,6 +92,6 @@ public:
 
 
 // ---- FRIEND FUNCTIONS ---- //
-ostream& operator<<(ostream& out, vjFrustum& _frust);
+std::ostream& operator<<(std::ostream& out, vjFrustum& _frust);
 
 #endif

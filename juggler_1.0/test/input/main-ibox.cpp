@@ -31,8 +31,8 @@
  * -----------------------------------------------------------------
  */
 
-#include <iostream.h>
-#include <iomanip.h>
+#include <iostream>
+#include <iomanip>
 #include <unistd.h>
 
 #include <SharedMem/vjMemPool.h>
@@ -50,15 +50,15 @@ int main()
   vjIBOX_DATA *data;
 
   char achar;
-  cout << "U - Update\n"
-       << "S - Start\n"
-       << "X - Stop\n"
-       << "Q - Quit\n"
-       << "O - Output\n";
+  std::cout << "U - Update\n"
+            << "S - Start\n"
+            << "X - Stop\n"
+            << "Q - Quit\n"
+            << "O - Output\n";
   do {
-   cin >> achar;
+   std::cin >> achar;
 
-   cout << flush;
+   std::cout << std::flush;
    switch(achar) {
      case 'u':case 'U': t1->updateData(); break;
      case 's':case 'S': t1->startSampling(); break;
@@ -68,16 +68,16 @@ int main()
          t1->updateData();
          
 	
-	cout << t1->getDigitalData(0);
-	cout << t1->getDigitalData(1);
-	cout << t1->getDigitalData(2);
-	cout << t1->getDigitalData(3);        
-         cout << endl; 
+	std::cout << t1->getDigitalData(0);
+	std::cout << t1->getDigitalData(1);
+	std::cout << t1->getDigitalData(2);
+	std::cout << t1->getDigitalData(3);        
+         std::cout << std::endl; 
          sleep(2);
     }
      break;
    }
-   cout << achar;
+   std::cout << achar;
   } while ((achar != 'q') && (achar != 'Q'));
   t1->stopSampling();
   delete t1;

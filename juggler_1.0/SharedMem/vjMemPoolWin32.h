@@ -70,14 +70,14 @@ class vjMemPoolWin32 : public vjMemPool
 {
 public:    
    vjMemPoolWin32(size_t initialSize = 65536,  int numProcs = 8, char* staticTempName = "memPoolWin32XXXXXX") {
-      cerr << "\n\nMemPoolWin32: Allocating Arena."
-      << "\n\tSize: " << initialSize
-      << "\n\tnProcs: " << numProcs << "\n" << flush;  
+       std::cerr << "\n\nMemPoolWin32: Allocating Arena."
+                 << "\n\tSize: " << initialSize
+                 << "\n\tnProcs: " << numProcs << "\n" << std::flush;
 
    }
 
    virtual ~vjMemPoolWin32() {
-      cerr << "\nUnlinking: " << endl;
+       std::cerr << "\nUnlinking: " << std::endl;
    }       
 
 public:
@@ -87,7 +87,7 @@ public:
       retval = malloc(size);
 
       if (retval == NULL)
-         cerr << "MemPoolWin32: Out of memory!!!" << endl;
+         std::cerr << "MemPoolWin32: Out of memory!!!" << std::endl;
 
       return retval;    
    }
@@ -96,7 +96,7 @@ public:
    {
       void* retval;
       retval = realloc(ptr,size);
-      cerr << "MemPoolWin32: realloc failure" << endl;
+      std::cerr << "MemPoolWin32: realloc failure" << std::endl;
 
       return retval;
    }
@@ -114,15 +114,15 @@ public:      // Non-virtual functions
    // Automatically called by the first new with default values if not called previously
    static void init(size_t initialSize = 32768, int numProcs = 64, char* staticTempName = "/var/tmp/memPoolsArenaXXXXXX")     // Function to initialize any STATIC data structures
    {
-      cerr << "\n\nMemPoolWin32: Allocating Base Arena for ALL vjMemPoolSGI's."
-      << "\n\tSize: " << initialSize
-      << "\n\tnProcs: " << numProcs << "\n" << flush;
+       std::cerr << "\n\nMemPoolWin32: Allocating Base Arena for ALL vjMemPoolSGI's."
+                 << "\n\tSize: " << initialSize << "\n\tnProcs: " << numProcs
+                 << "\n" << std::flush;
 
    }
 
    void* operator new(size_t sz)
    {   
-      cerr << "MemPoolWin32::new called.\n";
+        std::cerr << "MemPoolWin32::new called.\n";
       //if (arenaForMemPools == NULL)
       //  init();	// Make sure that we are initialized already.
 

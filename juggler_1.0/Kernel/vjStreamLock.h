@@ -36,7 +36,7 @@
 #define _VJ_STREAM_LOCK_H_
 //#pragma once
 
-#include <iostream.h>
+#include <vjConfig.h>
 #include <Sync/vjMutex.h>
 
 //: Class to lock a stream for multi-process output
@@ -50,8 +50,8 @@ public:
    explicit vjStreamLock(vjMutex& mutex) : mMutex(mutex)
    {;}
 
-   friend ostream& operator<<(ostream&, const vjStreamLock&);
-	
+   friend std::ostream& operator<<(std::ostream&, const vjStreamLock&);
+
 private:
    vjMutex& mMutex;
 };
@@ -69,8 +69,8 @@ public:
    explicit vjStreamUnLock(vjMutex& mutex) : mMutex(mutex)
    {;}
 
-   friend ostream& operator<<(ostream&, const vjStreamUnLock&);
-	
+   friend std::ostream& operator<<(std::ostream&, const vjStreamUnLock&);
+
 private:
    vjMutex& mMutex;
 };

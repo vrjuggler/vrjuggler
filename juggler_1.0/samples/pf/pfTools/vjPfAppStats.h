@@ -94,7 +94,7 @@ public:
       mStatsButton.init(button_name);
       vjDEBUG(vjDBG_ALL,0)
          << clrOutNORM(clrCYAN,"vjPfAppStats::toggleButton set to:")
-         << button_name.c_str() << endl << vjDEBUG_FLUSH;
+         << button_name.c_str() << std::endl << vjDEBUG_FLUSH;
    }
 
 protected:  // -- Helper functions --- //
@@ -167,7 +167,7 @@ void vjPfAppStats::preFrame()
       {
          vjDEBUG(vjDBG_ALL,0) << "vjPfAppStats: MP Stats mode done!\n" << vjDEBUG_FLUSH;
          setStatsMode(vjPfAppStats::Fill);    // Go to next mode
-      } else { cout << ".." <<flush; }
+      } else { std::cout << ".." <<std::flush; }
    }
 
    // Check for STATS CYCLE Button
@@ -230,7 +230,8 @@ void vjPfAppStats::setStatsMode(vjPfAppStats::statMode mode)
    if(mStatsMode == vjPfAppStats::MPipe)
    {
       mMPStats.init(120,1);
-      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrGREEN,"--> MP Stats mode starting!") << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrGREEN,"--> MP Stats mode starting!")
+                           << std::endl << vjDEBUG_FLUSH;
    }
 }
 

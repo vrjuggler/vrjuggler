@@ -75,7 +75,8 @@ void vjGlWindow::setLeftEyeProjection()
    float* frust = left_proj->mFrustum.frust;
 
    vjDEBUG(vjDBG_DRAW_MGR,7)  << "---- Left Frustum ----\n"
-               << surf_display->getLeftProj()->mFrustum.frust << endl << vjDEBUG_FLUSH;
+               << surf_display->getLeftProj()->mFrustum.frust << std::endl
+               << vjDEBUG_FLUSH;
 
       // --- Set to the correct buffer --- //
    if(isStereo())
@@ -116,7 +117,7 @@ void vjGlWindow::setRightEyeProjection()
    float* frust = right_proj->mFrustum.frust;
 
    vjDEBUG(vjDBG_DRAW_MGR,7)  << "---- Right Frustum ----\n"
-               << *frust << endl << vjDEBUG_FLUSH;
+               << *frust << std::endl << vjDEBUG_FLUSH;
 
       // --- Set to the correct buffer --- //
    if(isStereo())
@@ -158,7 +159,8 @@ void vjGlWindow::setCameraProjection()
    float* frust = sim_display->getCameraProj()->mFrustum.frust;
 
    vjDEBUG(vjDBG_DRAW_MGR,7)  << "---- Camera Frustrum ----\n"
-               << sim_display->getCameraProj()->mFrustum.frust << endl << vjDEBUG_FLUSH;
+               << sim_display->getCameraProj()->mFrustum.frust << std::endl
+               << vjDEBUG_FLUSH;
 
       // --- Set to the correct buffer --- //
    glDrawBuffer(GL_BACK);
@@ -190,14 +192,14 @@ void vjGlWindow::setCameraProjection()
 }
 
 
-ostream& operator<<(ostream& out, vjGlWindow* win)
+std::ostream& operator<<(std::ostream& out, vjGlWindow* win)
 {
    vjASSERT(win != NULL);
    vjASSERT(win->mDisplay != NULL);
 
    //out << "-------- vjGlWindow --------" << endl;
-   out << "Open: " << (win->window_is_open ? "Y" : "N") << endl;
-   out << "Display:" << *(win->mDisplay) << endl;
-   out << "Stereo:" << (win->in_stereo ? "Y" : "N") << endl;
+   out << "Open: " << (win->window_is_open ? "Y" : "N") << std::endl;
+   out << "Display:" << *(win->mDisplay) << std::endl;
+   out << "Stereo:" << (win->in_stereo ? "Y" : "N") << std::endl;
    return out;
 }

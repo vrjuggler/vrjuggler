@@ -127,7 +127,7 @@ public:
          }
       }
 
-      vjDEBUG_ENDlg(vjDBG_ALL,dbg_lvl,false,false) << endl << vjDEBUG_FLUSH;
+      vjDEBUG_ENDlg(vjDBG_ALL,dbg_lvl,false,false) << std::endl << vjDEBUG_FLUSH;
 
    }
 };

@@ -92,7 +92,7 @@ class vjPosition : virtual public vjInput {
     //: Get Position data
     virtual vjMatrix* getPosData(int devNum = 0) = 0;
     virtual vjTimeStamp* getPosUpdateTime (int devNum = 0) {
-	cout << "FOO, I FORGOT TO IMPLEMENT SOMETHING!!!!" << endl;
+	std::cout << "FOO, I FORGOT TO IMPLEMENT SOMETHING!!!!" << std::endl;
 	return NULL;
     }
 

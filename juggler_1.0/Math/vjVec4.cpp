@@ -63,7 +63,7 @@ inline vjVec4 operator /(const vjVec4& _v, float _s) {
 }
 
 
-ostream& operator<<(ostream& out, vjVec4& _v)
+std::ostream& operator<<(std::ostream& out, vjVec4& _v)
 {
     for(int j=0;j<4;j++)
     {

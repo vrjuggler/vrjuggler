@@ -158,11 +158,11 @@ public:
 
 
     //: Writes self to the given output stream
-    friend ostream& operator << (ostream& out, vjChunkDesc& self);
+    friend std::ostream& operator << (std::ostream& out, vjChunkDesc& self);
 
 
     //: Reads self's value from the given input stream
-    friend istream& operator >> (istream& in, vjChunkDesc& self);
+    friend std::istream& operator >> (std::istream& in, vjChunkDesc& self);
 
 };
 

@@ -177,6 +177,6 @@ public:
 inline vjVec4 operator *(float _s, const vjVec4& _v);
 inline vjVec4 operator *(const vjVec4& _v, float _s);
 inline vjVec4 operator /(const vjVec4& _v, float _s);
-ostream& operator<<(ostream& out, vjVec4& _v);
+std::ostream& operator<<(std::ostream& out, vjVec4& _v);
 
 #endif

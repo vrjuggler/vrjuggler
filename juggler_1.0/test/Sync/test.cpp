@@ -33,7 +33,7 @@
 
 /// TOP OF TEST_CPP
 
-#include <iostream.h>
+#include <iostream>
 #include <stdio.h>
 #include <ulocks.h>
 #include <math.h>
@@ -59,11 +59,11 @@ void main()
     mySemaphore = new vjSemaphore;
     myMutex = new vjMutex;
     //myMutex = new NullMutex;
-    cout << "Hello there\n\n" << flush;
-    cout << "Start:\n\n";
+    std::cout << "Hello there\n\n" << std::flush;
+    std::cout << "Start:\n\n";
 
     counter = 0;
-    cout << "Counter: " << counter << endl;
+    std::cout << "Counter: " << counter << std::endl;
     
     
     sprocInit(NULL);
@@ -88,14 +88,15 @@ void main()
     endSecond = endTime.tv_sec + (endTime.tv_usec * 0.000001);
     totalSeconds = (endSecond - startSecond);
     
-    cout << "\nDone: It took... " << totalSeconds << " seconds" << flush;
+    std::cout << "\nDone: It took... " << totalSeconds << " seconds"
+              << std::flush;
 //---------------------------------------------------------
     
     sginap(100);
-    cout << "\n\nCounter: " << counter << endl << flush;
+    std::cout << "\n\nCounter: " << counter << std::endl << std::flush;
     
-    cout << "End:\n\n";
-    cout << "\n" << flush;
+    std::cout << "End:\n\n";
+    std::cout << "\n" << std::flush;
     
     // -- Clean up --- //
     delete mySemaphore;

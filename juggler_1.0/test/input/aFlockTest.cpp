@@ -32,8 +32,8 @@
  */
 
 
-#include <iostream.h> 	// for cout
-#include <iomanip.h> 	// for setw
+#include <iostream> 	// for std::cout
+#include <iomanip> 	// for std::setw
 
 #include <stdlib.h> 	// for system
 #include <unistd.h> 	// for sleep
@@ -68,15 +68,15 @@ void main()
     
     do 
     {
-	cout << "U - Update\n"
+	std::cout << "U - Update\n"
        << "S - Start\n"
        << "X - Stop\n"
        << "Q - Quit\n"
        << "O - Output\n";
        
-	cin >> achar;
+	std::cin >> achar;
 	
-	cout << flush;
+	std::cout << std::flush;
 	switch (achar) 
 	{
 	case 'u':case 'U':  break;
@@ -87,40 +87,42 @@ void main()
 	case 'o':case 'O': 
 	    for(int z = 0; z < 10; z++)
 	    {
+		int i;
+
 		flock.sample();
 		system("clear");  
-		cout << "vjFlock------------------------------------------------------------" << endl ;
-		    cout<< "Data: x:" << setw(10) ;
-		    for(int i=1; i <= flock.getNumBirds(); ++i) 
-		    	cout<< setw(10) <<flock.xPos(i);
-		    cout<<endl;
-		    cout<< "      y:" << setw(10) ;
+		std::cout << "vjFlock------------------------------------------------------------" << std::endl;
+		    std::cout<< "Data: x:" << std::setw(10);
+		    for(i=1; i <= flock.getNumBirds(); ++i)
+		    	std::cout<< std::setw(10) <<flock.xPos(i);
+		    std::cout<<std::endl;
+		    std::cout<< "      y:" << std::setw(10);
 		    for(  i=1; i <= flock.getNumBirds(); ++i) 
-		    	cout<< setw(10) <<flock.yPos(i);
-		    cout<<endl;
-		    cout<< "      z:" << setw(10) ;
+		    	std::cout<< std::setw(10) <<flock.yPos(i);
+		    std::cout<<std::endl;
+		    std::cout<< "      z:" << std::setw(10);
 		    for(  i=1; i <= flock.getNumBirds(); ++i) 
-		    	cout<< setw(10) <<flock.zPos(i);
-		    cout<<endl;
-		    cout<< "    azi:" << setw(10) ;
+		    	std::cout<< std::setw(10) <<flock.zPos(i);
+		    std::cout<<std::endl;
+		    std::cout<< "    azi:" << std::setw(10);
 		    for(  i=1; i <= flock.getNumBirds(); ++i) 
-		    	cout<< setw(10) <<flock.zRot(i);
-		    cout<<endl;
-		    cout<< "   elev:" << setw(10) ;
+		    	std::cout<< std::setw(10) <<flock.zRot(i);
+		    std::cout<<std::endl;
+		    std::cout<< "   elev:" << std::setw(10);
 		    for(  i=1; i <= flock.getNumBirds(); ++i) 
-		    	cout<< setw(10) <<flock.yRot(i);
-		    cout<<endl;
-		    cout<< "   roll:"  ;
+		    	std::cout<< std::setw(10) <<flock.yRot(i);
+		    std::cout<<std::endl;
+		    std::cout<< "   roll:"  ;
 		    for(  i=1; i <= flock.getNumBirds(); ++i) 
-		    	cout<< setw(10) <<flock.xRot(i);
-		    cout<<endl<<endl;
+		    	std::cout<< std::setw(10) <<flock.xRot(i);
+		    std::cout<<std::endl<<std::endl;
 		sleep(2);
 	    }
 	    break;
 	}
 	
        
-	cout << achar;
+	std::cout << achar;
     } while ((achar != 'q') && (achar != 'Q'));
     
     flock.stop();

@@ -113,8 +113,8 @@ public:
 
         // If not locked ...
         if ( mCondMutex->test() == 0 ) {
-            cerr << "vjCondPosix::wait: INCORRECT USAGE: Mutex was not "
-                 << "locked when wait invoked!!!\n";
+            std::cerr << "vjCondPosix::wait: INCORRECT USAGE: Mutex was not "
+                      << "locked when wait invoked!!!\n";
 
             return -1;
         }
@@ -157,8 +157,8 @@ public:
 
         // If not locked ...
         if ( mCondMutex->test() == 0 ) {
-            cerr << "vjCondPosix::broadcast: Mutex was not locked when "
-                 << "broadcast called!!!\n";
+            std::cerr << "vjCondPosix::broadcast: Mutex was not locked when "
+                      << "broadcast called!!!\n";
         }
 
         return pthread_cond_broadcast(&mCondVar);
@@ -240,8 +240,8 @@ public:
     // -----------------------------------------------------------------------
     void
     dump (void) const {
-        cerr << "------------- vjCondPosix::Dump ---------\n"
-             << "Not Implemented yet.\n";
+        std::cerr << "------------- vjCondPosix::Dump ---------\n"
+                  << "Not Implemented yet.\n";
     }
 
 private:

@@ -37,7 +37,7 @@
 
 
 
-void vjTimedUpdate::write (ostream& out) {
+void vjTimedUpdate::write (std::ostream& out) {
     ;
 }
 

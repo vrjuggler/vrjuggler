@@ -52,7 +52,8 @@ void vjSoundFactory::registerConstructor( vjSoundEngineConstructorBase* construc
    vjDEBUG(vjDBG_INPUT_MGR,1) << "vjSoundFactory::registerConstructor: Sound engine registered for: "
 		    << constructor->getChunkType().c_str()
 		    << "   :" << (void*)constructor
-		    << " type:" << typeid(*constructor).name() << endl << vjDEBUG_FLUSH;
+		    << " type:" << typeid(*constructor).name() << std::endl
+                    << vjDEBUG_FLUSH;
 }
 
 bool vjSoundFactory::recognizeEngine(vjConfigChunk* chunk)
@@ -75,7 +76,7 @@ vjSoundEngine* vjSoundFactory::loadEngine(vjConfigChunk* chunk)
 
    vjDEBUG(vjDBG_INPUT_MGR,3) << "vjSoundFactory::loadEngine: Loading device: "
               << chunk->getType() << "  with: "
-              << typeid(*constructor).name() << endl << vjDEBUG_FLUSH;
+              << typeid(*constructor).name() << std::endl << vjDEBUG_FLUSH;
 
    new_engine = constructor->createEngine(chunk);
    return new_engine;

@@ -170,7 +170,7 @@ void vjPerfDataBuffer::set (int _phase, vjTimeStamp& _value) {
     //+       <br>2 25
     //+       <br>3 27
     //+       <br>1 42
-void vjPerfDataBuffer::write (ostream& out) {
+void vjPerfDataBuffer::write (std::ostream& out) {
     // the only tricky part of this is that the region we
     // want to print out might wrap back around to the
     // beginning of the list.  That's what the 2nd big
@@ -189,23 +189,23 @@ void vjPerfDataBuffer::write (ostream& out) {
     //cout << "begin/end are " << begin <<' '<< end << endl;
     if (begin == end)
 	return;
-    out << "PerfData1 \"" << name << "\" " << nindex << endl;
+    out << "PerfData1 \"" << name << "\" " << nindex << std::endl;
     if (begin < end) {
 	for (i = begin; i < end; i++) {
 	    b = &(buffer[i]);
 	    out << b->phase << ' '
-		<< setiosflags(ios::fixed) << b->ts << '\n';
+		<< std::setiosflags(std::ios::fixed) << b->ts << '\n';
 	}
     }
     else { /* wraparound */
 	for (i = begin; i < numbufs; i++) {
 	    b = &(buffer[i]);
-	    out << b->phase << ' ' << setiosflags(ios::fixed)
+	    out << b->phase << ' ' << std::setiosflags(std::ios::fixed)
 		<< b->ts << '\n';
 	}
 	for (i = 0; i < end; i++) {
 	    b = &(buffer[i]);
-	    out << b->phase << ' ' << setiosflags(ios::fixed)
+	    out << b->phase << ' ' << std::setiosflags(std::ios::fixed)
 		<< b->ts << '\n';
 	}
     }
@@ -216,14 +216,14 @@ void vjPerfDataBuffer::write (ostream& out) {
     lost_lock.release();
     read_begin = end;
 
-    out << -1 << ' ' << tlost << endl;
+    out << -1 << ' ' << tlost << std::endl;
 
 }
 
 
 
 // this probably isn't safe in a multitasking environment
-void vjPerfDataBuffer::writeTotal(ostream& out, int preskip, int postskip, float discrep) {
+void vjPerfDataBuffer::writeTotal(std::ostream& out, int preskip, int postskip, float discrep) {
     int begin = read_begin;
     int end = (write_pos - 1 + numbufs)%numbufs;
     int last = (end + numbufs-1) %numbufs;

@@ -46,17 +46,19 @@ bool vjIBox::config(vjConfigChunk *c)
   if( (!vjAnalog::config(c)) || (!vjDigital::config(c)))
      return false;
 
-  vjDEBUG(vjDBG_INPUT_MGR,3) << "	vjIBox::config:" << endl << vjDEBUG_FLUSH;
+  vjDEBUG(vjDBG_INPUT_MGR,3) << "	vjIBox::config:" << std::endl
+                             << vjDEBUG_FLUSH;
   port_id = c->getProperty("portNum");
 
   // Done in vjInput
   //active = 0;
   //baudRate = c->getProperty("baud");
 
-  vjDEBUG(vjDBG_INPUT_MGR,1) << "   Creating an IBox.. params: " << endl
-             << "	   portnum: " << port_id << endl
-             << "        baud   : " << baudRate << endl
-             << "   instanceName: " << instName << endl << endl << vjDEBUG_FLUSH;
+  vjDEBUG(vjDBG_INPUT_MGR,1) << "   Creating an IBox.. params: " << std::endl
+             << "	   portnum: " << port_id << std::endl
+             << "        baud   : " << baudRate << std::endl
+             << "   instanceName: " << instName << std::endl << std::endl
+             << vjDEBUG_FLUSH;
 
   return true;
 }
@@ -94,15 +96,18 @@ int vjIBox::startSampling()
       if (result == SUCCESS)
       {
   	    active = 1;
-	    vjDEBUG(vjDBG_INPUT_MGR,1) << "     Connected to IBox.\n" << flush << vjDEBUG_FLUSH;
+	    vjDEBUG(vjDBG_INPUT_MGR,1) << "     Connected to IBox.\n"
+	                               << std::flush << vjDEBUG_FLUSH;
       }
       else
       {
 	    active = 0;
-	    vjDEBUG(vjDBG_INPUT_MGR,0) << "   FAILED TO CONNECT to the Ibox named " << instName << endl
-	     << "     Ibox settings were: " << endl
-	     << "	     port : " << port_id << endl
-	     << "	  baudRate: " << baudRate << endl << endl << vjDEBUG_FLUSH;
+	    vjDEBUG(vjDBG_INPUT_MGR,0)
+	       << "   FAILED TO CONNECT to the Ibox named " << instName
+	       << std::endl << "     Ibox settings were: " << std::endl
+	       << "	     port : " << port_id << std::endl
+	       << "	  baudRate: " << baudRate << std::endl << std::endl
+	       << vjDEBUG_FLUSH;
 	    return 0;
       }
       hci_std_cmd(&thingie, 0,0,0);
@@ -168,8 +173,8 @@ int vjIBox::sample()
 // 	if (c == 60) {
 // 	  gettimeofday(&tv,0);
 // 	  stop_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
-// 	  cout << 1/((stop_time-start_time) / 60)
-// 	       << "  " << endl;
+// 	  std::cout << 1/((stop_time-start_time) / 60)
+// 	            << "  " << std::endl;
 // 	  c = 0;
 // 	}
 
@@ -206,7 +211,7 @@ int vjIBox::stopSampling()
     usleep(100);        // 100 uSec pause
 
     hci_disconnect(&thingie);
-    cout << "stopping the ibox.." << endl;
+    std::cout << "stopping the ibox.." << std::endl;
 
   }
   return 1;

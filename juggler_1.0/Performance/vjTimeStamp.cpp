@@ -33,7 +33,7 @@
 
 
 
-#include <vjDefines.h>
+#include <vjConfig.h>
 
 // these should all be in separate .cpp files.  fix later
 
@@ -115,7 +115,7 @@ float vjTimeStampSGI::operator - (const vjTimeStampSGI& t2) const {
 }
 
 
-ostream& operator << (ostream& out, vjTimeStampSGI& ts) {
+std::ostream& operator << (std::ostream& out, vjTimeStampSGI& ts) {
     out << ts.usecs();
     return out;
 }

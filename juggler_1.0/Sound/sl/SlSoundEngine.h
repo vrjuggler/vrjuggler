@@ -37,7 +37,6 @@
 #include <string>
 #include <assert.h>
 #include <unistd.h>
-#include <iostream.h>
 #include <sl.h>
 #include <Sound/vjSoundEngine.h> // base class..
 #include <Sound/vjSoundEngineConstructor.h>

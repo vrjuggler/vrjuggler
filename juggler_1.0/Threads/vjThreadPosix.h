@@ -255,13 +255,13 @@ public:  // ----- Various other thread functions ------ //
         if ( mScope == PTHREAD_SCOPE_SYSTEM ) {
             ret_val = pthread_setrunon_np(cpu);
         } else {
-            cerr << "This thread is not a system-scope thread!\n";
+            std::cerr << "This thread is not a system-scope thread!\n";
             ret_val = -1;
         }
 
         return ret_val;
 #else
-        cerr << "vjThreadPosix::setRunOn(): Not available on this system.\n";
+        std::cerr << "vjThreadPosix::setRunOn(): Not available on this system.\n";
 
         return -1;
 #endif
@@ -293,13 +293,13 @@ public:  // ----- Various other thread functions ------ //
         if ( mScope == PTHREAD_SCOPE_SYSTEM ) {
             ret_val = pthread_getrunon_np(cur_cpu);
         } else {
-            cerr << "This thread is not a system-scope thread!\n";
+            std::cerr << "This thread is not a system-scope thread!\n";
             ret_val = -1;
         }
 
         return ret_val;
 #else
-        cerr << "vjThreadPosix::getRunOn(): Not available on this system.\n";
+        std::cerr << "vjThreadPosix::getRunOn(): Not available on this system.\n";
 
         return -1;
 #endif
@@ -334,8 +334,8 @@ public:  // ----- Various other thread functions ------ //
     virtual int
     kill (int signum) {
 #ifdef _PTHREADS_DRAFT_4
-        cerr << "vjThreadPosix::kill(): Signals cannot be sent to threads "
-             << "with this POSIX threads implementation.\n";
+        std::cerr << "vjThreadPosix::kill(): Signals cannot be sent to threads "
+                  << "with this POSIX threads implementation.\n";
 
         return -1;
 #else
@@ -375,8 +375,8 @@ public:  // ----- Various other thread functions ------ //
     // -----------------------------------------------------------------------
     //: Provide a way of printing the process ID neatly.
     // -----------------------------------------------------------------------
-    ostream&
-    outStream (ostream& out) {
+    std::ostream&
+    outStream (std::ostream& out) {
         out << "pThrd: [" << getpid() << "] ";
         vjBaseThread::outStream(out);
         return out;

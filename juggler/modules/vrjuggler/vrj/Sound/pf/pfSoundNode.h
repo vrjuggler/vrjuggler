@@ -170,14 +170,14 @@ int pfSoundNode::app(pfTraverser *trav)
       // or in juggler's manager (not both, of course)...
 
       // use this for debugging the location of the sound reletive to the user.
-      //cout<<"["<<mSound->getName()<<"] sound in userspace: "<<soundPosition[0]<<" "<<soundPosition[1]<<" "<<soundPosition[2]<<"\n"<<flush;
+      //std::cout<<"["<<mSound->getName()<<"] sound in userspace: "<<soundPosition[0]<<" "<<soundPosition[1]<<" "<<soundPosition[2]<<"\n"<<std::flush;
    }
    else
    {
       // redundant (fixme), but make sure it's 0.0f,0.0f,0.0f
       // this makes the sound the same as the observer.
       mSound->setPosition( 0.0f, 0.0f, 0.0f );
-      //cout<<"["<<mSound->getName()<<"] No position\n"<<flush;
+      //std::cout<<"["<<mSound->getName()<<"] No position\n"<<std::flush;
    }
 
    return pfDCS::app(trav);  // call the parent class's app()

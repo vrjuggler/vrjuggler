@@ -109,7 +109,7 @@ public:
    {
       int ret_val = uspsema(sema);
       if(ret_val < 0)
-         cerr << "vjSemphoreSGI::ERROR:" << endl;
+         std::cerr << "vjSemphoreSGI::ERROR:" << std::endl;
 
       return ret_val;
    }
@@ -168,7 +168,7 @@ public:
    {
       int ret_val = usvsema(sema);
       if(ret_val < 0)
-         cerr << "vjSemaphoreSGI::ERROR:" << endl;
+         std::cerr << "vjSemaphoreSGI::ERROR:" << std::endl;
 
       return ret_val;
    }

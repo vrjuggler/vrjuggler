@@ -35,7 +35,7 @@
 
 #include <Environment/vjSocket.h>
 
-#ifndef WIN32
+#ifndef VJ_OS_Win32
 
 /***************************** BSD Sockets Version **************************/
 
@@ -61,8 +61,8 @@ vjSocketPosix::vjSocketPosix() {
 
 vjSocketPosix::vjSocketPosix(vjSocketIDPosix id) {
     sockid = id;
-    out = new ostream (new sockstreambuf (id));
-    in = new istream (new sockstreambuf(id));
+    out = new std::ostream (new sockstreambuf (id));
+    in = new std::istream (new sockstreambuf(id));
 }
 
 
@@ -163,8 +163,8 @@ vjSocketWin32::vjSocketWin32(vjSocketIDWin32& id) {
 //     sockstreambuf* buf = new sockstreambuf (id, new char[512], 512);
 //     out = new ofstream (buf);
 //     in = new ifstream (buf);
-    out = new ostream (new sockstreambuf (id));
-    in = new istream (new sockstreambuf(id));
+    out = new std::ostream (new sockstreambuf (id));
+    in = new std::istream (new sockstreambuf(id));
 }
 
 
@@ -199,12 +199,13 @@ bool vjSocketWin32::listen (int port) {
 
     err = WSAStartup( wVersionRequested, &wsaData ); 
     if(err < 0) {
-        cout << "-------- socket - WSAstartup failed-------------" << endl;
+        std::cout << "-------- socket - WSAstartup failed-------------"
+                  << std::endl;
         //return false;
         // output the error.
         //std::string error;
         //socketUtil::getLastError( error );
-        //cout<<"socketUtil: "<<error<<"\n"<<flush;
+        //std::cout<<"socketUtil: "<<error<<"\n"<<std::flush;
     }
 
     u_long nInterfaceAddr = inet_addr("0.0.0.0");
@@ -217,18 +218,21 @@ bool vjSocketWin32::listen (int port) {
 
     sockid = socket (AF_INET, SOCK_STREAM, 0);
     if (sockid == -1) {
-        cout << "---------- socket - sockID bad----------" <<endl;
+        std::cout << "---------- socket - sockID bad----------" << std::endl;
         return false;
     }
 
     err = bind ( sockid, (sockaddr*)&sockaddress,
                  sizeof (struct sockaddr_in));
-    if (err) cout << "--------- socket - bind error " << err << " --------" << endl;
+    if (err)
+        std::cout << "--------- socket - bind error " << err << " --------"
+                  << std::endl;
     if (!err)
         err = ::listen (sockid, 0);
 
     if (err) {
-        cout << "--------------- socket - listen fail ------------" << endl;
+        std::cout << "--------------- socket - listen fail ------------"
+                  << std::endl;
         close();
         return false;
     }
@@ -253,5 +257,5 @@ vjSocketWin32* vjSocketWin32::accept () {
 
 
 
-#endif //ifndef WIN32
+#endif //ifndef VJ_OS_Win32
 

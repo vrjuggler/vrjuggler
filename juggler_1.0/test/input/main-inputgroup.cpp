@@ -31,7 +31,7 @@
  * -----------------------------------------------------------------
  */
 
-#include <iostream.h>
+#include <iostream>
 #include <Input/InputManager/vjInputManager.h>
 #include <Input/ibox/hci.h>
 #include <Input/ibox/ibox.h>
@@ -46,45 +46,48 @@ int main()
    vjInputManager* input_manager = new(shared_pool) vjInputManager ;
 
       // --- Create Dummy -- //
-   cout << "\nCreating myDummy: vjDummyPosition w/X=5.0" << endl;
+   std::cout << "\nCreating myDummy: vjDummyPosition w/X=5.0" << std::endl;
    vjDummyPosition* myDummy = new(shared_pool) vjDummyPosition;
    myDummy->SetX(5.0);
 
       // -- get default pos data -- //
-   cout << "get the position data for proxy 0:" << endl;
+   std::cout << "get the position data for proxy 0:" << std::endl;
    data = input_manager->getPosData(pos_data, 0);
-   cout  << "  x:" << data->x 
-         << "  y:" << data->y 
-         << "  z:" << data->z << endl;
+   std::cout  << "  x:" << data->x 
+              << "  y:" << data->y 
+              << "  z:" << data->z << std::endl;
 
       // --- Add dummy to input group -- //
-   cout << "\nAdding myDummy to InputGroup" << endl;
+   std::cout << "\nAdding myDummy to InputGroup" << std::endl;
    int devNum = input_manager->fAddDevice(myDummy);
-   cout << "Device added as devNum: " << devNum << endl;
-   cout << "\nSet proxy 0 to devNum, subnumber 0" << endl;
+   std::cout << "Device added as devNum: " << devNum << std::endl;
+   std::cout << "\nSet proxy 0 to devNum, subnumber 0" << std::endl;
    input_manager->setPosProxy(0,devNum,0);
 
       // --- Now get Dummy's data -- //
-   cout << "Now get the positional data from posproxy0:" << endl;
+   std::cout << "Now get the positional data from posproxy0:" << std::endl;
    data = input_manager->getPosData(0);
-   cout  << "  x:" << data->x 
-         << "  y:" << data->y 
-         << "  z:" << data->z << endl;
+   std::cout  << "  x:" << data->x 
+              << "  y:" << data->y 
+              << "  z:" << data->z << std::endl;
 
 
-   cout << "\ngetDevice(devNum):" << (input_manager->getDevice(devNum)) << endl;
+   std::cout << "\ngetDevice(devNum):" << (input_manager->getDevice(devNum))
+             << std::endl;
    (input_manager->getDevice(devNum))->UpdateData();
-   cout << "\nget the devicename: " << (input_manager->getDevice(devNum))->getDeviceName() << endl;
+   std::cout << "\nget the devicename: "
+             << (input_manager->getDevice(devNum))->getDeviceName() 
+             << std::endl;
 
-   cout << "Doing UpdateAllData:" << flush;
+   std::cout << "Doing UpdateAllData:" << std::flush;
    input_manager->updateAllData();
-   cout << "..Done" << endl;
+   std::cout << "..Done" << std::endl;
 
-//  cout << "get an invalid device: ";
-//  cout << (input_manager->getDevice(3)) << endl;
+//  std::cout << "get an invalid device: ";
+//  std::cout << (input_manager->getDevice(3)) << std::endl;
 
-   cout << "\ntype something: " << flush ;
-   cin.get();
+   std::cout << "\ntype something: " << std::flush;
+   std::cin.get();
 
 #ifdef TRACKERS
    vjFlock* aFlock = new (shared_pool) vjFlock;
@@ -93,7 +96,7 @@ int main()
    input_manager->SetPosProxy(1,devNum,0);
    input_manager->SetPosProxy(2,devNum,1);
 
-   cout << "Trackers set up.. " << endl;
+   std::cout << "Trackers set up.. " << std::endl;
    //sleep(5);
 
    vjPOS_DATA *data1,*data2,*data0;
@@ -104,8 +107,9 @@ int main()
       data0 = input_manager->getPosData(0);
       data1 = input_manager->getPosData(1);
       data2 = input_manager->getPosData(2);
-      cout << endl;
-      cout << "X: " << data0->x << "  " << data1->x << "  " << data2->x << endl
+      std::cout << std::endl;
+      std::cout << "X: " << data0->x << "  " << data1->x << "  " << data2->x
+                << std::endl
       << "Y: " << data0->y << "  " << data1->y << "  " << data2->y << endl
       << "Z: " << data0->z << "  " << data1->z << "  " << data2->z << endl;
 
@@ -117,7 +121,7 @@ int main()
    
    vjIBox *myibox = new (shared_pool) vjIBox;
    myibox->StartSampling();
-   cout << "ibox is: " << myibox->getDeviceName();
+   std::cout << "ibox is: " << myibox->getDeviceName();
    C2Dinput_manageritalProxy dp1(myibox,0);
    devNum = input_manager->FAddDevice(myibox);
    input_manager->SetDinput_managerProxy(0,devNum,0);
@@ -127,9 +131,12 @@ int main()
    for (int i = 0; i < 20; i++)
    {
       input_manager->UpdateAllData();
-      cout << "dinput_managerital0: " << input_manager->getDinput_managerData(0);
-      cout << " dinput_managerital1: " << input_manager->getDinput_managerData(1);
-      cout << " dinput_managerital2: " << input_manager->getDinput_managerData(2) << endl;
+      std::cout << "dinput_managerital0: "
+                << input_manager->getDinput_managerData(0);
+      std::cout << " dinput_managerital1: "
+                << input_manager->getDinput_managerData(1);
+      std::cout << " dinput_managerital2: "
+                << input_manager->getDinput_managerData(2) << std::endl;
       sleep(1);
    }
 

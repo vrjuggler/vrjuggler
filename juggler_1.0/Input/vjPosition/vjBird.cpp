@@ -104,10 +104,7 @@ static void sampleBirds(void* pointer)
 
      gettimeofday(&tv,0);
      stop_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
-        cout << 1/((stop_time-start_time) / 60)
-           << "  " << endl;
-
-
+        std::cout << 1/((stop_time-start_time) / 60) << "  " << std::endl;
    }
 
 }
@@ -139,10 +136,10 @@ int vjBird::startSampling()
   //pickBird(theTransmitter,port_id);
   set_rep_and_stream(port_id, repRate);
 
-//  cout << "port_id:" << port_id << endl;
+//  std::cout << "port_id:" << port_id << std::endl;
 
 
-  cout << "vjBird ready to go.." << endl;
+  std::cout << "vjBird ready to go.." << std::endl;
 
   vjBird* devicePtr = this;
 
@@ -195,7 +192,7 @@ int vjBird::stopSampling()
       usleep(100);
       char   bird_command[4];
 
-      cout << "stopping the flock.." << endl;
+      std::cout << "stopping the flock.." << std::endl;
 
       bird_command[0] = 'B';
       write(port_id, bird_command, 1);
@@ -234,7 +231,7 @@ void vjBird::updateData()
 void vjBird::setHemisphere(BIRD_HEMI h)
 {
   if (active) {
-      cerr << "Cannot change the hemisphere\n";
+      std::cerr << "Cannot change the hemisphere\n";
       return;
    }
    hemisphere = h;
@@ -243,7 +240,7 @@ void vjBird::setHemisphere(BIRD_HEMI h)
 void vjBird::setFilters(BIRD_FILT f)
 {
   if (active) {
-      cerr << "Cannot change filters while active\n";
+      std::cerr << "Cannot change filters while active\n";
       return;
   }
   filter = f;
@@ -252,7 +249,7 @@ void vjBird::setFilters(BIRD_FILT f)
 void vjBird::setReportRate(char rRate)
 {
   if (active) {
-      cerr << "Cannot change report rate while active\n";
+      std::cerr << "Cannot change report rate while active\n";
       return;
   }
   repRate = rRate;
@@ -261,7 +258,7 @@ void vjBird::setReportRate(char rRate)
 void vjBird::setSync(int sync)
 {
   if (active) {
-      cerr << "Cannot change report rate while active\n";
+      std::cerr << "Cannot change report rate while active\n";
       return;
   }
   syncStyle = sync;
@@ -270,7 +267,7 @@ void vjBird::setSync(int sync)
 void vjBird::setBlocking(int blVal)
 {
   if (active) {
-      cerr << "Cannot change report rate while active\n";
+      std::cerr << "Cannot change report rate while active\n";
       return;
   }
   blocking = blVal;
@@ -282,11 +279,11 @@ void vjBird::positionCorrect(float&x,float&y,float&z) {
 
  /*   if(x<caltable.xmin || y<caltable.ymin || z<caltable.zmin ||
         x>=caltable.xmax || y>=caltable.ymax || z>=caltable.zmax){
-        cerr << "Point out of range " << x << " " <<  y << " " << z << endl;
-        cerr <<"                   "
+        std::cerr << "Point out of range " << x << " " <<  y << " " << z << std::endl;
+        std::cerr <<"                   "
              <<caltable.xmin<<" "<< caltable.xmax << " " <<  caltable.ymin
              <<caltable.ymax<<" "<< caltable.zmin << " " << caltable.zmax
-             << endl;
+             << std::endl;
         return;
     }
 */
@@ -332,13 +329,13 @@ void vjBird::initCorrectionTable()
 {
   int i,j,k, xsize,ysize,zsize;
   float dump;
-  ifstream inFile;
+  std::ifstream inFile;
 
-  cout << "Initializing calibration table ... ";
+  std::cout << "Initializing calibration table ... ";
   inFile.open("calibration.table");
   if (!inFile)
   {
-	cout << "Unable to open calibration.table\n";
+	std::cout << "Unable to open calibration.table\n";
         return;
   }
 
@@ -388,10 +385,10 @@ inline int getReading(vjMatrix *data, int port)
 	//while((read(port,&group,1) == 0) && c < 99999)
 	  //c++;
 
-        if (c >= 5000) cout << "timeout" << endl;
+        if (c >= 5000) std::cout << "timeout" << std::endl;
         //addr = group;
   } // while(addr != n);
-  //cout << "addr: " << addr << endl;
+  //std::cout << "addr: " << addr << std::endl;
 
   //vjPOS_DATA *dataPtr = data + addr - 1;
 
@@ -438,14 +435,14 @@ static int open_port(char* serialPort, int baud)
  ///////////////////////////////////////////////////////////////////
   int port_id = open(serialPort, O_RDWR | O_NDELAY);
   if (port_id == -1)
-   { cerr << "tracker port open failed\n";
+   { std::cerr << "tracker port open failed\n";
     return port_id;
    }
   sleep(2);
   close(port_id);
   port_id = open(serialPort,O_RDWR | O_NDELAY);
   if (port_id == -1)
-   { cerr << "tracker port open failed\n";
+   { std::cerr << "tracker port open failed\n";
     return port_id;
    }
 

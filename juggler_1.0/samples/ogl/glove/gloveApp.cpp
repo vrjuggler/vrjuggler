@@ -218,48 +218,48 @@ void gloveApp::preFrame()
 {
    /////////////////////////////////////////////////////////
    //: Debug stuff
-   cout<<mPinchLeftThumb->getData()
-      <<mPinchLeftIndex->getData()
-      <<mPinchLeftMiddle->getData()
-      <<mPinchLeftRing->getData()
-      <<mPinchLeftPinky->getData()
-      <<mPinchRightThumb->getData()
-      <<mPinchRightIndex->getData()
-      <<mPinchRightMiddle->getData()
-      <<mPinchRightRing->getData()
-      <<mPinchRightPinky->getData()<<"\n"<<flush;
+   std::cout<<mPinchLeftThumb->getData()
+            <<mPinchLeftIndex->getData()
+            <<mPinchLeftMiddle->getData()
+            <<mPinchLeftRing->getData()
+            <<mPinchLeftPinky->getData()
+            <<mPinchRightThumb->getData()
+            <<mPinchRightIndex->getData()
+            <<mPinchRightMiddle->getData()
+            <<mPinchRightRing->getData()
+            <<mPinchRightPinky->getData()<<"\n"<<std::flush;
          
    if (LeftPointing() == true)
    {
-      cout<<"Left Pointing"<<flush;
+      std::cout<<"Left Pointing"<<std::flush;
    } 
    
    else if (LeftOpen() == true)
    {
-      cout<<"Left Open"<<flush;
+      std::cout<<"Left Open"<<std::flush;
    }
    
    else if (LeftFist() == true)
    {
-      cout<<"Left Fist"<<flush;
+      std::cout<<"Left Fist"<<std::flush;
    }
    
    if (RightPointing() == true)
    {
-      cout<<", Right Pointing"<<flush;
+      std::cout<<", Right Pointing"<<std::flush;
    } 
    
    else if (RightOpen() == true)
    {
-      cout<<", Right Open"<<flush;
+      std::cout<<", Right Open"<<std::flush;
    }
    
    else if (RightFist() == true)
    {
-      cout<<", Right Fist"<<flush;
+      std::cout<<", Right Fist"<<std::flush;
    }
    
-   cout<<"\n"<<flush;
+   std::cout<<"\n"<<std::flush;
    
    /////////////////////////////////////////////////////////
    //: Handle navigation

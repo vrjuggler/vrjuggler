@@ -95,10 +95,13 @@ bool vjPfDrawManager::configDisplaySystem(vjConfigChunk* chunk)
    vjASSERT((std::string)chunk->getType() == std::string("displaySystem"));
 
    // ---- SETUP PipeStr's ---- //
-   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "------------- vjPfDrawManager::config ----------------" << endl << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL)
+      << "------------- vjPfDrawManager::config ----------------" << std::endl
+      << vjDEBUG_FLUSH;
    mNumPipes = (unsigned int)(int)chunk->getProperty("numpipes");
 
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "NumPipes: " << mNumPipes << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "NumPipes: " << mNumPipes
+                                            << std::endl << vjDEBUG_FLUSH;
    for (unsigned int i=0;i<mNumPipes;i++)
    {
       mPipeStrs.push_back(chunk->getProperty("xpipes", i).cstring());
@@ -109,7 +112,9 @@ bool vjPfDrawManager::configDisplaySystem(vjConfigChunk* chunk)
          strcpy(xpipe_name, display_env);
          mPipeStrs[i] = xpipe_name;
       }
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "Pipe:" << i << ": " << mPipeStrs[i] << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "Pipe:" << i << ": "
+                                               << mPipeStrs[i] << std::endl
+                                               << vjDEBUG_FLUSH;
    }
    return true;
 }
@@ -126,17 +131,23 @@ bool vjPfDrawManager::configPerformerAPI(vjConfigChunk* chunk)
    char* head_file = chunk->getProperty("simHeadModel").cstring();
    char* wand_file = chunk->getProperty("simWandModel").cstring();
    if(head_file == NULL)
-      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "WARNING: vjPfDrawManager::config: simHeadModel not set." << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL)
+         << "WARNING: vjPfDrawManager::config: simHeadModel not set."
+         << std::endl << vjDEBUG_FLUSH;
    if(wand_file == NULL)
-      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "WARNING: vjPfDrawManager::config: simWandModel not set." << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL)
+         << "WARNING: vjPfDrawManager::config: simWandModel not set."
+         << std::endl << vjDEBUG_FLUSH;
 
    mHeadModel = std::string(head_file);
    mWandModel = std::string(wand_file);
 
    vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL)
-      << "Head Model: " << mHeadModel.c_str() << endl
-      << "Wand Model: " << mWandModel.c_str() << endl << vjDEBUG_FLUSH;
-   vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "-----------------------------------------------------" << endl << vjDEBUG_FLUSH;
+      << "Head Model: " << mHeadModel.c_str() << std::endl
+      << "Wand Model: " << mWandModel.c_str() << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL)
+      << "-----------------------------------------------------" << std::endl
+      << vjDEBUG_FLUSH;
    return true;
 }
 
@@ -195,7 +206,7 @@ void vjPfDrawManager::initAPI()
 
 void vjPfDrawManager::initDrawing()
 {
-   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "vjPfDrawManager::initDrawing: Entering." << endl << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "vjPfDrawManager::initDrawing: Entering." << std::endl << vjDEBUG_FLUSH;
 
    // Set params for Multi-pipe and Multiprocess
    pfMultipipe(mNumPipes);
@@ -213,8 +224,8 @@ void vjPfDrawManager::initDrawing()
    // ------ OPEN/ALLOCATE Pipes ------- //
    for (unsigned int pipeNum = 0; pipeNum < mNumPipes; pipeNum++)
    {
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::initDrawing: Opening Pipe." << endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "\tpipe:" << pipeNum << ": " << mPipeStrs[pipeNum] << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager::initDrawing: Opening Pipe." << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "\tpipe:" << pipeNum << ": " << mPipeStrs[pipeNum] << std::endl << vjDEBUG_FLUSH;
 
       // Make sure there is room for the pipe.  The check must be made using
       // less than or equal because pipe numbering may start from 0, and an
@@ -238,8 +249,8 @@ void vjPfDrawManager::initDrawing()
       vjDEBUGlg(vjDBG_DRAW_MGR,vjDBG_VERB_LVL,false,false) << "  " << stereo_fb_config[i] << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "\nvjPfDrawManager::initDrawing: Got Mono FB config\n" << vjDEBUG_FLUSH;
    for(i=0;i<mono_fb_config.size();i++)
-      vjDEBUGlg(vjDBG_DRAW_MGR,vjDBG_VERB_LVL,false,false) << "  " << mono_fb_config[i] << endl << vjDEBUG_FLUSH;
-   vjDEBUGlg(vjDBG_DRAW_MGR,vjDBG_VERB_LVL,false,false) << endl << vjDEBUG_FLUSH;
+      vjDEBUGlg(vjDBG_DRAW_MGR,vjDBG_VERB_LVL,false,false) << "  " << mono_fb_config[i] << std::endl << vjDEBUG_FLUSH;
+   vjDEBUGlg(vjDBG_DRAW_MGR,vjDBG_VERB_LVL,false,false) << std::endl << vjDEBUG_FLUSH;
 
    //  For each display:
    //     -Create a pWin for it
@@ -248,12 +259,12 @@ void vjPfDrawManager::initDrawing()
    for (std::vector<vjDisplay*>::iterator dispIter = displays.begin();
        dispIter != displays.end(); dispIter++)
    {
-      vjDEBUG_BEGIN(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: ---- Opening new Display --------" << endl << vjDEBUG_FLUSH;
+      vjDEBUG_BEGIN(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: ---- Opening new Display --------" << std::endl << vjDEBUG_FLUSH;
 
       pfDisp tempPfDisp;
       tempPfDisp.disp = (*dispIter);
 
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "\tDisplay is:" << (void*)(*dispIter) << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "\tDisplay is:" << (void*)(*dispIter) << std::endl << vjDEBUG_FLUSH;
       vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "\tvjPfDrawManager::initDrawing: Got Display:\n" << (*dispIter) << vjDEBUG_FLUSH;
 
       int xo, yo, xs, ys;
@@ -325,7 +336,7 @@ void vjPfDrawManager::initDrawing()
       // -- Add new pfDisp to disp Vector -- //
       disps.push_back(tempPfDisp);      // This should make a COPY
 
-      vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "---- Display Open (done) --------" << endl << vjDEBUG_FLUSH;
+      vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "---- Display Open (done) --------" << std::endl << vjDEBUG_FLUSH;
    }
 
 
@@ -376,7 +387,7 @@ void vjPfDrawManager::initDrawing()
    // Dump the state
    debugDump();
 
-   vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "vjPfDrawManager::initDrawing: Exiting." << endl << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "vjPfDrawManager::initDrawing: Exiting." << std::endl << vjDEBUG_FLUSH;
 }
 
 // Initialize the parameters of the master channel
@@ -456,7 +467,7 @@ std::vector<int> vjPfDrawManager::getStereoFBConfig()
 //: Callback when display is added to display manager
 void vjPfDrawManager::addDisplay(vjDisplay* disp)
 {
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager:addDisplay\n" << disp << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager:addDisplay\n" << disp << std::endl << vjDEBUG_FLUSH;
 }
 
 
@@ -487,7 +498,7 @@ void vjPfDrawManager::initSimulator()
    if(!mHeadModel.empty())
    {
       head_node = pfdLoadFile(mHeadModel.c_str());     // Load head model
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: Loaded head model: " << mHeadModel.c_str() << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: Loaded head model: " << mHeadModel.c_str() << std::endl << vjDEBUG_FLUSH;
    } else {
       vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: No wand head specified.\n" << vjDEBUG_FLUSH;
    }
@@ -495,7 +506,7 @@ void vjPfDrawManager::initSimulator()
    if(!mWandModel.empty())
    {
       wand_node = pfdLoadFile(mWandModel.c_str());     // Load wand model
-      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: Loaded wand model: " << mWandModel.c_str() << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: Loaded wand model: " << mWandModel.c_str() << std::endl << vjDEBUG_FLUSH;
    } else {
       vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: No wand model specified.\n" << vjDEBUG_FLUSH;
    }
@@ -539,7 +550,7 @@ void vjPfDrawManager::closeAPI()
 
 void vjPfDrawManager::updateProjections()
 {
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "vjPfDrawManager::updateProjections: Entering." << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "vjPfDrawManager::updateProjections: Entering." << std::endl << vjDEBUG_FLUSH;
 
    // --- Update the channel projections --- //
    //for(each pfDisp)
@@ -567,7 +578,7 @@ void vjPfDrawManager::updateProjections()
 void vjPfDrawManager::updatePfProjection(pfChannel* chan, vjProjection* proj, bool simulator)
 {
    vjDEBUG_BEGIN(vjDBG_DRAW_MGR,vjDBG_HVERB_LVL) << "vjPfDrawManager::updatePfProjection: Entering. viewMat:\n"
-                    << proj->mViewMat << endl << vjDEBUG_FLUSH;
+                    << proj->mViewMat << std::endl << vjDEBUG_FLUSH;
 
    pfMatrix pfViewMat;
    pfViewMat.set(proj->mViewMat.getFloatPtr());      // Hmm...
@@ -599,7 +610,7 @@ void vjPfDrawManager::updatePfProjection(pfChannel* chan, vjProjection* proj, bo
    vjDEBUG(vjDBG_DRAW_MGR,7) << "Frustum: l:" << proj->mFrustum[vjFrustum::VJ_LEFT]
               << "   r: " << proj->mFrustum[vjFrustum::VJ_RIGHT]
               << "   b: " << proj->mFrustum[vjFrustum::VJ_BOTTOM]
-              << "   t: " << proj->mFrustum[vjFrustum::VJ_TOP] << endl << vjDEBUG_FLUSH;
+              << "   t: " << proj->mFrustum[vjFrustum::VJ_TOP] << std::endl << vjDEBUG_FLUSH;
 
    vjDEBUG_END(vjDBG_DRAW_MGR,6) << "vjPfDrawManager::updatePfProjection: Exiting.\n" << vjDEBUG_FLUSH;
 }
@@ -625,17 +636,21 @@ vjPfDrawManager::pfDisp* vjPfDrawManager::getPfDisp(pfChannel* chan)
 
 void vjPfDrawManager::debugDump()
 {
-   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,0) << "-- DEBUG DUMP --------- " << clrOutNORM(clrCYAN,"vjPfDrawManager:") << (void*)this << " ------------" << endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR,0)       << "app:" << (void*)app << endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR,0)       << "scene:" << (void*)mSceneRoot << endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR,0)       << "sim scene:" << (void*)mRootWithSim << endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR,0)       << "Disps:" << disps.size() << endl << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,0) << "-- DEBUG DUMP --------- " << clrOutNORM(clrCYAN,"vjPfDrawManager:") << (void*)this << " ------------" << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,0)       << "app:" << (void*)app << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,0)       << "scene:" << (void*)mSceneRoot << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,0)       << "sim scene:" << (void*)mRootWithSim << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,0)       << "Disps:" << disps.size() << std::endl << vjDEBUG_FLUSH;
 
    for (std::vector<pfDisp>::iterator i = disps.begin(); i != disps.end(); i++)
    {
-      vjDEBUG_BEGIN(vjDBG_DRAW_MGR,0) << "Display:" << (void*)(i->disp) << endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_DRAW_MGR,0) << "pWin:" << (void*)(i->pWin) << endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_DRAW_MGR,0) << "vis id:" << hex << i->pWin->getFBConfigId() << endl << vjDEBUG_FLUSH;
+      vjDEBUG_BEGIN(vjDBG_DRAW_MGR,0) << "Display:" << (void*)(i->disp)
+                                      << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DRAW_MGR,0) << "pWin:" << (void*)(i->pWin) << std::endl
+                                << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DRAW_MGR,0) << "vis id:" << std::hex
+                                << i->pWin->getFBConfigId() << std::endl
+                                << vjDEBUG_FLUSH;
       pfChannel* l_chan = (i->chans[pfDisp::LEFT]);
       pfChannel* r_chan = (i->chans[pfDisp::RIGHT]);
       unsigned lc_mask,rc_mask;
@@ -649,14 +664,14 @@ void vjPfDrawManager::debugDump()
                                      << " AppFunc:" << (lc_mask & PFCHAN_APPFUNC)
                                      << " SwapBuff:" << (lc_mask & PFCHAN_SWAPBUFFERS)
                                      << " SwapBuff-HW:" << (lc_mask & PFCHAN_SWAPBUFFERS_HW)
-                                     << endl << vjDEBUG_FLUSH;
+                                     << std::endl << vjDEBUG_FLUSH;
       vjDEBUG_NEXT(vjDBG_DRAW_MGR,0) << "       R:" << (void*)r_chan
                                      << "  shared: FOV:" << (rc_mask & PFCHAN_FOV)
                                      << " Scene:" << (rc_mask & PFCHAN_SCENE)
                                      << " AppFunc:" << (rc_mask & PFCHAN_APPFUNC)
                                      << " SwapBuff:" << (rc_mask & PFCHAN_SWAPBUFFERS)
                                      << " SwapBuff-HW:" << (rc_mask & PFCHAN_SWAPBUFFERS_HW)
-                                     << endl << vjDEBUG_FLUSH;
+                                     << std::endl << vjDEBUG_FLUSH;
    }
    vjDEBUG_END(vjDBG_DRAW_MGR,0) << "-------- Dump end ----\n" << vjDEBUG_FLUSH;
 }
@@ -676,7 +691,9 @@ void vjPFconfigPWin(pfPipeWindow* pWin)
 
    // Ouput the visual id
    int fb_id = pWin->getFBConfigId();
-   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPFConfigPWin: framebuffer id: x" << hex << fb_id << dec << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL)
+      << "vjPFConfigPWin: framebuffer id: x" << std::hex << fb_id << std::dec
+      << std::endl << vjDEBUG_FLUSH;
 }
 
 
@@ -684,7 +701,7 @@ void vjPFconfigPWin(pfPipeWindow* pWin)
 void vjPfAppFunc(pfChannel *chan, void* chandata)
 {
    vjDEBUG(vjDBG_DRAW_MGR, 0) << "--- vjPfAppFunc: Enter ---.\n" << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR, 0) << "chan: " << chan << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR, 0) << "chan: " << chan << std::endl << vjDEBUG_FLUSH;
 
    pfChannel* master_chan = vjPfDrawManager::instance()->mMasterChan;
    if(master_chan == chan)
@@ -713,7 +730,7 @@ void vjPfAppFunc(pfChannel *chan, void* chandata)
 void vjPfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo, bool simulator)
 {
    vjDEBUG_BEGIN(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "--- vjPfDrawFunc: Enter ---.\n" << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "chan: " << chan << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "chan: " << chan << std::endl << vjDEBUG_FLUSH;
 
       // Select correct buffer to draw to
       // If we are in stereo and not a simulator
@@ -761,28 +778,28 @@ void vjPfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye,
 void vjPfDrawFuncStereoLeft(pfChannel *chan, void* chandata)
 {
    vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "--- vjPfDrawFuncStereoLeft: Enter ---.\n" << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "chan: " << chan << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "chan: " << chan << std::endl << vjDEBUG_FLUSH;
    vjPfDrawFunc(chan,chandata,true,false,true,false);
 }
 
 void vjPfDrawFuncStereoRight(pfChannel *chan, void* chandata)
 {
    vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "--- vjPfDrawFuncStereoRight: Enter ---.\n" << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "chan: " << chan << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "chan: " << chan << std::endl << vjDEBUG_FLUSH;
    vjPfDrawFunc(chan,chandata,false,true,true,false);
 }
 
 void vjPfDrawFuncMonoBackbuffer(pfChannel *chan, void* chandata)
 {
    vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "--- vjPfDrawFuncMonoBackbuffer: Enter ---.\n" << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "chan: " << chan << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "chan: " << chan << std::endl << vjDEBUG_FLUSH;
    vjPfDrawFunc(chan,chandata,false,false,false,false);
 }
 
 void vjPfDrawFuncSimulator(pfChannel* chan, void* chandata)
 {
    vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "--- vjPfDrawFuncSimulator: Enter ---.\n" << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "chan: " << chan << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR, vjDBG_VERB_LVL) << "chan: " << chan << std::endl << vjDEBUG_FLUSH;
    vjPfDrawFunc(chan,chandata,false,false,false,true);
 }
 

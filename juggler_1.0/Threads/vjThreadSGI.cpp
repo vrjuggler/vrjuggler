@@ -129,7 +129,7 @@ void vjThreadSGI::startThread(void* null_param)
  int
 vjThreadSGI::join (void** arg)
 {
-   cerr << "vjThreadSGI::join() not implemented yet!\n";
+   std::cerr << "vjThreadSGI::join() not implemented yet!\n";
    return -1;
 }
 

@@ -31,7 +31,7 @@
  * -----------------------------------------------------------------
  */
 
-#include <iostream.h>
+#include <iostream>
 #include <stdio.h>
 #include <math.h>
 
@@ -61,12 +61,12 @@ int main(int argc, char* argv[])
 {
    if(argc <= 1)
    {
-      cout << "Usage: testTSD_Performance <num_threads>\n" << flush;
+      std::cout << "Usage: testTSD_Performance <num_threads>\n" << std::flush;
       exit(1);
    }
 
    int num_threads = atoi(argv[1]);
-   cout << "Using num_threads: " << num_threads << endl;
+   std::cout << "Using num_threads: " << num_threads << std::endl;
    
    for(int thread_num=0;thread_num < num_threads;thread_num++)
    {
@@ -91,7 +91,8 @@ int main(int argc, char* argv[])
 
    total_avg /= (double)num_threads;
 
-   vjDEBUG(vjDBG_ALL,0) << "AVERAGE TIMING: " << total_avg*1000.0f << "ms" << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,0) << "AVERAGE TIMING: " << total_avg*1000.0f << "ms"
+                        << std::endl << vjDEBUG_FLUSH;
 }
 
 
@@ -110,7 +111,8 @@ void doFunc(void* void_thread_num)
 
    
    vjDEBUG(vjDBG_ALL, 0) << "Thread: " << thread_num << ": Exiting: Avg Time of: "
-                         << ((timers[thread_num].getTiming()/(double)num_reps)*1000.0f) << "ms" << endl << vjDEBUG_FLUSH;
+                         << ((timers[thread_num].getTiming()/(double)num_reps)*1000.0f)
+                         << "ms" << std::endl << vjDEBUG_FLUSH;
    thread_count_mutex.acquire();
       thread_count--;               // Removing us from the number there
    thread_count_mutex.release();

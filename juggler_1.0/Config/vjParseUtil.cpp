@@ -38,7 +38,7 @@
 #include <Kernel/vjDebug.h>
 
 /* a utility function that probably belongs elsewhere */
-bool readString (istream &in, char *buffer, int size, bool *quoted) {
+bool readString (std::istream &in, char *buffer, int size, bool *quoted) {
     /* reads a string from in.  a string is either " delimited
      * or contains no whitespace.
      *
@@ -145,7 +145,7 @@ bool readString (istream &in, char *buffer, int size, bool *quoted) {
 
 
 
-VarType readType (istream &in) {
+VarType readType (std::istream &in) {
     char str[256];
 
     if (!readString (in, str, 256))

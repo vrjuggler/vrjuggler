@@ -63,7 +63,8 @@ bool vjCyberGlove::config(vjConfigChunk *c)
     std::string glove_pos_proxy = c->getProperty("glovePos");    // Get the name of the pos_proxy
     if(glove_pos_proxy == std::string(""))
     {
-       vjDEBUG(vjDBG_INPUT_MGR,0) << "ERROR: vjCyberglove has no posProxy." << endl << vjDEBUG_FLUSH;
+       vjDEBUG(vjDBG_INPUT_MGR,0) << "ERROR: vjCyberglove has no posProxy."
+                                  << std::endl << vjDEBUG_FLUSH;
        return false;
     }
 
@@ -72,7 +73,9 @@ bool vjCyberGlove::config(vjConfigChunk *c)
     if(proxy_index != -1)
        mGlovePos[0] = vjKernel::instance()->getInputManager()->getPosProxy(proxy_index);
     else
-       vjDEBUG(vjDBG_INPUT_MGR,0) << "ERROR: vjCyberGlove::vjCyberGlove: Can't find posProxy." << endl << vjDEBUG_FLUSH << endl;
+       vjDEBUG(vjDBG_INPUT_MGR,0)
+          << "ERROR: vjCyberGlove::vjCyberGlove: Can't find posProxy."
+          << std::endl << vjDEBUG_FLUSH << std::endl;
 
     mGlove = new CyberGloveBasic( mCalDir, sPort, baudRate );
 
@@ -98,7 +101,7 @@ vjCyberGlove::startSampling()
       }
       else
       {
-         vjDEBUG(vjDBG_INPUT_MGR,1) << "vjCyberGlove is active " << endl;
+         vjDEBUG(vjDBG_INPUT_MGR,1) << "vjCyberGlove is active " << std::endl;
          active = 1;
          return 1;
       }
@@ -158,7 +161,7 @@ int vjCyberGlove::stopSampling()
       usleep(100);
 
       mGlove->close();
-      vjDEBUG(vjDBG_INPUT_MGR,1) << "stopping vjCyberGlove.." << endl;
+      vjDEBUG(vjDBG_INPUT_MGR,1) << "stopping vjCyberGlove.." << std::endl;
    }
    return 1;
 }

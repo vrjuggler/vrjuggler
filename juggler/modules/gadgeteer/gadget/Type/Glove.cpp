@@ -137,7 +137,7 @@ int vjGloveData::calcXforms()
 }
 
 // Output the angles in one single line
-ostream& vjGloveData::outputAngles(ostream& out) const
+std::ostream& vjGloveData::outputAngles(std::ostream& out) const
 {
    for(int i=0;i<NUM_COMPONENTS;i++)
       for(int j=0;j<NUM_JOINTS;j++)
@@ -147,7 +147,7 @@ ostream& vjGloveData::outputAngles(ostream& out) const
 }
 
 // Input the angles from one single line
-istream& vjGloveData::inputAngles(istream& in)
+std::istream& vjGloveData::inputAngles(std::istream& in)
 {
    for(int i=0;i<NUM_COMPONENTS;i++)
       for(int j=0;j<NUM_JOINTS;j++)

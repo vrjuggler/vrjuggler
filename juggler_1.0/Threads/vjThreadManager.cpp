@@ -83,7 +83,7 @@ void vjThreadManager::debugDump()
       if (mThreads[i] != NULL)
          vjDEBUG(vjDBG_ALL, vjDBG_CONFIG_LVL) << i << ": ["
                                                 << (void*)mThreads[i] << "] "
-                                                << mThreads[i] << endl
+                                                << mThreads[i] << std::endl
                                                 << vjDEBUG_FLUSH;
       else
          vjDEBUG(vjDBG_ALL, vjDBG_CONFIG_LVL) << i << ": ["
