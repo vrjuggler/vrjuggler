@@ -797,7 +797,7 @@ UNIX_VJROOT_ABS="$VJROOT_ABS"
 if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS="$LDFLAGS $LIBS comctl32.lib user32.lib gdi32.lib ws2_32.lib"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $LIBS $DTK_LDFLAGS $NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm"
+    APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $LIBS $DTK_LDFLAGS $NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
 fi
 
 # Variables set in Makefiles found in the application trees.  All variables
@@ -861,10 +861,10 @@ if test "$OS_TYPE" = "UNIX" ; then
         if test "x$PLATFORM" = "xDarwin" ; then
             APP_EXTRA_LIBS_GL="$OGL_LDFLAGS -framework AGL -framework DrawSprocket -framework Carbon -framework ApplicationServices"
         else
-            APP_EXTRA_LIBS_GL="-L$OGLROOT/lib$LIBBITSUF $LIBOPENGL"
+            APP_EXTRA_LIBS_GL="-L$OGLROOT/lib$LIBBITSUF $LIBOPENGL -lm"
         fi
     else
-        APP_EXTRA_LIBS_GL="$LIBOPENGL"
+        APP_EXTRA_LIBS_GL="$LIBOPENGL -lm"
     fi
 
     if test "x$PF_LDFLAGS" != "x" ; then
@@ -924,7 +924,6 @@ VJ_SHARE_DIR=`echo "$VJ_SHARE_DIR" | sed -e "${_prefix_exp}"`
 # Information needed to generate juggler-config.
 case $SUBSYSTEM in
     SPROC)
-        subsystem_cflags="$INCLUDES"
         subsystem_cxxflags="$INCLUDES"
         subsystem_libs="$SEM_LIB $SOCKET_LIB"
         static_begin="-B static"
@@ -933,7 +932,6 @@ case $SUBSYSTEM in
         vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
         ;;
     POSIX)
-        subsystem_cflags="$INCLUDES"
         subsystem_cxxflags="$INCLUDES"
         subsystem_libs="$PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
 
@@ -949,7 +947,6 @@ case $SUBSYSTEM in
         vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
         ;;
     NSPR)
-        subsystem_cflags="$INCLUDES"
         subsystem_cxxflags="$INCLUDES"
         subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
 
@@ -965,7 +962,6 @@ case $SUBSYSTEM in
         vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
         ;;
     WIN32)
-        subsystem_cflags="$INCLUDES"
         subsystem_cxxflags="$INCLUDES"
         subsystem_libs="$NSPR_LIB comctl32.lib user32.lib gdi32.lib ws2_32.lib"
         vrj_ldflags="/link /libpath:\$prefix/lib/debug $NSPR_LDFLAGS"
@@ -1046,7 +1042,6 @@ AC_SUBST(APP_EXTRA_LIBS_PF)
 AC_SUBST(APP_EXTRA_LIBS_AW)
 AC_SUBST(APP_EXTRA_LIBS_SL)
 
-AC_SUBST(subsystem_cflags)
 AC_SUBST(subsystem_cxxflags)
 AC_SUBST(subsystem_libs)
 AC_SUBST(static_begin)
