@@ -194,8 +194,8 @@ public:
     //                 be stored.
     //! ARGS: length - The number of bytes to be read.
     //
-    //! RETURNS: >-1 - The number of bytes successfully read from the serial
-    //+                port.
+    //! RETURNS: >-1 - The number of bytes successfully read from the file
+    //+                handle.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     virtual ssize_t readn(void* buffer, const size_t length);
@@ -214,8 +214,8 @@ public:
     //                 to be stored.
     //! ARGS: length - The number of bytes to be read.
     //
-    //! RETURNS: >-1 - The number of bytes successfully read from the serial
-    //+                port.
+    //! RETURNS: >-1 - The number of bytes successfully read from the file
+    //+                handle.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     virtual ssize_t readn(std::string& buffer, const size_t length = 0);
@@ -234,8 +234,8 @@ public:
     //                 be stored.
     //! ARGS: length - The number of bytes to be read.
     //
-    //! RETURNS: >-1 - The number of bytes successfully read from the serial
-    //+                port.
+    //! RETURNS: >-1 - The number of bytes successfully read from the file
+    //+                handle.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     virtual ssize_t readn(std::vector<char>& buffer, const size_t length = 0);
