@@ -108,8 +108,11 @@ void OpenSGNav::preFrame()
    // Travel in model
    // - Find forward direction of wand
    // - Translate along that direction
-   gmtl::Matrix44f wand_mat;
-   wand_mat = mWandPos->getData();      // Get the wand matrix
+
+   // Get the wand matrix
+   // NOTE: We ask for the wand transformation matrix in the same units that
+   // we are using for this application object.
+   gmtl::Matrix44f wand_mat(mWandPos->getData(getDrawScaleFactor()));
    gmtl::Vec3f z_dir = gmtl::Vec3f(0.0f, 0.0f, mVelocity);
    gmtl::Vec3f trans = wand_mat * z_dir;
 
