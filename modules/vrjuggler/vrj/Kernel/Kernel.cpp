@@ -43,7 +43,6 @@
 
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
-#include <vrj/Environment/EnvironmentManager.h>
 #include <vpr/System.h>
 #include <vpr/Util/Version.h>
 
@@ -51,6 +50,8 @@
 
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ChunkFactory.h>
+#include <jccl/Net/JackalServer.h>
+#include <jccl/RTRC/ConfigManager.h>
 #include <jccl/PerfMonitor/PerformanceMonitor.h>
 
 // Get the system factory we need
@@ -214,7 +215,7 @@ void Kernel::checkForReconfig()
 
 
    // ---- RECONFIGURATION --- //
-   jccl::ConfigManager* cfg_mgr = environmentManager->getConfigManager();
+   jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
    unsigned num_processed(0);
 
    do
@@ -263,9 +264,7 @@ void Kernel::changeApplication(App* newApp)
 
    vprASSERT(vpr::Thread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
 
-   vprASSERT (environmentManager != NULL && "EnvManager exists");
-
-   jccl::ConfigManager* cfg_mgr = environmentManager->getConfigManager();
+   jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
 
    // EXIT Previous application
    if(mApp != NULL)
@@ -345,7 +344,11 @@ void Kernel::initConfig()
    vprASSERT(mDisplayManager != NULL);                 // Did we get an object
 
    //setupEnvironmentManager();
-   environmentManager = new EnvironmentManager();
+   jccl::JackalServer::instance()->addJackalControl(jccl::ConfigManager::instance());
+   jccl::JackalServer::instance()->addJackalControl(jccl::PerformanceMonitor::instance());
+
+   jccl::ConfigManager::instance()->addConfigChunkHandler(jccl::JackalServer::instance());
+   jccl::ConfigManager::instance()->addConfigChunkHandler(jccl::PerformanceMonitor::instance());
 
    //??// processPending() // Should I do this here
 
@@ -362,10 +365,9 @@ void Kernel::initConfig()
 #endif
 
    // hook dynamically-reconfigurable managers up to config manager...
-   jccl::ConfigManager* cfg_mgr = environmentManager->getConfigManager();
-   cfg_mgr->addConfigChunkHandler (this);
-   cfg_mgr->addConfigChunkHandler (mInputManager);
-   cfg_mgr->addConfigChunkHandler (mDisplayManager);
+   jccl::ConfigManager::instance()->addConfigChunkHandler(this);
+   jccl::ConfigManager::instance()->addConfigChunkHandler(mInputManager);
+   jccl::ConfigManager::instance()->addConfigChunkHandler(mDisplayManager);
 
    vprDEBUG_END(vrjDBG_KERNEL,3) << "vjKernel::initConfig: Done.\n" << vprDEBUG_FLUSH;
 }
@@ -529,11 +531,11 @@ void Kernel::startDrawManager(bool newMgr)
    if(newMgr)
    {
       mDrawManager->setDisplayManager(mDisplayManager);
-      environmentManager->getConfigManager()->lockPending();
+      jccl::ConfigManager::instance()->lockPending();
       {
          mDrawManager->configProcessPending();                 // Handle any pending configuration requests BEFORE we init and start it going
       }
-      environmentManager->getConfigManager()->unlockPending();
+      jccl::ConfigManager::instance()->unlockPending();
    }
    mDrawManager->setApp(mApp);
 
@@ -590,8 +592,6 @@ Kernel::Kernel()
    mDrawManager   = NULL;
    mSoundManager  = NULL;
    mDisplayManager = NULL;
-
-   environmentManager = NULL;
 
    //mInitialChunkDB = NULL;
    //mChunkDB = NULL;
