@@ -69,9 +69,6 @@
 /* Define to use the NSPR subsystem. */
 #undef VPR_USE_WIN32
 
-/* Define to use simulated sockets. */
-#undef VPR_USE_SIM_SOCKETS
-
 /* Define all of the following if building on IRIX. */
 #undef VPR_OS_IRIX
 #undef _BSD_TYPES
