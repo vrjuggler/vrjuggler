@@ -94,7 +94,7 @@ fi
 AC_CONFIG_SUBDIRS(modules/vapor $JUGGLER_PROJECTS)
 
 VPR_BASE_DIR="$builddir/modules/vapor"
-VPR_CONFIG="$VPR_BASE_DIR/vpr-config --basedir"
+VPR_CONFIG="$VPR_BASE_DIR/vpr-config --basedir --no-includedir"
 
 export VPR_BASE_DIR
 export VPR_CONFIG
