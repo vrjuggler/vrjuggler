@@ -457,6 +457,7 @@ AC_CONFIG_FILES([
    rtrc/Makefile
    rtrc/jccl/Makefile
    rtrc/jccl/RTRC/Makefile
+   data/Makefile
    test/Makefile
    test/TestSuite/Makefile
    test/TestSuite/test.defs.mk

@@ -35,6 +35,9 @@ import java.io.File;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
+import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
+
+
 /**
  * If a SAX application needs to implement customized handling for external
  * entities, it must implement this interface and register an instance with
@@ -52,53 +55,75 @@ public class ConfigSchemaResolver implements EntityResolver
    {
       InputSource source;
 
-      // If this systemId is one of the JCCL schemas, process it.
-      // XXX: Is there a better way to filter this before it gets to us?
-      if ( systemId.indexOf("jccl/xsd") != -1 )
+      try
       {
-         // Get the schema file name from the string.
-         int index = systemId.lastIndexOf('/');
-         String schema_file = systemId.substring(index + 1);
+         String full_schema_file;
 
-         // Construct the full name of the schema file.  On UNIX, it will be
-         // of the form $JCCL_BASE_DIR/share/jccl/data/<schema_file>
-         String base_dir = System.getProperty("JCCL_BASE_DIR");
-
-         if ( null == base_dir )
+         // This is a remote schema that would have to be downloaded using
+         // HTTP.
+         if ( systemId.startsWith("http://") )
          {
-            System.err.println("WARNING: JCCL_BASE_DIR not available for " +
-                               "local schema loading!");
-            source = new InputSource(systemId);
+            String base_dir =
+               (new EnvironmentServiceProxy()).getenv("JCCL_BASE_DIR");
+
+            if ( null == base_dir )
+            {
+               System.err.println("WARNING: JCCL_BASE_DIR not available for " +
+                                  "local schema loading!");
+               throw new Exception("JCCL_BASE_DIR not available");
+            }
+
+            // Chop the "http://" off the front of the system ID to get the
+            // schema location.
+            String schema_file = systemId.substring(6);
+
+            // Replace the '/' characters in the schema location with the
+            // platform-specific file separator character.
+            if ( '/' != File.separatorChar )
+            {
+               schema_file = schema_file.replace('/', File.separatorChar);
+            }
+
+            full_schema_file = base_dir + File.separator + "share" +
+                               File.separator + "jccl" +
+                               File.separator + "data" +
+                               File.separator + "schema" +
+                               File.separator + schema_file;
+         }
+         // This is a locally available schema.
+         else if ( systemId.startsWith("file://") )
+         {
+            // Chop the "file://" off the front of the system ID to get the
+            // schema location.
+            full_schema_file = systemId.substring(6);
          }
          else
          {
-            String full_schema_file = base_dir + File.separator + "share" +
-                                      File.separator + "jccl" +
-                                      File.separator + "data" +
-                                      File.separator + schema_file;
+            System.err.println("WARNING: Unexpected URI protocol in '" +
+                              systemId + "'");
+            throw new Exception("Unexpected protocol type in schema URI");
+         }
 
-            File f = new File(full_schema_file);
+         File f = new File(full_schema_file);
 
-            // If the schema file exists locally, use it!
-            if ( f.isFile() && f.canRead() )
-            {
-               // Let the File object give us the absolute file name just in
-               // case there is anything wonky with $JCCL_BASE_DIR.
-               source = new InputSource(f.getAbsolutePath());
-            }
-            // Otherwise, use what we were given.
-            else
-            {
-               System.err.println("WARNING: Could not read " +
-                                  f.getAbsolutePath());
-               System.err.println("Falling back on " + systemId);
-               source = new InputSource(systemId);
-            }
+         // If the schema file exists locally, use it!
+         if ( f.isFile() && f.canRead() )
+         {
+            // Let the File object give us the absolute file name just in
+            // case there is anything wonky with $JCCL_BASE_DIR.
+            source = new InputSource(f.getAbsolutePath());
+         }
+         // Otherwise, use what we were given.
+         else
+         {
+            System.err.println("WARNING: Could not read " +
+                               f.getAbsolutePath());
+            throw new Exception("Could not read " + f.getAbsolutePath());
          }
       }
-      // This is not a JCCL schema, so pass it through untouched.
-      else
+      catch(Exception ex)
       {
+         System.out.println("Falling back on " + systemId);
          source = new InputSource(systemId);
       }
 
