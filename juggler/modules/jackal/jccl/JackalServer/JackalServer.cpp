@@ -23,16 +23,6 @@
 // author: Christopher Just
 
 
-// needed for network cruft
-#ifdef HAVE_STRINGS_H
-#include <strings.h>    // For bzero()
-#endif
-
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-
 #include <Environment/vjEnvironmentManager.h>
 #include <Kernel/vjKernel.h>
 #include <Environment/vjConnect.h>
@@ -142,6 +132,8 @@ void vjEnvironmentManager::sendRefresh() {
 bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
     bool networkingchanged = false;
     int newport;
+
+    vjDEBUG(vjDBG_ENV_MGR, 0) << "-------------------------------------- EM GOT CHUNK -------------------------\n" << vjDEBUG_FLUSH;
 
     std::string s = chunk->getType();
     if (!vjstrcasecmp (s, "EnvironmentManager")) {

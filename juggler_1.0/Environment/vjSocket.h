@@ -114,8 +114,6 @@ typedef vjSocketIDPosix vjSocketID;
 
 #include <strings.h>    // For bzero()
 #include <winsock2.h>
-//#include <netinet/in.h>
-//#include <netdb.h>
 
 
 typedef SOCKET vjSocketIDWin32;
@@ -141,7 +139,7 @@ public:
 	in = new ifstream (id);
     }
 
-    ~vjSocketPosix () {
+    ~vjSocketWin32 () {
 	close();
     }
 
@@ -203,14 +201,14 @@ public:
 
 
     // must be called after listen
-    vjSocketPosix* accept () {
+    vjSocketWin32* accept () {
 	sockaddr_in servaddr;
 	int servsock;
  	int len = sizeof (struct sockaddr_in);
  	servsock = ::accept (sockid,
  			   (sockaddr*)&servaddr, &len);
 	if (servsock != -1)
-	    return new vjSocketPosix (servsock);
+	    return new vjSocketWin32 (servsock);
 	else
 	    return NULL;
     }
