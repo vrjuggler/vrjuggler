@@ -29,8 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
 package VjConfig;
 
 import VjConfig.ChunkDBEvent;
@@ -40,19 +38,18 @@ import VjConfig.ChunkDBEvent;
  *  whenever the ChunkDB is modified.
  *  <p>
  *  ChunkDBEvents may be sent by any thread; a listener intending
- *  to update GUI components based on the event must use 
+ *  to update GUI components based on the event must use
  *  SwingUtilities.invokeLater or something similar to ensure correct
  *  synchronization.
  *
  *  @author Christopher Just
  *  @version $Revision$
  */
-public interface ChunkDBListener extends java.util.EventListener {
-
-    public abstract void configChunkAdded (ChunkDBEvent e);
-    public abstract void configChunkRemoved (ChunkDBEvent e);
-    public abstract void configChunkReplaced (ChunkDBEvent e);
-    public abstract void configChunksCleared (ChunkDBEvent e);
+public interface ChunkDBListener
+   extends java.util.EventListener
+{
+   public abstract void configChunkAdded(ChunkDBEvent e);
+   public abstract void configChunkRemoved(ChunkDBEvent e);
+   public abstract void configChunkReplaced(ChunkDBEvent e);
+   public abstract void configChunksCleared(ChunkDBEvent e);
 }
-
-
