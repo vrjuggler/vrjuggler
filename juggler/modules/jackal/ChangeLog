@@ -1,7 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- --------------------------------------------------------
-Jun-04-2002 patrickh    The process of installing CppDOM has been moved over to
-                        the juggler/external installation system.
+Jun-04-2002 patrickh    The process of making symlinks to the contents of
+                        juggler/external/cppdom during the build process and
+                        of installing CppDOM has been moved over to the
+                        juggler/external mini build system.
 May-31-2002 patrickh    Disabled performance collection code by default.  It is
                         currently unstable.  See SourceForge Bug #562680.
                         NEW VERSION: 0.2.1
