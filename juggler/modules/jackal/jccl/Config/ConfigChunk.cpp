@@ -50,11 +50,11 @@ vjConfigChunk::vjConfigChunk (vjConfigChunk& c):props(), type_as_varvalue(T_STRI
 vjConfigChunk& vjConfigChunk::operator = (const vjConfigChunk& c) {
     int i;
     if (this == &c)     // ack! same object!
-        return *this;   
+        return *this;
 
     desc = c.desc;
     type_as_varvalue = c.type_as_varvalue;
-    
+
     for (i = 0; i < props.size(); i++)
         delete (props[i]);
     props.erase (props.begin(), props.end());
@@ -97,28 +97,36 @@ bool vjConfigChunk::operator< (vjConfigChunk& c) {
 // This is used to sort a db by dependancy.
 std::vector<std::string> vjConfigChunk::getDependencies()
 {
-    std::string chunkname;
-    std::vector<std::string> dep_list;     // Create return vector
-    int i, j;
+   std::string chunkname;
+   std::vector<std::string> dep_list;     // Create return vector
+   int i, j;
 
-    //cout << "Dependency test for " << getProperty ("name") << endl;
-    for(i=0;i<props.size();i++) {
-	if(props[i]->type == T_CHUNK)
-	    for(j=0;j<props[i]->getNum();j++) {
-		chunkname = static_cast<std::string>(props[i]->getValue(j));
-		if (!(chunkname == "")) {
-		    dep_list.push_back(chunkname);
-		}
-	    }
-	if (props[i]->type == T_EMBEDDEDCHUNK) {
-	    std::vector<std::string> child_deps;
-	    for (j = 0; j < props[i]->getNum(); j++) {
-		// if we ever have cyclic dependencies, we're in trouble
-		child_deps = ((vjConfigChunk*)props[i]->getValue(j))->getDependencies();
-		dep_list.insert (dep_list.end(), child_deps.begin(), child_deps.end());
-	    }
-	}
-    }
+   //cout << "Dependency test for " << getProperty ("name") << endl;
+   for (i=0;i<props.size();i++)                       // For each property
+   {
+      if (props[i]->type == T_CHUNK)                  // If it is a chunk ptr
+      {
+         for (j=0;j<props[i]->getNum();j++)           // For each property
+         {
+            vjVarValue prop_var_val = props[i]->getValue(j);
+            chunkname = static_cast<std::string>(prop_var_val);
+            if (!(chunkname == ""))
+            {
+               dep_list.push_back(chunkname);
+            }
+         }
+      }
+      else if (props[i]->type == T_EMBEDDEDCHUNK)
+      {
+         std::vector<std::string> child_deps;
+         for (j = 0; j < props[i]->getNum(); j++)
+         {
+            // if we ever have cyclic dependencies, we're in trouble
+            child_deps = ((vjConfigChunk*)props[i]->getValue(j))->getDependencies();
+            dep_list.insert (dep_list.end(), child_deps.begin(), child_deps.end());
+         }
+      }
+   }
    return dep_list;      // Return the list
 }
 
@@ -170,10 +178,14 @@ bool vjConfigChunk::tryassign (vjProperty *p, int index, const char* val) {
     int i;
     float f;
     bool b;
-    vjEnumEntry* e = p->getEnumEntry (val);
-    if (e) {
-	p->setValue (e->getValue());
-	return true;
+
+    if(p->type != T_CHUNK)          // T_CHUNKS have enumeration, but they are really strings (or something)
+    {
+       vjEnumEntry* e = p->getEnumEntry (val);
+       if (e) {
+   	   p->setValue (e->getValue());
+   	   return true;
+       }
     }
 
     switch (p->type) {
