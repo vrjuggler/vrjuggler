@@ -57,7 +57,6 @@ class IntersenseAPIStandalone
 public:
    IntersenseAPIStandalone()
       : mActive(false)
-      , mBaudRate(9600)
       , mCurrentStation(0)
       , mHandle(-1)
       , mNumStations(0)
@@ -81,11 +80,6 @@ public:
       mPort = port;
    }
 
-   void setBaudRate(const int& baud_rate)
-   {
-      mBaudRate = baud_rate;
-   }
-
    void setNumStations(const unsigned int num)
    {
       mNumStations = num;
@@ -99,11 +93,6 @@ public:
    const std::string getPort() const
    {
       return mPort;
-   }
-
-   int getBaudRate() const
-   {
-      return mBaudRate;
    }
 
    unsigned int getNumStations() const
@@ -388,7 +377,6 @@ private:
    int convertPort(const std::string& port);
 
    bool                 mActive;
-   int                  mBaudRate; 
    unsigned int         mCurrentStation; //0-3 for current 9/2000 IS900
    ISD_TRACKER_HANDLE   mHandle;    /**< The handle used to communicate with the Intersense tracker.*/
    unsigned int         mNumStations;
