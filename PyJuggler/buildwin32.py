@@ -77,6 +77,12 @@ def setVars():
    processInput(options, 'OSGHOME', 'Open Scene Graph installation directory',
                 False)
 
+   # Check for Boost 1.32 Visual C++ toolset names.
+   match = re.compile(r'vc-(\d)_(\d)').match(options['BOOST_TOOL'])
+
+   if match is not None:
+      os.environ['BOOST_TOOL'] = 'vc%s%s' % (match.group(1), match.group(2))
+
    cache_file = open(cache_file, 'w')
    for k, v in options.iteritems():
       output = "options['%s'] = r'%s'\n" % (k, v)
