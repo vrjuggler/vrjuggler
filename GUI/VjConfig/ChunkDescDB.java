@@ -183,7 +183,7 @@ public class ChunkDescDB {
 	for (int i = 0; i < descs.size(); i++)
 	    if (((ChunkDesc)descs.elementAt(i)).name.equalsIgnoreCase(n))
 		return ((ChunkDesc)descs.elementAt(i)).token;
-	return "";
+	return null;
     }
 
 
@@ -192,7 +192,7 @@ public class ChunkDescDB {
 	for (int i = 0; i < descs.size(); i++)
 	    if (((ChunkDesc)descs.elementAt(i)).token.equalsIgnoreCase(n))
 		return ((ChunkDesc)descs.elementAt(i)).name;
-	return "";
+	return null;
     }
 
 
