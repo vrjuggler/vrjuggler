@@ -94,7 +94,7 @@ namespace cluster
       std::string local_host_name = ClusterNetwork::instance()->getLocalHostname();
       std::string temp_manager_id = std::string("ManagerID");
 
-      SyncRequest sync_request(local_host_name, (vpr::Uint16)mTCPport, temp_manager_id);
+      SyncRequest sync_request(local_host_name, mTCPport, temp_manager_id);
       sync_request.send(mSyncServer);
 
       Packet* packet = PacketFactory::instance()->recvPacket(mSyncServer);
