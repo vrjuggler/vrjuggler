@@ -262,6 +262,7 @@ NetworkGraph::VertexListPtr NetworkGraph::getShortestPath (const NetworkGraph::n
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
       << "Path (dest <-- src): " << node_prop_map[dest].getIpAddressString()
       << vprDEBUG_FLUSH;
+   vstack.push(dest);
 
    // Put the vertices returned in the predecessor map into a stack so that
    // the order that we can reverse the order and put them into vlist.
