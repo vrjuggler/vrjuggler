@@ -73,7 +73,6 @@ InetAddrNSPR::getFamily (void) const
 
 // ----------------------------------------------------------------------------
 // Set the protocol family of this address structure.
-// XXX: Are raw sockets allowed with WinSock, and if so, what is the PF value?
 // ----------------------------------------------------------------------------
 void
 InetAddrNSPR::setFamily (const SocketTypes::Domain family) {
@@ -94,7 +93,6 @@ InetAddrNSPR::setFamily (const SocketTypes::Domain family) {
         break;
     }
 }
-
 
 // ----------------------------------------------------------------------------
 // Get the IP address associated with this structure as a human-readable
