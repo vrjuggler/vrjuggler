@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <Config/vjVarValue.h>
 #include <Config/vjConfigChunk.h>
+#include <Kernel/vjDebug.h>
 
 vjVarValue* vjVarValue::invalid_instance = NULL;
 
@@ -115,6 +116,8 @@ vjVarValue::operator int() {
 vjVarValue::operator vjConfigChunk*() {
     if ((type == T_EMBEDDEDCHUNK))
 	return new vjConfigChunk (*val.embeddedchunkval);
+    // we need to make a copy because if the value is deleted, it deletes 
+    // its embeddedchunk
     //return val.embeddedchunkval;
     if (type != T_INVALID)
 	cerr << "Type error in cast!\n";
@@ -148,16 +151,18 @@ char* vjVarValue::cstring () {
 	return strdup (val.strval.c_str());
     }
     if (type != T_INVALID)
-	cerr << "Type error in cast to char*!\n";
-    return NULL;
+	cerr << "Type error in cast to char*!" << endl;
+    return strdup("");
 }
 
 vjVarValue::operator std::string () {
     if ((type == T_STRING) || (type == T_CHUNK)) {
       return val.strval;
     }
-    if (type != T_INVALID)
-	cerr << "Type error in cast to std::string!\n";
+    if (type != T_INVALID) {
+	cerr << "Type error in cast to std::string!" << endl;
+	//vjASSERT(false);
+    }
     return (std::string)"";
 }
 

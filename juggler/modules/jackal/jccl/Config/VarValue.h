@@ -75,6 +75,10 @@ public:
     }
 
 
+    VarType getType () {
+	return type;
+    }
+
     //: Copy constructor.
     vjVarValue (vjVarValue &v);
 

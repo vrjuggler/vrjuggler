@@ -176,7 +176,13 @@ int vjConfigChunkDB::removeMatching (const std::string& property, const std::str
     int i = 0;
     std::vector<vjConfigChunk*>::iterator begin = chunks.begin();
     while (begin != chunks.end()) {
-	if (!vjstrcasecmp (value, (*begin)->getProperty(property))) {
+	//cout << "prop name is '" << property << "' and getProerty returns "
+	//   << (*begin)->getProperty(property) << endl;
+	//if ((*begin)->getProperty(property) == 
+	//if (!vjstrcasecmp (value, (*begin)->getProperty(property))) {
+	vjVarValue v = (*begin)->getProperty(property);
+	if (((v.getType() == T_STRING) || (v.getType() == T_STRING))
+	    &&  (!vjstrcasecmp (value, (std::string)v))) {
 	    //delete (*begin);
 	    chunks.erase(begin);
 	    i++;
@@ -342,7 +348,9 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
          break; /* eof */
       if (!strcasecmp (str, "end"))
          break;
-      ch = vjChunkFactory::createChunk (str);
+
+      std::string newstr = str;
+      ch = vjChunkFactory::createChunk (newstr);
       if (ch == NULL)
       {
          vjDEBUG(vjDBG_ALL,0) << "ERROR!: Unknown Chunk type: " << str << endl
@@ -358,6 +366,8 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
       else
       {
          in >> *ch;
+
+	 cerr << "read chunk: " << *ch << endl;
 
 	 if (!vjstrcasecmp (ch->getType(), "vjIncludeFile")) {
 	     std::string s = ch->getProperty ("Name");
