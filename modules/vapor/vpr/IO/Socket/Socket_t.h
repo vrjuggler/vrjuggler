@@ -36,6 +36,7 @@
 
 #include <string>
 
+#include <IO/BlockIO.h> // base class.
 
 namespace vpr {
 

@@ -36,25 +36,25 @@
 // include base class for vprSystem
 //#include <SystemBase.h>
 
-// determine which implementation of vprSystem to include.
+// determine which implementation of vpr::System to include.
 #if defined(VPR_USE_IRIX_SPROC) || defined(VPR_USE_PTHREADS)
 #   include <md/POSIX/SystemPosix.h>
-
 namespace vpr {
     typedef SystemPosix System;
 };
+
 #elif defined(VPR_USE_WIN32)
 #   include <md/WIN32/SystemWin32.h>
-
 namespace vpr {
     typedef SystemWin32 System;
 };
+
 #else
 #   include <md/NSPR/SystemNSPR.h>
-
 namespace vpr {
     typedef SystemNSPR System;
 };
+
 #endif  /* VPR_IRIX_SPROC || VPR_USE_PTHREADS */
 
 #endif // _VPR_SYSTEM_FAKE_H_

@@ -46,11 +46,17 @@ namespace vpr {
 #if SIZEOF_SHORT == 2
     typedef short Int16;
     typedef unsigned short Uint16;
+#elif SIZEOF_INT == 2
+    typedef int Int16;
+    typedef unsigned int Uint16;
 #endif
-
+    
 #if SIZEOF_INT == 4
     typedef int Int32;
     typedef unsigned int Uint32;
+#elif SIZEOF_LONG == 4
+    typedef long Int32;
+    typedef unsigned long Uint32;
 #endif
 
 #if SIZEOF_LONG == 8
@@ -59,6 +65,9 @@ namespace vpr {
 #elif SIZEOF_LONG_LONG == 8
     typedef long long Int64;
     typedef unsigned long long Uint64;
+#elif SIZEOF_INT == 8
+    typedef int Int64;
+    typedef unsigned int Uint64;
 #endif
 };
 #endif
