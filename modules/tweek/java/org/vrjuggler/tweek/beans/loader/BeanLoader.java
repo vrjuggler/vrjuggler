@@ -138,8 +138,6 @@ public class BeanLoader
 //            e.getException().printStackTrace();
          }
 
-//         e.printStackTrace();
-
          throw new BeanInstantiationException("Instantiation of " + bean_class +
                                               " failed!\n(" +
                                               "Class " + e.getMessage() +
