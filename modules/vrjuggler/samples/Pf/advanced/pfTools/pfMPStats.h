@@ -198,32 +198,6 @@ private:
 };
 
 
-
-/*****************************************************************************/
-/* static query   definitions                                                */
-/*****************************************************************************/
-
-#define PREV_MPSFRAME   0 /* it could change in the future */
-
-static unsigned int AppQuery[] = {
-    PFFSTATS_BUF_PREV | PFFSTATSVAL_PFTIMES_HIST_LAST_APP,
-    0
-};
-static unsigned int IsectQuery[] = {
-    PFFSTATS_BUF_PREV | PFFSTATSVAL_PFTIMES_HIST_LAST_ISECT,
-    0
-};
-static unsigned int ChanDrawQuery[] = {
-    PFFSTATS_BUF_PREV | PFFSTATSVAL_PFTIMES_HIST_LAST_DRAW,
-    0
-};
-
-static unsigned int ChanCullQuery[] = {
-    PFFSTATS_BUF_PREV | PFFSTATSVAL_PFTIMES_HIST_LAST_CULL,
-    0
-};
-
-
 /*****************************************************************************/
 /* dump file formats                                                         */
 /*****************************************************************************/

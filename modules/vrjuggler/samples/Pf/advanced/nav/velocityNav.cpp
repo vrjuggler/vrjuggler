@@ -37,16 +37,21 @@
 #include <velocityNav.h>
 
 
-velocityNav::velocityNav() :
-   mVelocity(0.0f, 0.0f , 0.0f),
-   mVelocityFromGravityAccumulator(0.0f,0.0f,0.0f),
-   mMaxVelocity(2500.0f),
-   mDamping(1.0f),
-   mAcceleration(10.0f),
-   mUnits(velocityNav::FEET),
-   mMode(velocityNav::DRIVE),
-   mTimeHack(0),
-   mLastTimeStamp(0,vpr::Interval::Base)
+velocityNav::velocityNav()
+   : mVelocity(0.0f, 0.0f , 0.0f)
+   , mVelocityFromGravityAccumulator(0.0f,0.0f,0.0f)
+   , mMaxVelocity(2500.0f)
+   , mDamping(1.0f)
+   , mAcceleration(10.0f)
+   , mBraking(false)
+   , mAcceleratingForward(false)
+   , mRotating(false)
+   , mStopping(false)
+   , mResetting(false)
+   , mLastTimeStamp(0,vpr::Interval::Base)
+   , mUnits(velocityNav::FEET)
+   , mMode(velocityNav::DRIVE)
+   , mTimeHack(0)
 {
    stop();
    //stopWatch.start();
@@ -72,8 +77,6 @@ velocityNav::velocityNav() :
    setStopActionCombo(stop_combo);
    setRotationActionCombo(rotate_combo);
    setResetActionCombo(reset_combo);
-
-   mBraking = mAcceleratingForward = mRotating = mStopping = mResetting = false;
 }
 
 
