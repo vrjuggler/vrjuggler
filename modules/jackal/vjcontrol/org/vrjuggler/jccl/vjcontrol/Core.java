@@ -98,6 +98,7 @@ public class Core
     private List modules;
 
     private List pending_chunks;
+    private List pending_wrong_profile_chunks;
     private List registered_components;
 
     private String[] command_line;
@@ -125,6 +126,7 @@ public class Core
     private Core() {
         modules = new Vector();
         pending_chunks = new Vector();
+        pending_wrong_profile_chunks = new Vector();
         registered_components = new Vector();
         command_line = new String[0];
     }
@@ -176,13 +178,16 @@ public class Core
 	    return;
 
 	try {
-            user_profile.setFromConfigChunk (ch);
 
 	    //window_pos_kludge = ch.getPropertyFromToken("windowposkludge").getValue(0).getBool();
 
 	    screenWidth = ch.getPropertyFromToken("windowsize").getValue(0).getInt();
 	    screenHeight = ch.getPropertyFromToken("windowsize").getValue(1).getInt();	   
 
+            user_profile.setFromConfigChunk (ch);
+            instance.pending_chunks.addAll (instance.pending_wrong_profile_chunks);
+            instance.pending_wrong_profile_chunks.clear();
+            instance.configProcessPending();
 	}
 	catch (Exception e) {
 	    Core.consoleInfoMessage (component_name, "Old vjcontrol preferences file - please check preferences and re-save");
@@ -231,20 +236,27 @@ public class Core
         ConfigChunk ch;
         for (int i = 0; i < pending_chunks.size(); ) {
             ch = (ConfigChunk)pending_chunks.get(i);
-            if (checkDependencies (ch)) {
-                add_success = addComponentConfig (ch);
-                pending_chunks.remove(i);
-                if (add_success) 
-                    Core.consoleInfoMessage (component_name, "Add Component: " 
-                                             + ch.getName());
-                else
-                    Core.consoleErrorMessage (component_name, 
-                                              "Add Component failed: " 
-                                              + ch.getName());
-                retval = true;
+            if (user_profile.accepts (ch)) {
+                if (checkDependencies (ch)) {
+                    add_success = addComponentConfig (ch);
+                    pending_chunks.remove(i);
+                    if (add_success) 
+                        Core.consoleInfoMessage (component_name, "Add Component: " 
+                                                 + ch.getName());
+                    else
+                        Core.consoleErrorMessage (component_name, 
+                                                  "Add Component failed: " 
+                                                  + ch.getName());
+                    retval = true;
+                }
+                else i++;
             }
-            else
-                i++;
+            else {
+                // doesn't match profile... skip.
+                pending_chunks.remove(i);
+                pending_wrong_profile_chunks.add(ch);
+                System.out.println ("adding to wrong_profile_chunks: " + ch.getName());
+            }
         }
         return retval;
     }
