@@ -45,6 +45,9 @@ public:
       vpr::GUID* guid2 = vpr::GUIDFactory::createGUID(guid_struct);
       CPPUNIT_ASSERT(*guid1 == *guid2);
 
+      vpr::GUID guid1_again("4A781D61-3D28-11D2-8DB8-00609703C14E");
+      CPPUNIT_ASSERT(guid1_again == (*guid2));
+
       // Test assignment
       vpr::GUID guid3(*vpr::GUIDFactory::createRandomGUID()), guid4;
       guid3 = guid4;
