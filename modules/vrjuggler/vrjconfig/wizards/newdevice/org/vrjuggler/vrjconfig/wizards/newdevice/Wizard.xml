@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<wizard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd">
-   <step title="Step 1" class="org.vrjuggler.vrjconfig.wizard.newdevice.SelectDefinitionStep" />
-   <step title="Step 1" class="org.vrjuggler.vrjconfig.wizard.newdevice.ConfigureDeviceStep" />
-</wizard>
