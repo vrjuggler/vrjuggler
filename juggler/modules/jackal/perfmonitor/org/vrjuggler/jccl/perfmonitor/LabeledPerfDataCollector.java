@@ -139,7 +139,6 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
         action_listeners = new ArrayList();
 	index_info = new HashMap();
 	name = _name;
-	num = 0;
 	totalsum = 0.0;
 	totalsamps = 0;
 	current_dl = new DataLine ();
@@ -180,7 +179,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 
 
     public int getNumIndices() {
-	return num;
+	return index_info.size();
     }
 
     public String getName() {
@@ -218,7 +217,6 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	if (ii == null) {
 	    ii = new IndexInfo(category, index);
 	    index_info.put (index, ii);
-	    num++;
 	}
 	ii.addSample (stamp);
 	current_dl.addSample (ii, stamp);
