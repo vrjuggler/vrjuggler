@@ -1,4 +1,4 @@
-#include <TestRunner.h>
+#include <CppUnit/textui/TestRunner.h>
 #include <Math/vjMatrixTest.h>
 
 
