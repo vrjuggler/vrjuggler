@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Aug-15-2002 nonchocoboy Fleshed out the browse tab of the ChunkDescChooser.
 Aug-15-2002 nonchocoboy Integated editors with the ConfigBroker and contexts.
                         NEW VERSION: 0.8.0
 Aug-15-2002 nonchocoboy Added ability to add new values to properties with
