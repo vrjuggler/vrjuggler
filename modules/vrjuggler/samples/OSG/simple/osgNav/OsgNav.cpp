@@ -42,9 +42,19 @@
 
 OsgNav::OsgNav(vrj::Kernel* kern, int& argc, char** argv) : vrj::OsgApp(kern)
 {
+   mFileToLoad = std::string("");
+   
    //Initialize tweek, which registers a new RemoteNavSubjectImpl with the
    //nameserver.
    initTweek( argc, argv );
+}
+
+void OsgNav::latePreFrame()
+{
+   // Update the scene graph
+   osg::Matrix osg_current_matrix;
+   osg_current_matrix.set(mNavigater->getCurPos().getData());
+   mNavTrans->setMatrix(osg_current_matrix);
 }
 
 void OsgNav::preFrame()
@@ -80,6 +90,11 @@ void OsgNav::preFrame()
       mNavigater->setVelocity(gmtl::Vec3f(0.0, 0.0, 0.0));
    }
 
+   if ( mButton1->getData() == gadget::Digital::TOGGLE_ON)
+   {
+      std::cout << "Cur Pos: " << mNavigater->getCurPos() << std::endl;
+   }
+
    // If we are pressing button 2 then rotate in the direction the wand is
    // pointing.
    if ( mButton2->getData() == gadget::Digital::ON )
@@ -90,14 +105,8 @@ void OsgNav::preFrame()
    {
       mNavigater->setRotationalVelocity(gmtl::Matrix44f());
    }
-
    // Update the navigation using the time delta between
    mNavigater->update(time_delta);
-
-   // Update the scene graph
-   osg::Matrix osg_current_matrix;
-   osg_current_matrix.set(mNavigater->getCurPos().getData());
-   mNavTrans->setMatrix(osg_current_matrix);
 }
 
 void OsgNav::bufferPreDraw()
@@ -117,7 +126,6 @@ void OsgNav::myInit()
    mRootNode = new osg::Group();
    mNoNav    = new osg::Group();
    mNavTrans = new osg::MatrixTransform();
-   mFileToLoad = std::string("");
 
    // We need to create a new navigater before calling initTweek because we pass
    // it to the RemoteNavSubjectImpl.
@@ -142,8 +150,16 @@ void OsgNav::myInit()
    //This can be used if the model orientation needs to change
    mModelTrans->preMult( osg::Matrix::rotate( gmtl::Math::deg2Rad( -90.0f ), 1.0f, 0.0f, 0.0f) );
 
-   // Add model to the transform
-   mModelTrans->addChild(mModel);
+   if(NULL == mModel)
+   {
+      std::cout << "ERROR: Could not load file: " << mFileToLoad << std::endl;
+   }
+   else
+   {
+      // Add model to the transform
+      mModelTrans->addChild(mModel);
+   }
+   
    // Add the transform to the tree
    mNavTrans->addChild( mModelTrans );
 
