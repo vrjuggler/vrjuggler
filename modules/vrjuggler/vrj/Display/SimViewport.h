@@ -45,7 +45,7 @@
 namespace vrj
 {
 
-class SimViewport : public Viewport
+class VJ_CLASS_API SimViewport : public Viewport
 {
 public:
    SimViewport() : Viewport()

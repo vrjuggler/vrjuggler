@@ -47,7 +47,7 @@ namespace vrj
 /**
  * Projection class that simply takes a matrix for the camera position.
  */
-class CameraProjection : public Projection
+class VJ_CLASS_API CameraProjection : public Projection
 {
 public:
    CameraProjection() : mVertFOV(60.0f)
