@@ -44,9 +44,9 @@ xmlupdate.py
 desc_2.0-2.1.xsl
 ----------------
    An XSLT stylesheet that provides the upgrade path from version 2.0 of
-   the configuration description file format to version 2.1.  Simply use
+   the configuration definition file format to version 2.1.  Simply use
    this stylesheet with an XSLT processor to update old configuration
-   description files.
+   definition files.
    
    The old files must have the following processing instruction:
 
@@ -54,11 +54,11 @@ desc_2.0-2.1.xsl
 
    The stylesheet uses this instruction to be sure that its input is
    the correct version.  Version 2.0 was in use between May 24, 2002,
-   and July 17, 2002.  Any description files created using VjControl
+   and July 17, 2002.  Any definition files created using VjControl
    between that time qualify as using version 2.0 of the file format,
    though they may not include the above processing instruction.  In
    that case, the processing instruction should be added as the second
-   line of the source input description file(s).
+   line of the source input definition file(s).
 
    To use this stylesheet with the xsltproc command, run xsltproc as
    follows:
@@ -70,7 +70,7 @@ desc_2.0-2.1.xsl
 
       xalan -in <input.desc> -out <output.desc> -xsl desc_2.0-2.1.xsl
 
-   Fill in your input filename and output filename for appropriately.
+   Fill in your input filename and output filename appropriately.
 
    Alternatively, you may use the makefile found in this directory as
    follows:
@@ -82,8 +82,8 @@ desc_2.0-2.1.xsl
    provide a path to the 'xsltproc' or 'xalan' executables.
 
    Once you have updated the file, you should load the generated
-   description file using VRJConfig and review your configuration
-   descriptions.  Some additions to the XML content will be made, and
+   definition file using VRJConfig and review your configuration
+   definitions.  Some additions to the XML content will be made, and
    generic identifiers are often used for these additions.  Using
    VRJConfig, you can make customizations for your specific
    configuration types.
@@ -91,9 +91,9 @@ desc_2.0-2.1.xsl
 desc_2.1-2.2.xsl
 ----------------
    An XSLT stylesheet that provides the upgrade path from version 2.1 of
-   the configuration description file format to version 2.2.  Simply use
+   the configuration definition file format to version 2.2.  Simply use
    this stylesheet with an XSLT processor to update old configuration
-   description files.
+   definition files.
    
    The old files must have the following processing instruction:
 
@@ -101,11 +101,11 @@ desc_2.1-2.2.xsl
 
    The stylesheet uses this instruction to be sure that its input is
    the correct version.  Version 2.1 was in use between July 17, 2002,
-   and January 15, 2003.  Any description files created using VRJConfig
+   and January 15, 2003.  Any definition files created using VRJConfig
    between that time qualify as using version 2.1 of the file format,
    though they may not include the above processing instruction.  In
    that case, the processing instruction should be added as the second
-   line of the source input description file(s).
+   line of the source input definition file(s).
 
    To use this stylesheet with the xsltproc command, run xsltproc as
    follows:
@@ -117,7 +117,7 @@ desc_2.1-2.2.xsl
 
       xalan -in <input.desc> -out <output.desc> -xsl desc_2.1-2.2.xsl
 
-   Fill in your input filename and output filename for appropriately.
+   Fill in your input filename and output filename appropriately.
 
    Alternatively, you may use the makefile found in this directory as
    follows:
@@ -129,8 +129,8 @@ desc_2.1-2.2.xsl
    provide a path to the 'xsltproc' or 'xalan' executables.
 
    Once you have updated the file, you should load the generated
-   description file using VRJConfig and review your configuration
-   descriptions.  Some additions to the XML content will be made, and
+   definition file using VRJConfig and review your configuration
+   definitions.  Some additions to the XML content will be made, and
    generic identifiers are often used for these additions.  Using
    VRJConfig, you can make customizations for your specific
    configuration types.
@@ -138,9 +138,9 @@ desc_2.1-2.2.xsl
 desc_2.2-2.3.xsl
 ----------------
    An XSLT stylesheet that provides the upgrade path from version 2.2 of
-   the configuration description file format to version 2.3.  Simply use
+   the configuration definition file format to version 2.3.  Simply use
    this stylesheet with an XSLT processor to update old configuration
-   description files.
+   definition files.
    
    The old files must have the following processing instruction:
 
@@ -148,11 +148,11 @@ desc_2.2-2.3.xsl
 
    The stylesheet uses this instruction to be sure that its input is
    the correct version.  Version 2.2 was in use between January 15, 2003,
-   and February 27, 2003.  Any description files created using VRJConfig
+   and February 27, 2003.  Any definition files created using VRJConfig
    between that time qualify as using version 2.2 of the file format,
    though they may not include the above processing instruction.  In
    that case, the processing instruction should be added as the second
-   line of the source input description file(s).
+   line of the source input definition file(s).
 
    To use this stylesheet with the xsltproc command, run xsltproc as
    follows:
@@ -164,7 +164,7 @@ desc_2.2-2.3.xsl
 
       xalan -in <input.desc> -out <output.desc> -xsl desc_2.2-2.3.xsl
 
-   Fill in your input filename and output filename for appropriately.
+   Fill in your input filename and output filename appropriately.
 
    Alternatively, you may use the makefile found in this directory as
    follows:
@@ -176,11 +176,60 @@ desc_2.2-2.3.xsl
    provide a path to the 'xsltproc' or 'xalan' executables.
 
    Once you have updated the file, you should load the generated
-   description file using VRJConfig and review your configuration
-   descriptions.  Some additions to the XML content will be made, and
+   definition file using VRJConfig and review your configuration
+   definitions.  Some additions to the XML content will be made, and
    generic identifiers are often used for these additions.  Using
    VRJConfig, you can make customizations for your specific
    configuration types.
+
+desc_2.3-3.0.xsl
+----------------
+   An XSLT stylesheet that provides the upgrade path from version 2.3 of
+   the configuration definition file format to version 3.0.  Simply use
+   this stylesheet with an XSLT processor to update old configuration
+   definition files.
+   
+   The old files must have the following processing instruction:
+
+      <?org-vrjuggler-jccl-settings desc.db.version="2.3" ?>
+
+   The stylesheet uses this instruction to be sure that its input is
+   the correct version.  Version 2.3 was in use between February 27, 2003,
+   and July 10, 2003.  Any definition files created using VRJConfig between
+   that time qualify as using version 2.3 of the file format, though they
+   may not include the above processing instruction.  In that case, the
+   processing instruction should be added as the second line of the source
+   input definition file(s).
+
+   To use this stylesheet with the xsltproc command, run xsltproc as
+   follows:
+
+      xsltproc -o junk desc_2.3-3.0.xsl <input.desc>
+
+   To use it with Xalan, run the xalan wrapper (shell script or batch
+   file) as follows:
+
+      xalan -in <input.desc> -out junk -xsl desc_2.3-3.0.xsl
+
+   Fill in your input filename appropriately.  The output file name is
+   ignored with this transform because new files are named based on the
+   config definition type.  The new files are generated in a subdirectory
+   named 'definitions'.
+
+   Alternatively, you may use the makefile found in this directory as
+   follows:
+
+     make INPUT_FILE=<input.desc> OUTPUT_FILE=junk desc-update-2.3-3.0
+
+   This makefile will work with any implementation of make (including
+   Microsoft's nmake utility).  You may need to edit the makefile to
+   provide a path to the 'xsltproc' or 'xalan' executables.
+
+   Once you have updated the file, you should load the generated
+   definition files using VRJConfig and review them.  Many changes to the
+   XML structure will be made, and generic identifiers may be used for
+   new additions.  Using VRJConfig, you can make customizations for your
+   specific configuration types.
 
 cfg_2.0-2.1.xsl
 ---------------
@@ -198,7 +247,7 @@ cfg_2.0-2.1.xsl
    VjControl or VRJConfig between that time qualify as using version
    2.0 of the file format, though they may not include the above
    processing instruction.  In that case, the processing instruction
-   should be added as the second line of the source input description
+   should be added as the second line of the source input definition
    file(s).
 
    To use this stylesheet with the xsltproc command, run xsltproc as
@@ -211,7 +260,7 @@ cfg_2.0-2.1.xsl
 
       xalan -in <input.desc> -out <output.desc> -xsl cfg_2.0-2.1.xsl
 
-   Fill in your input filename and output filename for appropriately.
+   Fill in your input filename and output filename appropriately.
 
    Alternatively, you may use the makefile found in this directory as
    follows:
@@ -223,10 +272,10 @@ cfg_2.0-2.1.xsl
    provide a path to the 'xsltproc' or 'xalan' executables.
 
    Once you have updated the file, you should load the generated
-   description file using VRJConfig and review your configuration(s).
-   The only changes should be to XML elements that are used to reference
-   external files.  There may also be some whitespace differences
-   depending on the XSLT processor used.
+   config file using VRJConfig and review your configuration(s).  The only
+   changes should be to XML elements that are used to reference external
+   files.  There may also be some whitespace differences depending on the
+   XSLT processor used.
 
 Patrick Hartling <patrick@vrjuggler.org>
 $Id$
