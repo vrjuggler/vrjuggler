@@ -278,7 +278,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
                         time = Double.parseDouble (child.getNodeValue());
                     }
                 }
-                addDataElem (name, category, time);
+                addDataElem (label, category, time);
 
             }
             else {
