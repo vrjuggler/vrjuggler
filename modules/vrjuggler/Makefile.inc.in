@@ -115,7 +115,7 @@ endif
 BRANCH		= HEAD
 CANON_NAME	= Kenny
 VER_ARGS	= -f $(VJROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
-                  -i $(VJROOT_ABS)/vrj/vjParam.h.in -o vrj/vjParam.h	\
+                  -i $(VJROOT_ABS)/vrj/vrjParam.h.in -o vrj/vrjParam.h	\
                   -d "`date '+%b %e, %Y %H:%M:%S'`" -n "$(CANON_NAME)"
 
 ifdef VERSION
@@ -251,8 +251,8 @@ ifneq (@OS_TYPE@, Win32)
           $(LN_S) $(VJROOT_ABS)/vrj/*.h ./
 	cd $(instlinks)/include/vrj && rm -f ./vjDefines.h &&		\
 	  $(LN_S) $(topdir)/vrj/vjDefines.h ./vjDefines.h
-	cd $(instlinks)/include/vrj && rm -f ./vjParam.h &&		\
-	  $(LN_S) $(topdir)/vrj/vjParam.h ./vjParam.h
+	cd $(instlinks)/include/vrj && rm -f ./vrjParam.h &&		\
+	  $(LN_S) $(topdir)/vrj/vrjParam.h ./vrjParam.h
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 	cd $(instlinks)/bin && rm -f ./catadf.pl &&			\
           $(LN_S) $(VJROOT_ABS)/tools/catadf.pl ./catadf.pl
@@ -349,7 +349,7 @@ post-install-headers:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/vrj/vjDefines.h $(includedir)/vrj
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/vrj/vjParam.h $(includedir)/vrj
+          $(topdir)/vrj/vrjParam.h $(includedir)/vrj
 
 install-headers-deprecated:
 	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
