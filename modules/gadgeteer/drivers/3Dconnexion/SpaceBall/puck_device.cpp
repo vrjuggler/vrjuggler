@@ -151,7 +151,7 @@ bool PuckDevice::sample()
 	// analog data changed
     {
 	analogData submit(6);
-	for (int i = 0; i < _axes.size(); i++)
+	for (unsigned int i = 0; i < _axes.size(); i++)
 	{
 	    float normalize;
 	    float value = _axes[i].getAnalog();
@@ -183,14 +183,14 @@ void PuckDevice::updateData()
 
 void PuckDevice::initBuffers()
 {
-    for (int i = 0; i < _axes.size(); i++)
+    for (unsigned int i = 0; i < _axes.size(); i++)
     {
 	float normalize;
 	float value = 0;
 	gadget::Analog::normalizeMinToMax(value, normalize);
 	_axes[i] = normalize;
     }
-    for (int i = 0; i < _buttons.size(); i++)
+    for (unsigned int i = 0; i < _buttons.size(); i++)
 	_buttons[i] = 0;
 
     gadget::Digital::addDigitalSample(_buttons);
@@ -1208,12 +1208,12 @@ void spaceTraveler::init(const string devName, const string port)
     _autozero = true;
     
     // Init cached values
-    for (int i = 0; i < _analogCache.size(); i++)
+    for (unsigned int i = 0; i < _analogCache.size(); i++)
     {
 	_analogCache[i] = _nullVal;
 	_zeroValues[i] = 0;
     }
-    for (int i = 0; i < _digitalCache.size(); i++)
+    for (unsigned int i = 0; i < _digitalCache.size(); i++)
 	_digitalCache[i] = -1;
     
 }
