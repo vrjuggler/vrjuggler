@@ -33,6 +33,7 @@
 #include <gadget/gadgetConfig.h>
 
 #include <iomanip>
+#include <sstream>
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
