@@ -117,6 +117,19 @@ public class DisplayWindowFrame
       }
    }
 
+   /**
+    * Unregisters this object as a ConfigElementListener from the contained
+    * mElement reference.  This is needed to prevent a circular reference
+    * from existing forever between this object and its ConfigElement.
+    *
+    * Is this the best place (or way) to do this?
+    */
+   public void removeNotify()
+   {
+      super.removeNotify();
+      mElement.removeConfigElementListener(mElementListener);
+   }
+
    public void valueChanged(PlacerSelectionEvent e)
    {
       mSelectedViewport = ((ConfigElement) e.getValue());
