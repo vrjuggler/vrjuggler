@@ -45,8 +45,7 @@
 #ifndef _ASCENSION_FLOCKOFBIRD_H_
 #define _ASCENSION_FLOCKOFBIRD_H_
 
-#include <VPR/IO/Port/vjSerialPort.h>
-#include </home/users/browner/vpr/vapor/vpr/IO/Port/SerialPort.h>
+#include <vpr/IO/Port/SerialPort.h>
 
 #define POSITION_RANGE 12.0f
 #define ANGLE_RANGE   180.0f
