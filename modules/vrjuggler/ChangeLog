@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jul-01-2002 allenb    Removed OSG hack and replaced with a much better
+                      (and less trusting) solution using new glUserData.
 Jul-01-2002 allenb    Temporary hack added to GlPipe.cpp to set viewport
                       before each call to draw.  This was needed to work
                       around a bug in OSG.  
