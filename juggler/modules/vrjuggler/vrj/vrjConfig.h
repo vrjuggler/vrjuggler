@@ -44,7 +44,7 @@
 #endif
 
 #ifdef WIN32
-//#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#define WIN32_LEAN_AND_MEAN	// Exclude rarely-used stuff from Windows headers
 #pragma warning(disable:4244)  // Converting double to float
 #pragma warning(disable:4800)  // Int forcing value to bool
 #pragma warning(disable:4101)  // unreferenced local variable
