@@ -125,26 +125,38 @@ public class DescDBPanel extends JPanel
 
 	if (name == null || name.equals (""))
 	    name = "No Selection";
+	ChunkDescDB db = Core.getChunkDescDB (name);
+	if (db == null)
+	    name = "No Selection";
 	if (name.equalsIgnoreCase ("No Selection")) {
 	    tree.setModel (new DefaultTreeModel (new DefaultMutableTreeNode ("no selection")));
 	    currdb = null;
-	    return;
 	}
-	
-	ChunkDescDB db = Core.getChunkDescDB (name);
-	if (db == null)
-	    return;
+	else {
+	    currdb = db;
+	    root = new DefaultMutableTreeNode ("root");
+	    for (i = 0; i < currdb.size(); i++) {
+		d = (ChunkDesc)currdb.elementAt(i);
+		root.add (new DefaultMutableTreeNode (d.name));
+	    }
+	    model = new DefaultTreeModel (root);
+	    tree.setModel (model);
+	    tree.setRootVisible (false);
+	    db_combobox.setSelectedItem (currdb.name);
+	}
+	if (name.equalsIgnoreCase ("No Selection"))
+	    setButtonsEnabled(false);
+	else
+	    setButtonsEnabled(true);
+    }
 
-	currdb = db;
-	root = new DefaultMutableTreeNode ("root");
-	for (i = 0; i < currdb.size(); i++) {
-	    d = (ChunkDesc)currdb.elementAt(i);
-	    root.add (new DefaultMutableTreeNode (d.name));
-	}
-	model = new DefaultTreeModel (root);
-	tree.setModel (model);
-	tree.setRootVisible (false);
-	db_combobox.setSelectedItem (currdb.name);
+
+
+    private void setButtonsEnabled (boolean b) {
+	save_button.setEnabled(b);
+	close_button.setEnabled(b);
+	insert_button.setEnabled(b);
+	remove_button.setEnabled(b);
     }
 
 
