@@ -54,6 +54,8 @@ import VjComponents.Network.NetworkModule;
  *  It is illegal to call any of the reading or message sending 
  *  functions until the XMLConfigCommunicator has been assigned a
  *  NetworkModule object to talk to.
+ *
+ *  @version $Revision$
  */
 public class XMLConfigCommunicator
     extends DefaultNetCommunicator
@@ -201,6 +203,7 @@ public class XMLConfigCommunicator
     protected void parseCommands (Element node) throws Exception {
         Node child;
         String name = node.getTagName ();
+        ConfigIOStatus iostatus = new ConfigIOStatus();
 
         System.out.println ("reading command: '" + name + "'");
         if (name.equalsIgnoreCase ("apply_chunks")) {
@@ -213,7 +216,7 @@ public class XMLConfigCommunicator
             while (child != null) {
                 switch (child.getNodeType()) {
                 case Node.ELEMENT_NODE:
-                    config_handler.buildChunkDB (db, child);
+                    config_handler.buildChunkDB (db, child, iostatus);
                     break;
                 case Node.COMMENT_NODE:
                 case Node.NOTATION_NODE:
@@ -226,11 +229,21 @@ public class XMLConfigCommunicator
                 child = child.getNextSibling();
             }
             //System.out.println ("read ConfigChunkDB:\n" + db.xmlRep());
-            if (all)
-                active_chunkdb.clear();
-            active_chunkdb.addAll(db);
-            Core.consoleTempMessage (component_name, "Reading ConfigChunks -- Finished");
-//             return true;
+            if (iostatus.getStatus() != iostatus.FAILURE) {
+                if (all)
+                    active_chunkdb.clear();
+                active_chunkdb.addAll(db);
+            }
+
+            // write out errors to UI
+            for (int i = 0; i < iostatus.size(); i++)
+                Core.consoleInfoMessage (component_name, iostatus.get(i).toString());
+            if (iostatus.getStatus() >= iostatus.ERRORS)
+                Core.consoleErrorMessage (component_name, iostatus.getSummary());
+            else
+                Core.consoleInfoMessage (component_name, iostatus.getSummary());
+
+            //Core.consoleTempMessage (component_name, "Reading ConfigChunks -- Finished");
         }
         else if (name.equalsIgnoreCase ("apply_descs")) {
             boolean all = node.getAttribute("all").equalsIgnoreCase("true");
@@ -244,7 +257,7 @@ public class XMLConfigCommunicator
             while (child != null) {
                 switch (child.getNodeType()) {
                 case Node.ELEMENT_NODE:
-                    config_handler.buildChunkDescDB (db, child);
+                    config_handler.buildChunkDescDB (db, child, iostatus);
                     break;
                 case Node.COMMENT_NODE:
                 case Node.NOTATION_NODE:
@@ -258,17 +271,26 @@ public class XMLConfigCommunicator
                 child = child.getNextSibling();
             }
 
-            active_descdb.addAll (db);
-            // we're not going thru the ConfigModule to add values to this
-            // db, so we have to inform the ChunkFactory ourselves that these
-            // new ChunkDescs are available.
-            ChunkFactory.addChunkDescDB (db);
-            Core.consoleTempMessage (component_name, "Reading ChunkDescs -- Finished");
-//             return true;
+            if (iostatus.getStatus() != iostatus.FAILURE) {
+                active_descdb.addAll (db);
+                // we're not going thru the ConfigModule to add values to this
+                // db, so we have to inform the ChunkFactory ourselves that 
+                // new ChunkDescs are available.
+                ChunkFactory.addChunkDescDB (db);
+            }
+
+            // write out errors to UI
+            for (int i = 0; i < iostatus.size(); i++)
+                Core.consoleInfoMessage (component_name, iostatus.get(i).toString());
+            if (iostatus.getStatus() >= iostatus.ERRORS)
+                Core.consoleErrorMessage (component_name, iostatus.getSummary());
+            else
+                Core.consoleInfoMessage (component_name, iostatus.getSummary());
+
+            //Core.consoleTempMessage (component_name, "Reading ChunkDescs -- Finished");
         }
         else if (name.equalsIgnoreCase ("refresh_all")) {
             getChunks();
-//             return true;
         }
         else if (name.equalsIgnoreCase ("remove_chunks")) {
 //             boolean all = node.getAttribute("all").equalsIgnoreCase("true");
@@ -281,15 +303,12 @@ public class XMLConfigCommunicator
 
             active_chunkdb.removeAll (db);
             Core.consoleTempMessage (component_name, "Removing ConfigChunks -- Finished");
-//             return true;
         }
         else if (name.equalsIgnoreCase ("remove_descs")) {
-//             return true; // do nothing
+            // do nothing
         }
         else {
             throw new Exception ("Unrecognized command: " + name);
-//             System.out.println ("Unrecognized command: " + name);
-//             return false;
         }
     }
 

@@ -180,23 +180,6 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         }
     }
 
-    /** temporary hack to avoid breaking apis... */
-    public boolean buildChunkDB (ConfigChunkDB db, Node doc) {
-        ConfigIOStatus iostatus = new ConfigIOStatus();
-        buildChunkDB (db, doc, iostatus);
-        return (iostatus.getStatus() == iostatus.SUCCESS || iostatus.getStatus() == iostatus.WARNINGS);
-    }
-
-    /** temporary hack */
-    public ConfigChunk buildConfigChunk (Node doc, boolean use_defaults) {
-        ConfigIOStatus iostatus = new ConfigIOStatus();
-        ConfigChunk ch = buildConfigChunk (doc, use_defaults, iostatus);
-        if (iostatus.getStatus() == iostatus.ERRORS || iostatus.getStatus() == iostatus.FAILURE)
-            return null;
-        else
-            return ch;
-    }
-
 
     /** Converts a DOM tree to a ConfigChunkDB.
      *  This method reads the DOM tree rooted at doc, and puts all
@@ -517,13 +500,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         }
     }
 
-    
-    /** temporary hack to avoid breaking apis... */
-    public boolean buildChunkDescDB (ChunkDescDB db, Node doc) {
-        ConfigIOStatus iostatus = new ConfigIOStatus();
-        buildChunkDescDB (db, doc, iostatus);
-        return (iostatus.getStatus() == iostatus.SUCCESS || iostatus.getStatus() == iostatus.WARNINGS);
-    }
+
 
     /** Converts a DOM tree to a ChunkDescDB.
      *  This method reads the DOM tree rooted at doc, and puts all
