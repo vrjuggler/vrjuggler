@@ -118,9 +118,18 @@ int vjGlxWindow::open() {
         | PointerMotionMask | KeyPressMask;
     w_attrib.border_pixel = 0x0;
 
+
+    // get screen dimensions for translating window origin.
+    XWindowAttributes winattrs;
+    XGetWindowAttributes (x_display, RootWindow (x_display, screen), &winattrs);
+//    cout << "------------------------------------------------------------------\n"
+//          << "    screen dims: " << winattrs.width << ", " << winattrs.height 
+//          << "    win pos: " << origin_x << ", " <<  winattrs.height - origin_y - window_height << endl;
+
+
     // create window
     if ((x_window = XCreateWindow (x_display, RootWindow(x_display, screen),
-                                   origin_x, origin_y - window_height,
+                                   origin_x, winattrs.height - origin_y - window_height,
                                    window_width, window_height,
                                    0, visual_info->depth,
                                    InputOutput,
