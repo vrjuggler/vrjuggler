@@ -69,7 +69,12 @@ vpr::ReturnStatus SocketDatagramImplBSD::recvfrom (void* msg,
                                                    vpr::Uint32& bytes_read,
                                                    const vpr::Interval timeout)
 {
+#ifdef VPR_OS_IRIX
+   int fromlen;
+#else
    socklen_t fromlen;
+#endif
+
    vpr::ReturnStatus retval;
 
    retval = mHandle->isReadable(timeout);
