@@ -704,7 +704,7 @@ sub parseOutput ($$)
          my $i;
          for ( $i = 0; $i <= $#param_list; $i++ )
          {
-            if ( $param_list[$i] =~ /(--(enable|disable)\S+)\s/ )
+            if ( $param_list[$i] =~ /(--(enable|disable)\S+)/ )
             {
                my $param = "$1";
 
