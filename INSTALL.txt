@@ -130,12 +130,23 @@ Introduction
    support for templates and the C++ standard in general, users need to be
    aware that it may not be possible.
 
+   At this time, there are two ways to build VR Juggler on Windows:
+
+    1. Use the Visual Studio project file
+
+    2. Use the "unified" command-line build system
+
+   For instructions on using the Visual Studio project file, refer to the
+   README.html file located in the vc7 subdirectory of this directory. For
+   instructions on using the command-line build system, continue reading this
+   document.
+
    VR Juggler and all its modules have a "unified" build system. That is, the
-   same build system works on UNIX-based systems as on Win32. To do this, we
-   require the use of Cygwin (http://sources.redhat.com/cygwin/download.html)
-   to provide a build environment for all of the code found in this source
-   tree. We also require the use of an extension to Cygwin that we call
-   "juggler-tools". The archive may be downloaded from
+   same build system works on UNIX-based systems and on Win32. To do this, we
+   require the use of Cygwin (http://www.cygwin.com/mirrors.html) to provide
+   a build environment for all of the code found in this source tree. We also
+   require the use of an extension to Cygwin that we call "juggler-tools".
+   The archive may be downloaded from
    http://www.vrjuggler.org/download/juggler-tools.zip. After being
    installed, the juggler-tools directory should be added at the end of your
    path so that it adds to the Cygwin environment and does not conflict with
@@ -150,7 +161,8 @@ Getting the Source Code and the Dependencies
    archive, that code is a complete "snapshot" of the CVS repository at the
    time of release. It contains all dependencies that would otherwise have
    been acquired using CVS. It does not contain binary dependencies that must
-   be downloaded separately (such as NSPR, the JDK, a C++ compiler, etc.).
+   be downloaded separately (such as NSPR, the Java Developer Kit, a C++
+   compiler, etc.).
 
    The current list of required software packages is as follows:
 
@@ -179,10 +191,11 @@ Getting the Source Code and the Dependencies
        Runtime, which can be used by VPR for threading and sockets (required
        on Win32, Solaris, and Mac OS X).
 
-     o Java Developer Kit (http://java.sun.com/): The JDK is used to compile
-       all the Java code used in the Juggler Project. Without it, none of the
-       Java code can be built. We require version 1.3 or newer. The Java
-       Standard Edition can be downloaded from http://java.sun.com/j2se/.
+     o Java Developer Kit (http://java.sun.com/): The JDK/J2SDK is used to
+       compile all the Java code used in the Juggler Project. Without it,
+       none of the Java code can be built. We require version 1.3 or newer;
+       we recommend version 1.4 or newer. The Java Standard Edition (J2SE)
+       can be downloaded from http://java.sun.com/j2se/.
 
      o OpenORB (http://openorb.sourceforge.net/): A pure Java implementation
        of CORBA 2.3, required for the Tweek Java GUI if you are using a
@@ -351,14 +364,15 @@ Getting the Source Code and the Dependencies
    ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases. At this time, we
    recommend the use of version 4.2 or newer.
 
-    Java Developer Kit (JDK)
+    Java Developer Kit (JDK/J2SDK)
 
    We make use of the Java programming language in addition to C++. Java is
    used exclusively for GUIs such as Tweek and VRJConfig (which is a JavaBean
    that is loaded into Tweek). To compile the Java code, a JDK is necessary.
-   We currently require version 1.3 or newer. The Java Standard Edition can
-   be downloaded from http://java.sun.com/j2se/. More information can be
-   found at http://java.sun.com/.
+   We currently require version 1.3 or newer; we recommend version 1.4 or
+   newer. The Java Standard Edition can be downloaded from
+   http://java.sun.com/j2se/. More information can be found at
+   http://java.sun.com/.
 
     OpenORB
 

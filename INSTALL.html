@@ -1,6 +1,6 @@
 <html><head>
       <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-   <title>Building and Installing the Juggler Project (Version 1.1/2.0)</title><link rel="stylesheet" href="base_style.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.64.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" lang="en"><div class="titlepage"><div><div><h1 class="title"><a name="d0e1"></a>Building and Installing the Juggler Project (Version 1.1/2.0)</h1></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="othername">The Juggler Team</span></h3></div></div></div><div><p class="pubdate">$Date$</p></div></div><div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#d0e15">Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e32">Important Notes for IRIX Users</a></span></dt><dt><span class="section"><a href="#d0e116">Important Note for Win32 Users</a></span></dt></dl></dd><dt><span class="section"><a href="#source.code.section">Getting the Source Code and the Dependencies</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e230">How to Get the Juggler Suite and External Dependencies from CVS</a></span></dt><dt><span class="section"><a href="#using.cvs-gather.section">Using cvs-gather</a></span></dt><dt><span class="section"><a href="#d0e423">Downloading Binary Dependencies</a></span></dt></dl></dd><dt><span class="section"><a href="#compile.section">Compiling</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e517">Important Note Regarding Compiling</a></span></dt><dt><span class="section"><a href="#d0e528">Compiling the Juggler Suite of Tools</a></span></dt><dt><span class="section"><a href="#compile.individual.section">Tips for Compiling Individual Tools in the Juggler Suite</a></span></dt></dl></dd></dl></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e15"></a>Introduction</h2></div></div><div></div></div><p>You have downloaded the source code for Version 1.1 of the Juggler
+   <title>Building and Installing the Juggler Project (Version 1.1/2.0)</title><link rel="stylesheet" href="base_style.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.65.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" lang="en"><div class="titlepage"><div><div><h1 class="title"><a name="d0e1"></a>Building and Installing the Juggler Project (Version 1.1/2.0)</h1></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="othername">The Juggler Team</span></h3></div></div></div><div><p class="pubdate">$Date$</p></div></div><div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#d0e15">Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e32">Important Notes for IRIX Users</a></span></dt><dt><span class="section"><a href="#d0e116">Important Note for Win32 Users</a></span></dt></dl></dd><dt><span class="section"><a href="#source.code.section">Getting the Source Code and the Dependencies</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e250">How to Get the Juggler Suite and External Dependencies from CVS</a></span></dt><dt><span class="section"><a href="#using.cvs-gather.section">Using cvs-gather</a></span></dt><dt><span class="section"><a href="#d0e443">Downloading Binary Dependencies</a></span></dt></dl></dd><dt><span class="section"><a href="#compile.section">Compiling</a></span></dt><dd><dl><dt><span class="section"><a href="#d0e537">Important Note Regarding Compiling</a></span></dt><dt><span class="section"><a href="#d0e548">Compiling the Juggler Suite of Tools</a></span></dt><dt><span class="section"><a href="#compile.individual.section">Tips for Compiling Individual Tools in the Juggler Suite</a></span></dt></dl></dd></dl></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e15"></a>Introduction</h2></div></div><div></div></div><p>You have downloaded the source code for Version 1.1 of the Juggler
     Project. This is the code that will become VR Juggler 2.0, and it is the
     code that is used to create the VR juggler 2.0 pre-releases. Please be
     aware that this code represents a work in progress, and if you acquired it
@@ -61,9 +61,13 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</pre><p>Furthermore
       source code. We understand that this is an inconvenience, and we are
       interested in methods for compiling the code with Visual Studio 6.
       However, due to VC6's poor support for templates and the C++
-      standard in general, users need to be aware that it may not be possible.</p><p>VR Juggler and all its modules have a &#8220;<span class="quote">unified</span>&#8221; build
-      system. That is, the same build system works on UNIX-based systems as on
-      Win32. To do this, we require the use of Cygwin (<a href="http://sources.redhat.com/cygwin/download.html" target="_top">http://sources.redhat.com/cygwin/download.html</a>)
+      standard in general, users need to be aware that it may not be possible.</p><p>At this time, there are two ways to build VR Juggler on Windows:</p><div class="orderedlist"><ol type="1"><li><p>Use the Visual Studio project file</p></li><li><p>Use the &#8220;<span class="quote">unified</span>&#8221; command-line build system</p></li></ol></div><p>For instructions on using the Visual Studio project file, refer to
+      the <a href="vc7/README.html" target="_top">README.html</a> file located in the
+      <tt class="filename">vc7</tt> subdirectory of this directory. For
+      instructions on using the command-line build system, continue reading
+      this document.</p><p>VR Juggler and all its modules have a &#8220;<span class="quote">unified</span>&#8221; build
+      system. That is, the same build system works on UNIX-based systems and
+      on Win32. To do this, we require the use of Cygwin (<a href="http://www.cygwin.com/mirrors.html" target="_top">http://www.cygwin.com/mirrors.html</a>)
       to provide a build environment for all of the code found in this source
       tree. We also require the use of an extension to Cygwin that we call
       &#8220;<span class="quote">juggler-tools</span>&#8221;. The archive may be downloaded from <a href="http://www.vrjuggler.org/download/juggler-tools.zip" target="_top">http://www.vrjuggler.org/download/juggler-tools.zip</a>.
@@ -77,7 +81,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</pre><p>Furthermore
     repository at the time of release. It contains all dependencies that would
     otherwise have been acquired using CVS. It <span class="emphasis"><em>does not</em></span>
     contain binary dependencies that must be downloaded separately (such as
-    NSPR, the JDK, a C++ compiler, etc.).</p><p>The current list of <span class="emphasis"><em>required</em></span> software packages
+    NSPR, the Java Developer Kit, a C++ compiler, etc.).</p><p>The current list of <span class="emphasis"><em>required</em></span> software packages
     is as follows:</p><div class="itemizedlist"><ul type="disc"><li><p>CppDOM (<a href="http://www.sourceforge.net/projects/xml-cppdom/" target="_top">http://www.sf.net/projects/xml-cppdom/</a>):
         A lightweight, easy-to-use XML parser written in C++. CppDOM must be
         compiled and installed for use with VR Juggler.</p></li><li><p>Boost (<a href="http://www.boost.org/" target="_top">http://www.boost.org/</a>):
@@ -92,10 +96,10 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</pre><p>Furthermore
         needed for building the sample VR Juggler applications.</p></li></ul></div><p>The following lists <span class="emphasis"><em>semi-optional</em></span> packages:</p><div class="itemizedlist"><ul type="disc"><li><p>NSPR (<a href="http://www.mozilla.org/projects/nspr/" target="_top">http://www.mozilla.org/projects/nspr/</a>):
         The Netscape Portable Runtime, which can be used by VPR for threading
         and sockets (required on Win32, Solaris, and Mac OS X).</p></li><li><p>Java Developer Kit (<a href="http://java.sun.com/" target="_top">http://java.sun.com/</a>):
-        The JDK is used to compile all the Java code used in the Juggler
+        The JDK/J2SDK is used to compile all the Java code used in the Juggler
         Project. Without it, none of the Java code can be built. We require
-        version 1.3 or newer. The Java Standard Edition can be downloaded from
-        <a href="http://java.sun.com/j2se/" target="_top">http://java.sun.com/j2se/</a>.</p></li><li><p>OpenORB (<a href="http://www.jdom.org/" target="_top">http://openorb.sourceforge.net/</a>):
+        version 1.3 or newer; we recommend version 1.4 or newer. The Java
+        Standard Edition (J2SE) can be downloaded from <a href="http://java.sun.com/j2se/" target="_top">http://java.sun.com/j2se/</a>.</p></li><li><p>OpenORB (<a href="http://www.jdom.org/" target="_top">http://openorb.sourceforge.net/</a>):
         A pure Java implementation of CORBA 2.3, required for the Tweek Java
         GUI if you are using a version of the JDK older than 1.4.0.</p></li><li><p>omniORB (<a href="http://www.jdom.org/" target="_top">http://omniorb.sourceforge.net/</a>):
         A C++ implementation of CORBA 2.3, required for the Tweek C++ API.</p></li></ul></div><p>In the following subsections, we describe how to get all of the
@@ -108,7 +112,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</pre><p>Furthermore
     that you download.</p><p>This remainder of this section is <span class="emphasis"><em>only</em></span> for
     those users who want to get the Juggler Project source code from the CVS
     repository on SourceForge. Those users who have downloaded a pre-packaged
-    version of the source should skip ahead to <a href="#using.configure.pl" title="Using configure.pl">the section called &#8220;Using configure.pl&#8221;</a>.</p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e230"></a>How to Get the Juggler Suite and External Dependencies from CVS</h3></div></div><div></div></div><p>You can optionally get the Juggler Project as a source code
+    version of the source should skip ahead to <a href="#using.configure.pl" title="Using configure.pl">the section called &#8220;Using configure.pl&#8221;</a>.</p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e250"></a>How to Get the Juggler Suite and External Dependencies from CVS</h3></div></div><div></div></div><p>You can optionally get the Juggler Project as a source code
       tarball from the website (<a href="http://www.vrjuggler.org/" target="_top">http://www.vrjuggler.org/</a>)
       or you can follow these steps to get the code from our CVS repository.</p><div class="orderedlist"><ol type="1"><li><p>Check out the 'juggler' module using CVS.</p><pre class="screen">cvs -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler login
 cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler co juggler</pre></li><li><p>Get external packages that Juggler depends on. Typically you
@@ -130,7 +134,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
       order to build. To get help on using this tool, use one of the following
       (the second version gives much more detailed output):</p><pre class="screen">./cvs-gather.pl --help
 ./cvs-gather.pl --manual
-</pre><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e292"></a>Standard Use of <span><b class="command">cvs-gather</b></span></h4></div></div><div></div></div><p>In most cases, <span><b class="command">cvs-gather</b></span> can be used as
+</pre><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e312"></a>Standard Use of <span><b class="command">cvs-gather</b></span></h4></div></div><div></div></div><p>In most cases, <span><b class="command">cvs-gather</b></span> can be used as
         follows:</p><pre class="screen">./cvs-gather.pl
 </pre><p>All the output will be written to the file <tt class="filename">gather.log</tt>.
         If you would like to see the progress of CVS as it checks out files,
@@ -164,38 +168,39 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
         files. To use the override file, just add the argument
         <tt class="option">--override=&lt;filename&gt;</tt> when running
         <span><b class="command">cvs-gather</b></span>.</p><p>The following shows how to run <span><b class="command">cvs-gather</b></span>
-        with your own overrides file (called <tt class="filename">my_gatheroverride</tt>):</p><pre class="screen">cvs-gather.pl --override=my_gatheroverride</pre><p>If all goes well, you'll get everything you need to compile.</p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e423"></a>Downloading Binary Dependencies</h3></div></div><div></div></div><p>In addition to source the dependencies acquired through CVS, there
+        with your own overrides file (called <tt class="filename">my_gatheroverride</tt>):</p><pre class="screen">cvs-gather.pl --override=my_gatheroverride</pre><p>If all goes well, you'll get everything you need to compile.</p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e443"></a>Downloading Binary Dependencies</h3></div></div><div></div></div><p>In addition to source the dependencies acquired through CVS, there
       are some third-party dependencies that must be installed separately.
       Remember that no Java code in VR Juggler can be used without the JDK and
       a working Java version of CORBA (either from OpenORB, JacORB, or the JDK
-      itself).</p><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e428"></a>Boost</h4></div></div><div></div></div><p>The minimum required version of Boost, as of this writing, is
+      itself).</p><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e448"></a>Boost</h4></div></div><div></div></div><p>The minimum required version of Boost, as of this writing, is
         1.31.0. The Boost source can be downloaded from <a href="http://www.sf.net/projects/boost/" target="_top">http://www.sf.net/projects/boost/</a>.
         To compile and install Boost, refer to its installation documentation
         (<a href="http://www.boost.org/more/getting_started.html#Build_Install" target="_top">http://www.boost.org/more/getting_started.html#Build_Install</a>).
         Note that you need the command <span><b class="command">bjam</b></span> (referred to as
-        &#8220;<span class="quote">boost-jam</span>&#8221; on the Boost download page) to build Boost.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e445"></a>CppDOM</h4></div></div><div></div></div><p>For XML processing, we use CppDOM 0.3.0 or newer. The source and
+        &#8220;<span class="quote">boost-jam</span>&#8221; on the Boost download page) to build Boost.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e465"></a>CppDOM</h4></div></div><div></div></div><p>For XML processing, we use CppDOM 0.3.0 or newer. The source and
         binary distributions for some platforms can be downloaded from <a href="http://www.sf.net/projects/xml-cppdom" target="_top">http://www.sf.net/projects/xml-cppdom/</a>.
         If a binary version is not available for your operating system you
         must compile and install CppDOM yourself. Note that you need SCons (<a href="http://scons.sourceforge.net/" target="_top">http://scons.sourceforge.net/</a>)
-        to build and install CppDOM.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e456"></a>Netscape Portable Runtime (NSPR)</h4></div></div><div></div></div><p>Our operating system abstraction, VPR, can make use of NSPR for
+        to build and install CppDOM.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e476"></a>Netscape Portable Runtime (NSPR)</h4></div></div><div></div></div><p>Our operating system abstraction, VPR, can make use of NSPR for
         operating system primitives. On some platforms (IRIX, FreeBSD, Linux),
         the use of NSPR is strictly optional. On others (Win32, Mac OS X, and
         Solaris), it is required. Based on your local system you should decide
         whether you need NSPR. Binary versions of NSPR can be downloaded from
         <a href="ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases" target="_top">ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases</a>.
-        At this time, we recommend the use of version 4.2 or newer.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e464"></a>Java Developer Kit (JDK)</h4></div></div><div></div></div><p>We make use of the Java programming language in addition to C++.
+        At this time, we recommend the use of version 4.2 or newer.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e484"></a>Java Developer Kit (JDK/J2SDK)</h4></div></div><div></div></div><p>We make use of the Java programming language in addition to C++.
         Java is used exclusively for GUIs such as Tweek and VRJConfig (which
         is a JavaBean that is loaded into Tweek). To compile the Java code, a
-        JDK is necessary. We currently require version 1.3 or newer. The Java
-        Standard Edition can be downloaded from <a href="http://java.sun.com/j2se/" target="_top">http://java.sun.com/j2se/</a>.
-        More information can be found at <a href="http://java.sun.com/" target="_top">http://java.sun.com/</a>.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e475"></a>OpenORB</h4></div></div><div></div></div><p>OpenORB is a pure-Java implementation of CORBA 2.3. It is
+        JDK is necessary. We currently require version 1.3 or newer; we
+        recommend version 1.4 or newer. The Java Standard Edition can be
+        downloaded from <a href="http://java.sun.com/j2se/" target="_top">http://java.sun.com/j2se/</a>.
+        More information can be found at <a href="http://java.sun.com/" target="_top">http://java.sun.com/</a>.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e495"></a>OpenORB</h4></div></div><div></div></div><p>OpenORB is a pure-Java implementation of CORBA 2.3. It is
         required in order to compile the Tweek Java API (and hence VRJConfig)
         if you are using a version of the JDK older than 1.4.0. OpenORB 1.3.0
         can be downloaded from <a href="http://openorb.sourceforge.net/" target="_top">http://openorb.sourceforge.net/</a>.</p><p>There are three JAR files needed to use OpenORB 1.3 with Juggler
         Project code. They are <tt class="filename">openorb-1.3.0.jar</tt>,
         <tt class="filename">avalon-framework.jar</tt>, and <tt class="filename">logkit.jar</tt>.
         All three come with a standard OpenORB distribution. We will show how
-        to tell the configure scripts about these JAR files later.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e494"></a>omniORB</h4></div></div><div></div></div><p>omniORB is a C++ implementation of CORBA 2.3. It is required in
+        to tell the configure scripts about these JAR files later.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="d0e514"></a>omniORB</h4></div></div><div></div></div><p>omniORB is a C++ implementation of CORBA 2.3. It is required in
         order to compile the Tweek C++ API. At this time, the Tweek C++ API is
         not required for VR Juggler, but this situation will change in the
         near future. At this time, we primarily use omniORB 4.0.x. omniORB can
@@ -208,10 +213,10 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
         Please refer to <a href="#tweek.build.section" title="Tweek">the section called &#8220;Tweek&#8221;</a> for more
         details on this.</p></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="compile.section"></a>Compiling</h2></div></div><div></div></div><p>In this section, we describe how to compile the Juggler Project. We
     focus on VR Juggler as a whole, but information about some of the
-    individual components is provided later.</p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e517"></a>Important Note Regarding Compiling</h3></div></div><div></div></div><p>You have downloaded <span class="emphasis"><em>developmental</em></span> code. It
+    individual components is provided later.</p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e537"></a>Important Note Regarding Compiling</h3></div></div><div></div></div><p>You have downloaded <span class="emphasis"><em>developmental</em></span> code. It
       may not be stable, and it may not even compile. Compiling VR Juggler
       itself can be a little complicated for anyone who does not have some
-      background in Autoconf, C++, and <span><b class="command">make</b></span>.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e528"></a>Compiling the Juggler Suite of Tools</h3></div></div><div></div></div><p>This section explains how to get, configure, and compile all of
+      background in Autoconf, C++, and <span><b class="command">make</b></span>.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e548"></a>Compiling the Juggler Suite of Tools</h3></div></div><div></div></div><p>This section explains how to get, configure, and compile all of
       the tools that make up VR Juggler. Each tool compiles to its own library
       and can be installed individually. (Refer to the <tt class="filename">README</tt>
       file in this directory for more information about the specific modules.)</p><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="config.vrjuggler.section"></a>Configuring VR Juggler</h4></div></div><div></div></div><p>Every time you update the source code acquired from CVS and
@@ -221,12 +226,12 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
         directory where it exists. Do not try to run it from a build directory
         or any other place in the Juggler source tree. The same holds for the
         individual <span><b class="command">autogen.sh</b></span> scripts in the various
-        modules, should you need to run one individually.</p><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e560"></a>Win32 Issues</h5></div></div><div></div></div><p>The VR Juggler build system is &#8220;<span class="quote">unified</span>&#8221; in that
+        modules, should you need to run one individually.</p><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e580"></a>Win32 Issues</h5></div></div><div></div></div><p>The VR Juggler build system is &#8220;<span class="quote">unified</span>&#8221; in that
           the same build code runs on UNIX-based systems as on Windows.
           However, the build system is very UNIX-centric, and as a result,
           using it on Windows is a little more complicated than we would like.
           It does not help that Cygwin is a poor substitute for a real
-          UNIX-like environment.</p><div class="section" lang="en"><div class="titlepage"><div><div><h6 class="title"><a name="d0e568"></a>Dealing with Cygwin Autoconf and Automake</h6></div></div><div></div></div><p>On Win32, recent versions of Cygwin install Autoconf 2.13
+          UNIX-like environment.</p><div class="section" lang="en"><div class="titlepage"><div><div><h6 class="title"><a name="d0e588"></a>Dealing with Cygwin Autoconf and Automake</h6></div></div><div></div></div><p>On Win32, recent versions of Cygwin install Autoconf 2.13
             <span class="emphasis"><em>and</em></span> Autoconf 2.5x. Similarly, Automake 1.4
             <span class="emphasis"><em>and</em></span> Automake 1.5 are installed. The former
             versions (2.13 and 1.4) are considered &#8220;<span class="quote">stable</span>&#8221; while
@@ -235,7 +240,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
             build system does not work with Automake 1.5 on Win32. At this
             time, it is unclear why it does not work, but the following
             provides a workaround for running <span><b class="command">autogen.sh</b></span> on
-            Win32 using the default BASH environment:</p><pre class="screen">ACLOCAL=/usr/autotool/stable/bin/aclocal ./autogen.sh</pre><p>If you are using tcsh, use the following command instead:</p><pre class="screen">env ACLOCAL=/usr/autotool/stable/bin/aclocal ./autogen.sh</pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h6 class="title"><a name="d0e594"></a>Paths</h6></div></div><div></div></div><p>Paths are a major source of confusion when building VR
+            Win32 using the default BASH environment:</p><pre class="screen">ACLOCAL=/usr/autotool/stable/bin/aclocal ./autogen.sh</pre><p>If you are using tcsh, use the following command instead:</p><pre class="screen">env ACLOCAL=/usr/autotool/stable/bin/aclocal ./autogen.sh</pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h6 class="title"><a name="d0e614"></a>Paths</h6></div></div><div></div></div><p>Paths are a major source of confusion when building VR
             Juggler on Win32. It is very important that everyone who tries to
             build on Win32 read this section and understand it. The basic
             principle is that using the VR Juggler build system works the same
@@ -308,7 +313,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
           It is not a replacement for this document, but it shows how some
           members of the Juggler team configure VR Juggler. It also has
           information on more advanced uses of <span><b class="command">configure.pl</b></span>
-          that are beyond the scope of this document.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e744"></a>Using Locally Installed Software</h5></div></div><div></div></div><p>As noted in <a href="#source.code.section" title="Getting the Source Code and the Dependencies">the section called &#8220;Getting the Source Code and the Dependencies&#8221;</a>, VR Juggler
+          that are beyond the scope of this document.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="d0e764"></a>Using Locally Installed Software</h5></div></div><div></div></div><p>As noted in <a href="#source.code.section" title="Getting the Source Code and the Dependencies">the section called &#8220;Getting the Source Code and the Dependencies&#8221;</a>, VR Juggler
           depends on several external software packages. The
           <span><b class="command">cvs-gather</b></span> tool collects the source code for
           those packages into the directory <tt class="filename">juggler/external</tt>,
