@@ -58,13 +58,10 @@ public:
     }
 
     //---------------------------------------------------------
-    // int aquire()
+    //: Lock the mutex.
     //
-    // PURPOSE:
-    //   Lock the mutex
-    // RETURNS:
-    //   1 - Aquired
-    //  -1 - Error
+    //! RETURNS:  1 - Acquired
+    //! RETURNS: -1 - Error
     //---------------------------------------------------------
     int acquire() const
     {
@@ -77,7 +74,7 @@ public:
     }
 
     //----------------------------------------------------------
-    //  Aquire a read mutex
+    //: Acquire a read mutex.
     //----------------------------------------------------------
     int acquireRead() const
     {
@@ -85,7 +82,7 @@ public:
     }
 
     //----------------------------------------------------------
-    //  Aquire a write mutex
+    //: Acquire a write mutex.
     //----------------------------------------------------------
     int acquireWrite() const
     {
@@ -93,14 +90,11 @@ public:
     }
 
     //---------------------------------------------------------
-    // int tryAquire()
+    //: Try to acquire the lock.  Returns immediately even if
+    //+ we don't acquire the lock.
     //
-    // PURPOSE:
-    //   Try to acquire the lock.
-    //   Returns immediately even if we don't aquire the lock.
-    // RETURNS:
-    //   1 - Aquired
-    //   0 - Not Aquired
+    //! RETURNS: 1 - Acquired
+    //! RETURNS: 0 - Not Acquired
     //---------------------------------------------------------
     int tryAcquire () const
     {
@@ -113,7 +107,7 @@ public:
     }
 
     //----------------------------------------------------------
-    //  Try to aquire a read mutex
+    //: Try to acquire a read mutex.
     //----------------------------------------------------------
     int tryAcquireRead () const
     {
@@ -121,7 +115,7 @@ public:
     }
 
     //----------------------------------------------------------
-    //  Try to aquire a write mutex
+    //: Try to acquire a write mutex.
     //----------------------------------------------------------
     int tryAcquireWrite () const
     {
@@ -129,13 +123,10 @@ public:
     }
 
     //---------------------------------------------------------
-    // int release()
+    //: Release the mutex.
     //
-    // PURPOSE:
-    //   Release the mutex.
-    // RETURNS:
-    //   0 - Success
-    //  -1 - Error
+    //! RETURNS:  0 - Success
+    //! RETURNS: -1 - Error
     //---------------------------------------------------------
     int release() const
     {
@@ -143,13 +134,11 @@ public:
     }
 
     //------------------------------------------------------
-    // int test()
+    //: Test the current lock status.
     //
-    // PURPOSE:
-    //	Test the current lock status
-    // RETURNS:
-    //  0 - Not locked
-    //  1 - Locked
+    //
+    //! RETURNS: 0 - Not locked
+    //! RETURNS: 1 - Locked
     //------------------------------------------------------
     int test()
     {
@@ -164,10 +153,7 @@ public:
 
 
     //---------------------------------------------------------
-    // void dump()
-    //
-    // PURPOSE:
-    //  Dump the mutex debug stuff and current state.
+    //: Dump the mutex debug stuff and current state.
     //---------------------------------------------------------
     void dump (FILE* dest = stderr, const char* message = "\n------ Mutex Dump -----\n") const
     {

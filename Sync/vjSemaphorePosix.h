@@ -105,7 +105,7 @@ public:
     }
 
     // -----------------------------------------------------------------------
-    //: Aquire and lock a write semaphore.
+    //: Acquire and lock a write semaphore.
     //
     //! PRE: None.
     //! POST: The calling thread either acquires the semaphore until

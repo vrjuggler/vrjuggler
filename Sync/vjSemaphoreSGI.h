@@ -22,9 +22,11 @@
 class vjSemaphoreSGI
 {
 public:
+   //---------------------------------------------------------
    //: Constructor
    // Default to initial Value = 1
    // That means taht semaphore initialy is available.
+   //---------------------------------------------------------
    vjSemaphoreSGI (int initialValue = 1)
    {
       // BUG:
@@ -63,17 +65,13 @@ public:
          delete semaphorePool;
          semaphorePool = NULL;
       }
-
    }
 
    //---------------------------------------------------------
-   // int aquire()
+   //: Lock the semaphore.
    //
-   // PURPOSE:
-   //   Lock the Semaphore
-   // RETURNS:
-   //   1 - Aquired
-   //  -1 - Error
+   //! RETURNS:  1 - Acquired
+   //! RETURNS: -1 - Error
    //---------------------------------------------------------
    int acquire() const
    {
@@ -84,61 +82,56 @@ public:
       return ret_val;
    }
 
-//----------------------------------------------------------
-//  Acquire a read Semaphore
-//----------------------------------------------------------
+   //----------------------------------------------------------
+   //: Acquire a read semaphore.
+   //----------------------------------------------------------
    int acquireRead() const
    {
       return this->acquire();     // No special "read" semaphore -- For now
    }
 
-//----------------------------------------------------------
-//  Acquire a write Semaphore
-//----------------------------------------------------------
+   //----------------------------------------------------------
+   //: Acquire a write semaphore.
+   //----------------------------------------------------------
    int acquireWrite() const
    {
       return this->acquire();     // No special "write" semaphore -- For now
    }
 
-//---------------------------------------------------------
-// int tryAcquire()
-//
-// PURPOSE:
-//   Try to acquire the semaphore immediately.  Does not block.
-// RETURNS:
-//   1 - Aquired
-//   0 - Not Aquired
-//---------------------------------------------------------
+   //---------------------------------------------------------
+   //: Try to acquire the semaphore immediately.  Does not
+   //+ block.
+   //
+   //! RETURNS: 1 - Acquired
+   //! RETURNS: 0 - Not acquired
+   //---------------------------------------------------------
    int tryAcquire () const
    {
       return uscpsema(sema);
    }
 
-//----------------------------------------------------------
-//  Try to aquire a read Semaphore
-//----------------------------------------------------------
+   //----------------------------------------------------------
+   //: Try to acquire a read semaphore.
+   //----------------------------------------------------------
    int tryAcquireRead () const
    {
       return this->tryAcquire();
    }
 
-//----------------------------------------------------------
-//  Try to aquire a write Semaphore
-//----------------------------------------------------------
+   //----------------------------------------------------------
+   //: Try to acquire a write semaphore.
+   //----------------------------------------------------------
    int tryAcquireWrite () const
    {
       return this->tryAcquire();
    }
 
-//---------------------------------------------------------
-// int release()
-//
-// PURPOSE:
-//   Release the Semaphore.
-// RETURNS:
-//   0 - Success
-//  -1 - Error
-//---------------------------------------------------------
+   //---------------------------------------------------------
+   //: Release the semaphore.
+   //
+   //! RETURNS:  0 - Success
+   //! RETURNS: -1 - Error
+   //---------------------------------------------------------
    int release() const
    {
       int ret_val = usvsema(sema);
@@ -148,29 +141,25 @@ public:
       return ret_val;
    }
 
-//---------------------------------------------------------
-// int reset(int val)
-//
-// PURPOSE:
-//   Reset the Semaphore.
-// RETURNS:
-//   0 - Success
-//  -1 - Error
-// NOTE:
-//   If processes are waiting on the semaphore, the results are undefined
-//---------------------------------------------------------
+   //---------------------------------------------------------
+   //: Reset the semaphore.
+   //
+   //! RETURNS:  0 - Success
+   //! RETURNS: -1 - Error
+   //
+   //! NOTE: If processes are waiting on the semaphore,
+   //+ the results are undefined.
+   //---------------------------------------------------------
    int reset(int val)
    {
       return usinitsema(sema, val);
    }
 
-//---------------------------------------------------------
-// void dump()
-//
-// PURPOSE:
-//  Dump the semaphore debug stuff and current state.
-//---------------------------------------------------------
-   void dump (FILE* dest = stderr, const char* message = "\n------ Semaphore Dump -----\n") const
+   //---------------------------------------------------------
+   //: Dump the semaphore debug stuff and current state.
+   //---------------------------------------------------------
+   void dump (FILE* dest = stderr,
+              const char* message = "\n------ Semaphore Dump -----\n") const
    {
       usdumpsema(sema, dest, message);
    }
