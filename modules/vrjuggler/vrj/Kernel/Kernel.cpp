@@ -466,7 +466,9 @@ void Kernel::loadConfigFile(std::string filename)
    vprDEBUG(vrjDBG_KERNEL,vprDBG_CONFIG_LVL)
       << "Loading config file: " << filename << std::endl << vprDEBUG_FLUSH;
 
-   jccl::Configuration* cfg = new jccl::Configuration;
+   // We can allocate this on thte stack because the config elements get
+   // copied into a new PendingConfigElement from the configuration.
+   jccl::Configuration cfg;
 
    // ------- OPEN Program specified Config file ------ //
    if(filename.empty())   // We have a filename
@@ -474,21 +476,17 @@ void Kernel::loadConfigFile(std::string filename)
       return;
    }
 
-   bool cfg_load_success = cfg->load(filename);
+   bool cfg_load_success = cfg.load(filename);
    if (!cfg_load_success)
    {
-     vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
-        << "vrj::Kernel::loadConfigFile: Failed to load file: "
-        << filename << std::endl << vprDEBUG_FLUSH;
-     exit(1);
+      vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
+         << "vrj::Kernel::loadConfigFile: Failed to load file: "
+         << filename << std::endl << vprDEBUG_FLUSH;
+      exit(1);
    }
 
    // Put them all in pending
-   jccl::ConfigManager::instance()->addPendingAdds(cfg);
-   
-   // We can delete this here because the ConfigElements get copyed into a new
-   // PendingConfigElement from the configuration.
-   delete cfg;
+   jccl::ConfigManager::instance()->addPendingAdds(&cfg);
 }
 
 // Scans the given directory (or directories) for .jdef files and loads all
