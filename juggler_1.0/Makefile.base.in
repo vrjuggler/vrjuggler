@@ -33,6 +33,7 @@
 # scriptdir      - The path to the directory containing scripts used in the
 #                  build and install/release process.
 # sysconfdir     - System configuration directory (usually ${prefix}/etc).
+# topdir         - The top of the build tree.
 # VJROOT_ABS     - The absolute path to the root of the VR Juggler source
 #                  tree.
 #
