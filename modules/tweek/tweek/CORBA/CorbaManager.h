@@ -89,28 +89,28 @@ public:
     * the root POA (RootPOA) is created, and all servants registered with this
     * manager are activated within that child POA.
     *
-    * @param localId    A string providing a unique identifier for the local
-    *                   POA.
-    * @param argc       The size of the following argument vector.  This will be
-    *                   modified if any elements are removed from argv.
-    * @param argv       The command-line arguments passed to the application.
-    *                   These may include parameters defining the ORB's
-    *                   behavior.  Those recognized as ORB arguments are removed
-    *                   from the array leaving application parameters.
-    * @param nsHost     The hostname (or IP address) of the machine where
-    *                   the Naming Service is running.  This parameter is
-    *                   optional, and it defaults to an empty string.  If no
-    *                   value is given, the root naming context reference will
-    *                   be requested using the "resolve initial references"
-    *                   mechanism in CORBA.  This may require the use of an
-    *                   external configuration file or command-line options
-    *                   given in the argv parameter.
-    * @param nsPort     The port number on which the Naming Service is
-    *                   listening.  Normally, this will be 2809.  It defaults
-    *                   to 2809.
-    * @param iiopVerion The version of IIOP to use when communicating with
-    *                   the Naming Service.  Common values are "1.0" and
-    *                   "1.2".  It defaults to "1.0".
+    * @param localId     A string providing a unique identifier for the local
+    *                    POA.
+    * @param argc        The size of the following argument vector.  This will
+    *                    be modified if any elements are removed from argv.
+    * @param argv        The command-line arguments passed to the application.
+    *                    These may include parameters defining the ORB's
+    *                    behavior.  Those recognized as ORB arguments are
+    *                    removed from the array leaving application parameters.
+    * @param nsHost      The hostname (or IP address) of the machine where
+    *                    the Naming Service is running.  This parameter is
+    *                    optional, and it defaults to an empty string.  If no
+    *                    value is given, the root naming context reference will
+    *                    be requested using the "resolve initial references"
+    *                    mechanism in CORBA.  This may require the use of an
+    *                    external configuration file or command-line options
+    *                    given in the argv parameter.
+    * @param nsPort      The port number on which the Naming Service is
+    *                    listening.  Normally, this will be 2809.  It defaults
+    *                    to 2809.
+    * @param iiopVersion The version of IIOP to use when communicating with
+    *                    the Naming Service.  Common values are "1.0" and
+    *                    "1.2".  It defaults to "1.0".
     */
    vpr::ReturnStatus init(const std::string& localId, int& argc, char** argv,
                           const std::string& nsHost = std::string(""),
