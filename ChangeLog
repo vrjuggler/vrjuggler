@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+
+[Version 1.0.2 - 8.6.2001]=====================================================
 Jul-24-2001 cjust     Fixed a redraw bug in VjControl that happened when
                       updating the Active chunkdb from a network connection.
                       This could cause the status bar label or the chunkdb's
