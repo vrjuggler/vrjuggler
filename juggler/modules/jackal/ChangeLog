@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-07-2004 patrickh    Extended the property definition editor to allow the
+                        "editable" attribute for enumerations to be changed.
+                        NEW VERSION: 0.19.0
 Sep-17-2004 patrickh    Introduced the concept of editable enumerations for use
                         in VRJConfig.  The config definition file format has
                         been modified to allow for this, and the .jdef file

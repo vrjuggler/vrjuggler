@@ -236,6 +236,13 @@ public class PropertyDefinition
       return mEditableEnum;
    }
 
+   public void setEnumEditable(boolean editable)
+   {
+      boolean old_editable = mEditableEnum;
+      mEditableEnum = editable;
+      fireEnumEditableChanged(old_editable);
+   }
+
    /**
     * Performs a reverse lookup on the enumeration map to get the symbol
     * corresponding to the given value.  If no symbol is found (if, for
@@ -546,6 +553,27 @@ public class PropertyDefinition
                evt = new PropertyDefinitionEvent(this, def);
             }
             ((PropertyDefinitionListener)listeners[i+1]).propertyValueDefinitionRemoved(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies listeners that this definition's editable enumeration status
+    * has changed.
+    */
+   protected void fireEnumEditableChanged(boolean oldEditable)
+   {
+      PropertyDefinitionEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == PropertyDefinitionListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new PropertyDefinitionEvent(this, oldEditable);
+            }
+            ((PropertyDefinitionListener)listeners[i+1]).enumEditableChanged(evt);
          }
       }
    }

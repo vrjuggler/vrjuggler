@@ -52,6 +52,8 @@ public interface PropertyDefinitionListener
 
    public void propertyValueDefinitionRemoved(PropertyDefinitionEvent evt);
 
+   public void enumEditableChanged(PropertyDefinitionEvent evt);
+
    public void enumAdded(PropertyDefinitionEvent evt);
 
    public void enumRemoved(PropertyDefinitionEvent evt);
