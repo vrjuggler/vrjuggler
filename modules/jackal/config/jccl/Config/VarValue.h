@@ -97,7 +97,7 @@ public:
     //!NOTE: This is mainly useful for returning an invalid VarValue in
     //+      case of an error, and is used internally by some Config/*
     //+      classes.
-    //!NOTE: There is a farily harmless race condition where an extra
+    //!NOTE: There is a fairly harmless race condition where an extra
     //+      invalid vjVarValue gets created & not deleted.  This is 
     //+      very unlikely, and would only result in losing a few bytes
     //+      anyway.
