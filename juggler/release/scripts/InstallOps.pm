@@ -111,6 +111,7 @@ sub newDir ($$) {
 	chdir("$base_dir")
 	    or die "newDir(): WARNING: Could not chdir to $base_dir: $!\n";
 
+	umask(002);
 	mkpath("$newdir", 0, 0755)
 	    or warn "newDir(): WARNING: Could not make $newdir: $!\n";
     }
@@ -144,6 +145,7 @@ sub installFile ($$$) {
 
     print "$inst_path/$src_file -> $inst_dir/$filename\n";
 
+    umask(002);
     mkpath("$inst_dir", 0, 0755) or "mkpath: $!\n";
     copy("$src_file", "$inst_dir") or "copy: $!\n";
     chmod($mode, "$inst_dir/$filename") or "chmod: $!\n";

@@ -74,6 +74,7 @@ GetOptions("CXX=s" => \$VARS{'CXX'}, "DEFS:s" => \$VARS{'DEFS'},
 	   "srcdir=s" => \$VARS{'srcdir'}, "SUBDIRS=s" => \$VARS{'SUBDIRS'},
 	   "prefix=s" => \$prefix, "startdir=s" => \$startdir);
 
+umask(002);
 chdir("$startdir") or die "ERROR: Cannot chdir to $startdir: $!\n";
 
 my ($basedir, $dir);
