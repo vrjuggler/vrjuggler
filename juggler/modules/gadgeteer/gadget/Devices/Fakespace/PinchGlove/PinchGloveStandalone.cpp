@@ -30,7 +30,7 @@
 #include <sys/stat.h>
 #include <iostream.h>
 
-#include "fsPinchGlove.h"
+#include <Input/vjGlove/fsPinchGlove.h>
 
 int pinchfd = -1;
 const char* const fsPinchGlove::_openHandString = "00000.00000";
