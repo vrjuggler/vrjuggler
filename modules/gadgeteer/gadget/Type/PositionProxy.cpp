@@ -72,58 +72,38 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       mUnitNum = chunk->getProperty<int>("unit");
       mDeviceName = chunk->getProperty<std::string>("device");
 
-      if (true == chunk->getProperty<bool>("etrans") )
+      // --- Configure filters --- //
+      unsigned num_filters = chunk->getNum("position_filters");
+   
+      vprDEBUG_OutputGuard(vprDBG_ALL, 0,
+                           std::string("PositionProxy::config: ") + chunk->getName() + std::string(":") + chunk->getDescToken(),
+                           std::string("Positionproxy::config: done.\n") );
+   
+      vprDEBUG( vprDBG_ALL, 0) << "Num filters: " << num_filters << std::endl << vprDEBUG_FLUSH;
+   
+      jccl::ConfigChunkPtr cur_filter;
+      PositionFilter* new_filter(NULL);
+   
+      for(unsigned i=0;i<num_filters;++i)
       {
-         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,3)
-            << "Position Transform enabled..." << std::endl << vprDEBUG_FLUSH;
-         /*
-         setTransform
-            ( chunk->getProperty<float>("translate",0) , // xtrans
-            chunk->getProperty<float>("translate",1) , // ytrans
-            chunk->getProperty<float>("translate",2) , // ztrans
-            chunk->getProperty<float>("rotate",0) , // xrot
-            chunk->getProperty<float>("rotate",1) , // yrot
-            chunk->getProperty<float>("rotate",2) );// zrot
-         */
-/*
-         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,4)
-            << "Transform Matrix: " << std::endl
-            << getTransform() << std::endl << vprDEBUG_FLUSH;
-*/
-      }
-
-      // Setup filter method
-      // XXX: For now, just hardcode to a single filter type
-      // in future, there should be a filter factory
-      /*
-      if(true == chunk->getProperty<bool>("useFilter"))
-      {
-         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,3)
-            << "Using filter: Linear sigmoid." << std::endl << vprDEBUG_FLUSH;
-         LinearSigmoidPositionFilter* sig_filter;
-         sig_filter = new LinearSigmoidPositionFilter();
-
-         jccl::ConfigChunkPtr sigmoid_params =
-            chunk->getProperty<jccl::ConfigChunkPtr>("sigmoidParams");
-
-         if(sigmoid_params.get() == NULL)
+         cur_filter = chunk->getProperty<jccl::ConfigChunkPtr>("position_filters",i);
+         vprASSERT(cur_filter.get() != NULL);
+   
+         std::string filter_chunk_desc = cur_filter->getDescToken();
+         vprDEBUG( vprDBG_ALL, 0) << "   Filter [" << i << "]: Type:" << filter_chunk_desc << std::endl << vprDEBUG_FLUSH;
+   
+         new_filter = PositionFilterFactory::instance()->createObject(filter_chunk_desc);
+         if(new_filter != NULL)
          {
-            vprDEBUG(vprDBG_ERROR,0)
-               << clrOutBOLD(clrRED,"ERROR:") << "Got NULL sigmoid Params.\n"
-               << vprDEBUG_FLUSH;
+            new_filter->config(cur_filter);
+            mPositionFilters.push_back(new_filter);
          }
-
-         sig_filter->setMaxDist(sigmoid_params->getProperty<float>("maxDist"));
-         sig_filter->setMinDist(sigmoid_params->getProperty<float>("minDist"));
-         sig_filter->setMaxThreshold(sigmoid_params->getProperty<float>("maxThreshold"));
-         mFilter = sig_filter;
-      }
-      else
-      {
-         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,3) << "NOT USING FILTER."
-                                              << std::endl << vprDEBUG_FLUSH;
-      }
-      */
+         else
+         {
+            vprDEBUG( vprDBG_ALL, 0) << "   NULL Filter!!!" << std::endl << vprDEBUG_FLUSH;
+         }
+      }  // if have filters
+   
    }
 
    // --- SETUP PROXY with INPUT MGR ---- //
@@ -136,22 +116,13 @@ void PositionProxy::updateData()
 {
    if((!mStupified) && (mTypedDevice != NULL))
    {
-       mPositionData = (mTypedDevice->getPositionData (mUnitNum));
-
-       //vprDEBUG(vprDBG_ALL,0) << "Proxy::updateData: mPosData:" << *(mPositionData.getPosition()) << "\n" << vprDEBUG_FLUSH;
-
-      /*
-      if(mETrans)
-         transformData();
-         */
-
-      // Filter the data if there is an active filters
-      /*
-      if(mFilter != NULL)
+      mPositionData = (mTypedDevice->getPositionData (mUnitNum));
+      
+      // Apply all the positional filters
+      for(std::vector<PositionFilter*>::iterator i = mPositionFilters.begin(); i != mPositionFilters.end(); ++i)
       {
-         *(mPositionData.getPosition()) = mFilter->getPos(*(mPositionData.getPosition()));
+          (*i)->apply(mPositionData);
       }
-      */
 
       // Do scaling based on Proxy scale factor
       gmtl::Vec3f trans;                              // SCALE:
