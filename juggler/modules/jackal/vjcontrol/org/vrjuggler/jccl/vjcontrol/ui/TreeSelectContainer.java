@@ -330,7 +330,7 @@ JScrollPane sp;
             sp.setMaximumSize (d3);
 
             if (active_panel != null)
-                remove ((JComponent)active_panel);
+                remove (active_panel.getUIComponent());
             //container_panel.removeAll();
             active_panel = p;
             if (p != null) {
