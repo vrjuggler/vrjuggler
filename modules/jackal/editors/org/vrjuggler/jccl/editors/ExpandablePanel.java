@@ -53,6 +53,16 @@ import com.sun.java.swing.plaf.windows.WindowsTreeUI;
  */
 public class ExpandablePanel extends PropertyComponent
 {
+   public static final int EXPAND_BUTTON_COLUMN = 0;
+   public static final int TYPE_ICON_COLUMN     = 1;
+   public static final int TITLE_COLUMN         = 2;
+
+   public static final int TITLE_ROW = 0;
+   public static final int NEST_ROW  = 2;
+
+   public static final int NEST_SPAN_START_COLUMN = TYPE_ICON_COLUMN;
+   public static final int NEST_SPAN_END_COLUMN   = TITLE_COLUMN;
+
    private TableLayout tableLayout;
 
    public void finalize()
@@ -84,8 +94,8 @@ public class ExpandablePanel extends PropertyComponent
 
       // The icons are only 16 pixels tall, so we want to enforce the size.
       double size[][] =
-         {{ p, p, f, 16, 16}, // Columns
-          { 16, p}}; // Rows
+         {{ TableLayout.MINIMUM, p, f, 5}, // Columns
+          { p, 3, p}}; // Rows
 
       tableLayout = new TableLayout(size);
       //tableLayout.setVGap(10);
@@ -105,7 +115,11 @@ public class ExpandablePanel extends PropertyComponent
             {
                if(!mExpanded)
                {
-                  TableLayoutConstraints c2 = new TableLayoutConstraints(1, 1, 4, 1, TableLayout.FULL, TableLayout.FULL);
+                  TableLayoutConstraints c2 =
+                     new TableLayoutConstraints(NEST_SPAN_START_COLUMN, NEST_ROW,
+                                                NEST_SPAN_END_COLUMN, NEST_ROW,
+                                                TableLayout.FULL,
+                                                TableLayout.FULL);
                   add(mComponent, c2);
 
                   // We are now expanded.
@@ -127,7 +141,10 @@ public class ExpandablePanel extends PropertyComponent
          });
       
       // Add expand button.
-      TableLayoutConstraints c = new TableLayoutConstraints(0, 0, 0, 0, TableLayout.LEFT, TableLayout.TOP);
+      TableLayoutConstraints c =
+         new TableLayoutConstraints(EXPAND_BUTTON_COLUMN, TITLE_ROW,
+                                    EXPAND_BUTTON_COLUMN, TITLE_ROW,
+                                    TableLayout.LEFT, TableLayout.CENTER);
       mExpandButton.setIcon(mCollapsedIcon);
       mExpandButton.setMargin(new Insets(0,0,0,0));
       mExpandButton.setBorderPainted(false);
@@ -136,7 +153,10 @@ public class ExpandablePanel extends PropertyComponent
       add(mExpandButton, c);
  
       // Add type icon button.
-      TableLayoutConstraints ct = new TableLayoutConstraints(1, 0, 1, 0, TableLayout.LEFT, TableLayout.TOP);
+      TableLayoutConstraints ct =
+         new TableLayoutConstraints(TYPE_ICON_COLUMN, TITLE_ROW,
+                                    TYPE_ICON_COLUMN, TITLE_ROW,
+                                    TableLayout.LEFT, TableLayout.CENTER);
       mTypeButton.setMargin(new Insets(0,0,0,0));
       mTypeButton.setBorderPainted(false);
       mTypeButton.setFocusPainted(false);
