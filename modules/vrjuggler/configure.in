@@ -370,11 +370,31 @@ VJ_APP_LINKER_DOOZER(["$CXX"], ["$EXTRA_LINK_FLAGS"], ["$LDOPTS_DBG"],
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(VJ_BASE_DIR)'
 
+if test "x$x_libraries" != "xNONE" -a "x$x_libraries" != "x" ; then
+   X_LDFLAGS="-L$x_libraries"
+fi
+
 if test "$OS_TYPE" = "UNIX" ; then
     REQ_EXTRA_LIBS="$LDFLAGS $GADGET_LIBS_CC_MIN $JCCL_LIBS_CC_MIN $JCCL_EXTRA_LIBS_CC $LIBS -lm"
     DYLIB_DEPS_VJ="$SNX_LIBS_CC $REQ_EXTRA_LIBS"
-    DYLIB_DEPS_GL="-L\$(LIBDIR) -lJuggler $OGL_LDFLAGS $LIBOPENGL $REQ_EXTRA_LIBS"
+    DYLIB_DEPS_GL="-L\$(LIBDIR) -lJuggler $REQ_EXTRA_LIBS"
     DYLIB_DEPS_PF="-L\$(LIBDIR) -lJuggler $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_LIBS"
+
+    osx_frameworks='-framework AGL -framework ApplicationServices'
+
+    if test "x$GADGET_USE_X11" != "xyes" ; then
+        osx_frameworks="$osx_frameworks -framework Carbon"
+    fi
+
+    if test "x$PLATFORM" = "xDarwin" ; then
+        if test "x$GADGET_USE_X11" = "xyes" ; then
+            DYLIB_DEPS_GL="$DYLIB_DEPS_GL $X_LDFLAGS -lGL -lGLU $osx_frameworks"
+        else
+            DYLIB_DEPS_GL="$DYLIB_DEPS_GL $OGL_LDFLAGS $LIBOPENGL $osx_frameworks"
+        fi
+    else
+        DYLIB_DEPS_GL="$DYLIB_DEPS_GL $OGL_LDFLAGS $LIBOPENGL"
+    fi
 
     REQ_EXTRA_PROF_LIBS="$LDFLAGS $GADGET_PROF_LIBS_CC_MIN $JCCL_PROF_LIBS_CC_MIN $JCCL_EXTRA_LIBS_CC $LIBS -lm"
     DYLIB_PROF_DEPS_VJ="$SNX_PROF_LIBS_CC $REQ_EXTRA_PROF_LIBS"
@@ -389,18 +409,10 @@ if test "$OS_TYPE" = "UNIX" ; then
 
     if test "x$OGL_LDFLAGS" != "x" ; then
         if test "x$PLATFORM" = "xDarwin" ; then
-            osx_frameworks='-framework AGL -framework ApplicationServices'
-
-            if test "x$GADGET_USE_X11" != "xyes" ; then
-                osx_frameworks="$osx_frameworks -framework Carbon"
-            fi
-
             if test "x$GADGET_USE_X11" = "xyes" ; then
                 APP_EXTRA_LIBS_GL="-lGL -lGLU $osx_frameworks"
-                DYLIB_DEPS_GL="-lGL -lGLU $osx_frameworks"
             else
                 APP_EXTRA_LIBS_GL="$OGL_LDFLAGS $osx_frameworks"
-                DYLIB_DEPS_GL="$DYLIB_DEPS_GL $osx_frameworks"
             fi
         else
             APP_EXTRA_LIBS_GL="-L$OGLROOT/lib$LIBBITSUF $LIBOPENGL"
