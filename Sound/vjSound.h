@@ -1,22 +1,19 @@
 #ifndef SOUND_h
 #define SOUND_h
 
-#include <vjConfig.h>
-
 #include <iostream.h>
-
 #include <Math/vjVec3.h>
 
-class SoundEngine;
-class Sound
+class vjSoundEngine;
+class vjSound
 {
 public:
-   Sound( SoundEngine& engine ) : mPosition( 0.0f, 0.0f, 0.0f ), mVolume( 1.0f ), 
+   vjSound( vjSoundEngine& engine ) : mPosition( 0.0f, 0.0f, 0.0f ), mVolume( 1.0f ), 
       mEngine(&engine), mFalloff( 20.0f ), mLooping( 0 ) 
    {
    }
    
-   virtual ~Sound()
+   virtual ~vjSound()
    {
    }
    
@@ -31,13 +28,13 @@ public:
       return true;
    }
    
-   void setEngine( SoundEngine& se )
+   void setEngine( vjSoundEngine& se )
    {
       mEngine = &se;
    }
    
-   SoundEngine& engine() { return *mEngine; }
-   const SoundEngine& engine() const { return *mEngine; }
+   vjSoundEngine& engine() { return *mEngine; }
+   const vjSoundEngine& engine() const { return *mEngine; }
    
    virtual void pitchBend( float amount = 1.0 )
    {
@@ -114,7 +111,7 @@ public:
 
 protected:
    // my associated engine...
-   SoundEngine* mEngine;
+   vjSoundEngine* mEngine;
    
    vjVec3 mPosition; // position of this sound in distance units where 1 is one unit.
    float mVolume;  // from 0.0 to 1.0

@@ -1,12 +1,10 @@
-#include <vjConfig.h>
-
 #include <string>
-#include <Sound/Sound.h>
-#include <Sound/SoundEngine.h>
+#include <Sound/vjSound.h>
+#include <Sound/vjSoundEngine.h>
 
 // lookup a filename, given the sound's alias.
 // the "filename" returned can be used in a call to Sound::load()
-void SoundEngine::aliasToFileName( const char* const alias, std::string& filename )
+void vjSoundEngine::aliasToFileName( const char* const alias, std::string& filename )
 {
    filename = alias;
 }
@@ -16,7 +14,7 @@ void SoundEngine::aliasToFileName( const char* const alias, std::string& filenam
 // TODO: if called twice with name alias, should return same pointer.
 // memory managed by engine...
 // return NULL on load failure.
-Sound* SoundEngine::getHandle( const char* const alias )
+vjSound* vjSoundEngine::getHandle( const char* const alias )
 {
    std::string filename;
    this->aliasToFileName( alias, filename );
@@ -26,7 +24,7 @@ Sound* SoundEngine::getHandle( const char* const alias )
       return NULL;
    }   
    
-   Sound* snd = this->newSound();
+   vjSound* snd = this->newSound();
    bool didLoad = snd->load( filename.c_str() );
    
    if (didLoad)
@@ -44,31 +42,31 @@ Sound* SoundEngine::getHandle( const char* const alias )
 
 //: Factory function to create a new sound.
 // memory managed by engine
-Sound* SoundEngine::newSound()
+vjSound* vjSoundEngine::newSound()
 {
    cout<<"new Sound()\n"<<flush;
-   return new Sound( *this );
+   return new vjSound( *this );
 }
 
 
 // set position
-void SoundEngine::setPosition( const vjMatrix& position )
+void vjSoundEngine::setPosition( const vjMatrix& position )
 {
    mPosition = position;
 }
 
 // set position
-void SoundEngine::setPosition( const float& x, const float& y, const float& z )
+void vjSoundEngine::setPosition( const float& x, const float& y, const float& z )
 {
    mPosition.makeTrans( x, y, z );
 }
 
-void SoundEngine::getPosition( vjMatrix& position ) const
+void vjSoundEngine::getPosition( vjMatrix& position ) const
 {
    position = mPosition;
 }
 
-void SoundEngine::getPosition( float& x, float& y, float& z ) const
+void vjSoundEngine::getPosition( float& x, float& y, float& z ) const
 {
    vjVec3 point( 0.0f, 0.0f, 0.0f );
    point.xformFull( mPosition, point );
