@@ -37,7 +37,7 @@
 int
 main (int argc, char* argv[]) {
     vpr::SocketDatagram sock(vpr::InetAddr::AnyAddr,
-                             vpr::InetAddr((argv[1], atoi(argv[2]))));
+                             vpr::InetAddr(argv[1], atoi(argv[2])));
 
     if ( sock.open() ) {
         char buffer[40];
