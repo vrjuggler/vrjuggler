@@ -208,20 +208,20 @@ private:
 
 static unsigned int AppQuery[] = {
     PFFSTATS_BUF_PREV | PFFSTATSVAL_PFTIMES_HIST_LAST_APP,
-    NULL
+    0
 };
 static unsigned int IsectQuery[] = {
     PFFSTATS_BUF_PREV | PFFSTATSVAL_PFTIMES_HIST_LAST_ISECT,
-    NULL
+    0
 };
 static unsigned int ChanDrawQuery[] = {
     PFFSTATS_BUF_PREV | PFFSTATSVAL_PFTIMES_HIST_LAST_DRAW,
-    NULL
+    0
 };
 
 static unsigned int ChanCullQuery[] = {
     PFFSTATS_BUF_PREV | PFFSTATSVAL_PFTIMES_HIST_LAST_CULL,
-    NULL
+    0
 };
 
 

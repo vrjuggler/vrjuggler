@@ -45,6 +45,11 @@ public:
    enum navMode { DRIVE=0, FLY=1 };
    velocityNav();
 
+   // Empty virtual destructor to make GCC happy.
+   virtual ~velocityNav (void) {
+      /* Do nothing. */ ;
+   }
+
    // Update the interaction state
    virtual void updateInteraction();
 
@@ -159,14 +164,14 @@ private:
 };
 
 velocityNav::velocityNav() :
-   mTimeHack(0),
-   mDamping( 1.0f ),
    mVelocity( 0.0f, 0.0f , 0.0f ),
    mVelocityFromGravityAccumulator(0.0f,0.0f,0.0f),
-   mMode( velocityNav::DRIVE ),
    mMaxVelocity( 2500.0f ),
+   mDamping( 1.0f ),
    mAcceleration(10.0f),
-   mUnits( velocityNav::FEET )
+   mUnits( velocityNav::FEET ),
+   mMode( velocityNav::DRIVE ),
+   mTimeHack(0)
 {
    stop();
    stopWatch.start();
@@ -207,7 +212,7 @@ void velocityNav::setActionButtons(std::vector<std::string> action_btn_names)
    }
 
    // Update all the entries
-   for(int i=0;i<action_btn_names.size();i++)
+   for(unsigned int i=0;i<action_btn_names.size();i++)
    {
       mActionButtons[i]->init(action_btn_names[i]);
    }

@@ -150,11 +150,11 @@ public:
    simplePfNavApp() : mStatusMessageEmitCount(0),// mWorldDcsTrans( 0.0f, 0.0f, 0.0f ),
       mInitialNavPos( 0.0f, 0.0f, 0.0f ),
       mBoundingSize(0.0f),
+      mCurNavIndex(0),
+      mLightGroup( NULL ),
       mConfiguredNoCollideModels( NULL ),
       mSoundNodes( NULL ),
-      mUnCollidableModelGroup( NULL ),
-      mLightGroup( NULL ),
-      mCurNavIndex(0)
+      mUnCollidableModelGroup( NULL )
    {
       mSun = NULL;
       mRootNode = NULL;
@@ -165,6 +165,11 @@ public:
       mNavigationDCS = NULL;
 
       //enableStats();
+   }
+
+   // Empty virtual destructor to make GCC happy.
+   virtual ~simplePfNavApp (void) {
+      /* Do nothing. */ ;
    }
 
    virtual void init()
@@ -187,7 +192,7 @@ public:
       vjDEBUG(vjDBG_ALL,1) << "simplePfNavApp::preForkInit: Initializing new types.\n" << vjDEBUG_FLUSH;
 
       // Initialize loaders
-      for (int x = 0; x < mModelList.size(); ++x)
+      for (unsigned int x = 0; x < mModelList.size(); ++x)
       {
          std::cout << "simplePfNavAPP: Initializing performer file loaders for types like: "
                    << mModelList[x].filename.c_str() << "\n" << std::flush;
@@ -343,7 +348,7 @@ public:  // Configure the application
          vjMatrix initial_nav;              // Initial navigation position
          initial_nav.setTrans( mInitialNavPos );
 
-         for(int i=0;i<mNavigators.size();i++)
+         for(unsigned int i=0;i<mNavigators.size();i++)
          {
             mNavigators[i]->setHomePosition(initial_nav);
             mNavigators[i]->setCurPos(initial_nav);
@@ -455,7 +460,7 @@ void simplePfNavApp::initializeModels()
    mConfiguredCollideModels = new pfGroup;
    mConfiguredNoCollideModels = new pfGroup;
 
-   for (int x = 0; x < mModelList.size(); ++x)
+   for (unsigned int x = 0; x < mModelList.size(); ++x)
    {
       mModelList[x].modelDCS = new pfDCS();
 
@@ -511,7 +516,7 @@ void simplePfNavApp::initializeSounds()
 
    mSoundNodes = new pfGroup();
 
-   for (int x = 0; x < mSoundList.size(); ++x)
+   for (unsigned int x = 0; x < mSoundList.size(); ++x)
    {
       pfDCS* nextSoundDCS = new pfDCS();
 
