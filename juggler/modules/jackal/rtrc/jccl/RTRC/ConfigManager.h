@@ -54,6 +54,10 @@ namespace jccl
 
 class ConfigElementHandler;
 
+#ifdef HAVE_TWEEK_CXX
+class RTRCInterface;
+#endif
+
 /** Dynamic reconfiguration management plugin for Jackal.
  *  The ConfigManager provides a complete solution for configuring an
  *  application via JCCL's ConfigElement API.  The ConfigManager can
@@ -390,8 +394,10 @@ private:
    /** Size of pending list when last checked (used to check for changes). */
    int                     mLastPendingSize;
 
+#ifdef HAVE_TWEEK_CXX
    /** Network communications object for reconfiguration control. */
-//   XMLConfigCommunicator*   mConfigCommunicator;
+   RTRCInterface* mReconfigIf;
+#endif
 
    std::string              mCachedLocalHostName;  /**< A cached copy of the local host name */
 protected:
@@ -399,10 +405,11 @@ protected:
    ConfigManager();
    virtual ~ConfigManager();
 
+   /** Enables the remote runtime reconfiguration interface object. */
+   void enableReconfigInterface();
+
    // needed for windows:
-   ConfigManager(const ConfigManager&)
-//      : JackalControl()
-   {;}
+   ConfigManager(const ConfigManager&) {;}
    void operator= (const ConfigManager&) {;}
 
    vprSingletonHeader(ConfigManager);
