@@ -2687,19 +2687,24 @@ private:
       <title id="chapter.perfmon">Performance Monitoring</title>
 
       <para>The Performance Monitoring part of the VPR library enables users
-      to obtain and use performance metrics easily. It is a collection of
-      tools that enable the user to obtain accurate metrics. This is done by
-      using the <classname>vpr::Interval</classname> and
-      <classname>vpr::Guard</classname> classes to first for measuring the
-      time spent in a particular piece of code and the second for catching the
-      end of a function to cut down on the intrusion of API. A
-      <classname>vpr::Profile</classname><indexterm>
-          <primary>classes</primary>
-
-          <secondary>vpr::Profile</secondary>
-        </indexterm> is the base class for obtaining a metric. You essentially
-      start and stop <classname>vpr::Profile</classname>'s via the API.
-      </para>
+      to obtain and use performance metrics easily. The basic concept for
+      VPR's performance monitoring is that there is a manager that is in
+      charge of keeping track of all the different data coming in. This is
+      called the <classname>vpr::ProfileManager</classname>. It keeps a one to
+      many tree of the different metrics or
+      <classname>vpr::ProfileSample</classname>'s being used. So when you ask
+      the <classname>vpr::ProfileManager</classname> to start profiling a
+      section of code you ask it to start a profile with a name associated to
+      it if you want to stop the profiling before the end of the function or
+      by making a <classname>vpr::ProfileSample</classname> and giving it a
+      name as its argument that upon the completion of execution will be
+      destructed and in its destructor asks the
+      <classname>vpr::ProfileManager</classname> to stop profiling. If you
+      were just sampling part of the code you can ask the
+      <classname>vpr::ProfileManger</classname> to stop profiling. Profiling
+      data is obtained by using the <classname>vpr::Interval</classname> class
+      to measure the time spent in a particular piece of code using the
+      highest precision timer available to the VPR. </para>
     </chapter>
   </part>
 
