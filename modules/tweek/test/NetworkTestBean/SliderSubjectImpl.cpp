@@ -41,7 +41,8 @@
 namespace networktest
 {
 
-void SliderSubjectImpl::setValue (long value)
+void SliderSubjectImpl::setValue(CORBA::Long value)
+   throw(CORBA::SystemException)
 {
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
       << "Setting mValue to " << value << std::endl << vprDEBUG_FLUSH;
@@ -52,7 +53,8 @@ void SliderSubjectImpl::setValue (long value)
    tweek::SubjectImpl::notify();
 }
 
-long SliderSubjectImpl::getValue ()
+CORBA::Long SliderSubjectImpl::getValue()
+   throw(CORBA::SystemException)
 {
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
       << "Returning " << mValue << " to caller\n" << vprDEBUG_FLUSH;

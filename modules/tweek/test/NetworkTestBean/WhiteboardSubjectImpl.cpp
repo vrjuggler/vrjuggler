@@ -40,8 +40,9 @@
 namespace networktest
 {
 
-void WhiteboardSubjectImpl::insertText (CORBA::Long offset, CORBA::Long length,
-                                        const char* text)
+void WhiteboardSubjectImpl::insertText(CORBA::Long offset, CORBA::Long length,
+                                       const char* text)
+   throw(CORBA::SystemException)
 {
    mText.insert(offset, text);
    mLastOffset = offset;
@@ -50,16 +51,18 @@ void WhiteboardSubjectImpl::insertText (CORBA::Long offset, CORBA::Long length,
    notify();
 }
 
-void WhiteboardSubjectImpl::getLastChange (CORBA::Long& offset,
-                                           CORBA::Long& length,
-                                           CORBA::String_out text)
+void WhiteboardSubjectImpl::getLastChange(CORBA::Long& offset,
+                                          CORBA::Long& length,
+                                          CORBA::String_out text)
+   throw(CORBA::SystemException)
 {
    offset = mLastOffset;
    length = mLastLength;
    text   = CORBA::string_dup(mLastChange.c_str());
 }
 
-char* WhiteboardSubjectImpl::getAllText ()
+char* WhiteboardSubjectImpl::getAllText()
+   throw(CORBA::SystemException)
 {
    // XXX: The client is responsible for releasing this memory!
    return CORBA::string_dup(mText.c_str());
