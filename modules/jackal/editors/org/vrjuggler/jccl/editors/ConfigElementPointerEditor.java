@@ -48,11 +48,11 @@ public class ConfigElementPointerEditor
     */
    public String getAsText()
    {
-      if (null == mValue.getTarget() || mValue.getTarget().equals(""))
+      if (null == mValue || mValue.equals(""))
       {
          return "None";
       }
-      return mValue.getTarget();
+      return mValue;
    }
 
    /**
@@ -66,7 +66,6 @@ public class ConfigElementPointerEditor
    public void setAsText(String text)
       throws IllegalArgumentException
    {
-      System.out.println("setAsText: " + text);
       if (text == null)
       {
          // Ack ... we got a bad string
@@ -74,12 +73,14 @@ public class ConfigElementPointerEditor
       }
       else
       {
-         System.out.println("SetTarget: " + text);
          if (text.equals("None"))
          {
-            text = "";
+            mValue = "";
          }
-         mValue.setTarget(text);
+         else
+         {
+            mValue = text;
+         }
       }
    }
 
@@ -208,15 +209,14 @@ public class ConfigElementPointerEditor
     */
    public void setValue(Object value)
    {
-      this.mValue = (ConfigElementPointer)value;
+      this.mValue = (String)value;
       firePropertyChange();
    }
 
    /**
     * The String name of the Element pointer being edited.
     */
-   //private String mValue = null;
-   private ConfigElementPointer mValue = null;
+   private String mValue = null;
 
    /**
     * The list of tags supported by this value.
