@@ -56,7 +56,6 @@
 
 #include <osgUtil/SceneView>
 #include <osgUtil/Optimizer>
-#include <osgUtil/DisplayListVisitor>
 
 #include <osgDB/ReadFile>
 #include <math.h>
