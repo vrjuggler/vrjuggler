@@ -175,9 +175,9 @@ void vjKernel::configRemove(vjConfigChunkDB* chunkDB)
 // -------------------------------
 bool vjKernel::configKernelHandle(vjConfigChunk* chunk)
 {
-   string chunk_type = (string)(char*)chunk->getType();
+   std::string chunk_type = (std::string)(char*)chunk->getType();
 
-   if(string("JugglerUser") == chunk_type)
+   if(std::string("JugglerUser") == chunk_type)
       return true;
    else
       return false;
@@ -185,11 +185,11 @@ bool vjKernel::configKernelHandle(vjConfigChunk* chunk)
 
 bool vjKernel::configKernelAdd(vjConfigChunk* chunk)
 {
-   string chunk_type = (string)(char*)chunk->getType();
+   std::string chunk_type = (std::string)(char*)chunk->getType();
 
    vjASSERT(configKernelHandle(chunk));
 
-   if(string("JugglerUser") == chunk_type)
+   if(std::string("JugglerUser") == chunk_type)
    {
       vjUser* new_user = new vjUser;
       bool success = new_user->config(chunk);
@@ -310,7 +310,7 @@ void vjKernel::setupEnvironmentManager() {
    vjDEBUG(0) << "      Environment Manager running\n" << vjDEBUG_FLUSH;
 }
 
-vjUser* vjKernel::getUser(string userName)
+vjUser* vjKernel::getUser(std::string userName)
 {
    for(int i=0;i<mUsers.size();i++)
       if(userName == mUsers[i]->getName())

@@ -4,7 +4,7 @@
 // Grabs it out of the given config chunk
 bool vjSimInput::config(vjConfigChunk* chunk)
 {
-   string keyboardName = (char*)chunk->getProperty("keyboardProxy");    // Get the event source
+   std::string keyboardName = (char*)chunk->getProperty("keyboardProxy");    // Get the event source
    mKeyboard.init(keyboardName);
    return true;
 }

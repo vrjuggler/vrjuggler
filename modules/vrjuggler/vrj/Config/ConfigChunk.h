@@ -182,7 +182,7 @@ public:
     //: Return a list of chunk names dependant upon this one
     // Returns a list of the names of all the chunks
     // that are pointed to by chunk ptrs of this chunk
-    vector<string> getDependencies();
+    vector<std::string> getDependencies();
 
 private:
   vjProperty *getPropertyPtr (char *name);

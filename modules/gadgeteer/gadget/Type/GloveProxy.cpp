@@ -6,11 +6,11 @@ bool vjGloveProxy::config(vjConfigChunk* chunk)
 {
    vjDEBUG_BEGIN(1) << "------------------ GLOVE PROXY -----------------\n"
                     << "   config()" << endl << vjDEBUG_FLUSH;
-   vjASSERT(((string)(char*)chunk->getType()) == "GloveProxy");
+   vjASSERT(((std::string)(char*)chunk->getType()) == "GloveProxy");
 
    int unitNum = chunk->getProperty("unit");
-   string proxy_name = (char*)chunk->getProperty("name");
-   string dev_name = (char*)chunk->getProperty("device");
+   std::string proxy_name = (char*)chunk->getProperty("name");
+   std::string dev_name = (char*)chunk->getProperty("device");
 
    int proxy_num = vjKernel::instance()->getInputManager()->AddGloveProxy(dev_name,unitNum,proxy_name,this);
 

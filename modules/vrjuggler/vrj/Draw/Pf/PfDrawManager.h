@@ -158,8 +158,8 @@ protected:
    pfScene*          mRootWithSim;  // The root with the simulator added on to it
    pfDCS*            mHeadDCS;      // The DCS above the head
    pfDCS*            mWandDCS;      // The DCS above the wand
-   string            mHeadModel;    // The head model file path
-   string            mWandModel;    // The wand model file path
+   std::string       mHeadModel;    // The head model file path
+   std::string       mWandModel;    // The wand model file path
 
    // --- Singleton Stuff --- //
 public:

@@ -207,7 +207,7 @@ int vjConfigChunkDB::dependencySort()
    {
       vjDEBUG(2) << "Chunk:" << chunks[i]->getProperty("name") << endl
                  << "\tDepends on:\n" << vjDEBUG_FLUSH;
-      vector<string> deps = chunks[i]->getDependencies();
+      vector<std::string> deps = chunks[i]->getDependencies();
       if(deps.size() > 0)
       {
          for(int j=0;j<deps.size();j++)
@@ -229,7 +229,7 @@ int vjConfigChunkDB::dependencySort()
    chunks = vector<vjConfigChunk*>(0);             // Chunks is the local data - Zero it out to start
 
    bool dep_pass(true);             // Flag for Pass dependency check
-   vector<string> deps;             // Dependencies of current item
+   vector<std::string> deps;        // Dependencies of current item
    vector<vjConfigChunk*>::iterator cur_item
                = src_chunks.begin();          // The current src item to look at
 
@@ -265,7 +265,7 @@ int vjConfigChunkDB::dependencySort()
       {
           vjDEBUG(0) << "ERROR: Dependency error:  Chunk:" << src_chunks[i]->getProperty("name")
                      << "\tDepends on: \n" << vjDEBUG_FLUSH;
-         vector<string> deps = src_chunks[i]->getDependencies();
+         vector<std::string> deps = src_chunks[i]->getDependencies();
          if(deps.size() > 0)
          {
             for(int j=0;j<deps.size();j++)
@@ -288,7 +288,7 @@ int vjConfigChunkDB::dependencySort()
       {
          cout << "Chunk:" << chunks[i]->getProperty("name") << endl;
          cout << "\tDepends on:";
-         vector<string> deps = chunks[i]->getDependencies();
+         vector<std::string> deps = chunks[i]->getDependencies();
          if(deps.size() > 0)
          {
             for(int j=0;j<deps.size();j++)

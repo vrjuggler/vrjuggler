@@ -57,8 +57,8 @@ void vjPfDrawManager::config(vjConfigChunkDB*  chunkDB)
       if(wand_file == NULL)
          vjDEBUG(0) << "vjPfDrawManager::config: simWandModel not set." << endl << vjDEBUG_FLUSH;
 
-      mHeadModel = string(head_file);
-      mWandModel = string(wand_file);
+      mHeadModel = std::string(head_file);
+      mWandModel = std::string(wand_file);
    }
 
    vjDEBUG(0) << "Head Model: " << mHeadModel << endl

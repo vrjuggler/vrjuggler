@@ -67,7 +67,7 @@ public:
 	
 	/** vjInput virtual functions **/
 	char* GetDeviceName() { return "vjThreeDMouse"; }
-	static string getChunkType() { return string("ThreeDMouse");}
+	static std::string getChunkType() { return std::string("ThreeDMouse");}
 	
 	/** vjPosition pure virtual functions **/
 	vjMatrix* GetPosData(int devNum = 0);

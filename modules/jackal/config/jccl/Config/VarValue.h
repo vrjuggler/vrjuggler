@@ -120,7 +120,7 @@ public:
    *  to be NULL.
    */
   operator char* ();
-    operator string ();
+    operator std::string ();
 
   /** @name Assignment Operators.
    *  This is the flip side of the cast: when data is assigned into

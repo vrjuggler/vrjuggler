@@ -47,10 +47,10 @@ vjConfigChunk& vjConfigChunk::operator = (vjConfigChunk& c) {
 
 //: Return a list of chunk names dependant upon this one
 // This is used to sort a db by dependancy.
-vector<string> vjConfigChunk::getDependencies()
+vector<std::string> vjConfigChunk::getDependencies()
 {
     char* chunkname;
-    vector<string>    dep_list;       // Create return vector
+    vector<std::string> dep_list;     // Create return vector
 
     //cout << "Dependency test for " << getProperty ("name") << endl;
     for(int i=0;i<props.size();i++)
@@ -58,7 +58,7 @@ vector<string> vjConfigChunk::getDependencies()
 	    for(int j=0;j<props[i]->getNum();j++) {
 		chunkname = (char*)props[i]->getValue(j);
 		if (chunkname && (chunkname[0] != '\0')) {
-		    dep_list.push_back((string)chunkname);
+		    dep_list.push_back((std::string)chunkname);
 		}
 	    }
 

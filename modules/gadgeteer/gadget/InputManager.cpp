@@ -134,7 +134,7 @@ bool vjInputManager::configCanHandle(vjConfigChunk* chunk)
 bool vjInputManager::ConfigureDevice(vjConfigChunk* chunk)
 {
    bool ret_val;
-   string dev_name = (string)(char*)chunk->getProperty("name");
+   std::string dev_name = (std::string)(char*)chunk->getProperty("name");
    vjDEBUG_BEGIN(1) << "ConfigureDevice: Named: " << dev_name << endl << vjDEBUG_FLUSH;
 
    vjInput* new_device;
@@ -160,7 +160,7 @@ bool vjInputManager::ConfigureDevice(vjConfigChunk* chunk)
 // Check if the device factory or proxy factory can handle the chunk
 bool vjInputManager::ConfigureProxy(vjConfigChunk* chunk)
 {
-   string proxy_name = (string)(char*)chunk->getProperty("name");
+   std::string proxy_name = (std::string)(char*)chunk->getProperty("name");
    vjDEBUG_BEGIN(1) << "ConfigureProxy: Named: " << proxy_name << endl << vjDEBUG_FLUSH;
 
    vjProxy* new_proxy;
@@ -282,7 +282,7 @@ void vjInputManager::DumpStatus()
 
       // Dump Alias list
   cout << "   Alias List:" << endl;
-  for(map<string, int>::iterator cur_alias = proxyAliases.begin(); cur_alias != proxyAliases.end(); cur_alias++)
+  for(map<std::string, int>::iterator cur_alias = proxyAliases.begin(); cur_alias != proxyAliases.end(); cur_alias++)
      cout << "      Alias:" << (*cur_alias).first << "  index:" << (*cur_alias).second << endl;
 	
   cout << "  vjInputManager Status**" << endl << flush;
@@ -445,7 +445,7 @@ int vjInputManager::SetPosProxy(int ProxyNum, int DevNum, int subNum)
 //! POST: pos proxy has been added
 //+   proxy alias has been set
 //! RETURNS: -1: failure, >0: proxy_num
-int vjInputManager::AddPosProxy(string devName, int subNum, string proxyName, vjPosProxy* posProxy)
+int vjInputManager::AddPosProxy(std::string devName, int subNum, std::string proxyName, vjPosProxy* posProxy)
 {
    int dev_num = FindDeviceNum(devName.c_str());              // Get device number
    if(-1 == dev_num)       // Not found, ERROR
@@ -501,7 +501,7 @@ int vjInputManager::SetDigProxy(int ProxyNum, int DevNum, int subNum)
 //! POST: dig proxy has been added
 //+   proxy alias has been set
 //! RETURNS: -1: failure, >0: proxy_num
-int vjInputManager::AddDigProxy(string devName, int subNum, string proxyName, vjDigitalProxy* digitalProxy)
+int vjInputManager::AddDigProxy(std::string devName, int subNum, std::string proxyName, vjDigitalProxy* digitalProxy)
 {
    int dev_num = FindDeviceNum(devName.c_str());              // Get device number
    if(-1 == dev_num)       // Not found, ERROR
@@ -559,7 +559,7 @@ int vjInputManager::SetAnaProxy(int ProxyNum, int DevNum, int subNum)
 //! POST: analog proxy has been added
 //+   proxy alias has been set
 //! RETURNS: -1: failure, >0: proxy_num
-int vjInputManager::AddAnaProxy(string devName, int subNum, string proxyName, vjAnalogProxy* anaProxy)
+int vjInputManager::AddAnaProxy(std::string devName, int subNum, std::string proxyName, vjAnalogProxy* anaProxy)
 {
    int dev_num = FindDeviceNum(devName.c_str());              // Get device number
    if(-1 == dev_num)       // Not found, ERROR
@@ -611,7 +611,7 @@ int vjInputManager::SetGloveProxy(int ProxyNum, int DevNum, int subNum)
 //! POST: glove proxy has been added
 //+   proxy alias has been set
 //! RETURNS: -1: failure, >0: proxy_num
-int vjInputManager::AddGloveProxy(string devName, int subNum, string proxyName, vjGloveProxy* gloveProxy)
+int vjInputManager::AddGloveProxy(std::string devName, int subNum, std::string proxyName, vjGloveProxy* gloveProxy)
 {
    int dev_num = FindDeviceNum(devName.c_str());              // Get device number
    if(-1 == dev_num)       // Not found, ERROR
@@ -655,7 +655,7 @@ int vjInputManager::SetKeyboardProxy(int ProxyNum, int DevNum)
 //! POST: keyboard proxy has been added
 //+   proxy alias has been set
 //! RETURNS: -1: failure, >0: proxy_num
-int vjInputManager::AddKeyboardProxy(string devName, int subNum, string proxyName, vjKeyboardProxy* kbProxy)
+int vjInputManager::AddKeyboardProxy(std::string devName, int subNum, std::string proxyName, vjKeyboardProxy* kbProxy)
 {
    int dev_num = FindDeviceNum(devName.c_str());              // Get device number
    if(-1 == dev_num)       // Not found, ERROR
@@ -700,7 +700,7 @@ int vjInputManager::SetGestureProxy(int ProxyNum, int DevNum)
 //! POST: gesture proxy has been added
 //+   proxy alias has been set
 //! RETURNS: -1: failure, >0: proxy_num
-int vjInputManager::AddGestureProxy(string devName, int subNum, string proxyName, vjGestureProxy* gestureProxy)
+int vjInputManager::AddGestureProxy(std::string devName, int subNum, std::string proxyName, vjGestureProxy* gestureProxy)
 {
    int dev_num = FindDeviceNum(devName.c_str());              // Get device number
    if(-1 == dev_num)       // Not found, ERROR
@@ -740,7 +740,7 @@ void vjInputManager::StupifyGesture(int ProxyNum)
 // Is it a proxy alias
 bool recognizeProxyAlias(vjConfigChunk* chunk)
 {
-   return (((string)(char*)chunk->getType()) == "proxyAlias");
+   return (((std::string)(char*)chunk->getType()) == "proxyAlias");
 }
 
 // Configures proxy aliases in config database
@@ -749,12 +749,12 @@ bool recognizeProxyAlias(vjConfigChunk* chunk)
 bool vjInputManager::ConfigureProxyAlias(vjConfigChunk* chunk)
 {
    vjDEBUG_BEGIN(1) << "vjInputManager::ConfigureProxyAlias" << endl << vjDEBUG_FLUSH;
-   vjASSERT(((string)(char*)chunk->getType()) == "proxyAlias");
+   vjASSERT(((std::string)(char*)chunk->getType()) == "proxyAlias");
 
-   string alias_name, proxy_ptr;       // The string of the alias, name of proxy to pt to
+   std::string alias_name, proxy_ptr;  // The string of the alias, name of proxy to pt to
 
-   alias_name = (string)(char*)chunk->getProperty("aliasName");
-   proxy_ptr = (string)(char*)chunk->getProperty("proxyPtr");
+   alias_name = (std::string)(char*)chunk->getProperty("aliasName");
+   proxy_ptr = (std::string)(char*)chunk->getProperty("proxyPtr");
 
    if(proxyAliases.end() == proxyAliases.find(proxy_ptr))
    {
@@ -776,8 +776,9 @@ bool vjInputManager::ConfigureProxyAlias(vjConfigChunk* chunk)
 // PRE: none - BUT: Preferable if proxyIndex  is for a valid proxy
 // POST: Alias list has alias str refering to proxyIndex
 // ARG: str: The string descriptor for the alias
-//       NOTE: You can pass a char*, string has a copy contructor for char*
-void vjInputManager::AddProxyAlias(string aliasStr, int proxyIndex)
+//       NOTE: You can pass a char*, std::string has a copy contructor for
+//             char*.
+void vjInputManager::AddProxyAlias(std::string aliasStr, int proxyIndex)
 {
    vjDEBUG(1) << "AddProxyAlias: alias:" << aliasStr << "   index:" << proxyIndex << endl << vjDEBUG_FLUSH;
    proxyAliases[aliasStr] = proxyIndex;
@@ -788,7 +789,7 @@ void vjInputManager::AddProxyAlias(string aliasStr, int proxyIndex)
 // POST: none
 // RETVAL: -1 if str not found
 //         proxy index if found
-int vjInputManager::GetProxyIndex(string proxyName)
+int vjInputManager::GetProxyIndex(std::string proxyName)
 {
    if(proxyAliases.end() == proxyAliases.find(proxyName))
       return -1;

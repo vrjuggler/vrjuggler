@@ -49,7 +49,7 @@ public:
    char* GetDeviceName() { return "IBox";}
    //@}
 
-   static string getChunkType() { return string("IBox");}
+   static std::string getChunkType() { return std::string("IBox");}
 
    /** @name vjDigital Pure Virtual Functions */
    //@{

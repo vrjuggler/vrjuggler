@@ -141,17 +141,17 @@ vjVarValue::operator char* () {
     return NULL;
 }
 
-vjVarValue::operator string () {
+vjVarValue::operator std::string () {
     if ((type == T_STRING) || (type == T_CHUNK)) {
 	if (val.strval) {
-	    return (string)val.strval;
+	    return (std::string)val.strval;
 	}
 	else
-	    return (string)"";
+	    return (std::string)"";
     }
     if (type != T_INVALID)
-	cerr << "Type error in cast to string!\n";
-    return (string)"";
+	cerr << "Type error in cast to std::string!\n";
+    return (std::string)"";
 }
 
 
