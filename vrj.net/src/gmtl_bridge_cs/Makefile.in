@@ -63,7 +63,9 @@ SRCS=		gmtl_AABoxd.cs			\
 		gmtl_LineSegd.cs		\
 		gmtl_LineSegf.cs		\
 		gmtl_Math.cs			\
+		gmtl_Matrix33d.cs		\
 		gmtl_Matrix33f.cs		\
+		gmtl_Matrix44d.cs		\
 		gmtl_Matrix44f.cs		\
 		gmtl_Planed.cs			\
 		gmtl_Planef.cs			\
@@ -73,6 +75,9 @@ SRCS=		gmtl_AABoxd.cs			\
 		gmtl_Point3d.cs			\
 		gmtl_Point3f.cs			\
 		gmtl_Point3i.cs			\
+		gmtl_Point4d.cs			\
+		gmtl_Point4f.cs			\
+		gmtl_Point4i.cs			\
 		gmtl_Quatd.cs			\
 		gmtl_Quatf.cs			\
 		gmtl_Rayd.cs			\
