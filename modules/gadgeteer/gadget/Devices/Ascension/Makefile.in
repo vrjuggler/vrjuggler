@@ -52,10 +52,6 @@ SRCS		= Flock.cpp			\
                   MotionStar.cpp		\
                   MotionStarStandalone.cpp
 
-ifneq (@OS_TYPE@, Win32)
-SRCS		+= Bird.cpp
-endif
-
 include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
