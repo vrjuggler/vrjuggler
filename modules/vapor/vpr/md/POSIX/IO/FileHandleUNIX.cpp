@@ -105,8 +105,9 @@ FileHandleUNIX::open () {
     // If the file handle was not returned successfully, print an error
     // message explaining why.
     if ( m_fdesc == -1 ) {
-        fprintf(stderr, "[vpr::FileHandleUNIX] Could not open %s: %s\n",
-                m_name.c_str(), strerror(errno));
+        vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << "[vpr::FileHandleUNIX] Could not open " << m_name << ": "
+            << strerror(errno) << std::endl << vprDEBUG_FLUSH;
         status.setCode(Status::Failure);
     }
     // Otherwise, set m_open to true.
@@ -125,9 +126,9 @@ FileHandleUNIX::close () {
     Status status;
 
     if ( ::close(m_fdesc) == -1 ) {
-        fprintf(stderr,
-                "[vpr::FileHandleUNIX] Could not close %s: %s\n",
-                m_name.c_str(), strerror(errno));
+        vprDEBUG(0, vprDBG_WARNING_LVL)
+            << "[vpr::FileHandleUNIX] Could not close " << m_name << ": "
+            << strerror(errno) << std::endl << vprDEBUG_FLUSH;
         status.setCode(Status::Failure);
     }
     else {
@@ -202,9 +203,9 @@ FileHandleUNIX::enableBlocking () {
 
     // Set the file descriptor to be blocking with the new flags.
     if ( setFlags(new_flags) == -1 ) {
-        fprintf(stderr,
-                "[vpr::FileHandleUNIX] Failed to set blocking on %s: %s\n",
-                m_name.c_str(), strerror(errno));
+        vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << "[vpr::FileHandleUNIX] Failed to set blocking on " << m_name
+            << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
         retval.setCode(Status::Failure);
     }
     else {
@@ -237,9 +238,9 @@ FileHandleUNIX::enableNonBlocking () {
 
     // Set the file descriptor to be non-blocking with the new flags.
     if ( setFlags(new_flags) == -1 ) {
-        fprintf(stderr,
-                "[vpr::FileHandleUNIX] Failed to set non-blocking on %s: %s\n",
-                m_name.c_str(), strerror(errno));
+        vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << "[vpr::FileHandleUNIX] Failed to set non-blocking on " << m_name
+            << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
         retval.setCode(Status::Failure);
     }
     else {
@@ -265,9 +266,10 @@ FileHandleUNIX::enableAppend () {
     retval = setFlags(new_flags);
 
     if ( retval == -1 ) {
-        fprintf(stderr,
-                "[vpr::FileHandleUNIX] Failed to enable append mode on %s: %s\n",
-                m_name.c_str(), strerror(errno));
+        vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << "[vpr::FileHandleUNIX] Failed to enable append mode on "
+            << m_name << ": " << strerror(errno) << std::endl
+            << vprDEBUG_FLUSH;
         status.setCode(Status::Failure);
     }
 
@@ -290,9 +292,10 @@ FileHandleUNIX::disableAppend () {
     retval = setFlags(new_flags);
 
     if ( retval == -1 ) {
-        fprintf(stderr,
-                "[vpr::FileHandleUNIX] Failed to disable append mode on %s: %s\n",
-                m_name.c_str(), strerror(errno));
+        vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << "[vpr::FileHandleUNIX] Failed to disable append mode on "
+            << m_name << ": " << strerror(errno) << std::endl
+            << vprDEBUG_FLUSH;
         status.setCode(Status::Failure);
     }
 
@@ -316,14 +319,16 @@ FileHandleUNIX::enableSynchronousWrite () {
     retval = setFlags(new_flags);
 
     if ( retval == -1 ) {
-        fprintf(stderr,
-                "[vpr::FileHandleUNIX] Failed to enable synchronous writes on %s: %s\n",
-                m_name.c_str(), strerror(errno));
+        vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << "[vpr::FileHandleUNIX] Failed to enable synchronous writes on "
+            << m_name << ": " << strerror(errno) << std::endl
+            << vprDEBUG_FLUSH;
         status.setCode(Status::Failure);
     }
 #else
-    fprintf(stderr,
-            "[vpr::FileHandleUNIX] Cannot enable synchronous writes on this platform!\n");
+    vprDEBUG(0, vprDBG_CRITICAL_LVL)
+        << "[vpr::FileHandleUNIX] Cannot enable synchronous writes on this platform!\n"
+        << vprDEBUG_FLUSH;
     status.setCode(Status::Failure);
 #endif
 
@@ -347,14 +352,16 @@ FileHandleUNIX::enableAsynchronousWrite () {
     retval = setFlags(new_flags);
 
     if ( retval == -1 ) {
-        fprintf(stderr,
-                "[vpr::FileHandleUNIX] Failed to enable asynchronous writes on %s: %s\n",
-                m_name.c_str(), strerror(errno));
+        vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << "[vpr::FileHandleUNIX] Failed to enable asynchronous writes on "
+            << m_name << ": " << strerror(errno) << std::endl
+            << vprDEBUG_FLUSH;
         status.setCode(Status::Failure);
     }
 #else
-    fprintf(stderr,
-            "[vpr::FileHandleUNIX] Cannot enable asynchronous writes on this platform!\n");
+    vprDEBUG(0, vprDBG_CRITICAL_LVL)
+        << "[vpr::FileHandleUNIX] Cannot enable asynchronous writes on this platform!\n"
+        << vprDEBUG_FLUSH;
     status.setCode(Status::Failure);
 #endif
 
@@ -388,8 +395,9 @@ FileHandleUNIX::read_i (void* buffer, const size_t length,
             // If the error is EAGAIN and we are in non-blocking mode, we do not
             // bother to print the message.
             if ( ! (errno == EAGAIN && ! m_blocking) ) {
-                fprintf(stderr, "[vpr::FileHandleUNIX] Error reading from %s: %s\n",
-                        m_name.c_str(), strerror(errno));
+                vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+                    << "[vpr::FileHandleUNIX] Error reading from " << m_name
+                    << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
                 status.setCode(Status::Failure);
             }
 
@@ -398,8 +406,9 @@ FileHandleUNIX::read_i (void* buffer, const size_t length,
         // message.
         else if ( bytes_read == 0 && errno != 0 ) {
 //        errno != ENOENT
-            fprintf(stderr, "[vpr::FileHandleUNIX] Nothing read from %s: %s\n",
-                    m_name.c_str(), strerror(errno));
+            vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+                << "[vpr::FileHandleUNIX] Nothing read from " << m_name
+                << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
         }
     }
 
@@ -470,9 +479,9 @@ FileHandleUNIX::write_i (const void* buffer, const size_t length,
                 status.setCode(Status::WouldBlock);
             }
             else {
-                fprintf(stderr,
-                        "[vpr::FileHandleUNIX] Error writing to %s: %s\n",
-                        m_name.c_str(), strerror(errno));
+                vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+                    << "[vpr::FileHandleUNIX] Error writing to " << m_name
+                    << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
                 status.setCode(Status::Failure);
             }
         }
