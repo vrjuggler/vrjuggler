@@ -47,7 +47,7 @@ chunks used by Juggler beta1:
 <li><b>Flock</b> - Config for Flock of Birds tracking system driver
 <li><b>Position Proxy</b> - Proxy for a positional device (e.g. the Flock)
 <li><b>Performer API</b> - Setup info for Iris Performer-based apps
-</dl>
+</ul>
 
 When Juggler reads a configuration file, it compiles a list of all the 
 ConfigChunks in the file and then tries to find a Juggler component
@@ -80,8 +80,10 @@ the name of the serial port to connect to, the baud rate to use, the
 positional offset, and so on.  To illustrate, here's what it looks like when
 you view a single ConfigChunk in the vjcontrol program:
 
+<center>
 <p>
 <img alt="ConfigChunk Demo Pic" src="${VJCONTROL}/gfx/ConfigChunkPic.png"></img>
+</center>
 
 <p>
 "Instance Name" is the name of the Chunk - in this case, "flock_o_birds", 
@@ -127,14 +129,15 @@ in a ChunkDesc?  Information about all the properties in the Chunk,
 with their names, and types, and number of allowed values.  There's also
 help strings and other information used to make the vjcontrol program 
 a little more user-friendly.
-
+<p>
 Here's a breakdown of the contents of a ChunkDesc:
 
+<p>
 <ul>
 <li><b>Name</b> - This string is the name of the type of ConfigChunk this
 description defines.  In the examples we've used on this page, this would
 be something like "Surface Display" or "Flock".
-
+<p>
 <li><b>Token</b> - Usually this is a short form of the name - no whitespace
 allowed.  The token
 is used by the Juggler library to refer to the Chunk type.  This means
@@ -143,10 +146,10 @@ just change the way things are labeled in the vjcontrol GUI - but
 changing the token is a bad idea - Juggler could get confused and be
 unable to recognize or load Chunks.  So, once you define a token, don't
 change it unless you're prepared for the consequences.
-
+<p>
 <li><b>Help</b> - This is a short (one-line) help text, that should 
 contain a description of what Chunks using this ChunkDesc are used for.
-
+<p>
 <li>A list of property descriptions.  This list always contains one
 entry - Name.  That's the instance name property of a Chunk using this
 description, as opposed to the name of the description itself.
@@ -154,29 +157,30 @@ description, as opposed to the name of the description itself.
 what Chunks using this description are trying to do.  Here's what's
 in the description of a property:
 
+<p>
 <ul>
 <li><b>Name</b> - The name of a property is simply a text string used to refer to it by the GUI, like "Serial Port" or "X Display Name". 
-
+<p>
 <li><b>Token</b> - The token is a lot like the name, and they are often the same string. The difference is that the token is used internally, in the config
   file format, and in the library itself when querying the configuration database. The token is restricted in a way similar to C/C++
   variable names: no whitespace is permitted, and it may not begin with a number. 
-
+<p>
 <li><b>Type</b> - There are four primitive types for properties: strings, integers, floating-point numbers, and booleans. In addition to these four
   types, Property values can also refer to other ConfigChunks. Example: The ConfigChunk for "general setup" might have a
   Property that lists the active Displays. The type for this Property could just be a string (matching the name of a Display
   ConfigChunk), but we can also make the Property type be "name of a Display ConfigChunk". This lets the GUI be a little smarter
   and easier to use when editing that property - but more on that later. 
-
+<p>
 <li><b>Number</b> - Most Properties have single values. Other times, as with our "Position Offset" example, a Property may need a fixed number of
   values. It is also possible for a Property to have a variable number of values; the list of active Displays mentioned above would be a
   good example. There may be no active displays, there may be 6, or 2, or just 1. 
-
+<p>
 <li><b>Value Lists (optional)</b> - Sometimes a Property might have a certain number of appropriate choices. For example, the handedness of a glove is either "Left"
   or "Right", and it would be nice if our GUI could display those as choices to the user, instead of requiring them to type in a string.
   The configuration system supports this with enumerations, which are simply lists of the appropriate values for a Property.
   Enumerations for string Properties are just lists of string values, while enumerations for integer and float Properties map
   descriptive strings to numeric values.
-
+<p>
 <li><b>Value Labels (optional)</b> - Some properties need to have several
 values - for example three floating point numbers to define a point in 
 space.  In this case, we can include value labels - short strings, one
