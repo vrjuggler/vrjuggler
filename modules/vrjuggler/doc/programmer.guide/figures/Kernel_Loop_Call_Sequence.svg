@@ -10,40 +10,144 @@
         <path d="M0 0 L619 0 L619 680 L0 680 L0 0 Z" />
       </clipPath>
       <clipPath clipPathUnits="userSpaceOnUse" id="clipPath2">
-        <path d="M350 50 L350 116 L467 116 L467 50 Z" />
-      </clipPath>
-      <clipPath clipPathUnits="userSpaceOnUse" id="clipPath3">
-        <path d="M350 50 L350 106 L467 106 L467 50 Z" />
-      </clipPath>
-      <clipPath clipPathUnits="userSpaceOnUse" id="clipPath4">
         <path d="M500 50 L500 116 L606 116 L606 50 Z" />
       </clipPath>
-      <clipPath clipPathUnits="userSpaceOnUse" id="clipPath5">
+      <clipPath clipPathUnits="userSpaceOnUse" id="clipPath3">
         <path d="M500 50 L500 106 L606 106 L606 50 Z" />
       </clipPath>
-      <clipPath clipPathUnits="userSpaceOnUse" id="clipPath6">
-        <path d="M50 50 L50 116 L138 116 L138 50 Z" />
-      </clipPath>
-      <clipPath clipPathUnits="userSpaceOnUse" id="clipPath7">
-        <path d="M50 50 L50 106 L138 106 L138 50 Z" />
-      </clipPath>
-      <clipPath clipPathUnits="userSpaceOnUse" id="clipPath8">
+      <clipPath clipPathUnits="userSpaceOnUse" id="clipPath4">
         <path d="M220 50 L220 116 L308 116 L308 50 Z" />
       </clipPath>
-      <clipPath clipPathUnits="userSpaceOnUse" id="clipPath9">
+      <clipPath clipPathUnits="userSpaceOnUse" id="clipPath5">
         <path d="M220 50 L220 106 L308 106 L308 50 Z" />
       </clipPath>
+      <clipPath clipPathUnits="userSpaceOnUse" id="clipPath6">
+        <path d="M350 50 L350 116 L467 116 L467 50 Z" />
+      </clipPath>
+      <clipPath clipPathUnits="userSpaceOnUse" id="clipPath7">
+        <path d="M350 50 L350 106 L467 106 L467 50 Z" />
+      </clipPath>
+      <clipPath clipPathUnits="userSpaceOnUse" id="clipPath8">
+        <path d="M50 50 L50 116 L138 116 L138 50 Z" />
+      </clipPath>
+      <clipPath clipPathUnits="userSpaceOnUse" id="clipPath9">
+        <path d="M50 50 L50 106 L138 106 L138 50 Z" />
+      </clipPath>
       <clipPath clipPathUnits="userSpaceOnUse" id="clipPath10">
-        <path d="M14 254 L14 272 L131 272 L131 254 Z" />
+        <path d="M24 284 L24 302 L141 302 L141 284 Z" />
       </clipPath>
     </defs>
     <g style="fill:navy; stroke:navy;">
-      <rect x="353" y="53" width="116" style="clip-path:url(#clipPath1); stroke:none;" height="65" />
-      <rect x="350" y="50" width="116" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="65" />
-      <rect x="350" y="50" width="116" style="clip-path:url(#clipPath1); fill:none; stroke:black;" height="65" />
+      <rect x="503" y="53" width="105" style="clip-path:url(#clipPath1); stroke:none;" height="65" />
+      <rect x="500" y="50" width="105" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="65" />
+      <rect x="500" y="50" width="105" style="clip-path:url(#clipPath1); fill:none; stroke:black;" height="65" />
     </g>
     <g style="font-family:sans-serif;">
-      <text x="354" y="73" style="clip-path:url(#clipPath3); stroke:none;">vjGlDrawManager
+      <text x="504" y="73" style="clip-path:url(#clipPath3); stroke:none;">vjInputManager
+      </text>
+    </g>
+    <g>
+      <line x1="554" x2="554" y1="118" style="clip-path:url(#clipPath1); fill:none;" y2="128" />
+      <line x1="554" x2="554" y1="133" style="clip-path:url(#clipPath1); fill:none;" y2="143" />
+      <line x1="554" x2="554" y1="148" style="clip-path:url(#clipPath1); fill:none;" y2="158" />
+      <line x1="554" x2="554" y1="163" style="clip-path:url(#clipPath1); fill:none;" y2="173" />
+      <line x1="554" x2="554" y1="178" style="clip-path:url(#clipPath1); fill:none;" y2="188" />
+      <line x1="554" x2="554" y1="193" style="clip-path:url(#clipPath1); fill:none;" y2="203" />
+      <line x1="554" x2="554" y1="208" style="clip-path:url(#clipPath1); fill:none;" y2="218" />
+      <line x1="554" x2="554" y1="223" style="clip-path:url(#clipPath1); fill:none;" y2="233" />
+      <line x1="554" x2="554" y1="238" style="clip-path:url(#clipPath1); fill:none;" y2="248" />
+      <line x1="554" x2="554" y1="253" style="clip-path:url(#clipPath1); fill:none;" y2="263" />
+      <line x1="554" x2="554" y1="268" style="clip-path:url(#clipPath1); fill:none;" y2="278" />
+      <line x1="554" x2="554" y1="283" style="clip-path:url(#clipPath1); fill:none;" y2="293" />
+      <line x1="554" x2="554" y1="298" style="clip-path:url(#clipPath1); fill:none;" y2="308" />
+      <line x1="554" x2="554" y1="313" style="clip-path:url(#clipPath1); fill:none;" y2="323" />
+      <line x1="554" x2="554" y1="328" style="clip-path:url(#clipPath1); fill:none;" y2="338" />
+      <line x1="554" x2="554" y1="343" style="clip-path:url(#clipPath1); fill:none;" y2="353" />
+      <line x1="554" x2="554" y1="358" style="clip-path:url(#clipPath1); fill:none;" y2="368" />
+      <line x1="554" x2="554" y1="373" style="clip-path:url(#clipPath1); fill:none;" y2="383" />
+      <line x1="554" x2="554" y1="388" style="clip-path:url(#clipPath1); fill:none;" y2="398" />
+      <line x1="554" x2="554" y1="403" style="clip-path:url(#clipPath1); fill:none;" y2="413" />
+      <line x1="554" x2="554" y1="418" style="clip-path:url(#clipPath1); fill:none;" y2="428" />
+      <line x1="554" x2="554" y1="433" style="clip-path:url(#clipPath1); fill:none;" y2="443" />
+      <line x1="554" x2="554" y1="448" style="clip-path:url(#clipPath1); fill:none;" y2="458" />
+      <line x1="554" x2="554" y1="463" style="clip-path:url(#clipPath1); fill:none;" y2="473" />
+      <line x1="554" x2="554" y1="478" style="clip-path:url(#clipPath1); fill:none;" y2="488" />
+      <line x1="554" x2="554" y1="493" style="clip-path:url(#clipPath1); fill:none;" y2="503" />
+      <line x1="554" x2="554" y1="508" style="clip-path:url(#clipPath1); fill:none;" y2="518" />
+      <line x1="554" x2="554" y1="523" style="clip-path:url(#clipPath1); fill:none;" y2="533" />
+      <line x1="554" x2="554" y1="538" style="clip-path:url(#clipPath1); fill:none;" y2="548" />
+      <line x1="554" x2="554" y1="553" style="clip-path:url(#clipPath1); fill:none;" y2="563" />
+      <line x1="554" x2="554" y1="568" style="clip-path:url(#clipPath1); fill:none;" y2="578" />
+      <line x1="554" x2="554" y1="583" style="clip-path:url(#clipPath1); fill:none;" y2="593" />
+      <line x1="554" x2="554" y1="598" style="clip-path:url(#clipPath1); fill:none;" y2="608" />
+      <line x1="554" x2="554" y1="613" style="clip-path:url(#clipPath1); fill:none;" y2="623" />
+      <line x1="554" x2="554" y1="628" style="clip-path:url(#clipPath1); fill:none;" y2="638" />
+      <line x1="554" x2="554" y1="643" style="clip-path:url(#clipPath1); fill:none;" y2="653" />
+      <line x1="554" x2="554" y1="658" style="clip-path:url(#clipPath1); fill:none;" y2="668" />
+      <rect x="547" y="569" width="14" style="clip-path:url(#clipPath1); fill:none;" height="20" />
+      <rect x="548" y="570" width="13" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="19" />
+      <rect x="223" y="53" width="87" style="clip-path:url(#clipPath1); fill:navy; stroke:none;" height="65" />
+      <rect x="220" y="50" width="87" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="65" />
+      <rect x="220" y="50" width="87" style="clip-path:url(#clipPath1); fill:none;" height="65" />
+    </g>
+    <g style="font-family:sans-serif;">
+      <text x="239" y="73" style="clip-path:url(#clipPath5); stroke:none;">vjGlApp
+      </text>
+    </g>
+    <g>
+      <line x1="265" x2="265" y1="118" style="clip-path:url(#clipPath1); fill:none;" y2="128" />
+      <line x1="265" x2="265" y1="133" style="clip-path:url(#clipPath1); fill:none;" y2="143" />
+      <line x1="265" x2="265" y1="148" style="clip-path:url(#clipPath1); fill:none;" y2="158" />
+      <line x1="265" x2="265" y1="163" style="clip-path:url(#clipPath1); fill:none;" y2="173" />
+      <line x1="265" x2="265" y1="178" style="clip-path:url(#clipPath1); fill:none;" y2="188" />
+      <line x1="265" x2="265" y1="193" style="clip-path:url(#clipPath1); fill:none;" y2="203" />
+      <line x1="265" x2="265" y1="208" style="clip-path:url(#clipPath1); fill:none;" y2="218" />
+      <line x1="265" x2="265" y1="223" style="clip-path:url(#clipPath1); fill:none;" y2="233" />
+      <line x1="265" x2="265" y1="238" style="clip-path:url(#clipPath1); fill:none;" y2="248" />
+      <line x1="265" x2="265" y1="253" style="clip-path:url(#clipPath1); fill:none;" y2="263" />
+      <line x1="265" x2="265" y1="268" style="clip-path:url(#clipPath1); fill:none;" y2="278" />
+      <line x1="265" x2="265" y1="283" style="clip-path:url(#clipPath1); fill:none;" y2="293" />
+      <line x1="265" x2="265" y1="298" style="clip-path:url(#clipPath1); fill:none;" y2="308" />
+      <line x1="265" x2="265" y1="313" style="clip-path:url(#clipPath1); fill:none;" y2="323" />
+      <line x1="265" x2="265" y1="328" style="clip-path:url(#clipPath1); fill:none;" y2="338" />
+      <line x1="265" x2="265" y1="343" style="clip-path:url(#clipPath1); fill:none;" y2="353" />
+      <line x1="265" x2="265" y1="358" style="clip-path:url(#clipPath1); fill:none;" y2="368" />
+      <line x1="265" x2="265" y1="373" style="clip-path:url(#clipPath1); fill:none;" y2="383" />
+      <line x1="265" x2="265" y1="388" style="clip-path:url(#clipPath1); fill:none;" y2="398" />
+      <line x1="265" x2="265" y1="403" style="clip-path:url(#clipPath1); fill:none;" y2="413" />
+      <line x1="265" x2="265" y1="418" style="clip-path:url(#clipPath1); fill:none;" y2="428" />
+      <line x1="265" x2="265" y1="433" style="clip-path:url(#clipPath1); fill:none;" y2="443" />
+      <line x1="265" x2="265" y1="448" style="clip-path:url(#clipPath1); fill:none;" y2="458" />
+      <line x1="265" x2="265" y1="463" style="clip-path:url(#clipPath1); fill:none;" y2="473" />
+      <line x1="265" x2="265" y1="478" style="clip-path:url(#clipPath1); fill:none;" y2="488" />
+      <line x1="265" x2="265" y1="493" style="clip-path:url(#clipPath1); fill:none;" y2="503" />
+      <line x1="265" x2="265" y1="508" style="clip-path:url(#clipPath1); fill:none;" y2="518" />
+      <line x1="265" x2="265" y1="523" style="clip-path:url(#clipPath1); fill:none;" y2="533" />
+      <line x1="265" x2="265" y1="538" style="clip-path:url(#clipPath1); fill:none;" y2="548" />
+      <line x1="265" x2="265" y1="553" style="clip-path:url(#clipPath1); fill:none;" y2="563" />
+      <line x1="265" x2="265" y1="568" style="clip-path:url(#clipPath1); fill:none;" y2="578" />
+      <line x1="265" x2="265" y1="583" style="clip-path:url(#clipPath1); fill:none;" y2="593" />
+      <line x1="265" x2="265" y1="598" style="clip-path:url(#clipPath1); fill:none;" y2="608" />
+      <line x1="265" x2="265" y1="613" style="clip-path:url(#clipPath1); fill:none;" y2="623" />
+      <line x1="265" x2="265" y1="628" style="clip-path:url(#clipPath1); fill:none;" y2="638" />
+      <line x1="265" x2="265" y1="643" style="clip-path:url(#clipPath1); fill:none;" y2="653" />
+      <line x1="265" x2="265" y1="658" style="clip-path:url(#clipPath1); fill:none;" y2="668" />
+      <rect x="258" y="148" width="14" style="clip-path:url(#clipPath1); fill:none;" height="20" />
+      <rect x="259" y="149" width="13" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="19" />
+      <rect x="258" y="250" width="14" style="clip-path:url(#clipPath1); fill:none;" height="20" />
+      <rect x="259" y="251" width="13" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="19" />
+      <rect x="258" y="340" width="14" style="clip-path:url(#clipPath1); fill:none;" height="20" />
+      <rect x="259" y="341" width="13" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="19" />
+      <rect x="258" y="420" width="14" style="clip-path:url(#clipPath1); fill:none;" height="20" />
+      <rect x="259" y="421" width="13" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="19" />
+      <rect x="258" y="516" width="14" style="clip-path:url(#clipPath1); fill:none;" height="20" />
+      <rect x="259" y="517" width="13" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="19" />
+      <rect x="353" y="53" width="116" style="clip-path:url(#clipPath1); fill:navy; stroke:none;" height="65" />
+      <rect x="350" y="50" width="116" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="65" />
+      <rect x="350" y="50" width="116" style="clip-path:url(#clipPath1); fill:none;" height="65" />
+    </g>
+    <g style="font-family:sans-serif;">
+      <text x="354" y="73" style="clip-path:url(#clipPath7); stroke:none;">vjGlDrawManager
       </text>
     </g>
     <g>
@@ -98,121 +202,17 @@
       <rect x="403" y="388" width="13" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="92" />
       <rect x="427" y="470" width="14" style="clip-path:url(#clipPath1); fill:none;" height="20" />
       <rect x="428" y="471" width="13" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="19" />
-      <rect x="503" y="53" width="105" style="clip-path:url(#clipPath1); fill:navy; stroke:none;" height="65" />
-      <rect x="500" y="50" width="105" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="65" />
-      <rect x="500" y="50" width="105" style="clip-path:url(#clipPath1); fill:none;" height="65" />
-    </g>
-    <g style="font-family:sans-serif;">
-      <text x="504" y="73" style="clip-path:url(#clipPath5); stroke:none;">vjInputManager
-      </text>
-    </g>
-    <g>
-      <line x1="554" x2="554" y1="118" style="clip-path:url(#clipPath1); fill:none;" y2="128" />
-      <line x1="554" x2="554" y1="133" style="clip-path:url(#clipPath1); fill:none;" y2="143" />
-      <line x1="554" x2="554" y1="148" style="clip-path:url(#clipPath1); fill:none;" y2="158" />
-      <line x1="554" x2="554" y1="163" style="clip-path:url(#clipPath1); fill:none;" y2="173" />
-      <line x1="554" x2="554" y1="178" style="clip-path:url(#clipPath1); fill:none;" y2="188" />
-      <line x1="554" x2="554" y1="193" style="clip-path:url(#clipPath1); fill:none;" y2="203" />
-      <line x1="554" x2="554" y1="208" style="clip-path:url(#clipPath1); fill:none;" y2="218" />
-      <line x1="554" x2="554" y1="223" style="clip-path:url(#clipPath1); fill:none;" y2="233" />
-      <line x1="554" x2="554" y1="238" style="clip-path:url(#clipPath1); fill:none;" y2="248" />
-      <line x1="554" x2="554" y1="253" style="clip-path:url(#clipPath1); fill:none;" y2="263" />
-      <line x1="554" x2="554" y1="268" style="clip-path:url(#clipPath1); fill:none;" y2="278" />
-      <line x1="554" x2="554" y1="283" style="clip-path:url(#clipPath1); fill:none;" y2="293" />
-      <line x1="554" x2="554" y1="298" style="clip-path:url(#clipPath1); fill:none;" y2="308" />
-      <line x1="554" x2="554" y1="313" style="clip-path:url(#clipPath1); fill:none;" y2="323" />
-      <line x1="554" x2="554" y1="328" style="clip-path:url(#clipPath1); fill:none;" y2="338" />
-      <line x1="554" x2="554" y1="343" style="clip-path:url(#clipPath1); fill:none;" y2="353" />
-      <line x1="554" x2="554" y1="358" style="clip-path:url(#clipPath1); fill:none;" y2="368" />
-      <line x1="554" x2="554" y1="373" style="clip-path:url(#clipPath1); fill:none;" y2="383" />
-      <line x1="554" x2="554" y1="388" style="clip-path:url(#clipPath1); fill:none;" y2="398" />
-      <line x1="554" x2="554" y1="403" style="clip-path:url(#clipPath1); fill:none;" y2="413" />
-      <line x1="554" x2="554" y1="418" style="clip-path:url(#clipPath1); fill:none;" y2="428" />
-      <line x1="554" x2="554" y1="433" style="clip-path:url(#clipPath1); fill:none;" y2="443" />
-      <line x1="554" x2="554" y1="448" style="clip-path:url(#clipPath1); fill:none;" y2="458" />
-      <line x1="554" x2="554" y1="463" style="clip-path:url(#clipPath1); fill:none;" y2="473" />
-      <line x1="554" x2="554" y1="478" style="clip-path:url(#clipPath1); fill:none;" y2="488" />
-      <line x1="554" x2="554" y1="493" style="clip-path:url(#clipPath1); fill:none;" y2="503" />
-      <line x1="554" x2="554" y1="508" style="clip-path:url(#clipPath1); fill:none;" y2="518" />
-      <line x1="554" x2="554" y1="523" style="clip-path:url(#clipPath1); fill:none;" y2="533" />
-      <line x1="554" x2="554" y1="538" style="clip-path:url(#clipPath1); fill:none;" y2="548" />
-      <line x1="554" x2="554" y1="553" style="clip-path:url(#clipPath1); fill:none;" y2="563" />
-      <line x1="554" x2="554" y1="568" style="clip-path:url(#clipPath1); fill:none;" y2="578" />
-      <line x1="554" x2="554" y1="583" style="clip-path:url(#clipPath1); fill:none;" y2="593" />
-      <line x1="554" x2="554" y1="598" style="clip-path:url(#clipPath1); fill:none;" y2="608" />
-      <line x1="554" x2="554" y1="613" style="clip-path:url(#clipPath1); fill:none;" y2="623" />
-      <line x1="554" x2="554" y1="628" style="clip-path:url(#clipPath1); fill:none;" y2="638" />
-      <line x1="554" x2="554" y1="643" style="clip-path:url(#clipPath1); fill:none;" y2="653" />
-      <line x1="554" x2="554" y1="658" style="clip-path:url(#clipPath1); fill:none;" y2="668" />
-      <rect x="547" y="569" width="14" style="clip-path:url(#clipPath1); fill:none;" height="20" />
-      <rect x="548" y="570" width="13" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="19" />
       <rect x="53" y="53" width="87" style="clip-path:url(#clipPath1); fill:navy; stroke:none;" height="65" />
       <rect x="50" y="50" width="87" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="65" />
       <rect x="50" y="50" width="87" style="clip-path:url(#clipPath1); fill:none;" height="65" />
     </g>
     <g style="font-family:sans-serif;">
-      <text x="68" y="73" style="clip-path:url(#clipPath7); stroke:none;">vjKernel
+      <text x="68" y="73" style="clip-path:url(#clipPath9); stroke:none;">vjKernel
       </text>
     </g>
     <g>
       <rect x="88" y="119" width="14" style="clip-path:url(#clipPath1); fill:none;" height="549" />
       <rect x="89" y="120" width="13" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="548" />
-      <rect x="223" y="53" width="87" style="clip-path:url(#clipPath1); fill:navy; stroke:none;" height="65" />
-      <rect x="220" y="50" width="87" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="65" />
-      <rect x="220" y="50" width="87" style="clip-path:url(#clipPath1); fill:none;" height="65" />
-    </g>
-    <g style="font-family:sans-serif;">
-      <text x="239" y="73" style="clip-path:url(#clipPath9); stroke:none;">vjGlApp
-      </text>
-    </g>
-    <g>
-      <line x1="265" x2="265" y1="118" style="clip-path:url(#clipPath1); fill:none;" y2="128" />
-      <line x1="265" x2="265" y1="133" style="clip-path:url(#clipPath1); fill:none;" y2="143" />
-      <line x1="265" x2="265" y1="148" style="clip-path:url(#clipPath1); fill:none;" y2="158" />
-      <line x1="265" x2="265" y1="163" style="clip-path:url(#clipPath1); fill:none;" y2="173" />
-      <line x1="265" x2="265" y1="178" style="clip-path:url(#clipPath1); fill:none;" y2="188" />
-      <line x1="265" x2="265" y1="193" style="clip-path:url(#clipPath1); fill:none;" y2="203" />
-      <line x1="265" x2="265" y1="208" style="clip-path:url(#clipPath1); fill:none;" y2="218" />
-      <line x1="265" x2="265" y1="223" style="clip-path:url(#clipPath1); fill:none;" y2="233" />
-      <line x1="265" x2="265" y1="238" style="clip-path:url(#clipPath1); fill:none;" y2="248" />
-      <line x1="265" x2="265" y1="253" style="clip-path:url(#clipPath1); fill:none;" y2="263" />
-      <line x1="265" x2="265" y1="268" style="clip-path:url(#clipPath1); fill:none;" y2="278" />
-      <line x1="265" x2="265" y1="283" style="clip-path:url(#clipPath1); fill:none;" y2="293" />
-      <line x1="265" x2="265" y1="298" style="clip-path:url(#clipPath1); fill:none;" y2="308" />
-      <line x1="265" x2="265" y1="313" style="clip-path:url(#clipPath1); fill:none;" y2="323" />
-      <line x1="265" x2="265" y1="328" style="clip-path:url(#clipPath1); fill:none;" y2="338" />
-      <line x1="265" x2="265" y1="343" style="clip-path:url(#clipPath1); fill:none;" y2="353" />
-      <line x1="265" x2="265" y1="358" style="clip-path:url(#clipPath1); fill:none;" y2="368" />
-      <line x1="265" x2="265" y1="373" style="clip-path:url(#clipPath1); fill:none;" y2="383" />
-      <line x1="265" x2="265" y1="388" style="clip-path:url(#clipPath1); fill:none;" y2="398" />
-      <line x1="265" x2="265" y1="403" style="clip-path:url(#clipPath1); fill:none;" y2="413" />
-      <line x1="265" x2="265" y1="418" style="clip-path:url(#clipPath1); fill:none;" y2="428" />
-      <line x1="265" x2="265" y1="433" style="clip-path:url(#clipPath1); fill:none;" y2="443" />
-      <line x1="265" x2="265" y1="448" style="clip-path:url(#clipPath1); fill:none;" y2="458" />
-      <line x1="265" x2="265" y1="463" style="clip-path:url(#clipPath1); fill:none;" y2="473" />
-      <line x1="265" x2="265" y1="478" style="clip-path:url(#clipPath1); fill:none;" y2="488" />
-      <line x1="265" x2="265" y1="493" style="clip-path:url(#clipPath1); fill:none;" y2="503" />
-      <line x1="265" x2="265" y1="508" style="clip-path:url(#clipPath1); fill:none;" y2="518" />
-      <line x1="265" x2="265" y1="523" style="clip-path:url(#clipPath1); fill:none;" y2="533" />
-      <line x1="265" x2="265" y1="538" style="clip-path:url(#clipPath1); fill:none;" y2="548" />
-      <line x1="265" x2="265" y1="553" style="clip-path:url(#clipPath1); fill:none;" y2="563" />
-      <line x1="265" x2="265" y1="568" style="clip-path:url(#clipPath1); fill:none;" y2="578" />
-      <line x1="265" x2="265" y1="583" style="clip-path:url(#clipPath1); fill:none;" y2="593" />
-      <line x1="265" x2="265" y1="598" style="clip-path:url(#clipPath1); fill:none;" y2="608" />
-      <line x1="265" x2="265" y1="613" style="clip-path:url(#clipPath1); fill:none;" y2="623" />
-      <line x1="265" x2="265" y1="628" style="clip-path:url(#clipPath1); fill:none;" y2="638" />
-      <line x1="265" x2="265" y1="643" style="clip-path:url(#clipPath1); fill:none;" y2="653" />
-      <line x1="265" x2="265" y1="658" style="clip-path:url(#clipPath1); fill:none;" y2="668" />
-      <rect x="258" y="148" width="14" style="clip-path:url(#clipPath1); fill:none;" height="20" />
-      <rect x="259" y="149" width="13" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="19" />
-      <rect x="258" y="250" width="14" style="clip-path:url(#clipPath1); fill:none;" height="20" />
-      <rect x="259" y="251" width="13" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="19" />
-      <rect x="258" y="340" width="14" style="clip-path:url(#clipPath1); fill:none;" height="20" />
-      <rect x="259" y="341" width="13" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="19" />
-      <rect x="258" y="420" width="14" style="clip-path:url(#clipPath1); fill:none;" height="20" />
-      <rect x="259" y="421" width="13" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="19" />
-      <rect x="258" y="516" width="14" style="clip-path:url(#clipPath1); fill:none;" height="20" />
-      <rect x="259" y="517" width="13" style="clip-path:url(#clipPath1); fill:white; stroke:none;" height="19" />
       <line x1="102" x2="547" y1="569" style="clip-path:url(#clipPath1); fill:none; stroke:rgb(50,50,0);" y2="569" />
       <line x1="547" x2="537" y1="589" style="clip-path:url(#clipPath1); fill:none; stroke:rgb(50,50,0);" y2="589" />
       <line x1="532" x2="522" y1="589" style="clip-path:url(#clipPath1); fill:none; stroke:rgb(50,50,0);" y2="589" />
@@ -409,18 +409,18 @@
       <line x1="240" x2="258" y1="144" style="clip-path:url(#clipPath1); fill:none; font-family:sans-serif; stroke:rgb(50,50,0);" y2="148" />
       <text x="110" y="141" style="clip-path:url(#clipPath1); fill:rgb(50,50,0); font-family:sans-serif; stroke:none;"> init():void
       </text>
-      <polygon points=" 13 253 134 253 149 268 149 276 13 276" style="fill:navy; clip-path:url(#clipPath1); font-family:sans-serif; stroke:none;" />
-      <polygon points=" 10 250 131 250 146 265 146 273 10 273" style="fill:white; clip-path:url(#clipPath1); font-family:sans-serif; stroke:none;" />
-      <line x1="10" x2="131" y1="250" style="clip-path:url(#clipPath1); fill:none; font-family:sans-serif;" y2="250" />
-      <line x1="131" x2="146" y1="250" style="clip-path:url(#clipPath1); fill:none; font-family:sans-serif;" y2="265" />
-      <line x1="146" x2="146" y1="265" style="clip-path:url(#clipPath1); fill:none; font-family:sans-serif;" y2="273" />
-      <line x1="146" x2="10" y1="273" style="clip-path:url(#clipPath1); fill:none; font-family:sans-serif;" y2="273" />
-      <line x1="10" x2="10" y1="273" style="clip-path:url(#clipPath1); fill:none; font-family:sans-serif;" y2="250" />
-      <line x1="131" x2="131" y1="250" style="clip-path:url(#clipPath1); fill:none; font-family:sans-serif;" y2="265" />
-      <line x1="131" x2="146" y1="265" style="clip-path:url(#clipPath1); fill:none; font-family:sans-serif;" y2="265" />
+      <polygon points=" 23 283 144 283 159 298 159 306 23 306" style="fill:navy; clip-path:url(#clipPath1); font-family:sans-serif; stroke:none;" />
+      <polygon points=" 20 280 141 280 156 295 156 303 20 303" style="fill:white; clip-path:url(#clipPath1); font-family:sans-serif; stroke:none;" />
+      <line x1="20" x2="141" y1="280" style="clip-path:url(#clipPath1); fill:none; font-family:sans-serif;" y2="280" />
+      <line x1="141" x2="156" y1="280" style="clip-path:url(#clipPath1); fill:none; font-family:sans-serif;" y2="295" />
+      <line x1="156" x2="156" y1="295" style="clip-path:url(#clipPath1); fill:none; font-family:sans-serif;" y2="303" />
+      <line x1="156" x2="20" y1="303" style="clip-path:url(#clipPath1); fill:none; font-family:sans-serif;" y2="303" />
+      <line x1="20" x2="20" y1="303" style="clip-path:url(#clipPath1); fill:none; font-family:sans-serif;" y2="280" />
+      <line x1="141" x2="141" y1="280" style="clip-path:url(#clipPath1); fill:none; font-family:sans-serif;" y2="295" />
+      <line x1="141" x2="156" y1="295" style="clip-path:url(#clipPath1); fill:none; font-family:sans-serif;" y2="295" />
     </g>
     <g style="font-family:sans-serif;">
-      <text x="18" y="264" style="clip-path:url(#clipPath10); stroke:none;">while(running)
+      <text x="28" y="294" style="clip-path:url(#clipPath10); stroke:none;">while(running)
       </text>
     </g>
   </g>
