@@ -1546,6 +1546,8 @@ dnl #     * APP_VJ_LIBS_BASIC_INST: Same as the above but is for installed
 dnl #       Makefiles.
 dnl #     * APP_VJ_LIBS_GL: The VR Juggler OpenGL API library.
 dnl #     * APP_VJ_LIBS_PF: The VR Juggler Performer API library.
+dnl #     * APP_VJ_LIBS_AW: The VR Juggler AudioWorks API library.
+dnl #     * APP_VJ_LIBS_SL: The VR Juggler SL API library.
 dnl #     * APP_LIBS_BASIC: The _most basic_ basic libraries needed for
 dnl #       compiling (e.g., -lC).
 dnl #     * APP_EXTRA_LIBS_BEGIN: Options used at the beginning of the list
@@ -1555,13 +1557,13 @@ dnl #       libraries.
 dnl #     * APP_EXTRA_LIBS_BASIC: A basic set of extra libraries and linker
 dnl #       flags needed for compiling.  These are put after those listed in
 dnl #       the previous variables in the compile line.
-dnl #     * APP_VJ_LIBS_GL: The OpenGL libraries needed for compiling with
+dnl #     * APP_EXTRA_LIBS_GL: The OpenGL libraries needed for compiling with
 dnl #       the OpenGL API.
-dnl #     * APP_VJ_LIBS_PF: The Performer libraries needed for compiling
+dnl #     * APP_EXTRA_LIBS_PF: The Performer libraries needed for compiling
 dnl #       with the Performer API.
-dnl #     * APP_VJ_LIBS_AW: The AudioWorks libraries needed for compiling
+dnl #     * APP_EXTRA_LIBS_AW: The AudioWorks libraries needed for compiling
 dnl #       with the AudioWorks sound system.
-dnl #     * APP_VJ_LIBS_SL: The SL libraries needed for compiling with the
+dnl #     * APP_EXTRA_LIBS_SL: The SL libraries needed for compiling with the
 dnl #       SL sound libraries.
 dnl #
 APP_EXTRA_FLAGS="${_EXTRA_FLAGS}"
