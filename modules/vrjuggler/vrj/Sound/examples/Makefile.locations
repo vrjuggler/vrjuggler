@@ -1,8 +1,0 @@
-SOUNDENGINE_LIB = -L../ -lsoundengine
-AW_LIB = -L../aw -lsoundengine_aw
-SL_LIB = -L../sl -lsoundengine_sl
-SOUNDENGINE_INCLUDES = -I../
-
-############################################################
-ADDITIONAL_INCLUDES = $(SOUNDENGINE_INCLUDES) -I../../samples/pfNav/
-ADDITIONAL_LIBS = $(SL_LIB) $(AW_LIB) $(SOUNDENGINE_LIB)

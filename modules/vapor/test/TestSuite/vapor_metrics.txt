@@ -1,3 +1,0 @@
-gfxn1/Debug/GUIDTest/CreationOverhead                              0.96922
-gfxn1/Debug/Main/MetricTest                                        1221.75
-gfxn1/Debug/TSDataOverhead3                                        25.1299
