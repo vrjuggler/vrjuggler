@@ -230,7 +230,7 @@ void SimPosition::moveUp(const float amt)
 }
 
 /** Rotation amt around axis */
-void SimPosition::rotAxis(const float amt, const gmtl::Vec3f rotAxis)
+void SimPosition::rotAxis(const float amt, const gmtl::Vec3f& rotAxis)
 {
    // convert the input...
    gmtl::AxisAnglef axisAngle( gmtl::Math::deg2Rad(amt*mDRot), gmtl::makeNormal( rotAxis ) );
@@ -263,21 +263,21 @@ void SimPosition::rotAxis(const float amt, const gmtl::Vec3f rotAxis)
 // Pitch up - rot +x axis
 void SimPosition::rotUp(const float amt)
 {
-   static gmtl::Vec3f x_axis(1.0,0.0,0.0);
+   gmtl::Vec3f x_axis(1.0,0.0,0.0);
    rotAxis(amt, x_axis);
 }
 
 // Yaw left - rot +Y axis
 void SimPosition::rotLeft(const float amt)
 {
-   static gmtl::Vec3f y_axis(0.0, 1.0, 0.0);
+   gmtl::Vec3f y_axis(0.0, 1.0, 0.0);
    rotAxis(amt, y_axis);
 }
 
 // Roll Left - rot -z axis
 void SimPosition::rotRollCCW(const float amt)
 {
-   static gmtl::Vec3f neg_z_axis(0.0, 0.0, -1.0);
+   gmtl::Vec3f neg_z_axis(0.0, 0.0, -1.0);
    rotAxis(amt, neg_z_axis);
 }
 
