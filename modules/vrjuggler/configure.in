@@ -152,6 +152,7 @@ case $host in
         INCLUDES="$INCLUDES -I/usr/include/CC -I/usr/include"
         LD='ld'
         LIBOPTS='-shared -all -check_registry'
+        LDFLAGS="$LDFLAGS"
         LDOPTS=''
         OPT_FLAGS='-Olimit 2000'
         SHAREDLIB_EXT='so'
@@ -308,9 +309,6 @@ elif test -z "$THREADS" ; then
     AC_MSG_ERROR(No threading package defined!)
 fi
 
-
-
-
 #------------------------------------------
 # OPEN GL
 #------------------------------------------
@@ -385,17 +383,17 @@ if test "x$enable_opengl" = "xyes" ; then
     # If OpenGL API files were added, define this extra stuff that is used
     # in some Makefiles.
     if test ! -z "$OPENGL_API" ; then
-        LIBOPENGL='-L${OGLROOT} -lGLU -lGL -lXext'
+        LIBOPENGL="-L${OGLROOT} -lGLU -lGL -lXext"
 
         if test "$PLATFORM" = "HP" ; then
-            SYSTEM_OPENGL='${LIBOPENGL} -lX11 -lm -lC'
+            SYSTEM_OPENGL="$LIBOPENGL -lX11 -lm -lC"
         else
             if test "$OBJECT_STYLE" = "64" ; then
-                SYSTEM_OPENGL='-limage ${LIBOPENGL} -lXmu -lX11 -lm -lC'
+                SYSTEM_OPENGL="-limage $LIBOPENGL -lXmu -lX11 -lm -lC"
             elif test "$OBJECT_STYLE" = "32" ; then
-                SYSTEM_OPENGL='-lmpc -limage -lGLw ${LIBOPENGL} -lfpe -lXm -lXt -lXmu -lX11 -lm -lmalloc -lC'
+                SYSTEM_OPENGL="-lmpc -limage -lGLw $LIBOPENGL -lfpe -lXm -lXt -lXmu -lX11 -lm -lmalloc -lC"
             else
-                SYSTEM_OPENGL='-limage ${LIBOPENGL} -lXmu -lX11 -lm -lC'
+                SYSTEM_OPENGL="-limage $LIBOPENGL -lXmu -lX11 -lm -lC"
             fi
         fi
     # No OpenGL API files were added, so restore $INCLUDES and $LDFLAGS so
@@ -447,7 +445,6 @@ if test "x$enable_perf" = "xyes" ; then
     fi
 fi
 
-
 # -----------------------------------------------------------------------------
 # Checks for header files.
 # -----------------------------------------------------------------------------
@@ -477,7 +474,6 @@ dnl # All of the above function checks may not be necessary ...
 # -----------------------------------------------------------------------------
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
-
 if test "$PLATFORM" = "SGI" ; then
     CFLAGS="$CFLAGS -nostdinc -woff 1685,515,608,658,799,803,852,1048,1233,1499 -MDupdate Makedepend"
     CXXFLAGS="$CXXFLAGS -nostdinc -woff 3322 -w2 -MDupdate Makedepend"
@@ -519,6 +515,8 @@ cd "$topdir"
 # alternative to using ${srcdir}.
 VJ_SRCDIR='${VJROOT_ABS}'
 
+TEST_EXTRA_LIBS="$LDFLAGS -L${OGLROOT}/lib${LIBBITSUF} $OGLLIB $SYSTEM_OPENGL $LIBS"
+
 dnl # AC_SUBST(builddir)
 AC_SUBST(topdir)
 AC_SUBST(VJROOT_ABS)
@@ -546,11 +544,8 @@ AC_SUBST(DSOREGFILE)
 AC_SUBST(DSOVERSION)
 AC_SUBST(DSOVERSIONOPTS)
 
-AC_SUBST(OGLROOT)
-AC_SUBST(PFROOT)
-AC_SUBST(LIBOPENGL)
-AC_SUBST(OGLLIB)
-AC_SUBST(SYSTEM_OPENGL)
+#AC_SUBST(OGLROOT)
+#AC_SUBST(PFROOT)
 
 AC_SUBST(OPENGL_API)
 AC_SUBST(PERFORMER_API)
@@ -558,6 +553,8 @@ AC_SUBST(PERFORMER_API)
 AC_SUBST(SHMEM_SYS)
 AC_SUBST(SYNC_SYS)
 AC_SUBST(THREAD_SYS)
+
+AC_SUBST(TEST_EXTRA_LIBS)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
@@ -570,4 +567,4 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Math/Makefile
           Threads/Makefile test/Makefile test/CfgTest/Makefile
           test/input/Makefile test/ogl/Makefile test/ogl/cubes/Makefile
           test/ogl/wand/Makefile test/pfNav/Makefile test/Sync/Makefile
-	  test/Quat/Makefile)
+          test/Quat/Makefile test/testDynamicCastSTL/Makefile)
