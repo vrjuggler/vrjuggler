@@ -80,6 +80,7 @@ BEANS		= Viewers
 
 TWEEK_CLASSES	= org/vrjuggler/tweek/*.class			\
                   org/vrjuggler/tweek/services/*.class
+TWEEK_EXTRAS	= org/vrjuggler/tweek/*.gif
 
 BEANS_MF	= $(srcdir)/beans.MF
 BEANS_CLASSES	= org/vrjuggler/tweek/beans/*.class		\
@@ -106,6 +107,7 @@ jars: $(JARS) $(addsuffix .jar, $(BEANS))
 
 Tweek.jar: $(TWEEK_CLASSES)
 	$(JAR) cvf $@ $(TWEEK_CLASSES)
+	cd $(srcdir) && $(JAR) uvf $(topdir)/java/$@ $(TWEEK_EXTRAS)
 
 TweekComm.jar: $(COMM_CLASSES)
 	$(JAR) cvf $@ $(COMM_CLASSES)
