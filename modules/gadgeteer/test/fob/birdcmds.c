@@ -1,76 +1,34 @@
-/****************************************************************************
-*****************************************************************************
-    birdcmds        - Bird Command Routines
-
-    written for:    Ascension Technology Corporation
-		    PO Box 527
-		    Burlington, Vermont  05402
-		    802-655-7879
-
-    by:             Jeff Finkelstein
-		    802-985-2535
-
-
-    Modification History:
-	  10/18/90  jf - released
-	  10/24/90  jf - modified trap for 1.00 in birdanglealign to be 0x7fff
-	  11/12/90  jf - add new commands
-	  11/29/90  jf - added 'Hit 'B' Key...' to checkdone
-			 added the dislay of retrace count to display CRT
-			 Pick Display
-	  2/4/91    jf - added code to display the button value if enabled
-		       - modified change/examine filter strings to reflect
-			 Wide/Narrow Notch filters
-		       - fixed negative angle bug in bird_referframe
-	  2/20/91   jf - added initialization of factory test mode to
-			 birdloadconfig
-	  3/16/91   jf - added new selection for CRT Sync for Fast Vertical
-			 retrace (> 70 Hz)
-	  4/25/91   jf - added restoreconsole to exit() condition for UNIX
-			 compatibility
-	  4/29/91   jf - fixed bug in checkdone(), STREAM mode to assure
-			 a TRUE return if a key is hit
-	  9/17/91   jf - added new change and examine value commands
-			 for the FBB
-		    jf - added posk global for POSK36 and POSK72
-	  10/18/91  jf - modified max measurement rate to 144 Hz
-	  11/1/91   jf - added chg/exm alpha max and glitch checking
-	  11/10/91  jf - changed 'glitch checking' to 'sudden output change'
-	  11/18/91  jf - changed max CRT sync to 72 Hz
-	  1/3/92    jf - fixed bug in shutting off button mode
-	  2/25/92   jf - added showfbbconfig from cmdutil.c
-	  3/23/92   jf - modified Alpha Min/Max to 7 word tables
-	  4/7/92    jf - added data file streaming to all the orientation
-			 modes
-		    jf - modified operation of chg/exm Error Mask
-		    jf - modified measurement rate const to 0.3 for
-			 ROMs 3.28 and 4.11
-	  4/20/92   mo - added new functions bird_quaternions(),
-			 bird_posquaternions() ,fprintquaternions()
-			 and printquaternions().
-	  6/1/92    jf - updated examine value to reflect new status 
-			 definitions
-	  6/9/92    jf - removed save config from change and examine value
-		    jf - added examine extended error code
-	  12/22/92  jf - updated for CPU independence...high byte/low byte
-			 order now handled at run time to be compatible
-			 with Motorola and RISC CPUs
-	  1/26/93   jf - removed individual pos/orient cmds and replaced
-			 them with getsinglebirddata
-	  2/23/93   jf - added ERC filter values and text strings
-	  5/18/94   sw - added Normal/expanded address mode detection
-			 for examine birdstatus
-	  5/23/94   sw - added XYZ Reference frame change value / examine value 
-		       - corrected errors in filter distance labels
-	  12/20/94  sw - added routines to run error statistics.
-	   5/11/95  sw - removed addressing mode check on examine value, unless
-			 command will need that information.                         
-	   6/6/95   sw - Placed \r into new printf statements to work with unix systems.
-
-	   <<<< Copyright 1990 Ascension Technology Corporation >>>>
-*****************************************************************************
-****************************************************************************/
-#include <stdio.h>          /* general I/O */
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <math.h>           /* trig math funcs */
 #include "asctech.h"        /* general definitions */
 #include "compiler.h"       /* Compiler Specific Header */
