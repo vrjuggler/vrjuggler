@@ -356,11 +356,14 @@ UNIX_GADGETROOT_ABS="$GADGETROOT_ABS"
 # application.
 if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS="$LDFLAGS $JCCL_LIBS_LD_MIN $JCCL_EXTRA_LIBS_LD_MIN $VPR_LIBS_LD_MIN $LIBS $VPR_EXTRA_LIBS_LD_MIN"
+    APP_EXTRA_PROF_LIBS="$APP_EXTRA_LIBS"
 else
     APP_EXTRA_LIBS="$LDFLAGS $JCCL_LIBS_CC_MIN $JCCL_EXTRA_LIBS_CC_MIN $VPR_LIBS_CC_MIN $LIBS $DTK_LDFLAGS $VPR_EXTRA_LIBS_CC_MIN"
+    APP_EXTRA_PROF_LIBS="$LDFLAGS $JCCL_PROF_LIBS_CC_MIN $JCCL_EXTRA_LIBS_CC_MIN $VPR_PROF_LIBS_CC_MIN $LIBS $DTK_LDFLAGS $VPR_EXTRA_LIBS_CC_MIN"
 
     if test "x$PLATFORM" = "xDarwin" ; then
        APP_EXTRA_LIBS="$APP_EXTRA_LIBS -framework Carbon"
+       APP_EXTRA_PROF_LIBS="$APP_EXTRA_PROF_LIBS -framework Carbon"
     fi
 fi
 
@@ -373,9 +376,10 @@ VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT,
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(GADGET_BASE_DIR)'
 
-if test "$OS_TYPE" = "UNIX" ; then
-    DYLIB_DEPS="$APP_EXTRA_LIBS"
+DYLIB_DEPS="$APP_EXTRA_LIBS"
+DYLIB_PROF_DEPS="$APP_EXTRA_PROF_LIBS"
 
+if test "$OS_TYPE" = "UNIX" ; then
     if test "x$x_includes" != "xNONE" -a "x$x_includes" != "x" ; then
         INCLUDES="$INCLUDES -I$x_includes"
         gadget_cxxflags="$gadget_cxxflags -I$x_includes"
@@ -386,8 +390,6 @@ if test "$OS_TYPE" = "UNIX" ; then
     fi
 
     APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11 -lXext"
-elif test "$OS_TYPE" = "Win32" ; then
-    DYLIB_DEPS="$APP_EXTRA_LIBS"
 fi
 
 # Translate paths from UNIX-style to Win32.
@@ -472,6 +474,7 @@ AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
 
 AC_SUBST(DYLIB_DEPS)
+AC_SUBST(DYLIB_PROF_DEPS)
 
 AC_SUBST(APP_EXTRA_LIBS_X11)
 
