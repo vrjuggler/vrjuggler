@@ -348,6 +348,11 @@ public class ConfigContextModel
 
       DefaultMutableTreeNode cat_node = new DefaultMutableTreeNode(category);
       insertNodeInto(cat_node, parent_node, insert_idx);
+      
+      // Inform all listeners of the change. This seems to only be an issue
+      // when adding the first category.
+      reload();
+
       return cat_node;
    }
 
