@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings desc.db.version="2.1"?>
+<ChunkDescDB>
+  <ChunkDesc token="ConfigApp" name="ConfigApp">
+    <category>Application</category>
+    <help>This is an application-specific configuration definition for use with the ConfigApp OpenGL sample application.</help>
+    <PropertyDesc name="Lower left corner color" token="lowerLeftColor" type="float" variable="0">
+      <item label="Red value" defaultvalue="1.0" />
+      <item label="Green value" defaultvalue="0.0" />
+      <item label="Blue value" defaultvalue="0.0" />
+      <help>Specifies the RGB values for the lower left corner color.</help>
+    </PropertyDesc>
+    <PropertyDesc name="Lower right corner color" token="lowerRightColor" type="float" variable="0">
+      <item label="Red value" defaultvalue="1.0" />
+      <item label="Green value" defaultvalue="0.0" />
+      <item label="Blue value" defaultvalue="0.0" />
+      <help>Specifies the RGB values for the lower right corner color.</help>
+    </PropertyDesc>
+    <PropertyDesc name="Upper right corner color" token="upperRightColor" type="float" variable="0">
+      <item label="Red value" defaultvalue="1.0" />
+      <item label="Green value" defaultvalue="0.0 " />
+      <item label="Blue value" defaultvalue="0.0" />
+      <help>Specifies the RGB values for the upper right corner color.</help>
+    </PropertyDesc>
+    <PropertyDesc name="Upper left corner color" token="upperLeftColor" type="float" variable="0">
+      <item label="Red value" defaultvalue="1.0" />
+      <item label="Green value" defaultvalue="0.0 " />
+      <item label="Blue value" defaultvalue="0.0" />
+      <help>Specifies the RGB values for the upper left corner color.</help>
+    </PropertyDesc>
+  </ChunkDesc>
+</ChunkDescDB>
+
