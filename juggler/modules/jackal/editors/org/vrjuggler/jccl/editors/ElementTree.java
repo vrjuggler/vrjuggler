@@ -80,6 +80,90 @@ class ConfigElementSelection implements ClipboardOwner, Transferable
 }
 
 /**
+ * Returns a component used to edit the name of the ConfigElement in the JTree.
+ */
+class AronsEditor implements TreeCellEditor
+{
+   /**
+    * Returns a component that will be used to edit the name of the
+    * ConfigElement.
+    */
+   public Component getTreeCellEditorComponent(JTree tree,
+                                            Object value,
+                                            boolean isSelected,
+                                            boolean expanded,
+                                            boolean leaf,
+                                            int row)
+   {
+      // Get a reference to the selected TreeNode.
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
+     
+      if(!(node.getUserObject() instanceof ConfigElement))
+      {
+         throw new IllegalArgumentException("Error: "
+               + "The selected node contains an object with type:" 
+               + node.getUserObject().getClass());
+      }
+     
+      // Get a reference to the selected ConfigElement.
+      mElement = (ConfigElement)node.getUserObject();
+      mTextField = new JTextField(mElement.getName());
+     
+      final JTree temp_tree = tree;
+      
+      // Specify what should happen when done editing.
+      mTextField.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            // Force the focus to be lost.
+            //mTextField.transferFocusUpCycle();
+            // Force the focus to be transfered to the next component.
+            //mTextField.transferFocus();
+            
+            // This is no longer needed since the above line will force a
+            // focusLostEvent. But I have choosen to leave this line here in
+            // case it might become useful later.
+            stopCellEditing();
+            temp_tree.clearSelection();
+         }
+      });
+      
+      mTextField.addFocusListener(new FocusAdapter()
+      {
+         public void focusLost(FocusEvent evt)
+         {
+            stopCellEditing();
+         }
+      });
+      
+      return mTextField;
+   }
+   public Object getCellEditorValue()
+   {
+      return mElement;
+   }
+   public boolean isCellEditable(EventObject anEvent)
+   { return true; }
+   public boolean shouldSelectCell(EventObject anEvent)
+   { return true; }
+   public boolean stopCellEditing()
+   {
+      System.out.println("Stop Cell Editing...");
+      mElement.setName(mTextField.getText());      
+      return true; 
+   }
+   public void cancelCellEditing()
+   {;}
+   public void addCellEditorListener(CellEditorListener l)
+   {;}
+   public void removeCellEditorListener(CellEditorListener l)
+   {;}
+
+   private JTextField      mTextField  = null;
+   private ConfigElement   mElement    = null;
+}
+/**
  * A JTree that allows us to transfer ConfigElements to/from other ElementTrees
  * in other contexts.
  */
@@ -97,6 +181,14 @@ class ElementTree extends JTree implements DragGestureListener,
    public ElementTree()
    {
       super();
+      
+      // Allow the user to change the name of a leaf node(an element)
+      setEditable(true);
+     
+      //setCellEditor(new DefaultTreeCellEditor(this, new DefaultTreeCellRenderer()));
+      setCellEditor(new DefaultTreeCellEditor(this, new DefaultTreeCellRenderer(), new AronsEditor()));
+
+      
       DragSource dragSource = DragSource.getDefaultDragSource();
       
       // Create a new drop target. We do not need to keep a reference to this
