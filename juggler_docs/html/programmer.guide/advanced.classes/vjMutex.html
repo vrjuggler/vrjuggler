@@ -44,7 +44,7 @@
   </OL>
 <!-- install-web toc-end -->
 
-<A NAME="intro"><H4>Introduction</H4></A>
+<A NAME="intro"><H3>Introduction</H3></A>
 
   <P>
     In addition to cross-platform
@@ -56,7 +56,7 @@
     <TT>vjMutex</TT> interface provided with and used by VR Juggler.
   </P>
 
-<A NAME="high-level"><H4>High-Level Description</H4></A>
+<A NAME="high-level"><H3>High-Level Description</H3></A>
 
   <P>
     The cross-platform mutex abstraction in VR Juggler is critical for
@@ -72,7 +72,7 @@
     documentation will be expanded.
   </P>
 
-<A NAME="use"><H4>Using <TT>vjMutex</TT></H4></A>
+<A NAME="use"><H3>Using <TT>vjMutex</TT></H3></A>
 
   <P>
     At this point, if you have read the preceding sections in the
@@ -81,7 +81,7 @@
     <TT>Sync/vjMutex.h</TT>.  I bet you didn't see that coming.
   </P>
 
-<A NAME="creating"><H5>Creating a <TT>vjMutex</TT></H5></A>
+<A NAME="creating"><H4>Creating a <TT>vjMutex</TT></H4></A>
 
   <P>
     When you create a <TT>vjMutex</TT> object, there are no special
@@ -96,7 +96,7 @@
     There is nothing more to say this time.
   </P>
 
-<A NAME="acquire"><H5>Locking a Mutex</H5></A>
+<A NAME="acquire"><H4>Locking a Mutex</H4></A>
 
   <P>
     When a thread needs to acquire access to shared data, it can lock a
@@ -120,7 +120,7 @@
     attempt to lock the semaphore fails for some reason, -1 is returned.
   </P>
 
-<A NAME="tryacquire"><H5>Attempting to Lock a Mutex</H5></A>
+<A NAME="tryacquire"><H4>Attempting to Lock a Mutex</H4></A>
 
   <P>
     If you want to lock a mutex only when the call would not block, a method
@@ -135,7 +135,7 @@
     If the mutex is locked, 1 is returned.  Otherwise, 0 is returned.
   </P>
 
-<A NAME="test"><H5>Testing the State of a Mutex</H5></A>
+<A NAME="test"><H4>Testing the State of a Mutex</H4></A>
 
   <P>
     In addition to conditionally locking, you can test the state of a mutex
@@ -152,7 +152,7 @@
     returned.
   </P>
 
-<A NAME="release"><H5>Releasing a Locked Mutex</H5></A>
+<A NAME="release"><H4>Releasing a Locked Mutex</H4></A>
 
   <P>
     When you are done accessing the shared data, you release the lock you
@@ -166,7 +166,7 @@
     Otherwise, -1 is returned.
   </P>
 
-<A NAME="details"><H4>The Gory Details</H4></A>
+<A NAME="details"><H3>The Gory Details</H3></A>
 
   <P>
     If you have read the Gory Details sections for

@@ -92,7 +92,7 @@
   </OL>
 <!-- install-web toc-end -->
 
-<A NAME="intro"><H4>Introduction</H4></A>
+<A NAME="intro"><H3>Introduction</H3></A>
 
   <P>
     This document is intended to provide an introduction into how the
@@ -104,7 +104,7 @@
     description of the internal C++ details of <TT>vjMatrix</TT>.
   </P>
 
-<A NAME="high-level"><H4>High-Level Description</H4></A>
+<A NAME="high-level"><H3>High-Level Description</H3></A>
 
   <P>
     Abstractly, <TT>vjMatrix</TT> represents a 4x4
@@ -212,7 +212,7 @@
     continue on to learn about the <TT>vjMatrix</TT> class at the C++ level.
   </P>
 
-<A NAME="use"><H4>Using <TT>vjMatrix</TT></H4></A>
+<A NAME="use"><H3>Using <TT>vjMatrix</TT></H3></A>
 
   <P>
     Keeping the idea of a normal mathematical matrix in mind, you are now
@@ -226,7 +226,7 @@
     We begin with creating the objects and setting their values.
   </P>
 
-<A NAME="creating"><H5>Creating Matrices and Setting Their Values</H5></A>
+<A NAME="creating"><H4>Creating Matrices and Setting Their Values</H4></A>
 
   <P>
     Before you can do anything with matrices, you will need to create some
@@ -312,7 +312,7 @@
     are row-major.
   </P>
 
-<A NAME="assignment"><H5>Assignment</H5></A>
+<A NAME="assignment"><H4>Assignment</H4></A>
 
   <P>
     Assigning one <TT>vjMatrix</TT> to another happens using the normal
@@ -330,7 +330,7 @@
     be a slow operation.
   </P>
 
-<A NAME="equality"><H5>Equality/Inequality Comparison</H5></A>
+<A NAME="equality"><H4>Equality/Inequality Comparison</H4></A>
 
   <P>
     To compare the equality of two matrices, you have three available
@@ -376,7 +376,7 @@
     You can use whichever method is most convenient for your needs.
   </P>
 
-<A NAME="transpose"><H5>Transposing</H5></A>
+<A NAME="transpose"><H4>Transposing</H4></A>
 
   <P>
     The transpose operation works conceptually as
@@ -394,7 +394,7 @@
     reference to be efficient.
   </P>
 
-<A NAME="invert"><H5>Finding the Inverse</H5></A>
+<A NAME="invert"><H4>Finding the Inverse</H4></A>
 
   <P>
     Finding the inverse works conceptually as
@@ -412,7 +412,7 @@
     reference to be efficient.
   </P>
 
-<A NAME="add"><H5>Addition</H5></A>
+<A NAME="add"><H4>Addition</H4></A>
 
   <P>
     For the addition operation, the interface is defined so that the sum
@@ -446,7 +446,7 @@
     The result is stored (via a copy) in <TT>mat3</TT>.
   </P>
 
-<A NAME="sub"><H5>Subtraction</H5></A>
+<A NAME="sub"><H4>Subtraction</H4></A>
 
   <P>
     For the subtraction operation, the interface is defined so that the
@@ -480,7 +480,7 @@
     The result is stored (via a copy) in <TT>mat3</TT>.
   </P>
 
-<A NAME="mult"><H5>Multiplication</H5></A>
+<A NAME="mult"><H4>Multiplication</H4></A>
 
   <P>
     For the multiplication operation, the interface is defined so that the
@@ -565,7 +565,7 @@
     the result of the multiplication is stored in <TT>mat1</TT>.
   </P>
 
-<A NAME="scale"><H5>Scaling by a Scalar Value</H5></A>
+<A NAME="scale"><H4>Scaling by a Scalar Value</H4></A>
 
   <P>
     Scaling the values of a matrix by a scalar value can be done using
@@ -618,7 +618,7 @@
     <TT>mat2</TT>.
   </P>
 
-<A NAME="makeIdent"><H5>Creating an Identity Matrix Quickly</H5></A>
+<A NAME="makeIdent"><H4>Creating an Identity Matrix Quickly</H4></A>
 
   <P>
     In computer graphics, an identity matrix is often needed when doing
@@ -637,7 +637,7 @@
     achive the same result, but that's hardly the point of the example.
   </P>
 
-<A NAME="zero"><H5>Zeroing a Matrix in a Single Step</H5></A>
+<A NAME="zero"><H4>Zeroing a Matrix in a Single Step</H4></A>
 
   <P>
     Before using a matrix, it is often helpful to zero it out to ensure
@@ -654,8 +654,8 @@
     The result is that all elements of <TT>mat1</TT> are now 0.0.
   </P>
 
-<A NAME="euler"><H5>Creating an XYZ, a ZYX or a ZXY Euler Rotation
-Matrix</H5></A>
+<A NAME="euler"><H4>Creating an XYZ, a ZYX or a ZXY Euler Rotation
+Matrix</H4></A>
 
   <P>
     All the rotation information for a transform can be contained in a
@@ -692,8 +692,8 @@ Matrix</H5></A>
     values can be returned in them.
   </P>
 
-<A NAME="constrain"><H5>Constraining Rotation About a Specific Axis or
-Axes</H5></A>
+<A NAME="constrain"><H4>Constraining Rotation About a Specific Axis or
+Axes</H4></A>
 
   <P>
     In a matrix that has rotations about more than one axis, it may be
@@ -718,7 +718,7 @@ Axes</H5></A>
     of the constrained transformations are stored in it.
   </P>
 
-<A NAME="dircos"><H5>Making a Matrix Using Direction Cosines</H5></A>
+<A NAME="dircos"><H4>Making a Matrix Using Direction Cosines</H4></A>
 
   <P>
     Creating a direction cosine matrix is another part of the
@@ -738,7 +738,7 @@ Axes</H5></A>
     The result is that <TT>mat</TT> becomes a direction cosine matrix.
   </P>
 
-<A NAME="makeQuat"><H5>Making a Matrix from a Quaternion</H5></A>
+<A NAME="makeQuat"><H4>Making a Matrix from a Quaternion</H4></A>
 
   <P>
     Converting a <A HREF="${GLOSSARY}">quaternion</A> to its corresponding
@@ -772,8 +772,8 @@ Axes</H5></A>
     matrix represented by the quaternion.
   </P>
 
-<A NAME="makeRot"><H5>Making a Rotation Transformation Matrix About a
-Single Axis</H5></A>
+<A NAME="makeRot"><H4>Making a Rotation Transformation Matrix About a
+Single Axis</H4></A>
 
   <P>
     To make a rotation matrix where the rotation is about a single axis,
@@ -837,7 +837,7 @@ Single Axis</H5></A>
     order.
   </P>
 
-<A NAME="makeTrans"><H5>Making a Translation Transformation Matrix</H5></A>
+<A NAME="makeTrans"><H4>Making a Translation Transformation Matrix</H4></A>
 
   <P>
     To make a translation matrix, there are two methods with each having
@@ -948,7 +948,7 @@ Single Axis</H5></A>
     reminder that it comes first in the multiplication order.
   </P>
 
-<A NAME="makeScale"><H5>Making a Scale Transformation Matrix</H5></A>
+<A NAME="makeScale"><H4>Making a Scale Transformation Matrix</H4></A>
 
   <P>
     To make a transformation matrix that only scales, a simple method is
@@ -1005,7 +1005,7 @@ Single Axis</H5></A>
     reminder that it comes first in the multiplication order.
   </P>
 
-<A NAME="extract"><H5>Extracting Specific Transformation Information</H5></A>
+<A NAME="extract"><H4>Extracting Specific Transformation Information</H4></A>
 
   <P>
     Finally, methods are provided for extracting transformations from a
@@ -1080,7 +1080,7 @@ Single Axis</H5></A>
     That's all there is to reading translations.
   </P>
 
-<A NAME="pfMatrix"><H5>Converting to a Performer Matrix</H5></A>
+<A NAME="pfMatrix"><H4>Converting to a Performer Matrix</H4></A>
 
   <P>
     SGI's OpenGL Performer likes to work with its own <TT>pfMatrix</TT>
@@ -1116,7 +1116,7 @@ Single Axis</H5></A>
     functions are found in the header <TT>Kernel/Pf/vjPfUtil.h</TT>.
   </P>
 
-<A NAME="details"><H4>The Gory Details</H4></A>
+<A NAME="details"><H3>The Gory Details</H3></A>
 
   <P>
     Now it's time for the really nasty part.  Reading this could cause

@@ -53,7 +53,7 @@
   </OL>
 <!-- install-web toc-end -->
 
-<A NAME="intro"><H4>Introduction</H4></A>
+<A NAME="intro"><H3>Introduction</H3></A>
 
   <P>
     When considering multithreaded programming, Spider-Man would most
@@ -78,7 +78,7 @@
     <A HREF="${GLOSSARY}#mutex">mutexes</A>.
   </P>
 
-<A NAME="reading"><H4>Recommended Reading</H4></A>
+<A NAME="reading"><H3>Recommended Reading</H3></A>
 
   <P>
     Before reading this sections, it is assumed that you already know the
@@ -112,7 +112,7 @@
     </UL>
   </P>
 
-<A NAME="high-level"><H4>High-Level Description</H4></A>
+<A NAME="high-level"><H3>High-Level Description</H3></A>
 
   <P>
     The threading interface in VR Juggler is modeled after the POSIX
@@ -151,7 +151,7 @@
     interface is the focus of this section.
   </P>
 
-<A NAME="use"><H4>Using <TT>vjThread</TT></H4></A>
+<A NAME="use"><H3>Using <TT>vjThread</TT></H3></A>
 
   <P>
     Use of <TT>vjThread</TT> is intended to be easy.  Multithreaded
@@ -181,7 +181,7 @@
     The single file <TT>Thread/vjThread.h</TT> is all you ever need.
   </P>
 
-<A NAME="creating"><H5>Creating <TT>vjThread</TT>s</H5></A>
+<A NAME="creating"><H4>Creating <TT>vjThread</TT>s</H4></A>
 
   <P>
     On with the code examples!  The following example illustrates how to
@@ -248,7 +248,7 @@
     allocated for the argument structure before the thread exits, of course.
   </P>
 
-<A NAME="join"><H5>Waiting for a Thread to Complete</H5></A>
+<A NAME="join"><H4>Waiting for a Thread to Complete</H4></A>
 
   <P>
     Once we have a thread running, it is often useful to synchronize
@@ -294,7 +294,7 @@
     platforms in a future release.
   </P>
 
-<A NAME="suspend"><H5>Suspending and Resuming a Thread's Execution</H5></A>
+<A NAME="suspend"><H4>Suspending and Resuming a Thread's Execution</H4></A>
 
   <P>
     Sometimes, you may want to suspend a running thread's execution and
@@ -318,7 +318,7 @@
     error status.
   </P>
 
-<A NAME="priority"><H5>Getting and Setting a Thread's Priority</H5></A>
+<A NAME="priority"><H4>Getting and Setting a Thread's Priority</H4></A>
 
   <P>
     Changing the priority of a thread tells the underlying operating
@@ -359,7 +359,7 @@
     error status.
   </P>
 
-<A NAME="signal"><H5>Sending Signals to a Thread</H5></A>
+<A NAME="signal"><H4>Sending Signals to a Thread</H4></A>
 
   <P>
     On UNIX systems, a signal is sent to a process using the
@@ -398,7 +398,7 @@
     occurred.
   </P>
 
-<A NAME="cancel"><H5>Cancelling a Thread's Execution</H5></A>
+<A NAME="cancel"><H4>Cancelling a Thread's Execution</H4></A>
 
   <P>
     As described in the <A HREF="#signal">previous section</A>, using the
@@ -428,7 +428,7 @@
     thread implementations.
   </P>
 
-<A NAME="self"><H5>Requesting the Current Thread's Identifier</H5></A>
+<A NAME="self"><H4>Requesting the Current Thread's Identifier</H4></A>
 
   <P>
     Lastly, it is common to request the currently running thread's
@@ -450,7 +450,7 @@
     described operations on the current thread.
   </P>
 
-<A NAME="details"><H4>The Gory Details</H4></A>
+<A NAME="details"><H3>The Gory Details</H3></A>
 
   <P>
     The current threading implementation in VR Juggler is a little

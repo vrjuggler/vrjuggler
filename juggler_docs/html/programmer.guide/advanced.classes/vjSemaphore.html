@@ -41,7 +41,7 @@
   </OL>
 <!-- install-web toc-end -->
 
-<A NAME="intro"><H4>Introduction</H4></A>
+<A NAME="intro"><H3>Introduction</H3></A>
 
   <P>
     The most important part of multithreaded programming is properly
@@ -56,7 +56,7 @@
     advanced classes at all.
   </P>
 
-<A NAME="high-level"><H4>High-Level Description</H4></A>
+<A NAME="high-level"><H3>High-Level Description</H3></A>
 
   <P>
     As with threads, a cross-platform abstraction layer has been written
@@ -70,7 +70,7 @@
     will be expanded.
   </P>
 
-<A NAME="use"><H4>Using <TT>vjSemaphore</TT></H4></A>
+<A NAME="use"><H3>Using <TT>vjSemaphore</TT></H3></A>
 
   <P>
     If you have been reading all of the sections in this chapter
@@ -81,7 +81,7 @@
     That is all handled appropriately within <TT>Sync/vjSemaphore.h</TT>.
   </P>
 
-<A NAME="creating"><H5>Creating a <TT>vjSemaphore</TT></H5></A>
+<A NAME="creating"><H4>Creating a <TT>vjSemaphore</TT></H4></A>
 
   <P>
     When you create a <TT>vjSemaphore</TT> object, you give the initial
@@ -112,7 +112,7 @@
     4 resources instead of 5.
   </P>
 
-<A NAME="acquire"><H5>Locking a Semaphore</H5></A>
+<A NAME="acquire"><H4>Locking a Semaphore</H4></A>
 
   <P>
     When a thread needs to acquire access to shared data, it locks a
@@ -136,7 +136,7 @@
     attempt to lock the semaphore fails for some reason, -1 is returned.
   </P>
 
-<A NAME="tryacquire"><H5>Attempting to Lock a Semaphore</H5></A>
+<A NAME="tryacquire"><H4>Attempting to Lock a Semaphore</H4></A>
 
   <P>
     If you want to lock a semaphore only when the call would not block, a
@@ -152,7 +152,7 @@
     and you can try again later.
   </P>
 
-<A NAME="release"><H5>Releasing a Locked Semaphore</H5></A>
+<A NAME="release"><H4>Releasing a Locked Semaphore</H4></A>
 
   <P>
     Finally, when you are done accessing the shared data, you release
@@ -166,7 +166,7 @@
     Otherwise, -1 is returned.
   </P>
 
-<A NAME="details"><H4>The Gory Details</H4></A>
+<A NAME="details"><H3>The Gory Details</H3></A>
 
   <P>
     If you have read the
