@@ -124,7 +124,17 @@ int DataGloveStandalone::ReadRecordsFromHardware( float *ch0, float *ch1, float 
    }
    // If read the start buffer, read the rest 9 data.
    mPort->read(&packet, 9, written);
-
+   
+   ///////////////////////////////////////////////////// 
+   // Longitudinal Checksum
+   /////////////////////////////////////////////////////
+   int checksum = (int)packet[0]^(int)packet[1]^(int)packet[2]^(int)packet[3]^(int)packet[4]^(int)packet[5]^(int)packet[6];
+   
+   if(checksum != (int)packet[7])
+   {
+      return true;
+   }
+   
    // Decode the report and store the values 
    *ch0 = float(packet[0])/255.0;   // Thumb
    *ch1 = float(packet[1])/255.0;   // Index
