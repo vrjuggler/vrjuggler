@@ -1,5 +1,4 @@
-/*************** <auto-copyright.pl BEGIN do not edit this line> **************
- *
+/*************** <auto-copyright.pl BEGIN do not edit this line> ************** *
  * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
  *
  * Original Authors:
@@ -30,47 +29,47 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SERIAL_PORT_IMP_TERMIOS_H_
-#define _VPR_SERIAL_PORT_IMP_TERMIOS_H_
-
-#include <termios.h>
-#include <string>
-#include <vector>
-
-#include <IO/Port/Port.h>
-#include <IO/Port/SerialTypes.h>
-#include <md/POSIX/FileHandleUNIX.h>
+#ifndef _VPR_SERIAL_PORT_T_H_
+#define _VPR_SERIAL_PORT_T_H_
 
 
 namespace vpr {
 
 // ----------------------------------------------------------------------------
-//: vpr::SerialPort implementation using termios.
+//: Cross-platform serial port interface.
 // ----------------------------------------------------------------------------
-class SerialPortImpTermios : public Port {
+//!PUBLIC_API:
+template<class RealSerialPortImp>
+class SerialPort_t : public Port {
 public:
     // ------------------------------------------------------------------------
-    //: Constructor.  This creates a file handle object connected to the given
-    //+ port name and sets the update action to happen immediately.
+    //: Constructor.
     //
     //! PRE: None.
-    //! POST: m_handle is allocated and connected to port_name, and the update
-    //+       action is set to vpr::SerialTypes::NOW.
+    //! POST: A serial port interface implementation object is created using
+    //+       the given port name.
     //
-    //! ARGS: port_name - The name of the serial port that will be accessed.
+    //! ARGS: port_name - The name of the serial port to be accessed by this
+    //+                   object.
     // ------------------------------------------------------------------------
-    SerialPortImpTermios(const std::string& port_name);
+    SerialPort_t (const std::string& port_name)
+        : Port(port_name), m_sio_imp(port_name)
+    {
+        /* Do nothing. */ ;
+    }
 
     // ------------------------------------------------------------------------
-    //: Destructor.  If the file handle is non-NULL, its memory is released.
+    //: Destructor.  This does nothing.
     //
     //! PRE: None.
-    //! POST: If m_handle is non-NULL, its memory is released.
+    //! POST: None.
     // ------------------------------------------------------------------------
-    virtual ~SerialPortImpTermios(void);
+    virtual ~SerialPort_t (void) {
+        /* Do nothing. */ ;
+    }
 
     // ========================================================================
-    // vpr::BlockIO overrides.
+    // Block I/O device interface.
     // ========================================================================
 
     // ------------------------------------------------------------------------
@@ -82,23 +81,23 @@ public:
     //+       is opened in read-only mode.  If the port is already open, this
     //+       has no effect.
     // ------------------------------------------------------------------------
-    inline virtual void
+    inline void
     setOpenReadOnly (void) {
-        m_handle->setOpenReadOnly();
+        m_sio_imp.setOpenReadOnly();
     }
 
     // ------------------------------------------------------------------------
     //: Set the open flags so that the serial port is opened in write-only
-    //: mode.
+    //+ mode.
     //
     //! PRE: None.
     //! POST: The open flags are updated so that when the port is opened, it
     //+       is opened in write-only mode.  If the port is already open, this
     //+       has no effect.
     // ------------------------------------------------------------------------
-    inline virtual void
+    inline void
     setOpenWriteOnly (void) {
-        m_handle->setOpenWriteOnly();
+        m_sio_imp.setOpenWriteOnly();
     }
 
     // ------------------------------------------------------------------------
@@ -110,9 +109,9 @@ public:
     //+       is opened in read/write mode.  If the port is already open, this
     //+       has no effect.
     // ------------------------------------------------------------------------
-    inline virtual void
+    inline void
     setOpenReadWrite (void) {
-        m_handle->setOpenReadWrite();
+        m_sio_imp.setOpenReadWrite();
     }
 
     // ------------------------------------------------------------------------
@@ -124,9 +123,9 @@ public:
     //+       is opened in blocking mode.  If the port is already open, this
     //+       has no effect.
     // ------------------------------------------------------------------------
-    inline virtual void
+    inline void
     setOpenBlocking (void) {
-        m_handle->setOpenBlocking();
+        m_sio_imp.setOpenBlocking();
     }
 
     // ------------------------------------------------------------------------
@@ -138,444 +137,644 @@ public:
     //+       is opened in non-blocking mode.  If the port is already open,
     //+       this has no effect.
     // ------------------------------------------------------------------------
-    inline virtual void
+    inline void
     setOpenNonBlocking (void) {
-        m_handle->setOpenNonBlocking();
+        m_sio_imp.setOpenNonBlocking();
     }
 
     // ------------------------------------------------------------------------
-    //: Open the serial port and initialize its flags.
+    //: Open the serial port.
     //
     //! PRE: The serial port is not already open.
-    //! POST: An attempt is made to open the port.  If it is successful, the
-    //+       port's flags are initaialized to 0.  The resulting status is
-    //+       returned to the caller.  If the port is opened, m_open is set to
-    //+       true.
+    //! POST: An attempt is made to open the serial port.  The resulting
+    //+       status is returned to the caller.
     //
     //! RETURNS: true  - The serial port was opened successfully.
-    //! RETURNS: false - The serial port could not be opened
+    //! RETURNS: false - The serial port could not be opened for some reason.
     // ------------------------------------------------------------------------
-    virtual Status open(void);
+    inline vpr::Status
+    open (void) {
+        return m_sio_imp.open();
+    }
 
     // ------------------------------------------------------------------------
     //: Close the serial port.
     //
     //! PRE: The serial port is open.
-    //! POST: An attempt is made to close the port.  The resulting status is
-    //+       returned to the caller.  If the port is closed, m_open is set to
-    //+       false.
+    //! POST: An attempt is made to close the serial port.  The resulting
+    //+       status is returned to the caller.
     //
     //! RETURNS: true  - The serial port was closed successfully.
     //! RETURNS: false - The serial port could not be closed for some reason.
     // ------------------------------------------------------------------------
-    inline virtual Status
+    inline vpr::Status
     close (void) {
-        Status retval;
-
-        retval = m_handle->close();
-        m_open = (retval.success() ? false : true);
-
-        return retval;
+        return m_sio_imp.close();
     }
 
     // ------------------------------------------------------------------------
     //: Reconfigure the serial port so that it is in blocking mode.
     //
-    //! PRE: The serial port is open.
+    //! PRE: The port is open.
     //! POST: Processes will block when accessing the port.
     //
     //! RETURNS: true  - The blocking mode was changed successfully.
     //! RETURNS: false - The blocking mode could not be changed for some
     //+                  reason.
     // ------------------------------------------------------------------------
-    inline virtual Status
+    inline vpr::Status
     enableBlocking (void) {
-       return m_handle->enableBlocking();
+        return m_sio_imp.enableBlocking();
     }
 
     // ------------------------------------------------------------------------
     //: Reconfigure the serial port so that it is in non-blocking mode.
     //
-    //! PRE: The serial port is open.
+    //! PRE: The port is open.
     //! POST: Processes will not block when accessing the port.
     //
-    //! RETURNS:  0 - The blocking mode was changed successfully.
-    //! RETURNS: -1 - The blocking mode could not be changed for some reason.
+    //! RETURNS: true  - The blocking mode was changed successfully.
+    //! RETURNS: false - The blocking mode could not be changed for some
+    //+                  reason.
     // ------------------------------------------------------------------------
-    inline virtual Status
+    inline virtual vpr::Status
     enableNonBlocking (void) {
-       return m_handle->enableNonBlocking();
+        return m_sio_imp.enableNonBlocking();
     }
 
     // ========================================================================
-    // vpr::SerialPortImp interface implementation.
+    // Serial port interface.
     // ========================================================================
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    SerialTypes::UpdateActionOption getUpdateAction(void);
+    inline vpr::Status
+    drainOutput (void) {
+        return m_sio_imp.drainOutput();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    void setUpdateAction(SerialTypes::UpdateActionOption action);
+    inline vpr::Status
+    controlFlow (SerialTypes::FlowActionOption opt) {
+        return m_sio_imp.controlFlow(opt);
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool getLocalAttachState(void);
+    inline vpr::Status
+    flushQueue (SerialTypes::FlushQueueOption opt) {
+        return m_sio_imp.flushQueue(opt);
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status enableLocalAttach(void);
+    inline vpr::Status
+    sendBreak (const int duration) {
+        return m_sio_imp.sendBreak(duration);
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status disableLocalAttach(void);
+    inline SerialTypes::UpdateActionOption
+    getUpdateAction (void) {
+        return m_sio_imp.getUpdateAction();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status getBufferSize(unsigned char& size);
+    inline void
+    setUpdateAction (SerialTypes::UpdateActionOption action) {
+        m_sio_imp.setUpdateAction(action);
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status setBufferSize(const unsigned char size);
+    inline vpr::Status
+    getBufferSize (unsigned char& size) {
+        return m_sio_imp.getBufferSize(size);
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status getTimeout(unsigned char& timeout);
+    inline vpr::Status
+    setBufferSize (const unsigned char size) {
+        return m_sio_imp.setBufferSize(size);
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status setTimeout(const unsigned char timeout);
+    inline vpr::Status
+    getTimeout (unsigned char& timeout) {
+        return m_sio_imp.getTimeout(timeout);
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status getCharacterSize(unsigned short& size);
+    inline vpr::Status
+    setTimeout (const unsigned char timeout_val) {
+        return m_sio_imp.setTimeout(timeout_val);
+    }
 
     // ------------------------------------------------------------------------
-    //: Set the character size for both reading and writing on this port.
-    //+ This size does not include the parity bit if any.  Possible values are
-    //+ 5, 6, 7 or 8 bits per byte.
     // ------------------------------------------------------------------------
-    Status setCharacterSize(const unsigned short bpb);
+    inline vpr::Status
+    getCharacterSize (unsigned short& size) {
+        return m_sio_imp.getCharacterSize(size);
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool getReadState(void);
+    inline vpr::Status
+    setCharacterSize (const unsigned short bpb) {
+        return m_sio_imp.setCharacterSize(bpb);
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status enableRead(void);
+    inline void
+    setControlCharacter (const unsigned int index, const unsigned char value) {
+        m_sio_imp.setControlCharacter(index, value);
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status disableRead(void);
+    inline unsigned char
+    getControlCharacter (const unsigned int index) {
+        return m_sio_imp.getControlCharacter(index);
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status getStopBits(unsigned short& num_bits);
+    inline vpr::Status
+    getStopBits (unsigned short& num_bits) {
+        return m_sio_imp.getStopBits(num_bits);
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status setStopBits(const unsigned short num_bits);
+    inline vpr::Status
+    setStopBits (const unsigned short num_bits) {
+        return m_sio_imp.setStopBits(num_bits);
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool getInputEchoState(void);
+    inline int
+    getParity (void) {
+        return m_sio_imp.getParity();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status enableInputEcho(void);
+    inline vpr::Status
+    setOddParity (void) {
+        return m_sio_imp.setOddParity();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status disableInputEcho(void);
+    inline vpr::Status
+    setEvenParity (void) {
+        return m_sio_imp.setEvenParity();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool getEraseEchoState(void);
+    inline vpr::Status
+    getInputBaudRate (int& rate) {
+        return m_sio_imp.getInputBaudRate(rate);
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status enableEraseEcho(void);
+    inline vpr::Status
+    setInputBaudRate (const int baud) {
+        return m_sio_imp.setInputBaudRate(baud);
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status disableEraseEcho(void);
+    inline vpr::Status
+    getOutputBaudRate (int& rate) {
+        return m_sio_imp.getOutputBaudRate(rate);
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool getKillEchoState(void);
+    inline vpr::Status
+    setOutputBaudRate (const int baud) {
+        return m_sio_imp.setOutputBaudRate(baud);
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status enableKillEcho(void);
+    inline bool
+    getLocalAttachState (void) {
+        return m_sio_imp.getLocalAttachState();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status disableKillEcho(void);
+    inline vpr::Status
+    enableLocalAttach (void) {
+        return m_sio_imp.enableLocalAttach();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool getNewlineEchoState(void);
+    inline vpr::Status
+    disableLocalAttach (void) {
+        return m_sio_imp.disableLocalAttach();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status enableNewlineEcho(void);
+    inline bool
+    getReadState (void) {
+        return m_sio_imp.getReadState();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status disableNewlineEcho(void);
+    inline vpr::Status
+    enableRead (void) {
+        return m_sio_imp.enableRead();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool getCanonicalState(void);
+    inline vpr::Status
+    disableRead (void) {
+        return m_sio_imp.disableRead();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status enableCanonicalInput(void);
+    inline bool
+    getInputEchoState (void) {
+        return m_sio_imp.getInputEchoState();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status disableCanonicalInput(void);
+    inline vpr::Status
+    enableInputEcho (void) {
+        return m_sio_imp.enableInputEcho();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool getCRTranslateState(void);
+    inline vpr::Status
+    disableInputEcho (void) {
+        return m_sio_imp.disableInputEcho();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status enableCRTranslation(void);
+    inline bool
+    getEraseEchoState (void) {
+        return m_sio_imp.getEraseEchoState();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status disableCRTranslation(void);
+    inline vpr::Status
+    enableEraseEcho (void) {
+        return m_sio_imp.enableEraseEcho();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool getExtendedHandlingState(void);
+    inline vpr::Status
+    disableEraseEcho (void) {
+        return m_sio_imp.disableEraseEcho();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status enableExtendedHandling(void);
+    inline bool
+    getKillEchoState (void) {
+        return m_sio_imp.getKillEchoState();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status disableExtendedHandling(void);
+    inline vpr::Status
+    enableKillEcho (void) {
+        return m_sio_imp.enableKillEcho();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool getCRIgnoreState(void);
+    inline vpr::Status
+    disableKillEcho (void) {
+        return m_sio_imp.disableKillEcho();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status enableCRIgnore(void);
+    inline bool
+    getNewlineEchoState (void) {
+        return m_sio_imp.getNewlineEchoState();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status disableCRIgnore(void);
+    inline vpr::Status
+    enableNewlineEcho (void) {
+        return m_sio_imp.enableNewlineEcho();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool getBadByteIgnoreState(void);
+    inline vpr::Status
+    disableNewlineEcho (void) {
+        return m_sio_imp.disableNewlineEcho();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status enableBadByteIgnore(void);
+    inline bool
+    getCanonicalState (void) {
+        return m_sio_imp.getCanonicalState();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status disableBadByteIgnore(void);
+    inline vpr::Status
+    enableCanonicalInput (void) {
+        return m_sio_imp.enableCanonicalInput();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool getParityCheckState(void);
+    inline vpr::Status
+    disableCanonicalInput (void) {
+        return m_sio_imp.disableCanonicalInput();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status enableParityCheck(void);
+    inline bool
+    getCRTranslateState (void) {
+        return m_sio_imp.getCRTranslateState();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status disableParityCheck(void);
+    inline vpr::Status
+    enableCRTranslation (void) {
+        return m_sio_imp.enableCRTranslation();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool getSignalGenerateState(void);
+    inline vpr::Status
+    disableCRTranslation (void) {
+        return m_sio_imp.disableCRTranslation();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status enableSignalGeneration(void);
+    inline bool
+    getExtendedHandlingState (void) {
+        return m_sio_imp.getExtendedHandlingState();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status disableSignalGeneration(void);
+    inline vpr::Status
+    enableExtendedHandling (void) {
+        return m_sio_imp.enableExtendedHandling();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool getBitStripState(void);
+    inline vpr::Status
+    disableExtendedHandling (void) {
+        return m_sio_imp.disableExtendedHandling();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status enableBitStripping(void);
+    inline bool
+    getCRIgnoreState (void) {
+        return m_sio_imp.getCRIgnoreState();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status disableBitStripping(void);
+    inline vpr::Status
+    enableCRIgnore (void) {
+        return m_sio_imp.enableCRIgnore();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool getStartStopInputState(void);
+    inline vpr::Status
+    disableCRIgnore (void) {
+        return m_sio_imp.disableCRIgnore();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status enableStartStopInput(void);
+    inline bool
+    getBadByteIgnoreState (void) {
+        return m_sio_imp.getBadByteIgnoreState();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status disableStartStopInput(void);
+    inline vpr::Status
+    enableBadByteIgnore (void) {
+        return m_sio_imp.enableBadByteIgnore();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool getStartStopOutputState(void);
+    inline vpr::Status
+    disableBadByteIgnore (void) {
+        return m_sio_imp.disableBadByteIgnore();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status enableStartStopOutput(void);
+    inline bool
+    getParityCheckState (void) {
+        return m_sio_imp.getParityCheckState();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status disableStartStopOutput(void);
+    inline vpr::Status
+    enableParityCheck (void) {
+        return m_sio_imp.enableParityCheck();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool getNoFlushState(void);
+    inline vpr::Status
+    disableParityCheck (void) {
+        return m_sio_imp.disableParityCheck();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status enableNoFlush(void);
+    inline bool
+    getSignalGenerateState (void) {
+        return m_sio_imp.getSignalGenerateState();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status disableNoFlush(void);
+    inline vpr::Status
+    enableSignalGeneration (void) {
+        return m_sio_imp.enableSignalGeneration();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool getParityGenerationState(void);
+    inline vpr::Status
+    disableSignalGeneration (void) {
+        return m_sio_imp.disableSignalGeneration();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status enableParityGeneration(void);
+    inline bool
+    getBitStripState (void) {
+        return m_sio_imp.getBitStripState();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status disableParityGeneration(void);
+    inline vpr::Status
+    enableBitStripping (void) {
+        return m_sio_imp.enableBitStripping();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool getParityErrorMarkingState(void);
+    inline vpr::Status
+    disableBitStripping (void) {
+        return m_sio_imp.disableBitStripping();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status enableParityErrorMarking(void);
+    inline bool
+    getStartStopInputState (void) {
+        return m_sio_imp.getStartStopInputState();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status disableParityErrorMarking(void);
+    inline vpr::Status
+    enableStartStopInput (void) {
+        return m_sio_imp.enableStartStopInput();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    int getParity(void);
+    inline vpr::Status
+    disableStartStopInput (void) {
+        return m_sio_imp.disableStartStopInput();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status setOddParity(void);
+    inline bool
+    getStartStopOutputState (void) {
+        return m_sio_imp.getStartStopOutputState();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status setEvenParity(void);
+    inline vpr::Status
+    enableStartStopOutput (void) {
+        return m_sio_imp.enableStartStopOutput();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status getInputBaudRate(int& rate);
+    inline vpr::Status
+    disableStartStopOutput (void) {
+        return m_sio_imp.disableStartStopOutput();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status setInputBaudRate(const int rate);
+    inline bool
+    getNoFlushState (void) {
+        return m_sio_imp.getNoFlushState();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status getOutputBaudRate(int& rate);
+    inline vpr::Status
+    enableNoFlush (void) {
+        return m_sio_imp.enableNoFlush();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status setOutputBaudRate(const int rate);
+    inline vpr::Status
+    disableNoFlush (void) {
+        return m_sio_imp.disableNoFlush();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status drainOutput(void);
+    inline bool
+    getParityGenerationState (void) {
+        return m_sio_imp.getParityGenerationState();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status controlFlow(SerialTypes::FlowActionOption opt);
+    inline vpr::Status
+    enableParityGeneration (void) {
+        return m_sio_imp.enableParityGeneration();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status flushQueue(SerialTypes::FlushQueueOption opt);
+    inline vpr::Status
+    disableParityGeneration (void) {
+        return m_sio_imp.disableParityGeneration();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    Status sendBreak(const int duration);
+    inline bool
+    getParityErrorMarkingState (void) {
+        return m_sio_imp.getParityErrorMarkingState();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    void setControlCharacter(const unsigned int index,
-                             const unsigned char value);
+    inline vpr::Status
+    enableParityErrorMarking (void) {
+        return m_sio_imp.enableParityErrorMarking();
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    unsigned char getControlCharacter(const unsigned int index);
+    inline vpr::Status
+    disableParityErrorMarking (void) {
+        return m_sio_imp.disableParityErrorMarking();
+    }
 
 protected:
-    // Symbolic names for the four types of flags that can be set in the
-    // termios struct.
-    enum _term_flag {
-        IFLAG,		// Input flag
-        OFLAG,		// Output flag
-        CFLAG,		// Control flag
-        LFLAG		// Local flag
-    };
-
     // ------------------------------------------------------------------------
-    //! Read up to the specified number of bytes from the serial port into the
-    //+ given buffer.
-    //
-    //! PRE: The port's file handle is valid, and the buffer is at least
-    //+      length bytes long.
-    //! POST: The given buffer has length bytes copied into it from the serial
-    //+       port, and the number of bytes read successfully is returned to
-    //+       the caller.
-    //
-    //! ARGS: buffer - A pointer to the buffer where the data read from the
-    //+                port is to be stored.
-    //! ARGS: length - The number of bytes to be read.
-    //
-    //! RETURNS: >-1 - The number of bytes successfully read from the serial
-    //+                port.
-    //! RETURNS:  -1 - An error occurred when reading.
-    // ------------------------------------------------------------------------
-    virtual Status
-    read_i (void* buffer, const size_t length, ssize_t& bytes_read) {
-        return m_handle->read(buffer, length, bytes_read);
-    }
-
-    // ------------------------------------------------------------------------
-    //: Read exactly the specified number of bytes from the serial port into
+    //: Read at most the specified number of bytes from the serial port into
     //+ the given buffer.
     //
-    //! PRE: The port's file handle is valid, and the buffer is at least
-    //+      length bytes long.
-    //! POST: The given buffer has length bytes copied into it from the serial
-    //+       port, and the number of bytes read successfully is returned to
+    //! PRE: The port implementation object is valid, and the buffer is at
+    //+     least length bytes long.
+    //! POST: The given buffer has length bytes copied into it from the port's
+    //+       buffer, and the number of bytes read successfully is returned to
     //+       the caller.
     //
     //! ARGS: buffer - A pointer to the buffer where the port's buffer
@@ -586,66 +785,58 @@ protected:
     //+                port.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    virtual Status
+    virtual vpr::Status
+    read_i (void* buffer, const size_t length, ssize_t& bytes_read) {
+        return m_sio_imp.read(buffer, length, bytes_read);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Read exactly the specified number of bytes from the serial port into
+    //+ the given buffer.
+    //
+    //! PRE: The port implementation object is valid, and the buffer is at
+    //+       least length bytes long.
+    //! POST: The given buffer has length bytes copied into it from the port's
+    //+       buffer, and the number of bytes read successfully is returned to
+    //+       the caller.
+    //
+    //! ARGS: buffer - A pointer to the buffer where the port's buffer
+    //+                contents are to be stored.
+    //! ARGS: length - The number of bytes to be read.
+    //
+    //! RETURNS: >-1 - The number of bytes successfully read from the serial
+    //+                port.
+    //! RETURNS:  -1 - An error occurred when reading.
+    // ------------------------------------------------------------------------
+    virtual vpr::Status
     readn_i (void* buffer, const size_t length, ssize_t& bytes_read) {
-        return m_handle->readn(buffer, length, bytes_read);
+        return m_sio_imp.readn(buffer, length, bytes_read);
     }
 
     // ------------------------------------------------------------------------
     //: Write the buffer to the serial port.
     //
-    //! PRE: The port's file handle is valid.
+    //! PRE: The port implementation object is valid.
     //! POST: The given buffer is written to the serial port, and the number
     //+       of bytes written successfully is returned to the caller.
     //
     //! ARGS: buffer - A pointer to the buffer to be written.
     //! ARGS: length - The length of the buffer.
     //
-    //! RETURNS: >-1 - The number of bytes successfully written to the serail
+    //! RETURNS: >-1 - The number of bytes successfully written to the serial
     //+                port.
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
-    virtual Status
+    virtual vpr::Status
     write_i (const void* buffer, const size_t length, ssize_t& bytes_written) {
-        return m_handle->write(buffer, length, bytes_written);
+        return m_sio_imp.write(buffer, length, bytes_written);
     }
 
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    Status getAttrs(struct termios* term);
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    Status setAttrs(struct termios* term, const char* err_msg,
-                    const bool print_sys_err = true);
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    Status setAttrs(struct termios* term, const std::string& err_msg,
-                    const bool print_sys_err = true);
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    bool getBit(const tcflag_t bit, _term_flag flag);
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    Status setBit(const tcflag_t bit, _term_flag flag, const bool enable,
-                  const std::string& err_msg, const bool print_sys_err = true);
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    int baudToInt(const speed_t baud_rate);
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    speed_t intToBaud(const int speed_int);
-
-    FileHandleUNIX*	m_handle;    //: File handle for the serial port
-    int			m_actions;
+    RealSerialPortImp m_sio_imp;    //: Platform-specific serial port
+                                    //+ implementation object
 };
 
 }; // End of vpr namespace
 
 
-#endif	/* _VPR_SERIAL_PORT_IMP_TERMIOS_H_ */
+#endif	/* _VPR_SERIAL_PORT_H_ */
