@@ -45,7 +45,7 @@
    <target name="dist" depends="compile_idl,compile">
       <jar destfile="jccl_rtrc.jar" basedir=".">
          <include name="org/vrjuggler/jccl/rtrc/*.class" />
-         <include name="rtrc/*.class" />
+         <include name="jccl/*.class" />
       </jar>
    </target>
 
