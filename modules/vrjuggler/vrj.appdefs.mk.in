@@ -40,7 +40,11 @@ DZR_BASE_DIR?=		$(VJ_BASE_DIR)/share/Doozer
 
 CC=			@APP_CC@
 CXX=			@APP_CXX@
-LINK=			@APP_LINK@
+LD=			@APP_LINK@
+
+# One of these must be uncommented.
+DEBUG_APP?=             TRUE
+#OPTIM_APP?=            TRUE
 
 EXTRA_CFLAGS+=		@APP_CFLAGS@
 EXTRA_CXXFLAGS+=	@APP_CXXFLAGS@
