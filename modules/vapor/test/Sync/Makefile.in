@@ -50,6 +50,8 @@
 
 default: testCond@EXEEXT@
 
+all: testCond@EXEEXT@
+
 # Basic options.
 srcdir		= @srcdir@
 CFLAGS		= @APP_CFLAGS@ $(EXTRA_CFLAGS) $(INCLUDES) $(DEFS)
