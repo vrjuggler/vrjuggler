@@ -623,15 +623,16 @@ dnl # At this point, we know what threading package we will be using and what
 dnl # C compiler we have available.  Now check to see if the compiler accepts
 dnl # the -pthread option.
 if test "x${_thread_pkg}" = "xPOSIX" ; then
-    _vjsave_CFLAGS="$CFLAGS"
-    CFLAGS="$CFLAGS -pthread"
-
     AC_CACHE_CHECK(whether $CC accepts -pthread,
         ac_cv_CC_accepts_pthread,
-        AC_TRY_COMPILE([], [ void f(){} ],
-            ac_cv_CC_accepts_pthread='yes', ac_cv_CC_accepts_pthread='no'))
-
-    CFLAGS="${_vjsave_CFLAGS}"
+        [ echo 'void f(){}' > conftest.c
+          if test -z "`${CC} -pthread -c conftest.c 2>&1`" ; then
+              ac_cv_CC_accepts_pthread='yes'
+          else
+              ac_cv_CC_accepts_pthread='no'
+          fi
+          rm -f conftest*
+        ])
 fi
 
 dnl # Ensure that the C++ compiler we've found is capable of compiling the
