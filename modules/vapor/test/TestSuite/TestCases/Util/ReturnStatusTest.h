@@ -33,8 +33,8 @@ public:
    {
       // default constructor test
       vpr::ReturnStatus s;
-      assertTest( s == vpr::ReturnStatus::Success );
-      assertTest( s.code() == vpr::ReturnStatus::Success );
+      assertTest( s == vpr::ReturnStatus::Succeed );
+      assertTest( s.code() == vpr::ReturnStatus::Succeed );
 
       // ReturnStatus::Code constructor test
       vpr::ReturnStatus a( vpr::ReturnStatus::WouldBlock );
@@ -47,35 +47,35 @@ public:
       assertTest( b.code() == vpr::ReturnStatus::WouldBlock );
 
       // setCode test
-      a.setCode( vpr::ReturnStatus::Failure );
-      assertTest( a == vpr::ReturnStatus::Failure );
-      assertTest( a.code() == vpr::ReturnStatus::Failure );
+      a.setCode( vpr::ReturnStatus::Fail );
+      assertTest( a == vpr::ReturnStatus::Fail );
+      assertTest( a.code() == vpr::ReturnStatus::Fail );
 
       // status = status test
-      s.setCode( vpr::ReturnStatus::Success );
-      a.setCode( vpr::ReturnStatus::Failure );
+      s.setCode( vpr::ReturnStatus::Succeed );
+      a.setCode( vpr::ReturnStatus::Fail );
       a = s;
-      assertTest( a == vpr::ReturnStatus::Success );
-      assertTest( a.code() == vpr::ReturnStatus::Success );
+      assertTest( a == vpr::ReturnStatus::Succeed );
+      assertTest( a.code() == vpr::ReturnStatus::Succeed );
 
       // status = code test
-      a.setCode( vpr::ReturnStatus::Failure );
-      a = vpr::ReturnStatus::Success;
-      assertTest( a == vpr::ReturnStatus::Success );
-      assertTest( a.code() == vpr::ReturnStatus::Success );
+      a.setCode( vpr::ReturnStatus::Fail );
+      a = vpr::ReturnStatus::Succeed;
+      assertTest( a == vpr::ReturnStatus::Succeed );
+      assertTest( a.code() == vpr::ReturnStatus::Succeed );
 
       // code() test
       vpr::ReturnStatus c;
-      a.setCode( vpr::ReturnStatus::Failure );
+      a.setCode( vpr::ReturnStatus::Fail );
       c.setCode( a.code() );
-      assertTest( c == vpr::ReturnStatus::Failure );
-      assertTest( c.code() == vpr::ReturnStatus::Failure );
+      assertTest( c == vpr::ReturnStatus::Fail );
+      assertTest( c.code() == vpr::ReturnStatus::Fail );
 
 
 
       // setup some stuff....
-      a.setCode( vpr::ReturnStatus::Success );
-      b.setCode( vpr::ReturnStatus::Success );
+      a.setCode( vpr::ReturnStatus::Succeed );
+      b.setCode( vpr::ReturnStatus::Succeed );
 
       // ReturnStatus == ReturnStatus test
       assertTest( a == b );
@@ -89,8 +89,8 @@ public:
 
 
       // setup some stuff....
-      a.setCode( vpr::ReturnStatus::Success );
-      b.setCode( vpr::ReturnStatus::Failure );
+      a.setCode( vpr::ReturnStatus::Succeed );
+      b.setCode( vpr::ReturnStatus::Fail );
 
       // ReturnStatus != ReturnStatus test
       assertTest( a != b );
@@ -107,8 +107,8 @@ public:
    {
       // setup some stuff....
       vpr::ReturnStatus a, b, c;
-      a.setCode( vpr::ReturnStatus::Success );
-      b.setCode( vpr::ReturnStatus::Failure );
+      a.setCode( vpr::ReturnStatus::Succeed );
+      b.setCode( vpr::ReturnStatus::Fail );
       c.setCode( vpr::ReturnStatus::WouldBlock );
 
       assertTest( a.success() );
