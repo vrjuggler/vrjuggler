@@ -89,27 +89,6 @@ Builder: JExplorerBuilder V 1. 0. 7
 					image="Leaf.gif">
 			</folder>
 
-			<folder title="Helper Classes"
-				info="High-level descriptions of common helper classes"
-				image="Leaf_Script2.gif">
-				<item title="vjVec3 and vjVec4"
-					link="helper.classes/vjVec.html"
-					info="The vjVec classes"
-					image="Leaf.gif">
-				<item title="vjMatrix"
-					link="helper.classes/vjMatrix.html"
-					info="The vjMatrix class"
-					image="Leaf.gif">
-				<item title="vjDeviceInterface (position, analog, etc.)"
-					link="helper.classes/vjDeviceInterace.html"
-					info="The vjDeviceInterface class"
-					image="Leaf.gif">
-				<item title="vjProxy"
-					link="helper.classes/vjProxy.html"
-					info="The vjProxy interface"
-					image="Leaf.gif">
-			</folder>
-
 			< folder title="Case Studies: Learn by example" 
 				info="Learn by example"
 				image="Leaf_Script2.gif" imagetwo="Leaf_Write.gif" >
