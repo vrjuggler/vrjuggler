@@ -49,17 +49,6 @@ public class ConfigContextEditor
          {
             public void valueChanged(TreeSelectionEvent evt)
             {
-               // Remove all old custom editors.
-               if (mCustomEditors != null)
-               {
-                  for(Iterator itr = mCustomEditors.iterator() ; itr.hasNext() ; )
-                  {
-                     CustomEditor editor = (CustomEditor)itr.next(); 
-                     mTabPane.remove(mTabPane.indexOfTab(editor.getTitle()));
-                  }
-                  mCustomEditors = null;
-               }
-
                // Get the selected node.
                DefaultMutableTreeNode node =
                   (DefaultMutableTreeNode)mElementTree.getLastSelectedPathComponent();
@@ -99,23 +88,6 @@ public class ConfigContextEditor
                   PropertySheetFactory.instance().makeSheet(elt, start_color);
                mElementPropSheetScrollPane.getViewport().removeAll();
                mElementPropSheetScrollPane.getViewport().add(mElementPropSheet, null);
-
-
-               // Load all supported custom editors.
-               mCustomEditors = CustomEditorRegistry.findEditors(elt.getDefinition().getToken());
-    
-               if (mCustomEditors != null)
-               {
-
-
-                  for(Iterator itr = mCustomEditors.iterator() ; itr.hasNext() ; )
-                  {
-                     CustomEditor editor = (CustomEditor)itr.next(); 
-                     editor.setContext(getContext());
-                     editor.setConfigElement(elt);
-                     mTabPane.add(editor.getPanel(), editor.getTitle());
-                  }
-               }  
             }
          });
    }
@@ -229,10 +201,9 @@ public class ConfigContextEditor
       propsSplitPane.setOneTouchExpandable(true);
      
       helpScrollPane.setViewportView(helpPane);
-      propsSplitPane.add(mTabPane, JSplitPane.TOP);
+      propsSplitPane.add(mElementPropSheetScrollPane, JSplitPane.TOP);
       propsSplitPane.add(helpScrollPane, JSplitPane.BOTTOM);
       
-      mTabPane.add(mElementPropSheetScrollPane, "DefaultEditor");
       mElementPropSheetScrollPane.getViewport().add(mElementPropSheet, null);
       mElementTreeScrollPane.getViewport().add(mElementTree, null);
       
@@ -347,7 +318,6 @@ public class ConfigContextEditor
     
    private BorderLayout mBaseLayout = new BorderLayout();
    private JSplitPane mBaseSplitPane = new JSplitPane();
-   private JTabbedPane mTabPane = new JTabbedPane();
    private JScrollPane mElementTreeScrollPane = new JScrollPane();
    private ElementTree mElementTree = new ElementTree();
    private JScrollPane mElementPropSheetScrollPane = new JScrollPane();
