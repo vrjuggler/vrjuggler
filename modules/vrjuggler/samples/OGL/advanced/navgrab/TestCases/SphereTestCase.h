@@ -22,7 +22,7 @@ class SphereTestCase : public vrj::test::TestCase
 {
 public:
    SphereTestCase()
-      : TestCase("SphereTestCase"), mNavGrabApp(NULL), mCurState(Done)
+      : vrj::test::TestCase("SphereTestCase"), mNavGrabApp(NULL), mCurState(Done)
    {;}
 
    /** Do any setup needed before the test starts */
