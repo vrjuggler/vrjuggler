@@ -143,6 +143,7 @@ ifndef NO_CLEAN
 endif
 	@$(MAKE) $(BEFOREBUILD)
 	@$(MAKE) libs build-java
+	@$(MAKE) BUILD_TYPE=opt CALLER=world $(AFTERBUILD)
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning JCCL installation process"
 	@echo "---------------------------------------------------------------"
@@ -171,6 +172,7 @@ endif
             echo "------------------------------------------------" ;	\
             $(MAKE) jcclABI=$$abi libs ;				\
           done
+	@$(MAKE) BUILD_TYPE=opt CALLER=world $(AFTERBUILD)
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning JCCL installation process"
 	@echo "---------------------------------------------------------------"
@@ -203,9 +205,7 @@ ifndef NO_CLEAN
 endif
 	@$(MAKE) $(BEFOREBUILD)
 	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N libs build-java
-ifdef GLOBAL_BUILD
-	@$(MAKE) links
-endif
+	@$(MAKE) BUILD_TYPE=opt $(AFTERBUILD)
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning JCCL release installation process"
 	@echo "---------------------------------------------------------------"

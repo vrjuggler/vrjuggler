@@ -75,9 +75,12 @@ beforebuild:
 
 # Things to do after the object files and library are built.
 afterbuild:
-ifdef GLOBAL_BUILD
-	@$(MAKE) links
+ifdef BUILD_PROF_LIBS
+ifeq ($(CALLER), world)
+	@$(MAKE) links-prof-libs
 endif
+endif
+	@$(MAKE) links
 
 # =============================================================================
 # Make links for developer use that provide the needed functionality for
@@ -105,6 +108,10 @@ links-opt:
 
 links-prof:
 	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-profiled
+
+links-prof-libs:
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-prof
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-prof-dso
 
 # Remove the links in $(instlinks).  We cannot do this in the global build,
 # however, because it would blow away links set up by our dependencies.
