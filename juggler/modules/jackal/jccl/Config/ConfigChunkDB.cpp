@@ -395,6 +395,12 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
                 newdb.load (s, self.file_name);
                 self.addChunks(&newdb);
             }
+            else if (!vjstrcasecmp (ch->getType(), "vjIncludeDescFile")) {
+                // the descs could be needed by everybody else in this file,
+                // so load 'em now...
+                std::string s = ch->getProperty ("Name");
+                vjChunkFactory::instance()->loadDescs (s);
+            }
             else {
                 /* OK.  If this chunk has the same instancename as a chunk
                  * already in self, we want to remove the old one
