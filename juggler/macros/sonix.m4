@@ -47,14 +47,14 @@ dnl ---------------------------------------------------------------------------
 AC_DEFUN(SNX_PATH,
 [
     dnl Get the cflags and libraries from the sonix-config script
-    AC_ARG_WITH(sonix-prefix,
-                [  --with-sonix-prefix=<PATH> Prefix where SNX is installed
+    AC_ARG_WITH(sonix,
+                [  --with-sonix=<PATH>     Prefix where Sonix is installed
                           (optional)                      [No default]],
                 sonix_config_prefix="$withval", sonix_config_prefix="")
     AC_ARG_WITH(sonix-exec-prefix,
                 [  --with-sonix-exec-prefix=<PATH>
-                          Exec prefix where SNX is
-                          installed (optional)            [No default]],
+                          Prefix where Sonix executables
+                          are installed (optional)        [No default]],
                 sonix_config_exec_prefix="$withval", sonix_config_exec_prefix="")
 dnl    AC_ARG_ENABLE(sonixtest,
 dnl                  [  --disable-sonixtest       Do not try to compile and run a
