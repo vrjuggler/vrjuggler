@@ -182,6 +182,9 @@ ifndef NO_CLEAN
 endif
 	@$(MAKE) $(BEFOREBUILD)
 	@$(MAKE) libs
+ifdef GLOBAL_BUILD
+	@$(MAKE) links
+endif
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning JCCL release installation process"
 	@echo "---------------------------------------------------------------"
@@ -189,12 +192,16 @@ endif
 	@$(MAKE) install-libs
 	@$(MAKE) do-post-install
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JCCLROOT_ABS)/ChangeLog $(prefix)
+          $(JCCLROOT_ABS)/ChangeLog $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JCCLROOT_ABS)/COPYING $(prefix)
+          $(JCCLROOT_ABS)/COPYING.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JCCLROOT_ABS)/README.txt $(prefix)
-	@echo "Build time: `LTIME=C date`" > $(prefix)/BUILD_TIME
+          $(JCCLROOT_ABS)/README.txt $(projdatadir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(JCCLROOT_ABS)/INSTALL.txt $(projdatadir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(JCCLROOT_ABS)/RELEASE_NOTES.txt $(projdatadir)
+	@echo "Build time: `LTIME=C date`" > $(projdatadir)/BUILD_TIME
 	@echo "==============================================================="
 	@echo ">>> JCCL make release started on $(STARTTIME)"
 	@echo ">>> JCCL make release completed on `LTIME=C date`"
