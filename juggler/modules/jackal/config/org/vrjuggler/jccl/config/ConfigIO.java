@@ -229,12 +229,13 @@ public class ConfigIO {
 
 
 
-    public static boolean writeConfigChunkDB (File file, ConfigChunkDB db, int handler_type) {
+    public static void writeConfigChunkDB (File file, ConfigChunkDB db, int handler_type) throws IOException {
         ConfigIOHandler handler = getHandler (handler_type);
         if (handler == null)
-            return false;
+            throw new IOException ("Couldn't find file format handler.");
 
-        return handler.writeConfigChunkDB (file, db);
+        if (!handler.writeConfigChunkDB (file, db))
+            throw new IOException ("Handler write failed.");
     }
 
 
@@ -330,15 +331,13 @@ public class ConfigIO {
 
 
 
-    public static boolean writeChunkDescDB (File file, ChunkDescDB db, int handler_type) {
+    public static void writeChunkDescDB (File file, ChunkDescDB db, int handler_type) throws IOException {
         ConfigIOHandler handler = getHandler (handler_type);
-        if (handler == null) {
-            Core.consoleErrorMessage ("ConfigIO", "Couldn't get ConfigIOHandler for writeChunkDescDB.");
-            return false;
-        }
-        else {
-            return handler.writeChunkDescDB (file, db);
-        }
+        if (handler == null)
+            throw new IOException ("Couldn't find file format handler.");
+
+        if (!handler.writeChunkDescDB (file, db))
+            throw new IOException ("Handler write failed.");
     }
 
 

@@ -929,25 +929,21 @@ public class ConfigModule extends DefaultCoreModule {
 	if (f == null)
 	    return db.name;
 
-	try {
-	    DataOutputStream out = new DataOutputStream(new FileOutputStream(f));
-            ConfigIO.writeConfigChunkDB (out, db, ConfigIO.DEFAULT);
-	    Core.consoleInfoMessage (component_name, "Saved ChunkDB file: " + f);
-            db.need_to_save = false;
-	    /* do some fixing up if the name changed */
-	    db.setFile (f);
-            renameChunkDB (db, f.getName());
+        try {
+            ConfigIO.writeConfigChunkDB (f, db, ConfigIO.DEFAULT);
 
-//             String newname = db.getFile().getName();
-//             if (!newname.equals(db.getName())) {
-//                 db.setName (createUniqueChunkDBName(newname));
-//             }
-            return db.name;
-	}
-	catch (IOException e) {
-	    Core.consoleErrorMessage (component_name, "IOerror saving file " + f);
-	    return db.name;
-	}
+            Core.consoleInfoMessage (component_name, "Saved ChunkDB file: " + f);
+            db.need_to_save = false;
+            /* do some fixing up if the name changed */
+            db.setFile (f);
+            renameChunkDB (db, f.getName());
+        }
+        catch (IOException e) {
+            Core.consoleErrorMessage (component_name, "Save ChunkDB failed: "
+                                      + e);
+        }
+
+        return db.name;
     }
 
 
@@ -1056,25 +1052,18 @@ public class ConfigModule extends DefaultCoreModule {
 	    return db.name;
 	
 	try {
-	    DataOutputStream out = 
-		new DataOutputStream(new FileOutputStream(f));
-            if (ConfigIO.writeChunkDescDB (out, db, ConfigIO.DEFAULT)) {
-                db.need_to_save = false;
-                Core.consoleInfoMessage (component_name, 
-                                         "Saved ChunkDesc File: " + f);
-                /* do some fixing up if the name changed */
-                db.setFile (f);
-                renameDescDB (db, f.getName());
-            }
-            else {
-                Core.consoleErrorMessage (component_name, "Save failed: " +f);
-            }
-            return db.name;
-	}
+            ConfigIO.writeChunkDescDB (f, db, ConfigIO.DEFAULT);
+            db.need_to_save = false;
+            Core.consoleInfoMessage (component_name, 
+                                     "Saved ChunkDesc File: " + f);
+            /* do some fixing up if the name changed */
+            db.setFile (f);
+            renameDescDB (db, f.getName());
+        }
 	catch (IOException e) {
-	    Core.consoleErrorMessage (component_name, "IOerror saving file " + f);
-	    return db.name;
+	    Core.consoleErrorMessage (component_name, "Save DescDB failed: " + f);
 	}
+        return db.name;
     }
 
 
