@@ -348,12 +348,18 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
       else
       {
          in >> *ch;
-         /* OK.  If this chunk has the same instancename as a chunk
-          * already in self, we want to remove the old one
-          */
-         if (ch->getNum ("name"))
-            self.removeMatching ("name", (std::string)ch->getProperty ("name"));
-         self.chunks.push_back(ch);
+
+	 if (!vjstrcasecmp (ch->getType(), "vjIncludeFile")) {
+	     self.load (ch->getProperty("Name"));
+	 }
+	 else {
+	     /* OK.  If this chunk has the same instancename as a chunk
+	      * already in self, we want to remove the old one
+	      */
+	     if (ch->getNum ("name"))
+		 self.removeMatching ("name", (std::string)ch->getProperty ("name"));
+	     self.chunks.push_back(ch);
+	 }
       }
    } while (!in.eof());
 
@@ -364,25 +370,25 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
 
 
 
-bool vjConfigChunkDB::load (const char *fname) {
-    ifstream in(fname);
+bool vjConfigChunkDB::load (const std::string& fname) {
+    ifstream in(fname.c_str());
 
-    vjDEBUG(vjDBG_ALL,4) << "vjConfigChunkDB::load(): opening file " << fname << " -- " << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_CONFIG,4) << "vjConfigChunkDB::load(): opening file " << fname << " -- " << vjDEBUG_FLUSH;
 
 
     if (!in) {
-	vjDEBUG(vjDBG_ALL,1) << "\nvjConfigChunkDB::load(): Unable to open file '"
+	vjDEBUG(vjDBG_ALL,0) << "\nvjConfigChunkDB::load(): Unable to open file '"
 		   << fname << "'" << endl << vjDEBUG_FLUSH;
 	return false;
     }
-    vjDEBUG(vjDBG_ALL,3) << " succeeded." << endl << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_CONFIG,3) << " succeeded." << endl << vjDEBUG_FLUSH;
     in >> *this;
     return true;
 }
 
-bool vjConfigChunkDB::save (const char *fname) {
+bool vjConfigChunkDB::save (const std::string& fname) {
 
-   ofstream out(fname);
+   ofstream out(fname.c_str());
    if (!out)
    {
       vjDEBUG(vjDBG_ALL,1) << "ERROR: vjConfigChunkDB::save() - Unable to open file '"

@@ -212,7 +212,7 @@ public:
     //! NOTE: The return value only considers opening the file,
     //+       and does not account for parsing or other reading
     //+       errors.
-    bool load (const char *fname);
+    bool load (const std::string& fname);
 
 
 
@@ -221,7 +221,7 @@ public:
     //! RETURNS: true - file was opened succesfully.
     //! RETURNS: false - otherwise.
     //! NOTE: This function calls operator << to do its work.
-    bool save (const char *fname);
+    bool save (const std::string& fname);
 
 };
 
