@@ -92,7 +92,8 @@ enum Keys
    MOUSE_NEGY,
    MBUTTON1,
    MBUTTON2,
-   MBUTTON3
+   MBUTTON3,
+   NO_MBUTTON
 };
 
 /// Mask values for keyboard modifier keys.

@@ -54,18 +54,17 @@ public:
    /**
     * Initializes data members.
     *
-    * @param state         The mask of mouse buttons and any modifiers being
-    *                      pressed.  This should be constructed using the
-    *                      bitwise OR of gadget::ModifierMask and
-    *                      gadget::ButtonMask values.
-    * @param isButtonPress Flag indicating whether this is a key press event
-    *                      (true) or a key release event (false).
+    * @param button        The button that generated the event.
     * @param x             The X coordinate of the mouse within the window.
     * @param y             The Y coordinate of the mouse within the window.
     * @param globalX       The X coordiante of the mouse relative to the root
     *                      window (i.e., the desktop).
     * @param globalY       The Y coordiante of the mouse relative to the root
     *                      window (i.e., the desktop).
+    * @param state         The mask of mouse buttons and any modifiers being
+    *                      pressed.  This should be constructed using the
+    *                      bitwise OR of gadget::ModifierMask and
+    *                      gadget::ButtonMask values.
     * @param time          The time at which this event occurred.  This should
     *                      be as accurate as possible,  preferabbly acquired
     *                      from the operating system or windowing system event
@@ -74,35 +73,22 @@ public:
     *
     * @see gadget::ModifierMask, gadget::ButtonMask
     */
-   MouseEvent(const int& state, const bool& isButtonPress, const int& x,
-              const int& y, const int& globalX, const int& globalY,
-              const unsigned long& time)
-      : gadget::Event(Event::MouseEvent, time)
-      , mState(state)
-      , mIsButtonPress(isButtonPress)
+   MouseEvent(const gadget::EventType& type, const gadget::Keys& button,
+              const int& x, const int& y, const int& globalX,
+              const int& globalY, const int& state, const unsigned long& time)
+      : gadget::Event(type, time)
+      , mButton(button)
       , mRelativeX(x)
       , mRelativeY(y)
       , mGlobalX(globalX)
       , mGlobalY(globalY)
+      , mState(state)
    {
    }
 
-   /**
-    * Indicates if this is a mouse button press (true) or button release
-    * (false) event.
-    */
-   const bool& isButtonPress() const
+   const gadget::Keys& getButton() const
    {
-      return mIsButtonPress;
-   }
-
-   /**
-    * Indicates if this is a mouse button release (true) or button press
-    * (false) event.
-    */
-   bool isButtonRelease() const
-   {
-      return ! mIsButtonPress;
+      return mButton;
    }
 
    /**
@@ -151,12 +137,12 @@ public:
    }
 
 private:
-   int  mState;         /**< Mouse button and modifier key state. */
-   bool mIsButtonPress; /**< Flag indicating if this is a button press or release event. */
-   int  mRelativeX;     /**< Relative X position. */
-   int  mRelativeY;     /**< Relative Y position. */
-   int  mGlobalX;       /**< Global X position. */
-   int  mGlobalY;       /**< Global Y position. */
+   gadget::Keys mButton;        /**< The button associated with this event. */
+   int          mRelativeX;     /**< Relative X position. */
+   int          mRelativeY;     /**< Relative Y position. */
+   int          mGlobalX;       /**< Global X position. */
+   int          mGlobalY;       /**< Global Y position. */
+   int          mState;         /**< Mouse button and modifier key state. */
 };
 
 } // End of gadget namespace

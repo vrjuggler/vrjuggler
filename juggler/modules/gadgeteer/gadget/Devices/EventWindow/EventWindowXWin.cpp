@@ -315,7 +315,8 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
          mRealkeys[vj_key] = 1;
          mKeys[vj_key] += 1;
 
-         addKeyEvent(vj_key, true, event.xkey.state, event.xkey.time);
+         addKeyEvent(vj_key, gadget::KeyPressEvent, event.xkey.state,
+                     event.xkey.time);
 
          // -- Update lock state -- //
          // Any[key == ESC]/unlock(ifneeded) -> Unlocked
@@ -396,7 +397,8 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
          vj_key = xKeyToKey(key);
          mRealkeys[vj_key] = 0;
 
-         addKeyEvent(vj_key, false, event.xkey.state, event.xkey.time);
+         addKeyEvent(vj_key, gadget::KeyReleaseEvent, event.xkey.state,
+                     event.xkey.time);
 
          // -- Update lock state -- //
          // lock_keyDown[key==storedKey]/unlockMouse -> unlocked
@@ -429,7 +431,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
             cur_x = event.xmotion.x;
             cur_y = event.xmotion.y;
 
-            addMouseEvent(event.xmotion);
+            addMouseMoveEvent(event.xmotion);
 
             vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
                << "MotionNotify: x:"  << std::setw(6) << cur_x << "  y:"
@@ -486,17 +488,20 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
          case Button1:
             mRealkeys[gadget::MBUTTON1] = 1;
             mKeys[gadget::MBUTTON1] += 1;
-            addMouseEvent(event.xbutton, true);
+            addMouseButtonEvent(gadget::MBUTTON1, event.xbutton,
+                                gadget::MouseButtonPressEvent);
             break;
          case Button2:
             mRealkeys[gadget::MBUTTON2] = 1;
             mKeys[gadget::MBUTTON2] += 1;
-            addMouseEvent(event.xbutton, true);
+            addMouseButtonEvent(gadget::MBUTTON2, event.xbutton,
+                                gadget::MouseButtonPressEvent);
             break;
          case Button3:
             mRealkeys[gadget::MBUTTON3] = 1;
             mKeys[gadget::MBUTTON3] += 1;
-            addMouseEvent(event.xbutton, true);
+            addMouseButtonEvent(gadget::MBUTTON3, event.xbutton,
+                                gadget::MouseButtonPressEvent);
             break;
          }
 
@@ -508,15 +513,18 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
          {
          case Button1:
             mRealkeys[gadget::MBUTTON1] = 0;
-            addMouseEvent(event.xbutton, false);
+            addMouseButtonEvent(gadget::MBUTTON1, event.xbutton,
+                                gadget::MouseButtonReleaseEvent);
             break;
          case Button2:
             mRealkeys[gadget::MBUTTON2] = 0;
-            addMouseEvent(event.xbutton, false);
+            addMouseButtonEvent(gadget::MBUTTON2, event.xbutton,
+                                gadget::MouseButtonReleaseEvent);
             break;
          case Button3:
             mRealkeys[gadget::MBUTTON3] = 0;
-            addMouseEvent(event.xbutton, false);
+            addMouseButtonEvent(gadget::MBUTTON3, event.xbutton,
+                                gadget::MouseButtonReleaseEvent);
             break;
          }
 
@@ -531,51 +539,35 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
    }
 }
 
-void EventWindowXWin::addKeyEvent(gadget::Keys key, const bool& isKeyPress,
+void EventWindowXWin::addKeyEvent(const gadget::Keys& key,
+                                  onst gadget::EventType& type,
                                   const int& state, const Time& time)
 {
-   gadget::EventPtr key_event(new gadget::KeyEvent(key, isKeyPress,
-                                                   getMask(state), time));
+   gadget::EventPtr key_event(new gadget::KeyEvent(type, key, getMask(state),
+                                                   time));
    addEvent(key_event);
 }
 
-void EventWindowXWin::addMouseEvent(const XMotionEvent& event)
+void EventWindowXWin::addMouseMoveEvent(const XMotionEvent& event)
 {
-   gadget::EventPtr mouse_event(new gadget::MouseEvent(getMask(event.state),
-                                                       false, event.x,
-                                                       event.y, event.x_root,
+   gadget::EventPtr mouse_event(new gadget::MouseEvent(gadget::MouseMoveEvent,
+                                                       gadget::NO_MBUTTON,
+                                                       event.x, event.y,
+                                                       event.x_root,
                                                        event.y_root,
+                                                       getMask(event.state),
                                                        event.time));
    addEvent(mouse_event);
 }
 
-void EventWindowXWin::addMouseEvent(const XButtonEvent& event,
-                                    const bool& isButtonPress)
+void EventWindowXWin::addMouseButtonEvent(const gadget::Keys& button,
+                                          const XButtonEvent& event,
+                                          const gadget::EventType& type)
 {
-   //XXX: This doesn't seem right because AFAICT, the button member can contain
-   //     only one button at a time which would preclude the ability to press
-   //     multiple buttons at the same time (chording). HOWEVER, this fixes the
-   //     bug whereby on a button down event, the state was 0 (no buttons).
-   //     -- Ben Scott
-   int state(0);
-   if (event.button == Button1)
-   {
-      state |= gadget::BUTTON1_MASK;
-   }
-   if (event.button == Button2)
-   {
-      state |= gadget::BUTTON2_MASK;
-   }
-   if (event.button == Button3)
-   {
-      state |= gadget::BUTTON3_MASK;
-   }
-
-//   gadget::EventPtr mouse_event(new gadget::MouseEvent(getMask(event.state),
-   gadget::EventPtr mouse_event(new gadget::MouseEvent(state,
-                                                       isButtonPress, event.x,
+   gadget::EventPtr mouse_event(new gadget::MouseEvent(type, button, event.x,
                                                        event.y, event.x_root,
                                                        event.y_root,
+                                                       getMask(event.state),
                                                        event.time));
    addEvent(mouse_event);
 }
