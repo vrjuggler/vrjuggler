@@ -58,7 +58,7 @@ public interface BeanPreferences
     * other means.  An implementation of this method simply delays execution
     * of code until it is needed--if it is needed at all.
     */
-   public void initGUI();
+   public void initPrefsGUI();
 
    /**
     * Returns the "name" of the editor panel.  This may be any string that can
