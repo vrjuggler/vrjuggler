@@ -139,24 +139,6 @@ bool EventWindowOSX::startSampling()
    return 1;
 }
 
-int EventWindowOSX::onlyModifier(int mod)
-{
-   switch(mod)
-   {
-      case gadget::KEY_NONE:
-         return(!mCurKeys[gadget::KEY_SHIFT] && !mCurKeys[gadget::KEY_CTRL] && !mCurKeys[gadget::KEY_ALT]);
-      case gadget::KEY_SHIFT:
-         return(mCurKeys[gadget::KEY_SHIFT] && !mCurKeys[gadget::KEY_CTRL] && !mCurKeys[gadget::KEY_ALT]);
-      case gadget::KEY_CTRL:
-         return(!mCurKeys[gadget::KEY_SHIFT] && mCurKeys[gadget::KEY_CTRL] && !mCurKeys[gadget::KEY_ALT]);
-      case gadget::KEY_ALT:
-         return(!mCurKeys[gadget::KEY_SHIFT] && !mCurKeys[gadget::KEY_CTRL] && mCurKeys[gadget::KEY_ALT]);
-      default:
-         vprASSERT(false);
-         return 0;
-   }
-}
-
 void EventWindowOSX::updateData()
 {
    vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
