@@ -54,6 +54,15 @@ namespace vpr
 
   const InetAddrSIM InetAddrSIM::AnyAddr;
 
+  vpr::ReturnStatus getLocalHost (vpr::InetAddrSIM& host_addr)
+  {
+     vpr::ReturnStatus status;
+
+     vprASSERT(false && "Implement me!");
+
+     return status;
+  }
+
   vpr::ReturnStatus InetAddrSIM::setAddress( const std::string& address )
   {
       std::string::size_type pos;

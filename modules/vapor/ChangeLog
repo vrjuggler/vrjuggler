@@ -1,11 +1,13 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
-                    NEW VERSION: 0.15.0
-2002-05-29 allenb   Auto-register debug categories and changed the format of 
+2002-05-31 patrickh Added vpr::InetAddr::getLocalHost().
+                    NEW VERSION: 0.15.1
+2002-05-30 allenb   Auto-register debug categories and changed the format of 
                     debug category objects.
                     This should help fix the long standing issues of startup 
                     intialization and ordering involved in the debug output 
                     categories.
+                    NEW VERSION: 0.15.0
 2002-05-29 patrickh Fixed API for vpr::RWMutexNSPR to match vpr::RWMutex.
                     NEW VERSION: 0.14.1
 2002-05-24 allenb   Updated Debug to have a disallowed category list.  This

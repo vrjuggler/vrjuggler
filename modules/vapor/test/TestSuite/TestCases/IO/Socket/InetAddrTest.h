@@ -45,6 +45,8 @@ public:
 
    void testAddressLookup();
 
+   void testLocalAddressLookup();
+
    static CppUnit::Test* suite()
    {
       CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("NoninteractiveInetAddrTest");
@@ -54,6 +56,8 @@ public:
       test_suite->addTest( new CppUnit::TestCaller<InetAddrTest>("testSets", &InetAddrTest::testSets));
       test_suite->addTest( new CppUnit::TestCaller<InetAddrTest>("testAddressLookup",
                                                                  &InetAddrTest::testAddressLookup));
+      test_suite->addTest( new CppUnit::TestCaller<InetAddrTest>("testLocalAddressLookup",
+                                                                 &InetAddrTest::testLocalAddressLookup));
 
       return test_suite;
    }

@@ -64,4 +64,15 @@ void InetAddrTest::testAddressLookup ()
 #endif
 }
 
+void InetAddrTest::testLocalAddressLookup ()
+{
+   vpr::InetAddr empty_addr, local_addr;
+   vpr::ReturnStatus status;
+
+   CPPUNIT_ASSERT(empty_addr == local_addr && "Default addresses not equal");
+   status = vpr::InetAddr::getLocalHost(local_addr);
+   CPPUNIT_ASSERT(status.success() && "Local host lookup failed");
+   CPPUNIT_ASSERT(empty_addr != local_addr && "Default addresses not equal");
+}
+
 } // End of vprTest namespace

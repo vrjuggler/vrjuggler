@@ -42,6 +42,7 @@
 #include <vpr/vprConfig.h>
 
 #include <stdio.h>
+#include <prsystem.h>
 
 #include <vpr/md/NSPR/IO/Socket/InetAddrNSPR.h>
 #include <vpr/Util/Error.h>
@@ -51,6 +52,20 @@ namespace vpr
 {
 
 const InetAddrNSPR InetAddrNSPR::AnyAddr;      // Default constructor defaults to ANY addr
+
+vpr::ReturnStatus InetAddrNSPR::getLocalHost (vpr::InetAddrNSPR& host_addr)
+{
+   vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
+   char local_host_name[257];
+
+   if ( PR_GetSystemInfo(PR_SI_HOSTNAME, local_host_name, 256) == PR_SUCCESS )
+   {
+      host_addr.setAddress(std::string(local_host_name), 0);
+      status.setCode(vpr::ReturnStatus::Succeed);
+   }
+
+   return status;
+}
 
 // ----------------------------------------------------------------------------
 // Set the address for this object using the given address.  It must be of the
@@ -210,7 +225,7 @@ vpr::ReturnStatus InetAddrNSPR::lookupAddress (const std::string& address)
 
       if ( retval.failure() )
       {
-         vpr::Error::outputCurrentError(std::cerr, "[InetAddrNSPR::lookupAddress] Could not enumerate host entry");         
+         vpr::Error::outputCurrentError(std::cerr, "[InetAddrNSPR::lookupAddress] Could not enumerate host entry");
       }
    }
 
