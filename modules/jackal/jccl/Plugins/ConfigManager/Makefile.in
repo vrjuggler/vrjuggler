@@ -53,8 +53,6 @@ DEPEND_SRCS	:= vjAPI.C			\
 
 KERNEL_OBJECTS	= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.C=.o))
 
-LIBRARY		= libJuggler
-
 @SET_MAKE@
 
 # -----------------------------------------------------------------------------
@@ -63,17 +61,17 @@ LIBRARY		= libJuggler
 
 default: all
 
-dbg: dbg-recursive
+dbg: dbg-recursive  ${KERNEL_OBJECTS} 
 
-opt: opt-recursive 
+opt: opt-recursive  ${KERNEL_OBJECTS} 
 
-dso: dso-recursive 
+dso: dso-recursive  ${KERNEL_OBJECTS}  
 
-ddso: ddso-recursive 
+ddso: ddso-recursive ${KERNEL_OBJECTS} 
 
-obj: obj-recursive 
+obj: obj-recursive  ${KERNEL_OBJECTS} 
 
-all: dbg opt dso ddso ${KERNEL_OBJECTS}
+all: dbg opt dso ddso 
 
 depend: depend-recursive .depend_done
 
