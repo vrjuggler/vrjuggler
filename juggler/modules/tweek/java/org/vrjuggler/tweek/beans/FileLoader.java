@@ -39,9 +39,12 @@ package org.vrjuggler.tweek.beans;
 
 /**
  * The interface used to identify Beans as being able to load and unload files
- * using a GUI.
+ * using a GUI.  This interface must be implemented by the Tweek Panel Bean
+ * that will be loaded and instantiated by the Tweek Java GUI.  The Tweek Java
+ * GUI only learns of FileLoader implementations when the Panel Bean is
+ * focused.
  *
- * @since 1.0
+ * @since 0.3.0
  */
 public interface FileLoader
 {
@@ -58,9 +61,6 @@ public interface FileLoader
     * at a time.  Those Beans capable of opening more than one file should
     * return true.  Other Beans should return false.  If this behavior is not
     * followed, the results are undefined.
-    *
-    * @pre The Bean will correctly return its ability to open more than one
-    *      file at a time.
     *
     * @return true is returned if the Bean can open more than one file at a
     *         time.<br>
@@ -83,12 +83,20 @@ public interface FileLoader
     * of saving files should return true.  Other Beans should return false.  If
     * this behavior is not followed, the results are undefined.
     *
-    * @pre The Bean will correctly return its ability to save files.
-    *
-    * @return true is returned if the Bean can save file.<br>
+    * @return true is returned if the Bean can save files.<br>
     *         false is returned otherwise.
     */
    public boolean canSave();
+
+   /**
+    * Determines if the file loading Bean has unsaved changes.
+    *
+    * @return true is returned if the Bean has unsaved changes.<br>
+    *         false is returned otherwise.
+    *
+    * @since 0.92.3
+    */
+   public boolean hasUnsavedChanges();
 
    /**
     * Informs an instance of the implementing class that the user has requested
@@ -109,6 +117,18 @@ public interface FileLoader
     *         false is returned if the file saving failed.
     */
    public boolean saveAsRequested();
+
+   /**
+    * Informs an instance of the implementing class that the user has requested
+    * the saving of all files.  It is up to the implementing class to take
+    * appropriate actions.
+    *
+    * @return true is returned if all files were saved successfully.<br>
+    *         false is returned if the file saving failed.
+    *
+    * @since 0.92.3
+    */
+   public boolean saveAllRequested();
 
    /**
     * Informs an instance of the implementing class that the user has requested

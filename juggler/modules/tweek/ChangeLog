@@ -1,6 +1,12 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
-2005-02-08 patrrickh   Added org.vrjuggler.tweek.TweekCore.getMessageDocument()
+2005-02-10 patrickh    Extended org.vrjuggler.tweek.beans.FileLoader to allow
+                       save-all operations and to allow for testing for unsaved
+                       changes.  Added the capability for Beans to notify the
+                       Tweek Java GUI about file operations (open, close, save,
+                       etc.) that they perform themselves.
+                       NEW VERSION 0.92.3
+2005-02-08 patrickh    Added org.vrjuggler.tweek.TweekCore.getMessageDocument()
                        for easy access to the Tweek Java GUI's informational
                        message document.
                        NEW VERSION: 0.92.2
