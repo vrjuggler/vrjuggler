@@ -114,7 +114,7 @@ sub readSources ($$) {
         my $file;
         foreach $file ( @all_files ) {
             # Only match C/C++ source files.
-            if ( -f "$file" && $file =~ /(\.(c\+\+|cpp|cxx|cc|c))$/i ) {
+            if ( -f "$dir/$file" && $file =~ /(\.(c\+\+|cpp|cxx|cc|c))$/i ) {
                 my $ext = "$1";
 
                 # Add this suffix to the main suffix hash.
