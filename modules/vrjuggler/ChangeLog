@@ -5,6 +5,8 @@ Sep-21-2001 patrick   Complete restructuring of the VR Juggler source tree.
                       namespace), and all file names have had the "vj" prefix
                       removed.  See RELEASE_NOTES.txt for more details on
                       updating after this change.
+Sep-20-2001 patrick   The default chunk description file for VR Juggler is now
+                      vrj-chunks.desc.
 Sep-19-2001 kevn      Now using the vrj namespace instead of the prefix "vj"
                       on classes.
 Aug-27-2001 patrick   We build DLLs on Win32 now.
