@@ -125,7 +125,7 @@ public:
    /**
     * Copy Constructor
     */
-   UserData(UserData& userdata) : mAppData(userdata.mAppData)
+   UserData(const UserData& userdata) : mAppData(userdata.mAppData)
    {;}
    
    UserData& operator=(const UserData& userdata)
