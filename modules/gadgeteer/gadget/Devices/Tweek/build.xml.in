@@ -45,7 +45,7 @@
    <target name="dist" depends="compile_idl,compile">
       <jar destfile="TweekGadget.jar" basedir=".">
          <include name="org/vrjuggler/gadget/tweekgadget/*.class" />
-         <include name="gadget/**" />
+         <include name="gadget/*.class" />
       </jar>
    </target>
 
