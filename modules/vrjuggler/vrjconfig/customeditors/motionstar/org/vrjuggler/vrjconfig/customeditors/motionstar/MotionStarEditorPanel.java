@@ -115,18 +115,53 @@ public class MotionStarEditorPanel
 
       java.util.List filters = elt.getPropertyValues("position_filters");
 
-      // Pass off the embedded position_transform_filter config element.  For
-      // now, we assume that there will be at most one such element.
-      for ( java.util.Iterator i = filters.iterator(); i.hasNext(); )
+      if ( filters == null || filters.size() == 0 )
       {
-         ConfigElement filter = (ConfigElement) i.next();
+         // Pop up a warning message saying that the config element is
+         // missing information.
+         Frame parent =
+            (Frame) SwingUtilities.getAncestorOfClass(Frame.class, this);
+         JOptionPane.showMessageDialog(parent,
+                                       "WARNING: Config element '" +
+                                          elt.getName() +
+                                          "' has no position filters!\n" +
+                                          "Will create default position " +
+                                          "transform filter ...",
+                                       "Correcting Incomplete Configuration Element",
+                                       JOptionPane.WARNING_MESSAGE);
 
-         if ( filter.getDefinition().getToken().equals("position_transform_filter") )
+         // Create the new position_transform_filter config element.
+         ConfigBrokerProxy broker = new ConfigBrokerProxy();
+         ConfigDefinition filter_def =
+            broker.getRepository().get("position_transform_filter");
+         ConfigElementFactory factory =
+            new ConfigElementFactory(broker.getRepository().getAllLatest());
+         ConfigElement xform_filter = factory.create("Transform Filter 0",
+                                                     filter_def);
+
+         // Add the new config element to the position_filters property.
+         elt.addProperty("position_filters", xform_filter);
+
+         // Go ahead and set up the position transform filter editor panel
+         // using the newly created config element.
+         mPosXformFilterPanel.setConfig(ctx, xform_filter);
+      }
+      else
+      {
+         // Pass off the embedded position_transform_filter config element.
+         // For now, we assume that there will be at most one such element.
+         for ( java.util.Iterator i = filters.iterator(); i.hasNext(); )
          {
-            mPosXformFilterPanel.setConfig(ctx, filter);
-            break;
+            ConfigElement filter = (ConfigElement) i.next();
+
+            if ( filter.getDefinition().getToken().equals("position_transform_filter") )
+            {
+               mPosXformFilterPanel.setConfig(ctx, filter);
+               break;
+            }
          }
       }
+
 
       try
       {
