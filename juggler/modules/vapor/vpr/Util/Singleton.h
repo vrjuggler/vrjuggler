@@ -88,7 +88,7 @@ public:                                                        \
 namespace vpr
 {
    
-   // or you can use this coolio class to make a singleton,
+   // you can use this coolio class to make a singleton,
    // just inherit like so...
    //
    // class myClass : public vpr::Singleton<myClass>

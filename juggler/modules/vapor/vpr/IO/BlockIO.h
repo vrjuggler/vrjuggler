@@ -407,7 +407,7 @@ public:
        temp_buf = (char*) malloc(buf_len);
        memset(temp_buf, 0, buf_len);
        bytes = readn(temp_buf, buf_len);
-
+       
        // If anything was read into temp_buf, copy it into buffer.
        if ( bytes > -1 ) {
            buffer = temp_buf;
