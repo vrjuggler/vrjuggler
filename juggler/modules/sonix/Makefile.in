@@ -55,9 +55,11 @@ include @topdir@/make.defs.mk
 includedir           = @includedir@
 instlinks            = $(topdir)/install-clone
 
+
 SNX_LIBRARY           = @LIB_PREFIX@sonix
 SNX_LIB_STATIC        = $(SNX_LIBRARY).$(STATICLIB_EXT)
 SNX_LIB_DYNAMIC       = $(SNX_LIBRARY).$(DYNAMICLIB_EXT)
+DYLIB_DEPS_SNX		= @snx_ldflags_linker@
 
 # setup the list of libs to be built...
 LIBS        = $(SNX_LIBRARY)
@@ -97,6 +99,7 @@ $(LIBDIR)/$(SNX_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "$@ done"
 	@echo "------------------------------------------------"
 
+
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
 # ------------------------------------------------
@@ -105,7 +108,8 @@ $(LIBDIR)/$(SNX_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $@ $(OBJDIR)/*.$(OBJEXT)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) \
+	$(DYLIB_DEPS_SNX)
 	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
