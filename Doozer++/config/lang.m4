@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          lang.m4,v
-dnl Date modified: 2004/07/02 11:35:54
-dnl Version:       1.7
+dnl Date modified: 2005/01/08 22:44:39
+dnl Version:       1.8
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -38,7 +38,7 @@ dnl     DPP_LANG_CPLUSPLUS - Set the current language to C++.
 dnl     DPP_LANG_JAVA      - Set the current language to Java.
 dnl ===========================================================================
 
-dnl lang.m4,v 1.7 2004/07/02 11:35:54 patrickh Exp
+dnl lang.m4,v 1.8 2005/01/08 22:44:39 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Save the current language state.

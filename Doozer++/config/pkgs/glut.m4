@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          glut.m4,v
-dnl Date modified: 2004/10/21 15:59:18
-dnl Version:       1.11
+dnl Date modified: 2005/01/08 22:44:41
+dnl Version:       1.12
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -42,7 +42,7 @@ dnl     GLUT_INCLUDES - Extra include path for the GLUT header directory.
 dnl     GLUT_LDFLAGS  - Extra linker flags for the GLUT library directory.
 dnl ===========================================================================
 
-dnl glut.m4,v 1.11 2004/10/21 15:59:18 patrickh Exp
+dnl glut.m4,v 1.12 2005/01/08 22:44:41 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has GLUT installed.  This adds the

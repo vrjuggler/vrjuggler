@@ -1,5 +1,5 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -21,13 +21,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.simple-app.mk,v
-# Date modified: 2004/04/04 16:38:04
-# Version:       1.7
+# Date modified: 2005/01/08 22:44:43
+# Version:       1.8
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.simple-app.mk,v 1.7 2004/04/04 16:38:04 patrickh Exp
+# dpp.simple-app.mk,v 1.8 2005/01/08 22:44:43 patrickh Exp
 #
 # This file <dpp.simple-app.mk> defines many targets for use in compiling a
 # single application.
