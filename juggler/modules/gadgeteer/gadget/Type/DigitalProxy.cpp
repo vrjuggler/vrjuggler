@@ -42,8 +42,16 @@ bool DigitalProxy::config(jccl::ConfigChunkPtr chunk)
    vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,3) << "----------- configuring DIGITAL proxy ----\n" << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "DigProxy");
 
-   m_unitNum = chunk->getProperty("unit");
-   mDeviceName = (std::string)chunk->getProperty("device");
+   // if we are going to be receiving remote data, we need to connect to the remote device through a NetInput
+   std::string location = (std::string)chunk->getProperty("location");
+   if(location.size() > 0){
+      mDeviceName = (std::string)chunk->getProperty("name");
+      mDeviceName += "_NET_";
+   }
+   else{  // normal local devices
+      m_unitNum = chunk->getProperty("unit");
+      mDeviceName = (std::string)chunk->getProperty("device");
+   }
 
    refresh();
    return true;

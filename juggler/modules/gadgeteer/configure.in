@@ -477,6 +477,7 @@ AC_OUTPUT(gadgeteer-config
           gadget/Devices/Open/Trackd/Makefile
           gadget/Devices/Sim/Makefile
           gadget/Devices/VirtualTechnologies/Makefile
+          gadget/RemoteInputManager/Makefile
           gadget/Type/Makefile
           test/Makefile
           mtree/GADGET.data.dist

@@ -52,6 +52,7 @@ namespace gadget
 // Proxies
 class Proxy;
 class Input;
+class RemoteInputManager;
 
 //: The InputManager holds an manages all vj Input devices.
 //
@@ -188,6 +189,20 @@ private:
 
    //: Add a proxy alias
    void addProxyAlias(std::string alias_name, std::string proxy_name);
+
+   /*********************************************************
+   *          RemoteInputManger                             *
+   *********************************************************/
+
+public:
+   RemoteInputManager* getRemoteInputManager(){ return mRemoteInputManager; }
+
+protected:
+   bool configureRemoteInputManager(jccl::ConfigChunkPtr chunk);
+   bool configureRemoteConnection(jccl::ConfigChunkPtr chunk);
+
+private:
+   RemoteInputManager* mRemoteInputManager;
 };
 
 // Write out the status of the input manager

@@ -69,48 +69,57 @@ bool PositionProxy::config(jccl::ConfigChunkPtr chunk)
    vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,3) << "------------------ POS PROXY config() -----------------\n" << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "PosProxy");
 
-   mUnitNum = chunk->getProperty("unit");
-   mDeviceName = (std::string)chunk->getProperty("device");
+   // if we are going to be receiving remote data, we need to connect to a vjNetInput
+   std::string location = (std::string)chunk->getProperty("location");
+   if(location.size() > 0){ 
+      mDeviceName = (std::string)chunk->getProperty("name");
+      mDeviceName += "_NET_";   // input device we'll point to
+   }
+   else{
+      mUnitNum = chunk->getProperty("unit");
+      mDeviceName = (std::string)chunk->getProperty("device");
 
-   if (true == (bool)chunk->getProperty("etrans") )
-   {
-      vprDEBUG_NEXT(vrjDBG_INPUT_MGR,3) << "Position Transform enabled..."
-                                      << std::endl << vprDEBUG_FLUSH;
-      setTransform
-      ( chunk->getProperty("translate",0) , // xtrans
-        chunk->getProperty("translate",1) , // ytrans
-        chunk->getProperty("translate",2) , // ztrans
-        chunk->getProperty("rotate",0) , // xrot
-        chunk->getProperty("rotate",1) , // yrot
-        chunk->getProperty("rotate",2) );// zrot
-      vprDEBUG_NEXT(vrjDBG_INPUT_MGR,4) << "Transform Matrix: " << std::endl
+      if (true == (bool)chunk->getProperty("etrans") )
+      {
+         vprDEBUG_NEXT(vrjDBG_INPUT_MGR,3) << "Position Transform enabled..."
+                                       << std::endl << vprDEBUG_FLUSH;
+         setTransform
+            ( chunk->getProperty("translate",0) , // xtrans
+            chunk->getProperty("translate",1) , // ytrans
+            chunk->getProperty("translate",2) , // ztrans
+            chunk->getProperty("rotate",0) , // xrot
+            chunk->getProperty("rotate",1) , // yrot
+            chunk->getProperty("rotate",2) );// zrot
+         vprDEBUG_NEXT(vrjDBG_INPUT_MGR,4) << "Transform Matrix: " << std::endl
                                       << getTransform() << std::endl
                                       << vprDEBUG_FLUSH;
-   }
+      }
 
-   // Setup filter method
-   // XXX: For now, just hardcode to a single filter type
-   // in future, there should be a filter factory
-   if(true == (bool)chunk->getProperty("useFilter"))
-   {
-      vprDEBUG_NEXT(vrjDBG_INPUT_MGR,3) << "Using filter: Linear sigmoid."
-                                      << std::endl << vprDEBUG_FLUSH;
-      LinearSigmoidPositionFilter* sig_filter;
-      sig_filter = new LinearSigmoidPositionFilter();
+      // Setup filter method
+      // XXX: For now, just hardcode to a single filter type
+      // in future, there should be a filter factory
+      if(true == (bool)chunk->getProperty("useFilter"))
+      {
+         vprDEBUG_NEXT(vrjDBG_INPUT_MGR,3) << "Using filter: Linear sigmoid."
+                                       << std::endl << vprDEBUG_FLUSH;
+         LinearSigmoidPositionFilter* sig_filter;
+         sig_filter = new LinearSigmoidPositionFilter();
+   
+         jccl::ConfigChunkPtr sigmoid_params = (jccl::ConfigChunkPtr)chunk->getProperty("sigmoidParams");
+         if(sigmoid_params.get() == NULL)
+         { vprDEBUG(vprDBG_ERROR,0) << clrOutBOLD(clrRED,"ERROR:") << "Got NULL sigmoid Params.\n" << vprDEBUG_FLUSH; }
 
-      jccl::ConfigChunkPtr sigmoid_params = (jccl::ConfigChunkPtr)chunk->getProperty("sigmoidParams");
-      if(sigmoid_params.get() == NULL)
-      { vprDEBUG(vprDBG_ERROR,0) << clrOutBOLD(clrRED,"ERROR:") << "Got NULL sigmoid Params.\n" << vprDEBUG_FLUSH; }
+         sig_filter->setMaxDist(sigmoid_params->getProperty("maxDist"));
+         sig_filter->setMinDist(sigmoid_params->getProperty("minDist"));
+         sig_filter->setMaxThreshold(sigmoid_params->getProperty("maxThreshold"));
+         mFilter = sig_filter;
+      }
+      else
+      {
+         vprDEBUG_NEXT(vrjDBG_INPUT_MGR,3) << "NOT USING FILTER." << std::endl
+                                       << vprDEBUG_FLUSH;
+      }
 
-      sig_filter->setMaxDist(sigmoid_params->getProperty("maxDist"));
-      sig_filter->setMinDist(sigmoid_params->getProperty("minDist"));
-      sig_filter->setMaxThreshold(sigmoid_params->getProperty("maxThreshold"));
-      mFilter = sig_filter;
-   }
-   else
-   {
-      vprDEBUG_NEXT(vrjDBG_INPUT_MGR,3) << "NOT USING FILTER." << std::endl
-                                      << vprDEBUG_FLUSH;
    }
 
    // --- SETUP PROXY with INPUT MGR ---- //

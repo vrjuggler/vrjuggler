@@ -314,6 +314,52 @@ namespace jccl {
     }
 
 
+    //: Is there a chunk of this type in the active configuration?
+    //! CONCURRENCY: concurrent
+    //! NOTE: This locks the active list to do processing
+    bool ConfigManager::isChunkTypeInActiveList(std::string chunk_type)
+    {
+    vpr::Guard<vpr::Mutex> guard(mActiveLock);     // Lock the current list
+
+        // std::cout << "isChunkTypeInActiveList ActiveConfig.getChunks().size == " << mActiveConfig.getChunks().size() << std::endl;
+
+        std::vector<ConfigChunkPtr>::iterator i;
+        for(i=mActiveConfig.begin(); i != mActiveConfig.end();i++)
+        {
+            // std::cout << "trying to match " << std::string((*i)->getType()) << " with " << chunk_type << std::endl;
+            if(std::string((*i)->getType()) == chunk_type){
+                // std::cout << "match!" << std::endl;
+                return true;
+            }
+        }
+        // std::cout << "no match!" << std::endl;
+        return false;     // Not found, so return false
+    }
+
+
+   //: Is there a chunk of this type in the pending list??
+   //! CONCURRENCY: concurrent
+   //! NOTE: This locks the pending list to do processing
+   bool ConfigManager::isChunkTypeInPendingList(std::string chunk_type)
+   {
+      vpr::Guard<vpr::Mutex> guard(mActiveLock);     // Lock the current list
+
+      // std::cout << "isChunkTypeInPendingList(): mPendingConfig.size == " << mPendingConfig.size() << std::endl;
+
+      std::list<PendingChunk>::iterator i;
+      for(i=mPendingConfig.begin(); i != mPendingConfig.end();i++)
+      {
+         // std::cout << "trying to match " << std::string((*i).mChunk->getType()) << " with " << chunk_type << std::endl;
+         if(std::string((*i).mChunk->getType()) == chunk_type){
+            // std::cout << "match!" << std::endl;
+            return true;
+         }
+      }
+      // std::cout << "no match!" << std::endl;
+      return false;     // Not found, so return false
+   }
+
+
 
    //: Add an item to the active configuration
    //! NOTE: This DOES NOT process the chunk
