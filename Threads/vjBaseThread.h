@@ -274,7 +274,9 @@ public:
    // -----------------------------------------------------------------------
    virtual std::ostream& outStream(std::ostream& out)
    {
-      out << "t:" << mThreadId << " ";
+      out.setf(std::ios::right);
+      out << std::setw(3) << mThreadId;
+      out.unsetf(std::ios::right);
       return out;
    }
 
@@ -335,7 +337,7 @@ public:
    vjBaseThread* getThread(IdxType index)
    {
       //std::hash_map<IdxType, vjBaseThread*>::iterator i;
-      std::map<IdxType, vjBaseThread*>::iterator i;
+      typename std::map<IdxType, vjBaseThread*>::iterator i;
       i = mThreadMap.find(index);
       if(i == mThreadMap.end())
          return NULL;

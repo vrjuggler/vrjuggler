@@ -49,7 +49,13 @@
 
 
 int vjGlWindow::mCurMaxWinId = 0;
+vjMutex vjGlWindow::mWinIdMutex;
 
+int vjGlWindow::getNextWindowId()
+{
+vjGuard<vjMutex> guard(mWinIdMutex);   // Protect the id
+   return mCurMaxWinId++;
+}
 
 void vjGlWindow::config(vjDisplay* _display)
 {
@@ -99,7 +105,7 @@ void vjGlWindow::setLeftEyeProjection()
 #ifndef USE_PROJECTION_MATRIX
       // Set camera rotation and position
    glLoadIdentity();
-   glMultMatrixf(left_proj->viewMat.getFloatPtr());
+   glMultMatrixf(left_proj->mViewMat.getFloatPtr());
 #endif
 }
 
@@ -141,7 +147,7 @@ void vjGlWindow::setRightEyeProjection()
 #ifndef USE_PROJECTION_MATRIX
       // Set camera rotation and position
    glLoadIdentity();
-   glMultMatrixf(right_proj->viewMat.getFloatPtr());
+   glMultMatrixf(right_proj->mViewMat.getFloatPtr());
 #endif
 }
 

@@ -60,9 +60,9 @@ typedef vj_thread_func_t THREAD_FUNC;
 #   include <windows.h>
 #   include <process.h>
 #   include <Threads/vjThreadWin32.h>
-//#   include <Threads/vjThreadKeyWin32.h>
+#   include <Threads/vjThreadKeyWin32.h>
     typedef vjThreadWin32 vjThread;
-/*   typedef vjThreadKeyWin32 vjKeyId; */
+    typedef vjThreadKeyWin32 vjKeyId;
 #elif defined(VJ_USE_PTHREADS)
     typedef int cancel_state_t;
 

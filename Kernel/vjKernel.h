@@ -1,5 +1,4 @@
-/*************** <auto-copyright.pl BEGIN do not edit this line> **************
- *
+/*************** <auto-copyright.pl BEGIN do not edit this line> ************** *
  * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
  *
  * Original Authors:
@@ -233,44 +232,12 @@ protected:
    // ----------------------- //
 protected:
    //: Constructor:  Hidden, so no instantiation is allowed
-   vjKernel()
-   {
-      mApp = NULL;
-      mNewApp = NULL;
-      mNewAppSet = false;
-      mControlThread = NULL;
-      mSysFactory = NULL;
-      mInputManager = NULL;
-      mDrawManager = NULL;
-      mDisplayManager = NULL;
-      mSoundManager = NULL;
-
-      environmentManager = NULL;
-      perfBuffer = NULL;
-
-      //mInitialChunkDB = NULL;
-      //mChunkDB = NULL;
-
-      sharedMemPool = NULL;
-   }
+   vjKernel();
 
    virtual ~vjKernel()
    {;}
 
-   vjSingletonHeader(vjKernel);
-/*
-public:
-   //: Get instance of singleton object
-   static vjKernel* instance()
-   {
-      if (_instance == NULL)
-         _instance = new vjKernel;
-      return _instance;
-   }
-
-private:
-   static vjKernel* _instance;   //: The instance
-   */
+   vjSingletonHeader( vjKernel );
 };
 
 

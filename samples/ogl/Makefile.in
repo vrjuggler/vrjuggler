@@ -36,25 +36,32 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
+APPS	= analog	\
+          combo		\
+          cones		\
+          cubes		\
+          digitalGlove	\
+          glove		\
+          simpleGlove	\
+          texture	\
+          torus		\
+          wand
+
 # -----------------------------------------------------------------------------
 # Build targets.
 # -----------------------------------------------------------------------------
 default: all
 
-all: combo cones cubes wand digitalGlove simpleGlove glove torus
+all: $(APPS)
 
-cones cubes glove digitalGlove simpleGlove wand torus combo::
+$(APPS)::
 	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	-cd cones        && $(MAKE) clean
-	-cd cubes        && $(MAKE) clean
-	-cd wand         && $(MAKE) clean
-	-cd glove        && $(MAKE) clean
-	-cd digitalGlove && $(MAKE) clean
-	-cd simpleGlove  && $(MAKE) clean
-	-cd torus	 && $(MAKE) clean
-	-cd combo	 && $(MAKE) clean
+	@for app in $(APPS) ; do		\
+            cd $$app && $(MAKE) clean ;		\
+            cd .. ;				\
+        done

@@ -49,11 +49,10 @@ void vjSoundFactory::registerConstructor( vjSoundEngineConstructorBase* construc
 {
    vjASSERT(constructor != NULL);
    mConstructors.push_back(constructor);     // Add the constructor to the list
-   vjDEBUG(vjDBG_INPUT_MGR,1) << "vjSoundFactory::registerConstructor: Sound engine registered for: "
-		    << constructor->getChunkType().c_str()
-		    << "   :" << (void*)constructor
-		    << " type:" << typeid(*constructor).name() << std::endl
-                    << vjDEBUG_FLUSH;
+   std::cout << "vjSoundFactory::registerConstructor: Sound engine registered for: "
+	     << constructor->getChunkType().c_str()
+	     << "   :" << (void*)constructor
+	     << " type:" << typeid(*constructor).name() << std::endl;
 }
 
 bool vjSoundFactory::recognizeEngine(vjConfigChunk* chunk)

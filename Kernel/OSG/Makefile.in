@@ -1,0 +1,97 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Makefile.in for juggler/Kernel/OSG.  It requires GNU make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+default: all
+
+# Include common definitions.
+include @topdir@/Makefile.base
+
+includedir	= @includedir@/Kernel/OSG
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+
+# If we are not building in the current directory (the default), put all the
+# object files in the OSG subdirectory of ${OBJDIR}.
+ifneq (${OBJDIR}, .)
+    OBJDIR	:= ${OBJDIR}/OSG
+endif
+
+INSTALL		= @INSTALL@
+VJROOT		= ${top_srcdir}
+VJ_SRCDIR	= @VJ_SRCDIR@/Kernel/OSG
+WORKDIR		= ${topdir}/Kernel/OSG
+
+# Include source building, dependency and installation targets.
+include ${MKPATH}/vj.compile.mk
+include ${MKPATH}/vj.dep.mk
+include ${MKPATH}/vj.install.mk
+
+# Search path for source code and object files.
+vpath
+vpath %.c @srcdir@
+vpath %.cpp @srcdir@
+vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
+
+OSG_API 	= @OSG_API@
+
+ifeq (${OSG_API}, Y)
+#OSG_SRCS 	= vjOsgApp.cpp
+#DEPEND_FILES	= ${OSG_SRCS:.cpp=.d}
+endif
+
+# -----------------------------------------------------------------------------
+# Library targets.
+# -----------------------------------------------------------------------------
+all dbg opt dso ddso obj: # beforebuild ${OSG_OBJECTS}
+
+beforebuild:
+ifeq (${OSG_API}, Y)
+	@$(SHELL) $(scriptdir)/mkinstalldirs $(OBJDIR)
+endif
+
+# -----------------------------------------------------------------------------
+# Clean-up.
+# -----------------------------------------------------------------------------
+CLEAN_FILES	+= ${OSG_OBJECTS}
+
+# -----------------------------------------------------------------------------
+# Include dependencies generated automatically.
+# -----------------------------------------------------------------------------
+#ifndef DO_CLEANDEPEND
+#    -include ${DEPEND_FILES}
+#endif

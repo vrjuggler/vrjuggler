@@ -16,7 +16,7 @@
     </TD>
     <TD ALIGN="RIGHT" BGCOLOR="#008000">
       <FONT COLOR="#ffffff"><a href="http://www.vrjuggler.org/" TARGET="_top"><B><I>VR Juggler</a><BR>
-      Beta 2.0</I></B></FONT>
+      Release 1.0</I></B></FONT>
       <BR>
     </TD>
   </TR>

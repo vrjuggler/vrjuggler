@@ -71,7 +71,9 @@ public:
    // Copy the device data to local storage, and transform it if necessary
    void updateData() {
       mPosData = *(mPosPtr->getPosData(mUnitNum));
-      mPosUpdateTime = *(mPosPtr->getPosUpdateTime(mUnitNum));
+      vjTimeStamp* ts = mPosPtr->getPosUpdateTime(mUnitNum);
+      if (ts)
+          mPosUpdateTime = *ts;
 
       if(mETrans)
          transformData();

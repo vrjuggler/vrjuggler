@@ -62,7 +62,8 @@ ConesApp::~ConesApp () {
 }
 
 // ----------------------------------------------------------------------------
-// Execute any initialization needed before the API is started.
+// Execute any initialization needed before the API is started.  Put device
+// initialization here.
 // ----------------------------------------------------------------------------
 void
 ConesApp::init () {
@@ -91,7 +92,7 @@ ConesApp::init () {
         vjASSERT(users[0]->getId() == 0);
         break;
       default:
-        vjDEBUG(vjDBG_ALL, 0) << "ERROR: Bad number of users."
+        vjDEBUG(vjDBG_ALL, 0) << clrOutNORM(clrRED, "ERROR:") << " Bad number of users."
                               << vjDEBUG_FLUSH;
         exit();
       break;
@@ -109,45 +110,53 @@ ConesApp::apiInit () {
 }
 
 // ----------------------------------------------------------------------------
-// Called immediately upon opening a new OpenGL context.
+// Called immediately upon opening a new OpenGL context.  This is called for
+// every display window that is opened.  Put OpenGL resource allocation here.
 // ----------------------------------------------------------------------------
 void
 ConesApp::contextInit () {
-    vjASSERT(mDlData->firstTime == true);   // We should not have been here yet
-    mDlData->firstTime = false;
-
     // Generate some random lists.  NOTE: Needed for testing only.
-    int num_dls = rand() % 50;
-    glGenLists(num_dls);
+    mDlDebugData->maxIndex = rand() % 50;
+    mDlDebugData->dlIndex  = glGenLists(mDlDebugData->maxIndex);
 
     // Create display list.
-    mDlData->coneDLIndex = glGenLists(1);
-    glNewList(mDlData->coneDLIndex, GL_COMPILE);
+    mDlData->dlIndex = glGenLists(1);
+    glNewList(mDlData->dlIndex, GL_COMPILE);
         drawCone(1.5, 2.0, 20, 10);
     glEndList();
 
-    vjDEBUG(vjDBG_ALL, 0) << "Creating DL:" << mDlData->coneDLIndex
+    vjDEBUG(vjDBG_ALL, 0) << "Creating DL:" << mDlData->dlIndex
                           << std::endl << vjDEBUG_FLUSH;
-    std::cerr << "created displays lists:" << num_dls + 1 << std::endl;
+    std::cerr << "created displays lists:" << mDlDebugData->dlIndex + 1
+              << std::endl;
 
     initGLState();
 }
 
 // ----------------------------------------------------------------------------
-// Function to draw the scene.
-//
-// PRE: OpenGL state has correct transformation and buffer selected.
-// POST: The current scene has been drawn.
+// Called immediately upon closing an OpenGL context.  This is called for
+// every display window that is closed.  Put OpenGL deallocation here.
 // ----------------------------------------------------------------------------
 void
-ConesApp::draw () {
-    initGLState();    // This should really be in another function
+ConesApp::contextClose() {
+    // Deallocate the random display lists used for debugging.
+    if ( glIsList(mDlDebugData->dlIndex) == GL_TRUE ) {
+        vjDEBUG(vjDBG_ALL, 0) << "Deallocating " << mDlDebugData->maxIndex
+                              << " debugging display lists\n" << vjDEBUG_FLUSH;
+        glDeleteLists(mDlDebugData->dlIndex, mDlDebugData->maxIndex);
+    }
 
-    myDraw(vjGlDrawManager::instance()->currentUserData()->getUser());
+    // Deallocate the cube face geometry data from the video hardware.
+    if ( glIsList(mDlData->dlIndex) == GL_TRUE ) {
+        vjDEBUG(vjDBG_ALL, 0) << "Deallocating cone display list\n"
+                              << vjDEBUG_FLUSH;
+        glDeleteLists(mDlData->dlIndex, 1);
+    }
 }
 
 // ----------------------------------------------------------------------------
 // Function called after tracker update but before start of drawing.
+// Do calculations here.
 // ----------------------------------------------------------------------------
 void
 ConesApp::preFrame () {
@@ -161,6 +170,19 @@ ConesApp::preFrame () {
 }
 
 // ----------------------------------------------------------------------------
+// Function to render the scene.  Put OpenGL draw calls here.
+//
+// PRE: OpenGL state has correct transformation and buffer selected.
+// POST: The current scene has been drawn.
+// ----------------------------------------------------------------------------
+void
+ConesApp::draw () {
+    initGLState();    // This should really be in another function
+
+    myDraw(vjGlDrawManager::instance()->currentUserData()->getUser());
+}
+
+// ----------------------------------------------------------------------------
 // Function called after drawing has been triggered but BEFORE it completes.
 // ----------------------------------------------------------------------------
 void
@@ -170,7 +192,8 @@ ConesApp::intraFrame () {
 }
 
 // ----------------------------------------------------------------------------
-// Function called before updating trackers but after the frame is drawn.
+// Function called before updating trackers but after the frame is drawn.  Do
+// calculations here.
 // ----------------------------------------------------------------------------
 void
 ConesApp::postFrame () {

@@ -263,11 +263,11 @@ void vjMatrix::constrainRotAxis( const bool& allowXRot, const bool& allowYRot, c
    // temporary matrix
    vjMatrix constrainedMatrix;
    constrainedMatrix = *this;
-   vjMatrix inv_mat;
+   //vjMatrix inv_mat;
 
    // Restrict the rotation to only the axis specified
    float xRot, yRot, zRot;
-   vjVec3 xAxis( 1, 0, 0 ), yAxis( 0, 1, 0 ), zAxis( 0, 0, 1 );
+   //vjVec3 xAxis( 1, 0, 0 ), yAxis( 0, 1, 0 ), zAxis( 0, 0, 1 );
 
    // Add back the translation:
    /*
@@ -414,17 +414,47 @@ void vjMatrix::makeDirCos(vjVec3 secXAxis, vjVec3 secYAxis, vjVec3 secZAxis)
 }
 
 // From Watt & Watt
-void    vjMatrix::makeQuaternion(float* q)
+void    vjMatrix::makeQuaternion( const float* const q )
 {
+   /* 
+   // A piece of reference code for checking against...
+   const int W = VJ_W;
+   const int X = VJ_X;
+   const int Y = VJ_Y;
+   const int Z = VJ_Z;
+   const float* const quat = q;
+
+   mat[0][0]  = 1.0f  - 2.0f * (quat[Y] * quat[Y] + quat[Z] * quat[Z]);
+   mat[0][1]  = 2.0f         * (quat[X] * quat[Y] + quat[W] * quat[Z]);
+   mat[0][2]  = 2.0f         * (quat[X] * quat[Z] - quat[W] * quat[Y]);
+   mat[0][3]  = 0.0f;
+
+   mat[1][0]  = 2.0f         * (quat[X] * quat[Y] - quat[W] * quat[Z]);
+   mat[1][1]  = 1.0f  - 2.0f * (quat[X] * quat[X] + quat[Z] * quat[Z]);
+   mat[1][2]  = 2.0f         * (quat[Y] * quat[Z] + quat[W] * quat[X]);
+   mat[1][3]  = 0.0f;
+
+   mat[2][0]  = 2.0f         * (quat[X] * quat[Z] + quat[W] * quat[Y]);
+   mat[2][1]  = 2.0f         * (quat[Y] * quat[Z] - quat[W] * quat[X]);
+   mat[2][2] = 1.0f  - 2.0f * (quat[X] * quat[X] + quat[Y] * quat[Y]);
+   mat[2][3] = 0.0f;
+
+   mat[3][0] = 0;
+   mat[3][1] = 0;
+   mat[3][2] = 0;
+   mat[3][3] = 1.0f;
+   */
+
+
    float wx, wy, wz, xx, yy, yz, xy, xz, zz, xs, ys, zs;
    //float s;
 
    //s = 2.0f/(q[VJ_X]*q[VJ_X] + q[VJ_Y]*q[VJ_Y] + q[VJ_Z]*q[VJ_Z] + q[VJ_W]*q[VJ_W]);
 
-   xs = q[VJ_X] + q[VJ_X];    ys = q[VJ_Y] + q[VJ_Y];    zs = q[VJ_Z] + q[VJ_Z];
-   xx = q[VJ_X] * xs;   xy = q[VJ_X] * ys;   xz = q[VJ_X] * zs;
-   yy = q[VJ_Y] * ys;   yz = q[VJ_Y] * zs;   zz = q[VJ_Z] * zs;
-   wx = q[VJ_W] * xs;   wy = q[VJ_W] * ys;   wz = q[VJ_W] * zs;
+   xs = q[VJ_X] + q[VJ_X]; ys = q[VJ_Y] + q[VJ_Y]; zs = q[VJ_Z] + q[VJ_Z];
+   xx = q[VJ_X] * xs;      xy = q[VJ_X] * ys;      xz = q[VJ_X] * zs;
+   yy = q[VJ_Y] * ys;      yz = q[VJ_Y] * zs;      zz = q[VJ_Z] * zs;
+   wx = q[VJ_W] * xs;      wy = q[VJ_W] * ys;      wz = q[VJ_W] * zs;
 
    mat[0][0] = 1.0 - (yy+zz);
     mat[0][1] = xy+wz;
@@ -447,8 +477,10 @@ void    vjMatrix::makeQuaternion(float* q)
     mat[3][3] = 1.0;
 }
 
-void vjMatrix::makeQuaternion(vjQuat& q)
-{makeQuaternion(q.vec);}
+void vjMatrix::makeQuaternion( const vjQuat& q )
+{
+   makeQuaternion(q.vec);
+}
 
 void  vjMatrix::makeRot(float _degrees, vjVec3 _axis)
 {
@@ -474,7 +506,7 @@ void  vjMatrix::makeRot(float _degrees, vjVec3 _axis)
     mat[0][1] = (t*x*y)+(s*z); mat[1][1] = (t*y*y)+c;     mat[2][1] = (t*y*z)-(s*x); mat[3][1] = 0.0f;
     mat[0][2] = (t*x*z)-(s*y); mat[1][2] = (t*y*z)+(s*x); mat[2][2] = (t*z*z)+c;     mat[3][2] = 0.0f;
     mat[0][3] = 0.0f;          mat[1][3] = 0.0f;          mat[2][3] = 0.0f;          mat[3][3] = 1.0f;
-
+          
     zeroClamp();     // Clamp ~ zero values
 }
 

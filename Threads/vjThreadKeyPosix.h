@@ -57,14 +57,16 @@
 #endif
 
 
-//:
+//: Wrapper around POSIX threads thread-specific data.
 
 class vjThreadKeyPosix {
 public:
+    // -----------------------------------------------------------------------
     //: Constructor.
     // -----------------------------------------------------------------------
-    vjThreadKeyPosix () {
+    vjThreadKeyPosix (void) {
         keycreate(NULL);
+        setspecific(NULL);
     } 
 
     // -----------------------------------------------------------------------
@@ -72,13 +74,15 @@ public:
     // -----------------------------------------------------------------------
     vjThreadKeyPosix (vj_thread_func_t destructor, void* arg) {
         keycreate(destructor, arg);
+        setspecific(NULL);
     }
 
     // -----------------------------------------------------------------------
     //: Constructor.
     // -----------------------------------------------------------------------
-    vjThreadKeyPosix ( vjBaseThreadFunctor* destructor) {
+    vjThreadKeyPosix (vjBaseThreadFunctor* destructor) {
         keycreate(destructor);
+        setspecific(NULL);
     }
 
     // -----------------------------------------------------------------------
@@ -157,8 +161,8 @@ public:
     int
     keyfree (void) {
 #ifdef _PTHREADS_DRAFT_4
-        cerr << "keyfree() not supported with this POSIX threads "
-             << "implementation\n";
+        std::cerr << "keyfree() not supported with this POSIX threads "
+                  << "implementation\n";
 
         return -1;
 #else

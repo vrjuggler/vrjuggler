@@ -45,26 +45,26 @@
 
 
 //: Convert Performer matrix to Juggler matrix
-vjMatrix vjGetVjMatrix(pfMatrix& perfMat); //TODO!!! FIXME!!! change VJ to Vj
+vjMatrix vjGetVjMatrix(pfMatrix& perfMat);
 
 #define featureChange(var)\
-   std::cout<<"  !!!!!!!!!!!!\n"<<std::flush;\
-   std::cout<<" !!!!!!!!!!!!!!\n"<<std::flush;\
-   std::cout<<"!!!!!!!!!!!!!!!!\n"<<std::flush;\
-   std::cout<<"              \n"<<std::flush;\
+   std::cout<<"    !!!!!!!!!!!!  \n"<<std::flush;\
+   std::cout<<"   !!!!!!!!!!!!!! \n"<<std::flush;\
+   std::cout<<"  !!!!!!!!!!!!!!!!\n"<<std::flush;\
+   std::cout<<"                  \n"<<std::flush;\
    std::cout<<"FEATURE CHANGED:  "<<var<<"\n"<<std::flush;\
-   std::cout<<"              \n"<<std::flush;\
-   std::cout<<"!!!!!!!!!!!!!!!!\n"<<std::flush;\
-   std::cout<<" !!!!!!!!!!!!!!\n"<<std::flush;\
-   std::cout<<"  !!!!!!!!!!!!\n"<<std::flush;\
+   std::cout<<"                  \n"<<std::flush;\
+   std::cout<<"  !!!!!!!!!!!!!!!!\n"<<std::flush;\
+   std::cout<<"   !!!!!!!!!!!!!! \n"<<std::flush;\
+   std::cout<<"    !!!!!!!!!!!!  \n"<<std::flush;\
    std::cout<<"Exiting...\n"<<std::flush;\
    exit(-1);
    
-inline vjMatrix vjGetVJMatrix(pfMatrix& perfMat)
-{
-   featureChange("Please change all references to vjGetVJMatrix to vjGetVjMatrix (lower case j)")
-   return vjMatrix();
-}
+//inline vjMatrix vjGetVJMatrix(pfMatrix& perfMat)
+//{
+//   featureChange("Please change all references to vjGetVJMatrix to vjGetVjMatrix (lower case j)")
+//   return vjMatrix();
+//}
 
 //: Convert Juggler Matrix to Pf Matrix
 pfMatrix vjGetPfMatrix(vjMatrix& mat);

@@ -223,7 +223,12 @@ public:
     bool addValue (const std::string& property, const std::string& val);
     bool addValue (const std::string& property, vjConfigChunk* val);
 
-
+    //: check to see if a property exists within a config chunk.
+    inline bool doesPropertyExistFromToken( const std::string& token ) const
+    {
+       return (this->getPropertyPtrFromToken( token ) != NULL);
+    }   
+    
     //: Return a list of chunk names dependant based on chunk ptrs
     // Returns a list of the names of all the chunks
     // that are pointed to by chunk ptrs of this chunk

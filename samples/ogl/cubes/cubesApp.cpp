@@ -55,21 +55,21 @@ void UserData::updateNavigation()
    vjQuat      source_rot, goal_rot, slerp_rot;
 
    transformIdent.makeIdent();            // Create an identity matrix to rotate from
-   source_rot.makeQuat(transformIdent);
+   source_rot.makeRot(transformIdent);
 
    vjMatrix* wand_matrix;
    wand_matrix = mWand->getData();
    wand_matrix->getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
 
 
-   vjDEBUG(vjDBG_ALL,2) << "===================================\n"
+   vjDEBUG(vjDBG_ALL,6) << "===================================\n"
                         << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_ALL,2) << "Wand:\n" << *wand_matrix << std::endl
+   vjDEBUG(vjDBG_ALL,6) << "Wand:\n" << *wand_matrix << std::endl
                         << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_ALL,2) << "Wand XYZ: " << xyzAngles << std::endl
+   vjDEBUG(vjDBG_ALL,6) << "Wand XYZ: " << xyzAngles << std::endl
                         << vjDEBUG_FLUSH;
 
-   goal_rot.makeQuat(*wand_matrix);    // Create the goal rotation quaternion
+   goal_rot.makeRot(*wand_matrix);    // Create the goal rotation quaternion
 
    if(transformIdent != *wand_matrix)  // If we don't have two identity matrices
    {
@@ -79,13 +79,13 @@ void UserData::updateNavigation()
    else
       transform.makeIdent();
 
-   vjDEBUG(vjDBG_ALL,2) << "Transform:\n" << transform << std::endl
+   vjDEBUG(vjDBG_ALL,6) << "Transform:\n" << transform << std::endl
                         << vjDEBUG_FLUSH;
    transform.getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
-   vjDEBUG(vjDBG_ALL,2) << "Transform XYZ: " << xyzAngles << std::endl
+   vjDEBUG(vjDBG_ALL,6) << "Transform XYZ: " << xyzAngles << std::endl
                         << vjDEBUG_FLUSH;
 
-   vjDEBUG(vjDBG_ALL,2) << "Nav:\n" << mNavMatrix << std::endl << std::endl
+   vjDEBUG(vjDBG_ALL,6) << "Nav:\n" << mNavMatrix << std::endl << std::endl
                         << vjDEBUG_FLUSH;
 
    // ----- Translation ------- //
@@ -101,7 +101,7 @@ void UserData::updateNavigation()
 
 
    if(mIncVelocityButton->getData() || mDecVelocityButton->getData())
-      vjDEBUG(vjDBG_ALL,2) << "Velocity: " << mCurVelocity << std::endl
+      vjDEBUG(vjDBG_ALL,6) << "Velocity: " << mCurVelocity << std::endl
                            << vjDEBUG_FLUSH;
 
    if(mIncVelocityButton->getData() == vjDigital::TOGGLE_ON)
@@ -110,8 +110,8 @@ void UserData::updateNavigation()
       vjDEBUG(vjDBG_ALL,2) << "-- Toggle OFF --" << std::endl << vjDEBUG_FLUSH;
    if(mIncVelocityButton->getData() == vjDigital::ON)
       vjDEBUG(vjDBG_ALL,2) << "-- ON --" << std::endl << vjDEBUG_FLUSH;
-   if(mIncVelocityButton->getData() == vjDigital::OFF)
-      vjDEBUG(vjDBG_ALL,2) << "-- OFF --" << std::endl << vjDEBUG_FLUSH;
+//   if(mIncVelocityButton->getData() == vjDigital::OFF)
+//      vjDEBUG(vjDBG_ALL,) << "-- OFF --" << std::endl << vjDEBUG_FLUSH;
 
    // Find direction vector
    vjVec3   forward(0.0f, 0.0f, -1.0f);
@@ -127,11 +127,11 @@ void UserData::updateNavigation()
 
    local_xform.getXYZEuler(xyzAngles[0], xyzAngles[1], xyzAngles[2]);
    local_xform.getTrans(xyzTrans[0], xyzTrans[1], xyzTrans[2]);
-   vjDEBUG(vjDBG_ALL,2) << "Transform   Rot: " << xyzAngles << std::endl
+   vjDEBUG(vjDBG_ALL,6) << "Transform   Rot: " << xyzAngles << std::endl
                         << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_ALL,2) << "Transform Trans: " << xyzTrans << std::endl
+   vjDEBUG(vjDBG_ALL,6) << "Transform Trans: " << xyzTrans << std::endl
                         << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_ALL,2) << "-------------------------------------------"
+   vjDEBUG(vjDBG_ALL,6) << "-------------------------------------------"
                         << std::endl << vjDEBUG_FLUSH;
 }
 
@@ -139,7 +139,8 @@ void UserData::updateNavigation()
 // cubesApp methods.
 // ----------------------------------------------------------------------------
 
-// Execute any initialization needed before the API is started
+// Execute any initialization needed before the API is started.  Put device
+// initialization here.
 void cubesApp::init()
 {
    vjDEBUG(vjDBG_ALL,0) << "---------- cubes:App:init() ---------------"
@@ -165,32 +166,59 @@ void cubesApp::init()
       vjASSERT(users[0]->getId() == 0);
       break;
    default:
-      vjDEBUG(vjDBG_ALL,0) << "ERROR: Bad number of users." << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrRED, "ERROR:") << " Bad number of users." << vjDEBUG_FLUSH;
       exit();
       break;
    }
 }
 
-// Called immediately upon opening a new OpenGL context
+// Called immediately upon opening a new OpenGL context.  This is called once
+// for every display window that is opened.  Put OpenGL resource allocation
+// here.
 void cubesApp::contextInit()
 {
-   // Create display list
-   vjASSERT(mDlData->firstTime == true);   // We should not have been here yet
-   mDlData->firstTime = false;
+   // Generate some random lists.  NOTE: Needed for testing/debugging only!
+   mDlDebugData->maxIndex = rand()%50;
+   mDlDebugData->dlIndex = glGenLists(mDlDebugData->maxIndex);
 
-   int num_dls = rand()%50;
-   glGenLists(num_dls);        // Generate some random lists.  NOTE: Needed for testing only
+   // Generate the display list to be used for the cube faces.  This is the
+   // important one.
+   mDlData->dlIndex = glGenLists(1);
 
-   mDlData->cubeDLIndex = glGenLists(1);
-   glNewList(mDlData->cubeDLIndex, GL_COMPILE);
-	drawbox(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, GL_QUADS);
-   glEndList();
+   // Verify that we got a valid display list index.
+   if ( glIsList(mDlData->dlIndex) == GL_FALSE ) {
+       vjASSERT(false && "glGenLists() returned an invalid display list!");
+   }
+   else {
+       glNewList(mDlData->dlIndex, GL_COMPILE);
+          drawbox(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, GL_QUADS);
+       glEndList();
 
-   vjDEBUG(vjDBG_ALL,0) << "Creating DL:" << mDlData->cubeDLIndex << std::endl
-                        << vjDEBUG_FLUSH;
-   std::cerr << "created displays lists:" << num_dls+1 << std::endl;
+       vjDEBUG(vjDBG_ALL,0) << "Creating DL:" << mDlData->dlIndex
+                            << std::endl << vjDEBUG_FLUSH;
+       std::cerr << "created displays lists:" << mDlDebugData->maxIndex + 1
+                 << std::endl;
 
-   initGLState();
+       initGLState();
+    }
+}
+
+//: Called immediately upon closing an OpenGL context 
+// (called for every window that is closed)
+// put your opengl deallocation here...
+void cubesApp::contextClose()
+{
+   // Deallocate the random display lists used for debugging.
+   if ( glIsList(mDlDebugData->dlIndex) == GL_TRUE ) {
+      vjDEBUG(vjDBG_ALL, 0) << "Deallocating " << mDlDebugData->maxIndex
+                            << " display lists\n" << vjDEBUG_FLUSH;
+      glDeleteLists(mDlDebugData->dlIndex, mDlDebugData->maxIndex);
+   }
+
+   // Deallocate the cube face geometry data from the video hardware.
+   if ( glIsList(mDlData->dlIndex) == GL_TRUE ) {
+      glDeleteLists(mDlData->dlIndex, 1);
+   }
 }
 
 //----------------------------------------------

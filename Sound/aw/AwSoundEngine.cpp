@@ -95,20 +95,27 @@ void AwSoundEngine::init()
    // The three stages in setting up a AudioWorks application are
    // - Initialization
    vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << "awInitSys\n" << vjDEBUG_FLUSH;
-   vjASSERT( awInitSys() != -1 );
-
+   int result = awInitSys();
+   if (result == -1)
+   {
+      vjASSERT( result != -1 && "awInitSys failed" );
+      return;
+   }
+   
    // - Definition
    // Call awDefineSys() with the name of an application definition file
    vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "[aw] Loading: " << std::flush
                                        << tmpFile.c_str() << "\n"
                                        << vjDEBUG_FLUSH;
-   int result = awDefineSys( tmpFile.c_str() );
+   result = awDefineSys( tmpFile.c_str() );
    if (result == -1)
    {
-      vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"[aw] ADF file didn't load: ")  << "awDefineSys failed (== -1)... about to assert.."<< "\n" << vjDEBUG_FLUSH;
-      sleep( 5 );
+      vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"[aw] FATAL: ")  << "awDefineSys failed...Audioworks couldn't initialize (or not as likely, ADF file couldn't be found)"<< "\n" << vjDEBUG_FLUSH;
+      //sleep( 5 );
+      vjASSERT( false && "awDefineSys failed...Audioworks system couldn't initialize (or not as likely, ADF file couldn't be found)" );
+      return;
    }
-   vjASSERT( result != -1 );
+   
    // Make explicit function calls to create instances of AudioWorks classes.
 
    // - Configuration
@@ -121,8 +128,13 @@ void AwSoundEngine::init()
    // function calls.  These functions must be called by the application
    // for each sound and engine that will be used in the same simulation.
    vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << "awConfigSys\n" << vjDEBUG_FLUSH;
-   vjASSERT( awConfigSys( 1 ) == 0 );
-   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW,"done\n") << vjDEBUG_FLUSH;
+   result = awConfigSys( 1 );
+   if (result != 0)
+   {
+      vjASSERT( result == 0 && "awConfigSys failed" );
+      return;
+   }
+   vjDEBUG( vjDBG_ALL, vjDBG_CONFIG_LVL ) << clrOutNORM(clrYELLOW,"done\n") << vjDEBUG_FLUSH;
 
    // use a separate process for the sound engine.
    // OFF is default

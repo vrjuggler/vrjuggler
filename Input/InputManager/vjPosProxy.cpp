@@ -65,7 +65,7 @@ void vjPosProxy::setTransform( float xoff, float yoff, float zoff,    // Transla
 void vjPosProxy::set(vjPosition* posPtr, int unitNum)
 {
    vjASSERT( posPtr->fDeviceSupport(DEVICE_POSITION) );
-   vjDEBUG(vjDBG_INPUT_MGR,1) << "posPtr: " << posPtr << std::endl
+   vjDEBUG(vjDBG_INPUT_MGR, vjDBG_VERB_LVL) << "posPtr: " << posPtr << std::endl
               << "unit  : " << unitNum << std::endl << std::endl
               << vjDEBUG_FLUSH;
    mPosPtr = posPtr;

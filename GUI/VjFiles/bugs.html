@@ -9,9 +9,6 @@
 <li>VjControl is perfect.  It has no bugs.  If in doubt, repeat this as a 
 mantra until you believe.
 
-<br><li>File names of loaded chunkorgtrees are not stored correctly,
-resulting in weird defaults for the org tree save file requester.
-
 <br><li>If you remove the ConfigChunk that represents the connection
 to the GUI, the GUI won't notice that the connection has been closed,
 even though it has. (new improved non-fatal vjConnect suicide bug).
@@ -31,18 +28,8 @@ until you restart vjcontrol.
 
 <br><li>Strings can't contain quotes (parsing bug).
 
-<br><li>The current jdk1.2 release for Irix has some annoying minor glitches
-with window placement & sizing.
-
-<br><li>Double-clicking on chunk names in the org tree panel can occasionally 
-cause a null pointer exception.  This appears to be a bug in JFC 1.1 mouse
-click handling, and can safely be ignored.
-
 <br><li>The help panel (ie the window you're looking at now) doesn't respond to
 the font selected in preferences.
-
-<br><li>Additional frames that are open when vjcontrol's look & feel are 
-changed don't adopt the new look and feel. (The help panel never changes look & feel).
 
 <br><li>Run-time performance monitoring with multiple graphing windows open
 can be quite CPU-intensive (Java-too-slow error).
@@ -54,6 +41,21 @@ summary to the standard output stream.
 first opened.  Close & reopen to correct.
 
 </ul>
+<br>
+
+<h2>Fixed in 1.0</h2>
+
+<ul>
+<br><li>backspace was ignored for certain widgets when run on Linux.
+
+<br><li>Additional frames that are open when vjcontrol's look & feel are 
+changed don't adopt the new look and feel. (The help panel never changes look & feel).
+
+
+</ul>
+<br>
+<br>
+<br>
 
 </body>
 

@@ -50,6 +50,7 @@ vjGlxWindow::vjGlxWindow():vjGlWindow() {
    x_display = NULL;
    visual_info = NULL;
    glx_context = NULL;
+   x_window = 0;
    window_name = std::string("");
    mPipe = -1;
    mXDisplayName = std::string("");
@@ -231,7 +232,7 @@ int vjGlxWindow::open() {
 
 //     vjASSERT(NULL != glx_context);
 //     if (!glXMakeCurrent ( x_display, x_window, glx_context  )) {
-//         vjDEBUG(vjDBG_ERROR,0) << "ERROR: Couldn't set GlxContext for '" << mXDisplayName << "'\n" << vjDEBUG_FLUSH;
+//         vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " Couldn't set GlxContext for '" << mXDisplayName << "'\n" << vjDEBUG_FLUSH;
 //         return false;
 //     }
 
@@ -407,7 +408,7 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
 
    if (!glXQueryExtension (display, NULL, NULL))
    {
-      vjDEBUG(vjDBG_ERROR,0) << "ERROR: X Display '"<< mXDisplayName <<
+      vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " X Display '"<< mXDisplayName <<
       "' doesn't support GLX.\n" << vjDEBUG_FLUSH;
       return NULL;
    }

@@ -373,19 +373,29 @@ static BOOL processInterTraxDataRecord(InterSenseTrackerType *tracker, char *cmd
         struct INT_ANGLES_3DOF angles;
     } angleBuffer;
 
-#if defined  REVERSE_BYTE_ORDER
-    char buf[6];
+    union {
+        char    c[sizeof(short)];
+        short   value;
+    } endian;
 
-    buf[0] = cmdbuf[1];
-    buf[1] = cmdbuf[0];
-    buf[2] = cmdbuf[3];
-    buf[3] = cmdbuf[2];
-    buf[4] = cmdbuf[5];
-    buf[5] = cmdbuf[4];
-    memcpy((void *)angleBuffer.bytes, (void *)buf, 6);
-#else
-    memcpy((void *)angleBuffer.bytes, (void *)cmdbuf, 6);
-#endif
+    endian.value = 256;
+
+    /* Big endian. */
+    if ( endian.c[0] ) {
+        char buf[6];
+
+        buf[0] = cmdbuf[1];
+        buf[1] = cmdbuf[0];
+        buf[2] = cmdbuf[3];
+        buf[3] = cmdbuf[2];
+        buf[4] = cmdbuf[5];
+        buf[5] = cmdbuf[4];
+        memcpy((void *)angleBuffer.bytes, (void *)buf, 6);
+    }
+    /* Little endian. */
+    else {
+        memcpy((void *)angleBuffer.bytes, (void *)cmdbuf, 6);
+    }
 
     tracker->station[0].Orientation[0] = -((float)angleBuffer.angles.azIntAngle * 180.0f) / 32768L;
     tracker->station[0].Orientation[1] =  ((float)angleBuffer.angles.elIntAngle * 180.0f) / 32768L;
@@ -495,18 +505,29 @@ static float byteOrder(char *value)
 {
     float num;
 
-#if defined REVERSE_BYTE_ORDER
-    char buf[4];
+    union {
+        char    c[sizeof(short)];
+        short   value;
+    } endian;
 
-    buf[0] = value[3];
-    buf[1] = value[2];
-    buf[2] = value[1];
-    buf[3] = value[0]; 
+    endian.value = 256;
+
+    /* Big endian. */
+    if ( endian.c[0] ) {
+        char buf[4];
+
+        buf[0] = value[3];
+        buf[1] = value[2];
+        buf[2] = value[1];
+        buf[3] = value[0]; 
     
-    memcpy((void *)&num, (void *)buf, 4);
-#else
-    memcpy((void *)&num, (void *)value, 4);
-#endif
+        memcpy((void *)&num, (void *)buf, 4);
+    }
+    /* Little endian. */
+    else {
+        memcpy((void *)&num, (void *)value, 4);
+    }
+
     return num;
 }
 

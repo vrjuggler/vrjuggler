@@ -69,10 +69,10 @@ class vjMemPoolWin32 : public vjMemPool
 {
 public:    
    vjMemPoolWin32(size_t initialSize = 65536,  int numProcs = 8, char* staticTempName = "memPoolWin32XXXXXX") {
-       std::cerr << "\n\nMemPoolWin32: Allocating Arena."
-                 << "\n\tSize: " << initialSize
-                 << "\n\tnProcs: " << numProcs << "\n" << std::flush;
-
+       std::cerr << "\nvjMemPoolWin32: Allocating arena ("
+                 << initialSize << " bytes, "
+                 << numProcs  << " procs"
+                 << ")\n" << std::flush;
    }
 
    virtual ~vjMemPoolWin32() {
@@ -110,13 +110,17 @@ public:      // Non-virtual functions
 
    public:
    // Function must be called before any vjMemPools are created.
-   // Automatically called by the first new with default values if not called previously
-   static void init(size_t initialSize = 32768, int numProcs = 64, char* staticTempName = "/var/tmp/memPoolsArenaXXXXXX")     // Function to initialize any STATIC data structures
+   // Automatically called by the first new with default values if not called
+   // previously
+   // Function to initialize any STATIC data structures
+   static void init(size_t initialSize = 32768, int numProcs = 64,
+                    char* staticTempName = "/var/tmp/memPoolsArenaXXXXXX")
    {
-       std::cerr << "\n\nMemPoolWin32: Allocating Base Arena for ALL vjMemPoolSGI's."
-                 << "\n\tSize: " << initialSize << "\n\tnProcs: " << numProcs
-                 << "\n" << std::flush;
-
+      std::cerr << "\nvjMemPoolWin32: Allocating Base Arena for ALL "
+                << "vjMemPoolWin32's.\n  "
+                << initialSize << " bytes, "
+                << numProcs << " procs"
+                << "\n" << std::flush;
    }
 
    void* operator new(size_t sz)
