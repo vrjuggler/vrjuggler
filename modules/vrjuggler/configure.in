@@ -707,8 +707,6 @@ AC_OUTPUT(vrjuggler-config
           test/Draw/OGL/texture/Makefile
           test/Draw/OGL/torus/Makefile
           test/Draw/OGL/wand/Makefile
-          test/Draw/OpenSG/Makefile
-          test/Draw/OpenSG/OpenSGNav/Makefile
           test/RTRC/Makefile
           test/TestSuite/Makefile
           test/TestSuite/test.defs.mk
