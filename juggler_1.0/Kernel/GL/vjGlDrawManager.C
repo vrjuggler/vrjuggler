@@ -16,21 +16,21 @@ void vjGlDrawManager::config(vjConfigChunkDB*  chunkDB)
 {
     // Setup any config data
 }
-    
+
     // Enable a frame to be drawn
     // Trigger draw
 void vjGlDrawManager::draw()
 {
    drawTriggerSema.release();
 }
-    
-    
+
+
 //: Blocks until the end of the frame
 //! POST:
 //+	   The frame has been drawn
 void vjGlDrawManager::sync()
 {
-   drawDoneSema.acquire();  
+   drawDoneSema.acquire();
 }
 
 
@@ -42,7 +42,7 @@ void vjGlDrawManager::main(void* nullParam)
    {
       // Wait for trigger
       drawTriggerSema.acquire();
-      
+
       // THEN --- Do Rendering --- //
       drawAllPipes();
 
@@ -65,7 +65,7 @@ void vjGlDrawManager::drawAllPipes()
       pipes[pipeNum]->completeRender();
 
    vjDEBUG_END(3) << "vjGLDrawManager::drawAllPipes: Exit" << endl << flush << vjDEBUG_FLUSH;
-}    
+}
 
     /// Initialize the drawing API (if not already running)
 void vjGlDrawManager::initAPI()
@@ -73,7 +73,7 @@ void vjGlDrawManager::initAPI()
     ; /* Do nothing */
 }
 
-    //: Initialize the drawing state for the API based on 
+    //: Initialize the drawing state for the API based on
     //+ the data in the display manager.
     //
     //! PRE: API is running (initAPI has been called)
@@ -102,7 +102,7 @@ void vjGlDrawManager::initDrawing()
    {
       int pipeNum = wins[winId]->getDisplay()->pipe();  // Find pipe to add it too
                                                         // ASSERT: pipeNum := [0...n]
-      
+
       if(pipes.size() < (pipeNum+1))            // ASSERT: Max index of pipes is < our pipe
       {
                                                 // XXX: This is not really a good way to do it
@@ -127,19 +127,19 @@ void vjGlDrawManager::initDrawing()
 
       // --- Setup Multi-Process stuff --- //
       // Create a new thread to handle the control
-	vjThreadId* controlPid;
+	vjThread* control_thread;
 
-   vjThreadMemberFunctor<vjGlDrawManager>* memberFunctor = 
+   vjThreadMemberFunctor<vjGlDrawManager>* memberFunctor =
       new vjThreadMemberFunctor<vjGlDrawManager>(this, &vjGlDrawManager::main, NULL);
 
-	controlPid = vjThread::spawn(memberFunctor, 0);
-   
-   vjDEBUG(0) << "vjGlDrawManager::thread: " << *controlPid << endl << vjDEBUG_FLUSH;
+	control_thread = new vjThread(memberFunctor, 0);
+
+   vjDEBUG(0) << "vjGlDrawManager::thread: " << control_thread << endl << vjDEBUG_FLUSH;
    // Dump the state
    debugDump();
 }
-	    
-    
+	
+
     /// Shutdown the drawing API
 void vjGlDrawManager::closeAPI()
 {
@@ -200,7 +200,7 @@ void vjGlDrawManager::debugDump()
     vjDEBUG(0) << "-- DEBUG DUMP --------- vjGlDrawManager: " << (void*)this << " ------------" << endl
 	         << "\tapp:" << (void*)app << endl << vjDEBUG_FLUSH;
     vjDEBUG(0) << "\tWins:" << wins.size() << endl << vjDEBUG_FLUSH;
-    
+
     for(vector<vjGlWindow*>::iterator i = wins.begin(); i != wins.end(); i++)
     {
 	   vjDEBUG(0) << "\n\t\tvjGlWindow:\n" << *(*i) << endl << vjDEBUG_FLUSH;
@@ -244,7 +244,7 @@ void vjGlDrawManager::drawBox(float size, GLenum type)
     {0.0, 0.0, 1.0},
     {0.0, 0.0, -1.0}
   };
-  
+
   static GLint faces[6][4] =
   {
     {0, 1, 2, 3},

@@ -23,16 +23,14 @@
 int vjGlPipe::start()
 {
    vjASSERT(mThreadRunning == false);        // We should not be running yet
-   
-   // Create a new thread to handle the control loop
-   vjThreadId* controlPid;
 
-   vjThreadMemberFunctor<vjGlPipe>* memberFunctor = 
+   // Create a new thread to handle the control loop
+   vjThreadMemberFunctor<vjGlPipe>* memberFunctor =
    new vjThreadMemberFunctor<vjGlPipe>(this, &vjGlPipe::controlLoop, NULL);
 
-   controlPid = vjThread::spawn(memberFunctor, 0);
+   mActiveThread = new vjThread(memberFunctor, 0);
 
-   vjDEBUG(0) << "vjGlPipe::start: Started control loop.  " << *controlPid << endl << vjDEBUG_FLUSH;
+   vjDEBUG(0) << "vjGlPipe::start: Started control loop.  " << mActiveThread << endl << vjDEBUG_FLUSH;
    return 1;
 }
 
@@ -78,7 +76,7 @@ void vjGlPipe::controlLoop(void* nullParam)
 
          // --- Call the pipe pre-draw function --- //
       vjGlApp* theApp = glManager->getApp();
-      
+
          // Should I get into a context
       theApp->pipePreDraw();                    // Call pipe pre-draw function
 
@@ -98,7 +96,7 @@ void vjGlPipe::controlLoop(void* nullParam)
 void vjGlPipe::checkForNewWindows()
 {
    vjGlApp* theApp = glManager->getApp();    // Get the application
-   
+
    if (newWins.size() > 0)  // If there are new windows added
    {
       vjGuard<vjMutex> guardNew(newWinLock);
@@ -123,7 +121,9 @@ void vjGlPipe::checkForNewWindows()
 void vjGlPipe::renderWindow(vjGlWindow* win)
 {
    vjGlApp* theApp = glManager->getApp();       // Get application for easy access
-   theApp->setContextId(win->getId());          // Set the context id for application
+   //theApp->setContextId(win->getId());          // Set the context id for application
+   vjGlDrawManager::instance()->currentContext() = win->getId();
+   vjDEBUG(1) << "vjGlPipe::renderWindow: Set context to: " << vjGlDrawManager::instance()->currentContext() << endl << vjDEBUG_FLUSH;
 
    win->makeCurrent();
 
