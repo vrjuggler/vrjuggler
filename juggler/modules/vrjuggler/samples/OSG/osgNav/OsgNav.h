@@ -43,9 +43,9 @@
 #include <vrj/Draw/OGL/GlApp.h>
 #include <vrj/Math/Matrix.h>
 
-#include <vrj/Input/Type/PosInterface.h>
-#include <vrj/Input/Type/AnalogInterface.h>
-#include <vrj/Input/Type/DigitalInterface.h>
+#include <gadget/Type/PositionInterface.h>
+#include <gadget/Type/AnalogInterface.h>
+#include <gadget/Type/DigitalInterface.h>
 
 //OSG  includes
 #include <osg/Geode>
@@ -194,14 +194,14 @@ private:
    std::string mFileToLoad;
 
 public:
-    vrj::PosInterface    mWand;     // the Wand
-    vrj::PosInterface    mHead;     // the head
-    vrj::DigitalInterface   mButton0;
-    vrj::DigitalInterface   mButton1;
-    vrj::DigitalInterface   mButton2;
-    vrj::DigitalInterface   mButton3;
-    vrj::DigitalInterface   mButton4;
-    vrj::DigitalInterface   mButton5;
+    gadget::PositionInterface    mWand;     // the Wand
+    gadget::PositionInterface    mHead;     // the head
+    gadget::DigitalInterface   mButton0;
+    gadget::DigitalInterface   mButton1;
+    gadget::DigitalInterface   mButton2;
+    gadget::DigitalInterface   mButton3;
+    gadget::DigitalInterface   mButton4;
+    gadget::DigitalInterface   mButton5;
 };
 
 

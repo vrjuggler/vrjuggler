@@ -72,7 +72,7 @@ cout  << "Wand Buttons:"
    mPos[0] += posInc;
 
    //Do the actual move
-    mModelTrans->getMatrix().setTrans(mPos);
+    mModelTrans->getMatrix().setTrans(mPos[0], mPos[1], mPos[2]);
 
    // -- Get wand info -- //
     vrj::Matrix* wandMatrix;
@@ -83,18 +83,18 @@ cout  << "Wand Buttons:"
     osgWandMat.set(wandMatrix->getFloatPtr());
 
 
-   if(mButton0->getData() == vrj::Digital::ON)
+   if(mButton0->getData() == gadget::Digital::ON)
     {
       //Move in the direction of the wand
         speed = speed + inc;
       cout << "speed: " << speed << std::endl;
     }
-    if(mButton1->getData() == vrj::Digital::ON)
+    if(mButton1->getData() == gadget::Digital::ON)
     {
         //joint->preRotate(5.0f, 0.0f, 0.0f, 1.0f);
       speed = 0;
     }
-    if(mButton2->getData() == vrj::Digital::ON)
+    if(mButton2->getData() == gadget::Digital::ON)
     {
         //joint->preRotate(-5.0f, 0.0f, 0.0f, 1.0f);
         speed = speed - inc;
