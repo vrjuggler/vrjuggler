@@ -38,7 +38,7 @@ LINK		= $(CXX) $(CPPFLAGS) $(CXXFLAGS) @EXTRA_LINK_FLAGS@	\
                   $(EXTRA_FLAGS)
 
 VPR_LIBS	= @APP_VPR_LIBS_BEGIN@ @APP_VPR_LIBS_BASIC@ @APP_VPR_LIBS_END@ @APP_LIBS_BASIC@
-EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_END@ -lm
+EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_END@
 
 # -----------------------------------------------------------------------------
 # Compiler command lines.
