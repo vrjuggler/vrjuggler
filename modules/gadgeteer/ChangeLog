@@ -1,5 +1,9 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Oct-30-2002 allenb    PositionXformFilter now supports pre and post transforms
+                      This will allow it to be used for pos devices and for
+		      position proxies.
+		      NEW VERSION: 0.6.3
 Oct-29-2002 patrickh  The Input Manager can now scan a list of directories to
                       find driver DSOs.  Scanning is performed in addition to
                       the individual driver loading added in version 0.5.0.
