@@ -105,7 +105,7 @@ vjMatrix vjLinearSigmoidPosFilter::getPos(const vjMatrix newPos)
    trans_diff = new_trans-last_returned_trans;
    dist = trans_diff.length();
 
-   vjDEBUG(vjDBG_ALL,0) << "sigmoid: dist: " << dist << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,2) << "sigmoid: dist: " << dist << endl << vjDEBUG_FLUSH;
 
    // Get scale factor
    scale_factor = getScaleFactor(dist);
@@ -119,6 +119,8 @@ vjMatrix vjLinearSigmoidPosFilter::getPos(const vjMatrix newPos)
    }
    else
    {
+      vjDEBUG(vjDBG_ALL,2) << "sigmoid: scale_factor: " << scale_factor << endl << vjDEBUG_FLUSH;
+
       vjASSERT((scale_factor > eps) && (scale_factor < (1.0f-eps)));
 
       vjVec3 ret_trans;
@@ -126,9 +128,7 @@ vjMatrix vjLinearSigmoidPosFilter::getPos(const vjMatrix newPos)
 
       ret_trans = last_returned_trans + (trans_diff * scale_factor);
 
-      vjDEBUG(vjDBG_ALL,0) << "sigmoid: scale_factor: " << scale_factor << endl << vjDEBUG_FLUSH;
-
-      vjDEBUG(vjDBG_ALL,0) << "\tret_trans = last_returned_trans + (trans_diff * scale_factor) -->"
+      vjDEBUG(vjDBG_ALL,2) << "\tret_trans = last_returned_trans + (trans_diff * scale_factor) -->"
                            << ret_trans << " = " << last_returned_trans << " + (" << trans_diff
                            << " * " << scale_factor << " )\n" << vjDEBUG_FLUSH;
 
