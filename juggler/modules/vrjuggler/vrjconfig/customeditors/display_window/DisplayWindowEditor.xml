@@ -8,7 +8,7 @@
          <bean>ConfigBroker</bean>
          <jar path="${JCCL_BASE_DIR}/share/jccl/beans">jccl_editors.jar</jar>
          <jar path="${JCCL_BASE_DIR}/share/jccl/java">TableLayout.jar</jar>
-         <jar path="${VJ_BASE_DIR}/share/vrjuggler">CommonEditors.jar</jar>
+         <jar path="${VJ_BASE_DIR}/share/vrjuggler/java">CommonEditors.jar</jar>
       </dependencies>
    </service>
 </beanlist>
