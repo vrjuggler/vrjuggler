@@ -49,6 +49,7 @@ $path_subst{"GLOSSARY"} = 'html/misc/glossary.html';
 $path_subst{"LAYOUT"} = 'html/layout';
 $path_subst{"LEGAL"} = 'html/legal';
 $path_subst{"MISC"} = 'html/misc';
+$path_subst{"GALLERY"} = 'html/gallery';
 $path_subst{"NEWS"} = 'html/news';
 $path_subst{"PUBLICATIONS"} = 'html/publications';
 $path_subst{"FAQ"} = 'html/misc/faq.html';
