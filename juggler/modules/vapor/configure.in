@@ -552,12 +552,22 @@ fi
 # Checks for library functions.
 # -----------------------------------------------------------------------------
 AC_CHECK_FUNCS([gettimeofday sigaction sigemptyset sigfillset sigaddset \
-               sigdelset sigismember snprintf socket strerror])
+                sigdelset sigismember snprintf strerror])
 
 _vpr_save_LIBS="$LIBS"
-AC_CHECK_FUNC([gethostbyname], [SOCKET_LIB=''],
-    [AC_CHECK_LIB([socket], [gethostbyname], [SOCKET_LIB='-lsocket'])])
+AC_CHECK_FUNC([socket], [SOCKET_LIB=''],
+   [AC_CHECK_LIB([socket], [socket], [SOCKET_LIB='-lsocket'])])
 LIBS="${_vpr_save_LIBS}"
+
+_vpr_save_LIBS="$LIBS"
+AC_CHECK_FUNC([gethostbyname], [NS_LIB=''],
+   [AC_CHECK_LIB([socket], [gethostbyname], [NS_LIB='-lsocket'],
+      [AC_CHECK_LIB([nsl], [gethostbyname], [NS_LIB='-lnsl'])])])
+LIBS="${_vpr_save_LIBS}"
+
+if test "x$SOCKET_LIB" = "x$NS_LIB" ; then
+   NS_LIB=''
+fi
 
 # Default to using the Leach UUID implementation found in
 # juggler/external/leach-uuid.
@@ -709,7 +719,7 @@ UNIX_VPRROOT_ABS="$VPRROOT_ABS"
 if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS="$LDFLAGS $LIBS $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $UUID_LIB $DYN_LOAD_LIB"
+    APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
 fi
 
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
@@ -757,7 +767,7 @@ fi
 case $SUBSYSTEM in
     SPROC)
         subsystem_cxxflags="$subsystem_includes"
-        subsystem_libs="$SEM_LIB $SOCKET_LIB $UUID_LIB $DYN_LOAD_LIB"
+        subsystem_libs="$SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
         static_begin="-B static"
         static_end="-B dynamic"
         vpr_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
@@ -769,7 +779,7 @@ case $SUBSYSTEM in
         ;;
     POSIX)
         subsystem_cxxflags="$subsystem_includes"
-        subsystem_libs="$PTHREAD_LIB $SEM_LIB $SOCKET_LIB $UUID_LIB $DYN_LOAD_LIB"
+        subsystem_libs="$PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
 
         if test "x$PLATFORM" != "xDarwin" ; then
             if test "x$GNU_LD" = "xyes" ; then
@@ -800,7 +810,7 @@ case $SUBSYSTEM in
             vpr_prof_libs='vpr.lib'
         else
             subsystem_cxxflags="$subsystem_includes"
-            subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $UUID_LIB $DYN_LOAD_LIB"
+            subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $NS_LIB $UUID_LIB $DYN_LOAD_LIB"
             vpr_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
             vpr_ldflags_linker="$vpr_ldflags_compiler"
             vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS"
