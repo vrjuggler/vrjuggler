@@ -73,6 +73,33 @@ public:
       return ! (*this == guid_obj);
    }
 
+   bool operator<(const GUID& r) const
+   {
+      bool ret_val(false);
+
+      if (m_guid.packed.l0 < r.m_guid.packed.l0)
+         ret_val = true;
+      else if(m_guid.packed.l0 == r.m_guid.packed.l0)
+      {
+         if(m_guid.packed.l1 < r.m_guid.packed.l1)
+            ret_val = true;
+         else if(m_guid.packed.l1 == r.m_guid.packed.l1)
+         {
+            if(m_guid.packed.l2 < r.m_guid.packed.l2)
+               ret_val = true;
+            else if(m_guid.packed.l2 == r.m_guid.packed.l2)
+            {
+               if(m_guid.packed.l3 < r.m_guid.packed.l3)
+               {
+                  ret_val = true;
+               }
+            }
+         }
+      }
+
+      return ret_val;
+   }
+
    struct StdGUID
    {
       vpr::Uint32 m0;
