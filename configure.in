@@ -82,6 +82,12 @@ AC_ARG_ENABLE(plexus,
 
 builtin(include, modules/plexus/cfgargs.m4)
 
+AC_ARG_ENABLE(dso,
+              [--enable-dso              Enable building DSO             [default=no]],
+              build_dso="$enableval", build_dso='no')
+
+builtin(include, modules/dso/cfgargs.m4)
+
 DPP_ABI_SETUP
 
 # -----------------------------------------------------------------------------
@@ -117,13 +123,38 @@ fi
 
 BUILD_PLEXUS='NO'
 
-if test "x$build_plexus" = "xyes" ; then
+load_plexus ( )
+{
    BUILD_PLEXUS='YES'
    JUGGLER_PROJECTS="$JUGGLER_PROJECTS modules/plexus"
    PLX_BASE_DIR="$builddir/modules/plexus"
    PLEXUS_CONFIG="$PLX_BASE_DIR/plexus-config --basedir --no-includedir"
    export PLX_BASE_DIR
-   export PLX_CONFIG
+   export PLEXUS_CONFIG
+}
+
+if test "x$build_plexus" = "xyes" ; then
+   load_plexus
+fi
+
+BUILD_DSO='NO'
+
+if test "x$build_dso" = "xyes" ; then
+   if test "x$SUBSYSTEM" != "xNSPR" ; then
+      echo "DSO can only be built with NSPR at this time"
+      exit 1
+   fi
+
+   if test "x$BUILD_PLEXUS" = "xNO" ; then
+      load_plexus
+   fi
+
+   BUILD_DSO='YES'
+   JUGGLER_PROJECTS="$JUGGLER_PROJECTS modules/dso"
+   DSO_BASE_DIR="$builddir/modules/dso"
+   DSO_CONFIG="$DSO_BASE_DIR/dso-config --basedir --no-includedir"
+   export DSO_BASE_DIR
+   export DSO_CONFIG
 fi
 
 # List the sub-projects where a local configure script needs to be run.
@@ -212,6 +243,13 @@ fi
 
 INCLUDES="$INCLUDES -I$BOOST_DIR"
 export INCLUDES
+
+if test "x$BUILD_DSO" = "xYES" ; then
+   jsave_CPPFLAGS="$CPPFLAGS"
+   CPPFLAGS="$CPPFLAGS -I$VPR_BASE_DIR $NSPR_INCLUDES"
+   EQUIP_PATH(0.0.1, , AC_MSG_ERROR(*** Equip required for DSO ***))
+   CPPFLAGS="$jsave_CPPFLAGS"
+fi
 
 # -----------------------------------------------------------------------------
 # Miscellaneous checks.
