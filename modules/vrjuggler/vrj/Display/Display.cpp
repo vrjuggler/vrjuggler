@@ -70,6 +70,7 @@ void Display::configDisplayWindow(jccl::ConfigChunkPtr chunk)
     mBorder     = chunk->getProperty("border");
     int pipe    = chunk->getProperty("pipe");
     mActive  = chunk->getProperty("active");
+    mStereo  = chunk->getProperty("stereo");
 
    // -- Check for error in configuration -- //
    // NOTE: If there are errors, set them to some default value
