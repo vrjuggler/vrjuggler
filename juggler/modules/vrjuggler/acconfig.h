@@ -160,9 +160,6 @@
 #undef int32_t
 #undef int64_t
 
-/* Define if you have the pthread_attr_setstack function.  */
-#undef HAVE_PTHREAD_ATTR_SETSTACK
-
 /* Define if you have the sched_yield function.  */
 #undef HAVE_SCHED_YIELD
 
