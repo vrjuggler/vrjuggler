@@ -49,7 +49,6 @@
 
 #include <Threads/vjThreadPool.h>
 #include <Threads/vjThread.h>
-#include <SharedMem/vjMemory.h>
 #include <Sync/vjGuard.h>
 #include <Kernel/vjDebug.h>
 

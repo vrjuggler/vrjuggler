@@ -38,7 +38,6 @@
 #include <vjConfig.h>
 
 #include <Threads/vjThread.h>
-#include <SharedMem/vjMemory.h>
 #include <Sync/vjSemaphore.h>
 
 
