@@ -49,6 +49,10 @@ default: all
 # Include common definitions here.
 include @topdir@/make.defs.mk
 
+ifeq ($(OS_TYPE), Win32)
+   EXTRA_DEFS+= -DWIN32
+endif
+
 # There is nothing to install from this directory.
 INSTALL_FILES=
 
