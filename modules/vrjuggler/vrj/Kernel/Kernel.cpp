@@ -59,6 +59,7 @@
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/Config/ElementFactory.h>
 #include <jccl/RTRC/ConfigManager.h>
+#include <jccl/Util/Version.h>
 
 #include <boost/concept_check.hpp>
 
@@ -610,6 +611,10 @@ Kernel::Kernel()
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
       << clrOutNORM(clrGREEN, "VPR: ")
       << clrOutNORM(clrGREEN, vpr::getVersionString())
+      << clrRESET << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << clrOutNORM(clrGREEN, "JCCL: ")
+      << clrOutNORM(clrGREEN, jccl::getVersionString())
       << clrRESET << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
       << clrOutNORM(clrGREEN, "Gadgeteer: ")
