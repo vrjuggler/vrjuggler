@@ -15,7 +15,7 @@
 /* This should always be included first. */
 #ifdef HAVE_CONFIG_H
 #include <vjDefines.h>
-#endif
+#endif	/* HAVE_CONFIG_H */
 
 
 #endif	/* _VJ_CONFIG_H_ */
