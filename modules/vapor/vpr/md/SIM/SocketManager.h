@@ -266,51 +266,34 @@ public:
 private:
    vpr::sim::NetworkGraph::net_vertex_t getLocalhost(void);
 
-   /**
-    * Comparison function for vpr::InetAddrSIM
-    */
-   struct ltaddr
-   {
-      bool operator()( const vpr::InetAddrSIM& s1, const vpr::InetAddrSIM& s2)
-         const
-      {
-         if (s1.getAddressValue() < s2.getAddressValue())
-            return true;
-         else if (s1.getAddressValue() > s2.getAddressValue())
-            return false;
-         else if (s1.getPort() < s2.getPort())
-            return true;
-         else
-            return false;
-      }
-   };
-
    bool mActive;
 
    /** This is a list of sockets that have gone into a listening state
     * Used to track which sockets are currently in a listening state
     * XXX: Could move this into the actually socket as a socket state instead.
    */
-   std::map<vpr::InetAddrSIM, std::pair<const vpr::SocketStreamImplSIM*, int>, ltaddr> mListenerList;
+   std::map<vpr::InetAddrSIM, std::pair<const vpr::SocketStreamImplSIM*, int> > mListenerList;
    vpr::Mutex mListenerListMutex;
 
    /**
     * @note Handles are doubly mapped between the two maps.  Use _bind() and
     *       _unbind() to access these.
     */
+   ///*
    std::map<const vpr::SocketImplSIM*, vpr::InetAddrSIM> mBindListSockUDP;
-   std::map<vpr::InetAddrSIM, const vpr::SocketImplSIM*, ltaddr> mBindListAddrUDP;
+   std::map<vpr::InetAddrSIM, const vpr::SocketImplSIM*> mBindListAddrUDP;
 
    vpr::Mutex mBindListSockMutexUDP;
    vpr::Mutex mBindListAddrMutexUDP;
 
    std::map<const vpr::SocketImplSIM*, vpr::InetAddrSIM> mBindListSockTCP;
-   std::map<vpr::InetAddrSIM, const vpr::SocketImplSIM*, ltaddr> mBindListAddrTCP;
+   std::map<vpr::InetAddrSIM, const vpr::SocketImplSIM*> mBindListAddrTCP;
 
    vpr::Mutex mBindListSockMutexTCP;
    vpr::Mutex mBindListAddrMutexTCP;
 
    vpr::Mutex mPortMutex;          /**< Mutex to protect port generation */
+   //*/
 };
 
 } // namespace sim
