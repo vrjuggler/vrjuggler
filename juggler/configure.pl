@@ -347,8 +347,13 @@ sub generateMakefile (;$)
 
    if ( $Win32 )
    {
+      # Get the Win32-friendly versions of these paths.  Then change the \'s
+      # to /'s just to be safe.
       my $win_pwd = `cygpath -w $ENV{'PWD'}`;
       my $win_cwd = `cygpath -w $cwd`;
+      $win_pwd    =~ s/\\/\//g;
+      $win_cwd    =~ s/\\/\//g;
+
       $input_file =~ s/\@JUGGLERROOT_ABS\@/$win_pwd/g;
       $input_file =~ s/\@topdir\@/$win_cwd/g;
    }
