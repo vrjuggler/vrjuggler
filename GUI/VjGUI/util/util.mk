@@ -14,6 +14,9 @@ VJGUIUTIL_SOURCES = VjGUI/util/FloatTextField.java	\
 		    VjGUI/util/IntegerTextField.java	\
 		    VjGUI/util/NoSpaceTextField.java	\
 		    VjGUI/util/StringTextField.java     \
-		    VjGUI/util/JFrameParent.java
+		    VjGUI/util/JFrameParent.java        \
+		    VjGUI/util/LinkedList.java          \
+		    VjGUI/util/ListIterator.java        \
+		    VjGUI/util/ListElem.java
 
 VJGUIUTIL_OBJS = ${VJGUIUTIL_SOURCES:.java=.class}
