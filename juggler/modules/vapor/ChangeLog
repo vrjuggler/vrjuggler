@@ -1,5 +1,10 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-01-08 allenb   Refactored ObjectReader and ObjectWriter to be abstract
+                    base classes for serializing objects.  Introduced a new
+					set of classes (BufferObjectReader and BufferObjectWriter)
+					to hold the implementation of the previous methods.
+					NEW VERSION: 0.23.0
 2002-01-06 patrickh Reverted the vpr::Thread semantics back to the pre-0.21
                     usage.  A new default constructor has been added that does
                     not spawn a thread.  When this constructor is used, the
