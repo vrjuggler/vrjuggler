@@ -560,6 +560,8 @@ AC_CONFIG_FILES([
    common.defs.mk
    driver.defs.mk
    make.defs.mk
+   3Dconnexion/Makefile
+   3Dconnexion/SpaceBall/Makefile
    5DT/Makefile
    5DT/DataGlove/Makefile
    Ascension/Makefile
