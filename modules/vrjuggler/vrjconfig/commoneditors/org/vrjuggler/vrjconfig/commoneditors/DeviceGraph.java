@@ -42,20 +42,16 @@ import java.util.Map;
 import javax.swing.JComponent;
 
 import org.jgraph.JGraph;
-import org.jgraph.cellview.JGraphRoundRectView;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.CellView;
 import org.jgraph.graph.DefaultGraphModel;
 import org.jgraph.graph.GraphConstants;
-import org.jgraph.graph.GraphLayoutCache;
-import org.jgraph.graph.GraphModel;
 import org.jgraph.util.JGraphHeavyweightRedirector;
 import org.jgraph.util.JGraphUtilities;
 
-import org.vrjuggler.jccl.config.*;
-
-import org.vrjuggler.vrjconfig.commoneditors.devicegraph.*;
-import org.vrjuggler.vrjconfig.commoneditors.devicegraph.extras.*;
+import org.vrjuggler.vrjconfig.commoneditors.devicegraph.DeviceGraphLayoutCache;
+import org.vrjuggler.vrjconfig.commoneditors.devicegraph.DeviceGraphModel;
+import org.vrjuggler.vrjconfig.commoneditors.devicegraph.GraphHelpers;
 
 
 /**
@@ -100,66 +96,19 @@ public class DeviceGraph
     */
    public DeviceGraph()
    {
-      super(new DeviceGraphModel());
-      ProxiedDeviceCellViewFactory factory =
-         new ProxiedDeviceCellViewFactory();
-
-      ConfigBroker broker = new ConfigBrokerProxy();
-      ConfigDefinitionRepository repos = broker.getRepository();
-      List all_defs = repos.getAllLatest();
-
-      // Input device types.
-      List device_types =
-         ConfigUtilities.getDefinitionsOfType(all_defs, INPUT_DEVICE_TYPE);
-      DefaultDeviceGraphCellCreator creator =
-         new DefaultDeviceGraphCellCreator();
-
-      for ( Iterator d = device_types.iterator(); d.hasNext(); )
-      {
-         ConfigDefinition def = (ConfigDefinition) d.next();
-         if ( ! def.isAbstract() )
-         {
-            GraphHelpers.registerGraphCellCreator(def, creator);
-            factory.registerCreator(def, MultiUnitDeviceVertexView.class);
-         }
-      }
-
-      // Override the creators for specific device types.
-      factory.registerCreator(repos.get(SIM_POS_DEVICE_TYPE),
-                              JGraphRoundRectView.class);
-      factory.registerCreator(repos.get(INTERSENSE_TYPE),
-                              IntersenseVertexView.class);
-      factory.registerCreator(repos.get(INTERSENSE_API_TYPE),
-                              IntersenseVertexView.class);
-
-      // Proxy types.
-      List proxy_types = ConfigUtilities.getDefinitionsOfType(all_defs,
-                                                              PROXY_TYPE);
-      for ( Iterator d = proxy_types.iterator(); d.hasNext(); )
-      {
-         ConfigDefinition def = (ConfigDefinition) d.next();
-         if ( ! def.isAbstract() )
-         {
-            factory.registerCreator(def, ProxyVertexView.class);
-         }
-      }
-
-      setGraphLayoutCache(new DeviceGraphLayoutCache(getModel(), factory));
-
-      this.addMouseListener(new JGraphHeavyweightRedirector(false, true));
+      this(new DeviceGraphModel());
    }
 
-/*
-   public DeviceGraph(GraphModel model)
+   public DeviceGraph(DeviceGraphModel model)
    {
-      super(model);
+      this(model, new DeviceGraphLayoutCache(model));
    }
 
-   public DeviceGraph(GraphModel model, GraphLayoutCache cache)
+   public DeviceGraph(DeviceGraphModel model, DeviceGraphLayoutCache cache)
    {
       super(model, cache);
+      this.addMouseListener(new JGraphHeavyweightRedirector(false, true));
    }
-*/
 
    /**
     * Cause all cells to change their size to the cell's renderer's perferred

@@ -33,7 +33,10 @@
 package org.vrjuggler.vrjconfig.commoneditors.devicegraph;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+
+import org.jgraph.cellview.JGraphRoundRectView;
 import org.jgraph.graph.CellView;
 import org.jgraph.graph.CellViewFactory;
 import org.jgraph.graph.DefaultEdge;
@@ -43,35 +46,82 @@ import org.jgraph.graph.DefaultPort;
 import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.GraphModel;
 
+import org.vrjuggler.jccl.config.ConfigBrokerProxy;
+import org.vrjuggler.jccl.config.ConfigDefinition;
+import org.vrjuggler.jccl.config.ConfigDefinitionRepository;
 import org.vrjuggler.jccl.config.ConfigElement;
+import org.vrjuggler.jccl.config.ConfigUtilities;
+
+import org.vrjuggler.vrjconfig.commoneditors.devicegraph.extras.*;
 
 
 public class DeviceGraphLayoutCache
    extends GraphLayoutCache
    implements org.vrjuggler.vrjconfig.commoneditors.EditorConstants
 {
-   // XXX: This constructor might be a good place to centralize the
-   // device and proxy cell view registration, but who the hell knows if this
-   // is the appropriate place?!?  Stupid JGraph ...
-/*
-   public DeviceGraphLayoutCache(GraphModel model)
+   public DeviceGraphLayoutCache(DeviceGraphModel model)
    {
-      this(model, new ProxiedDeviceCellViewFactory(), false);
-   }
-*/
+      this(model, new ProxiedDeviceCellViewFactory());
 
-   public DeviceGraphLayoutCache(GraphModel model, CellViewFactory factory)
+      ProxiedDeviceCellViewFactory factory =
+         (ProxiedDeviceCellViewFactory) getFactory();
+
+      ConfigBrokerProxy broker = new ConfigBrokerProxy();
+      ConfigDefinitionRepository repos = broker.getRepository();
+      List all_defs = repos.getAllLatest();
+
+      // Input device types.
+      List device_types =
+         ConfigUtilities.getDefinitionsOfType(all_defs, INPUT_DEVICE_TYPE);
+      DefaultDeviceGraphCellCreator creator =
+         new DefaultDeviceGraphCellCreator();
+
+      for ( Iterator d = device_types.iterator(); d.hasNext(); )
+      {
+         ConfigDefinition def = (ConfigDefinition) d.next();
+         if ( ! def.isAbstract() )
+         {
+            GraphHelpers.registerGraphCellCreator(def, creator);
+            factory.registerCreator(def, MultiUnitDeviceVertexView.class);
+         }
+      }
+
+      // Override the creators for specific device types.
+      factory.registerCreator(repos.get(SIM_POS_DEVICE_TYPE),
+                              JGraphRoundRectView.class);
+      factory.registerCreator(repos.get(INTERSENSE_TYPE),
+                              IntersenseVertexView.class);
+      factory.registerCreator(repos.get(INTERSENSE_API_TYPE),
+                              IntersenseVertexView.class);
+
+      // Proxy types.
+      List proxy_types = ConfigUtilities.getDefinitionsOfType(all_defs,
+                                                              PROXY_TYPE);
+      for ( Iterator d = proxy_types.iterator(); d.hasNext(); )
+      {
+         ConfigDefinition def = (ConfigDefinition) d.next();
+         if ( ! def.isAbstract() )
+         {
+            factory.registerCreator(def, ProxyVertexView.class);
+         }
+      }
+   }
+
+   public DeviceGraphLayoutCache(DeviceGraphModel model,
+                                 ProxiedDeviceCellViewFactory factory)
    {
       this(model, factory, false);
    }
 
-   public DeviceGraphLayoutCache(GraphModel model, CellViewFactory factory,
+   public DeviceGraphLayoutCache(DeviceGraphModel model,
+                                 ProxiedDeviceCellViewFactory factory,
                                  boolean partial)
    {
       this(model, factory, null, null, partial);
    }
 
-   public DeviceGraphLayoutCache(GraphModel model, CellViewFactory factory,
+   public DeviceGraphLayoutCache(DeviceGraphModel model,
+                                 ProxiedDeviceCellViewFactory factory,
                                  CellView[] cellViews,
                                  CellView[] hiddenCellViews, boolean partial)
    {
