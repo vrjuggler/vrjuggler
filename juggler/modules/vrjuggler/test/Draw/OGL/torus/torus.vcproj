@@ -20,7 +20,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VJ_BASE_DIR)/include&quot;;.;&quot;$(NSPR_ROOT)/include/nspr&quot;"
+				AdditionalIncludeDirectories=".;&quot;$(NSPR_ROOT)/include/nspr&quot;;&quot;$(VJ_BASE_DIR)/include&quot;"
 				PreprocessorDefinitions="_DEBUG,_CONSOLE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -74,7 +74,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="$(VJ_BASE_DIR)/include,."
+				AdditionalIncludeDirectories=".;&quot;$(NSPR_ROOT)/include/nspr&quot;;&quot;$(VJ_BASE_DIR)/include&quot;"
 				PreprocessorDefinitions="_OPT,_CONSOLE"
 				StringPooling="TRUE"
 				RuntimeLibrary="4"
@@ -92,7 +92,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="Juggler.lib Juggler_ogl.lib Juggler_utils.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="Juggler.lib Juggler_ogl.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib"
 				OutputFile=".\Release/torus.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
