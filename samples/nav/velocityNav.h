@@ -254,6 +254,12 @@ void velocityNav::update()
    stopWatch.stop();
    stopWatch.start();
 
+   // If we are not supposed to be active, then don't run
+   if(!this->isActive())
+   {
+      return;
+   }
+
    //////////////////////////////////
    // do navigations...
    //////////////////////////////////
