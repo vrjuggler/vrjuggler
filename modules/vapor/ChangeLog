@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2004-12-22 patrickh Use named semaphores for all releases of Darwin 7.x.
+                    NEW VERSION: 0.41.1
 2004-12-22 allenb   Added simplified interface to the profiling code through
                     the vpr::prof namespace.
                     NEW VERSION: 0.41.0
@@ -9,7 +11,6 @@ DATE       AUTHOR   CHANGE
                     compiler.
                     NEW VERSION: 0.40.5
 2004-12-01 allenb   Added support for demangling of callstack data with GCC.
->>>>>>> 1.161
 2004-11-18 patrickh Changed vpr::Int8 from char to signed char.
                     NEW VERSION: 0.40.2
 2004-10-27 allenb   Added support for multi-threaded profile data collection.
