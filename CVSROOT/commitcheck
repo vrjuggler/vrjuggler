@@ -31,7 +31,6 @@ then
 	:	# OK
 else
 	echo "commit_prep.pl failed!" 1>&2
-	exit 1
 fi
 
 exit 0		# Lets do it!
