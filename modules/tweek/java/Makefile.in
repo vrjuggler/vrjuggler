@@ -74,14 +74,16 @@ else
    CLASSPATH=	$(JDOM_JAR)$(JCPS)$(LAF_JARS)
 endif
 
-IDL_JAVA_FILES=	SubjectManager.java	\
-		Subject.java		\
-		Observer.java
+IDL_JAVA_FILES=	SubjectManager.java		\
+		Subject.java			\
+		Observer.java			\
+		BeanDeliverySubject.java
 
 JARS=		Tweek.jar		\
 		TweekBeans.jar		\
 		TweekEvents.jar		\
 		TweekNet.jar		\
+		TweekBeanDelivery.jar	\
 		TweekServices.jar	\
 		kunststoff-mod.jar
 BEANS=		Viewers

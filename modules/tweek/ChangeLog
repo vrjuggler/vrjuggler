@@ -1,5 +1,9 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2002-09-21 patrickh    Added the ability to send Beans from a C++ servant to a
+                       client.  The Tweek Java GUI makes use of this so that it
+                       can receive Beans easily from user code.
+                       NEW VERSION: 0.12.0
 2002-09-10 patrickh    Changed org.vrjuggler.tweek.net.CommunicationListener to
                        have two methods, connectionOpened() and
                        connectionClosed() instead of one method where the event

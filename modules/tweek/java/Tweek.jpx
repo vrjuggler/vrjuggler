@@ -47,6 +47,7 @@
   <node name="com.incors.plaf.kunststoff.mini" type="Package"/>
   <node name="com.incors.plaf.kunststoff.themes" type="Package"/>
   <node name="org.vrjuggler.tweek" type="Package"/>
+  <node name="org.vrjuggler.tweek.beandelivery" type="Package"/>
   <node name="org.vrjuggler.tweek.beans" type="Package"/>
   <node name="org.vrjuggler.tweek.beans.loader" type="Package"/>
   <node name="org.vrjuggler.tweek.event" type="Package"/>
@@ -57,4 +58,5 @@
   <node name="org.vrjuggler.tweek.services" type="Package"/>
   <node name="org.vrjuggler.tweek.text" type="Package"/>
   <node name="org.vrjuggler.tweek.treeviewer" type="Package"/>
+  <node name="tweek" type="Package"/>
 </project>
