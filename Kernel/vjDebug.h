@@ -25,6 +25,8 @@
 #define vjDBG_ENV_MGRstr std::string("DBG_ENV_MGR")
 #define vjDBG_PERFORMANCE (vjDBG_BASE+7)
 #define vjDBG_PERFORMANCEstr std::string("DBG_PERFORMANCE")
+#define vjDBG_CONFIG (vjDBG_BASE+8)
+#define vjDBG_CONFIGstr std::string("DBG_CONFIGDB")
 
 #define vjDBG_USER 100
 
@@ -183,6 +185,7 @@ public:
       addCategoryName(vjDBG_DISP_MGRstr,vjDBG_DISP_MGR);
       addCategoryName(vjDBG_ENV_MGRstr, vjDBG_ENV_MGR);
       addCategoryName(vjDBG_PERFORMANCEstr, vjDBG_PERFORMANCE);
+      addCategoryName(vjDBG_CONFIGstr, vjDBG_CONFIG);
    }
 
    void getAllowedCatsFromEnv()
