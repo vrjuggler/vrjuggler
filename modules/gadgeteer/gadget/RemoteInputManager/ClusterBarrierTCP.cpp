@@ -164,7 +164,7 @@ namespace gadget
       vpr::Uint8 temp;
       if (!mSyncServer->recv(&temp , 1, bytes_read,read_timeout).success())
       {
-         std::cout << "ERROR" << std::endl;
+         std::cout << "[ClusterBarrierTCP] SYNC ERROR" << std::endl;
          vpr::System::sleep(1);
       }
       //vprASSERT(1==bytes_read && "ClusterBarrierTCP: Slave Barrier received timeout");
