@@ -282,7 +282,7 @@ public:
     //: Overloaded equality operator.
     // ------------------------------------------------------------------------
     bool
-    operator== (const InetAddrWinSock& addr) {
+    operator== (const InetAddrWinSock& addr) const {
         return ((m_addr.sin_addr.s_addr == addr.m_addr.sin_addr.s_addr) &&
                 (m_addr.sin_port == addr.m_addr.sin_port) &&
                 (m_addr.sin_family == addr.m_addr.sin_family));
@@ -292,7 +292,7 @@ public:
     //: Overloaded inequality operator.
     // ------------------------------------------------------------------------
     bool
-    operator!= (const InetAddrWinSock& addr) {
+    operator!= (const InetAddrWinSock& addr) const {
         return ! (*this == addr);
     }
 
