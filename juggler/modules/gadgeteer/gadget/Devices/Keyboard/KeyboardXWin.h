@@ -16,34 +16,8 @@
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
 
-#include <Input/vjPosition/vjPosition.h>
-#include <Input/vjInput/vjDigital.h>
-#include <Input/vjInput/vjAnalog.h>
 #include <Input/vjInput/vjKeyboard.h>
-#include <Threads/vjThread.h>
 class vjConfigChunk;
-
-
-
-/** @name type-checked constants for the array indicies to the positional
- *          keyboard controls.
- */
-// XXX: This should be #defines so that we don't clutter up global variable space ??
-//@{
-const int FORWARD = 0;
-const int BACK    = 1;
-const int LEFT    = 2;
-const int RIGHT   = 3;
-const int UP      = 4;
-const int DOWN    = 5;
-const int ROTR    = 6;
-const int ROTL    = 7;
-const int ROTU    = 8;
-const int ROTD    = 9;
-const int ROT_ROLL_CCW = 10;
-const int ROT_ROLL_CW = 11;
-#define NUM_POS_CONTROLS 12      // How many do we need space for??
-//@}
 
 //---------------------------------------------------------------
 //: XWin Keyboard class
@@ -52,8 +26,9 @@ const int ROT_ROLL_CW = 11;
 // This device is a source of keyboard events.  The device should not be
 // used directly, it should be referenced through proxies.
 //
-// See also: vjKeyboardProxy
-class vjXWinKeyboard : public vjPosition, public vjDigital, public vjAnalog, public vjKeyboard
+// See also: vjKeyboard vjKeyboardProxy
+//--------------------------------------------------------------
+class vjXWinKeyboard : public vjKeyboard
 {
 public:
 
@@ -61,10 +36,6 @@ public:
    vjXWinKeyboard()
    {
       myThread = NULL;
-      for (int i =0; i < 256; i++)
-         m_realkeys[i] = m_keys[i] = 0;
-      m_realkeys[0] = m_keys[0] = 1;
-      m_dtrans = 0.1; m_drot = 1;
       oldMouseX = 0; oldMouseY = 0;
    }
    ~vjXWinKeyboard() { StopSampling();}
@@ -75,16 +46,7 @@ public:
    int Sample() { return 1;}
    void UpdateData();
 
-   char* GetDeviceName() { return "vjKeyboard";}
-
-   //: Get the analog data
-   int GetAnalogData(int devNum = 0) { return m_anadata[devNum];}
-
-   //: Get simulated digital data
-   int GetDigitalData(int devNum = 0) { return m_digdata[devNum];}
-
-   // Get simulated positional data
-   vjMatrix* GetPosData(int devNum = 0) { return &(m_posdata[devNum]);}
+   char* GetDeviceName() { return "vjXwinKeyboard";}
 
    // returns the number of times the key was pressed during the
    // last frame, so you can put this in an if to check if was
@@ -102,13 +64,9 @@ public:
 private:
    /* Private functions for processing input data */
    int OnlyModifier(int);
+
+   //: Update the keys.
    void UpdKeys();
-   void MoveFor(float, int);
-   void MoveLeft(float, int);
-   void MoveUp(float, int);
-   void RotUp(float, int);
-   void RotLeft(float, int);
-   void RotRollCCW(float amt, int n);
 
    /* X-Windows utility functions */
    //: Convert XKey to vjKey
@@ -123,11 +81,7 @@ private:
    void SetHints(Window window, char*  window_name, char*  icon_name,
                  char* class_name, char* class_type);
 
-   vjMatrix     m_posdata[2];       // Local position data
-   int          m_anadata[4];       // Local analog data
-   int          m_digdata[4];       // Local digital data
 
-   vjThread*  myThread;
    Window       m_window;
    XVisualInfo* m_visual;
    Display*     m_display;
@@ -139,28 +93,8 @@ private:
    int m_keys[256];     // The keyboard state during an UpdateData, without KeyUp events included
    int m_realkeys[256]; // The real keyboard state, all events processed
 
-   /* Control key holders */
-   int m_pos0key[NUM_POS_CONTROLS];
-   int m_pos0mod[NUM_POS_CONTROLS];
-
-   int m_pos1key[NUM_POS_CONTROLS];
-   int m_pos1mod[NUM_POS_CONTROLS];
-
-   int m_digkeys[4];
-   int m_anakeysup[4];
-   int m_anakeysdn[4];
-   int m_digmods[4];
-   int m_anamodsup[4];
-   int m_anamodsdn[4];
-
-   /* Movement stuff */
-   int m_anastep;
-
-   float m_dtrans, m_drot;
    float m_mouse_sensitivity;
    int   oldMouseX, oldMouseY;
-
-   int m_toggleoff;  // digital data is toggled or just while key is down
 };
 
 #endif
