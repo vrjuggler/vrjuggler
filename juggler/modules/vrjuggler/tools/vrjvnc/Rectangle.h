@@ -2,8 +2,8 @@
  *
  * VRJ VNC is (C) Copyright 2003 by Iowa State University
  *
- * Original Author:
- *   Patrick Hartling
+ * Original Authors:
+ *   Patrick Hartling, Allen Bierbaum
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
