@@ -47,6 +47,7 @@ import org.vrjuggler.jccl.config.ConfigContext;
 
 public class TransformTranslationEditor
    extends JPanel
+   implements EditorConstants
 {
    public static final int TRANSMITTER = CoordinateFrameEditor.TRANSMITTER;
    public static final int SENSOR      = CoordinateFrameEditor.SENSOR;
@@ -60,13 +61,13 @@ public class TransformTranslationEditor
    {
       if ( coordinateType == TRANSMITTER )
       {
-         mTranslateProp = EditorConstants.PRE_TRANSLATION_PROPERTY;
+         mTranslateProp = PRE_TRANSLATION_PROPERTY;
          mTrackerPosLabel.setText(
             "<html>Position of the tracker transmitter from VR Juggler origin (pre-translation)</html>");
       }
       else
       {
-         mTranslateProp = EditorConstants.POST_TRANSLATION_PROPERTY;
+         mTranslateProp = POST_TRANSLATION_PROPERTY;
          mTrackerPosLabel.setText(
             "<html>Position of the sensor from VR Juggler tracked origin (post-translation)</html>");
       }
@@ -96,7 +97,7 @@ public class TransformTranslationEditor
 
    public void setConfig(ConfigContext ctx, ConfigElement elt)
    {
-      if ( ! elt.getDefinition().getToken().equals(EditorConstants.POSITION_TRANSFORM_FILTER_TYPE) )
+      if ( ! elt.getDefinition().getToken().equals(POSITION_TRANSFORM_FILTER_TYPE) )
       {
          throw new IllegalArgumentException("Cannot handle config element " +
                                             "of type '" +

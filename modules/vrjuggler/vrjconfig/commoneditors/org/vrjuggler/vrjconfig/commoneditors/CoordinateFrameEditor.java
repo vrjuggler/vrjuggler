@@ -55,6 +55,7 @@ import java.awt.Component;
 public class CoordinateFrameEditor
    extends JPanel
    implements ChangeListener
+            , EditorConstants
 {
    public static final int TRANSMITTER = 0;
    public static final int SENSOR      = 1;
@@ -216,7 +217,7 @@ public class CoordinateFrameEditor
 
    public void setConfig(ConfigContext ctx, ConfigElement elt)
    {
-      if ( ! elt.getDefinition().getToken().equals(EditorConstants.POSITION_TRANSFORM_FILTER_TYPE) )
+      if ( ! elt.getDefinition().getToken().equals(POSITION_TRANSFORM_FILTER_TYPE) )
       {
          throw new IllegalArgumentException("Config element of type '" +
                                             elt.getDefinition().getToken() +
@@ -228,11 +229,11 @@ public class CoordinateFrameEditor
 
       if ( mCoordinateType == TRANSMITTER )
       {
-         mRotateProp = EditorConstants.PRE_ROTATION_PROPERTY;
+         mRotateProp = PRE_ROTATION_PROPERTY;
       }
       else
       {
-         mRotateProp = EditorConstants.POST_ROTATION_PROPERTY;
+         mRotateProp = POST_ROTATION_PROPERTY;
       }
 
       float x_rot = ((Number) elt.getProperty(mRotateProp, 0)).floatValue();
