@@ -47,6 +47,6 @@ install-books:
 %.pdf: %.html
 	$(PSGEN) $(PSGEN_FLAGS) $< > $@.ps
 	$(PDFGEN) $(PDFGEN_FLAGS) $@.ps $@
-	rm -f temp.ps
+	rm -f $@.ps
 
 #getting.started.guide.pdf: getting.started.guide.html
