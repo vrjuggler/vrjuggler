@@ -339,6 +339,11 @@ public:
                         vpr::Uint32& bytes_written,
                         const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
+    vpr::Uint32 availableBytes()
+    {
+      return PR_Available( m_handle );
+    }
+
     /**
      * Retrieves the value for the given option as set on the socket.
      *
@@ -415,7 +420,7 @@ protected:
         m_blocking        = sock.m_blocking;
         m_blocking_fixed  = sock.m_blocking_fixed;
     }
-    
+
     std::string       m_name;
     PRFileDesc*       m_handle;      //: Handle to the socket
     vpr::InetAddr     m_local_addr;  //: The local site's address structure

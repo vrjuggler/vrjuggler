@@ -7,12 +7,11 @@
 namespace vpr
 {
 
-template
 class DurationStatCollector : public SampleLimitedStatCollector<double, false>
 {
 public:
    DurationStatCollector(vpr::Interval::Unit units = vpr::Interval::Sec, unsigned sampleLimit = 100)
-    : SampleLimitedStatCollector(sampleLimit)
+    : SampleLimitedStatCollector<double, false>(sampleLimit)
    {
       mUnits = units;
       mStartTimeNeededNext = true;
@@ -36,7 +35,7 @@ public:
       vpr::Interval diff(mSampleStartTime - mSampleStopTime);
       double sample(0.0f);
 
-      switch(timeUnit)
+      switch(mUnits)
       {
       case vpr::Interval::Sec:
          sample = diff.secf();
@@ -62,7 +61,7 @@ protected:
    vpr::Interval  mSampleStopTime;
 
    bool mStartTimeNeededNext;       // For helping with debugging
-}
+};
 
 }; // namespace
 
