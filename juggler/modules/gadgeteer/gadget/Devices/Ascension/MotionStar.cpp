@@ -152,7 +152,7 @@ vjMotionStar::startSampling () {
 
       switch (retval) {
          // Proper startup.
-         case 0;
+         case 0:
             break;
          // Connection to server failed.  aMotionStar prints out the system
          // error message about why.
