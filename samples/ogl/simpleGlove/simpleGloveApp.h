@@ -65,6 +65,13 @@ public:
       mQuadObj = NULL;
    }
 
+   virtual ~simpleGloveApp (void) {
+      if ( mQuadObj != NULL ) {
+         gluDeleteQuadric(mQuadObj);
+         mQuadObj = NULL;
+      }
+   }
+
    // Execute any initialization needed before the API is started
    // Initialize interfaces
    virtual void init()
