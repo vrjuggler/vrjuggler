@@ -28,8 +28,6 @@ implements ActionListener, WindowListener, ItemListener {
     List                  panellist; // list of panels in the cardlayout
     public MenuBar        menubar;
 
-
-
     public ClientUI (ClientGlobals c) {
 	super("VR Juggler Configuration Editor");
 	core = c;

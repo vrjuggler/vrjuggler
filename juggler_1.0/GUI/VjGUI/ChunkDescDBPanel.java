@@ -71,12 +71,19 @@ implements ActionListener {
     /* build menus - but don't add them until "activate" */
     filemenu = new Menu("File");
     filemenu.addActionListener(this);
-    filemenu.add("Open User Descriptions");
-    filemenu.add("Save User Descriptions");
-    filemenu.add("Save User Descriptions As...");
-    filemenu.add("Open Global Descriptions");
-    filemenu.add("Save Global Descriptions");
-    filemenu.add("Save Global Descriptions As...");
+    if (core.multilevelchunkdescenabled) {
+	filemenu.add("Open User Descriptions");
+	filemenu.add("Save User Descriptions");
+	filemenu.add("Save User Descriptions As...");
+	filemenu.add("Open Global Descriptions");
+	filemenu.add("Save Global Descriptions");
+	filemenu.add("Save Global Descriptions As...");
+    }
+    else {
+	filemenu.add ("Open Descriptions...");
+	filemenu.add ("Save Descriptions");
+	filemenu.add ("Save Descriptions As...");
+    }
     filemenu.add("Exit");
 
     networkmenu = new Menu("File");
@@ -167,26 +174,38 @@ implements ActionListener {
 	  return; // cuz this window is already open.
       }
 
-      ChunkDescFrame cdf = new ChunkDescFrame (core, this, 
-					       core.descs.getByName(name));
+      ChunkDescFrame cdf = 
+	  new ChunkDescFrame (core, this, 
+			      core.descs.getByName(name));
       cdf.addWindowListener (cdf);
       cdframes.addElement(cdf);
       //cdf.setSize (550,350);
       //cdf.show();
     }
     /* menu stuff */
-    else if ((e.getSource() == filemenu) || (e.getSource() == networkmenu)) {
+    else if ((e.getSource() == filemenu) || 
+	     (e.getSource() == networkmenu)) {
       String s = e.getActionCommand();
 
       if (s.equalsIgnoreCase ("save user descriptions")) {
 	core.fileio.saveUserChunkDescDB();
       }
+      else if (s.equalsIgnoreCase ("save descriptions")) {
+	  core.fileio.saveUserChunkDescDB();
+      }
       else if (s.equalsIgnoreCase ("save user descriptions as...")) {
 	core.fileio.saveAsUserChunkDescDB();
+      }
+      else if (s.equalsIgnoreCase ("save descriptions as...")) {
+	  core.fileio.saveAsUserChunkDescDB();
       }
       else if (s.equalsIgnoreCase ("open user descriptions")) {
 	core.fileio.loadUserChunkDescDB();
 	update();
+      }
+      else if (s.equalsIgnoreCase ("open descriptions")) {
+	  core.fileio.loadUserChunkDescDB();
+	  update();
       }
       if (s.equalsIgnoreCase ("save global descriptions")) {
 	core.fileio.saveBaseChunkDescDB();
