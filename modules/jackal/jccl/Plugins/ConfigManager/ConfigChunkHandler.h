@@ -37,7 +37,8 @@
 #include <jccl/jcclConfig.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 
-namespace jccl {
+namespace jccl
+{
 
 class ConfigManager;
 
@@ -58,57 +59,60 @@ class ConfigManager;
  *  dynamic reconfiguration need.
  */
 
-class JCCL_CLASS_API ConfigChunkHandler {
+class JCCL_CLASS_API ConfigChunkHandler
+{
 
 public:
 
-    /** Checks if this handler can process chunk.
-     *  Typically, an implementation of handler will check the chunk's
-     *  description name/token to decide if it knows how to deal with
-     *  it.
-     *  @return true iff this handler can process chunk.
-     */
+   /** Checks if this handler can process chunk.
+    *  Typically, an implementation of handler will check the chunk's
+    *  description name/token to decide if it knows how to deal with
+    *  it.
+    *  @return true iff this handler can process chunk.
+    */
    virtual bool configCanHandle(ConfigChunkPtr chunk) = 0;
 
 
-    /** Process any pending reconfiguration requests that we know how to
-     *  deal with.
-     *
-     *  The default implementation does the following for each item in the
-     *  pending list:
-     *
-     *  <pre>
-     *    for each pending item p in the pending list do
-     *        if this->configCanHandle(p) AND p's dependencies are met
-     *            retval = configAdd or configRemove (p)
-     *            if retval = true
-     *                remove request from pending
-     *                add or remove p.chunk from active
-     *  </pre>
-     *
-     *  ConfigManager's pending list MUST be locked before this function
-     *  is called.  Typically, configProcessPending will be called by
-     *  ConfigManager::attemptReconfiguration(), which takes care of
-     *  this automatically.
-     */
+   /** Process any pending reconfiguration requests that we know how to
+    *  deal with.
+    *
+    *  The default implementation does the following for each item in the
+    *  pending list:
+    *
+    *  <pre>
+    *    for each pending item p in the pending list do
+    *        if this->configCanHandle(p) AND p's dependencies are met
+    *            retval = configAdd or configRemove (p)
+    *            if retval = true
+    *                remove request from pending
+    *                add or remove p.chunk from active
+    *  </pre>
+    *
+    *  ConfigManager's pending list MUST be locked before this function
+    *  is called.  Typically, configProcessPending will be called by
+    *  ConfigManager::attemptReconfiguration(), which takes care of
+    *  this automatically.
+    */
    virtual int configProcessPending ();
 
 
-    /** Add the pending chunk to the configuration.
-     *  PRE: configCanHandle (chunk) == true.
-     *  @return true iff chunk was successfully added to configuration.
-     */
+   /** Add the pending chunk to the configuration.
+    *  PRE: configCanHandle (chunk) == true.
+    *  @return true iff chunk was successfully added to configuration.
+    */
    virtual bool configAdd(ConfigChunkPtr chunk) = 0;
 
 
-    /** Remove the pending chunk from the current configuration.
-     *  PRE: configCanHandle (chunk) == true.
-     *  @return true iff the chunk (and any objects it represented)
-     *          were successfully removed.
-     */
+   /** Remove the pending chunk from the current configuration.
+    *  PRE: configCanHandle (chunk) == true.
+    *  @return true iff the chunk (and any objects it represented)
+    *          were successfully removed.
+    */
    virtual bool configRemove(ConfigChunkPtr chunk) = 0;
 
+   
 };
+
 
 }; // namespace jccl
 

@@ -40,74 +40,77 @@
 #include <typeinfo>
 #include <vpr/Util/Singleton.h>
 
-namespace jccl {
-
-    /** A dependency checker for dynamically added components.
-     *  The DependencyManager works in conjunction with the
-     *  ConfigManager, and checks for dependencies for any
-     *  configuration add request.
-     *  The default behavior is to simply check the ConfigManager's
-     *  active list for all ConfigChunk's that the request's
-     *  ConfigChunk refers to.  However, additional DepCheckers 
-     *  can be registered to provide specialized functionality.
-     *
-     *  Note that this class is a singleton - primarily so that the 
-     *  master list of DepCheckers can be appended to by any entity
-     *  in the system.
-     */
-class JCCL_CLASS_API DependencyManager
+namespace jccl
 {
 
+/** A dependency checker for dynamically added components.
+ *  The DependencyManager works in conjunction with the
+ *  ConfigManager, and checks for dependencies for any
+ *  configuration add request.
+ *  The default behavior is to simply check the ConfigManager's
+ *  active list for all ConfigChunk's that the request's
+ *  ConfigChunk refers to.  However, additional DepCheckers 
+ *  can be registered to provide specialized functionality.
+ *
+ *  Note that this class is a singleton - primarily so that the 
+ *  master list of DepCheckers can be appended to by any entity
+ *  in the system.
+ */
+class JCCL_CLASS_API DependencyManager
+{
+   
 private:
-    /** Constructor. Private since this is a singleton. */
-    DependencyManager ();
+   /** Constructor. Private since this is a singleton. */
+   DependencyManager ();
 
 
 public:
 
-    /** registers a new dependency checker. */
-    void registerChecker (DepChecker* checker);
+   /** registers a new dependency checker. */
+   void registerChecker (DepChecker* checker);
 
 
-    /** Checks if dependencies are satisfied for the given chunk.
-     *  @return true iff dependencies for chunk are satisfied.
-     */
-    bool isSatisfied (ConfigChunkPtr chunk);
+   /** Checks if dependencies are satisfied for the given chunk.
+    *  @return true iff dependencies for chunk are satisfied.
+    */
+   bool isSatisfied (ConfigChunkPtr chunk);
 
 
-    /** Prints information about chunk's dependencies. */
-    void debugOutDependencies (ConfigChunkPtr chunk, int dbg_lvl);
+   /** Prints information about chunk's dependencies. */
+   void debugOutDependencies (ConfigChunkPtr chunk, int dbg_lvl);
     
 
 private:
 
-    /** Finds a DepChecker that can handle chunk.
-     *  DepCheckers list the ConfigChunk types that they know how to 
-     *  handle; this is checked versus chunk.getDescToken().
-     *  @return A DepChecker that knows how to handle chunk.  If no
-     *          specific checker is found, the default checker is
-     *          returned.  If multiple specific DepCheckers claim to
-     *          be able to handle chunk, the choice is implementation
-     *          dependent.
-     */
-    DepChecker* findDepChecker(ConfigChunkPtr chunk);
+   /** Finds a DepChecker that can handle chunk.
+    *  DepCheckers list the ConfigChunk types that they know how to 
+    *  handle; this is checked versus chunk.getDescToken().
+    *  @return A DepChecker that knows how to handle chunk.  If no
+    *          specific checker is found, the default checker is
+    *          returned.  If multiple specific DepCheckers claim to
+    *          be able to handle chunk, the choice is implementation
+    *          dependent.
+    */
+   DepChecker* findDepChecker(ConfigChunkPtr chunk);
+   
 
-
-    /** Prints information about the DependencyManager's state to vprDEBUG. */
-    void debugDump();
+   /** Prints information about the DependencyManager's state to vprDEBUG. */
+   void debugDump();
 
     
 private:
 
-    /** List of dependency checkers. */
-    std::vector<DepChecker*> mDepCheckers;
+   /** List of dependency checkers. */
+   std::vector<DepChecker*> mDepCheckers;
 
-    /** Default dependency checker. */
-    DepChecker               mDefaultChecker;  
+   /** Default dependency checker. */
+   DepChecker               mDefaultChecker;  
 
-    vprSingletonHeader(DependencyManager);
+   vprSingletonHeader(DependencyManager);
 
-};
+   
+}; // class DependencyManager
+
 
 }; // namespace jccl
 
