@@ -243,6 +243,24 @@ public:
        return *this;
     }
 
+    // ------------------------------------------------------------------------
+    //: Overloaded equality operator.
+    // ------------------------------------------------------------------------
+    bool
+    operator== (const InetAddrNSPR& addr) {
+        return ((mAddr.inet.family == addr.mAddr.inet.family) &&
+                (mAddr.inet.port == mAddr.inet.port) &&
+                (mAddr.inet.ip == mAddr.inet.ip));
+    }
+
+    // ------------------------------------------------------------------------
+    //: Overloaded inequality operator.
+    // ------------------------------------------------------------------------
+    bool
+    operator!= (const InetAddrNSPR& addr) {
+        return ! (*this == addr);
+    }
+
     // --- Impl specific --- //
 
     // Get the info needed by other NSPR commands
