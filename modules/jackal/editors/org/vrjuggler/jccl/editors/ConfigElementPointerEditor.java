@@ -34,6 +34,8 @@ package org.vrjuggler.jccl.editors;
 import java.beans.*;
 import java.util.*;
 import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.config.event.ConfigEvent;
+import org.vrjuggler.jccl.config.event.ConfigListener;
 import org.vrjuggler.tweek.beans.BeanRegistry;
 
 /**
@@ -95,7 +97,34 @@ public class ConfigElementPointerEditor
    /**
     * Sets up the tags list based on the given definition of the property.
     */
-   public void setPropertyDefinition(PropertyDefinition propDef)
+   public void setPropertyDefinition(PropertyDefinition propDef, ConfigContext ctx)
+   {
+      mPropertyDefinition = propDef;
+      mConfigContext = ctx;
+      generateTags();
+      
+      ConfigBroker broker = new ConfigBrokerProxy();
+      broker.addConfigListener(new ConfigListener()
+         {
+            public void configElementAdded(ConfigEvent evt)
+            {
+               if (mConfigContext.contains(evt.getResource()))
+               {
+                  generateTags();
+               }
+            }
+
+            public void configElementRemoved(ConfigEvent evt)
+            {
+               if (mConfigContext.contains(evt.getResource()))
+               {
+                  generateTags();
+               }
+            }
+         });
+   }
+   
+   public void generateTags()
    {
       // For each definition token this definition can point to, look for
       // matching config elements we can use.
@@ -103,7 +132,7 @@ public class ConfigElementPointerEditor
 
       mTags.add("None");
 
-      for (Iterator at_itr = propDef.getAllowedAndDerivedTypes().iterator(); at_itr.hasNext(); )
+      for (Iterator at_itr = mPropertyDefinition.getAllowedAndDerivedTypes().iterator(); at_itr.hasNext(); )
       {
          String type = (String)at_itr.next();
 
@@ -118,21 +147,19 @@ public class ConfigElementPointerEditor
       }
    }
 
+
    /**
     * Gets a list of the config elements in the current configuration that have
     * the definition with the given token.
-    *
-    * XXX: This is a complete hack. We need a better way to propogate the
-    * current configuration context all the way down to here.
     */
    private List getElementsWithToken(String token)
    {
       List matches = new ArrayList();
       List all_elements = new ArrayList();
-
+      
       ConfigBroker broker = new ConfigBrokerProxy();
       // XXX: ACK! We really should look only in the current context, not all resources
-      for (Iterator itr = broker.getResourceNames().iterator(); itr.hasNext(); )
+      for (Iterator itr = mConfigContext.getResources().iterator(); itr.hasNext(); )
       {
          List elements = broker.getElementsIn((String)itr.next());
 
@@ -222,4 +249,6 @@ public class ConfigElementPointerEditor
     * The list of tags supported by this value.
     */
    private List mTags = new ArrayList();
+   private ConfigContext mConfigContext = null;
+   private PropertyDefinition mPropertyDefinition = null;
 }
