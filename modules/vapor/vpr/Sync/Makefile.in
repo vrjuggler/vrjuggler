@@ -50,22 +50,22 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vpr/Sync
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(VPR_LIBRARY)
+includedir=	@includedir@/vpr/Sync
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(VPR_LIBRARY)
 
-SRCS		=
+SRCS=		
 
 ifeq (@SUBSYSTEM@, SPROC)
-SRCS		+= CondVarGeneric.cpp
+SRCS+=		CondVarGeneric.cpp
 else
-SRCS		+= Barrier.cpp
+SRCS+=		Barrier.cpp
 endif
 
 ifneq (@SUBSYSTEM@, NSPR)
-SRCS		+= RWMutex.cpp
+SRCS+=		RWMutex.cpp
 endif
 
 include $(MKPATH)/dpp.obj.mk
@@ -75,6 +75,6 @@ include $(MKPATH)/dpp.obj.mk
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
 ifndef DO_BEFOREBUILD
-    -include $(DEPEND_FILES)
+   -include $(DEPEND_FILES)
 endif
 endif
