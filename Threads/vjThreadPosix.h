@@ -60,6 +60,7 @@ struct eq_thread {
 //: Threads implementation using POSIX threads (both Draft 4 and the "final"
 //+ draft of the standard are supported).
 
+//!PUBLIC_API
 class vjThreadPosix : public vjBaseThread
 {
 public:

@@ -16,13 +16,14 @@
 #include <vjConfig.h>
 #include <iostream.h>
 
+//!PUBLIC_API
 class vjNullMutex
 {
 public:
     vjNullMutex () {}
     ~vjNullMutex() {}
-  
-  
+
+
     //---------------------------------------------------------
     // int aquire()
     //
@@ -36,7 +37,7 @@ public:
     {
         return 1;
     }
-  
+
     //----------------------------------------------------------
     //  Aquire a read mutex
     //----------------------------------------------------------
@@ -52,13 +53,13 @@ public:
     {
         return this->acquire();	    // No special "write" semaphore -- For now
     }
-  
+
     //---------------------------------------------------------
     // int tryAquire()
     //
 
     // PURPOSE:
-    //   Try to acquire the lock.  
+    //   Try to acquire the lock.
     //   Returns immediately even if we don't aquire the lock.
     // RETURNS:
     //   1 - Aquired
@@ -76,7 +77,7 @@ public:
     {
         return this->tryAcquire();
     }
-  
+
     //----------------------------------------------------------
     //  Try to aquire a write mutex
     //----------------------------------------------------------
@@ -89,16 +90,16 @@ public:
     // int release()
     //
     // PURPOSE:
-    //   Release the mutex. 
+    //   Release the mutex.
     // RETURNS:
     //   0 - Success
     //  -1 - Error
     //---------------------------------------------------------
     int release() const
     {
-        return 0;   
+        return 0;
     }
-  
+
     //------------------------------------------------------
     // int test()
     //
@@ -113,19 +114,19 @@ public:
         return 0;     // Just return 0 since it is a null lock
     }
 
-  
+
     //---------------------------------------------------------
     // void dump()
     //
     // PURPOSE:
     //  Dump the mutex debug stuff and current state.
     //---------------------------------------------------------
-#ifndef WIN32 
+#ifndef WIN32
     void dump (FILE* dest = stderr, const char* message = "\n------ Mutex Dump -----\n") const
     {
-        cerr << message << "NULL Mutex\n";  
+        cerr << message << "NULL Mutex\n";
     }
-#endif  
+#endif
 
 protected:
     // = Prevent assignment and initialization.

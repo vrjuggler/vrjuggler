@@ -13,6 +13,7 @@ typedef int sigset_t;
 //----------------------------------------------
 //: Wrapper for Win32 thread handling functions
 //----------------------------------------------
+//!PUBLIC_API
 class vjThreadWin32
 {
 public:
@@ -292,8 +293,8 @@ public:
     //! RETURNS: pointer - A pointer to this vjThreadWin32 object's address.
     // -----------------------------------------------------------------------
     inline vjThreadWin32*
-    self (void) { 
-        return this; 
+    self (void) {
+        return this;
     }
 
     // -----------------------------------------------------------------------

@@ -28,6 +28,7 @@
 //: Mutex wrapper for POSIX-compliant systems using pthreads mutex variables
 //+ for the implementation.
 
+//!PUBLIC_API
 class vjMutexPosix {
 public:
     // -----------------------------------------------------------------------

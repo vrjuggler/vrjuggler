@@ -15,6 +15,7 @@ class vjMatrix;
 #define VJ_W 3
 
 //: Vector of length 4
+//!PUBLIC_API
 class vjVec4
 {
 public:

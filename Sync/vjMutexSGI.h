@@ -18,6 +18,7 @@
 #include <SharedMem/vjMemPool.h>
 #include <SharedMem/vjMemPoolSGI.h>
 
+//!PUBLIC_API
 class  vjMutexSGI
 {
 public:
@@ -27,11 +28,11 @@ public:
         if(mutexPool == NULL) {
             mutexPool = new vjMemPoolSGI(65536, 32, "/var/tmp/memMutexPoolSGIXXXXXX");
             attachedCounter = static_cast<int*>(mutexPool->allocate(sizeof(int)));
-            *attachedCounter = 0; 
+            *attachedCounter = 0;
         }
         *attachedCounter = *attachedCounter + 1;	    // Track how many mutexes are allocated
         //vjDEBUG << " vjMutexSGI:: vjMutexSGI: attachedCounter: " << *attachedCounter << endl << vjDEBUG_FLUSH;
-      
+
         // ----- Allocate the mutex ----- //
         mutex = usnewlock(mutexPool->getArena());
     }
@@ -40,12 +41,12 @@ public:
     {
         // ---- Delete the mutex --- //
         usfreelock(mutex, mutexPool->getArena());
-    
+
         // ---- Deal with the pool --- //
-        *attachedCounter = *attachedCounter - 1;	    // Track how many mutexes are allocated  
-    
+        *attachedCounter = *attachedCounter - 1;	    // Track how many mutexes are allocated
+
         //vjDEBUG << " vjMutexSGI::~ vjMutexSGI: attachedCounter: " << *attachedCounter << endl << vjDEBUG_FLUSH;
-      
+
         if(*attachedCounter == 0)
         {
             mutexPool->deallocate(attachedCounter);
@@ -53,9 +54,9 @@ public:
             delete mutexPool;
             mutexPool = NULL;
         }
-    
+
     }
-  
+
     //---------------------------------------------------------
     // int aquire()
     //
@@ -69,7 +70,7 @@ public:
     {
         return ussetlock(mutex);
     }
-  
+
     //----------------------------------------------------------
     //  Aquire a read mutex
     //----------------------------------------------------------
@@ -85,12 +86,12 @@ public:
     {
         return this->acquire();	    // No special "write" semaphore -- For now
     }
-  
+
     //---------------------------------------------------------
     // int tryAquire()
     //
     // PURPOSE:
-    //   Try to acquire the lock.  
+    //   Try to acquire the lock.
     //   Returns immediately even if we don't aquire the lock.
     // RETURNS:
     //   1 - Aquired
@@ -108,7 +109,7 @@ public:
     {
         return this->tryAcquire();
     }
-  
+
     //----------------------------------------------------------
     //  Try to aquire a write mutex
     //----------------------------------------------------------
@@ -121,14 +122,14 @@ public:
     // int release()
     //
     // PURPOSE:
-    //   Release the mutex. 
+    //   Release the mutex.
     // RETURNS:
     //   0 - Success
     //  -1 - Error
     //---------------------------------------------------------
     int release() const
     {
-        return usunsetlock(mutex);   
+        return usunsetlock(mutex);
     }
 
     //------------------------------------------------------
@@ -145,7 +146,7 @@ public:
         return ustestlock(mutex);
     }
 
-  
+
     //---------------------------------------------------------
     // void dump()
     //
@@ -154,9 +155,9 @@ public:
     //---------------------------------------------------------
     void dump (FILE* dest = stdout, const char* message = "\n------ Mutex Dump -----\n") const
     {
-        usdumplock(mutex, dest, message);  
+        usdumplock(mutex, dest, message);
     }
-  
+
 
 protected:
     ulock_t mutex;
@@ -164,7 +165,7 @@ protected:
     // = Prevent assignment and initialization.
     void operator= (const  vjMutexSGI &) {}
      vjMutexSGI (const  vjMutexSGI &) {}
-  
+
     static vjMemPoolSGI* mutexPool;
     static int* attachedCounter;
 };

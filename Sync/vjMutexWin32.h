@@ -16,6 +16,7 @@
 #include <SharedMem/vjMemPool.h>
 #include <SharedMem/vjMemPoolWin32.h>
 
+//!PUBLIC_API
 class vjMutexWin32
 {
 public:
@@ -25,12 +26,12 @@ public:
         if(mutexPool == NULL) {
             mutexPool = new vjMemPoolWin32(65536, 32, "memMutexPoolSGIXXXXXX");
             attachedCounter = static_cast<int*>(mutexPool->allocate(sizeof(int)));
-            *attachedCounter = 0; 
+            *attachedCounter = 0;
         }
 		
         *attachedCounter = *attachedCounter + 1;	    // Track how many mutexes are allocated
         cerr << "vjMutexWin32::vjMutexWin32: attachedCounter: " << *attachedCounter << endl;
-      
+
         // ----- Allocate the mutex ----- //
         mutex = CreateMutex(NULL,FALSE,NULL);
     }
@@ -39,12 +40,12 @@ public:
     {
         // ---- Delete the mutex --- //
         CloseHandle(mutex);
-    
+
         // ---- Deal with the pool --- //
-        *attachedCounter = *attachedCounter - 1;	    // Track how many mutexes are allocated  
-    
+        *attachedCounter = *attachedCounter - 1;	    // Track how many mutexes are allocated
+
         cerr << "vjMutexWin32::~vjMutexWin32: attachedCounter: " << *attachedCounter << endl;
-      
+
         if(*attachedCounter == 0)
         {
             mutexPool->deallocate(attachedCounter);
@@ -52,9 +53,9 @@ public:
             delete mutexPool;
             mutexPool = NULL;
         }
-    
+
     }
-  
+
     //---------------------------------------------------------
     // int aquire()
     //
@@ -73,7 +74,7 @@ public:
 		}
         return -1;
     }
-  
+
     //----------------------------------------------------------
     //  Aquire a read mutex
     //----------------------------------------------------------
@@ -89,12 +90,12 @@ public:
     {
         return this->acquire();	    // No special "write" semaphore -- For now
     }
-  
+
     //---------------------------------------------------------
     // int tryAquire()
     //
     // PURPOSE:
-    //   Try to acquire the lock.  
+    //   Try to acquire the lock.
     //   Returns immediately even if we don't aquire the lock.
     // RETURNS:
     //   1 - Aquired
@@ -107,7 +108,7 @@ public:
 		{
 			return 1;
 		}
-		return 0;	    
+		return 0;	
     }
 
     //----------------------------------------------------------
@@ -117,7 +118,7 @@ public:
     {
         return this->tryAcquire();
     }
-  
+
     //----------------------------------------------------------
     //  Try to aquire a write mutex
     //----------------------------------------------------------
@@ -130,14 +131,14 @@ public:
     // int release()
     //
     // PURPOSE:
-    //   Release the mutex. 
+    //   Release the mutex.
     // RETURNS:
     //   0 - Success
     //  -1 - Error
     //---------------------------------------------------------
     int release() const
     {
-        return ReleaseMutex(mutex);   
+        return ReleaseMutex(mutex);
     }
 
     //------------------------------------------------------
@@ -160,7 +161,7 @@ public:
         return 1;
     }
 
-  
+
     //---------------------------------------------------------
     // void dump()
     //
@@ -169,9 +170,9 @@ public:
     //---------------------------------------------------------
     void dump (FILE* dest = stderr, const char* message = "\n------ Mutex Dump -----\n") const
     {
-		cout << "Mutex::dump" << endl; 
+		cout << "Mutex::dump" << endl;
     }
-  
+
 
 protected:
     HANDLE mutex;
@@ -179,7 +180,7 @@ protected:
     // = Prevent assignment and initialization.
     void operator= (const vjMutexWin32 &) {}
     vjMutexWin32 (const vjMutexWin32 &) {}
-  
+
     static vjMemPoolWin32* mutexPool;
     static int* attachedCounter;
 };

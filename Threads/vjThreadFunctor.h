@@ -10,6 +10,7 @@ class  vjBaseThreadFunctor
 //     Converts a function into a functor that can be passed
 //	to a extern C type function to be called by a thread creation
 //	routine.
+//!PUBLIC_API
 //---------------------------------------------------------------
 {
 public:
@@ -18,6 +19,7 @@ public:
     virtual void setArg(void*) = 0;
 };
 
+//!PUBLIC_API
 template<class T>
 class vjThreadMemberFunctor : public  vjBaseThreadFunctor
 {
@@ -49,10 +51,11 @@ public:
 private:
     T*	    object;
     FunPtr  function;
-    void*   argument;    
+    void*   argument;
 };
 
 
+//!PUBLIC_API
 class vjThreadNonMemberFunctor : public  vjBaseThreadFunctor
 //---------------------------------------------------------------
 // PURPOSE:
@@ -61,7 +64,7 @@ class vjThreadNonMemberFunctor : public  vjBaseThreadFunctor
 {
 public:
     typedef void(* NonMemFunPtr)(void*);
-    
+
     // Constructor
     vjThreadNonMemberFunctor (NonMemFunPtr f, void* a = NULL) : func(f), argument(a)
     {;}
@@ -69,19 +72,19 @@ public:
     virtual void operator() (void* arg) {
         (*func)(arg);
     }
-    
+
     virtual void operator() () {
         (*func)(argument);
     }
-    
+
     void setArg (void* arg) {
         argument = arg;
-    }  
+    }
 
     // private:
-    // = Arguments to thread startup.  
+    // = Arguments to thread startup.
     NonMemFunPtr func;	// Thread startup function (C++ linkage).
-    void* argument;		// Argument to thread startup function.  
+    void* argument;		// Argument to thread startup function.
 };
 
 //--------------------------------------------
