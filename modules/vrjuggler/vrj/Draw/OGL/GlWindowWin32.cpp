@@ -65,7 +65,7 @@ GlWindowWin32::~GlWindowWin32()
 // - Creates a window
 // - Creates a rendering context
 // - Registers new window with the window list
-int GlWindowWin32::open()
+bool GlWindowWin32::open()
 {
    if ( false == GlWindowWin32::registerWindowClass() )
    {
@@ -188,7 +188,7 @@ void GlWindowWin32::removeEventWindowDevice()
  * Closes the OpenGL window.
  * @note Must be called by the same thread that called open.
  */
-int GlWindowWin32::close()
+bool GlWindowWin32::close()
 {
    // if not open, then don't bother.
    if ( !mWindowIsOpen )

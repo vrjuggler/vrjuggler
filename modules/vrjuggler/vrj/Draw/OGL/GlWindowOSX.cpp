@@ -96,7 +96,7 @@ void GlWindowOSX::swapBuffers() {
 
 }
 
-int GlWindowOSX::open() {
+bool GlWindowOSX::open() {
    vpr::DebugOutputGuard(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL,
                          "vrj::GlWindowOSX::open()\n",
                          "vrj::GlWindowOSX::open() done.\n");
@@ -105,7 +105,7 @@ int GlWindowOSX::open() {
     //I'll need to check to see how this works with multiple monitors
     CGRect bounds;
     bounds = CGDisplayBounds(kCGDirectMainDisplay);
-    
+
     // If the size of the window and the size of the screen are the same
     // switch to fullscreen mode
     // Note: this is not true fullscreen the menu bar and dock are just hiden
@@ -193,7 +193,7 @@ int GlWindowOSX::open() {
     return true;
 }
 
-int GlWindowOSX::close() {
+bool GlWindowOSX::close() {
     vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
        << "vrj::GlWindowOSX::close()" << std::endl << vprDEBUG_FLUSH;
     if(!gpWindow) return false;
