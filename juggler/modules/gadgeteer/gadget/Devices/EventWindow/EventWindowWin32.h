@@ -115,13 +115,6 @@ public:
    static std::string getElementType();
 
    /**
-    * Returns the number of times the key was pressed during the last frame.
-    * You can put this in an if to check if was pressed at all, or if you are
-    * doing processing based on this catch the actual number.
-    */
-   int isKeyPressed(int Key);
-
-   /**
     * Invokes the global scope delete operator.  This is required for proper
     * releasing of memory in DLLs on Win32.
     */
@@ -166,12 +159,6 @@ protected:
     * Copies mKeys to mCurKeys.
     */
    void handleEvents();
-
-   /** @name Private functions for processing input data */
-   /* Private functions for processing input data */
-   //@{
-   int onlyModifier(int);
-   //@}
 
    /** @name Windows utility functions */
    //@{

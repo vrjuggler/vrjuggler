@@ -104,7 +104,9 @@ public:
    }
 
    /**
-    * Is the given key pressed?
+    * Returns the number of times the key was pressed during the last frame.
+    * You can put this in an if to check if was pressed at all, or if you are
+    * doing processing based on this catch the actual number.
     * @return The number of times the key was pressed since last update.
     */
    int keyPressed(gadget::Keys keyId)

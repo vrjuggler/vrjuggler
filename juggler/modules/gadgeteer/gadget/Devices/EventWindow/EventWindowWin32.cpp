@@ -248,23 +248,6 @@ bool EventWindowWin32::startSampling()
    return true; // success
 }
 
-int EventWindowWin32::onlyModifier(int mod)
-{
-   switch ( mod )
-   {
-      case gadget::KEY_NONE:
-         return(!mCurKeys[gadget::KEY_SHIFT] && !mCurKeys[gadget::KEY_CTRL] && !mCurKeys[gadget::KEY_ALT]);
-      case gadget::KEY_SHIFT:
-         return(mCurKeys[gadget::KEY_SHIFT] && !mCurKeys[gadget::KEY_CTRL] && !mCurKeys[gadget::KEY_ALT]);
-      case gadget::KEY_CTRL:
-         return(!mCurKeys[gadget::KEY_SHIFT] && mCurKeys[gadget::KEY_CTRL] && !mCurKeys[gadget::KEY_ALT]);
-      case gadget::KEY_ALT:
-         return(!mCurKeys[gadget::KEY_SHIFT] && !mCurKeys[gadget::KEY_CTRL] && mCurKeys[gadget::KEY_ALT]);
-      default:
-         vprASSERT(false);
-         return 0;
-   }
-}
 
 void EventWindowWin32::updateData()
 {
@@ -803,14 +786,6 @@ std::string EventWindowWin32::getElementType()
    return "event_window";
 }
 
-// returns the number of times the key was pressed during the
-// last frame, so you can put this in an if to check if was
-// pressed at all, or if you are doing processing based on this
-// catch the actual number..
-int EventWindowWin32::isKeyPressed(int Key)
-{
-   return mCurKeys[Key];
-}
 
 void EventWindowWin32::lockMouse()
 {
