@@ -281,7 +281,7 @@ inline void velocityNav::updateInteraction()
    if(mResetting)
    {
       gmtl::Vec3f hpos;
-      gmtl::getTrans(mHomePos, hpos[0], hpos[1], hpos[2]);
+      gmtl::setTrans( hpos[0], hpos[1], hpos[2], mHomePos );
       vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrCYAN,"velNav: Resetting") << " to "
                            << hpos << std::endl << vprDEBUG_FLUSH;
    }

@@ -281,7 +281,7 @@ void gloveApp::postFrame()
 
    //: Get the position of the index finger:
     finger_matrix = mGlove->getPos(gadget::GloveData::INDEX);
-    gmtl::getTrans(finger_matrix, glovePos[0], glovePos[1], glovePos[2]);
+    gmtl::setTrans( glovePos[0], glovePos[1], glovePos[2], finger_matrix );
     gmtl::xform(glovePos, invNav, glovePos);
 
     ////////////////////////
