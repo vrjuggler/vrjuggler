@@ -57,8 +57,7 @@ SUBDIR=		doc/build.system				\
 		modules/vrjuggler/doc/faq			\
 		modules/vrjuggler/doc/getting.started.guide	\
 		modules/vrjuggler/doc/migration			\
-		modules/vrjuggler/doc/programmer.guide		\
-		modules/vrjuggler/doc/vjcontrol.guide
+		modules/vrjuggler/doc/programmer.guide
 
 all:
 	for dir in $(SUBDIR) ; do		\
