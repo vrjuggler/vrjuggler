@@ -143,6 +143,26 @@ public:
    }
 
 
+   void testSetNowOverhead()
+   {
+      vpr::Uint32 loops(10000);
+
+      vpr::Interval time_in, time_out;
+      time_in.setNow();
+
+      while(loops--)
+      {
+         time_out.setNow();
+      }
+
+      vpr::Interval diff = time_out - time_in;
+
+      double per_call;      // Num ns per call
+      per_call = (diff.usecf()*1000.0f) / double(loops);
+
+      std::cout << "vpr::Interval::setNow: overhead = " << per_call << "ns per call\n" << std::flush;
+   }
+
    static Test* suite()
    {
       TestSuite *test_suite = new TestSuite ("StatusTest");
@@ -156,6 +176,7 @@ public:
       test_suite->addTest( new TestCaller<IntervalTest>("testMsecf", &IntervalTest::testMsecf));
       test_suite->addTest( new TestCaller<IntervalTest>("testUsec", &IntervalTest::testUsec));
       test_suite->addTest( new TestCaller<IntervalTest>("testUsecf", &IntervalTest::testUsecf));
+      test_suite->addTest( new TestCaller<IntervalTest>("testSetNowOverhead", &IntervalTest::testSetNowOverhead));
 
       return test_suite;
    }
