@@ -100,6 +100,22 @@ public class ChunkDescTest
       assertEquals( c.getToken(), t );
    }
 
+   public void testGetVersion()
+   {
+      ChunkDesc c = new ChunkDesc();
+      assertEquals(c.getVersion(), "1.1");
+
+      c.setVersion("4.5");
+      assertEquals(c.getVersion(), "4.5");
+   }
+
+   public void testSetVersion()
+   {
+      ChunkDesc c = new ChunkDesc();
+      c.setVersion("34.5");
+      assertEquals(c.getVersion(), "34.5");
+   }
+
    // test set before get for help
    public void testSetHelp()
    {

@@ -35,6 +35,7 @@ import java.beans.*;
 import java.io.*;
 import java.util.*;
 import javax.swing.event.EventListenerList;
+import org.jdom.Attribute;
 import org.jdom.Element;
 
 /**
@@ -143,6 +144,31 @@ public class ChunkDesc
       mDomElement.setAttribute("token", newToken);
       changeSupport.firePropertyChange("token", old, newToken);
       fireTokenChanged();
+   }
+
+   /**
+    * Gets the version of this ChunkDesc.
+    */
+   public String getVersion()
+   {
+      Attribute vers_attr = mDomElement.getAttribute(version_TOKEN);
+      if (null == vers_attr)
+      {
+         vers_attr = new Attribute(version_TOKEN, "1.1");
+         mDomElement.setAttribute(vers_attr);
+      }
+      return vers_attr.getValue();
+   }
+
+   /**
+    * Sets the version of this ChunkDesc to the given value.
+    */
+   public void setVersion(String version)
+   {
+      String old = getToken();
+      mDomElement.setAttribute(version_TOKEN, version);
+      changeSupport.firePropertyChange("version", old, version);
+      //fireVersionChanged();
    }
 
    /**
