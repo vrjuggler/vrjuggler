@@ -40,45 +40,47 @@
 namespace gadget 
 {
 
-    /** Base class for all input data returned by Gadgeteer.
-     *  This provides all input data with a standard timestamping
-     *  system used to calculate input latency.
-     */
+/**
+ * Base class for all input data returned by Gadgeteer.
+ * This provides all input data with a standard timestamping system used to
+ * calculate input latency.
+ */
 class GADGET_CLASS_API InputData 
 {
-
 public:
 
    /** Constructor. */
-   InputData () {;}
-
+   InputData()
+   {
+      ;
+   }
 
    /** Record the current time using the vpr::Interval. */
-   void setTime () 
+   void setTime() 
    {
       mTimeStamp.setNow();
    }
 
    /** Record the given time. */
-   void setTime (const vpr::Interval& iv) 
+   void setTime(const vpr::Interval& iv) 
    {
       mTimeStamp = iv;
    }
 
    /** Return the last marked time using the vpr::Interval. */
-   vpr::Interval getTime () const
+   vpr::Interval getTime() const
    {
       return mTimeStamp;
    }
 
 protected:
 
-   void copy (const InputData& id) 
+   void copy(const InputData& id) 
    {
       mTimeStamp = id.mTimeStamp;
    }
 
-   vpr::Interval    mTimeStamp;
+   vpr::Interval mTimeStamp;
 
 
 }; // class InputData
