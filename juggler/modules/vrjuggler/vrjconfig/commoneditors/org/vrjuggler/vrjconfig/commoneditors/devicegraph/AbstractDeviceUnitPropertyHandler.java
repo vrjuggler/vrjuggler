@@ -38,7 +38,6 @@ import javax.swing.event.EventListenerList;
 
 import org.vrjuggler.jccl.config.ConfigContext;
 import org.vrjuggler.jccl.config.ConfigElement;
-import org.vrjuggler.jccl.config.event.ConfigElementEvent;
 
 import org.vrjuggler.vrjconfig.commoneditors.event.DeviceUnitEvent;
 import org.vrjuggler.vrjconfig.commoneditors.event.DeviceUnitListener;
@@ -85,52 +84,6 @@ public abstract class AbstractDeviceUnitPropertyHandler
    {
       return this.unitTypes;
    }
-
-   /**
-    * Invoked when a property value is added to the config element being
-    * held by this handler.  Whether this results in a
-    * <code>DeviceUnitEvent</code> event being generated is dependent upon the
-    * specific implementation of this interface.
-    */
-   public abstract void propertyValueAdded(ConfigElementEvent evt);
-
-   /**
-    * Invoked when a proeprty value is changed in the config element being
-    * held by this handler.  Whether this results in a
-    * <code>DeviceUnitEvent</code> event being generated is dependent upon the
-    * specific implementation of this interface.
-    */
-   public abstract void propertyValueChanged(ConfigElementEvent evt);
-
-   /**
-    * Invoked when a property value is removed from the config element being
-    * held by this handler.  Whether this results in a
-    * <code>DeviceUnitEvent</code> event being generated is dependent upon the
-    * specific implementation of this interface.
-    */
-   public abstract void propertyValueRemoved(ConfigElementEvent evt);
-
-   /**
-    * Adds a new unit of the given type to the device managed by this handler.
-    *
-    * @param unitType   the type (as defined in <code>UnitConstants</code> of
-    *                   the device unit to be added)
-    *
-    * @see UnitConstants
-    */
-   public abstract void addUnit(Integer unitType);
-
-   /**
-    * Removes the identified unit of the given type from the device managed by
-    * this handler.
-    *
-    * @param unitType   the type (as defined in <code>UnitConstants</code> of
-    *                   the device unit to be added)
-    * @param unitNumber the index of the unit to remove
-    *
-    * @see UnitConstants
-    */
-   public abstract void removeUnit(Integer unitType, int unitNumber);
 
    /**
     * Adds the given <code>DeviceUnitListener</code> to the list of listeners.
