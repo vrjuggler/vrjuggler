@@ -244,7 +244,7 @@ public class VrjConfig
    /**
     * The special internal frame used to hold configuration editors.
     */
-   private class ConfigIFrame
+   public class ConfigIFrame
       extends JInternalFrame implements ActionListener
    {
       public ConfigIFrame(File curDir, ConfigContext ctx)
@@ -255,10 +255,18 @@ public class VrjConfig
                true,
                true);
          getContentPane().setLayout(new BorderLayout());
-         mContextToolbar = new ContextToolbar(curDir, ctx);
+         mContextToolbar = new ContextToolbar(curDir, ctx, this);
 
          mToolbar.addActionListener(this);
          addActionListener(editor.getContextEditor().getElementTree());
+         
+         addInternalFrameListener(new InternalFrameAdapter()
+            {
+               public void internalFrameClosing(InternalFrameEvent evt)
+               {
+                  mContextToolbar.doClose();
+               }
+            });
                
          getContentPane().add(mContextToolbar, BorderLayout.NORTH);
          getContentPane().add(editor, BorderLayout.CENTER);
@@ -322,7 +330,7 @@ public class VrjConfig
             }
          }
       }
-      
+
       private ContextToolbar        mContextToolbar = null;
       private GenericConfigEditor   editor   = new GenericConfigEditor();
    }
