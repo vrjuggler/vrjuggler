@@ -85,14 +85,16 @@ public:
     * @pre addr is a reference to a valid vpr::InetAddr object.
     * @post A socket is created using the contents of addr.
     *
-    * @param local_addr  A reference to a vpr::InetAddr object for the
-    *                     local socket address.
-    * @param remote_addr A reference to a vpr::InetAddr object for the
-    *                     remote socket address.
+    * @param localAddr  A reference to a vpr::InetAddr object for the
+    *                   local socket address.
+    * @param remoteAddr A reference to a vpr::InetAddr object for the
+    *                   remote socket address.
     */
-   SocketStream_t(vpr::InetAddr local_addr, vpr::InetAddr remote_addr)
+   SocketStream_t(vpr::InetAddr localAddr, vpr::InetAddr remoteAddr)
    {
-      mSocketStreamImpl = boost::shared_ptr<SocketStreamImpl>(new SocketStreamImpl(local_addr, remote_addr));
+      mSocketStreamImpl =
+         boost::shared_ptr<SocketStreamImpl>(new SocketStreamImpl(localAddr,
+                                                                  remoteAddr));
       this->mSocketImpl = mSocketStreamImpl;
    }
 
@@ -102,7 +104,9 @@ public:
     * @param sock The source stream socket to be copied into this object.
     */
    SocketStream_t(const SocketStream_t& sock)
-      : Socket_t<SocketConfig_>(), SocketStreamOpt(), mSocketStreamImpl(sock.mSocketStreamImpl)
+      : Socket_t<SocketConfig_>()
+      , SocketStreamOpt()
+      , mSocketStreamImpl(sock.mSocketStreamImpl)
    {
       this->mSocketImpl = mSocketStreamImpl;
    }
@@ -132,7 +136,7 @@ public:
     *         listening state.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus listen (const int backlog = 5)
+   vpr::ReturnStatus listen(const int backlog = 5)
    {
       return mSocketStreamImpl->listen(backlog);
    }
@@ -160,8 +164,8 @@ public:
     *         vpr::ReturnStatus::Fail is returned if the accept failed.  The
     *         given vpr::SocketStream object is not modified in this case.
     */
-   vpr::ReturnStatus accept (SocketStream_t& sock,
-                             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus accept(SocketStream_t& sock,
+                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return mSocketStreamImpl->accept(*(sock.mSocketStreamImpl), timeout);
    }
@@ -176,9 +180,9 @@ public:
     * @post The socket is in the listening state waiting for incoming
     *       connection requests.
     *
-    * @param reuse_addr Enable or disable reuse of the address being bound.
-    *                   This argument is optional and defaults to true.
-    * @param backlog    The maximum length of the pending connection queue.
+    * @param reuseAddr Enable or disable reuse of the address being bound.
+    *                  This argument is optional and defaults to true.
+    * @param backlog   The maximum length of the pending connection queue.
     *
     * @return <code>vpr::ReturnStatus::Succeed</code> is returned if the server
     *         socket is in the listening state and ready to accept incoming
@@ -186,7 +190,7 @@ public:
     *         <code>vpr::ReturnStatus::Fail</code> is returned if the server
     *         socket could not be set up.
     */
-   vpr::ReturnStatus openServer(const bool reuse_addr = true,
+   vpr::ReturnStatus openServer(const bool reuseAddr = true,
                                 const int backlog = 5)
    {
       vpr::ReturnStatus status;
@@ -196,7 +200,7 @@ public:
 
       if ( status.success() )
       {
-         status = this->setReuseAddr(reuse_addr);
+         status = this->setReuseAddr(reuseAddr);
 
          if ( status.success() )
          {
@@ -219,13 +223,14 @@ protected:
     * Constructor.  Create a vpr::SocketStream object using the given
     * vpr::SocketStreamImpl object pointer.  This is needed by accept().
     *
-    * @pre sock_imp points to a valid vpr::SocketStreamImpl object.
-    * @post sock_imp is copied into mSocketStreamImpl.
+    * @pre sockImp points to a valid vpr::SocketStreamImpl object.
+    * @post sockImp is copied into mSocketStreamImpl.
     *
-    * @param sock_imp A pointer to a vpr::SocketStreamImpl object.
+    * @param sockImp A pointer to a vpr::SocketStreamImpl object.
     */
-   SocketStream_t (SocketStreamImpl* sock_imp)
-      : Socket_t<Config>(), mSocketStreamImpl(sock_imp)
+   SocketStream_t(SocketStreamImpl* sockImp)
+      : Socket_t<Config>()
+      , mSocketStreamImpl(sockImp)
    {
       this->mSocketImpl = mSocketStreamImpl;
    }

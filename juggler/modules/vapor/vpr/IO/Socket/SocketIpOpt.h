@@ -57,7 +57,7 @@ public:
    /**
     *
     */
-   vpr::ReturnStatus getTypeOfService (vpr::SocketOptions::TypeOfService& tos)
+   vpr::ReturnStatus getTypeOfService(vpr::SocketOptions::TypeOfService& tos)
    {
       vpr::SocketOptions::Data option;
       vpr::ReturnStatus retval;
@@ -75,7 +75,7 @@ public:
    /**
     *
     */
-   vpr::ReturnStatus setTypeOfService (const vpr::SocketOptions::TypeOfService& tos)
+   vpr::ReturnStatus setTypeOfService(const vpr::SocketOptions::TypeOfService& tos)
    {
       vpr::SocketOptions::Data option;
       option.type_of_service = tos;
@@ -85,7 +85,7 @@ public:
    /**
     *
     */
-   vpr::ReturnStatus getTimeToLive (vpr::Int32& ttl)
+   vpr::ReturnStatus getTimeToLive(vpr::Int32& ttl)
    {
       vpr::SocketOptions::Data option;
       vpr::ReturnStatus retval;
@@ -103,7 +103,7 @@ public:
    /**
     *
     */
-   vpr::ReturnStatus setTimeToLive (const vpr::Int32 ttl)
+   vpr::ReturnStatus setTimeToLive(const vpr::Int32 ttl)
    {
       vpr::SocketOptions::Data option;
       option.ip_ttl = ttl;
