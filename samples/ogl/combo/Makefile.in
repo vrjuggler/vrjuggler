@@ -8,6 +8,7 @@
 srcdir		= @srcdir@
 
 COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
+LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ -g
 VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir} -I${srcdir}/../torus -I${srcdir}/../wand -I${srcdir}/../cubes
 VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_LIBS_BASIC@
 VPATH		= @srcdir@:@srcdir@/../cubes:@srcdir@/../wand:@srcdir@/../torus
@@ -35,7 +36,7 @@ default: all
 all: combo
 
 combo: ${OBJECTS}
-	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
+	${LINK} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
 combo.o: torusApp.h wandApp.h cubesApp.h
 cubesApp.o: cubesApp.h
