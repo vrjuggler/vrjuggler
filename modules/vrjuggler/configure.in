@@ -343,6 +343,29 @@ case $host_os in
         _EXTRA_FLAGS=''
         PLATFORM='Linux'
         ;;
+    dnl # A machine running Solaris (aka SunOS).  Currently only i386 is
+    dnl # supported.
+    solaris*)
+        AR='ar -r'
+        LD='${CXX} -G'
+        LDOPTS=''
+        OPT_FLAGS='-O2'
+        SHAREDLIB_EXT='so'
+
+        dnl # We have to use POSIX threads on Linux.
+        if test "x${_thread_pkg}" != "xPOSIX" ; then
+            AC_MSG_WARN(*** POSIX threads must be used on $host ***)
+            _thread_pkg='POSIX'
+        fi
+
+        AC_DEFINE(VJ_OS_Solaris,)
+        ABI='ELF'
+        ISA='i386'
+        ABI_LIST='ELF'
+        LIBBITSUF=''
+        _EXTRA_FLAGS=''
+        PLATFORM='Solaris'
+        ;;
     dnl # Unkown operating system (to config.guess).
     unknown)
         AC_DEFINE(VJ_OS_GENERIC,)
@@ -562,7 +585,7 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
 
         dnl # Define the appropriate value for _POSIX_C_SOURCE on the current
         dnl # platform.
-        if test "$PLATFORM" = "SGI" -o "$PLATFORM" = "Linux" ; then
+        if test "$PLATFORM" = "SGI" -o "$PLATFORM" = "Linux" -o "$PLATFORM" = "Solaris" ; then
             AC_DEFINE(VJ_POSIX_C_SOURCE, 199506L)
         else
             AC_DEFINE(VJ_POSIX_C_SOURCE, 2)
@@ -798,6 +821,10 @@ dnl # -------------------------------------------------------------------------
 dnl # Checks for library functions.
 dnl # -------------------------------------------------------------------------
 AC_CHECK_FUNCS(gettimeofday socket strdup strerror strtod sginap)
+
+dnl # On Solaris, sched_yield(3) and its synchronization friends are in
+dnl # libposix4.
+AC_CHECK_LIB(posix4, sched_yield, LIBS="$LIBS -lposix4")
 
 AC_CHECK_LIB(m, sinf, AC_DEFINE(HAVE_SINF))
 AC_CHECK_LIB(m, sqrtf, AC_DEFINE(HAVE_SQRTF))
