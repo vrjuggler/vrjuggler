@@ -79,10 +79,6 @@ ifneq ($(TARGETS), )
           done
 endif
 
-links-boost:
-	cd $(instlinks)/include && rm -rf ./boost && mkdir boost &&	\
-          cd ./boost && $(LN_S) $(EXTROOT_ABS)/boost/boost/* ./
-
 links-cppdom:
 	cd $(instlinks)/include && $(RM_LN) ./cppdom &&			\
           $(LN_S) $(EXTROOT_ABS)/cppdom/cppdom ./
@@ -108,19 +104,6 @@ ifneq ($(TARGETS), )
             $(MAKE) install-$$target || exit 1;				\
           done
 endif
-
-# A custom installation is needed for Boost because the install-dir.pl script
-# needs to be picky.  We only want to copy over header files, but the C++ C
-# compatibility headers do not have an extension.  Thus, they must be installed
-# separately.
-install-boost:
-	@$(SHELL) $(MKINSTALLDIRS) $(includedir)/boost
-	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
-          $(GROUP_OPT_UNIX) -e .hpp,.h -o $(includedir)/boost 		\
-          -i $(EXTROOT_ABS)/boost/boost
-	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
-          $(GROUP_OPT_UNIX) -o $(includedir)/boost/compatibility 	\
-          -i $(EXTROOT_ABS)/boost/boost/compatibility
 
 install-init:
 	@$(MAKE) DIRS="init" generic-header-install
