@@ -124,7 +124,7 @@ vpr::ReturnStatus ParseUtil::findFileUsingPath(const std::string& fileName,
             break;
          }
       }
-      catch(fs::filesystem_error& ex)
+      catch(fs::filesystem_error&)
       {
          /* Ignore the exception. */ ;
       }
