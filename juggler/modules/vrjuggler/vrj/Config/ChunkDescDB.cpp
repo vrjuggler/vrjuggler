@@ -33,6 +33,7 @@
 #include <vrj/vrjConfig.h>
 #include <sys/types.h>
 
+#include <vpr/Util/Assert.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Config/ParseUtil.h>
 #include <vrj/Config/ConfigTokens.h>

@@ -39,6 +39,7 @@
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
 #include <vpr/Util/Singleton.h>
+#include <vpr/Util/Assert.h>
 
 #include <vrj/Util/Debug.h>
 //#include <vrj/Config/ConfigChunk.h>
