@@ -37,16 +37,17 @@
 #ifndef _GADGET_MSFTSPEECHRECOG_DIGITAL_H_
 #define _GADGET_MSFTSPEECHRECOG_DIGITAL_H_
 
+#include <gadget/Devices/DriverConfig.h>
+
 #include <vector>
 #include <string>
 
-#include <gadget/Devices/DriverConfig.h>
 #include <vpr/Thread/Thread.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/SpeechRecogDigital.h>
 #include <gadget/Type/InputMixer.h>
 
-#include "MSFTSpeechServerManager.h"
+#include <drivers/Microsoft/SpeechRecognition/MSFTSpeechServerManager.h>
 
 namespace gadget
 {
@@ -56,7 +57,8 @@ namespace gadget
 namespace gadget
 {
 
-class MSFTSpeechRecogDigital : public gadget::InputMixer<gadget::Input, gadget::SpeechRecogDigital>
+class MSFTSpeechRecogDigital
+   : public gadget::InputMixer<gadget::Input, gadget::SpeechRecogDigital>
 {
 public:
    MSFTSpeechRecogDigital();
@@ -81,11 +83,16 @@ public:
    void updateData();
 
    /** Returns what chunk type is associated with this class. */
-   static std::string getElementType() { return std::string("msft_speech_recog_digital");}
-
+   static std::string getElementType()
+   {
+      return std::string("msft_speech_recog_digital");
+   }
 
    /** Checks if the device is active. */
-   bool isActive() { return mIsActive; };
+   bool isActive()
+   {
+      return mIsActive;
+   };
 
    /**
     * Invokes the global scope delete operator.  This is required for proper
@@ -114,8 +121,7 @@ private:
 
    gadget::DigitalData mLastSampleToggle;
 
-	MSFTSpeechServerManager* mSpeechManager;
-
+   MSFTSpeechServerManager* mSpeechManager;
 };
 
 } // End of gadget namespace

@@ -30,9 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vector>
-
 #include <gadget/Devices/DriverConfig.h>
+
+#include <vector>
 
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
@@ -40,81 +40,88 @@
 
 #include <drivers/Microsoft/SpeechRecognition/MSFTSpeechRecogString.h>
 
-using namespace gadget;
-
-MSFTSpeechRecogString::MSFTSpeechRecogString() : mIsActive(false),mSpeechManager(MSFTSpeechServerManager::instance())
+namespace gadget
 {
 
+MSFTSpeechRecogString::MSFTSpeechRecogString()
+   : mIsActive(false)
+   , mSpeechManager(MSFTSpeechServerManager::instance())
+{
 }
 
 bool MSFTSpeechRecogString::config(jccl::ConfigElementPtr c)
 {
-    if(! (Input::config(c) && SpeechRecogString::config(c)))
-      {return false;}
+   if(! (Input::config(c) && SpeechRecogString::config(c)))
+   {
+      return false;
+   }
 
    mGrammarFileName = c->getProperty<std::string>("grammar_file");
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL) 
-         << "mGrammarFileName: " << mGrammarFileName << std::endl << vprDEBUG_FLUSH;
-   mSpeechManager->addGrammar(mGrammarFileName , this);
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+      << "mGrammarFileName: " << mGrammarFileName << std::endl
+      << vprDEBUG_FLUSH;
+   mSpeechManager->addGrammar(mGrammarFileName, this);
 
    return true;
 }
 
 MSFTSpeechRecogString::~MSFTSpeechRecogString()
 {
-    this->stopSampling();
+   this->stopSampling();
 }
 
 // Main thread of control for this active object
 void MSFTSpeechRecogString::controlLoop(void* nullParam)
 {
-    boost::ignore_unused_variable_warning(nullParam);
+   boost::ignore_unused_variable_warning(nullParam);
 
-    //Wait for initialization to finish
-    while( mIsInitializing )
-    {
-       vpr::Thread::yield();
-    }
+   //Wait for initialization to finish
+   // XXX: This should use a condition variable.  -PH 7/10/2004
+   while( mIsInitializing )
+   {
+      vpr::Thread::yield();
+   }
 
-    mSpeechManager->startUpdating();
+   mSpeechManager->startUpdating();
 
-    // Loop through and keep sampling
-    while ( this->isActive() )
-    {
-        this->sample();
-    }
+   // Loop through and keep sampling
+   while ( this->isActive() )
+   {
+      this->sample();
+   }
 }
 
 bool MSFTSpeechRecogString::startSampling()
 {
    mIsInitializing = true;
 
-	// make sure inertia cubes aren't already started
+   // make sure inertia cubes aren't already started
    if ( this->isActive() )
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "gadget::MSFTSpeechRecogString was already started." << std::endl
          << vprDEBUG_FLUSH;
-      
+
       mIsInitializing = false;
       return false;
    }
 
-	// Has the thread actually started already
+   // Has the thread actually started already
    if(mThread != NULL)
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CONFIG_LVL)
          << clrOutNORM(clrRED,"ERROR:")
-         << "gadget::MSFTSpeechRecogString: startSampling called, when already sampling.\n"
+         << " gadget::MSFTSpeechRecogString: startSampling called, when already sampling.\n"
          << vprDEBUG_FLUSH;
       vprASSERT(false);
    }
-	else
-	{
-
-		// Create a new thread to handle the sampling control
+   else
+   {
+      // Create a new thread to handle the sampling control
       vpr::ThreadMemberFunctor<MSFTSpeechRecogString>* memberFunctor =
-         new vpr::ThreadMemberFunctor<MSFTSpeechRecogString>(this, &MSFTSpeechRecogString::controlLoop, NULL);
+         new vpr::ThreadMemberFunctor<MSFTSpeechRecogString>(this,
+                                                             &MSFTSpeechRecogString::controlLoop,
+                                                             NULL);
       mThread = new vpr::Thread(memberFunctor);
 
       if ( ! mThread->valid() )
@@ -125,9 +132,9 @@ bool MSFTSpeechRecogString::startSampling()
       else
       {
          mIsActive = true;
-         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL) 
-            << "gadget::MSFTSpeechRecogString sampling control thread created." << std::endl
-            << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+            << "gadget::MSFTSpeechRecogString sampling control thread created."
+            << std::endl << vprDEBUG_FLUSH;
          mIsInitializing = false;
          return true;   // success
       }
@@ -139,16 +146,19 @@ bool MSFTSpeechRecogString::startSampling()
 
 bool MSFTSpeechRecogString::sample()
 {
-   if (this->isActive() == false) {return false;}
-   
+   if (this->isActive() == false)
+   {
+      return false;
+   }
+
    vpr::Thread::yield();
-   
+
    //Get the Speech Managers state and set it up as a sample
    std::vector< StringData > temp;
    StringData SpeechManagerStringState( mSpeechManager->getStringState(this) );
 
    temp.push_back( SpeechManagerStringState );
-   
+
    addStringSample(temp);
 
    return true;
@@ -157,7 +167,9 @@ bool MSFTSpeechRecogString::sample()
 bool MSFTSpeechRecogString::stopSampling()
 {
    if (this->isActive() == false)
+   {
       return false;
+   }
 
    if (mThread != NULL)
    {
@@ -176,12 +188,15 @@ bool MSFTSpeechRecogString::stopSampling()
    return true;
 }
 
-
 void MSFTSpeechRecogString::updateData()
 {
    if (!isActive())
+   {
       return;
+   }
 
    mSpeechManager->resetData();
    swapStringBuffers();
+}
+
 }
