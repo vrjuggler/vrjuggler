@@ -246,12 +246,22 @@ public class ProxyPointerEdge
                   }
 
                   DeviceInfo dev_info   = (DeviceInfo) dev_cell.getUserObject();
+                  UnitInfo unit_info    = (UnitInfo) dev_port.getUserObject();
                   ConfigElement dev_elt = dev_info.getElement();
                   proxy_elt.setProperty(DEVICE_PROPERTY, 0, dev_elt.getName(),
                                         proxy_info.getContext());
-                  proxy_elt.setProperty(UNIT_PROPERTY, 0,
-                                        dev_port.getUserObject(),
-                                        proxy_info.getContext());
+
+                  // Aggrivatingly enough, not all proxy types have a property
+                  // EditorConstants.UNIT_PROPERTY.
+                  try
+                  {
+                     proxy_elt.setProperty(UNIT_PROPERTY, 0,
+                                           unit_info.getUnitNumber(),
+                                           proxy_info.getContext());
+                  }
+                  catch (IllegalArgumentException ex)
+                  {
+                  }
                }
             }
 

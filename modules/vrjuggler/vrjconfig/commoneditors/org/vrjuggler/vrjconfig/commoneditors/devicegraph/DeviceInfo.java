@@ -32,9 +32,17 @@
 
 package org.vrjuggler.vrjconfig.commoneditors.devicegraph;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.vrjuggler.jccl.config.ConfigContext;
+import org.vrjuggler.jccl.config.ConfigDefinition;
 import org.vrjuggler.jccl.config.ConfigElement;
 import org.vrjuggler.jccl.config.PropertyDefinition;
+
+import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
 
 
 /**
@@ -74,7 +82,7 @@ public class DeviceInfo
     */
    public DeviceInfo(ConfigElement devElt, ConfigContext ctx)
    {
-      this(devElt, ctx, null);
+      this(devElt, ctx, (String) null);
    }
 
    /**
@@ -98,10 +106,79 @@ public class DeviceInfo
    {
       super(devElt, ctx);
 
+      ConfigDefinition def = devElt.getDefinition();
+      Integer unit_type = UnitTypeHelpers.getSingleUnitType(def);
+
+      // If unitPropertyName contains a non-empty string, then we have a device
+      // that supports a variable number of units, each of the same input type.
       if ( unitPropertyName != null && ! unitPropertyName.equals("") )
       {
-         unitPropertyDefinition =
-            devElt.getDefinition().getPropertyDefinition(unitPropertyName);
+         mUnitTypeMap = new HashMap();
+         mUnitTypeMap.put(unit_type,
+                          def.getPropertyDefinition(unitPropertyName));
+
+         this.unitTypes     = mUnitTypeMap.keySet();
+         mVariableUnitCount = true;
+      }
+      // Otherwise, our device supports a fixed number of units (one or more),
+      // each of the same input type.
+      else
+      {
+         this.unitTypes = new ArrayList(1);
+         this.unitTypes.add(unit_type);
+
+         mVariableUnitCount = false;
+      }
+   }
+
+   /**
+    * This version of the constructor should be used when the config element
+    * has a <i>variable</i> number of input sources (units) <i>and</i> supports
+    * multiipe input source types.
+    *
+    * @param devElt             the device config element
+    * @param ctx                the config context that contains
+    *                           <code>devElt</code>
+    * @param unitTypeMap        a mapping from unit types to property
+    *                           definitions (<code>Integer</code> to
+    *                           <code>PropertyDefinition</code>)
+    *
+    * @see UnitConstants
+    * @see org.vrjuggler.jccl.config.PropertyDefinition
+    */
+   public DeviceInfo(ConfigElement devElt, ConfigContext ctx,
+                     Map unitTypeMap)
+   {
+      super(devElt, ctx);
+
+      mVariableUnitCount = true;
+      mUnitTypeMap       = unitTypeMap;
+      this.unitTypes     = unitTypeMap.keySet();
+   }
+
+   /**
+    * This version of the constructor should be used when the config element
+    * has a <i>fixed</i> number of input sources (units) <i>and</i> supports
+    * multiipe input source types.
+    *
+    * @param devElt     the device config element
+    * @param ctx        the config context that contains <code>devElt</code>
+    * @param unitTypes  the list of unit types supported by this device
+    *
+    * @see UnitConstants
+    */
+   public DeviceInfo(ConfigElement devElt, ConfigContext ctx,
+                     Collection unitTypes)
+   {
+      super(devElt, ctx);
+
+      mVariableUnitCount = false;
+      this.unitTypes     = unitTypes;
+
+      mUnitTypeMap = new HashMap();
+      for ( java.util.Iterator i = this.unitTypes.iterator(); i.hasNext(); )
+      {
+         mUnitTypeMap.put(i.next(), null);
       }
    }
 
@@ -111,6 +188,46 @@ public class DeviceInfo
     * this device has.  To make a reliable determination about whether the
     * device has a variable number of input sources, use
     * <a href="#hasVariableUnitCount()"><code>hasVariableUnitCount()</code></a>.
+    * Invoking this method when the device does not support a variable number
+    * of input sources will generally result in a
+    * <code>NullPointerException</code> being thrown.
+    *
+    * @param inputType  the input type of the property definition to return
+    *
+    * @return a <code>PropertyDefinition</code> reference for this device's
+    *         input source (unit) configuration or null if this device has
+    *         a fixed number of input sources (greater than or equal to 1)
+    *         at all times.
+    *
+    * @see UnitConstants
+    * @see #hasVariableUnitCount()
+    * @see #getUnitTypes()
+    */
+   public PropertyDefinition getUnitPropertyDefinition(Integer inputType)
+   {
+      return getUnitPropertyDefinition((Object) inputType);
+   }
+
+   /**
+    * Retrieves the definition for the property in this device's config
+    * element that provides an indication of how many input sources (units)
+    * this device has.  To make a reliable determination about whether the
+    * this device has.  To make a reliable determination about whether the
+    * device has a variable number of input sources, use
+    * <a href="#hasVariableUnitCount()"><code>hasVariableUnitCount()</code></a>.
+    * Invoking this method when the device does not support a variable number
+    * of input sources will generally result in a
+    * <code>NullPointerException</code> being thrown.
+    *
+    * <p>
+    * This method is a convenience overload of <code>getUnitPropertyDefinition(Integer)</code> that
+    * can be useful when iterating over the collection of supported unit
+    * types.  Using this version of the method relieves the caller from having
+    * to cast the collection item from <code>java.lang.Object</code> to
+    * <code>java.lang.Integer</code>.
+    * </p>
+    *
+    * @param inputType  the input type of the property definition to return
     *
     * @return a <code>PropertyDefinition</code> reference for this device's
     *         input source (unit) configuration or null if this device has
@@ -118,10 +235,11 @@ public class DeviceInfo
     *         at all times.
     *
     * @see #hasVariableUnitCount()
+    * @see #getUnitTypes()
     */
-   public PropertyDefinition getUnitPropertyDefinition()
+   public PropertyDefinition getUnitPropertyDefinition(Object inputType)
    {
-      return unitPropertyDefinition;
+      return (PropertyDefinition) mUnitTypeMap.get(inputType);
    }
 
    /**
@@ -135,8 +253,22 @@ public class DeviceInfo
     */
    public boolean hasVariableUnitCount()
    {
-      return unitPropertyDefinition != null;
+      return mVariableUnitCount;
    }
 
-   private PropertyDefinition unitPropertyDefinition = null;
+   /**
+    * Returns the collection of input source (unit) types supported by the
+    * device represented by the contained config element.  This method is safe
+    * to call for all instances of this class regardless of the device type
+    * behind the scenes.
+    */
+   public Collection getUnitTypes()
+   {
+      return unitTypes;
+   }
+
+   private boolean mVariableUnitCount = false;
+   private Map     mUnitTypeMap       = null;
+
+   private Collection unitTypes = null;
 }
