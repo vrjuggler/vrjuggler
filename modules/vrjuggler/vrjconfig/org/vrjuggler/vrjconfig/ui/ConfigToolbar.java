@@ -90,6 +90,7 @@ public class ConfigToolbar
 
    public void setConfigContext(ConfigContext ctx)
    {
+      this.context.removeContextListener(contextListener);
       this.context = ctx;
 
       boolean nonempty_context = true;
@@ -99,23 +100,7 @@ public class ConfigToolbar
       }
       saveBtn.setEnabled(nonempty_context);
       expandBtn.setEnabled(nonempty_context);
-      context.addContextListener(new ContextListener()
-      {
-         public void resourceAdded(ContextEvent evt)
-         {
-            saveBtn.setEnabled(true);
-            expandBtn.setEnabled(false);
-         }
-
-         public void resourceRemoved(ContextEvent evt)
-         {
-            if (context.getResources().size() == 0)
-            {
-               saveBtn.setEnabled(false);
-               expandBtn.setEnabled(false);
-            }
-         }
-      });
+      context.addContextListener(contextListener);
    }
 
    public ConfigContext getConfigContext()
@@ -525,4 +510,29 @@ public class ConfigToolbar
 
    private ConfigContext context = new ConfigContext();
    private EditContextPopup contextEditor;
+   private ContextChangeListener contextListener = new ContextChangeListener();
+
+
+   /**
+    * Our special context change listener used to toggle the save and expand
+    * toolbar buttons.
+    */
+   private class ContextChangeListener
+      implements ContextListener
+   {
+      public void resourceAdded(ContextEvent evt)
+      {
+         saveBtn.setEnabled(true);
+         expandBtn.setEnabled(true);
+      }
+
+      public void resourceRemoved(ContextEvent evt)
+      {
+         if (context.getResources().size() == 0)
+         {
+            saveBtn.setEnabled(false);
+            expandBtn.setEnabled(false);
+         }
+      }
+   }
 }
