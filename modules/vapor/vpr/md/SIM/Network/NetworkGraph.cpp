@@ -313,7 +313,7 @@ NetworkGraph::VertexListPtr NetworkGraph::getShortestPath (const NetworkGraph::n
       p = q;
    }
 
-   vprDEBUG_CONT_END(vprDBG_ALL, vprDBG_VERB_LVL) << "\n" << vprDEBUG_FLUSH;
+   vprDEBUG_CONT_END(vprDBG_ALL, vprDBG_STATE_LVL) << "\n" << vprDEBUG_FLUSH;
    vprASSERT(p == src && "Destination is unreachable from source!");
 
    std::reverse(vlist->begin(), vlist->end());
