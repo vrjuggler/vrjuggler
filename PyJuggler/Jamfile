@@ -1,11 +1,14 @@
 # Jamfile for compiling the PyJuggler Python extension module.  This
 # depends on working installations of Python, Boost.Python, VR Juggler,
-# and NSPR.  Relevant websites are the following:
+# CppDOM, (for some platforms) NSPR, and (optionally) Open Scene Graph.
+# Relevant websites are the following:
 #
 #    http://www.python.org/
 #    http://www.boost.org/libs/python/
 #    http://www.vrjuggler.org/
+#    http://www.sourceforge.net/projects/xml-cppdom/
 #    http://www.mozilla.org/projects/nspr/
+#    http://www.openscenegraph.org/
 #
 # $Id$
 
@@ -27,8 +30,9 @@ subproject libs/python/pyjuggler ;
 #
 
 # Include definitions needed for Python modules
-SEARCH on python.jam = $(BOOST_BUILD_PATH) ;
-include python.jam ;
+#SEARCH on python.jam = $(BOOST_BUILD_PATH) ;
+#include python.jam ;
+import python ;
 
 # ----- vpr -------
 
@@ -39,24 +43,27 @@ extension vpr
    src/vpr/_Interval.cpp
    src/vpr/_ReturnStatus.cpp
    src/vpr/vpr.cpp
-  
-   # dependencies
-   <dll>../build/boost_python
+
+   # requirements and dependencies for Boost.Python extensions
+   <template>@boost/libs/python/build/extension
 
 :  # VPR dependencies
    <include>$(VJ_BASE_DIR)/include
-   <include>$(CPPDOM_ROOT)/include
-   <include>$(NSPR_ROOT)/include/nspr
+   <include>$(VJ_DEPS_DIR)/include
 
    <library-path>$(VJ_BASE_DIR)/lib
+   <library-path>$(VJ_DEPS_DIR)/lib
 
    <mipspro><*><library-path>$(VJ_BASE_DIR)/lib32
+   <mipspro><*><library-path>$(VJ_DEPS_DIR)/lib32
 
-   <vc7><debug><library-path>$(VJ_BASE_DIR)/lib/debug
-   <vc7><debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
-   <vc7><release><library-path>$(VJ_BASE_DIR)/lib/opt
+   <*><release><find-library>vpr
+   <*><release><find-library>cppdom
 
-   <find-library>vpr
+   <vc7.1><debug><find-library>vpr_d
+   <vc7.1><debug><find-library>cppdom_d
+   <vc7.1><debug-python><find-library>vpr_d
+   <vc7.1><debug-python><find-library>cppdom_d
   ;
 
 # ----- jccl -------
@@ -67,25 +74,30 @@ extension jccl
    src/jccl/_ConfigElement.cpp
    src/jccl/_ConfigElementHandler.cpp
    src/jccl/jccl.cpp
-  
-   # dependencies
-   <dll>../build/boost_python
+
+   # requirements and dependencies for Boost.Python extensions
+   <template>@boost/libs/python/build/extension
 
 :  # JCCL dependencies
    <include>$(VJ_BASE_DIR)/include
-   <include>$(CPPDOM_ROOT)/include
-   <include>$(NSPR_ROOT)/include/nspr
+   <include>$(VJ_DEPS_DIR)/include
 
    <library-path>$(VJ_BASE_DIR)/lib
+   <library-path>$(VJ_DEPS_DIR)/lib
 
    <mipspro><*><library-path>$(VJ_BASE_DIR)/lib32
+   <mipspro><*><library-path>$(VJ_DEPS_DIR)/lib32
 
-   <vc7><debug><library-path>$(VJ_BASE_DIR)/lib/debug
-   <vc7><debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
-   <vc7><release><library-path>$(VJ_BASE_DIR)/lib/opt
+   <*><release><find-library>vpr
+   <*><release><find-library>jccl
+   <*><release><find-library>cppdom
 
-   <find-library>vpr
-   <find-library>jccl
+   <vc7.1><debug><find-library>vpr_d
+   <vc7.1><debug><find-library>jccl_d
+   <vc7.1><debug><find-library>cppdom_d
+   <vc7.1><debug-python><find-library>vpr_d
+   <vc7.1><debug-python><find-library>jccl_d
+   <vc7.1><debug-python><find-library>cppdom_d
   ;
 
 # ----- gadget -------
@@ -112,27 +124,36 @@ extension gadget
    src/gadget/_gadget_Type_EventWindow_Event_h.cpp
    src/gadget/_gadget_Type_EventWindow_Keys_h.cpp
    src/gadget/gadget.cpp
-  
-   # dependencies
-   <dll>../build/boost_python
+
+   # requirements and dependencies for Boost.Python extensions
+   <template>@boost/libs/python/build/extension
 
 :  # Gadgeteer dependencies
    <include>src
    <include>$(VJ_BASE_DIR)/include
-   <include>$(CPPDOM_ROOT)/include
-   <include>$(NSPR_ROOT)/include/nspr
+   <include>$(VJ_DEPS_DIR)/include
 
    <library-path>$(VJ_BASE_DIR)/lib
+   <library-path>$(VJ_DEPS_DIR)/lib
 
    <mipspro><*><library-path>$(VJ_BASE_DIR)/lib32
+   <mipspro><*><library-path>$(VJ_DEPS_DIR)/lib32
 
-   <vc7><debug><library-path>$(VJ_BASE_DIR)/lib/debug
-   <vc7><debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
-   <vc7><release><library-path>$(VJ_BASE_DIR)/lib/opt
+   <*><release><find-library>vpr
+   <*><release><find-library>jccl
+   <*><release><find-library>gadget
+   <*><release><find-library>cppdom
 
-   <find-library>vpr
-   <find-library>jccl
-   <find-library>gadget
+   <vc7.1><*><find-library>libnspr4
+
+   <vc7.1><debug><find-library>vpr_d
+   <vc7.1><debug><find-library>jccl_d
+   <vc7.1><debug><find-library>gadget_d
+   <vc7.1><debug><find-library>cppdom_d
+   <vc7.1><debug-python><find-library>vpr_d
+   <vc7.1><debug-python><find-library>jccl_d
+   <vc7.1><debug-python><find-library>gadget_d
+   <vc7.1><debug-python><find-library>cppdom_d
   ;
 
 # ----- __vrj -------
@@ -152,33 +173,44 @@ extension __vrj
    src/vrj/_User.cpp
    src/vrj/_Viewport.cpp
    src/vrj/__vrj.cpp
-  
-   # dependencies
-   <dll>../build/boost_python
+
+   # requirements and dependencies for Boost.Python extensions
+   <template>@boost/libs/python/build/extension
 
 :  # VR Juggler dependencies
    <include>.
    <include>src
    <include>$(VJ_BASE_DIR)/include
-   <include>$(CPPDOM_ROOT)/include
-   <include>$(NSPR_ROOT)/include/nspr
+   <include>$(VJ_DEPS_DIR)/include
 
    <library-path>$(VJ_BASE_DIR)/lib
+   <library-path>$(VJ_DEPS_DIR)/lib
 
    <mipspro><*><library-path>$(VJ_BASE_DIR)/lib32
+   <mipspro><*><library-path>$(VJ_DEPS_DIR)/lib32
 
-   <vc7><debug><library-path>$(VJ_BASE_DIR)/lib/debug
-   <vc7><debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
-   <vc7><release><library-path>$(VJ_BASE_DIR)/lib/opt
+   <*><release><find-library>vpr
+   <*><release><find-library>jccl
+   <*><release><find-library>gadget
+   <*><release><find-library>vrj
+   <*><release><find-library>vrj_ogl
+   <*><release><find-library>cppdom
 
-   <find-library>vpr
-   <find-library>jccl
-   <find-library>gadget
-   <find-library>vrj
-   <find-library>vrj_ogl
+   <vc7.1><debug><find-library>vpr_d
+   <vc7.1><debug><find-library>jccl_d
+   <vc7.1><debug><find-library>gadget_d
+   <vc7.1><debug><find-library>vrj_d
+   <vc7.1><debug><find-library>vrj_ogl_d
+   <vc7.1><debug><find-library>cppdom_d
+   <vc7.1><debug-python><find-library>vpr_d
+   <vc7.1><debug-python><find-library>jccl_d
+   <vc7.1><debug-python><find-library>gadget_d
+   <vc7.1><debug-python><find-library>vrj_d
+   <vc7.1><debug-python><find-library>vrj_ogl_d
+   <vc7.1><debug-python><find-library>cppdom_d
   ;
 
-# ----- osgapp -------
+# ----- __osgapp -------
 
 # Declare a Python extension called __osgapp
 extension __osgapp
@@ -186,34 +218,61 @@ extension __osgapp
    pyjutil/InterpreterGuard.cpp
    src/osgapp/_OsgApp.cpp
    src/osgapp/__osgapp.cpp
-  
-   # dependencies
-   <dll>../build/boost_python
+
+   # requirements and dependencies for Boost.Python extensions
+   <template>@boost/libs/python/build/extension
 
 :  # vrj::OsgApp dependencies
    <include>.
    <include>src
    <include>$(VJ_BASE_DIR)/include
-   <include>$(CPPDOM_ROOT)/include
-   <include>$(NSPR_ROOT)/include/nspr
+   <include>$(VJ_DEPS_DIR)/include
    <include>$(OSGHOME)/include
 
    <library-path>$(VJ_BASE_DIR)/lib
+   <library-path>$(VJ_DEPS_DIR)/lib
    <library-path>$(OSGHOME)/lib
 
    <mipspro><*><library-path>$(VJ_BASE_DIR)/lib32
+   <mipspro><*><library-path>$(VJ_DEPS_DIR)/lib32
 
-   <vc7><debug><library-path>$(VJ_BASE_DIR)/lib/debug
-   <vc7><debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
-   <vc7><release><library-path>$(VJ_BASE_DIR)/lib/opt
+   <*><release><find-library>vpr
+   <*><release><find-library>jccl
+   <*><release><find-library>gadget
+   <*><release><find-library>vrj
+   <*><release><find-library>vrj_ogl
+   <*><release><find-library>osg
+   <*><release><find-library>osgProducer
+   <*><release><find-library>osgUtil
+   <*><release><find-library>osgDB
+   <*><release><find-library>cppdom
 
-   <find-library>vpr
-   <find-library>jccl
-   <find-library>gadget
-   <find-library>vrj
-   <find-library>vrj_ogl
-   <find-library>osg
-   <find-library>osgProducer
-   <find-library>osgUtil
-   <find-library>osgDB
+   <gcc><*><find-library>GL
+   <gcc><*><find-library>GLU
+   <mipspro><*><find-library>GL
+   <mipspro><*><find-library>GLU
+
+   <vc7.1><*><find-library>opengl32
+   <vc7.1><*><find-library>glu32
+
+   <vc7.1><debug><find-library>vpr_d
+   <vc7.1><debug><find-library>jccl_d
+   <vc7.1><debug><find-library>gadget_d
+   <vc7.1><debug><find-library>vrj_d
+   <vc7.1><debug><find-library>vrj_ogl_d
+   <vc7.1><debug><find-library>osgd
+   <vc7.1><debug><find-library>osgProducerd
+   <vc7.1><debug><find-library>osgUtild
+   <vc7.1><debug><find-library>osgDBd
+   <vc7.1><debug><find-library>cppdom_d
+   <vc7.1><debug-python><find-library>vpr_d
+   <vc7.1><debug-python><find-library>jccl_d
+   <vc7.1><debug-python><find-library>gadget_d
+   <vc7.1><debug-python><find-library>vrj_d
+   <vc7.1><debug-python><find-library>vrj_ogl_d
+   <vc7.1><debug-python><find-library>osgd
+   <vc7.1><debug-python><find-library>osgProducerd
+   <vc7.1><debug-python><find-library>osgUtild
+   <vc7.1><debug-python><find-library>osgDBd
+   <vc7.1><debug-python><find-library>cppdom_d
   ;

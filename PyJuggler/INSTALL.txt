@@ -45,11 +45,11 @@ for compiling PyJuggler on your local operating system.
         this template-heavy code, and there will be link errors if you try
         to link against a VR Juggler installation compiled with VC++ 7.0.
 
-        Set the environment variable %NSPR_ROOT% to the base directory of
-        your NSPR installation.  This directory must contain a subdirectory
-        named 'include/nspr' that contains the NSPR headers and a
-        subdirectory named 'lib' that contains the natively compiled NSPR
-        libraries.
+        Set the environment variable %VJ_DEPS_DIR% to the base directory of
+        the VR Juggler dependencies.  This directory must contain a
+        subdirectory named 'include' that contains the NSPR and CppDOM
+        headers, and it must contain a subdirectory named 'lib' that contains
+        the natively compiled NSPR and CppDOM libraries.
 
 Using Boost.Build
 =================
@@ -78,12 +78,7 @@ Once you have bjam, follow these simple steps:
    3) Set the following environment variables:
 
          VJ_BASE_DIR: VR Juggler installation directory
-         CPPDOM_ROOT: CppDOM installation directory
-
-      If you are compiling on Windows, Solaris, or Mac OS X, you must also
-      set the following environment variable:
-
-         NSPR_ROOT: NSPR installation directory
+         VJ_DEPS_DIR: VR Juggler dependency installation directory
 
       If you want to compile in the bindings for the class vrj::OsgApp,
       set the following environment variable:
