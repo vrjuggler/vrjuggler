@@ -75,7 +75,8 @@ public class DisplayWindowFrame
       ConfigBrokerProxy broker = new ConfigBrokerProxy();
       ConfigDefinition vp_def =
          broker.getRepository().get(SURFACE_VIEWPORT_TYPE);
-      java.util.Map views = vp_def.getPropertyDefinition("view").getEnums();
+      java.util.Map views =
+         vp_def.getPropertyDefinition(VIEW_PROPERTY).getEnums();
 
       LEFT_EYE  = ((Integer) views.get("Left Eye")).intValue();
       RIGHT_EYE = ((Integer) views.get("Right Eye")).intValue();
@@ -153,10 +154,12 @@ public class DisplayWindowFrame
 
       if ( enabled )
       {
-         boolean active = mSelectedViewport.getProperty("active", 0).equals(Boolean.TRUE);
+         boolean active =
+            mSelectedViewport.getProperty(ACTIVE_PROPERTY, 0).equals(Boolean.TRUE);
          mViewportActiveItem.setSelected(active);
 
-         int view = ((Integer) mSelectedViewport.getProperty("view", 0)).intValue();
+         int view =
+            ((Integer) mSelectedViewport.getProperty(VIEW_PROPERTY, 0)).intValue();
 
          if ( view == LEFT_EYE )
          {
@@ -179,22 +182,22 @@ public class DisplayWindowFrame
 
    public void addSurfaceViewport(ConfigElement surfaceVP)
    {
-      mElement.addProperty("surface_viewports", surfaceVP);
+      mElement.addProperty(SURFACE_VIEWPORTS_PROPERTY, surfaceVP);
    }
 
    public void addSimulatorViewport(ConfigElement simVP)
    {
-      mElement.addProperty("simulator_viewports", simVP);
+      mElement.addProperty(SIMULATOR_VIEWPORTS_PROPERTY, simVP);
    }
 
    public void removeSurfaceViewport(ConfigElement surfaceVP)
    {
-      mElement.removeProperty("surface_viewports", surfaceVP);
+      mElement.removeProperty(SURFACE_VIEWPORTS_PROPERTY, surfaceVP);
    }
 
    public void removeSimulatorViewport(ConfigElement simVP)
    {
-      mElement.removeProperty("simulator_viewports", simVP);
+      mElement.removeProperty(SIMULATOR_VIEWPORTS_PROPERTY, simVP);
    }
 
    private void jbInit() throws Exception
@@ -247,16 +250,20 @@ public class DisplayWindowFrame
 
    private void updateContextMenuItems()
    {
-      boolean active = ((Boolean) mElement.getProperty("active", 0)).booleanValue();
+      boolean active =
+         ((Boolean) mElement.getProperty(ACTIVE_PROPERTY, 0)).booleanValue();
       mWinActiveItem.setSelected(active);
 
-      boolean border = ((Boolean) mElement.getProperty("border", 0)).booleanValue();
+      boolean border =
+         ((Boolean) mElement.getProperty(BORDER_PROPERTY, 0)).booleanValue();
       mBorderItem.setSelected(border);
 
-      boolean pointer = ((Boolean) mElement.getProperty("hide_mouse", 0)).booleanValue();
+      boolean pointer =
+         ((Boolean) mElement.getProperty(HIDE_MOUSE_PROPERTY, 0)).booleanValue();
       mPointerItem.setSelected(pointer);
 
-      boolean stereo = ((Boolean) mElement.getProperty("stereo", 0)).booleanValue();
+      boolean stereo =
+         ((Boolean) mElement.getProperty(STEREO_PROPERTY, 0)).booleanValue();
       mWinStereoItem.setSelected(stereo);
    }
 
@@ -317,38 +324,46 @@ public class DisplayWindowFrame
       if ( dlg.showDialog() == DisplayWindowStartDialog.OK_OPTION )
       {
          Rectangle bounds  = dlg.getDisplayWindowBounds();
-         mElement.setProperty("origin", 0, new Integer(bounds.x), mContext);
-         mElement.setProperty("origin", 1, new Integer(bounds.y), mContext);
-         mElement.setProperty("size", 0, new Integer(bounds.width), mContext);
-         mElement.setProperty("size", 1, new Integer(bounds.height), mContext);
+         mElement.setProperty(ORIGIN_PROPERTY, 0, new Integer(bounds.x),
+                              mContext);
+         mElement.setProperty(ORIGIN_PROPERTY, 1, new Integer(bounds.y),
+                              mContext);
+         mElement.setProperty(SIZE_PROPERTY, 0, new Integer(bounds.width),
+                              mContext);
+         mElement.setProperty(SIZE_PROPERTY, 1, new Integer(bounds.height),
+                              mContext);
 
          ConfigElement fb_cfg =
-            (ConfigElement) mElement.getProperty("frame_buffer_config", 0);
-         fb_cfg.setProperty("visual_id", 0, dlg.getVisualID(), mContext);
-         fb_cfg.setProperty("red_size", 0, dlg.getColorRedDepth(), mContext);
-         fb_cfg.setProperty("green_size", 0, dlg.getColorGreenDepth(),
+            (ConfigElement) mElement.getProperty(FRAME_BUFFER_PROPERTY, 0);
+         fb_cfg.setProperty(VISUAL_ID_PROPERTY, 0, dlg.getVisualID(),
                             mContext);
-         fb_cfg.setProperty("blue_size", 0, dlg.getColorBlueDepth(), mContext);
-         fb_cfg.setProperty("alpha_size", 0, dlg.getColorAlphaDepth(),
+         fb_cfg.setProperty(COLOR_RED_SIZE_PROPERTY, 0, dlg.getColorRedDepth(),
                             mContext);
-         fb_cfg.setProperty("auxiliary_buffer_count", 0,
+         fb_cfg.setProperty(COLOR_GREEN_SIZE_PROPERTY, 0,
+                            dlg.getColorGreenDepth(), mContext);
+         fb_cfg.setProperty(COLOR_BLUE_SIZE_PROPERTY, 0,
+                            dlg.getColorBlueDepth(), mContext);
+         fb_cfg.setProperty(COLOR_ALPHA_SIZE_PROPERTY, 0,
+                            dlg.getColorAlphaDepth(), mContext);
+         fb_cfg.setProperty(AUX_BUFFER_COUNT_PROPERTY, 0,
                             dlg.getAuxiliaryBufferCount(), mContext);
-         fb_cfg.setProperty("depth_buffer_size", 0, dlg.getDepthBufferSize(),
-                            mContext);
-         fb_cfg.setProperty("stencil_buffer_size", 0,
+         fb_cfg.setProperty(DEPTH_BUFFER_SIZE_PROPERTY, 0,
+                            dlg.getDepthBufferSize(), mContext);
+         fb_cfg.setProperty(STENCIL_BUFFER_SIZE_PROPERTY, 0,
                             dlg.getStencilBufferSize(), mContext);
-         fb_cfg.setProperty("accum_red_size", 0, dlg.getAccumRedDepth(),
+         fb_cfg.setProperty(ACCUM_RED_SIZE_PROPERTY, 0, dlg.getAccumRedDepth(),
                             mContext);
-         fb_cfg.setProperty("accum_green_size", 0, dlg.getAccumGreenDepth(),
+         fb_cfg.setProperty(ACCUM_GREEN_SIZE_PROPERTY, 0,
+                            dlg.getAccumGreenDepth(), mContext);
+         fb_cfg.setProperty(ACCUM_BLUE_SIZE_PROPERTY, 0,
+                            dlg.getAccumBlueDepth(), mContext);
+         fb_cfg.setProperty(ACCUM_ALPHA_SIZE_PROPERTY, 0,
+                            dlg.getAccumAlphaDepth(), mContext);
+         fb_cfg.setProperty(FSAA_ENABLE_PROPERTY, 0, dlg.getFSAAEnable(),
                             mContext);
-         fb_cfg.setProperty("accum_blue_size", 0, dlg.getAccumBlueDepth(),
-                            mContext);
-         fb_cfg.setProperty("accum_alpha_size", 0, dlg.getAccumAlphaDepth(),
-                            mContext);
-         fb_cfg.setProperty("fsaa_enable", 0, dlg.getFSAAEnable(), mContext);
 
-         mElement.setProperty("stereo", 0, dlg.inStereo(), mContext);
-         mElement.setProperty("border", 0, dlg.hasBorder(), mContext);
+         mElement.setProperty(STEREO_PROPERTY, 0, dlg.inStereo(), mContext);
+         mElement.setProperty(BORDER_PROPERTY, 0, dlg.hasBorder(), mContext);
 
          mElement.setProperty(LOCK_KEY_PROPERTY, 0, dlg.getLockKey(),
                               mContext);
@@ -361,21 +376,21 @@ public class DisplayWindowFrame
 
    void windowActiveItemActionPerformed(ActionEvent e)
    {
-      mElement.setProperty("active", 0,
+      mElement.setProperty(ACTIVE_PROPERTY, 0,
                            Boolean.valueOf(mWinActiveItem.isSelected()),
                            mContext);
    }
 
    void borderItemActionPerformed(ActionEvent e)
    {
-      mElement.setProperty("border", 0,
+      mElement.setProperty(BORDER_PROPERTY, 0,
                            Boolean.valueOf(mBorderItem.isSelected()),
                            mContext);
    }
 
    void pointerItemActionPerformed(ActionEvent e)
    {
-      mElement.setProperty("hide_mouse", 0,
+      mElement.setProperty(HIDE_MOUSE_PROPERTY, 0,
                            Boolean.valueOf(mPointerItem.isSelected()),
                            mContext);
       mHideMouse = mPointerItem.isSelected();
@@ -383,7 +398,7 @@ public class DisplayWindowFrame
 
    void windowStereoItemActionPerformed(ActionEvent e)
    {
-      mElement.setProperty("stereo", 0,
+      mElement.setProperty(STEREO_PROPERTY, 0,
                            Boolean.valueOf(mWinStereoItem.isSelected()),
                            mContext);
    }
@@ -392,10 +407,14 @@ public class DisplayWindowFrame
    {
       Container owner = (Container) SwingUtilities.getRoot(this);
 
-      float old_origin_x = ((Number) mSelectedViewport.getProperty("origin", 0)).floatValue();
-      float old_origin_y = ((Number) mSelectedViewport.getProperty("origin", 1)).floatValue();
-      float old_width    = ((Number) mSelectedViewport.getProperty("size", 0)).floatValue();
-      float old_height   = ((Number) mSelectedViewport.getProperty("size", 1)).floatValue();
+      float old_origin_x =
+         ((Number) mSelectedViewport.getProperty(ORIGIN_PROPERTY, 0)).floatValue();
+      float old_origin_y =
+         ((Number) mSelectedViewport.getProperty(ORIGIN_PROPERTY, 1)).floatValue();
+      float old_width =
+         ((Number) mSelectedViewport.getProperty(SIZE_PROPERTY, 0)).floatValue();
+      float old_height =
+         ((Number) mSelectedViewport.getProperty(SIZE_PROPERTY, 1)).floatValue();
 
       int status;
       float origin_x = 0.0f, origin_y = 0.0f, width = 0.0f, height = 0.0f;
@@ -417,50 +436,51 @@ public class DisplayWindowFrame
             width    = (float) bounds.width / 100.0f;
             height   = (float) bounds.height / 100.0f;
 
-            mSelectedViewport.setProperty("origin", 0, new Float(origin_x),
+            mSelectedViewport.setProperty(ORIGIN_PROPERTY, 0,
+                                          new Float(origin_x), mContext);
+            mSelectedViewport.setProperty(ORIGIN_PROPERTY, 1,
+                                          new Float(origin_y), mContext);
+            mSelectedViewport.setProperty(SIZE_PROPERTY, 0, new Float(width),
                                           mContext);
-            mSelectedViewport.setProperty("origin", 1, new Float(origin_y),
+            mSelectedViewport.setProperty(SIZE_PROPERTY, 1, new Float(height),
                                           mContext);
-            mSelectedViewport.setProperty("size", 0, new Float(width),
+            mSelectedViewport.setProperty(VIEW_PROPERTY, 0, dlg.getViewpoint(),
                                           mContext);
-            mSelectedViewport.setProperty("size", 1, new Float(height),
+            mSelectedViewport.setProperty(USER_PROPERTY, 0, dlg.getUser(),
                                           mContext);
-            mSelectedViewport.setProperty("view", 0, dlg.getViewpoint(),
-                                          mContext);
-            mSelectedViewport.setProperty("user", 0, dlg.getUser(), mContext);
 
             Point3D[] corners = dlg.getCorners();
-            mSelectedViewport.setProperty("lower_left_corner", 0,
+            mSelectedViewport.setProperty(LOWER_LEFT_CORNER_PROPERTY, 0,
                                           new Float(corners[0].x), mContext);
-            mSelectedViewport.setProperty("lower_left_corner", 1,
+            mSelectedViewport.setProperty(LOWER_LEFT_CORNER_PROPERTY, 1,
                                           new Float(corners[0].y), mContext);
-            mSelectedViewport.setProperty("lower_left_corner", 2,
+            mSelectedViewport.setProperty(LOWER_LEFT_CORNER_PROPERTY, 2,
                                           new Float(corners[0].z), mContext);
-            mSelectedViewport.setProperty("lower_right_corner", 0,
+            mSelectedViewport.setProperty(LOWER_RIGHT_CORNER_PROPERTY, 0,
                                           new Float(corners[1].x), mContext);
-            mSelectedViewport.setProperty("lower_right_corner", 1,
+            mSelectedViewport.setProperty(LOWER_RIGHT_CORNER_PROPERTY, 1,
                                           new Float(corners[1].y), mContext);
-            mSelectedViewport.setProperty("lower_right_corner", 2,
+            mSelectedViewport.setProperty(LOWER_RIGHT_CORNER_PROPERTY, 2,
                                           new Float(corners[1].z), mContext);
-            mSelectedViewport.setProperty("upper_right_corner", 0,
+            mSelectedViewport.setProperty(UPPER_RIGHT_CORNER_PROPERTY, 0,
                                           new Float(corners[2].x), mContext);
-            mSelectedViewport.setProperty("upper_right_corner", 1,
+            mSelectedViewport.setProperty(UPPER_RIGHT_CORNER_PROPERTY, 1,
                                           new Float(corners[2].y), mContext);
-            mSelectedViewport.setProperty("upper_right_corner", 2,
+            mSelectedViewport.setProperty(UPPER_RIGHT_CORNER_PROPERTY, 2,
                                           new Float(corners[2].z), mContext);
-            mSelectedViewport.setProperty("upper_left_corner", 0,
+            mSelectedViewport.setProperty(UPPER_LEFT_CORNER_PROPERTY, 0,
                                           new Float(corners[3].x), mContext);
-            mSelectedViewport.setProperty("upper_left_corner", 1,
+            mSelectedViewport.setProperty(UPPER_LEFT_CORNER_PROPERTY, 1,
                                           new Float(corners[3].y), mContext);
-            mSelectedViewport.setProperty("upper_left_corner", 2,
+            mSelectedViewport.setProperty(UPPER_LEFT_CORNER_PROPERTY, 2,
                                           new Float(corners[3].z), mContext);
 
-            mSelectedViewport.setProperty("tracked", 0, dlg.isTracked(),
+            mSelectedViewport.setProperty(TRACKED_PROPERTY, 0, dlg.isTracked(),
                                           mContext);
 
             if ( dlg.isTracked() == Boolean.TRUE )
             {
-               mSelectedViewport.setProperty("tracker_proxy", 0,
+               mSelectedViewport.setProperty(TRACKER_PROXY_PROPERTY, 0,
                                              dlg.getTrackerProxy(), mContext);
             }
          }
@@ -483,27 +503,27 @@ public class DisplayWindowFrame
             width    = (float) bounds.width / 100.0f;
             height   = (float) bounds.height / 100.0f;
 
-            mSelectedViewport.setProperty("origin", 0, new Float(origin_x),
+            mSelectedViewport.setProperty(ORIGIN_PROPERTY, 0,
+                                          new Float(origin_x), mContext);
+            mSelectedViewport.setProperty(ORIGIN_PROPERTY, 1,
+                                          new Float(origin_y), mContext);
+            mSelectedViewport.setProperty(SIZE_PROPERTY, 0, new Float(width),
                                           mContext);
-            mSelectedViewport.setProperty("origin", 1, new Float(origin_y),
+            mSelectedViewport.setProperty(SIZE_PROPERTY, 1, new Float(height),
                                           mContext);
-            mSelectedViewport.setProperty("size", 0, new Float(width),
+            mSelectedViewport.setProperty(VIEW_PROPERTY, 0, dlg.getViewpoint(),
                                           mContext);
-            mSelectedViewport.setProperty("size", 1, new Float(height),
+            mSelectedViewport.setProperty(USER_PROPERTY, 0, dlg.getUser(),
                                           mContext);
-            mSelectedViewport.setProperty("view", 0, dlg.getViewpoint(),
-                                          mContext);
-            mSelectedViewport.setProperty("user", 0, dlg.getUser(),
-                                          mContext);
-            mSelectedViewport.setProperty("vertical_fov", 0,
+            mSelectedViewport.setProperty(VERTICAL_FOV_PROPERTY, 0,
                                           dlg.getVertialFOV(), mContext);
 
             ConfigElement sim_elt =
-               (ConfigElement) mSelectedViewport.getProperty("simulator_plugin", 0);
+               (ConfigElement) mSelectedViewport.getProperty(SIMULATOR_PLUGIN_PROPERTY, 0);
 
-            sim_elt.setProperty("camera_pos", 0, dlg.getCameraPosition(),
-                                mContext);
-            sim_elt.setProperty("wand_pos", 0, dlg.getWandPosition(),
+            sim_elt.setProperty(CAMERA_POS_PROPERTY, 0,
+                                dlg.getCameraPosition(), mContext);
+            sim_elt.setProperty(WAND_POS_PROPERTY, 0, dlg.getWandPosition(),
                                 mContext);
          }
       }
@@ -524,31 +544,31 @@ public class DisplayWindowFrame
 
    void viewportActiveItemSelected(ActionEvent e)
    {
-      mSelectedViewport.setProperty("active", 0,
+      mSelectedViewport.setProperty(ACTIVE_PROPERTY, 0,
                                     Boolean.valueOf(mViewportActiveItem.isSelected()),
                                     mContext);
    }
 
    void viewportLeftEyeItemSelected(ActionEvent e)
    {
-      mSelectedViewport.setProperty("view", 0, new Integer(LEFT_EYE),
+      mSelectedViewport.setProperty(VIEW_PROPERTY, 0, new Integer(LEFT_EYE),
                                     mContext);
    }
 
    void viewportRightEyeItemSelected(ActionEvent e)
    {
-      mSelectedViewport.setProperty("view", 0, new Integer(RIGHT_EYE),
+      mSelectedViewport.setProperty(VIEW_PROPERTY, 0, new Integer(RIGHT_EYE),
                                     mContext);
    }
 
    void viewportStereoItemSelected(ActionEvent e)
    {
-      mSelectedViewport.setProperty("view", 0, new Integer(STEREO),
+      mSelectedViewport.setProperty(VIEW_PROPERTY, 0, new Integer(STEREO),
                                     mContext);
 
       // Since a viewport will use the stereo view, we need to enable
       // stereoscopoic rendering for the whole display window.
-      mElement.setProperty("stereo", 0, Boolean.TRUE, mContext);
+      mElement.setProperty(STEREO_PROPERTY, 0, Boolean.TRUE, mContext);
    }
 
    void viewportRemoveItemSelected(ActionEvent e)
@@ -556,11 +576,11 @@ public class DisplayWindowFrame
       String prop;
       if ( mSelectedViewport.getDefinition().getToken().equals(SURFACE_VIEWPORT_TYPE) )
       {
-         prop = "surface_viewports";
+         prop = SURFACE_VIEWPORTS_PROPERTY;
       }
       else
       {
-         prop = "simulator_viewports";
+         prop = SIMULATOR_VIEWPORTS_PROPERTY;
       }
 
       mElement.removeProperty(prop, mSelectedViewport);

@@ -68,9 +68,11 @@ public class SurfaceViewportCreateDialog
          broker.getRepository().get(SURFACE_VIEWPORT_TYPE);
 
       mTrackerProxyEditor =
-         new PropertyEditorPanel(ctx, mViewportElement.getProperty("tracker_proxy", 0),
-                                 vp_def.getPropertyDefinition("tracker_proxy"),
-                                 mViewportElement, 0, Color.white);
+         new PropertyEditorPanel(
+            ctx, mViewportElement.getProperty(TRACKER_PROXY_PROPERTY, 0),
+            vp_def.getPropertyDefinition(TRACKER_PROXY_PROPERTY),
+            mViewportElement, 0, Color.white
+         );
 
       initUI();
 
@@ -100,15 +102,24 @@ public class SurfaceViewportCreateDialog
 
          float[] ll_corner = new float[3], lr_corner = new float[3],
                  ul_corner = new float[3];
-         ll_corner[0] = ((Number) mViewportElement.getProperty("lower_left_corner", 0)).floatValue();
-         ll_corner[1] = ((Number) mViewportElement.getProperty("lower_left_corner", 1)).floatValue();
-         ll_corner[2] = ((Number) mViewportElement.getProperty("lower_left_corner", 2)).floatValue();
-         lr_corner[0] = ((Number) mViewportElement.getProperty("lower_right_corner", 0)).floatValue();
-         lr_corner[1] = ((Number) mViewportElement.getProperty("lower_right_corner", 1)).floatValue();
-         lr_corner[2] = ((Number) mViewportElement.getProperty("lower_right_corner", 2)).floatValue();
-         ul_corner[0] = ((Number) mViewportElement.getProperty("upper_left_corner", 0)).floatValue();
-         ul_corner[1] = ((Number) mViewportElement.getProperty("upper_left_corner", 1)).floatValue();
-         ul_corner[2] = ((Number) mViewportElement.getProperty("upper_left_corner", 2)).floatValue();
+         ll_corner[0] =
+            ((Number) mViewportElement.getProperty(LOWER_LEFT_CORNER_PROPERTY, 0)).floatValue();
+         ll_corner[1] =
+            ((Number) mViewportElement.getProperty(LOWER_LEFT_CORNER_PROPERTY, 1)).floatValue();
+         ll_corner[2] =
+            ((Number) mViewportElement.getProperty(LOWER_LEFT_CORNER_PROPERTY, 2)).floatValue();
+         lr_corner[0] =
+            ((Number) mViewportElement.getProperty(LOWER_RIGHT_CORNER_PROPERTY, 0)).floatValue();
+         lr_corner[1] =
+            ((Number) mViewportElement.getProperty(LOWER_RIGHT_CORNER_PROPERTY, 1)).floatValue();
+         lr_corner[2] =
+            ((Number) mViewportElement.getProperty(LOWER_RIGHT_CORNER_PROPERTY, 2)).floatValue();
+         ul_corner[0] =
+            ((Number) mViewportElement.getProperty(UPPER_LEFT_CORNER_PROPERTY, 0)).floatValue();
+         ul_corner[1] =
+            ((Number) mViewportElement.getProperty(UPPER_LEFT_CORNER_PROPERTY, 1)).floatValue();
+         ul_corner[2] =
+            ((Number) mViewportElement.getProperty(UPPER_LEFT_CORNER_PROPERTY, 2)).floatValue();
 
          float wall_width, wall_height;
 
@@ -170,7 +181,7 @@ public class SurfaceViewportCreateDialog
 
    public Object getTrackerProxy()
    {
-      return mViewportElement.getProperty("tracker_proxy", 1);
+      return mViewportElement.getProperty(TRACKER_PROXY_PROPERTY, 1);
    }
 
    public Point3D[] getCorners()
