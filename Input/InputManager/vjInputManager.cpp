@@ -575,7 +575,10 @@ int vjInputManager::addPosProxy(std::string devName, int subNum, std::string pro
 {
    int dev_num = findDeviceNum(devName.c_str());              // Get device number
    if(-1 == dev_num)       // Not found, ERROR
+   {
+      vjDEBUG(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "vjInputManager::addPosProxy: Could not find device: " << devName << std::endl << vjDEBUG_FLUSH;
       return -1;
+   }
 
    vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL)      << "adding a posProxy : " << proxyName.c_str() << std::endl << vjDEBUG_FLUSH;
    vjDEBUG_CONT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "   attaching to device named: " << devName.c_str() << std::endl << vjDEBUG_FLUSH;
