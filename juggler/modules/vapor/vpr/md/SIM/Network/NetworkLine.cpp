@@ -54,7 +54,7 @@ namespace sim
 {
 
 NetworkLine::NetworkLine (const double miles, const double Mbps,
-                          vpr::Uint32 delay, const std::string& net_type,
+                          const double delay, const std::string& net_type,
                           const vpr::Uint8 net_id, const std::string& net_ip)
    : mLength(miles), mCapacity(Mbps), mDelay(delay), mNetworkID(net_id),
      mNetworkIP(0), mNetworkIPStr(net_ip)
