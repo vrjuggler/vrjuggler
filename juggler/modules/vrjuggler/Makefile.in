@@ -210,12 +210,12 @@ endif
 # =============================================================================
 
 # Subdirectories used for recursion through the source tree.
-SUBDIRS		= Math		\
-                  Config	\
-                  Kernel	\
+SUBDIRS		= Config	\
                   Environment	\
-                  Performance	\
                   Input		\
+                  Kernel	\
+                  Math		\
+                  Performance	\
                   SharedMem	\
                   Sound		\
                   Sync		\
