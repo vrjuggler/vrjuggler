@@ -33,6 +33,8 @@
 
 // library of file utility functions, useful to IRIS Performer apps
 
+#include <iostream>
+
 // Performer includes
 #include <Performer/pf/pfChannel.h>
 #include <Performer/pf/pfEarthSky.h>
@@ -63,8 +65,8 @@ pfNode* pfFileIO::loadFile( const std::string& filename )
 
    if (node == NULL)
    {
-      cout << "pfFileIO::loadFile: COULDN'T FIND "<<file_name.c_str()
-           << "\tusing filepath: " << filePath << endl;
+      std::cout << "pfFileIO::loadFile: COULDN'T FIND "<<file_name.c_str()
+                << "\tusing filepath: " << filePath << std::endl;
    }
 
    return node;
@@ -110,22 +112,22 @@ pfNode* pfFileIO::autoloadFile( const std::string& fileName, const pfFileIO::uni
    std::string optimizedFileName = optimizedName( fileName );
    if (pfFileIO::isOptimized( fileName ))
    {
-      cout<<"Loading(o) "<<fileName.c_str()<<".\n "<<flush;
+      std::cout<<"Loading(o) "<<fileName.c_str()<<".\n "<<std::flush;
       node = loadFile( fileName );
    }   
    else if (vjFileIO::fileExists(optimizedFileName))
    {
       // don't need to output this, because performer already does. :)
-      //cout<<"Loading "<<optimizedFileName.c_str()<<"\n"<<flush;
+      //std::cout<<"Loading "<<optimizedFileName.c_str()<<"\n"<<std::flush;
       node = loadFile( optimizedFileName );
    }
    else
    {
-      cout<<"Loading(c) "<<fileName.c_str()<<"... "<<flush;
+      std::cout<<"Loading(c) "<<fileName.c_str()<<"... "<<std::flush;
       node = loadFile( fileName );
       if(node != NULL)
       {
-         cout<<"Caching to "<<optimizedFileName.c_str()<<"...\n"<<flush;
+         std::cout<<"Caching to "<<optimizedFileName.c_str()<<"...\n"<<std::flush;
          writeOptimizedFile( node, optimizedFileName );
       }
       // TODO: consider if the user has write access,
