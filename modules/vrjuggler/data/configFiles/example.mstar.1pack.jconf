@@ -12,6 +12,10 @@
          <server_port>6000</server_port>
          <is_master>false</is_master>
          <hemisphere>Front</hemisphere>
+         <data_format>Position and Angles</data_format>
+         <mode>Run Continuous</mode>
+         <report_rate>1</report_rate>
+         <measurement_rate>68.4</measurement_rate>
          <position_filters>
             <position_transform_filter name="Position Filter 0" version="1">
                <pre_translate>2.065</pre_translate>
@@ -30,10 +34,6 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <data_format>Position and Angles</data_format>
-         <mode>Run Continuous</mode>
-         <report_rate>1</report_rate>
-         <measurement_rate>68.4</measurement_rate>
          <device_host />
       </motion_star>
       <alias name="VJHead" version="1">
