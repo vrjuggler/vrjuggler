@@ -53,9 +53,9 @@ vjProperty::vjProperty (vjPropertyDesc *pd) {
     embeddesc = NULL;
 
     if (type == T_EMBEDDEDCHUNK) {
-   vjEnumEntry *e = description->getEnumEntryAtIndex (0);
-   if (e) 
-       embeddesc = vjChunkFactory::instance()->getChunkDesc (e->getName());
+        vjEnumEntry *e = description->getEnumEntryAtIndex (0);
+        if (e) 
+            embeddesc = vjChunkFactory::instance()->getChunkDesc (e->getName());
     }
 
     /* the idea here is that if num == -1 we can add values to 
@@ -63,12 +63,12 @@ vjProperty::vjProperty (vjPropertyDesc *pd) {
      * otherwise we can just set the extant values.
      */
     if (num != -1) {
-   /* we're filling the vector with num copies of a 
-    * default vjVarValue */
-   for (j = 0; j < num; j++ ) {
-       v = createVarValue (j);
-       value.push_back(v);
-   }
+        /* we're filling the vector with num copies of a 
+         * default vjVarValue */
+        for (j = 0; j < num; j++ ) {
+            v = createVarValue (j);
+            value.push_back(v);
+        }
     }
 }
 
@@ -77,18 +77,18 @@ vjProperty::vjProperty (vjPropertyDesc *pd) {
 vjVarValue *vjProperty::createVarValue (int i) {
     // if i == -1, we're just tacking onto the end
     if (i == -1)
-   i = value.size();
+        i = value.size();
     if (type == T_EMBEDDEDCHUNK) {
-   vjConfigChunk *ch = vjChunkFactory::instance()->createChunk (embeddesc);
-   if (description->getValueLabelsSize() > i)
-       ch->setProperty ("Name", description->getValueLabel(i));
-   else {
-       ch->setProperty ("Name", description->getName());
-   }
-   return new vjVarValue (ch);
+        vjConfigChunk *ch = vjChunkFactory::instance()->createChunk (embeddesc);
+        if (description->getValueLabelsSize() > i)
+            ch->setProperty ("Name", description->getValueLabel(i));
+        else {
+            ch->setProperty ("Name", description->getName());
+        }
+        return new vjVarValue (ch);
     }
     else
-   return new vjVarValue (type);
+        return new vjVarValue (type);
 }
  
 
@@ -97,7 +97,7 @@ vjProperty::~vjProperty () {
     unsigned int i;
 
     for (i = 0; i < value.size(); i++)
-   delete (value)[i];
+        delete (value)[i];
 }
 
 
@@ -112,11 +112,13 @@ vjProperty& vjProperty::operator= (const vjProperty& p) {
     unsigned int i;
 
     if (&p == this)
-   return *this;
+        return *this;
 
     description = p.description;
     type = p.type;
     units = p.units;
+    embeddesc = p.embeddesc;
+    num = p.num;
 
     for (i = 0; i < value.size(); i++)
         delete (value[i]);
