@@ -954,17 +954,17 @@ void RemoteInputManager::initNetwork(){
 // addConnection if it doesn't exist already
 bool RemoteInputManager::addConnection(const std::string &connection_alias, const std::string& connection_hostname, const int connection_port, const std::string& manager_id, vpr::SocketStream* sock_stream){   
    // make sure connection doesn't exist already:
-   if (getConnectionByHostAndPort(connection_hostname, connection_port) != NULL) {
-      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CONFIG_LVL) << "RemoteInputManger: Connection Host and port: " << connection_hostname <<":"<< connection_port << " has already been added." << std::endl << vprDEBUG_FLUSH;
-      return false;
-   }
-   else if(getConnectionByAliasName(connection_alias) != NULL){
-      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CONFIG_LVL) << "RemoteInputManager: Connection named: " << connection_alias << " has already been added." << std::endl << vprDEBUG_FLUSH;
+   if(getConnectionByManagerId(manager_id) != NULL){
+      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CONFIG_LVL) << "RemoteInputManager: Connection to " << connection_hostname 
+         <<" : "<< connection_port <<" : "<< manager_id << " already exists." << std::endl << vprDEBUG_FLUSH;
       return false;
    }
    else{ // add connection
       NetConnection* connection = new NetConnection(connection_alias, connection_hostname, connection_port, manager_id, sock_stream);
       mConnections.push_back(connection);
+      vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CONFIG_LVL) << "RemoteInputManager: Added connection to " << connection_hostname 
+         <<" : "<< connection_port <<" : "<< manager_id << std::endl << vprDEBUG_FLUSH;
+
       return true;
    }
 }
@@ -1100,6 +1100,15 @@ NetConnection* RemoteInputManager::getConnectionByAliasName(const std::string& a
       // std::cout << "Checking for match: " << (*i)->printAliasNames() << ", " << alias_name << std::endl;
       vprDEBUG(vrjDBG_INPUT_MGR,vprDBG_CONFIG_LVL) << "Checking for match: " << (*i)->printAliasNamesToString() << ", " << alias_name << std::endl << vprDEBUG_FLUSH;
       if( (*i)->hasAliasName(alias_name) )
+         return *i;
+   }
+   return NULL;
+}
+
+NetConnection* RemoteInputManager::getConnectionByManagerId(const vpr::GUID& manager_id){
+   for(std::list<NetConnection*>::iterator i = mConnections.begin();
+      i != mConnections.end(); i++){
+      if( (*i)->getManagerId() == manager_id )
          return *i;
    }
    return NULL;

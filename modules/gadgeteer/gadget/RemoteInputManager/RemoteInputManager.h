@@ -347,6 +347,7 @@ public:
    NetInput* findTransmittingNetInput(const std::string& device_name);
    NetConnection* getConnectionByHostAndPort(const std::string& hostname, const int port); // NetConnection* getConnectionByHostAndPort(const std::string& location_name);
    NetConnection* getConnectionByAliasName(const std::string& alias_name);
+   NetConnection* getConnectionByManagerId(const vpr::GUID& manager_id);
    void sendEndBlocks();
 
    // returns unsigned short by default
