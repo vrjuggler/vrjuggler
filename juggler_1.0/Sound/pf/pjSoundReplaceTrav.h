@@ -142,8 +142,8 @@ protected:
             }
             else
             {
-               vjDEBUG(vjDBG_ALL,0)<<clrOutNORM(clrGREEN,"[SoundReplacer] !!! WARNING !!! ") <<"SOUND NOT FOUND: "<<soundName.c_str()<<"\n"<<vjDEBUG_FLUSH;
-               vjDEBUG(vjDBG_ALL,0)<<clrOutNORM(clrGREEN,"[SoundReplacer] !!!         !!! ") <<"You need to enter \""<<soundName.c_str()<<"\" into your sound config file(s)\n"<<vjDEBUG_FLUSH;
+               vjDEBUG(vjDBG_ALL,0)<<clrOutNORM(clrRED,"[SoundReplacer] !!! WARNING !!! ") <<"SOUND NOT FOUND: "<<soundName.c_str()<<"\n"<<vjDEBUG_FLUSH;
+               vjDEBUG(vjDBG_ALL,0)<<clrOutNORM(clrRED,"[SoundReplacer] !!!         !!! ") <<"You need to enter \""<<soundName.c_str()<<"\" into your sound config file(s)\n"<<vjDEBUG_FLUSH;
                return PFTRAV_CONT;	    // Return continue                
             }
          }
