@@ -146,6 +146,7 @@ bool vjDebug::isCategoryAllowed(int cat)
 
 void vjDebug::setDefaultCategoryNames()
 {
+   ///* XXX: Removed for insure checking
    addCategoryName(vjDBG_ALLstr,vjDBG_ALL);
    addCategoryName(vjDBG_ERRORstr,vjDBG_ERROR);
    addCategoryName(vjDBG_KERNELstr,vjDBG_KERNEL);
@@ -155,10 +156,12 @@ void vjDebug::setDefaultCategoryNames()
    addCategoryName(vjDBG_ENV_MGRstr, vjDBG_ENV_MGR);
    addCategoryName(vjDBG_PERFORMANCEstr, vjDBG_PERFORMANCE);
    addCategoryName(vjDBG_CONFIGstr, vjDBG_CONFIG);
+   //*/
 }
 
 void vjDebug::getAllowedCatsFromEnv()
 {
+   ///* XXX: For insure
    char* dbg_cats_env = getenv("VJ_DEBUG_CATEGORIES");
 
    if(dbg_cats_env != NULL)
@@ -185,6 +188,8 @@ void vjDebug::getAllowedCatsFromEnv()
                 << " Setting to: vjDBG_ALL!" << std::endl << std::flush;
       addAllowedCategory(vjDBG_ALL);
    }
+   //*/
+   //addAllowedCategory(vjDBG_ALL);
 }
 
 void vjDebug::growAllowedCategoryVector(int newSize)

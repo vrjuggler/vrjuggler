@@ -408,15 +408,16 @@ bool vjKernel::removeUser(vjConfigChunk* chunk)
 void vjKernel::loadConfigFile(std::string filename)
 {
    vjDEBUG(vjDBG_KERNEL,1) << "   vjKernel::loadConfigFile: "
-                           << filename.c_str() << std::endl << vjDEBUG_FLUSH;
+                           << filename << std::endl << vjDEBUG_FLUSH;
 
-   vjConfigChunkDB chunk_db;
+   vjConfigChunkDB* chunk_db = new vjConfigChunkDB;
 
    // ------- OPEN Program specified Config file ------ //
    if(filename.empty())   // We have a filename
      return;
 
-   if (!chunk_db.load(filename.c_str()))
+   bool chunk_db_load_success = chunk_db->load(filename);
+   if (!chunk_db_load_success)
    {
      vjDEBUG(vjDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:")
         << "vjConfigManager::loadConfigFile: DB Load failed to load file: "
@@ -425,7 +426,7 @@ void vjKernel::loadConfigFile(std::string filename)
    }
 
    // Put them all in pending
-   vjConfigManager::instance()->addChunkDB(&chunk_db);
+   vjConfigManager::instance()->addChunkDB(chunk_db);
 
    //vjDEBUG(vjDBG_KERNEL,5) << "------------  Loaded Config Chunks ----------" << vjDEBUG_FLUSH;
    //vjDEBUG(vjDBG_KERNEL,5) << (*mInitialChunkDB) << vjDEBUG_FLUSH;

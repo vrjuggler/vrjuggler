@@ -38,10 +38,8 @@
 
 
 vjDeviceInterface::vjDeviceInterface()
-: mProxyIndex(-1)
+: mProxyIndex(-1), mProxyName("UnInitialized"), mNameSet(false)
 {
-   mProxyName = "UnInitialized";
-   mNameSet = false;
    vjDeviceInterface::addDevInterface(this);    // Keep referense to the interface
 }
 
