@@ -59,6 +59,7 @@ namespace gadget
       mLocalMachineChunkName = "";
       mActive = false;
       mAcceptThread = NULL;
+      mIsMaster=false;
       mListenPort = 7394; // will always be changed
       mInputManager = input_manager;
 
@@ -126,9 +127,9 @@ namespace gadget
       std::cout << "ConfigAdd:" << chunk->getDescToken() << std::endl; 
       if ( this->recognizeRemoteInputManagerConfig(chunk)) 
       {
-         mSyncMachine = chunk->getProperty<std::string>("sync_machine");
+         mSyncMasterChunkName = chunk->getProperty<std::string>("sync_machine");
          
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC_MACHINE is: " << mSyncMachine << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC_MACHINE is: " << mSyncMasterChunkName << std::endl << vprDEBUG_FLUSH;
       }
       else if ( recognizeClusterMachineConfig(chunk) )
       {
@@ -233,25 +234,28 @@ namespace gadget
    
             std::string streamHostname,streamManagerId;
             vpr::Uint16 streamPort;
-   
+            bool sync = false;
+
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetNORM(clrYELLOW) << "[makeConnection]"
                << "Waiting for a handshake responce on port: "<< mListenPort << "\n"<< clrRESET << vprDEBUG_FLUSH;
                
                // If we receive a handshake successfully
             if ( mAcceptMsgPackage.receiveHandshake(streamHostname,streamPort, streamManagerId, client_sock) )
             {  
-               //if (sync)
-               //{
-               //   // We have a sync request.
-               //   //if (mSyncServer = this->) {
-               //  std::cout << "SYNC SYNC SYNC SYNC SYNC SYNC SYNC SYNC SYNC SYNC SYNC, accepted!!!!!" << std::endl;
-               //   mAcceptMsgPackage.createHandshake(true,true,mShortHostname,mListenPort,mManagerId.toString());
-               //   mAcceptMsgPackage.sendAndClear(client_sock);
-               //   mClientSyncs.push_back(client_sock);
-               //   client_sock = new vpr::SocketStream;
-               //   //}
-               //
-               //}
+              /*/if (sync)
+               {
+                  // We have a sync request.
+                if (mIsMaster)
+                {
+                 std::cout << "SYNC, accepted: " << streamHostname << std::endl;
+                  mClientSyncs.push_back(client_sock);
+                  client_sock = new vpr::SocketStream;
+                }
+                else
+                {
+                    vprASSERT(false && "Tried to conneted to a client machine!");
+                }
+               }*/
                if (getTransmittingConnectionByManagerId(streamManagerId) == NULL)   // If the transmitting NetConnection does not exist yet
                                  {
                   NetConnection* connection = new NetConnection(vpr::Interval(0,vpr::Interval::Base),streamHostname, streamPort, streamManagerId, client_sock);
@@ -343,6 +347,34 @@ namespace gadget
                   << " Found the local Cluster Machine Chunk: " << mLocalMachineChunkName << "\n"<< vprDEBUG_FLUSH;
          }
       }
+      
+
+      /*jccl::ConfigChunkPtr sync_server_chunk = mMachineTable[mSyncMasterChunkName];
+      std::string sync_server_hostname = sync_server_chunk->getProperty<std::string>("host_name");
+      
+      if (sync_server_hostname == getLocalHostName())
+      {
+          mIsMaster = true;
+      }
+      else
+      {
+              // Sync setup loop
+          for(std::map<std::string, jccl::ConfigChunkPtr>::iterator i=mMachineTable.begin();
+              i!=mMachineTable.end();i++)
+          {
+             if ((*i).second->getProperty<std::string>("host_name") != getLocalHostName())
+             {
+                mLocalMachineChunkName = (*i).first;
+                ///////////////////////////////////////////////////////////////////////
+
+
+
+
+
+                ///////////////////////////////////////////////////////////////////////
+             }
+          }
+      } */
 
          // Seperate devices from local and remote
       for (std::vector<jccl::ConfigChunkPtr>::iterator j = mDeviceChunks.begin();
@@ -503,10 +535,13 @@ namespace gadget
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Configuring:" << host_name << "-" << chunk->getName() << "\n"<< vprDEBUG_FLUSH;
             
             connection = makeConnection(host_name, port_num);
+
             //if (host_chunk == this->mSyncMachine)
             //{
             //    this->mServerSync = this->makeSyncConnection(host_name,port_num);
             ///}
+
+
             if (connection != NULL)
             {
                configureReceivingNetDevice(chunk, connection);  // requests a connection to the device
@@ -612,6 +647,7 @@ namespace gadget
          
       }
    }
+   
    void RemoteInputManager::createBarrier()
    {
       // If Sync_device is in transmitting
@@ -668,8 +704,8 @@ namespace gadget
            temp->sendBarrier();
            std::cout << "Receiving Barrier" << std::endl;
            temp->receiveBarrier();
-       }
-       */
+       } */
+       
    }
    
    
