@@ -32,7 +32,7 @@
 
 #include <vrj/vjConfig.h>
 #include <string.h>
-#include <vrj/vjParam.h>
+#include <vrj/vrjParam.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Kernel/ConfigManager.h>

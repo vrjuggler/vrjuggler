@@ -85,7 +85,6 @@
 # install-test      - Install only the test code.
 # install-tools     - Install only the user tools code.
 # install-data      - Install only the Data directory.
-# install-vjcontrol - Install only VjControl.
 #
 # docs              - Build the internal and the public documentation.
 # doc-internal      - Build only the internal documentation.
@@ -145,7 +144,7 @@ ifndef NO_CLEAN
 	@$(MAKE) clobber
 endif
 	@$(MAKE) $(BEFOREBUILD)
-	@$(MAKE) libs vjcontrol
+	@$(MAKE) libs
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning VR Juggler installation process"
 	@echo "---------------------------------------------------------------"
@@ -174,7 +173,6 @@ endif
             echo "------------------------------------------------" ;	\
             $(MAKE) vjABI=$$abi libs ;					\
           done
-	@$(MAKE) vjcontrol
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning VR Juggler installation process"
 	@echo "---------------------------------------------------------------"
@@ -202,7 +200,7 @@ ifndef NO_CLEAN
 	@$(MAKE) clobber
 endif
 	@$(MAKE) $(BEFOREBUILD)
-	@$(MAKE) libs vjcontrol
+	@$(MAKE) libs
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning VR Juggler release installation process"
 	@echo "---------------------------------------------------------------"
