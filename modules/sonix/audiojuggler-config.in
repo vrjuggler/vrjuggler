@@ -35,9 +35,9 @@
 %{
 %}
 
-subsystem_cflags="@subsystem_cflags@"
-subsystem_cxxflags="@subsystem_cxxflags@"
-subsystem_libs="@subsystem_libs@"
+subsystem_cflags="@application_cflags@"
+subsystem_cxxflags="@application_cxxflags@"
+subsystem_libs="@application_libs@"
 Juggler_lib="@Juggler_lib@"
 
 prefix=@prefix@
