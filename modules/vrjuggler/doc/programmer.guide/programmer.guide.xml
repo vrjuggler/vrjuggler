@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../../../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="http://www.vrjuggler.org/docbook_ab.css" type="text/css"?>
 <?morphon-document-settings
   morphon.document.settings.whitespaces.amount="3"
   morphon.document.settings.print.fixed.attributes="true"
@@ -14,7 +14,7 @@
    <bookinfo>
       <title>VR Juggler</title>
       <subtitle>The Programmer's Guide</subtitle>
-      <releaseinfo>Version 1.1 DR2</releaseinfo>
+      <releaseinfo>Version 1.1 DR3</releaseinfo>
       <pubdate>$Date$</pubdate>
    </bookinfo>
    <part id="intro.part">
@@ -1716,7 +1716,7 @@ wand_pos = *(mWand-&gt;getData());
                         </row>
                         <row>
                            <entry>Directory</entry>
-                           <entry><filename>$VJ_BASE_DIR/share/samples/tutorials/simpleInput</filename></entry>
+                           <entry><filename>$VJ_BASE_DIR/share/samples/OGL/simple/simpleInput</filename></entry>
                         </row>
                         <row>
                            <entry>Files</entry>
@@ -1890,7 +1890,7 @@ public:
                         </row>
                         <row>
                            <entry>Directory</entry>
-                           <entry><filename>$VJ_BASE_DIR/share/samples/tutorials/simpleApp</filename></entry>
+                           <entry><filename>$VJ_BASE_DIR/share/samples/OGL/simple/simpleApp</filename></entry>
                         </row>
                         <row>
                            <entry>Files</entry>
@@ -2171,7 +2171,7 @@ userApp::draw()
                         </row>
                         <row>
                            <entry>Directory</entry>
-                           <entry><filename>$VJ_BASE_DIR/share/samples/tutorials/contextApp</filename></entry>
+                           <entry><filename>$VJ_BASE_DIR/share/samples/OGL/simple/contextApp</filename></entry>
                         </row>
                         <row>
                            <entry>Files</entry>
@@ -2334,7 +2334,7 @@ void contextApp::draw()
                         </row>
                         <row>
                            <entry>Directory</entry>
-                           <entry><filename>$VJ_BASE_DIR/share/samples/tutorials/simplePf</filename></entry>
+                           <entry><filename>$VJ_BASE_DIR/share/samples/Pf/simple/simplePf</filename></entry>
                         </row>
                         <row>
                            <entry>Files</entry>
