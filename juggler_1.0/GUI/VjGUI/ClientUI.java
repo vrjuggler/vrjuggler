@@ -73,12 +73,20 @@ implements ActionListener, WindowListener, ItemListener {
     mp.add (cardpanel, "Center");
 
     add(mp);
-
-    resize (750,490);
-    show();
     addWindowListener(this);
     layout.show(cardpanel, "Connection");
     activepanel = connectpanel;
+
+    /* this slightly convoluted process is needed in order to open a window
+     * that is wide enough to show the full PropertyPanels, regardless of
+     * font & label sizes etc.
+     */
+    setSize(500,500);
+    setVisible(true);
+    int width = chunkspanel.getPreferredSize().width 
+	+ listpanel.getPreferredSize().width + 50;
+    setSize(width, 500);
+
   }
 
 

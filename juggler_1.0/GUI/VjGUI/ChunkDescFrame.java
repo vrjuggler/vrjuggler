@@ -113,6 +113,17 @@ public class ChunkDescFrame extends Frame implements ActionListener,
     buttonspanel.add (cancelbutton);
 
     mainpanel.add (buttonspanel, "South");
+
+    /* this slightly convoluted process is needed in order to open a window
+     * that is wide enough to show the full PropertyPanels, regardless of
+     * font & label sizes etc.
+     */
+    setSize(900,500);
+    setVisible(true);
+    Dimension dim = properties.getPreferredSize();
+    setSize(dim.width + 54, 600);
+    validate();
+
   }
 
   public void closeFrame() {

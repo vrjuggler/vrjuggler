@@ -27,9 +27,8 @@ public class DescEnumFrame extends Frame
   Vector elempanels; // vector of DescEnumElemPanels
   Vector data;  // vector of DescEnum
   public boolean closed;
+    Panel buttonspanel;
 
-  //  public DescEnumFrame (PropertyDescPanel p, PropertyDesc d,
-  //			ClientGlobals c) {
   public DescEnumFrame (ClientGlobals c,
 			PropertyDescPanel p,
 			Vector _data,
@@ -44,7 +43,7 @@ public class DescEnumFrame extends Frame
 
     setFont(core.ui.windowfont);
 
-    Panel buttonspanel = new Panel();
+    buttonspanel = new Panel();
 
     data = _data;
 
@@ -80,10 +79,25 @@ public class DescEnumFrame extends Frame
     buttonspanel.add (cancelbutton);
     panel.add (buttonspanel, "South");
 
-    setSize (450,270);
+    //    setSize (450,270);
     makeItems();
     addWindowListener(this);
-    show();
+    //show();
+
+
+    /* this slightly convoluted process is needed in order to open a window
+     * that is wide enough to show the full PropertyPanels, regardless of
+     * font & label sizes etc.
+     */
+    setSize(400,400);
+    setVisible(true);
+    //    Dimension dim = sppanel.getPreferredSize();
+    int width1 = sppanel.getPreferredSize().width;
+    int width2 = buttonspanel.getPreferredSize().width;
+    width1 = (width1 > width2)? width1 : width2;
+    setSize(width1 + 54, 400);
+    validate();
+
   }
 
   public void closeFrame() {
@@ -122,6 +136,14 @@ public class DescEnumFrame extends Frame
       elempanels.addElement(p);
       splayout.setConstraints(p,spconstraints);
       sppanel.add(p);
+
+      if (elempanels.size() == 1) { // make sure panel wide enough
+	  int width1 = sppanel.getPreferredSize().width;
+	  int width2 = buttonspanel.getPreferredSize().width;
+	  width1 = (width1 > width2)? width1 : width2;
+	  setSize(width1 + 54, 400);
+      }
+
       validate();
     }
     else if (e.getSource() == removebutton) {

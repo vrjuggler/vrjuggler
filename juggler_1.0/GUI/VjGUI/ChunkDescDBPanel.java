@@ -171,8 +171,8 @@ implements ActionListener {
 					       core.descs.getByName(name));
       cdf.addWindowListener (cdf);
       cdframes.addElement(cdf);
-      cdf.setSize (550,350);
-      cdf.show();
+      //cdf.setSize (550,350);
+      //cdf.show();
     }
     /* menu stuff */
     else if ((e.getSource() == filemenu) || (e.getSource() == networkmenu)) {
