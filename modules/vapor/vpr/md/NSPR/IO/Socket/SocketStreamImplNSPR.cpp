@@ -62,41 +62,36 @@ namespace vpr
 // Public methods.
 // ============================================================================
 
-// ----------------------------------------------------------------------------
 // Constructor.  This takes the address (either hostname or IP address) of a
 // remote site and a port and stores the values for later use in the member
 // variables of the object.
-// ----------------------------------------------------------------------------
-SocketStreamImplNSPR::SocketStreamImplNSPR (void)
+SocketStreamImplNSPR::SocketStreamImplNSPR()
    : SocketImplNSPR(vpr::SocketTypes::STREAM)
 {
    /* Do nothing. */ ;
 }
 
-// ----------------------------------------------------------------------------
 // Constructor.  This takes the address (either hostname or IP address) of a
 // remote site and a port and stores the values for later use in the member
 // variables of the object.
-// ----------------------------------------------------------------------------
-SocketStreamImplNSPR::SocketStreamImplNSPR (const vpr::InetAddr& local_addr,
-                                            const vpr::InetAddr& remote_addr)
-   : SocketImplNSPR(local_addr, remote_addr, vpr::SocketTypes::STREAM)
+SocketStreamImplNSPR::SocketStreamImplNSPR(const vpr::InetAddr& localAddr,
+                                           const vpr::InetAddr& remoteAddr)
+   : SocketImplNSPR(localAddr, remoteAddr, vpr::SocketTypes::STREAM)
 {
    ;
 }
 
-// ----------------------------------------------------------------------------
 // Listen on the socket for incoming connection requests.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SocketStreamImplNSPR::listen (const int backlog)
+vpr::ReturnStatus SocketStreamImplNSPR::listen(const int backlog)
 {
    vpr::ReturnStatus retval;
    PRStatus status;
 
    if ( !mBound )        // To listen, we must be bound
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "SocketStreamImplNSPR::listen: Trying to listen on an unbound socket.\n"
-      << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[vpr::SocketStreamImplNSPR::listen()] "
+         << "Trying to listen on an unbound socket.\n" << vprDEBUG_FLUSH;
       retval.setCode(vpr::ReturnStatus::Fail);
    }
    else
@@ -107,7 +102,8 @@ vpr::ReturnStatus SocketStreamImplNSPR::listen (const int backlog)
 
       if ( PR_FAILURE == status )
       {
-         vpr::Error::outputCurrentError(std::cerr, "SocketStreamImplNSPR::listen: Cannon listen on socket: ");
+         vpr::Error::outputCurrentError(std::cerr,
+                                        "[vpr::SocketStreamImplNSPR::listen()] Cannot listen on socket: ");
          retval.setCode(vpr::ReturnStatus::Fail);
       }
    }
@@ -115,19 +111,18 @@ vpr::ReturnStatus SocketStreamImplNSPR::listen (const int backlog)
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Accept an incoming connection request.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock,
-                                                vpr::Interval timeout)
+vpr::ReturnStatus SocketStreamImplNSPR::accept(SocketStreamImplNSPR& sock,
+                                               vpr::Interval timeout)
 {
    vpr::ReturnStatus retval;
    vpr::InetAddr addr;
 
    if ( ! mBound )        // To listen, we must be bound
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "SocketStreamImplNSPR::accept: Trying to accept on an unbound socket.\n"
-      << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "[vpr::SocketStreamImplNSPR::accept()] "
+         << "Trying to accept on an unbound socket.\n" << vprDEBUG_FLUSH;
       retval.setCode(vpr::ReturnStatus::Fail);
    }
    else
@@ -156,7 +151,8 @@ vpr::ReturnStatus SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock,
          }
          else
          {
-            vpr::Error::outputCurrentError(std::cerr, "SocketStreamImplNSPR::accept: Cannot accept on socket: ");
+            vpr::Error::outputCurrentError(std::cerr,
+                                           "[vpr::SocketStreamImplNSPR::accept()] Cannot accept on socket: ");
             retval.setCode(vpr::ReturnStatus::Fail);
          }
       }

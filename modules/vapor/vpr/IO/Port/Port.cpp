@@ -46,7 +46,7 @@
 namespace vpr
 {
 
-Port::Port (const std::string& port_name) : BlockIO(port_name)
+Port::Port(const std::string& portName) : BlockIO(portName)
 {
    /* Do nothing. */ ;
 }
@@ -54,7 +54,7 @@ Port::Port (const std::string& port_name) : BlockIO(port_name)
 /**
  * Destructor.  This does nothing.
  */
-Port::~Port ()
+Port::~Port()
 {
    /* Do nothing. */ ;
 }

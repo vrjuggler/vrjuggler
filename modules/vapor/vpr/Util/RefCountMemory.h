@@ -46,8 +46,9 @@
 
 namespace vpr
 {
-   /**
-    * reference countable memory. (no, not radio controlled, sorry)
+   /** \class RefCountMemory RefCountMemory.h vpr/Util/RefCountMemory.h
+    *
+    * Reference countable memory. (No, not radio controlled, sorry.)
     *
     * To use reference counting on your objects, inherit from this class.
     *
@@ -66,6 +67,8 @@ namespace vpr
     *   obj.unrefDelete(); // count == 0, memory is deleted
     * 
     * class Object : public vpr::RefCountMemory
+    *
+    * @deprecated Use boost::shared_ptr<T> instead.
     */
    class RefCountMemory
    {

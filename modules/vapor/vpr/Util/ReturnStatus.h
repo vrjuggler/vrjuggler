@@ -47,14 +47,15 @@
 
 namespace vpr
 {
-   /**
+   /** \class ReturnStatus ReturnStatus.h vpr/Util/ReturnStatus.h
+    *
     * Class used to represent the status of a function or method upon its
     * return.
     */
    class VPR_CLASS_API ReturnStatus
    {
    public:
-      /// Possible status codes.
+      /** Possible status codes. */
       enum Code
       {
          Succeed,          /**< Successful status */
@@ -65,7 +66,7 @@ namespace vpr
          NotConnected      /**< The given I/O device is closed */
       };
 
-      /// Default constructor.  vpr::ReturnStatus::Succeed is default.
+      /** Default constructor.  vpr::ReturnStatus::Succeed is default. */
       ReturnStatus() : mReturnStatus(vpr::ReturnStatus::Succeed)
       {
       }
@@ -85,7 +86,7 @@ namespace vpr
       /**
        * Sets the status code.
        *
-       * @post Set status to code.
+       * @post Set status to \p c.
        */
       void setCode(const Code& c)
       {
@@ -100,13 +101,13 @@ namespace vpr
          return mReturnStatus;
       }
 
-      /// Copy constructor.
+      /** Copy constructor. */
       ReturnStatus(const ReturnStatus& status)
       {
          this->copy(status);
       }
 
-      /// vpr::ReturnStatus::Code constructor.
+      /** vpr::ReturnStatus::Code constructor. */
       ReturnStatus(const Code& c)
       {
          this->setCode(c);
@@ -140,7 +141,7 @@ namespace vpr
       /**
        * Equality operator for comparison with a vpr::ReturnStatus object.
        *
-       * @return true if equal, false if not.
+       * @return \c true if equal, \c false if not.
        */
       bool operator==(const ReturnStatus& status) const
       {
@@ -150,7 +151,7 @@ namespace vpr
       /**
        * Equality operator for comparison with a vpr::ReturnStatus::Code value.
        *
-       * @return true if equal, false if not.
+       * @return \c true if equal, \c false if not.
        */
       bool operator==(const Code& c) const
       {
@@ -160,7 +161,7 @@ namespace vpr
       /**
        * Inequality operator for comparison with a vpr::ReturnStatus object.
        *
-       * @return false if equal, true if not.
+       * @return \c false if equal, \c true if not.
        */
       bool operator!=(const ReturnStatus& status) const
       {
@@ -171,7 +172,7 @@ namespace vpr
        * Inequality operator for comparison with a vpr::ReturnStatus::Code
        * values.
        *
-       * @return false if equal, true if not.
+       * @return \c false if equal, \c true if not.
        */
       bool operator!=(const Code& c) const
       {
@@ -179,7 +180,7 @@ namespace vpr
       }
 
    public:
-      /** @name State test helpers. */
+      /** @name State test helpers */
       //@{
       bool success() const
       {

@@ -61,6 +61,12 @@
 namespace vpr
 {
 
+/** \class SocketImplNSPR SocketImplNSPR.h vpr/IO/Socket/Socket.h
+ *
+ * NSPR implementation of the base socket interface.  This is used in
+ * conjunction with vpr::SocketConfiguration to create the typedef
+ * vpr::Socket.
+ */
 class VPR_CLASS_API SocketImplNSPR
 {
 public:
@@ -71,9 +77,6 @@ public:
    /**
     * Gets the "name" of this socket.  It is typically the address of the
     * peer host.
-    *
-    * @pre None.
-    * @post
     *
     * @return An object containing the "name" of this socket.
     */
@@ -86,13 +89,14 @@ public:
     * Opens the socket.  This creates a new socket using the domain and type
     * options set through member variables.
     *
-    * @pre mDomain and mType have been set to values recognized.
+    * @pre \c mDomain and \c mType have been set to values recognized.
     * @post A new socket is created.
     *
-    * Returns:
-    *     true  - The socket was opened successfully.
-    *     false - The socket could not be opened for some reason (an error
-    *             message is printed explaining why).
+    * @return vpr::ReturnStatus::Succeed is returned if the socket was opened
+    *         successfully.
+    * @return vpr::ReturnStatus::Fail is returned if the socket could not be
+    *         opened for some reason (an error message is printed explaining
+    *         why).
     */
    vpr::ReturnStatus open();
 
@@ -101,28 +105,35 @@ public:
     *
     * @pre The socket is open.
     * @post An attempt is made to close the socket.  The resulting status is
-    *        returned to the caller.  If the socket is closed, mOpen is set
-    *        to false.
+    *       returned to the caller.  If the socket is closed, \c mOpen is set
+    *       to \c false.
     *
-    * @return true if the socket was closed successfully.
-    * @return false if the socket could not be closed for some reason.
+    * @return vpr::ReturnStatus::Succeed is returned if the socket was closed
+    *         successfully.
+    * @return vpr::ReturnStatus::Fail is returned if the socket could not be
+    *         closed for some reason.
     */
    vpr::ReturnStatus close();
 
    /**
     * Gets the open state of this socket.
     *
-    * @pre None.
-    * @post The boolean value giving the open state is returned to the
-    *       caller.
+    * @post The boolean value giving the open state is returned to the caller.
     *
-    * @return true is returned if this socket is open; false otherwise.
+    * @return \c true is returned if this socket is open; \c false otherwise.
     */
    bool isOpen() const
    {
       return mOpen;
    }
 
+   /**
+    * Gets the bound state of this socket.
+    *
+    * @post The boolean value giving the bound state is returned to the caller.
+    *
+    * @return \c true is returned if this socket is bound; \c false otherwise.
+    */
    bool isBound() const
    {
       return mBound;
@@ -134,16 +145,16 @@ public:
     * @pre The socket is open, and mLocalAddr has been initialized properly.
     * @post The socket is bound to the address in mLocalAddr.
     *
-    * Returns:
-    *     true  - The socket was bound to the address successfully.
-    *     false - The socket could not be bound to the address in
-    *             mLocalAddr.  An error message is printed explaining what
-    *             went wrong.
+    * @return vpr::ReturnStatus::Succeed is returned if this socket was bound
+    *         to its local address successfully.
+    * @return vpr::ReturnStatus::Fail is returned if this socket could not be
+    *         bound to the address in \c mLocalAddr.  An error message is
+    *         printed explaining what went wrong.
     */
    vpr::ReturnStatus bind();
 
    /**
-    *  Return the contained handle
+    * Returns the contained handle.
     */
    vpr::IOSys::Handle getHandle() const
    {
@@ -159,22 +170,35 @@ public:
       return mBlockingFixed;
    }
 
+   /**
+    * Sets the blocking state for this socket.
+    *
+    * @pre This socket is not already open (isOpen() returns \c false).
+    * @post Processes will block (or not) when accessing the socket.
+    *
+    * @param blocking The new blocking state.  A value of \c true indicates
+    *                 that this will be a blocking socket.  A value of \c false
+    *                 indicates that it will be a non-blocking socket.
+    * 
+    * @return vpr::ReturnStatus::Succeed is returned if the blocking state was
+    *         changed successfully.
+    * @return vpr::ReturnStatus::Fail is returned if the blocking state was not
+    *         changed.  This will happen if this socket is already open.
+    *
+    * @see isOpen, open
+    */
    vpr::ReturnStatus setBlocking(bool blocking);
 
    /**
-    * Gets the current blocking state for the socket.
+    * Gets the current blocking state for this socket.
     *
-    * @return <code>true</code> is returned if the socket is in blocking
-    *         mode.  Otherwise, <code>false</code> is returned.
+    * @return \c true is returned if the socket is in blocking mode.
+    *         Otherwise, \c false is returned.
     */
    bool isBlocking() const
    {
       return mBlocking;
    }
-
-   // ========================================================================
-   // vpr::SocketImp interface implementation.
-   // ========================================================================
 
    /**
     * Connects the socket on the client side to the server side.  For a
@@ -182,25 +206,24 @@ public:
     * default destination for all packets.  For a stream socket, this has
     * the effect of establishing a connection with the destination.
     *
-    * @pre The socket is open.
-    * @post The socket is connected to the address in mLocalAddr.  For a
+    * @pre This socket is open.
+    * @post This socket is connected to the address in \c mLocalAddr.  For a
     *       stream socket, this means that a connection for future
     *       communication has been established.  For a datagram socket, the
-    *       default destination for all packets is now mLocalAddr.
+    *       default destination for all packets is now \c mLocalAddr.
     *
-    * Returns:
-    *     true  - The connection was made.
-    *     false - The connect could not be made.  An error message is
-    *             printed explaining what happened.
+    * @return vpr::ReturnStatus::Succeed is returned if the connection was
+    *         made.
+    * @return vpr::ReturnStatus::Fail is returned if the connection could not
+    *         be made.  An error message is printed explaining what happened.
     */
    vpr::ReturnStatus connect(const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Gets the status of a possibly connected socket.
     *
-    * @pre None
-    * @return true if the socket is connected to a remote addr.
-    * @return false if the socket is not currently connect (the other side
+    * @return \c true if the socket is connected to a remote address.
+    * @return \c false if the socket is not currently connect (the other side
     *         may have disconnected).
     */
    bool isConnected() const
@@ -230,51 +253,93 @@ public:
    }
 
    /**
-    * Gets the type of this socket (e.g., vpr::SocketTypes::STREAM).
+    * Gets the type of this socket (for example, vpr::SocketTypes::STREAM).
     *
     * @pre The socket implementation pointer is valid.
     * @post The socket type for this socket is returned to the caller.
     *
     * @return A vpr::SocketTypes::Type value giving the socket type for
-    *           this socket.
+    *         this socket.
     */
    const SocketTypes::Type& getType() const
    {
       return mType;
    }
 
+   /**
+    * Returns the local address to which this socket will be or is bound.
+    */
    const vpr::InetAddr& getLocalAddr() const
    {
       return mLocalAddr;
    }
 
+   /**
+    * Changes the local address for this socket.
+    *
+    * @pre This socket is not already bound (isBound() returns \c false).
+    * @post On successful completion, \c mLocalAddr is updated to use the given
+    *       vpr::InetAddr object.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the local address was
+    *         changed successfully.
+    * @return vpr::ReturnStatus::Fail is returned if the local address could
+    *         not be changed.  This occurs when this socket is already bound.
+    *
+    * @see isBound, bind
+    */
    vpr::ReturnStatus setLocalAddr(const vpr::InetAddr& addr)
    {
       vpr::ReturnStatus status;
 
       if ( mBound )
       {
-         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "SocketImplNSPR::setLocalAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << "[vpr::SocketImplNSPR::setLocalAddr()] "
+            << "Can't set address of bound socket.\n" << vprDEBUG_FLUSH;
          status.setCode(ReturnStatus::Fail);
       }
       else
+      {
          mLocalAddr = addr;
+      }
 
       return status;
    }
 
+   /**
+    * Returns the remote address with which this socket will communicate.
+    */
    const vpr::InetAddr& getRemoteAddr() const
    {
       return mRemoteAddr;
    }
 
+   /**
+    * Changes the remote address for this socket.
+    *
+    * @pre This socket is not already connected (isConnected() returns
+    *      \c false).
+    * @post On successful completion, \c mRemoteAddr is updated to use the
+    *       given vpr::InetAddr object.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the remote address was
+    *         changed successfully.
+    * @return vpr::ReturnStatus::Fail is returned if the remote address could
+    *         not be changed.  This occurs when this socket is already
+    *         connected.
+    *
+    * @see isConnected, connect
+    */
    vpr::ReturnStatus setRemoteAddr(const vpr::InetAddr& addr)
    {
       vpr::ReturnStatus status;
 
       if ( mConnected )
       {
-         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "SocketImplNSPR::setRemoteAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << "[vpr::SocketImplNSPR::setRemoteAddr()] "
+            << "Can't set address of bound socket.\n" << vprDEBUG_FLUSH;
          status.setCode(vpr::ReturnStatus::Fail);
       }
       else
@@ -286,17 +351,21 @@ public:
    }
 
    vpr::ReturnStatus read_i(void* buffer, const vpr::Uint32 length,
-                            vpr::Uint32& bytes_read,
+                            vpr::Uint32& bytesRead,
                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    vpr::ReturnStatus readn_i(void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& bytes_read,
+                             vpr::Uint32& bytesRead,
                              const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    vpr::ReturnStatus write_i(const void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& bytes_written,
+                             vpr::Uint32& bytesWritten,
                              const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
+   /**
+    * Returns the number of bytes available to be read from this socket's
+    * receive buffer.
+    */
    vpr::Uint32 availableBytes() const
    {
       return PR_Available(mHandle);
@@ -310,11 +379,11 @@ public:
     *               given option.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the value for the given
-    *         option was retrieved successfully.<br>
-    *         vpr::ReturnStatus;:Fail is returned otherwise.
+    *         option was retrieved successfully.
+    * @return vpr::ReturnStatus::Fail is returned otherwise.
     */
    vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
-                               struct vpr::SocketOptions::Data& data) const;
+                               vpr::SocketOptions::Data& data) const;
 
    /**
     * Sets a value for the given option on the socket using the given data
@@ -325,12 +394,11 @@ public:
     *               the socket option.
     */
    vpr::ReturnStatus setOption(const vpr::SocketOptions::Types option,
-                               const struct vpr::SocketOptions::Data& data);
+                               const vpr::SocketOptions::Data& data);
 
    /**
     * Destructor.
     *
-    * @pre None.
     * @post Closes the socket, and deallocates and resources associated with
     *       the socket.
     */
@@ -341,24 +409,25 @@ protected:
     * Default constructor.  This just initializes member variables to
     * reasonable defaults.
     *
-    * @pre None.
     * @post The member variables are initialized accordingly to reasonable
     *       defaults.
+    *
+    * @param sockType The type of socket.
     */
-   SocketImplNSPR(const SocketTypes::Type sock_type);
+   SocketImplNSPR(const SocketTypes::Type sockType);
 
    /**
-    * Standard constructor.  This takes two InetAddr objects, a local address
-    * and a remote address.
+    * Standard constructor.  This takes two vpr::InetAddr objects, a local
+    * address and a remote address.
     *
-    * @pre None.
     * @post The member variables are initialized with the given values.
     *
-    * @param local_addr  The local address for the socket.
-    * @param remote_addr The remote address for the socket.
+    * @param localAddr  The local address for the socket.
+    * @param remoteAddr The remote address for the socket.
+    * @param sockType   The type of socket.
     */
-   SocketImplNSPR(const InetAddr& local_addr, const InetAddr& remote_addr,
-                  const SocketTypes::Type sock_type);
+   SocketImplNSPR(const InetAddr& localAddr, const InetAddr& remoteAddr,
+                  const SocketTypes::Type sockType);
 
    /**
     * Copy constructor.

@@ -54,22 +54,27 @@
 namespace vpr
 {
 
-/** Statistics collection class
-*
-* STA - Short Term Average (a time limited average)
-*
-* @param TimeBased  Should the return values be /per second or just "normal" stats
-*
-*  This is basically the difference between discrete and continuous values (or interpretation of the values)
-*/
+/** \class SampleLimitedStatCollector SampleLimitedStatCollector.h vpr/Util/SampleLimitedStatCollector.h
+ *
+ * Statistics collection class.
+ *
+ * STA: Short Term Average (a time-limited average)
+ *
+ * @param TYPE      The sample type.
+ * @param TimeBased Should the return values be per second or just "normal"
+ *                  stats?  This is basically the difference between discrete
+ *                  and continuous values (or interpretation of the values).
+ */
 template<class TYPE, bool TimeBased>
 class SampleLimitedStatCollector
 {
 public:
-   /** Constructor
-   * @param staMaxTime  The max age for samples in the sta computation
-   */
-   SampleLimitedStatCollector(unsigned sampleLimit = 100 )
+   /**
+    * Constructor.
+    *
+    * @param sampleLimit The max age for samples in the sta computation.
+    */
+   SampleLimitedStatCollector(const unsigned int sampleLimit = 100)
    {
       mSTASampleLimit = sampleLimit;
       reset();
@@ -93,53 +98,65 @@ public:
    void addSample(const TYPE sample);
 
    TYPE getTotal() const
-   { return mCurTotal; }
-   vpr::Uint32 getNumSamples() const
-   { return mSampleCount; }
+   {
+      return mCurTotal;
+   }
 
-   /** Return Mean (value/second) */
+   vpr::Uint32 getNumSamples() const
+   {
+      return mSampleCount;
+   }
+
+   /** Return Mean (value/second). */
    double getMean();
    double getInstAverage();
    double getSTA();
    double getMaxSTA() const
-   {  return mMaxSTA; }
+   {
+      return mMaxSTA;
+   }
 
    void print(std::ostream& out);
 
 private:
-   TYPE        mCurTotal;     // Running total of the data
-   vpr::Uint32 mSampleCount;  // Number of samples taken
+   TYPE        mCurTotal;     /**< Running total of the data */
+   vpr::Uint32 mSampleCount;  /**< Number of samples taken */
 
-   unsigned       mSTASampleLimit;   // Max age of a value used in short term average (STA)
+   unsigned int   mSTASampleLimit;  /**< Max age of a value used in short term average (STA) */
    double         mMaxSTA;
-   double         mRunningSTATotal; // The running total of the STA
+   double         mRunningSTATotal; /**< The running total of the STA */
 
-   vpr::DateTime mInitialSampleTime;   // Time of first sample
-   vpr::Interval mPrevSampleTime1, mPrevSampleTime2;      // Time of last 2 samples (mPrevST1 < mPrevSt2)
-   TYPE          mPrevSample1, mPrevSample2;              // Previous samples
+   vpr::DateTime mInitialSampleTime;   /**< Time of first sample */
+   vpr::Interval mPrevSampleTime1, mPrevSampleTime2;      /**< Time of last 2 samples (mPrevST1 < mPrevSt2) */
+   TYPE          mPrevSample1, mPrevSample2;              /**< Previous samples */
 
-   unsigned      mCurSampleIndex;                                  // Index of the NEXT sample to write
-   std::vector< std::pair<TYPE,vpr::Interval> >  mSampleBuffer;    // Buffer of samples used to calc STA
+   unsigned int  mCurSampleIndex;                                  /**< Index of the NEXT sample to write */
+   std::vector< std::pair<TYPE,vpr::Interval> >  mSampleBuffer;    /**< Buffer of samples used to calc STA */
 };
 
 template <class TYPE, bool TimeBased>
 void SampleLimitedStatCollector<TYPE, TimeBased>::print(std::ostream& out)
 {
-   out << "type: " << typeid(TYPE).name() << "   time based:" << ( TimeBased ? "Y" : "N" ) << std::endl
+   out << "type: " << typeid(TYPE).name() << "   time based:"
+       << (TimeBased ? "Y" : "N") << std::endl
        << "total: " << mCurTotal << "   samples:" << mSampleCount << std::endl
-       << "mean: " << getMean() << "    sampleLimit:" << mSTASampleLimit << std::endl
-       << "Initial Sample Time:" << mInitialSampleTime.getMinutesf() << std::endl
-       << "prev sampTime: " << mPrevSampleTime1.secf() << "s   prev sampTime2:" << mPrevSampleTime2.secf() << std::endl
-       << "prev samp: " << mPrevSample1 << "   prev samp2:" << mPrevSample2 << std::endl
+       << "mean: " << getMean() << "    sampleLimit:" << mSTASampleLimit
+       << std::endl
+       << "Initial Sample Time:" << mInitialSampleTime.getMinutesf()
+       << std::endl
+       << "prev sampTime: " << mPrevSampleTime1.secf() << "s   prev sampTime2:"
+       << mPrevSampleTime2.secf() << std::endl
+       << "prev samp: " << mPrevSample1 << "   prev samp2:" << mPrevSample2
+       << std::endl
        << " --- data --- time --- " << std::endl;
 
-   for(typename std::vector< std::pair<TYPE,vpr::Interval> >::iterator i = mSampleBuffer.begin();
-       i!= mSampleBuffer.end(); ++i)
+   for ( typename std::vector< std::pair<TYPE,vpr::Interval> >::iterator i = mSampleBuffer.begin();
+         i!= mSampleBuffer.end();
+         ++i )
    {
       out << (*i).first << "   " << (*i).second.msec() << "ms\n";
    }
 }
-
 
 template <class TYPE, bool TimeBased>
 void SampleLimitedStatCollector<TYPE, TimeBased>::addSample(const TYPE sample)
@@ -175,20 +192,26 @@ void SampleLimitedStatCollector<TYPE, TimeBased>::addSample(const TYPE sample)
    // Goto next index
    ++mCurSampleIndex;
    if(mCurSampleIndex == mSTASampleLimit)
-   {  mCurSampleIndex = 0; }
+   {
+      mCurSampleIndex = 0;
+   }
    vprASSERT(mCurSampleIndex < mSTASampleLimit && "Should never get larger then SampleLimit");
 
    // --- UPDATE MAXES ---- //
    double sta_value = getSTA();
    if(sta_value > mMaxSTA)                        // Check for new max
-   {  mMaxSTA = sta_value; }
+   {
+      mMaxSTA = sta_value;
+   }
 }
 
 template <class TYPE, bool TimeBased>
 double SampleLimitedStatCollector<TYPE, TimeBased>::getMean()
 {
    if(0 == mCurTotal)
+   {
       return 0.0f;
+   }
 
    double mean_result(0.0);
 
@@ -278,8 +301,7 @@ double SampleLimitedStatCollector<TYPE, TimeBased>::getSTA()
    return sta_value;
 }
 
+} // namespace vpr
 
-}; // namespace vpr
 
 #endif
-

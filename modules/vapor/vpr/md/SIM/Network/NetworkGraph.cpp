@@ -58,7 +58,7 @@ namespace sim
 {
 
 // Crummy helper for crappy C++ I/O.
-static void skipToEOL (std::istream& stream)
+static void skipToEOL(std::istream& stream)
 {
    char c;
 
@@ -68,7 +68,7 @@ static void skipToEOL (std::istream& stream)
    }
 }
 
-vpr::ReturnStatus NetworkGraph::construct (const std::string& path)
+vpr::ReturnStatus NetworkGraph::construct(const std::string& path)
 {
    vpr::ReturnStatus status;
    std::ifstream input_file(path.c_str());
@@ -187,7 +187,7 @@ vpr::ReturnStatus NetworkGraph::construct (const std::string& path)
    return status;
 }
 
-vpr::sim::NetworkLine& NetworkGraph::getLineProperty (const NetworkGraph::net_edge_t& e)
+vpr::sim::NetworkLine& NetworkGraph::getLineProperty(const NetworkGraph::net_edge_t& e)
 {
    // XXX: Need to make an assertion that e is in mGraph!
 //   vprASSERT(... && "Given edge not found in the graph!");
@@ -199,8 +199,8 @@ vpr::sim::NetworkLine& NetworkGraph::getLineProperty (const NetworkGraph::net_ed
    return line_prop_map[e];
 }
 
-void NetworkGraph::setLineProperty (const NetworkGraph::net_edge_t& e,
-                                    const vpr::sim::NetworkLine& prop)
+void NetworkGraph::setLineProperty(const NetworkGraph::net_edge_t& e,
+                                   const vpr::sim::NetworkLine& prop)
 {
    // XXX: Need to make an assertion that e is in mGraph!
 //   vprASSERT(... && "Given edge not found in the graph!");
@@ -211,8 +211,8 @@ void NetworkGraph::setLineProperty (const NetworkGraph::net_edge_t& e,
    line_prop_map[e] = prop;
 }
 
-vpr::ReturnStatus NetworkGraph::getNodeWithAddr (const vpr::Uint32 addr,
-                                                 NetworkGraph::net_vertex_t& node)
+vpr::ReturnStatus NetworkGraph::getNodeWithAddr(const vpr::Uint32 addr,
+                                                NetworkGraph::net_vertex_t& node)
 {
    vprASSERT(isValid() && "Trying to use invalid graph");
 
@@ -237,7 +237,7 @@ vpr::ReturnStatus NetworkGraph::getNodeWithAddr (const vpr::Uint32 addr,
    return status;
 }
 
-vpr::sim::NetworkNodePtr NetworkGraph::getNodeProperty (const NetworkGraph::net_vertex_t& v)
+vpr::sim::NetworkNodePtr NetworkGraph::getNodeProperty(const NetworkGraph::net_vertex_t& v)
 {
    // XXX: Need to make an assertion that v is in mGraph!
 //   vprASSERT(... && "Given vertex not found in the graph!");
@@ -249,8 +249,8 @@ vpr::sim::NetworkNodePtr NetworkGraph::getNodeProperty (const NetworkGraph::net_
    return node_prop_map[v];
 }
 
-void NetworkGraph::setNodeProperty (const NetworkGraph::net_vertex_t& v,
-                                    vpr::sim::NetworkNodePtr prop)
+void NetworkGraph::setNodeProperty(const NetworkGraph::net_vertex_t& v,
+                                   vpr::sim::NetworkNodePtr prop)
 {
    // XXX: Need to make an assertion that v is in mGraph!
 //   vprASSERT(... && "Given vertex not found in the graph!");
@@ -261,8 +261,8 @@ void NetworkGraph::setNodeProperty (const NetworkGraph::net_vertex_t& v,
    node_prop_map[v] = prop;
 }
 
-NetworkGraph::VertexListPtr NetworkGraph::getShortestPath (const NetworkGraph::net_vertex_t& src,
-                                                           const NetworkGraph::net_vertex_t& dest)
+NetworkGraph::VertexListPtr NetworkGraph::getShortestPath(const NetworkGraph::net_vertex_t& src,
+                                                          const NetworkGraph::net_vertex_t& dest)
    const
 {
    NetworkGraph::VertexListPtr vlist(new NetworkGraph::VertexList);
@@ -322,7 +322,7 @@ NetworkGraph::VertexListPtr NetworkGraph::getShortestPath (const NetworkGraph::n
    return vlist;
 }
 
-NetworkGraph::VertexListPtr NetworkGraph::reversePath (NetworkGraph::VertexListPtr path)
+NetworkGraph::VertexListPtr NetworkGraph::reversePath(NetworkGraph::VertexListPtr path)
 {
    VertexListPtr new_path(new NetworkGraph::VertexList(path->size()));
 
@@ -334,7 +334,7 @@ NetworkGraph::VertexListPtr NetworkGraph::reversePath (NetworkGraph::VertexListP
    return new_path;
 }
 
-vpr::ReturnStatus NetworkGraph::getAllAddresses (NetworkGraph::AddressList& list)
+vpr::ReturnStatus NetworkGraph::getAllAddresses(NetworkGraph::AddressList& list)
 {
    vpr::ReturnStatus status;
    boost::graph_traits<net_graph_t>::vertex_iterator vi, vi_end;

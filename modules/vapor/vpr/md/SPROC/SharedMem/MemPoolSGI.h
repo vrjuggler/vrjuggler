@@ -55,19 +55,23 @@
 namespace vpr
 {
 
-/**
+/** \class MemPoolSGI MemPoolSGI.h vpr/md/SPROC/SharedMem/MemPoolSGI.h
+ *
  * Shared Memory pool on the SGI systems, used primarily for semaphores and
  * mutexes.  Used to control allocation and deallocation from a "memory pool."
+ *
+ * This class is for use exclusively within VPR.  More specifically, it is only
+ * for use by the SPROC threading subsystem.
  *
  * Clients should create memory pools as needed.  Then, when objects are
  * created, they can pass a pool as a parameter to the new (if the object is a
  * derived from vprMemory).
  *
- * @note The static function 'init' MUST be called before any forks or other
+ * @note The static function init() MUST be called before any forks or other
  *       process splitting take place.  This is because it sets static data
  *       that must be shared across processes.
  *
- * @date 1-9-97
+ * @date January 9, 1997
  */
 class MemPoolSGI : public MemPool
 {
@@ -107,7 +111,11 @@ public:
    }
 
 public:      // Non-virtual functions
-   usptr_t*    getArena() // Use with extreme caution  NOTE: Possibly use "friend" stuff
+   /**
+    * Use with extreme caution.
+    * @note Possibly use "friend" stuff.
+    */
+   usptr_t* getArena()
    {
       return arena;
    }

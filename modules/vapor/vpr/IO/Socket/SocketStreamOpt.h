@@ -53,7 +53,8 @@
 namespace vpr
 {
 
-/**
+/** \class SocketStreamOpt SocketStreamOpt.h vpr/IO/Socket/SocketStreamOpt.h
+ *
  * Options for stream sockets.
  */
 class VPR_CLASS_API SocketStreamOpt : public vpr::SocketOptionWrapper

@@ -48,6 +48,10 @@
 namespace vpr
 {
 
+/** \class LoaderError LoaderError.h vpr/DynLoad/LoaderError.h
+ *
+ * Error reporting class for dynamic library loading.
+ */
 class VPR_CLASS_API LoaderError : public std::runtime_error
 {
 public:

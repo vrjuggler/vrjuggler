@@ -39,11 +39,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #ifndef VPR_PROFILE_NODE_H
 #define VPR_PROFILE_NODE_H
 
-/*
+/**
+ * \file
+ *
  * Primarily based on
  * Real-Time Hierarchical Profiling for Game Programming Gems 3
  * by Greg Hjelstrom & Byon Garrabrant
@@ -58,7 +59,8 @@
 namespace vpr
 {
 
-   /**
+   /** \class ProfileNode ProfileNode.h vpr/Perf/ProfileNode.h
+    *
     * A node in the Profile Hierarchy Tree.
     *
     * This is the main class for performance profiling.
@@ -75,47 +77,56 @@ namespace vpr
    {
    public:
       /**
-       * constructor for a profile node
-       * Takes a static string pointer for the name and a reference to a parent.
-       * Parent and children default to NULL
-       * @param name   Static string pointer and name for this node.
+       * Constructor for a profile node.
+       * Takes a static string pointer for the name and a reference to a
+       * parent.  Parent and children default to NULL.
+       *
+       * @param name      Static string pointer and name for this node.
+       * @param queueSize Queue size.
        */
-      ProfileNode( const char * name, const unsigned int queueSize=0 );
+      ProfileNode(const char * name, const unsigned int queueSize = 0);
 
       /**
-       * destructor
+       * Destructor.
        */
-      ~ProfileNode( void );
+      ~ProfileNode();
 
-      /** Adds a new node as a child.
-       * @param newChild - New child to add.  It will have it's parent set to us.
+      /**
+       * Adds a new node as a child.
+       *
+       * @param newChild New child to add.  It will have its parent set to us.
        */
       void addChild(ProfileNode* newChild);
 
-      /** Return pointer to sub-node (child) with the given name.
-       * NOTE: Currently requires the char* to be same as used to create.
+      /**
+       * Returns pointer to sub-node (child) with the given name.
+       *
+       * @note Currently requires the char* to be same as used to create.
        */
-      ProfileNode* getChild( const char* nodeName );
+      ProfileNode* getChild(const char* nodeName);
 
-      /** Find a child using string name instead of pointer comparison.
+      /**
+       * Finds a child using string name instead of pointer comparison.
        */
-      ProfileNode* getNamedChild( const char* nodeName);
+      ProfileNode* getNamedChild(const char* nodeName);
 
-      /** Returns named node or creates new child.
-      * Returns a pointer to a subnode of this node given the name of the subnode
-      * If the name doesn't exist it creates the new node and adds it as a child
-      * to this node and returns this new node.
+      /**
+       * Returns named node or creates new child.
+       * Returns a pointer to a subnode of this node given the name of the
+       * subnode.  If the name doesn't exist it creates the new node and adds
+       * it as a child to this node and returns this new node.
        */
-      ProfileNode* getSubNode( const char * name, const unsigned int queueSize=0);
+      ProfileNode* getSubNode(const char* name,
+                              const unsigned int queueSize = 0);
 
-      /** Get the static string name associated with this node. */
+      /** Gets the static string name associated with this node. */
       const char* getName()
       {
          return mName;
       }
 
       /**
-       * return This nodes parent.
+       * Returns this node's parent.
        */
       ProfileNode* getParent()
       {
@@ -123,7 +134,7 @@ namespace vpr
       }
 
       /**
-       * @return A pointer to next sibling node in line.
+       * Returns a pointer to next sibling node in line.
        */
       ProfileNode* getSibling()
       {
@@ -131,53 +142,54 @@ namespace vpr
       }
 
       /**
-       * @returns A pointer to its child.
+       * Returns a pointer to its child.
        */
       ProfileNode* getChild()
       {
          return mChild;
       }
 
-      /** Print tree rooted at this node.
-       * @param depth Depth in the traversal. Used for indentation and the like.
+      /**
+       * Prints tree rooted at this node.
+       *
+       * @param depth Depth in the traversal.  Used for indentation and the
+       *              like.
        */
-      void printTree(const unsigned depth=0);
+      void printTree(const unsigned depth = 0);
 
-      /** Get an xml representation of the profile hierarchy. */
+      /** Gets an XML representation of the profile hierarchy. */
       std::string getXMLRep();
 
-      /** Recursively resets the metric values for all nodes rooted here.
+      /**
+       * Recursively resets the metric values for all nodes rooted here.
        * Resets total calls and total times.  Also resets the history.
        */
       void reset();
 
-      /** Starts a sampling period for this profile node.
+      /**
+       * Starts a sampling period for this profile node.
        * Starts the time running for us.
        */
       void startSample();
 
-      /** Stops the sampling period for this profile node.
-       */
+      /** Stops the sampling period for this profile node. */
       bool stopSample();
 
-
-      // -------------------------------------
-      /// @name Metric getters.
-      // -------------------------------------
+      /** @name Metric getters */
       //@{
-      /** Return the last sample taken. */
+      /** Returns the last sample taken. */
       vpr::Interval getLastSample()
       {
          return mLastSample;
       }
 
-      /** Return the total number of samples made on this node. */
-      unsigned getTotalCalls()
+      /** Returns the total number of samples made on this node. */
+      unsigned int getTotalCalls()
       {
          return mTotalCalls;
       }
 
-      /** Return the total sampled time for this node. */
+      /** Returns the total sampled time for this node. */
       vpr::Interval getTotalTime()
       {
          return mTotalTime;
@@ -190,19 +202,21 @@ namespace vpr
          return std::make_pair(mHistory.begin(), mHistory.end());
       }
 
-      /** Get the average time sample.
+      /**
+       * Gets the average time sample.
        * Returns total time sampled/total calls.
        */
       vpr::Interval getAverage();
 
-      /** Get the short term average.
+      /**
+       * Gets the short term average.
        * Computed as the average of the history.
        */
       vpr::Interval getSTA();
       //@}
 
    protected:
-      /** Helper for building up XML rep recursively. */
+      /** Helper for building up XML representation recursively. */
       void getXMLRep(std::stringstream& s, unsigned depth=0);
 
    protected:

@@ -54,13 +54,13 @@
 namespace vpr
 {
 
-vpr::ReturnStatus SocketStreamImplSIM::listen( const int backlog )
+vpr::ReturnStatus SocketStreamImplSIM::listen(const int backlog)
 {
    return vpr::sim::Controller::instance()->getSocketManager().listen(this, backlog);
 }
 
-vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
-                                               vpr::Interval timeout )
+vpr::ReturnStatus SocketStreamImplSIM::accept(SocketStreamImplSIM& clientSock,
+                                              vpr::Interval timeout)
 {
    boost::ignore_unused_variable_warning(timeout);
    vpr::ReturnStatus status;
@@ -80,31 +80,31 @@ vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
          << "\n" << vprDEBUG_FLUSH;
 
       // -- Set known properties of the next socket
-      client_sock.mRemoteAddr = peer_ptr->mLocalAddr;    // Get the remote node's address (it must have called bind, so this is final)
-      client_sock.mOpen       = true;
-      client_sock.mBlocking   = mBlocking;
-      client_sock.setConnectState(peer_ptr);
+      clientSock.mRemoteAddr = peer_ptr->mLocalAddr;    // Get the remote node's address (it must have called bind, so this is final)
+      clientSock.mOpen       = true;
+      clientSock.mBlocking   = mBlocking;
+      clientSock.setConnectState(peer_ptr);
 
       // Get an address for the new socket, bind it, and attach the socket to
       // the correct node.
       vpr::sim::Controller* controller = vpr::sim::Controller::instance();
       vpr::sim::SocketManager& sock_mgr = controller->getSocketManager();
-      client_sock.mLocalAddr  = mLocalAddr;              // Start with local socket's address
-      client_sock.mLocalAddr.setPort(0);                 // Clear port so that we get a unique one
-      client_sock.bind();                                // Bind to a port (and assign to net node)
+      clientSock.mLocalAddr  = mLocalAddr;              // Start with local socket's address
+      clientSock.mLocalAddr.setPort(0);                 // Clear port so that we get a unique one
+      clientSock.bind();                                // Bind to a port (and assign to net node)
 
       // Now define the route for messages between the two sockets.
       // - Sets the path inside both sockets (path to the other socket)
-      sock_mgr.findRoute(peer_ptr, client_sock.getHandle());
+      sock_mgr.findRoute(peer_ptr, clientSock.getHandle());
 
-      peer_ptr->completeConnection( client_sock.getHandle() );
+      peer_ptr->completeConnection(clientSock.getHandle());
 
       controller->addConnectionCompletionEvent(controller->getClock().getCurrentTime(),
                                                peer_ptr);
 
       // Make sure the peer's remote address has the right address.
       // Prior to this point, it has the port of the accepting socket.
-      vprASSERT(peer_ptr->mRemoteAddr == client_sock.mLocalAddr && "Connector doesn't know peer's IP address");
+      vprASSERT(peer_ptr->mRemoteAddr == clientSock.mLocalAddr && "Connector doesn't know peer's IP address");
    }
    else
    {
@@ -115,7 +115,7 @@ vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
    return status;
 }
 
-vpr::ReturnStatus SocketStreamImplSIM::addConnector ( vpr::SocketImplSIM* peerSock)
+vpr::ReturnStatus SocketStreamImplSIM::addConnector(vpr::SocketImplSIM* peerSock)
 {
    SocketStreamImplSIM* stream_remote;
 
@@ -137,7 +137,7 @@ vpr::ReturnStatus SocketStreamImplSIM::addConnector ( vpr::SocketImplSIM* peerSo
    return vpr::ReturnStatus(vpr::ReturnStatus::InProgress);
 }
 
-vpr::ReturnStatus SocketStreamImplSIM::isReadReady () const
+vpr::ReturnStatus SocketStreamImplSIM::isReadReady() const
 {
    vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
 
@@ -156,7 +156,7 @@ vpr::ReturnStatus SocketStreamImplSIM::isReadReady () const
    return status;
 }
 
-vpr::ReturnStatus SocketStreamImplSIM::isWriteReady () const
+vpr::ReturnStatus SocketStreamImplSIM::isWriteReady() const
 {
    vpr::ReturnStatus status;
 

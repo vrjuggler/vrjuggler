@@ -53,25 +53,29 @@ namespace vpr
 namespace sim
 {
 
-NetworkLine::NetworkLine (const double miles, const double Mbps,
-                          const double delay, const std::string& net_type,
-                          const vpr::Uint8 net_id, const std::string& net_ip)
-   : mLength(miles), mCapacity(Mbps), mDelay(delay), mNetworkID(net_id),
-     mNetworkIP(0), mNetworkIPStr(net_ip)
+NetworkLine::NetworkLine(const double miles, const double Mbps,
+                         const double delay, const std::string& netType,
+                         const vpr::Uint8 netID, const std::string& netIP)
+   : mLength(miles)
+   , mCapacity(Mbps)
+   , mDelay(delay)
+   , mNetworkID(netID)
+   , mNetworkIP(0)
+   , mNetworkIPStr(netIP)
 {
    // 5 is the approximate number of microseconds it takes light to move
    // one mile (i.e., 5 usec/mile).
    mLatency = 5.0f * miles;
 
-   if ( net_type.compare("WAN") == 0 )
+   if ( netType.compare("WAN") == 0 )
    {
       mNetworkType = NetworkLine::WAN;
    }
-   else if ( net_type.compare("MAN") == 0 )
+   else if ( netType.compare("MAN") == 0 )
    {
       mNetworkType = NetworkLine::MAN;
    }
-   else if ( net_type.compare("LAN") == 0 )
+   else if ( netType.compare("LAN") == 0 )
    {
       mNetworkType = NetworkLine::LAN;
    }
@@ -85,22 +89,22 @@ NetworkLine::NetworkLine (const double miles, const double Mbps,
 // Private methods.
 // ============================================================================
 
-vpr::ReturnStatus NetworkLine::getArrivedMessageFromQueue (const vpr::Interval& event_time,
-                                                           vpr::sim::MessagePtr& msg,
-                                                           msg_queue_t& queue)
+vpr::ReturnStatus NetworkLine::getArrivedMessageFromQueue(const vpr::Interval& eventTime,
+                                                          vpr::sim::MessagePtr& msg,
+                                                          msg_queue_t& queue)
 {
    vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
 
    vprASSERT(! queue.empty() && "Queue must have an event!");
 
    msg = queue.front().second;
-   vprASSERT(msg->whenArrivesFully() == event_time && "This event must be the message on the front of the queue");
+   vprASSERT(msg->whenArrivesFully() == eventTime && "This event must be the message on the front of the queue");
 
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
       << "NetworkLine::getArrivedMessage() [" << mNetworkIPStr
       << "]: Message arrived at "
       << msg->whenArrivesFully().getBaseVal() << ", current event time is "
-      << event_time.getBaseVal() << "\n" << vprDEBUG_FLUSH;
+      << eventTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
 
    queue.pop_front();
    status.setCode(vpr::ReturnStatus::Succeed);
@@ -108,9 +112,9 @@ vpr::ReturnStatus NetworkLine::getArrivedMessageFromQueue (const vpr::Interval& 
    return status;
 }
 
-void NetworkLine::calculateMessageEventTimes (vpr::sim::MessagePtr msg,
-                                              const vpr::Interval& cur_time,
-                                              msg_queue_t& queue)
+void NetworkLine::calculateMessageEventTimes(vpr::sim::MessagePtr msg,
+                                             const vpr::Interval& curTime,
+                                             msg_queue_t& queue)
 {
    // XXX: Syncronization issue here!!!!
 
@@ -124,8 +128,8 @@ void NetworkLine::calculateMessageEventTimes (vpr::sim::MessagePtr msg,
       // message in the queue.
       vpr::Interval wire_ready(tail_msg->whenFullyOnWire().getBaseVal() + 1,
                                vpr::Interval::Base);
-      vpr::Interval start_time = (wire_ready < cur_time ? cur_time
-                                                        : wire_ready);
+      vpr::Interval start_time = (wire_ready < curTime ? curTime
+                                                       : wire_ready);
 
       vpr::Interval on_wire_time(start_time + getWireAccessTime(msg->getSize() * 8));
 
@@ -135,14 +139,15 @@ void NetworkLine::calculateMessageEventTimes (vpr::sim::MessagePtr msg,
    }
    else
    {
-      vpr::Interval on_wire_time(cur_time + getWireAccessTime(msg->getSize() * 8));
-      msg->setStartOnWireTime(cur_time);
+      vpr::Interval on_wire_time(curTime + getWireAccessTime(msg->getSize() * 8));
+      msg->setStartOnWireTime(curTime);
       msg->setFullyOnWireTime(on_wire_time);
       msg->setArrivesFullyTime(on_wire_time + getBitTransmissionTime());
    }
 }
 
-void NetworkLine::addMessageToQueue (vpr::sim::MessagePtr msg, msg_queue_t& queue)
+void NetworkLine::addMessageToQueue(vpr::sim::MessagePtr msg,
+                                    msg_queue_t& queue)
 {
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
       << "NetworkLine::addMessage(): Adding new message to queue for "
@@ -181,11 +186,12 @@ struct RemovePred
 };
 
 void NetworkLine::removeMessagesFromQueue (const vpr::SocketImplSIM* sock,
-                                           std::vector<vpr::Interval>& event_times,
+                                           std::vector<vpr::Interval>& eventTimes,
                                            msg_queue_t& queue)
 {
-   msg_queue_t::iterator i = std::remove_if(queue.begin(), queue.end(),
-                                            RemovePred<msg_queue_entry_t>(sock));
+   msg_queue_t::iterator i =
+      std::remove_if(queue.begin(), queue.end(),
+                     RemovePred<msg_queue_entry_t>(sock));
 
 #ifdef VPR_DEBUG
    if ( i != queue.end() )
@@ -199,7 +205,7 @@ void NetworkLine::removeMessagesFromQueue (const vpr::SocketImplSIM* sock,
    // It might be possible to do this faster.
    for ( msg_queue_t::iterator j = i; j != queue.end(); j++ )
    {
-      event_times.push_back((*j).first);
+      eventTimes.push_back((*j).first);
    }
 
    queue.erase(i, queue.end());

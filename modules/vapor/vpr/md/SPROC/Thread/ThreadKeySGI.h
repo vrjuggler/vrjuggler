@@ -39,12 +39,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-/*
- * --------------------------------------------------------------------------
- * NOTES:
- *    - This file (vprThreadKeySGI.h) MUST be included by vprThread.h, not
- *      the other way around.
- * --------------------------------------------------------------------------
+/**
+ * \file
+ *
+ * @note This file MUST be included by vpr/Thread/Thread.h, not the other way
+ *       around.
  */
 
 #ifndef _VPR_THREAD_KEY_SGI_H_
@@ -62,13 +61,35 @@ namespace vpr
 // Key destructor function type.
 typedef thread_func_t   KeyDestructor;
 
+/** \class ThreadKeySGI ThreadKeySGI.h vpr/Threaed/Thread.h
+ *
+ * Wrapper around SPROC thread-specific data.  It is typedef'd to
+ * vpr::ThreadKey.
+ */
 class ThreadKeySGI
 {
 public:
    /**
-    * Constructor.
+    * Default constructor.  After calling this, one of the keycreate()
+    * overloads must be called to finish the key allocation process.
+    *
+    * @see keycreate
     */
-   ThreadKeySGI(thread_func_t destructor, void* arg = 0)
+   ThreadKeySGI()
+   {
+      keycreate(NULL);
+   }
+
+   /**
+    * Creates a key that knows how to delete itself using a function pointer.
+    *
+    * @post A key is created and is associated with the specified destructor
+    *       function and argument.
+    *
+    * @param destructor The destructor function for the key.
+    * @param arg        Argument to be passed to destructor.
+    */
+   ThreadKeySGI(thread_func_t destructor, void* arg)
    {
       keycreate(destructor, arg);
    }
@@ -95,13 +116,12 @@ public:
     * and is destroyed using the spcefied destructor function that takes a
     * single argument.
     *
-    * @pre None.
     * @post A key is created and is associated with the specified
     *        destructor function and argument.
     *
     * @param destructor  The destructor function for the key.  This uses
     *                    the functor data structure.
-    * @param arg         Argument to be passed to destructor (optional).
+    * @param arg         Argument to be passed to destructor.
     *
     * @return 0 is returned on successful complection
     * @return -1 is returned to indicate an error.
@@ -110,7 +130,7 @@ public:
     *       it requires arguments.  Otherwise, use the two-argument
     *       version of keycreate().
     */
-   int keycreate(thread_func_t destructor, void* arg = 0)
+   int keycreate(thread_func_t destructor, void* arg)
    {
       std::cerr << "vpr::ThreadKeySGI::keycreate() not implemented yet!\n";
 
@@ -122,13 +142,11 @@ public:
     * each thread in the process, is global to all threads in the process
     * and is destroyed by the specified destructor function.
     *
-    * @pre None.
     * @post A key is created and is associated with the specified
     *        destructor function.
     *
-    * @param desctructor Procedure to be called to destroy a data value
-    *                    associated with the key when the thread
-    *                    terminates.
+    * @param destructor Procedure to be called to destroy a data value
+    *                   associated with the key when the thread terminates.
     *
     * @return  0 is returned upon successful completion.
     * @return -1 is returned to indicate an error.
@@ -162,12 +180,12 @@ public:
     * Binds value to the thread-specific data key for the calling thread.
     *
     * @pre The specified key must have been properly created using the
-    *       keycreate() member function.
+    *      keycreate() member function.
     * @post The specified value is associated with the key for the calling
     *        thread.
     *
-    * @param value  Address containing data to be associated with the
-    *                specified key for the current thread.
+    * @param value Address containing data to be associated with the
+    *              specified key for the current thread.
     *
     * @return  0 is returned upon successful completion.
     * @return -1 is returned to indicate an error.
@@ -186,7 +204,7 @@ public:
     * @pre The specified key must have been properly created using the
     *       keycreate() member function.
     * @post The value associated with the key is obtained and stored in the
-    *        pointer valuep so that the caller may work with it.
+    *        pointer \p valuep so that the caller may work with it.
     *
     * @param valuep  Address of the current data value associated with the
     *                 key.

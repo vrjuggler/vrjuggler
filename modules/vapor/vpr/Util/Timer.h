@@ -42,31 +42,38 @@
 #ifndef _VPR_TIMER_H_
 #define _VPR_TIMER_H_
 
-#ifndef WIN32
+#include <vpr/vprConfig.h>
+
+#ifndef VPR_OS_Win32
 #include <sys/time.h>
 #endif
 
 namespace vpr
 {
 
-/**
+/** \class Timer Timer.h vpr/Util/Timer.h
+ *
  * Simple class to take timings and give averages.
- * NOTE: All times are in seconds
+ *
+ * @note All times are in seconds.
  */
 class Timer
 {
 public:
    Timer()
+      : mStartTime(0)
+      , mEndTime(0)
+      , mTotalTime(0)
+      , mTimeCount(0)
    {
-      totalTime = 0;
-      timeCount = 0;
-      startTime = 0;
-      endTime = 0;
+      ;
    }
 
-   /// Starts a timing.
+   /** Starts a timing. */
    void startTiming()
-   { startTime = wallclock(); }
+   {
+      mStartTime = wallclock();
+   }
 
    /**
     * Stops current timing.
@@ -75,37 +82,45 @@ public:
     */
    void stopTiming()
    {
-      endTime = wallclock();
-      if (startTime == 0)   // If we haven't called start then ignore
-      { totalTime = 0; }
+      mEndTime = wallclock();
+      if ( mStartTime == 0 )   // If we haven't called start then ignore
+      {
+         mTotalTime = 0;
+      }
       else
       {
-         lastTiming = (endTime - startTime);
-         totalTime += lastTiming;
-         timeCount++;
+         mLastTiming = (mEndTime - mStartTime);
+         mTotalTime += mLastTiming;
+         mTimeCount++;
       }
    }
 
-   /// Gets the average timing.
+   /** Gets the average timing. */
    double getTiming()
-   { return (totalTime/(double)timeCount); }
+   {
+      return (mTotalTime/(double)mTimeCount);
+   }
 
    double getLastTiming()
-   { return lastTiming; }
+   {
+      return mLastTiming;
+   }
 
-   /// Returns the number of timings collected.
+   /** Returns the number of timings collected. */
    long getTimeCount()
-   { return timeCount; }
+   {
+      return mTimeCount;
+   }
 
    void reset()
    {
-      totalTime = 0;
-      timeCount = 0;
-      startTime = 0;
-      endTime = 0;
+      mTotalTime = 0;
+      mTimeCount = 0;
+      mStartTime = 0;
+      mEndTime = 0;
    }
 
-#ifdef WIN32
+#ifdef VPR_OS_Win32
    double wallclock()
    {
       return ((double)GetTickCount())/1000.0f;
@@ -123,14 +138,18 @@ public:
    }
 #endif
 
-private:               // Timing stuff
-   double  startTime;       //! The times
-   double  endTime;
-   double  lastTiming;      //! The last timing recieved
-   double  totalTime;       //! The total time
-   long    timeCount;       //! The count on the number of times
+private:
+   /** @name Timing stuff */
+   //@{
+   double  mStartTime;       /**< The start time */
+   double  mEndTime;         /**< The end time */
+   double  mLastTiming;      /**< The last timing recieved */
+   double  mTotalTime;       /**< The total time */
+   long    mTimeCount;       /**< The count on the number of times */
+   //@}
 };  // class Timer
 
 }   // namespace vpr
+
 
 #endif

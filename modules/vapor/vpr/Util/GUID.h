@@ -53,11 +53,20 @@ namespace vpr
 
 class GUIDFactory;
 
+/** \class GUID GUID.h vpr/Util/GUID.h
+ *
+ * A cross-platform implementation of globally unique identifiers, also known
+ * as GUIDs or UUIDs (universally unique identifiers).
+ */
 class VPR_CLASS_API GUID : public vpr::SerializableObject
 {
 public:
-   /** Tag to the constructor to force generation: vpr::GUID guid(vpr::GUID::generate_tag);
-*/
+   /**
+    * Tag to the constructor to force generation:
+    * \code
+    * vpr::GUID guid(vpr::GUID::generateTag)
+    * \endcode
+    */
    class GenerateTag { };
    static GenerateTag generateTag;
 
@@ -71,11 +80,11 @@ public:
     */
    std::string toString() const;
 
-   bool operator==(const GUID& guid_obj) const;
+   bool operator==(const GUID& guidObj) const;
 
-   bool operator!= (const GUID& guid_obj) const
+   bool operator!= (const GUID& guidObj) const
    {
-      return ! (*this == guid_obj);
+      return ! (*this == guidObj);
    }
 
    bool operator<(const GUID& r) const
@@ -117,7 +126,7 @@ public:
 
 public:
    /**
-    * Generates empty guid - Sets equal to GUID::NullGUID
+    * Generates an empty GUID, set equal to vpr::GUID::NullGUID.
     */
    GUID();
 
@@ -128,22 +137,22 @@ public:
 
    /**
     * Generates a GUID from the given string representation of the GUID using
-    * a std::string.
+    * a \c std::string.
+    *
     * Format: "8x-4x-4x-2x2x-2x2x2x2x2x2x"
     *
-    * @param guid_string Ptr to a string that is used to inialize guid. Must
-    *                    be non-NULL.
+    * @param guidString A string that is used to inialize this GUID.
     */
-   explicit GUID(const std::string& guid_string)
+   explicit GUID(const std::string& guidString)
    {
-      fromString(guid_string);
+      fromString(guidString);
    }
 
    /**
     * Generates a GUID based on the given name that is part of the namespace
     * identified by the given namespace GUID.
     */
-   GUID(const GUID& ns_guid, const std::string& name);
+   GUID(const GUID& nsGuid, const std::string& name);
 
    /** Copy constructor. */
    GUID(const GUID& obj) : vpr::SerializableObject(obj)
@@ -157,7 +166,9 @@ public:
    GUID& operator= (const GUID& obj)
    {
       if(&obj == this) // Check for self
+      {
          return *this;
+      }
 
       mGuid.packed.l0 = obj.mGuid.packed.l0;
       mGuid.packed.l1 = obj.mGuid.packed.l1;
@@ -167,9 +178,9 @@ public:
    }
 
    void generate();
-   void generate(const GUID& ns_guid, const std::string& name);
+   void generate(const GUID& nsGuid, const std::string& name);
 
-   /** @name Reader/Writer methods. */
+   /** @name Reader/Writer methods */
    //@{
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
@@ -221,7 +232,8 @@ public:
    {
       vpr::Uint32 operator() (const vpr::GUID& guid) const
       {
-         return guid.mGuid.packed.l0 + guid.mGuid.packed.l1 + guid.mGuid.packed.l2 + guid.mGuid.packed.l3;
+         return guid.mGuid.packed.l0 + guid.mGuid.packed.l1 +
+                guid.mGuid.packed.l2 + guid.mGuid.packed.l3;
       }
    };
 

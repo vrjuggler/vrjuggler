@@ -60,13 +60,15 @@
 namespace vpr
 {
 
-/**
- * Low-level class for loading symbols dynamically.  This implementation wraps
- * dlopen(3) and friends.  The idea of this class is to provide the basic
- * features needed to load a single shared/dynamic library and to get symbols
- * from it.  No features for path extension are provided here.
+/** \class LibraryDYLD LibraryDYLD.h vpr/DynLoad/Library.h
  *
- * @date 9-6-2002
+ * Low-level class for loading symbols dynamically.  This implementation wraps
+ * the Darwin dyld interface, the preferred method for dynamic symbol loading
+ * on Mac OS X.  The idea of this class is to provide the basic features needed
+ * to load a single shared/dynamic library and to get symbols from it.  No
+ * features for path extension are provided here.
+ *
+ * This class is typedef'd to vpr::Library.
  */
 class LibraryDYLD
 {

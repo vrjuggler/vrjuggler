@@ -60,9 +60,9 @@ namespace vpr
 
 // Constructor.  This creates a file handle object connected to the given port
 // name and sets the update action to happen immediately.
-SerialPortImplTermios::SerialPortImplTermios(const std::string& port_name)
+SerialPortImplTermios::SerialPortImplTermios(const std::string& portName)
 {
-   mHandle = new FileHandleImplUNIX(port_name);
+   mHandle = new FileHandleImplUNIX(portName);
    setUpdateAction(SerialTypes::NOW);
 }
 
@@ -972,12 +972,12 @@ vpr::ReturnStatus SerialPortImplTermios::getAttrs(struct termios* term) const
 }
 
 vpr::ReturnStatus SerialPortImplTermios::setAttrs(struct termios* term,
-                                                  const char* err_msg,
-                                                  const bool print_sys_err)
+                                                  const char* errMsg,
+                                                  const bool printSysErr)
 {
    vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
    vprASSERT(term != NULL);
-   vprASSERT(err_msg != NULL);
+   vprASSERT(errMsg != NULL);
 
    vpr::ReturnStatus retval;
 
@@ -1013,10 +1013,10 @@ vpr::ReturnStatus SerialPortImplTermios::setAttrs(struct termios* term,
    if ( tcsetattr(mHandle->mFdesc, mActions, term) == -1 )
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
-         << " [vpr::SerialPortImplTermios::setAttrs()] " << err_msg
+         << " [vpr::SerialPortImplTermios::setAttrs()] " << errMsg
          << " (port '" << getName() << "'\n" << vprDEBUG_FLUSH;
 
-      if ( print_sys_err )
+      if ( printSysErr )
       {
          vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_WARNING_LVL)
             << strerror(errno) << std::endl << vprDEBUG_FLUSH;
@@ -1029,10 +1029,10 @@ vpr::ReturnStatus SerialPortImplTermios::setAttrs(struct termios* term,
 }
 
 vpr::ReturnStatus SerialPortImplTermios::setAttrs(struct termios* term,
-                                                  const std::string& err_msg,
-                                                  const bool print_sys_err)
+                                                  const std::string& errMsg,
+                                                  const bool printSysErr)
 {
-   return setAttrs(term, err_msg.c_str(), print_sys_err);
+   return setAttrs(term, errMsg.c_str(), printSysErr);
 }
 
 bool SerialPortImplTermios::getBit(const tcflag_t bit,
@@ -1062,8 +1062,8 @@ bool SerialPortImplTermios::getBit(const tcflag_t bit,
 vpr::ReturnStatus SerialPortImplTermios::setBit(const tcflag_t bit,
                                                 SerialPortImplTermios::TermFlag flag,
                                                 bool enable,
-                                                const std::string& err_msg,
-                                                const bool print_sys_err)
+                                                const std::string& errMsg,
+                                                const bool printSysErr)
 {
    struct termios term;
    vpr::ReturnStatus retval;
@@ -1109,7 +1109,7 @@ vpr::ReturnStatus SerialPortImplTermios::setBit(const tcflag_t bit,
          }
       }
 
-      retval = setAttrs(&term, err_msg, print_sys_err);
+      retval = setAttrs(&term, errMsg, printSysErr);
    }
 
    return retval;

@@ -48,7 +48,8 @@
 namespace vpr
 {
 
-/**
+/** \class IOSysBase IOSysBase.h vpr/IO/IOSysBase.h
+ *
  * Base class for all for the IOSys class.
  * The "real" implementation is in an included file.
  */
@@ -58,7 +59,7 @@ public:
    
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif	/* _VPR_FILE_HANDLE_H_ */

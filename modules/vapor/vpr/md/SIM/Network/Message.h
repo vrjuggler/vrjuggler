@@ -64,7 +64,8 @@ class SocketImplSIM;
 namespace sim
 {
 
-/**
+/** \class Message Message.h vpr/md/SIM/Network/Message.h
+ *
  * Container class used to transmit messages between simulated network nodes.
  * Copying these objects is an expensive operation, and hence, it should be
  * done as infrequently as possible.  Passing by reference may require access
@@ -98,9 +99,9 @@ public:
 
    /**
     * Copy constructor that makes a copy of the given source object.  That
-    * is, now new memory is allocated for this object's copy of the message body,
-    * instead we just make a copy of the shared_ptr to the message body and share
-    * it with the other message
+    * is, now new memory is allocated for this object's copy of the message
+    * body, instead we just make a copy of the shared_ptr to the message body
+    * and share it with the other message
     */
    Message(const Message& msg);
 
@@ -147,7 +148,7 @@ public:
       return (void*)&((*mMsg)[0]);
    }
 
-   /* Returns a shared copy of the message data */
+   /** Returns a shared copy of the message data. */
    MessageDataPtr getMessageData()
    {
       return mMsg;
@@ -165,17 +166,17 @@ public:
     * unread bytes.
     *
     * @pre This message has had some bytes read.
-    * @post The message is resized based on <bytes_read>, and the new
+    * @post The message is resized based on \p bytesRead, and the new
     *       size of this message is returned to the caller.
     *
-    * @param bytes_read The number of bytes read from this message so far.
+    * @param bytesRead The number of bytes read from this message so far.
     *
     * @return 0 is returned if the message was not resized.  This
-    *         indicates that all the bytes were read.<br>
-    *         A value greater than 0 is returned if this message has been
+    *         indicates that all the bytes were read.
+    * @return A value greater than 0 is returned if this message has been
     *         resized.
     */
-   vpr::Uint32 resize(const vpr::Uint32 bytes_read);
+   vpr::Uint32 resize(const vpr::Uint32 bytesRead);
 
    /**
     * Assigns the path that this message will follow.  The pointer to the next
@@ -228,10 +229,10 @@ public:
     * Increment the pointer to the next hop in this message's path as it moves
     * towards its destination.
     */
-   void incNextHop(bool& end_of_path)
+   void incNextHop(bool& endOfPath)
    {
       ++mNextHop;
-      end_of_path = (mMsgPath->end() == mNextHop);
+      endOfPath = (mMsgPath->end() == mNextHop);
    }
 
 private:

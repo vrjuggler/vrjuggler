@@ -51,15 +51,20 @@
 namespace vpr
 {
 
-/**
- * Helper class for vpr::ThreadPool
+/** \class OneThread ThreadPool.h vpr/Thread/ThreadPool.h
+ *
+ * Helper class for vpr::ThreadPool.
  */
 class OneThread
 {
 public:
-   OneThread() : thread(NULL), next(NULL), functor(NULL), threadWait(0)
+   OneThread()
+      : thread(NULL)
+      , next(NULL)
+      , functor(NULL)
+      , threadWait(0)
    {
-      next = NULL;
+      ;
    }
 
 public:
@@ -73,30 +78,34 @@ public:
 std::ostream& operator<< (std::ostream&, vpr::OneThread&);
 
 
-/**
+/** \class ThreadPool ThreadPool.h vpr/Thread/ThreadPool.h
+ *
  * A pool of threads to process user jobs
  *
- * Outline of thread pool <br>
+ * Outline of thread pool:
+ *
  *   |-Need to initialize all thread given a parameter to the constructor of the # to use <br>
  *   |-Need a function to block until all work is done that has started <br>
  *   |-Just repetiviely add work to the process <br>
  *
- * @date 2-5-97
+ * @date February 5, 1997
  */
 class ThreadPool
 {
 public:
-   /// Constructor.
+   /** Constructor. */
    ThreadPool(int numToStartWith = 1);
 
    /**
     * Gives a function to the processes.  Start a function going
     * asynchronously.  Called by master process.
     */
-   void startFunc (thread_func_t func, void* arg = NULL)
+   void startFunc(thread_func_t func, void* arg = NULL)
    {
-      ThreadNonMemberFunctor* NonMemFunctor = new ThreadNonMemberFunctor(func, arg);
-      this->startFunc(NonMemFunctor);
+      // XXX: Memory leak!
+      ThreadNonMemberFunctor* non_mem_functor =
+         new ThreadNonMemberFunctor(func, arg);
+      this->startFunc(non_mem_functor);
    }
 
    void startFunc(BaseThreadFunctor* theFunctor, void* argument)
@@ -114,13 +123,13 @@ public:
       //delete theFunctor;
    }
 
-   OneThread* addThread(void);
+   OneThread* addThread();
 
    /**
     * Body of a general-purpose child process. The argument, which must be
     * declared void* to match the func prototype, is the vpr::OneThread
     * structure that represents this process.   The contents of that
-    * struct, in particular threadWait, MUST be initialized by the parent.
+    * struct, in particular threadWait(), MUST be initialized by the parent.
     */
    void threadLoop(void* theThreadAsVoid);
 
@@ -135,24 +144,24 @@ public:
     * ready list, waiting if necessary.  Called by the master process as
     * part of dispatching a thread.
     */
-   OneThread* getThread(void);
+   OneThread* getThread();
 
-   /// Waits until all threads are done doing their work.
-   void barrier (void)
+   /** Waits until all threads are done doing their work. */
+   void barrier()
    {
       finishedLock.acquire();      // Get the lock that means threads done
       finishedLock.release();      // Reset it to done
    }
 
-   void printList(void);
+   void printList();
 
 private:
-   Semaphore readyThreads;    //! count represents threads ready to work
-   Mutex listLock;            //! mutex control of threadList head
-   Mutex workingCountLock;    //! mutex on thread count
-   Mutex finishedLock;        //! Lock for wether thread are finished, lock -> doing work
-   OneThread* listHead;       //! -> first ready vpr::OneThread
-   volatile int workingCount; //! Number of threads currently doing work
+   Semaphore readyThreads;    /**< Count represents threads ready to work */
+   Mutex listLock;            /**< Mutex control of threadList head */
+   Mutex workingCountLock;    /**< Mutex on thread count */
+   Mutex finishedLock;        /**< Lock for wether thread are finished, lock -> doing work */
+   OneThread* listHead;       /**< First ready vpr::OneThread */
+   volatile int workingCount; /**< Number of threads currently doing work */
 };
 
 } // End of vpr namespace

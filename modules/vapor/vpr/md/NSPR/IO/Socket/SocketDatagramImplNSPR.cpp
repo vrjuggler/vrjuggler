@@ -58,7 +58,7 @@ namespace vpr
 vpr::ReturnStatus SocketDatagramImplNSPR::recvfrom(void* msg,
                                                    const vpr::Uint32 length,
                                                    vpr::InetAddr& from,
-                                                   vpr::Uint32& bytes_read,
+                                                   vpr::Uint32& bytesRead,
                                                    const vpr::Interval timeout)
 {
    ReturnStatus retval;
@@ -69,13 +69,13 @@ vpr::ReturnStatus SocketDatagramImplNSPR::recvfrom(void* msg,
 
    if ( bytes > 0 )
    {
-      bytes_read = bytes;
+      bytesRead = bytes;
    }
    else if ( bytes == -1 )
    {
       PRErrorCode err_code = PR_GetError();
 
-      bytes_read = 0;
+      bytesRead = 0;
 
       if ( err_code == PR_WOULD_BLOCK_ERROR )
       {
@@ -95,7 +95,7 @@ vpr::ReturnStatus SocketDatagramImplNSPR::recvfrom(void* msg,
    else if ( bytes == 0 )      // Not connected
    {
       retval.setCode(ReturnStatus::NotConnected);
-      bytes_read = bytes;
+      bytesRead = bytes;
    }
 
    return retval;
@@ -104,7 +104,7 @@ vpr::ReturnStatus SocketDatagramImplNSPR::recvfrom(void* msg,
 vpr::ReturnStatus SocketDatagramImplNSPR::sendto(const void* msg,
                                                  const vpr::Uint32 length,
                                                  const vpr::InetAddr& to,
-                                                 vpr::Uint32& bytes_sent,
+                                                 vpr::Uint32& bytesSent,
                                                  const vpr::Interval timeout)
 {
    ReturnStatus retval;
@@ -117,7 +117,7 @@ vpr::ReturnStatus SocketDatagramImplNSPR::sendto(const void* msg,
    {
       PRErrorCode err_code = PR_GetError();
 
-      bytes_sent = 0;
+      bytesSent = 0;
 
       if ( err_code == PR_WOULD_BLOCK_ERROR )
       {
@@ -140,7 +140,7 @@ vpr::ReturnStatus SocketDatagramImplNSPR::sendto(const void* msg,
    }
    else
    {
-      bytes_sent = bytes;
+      bytesSent = bytes;
    }
 
    return retval;

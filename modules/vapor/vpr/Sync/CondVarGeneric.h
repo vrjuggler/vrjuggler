@@ -66,18 +66,19 @@
 namespace vpr
 {
 
-/**
- * Condition Variable wrapper for the any system.
+/** \class CondVarGeneric CondVarGeneric.h vpr/Sync/CondVar.h
  *
- *    Condition variables allow a locked test waiting
- *  for specific conditions to be satisfied.  For
- *  example waiting for a flag to be set or for a
- *  counter to fall below a certain value.
+ * Condition Variable wrapper for the any system.  This is typedef'd to
+ * vpr::CondVar on platforms or with threading subsystems that do not have
+ * native support for condition variables.
  *
- * Example:
- *    (Insert Example here)
+ * Condition variables allow a locked test waiting for specific conditions to
+ * be satisfied.  For example waiting for a flag to be set or for a counter to
+ * fall below a certain value.
  *
- * @date 1-29-97
+ * This is typedef'd to vpr::CondVar.
+ *
+ * @date January 29, 1997
  */
 class VPR_CLASS_API CondVarGeneric
 {
@@ -123,7 +124,9 @@ public:
       // ASSERT:  We have been locked
       if ( mCondMutex->test() == 0 )    // Not locked
       {
-         std::cerr << " vpr::CondVarGeneric::signal: Mutex was not locked when signal called!!!" << std::endl;
+         std::cerr << "[vpr::CondVarGeneric::signal()] "
+                   << "Mutex was not locked when signal called!!!"
+                   << std::endl;
       }
 
       if ( mWaiters > 0 )
@@ -145,10 +148,12 @@ public:
       // ASSERT:  We have been locked
       if ( mCondMutex->test() == 0 )    // Not locked
       {
-         std::cerr << " vpr::CondVarGeneric::broadcast: Mutex was not locked when broadcase called!!!" << std::endl;
+         std::cerr << "[vpr::CondVarGeneric::broadcast()] "
+                   << "Mutex was not locked when broadcase called!!!"
+                   << std::endl;
       }
 
-      for ( int i = mWaiters;i>0;i-- )
+      for ( int i = mWaiters; i > 0; --i )
       {
          mSema.release();
       }
@@ -156,19 +161,19 @@ public:
       return vpr::ReturnStatus();
    }
 
-   /// Acquires the condition lock.
+   /** Acquires the condition lock. */
    vpr::ReturnStatus acquire()
    {
       return mCondMutex->acquire();
    }
 
-   /// Tries to acquire the condition lock.
+   /** Tries to acquire the condition lock. */
    vpr::ReturnStatus tryAcquire()
    {
       return mCondMutex->tryAcquire();
    }
 
-   /// Releases the condition lock.
+   /** Releases the condition lock. */
    vpr::ReturnStatus release()
    {
       return mCondMutex->release();
@@ -193,15 +198,15 @@ public:
 
    void dump() const
    {
-      vprDEBUG_BEGIN(vprDBG_ALL,0)
+      vprDEBUG_BEGIN(vprDBG_ALL, vprDBG_CRITICAL_LVL)
          << "------------- vpr::CondVarGeneric::Dump ---------\n"
          << vprDEBUG_FLUSH;
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "mWaiters: "
                                                 << mWaiters << std::endl
                                                 << vprDEBUG_FLUSH;
       mCondMutex->dump();
-      vprDEBUG_END(vprDBG_ALL,0) << "-----------------------------------\n"
-                                 << vprDEBUG_FLUSH;
+      vprDEBUG_END(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "-----------------------------------\n" << vprDEBUG_FLUSH;
    }
 
 private:

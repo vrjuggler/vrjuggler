@@ -58,36 +58,36 @@
 namespace vpr
 {
 
-/**
- *  NSPR Implementation of ---> Cross-platform selection interface.
+/** \class SelectorImplNSPR SelectorImplNSPR.h vpr/IO/Selector.h
  *
+ * NSPR Implementation of cross-platform selection interface.
  * A selector is used to wait on a set of Handles untils any of the
  * events occur that the user is interested in.
  *
- * Implementation site of the Selector_t bridge.
+ * This is an implementation site of the vpr::Selector_t bridge.
  */
 class VPR_CLASS_API SelectorImplNSPR : public SelectorBase
 {
 public:
    // XXX: What should we do when we are adding a handler while
-   //    also iterating through the current handles.  Bad things "may" happend
-   // This happens ALL the time with acceptors because they add to the reactor as they
-   // are executing an handleEvent themselves
+   //    also iterating through the current handles.  Bad things "may" happen.
+   // This happens ALL the time with acceptors because they add to the reactor
+   // as they are executing an handleEvent themselves.
 
    /**
     * Adds the given handle to the selector.
     *
-    * @pre handle is a valid handle.
-    * @post handle is added to the handle set, and initialized to a mask of
+    * @pre \p handle is a valid handle.
+    * @post \p handle is added to the handle set and initialized to a mask of
     *       no-events.
     */
-   bool addHandle(IOSys::Handle handle, vpr::Uint16 mask=0);
+   bool addHandle(IOSys::Handle handle, vpr::Uint16 mask = 0);
 
    /**
     * Removes a handle from the selector.
     *
-    * @pre handle is in the selector.
-    * @post handle is removed from the set of valid handles.
+    * @pre \p handle is in the selector.
+    * @post \p handle is removed from the set of valid handles.
     */
    bool removeHandle(IOSys::Handle handle);
 
@@ -111,9 +111,11 @@ public:
     *
     * @param numWithEvents Upon completion, this holds the number of items
     *                      that have events.
-    * @param timeout  The number of msecs to select for (0 - don't wait).
+    * @param timeout       The number of milliseconds to select for
+    *                      (passing vpr::Interval::NoWait means don't wait).
     */
-   vpr::ReturnStatus select(vpr::Uint16& numWithEvents, const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   vpr::ReturnStatus select(vpr::Uint16& numWithEvents,
+                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Gets the number of handles.

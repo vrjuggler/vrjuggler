@@ -53,42 +53,49 @@
 namespace vpr
 {
 
-/** Object writer for data buffers.
-*
-* Write directly to a data buffer.
-*
-* @todo Add smart buffering for type sizes
-*/
+/** \class BufferObjectWriter BufferObjectWriter.h vpr/IO/BufferObjectWriter.h
+ *
+ * Object writer for data buffers.  Writes directly to a data buffer.
+ *
+ * @todo Add smart buffering for type sizes.
+ */
 class BufferObjectWriter : public ObjectWriter
 {
 public:
    BufferObjectWriter()
+      : mData(new std::vector<vpr::Uint8>)
+      , mCurHeadPos(0)
    {
-      mData = new std::vector<vpr::Uint8>;
-      mCurHeadPos = 0;
       mIsBinary = true;
    }
 
-   BufferObjectWriter(std::vector<vpr::Uint8>* data, unsigned curPos=0)
+   BufferObjectWriter(std::vector<vpr::Uint8>* data,
+                      const unsigned int curPos = 0)
+      : mData(data)
+      , mCurHeadPos(curPos)
    {
-      mData = data;
-      mCurHeadPos = curPos;
       mIsBinary = true;
    }
 
-   void setCurPos(unsigned val)
-   { mCurHeadPos = val; }
-   unsigned getCurPos()
-   { return mCurHeadPos; }
+   void setCurPos(unsigned int val)
+   {
+      mCurHeadPos = val;
+   }
+
+   unsigned int getCurPos()
+   {
+      return mCurHeadPos;
+   }
 
    std::vector<vpr::Uint8>* getData()
-   { return mData; }
+   {
+      return mData;
+   }
 
    /** @name Tag and attribute handling */
    //@{
-   /** Starts a new section/element of name tagName.
-   */
-   virtual vpr::ReturnStatus beginTag(std::string tagName)
+   /** Starts a new section/element of name \p tagName. */
+   virtual vpr::ReturnStatus beginTag(const std::string& tagName)
    {
       boost::ignore_unused_variable_warning(tagName);
       return vpr::ReturnStatus::Succeed;
@@ -100,20 +107,24 @@ public:
       return vpr::ReturnStatus::Succeed;
    }
 
-   /** Starts an attribute of the name attributeName */
-   virtual vpr::ReturnStatus beginAttribute(std::string attributeName)
+   /** Starts an attribute of the name \p attributeName. */
+   virtual vpr::ReturnStatus beginAttribute(const std::string& attributeName)
    {
       boost::ignore_unused_variable_warning(attributeName);
       return vpr::ReturnStatus::Succeed;
    }
 
-   /** Ends the most recently named attribute */
+   /** Ends the most recently named attribute. */
    virtual vpr::ReturnStatus endAttribute()
    {
       return vpr::ReturnStatus::Succeed;
    }
    //@}
 
+   /**
+    * Writes out the single byte.
+    * @post data = old(data)+val, \c mCurHeadPos advaced 1
+    */
    virtual vpr::ReturnStatus writeUint8(vpr::Uint8 val);
    virtual vpr::ReturnStatus writeUint16(vpr::Uint16 val);
    virtual vpr::ReturnStatus writeUint32(vpr::Uint32 val);
@@ -123,17 +134,15 @@ public:
    virtual vpr::ReturnStatus writeString(std::string val);
    virtual vpr::ReturnStatus writeBool(bool val);
 
-   /* Write raw data of length len */
-   inline vpr::ReturnStatus writeRaw(vpr::Uint8* data, unsigned len=1);
+   /* Writes raw data of length \p len. */
+   inline vpr::ReturnStatus writeRaw(vpr::Uint8* data,
+                                     const unsigned int len = 1);
 
 public:
    std::vector<vpr::Uint8>*   mData;
-   unsigned                   mCurHeadPos;
+   unsigned int               mCurHeadPos;
 };
 
-/* Write out the single byte.
-* @post: data = old(data)+val, mCurHeadPos advaced 1
-*/
 inline vpr::ReturnStatus BufferObjectWriter::writeUint8(vpr::Uint8 val)
 {
    return writeRaw(&val, 1);
@@ -178,7 +187,6 @@ inline vpr::ReturnStatus BufferObjectWriter::writeDouble(double val)
    return writeRaw((vpr::Uint8*)&nw_val, 8);
 }
 
-
 inline vpr::ReturnStatus BufferObjectWriter::writeString(std::string val)
 {
    writeUint16(val.size());
@@ -201,7 +209,8 @@ inline vpr::ReturnStatus BufferObjectWriter::writeBool(bool val)
 #endif
 }
 
-inline vpr::ReturnStatus BufferObjectWriter::writeRaw(vpr::Uint8* data, unsigned len)
+inline vpr::ReturnStatus BufferObjectWriter::writeRaw(vpr::Uint8* data,
+                                                      const unsigned int len)
 {
    for(unsigned i=0;i<len;++i)
       mData->push_back(data[i]);

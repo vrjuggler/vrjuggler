@@ -89,8 +89,11 @@ namespace vpr
 namespace vpr
 {
 
-/// Nice little helper class for hashing a vpr::Uint64.
-struct Unit64Hash
+/** \struct Uint64Hash vprTypes.h vpr/vprTypes.h
+ *
+ * Nice little helper class for hashing a vpr::Uint64.
+ */
+struct Uint64Hash
 {
    union Uint64_val
    {

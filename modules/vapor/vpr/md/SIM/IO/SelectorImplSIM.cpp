@@ -48,7 +48,7 @@
 namespace vpr
 {
 
-bool SelectorImplSIM::addHandle (vpr::IOSys::Handle handle, vpr::Uint16 mask)
+bool SelectorImplSIM::addHandle(vpr::IOSys::Handle handle, vpr::Uint16 mask)
 {
    bool status;
 
@@ -70,7 +70,7 @@ bool SelectorImplSIM::addHandle (vpr::IOSys::Handle handle, vpr::Uint16 mask)
    return status;
 }
 
-bool SelectorImplSIM::removeHandle (vpr::IOSys::Handle handle)
+bool SelectorImplSIM::removeHandle(vpr::IOSys::Handle handle)
 {
    bool status;
    std::vector<SimPollDesc>::iterator i = getHandle(handle);
@@ -88,7 +88,7 @@ bool SelectorImplSIM::removeHandle (vpr::IOSys::Handle handle)
    return status;
 }
 
-bool SelectorImplSIM::setIn (vpr::IOSys::Handle handle, vpr::Uint16 mask)
+bool SelectorImplSIM::setIn(vpr::IOSys::Handle handle, vpr::Uint16 mask)
 {
    bool status;
    std::vector<SimPollDesc>::iterator i = getHandle(handle);
@@ -106,7 +106,7 @@ bool SelectorImplSIM::setIn (vpr::IOSys::Handle handle, vpr::Uint16 mask)
    return status;
 }
 
-vpr::Uint16 SelectorImplSIM::getIn (vpr::IOSys::Handle handle)
+vpr::Uint16 SelectorImplSIM::getIn(vpr::IOSys::Handle handle)
 {
    vpr::Uint16 flags;
    std::vector<SimPollDesc>::iterator i = getHandle(handle);
@@ -124,7 +124,7 @@ vpr::Uint16 SelectorImplSIM::getIn (vpr::IOSys::Handle handle)
    return flags;
 }
 
-vpr::Uint16 SelectorImplSIM::getOut (vpr::IOSys::Handle handle)
+vpr::Uint16 SelectorImplSIM::getOut(vpr::IOSys::Handle handle)
 {
    vpr::Uint16 flags;
    std::vector<SimPollDesc>::iterator i = getHandle(handle);
@@ -142,8 +142,8 @@ vpr::Uint16 SelectorImplSIM::getOut (vpr::IOSys::Handle handle)
    return flags;
 }
 
-vpr::ReturnStatus SelectorImplSIM::select (vpr::Uint16& numWithEvents,
-                                       const vpr::Interval timeout)
+vpr::ReturnStatus SelectorImplSIM::select(vpr::Uint16& numWithEvents,
+                                          const vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
    std::vector<SimPollDesc>::iterator i;
@@ -201,7 +201,8 @@ vpr::ReturnStatus SelectorImplSIM::select (vpr::Uint16& numWithEvents,
    return status;
 }
 
-std::vector<SelectorImplSIM::SimPollDesc>::iterator SelectorImplSIM::getHandle (vpr::IOSys::Handle handle)
+std::vector<SelectorImplSIM::SimPollDesc>::iterator
+SelectorImplSIM::getHandle(vpr::IOSys::Handle handle)
 {
    // XXX: Should probably be replaced by a map in the future for speed.
 

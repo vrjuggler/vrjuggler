@@ -52,10 +52,10 @@
 namespace vpr
 {
 
-/**
- * Converts a function into a functor that can be passed to a
- * extern C type function to be called by a thread creation
- * routine.
+/** \class BaseThreadFunctor ThreadFunctor.h vpr/Thread/ThreadFunctor.h
+ *
+ * Converts a function into a functor that can be passed to a extern C type
+ * function to be called by a thread creation routine.
  */
 class BaseThreadFunctor
 {
@@ -71,7 +71,7 @@ public:
     * this object.  This version takes no argument and instead passes the
     * argument given when this object was constructed.
     */
-   virtual void operator()(void) = 0;    // Pure virtual
+   virtual void operator()() = 0;    // Pure virtual
 
    /**
     * Overloaded operator() used for invoking the function encapsulated by
@@ -94,7 +94,8 @@ public:
    virtual bool isValid() = 0;
 };
 
-/**
+/** \class ThreadMemberFunctor ThreadFunctor.h vpr/Thread/ThreadFunctor.h
+ *
  * Member functor class.  This class allows non-static class member functions
  * to be used as functors.
  */
@@ -123,12 +124,12 @@ public:
       (mObject->*mFunction)(arg);
    }
 
-   void operator() (void)
+   void operator() ()
    {
       (mObject->*mFunction)(mArgument);
    }
 
-   void setArg (void* arg)
+   void setArg(void* arg)
    {
       mArgument = arg;
    }
@@ -159,7 +160,8 @@ private:
    void*      mArgument;
 };
 
-/**
+/** \class ThreadRunFunctor ThreadFunctor.h vpr/Thread/ThreadFunctor.h
+ *
  * A variation on vpr::ThreadMemberFunctor that requires a class that
  * implements the "runnable" concept.  That is, the class must have a run()
  * method with the following signature: void run().  No argument will be
@@ -173,9 +175,10 @@ class ThreadRunFunctor : public BaseThreadFunctor
 public:
    typedef void (OBJ_TYPE::* FunPtr)();
 
-   ThreadRunFunctor(OBJ_TYPE* theObject) : mObject(NULL), mFunction(NULL)
+   ThreadRunFunctor(OBJ_TYPE* theObject)
+      : mObject(theObject)
+      , mFunction(NULL)
    {
-      mObject   = theObject;
       mFunction = &OBJ_TYPE::run;
    }
 
@@ -225,7 +228,8 @@ private:
 };
 
 
-/**
+/** \class ThreadNonMemberFunctor ThreadFunctor.h vpr/Thread/ThreadFunctor.h
+ *
  * Nonmember functor class.  Converts a non-member function or a static class
  * member function into a functor.
  */
@@ -242,7 +246,8 @@ public:
     *          argument is optional and defaults to NULL.
     */
    ThreadNonMemberFunctor (NonMemFunPtr f, void* a = NULL)
-      : mFunc(f), mArgument(a)
+      : mFunc(f)
+      , mArgument(a)
    {
       ;
    }
@@ -258,12 +263,12 @@ public:
       (*mFunc)(arg);
    }
 
-   virtual void operator() (void)
+   virtual void operator() ()
    {
       (*mFunc)(mArgument);
    }
 
-   void setArg (void* arg)
+   void setArg(void* arg)
    {
       mArgument = arg;
    }
@@ -281,10 +286,8 @@ public:
    void* mArgument;     /**< Argument to thread startup function. */
 };
 
-//---------------------------------------------
 // This is the actual function that is called.
-// It must be extern "C"
-//---------------------------------------------
+// It must be extern "C".
 #if defined(VPR_USE_IRIX_SPROC) /* ---- SGI IPC Barrier ------ */
 extern "C" void vprThreadFunctorFunction(void* args);
 #elif defined(VPR_USE_PTHREADS)

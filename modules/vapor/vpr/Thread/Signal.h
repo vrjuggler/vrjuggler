@@ -74,6 +74,11 @@ typedef RETSIGTYPE (*SignalHandler_t)(int);
 }
 
 #ifndef HAVE_SIGACTION
+/** \struct sigaction Signal.h vpr/Thread/Signal.h
+ *
+ * This data structure is defined only on platforms that do not provide a
+ * sigaction struct.
+ */
 struct sigaction
 {
    int                  sa_flags;      /**< see signal options below */
@@ -85,15 +90,17 @@ struct sigaction
 namespace vpr
 {
 
-/**
- * Wrapepr class for a signal set.  A signal set contains the set of system
+/** \class SignalSet Signal.h vpr/Thread/Signal.h
+ *
+ * Wrapper class for a signal set.  A signal set contains the set of system
  * signals to be masked when used with a vpr::SignalAction.
  */
 class VPR_CLASS_API SignalSet
 {
 public:
    /**
-    * Initializes mSigSet with sigset.  If sigset == 0 then fill the set.
+    * Initializes \c mSigSet with \p sigset.  If \p sigset == 0 then fill the
+    * set.
     *
     * @param sigset The signal set used for initializing this object.
     */
@@ -110,7 +117,8 @@ public:
    }
 
    /**
-    * If fill == false then initialize the mSigSet to be empty, else full.
+    * If \p fill is \c false then initialize the \c mSigSet to be empty.
+    * Otherwise, \c mSigSet is initialized to be full.
     *
     * @param fill A boolean flag stating whether to fill this object's
     *             signal set or make it empty.
@@ -144,36 +152,36 @@ public:
    vpr::ReturnStatus fillSet();
 
    /**
-    * Adds the individual signal specified by sig_num to the set.
+    * Adds the individual signal specified by \p sigNum to the set.
     *
-    * @param sig_num The signal number to be added.
+    * @param sigNum The signal number to be added.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the given signal is
     *         added to this object's signal set.  vpr::ReturnStatus::Fail is
     *         returned otherwise.
     */
-   vpr::ReturnStatus addSignal(const int sig_num);
+   vpr::ReturnStatus addSignal(const int sigNum);
 
    /**
-    * Deletes the individual signal specified by sig_num from the set.
+    * Deletes the individual signal specified by \p sigNum from the set.
     *
-    * @param sig_num The signal number to be removed.
+    * @param sigNum The signal number to be removed.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the given signal is
     *         removed from this object's signal set.  vpr::ReturnStatus::Fail
     *         is returned otherwise.
     */
-   vpr::ReturnStatus removeSignal(const int sig_num);
+   vpr::ReturnStatus removeSignal(const int sigNum);
 
    /**
-    * Checks whether the signal specified by sig_num is in the set.
+    * Checks whether the signal specified by \p sigNum is in the set.
     *
-    * @param sig_num The signal number being checked.
+    * @param sigNum The signal number being checked.
     *
-    * @return true is returned if sig_num is in this object's set.  false
-    *         is returned otherwise.
+    * @return \c true is returned if \p sigNum is in this object's set.
+    * @return \c false is returned otherwise.
     */
-   bool isMember(const int sig_num) const;
+   bool isMember(const int sigNum) const;
 
    /**
     * Returns a constant pointer to the underlying sigset_t variable.
@@ -189,7 +197,8 @@ private:
    sigset_t mSigSet;
 };
 
-/**
+/** \class SignalAction Signal.h vpr/Thread/Signal.h
+ *
  * Wrapper class for a signal action.  A signal action is used to encapsulate
  * the handler callback, the set of signals to be masked, and flags specifying
  * optional behavior when handling the signal.
@@ -257,7 +266,8 @@ public:
    struct sigaction mSA;
 };
 
-/**
+/** \class SigHandler Signal.h vpr/Thread/Signal.h
+ *
  * This class wraps the calls needed to register signal handlers with the
  * operating system.  It currently has only static member functions and thus
  * is not really much of a class at all.
@@ -270,20 +280,20 @@ public:
     * mask is applied, and no option flags are set.  To get a mask and/or
     * option flags, use a vpr::SignalAction object.
     *
-    * @post If sig_num is a valid signal number, handler is registered
+    * @post If \p sigNum is a valid signal number, handler is registered
     *       as a handler for that signal.
     *
-    * @param sig_num The signal to be handled.
+    * @param sigNum  The signal to be handled.
     * @param handler The callback that does the signal handling.
     * @param restart Restart a system call interrupted by the named signal.
     *                This argument is optional and defaults to true.
-    *                However, if sig_num is SIGALARM, the restart parameter
-    *                is ignored and set to false.
+    *                However, if \p sigNum is \c SIGALARM, the restart
+    *                parameter is ignored and set to false.
     *
-    * @returns vpr::ReturnStatus::Succeed is returned if the given handler is
-    *          registered successfully; vpr::ReturnStatus::Fail otherwise.
+    * @return vpr::ReturnStatus::Succeed is returned if the given handler is
+    *         registered successfully; vpr::ReturnStatus::Fail otherwise.
     */
-   static vpr::ReturnStatus registerHandler(const int sig_num,
+   static vpr::ReturnStatus registerHandler(const int sigNum,
                                             vpr::SignalHandler_t handler,
                                             const bool restart = true);
 
@@ -293,21 +303,21 @@ public:
     * option flags, use a vpr::SignalAction object.
     *
     * @pre  action is a reference to a valid vpr::SignalAction object.
-    * @post If sig_num is a valid signal number, action is registered
+    * @post If \p sigNum is a valid signal number, action is registered
     *       as the action to be taken when that signal is raised.
     *
-    * @param sig_num The signal to be handled.
+    * @param sigNum  The signal to be handled.
     * @param action  A vpr::SignalAction object encapsulating all the
     *                information needed to handle the named signal.
     * @param restart Restart a system call interrupted by the named signal.
     *                This argument is optional and defaults to true.
-    *                However, if sig_num is SIGALRM, the restart parameter
+    *                However, if \p sigNum is \c SIGALRM, the restart parameter
     *                is ignored and set to false.
     *
-    * @returns vpr::ReturnStatus::Succeed is returned if the given action is
-    *          registered successfully; vpr::ReturnStatus::Fail otherwise.
+    * @return vpr::ReturnStatus::Succeed is returned if the given action is
+    *         registered successfully; vpr::ReturnStatus::Fail otherwise.
     */
-   static vpr::ReturnStatus registerHandler(const int sig_num,
+   static vpr::ReturnStatus registerHandler(const int sigNum,
                                             vpr::SignalAction& action,
                                             const bool restart = true);
 
@@ -325,22 +335,22 @@ protected:
     * Wrapper around the system call sigaction(2).
     *
     * @pre  action points to a valid sigaction struct or is NULL.
-    * @post If sig_num is a valid signal number, action is registered as
+    * @post If \p sigNum is a valid signal number, action is registered as
     *       the action to be taken when that signal is raised.
     *
-    * @param sig_num The signal to be handled.
-    * @param action  A vpr::SignalAction object encapsulating all the
-    *                information needed to handle the named signal.  If
-    *                action is NULL, the signal will be ignored.
-    * @param old_act Storage for the previous action registered for the given
-    *                signal number.  If it is NULL, the previous action is
-    *                discarded.
+    * @param sigNum The signal to be handled.
+    * @param action A vpr::SignalAction object encapsulating all the
+    *               information needed to handle the named signal.  If
+    *               action is NULL, the signal will be ignored.
+    * @param oldAct Storage for the previous action registered for the given
+    *               signal number.  If it is NULL, the previous action is
+    *               discarded.
     *
-    * @returns 0 is returned on successful action registration; -1 is returned
-    *          otherwise.
+    * @return 0 is returned on successful action registration; -1 is returned
+    *         otherwise.
     */
-   static int sigaction(const int sig_num, const struct sigaction* action,
-                        struct sigaction* old_act = NULL);
+   static int sigaction(const int sigNum, const struct sigaction* action,
+                        struct sigaction* oldAct = NULL);
 };
 
 } // End of vpr namespace

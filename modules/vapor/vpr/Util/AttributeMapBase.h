@@ -51,32 +51,38 @@
 namespace vpr
 {
 
-/** Basic interface for adding attributes to classes.
-*
-* Useful for having custom setter/getter type settings
-* that are only used in certain contexts.
-*
-* Based upon boost::any type.
-*/
+/** \class AttributeMapBase AttributeMapBase.h vpr/Util/AttributeMapBase.h
+ *
+ * Basic interface for adding attributes to classes.
+ *
+ * Useful for having custom setter/getter type settings that are only used in
+ * certain contexts.
+ *
+ * This is based upon boost::any type.
+ */
 class AttributeMapBase
 {
 public:
-   /** Set an attribute.
-   * Set the attribute of name to value of val.
-   */
+   /**
+    * Sets an attribute to the given value.
+    *
+    * @param name The name of the attribute to set.
+    * @param val  The value to be set.
+    */
    template<typename TYPE>
-   void setAttrib(std::string name, TYPE val)
+   void setAttrib(const std::string& name, TYPE val)
    {
       mAttribMap[name] = val;
    }
 
-   /** Get an attribute value.
-   *
-   * If not previously set, then return the value
-   * of a default constructed instance of the given type.
-   */
+   /**
+    * Gets an attribute value.
+    *
+    * If not previously set, then return the value of a default constructed
+    * instance of the given type.
+    */
    template<typename TYPE>
-   TYPE getAttrib(std::string name)
+   TYPE getAttrib(const std::string& name)
    {
       TYPE ret_val;     // Construct default return value
       if(attribExists(name))
@@ -94,15 +100,15 @@ public:
       return ret_val;
    }
 
-   /** Does the named attribute exist.
-   * @return true if it exists.
-   */
-   bool attribExists(std::string name)
+   /**
+    * Does the named attribute exist?
+    * @return \c true if it exists.
+    */
+   bool attribExists(const std::string& name)
    {
       attrib_map_t::iterator found = mAttribMap.find(name);
       return (found != mAttribMap.end());
    }
-
 
 private:
    typedef std::map<std::string, boost::any> attrib_map_t;
@@ -111,5 +117,5 @@ private:
 
 } // namespace vpr
 
-#endif
 
+#endif

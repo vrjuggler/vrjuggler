@@ -54,10 +54,12 @@
 namespace vpr
 {
 
-/**
- * Mutex wrapper for the SGI systems.  Used for critical section protection.
+/** \class MutexSGI MutexSGI.h vpr/Sync/Mutex.h
  *
- * @date 1-20-1997
+ * Mutex wrapper for the SGI systems.  Used for critical section protection.
+ * This is typedef'd to vpr::Mutex.
+ *
+ * @date January 20, 1997
  */
 class MutexSGI
 {
@@ -114,7 +116,6 @@ public:
    /**
     * Locks this mutex.
     *
-    * @pre None.
     * @post A lock on this mutex is acquired by the caller.  If a lock has
     *       already been acquired by another process/thread, the caller blocks
     *       until the mutex has been freed.
@@ -138,7 +139,6 @@ public:
    /**
     * Acquires a read lock.
     *
-    * @pre None.
     * @post A lock on this mutex is acquired by the caller.  If a lock has
     *       already been acquired by another process/thread, the caller
     *       blocks until the mutex has been freed.
@@ -157,7 +157,6 @@ public:
    /**
     * Acquires a write lock.
     *
-    * @pre None.
     * @post A lock on this mutex is acquired by the caller.  If a lock has
     *       already been acquired by another process/thread, the caller blocks
     *       until the mutex has been freed.
@@ -176,7 +175,6 @@ public:
    /**
     * Tries to acquire a lock on this mutex (does not block).
     *
-    * @pre None.
     * @post A lock on this mutex is acquired by the caller.  If a lock has
     *       already been acquired by another process/thread, the caller
     *       returns does not wait for it to be unlocked.
@@ -201,7 +199,6 @@ public:
    /**
     * Tries to acquire a read lock (does not block).
     *
-    * @pre None.
     * @post A lock on this mutex is acquired by the caller.  If a lock has
     *       already been acquired by another process/thread, the caller
     *       returns does not wait for it to be unlocked.
@@ -218,7 +215,6 @@ public:
    /**
     * Tries to acquire a write lock (does not block).
     *
-    * @pre None.
     * @post A lock on this mutex is acquired by the caller.  If a lock has
     *       already been acquired by another process/thread, the caller returns
     *       does not wait for it to be unlocked.
@@ -256,7 +252,6 @@ public:
    /**
     * Tests the current lock status.
     *
-    * @pre None.
     * @post The state of this mutex is returned.
     *
     * @return 0 is returned if this mutex is not locked.  1 is returned if it
@@ -270,7 +265,6 @@ public:
    /**
     * Dumps the mutex debug stuff and current state.
     *
-    * @pre None.
     * @post All important data and debugging information related to the
     *       mutex are dumped to the specified file descriptor (or to stderr
     *       if none is given).

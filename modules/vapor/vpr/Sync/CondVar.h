@@ -42,6 +42,13 @@
 #ifndef _VPR_CondVar_h_
 #define _VPR_CondVar_h_
 
+/**
+ * \file
+ *
+ * Include this file to get the full declaration of the platform-specific
+ * type that is typedef'd to vpr::CondVar.
+ */
+
 #include <vpr/vprConfig.h>
 
 #if VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_IRIX_SPROC
@@ -59,28 +66,28 @@
 
 
 /** @example "Example of using a CondVar"
-* \code
-*
-* vpr::CondVar mCondVar;   // The condition variable to use
-*
-* // --- Set a state and signal everyone else about it --- //
-* mCondVar.acquire();
-* {
-*     mState = NEW_STATE;
-*     mCondVar.signal();
-* }
-* mCondVar.release();
-*
-*
-* // -- Wait for a condition -- //
-*   mCondVar.acquire();
-*   {
-*      while ( mState != DESIRED_STATE ) {
-*         mCondVar.wait();
-*      }
-*   }
-*   mCondVar.release();
-* \endcode
-*/
+ * \code
+ *
+ * vpr::CondVar mCondVar;   // The condition variable to use
+ *
+ * // --- Set a state and signal everyone else about it --- //
+ * mCondVar.acquire();
+ * {
+ *     mState = NEW_STATE;
+ *     mCondVar.signal();
+ * }
+ * mCondVar.release();
+ *
+ *
+ * // -- Wait for a condition -- //
+ *   mCondVar.acquire();
+ *   {
+ *      while ( mState != DESIRED_STATE ) {
+ *         mCondVar.wait();
+ *      }
+ *   }
+ *   mCondVar.release();
+ * \endcode
+ */
 
 #endif

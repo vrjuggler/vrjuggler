@@ -42,6 +42,13 @@
 #ifndef _VPR_SYSTEM_H_
 #define _VPR_SYSTEM_H_
 
+/**
+ * \file
+ *
+ * Include this file to get the platform-specific declaration of the class
+ * that is typedef'd to vpr::System.
+ */
+
 #include <vpr/vprConfig.h>
 
 // determine which implementation of vpr::System to include.

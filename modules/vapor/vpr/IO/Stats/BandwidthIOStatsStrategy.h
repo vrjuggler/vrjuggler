@@ -54,8 +54,9 @@
 namespace vpr
 {
 
-/**
- * Strategy for collecting bandwidth data about the block IO device.
+/** \class BandwidthIOStatsStrategy BandwidthIOStatsStrategy.h vpr/IO/Stats/BandwidthIOStatsStrategy.h
+ *
+ * Strategy for collecting bandwidth data about the block I/O device.
  * Holds all stats for Bandwidth collection.
  */
 class BandwidthIOStatsStrategy //: public BaseIOStatsStrategy_i
@@ -68,64 +69,66 @@ public:
    {;}
 
    /**
-    * @pre  read must have already occured.
+    * @pre The read operation must have already occured.
     */
-  virtual void read_s(ReturnStatus& status,
-               void* buffer, const vpr::Uint32 length,
-               vpr::Uint32& bytes_read,
-               const vpr::Interval timeout = vpr::Interval::NoTimeout)
-  {
-     boost::ignore_unused_variable_warning(buffer);
-     boost::ignore_unused_variable_warning(length);
-     boost::ignore_unused_variable_warning(timeout);
+   virtual void read_s(ReturnStatus& status, void* buffer,
+                       const vpr::Uint32 length, vpr::Uint32& bytesRead,
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   {
+      boost::ignore_unused_variable_warning(buffer);
+      boost::ignore_unused_variable_warning(length);
+      boost::ignore_unused_variable_warning(timeout);
 
-     if(status.success())
-     {
-        mReadStats.addSample(bytes_read);
-     }
-  }
+      if(status.success())
+      {
+         mReadStats.addSample(bytesRead);
+      }
+   }
 
    /**
-    * @pre  read must have already occured.
+    * @pre The read operation must have already occured.
     */
-  virtual void readn_s(ReturnStatus& status,
-                void* buffer, const vpr::Uint32 length,
-                vpr::Uint32& bytes_read,
-                const vpr::Interval timeout = vpr::Interval::NoTimeout)
-  {
-     boost::ignore_unused_variable_warning(buffer);
-     boost::ignore_unused_variable_warning(length);
-     boost::ignore_unused_variable_warning(timeout);
+   virtual void readn_s(ReturnStatus& status, void* buffer,
+                        const vpr::Uint32 length, vpr::Uint32& bytesRead,
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   {
+      boost::ignore_unused_variable_warning(buffer);
+      boost::ignore_unused_variable_warning(length);
+      boost::ignore_unused_variable_warning(timeout);
 
-     if(status.success())
-     {
-        mReadStats.addSample(bytes_read);
-     }
-  }
+      if(status.success())
+      {
+         mReadStats.addSample(bytesRead);
+      }
+   }
 
    /**
-    * @pre  write must have already occured.
+    * @pre The write operation must have already occured.
     */
-  virtual void write_s(ReturnStatus& status,
-                const void* buffer, const vpr::Uint32 length,
-                vpr::Uint32& bytes_written,
-                const vpr::Interval timeout = vpr::Interval::NoTimeout)
-  {
-     boost::ignore_unused_variable_warning(buffer);
-     boost::ignore_unused_variable_warning(length);
-     boost::ignore_unused_variable_warning(timeout);
+   virtual void write_s(ReturnStatus& status, const void* buffer,
+                        const vpr::Uint32 length, vpr::Uint32& bytesWritten,
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout)
+   {
+      boost::ignore_unused_variable_warning(buffer);
+      boost::ignore_unused_variable_warning(length);
+      boost::ignore_unused_variable_warning(timeout);
 
-     if(status.success())
-     {
-        mWriteStats.addSample(bytes_written);
-     }
-  }
+      if(status.success())
+      {
+         mWriteStats.addSample(bytesWritten);
+      }
+   }
 
 public:
    vpr::StatCollector<vpr::Uint32, true>& readStats()
-      { return mReadStats; }
+   {
+      return mReadStats;
+   }
+
    vpr::StatCollector<vpr::Uint32, true>& writeStats()
-      { return mWriteStats; }
+   {
+      return mWriteStats;
+   }
 
 private:
    vpr::StatCollector<vpr::Uint32, true> mReadStats;

@@ -53,15 +53,17 @@
 namespace vpr
 {
 
-/**
- * This class is the actual TS Table.
+/** \class TSTable TSTable.h vpr/Thread/TSTable.h
  *
- * This class maintains a table that has ptrs to all the TS data
- * in the system for a specific thread.
- * Only the owning thread may actually access the table.
- * Because of this, we do not have to lock the table at all when adding and removing.
+ * This class is the actual thread-specific table.
  *
- * Uses TSBaseObject*'s so that there is some type safety. (ie. better then void*'s)
+ * This class maintains a table that has ptrs to all the thread-specific data
+ * in the system for a specific thread.  Only the owning thread may actually
+ * access the table.  Because of this, we do not have to lock the table at all
+ * when adding and removing.
+ *
+ * Uses vpr::TSBaseObject pointers so that there is some type safety.  (This
+ * is better than using void*.)
  */
 class TSTable
 {
@@ -75,24 +77,25 @@ public:
    ~TSTable()
    {
       // For all elements in the table
-      for(unsigned int i=0;i<mTSObjects.size();i++)
+      for ( unsigned int i = 0; i < mTSObjects.size(); ++i )
       {
          if(mTSObjects[i] != NULL)        // If valid object
-         {  delete mTSObjects[i]; }       // Delete them
+         {
+            delete mTSObjects[i];         // Delete them
+         }
       }
    }
 
-
 public:
    /**
-    * Returns true if the table contains the given key.
-    * If false, then the user should setObject(...,key) before
-    * attempting to access the object.
+    * Returns \c true if the table contains the given key.  If \c false is
+    * returned, then the user should call setObject(...,key) before attempting
+    * to access the object.
     */
    bool containsKey(unsigned long key)
    {
       //vprASSERT((key >= 0) && "Called contains key with invalid key");
-      return ( (unsigned)key<mTSObjects.size() );
+      return (unsigned int) key < mTSObjects.size();
    }
 
    /** Gets the object with the spcified key. */
@@ -106,9 +109,9 @@ public:
    inline void setObject(TSBaseObject* object, unsigned long key);
 
    /**
-    * Releases the object given by key.
+    * Releases the object given by \p key.
     *
-    * @post Obj(key) is deleted, and the ptr is set to NULL.
+    * @post Obj(key) is deleted, and the pointer is set to NULL.
     */
    inline void releaseObject(unsigned long key);
 
@@ -116,10 +119,7 @@ private:
    std::vector<TSBaseObject*> mTSObjects;    /**< Map object key to TS Object ptr */
 };
 
-
-/**
- * Sets an object entry in the table.
- */
+// Sets an object entry in the table.
 void TSTable::setObject(TSBaseObject* object, unsigned long key)
 {
    //vprASSERT(key >= 0);
@@ -137,11 +137,7 @@ void TSTable::setObject(TSBaseObject* object, unsigned long key)
 #endif
 }
 
-/**
- * Releases the object given by key.
- *
- * @post Obj(key) is deleted, and the ptr is set to NULL.
- */
+// Releases the object given by key.
 void TSTable::releaseObject(unsigned long key)
 {
    vprASSERT(containsKey(key));
@@ -151,7 +147,6 @@ void TSTable::releaseObject(unsigned long key)
    }
    mTSObjects[key] = NULL;
 }
-
 
 } // End of vpr namespace
 

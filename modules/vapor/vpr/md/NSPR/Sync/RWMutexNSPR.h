@@ -53,6 +53,11 @@
 namespace vpr
 {
 
+/** \class SemaphreNSPR RWMutexNSPR.h vpr/Sync/RWMutex.h
+ *
+ * Read/write mutex implementation using NSPR read/write mutexes (PRRWLock).
+ * This is typedef'd to vpr::RWMutex.
+ */
 class VPR_CLASS_API RWMutexNSPR
 {
 public:
@@ -71,7 +76,7 @@ public:
     * Locks the mutex.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the mutex is acquired.
-    *         vpr::ReturnStatus::Fail is returned upon error.
+    * @return vpr::ReturnStatus::Fail is returned upon error.
     */
    vpr::ReturnStatus acquire()
    {
@@ -103,7 +108,7 @@ public:
     * P operation.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the mutex is acquired.
-    *         vpr::ReturnStatus::Fail is returned if the mutex is not
+    * @return vpr::ReturnStatus::Fail is returned if the mutex is not
     *         acquired.
     */
    vpr::ReturnStatus tryAcquire()
@@ -124,8 +129,8 @@ public:
    /**
     * Releases the mutex.
     *
-    * @return vpr::ReturnStatus::Succeed is returned on success;
-    *         vpr::ReturnStatus::Fail on error.
+    * @return vpr::ReturnStatus::Succeed is returned on success.
+    * @return vpr::ReturnStatus::Fail is returned on error.
     */
    vpr::ReturnStatus release()
    {
@@ -136,8 +141,8 @@ public:
    /**
     * Tests the current lock status.
     *
-    * @return 0 - Not locked
-    * @return 1 - Locked
+    * @return 0 is returned if this mutex is not locked.
+    * @return 1 is returned if this mutex is locked.
     */
 /*
     int test()
@@ -147,11 +152,13 @@ public:
 */
 
 protected:
-   int numWaitingReaders;    /**<  Number of waiting readers. */
-   int numWaitingWriters;    /**<  Number of waiting writers. */
+   int numWaitingReaders;    /**< Number of waiting readers. */
+   int numWaitingWriters;    /**< Number of waiting writers. */
 
-   // Value is -1 if writer has the lock, else this keeps track of the
-   // number of readers holding the lock.
+   /**
+    * Value is -1 if writer has the lock, else this keeps track of the
+    * number of readers holding the lock.
+    */
    int mRefCount;
 
    PRRWLock* mRwLock;

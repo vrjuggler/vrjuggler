@@ -48,7 +48,8 @@
 namespace vpr
 {
 
-/**
+/** \class SocketIpOpt SocketIpOpt.h vpr/IO/Socket/SocketIpOpt.h
+ *
  * IP-level options for sockets.
  */
 class VPR_CLASS_API SocketIpOpt : public SocketBasicOpt

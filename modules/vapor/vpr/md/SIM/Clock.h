@@ -55,25 +55,26 @@ class Interval;
 namespace sim
 {
 
-/**
+/** \class Clock Clock.h vpr/md/SIM/Clock.h
+ *
  * Simulated clock for use with the socket simulation code.  The basic unit
  * of time is tens of microseconds since that is what vpr::Interval uses.
  */
 class Clock
 {
 public:
-   Clock (void)
+   Clock()
       : mCurrentTime(0, vpr::Interval::Base)
    {
       /* Do nothing. */ ;
    }
 
-   const vpr::Interval& getCurrentTime (void) const
+   const vpr::Interval& getCurrentTime() const
    {
       return mCurrentTime;
    }
 
-   void setCurrentTime (const vpr::Interval& time)
+   void setCurrentTime(const vpr::Interval& time)
    {
       if ( time > mCurrentTime )
       {

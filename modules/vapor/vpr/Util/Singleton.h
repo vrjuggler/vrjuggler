@@ -59,7 +59,7 @@ public:                                                        \
 // NOTE: currently, func is thread safe after first call to instance().
 // if first call to instance happens multiple times simultaneously
 // then don't be surprised when something dies because of a mutex..
-// this bug can be caused by spawning two threads immediately after 
+// this bug can be caused by spawning two threads immediately after
 // entering main()
 #define vprSingletonImp( TYPE )                           \
    TYPE* TYPE::instance( void )                           \
@@ -96,46 +96,58 @@ public:                                                        \
 
 namespace vpr
 {
-   
-   /**
-    * You can use this coolio class to make a singleton, just inherit like
-    * so...
+
+   /** \class Singleton Singleton.h vpr/Util/Singleton.h
     *
+    * You can use this coolio class to make a singleton, just inherit like
+    * so:
+    *
+    * \code
     * class myClass : public vpr::Singleton<myClass>
+    * \endcode
+    *
+    * @param singleClass The type to be used a singleton.
+    *
+    * @note This class is currently broken under certain circumstances.
+    *       Refer to SourceForge bug #'s 729485 and 929003.  Until these bugs
+    *       are fixed, use of the preprocessor macros vprSingletonHeader()
+    *       et. al. are recommended.
     */
-   template< class singleClass >
+   template<class singleClass>
    class Singleton
    {
    public:
       /**
-       * NOTE: currently, func is thread safe after first call to instance().
-       * if first call to instance happens multiple times simultaneously
-       * then don't be surprised when something dies because of a mutex..
-       * this bug can be caused by spawning two threads immediately after 
-       * entering main()
+       * @note Currently, this function is thread safe after first call to
+       *       instance().  if first call to instance happens multiple times
+       *       simultaneously then don't be surprised when something dies
+       *       because of a mutex.  This bug can be caused by spawning two
+       *       threads immediately after entering main().
        */
-      inline static singleClass* instance( void )        
-      {                                                 
-         // WARNING! race condition possibility, creation of static vars 
+      static singleClass* instance()
+      {
+         // WARNING! race condition possibility, creation of static vars
          // are not thread safe.  This is only an issue when creating
          // your first thread, since it uses a singleton thread manager,
          // the two threads might both try to call instance at the same time
          // which then the creation of the following mutex would not be certain.
-         static vpr::Mutex singleton_lock1;       
-         static singleClass* the_instance1 = NULL;   
-                                     
-         if (the_instance1 == NULL)                 
-         {                                            
-            vpr::Guard<vpr::Mutex> guard( singleton_lock1 );
-            if (the_instance1 == NULL)        
-            { the_instance1 = new singleClass; }         
-         }                                      
-         return the_instance1;                     
+         static vpr::Mutex singleton_lock1;
+         static singleClass* the_instance1 = NULL;
+
+         if (the_instance1 == NULL)
+         {
+            vpr::Guard<vpr::Mutex> guard(singleton_lock1);
+            if (the_instance1 == NULL)
+            {
+               the_instance1 = new singleClass;
+            }
+         }
+         return the_instance1;
       }
 
    protected:
       /**
-       * Don't create a singleton with new!  
+       * Don't create a singleton with new!
        * use instance()
        */
       Singleton()

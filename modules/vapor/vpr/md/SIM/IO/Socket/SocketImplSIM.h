@@ -77,9 +77,10 @@ class SocketManager;
 
 } // End of sim namespace
 
-/**
- * Implementation class for simulated sockets.  This can be used in the
- * vpr::Socket_t bridge template.
+/** \class SocketImplSIM SocketImplSIM.h vpr/Socket/Socket.h
+ *
+ * Implementation class for simulated sockets.  This is used in conjunction
+ * with vpr::SocketConfiguration to create the typedef vpr::Socket.
  */
 class VPR_CLASS_API SocketImplSIM
 {
@@ -113,8 +114,8 @@ public:
     * @post The open state is set to true.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the socket was opened
-    *         successfully.<br>
-    *         vpr::ReturnStatus::Fail is returned if the socket could not be
+    *         successfully.
+    * @return vpr::ReturnStatus::Fail is returned if the socket could not be
     *         opened.
     */
    vpr::ReturnStatus open()
@@ -153,22 +154,21 @@ public:
     *       to false.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the socket was closed
-    *         successfully.<br>
-    *         vpr::ReturnStatus::Fail is returned if the socket could not be
+    *         successfully.
+    * @return vpr::ReturnStatus::Fail is returned if the socket could not be
     *         closed for some reason.
     */
    vpr::ReturnStatus close();
 
-   /// Gets the handle to this socket.
+   /** Gets the handle to this socket. */
    vpr::IOSysSIM::Handle getHandle() const
    {
       return const_cast<vpr::IOSysSIM::Handle>(this);
    }
 
-   // set it.
-   vpr::ReturnStatus setReuseAddr(bool adr)
+   vpr::ReturnStatus setReuseAddr(bool reuse)
    {
-      mReuseAddr = adr;
+      mReuseAddr = reuse;
       return vpr::ReturnStatus();
    }
 
@@ -176,12 +176,12 @@ public:
     * Binds this socket to the address in the host address member variable.
     *
     * @pre The socket is open, and mLocalAddr has been initialized properly.
-    * @post The socket is bound to the address in mLocalAddr.
+    * @post The socket is bound to the address in \c mLocalAddr.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the socket was bound
-    *         to the address successfully.<br>
-    *         vpr::ReturnStatus::Fail if the socket could not be bound to
-    *         the address in mLocalAddr.
+    *         to the address successfully.
+    * @return vpr::ReturnStatus::Fail if the socket could not be bound to
+    *         the address in \c mLocalAddr.
     */
    vpr::ReturnStatus bind();
 
@@ -190,9 +190,9 @@ public:
     *
     * @post Processes will block when accessing the socket.
     *
-    * @return vpr::ReturnStatus::Succeed is returned if the socket's
-    *         blocking mode is set to blocking.<br>
-    *         vpr::ReturnStatus::Fail is returned otherwise.
+    * @return vpr::ReturnStatus::Succeed is returned if this socket's
+    *         blocking mode is set to blocking.
+    * @return vpr::ReturnStatus::Fail is returned otherwise.
     */
    vpr::ReturnStatus setBlocking(bool blocking)
    {
@@ -203,8 +203,8 @@ public:
    /**
     * Gets the current blocking state for the socket.
     *
-    * @return true is returned if the socket is in blocking
-    *         mode.  Otherwise, false is returned.
+    * @return \c true is returned if the socket is in blocking mode.
+    * @return Otherwise, \c false is returned.
     */
    bool isBlocking() const
    {
@@ -225,23 +225,24 @@ public:
     * @post The socket is connected to the address in mLocalAddr.  For a
     *       stream socket, this means that a connection for future
     *       communication has been established.  For a datagram socket, the
-    *       default destination for all packets is now mLocalAddr.
+    *       default destination for all packets is now \c mLocalAddr.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the connection was made
-    *         and completed.<br>
-    *         vpr::ReturnStatus::InProgress is returned if this is a
+    *         and completed.
+    * @return vpr::ReturnStatus::InProgress is returned if this is a
     *         non-blocking socket and the connection will complete in the
-    *         background.<br>
-    *         vpr::ReturnStatus::Fail is returned if the connect could not
+    *         background.
+    * @return vpr::ReturnStatus::Fail is returned if the connect could not
     *         be made.
     */
    vpr::ReturnStatus connect(vpr::Interval timeout = vpr::Interval::NoTimeout);
 
-   /** Completes a previously started connection to a given peer
-   *
-   * NOTE: UDP sockets can use this function as well.  It lets them set a remote
-   *       sockets peer and connection status.
-   */
+   /**
+    * Completes a previously started connection to a given peer
+    *
+    * @note UDP sockets can use this function as well.  It lets them set a
+    *       remote sockets peer and connection status.
+    */
    vpr::ReturnStatus completeConnection(SocketImplSIM* connectedPeer);
 
    /**
@@ -249,8 +250,8 @@ public:
     *
     * @pre This socket is opened and has been connected to a peer.
     *
-    * @return true is returned if this socket is still connected.<br>
-    *         false is returned if this socket is not currently connected.
+    * @return \c true is returned if this socket is still connected.
+    * @return \c false is returned if this socket is not currently connected.
     */
    bool isConnected() const
    {
@@ -258,7 +259,7 @@ public:
    }
 
    /**
-    * Gets the type of this socket (e.g., vpr::SocketTypes::STREAM).
+    * Gets the type of this socket (for example, vpr::SocketTypes::STREAM).
     *
     * @pre The socket implementation pointer is valid.
     * @post The socket type for this socket is returned to the caller.
@@ -291,128 +292,127 @@ public:
    virtual vpr::Uint32 availableBytes() const;
 
    /**
-    * Implementation of the read template method.  This reads at
-    * most the specified number of bytes from the socket into the given
-    * buffer.
+    * Implementation of the read() template method.  This reads at most the
+    * specified number of bytes from the socket into the given buffer.
     *
     * @pre The device is open for reading, and the buffer is at least
-    *      length bytes long.
+    *      \p length bytes long.
     * @post The given buffer has length bytes copied into it from the device,
     *       and the number of bytes read successfully is returned to the
-    *       caller via the bytes_read parameter.
+    *       caller via the \p bytesRead parameter.
     *
-    * @param buffer     A pointer to the buffer where the device's buffer
-    *                   contents are to be stored.
-    * @param length     The number of bytes to be read.
-    * @param bytes_read The number of bytes read into the buffer.
-    * @param timeout    The maximum amount of time to wait for data to be
-    *                   available for reading.  This argument is optional and
-    *                   defaults to vpr::Interval::NoTimeout
+    * @param buffer    A pointer to the buffer where the device's buffer
+    *                  contents are to be stored.
+    * @param length    The number of bytes to be read.
+    * @param bytesRead The number of bytes read into the buffer.
+    * @param timeout   The maximum amount of time to wait for data to be
+    *                  available for reading.  This argument is optional and
+    *                  defaults to vpr::Interval::NoTimeout.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.<br>
-    *         vpr::ReturnStatus::WouldBlock if the device is in non-blocking
-    *         mode, and there is no data to read.<br>
-    *         vpr::ReturnStatus::Timeout is returned if the read could not
-    *         begin within the timeout interval.<br>
-    *         vpr::ReturnStatus::Fail is returned if the read operation
-    *         ailed.
+    *         completed successfully.
+    * @return vpr::ReturnStatus::WouldBlock if the device is in non-blocking
+    *         mode, and there is no data to read.
+    * @return vpr::ReturnStatus::Timeout is returned if the read could not
+    *         begin within the timeout interval.
+    * @return vpr::ReturnStatus::Fail is returned if the read operation failed.
     */
    vpr::ReturnStatus read_i(void* buffer, const vpr::Uint32 length,
-                            vpr::Uint32& data_read,
+                            vpr::Uint32& bytesRead,
                             vpr::Interval timeout = vpr::Interval::NoTimeout);
 
-   /** Exactly like read_i except takes MessageDataPtr directly for zero copy networking
-   * Updates msgData to point at the new message data.
-   */
-   vpr::ReturnStatus read_i(boost::shared_ptr<std::vector<vpr::Uint8> >& msgData,
-                            vpr::Uint32& data_read,
+   /**
+    * This is xactly like read_i() except that it takes MessageDataPtr directly
+    * for zero-copy networking.  Updates \p msgData to point at the new message
+    * data.
+    */
+   vpr::ReturnStatus read_i(vpr::sim::Message::MessageDataPtr& msgData,
+                            vpr::Uint32& bytesRead,
                             vpr::Interval timeout = vpr::Interval::NoTimeout);
 
 
    /**
-    * Implementation of the readn template method.  This reads
-    * exactly the specified number of bytes from the socket into the given
-    * buffer.
+    * Implementation of the readn() template method.  This reads exactly the
+    * specified number of bytes from the socket into the given buffer.
     *
     * @pre The device is open for reading, and the buffer is at least
-    *      length bytes long.
-    * @post The given buffer has length bytes copied into
-    *       it from the device, and the number of bytes read successfully
-    *       is returned to the caller via the bytes_read
-    *       parameter.
+    *      \p length bytes long.
+    * @post The given buffer has \p length bytes copied into it from the
+    *       device, and the number of bytes read successfully is returned to
+    *       the caller via the \p bytesRead parameter.
     *
-    * @param buffer     A pointer to the buffer where the device's buffer
-    *                   contents are to be stored.
-    * @param length     The number of bytes to be read.
-    * @param bytes_read The number of bytes read into the buffer.
-    * @param timeout    The maximum amount of time to wait for data to be
-    *                   available for reading.  This argument is optional and
-    *                   defaults to vpr::Interval::NoTimeout
+    * @param buffer    A pointer to the buffer where the device's buffer
+    *                  contents are to be stored.
+    * @param length    The number of bytes to be read.
+    * @param bytesRead The number of bytes read into the buffer.
+    * @param timeout   The maximum amount of time to wait for data to be
+    *                  available for reading.  This argument is optional and
+    *                  defaults to vpr::Interval::NoTimeout
     *
     * @return vpr::ReturnStatus::Succeed is returned if the read operation
-    *         completed successfully.<br>
-    *         vpr::ReturnStatus::WouldBlock if the device is in non-blocking
-    *         mode, and there is no data to read.<br>
-    *         vpr::ReturnStatus::Timeout is returned if the read could not
-    *         begin within the timeout interval.<br>
-    *         vpr::ReturnStatus::Fail is returned if the read operation
-    *         failed.
+    *         completed successfully.
+    * @return vpr::ReturnStatus::WouldBlock if the device is in non-blocking
+    *         mode, and there is no data to read.
+    * @return vpr::ReturnStatus::Timeout is returned if the read could not
+    *         begin within the timeout interval.
+    * @return vpr::ReturnStatus::Fail is returned if the read operation failed.
     */
    vpr::ReturnStatus readn_i(void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& data_read,
+                             vpr::Uint32& bytesRead,
                              vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      return read_i(buffer, length, data_read, timeout);
+      return read_i(buffer, length, bytesRead, timeout);
    }
 
    /**
-    * Exactly like read_i except takes MessageDataPtr directly for zero copy
-    * networking.  Updates msgData to point at the new message data.
+    * This is exactly like read_i() except that it takes MessageDataPtr
+    * directly for zero-copy networking.  Updates \p msgData to point at the
+    * new message data.
     */
    vpr::ReturnStatus readn_i(boost::shared_ptr<std::vector<vpr::Uint8> >& msgData,
-                             vpr::Uint32& data_read,
+                             vpr::Uint32& bytesRead,
                              vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      return read_i(msgData, data_read, timeout);
+      return read_i(msgData, bytesRead, timeout);
    }
 
    /**
-    * Implementation of the write template method.  This writes
-    * the buffer to the socket.
+    * Implementation of the write() template method.  This writes the buffer
+    * to the socket.
     *
     * @pre The device is open for writing.
     * @post The given buffer is written to the I/O device, and the number
     *       of bytes written successfully is returned to the caller via the
-    *       bytes_written parameter.
+    *       \p bytesWritten parameter.
     *
-    * @param buffer        A pointer to the buffer to be written.
-    * @param length        The length of the buffer.
-    * @param bytes_written The number of bytes written to the device.
-    * @param timeout       The maximum amount of time to wait for data to be
-    *                      available for writing.  This argument is optional
-    *                      and defaults to
-    *                      vpr::Interval::NoTimeout.
+    * @param buffer       A pointer to the buffer to be written.
+    * @param length       The length of the buffer.
+    * @param bytesWritten The number of bytes written to the device.
+    * @param timeout      The maximum amount of time to wait for data to be
+    *                     available for writing.  This argument is optional
+    *                     and defaults to vpr::Interval::NoTimeout.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the write operation
-    *         completed successfully.<br>
-    *         vpr::ReturnStatus::WouldBlock is returned if the handle is in
+    *         completed successfully.
+    * @return vpr::ReturnStatus::WouldBlock is returned if the handle is in
     *         non-blocking mode, and the write operation could not be
-    *         completed.<br>
-    *         vpr::ReturnStatus::Timeout is returned if the write could not
-    *         begin within the timeout interval.<br>
-    *         vpr::ReturnStatus::Fail is returned if the write operation
+    *         completed.
+    * @return vpr::ReturnStatus::Timeout is returned if the write could not
+    *         begin within the timeout interval.
+    * @return vpr::ReturnStatus::Fail is returned if the write operation
     *         failed.
     */
    vpr::ReturnStatus write_i(const void* buffer, const vpr::Uint32 length,
-                             vpr::Uint32& data_written,
+                             vpr::Uint32& bytesWritten,
                              vpr::Interval timeout = vpr::Interval::NoTimeout);
 
-   /** Exactly like write_i except takes MessageDataPtr directly for zero copy networking
-    * Starts passing a shared copy of msgData across the network
+   /**
+    * This is exactly like write_i() except that it takes MessageDataPtr
+    * directly for zero-copy networking.  Starts passing a shared copy of
+    * \p msgData across the network.
     */
-   vpr::ReturnStatus write_i(boost::shared_ptr<std::vector<vpr::Uint8> > msgData,
-                             vpr::Uint32& data_written,
+   vpr::ReturnStatus write_i(vpr::sim::Message::MessageDataPtr msgData,
+                             vpr::Uint32& bytesWritten,
                              vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
@@ -423,8 +423,8 @@ public:
     *               given option.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the value for the given
-    *         option was retrieved successfully.<br>
-    *         vpr::ReturnStatus;:Fail is returned otherwise.
+    *         option was retrieved successfully.
+    * @return vpr::ReturnStatus::Fail is returned otherwise.
     */
    vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
                                struct vpr::SocketOptions::Data& data);
@@ -448,10 +448,10 @@ public:
     *
     * @return vpr::ReturnStatus::Succeed is returned if this socket can read
     *         without blocking.  That is, there is data waiting to be read from
-    *         its arrival queue.<br>
-    *         vpr::ReturnStatus::Timeout is returned if this socket did not
-    *         become ready for reading within the timeout period.<br>
-    *         vpr::ReturnStatus::Fail is returned if this socket is not
+    *         its arrival queue.
+    * @return vpr::ReturnStatus::Timeout is returned if this socket did not
+    *         become ready for reading within the timeout period.
+    * @return vpr::ReturnStatus::Fail is returned if this socket is not
     *         ready for reading.  This can happen if the socket is not open,
     *         not connected, or without any received data.
     */
@@ -465,10 +465,10 @@ public:
     *
     * @return vpr::ReturnStatus::Succeed is returned if this socket can write
     *         without blocking.  That is, this socket is in a connected state,
-    *         and data can be sent to its peer right away.<br>
-    *         vpr::ReturnStatus::Timeout is returned if this socket did not
-    *         become ready for writing within the timeout period.<br>
-    *         vpr::ReturnStatus::Fail is returned if this socket is not
+    *         and data can be sent to its peer right away.
+    * @return vpr::ReturnStatus::Timeout is returned if this socket did not
+    *         become ready for writing within the timeout period.
+    * @return vpr::ReturnStatus::Fail is returned if this socket is not
     *         ready for writing.  This can happen if the socket is not open or
     *         not connected.
     */
@@ -481,8 +481,8 @@ public:
     *       this socket is in an exception state or not.
     *
     * @return vpr::ReturnStatus::Succeed is returned if this socket is in an
-    *         excptional state.<br>
-    *         vpr::ReturnStatus::Fail is returned otherwise.
+    *         excptional state.
+    * @return vpr::ReturnStatus::Fail is returned otherwise.
     */
    vpr::ReturnStatus inExceptState();
 
@@ -508,7 +508,6 @@ public:
       return mNetworkNode;
    }
 
-
 protected:
    friend class vpr::sim::SocketManager;
 
@@ -517,33 +516,33 @@ protected:
    /**
     * This just initializes member variables to reasonable defaults.
     *
-    * @pre None.
     * @post The member variables are initialized accordingly to reasonable
     *       defaults.
+    *
+    * @param sockType   The type of the socket to be created.
     */
-   SocketImplSIM(const vpr::SocketTypes::Type sock_type);
+   SocketImplSIM(const vpr::SocketTypes::Type sockType);
 
    /**
     * Standard constructor.  This takes two vpr::InetAddr objects, a local
     * address and a remote address.
     *
-    * @pre None.
     * @post The member variables are initialized with the given values.
     *
-    * @param local_addr  The local address for the socket.
-    * @param remote_addr The remote address for the socket.
-    * @param sock_type   The type of the socket to be created.
+    * @param localAddr  The local address for the socket.
+    * @param remoteAddr The remote address for the socket.
+    * @param sockType   The type of the socket to be created.
     */
-   SocketImplSIM(const vpr::InetAddr& local_addr,
-                 const vpr::InetAddr& remote_addr,
-                 const vpr::SocketTypes::Type sock_type);
+   SocketImplSIM(const vpr::InetAddr& localAddr,
+                 const vpr::InetAddr& remoteAddr,
+                 const vpr::SocketTypes::Type sockType);
 
    /**
     * Sets this socket's connected state using the given pointer value.
     * Depending on the value, the connected state of thsi socket is updated
     * accordingly.
     *
-    * @post mConnected will be set to true if  peer is non-NULL and false
+    * @post \p mConnected will be set to true if \p peer is non-NULL and false
     *       otherwise.
     */
    void setConnectState(vpr::SocketImplSIM* peer)

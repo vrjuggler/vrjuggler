@@ -52,6 +52,10 @@ namespace vpr
 
 class SocketImplSIM; // Forward declare this to avoid circular includes
 
+/** \class IOSysSIM IOSysSIM.h vpr/IO/IOSys.h
+ *
+ * Wrapper around simulated file descriptors.  This is typedef'd to vpr::IOSys.
+ */
 class VPR_CLASS_API IOSysSIM : public vpr::IOSysBase
 {
 public:

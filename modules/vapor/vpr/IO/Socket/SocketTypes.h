@@ -51,7 +51,7 @@ namespace vpr
  */
 namespace SocketTypes
 {
-   /// Possible socket domains (protocol families).
+   /** Possible socket domains (protocol families). */
    enum Domain
    {
       LOCAL,    /**< Local socket (UNIX domain socket) */
@@ -60,7 +60,7 @@ namespace SocketTypes
       LINK      /**< Raw socket */
    };
 
-   /// Possible socket types.
+   /** Possible socket types. */
    enum Type
    {
       STREAM,   /**< Stream socket */

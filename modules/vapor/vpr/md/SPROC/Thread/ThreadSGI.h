@@ -63,14 +63,16 @@
 namespace vpr
 {
 
-/**
+/** \class ThreadSGI ThreadSGI.h vpr/Thread/Thread.h
+ *
  * Threads implementation using multiple processes created with sproc(2).
+ * This is typedef'd to vpr::Thread.
  */
 class ThreadSGI : public BaseThread
 {
 public:
-   /***** CONSTRUCTORS ******/
-
+   /** @name Constructors */
+   //@{
    /** Non-spawning constructor.  This will not start a new thread. */
    ThreadSGI(BaseThread::VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
              BaseThread::VPRThreadScope scope = VPR_GLOBAL_THREAD,
@@ -98,6 +100,7 @@ public:
              BaseThread::VPRThreadScope scope = VPR_GLOBAL_THREAD,
              BaseThread::VPRThreadState state = VPR_JOINABLE_THREAD,
              size_t stackSize = 0);
+   //@}
 
    virtual ~ThreadSGI();
 
@@ -124,15 +127,12 @@ private:
    /**
     * Spawns a new thread that will execute functorPtr.
     *
-    * @pre None.
     * @post A thread (with any specified attributes) is created that begins
     *        executing func().  Depending on the scheduler, it may being
     *        execution immediately, or it may block for a short time before
     *        beginning execution.
     *
-    * @param functorPtr  Function to be executed by the thread.
-    * @param flags  Flags for the thread--not currently used in this
-    *                implementation (optional).
+    * @param functorPtr Function to be executed by the thread.
     *
     * @return A non-zero value is returned upon successful thread creation.
     *         -1 is returned if an error occurred.
@@ -143,13 +143,13 @@ private:
     * Called by the spawn routine to start the user thread function.
     *
     * @pre Called ONLY by a new thread
-    * @post The new thread will have started the user thread function
+    * @post The new thread will have started the user thread function.
     */
    void startThread(void* null_param);
 
 private:
    /**
-    * The functor to call from startThread
+    * The functor to call from startThread.
     */
    BaseThreadFunctor* mUserThreadFunctor;
    bool               mRunning;
@@ -186,7 +186,6 @@ public:
    /**
     * Suspends the execution of this thread.
     *
-    * @pre None.
     * @post This thread is sent the SIGSTOP signal and is thus suspended
     *        from execution until the member function resume() is called.
     *
@@ -201,7 +200,6 @@ public:
    /**
     * Gets this thread's priority.
     *
-    * @pre None.
     * @post The priority of this thread is returned in the integer pointer
     *        variable.
     *
@@ -228,7 +226,6 @@ public:
    /**
     * Sets this thread's priority.
     *
-    * @pre None.
     * @post This thread has its priority set to the specified value.
     *
     * @param prio  The new priority of the specified thread.
@@ -245,9 +242,8 @@ public:
     * Yields execution of the calling thread to allow a different blocked
     * thread to execute.
     *
-    * @pre None.
     * @post The caller yields its execution control to another thread or
-    *        process.
+    *       process.
     */
    static void yield()
    {
@@ -295,10 +291,9 @@ public:
    /**
     * Sends the specified signal to this thread (not necessarily SIGKILL).
     *
-    * @pre None.
     * @post This thread receives the specified signal.
     *
-    * @param signum  The signal to send to the specified thread.
+    * @param signum The signal to send to the specified thread.
     *
     * @return 0 is returned on successful completion.  -1 is returned on
     *         failure.
@@ -311,16 +306,15 @@ public:
    /**
     * Kills (cancels) this thread.
     *
-    * @pre None.
     * @post This thread is cancelled.  Depending on the cancellation
-    *        attributes of the specified thread, it may terminate
-    *        immediately, it may wait until a pre-defined cancel point to
-    *        stop or it may ignore the cancel altogether.  Thus, immediate
-    *        cancellation is not guaranteed.
+    *       attributes of the specified thread, it may terminate
+    *       immediately, it may wait until a pre-defined cancel point to
+    *       stop or it may ignore the cancel altogether.  Thus, immediate
+    *       cancellation is not guaranteed.
     *
     * @note For the sake of clarity, it is probably better to use the
-    *        cancel() routine instead of kill() because a two-argument
-    *        version of kill() is also used for sending signals to threads.
+    *       cancel() routine instead of kill() because a two-argument
+    *       version of kill() is also used for sending signals to threads.
     */
    virtual void kill()
    {
@@ -341,10 +335,11 @@ private:
    // information.
 public:
    /**
-    * Gets a pointer to the thread we are in.
+    * Get a pointer to the thread we are in.
     *
-    * @return NULL - Thread is not in global table
-    * @return NonNull - Ptr to the thread that we are running within
+    * @return NULL is returned if this thread is not in the global table.
+    * @return A non-NULL pointer is returned that points to the thread in
+    *         which we are currently running.
     */
    static Thread* self()
    {

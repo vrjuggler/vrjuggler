@@ -117,13 +117,8 @@ vpr::ReturnStatus SocketConnector::connect(vpr::SocketStream& newStream,
     return ret_val;
 }
 
-/**
- * Complete a non-blocking connection
- * Try to complete a non-blocking connection.
- *
- * @param newStream  The connected stream.
- * @param remoteAddr returns the address of the remote connection.
- */
+// Complete a non-blocking connection
+// Try to complete a non-blocking connection.
 vpr::ReturnStatus SocketConnector::complete(vpr::SocketStream& newStream,
                                             const vpr::Interval timeout)
 {

@@ -68,8 +68,17 @@
 namespace vpr
 {
 
-/**
+/** \class ThreadNSPR ThreadNSPR.h vpr/Thread/Thread.h
+ *
  * Threads implementation using the NSPR API.
+ *
+ * This works by recieving a function in the constructor that is the function
+ * to call when the new thread is created.  The function is stored internally
+ * to the class, then the class is "boot-strapped" by spawning a call to the
+ * startThread() function with in turn will call the previously set thread
+ * function.
+ *
+ * This is typedef'd to vpr::Thread.
  */
 class VPR_CLASS_API ThreadNSPR : public BaseThread
 {
@@ -103,7 +112,6 @@ public:
    /**
     * Destructor.
     *
-    * @pre None.
     * @post This thread is removed from the thread table and from the local
     *        thread hash.
     */
@@ -165,7 +173,6 @@ public:
    /**
     * Suspends the execution of this thread.
     *
-    * @pre None.
     * @post This thread is sent the SIGSTOP signal and is thus suspended
     *        from execution until the member function resume() is called.
     *
@@ -201,7 +208,6 @@ public:
    /**
     * Sets this thread's priority.
     *
-    * @pre None.
     * @post This thread has its priority set to the specified value.
     *
     * @param prio  The new priority for this thread.
@@ -217,7 +223,6 @@ public:
    /**
     * Sends the specified signal to this thread (not necessarily SIGKILL).
     *
-    * @pre None.
     * @post This thread receives the specified signal.
     *
     * @param signum  The signal to send to the specified thread.
@@ -234,7 +239,6 @@ public:
    /**
     * Kills (cancels) this thread.
     *
-    * @pre None.
     * @post This thread is cancelled.  Depending on the cancellation
     *        attributes of the specified thread, it may terminate
     *        immediately, it may wait until a pre-defined cancel point to
@@ -253,8 +257,9 @@ public:
    /**
     * Gets a pointer to the thread we are in.
     *
-    * @return NULL - Thread is not in global table
-    * @return NonNull - Ptr to the thread that we are running within
+    * @return NULL is returned if this thread is not in global table.
+    * @return A non-NULL value is the pointer to the thread that we are
+    *         running within.
     */
    static Thread* self();
 
@@ -262,7 +267,6 @@ public:
     * Yields execution of the calling thread to allow a different blocked
     * thread to execute.
     *
-    * @pre None.
     * @post The caller yields its execution control to another thread or
     *        process.
     */

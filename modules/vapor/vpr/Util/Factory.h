@@ -48,7 +48,12 @@
 namespace vpr
 {
 
-template <class IdentifierType, class AbstractProduct>
+/** \struct NullFactoryError Factory.h vpr/Util/Factory.h
+ *
+ * @param IdentifierType  The factory identifier type.
+ * @param AbstractProduct The type of the product created by the factory.
+ */
+template<class IdentifierType, class AbstractProduct>
 struct NullFactoryError
 {
    static AbstractProduct* onUnknownType(IdentifierType)
@@ -57,25 +62,35 @@ struct NullFactoryError
    }
 };
 
-/** Implements a useful little template function usable as a Creator in factory */
+/**
+ * Implements a useful little template function usable as a Creator in factory.
+ */
 template<class AbstractProduct, class ConcreteProduct>
 AbstractProduct* CreateProduct()
-{ return (new ConcreteProduct); }
+{
+   return (new ConcreteProduct);
+}
 
-/** Implements generic Factory pattern
-*
-* AbstractProduct: The base class for the hierarchy for the object factory
-* IndentifierType: The id for indexing the creators (must be sortable)
-* ProductCreator: The callable entity that creates objects.
-*        Must support:
-*           AbstractProduct* operator();
-*        (ex: functions, functors, classes)
-*        default: Simple function of type: AbstractProduct* func() { }
-* FactoryErrorPolicy: The handler for failed lookups.
-*        Must support:
-*           FactoryErrorImpl<IdentifierType, AbstractProduct> fErrorImpl;
-*           AbstractProduct* p = fErrorImpl.onUnknownType(id)
-*/
+/** \class Factory Factory.h vpr/Util/Factory.h
+ *
+ * Implements generic Factory pattern.
+ *
+ * @param AbstractProduct    The base class for the hierarchy for the object
+ *                           factory.
+ * @param IndentifierType    The ID type for indexing the creators (must be
+ *                           sortable).
+ * @param ProductCreator     The callable entity that creates objects.  It
+ *                           must support <tt>AbstractProduct* operator()</tt>.
+ *                           For example, functions, functors, and classes are
+ *                           valid types to use for this parameter.  The
+ *                           default type is a simple function.
+ * @paarm FactoryErrorPolicy The handler for failed lookups.  It must support
+ *                           the following:
+ * \code
+ * FactoryErrorImpl<IdentifierType, AbstractProduct> fErrorImpl;
+ * AbstractProduct* p = fErrorImpl.onUnknownType(id)
+ * \endcode
+ */
 template<
    class AbstractProduct,
    class IdentifierType,
@@ -112,15 +127,12 @@ public:
       return onUnknownType(id);     // Calls template method from FactoryErrorPolicy<>
    }
 
-
-
 protected:
    typedef std::map<IdentifierType, ProductCreator> CreatorMap;
    CreatorMap mCreatorMap;
 };
 
-}; // namespace vpr
+} // namespace vpr
 
 
 #endif
-

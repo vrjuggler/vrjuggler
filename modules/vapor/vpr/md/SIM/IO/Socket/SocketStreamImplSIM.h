@@ -56,11 +56,11 @@
 namespace vpr
 {
 
-/**
- * Simulated stream sockets.
+/** \class SocketStreamImplSIM SocketStreamImplSIM.h vpr/IO/Socket/SocketStream.h
  *
- * @author Kevin Meinert
- * @author Patrick Hartling
+ * Implementation of stream sockets using simulated sockets.  This is used in
+ * conjunction with vpr::SocketConfiguration to create the typedef
+ * vpr::SocketStream.
  */
 class VPR_CLASS_API SocketStreamImplSIM : public vpr::SocketImplSIM
 {
@@ -72,108 +72,116 @@ public:
    /**
     * Default constructor.  This initializes the member variables.
     */
-   SocketStreamImplSIM (void)
+   SocketStreamImplSIM()
       : SocketImplSIM(vpr::SocketTypes::STREAM), mNoDelay(false)
    {
       /* Do nothing. */ ;
    }
 
    /**
-    * Constructor.  This initializes the member variables.  In particular,
-    * the local and remote addresses for this socket are initialized using
-    * the given addresses.
+    * Constructor.  This takes the local and remote addresses for this socket.
+    * The local address is the address to which this socket will be bound.
+    * The remote address is the address which with this socket will
+    * communicate.
     *
-    * @post The member variables are initialized with the mType variable in
-    *       particular set to SOCK_STREAM.
+    * @post The member variables are initialized to default values.  The
+    *       socket type is set to vpr::SocketTypes::STREAM.
     *
-    * @param local_addr  The local address for this socket (the one it is
-    *                    bound to).
-    * @param remote_addr The remote address for this socket.  This is used for
-    *                    a socket that will connect to another socket.
+    * @param localAddr  The local address to which this socket will be bound.
+    * @param remoteAddr The remote address whith which this socket will
+    *                   communicate.
+    *
+    * @see bind, connect
     */
-   SocketStreamImplSIM (const vpr::InetAddr& local_addr,
-                        const vpr::InetAddr& remote_addr)
-      : SocketImplSIM(local_addr, remote_addr, vpr::SocketTypes::STREAM),
-        mNoDelay( false )
+   SocketStreamImplSIM(const vpr::InetAddr& localAddr,
+                       const vpr::InetAddr& remoteAddr)
+      : SocketImplSIM(localAddr, remoteAddr, vpr::SocketTypes::STREAM),
+        mNoDelay(false)
    {
-      mLocalAddr  = local_addr;
-      mRemoteAddr = remote_addr;
+      mLocalAddr  = localAddr;
+      mRemoteAddr = remoteAddr;
    }
 
    /**
     * Destructor.  This currently does nothing but act as a placeholder.
     */
-   virtual ~SocketStreamImplSIM (void)
+   virtual ~SocketStreamImplSIM()
    {
       /* Do nothing. */ ;
    }
 
    /**
-    * Puts this socket into the listening state where it listens for
-    * incoming connection requests.
+    * Listens on the socket for incoming connection requests.
     *
-    * @pre The socket has been opened and bound to the address in mLocalAddr.
+    * @pre The socket has been opened and bound to the address in
+    *      \c mLocalAddr.
     * @post The socket is in a listening state waiting for incoming
     *       connection requests.
     *
     * @param backlog The maximum length of the queue of pending connections.
     *
-    * @return vpr::ReturnStatus::Success is returned if this socket is now in a
-    *         listening state.<br>
-    *         vpr::ReturnStatus::Failure is returned otherwise.
+    * @return vpr::ReturnStatus::Succeed is returned if this socket is now in a
+    *         listening state.
+    * @return vpr::ReturnStatus::Fail is returned if this socket could not be
+    *         put into a listening state.  An error message is printed
+    *         explaining what went wrong.
+    *
+    * @see open, bind
     */
-   vpr::ReturnStatus listen( const int backlog = 5 );
+   vpr::ReturnStatus listen(const int backlog = 5);
 
    /**
-    * Accepts an incoming connection request and return the connected socket
+    * Accepts an incoming connection request and returns the connected socket
     * to the caller in the given socket object reference.
     *
-    * @pre The socket is open and is in a listening state.
-    * @post When a connection is established, the given vpr::SocketStream
-    *       object is assigned the newly connected socket.
+    * @pre This socket is open, bound, and in a listening state.
+    * @post When a connection is established, the given socket \p sock will
+    *       be set up to communicate with the newly accepted connection.
     *
-    * @param sock    A reference to a vpr::SocketStream object that will
-    *                be used to return the connected socket created.
-    * @param timeout The length of time to wait for the accept call to
-    *                return.
+    * @param clientSock A reference to a vpr::SocketStream object that will be
+    *                   used to return the newly connected socket.
+    * @param timeout    The length of time to wait for the accept call to
+    *                   return.
     *
-    * @return vpr::ReturnStatus::Success is returned if the incoming request has
-    *         been handled, and the given SocketStream object is a valid,
-    *         connected socket.<br>
-    *         vpr::ReturnStatus::WouldBlock is returned if this is a non-blocking
-    *         socket, and there are no waiting connection requests.<br>
-    *         vpr::ReturnStatus::Timeout is returned when no connections requests
-    *         arrived within the given timeout period.<br>
-    *         vpr::ReturnStatus::Failure is returned if the accept failed.  The
-    *         given vpr::SocketStream object is not modified in this case.
+    * @return vpr::ReturnStatus::Succeed is returned if the new connection was
+    *         accepted succesfully.
+    * @return vpr::ReturnStatus::WouldBlock is returned if this is a
+    *         non-blocking socket, and there are no waiting connection
+    *         requests.
+    * @return vpr::ReturnStatus::Timeout is returned when no connections
+    *         requests arrived within the given timeout period.
+    * @return vpr::ReturnStatus::Fail is returned if the connection was not
+    *         accepted.  An error message is printed explaining what went
+    *         wrong.
+    *
+    * @see open, bind, listen
     */
-   vpr::ReturnStatus accept( SocketStreamImplSIM& client_sock,
-                             vpr::Interval timeout = vpr::Interval::NoTimeout );
+   vpr::ReturnStatus accept(SocketStreamImplSIM& clientSock,
+                            vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Sets the current no-delay status for this socket.  If no-delay is true,
     * then the Nagel algorithm will be disabled.  Of course, there is no
     * Nagel algorithm for sim sockets.
     *
-    * @param enable_val The Boolean enable/disable state for no-delay on this
-    *                   socket.
+    * @param setting The Boolean enable/disable state for no-delay on this
+    *                socket.
     */
-   vpr::ReturnStatus setNoDelay( bool setting )
+   vpr::ReturnStatus setNoDelay(bool setting)
    {
       mNoDelay = setting;
       return vpr::ReturnStatus();
    }
 
    /**
-    * @param connector The socket making the connection.
+    * @param peerSock The socket making the connection.
     */
    vpr::ReturnStatus addConnector(vpr::SocketImplSIM* peerSock);
 
    /**
-    * Gets the current number of connectors waiting to connect to this
-    * socket.
+    * Gets the current number of connectors waiting to connect to this socket.
     */
-   vpr::Uint32 getConnectorCount (void) const
+   vpr::Uint32 getConnectorCount() const
    {
       return mConnectorQueue.size();
    }
@@ -183,9 +191,12 @@ public:
    virtual vpr::ReturnStatus isWriteReady() const;
 
 protected:
-   /**< Queue of pending connection requests.This is a list of the requesting connectors */
+   /**
+    * Queue of pending connection requests.This is a list of the requesting
+    * connectors.
+    */
    std::queue<SocketStreamImplSIM*> mConnectorQueue;
-   vpr::Mutex              mConnectorQueueMutex; /**< Mutex for connector queue */
+   vpr::Mutex mConnectorQueueMutex;   /**< Mutex for connector queue */
 
    bool mNoDelay;
 };

@@ -136,8 +136,8 @@ vpr::ReturnStatus FileHandleImplUNIX::open()
       else
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << "[vpr::FileHandleImplUNIX] Could not open " << mName << ": "
-            << strerror(errno) << std::endl << vprDEBUG_FLUSH;
+            << "[vpr::FileHandleImplUNIX::open()] Could not open " << mName
+            << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
          status.setCode(ReturnStatus::Fail);
          mOpen = false;
       }
@@ -158,14 +158,14 @@ vpr::ReturnStatus FileHandleImplUNIX::close()
    vpr::ReturnStatus status;
 
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-      << "[vpr::FileHandleImplUNIX::close] Closing file descriptor "
+      << "[vpr::FileHandleImplUNIX::close()] Closing file descriptor "
       << mFdesc << std::endl << vprDEBUG_FLUSH;
 
    if ( ::close(mFdesc) == -1 )
    {
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "[vpr::FileHandleImplUNIX] Could not close " << mName << ": "
-         << strerror(errno) << std::endl << vprDEBUG_FLUSH;
+         << "[vpr::FileHandleImplUNIX::close()] Could not close " << mName
+         << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
       status.setCode(ReturnStatus::Fail);
    }
    else
@@ -222,7 +222,7 @@ vpr::ReturnStatus FileHandleImplUNIX::setBlocking(bool blocking)
       if ( setFlags(new_flags) == -1 )
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << "[vpr::FileHandleImplUNIX] Failed to set "
+            << "[vpr::FileHandleImplUNIX::setBlocking()] Failed to set "
             << (blocking ? "blocking" : "non-blocking") << " state on "
             << mName << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
          retval.setCode(ReturnStatus::Fail);
@@ -288,7 +288,7 @@ vpr::ReturnStatus FileHandleImplUNIX::setAppend(bool append)
    if ( retval == -1 )
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << "[vpr::FileHandleImplUNIX] Failed to "
+         << "[vpr::FileHandleImplUNIX::setAppend()] Failed to "
          << (append ? "enable" : "disable") << " append mode on "
          << mName << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
       status.setCode(ReturnStatus::Fail);
@@ -324,14 +324,14 @@ vpr::ReturnStatus FileHandleImplUNIX::setSynchronousWrite(bool sync)
    if ( retval == -1 )
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << "[vpr::FileHandleImplUNIX] Failed to enable "
+         << "[vpr::FileHandleImplUNIX::setSynchronousWrite()] Failed to enable "
          << (sync ? "synchronous" : "asynchronous") << " writes on "
          << mName << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
       status.setCode(vpr::ReturnStatus::Fail);
    }
 #else
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-      << "[vpr::FileHandleImplUNIX] Cannot enable "
+      << "[vpr::FileHandleImplUNIX::setSynchronousWrite()] Cannot enable "
       << (sync ? "synchronous" : "asynchronous")
       << " writes on this platform!\n" << vprDEBUG_FLUSH;
    status.setCode(vpr::ReturnStatus::Fail);
@@ -375,7 +375,7 @@ vpr::ReturnStatus FileHandleImplUNIX::getReadBufferSize(vpr::Int32& buffer) cons
 // bufer.
 vpr::ReturnStatus FileHandleImplUNIX::read_i(void* buffer,
                                              const vpr::Uint32 length,
-                                             vpr::Uint32& bytes_read,
+                                             vpr::Uint32& bytesRead,
                                              const vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
@@ -391,7 +391,7 @@ vpr::ReturnStatus FileHandleImplUNIX::read_i(void* buffer,
       // Something went wrong while attempting to read from the file.
       if ( bytes < 0 )
       {
-         bytes_read = 0;
+         bytesRead = 0;
 
          if ( errno == EAGAIN && ! mBlocking )
          {
@@ -402,8 +402,9 @@ vpr::ReturnStatus FileHandleImplUNIX::read_i(void* buffer,
          if ( ! (errno == EAGAIN && ! mBlocking) )
          {
             vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-               << "[vpr::FileHandleImplUNIX] Error reading from " << mName
-               << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
+               << "[vpr::FileHandleImplUNIX::read_i()] Error reading from "
+               << mName << ": " << strerror(errno) << std::endl
+               << vprDEBUG_FLUSH;
             status.setCode(ReturnStatus::Fail);
          }
       }
@@ -413,20 +414,20 @@ vpr::ReturnStatus FileHandleImplUNIX::read_i(void* buffer,
       {
          // XXX: Failure status may not be exactly what we want to return.
          status.setCode(ReturnStatus::Fail);
-         bytes_read = 0;
+         bytesRead = 0;
 //     errno != ENOENT
          vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
-            << "[vpr::FileHandleImplUNIX] Nothing read from " << mName
-            << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
+            << "[vpr::FileHandleImplUNIX::read_i()] Nothing read from "
+            << mName << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
       }
       else
       {
-         bytes_read = bytes;
+         bytesRead = bytes;
       }
    }
    else
    {
-      bytes_read = 0;
+      bytesRead = 0;
    }
 
    return status;
@@ -437,7 +438,7 @@ vpr::ReturnStatus FileHandleImplUNIX::read_i(void* buffer,
 // _Effective TCP/IP Programming_ by Jon D. Snader.
 vpr::ReturnStatus FileHandleImplUNIX::readn_i(void* buffer,
                                               const vpr::Uint32 buffer_size,
-                                              vpr::Uint32& bytes_read,
+                                              vpr::Uint32& bytesRead,
                                               const vpr::Interval timeout)
 {
    size_t bytes_left;
@@ -450,7 +451,7 @@ vpr::ReturnStatus FileHandleImplUNIX::readn_i(void* buffer,
                                               << vprDEBUG_FLUSH;
    }
 
-   bytes_read = 0;
+   bytesRead = 0;
    bytes_left = buffer_size;
 
    while ( bytes_left > 0 )
@@ -478,19 +479,19 @@ vpr::ReturnStatus FileHandleImplUNIX::readn_i(void* buffer,
          else
          {
             status.setCode(ReturnStatus::Fail);
-            bytes_read = 0;
+            bytesRead = 0;
             return status;
          }
       }
       // We have read EOF, so there is nothing more to read.  At this point,
-      // bytes_read contains an accurate count of the bytes read so far
+      // bytesRead contains an accurate count of the bytes read so far
       // (posisbly less than buffer_size).
       else if ( bytes == 0 )
       {
          vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
             << "[vpr::FileHandleImplUNIX::readn_i()] Read EOF with "
             << bytes_left << " bytes left to read from file handle "
-            << mFdesc << " and " << bytes_read << " bytes read in total."
+            << mFdesc << " and " << bytesRead << " bytes read in total."
             << std::endl << vprDEBUG_FLUSH;
 
          return status;
@@ -499,7 +500,7 @@ vpr::ReturnStatus FileHandleImplUNIX::readn_i(void* buffer,
       {
          buffer = (void*) ((char*) buffer + bytes);
          bytes_left -= bytes;
-         bytes_read += bytes;
+         bytesRead  += bytes;
       }
    }
 
@@ -509,7 +510,7 @@ vpr::ReturnStatus FileHandleImplUNIX::readn_i(void* buffer,
 // Write the buffer to the file handle.
 vpr::ReturnStatus FileHandleImplUNIX::write_i(const void* buffer,
                                               const vpr::Uint32 length,
-                                              vpr::Uint32& bytes_written,
+                                              vpr::Uint32& bytesWritten,
                                               const vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
@@ -524,7 +525,7 @@ vpr::ReturnStatus FileHandleImplUNIX::write_i(const void* buffer,
 
       if ( bytes <= 0 )
       {
-         bytes_written = 0;
+         bytesWritten = 0;
 
          if ( errno == EAGAIN && ! mBlocking )
          {
@@ -533,14 +534,15 @@ vpr::ReturnStatus FileHandleImplUNIX::write_i(const void* buffer,
          else
          {
             vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-               << "[vpr::FileHandleImplUNIX] Error writing to " << mName
-               << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
+               << "[vpr::FileHandleImplUNIX::write_i()] Error writing to "
+               << mName << ": " << strerror(errno) << std::endl
+               << vprDEBUG_FLUSH;
             status.setCode(ReturnStatus::Fail);
          }
       }
       else
       {
-         bytes_written = bytes;
+         bytesWritten = bytes;
       }
    }
 

@@ -42,6 +42,13 @@
 #ifndef _VPR_RW_MUTEX_H_
 #define _VPR_RW_MUTEX_H_
 
+/**
+ * \file
+ *
+ * Include this file to get the full declaration of the platform-specific
+ * read/write mutex class.  It will be typedef'd to vpr::RWMutex.
+ */
+
 #include <vpr/vprConfig.h>
 #include <vpr/Sync/Semaphore.h>
 #include <vpr/Sync/CondVar.h>
@@ -56,22 +63,27 @@
 namespace vpr
 {
 
-/**
- * vpr::RWMutex wrapper.
+/** \class RWMutex RWMutex.h vpr/Sync/RWMutex.h
  *
- * @date 1-31-97
+ * Read/write mutex implementation.  This is used on platforms or with
+ * threading subsystems that do not have native support for read/write mutexes.
+ *
+ * @date January 31, 1997
  */
 class VPR_CLASS_API RWMutex
 {
 public:
-   RWMutex ()
-      : waitingReaders(&stateLock), numWaitingReaders(0),
-        waitingWriters(&stateLock), numWaitingWriters(0), refCount(0)
+   RWMutex()
+      : waitingReaders(&stateLock)
+      , numWaitingReaders(0)
+      , waitingWriters(&stateLock)
+      , numWaitingWriters(0)
+      , refCount(0)
    {
       /* Do nothing. */ ;
    }
 
-   ~RWMutex (void)
+   ~RWMutex()
    {
       /* Do nothing. */ ;
    }
@@ -80,39 +92,37 @@ public:
     * Locks the mutex.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the mutex is acquired.
-    *         vpr::ReturnStatus::Fail is returned upon error.
+    * @return vpr::ReturnStatus::Fail is returned upon error.
     */
    vpr::ReturnStatus acquire()
    {
       return acquireWrite();
    }
 
-   /// Acquires a read mutex.
-   vpr::ReturnStatus acquireRead(void);
+   /** Acquires a read mutex. */
+   vpr::ReturnStatus acquireRead();
 
-   /// Acquires a write mutex.
-   vpr::ReturnStatus acquireWrite(void);
+   /** Acquires a write mutex. */
+   vpr::ReturnStatus acquireWrite();
 
    /**
     * Tries to acquire the mutex.
-    * Wait until the semaphore value is greater than 0.
-    * Then decrement by 1 and return.
-    * P operation.
+    * Wait until the semaphore value is greater than 0, then decrement by 1
+    * and return.  This is a "P" operation.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the mutex is acquired.
-    *         vpr::ReturnStatus::Fail is returned if the mutex is not
-    *         acquired.
+    * @return vpr::ReturnStatus::Fail is returned if the mutex is not acquired.
     */
-   vpr::ReturnStatus tryAcquire ()
+   vpr::ReturnStatus tryAcquire()
    {
       return tryAcquireWrite();
    }
 
-   /// Tries to acquire a read mutex.
-   vpr::ReturnStatus tryAcquireRead (void);
+   /** Tries to acquire a read mutex. */
+   vpr::ReturnStatus tryAcquireRead();
 
-   /// Tries to acquire a write mutex.
-   vpr::ReturnStatus tryAcquireWrite (void);
+   /** Tries to acquire a write mutex. */
+   vpr::ReturnStatus tryAcquireWrite();
 
    /**
     * Releases the mutex.
@@ -120,20 +130,20 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned on success;
     *         vpr::ReturnStatus::Fail on error.
     */
-   vpr::ReturnStatus release(void);
+   vpr::ReturnStatus release();
 
    /**
-    *Tests the current lock status.
+    * Tests the current lock status.
     *
-    * @return 0 is returned to indicate that the mutex is not locked.<br>
-    *         1 is returned when the mutex is locked.
+    * @return 0 is returned to indicate that the mutex is not locked.
+    * @return 1 is returned when the mutex is locked.
     */
    int test()
    {
       return stateLock.test();
    }
 
-   /// Dumps the mutex debug stuff and current state.
+   /** Dumps the mutex debug stuff and current state. */
    void dump (FILE* dest = stderr,
               const char* message = "\n------ Mutex Dump -----\n") const
    {

@@ -55,8 +55,9 @@
 namespace vpr
 {
 
-/**
- * Holds list of all threads in system
+/** \class ThreadManager ThreadManager.h vpr/Thread/ThreadManager.h
+ *
+ * Holds list of all threads in system.
  *
  * @deprecated This class may go away in the future.
  */
@@ -87,36 +88,44 @@ public:
       mThreadVectorMutex.acquire();
    }
 
-   /// Unlocks the manager to allow people to use it again.
+   /** Unlocks the manager to allow people to use it again. */
    void unlock()
    {
       mThreadVectorMutex.release();
    }
 
-   /** Get list of all threads in system.
-    * @note WARNING: This method is for advanced usage only.  Use at your own risk.
+   /**
+    * Gets list of all threads in system.
+    * @note WARNING: This method is for advanced usage only.  Use at your own
+    *       risk!
     */
    std::vector<Thread*> getThreads()
-   { return mThreads; }
+   {
+      return mThreads;
+   }
 
    std::vector<Thread*>::size_type getNumThreads()
-   { return mThreads.size(); }
+   {
+      return mThreads.size();
+   }
 
-   Thread* getThread(unsigned i)
-   { return mThreads[i]; }
+   Thread* getThread(unsigned int i)
+   {
+      return mThreads[i];
+   }
 
-   /// Dumps the state of the manager to debug.
+   /** Dumps the state of the manager to debug. */
    void debugDump();
 
 private:
-   Mutex                mThreadVectorMutex;  //! Mutex to protect the threads vector
-   std::vector<Thread*> mThreads;            //! List of all threads in system
+   Mutex                mThreadVectorMutex;  /**< Mutex to protect the threads vector */
+   std::vector<Thread*> mThreads;            /**< List of all threads in system */
 
    // ----------------------- //
    // --- SINGLETON STUFF --- //
    // ----------------------- //
 protected:
-   /// Constructor.  Hidden, so no instantiation is allowed.
+   /** Constructor.  Hidden, so no instantiation is allowed. */
    ThreadManager()
    {;}
 
@@ -126,7 +135,7 @@ protected:
    ThreadManager(const ThreadManager&) {;}
    void operator=(const ThreadManager&) {;}
 
-vprSingletonHeader(ThreadManager);
+   vprSingletonHeader(ThreadManager);
 };
 
 } // End of vpr namespace

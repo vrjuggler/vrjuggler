@@ -52,7 +52,8 @@
 namespace vpr
 {
 
-/**
+/** \class ObjectWriter ObjectWriter.h vpr/IO/ObjectWriter.h
+ *
  * Interface used to write object data to a stream.
  *
  * @todo Add smart buffering for type sizes.
@@ -82,7 +83,9 @@ public:
       return mIsBinary;
    }
 
-   /** @name Tag and attribute handling.
+   /**
+    * @name Tag and attribute handling.
+    *
     * ObjectReader and ObjectWriter support an interface that allows for using
     * tags and attributes in the written output data.  This allows support for
     * formats such as XML where there is a logical grouping of the data.
@@ -103,13 +106,13 @@ public:
     */
    //@{
    /** Starts a new section/element of name tagName. */
-   virtual vpr::ReturnStatus beginTag(std::string tagName) = 0;
+   virtual vpr::ReturnStatus beginTag(const std::string& tagName) = 0;
 
    /** Ends the most recently named tag. */
    virtual vpr::ReturnStatus endTag() = 0;
 
    /** Starts an attribute of the name attributeName. */
-   virtual vpr::ReturnStatus beginAttribute(std::string attributeName) = 0;
+   virtual vpr::ReturnStatus beginAttribute(const std::string& attributeName) = 0;
 
    /** Ends the most recently named attribute. */
    virtual vpr::ReturnStatus endAttribute() = 0;

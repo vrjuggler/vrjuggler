@@ -45,21 +45,20 @@
 #include <vpr/vprConfig.h>
 
 #include <vector>
-
-#include <boost/static_assert.hpp>
-#include <vpr/IO/ObjectReader.h>
-
-#include <cppdom/cppdom.h>
 #include <string>
 #include <sstream>
+#include <boost/static_assert.hpp>
+#include <cppdom/cppdom.h>
 
 #include <vpr/Util/Assert.h>
+#include <vpr/IO/ObjectReader.h>
 
 
 namespace vpr
 {
 
-/**
+/** \class XMLObjectReader XMLObjectReader.h vpr/IO/XMLObjectReader.h
+ *
  * Object reader that reads out of a data buffer.
  *
  * @todo Add smart buffering for type sizes.
@@ -67,21 +66,20 @@ namespace vpr
 class VPR_CLASS_API XMLObjectReader : public ObjectReader
 {
 public:
-   XMLObjectReader(std::vector<vpr::Uint8> data);
+   XMLObjectReader(const std::vector<vpr::Uint8>& data);
 
    XMLObjectReader(cppdom::NodePtr rootNode);
 
    /** @name Tag and attribute handling. */
    //@{
-   /** Starts a new section/element of name tagName.
-   */
-   virtual vpr::ReturnStatus beginTag(std::string tagName);
+   /** Starts a new section/element of name \p tagName. */
+   virtual vpr::ReturnStatus beginTag(const std::string& tagName);
 
    /** Ends the most recently named tag. */
    virtual vpr::ReturnStatus endTag();
 
-   /** Starts an attribute of the name attributeName. */
-   virtual vpr::ReturnStatus beginAttribute(std::string attributeName);
+   /** Starts an attribute of the name \p attributeName. */
+   virtual vpr::ReturnStatus beginAttribute(const std::string& attributeName);
 
    /** Ends the most recently named attribute. */
    virtual vpr::ReturnStatus endAttribute();
@@ -92,7 +90,6 @@ public:
    virtual void pushState();
    virtual void popState();
 
-
    virtual vpr::Uint8 readUint8();
    virtual vpr::Uint16 readUint16();
    virtual vpr::Uint32 readUint32();
@@ -102,24 +99,48 @@ public:
    virtual std::string readString();
    virtual bool readBool();
 
-   /* Helper methods */
+   /** @name Helper methods */
+   //@{
    virtual void readUint8(vpr::Uint8& val)
-   { val = this->readUint8(); }
-   virtual void readUint16(vpr::Uint16& val)
-   { val = this->readUint16(); }
-   virtual void readUint32(vpr::Uint32& val)
-   { val = this->readUint32(); }
-   virtual void readUint64(vpr::Uint64& val)
-   { val = this->readUint64(); }
-   virtual void readFloat(float& val)
-   { val = this->readFloat(); }
-   virtual void readDouble(double& val)
-   { val = this->readDouble(); }
-   virtual void readString(std::string& str)
-   { str = this->readString(); }
-   virtual void readBool(bool& val)
-   { val = this->readBool(); }
+   {
+      val = this->readUint8();
+   }
 
+   virtual void readUint16(vpr::Uint16& val)
+   {
+      val = this->readUint16();
+   }
+
+   virtual void readUint32(vpr::Uint32& val)
+   {
+      val = this->readUint32();
+   }
+
+   virtual void readUint64(vpr::Uint64& val)
+   {
+      val = this->readUint64();
+   }
+
+   virtual void readFloat(float& val)
+   {
+      val = this->readFloat();
+   }
+
+   virtual void readDouble(double& val)
+   {
+      val = this->readDouble();
+   }
+
+   virtual void readString(std::string& str)
+   {
+      str = this->readString();
+   }
+
+   virtual void readBool(bool& val)
+   {
+      val = this->readBool();
+   }
+   //@}
 
 protected:
    enum CurSource
@@ -128,16 +149,16 @@ protected:
       CdataSource   /**< We are currently targetting cdata. */
    };
 
-    /** Gets the current string source we are reading from. */
-    std::stringstream* getCurSource();
+   /** Gets the current string source we are reading from. */
+   std::stringstream* getCurSource();
 
-    /**
-     * Initializes the members based on a serialized version of something in
-     * the data buffer.
-     */
-    void initCppDomTree(std::vector<vpr::Uint8> data);
+   /**
+    * Initializes the members based on a serialized version of something in
+    * the data buffer.
+    */
+   void initCppDomTree(const std::vector<vpr::Uint8>& data);
 
-    void debugDumpStack(int debug_level);
+   void debugDumpStack(int debug_level);
 
 protected:
    /** State to keep at each level of recursion. */
@@ -158,15 +179,18 @@ protected:
    };
 
 protected:
-   /* cppdom nodes.
+   /**
+    * @name CppDOM nodes.
     * When constructed, these are both null.
     */
+   //@{
    cppdom::NodePtr         mRootNode;        /**< Base node of the tree */
    std::vector<NodeState>  mCurNodeStack;    /**< Stack of current nodes we are examining recursively */
    std::stringstream       mAttribSource;    /**< Source of attribute data */
    CurSource               mCurSource;       /**< The current source of reading data */
+   //@}
 
-   // Stack to store state information
+   /** Stack to store state information. */
    struct ReadState
    {
       std::vector<NodeState> mNodeStack;      
@@ -174,7 +198,7 @@ protected:
    std::vector<ReadState>  mReadStateStack;  /**< Stack of previous read states */
 };
 
-
 } // namespace vpr
+
 
 #endif

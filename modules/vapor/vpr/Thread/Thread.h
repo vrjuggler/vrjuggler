@@ -43,6 +43,13 @@
 #define _VPR_THREAD_H_
 //#pragma once
 
+/**
+ * \file
+ *
+ * Include this file to get the full declaration of the platform-specific
+ * thread wrapper class that is typedef'd to vpr::Thread.
+ */
+
 #include <vpr/vprConfig.h>
 
 #include <vpr/Thread/BaseThread.h>

@@ -52,14 +52,15 @@
 namespace vpr
 {
 
-/**
+/** \class GuardedQueue GuardedQueue.h vpr/Sync/GuardedQueue.h
+ *
  * A guarded queue.
  * Guards an STL queue and implements the basic interface
  * All the functions pass directly through to the corresponding STL
  * queue function but they are guarded so that only a single
  * thread can interact with the queue at once.
  */
-template <class value_type>
+template<class value_type>
 class GuardedQueue
 {
 public:

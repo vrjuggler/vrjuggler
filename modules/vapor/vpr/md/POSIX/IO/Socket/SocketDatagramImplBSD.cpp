@@ -66,9 +66,9 @@ SocketDatagramImplBSD::SocketDatagramImplBSD()
    /* Do nothing. */ ;
 }
 
-SocketDatagramImplBSD::SocketDatagramImplBSD(const InetAddr& local_addr,
-                                             const InetAddr& remote_addr)
-   : SocketImplBSD(local_addr, remote_addr, vpr::SocketTypes::DATAGRAM)
+SocketDatagramImplBSD::SocketDatagramImplBSD(const InetAddr& localAddr,
+                                             const InetAddr& remoteAddr)
+   : SocketImplBSD(localAddr, remoteAddr, vpr::SocketTypes::DATAGRAM)
 {
    /* Do nothing. */ ;
 }
@@ -85,7 +85,7 @@ SocketDatagramImplBSD::SocketDatagramImplBSD(const SocketDatagramImplBSD& sock)
 vpr::ReturnStatus SocketDatagramImplBSD::recvfrom(void* msg,
                                                   const vpr::Uint32 length,
                                                   vpr::InetAddr& from,
-                                                  vpr::Uint32& bytes_read,
+                                                  vpr::Uint32& bytesRead,
                                                   const vpr::Interval timeout)
 {
 #if defined(VPR_OS_IRIX) || defined(VPR_OS_HPUX)
@@ -110,7 +110,7 @@ vpr::ReturnStatus SocketDatagramImplBSD::recvfrom(void* msg,
 
       if ( bytes == -1 )
       {
-         bytes_read = 0;
+         bytesRead = 0;
 
          if ( errno == EAGAIN && ! isBlocking() )
          {
@@ -131,7 +131,7 @@ vpr::ReturnStatus SocketDatagramImplBSD::recvfrom(void* msg,
       }
       else
       {
-         bytes_read = bytes;
+         bytesRead = bytes;
       }
    }
 
@@ -141,7 +141,7 @@ vpr::ReturnStatus SocketDatagramImplBSD::recvfrom(void* msg,
 vpr::ReturnStatus SocketDatagramImplBSD::sendto(const void* msg,
                                                 const vpr::Uint32 length,
                                                 const vpr::InetAddr& to,
-                                                vpr::Uint32& bytes_sent,
+                                                vpr::Uint32& bytesSent,
                                                 const vpr::Interval timeout)
 {
    vpr::ReturnStatus retval;
@@ -159,7 +159,7 @@ vpr::ReturnStatus SocketDatagramImplBSD::sendto(const void* msg,
 
       if ( bytes == -1 )
       {
-         bytes_sent = 0;
+         bytesSent = 0;
 
          if ( errno == EAGAIN && ! isBlocking() )
          {
@@ -182,7 +182,7 @@ vpr::ReturnStatus SocketDatagramImplBSD::sendto(const void* msg,
       }
       else
       {
-         bytes_sent = bytes;
+         bytesSent = bytes;
       }
    }
 

@@ -42,6 +42,13 @@
 #ifndef _VPR_FILE_HANDLE_H_
 #define _VPR_FILE_HANDLE_H_
 
+/**
+ * \file
+ *
+ * Include this file to get the full declaration of the platform-specific
+ * class that is typedef'd to vpr::FileHandle.
+ */
+
 #include <vpr/vprConfig.h>
 
 #include <string>

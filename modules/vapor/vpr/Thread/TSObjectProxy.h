@@ -55,10 +55,10 @@
 namespace vpr
 {
 
-/**
- * Base class for all TS Object proxies.
- * Handles ts key allocation.
- * Allows for friendship (if needed).
+/** \class TSObjectProxyBase TSObjectProxy.h vpr/Thread/TSObjectProxy.h
+ *
+ * Base class for all thread-specific object proxies.  This handles the
+ * thread-specific key allocation.  It allows for friendship (if needed).
  */
 class VPR_CLASS_API TSObjectProxyBase
 {
@@ -68,24 +68,24 @@ public:
 
 protected:
    /**
-    * Generates a unique key for Thread Specific data.
+    * Generates a unique key for thread-specific data.
     * This value will be used locally by each thread in the system.
     */
    static long generateNewTSKey();
 };
 
-/**
+/** \class TSObjectProxy TSObjectProxy.h vpr/Thread/TSObjectProxy.h
+ *
  * This is a smart pointer to a thread-specific object.
  *
- * This allows users to have an object that has a seperate copy
- * for each thread.
+ * This allows users to have an object that has a seperate copy for each
+ * thread.
  *
- * @note The object used for type T must have a default constructor
- *       This class creates each instance of the real objects
- *       using this default constructor.
+ * @note The object used for type \p T must have a default constructor.
+ *       This class creates each instance of the real objects using the
+ *       default constructor.
  *
- * Uses TSObject<> internally to keep some type information.
- *
+ * Uses TSObject<T> internally to keep some type information.
  *
  * @example "Example of using vpr::TSObjectProxy"
  *
@@ -94,7 +94,7 @@ protected:
  * (*var).method();
  * \endcode
  */
-template <class T>
+template<class T>
 class TSObjectProxy : public TSObjectProxyBase
 {
 public:
@@ -119,25 +119,29 @@ public:
       return *getSpecific();
    }
 
-   /** Return the thread specific object pointer for the given thread.
-    * NOTE: This should only be used by expert users.  It can cause
-    *        MAJOR synchronization issues and even data corruption.
+   /**
+    * Returns the thread specific object pointer for the given thread.
+    *
+    * @note This should only be used by expert users.  It can cause MAJOR
+    *       synchronization issues and even data corruption.
     */
    T* getObjPtrForThread(vpr::Thread* thread)
    {
       return getSpecific(thread);
    }
 
-
 private:
-   /** Get the correct version for current thread.
-    * @param reqThread - Request for this specific thread.
+   /**
+    * Gets the correct version for current thread.
+    *
     * - Find the correct table<br>
     * - Make sure that object exists locally<br>
     * - Get the obj pointer<br>
     * - Attempts a dynamic cast<br>
+    *
+    * @param reqThread Request for this specific thread.
     */
-   T* getSpecific(vpr::Thread* reqThread=NULL)
+   T* getSpecific(vpr::Thread* reqThread = NULL)
    {
       TSTable* table(NULL);
 
