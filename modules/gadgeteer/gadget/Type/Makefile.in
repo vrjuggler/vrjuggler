@@ -47,7 +47,7 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(GADGET_LIBRARY)
 
-DIRPRFX=	gadget/Type
+DIRPRFX=	gadget/Type/
 
 SUBDIR=		EventWindow	\
 		Position
