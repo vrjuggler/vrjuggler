@@ -40,8 +40,6 @@
 #include <gadget/Type/EventWindow/Keys.h>
 #include <gadget/Type/EventWindow/EventFactory.h>
 
-#include <vpr/IO/SerializableObject.h>
-
 
 namespace gadget
 {
@@ -54,7 +52,7 @@ GADGET_REGISTER_EVENT_CREATOR( MouseEvent, MouseMoveEvent );
  * event occurs.  This includes button presses, button releases, and mouse
  * motion.
  */
-class MouseEvent : public gadget::Event
+class GADGET_CLASS_API MouseEvent : public gadget::Event
 {
 public:
    /**
@@ -79,35 +77,17 @@ public:
     *
     * @see gadget::ModifierMask, gadget::ButtonMask
     */
-   MouseEvent(const gadget::EventType& type, const gadget::Keys& button,
-              const int& x, const int& y, const int& globalX,
-              const int& globalY, const int& state, const unsigned long& time)
-      : gadget::Event(type, time)
-      , mButton(button)
-      , mRelativeX(x)
-      , mRelativeY(y)
-      , mGlobalX(globalX)
-      , mGlobalY(globalY)
-      , mState(state)
-   {
-   }
-   
+   MouseEvent(const gadget::EventType type, const gadget::Keys button,
+              int x, int y, int globalX, int globalY, int state,
+              unsigned long time);
+
    /**
     * Default constructor needed in order to use the templated EventFactory 
     * without modification. The EventFactory was needed to allow the 
     * correct subtype of Event, MouseEvent in this case, to be created 
     * during de-serialization.
     */
-   MouseEvent()
-      : gadget::Event(NoEvent, 0),
-      mButton(gadget::NO_MBUTTON), 
-      mRelativeX(0), 
-      mRelativeY(0), 
-      mGlobalX(0), 
-      mGlobalY(0), 
-      mState(0)
-   {
-   }
+   MouseEvent();
 
    /**
     * Get the mouse button that was pressed while generating this event.
@@ -165,39 +145,12 @@ public:
    /**
     * Serializes this event using the given ObjectWriter.
     */
-   vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
-   {
-      writer->writeUint16(mType);
+   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
 
-      // Serialize all member variables
-      writer->writeUint32(mButton);
-      writer->writeUint32(mRelativeX);
-      writer->writeUint32(mRelativeY);
-      writer->writeUint32(mGlobalX);
-      writer->writeUint32(mGlobalY);
-      writer->writeUint32(mState);
-      
-      return vpr::ReturnStatus::Succeed;
-   }
-   
    /**
     * De-serializes this event using the given ObjectReader.
     */
-   vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
-   {
-      // We have already read the type in EventWindoe to decide
-      // if we should construct a KeyEvent or a MouseEvent
-      //mType = reader->readUint16();
-
-      // De-Serialize all member variables
-      mButton = (gadget::Keys)reader->readUint32();
-      mRelativeX = reader->readUint32();
-      mRelativeY = reader->readUint32();
-      mGlobalX = reader->readUint32();
-      mGlobalY = reader->readUint32();
-      mState = reader->readUint32();
-      return vpr::ReturnStatus::Succeed;
-   }
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
 
 private:
    gadget::Keys mButton;        /**< The button associated with this event. */

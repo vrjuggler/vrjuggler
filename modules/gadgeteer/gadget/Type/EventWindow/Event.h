@@ -33,6 +33,7 @@
 #ifndef _GADGET_EVENT_H_
 #define _GADGET_EVENT_H_
 
+#include <gadget/gadgetConfig.h>
 #include <vpr/IO/SerializableObject.h>
 
 namespace gadget
@@ -52,7 +53,7 @@ enum EventType
  * Base event type that an event source may generate.  This class cannot be
  * instantiated directly, and instead, subclasses must be used.
  */
-class Event : public vpr::SerializableObject
+class GADGET_CLASS_API Event : public vpr::SerializableObject
 {
 public:
    /**
@@ -88,19 +89,9 @@ public:
    {
    }
 
-   vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
-   {
-      writer->writeUint8(mType);
-      writer->writeUint64(mTime);
-      return vpr::ReturnStatus::Succeed;
-   }
+   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
 
-   vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
-   {
-      mType = (EventType)reader->readUint8();
-      mTime = reader->readUint64();
-      return vpr::ReturnStatus::Succeed;
-   }
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
 
 protected:
    /**
