@@ -82,6 +82,8 @@ public class FileControl {
 
 	Core.consoleInfoMessage ("FileControl", "Loading organization tree: " + f2);
 	st = new ConfigStreamTokenizer (r);
+	Core.chunkorgtree.setName (f2.getName());
+	Core.chunkorgtree.setFile (f2);
 	Core.chunkorgtree.read(st);
 	Core.rebuildAllTrees();
     }
@@ -106,6 +108,8 @@ public class FileControl {
 	    r = new FileReader (f);
 	    Core.consoleInfoMessage ("FileControl", "Loading organization tree: " + f);
 	    st = new ConfigStreamTokenizer (r);
+	    orgtree.setName (f.getName());
+	    orgtree.setFile (f);
 	    orgtree.read(st);
 	    //Core.rebuildAllTrees();
 	}
@@ -216,7 +220,8 @@ public class FileControl {
 
 
     public static String saveChunkOrgTree (ChunkOrgTree ot) {
-	File f = requestSaveFile (new File ("orgtree.org"));
+	System.out.println ("save msg for file " + ot.getFile());
+	File f = requestSaveFile (ot.getFile());
 	if (f == null)
 	    return "";
 
@@ -226,7 +231,8 @@ public class FileControl {
 	    Core.consoleInfoMessage ("FileControl", "Saved ChunkOrgTree file: " + f);
 
 	    /* do some fixing up if the name changed */
-	    //db.setFile (f);
+	    ot.setFile (f);
+	    ot.setName (f.getName());
 	    //return Core.renameChunkDB (db, f.getName());
 	    return f.getName();
 	}

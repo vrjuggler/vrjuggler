@@ -150,14 +150,16 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 
 
     public void buildTree() {
+
 	if (chunkdb == null) {
 	    root = new DefaultMutableTreeNode ("No DB selected");
 	}
 	else {
 	    if (chunkorgtree == null) 
 		Core.consoleErrorMessage ("ChunkDBTreeModel", "chunkorgtree is null..");
+
 	    root = new DefaultMutableTreeNode (new ChunkTreeNodeInfo (chunkdb));
-	    buildTreeEntry (chunkorgtree, (DefaultMutableTreeNode)root, chunkdb);
+	    buildTreeEntry (chunkorgtree.root, (DefaultMutableTreeNode)root, chunkdb);
 	}
 
 	DefaultMutableTreeNode n, n2;
@@ -185,21 +187,22 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 
 
 
-    public void buildTreeEntry (ChunkOrgTree on, DefaultMutableTreeNode tn,
+    public void buildTreeEntry (OrgTreeElem on, DefaultMutableTreeNode tn,
 				ConfigChunkDB db) {
 	DefaultMutableTreeNode newtn, newtn1, newtn2;
 	ConfigChunk ch;
-	ChunkOrgTree newon;
+	OrgTreeElem newon;
 	int i, j, k;
 	String s, s2;
 	Vector v;
-	
-	if (on == null)
+
+	if (on == null) {
+	    System.out.println ("treeelem is null");
 	    return;
+	}
 	for (i = 0; i < on.children.size(); i++) {
 	    if (on.children.elementAt(i) instanceof String) {
 		s = (String)(on.children.elementAt(i));
-		//System.out.println ("adding node: " + s);
 		newtn = new DefaultMutableTreeNode (new ChunkTreeNodeInfo(db, s, true));
 		// get all chunks in db of type s & add as childrne of newtn
 		v = db.getOfDescName(s);
@@ -210,8 +213,8 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 		}
 		tn.add(newtn);
 	    }
-	    else if (on.children.elementAt(i) instanceof ChunkOrgTree) {
-		newon = (ChunkOrgTree)(on.children.elementAt(i));
+	    else if (on.children.elementAt(i) instanceof OrgTreeElem) {
+		newon = (OrgTreeElem)(on.children.elementAt(i));
 		newtn = new DefaultMutableTreeNode (new ChunkTreeNodeInfo (db, newon.label));
 		
 		if (newon.label.equals ("*")) {
