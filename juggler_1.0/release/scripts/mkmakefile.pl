@@ -468,7 +468,7 @@ MK_START
         }
     }
     else {
-        print $handle "VPATH = \@srcdir\@";
+        print $handle "VPATH\t= \@srcdir\@";
 
         foreach ( @dirs ) {
             if ( "$_" ne "." ) {
