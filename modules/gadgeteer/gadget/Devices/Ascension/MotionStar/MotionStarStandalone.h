@@ -97,7 +97,7 @@ union data_block
 
 // Constants indicating the bit to test to get the corresponding value about
 // a device connected to a Flock.
-extern const unsigned char ERROR;
+extern const unsigned char ERR_STATE;
 extern const unsigned char RUNNING;
 //extern const unsigned char RESERVED1;
 //extern const unsigned char RESERVED2;
