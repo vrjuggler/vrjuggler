@@ -53,7 +53,6 @@
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Port/SerialPort.h>
 #include <gadget/RemoteInputManager/MsgPackage.h>
-#include "/home/users/aronb/ParallelPort/include/ieee1284.h"
 
 /*namespace vpr
 {
@@ -182,31 +181,6 @@ public:
 private:
    vpr::SerialPort*     mSerialPort;
 };
-
-
-class ClusterBarrierParallel : public ClusterBarrier
-{
-public:
-   ClusterBarrierParallel();
-   virtual ~ClusterBarrierParallel();
-   virtual vpr::ReturnStatus Init();
-
-   virtual void AddBarrierSlave(vpr::SocketStream* sock_stream);
-   vpr::ReturnStatus ConnectToMasterSocket();
-   vpr::ReturnStatus ConnectToSlaveParallel();
-   void test_open (struct parport_list *pl);
-
-   virtual void MasterSend();
-   virtual void MasterReceive();
-   virtual void SlaveSend();
-   virtual void SlaveReceive();
-   
-private:
-   vpr::SerialPort*     mSerialPort;
-   struct parport *port;
-};
-
-
 
 }; // namespace gadget
 
