@@ -66,14 +66,6 @@
 #undef WIN32
 #undef _MBCS
 
-/* Define to unique values used for defining VJ_PERFORMANCE. */
-#undef VJ_PERF_NONE
-#undef VJ_PERF_SGI
-#undef VJ_PERF_POSIX
-
-/* Define to one of the above values to enable performance testing. */
-#undef VJ_PERFORMANCE
-
 /* Definte if DTK is installed. */
 #undef VJ_HAVE_DTK
 
