@@ -66,3 +66,6 @@ install-docs:
 	mkdir -p $(doc_prefix)
 	rm -rf $(doc_prefix)/$(DOC_ROOT)
 	mv $(DOC_ROOT) $(doc_prefix)
+
+clobber:
+	rm -rf $(DOC_ROOT)
