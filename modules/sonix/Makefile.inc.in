@@ -258,7 +258,7 @@ hier:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/SNX.data.dist -p $(projdatadir)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/SNX.include.dist -p $(prefix)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/SNX.lib.dist -p $(prefix)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/SNX.test.dist -p $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/SNX.samples.dist -p $(projdatadir)
 
 PREINSTALL=	pre-install
 POSTINSTALL=	post-install
