@@ -453,7 +453,7 @@ public class ChunkDesc
          {
             if (evt == null)
             {
-               evt = new ChunkDescEvent(this, name);
+               evt = new ChunkDescEvent(this, name, 0);
             }
             ((ChunkDescListener)listeners[i+1]).nameChanged(evt);
          }
@@ -475,7 +475,7 @@ public class ChunkDesc
          {
             if (evt == null)
             {
-               evt = new ChunkDescEvent(this, token);
+               evt = new ChunkDescEvent(this, token, 0);
             }
             ((ChunkDescListener)listeners[i+1]).tokenChanged(evt);
          }
@@ -497,7 +497,7 @@ public class ChunkDesc
          {
             if (evt == null)
             {
-               evt = new ChunkDescEvent(this, help);
+               evt = new ChunkDescEvent(this, help, 0);
             }
             ((ChunkDescListener)listeners[i+1]).helpChanged(evt);
          }
@@ -519,7 +519,7 @@ public class ChunkDesc
          {
             if (evt == null)
             {
-               evt = new ChunkDescEvent(this, index, category);
+               evt = new ChunkDescEvent(this, category, index);
             }
             ((ChunkDescListener)listeners[i+1]).categoryAdded(evt);
          }
@@ -539,7 +539,7 @@ public class ChunkDesc
          {
             if (evt == null)
             {
-               evt = new ChunkDescEvent(this, index, oldCategory);
+               evt = new ChunkDescEvent(this, oldCategory, index);
             }
             ((ChunkDescListener)listeners[i+1]).categoryRemoved(evt);
          }

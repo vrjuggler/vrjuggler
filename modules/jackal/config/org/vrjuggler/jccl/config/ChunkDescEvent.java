@@ -39,19 +39,24 @@ public class ChunkDescEvent
    /**
     * Creates a new ChunkDesc event from the given source object for a property
     * of the desc that is not a property desc (i.e. name, token, ...).
+    *
+    * @param src     the object that fired this event
+    * @param value   the value of the property in question
+    * @param index   the index of the property if it is indexed in a list.
+    *                Otherwise, set this to 0.
     */
-   public ChunkDescEvent(Object src, Object value)
+   public ChunkDescEvent(Object src, Object value, int index)
    {
       this(src, null, 0, value);
    }
 
    /**
-    * Creates a new ChunkDesc event from the given source object for a property
-    * that is indexed in a list.
+    * Creates a new ChunkDesc event from the given source object for the given
+    * property desc contained therein.
     */
-   public ChunkDescEvent(Object src, int index, Object value)
+   public ChunkDescEvent(Object src, PropertyDesc propDesc)
    {
-      this(src, null, index, value);
+      this(src, propDesc, 0, null);
    }
 
    /**
