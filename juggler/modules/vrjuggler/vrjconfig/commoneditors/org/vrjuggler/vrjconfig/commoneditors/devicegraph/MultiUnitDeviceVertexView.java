@@ -414,8 +414,7 @@ public class MultiUnitDeviceVertexView
          port_widget.setPreferredSize(new Dimension(5, 5));
          port_widget.setForeground(nameLabel.getForeground());
 
-         JLabel name_field = new JLabel();
-         setLabelText(name_field, unit_info);
+         JLabel name_field = new UnitLabel(unit_info);
          name_field.setFont(new Font("Dialog", Font.ITALIC,
                                      nameLabel.getFont().getSize()));
          name_field.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -550,14 +549,6 @@ public class MultiUnitDeviceVertexView
             this.revalidate();
             GraphHelpers.autoSizeCellView(this.graph, pref_size, mView);
          }
-      }
-
-      private void setLabelText(JLabel label, UnitInfo unitInfo)
-      {
-         label.setText(
-            UnitTypeHelpers.getUnitTypeName(unitInfo.getUnitType()) +
-            " Unit " + unitInfo.getUnitNumber()
-         );
       }
 
       /**
@@ -721,20 +712,6 @@ public class MultiUnitDeviceVertexView
                         EditorConstants.UNIT_PROPERTY, 0,
                         unit_info.getUnitNumber(), proxy_info.getContext()
                      );
-                  }
-
-                  // Update the labels for the remaining units to reflect that
-                  // they have been shifted up one.
-                  List comp_list = (List) mUnitRowMap.get(unit_info);
-
-                  for ( Iterator comp = comp_list.iterator(); comp.hasNext(); )
-                  {
-                     Object comp_obj = comp.next();
-
-                     if ( comp_obj instanceof JLabel )
-                     {
-                        setLabelText((JLabel) comp_obj, unit_info);
-                     }
                   }
                }
             }
