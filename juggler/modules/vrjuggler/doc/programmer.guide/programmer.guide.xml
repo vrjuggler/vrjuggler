@@ -3512,7 +3512,7 @@ my_id = vpr::Thread::self();</programlisting>
                   <para>Say there is a class <classname>MyObject</classname> with a method <methodname>run()</methodname> having the appropriate prototype that will be executed by a <classname>vpr::Thread</classname><indexterm>
                         <primary>classes</primary>
                         <secondary>vpr::Thread</secondary>
-                     </indexterm> object. In this case, <methodname>run()</methodname> takes an argument that is a pointer to a pre-defined type <type>thread_args_t</type>. Also assume that there is an instance of <classname>MyObject</classname> pointed to by the variable <varname>my_obj</varname>. The following code creates the <classname>vpr::ThreadMemberFunctor</classname> object that will encapsulate the method:</para>
+                     </indexterm> object. In this case, <methodname>run()</methodname> takes an argument that is a pointer to a <emphasis>user-defined</emphasis> type <type>thread_args_t</type>. Also assume that there is an instance of <classname>MyObject</classname> pointed to by the variable <varname>my_obj</varname>. The following code creates the <classname>vpr::ThreadMemberFunctor</classname> object that will encapsulate the method:</para>
                   <programlisting>vpr::ThreadMemberFunctor&lt;MyObject&gt;* my_functor;
 thread_args_t* args;
 vpr::Thread* thread;
