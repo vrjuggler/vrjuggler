@@ -43,7 +43,6 @@ include @topdir@/make.defs.mk
 
 DRIVER_NAME=		TweekGadget
 
-includedir=		@includedir@/gadget/Devices/Tweek
 srcdir=			@srcdir@/../../gadget/Devices/Tweek
 top_srcdir=		@top_srcdir@
 EXTRA_INCLUDES+=	-I$(IDL_GENDIR)
@@ -59,7 +58,6 @@ endif
 
 ifeq ($(HAVE_TWEEK_CXX), Y)
    EXTRA_CXXFLAGS+=	@TWEEK_CXXFLAGS@
-   INSTALL_FILES=	$(IDL_GENDIR)/*.h
 
    IDL_CXX_FILES=	TweekAnalogSubject.cpp TweekAnalogSubject.h	\
 			TweekDigitalSubject.cpp TweekDigitalSubject.h	\
