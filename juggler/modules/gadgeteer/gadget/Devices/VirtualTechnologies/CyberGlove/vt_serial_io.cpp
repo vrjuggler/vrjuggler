@@ -165,7 +165,7 @@ CyberGloveBasic::vt_serial_open(char *devname, int baudrate)
   for (portfd = 0; portfd < MAXNUMFILEDESCR; portfd++)
     if (strcmp(devname,open_port_names[portfd]) == 0)
     {
-      sprintf(failed_routine_name,"vt_serial_port_open(%s,%d)",devname,baudrate);
+      sprintf(failed_routine_name,"vt_serial_open(%s,%d)",devname,baudrate);
       vt_set_error(failed_routine_name,IO_ERROR3);
       vt_fatal_error("");
     }

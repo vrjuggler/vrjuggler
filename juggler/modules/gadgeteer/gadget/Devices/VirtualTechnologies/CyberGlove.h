@@ -5,7 +5,7 @@
 #include <Input/vjGlove/vjGlove.h>
 #include <Input/vjGlove/CyberGloveBasic.h>
 
-class vjCyberGlove : public vjGlove
+class vjCyberGlove : virtual public vjGlove
 {
 public:
    //: Construct using chunk
@@ -28,9 +28,7 @@ protected:
    void copyDataFromGlove();
 
 protected:
-   vjThread*         mControlThread;      // The thread of control for the object
    CyberGloveBasic*  mGlove;              // The actual glove
-
    char*             mCalDir;             // Calibration file directory
 };
 
