@@ -52,18 +52,18 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::Digital::getDigitalData()
-   SHARPPY_API const gadget::DigitalData* gadget_Digital_getDigitalData__int0(gadget_Digital_Adapter* self_)
+   SHARPPY_API gadget::DigitalData* gadget_Digital_getDigitalData__int0(gadget_Digital_Adapter* self_)
    {
-      const gadget::DigitalData* result;
-      result = new const gadget::DigitalData(self_->getDigitalData());
+      gadget::DigitalData* result;
+      result = new gadget::DigitalData(self_->getDigitalData());
       return result;
    }
 
    // Wrapper for non-virtual method gadget::Digital::getDigitalData()
-   SHARPPY_API const gadget::DigitalData* gadget_Digital_getDigitalData__int1(gadget_Digital_Adapter* self_, int p0)
+   SHARPPY_API gadget::DigitalData* gadget_Digital_getDigitalData__int1(gadget_Digital_Adapter* self_, int p0)
    {
-      const gadget::DigitalData* result;
-      result = new const gadget::DigitalData(self_->getDigitalData(p0));
+      gadget::DigitalData* result;
+      result = new gadget::DigitalData(self_->getDigitalData(p0));
       return result;
    }
 
