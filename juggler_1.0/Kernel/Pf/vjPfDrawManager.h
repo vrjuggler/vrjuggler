@@ -2,11 +2,6 @@
 #define _VJ_PF_DRAW_MANAGER_
 
 #include <vjConfig.h>
-
-#if defined(VJ_USE_PTHREADS) && ! defined(_PTHREADS)
-#    define _PTHREADS
-#endif
-
 #include <function.h>
 #include <algorithm>
 

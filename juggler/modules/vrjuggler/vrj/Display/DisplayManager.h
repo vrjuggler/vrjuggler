@@ -7,14 +7,6 @@
 class vjDrawManager;
 class vjDisplay;
 
-#ifndef VJ_OS_HPUX
-    // This needs to be done for vector.h if pthread.h has not already been
-    // included.
-#   if defined(VJ_USE_PTHREADS) && ! defined(_PTHREADS)
-#       define _PTHREADS
-#   endif
-#endif
-
 #include <Input/vjPosition/vjPosition.h>
 #include <Kernel/vjDebug.h>
 #include <Input/InputManager/vjPosInterface.h>
