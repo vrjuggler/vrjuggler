@@ -107,33 +107,56 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
 
       mOrbThread = new vpr::Thread(corba_run);
    }
-   catch (CORBA::SystemException&)
+   catch (CORBA::SystemException& sysEx)
    {
       status.setCode(vpr::ReturnStatus::Fail);
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "Caught CORBA::SystemException\n" << vprDEBUG_FLUSH;
+      vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+         << "Caught CORBA::SystemException during initialization\n"
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+         << "Mindor code: " << sysEx.minor() << ", completed: "
+         << vprDEBUG_FLUSH;
+
+      switch ( sysEx.completed() )
+      {
+         case CORBA::COMPLETED_YES:
+            vprDEBUG_CONT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+               << "YES" << std::endl << vprDEBUG_FLUSH;
+            break;
+         case CORBA::COMPLETED_NO:
+            vprDEBUG_CONT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+               << "NO" << std::endl << vprDEBUG_FLUSH;
+            break;
+         case CORBA::COMPLETED_MAYBE:
+            vprDEBUG_CONT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+               << "MAYBE" << std::endl << vprDEBUG_FLUSH;
+            break;
+      }
    }
    catch (CORBA::Exception&)
    {
       status.setCode(vpr::ReturnStatus::Fail);
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << "Caught CORBA::Exception.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+         << "Caught CORBA::Exception during initialization.\n"
+         << vprDEBUG_FLUSH;
    }
    catch (omniORB::fatalException& fe)
    {
       status.setCode(vpr::ReturnStatus::Fail);
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "Caught omniORB::fatalException:\n" << vprDEBUG_FLUSH;
-      vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      vprDEBUG_NEXT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "  file: " << fe.file() << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      vprDEBUG_NEXT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "  line: " << fe.line() << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      vprDEBUG_NEXT(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "  mesg: " << fe.errmsg() << std::endl << vprDEBUG_FLUSH;
    }
    catch(...)
    {
-      std::cerr << "Caught unknown exception." << std::endl;
+      vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
+         << "Caught unknown exception during initialization." << std::endl
+         << vprDEBUG_FLUSH;
    }
 
    return status;
