@@ -103,7 +103,7 @@ namespace snxFileIO
    // i.e. reading a little endian TGA on a little endian intel system, 
    //      returns (untranslated) littleendian data
    template<class typeT>
-   inline static int ReadData( Endianness fileByteOrdering, FILE* fp, typeT& data )
+   inline int ReadData( Endianness fileByteOrdering, FILE* fp, typeT& data )
    {
       int size = ::fread( &data, sizeof(typeT), 1, fp );
 
@@ -120,7 +120,7 @@ namespace snxFileIO
    //: Write
    // this function is designed to work with little endian files, such as TGA and BMP.
    template<class typeT>
-   inline static int WriteData( Endianness fileByteOrdering, FILE* fp, const typeT& data )
+   inline int WriteData( Endianness fileByteOrdering, FILE* fp, const typeT& data )
    {
       typeT tempData = data;
 
@@ -138,31 +138,31 @@ namespace snxFileIO
    }
 
    // Read one byte of data from the file stream
-   static int ReadByte( FILE *fp, unsigned char& value );
+   int ReadByte( FILE *fp, unsigned char& value );
 
    // Read one short of data from the file stream
    // NOTE: these enhance readability and type checking, try to use them over the generic ReadData function
-   static int ReadShort( Endianness fileByteOrdering, FILE* fp, unsigned short& value );
+   int ReadShort( Endianness fileByteOrdering, FILE* fp, unsigned short& value );
 
    // Read one long of data from the file stream
    // NOTE: these enhance readability and type checking, try to use them over the generic ReadData function
-   static int ReadLong( Endianness fileByteOrdering, FILE *fp, unsigned long& value );
+   int ReadLong( Endianness fileByteOrdering, FILE *fp, unsigned long& value );
 
    // Write one byte of data to the file stream
-   static int WriteByte( FILE *fp, const unsigned char& value );
+   int WriteByte( FILE *fp, const unsigned char& value );
 
    // Write one short of data to the file stream
    // NOTE: these enhance readability and type checking, try to use them over the generic WriteData function
-   static int WriteShort( Endianness fileByteOrdering, FILE* fp, const unsigned short& value );
+   int WriteShort( Endianness fileByteOrdering, FILE* fp, const unsigned short& value );
 
    // Write one long of data to the file stream
    // NOTE: these enhance readability and type checking, try to use them over the generic WriteData function
-   static int WriteLong( Endianness fileByteOrdering, FILE *fp, const unsigned long& value );
+   int WriteLong( Endianness fileByteOrdering, FILE *fp, const unsigned long& value );
 
-   static void getLine( std::ifstream& f, std::string& text  );
+   void getLine( std::ifstream& f, std::string& text  );
 
-   static void getAll( std::ifstream& f, std::string& buffer );
+   void getAll( std::ifstream& f, std::string& buffer );
 
-}; //end namespace.
+} //end namespace.
 
 #endif
