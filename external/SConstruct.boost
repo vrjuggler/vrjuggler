@@ -92,10 +92,12 @@ def SetupBoostLibraryHelper(libName, lib_dirname):
    print "Setting up " + libName;
    build_dir = pj(boost_base, 'libs', lib_dirname, 'build');
    build_command = "cd " + build_dir + "; " + env['bjam'];
-   match_list = ['gcc', 'debug'];                            # XXX: Extend here for other build types
+#   match_list = ['gcc', 'debug'];                            # XXX: Extend here for other build types
+   match_list = ['lib',];                            # XXX: Extend here for other build types
    ExecuteBuildCommand(build_command);
-   print "Finding %s libraries..."%libName;
-   all_lib_files = GetAllFilesBelow(pj(build_dir, 'bin'));
+   print "Finding %s libraries below [%s]..."%(libName,pj(build_dir,'bin-stage'))   
+   all_lib_files = GetAllFilesBelow(pj(build_dir, 'bin-stage'));
+   print "All lib files:", all_lib_files;
    lib_files = [f for f in all_lib_files if isNeededLibraryFile(f, match_list)];
    for f in lib_files:
       print "  " + f;
