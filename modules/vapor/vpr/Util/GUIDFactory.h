@@ -83,7 +83,7 @@ public:
       return new vpr::GUID(namespace_guid, name);
    }
 
-private:
+protected:
    GUIDFactory (void) {;}
    GUIDFactory (const GUIDFactory& o) {;}
    void operator= (const GUIDFactory& o) {;}
