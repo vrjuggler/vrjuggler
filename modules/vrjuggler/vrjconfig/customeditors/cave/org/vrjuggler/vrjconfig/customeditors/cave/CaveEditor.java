@@ -63,7 +63,11 @@ public class CaveEditor
    {
       return null;
    }
-   
+
+   public void editorClosing()
+   {
+   }
+
    public void setConfig(ConfigContext ctx, ConfigElement elt)
    {
       mContext = ctx;

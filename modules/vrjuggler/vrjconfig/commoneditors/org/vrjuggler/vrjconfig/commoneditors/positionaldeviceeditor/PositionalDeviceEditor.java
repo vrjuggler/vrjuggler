@@ -77,6 +77,10 @@ public class PositionalDeviceEditor extends JPanel
       return null;
    }
 
+   public void editorClosing()
+   {
+   }
+
    /**
     * We'd like to be 600x400, please.
     */

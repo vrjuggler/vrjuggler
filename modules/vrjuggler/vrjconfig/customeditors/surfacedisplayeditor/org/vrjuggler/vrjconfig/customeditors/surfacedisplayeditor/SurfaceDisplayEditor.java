@@ -259,6 +259,10 @@ public class SurfaceDisplayEditor extends JSplitPane implements CustomEditor
       return null;
    }
 
+   public void editorClosing()
+   {
+   }
+
    public void setConfig(ConfigContext context, ConfigElement elm)
    {
       mContext = context;
