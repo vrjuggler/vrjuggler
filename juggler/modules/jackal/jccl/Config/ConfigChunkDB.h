@@ -59,8 +59,11 @@ private:
     //: vector of ConfigChunks
     std::vector<vjConfigChunk*> chunks;
 
+    //: name of the file this DB was loaded from - used for includes
+    std::string file_name;
+
     //: utility for load() - replaces $HOME and $VJ_BASE_DIR
-    std::string demangleFileName (const std::string& n);
+    std::string demangleFileName (const std::string& n, std::string parentfile);
 
 public:
 
@@ -266,7 +269,7 @@ public:
     //! NOTE: The return value only considers opening the file,
     //+       and does not account for parsing or other reading
     //+       errors.
-    bool load (const std::string& fname);
+    bool load (const std::string& fname, const std::string& parentfile = "");
 
 
 
