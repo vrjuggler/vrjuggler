@@ -1,5 +1,6 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2004-10-29 patrickh    Extended the Tweek Java GUI to integrate into Mac OS X.
 2004-10-29 patrickh    Relocated the Tweek Java libraries to the directory
                        $TWEEK_BASE_DIR/share/tweek/java.  Changed the default
                        Bean search path to $TWEEK_BASE_DIR/share/tweek/beans.

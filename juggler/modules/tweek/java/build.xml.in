@@ -39,6 +39,9 @@
       </javac>
    </target>
 
+   <!-- Determine if the com.apple.eawt package is available. -->
+   <available classname="com.apple.eawt.Application" property="eawt.present" />
+
    <!-- Compile all java sources -->
    <target name="compile">
       <javac destdir="."
@@ -54,6 +57,7 @@
              optimize="${optimize}">
          <src path="${srcdir}" />
          <include name="org/vrjuggler/tweek/**" />
+         <exclude unless="eawt.present" name="org/vrjuggler/tweek/mac/**" />
          <classpath>
             <pathelement path="${tweek.classpath}" />
          </classpath>
@@ -65,6 +69,7 @@
       <jar destfile="Tweek.jar" basedir=".">
          <include name="org/vrjuggler/tweek/*.class" />
          <include name="org/vrjuggler/tweek/gui/**" />
+         <include name="org/vrjuggler/tweek/mac/**" />
          <include name="org/vrjuggler/tweek/text/**" />
          <fileset dir="${srcdir}"
                   includes="org/vrjuggler/tweek/gui/*.gif" />
