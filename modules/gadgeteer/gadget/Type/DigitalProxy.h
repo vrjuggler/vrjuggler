@@ -49,7 +49,7 @@ namespace gadget
  * around and treat them as digital devices that only return a single
  * sub-device's amount of data (one int).
  *
- * @see gagdet:;Digital
+ * @see gagdet::Digital
  */
 class GADGET_CLASS_API DigitalProxy : public TypedProxy<Digital>
 {
@@ -68,7 +68,7 @@ public:
 
    virtual void updateData();
 
-   /** Returns time of last update. */
+   /** Returns the time of the last update. */
    virtual vpr::Interval getTimeStamp() const
    {
       return mData.getTime();
@@ -109,7 +109,7 @@ public:
    }
 
    /**
-    * Returns the unit index into the analog device from which this proxy
+    * Returns the unit index into the digital device from which this proxy
     * is reading data.
     */
    int getUnit() const

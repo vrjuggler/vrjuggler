@@ -61,10 +61,10 @@ namespace gadget
  *
  * A position proxy always points to a positional device and unit number within
  * that device.  The Input Manager can therefore keep an array of these
- * around and treat them as digital devices that only return a single
+ * around and treat them as positional devices that only return a single
  * sub-device's amount of data (one gmtl::Matrix44f).
  *
- * @see gagdet:;Position
+ * @see gagdet::Position
  */
 class GADGET_CLASS_API PositionProxy : public TypedProxy<Position>
 {
@@ -129,7 +129,7 @@ public:
 
    virtual Input* getProxiedInputDevice()
    {
-      if ((NULL == mTypedDevice) || (mStupified))
+      if ( NULL == mTypedDevice || mStupified )
       {
          return NULL;
       }

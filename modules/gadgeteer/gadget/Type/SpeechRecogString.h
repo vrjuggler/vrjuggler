@@ -50,15 +50,19 @@ namespace gadget
    const unsigned short MSG_DATA_SPEECH_RECOG_STRING = 430;
 
    /**
-   *  SpeechRecogString inherits from Input, so it has pure virtual function
-   *  constraints from Input in the following functions: StartSampling,
-   *  StopSampling, Sample, and UpdateData. <br>
-   *  SpeechRecogString adds one new pure virtual function, getStringData() for
-   *  retreiving the digital data, similar to the addition for gadget::Position
-   *  and gadget::Analog.
-   *
-   * @see Input
-   */
+    * SpeechRecogString is the abstract base class for devices that return
+    * spoken commends.  Drivers for all such devices must derive from this
+    * class (through gadget::InputMixer).  This is in addition to
+    * gadget::Input.  gadget::Input provides pure virtual function constraints
+    * in the following functions: startSampling(), stopSampling(), sample(),
+    * and updateData().
+    *
+    * gadget::SpeechRecogString adds the function getStringData() for
+    * retreiving the received commands.  This is similar to the additions made
+    * by gadget::Position and gadget::Analog.
+    *
+    * @see Input, InputMixer
+    */
    class GADGET_CLASS_API SpeechRecogString : public vpr::SerializableObject
    {
    public:
