@@ -111,7 +111,8 @@ public class PropertySheetFactory extends PropertyComponent
          if ( prop_def.isVariable() ||
               elm.getPropertyValueCount(prop_def.getToken()) > 1)
          {
-            System.out.println("Variable Property List.");
+            System.out.println("[PropertySheetFactory.makeSheet()] " +
+                               "Variable Property List.");
 
             addVarList(sheet, ctx, elm, prop_def, row);
             ++row;
@@ -143,29 +144,25 @@ public class PropertySheetFactory extends PropertyComponent
    {
       PropertySheet sheet = new PropertySheet();
 
-      System.out.println("Variable Property List.");
-      List props = elm.getPropertyValues(propDef.getToken());
+      System.out.println("[PropertySheetFactory.makeVarSheet()] " +
+                         "Variable Property List.");
 
       sheet.setConfigElement(elm);
       sheet.setColor(color);
-
       sheet.init();
 
       int row = 1;
-      int list_number = 0;
-
-      // Insert Add Icon
-      ClassLoader loader = getClass().getClassLoader();
-      Icon add_icon =
-         new ImageIcon(loader.getResource(IMG_ROOT + "/New16.gif"));
-      Icon remove_icon =
-         new ImageIcon(loader.getResource(IMG_ROOT + "/Delete16.gif"));
-
-      JButton add_button = new JButton();
 
       // If we have a variable list then create the buttons to add new values.
       if(propDef.isVariable())
       {
+         // Insert Add Icon
+         ClassLoader loader = getClass().getClassLoader();
+         Icon add_icon =
+            new ImageIcon(loader.getResource(IMG_ROOT + "/New16.gif"));
+
+         JButton add_button = new JButton();
+
          add_button.setIcon(add_icon);
          add_button.setMargin(new Insets(0,0,0,0));
          add_button.setBorderPainted(false);
@@ -196,6 +193,9 @@ public class PropertySheetFactory extends PropertyComponent
          sheet.add(add_button, c3);
          ++row;
       }
+
+      int list_number = 0;
+      List props = elm.getPropertyValues(propDef.getToken());
 
       for(Iterator itr = props.iterator() ; itr.hasNext() ; )
       {
