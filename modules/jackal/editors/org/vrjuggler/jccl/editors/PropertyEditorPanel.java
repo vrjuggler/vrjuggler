@@ -169,30 +169,7 @@ public class PropertyEditorPanel extends PropertyComponent
             mEditor.setAsText(txt_field.getText());
          }
 
-         
-         Object old_value = mConfigElement.getProperty(mPropName, mPropIndex);
-         
-         if (old_value instanceof ConfigElementPointer)
-         {
-            old_value = ((ConfigElementPointer)old_value).getTarget();
-         }
-         
-         // NOTE: Wo not need to treat ConfigElementPointers as a special
-         //       case when getting the new value since it is stored as a
-         //       string in the ConfigElementPointerEditor.
-
-         // Make sure that the value acually changed.
-         if ( !old_value.equals(mEditor.getValue()) )
-         {
-            ConfigElementPropertyEdit new_edit = 
-               new ConfigElementPropertyEdit(mConfigElement, mPropName, mPropIndex, 
-                                          old_value, mEditor.getValue());
-            
-            mConfigElement.setProperty(mPropName, mPropIndex, mEditor.getValue());
-            System.out.println("Adding: " + new_edit);
-            mConfigContext.postEdit(new_edit);
-         }
-         
+         mConfigElement.setProperty(mPropName, mPropIndex, mEditor.getValue(), mConfigContext);
       
          //return super.stopCellEditing();
          return true;
@@ -419,7 +396,7 @@ public class PropertyEditorPanel extends PropertyComponent
          if (propDef.getType() == ConfigElementPointer.class)
          {
             ConfigElementPointerEditor cpe = new ConfigElementPointerEditor();
-            cpe.setPropertyDefinition(propDef);
+            cpe.setPropertyDefinition(propDef, mConfigContext);
             ed = cpe;
          }
       }
