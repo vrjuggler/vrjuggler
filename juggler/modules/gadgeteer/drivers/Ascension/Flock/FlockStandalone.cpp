@@ -34,8 +34,9 @@
 #include <fstream>         // for std::ifstream
 #include <string.h>
 
-#include <unistd.h>        // for sleep, and ioctl
+#include <vpr/vpr.h>
 #include <vpr/Util/Assert.h> /* for vprASSERT */
+#include <vpr/System.h>
 
 #include <gadget/Devices/Ascension/FlockStandalone.h>
 
@@ -180,43 +181,43 @@ int FlockStandalone::start()
                    << (mBlocking ? "" : "non-") << "blocking)\n"
                    << std::flush;
          setBlocking();
-         sleep(1);
+         vpr::System::sleep(1);
 
          std::cout << "[FlockStandalone] Setting sync\n" << std::flush;
          setSync();
-         sleep(1);
+         vpr::System::sleep(1);
 
          std::cout << "[FlockStandalone] Setting group\n" << std::flush;
          setGroup();
-         sleep(1);
+         vpr::System::sleep(1);
 
          std::cout << "[FlockStandalone] Setting autoconfig\n" << std::flush;
          setAutoconfig();
-         sleep(1);
+         vpr::System::sleep(1);
 
          std::cout << "[FlockStandalone] Setting transmitter\n" << std::flush;
          setTransmitter();
-         sleep(1);
+         vpr::System::sleep(1);
 
          std::cout << "[FlockStandalone] Setting filter\n" << std::flush;
          setFilter();
-         sleep(1);
+         vpr::System::sleep(1);
 
          std::cout << "[FlockStandalone] Setting hemisphere\n" << std::flush;
          setHemisphere();
-         sleep(1);
+         vpr::System::sleep(1);
 
          std::cout << "[FlockStandalone] Setting pos_angles\n" << std::flush;
          setPosAngles();
-         sleep(1);
+         vpr::System::sleep(1);
 
          std::cout << "[FlockStandalone] Setting pickBird\n" << std::flush;
          pickBird(mXmitterUnitNumber);
-         sleep(1);
+         vpr::System::sleep(1);
 
          std::cout << "[FlockStandalone] Setting rep_and_stream\n" << std::flush;
          setRepAndStream();
-         sleep(1);
+         vpr::System::sleep(1);
 
          std::cout  << "[FlockStandalone] Ready to go!\n\n" << std::flush;
 
@@ -294,12 +295,12 @@ int FlockStandalone::stop ()
       bird_command[0] = 'B';
       mSerialPort->write(bird_command, 1, written);
       mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-      usleep(500 * mSleepFactor);
+      vpr::System::usleep(500 * mSleepFactor);
 
       bird_command[0] = 'G';
       mSerialPort->write(bird_command, 1, written);
       mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-      usleep(200 * FlockStandalone::mSleepFactor);
+      vpr::System::usleep(200 * FlockStandalone::mSleepFactor);
 
       mSerialPort->close();
 
@@ -623,7 +624,7 @@ int FlockStandalone::getReading (const int& n, float& xPos, float& yPos,
          while ( (num_read == 0) &&
                  (c < 99999) )
          {
-            usleep(100 * mSleepFactor);
+            vpr::System::usleep(100 * mSleepFactor);
             c++;
             mSerialPort->read(&group, 1, num_read,
                               vpr::Interval(timeout, vpr::Interval::Msec));
@@ -674,7 +675,7 @@ void FlockStandalone::pickBird (const int birdID)
       mSerialPort->write(&buff, sizeof(buff), written);
       mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
-      usleep(100 * mSleepFactor);
+      vpr::System::usleep(100 * mSleepFactor);
    }
 }
 
@@ -705,7 +706,7 @@ int FlockStandalone::openPort ()
       }
       else
       {
-         sleep(2);
+         vpr::System::sleep(2);
          mSerialPort->close();
 
          std::cout << "[FlockStandalone] Port reset successfully (port was "
@@ -778,7 +779,7 @@ void FlockStandalone::setBlocking ()
 
       mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
-      usleep(1000 * mSleepFactor);
+      vpr::System::usleep(1000 * mSleepFactor);
    }
 }
 
@@ -863,7 +864,7 @@ void FlockStandalone::setHemisphere()
          mSerialPort->write(buff, sizeof(buff), written);
          mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
-         usleep(500 * mSleepFactor);
+         vpr::System::usleep(500 * mSleepFactor);
       }
    }
 }
@@ -884,7 +885,7 @@ void FlockStandalone::setRepAndStream ()
       buff[0] = mReportRate;
       mSerialPort->write(buff, sizeof(buff), written);
       mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-      usleep(2000 * mSleepFactor);
+      vpr::System::usleep(2000 * mSleepFactor);
 
       ////////////////////////////////////////////////////////////////
       // set stream mode
@@ -892,7 +893,7 @@ void FlockStandalone::setRepAndStream ()
       buff[0] = '@';
       mSerialPort->write(buff, sizeof(buff), written);
       mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-      usleep(500 * mSleepFactor);
+      vpr::System::usleep(500 * mSleepFactor);
    }
 }
 
@@ -920,7 +921,7 @@ void FlockStandalone::setPosAngles ()
          mSerialPort->write(buff, sizeof(buff), written);
          mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
-         usleep(500 * mSleepFactor);
+         vpr::System::usleep(500 * mSleepFactor);
       }
    }
 }
@@ -947,7 +948,7 @@ void FlockStandalone::setFilter ()
       mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
       //TODO: Do I need to sleep here?
-      usleep(12000 * mSleepFactor);
+      vpr::System::usleep(12000 * mSleepFactor);
    }
 }
 
@@ -968,7 +969,7 @@ void FlockStandalone::setTransmitter ()
       mSerialPort->write(buff, sizeof(buff), written);
       mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
-      usleep(12000 * FlockStandalone::mSleepFactor);
+      vpr::System::usleep(12000 * FlockStandalone::mSleepFactor);
    }
 }
 
@@ -988,10 +989,10 @@ void FlockStandalone::setAutoconfig ()
       buff[1] = 0x32;
       buff[2] = mNumBirds + 1;  //number of input devices + 1 for transmitter
 
-      sleep(3);
+      vpr::System::sleep(3);
       mSerialPort->write(buff, sizeof(buff), written);
       mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-      sleep(2);
+      vpr::System::sleep(2);
    }
 }
 
@@ -1014,7 +1015,7 @@ void FlockStandalone::setGroup ()
 
       mSerialPort->write(buff, sizeof(buff), written);
       mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-      sleep(2);
+      vpr::System::sleep(2);
    }
 }
 
@@ -1122,7 +1123,7 @@ void FlockStandalone::checkDataReadyChar()
 
    std::cout << "I=" << i << std::endl;
    mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-   usleep(500 * mSleepFactor);
+   vpr::System::usleep(500 * mSleepFactor);
 }
 
 
@@ -1161,10 +1162,10 @@ void FlockStandalone::examineValue(char exam, int data, int reps, int format)
       }
       j = 0;
       // mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-      // usleep(500 * mSleepFactor);
+      // vpr::System::usleep(500 * mSleepFactor);
    }
    mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-   usleep(500 * mSleepFactor);
+   vpr::System::usleep(500 * mSleepFactor);
 }
 
 
@@ -1217,7 +1218,7 @@ void FlockStandalone::setValue(char exam, char setdata, int reps)
    }
 
    mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-   usleep(500 * mSleepFactor);
+   vpr::System::usleep(500 * mSleepFactor);
 }
 
 void FlockStandalone::setPosMode()

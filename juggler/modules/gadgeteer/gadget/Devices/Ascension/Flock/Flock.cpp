@@ -32,9 +32,6 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <sys/file.h>
-#include <sys/ioctl.h>
-#include <sys/time.h>
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 #include <vpr/Util/FileUtils.h>
