@@ -34,21 +34,13 @@
 #define GADGET_INPUT_AREA_WIN32_H
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/Util/Debug.h>
-#include <gadget/Type/Input.h>
+
+#include <vpr/Sync/Mutex.h>
+
 #include <gadget/Type/EventWindow/KeyEvent.h>
 #include <gadget/Type/EventWindow/MouseEvent.h>
 #include <gadget/Type/EventWindow/Keys.h>
 #include <gadget/Type/EventWindow/Event.h>
-
-#include <vpr/IO/BufferObjectReader.h>
-
-#ifndef GET_X_LPARAM
-#  define GET_X_LPARAM(lp)   ((int)(short)LOWORD(lp))
-#endif
-#ifndef GET_Y_LPARAM
-#  define GET_Y_LPARAM(lp)   ((int)(short)HIWORD(lp))
-#endif
 
 namespace gadget
 {

@@ -32,20 +32,22 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <boost/concept_check.hpp>
+#include <iomanip>
 
 #include <vpr/vpr.h>
-#include <vpr/System.h>
-#include <vpr/Thread/Thread.h>
-#include <jccl/Config/ConfigElement.h>
+#include <vpr/Sync/Guard.h>
 
 #include <gadget/Util/Debug.h>
-#include <gadget/InputManager.h>
-#include <gadget/Type/EventWindow/KeyEvent.h>
-#include <gadget/Type/EventWindow/MouseEvent.h>
 
-#include <gadget/Devices/EventWindow/InputAreaWin32.h> // my header
 #include <gadget/Devices/EventWindow/EventWindowWin32.h>
+#include <gadget/Devices/EventWindow/InputAreaWin32.h> // my header
+
+#ifndef GET_X_LPARAM
+#  define GET_X_LPARAM(lp)   ((int)(short)LOWORD(lp))
+#endif
+#ifndef GET_Y_LPARAM
+#  define GET_Y_LPARAM(lp)   ((int)(short)HIWORD(lp))
+#endif
 
 namespace gadget
 {
