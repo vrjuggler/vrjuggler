@@ -2,6 +2,7 @@
 #define _VJ_KEYBOARD_H_
 
 #include <vjConfig.h>
+#include <Input/vjInput/vjInput.h>
 
 
 // --------- VJKEY's ------------ //

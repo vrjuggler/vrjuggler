@@ -15,11 +15,17 @@
 
 //: Proxy to vjGesture object
 //
+// A proxy is used by the user to actually acces the gesture data.
+// The proxy allows the user to query the current gesture information.
+// Clients call the get* routines to get the current gesture (id or string)
+// Once the client has the current gesture, they should test it
+// against the gestures they want to respond to.
+//
 // See also: vjGesture
 class vjGestureProxy
 {
 public:
-     //: Construct the proxy to point to the given gesture device.
+   //: Construct the proxy to point to the given gesture device.
    vjGestureProxy(vjGesture* gesturePtr)
    { Set(gesturePtr); }
 
@@ -27,6 +33,8 @@ public:
    {}
 
    //: Set the gloveProxy to point to another device and subUnit number.
+   //! PRE: gesturePtr must point to a valid gesture device
+   //! POST: this now proxies the given gesture device
    void Set(vjGesture* gesturePtr)
    {
       vjASSERT( gesturePtr->FDeviceSupport(DEVICE_GESTURE) );
@@ -39,13 +47,14 @@ public:
    { return mGesturePtr->getGesture(); }
 
    //: Return the identifier of the string gesture.
+   //! ARGS: name - string name of a gesture
    //! RETURNS: -1 if not found
    int getGestureIndex(string name)
    { return mGesturePtr->getGestureIndex(name); }
 
    //: Get a gesture name
    //! RETURNS: Name of gesture with the given id (gestureId)
-   // NOTE: if gestureId = -1, returns name of current gesture
+   //! NOTE: if gestureId = -1, returns name of current gesture
    string getGestureString(int gestureId = -1)
    { return mGesturePtr->getGestureString(gestureId); }
 
