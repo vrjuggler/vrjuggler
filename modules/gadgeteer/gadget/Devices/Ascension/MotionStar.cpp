@@ -150,7 +150,11 @@ int vjMotionStar::startSampling()
       resetIndexes();
 
          vjDEBUG(vjDBG_INPUT_MGR,1) << "    Getting flock ready....\n" << vjDEBUG_FLUSH;
-      mMotionStar.start();
+      if ( mMotionStar.start() == -1 ) {
+         vjDEBUG(vjDBG_INPUT_MGR, 0) << "vjMotionStar failed to connect to server"
+                                     << endl << vjDEBUG_FLUSH;
+         return 0;
+      }
 
       //sanity check.. make sure birds actually started
       if (this->isActive() == false)
