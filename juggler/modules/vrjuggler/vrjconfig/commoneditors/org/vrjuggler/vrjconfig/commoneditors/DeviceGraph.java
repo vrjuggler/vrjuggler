@@ -218,7 +218,8 @@ public class DeviceGraph
    public static Map createDeviceAttributes(int x, int y, boolean autoSize)
    {
       Map map = new AttributeMap();
-      map = JGraph.createBounds((AttributeMap) map, x, y, Color.blue);
+      map = JGraph.createBounds((AttributeMap) map, x, y,
+                                Color.blue.brighter().brighter());
 
       GraphConstants.setAutoSize(map, autoSize);
       GraphConstants.setResize(map, true);
@@ -257,7 +258,8 @@ public class DeviceGraph
    public static Map createProxyAttributes(int x, int y, boolean autoSize)
    {
       Map map = new AttributeMap();
-      map = JGraph.createBounds((AttributeMap) map, x, y, Color.red);
+      map = JGraph.createBounds((AttributeMap) map, x, y,
+                                Color.red.brighter().brighter());
 
       GraphConstants.setAutoSize(map, autoSize);
       GraphConstants.setResize(map, true);
