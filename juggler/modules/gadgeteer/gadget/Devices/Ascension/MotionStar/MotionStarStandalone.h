@@ -233,6 +233,146 @@ private:
 
     float rawToFloat(char r1, char r2);
 
+    // ------------------------------------------------------------------------
+    //: Combine the two given bytes (passed as high byte and low byte
+    //+ respectively) into a single word.  This is used for reading bytes from
+    //+ the packets and converting them into usable values.
+    //
+    //! PRE: None.
+    //! POST: The two given bytes are combined into a single word that is
+    //+       returned to the caller.
+    //
+    //! ARGS: high_byte - The byte that will become the high byte of the
+    //+                   returned word.
+    //! ARGS: low_byte - The byte that will become the low byte of the
+    //+                  returned word.
+    //
+    //! RETURNS: A 16-bit word that is the combination of the two given bytes.
+    // ------------------------------------------------------------------------
+    inline short
+    toShort (char high_byte, char low_byte) {
+      return ((short) high_byte << 8) | ((short) low_byte);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Get the value of the translation along the x-axis from the response
+    //+ buffer as a single-precision floating-point value in inches.
+    //
+    //! PRE: A valid data packet has been read into the response buffer.
+    //! POST: The x-axis translation is read from the data packet, converted
+    //+       into a usable form and returned to the caller.
+    //
+    //! ARGS: offset - The current offset into the response buffer.
+    //
+    //! RETURNS: The x-axis translation as a floating-point value in inches.
+    // ------------------------------------------------------------------------
+    inline float
+    getXPos (const int offset) {
+      return (m_xmtr_pos_scale *
+               (float) toShort(response.buffer[2 + offset],
+                               response.buffer[3 + offset]) /
+               32767.0);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Get the value of the translation along the y-axis from the response
+    //+ buffer as a single-precision floating-point value in inches.
+    //
+    //! PRE: A valid data packet has been read into the response buffer.
+    //! POST: The y-axis translation is read from the data packet, converted
+    //+       into a usable form and returned to the caller.
+    //
+    //! ARGS: offset - The current offset into the response buffer.
+    //
+    //! RETURNS: The y-axis translation as a floating-point value in inches.
+    // ------------------------------------------------------------------------
+    inline float
+    getYPos (const int offset) {
+      return (m_xmtr_pos_scale *
+               (float) toShort(response.buffer[4 + offset],
+                               response.buffer[5 + offset]) /
+               m_xmtr_divisor);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Get the value of the translation along the z-axis from the response
+    //+ buffer as a single-precision floating-point value in inches.
+    //
+    //! PRE: A valid data packet has been read into the response buffer.
+    //! POST: The z-axis translation is read from the data packet, converted
+    //+       into a usable form and returned to the caller.
+    //
+    //! ARGS: offset - The current offset into the response buffer.
+    //
+    //! RETURNS: The z-axis translation as a floating-point value in inches.
+    // ------------------------------------------------------------------------
+    inline float
+    getZPos (const int offset) {
+      return (m_xmtr_pos_scale *
+               (float) toShort(response.buffer[6 + offset],
+                               response.buffer[7 + offset]) /
+               m_xmtr_divisor);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Get the value of the rotation about along the z-axis from the response
+    //+ buffer as a single-precision floating-point value in degrees.
+    //
+    //! PRE: A valid data packet has been read into the response buffer.
+    //! POST: The z-axis rotation is read from the data packet, converted
+    //+       into a usable form and returned to the caller.
+    //
+    //! ARGS: offset - The current offset into the response buffer.
+    //
+    //! RETURNS: The z-axis rotation as a floating-point value in degrees.
+    // ------------------------------------------------------------------------
+    inline float
+    getRoll (const int offset) {
+      return (m_xmtr_rot_scale *
+               (float) toShort(response.buffer[8 + offset],
+                               response.buffer[9 + offset]) /
+                m_xmtr_divisor);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Get the value of the rotation about along the y-axis from the response
+    //+ buffer as a single-precision floating-point value in degrees.
+    //
+    //! PRE: A valid data packet has been read into the response buffer.
+    //! POST: The y-axis rotation is read from the data packet, converted
+    //+       into a usable form and returned to the caller.
+    //
+    //! ARGS: offset - The current offset into the response buffer.
+    //
+    //! RETURNS: The y-axis rotation as a floating-point value in degrees.
+    // ------------------------------------------------------------------------
+    inline float
+    getAzimuth (const int offset) {
+      return (m_xmtr_rot_scale *
+               (float) toShort(response.buffer[10 + offset],
+                               response.buffer[11 + offset]) /
+                m_xmtr_divisor);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Get the value of the rotation about along the x-axis from the response
+    //+ buffer as a single-precision floating-point value in degrees.
+    //
+    //! PRE: A valid data packet has been read into the response buffer.
+    //! POST: The x-axis rotation is read from the data packet, converted
+    //+       into a usable form and returned to the caller.
+    //
+    //! ARGS: offset - The current offset into the response buffer.
+    //
+    //! RETURNS: The x-axis rotation as a floating-point value in degrees.
+    // ------------------------------------------------------------------------
+    inline float
+    getElevation (const int offset) {
+      return (m_xmtr_rot_scale *
+               (float) toShort(response.buffer[12 + offset],
+                               response.buffer[13 + offset]) /
+                m_xmtr_divisor);
+    }
 
 float posinfo[3][6];
 bool 			active;
@@ -291,7 +431,10 @@ int             runMode;
 unsigned char   addr;
 unsigned char   reportRate;
 
-
+float		m_xmtr_pos_scale;	// Transmitter position scaling factor
+float		m_xmtr_rot_scale;	// Transmitter position scaling factor
+float		m_xmtr_divisor;		// Number by which all returned values
+					// must be divided
 };
 
 

@@ -65,6 +65,10 @@ aMotionStar::aMotionStar(char* _address,
   } else {
     address = NULL;
   }
+
+  m_xmtr_pos_scale = 288.0;
+  m_xmtr_rot_scale = 180.0;
+  m_xmtr_divisor   = 32767.0;
 } // end aMotionStar::aMotionStar()
 
 
@@ -455,24 +459,12 @@ void aMotionStar::sample() {
     for (int bnum = 0; bnum < birdsRequired; bnum++)
     {
       o = 14*bnum;
-      posinfo[bnum][0] = 144*rawToFloat(response.buffer[2+o],
-                                     response.buffer[3+o]);//XPos
-      posinfo[bnum][1] = 144*rawToFloat(response.buffer[4+o],
-                                     response.buffer[5+o]);//YPos
-      posinfo[bnum][2] = 144*rawToFloat(response.buffer[6+o],
-                                     response.buffer[7+o]);//ZPos
-      posinfo[bnum][3] = 180*rawToFloat(response.buffer[8+o],
-                                     response.buffer[9+o]);//ZRot
-      posinfo[bnum][4] = 180*rawToFloat(response.buffer[10+o],
-                                     response.buffer[11+o]);//YRot
-      posinfo[bnum][5] = 180*rawToFloat(response.buffer[12+o],
-                                     response.buffer[13+o]);//XRot
-
-      // XXX: This is a hack until we figure out how to set the unit to
-      // feet instead of inches.
-      posinfo[bnum][0] /= 5.0;
-      posinfo[bnum][1] /= 5.0;
-      posinfo[bnum][2] /= 5.0;
+      posinfo[bnum][0] = getXPos(o) / 12.0;	// X translation
+      posinfo[bnum][1] = getYPos(o) / 12.0;	// Y translation
+      posinfo[bnum][2] = getZPos(o) / 12.0;	// Z translation
+      posinfo[bnum][3] = getRoll(o);		// Z rotation (roll)
+      posinfo[bnum][4] = getAzimuth(o);		// Y rotation (azimuth)
+      posinfo[bnum][5] = getElevation(o);	// X rotatoin (elevation)
     } // end for loop
 
 
