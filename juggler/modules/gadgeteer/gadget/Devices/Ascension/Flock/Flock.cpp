@@ -31,7 +31,7 @@ int vjFlock::getBirdIndex(int birdNum, int bufferIndex)
 {
    int ret_val = (birdNum*3)+bufferIndex;
    vjASSERT((ret_val >= 0) && (ret_val < ((getNumBirds()+1)*3)));
-   assertIndexes();
+   //assertIndexes();   // Can't assert here because it is possible the indexes are switching right now
    return ret_val;
 }
 
@@ -214,9 +214,21 @@ int vjFlock::Sample()
       int index = getBirdIndex(i,progress);
 
       // Sets index to current read buffer
+
+
       theData[index].makeZYXEuler(mFlockOfBirds.zRot( i ),
                                   mFlockOfBirds.yRot( i ),
                                   mFlockOfBirds.xRot( i ));
+
+
+
+      /*
+      theData[index].makeXYZEuler(mFlockOfBirds.xRot( i ),
+                                  mFlockOfBirds.yRot( i ),
+                                  mFlockOfBirds.zRot( i ));
+                                  */
+
+
       theData[index].setTrans(mFlockOfBirds.xPos( i ),
                               mFlockOfBirds.yPos( i ),
                               mFlockOfBirds.zPos( i ));
@@ -227,10 +239,12 @@ int vjFlock::Sample()
 
       // Transforms between the cord frames
       // See transform documentation and VR System pg 146
+      // Since we want the reciver in the world system, Rw
+      // wTr = wTt*tTr
       vjMatrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
 
-      world_T_transmitter = xformMat;                   // Set transmitter offset from local info
-      transmitter_T_reciever = theData[index];        // Get reciever data from sampled data
+      world_T_transmitter = xformMat;                    // Set transmitter offset from local info
+      transmitter_T_reciever = theData[index];           // Get reciever data from sampled data
       world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);   // compute total transform
       theData[index] = world_T_reciever;                                     // Store corrected xform back into data
 
