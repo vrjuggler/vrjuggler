@@ -137,12 +137,12 @@ public:
     }
 
 protected:
-    Mutex stateLock;        //! Serialize access to internal state.
-    CondVar waitingReaders; //! Reader threads waiting to acquire the lock.
-    int numWaitingReaders;  //! Number of waiting readers.
+    Mutex stateLock;        /**< Serialize access to internal state */
+    CondVar waitingReaders; /**< Reader threads waiting to acquire the lock */
+    int numWaitingReaders;  /**< Number of waiting readers */
 
-    CondVar waitingWriters; //! Writer threads waiting to acquire the lock.
-    int numWaitingWriters;  //! Number of waiting writers.
+    CondVar waitingWriters; /**< Writer threads waiting to acquire the lock */
+    int numWaitingWriters;  /**< Number of waiting writers */
 
     /**
      * Value is -1 if writer has the lock, else this keeps track of the
