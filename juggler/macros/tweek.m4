@@ -36,10 +36,9 @@ dnl ---------------------------------------------------------------------------
 AC_DEFUN(_TWEEK_PATH_SETUP,
 [
     dnl Get the cflags and libraries from the tweek-config script
-    AC_ARG_WITH(tweek-prefix,
-                [  --with-tweek-prefix=<PATH>
-                          Prefix where Tweek is installed
-                          (optional)                      [No default]],
+    AC_ARG_WITH(tweek,
+                [  --with-tweek=<PATH>     Directory where Tweek is
+                          installed                       [No default]],
                 tweek_config_prefix="$withval", tweek_config_prefix="")
     AC_ARG_WITH(tweek-exec-prefix,
                 [  --with-tweek-exec-prefix=<PATH>
@@ -47,9 +46,6 @@ AC_DEFUN(_TWEEK_PATH_SETUP,
                           installed (optional)            [No default]],
                 tweek_config_exec_prefix="$withval",
                 tweek_config_exec_prefix="")
-dnl    AC_ARG_ENABLE(tweektest,
-dnl                  [  --disable-tweektest     Do not try to compile and run a
-dnl                          test Tweek program], , enable_tweektest=yes)
 
     if test "x$tweek_config_exec_prefix" != "x" ; then
         tweek_config_args="$tweek_config_args --exec-prefix=$tweek_config_exec_prefix"
