@@ -80,7 +80,7 @@ vpr::ReturnStatus NetworkGraph::construct (const std::string& path)
 
       input_file >> node_count;
 
-      for ( vpr::Uint32 i = 0; i < node_count; i++ )
+      for ( vpr::Uint32 i = 0; i < node_count; ++i )
       {
          vpr::Uint32 index;
          vpr::Uint16 node_type;
@@ -106,7 +106,7 @@ vpr::ReturnStatus NetworkGraph::construct (const std::string& path)
       boost::property_map<net_graph_t, boost::edge_weight_t>::type weight_map;
       weight_map = boost::get(boost::edge_weight_t(), mGraph);
 
-      for ( vpr::Uint32 i = 0; i < full_edge_count; i++ )
+      for ( vpr::Uint32 i = 0; i < full_edge_count; ++i )
       {
          double length, delay, bw;
          vpr::Uint32 from_node, to_node;
@@ -196,7 +196,7 @@ vpr::ReturnStatus NetworkGraph::getNodeWithAddr (const vpr::Uint32 addr,
 
    boost::tie(vi, vi_end) = boost::vertices(mGraph);
 
-   for ( ; vi != vi_end; vi++ )
+   for ( ; vi != vi_end; ++vi )
    {
       node_prop = getNodeProperty(*vi);
 
@@ -300,7 +300,7 @@ NetworkGraph::VertexListPtr NetworkGraph::reversePath (NetworkGraph::VertexListP
 {
    VertexListPtr new_path(new NetworkGraph::VertexList(path->size()));
 
-   for ( vpr::Uint32 i = path->size(), j = 0; i > 0; i--, j++ )
+   for ( vpr::Uint32 i = path->size(), j = 0; i > 0; i--, ++j )
    {
       (*new_path)[j] = (*path)[i - 1];
    }
@@ -316,7 +316,7 @@ vpr::ReturnStatus NetworkGraph::getAllAddresses (NetworkGraph::AddressList& list
 
    boost::tie(vi, vi_end) = boost::vertices(mGraph);
 
-   for ( ; vi != vi_end; vi++ )
+   for ( ; vi != vi_end; ++vi )
    {
       node_prop = getNodeProperty(*vi);
       list.push_back(std::pair<net_vertex_t, vpr::Uint32>(*vi,
