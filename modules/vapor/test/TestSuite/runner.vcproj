@@ -152,6 +152,9 @@
 				RelativePath="TestCases\Socket\NonBlockingSocketsTest.cpp">
 			</File>
 			<File
+				RelativePath="TestCases\Perf\PerfTest.cpp">
+			</File>
+			<File
 				RelativePath="TestCases\Util\ReturnStatusTest.cpp">
 			</File>
 			<File
@@ -232,6 +235,9 @@
 			</File>
 			<File
 				RelativePath="TestCases\Socket\NonBlockingSocketsTest.h">
+			</File>
+			<File
+				RelativePath="TestCases\Perf\PerfTest.h">
 			</File>
 			<File
 				RelativePath="TestCases\Util\ReturnStatusTest.h">
