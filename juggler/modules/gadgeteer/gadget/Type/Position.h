@@ -66,27 +66,33 @@ namespace gadget
 class Position
 {
 public:
-    //: Constructor
-    Position();
+   //: Constructor
+   Position();
 
-    //: Destructor
-    virtual ~Position();
+   //: Destructor
+   virtual ~Position();
 
-    virtual bool config(jccl::ConfigChunkPtr c);
+   virtual bool config(jccl::ConfigChunkPtr c);
 
-    /** Get Positional data. */
-    PositionData* getPositionData (int devNum = 0)
-    {
-       vprASSERT(!mPosSamples.stableBuffer().empty() && "Empty stable buffer, can't get sample");
-       vprASSERT((mPosSamples.stableBuffer().back().size() > (unsigned)devNum) && 
-                "Trying to get out of range device. No device available"); 
-       
-       // XXX: Fill in
-       return &(mPosSamples.stableBuffer().back()[devNum]);
-    }
+   /** Get Positional data. */
+   PositionData getPositionData (int devNum = 0)
+   {
+      gadget::SampleBuffer<PositionData>::buffer_t& stable_buffer = mPosSamples.stableBuffer();
+
+      if ((!stable_buffer.empty()) &&
+          (stable_buffer.back().size() > (unsigned)devNum))  // If Have entry && devNum in range
+      {
+         return stable_buffer.back()[devNum];
+      } 
+      else        // No data or request out of range, return default value
+      {
+         return mDefaultValue;
+      }
+   }
 
 public:
    gadget::SampleBuffer<PositionData>  mPosSamples;   /**< Position samples */
+   PositionData                        mDefaultValue;   /**< Default analog value to return */
 
    vrj::Matrix xformMat;   /**< The total xform matrix.  T*R  NOTE: Used to move from trk coord system to Juggler coord system */
    vrj::Matrix rotMat;     /**< Only the rotation matrix */

@@ -75,7 +75,7 @@ public:
    virtual void updateData() {
       if(!mStupified)
       {
-          mPositionData = * (mTypedDevice->getPositionData (mUnitNum));
+          mPositionData = (mTypedDevice->getPositionData (mUnitNum));
 
          if(mETrans)
             transformData();
