@@ -86,10 +86,6 @@ install-boost:
 
 install-cppdom:
 	@$(MAKE) DIRS="cppdom/cppdom" generic-header-install
-#	@$(SHELL) $(MKINSTALLDIRS) $(includedir)/cppdom
-#	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
-#          $(GROUP_OPT_UNIX) -e .hpp,.h -o $(includedir)/cppdom 		\
-#          -i $(EXTROOT_ABS)/cppdom/cppdom
 
 generic-header-install:
 ifneq ($(DIRS), )
