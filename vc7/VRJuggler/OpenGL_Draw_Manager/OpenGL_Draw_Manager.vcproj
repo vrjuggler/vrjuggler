@@ -83,7 +83,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vrj.lib gadget.lib jccl.lib vpr.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="vrj.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib opengl32.lib glu32.lib"
 				OutputFile="$(OutDir)/vrj_ogl.dll"
 				Version="1.1.149"
 				LinkIncremental="1"
