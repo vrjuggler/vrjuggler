@@ -475,7 +475,6 @@ private:
    /** Network communications object for reconfiguration control. */
    RemoteReconfig* mReconfigIf;
 
-   std::string              mCachedLocalHostName;  /**< A cached copy of the local host name */
 protected:
 
    ConfigManager();
