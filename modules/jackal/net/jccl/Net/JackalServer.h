@@ -130,14 +130,23 @@ private:
 
     void controlLoop (void* nullParam);
 
+    //! NOTE: calling thread must own connections_mutex
     void activatePerfBuffers();
+
+    //! NOTE: calling thread must own connections_mutex
     void deactivatePerfBuffers();
 
+    //! NOTE: calling thread must own connections_mutex
     void setPerformanceTarget (vjConnect* con);
 
-    void removeConnect (vjConnect* con);
+    //: closes and removes a connection
+    //! RETURNS: true - if a matching connection was found and removed
+    //! RETURNS: false - con was NULL or no match was found
+    //! NOTE: calling thread must own connections_mutex
+    bool removeConnect (vjConnect* con);
 
     //: returns a pointer to a connection with the given name
+    //! NOTE: calling thread must own connections_mutex
     vjConnect* getConnect (const std::string& _name);
 
 
