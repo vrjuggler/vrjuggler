@@ -206,7 +206,6 @@ public:
 
    virtual void configure( const snx::SoundAPIInfo& sai )
    {
-      std::cout << "in audiere configure" << std::endl;
       snx::SoundImplementation::configure( sai );
       // TODO: configure the engine based on the settings!!
    }
