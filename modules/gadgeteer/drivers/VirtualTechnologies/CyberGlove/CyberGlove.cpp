@@ -103,6 +103,10 @@ int vjCyberGlove::Sample()
 
 void vjCyberGlove::UpdateData()
 {
+vjGuard<vjMutex> updateGuard(lock);
+   // Copy the valid data to the current data so that both are valid
+   mTheData[0][current] = mTheData[0][valid];   // ASSERT: we only have one glove
+
    // swap the indicies for the pointers
    swapCurrentIndexes();
 

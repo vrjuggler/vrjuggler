@@ -34,7 +34,11 @@ int vjGlPipe::start()
 //! POST: The pipe has be told to start rendering
 void vjGlPipe::triggerRender()
 {
-   vjASSERT(mThreadRunning == true);      // We must be running
+   //vjASSERT(mThreadRunning == true);      // We must be running
+   while(!mThreadRunning)
+   {
+      vjDEBUG(vjDBG_ALL,1) << "Waiting in triggerRender.\n" << vjDEBUG_FLUSH;
+   }
 
    renderTriggerSema.release();
 }
