@@ -25,8 +25,10 @@ import VjConfig.VarValue;
 
 public class DescEnum {
 
-  public String str;
-  public VarValue val;
+    public String str;
+    public VarValue val;
+
+
 
     public String toString () {
 	if (val != null)
@@ -35,45 +37,40 @@ public class DescEnum {
 	    return new String (str);
     }
 
-  public DescEnum (DescEnum other) {
-    str = other.str;
-    val = new VarValue (other.val);
-  }
 
-  public DescEnum (String s, int v) {
-    str = s;
-    val = new VarValue(v);
-  }
 
-  public DescEnum (String s, float v) {
-    str = s;
-    val = new VarValue(v);
-  }
-
-  public boolean equals (DescEnum d) {
-    if (!str.equalsIgnoreCase(d.str))
-      return false;
-    if (!val.equals(d.val))
-      return false;
-    return true;
-  }
-
-  public DescEnum (String line) {
-    // note that this requires an explicit value - 'string=6' or something
-    int i = line.indexOf("=");
-    if (i == -1) {
-      val = new VarValue(0);
-      str = line;
+    public DescEnum (DescEnum other) {
+	str = other.str;
+	val = new VarValue (other.val);
     }
-    else {
-      str = line.substring (0, i);
-      try {
-	val = new VarValue (Integer.parseInt(line.substring(i+1)));
-      }
-      catch ( NumberFormatException e ) {
-	val = new VarValue (Float.valueOf(line.substring(i+1)).floatValue());
-      }
-    }
-  }
 
+
+
+    public DescEnum (String s, VarValue v) {
+	str = s;
+	val = v;
+    }
+
+
+    public DescEnum (String s, String v) {
+	str = s;
+	val = new VarValue (v);
+    }
+
+    public DescEnum (String s, int v) {
+	str = s;
+	val = new VarValue(v);
+    }
+    
+
+
+    public boolean equals (DescEnum d) {
+	if (!str.equalsIgnoreCase(d.str))
+	    return false;
+	if (!val.equals(d.val))
+	    return false;
+	return true;
+    }
+
+    
 }

@@ -210,45 +210,60 @@ public class DescEnumFrame extends JFrame
 	else if (e.getSource() == okbutton) {
 	    unused = 0;
 	    data.removeAllElements();
+	    VarValue val;
+	    
+	    if (pdtype.equals (ValType.t_embeddedchunk) || pdtype.equals (ValType.t_chunk))
+		val = new VarValue(new ValType(ValType.t_string));
+	    else
+		val = new VarValue (pdtype);
+
 	    for (int i = 0; i < elempanels.size(); i++) {
 		p = (DescEnumElemPanel)elempanels.elementAt(i);
+
+		s = p.getName();
+		val.set (p.getVal());
+
 		if (pdtype.equals (ValType.t_chunk) || pdtype.equals (ValType.t_embeddedchunk)) {
 		    for (j = 0; j < Core.descdbs.size(); j++) {
-			s = ((ChunkDescDB)Core.descdbs.elementAt(j)).getTokenFromName (p.getName());
-			if (s != null)
+			String s2 = ((ChunkDescDB)Core.descdbs.elementAt(j)).getTokenFromName (p.getName());
+			if (s2 != null) {
+			    s = s2;
+			    val.set(s2);
 			    break;
+			}
 		    }
 		}
-		else
-		    s = p.getName();
+
 		if (s == null || s.equals (""))
 		    continue; 
+
+		data.addElement (new DescEnum (s, val));
 		
-		if (pdtype.equals (ValType.t_int)) {
-		    try {
-			j = p.getIntVal();
-			unused = (unused>j)?(unused):(j+1);
-		    }
-		    catch (NumberFormatException ne) {
-			j = unused++;
-		    }
-		    data.addElement(new DescEnum (s,j));
-		}
-		else if (pdtype.equals (ValType.t_float)) {
-		    try {
-			k = p.getFloatVal();
-			unused = (unused>k)?(unused):((new Float(k)).intValue() +1);
-		    }
-		    catch (NumberFormatException ne) {
-			k = unused++;
-		    }
-		    data.addElement(new DescEnum (s,k));
-		}
-		else if (pdtype.equals (ValType.t_string) ||
-			 pdtype.equals (ValType.t_chunk) ||
-			 pdtype.equals (ValType.t_embeddedchunk)) {
-		    data.addElement(new DescEnum (s,0));
-		}
+// 		if (pdtype.equals (ValType.t_int)) {
+// 		    try {
+// 			j = p.getIntVal();
+// 			unused = (unused>j)?(unused):(j+1);
+// 		    }
+// 		    catch (NumberFormatException ne) {
+// 			j = unused++;
+// 		    }
+// 		    data.addElement(new DescEnum (s,j));
+// 		}
+// 		else if (pdtype.equals (ValType.t_float)) {
+// 		    try {
+// 			k = p.getFloatVal();
+// 			unused = (unused>k)?(unused):((new Float(k)).intValue() +1);
+// 		    }
+// 		    catch (NumberFormatException ne) {
+// 			k = unused++;
+// 		    }
+// 		    data.addElement(new DescEnum (s,k));
+// 		}
+// 		else if (pdtype.equals (ValType.t_string) ||
+// 			 pdtype.equals (ValType.t_chunk) ||
+// 			 pdtype.equals (ValType.t_embeddedchunk)) {
+// 		    data.addElement(new DescEnum (s,0));
+// 		}
 	    }
 	    closeFrame();
 	}
