@@ -51,10 +51,10 @@
 #undef VPR_POSIX_C_SOURCE
 
 /* Define the following if using POSIX threads. */
+#undef _REENTRANT
 #undef _THREAD_SAFE
 #undef RWSTD_MULTI_THREAD
 #undef RW_MULTI_THREAD
-#undef _REENTRANT
 
 /* Define to use POSIX semaphores. */
 #undef VPR_POSIX_SEMAPHORES
