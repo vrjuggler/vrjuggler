@@ -191,7 +191,7 @@ namespace vpr {
 //-----------------------------------------
 class VPR_CLASS_API Debug
 {
-private:
+protected:
    // Set default values
    // Set up default categories
    // Get debug config from environment
