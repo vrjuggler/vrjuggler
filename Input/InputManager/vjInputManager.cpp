@@ -238,7 +238,8 @@ bool vjInputManager::configureDevice(vjConfigChunk* chunk)
    }
    else
    {
-      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:") << "new dev failed to start.. deleting instance" << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
+                  << "new dev " << clrSetBOLD(clrCYAN) << dev_name.c_str() << clrRESET << " failed to start.. deleting instance" << endl << vjDEBUG_FLUSH;
       delete new_device;
       ret_val = false;
    }
