@@ -76,7 +76,7 @@ public:
 
    //: Construct Quat from a pure quaternion 
    // NOTE: a pure quaternion is one with scalar component set to 0
-	//vjQuat( const vjVec3& pure_quat );
+   //vjQuat( const vjVec3& pure_quat );
    
    //: Construct Quat from 4 floats
    vjQuat( const float w,
@@ -100,7 +100,7 @@ public:
    
    //: Copy a pure quaternion to self
    // NOTE: a pure quaternion is one with scalar component set to 0
-	//!POST: self = pure_quat
+   //!POST: self = pure_quat
    void copy( const vjVec3& pure_quat );
    
    //: return the scalar component
@@ -124,10 +124,10 @@ public:
    float length() const;
    
    //: set self to the complex conjugate of self.
-	void conj();
+   void conj();
    
    //: set self to the complex conjugate of quat.
-	void conj( const vjQuat& quat );
+   void conj( const vjQuat& quat );
   
    //: normalize without the square root.  faster but not precise...
    //!POST: self = self / norm()
@@ -135,21 +135,21 @@ public:
    void normalizeFast();
    
    //: set self to the unit quaternion of quat. fast, imprecise
-	void normalizeFast( const vjQuat& quat );
+   void normalizeFast( const vjQuat& quat );
    
    //: set self to the normalized quaternion of self.
    //!POST: self = normalize(self), where normalize makes quat.length() == 1
    void normalize();
    
    //: set self to the normalized quaternion of quat.
-	void normalize( const vjQuat& quat );
+   void normalize( const vjQuat& quat );
   
    //: set self to the multiplicative inverse of self
    //!POST: self becomes the multiplicative inverse of self
    void invert();
    
-	//: set self to the multiplicative inverse of quat
-	//!POST: self becomes the multiplicative inverse of quat
+   //: set self to the multiplicative inverse of quat
+   //!POST: self becomes the multiplicative inverse of quat
    void invert( const vjQuat& quat );
 
 public:
@@ -160,6 +160,9 @@ public:
    //: scalar multiplication
    //!POST: this' = q1 * s
    void mult( const vjQuat& q1, const float& s );
+   
+   //: quaternion product of a pure quaternion [0,x,y,z] and a quaternion
+   void mult( const vjVec3& pure_quat, const vjQuat& quat );
 
    //: quotient of two quaternions
    //!POST: this' = q1 / q2
@@ -221,20 +224,19 @@ public:
    //!POST: temporary return value = self * quat 
    vjQuat operator*( const vjQuat& quat ) const;
    
-   //: multiply by a pure quaternion (only vector, scalar component == 0)
-   //  returns a pure quaternion as temporary                       <BR>
-   // NOTE: a pure quaternion is one with scalar component set to 0
-	//!PRE: give a pure quaternion for "pure_quat"
-   //!POST: pure quaternion = self * pure_quat 
-   vjVec3 operator*( const vjVec3& pure_quat ) const;
+   //: multiply by a vector
+   //  returns a vector as temporary                       <BR>
+   //!PRE: give a vector
+   //!POST: vector = self * vector
+   vjVec3 operator*( const vjVec3& vector ) const;
    
-   //: mult by scalar 
+   //: mult by scalar (order independant)
    // NOTE: less efficient (returns a copy), use mult() instead (faster)
-	vjQuat operator*( float s ) const;
+   vjQuat operator*( float s ) const;
    
    //: multiply by inverse quat.
    // NOTE: less efficient, use div() instead
-	vjQuat operator/( const vjQuat& quat ) const;
+   vjQuat operator/( const vjQuat& quat ) const;
    
    //: mult by inverse scalar.
    //!POST: returns a temporary == self scaled by s
@@ -244,7 +246,7 @@ public:
    // TODO: add description for what this means geometrically
    vjQuat operator+( const vjQuat& quat ) const;
    
-	//: do a "subtract" of all quat components
+   //: do a "subtract" of all quat components
    // TODO: add description for what this means geometrically
    vjQuat operator-( const vjQuat& quat ) const;
    
@@ -260,17 +262,17 @@ public:
    //  return false if self != quat
    bool operator==( const vjQuat& quat );
    
-	//: does self != quat?
+   //: does self != quat?
    // return true if self != quat                                  <BR>
    // return false if self == quat
    bool operator!=( const vjQuat& quat );
    
    //: set self to quat
-	vjQuat& operator=( const vjQuat& quat );
+   vjQuat& operator=( const vjQuat& quat );
    
    //: set self to 'pure' quaternion pure_quat
    // NOTE: a pure quaternion is one with scalar component set to 0
-	vjQuat& operator=( const vjVec3& pure_quat );
+   vjQuat& operator=( const vjVec3& pure_quat );
    
    //: output method
    std::ostream& outStreamRaw( std::ostream& out ) const;
@@ -580,24 +582,30 @@ inline vjQuat vjQuat::operator*( const vjQuat& quat ) const
    return dst;
 }
 
-//: multiply by a pure quaternion (only vector, scalar component == 0)
-//  returns a pure quaternion as temporary
-// NOTE: a pure quaternion is one with scalar component set to 0
-//!PRE: give a pure quaternion for "pure_quat"
-//!POST: pure quaternion = self * pure_quat 
-inline vjVec3 vjQuat::operator*( const vjVec3& pure_quat ) const
+//: multiply by a vector
+//  returns a vector as temporary
+//!PRE: give a vector
+//!POST: vector = self * vector 
+inline vjVec3 vjQuat::operator*( const vjVec3& vector ) const
 {
-   // convert the vec3 to a quat
-   vjQuat pure;
-   pure.copy( pure_quat );
+   // convert the vec3 to a pure quat
+   vjQuat pure_quat;
+   pure_quat.copy( vector );
 
+   std::cout<<"ttt: "<<*this<<" . "<<pure_quat<<"\n"<<std::flush;
+   
    // get the inverse of self
    vjQuat self_inv;
    self_inv.invert( *this );
+   std::cout<<"inv: "<<self_inv<<"\n"<<std::flush;
+   
 
    // do the multiplication, and return
-   vjQuat result = self_inv * pure * (*this);
-	return vjVec3( result.vec[VJ_X], result.vec[VJ_Y], result.vec[VJ_Z] );
+   vjQuat result = self_inv * pure_quat * (*this);
+   
+   std::cout<<"res: "<<result<<"\n"<<std::flush;
+   
+   return vjVec3( result.vec[VJ_X], result.vec[VJ_Y], result.vec[VJ_Z] );
 }
 
 // mult by scalar 
@@ -726,6 +734,12 @@ inline vjQuat& vjQuat::operator=( const vjVec3& pure_quat )
    return *this;
 }   
 
-
+//: quaternion product of a pure quaternion (0,x,y,z) and a quaternion
+inline void vjQuat::mult( const vjVec3& pure_quat, const vjQuat& quat )
+{
+   vjQuat pq;
+   pq.copy( pure_quat );
+   this->mult( pq, quat );
+}   
 
 #endif
