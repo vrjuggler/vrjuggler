@@ -48,6 +48,7 @@ public interface EnvironmentService
    public static final int UNIX = 0;
    public static final int MacOS = 1;
    public static final int Windows = 2;
+   public static final int WindowsCE = 3;
 
    /**
     * Stores the command-line arguments passed to the application when it was

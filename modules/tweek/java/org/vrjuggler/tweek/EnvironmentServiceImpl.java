@@ -95,6 +95,10 @@ class EnvironmentServiceImpl
       {
          os = EnvironmentService.MacOS;
       }
+      else if ( os_name.indexOf("WindowsCE") != -1 )
+      {
+         os = EnvironmentService.WindowsCE;
+      }
       else if ( os_name.indexOf("Windows") != -1 )
       {
          os = EnvironmentService.Windows;
@@ -116,9 +120,17 @@ class EnvironmentServiceImpl
       {
          data_dir_name = getUserHome() + File.separator + "Library";
       }
+      // Windows preferences location.
       else if ( getOS() == Windows )
       {
          data_dir_name = getUserHome() + File.separator + "Application Data";
+      }
+      // WindowsCE/PocketPC preferences location.  At the moment, this is
+      // set to the user's home directory because PocketPC does not seem to
+      // use "Application Data" as the application-specific data directory.
+      else if ( getOS() == WindowsCE )
+      {
+         data_dir_name = getUserHome();
       }
       // UNIX.
       else
