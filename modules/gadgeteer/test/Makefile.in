@@ -66,6 +66,7 @@ PROGS		= go@EXEEXT@			\
         	  go-logiclass@EXEEXT@		\
                   aFlockTest@EXEEXT@		\
         	  vjFlockTest@EXEEXT@		\
+                  aMotionStarTest@EXEEXT@	\
                   dummyTrackd@EXEEXT@		\
                   fsPinchGloveTest@EXEEXT@
 
