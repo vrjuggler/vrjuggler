@@ -44,6 +44,21 @@
 
 vjSingletonImp(vjOSXSystemFactory);
 
+// This function comes from Carbon SetupGL 1.5 distributed by Apple
+// Corporation.  Its use is here is permitted by the license.
+static Boolean PreflightGL (Boolean checkFullscreen)
+{
+   // ensure Mac OS X flag is set
+   if ((Ptr) kUnresolvedCFragSymbolAddress == (Ptr) aglChoosePixelFormat) // check for existance of OpenGL
+      return false;
+
+   // if on Mac OS X then this check is not required
+   if (checkFullscreen &&
+       ((Ptr) kUnresolvedCFragSymbolAddress == (Ptr) DSpStartup)) // check for existance of DSp
+      return false;
+   return true;
+}
+
 void vjOSXSystemFactory::CarbonApplicationThread(void* nullData)
 {
     Initialize();
