@@ -62,13 +62,10 @@ class vjChunkDesc;
 //!PUBLIC_API:
 class vjProperty {
 
-public:
+private:
 
     //: Pointer to this vjProperty's description.
     vjPropertyDesc *description;
-
-    //: Number of values.  -1 for variable number (use getNum() )
-    int num;
 
     //: Type of value entries.
     VarType type;
@@ -76,13 +73,20 @@ public:
     //: A unit, if type is T_DISTANCE. (not fully functional)
     CfgUnit units;
 
+    unsigned int validation;  // flag for testing validity of self
+
+public:
+
+    //: Number of values.  -1 for variable number (use getNum() )
+    int num;
+
     //: Vector containing the actual vjVarValues.
     std::vector<vjVarValue*> value;
 
     //: ChunkDesc for embedded chunk (if valtype is T_EMBEDDEDCHUNK)
     vjChunkDesc *embeddesc;
 
-    unsigned int validation;  // flag for testing validity of self
+
 
 
     //: Constructor
@@ -133,6 +137,13 @@ public:
     //! RETURNS: n - size of value vector.
     int getNum () const;
 
+    inline bool hasFixedNumberOfValues () const {
+        return (num >= 0);
+    }
+
+    inline VarType getType () const {
+        return type;
+    }
 
     const std::string& getName () const;
 

@@ -184,7 +184,7 @@ std::vector<std::string> vjConfigChunk::getChunkPtrDependencies() const
    //cout << "Dependency test for " << getProperty ("name") << endl;
    for (i=0;i<props.size();i++)                       // For each property
    {
-      if (props[i]->type == T_CHUNK)                  // If it is a chunk ptr
+      if (props[i]->getType() == T_CHUNK)             // If it is a chunk ptr
       {
          for (j=0;j<props[i]->getNum();j++)           // For each property
          {
@@ -196,7 +196,7 @@ std::vector<std::string> vjConfigChunk::getChunkPtrDependencies() const
             }
          }
       }
-      else if (props[i]->type == T_EMBEDDEDCHUNK)
+      else if (props[i]->getType() == T_EMBEDDEDCHUNK)
       {
          std::vector<std::string> child_deps;
          for (j = 0; j < props[i]->getNum(); j++)
@@ -228,7 +228,7 @@ vjProperty* vjConfigChunk::getPropertyPtrFromToken (const std::string& token) co
     assertValid();
 
     for (unsigned int i = 0; i < props.size(); i++) {
-        if (!vjstrcasecmp(props[i]->description->getToken(), token))
+        if (!vjstrcasecmp(props[i]->getToken(), token))
             return props[i];
     }
     return NULL;
@@ -291,7 +291,7 @@ bool vjConfigChunk::tryassign (vjProperty *p, int index, const char* val) {
     float f;
     bool b;
 
-    if(p->type != T_CHUNK) {          // T_CHUNKS have enumeration, but they are really strings (or something)
+    if(p->getType() != T_CHUNK) {          // T_CHUNKS have enumeration, but they are really strings (or something)
         vjEnumEntry* e = p->getEnumEntry (val);
         if (e) {
             p->setValue (e->getValue());
@@ -299,7 +299,7 @@ bool vjConfigChunk::tryassign (vjProperty *p, int index, const char* val) {
         }
     }
 
-    switch (p->type) {
+    switch (p->getType()) {
     case T_INT:
         i = strtol (val, &endval, 0);
         if (*endval != '\0')
@@ -386,7 +386,7 @@ std::istream& operator >> (std::istream& in, vjConfigChunk& self) {
 
                 // this works because the chunk >> expects the typename to have
                 // already been read (which we did when looking for '}')
-                if (p->type == T_EMBEDDEDCHUNK) {
+                if (p->getType() == T_EMBEDDEDCHUNK) {
                     vjConfigChunk *ch = vjChunkFactory::instance()->createChunk (p->embeddesc);
                     in >> *ch;
                     p->setValue (ch, i++);
@@ -401,7 +401,7 @@ std::istream& operator >> (std::istream& in, vjConfigChunk& self) {
                 }
             }
 
-            if ((p->num != -1) && (p->num != i))
+            if (p->hasFixedNumberOfValues() && (p->num != i))
                 vjDEBUG(vjDBG_ERROR,1) << "ERROR: vjProperty " << p->getName().c_str() << " should have "
                                        << p->num << " values; " << i << " found" << std::endl << vjDEBUG_FLUSH;
         }
@@ -519,7 +519,7 @@ bool vjConfigChunk::addValue (const std::string& property, int val) {
     p = getPropertyPtrFromToken (property);
     if (p == NULL)
         return false;
-    if (p->num != -1)
+    if (p->hasFixedNumberOfValues())
         return false;
     return setProperty (property, val, p->value.size());
 }
@@ -531,7 +531,7 @@ bool vjConfigChunk::addValue (const std::string& property, float val) {
     p = getPropertyPtrFromToken (property);
     if (p == NULL)
         return false;
-    if (p->num != -1)
+    if (p->hasFixedNumberOfValues())
         return false;
     return setProperty (property, val, p->value.size());
 }
@@ -543,7 +543,7 @@ bool vjConfigChunk::addValue (const std::string& property, const std::string& va
     p = getPropertyPtrFromToken (property);
     if (p == NULL)
         return false;
-    if (p->num != -1)
+    if (p->hasFixedNumberOfValues())
         return false;
     return setProperty (property, val, p->value.size());
 }
@@ -555,7 +555,7 @@ bool vjConfigChunk::addValue (const std::string& property, vjConfigChunk* val) {
     p = getPropertyPtrFromToken (property);
     if (p == NULL)
         return false;
-    if (p->num != -1)
+    if (p->hasFixedNumberOfValues())
         return false;
     return setProperty (property, val, p->value.size());
 }
