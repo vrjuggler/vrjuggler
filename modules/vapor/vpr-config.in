@@ -94,10 +94,10 @@ Options:
                                 alternate executable prefix to use when
                                 printing paths
         [--version]             Print the installed VPR's version number
-        [--libs [n32|64]]       Print the basic VPR libraries
-        [--extra-libs [n32|64]] Print the extra linker options needed for
+        [--libs [N32|64]]       Print the basic VPR libraries
+        [--extra-libs [N32|64]] Print the extra linker options needed for
                                 making an executable
-        [--cxxflags [n32|64]]   Print the flags for the C++ compiler
+        [--cxxflags [N32|64]]   Print the flags for the C++ compiler
         [--subsystem]           Print the OS abstraction layer being used
 Libraries:
         vpr
@@ -144,7 +144,7 @@ while test $# -gt 0; do
         --cxxflags)
             echo_cxxflags=yes
             case $2 in
-                n32)
+                N32)
                     vpr_extra_cxxflags="$vpr_extra_cxxflags $vpr_n32_flags $vpr_isa_flags"
                     shift
                     ;;
@@ -163,7 +163,7 @@ while test $# -gt 0; do
         --libs)
             echo_libs=yes
             case $2 in
-                n32)
+                N32)
                     ldflags="$vpr_n32_flags $vpr_isa_flags"
                     LIBBITSUF='32'
                     shift
@@ -184,7 +184,7 @@ while test $# -gt 0; do
                 --*)
                     # This is another option flag, so leave it alone.
                     ;;
-                n32)
+                N32)
                     LIBBITSUF='32'
                     shift
                     ;;
