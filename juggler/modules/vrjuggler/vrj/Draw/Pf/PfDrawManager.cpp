@@ -227,8 +227,9 @@ void vjPfDrawManager::initDrawing()
    std::vector<int> mono_fb_config = getMonoFBConfig();
 
    // ouput debug info about the frame buffer config recieved
+   unsigned int i;
    vjDEBUG(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "vjPfDrawManager::initDrawing: Got Stereo FB config\n" << vjDEBUG_FLUSH;
-   for(unsigned int i=0;i<stereo_fb_config.size();i++)
+   for(i=0;i<stereo_fb_config.size();i++)
       vjDEBUGlg(vjDBG_DRAW_MGR,vjDBG_VERB_LVL,false,false) << "  " << stereo_fb_config[i] << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_DRAW_MGR,vjDBG_VERB_LVL) << "\nvjPfDrawManager::initDrawing: Got Mono FB config\n" << vjDEBUG_FLUSH;
    for(i=0;i<mono_fb_config.size();i++)
@@ -341,7 +342,8 @@ void vjPfDrawManager::initDrawing()
    //                     PFCHAN_APPFUNC | PFCHAN_CULLFUNC );
 
    // ----- SETUP CHANNEL GROUP ---- //
-   for (unsigned int dispIndex=0; dispIndex<disps.size(); dispIndex++)
+   unsigned dispIndex=0;
+   for (dispIndex=0; dispIndex<disps.size(); dispIndex++)
    {
       pfChannel *left_ch, *right_ch;
       left_ch = disps[dispIndex].chans[pfDisp::LEFT];
