@@ -62,8 +62,11 @@ private:
       if(debug_lev != NULL)
       {
          debugLevel = atoi(debug_lev);
-         cout << "VJ_DEBUG_NFY_LEVEL: Set to " << debugLevel << endl;
-      }    
+         cout << "VJ_DEBUG_NFY_LEVEL: Set to " << debugLevel << endl << flush;
+      } else {   
+         cout << "VJ_DEBUG_NFY_LEVEL: Not found. " << endl << flush;
+         cout << "VJ_DEBUG_NFY_LEVEL: Defaults to " << debugLevel << endl << flush;
+      }
    }
 
 public:
