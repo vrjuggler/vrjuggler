@@ -36,6 +36,7 @@
 #include <vprConfig.h>
 #include <stdlib.h>
 #include <vector>
+#include <string>
 #include <map>
 
 #include <Sync/Mutex.h>
