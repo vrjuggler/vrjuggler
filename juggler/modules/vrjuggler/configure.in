@@ -607,16 +607,16 @@ if test "x$XERCES_INCLUDES" != "x" ; then
     INCLUDES="$INCLUDES $XERCES_INCLUDES"
 fi
 
-# For use in linking applications.
+CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
 
-if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
+if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xno" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
-    CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS -woff 3322 -w2"
+    CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4 -all"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     CFLAGS="$CFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
-    CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
+    CXXFLAGS="$CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
     DBG_FLAGS="$DBG_FLAGS /MTd"
     OPT_FLAGS="$OPT_FLAGS /MT"
