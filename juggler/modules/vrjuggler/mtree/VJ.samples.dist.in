@@ -47,6 +47,10 @@
                     ..
                 ..
             ..
+            ext
+                proceduralApp
+                ..
+            ..
             simple
                 ConfigApp
                 ..
@@ -63,10 +67,24 @@
         OSG
             simple
                 osgNav
+                    remotenav
+                        Subject
+                            idl
+                            ..
+                        ..
+                    ..
                 ..
             ..
         ..
         OpenSG
+            advanced
+                OpenSGViewer
+                    Common
+                    ..
+                    OpenSG
+                    ..
+                ..
+            ..
             simple
                 OpenSGNav
                 ..
