@@ -919,7 +919,7 @@ vpr::ReturnStatus SerialPortImplTermios::enableHardwareFlowControl ()
 vpr::ReturnStatus SerialPortImplTermios::disableHardwareFlowControl ()
 {
 #ifdef VPR_OS_IRIX
-   return setBit(CNEW_RTSCTS, SerialPortImplTermios::CFLAG, true,
+   return setBit(CNEW_RTSCTS, SerialPortImplTermios::CFLAG, false,
                  "Could not disable hardware flow control");
 #else
    return setBit(CRTSCTS, SerialPortImplTermios::CFLAG, false,
