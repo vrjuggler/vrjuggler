@@ -32,6 +32,7 @@ vjThreadPosix::vjThreadPosix (THREAD_FUNC func, void* arg, long flags,
 {
     vjThreadManager* vj_tm_inst;
 
+    mScope = VJ_THREAD_SCOPE;
     vj_tm_inst = vjThreadManager::instance();
 
     vj_tm_inst->lock();
@@ -59,6 +60,7 @@ vjThreadPosix::vjThreadPosix (vjBaseThreadFunctor* functorPtr, long flags,
 {
     vjThreadManager* vj_tm_inst;
 
+    mScope = VJ_THREAD_SCOPE;
     vj_tm_inst = vjThreadManager::instance();
 
     vj_tm_inst->lock();
@@ -131,7 +133,7 @@ vjThreadPosix::spawn (vjBaseThreadFunctor* functorPtr, long flags,
     // If thread priority scheduling is available, set the thread's priority
     // if it is set to be higher than 0.
 #   ifdef _POSIX_THREAD_PRIORITY_SCHEDULING
-        pthread_attr_setscope(&thread_attrs, VJ_THREAD_SCOPE);
+        pthread_attr_setscope(&thread_attrs, mScope);
 
         if ( priority > 0 ) {
             prio_param.sched_priority = priority;
