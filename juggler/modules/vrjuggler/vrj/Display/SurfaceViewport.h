@@ -51,7 +51,7 @@ namespace vrj
 class SurfaceViewport : public Viewport
 {
 public:
-   SurfaceViewport() :  mTracked(false), mLeftProj(NULL), mRightProj(NULL)
+   SurfaceViewport() :  mTracked(false)
    {;}
 
    virtual ~SurfaceViewport() {}
@@ -72,12 +72,6 @@ public:
    {
       ll = mLLCorner; lr = mLRCorner; ur = mURCorner; ul = mULCorner;
    }
-
-   Projection* getLeftProj()
-   { return mLeftProj; }
-
-   Projection* getRightProj()
-   { return mRightProj; }
 
    virtual std::ostream& outStream(std::ostream& out)
    {
@@ -118,10 +112,6 @@ protected:
    // Deal with tracked surfaces (ie. HMD, movable walls, desks, etc)
    bool           mTracked;            // Is this surface tracked
    std::string    mTrackerProxyName;   // If tracked, what is the name of the tracker
-
-   /// Defines the projection for this window. Ex. RIGHT, LEFT, FRONT
-   Projection*   mLeftProj;              //: Left eye projection
-   Projection*   mRightProj;             //: Right eye projection
 
 private:
          // These values are used to compute the coordinates of the view plane

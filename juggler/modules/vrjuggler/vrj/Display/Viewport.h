@@ -42,11 +42,13 @@
 #include <vrj/Kernel/Kernel.h>
 #include <jccl/Plugins/PerformanceMonitor/PerformanceMonitor.h>
 #include <vrj/Display/Display.h>
+#include <vrj/Display/Projection.h>
 
 namespace vrj
 {
 
 class Display;
+class Projection;
 
 //---------------------------------------------------------------------
 //: Base class for window viewports
@@ -61,7 +63,9 @@ class Display;
 class Viewport
 {
 public:
-   Viewport() : mUser(NULL), mDisplay(NULL), mViewportChunk(NULL)
+   Viewport()
+      : mUser(NULL), mDisplay(NULL), mViewportChunk(NULL),
+        mLeftProj(NULL), mRightProj(NULL)
    {
       mXorigin = mYorigin = mXsize = mYsize = -1.0f;
       mType = Viewport::UNDEFINED;
@@ -81,7 +85,6 @@ public:
         mLatencyMeasure->set (trackertimeindex, ts);
         mLatencyMeasure->set (currenttimeindex);
     }
-
 
    enum Type { UNDEFINED, SURFACE, SIM};                  // What type of viewport is it
    enum View { NONE=0, LEFT_EYE=1, RIGHT_EYE=2, STEREO=3 };      // For referring to which eye(s) to draw
@@ -148,6 +151,13 @@ public:
    Display* getDisplay()
    { return mDisplay; }
 
+   Projection* getLeftProj()
+   { return mLeftProj; }
+
+   Projection* getRightProj()
+   { return mRightProj; }
+
+
    virtual std::ostream& outStream(std::ostream& out);
    friend std::ostream& operator<<(std::ostream& out, Viewport& viewport);
 
@@ -163,14 +173,22 @@ protected:
    jccl::ConfigChunkPtr mViewportChunk;        /**< The chunk data for this display */
    jccl::PerfDataBuffer* mLatencyMeasure;
 
-   /** @nameLocation and size of viewport
+   /** @name Location and size of viewport
    * ASSERT: all values are >= 0.0 and <= 1.0
    */
    //@{
    float          mXorigin, mYorigin, mXsize, mYsize;
    //@}
-};
 
+   /** @name Projections
+   * Defines the projection for this window
+   */
+   //@{
+   Projection*   mLeftProj;      /** Left eye projection */
+   Projection*   mRightProj;     /** Right eye projection */
+   //@}
+
+};
 
 };
 
