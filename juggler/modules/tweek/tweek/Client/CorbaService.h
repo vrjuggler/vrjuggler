@@ -67,7 +67,7 @@ public:
     * @param nsPort       The port number on which the Naming Service is
     *                     listening.  Normally, this will be 2809.  It defaults
     *                     to 2809.
-    * @param iiopVer      The version of IIOP to use when communicating with
+    * @param iiopVersion  The version of IIOP to use when communicating with
     *                     the Naming Service.  Common values are "1.0" and
     *                     "1.2".  It defaults to "1.0".
     * @param subcontextId The identifier for the Naming subcontext.  This is
