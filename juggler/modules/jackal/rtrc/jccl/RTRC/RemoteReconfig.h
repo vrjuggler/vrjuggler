@@ -100,7 +100,7 @@ protected:
       /* Do nothing. */ ;
    }
 
-   RemoteReconfig(const RemoteReconfig& o)
+   RemoteReconfig(const RemoteReconfig&)
    {
       /* Do nothing. */ ;
    }
