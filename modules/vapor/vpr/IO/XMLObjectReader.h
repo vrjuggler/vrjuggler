@@ -73,7 +73,7 @@ public:
    XMLObjectReader(cppdom::NodePtr rootNode)
       : mCurSource(CdataSource)
    {
-      mRootNode = rootNode;      
+      mRootNode = rootNode;
    }
 
    /** @name Tag and attribute handling */
@@ -81,10 +81,10 @@ public:
    /** Starts a new section/element of name tagName.
    */
    virtual vpr::ReturnStatus beginTag(std::string tagName);
-   
+
    /** Ends the most recently named tag. */
    virtual vpr::ReturnStatus endTag();
-   
+
    /** Starts an attribute of the name attributeName */
    virtual vpr::ReturnStatus beginAttribute(std::string attributeName);
 
@@ -121,7 +121,7 @@ public:
 
 
 protected:
-   enum CurSource 
+   enum CurSource
    { AttribSource, /**< We are currently targetting an attribute */
      CdataSource /**< We are currently targetting cdata */
     };
@@ -131,7 +131,7 @@ protected:
     vpr::ReturnStatus readValueStringRep(T& val)
     {
        std::stringstream* in_stream(NULL);
-       
+
        if(AttribSource == mCurSource)
        { in_stream = &mAttribSource; }
        else
@@ -151,7 +151,7 @@ protected:
    {
       NodeState(cppdom::Node* cur_node=NULL)
          : node(cur_node)
-      { 
+      {
          nextChild = node->getChildren().begin();     // Initialize to the first child
          cdataSource.str(node->getFullCdata());
       }
@@ -181,7 +181,7 @@ protected:
    * When constructed, these are both null.
    */
    cppdom::NodePtr         mRootNode;        /**< Base node of the tree */
-   std::vector<NodeState>  mCurNodeStack;    /**< Stack of current nodes we are examining recursively */      
+   std::vector<NodeState>  mCurNodeStack;    /**< Stack of current nodes we are examining recursively */
    std::stringstream       mAttribSource;    /**< Source of attribute data */
    CurSource               mCurSource;       /**< The current source of reading data */
 };
@@ -207,16 +207,25 @@ inline  vpr::ReturnStatus XMLObjectReader::beginTag(std::string tagName)
    // Find the correct child
    if(mCurNodeStack.empty())  // We should enter the root
    {
-      mCurNodeStack.push_back(NodeState(mRootNode.get()));   
+      mCurNodeStack.push_back(NodeState(mRootNode.get()));
    }
    else                      // Find the next child and push it on
    {
       vprASSERT(mCurNodeStack.back().nextChild != mCurNodeStack.back().node->getChildren().end() && "Past last child");
+
+      // Make sure that we get to child of type node.
+      // While next child is not of type node skip over cdata...
+      while( (*(mCurNodeStack.back().nextChild))->getType() != cppdom::xml_nt_node)
+      {
+         mCurNodeStack.back().nextChild++;
+         vprASSERT(mCurNodeStack.back().nextChild != mCurNodeStack.back().node->getChildren().end() && "Past last child");
+      }
+
       cppdom::NodePtr next_child = *(mCurNodeStack.back().nextChild);      // Get the next child
+      mCurNodeStack.back().nextChild++;                                    // Step to the next child for next time
       mCurNodeStack.push_back( NodeState(next_child.get()));               // Add the child to the stack
-      mCurNodeStack.back().nextChild++;                                    // Step to the next child
    }
-      
+
    std::string cur_node_name = mCurNodeStack.back().node->getName();
    vprASSERT(tagName == cur_node_name && "Reading back in incorrect order");
    return vpr::ReturnStatus::Succeed;
@@ -246,7 +255,7 @@ inline vpr::ReturnStatus XMLObjectReader::beginAttribute(std::string attributeNa
 /** Ends the most recently named attribute */
 inline vpr::ReturnStatus XMLObjectReader::endAttribute()
 {
-   mAttribSource.str("");     // Clear the attrib content (not required, but helps point out bugs)   
+   mAttribSource.str("");     // Clear the attrib content (not required, but helps point out bugs)
    mCurSource = CdataSource;     // Set back to getting data from cdata
    return vpr::ReturnStatus::Succeed;
 }
@@ -272,7 +281,7 @@ inline vpr::Uint32 XMLObjectReader::readUint32()
 {
    vpr::Uint32 val;
    readValueStringRep(val);
-   return val;   
+   return val;
 }
 
 inline vpr::Uint64 XMLObjectReader::readUint64()
@@ -301,12 +310,12 @@ inline std::string XMLObjectReader::readString(unsigned len)
 {
    std::string ret_val("");
 
-   if(AttribSource == mCurSource)   // Just return a copy of the attribute source 
-   { 
+   if(AttribSource == mCurSource)   // Just return a copy of the attribute source
+   {
       ret_val = mAttribSource.str();
    }
    else  // Cdata, extract the "'s around the string
-   { 
+   {
       char char_buffer[1024];    // Buffer for writing the final value
       char temp_char('0');
 
@@ -325,10 +334,10 @@ inline std::string XMLObjectReader::readString(unsigned len)
          ret_val += char_buffer;                                           // append onto end
          done_reading = (mCurNodeStack.back().cdataSource.peek() == '"');     // Done reading if got to a "
       }
-      mCurNodeStack.back().cdataSource.ignore(1);                    // Ignore that " as well      
+      mCurNodeStack.back().cdataSource.ignore(1);                    // Ignore that " as well
    }
 
-   return ret_val;       
+   return ret_val;
 }
 
 inline bool XMLObjectReader::readBool()
