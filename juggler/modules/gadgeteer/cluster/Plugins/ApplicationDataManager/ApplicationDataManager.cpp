@@ -214,10 +214,12 @@ namespace cluster
     {;
     }
     
+    /*
     bool ApplicationDataManager::isPluginReady()
     {
        return (0 == mPendingApplicationDataRequests.size());
     }
+    */
 
     void ApplicationDataManager::updateAll()
     {

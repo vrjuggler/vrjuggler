@@ -110,7 +110,7 @@ public:
     *               and has no pending tasks.
     *  
     */
-   virtual bool isPluginReady();
+   //virtual bool isPluginReady();
    
    /** 
     *  Returns the name of the this plugin

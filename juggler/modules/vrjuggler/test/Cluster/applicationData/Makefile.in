@@ -42,7 +42,7 @@ APP_NAME=	applicationData@EXEEXT@
 APP_NAME=	applicationData
 GADGET_CONFIG=		gadgeteer-config
 GADGET_LIBS_PARAM?=	Gadgeteer
-EXTRA_LIBS +=   $(shell $(GADGET_CONFIG) $(GADGET_LIBS_PARAM) --plugin-path) -lApplicationDataManager_drv
+EXTRA_LIBS +=   $(shell $(GADGET_CONFIG) $(GADGET_LIBS_PARAM) --plugin-path) -lApplicationDataManager
 
 # Basic options.
 srcdir=		@srcdir@

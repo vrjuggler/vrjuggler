@@ -81,7 +81,7 @@ public:
 
    virtual void preDraw();
    virtual void postPostFrame();
-   virtual bool isPluginReady();
+   //virtual bool isPluginReady();
    
    bool createBarrier();
 

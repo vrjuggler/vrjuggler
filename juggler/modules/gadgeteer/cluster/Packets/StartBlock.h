@@ -76,8 +76,8 @@ public:
 
       mHeader = packet_head;
       
-      //recv(packet_head,stream);
-      //parse();
+      recv(packet_head,stream);
+      parse();
    }
 
 
@@ -86,18 +86,21 @@ public:
     *
     * Create a device request to be sent
     */
-   StartBlock(vpr::Uint32 frame_number)
+   StartBlock(const vpr::GUID& plugin_id, const vpr::Uint32& frame_number)
    {
       // Given the input, create the packet and then serialize the packet(which includes the header)
       // - Set member variables
       // - Create the correct packet header
       // - Serialize the packet
+
+      mPluginId = plugin_id;
    
       // Header vars (Create Header)
       mHeader = new Header(Header::RIM_PACKET,
                                        Header::RIM_START_BLOCK,
                                        Header::RIM_PACKET_HEAD_SIZE
-                                       /*+2 tempVar*/,frame_number);
+                                       +16/*Plugin GUID*/
+                                       ,frame_number);
       serialize();
    }
 
@@ -110,8 +113,8 @@ public:
       mPacketWriter->getData()->clear();
       mPacketWriter->setCurPos(0);
 
-      // Temp Var
-      //mPacketWriter->writeUint16(mTempVar);
+      // Serialize the Plugin ID
+      mPluginId.writeObject(mPacketWriter);
 
       // Create the header information
       mHeader->serializeHeader();
@@ -122,24 +125,24 @@ public:
     */
    void parse()
    {
-      // Temp Var
-      //mTempVar = mPacketReader->readUint16();
+      // De-Serialize the Plugin ID
+      mPluginId.readObject(mPacketReader);
    }
    
    virtual void printData(int debug_level)
    {
-/*      vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
+      vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
          <<  clrOutBOLD(clrYELLOW,"====== Start BLOCK ======\n") << vprDEBUG_FLUSH;
       
       Packet::printData(debug_level);
       
       vprDEBUG(gadgetDBG_RIM,debug_level) 
-         << clrOutBOLD(clrYELLOW, "New State:    ") << mNewState
-         << std::Startl << vprDEBUG_FLUSH;
+         << clrOutBOLD(clrYELLOW, "Plugin ID:    ") << mPluginId.toString()
+         << std::endl << vprDEBUG_FLUSH;
 
-      vprDEBUG_Start(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
+      vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
          <<  clrOutBOLD(clrYELLOW,"=======================\n") << vprDEBUG_FLUSH;
-*/         
+         
    }
    static vpr::Uint16 getBaseType()
    {
@@ -148,35 +151,8 @@ public:
       
    virtual bool action(ClusterNode* node)
    {
-      // On Barrier Recv
-      // -If Master
-      //   -Remove Pending slave
-      //   -If all recved
-      //     -Send responce to all nodes
-      //     -Set Running TRUE
-      // -Else
-      //   -Set Running TRUE
-
-      if (node == NULL)
-      {
-         return false;
-      }
-      if (ClusterManager::instance()->isBarrierMaster())
-      {
-         ClusterManager::instance()->removePendingBarrierSlave(node->getHostname());
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[XXX] ")
-            << "StartBlock::action() - Barrier Master!\n" << vprDEBUG_FLUSH;         
-      }
-      else
-      {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[XXX] ")
-            << "StartBlock::Action() - Slave\n" << vprDEBUG_FLUSH;         
-         ClusterManager::instance()->setRunning(true);
-      }
       return true;
    }
-private:
-   //vpr::Uint16    mTempVar;
 };
 }
 

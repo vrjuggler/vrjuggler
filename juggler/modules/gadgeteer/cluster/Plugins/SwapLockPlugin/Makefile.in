@@ -39,14 +39,17 @@
 
 default: all
 
-# Include common definitions
+# Include common definitions.
 include @topdir@/make.defs.mk
+
+PLUGIN_NAME=	SwapLockPlugin
 
 includedir=	@includedir@/cluster/Plugins/SwapLockPlugin
 srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
-SUBOBJDIR=	$(GADGET_LIBRARY)
+SUBOBJDIR=	$(PLUGIN_NAME)
+C_AFTERBUILD=	plugin-dso
 
 SRCS=		SwapLockPlugin.cpp	  \
 		ClusterBarrierSerial.cpp  \
@@ -54,9 +57,11 @@ SRCS=		SwapLockPlugin.cpp	  \
 
 ifneq (@OS_TYPE@, Win32)
 SRCS+=		ClusterBarrierWired.cpp
-endif
+endif		
 
 include $(MKPATH)/dpp.obj.mk
+
+include @topdir@/cluster/Plugins/plugin.defs.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
