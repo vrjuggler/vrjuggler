@@ -77,17 +77,17 @@ int main(int argc, char* argv[])
    extern char* optarg;
    extern int optind;
    int ch;
-   std::vector<std::string> script_names;
+   std::vector<std::string> module_names;
 
-   while ( (ch = getopt(argc, argv, "c:s:")) != -1 )
+   while ( (ch = getopt(argc, argv, "c:m:")) != -1 )
    {
       switch (ch)
       {
          case 'c':
             vrj::Kernel::instance()->loadConfigFile(optarg);
             break;
-         case 's':
-            script_names.push_back(std::string(optarg));
+         case 'm':
+            module_names.push_back(std::string(optarg));
             break;
          default:
 //            usage();
@@ -102,8 +102,8 @@ int main(int argc, char* argv[])
 
    std::vector<AppHolder> apps;
 
-   for ( std::vector<std::string>::iterator i = script_names.begin();
-         i != script_names.end();
+   for ( std::vector<std::string>::iterator i = module_names.begin();
+         i != module_names.end();
          ++i )
    {
       std::cout << "Working on module named '" << *i << "'" << std::endl;
