@@ -43,9 +43,8 @@
 #define _GADGET_CLUSTER_BARRIER_H
 
 #include <vpr/vprConfig.h>
-#include <vpr/System.h>
+//#include <vpr/System.h>
 
-#include <gadget/RemoteInputManager/ClusterBarrier.h>
 #include <vector>
 
 #include <boost/static_assert.hpp>
@@ -55,6 +54,11 @@
 #include <vpr/IO/Port/SerialPort.h>
 #include <gadget/RemoteInputManager/MsgPackage.h>
 
+/*namespace vpr
+{
+   class SerialPort;
+   class SocketStream;
+}*/
 
 namespace gadget
 {
@@ -161,53 +165,9 @@ private:
 class ClusterBarrierSerial : public ClusterBarrier
 {
 public:
-   ClusterBarrierSerial()
-   {
-   
-   }
-   virtual ~ClusterBarrierSerial()
-   {
-      if (mSerialPort != NULL)
-      {
-         mSerialPort->close();
-         delete mSerialPort;
-      }
-   }
-   virtual vpr::ReturnStatus Init()
-   {
-      vpr::ReturnStatus status;
-
-      if (mIsMaster)
-      {
-         std::cout << "Before SerialConnect!" << std::endl;
-         status = ConnectToMasterSerial();
-         if (status.success())
-         {
-            mActive = true;
-         }
-         return(status);
-      }
-      else
-      {
-         std::cout << "Before SocketConnect!" << std::endl;
-         status = ConnectToMasterSocket();
-         std::cout << "After SocketConnect!" << std::endl;
-         if (!status.success())
-         {
-            return status;   
-         }
-         else
-         {  
-            std::cout << "Before SerialConnect!" << std::endl;
-            status = ConnectToMasterSerial();
-            if (status.success())
-            {
-               mActive = true;
-            }
-            return(status);
-         }
-      }
-   }
+   ClusterBarrierSerial();
+   virtual ~ClusterBarrierSerial();
+   virtual vpr::ReturnStatus Init();
 
    virtual void AddBarrierSlave(vpr::SocketStream* sock_stream);
    vpr::ReturnStatus ConnectToMasterSocket();

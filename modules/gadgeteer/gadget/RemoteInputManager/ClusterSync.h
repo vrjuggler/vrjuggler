@@ -47,10 +47,6 @@
 #include <vector>
 #include <boost/static_assert.hpp>
 
-#include <vpr/System.h>
-#include <vpr/IO/Socket/SocketStream.h>
-#include <vpr/IO/ObjectWriter.h>
-#include <vpr/IO/ObjectReader.h>
 
    // Algorithm to calculate clock diff between the two nodes (as a vpr::Interval)
    // - Initialize tolerance value
@@ -70,18 +66,20 @@
    //    thus, we can't just exist on any state.  We have to exit in a state that is waiting for data.
    //    This leads to much ugliness (like a goto. grrrrr)
 
+namespace vpr
+{
+//   class SocketStream;
+   class ObjectReader;
+   class ObjectWriter;
+}
+
 namespace gadget
 {
 
 class GADGET_CLASS_API ClusterSync
 {
 public:
-   ClusterSync() : syncPacket(12)
-   {
-      mTol = 2;
-      mAccept = false;
-      mReader = new vpr::ObjectReader(&syncPacket);
-   }
+   ClusterSync();
    void getPacket(unsigned num);
    void sendAndClear();
    void clearIntervals();

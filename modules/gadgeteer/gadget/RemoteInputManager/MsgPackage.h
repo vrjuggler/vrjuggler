@@ -39,6 +39,13 @@
 #include <vpr/IO/ObjectWriter.h>
 #include <gadget/RemoteInputManager/NetDevice.h>
 
+//namespace vpr
+//{
+//   class SocketStream;
+//   class ObjectWriter;
+//   class ObjectReader;
+//}
+  
 namespace gadget
 {
 
@@ -74,10 +81,7 @@ namespace gadget
       void sendAndClear(vpr::SocketStream* sock_stream);
      
 
-      bool isEmpty()
-      {
-          return(mObjectWriter->getData()->empty() && mTempWriter->getData()->empty());
-      }
+      bool isEmpty();
 
      /**
       * Send contents of current ObjectWriter to the specified socket and 

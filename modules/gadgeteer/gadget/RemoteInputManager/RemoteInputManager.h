@@ -37,30 +37,33 @@
 // on another machine
 
 #include <gadget/gadgetConfig.h>
-#include <jccl/RTRC/ConfigChunkHandler.h>
+//#include <jccl/RTRC/ConfigChunkHandler.h>
 
 #include <vpr/Thread/Thread.h>
 #include <vpr/Sync/Mutex.h>
-#include <vpr/IO/Socket/SocketStream.h>
+//#include <vpr/IO/Socket/SocketStream.h>
 
-#include <gadget/RemoteInputManager/NetConnection.h>
+//#include <gadget/RemoteInputManager/NetConnection.h>
 #include <gadget/RemoteInputManager/MsgPackage.h>
-//#include <gadget/Type/NetInput.h>
-#include <gadget/RemoteInputManager/NetUtils.h>
-//#include <gadget/Type/NetDigital.h>
-//#include <gadget/Type/NetPosition.h>
-#include <gadget/RemoteInputManager/NetDevice.h>
-#include <gadget/Type/BaseTypeFactory.h>
-#include <gadget/RemoteInputManager/ClusterBarrier.h>
-#include <algorithm>
+//#include <gadget/RemoteInputManager/NetUtils.h>
+//#include <gadget/RemoteInputManager/NetDevice.h>
 
-namespace gadget{
+//namespace vpr
+//{
+//   class Thread;
+//}
 
+namespace gadget
+{
    class Proxy;
    class Input;
    class InputManager;
+   class SocketStream;
+   class NetConnection;
+   class NetDevice;
+   class ClusterBarrier;
 
-   // Note the RemoteInputManager does not inherit vjConfigChunkHandler like the Input Manager does.
+   // Note the RemoteInputManager does not inherit ConfigChunkHandler like the Input Manager does.
    // That's because it is closely connected to the Input Manager and the chunks it processes must also
    // be processed by the Input Manager.   
    class GADGET_CLASS_API RemoteInputManager
@@ -85,7 +88,10 @@ namespace gadget{
       std::vector<jccl::ConfigChunkPtr>                  mPendingDeviceChunks;
       std::map<std::string, jccl::ConfigChunkPtr>        mMachineTable;
       std::map<std::string, jccl::ConfigChunkPtr>        mClusterTable;
-
+      
+      std::map<std::string, vpr::ObjectWriter*>          mCachedDeviceData;
+      std::map<std::string, gadget::Input*>          mTransmittingDevicePointers;
+      
       vpr::Uint16          mListenPort;
       vpr::GUID            mManagerId;
       vpr::Thread*         mAcceptThread;
@@ -109,7 +115,7 @@ namespace gadget{
        */
       void shutdown();
       
-
+      vpr::ObjectWriter* getObjectWriter(std::string device_name, gadget::Input* input_device);
 
 
       void debugDump();
@@ -266,14 +272,14 @@ namespace gadget{
       /**
        * Send local data to all connected remote machines.
        */
-      void sendDeviceNetData();
+      void sendNetworkData();
       
       /**
        * Read the network until all connections have received the data 
        * they need
        */
-      void receiveReceivingConnectionData();
-      void receiveTransmittingConnectionData();
+      void readReceivingConnectionData();
+      void readTransmittingConnectionData();
 
       NetConnection* getTransmittingConnectionByHostAndPort(const std::string& hostname, const int port); // NetConnection* getConnectionByHostAndPort(const std::string& location_name);
       NetConnection* getTransmittingConnectionByManagerId(const vpr::GUID& manager_id);
