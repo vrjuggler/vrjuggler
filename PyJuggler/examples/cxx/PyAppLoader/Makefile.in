@@ -29,19 +29,37 @@ bindir=		@bindir@
 prefix=		@prefix@
 srcdir=		@srcdir@
 
+ifeq (@OS_TYPE@, Win32)
+   CXXFLAGS=	$(shell vrjuggler-config --includes) /Zm800 /GX /GR /Op	\
+		/I$(srcdir) /Zc:wchar_t,forScope $(CXXFLAGS_DBG)
+   CXXFLAGS_DBG=/Z7 /Od /Ob0 /MDd /D_DEBUG
+   CXXFLAGS_OPT=/Ogity /O2 /Gs /Ob2 /MD /D_OPT
+   LDFLAGS_DBG=	/DEBUG
+   LDFLAGS_OPT=	/RELEASE
+   LDFLAGS=	$(LDFLAGS_DBG)
+else
+   CXXFLAGS=	$(shell vrjuggler-config --cxxflags) -I$(srcdir)	\
+		$(CXXFLAGS_DBG)
+   CXXFLAGS_DBG=-D_DEBUG -g
+   CXXFLAGS_OPT=-D_OPT -O2
+   LDFLAGS_DBG=	-g
+   LDFLAGS_OPT=	-O2
+   LDFLAGS=	-Wl,--export-dynamic $(LDFLAGS_DBG)
+endif
+
 CXX=		@CXX@
-CXXFLAGS=	$(shell vrjuggler-config --cxxflags) @PYTHON_INCLUDES@	\
-		-I$(srcdir) $(DEBUG_FLAGS)
-DEBUG_FLAGS=	-g -D_DEBUG
-LDFLAGS=	-Wl,--export-dynamic
+CXXFLAGS+=	@PYTHON_INCLUDES@
 LIBS=		$(shell vrjuggler-config --libs)
 EXTRA_LIBS=	$(shell vrjuggler-config --extra-libs)
 
 PYTHON_VERSION=		@PYTHON_VERSION@
-PYTHON_LDFLAGS=		@PYTHON_LDFLAGS@ @PYTHON_LIB@ @UTIL_LIB@	\
+PYTHON_LIB=		@PYTHON_LIB_DBG@
+#PYTHON_LIB=		@PYTHON_LIB_OPT@
+PYTHON_LDFLAGS=		@PYTHON_LDFLAGS@ $(PYTHON_LIB) @UTIL_LIB@	\
 			@PYTHON_LIB_DEPS@				\
 			$(NULL)
-BOOST_PYTHON_LDFLAGS=	@BOOST_PYTHON_LDFLAGS@
+BOOST_PYTHON_LDFLAGS=	@BOOST_PYTHON_LDFLAGS_DBG@
+#BOOST_PYTHON_LDFLAGS=	@BOOST_PYTHON_LDFLAGS_OPT@
 
 EXEEXT=		@EXEEXT@
 OBJEXT=		@OBJEXT@
