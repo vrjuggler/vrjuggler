@@ -153,28 +153,35 @@ case $host in
             DSOREGFILE='/usr/lib64/so_locations'
             CFLAGS="$CFLAGS -mips3 -64"
             CXXFLAGS="$CXXFLAGS -mips3 -64"
+            LDOPTS="-mips3 -64"
             OPT_FLAGS='-OPT:Olimit=2000'
         elif test "$OBJECT_STYLE" = "64_M4" ; then
             DSOREGFILE='/usr/lib64/so_locations'
             CFLAGS="$CFLAGS -mips4 -64"
             CXXFLAGS="$CXXFLAGS -mips4 -64"
+            LDOPTS="-mips4 -64"
             OPT_FLAGS='-OPT:Olimit=2000'
         elif test "$OBJECT_STYLE" = "N32_M3" ; then
             DSOREGFILE='/usr/lib32/so_locations'
             CFLAGS="$CFLAGS -mips3 -n32"
             CXXFLAGS="$CXXFLAGS -mips3 -n32"
+            LDOPTS="-mips3 -n32"
             OPT_FLAGS='-OPT:Olimit=2000'
         elif test "$OBJECT_STYLE" = "N32_M4" ; then
             DSOREGFILE='/usr/lib32/so_locations'
             CFLAGS="$CFLAGS -mips4 -n32"
             CXXFLAGS="$CXXFLAGS -mips4 -n32"
+            LDOPTS="-mips4 -n32"
             OPT_FLAGS='-OPT:Olimit=2000'
         elif test "$OBJECT_STYLE" = "O32" ; then
             DSOREGFILE='/usr/lib/so_locations'
             CFLAGS="$CFLAGS -mips2 -o32"
             CXXFLAGS="$CXXFLAGS -mips2 -o32"
+            LDOPTS="-mips2 -o32"
             OPT_FLAGS='-Olimit 2000'
         fi
+
+echo "LDOPTS: $LDOPTS"
 
         AR='${CXX} -ar -WR,-v -o'
         CFLAGS="-ptv $CFLAGS"
@@ -183,7 +190,7 @@ case $host in
         LD='${CXX} -shared'
         LIBOPTS='-check_registry'
         LDFLAGS="$LDFLAGS"
-        LDOPTS='-all'
+        LDOPTS="$LDOPTS -all"
         SHAREDLIB_EXT='so'
 
         DSOVERSION='sgi4.0'
