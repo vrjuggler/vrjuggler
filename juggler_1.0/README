@@ -4,8 +4,9 @@
 #                       Virtual Reality Applications Center (VRAC)
 #
 # Contributors (Alphabetically): 
-#               Al Baker, Allen Bierbaum, Carolina Cruz-Neira, 
-#               Jesse Coats, Patrick Hartling, Chris Johanson, Chris Just,
+#               Albert Baker, Allen Bierbaum, Carolina Cruz-Neira, 
+#               Jesse Coats, Patrick Hartling, Andrew Himberger, 
+#               Chris Johanson, Christopher Just,
 #               Kevin Meinert, Ben Thompson
 #
 # 
@@ -71,6 +72,8 @@ Table of contents:
         * RedHat Linux 7.0
             GCC 2.96.69
             Mesa3D 3.2 or newer
+             or 
+            OpenGL 1.2 drivers
 
         * Win32
             Microsoft Visual Studio 6.0 (SP3 or SP4)
