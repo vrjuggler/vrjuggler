@@ -40,7 +40,6 @@
 #include <vpr/Sync/CondVar.h>
 #include <vpr/Sync/Semaphore.h>
 
-#include <jccl/Plugins/PerformanceMonitor/PerfDataBuffer.h>
 
 namespace vrj
 {
@@ -66,7 +65,6 @@ public:
         renderTriggerSema(0), renderCompleteSema(0), swapTriggerSema(0), swapCompleteSema(0)
    {
       mThreadRunning = false;
-      mPerfBuffer = 0;
     }
 
       //: Start the pipe running
@@ -174,8 +172,6 @@ private:
    vpr::Semaphore    swapTriggerSema;     //: Signals a swap to happen
    vpr::Semaphore    swapCompleteSema;    //: Signals a swap has been completed
 
-    jccl::PerfDataBuffer* mPerfBuffer;  //: Performance data for this pipe
-    int mPerfPhase;                 //: utility var for perf measurement
 };
 
 };
