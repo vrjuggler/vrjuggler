@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;&quot;$(CPPUNIT_ROOT)\include&quot;;&quot;$(VPR_BASE_DIR)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;"
+				AdditionalIncludeDirectories=".;&quot;$(CPPUNIT_ROOT)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VPR_BASE_DIR)\include&quot;"
 				PreprocessorDefinitions="MODULE_DIR=&quot;\&quot;$(OutDir)\\modules\&quot;&quot;;_DEBUG;WIN32;_WINDOWS;CPPUNIT_DLL"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -34,10 +34,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cppunitd_dll.lib vpr_d.lib boost_filesystem-$(BOOST_TOOL)-mt-gd-$(BOOST_VERSION).lib cppdom.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="cppunitd_dll.lib vpr_d.lib cppdom.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/runner.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(CPPUNIT_ROOT)\lib&quot;;&quot;$(VPR_BASE_DIR)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib\DebugDLL&quot;"
+				AdditionalLibraryDirectories="&quot;$(CPPUNIT_ROOT)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(VPR_BASE_DIR)\lib&quot;"
 				IgnoreAllDefaultLibraries="FALSE"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="TRUE"
@@ -70,7 +70,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories=".;&quot;$(CPPUNIT_ROOT)\include&quot;;&quot;$(VPR_BASE_DIR)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;"
+				AdditionalIncludeDirectories=".;&quot;$(CPPUNIT_ROOT)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VPR_BASE_DIR)\include&quot;"
 				PreprocessorDefinitions="MODULE_DIR=&quot;\&quot;$(OutDir)\\modules\&quot;&quot;;_OPT;NDEBUG;WIN32;_WINDOWS;CPPUNIT_DLL"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
@@ -86,10 +86,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cppunit_dll.lib vpr.lib boost_filesystem-$(BOOST_TOOL)-mt-$(BOOST_VERSION).lib cppdom.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
+				AdditionalDependencies="cppunit_dll.lib vpr.lib cppdom.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/runner.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(CPPUNIT_ROOT)\lib&quot;;&quot;$(VPR_BASE_DIR)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib\ReleaseDLL&quot;"
+				AdditionalLibraryDirectories="&quot;$(CPPUNIT_ROOT)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(VPR_BASE_DIR)\lib&quot;"
 				GenerateDebugInformation="TRUE"
 				SubSystem="1"
 				OptimizeReferences="2"
