@@ -46,99 +46,108 @@ namespace vrj
 class DrawManager;
 class Kernel;
 
-//----------------------------------------------------------------
-//: Encapsulates the actually application.
-//
-//     This class defines the class that all API specific
-//  application classes should be derived from.  The interface
-//  given is the interface that the Kernel expects in order to
-//  interface with the application.  Most of the application's
-//  interface will be defined in the derived API specific classes.
-//
-//  Users should sub-class the API specific classes to create
-//  user-defined applications.  A user application is required
-//  to provide function definitions for any of the virual functions
-//  that the application needs to use.  This is the method that
-//  the application programmer uses to interface with VR Juggler.
-//
-//  The control loop will look similar to this: <br> <br>
-//  NOTE: One time through the loop is a Juggler Frame <br>
-//
-//  while (drawing)          <br>
-//  {                        <br>
-//       <b>preFrame()</b>;   <br>
-//       draw();             <br>
-//       <b>intraFrame()</b>;  <br>
-//       sync();             <br>
-//       <b>postFrame()</b>;  <br>
-//                           <br>
-//       UpdateTrackers();   <br>
-//  }                        <br>
-//
-// @author Allen Bierbaum
-//  Date: 9-8-97
-//!PUBLIC_API:
-//------------------------------------------------------------------
+/** Encapsulates the actually application.
+ *
+ *     This class defines the class that all API specific
+ *  application classes should be derived from.  The interface
+ *  given is the interface that the Kernel expects in order to
+ *  interface with the application.  Most of the application's
+ *  interface will be defined in the derived API specific classes.
+ *
+ *  Users should sub-class the API specific classes to create
+ *  user-defined applications.  A user application is required
+ *  to provide function definitions for any of the virual functions
+ *  that the application needs to use.  This is the method that
+ *  the application programmer uses to interface with VR Juggler.
+ *
+ *  The control loop will look similar to this: <br> <br>
+ *  NOTE: One time through the loop is a Juggler Frame <br>
+ *
+ *  while (drawing)          <br>
+ *  {                        <br>
+ *       <b>preFrame()</b>;   <br>
+ *       draw();             <br>
+ *       <b>intraFrame()</b>;  <br>
+ *       sync();             <br>
+ *       <b>postFrame()</b>;  <br>
+ *                           <br>
+ *       UpdateTrackers();   <br>
+ *  }                        <br>
+ */
 class VJ_CLASS_API App : public jccl::ConfigChunkHandler
 {
 public:
-   //: Constructor
-   //! ARGS: kern - The Kernel that is active.  So application has easy access to kernel
+   /** Constructor
+    * @param kern - The Kernel that is active.  
+    *    So application has easy access to kernel
+    */
    App(Kernel* kern);
 
-   // Just call App(Kernel::instance())
+   /** Just call App(Kernel::instance()) */
    App();
 
 public:
-   //: Application init function
-   // Execute any initialization needed before the API is started
+   /** Application init function
+    * Execute any initialization needed before the API is started
+    */
    virtual void init()
    {;}
 
-   //: Application API init function
-   // Execute any initialization needed <b>after</b> API is started
-   //  but before the drawManager starts the drawing loops.
+   /** Application API init function
+    * Execute any initialization needed <b>after</b> API is started
+    *  but before the drawManager starts the drawing loops.
+    */
    virtual void apiInit()
    {;}
 
-   //: Execute any final cleanup needed for the application
+   /** Execute any final cleanup needed for the application
+    */
    virtual void exit()
    {;}
 
-   //: Function called before juggler frame starts.
-   // Called after tracker update but before start of a new frame
+   /** Function called before juggler frame starts.
+    * Called after tracker update but before start of a new frame
+    */
    virtual void preFrame()
    {;}
-   //: Function called <b>during</b> the application's drawing time
+   
+   /** Function called <b>during</b> the application's drawing time
+    */
    virtual void intraFrame()
    {;}
-   //: Function called before updating trackers but after the frame is complete
+   
+   /** Function called before updating trackers but after the frame is complete
+    */
    virtual void postFrame()
    {;}
 
 
-   //: Reset the application
-   // This is used when the system (or applications) would like the application
-   // to reset to the initial state that it started in.
+   /** Reset the application
+    * This is used when the system (or applications) would like the application
+    * to reset to the initial state that it started in.
+    */
    virtual void reset() {;}
 
-   //: Does the application currently have focus
-   // If an application has focus:
-   // - The user may be attempting to interact with it, so the app should process input
-   // If not,
-   // - The user is not interating with it, so ignore all input
-   // - BUT, the user may still be viewing it, so render and update any animations, etc.
-   //
-   // This is akin to the way a user can only interact with a GUI window that has focus
-   // (ie.The mouse is over the window)
+   /** Does the application currently have focus
+    * If an application has focus:
+    * - The user may be attempting to interact with it, so the app should process input
+    * If not,
+    * - The user is not interating with it, so ignore all input
+    * - BUT, the user may still be viewing it, so render and update any animations, etc.
+    *
+    * This is akin to the way a user can only interact with a GUI window that has focus
+    * (ie.The mouse is over the window)
+    */
    bool haveFocus() { return mHaveFocus;}
 
-   //: Called when the focus state changes
+   /** Called when the focus state changes
+    */
    virtual void focusChanged()
    {;}
 
-   //: Sets the focus state
-   // POST: If state has changed, then calls focusChanged
+   /** Sets the focus state
+    * POST: If state has changed, then calls focusChanged
+    */
    void setFocus(bool newState)
    {
       if(newState != mHaveFocus)
@@ -153,11 +162,12 @@ public:  // --- DEfault config handlers: (inherited from jccl::ConfigChunkHandle
    virtual bool configCanHandle(jccl::ConfigChunkPtr chunk)
    { return false; }
 
-   //: Are any application dependencies satisfied
-   // If the application requires anything special of the system for successful
-   // initialization, check it here.
-   // If retval == false, then the application will not be started yet
-   //    retval == true, application will be allowed to enter the system
+   /** Are any application dependencies satisfied
+    * If the application requires anything special of the system for successful
+    * initialization, check it here.
+    * If retval == false, then the application will not be started yet
+    *    retval == true, application will be allowed to enter the system
+    */
    virtual bool depSatisfied()
    { return true; }
 
@@ -175,12 +185,14 @@ public:
    bool        mHaveFocus;
 
 public:  // --- Factory functions --- //
-   //: Get the DrawManager to use
-   //! NOTE: Each derived app MUST implement this function
+   /** Get the DrawManager to use
+    * @NOTE Each derived app MUST implement this function
+    */
    virtual DrawManager*    getDrawManager() = 0;
 
-   //: Get the SoundManager to use
-   //! NOTE: Each derived app could implement this function if needed
+   /** Get the SoundManager to use
+    * @NOTE Each derived app could implement this function if needed
+    */
    virtual SoundManager*    getSoundManager()
    {
       return &SoundManagerFactory::get();
