@@ -591,7 +591,8 @@ public class ConfigToolbar
       openBtn.setToolTipText("Open a configuration file");
       openBtn.setActionCommand(OPEN_ACTION);
       openBtn.setFocusPainted(false);
-      RTRCBtn.setToolTipText("Remote run-time reconfiguration");
+      RTRCBtn.setToolTipText("Acquire the config elements of a running " +
+                             "VR Juggler application");
       RTRCBtn.setActionCommand(RTRC_ACTION);
       RTRCBtn.setFocusPainted(false);
 
