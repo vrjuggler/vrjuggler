@@ -98,24 +98,26 @@ public:
    /** Main thread of control for this active object. */
    void controlLoop(void* nullParam);
 
-   /** @name Pure Virtuals required by Input */
-   //@{
-   bool startSampling();
-   bool stopSampling();
-   //@}
+   /** Start the windows sampling. */
+   virtual bool startSampling();
+
+   /** Stop window sampling. */
+   virtual bool stopSampling();
 
    /**
     * Processes the current x-events.
     * Called repetatively by the controlLoop.
     */
-   bool sample()
+   virtual bool sample()
    {
       HandleEvents();
       return 1;
    }
 
-   void updateData();
+   /** Update the keys and event queue data structures with current data. */
+   virtual void updateData();
 
+   /** Return the element type associated with this device type. */
    static std::string getElementType();
 
    /**
@@ -258,7 +260,10 @@ protected:
     * Instead, it just uses a modified double buffering system.
     */
    //@{
-   int        mKeys[gadget::LAST_KEY];     /**< (0,*): The num key presses during an UpdateData (ie. How many keypress events). */
+   /** Key press count used during data updating.
+    *  (0,*): The num key presses during an UpdateData (ie. How many keypress events).
+    */
+   int        mKeys[gadget::LAST_KEY];
 
    int        mRealkeys[gadget::LAST_KEY]; /**< (0,1): The real keyboard state, all events processed (ie. what is the key now). */
    vpr::Mutex mKeysLock;         /**< Must hold this lock when accessing m_keys. */

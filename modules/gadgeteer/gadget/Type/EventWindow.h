@@ -95,13 +95,13 @@ public:
    }
 
    /**
-    * Get the interval that will be used for syncronization while only sharing 
+    * Get the interval that will be used for syncronization while only sharing
     * keyboard data across the cluster.
     */
    vpr::Interval getSyncTime()
    {
       return mSyncTime;
-   }  
+   }
 
    /**
     * Is the given key pressed?
@@ -118,6 +118,9 @@ public:
     */
    bool modifierOnly(gadget::Keys modKey);
 
+   /** Return the vrjuggler name associated with keyId.
+    * @example getKeyName(KEY_UP) returns "KEY_UP"
+    */
    std::string getKeyName(gadget::Keys keyId);
 
    /**
@@ -155,7 +158,7 @@ protected:
 
    // We have to create a Interval that the user can use across the cluster to syncronize
    // their applications navigation. We would like to use the timestamps from the event queue
-   // but we only get events during frames that have key presses and mouse motion. 
+   // but we only get events during frames that have key presses and mouse motion.
    vpr::Interval mSyncTime;      /**< Holds an Interval that is syncrnized across the cluster */
 };
 
