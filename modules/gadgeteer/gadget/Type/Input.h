@@ -48,22 +48,6 @@
 #include <gadget/gadgetConfig.h>
 #include <vpr/vpr.h>
 
-#ifndef VPR_OS_Win32
-#  include <unistd.h>
-
-#  include <termios.h>
-
-#  ifdef HAVE_SYS_PRCTL_H
-#     include <sys/prctl.h>
-#  endif    /* ifdef HAVE_SYS_PRCTL_H */
-#endif      /* ifndef VPR_OS_Win32 */
-
-#include <limits.h>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <signal.h>
-#include <float.h>
-
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
 #include <vpr/Thread/Thread.h>
