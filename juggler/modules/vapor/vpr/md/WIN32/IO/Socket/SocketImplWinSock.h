@@ -96,6 +96,14 @@ public:
     virtual Status bind(void);
 
     // ------------------------------------------------------------------------
+    //: Return the contained handle
+    // ------------------------------------------------------------------------
+    inline IOSys::Handle
+    getHandle (void) {
+       return m_sockfd;
+    }
+
+    // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     virtual Status
     enableBlocking (void) {
@@ -172,14 +180,20 @@ public:
         return m_local_addr;
     }
 
-    bool setLocalAddr(const InetAddr& addr)
-    {
-      if (this->m_open)
-       { return false; }
-       else
-          m_local_addr = addr;
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    Status
+    setLocalAddr(const InetAddr& addr) {
+        Status status;
 
-       return true;
+        if (this->m_open) {
+            status.setCode(vpr::Status::Failure);
+        }
+        else {
+            m_local_addr = addr;
+        }
+
+        return status;
     }
 
     // ------------------------------------------------------------------------
