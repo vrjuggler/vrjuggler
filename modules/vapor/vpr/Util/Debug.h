@@ -284,18 +284,19 @@ namespace vpr
           : mName("un-named"), mPrefix("unset"), mAllowed(false)
          {;}*/
 
-         CategoryInfo(std::string name, std::string prefix, bool allowed)
-          : mName(name), mPrefix(prefix), mAllowed(allowed)
+         CategoryInfo(std::string name, std::string prefix, bool allowed, bool disallowed)
+          : mName(name), mPrefix(prefix), mAllowed(allowed), mDisallowed(disallowed)
          {;}
 
-         std::string mName;
-         std::string mPrefix;
-         bool        mAllowed;
+         std::string mName;         /**< What is the name of the category */
+         std::string mPrefix;       /**< What is the prefix to output with the category */
+         bool        mAllowed;      /**< Is the category output allowed */
+         bool        mDisallowed;   /**< Is the category output dis-allowed */
       };
 
       // GUID, pair( name, prefix )
       typedef std::map<vpr::GUID, CategoryInfo > category_map_t;
-      std::map<vpr::GUID, CategoryInfo > mCategories; //! The names and id of allowed catagories
+      std::map<vpr::GUID, CategoryInfo > mCategories;    /**< The names and id of allowed catagories */
 
       vprSingletonHeaderWithInitFunc(Debug, init);
    };
