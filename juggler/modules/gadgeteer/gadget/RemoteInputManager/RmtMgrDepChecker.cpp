@@ -39,20 +39,25 @@
 #include <gadget/RemoteInputManager/RmtMgrDepChecker.h>
 
 
-namespace gadget{
+namespace gadget
+{
 
-bool RmtMgrDepChecker::depSatisfied(jccl::ConfigChunkPtr chunk){
+bool RmtMgrDepChecker::depSatisfied(jccl::ConfigChunkPtr chunk)
+{
    // we only pass local connections if we are already listening -- or can use a local connection
    //    to start listening (i.e. no remote input manager exists)
 
    bool pass = jccl::DepChecker::depSatisfied(chunk);   // Run default check
    RemoteInputManager* rmt_input_mgr =
-      gadget::InputManager::instance()->getRemoteInputManager();
+   gadget::InputManager::instance()->getRemoteInputManager();
 
    // if we can pass normal check and have started listening on a port, we pass all chunks
    std::string iname = (std::string)chunk->getProperty("Name");
-   if(rmt_input_mgr->listenWasInitialized() == true){      
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL) << "RmtMgrDepChecker: passing: " << iname << std::endl << vprDEBUG_FLUSH;
+   if ( rmt_input_mgr->listenWasInitialized() == true )
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << "RmtMgrDepChecker: passing: " << iname << std::endl
+         << vprDEBUG_FLUSH;
       return pass;
    }
 
@@ -62,48 +67,61 @@ bool RmtMgrDepChecker::depSatisfied(jccl::ConfigChunkPtr chunk){
    std::string chunk_type = chunk->getType();
 
    // Handle Connection Chunks
-   if(chunk_type == "RemoteInputHost"){
+   if ( chunk_type == "RemoteInputHost" )
+   {
       std::string hostname = chunk->getProperty("hostname");
       int port = chunk->getProperty("port");
 
       // so, if a remote input manager chunk exists:
-      if (rmt_input_mgr->mgrChunkExists()){
+      if ( rmt_input_mgr->mgrChunkExists() )
+      {
          // don't pass "Remote Connections" referring to our hostname unless listening port has been established
 
-         // check if location has local hostname:      
-         if(hostname.size() > 0){
-            if(rmt_input_mgr->hostnameMatchesLocalHostname(hostname)){
+         // check if location has local hostname:
+         if ( hostname.size() > 0 )
+         {
+            if ( rmt_input_mgr->hostnameMatchesLocalHostname(hostname) )
+            {
                // if we've gotten here, the listening port was not initialized (above if statement),
                // and the manager chunk exists, so we are still waiting for manager chunk to be processed.
-               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL) << "RmtMgrDepChecker:  Waiting for Remote Input Manger Chunk. Failed to pass local address: " << hostname <<":"<< port << std::endl << vprDEBUG_FLUSH;
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                  << "RmtMgrDepChecker:  Waiting for Remote Input Manger Chunk. Failed to pass local address: "
+                  << hostname <<":"<< port << std::endl << vprDEBUG_FLUSH;
                return false;
             }
          }
       }
       // if no manager chunk, pass all Remote Connections
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL) << "RmtMgrDepChecker: passing Remote Connection: " << hostname <<":"<< port << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << "RmtMgrDepChecker: passing Remote Connection: " << hostname
+         <<":"<< port << std::endl << vprDEBUG_FLUSH;
       return pass;
    }
-   else{  // Handle Remote Device Chunks (device or proxy with a location field)
+   else
+   {  // Handle Remote Device Chunks (device or proxy with a location field)
       // Check to see if Remote Input Manager has created the required net connection yet.
-      if(rmt_input_mgr->getConnectionByAliasName(iname) != NULL)
+      if ( rmt_input_mgr->getConnectionByAliasName(iname) != NULL )
+      {
          return pass;
+      }
       else  // still waiting for connection to be made
+      {
          return false;
+      }
    }
 
 
-  //---BELOW-IS-OLD----------------------------------------------------------------
-  // we used to not pass most chunks until a listening port was established.
+   //---BELOW-IS-OLD----------------------------------------------------------------
+   // we used to not pass most chunks until a listening port was established.
 
 /*
    bool pass = vjDepChecker::depSatisfied(chunk);   // Run default check
-      
+
    // If we can pass normal check and we have initialized the RemoteInputManager,
    //   we pass all Remote Devices and Connections.
    // Remote devices that depend on connections will have an automatic dependency elsewhere
    std::string iname = (std::string)chunk->getProperty("Name");
-   if(rmg_input_mgr->wasInitialized() == true){      
+   if(rmg_input_mgr->wasInitialized() == true){
       vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CRITICAL_LVL) << "RmtMgrDepChecker: passing: " << iname << std::endl << vjDEBUG_FLUSH;
       return pass;
    }
@@ -130,48 +148,59 @@ bool RmtMgrDepChecker::depSatisfied(jccl::ConfigChunkPtr chunk){
    }
 
    vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CRITICAL_LVL) << "RmtMgrDepChecker: Not passing: " << iname << std::endl << vjDEBUG_FLUSH;
-   return false;   
+   return false;
 */
-}    
+}
 
 
 // We can handle Remote Connection Chunks and Remote Device Chunks
-bool RmtMgrDepChecker::canHandle(jccl::ConfigChunkPtr chunk){
+bool RmtMgrDepChecker::canHandle(jccl::ConfigChunkPtr chunk)
+{
    // We can handle Remote Connection Chunk
    std::string chunk_type = chunk->getType();
-   if (chunk_type == "RemoteInputHost") 
+   if ( chunk_type == "RemoteInputHost" )
+   {
       return true;
+   }
 
    // Check if Remote Input Chunk (contains a location)
    std::string location = chunk->getProperty("location");
-   if(location.size() == 0)  // no location specified, not handled by remote input manager 
+   if ( location.size() == 0 )  // no location specified, not handled by remote input manager
+   {
       return false;
+   }
    //if (gadget::InputManager::instance()->getRemoteInputManager()->locationContainsLocalHostname(location))
    //   return false;  // local hostname means not handled by Remote Input Manager
    else
+   {
       return true;   // remote input
+   }
 }
 
-void RmtMgrDepChecker::debugOutDependencies(jccl::ConfigChunkPtr chunk,int dbg_lvl){
+void RmtMgrDepChecker::debugOutDependencies(jccl::ConfigChunkPtr chunk,int dbg_lvl)
+{
    jccl::DepChecker::debugOutDependencies(chunk,dbg_lvl);
 
    vprDEBUG_NEXT_BEGIN(jcclDBG_CONFIG,dbg_lvl) << "Extra Dependency: Dependent upon configuring a Remote Input Manager: " << vprDEBUG_FLUSH;
-   if(depSatisfied(chunk) == false)
+   if ( depSatisfied(chunk) == false )
+   {
       vprDEBUG_CONT(jcclDBG_CONFIG,dbg_lvl) << "FAILED!!!\n" << vprDEBUG_FLUSH;
+   }
    else
+   {
       vprDEBUG_CONT(jcclDBG_CONFIG,dbg_lvl) << "passed.\n" << vprDEBUG_FLUSH;
+   }
 
-
-   vprDEBUG_NEXT(jcclDBG_CONFIG,dbg_lvl) << "Extra Dependencies for: item: "
-                                      << chunk->getProperty("name")
-                                      << " type: "
-                                      << ((std::string)chunk->getType()).c_str()
-                                      << std::endl
-                                      << "   Dependant upon RemoteInputManager being configured in InputManager. "
-                                      << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(jcclDBG_CONFIG,dbg_lvl)
+      << "Extra Dependencies for: item: "
+      << chunk->getProperty("name")
+      << " type: "
+      << ((std::string)chunk->getType()).c_str()
+      << std::endl
+      << "   Dependant upon RemoteInputManager being configured in InputManager. "
+      << vprDEBUG_FLUSH;
 
    vprDEBUG_NEXT_END(jcclDBG_CONFIG,dbg_lvl) << std::endl << vprDEBUG_FLUSH;
 }
 
 }  // end namespace gadget
-
