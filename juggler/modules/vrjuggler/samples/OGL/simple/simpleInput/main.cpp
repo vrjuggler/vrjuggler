@@ -73,5 +73,8 @@ int main(int argc, char* argv[])
    // Keep thread alive and waiting
    kernel->waitForKernelStop();
 
+   // Destroy the application
+   delete simpleInput;
+
    return 0;
 }
