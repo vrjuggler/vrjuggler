@@ -1365,7 +1365,7 @@ bool reconfigApp::reconfigSimPos_check()
       return false;      
    }
 
-   gmtl::Matrix44f mat = *(device->getPositionData().getPosition());
+   gmtl::Matrix44f mat = device->getPositionData().getPosition();
 
    gmtl::Vec3f pos = gmtl::makeTrans<gmtl::Vec3f>(mat);
 
