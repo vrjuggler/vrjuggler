@@ -372,12 +372,27 @@ public class ConfigChunkPropertySheet
       }
    }
 
+   /**
+    * Sets the ConfigChunk that this property sheet is editing. This will cause
+    * the property sheet to update itself to reflect the change in the data that
+    * it is editing.
+    *
+    * @param chunk      the ConfigChunk to begin editing
+    */
    public void setConfigChunk(ConfigChunk chunk)
    {
+      // Modify the config chunk in the data model
       tableModel.setConfigChunk(chunk);
+
+      // Ensure that all the top-level properties are visible
       getTree().expandPath(new TreePath(tableModel.getRoot()));
    }
 
+   /**
+    * Gets the ConfigChunk that this property sheet is currently editing.
+    *
+    * @return  the ConfigChunk being edited
+    */
    public ConfigChunk getConfigChunk()
    {
       return tableModel.getConfigChunk();
