@@ -435,6 +435,7 @@ AC_OUTPUT(Makefile
           common.defs.mk
           make.defs.mk
           gad/Makefile
+          gad/Makefile.inc
           gad/Devices/Makefile
           gad/Devices/Ascension/Makefile
           gad/Devices/Fakespace/Makefile
