@@ -1,0 +1,9 @@
+#!/bin/csh
+
+setenv PATH /usr/java/bin:$PATH
+setenv JDK_HOME /usr/java
+
+
+#java -classpath ~cjust/fromlinux/java/VjCfg.jar:/usr/java/classes VjGUI.AppCore fileeditor $1 $2 $3
+
+java -classpath VjCfg.jar:/usr/java/classes VjGUI.AppCore fileeditor $1 $2 $3
