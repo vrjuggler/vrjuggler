@@ -73,6 +73,11 @@ public:
    */
    virtual void config(jccl::ConfigChunkPtr chunk);
 
+   static std::string getChunkType()
+   {
+      return std::string("default_simulator");
+   }
+
    /**
     * Draws this sim device using the given information about the Window it
     * will be drawing into.
