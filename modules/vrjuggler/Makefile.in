@@ -191,12 +191,13 @@ PF_LIB_DYNAMIC	= ${PF_LIBRARY}.@SHAREDLIB_EXT@
 SUBDIRS		= Math Config Kernel Environment Performance Input	\
                   SharedMem Sync Threads
 
-# Subdirectories used for recursion through the test source tree when
+# Subdirectories used for recursion through the application source trees when
 # installing.
 SAMPLE_SUBDIRS	= . ogl ogl/combo ogl/cubes ogl/glove ogl/simpleGlove	\
                   ogl/torus ogl/wand pfNav
 TEST_SUBDIRS	= . CfgTest GLWindow Math Matrix Quat Sync input	\
                   testDynamicCastSTL threads
+TOOLS_SUBDIRS	= .
 
 # The list of ABIs supported on this platform.
 ABI_LIST	= @ABI_LIST@
@@ -945,6 +946,10 @@ install-tools:
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.tools.dist -p ${prefix}
 	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/tools	\
           -m ${_FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/tools
+	${PERL} ${scriptdir}/makefiles-gen.pl				\
+          --prefix="${prefix}/tools" --vars="${topdir}/VARS.pl"		\
+          --startdir="${top_srcdir}/tools" --SUBDIRS="${TOOLS_SUBDIRS}"	\
+          --mode="${_FILE_PERMS}" ${_GROUP_OPT_PL} --srcdir="."
 
 # Install the standard data files.
 install-data:
