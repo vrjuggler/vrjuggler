@@ -177,10 +177,10 @@ public class InputWindowStartDialog
 
    public Rectangle getInputWindowBounds()
    {
-      int x = ((Integer) mPositionXField.getValue()).intValue();
-      int y = ((Integer) mPositionYField.getValue()).intValue();
-      int width = ((Integer) mWidthField.getValue()).intValue();
-      int height = ((Integer) mHeightField.getValue()).intValue();
+      int x = ((Number) mPositionXField.getValue()).intValue();
+      int y = ((Number) mPositionYField.getValue()).intValue();
+      int width = ((Number) mWidthField.getValue()).intValue();
+      int height = ((Number) mHeightField.getValue()).intValue();
       return new Rectangle(x, y, width, height);
    }
 
@@ -194,9 +194,9 @@ public class InputWindowStartDialog
       return (mStartLockedCB.isSelected() ? Boolean.TRUE : Boolean.FALSE);
    }
 
-   public Integer getSleepTime()
+   public Number getSleepTime()
    {
-      return (Integer) mSleepTimeField.getValue();
+      return (Number) mSleepTimeField.getValue();
    }
 
    public static final int OK_OPTION     = JOptionPane.OK_OPTION;
@@ -484,10 +484,10 @@ public class InputWindowStartDialog
 
       // The name cannot be an empty string.
       name_valid   = ! mNameField.getText().equals("");
-      width_valid  = ((Integer) mWidthField.getValue()).intValue() > 0;
-      height_valid = ((Integer) mHeightField.getValue()).intValue() > 0;
-      x_pos_valid  = ((Integer) mPositionXField.getValue()).intValue() >= 0;
-      y_pos_valid  = ((Integer) mPositionYField.getValue()).intValue() >= 0;
+      width_valid  = ((Number) mWidthField.getValue()).intValue() > 0;
+      height_valid = ((Number) mHeightField.getValue()).intValue() > 0;
+      x_pos_valid  = ((Number) mPositionXField.getValue()).intValue() >= 0;
+      y_pos_valid  = ((Number) mPositionYField.getValue()).intValue() >= 0;
 
       if ( name_valid && width_valid && height_valid && x_pos_valid &&
            y_pos_valid )
