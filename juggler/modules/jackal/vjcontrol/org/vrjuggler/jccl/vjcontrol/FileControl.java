@@ -47,10 +47,6 @@ import java.util.*;
  */
 public class FileControl {
 
-//     private String vjbasedir;
-//     private String homedir;
-//     private String vjsharedir;
-
     Map env_vars; 
 
     public FileControl () {
@@ -60,12 +56,6 @@ public class FileControl {
             homedir = ".";
         env_vars.put ("HOME", homedir);
 
-//         vjbasedir = System.getProperty ("VJ_BASE_DIR");
-//         if (vjbasedir == null)
-//             vjbasedir = ".";
-//         vjsharedir = System.getProperty ("VJ_SHARE_DIR");
-//         if (vjsharedir == null)
-//             vjsharedir = vjbasedir + "/share";
     }
 
 
@@ -82,14 +72,15 @@ public class FileControl {
 
 
     /** Performs substitution on file name strings.
-     *  The main task of mangleFileName is to convert occurrences of
-     *  $HOME, HOME, $VJ_BASE_DIR, and VJ_BASE_DIR, to the proper
-     *  path names.
+     *  This tries to do environment variable replacement.  
+     *  Variables should be of the form ${NAME} or $NAME (the former
+     *  is preferred).  Note that it is difficult to access arbitrary
+     *  environment variables in java without using deprecated
+     *  methods, but the vjcontrol startup script tries to guarantee
+     *  that at least ${HOME} and ${VJ_BASE_DIR} and ${JCCL_BASE_DIR}
+     *  will work.
      */
     public String mangleFileName (String s) {
-	// replace "HOME" and "VJ_BASE_DIR" in the string buffer w/
-	// proper values i hope..........
-
 
 	if (s == null)
 	    return "";
@@ -103,7 +94,7 @@ public class FileControl {
         }
         else if (s.startsWith ("$")) {
             // variable of form $VARNAME/whatever
-            int i = s.indexOf ("/");
+            int i = s.indexOf (File.separatorChar);
             if (i != -1) {
                 String var_name = s.substring (1, i);
                 s = getEnvVar (var_name) + s.substring (i);
@@ -111,19 +102,6 @@ public class FileControl {
             else
                 s = getEnvVar (s.substring(1));
         }
-
-// 	if (s.startsWith ("$VJ_BASE_DIR"))
-// 	    s = vjbasedir + s.substring (12);
-// 	else if (s.startsWith ("VJ_BASE_DIR"))
-// 	    s = vjbasedir + s.substring (11);
-// 	else if (s.startsWith ("$HOME"))
-// 	    s = homedir + s.substring (5);
-// 	else if (s.startsWith ("HOME"))
-// 	    s = homedir + s.substring (4);
-// 	else if (s.startsWith ("$VJ_SHARE_DIR"))
-// 	    s = vjsharedir + s.substring (13);
-// 	else if (s.startsWith ("VJ_SHARE_DIR"))
-// 	    s = vjsharedir + s.substring (12);
 
 	System.out.println ("stringReplacement: '" + s + "'");
 	return s;
