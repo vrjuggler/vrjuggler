@@ -125,6 +125,7 @@ private:
 
    gmtl::Matrix44f  mDesktopMatrix;    /**< vnc_T_world */
    gmtl::AABoxf     mDesktopBox;
+   float            mDrawRayLength;    /**< The length of the ray to draw */
    // Corners
    gmtl::AABoxf     mLLCorner;         /**< LL of the desktop */
    gmtl::AABoxf     mLRCorner;         /**< LR of the desktop */
