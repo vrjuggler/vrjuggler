@@ -119,6 +119,9 @@ SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock, vpr::Interval timeout)
     else {
        PRFileDesc* accept_sock = NULL;
 
+       // PR_Accept() is a potentially blocking call.
+       m_blocking_fixed = true;
+
        // Accept an incoming connection request.
        vprASSERT(m_handle != NULL);
        accept_sock = PR_Accept(m_handle, addr.getPRNetAddr(),
@@ -139,6 +142,7 @@ SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock, vpr::Interval timeout)
           sock.setRemoteAddr(addr);
           sock.m_open = true;
           sock.m_bound = true;
+          sock.m_blocking_fixed = true;
        }
     }
 
