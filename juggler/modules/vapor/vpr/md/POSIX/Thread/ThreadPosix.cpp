@@ -319,7 +319,75 @@ int ThreadPosix::setPrio (VPRThreadPriority prio)
 #endif
 }
 
-BaseThread* ThreadPosix::self (void)
+int ThreadPosix::setRunOn(int cpu)
+{
+#ifdef VPR_OS_IRIX
+   int ret_val;
+
+   if ( mScope == PTHREAD_SCOPE_SYSTEM )
+   {
+      ret_val = pthread_setrunon_np(cpu);
+   }
+   else
+   {
+      std::cerr << "This thread is not a system-scope thread!\n";
+      ret_val = -1;
+   }
+
+   return ret_val;
+#else
+   std::cerr << "vpr::ThreadPosix::setRunOn(): Not available on this system.\n";
+
+   return -1;
+#endif
+}
+
+int ThreadPosix::getRunOn(int* cur_cpu)
+{
+#ifdef VPR_OS_IRIX
+   int ret_val;
+
+   if ( mScope == PTHREAD_SCOPE_SYSTEM )
+   {
+      ret_val = pthread_getrunon_np(cur_cpu);
+   }
+   else
+   {
+      std::cerr << "This thread is not a system-scope thread!\n";
+      ret_val = -1;
+   }
+
+   return ret_val;
+#else
+   std::cerr << "vpr::ThreadPosix::getRunOn(): Not available on this system.\n";
+
+   return -1;
+#endif
+}
+
+int ThreadPosix::usleep(vpr::Uint32 micro)
+{
+#ifdef VPR_OS_Linux
+   ::usleep(micro);
+   return 0;  // usleep can't report failure, so assume success.
+#else
+   return ::usleep(micro);
+#endif
+}
+
+int ThreadPosix::kill(int signum)
+{
+#ifdef _PTHREADS_DRAFT_4
+   std::cerr << "vpr::ThreadPosix::kill(): Signals cannot be sent to threads "
+             << "with this POSIX threads implementation.\n";
+
+   return -1;
+#else
+   return pthread_kill(mThread, signum);
+#endif
+}
+
+BaseThread* ThreadPosix::self()
 {
    vprASSERT((statics.mStaticsInitialized==1221) && "Trying to call vpr::ThreadPosix::self before statics are initialized. Don't do that");
 
@@ -327,6 +395,17 @@ BaseThread* ThreadPosix::self (void)
    threadIdKey().getspecific((void**)&my_thread);
 
    return my_thread;
+}
+
+/// Provides a way of printing the process ID neatly.
+std::ostream& ThreadPosix::outStream(std::ostream& out)
+{
+   out.setf(std::ios::right);
+   out << std::setw(7) << std::setfill('0') << getpid() << "/";
+   out.unsetf(std::ios::right);
+   BaseThread::outStream(out);
+   out << std::setfill(' ');
+   return out;
 }
 
 // ===========================================================================
@@ -496,6 +575,28 @@ BaseThread::VPRThreadState ThreadPosix::posixThreadStateToVPR (const int state)
    };
 
    return vpr_state;
+}
+
+thread_id_t ThreadPosix::hash()
+{
+#if defined(VPR_OS_IRIX)
+   return mThread;
+#else
+
+   // This works on Linux, Solaris and FreeBSD.
+   return(thread_id_t) mThread;
+#endif    /* VPR_OS_IRIX */
+}
+
+thread_id_t ThreadPosix::hash(pthread_t thread)
+{
+#ifdef VPR_OS_IRIX
+   return thread;
+#else
+
+   // This works on Linux, Solaris and FreeBSD.
+   return(thread_id_t) thread;
+#endif
 }
 
 } // End of vpr namespace
