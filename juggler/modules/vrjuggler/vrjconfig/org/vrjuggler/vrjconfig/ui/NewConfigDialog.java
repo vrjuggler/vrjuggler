@@ -251,9 +251,10 @@ public class NewConfigDialog
       java.util.List dirs = new ArrayList();
 
       // Get the path from the environment
+      EnvironmentService env_svc = new EnvironmentServiceProxy();
       String default_path = "${VJ_BASE_DIR}/share/vrjuggler/data/definitions";
-      String path = System.getProperty("JCCL_DEFINITION_PATH", default_path);
-      path = (new EnvironmentServiceProxy()).expandEnvVars(path);
+      String path = env_svc.getenv("JCCL_DEFINITION_PATH", default_path);
+      path = env_svc.expandEnvVars(path);
 
       // Split the path on the path separator
       StringTokenizer tokenizer = new StringTokenizer(path, File.pathSeparator);
