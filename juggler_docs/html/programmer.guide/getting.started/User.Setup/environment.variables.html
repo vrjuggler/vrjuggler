@@ -18,7 +18,7 @@ optional.  This page lists all of these environment variables.
 operating systems and/or shell interpreters.  This page assumes the syntax
 used by the popular csh shell.
 <p><strong>Note for WinNT users:</strong> The typical syntax for setting an 
-environment variable under Windows is: <tt>set VARIABLE_NAME=value</tt>
+environment variable under Windows is: <tt>set&nbsp;VARIABLE_NAME=value</tt>
 </blockquote>
 
 <h3>Required Environment Variables</h3>
@@ -32,13 +32,13 @@ Juggler app.  It should be set to the base directory of the
 installed juggler library.
 <p>For example, if you downloaded a Juggler tar file and extracted it to
 the directory /home/software/, you would set VJ_BASE_DIR with this command:
-<p>ex. <tt>setenv VJ_BASE_DIR /home/software/vrjuggler-0.1.95</tt>
+<p>ex.&nbsp;<tt>setenv&nbsp;VJ_BASE_DIR&nbsp;/home/software/vrjuggler-0.1.95</tt>
 <p>The last component of the above example depends on the particular version
 of Juggler you've downloaded.
 <p>If you downloaded and built VR Juggler from the source code, the 
 compilation creates a directory called <tt>instlinks</tt> which can be used
 as a Juggler base:
-<p>ex. <tt>setenv VJ_BASE_DIR ~/my_build_dir/instlinks</tt>
+<p>ex.&nbsp;<tt>setenv&nbsp;VJ_BASE_DIR&nbsp;~/my_build_dir/instlinks</tt>
 </blockquote>
 
 <h4>JDK_HOME</h4>
@@ -48,7 +48,7 @@ vjcontrol, the VR Juggler configuration program.  If Java is installed on your
 system, JDK_HOME may already be set.  If not, it needs to be set to the base
 of the Java installation.
 
-<p>Ex. <tt>setenv JDK_HOME /usr/java</tt>
+<p>Ex.&nbsp;<tt>setenv&nbsp;JDK_HOME&nbsp;/usr/java</tt>
 </blockquote>
 
 <h4>LD_LIBRARY_PATH  (UNIX/Linux only)<br>
@@ -64,16 +64,16 @@ directory (under $VJ_BASE_DIR).
 not want to destroy the current value, just append the new path to it.  
 Otherwise something else could stop working.
 
-<p>ex. <tt>setenv LD_LIBRARY_PATH $VJ_BASE_DIR/lib</tt>
-<p>ex. <tt>setenv LD_LIBRARY_PATH $VJ_BASE_DIR/lib $LD_LIBRARY_PATH</tt>
+<p>ex.&nbsp;<tt>setenv&nbsp;LD_LIBRARY_PATH&nbsp;$VJ_BASE_DIR/lib</tt>
+<p>ex.&nbsp;<tt>setenv&nbsp;LD_LIBRARY_PATH&nbsp;$VJ_BASE_DIR/lib:$LD_LIBRARY_PATH</tt>
 <p><strong>NOTE: </strong> On some SGI systems, users of the MIPSpro compiler (version 7.3) will need to add another directory as follows: <br>
-<p><tt>setenv LD_LIBRARY_PATH $VJ_BASE_DIR/lib:/usr/lib32/cmplrs</tt>
+<p><tt>setenv&nbsp;LD_LIBRARY_PATH&nbsp;$VJ_BASE_DIR/lib:/usr/lib32/cmplrs</tt>
 
 <p>Irix supports several Application Binary Interfaces (ABIs).  VR Juggler
 supports the N32 and 64 formats.  There are different library path variables 
 for each:
-<p>ex. <tt>setenv LD_LIBRARYN32_PATH $VJ_BASE_DIR/lib32</tt>
-<p>ex. <tt>setenv LD_LIBRARY64_PATH $VJ_BASE_DIR/lib64</tt>
+<p>ex.&nbsp;<tt>setenv&nbsp;LD_LIBRARYN32_PATH&nbsp;$VJ_BASE_DIR/lib32</tt>
+<p>ex.&nbsp;<tt>setenv&nbsp;LD_LIBRARY64_PATH&nbsp;$VJ_BASE_DIR/lib64</tt>
 
 </blockquote>
 
@@ -83,7 +83,7 @@ for each:
 <blockquote>
 <p>If you intend to use the vjcontrol program, you may want to add the 
 $VJ_BASE_DIR/bin directory to your $PATH:
-<p>ex. setenv PATH $VJ_BASE_DIR/bin:$PATH
+<p>ex.&nbsp;<tt>setenv&nbsp;PATH&nbsp;$VJ_BASE_DIR/bin:$PATH</tt>
 </blockquote>
 
 <h4>VJ_DEBUG_NFY_LEVEL</h4>
@@ -94,7 +94,7 @@ a VR Juggler application outputs.  Its value is a number between 0
 Nonhackers are advised to use levels 0 through 3, as higher debug levels
 become increasingly cryptic and can <b>severely impact application performance</b>.
 <font color=red>The default is level 1</font> - only errors and critical information is output.
-<p>ex. <tt>setenv VJ_DEBUG_NFY_LEVEL 1</tt>
+<p>ex.&nbsp;<tt>setenv&nbsp;VJ_DEBUG_NFY_LEVEL&nbsp;1</tt>
 </blockquote>
 
 <h4>VJ_DEBUG_CATEGORIES</h4>
@@ -106,9 +106,9 @@ output.
 <p>The value of VJ_DEBUG_CATEGORIES is a space-separated list of Juggler
 debug component names (defined in $VJ_BASE_DIR/include/Kernel/vjDebug.h).
 The default value is "DBG_ALL", which performs no filtering whatsoever.
-<p>ex. <tt>setenv VJ_DEBUG_CATEGORIES DBG_ERROR</tt>
-<p>ex. <tt>setenv VJ_DEBUG_CATEGORIES "DBG_KERNEL DBG_INPUT"</tt>
-<p>ex. <tt>setenv VJ_DEBUG_CATEGORIES "DBG_CONFIGDB DBG_ENV_MGR"</tt>
+<p>ex.&nbsp;<tt>setenv&nbsp;VJ_DEBUG_CATEGORIES&nbsp;DBG_ERROR</tt>
+<p>ex.&nbsp;<tt>setenv&nbsp;VJ_DEBUG_CATEGORIES&nbsp;"DBG_KERNEL&nbsp;DBG_INPUT"</tt>
+<p>ex.&nbsp;<tt>setenv&nbsp;VJ_DEBUG_CATEGORIES&nbsp;"DBG_CONFIGDB&nbsp;DBG_ENV_MGR"</tt>
 </blockquote>
 
 
