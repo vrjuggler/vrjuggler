@@ -709,12 +709,13 @@ else
    APP_EXTRA_LIBS="$LDFLAGS $CXX_ORB_LDFLAGS $CXX_ORB_LIB $VPR_LIBS_CC_MIN $LIBS $VPR_EXTRA_LIBS_CC_MIN"
 fi
 
-# Put together the basic information needed to compile VR Juggler applications.
+# Put together the basic information needed to compile Tweek applications.
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS $IDL_GEN_INCLUDES, $DBG_FLAGS,
                 $OPT_FLAGS, TWEEK_BASE_DIR, $DEFS $EXTRA_DEFS, $INCLUDES,
                 ${_EXTRA_FLAGS})
-VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT,
-              TWEEK_BASE_DIR, tweek, $APP_EXTRA_LIBS)
+VJ_APP_LINKER_DOOZER(["$CXX"], ["$EXTRA_LINK_FLAGS"], ["$LDOPTS_DBG"],
+                     ["$LDOPTS_OPT"], ['$(TWEEK_LIBS_MIN)'],
+                     ["$APP_EXTRA_LIBS"])
 
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(TWEEK_BASE_DIR)'
