@@ -11,7 +11,7 @@
             <surname>Hartling</surname>
          </author>
       </authorgroup>
-      <releaseinfo>0.0.1</releaseinfo>
+      <releaseinfo>0.0.2</releaseinfo>
       <pubdate>$Date$</pubdate>
    </bookinfo>
    <preface>
@@ -1110,11 +1110,11 @@ public void connectionStateChanged(CommunicationEvent e)
                      <title>NetworkTestBean.xml</title>
                      <programlistingco>
                         <areaspec>
-                           <area coords="1 65" id="NetworkTestBean.xml.version"/>
-                           <area coords="2 65" id="NetworkTestBean.xml.beanlist"/>
-                           <area coords="3 65" id="NetworkTestBean.xml.guipanel"/>
-                           <area coords="4 65" id="NetworkTestBean.xml.file"/>
-                           <area coords="6 65" id="NetworkTestBean.xml.tree"/>
+                           <area coords="1 70" id="NetworkTestBean.xml.version"/>
+                           <area coords="2 70" id="NetworkTestBean.xml.beanlist"/>
+                           <area coords="4 70" id="NetworkTestBean.xml.guipanel"/>
+                           <area coords="5 70" id="NetworkTestBean.xml.file"/>
+                           <area coords="7 70" id="NetworkTestBean.xml.tree"/>
                         </areaspec>
                         <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -1130,7 +1130,7 @@ public void connectionStateChanged(CommunicationEvent e)
                               <para>Well-formed XML requires this line.</para>
                            </callout>
                            <callout arearefs="NetworkTestBean.xml.beanlist">
-                              <para>Tweek XML Bean files are <sgmltag>beanlist</sgmltag> documents. There must be exactly one <sgmltag>beanlist</sgmltag> per file, but the list itself can contain multiple Beans.</para>
+                              <para>Tweek XML Bean files are <sgmltag>beanlist</sgmltag> documents. There must be exactly one <sgmltag>beanlist</sgmltag> per file, but the list itself can contain multiple Beans. In this element, we also provide the information needed to validate this document using the XML Schema <filename>beanlist.xsd</filename>. In this case, we use the schema that does not employ XML namespaces. Use of the schema for validation is optional, but it is recommended.</para>
                            </callout>
                            <callout arearefs="NetworkTestBean.xml.guipanel">
                               <para>The Bean we have been developing is a GUI Panel Bean, and this indicates that fact.</para>
