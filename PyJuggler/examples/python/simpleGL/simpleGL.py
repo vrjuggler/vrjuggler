@@ -33,8 +33,11 @@ from OpenGL.GL import *
 # XXX: I think it would be better if the modules existed in the PyJuggler
 # namespace, but I don't know how to set that up.
 #from PyJuggler import *
-import gadget
+
+# NOTE: The order of these seems to be important.  Put 'import vrj' first.
 import vrj
+import gadget
+import jccl
 
 class SimplGlApp(vrj.GlApp):
    mButton0 = gadget.DigitalInterface()
