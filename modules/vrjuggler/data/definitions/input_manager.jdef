@@ -52,11 +52,11 @@
             </xsl:template>
            
             <xsl:template match="jconf:input_manager">
-               <xsl:element namespace="{$jconf}" name="input_manager_mine">
+               <xsl:element namespace="{$jconf}" name="input_manager">
                   <xsl:attribute name="name">
                      <xsl:value-of select="@name"/>
                   </xsl:attribute>
-                  <xsl:attribute namespace="{$jconf}" name="version">2</xsl:attribute>
+                  <xsl:attribute name="version">2</xsl:attribute>
                   <xsl:if test="count(./jconf:driver) &gt; 0">
                      <xsl:element namespace="{$jconf}" name="driver_path">
                         <xsl:call-template name="get-path">
