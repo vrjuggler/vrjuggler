@@ -88,7 +88,7 @@ public:
     * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
     * @semantics Triggers a sound
     */
-   virtual void trigger( const std::string & alias, const unsigned int & looping = 0 );
+   virtual void trigger( const std::string & alias, const int & looping = 0 );
 
    /*
     * when sound is already playing then you call trigger,
@@ -97,6 +97,19 @@ public:
     */
    virtual void setRetriggerable( const std::string& alias, bool onOff );
 
+   /**
+    * pause the sound, use unpause to return playback where you left off...
+    */
+   virtual void pause( const std::string& alias );
+
+   /**
+    * resume playback from a paused state.  does nothing if sound was not paused.
+    */
+   virtual void unpause( const std::string& alias );
+   
+   /** if the sound is paused, then return true. */
+   virtual bool isPaused( const std::string& alias );
+         
    /**
     * ambient or positional sound.
     * is the sound ambient - attached to the listener, doesn't change volume
@@ -116,17 +129,6 @@ public:
     */
    virtual void setCutoff( const std::string& alias, float amount );
    
-         
-   /*
-    * mute, sound continues to play, but you can't hear it...
-    */
-   virtual void mute( const std::string& alias );
-
-   /*
-    * unmute, let the muted-playing sound be heard again
-    */
-   virtual void unmute( const std::string& alias );
-
    /**
     * @semantics stop the sound
     * @input alias of the sound to be stopped
