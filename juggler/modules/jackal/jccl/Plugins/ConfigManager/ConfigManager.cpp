@@ -126,7 +126,7 @@ namespace jccl {
     // if it goes pending_repeat_limit calls without
     // changing size, then it returns false until mLastPendingSize changes
     bool ConfigManager::pendingNeedsChecked() {
-        const int pending_repeat_limit = 1;    // Must be one or greater.  1 means only allow one time of no changes
+        const int pending_repeat_limit = 3;    // Must be one or greater.  1 means only allow one time of no changes
         int cur_pending_size = 0;
         bool ret_val = false;
         
