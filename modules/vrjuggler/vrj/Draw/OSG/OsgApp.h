@@ -289,28 +289,13 @@ inline void OsgApp::draw()
 
    //Get the frustrum
    Frustum frustum = project->getFrustum();
-    /*
-   //Reset the camera
-   osg::Camera* the_cam = sv->getCamera();
+   sv->setProjectionMatrixAsFrustum(frustum[Frustum::VJ_LEFT],
+                                    frustum[Frustum::VJ_RIGHT],
+                                    frustum[Frustum::VJ_BOTTOM],
+                                    frustum[Frustum::VJ_TOP],
+                                    frustum[Frustum::VJ_NEAR],
+                                    frustum[Frustum::VJ_FAR]);
 
-   // Setup the camera
-   the_cam->home();
-   the_cam->setAdjustAspectRatioMode(osg::Camera::ADJUST_NONE);      // Tell it not to adjust the aspect ratio at all
-
-   //Set the frustrum
-   //float near_val = frustum[Frustum::VJ_NEAR];
-   the_cam->setFrustum(frustum[Frustum::VJ_LEFT],  frustum[Frustum::VJ_RIGHT],
-                       frustum[Frustum::VJ_BOTTOM],frustum[Frustum::VJ_TOP],
-                       frustum[Frustum::VJ_NEAR],  frustum[Frustum::VJ_FAR]);
-
-   //Set the look at
-   // NOTE: This is on the wrong stack !!!!
-   the_cam->attachTransform(osg::Camera::MODEL_TO_EYE, osg_proj_xform_mat);
-   */
-   sv->setProjectionMatrixAsFrustum(frustum[Frustum::VJ_LEFT],    frustum[Frustum::VJ_RIGHT],
-                       frustum[Frustum::VJ_BOTTOM],  frustum[Frustum::VJ_TOP],
-                       frustum[Frustum::VJ_NEAR],    frustum[Frustum::VJ_FAR]);
-   
    sv->setViewMatrix(*osg_proj_xform_mat);
 
    //Draw the scene
