@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-12-13 patrickh The simulated Socket Manager separates the binding of UDP
+                    and TCP sockets.
+                    NEW VERSION: 0.8.1
 2001-12-13 patrickh The simulator clock now operates in vpr::Intervals so that
                     it can take advantage of the built-in base time and
                     roll-over capabilities.

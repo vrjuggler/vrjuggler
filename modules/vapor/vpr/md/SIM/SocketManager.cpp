@@ -104,11 +104,20 @@ namespace sim
    {
       bool status;
 
-      mBindListSockMutex.acquire();
+      mBindListSockMutexTCP.acquire();
       {
-         status = mBindListSock.size() > 0;
+         status = mBindListSockTCP.size() > 0;
       }
-      mBindListSockMutex.release();
+      mBindListSockMutexTCP.release();
+
+      if ( ! status )
+      {
+         mBindListSockMutexUDP.acquire();
+         {
+            status = mBindListSockUDP.size() > 0;
+         }
+         mBindListSockMutexUDP.release();
+      }
 
       return status;
    }
@@ -155,11 +164,11 @@ namespace sim
          {
             const vpr::SocketImplSIM* sim_sock;
 
-            mBindListAddrMutex.acquire();
+            mBindListAddrMutexTCP.acquire();
             {
-               sim_sock = mBindListAddr[remoteName];
+               sim_sock = mBindListAddrTCP[remoteName];
             }
-            mBindListAddrMutex.release();
+            mBindListAddrMutexTCP.release();
 
             stream_socket = dynamic_cast<const vpr::SocketStreamImplSIM*>(sim_sock);
 
@@ -208,11 +217,11 @@ namespace sim
          const vpr::SocketImplSIM* sim_sock;
          const vpr::SocketDatagramImplSIM* dgram_socket;
 
-         mBindListAddrMutex.acquire();
+         mBindListAddrMutexUDP.acquire();
          {
-            sim_sock = mBindListAddr[remoteName];
+            sim_sock = mBindListAddrUDP[remoteName];
          }
-         mBindListAddrMutex.release();
+         mBindListAddrMutexUDP.release();
 
          dgram_socket = dynamic_cast<const vpr::SocketDatagramImplSIM*>(sim_sock);
 
@@ -304,16 +313,12 @@ namespace sim
          }
          else if (isBound( localName ) == true)
          {
-            mBindListAddrMutex.acquire();
-            {
-               vprASSERT( mBindListAddr.count( localName ) > 0 && "error" );
-               vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-                  << "vpr::sim::SocketManager: address " << localName
-                  << " is already bound by socket " << mBindListAddr[localName]
-                  << " (couldn't bind sock " << handle << ")\n"
-                  << vprDEBUG_FLUSH;
-            }
-            mBindListAddrMutex.release();
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               << "vpr::sim::SocketManager: Address " << localName
+               << " is already bound by socket "
+               << mBindListAddrUDP[localName]
+               << " (couldn't bind sock " << handle << ")\n"
+               << vprDEBUG_FLUSH;
          }
          else
          {
@@ -364,13 +369,13 @@ namespace sim
          // enter self into list for accepting connections.
          mListenerListMutex.acquire();
          {
-            mBindListSockMutex.acquire();
+            mBindListSockMutexTCP.acquire();
             {
-               mListenerList[mBindListSock[handle]] =
+               mListenerList[mBindListSockTCP[handle]] =
                   std::pair<const vpr::SocketStreamImplSIM*, int>(handle,
                                                                   backlog);
             }
-            mBindListSockMutex.release();
+            mBindListSockMutexTCP.release();
          }
          mListenerListMutex.release();
       }
@@ -574,6 +579,8 @@ namespace sim
                                       const vpr::SocketImplSIM* src_sock,
                                       const vpr::InetAddrSIM& dest_addr)
    {
+      vprASSERT(src_sock->getType() == vpr::SocketTypes::DATAGRAM && "Only datagram sockets may use sendMessageTo()");
+
       vpr::ReturnStatus status;
       NetworkGraph::net_vertex_t dest_node;
 
@@ -597,7 +604,13 @@ namespace sim
             vpr::SocketImplSIM* peer;
             NetworkGraph::VertexListPtr path;
 
-            peer = const_cast<vpr::SocketImplSIM*>(mBindListAddr[dest_addr]);
+            mBindListAddrMutexUDP.acquire();
+            {
+               peer =
+                  const_cast<vpr::SocketImplSIM*>(mBindListAddrUDP[dest_addr]);
+            }
+            mBindListAddrMutexUDP.release();
+
             vprASSERT(src_sock->mNodeAssigned && "Trying to send from socket not assigned to a node!");
             path = vpr::sim::Controller::instance()->getNetworkGraph().getShortestPath(src_sock->getNetworkNode(), dest_node);
             msg->setPath(path, src_sock, peer);
@@ -614,11 +627,23 @@ namespace sim
    {
       bool status;
 
-      mBindListSockMutex.acquire();
+      switch (handle->getType())
       {
-         status = mBindListSock.count( handle ) > 0;
+         case vpr::SocketTypes::DATAGRAM:
+            mBindListSockMutexUDP.acquire();
+            {
+               status = mBindListSockUDP.count(handle) > 0;
+            }
+            mBindListSockMutexUDP.release();
+            break;
+         case vpr::SocketTypes::STREAM:
+            mBindListSockMutexTCP.acquire();
+            {
+               status = mBindListSockTCP.count(handle) > 0;
+            }
+            mBindListSockMutexTCP.release();
+            break;
       }
-      mBindListSockMutex.release();
 
       return handle->isOpen() && status;
    }
@@ -628,11 +653,20 @@ namespace sim
    {
       bool status;
 
-      mBindListAddrMutex.acquire();
+      mBindListAddrMutexTCP.acquire();
       {
-         status = mBindListAddr.count( addr ) > 0;
+         status = mBindListAddrTCP.count(addr) > 0;
       }
-      mBindListAddrMutex.release();
+      mBindListAddrMutexTCP.release();
+
+      if ( ! status )
+      {
+         mBindListAddrMutexUDP.acquire();
+         {
+            status = mBindListAddrUDP.count(addr) > 0;
+         }
+         mBindListAddrMutexUDP.release();
+      }
 
       return status;
    }
@@ -660,11 +694,11 @@ namespace sim
       {
          mListenerListMutex.acquire();
          {
-            mBindListSockMutex.acquire();
+            mBindListSockMutexTCP.acquire();
             {
-               status = mListenerList.count( mBindListSock[handle] ) > 0;
+               status = mListenerList.count(mBindListSockTCP[handle]) > 0;
             }
-            mBindListSockMutex.release();
+            mBindListSockMutexTCP.release();
          }
          mListenerListMutex.release();
       }
@@ -678,12 +712,25 @@ namespace sim
 
       vprASSERT( isBound( handle ) && "need to check isBound before using" );
 
-      mBindListSockMutex.acquire();
+      switch (handle->getType())
       {
-         vprASSERT( mBindListSock.count( handle ) > 0 && "if handle is bound, then it should appear in the bindlist, but it doesn't" );
-         addr = mBindListSock[handle];
+         case vpr::SocketTypes::DATAGRAM:
+            mBindListSockMutexUDP.acquire();
+            {
+               vprASSERT( mBindListSockUDP.count( handle ) > 0 && "if handle is bound, then it should appear in the bindlist, but it doesn't" );
+               addr = mBindListSockUDP[handle];
+            }
+            mBindListSockMutexUDP.release();
+            break;
+         case vpr::SocketTypes::STREAM:
+            mBindListSockMutexTCP.acquire();
+            {
+               vprASSERT( mBindListSockTCP.count( handle ) > 0 && "if handle is bound, then it should appear in the bindlist, but it doesn't" );
+               addr = mBindListSockTCP[handle];
+            }
+            mBindListSockMutexTCP.release();
+            break;
       }
-      mBindListSockMutex.release();
 
       return addr;
    }
@@ -693,7 +740,7 @@ namespace sim
    {
       vpr::Guard<vpr::Mutex> guard(mPortMutex);
 
-      addr.setPort(genUnusedPort());
+      addr.setPort(genUnusedPort(sock->getType()));
 
       return bind(sock, addr);
    }
@@ -701,18 +748,37 @@ namespace sim
    void SocketManager::_bind( const vpr::SocketImplSIM* handle,
                               const vpr::InetAddrSIM& addr )
    {
-      mBindListSockMutex.acquire();
+      switch (handle->getType())
       {
-         mBindListSock[handle] = addr;
-      }
-      mBindListSockMutex.release();
+         case vpr::SocketTypes::DATAGRAM:
+            mBindListSockMutexUDP.acquire();
+            {
+               mBindListSockUDP[handle] = addr;
+            }
+            mBindListSockMutexUDP.release();
 
-      mBindListAddrMutex.acquire();
-      {
-         mBindListAddr[addr] = handle;
-      }
-      mBindListAddrMutex.release();
+            mBindListAddrMutexUDP.acquire();
+            {
+               mBindListAddrUDP[addr] = handle;
+            }
+            mBindListAddrMutexUDP.release();
 
+            break;
+         case vpr::SocketTypes::STREAM:
+            mBindListSockMutexTCP.acquire();
+            {
+               mBindListSockTCP[handle] = addr;
+            }
+            mBindListSockMutexTCP.release();
+
+            mBindListAddrMutexTCP.acquire();
+            {
+               mBindListAddrTCP[addr] = handle;
+            }
+            mBindListAddrMutexTCP.release();
+
+            break;
+      }
       vprASSERT( isBound( handle ) == true );
       vprASSERT( isBound( addr ) == true );
 
@@ -726,26 +792,53 @@ namespace sim
 
       vprASSERT( isBound( handle ) == true );
 
-      mBindListSockMutex.acquire();
+      switch (handle->getType())
       {
-         vprASSERT( isBound( mBindListSock[handle] ) == true );
+         case vpr::SocketTypes::DATAGRAM:
+            mBindListSockMutexUDP.acquire();
+            {
+               vprASSERT( isBound( mBindListSockUDP[handle] ) == true );
 
-         addr = mBindListSock[handle];
-         hand = handle;                // Temporary storage ...
+               addr = mBindListSockUDP[handle];
+               hand = handle;                // Temporary storage ...
 
-         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-            << "_unbind() unmapping: " << mBindListSock[handle] << " "
-            << handle << "\n" << vprDEBUG_FLUSH;
+               vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+                  << "_unbind() unmapping: " << mBindListSockUDP[handle] << " "
+                  << handle << "\n" << vprDEBUG_FLUSH;
 
-         mBindListAddrMutex.acquire();
-         {
-            mBindListAddr.erase( mBindListSock[handle] );
-         }
-         mBindListAddrMutex.release();
+               mBindListAddrMutexUDP.acquire();
+               {
+                  mBindListAddrUDP.erase(mBindListSockUDP[handle]);
+               }
+               mBindListAddrMutexUDP.release();
 
-         mBindListSock.erase( handle );
+               mBindListSockUDP.erase( handle );
+            }
+            mBindListSockMutexUDP.release();
+            break;
+         case vpr::SocketTypes::STREAM:
+            mBindListSockMutexTCP.acquire();
+            {
+               vprASSERT( isBound( mBindListSockTCP[handle] ) == true );
+
+               addr = mBindListSockTCP[handle];
+               hand = handle;                // Temporary storage ...
+
+               vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+                  << "_unbind() unmapping: " << mBindListSockTCP[handle] << " "
+                  << handle << "\n" << vprDEBUG_FLUSH;
+
+               mBindListAddrMutexTCP.acquire();
+               {
+                  mBindListAddrTCP.erase(mBindListSockTCP[handle]);
+               }
+               mBindListAddrMutexTCP.release();
+
+               mBindListSockTCP.erase( handle );
+            }
+            mBindListSockMutexTCP.release();
+            break;
       }
-      mBindListSockMutex.release();
 
       NetworkNode node_prop =
          vpr::sim::Controller::instance()->getNetworkGraph().getNodeProperty(handle->getNetworkNode());
@@ -775,23 +868,52 @@ namespace sim
    // XXX: This needs to be rethough since we can now have 2^64 port numbers
    // (2^32 at each node, and 2^32 nodes).
    // return an unused port at some existing address, or 0 for error.
-   vpr::Uint32 SocketManager::genUnusedPort()
+   vpr::Uint32 SocketManager::genUnusedPort (const vpr::SocketTypes::Type addr_type)
    {
-      vpr::Guard<vpr::Mutex> guard(mBindListAddrMutex);
+      vpr::Uint32 full = -1;
       vpr::InetAddrSIM address;
 
-      // NOTE: this is pretty dumb, but it works.
-      vpr::Uint32 full = -1;
-      for ( vpr::Uint32 x = 5000; x < full; ++x)
+      switch (addr_type)
       {
-         address.setPort( x );
+         case vpr::SocketTypes::DATAGRAM:
+            {
+               // This guard must be used because return is called from within
+               // the for loop.
+               vpr::Guard<vpr::Mutex> guard(mBindListAddrMutexUDP);
 
-         if ( mBindListAddr.count(address) == 0 )
-         {
-            return x;
-         }
+               // NOTE: this is pretty dumb, but it works.
+               for ( vpr::Uint32 x = 1; x < full; ++x)
+               {
+                  address.setPort(x);
+
+                  if ( mBindListAddrUDP.count(address) == 0 )
+                  {
+                     return x;
+                  }
+               }
+            }
+            vprASSERT( false && "should never fail" );
+            break;
+         case vpr::SocketTypes::STREAM:
+            {
+               // This guard must be used because return is called from within
+               // the for loop.
+               vpr::Guard<vpr::Mutex> guard(mBindListAddrMutexTCP);
+
+               // NOTE: this is pretty dumb, but it works.
+               for ( vpr::Uint32 x = 1; x < full; ++x)
+               {
+                  address.setPort(x);
+
+                  if ( mBindListAddrTCP.count(address) == 0 )
+                  {
+                     return x;
+                  }
+               }
+            }
+            vprASSERT( false && "should never fail" );
+            break;
       }
-      vprASSERT( false && "should never fail" );
       return 0; //error
    }
 

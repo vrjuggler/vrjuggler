@@ -257,7 +257,7 @@ private:
    /**
     * Returns an unused port at some existing address, or 0 for error.
     */
-   vpr::Uint32 genUnusedPort( void );
+   vpr::Uint32 genUnusedPort(const vpr::SocketTypes::Type addr_type);
 
    vpr::sim::NetworkGraph::net_vertex_t getLocalhost(void);
 
@@ -289,11 +289,17 @@ private:
     * @note Handles are doubly mapped between the two maps.  Use _bind() and
     *       _unbind() to access these.
     */
-   std::map<const vpr::SocketImplSIM*, vpr::InetAddrSIM> mBindListSock;
-   std::map<vpr::InetAddrSIM, const vpr::SocketImplSIM*, ltaddr> mBindListAddr;
+   std::map<const vpr::SocketImplSIM*, vpr::InetAddrSIM> mBindListSockUDP;
+   std::map<vpr::InetAddrSIM, const vpr::SocketImplSIM*, ltaddr> mBindListAddrUDP;
 
-   vpr::Mutex mBindListSockMutex;
-   vpr::Mutex mBindListAddrMutex;
+   vpr::Mutex mBindListSockMutexUDP;
+   vpr::Mutex mBindListAddrMutexUDP;
+
+   std::map<const vpr::SocketImplSIM*, vpr::InetAddrSIM> mBindListSockTCP;
+   std::map<vpr::InetAddrSIM, const vpr::SocketImplSIM*, ltaddr> mBindListAddrTCP;
+
+   vpr::Mutex mBindListSockMutexTCP;
+   vpr::Mutex mBindListAddrMutexTCP;
 
    vpr::Mutex mPortMutex;          /**< Mutex to protect port generation */
 };
