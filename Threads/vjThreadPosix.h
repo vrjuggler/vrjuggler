@@ -314,6 +314,7 @@ public:
 // All private member variables and functions.
 private:
     pthread_t	mThread;	//: pthread_t data structure for this thread
+    int		mScope;		//: Scope (process or system) of this thread
 
     void checkRegister(int status);
 
