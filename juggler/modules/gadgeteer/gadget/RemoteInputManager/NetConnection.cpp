@@ -49,7 +49,7 @@ namespace gadget
    NetConnection::NetConnection()
    {
       mSockStream = NULL;
-      //mRecvBuffer = new RecvBuffer;
+      
       //mObjectReader = new vpr::ObjectReader(new std::vector<vpr::Uint8>);
       mSendIterations = 0;
       mRecvIterations = 0;
@@ -70,7 +70,7 @@ namespace gadget
       mManagerId = vpr::GUID(manager_id); // set the id of the other computer's remote manager
       mSockStream = sock_stream;
       mSockStream->setNoDelay(true);
-      //mRecvBuffer = new RecvBuffer;
+      
       //mObjectReader = new vpr::ObjectReader(new std::vector<vpr::Uint8>);
       mSendIterations = 0;
       mRecvIterations = 0;
