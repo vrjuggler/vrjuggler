@@ -70,26 +70,29 @@ class VJ_CLASS_API GlWindow
 public:
    GlWindow()
       : mVrjDisplay(NULL)
+      // The context is always dirty when the window is first created
       , mDirtyContext(true)
       , mDirtyViewport(true)
-      , in_stereo(false)
-      , border(false)
+      , mInStereo(false)
+      , mHasBorder(false)
       , mHideMouse(false)
-      , window_is_open(false)
-      , window_width(0)
-      , window_height(0)
-      , origin_x(0)
-      , origin_y(0)
+      , mWindowIsOpen(false)
+      , mWindowWidth(0)
+      , mWindowHeight(0)
+      , mOriginX(0)
+      , mOriginY(0)
       // XXX: Sync problem on window id value assignment
       , mWindowId(getNextWindowId())
-      , mAreEventSource(false)
+      , mIsEventSource(false)
    {
-      // The context is always dirty when the window is first created
+      /* Do nothing. */ ;
    }
 
-   // Virtual destructor
+   /** Virtual destructor. */
    virtual ~GlWindow()
-   {;}
+   {
+      /* Do nothing. */ ;
+   }
 
 public:
 
@@ -137,9 +140,10 @@ public:
    virtual void checkEvents()
    {;}
 
-   /** Complete any setup that is needed after open
-   * @pre Window is open
-   */
+   /**
+    * Completes any setup that is needed after open.
+    * @pre Window is open.
+    */
    virtual void finishSetup();
 
 public:
@@ -207,7 +211,7 @@ public:
     */
    bool isOpen() const
    {
-      return window_is_open;
+      return mWindowIsOpen;
    }
 
    /**
@@ -216,12 +220,12 @@ public:
     */
    bool isStereo() const
    {
-      return in_stereo;
+      return mInStereo;
    }
 
    bool isEventSource() const
    {
-      return mAreEventSource;
+      return mIsEventSource;
    }
 
    vrj::Display* getDisplay()
@@ -239,23 +243,25 @@ public:
 
    // Called by event function to update size info
    // XXX: Should update Display configuration element in some way
-   void updateOriginSize(int o_x, int o_y, int width, int height)
+   void updateOriginSize(const int originX, const int originY, const int width, const int height)
    {
-      origin_x = o_x; origin_y = o_y;
-      window_width = width; window_height = height;
+      mOriginX      = originX;
+      mOriginY      = originY;
+      mWindowWidth  = width;
+      mWindowHeight = height;
 
       // Update the display configuration
-      mVrjDisplay->setOriginAndSize(o_x, o_y, width, height);
+      mVrjDisplay->setOriginAndSize(originX, originY, width, height);
    }
 
-   /** Return the origin and size of the current window */
-   void getOriginSize(unsigned& o_x, unsigned& o_y, unsigned& width,
-                      unsigned& height) const
+   /** Returns the origin and size of the current window. */
+   void getOriginSize(int& originX, int& originY, int& width,
+                      int& height) const
    {
-      o_x = origin_x;
-      o_y = origin_y;
-      width = window_width;
-      height = window_height;
+      originX = mOriginX;
+      originY = mOriginY;
+      width   = mWindowWidth;
+      height  = mWindowHeight;
    }
 
    friend std::ostream& operator<<(std::ostream& out, GlWindow& win);
@@ -275,22 +281,24 @@ protected:
      // transforms from.
    vrj::Display* mVrjDisplay;
 
-   bool mDirtyContext;  /**<  The context is dirty.  We need to (re)initialize it next draw */
-   bool mDirtyViewport; /**  The GL window setup (viewport, etc) is dirty and needs to be reinited. */
+   bool mDirtyContext;  /**< The context is dirty.  We need to (re)initialize it next draw. */
+   bool mDirtyViewport; /**< The GL window setup (viewport, etc) is dirty and needs to be reinited. */
 
    /**
     * Whether the display is actually in stereo if we wanted a stereo display
     * but couldn't open it we fall back to mono, and this will be false.
     */
-   bool in_stereo;
+   bool mInStereo;
 
-   bool border;         /**<  Do we have a border? */
-   bool mHideMouse;     /**<  Should we hide the mouse pointer? */
-   bool window_is_open; /**< Is the window open? */
-   int  window_width, window_height;
-   int  origin_x, origin_y;         /**< lower-left corner of window */
-   int  mWindowId;                  /**< A unique window id to identify us */
-   bool mAreEventSource;  /**< Should we act as an event source too? */
+   bool mHasBorder;     /**< Do we have a border? */
+   bool mHideMouse;     /**< Should we hide the mouse pointer? */
+   bool mWindowIsOpen;  /**< Is the window open? */
+   int  mWindowWidth;
+   int  mWindowHeight;
+   int  mOriginX;       /**< X component of the lower left-hand corner of the window. */
+   int  mOriginY;       /**< Y component of the lower left-hand corner of the window. */
+   int  mWindowId;      /**< A unique window id to identify us. */
+   bool mIsEventSource; /**< Should we act as an event source too? */
 
 private:
    static vpr::Mutex mWinIdMutex;
@@ -301,6 +309,6 @@ private:
 
 // ostream& operator<<(ostream& out, GlWindow& win);
 
-
 } // end namespace
+
 #endif

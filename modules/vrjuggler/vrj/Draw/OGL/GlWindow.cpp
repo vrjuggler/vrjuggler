@@ -79,15 +79,14 @@ namespace vrj
 int GlWindow::mCurMaxWinId = 0;
 vpr::Mutex GlWindow::mWinIdMutex;
 
-
 void GlWindow::configWindow(vrj::Display* displayWindow)
 {
    vprASSERT(displayWindow != NULL);      // We can't config to a NULL display
    mVrjDisplay = displayWindow;
-   mVrjDisplay->getOriginAndSize(origin_x, origin_y, window_width, window_height);
-   border = mVrjDisplay->shouldDrawBorder();
+   mVrjDisplay->getOriginAndSize(mOriginX, mOriginY, mWindowWidth,
+                                 mWindowHeight);
+   mHasBorder = mVrjDisplay->shouldDrawBorder();
    mHideMouse = mVrjDisplay->shouldHideMouse();
-   
 
    /// Other stuff
 }
@@ -97,7 +96,7 @@ void GlWindow::configWindow(vrj::Display* displayWindow)
 */
 void GlWindow::finishSetup()
 {
-   vprASSERT(window_is_open && "Pre-condition of being open failed");
+   vprASSERT(mWindowIsOpen && "Pre-condition of being open failed");
 
    // --- Setup any attached simulator that is needed --- //
    Viewport* viewport = NULL;
@@ -120,7 +119,7 @@ void GlWindow::finishSetup()
             // - Register a proxy that we will use
             // - Make device interface for that proxy
             // - Intialize the simulator
-            vprASSERT(mAreEventSource && "Tried to use simulator with a non-keyboard enabled GL window. Bad programmer.");
+            vprASSERT(mIsEventSource && "Tried to use simulator with a non-keyboard enabled GL window. Bad programmer.");
             gadget::EventWindow* kb_dev = dynamic_cast<gadget::EventWindow*>(this);
             gadget::Input* input_dev = dynamic_cast<gadget::Input*>(this);
             vprASSERT((kb_dev != NULL) && (input_dev != NULL) && "Failed to cast glWindow impl to a gadget::EventWindow");
@@ -169,11 +168,9 @@ void GlWindow::finishSetup()
 
 }
 
-
-
 void GlWindow::updateViewport()
 {
-   glViewport(0,0, window_width, window_height);
+   glViewport(0, 0, mWindowWidth, mWindowHeight);
    setDirtyViewport(false);
 }
 
@@ -182,29 +179,36 @@ void GlWindow::setViewport(float xo, float yo, float xSize, float ySize)
    vprASSERT( ((xo+xSize) <= 1.0f) && "X viewport sizes are out of range");
    vprASSERT( ((yo+ySize) <= 1.0f) && "Y viewport sizes are out of range");
 
-   unsigned ll_x = unsigned(xo*float(window_width));
-   unsigned ll_y = unsigned(yo*float(window_height));
-   unsigned x_size = unsigned(xSize*float(window_width));
-   unsigned y_size = unsigned(ySize*float(window_height));
+   unsigned ll_x = unsigned(xo * float(mWindowWidth));
+   unsigned ll_y = unsigned(yo * float(mWindowHeight));
+   unsigned x_size = unsigned(xSize * float(mWindowWidth));
+   unsigned y_size = unsigned(ySize * float(mWindowHeight));
 
    glViewport(ll_x, ll_y, x_size, y_size);
 }
 
-
 void GlWindow::setViewBuffer(vrj::Viewport::View view)
 {
    if(!isStereo())
+   {
       glDrawBuffer(GL_BACK);
+   }
    else if(Viewport::LEFT_EYE == view)
+   {
       glDrawBuffer(GL_BACK_LEFT);
+   }
    else if(Viewport::RIGHT_EYE == view)
+   {
       glDrawBuffer(GL_BACK_RIGHT);
+   }
 }
 
 void GlWindow::setProjection(vrj::Projection* proj)
 {
-   if (!window_is_open)
+   if (!mWindowIsOpen)
+   {
       return;
+   }
 
    const float* frust = proj->getFrustum().frust;
 
@@ -244,8 +248,8 @@ std::ostream& operator<<(std::ostream& out, GlWindow& win)
    vprASSERT(win.mVrjDisplay != NULL);
 
    //out << "-------- GlWindow --------" << endl;
-   out << "Open: " << (win.window_is_open ? "Yes" : "No") << std::endl;
-   out << "Stereo: " << (win.in_stereo ? "Yes" : "No") << std::endl;
+   out << "Open: " << (win.mWindowIsOpen ? "Yes" : "No") << std::endl;
+   out << "Stereo: " << (win.mInStereo ? "Yes" : "No") << std::endl;
    out << "Display Info:\n" << *(win.mVrjDisplay) << std::endl;
    return out;
 }

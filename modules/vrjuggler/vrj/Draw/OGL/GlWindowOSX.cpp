@@ -76,12 +76,12 @@ void GlWindowOSX::swapBuffers() {
             GetWindowPortBounds (gpWindow, &rectPort);
             int newWidth = rectPort.right - rectPort.left;
             int newHeight = rectPort.bottom - rectPort.top;
-            if( newWidth != window_width || newHeight != window_height)
+            if( newWidth != mWindowWidth || newHeight != mWindowHeight)
             {
                 // Refresh the window with black...
                 aglUpdateContext (aglContext);
                 glViewport (0, 0, rectPort.right - rectPort.left, rectPort.bottom - rectPort.top);
-                window_width = newWidth; window_height = newHeight;
+                mWindowWidth = newWidth; mWindowHeight = newHeight;
                 glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
                 glClear (GL_COLOR_BUFFER_BIT);
                 aglSwapBuffers (aglContext);
@@ -109,26 +109,30 @@ int GlWindowOSX::open() {
     // Note: this is not true fullscreen the menu bar and dock are just hiden
     // this will not give you the speed increases you could get if you gave GL
     // full control of the screen
-    if( bounds.size.height == window_height && bounds.size.width == window_width)
+    if( bounds.size.height == mWindowHeight &&
+        bounds.size.width == mWindowWidth)
     {
-        vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL) << "FULLSCREEN Mode enabled" << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
+           << "FULLSCREEN Mode enabled" << std::endl << vprDEBUG_FLUSH;
         HideMenuBar ();
     }
 
 
     //set the window size and location with the height adjusted
-    SetRect(&rectWin, origin_x , bounds.size.height - origin_y - window_height,
-                            origin_x + window_width, bounds.size.height - origin_y);
+    SetRect(&rectWin, mOriginX , bounds.size.height - mOriginY - mWindowHeight,
+            mOriginX + mWindowWidth, bounds.size.height - mOriginY);
                             /* left, top, right, bottom */
     /*
-    rectWin.top = origin_y;
-    rectWin.left = origin_x;
-    rectWin.bottom = origin_y + window_height;
-    rectWin.right = origin_x + window_width;
+    rectWin.top = mOriginY;
+    rectWin.left = mOriginX;
+    rectWin.bottom = mOriginY + mWindowHeight;
+    rectWin.right = mOriginX + mWindowWidth;
     */
     if (noErr != CreateNewWindow (kDocumentWindowClass, kWindowStandardDocumentAttributes | kWindowNoShadowAttribute | kWindowLiveResizeAttribute, &rectWin, &gpWindow))
     {
-        vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL) << "vjGlWindowOSX::open()    Window failed to open!" << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+           << "vjGlWindowOSX::open()    Window failed to open!" << std::endl
+           << vprDEBUG_FLUSH;
         return false;
     }
     SetWindowTitleWithCFString(gpWindow,window_title);
@@ -136,7 +140,7 @@ int GlWindowOSX::open() {
     ChangeWindowAttributes(gpWindow, NULL, kWindowCloseBoxAttribute );
 
     //This is the an event source window.
-    if (mAreEventSource == true)
+    if (mIsEventSource == true)
     {
         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
            << "vrj::GlWindowOSX::config(): We will be an event source\n"
@@ -169,7 +173,9 @@ int GlWindowOSX::open() {
     if (!aglContext)
     {
         DestroyGLFromWindow (&aglContext, &glInfo);
-        vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL) << "vjGlWindowOSX::open()    Window could not create GL Context!" << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+           << "[vrj::GlWindowOSX::open()] Window could not create GL Context!"
+           << std::endl << vprDEBUG_FLUSH;
         return false;
     }
     Rect rectPort;
@@ -178,9 +184,10 @@ int GlWindowOSX::open() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear (GL_COLOR_BUFFER_BIT);
     aglSwapBuffers (aglContext);
-    glViewport (0, 0, rectPort.right - rectPort.left, rectPort.bottom - rectPort.top);
+    glViewport(0, 0, rectPort.right - rectPort.left,
+               rectPort.bottom - rectPort.top);
 
-    window_is_open = true;
+    mWindowIsOpen = true;
     return true;
 }
 
@@ -224,9 +231,9 @@ void GlWindowOSX::configWindow(vrj::Display* _display)
 
    window_title = CFStringCreateWithCString(NULL, _display->getName().c_str(), kCFStringEncodingMacRoman);
 
-   mAreEventSource = display_elt->getProperty<bool>("act_as_event_source");
+   mIsEventSource = display_elt->getProperty<bool>("act_as_event_source");
    // if should act as an event source
-   if ( true == mAreEventSource )
+   if ( true == mIsEventSource )
    {
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
          << "vrj::GlWindowOSX::config(): We will be an event source\n"
@@ -250,8 +257,8 @@ void GlWindowOSX::configWindow(vrj::Display* _display)
       }
 
       // Custom configuration These proably do not matter
-      //gadget::EventWindowOSX::m_width = GlWindowXWin::window_width;
-      //gadget::EventWindowOSX::m_height = GlWindowXWin::window_height;
+      //gadget::EventWindowOSX::m_width = GlWindowXWin::mWindowWidth;
+      //gadget::EventWindowOSX::m_height = GlWindowXWin::mWindowHeight;
 
       //mWeOwnTheWindow = false;      // Event window device does not own window
    }
