@@ -485,7 +485,7 @@ sub format_summaries {
 
 	if ( $minor_rev > 1 ) {
 	    my $old_minor_rev = $minor_rev - 1;
-	    push(@text, "http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/$files[$rev].diff?r1=$major_rev.$old_minor_rev\&r2=$revs[$rev]\&cvsroot=vrjuggler");
+	    push(@text, "http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/vrjuggler/$files[$rev].diff?r1=$major_rev.$old_minor_rev\&r2=$revs[$rev]");
 	}
     }
     return @text;
