@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package org.vrjuggler.jccl.wizard.builder;
+package org.vrjuggler.tweek.wizard.builder;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.*;
 
-import org.vrjuggler.jccl.wizard.*;
+import org.vrjuggler.tweek.wizard.*;
 
 /**
  * Tweak panel bean that allows for the construction of Wizards.

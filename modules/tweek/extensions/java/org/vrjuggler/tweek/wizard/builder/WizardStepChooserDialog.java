@@ -29,12 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package org.vrjuggler.jccl.wizard.builder;
+package org.vrjuggler.tweek.wizard.builder;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import org.vrjuggler.jccl.wizard.*;
+import org.vrjuggler.tweek.wizard.*;
 
 /**
  * Dialog that lets the user choose a WizardStep.
@@ -92,7 +92,7 @@ public class WizardStepChooserDialog
       sequencesList.setCellRenderer(new WizardStepListCellRenderer());
 
       // Add in the default panes
-      panesModel.addElement("org.vrjuggler.jccl.wizard.panes.WelcomePane");
+      panesModel.addElement("org.vrjuggler.tweek.wizard.panes.WelcomePane");
       panesModel.addElement("org.vrjuggler.vrjconfig.wizard.panes.SimDisplayPane");
    }
 

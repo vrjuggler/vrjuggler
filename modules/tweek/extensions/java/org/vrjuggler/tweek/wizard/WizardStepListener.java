@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package org.vrjuggler.jccl.wizard;
+package org.vrjuggler.tweek.wizard;
 
 /**
  * Interface for objects that wish to know about WizardStep events.
