@@ -540,7 +540,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
 }
 
 void EventWindowXWin::addKeyEvent(const gadget::Keys& key,
-                                  onst gadget::EventType& type,
+                                  const gadget::EventType& type,
                                   const int& state, const Time& time)
 {
    gadget::EventPtr key_event(new gadget::KeyEvent(type, key, getMask(state),
