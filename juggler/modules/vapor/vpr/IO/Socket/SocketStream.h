@@ -39,8 +39,6 @@
 #include <IO/Socket/InetAddr.h>
 
 
-// XXX: Need to add methods for setsockopt(2) stuff.
-
 namespace vpr {
 
 // ----------------------------------------------------------------------------
@@ -165,6 +163,60 @@ public:
         }
 
         return retval;
+    }
+
+    /**
+     *
+     */
+    inline int
+    getMaxSegmentSize (Int32& size) const {
+        SocketTypes::OptionData option;
+        int retval;
+
+        retval = m_socket_stream_imp.getOption(SocketTypes::MaxSegment, option);
+
+        if ( retval == 0 ) {
+            size = option.max_segment;
+        }
+
+        return retval;
+    }
+
+    /**
+     *
+     */
+    inline int
+    setMaxSegmentSize (const Int32 size) {
+        SocketTypes::OptionData option;
+        option.max_segment = size;
+        return m_socket_stream_imp.setOption(SocketTypes::MaxSegment, option);
+    }
+
+    /**
+     *
+     */
+    inline int
+    getNoDelay (bool& enabled) const {
+        SocketTypes::OptionData option;
+        int retval;
+
+        retval = m_socket_stream_imp.getOption(SocketTypes::NoDelay, option);
+
+        if ( retval == 0 ) {
+            enabled = option.no_delay;
+        }
+
+        return retval;
+    }
+
+    /**
+     *
+     */
+    inline int
+    setNoDelay (const bool enable_val) {
+        SocketTypes::OptionData option;
+        option.no_delay = enable_val;
+        return m_socket_stream_imp.setOption(SocketTypes::NoDelay, option);
     }
 
 protected:
