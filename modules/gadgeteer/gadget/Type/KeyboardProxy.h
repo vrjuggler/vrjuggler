@@ -51,7 +51,7 @@ public:
 
    Keyboard* getKeyboardPtr()
    {
-      if(mStupified)
+      if(isStupified())
          return NULL;
       else
          return mTypedDevice;
@@ -64,7 +64,7 @@ public:
     */
    bool modifierOnly(int modKey)
    {
-      if(mStupified)
+      if(isStupified() || (mTypedDevice == NULL))
          return false;
       else
          return mTypedDevice->modifierOnly(modKey);
@@ -72,7 +72,7 @@ public:
 
    int keyPressed(int keyId)
    {
-      if(mStupified)
+      if(isStupified() || (mTypedDevice == NULL))
          return 0;
       else
          return mTypedDevice->keyPressed(keyId);
@@ -84,7 +84,7 @@ public:
 
    virtual Input* getProxiedInputDevice()
    {
-      if(NULL == mTypedDevice)
+      if ((NULL == mTypedDevice) || (isStupified()))
          return NULL;
 
       Input* ret_val = dynamic_cast<Input*>(mTypedDevice);

@@ -73,7 +73,7 @@ public:
    /** Updates the cached data copy from the device. */
    virtual void updateData()
    {
-      if(!mStupified)
+      if(!isStupified())
       {
          m_data = mTypedDevice->getAnalogData(m_unitNum);
       }
@@ -86,7 +86,7 @@ public:
    float getData() const
    {
       const float analogDefault(0.0f);
-      if(mStupified)
+      if(!isStupified())
          return analogDefault;
       else
          return m_data.getAnalog();
@@ -94,7 +94,7 @@ public:
 
    Analog* getAnalogPtr()
    {
-      if(mStupified)
+      if(isStupified())
          return NULL;
       else
          return mTypedDevice;
@@ -109,7 +109,7 @@ public:
 
    virtual Input* getProxiedInputDevice()
    {
-      if(NULL == mTypedDevice)
+      if((NULL == mTypedDevice) || (isStupified()))
          return NULL;
 
       Input* ret_val = dynamic_cast<Input*>(mTypedDevice);

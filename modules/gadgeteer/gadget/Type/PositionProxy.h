@@ -75,7 +75,7 @@ public:
     */
    virtual void updateData()
    {
-      if(!mStupified)
+      if((!mStupified) && (mTypedDevice != NULL))
       {
           mPositionData = (mTypedDevice->getPositionData (mUnitNum));
 
@@ -166,7 +166,7 @@ public:
 
    virtual Input* getProxiedInputDevice()
    {
-      if(NULL == mTypedDevice)
+      if ((NULL == mTypedDevice) || (mStupified))
       {
          return NULL;
       }

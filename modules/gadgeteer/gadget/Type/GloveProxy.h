@@ -70,7 +70,7 @@ public:
   float getAngle(GloveData::GloveComponent component,
                  GloveData::GloveJoint joint)
   {
-    if(mStupified)
+    if(isStupified())
        return 0.0f;
     else
        return mTypedDevice->getGloveAngle(component, joint, mUnitNum);
@@ -79,7 +79,7 @@ public:
 
   gmtl::Vec3f getVector(GloveData::GloveComponent component)
   {
-     if(mStupified)
+     if(isStupified())
         return gmtl::Vec3f(0,0,0);
      else
         return mTypedDevice->getGloveVector(component, mUnitNum);
@@ -87,7 +87,7 @@ public:
 
   gmtl::Matrix44f getPos( GloveData::GloveComponent component = GloveData::WRIST)
   {
-     if(mStupified)
+     if(isStupified())
         return gmtl::Matrix44f();
      else
       return mTypedDevice->getGlovePos(component, mUnitNum);
@@ -96,7 +96,7 @@ public:
 
   GloveData getData()
   {
-     if(mStupified)
+     if(isStupified())
         return GloveData();
      else
         return mTypedDevice->getGloveData(mUnitNum);
@@ -106,7 +106,7 @@ public:
   /** Returns a pointer to the device held by this proxy. */
   Glove* getGlovePtr()
   {
-     if(mStupified)
+     if(isStupified())
         return NULL;
      else
       return mTypedDevice;
@@ -126,7 +126,7 @@ public:
 
    virtual Input* getProxiedInputDevice()
    {
-      if(NULL == mTypedDevice)
+      if((NULL == mTypedDevice) || (isStupified()))
          return NULL;
 
       Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
