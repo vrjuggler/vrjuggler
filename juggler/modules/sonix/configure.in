@@ -257,6 +257,8 @@ else
     SAFE_SNXROOT_ABS="$SNXROOT_ABS"
 fi
 
+# See if we have vapor
+VPR_PATH(, [HAVE_VAPOR='Y'], [HAVE_VAPOR='N'], )
 
 dnl append the openal stuff...
 OPENAL_API='N'
@@ -266,9 +268,13 @@ if test "x$OPENAL_ENABLED" = "xno" ; then
 else
    DPP_HAVE_OPENAL( /usr/local, AC_MSG_RESULT(+ Found OpenAL), )
    if test "x$OPENAL" = "xyes" ; then
-      DPP_PTHREAD_FINISH
-      OPENAL_API='Y'
-      echo "+ added OpenAL to the compile and link paths"
+      if test "x$HAVE_VAPOR" = "xY" -a "x$VPR_SUBSYSTEM" != "xSPROC"; then
+         DPP_PTHREAD_FINISH
+         OPENAL_API='Y'
+         echo "+ added OpenAL to the compile and link paths"
+      else
+         AC_MSG_WARN([*** OpenAL cannot be used with a VPR installation using SPROC. ***])
+      fi
    else
       if test "x$OPENAL_ENABLED" = "xyes" ; then
          AC_MSG_WARN(*** you requested to use OpenAL as one of your audio subsystems, but it was not found. ***)
@@ -304,8 +310,12 @@ if test "x$AUDIOWORKS_ENABLED" = "xno" ; then
 else
    DPP_HAVE_AUDIOWORKS( /usr, AC_MSG_RESULT(+ Found AudioWorks), )
    if test "x$AUDIOWORKS" = "xyes" ; then
-      AUDIOWORKS_API='Y'
-      echo "+ added AudioWorks to the compile and link paths"
+      if test "x$HAVE_VAPOR" = "xY" -a "x$VPR_SUBSYSTEM" = "xSPROC"; then
+         AUDIOWORKS_API='Y'
+         echo "+ added AudioWorks to the compile and link paths"
+      else
+         AC_MSG_WARN([*** AudioWorks cannot be used with a VPR installation that does not use SPROC. ***])
+      fi
    else
       if test "x$AUDIOWORKS_ENABLED" = "xyes" ; then
          AC_MSG_WARN(*** you requested to use AudioWorks as one of your audio subsystems, but it was not found. ***)
