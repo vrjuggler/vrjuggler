@@ -83,21 +83,23 @@ int main(int argc, char* argv[])
    VRJConfigure(argc, argv);        // Configure the system
 
    init();                          // Initialize app vars
-   
-   VRJSetGLDrawMethod(draw);                 // Set draw method
-   VRJSetGLContextInitMethod(initGLState);   // Set init for GL state
-   VRJSetBufferPredrawMethod(bufferPreDraw); // Set method for clearing the buffers
-   VRJSetPreFrameMethod(preFrame);           // Set preframe callback
-      
+
+   // NOTE: The function pointers are passed using the address-of operator
+   // so that this will compile with Visual C++.  With other compilers, this
+   // is not necessary.
+   VRJSetGLDrawMethod(&draw);                 // Set draw method
+   VRJSetGLContextInitMethod(&initGLState);   // Set init for GL state
+   VRJSetBufferPredrawMethod(&bufferPreDraw); // Set method for clearing the buffers
+   VRJSetPreFrameMethod(&preFrame);           // Set preframe callback
+
 #ifdef USE_BLOCKING_METHOD
-   VRJProcRunSystem();                       // Start app running, blocks until done   
+   VRJProcRunSystem();                       // Start app running, blocks until done
 #else
 #endif
 
    return 0;
 }
 
-   
 // --- Implementation methods ----- //
 
 
@@ -209,21 +211,19 @@ void draw()
    glPopMatrix();
 }
 
-
-
 void initGLState()
 {
-   GLfloat light0_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
-   GLfloat light0_diffuse[] = { 0.8f,  0.8f,  0.8f,  1.0f};
-   GLfloat light0_specular[] = { 1.0f,  1.0f,  1.0f,  1.0f};
-   GLfloat light0_position[] = {0.0f, 0.75f, 0.75f, 0.0f};
+   GLfloat light0_ambient[]  = { 0.1f,  0.1f,  0.1f, 1.0f };
+   GLfloat light0_diffuse[]  = { 0.8f,  0.8f,  0.8f, 1.0f };
+   GLfloat light0_specular[] = { 1.0f,  1.0f,  1.0f, 1.0f };
+   GLfloat light0_position[] = { 0.0f, 0.75f, 0.75f, 0.0f };
 
-   GLfloat mat_ambient[] = { 0.7, 0.7,  0.7,  1.0};
-   GLfloat mat_diffuse[] = { 1.0,  0.5,  0.8,  1.0};
-   GLfloat mat_specular[] = { 1.0,  1.0,  1.0,  1.0};
-   GLfloat mat_shininess[] = { 50.0};
-//   GLfloat mat_emission[] = { 1.0,  1.0,  1.0,  1.0};
-   GLfloat no_mat[] = { 0.0,  0.0,  0.0,  1.0};
+   GLfloat mat_ambient[]   = { 0.7f, 0.7f, 0.7f, 1.0f };
+   GLfloat mat_diffuse[]   = { 1.0f, 0.5f, 0.8f, 1.0f };
+   GLfloat mat_specular[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
+   GLfloat mat_shininess[] = { 50.0f };
+//   GLfloat mat_emission[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
+   GLfloat no_mat[]        = { 0.0f, 0.0f, 0.0f, 1.0f };
 
    glLightfv(GL_LIGHT0, GL_AMBIENT,  light0_ambient);
    glLightfv(GL_LIGHT0, GL_DIFFUSE,  light0_diffuse);
