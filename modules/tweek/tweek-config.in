@@ -220,16 +220,13 @@ while test $# -gt 0; do
         --idl)
             echo_idl="$2"
             shift
-            shift
             ;;
         --idlflags)
             echo_idlflags="$2"
             shift
-            shift
             ;;
         --idlgendir)
             echo_idlgendir="$2"
-            shift
             shift
             ;;
         --static)
