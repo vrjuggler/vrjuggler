@@ -135,9 +135,6 @@ AC_ARG_WITH(idl-java,
             [  --with-idl-java=<PATH>  Path to Java IDL compiler ],
             _idl_java="$withval", _idl_java='no')
 
-AC_ARG_WITH(jdom, [  --with-jdom=<PATH>      Path to JDOM JAR file(s) ],
-            JDOM_JAR="$withval", JDOM_JAR='none')
-
 AC_ARG_WITH(junit, [  --with-junit=<PATH>     Path to JUnit JAR file(s) ],
             JUNIT_JAR="$withval", JUNIT_JAR='none')
 
@@ -404,14 +401,6 @@ if test "x$tweek_have_java" = "xY" ; then
       [ BUILD_JAVA='N'
         AC_MSG_WARN([*** JDK 1.3 or newer required for Tweek Java API ***])
       ])
-
-   if test "x$BUILD_JAVA" = "xY" ; then
-      DPP_CHECK_JAVA_STATIC_METHOD(org.jdom.Namespace,
-         getNamespace(uri), [String uri = new String("test")], ,
-         [ AC_MSG_WARN([*** JDOM required for Tweek Java API ***])
-           BUILD_JAVA='N' ],
-         $JDOM_JAR)
-   fi
 
    # If we are building the Tweek Java code, we should try to enable building
    # the Java test suite too.
@@ -995,13 +984,8 @@ if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
    tweek_64_flags='-64'
 fi
 
-jars='Tweek.jar TweekBeans.jar TweekEvents.jar TweekNet.jar TweekBeanDelivery.jar TweekServices.jar kunststoff-mod.jar metouia.jar looks.jar'
+jars='Tweek.jar TweekBeans.jar TweekEvents.jar TweekNet.jar TweekBeanDelivery.jar TweekServices.jar kunststoff-mod.jar metouia.jar looks.jar jaxen-core.jar jaxen-jdom.jar jdom.jar saxpath.jar xalan.jar xerces.jar xml-apis.jar'
 ext_jars='wizard.jar ui.jar'
-
-if test "x$JDOM_JAR" != "xnone" ; then
-   VJ_STRIP_JAR_PATH(strip_jdom, [$JDOM_JAR])
-   jars="$jars $strip_jdom"
-fi
 
 if test "x$JAVA_ORB_JAR" != "xnone" ; then
    VJ_STRIP_JAR_PATH(strip_java_orb, [$JAVA_ORB_JAR])
@@ -1043,7 +1027,6 @@ AC_SUBST(JAVA_IDL)
 AC_SUBST(JAVA_IDL_OPTS)
 AC_SUBST(JAVA_IDL_GENDIR_OPT)
 AC_SUBST(JAVA_IDL_INCFLAG)
-AC_SUBST(JDOM_JAR)
 AC_SUBST(JAVA_ORB_JAR)
 
 AC_SUBST(BUILD_JAVA_TEST_SUITE)
