@@ -180,8 +180,6 @@ ifneq (@OS_TYPE@, Win32)
 	cd $(instlinks)/include/gad && rm -f ./gadParam.h &&		\
 	  $(LN_S) $(topdir)/gad/gadParam.h ./gadParam.h
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
-	cd $(instlinks)/bin && rm -f ./catadf.pl &&			\
-          $(LN_S) $(GADROOT_ABS)/tools/catadf.pl ./catadf.pl
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
             -t $(GADROOT_ABS)/gadgeteer-config.in -p 'use_base_dir=yes'	\
             -o $(instlinks)/bin/gadgeteer-config -x
