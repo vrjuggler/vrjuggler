@@ -134,7 +134,8 @@ protected:
             if (sound != NULL)
             {
                parent->removeChild( currentNode );
-               parent->addChild( new pjSoundNode( sound ) );
+               bool positional_sound_true( true );
+               parent->addChild( new pjSoundNode( sound, positional_sound_true ) );
                sound->trigger();
                cout<<"[SoundReplacer]     Replaced "<<nodeName<<" node with a pjSoundNode referencing the "<<soundName<<" sound."<<flush;
             }
