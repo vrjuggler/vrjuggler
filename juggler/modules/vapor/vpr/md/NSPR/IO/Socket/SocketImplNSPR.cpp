@@ -148,7 +148,6 @@ SocketImpNSPR::getOption (const SocketOptions::Types option,
                           struct SocketOptions::Data& data)
 {
     PRStatus retval;
-    socklen_t opt_size;
     PRSocketOptionData opt_data;
     bool get_opt;
 
