@@ -43,14 +43,14 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     getMaxSegmentSize (Int32& size) {
         SocketOptions::Data option;
-        int retval;
+        Status retval;
 
         retval = getOption(SocketOptions::MaxSegment, option);
 
-        if ( retval == 0 ) {
+        if ( retval.success() ) {
             size = option.max_segment;
         }
 
@@ -60,7 +60,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     setMaxSegmentSize (const Int32 size) {
         SocketOptions::Data option;
         option.max_segment = size;
@@ -70,14 +70,14 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     getNoDelay (bool& enabled) {
         SocketOptions::Data option;
-        int retval;
+        Status retval;
 
         retval = getOption(SocketOptions::NoDelay, option);
 
-        if ( retval == 0 ) {
+        if ( retval.success() ) {
             enabled = option.no_delay;
         }
 
@@ -87,7 +87,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     setNoDelay (const bool enable_val) {
         SocketOptions::Data option;
         option.no_delay = enable_val;

@@ -34,6 +34,7 @@
 #define _VPR_SOCKET_BASIC_OPT_H_
 
 #include <IO/Socket/SocketOptions.h>
+#include <vprStatus.h>
 
 
 namespace vpr {
@@ -43,14 +44,14 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     getKeepAlive (bool& enabled) {
         SocketOptions::Data option;
-        int retval;
+        Status retval;
 
         retval = getOption(SocketOptions::KeepAlive, option);
 
-        if ( retval == 0 ) {
+        if ( retval.success() ) {
             enabled = option.keep_alive;
         }
 
@@ -60,7 +61,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     setKeepAlive (const bool enable_val) {
         SocketOptions::Data option;
         option.keep_alive = enable_val;
@@ -70,14 +71,14 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     getLingerOnClose (bool& enabled, int& linger_sec) {
         SocketOptions::Data opt;
-        int retval;
+        Status retval;
 
         retval = getOption(SocketOptions::Linger, opt);
 
-        if ( retval == 0 ) {
+        if ( retval.success() ) {
             enabled    = opt.linger.enabled;
             linger_sec = opt.linger.seconds;
         }
@@ -88,7 +89,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     setLingerOnClose (const bool enable_val, const int linger_sec) {
         SocketOptions::Data opt;
 
@@ -101,14 +102,14 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     getRecvBufferSize (Int32& size) {
         SocketOptions::Data opt;
-        int retval;
+        Status retval;
 
         retval = getOption(SocketOptions::RecvBufferSize, opt);
 
-        if ( retval == 0 ) {
+        if ( retval.success() ) {
             size = opt.recv_buffer_size;
         }
         else {
@@ -121,7 +122,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     setRecvBufferSize (const Int32 size) {
         SocketOptions::Data opt;
 
@@ -133,14 +134,14 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     getSendBufferSize (int& size) {
         SocketOptions::Data opt;
-        int retval;
+        Status retval;
 
         retval = getOption(SocketOptions::SendBufferSize, opt);
 
-        if ( retval == 0 ) {
+        if ( retval.success() ) {
             size = opt.send_buffer_size;
         }
         else {
@@ -153,7 +154,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     setSendBufferSize (const Int32 size) {
         SocketOptions::Data opt;
 
@@ -165,14 +166,14 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     getReuseAddr (bool& enabled) {
         SocketOptions::Data option;
-        int retval;
+        Status retval;
 
         retval = getOption(SocketOptions::ReuseAddr, option);
 
-        if ( retval == 0 ) {
+        if ( retval.success() ) {
             enabled = option.reuse_addr;
         }
 
@@ -184,7 +185,7 @@ public:
      *
      * PRE: The socket has been opened, but bind() has not been called.
      */
-    inline bool
+    inline Status
     setReuseAddr (const bool enable_val) {
         SocketOptions::Data option;
         option.reuse_addr = enable_val;
@@ -195,14 +196,14 @@ protected:
     /**
      *
      */
-    virtual bool getOption(const SocketOptions::Types option,
-                           struct SocketOptions::Data& data) = 0;
+    virtual Status getOption(const SocketOptions::Types option,
+                             struct SocketOptions::Data& data) = 0;
 
     /**
      *
      */
-    virtual bool setOption(const SocketOptions::Types option,
-                           const struct SocketOptions::Data& data) = 0;
+    virtual Status setOption(const SocketOptions::Types option,
+                             const struct SocketOptions::Data& data) = 0;
 };
 
 }; // End of vpr namespace

@@ -71,27 +71,28 @@ SocketStreamImpNSPR::SocketStreamImpNSPR (const InetAddr& local_addr,
 // ----------------------------------------------------------------------------
 // Listen on the socket for incoming connection requests.
 // ----------------------------------------------------------------------------
-bool
+Status
 SocketStreamImpNSPR::listen (const int backlog)
 {
-    bool retval;
+    Status retval;
     PRStatus status;
 
     if(!m_bound)        // To listen, we must be bound
     {
-        vprDEBUG(0,0) << "SocketStreamImpNSPR::listen: Trying to listen on an unbound socket.\n" << vprDEBUG_FLUSH;
-        return false;
+        vprDEBUG(0,0) << "SocketStreamImpNSPR::listen: Trying to listen on an unbound socket.\n"
+                      << vprDEBUG_FLUSH;
+        retval.setCode(Status::Failure);
     }
+    else {
+        // Put the socket into listning mode.  If that fails, print an error
+        // and return error status.
+        status = PR_Listen(m_handle, backlog);
 
-    // Put the socket into listning mode.  If that fails, print an error and
-    // return error status.
-    status = PR_Listen(m_handle, backlog);
-
-    if (PR_FAILURE == status) {
-       NSPR_PrintError("SocketStreamImpNSPR::listen: Cannon listen on socket: ");
-       retval = false;
+        if (PR_FAILURE == status) {
+           NSPR_PrintError("SocketStreamImpNSPR::listen: Cannon listen on socket: ");
+           retval.setCode(Status::Failure);
+        }
     }
-    retval = true;
 
     return retval;
 }
@@ -99,56 +100,44 @@ SocketStreamImpNSPR::listen (const int backlog)
 // ----------------------------------------------------------------------------
 // Accept an incoming connection request.
 // ----------------------------------------------------------------------------
-SocketStreamImpNSPR*
-SocketStreamImpNSPR::accept () {
-    PRFileDesc* accept_sock(NULL);
+Status
+SocketStreamImpNSPR::accept (SocketStreamImpNSPR& sock) {
+    Status retval;
     InetAddr addr;
-    SocketStreamImpNSPR* new_sock(NULL);
 
     if(!m_bound)        // To listen, we must be bound
     {
-        vprDEBUG(0,0) << "SocketStreamImpNSPR::accept: Trying to accept on an unbound socket.\n" << vprDEBUG_FLUSH;
-        return false;
+        vprDEBUG(0,0) << "SocketStreamImpNSPR::accept: Trying to accept on an unbound socket.\n"
+                      << vprDEBUG_FLUSH;
+        retval.setCode(Status::Failure);
     }
-
-    // Accept an incoming connection request.
-    vprASSERT(m_handle != NULL);
-    accept_sock = PR_Accept(m_handle, addr.getPRNetAddr(), PR_INTERVAL_NO_TIMEOUT);
-
-    if (NULL == accept_sock) {
-       NSPR_PrintError("SocketStreamImpNSPR::accept: Cannot accept on socket: ");
-       return NULL;
-    }
-
-    // Otherwise, create a new vpr::SocketStreamImp object
     else {
-        new_sock = new SocketStreamImpNSPR(accept_sock, addr);
-        vprASSERT(new_sock != NULL);
+       PRFileDesc* accept_sock(NULL);
+
+       // Accept an incoming connection request.
+       vprASSERT(m_handle != NULL);
+       accept_sock = PR_Accept(m_handle, addr.getPRNetAddr(),
+                               PR_INTERVAL_NO_TIMEOUT);
+
+       if (NULL == accept_sock) {
+          if ( PR_GetError() == PR_WOULD_BLOCK_ERROR ) {
+             retval.setCode(Status::WouldBlock);
+          }
+          else {
+             NSPR_PrintError("SocketStreamImpNSPR::accept: Cannot accept on socket: ");
+             retval.setCode(Status::Failure);
+          }
+       }
+       // Otherwise, put the new socket in the passed socket object.
+       else {
+          sock.m_handle = accept_sock;
+          sock.setRemoteAddr(addr);
+          sock.m_open = true;
+          sock.m_bound = true;
+       }
     }
 
-    return new_sock;
-}
-
-// ============================================================================
-// Protected methods.
-// ============================================================================
-
-// ----------------------------------------------------------------------------
-// Protected constructor.  This is used when the socket is created by the
-// operating system, typically by the accept(2) system call.
-// ----------------------------------------------------------------------------
-SocketStreamImpNSPR::SocketStreamImpNSPR (PRFileDesc* sock,
-                                          const InetAddr& remote_addr)
-    : SocketImpNSPR(SocketTypes::STREAM)
-{
-   m_handle = sock;
-
-    // Copy the given vpr::InetAddr to the new object's member variable.
-    m_remote_addr = remote_addr;
-
-    // The socket is open and bound (since it was created and is connected)
-    m_open = true;
-    m_bound = true;
+    return retval;
 }
 
 }; // End of vpr namespace

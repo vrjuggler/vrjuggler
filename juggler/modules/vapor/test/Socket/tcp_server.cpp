@@ -36,7 +36,7 @@
 
 int
 main (int argc, char* argv[]) {
-    int status;
+    int app_status;
     vpr::InetAddr local;
     vpr::Uint16 port = 15432;    // Default listening port
 
@@ -50,29 +50,32 @@ main (int argc, char* argv[]) {
     vpr::SocketStream sock(local, vpr::InetAddr::AnyAddr);
 
     // Open in server mode.
-    if ( sock.openServer() ) {
-        vpr::SocketStream* client_sock;
+    if ( sock.openServer().success() ) {
+        vpr::SocketStream client_sock;
+        vpr::Status status;
+        ssize_t bytes;
         char buffer[] = "Hello there!";
 //        std::string buffer = "Hello there!";
 
-        sock.setReuseAddr(true);
+        status = sock.setReuseAddr(true);
 
         // Loop forever handling all clients serially.
         while ( 1 ) {
             // Wait for an incoming connection.
-            client_sock = sock.accept();
+            status = sock.accept(client_sock);
 
-            // Using the new socket, send the buffer to the client.
-            client_sock->write(buffer, sizeof(buffer));
-//            client_sock->write(buffer);
-            delete client_sock;
+            // Using the new socket, send the buffer to the client and close
+            // the socket.
+            status = client_sock.write(buffer, sizeof(buffer), bytes);
+//            status = client_sock.write(buffer, buffer.length(), bytes);
+            client_sock.close();
         }
 
-        status = 0;
+        app_status = 0;
     }
     else {
-        status = 1;
+        app_status = 1;
     }
 
-    return status;
+    return app_status;
 }

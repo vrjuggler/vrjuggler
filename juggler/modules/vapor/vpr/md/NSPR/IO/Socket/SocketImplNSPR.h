@@ -38,6 +38,7 @@
 #include <string>
 #include <vector>
 #include <prio.h>
+#include <prerror.h>
 
 #include <IO/BlockIO.h>
 #include <IO/Socket/InetAddr.h>
@@ -45,6 +46,7 @@
 #include <IO/Socket/SocketTypes.h>
 #include <IO/Socket/SocketIpOpt.h>
 #include <IO/IOSys.h>
+#include <vprStatus.h>
 
 #include <Utils/Debug.h>
 
@@ -69,7 +71,7 @@ public:
     //     false - The socket could not be opened for some reason (an error
     //             message is printed explaining why).
     // ------------------------------------------------------------------------
-    virtual bool open(void);
+    virtual Status open(void);
 
     // ------------------------------------------------------------------------
     //: Close the socket.
@@ -82,21 +84,7 @@ public:
     //! RETURNS: true  - The socket was closed successfully.
     //! RETURNS: false - The socket could not be closed for some reason.
     // ------------------------------------------------------------------------
-    inline virtual bool
-    close (void) {
-        bool retval(false);
-        PRStatus status;
-
-        status = PR_Close(m_handle);
-
-        if(status == PR_SUCCESS)
-        {
-           m_open = false;
-           m_bound = false;
-           retval = true;
-        }
-        return retval;
-    }
+    virtual Status close(void);
 
     // ------------------------------------------------------------------------
     // Bind this socket to the address in the host address member variable.
@@ -110,7 +98,7 @@ public:
     //             m_host_addr.  An error message is printed explaining what
     //             went wrong.
     // ------------------------------------------------------------------------
-    virtual bool bind(void);
+    virtual Status bind(void);
 
     // ---------------------------------------
     //: Return the contained handle
@@ -122,55 +110,11 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline virtual bool
-    enableBlocking (void) {
-       if(m_bound)
-       {
-           vprDEBUG(0,0) << "NSPRSocketImpl::enableBlocking: Can't enable blocking after socket is bound\n" << vprDEBUG_FLUSH;
-           return false;
-       }
-        
-       PRStatus status;
-       PRSocketOptionData option_data;
-       option_data.option = PR_SockOpt_Nonblocking;
-       option_data.value.non_blocking = false;
-
-       status = PR_SetSocketOption(m_handle, &option_data);
-
-       // If that fails, print an error and return error status.
-       if ( status == PR_FAILURE )
-       {
-          NSPR_PrintError("SocketImpNSPR::enableBlocking: Failed to set.");
-          return false;
-       }
-       return true;
-    }
+    virtual Status enableBlocking(void);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline virtual bool
-    enableNonBlocking (void) {
-        if(m_bound)
-        {
-            vprDEBUG(0,0) << "NSPRSocketImpl::enableBlocking: Can't diable blocking after socket is bound\n" << vprDEBUG_FLUSH;
-            return false;
-        }
-
-        PRStatus status;
-       PRSocketOptionData option_data;
-       option_data.option = PR_SockOpt_Nonblocking;
-       option_data.value.non_blocking = true;
-
-       status = PR_SetSocketOption(m_handle, &option_data);
-
-       // If that fails, print an error and return error status.
-       if ( status == PR_FAILURE )
-       {
-          NSPR_PrintError("SocketImpNSPR::enableNonBlocking: Failed to set.");
-          return false;
-       }
-       return true;
-    }
+    virtual Status enableNonBlocking(void);
 
     // ========================================================================
     // vpr::SocketImp interface implementation.
@@ -193,7 +137,7 @@ public:
     //     false - The connect could not be made.  An error message is
     //             printed explaining what happened.
     // ------------------------------------------------------------------------
-    virtual bool connect(void);
+    virtual Status connect(void);
 
     // ------------------------------------------------------------------
     //: Get the status of a possibly connected socket
@@ -327,37 +271,66 @@ protected:
 protected:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual ssize_t
-    read_i (void* buffer, const size_t length)
+    virtual Status
+    read_i (void* buffer, const size_t length, ssize_t& bytes_read)
     {
-        return PR_Recv(m_handle, buffer, length, 0, PR_INTERVAL_NO_TIMEOUT);
+        Status retval;
+
+        bytes_read = PR_Recv(m_handle, buffer, length, 0,
+                             PR_INTERVAL_NO_TIMEOUT);
+
+        // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
+        if ( bytes_read == -1 ) {
+            retval.setCode(Status::Failure);
+        }
+
+        return retval;
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual ssize_t
-    readn_i (void* buffer, const size_t length) {
-        return PR_Recv(m_handle, buffer, length, 0, PR_INTERVAL_NO_TIMEOUT);
+    virtual Status
+    readn_i (void* buffer, const size_t length, ssize_t& bytes_read) {
+        Status retval;
+
+        bytes_read = PR_Recv(m_handle, buffer, length, 0,
+                             PR_INTERVAL_NO_TIMEOUT);
+
+        // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
+        if ( bytes_read == -1 ) {
+            retval.setCode(Status::Failure);
+        }
+
+        return retval;
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual ssize_t
-    write_i (const void* buffer, const size_t length) {
-        return PR_Send(m_handle, buffer, length, 0, PR_INTERVAL_NO_TIMEOUT);
+    virtual Status
+    write_i (const void* buffer, const size_t length, ssize_t& bytes_written) {
+        Status retval;
+
+        bytes_written = PR_Send(m_handle, buffer, length, 0,
+                                PR_INTERVAL_NO_TIMEOUT);
+
+        if ( bytes_written == -1 ) {
+            retval.setCode(Status::Failure);
+        }
+
+        return retval;
     }
 
     /**
      *
      */
-    virtual bool getOption(const SocketOptions::Types option,
-                           struct SocketOptions::Data& data);
+    virtual Status getOption(const SocketOptions::Types option,
+                             struct SocketOptions::Data& data);
 
     /**
      *
      */
-    virtual bool setOption(const SocketOptions::Types option,
-                           const struct SocketOptions::Data& data);
+    virtual Status setOption(const SocketOptions::Types option,
+                             const struct SocketOptions::Data& data);
 
     PRFileDesc*       m_handle;      //: Handle to the socket
     InetAddr          m_local_addr;  //: The local site's address structure

@@ -50,42 +50,65 @@ namespace vpr {
 // Open the socket.  This creates a new socket using the domain and type
 // options set through member variables.
 // ----------------------------------------------------------------------------
-bool
+Status
 SocketImpNSPR::open () {
-    bool retval;
-    PRFileDesc* new_sock = NULL;
+   Status retval;
+   PRFileDesc* new_sock = NULL;
 
-    if(NULL != m_handle)
-        return false;
+   if(NULL != m_handle) {
+      retval.setCode(Status::Failure);
+   }
+   else {
+      // NSPR has not concept of domain in socket creation
+      // switch (m_local_addr.getFamily())
 
-    // NSPR has not concept of domain in socket creation
-    // switch (m_local_addr.getFamily())
+      switch (m_type) {
+        case SocketTypes::STREAM:
+          new_sock = PR_NewTCPSocket();
+          break;
+        case SocketTypes::DATAGRAM:
+          new_sock = PR_NewUDPSocket();
+          break;
+        default:
+          fprintf(stderr,
+                  "[vpr::SocketImpNSPR] ERROR: Unknown socket type value %d\n",
+                  m_local_addr.getFamily());
+          break;
+      }
 
-    switch (m_type) {
-      case SocketTypes::STREAM:
-        new_sock = PR_NewTCPSocket();
-        break;
-      case SocketTypes::DATAGRAM:
-        new_sock = PR_NewUDPSocket();
-        break;
-      default:
-        fprintf(stderr,
-                "[vpr::SocketImpNSPR] ERROR: Unknown socket type value %d\n",
-                m_local_addr.getFamily());
-        break;
+      // If socket(2) failed, print an error message and return error status.
+      if ( new_sock == NULL ) {
+         fprintf(stderr,
+                 "[vpr::SocketImpNSPR] Could not create socket: \n");
+         retval.setCode(Status::Failure);
+      }
+      // Otherwise, return success.
+      else {
+         m_handle = new_sock;
+         m_open = true;
+      }
+   }
+
+   return retval;
+}
+
+// ----------------------------------------------------------------------------
+// Close the socket.
+// ----------------------------------------------------------------------------
+Status
+SocketImpNSPR::close () {
+    Status retval;
+    PRStatus status;
+
+    status = PR_Close(m_handle);
+
+    if (status == PR_SUCCESS) {
+       m_open = false;
+       m_bound = false;
+       retval.setCode(Status::Success);
     }
-
-    // If socket(2) failed, print an error message and return error status.
-    if ( new_sock == NULL ) {
-        fprintf(stderr,
-                "[vpr::SocketImpNSPR] Could not create socket: \n");
-        retval = false;
-    }
-    // Otherwise, return success.
     else {
-        m_handle = new_sock;
-        m_open = true;
-        retval = true;
+       retval.setCode(Status::Failure);
     }
 
     return retval;
@@ -94,9 +117,9 @@ SocketImpNSPR::open () {
 // ----------------------------------------------------------------------------
 // Bind this socket to the address in the host address member variable.
 // ----------------------------------------------------------------------------
-bool
+Status
 SocketImpNSPR::bind () {
-    bool retval;
+    Status retval;
     PRStatus status;
 
     // Bind the socket to the address in m_local_addr.
@@ -105,16 +128,76 @@ SocketImpNSPR::bind () {
     // If that fails, print an error and return error status.
     if ( status == PR_FAILURE )
     {
+       retval.setCode(Status::Failure);
        NSPR_PrintError("SocketImpNSPR::bind: Failed to bind.");
-       retval = false;
     }
     // Otherwise, return success.
     else {
         m_bound = true;
-        retval = true;
     }
 
     return retval;
+}
+
+// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
+Status
+SocketImpNSPR::enableBlocking () {
+   Status retval;
+
+   if (m_bound) {
+       vprDEBUG(0,0) << "NSPRSocketImpl::enableBlocking: Can't enable blocking after socket is bound\n"
+                     << vprDEBUG_FLUSH;
+       retval.setCode(Status::Failure);
+   }
+   else {
+      PRStatus status;
+      PRSocketOptionData option_data;
+      option_data.option = PR_SockOpt_Nonblocking;
+      option_data.value.non_blocking = false;
+
+      status = PR_SetSocketOption(m_handle, &option_data);
+
+      // If that fails, print an error and return error status.
+      if ( status == PR_FAILURE )
+      {
+         NSPR_PrintError("SocketImpNSPR::enableBlocking: Failed to set.");
+         retval.setCode(Status::Failure);
+      }
+   }
+
+   return retval;
+}
+
+// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
+Status
+SocketImpNSPR::enableNonBlocking () {
+   Status retval;
+
+   if(m_bound)
+   {
+      vprDEBUG(0,0) << "NSPRSocketImpl::enableBlocking: Can't diable blocking after socket is bound\n"
+                    << vprDEBUG_FLUSH;
+      retval.setCode(Status::Failure);
+   }
+   else {
+      PRStatus status;
+      PRSocketOptionData option_data;
+      option_data.option = PR_SockOpt_Nonblocking;
+      option_data.value.non_blocking = true;
+
+      status = PR_SetSocketOption(m_handle, &option_data);
+
+      // If that fails, print an error and return error status.
+      if ( status == PR_FAILURE )
+      {
+         NSPR_PrintError("SocketImpNSPR::enableNonBlocking: Failed to set.");
+         retval.setCode(Status::Failure);
+      }
+   }
+
+   return retval;
 }
 
 // ----------------------------------------------------------------------------
@@ -123,33 +206,40 @@ SocketImpNSPR::bind () {
 // destination for all packets.  For a stream socket, this has the effect of
 // establishing a connection with the destination.
 // ----------------------------------------------------------------------------
-bool
+Status
 SocketImpNSPR::connect () {
-    bool retval;
-    PRStatus status;
+   Status retval;
+   PRStatus status;
 
-    if(m_bound)
-    {
-        vprDEBUG(0,0) << "SocketImpNSPR::connect: Socket alreay bound.  Can't connect" << vprDEBUG_FLUSH; 
-        return false;
-    }
+   if(m_bound)
+   {
+      vprDEBUG(0,0) << "SocketImpNSPR::connect: Socket alreay bound.  Can't connect"
+                    << vprDEBUG_FLUSH; 
+      retval.setCode(Status::Failure);
+   }
+   else {
+      // Attempt to connect to the address in m_addr.
+      status = PR_Connect(m_handle, m_remote_addr.getPRNetAddr(),
+                          PR_INTERVAL_NO_TIMEOUT);
 
-    // Attempt to connect to the address in m_addr.
-    status = PR_Connect(m_handle, m_remote_addr.getPRNetAddr(), PR_INTERVAL_NO_TIMEOUT);
+      if ( status == PR_FAILURE )
+      {
+         if ( PR_GetError() == PR_WOULD_BLOCK_ERROR ) {
+            retval.setCode(Status::WouldBlock);
+         }
+         else {
+            NSPR_PrintError("SocketImpNSPR::connect: Failed to connect.");
+            retval.setCode(Status::Failure);
+         }
+      }
+      // Otherwise, return success.
+      else
+      {
+         m_bound = true;
+      }
+   }
 
-    if ( status == PR_FAILURE )
-    {
-       NSPR_PrintError("SocketImpNSPR::connect: Failed to connect.");
-       retval = false;
-    }
-    // Otherwise, return success.
-    else
-    {
-        m_bound = true;
-        retval = true;
-    }
-
-    return retval;
+   return retval;
 }
 
 // ============================================================================
@@ -194,11 +284,11 @@ SocketImpNSPR::~SocketImpNSPR ()
 /**
  *
  */
-bool
+Status
 SocketImpNSPR::getOption (const SocketOptions::Types option,
                           struct SocketOptions::Data& data)
 {
-    bool retval;
+    Status retval;
     PRSocketOptionData opt_data;
     bool get_opt;
 
@@ -256,8 +346,6 @@ SocketImpNSPR::getOption (const SocketOptions::Types option,
         status = PR_GetSocketOption(m_handle, &opt_data);
 
         if ( status == PR_SUCCESS ) {
-            retval = false;
-
             // This extracts the information from the union passed to
             // PR_GetSocketOption() and puts it in our friendly
             // SocketOptions::Data object.
@@ -322,14 +410,14 @@ SocketImpNSPR::getOption (const SocketOptions::Types option,
             }
         }
         else {
-            retval = false;
+            retval.setCode(Status::Failure);
             fprintf(stderr,
                     "[vpr::SocketImpNSPR] ERROR: Could not get socket option "
                     "for socket");
         }
     }
     else {
-        retval = false;
+        retval.setCode(Status::Failure);
     }
 
     return retval;
@@ -338,7 +426,7 @@ SocketImpNSPR::getOption (const SocketOptions::Types option,
 /**
  *
  */
-bool
+Status
 SocketImpNSPR::setOption (const SocketOptions::Types option,
                           const struct SocketOptions::Data& data)
 {
@@ -428,10 +516,17 @@ SocketImpNSPR::setOption (const SocketOptions::Types option,
     }
 
     vprASSERT((m_handle != NULL) && "Trying to set option on NULL handle");
-    if(m_handle == NULL)
-        return false;
-
-    return (PR_SetSocketOption(m_handle, &opt_data) == PR_SUCCESS);
+    if(m_handle == NULL) {
+        return Status(Status::Failure);
+    }
+    else {
+        if ( PR_SetSocketOption(m_handle, &opt_data) == PR_SUCCESS ) {
+            return Status();
+        }
+        else {
+            return Status(Status::Failure);
+        }
+    }
 }
 
 }; // End of vpr namespace
