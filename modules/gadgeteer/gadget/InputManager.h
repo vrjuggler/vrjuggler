@@ -10,14 +10,10 @@
 #include <vjConfig.h>
 #include <map>
 
-#ifdef VJ_OS_HPUX
-#   include <vector>
-#else
+#ifndef VJ_OS_HPUX
 #   if defined(VJ_USE_PTHREADS) && ! defined(_PTHREADS)
 #       define _PTHREADS
 #   endif
-
-#   include <vector.h>
 #endif
 
 #include <Kernel/vjDebug.h>
@@ -342,13 +338,13 @@ public:
 
 protected:
       // --- Vectors of devices and proxies --- //
-   vector<vjInput*>           m_devVector;
-   vector<vjPosProxy*>        m_posProxyVector;
-   vector<vjDigitalProxy*>    m_digProxyVector;
-   vector<vjAnalogProxy*>     m_anaProxyVector;
-   vector<vjGloveProxy*>      m_gloveProxyVector;
-   vector<vjKeyboardProxy*>   m_keyboardProxyVector;
-   vector<vjGestureProxy*>    m_gestureProxyVector;
+   std::vector<vjInput*>           m_devVector;
+   std::vector<vjPosProxy*>        m_posProxyVector;
+   std::vector<vjDigitalProxy*>    m_digProxyVector;
+   std::vector<vjAnalogProxy*>     m_anaProxyVector;
+   std::vector<vjGloveProxy*>      m_gloveProxyVector;
+   std::vector<vjKeyboardProxy*>   m_keyboardProxyVector;
+   std::vector<vjGestureProxy*>    m_gestureProxyVector;
 
    vjDummyPosition   m_dummyPos;
    vjDummyDigital    m_dummyDig;

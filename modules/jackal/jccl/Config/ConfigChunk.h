@@ -16,13 +16,10 @@
 #ifdef VJ_OS_HPUX
 #   include <float.h>
 #   include <stddef.h>
-#   include <vector>
 #else
 #   if defined(VJ_USE_PTHREADS) && ! defined(_PTHREADS)
 #       define _PTHREADS
 #   endif
-
-#   include <vector.h>
 #endif
 
 #include <Config/vjVarValue.h>
@@ -63,7 +60,7 @@ class vjConfigChunk {
 private:
     vjChunkDesc* desc;
     vjChunkDescDB *descdb;
-    vector<vjProperty*> props;       // Stores the set of properties
+    std::vector<vjProperty*> props;       // Stores the set of properties
 
 
 public:
@@ -181,7 +178,7 @@ public:
     //: Return a list of chunk names dependant upon this one
     // Returns a list of the names of all the chunks
     // that are pointed to by chunk ptrs of this chunk
-    vector<std::string> getDependencies();
+    std::vector<std::string> getDependencies();
 
 private:
   vjProperty *getPropertyPtr (char *name);

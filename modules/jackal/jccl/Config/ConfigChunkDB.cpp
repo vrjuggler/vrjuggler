@@ -66,13 +66,13 @@ vjConfigChunk* vjConfigChunkDB::getChunk (char *name) {
 }
 
 // Return a copy of the chunks vector
-vector<vjConfigChunk*> vjConfigChunkDB::getChunks()
+std::vector<vjConfigChunk*> vjConfigChunkDB::getChunks()
 {
    return chunks;
 }
 
 // Add the given chunks to the end of the chunk list
-void vjConfigChunkDB::addChunks(vector<vjConfigChunk*> new_chunks)
+void vjConfigChunkDB::addChunks(std::vector<vjConfigChunk*> new_chunks)
 {
    chunks.insert(chunks.end(), new_chunks.begin(), new_chunks.end());
 }
@@ -83,9 +83,9 @@ void vjConfigChunkDB::addChunks(vector<vjConfigChunk*> new_chunks)
 // second argument.  The returned vector may be empty.
 // NOTE:  The caller is responsible for delete()ing the vector, but not
 // its contents.
-vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (char *property, char *value) {
+std::vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (char *property, char *value) {
   char *c;
-  vector<vjConfigChunk*>* v = new vector<vjConfigChunk*>;
+  std::vector<vjConfigChunk*>* v = new std::vector<vjConfigChunk*>;
 
   for (int i = 0; i < chunks.size(); i++) {
     c = chunks[i]->getProperty(property);
@@ -95,9 +95,9 @@ vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (char *property, char *valu
   return v;
 }
 
-vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (char *property, int value) {
+std::vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (char *property, int value) {
   int c;
-  vector<vjConfigChunk*>* v = new vector<vjConfigChunk*>;
+  std::vector<vjConfigChunk*>* v = new std::vector<vjConfigChunk*>;
   for (int i = 0; i < chunks.size(); i++) {
     c = chunks[i]->getProperty(property);
     if (c == value)
@@ -107,9 +107,9 @@ vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (char *property, int value)
 }
 
 
-vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (char *property, float value) {
+std::vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (char *property, float value) {
   float c;
-  vector<vjConfigChunk*>* v = new vector<vjConfigChunk*>;
+  std::vector<vjConfigChunk*>* v = new std::vector<vjConfigChunk*>;
   for (int i = 0; i < chunks.size(); i++) {
     c = chunks[i]->getProperty(property);
     if (c == value)
@@ -136,7 +136,7 @@ bool vjConfigChunkDB::erase () {
 int vjConfigChunkDB::removeMatching (char *property, int value) {
   int i = 0;
   int c;
-  vector<vjConfigChunk*>::iterator begin = chunks.begin();
+  std::vector<vjConfigChunk*>::iterator begin = chunks.begin();
   while (begin != chunks.end()) {
     c = (*begin)->getProperty(property);
     if (c == value) {
@@ -153,7 +153,7 @@ int vjConfigChunkDB::removeMatching (char *property, float value) {
   int i = 0;
   float c;
 
-  vector<vjConfigChunk*>::iterator begin = chunks.begin();
+  std::vector<vjConfigChunk*>::iterator begin = chunks.begin();
   while (begin != chunks.end()) {
     c = (*begin)->getProperty(property);
     if (c == value) {
@@ -171,7 +171,7 @@ int vjConfigChunkDB::removeMatching (char *property, char *value) {
     return 0;
   int i = 0;
   char* c;
-  vector<vjConfigChunk*>::iterator begin = chunks.begin();
+  std::vector<vjConfigChunk*>::iterator begin = chunks.begin();
   while (begin != chunks.end()) {
     c = (*begin)->getProperty(property);
     if (c) {
@@ -206,7 +206,7 @@ int vjConfigChunkDB::dependencySort()
    {
       vjDEBUG(2) << "Chunk:" << chunks[i]->getProperty("name") << endl
                  << "\tDepends on:\n" << vjDEBUG_FLUSH;
-      vector<std::string> deps = chunks[i]->getDependencies();
+      std::vector<std::string> deps = chunks[i]->getDependencies();
       if(deps.size() > 0)
       {
          for(int j=0;j<deps.size();j++)
@@ -224,12 +224,12 @@ int vjConfigChunkDB::dependencySort()
    // So basically, we take an element from the src list one at a time
    // If it's dependencies are already in the local list, add it to the local list
    // else go on to the next one
-   vector<vjConfigChunk*> src_chunks = chunks;
-   chunks = vector<vjConfigChunk*>(0);             // Chunks is the local data - Zero it out to start
+   std::vector<vjConfigChunk*> src_chunks = chunks;
+   chunks = std::vector<vjConfigChunk*>(0);        // Chunks is the local data - Zero it out to start
 
    bool dep_pass(true);             // Flag for Pass dependency check
-   vector<std::string> deps;        // Dependencies of current item
-   vector<vjConfigChunk*>::iterator cur_item
+   std::vector<std::string> deps;   // Dependencies of current item
+   std::vector<vjConfigChunk*>::iterator cur_item
                = src_chunks.begin();          // The current src item to look at
 
    while(cur_item != src_chunks.end())          // While not at end of src list
@@ -264,7 +264,7 @@ int vjConfigChunkDB::dependencySort()
       {
           vjDEBUG(0) << "ERROR: Dependency error:  Chunk:" << src_chunks[i]->getProperty("name")
                      << "\tDepends on: \n" << vjDEBUG_FLUSH;
-         vector<std::string> deps = src_chunks[i]->getDependencies();
+         std::vector<std::string> deps = src_chunks[i]->getDependencies();
          if(deps.size() > 0)
          {
             for(int j=0;j<deps.size();j++)
@@ -287,7 +287,7 @@ int vjConfigChunkDB::dependencySort()
       {
          cout << "Chunk:" << chunks[i]->getProperty("name") << endl;
          cout << "\tDepends on:";
-         vector<std::string> deps = chunks[i]->getDependencies();
+         std::vector<std::string> deps = chunks[i]->getDependencies();
          if(deps.size() > 0)
          {
             for(int j=0;j<deps.size();j++)

@@ -69,7 +69,7 @@ void vjKernel::controlLoop(void* nullParam)
 
    // setup performance buffer
    performanceEnabled = 0;
-   vector<vjConfigChunk*>* perfchunks = mChunkDB->getMatching ("PerfMeasure");
+   std::vector<vjConfigChunk*>* perfchunks = mChunkDB->getMatching ("PerfMeasure");
    if (perfchunks->size() > 0) {
        vjConfigChunk* perfchunk = (*perfchunks)[0];
        performanceEnabled = (*perfchunks)[0]->getProperty ("KernelEnabled");
@@ -133,7 +133,7 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB)
    }
 
    // Get sorted list
-   vector<vjConfigChunk*> chunks = chunkDB->getChunks();
+   std::vector<vjConfigChunk*> chunks = chunkDB->getChunks();
 
    // For each element
    for(int i=0;i<chunks.size();i++)

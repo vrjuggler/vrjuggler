@@ -43,8 +43,8 @@ public:
    static std::string getChunkType() { return std::string("SimDigital");}
 
 private:
-   vector<int>             mDigitalData;     //: The digital data that we have
-   vector<vjKeyModPair>    mSimKeys;         //: The keys to press for digital simulation
+   std::vector<int>          mDigitalData;   //: The digital data that we have
+   std::vector<vjKeyModPair> mSimKeys;       //: The keys to press for digital simulation
 };
 
 #endif

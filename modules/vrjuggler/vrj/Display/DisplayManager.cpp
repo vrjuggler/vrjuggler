@@ -86,7 +86,7 @@ vjDisplay* vjDisplayManager::getDisplay(int dispId)
 void vjDisplayManager::updateProjections()
 {
    // for (all displays) update the projections
-   for (vector<vjDisplay*>::iterator i = mDisplays.begin(); i != mDisplays.end(); i++)
+   for (std::vector<vjDisplay*>::iterator i = mDisplays.begin(); i != mDisplays.end(); i++)
       (*i)->updateProjections();
 }
 

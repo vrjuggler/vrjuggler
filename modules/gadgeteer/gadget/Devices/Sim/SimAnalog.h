@@ -41,9 +41,9 @@ public:
    static std::string getChunkType() { return std::string("SimAnalog");}
 
 private:
-   vector<int>             mAnaData;      //: The analog data that we have
-   vector<vjKeyModPair>    mSimKeysUp;    //: The keys to press for moving analog up
-   vector<vjKeyModPair>    mSimKeysDown;    //: The keys to press for moving analog up
+   std::vector<int>          mAnaData;     //: The analog data that we have
+   std::vector<vjKeyModPair> mSimKeysUp;   //: The keys to press for moving analog up
+   std::vector<vjKeyModPair> mSimKeysDown; //: The keys to press for moving analog up
    int                     mAnaStep;      //: The analog step size
 };
 

@@ -2,6 +2,7 @@
 #ifndef _VJ_PROPERTY_H_
 #define _VJ_PROPERTY_H_
 
+#include <vjConfig.h>
 #include <Config/vjVarValue.h>
 #include <Config/vjChunkDesc.h>
 #include <Config/vjChunkDescDB.h>
@@ -44,7 +45,7 @@ public:
     CfgUnit units;
 
     //: Vector containing the actual vjVarValues.
-    vector<vjVarValue*> value;
+    std::vector<vjVarValue*> value;
 
     //: ChunkDesc for embedded chunk (if valtype is T_EMBEDDEDCHUNK)
     vjChunkDesc *embeddesc;

@@ -115,7 +115,7 @@ public:      // Global "get" interface
    vjUser*  getUser(std::string userName);
 
    //: Get a list of the users back
-   vector<vjUser*> getUsers()
+   std::vector<vjUser*> getUsers()
    { return mUsers; }
 
 private:
@@ -146,7 +146,7 @@ protected:
    vjMemPool*       sharedMemPool;
 
    /// Multi-user information
-   vector<vjUser*>   mUsers;              //: A list of user objects in system
+   std::vector<vjUser*>   mUsers;         //: A list of user objects in system
 
    // ----------------------- //
    // --- SINGLETON STUFF --- //

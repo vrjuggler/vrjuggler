@@ -1,13 +1,9 @@
 #include <vjConfig.h>
 
-#ifdef VJ_OS_HPUX
-#   include <algorithm>
-#else
+#ifndef VJ_OS_HPUX
 #   if defined(VJ_USE_PTHREADS) && ! defined(_PTHREADS)
 #       define _PTHREADS
 #   endif
-
-#   include <algo.h>
 #endif
 
 #include <Kernel/GL/vjGlPipe.h>

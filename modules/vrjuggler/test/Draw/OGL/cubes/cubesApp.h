@@ -5,6 +5,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <iostream.h>
+#include <vector>
 
 #include <Kernel/GL/vjGlApp.h>
 #include <Kernel/GL/vjGlContextData.h>
@@ -171,11 +172,11 @@ public:
    virtual void init()
    {
       cout << "---------- App:init() ---------------" << endl;
-      vector<vjUser*> users = kernel->getUsers();
+      std::vector<vjUser*> users = kernel->getUsers();
       int num_users = users.size();
 
       UserData* new_user=NULL;
-      mUserData = vector<UserData*>(num_users,NULL);
+      mUserData = std::vector<UserData*>(num_users,NULL);
 
       switch (num_users)
       {
@@ -426,7 +427,7 @@ private:
 
 public:
    vjGlContextData<ContextData>  mDlData;       // Data for display lists
-   vector<UserData*>             mUserData;     // All the users in the program
+   std::vector<UserData*>        mUserData;     // All the users in the program
 };
 
 #endif

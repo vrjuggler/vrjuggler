@@ -27,7 +27,7 @@ class vjChunkDescDB {
 private:
 
     //:Internal storage of vjChunkDescs
-    vector<vjChunkDesc*> descs;
+    std::vector<vjChunkDesc*> descs;
 
 public:
 

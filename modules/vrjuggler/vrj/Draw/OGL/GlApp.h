@@ -2,6 +2,7 @@
 #define _VJ_GL_APP_
 
 #include <vjConfig.h>
+
 #include <Kernel/vjApp.h>
 
 #include <Kernel/GL/vjGlDrawManager.h>
@@ -10,7 +11,6 @@
 #include <Kernel/vjUser.h>
 #include <Kernel/vjProjection.h>
 
-#include <vector.h>
 
 //-----------------------------------------------------------
 //: vjGlApp: Encapulates an actual OpenGL application.

@@ -11,6 +11,7 @@
  *  using this description.
  */
 
+#include <vjConfig.h>
 #include <Config/vjParseUtil.h>
 
 class vjPropertyDesc {
@@ -36,9 +37,9 @@ public:
     char *token; 
     /* the token used to id this in the parser (not case sensitive) */
 
-    vector<vjEnumEntry*> valuelabels;
+    std::vector<vjEnumEntry*> valuelabels;
 
-    vector<vjEnumEntry*> enumv;
+    std::vector<vjEnumEntry*> enumv;
     /* enumv is used to store enumerations - string/int pairs for T_INTs,
      * valid string values for T_STRINGS, and names of acceptable chunk
      * types for T_CHUNK.  Note that in the T_CHUNK case, an empty enumv

@@ -99,8 +99,8 @@ void vjGlDrawManager::initDrawing()
    //  For each display:
    //	-- Create a window for it
    //	-- Store the window in the wins vector
-   vector<vjDisplay*> displays = displayManager->getDisplays();
-   for (vector<vjDisplay*>::iterator dispIter = displays.begin();
+   std::vector<vjDisplay*> displays = displayManager->getDisplays();
+   for (std::vector<vjDisplay*>::iterator dispIter = displays.begin();
        dispIter != displays.end(); dispIter++)
    {
       vjGlWindow* newWin;
@@ -271,7 +271,7 @@ void vjGlDrawManager::debugDump()
 	         << "\tapp:" << (void*)app << endl << vjDEBUG_FLUSH;
     vjDEBUG(0) << "\tWins:" << wins.size() << endl << vjDEBUG_FLUSH;
 
-    for(vector<vjGlWindow*>::iterator i = wins.begin(); i != wins.end(); i++)
+    for(std::vector<vjGlWindow*>::iterator i = wins.begin(); i != wins.end(); i++)
     {
 	   vjDEBUG(0) << "\n\t\tvjGlWindow:\n" << *(*i) << endl << vjDEBUG_FLUSH;
     }

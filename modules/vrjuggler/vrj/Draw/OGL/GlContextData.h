@@ -2,6 +2,7 @@
 #define _VJ_GL_CONTEXT_DATA_H_
 #pragma once
 
+#include <vjConfig.h>
 #include <Kernel/GL/vjGlDrawManager.h>
 
 //! NOTE: This class for internal use only
@@ -80,7 +81,7 @@ protected:
    }
 
 private:
-   vector<ContextDataType>    mContextDataVector;     //: Vector of user data
+   std::vector<ContextDataType> mContextDataVector;   //: Vector of user data
 };
 
 #endif

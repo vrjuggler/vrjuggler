@@ -17,14 +17,11 @@
 #ifdef VJ_OS_HPUX
 #   include <float.h>
 #   include <stddef.h>
-#   include <vector>
 #else
 #   if defined(VJ_USE_PTHREADS) && ! defined(_PTHREADS)
 #       define _PTHREADS
 #   endif
-
-#   include <vector.h>
-#endif	/* ifdef VJ_OS_HPUX */
+#endif
 
 #include <Config/vjVarValue.h>
 #include <Config/vjParseUtil.h>
@@ -54,7 +51,7 @@ public:
     char *help;
 
     //:Container for this vjChunkDesc's vjPropertyDescs
-    vector<vjPropertyDesc*> plist;
+    std::vector<vjPropertyDesc*> plist;
 
 
     //:Constructor
