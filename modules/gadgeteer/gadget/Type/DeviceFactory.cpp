@@ -57,7 +57,7 @@
 #ifndef VPR_OS_Win32
 
 #   ifdef VPR_OS_Darwin
-#      include <gadget/Devices/Keyboard/OSXKeyboard.h>
+#      include <gadget/Devices/Keyboard/KeyboardOSX.h>
 #   else
 //#      include <gadget/Devices/VirtualTechnologies/CyberGlove.h>
 #      include <gadget/Devices/Keyboard/KeyboardXWin.h>
@@ -139,7 +139,7 @@ void DeviceFactory::hackLoadKnownDevices()
 
 #ifndef VPR_OS_Win32
 #ifdef VPR_OS_Darwin
-   DeviceConstructor<OSXKeyboard>* osx_keyboard = new DeviceConstructor<OSXKeyboard>;
+   DeviceConstructor<KeyboardOSX>* osx_keyboard = new DeviceConstructor<KeyboardOSX>;
    if( (NULL == osx_keyboard) )
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
