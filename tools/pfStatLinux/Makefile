@@ -20,4 +20,3 @@ ${TARGETS}: ${OBJS}
 
 clean:
 	-rm -f *.so *.so.* *.o *~ ${TARGETS}
-
