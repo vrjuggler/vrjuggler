@@ -64,6 +64,16 @@ public:
    BOOL enumerateAxes(const DIDEVICEOBJECTINSTANCE* doi);
    //@}
 
+   static int getAxisMin()
+   {
+      return -100;
+   }
+
+   static int getAxisMax()
+   {
+      return 100;
+   }
+
 private:
    /** @name Direct Input data */
    //@{

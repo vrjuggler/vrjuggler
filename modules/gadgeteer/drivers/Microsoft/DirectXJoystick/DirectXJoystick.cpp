@@ -104,11 +104,10 @@ bool DirectXJoystick::config(jccl::ConfigElementPtr e)
       mAxisButtonIndices.push_back(idx);
    }
 
-   // XXX: This doesn't make any sense.  PH 8/19/2004
-   if( getMin() == 0 && getMax() == 0 || getMin() >= getMax() )
+   if ( getMin() >= getMax() )
    {
-      setMin(-100.0f);
-      setMax(100.0f);
+      setMin((float) DirectXJoystickStandalone::getAxisMin());
+      setMax((float) DirectXJoystickStandalone::getAxisMax());
    }
 
    return true;
