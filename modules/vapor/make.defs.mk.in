@@ -93,8 +93,8 @@ scriptdir	= $(releasedir)/scripts
 topdir		= @topdir@
 DPP_SCRIPTDIR	= $(JUGGLERROOT_ABS)/Doozer++/scripts
 MAKEFLAGS	+= --no-print-directory
-MKDEPS_CC	= @CC@
-MKDEPS_CXX	= @CXX@
+DEPGEN_TOOL_CC	= @CC@
+DEPGEN_TOOL_CXX	= @CXX@
 MKINSTALLDIRS	= $(scriptdir)/mkinstalldirs
 MKPATH		= $(JUGGLERROOT_ABS)/Doozer++/mk
 MTREE_CMD	= @MTREE_CMD@
@@ -120,16 +120,13 @@ EXTRA_INCLUDES		= -I$(top_srcdir) @BOOST_INCLUDES@		\
                           -I$(JUGGLERROOT_ABS)/external/md5-c
 
 # -----------------------------------------------------------------------------
-# Makedepend commands
+# Makedepend commands.  Doozer++ uses $(MKDEP_C) and $(MKDEP_CXX).
 # -----------------------------------------------------------------------------
-MKDEPS_C	= $(MKDEPS_CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
-MKDEPS_CXX	= $(MKDEPS_CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
+MKDEP_C 	= $(DEPGEN_TOOL_CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+MKDEP_CXX	= $(DEPGEN_TOOL_CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 
 # -----------------------------------------------------------------------------
-# Platform- and binary-specific options.  The assignments preceding the
-# ifeq ... endif blocks are the default values.  Depending on the value of
-# $(ABI), further settings may be made to allow for building with multiple
-# ABIs.
+# Platform- and binary-specific options.
 # -----------------------------------------------------------------------------
 ifdef vprABI
     dppABI	= $(vprABI)
