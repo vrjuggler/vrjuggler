@@ -338,13 +338,9 @@ public class MultiUnitDeviceVertexView
                   int cur_count = mDeviceInfo.getUnitCount(type);
                   int old_count = ((Number) evt.getValue()).intValue();
 
-                  System.out.println("cur_count == " + cur_count);
-                  System.out.println("old_count == " + old_count);
-
                   // Unit addition.  This always appends the new unit.
                   if ( cur_count > old_count )
                   {
-                     System.out.println("Adding new row");
                      UnitInfo new_unit_info =
                         new UnitInfo(type, new Integer(cur_count - 1));
                      DefaultPort port =
@@ -361,7 +357,6 @@ public class MultiUnitDeviceVertexView
                   // Unit removal.
                   else
                   {
-                     System.out.println("Removing a row");
                      DefaultPort port = null;
 
                      // This bit is needed for handling undo and redo
@@ -465,10 +460,6 @@ public class MultiUnitDeviceVertexView
             {
                UnitInfo cur_unit_info =
                   (UnitInfo) ((DefaultPort) child).getUserObject();
-               System.out.println("[findPort()] Comparing " + searchUnitInfo +
-                                  " with " + cur_unit_info);
-               System.out.println("             Result == " +
-                                  searchUnitInfo.equals(cur_unit_info));
                if ( searchUnitInfo.equals(cur_unit_info) )
                {
                   port = (DefaultPort) child;
