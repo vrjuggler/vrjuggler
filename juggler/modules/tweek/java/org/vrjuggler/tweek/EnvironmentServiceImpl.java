@@ -36,6 +36,7 @@
 
 package org.vrjuggler.tweek;
 
+import java.io.File;
 import java.util.ArrayList;
 import org.vrjuggler.tweek.beans.BeanAttributes;
 import org.vrjuggler.tweek.beans.ServiceBean;
@@ -71,26 +72,24 @@ class EnvironmentServiceImpl
    {
       super(attrs);
 
-      String prefs_dir_name;
+      String data_dir_name;
 
       // Mac OS X preferences location.
-      if ( System.getProperty("mrj.version") != null )
+      if ( getOS() == MacOS )
       {
-         prefs_dir_name = getUserHome() + java.io.File.separator + "Library";
+         data_dir_name = getUserHome() + File.separator + "Library";
       }
-      // Windows.
-      else if ( System.getProperty("os.name").indexOf("Windows") != -1 )
+      else if ( getOS() == Windows )
       {
-         prefs_dir_name = getUserHome() + java.io.File.separator +
-                          "Application Data";
+         data_dir_name = getUserHome() + File.separator + "Application Data";
       }
       // UNIX.
       else
       {
-         prefs_dir_name = getUserHome();
+         data_dir_name = getUserHome();
       }
 
-      prefsDir = (new java.io.File(prefs_dir_name)).getAbsolutePath();
+      appDataDir = (new File(data_dir_name)).getAbsolutePath();
    }
 
    /**
@@ -189,7 +188,7 @@ class EnvironmentServiceImpl
     */
    public String getAppDataDir()
    {
-      return prefsDir;
+      return appDataDir;
    }
 
    public int getOS()
@@ -198,7 +197,7 @@ class EnvironmentServiceImpl
    }
 
    private String[] commandLineArgs = null;
-   private String   prefsDir        = null;
+   private String   appDataDir      = null;
 
    private static int os;
 }
