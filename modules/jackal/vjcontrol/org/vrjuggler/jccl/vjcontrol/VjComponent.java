@@ -113,7 +113,7 @@ public interface VjComponent {
      *  The component must be configured (e.g. by configure()) 
      *  before calling initialize().
      *
-     *  @throws VjComoponentException if initialization fails.
+     *  @throws VjComponentException if initialization fails.
      */
     public void initialize () throws VjComponentException;
 
@@ -134,11 +134,13 @@ public interface VjComponent {
      *          with the name of the child component's class, and that
      *          the child component can configure() itself with the 
      *          chunk.  See VjFiles/vjcontrol.dsc for examples.
-     *  @return True if the component was succesfully created and added.
-     *          False typically means that the parent doesn't know
-     *          what to do with this chunk, and is a configuration error.
+     *  @return The VjComponent that was created based on ch.  If the
+     *          parent is going to use ch to create components on demand,
+     *          it should return null.
+     *  @throws VjComponentException if an error occurred while trying
+     *          to create the new component.
      */
-    public boolean addConfig (ConfigChunk ch);
+    public VjComponent addConfig (ConfigChunk ch) throws VjComponentException;
 
 
     /** Remove a component that expects to be attached to this chunk.

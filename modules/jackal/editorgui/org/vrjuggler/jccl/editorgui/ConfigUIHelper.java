@@ -96,29 +96,29 @@ public class ConfigUIHelper
          *  @bug If configuration fails, some map entries may be left in
          *       place.
          */
-        public boolean addConfig (ConfigChunk ch) {
-            try {
-                String cn = ch.getValueFromToken ("ClassName", 0).getString();
-                Property p = ch.getPropertyFromToken ("UsedFor");
-                if (p == null)
-                    return false;
-                int n = p.getNum();
-                if (n == 0) {
-                    default_panel_chunk = ch;
-                }
-                else {
-                    String s;
-                    for (int i = 0; i < n; i++) {
-                        s = p.getValue(i).toString();
-                        chunkpanel_mappings.put (s, cn);
-                    }
-                }
-                return true;
+        public VjComponent addConfig (ConfigChunk ch) throws VjComponentException {
+            //try {
+            String cn = ch.getValueFromToken ("ClassName", 0).getString();
+            Property p = ch.getPropertyFromToken ("UsedFor");
+            if (p == null)
+                throw new VjComponentException (component_name + ": malformed ConfigChunk (no UsedFor property).");
+            int n = p.getNum();
+            if (n == 0) {
+                default_panel_chunk = ch;
             }
-            catch (Exception e) {
-                return false;
+            else {
+                String s;
+                for (int i = 0; i < n; i++) {
+                    s = p.getValue(i).toString();
+                    chunkpanel_mappings.put (s, cn);
+                }
             }
+            return null;
         }
+//              catch (Exception e) {
+//                  return false;
+//              }
+//          }
 
 
         public ConfigChunkPanel createConfigChunkPanel (String desc_token) {
@@ -297,23 +297,14 @@ public class ConfigUIHelper
 
     //---------------------------
 
-    public boolean addConfig (ConfigChunk ch) {
+    public VjComponent addConfig (ConfigChunk ch) throws VjComponentException {
 
-        try {
-            String classname = ch.getValueFromToken ("classname", 0).getString();
-            if (Core.component_factory.classSupportsInterface (classname, "VjComponents.ConfigEditor.ConfigChunkPanel")) {
-                configchunkpanel_factory.addConfig (ch);
-                // don't register w/ core cuz we didn't instantiate anything
-                return true;
-            }
-            else {
-                Core.consoleErrorMessage ("ControlUI", "Unrecognized component: " + classname);
-                return false;
-            }
+        String classname = ch.getValueFromToken ("classname", 0).getString();
+        if (Core.component_factory.classSupportsInterface (classname, "VjComponents.ConfigEditor.ConfigChunkPanel")) {
+            return configchunkpanel_factory.addConfig (ch);
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            return false;
+        else {
+            throw new VjComponentException (component_name + ": Unrecognized component: " + classname);
         }
     }
 

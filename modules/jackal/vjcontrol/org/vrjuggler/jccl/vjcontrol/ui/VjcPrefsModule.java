@@ -119,17 +119,6 @@ public class VjcPrefsModule
     }
 
 
-    public boolean addConfig (ConfigChunk ch) {
-        return false;
-    }
-
-
-
-    public boolean removeConfig (String name) {
-        return false;
-    }
-
-
 
     public void destroy () {
 //         EasyMenuBar mb = ui_module.getEasyMenuBar();

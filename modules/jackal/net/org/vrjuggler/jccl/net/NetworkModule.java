@@ -127,30 +127,20 @@ public class NetworkModule
 
 
 
-    public boolean addConfig (ConfigChunk ch) {
+    public VjComponent addConfig (ConfigChunk ch) throws VjComponentException {
 
-        try {
-            String classname = ch.getValueFromToken ("classname", 0).getString();
-            if (classname == null) {
-                Core.consoleErrorMessage (component_name, "Not a component instance chunk:" + ch.getName());
-                return false;
-            }
-            else if (Core.component_factory.classSupportsInterface (classname, "VjComponents.Network.NetCommunicator")) {
-                NetCommunicator nc = (NetCommunicator) Core.component_factory.createComponent(classname);
-                nc.setConfiguration (ch);
-                nc.initialize ();
-                addCommunicator (nc);
-                return true;
-            }
-            else {
-                Core.consoleErrorMessage (component_name, "Unrecognized component: " + classname);
-                return false;
-            }
+        String classname = ch.getValueFromToken ("classname", 0).getString();
+        if (classname == null)
+            throw new VjComponentException (component_name + ": Not a component instance chunk: " + ch.getName());
+        if (Core.component_factory.classSupportsInterface (classname, "VjComponents.Network.NetCommunicator")) {
+            NetCommunicator nc = (NetCommunicator) Core.component_factory.createComponent(classname);
+            nc.setConfiguration (ch);
+            nc.initialize ();
+            addCommunicator (nc);
+            return nc;
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        else 
+            throw new VjComponentException (component_name + ": Unrecognized component: " + classname);
     }
 
 
@@ -211,7 +201,6 @@ public class NetworkModule
 	    sock = new Socket (remote_name, port);
 	    outstream = new DataOutputStream (sock.getOutputStream());
 	    instream = sock.getInputStream();
-		//new ConfigStreamTokenizer (new InputStreamReader(sock.getInputStream()));
 	    connected = true;
 
 	    NetControlEvent e = new NetControlEvent (this, NetControlEvent.OPENED, remote_name, port);
@@ -341,11 +330,10 @@ public class NetworkModule
     }
 
 
-    public void addCommunicator (NetCommunicator n) {
+    protected void addCommunicator (NetCommunicator n) {
         synchronized (communicators) {
             n.setNetworkModule (this);
             communicators.add (n);
-            Core.registerComponent (n);
         }
     }
 

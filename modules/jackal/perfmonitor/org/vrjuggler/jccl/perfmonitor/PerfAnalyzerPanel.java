@@ -494,8 +494,8 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
     }
 
 
-    public boolean addConfig (ConfigChunk ch) {
-        return false;
+    public VjComponent addConfig (ConfigChunk ch) throws VjComponentException {
+        throw new VjComponentException (component_name + " does not support child component: " + ch.getName());
     }
 
 

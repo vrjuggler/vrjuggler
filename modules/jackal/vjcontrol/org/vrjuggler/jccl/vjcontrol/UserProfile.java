@@ -53,7 +53,7 @@ public class UserProfile {
             user_types[ALWAYS_SHOW] = true;
             retval = false;
         }
-        System.out.println ("chunk named: " + ch.getName() + "; retval is " + retval);
+        //System.out.println ("chunk named: " + ch.getName() + "; retval is " + retval);
         return retval;
     }
 

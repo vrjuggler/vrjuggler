@@ -92,11 +92,13 @@ public abstract class DefaultVjComponent
     }
 
 
-    /** add a component that expects to be attached to this chunk.
-     *  @returns True if the component was succesfully created and added.
+    /** Adds a component.
+     *  @return Nothing (this implementation always throws).
+     *  @throws The default implementation always throws a
+     *          VjComponentException.
      */
-    public boolean addConfig (ConfigChunk ch) {
-        return false;
+    public VjComponent addConfig (ConfigChunk ch) throws VjComponentException {
+        throw new VjComponentException (component_name + " does not support child component: " + ch.getName());
     }
 
 
@@ -105,9 +107,9 @@ public abstract class DefaultVjComponent
      *  @param name Name of the component to remove (should be the
      *              same as the name of the ConfigChunk used to create
      *              it).
-     *  @returns True if the component was found and removed.  False
-     *           indicates that the removeConfig couldn't find any
-     *           such component to remove.
+     *  @return True if the component was found and removed.  False
+     *          indicates that the removeConfig couldn't find any
+     *          such component to remove.
      */
     public boolean removeConfig (String name) {
         return false;
@@ -126,6 +128,4 @@ public abstract class DefaultVjComponent
         ;
     }
 
-
-    // possible fns:  getChunk; getDependencies
 }

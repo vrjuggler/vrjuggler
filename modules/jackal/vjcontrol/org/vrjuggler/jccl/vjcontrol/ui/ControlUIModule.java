@@ -325,49 +325,40 @@ public class ControlUIModule
     }
 
 
-    public boolean addConfig (ConfigChunk ch) {
+    public VjComponent addConfig (ConfigChunk ch) throws VjComponentException {
 
-        try {
-            String classname = ch.getValueFromToken ("classname", 0).getString();
-            if (classname == null) {
-                Core.consoleErrorMessage (component_name, "Not a component instance chunk:" + ch.getName());
-                return false;
-            }
-            else if (Core.component_factory.classSupportsInterface (classname, "VjComponents.UI.PlugPanel")) {
-                PlugPanel pp = (PlugPanel) Core.component_factory.createComponent(classname);
-                pp.setConfiguration (ch);
-                pp.initialize ();
-                child_panels.add (pp);
-                if (panel_container != null)
-                    panel_container.insertPanel(pp);
-                Core.registerComponent (pp);
-                return true;
-            }
-            else if (Core.component_factory.classSupportsInterface (classname, "VjComponents.UI.PlugPanelContainer")) {
-                PlugPanelContainer pc = (PlugPanelContainer) Core.component_factory.createComponent (classname);
-                pc.setConfiguration (ch);
-                pc.initialize ();
-                if (panel_container != null) {
-                    ((JComponent)panel_container).removeAll();
-                    main_panel.remove ((Component)panel_container);
-                }
-                panel_container = pc;
-                int n = child_panels.size();
-                for (int i = 0; i < n; i++) {
-                    PlugPanel pp = (PlugPanel)child_panels.get(i);
-                    pc.insertPanel (pp);
-                }
-                main_panel.add ((Component)panel_container, "Center");
-                return true;
-            }
-            else {
-                Core.consoleErrorMessage ("ControlUI", "Unrecognized component: " + classname);
-                return false;
-            }
+        String classname = ch.getValueFromToken ("classname", 0).getString();
+        if (classname == null) 
+            throw new VjComponentException (component_name + ": Not a component instance chunk: " + ch.getName());
+            
+        if (Core.component_factory.classSupportsInterface (classname, "VjComponents.UI.PlugPanel")) {
+            PlugPanel pp = (PlugPanel) Core.component_factory.createComponent(classname);
+            pp.setConfiguration (ch);
+            pp.initialize ();
+            child_panels.add (pp);
+            if (panel_container != null)
+                panel_container.insertPanel(pp);
+            return pp;
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            return false;
+        else if (Core.component_factory.classSupportsInterface (classname, "VjComponents.UI.PlugPanelContainer")) {
+            PlugPanelContainer pc = (PlugPanelContainer) Core.component_factory.createComponent (classname);
+            pc.setConfiguration (ch);
+            pc.initialize ();
+            if (panel_container != null) {
+                ((JComponent)panel_container).removeAll();
+                main_panel.remove ((Component)panel_container);
+            }
+            panel_container = pc;
+            int n = child_panels.size();
+            for (int i = 0; i < n; i++) {
+                PlugPanel pp = (PlugPanel)child_panels.get(i);
+                pc.insertPanel (pp);
+            }
+            main_panel.add ((Component)panel_container, "Center");
+            return pc;
+        }
+        else {
+            throw new VjComponentException (component_name + ": Unrecognized component: " + classname);
         }
     }
 
