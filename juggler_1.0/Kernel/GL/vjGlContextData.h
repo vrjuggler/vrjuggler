@@ -21,11 +21,20 @@ protected:
 //: OpenGL helper class that has templatized user context data
 //
 //  This class allows the user to specify a data type that contains
-// data that needs to have a context specific copy.  For example a struct
-// full of display list id's.  The user passes their user-defined data
-// structure as the template parameter.
-//  The resulting object will be a "smart" pointer to the context specific
-// data to use.
+// data that needs to have a context specific copy.  This means that there
+// is a unique copy of the data structure for each openGL context in
+// the current environment.  Juggler will take care of the data copies
+// transparently for the user so the user never has to know about the
+// current configuration. <br>
+//
+// An example use would be a struct full of display list id's.
+// The user passes their user-defined data structure as the template parameter.
+// The resulting object will be a "smart" pointer to the context specific
+// data to use. <br> <br>
+//
+// Ex: <br>
+//   vjGlContextData<myStruct>   myData; <br>
+//   myData->dlSphere = 0;
 //
 //! NOTE: Requires that the type of the context data provide a default
 //+ constructor used to initialize all of the copies of the data.
@@ -44,6 +53,10 @@ public:
    ContextDataType& operator*()
    { return (*getPtrToCur()); }
 
+   //: Returns reference to user data for the current context
+   //! PRE: We are in a draw process
+   //! NOTE: Should only be called from the draw function.
+   //+       Results are un-defined for other functions.
    ContextDataType* operator->()
    { return getPtrToCur(); }
 
