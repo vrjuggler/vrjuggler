@@ -189,7 +189,7 @@ void Debug::addCategory(const vpr::GUID& catId, std::string name, std::string pr
 {
    std::cout << "\nAdding category named '" << name << "'  -- prefix: " << prefix <<  " -- guid: " << catId
              << " to debug categories:" << &mCategories << " size: " << mCategories.size() << std::endl;
-   mCategories.insert( std::pair<vpr::GUID,CategoryInfo>(catId, CategoryInfo(name, prefix, false)));
+   mCategories.insert( std::pair<vpr::GUID,CategoryInfo>(catId, CategoryInfo(name, prefix, false, false)));
    std::cout << "new size: " << mCategories.size() << std::endl;
    debugDump();
    updateAllowedCategories();
@@ -200,9 +200,9 @@ void Debug::addCategory(const vpr::GUID& catId, std::string name, std::string pr
 // Are we allowed to print this category??
 bool Debug::isCategoryAllowed(const vpr::GUID& catId)
 {
-   //return true;
+   bool allow_category(false);
    
-   // If no entry for cat, grow the vector
+   // Make sure category is in the vector
    Debug::category_map_t::iterator cat = mCategories.find(catId);
    vprASSERT(cat != mCategories.end());    // ASSERT: We have a valid category 
 
@@ -215,31 +215,48 @@ bool Debug::isCategoryAllowed(const vpr::GUID& catId)
    bool allow_all = ((*cat_all).second.mAllowed == true);
 
    if(cat_is_all || allow_all)
-      return true;
+   {
+      allow_category = true;
+   }
    else
-      return (*cat).second.mAllowed;   
+   {
+      allow_category = (*cat).second.mAllowed;
+   }
+
+   // Check dis-allowing
+   // - If a category is disallowed, then set it false
+   if(allow_category)   // Only worry about it if it is already enabled
+   {
+      if( (*cat).second.mDisallowed)      // If disallowed
+      {
+         allow_category = false;          // Dis-allow it
+      }
+   }
+
+   return allow_category;
 }
 
 
 void Debug::updateAllowedCategories()
 {
-   // Get the environment variable
-   char* dbg_cats_env = getenv("VPR_DEBUG_CATEGORIES");
+   // Get the environment variables
+   char* dbg_allow_cats_env = getenv("VPR_DEBUG_ALLOW_CATEGORIES");
+   char* dbg_disallow_cats_env = getenv("VPR_DEBUG_DISALLOW_CATEGORIES");
 
    std::cout << "updateAllowedCategories" << std::endl;
    std::cout << "   updateAllowedCat: Trying to find vprDBG_ALL. guid [" << vprDBG_ALL << "] " << std::endl;
 
    Debug::category_map_t::iterator cat_all = mCategories.find(vprDBG_ALL);
    vprASSERT(!mCategories.empty() && "Empty category list");
-   vprASSERT((cat_all != mCategories.end()) && "Could not fine vprDBG_ALL in category list");    // ASSERT: We have a valid category 
+   vprASSERT((cat_all != mCategories.end()) && "Could not find vprDBG_ALL in category list");    // ASSERT: We have a valid category 
 
-   // 
-   if(dbg_cats_env != NULL)
+   // --- Setup allowed categories --- //
+   if(dbg_allow_cats_env != NULL)
    {
      (*cat_all).second.mAllowed = false;       // Disable the showing of all for now
 
-      std::cout << "   vprDEBUG::Found VPR_DEBUG_CATEGORIES: Updating allowed categories. (If blank, then none allowed.)\n" << std::flush;
-      std::string dbg_cats(dbg_cats_env);
+      std::cout << "   vprDEBUG::Found VPR_DEBUG_ALLOW_CATEGORIES: Updating allowed categories. (If blank, then none allowed.)\n" << std::flush;
+      std::string dbg_cats(dbg_allow_cats_env);
 
       // For each currently known category name
       category_map_t::iterator i;
@@ -263,10 +280,42 @@ void Debug::updateAllowedCategories()
    }
    else
    {
-      std::cout << "   vprDEBUG::VPR_DEBUG_CATEGORIES not found:\n"
+      std::cout << "   vprDEBUG::VPR_DEBUG_ALLOW_CATEGORIES not found:\n"
                 << " Setting to: vprDBG_ALL!" << std::endl << std::flush;
-      (*cat_all).second.mAllowed = true;       // Disable the showing of all for now      
+      (*cat_all).second.mAllowed = true;       // Enable the showing of all for now      
    }   
+
+   // --- Setup dis-allowed categories --- //
+   if(dbg_disallow_cats_env != NULL)
+   {
+      std::cout << "   vprDEBUG::Found VPR_DEBUG_DISALLOW_CATEGORIES: Updating allowed categories. (If blank, then none allowed.)\n" << std::flush;
+      std::string dbg_disallow_cats(dbg_disallow_cats_env);
+
+      // For each currently known category name
+      category_map_t::iterator i;
+      for(i=mCategories.begin();i != mCategories.end();i++)
+      {
+         std::string cat_name = (*i).second.mName;
+         if (dbg_disallow_cats.find(cat_name) != std::string::npos )    // Found one
+         {
+            std::cout << "   vprDEBUG::updateAllowedCategories: Dis-allowing: "
+                      << (*i).second.mName.c_str() << " val:" << (*i).first.toString()
+                      << std::endl << std::flush;            
+            (*i).second.mDisallowed = true;
+         }
+         else
+         {
+            //std::cout << "vprDEBUG::updateAllowedCategories: Not found (to allow): "
+            //          << (*i).second.mName.c_str() << " val:" << (*i).first.toString()
+            //          << std::endl << std::flush;
+         }
+      }
+   }
+   else
+   {
+      std::cout << "   vprDEBUG::VPR_DEBUG_DISALLOW_CATEGORIES not found." << std::flush;      
+   } 
+   
 }
 
 
@@ -305,7 +354,8 @@ void Debug::debugDump()
       std::cout << "    cat [" << (*i).first << "]  "
                 << " name [" << cat_info.mName << "]  "
                 << " prefix [" << cat_info.mPrefix << "]  "
-                << " allowed [" << cat_info.mAllowed << "] " << std::endl;
+                << " allowed [" << cat_info.mAllowed << "] " 
+                << " disallowed [" << cat_info.mDisallowed << "] " << std::endl;
    }
 
 }
