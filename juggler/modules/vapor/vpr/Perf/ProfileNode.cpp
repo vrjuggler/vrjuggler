@@ -52,12 +52,12 @@ namespace vpr
    ProfileNode::ProfileNode( const char * name, ProfileNode * parent ) :
    mName( name ),
       mTotalCalls( 0 ),
-      mTotalTime( 0 ),
       mRecursionCounter( 0 ),
       mParent( parent ),
       mChild( NULL ),
       mSibling( NULL )
    {
+      mTotalTime.secf(0.0f);
       mHistorySize = 1;
       mHistory.resize(mHistorySize);
       mStartTime.secf(0);
@@ -67,12 +67,12 @@ namespace vpr
    ProfileNode::ProfileNode( const char * name, ProfileNode * parent, const unsigned int queue_size) :
    mName( name ),
       mTotalCalls( 0 ),
-      mTotalTime( 0 ),
       mRecursionCounter( 0 ),
       mParent( parent ),
       mChild( NULL ),
       mSibling( NULL )
    {
+      mTotalTime.secf(0.0f);
       mHistorySize = queue_size;
       mHistory.resize(mHistorySize);
       mStartTime.secf(0);
@@ -162,7 +162,7 @@ namespace vpr
       NodeHistoryRange p = node->getNodeHistoryRange();
       for ( ; p.first != p.second; p.first++ )
       {
-         s << *(p.first) << " ";
+         s << p.first->msecf() << " ";
       }
 
       vprDEBUG(vprDBG_ALL, 0)  << clrOutBOLD(clrYELLOW, " history: ")
@@ -178,7 +178,7 @@ namespace vpr
    {
    Guard<Mutex> guard(mNodeLock);
       mTotalCalls = 0;
-      mTotalTime = 0.0f;
+      mTotalTime.secf(0.0f);
 
       if ( mChild )
       {
@@ -209,9 +209,9 @@ namespace vpr
          vpr::Interval time;
          profileGetTicks(&time);
          time -= mStartTime;
-         mHistory.push_front((float)(time.secf() / profileGetTickRate().secf()));
+         mHistory.push_front(time);
          mHistory.resize(mHistorySize);
-         mTotalTime += mHistory.front();
+         mTotalTime += time;
       }
 
       return( mRecursionCounter == 0 );

@@ -169,7 +169,7 @@ namespace vpr
 
            ProfileNode::NodeHistoryRange p = node->getNodeHistoryRange();
            mTreeLock.release();
-           return *(p.first);
+           return p.first->msecf();
        } 
 
       /**

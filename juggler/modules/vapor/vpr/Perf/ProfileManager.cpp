@@ -110,7 +110,7 @@ vpr::Mutex     ProfileManager::mTreeLock;
       vpr::Interval time;
       profileGetTicks(&time);
       time = time - *mResetTime;
-      return(float)(time.secf() / profileGetTickRate().secf());
+      return(float)time.secf();
    }
 
 } // end namespace vpr

@@ -115,7 +115,7 @@ namespace vpr
          ProfileNode::NodeHistoryRange p = iter.getNodeHistoryRange();
          for ( ; p.first != p.second; p.first++ )
          {
-            out << *(p.first) << " ";
+            out << p.first->msecf() << " ";
          }
 
          out << std::endl;

@@ -64,14 +64,6 @@ namespace vpr
       ticks->setNowReal();
    }
 
-   inline vpr::Interval profileGetTickRate(void)
-   {
-      vpr::Interval i;
-      i.secf(0.01f);
-      return i;
-   }
-
-
 /**
  * A node in the Profile Hierarchy Tree
  */
@@ -144,10 +136,10 @@ namespace vpr
 
       float          getTotalTime( void )
       {
-         return mTotalTime;
+         return mTotalTime.msecf();
       }
 
-      typedef std::pair< std::deque<float>::const_iterator, std::deque<float>::const_iterator> NodeHistoryRange;
+      typedef std::pair< std::deque<vpr::Interval>::const_iterator, std::deque<vpr::Interval>::const_iterator> NodeHistoryRange;
 
       const NodeHistoryRange getNodeHistoryRange()
       {
@@ -164,9 +156,9 @@ namespace vpr
 
       const char*    mName;         /**< Pointer to the name for this node.  Must be a static string. */
       int            mTotalCalls;   /**< Total number of times called since last reset. */
-      float          mTotalTime;    /**< Total summed time over mTotalCalls. */
+      vpr::Interval          mTotalTime;    /**< Total summed time over mTotalCalls. */
 
-      std::deque<float> mHistory;      /**< History of samples. */
+      std::deque<vpr::Interval> mHistory;      /**< History of samples. */
       unsigned int      mHistorySize;  /**< Max size allowed for history. */
 
       vpr::Interval  mStartTime;       /**< The time that this sample started. */
