@@ -37,32 +37,40 @@
 #include <gadget/Type/InputData.h>
 #include <gmtl/Matrix.h>
 
-namespace gadget {
+namespace gadget
+{
 
-    /** InputData subclass for positional data. */
+/** InputData subclass for positional data. */
 class GADGET_CLASS_API PositionData: public InputData
 {
 public:
 
-    /** Constructor. */
-    PositionData (): InputData()
-    {;}
+   /** Constructor. */
+   PositionData()
+      : InputData()
+   {
+      ;
+   }
 
-    gmtl::Matrix44f getPosition() const
-    { return mPosData; }
+   gmtl::Matrix44f getPosition() const
+   {
+      return mPosData;
+   }
 
-    void setPosition(gmtl::Matrix44f posMatrix)
-    { mPosData = posMatrix; }
+   void setPosition(gmtl::Matrix44f posMatrix)
+   {
+      mPosData = posMatrix;
+   }
 
-    PositionData& operator= (const PositionData& pd)
-    {
-        InputData::copy (pd);
-        mPosData = pd.mPosData;
-        return *this;
-    }
+   PositionData& operator= (const PositionData& pd)
+   {
+      InputData::copy (pd);
+      mPosData = pd.mPosData;
+      return *this;
+   }
 
 public:
-    gmtl::Matrix44f mPosData;
+   gmtl::Matrix44f mPosData;
 
 }; // class PositionData
 
