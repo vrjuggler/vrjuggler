@@ -100,19 +100,22 @@ void AnalogDemoApplication::draw()
    // render the floor geometry (not display listed)
    const float size = 6.0f;
    ::glLoadIdentity();
-   ::glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );
    ::glNormal3f( 0.0f, 1.0f, 0.0f );
    ::glBegin( GL_QUADS );
       ::glTexCoord2f( 1.0f, 1.0f );
+      ::glColor4f( 0.3f, 0.3f, 0.3f, 1.0f );
       ::glVertex3f(  size, 0, -size );
 
       ::glTexCoord2f( 0.0f, 1.0f );
+      ::glColor4f( 0.0f, 0.7f, 1.6f, 1.0f );
       ::glVertex3f( -size, 0, -size );
 
       ::glTexCoord2f( 0.0f, 0.0f );
+      ::glColor4f( 0.4f, 0.6f, 0.0f, 1.0f );
       ::glVertex3f( -size, 0,  size );
 
       ::glTexCoord2f( 1.0f, 0.0f );
+      ::glColor4f( 0.4f, 0.0f, 0.8f, 1.0f );
       ::glVertex3f(  size, 0,  size );
    ::glEnd();
    
