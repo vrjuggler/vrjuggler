@@ -113,8 +113,16 @@ public:
    static vpr::Uint64 Ntohll(vpr::Uint64 conversion)
    {
       vpr::Uint64 ret_val;
-      *((vpr::Uint32*)(&ret_val)) = SystemNSPR::Ntohl(*((vpr::Uint32*)(&conversion)));
-      *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemNSPR::Ntohl( *( ((vpr::Uint32*)(&conversion))+1) );
+      if (isLittleEndian()
+      {
+         *((vpr::Uint32*)(&ret_val) + 1) = SystemNSPR::Ntohl(*((vpr::Uint32*)(&conversion)));
+         *( ((vpr::Uint32*)(&ret_val))) = SystemNSPR::Ntohl( *( ((vpr::Uint32*)(&conversion))+1) );
+      }
+      else
+      {
+         *((vpr::Uint32*)(&ret_val)) = SystemNSPR::Ntohl(*((vpr::Uint32*)(&conversion)));
+         *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemNSPR::Ntohl( *( ((vpr::Uint32*)(&conversion))+1) );
+      }
       return ret_val;
    }
    static vpr::Uint16 Htons(vpr::Uint16 conversion)
@@ -128,8 +136,16 @@ public:
    static vpr::Uint64 Htonll(vpr::Uint64 conversion)
    {
       vpr::Uint64 ret_val;
-      *((vpr::Uint32*)(&ret_val)) = SystemNSPR::Htonl(*((vpr::Uint32*)(&conversion)));
-      *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemNSPR::Htonl( *( ((vpr::Uint32*)(&conversion))+1) );
+      if (isLittleEndian())
+      {
+         *((vpr::Uint32*)(&ret_val) + 1) = SystemNSPR::Htonl(*((vpr::Uint32*)(&conversion)));
+         *( ((vpr::Uint32*)(&ret_val))) = SystemNSPR::Htonl( *( ((vpr::Uint32*)(&conversion))+1) );
+      }
+      else
+      {
+         *((vpr::Uint32*)(&ret_val)) = SystemNSPR::Htonl(*((vpr::Uint32*)(&conversion)));
+         *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemNSPR::Htonl( *( ((vpr::Uint32*)(&conversion))+1) );
+      }
       return ret_val;
    }
 
