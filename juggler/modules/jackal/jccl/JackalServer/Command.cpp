@@ -33,10 +33,7 @@
 
 
 #include <jccl/JackalServer/Command.h>
-#include <jccl/Config/ConfigChunkDB.h>
-#include <jccl/Config/ChunkDescDB.h>
-#include <jccl/Config/ConfigIO.h>
-#include <jccl/Performance/PerfDataBuffer.h>
+
 
 namespace jccl {
 
@@ -64,103 +61,6 @@ namespace jccl {
         // true if self should be called _after_ cmd2
         return (next_fire_time < cmd2.next_fire_time);
     }
-    
 
-
-
-    // CommandRefresh
-
-    /*static*/ const std::string CommandRefresh::protocol_name ("xml_config");
-
-
-    CommandRefresh::CommandRefresh() {
-        ;
-    }
-
-    
-    /*virtual*/ void CommandRefresh::call (std::ostream& out) const {
-        out << "<refresh_all/>\n";
-    }
-
-
-    /*virtual*/ const std::string& CommandRefresh::getProtocolName () const {
-        return protocol_name;
-    }
-
-
-
-    // CommandSendChunkDB
-
-    /*static*/ const std::string CommandSendChunkDB::protocol_name ("xml_config");
-
-
-    CommandSendChunkDB::CommandSendChunkDB (ConfigChunkDB* _db, bool _all) {
-        db = _db;
-        all = _all;
-    }
-
-
-    /*virtual*/ void CommandSendChunkDB::call (std::ostream& out) const {
-        if (all)
-            out << "<apply_chunks all=\"true\">\n";
-        else
-            out << "<apply_chunks>\n";
-        ConfigIO::instance()->writeConfigChunkDB (out, *db, "xml_config");
-        out << "</apply_chunks>\n";
-    }
-
-
-    /*virtual*/ const std::string& CommandSendChunkDB::getProtocolName () const {
-        return protocol_name;
-    }
-
-
-
-    //CommandSendDescDB
-    
-    /*static*/ const std::string CommandSendDescDB::protocol_name ("xml_config");
-
-
-    CommandSendDescDB::CommandSendDescDB (ChunkDescDB* _db, bool _all) {
-        db = _db;
-        all = _all;
-    }
-
-    
-    /*virtual*/ void CommandSendDescDB::call (std::ostream& out) const {
-        if (all)
-            out << "<apply_descs all=\"true\">\n";
-        else
-            out << "<apply_descs>\n";
-        ConfigIO::instance()->writeChunkDescDB (out, *db, "xml_config");
-        out << "</apply_descs>\n";
-    }
-
-
-    /*virtual*/ const std::string& CommandSendDescDB::getProtocolName () const {
-        return protocol_name;
-    }
-
-
-
-    // CommandWritePerfData
-
-    /*static*/ const std::string CommandWritePerfData::protocol_name ("vjc_performance");
-    
-
-    CommandWritePerfData::CommandWritePerfData (PerfDataBuffer* _perf_buffer, 
-                                                float _refresh_time) :PeriodicCommand (_refresh_time) {
-        perf_buffer = _perf_buffer;
-    }
-
-    
-    /*virtual*/ void CommandWritePerfData::call (std::ostream& out) const {
-    perf_buffer->write (out);
-    }
-
-
-    /*virtual*/ const std::string& CommandWritePerfData::getProtocolName () const {
-        return protocol_name;
-    }
     
 };
