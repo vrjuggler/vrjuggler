@@ -13,6 +13,18 @@ Jul-13-2000 allenb    Initial ChangeLog file started
 Jul-11-2000 allenb    Rewrote the way that threads call self()
                       Rewrote thread specific data
                       Threads are now much faster (~10x)
+Jul-07-2000 patrick   Debugging symbols are now compiled into object files on
+                      Win32 which fixes long-standing (but unreported)
+                      problems with linking Juggler applications.
+Jun-23-2000 patrick   Set the stereo bit in an OpenGL window on Win32 if
+                      stereo is enabled in the windwo's config chunk.
+                      _OLD_TERMIOS is no longer set on IRIX.  The serial
+                      drivers are using the latest termios functions.  This
+                      code will probably not work on versions of IRIX before
+                      6.5 as a result.
+                      Added the new utility library Juggler_utils which is
+                      required by most, if not all, applications after this
+                      date.
 ==[ 0.1.96 ]=========================
 Bug fixes for OpenGL
 
