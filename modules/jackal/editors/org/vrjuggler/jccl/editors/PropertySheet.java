@@ -10,12 +10,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-//import java.util.HashMap;
-//import java.util.Map;
-//import java.util.Set;
 import javax.swing.*;
-
-//import new_layout.*;
+import java.beans.*;
 import info.clearthought.layout.*;
 import org.vrjuggler.jccl.editors.*;
 import org.vrjuggler.jccl.config.*;
@@ -30,6 +26,12 @@ public class PropertySheet extends PropertyComponent
       PropertyEditorPanelManager.registerEditor(Integer.class, IntegerEditorPanel.class);
       PropertyEditorPanelManager.registerEditor(Float.class, FloatEditorPanel.class);
       PropertyEditorPanelManager.registerEditor(ConfigElementPointer.class, StringEditorPanel.class);
+            
+      // Register the editors.
+      PropertyEditorManager.registerEditor(Boolean.class, BooleanEditor.class);
+      PropertyEditorManager.registerEditor(String.class, StringEditor.class);
+      PropertyEditorManager.registerEditor(Integer.class, IntegerEditor.class);
+      PropertyEditorManager.registerEditor(Float.class, FloatEditor.class);
    }
    public void setElement(ConfigElement elm)
    {
