@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../../../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="../../../../../software/XMLEditor/examples/docbook/docbook.css" type="text/css"?>
 <?morphon-document-settings
   morphon.document.settings.whitespaces.amount="3"
   morphon.document.settings.print.fixed.attributes="true"
@@ -1254,9 +1254,9 @@ gmtl::zero(mat1);</programlisting>
                <programlisting>vrj::Matrix mat1;
 float x_rot = 0.4, y_rot = 0.541, z_rot = 0.14221;
 
-gmtl::makeRot( mat1, x_rot, y_rot, z_rot, gmtl::XYZ );
-gmtl::makeRot( mat1, z_rot, y_rot, x_rot, gmtl::ZYX );
-gmtl::makeRot( mat1, z_rot, x_rot, y_rot, gmtl::ZXY );
+gmtl::setRot( mat1, gmtl::EulerAngleXYZf(x_rot, y_rot, z_rot));
+gmtl::setRot( mat1, gmtl::EulerAngleZYXf(z_rot, y_rot, x_rot));
+gmtl::setRot( mat1, gmtl::EulerAngleZXYf(z_rot, x_rot, y_rot));
 </programlisting>
                <para>In every case, the matrix is zeroed before the rotation transformation is stored. The result of the above code is that <varname>mat1</varname> is a ZXY Euler rotation matrix. The previous two operations are destroyed.</para>
             </section>
@@ -1271,12 +1271,7 @@ gmtl::makeRot( mat1, z_rot, x_rot, y_rot, gmtl::ZXY );
                <programlisting>gmtl::Matrix44f mat;
 gmtl::Vec3f trans(4.0, -4.231, 1.0);
 
-mat = gmtl::makeTrans&lt;Matrix44f&gt;(trans);</programlisting>
-               <para>or</para>
-               <programlisting>gmtl::Matrix44f mat;
-
-mat = gmtl::makeTrans&lt;Matrix44f&gt;(4.0, -4.231, 1.0);</programlisting>
-               <para>The only difference between these two is that the first takes a reference to a <classname>gmtl::Vec3f</classname> object specifying the translation.</para>
+mat = gmtl::makeTrans&lt;gmtl::Matrix44f&gt;(trans);</programlisting>
                <para>To <emphasis>change</emphasis> the translation of a transformation matrix without completely obliterating all other transformations, use the following instead:</para>
                <programlisting>gmtl::Vec3f trans(4.0, -4.231, 1.0);
 
@@ -1302,16 +1297,16 @@ mat = gmtl::makeScale&lt;Matrix44f&gt;(scale);</programlisting>
                   <primary>vrj::Matrix</primary>
                   <secondary>extracting transformation information</secondary>
                </indexterm>
-               <para>Finally, methods are provided for extracting transformations from a given matrix. The individual rotations and the translation can be read. For the following examples, assume that <varname>mat</varname> is a <classname>gmtl::Matrix44f</classname> object representing arbitrary translation, rotation, and scaling transformations. To get the Z-axis rotation information, use the following:</para>
-               <programlisting>float z_rot = gmtl::getZRot(mat);</programlisting>
+               <para>Finally, methods are provided for extracting transformations from a given matrix. The individual rotations and the translation can be read. For the following examples, assume that <varname>mat</varname> is a <classname>gmtl::Matrix44f</classname> object representing arbitrary translation, rotation, and scaling transformations. To get the Z-axis rotation information (an Euler angle), use the following:</para>
+               <programlisting>float z_rot = (gmtl::makeRot&lt;gmtl::EulerAngleXYZf&gt;(mat))[2];</programlisting>
                <para>The value return is in radians. We can also get the X-axis rotation.</para>
                <programlisting></programlisting>
-               <programlisting>float x_rot = gmtl::getXRot(mat);</programlisting>
-               <para>Getting translations is even simpler because translations are collected into a single vector easily. There are two forms for getting the translation. The first takes three <type>float</type>s by reference:</para>
-               <programlisting>float x, y, z;
+               <programlisting>float x_rot = (gmtl::makeRot&lt;gmtl::EulerAngleXYZf&gt;(mat))[0];</programlisting>
+               <para>Getting translations is even simpler because translations are collected into a single vector easily. </para>
+               <programlisting>gmtl::Vec3f trans;
 
-gmtl::getTrans(mat, x, y, z);</programlisting>
-               <para>After this, the translation in <varname>mat</varname> is stored in x, y, and z. </para>
+gmtl::setTrans(trans, mat);</programlisting>
+               <para>After this, the translation in <varname>mat</varname> is stored in trans. </para>
             </section>
             <section>
                <title>Converting to an OpenGL Performer Matrix</title>
@@ -1946,8 +1941,8 @@ void simpleApp::draw()
    Matrix44f box_offset;		
    const EulerAngleXYZf euler_ang(Math::deg2Rad(-90.0f), Math::deg2Rad(0.0f),
                                   Math::deg2Rad(0.0f));
-   box_offset = makeRot&lt;Matrix44f&gt;(euler_ang);
-   setTrans(box_offset, Vec3f(0.0, 1.0f, 0.0f));
+   box_offset = gmtl::makeRot&lt;Matrix44f&gt;(euler_ang);
+   gmtl::setTrans(box_offset, Vec3f(0.0, 1.0f, 0.0f));
    ...
    glPushMatrix();
       // Push on offset
@@ -2231,7 +2226,7 @@ public:
 void contextApp::draw()
 {
    // Get Wand matrix
-   Matrix44f wand_matrix;
+   gmtl::Matrix44f wand_matrix;
    wand_mat = *(mWand-&gt;getData());
    ...
    glPushMatrix();
