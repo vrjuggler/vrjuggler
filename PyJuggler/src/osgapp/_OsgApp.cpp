@@ -87,6 +87,7 @@ struct vrj_OsgApp_Wrapper: vrj::OsgApp
         return NULL;
     }
 
+/*
     void configSceneView(osgUtil::SceneView* p0) {
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_OsgApp_Wrapper::configSceneView()\n",
@@ -106,6 +107,7 @@ struct vrj_OsgApp_Wrapper: vrj::OsgApp
     void default_configSceneView(osgUtil::SceneView* p0) {
         vrj::OsgApp::configSceneView(p0);
     }
+*/
 
     void draw() {
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
@@ -575,7 +577,7 @@ void _Export_OsgApp()
         .def_readwrite("mHaveFocus", &vrj::App::mHaveFocus)
         .def("initScene", pure_virtual(&vrj::OsgApp::initScene))
         .def("getScene", pure_virtual(&vrj::OsgApp::getScene), return_internal_reference< 1 >())
-        .def("configSceneView", &vrj::OsgApp::configSceneView, &pyj::vrj_OsgApp_Wrapper::default_configSceneView)
+//        .def("configSceneView", &vrj::OsgApp::configSceneView, &pyj::vrj_OsgApp_Wrapper::default_configSceneView)
         .def("draw", (void (vrj::OsgApp::*)() )&vrj::OsgApp::draw, (void (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_draw)
         .def("init", (void (vrj::OsgApp::*)() )&vrj::OsgApp::init, (void (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_init)
         .def("contextInit", (void (vrj::OsgApp::*)() )&vrj::OsgApp::contextInit, (void (pyj::vrj_OsgApp_Wrapper::*)())&pyj::vrj_OsgApp_Wrapper::default_contextInit)
