@@ -313,11 +313,28 @@ vjTimeStamp* vjFlock::getPosUpdateTime (int d) {
 
 void vjFlock::UpdateData()
 {
+   int new_index, old_index, tmp;
+
    if (this->isActive() == false)
       return;
 
-   // Locks and then swap the indicies
-   swapCurrentIndexes();
+   lock.acquire();
+      // For each bird, ensure that we never swap an old value (stored in
+      // valid) over a newer value (presently in current).
+      for ( int i = 1; i <= mFlockOfBirds.getNumBirds(); i++ ) {
+         if (i == mFlockOfBirds.getTransmitter())
+            continue;
+
+         new_index = getBirdIndex(i, valid);
+         old_index = getBirdIndex(i, current);
+         theData[old_index] = theData[new_index];
+      }
+
+      // This is copied from vjInput::swapCurrentIndexes().
+      tmp = current;
+      current = valid;
+      valid = tmp;
+   lock.release();
 
    return;
 }
