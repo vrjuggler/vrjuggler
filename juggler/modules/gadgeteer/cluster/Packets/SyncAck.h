@@ -72,7 +72,7 @@ public:
     *
     * Create a device request to be sent
     */
-   SyncAck(std::string& host_name, vpr::Uint16& port, std::string& manager_id, bool& ack);
+   SyncAck(std::string& host_name, vpr::Uint16& port, std::string& manager_id, bool ack);
 
    
    /**

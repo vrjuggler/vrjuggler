@@ -54,7 +54,7 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigChunkPtr chunk)
       debugOutDependencies(chunk,vprDBG_WARNING_LVL);
       return true;
    }
-   else if (cluster::RemoteInputManager::instance()->recognizeRemoteDeviceConfig(chunk))
+   else if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk))
    {
       // Remote devices should have no dependencies since we are not actually configuring anything,
       // we are only creating a data structure that we can determine without any other chunks
@@ -152,7 +152,7 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigChunkPtr chunk)
 bool ClusterDepChecker::canHandle(jccl::ConfigChunkPtr chunk)
 {   
    return (chunk->getDescToken() == ClusterNetwork::getMachineSpecificChunkType() ||
-           cluster::RemoteInputManager::instance()->recognizeRemoteDeviceConfig(chunk) ||
+           cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk) ||
            cluster::ClusterManager::instance()->recognizeClusterManagerConfig(chunk) );
 }
 
@@ -164,7 +164,7 @@ void ClusterDepChecker::debugOutDependencies(jccl::ConfigChunkPtr chunk,int dbg_
       // the embedded chunks into the pending list
       //vprDEBUG(vprDBG_ALL,dbg_lvl) << "MachineSpecific Chunks have NO Deps!!!\n" << vprDEBUG_FLUSH;      
    }
-   else if (cluster::RemoteInputManager::instance()->recognizeRemoteDeviceConfig(chunk))
+   else if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk))
    {
       // Remote devices should have no dependencies since we are not actually configuring anything,
       // we are only creating a data structure that we can determine without any other chunks

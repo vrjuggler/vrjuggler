@@ -52,6 +52,7 @@
 //NEED TO REMOVE THESE FILES
 #include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
 #include <cluster/Plugins/ApplicationDataManager/ApplicationDataManager.h>
+#include <cluster/Plugins/SwapLockPlugin/SwapLockPlugin.h>
 
 // UserData
 #include <cluster/SerializableData.h>
@@ -118,6 +119,10 @@ namespace cluster
             else if (new_plugin == "ApplicationDataManager")
             {
                ApplicationDataManager::instance()->load();
+            }
+            else if (new_plugin == "SwapLockPlugin")
+            {
+               SwapLockPlugin::instance()->load();
             }
          }
          
@@ -204,7 +209,7 @@ namespace cluster
          // currently you can see the problem
          jccl::ConfigManager::instance()->addConfigChunkHandler(new_plugin);
          //We can still unregister it when removed below though
-         std::cout << "[ClusterManager] Adding a Manager!" << std::endl;
+         std::cout << "[ClusterManager] Adding a Manager! " << new_plugin->getManagerName() << std::endl;
       }
    }
    void ClusterManager::removePlugin(ClusterPlugin* old_manager)
@@ -310,4 +315,71 @@ namespace cluster
          sendEndBlocksAndSignalUpdate();
 //      }                                 
    }
+
+   void ClusterManager::createBarrier()
+   {  
+      vpr::Guard<vpr::Mutex> guard(mPluginsLock);
+   
+      for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
+           i != mPlugins.end() ; i++)
+      {
+         if ((*i)->isActive())
+         {  // As soon as we find a plug-in that creates a barrier, we can continue 
+            if((*i)->createBarrier())
+            {
+               return; 
+            }
+         }
+      }  
+   }
+
+   // ---- Configuration Helper Functions ----   
+   jccl::ConfigChunkPtr ClusterManager::getConfigChunkPointer(std::string& name)
+   {
+      jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
+      //cfg_mgr->lockPending();
+      //cfg_mgr->unlockPending();
+      for (std::list<jccl::ConfigManager::PendingChunk>::iterator i = cfg_mgr->getPendingBegin();
+           i != cfg_mgr->getPendingEnd() ; i++)
+      {
+         if ((*i).mChunk->getName() == name)
+         {
+            return((*i).mChunk);
+         }
+      }
+      cfg_mgr->lockActive();
+      jccl::ConfigChunkPtr temp = cfg_mgr->getActiveConfig()->get(name);
+      cfg_mgr->unlockActive();
+      return(temp);
+
+      //return(NULL); //HOW DO I DO THIS WITH BOOST SHARED POINTERS 
+   }
+
+
+   bool ClusterManager::recognizeRemoteDeviceConfig(jccl::ConfigChunkPtr chunk)
+   {  
+     if ( gadget::DeviceFactory::instance()->recognizeDevice(chunk) &&  chunk->getNum("deviceHost") > 0 )
+     {
+        std::string device_host = chunk->getProperty<std::string>("deviceHost");
+        //std::cout << "Checking: " << chunk->getName() << std::endl;
+        if ( !device_host.empty() )
+        {
+           // THIS IS A HACK: find a better way to do this
+           jccl::ConfigChunkPtr device_host_ptr = getConfigChunkPointer(device_host);
+           if (device_host_ptr.get() != NULL)
+           {
+              std::string host_name = device_host_ptr->getProperty<std::string>("host_name");
+              std::string local_host_name = cluster::ClusterNetwork::instance()->getLocalHostname();
+              //std::cout << "Host Name: " << host_name << std::endl;
+              //std::cout << "Local Host Name: " << local_host_name << std::endl;
+              if (host_name != local_host_name)
+              {
+                 return(true);
+              }// Device is on the local machine
+           }// Could not find the deviceHost in the configuration
+        }// Device is not a remote device since there is no name in the deviceHost field
+     }// Else it is not a device, or does not have a deviceHost property
+     return false;
+   }
+
 } // End of gadget namespace

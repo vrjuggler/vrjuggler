@@ -205,7 +205,6 @@ public:
    bool configAdd(jccl::ConfigChunkPtr chunk);
    bool configRemove(jccl::ConfigChunkPtr chunk);
    bool configCanHandle(jccl::ConfigChunkPtr chunk);
-   bool recognizeRemoteDeviceConfig(jccl::ConfigChunkPtr chunk);
    jccl::ConfigChunkPtr getConfigChunkPointer(std::string& name);
    vpr::ReturnStatus createPendingConfigRemove(std::string device_name);
    vpr::ReturnStatus createPendingConfigRemoveAndAdd(std::string device_name);

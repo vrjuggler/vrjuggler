@@ -66,10 +66,10 @@ namespace cluster
       mHeader = new Header(Header::RIM_PACKET,
                                       Header::RIM_SYNC_REQ,
                                       Header::RIM_PACKET_HEAD_SIZE 
-                                      + 2 
+                                      + 2 /*mHostname.size()*/
                                       + mHostname.size()
                                       + 2 /*mPort*/
-                                      + 2
+                                      + 2 /*mManager.size()*/
                                       + mManagerId.size(),0);
       serialize();
    }
