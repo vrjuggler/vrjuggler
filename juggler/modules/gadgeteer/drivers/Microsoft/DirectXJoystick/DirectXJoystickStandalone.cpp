@@ -33,19 +33,13 @@
 #include <drivers/Microsoft/DirectXJoystick/DirectXJoystickStandalone.h>
 
 
-namespace gadget
-{
-
 static LPDIRECTINPUT8       sDxObject;      // DirectInput object
 static LPDIRECTINPUTDEVICE8 sDxJoystick;    // DirectInput device
 static DIDEVICEINSTANCE     sDxDeviceInfo;
 static DIJOYSTATE           sJsData;        // joystick state data-structure
 
-// The Callback function must be static
-static BOOL CALLBACK enumerateJoysticksCallback(const DIDEVICEINSTANCE* dInstance,
-                                         void* pContext);
-static BOOL CALLBACK enumerateAxesCallback(const DIDEVICEOBJECTINSTANCE* doi,
-                                    void* pContext);
+namespace
+{
 
 BOOL CALLBACK enumerateJoysticksCallback(const DIDEVICEINSTANCE* dInstance,
                                          void* pContext)
@@ -86,6 +80,11 @@ BOOL CALLBACK enumerateAxesCallback(const DIDEVICEOBJECTINSTANCE* doi,
 
    return DIENUM_CONTINUE;
 }
+
+}
+
+namespace gadget
+{
 
 DirectXJoystickStandalone::DirectXJoystickStandalone()
 {
