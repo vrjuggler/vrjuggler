@@ -13,9 +13,13 @@
 #
 # all             - Build everything.
 # all-abi         - Build everything using all supported ABIs.
+# debug           - Build the VR Juggler libraries (dynamic and static) with
+#                   debugging symbols turned on.
 # dbg             - Build the debugging, static copy of the libraries.
 # ddso            - Build the debugging, dynamic shared object version of the
 #                   libraries.
+# optim           - Build the VR Juggler libraries (dynamic and static) with
+#                   optimization flags enabled.
 # opt             - Build the optimized, static version of the libraries.
 # dso             - Build the dynamic shared object version of the libraries.
 # obj             - Build the object files using the default value for
@@ -38,11 +42,14 @@
 #                   the Data directory, the configuration GUI and the test
 #                   code.
 # install-all-abi - Install every ABI possible on the target platform.
-# install         - Install the libraries, all header files, the Data
-#                   directory, the configuration GUI and the test code.
+# install         - Install the full debugging version of VR Juggler (with
+#                   both static and dynamic libraries). 
+# install-debug   - Same as 'install'.
 # install-dbg     - Install the debugging, static version of the libraries.
 # install-ddso    - Install the debugging, dynamic shared object version of
 #                   the libraries.
+# install-optim   - Install the full optimized version of VR Juggler (with
+#                   both static and dynamic libraries).
 # install-opt     - Install the optimized, static version of the libraries.
 # install-dso     - Install the dynamic shared object version of the libraries.
 # install-headers - Install only the header files.
@@ -65,7 +72,7 @@
 # version of the libraries.
 # -----------------------------------------------------------------------------
 
-default: dbg ddso
+default: debug
 
 # Define ${_LOCAL_CLEAN} to inform the shared clean target that there is a
 # '_clean' target to be run besides the standard 'clean' target.  This must
@@ -325,6 +332,24 @@ ifeq (${PF_API}, Y)
 	cd ${_LIB_LINK_DIR} && ln -sf ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
 endif
 
+# ----------------------------------------------------------------------------
+# Make the debugging version of the libraries building both static and shared
+# versions of the library binaries.
+# ----------------------------------------------------------------------------
+debug:
+	@echo "========================================================"
+	@echo "Making debugging version of VR Juggler"
+	@echo "========================================================"
+	@${MAKE} beforebuild
+	@${MAKE} _build_dbg_obj
+	@${MAKE} _build_dbg_lib_static
+	@${MAKE} _build_dbg_lib_shared
+	@${MAKE} _check_gui
+	@${MAKE} afterbuild
+	@echo "========================================================"
+	@echo "$@ complete"
+	@echo "========================================================"
+
 # ---------------------------------------------
 # Make the debugging version of the libraries.
 # ---------------------------------------------
@@ -351,6 +376,24 @@ ddso:
 	@${MAKE} beforebuild
 	@${MAKE} _build_dbg_obj
 	@${MAKE} _build_dbg_lib_shared
+	@${MAKE} _check_gui
+	@${MAKE} afterbuild
+	@echo "========================================================"
+	@echo "$@ complete"
+	@echo "========================================================"
+
+# ----------------------------------------------------------------------------
+# Make the optimized version of the libraries building both static and shared
+# versions of the library binaries.
+# ----------------------------------------------------------------------------
+optim:
+	@echo "========================================================"
+	@echo "Making optimized version of VR Juggler"
+	@echo "========================================================"
+	@${MAKE} beforebuild
+	@${MAKE} _build_opt_obj
+	@${MAKE} _build_opt_lib_static
+	@${MAKE} _build_opt_lib_shared
 	@${MAKE} _check_gui
 	@${MAKE} afterbuild
 	@echo "========================================================"
@@ -681,15 +724,16 @@ _install_post_libs:
 	@${MAKE} install-data
 	@${MAKE} install-gui
 
-# -------------------------------------------------------------------------
-# Do a full installation of the static debugging version of the libraries.
-# -------------------------------------------------------------------------
-install:
+# ---------------------------------------------
+# Install the debugging version of VR Juggler.
+# ---------------------------------------------
+install install-debug:
 	@echo "==============================================================="
-	@echo "Starting static debugging installation"
+	@echo "Installing debugging version of VR Juggler"
 	@echo "==============================================================="
 	@${MAKE} beforeinstall
 	@${MAKE} install-dbg
+	@${MAKE} install-ddso
 	@${MAKE} _install_post_libs
 	@${MAKE} afterinstall
 
@@ -734,6 +778,19 @@ ifeq (${PF_API}, Y)
           ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
 endif
 	@${MAKE} _DEFAULT_DIR="${_DEBUG_DIR}" _install_lib_links
+
+# ------------------------------------------------------------
+# Install the optimized version of VR Juggler.
+# ------------------------------------------------------------
+install-optim:
+	@echo "==============================================================="
+	@echo "Installing optimized version of VR Juggler"
+	@echo "==============================================================="
+	@${MAKE} beforeinstall
+	@${MAKE} install-opt
+	@${MAKE} install-dso
+	@${MAKE} _install_post_libs
+	@${MAKE} afterinstall
 
 # ------------------------------------------------------------
 # Install only the static optimized version of the libraries.
