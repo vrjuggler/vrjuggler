@@ -101,7 +101,7 @@ public class VarListPanel extends ExpandablePanel implements ConfigElementListen
       if(ConfigElement.class == prop_def.getType())
       {
          // Use the PropertySheetFactory to add an additional embedded element.
-         PropertySheetFactory.instance().addEmbeddedElement((PropertySheet)mComponent, elm, evt.getValue(), prop_def, 2);
+         PropertySheetFactory.instance().addEmbeddedElement((PropertySheet)mComponent, mConfigContext, elm, evt.getValue(), prop_def, 2);
       }
       else
       {

@@ -118,7 +118,7 @@ public class PropertySheetFactory extends PropertyComponent
             if(value.getClass() == ConfigElement.class)
             {
                // Embedded Element.
-               addEmbeddedElement(sheet, elm, value, prop_def, row);
+               addEmbeddedElement(sheet, ctx, elm, value, prop_def, row);
                ++row;
             }
             else
@@ -193,7 +193,7 @@ public class PropertySheetFactory extends PropertyComponent
          if(value.getClass() == ConfigElement.class)
          {
             // Embedded Element.
-            addEmbeddedElement(sheet, elm, value, prop_def, row);
+            addEmbeddedElement(sheet, ctx, elm, value, prop_def, row);
          }
          else // List of normal values.
          {
@@ -305,11 +305,12 @@ public class PropertySheetFactory extends PropertyComponent
       repaint();
    }
    
-   public void addEmbeddedElement(PropertySheet sheet, ConfigElement elm, Object value, PropertyDefinition prop_def, int row)
+   public void addEmbeddedElement(PropertySheet sheet, ConfigContext ctx, ConfigElement elm,
+                                  Object value, PropertyDefinition prop_def, int row)
    {
       // Embedded Element
       // Adding a List
-      EmbeddedElementPanel editor_list = new EmbeddedElementPanel((ConfigElement)value, sheet.getColor());
+      EmbeddedElementPanel editor_list = new EmbeddedElementPanel(ctx, (ConfigElement)value, sheet.getColor());
       
       ((TableLayout)sheet.getLayout()).insertRow(row, TableLayout.PREFERRED);
       
