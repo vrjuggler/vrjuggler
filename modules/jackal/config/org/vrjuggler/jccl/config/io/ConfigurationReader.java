@@ -74,8 +74,12 @@ public class ConfigurationReader
       try
       {
          // Build a DOM tree from the XML stream
-         SAXBuilder builder = new SAXBuilder(false);
-         Document doc       = builder.build(this);
+         SAXBuilder builder =
+            new SAXBuilder("org.apache.xerces.parsers.SAXParser", true);
+         builder.setFeature("http://apache.org/xml/features/validation/schema",
+                            true);
+         builder.setEntityResolver(new ConfigSchemaResolver());
+         Document doc = builder.build(this);
 
          // Bring the file up to date with the current file format version
          doc = upgrade(doc);

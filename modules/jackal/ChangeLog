@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-18-2004 patrickh    Re-enabled validation of .jconf and .jdef files
+                        loaded into the Java configuration editor Bean.
+                        NEW VERSION: 0.19.2
 Oct-11-2004 patrickh    Updated to require VPR 0.40.0.
                         NEW VERSION: 0.19.1
 Oct-07-2004 patrickh    Extended the property definition editor to allow the
