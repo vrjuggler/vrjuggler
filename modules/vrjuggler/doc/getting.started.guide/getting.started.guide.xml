@@ -803,6 +803,63 @@ value</screen>
 % VPR_DEBUG_DISALLOW_CATEGORIES = "DBG_CONFIG DBG_RECONFIGURATION"</screen>
           </listitem>
         </varlistentry>
+
+        <varlistentry>
+          <term>NO_RTRC_PLUGIN</term>
+
+          <listitem>
+            <para>Setting this environment variable to any value will prevent
+            the <ulink url="http://www.vrjuggler.org/jccl/">JCCL</ulink>
+            Config Manager from attempting to load the remote run-time
+            reconfiguration plug-in. This plug-in is used to allow VRJConfig
+            to connect to a running VR Juggler application so that the
+            application may be reconfigured on the fly.</para>
+
+            <para>Setting this environment variable is useful in two
+            scenarios: when using SPROC threads on IRIX and when using <ulink
+            url="http://www.vrjuggler.org/pyjuggler/">PyJuggler</ulink> on Mac
+            OS X. The current implementation of the remote run-time
+            reconfiguration plug-in is based on <ulink
+            url="http://omniorb.sourceforge.net/">omniORB</ulink>, which
+            cannot be used with SPROC threads. In that case, there will not be
+            a plug-in available to load, and setting this enviornment variable
+            ultimately prevents the IRIX run-time loader from printing a nasty
+            message saying as much. On Mac OS X, static data initialization in
+            omniORB fails when the omniORB libraries are loaded into the
+            Python interpreter application space, and this leads to a crash.
+            Setting this environment variable allows PyJuggler applications to
+            run correctly.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>NO_PERF_PLUGIN</term>
+
+          <listitem>
+            <para>Setting this environment variable to any value will prevent
+            the VR Juggler Performance Mediator from attempting to load the
+            remote performance visualization plug-in. This plug-in is used to
+            allow a JavaBean loaded by the <ulink
+            url="http://www.vrjuggler.org/tweek/">Tweek</ulink> Java GUI to
+            connect to a running VR Juggler application and display live
+            performance metrics.</para>
+
+            <para>Setting this environment variable is useful in two
+            scenarios: when using SPROC threads on IRIX and when using <ulink
+            url="http://www.vrjuggler.org/pyjuggler/">PyJuggler</ulink> on Mac
+            OS X. The current implementation of the remote performance
+            visualization plug-in is based on <ulink
+            url="http://omniorb.sourceforge.net/">omniORB</ulink>, which
+            cannot be used with SPROC threads. In that case, there will not be
+            a plug-in available to load, and setting this enviornment variable
+            ultimately prevents the IRIX run-time loader from printing a nasty
+            message saying as much. On Mac OS X, static data initialization in
+            omniORB fails when the omniORB libraries are loaded into the
+            Python interpreter application space, and this leads to a crash.
+            Setting this environment variable allows PyJuggler applications to
+            run correctly.</para>
+          </listitem>
+        </varlistentry>
       </variablelist>
     </section>
   </chapter>
