@@ -369,6 +369,8 @@ int omni_main_i(int argc, char** const argv)
       OMNI_LDFLAGS_LINK_EXE="/libpath:$OMNI_LIB_DIR"
 
       AC_DEFINE_UNQUOTED(OMNIORB_VER, $OMNI_VER)
+      AC_DEFINE_UNQUOTED(TWEEK_INCLUDE_CORBA_H, <omniORB$OMNI_VER/CORBA.h>)
+      AC_DEFINE_UNQUOTED(TWEEK_ORB_VER_STRING, "omniORB$OMNI_VER")
    else
       AC_MSG_ERROR(*** omniORB required for Tweek **)
    fi
