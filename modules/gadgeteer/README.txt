@@ -4,10 +4,10 @@
 #                       Virtual Reality Applications Center (VRAC)
 #
 # Contributors (Alphabetically): 
-#     Albert Baker, Allen Bierbaum, Aaron Bryden, Carolina Cruz-Neira, 
-#     Patrick Hartling, Andrew Himberger, Chris Johanson, Christopher Just,
-#     Chang Kim, Kevin Meinert, Eric Olson, Kevin Puetz, Nicolas Tarrin,
-#     Ben Thompson
+#     Albert Baker, Allen Bierbaum, Aron Bierbaum, Josh Brown, Aaron Bryden,
+#     Carolina Cruz-Neira, Patrick Hartling, Andrew Himberger, Jason Jerald,
+#     Chris Johanson, Christopher Just, Chang Kim, Kevin Meinert, Eric Olson,
+#     Kevin Puetz, Ben Scott, Anthony Steed, Nicolas Tarrin, Ben Thompson
 # 
 
 ------------------
