@@ -723,6 +723,10 @@ public class ConfigModule extends DefaultCoreModule {
             Core.consoleErrorMessage (component_name, "Parsing error: " + e);
             return null;
         }
+        catch (ConfigParserException e) {
+            Core.consoleErrorMessage (component_name, "Parsing error: " + e.getMessage());
+            return null;
+        }
     }
 
 
@@ -780,6 +784,10 @@ public class ConfigModule extends DefaultCoreModule {
 	}
         catch (IOException e) {
             Core.consoleErrorMessage (component_name, "Parsing error: " + e);
+            return null;
+        }
+        catch (ConfigParserException e) {
+            Core.consoleErrorMessage (component_name, "Parsing error: " + e.getMessage());
             return null;
         }
     }
