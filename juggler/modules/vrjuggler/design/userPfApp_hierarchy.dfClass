@@ -64,7 +64,7 @@ class __options {
 <oigroup:<oiref:cpp#Class#vrj::PfApp:oiref>=20,290,180,260,0:oigroup>
 <oigroup:<oiref:cpp#Extends#userPfApp#vrj::PfApp:oiref>=280,414,200,414:oigroup>
 <oigroup:<oiref:cpp#Class#vrj::App:oiref>=20,10,180,220,0:oigroup>
-<oigroup:<oiref:cpp#Class#userPfApp:oiref>=280,300,122,229,1:oigroup>
+<oigroup:<oiref:cpp#Class#userPfApp:oiref>=280,300,114,173,1:oigroup>
 */
 class __positions {
 }
