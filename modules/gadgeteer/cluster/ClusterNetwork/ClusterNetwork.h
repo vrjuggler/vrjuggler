@@ -285,12 +285,6 @@ public:
     */
    static std::string getMachineSpecificChunkType() { return std::string( "MachineSpecific" ); }
 
-   vpr::Uint16 generateLocalId()
-   { return mLocalIdGen.generateNewId(); }
-
-   void releaseLocalId(vpr::Uint16 remove)
-   { mLocalIdGen.releaseId(remove); }
-
 private:   
    std::vector<cluster::ClusterNode*>     mClusterNodes;       /**< Current configuration.     */
    vpr::Mutex                             mClusterNodesLock;   /**< Lock on active config list.*/
