@@ -37,7 +37,6 @@
 #include <vpr/vpr.h>
 #include <vpr/Util/Assert.h>
 
-#include <jccl/Config/ParseUtil.h>
 #include <jccl/Config/ConfigTokens.h>
 #include <jccl/Config/ElementFactory.h>
 #include <jccl/Config/PropertyDefinition.h>
