@@ -186,16 +186,16 @@ void SimDigitalGlove::updateFingerAngles()
     vprASSERT( RIGHT_HAND < GADGET_MAX_GLOVE_DEVS );
 
     // use the digital data set the angles for each joint.
-    mLeftHand.setFingers( mDigitalData[LPINKY].getDigitalData() == 1,
-                     mDigitalData[LRING].getDigitalData() == 1,
-                     mDigitalData[LMIDDLE].getDigitalData() == 1,
-                     mDigitalData[LINDEX].getDigitalData() == 1,
-                     mDigitalData[LTHUMB].getDigitalData() == 1 );
-    mRightHand.setFingers( mDigitalData[RPINKY].getDigitalData() == 1,
-                     mDigitalData[RRING].getDigitalData() == 1,
-                     mDigitalData[RMIDDLE].getDigitalData() == 1,
-                     mDigitalData[RINDEX].getDigitalData() == 1,
-                     mDigitalData[RTHUMB].getDigitalData() == 1 );
+    mLeftHand.setFingers( (int)mDigitalData[LPINKY] == 1,
+                     (int)mDigitalData[LRING] == 1,
+                     (int)mDigitalData[LMIDDLE] == 1,
+                     (int)mDigitalData[LINDEX] == 1,
+                     (int)mDigitalData[LTHUMB] == 1 );
+    mRightHand.setFingers( (int)mDigitalData[RPINKY] == 1,
+                     (int)mDigitalData[RRING] == 1,
+                     (int)mDigitalData[RMIDDLE] == 1,
+                     (int)mDigitalData[RINDEX] == 1,
+                     (int)mDigitalData[RTHUMB] == 1 );
 
     //Now, set the ugly ambiguously named array, mTheData:
 
