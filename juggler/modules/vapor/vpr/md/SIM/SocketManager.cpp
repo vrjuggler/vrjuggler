@@ -267,12 +267,13 @@ namespace sim
       bool end_of_path;
       msg->incNextHop(end_of_path);
 
+      vpr::sim::Controller* controller = vpr::sim::Controller::instance();
+
       if ( ! end_of_path )
       {
          NetworkGraph::net_vertex_t second_hop(msg->getNextHop());
          NetworkGraph::net_edge_t first_edge;
          bool found;
-         vpr::sim::Controller* controller = vpr::sim::Controller::instance();
          vpr::sim::NetworkGraph& net_graph = controller->getNetworkGraph();
 
          boost::tie(first_edge, found) = net_graph.getEdge(first_hop, second_hop);
@@ -315,6 +316,8 @@ namespace sim
             << msg->getDestinationSocket() << ") immediately\n"
             << vprDEBUG_FLUSH;
          msg->getDestinationSocket()->addArrivedMessage(msg);
+         controller->addLocalhostDeliveryEvent(controller->getClock().getCurrentTime(),
+                                               msg->getDestinationSocket());
       }
    }
 
