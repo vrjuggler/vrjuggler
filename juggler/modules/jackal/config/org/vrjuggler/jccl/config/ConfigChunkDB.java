@@ -50,6 +50,10 @@ import org.jdom.output.XMLOutputter;
 public class ConfigChunkDB
    implements Cloneable
 {
+   public static final double CONFIG_VERSION_VALUE = 2.0;
+
+   private static final String CONFIG_VERSION_ATTR = "config.db.version";
+
    /**
     * Creates a new ConfigChunk database initially empty and the name
     * "Untitled".
@@ -64,6 +68,7 @@ public class ConfigChunkDB
 
       // Create a new document for this DB.
       mDoc = new Document();
+      addVersion(mDoc);
       mDoc.setRootElement(new Element(ConfigTokens.chunk_db_TOKEN));
    }
 
@@ -765,6 +770,23 @@ public class ConfigChunkDB
             l[i].configChunksCleared(e);
          }
       }
+   }
+
+   /**
+    * Adds the version processing directive to the given Document instance.
+    */
+   private void addVersion(Document doc)
+   {
+      // Create a map to hold the attributes for the processing instruction
+      // to be created.
+      java.util.Map pi_attrs = new java.util.HashMap();
+
+      // Set the version information.
+      pi_attrs.put(CONFIG_VERSION_ATTR, String.valueOf(CONFIG_VERSION_VALUE));
+
+      ProcessingInstruction ver =
+         new ProcessingInstruction(ConfigTokens.SETTINGS_INSTRUCTION, pi_attrs);
+      doc.addContent(ver);
    }
 
    /** Vector of ConfigChunks. */
