@@ -208,6 +208,11 @@ public class IntersensePanel extends JPanel implements CustomEditor
       return("Intersense Editor");
    }
 
+   public ActionListener getHelpActionListener()
+   {
+      return null;
+   }
+
    /**
     * Initialize the GUI created with JBuilder.
     */

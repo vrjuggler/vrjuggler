@@ -39,6 +39,7 @@ import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.picking.behaviors.PickRotateBehavior;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -253,6 +254,11 @@ public class SurfaceDisplayEditor extends JSplitPane implements CustomEditor
       return("3D Surface Editor");
    }
    
+   public ActionListener getHelpActionListener()
+   {
+      return null;
+   }
+
    public void setConfig(ConfigContext context, ConfigElement elm)
    {
       mContext = context;
