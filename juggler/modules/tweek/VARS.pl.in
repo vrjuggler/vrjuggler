@@ -90,7 +90,7 @@ $VARS{'JAVAC'}        = '@JAVAC@';
 $VARS{'JAR'}          = '@JAR@';
 $VARS{'JCPS'}         = '@JCPS@';
 $VARS{'JDOM_JAR'}     = '@JDOM_JAR@';
-$VARS{'JAVA-ORB_JAR'} = '@JAVA-ORB_JAR@';
+$VARS{'JAVA_ORB_JAR'} = '@JAVA_ORB_JAR@';
 
 # Miscellaneous options.
 $VARS{'EXEEXT'}          = '@EXEEXT@';
