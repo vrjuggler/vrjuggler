@@ -1,6 +1,6 @@
 Builder: JExplorerBuilder V 1. 0. 7   
 < treecontrol imageurl="../../images/Icons/W98_Images/" >
-	< font face="Helvetica" style="Plain" size="10">
+	< font face="Helvetica" style="Plain" size="${TREE_FONTSIZE}">
 		< idefault title="Item" image="Folder_Closed.gif" imagetwo="" info="VR Juggler" link="" rlink="" target="Body" rtarget="NewWindow" >
 
 			< rootfolder title="VJ Control" 
