@@ -15,6 +15,7 @@
 
 #include <TestCases/Util/ReturnStatusTest.h>
 #include <TestCases/Util/IntervalTest.h>
+#include <TestCases/Util/GUIDTest.h>
 
 #include <TestCases/BoostTest.h>
 #include <TestCases/SystemTest.h>
@@ -61,6 +62,7 @@ int main (int ac, char **av)
    noninteractive_suite->addTest(vprTest::BoostTest::suite());
    noninteractive_suite->addTest(vprTest::SystemTest::suite());
    noninteractive_suite->addTest(vprTest::IntervalTest::suite());
+   noninteractive_suite->addTest(vprTest::GUIDTest::suite());
    noninteractive_suite->addTest(vprTest::InetAddrTest::suite());
    noninteractive_suite->addTest(vprTest::SocketTest::suite());
    noninteractive_suite->addTest(vprTest::NonBlockingSocketTest::suite());
@@ -77,6 +79,7 @@ int main (int ac, char **av)
    TestSuite* metrics_suite = new TestSuite("metrics");
 
    metrics_suite->addTest(vprTest::IntervalTest::metric_suite());
+   metrics_suite->addTest(vprTest::GUIDTest::metric_suite());
    metrics_suite->addTest(vprTest::SocketBandwidthIOStatsTest::metric_suite());
 
    runner.addTest("metrics", metrics_suite);
