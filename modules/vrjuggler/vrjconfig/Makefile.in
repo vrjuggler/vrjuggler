@@ -56,8 +56,14 @@ VRJCONFIG_DIR		= $(subst .,/,$(VRJCONFIG_PKG))
 VRJCONFIG_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(VRJCONFIG_DIR)/*.java))
 VRJCONFIG_CLASSES	= $(VRJCONFIG_SRCS:.java=.class)
 
+UI_PKG			= org.vrjuggler.vrjconfig.ui
+UI_DIR			= $(subst .,/,$(UI_PKG))
+UI_SRCS			= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(UI_DIR)/*.java))
+UI_CLASSES		= $(UI_SRCS:.java=.class)
+
 JAVA_SRCS = \
-	$(VRJCONFIG_SRCS)
+	$(VRJCONFIG_SRCS) \
+	$(UI_SRCS)
 
 JAVA_CLASSES = $(JAVA_SRCS:.java=.class)
 
@@ -89,9 +95,10 @@ ifneq ($(BEANS), )
 endif
 endif
 
-VRJConfig.jar: $(VRJCONFIG_CLASSES)
+VRJConfig.jar: $(VRJCONFIG_CLASSES) $(UI_CLASSES)
 	$(JAR) cvf $@ \
-		$(VRJCONFIG_DIR)/*.class
+		$(VRJCONFIG_DIR)/*.class \
+		$(UI_DIR)/*.class
 	cd $(srcdir) && $(JAR) uvf $(topdir)/vrjconfig/$@ \
 		$(VRJCONFIG_DIR)/images/*.gif \
 		LICENSE-java-laf.txt
