@@ -761,7 +761,7 @@ public class Placer
    /**
     * Notifies all listeners that the given index has been selected.
     *
-    * @param idx  the selected index or -1 if nothing is selected
+    * @param index  the selected index or -1 if nothing is selected
     */
    protected void fireItemSelected(int index)
    {
