@@ -529,6 +529,7 @@ vjKernel::vjKernel()
    //mInitialChunkDB = NULL;
    //mChunkDB = NULL;
 
+#ifdef VJ_VERSION
    // Print out the Juggler version number when the kernel is created.
    vjDEBUG(vjDBG_BASE, 0) << "======================================"
                           << std::endl << vjDEBUG_FLUSH;
@@ -537,5 +538,6 @@ vjKernel::vjKernel()
                           << std::endl << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_BASE, 0) << "======================================"
                           << std::endl << vjDEBUG_FLUSH;
+#endif
 }
 
