@@ -42,18 +42,13 @@
 #ifndef _VPR_MUTEX_H_
 #define _VPR_MUTEX_H_
 
-//----------------------------------------------
-// vpr::Mutex
-//
-// Purpose:
-//    Defines a mutex wrapper.  No base class because
-//   we don't want to have to use virtual functions.
-//
-// Author:
-//	Allen Bierbaum
-//
-// Date: 1-20-97
-//-----------------------------------------------
+/**
+ * Defines a mutex wrapper.  No base class because
+ *  we don't want to have to use virtual functions.
+ *
+ * @author Allen Bierbaum
+ * @date 1-20-97
+ */
 
 #include <vpr/vprConfig.h>
 

@@ -54,19 +54,12 @@
 
 namespace vpr {
 
-//----------------------------------------------
-// vpr::RWMutex
-//
-// Purpose:
-//:    vpr::RWMutex wrapper
-//
-//
-// Author:
-//	Allen Bierbaum
-//
-// Date: 1-31-97
-//-----------------------------------------------
-//!PUBLIC_API:
+/**
+ * vpr::RWMutex wrapper.
+ *
+ * @author Allen Bierbaum
+ * @date 1-31-97
+ */
 class VPR_CLASS_API RWMutex
 {
 public:
@@ -80,73 +73,62 @@ public:
     ~RWMutex(void)
     {}
 
-    //---------------------------------------------------------
-    //: Lock the mutex.
-    //
-    //! RETURNS:  1 - Acquired
-    //! RETURNS: -1 - Error
-    //---------------------------------------------------------
+    /**
+     * Locks the mutex.
+     *
+     * @return 1 is returned if the mutex is acquired.<br>
+     *         -1 is returned upon error.
+     */
     int acquire()
     {
         return acquireWrite();
     }
 
-    //----------------------------------------------------------
-    //: Acquire a read mutex.
-    //----------------------------------------------------------
+    /// Acquires a read mutex.
     int acquireRead(void);
 
-    //----------------------------------------------------------
-    //: Acquire a write mutex.
-    //----------------------------------------------------------
+    /// Acquires a write mutex.
     int acquireWrite(void);
 
-    //---------------------------------------------------------
-    //: Trys to acquire the mutex.
-    //  Wait until the semaphore value is greater than 0.
-    //  Then decrement by 1 and return.
-    //  P operation.
-    //
-    //! RETURNS: 1 - Acquired
-    //! RETURNS: 0 - Not acquired
-    //---------------------------------------------------------
+    /**
+     * Tries to acquire the mutex.
+     * Wait until the semaphore value is greater than 0.
+     * Then decrement by 1 and return.
+     * P operation.
+     *
+     * @return 1 is returned if the mutex is acquired.<br>
+     *         0 is returned if the mutex is not acquired.
+     */
     int tryAcquire ()
     {
         return tryAcquireWrite();
     }
 
-    //----------------------------------------------------------
-    //: Try to acquire a read mutex.
-    //----------------------------------------------------------
+    /// Tries to acquire a read mutex.
     int tryAcquireRead (void);
 
-    //----------------------------------------------------------
-    //: Try to acquire a write mutex.
-    //----------------------------------------------------------
+    /// Tries to acquire a write mutex.
     int tryAcquireWrite (void);
 
-    //---------------------------------------------------------
-    //: Release the mutex.
-    //
-    //! RETURNS:  0 - Success
-    //! RETURNS: -1 - Error
-    //---------------------------------------------------------
+    /**
+     * Releases the mutex.
+     *
+     * @return 0 is returned on success; -1 on error.
+     */
     int release(void);
 
-    //------------------------------------------------------
-    //:	Test the current lock status.
-    //
-    //! RETURNS: 0 - Not locked
-    //! RETURNS: 1 - Locked
-    //------------------------------------------------------
+    /**
+     *Tests the current lock status.
+     *
+     * @return 0 is returned to indicate that the mutex is not locked.<br>
+     *         1 is returned when the mutex is locked.
+     */
     int test()
     {
         return stateLock.test();
     }
 
-    //---------------------------------------------------------
-    //: Dump the mutex debug stuff and current state.
-    //---------------------------------------------------------
+    /// Dumps the mutex debug stuff and current state.
     void dump (FILE* dest = stderr,
                const char* message = "\n------ Mutex Dump -----\n") const
     {
@@ -154,15 +136,17 @@ public:
     }
 
 protected:
-    Mutex stateLock;        //: Serialize access to internal state.
-    CondVar waitingReaders; //: Reader threads waiting to acquire the lock.
-    int numWaitingReaders;    //: Number of waiting readers.
+    Mutex stateLock;        //! Serialize access to internal state.
+    CondVar waitingReaders; //! Reader threads waiting to acquire the lock.
+    int numWaitingReaders;  //! Number of waiting readers.
 
-    CondVar waitingWriters; //: Writer threads waiting to acquire the lock.
-    int numWaitingWriters;    //: Number of waiting writers.
+    CondVar waitingWriters; //! Writer threads waiting to acquire the lock.
+    int numWaitingWriters;  //! Number of waiting writers.
 
-    // Value is -1 if writer has the lock, else this keeps track of the
-    // number of readers holding the lock.
+    /**
+     * Value is -1 if writer has the lock, else this keeps track of the
+     * number of readers holding the lock.
+     */
     int refCount;
 
     // = Prevent assignment and initialization.

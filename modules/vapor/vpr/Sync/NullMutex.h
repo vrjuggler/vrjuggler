@@ -42,26 +42,17 @@
 #ifndef _vprNullMutex_h_
 #define _vprNullMutex_h_
 
-//----------------------------------------------
-// vpr::NullMutex
-//
-// Purpose:
-//    Null mutex wrapper.  Used to pass a do nothing
-//	mutex as a template type.
-//
-// Author:
-//	Allen Bierbaum
-//
-// Date: 1-21-97
-//-----------------------------------------------
-
 #include <vpr/vprConfig.h>
 
 
 namespace vpr {
 
-//: Null mutex wrapper.  Used to pass a "do nothing" mutex as a template type.
-//!PUBLIC_API:
+/**
+ * Null mutex wrapper.  Used to pass a do nothing mutex as a template type.
+ *
+ * @author Allen Bierbaum
+ * @date 1-21-97
+ */
 class VPR_CLASS_API NullMutex
 {
 public:
@@ -69,86 +60,75 @@ public:
     ~NullMutex() {}
 
 
-    //---------------------------------------------------------
-    //: Lock the mutex.
-    //
-    //! RETURNS:  1 - Acquired
-    //! RETURNS: -1 - Error
-    //---------------------------------------------------------
+    /**
+     * Locks the mutex.
+     *
+     * @return 1 is returned if the mutex is acquired.<br>
+     *         -1 is returned if an error occurs.
+     */
     int acquire() const
     {
         return 1;
     }
 
-    //----------------------------------------------------------
-    //: Acquire a read mutex.
-    //----------------------------------------------------------
+    /// Acquires a read mutex.
     int acquireRead() const
     {
         return this->acquire();	    // No special "read" semaphore -- For now
     }
 
-    //----------------------------------------------------------
-    //: Acquire a write mutex.
-    //----------------------------------------------------------
+    /// Acquires a write mutex.
     int acquireWrite() const
     {
         return this->acquire();	    // No special "write" semaphore -- For now
     }
 
-    //---------------------------------------------------------
-    //: Try to acquire the lock.  Returns immediately even if
-    //+ we don't acquire the lock.
-    //
-    //! RETURNS: 1 - Acquired
-    //! RETURNS: 0 - Not acquired
-    //---------------------------------------------------------
+    /**
+     * Try to acquire the lock.  Returns immediately even if we don't acquire
+     * the lock.
+     *
+     * @return 1 is returned if the mutex is acquired.<br>
+     *         0 is returned if the mutex is not acquired.
+     */
     int tryAcquire () const
     {
         return 1;	    // Try 100 spins.
     }
 
-    //----------------------------------------------------------
-    //: Try to acquire a read mutex.
-    //----------------------------------------------------------
+    /// Tries to acquire a read mutex.
     int tryacquire_read () const
     {
         return this->tryAcquire();
     }
 
-    //----------------------------------------------------------
-    //: Try to acquire a write mutex.
-    //----------------------------------------------------------
+    /// Tries to acquire a write mutex.
     int tryacquire_write () const
     {
         return this->tryAcquire();
     }
 
-    //---------------------------------------------------------
-    //: Release the mutex.
-    //
-    //! RETURNS:  0 - Success
-    //! RETURNS: -1 - Error
-    //---------------------------------------------------------
+    /**
+     * Release the mutex.
+     *
+     * @return 0 is returned on success; -1 is returned otherwise.
+     */
     int release() const
     {
         return 0;
     }
 
-    //------------------------------------------------------
-    //: Test the current lock status.
-    //
-    //! RETURNS: 0 - Not locked
-    //! RETURNS: 1 - Locked
-    //------------------------------------------------------
+    /**
+     * Tests the current lock status.
+     *
+     * @return 0 is returned if the mutex is not locked.<br>
+     *         1 is returend if the mutex is locked.
+     */
     int test()
     {
         return 0;     // Just return 0 since it is a null lock
     }
 
-    //---------------------------------------------------------
-    //: Dump the mutex debug stuff and current state.
-    //---------------------------------------------------------
+    /// Dumps the mutex debug stuff and current state.
     void dump (FILE* dest = stderr, const char* message = "\n------ Mutex Dump -----\n") const
     {
        std::cerr << message << "NULL Mutex\n";

@@ -49,34 +49,28 @@
 
 namespace vpr {
 
-//----------------------------------------------
-// vpr::Guard
-//
-// Purpose:
-//    Guard wrapper
-//
-//
-// Author:
-//	Allen Bierbaum
-//
-// Date: 1-31-97
-//-----------------------------------------------
-
-//: Guard wrapper.
-//!PUBLIC_API:
+/**
+ * Guard wrapper.
+ *
+ * @author Allen Bierbaum
+ *
+ * @date 1-31-97
+ */
 template <class LOCK>
 class Guard
 {
 public:
-   //: Acquire the lock implicitly.
-   // If block = 1 then use a blocking acquire
+   /**
+    * Acquires the lock implicitly.
+    * If block = 1 then use a blocking acquire.
+    */
    Guard(LOCK &lock, int block = 1)
    : theLock(&lock)
    {
       lockStatus = block ? acquire() : tryAcquire();
    }
 
-   //: Release the lock
+   /// Releases the lock.
    ~Guard()
    {
       if (lockStatus >= 0)
@@ -85,25 +79,27 @@ public:
       }
    }
 
-   //! RETURNS: 1 - Locked
-   //! RETURNS: 0 - Not locked
+   /**
+    * @return 1 is returned if this guard is locked.<br>
+    *         0 is returned if this guard is not locked.
+    */
    int locked() {
       return (lockStatus >= 0);  // != -1
    }
 
-   //: Acquire the lock
+   /// Acquires the lock.
    int acquire()
    {
       return theLock->acquire();
    }
 
-   //: Try to acquire lock
+   /// Tries to acquire lock.
    int tryAcquire()
    {
       return theLock->tryAcquire();
    }
 
-   //: Explicity release the lock
+   /// Explicity releases the lock.
    int release()
    {
       return theLock->release();
@@ -111,8 +107,8 @@ public:
 
 
 private:
-   LOCK* theLock;	//: The lock that we are using
-   int   lockStatus;	//: Are we locked or not
+   LOCK* theLock;	//! The lock that we are using
+   int   lockStatus;	//! Are we locked or not
 };
 
 }; // End of vpr namespace
