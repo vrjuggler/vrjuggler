@@ -42,6 +42,7 @@ import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 
 public class SimulatorViewportCreateDialog
    extends ViewportCreateDialog
+   implements EditorConstants
 {
    public SimulatorViewportCreateDialog(Container parent)
    {
@@ -52,7 +53,7 @@ public class SimulatorViewportCreateDialog
                                         ConfigElement viewportElt)
    {
       super("Basic Simulator Viewport Parameters", ctx, viewportElt,
-            EditorConstants.simulatorViewportType);
+            SIMULATOR_VIEWPORT_TYPE);
 
       ConfigBrokerProxy broker = new ConfigBrokerProxy();
       ConfigDefinition sim_def = broker.getRepository().get("default_simulator");

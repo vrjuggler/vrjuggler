@@ -45,7 +45,9 @@ import java.beans.*;
 
 public class DisplayWindowEditorPanel
    extends JPanel
-   implements CustomEditor, InternalFrameListener
+   implements CustomEditor
+            , InternalFrameListener
+            , EditorConstants
 {
    /**
     * For testing purposes only.
@@ -63,7 +65,7 @@ public class DisplayWindowEditorPanel
    public DisplayWindowEditorPanel()
    {
       // Register ourselves with the CustomEditorRegistry.
-      CustomEditorRegistry.registerEditor(EditorConstants.displayWindowType,
+      CustomEditorRegistry.registerEditor(DISPLAY_WINDOW_TYPE,
                                           DisplayWindowEditorPanel.class);
 
       try
@@ -78,7 +80,7 @@ public class DisplayWindowEditorPanel
       }
 
       ClassLoader loader = getClass().getClassLoader();
-      String root_path = EditorConstants.imageBase;
+      String root_path = IMAGE_BASE;
 
       try
       {
@@ -167,7 +169,7 @@ public class DisplayWindowEditorPanel
          for ( Iterator i = all_elts.iterator(); i.hasNext(); )
          {
             ConfigElement cur_elt = (ConfigElement) i.next();
-            if ( cur_elt.getDefinition().getName().equals(EditorConstants.displayWindowType) )
+            if ( cur_elt.getDefinition().getName().equals(DISPLAY_WINDOW_TYPE) )
             {
                addDisplay(cur_elt);
             }
@@ -387,7 +389,7 @@ public class DisplayWindowEditorPanel
       {
          ConfigBrokerProxy broker = new ConfigBrokerProxy();
          ConfigDefinition window_def =
-            broker.getRepository().get(EditorConstants.displayWindowType);
+            broker.getRepository().get(DISPLAY_WINDOW_TYPE);
          ConfigElementFactory factory =
             new ConfigElementFactory(broker.getRepository().getAllLatest());
 
@@ -424,11 +426,9 @@ public class DisplayWindowEditorPanel
          elt.setProperty("stereo", 0, dlg.inStereo());
          elt.setProperty("border", 0, dlg.hasBorder());
 
-         elt.setProperty(EditorConstants.lockKeyProperty, 0, dlg.getLockKey());
-         elt.setProperty(EditorConstants.startLockedProperty, 0,
-                         dlg.shouldStartLocked());
-         elt.setProperty(EditorConstants.sleepTimeProperty, 0,
-                         dlg.getSleepTime());
+         elt.setProperty(LOCK_KEY_PROPERTY, 0, dlg.getLockKey());
+         elt.setProperty(START_LOCKED_PROPERTY, 0, dlg.shouldStartLocked());
+         elt.setProperty(SLEEP_TIME_PROPERTY, 0, dlg.getSleepTime());
 
          addDisplay(elt);
       }
@@ -499,7 +499,7 @@ public class DisplayWindowEditorPanel
       {
          ConfigBrokerProxy broker = new ConfigBrokerProxy();
          ConfigDefinition vp_def =
-            broker.getRepository().get(EditorConstants.surfaceViewportType);
+            broker.getRepository().get(SURFACE_VIEWPORT_TYPE);
          ConfigElementFactory factory =
             new ConfigElementFactory(broker.getRepository().getAllLatest());
 
@@ -566,7 +566,7 @@ public class DisplayWindowEditorPanel
       {
          ConfigBrokerProxy broker = new ConfigBrokerProxy();
          ConfigDefinition vp_def =
-            broker.getRepository().get(EditorConstants.simulatorViewportType);
+            broker.getRepository().get(SIMULATOR_VIEWPORT_TYPE);
          ConfigElementFactory factory =
             new ConfigElementFactory(broker.getRepository().getAllLatest());
 
