@@ -258,7 +258,7 @@ protected:
    Kernel();
 
    Kernel(const vrj::Kernel& k) : jccl::ConfigChunkHandler() {;}
-   vrj::Kernel& operator=(const vrj::Kernel& k) {;}
+   void operator=(const vrj::Kernel& k) {;}
 
    virtual ~Kernel()
    {;}
