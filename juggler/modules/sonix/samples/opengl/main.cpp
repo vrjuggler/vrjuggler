@@ -69,6 +69,8 @@ public:
 int AppWindow::width = 0, AppWindow::height = 0;
 int AppWindow::mainWin_contextID = -1;
 
+int soundpos = 0;
+
 // our sound object...
 snx::SoundHandle kevinSound;
 
@@ -172,6 +174,7 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
       sonix::instance()->changeAPI( "Stub" );
       snx::SoundInfo si;
       si.filename = "../../../data/sample.wav";
+      si.ambient = false;
       si.datasource = snx::SoundInfo::FILESYSTEM;
       kevinSound.configure( si );
 
@@ -183,6 +186,7 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
       sonix::instance()->changeAPI( "Stub" );
       snx::SoundInfo si;
       si.filename = "../../../data/suck1.aiff";
+      si.ambient = false;
       si.datasource = snx::SoundInfo::FILESYSTEM;
       kevinSound.configure( si );
 
@@ -197,6 +201,7 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
       case 'a':
    {
       snx::SoundInfo si;
+      si.ambient = false;
       si.filename = "../../../data/sample.wav";
       si.datasource = snx::SoundInfo::FILESYSTEM;
       kevinSound.configure( si );
@@ -205,9 +210,11 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
       case 'b':
    {
       snx::SoundInfo si;
+      si.ambient = false;
       si.filename = "../../../data/sample-drumsolo-2bars.wav";
       si.datasource = snx::SoundInfo::FILESYSTEM;
       kevinSound.configure( si );
+      kevinSound.setAmbient( false );
    }
    break;
    case 't':
@@ -228,13 +235,17 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
 
    case ',':
    {
-      kevinSound.setPosition( -60, 0, 0 );
+      soundpos -= 1;
+      kevinSound.setPosition( soundpos, 0, 0 );
+      std::cout<<soundpos<<std::endl;
    }
    break;
 
    case '.':
    {
-      kevinSound.setPosition( 60, 0, 0 );
+      soundpos += 1;
+      kevinSound.setPosition( soundpos, 0, 0 );
+      std::cout<<soundpos<<std::endl;
    }
    break;
 
