@@ -63,6 +63,12 @@ void vjGlWindow::config(vjDisplay* _display)
 }
 
 
+void vjGlWindow::updateViewport()
+{
+   glViewport(0,0, window_width, window_height);
+   setDirtyViewport(false);
+}
+
 void vjGlWindow::setLeftEyeProjection()
 {
    vjASSERT(mDisplay->getType() == vjDisplay::SURFACE);

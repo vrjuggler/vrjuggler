@@ -222,6 +222,7 @@ int vjGlxWindow::open() {
 
     XMapWindow (x_display, x_window);
     XIfEvent (x_display, &fooevent, EventIsMapNotify, (XPointer)x_window);
+    XSync(x_display,0);
 
     vjDEBUG(vjDBG_DRAW_MGR,4) << "vjGlxWindow: done mapping window\n" << vjDEBUG_FLUSH;
 
@@ -491,4 +492,19 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
 int vjGlxWindow::EventIsMapNotify (Display *display,  XEvent *e,  XPointer window) {
 
     return ((e->type == MapNotify) && (e->xmap.window == (Window)window));
+}
+
+void vjGlxWindow::processEvent(XEvent event)
+{
+   switch(event.type)
+   {
+   case ConfigureNotify:
+      updateOriginSize(vjGlWindow::origin_x, vjGlWindow::origin_y,
+                       event.xconfigure.width, event.xconfigure.height);
+      vjGlWindow::setDirtyViewport(true);
+      break;
+
+   default:
+      break;
+   }
 }
