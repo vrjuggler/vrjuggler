@@ -32,7 +32,7 @@
 
 #include <gadget/Devices/DriverConfig.h>
 #include <vpr/Util/Debug.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Util/Debug.h>
 
@@ -72,7 +72,7 @@ LinuxJoydev::~LinuxJoydev()
 {
 }
 
-std::string LinuxJoydev::getChunkType()
+std::string LinuxJoydev::getElementType()
 {
    return "linux_joydev";
 }
@@ -80,7 +80,7 @@ std::string LinuxJoydev::getChunkType()
 /**
  *
  */
-bool LinuxJoydev::config(jccl::ConfigChunkPtr e)
+bool LinuxJoydev::config(jccl::ConfigElementPtr e)
 {
    if(! (Input::config(e) && Digital::config(e) && Analog::config(e)))
    {
@@ -104,7 +104,7 @@ bool LinuxJoydev::config(jccl::ConfigChunkPtr e)
 /** Begin sampling.
 * Connect to the joystick and prepare to read.
 */
-int LinuxJoydev::startSampling()
+bool LinuxJoydev::startSampling()
 {
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL) << "Opening Linux Joystick driver on port: " << mPortName << std::endl << vprDEBUG_FLUSH;
 
@@ -170,7 +170,7 @@ int LinuxJoydev::startSampling()
 /** Stops sampling.
 * Drop connection to joystick and clear everything.
 */
-int LinuxJoydev::stopSampling()
+bool LinuxJoydev::stopSampling()
 {
    if(mJsFD > 0)
    {
