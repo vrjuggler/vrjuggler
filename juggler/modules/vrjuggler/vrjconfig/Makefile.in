@@ -39,44 +39,10 @@ beandir=		$(bindir)/beans
 srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
 EXTRA_SRCS_PATH=	$(srcdir)/../tweek/idl
-EXTRA_JAVA_SRCS_PATH=	$(srcdir)/tweek
 INSTALL=		@INSTALL@
 INSTALL_FILES=		
 JAVA_IDL_OPTS=		@JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
 JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
-
-TWEEK_JARS	= @TWEEK_JARS@
-TWEEK_EXT_JARS	= @TWEEK_EXT_JARS@
-JCCL_JARS	= @JCCL_JARS@
-CLASSPATH	= $(JCCL_JARS)$(JCPS)$(TWEEK_EXT_JARS)$(JCPS)$(TWEEK_JARS)
-
-VRJCONFIG_PKG		= org.vrjuggler.vrjconfig
-VRJCONFIG_DIR		= $(subst .,/,$(VRJCONFIG_PKG))
-VRJCONFIG_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(VRJCONFIG_DIR)/*.java))
-VRJCONFIG_CLASSES	= $(VRJCONFIG_SRCS:.java=.class)
-
-UI_PKG			= org.vrjuggler.vrjconfig.ui
-UI_DIR			= $(subst .,/,$(UI_PKG))
-UI_SRCS			= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(UI_DIR)/*.java))
-UI_CLASSES		= $(UI_SRCS:.java=.class)
-
-PLACER_PKG		= org.vrjuggler.vrjconfig.ui.placer
-PLACER_DIR		= $(subst .,/,$(PLACER_PKG))
-PLACER_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(PLACER_DIR)/*.java))
-PLACER_CLASSES		= $(PLACER_SRCS:.java=.class)
-
-WIZARD_PKG		= org.vrjuggler.vrjconfig.wizard
-WIZARD_DIR		= $(subst .,/,$(WIZARD_PKG))
-WIZARD_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(WIZARD_DIR)/*.java))
-WIZARD_CLASSES		= $(WIZARD_SRCS:.java=.class)
-
-JAVA_SRCS = \
-	$(VRJCONFIG_SRCS) \
-	$(UI_SRCS) \
-	$(PLACER_SRCS) \
-	$(WIZARD_SRCS)
-
-JAVA_CLASSES = $(JAVA_SRCS:.java=.class)
 
 JARS		= 
 BEANS		= VRJConfig
@@ -89,25 +55,26 @@ instdir		= vrjuggler/vrjconfig/1.0
 doc_prefix	= $(webroot)/$(instdir)
 DOC_ROOT	= programmer.reference.java
 
+_LOCAL_CLEAN=1
+JAVA_AFTERBUILD=java_afterbuild
+
 include $(MKPATH)/dpp.obj.mk
+
+# -----------------------------------------------------------------------------
+# Uses ant to build the java classes and JARs
+# -----------------------------------------------------------------------------
+java_afterbuild:
+	@echo "------------------------------------------------"
+	@echo "Building java sources"
+	@echo "------------------------------------------------"
+	$(ANT)
+
+_clean:
+	$(ANT) clean
 
 # -----------------------------------------------------------------------------
 # Extra targets.
 # -----------------------------------------------------------------------------
-jars: $(JARS) $(addsuffix .jar, $(BEANS))
-
-VRJConfig.jar: $(VRJCONFIG_CLASSES) $(UI_CLASSES) $(PLACER_CLASSES) $(WIZARD_CLASSES)
-	$(JAR) cvf $@ \
-		$(VRJCONFIG_DIR)/*.class \
-		$(UI_DIR)/*.class \
-		$(PLACER_DIR)/*.class \
-		$(WIZARD_DIR)/*.class
-	cd $(srcdir) && $(JAR) uvf $(topdir)/vrjconfig/$@ \
-		$(VRJCONFIG_DIR)/images/*.gif \
-		$(VRJCONFIG_DIR)/images/*.png \
-		$(UI_DIR)/images/*.gif \
-		$(UI_DIR)/images/*.png \
-		LICENSE-java-laf.txt
 
 # This cannot be named 'install' because Doozer++ already defines that.
 vrjconfig-install:
@@ -146,8 +113,6 @@ install-docs:
 	$(MKINSTALLDIRS) $(doc_prefix)
 	rm -rf $(doc_prefix)/$(DOC_ROOT)
 	mv $(DOC_ROOT) $(doc_prefix)
-
-CLEAN_FILES	+= $(JARS) $(addsuffix .jar, $(BEANS)) $(JAVA_CLASSES)
 
 ifdef GLOBAL_BUILD
    CLEAN_DIRS+=	$(top_srcdir)/bin
