@@ -1328,6 +1328,11 @@ class GuiFrontEnd:
          cache_file.write(output)
       cache_file.close()
 
+   def printMessage(self, msg):
+      self.mRoot.OutputFrame.MessageText['state'] = 'normal'
+      self.mRoot.OutputFrame.MessageText.insert(Tkinter.END, msg, "a")
+      self.mRoot.OutputFrame.MessageText['state'] = 'disabled'
+
    def cleanup(self):
       self.__writeCacheFile()
       self.mRoot.destroy()
@@ -1674,41 +1679,21 @@ class GuiFrontEnd:
       print self.mRoot.CommandFrame.InstallJugglerDepsCheck['state']
 
       if self.mRoot.CommandFrame.InstallJugglerCheck.Variable.get() == "Yes":
-         self.mRoot.OutputFrame.MessageText['state'] = 'normal'
-         self.mRoot.OutputFrame.MessageText.insert(Tkinter.END,
-                                                   "Installing Juggler...\n",
-                                                   "a")
-         self.mRoot.OutputFrame.MessageText['state'] = 'disabled'
+         self.printMessage("Installing Juggler...\n")
          doInstall(self.mOptions['prefix'].get())
 
       if self.mRoot.CommandFrame.InstallJugglerDepsCheck.Variable.get() == "Yes":
-         self.mRoot.OutputFrame.MessageText['state'] = 'normal'
-         self.mRoot.OutputFrame.MessageText.insert(Tkinter.END,
-                                                   "Installing Juggler Dependencies...\n",
-                                                   "a")
-         self.mRoot.OutputFrame.MessageText['state'] = 'disabled'
+         self.printMessage("Installing Juggler Dependencies...\n")
          doDependencyInstall(self.mOptions['deps-prefix'].get())
 
-      self.mRoot.OutputFrame.MessageText['state'] = 'normal'
-      self.mRoot.OutputFrame.MessageText.insert(Tkinter.END,
-                                                "Build and Installation Finished.\n",
-                                                "a")
-      self.mRoot.OutputFrame.MessageText['state'] = 'disabled'
+      self.printMessage("Build and Installation Finished.\n")
       self.updateCommandFrame()
 
    def runVisualStudio(self):
       #print "generateVersionHeaders()"
-      self.mRoot.OutputFrame.MessageText['state'] = 'normal'
-      self.mRoot.OutputFrame.MessageText.insert(Tkinter.END,
-                                                "Generating Version Headers.\n",
-                                                "a")
-      self.mRoot.OutputFrame.MessageText['state'] = 'disabled'
+      self.printMessage("Generating Version Headers.\n")
       generateVersionHeaders()
-      self.mRoot.OutputFrame.MessageText['state'] = 'normal'
-      self.mRoot.OutputFrame.MessageText.insert(Tkinter.END,
-                                                "Generating Ant Build Files.\n",
-                                                "a")
-      self.mRoot.OutputFrame.MessageText['state'] = 'disabled'
+      self.printMessage("Generating Ant Build Files.\n")
       generateAntBuildFiles()
 
       devenv_cmd = getVSCmd()
@@ -1740,9 +1725,7 @@ class GuiFrontEnd:
       else:
          cmd = devenv_cmd_no_exe + ' ' + solution_file
          try:
-            self.mRoot.OutputFrame.MessageText['state'] = 'normal'
-            self.mRoot.OutputFrame.MessageText.insert(Tkinter.END, "Visual Studio has been opened.  Build the Solution and then exit Visual Studio to continue the Instalation\n", "a")
-            self.mRoot.OutputFrame.MessageText['state'] = 'disabled'
+            self.printMessage("Visual Studio has been opened.  Build the Solution and then exit Visual Studio to continue the Instalation\n")
             status = os.spawnl(os.P_WAIT, devenv_cmd, 'devenv', solution_file)
          except OSError, osEx:
             print "Could not execute %s: %s" % (cmd, osEx)
