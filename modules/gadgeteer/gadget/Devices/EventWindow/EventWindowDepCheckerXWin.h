@@ -49,7 +49,8 @@ namespace gadget
 /**
  * Dependency checker for X Window System event source.
  * Implement the basic stuff plus a check for wether the system knows about
- * the system display windows yet.
+ * the system display windows yet and wether dependent windows are in the
+ * window registry yet.
  */
 class EventWindowDepCheckerXWin : public jccl::DepChecker
 {
@@ -87,6 +88,11 @@ public:
    {
       return (gadget::InputManager::instance()->getDisplaySystemElement().get() != NULL);
    }
+
+   /** Checks if a remote window must be in the registry.
+    * Returns true if this dependency is passed.
+    */
+   bool haveRemoteWindowNeeded(jccl::ConfigElementPtr element);
 
    /** Writes out the dependencies to the vprDEBUG macro. */
    virtual void debugOutDependencies(jccl::ConfigElementPtr element,

@@ -1,5 +1,11 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-18-2004 allenb      Refactored how GL and Performer windows allow event
+                        input.  They now work with a window registry
+                        in gadgeteer to allow event sampling from event window
+                        "devices".  Note: this only works on X.
+                        Win32 is currently broken.
+                        NEW VERSION 1.1.160
 Oct-11-2004 patrickh    Updated to require VPR 0.40.1, the first version that
                         fully eliminates the need for NSPR on Mac OS X.
 Oct-11-2004 patrickh    Updated to require VPR 0.40.0.

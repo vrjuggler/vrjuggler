@@ -47,6 +47,7 @@
 #include <vrj/Display/DisplayManager.h>
 
 #include <vrj/Draw/OGL/GlWindowXWin.h>
+#include <gadget/Devices/EventWindow/EventWindowXWin.h>
 
 #include <stdexcept>
 
@@ -73,7 +74,8 @@ GlWindowXWin::GlWindowXWin()
    , mXWindow(0)
    , mWindowName("")
    , mPipe(-1)
-   , mXDisplayName("")
+   , mXDisplayName(""),
+   mEmptyCursorSet(false)
 {
    mWindowIsOpen = false;
    mWindowWidth = mWindowHeight = -1;
@@ -159,9 +161,7 @@ bool GlWindowXWin::open()
          throw glwinx_OpenFailureException();
       }
 
-      event_mask = ExposureMask | StructureNotifyMask | KeyPressMask |
-                   KeyReleaseMask | ButtonPressMask | ButtonReleaseMask |
-                   ButtonMotionMask | PointerMotionMask | StructureNotifyMask;
+      event_mask = ExposureMask | StructureNotifyMask;   // Don't request buttons or keys since that will be handled elsewhere
       w_attrib.event_mask = event_mask;
       w_attrib.border_pixel = 0x0;
 
@@ -272,30 +272,16 @@ bool GlWindowXWin::open()
 
       mWindowIsOpen = true;
 
-      // ----------- Event window device starting -------------- //
-      if ( true == mIsEventSource )    // Are we going to act as an event source?
-      {
-         // Set the parameters that we will need to get events
-         gadget::EventWindowXWin::mWindow  = mXWindow;
-         gadget::EventWindowXWin::mVisual  = mVisualInfo;
-         gadget::EventWindowXWin::mDisplay = mXDisplay;
-
-         // Start up the device
-         /*   Do it in out check event function
-         gadget::EventWindowXWin::startSampling();
-         */
-
-         gadget::Input* dev_ptr = dynamic_cast<gadget::Input*>(this);
-
-         // XXX: Possibly not the best way to add this to input manager
-         // - What happens when the event window is removed at run-time???
-         vrj::Kernel::instance()->getInputManager()->addDevice(dev_ptr);
-      }
-
       if( mHideMouse )
       {
-         XDefineCursor(mDisplay, mWindow, mEmptyCursor);
+         XDefineCursor(mXDisplay, mXWindow, mEmptyCursor);
       }
+
+      // ----------- Register this window with XEvent Device registry --------- //
+      gadget::EventWindowXWin::WindowRegistry::WindowInfo xwin_info;
+      xwin_info.displayName = mXDisplayName;
+      xwin_info.xWindow = mXWindow;
+      gadget::EventWindowXWin::WindowRegistry::instance()->addWindow(mVrjDisplay->getName(), xwin_info);
 
       ret_val = true;
    }
@@ -417,28 +403,6 @@ void GlWindowXWin::configWindow(vrj::Display* disp)
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
       << "[vrj::GlWindowXWin::config] Display name is '" << mXDisplayName
       << "'" << std::endl << vprDEBUG_FLUSH;
-
-   mIsEventSource = display_elt->getProperty<bool>("act_as_event_source");
-
-   // If should be an event source.
-   if ( true == mIsEventSource )
-   {
-      // Configure event window device portion.
-      jccl::ConfigElementPtr event_win_element =
-         display_elt->getProperty<jccl::ConfigElementPtr>("event_window_device");
-
-      // Set the name of the element to the same as the parent element (so we
-      // can point at it).
-      //event_win_element->setProperty("name", display_elt->getName();
-
-      gadget::EventWindowXWin::config(event_win_element);
-
-      // Custom configuration
-      gadget::EventWindowXWin::mWidth  = GlWindowXWin::mWindowWidth;
-      gadget::EventWindowXWin::mHeight = GlWindowXWin::mWindowHeight;
-
-      mWeOwnTheWindow = false;      // Event window device does not own window
-   }
 }
 
 bool GlWindowXWin::createHardwareSwapGroup(const std::vector<vrj::GlWindow*>& wins)
@@ -481,10 +445,23 @@ bool GlWindowXWin::createHardwareSwapGroup(const std::vector<vrj::GlWindow*>& wi
 
 void GlWindowXWin::checkEvents()
 {
-   // Node, this will call processEvent() in the final phase (see below)
-   if ( true == mIsEventSource )
+   XEvent event;
+
+   while( XPending(mXDisplay))
    {
-      gadget::EventWindowXWin::sample();    /** Sample from the xwindow (calls HandleEvents() )*/
+      XNextEvent(mXDisplay,&event);
+
+      switch ( event.type )
+      {
+         case ConfigureNotify:
+            updateOriginSize(vrj::GlWindow::mOriginX, vrj::GlWindow::mOriginY,
+                             event.xconfigure.width, event.xconfigure.height);
+            vrj::GlWindow::setDirtyViewport(true);
+            break;
+
+         default:
+            break;
+      }
    }
 
 }
@@ -763,19 +740,27 @@ int GlWindowXWin::eventIsMapNotify(::Display* display, XEvent* e,
    return((e->type == MapNotify) && (e->xmap.window == (Window)window));
 }
 
-void GlWindowXWin::processEvent(XEvent event)
+void GlWindowXWin::createEmptyCursor(::Display* display, ::Window root)
 {
-   switch ( event.type )
-   {
-      case ConfigureNotify:
-         updateOriginSize(vrj::GlWindow::mOriginX, vrj::GlWindow::mOriginY,
-                          event.xconfigure.width, event.xconfigure.height);
-         vrj::GlWindow::setDirtyViewport(true);
-         break;
+   Pixmap cursormask;
+   XGCValues xgc;
+   GC gc;
+   XColor dummycolour;
 
-      default:
-         break;
-   }
+   cursormask = XCreatePixmap(display, root, 1, 1, 1/*depth*/);
+   xgc.function = GXclear;
+   gc =  XCreateGC(display, cursormask, GCFunction, &xgc);
+   XFillRectangle(display, cursormask, gc, 0, 0, 1, 1);
+   dummycolour.pixel = 0;
+   dummycolour.red = 0;
+   dummycolour.flags = 04;
+   mEmptyCursor = XCreatePixmapCursor(display, cursormask, cursormask,
+                                      &dummycolour,&dummycolour, 0,0);
+   XFreePixmap(display,cursormask);
+   XFreeGC(display,gc);
+
+   mEmptyCursorSet = true;
 }
+
 
 } // namespace vrj
