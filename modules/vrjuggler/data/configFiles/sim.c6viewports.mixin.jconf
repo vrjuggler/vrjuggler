@@ -30,7 +30,7 @@
                <height>0</height>
                <origin>0</origin>
                <origin>0</origin>
-               <msens>0.0</msens>
+               <mouse_sensitivity>0.0</mouse_sensitivity>
                <display_number>0</display_number>
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
