@@ -43,6 +43,10 @@ public:
    vjMatrix* getHeadPos()
    { return mHead->GetData(); }
 
+    vjTimeStamp* getHeadUpdateTime() {
+	return mHead->getUpdateTime();
+    }
+
 private:
    int               mUserId;    //: the id of the user
    std::string       mName;      //: The string name of the user

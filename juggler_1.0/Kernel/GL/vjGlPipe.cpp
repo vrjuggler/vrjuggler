@@ -8,6 +8,7 @@
 
 #include <Kernel/vjSurfaceDisplay.h>
 #include <Kernel/vjSimDisplay.h>
+#include <Environment/vjEnvironmentManager.h>
 
 #include <GL/gl.h>
 
@@ -84,6 +85,8 @@ void vjGlPipe::addWindow(vjGlWindow* win)
 void vjGlPipe::controlLoop(void* nullParam)
 {
    mThreadRunning = true;     // We are running so set flag
+   // this should really not be here...
+   vjKernel::instance()->getEnvironmentManager()->addPerfDataBuffer (mPerfBuffer);
 
    while (!controlExit)
    {
@@ -160,6 +163,10 @@ void vjGlPipe::checkForNewWindows()
 //! POST: win is rendered (In stereo if it is a stereo window)
 void vjGlPipe::renderWindow(vjGlWindow* win)
 {
+
+   mPerfBuffer->set(0);
+
+
    vjGlApp* theApp = glManager->getApp();       // Get application for easy access
    vjDisplay* theDisplay = win->getDisplay();   // Get the display for easy access
 
@@ -167,27 +174,37 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
    vjDEBUG(4) << "vjGlPipe::renderWindow: Set context to: " << vjGlDrawManager::instance()->getCurrentContext() << endl << vjDEBUG_FLUSH;
 
    win->makeCurrent();                       // Set correct context
+
    theApp->contextPreDraw();                 // Do any context pre-drawing
+
+   mPerfBuffer->set(1);
 
    if (theDisplay->isSurface())        // Surface display
    {
       vjSurfaceDisplay* surface_disp = dynamic_cast<vjSurfaceDisplay*>(theDisplay);
 
       win->setLeftEyeProjection();
+      mPerfBuffer->set(2);
       glManager->currentUserData()->setUser(surface_disp->getUser());         // Set user data
       glManager->currentUserData()->setProjection(surface_disp->getLeftProj());
 
-      theApp->draw();
-      glManager->drawObjects();
+      mPerfBuffer->set(3);
 
+      theApp->draw();
+      mPerfBuffer->set(4);
+      glManager->drawObjects();
+      mPerfBuffer->set(5);
       if (win->isStereo())
       {
          win->setRightEyeProjection();
+	 mPerfBuffer->set(6);
          glManager->currentUserData()->setUser(surface_disp->getUser());         // Set user data
          glManager->currentUserData()->setProjection(surface_disp->getRightProj());
-
+	 mPerfBuffer->set(7);
          theApp->draw();
+	 mPerfBuffer->set(8);
          glManager->drawObjects();
+	 mPerfBuffer->set(9);
       }
    }
    else if(theDisplay->isSimulator())                                  // SIMULATOR

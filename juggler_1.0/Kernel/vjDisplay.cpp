@@ -13,7 +13,7 @@ void vjDisplay::config(vjConfigChunk* chunk)
     int originY = chunk->getProperty("origin", 1);
     int sizeX   = chunk->getProperty("size", 0);
     int sizeY   = chunk->getProperty("size", 1);
-    char* name  = chunk->getProperty("name");
+    std::string name  = chunk->getProperty("name");
     mBorder     = chunk->getProperty("border");
     int pipe    = chunk->getProperty("pipe");
     mStereo  = chunk->getProperty("stereo");
@@ -39,7 +39,7 @@ void vjDisplay::config(vjConfigChunk* chunk)
     setOriginAndSize(originX, originY, sizeX, sizeY);
 
     // Get the user for this display
-    std::string user_name = (std::string)(char*)chunk->getProperty("user");
+    std::string user_name = chunk->getProperty("user");
     mUser = vjKernel::instance()->getUser(user_name);
 
     if(NULL == mUser)
@@ -51,6 +51,42 @@ void vjDisplay::config(vjConfigChunk* chunk)
     displayChunk = chunk;        // Save the chunk for later use
 }
 
+// <<<<<<< vjDisplay.cpp
+// void vjDisplay::updateProjections()
+// {
+//    vjMatrix left_eye_pos, right_eye_pos;     // NOTE: Eye coord system is -z forward, x-right, y-up
+
+//    // -- Calculate Eye Positions -- //
+//    vjMatrix cur_head_pos = *(mUser->getHeadPos());
+//    mHeadUpdateTime = mUser->getHeadUpdateTime();
+
+//    vjCoord  head_coord(cur_head_pos);       // Create a user readable version
+
+//    vjDEBUG(4) << "vjDisplay::updateProjections: Getting head position" << endl << vjDEBUG_FLUSH;
+//    vjDEBUG(4) << "\tHeadPos:" << head_coord.pos << "\tHeadOr:" << head_coord.orient << endl << vjDEBUG_FLUSH;
+
+//    // Compute location of left and right eyes
+//    float interocularDist = 2.75/12.0f;
+//    float eye_offset = interocularDist/2.0f;      // Distance to move eye
+
+//    left_eye_pos.postTrans(cur_head_pos, -eye_offset, 0, 0);
+//    right_eye_pos.postTrans(cur_head_pos, eye_offset, 0, 0);
+
+
+//    if (mType == PROJ)
+//    {
+//       leftProj->calcViewMatrix(left_eye_pos);
+//       rightProj->calcViewMatrix(right_eye_pos);
+//    }
+//    else
+//    {
+//       mSim->update();
+//       vjMatrix camera_pos = mSim->getCameraPos();
+//       cameraProj->calcViewMatrix(camera_pos);
+//    }
+// }
+// =======
+// >>>>>>> 1.11
 	
     // ---- FRIEND FUNCTIONS ---- //
 ostream& operator<<(ostream& out,  vjDisplay& disp)

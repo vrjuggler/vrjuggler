@@ -29,7 +29,7 @@ public:
 
       mType = SURFACE;
 
-      char* proj  = chunk->getProperty("projectiontype");
+      char* proj  = chunk->getProperty("projectiontype").cstring();
 
       // Create Projection objects
       mLeftProj = new vjWallProjection;

@@ -147,7 +147,7 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB)
    {
       bool added_chunk = false;        // Flag: true - chunk was added
 
-      vjDEBUG(1) << "vjKernel::configAdd: chunk: " << (char*)chunks[i]->getProperty("name") << endl << vjDEBUG_FLUSH;
+      vjDEBUG(1) << "vjKernel::configAdd: chunk: " << chunks[i]->getProperty("name") << endl << vjDEBUG_FLUSH;
 
       // Find manager to handle them
       if(this->configKernelHandle(chunks[i]))            // Kernel
@@ -174,7 +174,7 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB)
       else                 // Else: Give unrecognized error
       {
          vjDEBUG(0) << "vjKernel::configAdd: Unrecognized chunk.\n"
-                    << "   type: " << (char*)chunks[i]->getType() << endl << vjDEBUG_FLUSH;
+                    << "   type: " << chunks[i]->getType() << endl << vjDEBUG_FLUSH;
       }
    }
 
@@ -194,7 +194,7 @@ void vjKernel::configRemove(vjConfigChunkDB* chunkDB)
 // -------------------------------
 bool vjKernel::configKernelHandle(vjConfigChunk* chunk)
 {
-   std::string chunk_type = (std::string)(char*)chunk->getType();
+   std::string chunk_type = (std::string)chunk->getType();
 
    if(std::string("JugglerUser") == chunk_type)
       return true;
@@ -204,7 +204,7 @@ bool vjKernel::configKernelHandle(vjConfigChunk* chunk)
 
 bool vjKernel::configKernelAdd(vjConfigChunk* chunk)
 {
-   std::string chunk_type = (std::string)(char*)chunk->getType();
+   std::string chunk_type = (std::string)chunk->getType();
 
    vjASSERT(configKernelHandle(chunk));
 
