@@ -33,8 +33,15 @@ dnl ************* <auto-copyright.pl END do not edit this line> *************
 dnl ---------------------------------------------------------------------------
 dnl VRJUGGLER_PATH([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
 dnl
-dnl Test for VR Juggler and then define VRJ_CXXFLAGS, VRJ_LIBS, and
-dnl VRJ_LIBS_STATIC.
+dnl Test for VR Juggler and then define the following variables:
+dnl     VRJ_CXXFLAGS
+dnl     VRJ_CXXFLAGS_ALL
+dnl     VRJ_LIBS_CC
+dnl     VRJ_LIBS_LD
+dnl     VRJ_LIBS_STATIC_CC
+dnl     VRJ_LIBS_STATIC_LD
+dnl     VRJ_EXTRA_LIBS_CC
+dnl     VRJ_EXTRA_LIBS_LD
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(VRJUGGLER_PATH,
 [
@@ -88,10 +95,19 @@ dnl                          test VR Juggler program], , enable_vrjtest=yes)
     if test "x$VRJ_CONFIG" = "xno" ; then
         no_vrj=yes
     else
+dnl        VRJ_LIBS="`$VRJ_CONFIG $vrj_config_args --libs $ABI` $VRJ_EXTRA_LIBS"
+dnl        VRJ_LIBS_STATIC="`$VRJ_CONFIG $vrj_config_args --libs $ABI --static` $VRJ_EXTRA_LIBS"
+
         VRJ_CXXFLAGS=`$VRJ_CONFIG $vrj_config_args --cxxflags $ABI`
-        VRJ_EXTRA_LIBS=`$VRJ_CONFIG $vrj_config_args --extra-libs $ABI`
-        VRJ_LIBS="`$VRJ_CONFIG $vrj_config_args --libs $ABI` $VRJ_EXTRA_LIBS"
-        VRJ_LIBS_STATIC="`$VRJ_CONFIG $vrj_config_args --libs $ABI --static` $VRJ_EXTRA_LIBS"
+        VRJ_CXXFLAGS_ALL=`$VRJ_CONFIG $vrj_config_args --cxxflags $ABI --all`
+        VRJ_LIBS_LD="`$VRJ_CONFIG $vrj_config_args --linker --libs $ABI`"
+        VRJ_LIBS_STATIC_LD="`$VRJ_CONFIG $vrj_config_args --linker --libs $ABI --static`"
+        VRJ_LIBS_CC="`$VRJ_CONFIG $vrj_config_args --libs $ABI`"
+        VRJ_LIBS_STATIC_CC="`$VRJ_CONFIG $vrj_config_args --libs $ABI --static`"
+        VRJ_EXTRA_LIBS_CC=`$VRJ_CONFIG $vrj_config_args --extra-libs $ABI`
+        VRJ_EXTRA_LIBS_LD=`$VRJ_CONFIG $vrj_config_args --extra-libs $ABI --linker`
+        VRJ_EXTRA_LIBS_ALL_CC=`$VRJ_CONFIG $vrj_config_args --extra-libs $ABI --all`
+        VRJ_EXTRA_LIBS_ALL_LD=`$VRJ_CONFIG $vrj_config_args --extra-libs $ABI --all --linker`
         VRJ_VERSION=`$VRJ_CONFIG --version`
         DPP_VERSION_CHECK_MSG([VR Juggler], [$VRJ_VERSION], [$min_vrj_version],
                               [vrj_cv_vrj_version], $2, $3)
@@ -105,12 +121,28 @@ dnl                          test VR Juggler program], , enable_vrjtest=yes)
             echo "*** full path to vrjuggler-config."
         fi
         VRJ_CXXFLAGS=""
-        VRJ_LIBS=""
-        VRJ_LIBS_STATIC=""
+        VRJ_CXXFLAGS_ALL=""
+        VRJ_LIBS_CC=""
+        VRJ_LIBS_LD=""
+        VRJ_LIBS_STATIC_CC=""
+        VRJ_LIBS_STATIC_LD=""
+        VRJ_EXTRA_LIBS_CC=""
+        VRJ_EXTRA_LIBS_LD=""
+        VRJ_EXTRA_LIBS_ALL_CC=""
+        VRJ_EXTRA_LIBS_ALL_LD=""
+        VRJ_VERSION="-1"
         ifelse([$3], , :, [$3])
     fi
 
     AC_SUBST(VRJ_CXXFLAGS)
-    AC_SUBST(VRJ_LIBS)
-    AC_SUBST(VRJ_LIBS_STATIC)
+    AC_SUBST(VRJ_CXXFLAGS_ALL)
+    AC_SUBST(VRJ_LIBS_CC)
+    AC_SUBST(VRJ_LIBS_LD)
+    AC_SUBST(VRJ_LIBS_STATIC_CC)
+    AC_SUBST(VRJ_LIBS_STATIC_LD)
+    AC_SUBST(VRJ_EXTRA_LIBS_CC)
+    AC_SUBST(VRJ_EXTRA_LIBS_LD)
+    AC_SUBST(VRJ_EXTRA_LIBS_ALL_CC)
+    AC_SUBST(VRJ_EXTRA_LIBS_ALL_LD)
+    AC_SUBST(VRJ_VERSION)
 ])

@@ -334,9 +334,9 @@ UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 # $APP_EXTRA_LIBS must list all the libraries need to link a VR Juggler-based
 # application.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $JCCL_LIBS_LD $JCCL_EXTRA_LIBS $VPR_LIBS_LD $LIBS $VPR_EXTRA_LIBS"
+    APP_EXTRA_LIBS="$LDFLAGS $JCCL_LIBS_LD $JCCL_EXTRA_LIBS_LD $VPR_LIBS_LD $LIBS $VPR_EXTRA_LIBS_LD"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $JCCL_LIBS_CC $JCCL_EXTRA_LIBS $VPR_LIBS_CC $LIBS $DTK_LDFLAGS $VPR_EXTRA_LIBS"
+    APP_EXTRA_LIBS="$LDFLAGS $JCCL_LIBS_CC $JCCL_EXTRA_LIBS_CC $VPR_LIBS_CC $LIBS $DTK_LDFLAGS $VPR_EXTRA_LIBS_CC"
 fi
 
 # Put together the basic information needed to compile Gadgeteer applications.
@@ -399,7 +399,7 @@ case $OS_TYPE in
         gadget_ldflags_linker="$gadget_ldflags_compiler"
         gadget_libs='-lgadget'
         gadget_extra_libs="$LDFLAGS $LIBS $DTK_LDFLAGS"
-        gadget_extra_libs_juggler="$JCCL_LIBS_CC $JCCL_EXTRA_LIBS $VPR_LIBS_CC $VPR_EXTRA_LIBS"
+        gadget_extra_libs_juggler="$JCCL_LIBS_CC $JCCL_EXTRA_LIBS_CC $VPR_LIBS_CC $VPR_EXTRA_LIBS_CC"
 
         Gadgeteer_lib='-lgadget'
         ;;
@@ -408,7 +408,7 @@ case $OS_TYPE in
         gadget_ldflags_linker="/libpath:\$prefix/lib/debug "
         gadget_libs='gadget.lib'
         gadget_extra_libs="$LDFLAGS $LIBS $DTK_LDFLAGS"
-        gadget_extra_libs_juggler="$JCCL_LIBS_LD $JCCL_EXTRA_LIBS $VPR_LIBS_LD $VPR_EXTRA_LIBS"
+        gadget_extra_libs_juggler="$JCCL_LIBS_LD $JCCL_EXTRA_LIBS_LD $VPR_LIBS_LD $VPR_EXTRA_LIBS_LD"
 
         Gadgeteer_lib='gadget.lib'
         ;;

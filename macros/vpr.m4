@@ -101,7 +101,8 @@ dnl                          test VPR program], , enable_vprtest=yes)
         VPR_LIBS_STATIC_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --static`"
         VPR_LIBS_CC="`$VPR_CONFIG $vpr_config_args --libs $ABI`"
         VPR_LIBS_STATIC_CC="`$VPR_CONFIG $vpr_config_args --libs $ABI --static`"
-        VPR_EXTRA_LIBS=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI`
+        VPR_EXTRA_LIBS_CC=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI`
+        VPR_EXTRA_LIBS_LD=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI --linker`
         VPR_VERSION=`$VPR_CONFIG --version`
 
         AC_MSG_CHECKING([whether VPR version is >= $min_vpr_version])
@@ -121,7 +122,8 @@ dnl                          test VPR program], , enable_vprtest=yes)
         VPR_LIBS_STATIC_LD=''
         VPR_LIBS_CC=''
         VPR_LIBS_STATIC_CC=''
-        VPR_EXTRA_LIBS=''
+        VPR_EXTRA_LIBS_CC=''
+        VPR_EXTRA_LIBS_LD=''
         VPR_VERSION='-1'
         ifelse([$3], , :, [$3])
     fi
@@ -131,6 +133,7 @@ dnl                          test VPR program], , enable_vprtest=yes)
     AC_SUBST(VPR_LIBS_STATIC_LD)
     AC_SUBST(VPR_LIBS_CC)
     AC_SUBST(VPR_LIBS_STATIC_CC)
-    AC_SUBST(VPR_EXTRA_LIBS)
+    AC_SUBST(VPR_EXTRA_LIBS_CC)
+    AC_SUBST(VPR_EXTRA_LIBS_LD)
     AC_SUBST(VPR_VERSION)
 ])
