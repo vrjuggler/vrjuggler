@@ -34,7 +34,6 @@
 
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Display/Projection.h>
-#include <vpr/System.h>
 
 #include <ConesApp.h>
 
@@ -72,7 +71,7 @@ main (int argc, char* argv[]) {
     application = new ConesApp();         // Declare an instance of the app
     kernel->setApplication(application);  // Set application
 
-    while (1) {
-       vpr::System::usleep(250000);
-    }
+    kernel->waitForKernelStop();
+
+    return 0;
 }
