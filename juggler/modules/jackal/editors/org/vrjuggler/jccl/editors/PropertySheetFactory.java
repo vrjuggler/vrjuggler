@@ -150,12 +150,22 @@ public class PropertySheetFactory extends PropertyComponent
       {
          // Insert Add Icon
          ClassLoader loader = getClass().getClassLoader();
-         Icon add_icon =
-            new ImageIcon(loader.getResource(IMG_ROOT + "/New16.gif"));
 
          JButton add_button = new JButton();
 
-         add_button.setIcon(add_icon);
+         try
+         {
+            Icon add_icon =
+               new ImageIcon(loader.getResource(IMG_ROOT + "/New16.gif"));
+            add_button.setIcon(add_icon);
+            add_button.setToolTipText("Add a new value of type " +
+                                      propDef.getToken());
+         }
+         catch(Exception ex)
+         {
+            add_button.setText("New Value");
+         }
+
          add_button.setMargin(new Insets(0,0,0,0));
          add_button.setBorderPainted(false);
          add_button.setFocusPainted(false);
@@ -249,6 +259,7 @@ public class PropertySheetFactory extends PropertyComponent
       if(propDef.isVariable())
       {
          remove_button.setEnabled(true);
+         remove_button.setToolTipText("Delete this property value");
 
          final String temp_string = propDef.getToken();
          final ConfigContext temp_ctx = ctx;
