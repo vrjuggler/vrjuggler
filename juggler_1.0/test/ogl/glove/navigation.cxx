@@ -1,7 +1,3 @@
-#include <Common.h>
-//#include <types/Matrix4f.h>
-//#include <types/Vector3.h>
-
 #include <Math/vjMatrix.h>
 #include <Math/vjVec3.h>
 

@@ -84,7 +84,9 @@ protected:
    //: VR Juggler devices
    vjGloveInterface    mGlove;
    vjGestureInterface  mGesture;
-
+   vjPosInterface      mGloveTracker;
+   
+   
    //: Object selection
    bool                mCubeSelected;
    bool                mSphereSelected;
@@ -137,6 +139,7 @@ inline void gloveApp::init()
     // Initialize devices
     mGlove.init("VJGlove");
     mGesture.init("VJGesture");
+    mGloveTracker.init("GlovePos Proxy");
 }
 
 //: API Init
@@ -248,6 +251,13 @@ inline void gloveApp::postSync()
 {
 }
 
+#include "navigation.h"
+
+//: we need to keep track of the wand, and the user.
+UserInfo    userInfo;
+TrackedInfo wandInfo;
+TrackedInfo headInfo;
+
 //: Function called after tracker update but before start of drawing
 //  In the glove application, this function does the logic for picking the objects.
 inline void gloveApp::preDraw()
@@ -264,7 +274,7 @@ inline void gloveApp::preDraw()
 
     //vjDEBUG(7) << "Gesture: " << mGesture->getGestureString(mGesture->getGesture())<<"\n"<<flush;
     //vjDEBUG(7) << glovePos[0]<<" "<<glovePos[1]<<" "<<glovePos[2]<<" : "<<mCubePos[0]<<" "<<mCubePos[1]<<" "<<mCubePos[2]<<"\n"<<flush;
-
+/*
     //: Navagate Rotationally when open hand...
     if (mGesture->getGesture() == mGesture->getGestureIndex("Open Hand"))
     {
@@ -283,6 +293,18 @@ inline void gloveApp::preDraw()
 	mNavigation.preRot( yaw * 0.02f, up, mNavigation);
 	mNavigation.preTrans( 0.0f, 0.0f, 0.1f, mNavigation );
     }
+*/
+    static float userVelocity = 0;
+    
+    if (mGesture->getGesture() == mGesture->getGestureIndex("Pointing"))
+    {
+	userVelocity += 0.0001f;
+    }
+    userInfo.setVelocity( userVelocity );
+    userInfo.setAngularVelocity( 0.01f );
+    wandInfo.updateWithMatrix( *mGloveTracker->GetData() );
+    userInfo.update( wandInfo, vjVec3(0.0f, 0.0f, 0.0f) );
+    userInfo.getSceneTransform( mNavigation );
 
     //: pick up the object if you're pointing.
     //  set the object position equal to the glove position.
