@@ -4,7 +4,7 @@
                name="Include Test Configuration"
                xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd"
                xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
-   <include file="included_cfg.jcfg" />
+   <include>included_cfg.jcfg</include>
    <elements>
       <include_test name="Test 1" version="1">
          <int_prop>2</int_prop>
