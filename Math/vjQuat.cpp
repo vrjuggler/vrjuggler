@@ -31,7 +31,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
+#include <assert.h>
 #include <Math/vjQuat.h>
+
 
 void vjQuat::makeQuat(const vjMatrix& mat)
 {
@@ -165,5 +167,7 @@ void vjQuat::slerp(float t, const vjQuat& p, const vjQuat& q)
 }
 
 void vjQuat::squad(float _t, const vjQuat& _q1, const vjQuat& _q2, const vjQuat& _a, const vjQuat& _b)
-{;}
+{ 
+   assert( false && "not implemented" ); 
+}
 
