@@ -33,6 +33,8 @@
 #ifndef _VPR_SOCKET_IMP_BSD_H_
 #define _VPR_SOCKET_IMP_BSD_H_
 
+#include <vprConfig.h>
+
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <string>
@@ -42,14 +44,16 @@
 #include <md/POSIX/FileHandleUNIX.h>
 #include <IO/Socket/InetAddr.h>
 
+/*
 #if defined(sgi) && defined(host_mips) && !defined(socklen_t)
 typedef int socklen_t;
 #endif
+*/
 
 
 namespace vpr {
 
-class SocketImpBSD : virtual public SocketImp {
+class SocketImpBSD : virtual public SocketImp_i {
 public:
     // ========================================================================
     // vpr::BlockIO overrides.

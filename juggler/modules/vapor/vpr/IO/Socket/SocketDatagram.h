@@ -33,6 +33,8 @@
 #ifndef _VPR_SOCKET_DATAGRAM_H_
 #define _VPR_SOCKET_DATAGRAM_H_
 
+#include <vprConfig.h>
+
 #include <IO/Socket/Socket.h>
 #include <IO/Socket/SocketDatagramImp.h>
 #include <IO/Socket/InetAddr.h>
@@ -44,12 +46,17 @@ namespace vpr {
 //: Datagram socket interface.
 // ----------------------------------------------------------------------------
 //! PUBLIC_API:
-class SocketDatagram : public Socket {
+template<class RealSocketDatagramImp, class RealSocketDatagramImpParent>
+class SocketDatagram_t : public Socket_t<RealSocketDatagramImpParent> {
 public:
     // ------------------------------------------------------------------------
     //: Default constructor.
     // ------------------------------------------------------------------------
-    SocketDatagram(void);
+    SocketDatagram_t (void)
+        : m_socket_dgram_imp()
+    {
+        m_socket_imp = &m_socket_dgram_imp;
+    }
 
     // ------------------------------------------------------------------------
     //: Constructor.  This takes a port number and stores the value for later
@@ -62,7 +69,11 @@ public:
     //
     //! ARGS: port - The port on the remote site to which we will connect.
     // ------------------------------------------------------------------------
-    SocketDatagram(const unsigned short port);
+    SocketDatagram_t (const Uint16 port)
+        : m_socket_dgram_imp("INADDR_ANY", port)
+    {
+        m_socket_imp = &m_socket_dgram_imp;
+    }
 
     // ------------------------------------------------------------------------
     //: Constructor.  This takes the address (either hostname or IP address)
@@ -78,8 +89,13 @@ public:
     //! ARGS: port    - The port on the remote site to which we will connect.
     //! ARGS: domain  - The protocol family (domain) for this socket.
     // ------------------------------------------------------------------------
-    SocketDatagram (const std::string& address, const unsigned short port,
-                    const SocketTypes::Domain domain = SocketTypes::INET);
+    SocketDatagram_t (const std::string& address, const Uint16 port,
+                      const SocketTypes::Domain domain = SocketTypes::INET)
+        : Socket_t<RealSocketDatagramImpParent>(address),
+          m_socket_dgram_imp(address, port, domain)
+    {
+        m_socket_imp = &m_socket_dgram_imp;
+    }
 
     // ------------------------------------------------------------------------
     //: Constructor.  This takes an address of the form
@@ -93,7 +109,23 @@ public:
     //
     //! ARGS: An address of the form <host addr>:<port number>.
     // ------------------------------------------------------------------------
-    SocketDatagram(const std::string& address);
+    SocketDatagram_t (const std::string& address)
+        : m_socket_dgram_imp(address)
+    {
+        std::string::size_type pos;
+        std::string host_addr, host_port;
+        Uint16 port;
+        SocketDatagramFactory fac;
+
+        pos       = address.find(":");
+        host_addr = address.substr(0, pos);
+        host_port = address.substr(pos + 1);
+        port      = atoi(host_port.c_str());
+
+//        m_socket_dgram_imp.getRemoteAddr().setAddress(host_addr);
+//        m_socket_dgram_imp.getRemoteAddr().setPort(port);
+        m_socket_imp = &m_socket_dgram_imp;
+    }
 
     // ------------------------------------------------------------------------
     //: Constructor.  This takes a reference to a vpr::InetAddr object and
@@ -104,7 +136,11 @@ public:
     //
     //! ARGS: addr - A reference to a vpr::InetAddr object.
     // ------------------------------------------------------------------------
-    SocketDatagram(const InetAddr& addr);
+    SocketDatagram_t (const InetAddr& addr)
+        : m_socket_dgram_imp(addr)
+    {
+        m_socket_imp = &m_socket_dgram_imp;
+    }
 
     // ------------------------------------------------------------------------
     //: Destructor.  This currently does nothing.
@@ -112,7 +148,7 @@ public:
     //! PRE: None.
     //! POST: None.
     // ------------------------------------------------------------------------
-    virtual ~SocketDatagram (void) {
+    virtual ~SocketDatagram_t (void) {
         /* Do nothing. */ ;
     }
 
@@ -120,7 +156,7 @@ public:
     // ------------------------------------------------------------------------
     inline virtual ssize_t
     recvfrom (void* msg, const size_t len, const int flags, InetAddr& from) {
-        return m_socket_dgram_imp->recvfrom(msg, len, flags, from);
+        return m_socket_dgram_imp.recvfrom(msg, len, flags, from);
     }
 
     // ------------------------------------------------------------------------
@@ -129,21 +165,21 @@ public:
     recvfrom (unsigned char* msg, const size_t len, const int flags,
               InetAddr& from)
     {
-        return m_socket_dgram_imp->recvfrom(msg, len, flags, from);
+        return m_socket_dgram_imp.recvfrom(msg, len, flags, from);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline virtual ssize_t
     recvfrom (char* msg, const size_t len, const int flags, InetAddr& from) {
-        return m_socket_dgram_imp->recvfrom(msg, len, flags, from);
+        return m_socket_dgram_imp.recvfrom(msg, len, flags, from);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline virtual ssize_t
     recvfrom (std::vector<char>& msg, const int flags, InetAddr& from) {
-        return m_socket_dgram_imp->recvfrom(msg, flags, from);
+        return m_socket_dgram_imp.recvfrom(msg, flags, from);
     }
 
     // ------------------------------------------------------------------------
@@ -152,7 +188,7 @@ public:
     recvfrom (std::vector<char>& msg, const size_t len, const int flags,
               InetAddr& from)
     {
-        return m_socket_dgram_imp->recvfrom(msg, len, flags, from);
+        return m_socket_dgram_imp.recvfrom(msg, len, flags, from);
     }
 
     // ------------------------------------------------------------------------
@@ -161,7 +197,7 @@ public:
     sendto (const void* msg, const size_t len, const int flags,
             const InetAddr& to)
     {
-        return m_socket_dgram_imp->sendto(msg, len, flags, to);
+        return m_socket_dgram_imp.sendto(msg, len, flags, to);
     }
 
     // ------------------------------------------------------------------------
@@ -170,7 +206,7 @@ public:
     sendto (const unsigned char* msg, const size_t len, const int flags,
             const InetAddr& to)
     {
-        return m_socket_dgram_imp->sendto(msg, len, flags, to);
+        return m_socket_dgram_imp.sendto(msg, len, flags, to);
     }
 
     // ------------------------------------------------------------------------
@@ -179,7 +215,7 @@ public:
     sendto (const char* msg, const size_t len, const int flags,
             const InetAddr& to)
     {
-        return m_socket_dgram_imp->sendto(msg, len, flags, to);
+        return m_socket_dgram_imp.sendto(msg, len, flags, to);
     }
 
     // ------------------------------------------------------------------------
@@ -188,7 +224,7 @@ public:
     sendto (const std::vector<char>& msg, const int flags,
             const InetAddr& to)
     {
-        return m_socket_dgram_imp->sendto(msg, flags, to);
+        return m_socket_dgram_imp.sendto(msg, flags, to);
     }
 
     // ------------------------------------------------------------------------
@@ -197,15 +233,35 @@ public:
     sendto (const std::vector<char>& msg, const size_t len, const int flags,
             const InetAddr& to)
     {
-        return m_socket_dgram_imp->sendto(msg, len, flags, to);
+        return m_socket_dgram_imp.sendto(msg, len, flags, to);
     }
 
 protected:
-    SocketDatagramImp* m_socket_dgram_imp;  //: Platform-specific datagram
-                                            //+ socket implementation object
+    RealSocketDatagramImp m_socket_dgram_imp;  //: Platform-specific datagram
+                                               //+ socket implementation object
 };
 
 }; // End of vpr namespace
+
+#if defined(VPR_USE_NSPR)
+#   include <md/NSPR/SocketDatagramImpNSPR.h>
+
+namespace vpr {
+  typedef SocketDatagram_t<SocketDatagramImpNSPR, SocketImpNSPR> SocketDatagram;
+};
+#elif defined(VPR_OS_Win32)
+#   include <md/WIN32/SocketDatagramImpWinSock.h>
+
+namespace vpr {
+  typedef SocketDatagram_t<SocketDatagramImpWinSock, SocketImpWinSock> SocketDatagram;
+};
+#else
+#   include <md/POSIX/SocketDatagramImpBSD.h>
+
+namespace vpr {
+  typedef SocketDatagram_t<SocketDatagramImpBSD, SocketImpBSD> SocketDatagram;
+};
+#endif
 
 
 #endif	/* _VJ_SOCKET_DATAGRAM_H_ */

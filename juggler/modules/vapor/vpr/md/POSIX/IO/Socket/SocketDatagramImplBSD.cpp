@@ -55,7 +55,7 @@ namespace vpr {
 // Default constructor.  This does nothing.
 // ----------------------------------------------------------------------------
 SocketDatagramImpBSD::SocketDatagramImpBSD (void)
-    : SocketImpBSD(), SocketDatagramImp()
+    : SocketImpBSD(), SocketDatagramImp_i()
 {
 fprintf(stderr, "vpr::SocketDatagramImpBSD default constructor\n");
     /* Do nothing. */ ;
@@ -70,7 +70,7 @@ SocketDatagramImpBSD::SocketDatagramImpBSD (const std::string& address,
                                             const unsigned short port,
                                             const SocketTypes::Domain domain)
     : SocketImpBSD(address, port, domain, SocketTypes::DATAGRAM),
-      SocketDatagramImp(address, port, domain)
+      SocketDatagramImp_i(address, port, domain)
 {
     m_name = address;
     m_addr.setPort(port);

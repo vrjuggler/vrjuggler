@@ -58,7 +58,7 @@ namespace vpr {
 // variables of the object.
 // ----------------------------------------------------------------------------
 SocketStreamImpBSD::SocketStreamImpBSD (void)
-    : SocketImpBSD(), SocketStreamImp()
+    : SocketImpBSD(), SocketStreamImp_i()
 {
 fprintf(stderr, "vpr::SocketStreamImpBSD default constructor\n");
     /* Do nothing. */ ;
@@ -72,7 +72,7 @@ fprintf(stderr, "vpr::SocketStreamImpBSD default constructor\n");
 SocketStreamImpBSD::SocketStreamImpBSD (const std::string& address,
                                         const unsigned short port)
     : SocketImpBSD(address, port, SocketTypes::INET, SocketTypes::STREAM),
-      SocketStreamImp(address, port, SocketTypes::INET)
+      SocketStreamImp_i(address, port, SocketTypes::INET)
 {
     m_name = address;
     m_addr.setPort(port);
@@ -94,7 +94,7 @@ SocketStreamImpBSD::SocketStreamImpBSD (const std::string& address,
                                         const unsigned short port,
                                         const SocketTypes::Domain domain)
     : SocketImpBSD(address, port, domain, SocketTypes::STREAM),
-      SocketStreamImp(address, port, domain)
+      SocketStreamImp_i(address, port, domain)
 {
     m_name = address;
     m_addr.setPort(port);
@@ -139,12 +139,12 @@ SocketStreamImpBSD::listen (const int backlog) {
 // ----------------------------------------------------------------------------
 // Accept an incoming connection request.
 // ----------------------------------------------------------------------------
-SocketStreamImp*
+SocketStreamImpBSD*
 SocketStreamImpBSD::accept () {
     int accept_sock;
     InetAddr addr;
     socklen_t addrlen;
-    SocketStreamImp* new_sock;
+    SocketStreamImpBSD* new_sock;
 
     // Accept an incoming connection request.
     addrlen = addr.size();
@@ -176,7 +176,7 @@ SocketStreamImpBSD::accept () {
 // operating system, typically by the accept(2) system call.
 // ----------------------------------------------------------------------------
 SocketStreamImpBSD::SocketStreamImpBSD (const int sock, InetAddr& host_addr)
-    : SocketImpBSD(), SocketStreamImp()
+    : SocketImpBSD(), SocketStreamImp_i()
 {
 fprintf(stderr, "Protected vpr::SocketStreamImpBSD constructor\n");
 // XXX: Merge

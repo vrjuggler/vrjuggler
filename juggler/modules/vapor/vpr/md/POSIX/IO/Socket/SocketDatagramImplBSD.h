@@ -42,9 +42,11 @@
 namespace vpr {
 
 class SocketDatagramImpBSD : virtual public SocketImpBSD,
-                             virtual public SocketDatagramImp
+                             virtual public SocketDatagramImp_i
 {
 public:
+    typedef SocketImpBSD parent;
+
     // ========================================================================
     // vpr::SocketDatagram implementation.
     // ========================================================================
