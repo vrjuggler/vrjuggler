@@ -41,64 +41,70 @@ public class ChunkDescDB extends Vector {
     }
 
 
+    public String getName () {
+	return name;
+    }
+
+
     public void setFile (File _file) {
 	file = _file;
     }
 
 
-  public ChunkDescDB diff (ChunkDescDB d) {
-    /* builds a new ChunkDescDB that's sort of the difference of its
-     * arguments - the returned db contains every chunk in d that isn't
-     * in self or differs from the same-named chunk in self 
-     */
-    ChunkDesc c1, c2;
-    ChunkDescDB newdb = new ChunkDescDB();
 
-    for (int i = 0; i < d.size(); i++) {
-      c1 = (ChunkDesc)d.elementAt(i);
-      c2 = getByToken (c1.token);
-      if ((c2 == null) || (!c1.equals(c2)))
-        newdb.addElement(c1);
+    public ChunkDescDB diff (ChunkDescDB d) {
+	/* builds a new ChunkDescDB that's sort of the difference of its
+	 * arguments - the returned db contains every chunk in d that isn't
+	 * in self or differs from the same-named chunk in self 
+	 */
+	ChunkDesc c1, c2;
+	ChunkDescDB newdb = new ChunkDescDB();
+	
+	for (int i = 0; i < d.size(); i++) {
+	    c1 = (ChunkDesc)d.elementAt(i);
+	    c2 = getByToken (c1.token);
+	    if ((c2 == null) || (!c1.equals(c2)))
+		newdb.addElement(c1);
+	}
+	return newdb;
     }
-    return newdb;
-  }
 
 
-  public void replace (ChunkDesc oldc, ChunkDesc newc) {
-    int i = indexOf (oldc);
-    if (i >= 0) {
-      setElementAt (newc, i);
+    public void replace (ChunkDesc oldc, ChunkDesc newc) {
+	int i = indexOf (oldc);
+	if (i >= 0) {
+	    setElementAt (newc, i);
+	}
+	else
+	    addElement (newc);
     }
-    else
-      addElement (newc);
-  }
-
-  public boolean removeAll () {
-    removeAllElements();
-    return true;
-  }
-
-  public boolean remove(String tok) {
-    for (int i = 0; i < size(); i++) {
-      if (((ChunkDesc)elementAt(i)).token.equals(tok)) {
-	removeElementAt(i);
+    
+    public boolean removeAll () {
+	removeAllElements();
 	return true;
-      }
     }
-    return false;
-  }
 
-
-  public boolean removeByName(String tok) {
-    for (int i = 0; i < size(); i++) {
-      if (((ChunkDesc)elementAt(i)).name.equalsIgnoreCase(tok)) {
-	removeElementAt(i);
-	return true;
-      }
+    public boolean remove(String tok) {
+	for (int i = 0; i < size(); i++) {
+	    if (((ChunkDesc)elementAt(i)).token.equals(tok)) {
+		removeElementAt(i);
+		return true;
+	    }
+	}
+	return false;
     }
-    return false;
-  }
 
+
+    public boolean removeByName(String tok) {
+	for (int i = 0; i < size(); i++) {
+	    if (((ChunkDesc)elementAt(i)).name.equalsIgnoreCase(tok)) {
+		removeElementAt(i);
+		return true;
+	    }
+	}
+	return false;
+    }
+    
     public Vector getTokenBegins (String tok) {
 	ChunkDesc d;
 	Vector v = new Vector();
