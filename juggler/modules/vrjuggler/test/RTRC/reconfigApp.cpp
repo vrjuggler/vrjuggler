@@ -1313,6 +1313,7 @@ bool reconfigApp::removeSimDigital_check()
    if (!proxy->isStupified())
    {
       std::cout << "\tError: Proxy is not stupified\n" << std::flush;
+      return false;
    }
    
    return true;
@@ -1338,37 +1339,55 @@ bool reconfigApp::readdSimDigital_check()
 
 bool reconfigApp::addSimAnalog_exec()
 {
-   std::cout << "Beginning test for adding a sim analog device...\n" << std::flush;
-   return true;
+   std::cout << "Beginning test for adding a sim analog device and pointing proxies at it...\n" << std::flush;   
+
+   return (  addChunkFile( "./Chunks/sim.extraanalogdevice.config" )
+          && addChunkFile( "./Chunks/sim.extraanalogproxy.config"  ));
 }
 
 bool reconfigApp::addSimAnalog_check()
 {
+   return verifyProxy( "ExtraAnalogProxy", "ExtraAnalogDevice" );
    return true;
 }
 
 
 bool reconfigApp::removeSimAnalog_exec()
 {
-   std::cout << "Beginning test for removing a sim analog device...\n" << std::flush;
-   return true;
+   std::cout << "Beginning test for removing a sim analog device and checking the proxies that point at it...\n" << std::flush;
+   return removeChunkFile( "./Chunks/sim.extraanalogdevice.config" );
 }
 
 bool reconfigApp::removeSimAnalog_check()
 {
+   //Look at the button proxy and see what it points at
+   gadget::Proxy* proxy = gadget::InputManager::instance()->getProxy( "ExtraAnalogProxy" );
+
+   if (proxy == NULL)
+   {
+      std::cout << "\tError: Could not find the proxy\n" << std::flush;
+      return false;
+   }
+
+   if (!proxy->isStupified())
+   {
+      std::cout << "\tError: Proxy is not stupified\n" << std::flush;
+      return false;
+   }
+   
    return true;
 }
 
 
 bool reconfigApp::readdSimAnalog_exec()
 {
-   std::cout << "Beginning test for readding a sim analog device...\n" << std::flush;
-   return true;
+   std::cout << "Beginning test for readding a sim analog device and checking the old proxies...\n" << std::flush;
+   return addChunkFile( "./Chunks/sim.extraanalogdevice.config" ) ;
 }
 
 bool reconfigApp::readdSimAnalog_check()
 {
-   return true;
+   return verifyProxy( "ExtraAnalogProxy", "ExtraAnalogDevice" );
 }
 
 bool reconfigApp::addAnalogProxy_exec()
