@@ -301,14 +301,15 @@ bool ConfigChunkDB::load(const std::string& filename, const std::string& parentf
                         std::string("Loading config file")+filename+std::string("\n"),
                         std::string("\n"));
 
-   mFileName = demangleFileName(filename, parentfile);
+   std::string absolute_filename = demangleFileName(filename, parentfile);
+   mFileName = absolute_filename;
 
    cppdom::XMLDocumentPtr chunk_db_doc = ChunkFactory::instance()->createXMLDocument();
    bool status(false);
 
    try
    {
-      chunk_db_doc->loadFile( mFileName );
+      chunk_db_doc->loadFile( absolute_filename );
 
       cppdom::XMLNodePtr chunk_db_node = chunk_db_doc->getChild( jccl::chunk_db_TOKEN);
       vprASSERT(chunk_db_node.get() != NULL);
@@ -323,7 +324,7 @@ bool ConfigChunkDB::load(const std::string& filename, const std::string& parentf
          {
             // Get the path to the included file relative to the current file
             std::string desc_filename = pi->getAttribute(file_TOKEN).template getValue<std::string>();
-            desc_filename = demangleFileName(desc_filename, mFileName);
+            desc_filename = demangleFileName(desc_filename, absolute_filename);
 
             // Load the file
             ChunkFactory::instance()->loadDescs(desc_filename, filename);
@@ -333,7 +334,7 @@ bool ConfigChunkDB::load(const std::string& filename, const std::string& parentf
          {
             // Get the path to the included file relative to the current file
             std::string chunk_filename = pi->getAttribute(file_TOKEN).template getValue<std::string>();
-            chunk_filename = demangleFileName(chunk_filename, mFileName);
+            chunk_filename = demangleFileName(chunk_filename, absolute_filename);
 
             // Load the file
             load(chunk_filename, filename);
