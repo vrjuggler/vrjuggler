@@ -25,6 +25,24 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+SUBDIR=	pyjutil	\
+	src
+
+@SET_MAKE@
+
+# TODO: Come up with a new way to do recursive builds, possibly through the
+# use of some GNU make fanciness.  Doozer++ needs a better way of doing
+# recursion.
 all:
-	$(MAKE) -C pyjutil
-	$(MAKE) -C src
+	@for dir in $(SUBDIR) ; do	\
+           echo "===> $$dir" ;		\
+           $(MAKE) -C $$dir || exit 1;	\
+           echo "<=== $$dir" ;		\
+         done
+
+clean clobber:
+	@for dir in $(SUBDIR) ; do		\
+           echo "===> $$dir" ;			\
+           $(MAKE) -C $$dir $@ || exit 1;	\
+           echo "<=== $$dir" ;			\
+         done
