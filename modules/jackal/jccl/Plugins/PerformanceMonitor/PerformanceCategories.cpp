@@ -47,8 +47,11 @@ namespace jccl {
 
     void PerformanceCategories::addCategory (const vpr::GUID& catId, const std::string& name)
     {
-        std::cout << "Adding category named '" << name << "'." << std::endl;
-        mCategories.insert( std::pair<vpr::GUID,CategoryInfo>(catId, CategoryInfo(name, false)));
+        // can't use vprDEBUG here, because this may get called before
+        // the debug categories are fully initialized.
+//          std::cout << "Adding category named '" << name << "' at " << &catId 
+//              << ".\n";
+        mCategories.insert( std::pair<const vpr::GUID*,CategoryInfo>(&catId, CategoryInfo(name, false)));
         //updateAllowedCategories();   
     }
 
@@ -81,8 +84,9 @@ namespace jccl {
         if (!mActive)
             return false;
         // do something with categories
+        //std::cout << "Finding category named at " << &category << "." << std::endl;
         
-        category_map_t::iterator cat = mCategories.find(category);
+        category_map_t::iterator cat = mCategories.find(&category);
         vprASSERT(cat != mCategories.end());  // cat is valid
         return (*cat).second.mActive;   
     }
@@ -152,4 +156,7 @@ namespace jccl {
     jcclREGISTER_PERF_CATEGORY(jcclPERF_JACKAL, PERF_JACKAL);
 
 
-};
+}; // namespace jccl
+
+const vpr::GUID jcclPERF_JACKAL ("29ecd55b-e68e-40ce-9db2-99e7682b36b4");
+const vpr::GUID jcclPERF_ALL ("0b6b599c-f90c-43f6-8fbb-08454dd78872");
