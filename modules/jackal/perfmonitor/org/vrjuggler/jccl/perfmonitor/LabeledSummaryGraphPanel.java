@@ -132,13 +132,16 @@ public class LabeledSummaryGraphPanel
 		// the order/presence of labels.
 		dl_it = dl.iterator();
 		ordered_it = col.indexIterator();
-		while (ordered_it.hasNext()) {
+		while (dl_it.hasNext()) {
 		    de = (LabeledPerfDataCollector.DataElem)dl_it.next();
-		    do {
-			ordered_ii = (LabeledPerfDataCollector.IndexInfo)ordered_it.next();
-			j++;
-		    } while (de.index_info != ordered_ii);
-		    j--; // cuz we overshoot;
+                    ordered_it = col.indexIterator();
+                    ordered_ii = (LabeledPerfDataCollector.IndexInfo)ordered_it.next();
+                    j = 0;
+                    while (de.index_info != ordered_ii) {
+                        ordered_ii = (LabeledPerfDataCollector.IndexInfo)ordered_it.next();
+                        j++;
+                    }
+
 		    results[j] += de.delta;
 		}
 	    }
