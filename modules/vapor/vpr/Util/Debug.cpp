@@ -259,7 +259,7 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
          }
          else
          {
-            *mFile << "\n";
+            *mFile << "\t";
          }
       }
 
