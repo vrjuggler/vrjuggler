@@ -114,6 +114,7 @@
 #   define VPR_EXPORT_DATA(__type) __type
 #   define VPR_IMPORT(__type)      extern __type
 #   define VPR_IMPORT_DATA(__type) extern __type
+#   define VPR_IMPORT_CLASS
 
 #   define VPR_EXTERN(__type)         extern __type
 #   define VPR_IMPLEMENT(__type)      __type
