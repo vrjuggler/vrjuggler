@@ -10,7 +10,7 @@ DIE=0
 : ${GGT_MACRO_PATH=../../macros.GGT}
 
 if [ -n "$DPP_PATH" ]; then
-   ACLOCAL_FLAGS="-I $DPP_PATH/config $ACLOCAL_FLAGS"
+   ACLOCAL_FLAGS="-I $DPP_PATH/config -I $DPP_PATH/config/pkgs $ACLOCAL_FLAGS"
 fi
 
 if [ -n "$MACRO_PATH" ]; then
