@@ -257,6 +257,14 @@ public class PropertyEditorPanel extends PropertyComponent
    {
       // Populate the text field with the object's string value
       final JTextField txtField = new JTextField(mEditor.getAsText());
+
+      // Editors for numeric data typically present the number value as
+      // right justified text.
+      if ( mEditor instanceof IntegerEditor || mEditor instanceof FloatEditor )
+      {
+         txtField.setHorizontalAlignment(SwingConstants.TRAILING);
+      }
+
       mEditorComponent = txtField;
       txtField.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
       txtField.addActionListener(new ActionListener()
