@@ -649,7 +649,11 @@ namespace cluster
                jccl::ConfigManager::PendingElement pending;
                pending.mType = jccl::ConfigManager::PendingElement::ADD;
                pending.mElement = (*i);
+               
+               // Do not lock the pending list since the ConfigManager locked it
+               // before calling our configAdd() method.
                jccl::ConfigManager::instance()->addPending(pending);
+               
                vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << clrSetBOLD(clrCYAN)
                   << "[ClusterNetwork] Adding Machine specific ConfigElement: "
                   << (*i)->getName() << clrRESET << std::endl << vprDEBUG_FLUSH;
