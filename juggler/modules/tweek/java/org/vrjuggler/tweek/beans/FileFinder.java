@@ -63,7 +63,7 @@ public class FileFinder
       }
 
       // Search the directory for the files matching the given extension.
-      ExtensionFileFilter filter = new ExtensionFileFilter( "" );
+      ExtensionFileFilter filter = new ExtensionFileFilter( "", false );
       filter.addExtension( ext );
       m_files = m_directory.listFiles( filter );
    }
