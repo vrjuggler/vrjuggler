@@ -51,6 +51,3 @@ else
 	@echo "VRJConfig JAR file creation skipped"
 	@echo "------------------------------------------------"
 endif
-
-vrjconfig-gui-links:
-	@$(MAKE) instlinks="$(instlinks)" links
