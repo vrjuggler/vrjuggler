@@ -233,10 +233,9 @@ int KeyboardWin32::startSampling()
                                        (void*)this );
 
    mThread = new vpr::Thread(memberFunctor);
-   vpr::ReturnStatus start_status = mThread->start();
 
    // return success value...
-   if ( ! start_status.success() )
+   if ( ! mThread->valid() )
    {
      return 0; // fail
    }

@@ -226,9 +226,8 @@ int DTK::startSampling()
        vpr::ThreadMemberFunctor<DTK>* memberFunctor =
            new vpr::ThreadMemberFunctor<DTK>(this, &DTK::controlLoop, NULL);
        mThread = new vpr::Thread(memberFunctor);
-       vpr::ReturnStatus start_status = mThread->start();
 
-       if ( start_status.success() )
+       if ( mThread->valid() )
        {
            return 1;   // success
        }

@@ -177,10 +177,9 @@ int KeyboardXWin::startSampling()
       new vpr::ThreadMemberFunctor<KeyboardXWin>(this, &KeyboardXWin::controlLoop, NULL);
 
    mThread = new vpr::Thread(memberFunctor);
-   vpr::ReturnStatus start_status = mThread->start();
 
    // return success value...
-   if ( ! start_status.success() )
+   if ( ! mThread->valid() )
    {
       return 0; // fail
    }

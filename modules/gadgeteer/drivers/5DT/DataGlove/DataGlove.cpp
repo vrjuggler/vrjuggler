@@ -102,9 +102,8 @@ int DataGlove::startSampling()
       vpr::ThreadMemberFunctor<DataGlove>* memberFunctor =
          new vpr::ThreadMemberFunctor<DataGlove>(this, &DataGlove::controlLoop, NULL);
       mThread = new vpr::Thread(memberFunctor);
-      vpr::ReturnStatus start_status = mThread->start();
 
-      if ( ! start_status.success() || ! mThread->valid() )
+      if ( ! mThread->valid() )
       {
          return 0;
       }

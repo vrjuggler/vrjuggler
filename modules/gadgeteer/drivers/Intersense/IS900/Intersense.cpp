@@ -194,12 +194,13 @@ int Intersense::startSampling()
         vpr::ThreadMemberFunctor<Intersense>* memberFunctor =
             new vpr::ThreadMemberFunctor<Intersense>(this, &Intersense::controlLoop, NULL);
         mThread = new vpr::Thread(memberFunctor);
-        vpr::ReturnStatus start_status = mThread->start();
 
-        if ( ! start_status.success() )
+        if ( ! mThread->valid() )
         {
             return 0;  // Fail
-        } else {
+        }
+        else
+        {
             return 1;   // success
         }
     }
