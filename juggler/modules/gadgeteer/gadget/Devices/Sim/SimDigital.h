@@ -63,9 +63,9 @@ public:
    virtual bool config(jccl::ConfigElementPtr element);
 
    /** These functions don't do anything. */
-   virtual int startSampling() { return 1; }
-   virtual int stopSampling() { return 1; }
-   virtual int sample() { return 1; }
+   virtual bool startSampling() { return 1; }
+   virtual bool stopSampling() { return 1; }
+   virtual bool sample() { return 1; }
 
    /** Updates the data. */
    virtual void updateData();

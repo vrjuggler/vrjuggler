@@ -170,14 +170,14 @@ void Flock::controlLoop(void* nullParam)
    }
 }
 
-int Flock::startSampling()
+bool Flock::startSampling()
 {
       // make sure birds aren't already started
    if (this->isActive() == true)
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
          << "gadget::Flock was already started." << std::endl << vprDEBUG_FLUSH;
-      return 0;
+      return false;
    }
 
    if (mThread == NULL)
@@ -191,7 +191,7 @@ int Flock::startSampling()
       {
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
             << "gadget::Flock failed to start.." << std::endl << vprDEBUG_FLUSH;
-         return 0;
+         return false;
       }
 
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
@@ -204,26 +204,26 @@ int Flock::startSampling()
 
       if ( ! mThread->valid() )
       {
-         return 0;  // Fail
+         return false;  // Fail
       }
       else
       {
-         return 1;   // success
+         return true;   // success
       }
    }
    else
    {
-      return 0; // already sampling
+      return false; // already sampling
    }
 }
 
-int Flock::sample()
+bool Flock::sample()
 {
    std::vector< gadget::PositionData > cur_samples(mFlockOfBirds.getNumBirds());
 
    if ( !isActive() )
    {
-      return 0;
+      return false;
    }
 
    int i;
@@ -263,14 +263,14 @@ int Flock::sample()
    // Add data sample
    addPositionSample(cur_samples);
 
-   return 1;
+   return true;
 }
 
-int Flock::stopSampling()
+bool Flock::stopSampling()
 {
    if (this->isActive() == false)
    {
-      return 0;
+      return false;
    }
 
    if (mThread != NULL)
@@ -299,7 +299,7 @@ int Flock::stopSampling()
          << "stopped." << std::endl << vprDEBUG_FLUSH;
    }
 
-   return 1;
+   return true;
 }
 
 

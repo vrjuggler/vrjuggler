@@ -422,7 +422,7 @@ bool Fastrak::config(jccl::ConfigElementPtr fastrakElement)
    return true;
 }
 
-int Fastrak::startSampling()
+bool Fastrak::startSampling()
 {
    int status(0);
 
@@ -444,7 +444,7 @@ int Fastrak::startSampling()
 
 // Record (or sample) the current data
 // this is called repeatedly by the sample thread created by startSampling()
-int Fastrak::sample()
+bool Fastrak::sample()
 {
    int status(1);
 
@@ -490,7 +490,7 @@ void Fastrak::updateData()
 }
 
 // kill sample thread
-int Fastrak::stopSampling()
+bool Fastrak::stopSampling()
 {
    if ( mSampleThread != NULL )
    {

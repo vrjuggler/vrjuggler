@@ -77,7 +77,7 @@ PinchGlove::~PinchGlove ()
    delete mGlove;       // Delete the glove
 }
 
-int PinchGlove::startSampling()
+bool PinchGlove::startSampling()
 {
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
       << "[PinchGlove] Begin sampling\n"
@@ -151,7 +151,7 @@ void PinchGlove::controlLoop(void* nullParam)
    }
 }
 
-int PinchGlove::sample()
+bool PinchGlove::sample()
 {
    // Tell the glove to sample
 
@@ -202,7 +202,7 @@ void PinchGlove::updateData()
    return;
 }
 
-int PinchGlove::stopSampling()
+bool PinchGlove::stopSampling()
 {
    if ( mThread != NULL )
    {

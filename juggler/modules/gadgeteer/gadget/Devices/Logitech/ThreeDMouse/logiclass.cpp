@@ -78,7 +78,7 @@ void initDevice(gadget::InputManager* inputMgr)
 namespace gadget
 {
 
-int ThreeDMouse::startSampling()
+bool ThreeDMouse::startSampling()
 {
   if (mThreadID == NULL) {
 
@@ -121,7 +121,7 @@ void sampleMouse(void* pointer) {
     }
 }
 
-int ThreeDMouse::stopSampling()
+bool ThreeDMouse::stopSampling()
 {
   if (mThread != NULL) {
     mThread->kill();
@@ -150,7 +150,7 @@ bool ThreeDMouse::config(jccl::ConfigElementPtr e)
    }
 
    mPortName = e->getProperty<std::string>("port");
-   
+
    baseVector[0] = baseVector[1] = baseVector[2] = 0;
 
    return true;

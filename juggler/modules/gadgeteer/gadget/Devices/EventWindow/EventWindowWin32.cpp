@@ -216,7 +216,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);
 
 // Create a win32 window and start a thread
 // processing it's messages
-int EventWindowWin32::startSampling()
+bool EventWindowWin32::startSampling()
 {
    if ( mThread != NULL )
    {
@@ -243,10 +243,10 @@ int EventWindowWin32::startSampling()
    // return success value...
    if ( ! mThread->valid() )
    {
-      return 0; // fail
+      return false; // fail
    }
 
-   return 1; // success
+   return true; // success
 }
 
 int EventWindowWin32::onlyModifier(int mod)
@@ -561,7 +561,7 @@ void EventWindowWin32::updKeys(const MSG& message)
    this->processEvent(message.message, message.wParam, message.lParam);
 }
 
-int EventWindowWin32::stopSampling()
+bool EventWindowWin32::stopSampling()
 {
    if ( mThread != NULL )
    {
@@ -577,7 +577,7 @@ int EventWindowWin32::stopSampling()
       mThread = NULL;
       //std::cout << "Stopping event window.." << std::endl;
    }
-   return 1;
+   return true;
 }
 
 gadget::Keys EventWindowWin32::VKKeyToKey(int vkKey)
@@ -798,10 +798,10 @@ BOOL EventWindowWin32::MenuInit(HINSTANCE hInstance)
 // Called repeatedly by
 // - the controlLoop when "we own the window",
 // - the GlWindow if we "dont own the window"
-int EventWindowWin32::sample()
+bool EventWindowWin32::sample()
 {
    this->handleEvents();
-   return 1;
+   return true;
 }
 
 std::string EventWindowWin32::getElementType()

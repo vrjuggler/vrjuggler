@@ -57,8 +57,8 @@ const unsigned short MSG_DATA_ANALOG = 421;
  * constraints from Input in the following functions: StartSampling,
  * StopSampling, Sample, and UpdateData. <br> <br>
  * Analog adds one new pure virtual function, getAnalogData() for retreiving
- * the analog data, similar to the addition for gadget:;Position and
- * gadget:;Digital.
+ * the analog data, similar to the type specific get data methods in gadget::Position and
+ * gadget::Digital.
  */
 class GADGET_CLASS_API Analog : public vpr::SerializableObject
 {
@@ -91,7 +91,8 @@ public:
     * Gee, that's ambiguous especially on a discrete system such as a digital
     * computer....
     *
-    * @pre Give the device number you wish to access.
+    * @param devNum - Device unit number to access
+    * @pre  Give the device number you wish to access.
     * @post Returns a value that ranges from 0.0f to 1.0f.
     *
     * @note For example, if you are sampling a potentiometer, and it returns
@@ -129,9 +130,8 @@ public:
 
 protected:
    /**
-    * Gives a value that will range from [min() <= n <= max()].
-    * This returns a value that is normalized to the range of mMin <= n <= mMax
-    * if n < mMin or n > mMax, then result = mMin or mMax respectively.
+    * Given a value that will range from [min() <= n <= max()].
+    * This returns a value that is normalized to [0,1]
     */
    void normalizeMinToMax(const float& plainJaneValue,
                           float& normedFromMinToMax);

@@ -100,15 +100,15 @@ public:
 
    /** @name Pure Virtuals required by Input */
    //@{
-   int startSampling();
-   int stopSampling();
+   bool startSampling();
+   bool stopSampling();
    //@}
 
    /**
     * Processes the current x-events.
     * Called repetatively by the controlLoop.
     */
-   int sample()
+   bool sample()
    {
       HandleEvents();
       return 1;

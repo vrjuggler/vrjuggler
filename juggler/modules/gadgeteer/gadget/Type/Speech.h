@@ -66,9 +66,9 @@ public:
       int id;
    };
 
-   virtual int startSampling() = 0;
-   virtual int stopSampling() = 0;
-   virtual int sample() = 0;
+   virtual bool startSampling() = 0;
+   virtual bool stopSampling() = 0;
+   virtual bool sample() = 0;
    virtual void updateData () = 0;
 
 protected:

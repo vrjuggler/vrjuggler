@@ -110,13 +110,13 @@ public:
    virtual bool config(jccl::ConfigElementPtr e);
 
    /**  begin sampling */
-   int startSampling();
+   bool startSampling();
 
    /**  stop sampling */
-   int stopSampling();
+   bool stopSampling();
 
    /**  sample data */
-   int sample();
+   bool sample();
 
    /**  update to the sampled data. */
    void updateData();
@@ -339,9 +339,9 @@ private:
 
    vpr::Thread*      mThread;      /**< The thread doing the flock sampling */
    FlockStandalone   mFlockOfBirds; /**< The actual Flock device object */
-   
+
    std::string       mPortName;
-   int               mBaudRate; 
+   int               mBaudRate;
 };
 
 } // End of gadget namespace

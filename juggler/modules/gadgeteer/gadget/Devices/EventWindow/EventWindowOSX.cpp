@@ -123,7 +123,7 @@ bool EventWindowOSX::config(jccl::ConfigElementPtr e)
    return true;
 }
 
-int EventWindowOSX::startSampling()
+bool EventWindowOSX::startSampling()
 {
    if ( mAmSampling == true )
    {
@@ -206,7 +206,7 @@ void EventWindowOSX::updateData()
    updateEventQueue();
 }
 
-int EventWindowOSX::stopSampling()
+bool EventWindowOSX::stopSampling()
 {
    // Add code to remove window
    // Deleate the UPP handle

@@ -59,13 +59,13 @@ template <class ParentType>
 class InputPlaceHolder  : public ParentType
 {
 public:
-   virtual int sample()
+   virtual bool sample()
     {return(0);}
 
-   virtual int startSampling()
+   virtual bool startSampling()
     {return(0);}
 
-   virtual int stopSampling()
+   virtual bool stopSampling()
     {return(0);}
 
    virtual void updateData()

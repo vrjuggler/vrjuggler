@@ -97,7 +97,7 @@ public:
       return (mDigitalData[dev]);
    }
 
-   virtual int startSampling()
+   virtual bool startSampling()
    {
      //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)<<"start\n"<<vprDEBUG_FLUSH;
        DigitalData temp;
@@ -110,13 +110,13 @@ public:
        return 1;
    }
 
-   virtual int stopSampling()
+   virtual bool stopSampling()
    {
      //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)<<"stop\n"<<vprDEBUG_FLUSH;
      return 1;
    }
 
-   virtual int sample()
+   virtual bool sample()
    {
      //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"sample\n"<<vprDEBUG_FLUSH;
      return 1;

@@ -196,7 +196,7 @@ void EventWindowXWin::controlLoop(void* nullParam)
 }
 
 
-int EventWindowXWin::startSampling()
+bool EventWindowXWin::startSampling()
 {
    if(mThread != NULL)
    {
@@ -676,7 +676,7 @@ int EventWindowXWin::getMask(const int& state)
    return mask;
 }
 
-int EventWindowXWin::stopSampling()
+bool EventWindowXWin::stopSampling()
 {
    // If there is a thread for us and we actually own the window
    if ((mThread != NULL) && mWeOwnTheWindow)

@@ -87,15 +87,15 @@ public:
 
    /** @name Pure virtuals required by gadget::Input. */
    //@{
-   int startSampling();
-   int stopSampling();
+   bool startSampling();
+   bool stopSampling();
    //@}
 
    /**
     * Do nothing the events are handled by call backs from the
     * Carbon event manager.
     */
-   int sample()
+   bool sample()
    {
       return 1;
    }

@@ -242,7 +242,7 @@ bool TweekGadget::config(jccl::ConfigElementPtr e)
    return configured;
 }
 
-int TweekGadget::startSampling()
+bool TweekGadget::startSampling()
 {
    int status(0);
 
@@ -269,7 +269,7 @@ int TweekGadget::startSampling()
    return status;
 }
 
-int TweekGadget::stopSampling()
+bool TweekGadget::stopSampling()
 {
    // This will cause the thread sample loop to exit.
    mThreadRunning = false;
@@ -290,7 +290,7 @@ int TweekGadget::stopSampling()
    return 1;
 }
 
-int TweekGadget::sample()
+bool TweekGadget::sample()
 {
    int status(0);
 

@@ -116,7 +116,7 @@ IBox::~IBox()
   returns 1 if successful, 0 if it failed or was already sampling
 
 *********************************************** ahimberg */
-int IBox::startSampling()
+bool IBox::startSampling()
 {
    vpr::ReturnStatus result;
 
@@ -157,7 +157,7 @@ int IBox::startSampling()
 }
 
 /**********************************************************
-  int IBox::sample()
+  bool IBox::sample()
 
   IBox Sampler function, tries to get a packet of new stuff,
   when it does it fills up the data and swaps swaps the
@@ -166,7 +166,7 @@ int IBox::startSampling()
   Each call to this function is not guaranteed to result in new data.
 
 *********************************************** ahimberg */
-int IBox::sample()
+bool IBox::sample()
 {
    //struct timeval tv;
    // double start_time, stop_time;
@@ -221,13 +221,13 @@ int IBox::sample()
 }
 
 /**********************************************************
-  int IBox::stopSampling()
+  bool IBox::stopSampling()
 
   Kill the sampling thread if it exists, disconnect from
   the ibox.
 
 *********************************************** ahimberg */
-int IBox::stopSampling()
+bool IBox::stopSampling()
 {
   if (mThread != NULL)
   {
