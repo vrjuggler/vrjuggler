@@ -49,6 +49,8 @@
 #include <vpr/IO/Socket/SocketStreamOpt.h>
 #include <vpr/IO/Socket/Socket_t.h> /* base bridge class.. */
 
+#include <boost/smart_ptr.hpp>
+
 
 namespace vpr {
 
@@ -72,10 +74,10 @@ public:
     /**
      * Default constructor.
      */
-    SocketStream_t (void)
-        : m_socket_stream_imp()
+    SocketStream_t (void)        
     {
-        m_socket_imp = &m_socket_stream_imp;
+       m_socket_stream_imp = boost::shared_ptr<SocketStreamImpl>( new SocketStreamImpl );
+       m_socket_imp = m_socket_stream_imp;
     }
 
     /**
@@ -91,10 +93,10 @@ public:
      * @param remote_addr A reference to a vpr::InetAddr object for the
      *                     remote socket address.
      */
-    SocketStream_t (vpr::InetAddr local_addr, vpr::InetAddr remote_addr)
-        : m_socket_stream_imp(local_addr, remote_addr)
+    SocketStream_t (vpr::InetAddr local_addr, vpr::InetAddr remote_addr)        
     {
-        m_socket_imp = &m_socket_stream_imp;
+       m_socket_stream_imp = boost::shared_ptr<SocketStreamImpl>(new SocketStreamImpl(local_addr, remote_addr)); 
+       m_socket_imp = m_socket_stream_imp;
     }
 
     /**
@@ -105,7 +107,7 @@ public:
     SocketStream_t (const SocketStream_t& sock)
         : m_socket_stream_imp(sock.m_socket_stream_imp)
     {
-        m_socket_imp = &m_socket_stream_imp;
+        m_socket_imp = m_socket_stream_imp;
     }
 
     /**
@@ -135,7 +137,7 @@ public:
      */
     inline vpr::ReturnStatus
     listen (const int backlog = 5) {
-        return m_socket_stream_imp.listen(backlog);
+        return m_socket_stream_imp->listen(backlog);
     }
 
     /**
@@ -165,7 +167,7 @@ public:
     accept (SocketStream_t& sock,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_socket_stream_imp.accept(sock.m_socket_stream_imp, timeout);
+        return m_socket_stream_imp->accept(*(sock.m_socket_stream_imp), timeout);
     }
 
     /**
@@ -223,27 +225,28 @@ protected:
      * @param sock_imp A pointer to a vpr::SocketStreamImpl object.
      */
     SocketStream_t (SocketStreamImpl* sock_imp)
-        : Socket_t<Config>(), m_socket_stream_imp(*sock_imp)
-    {
-        m_socket_imp = &m_socket_stream_imp;
+        : Socket_t<Config>(), m_socket_stream_imp(sock_imp)
+    {       
+       m_socket_imp = m_socket_stream_imp;
     }
 
     virtual vpr::ReturnStatus
     getOption (const vpr::SocketOptions::Types option,
                struct vpr::SocketOptions::Data& data)
     {
-        return m_socket_stream_imp.getOption(option, data);
+        return m_socket_stream_imp->getOption(option, data);
     }
 
     virtual vpr::ReturnStatus
     setOption (const vpr::SocketOptions::Types option,
                const struct vpr::SocketOptions::Data& data)
     {
-        return m_socket_stream_imp.setOption(option, data);
+        return m_socket_stream_imp->setOption(option, data);
     }
 
     /// Platform-specific stream socket implementation
-    SocketStreamImpl m_socket_stream_imp;
+    //SocketStreamImpl m_socket_stream_imp;
+    boost::shared_ptr<SocketStreamImpl> m_socket_stream_imp;  
 };
 
 }; // End of vpr namespace
