@@ -38,21 +38,21 @@ vjPfDrawManager* vjPfDrawManager::_instance = NULL;
 
 void vjPfDrawManager::configInitial(vjConfigChunkDB*  chunkDB)
 {
-   std::vector<vjConfigChunk*>* sgiChunks;
-   sgiChunks = chunkDB->getMatching("displaySystem");       // Get the chunk to config system
+   std::vector<vjConfigChunk*>* disp_chunks;
+   disp_chunks = chunkDB->getMatching("displaySystem");       // Get the chunk to config system
 
-   if (sgiChunks->size() <= 0)
+   if (disp_chunks->size() <= 0)
       cerr << "vjPfDrawManager::config: ERROR: Chunks not found. " << endl;
 
-   vjConfigChunk* sgiChunk = (*sgiChunks)[0];
+   vjConfigChunk* disp_chunk = (*disp_chunks)[0];
 
    vjDEBUG_BEGIN(vjDBG_DRAW_MGR,0) << "------------- vjPfDrawManager::config ----------------" << endl << vjDEBUG_FLUSH;
-   numPipes = sgiChunk->getProperty("numpipes");
+   numPipes = disp_chunk->getProperty("numpipes");
 
    vjDEBUG(vjDBG_DRAW_MGR,0) << "NumPipes: " << numPipes << endl << vjDEBUG_FLUSH;
    for (int i=0;i<numPipes;i++)
    {
-      pipeStrs.push_back(sgiChunk->getProperty("xpipes", i).cstring());
+      pipeStrs.push_back(disp_chunk->getProperty("xpipes", i).cstring());
       if(strcmp(pipeStrs[i], "-1") == 0)    // Use display env
       {
          char* display_env = getenv("DISPLAY");
@@ -83,7 +83,7 @@ void vjPfDrawManager::configInitial(vjConfigChunkDB*  chunkDB)
    }
 
    vjDEBUG(vjDBG_DRAW_MGR,0) << "Head Model: " << mHeadModel << endl
-              << "Wand Model: " << mWandModel << endl << vjDEBUG_FLUSH;
+                             << "Wand Model: " << mWandModel << endl << vjDEBUG_FLUSH;
    vjDEBUG_END(vjDBG_DRAW_MGR,0) << "-----------------------------------------------------" << endl << vjDEBUG_FLUSH;
 }
 
@@ -112,6 +112,8 @@ void vjPfDrawManager::setApp(vjApp* _app)
 void vjPfDrawManager::initAPI()
 {
    pfInit();
+
+   initDrawing();
 }
 
 void vjPfDrawManager::initDrawing()
@@ -222,7 +224,8 @@ void vjPfDrawManager::initDrawing()
 
 
    // ----- SETUP MASTER CHANNEL ----- //
-   pfChannel* masterChan = disps[0].chans[0];
+   pfChannel* masterChan = disps[0].chans[pfDisp::LEFT];
+   vjASSERT(masterChan != NULL);
 
    // Setup all Shared properties
    masterChan->setTravFunc(PFTRAV_DRAW, vjPfDrawFunc);
@@ -243,7 +246,7 @@ void vjPfDrawManager::initDrawing()
 
       vjASSERT(NULL != left_ch);
 
-      if (dispIndex != 0)
+      if (dispIndex != 0)                    // Assumes that all displays will have a valid left channel
          masterChan->attach(left_ch);
       if(right_ch != NULL)
       	masterChan->attach(right_ch);
@@ -432,6 +435,7 @@ void vjPFconfigPWin(pfPipeWindow* pWin)
 // --- Traversal functions --- //
 void vjPfDrawFunc(pfChannel *chan, void* chandata)
 {
+   vjDEBUG(vjDBG_DRAW_MGR, 1) << "vjPfDrawFunc: Called.\n" << vjDEBUG_FLUSH;
    vjPfDrawManager* dm = vjPfDrawManager::instance();
    vjPfDrawManager::pfDisp* cur_pf_disp = dm->getPfDisp(chan);
 
