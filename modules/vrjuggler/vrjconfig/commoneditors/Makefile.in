@@ -54,6 +54,9 @@ JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
 
 JARS=			CommonEditors.jar
 
+JGRAPH_DIR=		$(JUGGLERROOT_ABS)/external/jgraph/lib
+JGRAPH_JARS=		$(JGRAPH_DIR)/jgraph.jar		\
+			$(JGRAPH_DIR)/jgraphaddons.jar
 JOGL_JARS=		@JOGL_JARS@
 
 _LOCAL_CLEAN=		1
@@ -89,9 +92,11 @@ ifneq ($(JARS), )
                 $(topdir)/commoneditors/$$jar $(jardir) || exit 1;	\
           done
 endif
-
-# Do we want to copy the JOGL jar files into the installation?
-
+	for jar in $(JGRAPH_JARS) ;					\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $$jar $(javadir) ;			\
+          done
 	for jar in `echo "$(JOGL_JARS)" | sed -e 's/$(JCPS)/ /g'` ;	\
           do								\
               $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
@@ -107,9 +112,11 @@ ifneq ($(JARS), )
                 exit 1 ;						\
           done
 endif
-
-# Do we want to copy the JOGL jar files into the installation?
-
+	for jar in $(JGRAPH_JARS) ;					\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $$jar $(bundle_vrj_javadir) ;		\
+          done
 	for jar in `echo "$(JOGL_JARS)" | sed -e 's/$(JCPS)/ /g'` ;	\
           do								\
               $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\

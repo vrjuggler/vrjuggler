@@ -43,13 +43,15 @@ JDK_HOME?=	/usr/java
 BASE_PKG=	org.vrjuggler.vrjconfig
 DOC_PKGS=	$(BASE_PKG)				\
 		$(BASE_PKG).commoneditors		\
+		$(BASE_PKG).commoneditors.devicegraph	\
 		$(BASE_PKG).commoneditors.event		\
 		$(BASE_PKG).commoneditors.placer	\
 		$(BASE_PKG).ui
 SRC_PATH=	$(srcdir):$(srcdir)/commoneditors
 JDOM_DIR=	../../../external/jdom
+JGRAPH_DIR=	../../../external/jgraph/lib
 TL_DIR=		../../../external/TableLayout
-CLASSPATH=	$(TL_DIR)/TableLayout.jar:$(JDOM_DIR)/build/jdom.jar:$(TWEEK_BASE_DIR)/share/tweek/java/Tweek.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekBeans.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekEvents.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekNet.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekServices.jar:$(TWEEK_BASE_DIR)/share/tweek/java/ui.jar:$(JCCL_BASE_DIR)/share/jccl/beans/jccl_config.jar:$(JCCL_BASE_DIR)/share/jccl/beans/jccl_editors.jar:$(JCCL_BASE_DIR)/share/jccl/beans/jccl_rtrc.jar
+CLASSPATH=	$(TL_DIR)/TableLayout.jar:$(JDOM_DIR)/build/jdom.jar:$(JGRAPH_DIR)/jgraph.jar:$(JGRAPH_DIR)/jgraphaddons.jar:$(TWEEK_BASE_DIR)/share/tweek/java/Tweek.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekBeans.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekEvents.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekNet.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekServices.jar:$(TWEEK_BASE_DIR)/share/tweek/java/ui.jar:$(JCCL_BASE_DIR)/share/jccl/beans/jccl_config.jar:$(JCCL_BASE_DIR)/share/jccl/beans/jccl_editors.jar:$(JCCL_BASE_DIR)/share/jccl/beans/jccl_rtrc.jar
 
 include ../doc/version.mk
 
@@ -67,6 +69,8 @@ docs:
           -link "http://www.vrjuggler.org/tweek/1.0-beta2/programmer.reference.java" \
           -link "http://www.vrjuggler.org/jccl/1.0-beta2/programmer.reference.java" \
           -link "http://www.jdom.org/docs/apidocs/" 			\
+          -link "http://www.jgraph.com/doc/jgraph/" 			\
+          -link "http://www.jgraph.com/doc/jgraphaddons/"		\
           $(DOC_PKGS)
 
 install-docs:
