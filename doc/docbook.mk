@@ -38,6 +38,8 @@ SAXON_VERSION?=	6.5.1
 DVIPDF?=	dvipdf
 DVIPS?=		dvips
 FOP?=		sh $(DOCBOOK_ROOT)/fop/fop.sh
+HTML2TXT?=	/usr/bin/links
+HTML2TXTOPTS?=	-dump
 JADE?=		openjade -V tex-backend
 JADEPROC?=	$(DOCBOOK_ROOT)/jadeproc.pl
 JADETEX?=	$(TEX_BINDIR)/jadetex
@@ -206,15 +208,18 @@ else
           $(SAXON_FO_PARAMS) $(EXTRA_SAXON_FO_PARAMS)
 endif
 
-.xml.txt:
-ifeq ($(XSLT_TOOL), Xalan)
-	$(XALAN) -in $< -xsl $(XSL_DIR)/fo/docbook.xsl -out $@		\
-          $(XALAN_TXT_PARAMS) $(EXTRA_XALAN_TXT_PARAMS)
-else
-	$(SAXON) -i $< -xsl $(XSL_DIR)/fo/docbook.xsl -o $@		\
-          $(SAXON_TXT_PARAMS) $(EXTRA_SAXON_TXT_PARAMS)
-endif
-	$(FOP) -fo $< -txt $@
+.html.txt:
+	$(HTML2TXT) $(HTML2TXTOPTS) $(EXTRA_HTML2TXTOPTS) $< > $@
+
+#.xml.txt:
+#ifeq ($(XSLT_TOOL), Xalan)
+#	$(XALAN) -in $< -xsl $(XSL_DIR)/fo/docbook.xsl -out $@		\
+#          $(XALAN_TXT_PARAMS) $(EXTRA_XALAN_TXT_PARAMS)
+#else
+#	$(SAXON) -i $< -xsl $(XSL_DIR)/fo/docbook.xsl -o $@		\
+#          $(SAXON_TXT_PARAMS) $(EXTRA_SAXON_TXT_PARAMS)
+#endif
+#	$(FOP) -fo $< -txt $@
 
 # Generate a PDF file from an FO file using FOP.
 ifeq ($(FO_VERSION), FOP)
