@@ -35,12 +35,23 @@ package org.vrjuggler.vrjconfig.customeditors.display_window;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import org.vrjuggler.jccl.config.ConfigBrokerProxy;
+import org.vrjuggler.jccl.config.ConfigDefinition;
 import org.vrjuggler.jccl.config.ConfigElement;
 
+import org.vrjuggler.vrjconfig.customeditors.display_window.placer.PlacerSelectionEvent;
+import org.vrjuggler.vrjconfig.customeditors.display_window.placer.PlacerSelectionListener;
 
-public class DisplayWindowFrame extends JInternalFrame
+
+public class DisplayWindowFrame
+   extends JInternalFrame
+   implements PlacerSelectionListener
 {
    private static Cursor mInverseCursor;
+
+   private static final int LEFT_EYE;
+   private static final int RIGHT_EYE;
+   private static final int STEREO;
 
    /**
     * Constructs the inverse cursor that will be used when the mouse pointer
@@ -55,6 +66,14 @@ public class DisplayWindowFrame extends JInternalFrame
          new ImageIcon(loader.getResource(EditorConstants.imageBase + "/inverse-cursor.png")).getImage();
       mInverseCursor = tk.createCustomCursor(cursor_img, new Point(8, 6),
                                              "inverse");
+
+      ConfigBrokerProxy broker = new ConfigBrokerProxy();
+      ConfigDefinition vp_def = broker.getRepository().get("surface_viewport");
+      java.util.Map views = vp_def.getPropertyDefinition("view").getEnums();
+
+      LEFT_EYE  = ((Integer) views.get("Left Eye")).intValue();
+      RIGHT_EYE = ((Integer) views.get("Right Eye")).intValue();
+      STEREO    = ((Integer) views.get("Stereo")).intValue();
    }
 
    public DisplayWindowFrame(String title, Dimension resolution,
@@ -68,14 +87,17 @@ public class DisplayWindowFrame extends JInternalFrame
 
       try
       {
+         mViewportEditor = new ViewportPlacer(this.getSize(), mElement);
+         mViewportEditor.getPlacer().addPlacerSelectionListener(this);
          jbInit();
          placeMyself();
 
-//         mViewportEditor = new ViewportPlacer(this.getSize(), mElement);
-//         mMainPanel.add(mViewportEditor, BorderLayout.CENTER);
+         mViewButtonGroup.add(mViewportLeftEyeItem);
+         mViewButtonGroup.add(mViewportRightEyeItem);
+         mViewButtonGroup.add(mViewportStereoItem);
 
          boolean active = ((Boolean) mElement.getProperty("active", 0)).booleanValue();
-         mActiveItem.setSelected(active);
+         mWinActiveItem.setSelected(active);
 
          boolean border = ((Boolean) mElement.getProperty("border", 0)).booleanValue();
          mBorderItem.setSelected(border);
@@ -84,7 +106,7 @@ public class DisplayWindowFrame extends JInternalFrame
          mPointerItem.setSelected(pointer);
 
          boolean stereo = ((Boolean) mElement.getProperty("stereo", 0)).booleanValue();
-         mStereoItem.setSelected(stereo);
+         mWinStereoItem.setSelected(stereo);
 
          boolean event_src = ((Boolean) mElement.getProperty("act_as_event_source", 0)).booleanValue();
          mEventSrcItem.setSelected(event_src);
@@ -92,6 +114,29 @@ public class DisplayWindowFrame extends JInternalFrame
       catch(Exception e)
       {
          e.printStackTrace();
+      }
+   }
+
+   public void valueChanged(PlacerSelectionEvent e)
+   {
+      mSelectedViewport = ((ConfigElement) e.getValue());
+
+      boolean enabled = mSelectedViewport != null;
+      mViewportPropsItem.setEnabled(enabled);
+      mViewportActiveItem.setEnabled(enabled);
+      mViewportLeftEyeItem.setEnabled(enabled);
+      mViewportRightEyeItem.setEnabled(enabled);
+      mViewportStereoItem.setEnabled(enabled);
+
+      if ( enabled )
+      {
+         boolean active = mSelectedViewport.getProperty("active", 0) == Boolean.TRUE;
+         mViewportActiveItem.setSelected(active);
+
+         int view = ((Integer) mSelectedViewport.getProperty("view", 0)).intValue();
+         if ( view == LEFT_EYE )
+         {
+         }
       }
    }
 
@@ -151,25 +196,48 @@ public class DisplayWindowFrame extends JInternalFrame
    private void jbInit() throws Exception
    {
       this.addMouseListener(new DisplayWindowFrame_this_mouseAdapter(this));
-      mActiveItem.setText("Active");
-      mActiveItem.addActionListener(new DisplayWindowFrame_mActiveItem_actionAdapter(this));
+      mWinPropsItem.setText("Edit Window Properties ...");
+      mWinActiveItem.setText("Active");
+      mWinActiveItem.addActionListener(new DisplayWindowFrame_mActiveItem_actionAdapter(this));
       mBorderItem.setText("Has border");
       mBorderItem.addActionListener(new DisplayWindowFrame_mBorderItem_actionAdapter(this));
       mPointerItem.setText("Hide mouse pointer");
       mPointerItem.addActionListener(new DisplayWindowFrame_mPointerItem_actionAdapter(this));
-      mStereoItem.setText("Render in stereo");
-      mStereoItem.addActionListener(new DisplayWindowFrame_mStereoItem_actionAdapter(this));
+      mWinStereoItem.setText("Render in stereo");
+      mWinStereoItem.addActionListener(new DisplayWindowFrame_mStereoItem_actionAdapter(this));
       mEventSrcItem.setText("Acts as an event source");
       mEventSrcItem.addActionListener(new DisplayWindowFrame_mEventSrcItem_actionAdapter(this));
+      mViewportPropsItem.setEnabled(false);
+      mViewportPropsItem.setText("Edit Viewport Properties ...");
+      mViewportActiveItem.setEnabled(false);
+      mViewportActiveItem.setText("Is Viewport Active?");
+      mViewportActiveItem.addActionListener(new DisplayWindowFrame_mViewportActiveItem_actionAdapter(this));
+      mViewportLeftEyeItem.setEnabled(false);
+      mViewportLeftEyeItem.setText("Left Eye");
+      mViewportLeftEyeItem.addActionListener(new DisplayWindowFrame_mViewportLeftEyeItem_actionAdapter(this));
+      mViewportRightEyeItem.setEnabled(false);
+      mViewportRightEyeItem.setText("Right Eye");
+      mViewportRightEyeItem.addActionListener(new DisplayWindowFrame_mViewportRightEyeItem_actionAdapter(this));
+      mViewportStereoItem.setEnabled(false);
+      mViewportStereoItem.setText("Stereo");
+      mViewportStereoItem.addActionListener(new DisplayWindowFrame_mViewportStereoItem_actionAdapter(this));
       this.addMouseMotionListener(new DisplayWindowFrame_this_mouseMotionAdapter(this));
       this.addComponentListener(new DisplayWindowFrame_this_componentAdapter(this));
       mMainPanel.setLayout(mMainPanelLayout);
-      mContextMenu.add(mActiveItem);
+      mContextMenu.add(mWinPropsItem);
+      mContextMenu.add(mWinActiveItem);
       mContextMenu.add(mBorderItem);
       mContextMenu.add(mPointerItem);
-      mContextMenu.add(mStereoItem);
+      mContextMenu.add(mWinStereoItem);
       mContextMenu.add(mEventSrcItem);
-      this.getContentPane().add(mMainPanel,  BorderLayout.CENTER);
+      mContextMenu.addSeparator();
+      mContextMenu.add(mViewportPropsItem);
+      mContextMenu.add(mViewportActiveItem);
+      mContextMenu.add(mViewportLeftEyeItem);
+      mContextMenu.add(mViewportRightEyeItem);
+      mContextMenu.add(mViewportStereoItem);
+      this.getContentPane().add(mMainPanel, BorderLayout.CENTER);
+      mMainPanel.add(mViewportEditor, BorderLayout.CENTER);
    }
 
    private Point desktopToResolution(Point desktopPoint)
@@ -216,16 +284,25 @@ public class DisplayWindowFrame extends JInternalFrame
    private ConfigElement mElement = null;
    private boolean mHideMouse = false;
    private boolean mMousePressed = false;
-//   private ViewportPlacer mViewportEditor = null;
+   private ViewportPlacer mViewportEditor = null;
+   private ConfigElement mSelectedViewport = null;
 
    private JPopupMenu mContextMenu = new JPopupMenu();
-   private JCheckBoxMenuItem mActiveItem = new JCheckBoxMenuItem();
+   private JMenuItem mWinPropsItem = new JMenuItem();
+   private JCheckBoxMenuItem mWinActiveItem = new JCheckBoxMenuItem();
    private JCheckBoxMenuItem mBorderItem = new JCheckBoxMenuItem();
    private JCheckBoxMenuItem mPointerItem = new JCheckBoxMenuItem();
-   private JCheckBoxMenuItem mStereoItem = new JCheckBoxMenuItem();
+   private JCheckBoxMenuItem mWinStereoItem = new JCheckBoxMenuItem();
    private JCheckBoxMenuItem mEventSrcItem = new JCheckBoxMenuItem();
    private JPanel mMainPanel = new JPanel();
    private BorderLayout mMainPanelLayout = new BorderLayout();
+
+   private JMenuItem mViewportPropsItem = new JMenuItem();
+   private JCheckBoxMenuItem mViewportActiveItem = new JCheckBoxMenuItem();
+   private JRadioButtonMenuItem mViewportRightEyeItem = new JRadioButtonMenuItem();
+   private JRadioButtonMenuItem mViewportStereoItem = new JRadioButtonMenuItem();
+   private JRadioButtonMenuItem mViewportLeftEyeItem = new JRadioButtonMenuItem();
+   private ButtonGroup mViewButtonGroup = new ButtonGroup();
 
    void this_mouseEntered(MouseEvent e)
    {
@@ -287,10 +364,10 @@ public class DisplayWindowFrame extends JInternalFrame
       }
    }
 
-   void activeItemActionPerformed(ActionEvent e)
+   void windowActiveItemActionPerformed(ActionEvent e)
    {
       mElement.setProperty("active", 0,
-                           Boolean.valueOf(mActiveItem.isSelected()));
+                           Boolean.valueOf(mWinActiveItem.isSelected()));
    }
 
    void borderItemActionPerformed(ActionEvent e)
@@ -306,16 +383,37 @@ public class DisplayWindowFrame extends JInternalFrame
       mHideMouse = mPointerItem.isSelected();
    }
 
-   void stereoItemActionPerformed(ActionEvent e)
+   void windowStereoItemActionPerformed(ActionEvent e)
    {
       mElement.setProperty("stereo", 0,
-                           Boolean.valueOf(mPointerItem.isSelected()));
+                           Boolean.valueOf(mWinStereoItem.isSelected()));
    }
 
    void eventSrcItemActionPerformed(ActionEvent e)
    {
       mElement.setProperty("act_as_event_source", 0,
                            Boolean.valueOf(mEventSrcItem.isSelected()));
+   }
+
+   void viewportActiveItemSelected(ActionEvent e)
+   {
+      mSelectedViewport.setProperty("active", 0,
+                                    Boolean.valueOf(mViewportActiveItem.isSelected()));
+   }
+
+   void viewportLeftEyeItemSelected(ActionEvent e)
+   {
+      mSelectedViewport.setProperty("view", 0, new Integer(LEFT_EYE));
+   }
+
+   void viewportRightEyeItemSelected(ActionEvent e)
+   {
+      mSelectedViewport.setProperty("view", 0, new Integer(RIGHT_EYE));
+   }
+
+   void viewporStereoItemSelected(ActionEvent e)
+   {
+      mSelectedViewport.setProperty("view", 0, new Integer(STEREO));
    }
 
    void this_mouseDragged(MouseEvent e)
@@ -364,6 +462,7 @@ public class DisplayWindowFrame extends JInternalFrame
                                                  newBounds.height));
       mElement.setProperty("size", 0, new Integer(size.x));
       mElement.setProperty("size", 1, new Integer(size.y));
+      mViewportEditor.setDesktopSize(this.getSize());
    }
 }
 
@@ -407,7 +506,7 @@ class DisplayWindowFrame_mActiveItem_actionAdapter implements ActionListener
    }
    public void actionPerformed(ActionEvent e)
    {
-      adaptee.activeItemActionPerformed(e);
+      adaptee.windowActiveItemActionPerformed(e);
    }
 }
 
@@ -449,7 +548,7 @@ class DisplayWindowFrame_mStereoItem_actionAdapter implements ActionListener
    }
    public void actionPerformed(ActionEvent e)
    {
-      adaptee.stereoItemActionPerformed(e);
+      adaptee.windowStereoItemActionPerformed(e);
    }
 }
 
@@ -500,5 +599,61 @@ class DisplayWindowFrame_this_componentAdapter extends java.awt.event.ComponentA
    public void componentResized(ComponentEvent e)
    {
       adaptee.this_componentResized(e);
+   }
+}
+
+class DisplayWindowFrame_mViewportActiveItem_actionAdapter implements java.awt.event.ActionListener
+{
+   private DisplayWindowFrame adaptee;
+
+   DisplayWindowFrame_mViewportActiveItem_actionAdapter(DisplayWindowFrame adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+   public void actionPerformed(ActionEvent e)
+   {
+      adaptee.viewportActiveItemSelected(e);
+   }
+}
+
+class DisplayWindowFrame_mViewportLeftEyeItem_actionAdapter implements java.awt.event.ActionListener
+{
+   private DisplayWindowFrame adaptee;
+
+   DisplayWindowFrame_mViewportLeftEyeItem_actionAdapter(DisplayWindowFrame adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+   public void actionPerformed(ActionEvent e)
+   {
+      adaptee.viewportLeftEyeItemSelected(e);
+   }
+}
+
+class DisplayWindowFrame_mViewportRightEyeItem_actionAdapter implements java.awt.event.ActionListener
+{
+   private DisplayWindowFrame adaptee;
+
+   DisplayWindowFrame_mViewportRightEyeItem_actionAdapter(DisplayWindowFrame adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+   public void actionPerformed(ActionEvent e)
+   {
+      adaptee.viewportRightEyeItemSelected(e);
+   }
+}
+
+class DisplayWindowFrame_mViewportStereoItem_actionAdapter implements java.awt.event.ActionListener
+{
+   private DisplayWindowFrame adaptee;
+
+   DisplayWindowFrame_mViewportStereoItem_actionAdapter(DisplayWindowFrame adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+   public void actionPerformed(ActionEvent e)
+   {
+      adaptee.viewporStereoItemSelected(e);
    }
 }
