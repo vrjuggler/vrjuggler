@@ -375,12 +375,12 @@ Compiling
 
    By default, the configuration process will configure VR Juggler and all of
    its dependencies. This includes Sonix, which is an interesting special
-   case. Sonix can make use of OpenAL or AudioWorks to provide spatialized
-   sound in VR Juggler applications. If neither of those packages is found,
-   Sonix will "stub out" its sound APIs. This means that Sonix and the VR
-   Juggler Sound Manager can still be used in applications, but no audio will
-   be heard at run time. See the section called "Sonix" for more information
-   about how to configure Sonix to use OpenAL or AudioWorks.
+   case. Sonix can make use of Aaudiere, OpenAL, or AudioWorks to add sound
+   to VR Juggler applications. If none of those packages is found, Sonix will
+   "stub out" its sound APIs. This means that Sonix and the VR Juggler Sound
+   Manager can still be used in applications, but no audio will be heard at
+   run time. See the section called "Sonix" for more information about how to
+   configure Sonix to use Audiere, OpenAL, or AudioWorks.
 
    For example uses of configure.pl, take a look at the Wiki page relating to
    building from CVS
@@ -395,7 +395,7 @@ Compiling
    Dependencies", VR Juggler depends on several external software packages.
    As an example, consider the case where the GMTL library is installed in
    /home/user1/pkgs/GMTL with the headers in /home/user1/pkgs/GMTL/include.
-   To use thi installation, run configure.pl as follows:
+   To use this installation, run configure.pl as follows:
 
  ../configure.pl --with-gmtl-prefix=/home/user1/pkgs/GMTL
 
@@ -493,8 +493,8 @@ Compiling
 
    Depending on your omniORB installation, you may have to pass extra
    arguments to configure.pl so that the configuration process can find the
-   omniidl binary and the omniORB libraries. For example, on RedHat Linux 7.2
-   with omniORB 3.0.x, the following arguments must be specified in addition
-   to the above:
+   omniidl binary and the omniORB libraries. For example, on Red Hat Linux
+   7.2 with omniORB 3.0.x, the following arguments must be specified in
+   addition to the above:
 
  --with-cxx-orb-bin=<OMNIORB_PATH>/bin/i586_linux_2.0_glibc --with-cxx-orb-lib=<OMNIORB_PATH>/lib/i586_linux_2.0_glibc

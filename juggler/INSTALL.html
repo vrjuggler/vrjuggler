@@ -202,13 +202,13 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
                 <tt class="option">--with-boost-includes=/home/user1/pkgs/boost/include/boost-1_31</tt>
                 when running <span><b class="command">configure.pl</b></span>.</p></div></li></ol></div><p>By default, the configuration process will configure VR
           Juggler and all of its dependencies. This includes Sonix, which is
-          an interesting special case. Sonix can make use of OpenAL or
-          AudioWorks to provide spatialized sound in VR Juggler applications.
-          If neither of those packages is found, Sonix will &#8220;<span class="quote">stub out</span>&#8221;
-          its sound APIs. This means that Sonix and the VR Juggler Sound
-          Manager can still be used in applications, but no audio will be
-          heard at run time. See <a href="#sonix.compile.section" title="Sonix">the section called &#8220;Sonix&#8221;</a> for
-          more information about how to configure Sonix to use OpenAL or
+          an interesting special case. Sonix can make use of Aaudiere, OpenAL,
+          or AudioWorks to add sound to VR Juggler applications. If none of
+          those packages is found, Sonix will &#8220;<span class="quote">stub out</span>&#8221; its
+          sound APIs. This means that Sonix and the VR Juggler Sound Manager
+          can still be used in applications, but no audio will be heard at run
+          time. See <a href="#sonix.compile.section" title="Sonix">the section called &#8220;Sonix&#8221;</a> for more
+          information about how to configure Sonix to use Audiere, OpenAL, or
           AudioWorks.</p><p>For example uses of <span><b class="command">configure.pl</b></span>, take a
           look at the Wiki page relating to building from CVS (<a href="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs" target="_top">http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs</a>).
           It is not a replacement for this document, but it shows how some
@@ -218,7 +218,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
           depends on several external software packages. As an example,
           consider the case where the GMTL library is installed in
           <tt class="filename">/home/user1/pkgs/GMTL</tt> with the headers in
-          <tt class="filename">/home/user1/pkgs/GMTL/include</tt>. To use thi
+          <tt class="filename">/home/user1/pkgs/GMTL/include</tt>. To use this
           installation, run <span><b class="command">configure.pl</b></span> as follows:</p><pre class="screen">../configure.pl --with-gmtl-prefix=/home/user1/pkgs/GMTL</pre><p>The --<tt class="option">with-gmtl-prefix</tt> option could of course
           be mixed in with those shown in the previous section.</p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="compile.vrjuggler.section"></a>Compiling VR Juggler</h4></div></div><div></div></div><p>Once the configuration process is complete, the code can be
         compiled. Remember that we require the use of GNU make 3.78 or newer.</p><div class="orderedlist"><ol type="1"><li><p>Compile the source tree using GNU make.</p><pre class="screen">gmake build</pre></li><li><p>Once this completes, you will have a full build of VR
@@ -268,6 +268,6 @@ gmake build install</pre><p>If JDK 1.4.0 or newer is used, you do not need OpenO
         instead.</p><p>Depending on your omniORB installation, you may have to pass
         extra arguments to <span><b class="command">configure.pl</b></span> so that the
         configuration process can find the <span><b class="command">omniidl</b></span> binary
-        and the omniORB libraries. For example, on RedHat Linux 7.2 with
+        and the omniORB libraries. For example, on Red Hat Linux 7.2 with
         omniORB 3.0.x, the following arguments must be specified in addition
         to the above:</p><pre class="screen">--with-cxx-orb-bin=&lt;OMNIORB_PATH&gt;/bin/i586_linux_2.0_glibc --with-cxx-orb-lib=&lt;OMNIORB_PATH&gt;/lib/i586_linux_2.0_glibc</pre></div></div></div></div></body></html>
