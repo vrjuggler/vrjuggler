@@ -60,7 +60,7 @@ namespace cluster
 StartBarrierPlugin::StartBarrierPlugin()
    : mBarrierMaster(false)
    , mComplete(false)
-   , mHandlerGUID("566a50ff-5e73-43e0-a9a9-0fb62b76731a")
+   , mHandlerGUID(std::string("566a50ff-5e73-43e0-a9a9-0fb62b76731a"))
 {;}
 
 StartBarrierPlugin::~StartBarrierPlugin()

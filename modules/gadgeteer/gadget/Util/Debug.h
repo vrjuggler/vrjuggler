@@ -40,9 +40,9 @@
 #include <vpr/Util/Debug.h>
 
 // Gadgeteer categories
-const vpr::DebugCategory gadgetDBG_INPUT_MGR(vpr::GUID("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2"), "DBG_INPUT_MGR", "gadgetINP:");
-const vpr::DebugCategory gadgetDBG_RIM(vpr::GUID("2af7e28f-a831-4b7c-b5c9-beda5289ffde"), "DBG_RIM", "gadgetRIM:");
-const vpr::DebugCategory gadgetDBG_NET_MGR(vpr::GUID("02be47d5-c5f8-4487-b08c-e99ee23cc1d5"), "DBG_NET_MGR", "gadgetNET:");
+const vpr::DebugCategory gadgetDBG_INPUT_MGR(vpr::GUID(std::string("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2")), "DBG_INPUT_MGR", "gadgetINP:");
+const vpr::DebugCategory gadgetDBG_RIM(vpr::GUID(std::string("2af7e28f-a831-4b7c-b5c9-beda5289ffde")), "DBG_RIM", "gadgetRIM:");
+const vpr::DebugCategory gadgetDBG_NET_MGR(vpr::GUID(std::string("02be47d5-c5f8-4487-b08c-e99ee23cc1d5")), "DBG_NET_MGR", "gadgetNET:");
 
 
 #endif
