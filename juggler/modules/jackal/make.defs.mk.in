@@ -85,6 +85,7 @@ scriptdir	= $(releasedir)/scripts
 topdir		= @topdir@
 top_srcdir      = @top_srcdir@
 CXX_IDL		= @TWEEK_CXX_IDL@
+JAVA_IDL    = @TWEEK_JAVA_IDL@
 DPP_SCRIPTDIR	= $(JUGGLERROOT_ABS)/Doozer++/scripts
 MAKEFLAGS	+= --no-print-directory
 DEPGEN_TOOL_CC	= @CC@
