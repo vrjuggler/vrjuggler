@@ -57,4 +57,18 @@ void CameraProjection::calcViewMatrix(gmtl::Matrix44f& cameraPos, const float sc
    mFrustum.set(-right, right, -top, top, mNearDist, mFarDist);
 }
 
+std::ostream& CameraProjection::outStream(std::ostream& out,
+                                          const unsigned int indentLevel)
+{
+   const int pad_width_dot(20 - indentLevel);
+   out.setf(std::ios::left);
+
+   const std::string indent_text(indentLevel, ' ');
+
+   out << indent_text << std::setw(pad_width_dot)
+       << "Type " << " vrj::CameraProjection\n";
+
+   return Projection::outStream(out, indentLevel);
+}
+
 }

@@ -73,12 +73,20 @@ void TrackedSurfaceProjection::updateSurfaceParams(const float scaleFactor)
    m_surface_M_base = gmtl::invert(m_surface_M_base, m_base_M_surface);    // Set the inverse matrix for later
 }
 
-std::ostream& TrackedSurfaceProjection::outStream(std::ostream& out)
+std::ostream& TrackedSurfaceProjection::outStream(std::ostream& out,
+                                                  const unsigned int indentLevel)
 {
-   out << "vjTrackedSurfaceProjection:\n";
-   out << "Pos Proxy: " << mTracker.getProxyName().c_str() << std::endl;
-   return SurfaceProjection::outStream(out);
+   const int pad_width_dot(20 - indentLevel);
+   out.setf(std::ios::left);
+
+   const std::string indent_text(indentLevel, ' ');
+
+   out << indent_text << std::setw(pad_width_dot)
+       << "Type " << " vrj::TrackedSurfaceProjection\n";
+   out << indent_text << std::setw(pad_width_dot)
+       << "Pos Proxy " << " " << mTracker.getProxyName() << std::endl;
+
+   return SurfaceProjection::outStream(out, indentLevel);
 }
 
-
-};
+}
