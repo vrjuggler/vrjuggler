@@ -44,7 +44,9 @@
 
 namespace jccl {
 
+#if 1
     vprSingletonImp(ConfigManager);
+#endif
 
 
     ConfigManager::ConfigManager() {
@@ -544,7 +546,7 @@ namespace jccl {
     
     /*virtual*/ void ConfigManager::setJackalServer (JackalServer* js) {
         jackal_server = js;
-        addConfigChunkHandler (js);
+        //addConfigChunkHandler (js);
     }
     /*virtual*/ void ConfigManager::addConnect (Connect *c) {
         c->addCommunicator (config_communicator);
