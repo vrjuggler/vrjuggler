@@ -34,6 +34,7 @@
 
 import os
 import re
+import shutil
 import sys
 import time
 
@@ -94,7 +95,8 @@ def setVars():
                                     r'C:\Program Files\Silicon Graphics\OpenGL Performer'),
       'VRPN_ROOT'       : os.getenv('VRPN_ROOT', ''),
       'AUDIERE_ROOT'    : os.getenv('AUDIERE_ROOT', ''),
-      'TRACKD_API_ROOT' : os.getenv('TRACKD_API_ROOT', '')
+      'TRACKD_API_ROOT' : os.getenv('TRACKD_API_ROOT', ''),
+      'prefix'          : r'C:\vrjuggler'
    }
 
    # If there are cached options, read them in.
@@ -103,13 +105,13 @@ def setVars():
       execfile(cache_file)
 
    print "+++ Required Settings"
+   boost_ver = processInput(options, 'prefix', 'installation prefix')
    boost_ver = processInput(options, 'BOOST_VERSION', 'Boost C++ version')
    boost_dir = processInput(options, 'BOOST_ROOT',
                             'Boost C++ installation directory')
 
    if options['BOOST_INCLUDES'] == '':
-      options['BOOST_INCLUDES'] = r'%s\include\boost-%s' % \
-                                     (boost_dir, boost_ver)
+      options['BOOST_INCLUDES'] = boost_dir + r'\include\boost-' + boost_ver
 
    processInput(options, 'BOOST_INCLUDES',
                 'directory containing the Boost C++ header tree')
@@ -136,6 +138,8 @@ def setVars():
       output = "options['%s'] = r'%s'\n" % (k, v)
       cache_file.write(output)
    cache_file.close()
+
+   return options
 
 def generateVersionHeaders():
    class JugglerModule:
@@ -228,7 +232,7 @@ def generateVersionHeaders():
          except IOError, ex:
             print "ERROR: Could not read from %s" % self.header_template
             print ex
-            print "Cannot continue; exiting with error status"
+            print "Cannot continue; exiting with error status."
             sys.exit(2)
 
    mods = []
@@ -247,11 +251,354 @@ def generateVersionHeaders():
    for m in mods:
       m.generateParamHeader()
 
-def doInstall():
+def doInstall(prefix):
+   makeTree(prefix)
+   installExternal(prefix)
+   installVPR(prefix)
+   installTweek(prefix)
+   installJCCL(prefix)
+   installJCCLPlugins(prefix)
+   installSonix(prefix)
+   installSonixPlugins(prefix)
+   installGadgeteer(prefix)
+   installGadgeteerDrivers(prefix)
+   installGadgeteerPlugins(prefix)
+   installVRJuggler(prefix)
+   installWin32Deps(prefix)
+
+def mkinstalldirs(dir):
+#   print "Checking for", dir
+   if not os.path.exists(dir):
+      (head, tail) = os.path.split(dir)
+      mkinstalldirs(head)
+      os.mkdir(dir)
+
+def makeTree(prefix):
+   mkinstalldirs(os.path.join(prefix, 'bin'))
+   mkinstalldirs(os.path.join(prefix, 'include'))
+   mkinstalldirs(os.path.join(prefix, 'lib'))
+   mkinstalldirs(os.path.join(prefix, 'share'))
+
+def installDir(startDir, destDir, allowedExts = None, disallowedExts = None):
+   cwd = os.getcwd()
+   mkinstalldirs(destDir)
+
+   os.chdir(startDir)
+   contents = os.listdir(startDir)
+
+   if disallowedExts is None:
+      disallowedExts = []
+
+   # Add some extensions that should always be disallowed.  This relieves the
+   # caller from having to add these repeatedly.
+   disallowedExts.append('.ilk')
+   disallowedExts.append('.ncb')
+   disallowedExts.append('.pdb')
+   disallowedExts.append('.suo')
+
+   skip_dirs = ['CVS', 'autom4te.cache']
+   for f in contents:
+      if os.path.isdir(f):
+         if f in skip_dirs:
+            continue
+
+         start_dir = os.path.join(startDir, f)
+         dest_dir  = os.path.join(destDir, f)
+         installDir(start_dir, dest_dir, allowedExts, disallowedExts)
+      else:
+         (root, f_ext) = os.path.splitext(f)
+         if allowedExts is None:
+            if f_ext not in disallowedExts:
+               shutil.copy2(f, destDir)
+         elif f_ext in allowedExts:
+            shutil.copy2(f, destDir)
+
+   os.chdir(cwd)
+
+def installLibs(srcRoot, destdir,
+                buildTypes = ['ReleaseDLL', 'DebugDLL', 'Release', 'Debug'],
+                extensions = ['.dll', '.lib']):
+   for t in buildTypes:
+      srcdir = os.path.join(srcRoot, t)
+      if os.path.exists(srcdir):
+         installDir(srcdir, destdir, extensions)
+
+def installExternal(prefix):
+   # Install the GMTL headers.
+   print "Installing GMTL headers ..."
+   destdir = os.path.join(prefix, 'include', 'gmtl')
+   srcdir  = os.path.join(juggler_dir, 'external', 'GMTL', 'gmtl')
+   installDir(srcdir, destdir, ['.h'])
+
+   # Install Doozer (even though it probably won't be used).
+   print "Installing Doozer ..."
+   destdir = os.path.join(prefix, 'share', 'Doozer')
+   srcdir  = os.path.join(juggler_dir, 'external', 'Doozer')
+   installDir(srcdir, destdir, ['.mk'])
+
+def installVPR(prefix):
+   print "Installing VPR headers and libraries ..."
+
+   destdir = os.path.join(prefix, 'include', 'vpr')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'vapor', 'vpr')
+   installDir(srcdir, destdir, ['.h'])
+
+   srcdir  = os.path.join(juggler_dir, 'vc7', 'VPR', 'vpr')
+   installDir(srcdir, destdir, ['.h'])
+
+   destdir = os.path.join(prefix, 'lib')
+   srcroot = os.path.join(juggler_dir, 'vc7', 'VPR')
+   installLibs(srcroot, destdir)
+
+   destdir = os.path.join(prefix, 'share', 'vpr', 'test')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'vapor', 'test')
+   installDir(srcdir, destdir, None, ['.in'])
+
+   destdir = os.path.join(prefix, 'share', 'vpr')
+   srcroot = os.path.join(juggler_dir, 'modules', 'vapor')
+
+   extra_files = ['ChangeLog', 'COPYING.txt', 'README.txt', 'RELEASE_NOTES.txt']
+   for f in extra_files:
+      shutil.copy2(os.path.join(srcroot, f), destdir)
+
+def installTweek(prefix):
+   print "Installing Tweek headers, libraries, and data files ..."
+
+   destdir = os.path.join(prefix, 'include', 'tweek')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'tweek', 'tweek')
+   installDir(srcdir, destdir, ['.h', '.idl'])
+
+   srcdir  = os.path.join(juggler_dir, 'vc7', 'Tweek_CXX', 'tweek')
+   installDir(srcdir, destdir, ['.h'])
+
+   destdir = os.path.join(prefix, 'lib')
+   srcroot = os.path.join(juggler_dir, 'vc7', 'Tweek_CXX')
+   installLibs(srcroot, destdir)
+
+   destdir = os.path.join(prefix, 'share', 'tweek', 'test')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'tweek', 'test')
+   installDir(srcdir, destdir, None, ['.in'])
+
+   destdir = os.path.join(prefix, 'share', 'tweek', 'data')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'tweek', 'data')
+   installDir(srcdir, destdir)
+
+   destdir = os.path.join(prefix, 'share', 'tweek')
+   srcroot = os.path.join(juggler_dir, 'modules', 'tweek')
+
+   extra_files = ['ChangeLog', 'COPYING.txt', 'RELEASE_NOTES.txt']
+   for f in extra_files:
+      shutil.copy2(os.path.join(srcroot, f), destdir)
+
+def installJCCL(prefix):
+   print "Installing JCCL headers, libraries, and tools ..."
+
+   destdir = os.path.join(prefix, 'include', 'jccl')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'jackal', 'common', 'jccl')
+   installDir(srcdir, destdir, ['.h'])
+
+   srcdir  = os.path.join(juggler_dir, 'modules', 'jackal', 'config', 'jccl')
+   installDir(srcdir, destdir, ['.h'])
+
+   srcdir  = os.path.join(juggler_dir, 'modules', 'jackal', 'rtrc', 'jccl')
+   installDir(srcdir, destdir, ['.h'])
+
+   srcdir  = os.path.join(juggler_dir, 'vc7', 'JCCL', 'jccl')
+   installDir(srcdir, destdir, ['.h'])
+
+   destdir = os.path.join(prefix, 'lib')
+   srcroot = os.path.join(juggler_dir, 'vc7', 'JCCL')
+   installLibs(srcroot, destdir)
+
+   destdir = os.path.join(prefix, 'share', 'jccl', 'test')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'jackal', 'test')
+   installDir(srcdir, destdir, None, ['.in'])
+
+   destdir = os.path.join(prefix, 'share', 'jccl', 'tools')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'jackal', 'tools')
+   installDir(srcdir, destdir)
+
+   destdir = os.path.join(prefix, 'share', 'jccl', 'data')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'jackal', 'data')
+   installDir(srcdir, destdir)
+
+   destdir = os.path.join(prefix, 'share', 'jccl')
+   srcroot = os.path.join(juggler_dir, 'modules', 'jackal')
+
+   extra_files = ['ChangeLog', 'COPYING.txt', 'RELEASE_NOTES.txt']
+   for f in extra_files:
+      shutil.copy2(os.path.join(srcroot, f), destdir)
+
+def installJCCLPlugins(prefix):
+   print "Installing JCCL plug-ins ..."
+
+   destdir = os.path.join(prefix, 'lib', 'jccl', 'plugins')
+   srcroot = os.path.join(juggler_dir, 'vc7', 'JCCL', 'RTRC_Plugin_CXX')
+   installLibs(srcroot, destdir, extensions = ['.dll'])
+
+def installSonix(prefix):
+   print "Installing Sonix headers, libraries, and samples ..."
+
+   destdir = os.path.join(prefix, 'include', 'snx')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'sonix', 'snx')
+   installDir(srcdir, destdir, ['.h'])
+
+   srcdir  = os.path.join(juggler_dir, 'vc7', 'Sonix', 'snx')
+   installDir(srcdir, destdir, ['.h'])
+
+   destdir = os.path.join(prefix, 'lib')
+   srcroot = os.path.join(juggler_dir, 'vc7', 'Sonix')
+   installLibs(srcroot, destdir)
+
+   destdir = os.path.join(prefix, 'share', 'sonix', 'samples')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'sonix', 'samples')
+   installDir(srcdir, destdir, None, ['.in'])
+
+   destdir = os.path.join(prefix, 'share', 'sonix', 'data')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'sonix', 'data')
+   installDir(srcdir, destdir)
+
+   destdir = os.path.join(prefix, 'share', 'sonix')
+   srcroot = os.path.join(juggler_dir, 'modules', 'sonix')
+
+   extra_files = ['ChangeLog', 'COPYING.txt', 'README.txt']
+   for f in extra_files:
+      shutil.copy2(os.path.join(srcroot, f), destdir)
+
+def installSonixPlugins(prefix):
+   print "Installing Sonix plug-ins ..."
+
+   destdir_dbg = os.path.join(prefix, 'lib', 'snx', 'dbg')
+   destdir_opt = os.path.join(prefix, 'lib', 'snx', 'opt')
+
+   srcroot = os.path.join(juggler_dir, 'vc7', 'Sonix', 'OpenAL')
+   installLibs(srcroot, destdir_dbg, ['DebugDLL'], ['.dll'])
+   installLibs(srcroot, destdir_opt, ['ReleaseDLL'], ['.dll'])
+
+   srcroot = os.path.join(juggler_dir, 'vc7', 'Sonix', 'Audiere')
+   installLibs(srcroot, destdir_dbg, ['DebugDLL'], ['.dll'])
+   installLibs(srcroot, destdir_opt, ['ReleaseDLL'], ['.dll'])
+
+def installGadgeteer(prefix):
+   print "Installing Gadgeteer headers, libraries, and samples ..."
+
+   destdir = os.path.join(prefix, 'include', 'gadget')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'gadgeteer', 'gadget')
+   installDir(srcdir, destdir, ['.h'])
+
+   srcdir  = os.path.join(juggler_dir, 'vc7', 'Gadgeteer', 'gadget')
+   installDir(srcdir, destdir, ['.h'])
+
+   destdir = os.path.join(prefix, 'lib')
+   srcroot = os.path.join(juggler_dir, 'vc7', 'Gadgeteer')
+   installLibs(srcroot, destdir)
+
+   destdir = os.path.join(prefix, 'share', 'gadgeteer', 'data')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'gadgeteer', 'data')
+   installDir(srcdir, destdir)
+
+   destdir = os.path.join(prefix, 'share', 'gadgeteer', 'samples')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'gadgeteer', 'samples')
+   installDir(srcdir, destdir, None, ['.in'])
+
+   destdir = os.path.join(prefix, 'share', 'gadgeteer', 'test')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'gadgeteer', 'test')
+   installDir(srcdir, destdir, None, ['.in'])
+
+   destdir = os.path.join(prefix, 'share', 'gadgeteer', 'tools')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'gadgeteer', 'tools')
+   installDir(srcdir, destdir, None, ['.in'])
+
+   destdir = os.path.join(prefix, 'share', 'gadgeteer')
+   srcroot = os.path.join(juggler_dir, 'modules', 'gadgeteer')
+
+   extra_files = ['ChangeLog', 'COPYING.txt', 'RELEASE_NOTES.txt']
+   for f in extra_files:
+      shutil.copy2(os.path.join(srcroot, f), destdir)
+
+def installGadgeteerDrivers(prefix):
+   print "Installing Gadgeteer device drivers ..."
+
+   destdir = os.path.join(prefix, 'lib', 'gadgeteer', 'drivers')
+   srcroot = os.path.join(juggler_dir, 'vc7', 'Gadgeteer')
+
+   drivers = ['DataGlove', 'Fastrak', 'Flock', 'IBox', 'IntersenseAPI',
+              'IS900', 'MotionStar', 'PinchGlove', 'TrackdAPI', 'Tweek',
+              'VRPN']
+
+   for d in drivers:
+      srcdir = os.path.join(srcroot, d)
+      installLibs(srcdir, destdir, extensions = ['.dll'])
+
+def installGadgeteerPlugins(prefix):
+   print "Installing Gadgeteer cluster plug-ins ..."
+
+   destdir = os.path.join(prefix, 'include', 'plugins',
+                          'ApplicationDataManager')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'gadgeteer', 'plugins',
+                          'ApplicationDataManager')
+   installDir(srcdir, destdir, ['.h'])
+
+   destdir = os.path.join(prefix, 'lib', 'gadgeteer', 'plugins')
+   srcroot = os.path.join(juggler_dir, 'vc7', 'Gadgeteer')
+
+   plugins = ['ApplicationDataManager', 'RemoteInputManager',
+              'StartBarrierPlugin', 'SwapLockTCPPlugin']
+
+   for p in plugins:
+      srcdir = os.path.join(srcroot, p)
+      installLibs(srcdir, destdir, extensions = ['.dll'])
+
+def installVRJuggler(prefix):
+   print "Installing VR Juggler headers, libraries, and samples ..."
+
+   destdir = os.path.join(prefix, 'include', 'vrj')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'vrjuggler', 'vrj')
+   installDir(srcdir, destdir, ['.h'])
+
+   srcdir  = os.path.join(juggler_dir, 'vc7', 'VRJuggler', 'vrj')
+   installDir(srcdir, destdir, ['.h'])
+
+   destdir = os.path.join(prefix, 'lib')
+   srcroot = os.path.join(juggler_dir, 'vc7', 'VRJuggler')
+   installLibs(srcroot, destdir)
+
+   srcroot = os.path.join(juggler_dir, 'vc7', 'VRJuggler',
+                          'OpenGL_Draw_Manager')
+   installLibs(srcroot, destdir)
+
+   srcroot = os.path.join(juggler_dir, 'vc7', 'VRJuggler',
+                          'Performer_Draw_Manager')
+   installLibs(srcroot, destdir)
+
+   destdir = os.path.join(prefix, 'share', 'vrjuggler', 'data')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'vrjuggler', 'data')
+   installDir(srcdir, destdir)
+
+   destdir = os.path.join(prefix, 'share', 'vrjuggler', 'samples')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'vrjuggler', 'samples')
+   installDir(srcdir, destdir, None, ['.in'])
+
+   destdir = os.path.join(prefix, 'share', 'vrjuggler', 'test')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'vrjuggler', 'test')
+   installDir(srcdir, destdir, None, ['.in'])
+
+   destdir = os.path.join(prefix, 'share', 'vrjuggler', 'tools')
+   srcdir  = os.path.join(juggler_dir, 'modules', 'vrjuggler', 'tools')
+   installDir(srcdir, destdir, None, ['.in'])
+
+   destdir = os.path.join(prefix, 'share', 'vrjuggler')
+   srcroot = os.path.join(juggler_dir, 'modules', 'vrjuggler')
+
+   extra_files = ['ChangeLog', 'COPYING.txt', 'RELEASE_NOTES.txt']
+   for f in extra_files:
+      shutil.copy2(os.path.join(srcroot, f), destdir)
+
+def installWin32Deps(prefix):
    pass
 
 def main():
-   setVars()
+   options = setVars()
    generateVersionHeaders()
 
    # The environment variable %VSINSTALLDIR% is set by vsvars32.bat.
@@ -263,10 +610,10 @@ def main():
    status = os.spawnl(os.P_WAIT, devenv_cmd, 'devenv', solution_file)
 
    if status == 0:
-      print "Proceed with VR Juggler installation? (y/n) ",
+      print "Proceed with VR Juggler installation [y]: ",
       proceed = sys.stdin.readline().strip(" \n")
-      if proceed.lower().startswith('y'):
-         doInstall()
+      if proceed == '' or proceed.lower().startswith('y'):
+         doInstall(options['prefix'])
 
 
 juggler_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
