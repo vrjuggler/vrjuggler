@@ -162,11 +162,14 @@ AC_ARG_WITH(pfver,
             [  --with-pfver=<VER>      Performer version to use        [default=2.4]],
             PF_VER="$withval", PF_VER='2.4')
 
+dnl # If no value has been set for $DEFAULT_OGLROOT, use /usr.
+: ${DEFAULT_OGLROOT=/usr}
+
 dnl # Define the root directory for the OpenGL installation.
 dnl # The default is /usr.
 AC_ARG_WITH(oglroot,
             [  --with-oglroot=<PATH>   OpenGL installation directory   [default=/usr]],
-            OGLROOT="$withval", OGLROOT='/usr')
+            OGLROOT="$withval", OGLROOT="$DEFAULT_OGLROOT")
 
 dnl # Use the Mesa OpenGL implementation.  That is, link with libMesaGL and
 dnl # libMesaGLU.
@@ -437,6 +440,12 @@ case $target_os in
         if test "x${_thread_pkg}" != "xPOSIX" ; then
             AC_MSG_WARN(*** Forcing the use of POSIX threads ***)
             _thread_pkg='POSIX'
+        fi
+
+        dnl # If nothing was given as an alternate OpenGL installation path,
+        dnl # use /opt/graphics/OpenGL.
+        if test "x$OGLROOT" = "x$DEFAULT_OGLROOT" ; then
+            OGLROOT='/opt/graphics/OpenGL'
         fi
 
         AC_DEFINE(VJ_OS_HPUX,)
@@ -1103,10 +1112,9 @@ if test "x${_enable_gl_api}" = "xyes" ; then
     _vjsave_INCLUDES="$INCLUDES"
     _vjsave_LDFLAGS="$LDFLAGS"
 
-    dnl # Add the user-specified OpenGL installation directory to these paths.
-    dnl # Ensure that /usr/include and /usr/lib are not included multiple times
-    dnl # if $OGLROOT is "/usr".
-    if test "x${OGLROOT}" != "x/usr" ; then
+    dnl # Add the user-specified OpenGL installation directory to these paths
+    dnl # if one was given.
+    if test "x$OGLROOT" != "x$DEFAULT_OGLROOT" ; then
         CPPFLAGS="$CPPFLAGS -I${OGLROOT}/include"
         INCLUDES="$INCLUDES -I${OGLROOT}/include"
         LDFLAGS="-L${OGLROOT}/lib${LIBBITSUF} $LDFLAGS"
