@@ -53,3 +53,8 @@ Points of interest in the Juggler 1.1 code
   - Reconfig/add/remove keyboard proxy (test proxy and dev interface)     
 
 * OTHER TESTS
+
+
+TODO: Change all of the _check functions to load the files that they are supposed
+      to test against and look at the chunk properties to test against what the
+      config manager(s) know about.
