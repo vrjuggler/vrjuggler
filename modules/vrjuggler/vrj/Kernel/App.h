@@ -95,6 +95,7 @@ public:
    }
 
 public:
+
    /** Application init function
     * Execute any initialization needed before the API is started
     * @note: Derived classes MUST call base class version of this method
