@@ -145,7 +145,7 @@ public:
     */
    virtual int spawn (BaseThreadFunctor* functorPtr,
                       VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
-                      VPRThreadScope scope = VPR_LOCAL_THREAD,
+                      VPRThreadScope scope = VPR_GLOBAL_THREAD,
                       VPRThreadState state = VPR_JOINABLE_THREAD,
                       size_t stack_size = 0)
    {
