@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -34,10 +34,12 @@
 
 extern "C"
 {
-   // Copy constructor wrapper.
-   SHARPPY_API vpr::Interval* vpr_Interval_Interval__vpr_Interval(const vpr::Interval* p)
+   // Constructor wrapper.
+   SHARPPY_API vpr::Interval* vpr_Interval_Interval__vpr_Interval(const vpr::Interval* p0)
    {
-      vpr::Interval* obj = new vpr::Interval(*p);
+      const vpr::Interval& marshal_p0 = *p0; // Pre-call marshaling for p0
+      vpr::Interval* obj = new vpr::Interval(marshal_p0);
+      ; // Post-call marshaling for p0
       return obj;
    }
 
@@ -233,6 +235,7 @@ extern "C"
 
       return result;
    }
+
 
 
 

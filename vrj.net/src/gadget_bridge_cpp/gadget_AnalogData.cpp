@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -34,10 +34,12 @@
 
 extern "C"
 {
-   // Copy constructor wrapper.
-   SHARPPY_API gadget::AnalogData* gadget_AnalogData_AnalogData__gadget_AnalogData(const gadget::AnalogData* p)
+   // Constructor wrapper.
+   SHARPPY_API gadget::AnalogData* gadget_AnalogData_AnalogData__gadget_AnalogData(const gadget::AnalogData* p0)
    {
-      gadget::AnalogData* obj = new gadget::AnalogData(*p);
+      const gadget::AnalogData& marshal_p0 = *p0; // Pre-call marshaling for p0
+      gadget::AnalogData* obj = new gadget::AnalogData(marshal_p0);
+      ; // Post-call marshaling for p0
       return obj;
    }
 
@@ -74,6 +76,7 @@ extern "C"
    {
       self_->setAnalog(p0);
    }
+
 
 
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.67 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.69 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -121,6 +121,7 @@ public sealed class GUID
 
    public GUID(vpr.GUID p0)
    {
+      allocDelegates();
       
       mRawObject   = vpr_GUID_GUID__vpr_GUID(p0);
       mWeOwnMemory = true;

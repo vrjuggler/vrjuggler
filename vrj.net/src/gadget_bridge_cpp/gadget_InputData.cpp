@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -34,10 +34,12 @@
 
 extern "C"
 {
-   // Copy constructor wrapper.
-   SHARPPY_API gadget::InputData* gadget_InputData_InputData__gadget_InputData(const gadget::InputData* p)
+   // Constructor wrapper.
+   SHARPPY_API gadget::InputData* gadget_InputData_InputData__gadget_InputData(const gadget::InputData* p0)
    {
-      gadget::InputData* obj = new gadget::InputData(*p);
+      const gadget::InputData& marshal_p0 = *p0; // Pre-call marshaling for p0
+      gadget::InputData* obj = new gadget::InputData(marshal_p0);
+      ; // Post-call marshaling for p0
       return obj;
    }
 
@@ -75,6 +77,7 @@ extern "C"
 
       return result;
    }
+
 
 
 

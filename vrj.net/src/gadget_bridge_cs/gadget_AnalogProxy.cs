@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.67 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.69 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -57,6 +57,7 @@ public sealed class AnalogProxy
    public AnalogProxy(gadget.AnalogProxy p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
+      allocDelegates();
       
       mRawObject   = gadget_AnalogProxy_AnalogProxy__gadget_AnalogProxy(p0);
       mWeOwnMemory = true;

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -34,10 +34,12 @@
 
 extern "C"
 {
-   // Copy constructor wrapper.
-   SHARPPY_API gadget::PositionData* gadget_PositionData_PositionData__gadget_PositionData(const gadget::PositionData* p)
+   // Constructor wrapper.
+   SHARPPY_API gadget::PositionData* gadget_PositionData_PositionData__gadget_PositionData(const gadget::PositionData* p0)
    {
-      gadget::PositionData* obj = new gadget::PositionData(*p);
+      const gadget::PositionData& marshal_p0 = *p0; // Pre-call marshaling for p0
+      gadget::PositionData* obj = new gadget::PositionData(marshal_p0);
+      ; // Post-call marshaling for p0
       return obj;
    }
 
@@ -67,6 +69,7 @@ extern "C"
    {
       self_->setPosition(p0);
    }
+
 
 
 

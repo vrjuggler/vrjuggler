@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.69 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -60,12 +60,14 @@ public class BaseDeviceInterface
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gadget_BaseDeviceInterface_BaseDeviceInterface__gadget_BaseDeviceInterface([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.BaseDeviceInterfaceMarshaler))] gadget.BaseDeviceInterface p0);
+   private extern static IntPtr gadget_BaseDeviceInterface_BaseDeviceInterface__gadget_BaseDeviceInterface([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.BaseDeviceInterfaceMarshaler))] gadget.BaseDeviceInterface p0,
+	[MarshalAs(UnmanagedType.FunctionPtr)] refreshDelegate d0);
 
    public BaseDeviceInterface(gadget.BaseDeviceInterface p0)
    {
+      allocDelegates();
       
-      mRawObject   = gadget_BaseDeviceInterface_BaseDeviceInterface__gadget_BaseDeviceInterface(p0);
+      mRawObject   = gadget_BaseDeviceInterface_BaseDeviceInterface__gadget_BaseDeviceInterface(p0, m_refreshDelegate);
       mWeOwnMemory = true;
       
    }
@@ -103,6 +105,7 @@ public class BaseDeviceInterface
 
    // Operator overloads.
 
+   // Converter operators.
 
    // Start of non-virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]

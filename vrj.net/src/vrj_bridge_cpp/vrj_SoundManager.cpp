@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,16 +35,18 @@
 
 extern "C"
 {
-   // Copy constructor wrapper.
-   SHARPPY_API vrj::SoundManager* vrj_SoundManager_SoundManager__vrj_SoundManager(const vrj_SoundManager_Adapter* p)
+   // Constructor wrapper.
+   SHARPPY_API vrj_SoundManager_Adapter* vrj_SoundManager_SoundManager__vrj_SoundManager(const vrj::SoundManager* p0, vrj_SoundManager_Adapter::configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t cb0, vrj_SoundManager_Adapter::configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t cb1, vrj_SoundManager_Adapter::configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t cb2, vrj_SoundManager_Adapter::update_callback_t cb3, vrj_SoundManager_Adapter::sync_callback_t cb4, vrj_SoundManager_Adapter::configProcessPending_callback_t cb5)
    {
-      vrj_SoundManager_Adapter* obj = new vrj_SoundManager_Adapter(*p);
-      obj->configAdd_callback_boost_shared_ptr_jccl__ConfigElement = p->configAdd_callback_boost_shared_ptr_jccl__ConfigElement;
-      obj->configRemove_callback_boost_shared_ptr_jccl__ConfigElement = p->configRemove_callback_boost_shared_ptr_jccl__ConfigElement;
-      obj->configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement = p->configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement;
-      obj->update_callback = p->update_callback;
-      obj->sync_callback = p->sync_callback;
-      obj->configProcessPending_callback = p->configProcessPending_callback;
+      const vrj::SoundManager& marshal_p0 = *p0; // Pre-call marshaling for p0
+      vrj_SoundManager_Adapter* obj = new vrj_SoundManager_Adapter(marshal_p0);
+      obj->configAdd_callback_boost_shared_ptr_jccl__ConfigElement = cb0;
+      obj->configRemove_callback_boost_shared_ptr_jccl__ConfigElement = cb1;
+      obj->configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement = cb2;
+      obj->update_callback = cb3;
+      obj->sync_callback = cb4;
+      obj->configProcessPending_callback = cb5;
+      ; // Post-call marshaling for p0
       return obj;
    }
 
@@ -105,6 +107,7 @@ extern "C"
    {
       self_->vrj::SoundManager::sync();
    }
+
 
 
 

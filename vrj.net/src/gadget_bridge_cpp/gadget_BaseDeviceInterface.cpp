@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,11 +35,13 @@
 
 extern "C"
 {
-   // Copy constructor wrapper.
-   SHARPPY_API gadget::BaseDeviceInterface* gadget_BaseDeviceInterface_BaseDeviceInterface__gadget_BaseDeviceInterface(const gadget_BaseDeviceInterface_Adapter* p)
+   // Constructor wrapper.
+   SHARPPY_API gadget_BaseDeviceInterface_Adapter* gadget_BaseDeviceInterface_BaseDeviceInterface__gadget_BaseDeviceInterface(const gadget::BaseDeviceInterface* p0, gadget_BaseDeviceInterface_Adapter::refresh_callback_t cb0)
    {
-      gadget_BaseDeviceInterface_Adapter* obj = new gadget_BaseDeviceInterface_Adapter(*p);
-      obj->refresh_callback = p->refresh_callback;
+      const gadget::BaseDeviceInterface& marshal_p0 = *p0; // Pre-call marshaling for p0
+      gadget_BaseDeviceInterface_Adapter* obj = new gadget_BaseDeviceInterface_Adapter(marshal_p0);
+      obj->refresh_callback = cb0;
+      ; // Post-call marshaling for p0
       return obj;
    }
 
@@ -88,6 +90,7 @@ extern "C"
    {
       self_->gadget::BaseDeviceInterface::refresh();
    }
+
 
 
    // Wrapper for static method gadget::BaseDeviceInterface::refreshAllDevices()

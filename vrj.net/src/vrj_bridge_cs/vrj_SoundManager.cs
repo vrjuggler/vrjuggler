@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.69 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -57,13 +57,20 @@ public class SoundManager
    }
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr vrj_SoundManager_SoundManager__vrj_SoundManager([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vrj.SoundManagerMarshaler))] vrj.SoundManager p0);
+   private extern static IntPtr vrj_SoundManager_SoundManager__vrj_SoundManager([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vrj.SoundManagerMarshaler))] vrj.SoundManager p0,
+	[MarshalAs(UnmanagedType.FunctionPtr)] configAddDelegate_boost_shared_ptr_jccl__ConfigElement d0,
+	[MarshalAs(UnmanagedType.FunctionPtr)] configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement d1,
+	[MarshalAs(UnmanagedType.FunctionPtr)] configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement d2,
+	[MarshalAs(UnmanagedType.FunctionPtr)] updateDelegate d3,
+	[MarshalAs(UnmanagedType.FunctionPtr)] syncDelegate d4,
+	[MarshalAs(UnmanagedType.FunctionPtr)] configProcessPendingDelegate d5);
 
    public SoundManager(vrj.SoundManager p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
+      allocDelegates();
       
-      mRawObject   = vrj_SoundManager_SoundManager__vrj_SoundManager(p0);
+      mRawObject   = vrj_SoundManager_SoundManager__vrj_SoundManager(p0, m_configAddDelegate_boost_shared_ptr_jccl__ConfigElement, m_configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement, m_configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement, m_updateDelegate, m_syncDelegate, m_configProcessPendingDelegate);
       mWeOwnMemory = true;
       
    }
@@ -108,6 +115,7 @@ public class SoundManager
 
    // Operator overloads.
 
+   // Converter operators.
 
    // Start of virtual methods.
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
