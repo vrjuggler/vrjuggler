@@ -57,13 +57,6 @@ namespace vpr {
  */
 class VPR_CLASS_API BlockIO {
 public:
-    /// Possible modes for opening I/O devices.
-    enum _open_mode {
-        READ_ONLY,        /**< Open read-only */
-        WRITE_ONLY,       /**< Open write-only */
-        READ_WRITE        /**< Open read/write */
-    };
-
     /**
      * Gets the name of this I/O device.  The significance of the name depends
      * on the specific device type.
@@ -77,45 +70,6 @@ public:
     virtual const std::string&
     getName (void) {
         return m_name;
-    }
-
-    /**
-     * Sets the open flags so that the I/O device is opened in read-only mode.
-     *
-     * @pre None.
-     * @post The open flags are updated so that when the device is opened, it
-     *       it is opened in read-only mode.  If the device is already open,
-     *       this has no effect.
-     */
-    virtual void
-    setOpenReadOnly (void) {
-        m_open_mode = READ_ONLY;
-    }
-
-    /**
-     * Sets the open flags so that the I/O device is opened in write-only mode.
-     *
-     * @pre None.
-     * @post The open flags are updated so that when the device is opened, it
-     *       is opened in write-only mode.  If the device is already open,
-     *       this has no effect.
-     */
-    virtual void
-    setOpenWriteOnly (void) {
-        m_open_mode = WRITE_ONLY;
-    }
-
-    /**
-     * Sets the open flags so that the I/O device is opened in read/write mode.
-     *
-     * @pre None.
-     * @post The open flags are updated so that when the device is opened, it
-     *       is opened in read/write mode.  If the device is already open,
-     *       this has no effect.
-     */
-    virtual void
-    setOpenReadWrite (void) {
-        m_open_mode = READ_WRITE;
     }
 
     /**
@@ -612,51 +566,6 @@ public:
     }
 
     /**
-     * Tests if the I/O device is read-only.
-     *
-     * @pre The I/O device is open.
-     * @post The access mode is tested for read-only mode, and the result is
-     *       returned to the caller.
-     *
-     * @return <code>true</code> is returned if the device is in read-only
-     *         mode; <code>false</code> otherwise.
-     */
-    inline bool
-    isReadOnly (void) {
-        return (m_open_mode == READ_ONLY);
-    }
-
-    /**
-     * Tests if the I/O device is write-only.
-     *
-     * @pre The I/O device is open.
-     * @post The access mode is tested for write-only mode, and the result is
-     *       returned to the caller.
-     *
-     * @return <code>true</code> is returned if the device is in write-only
-     *         mode; <code>false</code> otherwise.
-     */
-    inline bool
-    isWriteOnly (void) {
-        return (m_open_mode == WRITE_ONLY);
-    }
-
-    /**
-     * Tests if the I/O device is read/write.
-     *
-     * @pre The I/O device is open.
-     * @post The access mode is tested for read/write mode, and the result is
-     *       returned to the caller.
-     *
-     * @return <code>true</code> is returned if the device is in read/write
-     *         mode; <code>false</code> otherwise.
-     */
-    inline bool
-    isReadWrite (void) {
-        return (m_open_mode == READ_WRITE);
-    }
-
-    /**
      * Test if reading from this I/O device will block.
      *
      * @pre getHandle() returns a valid <code>vpr::IOSys::Handle</code>
@@ -696,15 +605,13 @@ protected:
      *
      * @pre None.
      * @post The name object is copied into m_name; the open mode is set to
-     *       read/write and blocking; the open state is set to
-     *       <code>false</code>; and the blocking mode for reads and writes is
-     *       set to <code>true</code>.
+     *       blocking; the open state is set to <code>false</code>; and the
+     *       blocking mode for reads and writes is set to <code>true</code>.
      *
      * @param name The name for this device.
      */
     BlockIO (const std::string& name)
-        : m_name(name), m_open_mode(READ_WRITE), m_open_blocking(true),
-          m_open(false), m_blocking(true)
+        : m_name(name), m_open_blocking(true), m_open(false), m_blocking(true)
     {
         /* Do nothing. */ ;
     }
@@ -718,7 +625,6 @@ protected:
     BlockIO (const BlockIO& other)
     {
         m_name          = other.m_name;
-        m_open_mode     = other.m_open_mode;
         m_open_blocking = other.m_open_blocking;
         m_open          = other.m_open;
         m_blocking      = other.m_blocking;
@@ -827,9 +733,6 @@ protected:
                            const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
     /// The name of the I/O device.
     std::string m_name; 
-
-    /// The open mode of the device
-    _open_mode m_open_mode;
 
     /// Flag telling if blocking is enabled when opening the device
     bool m_open_blocking;

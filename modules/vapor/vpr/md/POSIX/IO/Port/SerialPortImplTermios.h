@@ -75,6 +75,48 @@ public:
     // vpr::BlockIO overrides.
     // ========================================================================
 
+    /**
+     * Sets the open flags so that the serial port is opened in read-only
+     * mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the port is opened, it is
+     *       opened in read-only mode.  If the port is already open, this has
+     *       no effect.
+     */
+    inline void
+    setOpenReadOnly (void) {
+        m_handle->setOpenReadOnly();
+    }
+
+    /**
+     * Sets the open flags so that the serial port is opened in write-only
+     * mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the port is opened, it is
+     *       opened in write-only mode.  If the port is already open, this has
+     *       no effect.
+     */
+    inline void
+    setOpenWriteOnly (void) {
+        m_handle->setOpenWriteOnly();
+    }
+
+    /**
+     * Sets the open flags so that the serial port is opened in read/write
+     * mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the port is opened, it is
+     *       opened in read/write mode.  If the port is already open, this has
+     *       no effect.
+     */
+    inline void
+    setOpenReadWrite (void) {
+        m_handle->setOpenReadWrite();
+    }
+
     // ------------------------------------------------------------------------
     //: Open the serial port and initialize its flags.
     //
@@ -145,6 +187,51 @@ public:
     inline IOSys::Handle
     getHandle (void) {
        return m_handle->getHandle();
+    }
+
+    /**
+     * Tests if the serial port is read-only.
+     *
+     * @pre The serial port is open.
+     * @post The access mode is tested for read-only mode, and the result is
+     *       returned to the caller.
+     *
+     * @return <code>true</code> is returned if the device is in read-only
+     *         mode; <code>false</code> otherwise.
+     */
+    inline bool
+    isReadOnly (void) {
+        return m_handle->isReadOnly();
+    }
+
+    /**
+     * Tests if the serial port is write-only.
+     *
+     * @pre The serial port is open.
+     * @post The access mode is tested for write-only mode, and the result is
+     *       returned to the caller.
+     *
+     * @return <code>true</code> is returned if the device is in write-only
+     *         mode; <code>false</code> otherwise.
+     */
+    inline bool
+    isWriteOnly (void) {
+        return m_handle->isWriteOnly();
+    }
+
+    /**
+     * Tests if the serial port is read/write.
+     *
+     * @pre The serial port is open.
+     * @post The access mode is tested for read/write mode, and the result is
+     *       returned to the caller.
+     *
+     * @return <code>true</code> is returned if the device is in read/write
+     *         mode; <code>false</code> otherwise.
+     */
+    inline bool
+    isReadWrite (void) {
+        return m_handle->isReadWrite();
     }
 
     // ========================================================================

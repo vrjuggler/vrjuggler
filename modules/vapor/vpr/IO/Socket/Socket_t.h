@@ -82,45 +82,6 @@ public:
     }
 
     /**
-     * Sets the open flags so that the socket is opened in read-only mode.
-     *
-     * @pre None.
-     * @post The open flags are updated so that when the socket is opened, it
-     *       is opened in read-only mode.  If the socket is already open,
-     *       this has no effect.
-     */
-    inline void
-    setOpenReadOnly (void) {
-        m_socket_imp->setOpenReadOnly();
-    }
-
-    /**
-     * Sets the open flags so that the socket is opened in write-only mode.
-     *
-     * @pre None.
-     * @post The open flags are updated so that when the socket is opened, it
-     *       is opened in write-only mode.  If the socket is already open,
-     *       this has no effect.
-     */
-    inline void
-    setOpenWriteOnly (void) {
-        m_socket_imp->setOpenWriteOnly();
-    }
-
-    /**
-     * Sets the open flags so that the socket is opened in read/write mode.
-     *
-     * @pre None.
-     * @post The open flags are updated so that when the socket is opened, it
-     *       is opened in read/write mode.  If the socket is already open,
-     *       this has no effect.
-     */
-    inline void
-    setOpenReadWrite (void) {
-        m_socket_imp->setOpenReadWrite();
-    }
-
-    /**
      * Sets the blocking flags so that the socket is opened in blocking mode.
      *
      * @pre None.
