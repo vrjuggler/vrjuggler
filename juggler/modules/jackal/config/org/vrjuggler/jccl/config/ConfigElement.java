@@ -43,6 +43,7 @@ import org.vrjuggler.jccl.config.event.*;
  */
 public class ConfigElement implements ConfigElementPointerListener
 {
+
    /**
     * Create a new configuration element with the given properties.
     */
@@ -67,6 +68,67 @@ public class ConfigElement implements ConfigElementPointerListener
                ((ConfigElementPointer)prop).addConfigElementPointerListener(this);
             }
          }
+      }
+   }
+  
+   /**
+    * Constucts a ConfigElement that is identical to the given ConfigElement.
+    */
+   public ConfigElement(ConfigElement old_elm)
+   {
+      mName = new String(old_elm.mName);
+      mDefinition = old_elm.mDefinition;
+
+      mProps = new TreeMap();
+      
+      Set map_set = old_elm.mProps.entrySet();
+      
+      for(Iterator itr = map_set.iterator() ; itr.hasNext() ; )
+      {
+         Map.Entry entry = (Map.Entry)itr.next();
+         
+         List values = new ArrayList();
+         
+         String prop_token = (String)entry.getKey();
+         
+         for(Iterator list_iterator = ((List)entry.getValue()).iterator() ;
+               list_iterator.hasNext() ; )
+         {   
+            Object obj = list_iterator.next();
+            
+            if(obj instanceof Boolean)
+            {
+               Boolean temp = new Boolean( ((Boolean)obj).booleanValue() );
+               values.add(temp);
+            }
+            else if(obj instanceof Integer)
+            {
+               Integer temp = new Integer( ((Integer)obj).intValue() );
+               values.add(temp);
+            }
+            else if(obj instanceof Float)
+            {
+               Float temp = new Float( ((Float)obj).floatValue() );
+               values.add(temp);
+            }
+            else if(obj instanceof String)
+            {
+               String temp = new String((String)obj);
+               values.add(temp);
+            }
+            else if(obj instanceof ConfigElementPointer)
+            {
+               ConfigElementPointer temp = new ConfigElementPointer( 
+                     ( (ConfigElementPointer)obj).getTarget());
+               values.add(temp);
+            }
+            else if(obj instanceof ConfigElement)
+            {
+               ConfigElement temp = new ConfigElement((ConfigElement)obj);
+               values.add(temp);
+            }
+         }
+         mProps.put(prop_token, values);
       }
    }
 
@@ -227,6 +289,29 @@ public class ConfigElement implements ConfigElementPointerListener
 
       // Notify listeners of the removal
       firePropertyValueRemoved(name, index, old_value);
+   }
+   
+   public synchronized void removeProperty(String name, Object old_value)
+      throws IllegalArgumentException,
+             ArrayIndexOutOfBoundsException
+   {
+      // Get the list of property values
+      List values = getPropertyValues(name);
+
+      // Verify that this property supports variable values
+      PropertyDefinition prop_def = mDefinition.getPropertyDefinition(name);
+      if (! prop_def.isVariable())
+      {
+         throw new IllegalArgumentException(name + " does not support a variable number of values");
+      }
+
+      // TODO: Validate that value is of the correct type for this property
+
+      // Remove the value from the list
+      boolean result = values.remove(old_value);
+
+      // Notify listeners of the removal
+      firePropertyValueRemoved(name, -1, old_value);
    }
 
    /**

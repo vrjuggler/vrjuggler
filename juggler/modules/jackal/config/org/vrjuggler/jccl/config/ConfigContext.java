@@ -33,6 +33,7 @@ package org.vrjuggler.jccl.config;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 import javax.swing.event.EventListenerList;
 
 /**
@@ -102,6 +103,24 @@ public class ConfigContext
    public List getResources()
    {
       return mResources;
+   }
+   
+   /**
+    * Returns true if the give ConfigElement is in this context.
+    */
+   public boolean containsElement(ConfigElement elm)
+   {
+      ConfigBroker broker = new ConfigBrokerProxy();
+      
+      for(Iterator itr = mResources.iterator() ; itr.hasNext() ; )
+      {
+         java.util.List elm_list = broker.getElementsIn((String)itr.next());
+         if(elm_list.contains(elm))
+         {
+            return true;
+         }
+      }
+      return false;
    }
 
    /**
