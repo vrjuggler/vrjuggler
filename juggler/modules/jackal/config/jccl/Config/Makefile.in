@@ -49,11 +49,6 @@ SRCS		= \
 	ParseUtil.cpp \
 	PropertyDesc.cpp
 
-#	ConfigIO.cpp \
-#	Property.cpp \
-#	VarValue.cpp \
-#	XMLConfigIOHandler.cpp
-
 EXTRA_INCLUDES = \
 	-I$(top_srcdir)/config \
 	-I$(top_srcdir)/common \
