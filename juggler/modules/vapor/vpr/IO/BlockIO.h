@@ -447,10 +447,11 @@ public:
 
       // Allocate the temporary buffer, zero it, and read in the current
       // buffer from the device.
+      
       buffer.resize(length);
       memset(&buffer[0], '\0', buffer.size());
       status = this->readn(&buffer[0], buffer.size(), bytes_read, timeout);
-
+      
       if ( status.success() )
       {
          buffer.resize(bytes_read);
