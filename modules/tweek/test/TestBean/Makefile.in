@@ -26,7 +26,7 @@ all:
 java: $(CLASSES)
 
 TestBean.jar: $(CLASSES)
-	$(JAR) cvfm $@ $(srcdir)/test.MF $(CLASSES)
+	$(JAR) cvf $@ $(CLASSES)
 
 install:
 	cp TestBean.jar $(TWEEK_BASE_DIR)/bin/beans

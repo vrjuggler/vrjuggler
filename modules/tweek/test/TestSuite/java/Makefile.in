@@ -48,7 +48,7 @@ java_idl: $(IDL_JAVA_FILES)
 java: $(CLASSES)
 
 GenericBean.jar: $(GENERIC_CLASSES)
-	$(JAR) cvfm $@ $(srcdir)/GenericBean.MF $(GENERIC_CLASSES)
+	$(JAR) cvf $@ $(GENERIC_CLASSES)
 
 #install:
 #	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/bin/beans
