@@ -85,7 +85,7 @@ dnl                          test SNX program], , enable_sonixtest=yes)
     fi
 
     AC_PATH_PROG(SNX_CONFIG, sonix-config, no)
-    min_sonix_version=ifelse([$1], ,0.0.1,$1)
+    min_sonix_version=ifelse([$1], ,0.0.1, [$1])
 
     dnl Do a sanity check to ensure that $SNX_CONFIG actually works.
     if ! (eval $SNX_CONFIG --cxxflags >/dev/null 2>&1) 2>&1 ; then
@@ -115,7 +115,7 @@ dnl                          test SNX program], , enable_sonixtest=yes)
 
         AC_MSG_CHECKING([whether Sonix version is >= $min_sonix_version])
         AC_MSG_RESULT([$SNX_VERSION])
-        DPP_VERSION_CHECK([$SNX_VERSION], [$min_sonix_version], $2, $3)
+        DPP_VERSION_CHECK([$SNX_VERSION], [$min_sonix_version], [$2], [$3])
     fi
 
     if test "x$no_sonix" != x ; then
