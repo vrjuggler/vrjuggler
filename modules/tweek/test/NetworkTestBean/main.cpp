@@ -30,11 +30,11 @@ int main (int argc, char* argv[])
 
                try
                {
-                  mgr.getChildPOA()->activate_object(slider_subj);
-                  mgr.getChildPOA()->activate_object(whiteboard_subj);
-                  tweek::SubjectManagerImpl::instance()->registerSubject(slider_subj->_this(),
+                  tweek::SubjectManagerImpl::instance()->registerSubject(mgr,
+                                                                         slider_subj,
                                                                          "SliderSubject");
-                  tweek::SubjectManagerImpl::instance()->registerSubject(whiteboard_subj->_this(),
+                  tweek::SubjectManagerImpl::instance()->registerSubject(mgr,
+                                                                         whiteboard_subj,
                                                                          "WhiteboardSubject");
                }
                catch (...)
