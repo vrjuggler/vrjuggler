@@ -34,7 +34,6 @@
 package VjGUI;
 
 import java.net.*;
-import java.util.Vector;
 import java.io.*;
 import java.awt.event.*;
 import java.awt.BorderLayout;
@@ -44,7 +43,10 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 import javax.swing.text.html.*;
+import javax.swing.border.EmptyBorder;
 import java.util.Enumeration;
+import java.util.Vector;
+
 import VjGUI.Core;
 import VjGUI.util.JFrameParent;
 import VjGUI.util.ChildFrame;
@@ -57,6 +59,7 @@ import VjGUI.util.ChildFrame;
  */
 public class HTMLFrame extends JFrame 
     implements ChildFrame, HyperlinkListener, WindowListener, ActionListener {
+
 
     URL contents_url;
     URL current_url;
@@ -71,6 +74,7 @@ public class HTMLFrame extends JFrame
     protected JButton forward_button;
     protected JButton back_button;
     protected JButton close_button;
+
 
     /**
      * Constructor
@@ -88,8 +92,10 @@ public class HTMLFrame extends JFrame
         back_buffer = new Vector();
         forward_buffer = new Vector();
 
-        Container main_panel = getContentPane();
+        JPanel main_panel = new JPanel();
+	main_panel.setBorder (new EmptyBorder (5, 5, 5, 5));
         main_panel.setLayout (new BorderLayout (5,5));
+        getContentPane().add(main_panel);
 
 	pane = new JEditorPane();
 	sp = new JScrollPane (pane);
@@ -99,7 +105,7 @@ public class HTMLFrame extends JFrame
 	pane.addHyperlinkListener (this);
 
         JPanel buttons_panel = new JPanel();
-        buttons_panel.setLayout (new GridLayout (1,4));
+        buttons_panel.setLayout (new GridLayout (1, 4, 5, 0));
         main_panel.add (buttons_panel, "South");
 
         contents_button = new JButton ("Contents");
@@ -107,15 +113,15 @@ public class HTMLFrame extends JFrame
         contents_button.setEnabled (false);
         contents_button.addActionListener (this);
 
-        forward_button = new JButton ("Forward");
-        buttons_panel.add (forward_button);
-        forward_button.setEnabled (false);
-        forward_button.addActionListener (this);
-
         back_button = new JButton ("Back");
         buttons_panel.add (back_button);
         back_button.setEnabled (false);
         back_button.addActionListener (this);
+
+        forward_button = new JButton ("Forward");
+        buttons_panel.add (forward_button);
+        forward_button.setEnabled (false);
+        forward_button.addActionListener (this);
 
         close_button = new JButton ("Close");
         buttons_panel.add (close_button);
@@ -250,7 +256,20 @@ public class HTMLFrame extends JFrame
     }
 
 
-    public void displayURL (URL url) {
+
+    /**
+     * Display the given URL.
+     *
+     * This is a utility function used by setURL and actionPerformed. Outside
+     * code should use setURL only.
+     * <p>
+     * Any code calling displayURL should be careful to maintain the
+     * forward_buffer and back_buffer for navigation.
+     *
+     * @param url A URL to be displayed.  url can be null, but that will
+     *            cause an error message to be displayed in the HTMLFrame.
+     */
+    protected void displayURL (URL url) {
         try {
             current_url = url;
 	    pane.setPage (url);
