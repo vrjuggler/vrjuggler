@@ -1322,7 +1322,7 @@ aMotionStar::configureBirds () {
                 // Disable the current bird in the m_birds vector.
                 m_birds[bird]->data_words  = 0;
                 m_birds[bird]->format      = FLOCK::NO_BIRD_DATA;
-                m_birds[bird]->report_rate = 0;
+                m_birds[bird]->report_rate = 1;
                 m_birds[bird]->hemisphere  = m_hemisphere;
 
                 // Fill in the bird_status struct with disabling values.
