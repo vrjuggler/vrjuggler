@@ -12,6 +12,7 @@
 
 #include <vrj/Display/CameraProjection.h>
 #include <vrj/Display/Projection.h>
+#include <gadget/Type/Position/PositionUnitConversion.h>
  
 namespace vrj
 {
@@ -88,10 +89,10 @@ void SimViewport::updateProjections()
 /**  Update internal simulator data */
 void SimViewport::updateInternalData()
 {
-   mHeadPos = *(mUser->getHeadPos());
-   mWandPos = *(mWand->getData());   
+   mHeadPos = mUser->getHeadPosProxy()->getData(gadget::PositionUnitConversion::ConvertToMeters);
+   mWandPos = mWand->getData(gadget::PositionUnitConversion::ConvertToMeters);   
 
-   mCameraPos = *(mCamera->getData());
+   mCameraPos = mCamera->getData(gadget::PositionUnitConversion::ConvertToMeters);
    gmtl::invert(mCameraPos);
 }
 

@@ -269,7 +269,7 @@ int Flock::sample()
       //if (i==1)
          //vprDEBUG(vprDBG_ALL,2) << "Flock: bird1:    orig:" << Coord(theData[index]).pos << std::endl << vprDEBUG_FLUSH;
 
-      *(cur_samples[i].getPosition()) = transmitter_T_reciever;                                     // Store corrected xform back into data
+      cur_samples[i].mPosData = transmitter_T_reciever;                                     // Store corrected xform back into data
       cur_samples[i].setTime (cur_samples[0].getTime());
 
       //if (i == 1)

@@ -243,12 +243,12 @@ int Intersense::sample()
 
       if ( mTracker.rAngleFormat(stationIndex) == ISD_EULER )
       {
-         gmtl::identity(*(cur_pos_samples[i].getPosition()));
+         gmtl::identity(cur_pos_samples[i].mPosData);
          gmtl::EulerAngleZYXf euler( gmtl::Math::deg2Rad( mTracker.zRot( stationIndex ) ),
                                      gmtl::Math::deg2Rad( mTracker.yRot( stationIndex ) ),
                                      gmtl::Math::deg2Rad( mTracker.xRot( stationIndex ) ) );
-         gmtl::setRot( *(cur_pos_samples[i].getPosition()), euler );
-         gmtl::setTrans( *(cur_pos_samples[i].getPosition()),
+         gmtl::setRot( cur_pos_samples[i].mPosData, euler );
+         gmtl::setTrans( cur_pos_samples[i].mPosData,
                             gmtl::Vec3f(mTracker.xPos( stationIndex )*3.2808,
                                         mTracker.yPos( stationIndex )*3.2808,
                                         mTracker.zPos( stationIndex )*3.2808) );
@@ -259,7 +259,7 @@ int Intersense::sample()
                              mTracker.yQuat( stationIndex ),
                              mTracker.zQuat( stationIndex ),
                              mTracker.wQuat( stationIndex ));
-         gmtl::set( *(cur_pos_samples[i].getPosition()), quatValue );
+         gmtl::set( cur_pos_samples[i].mPosData, quatValue );
       }
 
       cur_pos_samples[i].setTime (cur_pos_samples[0].getTime());

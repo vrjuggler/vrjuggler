@@ -301,6 +301,7 @@ void GlPipe::renderWindow(GlWindow* win)
 
    GlApp* theApp = glManager->getApp();       // Get application for easy access
    Display* theDisplay = win->getDisplay();   // Get the display for easy access
+   float draw_scale_factor = 1.0f/theApp->getDrawScaleFactor();
 
    glManager->setCurrentContext(win->getId());     // Set TSS data of context id
 
@@ -395,7 +396,10 @@ void GlPipe::renderWindow(GlWindow* win)
 
                jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/set left buffer and projection");
 
-               theApp->draw();
+               glPushMatrix();
+                  glScalef(draw_scale_factor, draw_scale_factor, draw_scale_factor);      // Scale to local app units
+                  theApp->draw();
+               glPopMatrix();
 
                jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/left draw()");
 
@@ -416,7 +420,10 @@ void GlPipe::renderWindow(GlWindow* win)
 
                jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/set right buffer and projection");
 
-               theApp->draw();
+               glPushMatrix();
+                  glScalef(draw_scale_factor, draw_scale_factor, draw_scale_factor);      // Scale to local app units
+                  theApp->draw();
+               glPopMatrix();
 
                jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/right draw()");
 
@@ -436,7 +443,6 @@ void GlPipe::renderWindow(GlWindow* win)
    theApp->contextPostDraw();
 
    jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/contextPostDraw()");
-
 }
 
 /**
@@ -452,3 +458,4 @@ void GlPipe::swapWindowBuffers(GlWindow* win)
 }
 
 };
+

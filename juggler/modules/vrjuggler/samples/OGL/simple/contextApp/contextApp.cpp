@@ -72,7 +72,7 @@ void contextApp::draw()
 
    // -- Get Wand matrix --- //
    Matrix44f wand_matrix;
-   wand_matrix = *(mWand->getData());
+   wand_matrix = mWand->getData();
 
    // --- Create a color for the wand --- //
    float wand_color[3];

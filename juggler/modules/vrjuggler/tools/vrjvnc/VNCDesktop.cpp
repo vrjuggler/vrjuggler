@@ -241,7 +241,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    // Compute the wand xform in the local desktop coordinate frame
    //   wand_vnc = vnc_M_vw * vw_M_world
    gmtl::Matrix44f desktop_M_world;                               // inv(wMvw*vwMvnc) -- nav*desktop
-   const gmtl::Matrix44f wand_mat_world(*(mWand->getData()));
+   const gmtl::Matrix44f wand_mat_world(mWand->getData());
    gmtl::Matrix44f world_M_desktop = navMatrix*m_vworld_M_desktop;
    gmtl::invert(desktop_M_world, world_M_desktop);
    gmtl::Matrix44f wand_mat = desktop_M_world * wand_mat_world;

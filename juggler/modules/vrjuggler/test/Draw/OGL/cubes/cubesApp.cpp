@@ -63,20 +63,19 @@ void UserData::updateNavigation()
 
    gmtl::identity(transformIdent);
 
-   gmtl::Matrix44f* wand_matrix;
-   wand_matrix = mWand->getData();
-   gmtl::setRot( xyzAngles, *wand_matrix );
+   gmtl::Matrix44f wand_matrix = mWand->getData();
+   gmtl::setRot( xyzAngles, wand_matrix );
 
    vprDEBUG(vprDBG_ALL,6) << "===================================\n"
                         << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL,6) << "Wand:\n" << *wand_matrix << std::endl
+   vprDEBUG(vprDBG_ALL,6) << "Wand:\n" << wand_matrix << std::endl
                         << vprDEBUG_FLUSH;
 //   vprDEBUG(vprDBG_ALL,6) << "Wand XYZ: " << xyzAngles << std::endl
 //                        << vprDEBUG_FLUSH;
 
-   gmtl::set(goal_rot, *wand_matrix); // Create the goal rotation quaternion
+   gmtl::set(goal_rot, wand_matrix); // Create the goal rotation quaternion
 
-   if(transformIdent != *wand_matrix)  // If we don't have two identity matrices
+   if(transformIdent != wand_matrix)  // If we don't have two identity matrices
    {
       gmtl::slerp(slerp_rot, 0.05f, source_rot, goal_rot); // Transform part way there
       gmtl::set(transform, slerp_rot);      // Create the transform matrix to use

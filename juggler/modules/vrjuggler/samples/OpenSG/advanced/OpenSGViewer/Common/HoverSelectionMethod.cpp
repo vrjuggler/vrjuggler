@@ -79,7 +79,7 @@ void HoverSelectionMethod::updateSelection()
    gmtl::Matrix44f vw_M_plat = cur_user->getXform_vwMrw();     // Get the xform from vw to real world (platform)
 
    gmtl::Matrix44f plat_M_wand, vw_M_wand;
-   plat_M_wand = *(cur_user->getWandPos()->getData());      // Get the wand matrix
+   plat_M_wand = cur_user->getWandPos()->getData();      // Get the wand matrix
    vw_M_wand = vw_M_plat * plat_M_wand;                   // Get the wand matrix in virtual world coords
 
 #ifdef DEBUG_DRAW_VIEW_CONTROLLER

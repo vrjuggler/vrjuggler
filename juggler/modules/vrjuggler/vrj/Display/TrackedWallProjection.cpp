@@ -33,6 +33,7 @@
 #include <vrj/vrjConfig.h>
 
 #include <vrj/Display/TrackedWallProjection.h>
+#include <gadget/Type/Position/PositionUnitConversion.h>
 
 
 namespace vrj
@@ -46,7 +47,7 @@ void TrackedWallProjection::updateWallParams()
    // We want surfMbase <=== surfMbase*trackerMbase
    // NOTE: wallRotMat's base is the base of the tracking system
 
-   gmtl::Matrix44f tracker_mat = *(mTracker->getData());     // baseMtracker
+   gmtl::Matrix44f tracker_mat = mTracker->getData(gadget::PositionUnitConversion::ConvertToMeters);     // baseMtracker
 
    // Method 1:
    // baseMsurf = baseMtracker*baseMsurf

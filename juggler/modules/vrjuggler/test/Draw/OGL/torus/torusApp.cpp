@@ -66,7 +66,7 @@ void torusApp::draw()
    glClear(GL_DEPTH_BUFFER_BIT);
 
    //vrj::Coord wand_pos(*mWand->getData());
-   gmtl::Matrix44f wand_pos(*mWand->getData());
+   gmtl::Matrix44f wand_pos(mWand->getData());
    gmtl::Vec4f wand_trans( gmtl::makeTrans<gmtl::Vec4f>(wand_pos) );
 
    // Set light position

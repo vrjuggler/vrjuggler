@@ -137,6 +137,9 @@ public:
    PROXY_TYPE& operator*()
    { return *(mTypeSpecificProxy); }
 
+   PROXY_TYPE* getProxy()
+   { return mTypeSpecificProxy; }
+
    virtual void refresh()
    {
       BaseDeviceInterface::refresh();

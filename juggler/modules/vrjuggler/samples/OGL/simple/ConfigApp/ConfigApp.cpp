@@ -256,7 +256,7 @@ void ConfigApp::initLights()
       Matrix44f inv_nav;
       invert(inv_nav, mNavMatrix);
 
-      wand_mat = *(mWand->getData());
+      wand_mat = mWand->getData();
       setTrans(wand_trans, wand_mat);
       xform(wand_trans, inv_nav, wand_trans);
 
@@ -299,7 +299,7 @@ void ConfigApp::updateNavigation()
 
    user_info.setVelocity(mUserVelocity);
    user_info.setAngularVelocity(0.01f);
-   wand_info.updateWithMatrix(*(mWand->getData()));
+   wand_info.updateWithMatrix(mWand->getData());
    user_info.update(wand_info, Vec3f(0.0f, 0.0f, 0.0f));
    user_info.getSceneTransform(mNavMatrix);
 }
