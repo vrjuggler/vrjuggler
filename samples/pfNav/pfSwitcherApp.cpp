@@ -34,10 +34,17 @@
 #include <pfSwitcherApp.h>
 #include <pfFileIO.h>
 #include <Performer/pfutil.h>
+#include <simplePfNavApp.h>
 
-#define SWITCHER_APP_BASE_SIZE 5.0f
+#define SWITCHER_APP_BASE_SIZE 2.0f    // Make the icons 2 feet square
+#define SWITCHER_CLIP_SIZE 2.2f        // Size of the clipped space
 
 pfSwitcherApp* pfSwitcherApp::_instance = NULL;
+
+
+// Callback prototypes
+int PreDrawClipApp(pfTraverser* trav, void* data);
+int PostDrawClipApp(pfTraverser* trav, void* data);
 
 // Called for each application
 // Called after: initScene, apiInit
@@ -58,16 +65,20 @@ void pfAppHandle::constructAppSceneGraph()
 
    if(mUnitScaleFactor == 0.0f)            // If we have not already set this
    {
-      // Get Scaling factor
+      // Compute bounding box
       pfBox bound_box;
       pfuTravCalcBBox(mAppRoot,&bound_box);
       pfVec3 diag = (bound_box.max - bound_box.min);
-      mUnitScaleFactor = (SWITCHER_APP_BASE_SIZE/diag.length());
+
+      if(mBoundingSize == 0.0f)   // If bound was not already specified in handle
+      { mBoundingSize = (diag.length()/2.0f); }
+
+      mUnitScaleFactor = (SWITCHER_APP_BASE_SIZE/mBoundingSize);
       mUnitTrans = -((bound_box.max+bound_box.min)/2.0f);
    }
 
-   //
-   mAppXformDCS->setScale(mUnitScaleFactor);
+   // Set initial scale factor to single unit
+   setUnitScale();
 }
 
 void pfAppHandle::switchOn()
@@ -147,12 +158,17 @@ bool pfSwitcherApp::configAdd(vjConfigChunk* chunk)
 {
    vjASSERT(configCanHandle(chunk));
 
-   vjDEBUG(vjDBG_ALL,0) << "pfSwitcherApp::configAdd: "
+   vjDEBUG_BEGIN(vjDBG_ALL,0) << "pfSwitcherApp::configAdd: "
                         << clrOutNORM(clrMAGENTA,"CONFIGURING APP:")
                         << chunk->getProperty("Name") << endl << vjDEBUG_FLUSH;
    pfBasicConfigNavApp* cfg_app = new pfBasicConfigNavApp();
    bool ret_val = cfg_app->configApp(chunk);
    pfAppHandle cfg_app_handle(cfg_app,chunk->getProperty("Name"));
+   if(cfg_app->mBoundingSize != 0.0f)
+   {
+      cfg_app_handle.mBoundingSize = cfg_app->mBoundingSize;
+      vjDEBUG(vjDBG_ALL,0) << "pfAppHandle.mBoundingSize set to: " << cfg_app_handle.mBoundingSize << endl << vjDEBUG_FLUSH;
+   }
 
    //XXX: Get the bounding info
    registerApp(cfg_app_handle);
@@ -171,6 +187,8 @@ void pfSwitcherApp::constructSceneGraphSkeleton()
    mRootNode         = new pfGroup;
    mConstructDCS     = new pfDCS;
    mConstructSwitch  = new pfSwitch;
+   mAppGroupDCS      = new pfDCS;
+   mAppGroup         = new pfGroup;
 
    // ----- CONFIGURE CONSTRUCT MODEL ----- //
    // Load the construct model
@@ -189,6 +207,14 @@ void pfSwitcherApp::constructSceneGraphSkeleton()
    mConstructDCS->addChild(mConstructModel);
    mConstructDCS->setTrans(0.0f,0.0f,-1.0f);
 
+   // Position application graph scene graph
+   // This sets the position where the app icon is at
+   mRootNode->addChild(mAppGroupDCS);
+   mAppGroupDCS->setTrans(0.0f,3.0f,2.0f);      // Put in in front of us and in the air
+
+   mAppGroupDCS->addChild(mAppGroup);
+   mAppGroup->setTravFuncs(PFTRAV_DRAW, PreDrawClipApp, PostDrawClipApp);
+
    // -- ADD SUN ---
    mSun = new pfLightSource;                 // Create the SUN
    mSun->setPos( 0.3f, 0.0f, 0.3f, 0.0f );
@@ -203,12 +229,12 @@ void pfSwitcherApp::addAppGraph(pfAppHandle& handle)
 {
    vjDEBUG(vjDBG_ALL,0) << "pfSwitcherApp::addAppGraph: "
                         << clrOutNORM(clrMAGENTA,"Adding app graph for:") << handle.mAppName << endl << vjDEBUG_FLUSH;
-   mRootNode->addChild(handle.mAppSwitch);
+   mAppGroup->addChild(handle.mAppSwitch);
 }
 
 void pfSwitcherApp::removeAppGraph(pfAppHandle& handle)
 {
-   mRootNode->removeChild(handle.mAppSwitch);
+   mAppGroup->removeChild(handle.mAppSwitch);
 }
 
 // --------------------- //
@@ -454,6 +480,7 @@ void pfSwitcherApp::initSwitchTransIn()
    mTransIn = 0.0f;                                   // Initialize transtion value
    mApps[mActiveApp].setScaleUnitToFull(mTransIn);    // Set the initial scale;
 }
+
 
 // Update transition for switching apps out
 // POST: Scene graph is modified for transition
@@ -721,4 +748,48 @@ void pfSwitcherApp::postFrame()
    for(unsigned i=0;i<mApps.size();i++)
       if(isAppActive(i))
          mApps[i].mApp->postFrame();
+}
+
+int PreDrawClipApp(pfTraverser* trav, void* data)
+{
+   // Create the clip planes that will constraint the application
+   GLdouble clip_zpos[] = {0.0f, 0.0f, 1.0f, SWITCHER_CLIP_SIZE};
+   GLdouble clip_zneg[] = {0.0f, 0.0f, -1.0f, SWITCHER_CLIP_SIZE};
+   GLdouble clip_ypos[] = {0.0f, 1.0f, 0.0f, SWITCHER_CLIP_SIZE};
+   GLdouble clip_yneg[] = {0.0f, -1.0f, 0.0f, SWITCHER_CLIP_SIZE};
+   GLdouble clip_xpos[] = {1.0f, 0.0f, 0.0f, SWITCHER_CLIP_SIZE};
+   GLdouble clip_xneg[] = {-1.0f, 0.0f, 0.0f, SWITCHER_CLIP_SIZE};
+
+
+  glClipPlane(GL_CLIP_PLANE0, clip_zpos);
+  glEnable(GL_CLIP_PLANE0);
+
+  glClipPlane(GL_CLIP_PLANE1, clip_zneg);
+  glEnable(GL_CLIP_PLANE1);
+
+  glClipPlane(GL_CLIP_PLANE2, clip_ypos);
+  glEnable(GL_CLIP_PLANE2);
+
+  glClipPlane(GL_CLIP_PLANE3, clip_yneg);
+  glEnable(GL_CLIP_PLANE3);
+
+  glClipPlane(GL_CLIP_PLANE4, clip_xpos);
+  glEnable(GL_CLIP_PLANE4);
+
+  glClipPlane(GL_CLIP_PLANE5, clip_xneg);
+  glEnable(GL_CLIP_PLANE5);
+
+  return PFTRAV_CONT;
+}
+
+int PostDrawClipApp(pfTraverser* trav, void* data)
+{
+  glDisable(GL_CLIP_PLANE0);
+  glDisable(GL_CLIP_PLANE1);
+  glDisable(GL_CLIP_PLANE2);
+  glDisable(GL_CLIP_PLANE3);
+  glDisable(GL_CLIP_PLANE4);
+  glDisable(GL_CLIP_PLANE5);
+
+  return PFTRAV_CONT;
 }
