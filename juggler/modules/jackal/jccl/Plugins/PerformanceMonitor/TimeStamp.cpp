@@ -33,7 +33,7 @@ void vjTimeStampSGI::initialize() {
 
     cyclecntrsize = syssgi(SGI_CYCLECNTR_SIZE);
     maxval = (1 << cyclecntrsize) -1;
-  
+
     poffmask = getpagesize() - 1;
     phys_addr = syssgi(SGI_QUERY_CYCLECNTR, &cyclevalue);
     if (phys_addr == ENODEV) {
@@ -46,10 +46,10 @@ void vjTimeStampSGI::initialize() {
 	raddr = phys_addr & ~poffmask;
 	fd = open("/dev/mmem", O_RDONLY);
 
-	iotimer_addr = 
+	iotimer_addr =
 	    (volatile void *)mmap(0, poffmask, PROT_READ,
 				  MAP_PRIVATE, fd, (off_t)raddr);
-	iotimer_addr = 
+	iotimer_addr =
 	    (volatile void *)((__psunsigned_t)iotimer_addr +
 			      (phys_addr & poffmask));
     }
@@ -59,7 +59,7 @@ void vjTimeStampSGI::initialize() {
     else
 	initval = *(unsigned int*)iotimer_addr;
 
-    vjDEBUG(3) << "vjTimeStamp system initialized.\n"
+    vjDEBUG(vjDBG_ALL,3) << "vjTimeStamp system initialized.\n"
 	       << vjDEBUG_FLUSH;
 }
 
@@ -94,14 +94,14 @@ float vjTimeStampSGI::getResolution() {
 }
 
 
-/* these need to be here to avoid "Unresolved data symbols" 
+/* these need to be here to avoid "Unresolved data symbols"
  * problem w/ linker.
  */
 __psunsigned_t vjTimeStampSGI::phys_addr = 0;
 __psunsigned_t vjTimeStampSGI::raddr = 0;
 volatile void* vjTimeStampSGI::iotimer_addr;
 volatile unsigned long long vjTimeStampSGI::longcount;
-int vjTimeStampSGI::fd, 
+int vjTimeStampSGI::fd,
     vjTimeStampSGI::poffmask;
 float vjTimeStampSGI::resolution; // in usecs.
 int vjTimeStampSGI::cyclecntrsize;  // either 32 or 64 bits. depends on hardware
@@ -112,7 +112,7 @@ long long vjTimeStampSGI::maxval;
 #elif VJ_PERFORMANCE == VJ_PERF_POSIX
 
 /*
- * gettimeofday version 
+ * gettimeofday version
  */
 #include "Performance/vjTimeStampPosix.h"
 
