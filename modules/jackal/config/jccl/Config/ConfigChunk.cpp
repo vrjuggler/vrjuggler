@@ -35,25 +35,26 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#include <jccl/Config/ConfigChunk.h>
+#include <vpr/Util/Assert.h>
 #include <jccl/Config/ParseUtil.h>
 #include <jccl/Util/Debug.h>
-#include <vpr/Util/Assert.h>
 #include <jccl/Config/ChunkFactory.h>
 #include <jccl/Config/ChunkDesc.h>
 #include <jccl/Config/ConfigTokens.h>
+#include <jccl/Config/ConfigChunk.h>
+
 
 namespace jccl
 {
 
-ConfigChunk::ConfigChunk (ChunkDescPtr desc)
+ConfigChunk::ConfigChunk(ChunkDescPtr desc)
 {
    mValidation = true;
    setDesc(desc);
    mNode = ChunkFactory::instance()->createXMLNode(); // Create a fresh node
 }
 
-ConfigChunk::ConfigChunk (cppdom::XMLNodePtr chunkNode)
+ConfigChunk::ConfigChunk(cppdom::XMLNodePtr chunkNode)
 {
    vprASSERT(chunkNode.get() != NULL);    // Make sure we have a valid node
 
@@ -68,20 +69,19 @@ ConfigChunk::ConfigChunk (cppdom::XMLNodePtr chunkNode)
    setDesc(chunk_desc_ptr);
 }
 
-ConfigChunk::ConfigChunk (const ConfigChunk& c)
+ConfigChunk::ConfigChunk(const ConfigChunk& c)
 {
    mValidation = true;
    *this = c;
 }
 
-ConfigChunk::~ConfigChunk ()
+ConfigChunk::~ConfigChunk()
 {
    assertValid();
    mValidation = false;
 }
 
-
-ConfigChunk& ConfigChunk::operator = (const ConfigChunk& c)
+ConfigChunk& ConfigChunk::operator=(const ConfigChunk& c)
 {
    assertValid();
    c.assertValid();
@@ -96,7 +96,7 @@ ConfigChunk& ConfigChunk::operator = (const ConfigChunk& c)
    return *this;
 }
 
-bool ConfigChunk::operator== (const ConfigChunk& c) const
+bool ConfigChunk::operator==(const ConfigChunk& c) const
 {
    assertValid();
    c.assertValid();
@@ -114,7 +114,7 @@ bool ConfigChunk::operator== (const ConfigChunk& c) const
    return (self_string == c_string);
 }
 
-bool ConfigChunk::operator< (const ConfigChunk& c) const
+bool ConfigChunk::operator<(const ConfigChunk& c) const
 {
    assertValid();
 
@@ -128,12 +128,12 @@ bool ConfigChunk::operator< (const ConfigChunk& c) const
  */
 struct NamePred
 {
-   NamePred (const cppdom::XMLString& name) : mName(name)
+   NamePred(const cppdom::XMLString& name) : mName(name)
    {
       ;
    }
 
-   bool operator() (cppdom::XMLNodePtr node)
+   bool operator()(cppdom::XMLNodePtr node)
    {
       return (node->getAttribute(name_TOKEN).getString() == mName);
    }
@@ -142,7 +142,7 @@ struct NamePred
 };
 
 // used for dependency resolution
-ConfigChunkPtr ConfigChunk::getChildChunk (const std::string &path)
+ConfigChunkPtr ConfigChunk::getChildChunk(const std::string &path)
 {
    std::string working_path(path), prop_token;
    cppdom::XMLNodePtr root(mNode);
@@ -202,12 +202,12 @@ ConfigChunkPtr ConfigChunk::getChildChunk (const std::string &path)
    }
 }
 
-std::string ConfigChunk::getName () const
+std::string ConfigChunk::getName() const
 {
    return mNode->getAttribute(name_TOKEN).getString();
 }
 
-std::string ConfigChunk::getFullName () const
+std::string ConfigChunk::getFullName() const
 {
    cppdom::XMLNode *chunk_parent, *prop_parent;
    std::string full_name(getName());
@@ -287,10 +287,9 @@ std::vector<jccl::ConfigChunkPtr> ConfigChunk::getEmbeddedChunks() const
          }
       }
    }
+
    return embedded_list;      // Return the list
 }
-
-
 
 // This is used to sort a db by dependancy.
 // - For each chunk ptr, add the names of the chunk ptrs
@@ -333,34 +332,33 @@ std::vector<std::string> ConfigChunk::getChunkPtrDependencies() const
          }
       }
    }
+
    return dep_list;      // Return the list
 }
 
-
-std::ostream& operator << (std::ostream& out, const ConfigChunk& self)
+std::ostream& operator<<(std::ostream& out, const ConfigChunk& self)
 {
    self.assertValid();
    self.mNode->save(out);
    return out;
 }
 
-int ConfigChunk::getNum (const std::string& property_token) const
+int ConfigChunk::getNum(const std::string& property_token) const
 {
    assertValid();
    return mNode->getChildren(property_token).size();
 }
 
-std::string ConfigChunk::getDescToken () const
+std::string ConfigChunk::getDescToken() const
 {
    return mDesc->getToken();
 }
 
-void ConfigChunk::setDesc (ChunkDescPtr desc)
+void ConfigChunk::setDesc(ChunkDescPtr desc)
 {
    vprASSERT(desc.get() != NULL && "Trying to set a null description");
    mDesc = desc;
 }
-
 
 /** Get the property's cdata node
 * @param prop  The property token

@@ -56,47 +56,49 @@ public:
    /** Constructs a ConfigChunk matching the given description.
     *  @param desc points to a valid ChunkDesc
     */
-   ConfigChunk (ChunkDescPtr desc);
+   ConfigChunk(ChunkDescPtr desc);
 
    /** Constructor
    * Constructs the chunk to reference the given chunk node
    */
-   ConfigChunk (cppdom::XMLNodePtr chunkNode);
+   ConfigChunk(cppdom::XMLNodePtr chunkNode);
 
    /** Copy constructor. */
-   ConfigChunk (const ConfigChunk& c);
+   ConfigChunk(const ConfigChunk& c);
 
    /** Destroys a ConfigChunk and frees associated memory.
     *  @post Self has been destroyed, along with all properties
     *        and values associated with it (but _not_ the memory
     *        associated with its ChunkDesc).
     */
-   ~ConfigChunk ();
+   ~ConfigChunk();
 
 #ifdef JCCL_DEBUG
-   void assertValid () const
+   void assertValid() const
    {
-      vprASSERT (mValidation == true && "Trying to use deleted config chunk");
+      vprASSERT(mValidation == true && "Trying to use deleted config chunk");
    }
 #else
-   inline void assertValid () const
+   inline void assertValid() const
    {;}
 #endif
 
    /** Assignment operator. */
-   ConfigChunk& operator = (const ConfigChunk& c);
+   ConfigChunk& operator=(const ConfigChunk& c);
 
    /** Tests for value equality of two ConfigChunks.
     *  @return True iff self and c have the same values for all properties.
     */
-   bool operator == (const ConfigChunk& c) const;
+   bool operator==(const ConfigChunk& c) const;
 
    /** Inequality */
-   inline bool operator != (const ConfigChunk& c) const
-   { return !(*this == c); }
+   bool operator!=(const ConfigChunk& c) const
+   {
+      return !(*this == c);
+   }
 
    /** Lexical comparison based on chunk names (alphabetically) */
-   bool operator < (const ConfigChunk& c) const;
+   bool operator<(const ConfigChunk& c) const;
 
    /** Gets an embedded chunk from a property of self.
     *  @param path The complete name of an embedded chunk in self.
@@ -107,24 +109,24 @@ public:
     *          A NULL ConfigChunkPtr, if the embedded chunk name was
     *          not found.  Check before use.
     */
-   ConfigChunkPtr getChildChunk (const std::string &path);
+   ConfigChunkPtr getChildChunk(const std::string &path);
 
    /** Writes a representation of self to out.
     *  @param out An ostream.
     *  @param self A ConfigChunk.
     */
-   friend JCCL_API(std::ostream&) operator << (std::ostream& out,
-                                               const ConfigChunk& self);
+   friend JCCL_API(std::ostream&) operator<<(std::ostream& out,
+                                             const ConfigChunk& self);
 
    /** Returns number of values for the specified property.
     *  @param property The token of a property.
     *  @return The number of values that exist for the given property,
     *          or 0 if the property does not exist in self.
     */
-   int getNum (const std::string& property) const;
+   int getNum(const std::string& property) const;
 
    /** Returns the instance name of this ConfigChunk. */
-   std::string getName () const;
+   std::string getName() const;
 
    /**
     * Returns the fully qualified, unique name of this chunk.  This will be
@@ -133,10 +135,10 @@ public:
     * property token.  The format will be
     * "chunk name 0/property name 0/chunk name 1/property name 1/..."
     */
-   std::string getFullName () const;
+   std::string getFullName() const;
 
    /** Returns the token string that identifies self's ChunkDesc. */
-   std::string getDescToken () const;
+   std::string getDescToken() const;
 
    /** Returns a value from one of self's properties.
     *  @param property The token string for a property.
@@ -235,7 +237,7 @@ public:
    /** Associates the description d with this Chunk
     *  @post Set the description for the chunk
     */
-   void setDesc (ChunkDescPtr d);
+   void setDesc(ChunkDescPtr d);
 
    cppdom::XMLNodePtr getNode()
    { return mNode; }
