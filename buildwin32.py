@@ -193,10 +193,31 @@ def setVars():
                 False)
 
    if os.environ['OMNIORB_ROOT'] != '' and os.path.exists(os.environ['OMNIORB_ROOT']):
-      omnilib = os.path.join(os.environ['OMNIORB_ROOT'], 'lib', 'x86_win32')
-      omni_glob = os.path.join(omnilib, 'omniORB*_rt.lib')
-      omni_ver_re = re.compile(r'omniORB(\d\d\d)_rt.lib')
+      omni_bin = os.path.join(os.environ['OMNIORB_ROOT'], 'bin')
+
+      if os.path.exists(os.path.join(omni_bin, 'omniidl.exe')):
+         os.environ['OMNIORB_BIN'] = omni_bin
+      else:
+         os.environ['OMNIORB_BIN'] = os.path.join(omni_bin, 'x86_win32')
+
+      # Extend the path to include omniORB's bin directory.
+      os.environ['PATH'] = os.environ['OMNIORB_BIN'] + os.pathsep + os.environ['PATH']
+
+      omni_lib = os.path.join(os.environ['OMNIORB_ROOT'], 'lib')
+
+      if os.getenv('PYTHONPATH', '') != '':
+         os.environ['PYTHONPATH'] = os.path.join(omni_lib, 'python') + os.pathsep + os.environ['PYTHONPATH']
+      else:
+         os.environ['PYTHONPATH'] = os.path.join(omni_lib, 'python')
+
+      if os.path.exists(os.path.join(omni_lib, 'omnithread.lib')):
+         os.environ['OMNIORB_LIB'] = omni_lib
+      else:
+         os.environ['OMNIORB_LIB'] = os.path.join(omni_lib, 'x86_win32')
+
+      omni_glob = os.path.join(os.environ['OMNIORB_LIB'], 'omniORB*_rt.lib')
       libs = glob.glob(omni_glob)
+      omni_ver_re = re.compile(r'omniORB(\d\d\d)_rt.lib')
 
       for l in libs:
          match = omni_ver_re.search(l)
@@ -1030,7 +1051,7 @@ def simpleInstall(name, root, prefix, optional = False):
 
    if os.path.exists(srcdir):
       destdir = os.path.join(prefix, 'include')
-      installDir(srcdir, destdir, ['.h', '.hpp'])
+      installDir(srcdir, destdir, ['.h', '.hpp', '.ipp'])
 
    # Install all libraries.
    srcdir = os.path.join(root, 'lib')
@@ -1097,7 +1118,7 @@ def installOmniORB(prefix):
    # Install all libraries.
    # NOTE: When we install the omniORB .lib files, we get rid of the x86_win32
    # subdirectory.
-   srcdir = os.path.join(root, 'lib', 'x86_win32')
+   srcdir = os.environ['OMNIORB_LIB']
 
    if os.path.exists(srcdir):
       destdir = os.path.join(prefix, 'lib')
@@ -1112,7 +1133,7 @@ def installOmniORB(prefix):
    # Install all executables and DLLs.
    # NOTE: When we install the omniORB .dll files, we get rid of the x86_win32
    # subdirectory.
-   srcdir = os.path.join(root, 'bin', 'x86_win32')
+   srcdir = os.environ['OMNIORB_BIN']
 
    if os.path.exists(srcdir):
       destdir = os.path.join(prefix, 'bin')
