@@ -67,6 +67,6 @@ include $(MKPATH)/dpp.obj.mk
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
 ifndef DO_BEFOREBUILD
-    -include $(DEPEND_FILES)
+    include $(DEPEND_FILES)
 endif
 endif

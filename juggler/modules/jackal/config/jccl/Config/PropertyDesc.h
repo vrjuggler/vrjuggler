@@ -40,7 +40,6 @@
 
 namespace jccl {
    
-
 //------------------------------------------------------------
 //: A Description used to instantiate a vrj::Property
 //
@@ -233,6 +232,7 @@ private:
     int enum_val;
 
     unsigned int validation;
+
 
 };
 

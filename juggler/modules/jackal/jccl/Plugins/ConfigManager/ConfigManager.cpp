@@ -73,7 +73,7 @@ namespace jccl {
         PendingChunk pending;
         pending.mType = PendingChunk::ADD;
         
-        for(std::vector<ConfigChunk*>::iterator i=db->begin();i!=db->end();i++) {
+        for(ConfigChunkDB::iterator i=db->begin();i!=db->end();i++) {
             pending.mChunk = (*i);
             mPendingConfig.push_back(pending);
         }
@@ -92,7 +92,7 @@ namespace jccl {
         PendingChunk pending;
         pending.mType = PendingChunk::REMOVE;
         
-        for(std::vector<ConfigChunk*>::iterator i=db->begin();i!=db->end();i++) {
+        for(ConfigChunkDB::iterator i=db->begin();i!=db->end();i++) {
             pending.mChunk = (*i);
             mPendingConfig.push_back(pending);
         }
@@ -207,7 +207,7 @@ namespace jccl {
         vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_CONFIG_LVL) << "ConfigManager::scanForLostDependencies: Entered: \n" << vprDEBUG_FLUSH;
 
         DependencyManager* dep_mgr = DependencyManager::instance();
-        std::vector<ConfigChunk*> chunks;
+        std::vector<ConfigChunkPtr> chunks;
         int num_lost_deps(0);
 
         // NOTE: can't hold this lock because the depSatisfied routines make use of the activeLock as well
@@ -234,10 +234,10 @@ namespace jccl {
                 addPending(pending);
                 
                 // Add the pending re-addition
-                ConfigChunk* copy_of_chunk;          // Need a copy so that the remove can delete the chunk
-                copy_of_chunk = new ConfigChunk (*chunks[i]);
+//                 ConfigChunkPtr copy_of_chunk;          // Need a copy so that the remove can delete the chunk
+//                 copy_of_chunk = new ConfigChunk (*chunks[i]);
                 pending.mType = PendingChunk::ADD;
-                pending.mChunk = copy_of_chunk;
+                pending.mChunk = chunks[i];//copy_of_chunk;
                 addPending(pending);                   // Add the add item
             }
         }
@@ -260,7 +260,7 @@ namespace jccl {
         end = getPendingEnd();
         
         while(current != end) {
-            ConfigChunk* cur_chunk = (*current).mChunk;
+            ConfigChunkPtr cur_chunk = (*current).mChunk;
             
             if((*current).mType == PendingChunk::ADD)
                 vprDEBUG_NEXT(vprDBG_ALL,debug_level) << "   ADD -->" << vprDEBUG_FLUSH;
@@ -287,7 +287,7 @@ namespace jccl {
     {
         vpr::Guard<vpr::Mutex> guard(mActiveLock);     // Lock the current list
 
-        std::vector<ConfigChunk*>::iterator i;
+        ConfigChunkDB::iterator i;
         for(i=mActiveConfig.begin(); i != mActiveConfig.end();i++)
             {
                 if(std::string((*i)->getProperty("name")) == chunk_name)
@@ -303,7 +303,7 @@ namespace jccl {
    //! NOTE: This DOES NOT process the chunk
    //+     it just places it into the active configuration list
    //! PRE: Current list must NOT be locked
-   void ConfigManager::addActive (ConfigChunk* chunk)
+   void ConfigManager::addActive (ConfigChunkPtr chunk)
    {
       vprASSERT(0 == mActiveLock.test());
       lockActive();
@@ -376,7 +376,8 @@ namespace jccl {
     
     /*virtual*/ void ConfigManager::addConnect (Connect *c) {
         c->addCommunicator (config_communicator);
-        addActive (new ConfigChunk(*(c->getConfiguration())));
+        //addActive (new ConfigChunk(*(c->getConfiguration())));
+        addActive (c->getConfiguration());
     }
     /*virtual*/ void ConfigManager::removeConnect (Connect* c) {
         removeActive (c->getConfiguration()->getName());

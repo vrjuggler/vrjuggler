@@ -38,6 +38,7 @@
 #include <jccl/JackalServer/JackalControl.h>
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ChunkDescDB.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <jccl/Plugins/ConfigManager/XMLConfigCommunicator.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
@@ -63,12 +64,12 @@ class JCCL_CLASS_API ConfigManager: public JackalControl
 public:
    struct PendingChunk
    {
-      PendingChunk() : mType(0), mChunk(NULL)
+      PendingChunk() : mType(0), mChunk(0)
       {;}
 
       enum { ADD=0, REMOVE=1};
       unsigned mType;           // What type of chunk is it (ADD or REMOVE)
-      ConfigChunk* mChunk;
+      ConfigChunkPtr mChunk;
    };
 
 
@@ -195,7 +196,7 @@ public:   // ----- ACTIVE LIST ----- //
 
    //: Get the beginning of the current list
    //! PRE: Pending list must be locked
-   std::vector<ConfigChunk*>::iterator getActiveBegin()
+   ConfigChunkDB::iterator getActiveBegin()
    {
       vprASSERT(1 == mActiveLock.test());     // ASSERT: We must have the lock
       return mActiveConfig.begin();
@@ -204,7 +205,7 @@ public:   // ----- ACTIVE LIST ----- //
 
    //: Get the end of the pending list
    //! PRE: Active list must be locked
-   std::vector<ConfigChunk*>::iterator getActiveEnd()
+   ConfigChunkDB::iterator getActiveEnd()
    {
       vprASSERT(1 == mActiveLock.test());
       return mActiveConfig.end();
@@ -221,7 +222,7 @@ public:   // ----- ACTIVE LIST ----- //
     //! NOTE: This DOES NOT process the chunk
     //+     it just places it into the active configuration list
     //! PRE: Current list must NOT be locked
-    void addActive (ConfigChunk* chunk);
+    void addActive (ConfigChunkPtr chunk);
 
 
    //: Return ptr to the active config dhunk db

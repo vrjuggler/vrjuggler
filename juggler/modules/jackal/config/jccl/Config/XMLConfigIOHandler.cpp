@@ -213,9 +213,8 @@ bool XMLConfigIOHandler::writeProperty (XMLFormatter* f, const Property& p, cons
         writeBuf (f, "\n");
         for (i = 0; i < n; i++) {
             // ick... wish we weren't copying a chunk here
-            ConfigChunk *ch = p.getValue(i);
+            ConfigChunkPtr ch = p.getValue(i);
             writeConfigChunk (f, *ch, newpad);
-            delete (ch);
         }
         writeBuf (f, pad);
     }
@@ -300,14 +299,14 @@ bool XMLConfigIOHandler::parseTextValues (Property* p, int& startval, char* text
 }
 
 
-bool XMLConfigIOHandler::buildProperty (ConfigChunk* ch, const DOM_Node& doc, bool use_defaults) {
+bool XMLConfigIOHandler::buildProperty (ConfigChunkPtr ch, const DOM_Node& doc, bool use_defaults) {
     char* name = doc.getNodeName().transcode();
     char* value = doc.getNodeValue().transcode();
     DOM_Node child;
     Property* p;
     int valindex = 0;
     bool retval = true;
-    ConfigChunk* ch2;
+    ConfigChunkPtr ch2;
 
     switch (doc.getNodeType()) {
     case DOM_Node::ELEMENT_NODE:
@@ -319,7 +318,7 @@ bool XMLConfigIOHandler::buildProperty (ConfigChunk* ch, const DOM_Node& doc, bo
                     switch (child.getNodeType()) {
                     case DOM_Node::ELEMENT_NODE:
                         ch2 = buildConfigChunk (child, use_defaults);
-                        if (ch2)
+                        if (ch2.get())
                             p->setValue (ch2, valindex++);
                         else {
                             vprDEBUG(jcclDBG_CONFIG,0) << 
@@ -396,13 +395,13 @@ bool XMLConfigIOHandler::buildProperty (ConfigChunk* ch, const DOM_Node& doc, bo
 
 
 
-ConfigChunk* XMLConfigIOHandler::buildConfigChunk (const DOM_Node& doc, bool use_defaults) {
+ConfigChunkPtr XMLConfigIOHandler::buildConfigChunk (const DOM_Node& doc, bool use_defaults) {
     char* name = doc.getNodeName().transcode();
     DOM_Node child;
     DOM_NamedNodeMap attributes;
     int attrCount;
     int i;
-    ConfigChunk* ch = 0;
+    ConfigChunkPtr ch;
     bool retval = true;
 
     switch (doc.getNodeType()) {
@@ -412,7 +411,7 @@ ConfigChunk* XMLConfigIOHandler::buildConfigChunk (const DOM_Node& doc, bool use
         break;
     case DOM_Node::ELEMENT_NODE:
         ch = ChunkFactory::instance()->createChunk(name, use_defaults);
-        if (ch) {
+        if (ch.get()) {
             // parse attributes
             attributes = doc.getAttributes();
             attrCount = attributes.getLength();
@@ -451,11 +450,11 @@ ConfigChunk* XMLConfigIOHandler::buildConfigChunk (const DOM_Node& doc, bool use
     if (!retval) {
         // in the event of a failure, we completely skip the chunk. 
         // don't risk actually sending on some mangled thing.
-        if (ch) {
+        if (ch.get()) {
             vprDEBUG(jcclDBG_CONFIG,5) << "Rejecting ConfigChunk due to errors:\n"
                                     << *ch << vprDEBUG_FLUSH;
             // delete ch;
-            ch = 0;
+            ch.reset(0);
         }
     }
     return ch;
@@ -466,7 +465,7 @@ ConfigChunk* XMLConfigIOHandler::buildConfigChunk (const DOM_Node& doc, bool use
 bool XMLConfigIOHandler::buildChunkDB (ConfigChunkDB& db, const DOM_Node& doc) {
     char* name = doc.getNodeName().transcode();
     DOM_Node child;
-    ConfigChunk* ch;
+    ConfigChunkPtr ch;
     bool retval = true;
 
     switch (doc.getNodeType()) {
@@ -481,7 +480,7 @@ bool XMLConfigIOHandler::buildChunkDB (ConfigChunkDB& db, const DOM_Node& doc) {
                 if (child.getNodeType() == DOM_Node::ELEMENT_NODE) {
                     ch = buildConfigChunk (child);
                     // look for includes...
-                    if (ch) {
+                    if (ch.get() != 0) {
                         if (!vjstrcasecmp (ch->getType(), "IncludeFile")) {
                             std::string s = ch->getProperty ("Name");
                             std::string fname = db.getFileName();
@@ -603,7 +602,7 @@ bool XMLConfigIOHandler::buildChunkDB (ConfigChunkDB& db, const DOM_Node& doc) {
 bool XMLConfigIOHandler::writeChunkDesc (XMLFormatter* f, const ChunkDesc& desc, const std::string& pad) {
     std::string newpad = pad + "  ";
     bool retval = true;
-    ConfigChunk* ch;
+    ConfigChunkPtr ch;
     ChunkDesc::const_iterator it;
     writeBuf (f, "<ChunkDesc token=\"");
     writeBuf (f, desc.getToken(), XMLFormatter::AttrEscapes);
@@ -619,7 +618,7 @@ bool XMLConfigIOHandler::writeChunkDesc (XMLFormatter* f, const ChunkDesc& desc,
         retval = writePropertyDesc (f, **it, newpad);
     }
     std::cout << "about to write defaults..." << std::endl;
-    if ((ch = desc.getDefaultChunk()) != 0) {
+    if ((ch = desc.getDefaultChunk()).get() != 0) {
         //std::cout << "yup, writing defaults..." << std::endl;
         writeBuf (f, newpad);
         writeBuf (f, "<Defaults>\n");

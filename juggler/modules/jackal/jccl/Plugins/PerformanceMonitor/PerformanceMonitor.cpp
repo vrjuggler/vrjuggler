@@ -41,7 +41,7 @@
 #include <jccl/JackalServer/Connect.h>
 #include <jccl/Plugins/PerformanceMonitor/PerfCommand.h>
 #include <jccl/Plugins/PerformanceMonitor/PerfDataBuffer.h>
-#include <jccl/Config/ConfigChunkDB.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ParseUtil.h>
 
 
@@ -55,7 +55,6 @@ PerformanceMonitor::PerformanceMonitor():
 
     perf_target_name = "";
     perf_target = NULL;
-    current_perf_config = NULL;
 }
 
 
@@ -129,11 +128,11 @@ void PerformanceMonitor::releasePerfDataBuffer (PerfDataBuffer *b) {
 
     //---------------------- ConfigChunkHandler Stuff ----------------------
 
-bool PerformanceMonitor::configAdd(ConfigChunk* chunk) {
+bool PerformanceMonitor::configAdd(ConfigChunkPtr chunk) {
 
     std::string s = chunk->getType();
     if (!vjstrcasecmp (s, "PerfMeasure")) {
-        current_perf_config = new ConfigChunk (*chunk);
+        current_perf_config = chunk;//new ConfigChunk (*chunk);
 
         perf_target_name = (std::string)chunk->getProperty ("PerformanceTarget");
         if ((perf_target == 0) || 
@@ -162,15 +161,16 @@ bool PerformanceMonitor::configAdd(ConfigChunk* chunk) {
 
 
 
-bool PerformanceMonitor::configRemove(ConfigChunk* chunk) {
+bool PerformanceMonitor::configRemove(ConfigChunkPtr chunk) {
 
     std::string s = chunk->getType();
     if (!vjstrcasecmp (s, "PerfMeasure")) {
-        if (current_perf_config) {
+        if (current_perf_config.get()) {
             if (!vjstrcasecmp (current_perf_config->getProperty ("Name"),
                                chunk->getProperty ("Name"))) {
-                delete (current_perf_config);
-                current_perf_config = NULL;
+//                 delete (current_perf_config);
+//                 current_perf_config = NULL;
+                current_perf_config.reset(0);
                 deactivatePerfBuffers ();
             }
         }
@@ -181,7 +181,7 @@ bool PerformanceMonitor::configRemove(ConfigChunk* chunk) {
 
 
 
-bool PerformanceMonitor::configCanHandle(ConfigChunk* chunk) {
+bool PerformanceMonitor::configCanHandle(ConfigChunkPtr chunk) {
     std::string s = chunk->getType();
     return (!vjstrcasecmp (s, "PerfMeasure"));
 }
@@ -223,7 +223,7 @@ bool PerformanceMonitor::configCanHandle(ConfigChunk* chunk) {
         if (perf_buffers.empty())
             return;
         
-        if (perf_target == NULL || current_perf_config == NULL) {
+        if (perf_target == NULL || current_perf_config.get() == NULL) {
             deactivatePerfBuffers();
             return;
         }
@@ -232,12 +232,12 @@ bool PerformanceMonitor::configCanHandle(ConfigChunk* chunk) {
         std::vector<buffer_element>::const_iterator b;
         std::vector<VarValue*>::const_iterator val;
         bool found;
-        ConfigChunk* ch;
+        ConfigChunkPtr ch;
 
         for (b = perf_buffers.begin(); b != perf_buffers.end(); b++) {
             found = false;
             for (val = v.begin(); val != v.end(); val++) {
-                ch = *(*val); // this line demonstrates a subtle danger
+                ch = (ConfigChunkPtr)*(*val); // this line demonstrates a subtle danger
                 if ((bool)ch->getProperty ("Enabled")) {
                     if (!vjstrncasecmp(ch->getProperty("Prefix"), b->buffer->getName()))
                         found = true;

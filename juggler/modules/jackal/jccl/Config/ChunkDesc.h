@@ -36,14 +36,14 @@
 
 #include <jccl/jcclConfig.h>
 #include <jccl/Config/PropertyDesc.h>
-#include <boost/smart_ptr.hpp>
+#include <jccl/Config/ChunkDescPtr.h>
+#include <jccl/Config/ConfigChunkPtr.h>
 //#include <dom/DOM.hpp>
 
 class DOM_Node;
 
 namespace jccl {
    
-class ConfigChunk;
 
 //-----------------------------------------------------------------
 //:Defines name and properties for a kind of ConfigChunk
@@ -74,7 +74,7 @@ public:
 
     unsigned int validation;
 
-    ConfigChunk* default_chunk;
+    ConfigChunkPtr default_chunk;
     // be very careful with this
     DOM_Node *default_node;
 
@@ -165,14 +165,18 @@ public:
 
 
     const std::string& getName() const;
+
     const std::string& getToken() const;
+
     const std::string& getHelp() const;
 
+
     void setDefaultChunk (DOM_Node* n);
-    void setDefaultChunk (ConfigChunk* ch) {
-        default_chunk = ch;
-    }
-    ConfigChunk* getDefaultChunk() const;
+
+    ConfigChunkPtr getDefaultChunk() const;
+
+    void setDefaultChunk (ConfigChunkPtr ch);
+
 
     //:Adds a PropertyDesc to self.
     //!NOTE: Any PropertyDesc previously in self with the
@@ -209,7 +213,6 @@ public:
 
 };
 
-    typedef boost::shared_ptr<ChunkDesc> ChunkDescPtr;
 
 };
 #endif
