@@ -35,13 +35,13 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: OpenSGNav@EXEEXT@
+all: OpenSGViewer@EXEEXT@
 
-APP_NAME=	OpenSGNav@EXEEXT@
+APP_NAME=	OpenSGViewer@EXEEXT@
 
 # Basic options.
 srcdir=		@srcdir@
-SRCS=		OpenSGNav.cpp app.cpp
+SRCS=		OpenSGViewer.cpp app.cpp
 
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
@@ -55,5 +55,5 @@ EXTRA_LIBS+=		$(OPENSG_LIBS)
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
-OpenSGNav@EXEEXT@: $(OBJS)
+OpenSGViewer@EXEEXT@: $(OBJS)
 	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
