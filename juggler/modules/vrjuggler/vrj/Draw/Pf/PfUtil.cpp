@@ -37,6 +37,7 @@
 #include <gmtl/Generate.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/VecOps.h>
+#include <gmtl/Math.h>
 
 namespace vrj
 {
