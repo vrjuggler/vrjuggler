@@ -55,6 +55,9 @@
 /* Define if building on FreeBSD. */
 #undef VJ_OS_FreeBSD
 
+/* Define if building on Linux. */
+#undef VJ_OS_Linux
+
 /* Define if building on a platform not specified above. */
 #undef VJ_OS_GENERIC
 
