@@ -297,11 +297,10 @@ int ThreadPosix::getPrio(VPRThreadPriority* prio)
 int ThreadPosix::setPrio(VPRThreadPriority prio)
 {
 #ifdef _POSIX_THREAD_PRIORITY_SCHEDULING
-   sched_param_t fifo_sched_param;
+   sched_param_t sched_param;
+   sched_param.sched_priority = prio;
 
-   fifo_sched_param.sched_priority = prio;
-
-   return pthread_setschedparam(mThread, SCHED_FIFO, &fifo_sched_param);
+   return pthread_setschedparam(mThread, SCHED_RR, &sched_param);
 #else
    boost::ignore_unused_variable_warning(prio);
    std::cerr << "vpr::ThreadPosix::setPrio(): Not supported\n";
