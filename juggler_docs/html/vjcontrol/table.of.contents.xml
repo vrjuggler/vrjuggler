@@ -11,7 +11,18 @@ Builder: JExplorerBuilder V 1. 0. 7
 				image="Book_Closed.gif" 
 				imagetwo="Book_Open.gif" >
 
-			< folder title="Installing and Using VjControl" 
+			< folder title="Configuration Basics" 
+			link="${VJCONTROL}/index.html" 
+			target="Body" 
+			info="General information about Configuring Juggler" 
+			image="Leaf.gif" >
+
+				< item title="ConfigChunk Primer" link="${VJCONTROL}/chunkprimer.html" info="Introduction to ConfigChunks" target="Body" image="Leaf.gif" >
+				< item title="Configuring Juggler" link="${VJCONTROL}/configApps.html" info="Specific information about configuring VR Juggler components" target="Body" image="Leaf.gif" >
+
+                        </folder>
+
+			< folder title="Using VjControl" 
 			link="${VJCONTROL}/index.html" 
 			target="Body" 
 			info="Installing and Using VjControl" 

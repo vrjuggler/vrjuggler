@@ -62,6 +62,12 @@ Configuration files to load at startup (The details are similar to the
 option above).
 <p>
 
+<li><h4>Default ConfigChunk Files</h4> - This lets you specify one or more
+Configuration files which contain default values for new ConfigChunks.
+When you create a new ConfigChunk in VjControl, it checks the default files 
+for a Chunk of that type.  If found, it copies that value into the new Chunk.
+<p>
+
 <li><h4>Font Name and Font Size</h4> - This specifies the name and size of
 font to use for all of vjcontrol's windows.  Note that currently only a 
 small number of fonts are available (this is a limitation of JDK 1.1,
