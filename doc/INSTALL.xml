@@ -228,8 +228,8 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
       you can execute the following commands from a shell to get the code from
       our CVS repository:</para>
 
-      <screen>cvs -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler login
-cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler co juggler</screen>
+      <screen>cvs -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler login
+cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co juggler</screen>
     </section>
 
     <section>
