@@ -105,7 +105,7 @@ links:
 	cd $(instlinks)/bin && \
           for jar in $(JARS) ; \
           do \
-              rm $$jar
+              rm $$jar ; \
               $(LN_S) $(topdir)/java/$$jar ./ ; \
           done
 	cd $(instlinks)/bin/beans && \
@@ -135,6 +135,7 @@ ifeq (@OS_TYPE@, UNIX)
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
                 $(top_srcdir)/java/$$bean.xml $(beandir) ; \
           done
+endif
 
 install-docs:
 	$(MKINSTALLDIRS) $(doc_prefix)
