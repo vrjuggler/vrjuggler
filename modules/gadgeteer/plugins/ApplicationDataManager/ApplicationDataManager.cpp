@@ -81,10 +81,11 @@ namespace cluster
 
    bool ApplicationDataManager::isPluginReady()
    {
-      // This plugin will be ready when it does not have any more PendingApplicationDataRequests
+      // This plugin will be ready when it does not have any more
+      // PendingApplicationDataRequests
       vpr::Guard<vpr::Mutex> guard(mPendingApplicationDataRequestsLock);
       return(0 == mPendingApplicationDataRequests.size());
-   }    
+   }
 
    void ApplicationDataManager::handlePacket(Packet* packet, gadget::Node* node)
    {
@@ -93,31 +94,37 @@ namespace cluster
          switch ( packet->getPacketType() )
          {
          case cluster::Header::RIM_DATA_PACKET:
+         {
+            DataPacket* temp_data_packet = dynamic_cast<DataPacket*>(packet);
+            vprASSERT(NULL != temp_data_packet && "Dynamic cast failed!");
+
+            // Find the ApplicationData Object that we have received data
+            // for.
+            ApplicationData* user_data =
+               getRemoteApplicationData(temp_data_packet->getObjectId());
+            if (user_data != NULL)
             {
-               DataPacket* temp_data_packet = dynamic_cast<DataPacket*>(packet);
-               vprASSERT(NULL != temp_data_packet && "Dynamic cast failed!");
-   
-               // Find the ApplicationData Object that we have received data for.
-               ApplicationData* user_data = getRemoteApplicationData(temp_data_packet->getObjectId());
-               if (user_data != NULL)
-               {                  
-                  // Create a object reader to parse the object's data with
-                  vpr::BufferObjectReader* temp_reader = new vpr::BufferObjectReader(temp_data_packet->getDeviceData());
-                  
-                  // Parse the object's data using the temporary ObjectReader
-                  user_data->readObject(temp_reader);
-               }
-               break;
+               // Create a object reader to parse the object's data with
+               vpr::BufferObjectReader* temp_reader =
+                  new vpr::BufferObjectReader(temp_data_packet->getDeviceData());
+
+               // Parse the object's data using the temporary ObjectReader
+               user_data->readObject(temp_reader);
             }
+            break;
+         }
          case cluster::Header::RIM_APPDATA_REQ:
          {
-            ApplicationDataRequest* temp_request = dynamic_cast<ApplicationDataRequest*>(packet);
+            ApplicationDataRequest* temp_request =
+               dynamic_cast<ApplicationDataRequest*>(packet);
             vprASSERT(NULL != temp_request && "Dynamic cast failed!");
 
-            // Find the ApplicationDataServer that is serving the data for this requested object.
-            ApplicationDataServer* temp_app_data_server = getApplicationDataServer(temp_request->getId());
-            ApplicationDataAck* temp_ack = NULL;
-                        
+            // Find the ApplicationDataServer that is serving the data for
+            // this requested object.
+            ApplicationDataServer* temp_app_data_server =
+               getApplicationDataServer(temp_request->getId());
+            ApplicationDataAck* temp_ack(NULL);
+
             // -If a ApplicationDataServer for this object exists
             //   -Add the requesting node as a client
             //   -Respond with an ACK
@@ -128,11 +135,13 @@ namespace cluster
             if (temp_app_data_server != NULL)
             {
                temp_app_data_server->addClient(node);
-               temp_ack = new ApplicationDataAck(getHandlerGUID(), temp_request->getId(), true);
+               temp_ack = new ApplicationDataAck(getHandlerGUID(),
+                                                 temp_request->getId(), true);
             }
             else
             {
-               temp_ack = new ApplicationDataAck(getHandlerGUID(), temp_request->getId(), false);
+               temp_ack = new ApplicationDataAck(getHandlerGUID(),
+                                                 temp_request->getId(), false);
             }
             node->send(temp_ack);
             delete temp_ack;
@@ -140,27 +149,28 @@ namespace cluster
          }
          case cluster::Header::RIM_APPDATA_ACK:
          {
-            ApplicationDataAck* temp_ack = dynamic_cast<ApplicationDataAck*>(packet);
+            ApplicationDataAck* temp_ack =
+               dynamic_cast<ApplicationDataAck*>(packet);
             vprASSERT(NULL != temp_ack && "Dynamic cast failed!");
 
             // -If we received an ACK
-            //   -Remove the coresponding ApplicationDataRequest from the pending list
+            //   -Remove the coresponding ApplicationDataRequest from the
+            //    pending list
             if (temp_ack->getAck())
             {
                removePendingApplicationDataRequest(temp_ack->getId());
-            }         
+            }
             break;
          }
          default:
-            {
-               vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) << clrOutBOLD(clrCYAN,"[ApplicationDataManager] ")
-                  << "Don't know how to handle a packet of type: " << packet->getPacketType() 
-                  << std::endl << vprDEBUG_FLUSH;
-               break;
-            }
+            vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL)
+               << clrOutBOLD(clrCYAN,"[ApplicationDataManager] ")
+               << "Don't know how to handle a packet of type: "
+               << packet->getPacketType() << std::endl << vprDEBUG_FLUSH;
+            break;
          } // End switch
-      } // End if                 
-    }
+      } // End if
+   }
 
    std::string ApplicationDataManager::getElementType()
    {
@@ -175,8 +185,10 @@ namespace cluster
    {
       if (recognizeApplicationDataManagerConfig(element))
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) << clrOutBOLD(clrCYAN,"[ApplicationDataManager] ")
-            << "The ApplicationDataMananger does not currently support a need for configuration element: " << element->getName() 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrCYAN,"[ApplicationDataManager] ")
+            << "The ApplicationDataMananger does not currently support a "
+            << "need for configuration element: " << element->getName()
             << "\n" << vprDEBUG_FLUSH;
          return(true);
       }
@@ -185,48 +197,50 @@ namespace cluster
          std::string guid_string = element->getProperty<std::string>("guid");
          vpr::GUID guid(guid_string);
          std::string hostname = element->getProperty<std::string>("hostname");
-         
+
          vpr::Guard<vpr::Mutex> guard(mNeedsConfigedLock);
          std::vector<ApplicationData*>::iterator begin = mNeedsConfiged.begin();
          std::vector<ApplicationData*>::iterator end = mNeedsConfiged.end();
          std::vector<ApplicationData*>::iterator i;
 
-         for (i = begin ; i != end ; i++)
+         for (i = begin ; i != end ; ++i)
          {
             if ((*i)->getId() == guid)
             {
-               vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
-                  << "[ApplicationDataManager::ConfigAdd()] " 
-                  << "Configuring ApplicationData object " << guid.toString() << " on host: " 
-                  << hostname << std::endl << vprDEBUG_FLUSH;
+               vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+                  << "[ApplicationDataManager::ConfigAdd()] "
+                  << "Configuring ApplicationData object " << guid.toString()
+                  << " on host: " << hostname << std::endl << vprDEBUG_FLUSH;
 
-                  (*i)->setHostname(hostname);
+               (*i)->setHostname(hostname);
 
-                  if (ClusterNetwork::isLocalHost(hostname))
-                  {
-                     // This application data is local.
-                     (*i)->setIsLocal(true);
+               if (ClusterNetwork::isLocalHost(hostname))
+               {
+                  // This application data is local.
+                  (*i)->setIsLocal(true);
 
-                     // Adding a new ApplicationData server.
-                     vpr::Guard<vpr::Mutex> guard(mApplicationDataServersLock); 
-                     ApplicationDataServer* new_appdata_server = new ApplicationDataServer(guid, (*i), mHandlerGUID);
-                     mApplicationDataServers[guid] = new_appdata_server;
-                  }
-                  else
-                  {    
-                     // This application data is not local.
-                     (*i)->setIsLocal(false);
+                  // Adding a new ApplicationData server.
+                  vpr::Guard<vpr::Mutex> guard(mApplicationDataServersLock);
+                  ApplicationDataServer* new_appdata_server =
+                     new ApplicationDataServer(guid, (*i), mHandlerGUID);
+                  mApplicationDataServers[guid] = new_appdata_server;
+               }
+               else
+               {
+                  // This application data is not local.
+                  (*i)->setIsLocal(false);
 
-                     // Create a ApplicationDataRequest.
-                     ApplicationDataRequest* new_appdata_req = new ApplicationDataRequest(getHandlerGUID(), guid);
+                  // Create a ApplicationDataRequest.
+                  ApplicationDataRequest* new_appdata_req =
+                     new ApplicationDataRequest(getHandlerGUID(), guid);
 
-                     // Add ApplicationData request to pending list.
-                     addPendingApplicationDataRequest(new_appdata_req, hostname);
+                  // Add ApplicationData request to pending list.
+                  addPendingApplicationDataRequest(new_appdata_req, hostname);
 
-                     // Add ApplicationData to Remote Vector.
-                     vpr::Guard<vpr::Mutex> guard(mRemoteApplicationDataLock);
-                     mRemoteApplicationData[guid] = (*i);
-                  }
+                  // Add ApplicationData to Remote Vector.
+                  vpr::Guard<vpr::Mutex> guard(mRemoteApplicationDataLock);
+                  mRemoteApplicationData[guid] = (*i);
+               }
             }
             mNeedsConfiged.erase(i);
             return true;
@@ -236,9 +250,10 @@ namespace cluster
       }
       else
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) 
-            << "[ApplicationDataManager::ConfigAdd()] " 
-            << clrOutBOLD(clrRED, "WARNING: ") << "Don't know how to handle the configuration element: " 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL)
+            << "[ApplicationDataManager::ConfigAdd()] "
+            << clrOutBOLD(clrRED, "WARNING: ")
+            << "Don't know how to handle the configuration element: "
             << element->getName() << std::endl << vprDEBUG_FLUSH;
          return(false);
       }
@@ -254,23 +269,28 @@ namespace cluster
    {
       if (recognizeApplicationDataManagerConfig(element))
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) << clrOutBOLD(clrCYAN,"[ApplicationDataManager] ")
-            << "The ApplicationDataMananger does not currently support a need for configuration element: " << element->getName() 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrCYAN,"[ApplicationDataManager] ")
+            << "The ApplicationDataMananger does not currently support a "
+            << "need for configuration element: " << element->getName()
             << "\n" << vprDEBUG_FLUSH;
          return(true);
       }
       else if (recognizeApplicationDataManagerConfig(element))
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) << clrOutBOLD(clrCYAN,"[ApplicationDataManager] ")
-            << "The ApplicationDataMananger does not currently support a need for configuration element: " << element->getName() 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrCYAN,"[ApplicationDataManager] ")
+            << "The ApplicationDataMananger does not currently support a "
+            << "need for configuration element: " << element->getName()
             << "\n" << vprDEBUG_FLUSH;
          return(true);
       }
-	  else
-	  {
-	     vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) 
-            << "[ApplicationDataManager::ConfigRemove()] " 
-            << clrOutBOLD(clrRED, "WARNING: ") << "Don't know how to handle the configuration element: " 
+      else
+      {
+         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL)
+            << "[ApplicationDataManager::ConfigRemove()] "
+            << clrOutBOLD(clrRED, "WARNING: ")
+            << "Don't know how to handle the configuration element: "
             << element->getName() << std::endl << vprDEBUG_FLUSH;
          return(false);
       }
@@ -287,7 +307,7 @@ namespace cluster
       return( recognizeApplicationDataManagerConfig(element) ||
               recognizeApplicationDataConfig(element) );
    }
-    
+
    /**
     * Helper function that checks the type of a given element against
     * the type that the ApplicationDataManager accepts.
@@ -295,8 +315,8 @@ namespace cluster
    bool ApplicationDataManager::recognizeApplicationDataManagerConfig(jccl::ConfigElementPtr element)
    {
       return(element->getID() == ApplicationDataManager::getElementType());
-   }  
-   
+   }
+
    /**
     * Helper function that checks the type of a given element against
     * the type that the ApplicationDataManager accepts.
@@ -304,28 +324,29 @@ namespace cluster
    bool ApplicationDataManager::recognizeApplicationDataConfig(jccl::ConfigElementPtr element)
    {
       return(element->getID() == "application_data");
-   }  
+   }
 
    void ApplicationDataManager::postPostFrame()
    {;}
-    
+
    void ApplicationDataManager::preDraw()
    {
       //mFrameNumber++;
-       
-      
+
       // Send ApplicationData
       vprDEBUG(gadgetDBG_RIM, vprDBG_HVERB_LVL)
          << clrOutBOLD(clrMAGENTA,"[ApplicationDataManager::preDraw()]")
          << "Sending ApplicationData.\n" << vprDEBUG_FLUSH;
-      
+
       vpr::Guard<vpr::Mutex> guard(mApplicationDataServersLock);
-       
+
       std::map<vpr::GUID, ApplicationDataServer*>::iterator application_data_servers_begin = mApplicationDataServers.begin();
       std::map<vpr::GUID, ApplicationDataServer*>::iterator application_data_servers_end = mApplicationDataServers.end();
-      
+
       // For each ApplicationDataServer on this node, serialize the data and send it to each of it's clients.
-      for (std::map<vpr::GUID, ApplicationDataServer*>::iterator i = application_data_servers_begin; i != application_data_servers_end; i++)
+      for (std::map<vpr::GUID, ApplicationDataServer*>::iterator i = application_data_servers_begin;
+           i != application_data_servers_end;
+           ++i)
       {
        (*i).second->serializeAndSend();
       }
@@ -339,12 +360,13 @@ namespace cluster
       std::map<ApplicationDataRequest*, std::string>::iterator begin = mPendingApplicationDataRequests.begin();
       std::map<ApplicationDataRequest*, std::string>::iterator end   = mPendingApplicationDataRequests.end();
       std::map<ApplicationDataRequest*, std::string>::iterator i;
-      
+
       // For each pending ApplicationData request
-      for (i = begin ; i != end ; i++)
+      for (i = begin ; i != end ; ++i)
       {
          // Get the Node that the request is for.
-         gadget::Node* temp_node = ClusterManager::instance()->getNetwork()->getNodeByHostname((*i).second);
+         gadget::Node* temp_node =
+            ClusterManager::instance()->getNetwork()->getNodeByHostname((*i).second);
 
          // If the node exists in the ClusterNetwork
          if (temp_node != NULL)
@@ -357,7 +379,8 @@ namespace cluster
             }
             else
             {
-               // Else add the Node to the list of pending Nodes so that we will connect to it.
+               // Else add the Node to the list of pending Nodes so that we
+               // will connect to it.
                temp_node->setStatus(gadget::Node::PENDING);
             } // End if
          } // End if
@@ -382,7 +405,7 @@ namespace cluster
 
       return NULL;
    }
-        
+
    ApplicationData* ApplicationDataManager::getRemoteApplicationData(const vpr::GUID& id)
    {
       vpr::Guard<vpr::Mutex> guard(mRemoteApplicationDataLock);
@@ -415,7 +438,7 @@ namespace cluster
          }
       }
    }
-   
+
    void ApplicationDataManager::addSerializableObject(vpr::SerializableObject* object)
    {
       ApplicationData* new_app_data = static_cast<ApplicationData*>(object);
@@ -423,7 +446,7 @@ namespace cluster
       vpr::GUID id = new_app_data->getId();
       std::string hostname = new_app_data->getHostname();
 
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
          << clrOutBOLD(clrMAGENTA,"[ApplicationDataManager]")
          << " Adding ApplicationData: " << id.toString()
          << std::endl << vprDEBUG_FLUSH;
@@ -442,14 +465,14 @@ namespace cluster
          {
             // This application data is local.
             new_app_data->setIsLocal(true);
-            
+
             // Adding a new ApplicationData server.
-            vpr::Guard<vpr::Mutex> guard(mApplicationDataServersLock);         
+            vpr::Guard<vpr::Mutex> guard(mApplicationDataServersLock);
             ApplicationDataServer* new_appdata_server = new ApplicationDataServer(id, new_app_data, mHandlerGUID);
             mApplicationDataServers[id] = new_appdata_server;
          }
          else
-         {    
+         {
             // This application data is not local.
             new_app_data->setIsLocal(false);
 
@@ -458,76 +481,83 @@ namespace cluster
 
             // Add ApplicationData request to pending list.
             addPendingApplicationDataRequest(new_appdata_req, hostname);
-             
+
             // Add ApplicationData to Remote Vector.
             vpr::Guard<vpr::Mutex> guard(mRemoteApplicationDataLock);
             mRemoteApplicationData[id] = new_app_data;
          }
       }
-    }
+   }
 
-    void ApplicationDataManager::removeApplicationData(ApplicationData* old_app_data)
-    {
-       vpr::GUID id = old_app_data->getId();
-       std::string hostname = old_app_data->getHostname();
+   void ApplicationDataManager::removeApplicationData(ApplicationData* old_app_data)
+   {
+      vpr::GUID id = old_app_data->getId();
+      std::string hostname = old_app_data->getHostname();
 
-       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
-          << clrOutBOLD(clrMAGENTA,"[ApplicationDataManager]")
-          << " Removing ApplicationData: " << id.toString()
-          << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         << clrOutBOLD(clrMAGENTA,"[ApplicationDataManager]")
+         << " Removing ApplicationData: " << id.toString()
+         << std::endl << vprDEBUG_FLUSH;
 
-       // Remove Pending ApplicationData
-       removePendingApplicationDataRequest(old_app_data->getId());
-       /*
-       // Remove Active ApplicationData
-       vpr::Guard<vpr::Mutex> guard(mApplicationDataLock);
-       for (std::vector<cluster::ApplicationData*>::iterator i = mApplicationData.begin() ;
-            i != mApplicationData.end() ; i++)
-       {
-          if ((*i) == old_user_data)
-          {
-             mApplicationData.erase(i);
-             return;
-          }
-       }
-       */
-    }
+      // Remove Pending ApplicationData
+      removePendingApplicationDataRequest(old_app_data->getId());
+      /*
+      // Remove Active ApplicationData
+      vpr::Guard<vpr::Mutex> guard(mApplicationDataLock);
+      for (std::vector<cluster::ApplicationData*>::iterator i = mApplicationData.begin();
+           i != mApplicationData.end();
+           ++i)
+      {
+         if ((*i) == old_user_data)
+         {
+            mApplicationData.erase(i);
+            return;
+         }
+      }
+      */
+   }
 
-    void ApplicationDataManager::dumpApplicationData()
-    {
-       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
-          << clrOutBOLD(clrMAGENTA,"[ApplicationDataManager]")
-          << " Listing All Application Level ApplicationData"
-          << std::endl << vprDEBUG_FLUSH;
+   void ApplicationDataManager::dumpApplicationData()
+   {
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         << clrOutBOLD(clrMAGENTA,"[ApplicationDataManager]")
+         << " Listing All Application Level ApplicationData"
+         << std::endl << vprDEBUG_FLUSH;
 
-       vpr::Guard<vpr::Mutex> ads_guard(mApplicationDataServersLock);
-       
-       std::map<vpr::GUID, ApplicationDataServer*>::iterator ads_begin = mApplicationDataServers.begin();
-       std::map<vpr::GUID, ApplicationDataServer*>::iterator ads_end = mApplicationDataServers.end();
-       std::map<vpr::GUID, ApplicationDataServer*>::iterator ads;
+      vpr::Guard<vpr::Mutex> ads_guard(mApplicationDataServersLock);
 
-       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "ApplicationDataServers:" << std::endl << vprDEBUG_FLUSH;          
-       
-       for (ads = ads_begin ; ads != ads_end ; ads++)
-       {
-          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "     Server: "
-          << (*ads).first << std::endl << vprDEBUG_FLUSH;          
-       }
-       
-       vpr::Guard<vpr::Mutex> rad_guard(mRemoteApplicationDataLock);
-       
-       std::map<vpr::GUID, ApplicationData*>::iterator rad_begin = mRemoteApplicationData.begin();
-       std::map<vpr::GUID, ApplicationData*>::iterator rad_end = mRemoteApplicationData.end();
-       std::map<vpr::GUID, ApplicationData*>::iterator rad;
+      std::map<vpr::GUID, ApplicationDataServer*>::iterator ads_begin =
+         mApplicationDataServers.begin();
+      std::map<vpr::GUID, ApplicationDataServer*>::iterator ads_end =
+         mApplicationDataServers.end();
+      std::map<vpr::GUID, ApplicationDataServer*>::iterator ads;
 
-       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Remote ApplicationData Objects:" << std::endl << vprDEBUG_FLUSH;          
-       
-       for (rad = rad_begin ; rad != rad_end ; rad++)
-       {
-          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-               << "Hostname: " << (*rad).second->getHostname()
-               << "GUID: " << (*rad).second->getId() 
-               << std::endl << vprDEBUG_FLUSH;          
-       }   
-    }
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         << "ApplicationDataServers:" << std::endl << vprDEBUG_FLUSH;
+
+      for (ads = ads_begin ; ads != ads_end ; ++ads)
+      {
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+            << "     Server: " << (*ads).first << std::endl << vprDEBUG_FLUSH;
+      }
+
+      vpr::Guard<vpr::Mutex> rad_guard(mRemoteApplicationDataLock);
+
+      std::map<vpr::GUID, ApplicationData*>::iterator rad_begin =
+        mRemoteApplicationData.begin();
+      std::map<vpr::GUID, ApplicationData*>::iterator rad_end =
+        mRemoteApplicationData.end();
+      std::map<vpr::GUID, ApplicationData*>::iterator rad;
+
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+        << "Remote ApplicationData Objects:" << std::endl << vprDEBUG_FLUSH;
+
+      for (rad = rad_begin ; rad != rad_end ; ++rad)
+      {
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+            << "Hostname: " << (*rad).second->getHostname()
+            << "GUID: " << (*rad).second->getId()
+            << std::endl << vprDEBUG_FLUSH;
+      }
+   }
 } // End of gadget namespace
