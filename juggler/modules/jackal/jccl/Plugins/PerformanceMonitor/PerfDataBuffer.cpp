@@ -6,7 +6,7 @@
 
 
 vjPerfDataBuffer::vjPerfDataBuffer (char* _name, int _numbufs,
-				    int _nindex, bool _enabled) {
+				    int _nindex) {
     name = strdup (_name);
     numbufs = _numbufs;
     buffer = new buf_entry[numbufs];
@@ -14,7 +14,6 @@ vjPerfDataBuffer::vjPerfDataBuffer (char* _name, int _numbufs,
     write_pos = 1;
     lost = 0;
     active = 0;
-    enabled = _enabled;
     nindex = _nindex;
 }
 
@@ -35,8 +34,7 @@ vjPerfDataBuffer::~vjPerfDataBuffer () {
 //+       storing data whenever a set() is made and
 //+       writing available data when requested.
 void vjPerfDataBuffer::activate() {
-    if (enabled)
-	active = 1;
+    active = 1;
 }
 
 
@@ -54,6 +52,12 @@ void vjPerfDataBuffer::deactivate() {
     read_begin = 0;
     write_pos = 1;
     lost = 0;
+}
+
+
+
+bool vjPerfDataBuffer::isActive() {
+    return active;
 }
 
 
