@@ -88,8 +88,8 @@ DYNAMICLIB_EXT=	@DYNAMICLIB_EXT@
 
 # Add extra linking options on Darwin/OS X.
 ifeq (@PLATFORM@, Darwin)
-LDOPTS+=	-compatibility_version $(SHLIB_MAJOR).$(SHLIB_MINOR)
-LDOPTS+=	-current_version $(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
+LDOPTS+=	-Wl,-dylib_compatibility_version,$(SHLIB_MAJOR).$(SHLIB_MINOR)
+LDOPTS+=	-Wl,-dylib_current_version,$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
 endif
 
 # Full list of the libraries to build.
@@ -190,8 +190,16 @@ $(LIBDIR)/$(VJ_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+ifeq (@PLATFORM@, Darwin)
+	ld -dynamic -m -r -d -bind_at_load -o $(@:.dylib=.lo)		\
+          $(OBJDIR)/*.$(OBJEXT)
+	$(CXX) -g -Wl,-dynamic -nostartfiles -Wl,-dylib -Wl,-ldylib1.o	\
+          $(LDOPTS) -o $@ $(@:.dylib=.lo) $(DYLIB_DEPS_VJ)
+	rm -f $(@:.dylib=.lo)
+else
 	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
-            $(DYLIB_DEPS_VJ)
+          $(DYLIB_DEPS_VJ)
+endif
 ifeq (@OS_TYPE@, Win32)
 	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(VJ_LIBRARY).* .
 else
@@ -206,8 +214,16 @@ $(LIBDIR)/$(VJ_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+ifeq (@PLATFORM@, Darwin)
+	ld -dynamic -m -r -d -bind_at_load -o $(@:.dylib=.lo)		\
+          $(OBJDIR)/*.$(OBJEXT)
+	$(CXX) -g -Wl,-dynamic -nostartfiles -Wl,-dylib -Wl,-ldylib1.o	\
+          $(LDOPTS) -o $@ $(@:.dylib=.lo) $(DYLIB_PROF_DEPS_VJ)
+	rm -f $(@:.dylib=.lo)
+else
 	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
-            $(DYLIB_PROF_DEPS_VJ)
+          $(DYLIB_PROF_DEPS_VJ)
+endif
 ifeq (@OS_TYPE@, Win32)
 	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(VJ_LIBRARY)$(PROFLIB_EXT).* .
 else
@@ -222,8 +238,16 @@ $(LIBDIR)/$(GL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+ifeq (@PLATFORM@, Darwin)
+	ld -dynamic -m -r -d -bind_at_load -o $(@:.dylib=.lo)		\
+          $(OBJDIR)/*.$(OBJEXT)
+	$(CXX) -g -Wl,-dynamic -nostartfiles -Wl,-dylib -Wl,-ldylib1.o	\
+          $(LDOPTS) -o $@ $(@:.dylib=.lo) $(DYLIB_DEPS_GL)
+	rm -f $(@:.dylib=.lo)
+else
 	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
-            $(DYLIB_DEPS_GL)
+          $(DYLIB_DEPS_GL)
+endif
 ifeq (@OS_TYPE@, Win32)
 	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(GL_LIBRARY).* .
 else
@@ -238,8 +262,16 @@ $(LIBDIR)/$(GL_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+ifeq (@PLATFORM@, Darwin)
+	ld -dynamic -m -r -d -bind_at_load -o $(@:.dylib=.lo)		\
+          $(OBJDIR)/*.$(OBJEXT)
+	$(CXX) -g -Wl,-dynamic -nostartfiles -Wl,-dylib -Wl,-ldylib1.o	\
+          $(LDOPTS) -o $@ $(@:.dylib=.lo) $(DYLIB_PROF_DEPS_GL)
+	rm -f $(@:.dylib=.lo)
+else
 	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
-            $(DYLIB_PROF_DEPS_GL)
+          $(DYLIB_PROF_DEPS_GL)
+endif
 ifeq (@OS_TYPE@, Win32)
 	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(GL_LIBRARY)$(PROFLIB_EXT).* .
 else
