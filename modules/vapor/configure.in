@@ -467,7 +467,7 @@ AC_HEADER_TIME
 AC_CHECK_HEADERS([bstring.h fcntl.h limits.h signal.h strings.h sys/file.h \
                  sys/filio.h sys/ioctl.h sys/sysinfo.h sys/time.h \
                  termios.h unistd.h sys/capability.h sys/stdsyms.h \
-                 uuid.h uuid/uuid.h])
+                 uuid.h uuid/uuid.h sys/uuid.h])
 
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
