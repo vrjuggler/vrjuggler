@@ -131,7 +131,6 @@ namespace cluster
 
    void ApplicationDataServer::addClient(ClusterNode* new_client_node)
    {
-      vprASSERT(0 == mClientsLock.test());
       vprASSERT(new_client_node != NULL && "You can not add a new client that is NULL");
       
       // Lock mutex to make this thread safe
@@ -142,7 +141,6 @@ namespace cluster
 
    void ApplicationDataServer::removeClient(const std::string& host_name)
    {
-      vprASSERT(0 == mClientsLock.test());
       vpr::Guard<vpr::Mutex> guard(mClientsLock);
 
       for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin() ;
