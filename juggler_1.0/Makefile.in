@@ -137,7 +137,7 @@ LIB_DYNAMIC	= ${LIBRARY}.@SHAREDLIB_EXT@
 # -----------------------------------------------------------------------------
 
 # Subdirectories used for recursion through the source tree.
-SUBDIRS		= Math Config Kernel Input SharedMem Sync Threads
+SUBDIRS		= Math Config Kernel Environment Performance Input SharedMem Sync Threads
 
 # Subdirectories used for recursion through the test source tree when
 # installing.
