@@ -59,168 +59,178 @@ void vjGlxWindow::swapBuffers() {
 
 
 int vjGlxWindow::open() {
-   /* attempts to open the glxWindow & create the gl context.  Does nothing
-    * if the window is already open (& returns true).
-    * returns true for success, false for failure.
-    * The newly opened window will be set as the calling proccess'
-    * current gl context.
+    /* attempts to open the glxWindow & create the gl context.  Does nothing
+     * if the window is already open (& returns true).
+     * returns true for success, false for failure.
+     * The newly opened window will be set as the calling proccess'
+     * current gl context.
+     */
+
+    XEvent fooevent;
+    XSetWindowAttributes w_attrib;
+    int screen;
+
+    vjDEBUG(vjDBG_DRAW_MGR,3) << "glxWindow: Open window\n" << vjDEBUG_FLUSH;
+
+    if (window_is_open)
+        return true;
+
+    if (window_width == -1) {
+        vjDEBUG(vjDBG_ERROR, 0) << "ERROR: vjGlxWindow: Window has not been configured\n" << vjDEBUG_FLUSH;
+        return false;
+    }
+
+    if (! (x_display = XOpenDisplay (display_name))) {
+        vjDEBUG(vjDBG_ERROR, 0) << "ERROR: vjGlxWindow: Unable to open display '" << display_name << "'.\n" << vjDEBUG_FLUSH;
+        return false;
+    }
+
+    screen = DefaultScreen (x_display);
+
+    // get an XVisualInfo*, which we'll need below
+    if ((visual_info = GetGlxVisInfo (x_display, screen)) == NULL) {
+        vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjGlxWindow: glXChooseVisual failed\n" << vjDEBUG_FLUSH;
+        return false;
+    }
+
+    // window attributes.
+    if ((w_attrib.colormap = XCreateColormap (x_display,
+                                              RootWindow(x_display, screen),
+                                              visual_info->visual,
+                                              AllocNone)) == 0) {
+        vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjGlxWindow: XCreateColorMap failed on '" << display_name << "'.\n" << vjDEBUG_FLUSH;
+        return false;
+    }
+
+    w_attrib.event_mask = ExposureMask | StructureNotifyMask
+        | PointerMotionMask | KeyPressMask;
+    w_attrib.border_pixel = 0x0;
+
+    // create window
+    if ((x_window = XCreateWindow (x_display, RootWindow(x_display, screen),
+                                   origin_x, origin_y - window_height,
+                                   window_width, window_height,
+                                   0, visual_info->depth,
+                                   InputOutput,
+                                   visual_info->visual,
+                                   CWEventMask | CWColormap | CWBorderPixel,
+                                   /* ^--attrib mask*/
+                                   &w_attrib))  /* Attributes */
+        == 0)
+        {
+            vjDEBUG(vjDBG_DRAW_MGR,0) << "ERROR: vjGlxWindow: Couldn't create window for " << display_name << endl << vjDEBUG_FLUSH;
+            return false;
+        }
+
+    /***************** Set Window Name/Class/Size/Pos *********************/
+
+    /* Before we map the window, we need a name for it (this is also useful for
+     * the resource cruft that'll get rid of the borders).
+     */
+    XClassHint *classhint = XAllocClassHint();
+    classhint->res_name = (char*)window_name.c_str();
+    classhint->res_class = "vj GLX";
+    //XSetClassHint (x_display, x_window, classhint);
+
+    // InSoc makes things simple
+    // X makes things complicated
+    XTextProperty w_name;
+    char* foo = (char*)window_name.c_str();
+    XStringListToTextProperty(&foo, 1, &w_name);
+
+    /* The next few lines of crud are needed to get it through the window
+     * manager's skull that yes, we DO have a REASON for wanting the window
+     * to be positioned WHERE WE TOLD YOU TO, and not where YOU think it should
+     * go, thank you very much, I'M the APPLICATION so stop $%^*&%#@! SECOND
+     * GUESSING ME!
+     */
+    XSizeHints *sizehints = XAllocSizeHints();
+    sizehints->flags = USPosition;
+
+    XSetWMProperties (x_display, x_window, &w_name, &w_name, 
+                      NULL, 0, sizehints, NULL, classhint);
+    
+    XFree (w_name.value);
+    XFree (classhint);
+    XFree (sizehints);
+
+    /***************** Border Stuff ***************************/
+
+    /* Get rid of window border, if configured to do so.
+     * This technique doesn't require any modifications to the .XDefaults file
+     * or anything, but it will only work with window managers based on MWM
+     * (the Motif window manager).  That covers most cases.
+     * Unfortunately, the generic X resources for communicating with a window
+     * manager don't support this feature.
+     */
+    if (!border) {
+        vjDEBUG(vjDBG_DRAW_MGR,5) << "attempting to make window borderless" << endl << vjDEBUG_FLUSH;
+        Atom vjMotifHints = XInternAtom (x_display, "_MOTIF_WM_HINTS", 0);
+        if (vjMotifHints == None) {
+            vjDEBUG(vjDBG_DRAW_MGR,0) << "ERROR: vjGlxWindow: Could not get X atom for _MOTIF_WM_HINTS." << endl << vjDEBUG_FLUSH;
+        }
+        else {
+            MotifWmHints hints;
+            hints.flags = MWM_HINTS_DECORATIONS;
+            hints.decorations = 0;
+            XChangeProperty(x_display, x_window,
+                            vjMotifHints, vjMotifHints, 32,
+                            PropModeReplace, (unsigned char *) &hints, 4);
+        }
+    }
+
+    /********************* Mapping Window **************************/
+
+    /* Now that we've straightened that out with a minimum of bloodshed,
+     * we can actually map the window.  The XIfEvent makes us wait until
+     * it's actually on screen.
+     */
+
+    XMapWindow (x_display, x_window);
+    XIfEvent (x_display, &fooevent, EventIsMapNotify, (XPointer)x_window);
+
+    vjDEBUG(vjDBG_DRAW_MGR,4) << "vjGlxWindow: done mapping window\n" << vjDEBUG_FLUSH;
+
+    /********************* OpenGL Context Stuff *********************/
+
+    glx_context = glXCreateContext (x_display,visual_info, NULL, True);
+    if (NULL == glx_context) {
+        vjDEBUG(vjDBG_ERROR,0) << "ERROR: Couldn't create GlxContext for '" << display_name << "'\n" << vjDEBUG_FLUSH;
+        return false;
+    }
+
+    vjASSERT(NULL != glx_context);
+    if (!glXMakeCurrent ( x_display, x_window, glx_context  )) {
+        vjDEBUG(vjDBG_ERROR,0) << "ERROR: Couldn't set GlxContext for '" << display_name << "'\n" << vjDEBUG_FLUSH;
+        return false;
+    }
+
+    /* allen found a hint online that if we have the controlling process
+     * "disown" the gl context we just created, we could then have another
+     * process pick it up and use it.  However, it doesn't seem to have
+     * worked for us.
+     */
+    // glXMakeCurrent (x_display,0,0);
+
+    window_is_open = 1;
+
+    /*
+      glEnable (GL_DEPTH_TEST);
+      glClearDepth (1.0);
+      glFlush();
     */
-
-   XEvent fooevent;
-   XSetWindowAttributes w_attrib;
-   int screen;
-
-   vjDEBUG(vjDBG_DRAW_MGR,3) << "glxWindow: Open window" << endl << vjDEBUG_FLUSH;
-
-   if (window_is_open)
-      return true;
-
-   if (window_width == -1)
-      vjDEBUG(vjDBG_DRAW_MGR,1) << "ERROR: vjGlxWindow: Window has not been configured\n" << vjDEBUG_FLUSH;
-
-   if (! (x_display = XOpenDisplay (display_name)))
-   {
-      vjDEBUG(vjDBG_DRAW_MGR,0) << "vjGlxWindow: Unable to open display " << display_name << endl << vjDEBUG_FLUSH;
-      return false;
-   }
-
-   screen = DefaultScreen (x_display);
-
-   // get an XVisualInfo*, which we'll need below
-   if ((visual_info = GetGlxVisInfo (x_display, screen)) == NULL)
-   {
-      vjDEBUG(vjDBG_DRAW_MGR,0) << "vjGlxWindow: glXChooseVisual failed\n" << flush << vjDEBUG_FLUSH;
-      return false;
-   }
-
-   // window attributes.
-   if ((w_attrib.colormap = XCreateColormap (x_display,
-                                             RootWindow(x_display, screen),
-                                             visual_info->visual,
-                                             AllocNone)) == 0)
-   {
-      vjDEBUG(vjDBG_DRAW_MGR,0) << "ERROR: vjGlxWindow: XCreateColorMap failed on " << display_name << endl << vjDEBUG_FLUSH;
-      return false;
-   }
-   w_attrib.event_mask = ExposureMask | StructureNotifyMask
-                         | PointerMotionMask | KeyPressMask;
-   w_attrib.border_pixel = 0x0;
-
-   // create window
-   if ((x_window = XCreateWindow (x_display, RootWindow(x_display, screen),
-                                  origin_x, origin_y - window_height,
-                                  window_width, window_height,
-                                  0, visual_info->depth,
-                                  InputOutput,
-                                  visual_info->visual,
-                                  CWEventMask | CWColormap | CWBorderPixel,
-                                  /* ^--attrib mask*/
-                                  &w_attrib))  /* Attributes */
-       == 0)
-   {
-      vjDEBUG(vjDBG_DRAW_MGR,0) << "ERROR: vjGlxWindow: Couldn't create window for " << display_name << endl << vjDEBUG_FLUSH;
-      return false;
-   }
-
-   /* Before we map the window, we need a name for it (this is also useful for
-    * the resource cruft that'll get rid of the borders).
-    */
-   XClassHint *classhint = XAllocClassHint();
-   classhint->res_name = (char*)window_name.c_str();
-   classhint->res_class = "vj GLX";
-   XSetClassHint (x_display, x_window, classhint);
-   XFree (classhint);
-
-
-   /* Get rid of window border, if configured to do so.
-    * This technique doesn't require any modifications to the .XDefaults file
-    * or anything, but it will only work with window managers based on MWM
-    * (the Motif window manager).  That covers most cases.
-    * Unfortunately, the generic X resources for communicating with a window
-    * manager don't support this feature.
-    */
-   if (!border)
-   {
-      vjDEBUG(vjDBG_DRAW_MGR,4) << "attempting to make window borderless" << endl << vjDEBUG_FLUSH;
-      Atom vjMotifHints = XInternAtom (x_display, "_MOTIF_WM_HINTS", 0);
-      if (vjMotifHints == None)
-      {
-         vjDEBUG(vjDBG_DRAW_MGR,0) << "ERROR: vjGlxWindow: Could not get X atom for _MOTIF_WM_HINTS." << endl << vjDEBUG_FLUSH;
-      }
-      else
-      {
-         MotifWmHints hints;
-         hints.flags = MWM_HINTS_DECORATIONS;
-         hints.decorations = 0;
-         XChangeProperty(x_display, x_window,
-                         vjMotifHints, vjMotifHints, 32,
-                         PropModeReplace, (unsigned char *) &hints, 4);
-      }
-   }
-/* END_BORDERLESS_STUFF*/
-
-
-   /* The next few lines of crud are needed to get it through the window
-    * manager's skull that yes, we DO have a REASON for wanting the window
-    * to be positioned WHERE WE TOLD YOU TO, and not where YOU think it should
-    * go, thank you very much, I'M the APPLICATION so stop $%^*&%#@! SECOND
-    * GUESSING ME!
-    */
-   vjDEBUG(vjDBG_DRAW_MGR,4) << "vjGlxWindow: Positioning window\n" << vjDEBUG_FLUSH;
-   XSizeHints *sizehints = XAllocSizeHints();
-   sizehints->flags = USPosition;
-   XSetWMNormalHints (x_display, x_window, sizehints);
-   XFree (sizehints);
-
-   /* Now that we've straightened that out with a minimum of bloodshed,
-    * we can actually map the window.  The XIfEvent lets us wait until
-    * it's actually on screen.
-    */
-
-   XMapWindow (x_display, x_window);
-   XIfEvent (x_display, &fooevent, EventIsMapNotify, (XPointer)x_window);
-
-   vjDEBUG(vjDBG_DRAW_MGR,4) << "vjGlxWindow: done map" << endl << vjDEBUG_FLUSH;
-
-   glx_context = glXCreateContext (x_display,visual_info, NULL, True);
-   if (NULL == glx_context)
-   {
-      vjDEBUG(vjDBG_ERROR,0) << "ERROR: Couldn't create GlxContext for " << display_name << vjDEBUG_FLUSH
-      << endl;
-      return false;
-   }
-
-   vjASSERT(NULL != glx_context);
-   if (!glXMakeCurrent ( x_display, x_window, glx_context  ))
-   {
-      vjDEBUG(vjDBG_ERROR,0) << "ERROR: Couldn't set GlxContext for " << display_name << endl << vjDEBUG_FLUSH;
-      return false;
-   }
-
-   /* allen found a hint online that if we have the controlling process
-    * "disown" the gl context we just created, we could then have another
-    * process pick it up and use it.  However, it doesn't seem to have
-    * worked for us.
-    */
-   // glXMakeCurrent (x_display,0,0);
-
-   window_is_open = 1;
-
-   /*
-   glEnable (GL_DEPTH_TEST);
-   glClearDepth (1.0);
-   glFlush();
-   */
-   return true;
+    return true;
 }
+
+
 
 //: Closes the window given
 //! NOTE: this function mucks with the current rendering context */
 int vjGlxWindow::close() {
-   if (!window_is_open)
-      return true;
+    if (!window_is_open)
+        return true;
 
-   window_is_open = false;
+    window_is_open = false;
 
    if (glx_context)
    {
@@ -249,6 +259,7 @@ int vjGlxWindow::close() {
    return true;
 
 } /* close() */
+
 
 
 bool vjGlxWindow::makeCurrent() {
@@ -353,8 +364,8 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
 
    if (!glXQueryExtension (display, NULL, NULL))
    {
-      vjDEBUG(vjDBG_ERROR,0) << "ERROR: Display "<< display_name <<
-      "doesn't support GLX.\n  Aborting.\n" <<flush << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ERROR,0) << "ERROR: Display '"<< display_name <<
+      "' doesn't support GLX.\n" << vjDEBUG_FLUSH;
       return NULL;
    }
 
@@ -375,9 +386,9 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
    // still no luck. if we were going for stereo, let's try without.
    if (mDisplay->inStereo())
    {
-      vjDEBUG(vjDBG_DRAW_MGR,2) << "WARNING: Display process for " << display_name
-                 << "\n  Couldn't get display in stereo."
-                 << "\n  Trying mono.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DRAW_MGR,0) << "WARNING: Display process for '" << display_name
+                 << "' couldn't get display in stereo - trying mono.\n"
+                 << vjDEBUG_FLUSH;
       in_stereo = false;
       viattrib[12] = GLX_USE_GL; // should be a reasonable 'ignore' tag
       if( (vi = glXChooseVisual (display, screen, viattrib)) )
@@ -385,14 +396,14 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
    }
 
    // if we reach here, we didn't.  Maybe we should make alpha optional.
-   vjDEBUG(vjDBG_DRAW_MGR,2) << "WARNING: Display process for " << display_name
-              << "\n  Couldn't get display with alpha channel."
-              << "\n  Trying without." << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,2) << "WARNING: Display process for '" << display_name
+              << "' couldn't get display with alpha channel - trying without.\n"
+              << vjDEBUG_FLUSH;
    viattrib[11] = 0;
    if( (vi = glXChooseVisual (display, screen, viattrib)) )
       return vi;
 
-   // But they told me to please go f___ myself
+   // But they told me to please just go f___ myself
    // You know you just can't win.  -d. gilmour
    return NULL;
 }
@@ -403,5 +414,5 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
 //+       until a window has actually been mapped.
 int vjGlxWindow::EventIsMapNotify (Display *display,  XEvent *e,  XPointer window) {
 
-   return ((e->type == MapNotify) && (e->xmap.window == (Window)window));
+    return ((e->type == MapNotify) && (e->xmap.window == (Window)window));
 }
