@@ -63,16 +63,16 @@ public class BeanAttributes
     *
     * @param name          the name of the bean
     * @param jarURL        the URL string of the jar that contains the bean
-    * @param entry         the entry in the jar that contains the bean
+    * @param classname     the bean's fully-qualified classname
     * @param dependencies  a list of BeanDependency objects that describe the
     *                      beans this bean depends on as
     */
-   public BeanAttributes( String name, String jarURL, String entry,
+   public BeanAttributes( String name, String jarURL, String classname,
                           List dependencies )
    {
       this.name         = name;
       this.jarURL       = jarURL;
-      this.entry        = entry;
+      this.classname    = classname;
       this.dependencies = dependencies;
    }
 
@@ -89,7 +89,7 @@ public class BeanAttributes
    {
       String name = "";
       String jarURL = "";
-      String entry = "";
+      String classname = "";
       List dependencies = new ArrayList();
 
       name = root.getAttribute("name").getValue();
@@ -125,7 +125,7 @@ public class BeanAttributes
          else if ( e.getName().equals("file") )
          {
             jarURL = expandEnvVars(e.getAttribute("name").getValue());
-            entry   = e.getAttribute("entry").getValue();
+            classname = e.getAttribute("class").getValue();
          }
       }
 
@@ -139,7 +139,7 @@ public class BeanAttributes
          }
       }
 
-      return new BeanAttributes( name, jarURL, entry, dependencies );
+      return new BeanAttributes( name, jarURL, classname, dependencies );
    }
 
    /**
@@ -163,13 +163,13 @@ public class BeanAttributes
    }
 
    /**
-    * Gets the entry in the JAR file that contains the bean.
+    * Gets the bean's fully qaulified classname.
     *
-    * @return  a string entry of the bean in the JAR
+    * @return  the classname of the bean
     */
-   public String getEntry()
+   public String getClassname()
    {
-      return entry;
+      return classname;
    }
 
    /**
@@ -242,9 +242,9 @@ public class BeanAttributes
    private String jarURL;
 
    /**
-    * The entry in the JAR that contains the bean.
+    * The bean's fully qualified class name.
     */
-   private String entry;
+   private String classname;
 
    /**
     * A list of BeanDependency objects that describe the beans that are required

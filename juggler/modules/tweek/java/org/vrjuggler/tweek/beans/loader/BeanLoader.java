@@ -139,11 +139,12 @@ public class BeanLoader
    protected boolean verifyBean (String bean_class)
    {
       boolean found   = false;
-      JarEntry entry  = mBeanJar.getJarFile().getJarEntry(bean_class + ".class");
+      String entry_name = bean_class.replace('.', '/');
+      JarEntry entry  = mBeanJar.getJarFile().getJarEntry(entry_name + ".class");
 
       if ( entry == null )
       {
-         entry = mBeanJar.getJarFile().getJarEntry(bean_class + ".ser");
+         entry = mBeanJar.getJarFile().getJarEntry(entry_name + ".ser");
 
          if ( entry != null )
          {
