@@ -90,8 +90,11 @@ void vjDisplay::config(vjConfigChunk* chunk)
 
 	
     // ---- FRIEND FUNCTIONS ---- //
+//! PRE: disp != NULL
+//+      disp->mUser != NULL
 ostream& operator<<(ostream& out,  vjDisplay* disp)
 {
+   vjASSERT(disp != NULL);
    vjASSERT(disp->mUser != NULL);
 
     //out << "vjDisplay:" << (void*)(&disp)
