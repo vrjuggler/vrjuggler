@@ -68,6 +68,7 @@ public:
    void removePlugin(ClusterPlugin* old_manager);
    bool doesPluginExist(ClusterPlugin* old_manager);
    
+   void sendRequests();
    void preDraw();
    void postPostFrame();
    void createBarrier();

@@ -51,21 +51,15 @@ namespace cluster
 {
    vprSingletonImp( SwapLockPlugin );
    
-   SwapLockPlugin::SwapLockPlugin() : mPluginGUID("5edfc033-1b3e-4741-b0e0-6ebb47967644")
+   SwapLockPlugin::SwapLockPlugin() : mPluginGUID("5edfc033-1b3e-4741-b0e0-6ebb47967644"),
+      SYNC_SIGNAL('G'), read_timeout(5,vpr::Interval::Sec)
    {
       // This is done by the ClusterManager
       //jccl::DependencyManager::instance()->registerChecker(new ClusterDepChecker());
       mFrameNumber = 0;
-      mBarrier = NULL;
    }
    SwapLockPlugin::~SwapLockPlugin()
-   {
-      if (NULL != mBarrier)
-      {
-         delete mBarrier;
-         mBarrier = NULL;
-      }
-   }
+   {;}
    
    /** Add the pending chunk to the configuration.
    *  PRE: configCanHandle (chunk) == true.
@@ -73,136 +67,54 @@ namespace cluster
    */
    bool SwapLockPlugin::configAdd(jccl::ConfigChunkPtr chunk)
    {
-      /*if (recognizeSwapLockPluginConfig(chunk))
+      // -If the cluster manager has been configured.
+
+      if(!ClusterManager::instance()->isClusterActive())
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[SwapLockPlugin] ")
-         << "Configure the SwapLock: " << chunk->getName() 
-         << "\n" << vprDEBUG_FLUSH;
-         return(true);
+         // XXX: This could be made into a dependancy also.
+         return false;
+      }
+
+      /////////////////////////////////////////
+      //  SwapLock Barrier Stuff
+      //
+      // -Set flag we have started configuring the cluster
+      // -Get Sync Machine Chunk Name
+      // -Get ChunkPtr to this chunk
+      // -Get the Hostname of this node
+
+      std::string barrier_machine_chunk_name = chunk->getProperty<std::string>(std::string("sync_server"));
+      jccl::ConfigChunkPtr barrier_machine_chunk = ClusterManager::instance()->getConfigChunkPointer(barrier_machine_chunk_name);
+      vprASSERT(NULL != barrier_machine_chunk.get() && "ConfigManager Chunk MUST have a barrier_master.");
+      mBarrierMasterHostname = barrier_machine_chunk->getProperty<std::string>(std::string("host_name"));
+
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
+         << "SwapLock Master Chunk Name is: " << barrier_machine_chunk_name << std::endl << vprDEBUG_FLUSH;         
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
+         << "SwapLock Master Hostname is: " << mBarrierMasterHostname << std::endl << vprDEBUG_FLUSH;         
+      // Starting Barrier Stuff
+      /////////////////////////////////////         
+      
+      if (mBarrierMasterHostname == ClusterNetwork::instance()->getLocalHostname())
+      {
+         mBarrierMaster = true;
+         mSlaves = ClusterManager::instance()->getClusterNodes();     
+         for (std::vector<std::string>::iterator i = mSlaves.begin() ; i != mSlaves.end() ; i++)
+         {
+            ClusterNode* temp_node = ClusterNetwork::instance()->getClusterNodeByHostname(*i);
+            if (NULL != temp_node)
+            {
+               mSlaveNodes.push_back(temp_node);
+            }
+         }         
       }
       else
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) 
-         << clrOutBOLD(clrRED,"[SwapLockPlugin::ConfigAdd] ERROR, Something is seriously wrong, we should never get here\n")
-         << vprDEBUG_FLUSH;
-         return(true);
-      }       
-      */
-      
-
-
-      // Find the name of the Sync Server
-      ///////////////////////////////////////////////////////////////////////////////////
-      std::string mSyncMasterChunkName = chunk->getProperty<std::string>("sync_server");
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC_MACHINE is: " << mSyncMasterChunkName << std::endl << vprDEBUG_FLUSH;
-      ///////////////////////////////////////////////////////////////////////////////////
-      
-      // Configure the ClusterBarrier
-      //////////////////////////////////////////////////////////////////////////////////
-      
-      // Temporary variables to hold SyncServer information
-      //         jccl::ConfigChunkPtr sync_server_chunk = mClusterTable[mSyncMasterChunkName];
-      //std::string          sync_server_hostname = sync_server_chunk->getProperty<std::string>("host_name");
-      //int                  sync_server_listen_port = sync_server_chunk->getProperty<int>("listen_port");
-      
-      jccl::ConfigChunkPtr server_chunk = ClusterManager::instance()->getConfigChunkPointer(mSyncMasterChunkName);
-
-      if (NULL == server_chunk.get())
-      {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"This machine is not in the current Cluster Configuration!\n") << vprDEBUG_FLUSH;
-         exit(1);
+         mBarrierMaster = false;
+         mMasterNode = ClusterNetwork::instance()->getClusterNodeByHostname(mBarrierMasterHostname);
       }
 
-      // Get Barrier method
-      int sync_method = chunk->getProperty<int>("sync_method");
-      std::cout << "Method: " << sync_method << std::endl;
-
-      //////////// Get Local Machin Configuration /////////
-      //         jccl::ConfigChunkPtr local_machine_chunk = mClusterTable[mLocalMachineChunkName];
-      //         std::string          serial_port = local_machine_chunk->getProperty<std::string>("serialPort");
-      //         int                  baud_rate = local_machine_chunk->getProperty<int>("serialBaud");
-      /////////////////////////////////////////////////////
-      
-      switch (sync_method)
-      {
-      case 0:
-         mBarrier = NULL;
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
-            clrOutBOLD(clrRED,"Barrier Method: NONE\n") << vprDEBUG_FLUSH;            
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
-            clrOutBOLD(clrRED,"Significant Tear Might Appear Between Screens!!!\n") << vprDEBUG_FLUSH;            
-         break;
-      case 1:
-         mBarrier = new ClusterBarrierTCP;
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
-            "ClusterBarrierTCP Barrier Method: TCP/IP Sockets \n" << vprDEBUG_FLUSH;
-         break;
-      /* NOT USED ANYMORE
-      case 2:
-         mBarrier = new ClusterBarrierSerial;
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
-            "ClusterBarrierSerial Barrier Method: TCP/IP Sockets & Serial Port \n" << vprDEBUG_FLUSH;
-         break;
-      */
-      case 3:
-#ifndef VPR_OS_Win32
-         mBarrier = new ClusterBarrierWired;
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
-            "ClusterBarrierWire Barrier Method: Altered Serial Driver \n" << vprDEBUG_FLUSH;
-#else
-         vprASSERT(false && "gadget::ClusterBarrierWired is not available on Win32");
-#endif
-         break;
-      default:
-         mBarrier = new ClusterBarrierTCP;
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
-            "ClusterBarrierTCP Barrier Method: TCP/IP Sockets \n" << vprDEBUG_FLUSH;
-         break;
-      }
-         
-         if (mBarrier != NULL)
-         {
-            int sync_port = chunk->getProperty<int>("sync_server_port");            
-
-            // XXX: We are actually going to want to get a different
-            // port from a config file so that we do not have to 
-            // deal with the same slow port as the RIM or UserData
-            
-            //mBarrier->setHostname(sync_server->getHostname());  
-            mBarrier->setHostname(server_chunk->getProperty<std::string>("host_name"));
-            mBarrier->setTCPPort(sync_port);
-            
-            //? mBarrier->setSerialPort(serial_port);
-            //? mBarrier->setBaudRate(baud_rate);
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrCYAN)                                
-               << "=========== Barrier Settings ==============="
-               << "\nBarrier-SyncServer Chunk:  " << mSyncMasterChunkName 
-               << "\nBarrier-SyncServer Host    " << server_chunk->getProperty<std::string>("host_name")
-               << "\nBarrier-SyncServer Port:   " << sync_port
-               //<< "\nBarrier-Local Serial Port: " << serial_port
-               //<< "\nBarrier-Local Baud Rate:   " << baud_rate 
-               << clrRESET << std::endl << vprDEBUG_FLUSH;
-      
-            // Have all clients connect to sync server
-            //   If master 
-            //   - Set master true
-            //   Else
-            //   - connect to sync Master server  
-      
-            if (ClusterNetwork::instance()->getLocalHostname()== server_chunk->getProperty<std::string>("host_name"))
-            {
-               mBarrier->setMaster(true);
-               //mBarrier->Init();
-               //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC This machine is sync server!" << std::endl << vprDEBUG_FLUSH;
-            }
-            else
-            {
-               mBarrier->setMaster(false);
-               //mBarrier->Init();
-            }
-         }
-         //////////////////////
-         return true;
+      return true;
    }
    
    
@@ -269,35 +181,92 @@ namespace cluster
       // - for each slave
       //   - send ready
 
-      if (NULL == mBarrier)
+      //vpr::Interval first_time, second_time;
+      //first_time.setNow();
+
+      if (mBarrierMaster)
       {
-         return false;
-      }
-      else if (!mBarrier->isActive())
-      {
-         mBarrier->Init();
+         MasterReceive();
+         MasterSend();
       }
       else
       {
-         //vpr::Interval first_time, second_time;
-         //first_time.setNow();
-
-         if (mBarrier->isMaster())
-         {
-            mBarrier->MasterReceive();
-            mBarrier->MasterSend();
-         }
-         else
-         {
-            mBarrier->SlaveSend();
-            mBarrier->SlaveReceive();
-         }
-         //second_time.setNow();
-         //vpr::Interval diff_time(second_time-first_time);
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrSetBOLD(clrCYAN) << "Latency: " 
-         //   << diff_time.getBaseVal() << " usecs\n"<< clrRESET << vprDEBUG_FLUSH;
+         SlaveSend();
+         SlaveReceive();
       }
+      //second_time.setNow();
+      //vpr::Interval diff_time(second_time-first_time);
+      //vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrSetBOLD(clrCYAN) << "Latency: " 
+      //   << diff_time.getBaseVal() << " usecs\n"<< clrRESET << vprDEBUG_FLUSH;
+
       return(true);
    }
+
+   /////////////// Actual Communication  //////////////////////////
+
+   void SwapLockPlugin::MasterSend()
+   {
+      //vprASSERT(mSyncClients!=NULL && "Sync Clients Vector is NULL!");
+      //vprASSERT(mSwapLockActive==true && "Barrier is not active!");
+      
+      vpr::Uint32 bytes_read;
+
+      for (std::vector<ClusterNode*>::iterator i = mSlaveNodes.begin();
+        i != mSlaveNodes.end();i++)
+      {
+         (*i)->getSockStream()->send(&SYNC_SIGNAL , 1, bytes_read, vpr::Interval::NoWait);
+      }
+
+   }
+   void SwapLockPlugin::MasterReceive()
+   {
+      //vprASSERT(mSwapLockActive==true && "Barrier is not active!");
+      
+      vpr::Uint32 bytes_read;
+      vpr::Uint8 temp;
+      for (std::vector<ClusterNode*>::iterator i = mSlaveNodes.begin();
+        i != mSlaveNodes.end();i++)
+      {
+         if((*i)->getSockStream()->recv(&temp , 1, bytes_read, read_timeout) == vpr::ReturnStatus::Timeout)
+         {
+            static int numTimeouts = 0;
+            numTimeouts++;
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << "ClusterBarrierTCP: Received a timeout from a cluster node, it was removed" 
+               << std::endl << vprDEBUG_FLUSH;
+            if (numTimeouts > 5)
+            {
+               mSlaveNodes.erase(i);
+               vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << "ClusterBarrierTCP: Received too many timeouts from a cluster node,"
+                  <<" so it was removed from the list of machines to syncronize with." 
+                  << std::endl << vprDEBUG_FLUSH;
+               vpr::System::sleep(1);
+            }
+         }
+         //vprASSERT(1==bytes_read && "ClusterBarrierTCP: Master Barrier received timeout");
+      } 
+   }
+   void SwapLockPlugin::SlaveSend()
+   {
+      vprASSERT(mMasterNode!=NULL && "mSyncServer is NULL!");
+      //vprASSERT(mSwapLockActive==true && "Barrier is not active!");
+      
+      vpr::Uint32 bytes_read;
+      mMasterNode->getSockStream()->send(&SYNC_SIGNAL , 1, bytes_read, vpr::Interval::NoWait);
+   }
+   void SwapLockPlugin::SlaveReceive()
+   {
+      vprASSERT(mMasterNode!=NULL && "mSyncServer is NULL!");
+      //vprASSERT(mSwapLockActive==true && "Barrier is not active!");
+
+      vpr::Uint32 bytes_read;
+      vpr::Uint8 temp;
+      if (!mMasterNode->getSockStream()->recv(&temp , 1, bytes_read, read_timeout).success())
+      {
+         std::cout << "[ClusterBarrierTCP] SYNC ERROR" << std::endl;
+         vpr::System::sleep(1);
+      }
+      //vprASSERT(1==bytes_read && "ClusterBarrierTCP: Slave Barrier received timeout");
+   }
+
 
 } // End of gadget namespace

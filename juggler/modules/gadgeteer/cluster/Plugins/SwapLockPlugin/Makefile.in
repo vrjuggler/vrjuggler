@@ -51,13 +51,13 @@ INSTALL=	@INSTALL@
 SUBOBJDIR=	$(PLUGIN_NAME)
 C_AFTERBUILD=	plugin-dso
 
-SRCS=		SwapLockPlugin.cpp	  \
+SRCS=		SwapLockPlugin.cpp
 		#ClusterBarrierSerial.cpp
-		ClusterBarrierTCP.cpp	  \
+#		ClusterBarrierTCP.cpp	  \
 
-ifneq (@OS_TYPE@, Win32)
-SRCS+=		ClusterBarrierWired.cpp
-endif		
+#ifneq (@OS_TYPE@, Win32)
+#SRCS+=		ClusterBarrierWired.cpp
+#endif		
 
 include $(MKPATH)/dpp.obj.mk
 

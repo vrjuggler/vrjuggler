@@ -83,6 +83,10 @@ public:
    virtual void preDraw() = 0;
    virtual void postPostFrame() = 0;
    virtual std::string getManagerName() = 0;
+
+   virtual void sendRequests()
+   {;}
+
    virtual bool isPluginReady()
    {
       return true;
