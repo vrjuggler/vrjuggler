@@ -37,6 +37,8 @@ import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.beans.FileLoader;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 
+import org.vrjuggler.vrjconfig.ui.ConfigToolbar;
+
 public class VrjConfig
    extends JPanel
 {
@@ -50,62 +52,6 @@ public class VrjConfig
       {
          e.printStackTrace();
       }
-
-      // Try to get icons for the toolbar buttons
-      try
-      {
-         ClassLoader loader = BeanJarClassLoader.instance();
-         openBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/open.gif")));
-         saveBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/save.gif")));
-         saveAsBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/saveas.gif")));
-         saveAllBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/saveall.gif")));
-      }
-      catch (Exception e)
-      {
-         // Ack! No icons. Use text labels instead
-         openBtn.setText("Open");
-         saveBtn.setText("Save");
-         saveAsBtn.setText("Save As");
-         saveAllBtn.setText("Save All");
-      }
-
-
-      // Get some of the icons we care about
-      ImageIcon newChunkIcon = null;
-      ImageIcon newDescIcon = null;
-      try
-      {
-         ClassLoader loader = BeanJarClassLoader.instance();
-         newChunkIcon = new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/newchunk.gif"));
-         newDescIcon = new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/newdesc.gif"));
-      }
-      catch (Exception e)
-      {
-         newChunkIcon = new ImageIcon();
-         newDescIcon = new ImageIcon();
-      }
-
-      // Setup the new popup button
-      JPopupMenu new_popup = new JPopupMenu();
-      JMenuItem chunk_menu_item = new JMenuItem("New Config Collection", newChunkIcon);
-      JMenuItem desc_menu_item = new JMenuItem("New Config Format", newDescIcon);
-      chunk_menu_item.addActionListener(new ActionListener()
-      {
-         public void actionPerformed(ActionEvent evt)
-         {
-            createNewConfigChunkDB();
-         }
-      });
-      desc_menu_item.addActionListener(new ActionListener()
-      {
-         public void actionPerformed(ActionEvent evt)
-         {
-            createNewChunkDescDB();
-         }
-      });
-      new_popup.add(chunk_menu_item);
-      new_popup.add(desc_menu_item);
-      newPopupBtn.setPopupMenu(new_popup);
    }
 
    /**
@@ -114,82 +60,48 @@ public class VrjConfig
    private void jbInit()
       throws Exception
    {
-      titleLbl.setBackground(UIManager.getColor("textHighlight"));
-      titleLbl.setFont(new java.awt.Font("Serif", 1, 18));
-      titleLbl.setForeground(Color.black);
-      titleLbl.setBorder(BorderFactory.createRaisedBevelBorder());
-      titleLbl.setOpaque(true);
-      titleLbl.setHorizontalAlignment(SwingConstants.RIGHT);
-      titleLbl.setText("VRJConfig");
       this.setLayout(baseLayout);
-      mainPnl.setLayout(mainLayout);
-      toolbar.setBorder(BorderFactory.createEtchedBorder());
-      toolbar.setFloatable(false);
-      openBtn.setToolTipText("Open Configuration");
-      openBtn.setActionCommand("Open");
-      openBtn.setFocusPainted(false);
-      saveBtn.setToolTipText("Save Configuration");
-      saveBtn.setActionCommand("Save");
-      saveBtn.setFocusPainted(false);
-      saveAsBtn.setToolTipText("Save Configuration As");
-      saveAsBtn.setActionCommand("SaveAs");
-      saveAsBtn.setFocusPainted(false);
-      saveAllBtn.setToolTipText("Save All Open Configurations");
-      saveAllBtn.setActionCommand("SaveAll");
-      saveAllBtn.setFocusPainted(false);
       desktop.setBorder(BorderFactory.createEtchedBorder());
-      openBtn.addActionListener(new ActionListener()
+      toolbar.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
          {
-            openBtn_actionPerformed(evt);
+            String cmd = evt.getActionCommand();
+            if (cmd.equals("New ConfigDB"))
+            {
+               createNewConfigChunkDB();
+            }
+            else if (cmd.equals("New DescDB"))
+            {
+               createNewChunkDescDB();
+            }
+            else if (cmd.equals("Open"))
+            {
+               open();
+            }
+            else if (cmd.equals("Save"))
+            {
+               save();
+            }
+            else if (cmd.equals("SaveAs"))
+            {
+               saveAs();
+            }
+            else if (cmd.equals("SaveAll"))
+            {
+               saveAll();
+            }
          }
       });
-      saveBtn.addActionListener(new ActionListener()
-      {
-         public void actionPerformed(ActionEvent evt)
-         {
-            saveBtn_actionPerformed(evt);
-         }
-      });
-      saveAsBtn.addActionListener(new ActionListener()
-      {
-         public void actionPerformed(ActionEvent evt)
-         {
-            saveAsBtn_actionPerformed(evt);
-         }
-      });
-      saveAllBtn.addActionListener(new ActionListener()
-      {
-         public void actionPerformed(ActionEvent evt)
-         {
-            saveAllBtn_actionPerformed(evt);
-         }
-      });
-      this.add(titleLbl,  BorderLayout.NORTH);
-      this.add(mainPnl, BorderLayout.CENTER);
-      mainPnl.add(toolbar, BorderLayout.NORTH);
-      toolbar.add(newPopupBtn, null);
-      toolbar.add(openBtn, null);
-      toolbar.add(saveBtn, null);
-      toolbar.add(saveAsBtn, null);
-      toolbar.add(saveAllBtn, null);
-      mainPnl.add(desktop, BorderLayout.CENTER);
+      this.add(toolbar,  BorderLayout.NORTH);
+      this.add(desktop, BorderLayout.CENTER);
    }
 
    // JBuilder GUI variables
    private BorderLayout baseLayout = new BorderLayout();
-   private JLabel titleLbl = new JLabel();
-   private JPanel mainPnl = new JPanel();
-   private BorderLayout mainLayout = new BorderLayout();
-   private JToolBar toolbar = new JToolBar();
-   private JButton openBtn = new JButton();
-   private JButton saveBtn = new JButton();
-   private JButton saveAsBtn = new JButton();
-   private JButton saveAllBtn = new JButton();
+   private ConfigToolbar toolbar = new ConfigToolbar();
    private JDesktopPane desktop = new JDesktopPane();
    private JFileChooser fileChooser = new JFileChooser();
-   private PopupButton newPopupBtn = new PopupButton();
 
    protected void createNewConfigChunkDB()
    {
@@ -229,7 +141,7 @@ public class VrjConfig
       catch (java.beans.PropertyVetoException pve) { /*ignore*/ }
    }
 
-   protected void openBtn_actionPerformed(ActionEvent evt)
+   protected void open()
    {
       int result = fileChooser.showOpenDialog(this);
       if (result == JFileChooser.APPROVE_OPTION)
@@ -288,7 +200,7 @@ public class VrjConfig
       }
    }
 
-   protected void saveBtn_actionPerformed(ActionEvent evt)
+   protected void save()
    {
       JInternalFrame sel_frame = desktop.getSelectedFrame();
       if (sel_frame != null)
@@ -297,7 +209,7 @@ public class VrjConfig
       }
    }
 
-   protected void saveAsBtn_actionPerformed(ActionEvent evt)
+   protected void saveAs()
    {
       JInternalFrame sel_frame = desktop.getSelectedFrame();
       if (sel_frame != null)
@@ -373,7 +285,7 @@ public class VrjConfig
       }
    }
 
-   protected void saveAllBtn_actionPerformed(ActionEvent evt)
+   protected void saveAll()
    {
       JInternalFrame[] frames = desktop.getAllFrames();
       for (int i=0; i<frames.length; ++i)
