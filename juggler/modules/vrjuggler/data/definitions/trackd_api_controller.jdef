@@ -4,7 +4,7 @@
             xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
-   <definition_version version="1" label="TrackdAPIController">
+   <definition_version version="1" label="TrackdAPI Controller">
       <help>Configure the interface to a trackdAPI controller memory area.</help>
       <parent/>
       <category>/Devices</category>
