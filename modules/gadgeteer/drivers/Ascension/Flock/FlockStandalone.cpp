@@ -364,7 +364,11 @@ void FlockStandalone::sample()
    vprASSERT( (STREAMING == mStatus) || (RUNNING == mStatus) );
 
    std::vector<vpr::Uint8> data_record;
+   std::vector<vpr::Uint8> temp_data_record;    // Temp buffer for reading data
+   vpr::Uint8 buffer;                           // Temporary single byte buffer
+            
    vpr::Uint32 bytes_read;
+   vpr::Uint32 bytes_remaining;
    const vpr::Uint8 phase_mask(1<<7);     // Mask for finding phasing bit
 
    unsigned single_bird_data_size = Flock::Output::getDataSize(mOutputFormat);
@@ -375,35 +379,66 @@ void FlockStandalone::sample()
    const unsigned data_record_size(mNumSensors*single_bird_data_size);    // Size of the data record to read
 
    bool sample_succeeded;        // Flag for success. When false, there was an error so repeat.
+   
+   // counter to track the number of times a read doesn't complete in stream mode.  This counter is
+   // used to intelligently back off the reporting rate if needed (baud rate not high enough is the normal cause)
+   unsigned num_stream_read_failures = 0;
+   unsigned const stream_read_failure_limit(5);
 
    // Try to send/read sample until it succeeds
    do
    {
       sample_succeeded = true;      // Default to success
       data_record.clear();
+      
+      // - Get a data record in whatever way we should for this mode
+      // - Take into account phasing bits
+      // - Process the data record
       try
       {
-         // - Get a data record in whatever way we should for this mode
-         // - Take into account phasing bits
-         // - Process the data record
+         // ------ POINT MODE ------ //
          if(FlockStandalone::RUNNING == mStatus)     // Must use point mode
          {
-            //mSerialPort->drainOutput();
-            //mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);       // Clear the buffers
-            //vprASSERT(mSerialPort->
             sendCommand(Flock::Command::Point);       // Triggers a data record update
       
-            mSerialPort->read(data_record, data_record_size, bytes_read, mReadTimeout);
-            if(data_record_size != bytes_read)
-            { throw Flock::CommandFailureException("Did not read full data record in point mode."); }
+            // Read the reply data record
+            bytes_remaining = data_record_size;                     // How many bytes do we have left to read
+            vpr::ReturnStatus read_ret(vpr::ReturnStatus::Succeed);
+
+            while(bytes_remaining)        // While more left to read
+            {
+               read_ret = mSerialPort->read(temp_data_record, bytes_remaining, bytes_read, mReadTimeout);
+               data_record.insert(data_record.end(), temp_data_record.begin(), temp_data_record.end());        // Append the temp data onto the end of the data record
+               bytes_remaining -= bytes_read;
+               if(read_ret.inProgress() || read_ret.failure())    // If timeout or failed
+               {
+                  num_stream_read_failures++;
+                  throw Flock::CommandFailureException("Did not read full data record in point mode."); 
+               }
+            }
+            vprASSERT(data_record.size() == data_record_size);            // Assert: We actually read the number of bytes we set out too
          }
+         // ------- STREAMING MODE ------ //
          else if(FlockStandalone::STREAMING == mStatus)
          {
-            // Look for phasing bit
-            vpr::Uint8 buffer;
-      
+            // Check for read failure limit
+            if (num_stream_read_failures > stream_read_failure_limit)
+            {
+               vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "FlockStandalone::sample: stream reading failure limit hit. Attempting to fix by decreasing report rate. (may need to increase baud rate).\n" << vprDEBUG_FLUSH;
+               Flock::ReportRate report_rate = getReportRate();
+               if(Flock::Every32 != report_rate)
+               {
+                  Flock::ReportRate new_rate = Flock::ReportRate(unsigned(report_rate)+1);
+                  setReportRate(new_rate);
+               }
+               else
+               {
+                  vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "FlockStandalone::sample: Report rate already at minimum.  Can't correct.\n" << vprDEBUG_FLUSH;
+               }
+               num_stream_read_failures = 0;       // Reset the count
+            }
+            
             // Read one byte at a time looking for phasing bit
-            // Do while we don't have phasing bit
             do
             {
                mSerialPort->read(&buffer, 1, bytes_read, mReadTimeout);
@@ -412,17 +447,34 @@ void FlockStandalone::sample()
             }
             while(!(phase_mask & buffer));
       
-            vprASSERT(phase_mask & buffer);
-      
             // Now read the rest of the record
-            mSerialPort->read(data_record, data_record_size-1, bytes_read, mReadTimeout);
-            if(data_record_size-1 != bytes_read)
-            { throw Flock::CommandFailureException("Could not find entire streaming data record"); }
-      
-            // Check to make sure there are no other phase bits in the data record
+            bytes_remaining = (data_record_size-1);                     // How many bytes do we have left to read
+            vpr::ReturnStatus read_ret(vpr::ReturnStatus::Succeed);
+            
+            while(bytes_remaining)        // While more left to read
+            {
+               read_ret = mSerialPort->read(temp_data_record, bytes_remaining, bytes_read, mReadTimeout);
+               data_record.insert(data_record.end(), temp_data_record.begin(), temp_data_record.end());        // Append the temp data onto the end of the data record
+               bytes_remaining -= bytes_read;
+               if(read_ret.inProgress() || read_ret.failure())    // If timeout or failed
+               {
+                  num_stream_read_failures++;
+                  throw Flock::CommandFailureException("Could not find entire streaming data record"); 
+               }
+            }
+            vprASSERT(data_record.size() == (data_record_size-1));            // Assert: We actually read the number of bytes we set out too
+
+            // If there are phase bits in the rest of the data we are out of phase so restart reading
             for(unsigned b=0;b<data_record.size();++b)
-            {  vprASSERT(!(phase_mask & data_record[b])); }
-      
+            {  
+               if(phase_mask & data_record[b])
+               {
+                  vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "FlockStandalone::sample: data out of phase, attempting to correct.\n" << vprDEBUG_FLUSH;
+                  sample_succeeded = false;
+                  num_stream_read_failures++;
+               }
+            }
+            
             data_record.insert(data_record.begin(), buffer);
          }
       }
@@ -430,6 +482,7 @@ void FlockStandalone::sample()
       {
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "FlockStandalone::sample: Warning: exception:" << cfe.getMessage() << std::endl << vprDEBUG_FLUSH;
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "FlockStandalone::sample: Flushing queues to correct.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "FlockStandalone::sample: num_stream_read_failures:" << num_stream_read_failures << "\n" << vprDEBUG_FLUSH;
          vpr::System::msleep(750);     // Wait for data to arrive and clear
          mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
          sample_succeeded = false;
@@ -574,14 +627,24 @@ void FlockStandalone::setFilterType( const BIRD_FILT& f )
 }
 
 /** Set the report rate that the Flock uses. */
+// Note: report rate only affects streaming mode and the start and stop streaming actually set it
+//       so we don't need to send the command here.  we just rely upon start and stop streaming to do it
 void FlockStandalone::setReportRate(Flock::ReportRate rRate )
 {
-   if ( (FlockStandalone::CLOSED != mStatus) && (FlockStandalone::OPEN != mStatus) )
-   {
-      throw Flock::CommandFailureException("Setting report rate not allowed after flock configured");
+   bool was_streaming(false);
+   if (FlockStandalone::STREAMING == mStatus)
+   {  
+      was_streaming = true; 
+      stopStreaming();
    }
 
    mReportRate = rRate;
+   vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] report rate to: " << Flock::getReportRateString(mReportRate) << "\n" << vprDEBUG_FLUSH;
+      
+   if(was_streaming)
+   {
+      startStreaming();
+   }  
 }
 
 void FlockStandalone::setOutputFormat(Flock::Output::Format format)
