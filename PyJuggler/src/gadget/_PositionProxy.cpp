@@ -144,7 +144,7 @@ void _Export_PositionProxy()
 {
     class_< gadget::PositionProxy, pyj::gadget_PositionProxy_Wrapper >("PositionProxy"
          "A proxy class to positional devices used by the Input Manager.\n\n"
-         "A position proxy always points to an positional device and a unit\n"
+         "A position proxy always points to a positional device and a unit\n"
          "number within that device.  The Input Manager can therefore keep\n"
          "an array of these around and treat them as positional devices that\n"
          "only return a single sub-device's amount of data (one int)."

@@ -121,7 +121,7 @@ void _Export_Position()
              "config(element) -> Boolean\n"
              "Configures this positional device.\n"
              "Arguments:\n:"
-             "element -- The config element for an positional device.  It\n"
+             "element -- The config element for a positional device.  It\n"
              "           must derive from the base config element type\n"
              "           'positional_device'."
          )
