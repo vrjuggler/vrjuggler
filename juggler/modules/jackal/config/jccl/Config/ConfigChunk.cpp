@@ -281,7 +281,7 @@ std::vector<jccl::ConfigChunkPtr> ConfigChunk::getEmbeddedChunks() const
 
          for ( j=0; j<num_props; j++ )             // For each entry
          {
-            ConfigChunkPtr embedded_chunk = this->getProperty<ConfigChunkPtr>(prop_token, j);
+            ConfigChunkPtr embedded_chunk = this->template getProperty<ConfigChunkPtr>(prop_token, j);
             vprASSERT(embedded_chunk.get() != NULL);
             embedded_list.push_back(embedded_chunk);
          }
@@ -318,14 +318,14 @@ std::vector<std::string> ConfigChunk::getChunkPtrDependencies() const
          {
             if(var_type == T_CHUNK)                // Just get the chunk names and add it
             {
-               std::string chunk_name = this->getProperty<std::string>(prop_token, j);
+               std::string chunk_name = this->template getProperty<std::string>(prop_token, j);
                if ( chunk_name != "")
                { dep_list.push_back(chunk_name); }
             }
             else if(var_type == T_EMBEDDEDCHUNK)   // Recurse and add
             {
                std::vector<std::string> child_deps;
-               ConfigChunkPtr embedded_chunk = this->getProperty<ConfigChunkPtr>(prop_token, j);
+               ConfigChunkPtr embedded_chunk = this->template getProperty<ConfigChunkPtr>(prop_token, j);
                vprASSERT(embedded_chunk.get() != NULL);
                child_deps = embedded_chunk->getChunkPtrDependencies();
                dep_list.insert(dep_list.end(), child_deps.begin(), child_deps.end());

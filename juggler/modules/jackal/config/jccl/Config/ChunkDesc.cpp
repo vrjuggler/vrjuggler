@@ -133,7 +133,7 @@ std::string ChunkDesc::getName () const
 std::string ChunkDesc::getToken () const
 {
    assertValid();
-   return mNode->getAttribute(jccl::token_TOKEN).getValue<std::string>();
+   return mNode->getAttribute(jccl::token_TOKEN).template getValue<std::string>();
 }
 
 std::string ChunkDesc::getHelp () const
