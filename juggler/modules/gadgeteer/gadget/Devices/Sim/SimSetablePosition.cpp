@@ -32,9 +32,10 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <gadget/Devices/Sim/SimSetablePosition.h>
 #include <jccl/Config/ConfigElement.h>
-#include <vpr/Util/Debug.h>
+//#include <vpr/Util/Debug.h>
+#include <gadget/Devices/Sim/SimSetablePosition.h>
+
 
 namespace gadget
 {
@@ -54,26 +55,28 @@ bool SimSetablePosition::config(jccl::ConfigElementPtr element)
    return true;
 }
 
-
-void SimSetablePosition::setData(const std::vector<PositionData> &pos_data_vec)
+void SimSetablePosition::setData(const std::vector<PositionData>& posDataVec)
 {
    mPos.setTime();   // Set the time
-   addPositionSample(pos_data_vec);   
+   addPositionSample(posDataVec);   
 
    swapPositionBuffers(); // Swap the buffers
 }
 
-void SimSetablePosition::setData(const PositionData& pos_data)
+void SimSetablePosition::setData(const PositionData& posData)
 {
    std::vector<PositionData> pos_data_vec;
-   pos_data_vec.push_back(pos_data);
+   pos_data_vec.push_back(posData);
 
    mPos.setTime();   // Set the time
    addPositionSample(pos_data_vec);   
 
    swapPositionBuffers(); // Swap the buffers
 
-   //vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_DETAILED_LVL) << "SimSetablePosition: set Data:" << *(const_cast<PositionData*>(&pos_data)->getPosition()) << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_DETAILED_LVL)
+   //   << "[SimSetablePosition::setData()] "
+   //   << *(const_cast<PositionData*>(&pos_data)->getPosition()) << std::endl
+   //   << vprDEBUG_FLUSH;
 }
 
 } // End of gadget namespace
