@@ -22,12 +22,14 @@ AR=		@AR@ $(ARFLAGS)
 AR_NAME_FLAG=	@AR_NAME_FLAG@
 ARFLAGS=	@ARFLAGS@
 CXX=		@CXX@
+CXXFLAGS=	@CXXFLAGS_DYNLIB@ $(shell vpr-config --cxxflags)
+CXX_DLL=	@CXX_DLL@
+DYLIB_NAME_FLAG=@DYLIB_NAME_FLAG@
 RANLIB=		@RANLIB@
 
 ifeq (@OS_TYPE@, Win32)
    ARFLAGS+=	$(LDFLAGS)
-   CXXFLAGS=	$(shell vpr-config --includes) /Zm800 /GX /GR /Op	\
-		/Zc:wchar_t,forScope
+   CXXFLAGS+=	/Zm800 /GX /GR /Op /Zc:wchar_t,forScope
    CXXFLAGS_DBG=/Z7 /Od /Ob0 /MDd /D_DEBUG
    CXXFLAGS_OPT=/Ogity /O2 /Gs /Ob2 /MD /D_OPT /DNDEBUG
    LDFLAGS_DBG=	/DEBUG
@@ -35,7 +37,6 @@ ifeq (@OS_TYPE@, Win32)
    LIBEXT_DBG=	_d
    LIBEXT_OPT=	
 else
-   CXXFLAGS=	$(shell vpr-config --cxxflags)
    CXXFLAGS_DBG=-D_DEBUG -g
    CXXFLAGS_OPT=-D_OPT -DNDEBUG -O2
    LDFLAGS_DBG=	-g
@@ -65,6 +66,10 @@ else
    OBJDIR=	$(OBJDIR_OPT)
 endif
 
+ifeq (@PLATFORM@, Darwin)
+   LDFLAGS+=	-framework Python
+endif
+
 ARCEXT=		@STATICLIB_EXT@
 DLLEXT=		@DYNAMICLIB_EXT@
 OBJEXT=		@OBJEXT@
@@ -81,8 +86,9 @@ PYJUTIL_LIB=	$(LIB_PREFIX)pyjutil$(LIBEXT)
 
 # Static (archive) library list.
 PYJUTIL_ARC=	$(PYJUTIL_LIB).$(ARCEXT)
+PYJUTIL_DLL=	$(PYJUTIL_LIB).$(DLLEXT)
 
-LIBS=		$(PYJUTIL_ARC)
+LIBS=		$(PYJUTIL_DLL)
 
 vpath %.cpp $(srcdir)
 
@@ -125,6 +131,10 @@ $(OBJDIR)/%.$(OBJEXT): %.cpp
 $(PYJUTIL_ARC): $(OBJS)
 	$(AR) $(AR_NAME_FLAG)$@ $(OBJS)
 	$(RANLIB) $@
+
+$(PYJUTIL_DLL): $(OBJS)
+	$(CXX_DLL) $(DYLIB_NAME_FLAG) $(OBJS) $(LDFLAGS) $(VPR_LIBS)	\
+          $(VPR_EXTRA_LIBS)
 
 #%.$(ARCEXT): %.$(OBJEXT)
 #	$(CXX) -shared -o $@ $< $(BOOST_PYTHON_LDFLAGS)			\
