@@ -1,11 +1,12 @@
 package org.vrjuggler.jccl.editors;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
-import java.awt.event.*;
 
 import org.vrjuggler.jccl.config.*;
 
@@ -33,44 +34,44 @@ public class ConfigContextEditor
       // Setup a listener for the tree so that when an element is selected, the
       // appropriate element is displayed in the property sheet.
       mElementTree.addTreeSelectionListener(new TreeSelectionListener()
-      {
-         public void valueChanged(TreeSelectionEvent evt)
          {
-            DefaultMutableTreeNode node =
-               (DefaultMutableTreeNode)mElementTree.getLastSelectedPathComponent();
-            Object value = node.getUserObject();
-            if (value == null || !(value instanceof ConfigElement))
+            public void valueChanged(TreeSelectionEvent evt)
             {
-               return;
-            }
-
-            ConfigElement elt = (ConfigElement)value;
-            mElementPropSheet.setElement(elt);
-         
-            if (mCustomEditors != null)
-            {
-               for(Iterator itr = mCustomEditors.iterator() ; itr.hasNext() ; )
+               DefaultMutableTreeNode node =
+                  (DefaultMutableTreeNode)mElementTree.getLastSelectedPathComponent();
+               Object value = node.getUserObject();
+               if (value == null || !(value instanceof ConfigElement))
                {
-                  CustomEditor editor = (CustomEditor)itr.next(); 
-                  mTabPane.remove(mTabPane.indexOfTab(editor.getTitle()));
+                  return;
                }
-               mCustomEditors = null;
-            }
 
-            mCustomEditors = CustomEditorRegistry.findEditors(elt.getDefinition().getToken());
- 
-            if (mCustomEditors != null)
-            {
-
-               for(Iterator itr = mCustomEditors.iterator() ; itr.hasNext() ; )
+               ConfigElement elt = (ConfigElement)value;
+               mElementPropSheet.setElement(elt);
+              
+               if (mCustomEditors != null)
                {
-                  CustomEditor editor = (CustomEditor)itr.next(); 
-                  editor.setConfigElement(elt);
-                  mTabPane.add(editor.getPanel(), editor.getTitle());
+                  for(Iterator itr = mCustomEditors.iterator() ; itr.hasNext() ; )
+                  {
+                     CustomEditor editor = (CustomEditor)itr.next(); 
+                     mTabPane.remove(mTabPane.indexOfTab(editor.getTitle()));
+                  }
+                  mCustomEditors = null;
                }
-            } 
-         }
-      });
+
+               mCustomEditors = CustomEditorRegistry.findEditors(elt.getDefinition().getToken());
+    
+               if (mCustomEditors != null)
+               {
+
+                  for(Iterator itr = mCustomEditors.iterator() ; itr.hasNext() ; )
+                  {
+                     CustomEditor editor = (CustomEditor)itr.next(); 
+                     editor.setConfigElement(elt);
+                     mTabPane.add(editor.getPanel(), editor.getTitle());
+                  }
+               }  
+            }
+         });
    }
 
    /**
@@ -127,9 +128,8 @@ public class ConfigContextEditor
    {
       JPanel temp = new JPanel();
       temp.setLayout(new BorderLayout());
-      
       treePane.setLayout(treeLayout);
-
+      
       this.setLayout(mBaseLayout);
       mElementTreeScrollPane.setMinimumSize(new Dimension(0, 0));
       mElementTree.setRootVisible(false);
@@ -139,12 +139,8 @@ public class ConfigContextEditor
       mBaseSplitPane.add(treePane, JSplitPane.LEFT);
       mBaseSplitPane.add(mTabPane, JSplitPane.RIGHT);
       mTabPane.add(mElementPropSheetScrollPane, "DefaultEditor");
-      
       mElementPropSheetScrollPane.getViewport().add(mElementPropSheet, null);
       mElementTreeScrollPane.getViewport().add(mElementTree, null);
-
-      
-      
       
       treeToolbar.setFloatable(false);
 
@@ -167,28 +163,15 @@ public class ConfigContextEditor
             ;//removeAction(evt);
          }
       });
-
+      
       treePane.add(treeToolbar, BorderLayout.NORTH);
       treePane.add(mElementTreeScrollPane, BorderLayout.CENTER);
       treeToolbar.add(addBtn);
       treeToolbar.add(removeBtn);
    }
 
-   private ConfigBroker broker = null;
    /**
-    * Gets the cached config broker proxy instance.
-    */
-   private ConfigBroker getConfigBroker()
-   {
-      if (broker == null)
-      {
-         broker = new ConfigBrokerProxy();
-      }
-      return broker;
-   }
-
-   /**
-    * Adds a new config chunk to the current ConfigChunkDB.
+    * Adds a new config chunk to the current ConfigBroker.
     */
    protected void addAction(ActionEvent evt)
    {
@@ -196,9 +179,9 @@ public class ConfigContextEditor
                      mElementTree.getLastSelectedPathComponent();
 
       // Get a DB of all known ChunkDescs
-      ConfigDefinitionRepository temp = getConfigBroker().getRepository();
+      ConfigDefinitionRepository temp = getBroker().getRepository();
       java.util.List defs = temp.getAllLatest();
-      //java.util.List descs = getConfigBroker().getDescs(getContext());
+      //java.util.List descs = getBroker().getDescs(getContext());
 
       // Ask the user to choose a base ChunkDesc
       ConfigDefinitionChooser chooser = new ConfigDefinitionChooser();
@@ -210,13 +193,22 @@ public class ConfigContextEditor
       if (result == ConfigDefinitionChooser.APPROVE_OPTION)
       {
          ConfigElementFactory tempfac = new ConfigElementFactory(defs);
-         //ConfigElement element = new ConfigElement(chooser.getSelectedDefinition());
+         
+         // TODO: Compute a unique name
+         // -We used to use the following to get a unique name, but it is gone now :(
+         //       chunk.setName(configChunkDB.getNewName(chunk.getDesc().getName()));
+
+         // -The following method can lead to problems since we do not want
+         // elements that are named the same.
+         //       chunk.setName(chunk.getDesc().getName()); 
+         
+         // -Our temporary Solution is to try to make it obvious to the user that they 
+         // need to change it.
          ConfigElement element = tempfac.create("CHANGEME", chooser.getSelectedDefinition());
-            //         chunk.setName(configChunkDB.getNewName(chunk.getDesc().getName()));
-//         chunk.setName(chunk.getDesc().getName()); // TODO: Compute a unique name
+         
 
          // Make sure this add goes through successfully
-         if (! getConfigBroker().add(getContext(), element))
+         if (! getBroker().add(getContext(), element))
          {
             JOptionPane.showMessageDialog(this,
                                           "There are no configuration files active.",
@@ -236,9 +228,7 @@ public class ConfigContextEditor
 //         }
       }
    }
-
-
-
+      
    private BorderLayout mBaseLayout = new BorderLayout();
    private JSplitPane mBaseSplitPane = new JSplitPane();
    private JTabbedPane mTabPane = new JTabbedPane();
@@ -322,7 +312,6 @@ class ConfigContextCellRenderer
 
       return this;
    }
-
    private Icon mElementIcon;
    private Icon mPropertyIcon;
    private Icon mCategoryIcon;
