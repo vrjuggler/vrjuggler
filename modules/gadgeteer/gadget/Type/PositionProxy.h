@@ -51,7 +51,6 @@
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Output.h>
 
-
 namespace gadget
 {
 
@@ -74,48 +73,13 @@ public:
     * Updates the proxy's copy of the data.
     * Copies the device data to local storage, and transform it if necessary.
     */
-   virtual void updateData()
-   {
-      if((!mStupified) && (mTypedDevice != NULL))
-      {
-          mPositionData = (mTypedDevice->getPositionData (mUnitNum));
-
-          //vprDEBUG(vprDBG_ALL,0) << "Proxy::updateData: mPosData:" << *(mPositionData.getPosition()) << "\n" << vprDEBUG_FLUSH;
-
-         /*
-         if(mETrans)
-            transformData();
-            */
-
-         // Filter the data if there is an active filters
-         /*
-         if(mFilter != NULL)
-         {
-            *(mPositionData.getPosition()) = mFilter->getPos(*(mPositionData.getPosition()));
-         }
-         */
-      }
-   }
+   virtual void updateData();
 
    /// Returns time of last update.
    vpr::Interval getTimeStamp()
    {
       return mPositionData.getTime();
    }
-
-   /**
-    * Sets the transform for this PositionProxy.
-    * Sets the transformation matrix to:
-    * <code>
-    *    mMatrixTransform = M<sub>trans</sub>.post(M<sub>rot</sub>)
-    * </code>
-    *
-    * @note This means that to set transform, you specific the translation
-    *       followed by rotation that takes the device from where it physically
-    *       is in space to where you want it to be.
-    */
-   void setTransform( float xoff, float yoff, float zoff,    // Translate
-                      float xrot, float yrot, float zrot);   // Rotate
 
    /**
     * Gets the positional data within the device pointed to by this proxy as a
@@ -192,7 +156,20 @@ public:
 
 private:
    PositionData      mPositionData;
-   int               mUnitNum;   
+   int               mUnitNum;
+   
+public:
+   /** Sets the scale factor to be applied to all positional
+   * data returned from position proxies in the system.
+   *
+   * Since gadgeteer uses Meters internally, this factor
+   * is meant to convert from Meters to the units desired.
+   */
+   static void setScaleFactor(float scaleFactor)
+   { sScaleFactor = scaleFactor; }
+   
+private:
+   static float sScaleFactor;
 };
 
 } // End of gadget namespace

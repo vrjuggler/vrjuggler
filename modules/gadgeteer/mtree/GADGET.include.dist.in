@@ -52,6 +52,8 @@
             RemoteInputManager
             ..
             Type
+	        Position
+		..
             ..
             Util
             ..
