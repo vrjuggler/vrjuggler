@@ -28,7 +28,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- *************** <auto-copyright.pl END do not edit this line> ***************/
+    *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef _GADGET_ABSTRACT_NETWORK_MANAGER_H
 #define _GADGET_ABSTRACT_NETWORK_MANAGER_H
@@ -105,7 +105,7 @@ public:
     * first by callinf lockNodes()
     */
    vpr::ReturnStatus addNode(const std::string& name, const std::string& host_name, 
-                                    const vpr::Uint16& port, vpr::SocketStream* socket_stream = NULL);
+                             const vpr::Uint16& port, vpr::SocketStream* socket_stream = NULL);
 
    /**
     * Adds the given Node to the std::map of Nodes
@@ -230,21 +230,10 @@ public:
    void addHandler(PacketHandler* new_handler);
    
    virtual vpr::ReturnStatus attemptConnect(Node* node) = 0;
-   /*
-   {
-      return(mConnector->attemptConnect(node));
-   }
-   */
    virtual void startListening(int listen_port, bool accept_anonymous) = 0;
-   /*
-   {
-      mAcceptor->startListening(listen_port);
-   }
-   */
 
 private:   
    std::vector<gadget::Node*>    mNodes;         /**< List of nodes in network. */
-//   vpr::RWMutex                         mNodesLock;
    
    std::map<vpr::GUID, PacketHandler*>  mHandlerMap;
 };
