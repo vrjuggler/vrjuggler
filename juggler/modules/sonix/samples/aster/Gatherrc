@@ -1,0 +1,9 @@
+// Run as: cvs-gather.pl --cfg=setupDeps.gatherrc
+
+Doozer      // Get Doozer for makefiles
+{
+   CVSROOT: :pserver:anonymous@cvs.doozer.sourceforge.net:/cvsroot/doozer;
+   Module: Doozer/mk [mk];
+   Tag: HEAD;
+   Path: .;
+}; 
