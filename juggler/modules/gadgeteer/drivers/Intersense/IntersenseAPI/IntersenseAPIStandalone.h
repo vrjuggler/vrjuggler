@@ -35,7 +35,7 @@
 
 #include <string>
 
-#include <drivers/Intersense/IntersenseAPI/isense.h>
+#include <drivers/Intersense/IntersenseAPI/isense/isense.h>
 
 
 class IntersenseAPIStandalone
