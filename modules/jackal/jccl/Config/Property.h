@@ -38,7 +38,8 @@
 #include <jccl/jcclConfig.h>
 #include <jccl/Config/VarValue.h>
 #include <jccl/Config/PropertyDesc.h>
-#include <jccl/Config/ChunkDesc.h>
+#include <jccl/Config/ChunkDescPtr.h>
+#include <jccl/Config/ConfigChunkPtr.h>
 
 namespace jccl {
 
@@ -178,7 +179,7 @@ public:
     bool setValue (int val, int ind = 0);
     bool setValue (float val, int ind = 0);
     bool setValue (const std::string&  val, int ind = 0);
-    bool setValue (ConfigChunk* val, int ind = 0);
+    bool setValue (ConfigChunkPtr val, int ind = 0);
     bool setValue (const VarValue& val, int ind = 0);
 
     //: Attempts to assign a value (in tok) to the Property's ith value.

@@ -35,7 +35,7 @@
 #define _JCCL_CONFIGCHUNKDB_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunkPtr.h>
 
 
 namespace jccl {
@@ -57,15 +57,15 @@ class JCCL_CLASS_API ConfigChunkDB {
 
 private:
     //: vector of ConfigChunks
-    std::vector<ConfigChunk*> chunks;
+    std::vector<ConfigChunkPtr> chunks;
 
     //: name of the file this DB was loaded from - used for includes
     std::string file_name;
 
 public:
 
-    typedef std::vector<ConfigChunk*>::iterator iterator;
-    typedef std::vector<ConfigChunk*>::const_iterator const_iterator;
+    typedef std::vector<ConfigChunkPtr>::iterator iterator;
+    typedef std::vector<ConfigChunkPtr>::const_iterator const_iterator;
 
     inline iterator begin() {
         return chunks.begin();
@@ -148,19 +148,19 @@ public:
     //+          the argument, or NULL if no such element exists.
     //! NOTE: The memory associated with the return value belongs to
     //+       the ConfigChunkDB, and should not be delete()d
-    ConfigChunk *getChunk (const std::string& name) const;
+    ConfigChunkPtr getChunk (const std::string& name) const;
 
 
     //: return a vector of all the chunks
     //! POST: returns
     //! RETURNS: Copy of the pointers to the chunks in this.
-    std::vector<ConfigChunk*> getChunks() const;
+    std::vector<ConfigChunkPtr> getChunks() const;
 
 
 
     //: Add chunks to self
     //! POST: self has added copies of all chunks in new_chunks
-    void addChunks(std::vector<ConfigChunk*> new_chunks);
+    void addChunks(std::vector<ConfigChunkPtr> new_chunks);
 
 
 
@@ -172,7 +172,7 @@ public:
 
 
     //: Adds a chunk to this
-    void addChunk(ConfigChunk* new_chunk);
+    void addChunk(ConfigChunkPtr new_chunk);
 
 
 
@@ -187,7 +187,7 @@ public:
     //! NOTE: The memory for the vector should be deleted by the
     //+       caller when it is no longer needed.  The individual
     //+       ConfigChunks in the vector should not be freed.
-    std::vector<ConfigChunk*>* getMatching (const std::string& mytypename) const {
+    std::vector<ConfigChunkPtr>* getMatching (const std::string& mytypename) const {
         return getMatching ("type", mytypename);
     }
 
@@ -205,9 +205,9 @@ public:
     //! NOTE: The memory for the vector should be deleted by the
     //+       caller when it is no longer needed.  The individual
     //+       ConfigChunks in the vector should not be freed.
-    std::vector<ConfigChunk*>* getMatching (const std::string& property, const std::string value) const;
-    std::vector<ConfigChunk*>* getMatching (const std::string& property, int value) const;
-    std::vector<ConfigChunk*>* getMatching (const std::string& property, float value) const;
+    std::vector<ConfigChunkPtr>* getMatching (const std::string& property, const std::string value) const;
+    std::vector<ConfigChunkPtr>* getMatching (const std::string& property, int value) const;
+    std::vector<ConfigChunkPtr>* getMatching (const std::string& property, float value) const;
 
 
 

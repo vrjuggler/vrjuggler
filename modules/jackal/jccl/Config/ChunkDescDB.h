@@ -35,7 +35,8 @@
 #define _JCCL_CHUNKDESCDB_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Config/ChunkDesc.h>
+//#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ChunkDescPtr.h>
 
 namespace jccl {
    

@@ -38,6 +38,7 @@
 #include <jccl/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 #include <jccl/Config/ChunkDescDB.h>
+#include <jccl/Config/ChunkDesc.h>
 #include <jccl/Config/ParseUtil.h>
 #include <jccl/Config/ConfigTokens.h>
 #include <jccl/Config/ConfigIO.h>

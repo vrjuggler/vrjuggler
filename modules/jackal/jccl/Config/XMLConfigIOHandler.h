@@ -40,13 +40,14 @@
 #include <parsers/DOMParser.hpp>
 #include <framework/XMLFormatter.hpp>
 #include <dom/DOM.hpp>
-//#include <stdlib.h>
 
 #include <jccl/Config/ConfigChunkDB.h>
+#include <jccl/Config/Property.h>
 //#include <Config/ChunkFactory.h>
 
 namespace jccl
 {
+
    
 //: Config IO handler for the new XML-based cfgfile format.
 //  This particular class is dependent on the Xerces representation of
@@ -74,9 +75,9 @@ public:
 
     bool buildChunkDB (ConfigChunkDB& db, const DOM_Node& doc);
 
-    bool buildProperty (ConfigChunk* ch, const DOM_Node& doc, bool use_defaults = true);
+    bool buildProperty (ConfigChunkPtr ch, const DOM_Node& doc, bool use_defaults = true);
 
-    ConfigChunk* buildConfigChunk (const DOM_Node& doc, bool use_defaults = true);
+    ConfigChunkPtr buildConfigChunk (const DOM_Node& doc, bool use_defaults = true);
 
 private:
 

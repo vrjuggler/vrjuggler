@@ -108,10 +108,10 @@ void ConfigChunk::assertValid () const {
 
 void ConfigChunk::associateDesc (ChunkDescPtr d, bool use_defaults) {
     assertValid();
-    ConfigChunk* ch = 0;
+    ConfigChunkPtr ch;
     if (use_defaults)
         ch = d->getDefaultChunk();
-    if (ch)
+    if (ch.get() != 0)
         *this = *ch;
     else {
 
@@ -196,15 +196,16 @@ bool ConfigChunk::operator< (const ConfigChunk& c) const {
 
 
 // used for dependency resolution
-ConfigChunk* ConfigChunk::getEmbeddedChunk (const std::string &path) {
+ConfigChunkPtr ConfigChunk::getEmbeddedChunk (const std::string &path) {
     std::string propname, chunkname, subpath;
     Property* prop;
     int i;
-    ConfigChunk *ch = this;
-    ConfigChunk *ch2, *ch3;
-        
+    ConfigChunkPtr ch(this);// *ch = this;
+    //ConfigChunk *ch2, *ch3;
+    ConfigChunkPtr ch2, ch3;
+  
     if (vjstrcasecmp (ch->getName(), path /*getFirstNameComponent (path)*/)) {
-        return 0;
+        return ConfigChunkPtr(0);
     }
     else {
         if (!hasSeparator(path))
@@ -217,10 +218,10 @@ ConfigChunk* ConfigChunk::getEmbeddedChunk (const std::string &path) {
             prop = getPropertyPtrFromName(propname);
             if (prop) {
                 for (i = 0; i < prop->getNum(); i++) {
-                    ch2 = (ConfigChunk*)prop->getValue(i);
-                    if (ch2) {
+                    ch2 = (ConfigChunkPtr)prop->getValue(i);
+                    if (ch2.get() != 0) {
                         ch3 = ch2->getEmbeddedChunk(path);
-                        if (ch3)
+                        if (ch3.get() != 0)
                             return ch3;
                     }
                 }
@@ -231,16 +232,16 @@ ConfigChunk* ConfigChunk::getEmbeddedChunk (const std::string &path) {
                 prop = getPropertyPtrFromToken(propname);
                 if (prop) {
                     for (i = 0; i < prop->getNum(); i++) {
-                        ch2 = (ConfigChunk*)prop->getValue(i);
-                        if (ch2) {
+                        ch2 = (ConfigChunkPtr)prop->getValue(i);
+                        if (ch2.get() != 0) {
                             ch3 = ch2->getEmbeddedChunk(path);
-                            if (ch3)
+                            if (ch3.get() != 0)
                                 return ch3;
                         }
                     }
                 }
             }
-            return 0;
+            return ConfigChunkPtr();
         }
     }
 }
@@ -279,7 +280,7 @@ std::vector<std::string> ConfigChunk::getChunkPtrDependencies() const
          for (j = 0; j < props[i]->getNum(); j++)
          {
             // XXX: if we ever have cyclic dependencies, we're in trouble
-            child_deps = ((ConfigChunk*)props[i]->getValue(j))->getChunkPtrDependencies();
+            child_deps = ((ConfigChunkPtr)props[i]->getValue(j))->getChunkPtrDependencies();
             dep_list.insert (dep_list.end(), child_deps.begin(), child_deps.end());
          }
       }
@@ -394,7 +395,7 @@ std::istream& operator >> (std::istream& in, ConfigChunk& self) {
                 // this works because the chunk >> expects the typename to have
                 // already been read (which we did when looking for '}')
                 if (p->getType() == T_EMBEDDEDCHUNK) {
-                    ConfigChunk *ch = ChunkFactory::instance()->createChunk (p->embeddesc);
+                    ConfigChunkPtr ch = ChunkFactory::instance()->createChunk (p->embeddesc);
                     in >> *ch;
                     p->setValue (ch, i++);
                 }
@@ -443,6 +444,13 @@ int ConfigChunk::getNum (const std::string& property_token) const {
     else
         return 0;
 }
+
+
+
+    //: Returns token of this ConfigChunk's ChunkDesc.
+    const std::string& ConfigChunk::getDescToken () const {
+        return desc->getToken();
+    }
 
 
 
@@ -505,7 +513,7 @@ bool ConfigChunk::setProperty (const std::string& property, const std::string& v
     return p->setValue (val, ind);
 }
 
-bool ConfigChunk::setProperty (const std::string& property, ConfigChunk* val, int ind) {
+bool ConfigChunk::setProperty (const std::string& property, ConfigChunkPtr val, int ind) {
     assertValid();
 
     Property *p;
@@ -555,7 +563,7 @@ bool ConfigChunk::addValue (const std::string& property, const std::string& val)
     return setProperty (property, val, p->value.size());
 }
 
-bool ConfigChunk::addValue (const std::string& property, ConfigChunk* val) {
+bool ConfigChunk::addValue (const std::string& property, ConfigChunkPtr val) {
     assertValid();
 
     Property *p;

@@ -36,6 +36,7 @@
 #define _JCCL_VARVALUE_H_
 
 #include <jccl/jcclConfig.h>
+#include <jccl/Config/ConfigChunkPtr.h>
 #include <ctype.h>
 
 namespace jccl
@@ -55,12 +56,10 @@ typedef enum { T_INT, T_FLOAT, T_BOOL, T_STRING, T_DISTANCE,
 
 typedef enum {U_Feet, U_Inches, U_Meters, U_Centimeters, U_BadUnit}
               CfgUnit;
-
-class ConfigChunk;
-
 /* note for myself as I'm adding T_DISTANCE - everything gets stored
  * internally as feet.
  */
+
 
 //-------------------------------------------------
 //: A VarValue is an object that knows its own type even if we don't.
@@ -96,7 +95,7 @@ private:
     float        floatval;
     std::string  strval;
     bool         boolval;
-    ConfigChunk *embeddedchunkval;
+    ConfigChunkPtr embeddedchunkval;
     unsigned int validation;
 
     static VarValue* invalid_instance;
@@ -131,7 +130,7 @@ public:
     //+      this constructor instead of using the VarValue copy constructor
     //+      becuase getProperty returns a const VarValue and the copy const
     //+      didn't expect a const (since fixed).
-    explicit VarValue (const ConfigChunk* ch);
+    explicit VarValue (const ConfigChunkPtr ch);
 
 
     //: Creates a new VarValue of type t.
@@ -182,9 +181,7 @@ public:
     
 
     //: cast to ConfigChunk
-    //!NOTE: Returns a copy of the contained chunk which must be
-    //+      freed.
-    operator ConfigChunk*() const;
+    operator ConfigChunkPtr() const;
 
 
     //: Cast to bool
@@ -220,7 +217,7 @@ public:
     //+      the original as you please.
     VarValue &operator = (const char *s);
 
-    VarValue &operator = (const ConfigChunk *s);
+    VarValue &operator = (const ConfigChunkPtr s);
 
 
 

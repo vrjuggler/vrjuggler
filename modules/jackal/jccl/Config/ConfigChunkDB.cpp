@@ -38,11 +38,12 @@
 #include <jccl/jcclConfig.h>
 
 #include <jccl/Config/ConfigChunkDB.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ChunkFactory.h>
 #include <jccl/Config/ParseUtil.h>
-#include <jccl/Util/Debug.h>
 #include <jccl/Config/ConfigTokens.h>
 #include <jccl/Config/ConfigIO.h>
+#include <jccl/Util/Debug.h>
 
 #include <sys/types.h>
 
@@ -74,14 +75,15 @@ ConfigChunkDB& ConfigChunkDB::operator = (const ConfigChunkDB& db) {
     //    delete chunks[i];
     chunks.clear();
     for (i = 0, size = db.chunks.size(); i < size; i++) {
-        chunks.push_back (new ConfigChunk(*(db.chunks[i])));
+        chunks.push_back (db.chunks[i]);
+        //chunks.push_back (new ConfigChunk(*(db.chunks[i])));
     }
     return *this;
 }
 
 
 
-ConfigChunk* ConfigChunkDB::getChunk (const std::string& name) const {
+ConfigChunkPtr ConfigChunkDB::getChunk (const std::string& name) const {
     /* returns a chunk with the given name, if such exists, or NULL.
      */
     unsigned int i, size;
@@ -89,24 +91,25 @@ ConfigChunk* ConfigChunkDB::getChunk (const std::string& name) const {
         if (!vjstrcasecmp (name, chunks[i]->getProperty("name")))
             return chunks[i];
     }
-    return NULL;
+    return ConfigChunkPtr();
 }
 
 
 
 // Return a copy of the chunks vector
-std::vector<ConfigChunk*> ConfigChunkDB::getChunks() const {
+std::vector<ConfigChunkPtr> ConfigChunkDB::getChunks() const {
     return chunks;
 }
 
 
 
 // Add the given chunks to the end of the chunk list
-void ConfigChunkDB::addChunks(std::vector<ConfigChunk*> new_chunks) {
+void ConfigChunkDB::addChunks(std::vector<ConfigChunkPtr> new_chunks) {
     // no! must make copies of all chunks. sigh...
     unsigned int i, size;
     for (i = 0, size = new_chunks.size(); i < size; i++)
-        addChunk (new ConfigChunk (*new_chunks[i]));
+        addChunk (new_chunks[i]);
+        //addChunk (new ConfigChunk (*new_chunks[i]));
 }
 
 
@@ -117,7 +120,7 @@ void ConfigChunkDB::addChunks(const ConfigChunkDB *db) {
 
 
 
-void ConfigChunkDB::addChunk(ConfigChunk* new_chunk) {
+void ConfigChunkDB::addChunk(ConfigChunkPtr new_chunk) {
     removeNamed (new_chunk->getProperty("Name"));
     chunks.push_back (new_chunk);
 }
@@ -130,8 +133,8 @@ void ConfigChunkDB::addChunk(ConfigChunk* new_chunk) {
 // second argument.  The returned vector may be empty.
 // NOTE:  The caller is responsible for delete()ing the vector, but not
 // its contents.
-std::vector<ConfigChunk*>* ConfigChunkDB::getMatching (const std::string& property, const std::string value) const {
-    std::vector<ConfigChunk*>* v = new std::vector<ConfigChunk*>;
+std::vector<ConfigChunkPtr>* ConfigChunkDB::getMatching (const std::string& property, const std::string value) const {
+    std::vector<ConfigChunkPtr>* v = new std::vector<ConfigChunkPtr>;
 
     for (unsigned int i = 0; i < chunks.size(); i++) {
         if (!vjstrcasecmp (value, chunks[i]->getProperty(property)))
@@ -140,9 +143,9 @@ std::vector<ConfigChunk*>* ConfigChunkDB::getMatching (const std::string& proper
     return v;
 }
 
-std::vector<ConfigChunk*>* ConfigChunkDB::getMatching (const std::string& property, int value) const {
+std::vector<ConfigChunkPtr>* ConfigChunkDB::getMatching (const std::string& property, int value) const {
     int c;
-    std::vector<ConfigChunk*>* v = new std::vector<ConfigChunk*>;
+    std::vector<ConfigChunkPtr>* v = new std::vector<ConfigChunkPtr>;
     for (unsigned int i = 0; i < chunks.size(); i++) {
         c = chunks[i]->getProperty(property);
         if (c == value)
@@ -152,9 +155,9 @@ std::vector<ConfigChunk*>* ConfigChunkDB::getMatching (const std::string& proper
 }
 
 
-std::vector<ConfigChunk*>* ConfigChunkDB::getMatching (const std::string& property, float value) const {
+std::vector<ConfigChunkPtr>* ConfigChunkDB::getMatching (const std::string& property, float value) const {
     float c;
-    std::vector<ConfigChunk*>* v = new std::vector<ConfigChunk*>;
+    std::vector<ConfigChunkPtr>* v = new std::vector<ConfigChunkPtr>;
     for (unsigned int i = 0; i < chunks.size(); i++) {
         c = chunks[i]->getProperty(property);
         if (c == value)
@@ -181,7 +184,7 @@ bool ConfigChunkDB::erase () {
 int ConfigChunkDB::removeMatching (const std::string& property, int value) {
     int i = 0;
     int c;
-    std::vector<ConfigChunk*>::iterator cur_chunk = chunks.begin();
+    iterator cur_chunk = chunks.begin();
     while (cur_chunk != chunks.end()) {
         c = (*cur_chunk)->getProperty(property);
         if (c == value) {
@@ -199,7 +202,7 @@ int ConfigChunkDB::removeMatching (const std::string& property, float value) {
     int i = 0;
     float c;
 
-    std::vector<ConfigChunk*>::iterator cur_chunk = chunks.begin();
+    iterator cur_chunk = chunks.begin();
     while (cur_chunk != chunks.end()) {
         c = (*cur_chunk)->getProperty(property);
         if (c == value) {
@@ -216,7 +219,7 @@ int ConfigChunkDB::removeMatching (const std::string& property, float value) {
 int ConfigChunkDB::removeMatching (const std::string& property, const std::string& value) {
 
     int i = 0;
-    std::vector<ConfigChunk*>::iterator cur_chunk = chunks.begin();
+    iterator cur_chunk = chunks.begin();
     while (cur_chunk != chunks.end()) {
         VarValue v = ((*cur_chunk)->getProperty(property));
         if (((v.getType() == T_STRING) || (v.getType() == T_STRING))
@@ -273,12 +276,12 @@ int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
     // If it's dependencies are already in the local list, add it to the local list
     // else go on to the next one
     // Kinda like an insertion sort
-    std::vector<ConfigChunk*> src_chunks = chunks;
-    chunks = std::vector<ConfigChunk*>(0);        // Chunks is the local data - Zero it out to start
+    std::vector<ConfigChunkPtr> src_chunks = chunks;
+    chunks = std::vector<ConfigChunkPtr>(0);        // Chunks is the local data - Zero it out to start
 
     bool dep_pass(true);             // Flag for Pass dependency check
     std::vector<std::string> deps;   // Dependencies of current item
-    std::vector<ConfigChunk*>::iterator cur_item = src_chunks.begin();          // The current src item to look at
+    std::vector<ConfigChunkPtr>::iterator cur_item = src_chunks.begin();          // The current src item to look at
     
     while (cur_item != src_chunks.end()) {          // While not at end of src list
         vprDEBUG(jcclDBG_CONFIG,4) << "Checking depencies for: " << (*cur_item)->getProperty("name") << "\n" << vprDEBUG_FLUSH;
@@ -289,19 +292,18 @@ int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
             
             if (ConfigChunk::hasSeparator (deps[dep_num])) {
                 std::string chunkname = ConfigChunk::getFirstNameComponent(deps[dep_num]);
-                ConfigChunk* ch;
                 bool found = false;
-                ch = getChunk(chunkname);
-                found = found || (ch && ch->getEmbeddedChunk (deps[dep_num]));
+                ConfigChunkPtr ch = getChunk(chunkname);
+                found = ((ch.get() != 0) && (ch->getEmbeddedChunk (deps[dep_num]).get() != 0));
                 if (!found && auxChunks) {
                     ch = auxChunks->getChunk(chunkname);
-                    found = found || (ch && ch->getEmbeddedChunk (deps[dep_num]));
+                    found = ((ch.get() != 0) && (ch->getEmbeddedChunk (deps[dep_num]).get() != 0));
                 }
                 dep_pass = dep_pass && found;
             }
             else {
-                dep_pass = dep_pass && (getChunk(deps[dep_num]) || 
-                                        (auxChunks && auxChunks->getChunk(deps[dep_num])));
+                dep_pass = dep_pass && (getChunk(deps[dep_num]).get() || 
+                                        (auxChunks && auxChunks->getChunk(deps[dep_num]).get()));
                 
             }
         }
@@ -342,19 +344,27 @@ int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
         // Print out sorted dependancies
 #ifdef JCCL_DEBUG
         
-        vprDEBUG_BEGIN(jcclDBG_CONFIG,4) << "---- After sort ----" << std::endl << vprDEBUG_FLUSH;
-        for (unsigned int i=0;i<chunks.size();i++) {
-            vprDEBUG(jcclDBG_CONFIG,4) << "Chunk:" << chunks[i]->getProperty("name") << std::endl
-                                    << "\tDepends on:\n" << vprDEBUG_FLUSH;
-            std::vector<std::string> deps = chunks[i]->getChunkPtrDependencies();
+        vprDEBUG_BEGIN(jcclDBG_CONFIG,4) << "---- After sort ----" 
+                                         << std::endl << vprDEBUG_FLUSH;
+        for (unsigned int i=0; i<chunks.size(); i++) {
+            vprDEBUG(jcclDBG_CONFIG,4) << "Chunk:" 
+                                       << chunks[i]->getProperty("name")
+                                       << "\n\tDepends on:\n" 
+                                       << vprDEBUG_FLUSH;
+            std::vector<std::string> deps 
+                = chunks[i]->getChunkPtrDependencies();
             if (deps.size() > 0) {
                 for (unsigned int j=0;j<deps.size();j++)
-                    vprDEBUG(jcclDBG_CONFIG,4) << "   " << j << ": " << deps[j].c_str() << std::endl << vprDEBUG_FLUSH;
+                    vprDEBUG(jcclDBG_CONFIG,4) << "   " << j << ": " 
+                                               << deps[j].c_str() 
+                                               << std::endl << vprDEBUG_FLUSH;
             } else {
-                vprDEBUG(jcclDBG_CONFIG,4) << "   Nothing.\n" << vprDEBUG_FLUSH;
+                vprDEBUG(jcclDBG_CONFIG,4) << "   Nothing.\n" 
+                                           << vprDEBUG_FLUSH;
             }
         }
-        vprDEBUG_END(jcclDBG_CONFIG,4) << "-----------------\n" << vprDEBUG_FLUSH;
+        vprDEBUG_END(jcclDBG_CONFIG,4) << "-----------------\n" 
+                                       << vprDEBUG_FLUSH;
 #endif
         
         return 0;      // Success
@@ -379,7 +389,7 @@ std::istream& operator >> (std::istream& in, ConfigChunkDB& self) {
 
     const int bufsize = 512;
     char str[bufsize];
-    ConfigChunk *ch;
+    ConfigChunkPtr ch;
 
     do {
         if (!readString (in, str, bufsize))
@@ -389,7 +399,7 @@ std::istream& operator >> (std::istream& in, ConfigChunkDB& self) {
 
         std::string newstr = str;
         ch = ChunkFactory::instance()->createChunk (newstr);
-        if (ch == NULL) {
+        if (ch.get() == NULL) {
             vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " Unknown Chunk type: " << str << std::endl
                                    << vprDEBUG_FLUSH;
             // skip to end of chunk

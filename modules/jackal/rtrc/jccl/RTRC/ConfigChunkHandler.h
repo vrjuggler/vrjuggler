@@ -35,10 +35,10 @@
 #define _JCCL_CONFIG_CHUNK_HANDLER_H_
 
 #include <jccl/jcclConfig.h>
+#include <jccl/Config/ConfigChunkPtr.h>
 
 namespace jccl {
 
-class ConfigChunk;
 class ConfigManager;
 
 
@@ -68,7 +68,7 @@ public:
      *  it.
      *  @return true iff this handler can process chunk.
      */
-   virtual bool configCanHandle(ConfigChunk* chunk) = 0;
+   virtual bool configCanHandle(ConfigChunkPtr chunk) = 0;
 
 
     /** Process any pending reconfiguration requests that we know how to
@@ -98,7 +98,7 @@ public:
      *  PRE: configCanHandle (chunk) == true.
      *  @return true iff chunk was successfully added to configuration.
      */
-   virtual bool configAdd(ConfigChunk* chunk) = 0;
+   virtual bool configAdd(ConfigChunkPtr chunk) = 0;
 
 
     /** Remove the pending chunk from the current configuration.
@@ -106,7 +106,7 @@ public:
      *  @return true iff the chunk (and any objects it represented)
      *          were successfully removed.
      */
-   virtual bool configRemove(ConfigChunk* chunk) = 0;
+   virtual bool configRemove(ConfigChunkPtr chunk) = 0;
 
 };
 

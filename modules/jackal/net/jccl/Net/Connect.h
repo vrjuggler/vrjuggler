@@ -36,6 +36,8 @@
 
 #include <jccl/jcclConfig.h>
 #include <queue>
+#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <jccl/JackalServer/Socket.h>
 #include <jccl/JackalServer/NetCommunicator.h>
 #include <vpr/Thread/Thread.h>
@@ -44,7 +46,6 @@
 
 namespace jccl {
 
-class ConfigChunk;
 
 enum ConnectMode { VJC_INTERACTIVE, VJC_INPUT, VJC_OUTPUT };
 
@@ -62,7 +63,7 @@ class JCCL_CLASS_API Connect {
 
 
 
-    Connect (ConfigChunk* c);
+    Connect (ConfigChunkPtr c);
 
 
     //: destructor
@@ -84,7 +85,7 @@ class JCCL_CLASS_API Connect {
     }
 
 
-    ConfigChunk* getConfiguration () {
+    ConfigChunkPtr getConfiguration () {
         return connect_chunk;
     }
 
@@ -142,7 +143,7 @@ private:
     bool                    read_die;    // if true, thread suicide
     bool                    write_die;   // if true, thread suicide
     bool                    write_alive; // true when thread running
-    ConfigChunk*          connect_chunk;
+    ConfigChunkPtr          connect_chunk;
 
     //: used for storing Command* in a priority queue
     struct CommandPtrCmp {

@@ -35,6 +35,7 @@
 #define _JCCL_JACKAL_SERVER_H_
 
 #include <jccl/jcclConfig.h>
+#include <jccl/Config/ConfigChunkPtr.h>
 #include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
 #include <jccl/JackalServer/Socket.h>
 #include <vpr/Thread/Thread.h>
@@ -45,7 +46,6 @@ namespace jccl {
 
 class Connect;
 class JackalControl;
-class ConfigChunkDB;
 
 
 //-------------------------------------
@@ -120,11 +120,11 @@ public:
 
     //------------------- ConfigChunkHandler Stuff ---------------------
 
-    virtual bool configAdd(ConfigChunk* chunk);
+    virtual bool configAdd(ConfigChunkPtr chunk);
 
-    virtual bool configRemove(ConfigChunk* chunk);
+    virtual bool configRemove(ConfigChunkPtr chunk);
 
-    virtual bool configCanHandle(ConfigChunk* chunk);
+    virtual bool configCanHandle(ConfigChunkPtr chunk);
 
 
 

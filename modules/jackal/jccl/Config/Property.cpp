@@ -87,7 +87,7 @@ VarValue *Property::createVarValue (int i) {
     if (i == -1)
         i = value.size();
     if (type == T_EMBEDDEDCHUNK) {
-        ConfigChunk *ch = ChunkFactory::instance()->createChunk (embeddesc);
+        ConfigChunkPtr ch = ChunkFactory::instance()->createChunk (embeddesc);
         if (description->getValueLabelsSize() > i)
             ch->setProperty ("Name", description->getValueLabel(i));
         else {
@@ -328,7 +328,7 @@ bool Property::setValue (const std::string& val, int ind) {
 
 
 
-bool Property::setValue (ConfigChunk* val, int ind) {
+bool Property::setValue (ConfigChunkPtr val, int ind) {
     assertValid();
 
     if (!preSet(ind)) {

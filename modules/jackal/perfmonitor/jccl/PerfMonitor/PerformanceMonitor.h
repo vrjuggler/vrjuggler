@@ -37,6 +37,8 @@
 #include <jccl/jcclConfig.h>
 #include <jccl/JackalServer/JackalControl.h>
 #include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
+//#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Sync/Mutex.h>
 
@@ -90,11 +92,11 @@ public:
 
     //---------------- ConfigChunkHandler Stuff -----------------
 
-    virtual bool configAdd(ConfigChunk* chunk);
+    virtual bool configAdd(ConfigChunkPtr chunk);
 
-    virtual bool configRemove(ConfigChunk* chunk);
+    virtual bool configRemove(ConfigChunkPtr chunk);
 
-    virtual bool configCanHandle(ConfigChunk* chunk);
+    virtual bool configCanHandle(ConfigChunkPtr chunk);
 
 
 
@@ -108,7 +110,7 @@ private:
     Connect*                  perf_target;
     std::vector<buffer_element> perf_buffers;
     float                     perf_refresh_time;  // in milliseconds
-    ConfigChunk*              current_perf_config;
+    ConfigChunkPtr            current_perf_config;
     vpr::Mutex                perf_buffers_mutex;
 
 

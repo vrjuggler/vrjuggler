@@ -35,7 +35,8 @@
 #define _JCCL_CONFIGCHUNK_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Config/ChunkDesc.h>
+#include <jccl/Config/ChunkDescPtr.h>
+#include <jccl/Config/ConfigChunkPtr.h>
 #include <jccl/Config/Property.h>
 #include <jccl/Config/VarValue.h>
 
@@ -158,7 +159,7 @@ public:
 
 
     // used for dependency resolution
-    ConfigChunk* getEmbeddedChunk (const std::string &path);
+    ConfigChunkPtr getEmbeddedChunk (const std::string &path);
 
 
     //: writes self to out
@@ -209,9 +210,7 @@ public:
     }
 
     //: Returns token of this ConfigChunk's ChunkDesc.
-    const std::string& getDescToken () const {
-        return desc->getToken();
-    }
+    const std::string& getDescToken () const;
 
 
     //: Returns one of the values for a given property.
@@ -246,8 +245,10 @@ public:
     //+      own copy of the string value argument.
     bool setProperty (const std::string& property, int val, int ind=0);
     bool setProperty (const std::string& property, float val, int ind=0);
-    bool setProperty (const std::string& property, const std::string& val,  int ind=0);
-    bool setProperty (const std::string& property, ConfigChunk *val,  int ind=0);
+    bool setProperty (const std::string& property, const std::string& val, 
+                      int ind=0);
+    bool setProperty (const std::string& property, 
+                      ConfigChunkPtr val, int ind=0);
 
 
 
@@ -264,7 +265,7 @@ public:
     bool addValue (const std::string& property, int val);
     bool addValue (const std::string& property, float val);
     bool addValue (const std::string& property, const std::string& val);
-    bool addValue (const std::string& property, ConfigChunk* val);
+    bool addValue (const std::string& property, ConfigChunkPtr val);
 
 
     //: check to see if a property exists within a config chunk.
@@ -284,6 +285,7 @@ public:
 
 
 };
+
 
 }; // namespace jccl
 
