@@ -70,6 +70,13 @@ public:
     bool insert (vjChunkDesc *d);
 
 
+    //:Inserts all vjChunkDescs in db
+    //!ARGS: db - a non-NULL pointer to a vjChunkDescDB
+    //!POST: all elements of db are inserted into self, replacing any
+    //+      existing vjChunkDescs with the same token.
+    void insert (vjChunkDescDB* db);
+    
+
     //:Removes vjChunkDesc from self
     //!ARGS: _token - a non-NULL C string
     //!POST: Any vjChunkDesc in self whose token equals _token

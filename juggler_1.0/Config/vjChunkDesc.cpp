@@ -30,6 +30,13 @@ vjChunkDesc::vjChunkDesc () :plist() {
 }
 
 
+
+vjChunkDesc::vjChunkDesc (vjChunkDesc& desc): plist() {
+    *this = desc;
+}
+
+
+
 vjChunkDesc::~vjChunkDesc() {
     for (int i = 0; i < plist.size(); i++)
 	delete plist[i];
@@ -53,7 +60,7 @@ vjChunkDesc& vjChunkDesc::operator= (const vjChunkDesc& other) {
     
     plist.reserve (other.plist.size());
     for (i = 0; i < other.plist.size(); i++)
-	plist.push_back ( other.plist[i]);
+	plist.push_back ( new vjPropertyDesc(*(other.plist[i])));
     
     return *this;
 }

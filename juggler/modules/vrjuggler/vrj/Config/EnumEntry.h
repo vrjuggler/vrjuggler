@@ -40,6 +40,12 @@ public:
 	val = _val;
     }
 
+
+    vjEnumEntry (vjEnumEntry& e):val(e.val) {
+	entry = e.entry;
+    }
+
+
     std::string getName () {
 	return entry;
     }

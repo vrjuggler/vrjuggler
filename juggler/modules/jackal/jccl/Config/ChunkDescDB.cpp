@@ -60,6 +60,15 @@ bool vjChunkDescDB::insert (vjChunkDesc *d) {
 
 
 
+void vjChunkDescDB::insert (vjChunkDescDB* db) {
+    std::vector<vjChunkDesc*>::iterator begin = db->descs.begin();
+    while (begin != db->descs.end()) {
+	insert (new vjChunkDesc(**begin));
+	begin++;
+    }
+}
+
+
 
 bool vjChunkDescDB::remove (const std::string& tok) {
 
