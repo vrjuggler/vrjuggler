@@ -189,78 +189,34 @@ public:
    /**
     *
     */
-   void addReadyMessage (vpr::sim::MessagePtr msg,
-                         const LineDirection direction)
+   void addMessage (vpr::sim::MessagePtr msg, const LineDirection direction)
    {
       switch (direction)
       {
          case FORWARD:
-            addMessage(msg, mForwardLineQueue);
+            addMessageToQueue(msg, mForwardLineQueue);
             break;
          case REVERSE:
-            addMessage(msg, mReverseLineQueue);
+            addMessageToQueue(msg, mReverseLineQueue);
             break;
       }
    }
 
    /**
     */
-   vpr::ReturnStatus checkForReadyMessage (const vpr::Interval& event_time,
-                                           vpr::sim::MessagePtr& msg,
-                                           const LineDirection direction)
+   vpr::ReturnStatus getArrivedMessage (const vpr::Interval& event_time,
+                                        vpr::sim::MessagePtr& msg,
+                                        const LineDirection direction)
    {
       vpr::ReturnStatus status;
 
-      switch (direction)
+      if ( direction == FORWARD )
       {
-         case FORWARD:
-            status = getReadyMessage(event_time, msg, mForwardLineQueue);
-            break;
-         case REVERSE:
-            status = getReadyMessage(event_time, msg, mReverseLineQueue);
-            break;
+         status = getArrivedMessageFromQueue(event_time, msg, mForwardLineQueue);
       }
-
-      return status;
-   }
-
-   /**
-    */
-   vpr::ReturnStatus checkForTransmittedMessage (const vpr::Interval& event_time,
-                                                 vpr::sim::MessagePtr& msg,
-                                                 const LineDirection direction)
-   {
-      vpr::ReturnStatus status;
-
-      switch (direction)
+      else
       {
-         case FORWARD:
-            status = getTransmittedMessage(event_time, msg, mForwardLineQueue);
-            break;
-         case REVERSE:
-            status = getTransmittedMessage(event_time, msg, mReverseLineQueue);
-            break;
-      }
-
-      return status;
-   }
-
-   /**
-    */
-   vpr::ReturnStatus checkForArrivedMessage (const vpr::Interval& event_time,
-                                             vpr::sim::MessagePtr& msg,
-                                             const LineDirection direction)
-   {
-      vpr::ReturnStatus status;
-
-      switch (direction)
-      {
-         case FORWARD:
-            status = getArrivedMessage(event_time, msg, mForwardLineQueue);
-            break;
-         case REVERSE:
-            status = getArrivedMessage(event_time, msg, mReverseLineQueue);
-            break;
+         status = getArrivedMessageFromQueue(event_time, msg, mReverseLineQueue);
       }
 
       return status;
@@ -269,23 +225,15 @@ public:
 private:
    typedef std::map<vpr::Interval, vpr::sim::MessagePtr> msg_queue_t;
 
-   vpr::ReturnStatus getReadyMessage(const vpr::Interval& event_time,
-                                     vpr::sim::MessagePtr& msg,
-                                     msg_queue_t& queue);
-
-   vpr::ReturnStatus getTransmittedMessage(const vpr::Interval& event_time,
-                                           vpr::sim::MessagePtr& msg,
-                                           msg_queue_t& queue);
-
-   vpr::ReturnStatus getArrivedMessage(const vpr::Interval& event_time,
-                                       vpr::sim::MessagePtr& msg,
-                                       msg_queue_t& queue);
+   vpr::ReturnStatus getArrivedMessageFromQueue(const vpr::Interval& event_time,
+                                                vpr::sim::MessagePtr& msg,
+                                                msg_queue_t& queue);
 
    void calculateMessageEventTimes(vpr::sim::MessagePtr msg,
                                    const vpr::Interval& cur_time,
                                    msg_queue_t& queue);
 
-   void addMessage(vpr::sim::MessagePtr msg, msg_queue_t& queue);
+   void addMessageToQueue(vpr::sim::MessagePtr msg, msg_queue_t& queue);
 
    double      mLength;       /**< Length in miles */
    double      mCapacity;     /**< Capacity in Mbps */

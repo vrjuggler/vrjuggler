@@ -501,7 +501,6 @@ namespace sim
          {
             NetworkLine first_edge_prop;
             NetworkLine::LineDirection dir;
-            vpr::Interval event_time;
 
             first_edge_prop = vpr::sim::Controller::instance()->getNetworkGraph().getLineProperty(first_edge);
 
@@ -518,10 +517,9 @@ namespace sim
                << msg->whenArrivesFully().getBaseVal() << ")\n"
                << vprDEBUG_FLUSH;
 
-            event_time = msg->whenStartOnWire();
-            first_edge_prop.addReadyMessage(msg, dir);
+            first_edge_prop.addMessage(msg, dir);
             vpr::sim::Controller::instance()->getNetworkGraph().setLineProperty(first_edge, first_edge_prop);
-            vpr::sim::Controller::instance()->addEvent(event_time, first_edge);
+            vpr::sim::Controller::instance()->addEvent(msg->whenArrivesFully(), first_edge, dir);
          }
       }
       // This is a loopback, so we can just deliver the message without going

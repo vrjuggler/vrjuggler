@@ -177,7 +177,8 @@ public:
     * upcoming events.
     */
    void addEvent(const vpr::Interval& event_time,
-                 const NetworkGraph::net_edge_t edge);
+                 const NetworkGraph::net_edge_t edge,
+                 const NetworkLine::LineDirection dir);
 
    /**
     * Processes the next event in the event queue no matter how far into the
@@ -243,9 +244,22 @@ private:
    vpr::sim::SocketManager mSocketManager;
    vpr::sim::NetworkGraph  mGraph;
 
+   struct EventData
+   {
+      EventData (const NetworkGraph::net_edge_t _edge,
+                 const NetworkLine::LineDirection _dir)
+         : edge(_edge), direction(_dir)
+      {
+         ;
+      }
+
+      NetworkGraph::net_edge_t   edge;
+      NetworkLine::LineDirection direction;
+   };
+
    // This map of intervals to events is always sorted so that we can
    // iterate over it in increasing order of event times.
-   typedef std::multimap<vpr::Interval, NetworkGraph::net_edge_t> event_map_t;
+   typedef std::multimap<vpr::Interval, EventData> event_map_t;
    event_map_t mEvents;
 
    vpr::Uint32 mSleepTime;
