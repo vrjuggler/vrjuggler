@@ -556,9 +556,9 @@ UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 # Put together the basic information needed to compile VPR applications.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $LIBS $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+    APP_EXTRA_LIBS="$LDFLAGS $LIBS $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE comctl32.lib user32.lib gdi32.lib ws2_32.lib"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
+    APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
 fi
 
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
@@ -599,9 +599,9 @@ fi
 
 # Dependencies for dynamic/shared libraries.
 if test "x$OS_TYPE" = "xWin32" ; then
-    DYLIB_DEPS="$NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE ws2_32.lib"
+    DYLIB_DEPS="$NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
 else
-    DYLIB_DEPS="$NSPR_LDFLAGS $NSPR_LIB"
+    DYLIB_DEPS="$NSPR_LDFLAGS $NSPR_LIB $PLC_LIB"
 fi
 
 # Information needed to generate vpr-config.
@@ -640,7 +640,7 @@ case $SUBSYSTEM in
     NSPR)
         if test "x$OS_TYPE" = "xWin32" ; then
             subsystem_cxxflags="$INCLUDES"
-            subsystem_libs="$NSPR_LIB_LINK_EXE comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+            subsystem_libs="$NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE comctl32.lib user32.lib gdi32.lib ws2_32.lib"
             vpr_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
             vpr_ldflags_linker="/libpath:\$prefix/lib/debug"
             vpr_extra_ldflags_compiler="/link $NSPR_LDFLAGS"
@@ -648,7 +648,7 @@ case $SUBSYSTEM in
             vpr_libs='vpr.lib'
         else
             subsystem_cxxflags="$INCLUDES"
-            subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
+            subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
             vpr_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
             vpr_ldflags_linker="$vpr_ldflags_compiler"
             vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS"
