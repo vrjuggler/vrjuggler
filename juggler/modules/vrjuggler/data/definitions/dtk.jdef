@@ -19,11 +19,6 @@
          <value label="Segments"/>
          <allowed_type>dtk_segment</allowed_type>
       </property>
-      <property valuetype="configelement" variable="true" name="position_filters">
-         <help>This is a list of all the filters that are to be applied to the positional device data. The filters are applied in the order that they are specified in this configuration.</help>
-         <value label="Position Transform Filter"/>
-         <allowed_type>position_transform_filter</allowed_type>
-      </property>
       <upgrade_transform/>
    </definition_version>
 </definition>
