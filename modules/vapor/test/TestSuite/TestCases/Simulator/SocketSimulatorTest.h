@@ -3,9 +3,8 @@
 
 #include <string>
 
-#include <cppunit/TestCase.h>
-#include <cppunit/TestSuite.h>
-#include <cppunit/TestCaller.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/ThreadTestCase.h>
 
 #include <vpr/vpr.h>
@@ -17,7 +16,7 @@ namespace vprTest
 
 class SocketSimulatorTest : public CppUnit::ThreadTestCase
 {
-CPPUNIT_TEST_SUITE(GUIDTest);
+CPPUNIT_TEST_SUITE(SocketSimulatorTest);
 CPPUNIT_TEST( graphConstructionTest );
 CPPUNIT_TEST( singleThreadTest );
 CPPUNIT_TEST( networkCommTestTCP );

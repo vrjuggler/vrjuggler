@@ -57,7 +57,7 @@ INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VPR_LIBRARY)
 
 # Prefix for recursive stuff.
-DIRPRFX		= vpr/md/SIM/
+DIRPRFX		= vpr/md/SIM/IO/
 
 # Subdirectories used for recursion through the source tree.
 SUBDIR		= Socket

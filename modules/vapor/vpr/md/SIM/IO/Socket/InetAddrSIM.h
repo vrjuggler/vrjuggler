@@ -238,7 +238,7 @@ public:
     */
    vpr::ReturnStatus getHostname(std::string& hostname) const
    {
-      hostname = getAddressString()
+      hostname = getAddressString();
       return vpr::ReturnStatus();
    }
 
