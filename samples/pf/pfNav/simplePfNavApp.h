@@ -164,7 +164,7 @@ public:
 
       mNavigationDCS = NULL;
 
-      enableStats();
+      //enableStats();
    }
 
    virtual void init()
@@ -558,8 +558,8 @@ void simplePfNavApp::initScene()
    mSun = new pfLightSource;
    mLightGroup->addChild( mSun );
    mSun->setPos( 0.3f, 0.0f, 0.3f, 0.0f );
-   mSun->setColor( PFLT_DIFFUSE,0.3f,0.0f,0.95f );
-   mSun->setColor( PFLT_AMBIENT,0.4f,0.4f,0.4f );
+   mSun->setColor( PFLT_DIFFUSE,1.0f,1.0f,1.0f );
+   mSun->setColor( PFLT_AMBIENT,0.3f,0.3f,0.3f );
    mSun->setColor( PFLT_SPECULAR, 1.0f, 1.0f, 1.0f );
    mSun->on();
 
