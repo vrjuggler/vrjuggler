@@ -24,6 +24,13 @@
 #include <Input/InputManager/vjPosInterface.h>
 #include <Input/InputManager/vjDigitalInterface.h>
 
+#include "SoundFactory.h"
+#include "fileIO.h"
+#include "pjSoundNode.h" //performer-juggler sound node.
+#include "pjSoundReplaceTrav.h"
+
+SoundEngine* gSoundEngine = NULL;
+
 
 // nav includes
 #include <pfNavDCS.h>
@@ -49,7 +56,7 @@ public:
    virtual void init()
    {
       vjDEBUG(vjDBG_ALL, 1) << "app::init\n" << vjDEBUG_FLUSH;
-      vjProjection::setNearFar(0.5, 200000);
+      vjProjection::setNearFar( 0.4f, 200000 );
 
       mStats.setToggleButton("VJButton5");
    }
@@ -136,12 +143,12 @@ public:
 
    // navigation objects.
    velocityNav*   mVelNavDrive;
-   pfNavDCS*      mNavDCS;
+   pfNavDCS*      mNavigationDCS;
 
    // scene's root (as far as we're concerned here)
-   pfGroup*   rootNode;
+   pfGroup*       rootNode;
 
-   vjPfAppStats         mStats;
+   vjPfAppStats   mStats;
 };
 
 void simplePfNavApp::initScene()
@@ -150,11 +157,11 @@ void simplePfNavApp::initScene()
    vjDEBUG(vjDBG_ALL, 0) << "pfNavJugglerApplication::initScene\n" << vjDEBUG_FLUSH;
 
    // Allocate all the nodes needed
-   rootNode       = new pfGroup;       // Root of our graph
-   mNavDCS        = new pfNavDCS;      // DCS to navigate with
-   pfNode*  world_model;
+   rootNode                = new pfGroup;          // Root of our graph
+   mNavigationDCS          = new pfNavDCS;      // DCS to navigate with
+   pfNode* world_model;
    pfDCS*   world_model_dcs = new pfDCS;
-   pfGroup* collidable_model_group = new pfGroup;
+   pfGroup* collidable_modelGroup = new pfGroup;
 
    // Create the SUN
    pfLightSource* sun1 = new pfLightSource;
@@ -174,20 +181,17 @@ void simplePfNavApp::initScene()
 
    // --- CONSTRUCT SCENE GRAPH --- //
    //                           /-- sun1
-   // rootNode -- mNavDCS -- collidable_model_group -- world_model_dcs - world_model
-   //                           \-- noncollisionable_modelDcs -- other_models
-   pfVec3 pf_world_dcs_trans;
-   pf_world_dcs_trans = vjGetPfVec(mWorldDcsTrans);
-
-   rootNode->addChild( mNavDCS );
-   world_model_dcs->addChild( world_model);
-   world_model_dcs->setScale( mWorldDcsScale);
-   world_model_dcs->setTrans( pf_world_dcs_trans[0],
-                              pf_world_dcs_trans[1],
-                              pf_world_dcs_trans[2]);
-   collidable_model_group->addChild(world_model_dcs);
-   mNavDCS->addChild( sun1 );
-   mNavDCS->addChild( collidable_model_group );
+   // rootNode -- mNavigationDCS -- collidable_modelGroup -- world_model
+   //                           \-- noncollidable_modelGroup -- other_models
+   pfVec3 pf_worldDcsTrans;
+   pf_worldDcsTrans = vjGetPfVec( mWorldDcsTrans );
+   
+   rootNode->addChild( mNavigationDCS );
+   mNavigationDCS->setScale( mWorldDcsScale );
+   mNavigationDCS->setTrans( pf_worldDcsTrans[0], pf_worldDcsTrans[1], pf_worldDcsTrans[2]);
+   mNavigationDCS->addChild( sun1 );
+   mNavigationDCS->addChild( collidable_modelGroup );
+   collidable_modelGroup->addChild(world_model);
 
    // Configure the Navigator DCS node:
    vjMatrix initial_nav;              // Initial navigation position
@@ -203,14 +207,18 @@ void simplePfNavApp::initScene()
    // --- COLLISION DETECTORS --- //
    // Terrain collider
    //planeCollider* collide = new planeCollider;
-   pfPogoCollider*  ride_collide = new pfPogoCollider(collidable_model_group);
+   pfPogoCollider*  ride_collide = new pfPogoCollider(collidable_modelGroup);
    mVelNavDrive->addCollider(ride_collide);
 
    // Set the navigator's collider.
-   pfBoxCollider* correction_collide = new pfBoxCollider( collidable_model_group );
+   pfBoxCollider* correction_collide = new pfBoxCollider( collidable_modelGroup );
    mVelNavDrive->addCollider( correction_collide );
 
-   mNavDCS->setNavigator(mVelNavDrive);
+   mNavigationDCS->setNavigator(mVelNavDrive);
+
+   // replace all nodes with _Sound_ with pjSoundNodes...
+   //pjSoundReplaceTrav::traverse( collidable_modelGroup, gSoundEngine, "_Sound_" );
+   ///assert( NULL);
 
    // load these files into perfly to see just what your scenegraph
    // looked like. . . . .useful for debugging.
