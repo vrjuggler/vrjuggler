@@ -112,6 +112,7 @@ public:
       Status ret_val;
       ssize_t bytes_written;
 
+      // make lots of acceptors, set their addresses, and open them... saving each handle in a std::map
       for(i=0;i<mNumRendevousPorts;i++)
       {
          vpr::SocketAcceptor* new_acceptor = new vpr::SocketAcceptor();          // Create acceptor
@@ -142,11 +143,13 @@ public:
           threadAssertTest((ret.success()) && "Selection did not return successfully");
           threadAssertTest((num_events == 1) && "There was not only 1 event");
 
+          
+          // get an acceptor that has a connection request pending (ready_acceptor)
           int num_found(0);
-          vpr::SocketAcceptor* ready_acceptor;
-
+          vpr::SocketAcceptor* ready_acceptor = NULL;
           for(j=0;j<selector.getNumHandles();j++)
           {
+            // if selector's out flag is READ|EXCEPT
             if(selector.getOut(selector.getHandle(j)) & (vpr::Selector::READ | vpr::Selector::EXCEPT))
             {
                threadAssertTest((acceptorTable.find(selector.getHandle(j)) != acceptorTable.end()) && "Handle not found int acceptor table");
@@ -156,16 +159,18 @@ public:
           }
 
           threadAssertTest((num_found == 1) && "Wrong number of acceptors found");
+          threadAssertTest(ready_acceptor != NULL && "no ready acceptor");
 
-          // ACCEPT connection 
+          // ACCEPT connection (generate a sock)
           SocketStream sock;
           ret_val = ready_acceptor->accept(sock);
           threadAssertTest((ret_val.success()), "Accepted socket is null");
           threadAssertTest((sock.isOpen()), "Accepted socket should be open");
            
+          // use the sock to write (send)... then close it...
           ret_val = sock.write(mMessageValue, mMessageLen, bytes_written);      // Send a message           
           threadAssertTest((ret_val.success()), "Problem writing in acceptor");
-          ret_val = sock.close();                                // Close the socket
+          ret_val = sock.close();         // Close the socket
           threadAssertTest((ret_val.success()), "Problem closing accepted socket");          
        }
 
@@ -175,7 +180,7 @@ public:
           delete (*a).second;
        }
    }
-   void testAcceptorPoolSelection_connector(void* arg)
+   void testAcceptorPoolSelection_connector( void* arg )
    {
       Status ret_val;
       vpr::InetAddr remote_addr;
