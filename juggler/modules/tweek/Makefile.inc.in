@@ -306,6 +306,8 @@ post-install-headers:
           $(TWEEKROOT_ABS)/tweek/tweekConfig.h				\
           $(includedir)/tweek/tweekConfig.h
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(TWEEKROOT_ABS)/tweek/tweek.h $(includedir)/tweek/tweek.h
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/tweek/tweekDefines.h $(includedir)/tweek
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/tweek/tweekParam.h $(includedir)/tweek
