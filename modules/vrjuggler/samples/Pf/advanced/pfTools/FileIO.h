@@ -33,18 +33,19 @@
 #ifndef _VRJ_FILE___IO_STUFF
 #define _VRJ_FILE___IO_STUFF
 
-#include <vrj/vrjConfig.h>
-
 #include <stdlib.h>
 #include <string>
 #include <vector>
 
 
-namespace vrj
+namespace vrjutil
 {
 
 
-class VJ_CLASS_API FileIO
+// XXX: Most (all?) of the functionality in this class could be replaced by
+// using the more portable and more robust Boost.Filesystem library.
+//    -PH 5/22/2004
+class FileIO
 {
 public:
    // == "." by default
@@ -54,7 +55,7 @@ public:
    // or: ./rgbfiles
    // or: ${HOME}/VR/juggler
    // NOTE: you can use ${VARIABLE} in the path, to use env variables...
-   static void addFilePath( const std::string& filepath = "." );
+   static void addFilePath(const std::string& filepath = ".");
 
    /** filename handling routines **/
 
@@ -64,7 +65,7 @@ public:
     * ${HOME}/filename<br>
     * /home/vr/filename<br>
     */
-   static bool isAbsolutePathName( const std::string& n );
+   static bool isAbsolutePathName(const std::string& n);
 
    /**
     * n is your filename.
@@ -72,29 +73,32 @@ public:
     * if ${...} not found... then replaces it with "", and emits error
     * message to console.
     */
-   static std::string demangleFileName( const std::string& n, std::string parentfile );
+   static std::string demangleFileName(const std::string& n,
+                                       const std::string& parentfile);
 
    /** Checks if file exists. Does a demangle on the name before checking. */
-   static bool fileExists( const char* const name );
-   static bool fileExists( const std::string& name );
+   static bool fileExists(const char* name);
+   static bool fileExists(const std::string& name);
 
    /**
     * Checks if file exists in any of the registered paths.
     * @return true if exists and the resolved filepath.
     */
-   static bool fileExistsResolvePath( const char* const filename, std::string& realPath );
-   static bool fileExistsResolvePath( const std::string& filename, std::string& realPath );
+   static bool fileExistsResolvePath(const char* filename,
+                                     std::string& realPath);
+   static bool fileExistsResolvePath(const std::string& filename,
+                                     std::string& realPath);
 
    /**
     * @todo Remove this function, and move its code into fileExistsResolvePath.
     */
-   static std::string resolvePathForName( const char* const filename );
+   static std::string resolvePathForName(const char* filename);
 
    static std::vector<std::string> mPaths;
 };
 
 
-};
+}
 
 
 #endif

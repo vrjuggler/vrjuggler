@@ -38,7 +38,7 @@
 #include <string>
 #include <assert.h>
 #include <vpr/Util/FileUtils.h>
-#include <vrj/Util/FileIO.h> /* bool fileExists() */
+#include <FileIO.h> /* bool fileExists() */
 #include <Performer/pf/pfDCS.h>
 
 // use this class to store your filepath etc...
