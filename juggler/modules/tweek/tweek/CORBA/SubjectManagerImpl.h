@@ -122,6 +122,21 @@ public:
    virtual tweek::SubjectManager::SubjectManagerInfoList* getInfo();
 
    /**
+    * Returns the name of this Subject Manager reference as it is registered
+    * with the CORBA Naming Service.
+    *
+    * @note It might be possible for client code to look this up some other
+    *       way, so this method may not really be needed except as a
+    *       convenience.
+    */
+   virtual char* getName();
+
+   void setName(const std::string& name)
+   {
+      mName = name;
+   }
+
+   /**
     * Assigns the given value for the username informational item.  This can
     * be used to provide remote users with an application-specific identifier
     * for this Subject Manager instance.  If this method is not used, the
@@ -173,7 +188,7 @@ protected:
     * tweek::CorbaManager may create objects of this type.
     */
    SubjectManagerImpl(const CorbaManager& corba_mgr)
-      : mCorbaMgr(corba_mgr), mGUID()
+      : mCorbaMgr(corba_mgr), mGUID(), mName("")
    {
       mGUID.generate();
       initInfoMap();
@@ -205,6 +220,7 @@ protected:
 private:
    const CorbaManager& mCorbaMgr;
    vpr::GUID           mGUID;
+   std::string         mName;
 
    typedef std::map<std::string, Subject_ptr> subject_map_t;
    subject_map_t mSubjects;

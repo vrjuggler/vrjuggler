@@ -249,6 +249,11 @@ SubjectManager::SubjectManagerInfoList* SubjectManagerImpl::getInfo()
    return info_items;
 }
 
+char* SubjectManagerImpl::getName()
+{
+   return CORBA::string_dup(mGUID.toString().c_str());
+}
+
 void SubjectManagerImpl::initInfoMap()
 {
    vpr::InetAddr local_addr;
