@@ -519,13 +519,6 @@ public:
    vpr::ReturnStatus setOption(const vpr::SocketOptions::Types option,
                                const struct vpr::SocketOptions::Data& data);
 
-   virtual vpr::ReturnStatus addConnector(vpr::SocketImplSIM* local,
-                                          vpr::SocketImplSIM** remote)
-   {
-      vprASSERT(false && "I shouldn't ever be called!");
-      return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
-   }
-
    /**
     * Tests if this socket can read without blocking.
     *
@@ -586,7 +579,7 @@ public:
 
    void setNetworkNode (const vpr::sim::NetworkGraph::net_vertex_t& node)
    {
-      mNetworkNode  = node;      
+      mNetworkNode  = node;
    }
 
    vpr::sim::NetworkGraph::net_vertex_t getNetworkNode() const
@@ -596,7 +589,7 @@ public:
 
 
 protected:
-   friend class vpr::sim::SocketManager;   
+   friend class vpr::sim::SocketManager;
 
    void disconnect(void);
 
@@ -646,7 +639,7 @@ protected:
    vpr::Mutex mArrivedQueueMutex; /**< Mutex for the arrived message queue */
 
    vpr::sim::NetworkGraph::net_vertex_t mNetworkNode;
-   
+
    ///
    vpr::sim::NetworkGraph::VertexListPtr mPathToPeer;
 };

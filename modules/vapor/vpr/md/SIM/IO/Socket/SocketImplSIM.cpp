@@ -57,7 +57,7 @@ namespace vpr
 SocketImplSIM::~SocketImplSIM ()
 {
    close();
-   
+
    // cant do this because accept retuns an imp, which gets deleted
    // after constructing the returned Socket_t
 /*
@@ -88,9 +88,9 @@ vpr::ReturnStatus SocketImplSIM::close ()
       status = vpr::sim::Controller::instance()->getSocketManager().unbind(this);
       mBound = false;
    }
-      
+
    mOpen  = false;
-   
+
    return status;
 }
 
@@ -112,16 +112,16 @@ vpr::ReturnStatus SocketImplSIM::connect (vpr::Interval timeout)
    vprASSERT(mOpen && "An unopened socket cannot connect");
    vpr::sim::SocketManager& sock_mgr =
       vpr::sim::Controller::instance()->getSocketManager();
-   
+
    // If not bound, then bind us
    if (!mBound)
    {
       bind();
    }
-   
-   vprASSERT(mBound && "We must be bound first");   
 
-   status = sock_mgr.connect(this, &mPeer, mRemoteAddr, mPathToPeer, timeout);
+   vprASSERT(mBound && "We must be bound first");
+
+   status = sock_mgr.connect(this, mRemoteAddr, mPathToPeer, timeout);
    mConnected = status.success();
 
    // Now that we are connected (or queued to get connected), we do not have

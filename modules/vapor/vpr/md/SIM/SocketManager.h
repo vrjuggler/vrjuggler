@@ -112,7 +112,6 @@ public:
     *   invalid address, such as a zero-filled address.
     */
    vpr::ReturnStatus connect( vpr::SocketImplSIM* localSock,
-                              vpr::SocketImplSIM** remoteSock,
                               const vpr::InetAddrSIM& remoteName,
                               NetworkGraph::VertexListPtr& path,
                               vpr::Interval timeout );
