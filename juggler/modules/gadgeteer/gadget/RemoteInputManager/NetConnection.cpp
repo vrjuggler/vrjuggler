@@ -43,6 +43,7 @@
 #include <gadget/Type/DeviceFactory.h>
 #include <gadget/InputManager.h>
 #include <gadget/RemoteInputManager/RemoteInputManager.h>
+#include <gadget/Type/BaseTypeFactory.h>
 
 namespace gadget
 {
@@ -81,24 +82,36 @@ namespace gadget
    {
       mSockStream->close();
       delete mSockStream;
+         // Remove all Transmitting NetDevices
+      while ( mTransmittingDevices.size() > 0 )
+      {
+         delete *(mTransmittingDevices.begin()) ;
+         mTransmittingDevices.pop_front();
+      }
+         // Remove all Receiving NetDevices
+      while ( mReceivingDevices.size() > 0 )
+      {
+         delete *(mReceivingDevices.begin()) ;
+         mReceivingDevices.pop_front();
+      }
+
    }
 
    void NetConnection::sendNetworkData()
    {
       mSendIterations++;
       
-
-        for ( std::list<NetDevice*>::iterator i = mTransmittingDevices.begin();i != mTransmittingDevices.end();i++ )
-        {
-            if ( (*i)->getWasInitialized() )
-            {
-                vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[RIM] Sending data for device: " << (*i)->getSourceName() << "\n" << vprDEBUG_FLUSH;
-                (*i)->updateFromLocalSource();
-                
-                mMsgPackage.createDeviceDataPacket(*i);
-                mMsgPackage.sendAndClearDeviceData(mSockStream,(*i));
-            }
-        }
+      for ( std::list<NetDevice*>::iterator i = mTransmittingDevices.begin();i != mTransmittingDevices.end();i++ )
+      {
+         if ( (*i)->getWasInitialized() )
+         {
+             vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[RIM] Sending data for device: " << (*i)->getSourceName() << "\n" << vprDEBUG_FLUSH;
+             // (*i)->updateFromLocalSource();
+             
+             mMsgPackage.createDeviceDataPacket(*i);
+             mMsgPackage.sendAndClearDeviceData(mSockStream,(*i));
+         }
+      }
    }
 
    void NetConnection::addTransmittingNetDevice(NetDevice* net_device)
@@ -366,6 +379,7 @@ namespace gadget
             << "InputManager found: " << device_name << "\n" << vprDEBUG_FLUSH;
 
          net_device = new NetDevice(device_name, input_ptr, this->generateLocalId(), requester_device_id);
+         net_device->setObjectWriter(gadget::InputManager::instance()->getRemoteInputManager()->getObjectWriter(device_name,input_ptr));
          
          if (net_device != NULL)    // Successfully created transmitting NetDevice
          {
@@ -383,7 +397,8 @@ namespace gadget
          vprDEBUG(gadgetDBG_RIM, vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED) << "ERROR: Device " << device_name
          << " not found\n" << clrRESET << vprDEBUG_FLUSH;
       }
-      
+
+
       //
       // SEND A RESPONCE BACK TO REQUESTING MACHINE
       //
@@ -426,6 +441,7 @@ namespace gadget
 
    void NetConnection::receiveNetworkPacket()
    {
+      
       ///////////////////////////////////////////////////////////////////////
       //		  
       // PARSE PACKET	  
@@ -441,7 +457,6 @@ namespace gadget
       vprDEBUG_OutputGuard(gadgetDBG_RIM, vprDBG_VERB_LVL,
          std::string("[RIM::receiveNetworkPacket] Read Network Packet\n"),
          std::string("[RIM::receiveNetworkPacket] END Read Network Packet\n"));
-   
    
       vpr::Uint32 bytes_read;
       NetDevice* tmp_net_device;
@@ -461,11 +476,13 @@ namespace gadget
       ///////////////////////////////
       // READ IN THE PACKET HEADER //
       ///////////////////////////////
-   
+
          // Create a new vector can read the data into it
       std::vector<vpr::Uint8> packet_head(100);
+         
          //Read in the known length of the packet header
       vpr::ReturnStatus status = mSockStream->recvn(packet_head,RIM_HEAD_LENGTH,bytes_read);
+         
          // If the read was not successful 
       if (!status.success())
       {
@@ -527,8 +544,8 @@ namespace gadget
          vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrSetNORM(clrCYAN) 
             << "==============DEVICE ID: " 
             << device_id << "==================\n" << clrRESET << vprDEBUG_FLUSH;
-   
-            // Must also read 2 fewer byts since we just read two
+         
+            // Must also read 2 fewer bytes since we just read two
          status = mSockStream->recvn(packet_data,length-RIM_HEAD_LENGTH-2,bytes_read);
       }
       else
@@ -550,15 +567,13 @@ namespace gadget
             mMsgPackage.receiveDeviceRequest(data_reader);
    
                // Try to configure the NetDevice, it will send a responce
-            //XXXXXXXXXXXXXXX    FIX
-            //InputManager::instance()->getRemoteInputManager()->configureTransmittingNetDevice(mMsgPackage.getDeviceName(), mMsgPackage.getSenderId(),this);
             configureTransmittingNetDevice(mMsgPackage.getDeviceName(), mMsgPackage.getSenderId());
    
             vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"[RIM Packet] END MSG_DEVICE_REQ\n") << vprDEBUG_FLUSH;
             break;
          }
       case MSG_DEVICE_ACK:
-         {
+         {      
             vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"[RIM Packet] MSG_DEVICE_ACK\n") << vprDEBUG_FLUSH;
    
                // Have mMsgPackage receive the device acknoledgement
@@ -623,7 +638,7 @@ namespace gadget
       case MSG_DEVICE_DATA:   // Data for a given device has been received
          {
             vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutNORM(clrGREEN,"[RIM Packet] DEVICE_DATA\n") << vprDEBUG_FLUSH;
-   
+               
                // Try to find the NetDevice for this remote device
             NetDevice* net_device_recvr = this->findReceivingNetDeviceByLocalId(device_id);    
             if ( net_device_recvr == NULL )

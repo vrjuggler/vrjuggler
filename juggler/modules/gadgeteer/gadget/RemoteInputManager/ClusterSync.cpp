@@ -31,7 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vpr/vprConfig.h>
-#include <vpr/System.h>
 
 #include <vector>
 
@@ -46,6 +45,14 @@
 
 namespace gadget
 {
+   
+   ClusterSync::ClusterSync() : syncPacket(12)
+   {
+      mTol = 2;
+      mAccept = false;
+      mReader = new vpr::ObjectReader(&syncPacket);
+   }
+
    void ClusterSync::clientClusterSync(vpr::SocketStream* socket_stream)
    {
       mSocketStream = socket_stream;

@@ -37,7 +37,8 @@ public:
    * @post  An object that is responsible for the information regarding a
    *        device shared on a cluster
    */
-   NetDevice(const std::string& src_device_name, Input* input_ptr, VJ_NETID_TYPE local_device_id, VJ_NETID_TYPE rmt_device_id)
+   NetDevice(const std::string& src_device_name, Input* input_ptr, VJ_NETID_TYPE local_device_id, 
+             VJ_NETID_TYPE rmt_device_id)
    {
       mRealInput = input_ptr;
       mNumDependencies = 0;
@@ -47,8 +48,9 @@ public:
       mSrcName = src_device_name;
       mAckInitialization = false;
       mNeedToResendRequest = false;
-      std::vector<vpr::Uint8>* temp = new std::vector<vpr::Uint8>(100);
-      mObjectWriter = new vpr::ObjectWriter(temp);
+      //std::vector<vpr::Uint8>* temp = new std::vector<vpr::Uint8>(100);
+      //mObjectWriter = new vpr::ObjectWriter(temp);
+      mObjectWriter = NULL;
    }
   
   /** 
@@ -73,7 +75,17 @@ public:
       mSrcName = dev_name;
    }
    ~NetDevice()
-   {;}
+   {
+      if (mObjectWriter != NULL)
+      {
+         if (mObjectWriter->getData() != NULL)
+         {
+            delete mObjectWriter->getData();
+         }
+         delete mObjectWriter;
+      }
+      // Do we need to delete mRealInput?
+   }
    
    void updateFromLocalSource()
    {
@@ -86,6 +98,12 @@ public:
    {
       return mObjectWriter;
    }
+   
+   void setObjectWriter(vpr::ObjectWriter* writer)
+   {
+      mObjectWriter = writer;
+   }
+
 
   /**
    *  Adds a dependency for the NetDevice
@@ -119,7 +137,7 @@ public:
    */
    Input* getRealDevice()
    { return(mRealInput); }
-   
+
   /**
    *  Returns the unique id for this NetDevice.
    */
