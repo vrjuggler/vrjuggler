@@ -1,101 +1,229 @@
-<html><head><TITLE>Description of {classname}</TITLE><BASE TARGET="_parent" ></head>
-<body BGCOLOR=#FFFFFF>
-<FONT FACE="Helvetica">
-<DL><DT>
-<FONT SIZE=4>{ if templ} template { endif} {if struct} struct {endif}
-{else} {if union} union {endif}{else} class {endelse} {endelse}
-</FONT>
-<FONT SIZE=5><B>{classlinked}{templ}</B></FONT>
-{if parents}
-  <FONT SIZE=4> : {parents} </FONT>
-{endif}
-<br><br>
+<HEAD>
+  <TITLE>Description of {classname}</TITLE>
+  <BASE TARGET="_parent">
+</HEAD>
 
-<DD><FONT FACE="Times" SIZE=4>
-{if brief}  <B>{brief}</B> {if detail} <p> {endif} {else}  <br><br> {endelse} {endif}
-{if detail} <FONT SIZE=3>{detail}</FONT>  <br><br>{endif}
-{if italic} <I> {italic} </I> <br><br> {endif}
+<BODY BGCOLOR="#ffffff">
 
-</DL></FONT>
+{include ../common/class_desc_header.html.inc}
 
-<FONT SIZE=3>Members:</FONT><br><br>
-<UL>
-{if public}
+<!-- Opening heading. -->
+{include ../common/class_info.html.inc}
 
-<LI><FONT SIZE=2><B>Public:</B></FONT><br><br>
-<DL>
+<P>
+<HR>
+<P>
 
-{foreach public}
+{if class}
+  {if membervar !private}
+    <!-- Index of non-private class member variable(s). -->
+    <TABLE BORDER="1" WIDTH="100%">
+      <TR>
+	<TH COLSPAN="2" BGCOLOR="#0062b2">
+	  <FONT SIZE="+3" COLOR="#ffffff">Member Variable Summary</FONT>
+	</TH>
+      </TR>
+      {foreach member all}
+	{if !mprivate}
+	  {include ../common/member_var_index_table_body.html.inc}
+	  {if !func}
+	    <TR>
+	      <TD ALIGN="RIGHT" VALIGN="TOP" WIDTH="20%">
+		{include ../common/member_type.html.inc}
+	      </TD>
+	      <TD ALIGN="LEFT" VALIGN="TOP" WIDTH="80%">
+		<TT><B>{name}</B></TT>
+		<BR>
+		{if brief}
+		  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{brief}
+		  <BR>
+		{endif}
+	      </TD>
+	    </TR>
+	  {endif}
+	{endif}
+      {next member}
+    </TABLE>
 
-    <DT>{type}<B>{mname}</B>{if func}({args}) {if const}const{endif} {if throws} <FONT COLOR="red"> throws {throwclass}({throwargs}) </FONT>{endif}{endif}
-    {if enum} {lb}{args}{rb} {endif};
-    <DD><FONT FACE="Times" SIZE=3>
-      {private false}
-        {if brief}  <B>{brief}</B> <br> {endif}
-        {if detail} {detail} <br> {endif}
-        <TABLE BORDER="1">
-        {if MODIFIES} <TR><TD><B>Modifies</B></TD>  <TD><P>{MODIFIES}</TD>  </TR> {endif}
-        {if PRE} <TR><TD><B>Pre</B></TD>  <TD><P>{PRE}</TD>  </TR> {endif}
-        {if POST} <TR><TD><B>Post</B></TD>  <TD><P>{POST}</TD>  </TR> {endif}
-        {if NOTE} <TR><TD><B>Note</B></TD>  <TD><P>{NOTE}</TD>  </TR>  {endif}
-        </TABLE>
-      {endprivate}
+    <P>
+  {endif}
 
-      {if ARGS} <BR> {ARGS} {endif}
-      {if RETURNS} <BR> {RETURNS} {endif}
-      </FONT>
-<br>
-{next public}
+  {if constructor !private}
+    <!-- Index of non-private class constructor(s). -->
+    <TABLE BORDER="1" WIDTH="100%">
+      <TR>
+	<TH BGCOLOR="#0062b2">
+	  <FONT SIZE="+3" COLOR="#ffffff">Constructor Summary</FONT>
+	</TH>
+      </TR>
+      {foreach member}
+	{if !mprivate}
+	  {if mconstructor}
+	    <TR>
+	      <TD ALIGN="LEFT" VALIGN="TOP">
+		<TT>
+		<A HREF="#{memberef}" TARGET="class_desc"><B>{mname}</B></A>({args})
+		{if const} const {endif}
+		{if throws}
+		  <FONT COLOR="#ff0000">throws {throwclass}({throwargs})</FONT>
+		{endif}
+		</TT>  
+		<BR> 
+		{if brief}
+		  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{brief}
+		  <BR>
+		{endif}
+	      </TD> 
+	    </TR>     
+	  {endif}   
+	{endif}
+      {next member}
+    </TABLE>
 
-</DL>
-<br><br>
-{endif public}
-{if protected}
+    <P>
+  {endif}
 
-<LI><FONT SIZE=2><B>Protected:</B></FONT><br><br>
+  {if method !private}
+    <!-- Index of non-private class method(s). -->
+    <TABLE BORDER="1" WIDTH="100%">
+      <TR>
+	<TH COLSPAN="2" BGCOLOR="#0062b2">
+	  <FONT SIZE="+3" COLOR="#ffffff">Method Summary</FONT>
+	</TH>
+      </TR>
+      {foreach member all}
+	{if !mprivate}
+	  {if func}
+	    {if !mconstructor}
+	      {if !inherited}
+		<TR>
+		  <TD ALIGN="RIGHT" VALIGN="TOP" WIDTH="20%">
+		    {include ../common/member_type.html.inc}
+		  </TD>
+		  <TD ALIGN="LEFT" VALIGN="TOP" WIDTH="80%">
+		    {include ../common/method_name_index_entry.html.inc}
+		  </TD>
+		</TR>
+	      {endif}
+	      {else}
+		{if !overridden}
+		  <TR>
+		    <TD ALIGN="RIGHT" VALIGN="TOP" WIDTH="20%">
+		      {include ../common/member_type.html.inc}
+		    </TD>
+		    <TD ALIGN="LEFT" VALIGN="TOP" WIDTH="80%">
+		      {include ../common/in_method_name_index_entry.html.inc}
+		    </TD>
+		  </TR>
+		{endif}
+	      {endelse}
+	    {endif}
+	  {endif}
+	{endif}
+      {next member}
+    </TABLE>
 
-{foreach protected}
+    <P>
+  {endif}
 
-    <DT>{type}<B>{mname}</B>{if func}({args}) {if const}const{endif} {if throws} <FONT COLOR="red"> throws {throwclass}({throwargs}) </FONT>{endif}{endif}
-    {if enum} {lb}{args}{rb} {endif};
-    <DD><FONT FACE="Times" SIZE=3>
-      {private false}
-        {if brief}  <B>{brief}</B> <br> {endif}
-        {if detail} {detail} <br> {endif}
-        <TABLE BORDER="1">
-        {if MODIFIES} <TR><TD><B>Modifies</B></TD>  <TD><P>{MODIFIES}</TD>  </TR> {endif}
-        {if PRE} <TR><TD><B>Pre</B></TD>  <TD><P>{PRE}</TD>  </TR> {endif}
-        {if POST} <TR><TD><B>Post</B></TD>  <TD><P>{POST}</TD>  </TR> {endif}
-        {if NOTE} <TR><TD><B>Note</B></TD>  <TD><P>{NOTE}</TD>  </TR>  {endif}
-        </TABLE>
-      {endprivate}
+  {if constructor !private}
+    <!-- Class constructor(s). -->
+    <TABLE BORDER="1" WIDTH="100%">
+      <TR>
+	<TH BGCOLOR="#0062b2">
+	  <FONT SIZE="+3" COLOR="#ffffff">Constructor Detail</FONT>
+	</TH>
+      </TR>
+    </TABLE>
 
-      {if ARGS} <BR> {ARGS} {endif}
-      {if RETURNS} <BR> {RETURNS} {endif}
-      </FONT>
+    {foreach member}
+      {if !mprivate}
+	{if mconstructor}
+	  <P>
 
-<br>
-{next protected}
-<br><br>
-{endif protected}
-{if friend}
+	  <TABLE BORDER="0" CELLPADDING="3" CELLSPACING="4" WIDTH="100%">
+	    {include ../common/detail_table_heading.html.inc}
+	    <TR>
+	      <TD ALIGN="CENTER">
+		<TABLE BORDER="0" CELLSPACING="5" WIDTH="90%">
+		  {include ../common/constructor_detail_table_body.html.inc}
+		</TABLE>
+	      </TD>
+	    </TR>
+	  </TABLE>
 
-<LI><FONT SIZE=2><B>Friends:</B></FONT><br><br>
+	  <HR>
+	{endif}
+      {endif}
+    {next member}
 
-{foreach friend}
+    <P>
+  {endif}
 
-    <DT>{type}<B>{mname}</B>{if func}({args}) {if const}const{endif} {if throws} <FONT COLOR="red"> throws {throwclass}({throwargs}) </FONT>{endif}{endif}
-    {if enum} {lb}{args}{rb} {endif};
-    <DD><FONT FACE="Times" SIZE=3>
-      {if ARGS} <BR> {ARGS} {endif}
-      </FONT>
+  {if method !private}
+    <!-- Class method(s). -->
+    <TABLE BORDER="1" WIDTH="100%">
+      <TR>
+	<TH COLSPAN="2" BGCOLOR="#0062b2">
+	  <FONT SIZE="+3" COLOR="#ffffff">Method Detail</FONT>
+	</TH>
+      </TR>
+    </TABLE>
 
-<br>
-{next friend}
-<br><br>
-{endif friend}
-</UL>
-{if author} Programmer: { author } {endif}
-</FONT>
-</body>
-</html>
+    {foreach member}
+      {if !mprivate}
+	{if func}
+	  {if !mconstructor}
+	    <P>
+
+	    <TABLE BORDER="0" CELLPADDING="3" CELLSPACING="4" WIDTH="100%">
+	      {include ../common/detail_table_heading.html.inc}
+	      <TR>
+		<TD ALIGN="CENTER">
+		  <TABLE BORDER="0" CELLSPACING="5" WIDTH="90%">
+		    {include ../common/method_detail_table_body.html.inc}
+		  </TABLE>
+		</TD>
+	      </TR>
+	    </TABLE>
+
+	    <HR>
+	  {endif}
+	{endif}
+      {endif}
+    {next member}
+  {endif}
+{endif}		<!-- End of class information block -->
+{else}
+  <!-- Index of struct/union element(s). -->
+  {private false}
+    <TABLE BORDER="1" WIDTH="100%">
+      <TR>
+	<TH COLSPAN="2" BGCOLOR="#0062b2">
+	  <FONT SIZE="+3" COLOR="#ffffff"><B>Element Information</B></FONT>
+	</TH>
+      </TR>
+      {foreach member}
+	<TR>
+	  <TD ALIGN="RIGHT" VALIGN="TOP" WIDTH="20%">
+	    <TT>{type}</TT>
+	  </TD>
+	  <TD ALIGN="LEFT" VALIGN="TOP" WIDTH="80%">
+	    <TT><B>{name}</B></TT>
+	    <BR>
+	    {if brief}
+	      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{brief}
+	      <BR>
+	    {endif}
+	  </TD>
+	</TR>
+      {next member}
+    </TABLE>
+  {endprivate}
+{endelse}
+
+<P>
+
+{include ../common/class_desc_footer.html.inc}
+
+</BODY>
