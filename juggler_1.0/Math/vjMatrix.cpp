@@ -52,7 +52,7 @@ static inline void limitAngle(float& angle)
 // Clamp an angle to zero if it is close
 static inline void zeroClampAngle(float& angle)
 {
-   if(vjSystem::fabs(angle) < 1e-6)
+   if(vjSystem::abs(angle) < 1e-6)
       angle = 0.0f;
 }
 
@@ -726,7 +726,7 @@ int vjMatrix::invert(vjMatrix& _m)
                         for ( j = 0; j < n; j++ )
                         {
                                 if ( col[ j] )          continue;
-                                tmp_m = vjSystem::fabs( m[ i][ j]);
+                                tmp_m = vjSystem::abs( m[ i][ j]);
                                 if ( tmp_m > max_m)
                                 {
                                         max_m = tmp_m;
@@ -739,7 +739,7 @@ int vjMatrix::invert(vjMatrix& _m)
                 pivot = m[ r[ k] ][ c[ k] ];
 
 
-                if ( vjSystem::fabs( pivot) <= 1e-20)
+                if ( vjSystem::abs( pivot) <= 1e-20)
                 {
                         std::cerr << "*** pivot = %f in mat_inv. ***\n";
                         //exit( 0);

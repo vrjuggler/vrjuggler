@@ -258,7 +258,7 @@ void vjPerfDataBuffer::writeTotal(std::ostream& out, int preskip, int postskip, 
 	else if (begin < end) {
 	    for (i = begin+1; i < end; i++) {
 		diff = buffer[i].ts - buffer[i-1].ts;
-		if (vjSystem::fabs(diff - avg) > avg * discrep) {
+		if (vjSystem::abs(diff - avg) > avg * discrep) {
 		    out << "    " << diff << " us at time "
 			<< buffer[i-1].ts << " us\n";
 		}
@@ -267,20 +267,20 @@ void vjPerfDataBuffer::writeTotal(std::ostream& out, int preskip, int postskip, 
 	else { /* wraparound */
 	    for (i = begin+1; i < numbufs; i++) {
 		diff = buffer[i].ts - buffer[i-1].ts;
-		if (vjSystem::fabs(diff - avg) > avg * discrep) {
+		if (vjSystem::abs(diff - avg) > avg * discrep) {
 		    out << "    " << diff << " us at time "
 			<< buffer[i-1].ts << " us\n";
 
 		}
 	    }
 	    diff = buffer[0].ts - buffer[numbufs].ts;
-	    if (vjSystem::fabs(diff - avg) > avg * discrep) {
+	    if (vjSystem::abs(diff - avg) > avg * discrep) {
 		out << "    " << diff << " us at time "
 		    << buffer[numbufs].ts << " us\n";
 	    }
 	    for (i = 1; i < end; i++) {
 		diff = buffer[i].ts - buffer[i-1].ts;
-		if (vjSystem::fabs(diff - avg) > avg * discrep) {
+		if (vjSystem::abs(diff - avg) > avg * discrep) {
 		    out << "    " << diff << " us at time "
 			<< buffer[i-1].ts << " us\n";
 		}

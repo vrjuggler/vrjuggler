@@ -252,10 +252,10 @@ namespace kev
       
 private:
       // util func
-      void output( KeyFramer::Key& key )
-      {
-         printf( "KEY %f: %4.1f, \t%4.1f, \t%4.1f, |#| %4.1f, %4.1f, %4.1f, %4.1f\n", key.time(), key.position()[0], key.position()[1], key.position()[2], key.rotation()[0], key.rotation()[1], key.rotation()[2], key.rotation()[3] );
-      }
+      //void output( KeyFramer::Key& key )
+      //{
+      //   printf( "KEY %f: %4.1f, \t%4.1f, \t%4.1f, |#| %4.1f, %4.1f, %4.1f, %4.1f\n", key.time(), key.position()[0], key.position()[1], key.position()[2], key.rotation()[0], key.rotation()[1], key.rotation()[2], key.rotation()[3] );
+      //}
 public:
 
       //: jump to arbitrary time
@@ -304,7 +304,7 @@ public:
          float time_needed( timeNeeded );
          assert( (time_needed >= keyTwo.time() && time_needed <= keyOne.time()) ||
                  (time_needed >= keyOne.time() && time_needed <= keyTwo.time()) && "time_needed need to be in between the two times" );
-         float size = vjSystem::fabs( keyTwo.time() - keyOne.time() );
+         float size = vjSystem::abs( keyTwo.time() - keyOne.time() );
 
          // degenerate case where you're interpolating between two keys of the same size..
          if (size <= 0.00001f)

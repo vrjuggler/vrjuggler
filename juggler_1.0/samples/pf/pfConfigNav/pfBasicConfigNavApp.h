@@ -73,8 +73,6 @@ public:
      mCurrentConfig = NULL;
    }
 
-   bool configApp(vjConfigChunk* chunk);
-
 public:     // RECONFIG STUFF
    virtual bool configCanHandle(vjConfigChunk* chunk)
    {
@@ -104,11 +102,7 @@ public:     // RECONFIG STUFF
 
 protected:
    //! NOTE: Inherited from vjConfigChunkHandler
-   virtual bool configAdd(vjConfigChunk* chunk)
-   {
-      configApp(chunk);
-      return true;
-   }
+   virtual bool configAdd(vjConfigChunk* chunk);
 
    //! NOTE: INherited from vjConfigChunkHandler
    virtual bool configRemove(vjConfigChunk* chunk)
@@ -122,7 +116,7 @@ protected:
 // XXX: Smart update
 // Set the properties
 // Load with new settings
-bool pfBasicConfigNavApp::configApp(vjConfigChunk* chunk)
+bool pfBasicConfigNavApp::configAdd( vjConfigChunk* chunk )
 {
    int x;
 
@@ -149,6 +143,7 @@ bool pfBasicConfigNavApp::configApp(vjConfigChunk* chunk)
    else
    {
       this->keyFramer().stop();
+      this->keyFramer().rewind();
    }   
    this->keyFramer().loop( (int)chunk->getProperty( "animation_loops" ) );
    ////////////////////////////

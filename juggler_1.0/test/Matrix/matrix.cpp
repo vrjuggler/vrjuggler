@@ -514,7 +514,7 @@ bool compareMats(vjMatrix mat1, vjMatrix mat2, vjMatrix& difMat)
       float* mat;
       mat = diff_mat.getFloatPtr();    // Get the matrix
 
-      while( (vjSystem::fabs(mat[i]) < 1e-5) && (i<16) )
+      while( (vjSystem::abs(mat[i]) < 1e-5) && (i<16) )
       {
          i++;
       }

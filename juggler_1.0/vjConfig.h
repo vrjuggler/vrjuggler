@@ -112,8 +112,8 @@ inline void VJ_LERP( float& result, const float& lerp, const float& a,
 #define VJ_EPS 1e-8
 #define VJ_DEG2RAD(x) (x * 0.01745329252f) /* M_PI / 180.0 */
 #define VJ_RAD2DEG(x) (x * 57.2957795131f) /* 180.0 / M_PI */
-#define VJ_ZERO_CLAMP(x) ((vjSystem::fabs(x) < VJ_EPS)? 0.0f : x)
-#define VJ_IS_ZERO(x) (vjSystem::fabs(x) < VJ_EPS)
+#define VJ_ZERO_CLAMP(x) ((vjSystem::abs(x) < VJ_EPS)? 0.0f : x)
+#define VJ_IS_ZERO(x) (vjSystem::abs(x) < VJ_EPS)
 #define VJ_CLAMP(x,y) ((x>y)? y : x)
 #define VJ_MIN2(x,y) ((x>y)? y : x)
 #define VJ_MIN3(x,y,z) VJ_MIN2(VJ_MIN2(x,y),z)
