@@ -33,28 +33,37 @@
 #ifndef _GADGET_KEYBOARD_OSX_H_
 #define _GADGET_KEYBOARD_OSX_H_
 
-#include <gadget/gadgetConfig.h>
+#include <Carbon/Carbon.h>
 
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Keyboard.h>
-#include <vpr/Sync/Mutex.h>
-#include <Carbon/Carbon.h>
 #include <jccl/Config/ConfigChunkPtr.h>
-
+#include <gadget/gadgetConfig.h>
 
 namespace gadget
 {
 
+// Call back function to register with the carbon event loop.  The userData
+// argument contains a reference to the instance of the KeyboardOSX class that
+// registered to receive the event for its window
+
+
+pascal OSStatus keyboardHandlerOSX ( EventHandlerCallRef  nextHandler,
+                                     EventRef             theEvent, 
+                                     void*                userData);
+
 //---------------------------------------------------------------
-//: XWin Keyboard class
+//: OSX Keyboard class
 // Converts keyboard input into simulated input devices
 //
 // This device is a source of keyboard events.  The device should not be
 // used directly, it should be referenced through proxies.
 //
+// Change to reflect the removal of the mouse lock on every button press
+//
 // Mouse Locking:
-//    This device recieves input from the XWindows display.  As such,
-//  the xwindow must have focus to generate events.  In order to help
+//    This device receives input from the carbon event loop.  As such,
+//  the window must have focus to generate events.  In order to help
 //  users keep the window in focus, there are two cases where the
 //  driver will "lock" the mouse to the window, thus preventing loss of focus.
 //  CASE 1: The user holds down any key. (ie. a,b, ctrl, shift, etc)
@@ -71,28 +80,31 @@ public:
    // Lock_LockKey - The mouse is locked due to lock toggle key press
    // Lock_LockKeyDown - The mouse is locked due to a key being held down
    enum lockState { Unlocked, Lock_LockKey, Lock_KeyDown};
+
    KeyboardOSX()
    {
-      mPrevX = 0; mPrevY = 0;
-      mLockState = Unlocked;     // Initialize to unlocked.
-      mExitFlag = false;
-      mWeOwnTheWindow = true;
-      OSXSystemFactory::instance();
+        mLockState = Unlocked;     // Initialize to unlocked.
+        //Sampling has not been called yet
+        mAmSampling = false;
+        //mExitFlag = false;
+        mHandleEventsHasBeenCalled = false;      // Initialize it to not being called yet
+        //mWeOwnTheWindow = true;
+        //mShared = false;                         // False by default
    }
+   
    ~KeyboardOSX() { stopSampling();}
 
    virtual bool config(jccl::ConfigChunkPtr c);
 
-   // Main thread of control for this active object
-   void controlLoop(void* nullParam);
-
-   /* Pure Virtuals required by Input */
+   // Pure Virtuals required by Input //
    int startSampling();
    int stopSampling();
+   
 
-   // process the current x-events
-   // Called repetatively by the controlLoop
-   int sample() { HandleEvents(); return 1; }
+ 
+   // Do nothing the events are handled by call backs from the
+   // Carbon event manager
+   int sample() { return 1; }
    void updateData();
 
    static std::string getChunkType() { return std::string("Keyboard");}
@@ -109,39 +121,48 @@ public:
 
    virtual bool modifierOnly(int modKey)
    { return onlyModifier(modKey); }
+   
+   // Called by callback function
+   // processes the event
+   pascal OSStatus gotKeyEvent (  EventHandlerCallRef  nextHandler,
+                                  EventRef             theEvent, 
+                                  void*                userData);
 
 protected:
-
-
+   //: Do any extra event processing needed
 private:
-   /* Private functions for processing input data */
+   // Private functions for processing input data //
    int onlyModifier(int);
 
-   //: Handle any events in the system
-   // Copies m_keys to m_curKeys
-   void HandleEvents();
+   // OSX utility functions //
+   //: Convert OSXKey to VjKey
+   //! NOTE: Keypad keys are transformed ONLY to number keys
+   int osxKeyToKey( UInt32 osxKey );
 
-   // Open the Carbon window to sample from
+   // Open the carbon window to get events from
    int openTheWindow();
 
    //: Perform anything that must be done when state switches
    void lockMouse();
    void unlockMouse();
-
-   int OSXKeyToKey(int xKey);
+   
+   
 
 protected:
-   bool         mWeOwnTheWindow;       // True if this class owns the window (is reposible for opening and closing)
+  // bool         mWeOwnTheWindow;       // True if this class owns the window (is reposible for opening and closing)
                                        // NOTE: In a case where it does not, then the window vars must be set prior
                                        //    to starting the controlLoop (startSampling)
-   int          m_x, m_y;    // x_origin, y_origin
+   bool           mShared;   // True if the window is shared between multiple processes
+//   vpr::Mutex     mXfuncLock;      // Lock for exclusive access to x functions.  Must be held if mshared==true
+
+//   ::Window       m_window;
+//   ::XVisualInfo* m_visual;
+//   ::Display*     m_display;
+//   ::XSetWindowAttributes m_swa;
+   int          m_screen, m_x, m_y;    // screen id, x_origin, y_origin
    unsigned int m_width,m_height;
 
-   Rect             rectWin;
-   WindowPtr            gpWindow;
-   CFStringRef          window_title;
-
-   /* Keyboard state holders */
+   // Keyboard state holders //
    // NOTE: This driver does not use the normal triple buffering mechanism.
    // Instead, it just uses a modified double buffering system.
    int      m_keys[256];         // (0,*): The num key presses during an UpdateData (ie. How many keypress events)
@@ -150,120 +171,96 @@ protected:
    vpr::Mutex  mKeysLock;           // Must hold this lock when accessing m_keys OR mHandleEventsHasBeenCalled
    bool     mHandleEventsHasBeenCalled;  // This flag keeps track of wether or not HandleEvents has been called since the last updateData.
                                     // It is used by updateData to make sure we don't get a "blank" update where no keys are pressed.
-   bool     mExitFlag;           // Should we exit
+   //bool     mExitFlag;           // Should we exit
 
    lockState   mLockState;       // The current state of locking
    int         mLockStoredKey;   // The key that was pressed down
    int         mLockToggleKey;   // The key that toggles the locking
 
+   //std::string mXDisplayString;   // The display string to use from systemDisplay config info
+
    float m_mouse_sensitivity;
-   int   mSleepTimeMS;            // Amount of time to sleep in milliseconds between updates
-   int   mPrevX, mPrevY;          // Previous mouse location
-   int   mSnapTimer;
+   //int   mSleepTimeMS;            // Amount of time to sleep in milliseconds between updates
+   //int   mPrevX, mPrevY;          // Previous mouse location
+   bool	 mAmSampling;
+   WindowRef mWindow;		    // The carbon window
 };
 
-enum OSXKeyMap {
-    OSX_KEY_X = 0,
-    OSX_KEY_Z = 1,
-    OSX_KEY_G = 2,
-    OSX_KEY_H = 3,
-    OSX_KEY_F = 4,
-    OSX_KEY_D = 5,
-    OSX_KEY_S = 6,
-    OSX_KEY_A = 7,
-    OSX_KEY_R = 8,
-    OSX_KEY_E = 9,
-    OSX_KEY_W = 10,
-    OSX_KEY_Q = 11,
-    OSX_KEY_B = 12,
-    OSX_KEY_V = 14,
-    OSX_KEY_C = 15,
-    OSX_KEY_5 = 16,
-    OSX_KEY_6 = 17,
-    OSX_KEY_4 = 18,
-    OSX_KEY_3 = 19,
-    OSX_KEY_2 = 20,
-    OSX_KEY_1 = 21,
-    OSX_KEY_T = 22,
-    OSX_KEY_Y = 23,
-    OSX_KEY_O = 24,
-    OSX_KEY_BRACE_LEFT = 25,
-    OSX_KEY_0 = 26,
-    OSX_KEY_8 = 27,
-    OSX_KEY_MINUS = 28,
-    OSX_KEY_7 = 29,
-    OSX_KEY_9 = 30,
-    OSX_KEY_PLUS = 31,
-    OSX_KEY_QUOTE = 32,
-    OSX_KEY_J = 33,
-    OSX_KEY_L = 34,
-    OSX_KEY_RETURN = 35,
-    OSX_KEY_P = 36,
-    OSX_KEY_I = 37,
-    OSX_KEY_BRACE_RIGHT = 38,
-    OSX_KEY_U = 39,
-    OSX_KEY_GREATER_THAN = 40,
-    OSX_KEY_M = 41,
-    OSX_KEY_N = 42,
-    OSX_KEY_QUESTION_MARK = 43,
-    OSX_KEY_LESS_THAN = 44,
-    OSX_KEY_FORWARD_SLASH = 45,
-    OSX_KEY_SEMI_COLLEN = 46,
-    OSX_KEY_K = 47,
-    OSX_KEY_COMMAND = 48,
-    OSX_KEY_ESCAPE = 50,
-    OSX_KEY_BACKSPACE = 52,
-    OSX_KEY_TILDE = 53,
-    OSX_KEY_SPACE = 54,
-    OSX_KEY_TAB = 55,
-    OSX_KEY_CONTROL = 60,
-    OSX_KEY_OPTION = 61,
-    OSX_KEY_CAPS = 62,
-    OSX_KEY_SHIFT = 63,
-    OSX_KEYPAD_CLEAR = 64,
-    OSX_KEYPAD_PLUS = 66,
-    OSX_KEYPAD_MULT = 68,
-    OSX_KEYPAD_DECIMAL = 70,
-    OSX_KEYPAD_MINUS = 73,
-    OSX_KEYPAD_ENTER = 75,
-    OSX_KEYPAD_DIVIDE = 76,
-    OSX_KEYPAD_5 = 80,
-    OSX_KEYPAD_4 = 81,
-    OSX_KEYPAD_3 = 82,
-    OSX_KEYPAD_2 = 83,
-    OSX_KEYPAD_1 = 84,
-    OSX_KEYPAD_0 = 85,
-    OSX_KEYPAD_EQUAL = 86,
-    OSX_KEYPAD_9 = 91,
-    OSX_KEYPAD_8 = 92,
-    OSX_KEYPAD_7 = 94,
-    OSX_KEYPAD_6 = 95,
-    OSX_KEY_F9 = 98,
-    OSX_KEY_F8 = 99,
-    OSX_KEY_F3 = 100,
-    OSX_KEY_F7 = 101,
-    OSX_KEY_F6 = 102,
-    OSX_KEY_F5 = 103,
-    OSX_KEY_F12 = 104,
-    OSX_KEY_F10 = 106,
-    OSX_KEY_F14 = 108,
-    OSX_KEY_F13 = 110,
-    OSX_KEY_END = 112,
-    OSX_KEY_F4 = 113,
-    OSX_KEY_DEL = 114,
-    OSX_KEY_PAGEUP = 115,
-    OSX_KEY_HOME = 116,
-    OSX_KEY_HELP = 117,
-    OSX_KEY_F15 = 118,
-    OSX_KEY_UP = 121,
-    OSX_KEY_DOWN = 122,
-    OSX_KEY_RIGHT = 123,
-    OSX_KEY_LEFT = 124,
-    OSX_KEY_F1 = 125,
-    OSX_KEY_PAGEDOWN = 126,
-    OSX_KEY_F2 = 127
-   };
+
+// Note we are using the key code.
+// This might break on international keyboards
+
+enum OSXKeyMap
+{
+    OSXK_a = 0,
+    OSXK_b = 11,
+    OSXK_c = 8,
+    OSXK_d = 2,
+    OSXK_e = 14,
+    OSXK_f = 3,
+    OSXK_g = 5,
+    OSXK_h = 4,
+    OSXK_i = 34,
+    OSXK_j = 38,
+    OSXK_k = 40,
+    OSXK_l = 37,
+    OSXK_m = 46,
+    OSXK_n = 45,
+    OSXK_o = 31,
+    OSXK_p = 35,
+    OSXK_q = 12,
+    OSXK_r = 15,
+    OSXK_s = 1,
+    OSXK_t = 17,
+    OSXK_u = 32,
+    OSXK_v = 9,
+    OSXK_w = 13,
+    OSXK_x = 7,
+    OSXK_y = 16,
+    OSXK_z = 6,
+    
+    OSXK_1 = 18,
+    OSXK_2 = 19,
+    OSXK_3 = 20,
+    OSXK_4 = 21,
+    OSXK_5 = 23,
+    OSXK_6 = 22,
+    OSXK_7 = 26,
+    OSXK_8 = 28,
+    OSXK_9 = 25,
+    OSXK_0 = 29,
+    
+    OSXK_KP_1 = 83,
+    OSXK_KP_2 = 84,
+    OSXK_KP_3 = 85,
+    OSXK_KP_4 = 86,
+    OSXK_KP_5 = 87,
+    OSXK_KP_6 = 88,
+    OSXK_KP_7 = 89,
+    OSXK_KP_8 = 91,
+    OSXK_KP_9 = 92,
+    OSXK_KP_0 = 82,
+
+    OSXK_Return = 36,
+    OSXK_Enter = 76,
+    OSXK_NumLock = 71,
+    OSXK_Help = 114,
+    OSXK_Del = 117,
+    OSXK_Home = 115,
+    OSXK_End = 119,
+    OSXK_Page_Up = 116,
+    OSXK_Page_Down = 121,
+    OSXK_Ecs = 53,
+    
+    OSXK_Up = 126,
+    OSXK_Down = 125,
+    OSXK_Left = 123,
+    OSXK_Right = 124
+
 
 };
+
+
+}; // end namespace
 
 #endif
