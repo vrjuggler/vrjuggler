@@ -82,6 +82,12 @@ public class ChunkDescEventTest
       cat_elt.setText("TestCategory");
       elt.addContent(cat_elt);
 
+      Element prop_elt = new Element(ConfigTokens.property_desc_TOKEN);
+      prop_elt.setAttribute(ConfigTokens.name_TOKEN, "TestPropertyDesc");
+      prop_elt.setAttribute(ConfigTokens.token_TOKEN, "test_prop_desc");
+      prop_elt.setAttribute(ConfigTokens.type_TOKEN, ConfigTokens.string_TOKEN);
+      elt.addContent(prop_elt);
+
       // Create the chunk desc and its listener
       mListener = new ChangeListener();
       mDesc = new ChunkDesc(elt);
@@ -149,7 +155,36 @@ public class ChunkDescEventTest
       assertEquals(mListener.getEvent().getValue(), "TestCategory");
    }
 
+   /**
+    * Test property desc changed.
+    */
+   public void testPropertyDescChanged()
+   {
+      mDesc.getPropertyDesc("test_prop_desc").setToken("yo");
+      assertTrue(mListener.wasFired(PROPERTY_DESC_CHANGED));
+   }
 
+   /**
+    * Test property desc added.
+    */
+   public void testPropertyDescAdded()
+   {
+      PropertyDesc prop_desc = new PropertyDesc();
+      prop_desc.setName("New Prop");
+      prop_desc.setToken("new_prop");
+      prop_desc.setValType(ValType.STRING);
+      mDesc.addPropertyDesc(prop_desc);
+      assertTrue(mListener.wasFired(PROPERTY_DESC_ADDED));
+   }
+
+   /**
+    * Test property desc removed.
+    */
+   public void testPropertyDescRemoved()
+   {
+      mDesc.removePropertyDesc(mDesc.getPropertyDesc(0));
+      assertTrue(mListener.wasFired(PROPERTY_DESC_REMOVED));
+   }
 
    private ChangeListener mListener;
    private ChunkDesc mDesc;
