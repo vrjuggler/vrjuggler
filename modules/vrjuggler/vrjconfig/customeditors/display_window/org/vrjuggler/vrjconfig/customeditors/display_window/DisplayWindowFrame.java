@@ -50,6 +50,7 @@ import org.vrjuggler.vrjconfig.commoneditors.placer.PlacerSelectionListener;
 public class DisplayWindowFrame
    extends JugglerWindowFrame
    implements PlacerSelectionListener
+            , EditorConstants
 {
    private static Cursor mInverseCursor;
 
@@ -67,13 +68,13 @@ public class DisplayWindowFrame
       Toolkit tk = Toolkit.getDefaultToolkit();
       ClassLoader loader = DisplayWindowFrame.class.getClassLoader();
       Image cursor_img =
-         new ImageIcon(loader.getResource(EditorConstants.imageBase + "/inverse-cursor.png")).getImage();
+         new ImageIcon(loader.getResource(IMAGE_BASE + "/inverse-cursor.png")).getImage();
       mInverseCursor = tk.createCustomCursor(cursor_img, new Point(8, 6),
                                              "inverse");
 
       ConfigBrokerProxy broker = new ConfigBrokerProxy();
       ConfigDefinition vp_def =
-         broker.getRepository().get(EditorConstants.surfaceViewportType);
+         broker.getRepository().get(SURFACE_VIEWPORT_TYPE);
       java.util.Map views = vp_def.getPropertyDefinition("view").getEnums();
 
       LEFT_EYE  = ((Integer) views.get("Left Eye")).intValue();
@@ -190,6 +191,7 @@ public class DisplayWindowFrame
 
    private void jbInit() throws Exception
    {
+      this.getContentPane().setLayout(mMainLayout);
       mWinPropsItem.setText("Display Window Properties ...");
       mWinPropsItem.addActionListener(new DisplayWindowFrame_mWinPropsItem_actionAdapter(this));
       mWinActiveItem.setText("Is window active?");
@@ -250,13 +252,13 @@ public class DisplayWindowFrame
       mWinStereoItem.setSelected(stereo);
    }
 
-
    private DisplayWindowFrame_this_configElementAdapter mElementListener = null;
    private boolean mHideMouse = false;
 //   private boolean mMousePressed = false;
    private ViewportPlacer mViewportEditor = null;
    private ConfigElement mSelectedViewport = null;
 
+   private BorderLayout mMainLayout = new BorderLayout();
    private JPopupMenu mContextMenu = new JPopupMenu();
    private JMenuItem mWinPropsItem = new JMenuItem();
    private JCheckBoxMenuItem mWinActiveItem = new JCheckBoxMenuItem();
@@ -325,12 +327,12 @@ public class DisplayWindowFrame
          mElement.setProperty("stereo", 0, dlg.inStereo(), mContext);
          mElement.setProperty("border", 0, dlg.hasBorder(), mContext);
 
-         mElement.setProperty(EditorConstants.lockKeyProperty, 0,
-                              dlg.getLockKey(), mContext);
-         mElement.setProperty(EditorConstants.startLockedProperty, 0,
+         mElement.setProperty(LOCK_KEY_PROPERTY, 0, dlg.getLockKey(),
+                              mContext);
+         mElement.setProperty(START_LOCKED_PROPERTY, 0,
                               dlg.shouldStartLocked(), mContext);
-         mElement.setProperty(EditorConstants.sleepTimeProperty, 0,
-                              dlg.getSleepTime(), mContext);
+         mElement.setProperty(SLEEP_TIME_PROPERTY, 0, dlg.getSleepTime(),
+                              mContext);
       }
    }
 
@@ -375,7 +377,7 @@ public class DisplayWindowFrame
       int status;
       float origin_x = 0.0f, origin_y = 0.0f, width = 0.0f, height = 0.0f;
 
-      if ( mSelectedViewport.getDefinition().getToken().equals(EditorConstants.surfaceViewportType) )
+      if ( mSelectedViewport.getDefinition().getToken().equals(SURFACE_VIEWPORT_TYPE) )
       {
          Container parent =
             (Container) SwingUtilities.getAncestorOfClass(Container.class,
@@ -529,7 +531,7 @@ public class DisplayWindowFrame
    void viewportRemoveItemSelected(ActionEvent e)
    {
       String prop;
-      if ( mSelectedViewport.getDefinition().getToken().equals(EditorConstants.surfaceViewportType) )
+      if ( mSelectedViewport.getDefinition().getToken().equals(SURFACE_VIEWPORT_TYPE) )
       {
          prop = "surface_viewports";
       }

@@ -55,6 +55,7 @@ import org.vrjuggler.vrjconfig.commoneditors.placer.*;
  */
 public class ViewportPlacer
    extends JPanel
+   implements EditorConstants
 {
    public ViewportPlacer(Dimension desktopSize, ConfigContext ctx,
                          ConfigElement elt)
@@ -145,10 +146,10 @@ public class ViewportPlacer
       {
          ClassLoader loader = getClass().getClassLoader();
          surfaceIcon =
-            new ImageIcon(loader.getResource(EditorConstants.imageBase +
+            new ImageIcon(loader.getResource(IMAGE_BASE +
                                              "/vrjuggler-surface-viewport.png"));
          simIcon =
-            new ImageIcon(loader.getResource(EditorConstants.imageBase +
+            new ImageIcon(loader.getResource(IMAGE_BASE +
                                              "/vrjuggler-sim-viewport.png"));
          scaledSurfaceIcon = new ImageIcon();
          scaledSimIcon     = new ImageIcon();
@@ -187,7 +188,7 @@ public class ViewportPlacer
             ImageIcon icon, scaled_icon;
 
             // XXX: Come up with a cleaner way to do this.
-            if ( ((ConfigElement) placer.getModel().getElement(index)).getDefinition().getToken().equals(EditorConstants.surfaceViewportType) )
+            if ( ((ConfigElement) placer.getModel().getElement(index)).getDefinition().getToken().equals(SURFACE_VIEWPORT_TYPE) )
             {
                icon = surfaceIcon;
                scaled_icon = scaledSurfaceIcon;
