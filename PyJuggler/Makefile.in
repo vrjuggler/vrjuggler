@@ -13,6 +13,7 @@ datadir=	@datadir@
 prefix=		@prefix@
 projdatadir=	$(datadir)/pyjuggler
 scriptdir=	$(top_srcdir)/release/scripts
+srcdir=		@srcdir@
 topdir=		@topdir@
 top_srcdir=	@top_srcdir@
 
@@ -20,7 +21,7 @@ EXEC_PERMS=	@EXEC_PERMS@
 MAKEFLAGS+=	--no-print-directory
 MKINSTALLDIRS=	$(scriptdir)/mkinstalldirs
 PERL=		@PERL@
-PYDOC=		@PYDOC@
+PYTHON=		@PYTHON@
 
 pythonpath=	lib/python@PYTHON_VERSION@/site-packages
 
@@ -44,20 +45,7 @@ all debug optim:
 	$(MAKE) prefix="$(topdir)" RECTARGET="install" recursive
 
 docs:
-ifneq ($(PYDOC), no)
-	PYTHONPATH=$(pythonpath) $(PYDOC) -w __builtin__
-	PYTHONPATH=$(pythonpath) $(PYDOC) -w PyJuggler
-	PYTHONPATH=$(pythonpath) $(PYDOC) -w PyJuggler.vpr
-	PYTHONPATH=$(pythonpath) $(PYDOC) -w PyJuggler.jccl
-	PYTHONPATH=$(pythonpath) $(PYDOC) -w PyJuggler.snx
-	PYTHONPATH=$(pythonpath) $(PYDOC) -w PyJuggler.gadget
-	PYTHONPATH=$(pythonpath) $(PYDOC) -w PyJuggler.cluster
-	PYTHONPATH=$(pythonpath) $(PYDOC) -w PyJuggler.vrj
-	PYTHONPATH=$(pythonpath) $(PYDOC) -w PyJuggler.__vrj
-ifeq (@HAVE_OSG@, Y)
-	PYTHONPATH=$(pythonpath) $(PYDOC) -w PyJuggler.__osgapp
-endif
-endif
+	PYTHONPATH=$(pythonpath) $(PYTHON) $(srcdir)/gen-docs.py
 
 # XXX: The chmod thing at the end is pretty lame.
 install:
