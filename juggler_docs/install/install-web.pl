@@ -598,10 +598,13 @@ sub create_script($)
 
    ## Create the script file ####
    print OUTFILE "#! perl\n";
+   print OUTFILE "\# Options:  -a     recompile everything\n";
+   print OUTFILE "\#           -n     don't run netscape after compile\n";
+   print OUTFILE "\n";
+   print OUTFILE "\n";
    print OUTFILE "require 5.004;\n";
-   print OUTFILE "\n";
-   print OUTFILE "\n";
    print OUTFILE "use Getopt::Std;\n";
+   print OUTFILE "\n";
    print OUTFILE "\ngetopt('');\n";
 
    print OUTFILE "my \$src_dir = \"$src_dir\";\n";
@@ -624,16 +627,18 @@ sub create_script($)
    print OUTFILE "\$command .= \" -w \$subst_file\";\n";
    print OUTFILE "\$command .= \" -z use.last.build.pl\";\n";
    print OUTFILE "if(\$opt_a == 1)\n{\n";
-   print OUTFILE "\$command .= \" -a\";\n}";
+   print OUTFILE "    \$command .= \" -a\";\n}";
    print OUTFILE "\n\n";
 
    print OUTFILE "print \"\$command\\n\\n\\n\\n----------------\\n\\n\";\n";
    print OUTFILE "system(\"\$command\");\n";
 
    ## Netscape executing command ##
-   print OUTFILE "my \$netscape_command = \"netscape \" . \$html_install_prefix . \"index.html &\";\n";
-   print OUTFILE "print \"\$netscape_command\\n\";\n";
-   print OUTFILE "system(\"\$netscape_command\");\n";
-
+   print OUTFILE "if(\$opt_n == 0)\n";
+   print OUTFILE "{\n";
+   print OUTFILE "    my \$netscape_command = \"netscape \" . \$html_install_prefix . \"index.html &\";\n";
+   print OUTFILE "    print \"\$netscape_command\\n\";\n";
+   print OUTFILE "    system(\"\$netscape_command\");\n";
+   print OUTFILE "}\n";
    close(OUTFILE) or warn "WARNING: Cannot close $filename: $!\n";
 }

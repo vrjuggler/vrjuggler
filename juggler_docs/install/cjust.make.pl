@@ -1,4 +1,7 @@
 #!/home/freeware/bin/perl
+# Options:  -a     recompile everything
+#           -n     don't run netscape after compile
+
 require 5.004;
 
 
@@ -18,7 +21,7 @@ my $subst_file = "subst.pl";
 my $command = "install-web.pl ";
 $command .= " -s $src_dir";
 $command .= " -t $dest_dir";
-$command .= " -i __deleteme,JExplorer,install,CVS";
+$command .= " -i __deleteme,install,CVS,ver1.05,ver1.08,bak";
 $command .= " -c $css_filename";
 $command .= " -f $html_header_filename";
 $command .= " -f $html_footer_filename";
@@ -32,6 +35,9 @@ $command .= " -a";
 
 print "$command\n\n\n\n----------------\n\n";
 system("$command");
-my $netscape_command = "netscape " . $html_install_prefix . "index.html &";
-print "$netscape_command\n";
-system("$netscape_command");
+if($opt_n == 0)
+{
+    my $netscape_command = "netscape " . $html_install_prefix . "index.html &";
+    print "$netscape_command\n";
+    system("$netscape_command");
+}

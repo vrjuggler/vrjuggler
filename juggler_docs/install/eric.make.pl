@@ -1,4 +1,7 @@
 #!/home/freeware/bin/perl
+# Options:  -a     recompile everything
+#           -n     don't run netscape after compile
+
 require 5.004;
 
 
@@ -30,8 +33,11 @@ if($opt_a == 1)
 $command .= " -a";
 }
 
-print "$command\n\n\n\n-------------\n\n";
+print "$command\n\n\n\n----------------\n\n";
 system("$command");
-my $netscape_command = "netscape " . $html_install_prefix . "index.html &";
-print "$netscape_command\n";
-system("$netscape_command");
+if($opt_n == 0)
+{
+    my $netscape_command = "netscape " . $html_install_prefix . "index.html &";
+    print "$netscape_command\n";
+    system("$netscape_command");
+}

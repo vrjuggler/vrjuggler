@@ -213,8 +213,8 @@ sub installFile ($$$$$$) {
     umask(002);
     mkpath("$dest_dir", 0, 0755) or "mkpath: $!\n";
     copy("$filename", "$dest_dir") or "copy: $!\n";
-    chown($uid, $gid, "$dest_dir/$filename") or die "DIE: chown: $dest_dir/$filename: $!\n";
-    chmod(oct($mode), "$dest_dir/$filename") or die "DIE: chmod: $dest_dir/$filename: $!\n";
+    #chown($uid, $gid, "$dest_dir/$filename") or die "DIE: chown: $dest_dir/$filename: $!\n";
+    #chmod(oct($mode), "$dest_dir/$filename") or die "DIE: chmod: $dest_dir/$filename: $!\n";
 }
 
 # -----------------------------------------------------------------------------
