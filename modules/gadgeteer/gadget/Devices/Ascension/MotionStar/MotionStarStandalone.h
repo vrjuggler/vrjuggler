@@ -44,6 +44,8 @@
 #include <time.h>
 
 
+namespace BIRDNET {
+
 // BIRDNET command/response codes.
 const unsigned char MSG_WAKE_UP        = 10;
 const unsigned char RSP_WAKE_UP        = 20;
@@ -142,6 +144,9 @@ struct DATAPACKET {
     struct HEADER	header;
     unsigned char	buffer[2048];
 };
+
+};	// namspace BIRDNET
+
 
 class aMotionStar {
 public:
@@ -810,10 +815,10 @@ private:
     unsigned char           ertFlag;
     unsigned char           buttonState;
 
-    struct BIRD_STATUS Bird[120];
-    struct HEADER command, *lpCommand;
-    struct RSP_GET_STATUS_all RspGetStatAll, *lpRspGetStatAll;
-    struct DATAPACKET response, *lpResponse;
+    struct BIRDNET::BIRD_STATUS Bird[120];
+    struct BIRDNET::HEADER command, *lpCommand;
+    struct BIRDNET::RSP_GET_STATUS_all RspGetStatAll, *lpRspGetStatAll;
+    struct BIRDNET::DATAPACKET response, *lpResponse;
     struct sockaddr_in server;
  
     int s,rtn;

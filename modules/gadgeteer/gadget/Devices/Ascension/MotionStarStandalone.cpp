@@ -199,7 +199,7 @@ aMotionStar::start () {
 
   newptr =(char*)(&response);
   lpCommand = &command;
-  lpRspGetStatAll=(struct RSP_GET_STATUS_all*)(newptr);
+  lpRspGetStatAll=(struct BIRDNET::RSP_GET_STATUS_all*)(newptr);
   lpResponse = &response;
   Size = sizeof(server);
   lpSize = &Size;
@@ -257,7 +257,7 @@ aMotionStar::start () {
 void
 aMotionStar::stop () {
     command.sequence = htons(sequenceNumber);
-    command.type     = MSG_STOP_DATA;
+    command.type     = BIRDNET::MSG_STOP_DATA;
     numberBytes      = send(s, (void*) lpCommand, sizeof(command), 0);
 } // end void aMotionStar::stop()
 
@@ -413,7 +413,7 @@ aMotionStar::sendWakeup () {
 //  printf("WAKEUP:");
 
   command.sequence             = htons(sequenceNumber++);
-  command.type                 = MSG_WAKE_UP;
+  command.type                 = BIRDNET::MSG_WAKE_UP;
   command.xtype                = 0;
   command.protocol             = 1;
   command.number_bytes         = 0;
@@ -437,7 +437,7 @@ void
 aMotionStar::runContinuous () {
 //  cout << "runContinous" << endl;
 
-  command.type     = MSG_RUN_CONTINUOUS;
+  command.type     = BIRDNET::MSG_RUN_CONTINUOUS;
   command.xtype    = 0;
   command.sequence = htons(sequenceNumber++);
   n++;
@@ -476,7 +476,7 @@ aMotionStar::runContinuous () {
 void
 aMotionStar::singleShot () {
   /* send a request for a single shot packet */
-  command.type     = MSG_SINGLE_SHOT;
+  command.type     = BIRDNET::MSG_SINGLE_SHOT;
   command.xtype    = 0;
   command.sequence = htons(sequenceNumber++);
   numberBytes = send(s,(void*) lpCommand, sizeof(command), 0);
@@ -500,7 +500,7 @@ aMotionStar::getSystemStatus () {
   int                   headerBytes, dataBytes;
   int                   bytesReceived;
 
-  command.type  = MSG_GET_STATUS;
+  command.type  = BIRDNET::MSG_GET_STATUS;
   command.xtype = 0;
   numberBytes = send(s,(void*) lpCommand, sizeof(command), 0);
 
@@ -607,7 +607,7 @@ aMotionStar::getSystemStatus () {
 void
 aMotionStar::setSystemStatus () {
      int i;
-     response.header.type         = MSG_SEND_SETUP;
+     response.header.type         = BIRDNET::MSG_SEND_SETUP;
      response.header.xtype        = 0;
      response.header.number_bytes = htons(statusSize - 16);
 
@@ -637,7 +637,7 @@ aMotionStar::getBirdStatus (unsigned char fbb_addr) {
   int headerBytes, dataBytes;
   void * lpBuffer;
 
-  command.type         = MSG_GET_STATUS;
+  command.type         = BIRDNET::MSG_GET_STATUS;
   command.xtype        = fbb_addr;
   command.number_bytes = 0;
 
@@ -679,7 +679,7 @@ aMotionStar::getBirdStatus (unsigned char fbb_addr) {
 // ----------------------------------------------------------------------------
 void
 aMotionStar::setBirdStatus (unsigned char fbb_addr) {
-  response.header.type         = MSG_SEND_SETUP;
+  response.header.type         = BIRDNET::MSG_SEND_SETUP;
   response.header.xtype        = fbb_addr;
   response.header.number_bytes = htons(70);
 
