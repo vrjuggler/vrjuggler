@@ -35,7 +35,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <boost/concept_check.hpp>
-#include <cppdom/version.h>
 
 #include <jccl/Util/Debug.h>
 #include <jccl/Config/ConfigTokens.h>
@@ -361,8 +360,11 @@ ConfigElementPtr ConfigElement::getProperty_ElementPtr(const std::string& prop,
       if(!init_status)
       {
          vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-            << "Failed to initialize embedded config element: for prop:"
-            << prop << std::endl << vprDEBUG_FLUSH;
+            << "Failed to initialize embedded config element" << std::endl
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << "(property '" << prop << "')\n" << vprDEBUG_FLUSH;
+
          ret_val = ConfigElementPtr();      // Set to NULL
       }
    }
@@ -552,11 +554,7 @@ cppdom::NodePtr ConfigElement::getPropertyCdataNode(const std::string& prop, int
       {
          cppdom::NodePtr new_cdata_node = ElementFactory::instance()->createXMLNode();
          new_cdata_node->setName("cdata");
-#if CPPDOM_VERSION_MAJOR == 0 && CPPDOM_VERSION_MINOR < 4
-         new_cdata_node->setType(cppdom::xml_nt_cdata);
-#else
          new_cdata_node->setType(cppdom::Node::xml_nt_cdata);
-#endif
          (*property_i)->addChild(new_cdata_node);
          cdata_node = new_cdata_node;
       }
