@@ -70,6 +70,7 @@ APP_NAME='VRJConfig'
 
 . $TWEEK_BASE_DIR/bin/tweek-base.sh \
    --beanpath="$JCCL_BASE_DIR/share/jccl/beans" \
+   --beanpath="$VJ_BASE_DIR/share/vrjuggler/beans" \
    --defaultbean="Configuration Editor" "$@"
 
 exit $status

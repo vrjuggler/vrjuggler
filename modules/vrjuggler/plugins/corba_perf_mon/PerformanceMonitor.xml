@@ -2,14 +2,14 @@
 <beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd">
    <guipanel name="PerformanceMonitor">
-      <file name="${TWEEK_BASE_DIR}/bin/beans/PerformanceMonitor.jar"
+      <file name="${VJ_BASE_DIR}/share/vrjuggler/beans/PerformanceMonitor.jar"
             class="org.vrjuggler.perfmon.PerformanceMonitorGUI"/>
       <dependencies>
          <bean>ConfigBroker</bean>
-         <jar path="${TWEEK_BASE_DIR}/bin">jfreechart.jar</jar>
-         <jar path="${TWEEK_BASE_DIR}/bin">jcommon.jar</jar>
-         <jar path="${TWEEK_BASE_DIR}/bin">servlet.jar</jar>
-         <jar path="${TWEEK_BASE_DIR}/bin">gnujaxp.jar</jar>
+         <jar path="${VJ_BASE_DIR}/share/vrjuggler/java">jfreechart.jar</jar>
+         <jar path="${VJ_BASE_DIR}/share/vrjuggler/java">jcommon.jar</jar>
+         <jar path="${VJ_BASE_DIR}/share/vrjuggler/java">servlet.jar</jar>
+         <jar path="${VJ_BASE_DIR}/share/vrjuggler/java">gnujaxp.jar</jar>
       </dependencies>
       <tree path="/" />
    </guipanel>
