@@ -272,7 +272,7 @@ DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH(0.4.1, , AC_MSG_ERROR(*** VPR required for Plexus***))
+VPR_PATH(0.4.1, , AC_MSG_ERROR(*** VPR required for VR Juggler ***))
 
 # ------------
 # OpenGL API.
