@@ -341,12 +341,24 @@ void CorbaService::addSubjectManagers(const CosNaming::BindingList& bindingList,
                      mgrList.push_back(mgr);
                   }
                }
+               // In the Java equivalent of this method, CORBA::TRANSIENT
+               // exceptions are sometimes thrown by the call to
+               // tweek::SubjectManager::_non_existent() above.  I don't know
+               // if they are also thrown here, but we might as well be safe.
+               catch (CORBA::TRANSIENT ex)
+               {
+                  vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
+                     << "addSubjectManagers(): Caught CORBA::TRANSIENT "
+                     << "exception thrown by _non_existent\n"
+                     << vprDEBUG_FLUSH;
+               }
                // XXX: Figure out what exception(s) can be thrown by
                // CORBA::Object::_non_existent()!
                catch (...)
                {
                   vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
-                     << "addSubjectManagers(): Caught unknown exception from _non_existent\n"
+                     << "addSubjectManagers(): Caught unknown exception "
+                     << "thrown by _non_existent\n"
                      << vprDEBUG_FLUSH;
                }
             }
