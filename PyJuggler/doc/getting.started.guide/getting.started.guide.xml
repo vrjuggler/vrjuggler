@@ -32,8 +32,9 @@
     modules that the Python interpreter can load at runtime just as it would
     any other Python module. There are several Python modules, each
     corresponding to one of the software modules that comprise the larger
-    Juggler framework. For example, the module <classname>PyJuggler.gadget</classname>
-    contains bindings for the Gadgeteer C++ library.</para>
+    Juggler framework. For example, the module
+    <classname>PyJuggler.gadget</classname> contains bindings for the
+    Gadgeteer C++ library.</para>
   </preface>
 
   <chapter>
@@ -57,7 +58,8 @@
         </listitem>
 
         <listitem>
-          <para><ulink url="http://www.boost.org/libs/python/doc/">Boost.Python</ulink>:
+          <para><ulink
+          url="http://www.boost.org/libs/python/doc/">Boost.Python</ulink>:
           The high-level glue between C++ and Python code. PyJuggler requires
           Boost.Python v2 or newer. The version of Boost.Python used should
           come from the Boost same version against which VR Juggler was
@@ -65,12 +67,13 @@
         </listitem>
 
         <listitem>
-          <para><ulink url="http://pyopengl.sourceforge.net/">PyOpenGL</ulink>:
-          Python bindings for the OpenGL graphics API. As of this writing,
-          PyJuggler has only been tested with OpenGL-based VR Juggler
-          applications. These applications use PyOpenGL to make calls into the
-          natively compiled OpenGL libraries on the local system. We have
-          tested with PyOpenGL 2.0.</para>
+          <para><ulink
+          url="http://pyopengl.sourceforge.net/">PyOpenGL</ulink>: Python
+          bindings for the OpenGL graphics API. As of this writing, PyJuggler
+          has only been tested with OpenGL-based VR Juggler applications.
+          These applications use PyOpenGL to make calls into the natively
+          compiled OpenGL libraries on the local system. We have tested with
+          PyOpenGL 2.0.</para>
         </listitem>
 
         <listitem>
@@ -100,12 +103,13 @@
       <title>Downloading</title>
 
       <para>PyJuggler is distributed from the VR Juggler SourceForge.net
-      <ulink url="http://www.sourceforge.net/projects/vrjuggler/">project site</ulink>.
-      Because PyJuggler is still in the developmental stages, it is
-      recommended that users keep up to date with the latest version at all
+      <ulink url="http://www.sourceforge.net/projects/vrjuggler/">project
+      site</ulink>. Because PyJuggler is still in the developmental stages, it
+      is recommended that users keep up to date with the latest version at all
       times. PyJuggler will always keep up to date with the VR Juggler API,
       and because it provides a one-to-one mapping of C++ to Python, the API
-      will be identical except for slight differences based on Python syntax.</para>
+      will be identical except for slight differences based on Python
+      syntax.</para>
 
       <para>PyJuggler is an open source software library, and as such, its
       source code is available. Users are free to download the source, look at
@@ -115,7 +119,7 @@
       application objects in Python. As such, the source is provided primarily
       so that people can compile it for their local hardware and operating
       system. Some pre-compiled binary versions will exist, but the
-      requirements of those binaries may not satisfy every single user&#39;s
+      requirements of those binaries may not satisfy every single user's
       needs.</para>
     </section>
 
@@ -124,13 +128,13 @@
 
       <para>PyJuggler comes in a compressed archive format. For UNIX-based
       environments, we use the well-known <command>tar</command>(1) format for
-      the archive and either <command>gzip</command>(1) (<filename>.gz</filename>
-      file extension) or <command>bzip2</command>(1) (<filename>.bz2</filename>
-      file extension) for the compression. Because pre-compiled versions of
-      PyJuggler are quite large, we normally use the BZIP2 format because it
-      gives a better compression ratio than GZIP. To extract the contents of a
-      BZIP2-compressed TAR file, use the following if GNU <command>tar</command>(1)
-      is not available:</para>
+      the archive and either <command>gzip</command>(1)
+      (<filename>.gz</filename> file extension) or <command>bzip2</command>(1)
+      (<filename>.bz2</filename> file extension) for the compression. Because
+      pre-compiled versions of PyJuggler are quite large, we normally use the
+      BZIP2 format because it gives a better compression ratio than GZIP. To
+      extract the contents of a BZIP2-compressed TAR file, use the following
+      if GNU <command>tar</command>(1) is not available:</para>
 
       <screen>% bzip2 -cd pyjuggler.tar.bz2 | tar -xvf -</screen>
 
@@ -168,14 +172,15 @@
     system-wide installations). For example, on a UNIX-based system, PyJuggler
     could be unpacked into <filename>$HOME/pyjuggler</filename>. If PyJuggler
     was compiled against Python 2.2, <varname>PYTHONPATH</varname> would be
-    set as follows (assuming the use of either csh or tcsh as the user&#39;s
+    set as follows (assuming the use of either csh or tcsh as the user's
     shell):</para>
 
     <screen>% setenv PYTHONPATH $HOME/pyjuggler/lib/python2.2/site-packages</screen>
 
     <para>For more information about Python, Python modules, and environment
     variables read by the Python interpreter, refer to the <ulink
-    url="http://www.python.org/doc/">onilne Python documentation</ulink>.</para>
+    url="http://www.python.org/doc/">onilne Python
+    documentation</ulink>.</para>
 
     <tip>
       <para>PyOpenGL and PyGMTL may have to be handled similarly to PyJuggler
@@ -199,8 +204,8 @@
     <section>
       <title>simpleGL</title>
 
-      <para>In the PyJuggler installation directory, a very simple
-      <quote>pure Python</quote> application can be found under
+      <para>In the PyJuggler installation directory, a very simple <quote>pure
+      Python</quote> application can be found under
       <filename>share/pyjuggler/examples/python/simpleGL</filename>. The
       directory contains a single file <filename>simpleGL.py</filename>. To
       execute this application, the following will work in a UNIX-based
@@ -210,20 +215,21 @@
 
       <para>For a DOS/Win32 environment, the command is similar:</para>
 
-      <screen>&#62; python simpleGL.py standalone.jconf</screen>
+      <screen>&gt; python simpleGL.py standalone.jconf</screen>
 
       <note>
         <para>For VR Juggler 2.0 Alpha 4 and beyond, the full path to the
         configuration files does not have to be specified, so it is omitted in
         the above examples. The file <filename>standalone.jconf</filename> can
-        be found in the directory <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>.</para>
+        be found in the directory
+        <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>.</para>
       </note>
 
       <para>This opens a single graphics window showing the default VR Juggler
       simulator environment and a gray box. Clicking button 1 on the mouse
       causes the box to be grabbed so that it moves wherever the simulated
-      user&#39;s hand moves. Releasing button 1 causes the box to return to
-      its original location. To exit the application, press the
+      user's hand moves. Releasing button 1 causes the box to return to its
+      original location. To exit the application, press the
       <keysym>ESC</keysym> key.</para>
     </section>
 
@@ -244,10 +250,11 @@
       from within a C++ VR Juggler application object. The Python function
       called is quite trivial because the purpose of the application is to
       show what of the <ulink
-      url="http://www.python.org/doc/current/api/api.html">Python/C API</ulink>
-      must be utilized in order to make things work. The source code can be
-      found in <filename>share/pyjuggler/examples/cxx/PyExtApp</filename>
-      under the base PyJuggler installation directory.</para>
+      url="http://www.python.org/doc/current/api/api.html">Python/C
+      API</ulink> must be utilized in order to make things work. The source
+      code can be found in
+      <filename>share/pyjuggler/examples/cxx/PyExtApp</filename> under the
+      base PyJuggler installation directory.</para>
     </section>
   </chapter>
 </book>
