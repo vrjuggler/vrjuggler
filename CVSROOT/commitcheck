@@ -52,11 +52,11 @@ unless ($VERSION && $VERSION >= $cfg::MINCVSVERSION) {
 #
 # Does the access control list allow them commit access?
 #
-#system("$CVSROOT/CVSROOT/cvs_acls.pl", @ARGV);
-#if ($? >> 8) {
-#	print "Access control checks failed! (cvs_acls.pl)\n";
-#	exit 1;
-#}
+system("$CVSROOT/CVSROOT/cvs_acls.pl", @ARGV);
+if ($? >> 8) {
+	print "Access control checks failed! (cvs_acls.pl)\n";
+	exit 1;
+}
 
 #
 # Last minute checks and preparations for log_accum.pl later.  This
