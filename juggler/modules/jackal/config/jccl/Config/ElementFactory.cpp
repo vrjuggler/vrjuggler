@@ -160,17 +160,15 @@ namespace jccl
       return true;
    }
 
-   ConfigDefinitionPtr ElementFactory::getConfigDefinition(const std::string& token,
-                                                           unsigned int version)
+   ConfigDefinitionPtr ElementFactory::getConfigDefinition(const std::string& token)
    {
-      return mRepository.get(token, version);
+      return mRepository.get(token);
    }
 
    // Creates an Element using the named definition.
-   ConfigElementPtr ElementFactory::createElement(const std::string& defToken,
-                                                  unsigned int version)
+   ConfigElementPtr ElementFactory::createElement(const std::string& defToken)
    {
-      return createElement(mRepository.get(defToken, version));
+      return createElement(mRepository.get(defToken));
    }
 
    // Creates an element using the given config definition.

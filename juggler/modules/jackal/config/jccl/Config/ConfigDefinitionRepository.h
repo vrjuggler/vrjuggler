@@ -40,8 +40,8 @@
 namespace jccl
 {
    /**
-    * Stores a set of configuration definitions that can be retrieved by name
-    * and version.
+    * Stores a set of configuration definitions that can be retrieved by name.
+    * Only the newest version of a given definition is available.
     */
    class JCCL_CLASS_API ConfigDefinitionRepository
    {
@@ -57,7 +57,7 @@ namespace jccl
        * Gets the config definition for the given token.
        * @returns NULL ptr if not found, else a shared ptr to the desc
        */
-      ConfigDefinitionPtr get(const std::string token, unsigned int version);
+      ConfigDefinitionPtr get(const std::string& token) const;
 
       /**
        * Adds the given configuration definition to this repository.
@@ -70,8 +70,7 @@ namespace jccl
       void remove(ConfigDefinitionPtr def);
 
    private:
-      typedef std::map<unsigned int, ConfigDefinitionPtr> VersionMap;
-      typedef std::map<std::string, VersionMap> DefinitionMap;
+      typedef std::map<std::string, ConfigDefinitionPtr> DefinitionMap;
       DefinitionMap mDefs;
    };
 } // End of jccl namespace
