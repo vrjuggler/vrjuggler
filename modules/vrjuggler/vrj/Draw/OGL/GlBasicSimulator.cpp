@@ -239,6 +239,7 @@ void GlBasicSimulator::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor, 
                   red = blue = green = 0.75f;
 
                gmtl::Vec3f surf_color;
+               gmtl::Vec3f apex_color;
                if (drawFrustum)
                {
                   surf_color = gmtl::Vec3f(red,blue,green);
@@ -247,9 +248,10 @@ void GlBasicSimulator::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor, 
                {
                   surf_color = surfColor;
                }
-               if(1 == proj_num) // Right eye
+               apex_color = surf_color;
+               if(1 == proj_num)  // Right eye
                {
-                  surf_color = gmtl::Vec3f(1.0f, 1.0f, 1.0f) - surf_color;    // Invert it
+                  apex_color = gmtl::Vec3f(1.0f, 1.0f, 1.0f) - apex_color;    // Invert it
                }
 
                // Compute scaled colors for the corners
@@ -267,13 +269,14 @@ void GlBasicSimulator::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor, 
                vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL) << "apex: " << apex
                                                            << std::endl << vprDEBUG_FLUSH;
 
-               glColor4fv(&(ur_clr[0]));
+               glColor4fv(&(apex_color[0]));
                glPushMatrix();
                   if (drawFrustum)
                   {
                      drawLine(apex, ur); drawLine(apex, lr); drawLine(apex, ul); drawLine(apex, ll);
                   }
 
+                  glColor4fv(&(ur_clr[0]));
                   // Draw the outline
                   drawLine(ur, lr); drawLine(lr, ll); drawLine(ll, ul); drawLine(ul, ur);
 
