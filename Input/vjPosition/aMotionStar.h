@@ -275,19 +275,20 @@ struct SYSTEM_STATUS {
 //: BIRDNET singleBirdStatus packet.  It is 16 bytes long.  See page 125 of
 //+ the MotionStar Installation and Operation Guide.
 struct SINGLE_BIRD_STATUS {
-    unsigned char	status;         //: Device status
-    unsigned char	id;             //: Device type
-    unsigned char	softwareRev[2]; //: Software revision of firmware
-    unsigned char	errorCode;      //: Reserved for future use
-    unsigned char	setup;          //: Device setup parameters
-    unsigned char	dataFormat;     //: Data Format Code and Data Size
-    unsigned char	reportRate;     //: Rate at which data is generated
-                                        //+ relative to the sample rate
-    unsigned char	scaling[2];     //: Full scale output
-    unsigned char	hemisphere;     //: Bird's hemisphere of operation
-    unsigned char	FBBaddress;     //: FBB address
-    unsigned char	spare1;         //: Reserved
-    unsigned char	spare2[2];      //: Reserved
+    unsigned char	status;          //: Device status
+    unsigned char	id;              //: Device type
+    unsigned char	softwareRev[2];  //: Software revision of firmware
+    unsigned char	errorCode;       //: Reserved for future use
+    unsigned char	setup;           //: Device setup parameters
+    unsigned char	dataFormat;      //: Data Format Code and Data Size
+    unsigned char	reportRate;      //: Rate at which data is generated
+                                         //+ relative to the sample rate
+    unsigned char	scaling[2];      //: Full scale output
+    unsigned char	hemisphere;      //: Bird's hemisphere of operation
+    unsigned char	FBBaddress;      //: FBB address
+    unsigned char	transmitterType; //: FBB address
+    unsigned char	spare1;          //: Reserved
+    unsigned char	spare2[2];       //: Reserved
 };
 
 //: BIRDNET FILTER_TABLE structure.  This is for an ERC/ERT (Extended Range
