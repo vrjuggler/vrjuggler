@@ -100,10 +100,6 @@ LDOPTS		:= ${LDOPTS} ${DSOVERSIONOPTS}
 # State whether or not to build the configuration editor GUI.
 BUILD_GUI	= @BUILD_GUI@
 
-# Include library building and recursive target code.
-include ${MKPATH}/vj.lib.mk
-include ${MKPATH}/vj.rec.mk
-
 # =============================================================================
 # Build and installation directory naming and permission information.
 # =============================================================================
@@ -194,6 +190,10 @@ ABI_LIST	= @ABI_LIST@
 #    4) Build the Java-based config editor (if necessary).
 #    5) Set up the developer installation links.
 # =============================================================================
+
+# Include library building and recursive target code.
+include ${MKPATH}/vj.lib.mk
+include ${MKPATH}/vj.rec.mk
 
 # ------------------------------------------------
 # Build and install everything (i.e., the world).

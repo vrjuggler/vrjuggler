@@ -27,12 +27,6 @@ DEPEND_DEPS	+= depend-recursive
 NEWDEPEND_DEPS	+= newdepend-recursive
 INSTALL_DEPS	+= install-recursive
 
-# Include source building, recursive, dependency and installation targets.
-include ${MKPATH}/vj.compile.mk
-include ${MKPATH}/vj.rec.mk
-include ${MKPATH}/vj.dep.mk
-include ${MKPATH}/vj.install.mk
-
 # Prefix for recursive stuff.
 DIRPRFX		= Kernel/
 
@@ -58,6 +52,12 @@ DEPEND_SRCS	:= vjAPI.cpp			\
                    vjSGISystemFactory.cpp
 
 KERNEL_OBJECTS	= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.cpp=.o))
+
+# Include source building, recursive, dependency and installation targets.
+include ${MKPATH}/vj.compile.mk
+include ${MKPATH}/vj.rec.mk
+include ${MKPATH}/vj.dep.mk
+include ${MKPATH}/vj.install.mk
 
 # ----------------------------------------------------------------------------- # Library targets.
 # -----------------------------------------------------------------------------
