@@ -163,6 +163,10 @@ SocketImplBSD::enableBlocking (void) {
     }
     else {
         status = m_handle->enableBlocking();
+
+        if ( status.success() ) {
+            m_blocking = false;
+        }
     }
 
     return status;
@@ -184,6 +188,10 @@ SocketImplBSD::enableNonBlocking (void) {
     }
     else {
         status = m_handle->enableNonBlocking();
+
+        if ( status.success() ) {
+            m_blocking = false;
+        }
     }
 
     return status;
