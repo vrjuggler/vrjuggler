@@ -80,54 +80,56 @@ public class CorbaService
       System.out.println("nameServiceURI: " + nameServiceURI);
    }
 
-   public void init (String[] args) throws SystemException
+   /**
+    * Initializes this ORB (the so-called "CORBA Service") by starting the
+    * ORB thread and making the initial connection to the CORBA Naming Service.
+    *
+    * @param args Command line arguments to be processed by the ORB.
+    *
+    * @throws org.omg.SystemException A CORBA system error occurred.
+    * @throws org.omg.CosNaming.NamingContextPackage.NotFound The requested
+    *         naming context (the Tweek naming context in this case) cannot be
+    *         found in the CORBA Naming Service.
+    * @throws org.omg.CosNaming.NamingContextPackage.CannotProceed An operation
+    *         cannot be performed on a specific naming context--the Tweek
+    *         naming context in this case.
+    * @throws org.omg.CosNaming.NamingContextPackage.InvalidName An invalid
+    *         (non-existant) name was requested from the CORBA Naming Service.
+    * @throws org.omg.CORBA.ORBPackage.InvalidName The root Portable Object
+    *         Adapter (POA) could not be found.  CORBA objects cannot be
+    *         accessed.
+    * @throws org.omg.PortableServer.POAManagerPackage.AdapterInactive The
+    *         Portable Object Adapter (POA) is inactive and cannot be accessed.
+    */
+   public void init(String[] args)
+      throws SystemException, NotFound, CannotProceed, InvalidName,
+             org.omg.CORBA.ORBPackage.InvalidName,
+             org.omg.PortableServer.POAManagerPackage.AdapterInactive
    {
       mORB = ORB.init(args, null);
       mOrbThread = new OrbThread(mORB);
       mOrbThread.start();
 
-      try
-      {
-         mRootPoa = (POA) mORB.resolve_initial_references("RootPOA");
-         mRootPoa.the_POAManager().activate();
-      }
-      catch (org.omg.CORBA.ORBPackage.InvalidName name_ex)
-      {
-         System.err.println("ERROR: Could not get RootPOA: " +
-                            name_ex.getMessage());
-      }
-      catch (org.omg.PortableServer.POAManagerPackage.AdapterInactive ex)
-      {
-         System.err.println("ERROR: Could not activate RootPOA: " +
-                            ex.getMessage());
-      }
+      mRootPoa = (POA) mORB.resolve_initial_references("RootPOA");
+      mRootPoa.the_POAManager().activate();
 
-      try
+      org.omg.CORBA.Object init_ref = null;
+
+      init_ref = mORB.string_to_object(nameServiceURI);
+      rootContext = NamingContextHelper.narrow(init_ref);
+
+      if (rootContext != null)
       {
-         org.omg.CORBA.Object init_ref = null;
-
-         init_ref    = mORB.string_to_object(nameServiceURI);
-         rootContext = NamingContextHelper.narrow(init_ref);
-
-         if ( rootContext != null )
-         {
-            // XXX: Need to allow users to specify this through
-            // namingSubcontext.
-            NameComponent[] tweek_name_context = new NameComponent[1];
-            tweek_name_context[0] = new NameComponent("tweek", "context");
-
-            init_ref     = rootContext.resolve(tweek_name_context);
-            localContext = NamingContextHelper.narrow(init_ref);
-         }
-         else
-         {
-            System.err.println("Failed to get root naming context!");
-         }
+         // XXX: Need to allow users to specify this through
+         // namingSubcontext.
+         NameComponent[] tweek_name_context = new NameComponent[1];
+         tweek_name_context[0] = new NameComponent("tweek", "context");
+         init_ref = rootContext.resolve(tweek_name_context);
+         localContext = NamingContextHelper.narrow(init_ref);
       }
-      catch (UserException user_ex)
+      else
       {
-         System.err.println(user_ex.getMessage());
-         user_ex.printStackTrace();
+         System.err.println("Failed to get root naming context!");
       }
    }
 
