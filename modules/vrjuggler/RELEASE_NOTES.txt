@@ -15,7 +15,7 @@ Released: April 28, 2004
     
     Please refer to the following to get started with VR Juggler 2.0 Alpha 4:
 
-       http://www.vrjuggler.org/vrjuggler/2.0-alpha4/migration.guide/porting.guide.html
+       http://www.vrjuggler.org/vrjuggler/2.0-alpha4/porting.guide/porting.guide.html
     
     Required application and configuration changes for upgrading from all
     previous versions (including 2.0 Alpha 1 up through 2.0 Alpha 3):
