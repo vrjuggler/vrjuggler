@@ -96,6 +96,12 @@ public class CustomEditorDialog
       return status;
    }
 
+   public void dispose()
+   {
+      mEditor.editorClosing();
+      super.dispose();
+   }
+
    private void jbInit() throws Exception
    {
       this.getContentPane().setLayout(mMainLayout);

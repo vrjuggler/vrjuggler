@@ -225,6 +225,10 @@ public class DisplayWindowEditorPanel
       return null;
    }
 
+   public void editorClosing()
+   {
+   }
+
    public void internalFrameActivated(InternalFrameEvent e)
    {
       setActiveJugglerWindow((JugglerWindowFrame) e.getInternalFrame());

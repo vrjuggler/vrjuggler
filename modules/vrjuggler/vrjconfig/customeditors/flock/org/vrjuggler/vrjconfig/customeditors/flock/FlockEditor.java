@@ -81,6 +81,10 @@ public class FlockEditor
       return null;
    }
 
+   public void editorClosing()
+   {
+   }
+
    private ConfigContext mContext = null;
    private ConfigElement mElement = null;
    private DeviceEditorPanel mMainEditorPanel = null;
