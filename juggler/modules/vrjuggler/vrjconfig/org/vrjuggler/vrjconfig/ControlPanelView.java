@@ -44,6 +44,7 @@ import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.vrjconfig.ui.*;
+import org.vrjuggler.jccl.editors.*;
 
 /**
  * Provides a control panel view into a config chunk collection.
@@ -227,6 +228,12 @@ public class ControlPanelView
                showDevicesPanel();
             }
             else if (item.equals("D i s p l a y"))
+            {
+               CustomEditor editor = CustomEditorRegistry.findEditor("display_window");
+               editor.setContext(context);
+               pushCurrentBack(editor.getPanel());
+            }
+            else if (item.equals("S i m u l a t o r"))
             {
                DisplayEditor display_editor = new DisplayEditor();
                display_editor.setContext(context);
