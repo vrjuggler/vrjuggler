@@ -221,6 +221,110 @@ public:
      */
     Status setRemoteAddr(const InetAddr& addr);
 
+    /**
+     * Implementation of the <code>read</code> template method.  This reads at
+     * most the specified number of bytes from the socket into the given
+     * buffer.
+     *
+     * @pre The device is open for reading, and the buffer is at least
+     *      <code>length</code> bytes long.
+     * @post The given buffer has length bytes copied into it from the device,
+     *       and the number of bytes read successfully is returned to the
+     *       caller via the <code>bytes_read</code> parameter.
+     *
+     * @param buffer     A pointer to the buffer where the device's buffer
+     *                   contents are to be stored.
+     * @param length     The number of bytes to be read.
+     * @param bytes_read The number of bytes read into the buffer.
+     * @param timeout    The maximum amount of time to wait for data to be
+     *                   available for reading.  This argument is optional and
+     *                   defaults to vpr::Interval::NoTimeout.
+     *
+     * @return vpr::Status::Success is returned if the read operation
+     *         completed successfully.<br>
+     *         vpr::Status::InProgress if the device is in non-blocking mode,
+     *         and the read operation is in progress.<br>
+     *         vpr::Status::Timeout is returned if the read could not begin
+     *         within the timeout interval.<br>
+     *         vpr::Status::Failure is returned if the read operation failed.
+     */
+    virtual vpr::Status
+    read_i (void* buffer, const size_t length, ssize_t& bytes_read,
+            const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
+        m_blocking_fixed = true;
+        return m_handle->read_i(buffer, length, bytes_read, timeout);
+    }
+
+    /**
+     * Implementation of the <code>readn</code> template method.  This reads
+     * exactly the specified number of bytes from the socket into the given
+     * buffer.
+     *
+     * @pre The device is open for reading, and the buffer is at least
+     *      <code>length</code> bytes long.
+     * @post The given buffer has <code>length</code> bytes copied into
+     *       it from the device, and the number of bytes read successfully
+     *       is returned to the caller via the <code>bytes_read</code>
+     *       parameter.
+     *
+     * @param buffer     A pointer to the buffer where the device's buffer
+     *                   contents are to be stored.
+     * @param length     The number of bytes to be read.
+     * @param bytes_read The number of bytes read into the buffer.
+     * @param timeout    The maximum amount of time to wait for data to be
+     *                   available for reading.  This argument is optional and
+     *                   defaults to <code>vpr::Interval::NoTimeout</code>
+     *
+     * @return vpr::Status::Success is returned if the read operation
+     *         completed successfully.<br>
+     *         vpr::Status::InProgress if the device is in non-blocking mode,
+     *         and the read operation is in progress.<br>
+     *         vpr::Status::Timeout is returned if the read could not begin
+     *         within the timeout interval.<br>
+     *         vpr::Status::Failure is returned if the read operation failed.
+     */
+    virtual vpr::Status
+    readn_i (void* buffer, const size_t length, ssize_t& bytes_read,
+             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
+        m_blocking_fixed = true;
+        return m_handle->readn_i(buffer, length, bytes_read, timeout);
+    }
+
+    /**
+     * Implementation of the <code>write</code> template method.  This writes
+     * the buffer to the socket.
+     *
+     * @pre The device is open for writing.
+     * @post The given buffer is written to the I/O device, and the number
+     *       of bytes written successfully is returned to the caller via the
+     *       <code>bytes_written</code> parameter.
+     *
+     * @param buffer        A pointer to the buffer to be written.
+     * @param length        The length of the buffer.
+     * @param bytes_written The number of bytes written to the device.
+     * @param timeout       The maximum amount of time to wait for data to be
+     *                      available for writing.  This argument is optional
+     *                      and defaults to
+     *                      <code>vpr::Interval::NoTimeout</code>.
+     *
+     * @return vpr::Status::Success is returned if the write operation
+     *         completed successfully.<br>
+     *         vpr::Status::InProgress is returned if the handle is in
+     *         non-blocking mode, and the write operation is in progress.<br>
+     *         vpr::Status::Timeout is returned if the write could not begin
+     *         within the timeout interval.<br>
+     *         vpr::Status::Failure is returned if the write operation failed.
+     */
+    virtual vpr::Status
+    write_i (const void* buffer, const size_t length, ssize_t& bytes_written,
+             const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
+        m_blocking_fixed = true;
+        return m_handle->write_i(buffer, length, bytes_written, timeout);
+    }
+
 protected:
     /**
      * Default constructor.  This just initializes member variables to
@@ -265,110 +369,6 @@ protected:
      * @post The memory for m_handle is deleted.
      */
     virtual ~SocketImplBSD(void);
-
-    /**
-     * Implementation of the <code>read</code> template method.  This reads at
-     * most the specified number of bytes from the socket into the given
-     * buffer.
-     *
-     * @pre The device is open for reading, and the buffer is at least
-     *      <code>length</code> bytes long.
-     * @post The given buffer has length bytes copied into it from the device,
-     *       and the number of bytes read successfully is returned to the
-     *       caller via the <code>bytes_read</code> parameter.
-     *
-     * @param buffer     A pointer to the buffer where the device's buffer
-     *                   contents are to be stored.
-     * @param length     The number of bytes to be read.
-     * @param bytes_read The number of bytes read into the buffer.
-     * @param timeout    The maximum amount of time to wait for data to be
-     *                   available for reading.  This argument is optional and
-     *                   defaults to vpr::Interval::NoTimeout.
-     *
-     * @return vpr::Status::Success is returned if the read operation
-     *         completed successfully.<br>
-     *         vpr::Status::InProgress if the device is in non-blocking mode,
-     *         and the read operation is in progress.<br>
-     *         vpr::Status::Timeout is returned if the read could not begin
-     *         within the timeout interval.<br>
-     *         vpr::Status::Failure is returned if the read operation failed.
-     */
-    virtual Status
-    read_i (void* buffer, const size_t length, ssize_t& bytes_read,
-            const vpr::Interval timeout = vpr::Interval::NoTimeout)
-    {
-        m_blocking_fixed = true;
-        return m_handle->read(buffer, length, bytes_read, timeout);
-    }
-
-    /**
-     * Implementation of the <code>readn</code> template method.  This reads
-     * exactly the specified number of bytes from the socket into the given
-     * buffer.
-     *
-     * @pre The device is open for reading, and the buffer is at least
-     *      <code>length</code> bytes long.
-     * @post The given buffer has <code>length</code> bytes copied into
-     *       it from the device, and the number of bytes read successfully
-     *       is returned to the caller via the <code>bytes_read</code>
-     *       parameter.
-     *
-     * @param buffer     A pointer to the buffer where the device's buffer
-     *                   contents are to be stored.
-     * @param length     The number of bytes to be read.
-     * @param bytes_read The number of bytes read into the buffer.
-     * @param timeout    The maximum amount of time to wait for data to be
-     *                   available for reading.  This argument is optional and
-     *                   defaults to <code>vpr::Interval::NoTimeout</code>
-     *
-     * @return vpr::Status::Success is returned if the read operation
-     *         completed successfully.<br>
-     *         vpr::Status::InProgress if the device is in non-blocking mode,
-     *         and the read operation is in progress.<br>
-     *         vpr::Status::Timeout is returned if the read could not begin
-     *         within the timeout interval.<br>
-     *         vpr::Status::Failure is returned if the read operation failed.
-     */
-    virtual Status
-    readn_i (void* buffer, const size_t length, ssize_t& bytes_read,
-             const vpr::Interval timeout = vpr::Interval::NoTimeout)
-    {
-        m_blocking_fixed = true;
-        return m_handle->readn(buffer, length, bytes_read, timeout);
-    }
-
-    /**
-     * Implementation of the <code>write</code> template method.  This writes
-     * the buffer to the socket.
-     *
-     * @pre The device is open for writing.
-     * @post The given buffer is written to the I/O device, and the number
-     *       of bytes written successfully is returned to the caller via the
-     *       <code>bytes_written</code> parameter.
-     *
-     * @param buffer        A pointer to the buffer to be written.
-     * @param length        The length of the buffer.
-     * @param bytes_written The number of bytes written to the device.
-     * @param timeout       The maximum amount of time to wait for data to be
-     *                      available for writing.  This argument is optional
-     *                      and defaults to
-     *                      <code>vpr::Interval::NoTimeout</code>.
-     *
-     * @return vpr::Status::Success is returned if the write operation
-     *         completed successfully.<br>
-     *         vpr::Status::InProgress is returned if the handle is in
-     *         non-blocking mode, and the write operation is in progress.<br>
-     *         vpr::Status::Timeout is returned if the write could not begin
-     *         within the timeout interval.<br>
-     *         vpr::Status::Failure is returned if the write operation failed.
-     */
-    virtual Status
-    write_i (const void* buffer, const size_t length, ssize_t& bytes_written,
-             const vpr::Interval timeout = vpr::Interval::NoTimeout)
-    {
-        m_blocking_fixed = true;
-        return m_handle->write(buffer, length, bytes_written, timeout);
-    }
 
     virtual Status getOption(const SocketOptions::Types option,
                              struct SocketOptions::Data& data);

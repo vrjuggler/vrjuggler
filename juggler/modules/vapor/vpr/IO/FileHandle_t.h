@@ -391,7 +391,7 @@ protected:
     read_i (void* buffer, const size_t length, ssize_t& bytes_read,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_handle_impl.read(buffer, length, bytes_read, timeout);
+        return m_handle_impl.read_i(buffer, length, bytes_read, timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -422,7 +422,7 @@ protected:
     readn_i (void* buffer, const size_t length, ssize_t& bytes_read,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_handle_impl.readn(buffer, length, bytes_read, timeout);
+        return m_handle_impl.readn_i(buffer, length, bytes_read, timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -453,7 +453,7 @@ protected:
     write_i (const void* buffer, const size_t length, ssize_t& bytes_written,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_handle_impl.write(buffer, length, bytes_written, timeout);
+        return m_handle_impl.write_i(buffer, length, bytes_written, timeout);
     }
 
     /// Platform-specific file hanlde impll

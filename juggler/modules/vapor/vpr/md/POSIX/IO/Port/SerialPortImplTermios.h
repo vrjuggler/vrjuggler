@@ -807,28 +807,6 @@ public:
     // ------------------------------------------------------------------------
     Status sendBreak(const Int32 duration);
 
-protected:
-    /**
-     * Symbolic names for the four types of flags that can be set in the
-     * termios struct.
-     */
-    enum _term_flag {
-        IFLAG,		/**< Input flag */
-        OFLAG,		/**< Output flag */
-        CFLAG,		/**< Control flag */
-        LFLAG		/**< Local flag */
-    };
-
-    /**
-     * Sets the control character at the given index to the given value.
-     */
-    void setControlCharacter(const Uint32 index, const Uint8 value);
-
-    /**
-     * Gets the value of the control character at the given index.
-     */
-    Uint8 getControlCharacter(const Uint32 index);
-
     /**
      * Implementation of the <code>read</code> template method.  This reads at
      * most the specified number of bytes from the serial port into the given
@@ -929,6 +907,28 @@ protected:
     {
         return m_handle->write(buffer, length, bytes_written, timeout);
     }
+
+protected:
+    /**
+     * Symbolic names for the four types of flags that can be set in the
+     * termios struct.
+     */
+    enum _term_flag {
+        IFLAG,		/**< Input flag */
+        OFLAG,		/**< Output flag */
+        CFLAG,		/**< Control flag */
+        LFLAG		/**< Local flag */
+    };
+
+    /**
+     * Sets the control character at the given index to the given value.
+     */
+    void setControlCharacter(const Uint32 index, const Uint8 value);
+
+    /**
+     * Gets the value of the control character at the given index.
+     */
+    Uint8 getControlCharacter(const Uint32 index);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------

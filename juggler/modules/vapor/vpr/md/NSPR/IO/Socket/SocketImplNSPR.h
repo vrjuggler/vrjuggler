@@ -225,6 +225,24 @@ public:
        return status;
     }
 
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual Status read_i(void* buffer, const size_t length,
+                          ssize_t& bytes_read,
+                          const vpr::Interval timeout = vpr::Interval::NoTimeout);
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual Status readn_i(void* buffer, const size_t length,
+                           ssize_t& bytes_read,
+                           const vpr::Interval timeout = vpr::Interval::NoTimeout);
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    virtual Status write_i(const void* buffer, const size_t length,
+                           ssize_t& bytes_written,
+                           const vpr::Interval timeout = vpr::Interval::NoTimeout);
+
 protected:
     // ------------------------------------------------------------------------
     // Default constructor.  This just initializes member variables to
@@ -271,25 +289,6 @@ protected:
     // POST: None.
     // ------------------------------------------------------------------------
     virtual ~SocketImplNSPR(void);
-
-protected:
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    virtual Status read_i(void* buffer, const size_t length,
-                          ssize_t& bytes_read,
-                          const vpr::Interval timeout = vpr::Interval::NoTimeout);
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    virtual Status readn_i(void* buffer, const size_t length,
-                           ssize_t& bytes_read,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout);
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    virtual Status write_i(const void* buffer, const size_t length,
-                           ssize_t& bytes_written,
-                           const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     /**
      *
