@@ -1,7 +1,7 @@
 
-# ***************** <AJ heading BEGIN do not edit this line> *****************
+# ***************** <SNX heading BEGIN do not edit this line> *****************
 #
-# Audio Juggler
+# sonix
 #
 # Original Authors:
 #   Kevin Meinert, Carolina Cruz-Neira
@@ -12,7 +12,7 @@
 # Version:       $Revision$
 # -----------------------------------------------------------------
 #
-# ****************** <AJ heading END do not edit this line> ******************
+# ****************** <SNX heading END do not edit this line> ******************
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
 # VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
@@ -79,12 +79,12 @@ LIBS = ${LIBS} -lm
 ##################################################################
 
 # lib specific: (where to dump the .o files)
-SUBOBJDIR       = $(AJ_LIBRARY)
+SUBOBJDIR       = $(SNX_LIBRARY)
 
 include $(MKPATH)/dpp.obj.mk
 
 kevin: ${OBJECTS}
-	${AR} ${ARFLAGS} libvjsm.a ${OBJECTS}
+	${AR} ${ARFLAGS} libsonixvj.a ${OBJECTS}
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.

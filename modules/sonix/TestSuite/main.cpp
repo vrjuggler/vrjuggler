@@ -1,7 +1,7 @@
 
-/****************** <AJ heading BEGIN do not edit this line> *****************
+/****************** <SNX heading BEGIN do not edit this line> *****************
  *
- * Audio Juggler
+ * Juggler Juggler
  *
  * Original Authors:
  *   Kevin Meinert, Carolina Cruz-Neira
@@ -12,7 +12,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- ****************** <AJ heading END do not edit this line> ******************/
+ ****************** <SNX heading END do not edit this line> ******************/
 
 
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
@@ -45,7 +45,7 @@
 #include <framework/TestSuite.h>
 #include <textui/TestRunner.h>
 
-#include <TestCases/ajMathTest.h>
+#include <TestCases/snxMathTest.h>
 #include <TestCases/exampleTest.h>
 //#include <Utils/Debug.h>
 
@@ -65,8 +65,8 @@ int main (int ac, char **av)
    TestSuite* noninteractive_suite = new TestSuite("NonInteractive");
 
    // add tests to the suite
-   noninteractive_suite->addTest( ajTest::exampleTest::suite());
-   noninteractive_suite->addTest( ajTest::ajMathTest::suite());
+   noninteractive_suite->addTest( snxTest::exampleTest::suite());
+   noninteractive_suite->addTest( snxTest::snxMathTest::suite());
 
    // Add the test suite to the runner
    runner.addTest( "noninteractive", noninteractive_suite );

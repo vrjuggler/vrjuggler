@@ -1,14 +1,6 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
-Jun-17-2000 subatomic Created the VR Juggler vjSoundManager and associated 
-                      classes which allow a VR juggler application to generically
-                      use sound within an application.  vjSoundManager is 
-                      essentially an adaptor to an underlying sound API, in this
-                      case SL library, or Audioworks.
-Dec-05-2000 subatomic rewrote vjSoundManager to allow run-time reconfiguration
-                      like all the other components of VR Juggler.
-                      this code is a prototype, and is not yet good enough to go 
-                      into the main distribution of VR Juggler.
+Oct-22-2001 subatomic renamed project to sonix
 Jun-21-2001 subatomic Newest Juggler Audio is born.  Based on my previous two 
                       revisions, I've refactored the vjSoundManager into two parts.  
                       One part (core) that can stand alone as a useful reconfigurable 
@@ -20,3 +12,12 @@ Jun-21-2001 subatomic Newest Juggler Audio is born.  Based on my previous two
                       sound drivers at runtime to help facilitate an always 
                       running system.  This iteration of the VR Juggler sound code 
                       will be called AudioJuggler.
+Dec-05-2000 subatomic rewrote vjSoundManager to allow run-time reconfiguration
+                      like all the other components of VR Juggler.
+                      this code is a prototype, and is not yet good enough to go 
+                      into the main distribution of VR Juggler.
+Jun-17-2000 subatomic Created the VR Juggler vjSoundManager and associated 
+                      classes which allow a VR juggler application to generically
+                      use sound within an application.  vjSoundManager is 
+                      essentially an adaptor to an underlying sound API, in this
+                      case SL library, or Audioworks.

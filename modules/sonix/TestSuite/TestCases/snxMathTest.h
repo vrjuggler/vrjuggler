@@ -1,5 +1,5 @@
 
-/****************** <AJ heading BEGIN do not edit this line> *****************
+/****************** <SNX heading BEGIN do not edit this line> *****************
  *
  * Audio Juggler
  *
@@ -12,7 +12,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- ****************** <AJ heading END do not edit this line> ******************/
+ ****************** <SNX heading END do not edit this line> ******************/
 
 
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
@@ -48,23 +48,23 @@
 #include <TestSuite.h>
 #include <TestCaller.h>
 
-#include <aj/Matrix44.h> // 4x4 matrix math
-#include <aj/Vec3.h>     // vector math
-#include <aj/MatVec.h>   // for matrix/vec math
+#include <snx/Matrix44.h> // 4x4 matrix math
+#include <snx/Vec3.h>     // vector math
+#include <snx/MatVec.h>   // for matrix/vec math
 
 //#include <IO/Socket/InetAddr.h>
 
-namespace ajTest
+namespace snxTest
 {
 
-class ajMathTest : public TestCase
+class snxMathTest : public TestCase
 {
 public:
-   ajMathTest( std::string name )
+   snxMathTest( std::string name )
    : TestCase (name)
    {;}
 
-   virtual ~ajMathTest()
+   virtual ~snxMathTest()
    {}
 
    virtual void setUp()
@@ -76,17 +76,17 @@ public:
 
    void testSimple()
    {
-      aj::Matrix44 mat;
+      snx::Matrix44 mat;
       mat.makeRot( 180.0f * (3.145f / 180.0f), 0, 1, 0 );
       
       std::cout<<mat<<"\n"<<std::flush;
       
       
-      aj::Vec3 forward( 0,0,-1 );
+      snx::Vec3 forward( 0,0,-1 );
       
-      aj::Vec3 vec = aj::xformVec( mat, forward );
+      snx::Vec3 vec = snx::xformVec( mat, forward );
       std::cout<<vec[0]<<", "<<vec[1]<<", "<<vec[2]<<"\n"<<std::flush;
-      vec = aj::xformFull( mat, forward );
+      vec = snx::xformFull( mat, forward );
       std::cout<<vec[0]<<", "<<vec[1]<<", "<<vec[2]<<"\n"<<std::flush;
       
       assertTest( true );
@@ -94,15 +94,15 @@ public:
 
    static Test* suite()
    {
-      TestSuite* test_suite = new TestSuite ("ajMathTest");
-      test_suite->addTest( new TestCaller<ajMathTest>("testSimple", &ajMathTest::testSimple));
+      TestSuite* test_suite = new TestSuite ("snxMathTest");
+      test_suite->addTest( new TestCaller<snxMathTest>("testSimple", &snxMathTest::testSimple));
 
       return test_suite;
    }
 
    static Test* interactiveSuite()
    {
-      TestSuite* test_suite = new TestSuite ("InteractiveajMathTest");
+      TestSuite* test_suite = new TestSuite ("InteractivesnxMathTest");
       //test_suite->addTest( new TestCaller<ThreadTest>("interactiveCPUGrind", &ThreadTest::interactiveTestCPUGrind));
       return test_suite;
    }
