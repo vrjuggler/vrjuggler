@@ -43,16 +43,16 @@
 # ------------------------------------------------------------------------------
 
 # Compiler information.
-$VARS{'APP_CC'}          = '@APP_CC@';
-$VARS{'APP_CXX'}         = '@APP_CXX@';
-$VARS{'APP_CFLAGS'}      = '@APP_CFLAGS@';
-$VARS{'APP_CXXFLAGS'}    = '@APP_CXXFLAGS@';
+$VARS{'APP_CC'}           = '@APP_CC@';
+$VARS{'APP_CXX'}          = '@APP_CXX@';
+$VARS{'APP_CFLAGS'}       = '@APP_CFLAGS@';
+$VARS{'APP_CXXFLAGS'}     = '@APP_CXXFLAGS@';
 $VARS{'APP_DEBUG_CFLAGS'} = '@APP_DEBUG_CFLAGS@';
 $VARS{'APP_OPTIM_CFLAGS'} = '@APP_OPTIM_CFLAGS@';
 $VARS{'APP_EXTRA_CFLAGS'} = '@APP_EXTRA_CFLAGS@';
-$VARS{'APP_DEFS'}        = '@DEFS@';
-$VARS{'APP_INCLUDES'}    = '@APP_INCLUDES@';
-$VARS{'DEP_GEN_FLAG'}    = '@DEP_GEN_FLAG@';
+$VARS{'APP_DEFS'}         = '@DEFS@';
+$VARS{'APP_INCLUDES'}     = '@APP_INCLUDES@';
+$VARS{'DEP_GEN_FLAG'}     = '@DEP_GEN_FLAG@';
 
 # Linker information.
 $VARS{'APP_LINK'}             = '@APP_LINK@';
