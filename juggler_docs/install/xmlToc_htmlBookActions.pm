@@ -129,9 +129,6 @@ sub popFolder_action ($$$$$) {
                 $$xmlToc_data_out .= "$_";
             }
         }
-
-        # Insert footer.
-        $$xmlToc_data_out =~ s/<\/body>/\n${InstallWeb::html_footer}\n<\/body>/ois;
     }
 }
 
