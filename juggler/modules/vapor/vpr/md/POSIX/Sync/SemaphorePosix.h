@@ -45,6 +45,7 @@
 #define _VPR_SEMAPHORE_POSIX_H_
 
 #include <vprConfig.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <limits.h>
 #include <semaphore.h>
