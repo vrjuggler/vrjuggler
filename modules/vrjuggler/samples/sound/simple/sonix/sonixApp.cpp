@@ -134,10 +134,9 @@ void sonixApp::myDraw()
 
 void sonixApp::initSonix()
 {
-   
    // initialize a sound
    sound.init( "sol");
-   
+
    // initialize sonix with openal
    sonix::instance()->changeAPI( "Stub" );
    snx::SoundInfo si;
@@ -158,8 +157,8 @@ void sonixApp::initGLState()
    GLfloat light0_specular[] = { 1.0f,  1.0f,  1.0f,  1.0f};
    GLfloat light0_position[] = {0.0f, 0.75f, 0.75f, 0.0f};
 
-   GLfloat mat_ambient[] = { 0.7, 0.7,  0.7,  1.0};
-   GLfloat mat_diffuse[] = { 1.0,  0.5,  0.8,  1.0};
+   GLfloat mat_ambient[] = { 0.7f, 0.7f, 0.7f, 1.0f };
+   GLfloat mat_diffuse[] = { 1.0f, 0.5f, 0.8f, 1.0f };
    GLfloat mat_specular[] = { 1.0,  1.0,  1.0,  1.0};
    GLfloat mat_shininess[] = { 50.0};
    GLfloat mat_emission[] = { 1.0,  1.0,  1.0,  1.0};
@@ -233,5 +232,4 @@ void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
    }
 }
 
-}; // namespace vrjTest
-
+} // namespace vrjTest
