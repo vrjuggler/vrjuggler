@@ -273,9 +273,11 @@ if test "x$SUBSYNTH_ENABLED" = "xno" ; then
 # do nothing...
    true
 else
-   DPP_HAVE_SUBSYNTH( /usr/local, AC_MSG_RESULT(+ Found Subsynth),  )
+   VPR_PATH(0.4.1, , AC_MSG_ERROR(*** VPR required for subsynth***))
+   snx_dep_scripts="vpr-config"
+   DPP_HAVE_SUBSYNTH( /usr, AC_MSG_RESULT(+ Found Subsynth),  )
    if test "x$SUBSYNTH" = "xyes" ; then
-      INCLUDES="$INCLUDES $SYN_INCLUDES"
+      INCLUDES="$INCLUDES $VPR_INCLUDES $SYN_INCLUDES"
       LDFLAGS="$LDFLAGS $SYN_LDFLAGS"
       LIBS="$LIBS $LIBSUBSYNTH"
       SUBSYNTH_API='Y'
@@ -317,7 +319,6 @@ dnl -------------------------------------------------------------
 sample_application_includes="-I\${SNX_BASE_DIR}/include $INCLUDES"
 sample_application_ldflags="$LDFLAGS"
 
-#snx_dep_scripts='vpr-config'
 
 if test "x$OS_TYPE" = "xWin32" ; then
    snx_ldflags_compiler="/link /libpath:\$prefix/lib"
@@ -338,7 +339,7 @@ else
    snx_ldflags_linker="$snx_ldflags_compiler"
    snx_lib='-lsonix'
    snx_libs="-lsonix"
-   sample_application_libs="-L\$(SNX_BASE_DIR)/lib$LIBBITSUF -lsonix $LIBS -lm"
+   sample_application_libs="-L\$(SNX_BASE_DIR)/lib$LIBBITSUF -lsonix $LIBS $VPR_LIBS_CC -lm"
 fi
 
 sample_application_libs="$APP_LINKALL_ON $sample_application_libs $APP_LINKALL_OFF"
@@ -386,7 +387,6 @@ AC_SUBST(APP_LINKALL_OFF)
 
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
-AC_SUBST(snx_dep_scripts)
 AC_SUBST(snx_lib)
 AC_SUBST(snx_libs)
 AC_SUBST(snx_n32_flags)
@@ -400,6 +400,7 @@ AC_SUBST(snx_ldflags_linker)
 AC_SUBST(sample_application_includes)
 AC_SUBST(sample_application_ldflags)
 AC_SUBST(sample_application_libs)
+AC_SUBST(snx_dep_scripts)
 AC_SUBST(AUDIOWORKS_API)
 AC_SUBST(OPENAL_API)
 AC_SUBST(SUBSYNTH_API)
