@@ -43,7 +43,7 @@ class gloveApp : public vjGlApp
 {
 // utility functions
 protected:
-    friend vjVec3 operator*( const vjMatrix& m, const vjVec3& v );
+    //friend vjVec3 operator*( const vjMatrix& m, const vjVec3& v );
 
 // Application Functions:
 public:
@@ -102,7 +102,7 @@ protected:
    vjGlContextData<Scene> mScene;
 };
 
-inline vjVec3 operator*( const vjMatrix& m, const vjVec3& v )
+/*inline vjVec3 operator*( const vjMatrix& m, const vjVec3& v )
 {
     float a[4];
     a[0] = m(0,0) * v[0] + m(0,1) * v[1] + m(0,2)  * v[2] + m(0,3) * 1.0f;
@@ -113,7 +113,7 @@ inline vjVec3 operator*( const vjMatrix& m, const vjVec3& v )
     float invA3 = 1.0f / a[3];
 
     return vjVec3( a[0] * invA3, a[1] * invA3, a[2] * invA3 );
-}
+}*/
 
 inline void gloveApp::contextInit()
 {
@@ -270,7 +270,7 @@ inline void gloveApp::preDraw()
     //: Get the position of the index finger:
     finger_matrix = mGlove->getPos(vjGloveData::INDEX);
     finger_matrix.getTrans( glovePos[0], glovePos[1], glovePos[2] );
-    glovePos = invNav * glovePos;
+    glovePos.xformVec( invNav, glovePos );
 
     //vjDEBUG(7) << "Gesture: " << mGesture->getGestureString(mGesture->getGesture())<<"\n"<<flush;
     //vjDEBUG(7) << glovePos[0]<<" "<<glovePos[1]<<" "<<glovePos[2]<<" : "<<mCubePos[0]<<" "<<mCubePos[1]<<" "<<mCubePos[2]<<"\n"<<flush;

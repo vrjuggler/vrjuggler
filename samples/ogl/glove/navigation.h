@@ -24,8 +24,6 @@ private:
     static const vjVec3 origin;
 };
 
-#include <types/Vector3.h>
-
 class UserInfo
 {
 public:
@@ -54,10 +52,6 @@ public:
     
     inline void move( vjVec3& dist )
     { move( dist[0], dist[1], dist[2] ); }
-    
-    inline void move( const Vector3<float>& vec )
-    { move( vec[0], vec[1], vec[2] ); }
-    
     
     inline void move( float a, float b, float c )
     { _pos[0] += a; 
