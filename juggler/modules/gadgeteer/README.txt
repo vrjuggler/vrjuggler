@@ -1,13 +1,12 @@
-# What is this: VR Juggler
+# What is this: Gadgeteer
 #
 # Organization Credits: Iowa State University
 #                       Virtual Reality Applications Center (VRAC)
 #
 # Contributors (Alphabetically): 
 #               Albert Baker, Allen Bierbaum, Carolina Cruz-Neira, 
-#               Jesse Coats, Patrick Hartling, Andrew Himberger, 
-#               Chris Johanson, Christopher Just, Kevin Meinert,
-#               Ben Thompson, Terry Welsh
+#               Patrick Hartling, Andrew Himberger, Chris Johanson,
+#               Christopher Just, Kevin Meinert, Ben Thompson
 # 
 
 ------------------
@@ -17,7 +16,7 @@ Table of contents:
     1. Getting started
         A. Supported platforms
         B. Minimum requirements (compiler, libraries, etc.)
-    2. Questions about VR Juggler
+    2. Questions about Gadgeteer
         A. FAQ
         B. Documentation
               i. Getting Started Guide
@@ -28,7 +27,7 @@ Table of contents:
         C. Mailing lists
               i. vrjuggler-info@lists.sourceforge.net
              ii. vrjuggler-devel@lists.sourceforge.net
-    3. Compiling VR Juggler from source
+    3. Compiling Gadgeteer from source
 
 ==============================================================================
 1. Getting started
@@ -36,14 +35,14 @@ Table of contents:
 
     A. Supported platforms
 
-        VR Juggler is officially supported on the following platforms:
+        Gadgeteer is officially supported on the following platforms:
 
             IRIX 6.5
             RedHat Linux 6.1, 6.2, 7.1, and newer
             Windows NT 4.0 and 2000
             Windows 98/Me
 
-        VR Juggler is known to work on the following platforms (but is
+        Gadgeteer is known to work on the following platforms (but is
         not officially supported):
 
             HP-UX 11.00
@@ -94,7 +93,7 @@ Table of contents:
             Juggler Tools (http://www.vrjuggler.org/pub/juggler-tools-1.1.zip)
 
 ==============================================================================
-2. Questions about VR Juggler
+2. Questions about Gadgeteer
 ==============================================================================
 
     As with most open source projects, there is a common path to follow
@@ -126,12 +125,7 @@ Table of contents:
             http://www.vrjuggler.org/html/programmer.reference/index.html
             http://www.vrjuggler.org/html/books/programmer.reference.pdf
 
-         iv. VjControl (configuration of VR Juggler)
-
-            http://www.vrjuggler.org/html/vjcontrol/index.html
-            http://www.vrjuggler.org/html/books/vjcontrol.guide.pdf
-
-          v. VR Juggler Team Guide (for VR Juggler developers only)
+         iv. VR Juggler Team Guide (for VR Juggler developers only)
 
             http://www.vrjuggler.org/html/juggler.team.guide/index.html
             http://www.vrjuggler.org/html/books/juggler.team.guide.pdf
@@ -152,14 +146,14 @@ Table of contents:
             vrjuggler-devel@lists.sourceforge.net mailing list.
 
 ==============================================================================
-3. Compiling VR Juggler from source
+3. Compiling Gadgeteer from source
 ==============================================================================
 
     For a detailed description of this process, please refer to
     http://www.vrjuggler.org/html/juggler.team.guide/build/juggler/index.html
     before sending email to the mailing lists.
 
-    The documentation for compiling VR Juggler from source is now in the
-    INSTALL file.
+    The documentation for compiling Gadgeteer from source is now in the
+    INSTALL.txt file.
 
 $Id$
