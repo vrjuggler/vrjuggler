@@ -56,9 +56,6 @@
 /* Define to one of the above values to enable performance testing. */
 #undef JCCL_PERFORMANCE
 
-/* Define to `int' if the socklen_t type is not available.  */
-#undef socklen_t
-
 @BOTTOM@
 
 #endif	/* _JCCL_DEFINES_H_ */

@@ -124,9 +124,6 @@
 
 #undef VPR_SIMULATOR
 
-/* Define to `int' if the socklen_t type is not available.  */
-#undef socklen_t
-
 /* Define to `unsigned int' if the sigset_t type is not available.  */
 #undef sigset_t
 
