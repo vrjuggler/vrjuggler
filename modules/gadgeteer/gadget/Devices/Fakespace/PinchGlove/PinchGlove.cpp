@@ -110,9 +110,8 @@ int PinchGlove::startSampling()
          new vpr::ThreadMemberFunctor<PinchGlove>(this, &PinchGlove::controlLoop, NULL);
 
       mThread = new vpr::Thread(memberFunctor);
-      vpr::ReturnStatus start_status = mThread->start();
 
-      if ( ! start_status.success() || ! mThread->valid() )
+      if ( ! mThread->valid() )
       {
          return 0;
       }
