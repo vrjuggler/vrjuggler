@@ -47,22 +47,22 @@ main (int argc, char* argv[]) {
     remote_addr.setAddress(argv[1], atoi(argv[2]));
     vpr::SocketDatagram sock(vpr::InetAddr::AnyAddr, remote_addr);
 
-    if ( sock.open() ) {
+    if ( sock.open().success() ) {
         char buffer[40];
 
         // We only send to one host, so call connect().
-        if ( sock.connect() ) {
+        if ( sock.connect().success() ) {
             ssize_t bytes;
 
             // Read from the server.
             strcpy(buffer, "Hi, I'm a client");
-            bytes = sock.write(buffer, 40);
+            sock.write(buffer, 40, bytes);
 
             // Read from the server.
-            bytes = sock.read(buffer, 40);
+            vpr::Status status = sock.read(buffer, 40, bytes);
 
             // If the server reasponded, print the result.
-            if ( bytes > 0 ) {
+            if ( status.success() ) {
                 printf("Read %d bytes from server\n", bytes);
                 printf("    Got '%s'\n", buffer);
             }

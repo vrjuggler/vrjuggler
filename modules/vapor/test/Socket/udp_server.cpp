@@ -52,7 +52,7 @@ main (int argc, char* argv[]) {
     vpr::SocketDatagram sock(local, vpr::InetAddr::AnyAddr);
 
     // Bind the socket to the port.
-    if ( sock.open() && sock.bind() ) {
+    if ( sock.open().success() && sock.bind().success() ) {
         char recv_buf[32];
         char send_buf[] = "Hello there!";
         ssize_t bytes;
