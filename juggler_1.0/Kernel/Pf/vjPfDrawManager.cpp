@@ -423,29 +423,31 @@ void vjPfDrawManager::initChanGroupAttribs(pfChannel* masterChan)
 
    vjASSERT(masterChan != NULL);
 
-   /*
-   masterChan->setShare(PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
-                        PFCHAN_STRESS | PFCHAN_LOD | PFCHAN_SWAPBUFFERS |
-                        PFCHAN_APPFUNC | PFCHAN_SCENE | PFCHAN_CULLFUNC | PFCHAN_STATS_DRAWMODE );
-                        */
+   /*  Original code for reference
+    * masterChan->setShare(PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
+    *                    PFCHAN_STRESS | PFCHAN_LOD | PFCHAN_SWAPBUFFERS |
+    *                    PFCHAN_APPFUNC | PFCHAN_SCENE | PFCHAN_CULLFUNC | PFCHAN_STATS_DRAWMODE );
+    */
 
-   ///*
+   //
+   // Set the Channel attribs based on cur settings
+   //
    unsigned cur_share = masterChan->getShare();          // Get current setting, and OR the new stuff on
    masterChan->setShare((cur_share | PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
                         PFCHAN_STRESS | PFCHAN_LOD | PFCHAN_SWAPBUFFERS |
                         PFCHAN_APPFUNC | PFCHAN_SCENE | PFCHAN_CULLFUNC |
                         PFCHAN_STATS_DRAWMODE)
-                        //& (~PFCHAN_SCENE)
+                        &
+                         ~(PFCHAN_SCENE |
+                           PFCHAN_FOV |
+                           PFCHAN_VIEW |
+                           PFCHAN_VIEW_OFFSETS)
                         );
-   //*/
 
-   /*
-   masterChan->setTravFunc(PFTRAV_APP, vjPfAppFunc);
-
-   masterChan->setShare(PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
-                        PFCHAN_STRESS | PFCHAN_SWAPBUFFERS |
-                        PFCHAN_APPFUNC | PFCHAN_CULLFUNC );
-   */
+   //masterChan->setTravFunc(PFTRAV_APP, vjPfAppFunc);
+   //masterChan->setShare(PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
+   //                     PFCHAN_STRESS | PFCHAN_SWAPBUFFERS |
+   //                     PFCHAN_APPFUNC | PFCHAN_CULLFUNC );
 }
 
 
