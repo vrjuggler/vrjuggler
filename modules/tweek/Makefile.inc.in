@@ -50,8 +50,9 @@ instlinks	= $(topdir)/instlinks
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 
-BUILD_CXX	= @BUILD_CXX@
-BUILD_JAVA	= @BUILD_JAVA@
+BUILD_CXX		= @BUILD_CXX@
+BUILD_JAVA		= @BUILD_JAVA@
+BUILD_EXTENSIONS	= @BUILD_EXTENSIONS@
 
 # Extra compiler and linker options needed only by this file.
 DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
@@ -122,6 +123,7 @@ beforebuild:
 	@$(MAKE) cxx-idl
 	@$(MAKE) java-idl
 	@$(MAKE) tweek-java
+	@$(MAKE) extensions-java
 
 $(PARAM_HEADER):
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
@@ -178,7 +180,7 @@ endif
 # =============================================================================
 # Tweek GUI targets.
 # =============================================================================
-EXTRA_OBJ_TARGETS	= tweek-jar
+EXTRA_OBJ_TARGETS	= tweek-jar extensions-jar
 
 # Build the Tweek GUI code base and the JAR files.
 tweek-gui:
@@ -195,6 +197,25 @@ ifeq ($(BUILD_JAVA), Y)
 else
 	@echo "------------------------------------------------"
 	@echo "Tweek GUI build skipped"
+	@echo "------------------------------------------------"
+endif
+endif	# ifndef NO_JAVA
+
+# Build the Tweek extensions and the JAR files
+extensions-gui:
+	@$(MAKE) extensions-java
+	@$(MAKE) extensions-jar
+
+# Build the extensions and their JAR files
+extensions-java extensions-jar:
+ifndef NO_JAVA
+ifeq ($(BUILD_JAVA), Y)
+	@echo "===> extensions/java"
+	@$(MAKE) -C extensions/java $@
+	@echo "<=== extensions/java"
+else
+	@echo "------------------------------------------------"
+	@echo "Tweek Extensions build skipped"
 	@echo "------------------------------------------------"
 endif
 endif	# ifndef NO_JAVA
@@ -231,6 +252,9 @@ endif
 ifndef NO_JAVA
 ifeq ($(BUILD_JAVA), Y)
 	@$(MAKE) -C java instlinks="$(instlinks)" tweek-gui-links
+ifeq ($(BUILD_EXTENSIONS), Y)
+	@$(MAKE) -C extensions/java instlinks="$(instlinks)" extensions-gui-links
+endif
 	cd $(instlinks)/bin && $(RM_LN) ./idl* &&			\
           $(LN_S) $(JUGGLERROOT_ABS)/external/JacORB/idl* ./
 endif
@@ -334,6 +358,9 @@ ifdef NO_JAVA
 else
 ifeq ($(BUILD_JAVA), Y)
 	@$(MAKE) -C java tweek-gui-install
+ifeq ($(BUILD_EXTENSIONS), Y)
+	@$(MAKE) -C extensions/java extensions-gui-install
+endif # if $(BUILD_EXTENSIONS) == Y
 endif	# if $(BUILD_JAVA) == Y
 endif	# ifdef NO_JAVA
 
