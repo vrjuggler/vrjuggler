@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Apr-12-2001 patrick   The MotionStar driver now supports setting the
+                      measurement rate
 Mar-28-2001 kevn      vjQuat::unit() is now vjQuat::normalizeFast()
                       vjQuat::makeQuat() is now vjQuat::makeRot()
 Feb-14-2001 cjust     Fixed VjControl problems with recognizing backspace
