@@ -68,9 +68,7 @@ public:
 
 
 
-    TimeStampPosix() {
-	set();
-    }
+    TimeStampPosix();
 
 
 
