@@ -38,7 +38,12 @@
 #define _OLD_TERMIOS
 
 #include <termio.h>        // for definition of NCCS
-#include <sys/termio.h>    // for termio structure used by some ioctls
+
+// including sys/termio.h is bad for linux, and totally useless since
+// we just included termio.h which #includes it...
+// #include <sys/termio.h>    // for termio structure used by some ioctls
+
+
 #include <sys/types.h>     // for open
 #include <sys/stat.h>      // for open
 #include <fcntl.h>         // for open
@@ -703,15 +708,6 @@ int aFlock::open_port( const char* const serialPort,
     else
 	cout<<" failed\n"<<flush;
 
-    cout << "  Disconnect calling process from terminal and session (TIOCNOTTY)..." << flush;
-    result = ioctl( portId, TIOCNOTTY );
-
-    // did it succeed?
-    if (result == 0)
-	cout<<" success\n"<<flush;
-    else
-	cout<<" failed\n"<<flush;
-	
     // return the portID
     return portId;
 }
