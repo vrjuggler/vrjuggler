@@ -201,14 +201,14 @@ AC_DEFUN(TWEEK_PATH_CXX,
             TWEEK_INCLUDES_MIN=`$TWEEK_CONFIG $tweek_config_args --includes --min`
             TWEEK_EXTRA_LIBS_CC_MIN=`$TWEEK_CONFIG $tweek_config_args --extra-libs $ABI --min`
             TWEEK_EXTRA_LIBS_LD_MIN=`$TWEEK_CONFIG $tweek_config_args --extra-libs $ABI --linker --min`
-            TWEEK_LIBS_CC_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --min` $TWEEK_EXTRA_LIBS_CC_MIN"
-            TWEEK_LIBS_LD_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --min` $TWEEK_EXTRA_LIBS_LD_MIN"
-            TWEEK_PROF_LIBS_CC_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --min --profiled` $TWEEK_EXTRA_LIBS_CC_MIN"
-            TWEEK_PROF_LIBS_LD_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --min --profiled` $TWEEK_EXTRA_LIBS_LD_MIN"
-            TWEEK_LIBS_STATIC_CC_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static --min` $TWEEK_EXTRA_LIBS_CC_MIN"
-            TWEEK_LIBS_STATIC_LD_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static --min` $TWEEK_EXTRA_LIBS_LD_MIN"
-            TWEEK_PROF_LIBS_STATIC_CC_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static --min --profiled` $TWEEK_EXTRA_LIBS_CC_MIN"
-            TWEEK_PROF_LIBS_STATIC_LD_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static --min --profiled` $TWEEK_EXTRA_LIBS_LD_MIN"
+            TWEEK_LIBS_CC_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --min`"
+            TWEEK_LIBS_LD_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --min`"
+            TWEEK_PROF_LIBS_CC_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --min --profiled`"
+            TWEEK_PROF_LIBS_LD_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --min --profiled`"
+            TWEEK_LIBS_STATIC_CC_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static --min`"
+            TWEEK_LIBS_STATIC_LD_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static --min`"
+            TWEEK_PROF_LIBS_STATIC_CC_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static --min --profiled`"
+            TWEEK_PROF_LIBS_STATIC_LD_MIN="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static --min --profiled`"
 
             ifelse([$2], , :, [$2])
          fi
