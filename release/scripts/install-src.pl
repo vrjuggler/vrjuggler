@@ -128,8 +128,8 @@ push(@InstallOps::dirstack, "$opt_i");
 
 # List of installable file extensions.  These are checked with a
 # case-insensitive regular expression.
-my @exts = qw(.txt .c .h .cxx .cpp .pl .desc .dsc .mk .htm .html .gif
-              .jpg .dsw .dsp .vcproj .java .jar .config .cfg .idl);
+my @exts = qw(.txt .c .h .cxx .cpp .pl .jdef .desc .dsc .mk .htm .html .gif
+              .jpg .dsw .dsp .vcproj .java .jar .jconf .config .cfg .idl);
 
 if ( $opt_e )
 {
