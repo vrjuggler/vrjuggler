@@ -37,8 +37,19 @@ srcdir=		@srcdir@
 
 MKINSTALLDIRS=	$(scriptdir)/mkinstalldirs
 
+AR=		@AR@ $(ARFLAGS)
+AR_NAME_FLAG=	@AR_NAME_FLAG@
+ARFLAGS=	@ARFLAGS@
 CXX=		@CXX@
-CXXFLAGS=	$(shell vpr-config --cxxflags) @PYTHON_INCLUDES@ -I$(srcdir)
+
+ifeq (@OS_TYPE@, Win32)
+   CXXFLAGS=	$(shell vpr-config --includes) /Zm800 /Z7 /Od /Ob0 /GX	\
+		/GR /Op /Zc:wchar_t,forScope
+else
+   CXXFLAGS=	$(shell vpr-config --cxxflags)
+endif
+
+CXXFLAGS+=	@PYTHON_INCLUDES@ -I$(srcdir)
 
 PYTHON_VERSION=		@PYTHON_VERSION@
 
@@ -94,7 +105,7 @@ install:
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 $(PYJUTIL_ARC): $(OBJS)
-	ar -ruv $@ $(OBJS)
+	$(AR) $(AR_NAME_FLAG)$@ $(OBJS)
 
 #%.$(ARCEXT): %.$(OBJEXT)
 #	$(CXX) -shared -o $@ $< $(BOOST_PYTHON_LDFLAGS)			\
