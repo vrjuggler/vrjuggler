@@ -1,61 +1,54 @@
-<html><head><TITLE>Other Documented Items</TITLE></head>
-<body BGCOLOR=#FFFFFF>
-<BR><BR>
-<CENTER><H3>Other Documented Items</H3></CENTER>
+<HEAD>
+  <TITLE>Other Documented Items</TITLE>
+</HEAD>
 
-<BR><BR>
+<BODY BGCOLOR="#ffffff">
 
-<B>FUNCTIONS</B><BR><BR>
-<UL><DL>
+<DIV ALIGN="CENTER">
+  <H3>Other Documented Items</H3>
+</DIV>
+
+<P>
+
+<H3>FUNCTIONS</H3>
+
+<DL>
 {foreach func}
-
-    <DT>{type}<B> {name}</B>({args}) {if const}const{endif}{if throws} <FONT COLOR="red"> throws {throwclass}({throwargs}) </FONT>{endif};
-    <DD><FONT FACE="Times" SIZE=3>
-      {if brief}  <B>{brief}</B> <br> {endif}
-      {if detail} {detail} <br> {endif}
-      </FONT>
-
-<br>
+  <DT>{type} <B>{name}</B>({args}) {if const} const {endif}
+      {if throws}<FONT COLOR="#ff0000">throws {throwclass}({throwargs})</FONT>{endif};
+    <DD>{if brief} <B>{brief}</B><P> {endif}
+        {if detail} {detail} {endif}
 {next}
-</DL></UL>
-<B>GLOBALS</B><BR><BR>
-<UL><DL>
+</DL>
+
+<H3>GLOBALS</H3>
+
+<DL>
 {foreach global}
-
-    <DT>{type}<B> {name}</B>{if enum} {lb}{args}{rb} {endif}{else}{args}{endelse};
-    <DD><FONT FACE="Times" SIZE=3>
-      {if brief}  <B>{brief}</B> <br> {endif}
-      {if detail} {detail} <br> {endif}
-      </FONT>
-
-<br>
+  <DT>{type} <B>{name}</B> {if enum}{lb}{args}{rb}{endif}{else}{args}{endelse};
+    <DD>{if brief} <B>{brief}</B><P> {endif}
+        {if detail} {detail} {endif}
 {next}
-</DL></UL>
-<B>TYPEDEFS</B><BR><BR>
-<UL><DL>
+</DL>
+
+<H3>TYPEDEFS</H3>
+
+<DL>
 {foreach typedef}
-
-    <DT>{type}<B> {name}</B>{if enum} {lb}{args}{rb} {endif};
-    <DD><FONT FACE="Times" SIZE=3>
-      {if brief}  <B>{brief}</B> <br> {endif}
-      {if detail} {detail} <br> {endif}
-      </FONT>
-
-<br>
+  <DT>{type} <B>{name}</B> {if enum} {lb}{args}{rb}{endif};
+    <DD>{if brief} <B>{brief}</B><P> {endif}
+        {if detail} {detail} {endif}
 {next}
-</DL></UL>
-<B>MACROS</B><BR><BR>
-<UL><DL>
+</DL>
+
+<H3>MACROS</H3>
+
+<DL>
 {foreach macro}
-
-    <DT><B>{name}</B> : {args}
-    <DD><FONT FACE="Times" SIZE=3>
-      {if brief}  <B>{brief}</B> <br> {endif}
-      {if detail} {detail} <br> {endif}
-      </FONT>
-
-<br>
+  <DT><B>{name}</B>: {args}
+    <DD>{if brief} <B>{brief}</B><P> {endif}
+        {if detail} {detail} <br> {endif}
 {next}
-</DL></UL>
-</body>
-</html>
+</DL>
+
+</BODY>
