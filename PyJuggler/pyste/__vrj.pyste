@@ -40,9 +40,7 @@ GlApp = Class('vrj::GlApp', 'vrj/Draw/OGL/GlApp.h')
 exclude(GlApp.getDrawManager)
 exclude(GlApp.getSoundManager)
 
-# XXX: Cannot expose vrj::OsgApp or vrj::OpenSGApp without OSG and OpenSG
-# installed (respectively).
-#Class('vrj::OsgApp', 'vrj/Draw/OSG/OsgApp.h')
+# XXX: No Python bindings are available for OpenSG yet.
 #Class('vrj::OpenSGApp', 'vrj/Draw/OpenSG/OpenSGApp.h')
 
 User = Class('vrj::User', 'vrj/Kernel/User.h')
