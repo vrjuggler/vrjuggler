@@ -8,6 +8,10 @@
 #include <gadget/Type/DigitalInterface.h>
 #include <cppdom/cppdom.h>
 
+#include <boost/smart_ptr.hpp>
+#include <gadget/InputLoggerPtr.h>
+
+
 namespace gadget
 {
 

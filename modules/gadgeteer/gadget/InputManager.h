@@ -46,6 +46,7 @@
 
 #include <vpr/Util/Singleton.h>
 #include <jccl/RTRC/ConfigChunkHandler.h>
+#include <gadget/InputLoggerPtr.h>
 #include <map>
 
 #include <boost/smart_ptr.hpp>
@@ -59,7 +60,6 @@ class Proxy;
 class Input;
 class RemoteInputManager;
 class DeviceFactory;
-class InputLogger;
 
 /**
  * The Input Manager holds an manages all Gadgeteer Input devices.
@@ -218,6 +218,11 @@ protected:
     */
    vpr::ReturnStatus loadDriverDSO(vpr::LibraryPtr driverDSO);
 
+public:
+   /** Get the input logger connected to the system */
+   gadget::InputLoggerPtr getInputLogger()
+   { return mInputLogger; }
+
    /* friends */
    friend class InputLogger;  /**< Make input logger a friend */
 
@@ -236,9 +241,9 @@ protected:
    */
    std::map<std::string, std::string>   mProxyAliases;
 
-   jccl::ConfigChunkPtr             mDisplaySystemChunk;    /**< Config chunk for the displaySystem */
+   jccl::ConfigChunkPtr          mDisplaySystemChunk;    /**< Config chunk for the displaySystem */
 
-   boost::shared_ptr<InputLogger>   mInputLogger;           /**< The input logger for the system. Constructed on demand. */
+   gadget::InputLoggerPtr        mInputLogger;           /**< The input logger for the system. Constructed on demand. */
 
 private:
    /** Function to configure the proxy Alias array. */
