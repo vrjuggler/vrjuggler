@@ -214,6 +214,8 @@ bool PerformanceMonitor::configCanHandle(ConfigChunkPtr chunk) {
             if (perf_target)
                 perf_target->removePeriodicCommand (i->command);
         }
+
+        LabeledPerfDataBuffer::deactivate();
     }
 
 
@@ -258,6 +260,8 @@ bool PerformanceMonitor::configCanHandle(ConfigChunkPtr chunk) {
         for (val = v.begin(); val != v.end(); val++) {
             delete (*val);
         }
+
+        LabeledPerfDataBuffer::activate();
     }
 
 
