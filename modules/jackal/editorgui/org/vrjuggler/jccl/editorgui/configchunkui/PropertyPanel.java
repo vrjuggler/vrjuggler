@@ -140,7 +140,6 @@ public class PropertyPanel extends JPanel implements ActionListener {
 
 	    VarValuePanel p;
 	    p = makeVarValuePanel (pr, i);
-	    //p.setValue(pr.getValue(i));
 	    valuepanels.add(p);
 	    eastpanellayout.setConstraints(p, c);
 	    eastpanel.add (p);
@@ -177,10 +176,15 @@ public class PropertyPanel extends JPanel implements ActionListener {
             return retval;
 	}
 	else {
+            VarValue v;
+            if (valindex < pr.getNum())
+                v = pr.getValue(valindex);
+            else
+                v = new VarValue (pr.getValType());
 	    retval = new VarValueStandardPanel ();
             retval.setConfigUIHelper (uihelper_module);
             retval.setPropertyDesc (pr.getDesc());
-            retval.setValue (pr.getValue (valindex));
+            retval.setValue (v);
             return retval;
         }
     }

@@ -202,14 +202,17 @@ public class VarValueStandardPanel
 
 
 
+    /** Set the VarValue to be displayed in this panel.
+     *  @param v - a non-null VarValue.
+     */
     public void setValue (VarValue v) {
-	// sets the displayed value.
+        // sets the displayed value.
         if (choice != null) {
-	    choice.setSelectedItem(desc.getEnumString(v));
+            choice.setSelectedItem(desc.getEnumString(v));
         }
-	else
-	    /* set text in textbox */
-	    text.setText(v.toString());
+        else
+            /* set text in textbox */
+            text.setText(v.toString());
     }
 
 
