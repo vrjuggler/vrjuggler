@@ -776,7 +776,12 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
    private void networkConnectAction (ActionEvent e)
    {
       ConnectionDialog dialog = new ConnectionDialog(this, "ORB Connections");
-      dialog.display();
+      Dimension dlgSize = dialog.getPreferredSize();
+      Dimension frmSize = getSize();
+      Point loc = getLocation();
+      dialog.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x,
+                         (frmSize.height - dlgSize.height) / 2 + loc.y);
+      dialog.show();
 
       if ( dialog.getStatus() == ConnectionDialog.OK_OPTION )
       {

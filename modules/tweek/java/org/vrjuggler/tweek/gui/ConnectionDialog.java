@@ -62,9 +62,10 @@ import tweek.SubjectManagerPackage.SubjectMgrInfoItem;
  */
 public class ConnectionDialog extends JDialog
 {
-   public ConnectionDialog (Frame owner, String title)
+   public ConnectionDialog(Frame owner, String title)
    {
       super(owner, title);
+      enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 
       try
       {
@@ -102,13 +103,7 @@ public class ConnectionDialog extends JDialog
          });
 
       this.setModal(true);
-      this.setLocationRelativeTo(owner);
-   }
-
-   public void display ()
-   {
       this.pack();
-      this.setVisible(true);
    }
 
    public int getStatus ()
@@ -145,14 +140,15 @@ public class ConnectionDialog extends JDialog
    public static final int CANCEL_OPTION = JOptionPane.CANCEL_OPTION;
    public static final int CLOSED_OPTION = JOptionPane.CLOSED_OPTION;
 
-   protected void processWindowEvent (WindowEvent e)
+   protected void processWindowEvent(WindowEvent e)
    {
-      super.processWindowEvent(e);
-
-      if (e.getID() == WindowEvent.WINDOW_CLOSING)
+      if ( e.getID() == WindowEvent.WINDOW_CLOSING )
       {
          status = CLOSED_OPTION;
+         dispose();
       }
+
+      super.processWindowEvent(e);
    }
 
    private void jbInit() throws Exception
@@ -393,18 +389,18 @@ public class ConnectionDialog extends JDialog
       namingSubcontext       = mNamingContextField.getText();
    }
 
-   private void okButtonAction (ActionEvent e)
+   private void okButtonAction(ActionEvent e)
    {
       status = OK_OPTION;
       commit();
-      setVisible(false);
+      dispose();
    }
 
    /**
     * Sets the close status to CANCEL_OPTION and closes this dialog box.  If
     * an ORB is running, it is shut down.
     */
-   private void cancelButtonAction (ActionEvent e)
+   private void cancelButtonAction(ActionEvent e)
    {
       // If we have an ORB running, we have to shut it down.
       if ( null != corbaService )
@@ -414,7 +410,7 @@ public class ConnectionDialog extends JDialog
       }
 
       status = CANCEL_OPTION;
-      setVisible(false);
+      dispose();
    }
 
    private void commit()
