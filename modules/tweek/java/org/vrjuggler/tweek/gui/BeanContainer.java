@@ -41,12 +41,14 @@ import java.beans.Beans;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.tree.TreeModel;
+import org.vrjuggler.tweek.TweekCore;
 import org.vrjuggler.tweek.beandelivery.*;
 import org.vrjuggler.tweek.beans.*;
 import org.vrjuggler.tweek.event.*;
 import org.vrjuggler.tweek.net.CommunicationEvent;
 import org.vrjuggler.tweek.net.CommunicationListener;
 import org.vrjuggler.tweek.net.corba.*;
+import org.vrjuggler.tweek.text.MessageDocument;
 import tweek.*;
 
 
@@ -119,7 +121,8 @@ public class BeanContainer
 
    public synchronized void addUserLevelChangeListener(UserLevelChangeListener listener)
    {
-      System.out.println("Adding new UserLevelChangeListener");
+      MessageDocument doc = TweekCore.instance().getMessageDocument();
+      doc.printStatusnl("Adding new UserLevelChangeListener");
       mLevelListeners.add(listener);
    }
 
@@ -150,7 +153,8 @@ public class BeanContainer
 
    public synchronized void addCommunicationListener(CommunicationListener listener)
    {
-      System.out.println("Adding new CommunicationListener");
+      MessageDocument doc = TweekCore.instance().getMessageDocument();
+      doc.printStatusnl("Adding new CommunicationListener");
       mCommListeners.add(listener);
    }
 
