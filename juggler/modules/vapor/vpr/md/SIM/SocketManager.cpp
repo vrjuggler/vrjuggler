@@ -383,7 +383,7 @@ namespace sim
       local_addr = handle->getLocalAddr();
 
       // If any addr, then set it to local host
-      // Case localAddr = InetAddr::Any  ==> 0x7F000001 with random port
+      // Case localAddr = InetAddr::Any  ==> "localhost" with random port
       // Case localhost = ip addr        ==> "localhost" ip address
       if((local_addr == vpr::InetAddr::AnyAddr) ||
          (local_addr.getAddressValue() == LocalHostIpAddrValue) )
@@ -411,17 +411,23 @@ namespace sim
          {  port_num = net_node->getUnassignedTcpPortNumber(); }
          else
          {  port_num = net_node->getUnassignedUdpPortNumber(); }
+         local_addr.setPort(port_num);
       }
 
       // Set the final local address and add the socket to the node
       handle->setLocalAddr(local_addr);
       net_node->addSocket( handle );
 
-      // Store the network node version in the socket for fast access
+      // Store the network node vertex in the socket for fast access
       NetworkGraph::net_vertex_t node_vertex;
       status = net_graph.getNodeWithAddr(local_addr.getAddressValue(), node_vertex);
       vprASSERT(status.success());
       handle->setNetworkNode( node_vertex );
+
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "SocketManager::assignToNode(): Assigned node:  local_addr:" << local_addr
+         << "   type: " << ((handle->getType()==vpr::SocketTypes::STREAM) ? "STREAM" : "DATAGRAM")
+         << "  --> node: " << net_node->getIpAddressString() << std::endl <<  vprDEBUG_FLUSH;
 
       return status;
    }

@@ -207,12 +207,18 @@ vpr::Uint32 NetworkNode::getUnassignedTcpPortNumber()
       socket_map_t::iterator next = i; ++next;
       if(next != mStreamSocketMap.end())
       {
-         if((*next).first != ((*i).first + 1))     // If not sequential
+         if((*next).first != ((*i).first + 1) )     // If not sequential
          {
             ret_val = (*i).first + 1;
             found_one = true;
          }
       }
+      else // There is no next, so use the one after the current
+      {
+         ret_val = (*i).first +1;
+         found_one = true;
+      }
+
    }
 
    vprASSERT( mStreamSocketMap.find(ret_val) == mStreamSocketMap.end() && "Returned a value that already exists");
@@ -230,11 +236,16 @@ vpr::Uint32 NetworkNode::getUnassignedUdpPortNumber()
       socket_map_t::iterator next = i; ++next;
       if(next != mDgramSocketMap.end())
       {
-         if((*next).first != ((*i).first + 1))     // If not sequential
+         if((*next).first != ((*i).first + 1) )     // If not sequential
          {
             ret_val = (*i).first + 1;
             found_one = true;
          }
+      }
+      else // There is no next, so use the one after the current
+      {
+         ret_val = (*i).first +1;
+         found_one = true;
       }
    }
 
