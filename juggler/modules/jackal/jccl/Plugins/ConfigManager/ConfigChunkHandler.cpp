@@ -69,6 +69,8 @@ int vjConfigChunkHandler::configProcessPending(bool lockIt)
          std::string chunk_name = cur_chunk->getProperty("name");
          std::string chunk_type = cur_chunk->getType();
 
+         vjDEBUG(vjDBG_ALL,vjDBG_VERB_LVL) << "Item: name:" << chunk_name << " type:" << chunk_type << std::endl << vjDEBUG_FLUSH;
+
          // If the current handler (this) knows about the chunk
          if(this->configCanHandle(cur_chunk))
          {
