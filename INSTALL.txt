@@ -123,6 +123,17 @@ Introduction
    support for templates and the C++ standard in general, users need to be
    aware that it may not be possible.
 
+   VR Juggler and all its modules have a "unified" build system. That is, the
+   same build system works on UNIX-based systems as on Win32. To do this, we
+   require the use of Cygwin (http://sources.redhat.com/cygwin/download.html)
+   to provide a build environment for all of the code found in this source
+   tree. We also require the use of an extension to Cygwin that we call
+   "juggler-tools". The archive may be downloaded from
+   http://www.vrjuggler.org/download/juggler-tools.zip. After being
+   installed, the juggler-tools directory should be added at the end of your
+   path so that it adds to the Cygwin environment and does not conflict with
+   it.
+
 Getting the Source Code
 
    This section is for those users who want to get the Juggler Project source
