@@ -196,7 +196,9 @@ case $target_os in
         ;;
     # SGI running IRIX 6.*.
     irix6*)
-        DBG_FLAGS="$DBG_FLAGS -gslim"
+        if test "x$USE_GCC" != "xyes" ; then
+            DBG_FLAGS="$DBG_FLAGS -gslim"
+        fi
 
         if test "x$SUBSYSTEM" = "xnone" ; then
             AC_MSG_WARN(*** Forcing the use of SPROC subsystem ***)
