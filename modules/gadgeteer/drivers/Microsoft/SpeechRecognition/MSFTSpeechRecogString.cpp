@@ -51,7 +51,7 @@ MSFTSpeechRecogString::MSFTSpeechRecogString()
 
 bool MSFTSpeechRecogString::config(jccl::ConfigElementPtr c)
 {
-   if(! (Input::config(c) && SpeechRecogString::config(c)))
+   if(! (Input::config(c) && String::config(c)))
    {
       return false;
    }

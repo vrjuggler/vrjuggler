@@ -44,7 +44,7 @@
 
 #include <vpr/Thread/Thread.h>
 #include <gadget/Type/Input.h>
-#include <gadget/Type/SpeechRecogDigital.h>
+#include <gadget/Type/Command.h>
 #include <gadget/Type/InputMixer.h>
 
 #include <drivers/Microsoft/SpeechRecognition/MSFTSpeechServerManager.h>
