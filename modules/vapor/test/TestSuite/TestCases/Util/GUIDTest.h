@@ -52,10 +52,15 @@ public:
       CPPUNIT_ASSERT(guid1_again == (*guid2));
 
       // Test assignment
-      vpr::GUID guid3, guid4;
-      guid3.generate();
+      //vpr::GUID::generate_tag_type gen_tag;
+      //vpr::GUID guid3( gen_tag );
+      typedef vpr::GUID::generate_tag_type gen_type;
+      vpr::GUID guid3( gen_type() );
+      vpr::GUID guidtemp( gen_type() );
+      vpr::GUID guid4;
       guid3 = guid4;
       CPPUNIT_ASSERT(guid3 == guid4);
+      CPPUNIT_ASSERT(guid3 != vpr::GUID::NullGUID);   // Make sure it generated something
 
       // Test copy constructor
       vpr::GUID guid5(guid3);
@@ -88,7 +93,7 @@ public:
       CPPUNIT_ASSERT(guid3 != guid4);
       CPPUNIT_ASSERT(guid3 == guid3);
       CPPUNIT_ASSERT(guid4 == guid4);
-      
+
       CPPUNIT_ASSERT(vprDBG_ALL == guid5);
       CPPUNIT_ASSERT(guid5 == vprDBG_ALL);
 
@@ -123,18 +128,18 @@ public:
    {
        /*
        if (0>100)
-          ; 
+          ;
        else
        {
           bool enabled = (vpr::Debug::instance()->isDebugEnabled());
           bool low_level = (0 <= vpr::Debug::instance()->getLevel());
           bool cat_allowed = (vpr::Debug::instance()->isCategoryAllowed(vprDBG_ALL));
 
-          if(enabled && low_level && cat_allowed) 
+          if(enabled && low_level && cat_allowed)
             vpr::Debug::instance()->getStream(vprDBG_ALL, 0, true) << "out: -1" << vpr::StreamUnLock(vpr::Debug::instance()->debugLock()) << std::flush;
        }
        */
-      
+
       std::cout << "\n------ Should see debug output ----" << std::endl;
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "out: 0" << vprDEBUG_FLUSH;
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "out: 1" << vprDEBUG_FLUSH;
@@ -151,7 +156,7 @@ public:
       test_suite->addTest(new CppUnit::TestCaller<GUIDTest>("testConstructor",
                                                             &GUIDTest::testConstructor));
       test_suite->addTest(new CppUnit::TestCaller<GUIDTest>("testCompare",
-                                                            &GUIDTest::testCompare));      
+                                                            &GUIDTest::testCompare));
 
       return test_suite;
    }

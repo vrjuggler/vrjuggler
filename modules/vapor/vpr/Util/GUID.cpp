@@ -58,7 +58,8 @@ namespace vpr
       };
 
  const vpr::GUID GUID::NullGUID( null_guid_struct ); 
-
+ 
+ vpr::GUID::generate_tag_type GUID::generate_tag;
 //
       
 
