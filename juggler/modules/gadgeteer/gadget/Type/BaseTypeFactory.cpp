@@ -136,7 +136,9 @@ void BaseTypeFactory::hackLoadKnownDevices()
        (NULL == input_speech_string) ||
        (NULL == input_speech_digital) )
    {
-      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED,"ERROR:") << " Failed to load a known device\n"
+         << vprDEBUG_FLUSH;
    }
 }
 
@@ -150,10 +152,7 @@ void BaseTypeFactory::registerNetDevice(BaseTypeConstructorBase* constructor)
 // for one that knows how to load the device
 bool BaseTypeFactory::recognizeNetDevice(std::string base_type)
 {
-   if(findConstructor(base_type) == -1)
-      return false;
-   else
-      return true;
+   return ! (findConstructor(base_type) == -1);
 }
 
 /**
@@ -171,7 +170,8 @@ Input* BaseTypeFactory::loadNetDevice(std::string base_type)
    new_dev = constructor->createNetDevice(base_type);
    if(new_dev!=NULL)
    {
-      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[NetDevice Factory] Found the BaseType\n"<< vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL)
+         << "[NetDevice Factory] Found the BaseType\n"<< vprDEBUG_FLUSH;
    }
    return new_dev;
 }
@@ -180,13 +180,15 @@ int BaseTypeFactory::findConstructor(std::string base_type)
 {
    //std::string element_type(element->getID());
 
-   for(unsigned int i=0;i<mConstructors.size();i++)
+   for ( unsigned int i = 0; i < mConstructors.size(); ++i )
    {
       // Get next constructor
       BaseTypeConstructorBase* construct = mConstructors[i];
       vprASSERT(construct != NULL);
       if(construct->getBaseType() == base_type)
+      {
          return i;
+      }
    }
 
    return -1;
@@ -203,7 +205,7 @@ void BaseTypeFactory::debugDump()
                              << mConstructors.size() << "\n"
                              << vprDEBUG_FLUSH;
 
-   for(unsigned int cNum=0;cNum<mConstructors.size();cNum++)
+   for ( unsigned int cNum = 0; cNum < mConstructors.size(); ++cNum )
    {
       BaseTypeConstructorBase* dev_constr = mConstructors[cNum];
       vprDEBUG(gadgetDBG_RIM, vprDBG_VERB_LVL)
