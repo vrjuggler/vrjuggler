@@ -298,6 +298,8 @@ public class SimKeyboardEditorPanel
    private Map           mSimDevProxyDefMap    = new HashMap();
    private String        mDataSourceName       = null;
 
+   private Map mSimEditorCache = new HashMap();
+
    private SimDeviceEditor mCurSimEditor = null;
    private KeyboardEditorPanel mKeyboardEditor = new KeyboardEditorPanel();
 
@@ -418,31 +420,44 @@ public class SimKeyboardEditorPanel
          SimDeviceConfig sim_dev_cfg = (SimDeviceConfig) selection;
          ConfigElement dev_elt       = sim_dev_cfg.getDevice();
 
-         // Look up the editor for this config element's type.
-         Object value =
-            sSimDevEditorMap.get(dev_elt.getDefinition().getToken());
+         Object cached_editor = mSimEditorCache.get(dev_elt);
 
-         if ( value != null )
+         if ( cached_editor != null )
          {
-            Class editor_class = (Class) value;
-
-            try
-            {
-               mCurSimEditor = (SimDeviceEditor) editor_class.newInstance();
-               mCurSimEditor.setKeyboardEditorPanel(mKeyboardEditor);
-               mCurSimEditor.setConfig(mContext, dev_elt);
-               mDeviceSplitPane.remove(mEmptyEditor);
-               mDeviceSplitPane.add(mCurSimEditor.getEditor(),
-                                    JSplitPane.LEFT);
-            }
-            catch (Exception ex)
-            {
-               ex.printStackTrace();
-            }
+            mCurSimEditor = (SimDeviceEditor) cached_editor;
+            mCurSimEditor.setKeyboardEditorPanel(mKeyboardEditor);
+            mDeviceSplitPane.remove(mEmptyEditor);
+            mDeviceSplitPane.add(mCurSimEditor.getEditor(), JSplitPane.LEFT);
          }
          else
          {
-            /* No editor! */ ;
+            // Look up the editor for this config element's type.
+            Object value =
+               sSimDevEditorMap.get(dev_elt.getDefinition().getToken());
+
+            if ( value != null )
+            {
+               Class editor_class = (Class) value;
+
+               try
+               {
+                  mCurSimEditor = (SimDeviceEditor) editor_class.newInstance();
+                  mCurSimEditor.setKeyboardEditorPanel(mKeyboardEditor);
+                  mCurSimEditor.setConfig(mContext, dev_elt);
+                  mDeviceSplitPane.remove(mEmptyEditor);
+                  mDeviceSplitPane.add(mCurSimEditor.getEditor(),
+                                       JSplitPane.LEFT);
+                  mSimEditorCache.put(dev_elt, mCurSimEditor);
+               }
+               catch (Exception ex)
+               {
+                  ex.printStackTrace();
+               }
+            }
+            else
+            {
+               /* No editor! */ ;
+            }
          }
       }
 
