@@ -98,7 +98,9 @@ private:
    {
       //cout << "\n--- myDraw() ---\n";
 
-      cout << "HeadPos:" << vjCoord(*mHead->GetData()).pos << endl;
+      //cout << "HeadPos:" << vjCoord(*mHead->GetData()).pos << "\t"
+      //     << "WandPos:" << vjCoord(*mWand->GetData()).pos << endl;
+	    
 
       glClearColor(0.0, 0.0, 0.0, 0.0);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
