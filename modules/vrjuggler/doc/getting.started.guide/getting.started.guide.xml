@@ -199,7 +199,7 @@ value</screen>
             <varlistentry>
                <term>JDK_HOME</term>
                <listitem>
-                  <para>The <varname>JDK_HOME</varname> environment variable is required by the script that starts VjControl, the VR Juggler configuration program. If Java is installed on your system, <varname>JDK_HOME</varname> may already be set. If not, it needs to be set to the base of the Java installation.</para>
+                  <para>The <varname>JDK_HOME</varname> environment variable is required by the script that starts VrjConfig, the VR Juggler configuration program. If Java is installed on your system, <varname>JDK_HOME</varname> may already be set. If not, it needs to be set to the base of the Java installation.</para>
                </listitem>
             </varlistentry>
             <varlistentry>
@@ -289,16 +289,16 @@ value</screen>
          <para>There are two ways to compile VR Juggler applications: from the command line or with Microsoft Visual Studio. Compiling an application on the command line requires the use of GNU make (often installed as <command>gmake</command>) so that it will work on all supported platforms including Win32. Using Microsoft Visual Studio will only work on Win32.</para>
          <section>
             <title>Compiling from the Command Line</title>
-            <para>All the sample programs in <filename>$VJ_BASE_DIR/share/samples/tutorials/simpleApp</filename> use the same basic steps to compile unless otherwise noted. Always refer to the top of the sample application's <filename>Makefile</filename> for information that may be specific to building that application. In general, though, all applications' makefiles are compatible with the standard version of the <command>make</command>(1) utility. This includes the <command>nmake</command> command provided with Visual C++.</para>
-            <para>The example used here will be the Torus application found in <filename>$VJ_BASE_DIR/share/vrjuggler/samples/tutorials/simpleApp</filename>. It is an OpenGL-based application that will compile and run on all platforms supported by VR Juggler. Begin by changing into the directory <filename>$VJ_BASE_DIR/share/vrjuggler/samples/tutorials/simpleApp</filename> in a command shell.</para>
-            <para>To compile simpleApp, simply enter the following:</para>
+            <para>All the sample programs in <filename>$VJ_BASE_DIR/share/samples</filename> use the same basic steps to compile unless otherwise noted. Always refer to the top of the sample application's <filename>Makefile</filename> for information that may be specific to building that application. In general, though, all applications' makefiles required the GNU version of the <command>make</command>(1) utility, sometimes installed as <command>gmake</command>.</para>
+            <para>The example used here will be the MPApp tutorial application found in <filename>$VJ_BASE_DIR/share/vrjuggler/samples/tutorials/MPApp</filename>. It is an OpenGL-based application that will compile and run on all platforms supported by VR Juggler. Begin by changing into the directory <filename>$VJ_BASE_DIR/share/vrjuggler/samples/tutorials/MPApp</filename> in a command shell.</para>
+            <para>To compile MPApp, simply enter the following:</para>
             <screen>% gmake</screen>
-            <para>The compile process will then begin. As noted above, the use of GNU make is required to use the distributed makefiles. With Cygwin, GNU make is simple <command>make</command>. If you have your system set up properly, it will complete with an executable <filename>simpleApp</filename> file (or <filename>simpleApp.exe</filename> on Win32) in the directory. Now that you have a program compiled, it is time to learn how to run it. (Readers who are not using Visual Studio can skip ahead to <xref linkend="running.app.chapter"/>.)</para>
+            <para>The compile process will then begin. As noted above, the use of GNU make is required to use the distributed makefiles. With Cygwin, GNU make is simply <command>make</command>. If you have your system set up properly, it will complete with an executable <filename>MPApp</filename> file (or <filename>MP2App.exe</filename> on Win32) in the directory. Now that you have a program compiled, it is time to learn how to run it. (Readers who are not using Visual Studio can skip ahead to <xref linkend="running.app.chapter"/>.)</para>
          </section>
          <section>
             <title>Compiling Using Microsoft Visual Studio </title>
             <note>
-               <para>This section has not been updated for VR Juggler 1.1/2.0 yet. Until it is updated, Win32 users must complie from the command line or create Visual C++ workspaces themselves.</para>
+               <para>This section has not been updated for VR Juggler 1.1/2.0 yet. Until it is updated, Win32 users must compile from the command line or create Visual C++ workspaces themselves.</para>
             </note>
             <para>All OpenGL sample applications are shipped with pre-configured Microsoft Visual C++ workspaces. This is done to help new users get started with compiling VR Juggler applications and to give experienced Visual Studio users a starting place for their application development. To use the workspace for the Torus application, begin by opening the folder containing the source code and double-clicking on <filename>torus.dsw</filename>.</para>
             <figure float="1">
@@ -357,22 +357,18 @@ value</screen>
             </figure>
          </section>
       </section>
-      <section>
-         <title>Additional Notes</title>
-         <para>In some cases, VR Juggler applications have makefiles that require the use of GNU make. This is always noted in the heading comments of Makefile in the application's directory. GNU make is free software that can be downloaded from <ulink url="http://www.gnu.org/">the GNU Project</ulink>. Some operating system vendors provide pre-compiled packages for easy installation of GNU software.</para>
-      </section>
    </chapter>
    <chapter id="running.app.chapter">
       <title>Running a VR Juggler Sample Program</title>
       <para>It is important to note that the same VR Juggler application can be run in simulator mode or in a full-scale VR system with no modifications. What does change is the configuration files used when starting the program. In <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>, you can find many basic configuration files including those for running in simulator using a mouse and keyboard to simulate VR input devices and some example files based on those used for the VRAC C2 system. In the directory, you will see some files with names containing <quote>mixin</quote>. These are special files that provide a specific capability not necessarily needed by all applications. They can be mixed in (hence the name) with other configuration files as needed. The configuration files found in the <filename>configFiles</filename> directory will be referenced in the examples provided, so be sure you know where they are.</para>
       <section>
          <title><anchor id="reading"/>Required Reading </title>
-         <para>Before reading any further, make sure you have already read the instructions on how to install VR Juggler (see <xref linkend="install.vrj.chapter"/>) and on how to configure your environment (see <xref linkend="envvar.chapter"/>). That information will not be repeated, and it is assumed that you already know what we mean by <varname>VJ_BASE_DIR</varname> and <varname>LD_LIBRARY_PATH</varname> to name two environment variables. At this point, it is also assumed that you already have compiled an application (Torus in the case of the examples provided), so you should be sure to have read about how to compile a sample VR Juggler application (in <xref linkend="app.compile.chapter"/>) before proceeding.</para>
+         <para>Before reading any further, make sure you have already read the instructions on how to install VR Juggler (see <xref linkend="install.vrj.chapter"/>) and on how to configure your environment (see <xref linkend="envvar.chapter"/>). That information will not be repeated, and it is assumed that you already know what we mean by <varname>VJ_BASE_DIR</varname> and <varname>LD_LIBRARY_PATH</varname>, to name two environment variables. At this point, it is also assumed that you already have compiled an application (MPApp in the case of the examples provided), so you should be sure to have read about how to compile a sample VR Juggler application (in <xref linkend="app.compile.chapter"/>) before proceeding.</para>
       </section>
       <section>
          <title><anchor id="simulator"/>Running an Application in Simulator Mode </title>
-         <para>Running in simulator mode means that your input is simulated and your display windows have limited functionality. (By, <quote>simulated input</quote>, we mean that input is provided through windows that take keyboard and mouse input and translate that into transformations in the virtual world.) Simulator displays are limited primarily in that they cannot display stereo graphics. It is important to note that a simulator display is a special kind of VR Juggler display. Instead of basing its viewpoint on the head position of one of the users, the viewpoint is controlled by a separate <quote>camera</quote> that is just another positional device. The Sim Display also draws certain objects to help visualize the environment. For example, the heads of users are represented as blue spheres with gray eyes, and a wand (if present) is drawn as a green cone. Besides these common simulator objects, surface displays can be drawn. These are Juggler Displays representing projection screens or HMD viewing projections and are drawn as translucent rectangles.</para>
-         <para>As mentioned, several simulator configuration files are provided with a VR Juggler distribution. These files provide a complete simulation of an immersive environment. Please note that this documentation reflects the state of the configuration files at the time the documentation was written. For more information about the configuration files and how to view or modify the configuration, refer to the <emphasis>VjControl Guide</emphasis>. (Using VjControl is the best way to find out how a specific configuration file is set up.) The configuration files of interest for simulator mode are as follows:</para>
+         <para>Running in <quote>simulator mode</quote> means that your input is simulated and your display windows may have limited functionality. (By, <quote>simulated input</quote>, we mean that input is provided through windows that take keyboard and mouse input and translate that into transformations in the virtual world.) Simulator viewports are limited primarily in that they cannot display stereo graphics. It is important to note that a simulator viewport is a special kind of VR Juggler viewport within a display window. Instead of basing its viewpoint on the head position of one of the users, the viewpoint is controlled by a separate camera that is just another positional device. Within a simulator viewport, VR Juggler draws certain objects to help visualize the environment. For example, the heads of users are represented as blue spheres with gray eyes, and a wand (if present) is drawn as a green pointing device. Besides these common simulator objects, display surfaces can be drawn. These represent projection screens or HMD viewing projections and are drawn as translucent rectangles.</para>
+         <para>As mentioned, several simulator configuration files are provided with a VR Juggler distribution. These files provide a complete simulation of an immersive environment. Please note that this documentation reflects the state of the configuration files at the time the documentation was written. For more information about the configuration files and how to view or modify the configuration, refer to the <emphasis>VrjConfig Guide</emphasis>. (Using VrjConfig is the best way to find out how a specific configuration file is set up.) The configuration files of interest for simulator mode are as follows:</para>
          <itemizedlist>
             <listitem>
                <para><filename>sim.base.config</filename> - The basic configuration file needed by all applications when run in simulator mode. It defines commonly used VR Juggler concepts that are beyond the scope of this particular book. It also defines simulated head movement using the keyboard. For now, it is sufficient to know that it is required to run the sample applications in simulator mode.</para>
@@ -398,23 +394,40 @@ value</screen>
             <listitem>
                <para><filename>sim.wand.mixin.config</filename> - A <quote>mix-in</quote> configuration file that defines simulated wand input using the mouse. This is only required for applications where wand input is used and needs to be simulated when in simulator mode.</para>
             </listitem>
+            <listitem>
+               <para><filename>standalone.config</filename> - A configuration file that stands on its own and combines the functionality of <filename>sim.base.config</filename>, <filename>sim.wand.mixin.config</filename>, and <filename>sim.displays.config</filename>. Note that it uses a single display window for all input.</para>
+               <note>
+                  <para>At the time of this writing, this configuration file only works with OpenGL, OpenSG, and OpenSceneGraph applications running on UNIX-based platforms. It will not work with OpenGL Performer, nor will it work on Win32 or Mac OS X.</para>
+               </note>
+            </listitem>
          </itemizedlist>
-         <para>For the simpleApp application, we need the base configuration file, the displays configuration file, and the wand mix-in configuration file.</para>
+         <para>For the MPApp application, we need the base configuration file, the displays configuration file, and the wand mix-in configuration file.</para>
          <para>Now it is time to run the application&mdash;finally! Make sure that all your environment variables are set properly before trying to start the application. Once you are ready, specify the name of the application and all the configuration files it needs. An example of this is:</para>
-         <screen>% simpleApp sim.base.config sim.displays.config sim.wand.mixin.config</screen>
-         <para>You will notice that no paths are specified for finding the three configuration files. This is intentional to shorten the command line given in the example. In general, you always have to give the full path to the files. VR Juggler 1.0 does not have any logic for defining a path that would contain configuration files<footnote>
-               <para>This has been fixed for VR Juggler 1.1 and beyond.</para>
+         <screen>% MPApp sim.base.config sim.displays.config sim.wand.mixin.config</screen>
+         <para>You will notice that no paths are specified for finding the three configuration files. This is intentional to shorten the command line given in the example. In general, you always have to give the full path to the files<footnote>
+               <para>This is being remedied for VR Juggler 1.1 and beyond.</para>
             </footnote>. Beginning users will typically want to reference the example configuration files in <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>. As you get more comfortable with VR Juggler and its configuration system, you may want to make your own modified files and put them in the directory <filename>$HOME/.vjconfig</filename>. To simplify running applications, you may want to make a shell script (or batch file as appropriate) that does all the work of passing configuration files and common command-line arguments. For now, though, use the path <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename> for each of the configuration files you pass on the command line.</para>
-         <para>As the application starts, you will see a plethora of output (more or less depending on how you have <varname>$VPR_DEBUG_NFY_LEVEL</varname> and <varname>$VPR_DEBUG_CATAGORIES</varname> set), and then one moderately sized simulator display window will open on the left side of your screen while three blank keyboard input windows open on the right side of your screen. The display window will be titled <quote>SimWindow1</quote>, and the keyboard input windows will be titled <quote>Head Keyboard</quote>, <quote>Sim View Cameras Control</quote> and <quote>Wand Keyboard</quote> (in order from the top of the display to the bottom). Do not worry that the keyboard windows are black&mdash;that is normal. The display window will have a purple torus, a cyan sphere and a green cone. The torus is what you have come to see; the sphere is the simulated user's head; and the cone is the simulated user's wand. In <xref linkend="torus.running.figure"/>, we show what this looks on an IRIX 6.5 desktop for comparison with what you are seeing. Note that the head and wand are only rendered in the simulator windows. They are present because head and wand input are being simulated, and it is typically quite helpful to see the results of that simulated input.</para>
-         <figure float="1" id="torus.running.figure">
-            <title>torus running on an IRIX desktop</title>
+         <para>As the application starts, you will see a plethora of output (more or less depending on how you have <varname>$VPR_DEBUG_NFY_LEVEL</varname> and <varname>$VPR_DEBUG_CATAGORIES</varname> set), and then one moderately sized simulator display window will open on the left side of your screen while three blank keyboard input windows open on the right side of your screen. The display window will be titled <quote>SimWindow1</quote>, and the keyboard input windows will be titled <quote>Head Keyboard</quote>, <quote>Sim View Cameras Control</quote> and <quote>Wand Keyboard</quote> (in order from the top of the display to the bottom). Do not worry that the keyboard windows are black&mdash;that is normal. The display window will have an animated blue mesh, a cyan sphere, and a green pointer. The mesh is what you have come to see; the sphere is the simulated user's head; and the pointer is the simulated user's wand. In <xref linkend="MPApp.running.figure"/>, we show what this looks on an IRIX 6.5 desktop for comparison with what you are seeing. Note that the head and wand are only rendered in the simulator windows. They are present because head and wand input are being simulated, and it is typically quite helpful to see the results of that simulated input. To exit the application, press <keysym>ESC</keysym> in the window titled <quote>Head Window</quote>.</para>
+         <figure float="1" id="MPApp.running.figure">
+            <title>MPApp running on a Linux desktop with multiple input windows</title>
             <mediaobject>
                <imageobject>
-                  <imagedata align="center" fileref="figures/torus.thumbnail.png" format="PNG"/>
+                  <imagedata align="center" fileref="figures/MPApp.thumbnail.multi.png" format="PNG"/>
                </imageobject>
             </mediaobject>
          </figure>
-         <para>So now you are probably wondering what you can do with this fancy application. Interaction is done through the keyboard windows on the right side of your desktop. Moving the head is done with the keyboard in <quote>Head Keyboard</quote>; moving the camera is done with with the keyboard int <quote>Sim View Cameras Control</quote>; and moving the wand is done with the mouse in <quote>Wand Keyboard</quote>. As noted above, this information is current as of this writing. For information on how to verify these settings and to view the current configuration, refer to the <emphasis>VjControl Guide</emphasis>. The following list of tables provides all the keyboard and mouse controls for the simulator when using these particular configuration files. Note that it is possible to reconfigure the simulator to suit your preferences. This is provided mainly for those who just want something that works now.</para>
+         <para>With VR Juggler 1.1/2.0, it is possible to use a single window for graphics and for input. To use such a configuration, execute MPApp as follows:</para>
+         <screen>% MPApp standalone.config</screen>
+         <para>This time, only a single window opens, as shown in <xref linkend="MPApp.running.single.figure"/>. It shows the same graphics as before, but now it is configured to take keyboard and mouse input. To exit, press <keysym>ESC</keysym> in the graphics window.</para>
+         <figure float="1" id="MPApp.running.single.figure">
+            <title>MPApp running on a Linux desktop with one window</title>
+            <mediaobject>
+               <imageobject>
+                  <imagedata align="center" fileref="figures/MPApp.thumbnail.single.png" format="PNG"/>
+               </imageobject>
+            </mediaobject>
+         </figure>
+         <para>So now you are probably wondering what you can do with this fancy application. Both of the preceding configurations use the same keyboard/mouse mappings; they vary only in which windows accept the keyboard and mouse input. Using the multi-window configuration, head movement is done with the keyboard in <quote>Head Keyboard</quote>; camera movement is done with with the keyboard in <quote>Sim View Cameras Control</quote>; and wand movement is done with the keyboard and mouse in <quote>Wand Keyboard</quote>. Using the single-window configuration, all input is done with the keyboard and mouse in <quote>Sim Window</quote>. Note, however, that for the single-window configuration, the camera is attached to the user's head for an over-the-shoulder view, and hence, it does not move separately from the head. For information on how to verify these settings and to view the current configuration, refer to the <emphasis>VrjConfig Guide</emphasis>. The following list of tables provides all the keyboard and mouse controls for the simulator when using these particular configuration files. Note that it is possible to reconfigure the simulator to suit your preferences. This is provided mainly for those who just want something that works now.</para>
          <table>
             <title>Moving the simulated head</title>
             <tgroup cols="2">
@@ -562,7 +575,7 @@ value</screen>
             </tgroup>
          </table>
          <table>
-            <title>Moving the camera</title>
+            <title>Moving the camera (multi-window configuration only)</title>
             <tgroup cols="2">
                <thead>
                   <row>
@@ -702,8 +715,8 @@ value</screen>
                <para><filename>C2.mono.displays.config</filename> - The same configuration as <filename>C2.displays.config</filename> except that the walls are opened to render mono graphics.</para>
             </listitem>
          </itemizedlist>
-         <para>Running the application is the same as in simulator mode except that the configuration files given on the command line are different. For example, to run Torus in the C2 with stereo graphics, the following command would be used:</para>
-         <screen>% torus C2.base.config C2.displays.config C2.flock.config C2.ibox_buttons.config</screen>
+         <para>Running the application is the same as in simulator mode except that the configuration files given on the command line are different. For example, to run MPApp in the C2 with stereo graphics, the following command would be used:</para>
+         <screen>% MPApp C2.base.config C2.displays.config C2.flock.config C2.ibox_buttons.config</screen>
       </section>
    </chapter>
 </book>
