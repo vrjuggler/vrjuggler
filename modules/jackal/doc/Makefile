@@ -14,7 +14,7 @@ LATEX_OUTPUT_DIR=	latex
 
 # Fill these in!!  Together, they form the installation prefix.
 webroot=	$(HOME)/public_html/jugglerweb
-instdir=	jccl/0.0.6/programmer.reference
+instdir=	jccl/0.2/programmer.reference
 
 prefix=		$(webroot)/$(instdir)
 
