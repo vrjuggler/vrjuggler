@@ -187,7 +187,7 @@ public:
     //
     //! ARGS: size - The size of the memory block to allocate.
     // -----------------------------------------------------------------------
-#ifndef VJ_OS_MACOSX
+#ifndef VJ_OS_Darwin
     void* operator new (PRUint32 size) {
 #else
 // Mac OS X compilers were complaining about the PRUint32.  It demands size_t!

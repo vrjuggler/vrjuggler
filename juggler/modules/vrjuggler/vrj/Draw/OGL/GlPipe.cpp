@@ -43,7 +43,7 @@
 #include <Kernel/vjSimViewport.h>
 #include <Environment/vjEnvironmentManager.h>
 
-#ifdef VJ_OS_MACOSX
+#ifdef VJ_OS_Darwin
 #   include <OpenGL/gl.h>
 #else
 #   include <GL/gl.h>

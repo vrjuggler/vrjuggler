@@ -37,7 +37,7 @@
 #include <vjConfig.h>
 #include <stdio.h>
 
-#ifdef VJ_OS_MACOSX
+#ifdef VJ_OS_Darwin
 #   include <OpenGL/gl.h>
 #else
 #   include <GL/gl.h>
