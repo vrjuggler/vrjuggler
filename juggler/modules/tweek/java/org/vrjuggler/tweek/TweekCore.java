@@ -331,6 +331,11 @@ public class TweekCore
          {
             mValidateXML = true;
          }
+         else if ( args[i].startsWith("--help") || args[i].startsWith("-h") )
+         {
+            printUsage();
+            System.exit(0);
+         }
          else
          {
             save_args.add(args[i]);
@@ -350,6 +355,24 @@ public class TweekCore
       }
 
       return new_args;
+   }
+
+   /**
+    * Prints the usage information for running the Tweek Java GUI.
+    */
+   protected void printUsage()
+   {
+      System.out.println("--help, -h");
+      System.out.println("    Prints this usage information");
+      System.out.println("--beanpath=<path>");
+      System.out.println("    Specifiy one or more additional directories where Beans may be found");
+      System.out.println("    When using a list of directories, use the platform-specific path separator");
+      System.out.println("--defaultbean=<Panel Bean name>");
+      System.out.println("    Name a Panel Bean to load automatically at startup");
+      System.out.println("--prefs=<file>");
+      System.out.println("    Name a specific preferences file to load instead of <home-dir>/.tweekrc");
+      System.out.println("--validate");
+      System.out.println("    Enable validation of XML Bean list documents");
    }
 
    // ========================================================================
@@ -380,7 +403,7 @@ public class TweekCore
       // This class installs itself with the UI Manager automatically.
       new net.sourceforge.mlf.metouia.MetouiaLookAndFeel();
 
-     try
+      try
       {
          UIManager.setLookAndFeel(prefs.getLookAndFeel());
       }
