@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-06-2003 patrickh    Added jccl::ConfigElement::getVersion().
+                        NEW VERSION: 0.12.3
 Aug-16-2003 patrickh    Updated to Tweek 0.15.
                         NEW VERSION: 0.12.2
 Aug-15-2003 aronb       Fixed RTRC so that it now works with vrjconfig.
