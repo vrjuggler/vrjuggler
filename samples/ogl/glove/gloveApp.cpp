@@ -192,7 +192,7 @@ bool gloveApp::RightOpen()
 bool gloveApp::LeftFist()
 {
    if (mPinchLeftIndex->getData() == 1 ||
-         mPinchThumbIndex->getData() == 1)
+         mPinchLeftThumb->getData() == 1)
    {
       return true;
    }
