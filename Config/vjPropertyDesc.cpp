@@ -40,6 +40,7 @@
 
 
 vjPropertyDesc::vjPropertyDesc () : valuelabels(), enumv() {
+    validation = 1;
     name = "";
     token = "";
     num = 0;
@@ -48,7 +49,8 @@ vjPropertyDesc::vjPropertyDesc () : valuelabels(), enumv() {
 }
 
 
-vjPropertyDesc::vjPropertyDesc (vjPropertyDesc& d): valuelabels(), enumv() {
+vjPropertyDesc::vjPropertyDesc (const vjPropertyDesc& d): valuelabels(), enumv() {
+    validation = 1;
     *this = d;
 }
 
@@ -56,6 +58,7 @@ vjPropertyDesc::vjPropertyDesc (vjPropertyDesc& d): valuelabels(), enumv() {
 
 vjPropertyDesc::vjPropertyDesc (const std::string& n, int i, VarType t,
             const std::string& h): valuelabels(), enumv() {
+    validation = 1;
     name = n;
     token = n;
     help = h;
@@ -66,18 +69,29 @@ vjPropertyDesc::vjPropertyDesc (const std::string& n, int i, VarType t,
 
 
 vjPropertyDesc::~vjPropertyDesc () {
-    unsigned int i;
     /* XXX
+    unsigned int i;
     for (i = 0; i < enumv.size(); i++)
         delete enumv[i];
     for (i = 0; i < valuelabels.size(); i++)
         delete valuelabels[i];
-        */
+    */
+    validation = 0;
 }
 
 
 
+#ifdef VJ_DEBUG
+void vjPropertyDesc::assertValid () const {
+    assert (validation == 1 && "Trying to use deleted vjPropertyDesc");
+}
+#endif
+
+
+
 std::string vjPropertyDesc::getValueLabel (unsigned int i) {
+    assertValid();
+
     if (i < valuelabels.size())
         return valuelabels[i]->getName();
     else
@@ -87,6 +101,8 @@ std::string vjPropertyDesc::getValueLabel (unsigned int i) {
 
 
 vjEnumEntry* vjPropertyDesc::getEnumEntry (const std::string& s) {
+    assertValid();
+
     for (unsigned int i = 0; i < enumv.size(); i++) {
         if (!vjstrcasecmp (enumv[i]->getName(), s))
             return enumv[i];
@@ -96,6 +112,8 @@ vjEnumEntry* vjPropertyDesc::getEnumEntry (const std::string& s) {
 
 
 vjEnumEntry* vjPropertyDesc::getEnumEntryAtIndex (unsigned int index) {
+    assertValid();
+
     if (enumv.size() > index)
         return enumv[index];
     else
@@ -104,6 +122,8 @@ vjEnumEntry* vjPropertyDesc::getEnumEntryAtIndex (unsigned int index) {
 
 
 vjEnumEntry* vjPropertyDesc::getEnumEntryWithValue (vjVarValue& val) {
+    assertValid();
+
     for (unsigned int i = 0; i < enumv.size(); i++) {
         if (enumv[i]->getValue() == val)
             return enumv[i];
@@ -113,6 +133,8 @@ vjEnumEntry* vjPropertyDesc::getEnumEntryWithValue (vjVarValue& val) {
 
 
 std::ostream& operator << (std::ostream& out, vjPropertyDesc& self) {
+    self.assertValid();
+
     out << self.token.c_str() << " " << typeString(self.type) << " "
         << self.num << " \"" << self.name.c_str() << "\"";
 
@@ -143,6 +165,8 @@ std::ostream& operator << (std::ostream& out, vjPropertyDesc& self) {
 
 
 std::istream& operator >> (std::istream& in, vjPropertyDesc& self) {
+    self.assertValid();
+
 
     const int size = 512;
     char str[size];
@@ -224,7 +248,9 @@ std::istream& operator >> (std::istream& in, vjPropertyDesc& self) {
 }
 
 
-vjPropertyDesc& vjPropertyDesc::operator= (vjPropertyDesc& pd) {
+vjPropertyDesc& vjPropertyDesc::operator= (const vjPropertyDesc& pd) {
+    assertValid();
+
     unsigned int i;
     if (&pd == this)
         return *this;
@@ -242,8 +268,6 @@ vjPropertyDesc& vjPropertyDesc::operator= (vjPropertyDesc& pd) {
         */
     valuelabels.clear();
     enumv.clear();
-    //valuelabels.erase (valuelabels.begin(), valuelabels.end());
-    //enumv.erase (enumv.begin(), enumv.end());
     for (i = 0; i < pd.valuelabels.size(); i++)
         valuelabels.push_back (new vjEnumEntry(*(pd.valuelabels[i])));
     for (i = 0; i < pd.enumv.size(); i++)
@@ -255,6 +279,8 @@ vjPropertyDesc& vjPropertyDesc::operator= (vjPropertyDesc& pd) {
 //: Equality Operator
 // BUG (IPTHACK) - doesn't check equality of enumerations and valuelabels
 bool vjPropertyDesc::operator== (const vjPropertyDesc& pd) {
+    assertValid();
+
     if (vjstrcasecmp (name, pd.name))
         return false;
     if (vjstrcasecmp (token, pd.token))
