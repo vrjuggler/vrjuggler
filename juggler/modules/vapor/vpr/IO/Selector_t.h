@@ -52,7 +52,8 @@
 #include <vpr/Util/Interval.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * Cross-platform selection interface.
@@ -224,7 +225,7 @@ public:
 
 
 protected:
-    RealSelectorImp mSelectorImp;     /**< Platform-specific implementation */
+   RealSelectorImp mSelectorImp;     /**< Platform-specific implementation */
 };
 
 }; // End of vpr namespace
