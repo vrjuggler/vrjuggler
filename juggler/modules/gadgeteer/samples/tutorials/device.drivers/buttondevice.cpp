@@ -70,9 +70,9 @@ public:
    virtual bool config(jccl::ConfigElementPtr e);
    virtual void updateData();
 
-   virtual int startSampling();
-   virtual int sample();
-   virtual int stopSampling();
+   virtual bool startSampling();
+   virtual bool sample();
+   virtual bool stopSampling();
 
    static std::string getElementType();
 
@@ -145,7 +145,7 @@ void MyButtonDevice::updateData()
 /**
  * Spanws the sample thread, which calls MyButtonDevice::sample() repeatedly.
  */
-int MyButtonDevice::startSampling()
+bool MyButtonDevice::startSampling()
 {
    mRunning = true;
    mSampleThread = new vpr::Thread(threadedSampleFunction, (void*) this);
@@ -153,11 +153,11 @@ int MyButtonDevice::startSampling()
    if ( ! mSampleThread->valid() )
    {
       mRunning = false;
-      return 0; // thread creation failed
+      return false; // thread creation failed
    }
    else
    {
-      return 1; // thread creation success
+      return true; // thread creation success
    }
 }
 
@@ -165,9 +165,9 @@ int MyButtonDevice::startSampling()
  * Records (or samples) the current data.  This is called repeatedly by the
  * sample thread created by startSampling().
  */
-int MyButtonDevice::sample()
+bool MyButtonDevice::sample()
 {
-   int status(0);
+   bool status(false);
 
    if ( mRunning )
    {
@@ -178,14 +178,14 @@ int MyButtonDevice::sample()
       addDigitalSample(samples);
 
       // Successful sample.
-      status = 1;
+      status = true;
    }
 
    return status;
 }
 
 /** Kills the sample thread. */
-int MyButtonDevice::stopSampling()
+bool MyButtonDevice::stopSampling()
 {
    mRunning = false;
 
@@ -196,7 +196,7 @@ int MyButtonDevice::stopSampling()
       delete mSampleThread;
       mSampleThread = NULL;
    }
-   return 1;
+   return true;
 }
 
 /**
