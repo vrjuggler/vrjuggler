@@ -50,14 +50,23 @@ public interface EditorConstants
    /** Config element type alias. */
    public static final String ALIAS_TYPE = "alias";
 
+   /** Config element type analog_device. */
+   public static final String ANALOG_DEVICE_TYPE = "analog_device";
+
    /** Config element type analog_proxy. */
    public static final String ANALOG_PROXY_TYPE = "analog_proxy";
 
+   /** Config element type command_device. */
+   public static final String COMMAND_DEVICE_TYPE = "command_device";
+
    /** Config element type data_glove (5DT). */
-   public static final String DATA_GLOVE = "data_glove";
+   public static final String DATA_GLOVE_TYPE = "data_glove";
 
    /** Config element type default_simulator. */
    public static final String DEFAULT_SIMULATOR_TYPE = "default_simulator";
+
+   /** Config element type digital_device. */
+   public static final String DIGITAL_DEVICE_TYPE = "digital_device";
 
    /** Config element type digital_proxy. */
    public static final String DIGITAL_PROXY_TYPE = "digital_proxy";
@@ -76,6 +85,9 @@ public interface EditorConstants
 
    /** Config element type flock. */
    public static final String FLOCK_TYPE = "flock";
+
+   /** Config element type glove_device. */
+   public static final String GLOVE_DEVICE_TYPE = "glove_device";
 
    /** Config element type ibox. */
    public static final String IBOX_TYPE = "ibox";
@@ -116,6 +128,9 @@ public interface EditorConstants
    /** Config element type pinch_glove. */
    public static final String PINCH_GLOVE_TYPE = "pinch_glove";
 
+   /** Config element type positional_device. */
+   public static final String POSITIONAL_DEVICE_TYPE = "positional_device";
+
    /** Config element type position_proxy. */
    public static final String POSITION_PROXY_TYPE = "position_proxy";
 
@@ -149,6 +164,9 @@ public interface EditorConstants
 
    /** Config element type simulator_viewport. */
    public static final String SIMULATOR_VIEWPORT_TYPE = "simulator_viewport";
+
+   /** Config element type string_device. */
+   public static final String STRING_DEVICE_TYPE = "string_device";
 
    /** Config element type surface_viewport. */
    public static final String SURFACE_VIEWPORT_TYPE = "surface_viewport";
