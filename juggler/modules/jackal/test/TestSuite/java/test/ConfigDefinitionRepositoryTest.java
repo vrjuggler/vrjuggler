@@ -29,7 +29,8 @@ import org.vrjuggler.jccl.config.event.*;
                                   new ArrayList(),
                                   "Some Help",
                                   new ArrayList(),
-                                  new ArrayList());
+                                  new ArrayList(),
+                                  null);
    }
 
    public void testConstructor()

@@ -67,7 +67,8 @@ import org.vrjuggler.jccl.config.event.*;
                                   parents,
                                   "A person",
                                   categories,
-                                  prop_defs);
+                                  prop_defs,
+                                  null);
    }
 
    private ConfigElement makePerson(String name, int age, List friends)

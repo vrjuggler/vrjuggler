@@ -72,7 +72,8 @@ import org.vrjuggler.jccl.config.*;
                                   parents,
                                   "A person",
                                   categories,
-                                  prop_defs);
+                                  prop_defs,
+                                  null);
    }
 
    private ConfigDefinition makeWallDefinition()
@@ -108,7 +109,8 @@ import org.vrjuggler.jccl.config.*;
                                   parents,
                                   "A wall in 3D space.",
                                   categories,
-                                  prop_defs);
+                                  prop_defs,
+                                  null);
    }
 
    private ConfigDefinition makeCornerDefinition()
@@ -140,7 +142,8 @@ import org.vrjuggler.jccl.config.*;
                                   parents,
                                   "A corner of a wall in 3D space.",
                                   categories,
-                                  prop_defs);
+                                  prop_defs,
+                                  null);
    }
 
    public void testCreateNonRecursive()
