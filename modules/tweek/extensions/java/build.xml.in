@@ -47,7 +47,9 @@
 
    <!-- Clean up -->
    <target name="clean">
-      <delete dir="org" />
+      <delete>
+         <fileset dir="org" includes="**/*.class" />
+      </delete>
       <delete file="ui.jar" />
       <delete file="wizard.jar" />
       <delete file="WizardBuilder.jar" />

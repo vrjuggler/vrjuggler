@@ -101,8 +101,10 @@
 
    <!-- Clean up -->
    <target name="clean">
-      <delete dir="com" />
-      <delete dir="org" />
+      <delete>
+         <fileset dir="com" includes="**/*.class" />
+         <fileset dir="org" includes="**/*.class" />
+      </delete>
       <delete file="Tweek.jar" />
       <delete file="TweekBeans.jar" />
       <delete file="TweekEvents.jar" />
