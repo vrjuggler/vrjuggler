@@ -1,0 +1,320 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Specialized include file for the top-level makefile.  Targets and variables
+# needed for building the whole source tree are provided here.  This file
+# should only be included by the top-level makefile.  It is written in such a
+# way that no assumptions are made by this file about what the including file
+# provides except that it includes make.defs.mk.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+# Variables whose values are specific to this file.
+includedir	= @includedir@
+instlinks	= $(topdir)/instlinks
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+
+# Extra compiler and linker options needed only by this file.
+DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
+OPT_FLAGS	= -D_OPT @OPT_FLAGS@
+
+# =============================================================================
+# Build and installation directory naming and ownership information.
+# =============================================================================
+DEFAULT_DIR	= $(OPT_DIR)
+
+# If we have a name for the install group, define group-setting options for
+# UNIX commands (chown(1), chgrp(1)) and for local Perl scripts
+# (makefiles-gen.pl in particular).
+ifdef GROUP_NAME
+    _GROUP_OPT_PL	= --gname="$(GROUP_NAME)"
+endif
+
+# --------------------------------------------
+# Library build information.
+# --------------------------------------------
+
+SHLIB_MAJOR	= 1
+SHLIB_MINOR	= 0
+
+STATICLIB_EXT	= @STATICLIB_EXT@
+DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
+
+# Full list of the libraries to build.
+LIBS		= $(GAD_LIBRARY)
+
+STATIC_LIBS	= $(LIBS)
+
+ifneq (@OS_TYPE@, Win32)
+DYNAMIC_LIBS	= $(LIBS)
+endif
+
+# Dependencies for each of the various dynamic libraries we build.
+DYLIB_DEPS		= @DYLIB_DEPS@
+
+GAD_LIB_STATIC		= $(GAD_LIBRARY).$(STATICLIB_EXT)
+GAD_LIB_DYNAMIC		= $(GAD_LIBRARY).$(DYNAMICLIB_EXT)
+
+# On Linux, we have to compile the Performer library with -O for things to
+# link properly.
+ifeq ($(PLATFORM), Linux)
+    EXTRA_LDOPTS = -O
+endif
+
+# Version information.
+BRANCH		= HEAD
+CANON_NAME	= Kenny
+VER_ARGS	= -f $(GADROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
+                  -i $(GADROOT_ABS)/gad/gadParam.h.in -o gad/gadParam.h	\
+                  -d "`date '+%b %e, %Y %H:%M:%S'`" -n "$(CANON_NAME)"
+
+ifdef VERSION
+    VER_ARGS	+= -v $(VERSION)
+endif
+
+# =============================================================================
+# Library targets.
+# =============================================================================
+
+BEFOREBUILD	= beforebuild
+AFTERBUILD	= afterbuild
+
+# Things to do before the object files and library are built.
+beforebuild:
+	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
+	@$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
+            -t $(GADROOT_ABS)/gadgeteer-config.in -o $(topdir)/gadgeteer-config
+	@chmod +x $(topdir)/gadgeteer-config
+
+# Things to do after the object files and library are built.
+afterbuild:
+	@$(MAKE) links
+
+# -----------------------------------------------
+# Construct the static version of the libraries.
+# -----------------------------------------------
+$(LIBDIR)/$(GAD_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+#ifneq (@OS_TYPE@, Win32)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
+	$(RANLIB) $@
+	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+#endif
+
+# ------------------------------------------------
+# Construct the dynamic version of the libraries.
+# ------------------------------------------------
+$(LIBDIR)/$(GAD_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEPS)
+	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && rm -f $(GAD_LIB_STATIC) &&			\
+            $(LN_S) $(LIBDIR)/$(GAD_LIB_STATIC) ./
+	cd $(LIBDIR_BASE) && rm -f $(GAD_LIBRARY).exp &&		\
+            $(LN_S) $(LIBDIR)/$(GAD_LIBRARY).exp ./
+endif
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+# =============================================================================
+# Make links for developer use that provide the needed functionality for
+# the $GAD_BASE_DIR environment variable to be used when needed.  $GAD_BASE_DIR
+# should be set to $(instlinks).
+# =============================================================================
+links:
+ifneq (@OS_TYPE@, Win32)
+	@echo "------------------------------------------------"
+	@echo "Setting up developer installation links"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/gad
+	@$(MAKE) -C gad instlinks=$(instlinks) links
+	cd $(instlinks) && rm -f ./$(LIBDIR_NAME) &&			\
+          ln -s $(LIBDIR_BASE) ./$(LIBDIR_NAME)
+	cd $(instlinks) && rm -rf ./$(GAD_SHARE_DIR) &&			\
+          $(SHELL) $(MKINSTALLDIRS) ./$(GAD_SHARE_DIR)
+	cd $(instlinks)/$(GAD_SHARE_DIR) && rm -f ./Data &&		\
+          ln -s $(GADROOT_ABS)/Data ./Data
+	cd $(instlinks)/include/gad && rm -f ./*.h &&			\
+          $(LN_S) $(GADROOT_ABS)/gad/*.h ./
+	cd $(instlinks)/include/gad && rm -f ./gadDefines.h &&		\
+	  $(LN_S) $(topdir)/gad/gadDefines.h ./gadDefines.h
+	cd $(instlinks)/include/gad && rm -f ./gadParam.h &&		\
+	  $(LN_S) $(topdir)/gad/gadParam.h ./gadParam.h
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
+	cd $(instlinks)/bin && rm -f ./catadf.pl &&			\
+          $(LN_S) $(GADROOT_ABS)/tools/catadf.pl ./catadf.pl
+	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
+            -t $(GADROOT_ABS)/gadgeteer-config.in -p 'use_base_dir=yes'	\
+            -o $(instlinks)/bin/gadgeteer-config -x
+	@echo "\n\n"
+	@echo "---------------------------------------------------------------"
+	@echo 'You should now set $$GAD_BASE_DIR to:'
+	@cd $(instlinks) && echo "  `pwd`"
+	@echo "---------------------------------------------------------------"
+else
+	@echo "---------------------------------------------------------------"
+	@echo 'You must now install Gadgeteer and set %GAD_BASE_DIR% to:'
+	@echo "  $(prefix)"
+	@echo "---------------------------------------------------------------"
+endif
+
+# Remove the links in $(instlinks).
+clean-links:
+	@echo "------------------------------------------------"
+	@echo "Removing developer installation links"
+	@echo "------------------------------------------------"
+	rm -rf $(instlinks)
+
+# =============================================================================
+# Installation targets.  The default (what is done by 'install') is to install
+# the static debugging version of the libraries.  The steps taken for a full
+# installation are:
+#
+#     1) Create the full installation directory hierarchy.
+#     2) Install the libraries.
+#     3) Install the header files.
+#     4) Install the test programs.
+#     5) Install the contents of the Data directory.
+#     6) Install the Java-based config editor (if possible).
+# =============================================================================
+
+BEFOREINSTALL	= beforeinstall
+AFTERINSTALL	= afterinstall
+
+# Steps to take before beginning the installation process.  This target is
+# independent of the current ABI.
+beforeinstall:
+	@$(MAKE) hier
+
+# Make the full directory hierarchy for the installation.
+hier:
+	@echo "------------------------------------------------"
+	@echo "Making hierarchy"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GAD.install.dist -p $(prefix)
+	$(SHELL) $(MKINSTALLDIRS) $(datadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GAD.data.dist -p $(datadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GAD.include.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GAD.lib.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GAD.test.dist -p $(datadir)
+
+# Steps to take after the installation process is complete.  This target is
+# independent of the current ABI.
+afterinstall:
+	@echo "==============================================================="
+	@echo "Gadgeteer installation complete"
+	@echo "==============================================================="
+
+PREINSTALL	= pre-install
+POSTINSTALL	= post-install
+
+pre-install:
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GAD.lib.dist -p $(prefix)
+
+# Do everything needed after installing the library binaries.
+post-install:
+	@$(MAKE) install-test
+	@$(MAKE) install-tools
+	@$(MAKE) install-data
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/gadgeteer-config $(bindir)
+
+PREINSTALL_HEADERS	= pre-install-headers
+POSTINSTALL_HEADERS	= post-install-headers
+
+pre-install-headers:
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GAD.include.dist -p $(prefix)
+
+post-install-headers:
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(GADROOT_ABS)/gad/gadConfig.h $(includedir)/gad/gadConfig.h
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/gad/gadDefines.h $(includedir)/gad
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/gad/gadParam.h $(includedir)/gad
+
+# Install the test programs.
+install-test:
+	@echo "------------------------------------------------"
+	@echo "Installing test programs"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(datadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GAD.test.dist -p $(datadir)
+	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/test	\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/test
+	$(PERL) $(scriptdir)/makefiles-gen.pl --mode="$(FILE_PERMS)"	\
+          --prefix="$(datadir)/test" --vars="$(topdir)/VARS.pl"		\
+          --startdir="$(top_srcdir)/test" $(_GROUP_OPT_PL) --srcdir="."
+
+# Install the standard data files.
+install-data:
+	@echo "------------------------------------------------"
+	@echo "Installing standard data files"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(datadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GAD.data.dist -p $(datadir)
+	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/Data	\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/Data		\
+          -v "$(topdir)/VARS.pl"
+
+# =============================================================================
+# Clean-up targets.  '_clean' removes all the files in the build directories.  
+# '_clobber' removes the $(BUILDDIR_BASE) and $(LIBDIR_NAME) directories.
+# =============================================================================
+_clobber:
+	@$(MAKE) cleandepend
+	@$(MAKE) clean-links
+
+# Define $(_LOCAL_CLOBBER) to inform the shared 'clobber' target that there is
+# a '_clobber' target to be run besides the standard target.
+_LOCAL_CLOBBER	= 1
+
+include $(MKPATH)/dpp.libs.mk
+include $(MKPATH)/dpp.clean.mk
+
+CLEAN_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
+CLOBBER_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)

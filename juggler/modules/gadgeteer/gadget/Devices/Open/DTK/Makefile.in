@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/vrj/Input/Devices/Open/DTK.  It requires GNU make.
+# Makefile.in for gadgeteer/gad/Devices/Open/DTK.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,11 +41,11 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vrj/Input/Devices/Open/DTK
+includedir	= @includedir@/gad/Devices/Open/DTK
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
-SUBOBJDIR	= $(VJ_LIBRARY)
+SUBOBJDIR	= $(GAD_LIBRARY)
 
 ifeq (@HAVE_DTK@, Y)
 SRCS		= DTK.cpp			\
