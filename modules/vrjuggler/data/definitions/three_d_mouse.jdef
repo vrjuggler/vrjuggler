@@ -9,7 +9,6 @@
       <help>Configuration for a Logitech 3D Mouse</help>
       <parent>positional_device</parent>
       <parent>digital_device</parent>
-      <category>/Devices/Digital</category>
       <category>/Devices/Positional</category>
       <property valuetype="string" variable="false" name="port">
          <help>The serial port this device is connected to.</help>
@@ -28,11 +27,6 @@
          <enum label="57600" value="57600" />
          <enum label="115200" value="115200" />
          <enum label="230400" value="230400" />
-      </property>
-      <property valuetype="configelement" variable="true" name="position_filters">
-         <help>This is a list of all the filters that are to be applied to the positional device data. The filters are applied in the order that they are specified in this configuration.</help>
-         <value label="Position Transform Filter" />
-         <allowed_type>position_transform_filter</allowed_type>
       </property>
       <upgrade_transform />
    </definition_version>
