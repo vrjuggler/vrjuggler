@@ -142,4 +142,4 @@ _CC_SED_EXP	= '\''s/\($*\)\.@OBJEXT@[ :]*/.\/\1.@OBJEXT@ $@: /g'\''
 	@$(SHELL) -ec '$(COMPILE) $(DEP_GEN_FLAG) $< |			\
                        sed $(_CC_SED_EXP) > $@ ; [ -s $@ ] || rm -f $@'
 
-include $(DEPEND_FILES)
+-include $(DEPEND_FILES)
