@@ -149,7 +149,26 @@ namespace jcclTest
 
       void addPropDesc()
       {
+         // start fresh and new (and shiny!!!)
+         jccl::ChunkFactory::instance()->getChunkDescDB()->removeAll();
          
+         std::string file_path( TESTFILES_PATH );
+         jccl::ChunkFactory::instance()->loadDescs( file_path + "ChunkDescTest/ChunkDescTest.desc" );
+         jccl::ChunkDescPtr desc = jccl::ChunkFactory::instance()->getChunkDesc( "config-chuck-the-beaver" );
+         
+         // shouldn't exist (yet!)
+         CPPUNIT_ASSERT( desc->getPropertyDesc( "chuck e cheeze" ) == NULL );
+         
+         jccl::PropertyDesc pdesc;
+         pdesc.setName( "chuckli brocolli" );
+         pdesc.setToken( "chuck e cheeze" );
+         pdesc.setHelp( "lend a chucking hand" );
+         desc->add( &pdesc ); // suspicious that it doesn't take a const ptr (or shared_ptr!)
+         
+         CPPUNIT_ASSERT( desc->getPropertyDesc( "chuck e cheeze" ) != NULL );
+         
+         // @todo fails here, fixme.  should copy the desc -or- should use a smartptr
+         CPPUNIT_ASSERT( desc->getPropertyDesc( "chuck e cheeze" ) != &pdesc );
       }
             
       void remPropDesc()
