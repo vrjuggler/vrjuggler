@@ -1,6 +1,5 @@
 
 
-#include "vjTimeStamp.h"
 #include <iostream.h>
 
 
@@ -15,8 +14,8 @@ class vjPerfDataBuffer {
     //! PRE: true
     //! POST: self is created and has _numbufs buffers
     //! ARGS: _numbufs - number of buffers to allocate
-    //+       (default 25)
-    vjPerfDataBuffer (int _numbufs=25) {
+    //+       (default 0)
+    vjPerfDataBuffer (int _numbufs=0) {
     }
 
     //: destructor
@@ -33,7 +32,7 @@ class vjPerfDataBuffer {
     //+       that calls set. e.g. 1 = point right before
     //+       entering some big computation, and 2 = point
     //+       right after.
-    void set(int _phase) {
+    inline void set(int _phase) {
     }
 
 
@@ -51,11 +50,9 @@ class vjPerfDataBuffer {
     //+       <br>2 25
     //+       <br>3 27
     //+       <br>1 42
-    void write (ostream& out) {
-	out << "0 0\n";
+    inline void write (ostream& out) {
     }
 
-    /* problem.. lost count not entirely accurate */
 };
 
 
