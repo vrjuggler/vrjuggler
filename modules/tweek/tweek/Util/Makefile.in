@@ -54,13 +54,13 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(TWEEK_LIBRARY)
 
-#SRCS	=
+SRCS		= Debug.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
 # -----------------------------------------------------------------------------
-#ifndef DO_CLEANDEPEND
-#    -include $(DEPEND_FILES)
-#endif
+ifndef DO_CLEANDEPEND
+    -include $(DEPEND_FILES)
+endif
