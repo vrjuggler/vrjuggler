@@ -2,15 +2,15 @@
 
 #include <iostream.h>
 #include <fstream.h>
-#include <Config/ConfigChunkDB.h>
-#include <Config/ParseUtil.h>
-#include <Kernel/C2Debug.h>
-#include <Kernel/C2SGISystemFactory.h>
+#include <Config/vjConfigChunkDB.h>
+#include <Config/vjParseUtil.h>
+#include <Kernel/vjDebug.h>
+#include <Kernel/vjSGISystemFactory.h>
 main () {
 
-  ChunkDescDB desc;
-  ChunkDesc *d;
-  ConfigChunk *c,*c2;
+  vjChunkDescDB desc;
+  vjChunkDesc *d;
+  vjConfigChunk *c,*c2;
   int err = 0;
 
 
@@ -71,7 +71,7 @@ main () {
    *************************************************************************/
 
   cout << "\n\nCreating ConfigChunkDB..." << flush;
-  ConfigChunkDB chunk(&desc);
+  vjConfigChunkDB chunk(&desc);
   cout << "OK." << endl;  // at least we didn't segv.
 
   cout << "loading config chunks..." << flush;
