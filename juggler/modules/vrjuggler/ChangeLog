@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jul-01-2002 allenb    Temporary hack added to GlPipe.cpp to set viewport
+                      before each call to draw.  This was needed to work
+                      around a bug in OSG.  
 Jun-27-2002 patrickh  The application makefiles now require GNU make, Doozer
                       and the *-config scripts.  This fixes path problems in
                       the installation tree.
