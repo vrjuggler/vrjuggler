@@ -116,7 +116,6 @@
          <section>
             <title>Structure of a <function>main()</function> Function</title>
             <para>The following is a typical example of a <function>main()</function> function that will start the VR Juggler kernel and hand it an instance of a user application object. The specifics of what is happening in this code are described below.</para>
-            <para></para>
             <programlistingco>
                <areaspec>
                   <area coords="5" id="simpleApp.main.body.create-kernel"/>
