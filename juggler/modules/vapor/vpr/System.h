@@ -33,8 +33,7 @@
 #ifndef _VPR_SYSTEM_H_
 #define _VPR_SYSTEM_H_
 
-// include base class for vprSystem
-//#include <vpr/SystemBase.h>
+#include <vpr/vprConfig.h>
 
 // determine which implementation of vpr::System to include.
 #if defined(VPR_USE_IRIX_SPROC) || defined(VPR_USE_PTHREADS)
