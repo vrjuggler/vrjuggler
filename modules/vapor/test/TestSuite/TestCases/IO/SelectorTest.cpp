@@ -5,6 +5,12 @@
 #include <numeric>
 #include <algorithm>
 
+#if defined(__GNUC__) && \
+    (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1))
+#  include <ext/numeric>
+#  include <ext/algorithm>
+#endif
+
 #include <vpr/IO/Socket/Socket.h>
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Socket/InetAddr.h>
