@@ -50,6 +50,15 @@ public:
 
 
 
+    //: copy constructor
+    vjConfigChunkDB (vjConfigChunkDB& db);
+
+
+
+    vjConfigChunkDB& operator = (vjConfigChunkDB& db);
+
+
+
     //: Sets the vjChunkDescDB that self uses for creating Chunks
     //! PRE: d points to a vjChunkDescDB
     //! POST: self uses d for all vjChunkDesc lookups

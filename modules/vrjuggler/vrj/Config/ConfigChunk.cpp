@@ -25,12 +25,32 @@ vjConfigChunk::~vjConfigChunk () {
 
 
 
+vjConfigChunk::vjConfigChunk (vjConfigChunk& c):props() {
+    *this = c;
+}
+
+
+
+vjConfigChunk& vjConfigChunk::operator = (vjConfigChunk& c) {
+    int i;
+    desc = c.desc;
+    for (i = 0; i < props.size(); i++) 
+        delete (props[i]);
+    props.erase (props.begin(), props.end());
+    for (i = 0; i < c.props.size(); i++) {
+        props.push_back (new vjProperty(*(c.props[i])));
+    }
+    return *this;
+}
+
+
+
 vjProperty* vjConfigChunk::getPropertyPtr (char *property) {
-  for (int i = 0; i < props.size(); i++) {
-    if (!strcasecmp(props[i]->name,property))
-      return props[i];
-  }
-  return NULL;
+    for (int i = 0; i < props.size(); i++) {
+	if (!strcasecmp (props[i]->name, property))
+	    return props[i];
+    }
+    return NULL;
 }
 
 
@@ -294,7 +314,7 @@ int vjConfigChunk::getNum (char *property) {
 
 
 
-vjVarValue vjConfigChunk::getType () {
+vjVarValue& vjConfigChunk::getType () {
 
   vjVarValue v(T_STRING);
   v = desc->token;
@@ -303,8 +323,7 @@ vjVarValue vjConfigChunk::getType () {
  
 
 
-vjVarValue vjConfigChunk::getProperty (char *property, int ind) {
-  
+vjVarValue& vjConfigChunk::getProperty (char *property, int ind) {
   if (!strcasecmp(property,"type")) {
     vjVarValue v(T_STRING);
     v = desc->token;

@@ -82,6 +82,14 @@ public:
 
 
 
+    vjConfigChunk (vjConfigChunk& c);
+
+
+
+    vjConfigChunk& operator = (vjConfigChunk& c);
+
+
+
     //: writes self to out
     //!POST: self is written to out.  Format is as defined
     //+      in the ConfigFileFormats document.
@@ -106,7 +114,7 @@ public:
     //!RETURNS: s - a C string containing the token for this
     //+          chunk's vjChunkDesc.
     //!NOTE: this is the same as a call of getProperty ("type",0)
-    vjVarValue getType ();
+    vjVarValue& getType ();
 
 
 
@@ -129,7 +137,7 @@ public:
     //+      values in the vjProperty to return.
     //!RETURNS: v - a vjVarValue that can be cast directly if
     //+         its type is known (float, int, etc).
-    vjVarValue getProperty (char *property, int ind = 0);
+    vjVarValue& getProperty (char *property, int ind = 0);
 
 
 

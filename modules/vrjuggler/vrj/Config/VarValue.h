@@ -53,9 +53,9 @@ private:
   VarType    type;
 
   // these are the possible storage areas.
-  union {
+  struct {
     int        intval;
-    float     floatval;
+    float      floatval;
     char       *strval;
     bool       boolval;
   } val;
@@ -64,28 +64,43 @@ public:
 
   /// Copy constructor.  
   vjVarValue (vjVarValue &v) {
-    type = v.type;
-    switch (type) {
-    case T_INT:
-      val.intval = v.val.intval;
-      break;
-    case T_FLOAT:
-      val.floatval = v.val.floatval;
-      break;
-    case T_BOOL:
-      val.boolval = v.val.boolval;
-      break;
-    case T_STRING:
-    case T_CHUNK:
-      if (v.val.strval == NULL)
-	val.strval = NULL;
-      else {
-	val.strval = new char[strlen(v.val.strval)+1];
-	strcpy (val.strval, v.val.strval);
-      }
-      break;
-    }
+    *this = v;
   }
+
+
+
+    vjVarValue& operator= (vjVarValue &v) {
+	if ((type == T_STRING) || (type == T_CHUNK))
+	    if (val.strval) {
+		delete val.strval;
+		val.strval = NULL;
+	    }
+	type = v.type;
+	switch (type) {
+	case T_INVALID:
+	    break;
+	case T_INT:
+	    val.intval = v.val.intval;
+	    break;
+	case T_FLOAT:
+	    val.floatval = v.val.floatval;
+	    break;
+	case T_BOOL:
+	    val.boolval = v.val.boolval;
+	    break;
+	case T_STRING:
+	case T_CHUNK:
+	    if (v.val.strval == NULL)
+		val.strval = NULL;
+	    else
+		val.strval = strdup (v.val.strval);
+	    break;
+	default:
+	    //cout << "something's wrong with varvalue assign" << endl;
+	    break;
+	}
+	return *this;
+    }
   
 
   /** Creates a new vjVarValue of type t.  Note that once a vjVarValue object
@@ -161,12 +176,10 @@ public:
   operator char* () {
     if ((type == T_STRING) || (type == T_CHUNK)) {
       if (val.strval) {
-	char *s = new char[strlen(val.strval)+1];
-	strcpy (s, val.strval);
-	return s;
+	  return strdup (val.strval);
       }
       else
-	return NULL;
+	return strdup("");
     }
     if (type != T_INVALID)
       cerr << "Type error in cast to char*!\n";
@@ -227,8 +240,10 @@ public:
     if ((type == T_STRING) || (type == T_CHUNK)) {
       if (val.strval)
 	delete val.strval;
-      val.strval = new char[strlen(s)+1];
-      strcpy (val.strval, s);
+      if (s)
+	  val.strval = strdup(s);
+      else 
+	  val.strval = NULL;
       return *this;
     } else {
       cerr << "Type error in assignment!\n";
