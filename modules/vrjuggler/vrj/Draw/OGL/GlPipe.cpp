@@ -42,7 +42,7 @@
 
 #include <Kernel/vjSurfaceDisplay.h>
 #include <Kernel/vjSimDisplay.h>
-//**//#include <Environment/vjEnvironmentManager.h>
+#include <Environment/vjEnvironmentManager.h>
 
 #include <GL/gl.h>
 
@@ -133,7 +133,7 @@ void vjGlPipe::controlLoop(void* nullParam)
 {
    mThreadRunning = true;     // We are running so set flag
    // this should really not be here...
-//**//   vjKernel::instance()->getEnvironmentManager()->addPerfDataBuffer (mPerfBuffer);
+   vjKernel::instance()->getEnvironmentManager()->addPerfDataBuffer (mPerfBuffer);
 
    while (!controlExit)
    {
@@ -293,9 +293,9 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
             mPerfBuffer->set(++mPerfPhase);
 
          theApp->draw();
-            mPerfBuffer->set(4);
+            mPerfBuffer->set(++mPerfPhase);
          glManager->drawObjects();
-            mPerfBuffer->set(5);
+            mPerfBuffer->set(++mPerfPhase);
       }
       if ((vjDisplay::STEREO == view) || (vjDisplay::RIGHT_EYE == theDisplay->getView()))
       {
@@ -324,10 +324,11 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
          mPerfBuffer->set(++mPerfPhase);
       theApp->draw();
          mPerfBuffer->set(++mPerfPhase);
-         mPerfPhase += 2;
 
       glManager->drawObjects();
       glManager->drawSimulator(sim_disp);
+      mPerfBuffer->set (++mPerfPhase);
+      mPerfPhase += 3;
    }
 }
 
