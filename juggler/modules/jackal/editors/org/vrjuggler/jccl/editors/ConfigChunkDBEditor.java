@@ -833,7 +833,12 @@ public class ConfigChunkDBEditor
             if (prop_desc.equals(child.getUserObject()))
             {
                // Create a new node for the new property value
-               DefaultMutableTreeNode new_node = new DefaultMutableTreeNode(evt.getValue());
+               ConfigChunk new_chunk = (ConfigChunk)evt.getValue();
+               DefaultMutableTreeNode new_node = new DefaultMutableTreeNode(new_chunk);
+
+               // Add a listener to the newly added embedded chunk
+               System.out.println("Listening to emb chunk: "+new_chunk.getName());
+               new_chunk.addConfigChunkListener(this);
 
                // Add the new node into the tree
                treeModel.insertNodeInto(new_node, child, evt.getIndex());
