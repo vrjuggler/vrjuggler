@@ -31,8 +31,8 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# This include file <ConfigChunkUI.mk> defines the list of .java files that are built
-# into Java bytecode with javac.
+# This include file <ConfigChunkUI.mk> defines the list of .java files that
+# are built into Java bytecode with javac.
 # -----------------------------------------------------------------------------
 # Variables defined here are:
 #
@@ -40,11 +40,10 @@
 # CONFIGCHUNKUI_OBJS    - The list of .class files that will be created.
 # -----------------------------------------------------------------------------
 
-CONFIGCHUNKUI_SOURCES = \
-		VjComponents/ConfigEditor/ConfigChunkUI/ListBoxModel.java          	\
-	   	VjComponents/ConfigEditor/ConfigChunkUI/PropertyPanel.java		\
-		VjComponents/ConfigEditor/ConfigChunkUI/VarValueStandardPanel.java   	\
-		VjComponents/ConfigEditor/ConfigChunkUI/VarValueMiniChunkPanel.java  	\
-		VjComponents/ConfigEditor/ConfigChunkUI/VarValueBigChunkPanel.java
+CONFIGCHUNKUI_SOURCES = VjComponents/ConfigEditor/ConfigChunkUI/ListBoxModel.java \
+                   VjComponents/ConfigEditor/ConfigChunkUI/PropertyPanel.java \
+                VjComponents/ConfigEditor/ConfigChunkUI/VarValueStandardPanel.java \
+                VjComponents/ConfigEditor/ConfigChunkUI/VarValueMiniChunkPanel.java \
+                VjComponents/ConfigEditor/ConfigChunkUI/VarValueBigChunkPanel.java
 
-CONFIGCHUNKUI_OBJS = ${CONFIGCHUNKUI_SOURCES:.java=.class}
+CONFIGCHUNKUI_OBJS = $(CONFIGCHUNKUI_SOURCES:.java=.class)

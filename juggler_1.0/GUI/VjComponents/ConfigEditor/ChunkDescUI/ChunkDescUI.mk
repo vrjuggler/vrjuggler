@@ -40,9 +40,9 @@
 # CHUNKDESCUI_OBJS    - The list of .class files that will be created.
 # -----------------------------------------------------------------------------
 
-CHUNKDESCUI_SOURCES = VjComponents/ConfigEditor/ChunkDescUI/ChunkDescPanel.java	\
-			 VjComponents/ConfigEditor/ChunkDescUI/DescEnumElemPanel.java \
-			 VjComponents/ConfigEditor/ChunkDescUI/DescEnumFrame.java     \
-			 VjComponents/ConfigEditor/ChunkDescUI/PropertyDescPanel.java
+CHUNKDESCUI_SOURCES = VjComponents/ConfigEditor/ChunkDescUI/ChunkDescPanel.java \
+                      VjComponents/ConfigEditor/ChunkDescUI/DescEnumElemPanel.java \
+                      VjComponents/ConfigEditor/ChunkDescUI/DescEnumFrame.java \
+                      VjComponents/ConfigEditor/ChunkDescUI/PropertyDescPanel.java
 
-CHUNKDESCUI_OBJS = ${CHUNKDESCUI_SOURCES:.java=.class}
+CHUNKDESCUI_OBJS = $(CHUNKDESCUI_SOURCES:.java=.class)

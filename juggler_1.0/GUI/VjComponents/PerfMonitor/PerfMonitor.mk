@@ -40,18 +40,15 @@
 # VJCPERF_OBJS    - The list of .class files that will be created.
 # -----------------------------------------------------------------------------
 
-VJCPERF_SOURCES = \
-		VjComponents/PerfMonitor/DataLine.java 	\
-		VjComponents/PerfMonitor/GenericGraphFrame.java	\
-		VjComponents/PerfMonitor/GenericGraphPanel.java	\
-		VjComponents/PerfMonitor/GraphFrame.java	\
-		VjComponents/PerfMonitor/PerfAnalyzerPanel.java	\
-		VjComponents/PerfMonitor/PerfDataCollection.java	\
-		VjComponents/PerfMonitor/PerfDataCollector.java	\
-		VjComponents/PerfMonitor/PerformanceCommunicator.java	\
-		VjComponents/PerfMonitor/PerformanceModule.java	\
-		VjComponents/PerfMonitor/SummaryGraphPanel.java
+VJCPERF_SOURCES = VjComponents/PerfMonitor/DataLine.java		\
+                  VjComponents/PerfMonitor/GenericGraphFrame.java	\
+                  VjComponents/PerfMonitor/GenericGraphPanel.java	\
+                  VjComponents/PerfMonitor/GraphFrame.java		\
+                  VjComponents/PerfMonitor/PerfAnalyzerPanel.java	\
+                  VjComponents/PerfMonitor/PerfDataCollection.java	\
+                  VjComponents/PerfMonitor/PerfDataCollector.java	\
+                  VjComponents/PerfMonitor/PerformanceCommunicator.java	\
+                  VjComponents/PerfMonitor/PerformanceModule.java	\
+                  VjComponents/PerfMonitor/SummaryGraphPanel.java
 
-VJCPERF_OBJS = ${VJCPERF_SOURCES:.java=.class}
-
-
+VJCPERF_OBJS = $(VJCPERF_SOURCES:.java=.class)

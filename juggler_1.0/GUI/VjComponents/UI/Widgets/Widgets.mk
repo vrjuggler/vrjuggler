@@ -40,20 +40,20 @@
 # VJUIUTIL_OBJS    - The list of .class files that will be created.
 # -----------------------------------------------------------------------------
 
-VJCUIUTIL_SOURCES = VjComponents/UI/Widgets/FloatTextField.java	\
-		    VjComponents/UI/Widgets/IntegerTextField.java	\
-		    VjComponents/UI/Widgets/NoSpaceTextField.java	\
-		    VjComponents/UI/Widgets/StringTextField.java     \
-		    VjComponents/UI/Widgets/ChildFrameParent.java        \
-		    VjComponents/UI/Widgets/LinkedList.java          \
-		    VjComponents/UI/Widgets/ListIterator.java        \
-		    VjComponents/UI/Widgets/ListElem.java		\
-		    VjComponents/UI/Widgets/ChildFrame.java		\
-		    VjComponents/UI/Widgets/GenericEditorFrame.java	\
-		    VjComponents/UI/Widgets/EasyMenu.java		\
-		    VjComponents/UI/Widgets/EasyPopupMenu.java	\
-		    VjComponents/UI/Widgets/EasyMenuBar.java	\
-		    VjComponents/UI/Widgets/IconFactory.java	\
-		    VjComponents/UI/Widgets/EasyFileDialog.java	
+VJCUIUTIL_SOURCES = VjComponents/UI/Widgets/FloatTextField.java		\
+                    VjComponents/UI/Widgets/IntegerTextField.java	\
+                    VjComponents/UI/Widgets/NoSpaceTextField.java	\
+                    VjComponents/UI/Widgets/StringTextField.java	\
+                    VjComponents/UI/Widgets/ChildFrameParent.java	\
+                    VjComponents/UI/Widgets/LinkedList.java		\
+                    VjComponents/UI/Widgets/ListIterator.java		\
+                    VjComponents/UI/Widgets/ListElem.java		\
+                    VjComponents/UI/Widgets/ChildFrame.java		\
+                    VjComponents/UI/Widgets/GenericEditorFrame.java	\
+                    VjComponents/UI/Widgets/EasyMenu.java		\
+                    VjComponents/UI/Widgets/EasyPopupMenu.java		\
+                    VjComponents/UI/Widgets/EasyMenuBar.java		\
+                    VjComponents/UI/Widgets/IconFactory.java		\
+                    VjComponents/UI/Widgets/EasyFileDialog.java        
 
-VJCUIUTIL_OBJS = ${VJCUIUTIL_SOURCES:.java=.class}
+VJCUIUTIL_OBJS = $(VJCUIUTIL_SOURCES:.java=.class)

@@ -31,8 +31,8 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# This include file <Network.mk> defines the list of .java files that are built
-# into Java bytecode with javac.
+# This include file <Network.mk> defines the list of .java files that are
+# built into Java bytecode with javac.
 # -----------------------------------------------------------------------------
 # Variables defined here are:
 #
@@ -40,14 +40,11 @@
 # VJCNETWORK_OBJS    - The list of .class files that will be created.
 # -----------------------------------------------------------------------------
 
-VJCNETWORK_SOURCES = \
-		VjComponents/Network/ConnectionPane.java	\
-		VjComponents/Network/DefaultNetCommunicator.java	\
-		VjComponents/Network/NetCommunicator.java	\
-		VjComponents/Network/NetControlEvent.java	\
-		VjComponents/Network/NetControlListener.java	\
-		VjComponents/Network/NetworkModule.java
+VJCNETWORK_SOURCES = VjComponents/Network/ConnectionPane.java		\
+                     VjComponents/Network/DefaultNetCommunicator.java	\
+                     VjComponents/Network/NetCommunicator.java		\
+                     VjComponents/Network/NetControlEvent.java		\
+                     VjComponents/Network/NetControlListener.java	\
+                     VjComponents/Network/NetworkModule.java
 
-VJCNETWORK_OBJS = ${UI_SOURCES:.java=.class}
-
-
+VJCNETWORK_OBJS = $(UI_SOURCES:.java=.class)

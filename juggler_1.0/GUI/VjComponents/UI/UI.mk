@@ -40,17 +40,14 @@
 # UI_OBJS    - The list of .class files that will be created.
 # -----------------------------------------------------------------------------
 
-UI_SOURCES = \
-		VjComponents/UI/ControlUIModule.java 	\
-		VjComponents/UI/PlugPanel.java       	\
-		VjComponents/UI/PlugPanelContainer.java	\
-		VjComponents/UI/EditorPanel.java	\
-		VjComponents/UI/ConsolePane.java	\
-		VjComponents/UI/HTMLFrame.java		\
-		VjComponents/UI/TabPaneContainer.java	\
-		VjComponents/UI/TreeSelectContainer.java	\
-		VjComponents/UI/VjcPrefsModule.java	
+UI_SOURCES = VjComponents/UI/ControlUIModule.java 	\
+             VjComponents/UI/PlugPanel.java		\
+             VjComponents/UI/PlugPanelContainer.java	\
+             VjComponents/UI/EditorPanel.java		\
+             VjComponents/UI/ConsolePane.java		\
+             VjComponents/UI/HTMLFrame.java		\
+             VjComponents/UI/TabPaneContainer.java	\
+             VjComponents/UI/TreeSelectContainer.java	\
+             VjComponents/UI/VjcPrefsModule.java        
 
-UI_OBJS = ${UI_SOURCES:.java=.class}
-
-
+UI_OBJS = $(UI_SOURCES:.java=.class)

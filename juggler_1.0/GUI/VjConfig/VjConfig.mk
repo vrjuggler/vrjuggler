@@ -41,7 +41,7 @@
 # -----------------------------------------------------------------------------
 
 VJCONFIG_SOURCES = VjConfig/ChunkDependEntry.java       \
-		   VjConfig/ConfigChunkDB.java		\
+                   VjConfig/ConfigChunkDB.java		\
                    VjConfig/ConfigChunk.java		\
                    VjConfig/Property.java		\
                    VjConfig/Property.java		\
@@ -53,10 +53,10 @@ VJCONFIG_SOURCES = VjConfig/ChunkDependEntry.java       \
                    VjConfig/VarValue.java		\
                    VjConfig/VarValueException.java	\
                    VjConfig/ConfigStreamTokenizer.java  \
-		   VjConfig/ChunkFactory.java		\
-		   VjConfig/ChunkDBEvent.java		\
-		   VjConfig/ChunkDBListener.java	\
-		   VjConfig/DescDBEvent.java		\
-		   VjConfig/DescDBListener.java
+                   VjConfig/ChunkFactory.java		\
+                   VjConfig/ChunkDBEvent.java		\
+                   VjConfig/ChunkDBListener.java	\
+                   VjConfig/DescDBEvent.java		\
+                   VjConfig/DescDBListener.java
 
-VJCONFIG_OBJS = ${VJCONFIG_SOURCES:.java=.class}
+VJCONFIG_OBJS = $(VJCONFIG_SOURCES:.java=.class)
