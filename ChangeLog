@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jun-21-2002 jahare    Fixed an out-of-memory error in the method
+            patrickh  vjDeviceInterface::removeDevInterface().  It is now
+                      implemented correctly.
 Jun-10-2002 patrickh  Fixed a bug in the declaration of vjDeviceConstructor
                       that prevented user-defined devices from registering.
                       Submitted by Daniel Keefe <dfk@cs.brown.edu>.
