@@ -50,6 +50,19 @@ void Display::updateProjections(const float positionScale)
 }
 
 
+void Display::setOriginAndSize(int xo, int yo, int xs, int ys, bool updateConfig)
+{ 
+   _xo = xo; _yo = yo; _xs = xs; _ys = ys;
+   if(updateConfig)
+   {
+      mDisplayElement->setProperty<int>("origin", 0, xo);
+      mDisplayElement->setProperty<int>("origin", 1, yo);
+      mDisplayElement->setProperty<int>("size", 0, xs);
+      mDisplayElement->setProperty<int>("size", 1, ys);
+   }
+}
+
+
 void Display::config(jccl::ConfigElementPtr element)
 {
    vprASSERT(element.get() != NULL);

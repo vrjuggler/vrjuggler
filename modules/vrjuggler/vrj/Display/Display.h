@@ -97,8 +97,12 @@ public:
    bool  shouldDrawBorder()
    { return mBorder;}
 
-   void setOriginAndSize(int xo, int yo, int xs, int ys)
-   { _xo = xo; _yo = yo; _xs = xs; _ys = ys;}
+   /** Explicitly set the origin and size 
+   * @param updateConfig - If true, then the changes will be reflected in the config element for this display.
+   */
+   void setOriginAndSize(int xo, int yo, int xs, int ys, bool updateConfig=false);
+   
+   /** Return the current origin and size */
    void getOriginAndSize(int& xo, int& yo, int& xs, int& ys)
    {
       vprASSERT(_xo != -1);     // Make sure we have been configured
