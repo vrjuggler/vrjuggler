@@ -35,6 +35,9 @@ listserv/vrjuggler?</a></li>
       <li><a href="#vjcontrolDoesntRun"> Why doesn't vjcontrol or vjcontrol1.1 run?</a></li>
    </ul>
 	<li><a href="#applications"> VR applications</a></LI>
+   <ul>
+      <li><a href="#cavelib2dxform"> 2D Projections </a></li>
+   </ul>
 	<li><a href="#dev"> Juggler Team</a></LI>
 	<li>
 	     <a href="#troubleshooting"> Troubleshooting</a> 
@@ -132,7 +135,38 @@ href="${JUGGLER_MAILING_LIST}">vrjuggler@vrjuggler.org.</a>
 <HR><!-- ----------------------------------------- -->
 
 <h3><a name="applications">VR applications</a></h3>
-<LI><font size=1><a href="${CONTACT_US_DIRECTLY}">Contact Us</a> to add your question to this list!</font></li>
+<blockquote>
+	<a name="cavelib2dxform"><li><b>I'm a CAVELib user that's trying to learn VRJuggler for a new project.  Is
+   there an easy way to setup a 2d projection on the walls?  In Cavelib
+   you'ld do a CAVEWallTransform which puts you in a 2d projection on the
+   current wall so you can do 2d overlay stuff (Disable Lights & depth test,
+   then alot of glVertex2f).  Something similar to this would be nice, but
+   any way is welcome.<BR><BR>
+   Also, is there a way to tell which wall you're drawing on?  No need
+   drawing the overlay on all of them, after all.</b><BR></a>
+
+   This is OpenGL specific... Turn off the depth buffer testing, and then draw your 3d geometry at the
+   same position that the wall is at.  Make sure you draw it last too.  Also,
+   don't transform the geometry with your navigation matrix.  <BR><BR>
+
+   You will know what wall you're drawing on, by the position of your
+   geometry.<BR><BR>
+
+   This way, you wont have to do any thing weird or morally wrong, like draw 
+   2D in a 3D VR environment.  Personally though, I wouldn't ever draw just
+   on one wall, since technically the user isn't supposed to know the walls  
+   are there (thats what we call immersion).  It could ruin the effect for   
+   them. I'd just put it up somewhere convenient in 3D space (if that 
+   happens to be the wall, then I wouldn't let that stop me. :).   <BR><BR> 
+
+   The depth buffer trick will ensure that you'll always see it, but
+   becareful - since it can really confuse your users if something gets
+   positioned in front of your head up display... since your HUD would be the
+   thing drawn on top (physically impossible).<BR><BR>
+   </li>
+
+   <LI><font size=1><a href="${CONTACT_US_DIRECTLY}">Contact Us</a> to add your question to this list!</font></li>
+   </blockquote>
 
 <HR><!-- ----------------------------------------- -->
 <h3><a name="dev">Juggler Team</a></h3>
