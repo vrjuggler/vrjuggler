@@ -68,7 +68,7 @@
 class pfBasicConfigNavApp : public simplePfNavApp
 {
 public:
-   pfBasicConfigNavApp( ) : mCurrentConfig()
+   pfBasicConfigNavApp( )// : mCurrentConfig( new jccl::ConfigChunk )
    {
    }
 
@@ -108,7 +108,7 @@ protected:
    { vprASSERT(false); return false; }
 
 protected:
-   jccl::ConfigChunkPtr mCurrentConfig;      // config chunk that is current configuring this thingie
+   //jccl::ConfigChunkPtr mCurrentConfig;      // config chunk that is current configuring this thingie
 };
 
 // Get the properties from the chunks
