@@ -90,38 +90,50 @@ public:
    { return mViewport; }
 
    /**
-   * @pre eyePos is scaled by position factor.
-   * @pre scaleFactor is the scale current used
-   */
+    * @pre eyePos is scaled by position factor.
+    * @pre scaleFactor is the scale current used.
+    */
    virtual void calcViewMatrix(gmtl::Matrix44f& eyePos, const float scaleFactor) = 0;
 
    /** Helper to the frustum apex and corners in model coordinates.
-   * @note This function is meant for debugging purposes
-   * @post The given vars contain the values of the frustums
-   * corners in model space.
-   */
-   void getFrustumApexAndCorners(gmtl::Vec3f& apex, gmtl::Vec3f& ur, gmtl::Vec3f& lr,
-                                 gmtl::Vec3f& ul, gmtl::Vec3f& ll);
+    * @note This function is meant for debugging purposes.
+    * @post The given vars contain the values of the frustums
+    * corners in model space.
+    */
+   void getFrustumApexAndCorners(gmtl::Vec3f& apex, gmtl::Vec3f& ur,
+                                 gmtl::Vec3f& lr, gmtl::Vec3f& ul,
+                                 gmtl::Vec3f& ll);
+
+   /** Returns this projection's view matrix. */
+   const gmtl::Matrix44f& getViewMatrix() const
+   {
+      return mViewMat;
+   }
+
+   /** Returns a copy of this projection's frustum. */
+   vrj::Frustum getFrustum() const
+   {
+      return mFrustum;
+   }
 
    /** Virtual output oporators.
-   * Every class derived from us shoudl just define this, and
-   * the opertetor<< will "just work"
-   */
+    * Every class derived from us shoudl just define this, and
+    * the opertetor<< will "just work".
+    */
    virtual std::ostream& outStream(std::ostream& out,
                                    const unsigned int indentLevel = 0);
 
    friend VJ_API(std::ostream&) operator<<(std::ostream& out, Projection& proj);
 
 
-public:
+protected:
    gmtl::Matrix44f   mViewMat;     /**< The view transformation matrix for this projection */
    Frustum           mFrustum;     /**< The calculated view frustum for this projection */
 
-protected:
    Eye         mEye;          /**< The eye that this projection is rendering */
    Viewport*   mViewport;     /**< The containing viewport for the projection. Used in some projections to get size */
 
-   float       mFocusPlaneDist;     // Basically the distance to the surface.  Needed for drawing surface in simulator.
+   float       mFocusPlaneDist;     /**< Basically the distance to the surface.  Needed for drawing surface in simulator. */
 
 protected:
    /** @name Static near/far values */
@@ -131,10 +143,10 @@ protected:
    //@}
 
 public:
-   /** Set the system wide near and far values */
+   /** Set the system wide near and far values. */
    static void setNearFar(float near_val, float far_val);
 };
 
-};
+}
 
 #endif
