@@ -57,3 +57,6 @@ net-pkg-links:
 
 net-pkg-install:
 	@$(MAKE) net-install
+
+links:
+	@$(MAKE) -C jccl instlinks="$(instlinks)" links

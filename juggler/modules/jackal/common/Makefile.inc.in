@@ -57,3 +57,6 @@ config-pkg-links:
 
 config-pkg-install:
 	@$(MAKE) tweek-install
+
+links:
+	@$(MAKE) -C jccl instlinks="$(instlinks)" links
