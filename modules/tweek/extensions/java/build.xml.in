@@ -39,7 +39,7 @@
       <jar destfile="WizardBuilder.jar" basedir=".">
          <include name="org/vrjuggler/tweek/wizard/builder/**" />
          <fileset dir="${srcdir}"
-                  includes="org/vrjuggler/tweek/wizard/builder/**" />
+                  includes="org/vrjuggler/tweek/wizard/builder/images/*" />
          <fileset dir="${srcdir}"
                   includes="LICENSE-java-laf.txt" />
       </jar>
