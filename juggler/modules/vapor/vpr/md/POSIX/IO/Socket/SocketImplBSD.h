@@ -81,7 +81,7 @@ public:
     */
    const std::string& getName (void)
    {
-      return m_handle->getName();
+      return mHandle->getName();
    }
 
    /**
@@ -94,7 +94,7 @@ public:
     */
    void setOpenBlocking (void)
    {
-      m_open_blocking = true;
+      mOpenBlocking = true;
    }
 
    /**
@@ -108,17 +108,17 @@ public:
     */
    void setOpenNonBlocking (void)
    {
-      m_open_blocking = false;
+      mOpenBlocking = false;
    }
 
    /**
     * Opens the socket.  This creates a new socket using the domain and type
     * options set through member variables.
     *
-    * @pre m_domain and m_type have been set to values recognized by the
+    * @pre mDomain and mType have been set to values recognized by the
     *      socket(2) system call.
     * @post A new socket is created with its file handle stored in the
-    *       m_fdesc member variable.
+    *       mFdesc member variable.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the socket was opened
     *         successfully.<br>
@@ -140,8 +140,8 @@ public:
    {
       vpr::ReturnStatus retval;
 
-      retval = m_handle->close();
-      m_open = (retval.success() ? false : true);
+      retval = mHandle->close();
+      mOpen = (retval.success() ? false : true);
 
       return retval;
    }
@@ -158,30 +158,30 @@ public:
     */
    bool isOpen (void)
    {
-      return m_open;
+      return mOpen;
    }
 
    bool isBound() const
-   {  return m_bound; }
+   {  return mBound; }
 
 
    /**
     * Binds this socket to the address in the host address member variable.
     *
-    * @pre The socket is open, and m_host_addr has been initialized properly.
-    * @post The socket is bound to the address in m_host_addr.
+    * @pre The socket is open, and mLocalAddr has been initialized properly.
+    * @post The socket is bound to the address in mLocalAddr.
     *
     * @return vpr::ReturnStatus::Sucess is returned if the socket was bound to
     *         the address successfully.<br>
     *         vpr::ReturnStatus::Fail is returned if the socket could not be
-    *         bound to the address in m_host_addr.
+    *         bound to the address in mLocalAddr.
     */
    vpr::ReturnStatus bind(void);
 
    /// Returns the contained handle.
    vpr::IOSys::Handle getHandle (void)
    {
-      return m_handle->getHandle();
+      return mHandle->getHandle();
    }
 
    /**
@@ -190,7 +190,7 @@ public:
     */
    bool isBlockingFixed (void)
    {
-      return m_blocking_fixed;
+      return mBlockingFixed;
    }
 
    /**
@@ -223,7 +223,7 @@ public:
     */
    bool getBlocking (void) const
    {
-      return m_handle->getBlocking();
+      return mHandle->getBlocking();
    }
 
    /**
@@ -234,7 +234,7 @@ public:
     */
    bool getNonBlocking (void) const
    {
-      return m_handle->getNonBlocking();
+      return mHandle->getNonBlocking();
    }
 
    // ========================================================================
@@ -248,10 +248,10 @@ public:
     * the effect of establishing a connection with the destination.
     *
     * @pre The socket is open.
-    * @post The socket is connected to the address in m_host_addr.  For a
+    * @post The socket is connected to the address in mLocalAddr.  For a
     *       stream socket, this means that a connection for future
     *       communication has been established.  For a datagram socket, the
-    *       default destination for all packets is now m_host_addr.
+    *       default destination for all packets is now mLocalAddr.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the connection
     *         succeeded.<br>
@@ -286,7 +286,7 @@ public:
     */
    const vpr::SocketTypes::Type& getType (void) const
    {
-      return m_type;
+      return mType;
    }
 
    /**
@@ -300,14 +300,14 @@ public:
     */
    const vpr::InetAddr& getLocalAddr (void) const
    {
-      return m_local_addr;
+      return mLocalAddr;
    }
 
    /**
     * Changes the local address for this socket.
     *
     * @pre This socket is not already bound.
-    * @post m_local_addr is updated to use the given vpr::InetAddr object.
+    * @post mLocalAddr is updated to use the given vpr::InetAddr object.
     */
    vpr::ReturnStatus setLocalAddr(const vpr::InetAddr& addr);
 
@@ -317,14 +317,14 @@ public:
     */
    const vpr::InetAddr& getRemoteAddr (void) const
    {
-      return m_remote_addr;
+      return mRemoteAddr;
    }
 
    /**
     * Changes the remote address for this socket.
     *
     * @pre This socket is not already connected.
-    * @post m_local_addr is updated to use the given vpr::InetAddr object.
+    * @post mLocalAddr is updated to use the given vpr::InetAddr object.
     */
    vpr::ReturnStatus setRemoteAddr(const vpr::InetAddr& addr);
 
@@ -424,7 +424,7 @@ public:
 
    vpr::Uint32 availableBytes (void)
    {
-      return m_handle->availableBytes();
+      return mHandle->availableBytes();
    }
 
    /**
@@ -453,11 +453,11 @@ public:
                                const struct vpr::SocketOptions::Data& data);
 
    /**
-    * Destructor.  This releases the memory allocated for m_handle (if it is
+    * Destructor.  This releases the memory allocated for mHandle (if it is
     * non-NULL).
     *
-    * @pre If m_handle is NULL, its memory has already been deleted.
-    * @post The memory for m_handle is deleted.
+    * @pre If mHandle is NULL, its memory has already been deleted.
+    * @post The memory for mHandle is deleted.
     */
    ~SocketImplBSD(void);
 
@@ -470,11 +470,11 @@ protected:
     *       defaults.
     */
    SocketImplBSD (const vpr::SocketTypes::Type sock_type)
-      : m_open(false), m_open_blocking(true), m_bound(false),
-        m_connected(false), m_blocking_fixed(false), m_handle(NULL),
-        m_type(sock_type)
+      : mOpen(false), mOpenBlocking(true), mBound(false),
+        mConnected(false), mBlockingFixed(false), mHandle(NULL),
+        mType(sock_type)
    {
-      m_handle = new FileHandleImplUNIX();
+      mHandle = new FileHandleImplUNIX();
    }
 
    /**
@@ -490,29 +490,29 @@ protected:
    SocketImplBSD (const vpr::InetAddr& local_addr,
                   const vpr::InetAddr& remote_addr,
                   const vpr::SocketTypes::Type sock_type)
-      : m_open(false), m_open_blocking(true), m_bound(false),
-        m_connected(false), m_blocking_fixed(false), m_handle(NULL),
-        m_local_addr(local_addr), m_remote_addr(remote_addr), m_type(sock_type)
+      : mOpen(false), mOpenBlocking(true), mBound(false),
+        mConnected(false), mBlockingFixed(false), mHandle(NULL),
+        mLocalAddr(local_addr), mRemoteAddr(remote_addr), mType(sock_type)
    {
-      m_handle = new FileHandleImplUNIX(remote_addr.getAddressString());
+      mHandle = new FileHandleImplUNIX(remote_addr.getAddressString());
    }
 
 protected:
-   // XXX: This class should not need m_open and should instead use the one
+   // XXX: This class should not need mOpen and should instead use the one
    // in FileHandleUNIX.  For some reason, doing that causes all kinds of
    // problems in SocketStreamImplBSD::accept().
-   bool m_open;
-   bool m_open_blocking;
-   bool m_bound;
-   bool m_connected;
-   bool m_blocking_fixed;
+   bool mOpen;
+   bool mOpenBlocking;
+   bool mBound;
+   bool mConnected;
+   bool mBlockingFixed;
 
-   vpr::FileHandleImplUNIX* m_handle; /**< The OS handle for this socket */
+   vpr::FileHandleImplUNIX* mHandle; /**< The OS handle for this socket */
 
-   vpr::InetAddr m_local_addr;    /**< The local site's address structure */
-   vpr::InetAddr m_remote_addr;   /**< The remote site's address structure */
+   vpr::InetAddr mLocalAddr;    /**< The local site's address structure */
+   vpr::InetAddr mRemoteAddr;   /**< The remote site's address structure */
 
-   vpr::SocketTypes::Type m_type; /**< The type for this socket */
+   vpr::SocketTypes::Type mType; /**< The type for this socket */
 };
 
 } // End of vpr namespace

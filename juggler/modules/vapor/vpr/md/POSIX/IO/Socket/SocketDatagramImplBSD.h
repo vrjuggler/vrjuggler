@@ -99,12 +99,12 @@ public:
     SocketDatagramImplBSD (const SocketDatagramImplBSD& sock)
         : SocketImplBSD(SocketTypes::DATAGRAM)
     {
-        m_local_addr         = sock.m_local_addr;
-        m_remote_addr        = sock.m_remote_addr;
-        m_handle             = new FileHandleImplUNIX(sock.m_handle->getName());
-        m_handle->m_fdesc    = sock.m_handle->m_fdesc;
-        m_handle->m_open     = sock.m_handle->m_open;
-        m_handle->m_blocking = sock.m_handle->m_blocking;
+        mLocalAddr         = sock.mLocalAddr;
+        mRemoteAddr        = sock.mRemoteAddr;
+        mHandle            = new FileHandleImplUNIX(sock.mHandle->getName());
+        mHandle->mFdesc    = sock.mHandle->mFdesc;
+        mHandle->mOpen     = sock.mHandle->mOpen;
+        mHandle->mBlocking = sock.mHandle->mBlocking;
     }
 
     /**
@@ -126,4 +126,4 @@ public:
 }; // End of namespace
 
 
-#endif	/* _VPR_SOCKET_DATAGRAM_IMPL_BSD_H_ */
+#endif  /* _VPR_SOCKET_DATAGRAM_IMPL_BSD_H_ */

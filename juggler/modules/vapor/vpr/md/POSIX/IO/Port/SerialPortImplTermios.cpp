@@ -60,7 +60,7 @@ namespace vpr {
 // name and sets the update action to happen immediately.
 // ----------------------------------------------------------------------------
 SerialPortImplTermios::SerialPortImplTermios (const std::string& port_name) {
-    m_handle = new FileHandleImplUNIX(port_name);
+    mHandle = new FileHandleImplUNIX(port_name);
     setUpdateAction(SerialTypes::NOW);
 }
 
@@ -68,8 +68,8 @@ SerialPortImplTermios::SerialPortImplTermios (const std::string& port_name) {
 // Destructor.  If the file handle is non-NULL, its memory is released.
 // ----------------------------------------------------------------------------
 SerialPortImplTermios::~SerialPortImplTermios () {
-    if ( m_handle != NULL ) {
-        delete m_handle;
+    if ( mHandle != NULL ) {
+        delete mHandle;
     }
 }
 
@@ -80,7 +80,7 @@ ReturnStatus
 SerialPortImplTermios::open () {
     ReturnStatus status;
 
-    status = m_handle->open();
+    status = mHandle->open();
 
     // If the serial port could not be opened, print an error message.
     if ( status == vpr::ReturnStatus::Fail ) {
@@ -119,7 +119,7 @@ SerialTypes::UpdateActionOption
 SerialPortImplTermios::getUpdateAction () {
     SerialTypes::UpdateActionOption action;
 
-    switch (m_actions) {
+    switch (mActions) {
       case TCSANOW:
         action = SerialTypes::NOW;
         break;
@@ -146,13 +146,13 @@ SerialPortImplTermios::setUpdateAction (SerialTypes::UpdateActionOption action)
 {
     switch (action) {
       case SerialTypes::NOW:
-        m_actions = TCSANOW;
+        mActions = TCSANOW;
         break;
       case SerialTypes::DRAIN:
-        m_actions = TCSADRAIN;
+        mActions = TCSADRAIN;
         break;
       case SerialTypes::FLUSH:
-        m_actions = TCSAFLUSH;
+        mActions = TCSAFLUSH;
         break;
     }
 }
@@ -263,7 +263,7 @@ SerialPortImplTermios::setCharacterSize (const SerialTypes::CharacterSizeOption 
     ReturnStatus retval;
 
     if ( (retval = getAttrs(&term)).success() ) {
-        term.c_cflag &= ~CSIZE;	// Zero out the bits
+        term.c_cflag &= ~CSIZE; // Zero out the bits
 
         // Set the character size based on the given bits-per-byte value.
         switch (bpb) {
@@ -758,7 +758,7 @@ ReturnStatus
 SerialPortImplTermios::drainOutput () {
     ReturnStatus retval;
 
-    if ( tcdrain(m_handle->m_fdesc) == -1 ) {
+    if ( tcdrain(mHandle->mFdesc) == -1 ) {
         fprintf(stderr,
                 "[vpr::SerialPortImplTermios] Failed to drain output on port %s: %s\n",
                 getName().c_str(), strerror(errno));
@@ -794,7 +794,7 @@ SerialPortImplTermios::controlFlow (SerialTypes::FlowActionOption opt) {
         break;
     }
 
-    if ( tcflow(m_handle->m_fdesc, action) == -1 ) {
+    if ( tcflow(mHandle->mFdesc, action) == -1 ) {
         fprintf(stderr,
                 "[vpr::SerialPortImplTermios] Failed to alter flow control on "
                 "port %s: %s\n", getName().c_str(), strerror(errno));
@@ -826,7 +826,7 @@ SerialPortImplTermios::flushQueue (SerialTypes::FlushQueueOption vpr_queue) {
         break;
     }
 
-    if ( tcflush(m_handle->m_fdesc, queue) == -1 ) {
+    if ( tcflush(mHandle->mFdesc, queue) == -1 ) {
         std::string queue_name;
 
         switch (vpr_queue) {
@@ -860,7 +860,7 @@ ReturnStatus
 SerialPortImplTermios::sendBreak (const Int32 duration) {
     ReturnStatus retval;
 
-    if ( tcsendbreak(m_handle->m_fdesc, duration) == -1 ) {
+    if ( tcsendbreak(mHandle->mFdesc, duration) == -1 ) {
         fprintf(stderr,
                 "[vpr::SerialPortImplTermios] Failed to send break on port %s: %s\n",
                 getName().c_str(), strerror(errno));
@@ -933,7 +933,7 @@ ReturnStatus
 SerialPortImplTermios::getAttrs (struct termios* term) {
     ReturnStatus retval;
 
-    if ( tcgetattr(m_handle->m_fdesc, term) == -1 ) {
+    if ( tcgetattr(mHandle->mFdesc, term) == -1 ) {
         fprintf(stderr,
                 "[vpr::SerialPortImplTermios] Could not get attributes for port %s: %s\n",
                 getName().c_str(), strerror(errno));
@@ -980,7 +980,7 @@ SerialPortImplTermios::setAttrs (struct termios* term, const char* err_msg,
     }
     vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << std::endl << vprDEBUG_FLUSH;
 
-    if ( tcsetattr(m_handle->m_fdesc, m_actions, term) == -1 ) {
+    if ( tcsetattr(mHandle->mFdesc, mActions, term) == -1 ) {
         fprintf(stderr, "[vpr::SerialPortImplTermios] %s (port '%s')", err_msg,
                 getName().c_str());
 

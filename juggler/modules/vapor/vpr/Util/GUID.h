@@ -61,7 +61,7 @@ class GUIDFactory;
 class VPR_CLASS_API GUID
 {
 public:
-   /** Tag to the constructor to force generation: dso::GUID guid(dso::GUID::generate_tag); 
+   /** Tag to the constructor to force generation: dso::GUID guid(dso::GUID::generate_tag);
 */
    class GenerateTag { };
    static GenerateTag generateTag;
@@ -91,19 +91,19 @@ public:
    {
       bool ret_val(false);
 
-      if (m_guid.packed.l0 < r.m_guid.packed.l0)
+      if (mGuid.packed.l0 < r.mGuid.packed.l0)
       {  ret_val = true; }
-      else if(m_guid.packed.l0 == r.m_guid.packed.l0)
+      else if(mGuid.packed.l0 == r.mGuid.packed.l0)
       {
-         if(m_guid.packed.l1 < r.m_guid.packed.l1)
+         if(mGuid.packed.l1 < r.mGuid.packed.l1)
          {  ret_val = true; }
-         else if(m_guid.packed.l1 == r.m_guid.packed.l1)
+         else if(mGuid.packed.l1 == r.mGuid.packed.l1)
          {
-            if(m_guid.packed.l2 < r.m_guid.packed.l2)
+            if(mGuid.packed.l2 < r.mGuid.packed.l2)
             {  ret_val = true; }
-            else if(m_guid.packed.l2 == r.m_guid.packed.l2)
+            else if(mGuid.packed.l2 == r.mGuid.packed.l2)
             {
-               if(m_guid.packed.l3 < r.m_guid.packed.l3)
+               if(mGuid.packed.l3 < r.mGuid.packed.l3)
                {
                   ret_val = true;
                }
@@ -170,10 +170,10 @@ public:
 
    GUID (const GUID& obj)
    {
-      m_guid.packed.l0 = obj.m_guid.packed.l0;
-      m_guid.packed.l1 = obj.m_guid.packed.l1;
-      m_guid.packed.l2 = obj.m_guid.packed.l2;
-      m_guid.packed.l3 = obj.m_guid.packed.l3;
+      mGuid.packed.l0 = obj.mGuid.packed.l0;
+      mGuid.packed.l1 = obj.mGuid.packed.l1;
+      mGuid.packed.l2 = obj.mGuid.packed.l2;
+      mGuid.packed.l3 = obj.mGuid.packed.l3;
    }
 
 
@@ -183,10 +183,10 @@ public:
       if(&obj == this) // Check for self
          return *this;
 
-      m_guid.packed.l0 = obj.m_guid.packed.l0;
-      m_guid.packed.l1 = obj.m_guid.packed.l1;
-      m_guid.packed.l2 = obj.m_guid.packed.l2;
-      m_guid.packed.l3 = obj.m_guid.packed.l3;
+      mGuid.packed.l0 = obj.mGuid.packed.l0;
+      mGuid.packed.l1 = obj.mGuid.packed.l1;
+      mGuid.packed.l2 = obj.mGuid.packed.l2;
+      mGuid.packed.l3 = obj.mGuid.packed.l3;
       return *this;
    }
 
@@ -214,7 +214,7 @@ public:
          vpr::Uint32 l2;
          vpr::Uint32 l3;
       } packed;
-   } m_guid;
+   } mGuid;
 
    friend class vpr::GUIDFactory;
 
@@ -258,7 +258,7 @@ struct hash<vpr::GUID>
 {
    vpr::Uint32 operator() (const vpr::GUID guid) const
    {
-      return guid.m_guid.packed.l0 + guid.m_guid.packed.l1 + guid.m_guid.packed.l2 + guid.m_guid.packed.l3;
+      return guid.mGuid.packed.l0 + guid.mGuid.packed.l1 + guid.mGuid.packed.l2 + guid.mGuid.packed.l3;
    }
 };
 

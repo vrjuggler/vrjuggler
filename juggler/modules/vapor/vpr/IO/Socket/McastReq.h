@@ -57,7 +57,7 @@ public:
      * Default constructor.
      */
     McastReq (void)
-        : m_mcast_addr(), m_if_addr()
+        : mMcastAddr(), mIfAddr()
     {
         /* Do nothing. */ ;
     }
@@ -66,7 +66,7 @@ public:
      *
      */
     McastReq (const InetAddr& mcast_addr, const InetAddr& if_addr)
-        : m_mcast_addr(mcast_addr), m_if_addr(if_addr)
+        : mMcastAddr(mcast_addr), mIfAddr(if_addr)
     {
         /* Do nothing. */ ;
     }
@@ -75,8 +75,8 @@ public:
      * Copy constructor.
      */
     McastReq (const McastReq& mcast_addr) {
-        m_mcast_addr = mcast_addr.m_mcast_addr;
-        m_if_addr    = mcast_addr.m_if_addr;
+        mMcastAddr = mcast_addr.mMcastAddr;
+        mIfAddr    = mcast_addr.mIfAddr;
     }
 
     /**
@@ -84,7 +84,7 @@ public:
      */
     inline const InetAddr&
     getMulticastAddr (void) const {
-        return m_mcast_addr;
+        return mMcastAddr;
     }
 
     /**
@@ -92,15 +92,15 @@ public:
      */
     inline const InetAddr&
     getInterfaceAddr (void) const {
-        return m_if_addr;
+        return mIfAddr;
     }
 
 private:
-    InetAddr m_mcast_addr;
-    InetAddr m_if_addr;
+    InetAddr mMcastAddr;
+    InetAddr mIfAddr;
 };
 
 }; // End of vpr namespace
 
 
-#endif	/* _VPR_MCAST_REQ_H_ */
+#endif  /* _VPR_MCAST_REQ_H_ */

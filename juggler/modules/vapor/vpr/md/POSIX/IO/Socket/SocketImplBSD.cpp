@@ -72,7 +72,7 @@ vpr::ReturnStatus SocketImplBSD::open ()
    int domain, type, sock;
    vpr::ReturnStatus retval;
 
-   switch ( m_local_addr.getFamily() )
+   switch ( mLocalAddr.getFamily() )
    {
       case SocketTypes::LOCAL:
 #ifdef PF_LOCAL
@@ -100,18 +100,18 @@ vpr::ReturnStatus SocketImplBSD::open ()
 #else
          fprintf(stderr,
                  "[vpr::SocketImplBSD] WARNING: Cannot use LINK sockets. domain %d\n",
-                 m_local_addr.getFamily());
+                 mLocalAddr.getFamily());
 #endif
          break;
       default:
          domain = -1;
          fprintf(stderr,
                  "[vpr::SocketImplBSD] ERROR: Unknown socket domain value %d\n",
-                 m_local_addr.getFamily());
+                 mLocalAddr.getFamily());
          break;
    }
 
-   switch ( m_type )
+   switch ( mType )
    {
       case SocketTypes::STREAM:
          type = SOCK_STREAM;
@@ -126,12 +126,12 @@ vpr::ReturnStatus SocketImplBSD::open ()
          type = -1;
          fprintf(stderr,
                  "[vpr::SocketImplBSD] ERROR: Unknown socket type value %d\n",
-                 m_local_addr.getFamily());
+                 mLocalAddr.getFamily());
          break;
    }
 
-   // Attempt to create a new socket using the values in m_local_addr and
-   // m_type.
+   // Attempt to create a new socket using the values in mLocalAddr and
+   // mType.
    sock = socket(domain, type, 0);
 
    // If socket(2) failed, print an error message and return error status.
@@ -145,19 +145,19 @@ vpr::ReturnStatus SocketImplBSD::open ()
    // Otherwise, return success.
    else
    {
-      if ( m_handle == NULL )
+      if ( mHandle == NULL )
       {
-         m_handle = new FileHandleImplUNIX(m_remote_addr.getAddressString());
+         mHandle = new FileHandleImplUNIX(mRemoteAddr.getAddressString());
       }
 
-      m_handle->m_fdesc = sock;
-      m_handle->m_open  = true;
-      m_open            = true;
+      mHandle->mFdesc = sock;
+      mHandle->mOpen  = true;
+      mOpen           = true;
 
       // Since socket(2) cannot open a socket in non-blocking mode, we call
       // enableNonBlocking() now if the socket is to be opened in
       // non-blocking mode.
-      if ( ! m_open_blocking )
+      if ( ! mOpenBlocking )
       {
          retval = enableNonBlocking();
       }
@@ -174,10 +174,10 @@ vpr::ReturnStatus SocketImplBSD::enableBlocking ()
    vpr::ReturnStatus status;
 
    vprASSERT(isOpen() && "precondition says you must open() the socket first");
-   vprASSERT(! m_blocking_fixed &&
+   vprASSERT(! mBlockingFixed &&
              "Cannot enable blocking after a blocking call!");
 
-   status = m_handle->enableBlocking();
+   status = mHandle->enableBlocking();
 
    return status;
 }
@@ -190,10 +190,10 @@ vpr::ReturnStatus SocketImplBSD::enableNonBlocking ()
    vpr::ReturnStatus status;
 
    vprASSERT(isOpen() && "precondition says you must open() the socket first");
-   vprASSERT(! m_blocking_fixed &&
+   vprASSERT(! mBlockingFixed &&
              "Cannot disable blocking after a blocking call!");
 
-   status = m_handle->enableNonBlocking();
+   status = mHandle->enableNonBlocking();
 
    return status;
 }
@@ -206,9 +206,9 @@ vpr::ReturnStatus SocketImplBSD::bind ()
    vpr::ReturnStatus retval;
    int status;
 
-   // Bind the socket to the address in m_local_addr.
-   status = ::bind(m_handle->m_fdesc, (struct sockaddr*) &m_local_addr.m_addr,
-                   m_local_addr.size());
+   // Bind the socket to the address in mLocalAddr.
+   status = ::bind(mHandle->mFdesc, (struct sockaddr*) &mLocalAddr.mAddr,
+                   mLocalAddr.size());
 
    // If that fails, print an error and return error status.
    if ( status == -1 )
@@ -220,7 +220,7 @@ vpr::ReturnStatus SocketImplBSD::bind ()
    }
    else
    {
-      m_bound = true;
+      mBound = true;
    }
 
    return retval;
@@ -237,10 +237,10 @@ vpr::ReturnStatus SocketImplBSD::connect (vpr::Interval timeout)
    vpr::ReturnStatus retval;
    int status;
 
-   // Attempt to connect to the address in m_addr.
-   status = ::connect(m_handle->m_fdesc,
-                      (struct sockaddr*) &m_remote_addr.m_addr,
-                      m_remote_addr.size());
+   // Attempt to connect to the address in mAddr.
+   status = ::connect(mHandle->mFdesc,
+                      (struct sockaddr*) &mRemoteAddr.mAddr,
+                      mRemoteAddr.size());
 
    // If connect(2) failed, print an error message explaining why and return
    // error status.
@@ -248,8 +248,8 @@ vpr::ReturnStatus SocketImplBSD::connect (vpr::Interval timeout)
    {
       // If this is a non-blocking connection, return
       // vpr::ReturnStatus::InProgress to indicate that the connection will
-      // complete later.  I'm not sure if it's safe to set m_connected and
-      // m_blocking_fixed at this point, but they have to be set sometime.
+      // complete later.  I'm not sure if it's safe to set mConnected and
+      // mBlockingFixed at this point, but they have to be set sometime.
       if ( errno == EINPROGRESS && getNonBlocking() )
       {
          if ( vpr::Interval::NoWait == timeout )
@@ -259,46 +259,46 @@ vpr::ReturnStatus SocketImplBSD::connect (vpr::Interval timeout)
          // If we have a timeout value, wait for at most the duration of
          // that interval.  If we time out, tell the caller that the
          // connection is still in progress.
-         else if ( ! m_handle->isWriteable(timeout).success() )
+         else if ( ! mHandle->isWriteable(timeout).success() )
          {
             retval.setCode(vpr::ReturnStatus::InProgress);
          }
 
-         m_bound          = true;
-         m_connected      = true;
-         m_blocking_fixed = true;
+         mBound          = true;
+         mConnected      = true;
+         mBlockingFixed = true;
       }
       else
       {
          fprintf(stderr, "[vpr::SocketImplBSD] Error connecting to %s: %s\n",
-                 m_remote_addr.getAddressString().c_str(), strerror(errno));
+                 mRemoteAddr.getAddressString().c_str(), strerror(errno));
          retval.setCode(vpr::ReturnStatus::Fail);
       }
    }
    // Otherwise, return success.
    else
    {
-      m_bound          = true;
-      m_connected      = true;
-      m_blocking_fixed = true;
+      mBound          = true;
+      mConnected      = true;
+      mBlockingFixed = true;
    }
 
    // Fill in the local address if has not already been assigned.
-   if ( m_connected && vpr::InetAddr::AnyAddr == m_local_addr )
+   if ( mConnected && vpr::InetAddr::AnyAddr == mLocalAddr )
    {
       int status;
       socklen_t namelen;
       struct sockaddr temp_addr;
 
       namelen = sizeof(struct sockaddr);
-      status  = getsockname(m_handle->m_fdesc, &temp_addr, &namelen);
+      status  = getsockname(mHandle->mFdesc, &temp_addr, &namelen);
 
       if ( status == 0 )
       {
-         m_local_addr.setSockaddr(&temp_addr);
+         mLocalAddr.setSockaddr(&temp_addr);
 /* XXX: This doesn't compile on IRIX, and I don't know why.
          vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "Connected, local address is "
-                                          << m_local_addr << std::endl
+                                          << mLocalAddr << std::endl
                                           << vprDEBUG_FLUSH;
 */
       }
@@ -320,12 +320,12 @@ bool SocketImplBSD::isConnected ()
 
    retval = false;
 
-   if ( m_open && m_connected )
+   if ( mOpen && mConnected )
    {
       vpr::ReturnStatus status;
       vpr::Int32 bytes;
 
-      status = m_handle->getReadBufferSize(bytes);
+      status = mHandle->getReadBufferSize(bytes);
 
       if ( status.success() )
       {
@@ -333,7 +333,7 @@ bool SocketImplBSD::isConnected ()
          {
             // If there are no bytes to read but the OS tells us that the
             // socket is readable, then something is wrong.
-            if ( ! m_handle->isReadable(vpr::Interval::NoWait).success() )
+            if ( ! mHandle->isReadable(vpr::Interval::NoWait).success() )
             {
                retval = true;
             }
@@ -352,7 +352,7 @@ vpr::ReturnStatus SocketImplBSD::setLocalAddr (const InetAddr& addr)
 {
    vpr::ReturnStatus status;
 
-   if ( m_bound || m_connected )
+   if ( mBound || mConnected )
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
          << "SocketImplBSD::setLocalAddr: Can't set address of a "
@@ -361,7 +361,7 @@ vpr::ReturnStatus SocketImplBSD::setLocalAddr (const InetAddr& addr)
    }
    else
    {
-      m_local_addr = addr;
+      mLocalAddr = addr;
    }
 
    return status;
@@ -371,13 +371,13 @@ vpr::ReturnStatus SocketImplBSD::setRemoteAddr (const InetAddr& addr)
 {
    vpr::ReturnStatus status;
 
-   if ( m_connected )
+   if ( mConnected )
    {
       status.setCode(vpr::ReturnStatus::Fail);
    }
    else
    {
-      m_remote_addr = addr;
+      mRemoteAddr = addr;
    }
 
    return status;
@@ -389,8 +389,8 @@ vpr::ReturnStatus SocketImplBSD::read_i (void* buffer,
                                          const vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
-   m_blocking_fixed = true;
-   status = m_handle->read_i(buffer, length, bytes_read, timeout);
+   mBlockingFixed = true;
+   status = mHandle->read_i(buffer, length, bytes_read, timeout);
 
    if ( bytes_read == 0 )
    {
@@ -406,8 +406,8 @@ vpr::ReturnStatus SocketImplBSD::readn_i (void* buffer,
                                           const vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
-   m_blocking_fixed = true;
-   status = m_handle->readn_i(buffer, length, bytes_read, timeout);
+   mBlockingFixed = true;
+   status = mHandle->readn_i(buffer, length, bytes_read, timeout);
 
    if ( bytes_read == 0 )
    {
@@ -423,8 +423,8 @@ vpr::ReturnStatus SocketImplBSD::write_i (const void* buffer,
                                           const vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
-   m_blocking_fixed = true;
-   status = m_handle->write_i(buffer, length, bytes_written, timeout);
+   mBlockingFixed = true;
+   status = mHandle->write_i(buffer, length, bytes_written, timeout);
 
    if ( status.failure() )
    {
@@ -543,7 +543,7 @@ vpr::ReturnStatus SocketImplBSD::getOption (const vpr::SocketOptions::Types opti
          break;
    }
 
-   status = getsockopt(m_handle->m_fdesc, opt_level, opt_name,
+   status = getsockopt(mHandle->mFdesc, opt_level, opt_name,
                        (void*) &opt_data, &opt_size);
 
    if ( status == 0 )
@@ -616,7 +616,7 @@ vpr::ReturnStatus SocketImplBSD::getOption (const vpr::SocketOptions::Types opti
       retval.setCode(vpr::ReturnStatus::Fail);
       fprintf(stderr,
               "[vpr::SocketImplBSD] ERROR: Could not get socket option for socket %s: %s\n",
-              m_handle->getName().c_str(), strerror(errno));
+              mHandle->getName().c_str(), strerror(errno));
    }
 
    return retval;
@@ -754,7 +754,7 @@ vpr::ReturnStatus SocketImplBSD::setOption (const vpr::SocketOptions::Types opti
          break;
    }
 
-   if ( ::setsockopt(m_handle->m_fdesc, opt_level, opt_name, &opt_data, opt_size) != 0 )
+   if ( ::setsockopt(mHandle->mFdesc, opt_level, opt_name, &opt_data, opt_size) != 0 )
    {
       retval.setCode(vpr::ReturnStatus::Fail);
    }
@@ -771,10 +771,10 @@ vpr::ReturnStatus SocketImplBSD::setOption (const vpr::SocketOptions::Types opti
 // ----------------------------------------------------------------------------
 SocketImplBSD::~SocketImplBSD ()
 {
-   if ( m_handle != NULL )
+   if ( mHandle != NULL )
    {
-      delete m_handle;
-      m_handle = NULL;
+      delete mHandle;
+      mHandle = NULL;
    }
 }
 

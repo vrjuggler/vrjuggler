@@ -88,7 +88,7 @@ class VPR_CLASS_API SignalSet
 {
 public:
    /**
-    * Initialize <m_sigset> with <sigset>.  If <sigset> == 0 then fill
+    * Initialize <mSigSet> with <sigset>.  If <sigset> == 0 then fill
     * the set.
     *
     * @param sigset The signal set used for initializing this object.
@@ -101,12 +101,12 @@ public:
       }
       else
       {
-         m_sigset = *sigset;
+         mSigSet = *sigset;
       }
    }
 
    /**
-    * If <fill> == false then initialize the <m_sigset> to be empty, else
+    * If <fill> == false then initialize the <mSigSet> to be empty, else
     * full.
     *
     * @param fill A boolean flag stating whether to fill this object's
@@ -179,11 +179,11 @@ public:
     */
    const sigset_t* const getMask (void) const
    {
-      return &m_sigset;
+      return &mSigSet;
    }
 
 private:
-   sigset_t m_sigset;
+   sigset_t mSigSet;
 };
 
 /**
@@ -198,7 +198,7 @@ public:
     * Constructs an object that will hold the given handler, the given mask,
     * and any optional flags set.
     *
-    * @post The encapsulated m_sa variable is fully initialized.
+    * @post The encapsulated mSA variable is fully initialized.
     *
     * @param handler The actual handler callback.  Set to SIG_IGN to ignore
     *                the signal with which this action object will be
@@ -228,7 +228,7 @@ private:
    /**
     * Initializes this object.
     *
-    * @post The encapsulated m_sa variable is fully initialized.
+    * @post The encapsulated mSA variable is fully initialized.
     *
     * @param handler The actual handler callback.  Set to SIG_IGN to ignore
     *                the signal with which this action object will be
@@ -240,17 +240,17 @@ private:
    void init (vpr::SignalHandler_t handler, const sigset_t* mask,
               const int flags)
    {
-      memset(&m_sa, '\0', sizeof(m_sa));
-      m_sa.sa_handler = handler;
-      m_sa.sa_flags   = flags;
+      memset(&mSA, '\0', sizeof(mSA));
+      mSA.sa_handler = handler;
+      mSA.sa_flags   = flags;
 
       if ( mask != NULL ) {
-         memcpy(&m_sa.sa_mask, mask, sizeof(sigset_t));
+         memcpy(&mSA.sa_mask, mask, sizeof(sigset_t));
       }
    }
 
 public:
-   struct sigaction m_sa;
+   struct sigaction mSA;
 };
 
 /**

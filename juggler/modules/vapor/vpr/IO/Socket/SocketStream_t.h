@@ -72,8 +72,8 @@ public:
      */
     SocketStream_t (void)
     {
-       m_socket_stream_imp = boost::shared_ptr<SocketStreamImpl>( new SocketStreamImpl );
-       m_socket_imp = m_socket_stream_imp;
+       mSocketStreamImpl = boost::shared_ptr<SocketStreamImpl>( new SocketStreamImpl );
+       mSocketImpl = mSocketStreamImpl;
     }
 
     /**
@@ -91,8 +91,8 @@ public:
      */
     SocketStream_t (vpr::InetAddr local_addr, vpr::InetAddr remote_addr)
     {
-       m_socket_stream_imp = boost::shared_ptr<SocketStreamImpl>(new SocketStreamImpl(local_addr, remote_addr));
-       m_socket_imp = m_socket_stream_imp;
+       mSocketStreamImpl = boost::shared_ptr<SocketStreamImpl>(new SocketStreamImpl(local_addr, remote_addr));
+       mSocketImpl = mSocketStreamImpl;
     }
 
     /**
@@ -101,9 +101,9 @@ public:
      * @param sock The source stream socket to be copied into this object.
      */
     SocketStream_t (const SocketStream_t& sock)
-        : m_socket_stream_imp(sock.m_socket_stream_imp)
+        : mSocketStreamImpl(sock.mSocketStreamImpl)
     {
-        m_socket_imp = m_socket_stream_imp;
+        mSocketImpl = mSocketStreamImpl;
     }
 
     /**
@@ -114,14 +114,14 @@ public:
      */
     virtual ~SocketStream_t (void)
     {
-       ;  // When obj is destroyed, then member m_socket_stream_imp will be destroyed
+       ;  // When obj is destroyed, then member mSocketStreamImpl will be destroyed
     }
 
     /**
      * Puts this socket into the listening state where it listens for
      * incoming connection requests.
      *
-     * @pre The socket has been opened and bound to the address in m_addr.
+     * @pre The socket has been opened and bound to the address in mAddr.
      * @post The socket is in a listening state waiting for incoming
      *       connection requests.
      *
@@ -133,7 +133,7 @@ public:
      */
     inline vpr::ReturnStatus
     listen (const int backlog = 5) {
-        return m_socket_stream_imp->listen(backlog);
+        return mSocketStreamImpl->listen(backlog);
     }
 
     /**
@@ -163,7 +163,7 @@ public:
     accept (SocketStream_t& sock,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_socket_stream_imp->accept(*(sock.m_socket_stream_imp), timeout);
+        return mSocketStreamImpl->accept(*(sock.mSocketStreamImpl), timeout);
     }
 
     /**
@@ -216,28 +216,28 @@ protected:
      * vpr::SocketStreamImpl object pointer.  This is needed by accept().
      *
      * @pre sock_imp points to a valid vpr::SocketStreamImpl object.
-     * @post sock_imp is copied into m_socket_stream_imp.
+     * @post sock_imp is copied into mSocketStreamImpl.
      *
      * @param sock_imp A pointer to a vpr::SocketStreamImpl object.
      */
     SocketStream_t (SocketStreamImpl* sock_imp)
-        : Socket_t<Config>(), m_socket_stream_imp(sock_imp)
+        : Socket_t<Config>(), mSocketStreamImpl(sock_imp)
     {
-       m_socket_imp = m_socket_stream_imp;
+       mSocketImpl = mSocketStreamImpl;
     }
 
     virtual vpr::ReturnStatus
     getOption (const vpr::SocketOptions::Types option,
                struct vpr::SocketOptions::Data& data)
     {
-        return m_socket_stream_imp->getOption(option, data);
+        return mSocketStreamImpl->getOption(option, data);
     }
 
     virtual vpr::ReturnStatus
     setOption (const vpr::SocketOptions::Types option,
                const struct vpr::SocketOptions::Data& data)
     {
-        return m_socket_stream_imp->setOption(option, data);
+        return mSocketStreamImpl->setOption(option, data);
     }
 
 // Put in back door for simulator
@@ -245,8 +245,8 @@ protected:
 public:
 #endif
     /// Platform-specific stream socket implementation
-    //SocketStreamImpl m_socket_stream_imp;
-    boost::shared_ptr<SocketStreamImpl> m_socket_stream_imp;
+    //SocketStreamImpl mSocketStreamImpl;
+    boost::shared_ptr<SocketStreamImpl> mSocketStreamImpl;
 };
 
 }; // End of vpr namespace

@@ -99,7 +99,7 @@ public:
     */
    virtual const std::string& getName (void)
    {
-      return m_socket_imp->getName();
+      return mSocketImpl->getName();
    }
 
    /**
@@ -112,7 +112,7 @@ public:
     */
    void setOpenBlocking (void)
    {
-      m_socket_imp->setOpenBlocking();
+      mSocketImpl->setOpenBlocking();
    }
 
    /**
@@ -126,7 +126,7 @@ public:
     */
    void setOpenNonBlocking (void)
    {
-      m_socket_imp->setOpenNonBlocking();
+      mSocketImpl->setOpenNonBlocking();
    }
 
    /**
@@ -134,7 +134,7 @@ public:
     *
     * @pre The socket is not already open.
     * @post An attempt is made to open the socket.  The resulting status is
-    *       returned to the caller.  If the socket is opened, m_open is set
+    *       returned to the caller.  If the socket is opened, mOpen is set
     *       to true.
     *
     * @return vpr::ReturnStatus::Succeed is returned if this socket is
@@ -143,7 +143,7 @@ public:
     */
    vpr::ReturnStatus open (void)
    {
-      return m_socket_imp->open();
+      return mSocketImpl->open();
    }
 
    /**
@@ -151,7 +151,7 @@ public:
     *
     * @pre The socket is open.
     * @post An attempt is made to close the socket.  The resulting status
-    *       is returned to the caller.  If the socket is closed, m_open
+    *       is returned to the caller.  If the socket is closed, mOpen
     *       is set to false.
     *
     * @return vpr::ReturnStatus::Succeed is returned if this socket is
@@ -160,7 +160,7 @@ public:
     */
    vpr::ReturnStatus close (void)
    {
-      return m_socket_imp->close();
+      return mSocketImpl->close();
    }
 
    /**
@@ -175,7 +175,7 @@ public:
     */
    bool isOpen (void)
    {
-      return m_socket_imp->isOpen();
+      return mSocketImpl->isOpen();
    }
 
    /**
@@ -189,7 +189,7 @@ public:
     */
    bool isBound (void)
    {
-      return m_socket_imp->isBound();
+      return mSocketImpl->isBound();
    }
 
    /**
@@ -204,13 +204,13 @@ public:
     */
    bool isConnected()
    {
-      return m_socket_imp->isConnected();
+      return mSocketImpl->isConnected();
    }
 
    /// Gets the handle to this socket
    vpr::IOSys::Handle getHandle()
    {
-      return m_socket_imp->getHandle();
+      return mSocketImpl->getHandle();
    }
 
    /**
@@ -219,7 +219,7 @@ public:
     */
    bool isBlockingFixed (void)
    {
-      return m_socket_imp->isBlockingFixed();
+      return mSocketImpl->isBlockingFixed();
    }
 
    /**
@@ -234,7 +234,7 @@ public:
     */
    vpr::ReturnStatus enableBlocking (void)
    {
-      return m_socket_imp->enableBlocking();
+      return mSocketImpl->enableBlocking();
    }
 
    /**
@@ -249,13 +249,13 @@ public:
     */
    vpr::ReturnStatus enableNonBlocking (void)
    {
-      return m_socket_imp->enableNonBlocking();
+      return mSocketImpl->enableNonBlocking();
    }
 
    /**
     * Gets the current blocking state for the socket.
     *
-    * @pre m_blocking is set correctly
+    * @pre mBlocking is set correctly
     * @post
     *
     * @return true is returned if the socket is in blocking
@@ -263,13 +263,13 @@ public:
     */
    bool getBlocking (void) const
    {
-      return m_socket_imp->getBlocking();
+      return mSocketImpl->getBlocking();
    }
 
    /**
     * Gets the current non-blocking state for the socket.
     *
-    * @pre m_blocking is set correctly
+    * @pre mBlocking is set correctly
     * @post
     *
     * @return true is returned if the socket is in non-blocking
@@ -277,7 +277,7 @@ public:
     */
    bool getNonBlocking (void) const
    {
-      return m_socket_imp->getNonBlocking();
+      return mSocketImpl->getNonBlocking();
    }
 
    /**
@@ -292,7 +292,7 @@ public:
     */
    vpr::ReturnStatus bind (void)
    {
-      return m_socket_imp->bind();
+      return mSocketImpl->bind();
    }
 
    // ========================================================================
@@ -306,10 +306,10 @@ public:
     * the effect of establishing a connection with the destination.
     *
     * @pre The socket is open.
-    * @post The socket is connected to the address in m_host_addr.  For a
+    * @post The socket is connected to the address in mLocalAddr.  For a
     *       stream socket, this means that a connection for future
     *       communication has been established.  For a datagram socket, the
-    *       default destination for all packets is now m_host_addr.
+    *       default destination for all packets is now mLocalAddr.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the connection
     *         succeeded.<br>
@@ -323,7 +323,7 @@ public:
     */
    vpr::ReturnStatus connect (const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      return m_socket_imp->connect(timeout);
+      return mSocketImpl->connect(timeout);
    }
 
    /**
@@ -535,7 +535,7 @@ public:
    /** Return the number of avaiable bytes for reading */
    virtual vpr::Uint32 availableBytes()
    {
-      return m_socket_imp->availableBytes();
+      return mSocketImpl->availableBytes();
    }
 
    /**
@@ -646,34 +646,34 @@ public:
     * Gets the type of this socket (e.g., vpr::SocketTypes::STREAM).
     *
     * @pre The socket implementation pointer is valid.
-    * @post The socket type for m_socket_imp is returned to the caller.
+    * @post The socket type for mSocketImpl is returned to the caller.
     *
     * @return A vpr::SocketTypes::Type value giving the socket type for
     *         this socket.
     */
    const vpr::SocketTypes::Type& getType (void) const
    {
-      return m_socket_imp->getType();
+      return mSocketImpl->getType();
    }
 
    const InetAddr& getLocalAddr (void) const
    {
-      return m_socket_imp->getLocalAddr();
+      return mSocketImpl->getLocalAddr();
    }
 
    vpr::ReturnStatus setLocalAddr (const InetAddr& addr)
    {
-      return m_socket_imp->setLocalAddr(addr);
+      return mSocketImpl->setLocalAddr(addr);
    }
 
    const InetAddr& getRemoteAddr (void) const
    {
-      return m_socket_imp->getRemoteAddr();
+      return mSocketImpl->getRemoteAddr();
    }
 
    vpr::ReturnStatus setRemoteAddr (const InetAddr& addr)
    {
-      return m_socket_imp->setRemoteAddr(addr);
+      return mSocketImpl->setRemoteAddr(addr);
    }
 
 protected:
@@ -683,10 +683,10 @@ protected:
     *
     * @pre None.
     * @post "INADDR_ANY" is passed on to the vpr::BlockIO constructor, and
-    *       m_socket_imp is set to NULL.
+    *       mSocketImpl is set to NULL.
     */
    Socket_t (void)
-      : vpr::BlockIO(), m_socket_imp(NULL)
+      : vpr::BlockIO(), mSocketImpl(NULL)
    {
       initSocket_t();
    }
@@ -697,12 +697,12 @@ protected:
     *
     * @pre None.
     * @post address is passed on to the vpr::BlockIO constructor, and
-    *       m_socket_imp is set to NULL.
+    *       mSocketImpl is set to NULL.
     *
     * @param address The address string for this socket object.
     */
    Socket_t (const std::string& address)
-       : vpr::BlockIO(address), m_socket_imp(NULL)
+       : vpr::BlockIO(address), mSocketImpl(NULL)
    {
       initSocket_t();
    }
@@ -717,11 +717,11 @@ protected:
    virtual ~Socket_t (void)
    {
 /*
-      if(m_socket_imp != NULL)
-         delete m_socket_imp;
+      if(mSocketImpl != NULL)
+         delete mSocketImpl;
 */
 
-      //m_socket_imp = NULL;  // Don't destory because it is a member of the child class
+      //mSocketImpl = NULL;  // Don't destory because it is a member of the child class
       //                      // it will get destroyed on it's own
    }
 
@@ -774,7 +774,7 @@ protected:
                                      vpr::Uint32& bytes_read,
                                      const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      return m_socket_imp->read_i(buffer, length, bytes_read, timeout);
+      return mSocketImpl->read_i(buffer, length, bytes_read, timeout);
    }
 
    /**
@@ -809,7 +809,7 @@ protected:
                                       vpr::Uint32& bytes_read,
                                       const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      return m_socket_imp->readn_i(buffer, length, bytes_read, timeout);
+      return mSocketImpl->readn_i(buffer, length, bytes_read, timeout);
    }
 
    /**
@@ -843,19 +843,19 @@ protected:
                                       vpr::Uint32& bytes_written,
                                       const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
-      return m_socket_imp->write_i(buffer, length, bytes_written, timeout);
+      return mSocketImpl->write_i(buffer, length, bytes_written, timeout);
    }
 
    virtual vpr::ReturnStatus getOption (const vpr::SocketOptions::Types option,
                                         struct vpr::SocketOptions::Data& data)
    {
-      return m_socket_imp->getOption(option, data);
+      return mSocketImpl->getOption(option, data);
    }
 
    virtual vpr::ReturnStatus setOption (const vpr::SocketOptions::Types option,
                                         const struct vpr::SocketOptions::Data& data)
    {
-      return m_socket_imp->setOption(option, data);
+      return mSocketImpl->setOption(option, data);
    }
 
 // Put in back door for simulator
@@ -863,8 +863,8 @@ protected:
 public:
 #endif
    /// Platform-specific socket implementation object
-   //SocketImpl* m_socket_imp;
-   boost::shared_ptr<SocketImpl> m_socket_imp;
+   //SocketImpl* mSocketImpl;
+   boost::shared_ptr<SocketImpl> mSocketImpl;
 };
 
 } // End of vpr namespace

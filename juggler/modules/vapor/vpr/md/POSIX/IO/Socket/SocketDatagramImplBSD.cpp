@@ -72,17 +72,17 @@ vpr::ReturnStatus SocketDatagramImplBSD::recvfrom (void* msg,
    socklen_t fromlen;
    vpr::ReturnStatus retval;
 
-   retval = m_handle->isReadable(timeout);
+   retval = mHandle->isReadable(timeout);
 
    if ( retval.success() )
    {
       ssize_t bytes;
 
-      m_blocking_fixed = true;
+      mBlockingFixed = true;
 
       fromlen = from.size();
-      bytes   = ::recvfrom(m_handle->m_fdesc, msg, length, flags,
-                           (struct sockaddr*) &from.m_addr, &fromlen);
+      bytes   = ::recvfrom(mHandle->mFdesc, msg, length, flags,
+                           (struct sockaddr*) &from.mAddr, &fromlen);
 
       if ( bytes == -1 )
       {
@@ -96,8 +96,8 @@ vpr::ReturnStatus SocketDatagramImplBSD::recvfrom (void* msg,
          {
             fprintf(stderr,
                     "[vpr::SocketDatagramImplBSD] ERROR: Could not read from socket (%s:%hu): %s\n",
-                    m_remote_addr.getAddressString().c_str(),
-                    m_remote_addr.getPort(), strerror(errno));
+                    mRemoteAddr.getAddressString().c_str(),
+                    mRemoteAddr.getPort(), strerror(errno));
             retval.setCode(vpr::ReturnStatus::Fail);
          }
       }
@@ -125,16 +125,16 @@ vpr::ReturnStatus SocketDatagramImplBSD::sendto (const void* msg,
 {
    vpr::ReturnStatus retval;
 
-   retval = m_handle->isWriteable(timeout);
+   retval = mHandle->isWriteable(timeout);
 
    if ( retval.success() )
    {
       ssize_t bytes;
 
-      m_blocking_fixed = true;
+      mBlockingFixed = true;
 
-      bytes = ::sendto(m_handle->m_fdesc, msg, length, flags,
-                       (struct sockaddr*) &to.m_addr, to.size());
+      bytes = ::sendto(mHandle->mFdesc, msg, length, flags,
+                       (struct sockaddr*) &to.mAddr, to.size());
 
       if ( bytes == -1 )
       {
@@ -149,8 +149,8 @@ vpr::ReturnStatus SocketDatagramImplBSD::sendto (const void* msg,
             fprintf(stderr,
                     "[vpr::SocketDatagramImplBSD] ERROR: Could not send to %s:%hu on socket (%s:%hu): %s\n",
                     to.getAddressString().c_str(), to.getPort(),
-                    m_remote_addr.getAddressString().c_str(),
-                    m_remote_addr.getPort(), strerror(errno));
+                    mRemoteAddr.getAddressString().c_str(),
+                    mRemoteAddr.getPort(), strerror(errno));
             retval.setCode(vpr::ReturnStatus::Fail);
          }
       }

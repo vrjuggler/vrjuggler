@@ -57,11 +57,11 @@ namespace vpr
         { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
       };
 
- const vpr::GUID GUID::NullGUID( null_guid_struct ); 
- 
+ const vpr::GUID GUID::NullGUID( null_guid_struct );
+
  vpr::GUID::GenerateTag GUID::generateTag;
 //
-      
+
 
 std::string GUID::toString () const
 {
@@ -74,11 +74,11 @@ std::string GUID::toString () const
    sprintf(guid_c_str,
 #endif
             "%08X-%04hX-%04hX-%02X%02X-%02X%02X%02X%02X%02X%02X",
-            m_guid.moz.m0, m_guid.moz.m1, m_guid.moz.m2, m_guid.moz.m3[0],
-            (vpr::Uint32) m_guid.moz.m3[1], (vpr::Uint32) m_guid.moz.m3[2],
-            (vpr::Uint32) m_guid.moz.m3[3], (vpr::Uint32) m_guid.moz.m3[4],
-            (vpr::Uint32) m_guid.moz.m3[5], (vpr::Uint32) m_guid.moz.m3[6],
-            (vpr::Uint32) m_guid.moz.m3[7]);
+            mGuid.moz.m0, mGuid.moz.m1, mGuid.moz.m2, mGuid.moz.m3[0],
+            (vpr::Uint32) mGuid.moz.m3[1], (vpr::Uint32) mGuid.moz.m3[2],
+            (vpr::Uint32) mGuid.moz.m3[3], (vpr::Uint32) mGuid.moz.m3[4],
+            (vpr::Uint32) mGuid.moz.m3[5], (vpr::Uint32) mGuid.moz.m3[6],
+            (vpr::Uint32) mGuid.moz.m3[7]);
    guid_str = guid_c_str;
 
    return guid_str;
@@ -87,17 +87,17 @@ std::string GUID::toString () const
 bool GUID::operator== (const GUID& guid) const
 {
    /*
-   bool ret_val0 = (m_guid.packed.l0 == guid.m_guid.packed.l0);
-   bool ret_val1 = (m_guid.packed.l1 == guid.m_guid.packed.l1);
-   bool ret_val2 = (m_guid.packed.l2 == guid.m_guid.packed.l2);
-   bool ret_val3 = (m_guid.packed.l3 == guid.m_guid.packed.l3);
+   bool ret_val0 = (mGuid.packed.l0 == guid.mGuid.packed.l0);
+   bool ret_val1 = (mGuid.packed.l1 == guid.mGuid.packed.l1);
+   bool ret_val2 = (mGuid.packed.l2 == guid.mGuid.packed.l2);
+   bool ret_val3 = (mGuid.packed.l3 == guid.mGuid.packed.l3);
    return (ret_val0 && ret_val1 && ret_val2 && ret_val3);
    */
-   
-   return ( (m_guid.packed.l0 == guid.m_guid.packed.l0) &&
-            (m_guid.packed.l1 == guid.m_guid.packed.l1) &&
-            (m_guid.packed.l2 == guid.m_guid.packed.l2) &&
-            (m_guid.packed.l3 == guid.m_guid.packed.l3) );
+
+   return ( (mGuid.packed.l0 == guid.mGuid.packed.l0) &&
+            (mGuid.packed.l1 == guid.mGuid.packed.l1) &&
+            (mGuid.packed.l2 == guid.mGuid.packed.l2) &&
+            (mGuid.packed.l3 == guid.mGuid.packed.l3) );
 }
 
 // ============================================================================
@@ -105,14 +105,14 @@ bool GUID::operator== (const GUID& guid) const
 // ============================================================================
 
 GUID::GUID ()
-   :  m_guid( GUID::NullGUID.m_guid )     // Assign a null guid
+   :  mGuid( GUID::NullGUID.mGuid )     // Assign a null guid
 {
    ; /* Do nothing */
 }
 
 GUID::GUID (const struct vpr::GUID::StdGUID& guid)
 {
-   memcpy(&m_guid, &guid, sizeof(vpr::GUID::StdGUID));
+   memcpy(&mGuid, &guid, sizeof(vpr::GUID::StdGUID));
 }
 
 GUID::GUID (const GUID& ns_guid, const std::string& name)
@@ -122,14 +122,14 @@ GUID::GUID (const GUID& ns_guid, const std::string& name)
 
 void GUID::generate()
 {
-   uuid_create( (uuid_t*)(&m_guid.standard));
+   uuid_create( (uuid_t*)(&mGuid.standard));
 }
 
 void GUID::generate(const GUID& ns_guid, const std::string& name)
 {
-   uuid_t temp_ns_id = *((uuid_t*)(&ns_guid.m_guid.standard));    // nasty, but works
-   
-   uuid_create_from_name((uuid_t*)(&m_guid.standard), 
+   uuid_t temp_ns_id = *((uuid_t*)(&ns_guid.mGuid.standard));    // nasty, but works
+
+   uuid_create_from_name((uuid_t*)(&mGuid.standard),
                          temp_ns_id,
                          (void*) name.c_str(), name.length());
 }
@@ -142,13 +142,13 @@ void GUID::fromString (const std::string& guid_string)
    // architectures such as MIPS.
    sscanf(guid_string.c_str(),
           "%08x-%04hx-%04hx-%02x%02x-%02x%02x%02x%02x%02x%02x",
-          &m_guid.moz.m0, &m_guid.moz.m1, &m_guid.moz.m2,
+          &mGuid.moz.m0, &mGuid.moz.m1, &mGuid.moz.m2,
           &m3[0], &m3[1], &m3[2], &m3[3], &m3[4], &m3[5], &m3[6], &m3[7]);
 
-   // Fill the m_guid struct with the values read into m3[] above.
+   // Fill the mGuid struct with the values read into m3[] above.
    for ( int i = 0; i < 8; i++ )
    {
-      m_guid.moz.m3[i] = (vpr::Uint8) m3[i];
+      mGuid.moz.m3[i] = (vpr::Uint8) m3[i];
    }
 }
 

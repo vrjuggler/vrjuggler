@@ -93,7 +93,7 @@ vpr::SocketTypes::Domain InetAddrBSD::getFamily (void) const
 {
    vpr::SocketTypes::Domain family;
 
-   switch ( m_addr.sin_family )
+   switch ( mAddr.sin_family )
    {
 #ifdef PF_LOCAL
       case PF_LOCAL:
@@ -136,17 +136,17 @@ void InetAddrBSD::setFamily (const vpr::SocketTypes::Domain family)
    {
       case SocketTypes::LOCAL:
 #ifdef PF_LOCAL
-         m_addr.sin_family = PF_LOCAL;
+         mAddr.sin_family = PF_LOCAL;
 #else
-         m_addr.sin_family = PF_UNIX;
+         mAddr.sin_family = PF_UNIX;
 #endif
          break;
       case SocketTypes::INET:
-         m_addr.sin_family = PF_INET;
+         mAddr.sin_family = PF_INET;
          break;
       case SocketTypes::INET6:
 #ifdef PF_INET6
-         m_addr.sin_family = PF_INET6;
+         mAddr.sin_family = PF_INET6;
 #else
          fprintf(stderr,
                  "[vpr::InetAddrBSD] WARNING: IPv6 not supported on this host!\n");
@@ -155,9 +155,9 @@ void InetAddrBSD::setFamily (const vpr::SocketTypes::Domain family)
 #if defined(PF_LINK) || defined(PF_RAW)
       case SocketTypes::LINK:
 #ifdef PF_LINK
-         m_addr.sin_family = PF_LINK;
+         mAddr.sin_family = PF_LINK;
 #else
-         m_addr.sin_family = PF_RAW;
+         mAddr.sin_family = PF_RAW;
 #endif
          break;
 #endif
@@ -183,7 +183,7 @@ std::string InetAddrBSD::getAddressString (void) const
       vpr::Uint32 value;
    } addr;
 
-   addr.value = m_addr.sin_addr.s_addr;
+   addr.value = mAddr.sin_addr.s_addr;
 
    snprintf(ip_addr, sizeof(ip_addr), "%u.%u.%u.%u", (Uint8) addr.c[0],
             (Uint8) addr.c[1], (Uint8) addr.c[2], (Uint8) addr.c[3]);
@@ -197,8 +197,8 @@ std::string InetAddrBSD::getHostname () const
    std::string hostname;
    struct hostent* entry;
 
-   entry = gethostbyaddr((const char*) &m_addr.sin_addr,
-                         sizeof(m_addr.sin_addr), m_addr.sin_family);
+   entry = gethostbyaddr((const char*) &mAddr.sin_addr,
+                         sizeof(mAddr.sin_addr), mAddr.sin_family);
 
    if ( NULL == entry )
    {
@@ -217,8 +217,8 @@ std::vector<std::string> InetAddrBSD::getHostnames () const
    std::vector<std::string> names;
    struct hostent* entry;
 
-   entry = gethostbyaddr((const char*) &m_addr.sin_addr,
-                         sizeof(m_addr.sin_addr), m_addr.sin_family);
+   entry = gethostbyaddr((const char*) &mAddr.sin_addr,
+                         sizeof(mAddr.sin_addr), mAddr.sin_family);
 
    if ( NULL != entry )
    {
@@ -234,7 +234,7 @@ std::vector<std::string> InetAddrBSD::getHostnames () const
 }
 
 /**
- * Look up the given address and store the address in m_addr.
+ * Look up the given address and store the address in mAddr.
  */
 vpr::ReturnStatus InetAddrBSD::lookupAddress (const std::string& address)
 {
@@ -244,7 +244,7 @@ vpr::ReturnStatus InetAddrBSD::lookupAddress (const std::string& address)
    // First, try looking the host up by name.
    host_entry = gethostbyname(address.c_str());
 
-   // If that succeeded, put the result in m_remote_addr.
+   // If that succeeded, put the result in mRemoteAddr.
    if ( host_entry != NULL )
    {
       copyAddressValue(host_entry->h_addr);

@@ -77,7 +77,7 @@ SocketDatagramImplNSPR::recvfrom (void* msg, const vpr::Uint32 length,
     ReturnStatus retval;
     PRInt32 bytes;
 
-    bytes = PR_RecvFrom(m_handle, msg, length, flags, from.getPRNetAddr(),
+    bytes = PR_RecvFrom(mHandle, msg, length, flags, from.getPRNetAddr(),
                         NSPR_getInterval(timeout));
 
     if ( bytes > 0)
@@ -120,7 +120,7 @@ SocketDatagramImplNSPR::sendto (const void* msg, const vpr::Uint32 length,
     ReturnStatus retval;
     PRInt32 bytes;
 
-    bytes = PR_SendTo(m_handle, msg, length, flags, to.getPRNetAddr(),
+    bytes = PR_SendTo(mHandle, msg, length, flags, to.getPRNetAddr(),
                       NSPR_getInterval(timeout));
 
     if ( bytes == -1 ) {

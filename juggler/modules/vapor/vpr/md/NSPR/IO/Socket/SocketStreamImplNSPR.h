@@ -64,7 +64,7 @@ public:
     // member variables of the object.
     //
     // PRE: None.
-    // POST: The member variables are initialized with the m_type variable in
+    // POST: The member variables are initialized with the mType variable in
     //       particular set to SOCK_STREAM.
     // ------------------------------------------------------------------------
     SocketStreamImplNSPR(void);
@@ -85,7 +85,7 @@ public:
     // Listen on the socket for incoming connection requests.
     //
     // PRE: The socket has been opened and bound to the address in
-    //      m_host_addr.
+    //      mLocalAddr.
     // POST: The socket is in a listening state waiting for incoming
     //       connection requests.
     //

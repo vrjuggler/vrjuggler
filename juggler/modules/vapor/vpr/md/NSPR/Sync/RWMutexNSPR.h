@@ -55,12 +55,12 @@ namespace vpr {
 class VPR_CLASS_API RWMutexNSPR
 {
 public:
-    RWMutexNSPR (void) : m_rw_lock(NULL) {
-        m_rw_lock = PR_NewRWLock(1, "/var/tmp/test");
+    RWMutexNSPR (void) : mRwLock(NULL) {
+        mRwLock = PR_NewRWLock(1, "/var/tmp/test");
     }
 
     ~RWMutexNSPR (void) {
-        PR_DestroyRWLock(m_rw_lock);
+        PR_DestroyRWLock(mRwLock);
     }
 
     //---------------------------------------------------------
@@ -79,7 +79,7 @@ public:
     //----------------------------------------------------------
     int
     acquireRead (void) {
-        PR_RWLock_Rlock(m_rw_lock);
+        PR_RWLock_Rlock(mRwLock);
         return 1;
     }
 
@@ -88,7 +88,7 @@ public:
     //----------------------------------------------------------
     inline int
     acquireWrite (void) {
-        PR_RWLock_Wlock(m_rw_lock);
+        PR_RWLock_Wlock(mRwLock);
         return 1;
     }
 
@@ -124,12 +124,12 @@ public:
     //---------------------------------------------------------
     inline int
     release (void) {
-        PR_RWLock_Unlock(m_rw_lock);
+        PR_RWLock_Unlock(mRwLock);
         return 0;
     }
 
     //------------------------------------------------------
-    //:	Test the current lock status.
+    //: Test the current lock status.
     //
     //! RETURNS: 0 - Not locked
     //! RETURNS: 1 - Locked
@@ -158,7 +158,7 @@ protected:
     // number of readers holding the lock.
     int refCount;
 
-    PRRWLock* m_rw_lock;
+    PRRWLock* mRwLock;
 
     // = Prevent assignment and initialization.
     void operator= (const RWMutexNSPR &) {
@@ -173,4 +173,4 @@ protected:
 }; // End of vpr namespace
 
 
-#endif	/* _VPR_RW_MUTEX_H_ */
+#endif  /* _VPR_RW_MUTEX_H_ */
