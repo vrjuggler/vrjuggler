@@ -96,6 +96,12 @@ int main (int ac, char **av)
 
    std::string host_name = vpr::System::getHostname();   
    metric_prefix = host_name + "/";
+#ifdef _DEBUG
+   metric_prefix += "Debug/";
+#endif
+#ifdef _OPT
+   metric_prefix += "Opt/";
+#endif
 #ifdef VPR_SIMULATOR
    metric_prefix += "Sim/";
 #endif
