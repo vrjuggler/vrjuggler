@@ -59,11 +59,13 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 
     protected class DataElem {
 	public double stamp;
+	public double delta;
 	public IndexInfo index_info;
     
-	public DataElem (IndexInfo _index_info, double _stamp) {
+	public DataElem (IndexInfo _index_info, double _stamp, double _delta) {
 	    index_info = _index_info;
 	    stamp = _stamp;
+	    delta = _delta;
 	}
     }
 
@@ -76,8 +78,8 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	    samples = new ArrayList();
 	}
 
-	public void addSample (IndexInfo index_info, double stamp) {
-	    samples.add (new DataElem (index_info, stamp));
+	public void addSample (IndexInfo index_info, double stamp, double delta) {
+	    samples.add (new DataElem (index_info, stamp, delta));
 	}
 
 	public void setCutoff (boolean _cutoff) {
@@ -133,6 +135,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
     DataLine current_dl = null;
     int maxdatalines;
     protected List action_listeners;
+    double last_stamp; // last recorded sample, for finding deltas.
 
     public LabeledPerfDataCollector(String _name, int maxsamples) {
         datalines = new LinkedList();
@@ -142,6 +145,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	name = _name;
 	totalsum = 0.0;
 	totalsamps = 0;
+	last_stamp = 0.0;
 	current_dl = new DataLine ();
 	maxdatalines = maxsamples;
 	System.out.println ("creating PerfDataCollector " + _name + ".");
@@ -224,8 +228,10 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	    index_info.put (index, ii);
             ordered_index_info.add (ii);
 	}
-	ii.addSample (stamp);
-	current_dl.addSample (ii, stamp);
+	ii.addSample (stamp - last_stamp);
+	current_dl.addSample (ii, stamp, stamp - last_stamp);
+
+	last_stamp = stamp;
     }
 
 
