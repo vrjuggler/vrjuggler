@@ -826,6 +826,7 @@ public class Placer
       public void placerItemsInserted(PlacerModelEvent evt)
       {
          repaint();
+         fireItemSelected(0);
       }
 
       /**
@@ -838,8 +839,12 @@ public class Placer
          if (model.getSize() == 0)
          {
             selectedIndex = -1;
-            fireItemSelected(selectedIndex);
          }
+         else
+         {
+            selectedIndex = 0;
+         }
+         fireItemSelected(selectedIndex);
          repaint();
       }
    }
