@@ -49,7 +49,9 @@ namespace jccl {
 
 PerformanceMonitor::PerformanceMonitor():
                           perf_buffers(),
-                          perf_buffers_mutex() {
+                          perf_buffers_mutex(),
+                          connections(),
+                          connections_mutex() {
 
     perf_refresh_time = 500;
 
@@ -69,16 +71,31 @@ PerformanceMonitor::~PerformanceMonitor() {
 /*virtual*/ void PerformanceMonitor::addConnect (Connect* con) {
     vprASSERT (con != NULL);
 
+    connections_mutex.acquire();
+    connections.push_back (con);
     if (con->getName() == perf_target_name)
         setPerformanceTarget (con);
+    connections_mutex.release();
 }
 
 
 /*virtual*/ void PerformanceMonitor::removeConnect (Connect* con) {
     vprASSERT (con != NULL);
 
+    connections_mutex.acquire();
+
+    std::vector<Connect*>::iterator i;
+    for (i = connections.begin(); i != connections.end(); i++) {
+        if (con == *i) {
+            connections.erase (i);
+            delete con;
+            break;
+        }
+    }
+
     if (con == perf_target)
         setPerformanceTarget (NULL);
+    connections_mutex.release();
 }
 
 
@@ -137,7 +154,17 @@ bool PerformanceMonitor::configAdd(ConfigChunk* chunk) {
     std::string s = chunk->getType();
     if (!vjstrcasecmp (s, "PerfMeasure")) {
         current_perf_config = new ConfigChunk (*chunk);
+
+        perf_target_name = (std::string)chunk->getProperty ("PerformanceTarget");
+        connections_mutex.acquire();
+
+        Connect* new_perf_target = getConnect(perf_target_name);
+        if (new_perf_target != perf_target)
+            setPerformanceTarget (NULL);
+
         activatePerfBuffers();
+        connections_mutex.release();
+
         return true;
     }
     return false;
@@ -192,6 +219,16 @@ void PerformanceMonitor::setPerformanceTarget (Connect* con) {
     perf_buffers_mutex.release();
 }
 
+
+    /* connections needs to be locked */
+    Connect* PerformanceMonitor::getConnect (const std::string& s) {
+        vprASSERT (connections_mutex.test() == 1 && "Must be locked");
+
+        for (unsigned int i = 0; i < connections.size(); i++)
+            if (s == connections[i]->getName())
+                return connections[i];
+        return NULL;
+    }
 
 
 void PerformanceMonitor::deactivatePerfBuffers () {
