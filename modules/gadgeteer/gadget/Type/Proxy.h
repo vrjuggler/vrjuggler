@@ -163,6 +163,8 @@ public:
       return true;
    }
 
+   virtual std::string getDeviceName() const { return mDeviceName; } 
+
 protected:
    std::string    mDeviceName;   /**< Name of the device to link up with */
    DEV_TYPE*      mTypedDevice;  /**< The device (type specific pointer) */
