@@ -100,10 +100,6 @@ public class PropertyEditorPanel extends PropertyComponent
       mPropIndex = prop_num;
       mColor = color;
       
-      if (value instanceof ConfigElementPointer)
-      {
-         value = ((ConfigElementPointer)value).getTarget();
-      }
       fillEditorComponent(value, prop_def);
      
       mConfigElement.addConfigElementListener(this);
@@ -364,6 +360,12 @@ public class PropertyEditorPanel extends PropertyComponent
       }
 
       System.out.println("Using editor "+mEditor.getClass()+" for value of type "+value.getClass());
+      
+      if (value instanceof ConfigElementPointer)
+      {
+         value = ((ConfigElementPointer)value).getTarget();
+      }
+
       mEditor.setValue(value);
 
       // If the property editor supports known tagged values, use a combobox
