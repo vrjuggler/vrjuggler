@@ -76,28 +76,6 @@
          <help>This is the number of milliseconds that the event update loop should sleep between updates.</help>
          <value label="Sleep Time" defaultvalue="75"/>
       </property>
-      <!--
-      <property valuetype="integer" variable="false" name="origin">
-         <help>Window origin (lower left is 0,0)</help>
-         <value label="X" defaultvalue="0"/>
-         <value label="Y" defaultvalue="0"/>
-      </property>
-      <property valuetype="integer" variable="false" name="size">
-         <help>The dimensions (width and height) of the window in pixels.</help>
-         <value label="Width" defaultvalue="100"/>
-         <value label="Height" defaultvalue="100"/>
-      </property>
-      <property valuetype="integer" variable="false" name="display_number">
-         <help>The number of the display on which the event window will be opened. (-1 for local)</help>
-         <value label="Display Number" defaultvalue="0"/>
-      </property>
-      <property valuetype="configelementpointer" variable="false" name="device_host">
-         <help>Points to the machine that the device is physically connected to.</help>
-         <value label="Host Node"/>
-         <allowed_type>machine_specific</allowed_type>
-      </property>
-      -->
-      <upgrade_transform>
-      </upgrade_transform>
+      <upgrade_transform/>
    </definition_version>
 </definition>
