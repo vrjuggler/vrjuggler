@@ -1,13 +1,19 @@
 #include <CppUnit/framework/TestSuite.h>
 #include <CppUnit/textui/TestRunner.h>
+
 #include <TestCases/Socket/SocketTest.h>
 #include <TestCases/Socket/NonBlockingSocketsTest.h>
 #include <TestCases/Socket/SocketCopyConstructorTest.h>
-#include <TestCases/Thread/ThreadTest.h>
-#include <TestCases/IO/Socket/InetAddrTest.h>
-#include <TestCases/StatusTest.h>
 #include <TestCases/Socket/SocketConnectorAcceptorTest.h>
+
+#include <TestCases/Thread/ThreadTest.h>
+
+#include <TestCases/IO/Socket/InetAddrTest.h>
 #include <TestCases/IO/SelectorTest.h>
+
+#include <TestCases/StatusTest.h>
+#include <TestCases/Util/IntervalTest.h>
+
 #include <vpr/Util/Debug.h>
 
 
@@ -28,6 +34,7 @@ int main (int ac, char **av)
    // add tests to the suite
    //suite_1->addTest( /* put your test here */ );
    noninteractive_suite->addTest(vprTest::StatusTest::suite());
+   noninteractive_suite->addTest(vprTest::IntervalTest::suite());
    noninteractive_suite->addTest(vprTest::InetAddrTest::suite());
    noninteractive_suite->addTest(vprTest::SocketTest::suite());
    noninteractive_suite->addTest(vprTest::NonBlockingSocketTest::suite());
