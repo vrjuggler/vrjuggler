@@ -48,10 +48,15 @@ namespace vrj
 class VJ_CLASS_API SimViewport : public Viewport
 {
 public:
-   SimViewport() : Viewport()
-   {;}
+   SimViewport()
+      : Viewport()
+   {
+      ;
+   }
 
-   SimViewport(const SimViewport& sv) : Viewport(sv), mSimulator(sv.mSimulator)
+   SimViewport(const SimViewport& sv)
+      : Viewport(sv)
+      , mSimulator(sv.mSimulator)
    {
       ;
    }
@@ -62,16 +67,21 @@ public:
    }
 
 public:
-   /**  Configure the simulator */
+   /** Configures the simulator. */
    virtual void config(jccl::ConfigElementPtr element);
 
-   /** Update the projections
-   * @param positionScale - Scale value for converting from Juggler units (meters) to the display units
-   */
+   /**
+    * Updates the projections.
+    *
+    * @param positionScale Scale value for converting from Juggler units
+    *                      (meters) to the display units.
+    */
    virtual void updateProjections(const float positionScale);
 
    DrawSimInterface* getDrawSimInterface()
-   { return mSimulator; }
+   {
+      return mSimulator;
+   }
 
    void setDrawSimInterface(DrawSimInterface* draw_sim_i)
    {

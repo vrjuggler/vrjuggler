@@ -48,7 +48,8 @@ namespace vrj
 
    class Viewport;
 
-/** Pure virtual base class for viewport definitions.
+/**
+ * Pure virtual base class for projection definitions.
  *
  * Responsible for storing and computing projection information based upon an
  * eye positions.  This class is an abstract base class for other classes
@@ -57,7 +58,7 @@ namespace vrj
 class VJ_CLASS_API Projection
 {
 public:
-   /** Eye and type */
+   /** Eye type. */
    enum Eye
    {
       LEFT = 1,   /**< Left eye */
@@ -88,42 +89,51 @@ public:
       ;
    }
 
-   /** Configures the projection.
-   * Default implementation does nothing.
-   */
+   /**
+    * Configures the projection.  The default implementation does nothing.
+    */
    virtual void config(jccl::ConfigElementPtr element);
 
+   /** Sets the eye for this projection. */
    void setEye(Projection::Eye _eye)
    {
       mEye = _eye;
    }
 
-   int getEye() const
+   /** Returns the eye for this projection. */
+   Projection::Eye getEye() const
    {
       return mEye;
    }
 
+   /** Sets the viewport associated with this projection. */
    void setViewport(Viewport* vp)
    {
       mViewport = vp;
    }
 
+   /** Returns the viewport associated with this projection. */
    Viewport* getViewport() const
    {
       return mViewport;
    }
 
    /**
-    * @pre eyePos is scaled by position factor.
-    * @pre scaleFactor is the scale current used.
+    * Calcualtes the view matrix.
+    *
+    * @pre eyePos is scaled by position scale factor.  scaleFactor is the
+    *      scale currently used.
     */
    virtual void calcViewMatrix(gmtl::Matrix44f& eyePos,
                                const float scaleFactor) = 0;
 
-   /** Helper to the frustum apex and corners in model coordinates.
+   /**
+    * Helper to the get the frustum apex and corners in model coordinates.
+    *
+    * @post The given vars contain the values of the frusta corners in model
+    *       space.
+    *
     * @note This function is meant for debugging purposes.
-    * @post The given vars contain the values of the frustums
-    * corners in model space.
     */
    void getFrustumApexAndCorners(gmtl::Vec3f& apex, gmtl::Vec3f& ur,
                                  gmtl::Vec3f& lr, gmtl::Vec3f& ul,

@@ -60,18 +60,18 @@ protected:
 
 
 /**
- * OpenGL helper class that has templated user context data.
+ * OpenGL helper class that has templated user context-specific data.
  *
  * This class allows the user to specify a data type that contains
- * data that needs to have a context specific copy.  This means that there
- * is a unique copy of the data structure for each openGL context in
+ * data that needs to have a context-specific copy.  This means that there
+ * is a unique copy of the data structure for each OpenGL context in
  * the current environment.  Juggler will take care of the data copies
  * transparently for the user so the user never has to know about the
  * current configuration.
  *
  * An example use would be a struct full of display list id's.
  * The user passes their user-defined data structure as the template parameter.
- * The resulting object will be a "smart" pointer to the context specific
+ * The resulting object will be a "smart" pointer to the context-specific
  * data to use.
  *
  * @example "Example of using GL context-specific data"
@@ -94,7 +94,7 @@ protected:
  * }
  * \endcode
  *
- * @note Requires that the type of the context data provide a default
+ * @note Requires that the type of the context-specific data provide a default
  *       constructor used to initialize all of the copies of the data.
  */
 template<class ContextDataType = int>
@@ -141,7 +141,7 @@ public:
    }
 
 protected:
-   /** Container for the thread-specific context data. */
+   /** Container for the thread-specific context-specific data. */
    template<class DataType>
    struct ThreadContextData
    {

@@ -49,43 +49,43 @@ class SoundManager;
 /**
  * Encapsulates the actual application.
  *
- * This class defines the class from which all API-specific application should
- * be derived from.  The interface given is the interface that the Kernel
- * expects in order to communicate with the application.  Most of the
- * application's interface will be defined in the derived API-specific
- * classes.
+ * This class defines the base class for all graphics API-specific application
+ * object types.  The interface given is what the VR Juggler kernel expects in
+ * order to communicate with the application.  Most of the application's
+ * interface will be defined in the derived graphics API-specific classes.
  *
- * Users should sub-class the API-specific classes to create user-defined
- * applications.  A user application is required to provide function
- * definitions for any of the virual functions that the application needs to
- * use.  This is the method that the application programmer uses to interface
- * with VR Juggler.
+ * Users should write their application objectcs as subclasses of the graphics
+ * API-specific classes.  Overriding the virtual functions in this class and
+ * in the graphics API-specific subclasses is the method by which the
+ * application programmer interfaces with VR Juggler.
  *
- * The control loop will look similar to this:
+ * The VR Juggler kernel control loop will look similar to this:
  *
  * \code
- *  while (drawing)
- *  {
- *     <b>preFrame()</b>;
- *     <b>latePreFrame()</b>;
- *     draw();
- *     <b>intraFrame()</b>;
- *     sync();
- *     <b>postFrame()</b>;
+ * while (drawing)
+ * {
+ *    <b>app_obj->preFrame()</b>;
+ *    <b>app_obj->latePreFrame()</b>;
+ *    draw();
+ *    <b>app_obj->intraFrame()</b>;
+ *    sync();
+ *    <b>app_obj->postFrame()</b>;
  *
- *     UpdateTrackers();
- *  }
+ *    updateAllDevices();
+ * }
  * \endcode
  *
  * @note One time through the loop is a Juggler Frame.
+ *
+ * @see vrj::Kernel
  */
 class VJ_CLASS_API App : public jccl::ConfigElementHandler
 {
 public:
    /**
     * Constructor.
-    * @param kern The Kernel that is active (so application has easy access to
-    *             the kernel).
+    * @param kern The vrj::Kernel instance that is active (so that the
+    *             application has easy access to the kernel).
     */
    App(Kernel* kern);
 
@@ -101,68 +101,72 @@ public:
 
    /**
     * Application initialization function.
-    * Execute any initialization needed before the API is started.
+    * Execute any initialization needed before the grahpics API is started.
+    *
     * @note Derived classes MUST call base class version of this method.
     */
    virtual void init()
    {;}
 
    /**
-    * Application API initialization function.
-    * Execute any initialization needed <b>after</b> API is started
-    * but before the drawManager starts the drawing loops.
+    * Application graphics API initialization function.
+    * Execute any initialization needed <b>after</b> the graphics API is
+    * started but before the Draw Manager starts the rendering loop(s).
     */
    virtual void apiInit()
    {;}
 
-   /** Executes any final cleanup needed for the application. */
+   /**
+    * Executes any final clean-up needed for this application before exiting.
+    */
    virtual void exit()
    {;}
 
    /**
     * Function called before the Juggler frame starts.
-    * Called after tracker update but before start of a new frame.
+    * This is called after input device updates but before the start of a new
+    * frame.
     */
    virtual void preFrame()
    {;}
 
    /**
-    * Function called after preFrame() and ApplicationData syncronization, but
-    * before draw() function.
+    * Function called after preFrame() and application-specific data
+    * syncronization (in a cluster configuration) but before the start of a
+    * new frame.
     *
-    * @note This is required because we cannot update data in the draw()
-    *       function since it might be called more than once.
+    * @note This is required because we cannot update data during the
+    *       rendering process since it might be using multiple threads.
     */
    virtual void latePreFrame()
    {;}
 
-   /** Function called <b>during</b> the application's drawing time. */
+   /** Function called <b>during</b> this application's drawing time. */
    virtual void intraFrame()
    {;}
 
    /**
-    * Function called before updating trackers but after the frame is complete.
+    * Function called before updating input devices but after the frame is
+    * complete.
     */
    virtual void postFrame()
    {;}
 
    /**
-    * Resets the application.
-    * This is used when the system (or applications) would like the application
-    * to reset to the initial state that it started in.
+    * Resets this application.
+    * This is used when the kernel (or applications) would like this
+    * application object to reset to its initial state.
     */
    virtual void reset()
    {;}
 
    /**
-    * Does the application currently have focus?
+    * Does this application currently have focus?
     * If an application has focus, the user may be attempting to interact with
-    * it, so the app should process input.  If not, the user is not interating
-    * with it, so ignore all input, but the user may still be viewing it, so
-    * render and update any animations, etc.
-    *
-    * This is akin to the way a user can only interact with a GUI window that
-    * has focus (i.e., the mouse is over the window).
+    * it, so this application should process input.  If not, the user is not
+    * interating with it, so ignore all input.  However, the user may still be
+    * viewing it, so render, update any animations, etc.  This is akin to the
+    * way a user can only interact with a GUI window that has focus.
     */
    bool haveFocus()
    {
@@ -175,7 +179,11 @@ public:
 
    /**
     * Sets the focus state.
-    * @post If state has changed, then calls focusChanged().
+    *
+    * @post If the focus state has changed, then focusChanged() is called.
+    *
+    * @param newState A Boolean value indicating whether this application now
+    *                 has focus.
     *
     * @see focusChanged()
     */
@@ -189,11 +197,11 @@ public:
    }
 
    /**
-    * Returns scale scale factor to get from Juggler units (meters) to
-    * application units.  Internally VR Juggler stores and processes all
+    * Returns the scale factor to convert from Juggler units (meters) to
+    * application units.  Internally, VR Juggler stores and processes all
     * position values in meters.  The scale factor returned by this method is
-    * used by VR Juggler to scale the OpenGL drawing state from meters to
-    * whatever local units the application wants to use.
+    * used by VR Juggler to scale the rendering state from meters to whatever
+    * units this application wants to use.
     *
     * Example: to use feet as local app unit, return 3.28;
     */
@@ -203,21 +211,32 @@ public:
    }
 
 
-public:  // --- Default config handlers: (inherited from jccl::ConfigElementHandler) --- //
-   /** Default to handling nothing. */
+public:  // ---
+   /**
+    * @name Default config handlers.
+    */
+   //@{
+   /**
+    * Defaultsto handling nothing.
+    *
+    * @note Inherited from jccl::ConfigElementHandler.
+    */
    virtual bool configCanHandle(jccl::ConfigElementPtr element);
 
    /**
     * Are any application dependencies satisfied?
-    * If the application requires anything special of the system for successful
-    * initialization, check it here.  If the return value is false, then the
-    * application will not be started yet.  If the return value is true,
-    * application will be allowed to enter the system.
+    * If this application requires anything special of the system for
+    * successful initialization, check it here.  If the return value is false,
+    * then this application will not be started yet.  If the return value is
+    * true, then this application will be allowed to enter the system.
+    *
+    * @note Inherited from jccl::ConfigElementHandler.
     */
    virtual bool depSatisfied()
    {
       return true;
    }
+   //@}
 
 protected:
    /** @note Inherited from jccl::ConfigElementHandler. */
