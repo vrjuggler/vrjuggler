@@ -30,27 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GAD_PARAM_H_
-#define _GAD_PARAM_H_
-
 #include <gadget/gadgetConfig.h>
+#include <gadget/gadgetParam.h>
 
-
-/*
- * Define to the 9-digit Gadgeteer version integer.  This is the "internal
- * version number" that is intended for internal feature checks by Gadgeteer
- * itself.
- */
-#define __GADGET_version @VER_NUMBER@
-
-/*
- * This is the "human-readable" Gadgeteer version _string_.  It is of the
- * form <major>.<minor>.<days since last major release>.
- */
 namespace gadget
 {
-   extern GADGET_DATA_API(const char*) GADGET_VERSION;
+   const char* GADGET_VERSION = @VER_STRING@;
 }
-
-
-#endif	/* _GAD_PARAM_H_ */
