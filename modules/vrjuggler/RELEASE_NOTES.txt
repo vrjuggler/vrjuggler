@@ -10,6 +10,23 @@ For all versions:
 
 ===============================================================================
 
+Version: 2.0 Beta 2 (1.1.167-0)
+Released: January 18, 2005
+
+    Please refer to the following to get started with VR Juggler 2.0 Beta 2:
+
+       http://www.vrjuggler.org/twiki_public/bin/view/Juggler/MigratingToVrjTwo
+
+    There are no required application or configuration changes to update
+    from VR Juggler 2.0 Beta 1 to 2.0 Beta 2.  To update from 2.0 Alpha 4,
+    please refer to the instructions below for VR Juggler 2.0 Beta 1.
+
+    This release includes many bug fixes and feature enhancements &
+    additions to VRJConfig.  In particular, custom editors have been
+    added for configuring Ascension MotionStar Wireless and Ascension
+    Flock of Birds devices.  All bugs reported with VR Juggler 2.0 Beta 1
+    have been fixed.
+
 Version: 2.0 Beta 1 (1.1.166-0)
 Released: December 24, 2004
 
