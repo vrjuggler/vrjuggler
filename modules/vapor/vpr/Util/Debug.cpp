@@ -80,6 +80,7 @@ Debug::Debug()
 {
    indentLevel = 0;     // Initialy don't indent
    debugLevel = 1;      // Should actually try to read env variable
+   mUseThreadLocal = false;   // Initially set to false
 
    char* debug_lev = getenv("VPR_DEBUG_NFY_LEVEL");
    if(debug_lev != NULL)
