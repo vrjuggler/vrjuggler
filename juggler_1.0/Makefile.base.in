@@ -13,8 +13,6 @@
 # -----------------------------------------------------------------------------
 # Variables defined here are:
 #
-# SHELL          - The shell to use when make(1) executes shell commands.
-#
 # bindir         - Path to bin directory containing executables (usually
 #                  ${exec_prefix}/bin).
 # datadir        - Path to a directory generally sharing platform-independent
@@ -94,8 +92,6 @@
 # Suffix rules for .c => .o and .cpp => .o.
 # clean: Standard directory clean-up target.
 # -----------------------------------------------------------------------------
-
-SHELL		= /bin/sh
 
 # -----------------------------------------------------------------------------
 # Base variables needed by all Makefiles.
