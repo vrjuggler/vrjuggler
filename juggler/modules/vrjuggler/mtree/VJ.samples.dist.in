@@ -39,26 +39,6 @@
 .
     samples
         OGL
-            analog
-            ..
-            combo
-            ..
-            cones
-            ..
-            cubes
-            ..
-            digitalGlove
-            ..
-            simpleGlove
-            ..
-            texture
-                ImageFileLoaderCode
-                ..
-            ..
-            torus
-            ..
-            wand
-            ..
             glove
             ..
         ..

@@ -40,6 +40,34 @@
     test
         CfgTest
         ..
+        Draw
+            OGL
+                analog
+                ..
+                combo
+                ..
+                cones
+                ..
+                cubes
+                ..
+                digitalGlove
+                ..
+                simpleGlove
+                ..
+                texture
+                    ImageFileLoaderCode
+                    ..
+                ..
+                torus
+                ..
+                wand
+                ..
+            ..
+            OSG
+            ..
+            Pf
+            ..
+        ..
         Math
         ..
         Matrix
