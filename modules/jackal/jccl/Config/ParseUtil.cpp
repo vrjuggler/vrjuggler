@@ -36,6 +36,7 @@
 #include <jccl/Config/ParseUtil.h>
 #include <jccl/Util/Debug.h>
 #include <jccl/Config/ConfigTokens.h>
+#include <vpr/System.h>
 
 namespace jccl {
    
@@ -297,10 +298,8 @@ std::string replaceEnvVars (const std::string& s) {
                         break;
                 std::string var(s,i+1,j-i-1);
                 //cout << "searching for env var '" << var.c_str() << '\'' << endl;
-		char* ch = getenv (var.c_str());
 		std::string res;
-		if (ch)
-		    res = ch;
+		vpr::System::getenv (var, res);
                 result += res;
                 i = j+1;
                 lastpos = i;
@@ -311,10 +310,8 @@ std::string replaceEnvVars (const std::string& s) {
                         break;
                 std::string var(s,i,j-i);
                 //cout << "searching for env var '" << var.c_str() << '\'' << endl;
-		char* ch = getenv (var.c_str());
 		std::string res;
-		if (ch)
-		    res = ch;
+		vpr::System::getenv (var, res);
                 result += res;
                 i = j;
                 lastpos = i;
