@@ -37,7 +37,7 @@
 
 /set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
 .
-    Data
+    data
         DescHelp
         ..
         configFiles
