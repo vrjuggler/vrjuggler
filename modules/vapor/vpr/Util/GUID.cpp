@@ -137,7 +137,7 @@ void GUID::generate()
 void GUID::generate(const GUID& ns_guid, const std::string& name)
 {
 #ifdef HAVE_UUID_GENERATE
-   vprASSERT(false && "Damn it!");
+   vprASSERT(false && "Unimplemented method!");
 #else
    uuid_t temp_ns_id = *((uuid_t*)(&ns_guid.mGuid.standard));    // nasty, but works
 
