@@ -75,6 +75,9 @@ public:
     */
    void draw();
 
+protected:     // Helpers
+   void drawSphere(float radius, gmtl::Point3f offset, int parts=4);
+
 private:
    VNCInterface                         mVncIf;
    vpr::ThreadRunFunctor<VNCInterface>* mVncThreadFunctor;
@@ -89,27 +92,30 @@ private:
    bool mHaveKeyboard;
 
    // The desktop window (ie. the texture of the desktop) is assumed to be
-   // centered on 0,0,0 in the local coordinate frame with 
+   // centered on 0,0,0 in the local coordinate frame with
    //
    float mDesktopWidth, mDesktopHeight;      /**< Width and height of the virtual desktop. VRJ units */
-   int   mTexWidth, mTextHeight;             /**< Width and height of the texture in pixels */
+   int   mTexWidth, mTexHeight;             /**< Width and height of the texture in pixels */
    int   mVncWidth, mVncHeight;              /**< The width and height of the vnc/X desktop */
 
    /** Scale value for converting from virt desktop size to VNC coords
    *    ex. vnc.x = desktoppoly.x * mDesktopToVncWidthScale;
    */
-   float          mDesktopToVncWidthScale;   
+   float          mDesktopToVncWidthScale;
    float          mDesktopToVncHeightScale;
 
    gmtl::Matrix44f  mDesktopMatrix;  /**< vnc_T_world */
    gmtl::AABoxf     mDesktopBox;
-   //gmtl::Tri<float> mDesktopUL;
-   //gmtl::Tri<float> mDesktopLR;
 
    bool mDesktopWandIsect;
    bool mDesktopGrabbed;
 
    char* mTextureData;
+
+   // Debugging stuff
+   GLUquadric*   mSphereQuad;       /**< Sphere rep for draw "points" */
+   gmtl::Point3f mDebug_IsectPoint; /**< Isect point to draw */
+
 };
 
 }

@@ -61,7 +61,7 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
                        const std::string& password,
                        const float& desktopSideLength)
    : mVncIf(hostname, port, password), mVncThreadFunctor(NULL),
-     mVncThread(NULL), mHaveKeyboard(false), 
+     mVncThread(NULL), mHaveKeyboard(false),
      mDesktopWidth(desktopSideLength), mDesktopHeight(desktopSideLength),
      mDesktopWandIsect(false), mDesktopGrabbed(false),
      mTextureData(NULL)
@@ -126,6 +126,9 @@ void VNCDesktop::init(const std::string& wandName,
       mKeyboard.init(keyboardName);
       mHaveKeyboard = true;
    }
+
+   // Allocate a new quadric that will be used to render the sphere.
+   mSphereQuad = gluNewQuadric();
 }
 
 VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
@@ -185,7 +188,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    }
 
    // --------- UPDATE NAV AND DESKTOP MATRICES ----------------------- //
-   
+
    //gmtl::Matrix44f desktop_nav = navMatrix * mDesktopMatrix;
 
    // Do all intersection testing and stuff in the local coordinate frame so we don't have
@@ -204,17 +207,16 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    const gmtl::Planef z_plane(pos_z_norm, origin_point);
 
    // Find the point on the desktop plane that the ray intersects it
-   float t_isect;    // t value for the isect
+   // this is our intersection in desktop coordinates (polygon).
+   // It will have to be scaled to get back into vnc coords.
+   float t_isect;
    gmtl::intersect(z_plane, wand_ray, t_isect);
-   const gmtl::Point3f isect_point(wand_ray.mOrigin + (wand_ray.mDir*t_val));
+   const gmtl::Point3f isect_point(wand_ray.mOrigin + (wand_ray.mDir*t_isect));
    vprASSERT( gmtl::Math::isEqual(isect_point[2], 0.0f, 0.01f) && "Point should be on z=0 plane");
+   mDebug_IsectPoint = isect_point;
 
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
          << "VNC: Isect point: " << isect_point << std::endl << vprDEBUG_FLUSH;
-   
-   // Story the x and y intersections in desktop coordinates
-   const float x_isect(isect_point[0]);
-   const float y_isect(isect_point[1]);
 
    // Check for selecting the main desktop box
    if ( gmtl::isInVolume(mDesktopBox, isect_point) )
@@ -225,30 +227,23 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       int button_mask(0);
 
       if ( mLeftButton->getData() )
-      {
-         button_mask |= rfbButton1Mask;
-      }
-
+      {  button_mask |= rfbButton1Mask; }
       if ( mMiddleButton->getData())
-      {
-         button_mask |= rfbButton2Mask;
-      }
-
+      {  button_mask |= rfbButton2Mask; }
       if ( mRightButton->getData() )
-      {
-         button_mask |= rfbButton3Mask;
-      }
-
+      {  button_mask |= rfbButton3Mask; }
 
       // Translate that point into the coordinates VNC wants to see.
       //
       // x,y desktop point just like x desktop.  origin upper left, y increases going down
-      //     The valid range is the 
-      float x(isect[0] - desktop_ul_trans[2][0]);
-      float y(mDesktopWidth - isect[1] - desktop_ul_trans[2][1]);    // This flips to the x coordinate system
+      //     The valid range is [0,mVncWidth or mVncHeight]
+//      float x(isect[0] - desktop_ul_trans[2][0]);
+//      float y(mDesktopWidth - isect[1] - desktop_ul_trans[2][1]);    // This flips to the x coordinate system
 
-            mVncIf.pointerEvent(int(x * mDesktopToVncWidthScale), int(y * mDesktopToVncHeightScale),
-                          button_mask);
+      float vnc_x = isect_point[gmtl::Xelt] * mDesktopToVncWidthScale;                          // Scale
+      float vnc_y = -(isect_point[gmtl::Yelt] - mDesktopHeight) * mDesktopToVncHeightScale;     // Flip and scale
+
+      mVncIf.pointerEvent(int(vnc_x), int(vnc_y), button_mask);
 
       if ( mHaveKeyboard )
       {
@@ -290,6 +285,11 @@ void VNCDesktop::draw()
    glDisable(GL_LIGHTING);
    glDisable(GL_BLEND);
 
+   // -- Draw the desktop "objects" -- //
+   // Draw isect point
+   drawSphere(0.25f, mDebug_IsectPoint);
+
+   // Draw the ray
    glPushMatrix();
       glMultMatrixf(mWand->getData()->mData);
 
@@ -340,27 +340,18 @@ void VNCDesktop::draw()
          glColor3f(1.0f, 1.0f, 1.0f);
          glBindTexture(GL_TEXTURE_2D, tex_name);
          glBegin(GL_QUADS);
-/*
-            glTexCoord2f(0.0f, 0.0f);
-            glVertex3f(mDesktopUL[0][0], mDesktopUL[0][1], mDesktopUL[0][2]);
-            glTexCoord2f(1.0f, 0.0f);
-            glVertex3f(mDesktopUL[1][0], mDesktopUL[1][1], mDesktopUL[1][2]);
-            glTexCoord2f(1.0f, 1.0f);
-            glVertex3f(mDesktopUL[2][0], mDesktopUL[2][1], mDesktopUL[2][2]);
-            glTexCoord2f(0.0f, 1.0f);
-            glVertex3f(mDesktopLR[2][0], mDesktopLR[2][1], mDesktopLR[2][2]);
-*/
-            // XXX: This specifies the texture coordinates in clockwise order.
-            // I had to do this to get the image to show up correctly, though
-            // I am not sure why ...
-            glTexCoord2f(1.0f, 0.0f);
-            glVertex3f(mDesktopUL[0][0], mDesktopUL[0][1], mDesktopUL[0][2]);
-            glTexCoord2f(0.0f, 0.0f);
-            glVertex3f(mDesktopUL[1][0], mDesktopUL[1][1], mDesktopUL[1][2]);
-            glTexCoord2f(0.0f, 1.0f);
-            glVertex3f(mDesktopUL[2][0], mDesktopUL[2][1], mDesktopUL[2][2]);
-            glTexCoord2f(1.0f, 1.0f);
-            glVertex3f(mDesktopLR[2][0], mDesktopLR[2][1], mDesktopLR[2][2]);
+           // Draw quad, counter counter clockwise from bottom left hand corner (0,0)
+            glTexCoord2f(0.0f, 1.0f);           // LL
+            glVertex3f(0.0f, 0.0f, 0.0f);
+
+            glTexCoord2f(1.0f, 1.0f);           // LR
+            glVertex3f(mDesktopWidth, 0.0f, 0.0f);
+
+            glTexCoord2f(1.0f, 0.0f);           // UR
+            glVertex3f(mDesktopWidth, mDesktopHeight, 0.0f);
+
+            glTexCoord2f(0.0f, 0.0f);           // UL
+            glVertex3f(0.0f, mDesktopHeight, 0.0f);
          glEnd();
 
          // XXX: It would probably be good to render nothing on the back
@@ -385,5 +376,14 @@ void VNCDesktop::draw()
 
    glEnable(GL_LIGHTING);
 }
+
+void VNCDesktop::drawSphere(float radius, gmtl::Point3f offset, int parts)
+{
+   glPushMatrix();
+      glTranslatef(offset[0], offset[1], offset[2]);
+      gluSphere(mSphereQuad, radius, parts, parts);
+   glPopMatrix();
+}
+
 
 } // End of vrjvnc namespace
