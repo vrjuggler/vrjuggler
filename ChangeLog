@@ -1,5 +1,10 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Dec-21-2001 patrickh  Updated the use of variable argument lists in the
+                      CyberGlove driver from Virtual Technologies.  We can
+                      build and run on Linux/PowerPC now.  Submitted by
+                      Kevin Puetz <puetzk@iastate.edu> and Aaron Bryden
+                      <abryden@vrac.iastate.edu>.
 Dec-20-2001 patrickh  We can build 64-bit HP-UX binaries now (partially
                       submitted by Daniel Heath <DHeath@fueltechnv.com>).
 
