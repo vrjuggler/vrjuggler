@@ -37,6 +37,12 @@
 
 vjSoundManager* vjSoundManager::_instance = NULL;   //: The instance ptr
 
+vjSoundManager::vjSoundManager ()
+{
+    mSoundEngine = NULL;
+}
+
+
 //: Add the chunk to the configuration
 //! PRE: configCanHandle(chunk) == true
 bool vjSoundManager::configAdd(vjConfigChunk* chunk)
