@@ -40,7 +40,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
    <section id="source.code.section">
       <title>Getting the Source Code</title>
       <para>This section is for those users who want to get the Juggler Project source code from the CVS repository on SourceForge. Those users who have downloaded a pre-packaged version of the source can skip ahead to <xref linkend="config.section"/>.</para>
-      <para>Getting the source code takes a few steps. You have to first download or check out Juggler and some external packages such as GMTL, CppDOM, Boost, and possibly NSPR. The steps are listed in the following sections. The current list of <emphasis>required</emphasis> software packages is as follows:</para>
+      <para>Getting the source code takes a few steps. You have to first download or check out the Juggler Project source code and some external packages such as GMTL, CppDOM, Boost, and possibly NSPR. The steps are listed in the following subsections. The current list of <emphasis>required</emphasis> software packages is as follows:</para>
       <itemizedlist>
          <listitem>
             <para>GMTL (<ulink url="http://ggt.sourceforge.net/">http://ggt.sf.net/</ulink>): A generic math library that makes use of C++ templates and STL paradigms</para>
@@ -61,10 +61,10 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
             <para>JDOM (<ulink url="http://www.jdom.org/">http://www.jdom.org/</ulink>): An XML parser for Java (required only for VjControl, the GUI for editing VR Juggler configuration files)</para>
          </listitem>
       </itemizedlist>
-      <para>The following describes how to get all of the above except JDOM. JDOM must be downloaded separately.</para>
+      <para>The following describes how to get all of the above except JDOM and NSPR. These must be downloaded separately.</para>
       <section>
          <title>How to get the Juggler Suite and external package dependencies</title>
-         <para>You can optionally get Juggler as a source code tarball from the website (www.vrjuggler.org) or you can follow these steps to get the code from our CVS repository.</para>
+         <para>You can optionally get the Juggler Project as a source code tarball from the website (<ulink url="http://www.vrjuggler.org/">http://www.vrjuggler.org/</ulink>) or you can follow these steps to get the code from our CVS repository.</para>
          <orderedlist>
             <listitem>
                <para>Check out the 'juggler' module using CVS.</para>
@@ -72,31 +72,30 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
 cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler co juggler</screen>
             </listitem>
             <listitem>
-               <para>Get external packages that Juggler depends on. Typically you will run cvs-gather.pl, found in the top-level <filename>juggler</filename> directory.</para>
-               <para>The syntax will be similar to the following (you may have to edit the file <filename>Gatherrc</filename>, see also <xref linkend="acquire"/>):</para>
+               <para>Get external packages that Juggler depends on. Typically you will run cvs-gather.pl, found in the top-level <filename>juggler</filename> directory. For most users, the follow command will do the job:</para>
                <screen>./cvs-gather.pl --verbose</screen>
-               <para>You can use the <command>cvs-gather</command> tool, or you can read the file <filename>Gatherrc</filename> and get the packages manually. For more details about this, see <xref linkend="acquire"/>.</para>
+               <para>Ideally, users can just let the command run, but sometimes a password must be entered. The CVS password prompt will appear at such times. Each of the projects downloaded using <command>cvs-gather</command> come from SourceForge, and for anonymous CVS access there is no password. Hence, simply pressing the <keysym>ENTER</keysym> key will allow the download to continue.</para>
+               <para>You can use the <command>cvs-gather</command> tool, or you can read the file <filename>Gatherrc</filename> and get the packages manually. For more details about this, see <xref linkend="using.cvs-gather.section"/>. If you choose to follow this step as shown above, you may skip ahead to <xref linkend="compile.section"/>.</para>
             </listitem>
          </orderedlist>
       </section>
-      <section id="acquire">
-         <title>Acquire third-party packages</title>
+      <section id="using.cvs-gather.section">
+         <title>Using <command>cvs-gather</command></title>
          <para><command>cvs-gather</command> is a utility we include in the base <filename>juggler</filename> source directory to help you collect third-party (external) source code that the Juggler Project needs in order to build. To get help on using this tool, use one of the following (the second version gives much more detailed output):</para>
          <screen>./cvs-gather.pl --help
 ./cvs-gather.pl --manual
 </screen>
          <section>
-            <title>Standard use of <command>cvs-gather</command></title>
+            <title>Standard use<command></command></title>
             <para>In most cases, <command>cvs-gather</command> can be used as follows:</para>
             <screen>./cvs-gather.pl
 </screen>
             <para>All the output will be written to the file <filename>gather.log</filename>. If you would like to see the progress of CVS as it checks out files, run the command this way:</para>
             <screen>./cvs-gather.pl --verbose
 </screen>
-            <para>Ideally, users can just let the command run, but sometimes a password must be entered. The CVS password prompt will appear at such times. Each of the projects downloaded using <command>cvs-gather</command> come from SourceForge, and for anonymous CVS access there is no password. Hence, simply pressing the <keysym>ENTER</keysym> key will allow the download to continue.</para>
          </section>
          <section id="cvs-gather.advanced.section">
-            <title>Advanced use of <command>cvs-gather</command></title>
+            <title>Advanced use<command></command></title>
             <para>Use of <command>cvs-gather</command> is not required. You can limit what packages are downloaded. You can even skip <command>cvs-gather</command> altogether if you already have all the necessary packages in your system or if you feel like getting these packages manually. For a list of the package dependencies, refer to the file <filename>juggler/Gatherrc</filename>. For more information about the file format, refer to the <command>cvs-gather</command> manual.</para>
             <para>To limit which packages get downloaded through <command>cvs-gather</command>, use the <option>--target</option> option, as shown below:</para>
             <screen>./cvs-gather --target Boost,Doozer++</screen>
@@ -131,17 +130,17 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
    </section>
    <section>
       <title>Compiling</title>
-      <para>In this section, we describe how to compile the Juggler project. As of this writing, the explanation focuses on VR Juggler as a whole.</para>
+      <para>In this section, we describe how to compile the Juggler Project. We focus on VR Juggler as a whole, but information about some of the individual components is provided later.</para>
       <section>
          <title>Important Note Regarding Compiling</title>
-         <para>Please note: you have downloaded <emphasis>developmental</emphasis> code. It may not be stable, and it may not even compile. Compiling Juggler itself can be a little complicated for anyone who does not have some background in Autoconf, C++, and make.</para>
+         <para>You have downloaded <emphasis>developmental</emphasis> code. It may not be stable, and it may not even compile. Compiling VR Juggler itself can be a little complicated for anyone who does not have some background in Autoconf, C++, and <command>make</command>.</para>
       </section>
       <section>
          <title>Compiling the Juggler Suite of Tools</title>
-         <para>This section explains how to get, configure, and compile all of the tools that make up VR Juggler at once. Each tool compiles to its own library and can be installed individually. (Refer to the <filename>README</filename> file in this directory for more information about the specific modules.)</para>
+         <para>This section explains how to get, configure, and compile all of the tools that make up VR Juggler. Each tool compiles to its own library and can be installed individually. (Refer to the <filename>README</filename> file in this directory for more information about the specific modules.)</para>
          <section id="config.section">
             <title>Configuring VR Juggler</title>
-            <para>Every time you have newly updated source code acquired from CVS or <command>cvs-gather</command>, it is recommended that you run <command>autogen.sh</command>, found in the top-level <filename>juggler</filename> directory:</para>
+            <para>Every time you update the source code acquired from CVS and <command>cvs-gather</command>, it is recommended that you run <command>autogen.sh</command>. This script is found in the top-level <filename>juggler</filename> directory, and it is run as follows:</para>
             <screen>./autogen.sh</screen>
             <note>
                <para>On Win32, recent versions of Cygwin install Autoconf 2.13 <emphasis>and</emphasis> Autoconf 2.5x. Similarly, Automake 1.4 <emphasis>and</emphasis> Automake 1.5 are installed. The former versions (2.13 and 1.4) are considered <quote>stable</quote> while the latter are <quote>developmental</quote>. While the VR Juggler build system does work with either set on UNIX-based systems, the build system does not work with Automake 1.5 on Win32. At this time, it is unclear why it does not work, but the following provides a workaround for running <command>autogen.sh</command> on Win32 using the default BASH environment:</para>
@@ -151,12 +150,12 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
             </note>
             <section>
                <title>Using <command>configure.pl</command></title>
-               <para>In the base <filename>juggler</filename> source directory, we have a <quote>global</quote> configure script written in Perl rather than Autoconf. It is called <command>configure.pl</command>. To get options for this script, use one of the following (the second being much more detailed):</para>
+               <para>In the base <filename>juggler</filename> source directory, we have a <quote>global</quote> configure script written in Perl called <command>configure.pl</command>. To get the command-line options for this script, use one of the following (the second being much more detailed):</para>
                <screen>./configure.pl --help
 ./configure.pl --manual</screen>
-               <para>To configure your system, you'll need to see what options all the Autoconf-based configure scripts in VR Juggler need. To get this text, enter:</para>
+               <para>To configure your system, you will need to see what options all the Autoconf-based configure scripts in VR Juggler need. To get this text, enter:</para>
                <screen>./configure.pl --all-help</screen>
-               <para><command>configure.pl</command> works in a different <quote>build</quote> directory or in the directory where it resides. Here is how we (the Juggler Team) have been using it:</para>
+               <para><command>configure.pl</command> can run in a different <quote>build</quote> directory or in the directory where it resides. Here is how we (the Juggler Team) have been using it:</para>
                <orderedlist>
                   <listitem>
                      <para>Make a directory for compiling. There are many good reasons to do this away from the main source tree (though they will not be listed here).</para>
