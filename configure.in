@@ -859,12 +859,10 @@ dnl # If the library is found, check for pthread_kill().  If it is present,
 dnl # Draft 10 (the "final" draft) of the POSIX threads standard is in place.
 dnl # If not, Draft 4 is available.
 if test "x${_thread_pkg}" = "xPOSIX" ; then
-    _vjsave_CFLAGS="$CFLAGS"
-    _vjsave_CXXFLAGS="$CXXFLAGS"
+    _vjsave_LDFLAGS="$LDFLAGS"
 
     if test "$ac_cv_CC_accepts_pthread" = "yes" ; then
-        CFLAGS="$CFLAGS -pthread"
-        CXXFLAGS="$CXXFLAGS -pthread"
+        LDFLAGS="$LDFLAGS -pthread"
     fi
 
     AC_CHECK_LIB(pthread, pthread_create,
@@ -885,7 +883,7 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
     if test "x$THREADS" = "x" ; then
         AC_CHECK_LIB(c_r, pthread_create,
             AC_CHECK_HEADER(pthread.h,
-                [ THREADS='POSIX' _pthread_lib='-lc_r' ],
+                [ THREADS='POSIX' _pthread_lib='' ],
                 AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)))
     fi
 
@@ -934,8 +932,7 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
     fi
 
     dnl # Restore these in case any changes were made above.
-    CFLAGS="${_vjsave_CFLAGS}"
-    CXXFLAGS="${_vjsave_CXXFLAGS}"
+    LDFLAGS="${_vjsave_LDFLAGS}"
 dnl # We are using WIN32 threads.
 elif test "x${_thread_pkg}" = "xWIN32" ; then
     THREADS='WIN32'
@@ -1521,8 +1518,7 @@ elif test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
 fi
 
 if test "$ac_cv_CC_accepts_pthread" = "yes" ; then
-    CFLAGS="$CFLAGS -pthread"
-    CXXFLAGS="$CXXFLAGS -pthread"
+    LDFLAGS="$LDFLAGS -pthread"
 fi
 
 dnl # If we are using pthreads, add the library containing the pthread calls to
