@@ -188,6 +188,7 @@ AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, ${_OS_REL_NUM_MINOR})
 
 AR=''			dnl # Archive library command (generally ar(1))
 ARFLAGS=''		dnl # Flags for $AR
+DEP_GEN_FLAG='-M'	dnl # Flag for the compiler to generate dependencies
 LD=''			dnl # Shared library command (usually ld(1))
 LDOPTS=''		dnl # More options for shared library generator
 SHAREDLIB_EXT=''	dnl # Extension for shared libraries (usually 'so')
@@ -858,6 +859,7 @@ AC_SUBST(AR)
 AC_SUBST(ARFLAGS)
 AC_SUBST(CFLAGS)
 AC_SUBST(CXXFLAGS)
+AC_SUBST(DEP_GEN_FLAG)
 AC_SUBST(DEPENDFLAGS)
 AC_SUBST(DEPEND_EXTRAS)
 AC_SUBST(INCLUDES)
