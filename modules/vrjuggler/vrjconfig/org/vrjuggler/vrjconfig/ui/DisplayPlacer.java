@@ -289,7 +289,7 @@ public class DisplayPlacer
  */
 class DisplayPlacerModel
    extends AbstractPlacerModel
-   implements ChunkDBListener, PropertyChangeListener
+   implements ChunkDBListener, ConfigChunkListener
 {
    public void setConfigChunkDB(ConfigChunkDB db)
    {
@@ -299,7 +299,7 @@ class DisplayPlacerModel
       for (Iterator itr = windows.iterator(); itr.hasNext(); )
       {
          ConfigChunk chunk = (ConfigChunk)itr.next();
-         chunk.addPropertyChangeListener(this);
+         chunk.addConfigChunkListener(this);
       }
       chunkDB.addChunkDBListener(this);
 //      fireTableContentsChanged();
@@ -387,7 +387,7 @@ class DisplayPlacerModel
       if (chunk.getDesc().getToken().equals("displayWindow"))
       {
          System.out.println("Adding a new displayWindow.");
-         chunk.addPropertyChangeListener(this);
+         chunk.addConfigChunkListener(this);
          windows.add(0, chunk);
          fireItemsInserted(new int[] { 0 });
       }
@@ -402,7 +402,7 @@ class DisplayPlacerModel
          if (idx != -1)
          {
             System.out.println("Removed a displayWindow.");
-            chunk.removePropertyChangeListener(this);
+            chunk.removeConfigChunkListener(this);
             windows.remove(idx);
             fireItemsRemoved(new int[] { 0 }, new Object[] { chunk });
          }
@@ -420,7 +420,7 @@ class DisplayPlacerModel
       for (int i=0; i<windows.size(); ++i)
       {
          ConfigChunk chunk = (ConfigChunk)windows.get(i);
-         chunk.removePropertyChangeListener(this);
+         chunk.removeConfigChunkListener(this);
          idxs[i] = i;
          items[i] = chunk;
       }
@@ -431,7 +431,7 @@ class DisplayPlacerModel
    /**
     * Called whenever one of the displays contained within the model changes.
     */
-   public void propertyChange(PropertyChangeEvent evt)
+   public void nameChanged(ConfigChunkEvent evt)
    {
       int idx = getIndexOf(evt.getSource());
       if (idx != -1)
@@ -439,6 +439,10 @@ class DisplayPlacerModel
          fireItemsChanged(new int[] { idx });
       }
    }
+
+   public void propertyValueChanged(ConfigChunkEvent evt) { nameChanged(evt); }
+   public void propertyValueAdded(ConfigChunkEvent evt) { nameChanged(evt); }
+   public void propertyValueRemoved(ConfigChunkEvent evt) { nameChanged(evt); }
 
    /**
     * The ConfigChunkDB we're working off of.

@@ -50,12 +50,12 @@ public class ConfigChunkTableModel
    {
       if (mChunk != null)
       {
-         mChunk.removePropertyChangeListener(chunkListener);
+         mChunk.removeConfigChunkListener(chunkListener);
       }
       mChunk = chunk;
       if (mChunk != null)
       {
-         mChunk.addPropertyChangeListener(chunkListener);
+         mChunk.addConfigChunkListener(chunkListener);
       }
       fireTableDataChanged();
    }
@@ -351,9 +351,24 @@ public class ConfigChunkTableModel
     * config chunk that is being edited changes.
     */
    private class ChunkChangeListener
-      implements PropertyChangeListener
+      implements ConfigChunkListener
    {
-      public void propertyChange(PropertyChangeEvent evt)
+      public void nameChanged(ConfigChunkEvent evt)
+      {
+         chunkChanged();
+      }
+
+      public void propertyValueChanged(ConfigChunkEvent evt)
+      {
+         chunkChanged();
+      }
+
+      public void propertyValueAdded(ConfigChunkEvent evt)
+      {
+         chunkChanged();
+      }
+
+      public void propertyValueRemoved(ConfigChunkEvent evt)
       {
          chunkChanged();
       }
