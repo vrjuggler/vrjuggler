@@ -63,7 +63,7 @@ public:
    //  This will actually start a new thread that will execute the specified
    //  function.
    // -----------------------------------------------------------------------
-   vjThreadSGI(THREAD_FUNC func, void* arg = 0, long flags = 0,
+   vjThreadSGI(vj_thread_func_t func, void* arg = 0, long flags = 0,
                u_int priority = 0, void* stack_addr = NULL,
                size_t stack_size = 0);
 
@@ -99,7 +99,8 @@ public:
    spawn (vjBaseThreadFunctor* functorPtr, long flags = 0, u_int priority = 0,
           void* stack_addr = NULL, size_t stack_size = 0)
    {
-      mThreadPID = sproc(THREAD_FUNC(&ThreadFunctorFunction), PR_SADDR, functorPtr);
+      mThreadPID = sproc(vj_thread_func_t(&ThreadFunctorFunction), PR_SADDR,
+                         functorPtr);
       return mThreadPID;
    }
 

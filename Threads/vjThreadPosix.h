@@ -85,7 +85,7 @@ public:  // ---- Thread CREATION and SPAWNING ----- //
     // This will actually start a new thread that will execute the specified
     // function.
     // -----------------------------------------------------------------------
-    vjThreadPosix(THREAD_FUNC func, void* arg = 0, long flags = 0,
+    vjThreadPosix(vj_thread_func_t func, void* arg = 0, long flags = 0,
                   u_int priority = 0, void* stack_addr = NULL,
                   size_t stack_size = 0);
 

@@ -41,7 +41,10 @@
 
 
 // Typedefs to help with cross-platform abilities
-typedef void (*THREAD_FUNC)(void *);
+typedef void (*vj_thread_func_t)(void *);
+
+// For backwards compatability with older versions...
+typedef vj_thread_func_t THREAD_FUNC;
 
 #include <Threads/vjBaseThread.h>
 
