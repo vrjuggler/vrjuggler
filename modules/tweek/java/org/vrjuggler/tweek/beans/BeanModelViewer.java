@@ -82,7 +82,6 @@ public interface BeanModelViewer
    public void focusBean(PanelBean bean);
 
    public void addBeanFocusChangeListener(BeanFocusChangeListener l);
+
    public void removeBeanFocusChangeListener(BeanFocusChangeListener l);
-   public void fireBeanFocusEvent(PanelBean bean);
-   public void fireBeanUnfocusEvent(PanelBean bean);
 }

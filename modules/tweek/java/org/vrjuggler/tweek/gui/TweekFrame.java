@@ -262,115 +262,121 @@ public class TweekFrame
     * opportunity to manipulate context-specific (Bean-specific) information.
     * This includes context-specific file loading.  When a new Bean is focuesd,
     * it is queried to determine if it implements
-    * org.vrjuggler.tweek.beans.FileLoader.  If so, the Open item in the File
-    * menu is enabled, and the newly focused Bean is set up to receive open
-    * requests from the GUI.
+    * <code>org.vrjuggler.tweek.beans.FileLoader</code>.  If so, the Open item
+    * in the File menu is enabled, and the newly focused Bean is set up to
+    * receive open requests from the GUI.
+    *
+    * @since 0.92.7
     */
-   public void beanFocusChanged(BeanFocusChangeEvent e)
+   public void beanFocused(BeanFocusChangeEvent e)
    {
-      if ( e.getFocusType() == BeanFocusChangeEvent.BEAN_FOCUSED )
+      mMsgDocument.printStatus("Bean " + e.getBean() + " focused!\n");
+
+      Object panel_bean = e.getBean().getBean();
+
+      // If the Panel Bean supports file opening, enable mMenuFileOpen and
+      // set the Bean as the current file loader.  If and when the user
+      // selects the Open item in the File menu, panel_bean will be informed
+      // of the open request via the FileLoader interface.
+      if ( panel_bean instanceof FileLoader )
       {
-         mMsgDocument.printStatus("Bean " + e.getBean() + " focused!\n");
+         FileLoader loader = (FileLoader) panel_bean;
+         mMenuFileOpen.setText("Open " + loader.getFileType() + " ...");
+         mMenuFileClose.setText("Close " + loader.getFileType());
+         mMenuFileOpen.setEnabled(true);
+         boolean save_enabled = (loader.canSave() &&
+                                 loader.hasUnsavedChanges());
 
-         Object panel_bean = e.getBean().getBean();
+         mMenuFileSave.setEnabled(save_enabled);
+         mMenuFileSaveAll.setEnabled(save_enabled);
 
-         // If the Panel Bean supports file opening, enable mMenuFileOpen and
-         // set the Bean as the current file loader.  If and when the user
-         // selects the Open item in the File menu, panel_bean will be informed
-         // of the open request via the FileLoader interface.
-         if ( panel_bean instanceof FileLoader )
+         if ( loader.getOpenFileCount() > 0 )
          {
-            FileLoader loader = (FileLoader) panel_bean;
-            mMenuFileOpen.setText("Open " + loader.getFileType() + " ...");
-            mMenuFileClose.setText("Close " + loader.getFileType());
-            mMenuFileOpen.setEnabled(true);
-            boolean save_enabled = (loader.canSave() &&
-                                    loader.hasUnsavedChanges());
-
-            mMenuFileSave.setEnabled(save_enabled);
-            mMenuFileSaveAll.setEnabled(save_enabled);
-
-            if ( loader.getOpenFileCount() > 0 )
-            {
-               mMenuFileSaveAs.setEnabled(loader.canSave());
-               mMenuFileClose.setEnabled(true);
-            }
-            else
-            {
-               mMenuFileSaveAs.setEnabled(false);
-               mMenuFileClose.setEnabled(false);
-            }
-
-            mFileLoader = loader;
-         }
-         // This new Bean can't open files, we we make sure to disable the
-         // Open menu item.
-         else
-         {
-            disableFileHandlingItems();
-         }
-
-         if ( panel_bean instanceof ClipboardUser )
-         {
-            mMenuEditCut.setEnabled(true);
-            mMenuEditCopy.setEnabled(true);
-            mMenuEditPaste.setEnabled(true);
-
-            mClipboardUser = (ClipboardUser) panel_bean;
+            mMenuFileSaveAs.setEnabled(loader.canSave());
+            mMenuFileClose.setEnabled(true);
          }
          else
          {
-            disableClipboardItems();
+            mMenuFileSaveAs.setEnabled(false);
+            mMenuFileClose.setEnabled(false);
          }
 
-         if ( panel_bean instanceof UndoHandler )
-         {
-            mUndoHandler = (UndoHandler) panel_bean;
-            UndoManager mgr = mUndoHandler.getUndoManager();
-
-            if ( null == mgr )
-            {
-               mMenuEditUndo.setEnabled(false);
-               mMenuEditRedo.setEnabled(false);
-            }
-            else
-            {
-               mMenuEditUndo.setEnabled(mgr.canUndo());
-               mMenuEditRedo.setEnabled(mgr.canRedo());
-            }
-         }
-         else
-         {
-            disableUndoHandlerItems();
-         }
-
-         if ( panel_bean instanceof HelpProvider )
-         {
-            HelpProvider help_bean = (HelpProvider) panel_bean;
-            String help_desc = help_bean.getHelpDescription();
-
-            if ( help_desc == null || help_desc.equals("") )
-            {
-               help_desc = e.getBean().getName() + " Help";
-            }
-
-            mMenuHelpBean.setText(help_desc);
-            mMenuHelpBean.setEnabled(true);
-
-            mHelpProvider = help_bean;
-         }
-         else
-         {
-            disableHelpProvidingItems();
-         }
+         mFileLoader = loader;
       }
-      else if ( e.getFocusType() == BeanFocusChangeEvent.BEAN_UNFOCUSED )
+      // This new Bean can't open files, we we make sure to disable the
+      // Open menu item.
+      else
       {
-         mMsgDocument.printStatus("Bean " + e.getBean() + " unfocused!\n");
-
-         // Disable the Open menu item in the File menu just to be safe.
          disableFileHandlingItems();
       }
+
+      if ( panel_bean instanceof ClipboardUser )
+      {
+         mMenuEditCut.setEnabled(true);
+         mMenuEditCopy.setEnabled(true);
+         mMenuEditPaste.setEnabled(true);
+
+         mClipboardUser = (ClipboardUser) panel_bean;
+      }
+      else
+      {
+         disableClipboardItems();
+      }
+
+      if ( panel_bean instanceof UndoHandler )
+      {
+         mUndoHandler = (UndoHandler) panel_bean;
+         UndoManager mgr = mUndoHandler.getUndoManager();
+
+         if ( null == mgr )
+         {
+            mMenuEditUndo.setEnabled(false);
+            mMenuEditRedo.setEnabled(false);
+         }
+         else
+         {
+            mMenuEditUndo.setEnabled(mgr.canUndo());
+            mMenuEditRedo.setEnabled(mgr.canRedo());
+         }
+      }
+      else
+      {
+         disableUndoHandlerItems();
+      }
+
+      if ( panel_bean instanceof HelpProvider )
+      {
+         HelpProvider help_bean = (HelpProvider) panel_bean;
+         String help_desc = help_bean.getHelpDescription();
+
+         if ( help_desc == null || help_desc.equals("") )
+         {
+            help_desc = e.getBean().getName() + " Help";
+         }
+
+         mMenuHelpBean.setText(help_desc);
+         mMenuHelpBean.setEnabled(true);
+
+         mHelpProvider = help_bean;
+      }
+      else
+      {
+         disableHelpProvidingItems();
+      }
+   }
+
+   /**
+    * Handles the case when the current Panel Bean is unfocused.  The file
+    * handling menu items are disabled.
+    *
+    * @since 0.92.7
+    */
+   public void beanUnfocused(BeanFocusChangeEvent e)
+   {
+      mMsgDocument.printStatus("Bean " + e.getBean() + " unfocused!\n");
+
+      // Disable the Open menu item in the File menu just to be safe.
+      disableFileHandlingItems();
    }
 
    /**

@@ -1,5 +1,10 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2005-04-01 patrickh    Updated the interface
+                       org.vrjuggler.tweek.beans.BeanFocusChangeListener to use
+                       a more modern approach.  The method beanFocusChanged()
+                       has been split into beanFocused() and beanUnfocused().
+                       NEW VERSION 0.92.7
 2005-03-21 patrickh    org.vrjuggler.tweek.beans.loader.BeanInstatiationException
                        now supports the Java 1.4 "cause" mechanism for
                        chaining exceptions.
