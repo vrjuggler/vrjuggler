@@ -1,16 +1,28 @@
 
-//#include <sys/types.h> //for open
-//#include <sys/stat.h>  //for open
-#include <fcntl.h>     //for open
+/*
+    struct termio {
+	tcflag_t    c_iflag;     // input modes
+	tcflag_t    c_oflag;     // output modes
+	tcflag_t    c_cflag;     // control modes
+	tcflag_t    c_lflag;     // local modes 
+	speed_t     c_ospeed;    // output speed
+	speed_t     c_ispeed;    // input speed; not supported
+	char        c_line;      // line discipline
+	cc_t        c_cc[NCCS];  // control chars
+    }
+*/
 
-#include <sys/file.h>
-#include <sys/ioctl.h>
-#include <unistd.h>
-#include <sys/time.h>
+#include <termio.h>        // for definition of NCCS
+#include <sys/termio.h>    // for termio structure used by some ioctls
+#include <sys/types.h>     // for open
+#include <sys/stat.h>      // for open
+#include <fcntl.h>         // for open
 
-#include <assert.h>
-#include <fstream.h>
-#include <iostream.h>
+#include <unistd.h>        // for sleep, and ioctl
+
+#include <assert.h>        // for assert
+#include <fstream.h>       // for ifstream
+#include <iostream.h>      // for cout
 
 #include <Input/vjPosition/aFlock.h>
 
@@ -532,33 +544,43 @@ void  aFlock::pickBird( const int& birdID, const int& port )
     sginap( 1 );
 }
 
+//: Open the port.
+//  give - a serial port 
+//  give - a baud rate
+//  returns portId twice (created by the open function)
+//  NOTE: portId is returned from both ends of this function.
+//  if portId == -1 then function failed to open the port.
 int aFlock::open_port( const char* const serialPort, 
 			const int& baud, 
-			int& _portId )
+			int& portId )
 {
+    // A visual flag to tell if _OLD_TERMIOS was used.
+    // with - 48
+    // without - 40
+    // ... of course these may change in the future ...
+    cout<<"  ** termio struct size = "<<sizeof(termio)<<"\n"<<flush;
+    
     ///////////////////////////////////////////////////////////////////
     // Open and close the port to reset the tracker, then
     // Open the port
     ///////////////////////////////////////////////////////////////////
-    _portId = open( serialPort, O_RDWR | O_NDELAY);
-    //_portId = open( "temp.txt", O_WRONLY | O_CREAT);
-    if (_portId == -1)
+    portId = open( serialPort, O_RDWR | O_NDELAY);
+    if (portId == -1)
     {
 	cout << "  port reset failed (because port open failed)\n" << flush ;
-	return _portId;
+	return portId;
     } else {
 	sleep(2);
-	close( _portId );
+	close( portId );
 	cout << "  port reset successfully (port was opened then closed)\n" << flush;
     }
     
-    _portId = open( serialPort, O_RDWR | O_NDELAY);
-    //_portId = open( "temp.txt", O_WRONLY | O_CREAT);
+    portId = open( serialPort, O_RDWR | O_NDELAY);
     
-    if (_portId == -1)
+    if (portId == -1)
     {
 	cout << "  port open failed\n" << flush;
-	return _portId;
+	return portId;
     } else {
 	cout << "  port open successfully\n" << flush;
     }
@@ -569,41 +591,91 @@ int aFlock::open_port( const char* const serialPort,
     //////////////////////////////////////////////////////////////////
     
     cout << "  Getting current term setting\n" << flush;
-    termio port_a;
-    ioctl( _portId, TCGETA, &port_a );
+    termio termIoPort;
+    ioctl( portId, TCGETA, &termIoPort );
     
-    port_a.c_iflag = port_a.c_oflag = port_a.c_lflag = 0;
+    // set the flags to 0.  why???
+    termIoPort.c_iflag = 
+	termIoPort.c_oflag = 
+	termIoPort.c_lflag = 0;
     
+    // get the B* format baud rate
+    // i.e.: B38400 is baud = 38400
+    int magicBaudRate = 0;
     switch (baud)
     {
-    case 38400:
-	port_a.c_cflag = (B38400 | CS8 | CLOCAL | CREAD);
-	break;
-    
-    case 19200:
-	port_a.c_cflag = (B19200 | CS8 | CLOCAL | CREAD);
-	break;
-    case 9600:
-	port_a.c_cflag = (B9600 | CS8 | CLOCAL | CREAD);
-	break;
-    
-    case 4800:
-	port_a.c_cflag = (B4800 | CS8 | CLOCAL | CREAD);
-	break;
+	case 150: magicBaudRate = B150; break;
+	case 200: magicBaudRate = B200; break;
+	case 300: magicBaudRate = B300; break;
+	case 600: magicBaudRate = B600; break;
+	case 1200: magicBaudRate = B1200; break;
+	case 1800: magicBaudRate = B1800; break;
+	case 2400: magicBaudRate = B2400; break;
+	case 4800: magicBaudRate = B4800; break;
+	case 9600: magicBaudRate = B9600; break;
+	case 19200: magicBaudRate = B19200; break;
+	default: case 38400: magicBaudRate = B38400; break;
+	
+	#ifndef _OLD_TERMIOS
+	case 57600: magicBaudRate = B57600; break;
+	case 76800: magicBaudRate = B76800; break;
+	case 115200: magicBaudRate = B115200; break;
+	#endif
     }
     
-    port_a.c_cflag = (B38400 | CS8 | CLOCAL | CREAD);
-    port_a.c_cc[0] = port_a.c_cc[1] = port_a.c_cc[2] = port_a.c_cc[3] = 0;
-    port_a.c_cc[4] = port_a.c_cc[5] = 1;
+    // set the baud rate flag
+    termIoPort.c_cflag = (magicBaudRate | CS8 | CLOCAL | CREAD);
+    
+    #ifndef _OLD_TERMIOS
+	// new items in the new "termio" structure:
+	termIoPort.c_ospeed = baud;
+	termIoPort.c_ispeed = baud;
+	termIoPort.c_line = LDISC1; // or LDISC0 ???
+    #endif
+    
+    
+    // why are we setting the  "control-character array"  
+    //  to 0's and 1's ??? 
+    // shouldn't this array be set already by default?
+    // NOTE: with c_line=LDISC1, we get 7-15 also.
+    //       with c_line=LDISC0, we only get 0-6 (like below)
+    
+    // make sure we're not going off the end
+    assert( NCCS >= 16 );
+    
+    // set the control-character array to 0's and 1's
+    /*
+    termIoPort.c_cc[0] = 
+	termIoPort.c_cc[1] = 
+	termIoPort.c_cc[2] = 
+	termIoPort.c_cc[3] = 0;
+	
+    termIoPort.c_cc[4] = 
+	termIoPort.c_cc[5] = 1;
+    */
     
     // Set the new attributes
-    cout << "  Modifying old term setting: "<<baud<<" baud.\n" << flush;
-    ioctl( _portId, TCSETA, &port_a );
+    int result = 0;
+    cout << "  Setting new term setting: "<<baud<<" baud..." << flush;
+    result = ioctl( portId, TCSETA, &termIoPort );
     
-    cout<<"  Disconnect calling process from terminal and session (TIOCNOTTY).\n"<<flush;
-    ioctl( _portId, TIOCNOTTY );
+    // did it succeed?
+    if (result == 0)
+	cout<<" success\n"<<flush;
+    else 
+	cout<<" failed\n"<<flush;
     
-    return _portId;
+    cout << "  Disconnect calling process from terminal and session (TIOCNOTTY)..." << flush;
+    result = ioctl( portId, TIOCNOTTY );
+    
+    // did it succeed?
+    if (result == 0)
+	cout<<" success\n"<<flush;
+    else 
+	cout<<" failed\n"<<flush;
+	
+    // return the portID
+    return portId;
 }
 
 void aFlock::set_blocking( const int& port, const int& blocking )
