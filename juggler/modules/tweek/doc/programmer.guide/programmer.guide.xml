@@ -4371,7 +4371,7 @@ CLASSPATH	= $(TWEEK_EVENT_LIB):$(TWEEK_NET_LIB):$(JAVA_ORB_JAR)
 DEFS		= -D__linux__ -D__OSVERSION__=2 -D__x86__
 EXTRA_CFLAGS	= $(DEBUG_CFLAGS)
 DEBUG_CFLAGS	= -g -D_DEBUG
-OPTIM_CFLAGS	= -O2 -fno-strict-aliasing -D_OPT
+OPTIM_CFLAGS	= -O2 -fno-strict-aliasing -D_OPT -DNDEBUG
 INCLUDES		= -I$(TWEEK_BASE_DIR)/include -I$(HOME)/omni/include -I$(srcdir)
 
 EXTRA_LFLAGS	= $(DEBUG_LFLAGS)
