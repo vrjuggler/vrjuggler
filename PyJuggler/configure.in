@@ -26,7 +26,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 AC_REVISION([$Revision$])
-AC_INIT([src/PyJuggler.cpp])
+AC_INIT([src/gmtl-functions.h])
 AC_CONFIG_AUX_DIR([Doozer++/scripts])
 DPP_PREREQ([1.5.1])
 DPP_INIT
