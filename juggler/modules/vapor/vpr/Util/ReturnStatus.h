@@ -58,10 +58,11 @@ namespace vpr
       enum Code
       {
          Succeed,          /**< Succeedful status */
-         Fail,          /**< Fail status */
+         Fail,             /**< Fail status */
          WouldBlock,       /**< Operation would block */
          Timeout,          /**< Timeout occurred */
-         InProgress        /**< Operation is still in progress */
+         InProgress,       /**< Operation is still in progress */
+         NotConnected      /**< The given IO device is closed */
       };
 
       /// Default constructor.  vpr::ReturnStatus:;Succeed is default

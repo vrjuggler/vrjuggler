@@ -347,6 +347,9 @@ vpr::ReturnStatus SocketImplNSPR::read_i (void* buffer,
                                           vpr::Uint32& bytes_read,
                                           const vpr::Interval timeout)
 {
+   if(m_handle == NULL)
+      return vpr::ReturnStatus::Fail;
+
    vpr::ReturnStatus retval;
    PRInt32 bytes;
 
@@ -354,10 +357,14 @@ vpr::ReturnStatus SocketImplNSPR::read_i (void* buffer,
 
    bytes = PR_Recv(m_handle, buffer, length, 0, NSPR_getInterval(timeout));
 
-   // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
-   if ( bytes == -1 )
+   if( bytes > 0)     // Successful read
+   {
+      bytes_read = bytes;
+   }
+   else if ( bytes == -1 )      // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
    {
       PRErrorCode err_code = PR_GetError();
+      NSPR_PrintError( "SocketImplNSPR::read_i::Error -->");
 
       bytes_read = 0;
 
@@ -369,14 +376,21 @@ vpr::ReturnStatus SocketImplNSPR::read_i (void* buffer,
       {
          retval.setCode(vpr::ReturnStatus::Timeout);
       }
+      else if ( err_code == PR_CONNECT_RESET_ERROR ||
+                err_code == PR_SOCKET_SHUTDOWN_ERROR ||
+                err_code == PR_CONNECT_ABORTED_ERROR )
+      {
+         retval.setCode(vpr::ReturnStatus::NotConnected);
+      }
       else
       {
          retval.setCode(vpr::ReturnStatus::Fail);
       }
    }
-   else
+   else if( bytes == 0)    // Indicates that the network connection is closed
    {
       bytes_read = bytes;
+      retval.setCode(vpr::ReturnStatus::NotConnected);    // Set status to indicate connection is closed
    }
 
    return retval;
@@ -389,6 +403,9 @@ vpr::ReturnStatus SocketImplNSPR::readn_i (void* buffer,
                                            vpr::Uint32& bytes_read,
                                            const vpr::Interval timeout)
 {
+   if(m_handle == NULL)
+      return vpr::ReturnStatus::Fail;
+
    vpr::ReturnStatus retval;
    PRInt32 bytes;
 
@@ -396,8 +413,12 @@ vpr::ReturnStatus SocketImplNSPR::readn_i (void* buffer,
 
    bytes = PR_Recv(m_handle, buffer, length, 0, NSPR_getInterval(timeout));
 
-   // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
-   if ( bytes == -1 )
+
+   if ( bytes > 0 )     // Successfull read
+   {
+      bytes_read = bytes;
+   }
+   else if ( bytes == -1 )   // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
    {
       PRErrorCode err_code = PR_GetError();
 
@@ -411,14 +432,21 @@ vpr::ReturnStatus SocketImplNSPR::readn_i (void* buffer,
       {
          retval.setCode(vpr::ReturnStatus::Timeout);
       }
+      else if ( err_code == PR_CONNECT_RESET_ERROR ||
+                err_code == PR_SOCKET_SHUTDOWN_ERROR ||
+                err_code == PR_CONNECT_ABORTED_ERROR )
+      {
+         retval.setCode(vpr::ReturnStatus::NotConnected);
+      }
       else
       {
          retval.setCode(vpr::ReturnStatus::Fail);
       }
    }
-   else
+   else if( bytes == 0)    // Indicates that the network connection is closed
    {
       bytes_read = bytes;
+      retval.setCode(vpr::ReturnStatus::NotConnected);    // Set status to indicate connection is closed
    }
 
    return retval;
@@ -431,6 +459,9 @@ vpr::ReturnStatus SocketImplNSPR::write_i (const void* buffer,
                                            vpr::Uint32& bytes_written,
                                            const vpr::Interval timeout)
 {
+   if(m_handle == NULL)
+      return vpr::ReturnStatus::Fail;
+
    vpr::ReturnStatus retval;
    PRInt32 bytes;
 
@@ -442,6 +473,8 @@ vpr::ReturnStatus SocketImplNSPR::write_i (const void* buffer,
    {
       PRErrorCode err_code = PR_GetError();
 
+      NSPR_PrintError("SocketImplNspr::write_i: Error --> ");
+
       bytes_written = 0;
 
       if ( err_code == PR_WOULD_BLOCK_ERROR )
@@ -451,6 +484,13 @@ vpr::ReturnStatus SocketImplNSPR::write_i (const void* buffer,
       else if ( err_code == PR_IO_TIMEOUT_ERROR )
       {
          retval.setCode(vpr::ReturnStatus::Timeout);
+      }
+      else if ( err_code == PR_NOT_CONNECTED_ERROR ||
+                err_code == PR_CONNECT_RESET_ERROR ||
+                err_code == PR_SOCKET_SHUTDOWN_ERROR ||
+                err_code == PR_CONNECT_ABORTED_ERROR )
+      {
+         retval.setCode(vpr::ReturnStatus::NotConnected);
       }
       else
       {

@@ -80,6 +80,10 @@ SocketDatagramImplNSPR::recvfrom (void* msg, const vpr::Uint32 length,
     bytes = PR_RecvFrom(m_handle, msg, length, flags, from.getPRNetAddr(),
                         NSPR_getInterval(timeout));
 
+    if ( bytes > 0)
+    {
+       bytes_read = bytes;
+    }
     if ( bytes == -1 ) {
         PRErrorCode err_code = PR_GetError();
 
@@ -96,8 +100,10 @@ SocketDatagramImplNSPR::recvfrom (void* msg, const vpr::Uint32 length,
             retval.setCode(ReturnStatus::Fail);
         }
     }
-    else {
-        bytes_read = bytes;
+    else if (bytes == 0)      // Not connected
+    {
+       retval.setCode(ReturnStatus::NotConnected);
+       bytes_read = bytes;
     }
 
     return retval;
@@ -127,6 +133,10 @@ SocketDatagramImplNSPR::sendto (const void* msg, const vpr::Uint32 length,
         }
         else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
             retval.setCode(ReturnStatus::Timeout);
+        }
+        else if ( err_code == PR_NOT_CONNECTED_ERROR )
+        {
+           retval.setCode(vpr::ReturnStatus::NotConnected);
         }
         else {
             NSPR_PrintError("SocketDatagramImplNSPR::sendto: Could not send message");
