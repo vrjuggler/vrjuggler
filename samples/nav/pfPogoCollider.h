@@ -74,7 +74,7 @@ protected:
 // correction: return value to correct feetDelta upon collision with polys.
 // returns true on collide
 // NOTE: not a robust collider, use in combination with a ray collider, or robust volume collider.
-bool pfPogoCollider::testMove( vjVec3 feetPosition, vjVec3 feetDelta, vjVec3& correction, bool feetPositionWithDelta )
+inline bool pfPogoCollider::testMove( vjVec3 feetPosition, vjVec3 feetDelta, vjVec3& correction, bool feetPositionWithDelta )
 {
    pfVec3 pf_feet_position    = vjGetPfVec(feetPosition);
    pfVec3 pf_feet_delta       = vjGetPfVec(feetDelta);

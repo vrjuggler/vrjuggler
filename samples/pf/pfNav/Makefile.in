@@ -82,7 +82,8 @@ COMMON_OBJECTS	= simplePfNavApp.@OBJ_FILE_SUFFIX@	\
                   pfTerryCollide.@OBJ_FILE_SUFFIX@	\
                   pfTerryPogoCollide.@OBJ_FILE_SUFFIX@	\
                   pfTerryBoxCollide.@OBJ_FILE_SUFFIX@	\
-                  pfMPStats.@OBJ_FILE_SUFFIX@
+                  pfMPStats.@OBJ_FILE_SUFFIX@		\
+                  pfNavDCS.@OBJ_FILE_SUFFIX@
 
 PFNAV_OBJECTS	= pfNav.@OBJ_FILE_SUFFIX@ $(COMMON_OBJECTS)
 

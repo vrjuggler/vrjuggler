@@ -36,13 +36,8 @@
 
 #include <Performer/pf/pfDCS.h>
 #include <Performer/pr/pfLinMath.h>
-
-#include <Kernel/vjKernel.h>
-#include <Math/vjCoord.h>
-#include <Kernel/vjDebug.h>
-#include <Kernel/Pf/vjPfUtil.h>
-
 #include <navigator.h>
+
 
 class pfNavDCS : public pfDCS
 {
@@ -101,77 +96,5 @@ private:
    static pfType* classType;
 };
 
-
-
-pfNavDCS::pfNavDCS() : pfDCS()
-{
-   setType(classType);  // Set the type
-   mActive = true;
-   mNaver = NULL;
-}
-
-
-// Get the current position from the navigator
-// and set the DCS with it
-void pfNavDCS::updateTransformMatrix()
-{
-   vjASSERT(mNaver != NULL);     // We mut have a naver
-
-   // Set the navigation DCS to the new navigation matrix
-   // cur_pos = modelspace_M_user
-   vjMatrix cur_pos_inv, cur_pos;
-   cur_pos = mNaver->getCurPos();
-   cur_pos_inv.invert(cur_pos);
-   pfMatrix model_move = vjGetPfMatrix( cur_pos_inv );
-   this->setMat( model_move );
-}
-
-// app() - APP traversal function.  This overloads the standard pfNode
-// app() method, which will be called each frame during the APP
-// traversal of the scene graph (*only if* needsApp() (below) returns
-// TRUE).
-// app() is called automatically by Performer; it is not called directly
-// by a program.
-int pfNavDCS::app(pfTraverser *trav)
-{
-   if(mNaver != NULL)
-   {
-      if(isActive())
-      {
-         // Get input and update the state baed upon that input
-         mNaver->updateInteraction();
-
-         // Update the state of the navigation
-         mNaver->update();
-
-         updateTransformMatrix();
-      }
-   }
-   else
-   {
-      vjDEBUG(vjDBG_ALL,0) << "pfNavDCS::app: No naver set\n" << vjDEBUG_FLUSH;
-   }
-
-   return pfDCS::app(trav);        /* Finish by calling the parent class's app() */
-}
-
-
-
-//---------------------------------------------------------------------//
-// Performer type data - this part is required for any class which
-// is derived from a Performer class.  It creates a new pfType
-// which identifies objects of this class.  All constructors for
-// this class must then call setType(classType_).
-pfType *pfNavDCS::classType = NULL;
-
-void pfNavDCS::init(void)
-{
- if (classType == NULL)
-   {
-        pfDCS::init();           // Initialize my parent
-        classType =  new pfType(pfDCS::getClassType(), "pfNavDCS");  // Create the new type
-   }
-}
-//----------------------------------------------------------------------//
 
 #endif

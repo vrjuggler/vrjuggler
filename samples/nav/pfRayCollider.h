@@ -86,7 +86,7 @@ protected:
 
 // general ray collision routine with a scene.
 // correctionVector - should be added to whereYouWantToBe after calling this function
-bool pfRayCollider::testRayCollision( pfVec3& intersectionPt, pfVec3& whereYouReallyAre, pfNode *objNode, int mask, pfVec3 whereYouAre, pfVec3 whereYouWantToBe )
+inline bool pfRayCollider::testRayCollision( pfVec3& intersectionPt, pfVec3& whereYouReallyAre, pfNode *objNode, int mask, pfVec3 whereYouAre, pfVec3 whereYouWantToBe )
 {
    pfHit **hit[1];
    pfSegSet segset;
@@ -143,7 +143,7 @@ bool pfRayCollider::testRayCollision( pfVec3& intersectionPt, pfVec3& whereYouRe
 }
 
 
-bool pfRayCollider::testMove(vjVec3 _whereYouAre, vjVec3 _delta, vjVec3& correction, bool whereYouAreWithDelta)
+inline bool pfRayCollider::testMove(vjVec3 _whereYouAre, vjVec3 _delta, vjVec3& correction, bool whereYouAreWithDelta)
 {
    pfVec3 whereYouAre = vjGetPfVec(_whereYouAre);
    pfVec3 delta = vjGetPfVec(_delta);

@@ -68,7 +68,7 @@ public:
 };
 
 
-bool pfBoxCollider::testMove( vjVec3 feetPosition, vjVec3 feetDelta, vjVec3& correction, bool whereYouAreWithDelta)
+inline bool pfBoxCollider::testMove( vjVec3 feetPosition, vjVec3 feetDelta, vjVec3& correction, bool whereYouAreWithDelta)
 {
    pfVec3 pf_feet_position = vjGetPfVec(feetPosition);
    pfVec3 pf_feet_delta = vjGetPfVec(feetDelta);

@@ -52,7 +52,7 @@ private:
 };
 
 
-bool planeCollider::testMove(vjVec3 curPos, vjVec3 delta, vjVec3& correction, bool curPosWithDelta)
+inline bool planeCollider::testMove(vjVec3 curPos, vjVec3 delta, vjVec3& correction, bool curPosWithDelta)
 {
    correction.set(0,0,0);
 
