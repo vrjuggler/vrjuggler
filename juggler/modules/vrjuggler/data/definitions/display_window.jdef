@@ -213,12 +213,12 @@
                   <xsl:copy-of select="./jconf:border"/>
                   <xsl:copy-of select="./jconf:hide_mouse"/>
                   <xsl:copy-of select="./jconf:active"/>
-                  <xsl:if test="count(./jconf:simulator_viewports) = 1">
-                     <xsl:copy-of select="./jconf:simulator_viewports"/>
-                  </xsl:if>
-                  <xsl:if test="count(./jconf:surface_viewports) = 1">
-                     <xsl:copy-of select="./jconf:surface_viewports"/>
-                  </xsl:if>
+                  <xsl:for-each select="./jconf:simulator_viewports">
+                     <xsl:copy-of select="."/>
+                  </xsl:for-each>
+                  <xsl:for-each select="./jconf:surface_viewports">
+                     <xsl:copy-of select="."/>
+                  </xsl:for-each>
                </xsl:element>
             </xsl:template>
          </xsl:stylesheet>
