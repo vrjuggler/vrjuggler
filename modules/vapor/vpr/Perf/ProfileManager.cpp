@@ -54,17 +54,6 @@ vpr::Mutex     ProfileManager::mTreeLock;
 vpr::Interval  ProfileManager::mResetTime;
 
 
-   void  ProfileManager::startProfile( const char * name )
-   {
-      mTreeLock.acquire();
-      if ( name != mCurrentNode->getName() )
-      {
-         mCurrentNode = mCurrentNode->getSubNode( name );
-      }
-      mTreeLock.release();
-
-      mCurrentNode->startSample();
-   }
 
    void  ProfileManager::startProfile( const char * profileName , const unsigned int queueSize)
    {
