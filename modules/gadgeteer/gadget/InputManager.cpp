@@ -264,7 +264,10 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
             // (somehow) an invalid path.
             try
             {
-               if (boost::filesystem::exists(driver_dir))
+               boost::filesystem::path drv_path(driver_dir,
+                                                boost::filesystem::native);
+
+               if (boost::filesystem::exists(drv_path))
                {
                   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                      << "Searching for driver DSOs in '" << driver_dir << "'\n"
