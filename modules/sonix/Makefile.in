@@ -40,7 +40,13 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 
-default: all
+default: debug
+
+# This is a hack to deal with GNU make's ignorance about defined targets.
+# Without this, the 'default' set in dpp.subdir.mk becomes the default
+# target, and that's not what we want.
+DEFAULT_SET	= 1
+SRC_MKFILES	= Makefile
 
 include @topdir@/make.defs.mk
 
