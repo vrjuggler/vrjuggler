@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-11-2004 patrickh    Sonix now depends on an installed version of GMTL.
 Dec-01-2003 patrickh    Removed the deletePlugin() function from the required
                         list of entry points a Sonix plug-in must implement.
                         Now, snx::ISoundImplementation defines a pure virtual
