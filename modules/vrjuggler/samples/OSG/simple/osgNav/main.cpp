@@ -36,6 +36,7 @@
 // main.cpp
 //----------------------------------------
 
+#include <cstdlib>
 #include <OsgNav.h>
 
       // --- Lib Stuff --- //
@@ -54,21 +55,23 @@ int main(int argc, char* argv[])
       // display some usage info (holding the user by the hand stuff)
       //  this will probably go away once the kernel becomes separate 
       //  and can load application plugins.
-      std::cout<<"\n"<<flush;
-	   std::cout<<"\n"<<flush;
+	   std::cout<<"\n"<<std::flush;
+	   std::cout<<"\n"<<std::flush;
 
-      std::cout<<"Usage: "<<argv[0]<<" modelname vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n"<<flush;
-      
-      std::cout<<"\n"<<flush;
-      std::cout<<"\n"<<flush;
-      exit(1);
+      std::cout << "Usage: " << argv[0]
+                << " modelname vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n"
+                << std::endl << std::endl;
+
+      std::exit(1);
    }
    
    application->setModelFileName(std::string(argv[1]));
    
    // Load any config files specified on the command line
    for(int i=2;i<argc;i++)
+   {
       kernel->loadConfigFile(argv[i]);
+   }
 
    kernel->start();
 
@@ -76,7 +79,7 @@ int main(int argc, char* argv[])
    for(int i=0;i<20;i++)
    {
       usleep(50000);
-      cout << i << "." << flush;
+      std::cout << i << "." << std::flush;
    }
    */
 

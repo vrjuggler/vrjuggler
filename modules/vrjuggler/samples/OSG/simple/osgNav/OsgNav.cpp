@@ -50,13 +50,14 @@ void OsgNav::preFrame()
 
 //vprDEBUG(vprDBG_ALL,0) << "------- preFrame ------\n" << vprDEBUG_FLUSH;
 /*
-cout  << "Wand Buttons:"
-                      << " 0:" << mButton0->getData()
-                      << " 1:" << mButton1->getData()
-                      << " 2:" << mButton2->getData()
-                      << " 3:" << mButton3->getData()
-                      << " 4:" << mButton4->getData()
-                      << " 5:" << mButton5->getData() << endl;
+   std::cout << "Wand Buttons:"
+             << " 0:" << mButton0->getData()
+             << " 1:" << mButton1->getData()
+             << " 2:" << mButton2->getData()
+             << " 3:" << mButton3->getData()
+             << " 4:" << mButton4->getData()
+             << " 5:" << mButton5->getData()
+             << std::endl;
 */
 
     float inc = 0.005f;
@@ -64,7 +65,7 @@ cout  << "Wand Buttons:"
     // MOVE the model around
 
    //If the model has moved +/- 10 move back
-    //cout << posCount << endl;
+    //std::cout << posCount << std::endl;
     if((mPos[0] > 10.0f) || (mPos[0] < -10.0f))
    {
       posInc *= -1.0f;
@@ -90,7 +91,7 @@ cout  << "Wand Buttons:"
     {
       //Move in the direction of the wand
         speed = speed + inc;
-      cout << "speed: " << speed << std::endl;
+      std::cout << "speed: " << speed << std::endl;
     }
     if(mButton1->getData() == gadget::Digital::ON)
     {
@@ -101,7 +102,7 @@ cout  << "Wand Buttons:"
     {
         //joint->preRotate(-5.0f, 0.0f, 0.0f, 1.0f);
         speed = speed - inc;
-      cout << "speed: " << speed << std::endl;
+      std::cout << "speed: " << speed << std::endl;
     }
 
 

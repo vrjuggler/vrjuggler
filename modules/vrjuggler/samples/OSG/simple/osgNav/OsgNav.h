@@ -65,14 +65,10 @@
 
 #include <vrj/Draw/OSG/OsgApp.h>
 
-using namespace std;
 
-
-//----------------------------------------------------
-//: Demonstration OpenGL application class
-//
-// This application simply renders a box on the wand
-//----------------------------------------------------
+/**
+ * Demonstration Open Scene Graph application class
+ */
 class OsgNav : public vrj::OsgApp
 {
 public:
