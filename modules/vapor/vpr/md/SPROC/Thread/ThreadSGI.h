@@ -73,7 +73,7 @@ public:
 
    /** Non-spawning constructor.  This will not start a new thread. */
    ThreadSGI(BaseThread::VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
-             BaseThread::VPRThreadScope scope = VPR_LOCAL_THREAD,
+             BaseThread::VPRThreadScope scope = VPR_GLOBAL_THREAD,
              BaseThread::VPRThreadState state = VPR_JOINABLE_THREAD,
              size_t stackSize = 0);
 
@@ -84,7 +84,7 @@ public:
     */
    ThreadSGI(thread_func_t func, void* arg = 0,
              BaseThread::VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
-             BaseThread::VPRThreadScope scope = VPR_LOCAL_THREAD,
+             BaseThread::VPRThreadScope scope = VPR_GLOBAL_THREAD,
              BaseThread::VPRThreadState state = VPR_JOINABLE_THREAD,
              size_t stackSize = 0);
 
@@ -95,7 +95,7 @@ public:
     */
    ThreadSGI(BaseThreadFunctor* functorPtr,
              BaseThread::VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
-             BaseThread::VPRThreadScope scope = VPR_LOCAL_THREAD,
+             BaseThread::VPRThreadScope scope = VPR_GLOBAL_THREAD,
              BaseThread::VPRThreadState state = VPR_JOINABLE_THREAD,
              size_t stackSize = 0);
 
