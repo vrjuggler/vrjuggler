@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Aug-20-2002 nonchocoboy Filled in the search tab of the ChunkDescChooser. This
+                        completes the requirements for the ChunkDescChooser
+                        dialog window.
 Aug-20-2002 nonchocoboy The ConfigBroker will now popup a dialog asking the
                         user to choose a destination resource when adding a new
                         ConfigChunk or ChunkDesc if there is more than one
