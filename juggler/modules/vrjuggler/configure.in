@@ -315,7 +315,7 @@ fi
 VJ_COMPILER_SETUP
 
 # Now check to see if the compiler accepts the -pthread option.
-if test "x$SUBSYSTEM" != "xSPROC" -a "x$SUBSYSTEM" != "WIN32" -a \
+if test "x$SUBSYSTEM" != "xSPROC" -a "x$SUBSYSTEM" != "xWIN32" -a \
         "x$NSPR_THREADS_ENABLED" != "xyes"
 then
     DPP_CC_PTHREAD_ARG
