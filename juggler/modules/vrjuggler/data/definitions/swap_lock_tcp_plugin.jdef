@@ -9,7 +9,7 @@
       <property valuetype="configelementpointer" variable="false" name="sync_server">
          <help>Cluster Node that is responsible for syncronizing all other nodes.</help>
          <value label="Sync Server Machine" defaultvalue=""/>
-         <allowed_type>machine_specific</allowed_type>
+         <allowed_type>cluster_node</allowed_type>
       </property>
       <property valuetype="integer" variable="false" name="listen_port">
          <help>Port on which the Remote Input Manager listens for incoming cluster connections.</help>

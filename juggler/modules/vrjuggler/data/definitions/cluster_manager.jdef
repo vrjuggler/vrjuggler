@@ -13,12 +13,12 @@
       <property valuetype="configelementpointer" variable="true" name="cluster_nodes">
          <help>The list of all active nodes in the cluster.</help>
          <value label="Machine"/>
-         <allowed_type>machine_specific</allowed_type>
+         <allowed_type>cluster_node</allowed_type>
       </property>
       <property valuetype="configelementpointer" variable="false" name="barrier_master">
          <help>The node in the cluster that is responsible for synchronizing all other nodes.</help>
          <value label="Barrier Master"/>
-         <allowed_type>machine_specific</allowed_type>
+         <allowed_type>cluster_node</allowed_type>
       </property>
       <upgrade_transform/>
    </definition_version>
@@ -45,7 +45,7 @@
       <property valuetype="configelementpointer" variable="true" name="cluster_node">
          <help>The list of all active nodes in the cluster.</help>
          <value label="Machine"/>
-         <allowed_type>machine_specific</allowed_type>
+         <allowed_type>cluster_node</allowed_type>
       </property>
       <upgrade_transform>
          <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">

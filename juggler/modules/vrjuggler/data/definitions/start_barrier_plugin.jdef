@@ -9,7 +9,7 @@
       <property valuetype="configelementpointer" variable="false" name="start_master">
          <help>Cluster Node that is responsible for starting the cluster at the right time.</help>
          <value label="Start Master Machine"/>
-         <allowed_type>machine_specific</allowed_type>
+         <allowed_type>cluster_node</allowed_type>
       </property>
       <upgrade_transform/>
    </definition_version>

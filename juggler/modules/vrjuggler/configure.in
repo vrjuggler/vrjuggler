@@ -187,7 +187,7 @@ VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
 vrj_min_jccl_ver='0.24.0'
 JCCL_PATH_CXX([$vrj_min_jccl_ver], ,
               [AC_MSG_ERROR(*** JCCL C++ API required for VR Juggler ***)])
-GADGETEER_PATH([0.20.0], ,
+GADGETEER_PATH([0.21.0], ,
                [AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***)])
 SNX_PATH([0.5.0], [vrj_sonix_config='sonix-config'],
          [AC_MSG_ERROR(*** Sonix required for VR Juggler ***)])

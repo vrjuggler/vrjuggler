@@ -299,7 +299,6 @@
       </xsl:element>
    </xsl:template>
 
-<!--
    <xsl:template match="jconf:machine_specific">
       <xsl:element name="cluster_node">
          <xsl:attribute name="name">
@@ -315,7 +314,6 @@
          <xsl:copy-of select="./jconf:host_name" />
       </xsl:element>
    </xsl:template>
--->
 
    <xsl:template match="jconf:sound_manager">
       <xsl:element name="sound_manager_sonix">
