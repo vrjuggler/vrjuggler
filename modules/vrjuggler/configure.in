@@ -1065,6 +1065,11 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
 
         APP_EXTRA_LIBS_END="-lm"
+
+        dnl # FreeBSD apparently needs to use libcompat for linking now.
+        if test "x$PLATFORM" = "xFreeBSD" ; then
+            APP_EXTRA_LIBS_END="$APP_EXTRA_LIBS_END -lcompat"
+        fi
     fi
 
     APP_VJ_LIBS_GL="-lJuggler_ogl"
