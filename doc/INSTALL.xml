@@ -100,7 +100,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
                </listitem>
                <listitem>
                   <para>Configure all the Juggler modules. This is when you must tell the module configure scripts where all the package dependencies are found.</para>
-                  <screen>../configure.pl --cfg=../juggler.cfg --prefix=$HOME/vrjuggler-2.0 --with-xercesroot=/home/users/allenb/Linux/xerces-c-src1_5_1 --with-xerceslib=xerces-c1_5_1</screen>
+                  <screen>../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-xercesroot=/home/users/allenb/Linux/xerces-c-src1_5_1 --with-xerceslib=xerces-c1_5_1</screen>
                   <para>In this case, the interesting configuration options are the path to the Xerces-C installation directory and the basic name of the Xerces-C library. The basic library name comes from the actual library name. For example, on UNIX-based systems, the Xerces-C 1.5.1 library is called <filename>libxerces-c1_5_1.so</filename>; on Win32, it is <filename>xerces-c_1.lib</filename>. The configure script only needs the <emphasis>unique</emphasis> part of the name: <filename>xerces-c1_5_1</filename> or <filename>xerces-c_1</filename>.</para>
                </listitem>
                <listitem>
@@ -122,7 +122,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
 cd build.vpr</screen></para>
                   </listitem>
                   <listitem>
-                     <para><screen>../configure.pl --cfg=../juggler.cfg --module=VPR --prefix=$HOME/vpr-inst</screen></para>
+                     <para><screen>../configure.pl --module=VPR --prefix=$HOME/vpr-inst</screen></para>
                   </listitem>
                   <listitem>
                      <para><screen>gmake debug install</screen></para>
@@ -143,8 +143,8 @@ cd build.sonix</screen></para>
                   </listitem>
                   <listitem>
                      <para>Choose one of the following depending on which subsystem (or both) you want to enable in sonix...</para>
-                     <para><screen>../configure.pl --cfg=../juggler.cfg --module=Sonix --prefix=$HOME/sonix-inst --enable-openal --with-oalroot=/usr/local
-../configure.pl --cfg=../juggler.cfg --module=Sonix --prefix=$HOME/sonix-inst --enable-audioworks</screen></para>
+                     <para><screen>../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-openal --with-oalroot=/usr/local
+../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-audioworks</screen></para>
                   </listitem>
                   <listitem>
                      <para><screen>gmake debug install</screen></para>
@@ -163,7 +163,7 @@ cd build.sonix</screen></para>
 cd build.jccl</screen></para>
                   </listitem>
                   <listitem>
-                     <para><screen>../configure.pl --cfg=../juggler.cfg --module=JCCL --prefix=$HOME/jccl-inst --with-xercesroot=&lt;Xerces C++ dir&gt;</screen></para>
+                     <para><screen>../configure.pl --module=JCCL --prefix=$HOME/jccl-inst --with-xercesroot=&lt;Xerces C++ dir&gt;</screen></para>
                   </listitem>
                   <listitem>
                      <para><screen>gmake debug install</screen></para>
@@ -183,7 +183,7 @@ cd build.jccl</screen></para>
 cd build.gadgeteer</screen></para>
                   </listitem>
                   <listitem>
-                     <para><screen>../configure.pl --cfg=../juggler.cfg --module=Gadgeteer --prefix=$HOME/gadgeteer-inst</screen></para>
+                     <para><screen>../configure.pl --module=Gadgeteer --prefix=$HOME/gadgeteer-inst</screen></para>
                   </listitem>
                   <listitem>
                      <para><screen>gmake debug install</screen></para>
@@ -215,7 +215,7 @@ cd build.gadgeteer</screen></para>
 cd build.tweek</screen></para>
                   </listitem>
                   <listitem>
-                     <para><screen>../configure.pl --cfg=../juggler.cfg --module=Tweek --prefix=$HOME/tweek-inst --with-jdom=&lt;JDOMPATH&gt;/jdom.jar:&lt;JDOMPATH&gt;/xerces.jar --with-cxx-orb=omniORB3 --with-cxx-orb-root=&lt;OMNIORBPATH&gt; --with-java-orb=OpenORB --with-java-orb-jar=&lt;OPENORBPATH&gt;/lib/openorb-1.2.0.jar</screen></para>
+                     <para><screen>../configure.pl --module=Tweek --prefix=$HOME/tweek-inst --with-jdom=&lt;JDOMPATH&gt;/jdom.jar:&lt;JDOMPATH&gt;/xerces.jar --with-cxx-orb=omniORB3 --with-cxx-orb-root=&lt;OMNIORBPATH&gt; --with-java-orb=OpenORB --with-java-orb-jar=&lt;OPENORBPATH&gt;/lib/openorb-1.2.0.jar</screen></para>
                   </listitem>
                   <listitem>
                      <para><screen>gmake debug install</screen></para>
