@@ -38,7 +38,7 @@ VPATH		= @srcdir@:@srcdir@/../nav:@srcdir@/../pfTools
 # use -L/usr/lib64.
 EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_PF@ @TEST_EXTRA_LIBS_GL@
 
-OBJECTS		= fileIO.@OBJ_FILE_SUFFIX@		\
+PFNAV_OBJECTS		= fileIO.@OBJ_FILE_SUFFIX@		\
                   pfFileIO.@OBJ_FILE_SUFFIX@		\
                   pfNav.@OBJ_FILE_SUFFIX@		\
                   pfTerryCollide.@OBJ_FILE_SUFFIX@	\
@@ -46,15 +46,26 @@ OBJECTS		= fileIO.@OBJ_FILE_SUFFIX@		\
                   pfTerryBoxCollide.@OBJ_FILE_SUFFIX@	\
                   pfMPStats.@OBJ_FILE_SUFFIX@
 
+PF_BASIC_CONFIG_NAV_OBJECTS	= fileIO.@OBJ_FILE_SUFFIX@		\
+                  		pfFileIO.@OBJ_FILE_SUFFIX@		\
+                  		pfBasicConfigNav.@OBJ_FILE_SUFFIX@			\
+                  		pfTerryCollide.@OBJ_FILE_SUFFIX@	\
+                  		pfTerryPogoCollide.@OBJ_FILE_SUFFIX@	\
+                  		pfTerryBoxCollide.@OBJ_FILE_SUFFIX@	\
+                  		pfMPStats.@OBJ_FILE_SUFFIX@
+
 # -----------------------------------------------------------------------------
 # Targets.
 # -----------------------------------------------------------------------------
 default: all
 
-all: pfNav
+all: pfNav pfBasicConfigNav
 
-pfNav: $(OBJECTS)
-	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
+pfNav: $(PFNAV_OBJECTS)
+	$(LINK) -o $@ $(PFNAV_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
+
+pfBasicConfigNav: $(PF_BASIC_CONFIG_NAV_OBJECTS)
+	$(LINK) -o $@ $(PF_BASIC_CONFIG_NAV_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 .cpp.@OBJ_FILE_SUFFIX@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
@@ -63,6 +74,8 @@ pfNav: $(OBJECTS)
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend pfNav pfNav.exe pfNav.ilk $(OBJECTS) *core	\
-          so_locations *.?db
+	rm -f Makedepend pfNav pfBasicConfigNav pfNav.exe pfNav.ilk \
+	$(PFNAV_OBJECTS) $(PF_BASIC_CONFIG_NAV_OBJECTS) \
+	*core	\
+	so_locations *.?db
 	rm -rf ./ii_files
