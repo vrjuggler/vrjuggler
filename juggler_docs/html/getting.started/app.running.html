@@ -181,6 +181,24 @@
     % <B>torus sim.base.config sim.displays.config sim.wand.mixin.config</B>
 </PRE>
 
+    You will notice that no paths are specified for finding the three
+    configuration files.  This is intentional to shorten the command line
+    given in the example.  In general, you always have to give the full
+    path to the files.  VR Juggler does not have any logic (at this time)
+    for defining a path that would contain configuration files.
+    Beginning users will typically want to reference the example
+    configuration files in <TT>$VJ_BASE_DIR/Data/configFiles</TT>.  As
+    you get more comfortable with VR Juggler and its configuration
+    system, you may want to make your own modified files and put them in
+    the directory <TT>$HOME/.vjconfig</TT>.  To simplify running
+    applications, you may want to make a shell script (or batch file as
+    appropriate) that does all the work of passing configuration files
+    and common command-line arguments.  For now, though, use the path
+    <TT>$VJ_BASE_DIR/Data/configFiles</TT> for each of the configuration
+    files you pass on the command line.
+  </P>
+
+  <P>
     As the application starts, you will see a plethora of output (more or
     less depending on how you have <TT>$VJ_DEBUG_NFY_LEVEL</TT> and
     <TT>$VJ_DEBUG_CATAGORIES</TT> set), and then one moderately sized
