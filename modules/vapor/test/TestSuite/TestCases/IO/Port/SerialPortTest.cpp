@@ -44,7 +44,9 @@ void SerialPortTest::setUp ()
       mBaudRates.push_back(300);
       mBaudRates.push_back(600);
       mBaudRates.push_back(1200);
+#ifndef VPR_OS_IRIX
       mBaudRates.push_back(1800);
+#endif
       mBaudRates.push_back(2400);
       mBaudRates.push_back(4800);
       mBaudRates.push_back(9600);
@@ -53,15 +55,17 @@ void SerialPortTest::setUp ()
       mBaudRates.push_back(57600);
 #ifndef VPR_OS_Linux
       mBaudRates.push_back(76800);
-#endif
+#endif /* VPR_OS_Linux */
       mBaudRates.push_back(115200);
+#ifndef VPR_OS_IRIX
 #ifndef VPR_OS_Linux
       mBaudRates.push_back(230400);
-#endif
+#endif /* VPR_OS_Linux */
 #ifdef VPR_OS_FreeBSD
       mBaudRates.push_back(460800);
       mBaudRates.push_back(912600);
-#endif
+#endif /* VPR_OS_FreeBSD */
+#endif /* VPR_OS_IRIX */
    }
 }
 
@@ -701,7 +705,9 @@ CppUnit::Test* SerialPortTest::suite ()
    test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeParityGeneration", &SerialPortTest::testChangeParityGeneration));
    test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeParityErrorMarking", &SerialPortTest::testChangeParityErrorMarking));
    test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeParity", &SerialPortTest::testChangeParity));
+#ifndef VPR_OS_IRIX
    test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeInputBaudRate", &SerialPortTest::testChangeInputBaudRate));
+#endif
    test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeOutputBaudRate", &SerialPortTest::testChangeOutputBaudRate));
    test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeHardwareFlowControl", &SerialPortTest::testChangeHardwareFlowControl));
    test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeSoftwareFlowControl", &SerialPortTest::testChangeSoftwareFlowControl));
