@@ -29,7 +29,7 @@ class wandApp : public vjGlApp
 {
 public:
    wandApp(vjKernel* kern)
-      : vjGlApp(kern)            // Initialize base class
+      : vjGlApp(kern), clearColor(0.0f)            // Initialize base class
    {;}
 
    // Execute any initialization needed before the API is started
@@ -80,7 +80,16 @@ public:
    /// Function called after tracker update but before start of drawing
    virtual void preDraw()
    {
-       //cout << "cubesApp::preDraw()\n";
+      //cout << "cubesApp::preDraw()\n";
+      static float direction = 1;
+      const float incr(0.0025);
+
+      clearColor += (direction*incr);
+
+      if(clearColor == 1.0f)
+         direction = -1.0f;
+      if(clearColor == 0.0f)
+         direction = 1.0f;
    }
 
    /// Function called after drawing has been triggered but BEFORE it completes
@@ -102,7 +111,8 @@ private:
       //     << "WandPos:" << vjCoord(*mWand->GetData()).pos << endl;
 	
 
-      glClearColor(0.0, 0.0, 0.0, 0.0);
+      //glClearColor(0.0f, clearColor, 0.0f, 1.0);
+      glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       glMatrixMode(GL_MODELVIEW);
 
@@ -111,6 +121,12 @@ private:
       wandMatrix = mWand->GetData();
 
       glPushMatrix();
+
+      /*** Rotation for tracker coord system testing
+      * glRotatef(-180.0f, 0.0,0.0,1.0);
+      * glRotatef(-90,1.0,0.0,0.0);
+      ****/
+      glPushMatrix();
          // cout << "wand:\n" << *wandMatrix << endl;
          glMultMatrixf(wandMatrix->getFloatPtr());
          glColor3f(1.0f, 0.0f, 1.0f);
@@ -118,12 +134,27 @@ private:
          drawCube();
 
             // A little laser pointer
-         glLineWidth(2.0f);
+         glLineWidth(5.0f);
+
+         /*
          glBegin(GL_LINES);
             glColor3f(1.0f, 0.0f, 0.0f);
             glVertex3f(0.0f, 0.0f, 0.0f);
             glVertex3f(0.0f, 0.0f, -10.0f);
          glEnd();
+         */
+
+         // Draw Axis
+         glDisable(GL_LIGHTING);
+         glPushMatrix();
+            vjVec3 x_axis(7.0f,0.0f,0.0f); vjVec3 y_axis(0.0f, 7.0f, 0.0f); vjVec3 z_axis(0.0f, 0.0f, 7.0f); vjVec3 origin(0.0f, 0.0f, 0.0f);
+            glBegin(GL_LINES);
+               glColor3f(1.0f, 0.0f, 0.0f); glVertex3fv(origin.vec); glVertex3fv(x_axis.vec);
+               glColor3f(0.0f, 1.0f, 0.0f); glVertex3fv(origin.vec); glVertex3fv(y_axis.vec);
+               glColor3f(0.0f, 0.0f, 1.0f); glVertex3fv(origin.vec); glVertex3fv(z_axis.vec);
+            glEnd();
+         glPopMatrix();
+         glEnable(GL_LIGHTING);
       glPopMatrix();
 
    }
@@ -169,6 +200,7 @@ private:
 public:
    vjPosInterface    mWand;      // the Wand
    vjPosInterface    mHead;      // the head
+   float             clearColor;
 };
 
 

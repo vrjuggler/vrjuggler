@@ -216,8 +216,10 @@ public:
       vjDEBUG(0) << "Creating DL:" << mDlData->cubeDLIndex << endl << vjDEBUG_FLUSH;
 
       glNewList(mDlData->cubeDLIndex, GL_COMPILE);
-         drawbox(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5, GL_QUADS);
+         drawbox(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, GL_QUADS);
       glEndList();
+
+      initGLState();
    }
 
    /** Function to draw the scene
@@ -226,7 +228,7 @@ public:
     */
    virtual void draw()
    {
-      initGLState();    // This should really be in another function
+      //initGLState();    // This should really be in another function
 
       myDraw(vjGlDrawManager::instance()->currentUserData()->getUser());
    }
@@ -303,8 +305,7 @@ private:
                   glColor3f(x, y, z);     // Set the Color
                   glPushMatrix();
                      glTranslatef( (x-0.5)*SCALE, (y-0.5)*SCALE, (z-0.5)*SCALE);
-                     glScalef(1.5f, 1.5f, 1.5f);
-   		            drawCube();
+                     drawCube();
                   glPopMatrix();
                }
 
@@ -360,7 +361,7 @@ private:
       glMaterialfv( GL_FRONT,  GL_EMISSION, no_mat);
 
       glEnable(GL_DEPTH_TEST);
-      glEnable(GL_NORMALIZE);
+      //glEnable(GL_NORMALIZE);
       glEnable(GL_LIGHTING);
       glEnable(GL_LIGHT0);
       glEnable(GL_COLOR_MATERIAL);
