@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.78 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -39,11 +39,16 @@ namespace vpr
 
 public abstract class ObjectWriter
 {
-   protected internal IntPtr mRawObject = IntPtr.Zero;
+   protected IntPtr mRawObject = IntPtr.Zero;
    protected bool mWeOwnMemory = false;
    protected class NoInitTag {}
 
-   internal IntPtr RawObject
+   /// <summary>
+   /// This is needed for the custom marshaler to be able to perform a
+   /// reflective lookup.  The custom marshaler also uses this method to get
+   /// access to the value of mRawObject when necessary.
+   /// </summary>
+   public IntPtr RawObject
    {
       get { return mRawObject; }
    }
@@ -113,7 +118,7 @@ public abstract class ObjectWriter
    // Delegate for the beginTag() callback.
    protected IntPtr beginTagAdapter(string p0)
    {
-      return beginTag(p0).mRawObject;
+      return beginTag(p0).RawObject;
    }
 
    public delegate IntPtr beginTagDelegate_std_string(string p0);
@@ -125,7 +130,7 @@ public abstract class ObjectWriter
    // Delegate for the endTag() callback.
    protected IntPtr endTagAdapter()
    {
-      return endTag().mRawObject;
+      return endTag().RawObject;
    }
 
    public delegate IntPtr endTagDelegate();
@@ -137,7 +142,7 @@ public abstract class ObjectWriter
    // Delegate for the beginAttribute() callback.
    protected IntPtr beginAttributeAdapter(string p0)
    {
-      return beginAttribute(p0).mRawObject;
+      return beginAttribute(p0).RawObject;
    }
 
    public delegate IntPtr beginAttributeDelegate_std_string(string p0);
@@ -149,7 +154,7 @@ public abstract class ObjectWriter
    // Delegate for the endAttribute() callback.
    protected IntPtr endAttributeAdapter()
    {
-      return endAttribute().mRawObject;
+      return endAttribute().RawObject;
    }
 
    public delegate IntPtr endAttributeDelegate();
@@ -161,7 +166,7 @@ public abstract class ObjectWriter
    // Delegate for the writeUint8() callback.
    protected IntPtr writeUint8Adapter(byte p0)
    {
-      return writeUint8(p0).mRawObject;
+      return writeUint8(p0).RawObject;
    }
 
    public delegate IntPtr writeUint8Delegate_vpr_Uint8(byte p0);
@@ -173,7 +178,7 @@ public abstract class ObjectWriter
    // Delegate for the writeUint16() callback.
    protected IntPtr writeUint16Adapter(ushort p0)
    {
-      return writeUint16(p0).mRawObject;
+      return writeUint16(p0).RawObject;
    }
 
    public delegate IntPtr writeUint16Delegate_vpr_Uint16(ushort p0);
@@ -185,7 +190,7 @@ public abstract class ObjectWriter
    // Delegate for the writeUint32() callback.
    protected IntPtr writeUint32Adapter(uint p0)
    {
-      return writeUint32(p0).mRawObject;
+      return writeUint32(p0).RawObject;
    }
 
    public delegate IntPtr writeUint32Delegate_vpr_Uint32(uint p0);
@@ -197,7 +202,7 @@ public abstract class ObjectWriter
    // Delegate for the writeUint64() callback.
    protected IntPtr writeUint64Adapter(ulong p0)
    {
-      return writeUint64(p0).mRawObject;
+      return writeUint64(p0).RawObject;
    }
 
    public delegate IntPtr writeUint64Delegate_vpr_Uint64(ulong p0);
@@ -209,7 +214,7 @@ public abstract class ObjectWriter
    // Delegate for the writeFloat() callback.
    protected IntPtr writeFloatAdapter(float p0)
    {
-      return writeFloat(p0).mRawObject;
+      return writeFloat(p0).RawObject;
    }
 
    public delegate IntPtr writeFloatDelegate_float(float p0);
@@ -221,7 +226,7 @@ public abstract class ObjectWriter
    // Delegate for the writeDouble() callback.
    protected IntPtr writeDoubleAdapter(double p0)
    {
-      return writeDouble(p0).mRawObject;
+      return writeDouble(p0).RawObject;
    }
 
    public delegate IntPtr writeDoubleDelegate_double(double p0);
@@ -233,7 +238,7 @@ public abstract class ObjectWriter
    // Delegate for the writeString() callback.
    protected IntPtr writeStringAdapter(string p0)
    {
-      return writeString(p0).mRawObject;
+      return writeString(p0).RawObject;
    }
 
    public delegate IntPtr writeStringDelegate_std_string(string p0);
@@ -245,7 +250,7 @@ public abstract class ObjectWriter
    // Delegate for the writeBool() callback.
    protected IntPtr writeBoolAdapter(bool p0)
    {
-      return writeBool(p0).mRawObject;
+      return writeBool(p0).RawObject;
    }
 
    public delegate IntPtr writeBoolDelegate_bool(bool p0);
@@ -448,7 +453,7 @@ public class ObjectWriterMarshaler : ICustomMarshaler
    // Marshaling for managed data being passed to C++.
    public IntPtr MarshalManagedToNative(Object obj)
    {
-      return ((vpr.ObjectWriter) obj).mRawObject;
+      return ((vpr.ObjectWriter) obj).RawObject;
    }
 
    // Marshaling for native memory coming from C++.

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.78 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -181,7 +181,7 @@ public class TypedProxy_gadget__PositionMarshaler : ICustomMarshaler
    // Marshaling for managed data being passed to C++.
    public IntPtr MarshalManagedToNative(Object obj)
    {
-      return ((gadget.TypedProxy_gadget__Position) obj).mRawObject;
+      return ((gadget.TypedProxy_gadget__Position) obj).RawObject;
    }
 
    // Marshaling for native memory coming from C++.

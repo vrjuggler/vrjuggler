@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.78 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -39,11 +39,16 @@ namespace gmtl
 
 public class Rayd
 {
-   protected internal IntPtr mRawObject = IntPtr.Zero;
+   protected IntPtr mRawObject = IntPtr.Zero;
    protected bool mWeOwnMemory = false;
    protected class NoInitTag {}
 
-   internal IntPtr RawObject
+   /// <summary>
+   /// This is needed for the custom marshaler to be able to perform a
+   /// reflective lookup.  The custom marshaler also uses this method to get
+   /// access to the value of mRawObject when necessary.
+   /// </summary>
+   public IntPtr RawObject
    {
       get { return mRawObject; }
    }
@@ -180,7 +185,7 @@ public class RaydMarshaler : ICustomMarshaler
    // Marshaling for managed data being passed to C++.
    public IntPtr MarshalManagedToNative(Object obj)
    {
-      return ((gmtl.Rayd) obj).mRawObject;
+      return ((gmtl.Rayd) obj).RawObject;
    }
 
    // Marshaling for native memory coming from C++.

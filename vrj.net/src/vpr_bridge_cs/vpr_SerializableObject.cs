@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.78 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -51,7 +51,7 @@ public class SerializableObjectMarshaler : ICustomMarshaler
 {
    private class DummySerializableObject : vpr.SerializableObject
    {
-      protected internal IntPtr mRawObject = IntPtr.Zero;
+      private IntPtr mRawObject = IntPtr.Zero;
 
       internal IntPtr RawObject
       {
@@ -111,7 +111,7 @@ public class SerializableObjectMarshaler : ICustomMarshaler
       // and use the slow technique instead.
       try
       {
-         return ((DummySerializableObject) obj).mRawObject;
+         return ((DummySerializableObject) obj).RawObject;
       }
       catch(System.InvalidCastException ex)
       {

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.78 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -326,7 +326,7 @@ public abstract class App
    // Delegate for the getDrawManager() callback.
    protected IntPtr getDrawManagerAdapter()
    {
-      return getDrawManager().mRawObject;
+      return getDrawManager().RawObject;
    }
 
    public delegate IntPtr getDrawManagerDelegate();
@@ -338,7 +338,7 @@ public abstract class App
    // Delegate for the getSoundManager() callback.
    protected IntPtr getSoundManagerAdapter()
    {
-      return getSoundManager().mRawObject;
+      return getSoundManager().RawObject;
    }
 
    public delegate IntPtr getSoundManagerDelegate();
@@ -409,7 +409,7 @@ public class AppMarshaler : ICustomMarshaler
    // Marshaling for managed data being passed to C++.
    public IntPtr MarshalManagedToNative(Object obj)
    {
-      return ((vrj.App) obj).mRawObject;
+      return ((vrj.App) obj).RawObject;
    }
 
    // Marshaling for native memory coming from C++.

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.77 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.78 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -40,11 +40,16 @@ namespace vpr
 public sealed class GUID
    : vpr.SerializableObject
 {
-   protected internal IntPtr mRawObject = IntPtr.Zero;
+   protected IntPtr mRawObject = IntPtr.Zero;
    protected bool mWeOwnMemory = false;
    protected class NoInitTag {}
 
-   internal IntPtr RawObject
+   /// <summary>
+   /// This is needed for the custom marshaler to be able to perform a
+   /// reflective lookup.  The custom marshaler also uses this method to get
+   /// access to the value of mRawObject when necessary.
+   /// </summary>
+   public IntPtr RawObject
    {
       get { return mRawObject; }
    }
@@ -272,7 +277,7 @@ public sealed class GUID
    public static vpr.GUID.GenerateTag generateTag
    {
       get { return new vpr.GUID.GenerateTag(vpr_GUID_generateTag_get(), false); }
-      set { vpr_GUID_generateTag_set(value.mRawObject); }
+      set { vpr_GUID_generateTag_set(value.RawObject); }
    }
 
    // Getter function for vpr.GUID.NullGUID
@@ -292,11 +297,16 @@ public sealed class GUID
    // Nested class vpr.GUID.GenerateTag.
 public class GenerateTag
 {
-   protected internal IntPtr mRawObject = IntPtr.Zero;
+   protected IntPtr mRawObject = IntPtr.Zero;
    protected bool mWeOwnMemory = false;
    protected class NoInitTag {}
 
-   internal IntPtr RawObject
+   /// <summary>
+   /// This is needed for the custom marshaler to be able to perform a
+   /// reflective lookup.  The custom marshaler also uses this method to get
+   /// access to the value of mRawObject when necessary.
+   /// </summary>
+   public IntPtr RawObject
    {
       get { return mRawObject; }
    }
@@ -375,7 +385,7 @@ public class GenerateTagMarshaler : ICustomMarshaler
    // Marshaling for managed data being passed to C++.
    public IntPtr MarshalManagedToNative(Object obj)
    {
-      return ((vpr.GUID.GenerateTag) obj).mRawObject;
+      return ((vpr.GUID.GenerateTag) obj).RawObject;
    }
 
    // Marshaling for native memory coming from C++.
@@ -396,11 +406,16 @@ public class GenerateTagMarshaler : ICustomMarshaler
    // Nested class vpr.GUID.StdGUID.
 public class StdGUID
 {
-   protected internal IntPtr mRawObject = IntPtr.Zero;
+   protected IntPtr mRawObject = IntPtr.Zero;
    protected bool mWeOwnMemory = false;
    protected class NoInitTag {}
 
-   internal IntPtr RawObject
+   /// <summary>
+   /// This is needed for the custom marshaler to be able to perform a
+   /// reflective lookup.  The custom marshaler also uses this method to get
+   /// access to the value of mRawObject when necessary.
+   /// </summary>
+   public IntPtr RawObject
    {
       get { return mRawObject; }
    }
@@ -479,7 +494,7 @@ public class StdGUIDMarshaler : ICustomMarshaler
    // Marshaling for managed data being passed to C++.
    public IntPtr MarshalManagedToNative(Object obj)
    {
-      return ((vpr.GUID.StdGUID) obj).mRawObject;
+      return ((vpr.GUID.StdGUID) obj).RawObject;
    }
 
    // Marshaling for native memory coming from C++.
@@ -500,11 +515,16 @@ public class StdGUIDMarshaler : ICustomMarshaler
    // Nested class vpr.GUID.hash.
 public class hash
 {
-   protected internal IntPtr mRawObject = IntPtr.Zero;
+   protected IntPtr mRawObject = IntPtr.Zero;
    protected bool mWeOwnMemory = false;
    protected class NoInitTag {}
 
-   internal IntPtr RawObject
+   /// <summary>
+   /// This is needed for the custom marshaler to be able to perform a
+   /// reflective lookup.  The custom marshaler also uses this method to get
+   /// access to the value of mRawObject when necessary.
+   /// </summary>
+   public IntPtr RawObject
    {
       get { return mRawObject; }
    }
@@ -583,7 +603,7 @@ public class hashMarshaler : ICustomMarshaler
    // Marshaling for managed data being passed to C++.
    public IntPtr MarshalManagedToNative(Object obj)
    {
-      return ((vpr.GUID.hash) obj).mRawObject;
+      return ((vpr.GUID.hash) obj).RawObject;
    }
 
    // Marshaling for native memory coming from C++.
@@ -626,7 +646,7 @@ public class GUIDMarshaler : ICustomMarshaler
    // Marshaling for managed data being passed to C++.
    public IntPtr MarshalManagedToNative(Object obj)
    {
-      return ((vpr.GUID) obj).mRawObject;
+      return ((vpr.GUID) obj).RawObject;
    }
 
    // Marshaling for native memory coming from C++.

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.75 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.78 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -39,11 +39,16 @@ namespace gmtl
 
 public sealed class Matrix33f
 {
-   protected internal IntPtr mRawObject = IntPtr.Zero;
+   protected IntPtr mRawObject = IntPtr.Zero;
    protected bool mWeOwnMemory = false;
    protected class NoInitTag {}
 
-   internal IntPtr RawObject
+   /// <summary>
+   /// This is needed for the custom marshaler to be able to perform a
+   /// reflective lookup.  The custom marshaler also uses this method to get
+   /// access to the value of mRawObject when necessary.
+   /// </summary>
+   public IntPtr RawObject
    {
       get { return mRawObject; }
    }
@@ -255,7 +260,7 @@ public sealed class Matrix33f
    // Nested enumeration gmtl.Matrix<float,3,3>.XformState.
    public enum XformState
    {
-      TRANS = 2, FULL = 64, ORTHOGONAL = 4, AFFINE = 16, NON_UNISCALE = 32, XFORM_ERROR = 128, IDENTITY = 1
+      XFORM_ERROR = 128, FULL = 64, ORTHOGONAL = 4, AFFINE = 16, TRANS = 2, NON_UNISCALE = 32, IDENTITY = 1
    };
 
 
@@ -273,7 +278,7 @@ public class RowAccessorMarshaler : ICustomMarshaler
 {
    private class DummyRowAccessor : gmtl.Matrix33f.RowAccessor
    {
-      protected internal IntPtr mRawObject = IntPtr.Zero;
+      private IntPtr mRawObject = IntPtr.Zero;
 
       internal IntPtr RawObject
       {
@@ -307,7 +312,7 @@ public class RowAccessorMarshaler : ICustomMarshaler
       // and use the slow technique instead.
       try
       {
-         return ((DummyRowAccessor) obj).mRawObject;
+         return ((DummyRowAccessor) obj).RawObject;
       }
       catch(System.InvalidCastException ex)
       {
@@ -353,7 +358,7 @@ public class ConstRowAccessorMarshaler : ICustomMarshaler
 {
    private class DummyConstRowAccessor : gmtl.Matrix33f.ConstRowAccessor
    {
-      protected internal IntPtr mRawObject = IntPtr.Zero;
+      private IntPtr mRawObject = IntPtr.Zero;
 
       internal IntPtr RawObject
       {
@@ -387,7 +392,7 @@ public class ConstRowAccessorMarshaler : ICustomMarshaler
       // and use the slow technique instead.
       try
       {
-         return ((DummyConstRowAccessor) obj).mRawObject;
+         return ((DummyConstRowAccessor) obj).RawObject;
       }
       catch(System.InvalidCastException ex)
       {
@@ -444,7 +449,7 @@ public class Matrix33fMarshaler : ICustomMarshaler
    // Marshaling for managed data being passed to C++.
    public IntPtr MarshalManagedToNative(Object obj)
    {
-      return ((gmtl.Matrix33f) obj).mRawObject;
+      return ((gmtl.Matrix33f) obj).RawObject;
    }
 
    // Marshaling for native memory coming from C++.

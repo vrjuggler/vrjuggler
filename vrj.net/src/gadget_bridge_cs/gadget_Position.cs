@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.78 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -40,11 +40,16 @@ namespace gadget
 public class Position
    : vpr.SerializableObject
 {
-   protected internal IntPtr mRawObject = IntPtr.Zero;
+   protected IntPtr mRawObject = IntPtr.Zero;
    protected bool mWeOwnMemory = false;
    protected class NoInitTag {}
 
-   internal IntPtr RawObject
+   /// <summary>
+   /// This is needed for the custom marshaler to be able to perform a
+   /// reflective lookup.  The custom marshaler also uses this method to get
+   /// access to the value of mRawObject when necessary.
+   /// </summary>
+   public IntPtr RawObject
    {
       get { return mRawObject; }
    }
@@ -171,7 +176,7 @@ public class Position
    // Delegate for the writeObject() callback.
    protected IntPtr writeObjectAdapter(vpr.ObjectWriter p0)
    {
-      return writeObject(p0).mRawObject;
+      return writeObject(p0).RawObject;
    }
 
    public delegate IntPtr writeObjectDelegate_vpr_ObjectWriter([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.ObjectWriterMarshaler))] vpr.ObjectWriter p0);
@@ -194,7 +199,7 @@ public class Position
    // Delegate for the readObject() callback.
    protected IntPtr readObjectAdapter(vpr.ObjectReader p0)
    {
-      return readObject(p0).mRawObject;
+      return readObject(p0).RawObject;
    }
 
    public delegate IntPtr readObjectDelegate_vpr_ObjectReader([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.ObjectReaderMarshaler))] vpr.ObjectReader p0);
@@ -242,7 +247,7 @@ public class PositionMarshaler : ICustomMarshaler
    // Marshaling for managed data being passed to C++.
    public IntPtr MarshalManagedToNative(Object obj)
    {
-      return ((gadget.Position) obj).mRawObject;
+      return ((gadget.Position) obj).RawObject;
    }
 
    // Marshaling for native memory coming from C++.

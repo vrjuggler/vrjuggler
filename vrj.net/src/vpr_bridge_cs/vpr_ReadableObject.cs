@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.78 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -52,7 +52,7 @@ public class ReadableObjectMarshaler : ICustomMarshaler
 {
    private class DummyReadableObject : vpr.ReadableObject
    {
-      protected internal IntPtr mRawObject = IntPtr.Zero;
+      private IntPtr mRawObject = IntPtr.Zero;
 
       internal IntPtr RawObject
       {
@@ -99,7 +99,7 @@ public class ReadableObjectMarshaler : ICustomMarshaler
       // and use the slow technique instead.
       try
       {
-         return ((DummyReadableObject) obj).mRawObject;
+         return ((DummyReadableObject) obj).RawObject;
       }
       catch(System.InvalidCastException ex)
       {

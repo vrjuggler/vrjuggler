@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.76 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.78 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -39,11 +39,16 @@ namespace vpr
 
 public abstract class ObjectReader
 {
-   protected internal IntPtr mRawObject = IntPtr.Zero;
+   protected IntPtr mRawObject = IntPtr.Zero;
    protected bool mWeOwnMemory = false;
    protected class NoInitTag {}
 
-   internal IntPtr RawObject
+   /// <summary>
+   /// This is needed for the custom marshaler to be able to perform a
+   /// reflective lookup.  The custom marshaler also uses this method to get
+   /// access to the value of mRawObject when necessary.
+   /// </summary>
+   public IntPtr RawObject
    {
       get { return mRawObject; }
    }
@@ -124,7 +129,7 @@ public abstract class ObjectReader
    // Delegate for the beginTag() callback.
    protected IntPtr beginTagAdapter(string p0)
    {
-      return beginTag(p0).mRawObject;
+      return beginTag(p0).RawObject;
    }
 
    public delegate IntPtr beginTagDelegate_std_string(string p0);
@@ -136,7 +141,7 @@ public abstract class ObjectReader
    // Delegate for the endTag() callback.
    protected IntPtr endTagAdapter()
    {
-      return endTag().mRawObject;
+      return endTag().RawObject;
    }
 
    public delegate IntPtr endTagDelegate();
@@ -148,7 +153,7 @@ public abstract class ObjectReader
    // Delegate for the beginAttribute() callback.
    protected IntPtr beginAttributeAdapter(string p0)
    {
-      return beginAttribute(p0).mRawObject;
+      return beginAttribute(p0).RawObject;
    }
 
    public delegate IntPtr beginAttributeDelegate_std_string(string p0);
@@ -160,7 +165,7 @@ public abstract class ObjectReader
    // Delegate for the endAttribute() callback.
    protected IntPtr endAttributeAdapter()
    {
-      return endAttribute().mRawObject;
+      return endAttribute().RawObject;
    }
 
    public delegate IntPtr endAttributeDelegate();
@@ -552,7 +557,7 @@ public class ObjectReaderMarshaler : ICustomMarshaler
    // Marshaling for managed data being passed to C++.
    public IntPtr MarshalManagedToNative(Object obj)
    {
-      return ((vpr.ObjectReader) obj).mRawObject;
+      return ((vpr.ObjectReader) obj).RawObject;
    }
 
    // Marshaling for native memory coming from C++.
