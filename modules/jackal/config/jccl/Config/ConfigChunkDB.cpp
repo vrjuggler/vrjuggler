@@ -75,6 +75,17 @@ void ConfigChunkDB::getByType(const std::string& typeName, std::vector<ConfigChu
    }
 }
 
+void ConfigChunkDB::getByName(const std::string& typeName, std::vector<ConfigChunkPtr>& chunks) const
+{
+   for ( ConfigChunkDB::const_iterator i = begin(); i != end(); i++)
+   {
+      if ( typeName == (*i)->getName() )
+      {
+         chunks.push_back(*i);
+      }
+   }
+}
+
 bool ConfigChunkDB::remove(const std::string& name)
 {
    for ( ConfigChunkDB::iterator i = begin(); i != end(); i++)
