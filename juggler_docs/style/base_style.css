@@ -1,14 +1,18 @@
 a:link
 {
-color: rgb(1, 48, 90); 
+   color: rgb(1, 48, 90); 
 }
 a:visited
 {
-color: rgb(21, 99, 13); 
+   color: rgb(21, 99, 13); 
 } 
 a:active, a:hover
 {
-color: rgb(170, 23, 42);
+   color: rgb(170, 23, 42);
+}
+a:hover
+{
+   font-style: bold;
 }
 a
 {
@@ -59,4 +63,10 @@ TT, tt, PRE, pre
 {
 font-family: monospace,monospaced,courier,default,serif;
 color: rgb(0, 0, 40);
+}
+
+li, LI, .hanging
+{
+   text-indent: -2em;
+   margin-left:  2em;
 }
