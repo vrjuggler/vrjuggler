@@ -348,6 +348,11 @@ public class TweekFrame
 
    public void listenerUnregistered(RegistrationEvent e)
    {
+      Object obj = e.getRegistrant();
+      if ( obj instanceof TweekFrameListener )
+      {
+         removeTweekFrameListener((TweekFrameListener) obj);
+      }
    }
 
    /**
