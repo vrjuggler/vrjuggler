@@ -44,6 +44,7 @@ BASE_PKG=	org.vrjuggler.jccl
 DOC_PKGS=	$(BASE_PKG).config		\
 		$(BASE_PKG).config.event	\
 		$(BASE_PKG).config.io		\
+		$(BASE_PKG).config.undo		\
 		$(BASE_PKG).editors		\
 		$(BASE_PKG).editors.event
 SRC_PATH=	$(srcdir)/config:$(srcdir)/editors
