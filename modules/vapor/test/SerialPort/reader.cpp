@@ -36,30 +36,31 @@
 #include <vpr/IO/Port/SerialPort.h>
 
 
-int
-main (int argc, char* argv[]) {
-    vpr::SerialPort* read_port;
+int main (int argc, char* argv[])
+{
+   vpr::SerialPort* read_port;
 
-    read_port = new vpr::SerialPort(argv[1]);
+   read_port = new vpr::SerialPort(argv[1]);
 
-    read_port->setOpenReadOnly();
-    read_port->setOpenBlocking();
+   read_port->setOpenReadOnly();
+   read_port->setOpenBlocking();
 
-    if ( read_port->open().success() ) {
-        char buffer[80];
-        vpr::Uint32 bytes;
+   if ( read_port->open().success() )
+   {
+      char buffer[80];
+      vpr::Uint32 bytes;
 
-        std::cout << "Port opened\n";
-        memset((void*) &buffer, '\0', sizeof(buffer));
+      std::cout << "Port opened\n";
+      memset((void*) &buffer, '\0', sizeof(buffer));
 
-//        read_port->setUpdateAction(vpr::SerialIO::NOW);
-        read_port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
-        read_port->enableRead();
-        read_port->disableCanonicalInput();
-//        read_port->flushQueue(vpr::SerialTypes::INPUT_QUEUE);
-        read_port->read(buffer, sizeof(buffer), bytes);
-        std::cout << "Read '" << buffer << "'" << std::endl;
-    }
+//      read_port->setUpdateAction(vpr::SerialIO::NOW);
+      read_port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
+      read_port->enableRead();
+      read_port->disableCanonicalInput();
+//      read_port->flushQueue(vpr::SerialTypes::INPUT_QUEUE);
+      read_port->read(buffer, sizeof(buffer), bytes);
+      std::cout << "Read '" << buffer << "'" << std::endl;
+   }
 
-    return 0;
+   return 0;
 }
