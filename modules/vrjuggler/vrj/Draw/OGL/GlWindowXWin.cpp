@@ -48,6 +48,19 @@
 
 #include <vrj/Draw/OGL/GlWindowXWin.h>
 
+#include <stdexcept>
+
+namespace
+{
+   class glwinx_OpenFailureException : public std::runtime_error 
+   {
+   public:
+      glwinx_OpenFailureException() throw()
+         : std::runtime_error("Failed to open glx window")
+      {;}
+      ~glwinx_OpenFailureException() throw() {;}      
+   };
+}
 
 namespace vrj
 {
@@ -80,7 +93,8 @@ int GlWindowXWin::open()
    char* foo;
    ::XSizeHints *sizehints;
    ::XClassHint *classhint;
-   unsigned long event_mask(0);    // Event masks to use
+   unsigned long event_mask(0);    // Event masks to use   
+   bool ret_val(true);
 
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL) << "glxWindow: Open window\n" << vprDEBUG_FLUSH;
 
@@ -105,174 +119,181 @@ int GlWindowXWin::open()
       return false;
    }
 
-   screen = DefaultScreen(mXDisplay);
-
-   // get an XVisualInfo*, which we'll need below
-   if ( (mVisualInfo = getGlxVisInfo(mXDisplay, screen)) == NULL )
+   try
    {
-      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED,"ERROR:") << "glXChooseVisual failed\n"
-         << vprDEBUG_FLUSH;
-      goto OPEN_FAIL;
-   }
-
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-      << "Visual ID: 0x" << std::hex << mVisualInfo->visualid << std::dec
-      << std::endl << vprDEBUG_FLUSH;
-
-   // window attributes.
-   w_attrib.colormap = ::XCreateColormap(mXDisplay,
-                                         RootWindow(mXDisplay, screen),
-                                         mVisualInfo->visual,
-                                         AllocNone);
-
-   if ( w_attrib.colormap == 0 )
-   {
-      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED,"ERROR:")
-         << "vrj::GlWindowXWin: XCreateColorMap failed on '" << mXDisplayName
-         << "'.\n" << vprDEBUG_FLUSH;
-      goto OPEN_FAIL;
-   }
-
-   event_mask = ExposureMask | StructureNotifyMask | KeyPressMask |
-                KeyReleaseMask | ButtonPressMask | ButtonReleaseMask |
-                ButtonMotionMask | PointerMotionMask | StructureNotifyMask;
-   w_attrib.event_mask = event_mask;
-   w_attrib.border_pixel = 0x0;
-
-   // get screen dimensions for translating window origin.
-   ::XWindowAttributes winattrs;
-   ::XGetWindowAttributes(mXDisplay, RootWindow(mXDisplay, screen), &winattrs);
-
-   // create window
-   mXWindow = ::XCreateWindow(mXDisplay, RootWindow(mXDisplay, screen),
-                              origin_x, winattrs.height - origin_y - window_height,
-                              window_width, window_height, 0,
-                              mVisualInfo->depth, InputOutput,
-                              mVisualInfo->visual,
-                              CWEventMask | CWColormap | CWBorderPixel,
-                              &w_attrib);
-
-   if ( 0 == mXWindow )
-   {
-      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED,"ERROR:")
-         << "vrj::GlWindowXWin: Couldn't create window for " << mXDisplayName
+      screen = DefaultScreen(mXDisplay);
+   
+      // get an XVisualInfo*, which we'll need below
+      if ( (mVisualInfo = getGlxVisInfo(mXDisplay, screen)) == NULL )
+      {
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << clrOutNORM(clrRED,"ERROR:") << "glXChooseVisual failed\n"
+            << vprDEBUG_FLUSH;
+         throw glwinx_OpenFailureException();
+      }
+   
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << "Visual ID: 0x" << std::hex << mVisualInfo->visualid << std::dec
          << std::endl << vprDEBUG_FLUSH;
-      goto OPEN_FAIL;
-   }
-
-   /***************** Set Window Name/Class/Size/Pos *********************/
-
-   /* Before we map the window, we need a name for it (this is also useful for
-    * the resource cruft that'll get rid of the borders).
-    */
-   classhint = ::XAllocClassHint();
-   classhint->res_name = (char*)mWindowName.c_str();
-   classhint->res_class = "VRJ GLX";
-   //XSetClassHint(mXDisplay, mXWindow, classhint);
-
-   // InSoc makes things simple
-   // X makes things complicated
-   ::XTextProperty w_name;
-   foo = (char*) mWindowName.c_str();
-   ::XStringListToTextProperty(&foo, 1, &w_name);
-
-   /* guarantee window position */
-   sizehints = XAllocSizeHints();
-   sizehints->flags = USPosition;
-
-   ::XSetWMProperties(mXDisplay, mXWindow, &w_name, &w_name,
-                      NULL, 0, sizehints, NULL, classhint);
-
-   ::XFree(w_name.value);
-   ::XFree(classhint);
-   ::XFree(sizehints);
-
-   /***************** Border Stuff ***************************/
-
-   /* Get rid of window border, if configured to do so.
-    * This technique doesn't require any modifications to the .XDefaults file
-    * or anything, but it will only work with window managers based on MWM
-    * (the Motif window manager).  That covers most cases.
-    * Unfortunately, the generic X resources for communicating with a window
-    * manager don't support this feature.
-    */
-   if ( !border )
-   {
-      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL) << "attempting to make window borderless"
-         << std::endl << vprDEBUG_FLUSH;
-      Atom MotifHints = XInternAtom(mXDisplay, "_MOTIF_WM_HINTS", 0);
-      if ( MotifHints == None )
+   
+      // window attributes.
+      w_attrib.colormap = ::XCreateColormap(mXDisplay,
+                                            RootWindow(mXDisplay, screen),
+                                            mVisualInfo->visual,
+                                            AllocNone);
+   
+      if ( w_attrib.colormap == 0 )
+      {
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << clrOutNORM(clrRED,"ERROR:")
+            << "vrj::GlWindowXWin: XCreateColorMap failed on '" << mXDisplayName
+            << "'.\n" << vprDEBUG_FLUSH;
+         throw glwinx_OpenFailureException();
+      }
+   
+      event_mask = ExposureMask | StructureNotifyMask | KeyPressMask |
+                   KeyReleaseMask | ButtonPressMask | ButtonReleaseMask |
+                   ButtonMotionMask | PointerMotionMask | StructureNotifyMask;
+      w_attrib.event_mask = event_mask;
+      w_attrib.border_pixel = 0x0;
+   
+      // get screen dimensions for translating window origin.
+      ::XWindowAttributes winattrs;
+      ::XGetWindowAttributes(mXDisplay, RootWindow(mXDisplay, screen), &winattrs);
+   
+      // create window
+      mXWindow = ::XCreateWindow(mXDisplay, RootWindow(mXDisplay, screen),
+                                 origin_x, winattrs.height - origin_y - window_height,
+                                 window_width, window_height, 0,
+                                 mVisualInfo->depth, InputOutput,
+                                 mVisualInfo->visual,
+                                 CWEventMask | CWColormap | CWBorderPixel,
+                                 &w_attrib);
+   
+      if ( 0 == mXWindow )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
             << clrOutNORM(clrRED,"ERROR:")
-            << "vrj::GlWindowXWin: Could not get X atom for _MOTIF_WM_HINTS."
+            << "vrj::GlWindowXWin: Couldn't create window for " << mXDisplayName
             << std::endl << vprDEBUG_FLUSH;
+         throw glwinx_OpenFailureException();
       }
-      else
+   
+      /***************** Set Window Name/Class/Size/Pos *********************/
+   
+      /* Before we map the window, we need a name for it (this is also useful for
+       * the resource cruft that'll get rid of the borders).
+       */
+      classhint = ::XAllocClassHint();
+      classhint->res_name = (char*)mWindowName.c_str();
+      classhint->res_class = "VRJ GLX";
+      //XSetClassHint(mXDisplay, mXWindow, classhint);
+   
+      // InSoc makes things simple
+      // X makes things complicated
+      ::XTextProperty w_name;
+      foo = (char*) mWindowName.c_str();
+      ::XStringListToTextProperty(&foo, 1, &w_name);
+   
+      /* guarantee window position */
+      sizehints = XAllocSizeHints();
+      sizehints->flags = USPosition;
+   
+      ::XSetWMProperties(mXDisplay, mXWindow, &w_name, &w_name,
+                         NULL, 0, sizehints, NULL, classhint);
+   
+      ::XFree(w_name.value);
+      ::XFree(classhint);
+      ::XFree(sizehints);
+   
+      /***************** Border Stuff ***************************/
+   
+      /* Get rid of window border, if configured to do so.
+       * This technique doesn't require any modifications to the .XDefaults file
+       * or anything, but it will only work with window managers based on MWM
+       * (the Motif window manager).  That covers most cases.
+       * Unfortunately, the generic X resources for communicating with a window
+       * manager don't support this feature.
+       */
+      if ( !border )
       {
-         MotifWmHints hints;
-         hints.flags = MWM_HINTS_DECORATIONS;
-         hints.decorations = 0;
-         XChangeProperty(mXDisplay, mXWindow, MotifHints, MotifHints, 32,
-                         PropModeReplace, (unsigned char *) &hints, 4);
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL) << "attempting to make window borderless"
+            << std::endl << vprDEBUG_FLUSH;
+         Atom MotifHints = XInternAtom(mXDisplay, "_MOTIF_WM_HINTS", 0);
+         if ( MotifHints == None )
+         {
+            vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+               << clrOutNORM(clrRED,"ERROR:")
+               << "vrj::GlWindowXWin: Could not get X atom for _MOTIF_WM_HINTS."
+               << std::endl << vprDEBUG_FLUSH;
+         }
+         else
+         {
+            MotifWmHints hints;
+            hints.flags = MWM_HINTS_DECORATIONS;
+            hints.decorations = 0;
+            XChangeProperty(mXDisplay, mXWindow, MotifHints, MotifHints, 32,
+                            PropModeReplace, (unsigned char *) &hints, 4);
+         }
       }
+   
+      /********************* Mapping Window **************************/
+   
+      /* Open the window, select the input events, and wait until mapped (XIfEvent) */
+      ::XSelectInput(mXDisplay, mXWindow, event_mask);
+      ::XMapWindow(mXDisplay, mXWindow);
+      ::XIfEvent(mXDisplay, &fooevent, EventIsMapNotify, (XPointer)mXWindow);
+      ::XSync(mXDisplay, 0);
+   
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "vrj::GlWindowXWin: done mapping window\n"
+                                  << vprDEBUG_FLUSH;
+   
+      /********************* OpenGL Context Stuff *********************/
+   
+      mGlxContext = glXCreateContext(mXDisplay, mVisualInfo, NULL, True);
+      if ( NULL == mGlxContext )
+      {
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << clrOutNORM(clrRED,"ERROR:") << "Couldn't create GlxContext for '"
+            << mXDisplayName << "'\n" << vprDEBUG_FLUSH;
+         throw glwinx_OpenFailureException();      
+      }
+   
+      window_is_open = true;
+   
+      // ----------- Event window device starting -------------- //
+      if ( true == mAreEventSource )    // Are we going to act as an event source?
+      {
+         // Set the parameters that we will need to get events
+         gadget::EventWindowXWin::mWindow  = mXWindow;
+         gadget::EventWindowXWin::mVisual  = mVisualInfo;
+         gadget::EventWindowXWin::mDisplay = mXDisplay;
+   
+         // Start up the device
+         /*   Do it in out check event function
+         gadget::EventWindowXWin::startSampling();
+         */
+   
+         gadget::Input* dev_ptr = dynamic_cast<gadget::Input*>(this);
+   
+         // XXX: Possibly not the best way to add this to input manager
+         // - What happens when the event window is removed at run-time???
+         vrj::Kernel::instance()->getInputManager()->addDevice(dev_ptr);
+      }
+   
+      ret_val = true;
    }
-
-   /********************* Mapping Window **************************/
-
-   /* Open the window, select the input events, and wait until mapped (XIfEvent) */
-   ::XSelectInput(mXDisplay, mXWindow, event_mask);
-   ::XMapWindow(mXDisplay, mXWindow);
-   ::XIfEvent(mXDisplay, &fooevent, EventIsMapNotify, (XPointer)mXWindow);
-   ::XSync(mXDisplay, 0);
-
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "vrj::GlWindowXWin: done mapping window\n"
-                               << vprDEBUG_FLUSH;
-
-   /********************* OpenGL Context Stuff *********************/
-
-   mGlxContext = glXCreateContext(mXDisplay, mVisualInfo, NULL, True);
-   if ( NULL == mGlxContext )
+   catch (glwinx_OpenFailureException& openFailed)
    {
-      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED,"ERROR:") << "Couldn't create GlxContext for '"
-         << mXDisplayName << "'\n" << vprDEBUG_FLUSH;
-      goto OPEN_FAIL;
+      // close() is coincidentally safe to call on a partially-opened
+      // GlWindowXWin, and will deallocate all the stuff we might have
+      // allocated above.
+      close();
+
+      ret_val = false;
    }
-
-   window_is_open = true;
-
-   // ----------- Event window device starting -------------- //
-   if ( true == mAreEventSource )    // Are we going to act as an event source?
-   {
-      // Set the parameters that we will need to get events
-      gadget::EventWindowXWin::mWindow  = mXWindow;
-      gadget::EventWindowXWin::mVisual  = mVisualInfo;
-      gadget::EventWindowXWin::mDisplay = mXDisplay;
-
-      // Start up the device
-      /*   Do it in out check event function
-      gadget::EventWindowXWin::startSampling();
-      */
-
-      gadget::Input* dev_ptr = dynamic_cast<gadget::Input*>(this);
-
-      // XXX: Possibly not the best way to add this to input manager
-      // - What happens when the event window is removed at run-time???
-      vrj::Kernel::instance()->getInputManager()->addDevice(dev_ptr);
-   }
-
-   return true;
-
-   OPEN_FAIL:
-   // close() is coincidentally safe to call on a partially-opened
-   // GlWindowXWin, and will deallocate all the stuff we might have
-   // allocated above.
-   close();
-   return false;
+   
+   return ret_val;
 }
 
 /**
@@ -285,7 +306,18 @@ int GlWindowXWin::close()
    //vprASSERT( !mXfuncLock.test() && "Attempting to close a display window that is locked" );
    // Assert that we have not impllemented correct shutdown for the case that we
    // are an event window as well
-   vprASSERT(!mAreEventSource  && "Need to implement GLX window close with gadget::EventWindow");
+   //vprASSERT(!mAreEventSource  && "Need to implement GLX window close with gadget::EventWindow");
+
+   // Remove any event device from the input manager
+   if ( true == mAreEventSource )
+   {
+      gadget::Input* dev_ptr = dynamic_cast<gadget::Input*>(this);
+
+      // XXX: Possibly not the best way to remove this to input manager
+      // - This will internally call stop sampling (and stupify and proxies)
+      //   Note: The stop sampling will not do anything since the event window does not own the window
+      vrj::Kernel::instance()->getInputManager()->removeDevice(dev_ptr);
+   }
 
    if ( mGlxContext )
    {
@@ -429,6 +461,7 @@ void GlWindowXWin::configWindow(vrj::Display* disp)
 
 void GlWindowXWin::checkEvents()
 {
+   // Node, this will call processEvent() in the final phase (see below)
    if ( true == mAreEventSource )
    {
       gadget::EventWindowXWin::sample();    /** Sample from the xwindow (calls HandleEvents() )*/
@@ -650,11 +683,12 @@ int GlWindowXWin::EventIsMapNotify(::Display* display, ::XEvent* e,
    return((e->type == MapNotify) && (e->xmap.window == (Window)window));
 }
 
-void GlWindowXWin::processEvent(::XEvent event)
+void GlWindowXWin::processEvent(XEvent event)
 {
    switch ( event.type )
    {
       case ConfigureNotify:
+         //std::cout << "GlWindowXWin::processEvent: Got configure notify." << std::endl;
          updateOriginSize(vrj::GlWindow::origin_x, vrj::GlWindow::origin_y,
                           event.xconfigure.width, event.xconfigure.height);
          vrj::GlWindow::setDirtyViewport(true);
