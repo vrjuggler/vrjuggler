@@ -146,7 +146,7 @@ ReturnStatus SelectorImplNSPR::select(vpr::Uint16& numWithEvents,  const vpr::In
    {
       NSPR_PrintError("SelectorImplNSPR::select: Error selecting. ");
       numWithEvents = 0;
-      ret_val.setCode(ReturnStatus::Failure);
+      ret_val.setCode(ReturnStatus::Fail);
    }
    else if(0 == result)    // Timeout
    {

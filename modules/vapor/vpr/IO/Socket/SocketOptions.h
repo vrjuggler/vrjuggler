@@ -109,9 +109,9 @@ protected:
      * @param data   A data buffer that will be used to store the value of the
      *               given option.
      *
-     * @return vpr::ReturnStatus::Success is returned if the value for the given
+     * @return vpr::ReturnStatus::Succeed is returned if the value for the given
      *         option was retrieved successfully.<br>
-     *         vpr::ReturnStatus;:Failure is returned otherwise.
+     *         vpr::ReturnStatus;:Fail is returned otherwise.
      */
     virtual vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
                                   struct vpr::SocketOptions::Data& data) = 0;
