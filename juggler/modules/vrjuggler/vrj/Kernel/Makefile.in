@@ -81,7 +81,11 @@ SRCS		= vjAPI.cpp			\
 ifeq (@OS_TYPE@, Win32)
     SRCS	+= vjWin32SystemFactory.cpp
 else
-    SRCS	+= vjSGISystemFactory.cpp
+    ifeq (@OS_TYPE@, Darwin)
+    	SRCS    += vjOSXSystemFactory.cpp
+    else
+    	SRCS	+= vjSGISystemFactory.cpp
+    endif
 endif
 
 include $(MKPATH)/dpp.obj-subdir.mk

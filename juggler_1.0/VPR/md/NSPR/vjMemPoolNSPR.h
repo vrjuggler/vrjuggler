@@ -187,8 +187,13 @@ public:
     //
     //! ARGS: size - The size of the memory block to allocate.
     // -----------------------------------------------------------------------
-    void*
-    operator new (PRUint32 size) {
+#ifndef VJ_OS_MACOSX
+    void* operator new (PRUint32 size) {
+#else
+// Mac OS X compilers were complaining about the PRUint32.  It demands size_t!
+    void* operator new (size_t size) {
+#endif
+
         vjDEBUG(vjDBG_ALL,6) << "vjMemPoolNSPR::new called.\n" << vjDEBUG_FLUSH;
 
         init();

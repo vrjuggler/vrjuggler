@@ -266,6 +266,16 @@ case $target_os in
         AC_DEFINE(VJ_OS_Win32,)
         ;;
     dnl # Unkown operating system (to config.guess).
+    darwin1.3)
+
+        if test "x$SUBSYSTEM" != "xNSPR" ; then
+            AC_MSG_WARN(*** Forcing the use of NSPR subsystem ***)
+            SUBSYSTEM='NSPR' 
+        fi
+
+        AC_DEFINE(VJ_OS_MACOSX,)
+        AC_DEFINE(_BSD_TYPES,) 
+        ;;
     unknown)
         AC_DEFINE(VJ_OS_GENERIC,)
         ;;
@@ -931,6 +941,25 @@ if test "$SL" = "Y" ; then
 
     APP_EXTRA_INC_SL="$SL_INC"
     APP_EXTRA_LIBS_SL="$SL_LIB ${_sl_libs}"
+fi
+
+if test "$OS_TYPE" = "Darwin" ; then
+    	APP_VJ_LIBS_GL="-lJuggler_ogl"
+    	APP_VJ_LIBS_PF="-lJuggler_pf"
+    	APP_VJ_LIBS_UTILS="-lJuggler_utils"
+
+
+        APP_VJ_LIBS_BEGIN="-L\$(VJ_BASE_DIR)/lib"
+        APP_VJ_LIBS_END='$APP_VJ_LIBS_UTILS'
+        APP_VJ_LIBS_BASIC='-lJuggler'
+
+        APP_VJ_LIBS_BEGIN_INST="-L\$(VJ_BASE_DIR)/lib"
+        APP_VJ_LIBS_END_INST="-lJuggler_utils -Wl,-rpath,\$(VJ_BASE_DIR)/lib"
+        APP_VJ_LIBS_BASIC_INST='-lJuggler'
+
+        APP_EXTRA_LIBS_BEGIN="" 
+        APP_EXTRA_LIBS_END="$NSPR_LIBS $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm -lftime"
+	APP_EXTRA_LIBS_GL="-framework OpenGL -framework SetupGL -framework Carbon -framework ApplicationServices"
 fi
 
 if test "$OS_TYPE" = "UNIX" ; then

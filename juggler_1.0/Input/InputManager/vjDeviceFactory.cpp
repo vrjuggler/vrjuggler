@@ -47,15 +47,21 @@
 #ifndef WIN32
 #include <Input/vjPosition/vjFlock.h>
 #include <Input/vjPosition/vjIsense.h>
-#include <Input/vjInput/vjIbox.h>
-#include <Input/vjGlove/vjCyberGlove.h>
-#include <Input/vjGlove/vjPinchGlove.h>
-#include <Input/vjKeyboard/vjXWinKeyboard.h>
-#include <Input/vjKeyboard/vjXWinKBDepChecker.h>
+
+#ifdef VJ_OS_MACOSX
+	#include <Input/vjKeyboard/vjOSXKeyboard.h>
+#else
+	#include <Input/vjInput/vjIbox.h>
+	#include <Input/vjGlove/vjCyberGlove.h>
+	#include <Input/vjGlove/vjPinchGlove.h>
+	#include <Input/vjKeyboard/vjXWinKeyboard.h>
+	#include <Input/vjKeyboard/vjXWinKBDepChecker.h>
+	#include <Input/Multi/vjTrackdController.h>
+	#include <Input/Multi/vjTrackdSensor.h>
+#endif
+
 #include <Input/vjPosition/logiclass.h>
 #include <Input/vjPosition/vjMotionStar.h>
-#include <Input/Multi/vjTrackdController.h>
-#include <Input/Multi/vjTrackdSensor.h>
 #else
 #include <Input/vjKeyboard/vjKeyboardWin32.h>
 #endif
@@ -106,9 +112,14 @@ void vjDeviceFactory::hackLoadKnownDevices()
    }
 
 #ifndef WIN32
-   vjDeviceConstructor<vjFlock>* flock = new vjDeviceConstructor<vjFlock>;
-   vjDeviceConstructor<vjIsense>* intersense = new vjDeviceConstructor<vjIsense>;
-   vjDeviceConstructor<vjMotionStar>* MotionStar = new vjDeviceConstructor<vjMotionStar>;
+#ifdef VJ_OS_MACOSX
+   vjDeviceConstructor<vjOSXKeyboard>* osx_keyboard = new vjDeviceConstructor<vjOSXKeyboard>;
+   if( (NULL == osx_keyboard) )
+   {
+      vjDEBUG(vjDBG_ALL,vjDBG_ERROR) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vjDEBUG_FLUSH;
+   }
+
+#else
    vjDeviceConstructor<vjTrackdSensor>* trackd_sensor = new vjDeviceConstructor<vjTrackdSensor>;
    vjDeviceConstructor<vjTrackdController>* trackd_controller = new vjDeviceConstructor<vjTrackdController>;
    vjDeviceConstructor<vjIBox>* ibox = new vjDeviceConstructor<vjIBox>;
@@ -117,17 +128,25 @@ void vjDeviceFactory::hackLoadKnownDevices()
    vjDeviceConstructor<vjXWinKeyboard>* xwin_key = new vjDeviceConstructor<vjXWinKeyboard>;
    vjDependencyManager::instance()->registerChecker(new vjXWinKBDepChecker());
    vjDeviceConstructor<vjThreeDMouse>* threed_mouse = new vjDeviceConstructor<vjThreeDMouse>;
-
-   if( (NULL == flock)        ||
-       (NULL == intersense)   ||
-       (NULL == MotionStar)   ||
-       (NULL == trackd_sensor)      ||
+   if( (NULL == trackd_sensor)      ||
        (NULL == trackd_controller)  ||
        (NULL == ibox)         ||
        (NULL == pinch_glove)  ||
        (NULL == cyber_glove)  ||
        (NULL == xwin_key)     ||
        (NULL == threed_mouse))
+   {
+      vjDEBUG(vjDBG_ALL,vjDBG_ERROR) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vjDEBUG_FLUSH;
+   }
+   
+#endif
+   vjDeviceConstructor<vjFlock>* flock = new vjDeviceConstructor<vjFlock>;
+   vjDeviceConstructor<vjIsense>* intersense = new vjDeviceConstructor<vjIsense>;
+   vjDeviceConstructor<vjMotionStar>* MotionStar = new vjDeviceConstructor<vjMotionStar>;
+
+   if( (NULL == flock)        ||
+       (NULL == intersense)   ||
+       (NULL == MotionStar)   )
    {
       vjDEBUG(vjDBG_ALL,vjDBG_ERROR) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vjDEBUG_FLUSH;
    }

@@ -52,7 +52,11 @@ VJ_SRCDIR	= @VJ_SRCDIR@/Input/vjKeyboard
 ifeq (@OS_TYPE@, Win32)
     SRCS	= vjKeyboardWin32.cpp
 else
-    SRCS	= vjXWinKeyboard.cpp
+    ifeq (@OS_TYPE@, Darwin)
+	SRCS	= vjOSXKeyboard.cpp
+    else
+	SRCS	= vjXWinKeyboard.cpp
+    endif
 endif
 
 include $(MKPATH)/dpp.obj.mk

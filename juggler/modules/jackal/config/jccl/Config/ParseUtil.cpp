@@ -150,7 +150,7 @@ VarType readType (std::istream &in) {
     char str[256];
 
     if (!readString (in, str, 256))
-        return T_INVALID;
+        return VJ_T_INVALID;
 
     if (!strcasecmp (str, int_TOKEN))
         return T_INT;
@@ -171,7 +171,7 @@ VarType readType (std::istream &in) {
     if (!strcasecmp (str, embeddedchunk_TOKEN))
         return T_EMBEDDEDCHUNK;
 
-    return T_INVALID;
+    return VJ_T_INVALID;
 }
 
 

@@ -50,10 +50,12 @@ VJROOT		= $(top_srcdir)
 VJ_SRCDIR	= @VJ_SRCDIR@/Input/ibox
 
 ifneq (@OS_TYPE@, Win32)
+ifneq (@OS_TYPE@, Darwin)
 SRCS		= drivers.c	\
                   driveunx.c 	\
                   hci.c 	\
                   ibox.c
+endif
 endif
 
 include $(MKPATH)/dpp.obj.mk

@@ -39,7 +39,7 @@
 #include <Utils/vjBlockIO.h>
 #include <Utils/Socket/vjSocketTypes.h>
 #include <Utils/Socket/vjInetAddr.h>
-
+#include <vjDefines.h>
 
 // ----------------------------------------------------------------------------
 //: Socket interface.

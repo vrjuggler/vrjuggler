@@ -52,7 +52,9 @@ VJ_SRCDIR	= @VJ_SRCDIR@/Input/vjInput
 SRCS		= vjInput.cpp
 
 ifneq (@OS_TYPE@, Win32)
+ifneq (@OS_TYPE@, Darwin)
 SRCS		+= vjIbox.cpp
+endif
 endif
 
 include $(MKPATH)/dpp.obj.mk

@@ -59,6 +59,8 @@
 #if defined(VJ_OS_IRIX) || defined(VJ_OS_Linux) || defined(VJ_OS_AIX) ||   \
     defined(VJ_OS_Solaris) || defined(VJ_OS_FreeBSD)
 #include <Kernel/vjSGISystemFactory.h>
+#elif defined(VJ_OS_MACOSX)
+#include <Kernel/vjOSXSystemFactory.h>
 #elif defined(VJ_OS_Win32)
 #include <Kernel/vjWin32SystemFactory.h>
 #endif
@@ -294,6 +296,8 @@ void vjKernel::initConfig()
 #elif defined(VJ_OS_Linux) || defined(VJ_OS_Solaris) || defined(VJ_OS_AIX) || \
       defined(VJ_OS_FreeBSD)
    mSysFactory = vjSGISystemFactory::instance(); // HACK - this could be trouble, using SGI factory
+#elif defined(VJ_OS_MACOSX)
+   mSysFactory = vjOSXSystemFactory::instance();
 #elif defined(VJ_OS_Win32)
    mSysFactory = vjWin32SystemFactory::instance();
 #else

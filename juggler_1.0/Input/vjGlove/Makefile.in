@@ -52,6 +52,7 @@ VJ_SRCDIR	= @VJ_SRCDIR@/Input/vjGlove
 SRCS		= vjGlove.cpp
 
 ifneq (@OS_TYPE@, Win32)
+ifneq (@OS_TYPE@, Darwin)
 SRCS		+= CyberGloveBasic.cpp		\
                    fsPinchGlove.cpp		\
                    vjCyberGlove.cpp		\
@@ -65,6 +66,7 @@ SRCS		+= CyberGloveBasic.cpp		\
                    vt_read_user_cal.cpp		\
                    vt_serial_io.cpp		\
                    vt_virtual_hand.cpp
+endif
 endif
 
 include $(MKPATH)/dpp.obj.mk

@@ -56,7 +56,11 @@ SRCS 		= vjGlDrawManager.cpp	\
 ifeq (@OS_TYPE@, Win32)
     SRCS	+= vjGlWinWin32.cpp
 else
-    SRCS	+= vjGlxWindow.cpp
+    ifeq (@OS_TYPE@, Darwin)
+	SRCS    += vjGlOSXWindow.cpp
+    else
+    	SRCS	+= vjGlxWindow.cpp
+    endif
 endif
 
 ifeq (@OPENGL_API@, Y)
