@@ -11,6 +11,10 @@ public class PropertyComponent extends JPanel
    {
       doLayout();
       repaint();
+      
+      //JComponent parent = (JComponent)SwingUtilities.getAncestorOfClass(JScrollPane.class, getParent());
+      //parent.doLayout();
+      //parent.repaint();
    }
 
    public void updateMyRow()

@@ -61,6 +61,15 @@ public class PropertySheet extends PropertyComponent
 
    public void setElement(ConfigElement elm)
    {
+      // If the element is null then we want a blank panel. This is used when
+      // the JTree loses its selection.
+      if(null == elm)
+      {
+         removeAll();
+         refresh();
+         return;
+      }
+
       mConfigElement = elm;
       mColor = new Color(160, 160, 180);
       
