@@ -42,14 +42,18 @@ namespace gadget
 {
 
 /**
- * A proxy class to digital devices, used by the Input Manager.
+ * A proxy class to digital speech recognition devices, used by the Input
+ * Manager.
  *
- * A SpeechRecogDigitalProxy always points to a SpeechRecogDigital device and subUnit number,
- * the inputgroup can therefore keep an array of these around and
- * treat them as digital devices which only return a single
- * subDevice's amount of data.  (one int)
+ * A digital speech recognition proxy always points to a digital speech
+ * recognition device and unit number within that device.  The Input Manager
+ * can therefore keep an array of these around and treat them as digital
+ * devices that only return a single sub-device's amount of data (one int).
+ *
+ * @see gagdet::SpeechRecogDigital
  */
-class GADGET_CLASS_API SpeechRecogDigitalProxy : public TypedProxy<SpeechRecogDigital>
+class GADGET_CLASS_API SpeechRecogDigitalProxy
+   : public TypedProxy<SpeechRecogDigital>
 {
 
 public:
@@ -65,14 +69,14 @@ public:
 
    virtual void updateData();
 
-   /** Returns time of last update. */
+   /** Returns the time of the last update. */
    virtual vpr::Interval getTimeStamp() const
    {
       return mData.getTime();
    }
 
    /**
-    * Get the digital data.
+    * Gets the digital data.
     */
    int getData() const
    {
@@ -87,12 +91,20 @@ public:
       return &mData;
    }
 
+   /**
+    * Returns a pointer to the gadget::SpeechRecogDigital object that we are
+    * proxying.
+    */
    SpeechRecogDigital* getSpeechRecogDigitalPtr()
    {
       // If we're stupified, return NULL.  Otherwise, return mTypedDevice.
       return (isStupified() ? NULL : mTypedDevice);
    }
 
+   /**
+    * Returns the unit index into the string speech recognition device from
+    * which this proxy is reading data.
+    */
    int getUnit() const
    {
       return mUnitNum;

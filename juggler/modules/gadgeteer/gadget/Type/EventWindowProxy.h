@@ -43,7 +43,14 @@ namespace gadget
 {
 
 /**
- * Proxy class to event window-based devices.
+ * A proxy class to event window devices, used by the Input Manager.
+ *
+ * An event window proxy always points to an event window device and unit
+ * number within that device.  The Input Manager can therefore keep an array
+ * of these around and treat them as digital devices that only return a single
+ * sub-device's amount of data (an event queue and individual keys).
+ *
+ * @see gagdet::EventWindow
  */
 class GADGET_CLASS_API EventWindowProxy : public TypedProxy<EventWindow>
 {
@@ -51,6 +58,9 @@ public:
    EventWindowProxy()
    { ; }
 
+   /**
+    * Returns a pointer to the gadget::EventWindow object held by this proxy.
+    */
    EventWindow* getEventWindowPtr()
    {
       if(isStupified())
@@ -63,7 +73,7 @@ public:
       }
    }
 
-   /** Returns time of last update. */
+   /** Returns the time of the last update. */
    virtual vpr::Interval getTimeStamp() const
    {
       if ( isStupified() || (mTypedDevice == NULL) )
@@ -77,9 +87,15 @@ public:
    }
 
    /**
-    * Determines if the modifier key is pressed exclusively.
-    * @pre modKey is a valid modifier identifier
-    * @return true if modKey is the only modifier pressed
+    * Determines if the given modifier key is the only modifier pressed.
+    *
+    * @pre The given key identifier is one of gadget::NONE, gadget::KEY_ALT,
+    *      gadget::KEY_CTRL, or gadget::KEY_SHIFT.
+    *
+    * @param modKey A gadget::Keys value that must be one of gadget::NONE,
+    *               gadget::KEY_ALT, gadget::KEY_CTRL, or gadget::KEY_SHIFT.
+    *
+    * @return true if the given modifier key is the only modifier key pressed.
     */
    bool modifierOnly(gadget::Keys modKey)
    {
@@ -93,6 +109,15 @@ public:
       }
    }
 
+   /**
+    * Returns the number of times the given key was pressed during the last
+    * frame.  The value returned can be used in a conditional expression to
+    * determine if the key was pressed at all.
+    *
+    * @param keyId The identifier for the key whose state will be queried.
+    *
+    * @return The number of times the key was pressed since last update.
+    */
    int keyPressed(gadget::Keys keyId)
    {
       if ( isStupified() || (mTypedDevice == NULL) )
@@ -105,6 +130,9 @@ public:
       }
    }
 
+   /**
+    * Returns a copy of the current queue of events for the proxied window.
+    */
    EventWindow::EventQueue getEventQueue()
    {
       if ( isStupified() || (mTypedDevice == NULL) )
@@ -123,14 +151,15 @@ public:
 
    virtual Input* getProxiedInputDevice()
    {
-      if ((NULL == mTypedDevice) || (isStupified()))
+      if ( NULL == mTypedDevice || isStupified() )
+      {
          return NULL;
+      }
 
       Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
       vprASSERT((ret_val != NULL) && "Cross-cast in EventWindowProxy failed");
       return ret_val;
    }
-
 };
 
 

@@ -155,11 +155,6 @@ vpr::ReturnStatus EventWindow::readObject(vpr::ObjectReader* reader)
    return vpr::ReturnStatus::Succeed;
 }
 
-/**
- * Checks for the given modifier key pressed only.
- * @return true if key pressed exclusively.
- */
-//virtual bool modifierOnly(int modKey) =0;
 bool EventWindow::modifierOnly(gadget::Keys modKey)
 {
    switch (modKey)
