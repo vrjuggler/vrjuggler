@@ -56,10 +56,11 @@ public:
    class KeyModPair
    {
    public:
-      KeyModPair() : mKey(-1), mModifier(-1)
+      KeyModPair() : mKey(gadget::KEY_NONE), mModifier(gadget::KEY_NONE)
       {;}
 
-      KeyModPair(int key, int modifier) : mKey(key), mModifier(modifier)
+      KeyModPair(gadget::Keys key, gadget::Keys modifier)
+         : mKey(key), mModifier(modifier)
       {;}
 
       KeyModPair(const KeyModPair& in)
@@ -80,8 +81,8 @@ public:
       }
 
    public:
-      int mKey;
-      int mModifier;
+      gadget::Keys mKey;
+      gadget::Keys mModifier;
    };
 
 public:
@@ -118,7 +119,7 @@ protected:
     * Gets number of times the key was pressed.
     * @return Number of times the key was pressed.
     */
-   virtual int checkKey(int keyId);
+   virtual int checkKey(gadget::Keys keyId);
 
    /**
     * Constructs a vector of key mod pairs.
