@@ -85,6 +85,7 @@ public class ConnectionDialog extends JDialog
          (GlobalPreferencesService) BeanRegistry.instance().getBean("GlobalPreferences");
       mNSHostField.setText(prefs.getDefaultCorbaHost());
       mNSPortField.setText(String.valueOf(prefs.getDefaultCorbaPort()));
+      mNSIiopVerField.setText(String.valueOf(prefs.getDefaultIiopVersion()));
 
       // Add an input validator for the port number field.
       mNSPortField.setInputVerifier(new InputVerifier()
@@ -121,6 +122,11 @@ public class ConnectionDialog extends JDialog
       return nameServicePort;
    }
 
+   public String getNameServiceIiopVersion()
+   {
+      return nameServiceIiopVersion;
+   }
+
    public String getNamingSubcontext ()
    {
       return namingSubcontext;
@@ -154,21 +160,36 @@ public class ConnectionDialog extends JDialog
       mNSConnectPanel.setMinimumSize(new Dimension(450, 175));
 
       mNSHostLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mNSHostLabel.setLabelFor(mNSHostField);
       mNSHostLabel.setText("Naming Service Host");
       mNSHostField.setMinimumSize(new Dimension(80, 17));
       mNSHostField.setPreferredSize(new Dimension(180, 17));
+      mNSHostField.addFocusListener(new java.awt.event.FocusAdapter()
+      {
+         public void focusLost(FocusEvent e)
+         {
+            validateNetworkAddress();
+         }
+      });
       mNSHostField.addActionListener(new java.awt.event.ActionListener()
       {
          public void actionPerformed(ActionEvent e)
          {
-            validateNetworkAddress(e);
+            validateNetworkAddress();
+         }
+      });
+      mNSPortField.addFocusListener(new java.awt.event.FocusAdapter()
+      {
+         public void focusLost(FocusEvent e)
+         {
+            validateNetworkAddress();
          }
       });
       mNSPortField.addActionListener(new java.awt.event.ActionListener()
       {
          public void actionPerformed(ActionEvent e)
          {
-            validateNetworkAddress(e);
+            validateNetworkAddress();
          }
       });
       mSubjectMgrPanel.setBorder(mSubjectMgrBorder);
@@ -194,24 +215,49 @@ public class ConnectionDialog extends JDialog
       mSubjectMgrInfoPane.setMinimumSize(new Dimension(100, 90));
       mSubjectMgrInfoPane.setPreferredSize(new Dimension(180, 90));
       mNSPortLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mNSPortLabel.setLabelFor(mNSPortField);
       mNamingContextLabel.setHorizontalAlignment(SwingConstants.TRAILING);
-      mNSConnectPanel.add(mNSHostLabel,         new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 47, 18));
+      mNamingContextLabel.setLabelFor(mNamingContextField);
+      mNSIiopVerLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mNSIiopVerLabel.setLabelFor(mNSIiopVerField);
+      mNSIiopVerLabel.setText("IIOP Version");
+      mNSIiopVerField.addFocusListener(new java.awt.event.FocusAdapter()
+      {
+         public void focusLost(FocusEvent e)
+         {
+            validateNetworkAddress();
+         }
+      });
+      mNSIiopVerField.addActionListener(new java.awt.event.ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            validateNetworkAddress();
+         }
+      });
+      mNSConnectPanel.add(mNSHostLabel,            new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 47, 18));
       mNSConnectPanel.add(mNSHostField,       new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 14, 6));
 
       mNSPortLabel.setText("Naming Service Port");
       mNSPortField.setMinimumSize(new Dimension(50, 17));
       mNSPortField.setPreferredSize(new Dimension(50, 17));
-      mNSConnectPanel.add(mNSPortLabel,    new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 51, 18));
+      mNSConnectPanel.add(mNSPortLabel,      new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 0, 18));
       mNSConnectPanel.add(mNSPortField,            new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 10, 6));
+
+      mNSIiopVerField.setMinimumSize(new Dimension(50, 17));
+      mNSIiopVerField.setPreferredSize(new Dimension(50, 17));
+      mNSConnectPanel.add(mNSIiopVerLabel,     new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 0, 18));
+      mNSConnectPanel.add(mNSIiopVerField, new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 10, 6));
 
       mNamingContextLabel.setText("Naming Subcontext");
       mNamingContextField.setMinimumSize(new Dimension(80, 17));
       mNamingContextField.setPreferredSize(new Dimension(150, 17));
-
 
       mOkayButton.setText("OK");
       mOkayButton.setMnemonic('O');
@@ -236,11 +282,11 @@ public class ConnectionDialog extends JDialog
 
       this.getContentPane().add(mNSConnectPanel,  BorderLayout.NORTH);
 
-      mNSConnectPanel.add(mNamingContextLabel,   new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 56, 18));
-      mNSConnectPanel.add(mNamingContextField,    new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
+      mNSConnectPanel.add(mNamingContextLabel,    new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 0, 18));
+      mNSConnectPanel.add(mNamingContextField,    new GridBagConstraints(1, 3, 1, 1, 1.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 44, 6));
-      mNSConnectPanel.add(mNSConnectButton,               new GridBagConstraints(0, 3, 2, 1, 0.0, 0.0
+      mNSConnectPanel.add(mNSConnectButton,               new GridBagConstraints(0, 4, 2, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 0, 0, 0), 0, 0));
 
       this.getContentPane().add(mButtonPanel, BorderLayout.SOUTH);
@@ -264,6 +310,7 @@ public class ConnectionDialog extends JDialog
       // Create a new CORBA service using the information provided by the user.
       CorbaService new_orb = new CorbaService(this.getNameServiceHost(),
                                               this.getNameServicePort(),
+                                              this.getNameServiceIiopVersion(),
                                               this.getNamingSubcontext());
 
       TweekBean service = BeanRegistry.instance().getBean("Environment");
@@ -334,9 +381,10 @@ public class ConnectionDialog extends JDialog
     */
    private void commitConnectInfo()
    {
-      nameServiceHost  = mNSHostField.getText();
-      nameServicePort  = Integer.parseInt(mNSPortField.getText());
-      namingSubcontext = mNamingContextField.getText();
+      nameServiceHost        = mNSHostField.getText();
+      nameServicePort        = Integer.parseInt(mNSPortField.getText());
+      nameServiceIiopVersion = mNSIiopVerField.getText();
+      namingSubcontext       = mNamingContextField.getText();
    }
 
    private void okButtonAction (ActionEvent e)
@@ -376,10 +424,11 @@ public class ConnectionDialog extends JDialog
     * by the user.  If the network address is valid, then the Naming Service
     * connection button is enabled.  Otherwise, it is disabled.
     */
-   private void validateNetworkAddress(ActionEvent e)
+   private void validateNetworkAddress()
    {
       if ( ! mNSHostField.getText().equals("") &&
-           validatePortNumber(mNSPortField.getText()) )
+           validatePortNumber(mNSPortField.getText()) &&
+           ! mNSIiopVerField.getText().equals("") )
       {
          mNSConnectButton.setEnabled(true);
       }
@@ -421,17 +470,17 @@ public class ConnectionDialog extends JDialog
    {
       public void insertUpdate(DocumentEvent e)
       {
-         validateNetworkAddress(null);
+         validateNetworkAddress();
       }
 
       public void removeUpdate(DocumentEvent e)
       {
-         validateNetworkAddress(null);
+         validateNetworkAddress();
       }
 
       public void changedUpdate(DocumentEvent e)
       {
-         validateNetworkAddress(null);
+         validateNetworkAddress();
       }
    }
 
@@ -500,10 +549,11 @@ public class ConnectionDialog extends JDialog
 
    // Attributes that may be queried by the class that instantiated us.
    private int          status;
-   private String       nameServiceHost  = null;
-   private int          nameServicePort  = 2809;
-   private String       namingSubcontext = null;
-   private CorbaService corbaService     = null;
+   private String       nameServiceHost        = null;
+   private int          nameServicePort        = 2809;
+   private String       nameServiceIiopVersion = "1.0";
+   private String       namingSubcontext       = null;
+   private CorbaService corbaService           = null;
 
    // Internal-use properties.
    private tweek.SubjectManager mSubjectManager = null;
@@ -516,6 +566,8 @@ public class ConnectionDialog extends JDialog
    private JTextField    mNSHostField        = new JTextField();
    private JLabel        mNSPortLabel        = new JLabel();
    private JTextField    mNSPortField        = new JTextField();
+   private JLabel        mNSIiopVerLabel     = new JLabel();
+   private JTextField    mNSIiopVerField     = new JTextField();
    private JLabel        mNamingContextLabel = new JLabel();
    private JTextField    mNamingContextField = new JTextField();
 
