@@ -1186,7 +1186,8 @@ value</screen>
           <note>
             <para>At the time of this writing, this configuration file only
             works with OpenGL, OpenSG, and Open Scene Graph applications on
-            UNIX and Win32. It will not work with OpenGL Performer.</para>
+            UNIX, Win32, and Mac OS X. It will not work with OpenGL
+            Performer.</para>
           </note>
         </listitem>
       </itemizedlist>
@@ -1294,12 +1295,16 @@ value</screen>
           entry field under the heading <guilabel>Command
           Arguments</guilabel>. Here, enter the full paths to the VR Juggler
           configuration files that will be used to run the torus application.
-          To use the <envar>VJ_BASE_DIR</envar> environment variable, makefile
-          syntax must be used. In other words, to load
-          <filename>sim.base.jconf</filename>, use
-          <filename>$(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\sim.base.jconf</filename>.
-          The following shows the beginning of the arguments set to
-          <filename>standalone.jconf</filename>.</para>
+          To use the <envar>VJ_BASE_DIR</envar> environment variable (or any
+          other environment variable), makefile syntax must be used. In other
+          words, to load <filename>somefile.jconf</filename>, use
+          <filename>$(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\somefile.jconf</filename>.
+          As was stated above, the full path need not be specified, so
+          referencing <envar>VJ_BASE_DIR</envar> in the path to the example
+          configuration files will not be necessary in most cases.. In <xref
+          linkend="visual.studio.project-settings.dialog.figure" />, we see
+          the use of <filename>standalone.jconf</filename> as the single
+          command argument to MPApp.</para>
 
           <figure id="visual.studio.project-settings.dialog.figure">
             <title>Setting Command Arguments</title>
