@@ -438,7 +438,35 @@ else
 fi
 
 AC_PROG_INSTALL
-AC_CHECK_PROG(MTREE_CMD, mtree, mtree, \${scriptdir}/mtree.pl)
+
+dnl # Ensure that a version of Perl 5 greater than or equal to 5.004 is
+dnl # available.
+chkPerl ( ) {
+    if test -x "$1" ; then
+        retval=`$1 -e 'printf("%s\n", (($] >= 5.004) ? 0 : 1))'`
+    else
+        retval=1
+    fi
+
+    return $retval
+}
+
+_PERL_PATH='/usr/bin /usr/local/bin'
+AC_CACHE_CHECK(for Perl 5 version >= 5.004,
+               ac_cv_perl_version,
+               [ ac_cv_perl_version='no' ;
+                 for _dir in ${_PERL_PATH} ; do
+                     if eval "test \"`chkPerl ${_dir}/perl`\" -eq 0" ; then
+                         ac_cv_perl_version="${_dir}/perl"
+                     elif eval "test \"`chkPerl ${_dir}/perl5`\" -eq 0" ; then
+                         ac_cv_perl_version="${_dir}/perl5"
+                     fi
+                 done
+               ])
+
+PERL="$ac_cv_perl_version"
+
+AC_CHECK_PROG(MTREE_CMD, mtree, mtree, \${PERL} \${scriptdir}/mtree.pl)
 AC_PROG_MAKE_SET
 dnl # AC_PROG_RANLIB
 
@@ -829,6 +857,7 @@ AC_SUBST(LIBS)
 AC_SUBST(LDOPTS)
 AC_SUBST(DBG_FLAGS)
 AC_SUBST(OPT_FLAGS)
+AC_SUBST(PERL)
 AC_SUBST(SHAREDLIB_EXT)
 
 AC_SUBST(ABI)
