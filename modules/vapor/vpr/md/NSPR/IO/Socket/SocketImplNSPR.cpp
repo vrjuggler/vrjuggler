@@ -365,7 +365,7 @@ vpr::ReturnStatus SocketImplNSPR::read_i (void* buffer,
    {
       PRErrorCode err_code = PR_GetError();
       vpr::Error::outputCurrentError(std::cerr, "SocketImplNSPR::read_i::Error -->");
-      
+
       bytes_read = 0;
 
       if ( err_code == PR_WOULD_BLOCK_ERROR )
@@ -473,7 +473,7 @@ vpr::ReturnStatus SocketImplNSPR::write_i (const void* buffer,
    {
       PRErrorCode err_code = PR_GetError();
       vpr::Error::outputCurrentError(std::cerr, "SocketImplNspr::write_i: Error --> ");
-      
+
       bytes_written = 0;
 
       if ( err_code == PR_WOULD_BLOCK_ERROR )
@@ -633,6 +633,11 @@ vpr::ReturnStatus SocketImplNSPR::getOption (const vpr::SocketOptions::Types opt
                break;
             case vpr::SocketOptions::MaxSegment:
                data.max_segment = opt_data.value.max_segment;
+               break;
+            case vpr::SocketOptions::AddMember:
+            case vpr::SocketOptions::DropMember:
+            default:
+               vprASSERT(false && "Socket option handled incorrectly.");  // Should never get here
                break;
          }
       }
