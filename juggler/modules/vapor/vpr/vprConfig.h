@@ -107,16 +107,6 @@
 #   define VPR_CALLBACK_DECL
 #   define VPR_STATIC_CALLBACK(__x) static __x
 
-#ifdef _VPR_BUILD_
-#   define VPR_API(__type)	VPR_EXPORT(__type)
-#   define VPR_CLASS_API	VPR_EXPORT_CLASS
-#   define VPR_DATA_API(__type)	VPR_EXPORT_DATA(__type)
-#else
-#   define VPR_API(__type)	VPR_IMPORT(__type)
-#   define VPR_CLASS_API	VPR_IMPORT_CLASS
-#   define VPR_DATA_API(__type)	VPR_IMPORT_DATA(__type)
-#endif
-
 #else   /* UNIX (where this stuff is simple!) */
 
 #   define VPR_EXPORT(__type)      __type
@@ -135,5 +125,15 @@
 #   define VPR_STATIC_CALLBACK(__x) static __x
 
 #endif	/* VPR_OS_Win32 */
+
+#ifdef _VPR_BUILD_
+#   define VPR_API(__type)	VPR_EXPORT(__type)
+#   define VPR_CLASS_API	VPR_EXPORT_CLASS
+#   define VPR_DATA_API(__type)	VPR_EXPORT_DATA(__type)
+#else
+#   define VPR_API(__type)	VPR_IMPORT(__type)
+#   define VPR_CLASS_API	VPR_IMPORT_CLASS
+#   define VPR_DATA_API(__type)	VPR_IMPORT_DATA(__type)
+#endif
 
 #endif   /* _VPR_CONFIG_H_ */
