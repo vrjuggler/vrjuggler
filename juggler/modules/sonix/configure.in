@@ -59,8 +59,9 @@ DPP_PERL_VER(5.004)
 # -----------------------------------------------------------------------------
 VPR_PATH(0.4.1, , AC_MSG_ERROR(*** VPR required for sonix***))
 VRJUGGLER_PATH(1.1.91, , AC_MSG_ERROR(*** VR Juggler Math required for sonix ***))
-CXXFLAGS="$VRJ_CXXFLAGS $VPR_CXXFLAGS $CXXFLAGS"
-    
+#CXXFLAGS="$VRJ_CXXFLAGS $VPR_CXXFLAGS $CXXFLAGS"
+CXXFLAGS="-I$VJ_BASE_DIR/include -I$VPR_BASE_DIR/include $CXXFLAGS"
+
 
 DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 
