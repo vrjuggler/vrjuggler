@@ -182,7 +182,7 @@ SUBDIRS		= Math Config Kernel Environment Performance Input	\
 # Subdirectories used for recursion through the test source tree when
 # installing.
 TEST_SUBDIRS	= . CfgTest Matrix Quat Sync input ogl ogl/cubes	\
-                  ogl/glove ogl/simpleGlove ogl/wand pfNav		\
+                  ogl/glove ogl/simpleGlove ogl/torus ogl/wand pfNav	\
                   testDynamicCastSTL threads
 
 # The list of ABIs supported on this platform.
