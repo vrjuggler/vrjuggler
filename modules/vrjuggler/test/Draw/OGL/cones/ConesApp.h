@@ -75,7 +75,8 @@ public:
     virtual ~ConesApp(void);
 
     // ------------------------------------------------------------------------
-    // Execute any initialization needed before the API is started.
+    // Execute any initialization needed before the API is started.  Put
+    // device initialization here.
     // ------------------------------------------------------------------------
     virtual void init(void);
 
@@ -86,17 +87,11 @@ public:
     virtual void apiInit(void);
 
     // ------------------------------------------------------------------------
-    // Called immediately upon opening a new OpenGL context.
+    // Called immediately upon opening a new OpenGL context.  This is called
+    // for every display window that is opened.  Put OpenGL resource
+    // allocation here.
     // ------------------------------------------------------------------------
     virtual void contextInit(void);
-
-    // ------------------------------------------------------------------------
-    // Function to draw the scene.
-    //
-    // PRE: OpenGL state has correct transformation and buffer selected.
-    // POST: The current scene has been drawn.
-    // ------------------------------------------------------------------------
-    virtual void draw(void);
 
     /**   name Drawing Loop Functions
      *
@@ -117,8 +112,17 @@ public:
 
     // ------------------------------------------------------------------------
     // Function called after tracker update but before start of drawing.
+    // Do calculations here.
     // ------------------------------------------------------------------------
     virtual void preFrame(void);
+
+    // ------------------------------------------------------------------------
+    // Function to render the scene.  Put OpenGL draw calls here.
+    //
+    // PRE: OpenGL state has correct transformation and buffer selected.
+    // POST: The current scene has been drawn.
+    // ------------------------------------------------------------------------
+    virtual void draw(void);
 
     // ------------------------------------------------------------------------
     // Function called after drawing has been triggered but BEFORE it
@@ -128,6 +132,7 @@ public:
 
     // ------------------------------------------------------------------------
     // Function called before updating trackers but after the frame is drawn.
+    // Do calculations here.
     // ------------------------------------------------------------------------
     virtual void postFrame(void);
 

@@ -210,7 +210,8 @@ bool gloveApp::RightFist()
       return false;
 }
 
-//: Function called after tracker update but before start of drawing
+// Function called after tracker update but before start of drawing.  Do
+// calculations and state modifications here.
 //  In the glove application, this function does the logic for picking the
 //  objects.
 void gloveApp::preFrame()
