@@ -263,7 +263,7 @@ int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
             vprDEBUG(vprDBG_ERROR,0) << "Nothing.\n" << vprDEBUG_FLUSH;
          }
 
-         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICIAL_LVL)
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
             << clrOutNORM(clrRED, "Check for missing files or missing chunks in loaded files.\n")
             << vprDEBUG_FLUSH;
       }
