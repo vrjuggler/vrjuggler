@@ -50,6 +50,7 @@
 #include <vrj/vrjConfig.h>
 #include <vrj/Draw/OGL/GlApp.h>
 #include <vrj/Draw/OpenSG/OpenSGApp.h>
+#include <vpr/Util/Singleton.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
@@ -79,7 +80,8 @@ public:
     {
         std::cout << "OpenSGViewer::OpenSGViewer called\n";
         mFileToLoad = std::string("");
-   }
+        mUser = User::instance();
+    }
 
     virtual ~OpenSGViewer (void)
     {
@@ -107,6 +109,14 @@ public:
         std::cout << "OpenSGViewer::setModelFileName: Set filename: [" << filename << "]\n";
         mFileToLoad = filename;
     }
+
+    User* getUser()
+    { return mUser; }
+
+    OSG::NodePtr getCurSelectedNode()
+    { return mCurSelectedNode; }
+    std::vector<OSG::NodePtr> getSelectableNodes()
+    { return mSelectableNodes; }
 
 public:     // RECONFIG STUFF
    virtual bool configCanHandle(jccl::ConfigChunkPtr chunk)
@@ -137,7 +147,10 @@ public:     // RECONFIG STUFF
   private:
     std::string         mFileToLoad;      /**< Filename of the file to load */
 
-    User                mUser;            /**< The user that this is a viewer for */
+    User*               mUser;            /**< The user that this is a viewer for */
+
+    OSG::NodePtr        mCurSelectedNode; /**< Currently selected node */
+    std::vector<OSG::NodePtr> mSelectableNodes; /**< List of selectable nodes */
 
     //   mSceneRoot:[mSceneTransform]
     //         |
