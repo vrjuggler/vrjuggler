@@ -423,6 +423,7 @@ void vjKernel::startDrawManager(bool newMgr)
    {
       //mDrawManager->configInitial(mInitialChunkDB);     // Give it the chunk DB to extract API specific info
       mDrawManager->setDisplayManager(mDisplayManager);
+      mDrawManager->configProcessPending(true);           // See if there are any config chunks for us
    }
    mDrawManager->setApp(mApp);
 
