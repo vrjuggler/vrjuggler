@@ -321,6 +321,12 @@ if test "x$osg_base_dir" != "x/usr" ; then
    fi
 fi
 
+AC_PATH_X
+
+if test "x$x_libraries" != "xNONE" -a "x$x_libraries" != "x" ; then
+   X_LDFLAGS="-L$x_libraries"
+fi
+
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
 
@@ -330,7 +336,7 @@ LDFLAGS="$LDFLAGS $OSG_LDFLAGS"
 
 AC_CHECK_LIB([osg], [osgGetVersion],
    [AC_CHECK_HEADER([osg/Vec3], [HAVE_OSG='Y'], [HAVE_OSG='N'])],
-   [HAVE_OSG='N'], [-lX11 -lXext])
+   [HAVE_OSG='N'], [$X_LDFLAGS -lX11 -lXext])
 
 DPP_LANG_RESTORE
 
