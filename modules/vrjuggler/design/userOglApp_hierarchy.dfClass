@@ -8,7 +8,8 @@ class diagram {
 /**
 @__ref <oiref:cpp#Class#userOglApp:oiref><oihard>
 @__modelType reference
-@__imported 
+@__imported
+@__hiddenMember <oiref:cpp#Member#userOglApp#contextPreDraw#(##)#:oiref> 
 */
 class reference {
 }/**
@@ -20,7 +21,10 @@ class reference {
 @__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$constructor$$#(#Kernel*#)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$constructor$$#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::GlApp#pipePreDraw#(##)#:oiref>
-@__hiddenMember <oiref:cpp#Member#vrj::GlApp#getDrawManager#(##)#:oiref>*/
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#contextClose#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#contextPreDraw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#contextPostDraw#(##)#:oiref>*/
 class reference1 {
 }/**
 @__ref <oiref:cpp#Class#vrj::App:oiref><oihard>
@@ -55,12 +59,12 @@ class __tags {
 class __options {
 }/**
 @__positions 
-<oigroup:<oiref:cpp#Class#userOglApp:oiref>=240,220,160,183,0:oigroup>
-<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=95,220,95,170:oigroup>
-<oigroup:<oiref:cpp#Extends#userOglApp#vrj::GlApp:oiref>=240,295,190,295:oigroup>
+<oigroup:<oiref:cpp#Class#userOglApp:oiref>=240,220,160,170,0:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=105,220,105,170:oigroup>
+<oigroup:<oiref:cpp#Extends#userOglApp#vrj::GlApp:oiref>=240,275,190,275:oigroup>
 <oigroup:<oiref:cpp#Member#userOglApp#apiInit#(##)#:oiref>=110,130,211,13,1:oigroup>
 <oigroup:<oiref:cpp#Member#userOglApp#preFrame#(##)#:oiref>=110,150,211,13,1:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=20,220,170,150,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=20,220,170,110,0:oigroup>
 <oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,10,190,160,0:oigroup>
 */
 class __positions {
