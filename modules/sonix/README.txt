@@ -32,6 +32,9 @@ Table of contents:
    4. Running sonix tests, and sample apps...
    5. Trouble shooting
       LD paths
+      
+   6. Extending Sonix to your custom sound API.
+      Writting custom sound API plugins (sound driver backends) for sonix
 
 
 ==============================================================================
@@ -55,8 +58,6 @@ Table of contents:
       - Currently sonix implements an: 
         - OpenAL interface 
         - AudioWorks interface 
-      - Future plans to implement: 
-        - OpenML? interface
       - Also wanted: 
         - If someone wants to volunteer, we're also interested in writing 
           an interface to Lake's sound API (contact me: kevn@vrac.iastate.edu) 
@@ -208,3 +209,49 @@ Table of contents:
 
   for Irix:
   setenv LD_LIBRARYN32_PATH "$VPR_BASE_DIR"/lib32:"$GADGET_BASE_DIR"/lib32:"$JCCL_BASE_DIR"/lib32:"$VJ_BASE_DIR"/lib32:"$SNX_BASE_DIR"/lib32:"$XERCESROOT"/lib32:"$OALROOT"/lib32
+
+
+  6.  Extending Sonix to your custom sound API.
+  
+  Writting sound API plugins (sound driver backends) for sonix
+  
+  the most important features are bind/unbind and startup/shutdown.
+  
+  bind/unbind:
+  basically you implement the driver to support bind and unbind to allow
+  sonix the capability to load or unload any sound at any time.  This is
+  useful for a few things:
+  
+  1.) so you can change sound APIs at runtime.  sonix calls unbind for each
+    configured sound, and then kills the current API, starts the new API,
+    and then binds all the sounds there.  
+
+  2.) so the application can configure sounds before OR after the sound API
+    starts.  Since bind is implemented, sonix therefore has the capability
+    to load the sound after the API has started.  One caveat is that this
+    only works if your sound API supports loading sounds after it has
+    started.  One way to get around it as a plugin writter, is to shutdown
+    the API, then load the new sound, then startup the API again.  maybe
+    slow, but it should work.  One caveat with this is that your sound API
+    needs to support shutting down, then restarting again.
+    
+  startup/shutdown:
+  These two are required to make sonix function properly.
+  They allows sonix to start, stop, or restart the audio API at any time.  
+  This may happen when the user 
+  1.) changes the audio API at runtime
+  2.) starts or exits their application
+  
+  trigger/release and other control functions:
+  Trigger is the most important and should be implemented by every API plugin.
+  The other control features may not be supported under your sound API, 
+  in this case it is safe to stub them (withg an empty function).
+  
+  Other features not supported by the sonix API...
+  Feel free to suggest API extensions to the team.  We're open to new ideas.
+  Try to keep in the spirit of sonix being a simple to use sound triggering
+  library.  Extra filter params might be a gfood suggestion, while an API
+  to specify a synthesis network of unit generators might not be a good extension
+  and is probably outside the scope of sonix.  In any case, run it by us
+  we'd be interested to hear any ideas, and definatly we want to know 
+  what types of tools/features you need for sound.
