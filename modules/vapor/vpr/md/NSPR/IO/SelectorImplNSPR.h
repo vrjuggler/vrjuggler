@@ -35,14 +35,16 @@
 #define _VPR_SELECTOR_IMP_NSPR_H_
 
 #include <vprConfig.h>
-#include <Utils/Debug.h>
 
 #include <vector>
 #include <map>
 #include <string>
-
-#include <IO/Selector_t.h>
 #include <prio.h>
+
+#include <IO/SelectorBase.h>
+#include <IO/IOSys.h>
+#include <Utils/Debug.h>
+
 
 namespace vpr {
 

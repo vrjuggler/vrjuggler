@@ -1,4 +1,3 @@
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
@@ -39,23 +38,10 @@
 
 #include <string>
 #include <IO/IOSys.h>
+#include <IO/SelectorBase.h>
+
 
 namespace vpr {
-
-
-// Common base for all selectors and imp's   
-class SelectorBase
-{
-public:
-   enum EventType
-      { READ = 1,           // Read - 
-        ACCEPT = 1,        //  Accept - Same as READ 
-        WRITE = 2,          // Write -
-        EXCEPT = 4,         // Exception -
-        ERR = 8,            // Error -
-        INVALID = 16         // Invalid - Invalid handle
-      };
-};
 
 // ----------------------------------------------------------------------------
 //: Cross-platform selection interface.
