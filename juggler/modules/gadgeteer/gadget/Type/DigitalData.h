@@ -49,11 +49,11 @@ public:
     { mDigitalData = 0; }
 
 
-    int getDigitalData ()
+    int getDigitalData () const
     { return mDigitalData; }
 
 
-    void setDigitalData (int d)
+    void setDigitalData (const int d)
     { mDigitalData = d; }
 
 
@@ -65,7 +65,7 @@ public:
     }
 
 
-    DigitalData& operator= (int data)
+    DigitalData& operator= (const int data)
     {
        mDigitalData = data;
        return *this;
