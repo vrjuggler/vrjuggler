@@ -54,10 +54,8 @@ import org.vrjuggler.tweek.beans.BeanPathException;
 import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.beans.FileLoader;
 import org.vrjuggler.tweek.beans.HelpProvider;
-import org.vrjuggler.tweek.beans.TweekBean;
 import org.vrjuggler.tweek.beans.UndoHandler;
 import org.vrjuggler.tweek.beans.XMLBeanFinder;
-import org.vrjuggler.tweek.beans.loader.BeanInstantiationException;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.net.CommunicationEvent;
 import org.vrjuggler.tweek.net.CommunicationListener;
@@ -110,11 +108,8 @@ public class ControlPanelView
          List beans = finder.find(default_path);
          doc.printStatusnl(beans.toString());
 
-         for ( Iterator b = beans.iterator(); b.hasNext(); )
-         {
-            TweekBean cur_bean = (TweekBean) b.next();
-            mEditorBeans.put(cur_bean.getAttributes().getClassname(), cur_bean);
-         }
+         TweekCore tc = TweekCore.instance();
+         tc.loadBeans(beans);
       }
       catch (BeanPathException e)
       {
@@ -376,64 +371,61 @@ public class ControlPanelView
       // Attempt to load the class identified by the given EditorNode object.
       try
       {
-         TweekBean editor_bean =
-            (TweekBean) mEditorBeans.get(root.getClassName());
+         ClassLoader loader  = getClass().getClassLoader();
+         Class editor_class  = loader.loadClass(root.getClassName());
 
-         if ( editor_bean != null )
+         // Now that we have the class loaded, try to instantiate it.  If
+         // that succeeds, we can open a dialog box and present the editor to
+         // the user.
+         try
          {
-            // If editor instantiation succeeds, we can open a dialog box and
-            // present the editor to the user.
-            // NOTE: We could save some time and re-use editor Bean
-            // instantiations, but the custom editors are not required to
-            // support reopening.  Furthremore, we are not registering the
-            // instantiated Bean with the Tweek BeanRegistry singleton since
-            // the instance will not be reused.
-            // XXX: This does not verify that any other Beans upon which this
-            // edtior depends are loaded.  The BeanDependencyManager in Tweek
-            // needs work before this can be done.
-            editor_bean.instantiate();
-
             ConfigUndoManager mgr = mContext.getConfigUndoManager();
             int save_point = mgr.getEditOffsetFromSave();
             mToolbar.addSavePoint(save_point);
 
-            try
+            CustomEditor editor = (CustomEditor) editor_class.newInstance();
+
+            // This editor actually edits a context, so pass null for the
+            // ConfigElement.
+            editor.setConfig(mContext, null);
+
+            CustomEditorDialog dlg = new CustomEditorDialog(parent, editor);
+            int status = dlg.showDialog();
+
+            if ( status == CustomEditorDialog.CANCEL_OPTION )
             {
-               CustomEditor editor = (CustomEditor) editor_bean.getBean();
-
-               // This editor actually edits a context, so pass null for the
-               // ConfigElement.
-               editor.setConfig(mContext, null);
-
-               CustomEditorDialog dlg = new CustomEditorDialog(parent, editor);
-               int status = dlg.showDialog();
-
-               if ( status == CustomEditorDialog.CANCEL_OPTION )
-               {
-                  mToolbar.doUndoUntil(save_point);
-               }
-            }
-            // This is here in case someone screwed up the ControlPanel.xml
-            // file.
-            catch(ClassCastException e)
-            {
-               JOptionPane.showMessageDialog(
-                  parent,
-                  "Editor associated with '" + root.getLabel() +
-                     "' is not a custom editor!\n" +
-                     "Given type: " + root.getClassName(),
-                  "VRJConfig Control Panel Editor Instantiation Failure",
-                  JOptionPane.ERROR_MESSAGE
-               );
+               mToolbar.doUndoUntil(save_point);
             }
          }
-         else
+         // This is here not because Class.newInstance() throws it but because
+         // someone may have screwed up the ControlPanel.xml file.
+         catch(ClassCastException e)
          {
             JOptionPane.showMessageDialog(
                parent,
-               "Invalid editor class name for editor '" + root.getLabel() +
-                  "'!\n" +
+               "Editor associated with '" + root.getLabel() +
+                  "' is not a custom editor!\n" +
                   "Given type: " + root.getClassName(),
+               "VRJConfig Control Panel Editor Instantiation Failure",
+               JOptionPane.ERROR_MESSAGE
+            );
+         }
+         catch(InstantiationException e)
+         {
+            JOptionPane.showMessageDialog(
+               parent,
+               "Failed to create the editor plug-in of type\n" +
+                  root.getClassName() + "\nReason: " + e.getMessage(),
+               "VRJConfig Control Panel Editor Instantiation Failure",
+               JOptionPane.ERROR_MESSAGE
+            );
+         }
+         catch(IllegalAccessException e)
+         {
+            JOptionPane.showMessageDialog(
+               parent,
+               "Failed to create the editor plug-in of type\n" +
+                  root.getClassName() + "\nReason: " + e.getMessage(),
                "VRJConfig Control Panel Editor Instantiation Failure",
                JOptionPane.ERROR_MESSAGE
             );
@@ -441,20 +433,12 @@ public class ControlPanelView
       }
       // Class loading failed, so there is no way we can instantiate the
       // custom editor.
-      catch (BeanInstantiationException e)
+      catch(ClassNotFoundException e)
       {
-         String reason = e.getMessage();
-
-         Throwable cause = e.getCause();
-         if ( cause != null )
-         {
-            reason += "\n" + cause.getMessage();
-         }
-
          JOptionPane.showMessageDialog(
             parent,
-            "Failed to instantiate custom editor plug-in of type\n" +
-               root.getClassName() + "\nReason: " + reason,
+            "Failed to look up the editor plug-in of type\n" +
+               root.getClassName() + "\nReason: " + e.getMessage(),
             "VRJConfig Control Panel Editor Lookup Failure",
             JOptionPane.ERROR_MESSAGE
          );
@@ -694,8 +678,6 @@ public class ControlPanelView
    //--- JBuilder GUI variables ---//
    private BorderLayout mBaseLayout = new BorderLayout();
    private ControlPanelToolbar mToolbar = null;
-
-   private Map mEditorBeans = new HashMap();
 
    /**
     * The context providing a view into the current configuration.
