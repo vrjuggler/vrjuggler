@@ -76,7 +76,7 @@ vjConfigChunk& vjConfigChunk::operator = (const vjConfigChunk& c) {
 
 
 //: tests for equality of two vjConfigChunks
-bool vjConfigChunk::operator== (const vjConfigChunk& c) {
+bool vjConfigChunk::operator== (const vjConfigChunk& c) const {
     // equality operator - this makes a couple of assumptions:
     // 1. the descs must be the _same_object_, not just equal.
     // 2. the properties will be in the _same_order_.  This is
@@ -95,7 +95,7 @@ bool vjConfigChunk::operator== (const vjConfigChunk& c) {
 
 
 //: Compares two vjConfigChunks based on their instance names
-bool vjConfigChunk::operator< (vjConfigChunk& c) {
+bool vjConfigChunk::operator< (const vjConfigChunk& c) const {
     std::string s1 = getProperty ("name");
     std::string s2 = c.getProperty ("name");
     return s1 < s2;
@@ -105,7 +105,7 @@ bool vjConfigChunk::operator< (vjConfigChunk& c) {
 
 //: Return a list of chunk names dependant upon this one
 // This is used to sort a db by dependancy.
-std::vector<std::string> vjConfigChunk::getDependencies()
+std::vector<std::string> vjConfigChunk::getDependencies() const
 {
    std::string chunkname;
    std::vector<std::string> dep_list;     // Create return vector
@@ -142,7 +142,7 @@ std::vector<std::string> vjConfigChunk::getDependencies()
 
 
 
-vjProperty* vjConfigChunk::getPropertyPtrFromName (const std::string& property) {
+vjProperty* vjConfigChunk::getPropertyPtrFromName (const std::string& property) const {
     for (int i = 0; i < props.size(); i++) {
 	if (!vjstrcasecmp (props[i]->getName(), property))
 	    return props[i];
@@ -152,7 +152,7 @@ vjProperty* vjConfigChunk::getPropertyPtrFromName (const std::string& property) 
 
 
 
-vjProperty* vjConfigChunk::getPropertyPtrFromToken (const std::string& token) {
+vjProperty* vjConfigChunk::getPropertyPtrFromToken (const std::string& token) const {
   for (int i = 0; i < props.size(); i++) {
     if (!vjstrcasecmp(props[i]->description->getToken(), token))
       return props[i];
@@ -264,7 +264,6 @@ bool vjConfigChunk::tryassign (vjProperty *p, int index, const char* val) {
 
 
 
-
 istream& operator >> (istream& in, vjConfigChunk& self) {
     /* can't really use property >> because we don't know what
      * property to assign into.
@@ -341,7 +340,7 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 
 
 
-int vjConfigChunk::getNum (const std::string& property_token) {
+int vjConfigChunk::getNum (const std::string& property_token) const {
     vjProperty* p = getPropertyPtrFromToken (property_token);
     if (p)
 	return p->getNum();
@@ -351,13 +350,13 @@ int vjConfigChunk::getNum (const std::string& property_token) {
 
 
 
-vjVarValue& vjConfigChunk::getType () {
+const vjVarValue& vjConfigChunk::getType () const {
     return type_as_varvalue;
 }
 
 
 
-vjVarValue& vjConfigChunk::getProperty (const std::string& property_token, int ind) {
+const vjVarValue& vjConfigChunk::getProperty (const std::string& property_token, int ind) const {
    if (!vjstrcasecmp(property_token,"type"))
    {
       return type_as_varvalue;
@@ -366,8 +365,8 @@ vjVarValue& vjConfigChunk::getProperty (const std::string& property_token, int i
    vjProperty *p = getPropertyPtrFromToken (property_token);
    if (!p)
    {
-       vjDEBUG(vjDBG_CONFIG,2) << "request for property " << property_token.c_str() << " in chunk named "
-	    << getProperty("Name") << " returning invalid instance" << endl << vjDEBUG_FLUSH;
+       vjDEBUG(vjDBG_CONFIG,2) << "getProperty(\"" << property_token.c_str() << "\") in chunk \""
+	    << getProperty("Name") << "\" - no such property; returning T_INVALID\n" << vjDEBUG_FLUSH;
       return vjVarValue::getInvalidInstance();
    }
    return p->getValue (ind);
@@ -453,3 +452,5 @@ bool vjConfigChunk::addValue (const std::string& property, vjConfigChunk* val) {
 	return false;
     return setProperty (property, val, p->value.size());
 }
+
+

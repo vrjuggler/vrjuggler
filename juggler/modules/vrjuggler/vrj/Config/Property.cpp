@@ -88,7 +88,7 @@ vjProperty::~vjProperty () {
 
 
 
-vjProperty::vjProperty (vjProperty& p):value() {
+vjProperty::vjProperty (const vjProperty& p):value() {
     *this = p;
 }
 
@@ -115,7 +115,7 @@ vjProperty& vjProperty::operator= (const vjProperty& p) {
 
 
 
-bool vjProperty::operator== (const vjProperty& p) {
+bool vjProperty::operator== (const vjProperty& p) const {
     if (description != p.description)
 	return false;
     if (value.size() != p.value.size())
@@ -144,7 +144,7 @@ bool vjProperty::applyUnits (CfgUnit u) {
 
 
 
-vjEnumEntry* vjProperty::getEnumEntryWithValue (int val) {
+vjEnumEntry* vjProperty::getEnumEntryWithValue (int val) const {
     // gets an enumentry based on the value, instead of the name
     vjVarValue v(T_INT);
     v = val;
@@ -193,18 +193,18 @@ vjVarValue& vjProperty::getValue (int ind) {
 
 
 
-int vjProperty::getNum () {
+int vjProperty::getNum () const {
     return value.size();
 }
 
 
 
-std::string& vjProperty::getName () {
+const std::string& vjProperty::getName () const {
     return description->getName();
 }
 
 
-std::string& vjProperty::getToken () {
+const std::string& vjProperty::getToken () const {
     return description->getToken();
 }
 

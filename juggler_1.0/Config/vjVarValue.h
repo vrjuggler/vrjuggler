@@ -75,7 +75,7 @@ private:
     vjConfigChunk *embeddedchunkval;
 
     static vjVarValue* invalid_instance;
-    static std::string using_invalid_msg;
+    static const std::string using_invalid_msg;
 
 public:
 
@@ -90,7 +90,7 @@ public:
     static vjVarValue& getInvalidInstance ();
 
 
-    inline VarType getType () {
+    inline VarType getType () const {
 	return type;
     }
 
@@ -120,8 +120,8 @@ public:
 
 
     //: Equality Operator
-    bool operator == (const vjVarValue& v);
-    inline bool operator != (const vjVarValue& v) {
+    bool operator == (const vjVarValue& v) const;
+    inline bool operator != (const vjVarValue& v) const {
 	return !(*this == v);
     }
 
@@ -137,31 +137,31 @@ public:
     //: Cast to int
     //!RETURNS: i - integer value of self if T_INT, 0 or 1 if T_BOOL
     //!RETURNS: 0 - if not T_INT or T_BOOL (this is bad)
-    operator int();
+    operator int() const;
     
 
     //: cast to ConfigChunk
     //!NOTE: Returns a copy of the contained chunk which must be
     //+      freed.
-    operator vjConfigChunk*();
+    operator vjConfigChunk*() const;
 
 
     //: Cast to bool
-    operator bool();
+    operator bool() const;
 
 
     //: Cast to float (for T_FLOAT or T_DISTANCE)
-    operator float ();
+    operator float () const;
 
 
     //: Returns a string VarValue as a c-style string
     //!NOTE: returns a freshly allocated char array that the caller is 
     //+      responsible for deleting.
-    char* cstring ();
+    char* cstring () const;
 
 
     //: Cast to std::string
-    operator std::string ();
+    operator std::string () const;
 
 
     //: Assignment overload 

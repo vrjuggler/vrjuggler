@@ -25,7 +25,7 @@
 #include <Kernel/vjDebug.h>
 
 vjVarValue* vjVarValue::invalid_instance = NULL;
-std::string vjVarValue::using_invalid_msg = "Using T_INVALID VarValue - something's messed up";
+const std::string vjVarValue::using_invalid_msg = "Casting from T_INVALID VarValue - this may mean we're confused";
 
 
 /*static*/ vjVarValue& vjVarValue::getInvalidInstance () {
@@ -95,7 +95,7 @@ vjVarValue& vjVarValue::operator= (const vjVarValue &v) {
 
 
 //: Equality Operator
-bool vjVarValue::operator == (const vjVarValue& v) {
+bool vjVarValue::operator == (const vjVarValue& v) const {
     if (type != v.type)
         return false;
     switch (type) {
@@ -125,7 +125,7 @@ bool vjVarValue::operator == (const vjVarValue& v) {
 
 
 
-vjVarValue::operator int() {
+vjVarValue::operator int() const {
     switch (type) {
     case T_INT:
 	return intval;
@@ -134,7 +134,7 @@ vjVarValue::operator int() {
     case T_FLOAT:
 	return (int)floatval;
     case T_INVALID:
-	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg.c_str() << 1 
+	vjDEBUG(vjDBG_CONFIG,4) << using_invalid_msg.c_str() << 1 
 			       << endl << vjDEBUG_FLUSH;
 	return 0;
     default:
@@ -146,14 +146,14 @@ vjVarValue::operator int() {
 
 
 
-vjVarValue::operator vjConfigChunk*() {
+vjVarValue::operator vjConfigChunk*() const {
     switch (type) {
     case T_EMBEDDEDCHUNK:
 	// we need to make a copy because if the value is deleted, it deletes
 	// its embeddedchunk
 	return new vjConfigChunk (*embeddedchunkval);
     case T_INVALID:
-	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg.c_str() << 2 
+	vjDEBUG(vjDBG_CONFIG,4) << using_invalid_msg.c_str() << 2 
 			       << endl << vjDEBUG_FLUSH;
 	return NULL;
     default:
@@ -164,7 +164,7 @@ vjVarValue::operator vjConfigChunk*() {
 
 
 
-vjVarValue::operator bool() {
+vjVarValue::operator bool() const {
     if ((type == T_BOOL))
 	return boolval;
     switch (type) {
@@ -175,7 +175,7 @@ vjVarValue::operator bool() {
     case T_FLOAT:
 	return (bool)floatval;
     case T_INVALID:
-	vjDEBUG(vjDBG_CONFIG,1) << using_invalid_msg.c_str() << 3 
+	vjDEBUG(vjDBG_CONFIG,4) << using_invalid_msg.c_str() << 3 
 			       << endl << vjDEBUG_FLUSH;
 	return false;
     default:
@@ -187,7 +187,7 @@ vjVarValue::operator bool() {
 
 
 
-vjVarValue::operator float () {
+vjVarValue::operator float () const {
     switch (type) {
     case T_FLOAT:
 	return floatval;
@@ -196,7 +196,7 @@ vjVarValue::operator float () {
     case T_BOOL:
 	return (float)boolval;
     case T_INVALID:
-	vjDEBUG(vjDBG_CONFIG,1) <<  using_invalid_msg.c_str() << 4 
+	vjDEBUG(vjDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 4 
 			       << endl << vjDEBUG_FLUSH;
 	return 0.0f;
     default:
@@ -207,13 +207,13 @@ vjVarValue::operator float () {
 
 
 
-char* vjVarValue::cstring () {
+char* vjVarValue::cstring () const {
     switch (type) {
     case T_STRING:
     case T_CHUNK:
 	return strdup (strval.c_str());
     case T_INVALID:
-	vjDEBUG(vjDBG_CONFIG,1) <<  using_invalid_msg.c_str() << 5 
+	vjDEBUG(vjDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 5 
 			       << endl << vjDEBUG_FLUSH;
 	return strdup("");
     default:
@@ -224,13 +224,13 @@ char* vjVarValue::cstring () {
 
 
 
-vjVarValue::operator std::string () {
+vjVarValue::operator std::string () const {
     switch (type) {
     case T_STRING:
     case T_CHUNK:
 	return strval;
     case T_INVALID:
-	vjDEBUG(vjDBG_CONFIG,1) <<  using_invalid_msg.c_str() << 6 
+	vjDEBUG(vjDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 6 
 			       << endl << vjDEBUG_FLUSH;
 	return (std::string)"";
     default:
