@@ -369,13 +369,13 @@ post-install:
 install-java-idl:
 ifeq ($(BUILD_JAVA), Y)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(JACORB_DIR)/COPYING.LIB-2.0 $(projdatadir)
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(JACORB_DIR)/COPYRIGHT $(projdatadir)
+          $(EXTRA_INSTALL_ARGS) $(JACORB_DIR)/LICENSE $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(JACORB_DIR)/README.source $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(JACORB_DIR)/idl.jar $(bindir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(JACORB_DIR)/logkit-1.2.jar $(bindir)
 ifeq (@OS_TYPE@, Win32)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(JACORB_DIR)/idl.bat $(bindir)
