@@ -132,6 +132,8 @@ vjMotionStar::startSampling () {
    }
 
    if ( myThread == NULL ) {
+      int retval;
+
       if ( theData != NULL ) {
          getMyMemPool()->deallocate((void*)theData);
       }
@@ -146,10 +148,32 @@ vjMotionStar::startSampling () {
       vjDEBUG(vjDBG_INPUT_MGR,1) << "    Getting MotionStar ready ...\n"
                                  << vjDEBUG_FLUSH;
 
-      if ( mMotionStar.start() == -1 ) {
-         vjDEBUG(vjDBG_INPUT_MGR, 0) << "vjMotionStar failed to connect to server\n"
-                                     << vjDEBUG_FLUSH;
-         return 0;
+      retval = mMotionStar.start(); 
+
+      switch (retval) {
+         // Proper startup.
+         case 0;
+            break;
+         // Connection to server failed.  aMotionStar prints out the system
+         // error message about why.
+         case -1:
+            vjDEBUG(vjDBG_INPUT_MGR, 0) << "vjMotionStar failed to connect to server\n"
+                                        << vjDEBUG_FLUSH;
+            return 0;
+            break;
+         // No address has been set for the server, so no connection can be
+         // made.
+         case -2:
+            vjDEBUG(vjDBG_INPUT_MGR, 0) << "No server address set for vjMotionStar\n"
+                                        << vjDEBUG_FLUSH;
+            return 0;
+            break;
+         // Unkonwn return value from aMotionStar::start().
+         default:
+            vjDEBUG(vjDBG_INPUT_MGR, 0) << "Abnormal return from aMotionStar::start()\n"
+                                        << vjDEBUG_FLUSH;
+            return 0;
+            break;
       }
 
       //sanity check.. make sure birds actually started

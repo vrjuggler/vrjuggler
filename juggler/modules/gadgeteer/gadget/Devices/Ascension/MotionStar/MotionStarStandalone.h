@@ -195,6 +195,7 @@ public:
     //
     //! RETURNS:  0 - Successful startup.
     //! RETURNS: -1 - Failed to connect to server.
+    //! RETURNS: -2 - No address has been set for the server.
     // ------------------------------------------------------------------------
     int start();
 
