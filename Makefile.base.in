@@ -252,6 +252,7 @@ endif
 # Library names.
 # -----------------------------------------------------------------------------
 VJ_LIBRARY	= @LIB_PREFIX@Juggler
+UTILS_LIBRARY	= @LIB_PREFIX@Juggler_utils
 GL_LIBRARY	= @LIB_PREFIX@Juggler_ogl
 PF_LIBRARY	= @LIB_PREFIX@Juggler_pf
 AW_LIBRARY	= @LIB_PREFIX@Juggler_aw
