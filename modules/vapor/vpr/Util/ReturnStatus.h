@@ -57,12 +57,12 @@ namespace vpr
       /// Possible status codes.
       enum Code
       {
-         Succeed,          /**< Succeedful status */
-         Fail,             /**< Fail status */
+         Succeed,          /**< Successful status */
+         Fail,             /**< Failure status */
          WouldBlock,       /**< Operation would block */
          Timeout,          /**< Timeout occurred */
          InProgress,       /**< Operation is still in progress */
-         NotConnected      /**< The given IO device is closed */
+         NotConnected      /**< The given I/O device is closed */
       };
 
       /// Default constructor.  vpr::ReturnStatus::Succeed is default.
