@@ -1,5 +1,6 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Aug-06-2002 subatomic Added plugin for Subsynth audio synthesizer.
 Aug-04-2002 subatomic Use abstract interface class ISoundImplementation
                       so that plugins can be loaded at runtime instead of 
                       compiled statically.
