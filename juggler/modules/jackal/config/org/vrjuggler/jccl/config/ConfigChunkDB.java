@@ -266,9 +266,6 @@ public class ConfigChunkDB implements Cloneable {
             ch = (ConfigChunk)i.next();
             if (ch.getDescName().equalsIgnoreCase(typename))
                 v.add (ch);
-//  	for (int i = 0; i < size(); i++) {
-//  	    if (elementAt(i).desc.name.equalsIgnoreCase(typename))
-//  		v.add(elementAt(i));
 	}
 	return v;
     }
@@ -358,68 +355,6 @@ public class ConfigChunkDB implements Cloneable {
 	    name = root + Integer.toString(num++);
 	}
 	return name;
-    }
-
-
-
-    /** Reads a series of ConfigChunks from st.
-     *  Terminates when it encounters the end of the stream or the token
-     *  "End".
-     */
-    public boolean read (ConfigStreamTokenizer st) {
-	ConfigChunk c;
-
-	for (;;) {
-	    c = readAChunk(st);
-	    if (c != null) {
-                c.validateEmbeddedChunkNames(); // needed when loading old files.
-		insertOrdered(c);
-            }
-	    else
-		break;
-	}
-	return true;
-    }
-
-
-
-    /** Auxiliary for read. */
-    public ConfigChunk readAChunk (ConfigStreamTokenizer st) {
-	String s;
-	ConfigChunk c = null;
-	ChunkDesc d;
-
-	try {
-	    while (c == null) {
-		st.nextToken();
-		if ((st.ttype == ConfigStreamTokenizer.TT_EOF) ||
-		    ((st.ttype == ConfigStreamTokenizer.TT_WORD) &&
-		     st.sval.equalsIgnoreCase ("end")))
-		    return null;
-		c = ChunkFactory.createChunkWithDescToken(st.sval);
-		if (c != null) {
-		    c.read(st);
-		    if ((c.name == null) || (c.name.equals(""))) {
-			c.setName( getNewName (c.desc.name));    
-		    }
-		} 
-		else {
-		    System.err.println ("Error reading ConfigChunks - no such chunk type " + st.sval);
-		    for(;;) {
-			st.nextToken();
-			if ((st.ttype == ConfigStreamTokenizer.TT_WORD &&
-			     st.sval.equalsIgnoreCase("end")) ||
-			    (st.ttype == ConfigStreamTokenizer.TT_EOF))
-			    break;
-		    }    
-		}
-	    }
-	    return c;   
-	}
-	catch (IOException io) {
-	    System.err.println ("IO Error in ConfigChunkDB.read()");
-	    return null;
-	}
     }
 
 
