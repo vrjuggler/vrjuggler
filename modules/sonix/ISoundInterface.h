@@ -2,6 +2,7 @@
 
 #ifndef ISOUNDINTERFACE_H
 #define ISOUNDINTERFACE_H
+#include "SoundFactory.h"
 
 /** @interface */
 class ISoundInterface {
@@ -39,6 +40,13 @@ public:
      * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
      */
     virtual void associate(const std::string & alias, const std::string & filename) = 0;
+
+
     virtual void remove(const std::string alias) = 0;
+    virtual void setPosition( const std::string& alias, float x, float y, float z ) = 0;
+private:    
+
+    /** @link dependency */
+    /*#  SoundFactory lnkSoundFactory; */
 };
 #endif  //ISOUNDINTERFACE_H
