@@ -14,8 +14,9 @@ LATEX_OUTPUT_DIR=	latex
 
 # Fill these in!!  Together, they form the installation prefix.
 webroot=	$(HOME)/public_html/jugglerweb
-instdir=	tweek/1.0/programmer.reference.cxx
+instdir=	tweek/$(PROJECT_NUMBER)/programmer.reference.cxx
 
 prefix=		$(webroot)/$(instdir)
 
 include ../../../doc/doxygen.mk
+include version.mk
