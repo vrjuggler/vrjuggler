@@ -31,7 +31,8 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for gadgeteer/gadget/Devices/KeyboardMouseDevice.  It requires GNU make.
+# Makefile.in for gadgeteer/gadget/Devices/KeyboardMouseDevice.  It requires
+# GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -51,7 +52,6 @@ SRCS=		KeyboardMouseDevice.cpp
 
 xwin_srcs=	InputWindowXWin.cpp		\
 		InputAreaXWin.cpp
-#EventWindowDepCheckerXWin.cpp	\
 
 ifeq (@OS_TYPE@, Win32)
    SRCS=	InputWindowWin32.cpp	\
