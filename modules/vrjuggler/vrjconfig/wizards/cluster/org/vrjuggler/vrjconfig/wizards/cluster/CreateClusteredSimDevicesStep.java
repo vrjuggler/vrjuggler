@@ -37,15 +37,14 @@ import javax.swing.*;
 import org.vrjuggler.tweek.wizard.*;
 
 /**
- * A pane used to welcome the user to a wizard. This is generally the first
- * pane you wish to show in a wizard.
+ * Creates the clustered simulator configuration.
  */
 public class CreateClusteredSimDevicesStep
    extends AbstractWizardStep
    implements WizardPane
 {
    /**
-    * Creates a new CreateClusteredSimDevicesStep with no text.
+    * Creates a new CreateClusteredSimDevicesStep with nothing.
     */
    public CreateClusteredSimDevicesStep()
    {
@@ -59,15 +58,18 @@ public class CreateClusteredSimDevicesStep
    {
       if (cwp == null)
       {
+         // If this is the first time on this step...
          cwp = new CreateClusteredSimDevicesPanel();
          cwp.setFileSourceName(mFileSourceName);
-         cwp.init();
+         cwp.setHeadEventWindowName(mHeadEventWindowName);
+         cwp.setSimViewEventWindowName(mSimViewEventWindowName);
+         cwp.setWandEventWindowName(mWandEventWindowName);
          cwp.setConfigFilePath(mConfigFilePath);
+         cwp.init();
          cwp.copySimFilesToContext();
-         System.gc();
+         cwp.createDisplayElements();
       }
-      cwp.createDisplayChunks();
-      cwp.update();
+      cwp.loadLists();
       return cwp;
    }
 
@@ -93,7 +95,34 @@ public class CreateClusteredSimDevicesStep
    {
      return(mFileSourceName);
    }
-
+   
+   public void setHeadEventWindowName(String name)
+   {
+      mHeadEventWindowName = name;
+   }
+   public String getHeadEventWindowName()
+   {
+      return mHeadEventWindowName;
+   }
+   
+   public void setSimViewEventWindowName(String name)
+   {
+      mSimViewEventWindowName = name;
+   }
+   public String getSimViewEventWindowName()
+   {
+      return mSimViewEventWindowName;
+   }
+   
+   public void setWandEventWindowName(String name)
+   {
+      mWandEventWindowName = name;
+   }
+   public String getWandEventWindowName()
+   {
+      return mWandEventWindowName;
+   }
+   
    public List getRequiredClasses()
    {
       List classes = new ArrayList();
@@ -118,4 +147,7 @@ public class CreateClusteredSimDevicesStep
    private String mFileSourceName = new String("DefaultFileSource");
    private String mConfigFilePath =
        new String("${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/");
+   private String mHeadEventWindowName = "Head Event Window";
+   private String mSimViewEventWindowName = "Sim View Cameras Control";
+   private String mWandEventWindowName = "Wand Event Window";
 }
