@@ -3,7 +3,7 @@
 //
 // Dummy Analog device
 //
-// History:  
+// History:
 //
 // Andy Himberger:    v0.0 - 12-1-97 - Inital version
 ////////////////////////////////////////////////////////////////////////////
@@ -19,13 +19,13 @@ class vjDummyAnalog : public vjAnalog {
 	/** @name Construction/Destruction
 	 */
 	//@{
-	vjDummyAnalog() : vjAnalog(), vjInput() { 
-	  active = 1; }
+	vjDummyAnalog() : vjAnalog(), vjInput()
+   { active = 1; }
 	~vjDummyAnalog() {}
 	//@}
 	
 	/** @name vjInput pure virtual functions
-	 *  
+	 *
 	 *  pure virtual functions required by vjInput
 	 */
 	//@{
@@ -41,7 +41,7 @@ class vjDummyAnalog : public vjAnalog {
 	 *  override but are not required to
 	 */
 	//@{
-	char* GetDeviceName() { return "vjAnalog"; }
+	char* GetDeviceName() { return "vjDummyAnalog"; }
 	//@}
 	
 	/** @name vjAnalog pure virtual functions

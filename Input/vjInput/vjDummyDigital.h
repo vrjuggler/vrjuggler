@@ -3,7 +3,7 @@
 //
 // Dummy Digital device
 //
-// History:  
+// History:
 //
 // Andy Himberger:    v0.0 - 12-1-97 - Inital version
 ////////////////////////////////////////////////////////////////////////////
@@ -14,19 +14,20 @@
 
 #include <vjConfig.h>
 #include <Input/vjInput/vjDigital.h>
+#include <Input/vjInput/vjInput.h>
 
 //: A dummy Digital device for Digital proxies to default to.
-class vjDummyDigital : public vjDigital {
-
-  public:
-	/** @name Construction/Destruction */
-	//@{
-	vjDummyDigital() : vjDigital(), vjInput() { active = 1;}
+class vjDummyDigital : public vjDigital
+{
+public:
+	//: Constructor
+	vjDummyDigital() : vjDigital()
+   { active = 1;}
+   //: Destructor
 	~vjDummyDigital() {}
-	//@}
 
 	/** @name vjInput pure virtual functions
-	 *  
+	 *
 	 *  pure virtual functions required by vjInput
 	 */
 	//@{
@@ -42,7 +43,7 @@ class vjDummyDigital : public vjDigital {
 	 *  override but are not required to
 	 */
 	//@{
-	char* GetDeviceName() { return "vjDigital"; }
+	char* GetDeviceName() { return "vjDummyDigital"; }
 	//@}
 
 	/** @name vjAnalog pure virtual functions

@@ -10,7 +10,7 @@
 #include <vjConfig.h>
 #include <Input/vjInput/vjInput.h>
 
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
 //: vjAnalog is the abstract base class that devices with digital data derive
 //+ from.
 //
@@ -24,7 +24,7 @@
 //-----------------------------------------------------------------------------
 class vjAnalog : virtual public vjInput {
     public:
-    
+
 	/** @name Construction/Destruction
 	 */
 	//@{
@@ -47,5 +47,6 @@ class vjAnalog : virtual public vjInput {
 	//: Return analog data
 	virtual int GetAnalogData(int devNum = 0) = 0;
 };
+
 
 #endif	/* _VJ_ANALOG_H_ */
