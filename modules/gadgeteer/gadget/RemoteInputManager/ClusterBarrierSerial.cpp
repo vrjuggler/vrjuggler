@@ -44,6 +44,51 @@ namespace gadget
    static vpr::Uint8 SYNC_SIGNAL = 'G';
    static const vpr::Interval read_timeout(5,vpr::Interval::Sec);
    
+   ClusterBarrierSerial::ClusterBarrierSerial()
+   {
+   
+   }
+   ClusterBarrierSerial::~ClusterBarrierSerial()
+   {
+      if (mSerialPort != NULL)
+      {
+         mSerialPort->close();
+         delete mSerialPort;
+      }
+   }
+   vpr::ReturnStatus ClusterBarrierSerial::Init()
+   {
+      vpr::ReturnStatus status;
+   
+      if (mIsMaster)
+      {
+         status = ConnectToMasterSerial();
+         if (status.success())
+         {
+            mActive = true;
+         }
+         return(status);
+      }
+      else
+      {
+         status = ConnectToMasterSocket();
+         if (!status.success())
+         {
+            return status;   
+         }
+         else
+         {  
+            status = ConnectToMasterSerial();
+            if (status.success())
+            {
+               mActive = true;
+            }
+            return(status);
+         }
+      }
+   }
+
+   
    void ClusterBarrierSerial::AddBarrierSlave(vpr::SocketStream* sock_stream)
    {
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "ClusterBarrierTCP: Adding Barrier Slave\n"<< vprDEBUG_FLUSH;
@@ -52,36 +97,32 @@ namespace gadget
    
    vpr::ReturnStatus ClusterBarrierSerial::ConnectToMasterSerial()
    {
-      std::string port_name = "/dev/ttyS1";
-
-      std::cout << "Before Create!\n" << std::endl;
-      mSerialPort = new vpr::SerialPort(port_name);
-      std::cout << "After Create!\n" << std::endl;
+      //std::string port_name = "/dev/ttyS1";
+      //mSerialPort = new vpr::SerialPort(port_name);
+      mSerialPort = new vpr::SerialPort(mSerialPortName);
       
-      std::cout << "Before set!\n" << std::endl;
       mSerialPort->setOpenReadWrite();
-      std::cout << "After set!\n" << std::endl;
-      std::cout << "Before Open!\n" << std::endl;
       if ( !mSerialPort->open().success() )
       {
-         std::cout << "Before Create!\n" << std::endl;
-          std::cerr << "SYNC-BARRIER, Port: " << port_name << " could not be opened!" << std::endl;
-          return vpr::ReturnStatus::Fail;
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << "ClusterBarrierSerial::Init() Failed, Port: " << mSerialPortName << " could not be opened!\n" << vprDEBUG_FLUSH;
+         return vpr::ReturnStatus::Fail;
       }
       else
       {
-         std::cout << "Before Create!\n" << std::endl;
-          std::cerr << "SYNC-BARRIER, Success, Port: " << port_name << " opened." << std::endl;
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "ClusterBarrierSerial::Init() Success, Port: " << mSerialPortName << " opened.\n" << vprDEBUG_FLUSH;
       }
       
-      int baud_rate = 38400;
+      //int baud_rate = 38400;
       
       mSerialPort->clearAll();
       mSerialPort->enableLocalAttach();
       mSerialPort->setBufferSize(1);
       mSerialPort->setTimeout(0);
-      mSerialPort->setOutputBaudRate(baud_rate); // Put me before input to be safe
-      mSerialPort->setInputBaudRate(baud_rate);
+      //mSerialPort->setOutputBaudRate(baud_rate); // Put me before input to be safe
+      //mSerialPort->setInputBaudRate(baud_rate);
+      mSerialPort->setOutputBaudRate(mBaudRate); // Put me before input to be safe
+      mSerialPort->setInputBaudRate(mBaudRate);
+
       mSerialPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
       mSerialPort->enableRead();
       
@@ -147,13 +188,13 @@ namespace gadget
       
       vprASSERT(mActive==true && "Barrier is not active!");
 
-      mSerialPort->read(&temp,1,bytes_read,read_timeout);   // DONT USE, SERIAL ONLY
-      /*for (std::vector<vpr::SocketStream*>::iterator i = this->mSyncClients.begin();
+      //mSerialPort->read(&temp,1,bytes_read,read_timeout);   // DONT USE, SERIAL ONLY
+      for (std::vector<vpr::SocketStream*>::iterator i = this->mSyncClients.begin();
                i < this->mSyncClients.end();i++)
       {
          (*i)->recv(&temp , 1, bytes_read,read_timeout);
          vprASSERT(1==bytes_read && "SYNC-BARRIER, Master sync receive timeout");
-      } */
+      }
    }
    void ClusterBarrierSerial::SlaveSend()
    {
@@ -161,8 +202,8 @@ namespace gadget
       vprASSERT(mActive==true && "Barrier is not active!");
       
       vpr::Uint32 bytes_read;
-      mSerialPort->write(&SYNC_SIGNAL,1,bytes_read);     // DON'T USE, SERIAL ONLY
-      // mSyncServer->send(&SYNC_SIGNAL , 1, bytes_read);
+      //mSerialPort->write(&SYNC_SIGNAL,1,bytes_read);     // DON'T USE, SERIAL ONLY
+      mSyncServer->send(&SYNC_SIGNAL , 1, bytes_read);
    }
    void ClusterBarrierSerial::SlaveReceive()
    {

@@ -73,7 +73,11 @@ namespace gadget
       mObjectWriter->mData->clear();
       mObjectWriter->mCurHeadPos = 0;
    }
-   
+   bool MsgPackage::isEmpty()
+   {
+       return(mObjectWriter->getData()->empty() && mTempWriter->getData()->empty());
+   }
+
    void MsgPackage::sendAndClearDeviceData(vpr::SocketStream* sock_stream, NetDevice* net_device)
    {
          // Check to make sure that we still have a connection
@@ -717,8 +721,6 @@ namespace gadget
 
 
       // Read in the Packet Header
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "[PACKET]BEFORE READING HANDSHAKE\n" << vprDEBUG_FLUSH;
-      
       while (newStream->recvn(packet_head,8,bytes_read) != vpr::ReturnStatus::Succeed)
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"...Still waiting for handshake HEAD") 
@@ -726,8 +728,6 @@ namespace gadget
 
       }
       
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "[PACKET]HANDSHAKE READ SUCCESSFUL\n" 
-         << "  READ NUM BYTES: " << bytes_read << "\n" << vprDEBUG_FLUSH;
       vpr::ObjectReader* head_reader = new vpr::ObjectReader(&packet_head);
 
       // Read the info from the header

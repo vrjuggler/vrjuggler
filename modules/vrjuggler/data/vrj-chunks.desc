@@ -12,7 +12,7 @@
       <help>Serial port speed</help>
       <item label="Baud Rate" defaultvalue="38400" />
     </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help />
       <item label="" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
@@ -64,7 +64,7 @@
       <help>the actual analog data values range - upper bound</help>
       <item label="Range Maximum" defaultvalue="255.0" />
     </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help />
       <item label="" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
@@ -75,40 +75,6 @@
     <help>Use an audioworks sound engine.</help>
     <PropertyDesc token="adfConfigFile" name="adfConfigFile" type="string" variable="0">
       <item label="adf Config File" defaultvalue="" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="MachineSpecific" name="Cluster Machine">
-    <help>Settings for the specified machine.</help>
-    <category>Cluster Juggler</category>
-    <PropertyDesc name="Display System" token="display_system" type="embeddedchunk" variable="0">
-      <help>Embedded display system for this specific machine.</help>
-      <item label="Display System" />
-      <enumeration name="displaySystem" />
-    </PropertyDesc>
-    <PropertyDesc name="Display Windows" token="display_windows" type="embeddedchunk" variable="1">
-      <help>Embedded display windows for this specifc machine. </help>
-      <item label="Display Window" />
-      <enumeration name="displayWindow" />
-    </PropertyDesc>
-    <PropertyDesc name="Listen Port" token="listen_port" type="int" variable="0">
-      <help>Port on which the Remote Input Manager listens for incoming cluster connections.</help>
-      <item label="Listen Port" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc name="Forced Hostname" token="forced_hostname" type="string" variable="0">
-      <help>Useful if a computer has multiple networks and network names.</help>
-      <item label="Forced Hostname" defaultvalue="" />
-    </PropertyDesc>
-    <PropertyDesc token="host_name" name="Host Name" type="string" variable="0">
-      <help>Host name for this specific machine.</help>
-      <item label="Host Name" defaultvalue="" />
-    </PropertyDesc>
-    <PropertyDesc token="serialPort" name="Sync Serial Port" type="string" variable="0">
-      <help>Serial port used for cluster barrier.</help>
-      <item label="Port" defaultvalue="/dev/ttyd1" />
-    </PropertyDesc>
-    <PropertyDesc token="serialBaud" name="Sync Baud Rate" type="int" variable="0">
-      <help>Serial port speed</help>
-      <item label="Baud Rate" defaultvalue="38400" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="CyberGlove" name="CyberGlove">
@@ -132,7 +98,7 @@
       <enumeration name="proxyAlias" />
       <enumeration name="PosProxy" />
     </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help />
       <item label="" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
@@ -216,7 +182,7 @@
       <enumeration name="proxyAlias" />
       <enumeration name="PosProxy" />
     </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help />
       <item label="" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
@@ -255,7 +221,7 @@
       <item label="Key Presses" />
       <enumeration name="KeyModPair" />
     </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help />
       <item label="" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
@@ -539,9 +505,9 @@
       <item label="pitch" defaultvalue="0.0" />
       <item label="roll" defaultvalue="0.0" />
     </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help />
-      <item label="Cluster Machine" defaultvalue="" />
+      <item label="" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
@@ -616,7 +582,7 @@
       <help>Id of the transmitter</help>
       <item label="Transmitter ID" defaultvalue="3" />
     </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help />
       <item label="" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
@@ -652,7 +618,7 @@
       <item label="Glove Position" defaultvalue="" />
       <enumeration name="PosProxy" />
     </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help />
       <item label="" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
@@ -698,7 +664,7 @@
       <help>the actual analog data values range - upper bound</help>
       <item label="Analog Maximum" defaultvalue="255.0" />
     </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
@@ -756,7 +722,7 @@
       <help>the actual analog data values range - upper bound</help>
       <item label="Range Maximum" defaultvalue="0.0" />
     </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help />
       <item label="" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
@@ -919,7 +885,7 @@
       <help>This is the number of milliseconds that the keyboard update loop should sleep between updates.</help>
       <item label="Sleep Time" defaultvalue="75" />
     </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help />
       <item label="" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
@@ -933,6 +899,40 @@
       <item label="Device" defaultvalue="" />
       <enumeration name="Keyboard" />
       <enumeration name="simKeyboardDigital" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="MachineSpecific" name="Machine Specific">
+    <help>Settings for the specified machine.</help>
+    <category>Cluster Juggler</category>
+    <PropertyDesc name="Display System" token="display_system" type="embeddedchunk" variable="0">
+      <help>Embedded display system for this specific machine.</help>
+      <item label="Display System" />
+      <enumeration name="displaySystem" />
+    </PropertyDesc>
+    <PropertyDesc name="Display Windows" token="display_windows" type="embeddedchunk" variable="1">
+      <help>Embedded display windows for this specifc machine. </help>
+      <item label="Display Window" />
+      <enumeration name="displayWindow" />
+    </PropertyDesc>
+    <PropertyDesc name="Listen Port" token="listen_port" type="int" variable="0">
+      <help>Port on which the Remote Input Manager listens for incoming cluster connections.</help>
+      <item label="Listen Port" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc name="Forced Hostname" token="forced_hostname" type="string" variable="0">
+      <help>Useful if a computer has multiple networks and network names.</help>
+      <item label="Forced Hostname" defaultvalue="" />
+    </PropertyDesc>
+    <PropertyDesc token="host_name" name="Host Name" type="string" variable="0">
+      <help>Host name for this specific machine.</help>
+      <item label="Host Name" defaultvalue="" />
+    </PropertyDesc>
+    <PropertyDesc token="serialPort" name="Sync Serial Port" type="string" variable="0">
+      <help>Serial port used for cluster barrier.</help>
+      <item label="Port" defaultvalue="/dev/ttyd1" />
+    </PropertyDesc>
+    <PropertyDesc token="serialBaud" name="Sync Baud Rate" type="int" variable="0">
+      <help>Serial port speed</help>
+      <item label="Baud Rate" defaultvalue="38400" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="MotionStar" name="MotionStar">
@@ -1006,7 +1006,7 @@
       <help>Measurement rate for the chassis.</help>
       <item label="Chassis Measurement Rate" defaultavlue="0.0" />
     </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help />
       <item label="" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
@@ -1079,7 +1079,7 @@
       <enumeration name="proxyAlias" />
       <enumeration name="PosProxy" />
     </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
@@ -1185,9 +1185,9 @@
       <enumeration name="Local" value="0" />
       <enumeration name="Global" value="1" />
     </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help>Points to the machine that the device is physically connected to.</help>
-      <item label="Host Chunk" defaultvalue="" />
+      <item label="Host Node" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
     </PropertyDesc>
   </ChunkDesc>
@@ -1267,7 +1267,7 @@
       <item label="Right Glove Position" defaultvalue="" />
       <enumeration name="PosProxy" />
     </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help />
       <item label="" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
@@ -1377,7 +1377,7 @@
       <help>The number of analog inputs that will be stored into the Intersense device</help>
       <item label="Analog Count" defaultvalue="0" />
     </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help />
       <item label="" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
@@ -1443,7 +1443,7 @@
       <help>the actual analog data values range - upper bound</help>
       <item label="Range Maximum" defaultvalue="255.0" />
     </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help />
       <item label="" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
@@ -1606,7 +1606,7 @@
       <enumeration name="proxyAlias" />
       <enumeration name="DigProxy" />
     </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help />
       <item label="" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
@@ -1619,7 +1619,7 @@
       <item label="Sim Keys" />
       <enumeration name="simKeyDigital" />
     </PropertyDesc>
-    <PropertyDesc name="Host Chunk" token="host_chunk" type="chunk" variable="0">
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help />
       <item label="" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />

@@ -38,7 +38,7 @@
 #include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/Util/Error.h>
 
-#include <jccl/RTRC/ConfigChunkHandler.h>
+//#include <jccl/RTRC/ConfigChunkHandler.h>
 #include <jccl/RTRC/ConfigManager.h>
 
 
@@ -48,11 +48,16 @@
 
 #include <gadget/Type/InputMixer.h>
 #include <gadget/RemoteInputManager/NetDevice.h>
+#include <gadget/RemoteInputManager/NetConnection.h>
+
 #include <gadget/RemoteInputManager/RemoteInputManager.h>
+#include <gadget/Type/BaseTypeFactory.h>
 #include <gadget/Type/DeviceFactory.h>
 
+#include <gadget/RemoteInputManager/ClusterBarrier.h>
 
 #include <vpr/IO/Port/SerialPort.h>
+#include <vpr/IO/Socket/SocketStream.h>
 
 
 namespace gadget
@@ -103,6 +108,21 @@ namespace gadget
          delete mSerialPort;
       }
    }
+
+   vpr::ObjectWriter* RemoteInputManager::getObjectWriter(std::string device_name, gadget::Input* input_device)
+   {
+      if (mCachedDeviceData[device_name] != NULL)
+      {
+         return(mCachedDeviceData[device_name]);
+      }
+      else
+      {
+         mTransmittingDevicePointers[device_name] = input_device;
+         mCachedDeviceData[device_name] = new vpr::ObjectWriter;
+         return(mCachedDeviceData[device_name]);
+      }
+   }
+
 
    void RemoteInputManager::shutdown()
    {     // Kill the accepting thread
@@ -209,8 +229,8 @@ namespace gadget
          int                  sync_method = chunk->getProperty<int>("sync_method");
 
          jccl::ConfigChunkPtr local_machine_chunk = mClusterTable[mLocalMachineChunkName];
-         std::string          serial_port = local_machine_chunk->getProperty<std::string>("port");
-         int                  baud_rate = local_machine_chunk->getProperty<int>("baud");
+         std::string          serial_port = local_machine_chunk->getProperty<std::string>("serialPort");
+         int                  baud_rate = local_machine_chunk->getProperty<int>("serialBaud");
          
          switch (sync_method)
          {
@@ -224,6 +244,28 @@ namespace gadget
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
                "ClusterBarrierSerial Barrier Method: TCP/IP Sockets & Serial Port \n" << vprDEBUG_FLUSH;
             break;
+/*         case 2:
+            mBarrier = new gadget::ClusterBarrierUDP;
+
+
+            for(std::map<std::string, jccl::ConfigChunkPtr>::iterator i=mClusterTable.begin();
+                i!=mClusterTable.end();i++)
+            {
+               // if ((*i).second->getProperty<std::string>("host_name") == getLocalHostName())
+               if (!this->hostnameMatchesLocalHostname((*i).second->getProperty<std::string>("host_name")))
+               {
+                  mBarrier->AddBarrierSlave((*i).second->getProperty<std::string>("host_name"));
+                  vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutNORM(clrGREEN,"[Remote Input Manager]")
+                        << " Found the local Cluster Machine Chunk: " << mLocalMachineChunkName << "\n"<< vprDEBUG_FLUSH;
+               }
+            }
+
+
+
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
+               "ClusterBarrierSerial Barrier Method: UDP Sockets \n" << vprDEBUG_FLUSH;
+            break;
+*/
          default:
             mBarrier = new gadget::ClusterBarrierTCP;
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
@@ -672,9 +714,18 @@ namespace gadget
          vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "=====================\n" << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Number Transmitting Connections: " << this->mTransmittingConnections.size() << "\n" <<  vprDEBUG_FLUSH;
          
-            // Send Device Data
-         sendDeviceNetData();
+         for (std::map<std::string, gadget::Input*>::iterator i = mTransmittingDevicePointers.begin();
+              i != mTransmittingDevicePointers.end();i++)
+         {
+            vpr::ObjectWriter* writer = mCachedDeviceData[(*i).first];
+            writer->getData()->clear();
+            writer->setCurPos(0);
+            (*i).second->writeObject(writer);
+         }
          
+            // Send Device Data
+         sendNetworkData();
+
             // SendAndClear all connections, this could pick up device_ack's
          for (std::list<NetConnection*>::iterator i = mTransmittingConnections.begin();
               i != mTransmittingConnections.end();i++)
@@ -682,14 +733,12 @@ namespace gadget
                (*i)->getMsgPackage()->createEndBlock();
                (*i)->getMsgPackage()->sendAndClear((*i)->getSockStream());
          }
-         
          for (std::list<NetConnection*>::iterator i = mReceivingConnections.begin();
               i != mReceivingConnections.end();i++)
          {
                (*i)->getMsgPackage()->createEndBlock();
                (*i)->getMsgPackage()->sendAndClear((*i)->getSockStream());
          }
-
          
 
          vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "=====================\n" << vprDEBUG_FLUSH;
@@ -697,24 +746,26 @@ namespace gadget
          vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "=====================\n" << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Number Receiving Connections: " << this->mReceivingConnections.size() << "\n" << vprDEBUG_FLUSH;
          
-         receiveReceivingConnectionData();  // 
-         receiveTransmittingConnectionData();           // Read in END_BLOCKS
-
+         readReceivingConnectionData();  // 
+         
+         readTransmittingConnectionData();           // Read in END_BLOCKS
+         
          for (std::list<NetConnection*>::iterator i = mReceivingConnections.begin();
               i != mReceivingConnections.end();i++)
          {
              if ((*i)->getSockStream()->availableBytes() > 0)
              {
                  vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << "ERROR: RECEIVING Bytes on socket: " << (*i)->getSockStream()->availableBytes() << std::endl << vprDEBUG_FLUSH;
+                 std::cout << "ERROR: RECEIVING Bytes on socket: " << (*i)->getSockStream()->availableBytes() << std::endl;
              }
          }
-         
          for (std::list<NetConnection*>::iterator i = mTransmittingConnections.begin();
               i != mTransmittingConnections.end();i++)
          {
             if ((*i)->getSockStream()->availableBytes() > 0)
             {
                 vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << "ERROR: TRANS Bytes on socket: " << (*i)->getSockStream()->availableBytes() << std::endl << vprDEBUG_FLUSH;
+                std::cout << "ERROR: RECEIVING Bytes on socket: " << (*i)->getSockStream()->availableBytes() << std::endl;
             }
          }
 
@@ -789,7 +840,7 @@ namespace gadget
          if ( status.success() )
          {
             mConfigMutex.acquire();   // Aquire a Mutex so we don't add/remove devices/connections while they are in use
-   
+
             std::string streamHostname,streamManagerId;
             vpr::Uint16 streamPort;
             bool sync = false;
@@ -806,6 +857,8 @@ namespace gadget
                   if (mBarrier != NULL && mBarrier->isMaster())
                   {
                      mBarrier->AddBarrierSlave(client_sock);
+                     client_sock->setNoDelay(true);
+                     client_sock->setTypeOfService(vpr::SocketOptions::LowDelay);
                      client_sock = new vpr::SocketStream;
                   }
                   else
@@ -827,9 +880,12 @@ namespace gadget
                   mAcceptMsgPackage.createHandshake(true,mShortHostname,mListenPort, mManagerId.toString(),false);   // send my name: send my hostname & port
                   mAcceptMsgPackage.sendAndClear(client_sock);
                   
+                  client_sock->setNoDelay(true);
+                  client_sock->setTypeOfService(vpr::SocketOptions::LowDelay);
+                  
                      //Cluster Sync crap
                   connection->clientClusterSync();
-                  
+
                   client_sock = new vpr::SocketStream;
                }
                else  // Transmitting NetConnection already exists
@@ -877,17 +933,20 @@ namespace gadget
          // Set the address that we want to connect to
       if ( !inet_addr.setAddress(connection_hostname, connection_port).success() )
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrRED," ERROR: Failed to set address\n") << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrRED,"[RIM::makeConnection] ERROR: Failed to set address\n") << vprDEBUG_FLUSH;
          return NULL;
       }
          // Create a new socket stream to this address
       sock_stream = new vpr::SocketStream(vpr::InetAddr::AnyAddr, inet_addr);
+      
 
          // If we can successfully open the socket and connect to the server
       if ( sock_stream->open().success() && sock_stream->connect().success() )
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << " Successfully connected to: " 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << " Successfully connected to: " 
             << connection_hostname <<":"<< connection_port << "\n"<< vprDEBUG_FLUSH;
+         sock_stream->setNoDelay(true);
+         sock_stream->setTypeOfService(vpr::SocketOptions::LowDelay);
 
             // Send a handshake to initalize communication with remote computer
          mMsgPackage.createHandshake(true,mShortHostname,mListenPort,mManagerId.toString(),false);
@@ -912,7 +971,7 @@ namespace gadget
                // Add NetConnection
             mReceivingConnections.push_back(connection);
             
-            vprDEBUG(gadgetDBG_RIM, vprDBG_STATE_LVL)
+            vprDEBUG(gadgetDBG_RIM, vprDBG_CONFIG_LVL)
             << "SUCCESS - RemoteInputManager: Added connection to " << connection_hostname
             <<" : "<< connection_port <<" : "<< received_manager_id << "\n" << vprDEBUG_FLUSH;
             return connection;
@@ -920,7 +979,7 @@ namespace gadget
          else
          {
             delete sock_stream;
-            vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrSetNORM(clrRED) << "ERROR: Did not receive a handshake responce: " 
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetNORM(clrRED) << "ERROR: Did not receive a handshake responce: " 
                << connection_hostname <<" : "<< connection_port << "\n" << clrRESET << vprDEBUG_FLUSH;
             return NULL;
          }
@@ -934,7 +993,7 @@ namespace gadget
       }
    }
 
-   void RemoteInputManager::sendDeviceNetData()
+   void RemoteInputManager::sendNetworkData()
    {
       std::list<NetConnection*>::iterator i;
       for ( i = mTransmittingConnections.begin(); i != mTransmittingConnections.end();i++ )
@@ -944,7 +1003,7 @@ namespace gadget
       }
    }
    
-   void RemoteInputManager::receiveReceivingConnectionData()
+   void RemoteInputManager::readReceivingConnectionData()
    {
       std::list<NetConnection*>::iterator i;
       for ( i = mReceivingConnections.begin(); i != mReceivingConnections.end();i++ )
@@ -970,16 +1029,19 @@ namespace gadget
             while ( !(*i)->getAllPacketsReceived() ||
                      (*i)->getSockStream()->availableBytes() > 8)
    
-            {
+            {  
+               if ((*i)->getAllPacketsReceived())
+               {
+                  vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "Something is wrong!\n" << vprDEBUG_FLUSH;
+               }
                (*i)->receiveNetworkPacket();
-               //receiveNetworkPacket(*i);
             }
             vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "ALL PACKETS RECEIVED for: " << (*i)->getHostname() << "\n" << vprDEBUG_FLUSH;
          }
       }
    }
    
-   void RemoteInputManager::receiveTransmittingConnectionData()
+   void RemoteInputManager::readTransmittingConnectionData()
    {
       std::list<NetConnection*>::iterator i;
       for ( i = mTransmittingConnections.begin(); i != mTransmittingConnections.end();i++ )
@@ -1005,8 +1067,11 @@ namespace gadget
             while ( !(*i)->getAllPacketsReceived() || 
                      (*i)->getSockStream()->availableBytes() > 8)
             {
+               if ((*i)->getAllPacketsReceived())
+               {
+                  vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "Something is wrong!\n" << vprDEBUG_FLUSH;
+               }
                (*i)->receiveNetworkPacket();
-               //receiveNetworkPacket(*i);
             }
             vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "ALL PACKETS RECEIVED for: " << (*i)->getHostname() << "\n" << vprDEBUG_FLUSH;
          }
