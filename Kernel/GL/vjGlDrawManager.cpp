@@ -99,8 +99,9 @@ void vjGlDrawManager::initDrawing()
    //  For each display:
    //	-- Create a window for it
    //	-- Store the window in the wins vector
-   for (vector<vjDisplay*>::iterator dispIter = displayManager->displays.begin();
-       dispIter != displayManager->displays.end(); dispIter++)
+   vector<vjDisplay*> displays = displayManager->getDisplays();
+   for (vector<vjDisplay*>::iterator dispIter = displays.begin();
+       dispIter != displays.end(); dispIter++)
    {
       vjGlWindow* newWin;
       newWin = vjKernel::instance()->getSysFactory()->getGLWindow();
