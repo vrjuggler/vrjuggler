@@ -270,9 +270,7 @@ private:
    /** Opens the X window to sample from. */
    int openTheWindow();
 
-   ::Window createWindow(::Window parent, unsigned int border,
-                         unsigned long fore, unsigned long back,
-                         unsigned long event_mask);
+   ::Window createWindow(::Window parent, const unsigned int borderWidth);
 
    void setHints(::Window window, char*  window_name, char*  icon_name,
                  char* class_name, char* class_type);
