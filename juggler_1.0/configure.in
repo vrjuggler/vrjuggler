@@ -937,7 +937,7 @@ case $SUBSYSTEM in
         subsystem_cxxflags="$INCLUDES"
         subsystem_libs="$PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
 
-        if test "x$USE_GCC" = "xyes" ; then
+        if test "x$GXX" = "xyes" ; then
             static_begin="-Wl,-Bstatic"
             static_end="-Wl,-Bdynamic"
         else
@@ -953,7 +953,7 @@ case $SUBSYSTEM in
         subsystem_cxxflags="$INCLUDES"
         subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
 
-        if test "x$USE_GCC" = "xyes" ; then
+        if test "x$GXX" = "xyes" ; then
             static_begin="-Wl,-Bstatic"
             static_end="-Wl,-Bdynamic"
         else
