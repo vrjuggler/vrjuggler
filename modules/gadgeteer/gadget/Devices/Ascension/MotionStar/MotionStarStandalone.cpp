@@ -1672,18 +1672,18 @@ float MotionStarStandalone::toFloat (const unsigned char high_byte,
                                      const unsigned char low_byte)
    const
 {
-   unsigned short input, min_base, max_base;
-   float min, max, result;
+   unsigned short input;
+   float result;
 
    // Construct the input from the given bytes.
    input = toShort(high_byte, low_byte);
 
    // Use the values documented on page 92 of the MotionStar Installation and
    // Operation Guide.
-   min_base = 0x8000;
-   min      = -1.0;
-   max_base = 0x7fff;
-   max      = 0.99996;
+   const unsigned short min_base = 0x8000;
+   const float min               = -1.0f;
+   const unsigned short max_base = 0x7fff;
+   const float max               = 0.99996f;
 
    // If the input is 0, the result is 0.
    if ( input == 0 )
@@ -1811,7 +1811,7 @@ vpr::ReturnStatus MotionStarStandalone::sendMsg (const void* packet,
       fprintf(stderr, "[MotionStarStandalone] Sent 0 bytes to %s\n",
              m_address.getAddressString().c_str());
    }
-   
+
    return status;
 }
 
@@ -1840,7 +1840,7 @@ vpr::ReturnStatus MotionStarStandalone::getRsp (void* packet,
       fprintf(stderr, "[MotionStarStandalone] Read 0 bytes from %s\n",
               m_address.getAddressString().c_str());
    }
-   
+
 
    return status;
 }
