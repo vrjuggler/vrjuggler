@@ -1204,6 +1204,8 @@ sub GENTEXT {
 		isfriend("$cname", "$mname") ) ||
 	      ( ("$arg[1]" eq "overrides") && $mname && $parents{"$cname"} &&
 		overrides("$cname", "$mname") ) ||
+	      ( ("$arg[1]" eq "overridden") && $mname && $parents{"$cname"} &&
+		overridden("$cname", "$mname") ) ||
               ($mname && ${"$var_name"}{"$mloc","$mnm"})  ||
               (!$mname && ${"$var_name"}{"$cname"})  ||
               ($curglob && ($arg[1] eq $curglob) && $curglobval{$curglob})){
@@ -3203,4 +3205,31 @@ sub overrides ($$) {
   }
 
   return undef;
+}
+
+sub overridden ($$) {
+  my $curr_class = shift;
+  my $mname = shift;
+
+  my($class, $method) = split($;, "$mname");
+
+  return 0 if "$class" eq "$curr_class";
+
+  # Strip trailing whitespace to simplify comparison with other method names.
+  $method =~ s/\s+$//;
+
+  # If the method has no arguments, insert "void" for the argument list.
+  $method =~ s/\(\)\s*$/(void)/;
+
+  my(@members) = GETMEMBERS("$curr_class", 'member', 0);
+
+  my $member;
+  foreach $member ( @members ) {
+    $member = (split($;, "$member"))[1];
+    $member =~ s/\s+$//;		# Remove trailing whitespace
+    $member =~ s/\(\)\s*$/(void)/;	# Replace () with (void)
+    return 1 if "$method" eq "$member";
+  }
+
+  return 0;
 }
