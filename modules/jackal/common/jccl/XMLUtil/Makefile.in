@@ -38,17 +38,17 @@ include @topdir@/make.defs.mk
 # Otherwise, we need to build CppDOM into JCCL and install its headers
 # ourselves.
 ifeq (@LOCAL_CPPDOM@, Y)
-SRCS		=
 INSTALL_FILES	=
 else
 includedir	= @includedir@/cppdom
-SRCS		= xmlparser.cpp cppdom.cpp xmltokenizer.cpp
 INSTALL_FILES	= @CPPDOM_ROOT@/cppdom/*.h
 endif
 
 srcdir		= @CPPDOM_ROOT@/cppdom
 top_srcdir	= @top_srcdir@
 SUBOBJDIR	= $(JCCL_COMMON_LIBRARY)
+
+SRCS		= xmlparser.cpp cppdom.cpp xmltokenizer.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
