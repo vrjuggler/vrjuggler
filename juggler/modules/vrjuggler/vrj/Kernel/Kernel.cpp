@@ -160,7 +160,18 @@ void Kernel::controlLoop(void* nullParam)
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->preFrame()\n" << vprDEBUG_FLUSH;
          mApp->preFrame();         // PREFRAME: Do Any application pre-draw stuff
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update ClusterManager preDraw()\n" << vprDEBUG_FLUSH;
-         mClusterManager->preDraw();
+      }
+      else
+      {
+         // ??? Should we do this, or just grind up the CPU as fast as possible
+         vprASSERT(NULL != mControlThread);      // If control thread is not set correctly, it will seg fault here
+         vpr::Thread::yield();   // Give up CPU
+      }
+
+      mClusterManager->preDraw();
+
+      if((mApp != NULL) && (mDrawManager != NULL) && cluster)
+      {
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->draw()\n" << vprDEBUG_FLUSH;
          mDrawManager->draw();    // DRAW: Trigger the beginning of frame drawing
          mSoundManager->update();
