@@ -47,6 +47,13 @@
 #ifndef SNXSTUBSOUNDIMPLEMENTATION_H
 #define SNXSTUBSOUNDIMPLEMENTATION_H
 #include <string>
+#include <gmtl/Math.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/VecOps.h>
+#include <gmtl/Xforms.h>
+
 #include "snx/SoundImplementation.h"
 #include "snx/SoundInfo.h"
 #include "snx/SoundAPIInfo.h"
@@ -125,7 +132,7 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const vrj::Matrix& mat )
+   virtual void setListenerPosition( const gmtl::Matrix44f& mat )
    {
       snx::SoundImplementation::setListenerPosition( mat );
    }
@@ -133,7 +140,7 @@ public:
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( vrj::Matrix& mat )
+   virtual void getListenerPosition( gmtl::Matrix44f& mat )
    {
       snx::SoundImplementation::getListenerPosition( mat );
    }

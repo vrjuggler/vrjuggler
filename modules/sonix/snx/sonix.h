@@ -47,16 +47,23 @@
 #ifndef SONIX___H
 #define SONIX___H
 #include <string>
+#include <gmtl/Math.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/VecOps.h>
+#include <gmtl/Xforms.h>
+
+#include "snx/Singleton.h"
 #include "snx/SoundInfo.h"
 #include "snx/SoundFactory.h"
 #include "snx/SoundImplementation.h"
 #include "snx/SoundAPIInfo.h"
-#include "vpr/Util/Singleton.h"
 
-class sonix : public vpr::Singleton<sonix>
+class sonix : public snx::Singleton<sonix>
 {
 protected:
-   friend class vpr::Singleton<sonix>;
+   friend class snx::Singleton<sonix>;
 
    //: default constructor
    sonix() : mImplementation( NULL )
@@ -206,7 +213,7 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const vrj::Matrix& mat )
+   virtual void setListenerPosition( const gmtl::Matrix44f& mat )
    {
       this->impl().setListenerPosition( mat );
    }
@@ -214,7 +221,7 @@ public:
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( vrj::Matrix& mat )
+   virtual void getListenerPosition( gmtl::Matrix44f& mat )
    {
       this->impl().getListenerPosition( mat );
    }

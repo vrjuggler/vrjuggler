@@ -48,7 +48,13 @@
 #define SNXSOUNDIMPLEMENTATION_H
 #include <string>
 #include <map>
-#include "vrj/Math/Matrix.h"
+#include <gmtl/Math.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/VecOps.h>
+#include <gmtl/Xforms.h>
+
 #include "snx/SoundInfo.h"
 #include "snx/SoundAPIInfo.h"
 
@@ -66,7 +72,6 @@ public:
                            mSounds(),
                            mListenerPos()
    {
-      mListenerPos.makeIdent();
    }
 
    /**
@@ -230,20 +235,19 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const vrj::Matrix& mat )
+   virtual void setListenerPosition( const gmtl::Matrix44f& mat )
    {
       assert( this->isStarted() == true && "must call startAPI prior to this function" );
-      mListenerPos.copy( mat );
+      mListenerPos = mat;
    }
 
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( vrj::Matrix& mat )
+   virtual void getListenerPosition( gmtl::Matrix44f& mat )
    {
       assert( this->isStarted() == true && "must call startAPI prior to this function" );
-      
-      mat.copy( mListenerPos );
+      mat = mListenerPos;
    }
 
    /**
@@ -404,7 +408,7 @@ protected:
    /*
     * position of the observer/listener
     */
-   vrj::Matrix mListenerPos;
+   gmtl::Matrix44f mListenerPos;
    
    /** This class uses a std::map of sound infos for alias lookup
     * @link aggregation

@@ -48,13 +48,13 @@
 #define SNXSOUNDFACTORY_H
 #include <iostream>
 #include <string>
-#include "vpr/Util/Singleton.h"
+#include "snx/Singleton.h"
 #include "snx/SoundImplementation.h"
 
 namespace snx
 {
 
-class SoundFactory : public vpr::Singleton<SoundFactory>
+class SoundFactory : public snx::Singleton<SoundFactory>
 {
 public:
 
