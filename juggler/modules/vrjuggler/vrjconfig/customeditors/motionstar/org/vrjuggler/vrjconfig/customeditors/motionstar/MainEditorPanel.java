@@ -33,6 +33,7 @@
 package org.vrjuggler.vrjconfig.customeditors.motionstar;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -84,7 +85,13 @@ public class MainEditorPanel
    private void jbInit()
       throws Exception
    {
+      mHelpScrollPanel.setMinimumSize(new Dimension(0, 0));
+      mHelpScrollPanel.setPreferredSize(new Dimension(175, 600));
+      mContentPanel.setMinimumSize(new Dimension(600, 600));
+      mContentPanel.setPreferredSize(new Dimension(600, 600));
       mMainSplitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+      mMainSplitPane.setOneTouchExpandable(true);
+      mMainSplitPane.setDividerSize(5);
       this.setLayout(mMainLayout);
       mContentPanel.setLayout(mContentPanelLayout);
       mContentPanelLayout.setColumns(1);
