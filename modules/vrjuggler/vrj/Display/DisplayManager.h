@@ -34,6 +34,7 @@
 #define _VRJ_DISPLAY_MANAGER_H_
 
 #include <vrj/vrjConfig.h>
+#include <vector>
 
 #include <vpr/Util/Singleton.h>
 
