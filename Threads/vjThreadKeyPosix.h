@@ -5,8 +5,8 @@
  * $Date$
  * --------------------------------------------------------------------------
  * NOTES:
- *    - This file (vjThreadKeyPosix.h) MUST be included by vjThread.h, not the
- *      other way around.
+ *    - This file (vjThreadKeyPosix.h) MUST be included by vjThread.h, not
+ *      the other way around.
  * --------------------------------------------------------------------------
  */
 

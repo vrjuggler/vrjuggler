@@ -5,8 +5,8 @@
  * $Date$
  * --------------------------------------------------------------------------
  * NOTES:
- *    - This file (vjThreadKeyWin32.h) MUST be included by vjThread.h, not the
- *      other way around.
+ *    - This file (vjThreadKeyWin32.h) MUST be included by vjThread.h, not
+ *      the other way around.
  * --------------------------------------------------------------------------
  */
 
