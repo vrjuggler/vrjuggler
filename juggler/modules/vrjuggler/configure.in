@@ -1540,6 +1540,8 @@ dnl # listed are for use only in the Makefile.in's found in that tree unless
 dnl # otherwise noted.  They are used in the following way:
 dnl #
 dnl #     * TEST_EXTRA_FLAGS: Extra flags for the compiler and linker.
+dnl #     * TEST_VJ_INC_AW: The include path for the AudioWorks header files.
+dnl #     * TEST_VJ_INC_SL: The include path for hte SL header files.
 dnl #     * TEST_VJ_LIBS_BASIC: The basic VR Juggler library.
 dnl #     * TEST_VJ_LIBS_BASIC_INST: Same as the above but is for installed
 dnl #       Makefiles.
@@ -1563,11 +1565,13 @@ TEST_EXTRA_FLAGS="${_EXTRA_FLAGS}"
 
 dnl # If we have AudioWorks, make it available in the application makefiles.
 if test "$AUDIO_WORKS" = "Y" ; then
+    TEST_EXTRA_INC_AW="$AW_INC"
     TEST_EXTRA_LIBS_AW="$AW_LIB ${_aw_libs}"
 fi
 
 dnl # If we have SL, make it available in the application makefiles.
 if test "$SL" = "Y" ; then
+    TEST_EXTRA_INC_SL="$SL_INC"
     TEST_EXTRA_LIBS_SL="$SL_LIB ${_sl_libs}"
 fi
 
@@ -1693,6 +1697,8 @@ AC_SUBST(SL_INC)
 AC_SUBST(SL_LIB)
 
 AC_SUBST(TEST_EXTRA_FLAGS)
+AC_SUBST(TEST_EXTRA_INC_AW)
+AC_SUBST(TEST_EXTRA_INC_SL)
 AC_SUBST(TEST_VJ_LIBS_BASIC)
 AC_SUBST(TEST_VJ_LIBS_BASIC_INST)
 AC_SUBST(TEST_VJ_LIBS_GL)
