@@ -29,7 +29,7 @@ PROGS		= go go-ibox go-inputgroup go-logiclass
 # -----------------------------------------------------------------------------
 # Targets.
 # -----------------------------------------------------------------------------
-default: all
+default: aFlockTest
 
 all: ${PROGS}
 
@@ -37,13 +37,13 @@ all: ${PROGS}
 # aFlock test driver
 # ----------------
 aFlockTest: aFlockTest.o aFlock.o
-	${COMPILE} -o $@ aFlockTest.o aFlock.o 
+	CC -o $@ aFlockTest.o aFlock.o 
 
 aFlockTest.o: aFlockTest.cpp
-	${COMPILE} -woff 3303 -c -o $@ ${srcdir}/aFlockTest.cpp
+	CC -I../.. namespaces=ON bool=ON -woff 3303 -c -o $@ aFlockTest.cpp
 
 aFlock.o: ../../Input/vjPosition/aFlock.cpp
-	${COMPILE} -woff 3303 -c -o $@ ../../Input/vjPosition/aFlock.cpp
+	CC namespaces=ON bool=ON -woff 3303 -c -o $@ ../../Input/vjPosition/aFlock.cpp
 
 # ----------------
 # vjFlock test driver
