@@ -307,7 +307,7 @@ fi
 # Append the Audiere stuff...
 AUDIERE_API='N'
 if test "x$AUDIERE_ENABLED" = "xyes" ; then
-   DPP_HAVE_AUDIERE([/usr], AUDIERE_API='Y',
+   DPP_HAVE_AUDIERE([/usr], ,
       [AC_MSG_WARN([*** Audiere plug-in cannot be built. ***])])
 
    if test "x$AUDIERE" = "xyes" ; then
