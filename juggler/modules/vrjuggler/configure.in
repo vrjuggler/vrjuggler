@@ -674,6 +674,9 @@ AC_CONFIG_FILES([
    vrjconfig/Makefile
    vrjconfig/Makefile.inc
    vrjconfig/customeditors/Makefile
+   vrjconfig/customeditors/proxyeditor/build.xml
+   vrjconfig/customeditors/proxyeditor/Makefile
+   vrjconfig/customeditors/proxyeditor/Makefile.inc
    vrjconfig/customeditors/surfacedisplayeditor/build.xml
    vrjconfig/customeditors/surfacedisplayeditor/Makefile
    vrjconfig/customeditors/surfacedisplayeditor/Makefile.inc
