@@ -73,7 +73,7 @@ SocketDatagramImplBSD::recvfrom (void* msg, const size_t length,
                                 (struct sockaddr*) &from.m_addr, &fromlen);
 
         if ( bytes_read == -1 ) {
-            if ( errno == EAGAIN && ! m_blocking ) {
+            if ( errno == EAGAIN && getNonBlocking() ) {
                 retval.setCode(Status::InProgress);
             }
             else {
@@ -107,7 +107,7 @@ SocketDatagramImplBSD::sendto (const void* msg, const size_t length,
                               (struct sockaddr*) &to.m_addr, to.size());
 
         if ( bytes_sent == -1 ) {
-            if ( errno == EAGAIN && ! m_blocking ) {
+            if ( errno == EAGAIN && getNonBlocking() ) {
                 retval.setCode(Status::InProgress);
             }
             else {

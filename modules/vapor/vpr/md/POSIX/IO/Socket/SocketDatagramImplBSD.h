@@ -45,12 +45,12 @@ namespace vpr {
  *
  * @author Patrick Hartling
  */
-class SocketDatagramImplBSD : public SocketImplBSD {
+class SocketDatagramImplBSD : public vpr::SocketImplBSD {
 public:
     typedef SocketImplBSD Parent;
 
     // ========================================================================
-    // vpr::SocketDatagram implementation.
+    // vpr::SocketDatagram interface.
     // ========================================================================
 
     /**
@@ -58,7 +58,7 @@ public:
      * vpr::SocketTypes::DATAGRAM.
      */
     SocketDatagramImplBSD (void)
-        : SocketImplBSD(SocketTypes::DATAGRAM)
+        : SocketImplBSD(vpr::SocketTypes::DATAGRAM)
     {
         /* Do nothing. */ ;
     }
@@ -77,7 +77,7 @@ public:
      */
     SocketDatagramImplBSD (const InetAddr& local_addr,
                            const InetAddr& remote_addr)
-        : SocketImplBSD(local_addr, remote_addr, SocketTypes::DATAGRAM)
+        : SocketImplBSD(local_addr, remote_addr, vpr::SocketTypes::DATAGRAM)
     {
         /* Do nothing. */ ;
     }
@@ -90,33 +90,27 @@ public:
     SocketDatagramImplBSD (const SocketDatagramImplBSD& sock)
         : SocketImplBSD(SocketTypes::DATAGRAM)
     {
-        m_local_addr      = sock.m_local_addr;
-        m_remote_addr     = sock.m_remote_addr;
-        m_handle          = new FileHandleImplUNIX(sock.m_handle->getName());
-        m_handle->m_fdesc = sock.m_handle->m_fdesc;
-    }
-
-    /**
-     * Destructor.  This currently does nothing.
-     */
-    virtual ~SocketDatagramImplBSD (void) {
-        /* Do nothing. */ ;
+        m_local_addr         = sock.m_local_addr;
+        m_remote_addr        = sock.m_remote_addr;
+        m_handle             = new FileHandleImplUNIX(sock.m_handle->getName());
+        m_handle->m_fdesc    = sock.m_handle->m_fdesc;
+        m_handle->m_open     = sock.m_handle->m_open;
+        m_handle->m_blocking = sock.m_handle->m_blocking;
     }
 
     /**
      * Receives a message from the specified address.
      */
-    virtual Status recvfrom(void* msg, const size_t length, const int flags,
-                            InetAddr& from, ssize_t& bytes_read,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
+    vpr::Status recvfrom(void* msg, const size_t length, const int flags,
+                         vpr::InetAddr& from, ssize_t& bytes_read,
+                         const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     /**
      * Sends a message to the specified address.
      */
-    virtual Status sendto(const void* msg, const size_t length,
-                          const int flags, const InetAddr& to,
-                          ssize_t& bytes_sent,
-                          const vpr::Interval timeout = vpr::Interval::NoTimeout);
+    vpr::Status sendto(const void* msg, const size_t length, const int flags,
+                       const vpr::InetAddr& to, ssize_t& bytes_sent,
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
 };
 
 }; // End of namespace

@@ -88,27 +88,16 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Destructor.  This currently does nothing.
-    //
-    //! PRE: None.
-    //! POST: None.
     // ------------------------------------------------------------------------
-    virtual ~SocketDatagramImplNSPR (void) {
-        /* Do nothing. */ ;
-    }
+    vpr::Status recvfrom(void* msg, const size_t length, const int flags,
+                         vpr::InetAddr& from, ssize_t& bytes_read,
+                         const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual Status recvfrom(void* msg, const size_t length, const int flags,
-                            InetAddr& from, ssize_t& bytes_read,
-                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
-
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    virtual Status sendto(const void* msg, const size_t length,
-                          const int flags, const InetAddr& to,
-                          ssize_t& bytes_sent,
-                          const vpr::Interval timeout = vpr::Interval::NoTimeout);
+    vpr::Status sendto(const void* msg, const size_t length, const int flags,
+                       const vpr::InetAddr& to, ssize_t& bytes_sent,
+                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
 };
 
 }; // End of namespace
