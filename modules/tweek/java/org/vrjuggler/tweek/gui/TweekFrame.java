@@ -46,8 +46,6 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
-import com.incors.plaf.kunststoff.KunststoffLookAndFeel;
-import com.incors.plaf.kunststoff.mini.KunststoffMiniLookAndFeel;
 import org.vrjuggler.tweek.TweekCore;
 import org.vrjuggler.tweek.beans.*;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
@@ -94,18 +92,6 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          mMsgDocument.printWarning("WARNING: Failed to load icon " +
                                    icon_name + "\n");
       }
-
-      // Install extra look and feels.
-      UIManager.installLookAndFeel("Kunststoff",
-                                   KunststoffLookAndFeel.class.getName());
-      KunststoffLookAndFeel.setIsInstalled(true);
-
-      UIManager.installLookAndFeel("Kunststoff Mini",
-                                   KunststoffMiniLookAndFeel.class.getName());
-      KunststoffMiniLookAndFeel.setIsInstalled(true);
-
-      // This class installs itself with the UI Manager automatically.
-      new net.sourceforge.mlf.metouia.MetouiaLookAndFeel();
 
       mBeanPrefsDialog =
          new BeanPrefsDialog(this, "Bean-Specific Preferences Editor");
@@ -185,10 +171,6 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       try
       {
          jbInit();
-         GlobalPreferencesService prefs =
-            (GlobalPreferencesService)BeanRegistry.instance().getBean( "GlobalPreferences" );
-         UIManager.setLookAndFeel(prefs.getLookAndFeel());
-         SwingUtilities.updateComponentTreeUI(this);
          mMenuPrefsBeanEdit.setEnabled(mBeanPrefsDialog.getPrefsBeanCount() > 0);
       }
       catch (Exception e)
