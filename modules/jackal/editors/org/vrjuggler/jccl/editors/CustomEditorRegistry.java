@@ -31,10 +31,14 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.jccl.editors;
 
+import java.awt.*;
 import java.beans.*;
 import java.util.*;
-import java.awt.*;
+
+import org.vrjuggler.tweek.TweekCore;
+import org.vrjuggler.tweek.text.MessageDocument;
 import org.vrjuggler.jccl.config.*;
+
 
 /**
  * This all-static class is a registry for specialized PropertyEditors for
@@ -60,7 +64,9 @@ public class CustomEditorRegistry
       
       if (mEditors.containsKey(token))
       {
-         System.out.println("Found: " + token);
+         MessageDocument doc = TweekCore.instance().getMessageDocument();
+         doc.printStatusnl("Found: " + token);
+
          try
          {
             java.util.List classList = (java.util.List)mEditors.get(token);
@@ -75,7 +81,7 @@ public class CustomEditorRegistry
                
                editor = (CustomEditor)editorClass.newInstance();
                
-               System.out.println("Editor: " + editor.getTitle());
+               doc.printStatusnl("Editor: " + editor.getTitle());
                
                editorList.add(editor);   
             }
@@ -106,8 +112,10 @@ public class CustomEditorRegistry
       // Register the new editor class with the given token
       if (editorClass != null)
       {
-         System.out.println("CustomEditorRegistry - Registering["
-               + token + " -> " + editorClass);
+         MessageDocument doc = TweekCore.instance().getMessageDocument();
+         doc.printStatusnl("CustomEditorRegistry - Registering[" + token +
+                           " -> " + editorClass);
+
          if(mEditors.containsKey(token))
          {
             java.util.List editorList = (java.util.List)mEditors.get(token);
