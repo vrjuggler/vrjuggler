@@ -34,6 +34,8 @@
 #ifndef _PERFORMER_JUGGLER_SOUND_REPLACE_TRAV_H_
 #define _PERFORMER_JUGGLER_SOUND_REPLACE_TRAV_H_
 
+#include <vjConfig.h>
+
 #include <iostream>
 #include <Performer/pr.h>
 #include <Performer/pf.h>
@@ -43,9 +45,13 @@
 #include <Performer/pf/pfScene.h>
 #include <Performer/pr/pfMemory.h>
 #include <Performer/pf/pfSwitch.h>
+
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+
 #include <string>
-#include <assert.h>
+
 #include <Sound/pf/pfSoundNode.h>
 #include <Sound/vjSoundManager.h>
 #include <Kernel/vjDebug.h>
