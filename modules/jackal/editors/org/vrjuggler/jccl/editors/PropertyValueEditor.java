@@ -32,12 +32,17 @@
 package org.vrjuggler.jccl.editors;
 
 import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Font;
+import java.awt.event.*;
 import java.util.EventObject;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 
 import org.vrjuggler.jccl.config.ConfigChunk;
+import org.vrjuggler.jccl.config.PropertyDesc;
+import org.vrjuggler.jccl.config.VarValue;
 
 /**
  * Base cell editor for a ConfigChunk property sheet. This is essentially
@@ -97,8 +102,20 @@ public class PropertyValueEditor
    {
       delegate.removeCellEditorListener(this);
 
+      // Handle special case for the add property value button at the end of
+      // property with variable values
+      ConfigChunkTableModel data_model = (ConfigChunkTableModel)table.getModel();
+      PropertyDesc desc = data_model.getPropertyDesc(row);
+      ConfigChunk src_chunk = data_model.getConfigChunk();
+      int num_values = src_chunk.getNumPropertyValues(desc.getToken());
+      int value_idx = row - data_model.getRowFor(desc);
+      if (desc.hasVariableNumberOfValues() && (value_idx == num_values))
+      {
+         delegate = new AddButtonCellEditor();
+      }
+
       // Handle embedded chunks specially
-      if (value instanceof ConfigChunk)
+      else if (value instanceof ConfigChunk)
       {
          delegate = new EmbeddedChunkCellEditor();
       }
@@ -135,4 +152,86 @@ public class PropertyValueEditor
     * The adaptee delegate who does all the real work.
     */
    private TableCellEditor delegate = new ConfigChunkCellEditor();
+
+   /**
+    * Specialized cell editor for the cells that are just an button.
+    */
+   private class AddButtonCellEditor
+      extends AbstractCellEditor
+      implements TableCellEditor
+   {
+      private Object value = null;
+      private JTable table = null;
+      private Component editorComponent = null;
+      private int row = -1;
+
+      /**
+       * Gets the value contained in the editor.
+       */
+      public Object getCellEditorValue()
+      {
+         return value;
+      }
+
+      /**
+       * Gets the component to edits the given value.
+       */
+      public Component getTableCellEditorComponent(JTable table, Object value,
+                                                   boolean selected,
+                                                   int row, int col)
+      {
+         this.value = value;
+         this.table = table;
+         this.row = row;
+
+         // Assume that the table model is an instance of ConfigChunkTableModel and
+         // get the property description for the row this cell is in
+         ConfigChunkTableModel data_model = (ConfigChunkTableModel)table.getModel();
+         PropertyDesc desc = data_model.getPropertyDesc(row);
+         ConfigChunk src_chunk = data_model.getConfigChunk();
+
+         int num_values = src_chunk.getNumPropertyValues(desc.getToken());
+         int value_idx = row - data_model.getRowFor(desc);
+
+         JButton btn = new JButton();
+         btn.setText("Add New");
+         btn.setFont(table.getFont().deriveFont(Font.BOLD));
+         if (selected)
+         {
+            btn.setForeground(table.getSelectionForeground());
+            btn.setBackground(table.getSelectionBackground());
+         }
+         else
+         {
+            btn.setForeground(table.getForeground());
+            btn.setBackground(table.getBackground());
+         }
+         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+         btn.addActionListener(new ActionListener()
+         {
+            public void actionPerformed(ActionEvent evt)
+            {
+               AddButtonCellEditor.this.cancelCellEditing();
+               addNewValue();
+            }
+         });
+
+         editorComponent = btn;
+         return editorComponent;
+      }
+
+      protected void addNewValue()
+      {
+         ConfigChunkTableModel data_model = (ConfigChunkTableModel)table.getModel();
+         PropertyDesc desc = data_model.getPropertyDesc(row);
+         ConfigChunk src_chunk = data_model.getConfigChunk();
+
+         int add_index = src_chunk.getNumPropertyValues(desc.getToken());
+
+         // Get the default value
+         VarValue default_value = desc.getDefaultValue(add_index);
+
+         src_chunk.setProperty(desc.getToken(), add_index, default_value);
+      }
+   }
 }
