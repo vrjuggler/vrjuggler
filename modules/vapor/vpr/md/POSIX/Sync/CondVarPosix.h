@@ -54,6 +54,7 @@
 #include <pthread.h>
 #include <vpr/md/POSIX/Sync/MutexPosix.h>
 #include <vpr/Util/Interval.h>
+#include <sys/time.h>
 
 
 namespace vpr
@@ -142,14 +143,25 @@ public:
          }
          else
          {
-            struct timespec abstime;
-            abstime.tv_sec  = time_to_wait.sec();
-            abstime.tv_nsec = time_to_wait.usec();
+            struct timeval  now;                // The current time
+            struct timespec abs_timeout;        // The absolute time of the timeout
+            int    retcode;
 
-            if ( pthread_cond_timedwait(&mCondVar, &(mCondMutex->mMutex), &abstime) != 0 )
-            {
-               status.setCode(vpr::ReturnStatus::Fail);
-            }
+            // Calculate the absolute time for wait timeout
+            gettimeofday(&now, NULL);
+            abs_timeout.tv_sec = now.tv_sec + time_to_wait.sec();
+
+            vpr::Uint64 left_over_us = time_to_wait.usec()%1000000;     // Get the left over usecs
+            abs_timeout.tv_nsec = 1000 * (now.tv_usec + left_over_us);
+
+            retcode = pthread_cond_timedwait(&mCondVar, &(mCondMutex->mMutex), &abs_timeout);
+
+            if(0 == retcode)
+            { status.setCode(vpr::ReturnStatus::Succeed); }
+            else if(ETIMEDOUT == retcode)
+            { status.setCode(vpr::ReturnStatus::Timeout); }
+            else
+            { status.setCode(vpr::ReturnStatus::Fail); }
          }
       }
 

@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2004-01-15 allenb   Fixed bug in CondVarPosix::wait() where wait time was not
+                    being taken into account correctly.  This method also now
+                    returns timeouts correctly.
+                    NEW VERSION: 0.32.4
 2004-01-10 allenb   Changed Mutex::test() method to be const.
                     NEW VERSION: 0.32.3
 2003-11-12 patrickh Removed the vpr::GUID(const char*) constructor overload.
