@@ -33,7 +33,6 @@ dnl ************* <auto-copyright.pl END do not edit this line> *************
 AC_DEFUN(VJ_COMPILER_SETUP,
 [
     AC_REQUIRE([DPP_WITH_GCC])
-    AC_REQUIRE([DPP_ENABLE_NSPR_THREADS])
     AC_REQUIRE([DPP_SYSTEM_SETUP])
 
     # Override the C compiler that configure would otherwise find itself.
