@@ -63,8 +63,10 @@ def getOsgNavFacade():
    """ Return reference to a local object implementing MMAFacade. """
    facade = None
    if use_test_facade:
+      print "   Creating TEST facade."
       facade = RemoteNavFacade.TestRemoteNavFacade()
    else:
+      print "   Creating TWEEK facade from factory."
       import tweekfacadefactory
       facade = tweekfacadefactory.getTweekFacade()
       
