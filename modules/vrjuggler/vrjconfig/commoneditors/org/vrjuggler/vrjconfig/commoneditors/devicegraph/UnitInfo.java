@@ -33,40 +33,124 @@
 package org.vrjuggler.vrjconfig.commoneditors.devicegraph;
 
 
+/**
+ * A holder for information about input sources (units) on some input device.
+ * An input source in a given device is identified uniquely by its type and
+ * its number.  This class makes the input source type immutable but allows
+ * the number to be changed to account for changes in how the device is
+ * configured.
+ */
 public class UnitInfo
    implements UnitConstants
 {
+   /**
+    * Creates a new input source (unit) representation with the given type
+    * and number.
+    *
+    * @param unitType   the type of the unit (as specified in
+    *                   <code>UnitConstants</code>) associated with this object
+    * @param unitNumber the number (index) of the unit associated with this
+    *                   object
+    *
+    * @see UnitConstants
+    */
+   public UnitInfo(Integer unitType, int unitNumber)
+   {
+      this(unitType, new Integer(unitNumber));
+   }
+
+   /**
+    * Creates a new input source (unit) representation with the given type
+    * and number.
+    *
+    * @param unitType   the type of the unit (as specified in
+    *                   <code>UnitConstants</code>) associated with this object
+    * @param unitNumber the number (index) of the unit associated with this
+    *                   object
+    *
+    * @see UnitConstants
+    */
    public UnitInfo(Integer unitType, Integer unitNumber)
    {
       this.unitType   = unitType;
       this.unitNumber = unitNumber;
    }
 
+   /**
+    * Returns the type of this input source as specified by
+    * <code>UnitConstants</code>.
+    *
+    * @see UnitConstants
+    */
    public Integer getUnitType()
    {
       return this.unitType;
    }
 
+   /**
+    * Returns the unit number (index) of this input source.
+    */
    public Integer getUnitNumber()
    {
       return this.unitNumber;
    }
 
+   /**
+    * Changes the unit number (index) of this input source to the given value.
+    */
+   public void setUnitNumber(int unitNumber)
+   {
+      setUnitNumber(new Integer(unitNumber));
+   }
+
+   /**
+    * Changes the unit number (index) of this input source to the given value.
+    */
    public void setUnitNumber(Integer unitNumber)
    {
       this.unitNumber = unitNumber;
    }
 
+   /**
+    * Decrements this unit's number (index) by 1.
+    */
    public void decrementUnitNumber()
    {
-      this.unitNumber = new Integer(this.unitNumber.intValue() - 1);
+      decrementUnitNumber(1);
    }
 
+   /**
+    * Decrements this unit's number (index) by the given value.
+    *
+    * @param amount     the amount to decrement the unit number
+    */
+   public void decrementUnitNumber(int amount)
+   {
+      this.unitNumber = new Integer(this.unitNumber.intValue() - amount);
+   }
+
+   /**
+    * Increments this unit's number (index) by 1.
+    */
    public void incrementUnitNumber()
    {
-      this.unitNumber = new Integer(this.unitNumber.intValue() + 1);
+      incrementUnitNumber(1);
    }
 
+   /**
+    * Increments this unit's number (index) by the given value.
+    *
+    * @param amount     the amount to increment the unit number
+    */
+   public void incrementUnitNumber(int amount)
+   {
+      this.unitNumber = new Integer(this.unitNumber.intValue() + amount);
+   }
+
+   /**
+    * Equality overload to ensure that units can be compared easily and
+    * correctly.
+    */
    public boolean equals(Object obj)
    {
       boolean result = false;
@@ -89,6 +173,9 @@ public class UnitInfo
       return result;
    }
 
+   /**
+    * Strig-ifies this object.
+    */
    public String toString()
    {
       return "UnitInfo@" + Integer.toHexString(hashCode()) + ": [Type=" +
