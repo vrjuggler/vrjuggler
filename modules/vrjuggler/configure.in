@@ -140,6 +140,17 @@ AC_ARG_WITH(sl,
             [  --with-sl=<PATH>        SL installation                 [default=/usr]],
             _with_sl="$withval", _with_sl='/usr')
 
+# Define the root directory for the Xerces-c installation.
+AC_ARG_WITH(xercesroot,
+            [  --with-xercesroot=<PATH>
+                          Xerces-c installation directory [default=/usr]],
+            XERCESROOT="$withval", XERCESROOT="/usr")
+
+AC_ARG_WITH(xerceslib,
+            [  --with-xerceslib=<LIBNAME>
+                          Xerces-c library name           [default=-lxerces-c]],
+            XERCES_LIB="$withval", XERCES_LIB="-lxerces-c")
+
 # Define the binary format.
 DPP_ABI_SETUP
 
@@ -736,17 +747,6 @@ fi
 # -----------
 # Xerces-c
 # -----------
-# Define the root directory for the Xerces-c installation.
-AC_ARG_WITH(xercesroot,
-    [  --with-xercesroot=<PATH>Xerces-c installation
-                          directory                       [default=/usr]],
-                XERCESROOT="$withval", XERCESROOT="/usr")
-
-AC_ARG_WITH(xerceslib,
-    [  --with-xerceslib=<LIBNAME>
-                          Xerces-c library name           [default=-lxerces-c]],
-                XERCES_LIB="$withval", XERCES_LIB="-lxerces-c")
-
 _vjsave_CFLAGS="$CFLAGS"
 _vjsave_CPPFLAGS="$CPPFLAGS"
 _vjsave_INCLUDES="$INCLUDES"
@@ -756,9 +756,9 @@ _vjsave_LIBS="$LIBS"
 # Ensure that /usr/include and /usr/lib are not included multiple times
 # if XERCESROOT is "/usr".
 if test "x$XERCESROOT" != "x/usr" ; then
-        CPPFLAGS="-I$XERCESROOT/include $CPPFLAGS"
-        INCLUDES="-I$XERCESROOT/include $INCLUDES"
-        LDFLAGS="-L$XERCESROOT/lib$LIBBITSUF $LDFLAGS"
+    CPPFLAGS="-I$XERCESROOT/include $CPPFLAGS"
+    INCLUDES="-I$XERCESROOT/include $INCLUDES"
+    LDFLAGS="-L$XERCESROOT/lib$LIBBITSUF $LDFLAGS"
 fi
 
 CFLAGS="$CFLAGS $INCLUDES ${_EXTRA_FLAGS}"
@@ -788,8 +788,6 @@ CPPFLAGS="${_vjsave_CPPFLAGS}"
 INCLUDES="${_vjsave_INCLUDES}"
 LDFLAGS="${_vjsave_LDFLAGS}"
 LIBS="${_vjsave_LIBS}"
-
-
 
 # -----------------------------------------------------------------------------
 # Checks for header files.
