@@ -250,7 +250,6 @@ public class ConfigContextEditor
                                                   java.awt.Font.BOLD, 14));
       mElementTypeLabel.setForeground(Color.black);
       mElementTypeLabel.setBorder(BorderFactory.createRaisedBevelBorder());
-      mElementTypeLabel.setOpaque(true);
       mElementTypeLabel.setHorizontalAlignment(SwingConstants.LEFT);
 
       mElementPropSheetPanel.setLayout(mElementPropSheetLayout);
