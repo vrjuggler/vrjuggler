@@ -49,16 +49,11 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 INSTALL_FILES=	
 SUBOBJDIR=	$(DRIVER_NAME)
-
-ifeq (@BUILD_ISENSE_API@, Y)
 C_AFTERBUILD=	driver-dso
-
-POST_DSO_DRIVER_DEPS=	@ISENSE_API_LIB_FLAGS@
 
 SRCS=		isense.c 			\
 		IntersenseAPI.cpp		\
 		IntersenseAPIStandalone.cpp
-endif
 
 include $(MKPATH)/dpp.obj.mk
 include @topdir@/gadget/Devices/driver.defs.mk
