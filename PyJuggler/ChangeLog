@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-16-2003 patrickh    Improved the stability of code based on PyJuggler.vrj
+                        by synchronizing multi-threaded access to the Python 
+                        interpreter.
+                        NEW VERSION: 0.3.1
 Apr-11-2003 patrickh    Moved the individual modules into the PyJuggler
                         namespace.  Now we have PyJuggler.vpr, PyJuggler.vrj,
                         and so on.
