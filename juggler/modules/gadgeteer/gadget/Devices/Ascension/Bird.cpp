@@ -22,6 +22,7 @@
 #include <sys/file.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>
+#include <termios.h>
 
 #include <Input/vjPosition/vjBird.h>
 
@@ -184,11 +185,11 @@ int vjBird::stopSampling()
 
       bird_command[0] = 'B';
       write(port_id, bird_command, 1);
-      ioctl(port_id, TCFLSH, (char *) 0);
+      tcflush(port_id, TCIFLUSH);
       sginap(5);
       bird_command[0] = 'G';
       write(port_id, bird_command, 1);
-      ioctl(port_id, TCFLSH, (char *) 0);
+      tcflush(port_id, TCIFLUSH);
       sleep(2);
       close(port_id);
       port_id = -1;
@@ -411,7 +412,7 @@ inline void  pickBird(int birdID, int port)
 {
    char buff = 0xF0 + birdID;
    write(port, &buff, 1);
-   ioctl(port, TCFLSH, (char*) 0);
+   tcflush(port, TCIFLUSH);
    sginap(1);
 }
 
@@ -438,8 +439,8 @@ static int open_port(char* serialPort, int baud)
  // Setup the port, current setting is 38400 baud
  //
  //////////////////////////////////////////////////////////////////
-    termio port_a;
-    ioctl(port_id,TCGETA,&port_a);
+    termios port_a;
+    tcgetattr(port_id, &port_a);
 
     port_a.c_iflag = port_a.c_oflag = port_a.c_lflag = 0;
 
@@ -459,7 +460,7 @@ static int open_port(char* serialPort, int baud)
     port_a.c_cc[4] = port_a.c_cc[5] = 1;
 
    // Set the new attributes
-    ioctl(port_id,TCSETA,&port_a);
+    tcsetattr(port_id, TCSANOW, &port_a);
     ioctl(port_id,TIOCNOTTY);
     return port_id;
   }
@@ -478,7 +479,7 @@ static int open_port(char* serialPort, int baud)
 
   fcntl(port,F_SETFL,blocking ? blockf : nonblock); // 0 Non Blocked
                                                     // 1 Blocked
-  ioctl(port,TCFLSH,2);
+  tcflush(port, TCIOFLUSH);
   sginap(10);
   char junk[1024];
   read(port, junk, 1024);
@@ -498,7 +499,7 @@ static void set_sync(int port, int sync)
   unsigned char buff[4] = {'A', 1};
   buff[1] = sync;
   write(port,buff,2);
-  ioctl(port,TCFLSH,0);
+  tcflush(port, TCIFLUSH);
 }
 
 
@@ -547,7 +548,7 @@ static void set_hemisphere(int port, BIRD_HEMI hem)//, int transmitter)
 	break;
    }
     write(port, buff, 3);
-    ioctl(port, TCFLSH, (char *) 0);
+    tcflush(port, TCIFLUSH);
     sginap(5);
   }
 }
@@ -564,7 +565,7 @@ static void set_rep_and_stream(int port, char repRate)
  /////////////////////////////////////////////////////////////////
   buff[0] = repRate;
   write(port, buff, 1);
-  ioctl(port, TCFLSH, (char *) 0);
+  tcflush(port, TCIFLUSH);
   sginap(20);
 
  ////////////////////////////////////////////////////////////////
@@ -572,7 +573,7 @@ static void set_rep_and_stream(int port, char repRate)
  ////////////////////////////////////////////////////////////////
   buff[0] = '@';
   write(port, buff, 1);
-  ioctl(port, TCFLSH, (char *) 0);
+  tcflush(port, TCIFLUSH);
   sginap(5);
 
 }
@@ -588,7 +589,7 @@ static void set_pos_angles(int port)//, int transmitter)
     //pickBird(i,port);
     buff[0] = 'Y';
     write(port, buff, 1);
-    ioctl(port, TCFLSH, (char *) 0);
+    tcflush(port, TCIFLUSH);
     sginap(5);
   }
 
@@ -608,7 +609,7 @@ static void set_filter(int port, BIRD_FILT filter)
   buff[2] = 0x00;
   buff[3] = 0;
   write(port,buff,4);
-  ioctl(port,TCFLSH,(char*)0);
+  tcflush(port, TCIFLUSH);
  // Do I need to sleep here?
 
 }
@@ -623,7 +624,7 @@ static void set_transmitter(int port, int transmitter)
   buff[0] = (unsigned char) (0x30);
   buff[1] = (unsigned char) transmitter  << 4;
   write(port, buff, 2);
-  ioctl(port, TCFLSH,(char*) 0);
+  tcflush(port, TCIFLUSH);
   sginap(120);
  }
 
@@ -640,7 +641,7 @@ static void set_autoconfig(int port, int transmitter)
   buff[1] = 0x32;
   buff[2] = transmitter;  //number of input devices + 1 for transmitter
   write(port, buff,3);
-  ioctl(port, TCFLSH, (char*) 0);
+  tcflush(port, TCIFLUSH);
   sleep(2);
 }
 
@@ -657,7 +658,7 @@ static void set_group(int port)
   buff[1] = 0x23;
   buff[2] = 0x00;  // set group mode off
   write(port, buff, 3);
-  ioctl(port, TCFLSH, (char *) 0);
+  tcflush(port, TCIFLUSH);
   sleep(2);
 
 }

@@ -17,7 +17,7 @@
 #include <varargs.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <termio.h>
+#include <termios.h>
 
 #include <Input/vjGlove/vjCyberGlove.h>
 #include <Input/vjGlove/vt_types.h>
