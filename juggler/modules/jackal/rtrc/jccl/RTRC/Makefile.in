@@ -67,7 +67,7 @@ ifeq ($(HAVE_TWEEK_CXX), Y)
 			RTRCInterface.cpp
 endif
 
-EXTRA_INCLUDES= \
+EXTRA_INCLUDES+= \
 	-I$(top_srcdir)/common \
 	-I$(top_srcdir)/config \
 	-I$(top_srcdir)/net \
