@@ -50,6 +50,7 @@
 
 #include <vpr/vprTypes.h>
 #include <vpr/Util/Assert.h>
+#include <boost/concept_check.hpp>  // for ignore_unused_variable_warning
 
 
 namespace vpr
@@ -60,7 +61,19 @@ class GUIDFactory;
 class VPR_CLASS_API GUID
 {
 public:
+   /** Tag to the constructor to force generation: dso::GUID guid(dso::GUID::generate_tag); 
+*/
+   class GenerateTag { };
+   static GenerateTag generateTag;
+
+public:
    ~GUID (void) {;}
+
+   GUID(const vpr::GUID::generate_tag_type tag)
+   {
+      boost::ignore_unused_variable_warning(tag);
+      generate();
+   }
 
    /**
     * Converts this GUID to its corresponding string representation.
@@ -116,7 +129,7 @@ public:
     * Generates empty guid - Sets equal to GUID::NullGUID
     */
    GUID();
-      
+
    /**
     * Generates a GUID from the given struct.
     */
