@@ -16,7 +16,7 @@
 class vjPfApp;
 class vjProjection;
 class vjConfigChunkDB;
-class vjSimulator;
+class vjSimDisplay;
 
     // Performer Config function called in draw proc after window is set up
 void vjPFconfigPWin(pfPipeWindow* pWin);
@@ -122,7 +122,7 @@ protected:
    //: Helper to initialize the Performer simulator
    void initSimulator();
    void initLoaders();
-   void updateSimulator(vjSimulator* sim);
+   void updateSimulator(vjSimDisplay* sim);
 
    //: Helper to get the pfDisp given a channel
    //! RETURNS: NULL - Not found
