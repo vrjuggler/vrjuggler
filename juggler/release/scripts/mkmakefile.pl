@@ -467,9 +467,15 @@ sub printMultiAppMakefile ($$$) {
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
-all: @all_apps
-
 EOF
+
+    print $handle "all:";
+
+    foreach ( @all_apps ) {
+        print $handle " $_\@EXEEXT\@";
+    }
+
+    print $handle "\n\n";
 
     # Loop over the applications again and print the targets that build the
     # actual executables.
