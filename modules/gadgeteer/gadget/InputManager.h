@@ -159,6 +159,7 @@ public:
    void refreshAllProxies();
 
 protected:
+   bool removeProxy(std::string proxyName);
    bool removeProxy(vjConfigChunk* chunk);
 
 protected:
@@ -166,7 +167,10 @@ protected:
 
    tDevTableType                          mDevTable;
    std::map<std::string, vjProxy*>        mProxyTable;      // list of proxies in the system
-   std::map<std::string, std::string>     mProxyAliases;     // List of alias names for proxies
+   std::map<std::string, std::string>     mProxyAliases;    // List of alias names for proxies
+
+   // The mProxyAlias table serves as a secondary lookup for proxies.  ie. if the proxy name is not
+   // found in mProxyTable, then search mProxyAliases for it.
 
 private:
    //: Function to configure the proxy Alias array
