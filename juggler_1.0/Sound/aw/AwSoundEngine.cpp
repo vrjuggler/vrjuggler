@@ -36,8 +36,7 @@
 #include <aw.h> //audio works
 #include <Sound/vjSoundEngine.h>   // base class
 #include <Sound/aw/AwSound.h>       // my sound type...
-#include <samples/tools/fileIO.h>
-//#include <samples/tools/fileIO.cpp>
+#include <Config/vjParseUtil.h>
 
 #include <Sound/aw/AwSoundEngine.h> // my header
 
@@ -217,7 +216,7 @@ bool AwSoundEngine::config( vjConfigChunk* chunk )
 
    else
    {
-      std::string demangled = fileIO::demangleFileName( adfName, "" );
+      std::string demangled = demangleFileName( adfName, "" );
       mAdfFileList += demangled;
       mAdfFileList += " ";
       return true;
