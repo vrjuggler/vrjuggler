@@ -117,7 +117,6 @@ public class DeviceGraph
 
       setGraphLayoutCache(new DeviceGraphLayoutCache(getModel(), factory));
 
-//      this.addMouseListener(new MouseDispatcher(this));
       this.addMouseListener(new JGraphHeavyweightRedirector(false, true));
    }
 
