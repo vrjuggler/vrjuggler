@@ -189,60 +189,70 @@ public class DeviceInfo
                                             "variable unit numbers");
       }
 
-      PropertyDefinition prop_def = getUnitPropertyDefinition(unitType);
+      Object unit_prop_obj = mUnitTypeMap.get(unitType);
 
-      if ( prop_def.isVariable() )
+      if ( unit_prop_obj instanceof PropertyDefinition )
       {
-         PropertyValueDefinition value_def =
-            prop_def.getPropertyValueDefinition(0);
-         String token = prop_def.getToken();
+         PropertyDefinition prop_def = (PropertyDefinition) unit_prop_obj;
 
-         Object default_value = value_def.getDefaultValue();
-
-         if ( default_value == null )
+         if ( prop_def.isVariable() )
          {
-            if ( prop_def.getType() == ConfigElement.class )
-            {
-               ConfigBroker broker = new ConfigBrokerProxy();
-               ConfigDefinitionRepository repos = broker.getRepository();
-               ConfigElementFactory factory =
-                  new ConfigElementFactory(repos.getAllLatest());
+            PropertyValueDefinition value_def =
+               prop_def.getPropertyValueDefinition(0);
+            String token = prop_def.getToken();
 
-               // XXX: How do we deal with this?  The flexibility of allowed
-               // types makes this tricky.
-               int count = getElement().getPropertyValueCount(token);
-               default_value =
-                  factory.create(value_def.getLabel() + " " + count,
-                                 repos.get(prop_def.getAllowedType(0)));
-            }
-            else
-            {
-               System.out.println("Don't know what to do for type " +
-                                  prop_def.getType());
-            }
-         }
+            Object default_value = value_def.getDefaultValue();
 
-         System.out.println("[DeviceVertexRenderer.addUnit()] " +
-                            "default_value == " + default_value + " (type: " +
-                            prop_def.getType() + ")");
-         getElement().addProperty(token, default_value, getContext());
-      }
-      else
-      {
-         if ( prop_def.getType() == Integer.class )
-         {
-            Integer old_value =
-               (Integer) getElement().getProperty(prop_def.getToken(), 0);
-            Integer new_value = new Integer(old_value.intValue() + 1);
-            getElement().setProperty(prop_def.getToken(), 0, new_value,
-                                     getContext());
+            if ( default_value == null )
+            {
+               if ( prop_def.getType() == ConfigElement.class )
+               {
+                  ConfigBroker broker = new ConfigBrokerProxy();
+                  ConfigDefinitionRepository repos = broker.getRepository();
+                  ConfigElementFactory factory =
+                     new ConfigElementFactory(repos.getAllLatest());
+
+                  // XXX: How do we deal with this?  The flexibility of allowed
+                  // types makes this tricky.
+                  int count = getElement().getPropertyValueCount(token);
+                  default_value =
+                     factory.create(value_def.getLabel() + " " + count,
+                                    repos.get(prop_def.getAllowedType(0)));
+               }
+               else
+               {
+                  System.out.println("Don't know what to do for type " +
+                                     prop_def.getType());
+               }
+            }
+
+            System.out.println("[DeviceVertexRenderer.addUnit()] " +
+                               "default_value == " + default_value + " (type: " +
+                               prop_def.getType() + ")");
+            getElement().addProperty(token, default_value, getContext());
          }
          else
          {
-            throw new IllegalArgumentException("Don't know how to add a " +
-                                               "new unit to property " +
-                                               prop_def.getToken());
+            if ( prop_def.getType() == Integer.class )
+            {
+               Integer old_value =
+                  (Integer) getElement().getProperty(prop_def.getToken(), 0);
+               Integer new_value = new Integer(old_value.intValue() + 1);
+               getElement().setProperty(prop_def.getToken(), 0, new_value,
+                                        getContext());
+            }
+            else
+            {
+               throw new IllegalArgumentException("Don't know how to add a " +
+                                                  "new unit to property " +
+                                                  prop_def.getToken());
+            }
          }
+      }
+      else
+      {
+         int cur_value = ((Number) unit_prop_obj).intValue();
+         mUnitTypeMap.put(unitType, new Integer(cur_value + 1));
       }
    }
 
@@ -255,48 +265,65 @@ public class DeviceInfo
                                             "variable unit numbers");
       }
 
-      PropertyDefinition prop_def = getUnitPropertyDefinition(unitType);
-      if ( prop_def.isVariable() )
+      Object unit_prop_obj = mUnitTypeMap.get(unitType);
+
+      if ( unit_prop_obj instanceof PropertyDefinition )
       {
-         getElement().removeProperty(prop_def.getToken(), unitNumber,
-                                     getContext());
-      }
-      else
-      {
-         if ( prop_def.getType() == Integer.class )
+         PropertyDefinition prop_def = (PropertyDefinition) unit_prop_obj;
+
+         if ( prop_def.isVariable() )
          {
-            Integer value =
-               (Integer) getElement().getProperty(prop_def.getToken(), 0);
-            Integer new_value = new Integer(value.intValue() - 1);
-            getElement().setProperty(prop_def.getToken(), 0, new_value,
-                                     getContext());
+            getElement().removeProperty(prop_def.getToken(), unitNumber,
+                                        getContext());
          }
          else
          {
-            throw new IllegalArgumentException("Don't know how to remove " +
-                                               "unit for property " +
-                                               prop_def.getToken());
+            if ( prop_def.getType() == Integer.class )
+            {
+               Integer value =
+                  (Integer) getElement().getProperty(prop_def.getToken(), 0);
+               Integer new_value = new Integer(value.intValue() - 1);
+               getElement().setProperty(prop_def.getToken(), 0, new_value,
+                                        getContext());
+            }
+            else
+            {
+               throw new IllegalArgumentException("Don't know how to remove " +
+                                                  "unit for property " +
+                                                  prop_def.getToken());
+            }
          }
+      }
+      else
+      {
+         int cur_value = ((Number) unit_prop_obj).intValue();
+         mUnitTypeMap.put(unitType, new Integer(cur_value - 1));
       }
    }
 
    public int getUnitCount(Integer unitType)
    {
       int count = 0;
-      PropertyDefinition prop_def = getUnitPropertyDefinition(unitType);
+      Object unit_prop_obj = mUnitTypeMap.get(unitType);
 
-      if ( prop_def != null )
+      if ( unit_prop_obj instanceof PropertyDefinition )
       {
+         PropertyDefinition prop_def = (PropertyDefinition) unit_prop_obj;
+
          if ( prop_def.isVariable() )
          {
             count = getElement().getPropertyValueCount(prop_def.getToken());
          }
          else
          {
-            Number val =
-               (Number) getElement().getProperty(prop_def.getToken(), 0);
+            Number val = (Number) getElement().getProperty(prop_def.getToken(),
+                                                           0);
             count = val.intValue();
          }
+      }
+      else
+      {
+         count = ((Number) unit_prop_obj).intValue();
       }
 
       return count;
@@ -325,11 +352,12 @@ public class DeviceInfo
    public String getUnitPropertyToken(Integer unitType)
    {
       String result = null;
-      PropertyDefinition prop_def = getUnitPropertyDefinition(unitType);
 
-      if ( prop_def != null )
+      Object unit_prop_obj = mUnitTypeMap.get(unitType);
+
+      if ( unit_prop_obj instanceof PropertyDefinition )
       {
-         result = prop_def.getToken();
+         result = ((PropertyDefinition) unit_prop_obj).getToken();
       }
 
       return result;
@@ -338,74 +366,15 @@ public class DeviceInfo
    public Class getUnitPropertyType(Integer unitType)
    {
       Class result = null;
-      PropertyDefinition prop_def = getUnitPropertyDefinition(unitType);
 
-      if ( prop_def != null )
+      Object unit_prop_obj = mUnitTypeMap.get(unitType);
+
+      if ( unit_prop_obj instanceof PropertyDefinition )
       {
-         result = prop_def.getType();
+         result = ((PropertyDefinition) unit_prop_obj).getType();
       }
 
       return result;
-   }
-
-   /**
-    * Retrieves the definition for the property in this device's config
-    * element that provides an indication of how many input sources (units)
-    * this device has.  To make a reliable determination about whether the
-    * device has a variable number of input sources, use
-    * <a href="#hasVariableUnitCount()"><code>hasVariableUnitCount()</code></a>.
-    * Invoking this method when the device does not support a variable number
-    * of input sources will generally result in a
-    * <code>NullPointerException</code> being thrown.
-    *
-    * @param inputType  the input type of the property definition to return
-    *
-    * @return a <code>PropertyDefinition</code> reference for this device's
-    *         input source (unit) configuration or null if this device has
-    *         a fixed number of input sources (greater than or equal to 1)
-    *         at all times.
-    *
-    * @see UnitConstants
-    * @see #hasVariableUnitCount()
-    * @see #getUnitTypes()
-    */
-   private PropertyDefinition getUnitPropertyDefinition(Integer inputType)
-   {
-      return getUnitPropertyDefinition((Object) inputType);
-   }
-
-   /**
-    * Retrieves the definition for the property in this device's config
-    * element that provides an indication of how many input sources (units)
-    * this device has.  To make a reliable determination about whether the
-    * this device has.  To make a reliable determination about whether the
-    * device has a variable number of input sources, use
-    * <a href="#hasVariableUnitCount()"><code>hasVariableUnitCount()</code></a>.
-    * Invoking this method when the device does not support a variable number
-    * of input sources will generally result in a
-    * <code>NullPointerException</code> being thrown.
-    *
-    * <p>
-    * This method is a convenience overload of <code>getUnitPropertyDefinition(Integer)</code> that
-    * can be useful when iterating over the collection of supported unit
-    * types.  Using this version of the method relieves the caller from having
-    * to cast the collection item from <code>java.lang.Object</code> to
-    * <code>java.lang.Integer</code>.
-    * </p>
-    *
-    * @param inputType  the input type of the property definition to return
-    *
-    * @return a <code>PropertyDefinition</code> reference for this device's
-    *         input source (unit) configuration or null if this device has
-    *         a fixed number of input sources (greater than or equal to 1)
-    *         at all times.
-    *
-    * @see #hasVariableUnitCount()
-    * @see #getUnitTypes()
-    */
-   private PropertyDefinition getUnitPropertyDefinition(Object inputType)
-   {
-      return (PropertyDefinition) mUnitTypeMap.get(inputType);
    }
 
    /**
