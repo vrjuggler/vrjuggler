@@ -173,7 +173,6 @@ vpr::ReturnStatus CorbaManager::createSubjectManager ()
       {
          const char* id   = "SubjectManager";
          const char* kind = "Object";
-         CosNaming::Name context_name;
 
          // This gives us our reference from the POA to the servant that was
          // registered above.  This does not perform object activation because
@@ -182,9 +181,9 @@ vpr::ReturnStatus CorbaManager::createSubjectManager ()
 
          vprASSERT(! CORBA::is_nil(mgr_ptr) && "CORBA object not activated in POA");
 
-         context_name.length(1);
-         context_name[0].id   = CORBA::string_dup(id);
-         context_name[0].kind = CORBA::string_dup(kind);
+         m_subj_mgr_name.length(1);
+         m_subj_mgr_name[0].id   = CORBA::string_dup(id);
+         m_subj_mgr_name[0].kind = CORBA::string_dup(kind);
 
          // Bind the Subject Manager reference and activate the object within
          // the POA.  If a Subject Manager is already bound, the exceptoin
@@ -192,7 +191,7 @@ vpr::ReturnStatus CorbaManager::createSubjectManager ()
          // since we only want one Subject Manager per address space.
          try
          {
-            m_local_context->bind(context_name, mgr_ptr);
+            m_local_context->bind(m_subj_mgr_name, mgr_ptr);
          }
          catch (CosNaming::NamingContext::AlreadyBound& ex)
          {
@@ -214,6 +213,77 @@ vpr::ReturnStatus CorbaManager::createSubjectManager ()
             << "Caught a CORBA::SystemException while using the naming service"
             << std::endl << vprDEBUG_FLUSH;
       }
+   }
+
+   return status;
+}
+
+vpr::ReturnStatus CorbaManager::destroySubjectManager ()
+{
+   vpr::ReturnStatus status;
+
+   // Only try to do destruction if there is a servant to destroy.
+   if ( m_subj_mgr != NULL )
+   {
+      // This attempts to go through the process of destroying the registered
+      // Subject Manager servant.  The memory for the servant is only deleted
+      // if the servant can be deactivated in the POA.
+      try
+      {
+         // First, we deactivate the servant in the POA.
+         m_child_poa->deactivate_object(m_subj_mgr_id);
+
+         // Then we attempt to unbind the reference from the Naming Service.
+         // Should this fail, the object reference will be invalid because of
+         // the above step, so deleting the servant's memory should be okay.
+         try
+         {
+            m_local_context->unbind(m_subj_mgr_name);
+         }
+         catch (CORBA::ORB::InvalidName& ex)
+         {
+            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+               << "WARNING: Invalid name used when trying to unbind "
+               << "Subject Manager!\n" << vprDEBUG_FLUSH;
+         }
+         catch (CosNaming::NamingContext::CannotProceed& ex)
+         {
+            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+               << "WARNING: Could not unbind Subject Manager!\n"
+               << vprDEBUG_FLUSH;
+         }
+
+         // Finally, we delete the servant's memory.
+         delete m_subj_mgr;
+         m_subj_mgr = NULL;
+      }
+      catch (PortableServer::POA::ObjectNotActive& policy_ex)
+      {
+         // If the servant is not active in the POA, something may have gone
+         // wrong in createSubjectManager().  In that case, the memory should
+         // still be deleted since there is no active object to worry about
+         // anyway.
+         delete m_subj_mgr;
+         m_subj_mgr = NULL;
+
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "WARNING: Coult not deactive Subject Manager: not active in POA\n"
+            << vprDEBUG_FLUSH;
+      }
+      catch (PortableServer::POA::WrongPolicy& policy_ex)
+      {
+         status.setCode(vpr::ReturnStatus::Fail);
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "WARNING: Coult not deactive Subject Manager: wrong POA policy\n"
+            << vprDEBUG_FLUSH;
+      }
+   }
+   else
+   {
+      status.setCode(vpr::ReturnStatus::Fail);
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "WARNING: No Subject Manager servant to destroy!\n"
+         << vprDEBUG_FLUSH;
    }
 
    return status;
@@ -367,7 +437,7 @@ void CorbaManager::run(void* args)
 
    pman->activate();
    m_orb->run();
-   m_orb->destroy();
+//   m_orb->destroy();
 
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "Server has shut down\n"
                                           << vprDEBUG_FLUSH;
