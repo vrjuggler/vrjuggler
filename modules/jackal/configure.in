@@ -49,6 +49,20 @@ DPP_INIT
 DPP_GEN_RECONFIG
 
 # -----------------------------------------------------------------------------
+# Path setup.
+# -----------------------------------------------------------------------------
+
+# $srcdir is the root directory of the juggler source tree.  To get a value for
+# $VJROOT_ABS, we cd there and save the value of running pwd.  Then return to
+# the directory where configure is being run ($topdir).
+cd "$srcdir"
+JCCLROOT_ABS=`pwd`
+
+cd "$JCCLROOT_ABS/../.."
+JUGGLERROOT_ABS=`pwd`
+cd "$topdir"
+
+# -----------------------------------------------------------------------------
 # Command-line arguments (--enable-option, --with-pkg=package_name).
 # -----------------------------------------------------------------------------
 
@@ -83,8 +97,8 @@ DPP_ABI_SETUP
 
 AC_ARG_WITH(cppdomroot,
             [  --with-cppdomroot=<PATH>
-                          cppdom installation directory (remember that "cppdom/" should be a subdir of this dir [default=/usr]],
-            CPPDOM_ROOT="$withval", CPPDOM_ROOT='/usr')
+                          CppDOM installation directory   [default=$JUGGLERROOT_ABS/external/cppdom]],
+            CPPDOM_ROOT="$withval", CPPDOM_ROOT="$JUGGLERROOT_ABS/external/cppdom")
 
 # Specify where JDOM is located
 AC_ARG_WITH(jdom, [  --with-jdom=<PATH>      Path to JDOM JAR file(s) ],
@@ -211,11 +225,15 @@ DPP_LANG_CPLUSPLUS
 # XXX: Should be $CPPDOM_ROOT/include
 AC_CHECK_HEADER([cppdom/config.h],
     [cppdom_include="$CPPDOM_ROOT"],
-    [AC_MSG_ERROR([*** cppdom headers not found ***])])
+    [AC_MSG_ERROR([*** CppDOM is required for JCCL ***])])
 
 DPP_LANG_RESTORE
 
 CPPDOM_INCLUDES="-I$cppdom_include"
+
+if test "x$CPPDOM_ROOT" != "x$JUGGLERROOT_ABS/external/cppdom" ; then
+    LOCAL_CPPDOM='Y'
+fi
 
 CFLAGS="${_vjsave_CFLAGS}"
 CPPFLAGS="${_vjsave_CPPFLAGS}"
@@ -295,15 +313,6 @@ if test "x$PLATFORM" = "xHP" ; then
 elif test "x$OS_TYPE" = "xWin32" ; then
     DEPEND_EXTRAS="$DEPEND_EXTRAS -D__cplusplus"
 fi
-
-# $srcdir is the root directory of the juggler source tree.  To get a value for
-# $VJROOT_ABS, we cd there and save the value of running pwd.  Then return to
-# the directory where configure is being run ($topdir).
-cd "$srcdir"
-JCCLROOT_ABS=`pwd`
-cd "$JCCLROOT_ABS/../.."
-JUGGLERROOT_ABS=`pwd`
-cd "$topdir"
 
 # Define the base path to the source directory using $(JCCLROOT_ABS) as an
 # alternative to using $(srcdir).
@@ -447,6 +456,7 @@ AC_SUBST(JUNIT_JAR)
 
 AC_SUBST(CPPDOM_ROOT)
 AC_SUBST(CPPDOM_INCLUDES)
+AC_SUBST(LOCAL_CPPDOM)
 
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
