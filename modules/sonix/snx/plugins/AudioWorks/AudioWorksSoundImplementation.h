@@ -167,12 +167,13 @@ public:
     * @postconditions sound API is ready to go.
     * @semantics this function should be called before using the other functions in the class.
     */
-   virtual void startAPI();
+   virtual int startAPI();
 
    /**
     * kill the sound API, deallocating any sounds, etc...
     * @postconditions sound API is ready to go.
     * @semantics this function could be called any time, the function could be called multiple times, so it should be smart.
+    * @return value: 1 if success, 0 otherwise
     */
    virtual void shutdownAPI();
 

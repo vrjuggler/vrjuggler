@@ -350,8 +350,9 @@ namespace snx
     * start the sound API, creating any contexts or other configurations at startup
     * @postconditions sound API is ready to go.
     * @semantics this function should be called before using the other functions in the class.
+    * @return value: 1 if success, 0 otherwise
     */
-   void AudioWorksSoundImplementation::startAPI()
+   int AudioWorksSoundImplementation::startAPI()
    {
       // figure out what host to connect to if any:
       std::string hostname = getenv( "SNX_AW_HOSTNAME" );
@@ -390,7 +391,7 @@ namespace snx
       if (awInitSys() == -1) 
       {
         std::cerr << "[snx]AudioWorks| ERROR: InitSys() failed!\n" << std::flush;
-        return;
+        return 0;
       }
 
       //Initialize the engine
@@ -408,7 +409,7 @@ namespace snx
       {
           std::cerr << "[snx]AudioWorks| ERROR: failed to attach to engine (retval="<<result<<")...\n\n" << std::flush;
      //     awPrint(mEngine);
-          return;
+          return 0;
       }
 
       //Set up the channel
@@ -459,7 +460,7 @@ namespace snx
      {    
          vpr::DebugOutputGuard output2(snxDBG, vprDBG_CONFIG_LVL, std::string("ERROR: ConfigSys() failed\n"), std::string("\n"));
    //    awPrint(mEngine);
-       return;
+       return 0;
      }
 
      mIsStarted = true; //success
@@ -467,6 +468,7 @@ namespace snx
 
      // init the state now that the engine is started...
      this->setListenerPosition( mListenerPos );
+     return 1;
    }   
 
    /**

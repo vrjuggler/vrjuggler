@@ -400,9 +400,10 @@ void OpenALSoundImplementation::setCutoff( const std::string& alias, float amoun
 /**
  * start the sound API, creating any contexts or other configurations at startup
  * @postconditions sound API is ready to go.
+ * 
  * @semantics this function should be called before using the other functions in the class.
  */
-void OpenALSoundImplementation::startAPI()
+int OpenALSoundImplementation::startAPI()
 {
    if (mContextId == NULL && mDev == NULL)
    {
@@ -410,7 +411,7 @@ void OpenALSoundImplementation::startAPI()
       if (mDev == NULL) 
       {
          std::cerr << "[snx]OpenAL| ERROR: Could not open device\n" << std::flush;
-         return;
+         return 0;
       }
 
       // Initialize ALUT
@@ -422,7 +423,7 @@ void OpenALSoundImplementation::startAPI()
       {
          std::string err = (char*)alGetString( alcGetError( mDev ) );
          std::cerr << "[snx]OpenAL| ERROR: Could not open context: " << err.c_str() << "\n" << std::flush;
-         return;
+         return 0;
       }
 
       // make context active...
@@ -442,6 +443,7 @@ void OpenALSoundImplementation::startAPI()
 
    // ALfloat velocity[] = { 0.0f, 0.0f,  0.0f };
    // alListenerfv( AL_VELOCITY, velocity );
+   return 1;
 }
 
 /**
