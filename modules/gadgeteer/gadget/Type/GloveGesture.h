@@ -7,7 +7,6 @@
 #include <Input/vjGlove/vjGlove.h>
 #include <Input/InputManager/vjGloveProxy.h>
 #include <Config/vjConfigChunk.h>
-#include <mstring.h>
 
 //: Abstract base class for all glove gesture recognition
 //

@@ -19,7 +19,6 @@
 
 #   include <vector.h>
 #   include <map.h>
-#   include <mstring.h>		// XXX: Use for basic_string.  Should replace with "real" imp
 #endif
 
 #include <Kernel/vjDebug.h>
