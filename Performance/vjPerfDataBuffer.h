@@ -3,6 +3,7 @@
 #ifndef _VJ_PERF_DATA_BUFFER_H_
 #define _VJ_PERF_DATA_BUFFER_H_
 
+#include <Environment/vjTimedUpdate.h>
 #include <Performance/vjTimeStamp.h>
 #include <Sync/vjMutex.h>
 #include <iostream.h>
@@ -35,7 +36,7 @@
 // write() call.
 //
 //----------------------------------------------------------------
-class vjPerfDataBuffer {
+class vjPerfDataBuffer: public vjTimedUpdate {
 
     struct buf_entry {
 
@@ -84,7 +85,7 @@ public:
 
 
 
-    std::string getName() {
+    virtual std::string getName() {
 	return (std::string)name;
     }
 
