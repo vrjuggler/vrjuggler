@@ -63,12 +63,12 @@ vjInputManager::vjInputManager()
 *********************************************** ahimberg */
 vjInputManager::~vjInputManager()
 {
-   for (unsigned int a = 0; a < m_devVector.size(); a++)    // Stop all devices
-      if (m_devVector[a] != NULL)
-         m_devVector[a]->stopSampling();
-   for (unsigned int i = 0; i < m_devVector.size(); i++)    // Delete all devices
-      if (m_devVector[i] != NULL)
-         delete m_devVector[i];
+   for (tDevTableType::iterator a = mDevTable.begin(); a != mDevTable.end(); a++)    // Stop all devices
+      if ((*a).second != NULL)
+      {
+         (*a).second->stopSampling();
+         delete (*a).second;
+      }
 
    // Delete all the proxies
    for(std::map<std::string, vjProxy*>::iterator j = mProxyTable.begin(); j != mProxyTable.end(); j++)
@@ -127,8 +127,10 @@ bool vjInputManager::configRemove(vjConfigChunk* chunk)
       ret_val = removeDevice(chunk);
    else if(recognizeProxyAlias(chunk))
       ret_val = removeProxyAlias(chunk);
-   else     //if(vjProxyFactory::instance()->recognizeProxy(chunk))
-      ret_val = false;     // Chunk that is unrecognized (or a proxy)
+   else if(vjProxyFactory::instance()->recognizeProxy(chunk))
+      ret_val = removeProxy(chunk);
+   else
+      ret_val = false;
 
    if(ret_val)
    {
@@ -231,13 +233,12 @@ std::ostream& operator<<(std::ostream& out, vjInputManager& iMgr)
 
   out << "Devices:\n";
 
-  for (unsigned i = 0; i < iMgr.m_devVector.size(); i++)      // Dump DEVICES
-     if (iMgr.m_devVector[i] != NULL)
-       out << std::setw(2) << std::setfill(' ') << i << ":"
-           << "  name:" << std::setw(30) << std::setfill(' ') << iMgr.m_devVector[i]->getInstanceName()
-           << "  type:" << std::setw(12) << std::setfill(' ') << typeid(*(iMgr.m_devVector[i])).name()
-           << "  port:" << std::setw(10) << std::setfill(' ') << iMgr.m_devVector[i]->getPort()
-           << "  baud:" << iMgr.m_devVector[i]->getBaudRate() << std::endl;
+  for (vjInputManager::tDevTableType::iterator i = iMgr.mDevTable.begin(); i != iMgr.mDevTable.end(); i++)      // Dump DEVICES
+     if ((*i).second != NULL)
+       out << std::setw(2) << std::setfill(' ') << i->first << ":"
+           << "  name:" << std::setw(30) << std::setfill(' ') << i->second->getInstanceName()
+           << "  type:" << std::setw(12) << std::setfill(' ') << typeid(*(i->second)).name()
+           << std::endl;
 
   out << "\nProxies:\n";
   for (std::map<std::string, vjProxy*>::iterator i_p = iMgr.mProxyTable.begin();
@@ -272,7 +273,7 @@ std::ostream& operator<<(std::ostream& out, vjInputManager& iMgr)
 *********************************************** ahimberg */
 bool vjInputManager::addDevice(vjInput* devPtr)
 {
-   m_devVector.push_back(devPtr);
+   mDevTable[devPtr->getInstanceName()] = devPtr;
 
    refreshAllProxies();
 
@@ -289,10 +290,9 @@ bool vjInputManager::addDevice(vjInput* devPtr)
 *********************************************** ahimberg */
 void vjInputManager::updateAllData()
 {
-   unsigned int j;
-   for (j = 0; j < m_devVector.size(); j++)
-      if (m_devVector[j] != NULL)
-         m_devVector[j]->updateData();
+   for (tDevTableType::iterator i = mDevTable.begin(); i != mDevTable.end(); i++)      // all DEVICES
+     if ((*i).second != NULL)
+         i->second->updateData();
 
    // Update proxies
    for (std::map<std::string, vjProxy*>::iterator i_p = mProxyTable.begin();
@@ -303,93 +303,29 @@ void vjInputManager::updateAllData()
 }
 
 
-/**********************************************************
-  vjInputManager::findDeviceNum(char* instName)
-
-  Find a devive Number from the instance name of a device,
-  if the instance name is not in the device array returns -1
-
-*********************************************** ahimberg */
-int vjInputManager::findDeviceNum(const char* instName)
-{
-   for (unsigned int i = 0; i < m_devVector.size(); i++)
-   {
-      if (m_devVector[i] != NULL)
-         if ((strcasecmp(m_devVector[i]->getInstanceName(),instName) == 0)
-             && (strcasecmp(m_devVector[i]->getInstanceName(),"Undefined") != 0))
-            return i;
-   }
-   return -1;
-}
-
-
-/**********************************************************
-  vjInputManager::getDevice(int devNum)
-
-  Get the vjInput pointer at a device,
-  NOTE: this can return a null pointer if there is not a
-   device at devNum
-
-*********************************************** ahimberg */
-vjInput* vjInputManager::getDevice(unsigned int devNum)
-{
-    vjASSERT((devNum < m_devVector.size()) && "Device index out of range");
-    return m_devVector[devNum];
-}
 
 // Return a vjInput ptr to a deviced named
 // RETURNS: NULL - Not found
 vjInput* vjInputManager::getDevice(std::string deviceName)
 {
-   vjInput* ret_dev = NULL;
-   int dev_num = findDeviceNum(deviceName.c_str());
-   if(dev_num != -1)
-   {
-      ret_dev = getDevice(dev_num);
-   }
-   return ret_dev;
+   tDevTableType::iterator ret_dev;
+   ret_dev = mDevTable.find(deviceName);
+   if(ret_dev != mDevTable.end())
+      return ret_dev->second;
+   else
+      return NULL;
 }
 
-bool vjInputManager::removeDevice(vjInput* devPtr)
+// Remove the device that is pointed to by devPtr
+bool vjInputManager::removeDevice(const vjInput* devPtr)
 {
-   std::cout << "Not implemented" << std::endl;
+   for (tDevTableType::iterator i = mDevTable.begin(); i != mDevTable.end(); i++)      // all DEVICES
+     if ((*i).second == devPtr)
+         return removeDevice((*i).first);
+
    return false;
 }
 
-/**********************************************************
-  vjInputManager::removeDevice(int devNum)
-
-  vjInputManager remove devNum from the vjInputManager,
-  currently stupifies all the proxies connected to it.
-
-*********************************************** ahimberg */
-bool vjInputManager::removeDevice(int devNum)
-{
-   if (m_devVector[devNum] == NULL)    // Check for valid device
-      return false;
-
-   // XXX: We should actually just un-config the proxies
-   // Find any proxies connected to the device
-   // Stupify any proxies connected to device
-   for (std::map<std::string, vjProxy*>::iterator i_p = mProxyTable.begin();
-       i_p != mProxyTable.end(); i_p++)
-   {
-      if((*i_p).second->getProxiedInputDevice() == m_devVector[devNum])
-      {
-         (*i_p).second->stupify(true);
-      }
-   }
-
-   // stop the device, delete it, set pointer to NULL
-   m_devVector[devNum]->stopSampling();
-   delete m_devVector[devNum];
-   m_devVector[devNum] = NULL;
-
-   // Refresh the proxies
-   refreshAllProxies();
-
-   return 1;
-}
 
 /**********************************************************
   vjInputManager::removeDevice(char* instName)
@@ -398,17 +334,38 @@ bool vjInputManager::removeDevice(int devNum)
   currently stupifies all the proxies connected to it.
 
 *********************************************** ahimberg */
-bool vjInputManager::removeDevice(char* instName)
+bool vjInputManager::removeDevice(std::string instName)
 {
-   // find the device
-   int i = findDeviceNum(instName);
-
-   // -1 means not found, so fail
-   if (i == -1)
+   tDevTableType::iterator dev_found;
+   dev_found = mDevTable.find(instName);
+   if(dev_found == mDevTable.end())
       return false;
-   else // Let removeDevice(int devNum) takeover
-      return (removeDevice(i) );
 
+   vjInput* dev_ptr = dev_found->second;
+
+   if(NULL == dev_ptr)
+      return false;
+
+   // Find any proxies connected to the device
+   // Stupify any proxies connected to device
+   // NOTE: Could just remove it and then refresh all, but this is a little safer
+   //       since we explicitly stupify the one that we don't want anymore
+   for (std::map<std::string, vjProxy*>::iterator i_p = mProxyTable.begin();
+       i_p != mProxyTable.end(); i_p++)
+   {
+      if((*i_p).second->getProxiedInputDevice() == dev_ptr)
+      {
+         (*i_p).second->stupify(true);
+      }
+   }
+
+   // stop the device, delete it, set pointer to NULL
+   dev_ptr->stopSampling();
+   delete dev_ptr;
+   mDevTable.erase(dev_found);
+
+   // Refresh the proxies
+   refreshAllProxies();
 }
 
 
@@ -539,4 +496,9 @@ void vjInputManager::refreshAllProxies()
       (*i).second->refresh();
    }
 
+}
+
+bool removeProxy(vjConfigChunk* chunk)
+{
+   return true;
 }
