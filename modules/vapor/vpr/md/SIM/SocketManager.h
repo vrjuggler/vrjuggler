@@ -45,11 +45,17 @@
 #include <vpr/vprConfig.h>
 
 #include <list>
-#include <map>
-#include <hash_map>
+
+#if defined(HAVE_HASH_MAP)
+#  include <hash_map>
+#elif defined(HAVE_HASH_MAP_H)
+#  include <hash_map.h>
+#else
+#  include <map>
+#endif
+
 #include <string>
-#include <iostream>
-#include <pair.h>
+#include <utility>
 
 #include <vpr/vprTypes.h>
 #include <vpr/IO/Socket/SocketTypes.h>
@@ -225,13 +231,27 @@ protected:  // -- Internal helpers -- //
    
 
 protected:
+   // These two have to be here because Visual C++ will try to make them
+   // exported public symbols.  This causes problems because copying vpr::Mutex
+   // objects is not allowed.  We do not want to copy SocketManager instances
+   // anyway, so this should be fine.
+   SocketManager (const SocketManager& o) {;}
+   void operator= (const SocketManager& o) {;}
+
    bool mActive;
+
+#if defined(HAVE_HASH_MAP) || defined(HAVE_HASH_MAP_H)
+   typedef std::hash_map<vpr::InetAddr, vpr::SocketStreamImplSIM* > listener_map_t;
+   typedef std::hash_map<vpr::Uint32, vpr::sim::NetworkNodePtr> node_map_t;
+#else
+   typedef std::map<vpr::InetAddr, vpr::SocketStreamImplSIM* > listener_map_t;
+   typedef std::map<vpr::Uint32, vpr::sim::NetworkNodePtr> node_map_t;
+#endif
 
    /** This is a list of sockets that have gone into a listening state
     * Used to track which sockets are currently in a listening state
     * XXX: Could move this into the actually socket as a socket state instead.
-   */
-   typedef std::map<vpr::InetAddr, vpr::SocketStreamImplSIM* > listener_map_t;
+    */
    listener_map_t mListenerList;
    vpr::Mutex mListenerListMutex;
 
@@ -239,7 +259,6 @@ protected:
    // List of the nodes in the system indexed by IP address
    // NOTE: Local host will have two mappings
    // (one for the "localhost" address and one for the node's real address)
-   typedef std::map<vpr::Uint32, vpr::sim::NetworkNodePtr> node_map_t;
    node_map_t     mNetworkNodes;    /**< The nodes in the managed network */
    vpr::Mutex     mNetworkNodesMutex;
 };
