@@ -56,21 +56,25 @@ SUBDIR=		doc/build.system				\
 		modules/vrjuggler/doc/getting.started.guide	\
 		modules/vrjuggler/doc/programmer.guide
 
+JAVADOC_SUBDIR=	modules/tweek/java	\
+		modules/jackal		\
+		modules/vrjuggler
+
 all:
-	for dir in $(SUBDIR) ; do		\
-            $(MAKE) -C $$dir docs || exit 1;	\
+	for dir in $(SUBDIR) ; do				\
+            $(MAKE) -C $$dir docs || exit 1;			\
           done
-	$(MAKE) -C modules/tweek/java -f Makefile.docs docs
-	$(MAKE) -C modules/jackal -f Makefile.docs docs
-	$(MAKE) -C modules/vrjuggler -f Makefile.docs docs
+	for dir in $(JAVADOC_SUBDIR) ; do			\
+            $(MAKE) -C $$dir -f Makefile.docs docs || exit 1;	\
+          done
 
 install:
 	for dir in $(SUBDIR) ; do					\
             $(MAKE) -C $$dir webroot=$(webroot) install-docs || exit 1;	\
           done
-	$(MAKE) -C modules/tweek/java -f Makefile.docs install-docs
-	$(MAKE) -C modules/jackal -f Makefile.docs install-docs
-	$(MAKE) -C modules/vrjuggler -f Makefile.docs install-docs
+	for dir in $(JAVADOC_SUBDIR) ; do				\
+            $(MAKE) -C $$dir -f Makefile.docs install-docs || exit 1;	\
+          done
 
 .PHONY: release
 
@@ -81,9 +85,9 @@ release:
 	$(MAKE) -f Makefile.docs webroot="$(distroot)" install
 
 clobber:
-	for dir in $(SUBDIR) ; do		\
-            $(MAKE) -C $$dir clobber || exit 1;	\
+	for dir in $(SUBDIR) ; do					\
+            $(MAKE) -C $$dir clobber || exit 1;				\
           done
-	$(MAKE) -C modules/tweek/java -f Makefile.docs clobber
-	$(MAKE) -C modules/jackal -f Makefile.docs clobber
-	$(MAKE) -C modules/vrjuggler -f Makefile.docs clobber
+	for dir in $(JAVADOC_SUBDIR) ; do				\
+            $(MAKE) -C $$dir -f Makefile.docs clobber || exit 1;	\
+          done
