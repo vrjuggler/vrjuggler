@@ -45,9 +45,6 @@
 namespace gadget
 {
 
-   //class Input;
-   //class Kernel;
-
    /**
     * Base class for all input proxies.
     * @todo rename to InputProxy
@@ -89,7 +86,7 @@ namespace gadget
       }
 
       /**
-       * Return a pointer to the base class of the devices being proxied
+       * Returns a pointer to the base class of the devices being proxied.
        * @return NULL if no device is proxied.
        */
       virtual Input* getProxiedInputDevice() = 0;
@@ -103,30 +100,35 @@ namespace gadget
          return "Undefined";
       }
 
-      /** Get the name of the proxy. */
+      /** Gets the name of the proxy. */
       std::string getName() const
       {
          return mName;
       }
 
-      /** Set the name of the proxy. */
+      /** Sets the name of the proxy. */
       void setName(std::string name)
       {
          mName = name;
       }
 
-      /** Is the proxy current stupified?
-      * If the device we are proxying doesn't exist then this will return true
-      */
-      virtual bool isStupified() const 
-      { return mStupified; }
+      /**
+       * Is the proxy current stupified?
+       * If the device we are proxying doesn't exist, then this will return
+       * true.
+       */
+      virtual bool isStupified() const
+      {
+         return mStupified;
+      }
 
       /** Set the stupification state.
       * @param newState - The new state of stupification
       */
-      void stupify(bool newState = true) 
-      {mStupified = newState;}
-      
+      void stupify(bool newState = true)
+      {
+         mStupified = newState;
+      }
 
    protected:
       std::string mName;         /**< The name of the proxy */
@@ -165,21 +167,22 @@ namespace gadget
          }
       }
 
-      /** Refresh the proxy.
-      * This attempts to lookup the device that we are proxying.
-      * If the lookup fails, then we become stupified.  If not
-      * the the proxy is pointed at this potentially new device
-      */
+      /**
+       * Refreshes the proxy.
+       * This attempts to lookup the device that we are proxying.  If the
+       * lookup fails, then we become stupified.  If not the the proxy is
+       * pointed at this potentially new device.
+       */
       virtual bool refresh()
       {
          Input* input_dev = NULL;
          input_dev = InputManager::instance()->getDevice(mDeviceName);
-                
+
          if ( NULL == input_dev )       // Not found, so stupify
          {
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-            << "vjTypedProxy::refresh: Could not find device: "
-            << mDeviceName << std::endl << vprDEBUG_FLUSH;
+               << "gadget::TypedProxy::refresh: Could not find device: "
+               << mDeviceName << std::endl << vprDEBUG_FLUSH;
             stupify(true);
          }
          else
@@ -188,14 +191,14 @@ namespace gadget
             if ( NULL == typed_dev )
             {
                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-               << "vjTypedProxy::config: Device was of wrong type: "
-               << mDeviceName << " it was type:" << typeid(input_dev).name()
-               << std::endl << vprDEBUG_FLUSH;
+                  << "gadget::TypedProxy::config: Device was of wrong type: "
+                  << mDeviceName << " it was type:" << typeid(input_dev).name()
+                  << std::endl << vprDEBUG_FLUSH;
                stupify(true);
                return false;
             }
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-            << "   Proxy config()'ed" << std::endl << vprDEBUG_FLUSH;
+               << "   Proxy config()'ed" << std::endl << vprDEBUG_FLUSH;
             mTypedDevice = typed_dev;    // Set the proxy
             stupify(false);
          }
@@ -203,8 +206,10 @@ namespace gadget
       }
 
    /** Get the name of the device that we are proxying. */
-   virtual std::string getDeviceName() const 
-   { return mDeviceName; } 
+   virtual std::string getDeviceName() const
+   {
+      return mDeviceName;
+   }
 
 protected:
    std::string    mDeviceName;   /**< Name of the device to link up with */
