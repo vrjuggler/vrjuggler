@@ -91,7 +91,7 @@ AC_DEFUN(PLEXUS_PATH,
     min_plexus_version=ifelse([$1], ,0.0.1,$1)
 
     dnl Do a sanity check to ensure that $PLEXUS_CONFIG actually works.
-    if ! eval `$PLEXUS_CONFIG --cxxflags >/dev/null 2>&1` ; then
+    if ! (eval $PLEXUS_CONFIG --cxxflags >/dev/null 2>&1) 2>&1 ; then
         PLEXUS_CONFIG='no'
     fi
 
