@@ -81,7 +81,7 @@ public class BeanCollectionBuilder
 
       if ( is_directory )
       {
-         FileFinder finder = new FileFinder(".xml", path);
+         FileFinder finder = new FileFinder("xml", path);
          files = finder.getFiles();
       }
       else
