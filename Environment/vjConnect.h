@@ -75,7 +75,7 @@ class vjConnect {
     void controlLoop(void* nullParam);
 
     
-}; // end vjNetworkConnect()
+}; // end vjConnect
 
 
 #endif
