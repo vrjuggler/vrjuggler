@@ -311,7 +311,7 @@ public class FileControl {
 	    if (dir == null)
 		dir = "";
 	    chooser = new JFileChooser (new File(dir));
-	    chooser.setSelectedFile (file);
+	    //chooser.setSelectedFile (file);
 	}
 	chooser.setDialogType(JFileChooser.SAVE_DIALOG);
 
@@ -330,6 +330,9 @@ public class FileControl {
 	chooser.setFileHidingEnabled (false);
 	chooser.setApproveButtonText("Save");
 	chooser.setDialogTitle("Save File...");
+
+        if ((file != null) && (!file.isDirectory()))
+            chooser.setSelectedFile (file);
 
 	int returnVal = chooser.showSaveDialog(Core.ui); 
 	if(returnVal == JFileChooser.APPROVE_OPTION) { 
