@@ -3,6 +3,7 @@
 #ifndef OPENALSOUNDIMPLEMENTATION_H
 #define OPENALSOUNDIMPLEMENTATION_H
 #include "ISoundImplementation.h"
-class OpenALSoundImplementation : public ISoundImplementation {
+class OpenALSoundImplementation : public ISoundImplementation 
+{
 };
 #endif //OPENALSOUNDIMPLEMENTATION_H

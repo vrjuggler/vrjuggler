@@ -3,6 +3,7 @@
 #ifndef AUDIOWORKSSOUNDIMPLEMENTATION_H
 #define AUDIOWORKSSOUNDIMPLEMENTATION_H
 #include "ISoundImplementation.h"
-class AudioWorksSoundImplementation : public ISoundImplementation {
+class AudioWorksSoundImplementation : public ISoundImplementation 
+{
 };
 #endif //AUDIOWORKSSOUNDIMPLEMENTATION_H
