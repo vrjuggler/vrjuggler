@@ -474,6 +474,7 @@ void NonBlockingSocketTest::testSendUDP_receiver (void* arg)
    mCondVar.release();
 
    assertTestThread(bytes_read == mMessageLen && "Did not receive entire message");
+   assertTestThread(data == mMessage);
 
    status = recv_sock.close();
    assertTestThread(status.success() && "Could not close receiver socket");
