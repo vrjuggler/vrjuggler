@@ -515,7 +515,7 @@ void InputLogger::compressSamples()
       return;
 
    cur_node++;       // Can't remove first node
-   unsigned node_index(0);
+   //unsigned node_index(0);
 
    // Compress the data
    // - While nodes left
