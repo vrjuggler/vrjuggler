@@ -14,8 +14,9 @@ LATEX_OUTPUT_DIR=	latex
 
 # Fill these in!!  Together, they form the installation prefix.
 webroot=	$(HOME)/public_html/jugglerweb
-instdir=	gadgeteer/0.2/programmer.reference
+instdir=	gadgeteer/$(PROJECT_NUMBER)/programmer.reference
 
 prefix=		$(webroot)/$(instdir)
 
+include version.mk
 include ../../../doc/doxygen.mk
