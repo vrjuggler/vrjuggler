@@ -11,7 +11,7 @@ PDF_FILES=	programmer.guide.pdf
 
 # Fill these in!!  Together, they make up the installation prefix.
 webroot=	$(HOME)/public_html/jugglerweb
-instdir=	tweek/1.0/programmer.guide
+instdir=	tweek/$(PROJECT_NUMBER)/programmer.guide
 
 prefix=		$(webroot)/$(instdir)
 #INSTALL_DIRS=	figures
@@ -22,5 +22,5 @@ NEED_DB_IMAGES=	1
 programmer.guide.html: programmer.guide.xml
 programmer.guide.pdf: programmer.guide.xml programmer.guide.fo
 
-#include ../version.mk
+include ../version.mk
 include ../../../../doc/docbook.mk
