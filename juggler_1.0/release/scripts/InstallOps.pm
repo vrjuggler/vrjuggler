@@ -1,5 +1,22 @@
-# -----------------------------------------------------------------------------
-# $Id$
+#
+#  File:	   $RCSfile$
+#  Date modified:  $Date$
+#  Version:	   $Revision$
+#
+#
+#                                 VR Juggler
+#                                     by
+#                               Allen Bierbaum
+#                              Christopher Just
+#                              Patrick Hartling
+#                             Carolina Cruz-Neira
+#                                Albert Baker
+#
+#                          Copyright - 1997,1998,1999
+#                 Iowa State University Research Foundation, Inc.
+#                             All Rights Reserved
+#
+
 # -----------------------------------------------------------------------------
 # Installation operations Perl 5 module.  This module defines the following
 # subroutines for use in the Perl code that uses this.  The subroutines are
