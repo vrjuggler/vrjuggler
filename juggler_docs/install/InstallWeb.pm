@@ -34,8 +34,8 @@ use xmlToc_htmlTocActions;
 #---------------------------------
 
 # constants:
-my $html_comment_begin = "<!-- ";
-my $html_comment_end = " -->";
+my $html_comment_begin = "<!--";
+my $html_comment_end = "-->";
 my $usedebugoutput = "0";
 my $levels_of_recursion_allowed = 4; # you may have to change this to get deeper recursion
    
@@ -597,7 +597,7 @@ sub processIncludesRecursive($)
 sub processIncludes($)
 {
    outputDebug( "==> processIncludes\n" );
-   my $installweb_command = 'install-web';
+   my $installweb = 'install-web';
    my $include_command = 'include';
    my $include_toc_command = 'include-toc';
    my $include_tocdocs_command = 'include-tocdocs';
@@ -607,7 +607,7 @@ sub processIncludes($)
    my $includes_existed = 0;
    
    # While we have some more includes to deal with
-   while ($$contents_ref =~ m/($html_comment_begin[ ]*$installweb_command[ ]*include(-toc|-tocdocs)?[ ]*(\S*?)[ ]*$html_comment_end)/is)
+   while ($$contents_ref =~ m/($html_comment_begin\s*?$installweb\s*?include(-toc|-tocdocs)?\s*?(\S*?)\s*?$html_comment_end)/is)
    {
       my $include_statement = $1; # what was that match?
       my $orig_filename = $3;     # Get filename from the match
@@ -644,6 +644,7 @@ sub processIncludes($)
       # ----------- TOC-DOCS include ----------- #
       elsif ($include_statement =~ m/$include_tocdocs_command/)
       {
+         # TODO:
          print "==========================\n======================\nImplementME!\n\n====================\n";
       }
       
