@@ -168,6 +168,7 @@ links:
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/jccl
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 	for dir in $(SUBDIR); do \
 		$(MAKE) -C $$dir instlinks=$(instlinks) links; \
 	done
@@ -185,7 +186,6 @@ endif
           ln -s $(JCCLROOT_ABS)/data ./data
 	cd $(instlinks)/$(JCCL_SHARE_DIR) && rm -f ./samples &&		\
           ln -s $(JCCLROOT_ABS)/samples ./samples
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 ifndef NO_JAVA_GUI
 ifeq ($(BUILD_VJCONTROL), Y)
 	cd $(instlinks)/bin && $(RM_LN) ./VjControl.jar &&		\
