@@ -98,10 +98,16 @@ class OsgNavigator:
          print "Delta too big or not active; returning."
          return
 
+#      if not self.mNavData.isLocal():
+#         return
+
       # Clamp delta.
       if delta > 1.0:
          delta = 1.0
 
+      # *** Rotation ***
+
+      # Scale the rotation velocity (slerp) to get a time-based change.
       qrot = gmtl.Quatf()
       gmtl.set(qrot, self.mRotVelocity)
 
@@ -111,7 +117,7 @@ class OsgNavigator:
 
       # Only compute if we don't have identity rotation.
       if not gmtl.isEqual(self.identity_mat, self.mRotVelocity, 0.001):
-         gmtl.slerp(scaled_qrot, delta, src_rot, qrot)
+         gmtl.slerp(scaled_qrot, delta, src_rot, qrot, True)
          gmtl.set(delta_rot, scaled_qrot)
 
       if self.mMode == NavMode.WALK:
@@ -120,7 +126,7 @@ class OsgNavigator:
 
       gmtl.postMult(self.mNavData.mCurPos, delta_rot)
 
-      # Translation.
+      # *** Translation ***
       trans_delta = gmtl.Vec3f()
 
       if self.mMode == NavMode.WALK:
@@ -128,9 +134,9 @@ class OsgNavigator:
 
       # XXX: This should work...
 #      trans_delta = self.mVelocity * delta
-      trans_delta[0] *= delta
-      trans_delta[1] *= delta
-      trans_delta[2] *= delta
+      trans_delta[0] = self.mVelocity[0] * delta
+      trans_delta[1] = self.mVelocity[1] * delta
+      trans_delta[2] = self.mVelocity[2] * delta
 
       trans_matrix = gmtl.makeTransMatrix44(trans_delta)
       gmtl.postMult(self.mNavData.mCurPos, trans_matrix)
@@ -201,8 +207,10 @@ class PyOsgNav(vrj.OsgApp):
          direction = gmtl.Vec3f()
          z_dir = gmtl.Vec3f(0.0, 0.0, -10.0)
          gmtl.xform(direction, wand_matrix, z_dir)
+
+         self.mNavigator.setVelocity(direction)
       # Reset the velocity when we stop pressing the button.
-      elif self.mButton0.getData() == gadget.Digital.State.ON:
+      elif self.mButton0.getData() == gadget.Digital.State.TOGGLE_OFF:
          self.mNavigator.setVelocity(gmtl.Vec3f(0.0, 0.0, 0.0))
 
       if self.mButton1.getData() == gadget.Digital.State.TOGGLE_ON:
@@ -229,10 +237,11 @@ class PyOsgNav(vrj.OsgApp):
       self.mNavTrans.setMatrix(osg_current_matrix)
 
    def bufferPreDraw(self):
-      glClearColor(0.0, 0.0, 0.0)
+      glClearColor(0.0, 0.0, 0.0, 0.0)
       glClear(GL_COLOR_BUFFER_BIT)
 
    def draw(self):
+      # XXX: Move this call up to the C++ method vrj::OsgApp::draw().
       glClear(GL_DEPTH_BUFFER_BIT)
       vrj.OsgApp.draw(self)
 
