@@ -94,7 +94,7 @@ void Controller::addMessageEvent (const vpr::Interval& event_time,
                                   const NetworkGraph::net_edge_t edge,
                                   const NetworkLine::LineDirection dir)
 {
-   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+   vprDEBUG(vprDBG_SIM, vprDBG_HVERB_LVL)
       << "Controller::addMessageEvent(): Adding message event scheduled for time "
       << event_time.getBaseVal() << " on edge " << edge << "\n"
       << vprDEBUG_FLUSH;
@@ -104,7 +104,7 @@ void Controller::addMessageEvent (const vpr::Interval& event_time,
 void Controller::addConnectionEvent (const vpr::Interval& event_time,
                                      vpr::SocketImplSIM* acceptor_sock)
 {
-   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+   vprDEBUG(vprDBG_SIM, vprDBG_HVERB_LVL)
       << "Controller::addConnectionEvent(): Adding connection request event scheduled for time "
       << event_time.getBaseVal() << "\n" << vprDEBUG_FLUSH;
    mEvents.insert(std::pair<vpr::Interval, EventData>(event_time, EventData(acceptor_sock, EventData::CONNECTION_INIT)));
@@ -113,7 +113,7 @@ void Controller::addConnectionEvent (const vpr::Interval& event_time,
 void Controller::addConnectionCompletionEvent (const vpr::Interval& event_time,
                                                vpr::SocketImplSIM* connector_sock)
 {
-   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+   vprDEBUG(vprDBG_SIM, vprDBG_HVERB_LVL)
       << "Controller::addConnectionCompletionEvent(): Adding connection "
       << "completion event scheduled for time " << event_time.getBaseVal()
       << "\n" << vprDEBUG_FLUSH;
@@ -123,7 +123,7 @@ void Controller::addConnectionCompletionEvent (const vpr::Interval& event_time,
 void Controller::addLocalhostDeliveryEvent (const vpr::Interval& event_time,
                                             vpr::SocketImplSIM* connector_sock)
 {
-   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+   vprDEBUG(vprDBG_SIM, vprDBG_HVERB_LVL)
       << "Controller::addConnectionCompletionEvent(): Adding localhost "
       << "delivery event scheduled for time " << event_time.getBaseVal()
       << "\n" << vprDEBUG_FLUSH;
@@ -133,6 +133,10 @@ void Controller::addLocalhostDeliveryEvent (const vpr::Interval& event_time,
 void Controller::flushPath (const vpr::SocketImplSIM* sock,
                             vpr::sim::NetworkGraph::VertexListPtr path)
 {
+vpr::DebugOutputGuard dbg_output(vprDBG_SIM, vprDBG_STATE_LVL,
+                                 std::string("Controller::flushPath()\n"),
+                                 std::string("End of Controller::flushPath()\n"));
+
    vpr::sim::NetworkGraph::VertexList::iterator source, dest;
    vpr::sim::NetworkGraph::net_edge_t current_line;
    bool got_next_line;
@@ -146,12 +150,22 @@ void Controller::flushPath (const vpr::SocketImplSIM* sock,
 
       if ( got_next_line )
       {
+         vprDEBUG(vprDBG_SIM, vprDBG_STATE_LVL)
+            << "Controller::flushPath(): Working on line " << current_line
+            << std::endl << vprDEBUG_FLUSH;
+
          vpr::sim::NetworkLine& line_prop = mGraph.getLineProperty(current_line);
          vpr::sim::NetworkLine::LineDirection dir;
          std::vector<vpr::Interval> event_times;
 
          dir = mGraph.isSource(*source, current_line) ? NetworkLine::FORWARD
                                                       : NetworkLine::REVERSE;
+
+         vprDEBUG(vprDBG_SIM, vprDBG_VERB_LVL)
+            << "Controller::flushPath(): Removing active messages on line "
+            << current_line << " in the "
+            << ((dir == NetworkLine::FORWARD) ? "forward" : "reverse")
+            << " queue\n" << vprDEBUG_FLUSH;
 
          line_prop.removeActiveMessages(sock, event_times, dir);
 
@@ -170,6 +184,10 @@ void Controller::flushPath (const vpr::SocketImplSIM* sock,
                   i != event_times.end();
                   ++i )
             {
+               vprDEBUG(vprDBG_SIM, vprDBG_STATE_LVL)
+                  << "Controller::flushPath(): Looking for events scheduled to occur at "
+                  << (*i).getBaseVal() << std::endl << vprDEBUG_FLUSH;
+
                boost::tie(event_iter, end_iter) = mEvents.equal_range(*i);
 
                // XXX: I'm not sure if std::remove_if() can be used here
@@ -178,6 +196,9 @@ void Controller::flushPath (const vpr::SocketImplSIM* sock,
                {
                   if ( test_event == (*event_iter).second )
                   {
+                     vprDEBUG(vprDBG_SIM, vprDBG_VERB_LVL)
+                        << "Controller::flushPath(): Removing event\n"
+                        << vprDEBUG_FLUSH;
                      mEvents.erase(event_iter);
                   }
                }
@@ -194,6 +215,10 @@ void Controller::flushPath (const vpr::SocketImplSIM* sock,
 
 void Controller::processNextEvent (vpr::SocketImplSIM** recvSocket)
 {
+vpr::DebugOutputGuard dbg_output(vprDBG_SIM, vprDBG_STATE_LVL,
+                                 std::string("Controller::processNextEvent()\n"),
+                                 std::string("End of Controller::processNextEvent()\n"));
+
    if ( recvSocket != NULL )
    {
       (*recvSocket) = NULL;
@@ -203,13 +228,14 @@ void Controller::processNextEvent (vpr::SocketImplSIM** recvSocket)
 
    if ( cur_event != mEvents.end() )
    {
-      vpr::Interval event_time            = (*cur_event).first;
+      vpr::Interval event_time = (*cur_event).first;
 
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+      vprDEBUG(vprDBG_SIM, vprDBG_VERB_LVL)
          << "Controller::processNextEvent() [time = "
          << mClock.getCurrentTime().getBaseVal()
          << "]: Processing event scheduled to occur at time "
-         << event_time.getBaseVal() << "\n" << vprDEBUG_FLUSH;
+         << event_time.getBaseVal() << " (moving clock forward)\n"
+         << vprDEBUG_FLUSH;
 
       mClock.setCurrentTime(event_time);
 
@@ -228,7 +254,7 @@ void Controller::processNextEvent (vpr::SocketImplSIM** recvSocket)
          status = line.getArrivedMessage(event_time, msg, dir);
          vprASSERT(status.success() && "No arrived message at this time");
 
-         vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+         vprDEBUG(vprDBG_SIM, vprDBG_HVERB_LVL)
             << "Controller::processNextEvent(): Event is the arrival of a message for "
             << msg->getDestinationSocket()->getLocalAddr() << " on "
             << ((dir == vpr::sim::NetworkLine::FORWARD) ? "forward" : "reverse")
@@ -239,7 +265,7 @@ void Controller::processNextEvent (vpr::SocketImplSIM** recvSocket)
       }
       else if ( (*cur_event).second.type == EventData::CONNECTION_COMPLETE )
       {
-         vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+         vprDEBUG(vprDBG_SIM, vprDBG_HVERB_LVL)
             << "Controller::processNextEvent(): Event is a connection completion for "
             << (*cur_event).second.socket->getLocalAddr() << "\n"
             << vprDEBUG_FLUSH;
@@ -251,7 +277,7 @@ void Controller::processNextEvent (vpr::SocketImplSIM** recvSocket)
       }
       else if ( (*cur_event).second.type == EventData::CONNECTION_INIT )
       {
-         vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+         vprDEBUG(vprDBG_SIM, vprDBG_HVERB_LVL)
             << "Controller::processNextEvent(): Event is a connection request to "
             << (*cur_event).second.socket->getLocalAddr() << "\n"
             << vprDEBUG_FLUSH;
@@ -263,7 +289,7 @@ void Controller::processNextEvent (vpr::SocketImplSIM** recvSocket)
       }
       else
       {
-         vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+         vprDEBUG(vprDBG_SIM, vprDBG_HVERB_LVL)
             << "Controller::processNextEvent(): Event is a localhost message delivery to "
             << (*cur_event).second.socket->getLocalAddr() << "\n"
             << vprDEBUG_FLUSH;
@@ -283,11 +309,21 @@ void Controller::processNextEvent (vpr::SocketImplSIM** recvSocket)
    }
 }
 
-void Controller::processEvents (const vpr::Interval& time_step)
+void Controller::processEvents(const vpr::Interval& time_step)
 {
+vpr::DebugOutputGuard dbg_output(vprDBG_SIM, vprDBG_STATE_LVL,
+                                 std::string("Controller::processEvents()\n"),
+                                 std::string("End of Controller::processEvents()\n"));
+
    vpr::SocketImplSIM* recv_sock;
    vpr::Interval event_time = mClock.getCurrentTime() + time_step;
    event_map_t::iterator next_event;
+
+   vprDEBUG(vprDBG_SIM, vprDBG_VERB_LVL)
+      << "Controller::processEvents [time = "
+      << mClock.getCurrentTime().getBaseVal() << "]: Moving clock ahead "
+      << time_step.getBaseVal() << " units to be " << event_time.getBaseVal()
+      << std::endl << vprDEBUG_FLUSH;
 
    mClock.setCurrentTime(event_time);
 
@@ -326,7 +362,7 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
                                                             next_next_hop);
       vprASSERT(got_next_line && "Edge between nodes not found!");
 
-      vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+      vprDEBUG(vprDBG_SIM, vprDBG_HVERB_LVL)
          << "Controller::moveMessage(): Passing message for "
          << msg->getDestinationSocket()->getLocalAddr()
          << " on to next hop -- " << next_line << "\n" << vprDEBUG_FLUSH;
@@ -337,7 +373,7 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
       vpr::sim::NetworkLine& next_line_prop = mGraph.getLineProperty(next_line);
       next_line_prop.calculateMessageEventTimes(msg, cur_time, dir);
 
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+      vprDEBUG(vprDBG_SIM, vprDBG_VERB_LVL)
          << "Controller::moveMessage(): New message times: "
          << "starts = " << msg->whenStartOnWire().getBaseVal() << ", "
          << "transmits = " << msg->whenFullyOnWire().getBaseVal() << ", "
@@ -350,11 +386,11 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
    // End of the path--we have reached our destination.
    else
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+      vprDEBUG(vprDBG_SIM, vprDBG_STATE_LVL)
          << "Controller::moveMessage() [time = "
          << mClock.getCurrentTime().getBaseVal()
          << "]: Delivering message to destination\n" << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+      vprDEBUG(vprDBG_SIM, vprDBG_HVERB_LVL)
          << "Controller::moveMessage(): Message path was "
          << msg->getSourceSocket()->getLocalAddr() << " ("
          << std::hex << msg->getSourceSocket() << std::dec << ") ==> "
