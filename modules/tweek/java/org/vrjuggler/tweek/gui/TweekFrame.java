@@ -119,39 +119,65 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       BeanInstantiationCommunicator.instance().addBeanInstantiationListener(this);
    }
 
+   /**
+    * Sets the BeanViewer used to display the Bean heirarchy.
+    */
    public void setBeanViewer (String viewer)
    {
       BeanRegistry registry = BeanRegistry.instance();
-      if ( viewer != null )
+
+      // If a viewer string is valid, we'll try to find the Viewer Bean by
+      // name.
+      if ( viewer != null && ! viewer.equals("") )
       {
          mBeanViewer = (ViewerBean)registry.getBean( viewer );
 
+         // If the by-name lookup was successful, we use the requested viewer.
          if ( mBeanViewer != null )
          {
             BeanModelViewer bv = mBeanViewer.getViewer();
             mBeanContainer.replaceViewer(bv);
          }
+         // Otherwise, we fall back on the first Viewer Bean we know about.
          else
          {
             mMsgDocument.printWarning("WARNING: Unknown viewer type: '" + viewer + "'\n");
-            List viewers = registry.getBeansOfType(ViewerBean.class.getName());
+            loadFirstViewerBean();
+         }
+      }
+      // If we do not have a viewer name, we'll just use the first one in the
+      // collection of known Viewer Beans.
+      else
+      {
+         loadFirstViewerBean();
+      }
+   }
 
-            if ( viewers.size() > 0 )
-            {
-               mBeanViewer = (ViewerBean) viewers.get(0);
-               mBeanContainer.replaceViewer((BeanModelViewer)mBeanViewer.getViewer() );
-            }
-            else
-            {
-               mMsgDocument.printWarning("WARNING: No Viewer Beans loaded");
-               mBeanViewer = null;
-            }
+   /**
+    * Loads the first Viewer Bean in the collection of known Viewer Beans.  If
+    * there are now Viewer Beans known, mBeanViewer will be set to null.
+    */
+   private void loadFirstViewerBean()
+   {
+      List viewers = BeanRegistry.instance().getBeansOfType(ViewerBean.class.getName());
+
+      if ( viewers.size() > 0 )
+      {
+         mBeanViewer = (ViewerBean) viewers.get(0);
+         mBeanContainer.replaceViewer((BeanModelViewer)mBeanViewer.getViewer() );
+
+         GlobalPreferencesService prefs =
+            (GlobalPreferencesService)BeanRegistry.instance().getBean("GlobalPreferences");
+
+         if ( null != prefs )
+         {
+            prefs.setBeanViewer(mBeanViewer.getName());
          }
       }
       else
       {
-         mBeanViewer = (ViewerBean)registry.getBeansOfType(ViewerBean.class.getName()).get(0);
-         mBeanContainer.replaceViewer((BeanModelViewer)mBeanViewer.getViewer());
+         mMsgDocument.printWarning("WARNING: No Viewer Beans loaded");
+         mBeanViewer = null;
       }
    }
 
