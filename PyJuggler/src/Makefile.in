@@ -53,6 +53,10 @@ PYTHON_PACKAGES=	$(prefix)/lib/python$(PYTHON_VERSION)/site-packages/PyJuggler
 PYTHON_LDFLAGS=		@PYTHON_LIB_DEPS@
 BOOST_PYTHON_LDFLAGS=	@BOOST_PYTHON_LDFLAGS@
 
+# Linker flags needed by all extension modules.
+LDFLAGS=		@EXTRA_LINK_FLAGS@ $(BOOST_PYTHON_LDFLAGS)	\
+			$(PYTHON_LDFLAGS)
+
 OBJEXT=		@OBJEXT@
 DLLEXT=		@DYNAMICLIB_EXT@
 
@@ -154,29 +158,26 @@ install:
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 %.$(DLLEXT): %.$(OBJEXT)
-	$(CXX) -shared -o $@ $< $(BOOST_PYTHON_LDFLAGS)			\
-          $(PYTHON_LDFLAGS) $(LIBS) $(EXTRA_LIBS)
+	$(CXX) -shared -o $@ $< $(LDFLAGS) $(LIBS) $(EXTRA_LIBS)
 
 vpr.$(DLLEXT): $(VPR_OBJS)
-	$(CXX) -shared -o $@ $(VPR_OBJS) $(BOOST_PYTHON_LDFLAGS)	\
-          $(PYTHON_LDFLAGS) $(VPR_LIBS) $(VPR_EXTRA_LIBS)
+	$(CXX) -shared -o $@ $(VPR_OBJS) $(LDFLAGS) $(VPR_LIBS)		\
+          $(VPR_EXTRA_LIBS)
 
 jccl.$(DLLEXT): $(JCCL_OBJS)
-	$(CXX) -shared -o $@ $(JCCL_OBJS) $(BOOST_PYTHON_LDFLAGS)	\
-          $(PYTHON_LDFLAGS) $(JCCL_LIBS) $(JCCL_EXTRA_LIBS)
+	$(CXX) -shared -o $@ $(JCCL_OBJS) $(LDFLAGS) $(JCCL_LIBS)	\
+          $(JCCL_EXTRA_LIBS)
 
 gadget.$(DLLEXT): $(GADGET_OBJS)
-	$(CXX) -shared -o $@ $(GADGET_OBJS) $(BOOST_PYTHON_LDFLAGS)	\
-          $(PYTHON_LDFLAGS) $(GADGET_LIBS) $(GADGET_EXTRA_LIBS)
+	$(CXX) -shared -o $@ $(GADGET_OBJS) $(LDFLAGS) $(GADGET_LIBS)	\
+          $(GADGET_EXTRA_LIBS)
 
 vrj.$(DLLEXT): $(VRJ_OBJS)
-	$(CXX) -shared -o $@ $(VRJ_OBJS) $(PYJUTIL_LIB)			\
-          $(BOOST_PYTHON_LDFLAGS) $(PYTHON_LDFLAGS) $(VJ_LIBS)		\
-          $(VJ_EXTRA_LIBS)
+	$(CXX) -shared -o $@ $(VRJ_OBJS) $(PYJUTIL_LIB) $(LDFLAGS)	\
+          $(VJ_LIBS) $(VJ_EXTRA_LIBS)
 
 gmtl.$(DLLEXT): $(GMTL_OBJS)
-	$(CXX) -shared -o $@ $(GMTL_OBJS) $(BOOST_PYTHON_LDFLAGS)	\
-          $(PYTHON_LDFLAGS)
+	$(CXX) -shared -o $@ $(GMTL_OBJS) $(LDFLAGS)
 
 clean:
 	rm -f $(OBJS) $(GMTL_OBJS)

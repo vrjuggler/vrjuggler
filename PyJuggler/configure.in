@@ -182,7 +182,6 @@ else
    AC_CHECK_FILE([$PYSTE], , [AC_MSG_WARN([*** pyste.py does not exist ***])])
 fi
 
-
 BOOST_PYTHON_LIB="boost_python.$DYNAMICLIB_EXT"
 
 if test "x$OS_TYPE" = "xUNIX" ; then
@@ -203,12 +202,25 @@ VRJUGGLER_PATH([1.1.135], ,
                [AC_MSG_ERROR([*** VR Juggler is required for PyJuggler ***])])
 
 # -----------------------------------------------------------------------------
-# Checks for header files.
+# Finalize substitution settings.
 # -----------------------------------------------------------------------------
+
+# Compiler-specific settings when GCC is not being used.
+if test "x$USE_GCC" != "xyes" ; then
+   if test "x$PLATFORM" = "xIRIX" ; then
+      EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4 -all"
+   fi
+fi
 
 DPP_PTHREAD_FINISH
 
+# -----------------------------------------------------------------------------
+# Do Makefile substitutions.
+# -----------------------------------------------------------------------------
+
 DPP_SUBST
+
+AC_SUBST(EXTRA_LINK_FLAGS)
 
 AC_SUBST(PYTHON_ROOT)
 AC_SUBST(PYTHON_INCLUDES)
