@@ -54,6 +54,9 @@
   <file path="org/vrjuggler/tweek/beans/loader/BeanLoader.java"/>
   <file path="org/vrjuggler/tweek/beans/BeanModelViewer.java"/>
   <file path="org/vrjuggler/tweek/beans/BeanPathException.java"/>
+  <file path="org/vrjuggler/tweek/beans/BeanRegistrationEvent.java"/>
+  <file path="org/vrjuggler/tweek/beans/BeanRegistrationListener.java"/>
+  <file path="org/vrjuggler/tweek/beans/BeanRegistry.java"/>
   <file path="org/vrjuggler/tweek/treeviewer/BeanTree.java"/>
   <file path="org/vrjuggler/tweek/beans/BeanTreeModel.java"/>
   <file path="org/vrjuggler/tweek/treeviewer/BeanTreeViewer.java"/>
