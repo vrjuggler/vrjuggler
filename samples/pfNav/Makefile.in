@@ -15,8 +15,11 @@ LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
 VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include			\
                   -I$(VJ_BASE_DIR)/include/Math -I$(srcdir)		\
                   -I$(srcdir)/../nav -I$(srcdir)/../pfTools 		\
-                  -I$(srcdir)/../../Sound/
+                  -I$(VJ_BASE_DIR)/include/Sound
 VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_VJ_LIBS_PF@ @TEST_LIBS_BASIC@
+VJ_LIB_DEPS	= $(VJ_BASE_DIR)/lib32/libJuggler.a			\
+                  $(VJ_BASE_DIR)/lib32/libJuggler_ogl.a			\
+                  $(VJ_BASE_DIR)/lib32/libJuggler_pf.a
 
 vpath %.cpp @srcdir@ @srcdir@/../nav @srcdir@/../pfTools
 
@@ -54,13 +57,13 @@ default: pfNav
 
 all: pfNav pfBasicConfigNav pfSwitcher
 
-pfNav: $(PFNAV_OBJECTS)
+pfNav: $(PFNAV_OBJECTS) $(VJ_LIB_DEPS)
 	$(LINK) -o $@ $(PFNAV_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
-pfBasicConfigNav: $(PF_BASIC_CONFIG_NAV_OBJECTS)
+pfBasicConfigNav: $(PF_BASIC_CONFIG_NAV_OBJECTS) $(VJ_LIB_DEPS)
 	$(LINK) -o $@ $(PF_BASIC_CONFIG_NAV_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
-pfSwitcher: $(PF_SWITCHER_OBJECTS)
+pfSwitcher: $(PF_SWITCHER_OBJECTS) $(VJ_LIB_DEPS)
 	$(LINK) -o $@ $(PF_SWITCHER_OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 .cpp.@OBJ_FILE_SUFFIX@:
