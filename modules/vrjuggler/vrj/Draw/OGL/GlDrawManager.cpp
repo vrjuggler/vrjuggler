@@ -32,14 +32,11 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <stdlib.h>
 #include <boost/concept_check.hpp>
-
-#include <vpr/vpr.h>
-#include <vpr/Thread/Thread.h>
 
 #include <cluster/ClusterManager.h>
 
-#include <vrj/Draw/OGL/GlDrawManager.h>
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Kernel/Kernel.h>
 
@@ -60,16 +57,24 @@
 //#include <gadget/Type/Glove.h>
 //#include <gadget/Type/GloveProxy.h>
 
+#include <vrj/Draw/OGL/GlDrawManager.h>
+
 
 namespace vrj
 {
 
 vprSingletonImp(GlDrawManager);
 
-GlDrawManager::GlDrawManager() : drawTriggerSema(0), drawDoneSema(0), /*mRuntimeConfigSema(0),*/ mRunning(false)
+GlDrawManager::GlDrawManager()
+   : mApp(NULL)
+   , drawTriggerSema(0)
+   , drawDoneSema(0)
+//   , mRuntimeConfigSema(0)
+   , mRunning(false)
+   , mMemberFunctor(NULL)
+   , mControlThread(NULL)
 {
 }
-
 
 /** Sets the app the draw should interact with. */
 void GlDrawManager::setApp(App* _app)
@@ -84,8 +89,9 @@ void GlDrawManager::setApp(App* _app)
 
 /** Returns the app we are rednering. */
 GlApp* GlDrawManager::getApp()
-{ return mApp; }
-
+{
+   return mApp;
+}
 
 /**
  * Do initial configuration for the draw manager.
@@ -103,21 +109,16 @@ void GlDrawManager::start()
 {
    // --- Setup Multi-Process stuff --- //
    // Create a new thread to handle the control
-   vpr::Thread* control_thread;
-
    mRunning = true;
 
-   // XXX: Memory leak.
-   vpr::ThreadMemberFunctor<GlDrawManager>* memberFunctor =
-      new vpr::ThreadMemberFunctor<GlDrawManager>(this, &GlDrawManager::main, NULL);
-
-   // XXX: Memory leak.
-   // XXX: No way to stop this thread later.
-   control_thread = new vpr::Thread(memberFunctor);
+   mMemberFunctor =
+      new vpr::ThreadMemberFunctor<GlDrawManager>(this, &GlDrawManager::main,
+                                                  NULL);
+   mControlThread = new vpr::Thread(mMemberFunctor);
 
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-      << "vrj::GlDrawManager started. thread: " << control_thread << std::endl
-      << vprDEBUG_FLUSH;
+      << "vrj::GlDrawManager started (thread: "
+      << std::hex << mControlThread << std::dec << ")\n" << vprDEBUG_FLUSH;
 }
 
 
@@ -363,7 +364,6 @@ void GlDrawManager::closeAPI()
    // Close and delete all glWindows
 }
 
-/////// CHUNK HANDLERS ////////////////////
 /**
  * Adds the element to the draw manager config.
  * @pre configCanHandle(element) == true.
@@ -440,8 +440,7 @@ void GlDrawManager::outStream(std::ostream& out)
     out << "=======================================" << std::endl;
 }
 
-
-} // end namespace
+} // end vrj namespace
 
 
 #if  defined(VPR_OS_Win32)
@@ -466,4 +465,4 @@ vrj::GlWindow* GlDrawManager::getGLWindow()
 #endif
 }
 
-} // end namespace
+} // end vrj namespace
