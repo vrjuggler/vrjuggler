@@ -1,0 +1,49 @@
+# -----------------------------------------------------------------------------
+# Makefile.in for juggler/GUI.  It requires GNU make.
+# $Id$
+# -----------------------------------------------------------------------------
+
+default: VjCfg.jar
+
+srcdir	= @srcdir@
+topdir	= @topdir@
+
+# Include common definitions.
+include ${topdir}/Makefile.base
+
+# Include the .mk files for VjConfig and VjGUI so that the Java code in those
+# directories can be built using this Makefile.
+include ${srcdir}/VjConfig/VjConfig.mk
+include ${srcdir}/VjGUI/VjGUI.mk
+
+# Search path information.
+vpath
+vpath %.java @srcdir@/VjConfig @srcdir@/VjGUI
+vpath %.class VjConfig VjGUI
+
+# -----------------------------------------------------------------------------
+# Library targets.
+# -----------------------------------------------------------------------------
+all: VjCfg.jar
+
+VjCfg.jar: classfiles
+	jar cvf VjCfg.jar VjGUI/*.class	VjConfig/*.class
+
+classfiles: ${VJCONFIG_OBJS} ${VJGUI_OBJS}
+	@echo "------------------------------------------------"
+	@echo "Made all classfiles"
+	@echo "------------------------------------------------"
+
+VjConfig/%.class: %.java
+	javac -d . -classpath ${srcdir}:/usr/java/lib/classes.zip $<
+
+VjGUI/%.class: %.java
+	javac -d . -classpath ${srcdir}:/usr/java/lib/classes.zip $<
+
+# -----------------------------------------------------------------------------
+# Clean-up.
+# -----------------------------------------------------------------------------
+CLEAN_FILES	+= ${VJCONFIG_OBJS} VjConfig/*~ ${VJGUI_OBJS} VjGUI/*~
+
+clobber: clean
+	rm VjCfg.jar
