@@ -137,11 +137,13 @@ void NonBlockingSocketTest::testNonBlockingTransfer ()
    vpr::ThreadMemberFunctor<NonBlockingSocketTest>* acceptor_functor =
          new vpr::ThreadMemberFunctor<NonBlockingSocketTest>(this, &NonBlockingSocketTest::testNonBlockingTransfer_acceptor);
    vpr::Thread acceptor_thread( acceptor_functor);
+   acceptor_thread.start();
 
    // Spawn connector thread
    vpr::ThreadMemberFunctor<NonBlockingSocketTest>* connector_functor =
       new vpr::ThreadMemberFunctor<NonBlockingSocketTest>(this, &NonBlockingSocketTest::testNonBlockingTransfer_connector);
    vpr::Thread connector_thread( connector_functor);
+   connector_thread.start();
 
    // Wait for threads
    acceptor_thread.join();
@@ -418,11 +420,13 @@ void NonBlockingSocketTest::testSendUDP ()
    vpr::ThreadMemberFunctor<NonBlockingSocketTest>* receiver_functor =
          new vpr::ThreadMemberFunctor<NonBlockingSocketTest>(this, &NonBlockingSocketTest::testSendUDP_receiver);
    vpr::Thread receiver_thread( receiver_functor);
+   receiver_thread.start();
 
    // Spawn connector thread
    vpr::ThreadMemberFunctor<NonBlockingSocketTest>* sender_functor =
       new vpr::ThreadMemberFunctor<NonBlockingSocketTest>(this, &NonBlockingSocketTest::testSendUDP_sender);
    vpr::Thread sender_thread(sender_functor);
+   sender_thread.start();
 
    // Wait for threads
    receiver_thread.join();

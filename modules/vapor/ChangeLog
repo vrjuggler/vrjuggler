@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-12-24 patrickh vpr::Thread objects no longer spawn threads in their
+                    constructors.  Instead, vpr::Thread::start() must be used
+                    to start threads explicitly.
+                    NEW VERSION: 0.21.0
 2002-12-12 allenb   Fixed race condition in NSPR threads implementation.
                     NEW VERSION: 0.20.1
 2002-12-10 allenb   Removed port constructor for inet addr objects.  This
