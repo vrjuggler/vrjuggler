@@ -38,16 +38,14 @@ combo: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
 combo.o: combo.cpp torusApp.h wandApp.h cubesApp.h
-
 torusApp.o: torusApp.cpp torusApp.h
-	${COMPILE} -c -o $@ ${srcdir}/../torus/torusApp.cpp
 
 .cpp.o:
-	${COMPILE} -c ${srcdir}/$<
+	${COMPILE} -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend cubes ${OBJECTS} core so_locations
+	rm -f Makedepend combo ${OBJECTS} core so_locations
 	rm -rf ./ii_files
