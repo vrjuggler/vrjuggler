@@ -41,24 +41,24 @@ namespace jcclTest
          {
             // set property integer
             jccl::ConfigChunkPtr chunk_int = jccl::ConfigChunkPtr( new jccl::ConfigChunk );
-            retval = chunk_int->setProperty( "test prop int", 2, 0 );
+            retval = chunk_int->setProperty( "test_prop_int", 2, 0 );
             CPPUNIT_ASSERT( retval == false );
 
             // set property float
             jccl::ConfigChunkPtr chunk_float = jccl::ConfigChunkPtr( new jccl::ConfigChunk );
-            retval =  chunk_float->setProperty( "test prop float", 78.2f, 0 );
+            retval =  chunk_float->setProperty( "test_prop_float", 78.2f, 0 );
             CPPUNIT_ASSERT( retval == false );
 
             // set property string
             jccl::ConfigChunkPtr chunk_string = jccl::ConfigChunkPtr( new jccl::ConfigChunk );
-            retval =  chunk_string->setProperty( "test prop string", "green hairy meatball", 0 );
+            retval =  chunk_string->setProperty( "test_prop_string", "green hairy meatball", 0 );
             CPPUNIT_ASSERT( retval == false );
 
             // set multiple types of props on one chunk...
             jccl::ConfigChunkPtr chunk_multi = jccl::ConfigChunkPtr( new jccl::ConfigChunk );
-            chunk_multi->setProperty( "test prop multi", 2, 0 );
-            chunk_multi->setProperty( "test prop multi", 678.098f, 0 );
-            chunk_multi->setProperty( "test prop multi", "chunky munky", 0 );
+            chunk_multi->setProperty( "test_prop_multi", 2, 0 );
+            chunk_multi->setProperty( "test_prop_multi", 678.098f, 0 );
+            chunk_multi->setProperty( "test_prop_multi", "chunky munky", 0 );
          }
 
          // make sure they succeed with a desc
@@ -72,43 +72,43 @@ namespace jcclTest
 
             // set property integer
             jccl::ConfigChunkPtr chunk_int = jccl::ConfigChunkPtr( new jccl::ConfigChunk( desc ) );
-            retval = chunk_int->setProperty( "test prop int", 2, 0 );
+            retval = chunk_int->setProperty( "test_prop_int", 2, 0 );
             CPPUNIT_ASSERT( retval == true );
 
             // set property float
             jccl::ConfigChunkPtr chunk_float = jccl::ConfigChunkPtr( new jccl::ConfigChunk( desc ) );
-            retval =  chunk_float->setProperty( "test prop float", 78.2f, 0 );
+            retval =  chunk_float->setProperty( "test_prop_float", 78.2f, 0 );
             CPPUNIT_ASSERT( retval == true );
 
             // set property string
             jccl::ConfigChunkPtr chunk_string = jccl::ConfigChunkPtr( new jccl::ConfigChunk( desc ) );
-            retval =  chunk_string->setProperty( "test prop string", "green hairy meatball", 0 );
+            retval =  chunk_string->setProperty( "test_prop_string", "green hairy meatball", 0 );
             CPPUNIT_ASSERT( retval == true );
 
             // set multiple types of props on one chunk...
             jccl::ConfigChunkPtr chunk_multi = jccl::ConfigChunkPtr( new jccl::ConfigChunk( desc ) );
 
-            retval = chunk_multi->setProperty( "test prop multi", "chunky munky", 0 );
+            retval = chunk_multi->setProperty( "test_prop_multi", "chunky munky", 0 );
             CPPUNIT_ASSERT( retval == true );
-            CPPUNIT_ASSERT( std::string( "chunky munky" ) == (std::string)chunk_multi->getProperty( "test prop multi", 0 ) );
+            CPPUNIT_ASSERT( std::string( "chunky munky" ) == (std::string)chunk_multi->getProperty( "test_prop_multi", 0 ) );
 
-            retval = chunk_multi->setProperty( "test prop multi", 2, 0 );
+            retval = chunk_multi->setProperty( "test_prop_multi", 2, 0 );
             CPPUNIT_ASSERT( retval == true );
             // @todo this test currently fails, but it shouldn't
-            CPPUNIT_ASSERT( std::string( "chunky munky" ) != (std::string)chunk_multi->getProperty( "test prop multi", 0 ) );
-            CPPUNIT_ASSERT( 2 == (int)chunk_multi->getProperty( "test prop multi", 0 ) );
+            CPPUNIT_ASSERT( std::string( "chunky munky" ) != (std::string)chunk_multi->getProperty( "test_prop_multi", 0 ) );
+            CPPUNIT_ASSERT( 2 == (int)chunk_multi->getProperty( "test_prop_multi", 0 ) );
 
-            retval = chunk_multi->setProperty( "test prop multi", 678.098f, 0 );
+            retval = chunk_multi->setProperty( "test_prop_multi", 678.098f, 0 );
             CPPUNIT_ASSERT( retval == true );
             // @todo this test currently fails, but it shouldn't
-            CPPUNIT_ASSERT( 2 != (int)chunk_multi->getProperty( "test prop multi", 0 ) );
-            CPPUNIT_ASSERT( 678.098f == (float)chunk_multi->getProperty( "test prop multi", 0 ) );
+            CPPUNIT_ASSERT( 2 != (int)chunk_multi->getProperty( "test_prop_multi", 0 ) );
+            CPPUNIT_ASSERT( 678.098f == (float)chunk_multi->getProperty( "test_prop_multi", 0 ) );
 
-            retval = chunk_multi->setProperty( "test prop multi", "chunky munky", 0 );
+            retval = chunk_multi->setProperty( "test_prop_multi", "chunky munky", 0 );
             CPPUNIT_ASSERT( retval == true );
             // @todo this test currently fails, but it shouldn't
-            CPPUNIT_ASSERT( 678.098f != (float)chunk_multi->getProperty( "test prop multi", 0 ) );
-            CPPUNIT_ASSERT( std::string( "chunky munky" ) == (std::string)chunk_multi->getProperty( "test prop multi", 0 ) );
+            CPPUNIT_ASSERT( 678.098f != (float)chunk_multi->getProperty( "test_prop_multi", 0 ) );
+            CPPUNIT_ASSERT( std::string( "chunky munky" ) == (std::string)chunk_multi->getProperty( "test_prop_multi", 0 ) );
          }
       }
 
@@ -171,13 +171,13 @@ namespace jcclTest
 
          // set property integer
          jccl::ConfigChunk chunk_int( desc );
-         bool retval = chunk_int.setProperty( "test prop int", 2, 0 );
+         bool retval = chunk_int.setProperty( "test_prop_int", 2, 0 );
          CPPUNIT_ASSERT( retval == true );
          
          jccl::ConfigChunk receiving( desc );
-         CPPUNIT_ASSERT( chunk_int.getProperty( "test prop int", 0 ) != receiving.getProperty( "test prop int", 0 ) );
+         CPPUNIT_ASSERT( chunk_int.getProperty( "test_prop_int", 0 ) != receiving.getProperty( "test_prop_int", 0 ) );
          receiving = chunk_int;
-         CPPUNIT_ASSERT( chunk_int.getProperty( "test prop int", 0 ) == receiving.getProperty( "test prop int", 0 ) );
+         CPPUNIT_ASSERT( chunk_int.getProperty( "test_prop_int", 0 ) == receiving.getProperty( "test_prop_int", 0 ) );
       }
 
       void testCopyConstr()
@@ -191,11 +191,11 @@ namespace jcclTest
 
          // set property integer
          jccl::ConfigChunk chunk_int( desc );
-         bool retval = chunk_int.setProperty( "test prop int", 69, 0 );
+         bool retval = chunk_int.setProperty( "test_prop_int", 69, 0 );
          CPPUNIT_ASSERT( retval == true );
          
          jccl::ConfigChunk receiving( chunk_int );
-         CPPUNIT_ASSERT( chunk_int.getProperty( "test prop int", 0 ) == receiving.getProperty( "test prop int", 0 ) );
+         CPPUNIT_ASSERT( chunk_int.getProperty( "test_prop_int", 0 ) == receiving.getProperty( "test_prop_int", 0 ) );
       }
 
       void testIsEqual()
@@ -209,7 +209,7 @@ namespace jcclTest
 
          // set property integer
          jccl::ConfigChunk chunk_int( desc );
-         bool retval = chunk_int.setProperty( "test prop int", -928, 0 );
+         bool retval = chunk_int.setProperty( "test_prop_int", -928, 0 );
          CPPUNIT_ASSERT( retval == true );
          
          jccl::ConfigChunk receiving( chunk_int );
@@ -227,11 +227,28 @@ namespace jcclTest
 
          // set property integer
          jccl::ConfigChunk chunk_int( desc );
-         bool retval = chunk_int.setProperty( "test prop int", 798324, 0 );
+         bool retval = chunk_int.setProperty( "test_prop_int", 798324, 0 );
          CPPUNIT_ASSERT( retval == true );
          
          jccl::ConfigChunk receiving( desc );
          CPPUNIT_ASSERT( chunk_int != receiving );
+      }
+      
+      
+      void testAreDefaultsProperlyReturned()
+      {
+         // start fresh and new (and shiny!!!)
+         jccl::ChunkFactory::instance()->getChunkDescDB()->removeAll();
+         
+         std::string file_path(TESTFILES_PATH);
+         jccl::ChunkFactory::instance()->loadDescs( file_path + "ConfigChunkTest/ConfigChunkTest.desc" );
+         jccl::ChunkDescPtr desc = jccl::ChunkFactory::instance()->getChunkDesc( "config-chuck-the-beaver" );
+
+         jccl::ConfigChunk defaults( desc );
+         CPPUNIT_ASSERT( 1029384756 == (int)defaults.getProperty( "test_prop_int", 0 ) );
+         CPPUNIT_ASSERT( 3.1459f == (float)defaults.getProperty( "test_prop_float", 0 ) );
+         CPPUNIT_ASSERT( std::string( "upchuck" ) == (std::string)defaults.getProperty( "test_prop_string", 0 ) );
+         CPPUNIT_ASSERT( std::string( "woodchuck" ) == (std::string)defaults.getProperty( "test_prop_multi", 0 ) );
       }
 
 
@@ -246,6 +263,8 @@ namespace jcclTest
 
          test_suite->addTest( new CppUnit::TestCaller<ConfigChunkTest>( "testIsEqual", &ConfigChunkTest::testIsEqual ) );
          test_suite->addTest( new CppUnit::TestCaller<ConfigChunkTest>( "testIsNotEqual", &ConfigChunkTest::testIsNotEqual ) );
+
+         test_suite->addTest( new CppUnit::TestCaller<ConfigChunkTest>( "testAreDefaultsProperlyReturned", &ConfigChunkTest::testAreDefaultsProperlyReturned ) );
 
          return test_suite;
       }
