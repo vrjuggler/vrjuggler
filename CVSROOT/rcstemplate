@@ -1,4 +1,5 @@
 New feature:	
+Refactor:	
 Bug fixed:	
 SF Bug#:	
 
@@ -11,6 +12,8 @@ CVS: Please format log message lines to be no longer than the above line.
 CVS: ----------------------------------------------------------------------
 CVS: Log header strings:
 CVS: New feature:     Fill this in if a new feature is being added.
+CVS: Refactor:        Fill this in if the change is a refactoring
+CVS:                  of the old code.
 CVS: Bug fixed:	      Fill this in if a bug is fixed that does not have a
 CVS: 		      SourceForge Bug ID.
 CVS: SF Bug#:	      Fill this in if a SourceForge Bug ID is affected by
