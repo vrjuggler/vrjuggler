@@ -1,5 +1,5 @@
 
-/* this corresponds to the config ChunkDesc class */
+/* This corresponds to the config ChunkDesc class */
 
 package VjConfig;
 
@@ -42,8 +42,8 @@ public class ChunkDesc {
     /* This next part is O(n^2) <sigh> */
     for (int i = 0; i < props.size(); i++) {
       p1 = (PropertyDesc) props.elementAt(i);
-      p2 = c.getPropertyDesc(p1.name);
-      if (!p1.equals(p2))
+      p2 = c.getPropertyDesc(p1.token);
+      if ((p2 == null) || (!p1.equals(p2)))
         return false;
     }
     return true;
