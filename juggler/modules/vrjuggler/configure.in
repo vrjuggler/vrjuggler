@@ -69,14 +69,14 @@ AC_ARG_ENABLE(subsystem,
 # "yes" is set with --enable-gl-api and "no" is set with --disable-gl-api.
 # The default is "yes".
 AC_ARG_ENABLE(gl-api,
-              [  --enable-gl-api         use OpenGL API                  [default=yes]],
+              [  --enable-gl-api         Use OpenGL API                  [default=yes]],
               _enable_gl_api="$enableval", _enable_gl_api='yes')
 
 # Enable compilation of the Performer API.  Possible values are "yes" or "no".
 # "yes" is set with --enable-pf-api and "no" is set with --disable-pf-api.
 # The default is "yes".
 AC_ARG_ENABLE(pf-api,
-              [  --enable-pf-api         use Perfromer API               [default=yes]],
+              [  --enable-pf-api         Use Perfromer API               [default=yes]],
               _enable_pf_api="$enableval", _enable_pf_api='yes')
 
 # Enable performance testing.  Values that enable it are as follows:
