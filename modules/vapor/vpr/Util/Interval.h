@@ -123,6 +123,9 @@ public:
    bool operator ==(const Interval& r) const
    { return (mUsecs == r.mUsecs); }
 
+   bool operator !=(const Interval& r) const
+   { return ! (*this == r); }
+
    Interval operator +(const Interval& r) const
    { return Interval(mUsecs+r.mUsecs, Interval::USEC); }
    Interval operator -(const Interval& r) const
