@@ -966,14 +966,14 @@ _clean:
             echo "------------------------------------------------" ;	\
             rm -r ${_OPT_BUILDDIR} ;					\
         fi
-	-@rm -f .*_done
-	rm -f so_locations
 	@echo "------------------------------------------------"
 	@echo "Done with 'clean'"
 	@echo "------------------------------------------------"
 
 clobber:
 	@${MAKE} _clean
+	@${MAKE} cleandepend
+	@${MAKE} RECTARGET="cleandepend" recursive
 	@${MAKE} clean-links
 	@echo "------------------------------------------------"
 	@echo "Clobbering build directories"
