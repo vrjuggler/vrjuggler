@@ -59,9 +59,9 @@ void RemoteReconfigSubjectImpl::add(const char* configurationString)
    input >> new_elements;
 
    //std::cout << "Adding a new Element: " << std::endl << cfg_string << std::endl;
-   
+
    //Send pending changes to ConfigManager
-   jccl::ConfigManager::instance()->addPendingAdds(&new_elements);
+   jccl::ConfigManager::instance()->addConfigurationAdditions(&new_elements);
 }
 
 
@@ -75,11 +75,11 @@ void RemoteReconfigSubjectImpl::remove(const char* configurationString)
    std::istringstream input(cfg_string);
 
    input >> delete_elements;
-   
+
    //std::cout << "Removing a new Element: " << std::endl << configurationString << std::endl;
 
-   //Send pending changes to ConfigManager   
-   jccl::ConfigManager::instance()->addPendingRemoves(&delete_elements);
+   //Send pending changes to ConfigManager
+   jccl::ConfigManager::instance()->addConfigurationRemovals(&delete_elements);
 }
 
 void RemoteReconfigSubjectImpl::swap(const char* addConfigurationString,
@@ -95,10 +95,10 @@ void RemoteReconfigSubjectImpl::swap(const char* addConfigurationString,
 
    add_input >> add_elements;
    remove_input >> delete_elements;
-   
+
    //Send pending changes to ConfigManager
-   jccl::ConfigManager::instance()->addPendingRemoves(&delete_elements);
-   jccl::ConfigManager::instance()->addPendingAdds(&add_elements);
+   jccl::ConfigManager::instance()->addConfigurationRemovals(&delete_elements);
+   jccl::ConfigManager::instance()->addConfigurationAdditions(&add_elements);
 }
 
 char* RemoteReconfigSubjectImpl::getElements()
