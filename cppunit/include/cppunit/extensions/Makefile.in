@@ -107,7 +107,9 @@ libcppunitinclude_HEADERS = \
 	TestSetUp.h \
 	TestSuiteBuilder.h \
 	TestSuiteFactory.h \
-	TypeInfoHelper.h
+	TypeInfoHelper.h \
+	MetricRegistry.h \
+	ThreadTestCase.h
 
 subdir = include/cppunit/extensions
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
