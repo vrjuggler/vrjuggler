@@ -20,7 +20,7 @@
 #include <IO/Selector.h>
 #include <Utils/Status.h>
 
-#include <include/System.h>
+#include <System.h>
 
 #include <Threads/Thread.h>
 #include <Threads/ThreadFunctor.h>
