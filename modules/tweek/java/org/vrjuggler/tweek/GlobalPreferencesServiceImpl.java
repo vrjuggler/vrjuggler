@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Vector;
 import org.jdom.*;
 import org.jdom.filter.ContentFilter;
+import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 import org.vrjuggler.tweek.services.GlobalPreferencesService;
@@ -544,8 +545,9 @@ class GlobalPreferencesServiceImpl
     */
    public synchronized void save()
    {
-      XMLOutputter outputter = new XMLOutputter("  ", true);
-      outputter.setLineSeparator(System.getProperty("line.separator"));
+      Format f = Format.getPrettyFormat();
+      f.setLineSeparator(System.getProperty("line.separator"));
+      XMLOutputter outputter = new XMLOutputter(f);
 
       try
       {
@@ -602,9 +604,12 @@ class GlobalPreferencesServiceImpl
 
             if ( pi.getTarget().equals(PREFS_INSTRUCTION) )
             {
-               if ( pi.getValue(PREFS_VERSION_ATTR) != null )
+               String prefs_version =
+                  pi.getPseudoAttributeValue(PREFS_VERSION_ATTR);
+
+               if ( prefs_version != null )
                {
-                  Float version = Float.valueOf(pi.getValue(PREFS_VERSION_ATTR));
+                  Float version = Float.valueOf(prefs_version);
 
                   // Warn the uers if their configuration file is out of date.
                   if ( PREFS_VERSION_VALUE > version.floatValue() )
