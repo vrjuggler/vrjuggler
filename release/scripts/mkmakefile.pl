@@ -342,6 +342,9 @@ sub printAppMakefile ($$$) {
 
     # Print the target for the application.
     print $handle <<MK_END;
+# -----------------------------------------------------------------------------
+# Application build targets.
+# -----------------------------------------------------------------------------
 $app\@EXEEXT\@: \$(OBJS)
 	\$(LINK) \@EXE_NAME_FLAG\@ \$(OBJS) \$(BASIC_LIBS) \$(EXTRA_LIBS)
 
@@ -399,6 +402,12 @@ sub printMultiAppMakefile ($$$) {
         # Finally, generate the object list for this application.
         printAppObjs_in($handle, "${app}_OBJS", $cur_app_src);
     }
+
+    print $handle <<EOF;
+# -----------------------------------------------------------------------------
+# Application build targets.
+# -----------------------------------------------------------------------------
+EOF
 
     # Loop over the applications again and print the targets that build the
     # actual executables.
@@ -531,15 +540,18 @@ sub printAppMakefileEnd_in ($;@) {
     my $handle = shift;
     my @apps   = @_;
 
-    my $dirt ='';
+    my($dirt, $cruft) = ('', '');
     foreach ( @_ ) {
-        $dirt .= "$_\@EXEEXT\@ ";
+        $dirt  .= "$_\@EXEEXT\@ ";
+        $cruft .= "$_.ilk ";
     }
 
     print $handle <<MK_END;
+# -----------------------------------------------------------------------------
 # Clean-up targets.
+# -----------------------------------------------------------------------------
 clean:
-	rm -f *.\@OBJEXT\@ core*
+	rm -f Makedepend *.\@OBJEXT\@ $cruft so_locations *.?db core*
 	rm -rf ii_files
 
 clobber:
