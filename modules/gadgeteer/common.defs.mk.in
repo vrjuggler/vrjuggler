@@ -1,0 +1,300 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+# Doozer++
+#
+# Original Author:
+#   Patrick Hartling
+# -----------------------------------------------------------------------------
+# VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          common.defs.mk.in,v
+# Date modified: 2001/10/12 14:58:44
+# Version:       1.22
+# -----------------------------------------------------------------
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# =============================================================================
+# common.defs.mk.in,v 1.22 2001/10/12 14:58:44 patrickh Exp
+#
+# This file <common.defs.mk> provides variable assignments based on the
+# results of running a Doozer++-aware configure script.  It is distributed
+# with Doozer++ as a means for users to get quick, effortless access to all
+# these variables.  It is recommended that user build systems include this
+# file in their own local definitions file and override settings therein as
+# necessary.
+#
+# All makefiles in a source tree should include this file through some means
+# for maximum information sharing.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+# Variables defined here are:
+#
+# bindir          - Path to bin directory containing executables (usually
+#                   $(exec_prefix)/bin).
+# datadir         - Path to a directory generally sharing platform-independent
+#                   data (usually $(prefix)/share).
+# exec_prefix     - Path to base directory where executables will be (usually
+#                   $(prefix)).
+# libdir          - Path to directory containing shared and static libraries
+#                   (usually $(exec_prefix)/lib).
+# libexecdir      - Path to libexec directory that generally contains
+#                   executables not called directly by users (usually
+#                   $(exec_prefix)/libexec).
+# prefix          - Base path used for installation and other things.
+# sbindir         - Path to sbin directory containing executables (usually
+#                   $(exec_prefix)/sbin).
+# sysconfdir      - System configuration directory (usually $(prefix)/etc).
+# topdir          - The top of the build tree.
+#
+# AR              - Path to ar(1) (or equivalent program).
+# ARFLAGS         - Flags for $(AR).
+# CC              - Path to C compiler.
+# CXX             - Path to C++ compiler.
+# CPP             - Command for invoking the C preprocessor.
+# CXXCPP          - Command for invoking the C preprocessor used by the C++
+#                   compiler.
+# CFLAGS          - Flags for $(CC).
+# CFLAGS_DYLINB   - Special flags used only when building dynamically linked
+#                   libraries with the C compiler.
+# CPPFLAGS        - Flags for $(CPP) and $(CXXCPP).
+# CXXFLAGS        - Flags for $(CXX).
+# CXXFLAGS_DYLINB - Special flags used only when building dynamically linked
+#                   libraries with the C++ compiler.
+# DEFS            - Command-line preprocessor definitions (-Dvariable=value).
+# DEP_GEN_FLAG    - Flag passed to the compiler to generate dependencies.
+# DEPEND_FLAGS    - Flags passed to makedepend(1) (or equivalent program for
+#                   generating dependencies).
+# DEPEND_EXTRAS   - Flags not recognized by makedepend(1) that may be
+#                   necessary in $(CFLAGS) or $(CXXFLAGS).
+# OWNER_NAME      - The name of the user that will own the files.
+# GROUP_NAME      - The name of the group that will own the files.
+# FILE_PERMS      - Normal file permissions.
+# EXEC_PERMS      - Executable file permissions.
+# DIR_PERMS       - Directory permissions.
+# DYLIB_NAME_FLAG - Flag passed to the linker to name a dynamic library.
+# EXE_NAME_FLAG   - Flag passed to the linker to name an executable file.
+# INCLUDES        - Additions to the include path (-I/path/to/include).
+# JCPS            - The Java classpath separator character for this platform.
+# JAR             - Command for creating Java JAR files.
+# JAVAC           - Java compiler.
+# JAVAH           - javah utility.
+# JAVAP           - javap utility.
+# JDK_HOME        - Base Java installation directory.
+# JNI_INC         - The include paths necessary for JNI.
+# JNI_LIB         - The library which needs to be statically linked for JNI.
+# LD              - Path to ld(1) (or equivalent program).
+# LDFLAGS         - Flags for $(LD).
+# LDOPTS          - Extra, often platform-specific, options for the linker.
+# LIBS            - Extra external libraries needed at link time.
+# LN_S            - Working 'ln -s' command.
+# MAKEDEPEND      - The makedepend(1) program (if needed).
+# MKPATH          - Path to shared dpp.*.mk file directory.
+# OBJEXT          - Suffix for object file names (e.g., "o" or "obj").
+# OBJ_BUILD_FLAG  - Flag passed to the compiler to create an object file.
+# OBJ_NAME_FLAG   - Flag passed to the compiler to name an object file.
+# OBJDIR          - Path to the directory where the object files will be built.
+# OS_TYPE         - Type of the target operating system (UNIX or Win32).
+# PERL            - Path to Perl 5 binary.
+# RANLIB          - Path to ranlib(1) binary if it is available.  ':'
+#                   otherwise.
+# RMIC            - Java RMI compiler utility.
+#
+# USE_MAKEDEPEND  - Tell the dependency-generation code whether to use
+#                   makedepend(1).  The value will be either 'Y' or 'N'.
+#
+# C_COMPILE       - Command for compiling C code.
+# CXX_COMPILE     - Command for compiling C++ code.
+#
+# ABI             - Application Binary Interface type.  This may be used for
+#                   other binary types when supported by the operating system
+#                   (e.g., "ELF", "N32" or "64").
+# ISA             - Instruction Set Architecture.  This may be used for other
+#                   binary types when supported by the operating system (e.g.,
+#                   "mips3" or "i386").
+# LIBBITSUF       - Suffix for the library path used by the linker on IRIX
+#                   only.  For n32 binaries, it will be 32.  For 64-bit
+#                   binaries, it will be 64.
+# PLATFORM        - The operating system abbreviation on which the library is
+#                   being built.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Base variables needed by all makefiles.
+# -----------------------------------------------------------------------------
+bindir		= @bindir@
+datadir		= @datadir@
+exec_prefix	= @exec_prefix@
+libdir		= @libdir@
+libexecdir	= @libexecdir@
+prefix		= @prefix@
+sbindir		= @sbindir@
+sysconfdir	= @sysconfdir@
+topdir		= @topdir@
+
+AR		= @AR@ $(DPP_EXTRA_ARFLAGS) $(EXTRA_ARFLAGS) $(ARFLAGS)
+ARFLAGS		= @ARFLAGS@
+AR_NAME_FLAG	= @AR_NAME_FLAG@
+CC		= @CC@
+CXX		= @CXX@
+CPP		= @CPP@
+CXXCPP		= @CXXCPP@
+CFLAGS		= @CFLAGS@ $(OPTIMIZER) $(EXTRA_CFLAGS)
+CFLAGS_DYNLIB	= @CFLAGS_DYNLIB@
+CPPFLAGS	= @CPPFLAGS@ $(EXTRA_CPPFLAGS)
+CXXFLAGS	= @CXXFLAGS@ $(OPTIMIZER) $(EXTRA_CXXFLAGS)
+CXXFLAGS_DYNLIB	= @CXXFLAGS_DYNLIB@
+DEFS		= @DEFS@ $(EXTRA_DEFS)
+DEP_GEN_FLAG	= @DEP_GEN_FLAG@
+DEPEND_FLAGS	= @DEPEND_FLAGS@ @INCLUDES@ -I$(topdir) $(EXTRA_DEPEND_FLAGS)
+DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
+DYLIB_NAME_FLAG	= @DYLIB_NAME_FLAG@
+EXE_NAME_FLAG	= @EXE_NAME_FLAG@
+INCLUDES	= @INCLUDES@ -I$(topdir) $(EXTRA_INCLUDES)
+INSTALL		= @INSTALL@
+JCPS		= @JCPS@
+JAR		= @JAR@
+JAVAC		= @JAVAC@
+JAVAH		= @JAVAH@
+JAVAP		= @JAVAP@
+JDK_HOME	= @JDK_HOME@
+JNI_INC		= @JNI_INC@
+JNI_LIB		= @JNI_LIB@
+LD		= @LD@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
+LDFLAGS		= @LDFLAGS@ -L/usr/lib$(LIBBITSUF) -L/usr/lib
+LDOPTS		= @LDOPTS@ $(DPP_EXTRA_LDOPTS) $(EXTRA_LDOPTS)		\
+                  $(DSOVERSIONOPTS)
+LDOPTS_DBG	= @LDOPTS_DBG@ $(EXTRA_LDOPTS_DBG)
+LDOPTS_OPT	= @LDOPTS_OPT@ $(EXTRA_LDOPTS_OPT)
+LIBS		= @LIBS@ $(EXTRA_LIBS)
+LN_S		= @LN_S@
+MAKEDEPEND	= @MAKEDEPEND@
+MKPATH		?=
+OBJEXT		= @OBJEXT@
+OBJ_BUILD_FLAG	= @OBJ_BUILD_FLAG@
+OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
+OS_TYPE		= @OS_TYPE@
+PERL		= @PERL@
+RANLIB		= @RANLIB@
+RMIC		= @RMIC@
+
+# SGI-specific dynamic-shared-object information.
+DSOREGFILE	= @DSOREGFILE@
+DSOVERSION	= @DSOVERSION@
+DSOVERSIONOPTS	= @DSOVERSIONOPTS@
+
+USE_MAKEDEPEND	= @USE_MAKEDEPEND@
+
+# Installation information (permissions, ownership).
+OWNER_NAME	= @OWNER_NAME@
+GROUP_NAME	= @GROUP_NAME@
+FILE_PERMS	= @FILE_PERMS@
+EXEC_PERMS	= @EXEC_PERMS@
+DIR_PERMS	= @DIR_PERMS@
+
+# Allow overriding the default value of $(OBJDIR) by setting $(BASE_OBJDIR)
+# (probably using an externally defined value).
+ifdef BASE_OBJDIR
+    OBJDIR	= $(BASE_OBJDIR)
+else
+    OBJDIR	= .
+endif
+
+# -----------------------------------------------------------------------------
+# Compiler command lines.
+# -----------------------------------------------------------------------------
+C_COMPILE	= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+CXX_COMPILE	= $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
+
+# -----------------------------------------------------------------------------
+# Platform- and binary-specific options.  The assignments preceding the
+# ifeq ... endif blocks are the default values.  Depending on the value of
+# $(ABI), further settings may be made to allow for building with multiple
+# ABIs.
+# -----------------------------------------------------------------------------
+ifdef dppABI
+    ifeq ($(dppABI), N32_M3)
+        ABI     = N32
+        ISA     = mips3
+    endif
+    ifeq ($(dppABI), N32_M4)
+        ABI     = N32
+        ISA     = mips4
+    endif
+    ifeq ($(dppABI), 64_M3)
+        ABI     = 64
+        ISA     = mips3
+    endif
+    ifeq ($(dppABI), 64_M4)
+        ABI     = 64
+        ISA     = mips4
+    endif
+    ifeq ($(dppABI), ELF_i386)
+        ABI     = ELF
+        ISA     = i386
+    endif
+    ifeq ($(dppABI), MACINTOSH_PPC)
+        ABI     = MAC
+        ISA     = powerpc
+    endif
+else
+    ABI		?= @ABI@
+    ISA		?= @ISA@
+    LIBBITSUF	?= @LIBBITSUF@
+endif
+
+ABI_LIST	= @ABI_LIST@
+PLATFORM	= @PLATFORM@
+
+ifeq ($(ABI), N32)
+    ARFLAGS	:= -n32 $(ARFLAGS)
+    CFLAGS	+= -n32
+    CXXFLAGS	+= -n32
+    LDOPTS	+= -n32
+    LIBBITSUF	= 32
+endif
+ifeq ($(ABI), 64)
+    ARFLAGS	:= -64 $(ARFLAGS)
+    CFLAGS	+= -64
+    CXXFLAGS	+= -64
+    LDOPTS	+= -64
+    LIBBITSUF	= 64
+endif
+ifeq ($(ABI), ELF)
+    LIBBITSUF	=
+endif
+
+ifeq ($(ISA), mips3)
+    ARFLAGS	:= -mips3 $(ARFLAGS)
+    CFLAGS	+= -mips3
+    CXXFLAGS	+= -mips3
+    LDOPTS	+= -mips3
+endif
+ifeq ($(ISA), mips4)
+    ARFLAGS	:= -mips4 $(ARFLAGS)
+    CFLAGS	+= -mips4
+    CXXFLAGS	+= -mips4
+    LDOPTS	+= -mips4
+endif
+
+@SET_MAKE@
