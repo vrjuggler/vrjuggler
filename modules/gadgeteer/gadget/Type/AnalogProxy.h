@@ -48,25 +48,27 @@ namespace gadget
 {
 
 /**
- * A proxy class to analog devices, used by the InputManager.
+ * A proxy class to analog devices, used by the Input Manager.
  *
- * A AnalogProxy always points to an analog device and subUnit number,
- * the inputgroup can therefore keep an array of these around and
+ * An AnalogProxy always points to an analog device and subUnit number.
+ * The inputgroup can therefore keep an array of these around and
  * treat them as analog devices which only return a single
- * subDevice's amount of data.  (one int)
+ * subDevice's amount of data.  (one float)
  *
  * @see Analog
- *
  */
 class GADGET_CLASS_API AnalogProxy : public TypedProxy<Analog>
 {
 
 public:
    /** Constructor. */
-   AnalogProxy() : mUnitNum(-1), mData(-1.0f)
+   AnalogProxy()
+      : mUnitNum(-1)
+      , mData(-1.0f)
    {;}
 
-   virtual ~AnalogProxy() {}
+   virtual ~AnalogProxy()
+   {;}
 
    /** Updates the cached data copy from the device. */
    virtual void updateData()
@@ -79,8 +81,9 @@ public:
 
    /** Returns time of last update. */
    vpr::Interval getTimeStamp() const
-   {  return mData.getTime(); }
-
+   {
+      return mData.getTime();
+   }
 
    /**
     * Gets the current analog data value.
@@ -90,21 +93,31 @@ public:
    {
       const float analogDefault(0.0f);
       if(isStupified())
+      {
          return analogDefault;
+      }
       else
+      {
          return mData.getAnalog();
+      }
    }
 
    Analog* getAnalogPtr()
    {
       if(isStupified())
+      {
          return NULL;
+      }
       else
+      {
          return mTypedDevice;
+      }
    }
 
    int getUnit() const
-   { return mUnitNum;}
+   {
+      return mUnitNum;
+   }
 
    static std::string getElementType();
 
