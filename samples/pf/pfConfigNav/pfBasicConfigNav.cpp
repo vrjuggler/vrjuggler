@@ -43,7 +43,7 @@
 void main(int argc, char* argv[])
 {
    vjKernel* kernel = vjKernel::instance();                             // Declare a new Kernel
-   pfBasicConfigNavApp* application = new pfBasicConfigNavApp(kernel);  // Delcare an instance of my application
+   pfBasicConfigNavApp* application = new pfBasicConfigNavApp();  // Delcare an instance of my application
 
    // Load config information
    kernel->loadChunkDescFile(std::string("pfNavChunks.dsc"));

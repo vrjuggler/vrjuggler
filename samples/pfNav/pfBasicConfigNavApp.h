@@ -35,7 +35,7 @@
 class pfBasicConfigNavApp : public simplePfNavApp
 {
 public:
-   pfBasicConfigNavApp( vjKernel* kern ) :  simplePfNavApp( kern )
+   pfBasicConfigNavApp( )
    {
      mCurrentConfig = NULL;
    }
