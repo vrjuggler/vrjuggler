@@ -50,7 +50,7 @@ public:
    {;}
 
    //: Destroy the glove
-   ~vjPinchGlove ();
+   virtual ~vjPinchGlove ();
 
    virtual bool config(vjConfigChunk* c);
 

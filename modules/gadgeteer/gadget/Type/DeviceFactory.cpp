@@ -48,6 +48,7 @@
 #include <Input/vjPosition/vjFlock.h>
 #include <Input/vjInput/vjIbox.h>
 #include <Input/vjGlove/vjCyberGlove.h>
+#include <Input/vjGlove/vjPinchGlove.h>
 #include <Input/vjKeyboard/vjXWinKeyboard.h>
 #include <Input/vjPosition/logiclass.h>
 #include <Input/vjPosition/vjMotionStar.h>
@@ -85,6 +86,7 @@ void vjDeviceFactory::hackLoadKnownDevices()
    vjDeviceConstructor<vjMotionStar>* motion_star = new vjDeviceConstructor<vjMotionStar>;
    vjDeviceConstructor<vjIBox>* ibox = new vjDeviceConstructor<vjIBox>;
    vjDeviceConstructor<vjCyberGlove>* cyber_glove = new vjDeviceConstructor<vjCyberGlove>;
+   vjDeviceConstructor<vjPinchGlove>* pinch_glove = new vjDeviceConstructor<vjPinchGlove>;
    vjDeviceConstructor<vjXWinKeyboard>* xwin_key = new vjDeviceConstructor<vjXWinKeyboard>;
    vjDeviceConstructor<vjThreeDMouse>* threed_mouse = new vjDeviceConstructor<vjThreeDMouse>;
 #else
