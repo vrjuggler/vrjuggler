@@ -3,6 +3,7 @@
 	ProjectType="Visual C++"
 	Version="7.00"
 	Name="OpenSGNav"
+	ProjectGUID="{04FF04CD-6A8C-401E-91A3-0E9BE5463A0C}"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
