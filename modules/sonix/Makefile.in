@@ -113,6 +113,7 @@ endif
 # Construct the static version of the libraries.
 # -----------------------------------------------
 $(LIBDIR)/$(SNX_LIB_STATIC) $(LIBDIR)/$(SNX_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -123,6 +124,7 @@ $(LIBDIR)/$(SNX_LIB_STATIC) $(LIBDIR)/$(SNX_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJE
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
+endif
 
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
