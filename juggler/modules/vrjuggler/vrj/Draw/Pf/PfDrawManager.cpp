@@ -387,7 +387,7 @@ void PfDrawManager::addDisplay(Display* disp)
 
       if(viewport->isActive())      // is viewport active
       {
-         Viewport::View view = viewport->getView();
+         //Viewport::View view = viewport->getView();
          pfViewport pf_viewport;                         // The viewport to build up
          pf_viewport.viewport = viewport;
          float vp_ox, vp_oy, vp_sx, vp_sy;
@@ -961,7 +961,7 @@ void PfDrawManager::debugDumpPfDisp(pfDisplay* pf_disp, int debugLevel)
    vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)  << "pWin:" << (void*)(pf_disp->pWin) << std::endl << vprDEBUG_FLUSH;
    vprDEBUG_NEXT(vrjDBG_DRAW_MGR,debugLevel)  << "vis id:" << std::hex << pf_disp->pWin->getFBConfigId() << std::dec << std::endl << vprDEBUG_FLUSH;
 
-   for(int vp=0;vp<pf_disp->viewports.size();vp++)
+   for(unsigned vp=0; vp<pf_disp->viewports.size(); ++vp)
    {
       vprASSERT((pf_disp->viewports[vp].viewport != NULL) && "NULL viewport in pf_disp. Check if it was ever set.");
 
