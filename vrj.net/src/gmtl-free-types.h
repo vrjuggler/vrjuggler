@@ -28,6 +28,7 @@
 #ifndef _VRJ_NET_GMTL_FUNCTIONS_H_
 #define _VRJ_NET_GMTL_FUNCTIONS_H_
 
+#include <gmtl/Defines.h>
 #include <gmtl-AABoxOps.h>
 #include <gmtl-AxisAngleOps.h>
 #include <gmtl-CoordOps.h>
