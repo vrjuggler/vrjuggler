@@ -75,9 +75,9 @@ public:
     virtual bool config(jccl::ConfigChunkPtr c);
 
     /** Get Positional data. */
-    virtual PositionData* getPositionData (int devNum = 0)
+    PositionData* getPositionData (int devNum = 0)
     {
-       //crap here
+       // XXX: Fill in
     }
 
 public:
