@@ -1125,6 +1125,8 @@ AC_OUTPUT(Makefile
           samples/tutorials/Makefile
           samples/tutorials/simpleInput/Makefile
           samples/tutorials/simplePf/Makefile
+          samples/vjcontrol/Makefile
+          samples/vjcontrol/AudioPlayer/Makefile
           test/Makefile 
           test/TestSuite/Makefile
           test/CfgTest/Makefile

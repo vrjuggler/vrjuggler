@@ -1,0 +1,81 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Makefile.in for juggler/samples/vjcontrol/simple_panel
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+all: audio.jar
+default: audio.jar
+
+srcdir	= @srcdir@
+
+# JDK-related variables.  ${JAVAC_CMD} is the compile line for javac when
+# building .java files.
+JDK_HOME	= @JDK_HOME@
+GUI_CLASSPATH	= ${srcdir}:${VJ_BASE_DIR}/bin/VjControl.jar:${JDK_HOME}/lib/classes.zip
+JAR		= @JAR@
+JAVAC		= @JAVAC@
+ifeq (@OS_TYPE@, Win32)
+    JAVAC_CMD	= ${JAVAC} -d . -sourcepath ${srcdir}/src
+else
+    JAVAC_CMD	= ${JAVAC} -d . -sourcepath ${srcdir}/src -classpath ${GUI_CLASSPATH}
+endif
+
+# If the user defined ${CLASSPATH} (either as an environment variable or a
+# command-line argument), put it in ${GUI_CLASSPATH}.  Otherwise, leave it
+# out.
+ifdef CLASSPATH
+    GUI_CLASSPATH	:= ${CLASSPATH}:${GUI_CLASSPATH}
+endif
+
+# Prevent anything in this file from being built in parallel.
+MAKEFLAGS	+= -j 1
+
+OBJECTS = AudioPlayer/AudioPlayerPanel.class
+
+# -----------------------------------------------------------------------------
+# Targets.
+# -----------------------------------------------------------------------------
+
+audio.jar:
+	${JAVAC_CMD} ${srcdir}/src/AudioPlayer/AudioPlayerPanel.java
+	cp ${srcdir}/*.config .
+	${JAR} cvf audio.jar AudioPlayer/*.class contents.config
+
+# -----------------------------------------------------------------------------
+# Clean-up.
+# -----------------------------------------------------------------------------
+clean:
+	rm -f audio.jar
