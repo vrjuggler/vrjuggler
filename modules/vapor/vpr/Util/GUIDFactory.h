@@ -59,7 +59,9 @@ public:
 
    static vpr::GUID* createRandomGUID (void)
    {
-      return new vpr::GUID(true);
+      vpr::GUID* new_guid = new vpr::GUID;
+      new_guid->generate();
+      return new_guid;
    }
 
    static vpr::GUID* createGUID (const struct vpr::GUID::StdGUID& guid)

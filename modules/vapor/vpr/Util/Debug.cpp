@@ -104,9 +104,9 @@ Debug::Debug()
    getAllowedCatsFromEnv();
 }
 
-std::ostream& Debug::getStream(vpr::GUID cat, int level, bool show_thread_info,
-                               bool use_indent, int indentChange,
-                               bool lockStream)
+std::ostream& Debug::getStream(const vpr::GUID& cat, const int level, const bool show_thread_info,
+                               const bool use_indent, const int indentChange,
+                               const bool lockStream)
 {
    if(indentChange < 0)                // If decreasing indent
       indentLevel += indentChange;
@@ -169,18 +169,18 @@ std::ostream& Debug::getStream(vpr::GUID cat, int level, bool show_thread_info,
    return std::cout;
 }
 
-void Debug::addCategoryName(std::string name, vpr::GUID catId)
+void Debug::addCategoryName(std::string name, const vpr::GUID& catId)
 {
    mCategoryNames[name] = catId;
 }
 
-void Debug::addAllowedCategory(vpr::GUID catId)
+void Debug::addAllowedCategory(const vpr::GUID& catId)
 {
    mAllowedCategories[catId] = true;
 }
 
 // Are we allowed to print this category??
-bool Debug::isCategoryAllowed(vpr::GUID catId)
+bool Debug::isCategoryAllowed(const vpr::GUID& catId)
 {
    // If no entry for cat, grow the vector
    if(mAllowedCategories.find(catId) == mAllowedCategories.end())
@@ -188,10 +188,15 @@ bool Debug::isCategoryAllowed(vpr::GUID catId)
       
    // If I specified to listen to all OR
    // If it has category of ALL
-   if((mAllowedCategories[vprDBG_ALL] == true) || (catId == vprDBG_ALL))
+   bool cat_is_all = (catId == vprDBG_ALL);
+   bool allow_all = (mAllowedCategories[vprDBG_ALL] == true);
+
+   if(cat_is_all || allow_all)
       return true;
    else
       return mAllowedCategories[catId];
+   
+   //return true;
 }
 
 
