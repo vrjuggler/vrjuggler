@@ -10,7 +10,7 @@ class vjPinchGlove : public vjGlove
 {
 public:
    //: Construct
-   vjPinchGlove() : mGlove(NULL)
+   vjPinchGlove() : mGlove(NULL), mControlThread(NULL), mCalDir(NULL)
    {;}
 
    //: Destroy the glove
