@@ -53,11 +53,19 @@
         ..
         TestSuite
             TestCases
+                DynLoad
+                    modules
+                    ..
+                ..
                 IO
+                    Port
+                    ..
                     Socket
                     ..
                     Stats
                     ..
+                ..
+                Simulator
                 ..
                 Socket
                 ..
@@ -65,16 +73,6 @@
                 ..
                 Util
                 ..
-                examples
-                    GMTL
-                    ..
-                    SGA
-                    ..
-                    Threads
-                    ..
-                ..
-            ..
-            mk
             ..
         ..
         Thread
