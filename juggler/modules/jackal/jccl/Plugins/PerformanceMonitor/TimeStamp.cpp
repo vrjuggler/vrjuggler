@@ -37,7 +37,7 @@
 
 // these should all be in separate .cpp files.  fix later
 
-#if VJ_PERFORMANCE == VJ_PERF_SGI
+#if JCCL_PERFORMANCE == JCCL_PERF_SGI
 
 //#include <jccl/Plugins/PerformanceMonitor/TimeStampSGI.h>
 
@@ -146,7 +146,7 @@ long long TimeStampSGI::maxval;
 
 }; // namespace jccl
 
-#elif VJ_PERFORMANCE == VJ_PERF_POSIX
+#elif JCCL_PERFORMANCE == JCCL_PERF_POSIX
 
 /*
  * gettimeofday version
@@ -171,9 +171,9 @@ float TimeStampPosix::initval = 0.0;
 
 }; // namespace jccl
 
-#elif VJ_PERFORMANCE == VJ_PERF_NONE
+#elif JCCL_PERFORMANCE == JCCL_PERF_NONE
 // nothing to do here
-#endif // VJ_PERF_NONE
+#endif // JCCL_PERF_NONE
 
 
 namespace jccl {

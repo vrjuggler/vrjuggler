@@ -246,7 +246,7 @@ int ConfigChunkDB::removeMatching (const std::string& property, const std::strin
 int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
 {
     // Print out dependancies
-#ifdef VJ_vprDEBUG
+#ifdef JCCL_DEBUG
     vprDEBUG_BEGIN(jcclDBG_CONFIG,4) << "---- Dependencies -----------\n" << vprDEBUG_FLUSH;
     for (unsigned int i=0;i<chunks.size();i++) {
         vprDEBUG(jcclDBG_CONFIG,4) << "Chunk:" << chunks[i]->getProperty("name")
@@ -340,7 +340,7 @@ int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
         return -1;
     } else {
         // Print out sorted dependancies
-#ifdef VJ_vprDEBUG
+#ifdef JCCL_DEBUG
         
         vprDEBUG_BEGIN(jcclDBG_CONFIG,4) << "---- After sort ----" << std::endl << vprDEBUG_FLUSH;
         for (unsigned int i=0;i<chunks.size();i++) {
