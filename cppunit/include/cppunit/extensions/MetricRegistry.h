@@ -23,9 +23,9 @@ namespace CppUnit
  * CppUnit::MetricRegistry* metric_reg = CppUnit::MetricRegistry::instance();
  * std::string metric_prefix;    // Prefix for all metric labels (mode/hostname)
  *
- * std::string host_name = vpr::System::getHostname();   
+ * std::string host_name = vpr::System::getHostname();
  * metric_prefix = host_name + "/";
- *  
+ *
  * metric_reg->setPrefix(metric_prefix);
  * metric_reg->setFilename("vapor_metrics.txt");
  * metric_reg->setMetric("Main/MetricTest", 1221.75f);
@@ -82,10 +82,10 @@ public:
    /** Assert that we are greater then or equal to the cur_value */
    void assertMetricGE(std::string test_key, double cur_value, double soft_limit, double hard_limit)
    {
-      CPPUNIT_ASSERT((soft_limit > hard_limit) && "The soft limit percentage should be greater then hard_limit");
+      CPPUNIT_ASSERT((soft_limit < hard_limit) && "The soft limit percentage should be less then hard_limit");
 
       double old_sample = getMetric(test_key);
-      
+
       if(old_sample == 0.0f)
       {
          std::cout << "New metric for [" << test_key << "]  value:" << cur_value << std::endl;
@@ -93,13 +93,13 @@ public:
       }
       else
       {
-         //  softLimit < hard_limit < old_sample      
+         //  hard_limit < softLimit < old_sample
          double soft_limit_value = (old_sample * (1.0 - soft_limit));
          double hard_limit_value = (old_sample * (1.0 - hard_limit));
-   
+
          if(!(cur_value >= hard_limit_value))
          {
-            std::cout << "HardLimit [" << hard_limit_value << "] failed on metric: " 
+            std::cout << "HardLimit [" << hard_limit_value << "] failed on metric: "
                       << test_key << "  value:" << cur_value << std::endl;
             CPPUNIT_ASSERT(false);
          }
@@ -120,10 +120,10 @@ public:
    /** Assert that we are less then or equal to the cur_value */
    void assertMetricLE(std::string test_key, double cur_value, double soft_limit, double hard_limit)
    {
-      CPPUNIT_ASSERT((soft_limit > hard_limit) && "The soft limit percentage should be greater then hard_limit");
+      CPPUNIT_ASSERT((soft_limit < hard_limit) && "The soft limit percentage should be less then hard_limit");
 
       double old_sample = getMetric(test_key);
-            
+
       if(old_sample == 0.0f)
       {
          std::cout << "New metric for [" << test_key << "]  value:" << cur_value << std::endl;
@@ -131,13 +131,13 @@ public:
       }
       else
       {
-         //  old_sample < hard_limit < soft_limit     
+         //  old_sample <  soft_limit < hard_limit
          double soft_limit_value = (old_sample * (1.0 + soft_limit));
          double hard_limit_value = (old_sample * (1.0 + hard_limit));
-   
+
          if(!(cur_value <= hard_limit_value))
          {
-            std::cout << "HardLimit [" << hard_limit_value << "] failed on metric: " 
+            std::cout << "HardLimit [" << hard_limit_value << "] failed on metric: "
                       << test_key << "  value:" << cur_value << std::endl;
             CPPUNIT_ASSERT(false);
          }
@@ -173,7 +173,7 @@ protected:
 
          input_file >> key >> value;
          //input_file >> value;
-         
+
          if(input_file)
          {
             mMetricMap[key] = value;
@@ -202,18 +202,18 @@ protected:
       for(; i!=mMetricMap.end(); ++i)
       {
          output_file << std::setw(50) << (*i).first << "    " << (*i).second << "\n";
-         
+
          std::cout << "[w] metric: " << (*i).first << " -- " << (*i).second << std::endl;
       }
-     
+
       output_file.close();
       return true;
    }
 
-   
+
 private:
    std::string mFilename;
-   bool        mHaveOpenedFile;   
+   bool        mHaveOpenedFile;
 
    std::string mPrefix;
 
@@ -227,9 +227,9 @@ MetricRegistry* MetricRegistry::mInstance = NULL;
 
 #define CPPUNIT_ASSERT_METRIC_GE(test_key, cur_value, soft_limit, hard_limit)\
          (CppUnit::MetricRegistry::instance()->assertMetricGE(test_key, cur_value, soft_limit, hard_limit))
-         
+
 #define CPPUNIT_ASSERT_METRIC_LE(test_key, cur_value, soft_limit, hard_limit)\
          (CppUnit::MetricRegistry::instance()->assertMetricLE(test_key, cur_value, soft_limit, hard_limit))
-         
+
 
 #endif
