@@ -5,29 +5,94 @@
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <title>VR Juggler startup</title>
-<link rel="stylesheet" type="text/css" href="../../../style/base_style.css">
 </head>
 
 <body>
 
 <h1>VR Juggler startup</h1>
+<h2>No main()... sort of</h2>
+<p>In the previous section, we talked about how VR Juggler application's do not
+have a main() function.&nbsp; This needs to be explained a little further.</p>
+<p>While it is true that user applications do not have a main() function (they
+are just application objects), there still must be a main somewhere that starts
+the system.&nbsp; This is because compiler use main as the starting point for
+any application.</p>
+<p>In simple VR Juggler applications, there is a main() but it only starts up
+the VR Juggler kernel and give the kernel the application object to
+run.&nbsp;&nbsp;</p>
 <h2>What does main look like?&nbsp;</h2>
+<table border="0" cellspacing="0" width="615" cellpadding="0">
+  <tr>
+    <td width="23"></td>
+    <td width="567"></td>
+    <td width="20"></td>
+  </tr>
+  <tr>
+    <td width="23"></td>
+    <td width="567">
+      <pre>#include &lt;simpleApp.h&gt;</pre>
+      <pre>int main(int argc, char* argv[])
+{
+   vjKernel* kernel = vjKernel::instance();    // Get the kernel
+   simpleApp* app = new simpleApp();           // Create app object
+
+   kernel->loadConfigFile(...);                // Configure kernel
+
+   kernel->start();                    // Start the kernel thread
+
+   kernel->setApplication(app);        // Give application to kernel
+
+   while(!exit)
+   {
+     // sleep
+   }
+}</pre>
+    </td>
+    <td width="20"></td>
+  </tr>
+  <tr>
+    <td width="23"></td>
+    <td width="567"></td>
+    <td width="20"></td>
+  </tr>
+</table>
 <h3>Get kernel handle</h3>
+<pre><b>vjKernel* kernel = vjKernel::instance();    // Get the kernel</b></pre>
+<p>This line finds (and possible creates) the VR Juggler kernel and stores this
+handle so that we can use it later.</p>
 <h3>Create app obj</h3>
+<pre><b>#include &lt;simpleApp.h&gt;
+...
+simpleApp* app = new simpleApp();           // Create app object</b></pre>
+<p>We instantiate a copy of the user application object (simpleApp) here.&nbsp;
+Notice that we include the header file that defines the simpleApp class.</p>
 <h3>Give kernel config files</h3>
+<pre><b>kernel->loadConfigFile(...);                // Configure kernel</b></pre>
+<p>This line represents the code that will be in the main function that passes
+configuration files given on the command line to the kernel's loadConfigFile()
+function.&nbsp; Usually this is as simple as looping through all the command
+line arguments and passing each one to the kernel as a configuration file..</p>
 <h3>Start kernel thread - Juggler now running</h3>
+<pre><b>kernel->start();                    // Start the kernel thread</b></pre>
+<p>This line actually starts the VR Juggler kernel running.&nbsp; It creates a
+new thread of execution for the kernel, and the kernel begins to execute its
+internal processing.&nbsp; From this point on, we are only re-configuring the
+kernel.</p>
+<p>You may notice that the kernel knows nothing about the application yet (and
+actually needs to know nothing about the configuration files).&nbsp; This shows
+how VR Juggler's kernel executes independently from the user's
+application.&nbsp; The kernel will just sit there controlling and configuring
+the system with no application to run.</p>
 <h3>Give the kernel an app to run&nbsp;</h3>
+<pre><b>kernel->setApplication(app);        // Give application to kernel</b></pre>
+<p>This line actually tells the kernel what application it should be
+running.&nbsp; This reconfigures the kernel so that it will now start calling
+app's members functions.</p>
+<p>The application is now running in the VR system.</p>
+<h3>Call timing</h3>
+<p>
 Starts calling app methods<br>
-Diag: show call to method?&nbsp;
-<h2>No main() required</h2>
-<p>VR Juggler applications don't have a main. &nbsp;Instead the application is in an application object.</p>
-<h3>Well... actually they do</h3>
-<p>We only require a min to start the kernel.&nbsp; This does not have to be
-written by the user.&nbsp;</p>
-<p>It starts the kernel</p>
-<p>It can hand off the app obj</p>
-<p>Just need to tell the kernel what app to run</p>
-<p>dso's, config chunks, etc</p>
+Diag: show call to method?&nbsp;</p>
 
 </body>
 
