@@ -102,8 +102,16 @@ AC_ARG_WITH(gcc,
             [  --with-gcc              Force the use of GCC as the compiler],
             _use_gcc="$withval")
 
-dnl # Enable binary format.  Possible values are "O32", "N32" or "64".
-dnl # The default is "N32".
+dnl # Define the binary format.  Possible values are the following:
+dnl #     O32        - On IRIX, use old 32-bit mips2 binaries
+dnl #     N32_M3     - On IRIX, use N32 mips3 binaries
+dnl #     N32_M4     - On IRIX, use N32 mips4 binaries
+dnl #     64_M3      - On IRIX, use 64-bit mips3 binaries
+dnl #     64_M4      - On IRIX, use 64-bit mips4 binaries
+dnl #     HP         - On HP-UX, use HP PA-RISC binaries
+dnl #     ALPHA      - On an Alpha running Digital UNIX, use COFF binaries
+dnl #     ELF_i386   - On an i386 OS (e.g., Linux/i386), use ELF binaries
+dnl #     WIN32_i386 - On an i386 Win32 OS, Linux), use Win32 binaries
 AC_ARG_WITH(abi,
             [  --with-abi=<O32|N32_M3|N32_M4|64_M3|64_M4|HP|ALPHA|ELF_i386|WIN32_i386>
                           Define the Application Binary Interface to use],
