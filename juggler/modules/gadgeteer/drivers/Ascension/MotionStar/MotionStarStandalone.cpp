@@ -139,7 +139,7 @@ void aMotionStar::start () {
   server.sin_port=htons(TCP_PORT);                              /* Server port number */
   server.sin_addr.s_addr=inet_addr(ip_address);         /* Server address */
  
-  rtn = connect(s, (struct SOCKADDR *) &server, sizeof(server));
+  rtn = connect(s, (struct sockaddr *) &server, sizeof(server));
   printf("connect = %4d, connect error = %4d, ", rtn, errno);
   perror(NULL);
   printf("\n");
