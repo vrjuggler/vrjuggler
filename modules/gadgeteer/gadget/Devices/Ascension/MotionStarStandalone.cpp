@@ -300,7 +300,7 @@ int MotionStarStandalone::start ()
    if ( ! m_socket->open().success() )
    {
       fprintf(stderr,
-              "[MotionStarStandalone] Could not open %s socket: %s\n",
+              "[MotionStarStandalone] Could not open %s socket\n",
               ((m_proto == BIRDNET::UDP) ? "datagram" : "stream"));
       retval = -2;
    }
