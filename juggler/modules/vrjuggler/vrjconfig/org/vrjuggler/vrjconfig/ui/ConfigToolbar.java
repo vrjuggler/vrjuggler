@@ -71,8 +71,6 @@ public class ConfigToolbar
          ClassLoader loader = getClass().getClassLoader();
          newBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/newchunk.gif")));
          openBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/open.gif")));
-         saveBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/save.gif")));
-         saveAsBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/saveas.gif")));
          saveAllBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/saveall.gif")));
          copyBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/Copy16.gif")));
          pasteBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/Paste16.gif")));
@@ -85,8 +83,6 @@ public class ConfigToolbar
          // Ack! No icons. Use text labels instead
          newBtn.setText("New");
          openBtn.setText("Open");
-         saveBtn.setText("Save");
-         saveAsBtn.setText("Save As");
          saveAllBtn.setText("Save All");
          copyBtn.setText("Copy");
          pasteBtn.setText("Paste");
@@ -126,7 +122,8 @@ public class ConfigToolbar
       {
          nonempty_context = false;
       }
-      saveBtn.setEnabled(nonempty_context);
+      //saveBtn.setEnabled(nonempty_context);
+      saveAllBtn.setEnabled(nonempty_context);
       context.addContextListener(contextListener);
    }
 
@@ -399,11 +396,10 @@ public class ConfigToolbar
    }
 
 
-
    /**
     * Programmatically execute a save action.
     */
-   public boolean doSave()
+   public boolean doSaveAll()
    {
       boolean success = false;
       try
@@ -430,20 +426,18 @@ public class ConfigToolbar
    }
 
    /**
-    * Programmatically execute a save as action.
-    */
-   public boolean doSaveAs()
-   {
-      System.err.println("ConfigToolbar.doSaveAs(): not implemented");
-      return false;
-   }
-
-   /**
     * Programmatically execute an undo action.
     */
    public void doUndo()
    {
-      System.err.println("Undo not yet implemented");
+      if(ConfigUndoManager.instance().canUndo())
+      {
+         ConfigUndoManager.instance().undo();
+      }
+      else
+      {
+         System.out.println("Can not undo right now.");
+      }
    }
 
    /**
@@ -451,7 +445,14 @@ public class ConfigToolbar
     */
    public void doRedo()
    {
-      System.err.println("Redo not yet implemented");
+      if(ConfigUndoManager.instance().canRedo())
+      {
+         ConfigUndoManager.instance().redo();
+      }
+      else
+      {
+         System.out.println("Can not redo right now.");
+      }
    }
 
    /**
@@ -549,14 +550,7 @@ public class ConfigToolbar
       RTRCBtn.setToolTipText("Run Time ReConfiguration");
       RTRCBtn.setActionCommand("RTRC");
       RTRCBtn.setFocusPainted(false);
-      saveBtn.setEnabled(false);
-      saveBtn.setToolTipText("Save Configuration");
-      saveBtn.setActionCommand("Save");
-      saveBtn.setFocusPainted(false);
-      saveAsBtn.setEnabled(false);
-      saveAsBtn.setToolTipText("Save Configuration As");
-      saveAsBtn.setActionCommand("SaveAs");
-      saveAsBtn.setFocusPainted(false);
+      
       saveAllBtn.setEnabled(false);
       saveAllBtn.setToolTipText("Save All Open Configurations");
       saveAllBtn.setActionCommand("SaveAll");
@@ -571,11 +565,11 @@ public class ConfigToolbar
       pasteBtn.setActionCommand("paste");
       pasteBtn.setFocusPainted(false);
       
-      undoBtn.setEnabled(false);
+      undoBtn.setEnabled(true);
       undoBtn.setToolTipText("Undo");
       undoBtn.setActionCommand("Undo");
       undoBtn.setFocusPainted(false);
-      redoBtn.setEnabled(false);
+      redoBtn.setEnabled(true);
       redoBtn.setToolTipText("Redo");
       redoBtn.setActionCommand("Redo");
       redoBtn.setFocusPainted(false);
@@ -593,25 +587,11 @@ public class ConfigToolbar
             doOpen();
          }
       });
-      saveBtn.addActionListener(new ActionListener()
-      {
-         public void actionPerformed(ActionEvent evt)
-         {
-            doSave();
-         }
-      });
-      saveAsBtn.addActionListener(new ActionListener()
-      {
-         public void actionPerformed(ActionEvent evt)
-         {
-            doSaveAs();
-         }
-      });
       saveAllBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
          {
-//            saveAll();
+            doSaveAll();
          }
       });
       copyBtn.addActionListener(new ActionListener()
@@ -654,8 +634,6 @@ public class ConfigToolbar
       toolbar.add(newBtn, null);
       toolbar.add(openBtn, null);
       toolbar.add(RTRCBtn, null);
-      toolbar.add(saveBtn, null);
-      toolbar.add(saveAsBtn, null);
       toolbar.add(saveAllBtn, null);
       toolbar.addSeparator();
       toolbar.add(copyBtn, null);
@@ -671,8 +649,6 @@ public class ConfigToolbar
    private JToolBar toolbar = new JToolBar();
    private JButton newBtn = new JButton();
    private JButton openBtn = new JButton();
-   private JButton saveBtn = new JButton();
-   private JButton saveAsBtn = new JButton();
    private JButton saveAllBtn = new JButton();
    private JButton copyBtn = new JButton();
    private JButton pasteBtn = new JButton();
@@ -695,14 +671,14 @@ public class ConfigToolbar
    {
       public void resourceAdded(ContextEvent evt)
       {
-         saveBtn.setEnabled(true);
+         saveAllBtn.setEnabled(true);
       }
 
       public void resourceRemoved(ContextEvent evt)
       {
          if (context.getResources().size() == 0)
          {
-            saveBtn.setEnabled(false);
+            saveAllBtn.setEnabled(false);
          }
       }
    }
