@@ -5,7 +5,6 @@
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <title>Application Object Details</title>
-<link rel="stylesheet" type="text/css" href="../../../style/base_style.css">
 </head>
 
 <body>
@@ -22,20 +21,58 @@ Juggler kernel calls these functions from it's control loop to allocate processi
 
 a frame is.</p>
 <h2>Kernel loop&nbsp;</h2>
+<table border="0" cellpadding="0" cellspacing="0" width="20">
+  <tr>
+    <td colspan="4"></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>
+      <pre>#include &lt;simpleApp.h&gt;</pre>
+      <pre>int main(int argc, char* argv[])
+{
+   vjKernel* kernel = vjKernel::instance();
+   simpleApp* app = new simpleApp(); 
+
+   kernel->loadConfigFile(...);
+
+   <font color="#FF0000"><b>kernel->start();</b></font>
+
+   kernel->setApplication(app);
+
+   while(!exit)
+   {
+     // sleep
+   }
+}</pre>
+      <p>&nbsp;</td>
+    <td><img border="0" src="../images/AppInitAndMainLoop_modified.gif" width="473" height="491"></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td colspan="4"></td>
+  </tr>
+</table>
+<h3>How does the kernel loop start?</h3>
+<p>The figure shown above shows a timing diagram of the kernel and application
+object start up.&nbsp; The sequence on the right starts when the <tt>kernel-&gt;start()</tt>
+line is executed in the <tt>main()</tt> function on the left.&nbsp; This line
+tells the kernel thread to start running.&nbsp; When the kernel begins running,
+it starts calling the functions outlined in the diagram on the right.</p>
 <h3>What is a frame</h3>
-<p>The kernel calls each of the member functions based on a strictly scheduled frame of execution. &nbsp;During 
+<p>The kernel calls each of the application object's member functions based on a strictly scheduled frame of execution.&nbsp;
+The frame of execution is shown in the figure above.&nbsp; The frame of
+execution is all the lines within the <tt>while(running)</tt> clause above.</p>
+<p>During 
 
 the frame of execution, the 
 
-kernel calls the application methods and performs internal updates (see updateDevices() in { REF _Ref488569335 
-
-\h }Figure 14). &nbsp;Because the kernel has complete 
+kernel calls the application methods and performs internal updates (see
+updateAllData() in the figure ablove). &nbsp;Because the kernel has complete 
 
 control over the frame, it can make changes at predefined &quot;safe&quot; times when the application 
 
-is not doing any processing (see 
-
-checkForReconfig() in { REF _Ref488569335 \h }Figure 14). &nbsp;During these &quot;safe&quot; times, 
+is not doing any processing. &nbsp;During these &quot;safe&quot; times, 
 
 the kernel can change the virtual platform configuration as long as the interface 
 
@@ -51,146 +88,6 @@ devices have just been updated for this frame. &nbsp;Applications can rely upon 
 well-defined stages of the frame when the 
 
 kernel</p>
-<p><font size="7">[Diag: Frame picture</font>&nbsp;]</p>
-<h3>How does the kernel loop start?</h3>
-<p>Show where main starts kernel --&gt; loop<br>
-&nbsp;</p>
-<h2>Base interface</h2>
-<h3>Initialization</h3>
-<h4>vjApp::init()</h4>
-<p>The init() method is called by the kernel to initialize any application data. &nbsp;When the 
-
-kernel gets ready to startup a new application, it first calls the init() 
-
-method to signal to the application that it is about to be executed.</p>
-
-<h5>
-
-Uses...</h5>
-
-<p>Loading data files, creating lookup tables.&nbsp; Basically and
-pre-processing that the application needs to setup data structures.</p>
-<h4>vjApp::apiInit()</h4>
-<p>Graphics API specific initialization</p>
-
-<p>
-
-The apiInit() method is called when the graphics API has been initialized. &nbsp;It is used to 
-
-initialize any data members that cannot be initialized until the 
-
-graphics API has been initialized. &nbsp;In OpenGL applications, there is no concept of initializing 
-
-the API, so it is not normally used.</p>
-
-<h5>
-
-Uses...</h5>
-
-<p>
-
-Scene graph loading or other API specific initialization.</p>
-
-<h3>
-
-Frame functions</h3>
-
-<h4>
-
-vjApp::preFrame</h4>
-
-<p>
-
-The preFrame() method is called when the system is about to trigger drawing. &nbsp;This is the 
-
-time to do any last minute updates of data based on input 
-
-device status. &nbsp;It is best to avoid doing any time-consuming computation in this method because 
-
-the time use in this method contributes to the overall 
-
-device latency in the system. &nbsp;The devices will not be resampled before rendering begins.</p>
-
-<h5>
-
-Uses...</h5>
-
-<p>
-
-Updating data in response to device input.</p>
-
-<h4>
-
-vjApp::intraFrame</h4>
-
-<p>
-
-The intraFrame() method is called after rendering has been triggered but before the rendering 
-
-has necessarily finished. &nbsp;The code in this method will be 
-
-executing in parallel with the rendering method. &nbsp;This is the method to put any processing that 
-
-can be done for the next frame in order to make use of the 
-
-time that is being used for drawing. &nbsp;By putting processing in this method, it can increase frame 
-
-rates because the application can parallelize drawing and 
-
-computation. &nbsp;Special care needs to be taken to ensure that the data is buffered to prevent it 
-
-from changing while it is being used to render.</p>
-
-<h5>
-
-Uses...</h5>
-
-<p>
-
-Time consuming computation for the next frame.</p>
-
-<h4>
-
-vjApp::postFrame</h4>
-
-<p>
-
-The postFrame() method is called after rendering has completed but before the input devices have 
-
-been updated. &nbsp;This is a good place to do any data 
-
-updates that are not dependent upon input devices, but can not be overlapped with the rendering process.</p>
-
-<h5>
-
-Uses...</h5>
-
-<p>
-
-Clean up, sync with external networking or computation processes.</p>
-
-<h4>
-
-Call timing</h4>
-
-<p>Show the call timing of the frame functions.&nbsp;</p>
-
-<p>&nbsp;</p>
-
-<h2>Draw Manager
-
-specific app classes</h2>
-<p>The application classes are extended for each of the specific draw managers. &nbsp;This allows each 
-
-draw manager to add extra hooks into the 
-
-application class.</p>
-<h3>OpenGL application class</h3>
-<p>Show interface</p>
-<p>More detail later...</p>
-<h3>Performer application class</h3>
-<p>More detail later...</p>
-<p>Show interface</p>
 
 </body>
 
