@@ -167,7 +167,7 @@ public class PropertyEditorPanel extends PropertyComponent
       {
          //XXX Print this out to the Tweek console
          System.out.println(iae.getMessage());
-         JOptionPane.showMessageDialog(null,
+         JOptionPane.showMessageDialog(getParentFrame(),
                                        "Warning: Invalid property value '" +
                                           iae.getMessage() + "'",
                                        "Invalid Property Value Set",
@@ -283,7 +283,7 @@ public class PropertyEditorPanel extends PropertyComponent
          {
             // Create a new dialog to contain the custom editor
             int result = JOptionPane.showConfirmDialog(
-                                    (Component)evt.getSource(),
+                                    getParentFrame(),
                                     mEditor.getCustomEditor(),
                                     "Custom Editor",
                                     JOptionPane.OK_CANCEL_OPTION,
@@ -401,6 +401,11 @@ public class PropertyEditorPanel extends PropertyComponent
          ed = PropertyEditorManager.findEditor(value.getClass());
       }
       return ed;
+   }
+
+   private java.awt.Container getParentFrame()
+   {
+      return SwingUtilities.getAncestorOfClass(java.awt.Frame.class, this);
    }
 
    protected PropertyDefinition mPropDef = null;

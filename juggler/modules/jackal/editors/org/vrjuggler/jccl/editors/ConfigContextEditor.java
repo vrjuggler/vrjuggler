@@ -368,7 +368,7 @@ public class ConfigContextEditor
          // Make sure this add goes through successfully
          if (! getBroker().add(getContext(), element))
          {
-            JOptionPane.showMessageDialog(this,
+            JOptionPane.showMessageDialog(SwingUtilities.getAncestorOfClass(Frame.class, this),
                                           "There are no configuration files active.",
                                           "Error",
                                           JOptionPane.ERROR_MESSAGE);
