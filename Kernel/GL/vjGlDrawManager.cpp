@@ -71,6 +71,7 @@ void vjGlDrawManager::drawAllPipes()
    vjDEBUG_BEGIN(3) << "vjGLDrawManager::drawAllPipes: Enter" << endl << flush << vjDEBUG_FLUSH;
    int pipeNum;
 
+   // RENDER
       // Start rendering all the pipes
    for(pipeNum=0; pipeNum<pipes.size(); pipeNum++)
       pipes[pipeNum]->triggerRender();
@@ -78,6 +79,16 @@ void vjGlDrawManager::drawAllPipes()
       // Wait for rendering to finish on all the pipes
    for(pipeNum=0; pipeNum<pipes.size(); pipeNum++)
       pipes[pipeNum]->completeRender();
+
+   // SWAP
+      // Start swapping all the pipes
+   for(pipeNum=0; pipeNum<pipes.size(); pipeNum++)
+      pipes[pipeNum]->triggerSwap();
+
+      // Wait for swapping to finish on all the pipes
+   for(pipeNum=0; pipeNum<pipes.size(); pipeNum++)
+      pipes[pipeNum]->completeSwap();
+
 
    vjDEBUG_END(3) << "vjGLDrawManager::drawAllPipes: Exit" << endl << flush << vjDEBUG_FLUSH;
 }
@@ -173,18 +184,24 @@ void vjGlDrawManager::closeAPI()
 // XXX: Performance Critical problems here
 void vjGlDrawManager::drawObjects()
 {
-   vjInputManager*  input_mgr = vjKernel::instance()->getInputManager();
-
-   // Draw all glove Proxies that have drawing flag set
-   vjGloveProxy* cur_glove_proxy;
-   for(int glv=0;glv<input_mgr->getNumGloveProxies();glv++)    // For each glove in system
+   glPushAttrib( GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT | GL_LIGHTING_BIT );
    {
-      cur_glove_proxy = input_mgr->GetGloveProxy(glv);         // Get the glove proxy
-      if(cur_glove_proxy->isVisible())                         // If flag set
-         drawGlove(cur_glove_proxy);                           // draw it
-   }
+      glDisable(GL_LIGHTING);
+      glDisable(GL_BLEND);
+      vjInputManager*  input_mgr = vjKernel::instance()->getInputManager();
 
-   // Draw any other object that need to be seen
+      // Draw all glove Proxies that have drawing flag set
+      vjGloveProxy* cur_glove_proxy;
+      for(int glv=0;glv<input_mgr->getNumGloveProxies();glv++)    // For each glove in system
+      {
+         cur_glove_proxy = input_mgr->GetGloveProxy(glv);         // Get the glove proxy
+         if(cur_glove_proxy->isVisible())                         // If flag set
+            drawGlove(cur_glove_proxy);                           // draw it
+      }
+
+      // Draw any other object that need to be seen
+   }
+   glPopAttrib();
 }
 
 
@@ -250,14 +267,14 @@ void vjGlDrawManager::drawProjections(vjSimDisplay* sim)
                glColor4f(sim->getSurfaceColor()[0], sim->getSurfaceColor()[1],
                          sim->getSurfaceColor()[2], ALPHA_VALUE);
             drawLine(ur, lr); drawLine(lr, ll); drawLine(ll, ul); drawLine(ul, ur);
-            glPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
-               glEnable(GL_BLEND);
-               glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-               glBegin(GL_TRIANGLES);
-                  glVertex3fv(ll.vec); glVertex3fv(lr.vec); glVertex3fv(ur.vec);
-                  glVertex3fv(ur.vec); glVertex3fv(ul.vec); glVertex3fv(ll.vec);
-               glEnd();
-            glPopAttrib();
+
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glBegin(GL_TRIANGLES);
+               glVertex3fv(ll.vec); glVertex3fv(lr.vec); glVertex3fv(ur.vec);
+               glVertex3fv(ur.vec); glVertex3fv(ul.vec); glVertex3fv(ll.vec);
+            glEnd();
+            glDisable(GL_BLEND);
          glPopMatrix();
       }
    }
@@ -267,13 +284,13 @@ void vjGlDrawManager::drawProjections(vjSimDisplay* sim)
 //! NOTE: This is called internally by the library
 void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
 {
-   const float head_radius(0.75);
+   const float head_radius(0.60);      // 7.2 inches
    const float eye_vertical(0.22);
    const float eye_horizontal(0.7);
    const float interoccular(0.27);
    const float eye_radius(0.08f);
 
-   //glPushAttrib( GL_ENABLE_BIT | GL_LIGHTING_BIT );
+   glPushAttrib( GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT | GL_LIGHTING_BIT );
    {
    	//-----------------set up materials....
    	float mat_ambient[] = {0.1, 0.1, 0.1, 1.0};
@@ -292,11 +309,27 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
      // Draw the user's head
       glPushMatrix();
 	      glMultMatrixf(sim->getHeadPos().getFloatPtr());
-	      glColor3f(1.0f, 0.0f, 0.0f);
+	
+         // Draw Axis
+         glDisable(GL_LIGHTING);
+         glPushMatrix();
+            vjVec3 x_axis(10.0f,0.0f,0.0f); vjVec3 y_axis(0.0f, 10.0f, 0.0f); vjVec3 z_axis(0.0f, 0.0f, 10.0f); vjVec3 origin(0.0f, 0.0f, 0.0f);
+            glBegin(GL_LINES);
+               glColor3f(1.0f, 0.0f, 0.0f); glVertex3fv(origin.vec); glVertex3fv(x_axis.vec);
+               glColor3f(0.0f, 1.0f, 0.0f); glVertex3fv(origin.vec); glVertex3fv(y_axis.vec);
+               glColor3f(0.0f, 0.0f, 1.0f); glVertex3fv(origin.vec); glVertex3fv(z_axis.vec);
+            glEnd();
+         glPopMatrix();
+         glEnable(GL_LIGHTING);
+
+         glEnable(GL_BLEND);
+         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+         glColor4f(0.5, 0.75, 0.90, 0.67f);
 	      drawSphere(head_radius, 10, 10);             // Head
+         glDisable(GL_BLEND);
 
 	      glPushMatrix();
-	         glColor3f(0.0f, 0.0f, 1.0f);
+	         glColor3f(0.2f, 0.2f, 0.2f);
 	         glTranslatef(0.0f, eye_vertical, -eye_horizontal);
 	         glPushMatrix();                     // Right eye
 		         glTranslatef((interoccular/2.0f), 0.0f, 0.0f);
@@ -317,14 +350,12 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
       glPopMatrix();
 
        // Draw a The display surfaces
-      glPushAttrib( GL_ENABLE_BIT | GL_LIGHTING_BIT );
       glDisable(GL_LIGHTING);
       glPushMatrix();
          drawProjections(sim);
       glPopMatrix();
-      glPopAttrib();
    }
-   //glPopAttrib();
+   glPopAttrib();
 }
 
     /// dumps the object's internal state
@@ -450,8 +481,9 @@ void vjGlDrawManager::drawGlove(vjGloveProxy* gloveProxy)
       glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
       glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
       //----------------Enable Materials.....
-      glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
-      glEnable(GL_COLOR_MATERIAL);
+      //glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+      //glEnable(GL_COLOR_MATERIAL);
+      glDisable(GL_COLOR_MATERIAL);
 
       //-----------------set up a light....
       /*

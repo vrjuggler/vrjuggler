@@ -47,6 +47,21 @@ void vjGlPipe::completeRender()
    renderCompleteSema.acquire();
 }
 
+//: Trigger swapping of all pipe's windows
+void vjGlPipe::triggerSwap()
+{
+   vjASSERT(mThreadRunning == true);
+   swapTriggerSema.release();
+}
+
+//: Blocks until swapping of the windows is completed
+void vjGlPipe::completeSwap()
+{
+   vjASSERT(mThreadRunning == true);
+   swapCompleteSema.acquire();
+}
+
+
 /// Add a GLWindow to the window list
 // Control loop must now open the window on the next frame
 void vjGlPipe::addWindow(vjGlWindow* win)
@@ -62,29 +77,47 @@ void vjGlPipe::addWindow(vjGlWindow* win)
 // - Wait for render signal <br>
 // - Render all the windows <br>
 // - Signal render completed <br>
+// - Wait for swap signal <br>
+// - Swap all windows <br>
+// - Signal swap completed <br>
+//
 void vjGlPipe::controlLoop(void* nullParam)
 {
-   mThreadRunning = true;     // We are running
+   mThreadRunning = true;     // We are running so set flag
 
    while (!controlExit)
    {
       checkForNewWindows();      // Checks for new windows to open
       checkForWindowsToClose();  // Checks for closing windows
 
-      // wait for render signal
-      renderTriggerSema.acquire();
 
-         // --- Call the pipe pre-draw function --- //
-      vjGlApp* theApp = glManager->getApp();
+      // --- RENDER the windows ---- //
+      {
+         renderTriggerSema.acquire();
 
-         // Can't get a context since I may not be guaranteed a window
-      theApp->pipePreDraw();                    // Call pipe pre-draw function
+            // --- Call the pipe pre-draw function --- //
+         vjGlApp* theApp = glManager->getApp();
 
-      for (int winId=0;winId < openWins.size();winId++)
-         renderWindow(openWins[winId]);
+            // Can't get a context since I may not be guaranteed a window
+         theApp->pipePreDraw();                    // Call pipe pre-draw function
 
-      // Done rendering. Tell people that we are waiting now.
-      renderCompleteSema.release();
+         // Render the windows
+         for (int winId=0;winId < openWins.size();winId++)
+            renderWindow(openWins[winId]);
+
+         renderCompleteSema.release();
+      }
+
+      // ----- SWAP the windows ------ //
+      {
+         swapTriggerSema.acquire();
+
+         // Swap all the windows
+         for(int winId=0;winId < openWins.size();winId++)
+            swapWindowBuffers(openWins[winId]);
+
+         swapCompleteSema.release();
+      }
    }
 
    mThreadRunning = false;     // We are not running
@@ -141,20 +174,20 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
       vjSurfaceDisplay* surface_disp = dynamic_cast<vjSurfaceDisplay*>(theDisplay);
 
       win->setLeftEyeProjection();
-      glManager->drawObjects();
       glManager->currentUserData()->setUser(surface_disp->getUser());         // Set user data
       glManager->currentUserData()->setProjection(surface_disp->getLeftProj());
 
       theApp->draw();
+      glManager->drawObjects();
 
       if (win->isStereo())
       {
          win->setRightEyeProjection();
-         glManager->drawObjects();
          glManager->currentUserData()->setUser(surface_disp->getUser());         // Set user data
          glManager->currentUserData()->setProjection(surface_disp->getRightProj());
 
          theApp->draw();
+         glManager->drawObjects();
       }
    }
    else if(theDisplay->isSimulator())                                  // SIMULATOR
@@ -162,15 +195,20 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
       vjSimDisplay* sim_disp = dynamic_cast<vjSimDisplay*>(theDisplay);
 
       win->setCameraProjection();
-      glManager->drawObjects();
       glManager->currentUserData()->setUser(sim_disp->getUser());         // Set user data
       glManager->currentUserData()->setProjection(sim_disp->getCameraProj());
 
       theApp->draw();
 
+      glManager->drawObjects();
       glManager->drawSimulator(sim_disp);
    }
+}
 
-   glFlush();              // Flush the OpenGL commands
-   win->swapBuffers();     // Swap those buffers
+//: Swaps the buffers of the given window
+// Make the context current, and swap the window
+void vjGlPipe::swapWindowBuffers(vjGlWindow* win)
+{
+   win->makeCurrent();           // Set correct context
+   win->swapBuffers();           // Implicitly calls a glFlush
 }
