@@ -25,7 +25,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 // Includes ====================================================================
 #include <boost/python.hpp>
 #include <gmtl-wrappers.h>
@@ -61,16 +60,18 @@ void _Export_gmtl_wrappers_h()
     def("makeRotEulerAngleZXY", (gmtl::EulerAngle<double,gmtl::ZXY> (*)(const gmtl::Matrix<double,4,4> &))&gmtlWrapper::makeRotEulerAngleZXY);
     def("makeRotEulerAngleZYX", (gmtl::EulerAngle<float,gmtl::ZYX> (*)(const gmtl::Matrix<float,4,4> &))&gmtlWrapper::makeRotEulerAngleZYX);
     def("makeRotEulerAngleZYX", (gmtl::EulerAngle<double,gmtl::ZYX> (*)(const gmtl::Matrix<double,4,4> &))&gmtlWrapper::makeRotEulerAngleZYX);
+    def("makeRotMatrix33", (gmtl::Matrix<double,3,3> (*)(const gmtl::Quat<double> &))&gmtlWrapper::makeRotMatrix33);
     def("makeRotMatrix33", (gmtl::Matrix<float,3,3> (*)(const gmtl::Quat<float> &))&gmtlWrapper::makeRotMatrix33);
     def("makeRotMatrix33", (gmtl::Matrix<float,3,3> (*)(const gmtl::EulerAngle<float,gmtl::ZYX> &))&gmtlWrapper::makeRotMatrix33);
-    def("makeRotMatrix33", (gmtl::Matrix<float,3,3> (*)(const gmtl::EulerAngle<float,gmtl::ZXY> &))&gmtlWrapper::makeRotMatrix33);
-    def("makeRotMatrix33", (gmtl::Matrix<double,3,3> (*)(const gmtl::Quat<double> &))&gmtlWrapper::makeRotMatrix33);
     def("makeRotMatrix33", (gmtl::Matrix<float,3,3> (*)(const gmtl::EulerAngle<float,gmtl::XYZ> &))&gmtlWrapper::makeRotMatrix33);
-    def("makeRotMatrix44", (gmtl::Matrix<float,4,4> (*)(const gmtl::EulerAngle<float,gmtl::XYZ> &))&gmtlWrapper::makeRotMatrix44);
-    def("makeRotMatrix44", (gmtl::Matrix<double,4,4> (*)(const gmtl::Quat<double> &))&gmtlWrapper::makeRotMatrix44);
+    def("makeRotMatrix33", (gmtl::Matrix<float,3,3> (*)(const gmtl::EulerAngle<float,gmtl::ZXY> &))&gmtlWrapper::makeRotMatrix33);
     def("makeRotMatrix44", (gmtl::Matrix<float,4,4> (*)(const gmtl::Quat<float> &))&gmtlWrapper::makeRotMatrix44);
-    def("makeRotMatrix44", (gmtl::Matrix<float,4,4> (*)(const gmtl::EulerAngle<float,gmtl::ZYX> &))&gmtlWrapper::makeRotMatrix44);
+    def("makeRotMatrix44", (gmtl::Matrix<float,4,4> (*)(const gmtl::EulerAngle<float,gmtl::XYZ> &))&gmtlWrapper::makeRotMatrix44);
     def("makeRotMatrix44", (gmtl::Matrix<float,4,4> (*)(const gmtl::EulerAngle<float,gmtl::ZXY> &))&gmtlWrapper::makeRotMatrix44);
+    def("makeRotMatrix44", (gmtl::Matrix<double,4,4> (*)(const gmtl::Quat<double> &))&gmtlWrapper::makeRotMatrix44);
+    def("makeRotMatrix44", (gmtl::Matrix<float,4,4> (*)(const gmtl::EulerAngle<float,gmtl::ZYX> &))&gmtlWrapper::makeRotMatrix44);
+    def("makeRotMatrix44", (gmtl::Matrix<float,4,4> (*)(const gmtl::AxisAngle<float> &))&gmtlWrapper::makeRotMatrix44);
+    def("makeRotMatrix44", (gmtl::Matrix<double,4,4> (*)(const gmtl::AxisAngle<double> &))&gmtlWrapper::makeRotMatrix44);
     def("makeRotMatrix44", (gmtl::Matrix<float,4,4> (*)(const gmtl::Vec<float,3> &, const gmtl::Vec<float,3> &))&gmtlWrapper::makeRotMatrix44);
     def("makeRotQuat", (gmtl::Quat<float> (*)(const gmtl::Matrix<float,4,4> &))&gmtlWrapper::makeRotQuat);
     def("makeRotQuat", (gmtl::Quat<double> (*)(const gmtl::Matrix<double,4,4> &))&gmtlWrapper::makeRotQuat);

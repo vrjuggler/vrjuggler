@@ -60,6 +60,12 @@ namespace gmtlWrapper
       return gmtl::makeRot< gmtl::Matrix<DATA_TYPE, 4, 4> >(e);
    }
 
+   template<typename DATA_TYPE>
+   gmtl::Matrix<DATA_TYPE, 4, 4> makeRotMatrix44(const gmtl::AxisAngle<DATA_TYPE>& a)
+   {
+      return gmtl::makeRot< gmtl::Matrix<DATA_TYPE, 4, 4> >(a);
+   }
+
    template<typename DATA_TYPE, unsigned ROW, unsigned COL>
    gmtl::Quat<DATA_TYPE> makeRotQuat(const gmtl::Matrix<DATA_TYPE, ROW, COL>& m)
    {
@@ -94,6 +100,8 @@ namespace gmtlWrapper
    template gmtl::Matrix44f      makeRotMatrix44(const gmtl::EulerAngleXYZf&);
    template gmtl::Matrix44f      makeRotMatrix44(const gmtl::EulerAngleZYXf&);
    template gmtl::Matrix44f      makeRotMatrix44(const gmtl::EulerAngleZXYf&);
+   template gmtl::Matrix44f      makeRotMatrix44(const gmtl::AxisAnglef&);
+   template gmtl::Matrix44d      makeRotMatrix44(const gmtl::AxisAngled&);
    template gmtl::Quatf          makeRotQuat(const gmtl::Matrix44f&);
    template gmtl::Quatd          makeRotQuat(const gmtl::Matrix44d&);
    template gmtl::EulerAngleXYZf makeRotEulerAngleXYZ(const gmtl::Matrix44f&);
