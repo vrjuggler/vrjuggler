@@ -750,7 +750,7 @@ sub checkKeyVal ($$) {
 	$err = "No such group '$value'" if getgrnam("$value") eq undef;
     }
     # Check user name.
-    elsif ( "$keyword" eq "uname" ) {
+    elsif ( "$keyword" eq "uname" && ! $Win32 ) {
 	$err = "No such user '$value'" if getpwnam("$value") eq undef;
     }
 
