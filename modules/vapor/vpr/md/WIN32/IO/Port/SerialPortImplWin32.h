@@ -3,8 +3,7 @@
 
 #include <vpr/vprConfig.h>
 
-#include <windows.h>
-#include <iostream.h>
+#include <iostream>
 #include <stdio.h>
 #include <string>
 #include <vector>
@@ -97,7 +96,7 @@ public:
     // ------------------------------------------------------------------------
     inline virtual void
     setOpenBlocking (void) {
-        cout << "'setOpenBlocking' not implemented for Win32" << endl;
+        std::cout << "'setOpenBlocking' not implemented for Win32" << std::endl;
     }
 
     // ------------------------------------------------------------------------
@@ -111,7 +110,7 @@ public:
     // ------------------------------------------------------------------------
     inline virtual void
     setOpenNonBlocking (void) {
-        cout << "'setOpenBlocking' not implemented for Win32" << endl;
+        std::cout << "'setOpenBlocking' not implemented for Win32" << std::endl;
     }
 
 
@@ -167,7 +166,7 @@ public:
     enableBlocking (void) {
         Status status;
         status.setCode(Status::Failure);
-        cout << "Enabling blocking mode after port open is unsuported in Win32." << endl;
+        std::cout << "Enabling blocking mode after port open is unsuported in Win32." << std::endl;
         return status;
     }
 
@@ -184,7 +183,7 @@ public:
     enableNonBlocking (void) {
         Status status;
         status.setCode(Status::Failure);
-        cout << "Enabling Nonblocking mode after port open is unsuported in Win32." << endl;
+        std::cout << "Enabling Nonblocking mode after port open is unsuported in Win32." << std::endl;
         return status;
     }
 
