@@ -572,18 +572,13 @@ int vjXWinKeyboard::openTheWindow()
    int nVisuals;
 
    vis_infos = XGetVisualInfo( m_display, vMask, &vTemplate, &nVisuals);
-   XVisualInfo* p_visinfo;
-   for (i = 0, p_visinfo = vis_infos; i < nVisuals; i++, p_visinfo++)
-   {
-      if (p_visinfo->depth > 8)
-      {
-         m_visual = p_visinfo;
-         break;
-      }
-   }
 
-   if (i == nVisuals)
-   {
+   // Verify that we got at least one visual from XGetVisualInfo(3).
+   if ( vis_infos != NULL && nVisuals >= 1 ) {
+      m_visual = vis_infos;
+   }
+   // If we didn't get a matching visual, we're in trouble.
+   else {
       vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:")
                   << "vjKeyboard::startSampling() : find visual failed"
                   << std::endl << vjDEBUG_FLUSH;
