@@ -31,13 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/Devices/DriverConfig.h>
-#include <vpr/Util/Debug.h>
-#include <jccl/Config/ConfigElement.h>
-#include <gadget/Type/DeviceConstructor.h>
-#include <gadget/Util/Debug.h>
-#include <gadget/gadgetParam.h>
-
-#include <drivers/Open/LinuxJoydev/LinuxJoydev.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,6 +42,14 @@
 #include <fcntl.h>
 
 #include <linux/joystick.h>      // Get the joystick abilities
+
+#include <vpr/Util/Debug.h>
+#include <jccl/Config/ConfigElement.h>
+#include <gadget/Type/DeviceConstructor.h>
+#include <gadget/Util/Debug.h>
+#include <gadget/gadgetParam.h>
+
+#include <drivers/Open/LinuxJoydev/LinuxJoydev.h>
 
 
 extern "C"
