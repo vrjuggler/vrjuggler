@@ -263,8 +263,8 @@ int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
             vprDEBUG(vprDBG_ERROR,0) << "Nothing.\n" << vprDEBUG_FLUSH;
          }
 
-         vprDEBUG(vprDBG_ERROR,0)
-            << "Check for undefined devices that others depend upon.\n"
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICIAL_LVL)
+            << clrOutNORM(clrRED, "Check for missing files or missing chunks in loaded files.\n")
             << vprDEBUG_FLUSH;
       }
       chunks.insert(chunks.end(), src_chunks.begin(), src_chunks.end());   // Copy over the rest anyway
