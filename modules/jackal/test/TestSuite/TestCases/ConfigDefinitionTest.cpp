@@ -43,33 +43,25 @@ void ConfigDefinitionTest::basicFunctions()
 
 void ConfigDefinitionTest::propertyDefinitionTests()
 {
-   // start fresh and new (and shiny!!!)
-   jccl::ElementFactory::instance()->getConfigDefinitionRepository()->map().clear();
-   
-   std::string file_path( TESTFILES_PATH );
-   jccl::ElementFactory::instance()->loadDefs( file_path + "ConfigDefinitionTest/ConfigDefinitionTest.jdef" );
-   jccl::ConfigDefinitionPtr def = jccl::ElementFactory::instance()->getConfigDefinition( "config-chuck-the-beaver" );
+   jccl::ConfigDefinitionPtr def =
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
 
    CPPUNIT_ASSERT( def->getName() == "chuck" );
-   CPPUNIT_ASSERT( def->getToken() == "config-chuck-the-beaver" );
+   CPPUNIT_ASSERT( def->getToken() == "test_element" );
    CPPUNIT_ASSERT( def->getHelp() == "wood chuckin'" );
    
    jccl::PropertyDefinition p = def->getPropertyDefinition( "test_prop_multi" );
-   CPPUNIT_ASSERT( p.getName() == "big bad beaver" );
+   CPPUNIT_ASSERT( p.getName() == "test_prop_multi" );
    CPPUNIT_ASSERT( p.getToken() == "test_prop_multi" );
-   CPPUNIT_ASSERT( p.getHelp() == "multi beaver" );
+   CPPUNIT_ASSERT( p.getHelp() == "multi property" );
    CPPUNIT_ASSERT( p.getVarType() == jccl::T_STRING );
    CPPUNIT_ASSERT( p.getNumAllowed() == 1 );
 }
 
 void ConfigDefinitionTest::testEqual()
 {
-   // start fresh and new (and shiny!!!)
-   jccl::ElementFactory::instance()->getConfigDefinitionRepository()->map().clear();
-   
-   std::string file_path( TESTFILES_PATH );
-   jccl::ElementFactory::instance()->loadDefs( file_path + "ConfigDefinitionTest/ConfigDefinitionTest.jdef" );
-   jccl::ConfigDefinitionPtr def = jccl::ElementFactory::instance()->getConfigDefinition( "config-chuck-the-beaver" );
+   jccl::ConfigDefinitionPtr def =
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
    
    jccl::ConfigDefinition receiving;
    
@@ -86,13 +78,8 @@ void ConfigDefinitionTest::testEqual()
 
 void ConfigDefinitionTest::testCopyConstr()
 {
-   // start fresh and new (and shiny!!!) who cares about the rest of the system - blahhhh!!!
-   // @todo is there a way to not do this globally?
-   jccl::ElementFactory::instance()->getConfigDefinitionRepository()->map().clear();
-   
-   std::string file_path( TESTFILES_PATH );
-   jccl::ElementFactory::instance()->loadDefs( file_path + "ConfigDefinitionTest/ConfigDefinitionTest.jdef" );
-   jccl::ConfigDefinitionPtr def = jccl::ElementFactory::instance()->getConfigDefinition( "config-chuck-the-beaver" );
+   jccl::ConfigDefinitionPtr def =
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
 
    jccl::ConfigDefinition receiving(*def);
 
@@ -103,12 +90,8 @@ void ConfigDefinitionTest::testCopyConstr()
 
 void ConfigDefinitionTest::testIsEqual()
 {
-   // start fresh and new (and shiny!!!)
-   jccl::ElementFactory::instance()->getConfigDefinitionRepository()->map().clear();
-   
-   std::string file_path( TESTFILES_PATH );
-   jccl::ElementFactory::instance()->loadDefs( file_path + "ConfigDefinitionTest/ConfigDefinitionTest.jdef" );
-   jccl::ConfigDefinitionPtr def = jccl::ElementFactory::instance()->getConfigDefinition( "config-chuck-the-beaver" );
+   jccl::ConfigDefinitionPtr def =
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
    
    jccl::ConfigDefinition receiving;
    receiving = (*def);
@@ -118,12 +101,8 @@ void ConfigDefinitionTest::testIsEqual()
 
 void ConfigDefinitionTest::testIsNotEqual()
 {
-   // start fresh and new (and shiny!!!)
-   jccl::ElementFactory::instance()->getConfigDefinitionRepository()->map().clear();
-   
-   std::string file_path( TESTFILES_PATH );
-   jccl::ElementFactory::instance()->loadDefs( file_path + "ConfigDefinitionTest/ConfigDefinitionTest.jdef" );
-   jccl::ConfigDefinitionPtr def = jccl::ElementFactory::instance()->getConfigDefinition( "config-chuck-the-beaver" );
+   jccl::ConfigDefinitionPtr def =
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
    
    jccl::ConfigDefinition receiving;
 
@@ -132,12 +111,8 @@ void ConfigDefinitionTest::testIsNotEqual()
 
 void ConfigDefinitionTest::addPropDefinition()
 {
-   // start fresh and new (and shiny!!!)
-   jccl::ElementFactory::instance()->getConfigDefinitionRepository()->map().clear();
-   
-   std::string file_path( TESTFILES_PATH );
-   jccl::ElementFactory::instance()->loadDefs( file_path + "ConfigDefinitionTest/ConfigDefinitionTest.jdef" );
-   jccl::ConfigDefinitionPtr def = jccl::ElementFactory::instance()->getConfigDefinition( "config-chuck-the-beaver" );
+   jccl::ConfigDefinitionPtr def =
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
    
    // shouldn't exist (yet!)
    jccl::PropertyDefinition pd = def->getPropertyDefinition( "chuck e cheeze" );
@@ -159,12 +134,7 @@ void ConfigDefinitionTest::addPropDefinition()
       
 void ConfigDefinitionTest::remPropDefinition()
 {
-   // start fresh and new (and shiny!!!)
    /*
-   jccl::ElementFactory::instance()->getConfigDefinitionRepository()->map().clear();
-
-   std::string file_path( TESTFILES_PATH );
-   jccl::ElementFactory::instance()->loadDefs( file_path + "ConfigDefinitionTest/ConfigDefinitionTest.jdef" );
    jccl::ConfigDefinitionPtr def = jccl::ElementFactory::instance()->getConfigDefinition( "config-chuck-the-beaver" );
 
    // shouldn't exist (yet!)
