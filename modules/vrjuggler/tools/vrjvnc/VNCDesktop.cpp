@@ -72,59 +72,22 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
    mTexWidth  = getNearestMultipleOfTwo(mVncIf.getWidth());
    mTexHeight = getNearestMultipleOfTwo(mVncIf.getHeight());
 
+   // --- Update scales and bounds.  should move this to a method for later --- //
    mDesktopToVncWidthScale  = mVncWidth / mDesktopWidth;
    mDesktopToVncHeightScale = mVncHeight / mDesktopHeight;
 
-   const float half_width(mDesktopWidth / 2.0f);
-   const float half_height(mDesktopHeight / 2.0f);
-
-   const gmtl::Point3f desktop_center(0.0f, 0.0f, 0.0f);
-
-   // Define the triangle for the upper-left half of the desktop square.
-   // 1---0
-   // |  /
-   // | /
-   // |/
-   // 2
-   mDesktopUL[0] = gmtl::Point3f(desktop_center[0] + half_width,
-                                 desktop_center[1] + half_height,
-                                 desktop_center[2]);
-   mDesktopUL[1] = gmtl::Point3f(desktop_center[0] - half_width,
-                                 desktop_center[1] + half_height,
-                                 desktop_center[2]);
-   mDesktopUL[2] = gmtl::Point3f(desktop_center[0] - half_width,
-                                 desktop_center[1] - half_height,
-                                 desktop_center[2]);
-
-   // Define the triangle for the lower-right half of the desktop square.
-   //     0
-   //    /|
-   //   / |
-   //  /  |
-   // 1---2
-   mDesktopLR[0] = mDesktopUL[0];
-   mDesktopLR[1] = mDesktopUL[2];
-   mDesktopLR[2] = gmtl::Point3f(desktop_center[0] + half_width,
-                                 desktop_center[1] - half_width,
-                                 desktop_center[2]);
-
-   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
-      << "mDesktopUL: " << mDesktopUL << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
-      << "mDesktopLR: " << mDesktopLR << std::endl << vprDEBUG_FLUSH;
-
-   mDesktopBox.setMin(gmtl::Point3f(mDesktopUL[2][0], mDesktopUL[2][1],
-                                    mDesktopUL[2][2] - 0.25f));
-   mDesktopBox.setMax(gmtl::Point3f(mDesktopUL[0][0], mDesktopUL[0][1],
-                                    mDesktopUL[0][2] + 0.5f));
+   // Configure the desktop bounding box
+   mDesktopBox.setMin(gmtl::Point3f(0, 0, -0.50f));
+   mDesktopBox.setMax(gmtl::Point3f(mDesktopWidth, mDesktopHeight, 0.50f));
    mDesktopBox.setEmpty(false);
 
    // Set the translation point to be the middle of the desktop polygon.
-   gmtl::setTrans(mDesktopMatrix, gmtl::Vec3f(0.0f, 5.0f, -5.0f));
+   //gmtl::setTrans(mDesktopMatrix, gmtl::Vec3f(0.0f, 5.0f, -5.0f));
 
    // Request the first update.
    mVncIf.updateFramebuffer(0, 0, mVncIf.getWidth(), mVncIf.getHeight());
 
+   // Spawn off a thread to keep updating the data vnc connection
    mVncThreadFunctor = new vpr::ThreadRunFunctor<VNCInterface>(&mVncIf);
    mVncThread        = new vpr::Thread(mVncThreadFunctor);
    vprASSERT(mVncThread->valid() && "VNC sample thread failed to start");
@@ -223,45 +186,77 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
 
    // --------- UPDATE NAV AND DESKTOP MATRICES ----------------------- //
    
-   gmtl::Matrix44f desktop_nav = navMatrix * mDesktopMatrix;
+   //gmtl::Matrix44f desktop_nav = navMatrix * mDesktopMatrix;
 
-   // Get the point position of the wand and construct a ray that shoots out
-   // of the wand.
+   // Do all intersection testing and stuff in the local coordinate frame so we don't have
+   // to deal with rotations and translations of the desktop.
+   // Just transform the wand into the local frame and we are set to go with minimal effort.
+
+   // Get the point position of the wand and construct a ray that shoots out of the wand.
    const gmtl::Matrix44f wand_mat(*(mWand->getData()));
    const gmtl::Point3f wand_point(gmtl::makeTrans<gmtl::Point3f>(wand_mat));
    const gmtl::Vec3f ray_vector(0.0f, 0.0f, -100.0f);
-   const gmtl::Rayf wand_ray(gmtl::makeTrans<gmtl::Point3f>(wand_mat),
-                             wand_mat * ray_vector);
+   const gmtl::Rayf wand_ray(gmtl::makeTrans<gmtl::Point3f>(wand_mat), (wand_mat*ray_vector));
 
-   // Construct a transformed triangle for the upper-left half of the desktop.
-   const gmtl::Point3f desktop_ul_pts[] =
+   // Find ray intersection on the z=0 plane
+   const gmtl::Vec3f pos_z_norm(0.0f, 0.0f, 1.0f);
+   const gmtl::Point3f origin_point(0.0f, 0.0f, 0.0f);
+   const gmtl::Planef z_plane(pos_z_norm, origin_point);
+
+   // Find the point on the desktop plane that the ray intersects it
+   float t_isect;    // t value for the isect
+   gmtl::intersect(z_plane, wand_ray, t_isect);
+   const gmtl::Point3f isect_point(wand_ray.mOrigin + (wand_ray.mDir*t_val));
+   vprASSERT( gmtl::Math::isEqual(isect_point[2], 0.0f, 0.01f) && "Point should be on z=0 plane");
+
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+         << "VNC: Isect point: " << isect_point << std::endl << vprDEBUG_FLUSH;
+   
+   // Story the x and y intersections in desktop coordinates
+   const float x_isect(isect_point[0]);
+   const float y_isect(isect_point[1]);
+
+   // Check for selecting the main desktop box
+   if ( gmtl::isInVolume(mDesktopBox, isect_point) )
+   {
+      focus_val = IN_FOCUS;
+
+      // Compute VNC button masks
+      int button_mask(0);
+
+      if ( mLeftButton->getData() )
       {
-         gmtl::Point3f(desktop_nav * mDesktopUL[0]),
-         gmtl::Point3f(desktop_nav * mDesktopUL[1]),
-         gmtl::Point3f(desktop_nav * mDesktopUL[2])
-      };
-   const gmtl::Tri<float> desktop_ul_trans(desktop_ul_pts[0],
-                                           desktop_ul_pts[1],
-                                           desktop_ul_pts[2]);
+         button_mask |= rfbButton1Mask;
+      }
 
-   // Construct a transformed triangle for the lower-right half of the desktop.
-   const gmtl::Point3f desktop_lr_pts[] =
+      if ( mMiddleButton->getData())
       {
-         gmtl::Point3f(desktop_nav * mDesktopLR[0]),
-         gmtl::Point3f(desktop_nav * mDesktopLR[1]),
-         gmtl::Point3f(desktop_nav * mDesktopLR[2])
-      };
-   const gmtl::Tri<float> desktop_lr_trans(desktop_lr_pts[0],
-                                           desktop_lr_pts[1],
-                                           desktop_lr_pts[2]);
+         button_mask |= rfbButton2Mask;
+      }
 
-   // Transform the bounding box.
-   const gmtl::AABoxf desktop_box_trans(desktop_nav * mDesktopBox.getMin(),
-                                        desktop_nav * mDesktopBox.getMax());
+      if ( mRightButton->getData() )
+      {
+         button_mask |= rfbButton3Mask;
+      }
 
-   // Storage for information returned by gmtl::intersect().
-   float u, v, t;
 
+      // Translate that point into the coordinates VNC wants to see.
+      //
+      // x,y desktop point just like x desktop.  origin upper left, y increases going down
+      //     The valid range is the 
+      float x(isect[0] - desktop_ul_trans[2][0]);
+      float y(mDesktopWidth - isect[1] - desktop_ul_trans[2][1]);    // This flips to the x coordinate system
+
+            mVncIf.pointerEvent(int(x * mDesktopToVncWidthScale), int(y * mDesktopToVncHeightScale),
+                          button_mask);
+
+      if ( mHaveKeyboard )
+      {
+         // Handle keyboard input.
+      }
+   }
+
+   /*    Grabbing
    mDesktopWandIsect = gmtl::isInVolume(desktop_box_trans, wand_point);
 
    // If the wand intersects the desktop, button operations will affect
@@ -283,53 +278,8 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          mDesktopGrabbed = true;
       }
    }
-   // If the wand does not intersect the desktop, test to see if the wand
-   // ray intersects it.  If it does, then we are going to be moving the
-   // mouse and maybe pressing buttons.
-   else if ( gmtl::intersect(desktop_ul_trans, wand_ray, u, v, t) || 
-             gmtl::intersect(desktop_lr_trans, wand_ray, u, v, t) )
-   {
-      focus_val = IN_FOCUS;
+   */
 
-      // Get the point of intersection.
-      gmtl::Point3f isect = wand_ray.mDir * t + wand_ray.mOrigin;
-
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-         << "Got an intersection at " << isect << std::endl << vprDEBUG_FLUSH;
-
-      // Translate that point into the coordinates VNC wants to see.
-      //
-      // x,y desktop point just like x desktop.  origin upper left, y increases going down
-      //     The valid range is the 
-      gmtl::Point3f vnc_isect = isect - desktop_ul_trans[1];
-      float x(isect[0] - desktop_ul_trans[2][0]);
-      float y(mDesktopWidth - isect[1] - desktop_ul_trans[2][1]);
-
-      int button_mask(0);
-
-      if ( mLeftButton->getData() == gadget::Digital::ON )
-      {
-         button_mask |= rfbButton1Mask;
-      }
-
-      if ( mMiddleButton->getData() == gadget::Digital::TOGGLE_ON )
-      {
-         button_mask |= rfbButton2Mask;
-      }
-
-      if ( mRightButton->getData() == gadget::Digital::TOGGLE_ON )
-      {
-         button_mask |= rfbButton3Mask;
-      }
-
-      mVncIf.pointerEvent(int(x * mDesktopToVncWidthScale), int(y * mDesktopToVncHeightScale),
-                          button_mask);
-
-      if ( mHaveKeyboard )
-      {
-         // Handle keyboard input.
-      }
-   }
 
    return focus_val;
 }
@@ -385,7 +335,7 @@ void VNCDesktop::draw()
       }
       else
       {
-         glMultMatrixf(mDesktopMatrix.mData);
+         //glMultMatrixf(mDesktopMatrix.mData);
 
          glColor3f(1.0f, 1.0f, 1.0f);
          glBindTexture(GL_TEXTURE_2D, tex_name);
