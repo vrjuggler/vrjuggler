@@ -299,16 +299,16 @@ cd build.gadgeteer</screen></para>
          </section>
          <section>
             <title>Tweek (individual)</title>
-            <para>Tweek depends on VPR. It needs JDK 1.3.1, JDOM B7 or newer, and the third-party CORBA implementations omniORB 3.0.4 (C++) and OpenORB 1.2.0 (Java). These packages can be downloaded from the following websites:</para>
+            <para>Tweek depends on VPR. It needs JDK 1.3.1, JDOM B7 or newer, and the third-party CORBA implementations omniORB 3.0.4 or newer (C++) and OpenORB 1.2.0 or newer (Java). These packages can be downloaded from the following websites:</para>
             <itemizedlist>
                <listitem>
                   <para>JDOM: <ulink url="http://www.jdom.org/">http://www.jdom.org/</ulink></para>
                </listitem>
                <listitem>
-                  <para>omniORB: <ulink url="http://www.jdom.org/">http://www.omniorb.org/</ulink></para>
+                  <para>omniORB: <ulink url="http://www.omniorb.org/">http://www.omniorb.org/</ulink> or <ulink url="http://omniorb.sourceforge.net/">http://omniorb.sourceforge.net/</ulink></para>
                </listitem>
                <listitem>
-                  <para>OpenORB: <ulink url="http://www.jdom.org/">http://www.openorb.org/</ulink></para>
+                  <para>OpenORB: <ulink url="http://openorb.exolab.org/">http://openorb.exolab.org/</ulink> or <ulink url="http://openorb.sourceforge.net/">http://openorb.sourceforge.net/</ulink></para>
                </listitem>
             </itemizedlist>
             <para>For the following steps, assume that you have omniORB installed in <filename>&lt;OMNIORBPATH&gt;</filename>, OpenORB is installed in <filename>&lt;OPENORBPATH&gt;</filename>, and JDOM is installed in <filename>&lt;JDOMPATH&gt;</filename>.</para>
