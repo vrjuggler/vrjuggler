@@ -31,7 +31,13 @@ INSTALL_DEPS	+= install-recursive
 DIRPRFX		= Kernel/
 
 # Subdirectories to compile.
-SUBDIRS = Pf GL
+ifeq (@OPENGL_API@, Y)
+SUBDIRS += GL
+endif
+
+ifeq (@PERFORMER_API@, Y)
+SUBDIRS += Pf
+endif
 
 # Search path for source code and object files.
 vpath
