@@ -189,10 +189,16 @@ protected:
       mControlThread = NULL;
       mSysFactory = NULL;
       mInputManager = NULL;
+      mDrawManager = NULL;
       mDisplayManager = NULL;
+      environmentManager = NULL;
+      perfBuffer = NULL;
 
       mInitialChunkDB = NULL;
+      mChunkDB = NULL;
       mConfigDesc = NULL;
+
+      sharedMemPool = NULL;
    }
 
 public:
