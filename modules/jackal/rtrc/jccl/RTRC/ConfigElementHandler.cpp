@@ -58,11 +58,12 @@ int ConfigElementHandler::configProcessPending()
    ConfigManager*     cfg_mgr = ConfigManager::instance();
    DependencyManager* dep_mgr = DependencyManager::instance();
 
-   bool     scan_for_lost_dependants(false);       // Do we need to scan for un-filled dependencies
+   bool scan_for_lost_dependants(false);       // Do we need to scan for un-filled dependencies
 
    // We need to track the number vefore and after to know if we changed anything
-   int num_pending_before = cfg_mgr->getNumPending();
-   int num_pending_after(0);
+   std::list<ConfigManager::PendingElement>::size_type num_pending_before =
+      cfg_mgr->getNumPending();
+   std::list<ConfigManager::PendingElement>::size_type num_pending_after(0);
 
    vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_STATE_LVL)
       << typeid(*this).name() << "::configProcessPending: Entering: "
