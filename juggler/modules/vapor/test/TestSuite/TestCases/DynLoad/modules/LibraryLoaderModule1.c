@@ -1,4 +1,10 @@
-int sumFunc(int a1, int a2)
+#ifdef WIN32
+#define EXPORT __declspec(dllexport)
+#else
+#define EXPORT
+#endif
+
+EXPORT int sumFunc(int a1, int a2)
 {
    return a1 + a2;
 }
