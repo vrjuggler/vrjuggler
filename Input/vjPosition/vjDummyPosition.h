@@ -14,56 +14,47 @@
 class vjDummyPosition: public vjPosition {
 
   public:
-	/** @name Construction/Destruction */
-	//@{
-	vjDummyPosition() : vjPosition()
-   { active = 1;
-			    instName = NULL;}
-	~vjDummyPosition();
-	//@}
+
+    //: Constructor
+    vjDummyPosition() : vjPosition() { 
+	active = 1;
+	instName = NULL;
+	mTimeStamp.set();
+    }
+
+    //: Destructor
+    ~vjDummyPosition();
+
 
    virtual bool config(vjConfigChunk *c);
 
 
-	/** @name vjInput pure virtual functions
-	 *
-	 *  pure virtual functions required from vjInput
-	 */
-	//@{
-	int StartSampling();
-	int StopSampling();
-	int Sample();
-	void UpdateData();
-	//@}
-	
-	/** @name vjInput virtual functions
-	 *
-	 *  virtual functions that inherited members should
-	 *  override but are not required to
-	 */
-	//@{
-	char* GetDeviceName() { return "vjDummyPosition"; }
-	//@}
-	
-	/** @name vjPosition pure virtual functions
-	 *
-	 *  pure virtual functions required by vjPosition
-	 */
-	//@{
-	vjMatrix* GetPosData (int d = 0);
-	//@}
-	
-	//: Function to get access to the position matrix
-   vjMatrix& posData()
-   {
-      return mydata;
-   }
+    //: vjInput pure virtual functions
+    int StartSampling();
+    int StopSampling();
+    int Sample();
+    void UpdateData();
 
-   static std::string getChunkType() { return std::string("DummyPosition");}
+    //: vjInput virtual functions
+    char* GetDeviceName() { return "vjDummyPosition"; }
 
-  private:
-   vjMatrix mydata;     // Location data
 	
+    //: vjPosition pure virtual functions
+    vjMatrix* GetPosData (int d = 0);
+    vjTimeStamp* getPosUpdateTime(int d = 0);
+	
+	
+    //: Function to get access to the position matrix
+    vjMatrix& posData()
+	{
+	    return mydata;
+	}
+
+    static std::string getChunkType() { return std::string("DummyPosition");}
+
+private:
+    vjMatrix mydata;     // Location data
+    vjTimeStamp mTimeStamp;  // dummy stamp value;
 };
 
 #endif

@@ -40,11 +40,14 @@ vjPosition::vjPosition() : xformMat()
   cerr << "    vjPosition::vjPosition()" << endl;
   deviceAbilities = deviceAbilities | DEVICE_POSITION;
   theData = NULL;
+  mDataTimes = NULL;
 }
 
 vjPosition::~vjPosition()
 {
     if (theData != NULL)
        getMyMemPool()->deallocate((void*)theData);
+    if (mDataTimes != NULL)
+	delete mDataTimes;
 }
 

@@ -15,7 +15,6 @@
 #include <sys/time.h>
 #include <Input/vjPosition/aFlock.h>
 #include <Input/vjPosition/vjFlock.h>
-
 #include <Math/vjCoord.h>
 
 #include <Kernel/vjDebug.h>
@@ -97,7 +96,7 @@ bool vjFlock::config(vjConfigChunk *c)
    mFlockOfBirds.setFilterType( (BIRD_FILT)(static_cast<int>(c->getProperty("filt"))) ); //
 
    // sanity check the report rate
-   char r = static_cast<char*>(c->getProperty("report"))[0];
+   char r = static_cast<std::string>(c->getProperty("report")).c_str()[0];
    if ((r != 'Q') && (r != 'R') &&
        (r != 'S') && (r != 'T'))
    {
@@ -118,7 +117,7 @@ bool vjFlock::config(vjConfigChunk *c)
    << endl << vjDEBUG_FLUSH;
 
    // init the correction table with the calibration file.
-   mFlockOfBirds.initCorrectionTable( c->getProperty("calfile") );
+   mFlockOfBirds.initCorrectionTable( ((std::string)c->getProperty("calfile")).c_str() );
 
    return true;
 }
@@ -129,6 +128,8 @@ vjFlock::~vjFlock()
     this->StopSampling();
     if (theData != NULL)
        getMyMemPool()->deallocate((void*)theData);
+    if (mDataTimes != NULL)
+	delete mDataTimes;
 }
 
 static void SampleBirds(void* pointer)
@@ -155,10 +156,14 @@ int vjFlock::StartSampling()
    {
       if (theData != NULL)
          getMyMemPool()->deallocate((void*)theData);
+      if (mDataTimes != NULL)
+	  delete mDataTimes;
 
       // XXX: What is the +1 for
       // +1 is because birds are 1 based, not zero based
-      theData = (vjMatrix*) new vjMatrix[(mFlockOfBirds.getNumBirds()+1)*3];
+      int numbuffs = (mFlockOfBirds.getNumBirds()+1)*3;
+      theData = (vjMatrix*) new vjMatrix[numbuffs];
+      mDataTimes = new vjTimeStamp[numbuffs];
 
       // Reset current, progress, and valid
       resetIndexes();
@@ -202,6 +207,8 @@ int vjFlock::Sample()
    int i;
    //int tmp;
 
+   vjTimeStamp sampletime;
+   sampletime.set();
    mFlockOfBirds.sample();
 
    //: XXX: +1 for the transmitter???
@@ -232,6 +239,7 @@ int vjFlock::Sample()
       theData[index].setTrans(mFlockOfBirds.xPos( i ),
                               mFlockOfBirds.yPos( i ),
                               mFlockOfBirds.zPos( i ));
+      mDataTimes[index] = sampletime;
 
       //if (i==1)
          //vjDEBUG(2) << "Flock: bird1:    orig:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
@@ -290,11 +298,17 @@ int vjFlock::StopSampling()
 
 vjMatrix* vjFlock::GetPosData( int d ) // d is 0 based
 {
-  if (this->isActive() == false)
+    if (this->isActive() == false)
+	return NULL;
+	
+    return (&theData[getBirdIndex(d,current)]);
+}
+
+vjTimeStamp* vjFlock::getPosUpdateTime (int d) {
+    if (this->isActive() == false)
 	   return NULL;
 	
-  return (&theData[getBirdIndex(d,current)]);
-  //current*(mFlockOfBirds.getNumBirds()+1)+d]);
+    return (&mDataTimes[getBirdIndex(d,current)]);
 }
 
 void vjFlock::UpdateData()

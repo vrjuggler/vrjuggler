@@ -11,6 +11,7 @@
 #include <Input/vjInput/vjInput.h>
 #include <Math/vjVec3.h>
 #include <Math/vjMatrix.h>
+#include <Performance/vjTimeStamp.h>
 
 typedef struct {
   vjVec3 pos, orient;   // orient - EulerZYX , 0-Z, 1-Y, 2-X ???
@@ -34,42 +35,43 @@ typedef struct {
 //!PUBLIC_API:
 class vjPosition : virtual public vjInput {
     public:
-	/** @name Construction/Destruction
-	 */
-	//@{
-	vjPosition();
-	~vjPosition();
-	//@}
+    
+    //: Constructor
+    vjPosition();
 
-   virtual bool config(vjConfigChunk *c);
+    //: Destructor
+    ~vjPosition();
+
+    virtual bool config(vjConfigChunk *c);
 
 
-	/** @name vjInput pure virtual functions
-	 *
-	 *  pure virtual functions required from vjInput
-	 */
-	//@{
-	virtual int StartSampling() = 0;
-	virtual int StopSampling() = 0;
-	virtual int Sample() = 0;
-	virtual void UpdateData() = 0;
-	//@}
+    //:vjInput pure virtual functions
+    virtual int StartSampling() = 0;
+    virtual int StopSampling() = 0;
+    virtual int Sample() = 0;
+    virtual void UpdateData() = 0;
 
-	//: Get the device name
-	char* GetDeviceName() { return "vjPosition"; }
-
-	/* New pure virtual functions */
-	//: Get Position data
-	virtual vjMatrix* GetPosData(int devNum = 0) = 0;
+    
+    //: Get the device name
+    char* GetDeviceName() { return "vjPosition"; }
+    
+    /* New pure virtual functions */
+    //: Get Position data
+    virtual vjMatrix* GetPosData(int devNum = 0) = 0;
+    virtual vjTimeStamp* getPosUpdateTime (int devNum = 0) {
+	cout << "FOO, I FORGOT TO IMPLEMENT SOMETHING!!!!" << endl;
+	return NULL;
+    }
 
 public:
-   /* XXX: Some of this stuff should be removed */
-   /* XXX: theData is a ptr because flock needs an infinite number */
-   /* XXX: We should change this so that theData is defined in each class and not here */
-	vjMatrix* theData;   // Ptr to matrix that holds the actually position data
-	
-   vjMatrix xformMat;   // The total xform matrix.  T*R  NOTE: Used to move from trk coord system to Juggler coord system
-   vjMatrix rotMat;     // Only the rotation matrix
+    /* XXX: Some of this stuff should be removed */
+    /* XXX: theData is a ptr because flock needs an infinite number */
+    /* XXX: We should change this so that theData is defined in each class and not here */
+    vjMatrix* theData;   // Ptr to matrix that holds the actually position data
+    vjTimeStamp* mDataTimes; // time when each buffer was last filled.
+
+    vjMatrix xformMat;   // The total xform matrix.  T*R  NOTE: Used to move from trk coord system to Juggler coord system
+    vjMatrix rotMat;     // Only the rotation matrix
 };
 
 #endif
