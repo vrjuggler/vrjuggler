@@ -40,7 +40,6 @@ void vjKernel::controlLoop(void* nullParam)
    perfBuffer = new vjPerfDataBuffer ("Kernel loop", 500, 8);
    environmentManager->addPerfDataBuffer (perfBuffer);
 
-
    //while(!Exit)
    while (1)
    {
@@ -165,7 +164,14 @@ void vjKernel::initConfig()
 
 #ifdef VJ_OS_SGI
    mSysFactory = vjSGISystemFactory::instance(); // XXX: Should not be system specific
+#else
+#ifdef VJ_OS_Linux
+   mSysFactory = vjSGISystemFactory::instance(); // HACK - this could be trouble, using SGI factory
+#else
+   vjDEBUG (vjDBG_KERNEL,0) << "ERROR!: Don't know how to create System Factory!\n" << vjDEBUG_FLUSH;
 #endif
+#endif
+
    vjDEBUG_END(vjDBG_KERNEL,1) << "vjKernel::initConfig: Exiting.\n" << vjDEBUG_FLUSH;
 }
 
