@@ -216,7 +216,7 @@ bool XMLConfigIOHandler::writeProperty (XMLFormatter* f, const Property& p, cons
     VarType t = p.getType();
     std::string newpad = pad + "    ";
     unsigned int i;
-    unsigned int n = p.value.size();
+    unsigned int n = p.getNum();
 
     if (t == T_EMBEDDEDCHUNK) {
         writeBuf (f, "\n");
@@ -229,14 +229,14 @@ bool XMLConfigIOHandler::writeProperty (XMLFormatter* f, const Property& p, cons
     }
     else {
         for (i = 0; i < n; i++) {
-            VarValue *v = ((p.value))[i];
+            const VarValue& v = p.getValue(i);
             if ((t == T_STRING) || (t == T_CHUNK)) {
                 writeBuf (f, "\"");
-                writeBuf (f, (std::string)*v, XMLFormatter::CharEscapes);
+                writeBuf (f, (std::string)v, XMLFormatter::CharEscapes);
                 writeBuf (f, "\"");
             }
             else {
-                writeBuf (f, (std::string)*v, XMLFormatter::CharEscapes);
+                writeBuf (f, (std::string)v, XMLFormatter::CharEscapes);
             }
             if (i < n-1)
                 writeBuf (f, " ");
@@ -368,11 +368,10 @@ bool XMLConfigIOHandler::buildProperty (ConfigChunkPtr ch, const DOM_Node& doc, 
             }
         }
         else {
-            retval = false;
-            vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) 
-                << clrOutNORM(clrRED, "ERROR:") 
-                << " Property doesn't exist: '" << ch->getDescToken() << "->"
-                << name << "'.\n" << vprDEBUG_FLUSH;
+            //retval = false;
+            vprDEBUG(jcclDBG_CONFIG,vprDBG_CRITICAL_LVL)  
+                << "Warning: Property doesn't exist: '" << ch->getDescToken() 
+                << "->" << name << "'.\n" << vprDEBUG_FLUSH;
         }
         break;
     case DOM_Node::ATTRIBUTE_NODE:
