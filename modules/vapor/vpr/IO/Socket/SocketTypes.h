@@ -47,8 +47,6 @@ namespace vpr {
 
 /**
  * Socket I/O types.
- *
- * @author Patrick Hartling
  */
 namespace SocketTypes {
     /// Possible socket domains (protocol families).

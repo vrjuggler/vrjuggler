@@ -66,8 +66,6 @@ namespace vpr
 
 /**
  * Block-style (as opposed to streaming) I/O interface.
- *
- * @author Patrick Hartling
  */
 class VPR_CLASS_API BlockIO
 {

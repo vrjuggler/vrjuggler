@@ -56,10 +56,6 @@ namespace vpr {
 
 /**
  * Cross-platform stream socket class.
- *
- * @author Patrick Hartling
- * @author Allen Bierbaum
- * @author Kevin Meinert
  */
 //template<class RealSocketStreamImpl, class RealSocketStreamImplParent, class IO_STATS_STRATEGY = NullIOStatsStrategy>
 //class SocketStream_t : public Socket_t<RealSocketStreamImplParent, IO_STATS_STRATEGY>,

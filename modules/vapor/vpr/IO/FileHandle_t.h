@@ -58,8 +58,6 @@ namespace vpr
 /**
  * Extension to the vpr::BlockIO interface defining a cross-platform file
  * handle interface.
- *
- * @author Patrick Hartling
  */
 template<class RealFileHandleImpl>
 class FileHandle_t : public BlockIO
