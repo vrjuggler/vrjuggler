@@ -99,10 +99,9 @@ VPRROOT_ABS	= @SAFE_VPRROOT_ABS@
 # -----------------------------------------------------------------------------
 EXTRA_CFLAGS		= $(CFLAGS_DYNLIB)
 EXTRA_CXXFLAGS		= $(CXXFLAGS_DYNLIB)
-EXTRA_DEPEND_FLAGS	= -I$(topdir)/include -I$(VPRROOT_ABS)		\
-                          -I$(VPRROOT_ABS)/include
+EXTRA_DEPEND_FLAGS	= -I$(VPRROOT_ABS)
 EXTRA_DEFS		+= -D_VPR_BUILD_
-EXTRA_INCLUDES		= -I$(topdir)/include -I$(VPRROOT) -I$(VPRROOT)/include
+EXTRA_INCLUDES		= -I$(VPRROOT)
 
 # -----------------------------------------------------------------------------
 # Makedepend commands
