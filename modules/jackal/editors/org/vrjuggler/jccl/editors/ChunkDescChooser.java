@@ -285,6 +285,22 @@ public class ChunkDescChooser
             }
          }
       });
+      browseList.addMouseListener(new MouseAdapter()
+      {
+         public void mouseClicked(MouseEvent evt)
+         {
+            // Double-click on a list item, approves that item
+            if (evt.getClickCount() == 2)
+            {
+               JList list = (JList)evt.getSource();
+               int idx = list.locationToIndex(evt.getPoint());
+               if (idx != -1)
+               {
+                  approveSelection();
+               }
+            }
+         }
+      });
       approveBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
