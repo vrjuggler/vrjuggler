@@ -18,6 +18,7 @@
       <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
     <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
+      <item label="Position Filter" />
       <allowedtype>PosXformFilter</allowedtype>
       <help>This is a list of all the filters that are to be applied to the postional device data.
 
@@ -124,6 +125,7 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>DTKsegment</allowedtype>
     </PropertyDesc>
     <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
+      <item label="Position Filter" />
       <allowedtype>PosXformFilter</allowedtype>
       <help>This is a list of all the filters that are to be applied to the postional device data.
 
@@ -527,6 +529,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Number of Birds" defaultvalue="2" />
     </PropertyDesc>
     <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
+      <item label="Position Filter" />
       <allowedtype>PosXformFilter</allowedtype>
       <help>This is a list of all the filters that are to be applied to the postional device data.
 
@@ -713,6 +716,7 @@ A value of -1 means do not limit the frame rate.  Run as fast as possible.</help
       <item label="Baud Rate" defaultvalue="115200" />
     </PropertyDesc>
     <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
+      <item label="Position Filter" />
       <allowedtype>PosXformFilter</allowedtype>
       <help>This is a list of all the filters that are to be applied to the postional device data.
 
@@ -1036,6 +1040,7 @@ The filters are applied in the order that they are specified in this configurati
       <enumeration name="Right" value="5" />
     </PropertyDesc>
     <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
+      <item label="Position Filter" />
       <allowedtype>PosXformFilter</allowedtype>
       <help>This is a list of all the filters that are to be applied to the postional device data.
 
@@ -1242,6 +1247,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Unit" defaultvalue="0" />
     </PropertyDesc>
     <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
+      <item label="Position Filter" />
       <allowedtype>PosXformFilter</allowedtype>
       <help>This is a list of all the filters that are to be applied to the postional device data.
 
@@ -1305,6 +1311,7 @@ The filters are applied in the order that they are specified in this configurati
       <enumeration name="Global" value="1" />
     </PropertyDesc>
     <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
+      <item label="Position Filter" />
       <allowedtype>PosXformFilter</allowedtype>
       <help>This is a list of all the filters that are to be applied to the postional device data.
 
@@ -1591,6 +1598,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Shared Memory Key" defaultvalue="4126" />
     </PropertyDesc>
     <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
+      <item label="Position Filter" />
       <allowedtype>PosXformFilter</allowedtype>
       <help>This is a list of all the filters that are to be applied to the postional device data.
 
@@ -1626,6 +1634,7 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Shared Memory Key" defaultvalue="4126" />
     </PropertyDesc>
     <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
+      <item label="Position Filter" />
       <allowedtype>PosXformFilter</allowedtype>
       <help>This is a list of all the filters that are to be applied to the postional device data.
 
