@@ -2690,22 +2690,26 @@ private:
       to obtain and use performance metrics easily. The basic concept for
       VPR's performance monitoring is that there is a manager that is in
       charge of keeping track of all the different data coming in. This is
-      called the <classname>vpr::ProfileManager</classname>. It keeps a one to
-      many tree of the different metrics or
-      <classname>vpr::ProfileSample</classname>'s being used. So when you ask
-      the <classname>vpr::ProfileManager</classname> to start profiling a
-      section of code you ask it to start a profile with a name associated to
-      it if you want to stop the profiling before the end of the function or
-      by making a <classname>vpr::ProfileSample</classname> and giving it a
-      name as its argument that upon the completion of execution will be
-      destructed and in its destructor asks the
-      <classname>vpr::ProfileManager</classname> to stop profiling. If you
-      were just sampling part of the code you can ask the
-      <classname>vpr::ProfileManger</classname> to stop profiling. Along with
-      being able to keep track of the named profiles, you can also keep a
-      specified number of samples so you can keep more than just the last
-      sample you obtained. There are also two nice macros provided for ease of
-      use and to minimize the intrusiveness of the API. These are the
+      called the Profile Manager (from the class
+      <classname>vpr::ProfileManager</classname>).</para>
+
+      <para>The Profile Manager keeps a one-to-many tree of the different
+      metrics (instances of</para>
+
+      <para><classname>vpr::ProfileSample</classname>) being used. When the
+      Profile Manager starts profiling a section of code, it is given a name
+      to associate with the newly started profile. If you want to stop the
+      profiling before the end of the function or by making a
+      <classname>vpr::ProfileSample</classname> and giving it a name as its
+      argument that upon the completion of execution will be destructed and in
+      its destructor asks the Profile Manager to stop profiling. If you were
+      just sampling part of the code you can ask the Profile Manager to stop
+      profiling.</para>
+
+      <para>Along with being able to keep track of the named profiles, you can
+      also keep a specified number of samples so you can keep more than just
+      the last sample you obtained. There are also two macros provided for
+      ease of use and to minimize the intrusiveness of the API. These are the
       <methodname>VPR_PROFILE(name)</methodname> and
       <methodname>VPR_PROFILE_HISTORY(name, queue_size)</methodname> macros.
       These can be simply added at the top of functions that are to be
@@ -2714,7 +2718,7 @@ private:
       <varname>VPR_DISABLE_PROFILE</varname>. All of the profiling data is
       obtained by using the <classname>vpr::Interval</classname> class to
       measure the time spent in a particular piece of code using the highest
-      precision timer available to the VPR. </para>
+      precision timer available to the VPR.</para>
     </chapter>
   </part>
 
