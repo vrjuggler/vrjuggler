@@ -2,12 +2,16 @@
 
 default: txt
 
-TXT_FILES=	README.txt
-HTML_FILES=	README.html
-PDF_FILES=	README.pdf
+NAME=		README
 
-README.txt: README.xml README.html # README.fo
-README.html: README.xml
-README.pdf: README.xml README.fo # README.tex
+TXT_FILES=	$(NAME).txt
+HTML_FILES=	$(NAME).html
+PDF_FILES=	$(NAME).pdf
+
+$(NAME).txt: $(NAME).xml $(NAME).html # $(NAME).fo
+$(NAME).html: $(NAME).xml
+$(NAME).pdf: $(NAME).xml $(NAME).fo # $(NAME).tex
+
+CLOBBER_FILES=	$(TXT_FILES)
 
 include docbook.mk
