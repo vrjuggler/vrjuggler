@@ -114,24 +114,10 @@
 #undef VJ_HAVE_DTK
 
 /*
- * Define to `unsigned int' if the u_int and/or u_int32_t types are not
- * available.  On Windows when using Visual C++, define to UINT.
- */
-#undef u_int
-#undef uint32_t
-
-/*
  * Define to the sizeof a memory address if the type caddr_t is not available.
  * char* is most likely going to be a safe substitute.
  */
 #undef caddr_t
-
-/* 
- * On Windows when using Visual C++, define to __int32 and __int64
- * respectively if these two are not available.
- */
-#undef int32_t
-#undef int64_t
 
 /* Define if you have the sched_yield function.  */
 #undef HAVE_SCHED_YIELD
