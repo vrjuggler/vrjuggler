@@ -38,6 +38,12 @@
 /set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
 .
     include
+        cluster
+            ClusterNetwork
+            ..
+            Packets
+            ..
+        ..
         gadget
             Devices
                 EventWindow
@@ -58,20 +64,8 @@
             Util
             ..
         ..
-        cluster
-            ClusterNetwork
-            ..
-            Packets
-            ..
-            Plugins
-                ApplicationDataManager
-                ..
-                RemoteInputManager
-                ..
-                StartBarrierPlugin
-                ..
-                SwapLockPlugin
-                ..
+        plugins
+            ApplicationDataManager
             ..
         ..
     ..
