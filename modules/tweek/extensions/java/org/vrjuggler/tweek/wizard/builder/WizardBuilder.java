@@ -42,7 +42,6 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 
-import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.wizard.*;
 import org.vrjuggler.tweek.wizard.panes.*;
 
@@ -113,7 +112,7 @@ public class WizardBuilder
          WizardStepFactory.registerWizardStep(
                Class.forName("org.vrjuggler.vrjconfig.wizard.SimDisplayPane",
                              true,
-                             BeanJarClassLoader.instance()));
+                             this.getClass().getClassLoader()));
       }
       catch (ClassNotFoundException cnfe)
       {
@@ -121,7 +120,7 @@ public class WizardBuilder
       }
 
       // setup the main toolbar
-      ClassLoader loader = BeanJarClassLoader.instance();
+      ClassLoader loader = this.getClass().getClassLoader();
       newBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/tweek/wizard/builder/images/new24.gif")));
       openBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/tweek/wizard/builder/images/open24.gif")));
       saveBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/tweek/wizard/builder/images/save24.gif")));
@@ -603,7 +602,7 @@ public class WizardBuilder
 
       WizardViewerBean viewer = new WizardViewerBean();
       viewer.setWizard(model.getWizard());
-      viewer.setSidebarImage(new ImageIcon(BeanJarClassLoader.instance().getResource("org/vrjuggler/tweek/wizard/images/juggler_sidebar.png")));
+      viewer.setSidebarImage(new ImageIcon(this.getClass().getClassLoader().getResource("org/vrjuggler/tweek/wizard/images/juggler_sidebar.png")));
       viewer.addWizardViewListener(new WizardViewListener()
       {
          public void wizardStarted(WizardViewEvent evt) {}
