@@ -1531,22 +1531,16 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>PosProxy</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="SwapLockPlugin" name="SwapLockPlugin" version="1.0">
+  <ChunkDesc token="SwapLockTCPPlugin" name="SwapLockTCPPlugin" version="1.0">
     <category>Cluster Juggler</category>
-    <PropertyDesc name="TCP/IP Server Port" token="sync_server_port" type="int" variable="0">
-      <item label="" defaultvalue="" />
-    </PropertyDesc>
-    <PropertyDesc name="Syncronization Method" token="sync_method" type="int" variable="0">
-      <item label="" defaultvalue="" />
-      <enumeration name="TCP/IP" value="0" />
-      <enumeration name="Serial &amp; TCP/IP" value="1" />
-      <enumeration name="Wired Serial" value="2" />
-      <enumeration name="Nothing" value="3" />
-    </PropertyDesc>
     <PropertyDesc name="Syncronization Server" token="sync_server" type="chunk" variable="0">
       <help>Cluster Node that is responsible for syncronizing all other nodes.</help>
       <item label="Machine" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
+    </PropertyDesc>
+    <PropertyDesc name="Listen Port" token="listen_port" type="int" variable="0">
+      <help>Port on which the Remote Input Manager listens for incoming cluster connections.</help>
+      <item label="Listen Port" defaultvalue="0" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="TrackdAPIController" name="TrackdAPIController" version="1.0">
