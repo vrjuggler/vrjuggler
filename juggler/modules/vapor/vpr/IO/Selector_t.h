@@ -92,13 +92,13 @@ public:
    //: Get the current in flag mask
    vpr::Uint16 getIn(IOSys::Handle handle)
    {
-      return mSelectorImpl.getIn(handle);
+      return mSelectorImp.getIn(handle);
    }
 
    //: Get the current out flag mask
    vpr::Uint16 getOut(IOSys::Handle handle)
    {
-      return mSelectorImpl.getOut(handle);
+      return mSelectorImp.getOut(handle);
    }
 
    //: Select
@@ -106,8 +106,22 @@ public:
    //! ARGS: timeout - The number of msecs to select for (0 - don't wait)
    bool select(vpr::Uint16& numWithEvents, vpr::Uint16 timeout)
    {
-      return mSelectorImpl.select(numWithEvents, timeout);
+      return mSelectorImp.select(numWithEvents, timeout);
    }
+
+
+   // For iteration
+
+   vpr::Uint16 getNumHandles()
+   {
+      return mSelectorImp.getNumHandles();
+   }
+
+   IOSys::Handle getHandle(vpr::Uint16 index)
+   {
+      return mSelectorImp.getHandle(index);
+   }
+
 
 protected:
     RealSelectorImp mSelectorImp;     // Platform specific implementation                                 

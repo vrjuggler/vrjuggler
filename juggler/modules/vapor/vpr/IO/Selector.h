@@ -36,7 +36,7 @@
 #include <vprConfig.h>
 
 // include bridge class
-#include <IO/Socket/Selector_t.h>
+#include <IO/Selector_t.h>
 
 // make the connection
 #if defined(VPR_USE_NSPR)
