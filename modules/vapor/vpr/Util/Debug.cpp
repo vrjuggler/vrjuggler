@@ -191,6 +191,8 @@ void Debug::addAllowedCategory(const vpr::GUID& catId)
 // Are we allowed to print this category??
 bool Debug::isCategoryAllowed(const vpr::GUID& catId)
 {
+   return true;
+   /*
    // If no entry for cat, grow the vector
    if(mAllowedCategories.find(catId) == mAllowedCategories.end())
       mAllowedCategories[catId] = false;
@@ -205,7 +207,7 @@ bool Debug::isCategoryAllowed(const vpr::GUID& catId)
    else
       return mAllowedCategories[catId];
    
-   //return true;
+   */
 }
 
 
