@@ -43,6 +43,8 @@
 # Include common definitions.
 include @topdir@/make.defs.mk
 
+SUBOBJDIR=	$(TWEEK_LIBRARY)
+
 # Prefix for recursive stuff.
 DIRPRFX=	tweek/
 
@@ -52,6 +54,6 @@ SUBDIR=		CORBA	\
 		Util	\
 		idl
 
-$(RECTARGET): recursive
+SRCS=		tweekParam.cpp
 
-include $(MKPATH)/dpp.subdir.mk
+include $(MKPATH)/dpp.obj-subdir.mk
