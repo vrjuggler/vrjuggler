@@ -43,6 +43,8 @@
 #include <sys/types.h>
 #endif
 
+#include <Utils/Assert.h>
+
 
 namespace vpr {
 
@@ -445,7 +447,7 @@ public:
     write (const std::string& buffer, const size_t length,
            ssize_t& bytes_written)
     {
-       assert( length <= buffer.size() && "length was bigger than the data given" );
+       vprASSERT( length <= buffer.size() && "length was bigger than the data given" );
        return this->write(buffer.c_str(), length, bytes_written);
     }
 
@@ -467,7 +469,7 @@ public:
     write (const std::vector<vpr::Uint8>& buffer, const size_t length,
            ssize_t& bytes_written)
     {
-        assert( length <= buffer.size() && "length was bigger than the data given" );
+        vprASSERT( length <= buffer.size() && "length was bigger than the data given" );
         return this->write(&buffer[0], length, bytes_written);
     }
 
