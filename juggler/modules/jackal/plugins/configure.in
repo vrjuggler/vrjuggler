@@ -155,17 +155,24 @@ DPP_PROG_LINKER
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-JCCL_PATH([0.14.0], , [AC_MSG_ERROR([*** JCCL required for JCCL plug-ins ***])])
-
-TWEEK_PATH_CXX([0.15.0], [HAVE_TWEEK_CXX='Y'],
-   [AC_MSG_WARN([*** Tweek C++ required for remote reconfig ***])
-    HAVE_TWEEK_CXX='N'
+JCCL_PATH_CXX([0.14.0], [test_tweek_cxx='Y'],
+   [AC_MSG_WARN([*** JCCL C++ API required for JCCL C++ plug-ins ***])
+    test_tweek_cxx='N'
    ])
 
-TWEEK_PATH_JAVA([0.15.0], [HAVE_TWEEK_JAVA='Y'],
-   [AC_MSG_WARN([*** Tweek Java required for remote reconfig JavaBean ***])
-    HAVE_TWEEK_JAVA='N'
-   ])
+if test "x$test_tweek_cxx" = "xY" ; then
+   TWEEK_PATH_CXX([0.15.0], [HAVE_TWEEK_CXX='Y'],
+      [AC_MSG_WARN([*** Tweek C++ API required for remote reconfig ***])
+       HAVE_TWEEK_CXX='N'
+      ])
+fi
+
+if test "x$BUILD_JAVA" = "xY" ; then
+   JCCL_PATH_JAVA([0.14.0], [HAVE_TWEEK_JAVA='Y'],
+      [AC_MSG_WARN([*** JCCL Java API required for JCCL Java plug-ins ***])
+       HAVE_TWEEK_JAVA='N'
+      ])
+fi
 
 # -----------------------------------------------------------------------------
 # Miscellaneous checks.
