@@ -505,44 +505,6 @@ SocketImpBSD::setOption (const SocketOptions::Types option,
 // ============================================================================
 
 // ----------------------------------------------------------------------------
-// Default constructor.  This just initializes member variables to reasonable
-// defaults.
-// ----------------------------------------------------------------------------
-SocketImpBSD::SocketImpBSD ()
-    : BlockIO(std::string("INADDR_ANY")), m_handle(NULL)
-{
-fprintf(stderr, "vpr::SocketImpBSD default constructor\n");
-    /* Do nothing. */ ;
-}
-
-// ----------------------------------------------------------------------------
-// Standard constructor.  This takes the given address (a string containing a
-// hostname or an IP address), port, domain and type and stores the values in
-// the member variables for use when opening the socket and performing
-// communications.
-// ----------------------------------------------------------------------------
-SocketImpBSD::SocketImpBSD (const InetAddr& local_addr,
-                            const InetAddr& remote_addr,
-                            const SocketTypes::Type sock_type)
-    : BlockIO(std::string("INADDR_ANY")), m_handle(NULL),
-      m_local_addr(local_addr), m_remote_addr(remote_addr), m_type(sock_type)
-{
-fprintf(stderr, "vpr::SocketImpBSD(local, remote) constructor\n");
-fprintf(stderr, "    Local Address: %s\n",
-        m_local_addr.getAddressString().c_str());
-fprintf(stderr, "    Local Port: %hu -> %hu\n", local_addr.getPort(),
-        m_local_addr.getPort());
-fprintf(stderr, "    Remote Address: %s\n",
-        m_remote_addr.getAddressString().c_str());
-fprintf(stderr, "    Remote Port: %hu -> %hu\n", remote_addr.getPort(),
-        m_remote_addr.getPort());
-fprintf(stderr, "    Domain: %d -> %d\n", local_addr.getFamily(),
-        m_local_addr.getFamily());
-fprintf(stderr, "    Type: %d -> %d\n", sock_type, m_type);
-    m_handle = new FileHandleUNIX(m_name);
-}
-
-// ----------------------------------------------------------------------------
 // Destructor.  This currently does nothing.
 // ----------------------------------------------------------------------------
 SocketImpBSD::~SocketImpBSD () {

@@ -57,12 +57,20 @@ public:
     // POST: The member variables are initialized with the m_type variable in
     //       particular set to SOCK_STREAM.
     // ------------------------------------------------------------------------
-    SocketStreamImpBSD(void);
+    SocketStreamImpBSD (void)
+        : SocketImpBSD()
+    {
+        /* Do nothing. */ ;
+    }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    SocketStreamImpBSD(const InetAddr& local_addr,
-                       const InetAddr& remote_addr);
+    SocketStreamImpBSD (const InetAddr& local_addr,
+                        const InetAddr& remote_addr)
+        : SocketImpBSD(local_addr, remote_addr, SocketTypes::STREAM)
+    {
+        /* Do nothing. */ ;
+    }
 
     // ------------------------------------------------------------------------
     // Copy constructor.

@@ -52,39 +52,6 @@ namespace vpr {
 // ============================================================================
 
 // ----------------------------------------------------------------------------
-// Default constructor.  This does nothing.
-// ----------------------------------------------------------------------------
-SocketDatagramImpBSD::SocketDatagramImpBSD (void)
-    : SocketImpBSD()
-{
-fprintf(stderr, "vpr::SocketDatagramImpBSD default constructor\n");
-    /* Do nothing. */ ;
-}
-
-// ----------------------------------------------------------------------------
-// Constructor.  This takes the address (either hostname or IP address) of a
-// remote site and a port and stores the values for later use in the member
-// variables of the object.
-// ----------------------------------------------------------------------------
-SocketDatagramImpBSD::SocketDatagramImpBSD (const InetAddr& local_addr,
-                                            const InetAddr& remote_addr)
-    : SocketImpBSD(local_addr, remote_addr, SocketTypes::DATAGRAM)
-{
-fprintf(stderr, "vpr::SocketDatagramImpBSD(local, remote) constructor\n");
-fprintf(stderr, "    Local Address: %s -> %s\n",
-        local_addr.getAddressString().c_str(), m_name.c_str());
-fprintf(stderr, "    Local Port: %hu -> %hu\n", local_addr.getPort(),
-        m_local_addr.getPort());
-fprintf(stderr, "    Remote Address: %s -> %s\n",
-        remote_addr.getAddressString().c_str(), m_name.c_str());
-fprintf(stderr, "    Remote Port: %hu -> %hu\n", remote_addr.getPort(),
-        m_remote_addr.getPort());
-fprintf(stderr, "    Domain: %d -> %d\n", local_addr.getFamily(),
-        m_local_addr.getFamily());
-fprintf(stderr, "    Type: %d\n", m_type);
-}
-
-// ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 ssize_t
 SocketDatagramImpBSD::recvfrom (void* msg, const size_t len,
