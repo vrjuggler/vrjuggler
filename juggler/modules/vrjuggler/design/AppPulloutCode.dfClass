@@ -42,9 +42,9 @@ class __tags {
 */
 class __options {
 }/**
-@__positions <oigroup:<oiref:design#Class#id4s2p1cyax23xmcyb00neu.node.link:oiref>=250,130,180,180:oigroup>
-<oigroup:<oiref:design#Class#id4s2p1cyax23xmcyb00neu.node:oiref>=250,10,210,150,0:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,70,170,160,0:oigroup>
+@__positions <oigroup:<oiref:design#Class#id4s2p1cyax23xmcyb00neu.node.link:oiref>=250,135,180,135:oigroup>
+<oigroup:<oiref:design#Class#id4s2p1cyax23xmcyb00neu.node:oiref>=250,10,210,190,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,70,170,210,0:oigroup>
 */
 class __positions {
 }/**
