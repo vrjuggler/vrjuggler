@@ -83,8 +83,8 @@ public:
 
    void configWindow(vrj::Display* disp);
 
-public:  /**** Static Helpers *****/
-   /* static */ virtual bool createHardwareSwapGroup(std::vector<vrj::GlWindow*> wins);
+public:
+   virtual bool createHardwareSwapGroup(std::vector<vrj::GlWindow*> wins);
 
 protected:
    /* private member functions.  these get profoundly painful */
