@@ -38,7 +38,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -412,37 +411,12 @@ public class SimKeyboardEditorPanel
 
             try
             {
-               Constructor ctor = editor_class.getConstructor(null);
-
-               try
-               {
-                  mCurSimEditor = (SimDeviceEditor) ctor.newInstance(null);
-                  mCurSimEditor.setConfigElement(dev_elt);
-                  mDeviceSplitPane.add(mCurSimEditor.getEditor(),
-                                       JSplitPane.LEFT);
-               }
-               catch (InvocationTargetException ex1)
-               {
-                  ex1.printStackTrace();
-               }
-               catch (IllegalArgumentException ex1)
-               {
-                  ex1.printStackTrace();
-               }
-               catch (IllegalAccessException ex1)
-               {
-                  ex1.printStackTrace();
-               }
-               catch (InstantiationException ex1)
-               {
-                  ex1.printStackTrace();
-               }
+               mCurSimEditor = (SimDeviceEditor) editor_class.newInstance();
+               mCurSimEditor.setConfigElement(dev_elt);
+               mDeviceSplitPane.add(mCurSimEditor.getEditor(),
+                                    JSplitPane.LEFT);
             }
-            catch (SecurityException ex)
-            {
-               ex.printStackTrace();
-            }
-            catch (NoSuchMethodException ex)
+            catch (Exception ex)
             {
                ex.printStackTrace();
             }
