@@ -70,6 +70,7 @@ public class NewConfigDialog
 
       fileChooser.setCurrentDirectory(chooserCurDir);
 
+      /*
       // Try to get icons for the toolbar buttons
       try
       {
@@ -87,17 +88,29 @@ public class NewConfigDialog
          includesListMoveUpBtn.setText("Move Up");
          includesListMoveDownBtn.setText("Move Down");
       }
-
+      */
       // Setup the default UI texts
       setDialogTitle("Create New Configuration");
       nameTxt.setText("untitled.jconf");
-
+      
+      /*
       // Init the includes list
       includesList.setModel(includesTableModel);
       includesList.getColumnModel().getColumn(0).setCellEditor(new FileCellEditor(fileChooser));
-
+      */
+      
       // Default to the user's home dir
       directoryTxt.setText(fileChooser.getCurrentDirectory().getAbsolutePath());
+      
+      /*
+      // Fill in the definition path table with the values given.
+      java.util.List dirs = getDefinitionPath();
+      Iterator itr = dirs.iterator();
+      while(itr.hasNext())
+      {
+         includesTableModel.add(itr.next());
+      }
+      */
    }
 
    public int showDialog(Component parent)
@@ -132,6 +145,34 @@ public class NewConfigDialog
 
    public void approve()
    {
+      File dir = new File(directoryTxt.getText().trim());
+      // If the file does not exist the user that they have entered an invalid
+      // location.
+      if (!dir.isDirectory())
+      { 
+         JOptionPane.showMessageDialog(null, directoryTxt.getText().trim()  + " is not a valid directory.");
+         return;
+      }
+      
+      File file = new File(getDirectory(), getName());
+      // If the file does not exist the user that they have entered an invalid
+      // location.
+      // If file exists ask the user if we should overwrite(delete it now)
+      if (file.exists())
+      { 
+         int result = JOptionPane.showConfirmDialog(null, 
+               "File already exists, do you want to overwrite it?", "File exists!", 
+               JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+         if(JOptionPane.NO_OPTION == result)
+         {
+            return;
+         }
+         else
+         {
+            file.delete();
+         }
+      }
+
       returnValue = APPROVE_OPTION;
       if (dialog != null)
       {
@@ -167,6 +208,7 @@ public class NewConfigDialog
    /**
     * Gets a list of the files to include in the context by default.
     */
+   /*
    public java.util.List getIncludes()
    {
       java.util.List includes = new ArrayList();
@@ -177,6 +219,7 @@ public class NewConfigDialog
 
       return includes;
    }
+   */
 
    /**
     * Gets the string that goes in the <code>ResourceChooser</code> window's
@@ -197,10 +240,35 @@ public class NewConfigDialog
       dialogTitle = title;
       firePropertyChange("dialogTitle", old, title);
    }
+   
+   /**
+    * Gets a list of the directories in which to look for configuration
+    * definitions.
+    */
+   /*
+   private java.util.List getDefinitionPath()
+   {
+      java.util.List dirs = new ArrayList();
 
+      // Get the path from the environment
+      String default_path = "${VJ_BASE_DIR}/share/vrjuggler/data/definitions";
+      String path = System.getProperty("JCCL_DEFINITION_PATH", default_path);
+      path = (new EnvironmentServiceProxy()).expandEnvVars(path);
+
+      // Split the path on the path separator
+      StringTokenizer tokenizer = new StringTokenizer(path, File.pathSeparator);
+      while (tokenizer.hasMoreTokens())
+      {
+         dirs.add(tokenizer.nextToken());
+      }
+
+      return dirs;
+   }
+   */
    private void validateData()
    {
       boolean valid = true;
+
       if (nameTxt.getText().trim().equals(""))
       {
          valid = false;
@@ -212,6 +280,7 @@ public class NewConfigDialog
 
       okBtn.setEnabled(valid);
    }
+   /*
 
    private void addInclude()
    {
@@ -224,6 +293,7 @@ public class NewConfigDialog
 
    private void removeInclude(int idx)
    {
+      System.out.println("Removing: " + idx);
       includesTableModel.remove(idx);
 
       int sel_idx = idx;
@@ -238,6 +308,7 @@ public class NewConfigDialog
       {
          sel_idx = 0;
       }
+      System.out.println("Selecting: " + sel_idx);
       includesList.setRowSelectionInterval(sel_idx, sel_idx);
    }
 
@@ -245,9 +316,13 @@ public class NewConfigDialog
    {
       if (idx > 0)
       {
-         Object elt = includesTableModel.remove(idx);
-         includesTableModel.insert(elt, idx-1);
-         includesList.setRowSelectionInterval(idx-1, idx-1);
+         //includesList.clearSelection();
+         if(includesList.isEditing() && includesList.getCellEditor().stopCellEditing())
+         {
+            Object elt = includesTableModel.remove(idx);
+            includesTableModel.insert(elt, idx-1);
+            includesList.setRowSelectionInterval(idx-1, idx-1);
+         }
       }
    }
 
@@ -255,11 +330,16 @@ public class NewConfigDialog
    {
       if (idx < (includesTableModel.size()-1))
       {
-         Object elt = includesTableModel.remove(idx);
-         includesTableModel.insert(elt, idx+1);
-         includesList.setRowSelectionInterval(idx+1, idx+1);
+         //includesList.clearSelection();
+         if(includesList.isEditing() && includesList.getCellEditor().stopCellEditing())
+         {
+            Object elt = includesTableModel.remove(idx);
+            includesTableModel.insert(elt, idx+1);
+            includesList.setRowSelectionInterval(idx+1, idx+1);
+         }
       }
    }
+   */
 
    /**
     * Expands all known environment variables in the given string and returns
@@ -286,7 +366,8 @@ public class NewConfigDialog
       directoryPnl.setLayout(directoryPnlLayout);
       directoryBrowseBtn.setMargin(new Insets(0, 2, 0, 2));
       directoryBrowseBtn.setText("...");
-      includesPnl.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED,Color.white,new Color(142, 142, 142)),"Included Definitions"));
+      /*
+      includesPnl.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED,Color.white,new Color(142, 142, 142)),"Definition Path"));
       includesPnl.setLayout(includesPnlLayout);
       includesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       includesList.setShowGrid(false);
@@ -299,6 +380,7 @@ public class NewConfigDialog
       includesListRemoveBtn.setMargin(new Insets(0, 0, 0, 0));
       includesListNewBtn.setToolTipText("New Include");
       includesListNewBtn.setMargin(new Insets(0, 0, 0, 0));
+      */
       buttonPnl.setLayout(new BoxLayout(buttonPnl, BoxLayout.X_AXIS));
       cancelBtn.setText("Cancel");
       okBtn.setText("OK");
@@ -336,6 +418,7 @@ public class NewConfigDialog
             validateData();
          }
       });
+      
       directoryBrowseBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -351,6 +434,7 @@ public class NewConfigDialog
             }
          }
       });
+      /*
       includesListNewBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent e)
@@ -379,6 +463,7 @@ public class NewConfigDialog
             moveIncludeDown(includesList.getSelectedRow());
          }
       });
+      */
       cancelBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent e)
@@ -393,6 +478,21 @@ public class NewConfigDialog
             approve();
          }
       });
+      nameTxt.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            approve();
+         }
+      });
+      directoryTxt.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            approve();
+         }
+      });
+      
       this.add(configPnl, BorderLayout.NORTH);
       configPnl.add(nameLbl,         new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 2, 2));
@@ -406,6 +506,7 @@ public class NewConfigDialog
       directoryPnl.add(directoryTxt,  BorderLayout.CENTER);
       configPnl.add(directoryBrowseBtn,      new GridBagConstraints(2, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+      /*
       this.add(includesPnl, BorderLayout.CENTER);
       includesPnl.add(includesListSP, BorderLayout.CENTER);
       includesPnl.add(includesListCtrlPnl,  BorderLayout.NORTH);
@@ -414,8 +515,11 @@ public class NewConfigDialog
       includesListCtrlPnl.add(includesListRemoveBtn, null);
       includesListCtrlPnl.add(includesListMoveUpBtn, null);
       includesListCtrlPnl.add(includesListMoveDownBtn, null);
+      */
       this.add(buttonPnl,  BorderLayout.SOUTH);
+      /*
       includesListSP.getViewport().add(includesList, null);
+      */
       buttonPnl.add(Box.createHorizontalGlue());
       buttonPnl.add(cancelBtn, null);
       buttonPnl.add(Box.createHorizontalStrut(8));
@@ -437,6 +541,7 @@ public class NewConfigDialog
    private JPanel includesPnl = new JPanel();
    private BorderLayout includesPnlLayout = new BorderLayout();
    private JScrollPane includesListSP = new JScrollPane();
+   /*
    private JTable includesList = new JTable()
    {
       public Dimension getPreferredScrollableViewportSize()
@@ -458,6 +563,7 @@ public class NewConfigDialog
    private JButton includesListMoveDownBtn = new JButton();
    private JButton includesListRemoveBtn = new JButton();
    private JButton includesListNewBtn = new JButton();
+   */
    private JPanel buttonPnl = new JPanel();
    private JButton cancelBtn = new JButton();
    private JButton okBtn = new JButton();
@@ -483,11 +589,14 @@ public class NewConfigDialog
    /**
     * The mutable data model for the list.
     */
-   private IncludesTableModel includesTableModel = new IncludesTableModel();
+   /*
+    private IncludesTableModel includesTableModel = new IncludesTableModel();
+   */
 
    /**
     * A specialized table model for the includes list (table).
     */
+   /*
    private class IncludesTableModel
       extends AbstractTableModel
    {
@@ -502,7 +611,10 @@ public class NewConfigDialog
 
       public Object remove(int idx)
       {
+         System.out.println("mData: " + mData);
          Object obj = mData.remove(idx);
+         System.out.println("Removing: " + obj + " at " + idx);
+         System.out.println("mData: " + mData);
          this.fireTableRowsDeleted(idx, idx);
          return obj;
       }
@@ -514,7 +626,11 @@ public class NewConfigDialog
 
       public void insert(Object elt, int idx)
       {
+         System.out.println("Inserting: " + elt + " at " + idx);
+         System.out.println("mData: " + mData);
          mData.add(idx, elt);
+         System.out.println("mData: " + mData);
+         this.fireTableRowsUpdated(0, mData.size()-1);
       }
 
       public Object getValueAt(int row, int col)
@@ -561,28 +677,31 @@ public class NewConfigDialog
 
       private java.util.List mData = new ArrayList();
    }
+*/
 }
 
 /**
  * Custom cell editor for editing a filename.
  */
-class FileCellEditor
-   extends AbstractCellEditor
-   implements TableCellEditor
-{
+
+//class FileCellEditor
+//   extends AbstractCellEditor
+//   implements TableCellEditor
+//{
    /**
     * Creates a new file cell editor that will use a default file chooser when
     * the user chooses to select a file.
     */
-   public FileCellEditor()
-   {
-      this(new JFileChooser());
-   }
+//   public FileCellEditor()
+//   {
+//      this(new JFileChooser());
+//   }
 
    /**
     * Creates a new file cell editor that will use the given file chooser when
     * the user chooses to select a file.
     */
+/*
    public FileCellEditor(JFileChooser chooser)
    {
       mChooser = chooser;
@@ -595,7 +714,17 @@ class FileCellEditor
             stopCellEditing();
          }
       });
-
+*/
+      /*
+      mFilenameTxt.addFocusListener(new FocusAdapter()
+      {
+         public void focusLost(FocusEvent evt)
+         {
+            stopCellEditing();
+         }
+      });
+      */
+/*      
       // Init the browse button
       mBrowseBtn.setText("...");
       mBrowseBtn.setMargin(new Insets(2, 2, 2, 2));
@@ -615,22 +744,11 @@ class FileCellEditor
                mChooser.setCurrentDirectory(cur_file);
             }
 
+
             // Setup the file chooser options
-            mChooser.setMultiSelectionEnabled(false);
-            mChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            mChooser.setFileFilter(new FileFilter()
-            {
-               public boolean accept(File f)
-               {
-                  return f.getName().endsWith(".desc") || f.isDirectory();
-               }
-
-               public String getDescription()
-               {
-                  return "Configuration Definition Files (.desc)";
-               }
-            });
-
+            mChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            mChooser.setFileHidingEnabled(false);
+            mChooser.setDialogTitle("Select Directory");
 
             int result = mChooser.showOpenDialog((Component)evt.getSource());
             if (result == JFileChooser.APPROVE_OPTION)
@@ -656,15 +774,22 @@ class FileCellEditor
       mEditPnl.revalidate();
       return mEditPnl;
    }
+*/
 
    /**
     * Editing is invalid if the file does not exist.
     */
+   /*
    public boolean stopCellEditing()
    {
       File file = new File((String)getCellEditorValue());
-      if (! file.exists())
+      // If the file does not exist or it is not a directory inform the user
+      // that they have entered an invalid location.
+      if (!file.exists() || !file.isDirectory())
       {
+         JOptionPane.showMessageDialog(null, getCellEditorValue() + " is not a valid directory");
+         mFilenameTxt.selectAll();
+         mFilenameTxt.requestFocus();
          return false;
       }
       return super.stopCellEditing();
@@ -674,16 +799,17 @@ class FileCellEditor
    {
       return mFilenameTxt.getText();
    }
+   */
 
    /** The filename text field. */
-   private JTextField mFilenameTxt = new JTextField();
+   //private JTextField mFilenameTxt = new JTextField();
 
    /** The browse button. */
-   private JButton mBrowseBtn = new JButton();
+   //private JButton mBrowseBtn = new JButton();
 
    /** The panel containing the filename textfield and browse button. */
-   private JPanel mEditPnl = new JPanel();
+   //private JPanel mEditPnl = new JPanel();
 
    /** The file chooser to use with this editor. */
-   private JFileChooser mChooser;
-}
+   //private JFileChooser mChooser;
+//}
