@@ -20,7 +20,8 @@ FAQ
 Q: What bearing does the use of the GNU General Public License have on
    plug-ins written for TweekQt?
 
-A: I don't know, but I will find out.
+A: The plug-ins must also be licensed under the GNU GPL if they will be
+   redistributed.
 
 Resources
 =========
