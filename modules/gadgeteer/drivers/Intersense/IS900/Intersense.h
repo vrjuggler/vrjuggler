@@ -170,7 +170,7 @@ public:
      *  @return a pointer to the receiver's current PositionData, or NULL
      *          if the device is not active.
      */
-    PositionData* getPositionData (int dev=0);
+    // PositionData* getPositionData (int dev=0);
 
 
 

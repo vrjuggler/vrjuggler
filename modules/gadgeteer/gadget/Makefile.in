@@ -52,6 +52,7 @@ DIRPRFX	= gadget/
 
 # Subdirectories to compile.
 SUBDIR	= Devices	\
+          RemoteInputManager \
           Type
 
 SRCS	= InputManager.cpp	\

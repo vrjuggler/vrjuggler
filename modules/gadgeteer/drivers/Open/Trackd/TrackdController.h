@@ -113,10 +113,10 @@ public:
    }
 
    //: Return digital data
-   virtual DigitalData* getDigitalData(int devNum=0)
+   virtual const DigitalData getDigitalData(int devNum=0)
    {
       vprASSERT(devNum < (int)mCurButtons.size() && "Digital index out of range");    // Make sure we have enough space
-      return &(mCurButtons[devNum]);
+      return (mCurButtons[devNum]);
    }
 
    //: Return "analog data"..

@@ -152,6 +152,10 @@
     <PropertyDesc token="unit" name="Unit" type="Int" num="1">
         <help>The unit in the device this proxy attaches to</help>
     </PropertyDesc>
+    <PropertyDesc token="location" name="Location" type="Chunk" num="1">
+        <help>Remote net connection where this device will be found (no selection means local)</help>
+        <enumeration name="RemoteInputHost"/>
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="DigProxy" name="Digital Proxy">
     <help>Used to access a single digital (binary) input source</help>
@@ -169,6 +173,10 @@
     </PropertyDesc>
     <PropertyDesc token="unit" name="Unit" type="Int" num="1">
         <help>The unit in the device this proxy attaches to</help>
+    </PropertyDesc>
+    <PropertyDesc token="location" name="Location" type="Chunk" num="1">
+        <help>Remote net connection where this device will be found (no selection means local)</help>
+        <enumeration name="RemoteInputHost"/>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="apiPerformer" name="Performer API">
@@ -219,6 +227,10 @@
     </PropertyDesc>
     <PropertyDesc token="sigmoidParams" name="sigmoidParams" type="EmbeddedChunk" num="1">
         <enumeration name="sigmoid_linear_pos_filter"/>
+    </PropertyDesc>
+    <PropertyDesc token="location" name="Location" type="Chunk" num="1">
+        <help>Remote net connection where this device will be found (no selection means local)</help>
+        <enumeration name="RemoteInputHost"/>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="Flock" name="Flock of Birds">
@@ -1244,4 +1256,29 @@
         <enumeration name="surfaceViewport"/>
     </PropertyDesc>
   </ChunkDesc>
+  <ChunkDesc token="RemoteInputManager" name="Remote Input Manager">
+    <help>Manager of remote input devices.  This chunk is only required when it cannot be automatically determined which Remote Input Host we are (i.e. two of them have the same hostname, but different listening ports).</help> 
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+      <help>Unique name of this remote input manager</help>
+    </PropertyDesc>
+    <PropertyDesc token="listen_port" name="Listen Port" type="Int" num="1">
+      <help>Port on which to listen for connections</help>
+    </PropertyDesc>
+    <PropertyDesc token="forced_hostname" name="Forced Hostname" type="String" num="1">
+      <help>Useful if a computer has multiple networks and network names.</help>     
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="RemoteInputHost" name="Remote Input Host Address">
+    <help>A host and port that accepts requests to share its devices.</help>
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+      <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+    <PropertyDesc token="hostname" name="Hostname" type="String" num="1">
+      <help>Hostname of device host</help>
+    </PropertyDesc>
+    <PropertyDesc token="port" name="Host Port" type="Int" num="1">
+      <help>Listening port of device Host</help>
+    </PropertyDesc>
+  </ChunkDesc>
 </ChunkDescDB>
+

@@ -110,6 +110,16 @@ public: // -- Query functions --- //
      */
     bool isChunkInActiveList(std::string chunk_name);
 
+    /** Is the chunk of this type in the active configuration?
+     *  This locks the active list to do processing.
+     */ 
+    bool isChunkTypeInActiveList(std::string chunk_name);
+
+   /** Is there a chunk of this type in the pending list??
+    *  This locks the pending list to do processing 
+    */ 
+   bool isChunkTypeInPendingList(std::string chunk_type);
+
 
 
 public:   // ----- PENDING LIST ----- //
@@ -326,6 +336,16 @@ public:
      *  @return The number of lost dependencies found
      */
     int scanForLostDependencies();
+
+   //: Reset pending check count, so that pending list can't become stale yet.
+   //! POST: mPendingCountMutex == 0.
+   //+       Delay config from becoming stale.  ConfigManger must try to
+   //+       config items in pending list again before the list can
+   //+       become stale.
+   void delayStalePendingList(){
+     mLastPendingSize = mPendingConfig.size() + 1;
+   }
+
 
 
     //------------ Default DynamicReconfig Handling Stuff -------------------

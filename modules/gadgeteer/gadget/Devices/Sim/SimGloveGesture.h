@@ -64,7 +64,7 @@ public:
    //! RETURNS: id of current gesture
    virtual int getGesture();
 
-   virtual DigitalData* getDigitalData(int devNum = 0);
+   virtual const DigitalData getDigitalData(int devNum = 0);
 
    //: Load trained data for the gesture object
    // Loads the file for trained data

@@ -92,7 +92,7 @@ public:
    //  Returns -1 if function fails or if devNum is out of range.<BR>
    //  NOTE: If devNum is out of range, function will fail, possibly issueing
    //  an error to a log or console - but will not ASSERT.<BR>
-   const DigitalData getDigitalData(int devNum = 0)
+   virtual const DigitalData getDigitalData(int devNum = 0)
    {
       gadget::SampleBuffer<DigitalData>::buffer_t& stable_buffer = mDigitalSamples.stableBuffer();
 
