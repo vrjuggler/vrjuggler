@@ -52,38 +52,7 @@ bool PinchGlove::config(jccl::ConfigChunkPtr c)
       return false;
 
     vprASSERT(mThread == NULL);      // This should have been set by Input(c)
-
-    /*
-    char* home_dir = c->getProperty("calDir").cstring();
-    if (home_dir != NULL)
-    {
-        mCalDir = new char [strlen(home_dir) + 1];
-        strcpy(mCalDir,home_dir);
-    }
-    */
-
-    // already set in base interface.
-    //std::string mPort = c->getProperty("port");
-    std::string glove_pos_proxy = c->getProperty("glovePos");    // Get the name of the pos_proxy
-    if(glove_pos_proxy == std::string(""))
-    {
-       vprDEBUG(vrjDBG_INPUT_MGR,0)
-          << "[Pinch] ERROR: PinchGloveStandalone has no posProxy." << std::endl
-          << vprDEBUG_FLUSH;
-       return false;
-    }
-
-    // init glove proxy interface
-    /*
-    int proxy_index = Kernel::instance()->getInputManager()->getProxyIndex(glove_pos_proxy);
-    if(proxy_index != -1)
-       mGlovePos[0] = Kernel::instance()->getInputManager()->getPosProxy(proxy_index);
-    else
-       vprDEBUG(vrjDBG_INPUT_MGR,0)
-          << "[Pinch] ERROR: PinchGloveStandalone::PinchGloveStandalone: Can't find posProxy."
-          << std::endl << std::endl << vprDEBUG_FLUSH;
-          */
-
+  
     mGlove = new PinchGloveStandalone();
 
     return true;
@@ -102,8 +71,16 @@ int PinchGlove::startSampling()
 
    if (mThread == NULL)
    {
-      resetIndexes();
-
+      DigitalData temp;
+      temp=0;
+      for (int i=0;i<10;i++)
+      {
+          mDigitalData.push_back(temp);
+      }
+      mDigitalSamples.lock();
+      mDigitalSamples.addSample(mDigitalData);
+      mDigitalSamples.unlock();
+            
       // Create a new thread to handle the control
       vprDEBUG(vrjDBG_INPUT_MGR, 0) << "[Pinch] Spawning control thread\n"
                                   << vprDEBUG_FLUSH;
@@ -155,73 +132,59 @@ void PinchGlove::controlLoop(void* nullParam)
    }
 }
 
-//: Get the digital data for the given devNum
-//  Returns digital 0 or 1, if devNum makes sense.<BR>
-//  Returns -1 if function fails or if devNum is out of range.<BR>
-//  NOTE: If devNum is out of range, function will fail, possibly issueing
-//  an error to a log or console - but will not ASSERT.<BR>
-const DigitalData PinchGlove::getDigitalData(int devNum)
-{
-   // get the fakespace "gesture", it's a string like this "00000.00000"
-   std::string gesture;
-   mGlove->getSampledString( gesture );
-
-   // make sure the passed value is within range.
-   if ((devNum >= 0) && ((unsigned)devNum <= gesture.size()))
-   {
-      // get the requested digital data from the "gesture" string
-      char character[2];
-      character[0] = gesture[devNum];
-      character[1] = '\0';
-
-      // convert the character to a number.
-      // TODO: what to do if the PinchGloveStandalone ever gives us something
-      //       other than 0,1?
-      int number = atoi( character ); //probably a better way to do this...
-      mDigitalData[devNum] = number;
-      // XXX CJ Do something w/ mDigitalData's timestamp... copy from govedata?
-   }
-
-   else
-   {
-      // DONT assert!  just notify system that there was a user error.
-      // asserting could bring the system down, and that's bad.
-      vprDEBUG(vrjDBG_INPUT_MGR,0) << "[Pinch] Assertion: application requested a digital ID out of range.  Valid range is [0.."<<gesture.size() <<"]\n"<< vprDEBUG_FLUSH;
-   }
-
-   // function failed
-   //return -1;
-      return (mDigitalData[devNum]);
-}
-
 int PinchGlove::sample()
 {
     // Tell the glove to resample
+    
+    ///Get data from hardware
+    std::string gesture;
     mGlove->updateStringFromHardware();
+    mGlove->getSampledString( gesture );
+    
+    unsigned char character[2];
+    int number;
+    int i;
+    for(i=0;i<11;i++)
+    {
+        
+        if(i<5)
+        {
+            character[0]=gesture[i];
+            character[1]='\0';
+            number = atoi(character);
+            mDigitalData[i]=number;
+        }
+        else if(i>5)
+        {
+            character[0]=gesture[i];
+            character[1]='\0';
+            number = atoi(character);
+            mDigitalData[i-1]=number;
+        }
+    }
+    
+    mDigitalSamples.lock();
+    mDigitalSamples.addSample(mDigitalData);
+    mDigitalSamples.unlock();
+    
+    /////////////////////////////
+    // Add Finger Angles LATER //
+    // updateFingerAngles();   //
+    /////////////////////////////
 
-    updateFingerAngles();
-
-    // Update the xform data
-    mTheData[0][progress].calcXforms();
-    mTheData[1][progress].calcXforms();
-
-    swapValidIndexes();
-
+    /////////////////////////////////////////
+    // Update the xform data               //
+    // mTheData[0][progress].calcXforms(); //
+    // mTheData[1][progress].calcXforms(); //
+    /////////////////////////////////////////
+    
     return 1;
+
 }
 
 void PinchGlove::updateData()
 {
-vpr::Guard<vpr::Mutex> updateGuard(lock);
-
-   // Copy the valid data to the current data so that both are valid
-   mTheData[0][current] = mTheData[0][valid];   // first hand
-   mTheData[1][current] = mTheData[1][valid];   // other hand
-
-
-   // swap the indicies for the pointers
-   swapCurrentIndexes();
-
+    mDigitalSamples.swapBuffers();
     return;
 }
 
@@ -245,7 +208,8 @@ int PinchGlove::stopSampling()
 
 //TODO: move this function up the hierarchy, since PinchGlove also has this one.
 void PinchGlove::updateFingerAngles()
-{
+{/*
+	
     std::string gesture;
     // the the fakespace "gesture", it's a string like this "00000.00000"
     mGlove->getSampledString( gesture );
@@ -345,7 +309,7 @@ void PinchGlove::updateFingerAngles()
        // Left Wrist
        mTheData[LEFT_HAND][progress].angles[GloveData::WRIST][GloveData::YAW] = left.yaw();
        mTheData[LEFT_HAND][progress].angles[GloveData::WRIST][GloveData::PITCH] = left.pitch();
-    }
+    }*/
 }
 
 };
