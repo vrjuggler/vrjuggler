@@ -143,6 +143,7 @@ SUBDIR=	5DT/DataGlove		 \
 	Intersense/IntersenseAPI \
 	Logitech/ThreeDMouse	 \
 	Open/DTK		 \
+        Open/LinuxJoydev         \
 	Open/Trackd		 \
 	Open/VRPN		 \
 	Polhemus/Fastrak	 \
