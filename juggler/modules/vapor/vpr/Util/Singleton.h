@@ -97,23 +97,28 @@ public:                                                        \
 namespace vpr
 {
    
-   // you can use this coolio class to make a singleton,
-   // just inherit like so...
-   //
-   // class myClass : public vpr::Singleton<myClass>
-   //
+   /**
+    * You can use this coolio class to make a singleton, just inherit like
+    * so...
+    *
+    * class myClass : public vpr::Singleton<myClass>
+    *
+    * @author Kevin Meinert
+    */
    template< class singleClass >
    class VPR_CLASS_API Singleton
    {
    public:
-      // use the macro from above... kludgy yeah, but...
-      // NOTE: it might not be good to have the imp inline 
-      //       in the header???
-      // NOTE: currently, func is thread safe after first call to instance().
-      // if first call to instance happens multiple times simultaneously
-      // then don't be surprised when something dies because of a mutex..
-      // this bug can be caused by spawning two threads immediately after 
-      // entering main()
+      /**
+       * Use the macro from above... kludgy yeah, but...
+       * NOTE: it might not be good to have the imp inline 
+       *       in the header???<br>
+       * NOTE: currently, func is thread safe after first call to instance().
+       * if first call to instance happens multiple times simultaneously
+       * then don't be surprised when something dies because of a mutex..
+       * this bug can be caused by spawning two threads immediately after 
+       * entering main()
+       */
       inline static singleClass* instance( void )        
       {                                                 
          // WARNING! race condition possibility, creation of static vars 
@@ -134,13 +139,15 @@ namespace vpr
       }
 
    protected:
-      // dont create a singleton with new!  
-      // use instance()
+      /**
+       * Don't create a singleton with new!  
+       * use instance()
+       */
       Singleton()
       {
       }
 
-      // don't delete a singleton!
+      /// don't delete a singleton!
       virtual ~Singleton()
       {
       }
