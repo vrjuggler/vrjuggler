@@ -302,7 +302,7 @@ public:  // ----- Various other thread functions ------
      * @return 0 is returned if the affinity is retrieved successfully.<br>
      *         -1 is returned otherwise.
      *
-     * @ntoe This is currently only available on IRIX 6.5 and is
+     * @note This is currently only available on IRIX 6.5 and is
      *       non-portable.
      */
     virtual int
