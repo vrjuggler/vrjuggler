@@ -88,6 +88,18 @@ public:
    {
    }
 
+   vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
+   {
+      writer->writeUint8(mType);
+      writer->writeUint64(mTime);
+   }
+
+   vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
+   {
+      mType = (EventType)reader->readUint8();
+      mTime = reader->readUint64();
+   }
+
 protected:
    /**
     * Initializes data members.

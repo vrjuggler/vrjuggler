@@ -40,6 +40,7 @@
 
 #include <vpr/IO/SerializableObject.h>
 #include <vpr/Sync/Mutex.h>
+#include <vpr/Util/Interval.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 
 #include <gadget/Type/EventWindow/Keys.h>
@@ -97,6 +98,15 @@ public:
    }
 
    /**
+    * Get the interval that will be used for syncronization while only sharing 
+    * keyboard data across the cluster.
+    */
+   vpr::Interval getSyncTime()
+   {
+      return mSyncTime;
+   }  
+
+   /**
     * Is the given key pressed?
     * @return The number of times the key was pressed since last update.
     */
@@ -145,6 +155,11 @@ protected:
 
    EventQueue mWorkingEventQueue; /**< In-progress queue of events. */
    vpr::Mutex mWorkingEventQueueLock;
+
+   // We have to create a Interval that the user can use across the cluster to syncronize
+   // their applications navigation. We would like to use the timestamps from the event queue
+   // but we only get events during frames that have key presses and mouse motion. 
+   vpr::Interval mSyncTime;      /**< Holds an Interval that is syncrnized across the cluster */
 };
 
 } // end namespace
