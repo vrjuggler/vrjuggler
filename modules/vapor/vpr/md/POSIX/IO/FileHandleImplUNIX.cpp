@@ -524,6 +524,7 @@ FileHandleUNIX::isReadable (const vpr::Interval timeout) {
         }
 
         FD_ZERO(&read_set);
+        FD_SET(m_fdesc, &read_set);
 
         num_events = select(m_fdesc + 1, &read_set, NULL, NULL,
                             (timeout.usec() > 0) ? &timeout_obj: NULL);
@@ -547,7 +548,7 @@ FileHandleUNIX::isWriteable (const vpr::Interval timeout) {
 
     if ( timeout != vpr::Interval::NoTimeout ) {
         fd_set write_set;
-        vpr::Uint16 num_events;
+        int num_events;
         struct timeval timeout_obj;
 
         if ( timeout.msec() >= 1000 ) {
@@ -560,6 +561,7 @@ FileHandleUNIX::isWriteable (const vpr::Interval timeout) {
         }
 
         FD_ZERO(&write_set);
+        FD_SET(m_fdesc, &write_set);
 
         num_events = select(m_fdesc + 1, NULL, &write_set, NULL,
                             (timeout.usec() > 0) ? &timeout_obj: NULL);
