@@ -172,6 +172,14 @@ public class BeanAttributes
    }
 
    /**
+    * Sets the JAR URL the Bean is contained within.
+    */
+   public void setJarURL(String jarURL)
+   {
+      this.jarURL = jarURL;
+   }
+
+   /**
     * Gets the bean's fully qaulified classname.
     *
     * @return  the classname of the bean
