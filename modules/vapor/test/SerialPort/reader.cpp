@@ -52,7 +52,7 @@ int main (int argc, char* argv[])
    read_port = new vpr::SerialPort(argv[1]);
 
    read_port->setOpenReadOnly();
-   read_port->setOpenBlocking();
+   read_port->setBlocking(true);
 
    if ( read_port->open().success() )
    {
@@ -64,8 +64,8 @@ int main (int argc, char* argv[])
 
 //      read_port->setUpdateAction(vpr::SerialIO::NOW);
       read_port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
-      read_port->enableRead();
-      read_port->disableCanonicalInput();
+      read_port->setRead(true);
+      read_port->setCanonicalInput(false);
 //      read_port->flushQueue(vpr::SerialTypes::INPUT_QUEUE);
       read_port->read(buffer, sizeof(buffer), bytes);
       std::cout << "Read '" << buffer << "'" << std::endl;

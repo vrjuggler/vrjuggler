@@ -54,7 +54,7 @@ int main (int argc, char* argv[])
    write_port = new vpr::SerialPort(argv[1]);
 
    write_port->setOpenWriteOnly();
-   write_port->setOpenBlocking();
+   write_port->setBlocking(true);
 
    for ( int i = 1; i <= 4; i++ )
    {
@@ -66,12 +66,12 @@ int main (int argc, char* argv[])
 
          std::cout << "Port opened\n";
 
-         if ( write_port->getBufferSize(size).success() )
+         if ( write_port->getMinInputSize(size).success() )
          {
             std::cout << "Min buffer size: " << size << std::endl;
          }
 
-         write_port->disableCanonicalInput();
+         write_port->setCanonicalInput(false);
          write_port->setUpdateAction(vpr::SerialTypes::NOW);
          write_port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
          write_port->write(buffer, sizeof(char) * (strlen(buffer) + 1), bytes);
