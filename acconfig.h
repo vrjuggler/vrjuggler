@@ -10,9 +10,6 @@
 
 @TOP@
 
-/* Define to enable compile-time debugging blocks. */
-#undef VJ_DEBUG
-
 /* Define all of the following to use POSIX threads. */
 #undef VJ_USE_PTHREADS
 #undef VJ_THREAD_SCOPE

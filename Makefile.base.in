@@ -112,7 +112,7 @@ sysconfdir	= @sysconfdir@
 topdir		= @topdir@
 VJROOT_ABS	= @VJROOT_ABS@
 
-AR		= @AR@ ${ARFLAGS}
+AR		= @AR@ ${EXTRA_ARFLAGS} ${ARFLAGS}
 ARFLAGS		= @ARFLAGS@
 CC		= @CC@
 CXX		= @CXX@
@@ -126,7 +126,7 @@ DEPENDFLAGS	= @DEPENDFLAGS@ @INCLUDES@ -I${VJROOT_ABS} -I${topdir}
 DEPEND_EXTRAS	= @DEPEND_EXTRAS@ ${DEFS}
 INCLUDES	= @INCLUDES@ -I${VJROOT} -I${topdir}
 INSTALL		= @INSTALL@
-LD		= @LD@
+LD		= @LD@ ${EXTRA_LDFLAGS}
 LDFLAGS		= @LDFLAGS@ -L/usr/lib${LIBBITSUF} -L/usr/lib
 LDOPTS		= @LDOPTS@
 LIBS		= @LIBS@
