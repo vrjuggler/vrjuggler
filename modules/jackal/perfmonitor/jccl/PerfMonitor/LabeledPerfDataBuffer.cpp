@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <jccl/jcclConfig.h>
+#include <iomanip>
 
 #include <jccl/PerfMonitor/LabeledPerfDataBuffer.h>
 
