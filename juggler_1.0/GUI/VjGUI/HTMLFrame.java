@@ -31,12 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-
-
-/* a frame that displays a URL w/ active hyperlinks.  Useful for 
- * help info, etc.
- */
-
 package VjGUI;
 
 import java.net.*;
@@ -51,6 +45,12 @@ import VjGUI.Core;
 import VjGUI.util.JFrameParent;
 import VjGUI.util.ChildFrame;
 
+/**
+ * A frame for displaying a URL with active hyperlinks, eg for help info.
+ *
+ * @author Christopher Just
+ * @version $Revision$
+ */
 public class HTMLFrame extends JFrame 
     implements ChildFrame, HyperlinkListener, WindowListener {
 
@@ -58,6 +58,14 @@ public class HTMLFrame extends JFrame
     JEditorPane pane;
     JFrameParent parent;
 
+    /**
+     * Constructor
+     *
+     * @param _parent The "owner" of this frame, who receives close
+     *                messages.
+     * @param s       Title for the new frame
+     * @param url     A URL to display.  May be null.
+     */
     public HTMLFrame (JFrameParent _parent, String s, URL url) {
 	super ();
 	parent = _parent;
@@ -74,7 +82,15 @@ public class HTMLFrame extends JFrame
             setURL (url);
     }
 
-    /* Utility for setURL */
+
+
+    /**
+     * Builds (and verifies) a file URL - utility function for setURL
+     *
+     * @param fname Name of the file to attempt to open
+     * @return A valid URL if possible, or null if the file cannot be
+     *         found or opened.
+     */
     private URL getFileURL (String fname) {
 	URL url = null;
 	try {
@@ -89,6 +105,17 @@ public class HTMLFrame extends JFrame
 	return url;
     }
 
+
+
+    /**
+     * sets the URL to be displayed in the frame.
+     *
+     * @param name A full or partial URL in string form.
+     *       If name is not a complete URL, setURL will attempt to search
+     *       by appending name to a series of standardized locations.
+     *       This is done to ensure that URLs like "DescHelp/foo.html"
+     *       work in VjControl.
+     */
     public void setURL (String name) {
 
         URL url;
@@ -137,6 +164,17 @@ public class HTMLFrame extends JFrame
 	}
     }
 
+
+
+    /**
+     * sets the URL to be displayed in the frame.
+     *
+     * @param url A URL to be displayed.
+     *       If the URL contains the string "DescHelp", setURL will
+     *       mangle it in an attempt to search the various places that
+     *       DescHelp html files are stored (e.g. the VjControl .jar file,
+     *       $VJ_BASE_DIR/Data, and ~/.vjconfig).
+     */
     public void setURL (URL url) {
 
         /* a kludge to provide full search paths for DescHelp entries...
