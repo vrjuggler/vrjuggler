@@ -1,5 +1,12 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jul-05-2002 subatomic KeyboardWin32 now works with grabbing input
+                      focus when in a "locked" state. It supports the mouse 
+                      warp feature, and can capture kb/m when cursor is
+                      not in the window.  
+                      This class has also been refactored so that
+                      subclasses of it can create their own windows and
+                      still get window event input.
 Jun-24-2002 patrickh  The gadgeteer-config script is now written in Perl.  It
                       is capable of determining its installation path at
                       runtime.
