@@ -54,7 +54,8 @@ extern const float VJ_PI_2;
 extern const float VJ_PI_4;
 
 //: default epsilon used by some juggler math routines...
-extern const float VJ_EPSILON_DEFAULT;
+//extern const float VJ_EPSILON_DEFAULT;
+#define VJ_EPSILON_DEFAULT 1e-6f
 
 //: x-platform standard math routines.
 class vjMath 
@@ -289,7 +290,7 @@ public:
    inline float random()
    {
       // ::rand() returns int from  0 - RAND_MAX
-      const float rand_max( RAND_MAX );
+      const float rand_max = RAND_MAX;
       float r = static_cast<float>( ::rand() );
       r /= rand_max;
       return r;
