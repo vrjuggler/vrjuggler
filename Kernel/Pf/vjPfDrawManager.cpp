@@ -11,7 +11,8 @@
 #include <Kernel/vjDisplayManager.h>
 #include <Kernel/vjProjection.h>
 #include <Config/vjConfigChunk.h>
-#include <Kernel/vjSimulator.h>
+#include <Kernel/vjSimDisplay.h>
+#include <Kernel/vjSurfaceDisplay.h>
 
 vjPfDrawManager* vjPfDrawManager::_instance = NULL;
 
@@ -152,19 +153,19 @@ void vjPfDrawManager::initDrawing()
       vjDEBUG(0) << "\tvjPfDrawManager::initDrawing: Got Display:\n" << *(*dispIter) << vjDEBUG_FLUSH;
 
       int xo, yo, xs, ys;
-      pfPipe* localPipe = pipes[tempPfDisp.disp->pipe()];
+      pfPipe* localPipe = pipes[tempPfDisp.disp->getPipe()];
       vjASSERT(NULL != localPipe);        // Make sure we have a good pipe
 
       // --- Setup pWin --- //
       tempPfDisp.pWin = new pfPipeWindow(localPipe);
       vjASSERT(NULL != tempPfDisp.pWin);
 
-      tempPfDisp.disp->originAndSize(xo, yo, xs, ys);
+      tempPfDisp.disp->getOriginAndSize(xo, yo, xs, ys);
       tempPfDisp.pWin->setOriginSize(xo, yo, xs, ys);
 
          // Setup window border
-      if (tempPfDisp.disp->drawBorder())
-         tempPfDisp.pWin->setName(tempPfDisp.disp->getName()); // Give the window a name
+      if (tempPfDisp.disp->shouldDrawBorder())
+         tempPfDisp.pWin->setName(tempPfDisp.disp->getName().c_str()); // Give the window a name
       else
          tempPfDisp.pWin->setMode(PFWIN_NOBORDER, 1);          // Get rid of that border
 
@@ -286,7 +287,7 @@ void vjPfDrawManager::initSimulator()
    mRootWithSim->addChild(mSimTree);
 }
 
-void vjPfDrawManager::updateSimulator(vjSimulator* sim)
+void vjPfDrawManager::updateSimulator(vjSimDisplay* sim)
 {
    pfMatrix head_mat = vjGetPfMatrix(sim->getHeadPos());
    pfMatrix wand_mat = vjGetPfMatrix(sim->getWandPos());
@@ -311,14 +312,18 @@ void vjPfDrawManager::updateProjections()
    //    update Performer specific stuff.
    for (std::vector<pfDisp>::iterator i = disps.begin(); i != disps.end(); i++)
    {
-      if(!((*i).disp->isSimulator()))
-      {   // Update the projections
-         updatePfProjection((*i).chans[pfDisp::LEFT], (*i).disp->leftProj);
-         if((*i).disp->inStereo())
-            updatePfProjection((*i).chans[pfDisp::RIGHT], (*i).disp->rightProj);
-      } else {
-         updateSimulator((*i).disp->mSim);
-         updatePfProjection((*i).chans[pfDisp::LEFT], (*i).disp->cameraProj, true);
+      if((*i).disp->isSurface())    // SURFACE Display
+      {
+         vjSurfaceDisplay* surf_disp = dynamic_cast<vjSurfaceDisplay*>((*i).disp);
+         updatePfProjection((*i).chans[pfDisp::LEFT], surf_disp->getLeftProj());
+         if(surf_disp->inStereo())
+            updatePfProjection((*i).chans[pfDisp::RIGHT], surf_disp->getRightProj());
+      }
+      else                       // SIM DISPLAY
+      {
+         vjSimDisplay* sim_disp = dynamic_cast<vjSimDisplay*>((*i).disp);
+         updateSimulator(sim_disp);
+         updatePfProjection((*i).chans[pfDisp::LEFT], sim_disp->getCameraProj(), true);
       }
    }
 }
