@@ -137,7 +137,6 @@ all:
 	if [ ! -d jccl ] ; then mkdir jccl ; fi
 	if [ ! -d gadget ] ; then mkdir gadget ; fi
 	if [ ! -d vrj ] ; then mkdir vrj ; fi
-	if [ ! -d mods ] ; then mkdir mods ; fi
 	$(MAKE) modules
 	$(MAKE) prefix="$(topdir)" install
 
