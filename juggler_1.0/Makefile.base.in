@@ -80,8 +80,7 @@
 #                  binaries, it will be 32.  For 64-bit binaries, it will be
 #                  64.
 # PLATFORM       - The operating system abbreviation on which the library is
-#                  being built (e.g., SGI -> IRIX on an SGI computer,
-#                  HP => HP-UX on an HP workstation).
+#                  being built.
 #
 # VJ_LIBRARY     - The base name of the core Juggler library that will be
 #                  built with no file extension.
