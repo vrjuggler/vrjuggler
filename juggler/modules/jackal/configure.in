@@ -162,19 +162,19 @@ DPP_PATH_JAVA
 # built.
 if test "x$JAVAC" = "xno" ; then
     AC_MSG_WARN([*** VjControl requires javac -- it will not be built ***])
-    BUILD_VJCONTROL='N'
+    BUILD_JAVA='N'
 else
     # Check for JDOM.
     DPP_CHECK_JAVA_STATIC_METHOD([org.jdom.Namespace],
        [getNamespace(uri)], [String uri = new String("test")],
-       [BUILD_VJCONTROL='Y'],
+       [BUILD_JAVA='Y'],
        [ AC_MSG_WARN([*** JDOM required for VjControl ***])
-         BUILD_VJCONTROL='N' ],
+         BUILD_JAVA='N' ],
        [$JDOM_JAR])
 fi
 
 # If we're building VjControl, we should build the test cases too.
-if test "x$BUILD_VJCONTROL" = "xY" ; then
+if test "x$BUILD_JAVA" = "xY" ; then
     # Check for the JUnit library
     DPP_CHECK_JAVA_STATIC_METHOD([junit.framework.Assert],
         [assertTrue(true)], ,
@@ -453,7 +453,7 @@ AC_SUBST(JCCL_SHARE_DIR)
 AC_SUBST(RM_LN)
 AC_SUBST(EXTRA_LINK_FLAGS)
 
-AC_SUBST(BUILD_VJCONTROL)
+AC_SUBST(BUILD_JAVA)
 AC_SUBST(JDOM_JAR)
 
 AC_SUBST(BUILD_JAVA_TEST_SUITE)

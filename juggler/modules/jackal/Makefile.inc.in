@@ -50,7 +50,7 @@ top_srcdir	= @top_srcdir@
 DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
 OPT_FLAGS	= -D_OPT @OPT_FLAGS@
 
-BUILD_VJCONTROL	= @BUILD_VJCONTROL@
+BUILD_JAVA	= @BUILD_JAVA@
 JDOM_JAR	= @JDOM_JAR@
 
 # =============================================================================
@@ -338,7 +338,7 @@ install-tools:
           --prefix="$(projdatadir)/tools" --vars="$(topdir)/VARS.pl"	\
           --startdir="$(top_srcdir)/tools" --mode="$(FILE_PERMS)"	\
           $(_GROUP_OPT_PL) --srcdir="."
-ifndef NO_JAVA_GUI
+ifndef NO_JAVA
 ifeq (@OS_TYPE@, UNIX)
 	@sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'		\
           $(JCCLROOT_ABS)/tools/ConfigUpdater/cfgupdater.sh > cfgupdater
@@ -352,7 +352,7 @@ else
 endif	# if OS_TYPE == UNIX
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/tools/ConfigUpdater/ConfigUpdater.jar $(bindir)
-endif	# ifndef NO_JAVA_GUI
+endif	# ifndef NO_JAVA
 
 # Install the standard data files.
 install-data:
@@ -367,12 +367,12 @@ install-data:
 
 # Install the Java-based config editor if possible.
 install-vjcontrol:
-ifdef NO_JAVA_GUI
+ifdef NO_JAVA
 	@echo "------------------------------------------------"
 	@echo "Skipping installation of VjControl (not built)"
 	@echo "------------------------------------------------"
 else
-ifeq ($(BUILD_VJCONTROL), Y)
+ifeq ($(BUILD_JAVA), Y)
 	@echo "------------------------------------------------"
 	@echo "Installing VjControl"
 	@echo "------------------------------------------------"
@@ -392,8 +392,8 @@ endif	# if OS_TYPE == UNIX
 	for dir in $(SUBDIR); do \
             $(MAKE) -C $$dir java-install ; \
           done
-endif	# if $(BUILD_VJCONTROL) == Y
-endif	# ifdef NO_JAVA_GUI
+endif	# if $(BUILD_JAVA) == Y
+endif	# ifdef NO_JAVA
 
 # =============================================================================
 # Clean-up targets.  '_clean' removes all the files in the build directories.  
@@ -416,15 +416,15 @@ EXTRA_OBJ_TARGETS = build-java
 # to write to the same files at the same time while building different sources.
 MAKEFLAGS += -j 1
 build-java:
-ifdef NO_JAVA_GUI
+ifdef NO_JAVA
 	@echo "------------------------------------------------"
 	@echo "Skipping Java GUI targets."
 	@echo "------------------------------------------------"
 else
-ifeq ($(BUILD_VJCONTROL), Y)
+ifeq ($(BUILD_JAVA), Y)
 	$(MAKE) $(MAKEFLAGS) RECTARGET=java recursive
 endif
-endif #ifdef NO_JAVA_GUI
+endif #ifdef NO_JAVA
 
 include $(MKPATH)/dpp.libs.mk
 include $(MKPATH)/dpp.clean.mk
