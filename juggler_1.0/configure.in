@@ -187,7 +187,7 @@ case $host in
         DSOVERSION='sgi4.0'
         DSOVERSIONOPTS='-set_version ${DSOVERSION}'
 
-        ABI_LIST='N32_M4 N32_M3 64_M4 64_M3'
+        ABI_LIST='64_M4 64_M3 N32_M4 N32_M3'
         PLATFORM='SGI'
 
         AC_DEFINE(VJ_OS_SGI,)
