@@ -439,7 +439,7 @@ fi
 
 AC_PROG_INSTALL
 
-dnl # Ensure that a version of Perl 5 greater than or equal to 5.004 is
+dnl # Ensure that a version of Perl greater than or equal to 5.004 is
 dnl # available.
 chkPerl ( ) {
     if test -x "$1" ; then
@@ -448,18 +448,20 @@ chkPerl ( ) {
         retval=1
     fi
 
-    return $retval
+    echo $retval
 }
 
-_PERL_PATH='/usr/bin /usr/local/bin'
-AC_CACHE_CHECK(for Perl 5 version >= 5.004,
+_PERL_PATH='/usr/local/bin /usr/bin'
+AC_CACHE_CHECK(for Perl version >= 5.004,
                ac_cv_perl_version,
                [ ac_cv_perl_version='no' ;
                  for _dir in ${_PERL_PATH} ; do
                      if eval "test \"`chkPerl ${_dir}/perl`\" -eq 0" ; then
                          ac_cv_perl_version="${_dir}/perl"
+                         break
                      elif eval "test \"`chkPerl ${_dir}/perl5`\" -eq 0" ; then
                          ac_cv_perl_version="${_dir}/perl5"
+                         break
                      fi
                  done
                ])
