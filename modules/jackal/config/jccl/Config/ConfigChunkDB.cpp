@@ -311,6 +311,25 @@ bool ConfigChunkDB::load(const std::string& filename, const std::string& parentf
 
       cppdom::XMLNodePtr chunk_db_node = chunk_db_doc->getChild( jccl::chunk_db_TOKEN);
       vprASSERT(chunk_db_node.get() != NULL);
+
+      // Go through the include processing instructions
+      cppdom::XMLNodeList pi_list = chunk_db_doc->getPiList();
+      for (cppdom::XMLNodeList::iterator itr = pi_list.begin(); itr != pi_list.end(); ++itr)
+      {
+         cppdom::XMLNodePtr pi = *itr;
+         if (pi->getName() == include_desc_INSTRUCTION)
+         {
+            std::string desc_filename = pi->getAttribute(file_TOKEN).getValue<std::string>();
+            ChunkFactory::instance()->loadDescs(desc_filename, filename);
+         }
+         else if (pi->getName() == include_INSTRUCTION)
+         {
+            std::string chunk_filename = pi->getAttribute(file_TOKEN).getValue<std::string>();
+            load(chunk_filename, filename);
+         }
+      }
+
+      // Load in the chunk DB in the original file
       loadFromChunkDBNode( chunk_db_node, filename );
 
       status = true;
@@ -372,39 +391,24 @@ bool ConfigChunkDB::loadFromChunkDBNode(cppdom::XMLNodePtr chunkDBNode,
    for(cppdom::XMLNodeList::iterator cur_child = chunkDBNode->getChildren().begin();
         cur_child != chunkDBNode->getChildren().end(); cur_child++)
    {
-      // If it is an include, then process it special
-      std::string chunk_elt_type = (*cur_child)->getName();
-      if(chunk_elt_type == vj_include_desc_file_TOKEN)            // Include a desc file
-      {
-         std::string desc_filename = (*cur_child)->getAttribute(name_TOKEN).getValue<std::string>();
-         ChunkFactory::instance()->loadDescs(desc_filename, currentFile);
-      }
-      else if(chunk_elt_type == vj_include_file_TOKEN)            // Load another chunk file
-      {
-         std::string chunk_filename = (*cur_child)->getAttribute(name_TOKEN).getValue<std::string>();
-         load(chunk_filename, currentFile);
-      }
-      else                                                        // Load normal chunk
-      {
-         ConfigChunkPtr new_chunk(new ConfigChunk( *cur_child ) );     // New chunk
+      ConfigChunkPtr new_chunk(new ConfigChunk( *cur_child ) );     // New chunk
 
-         // Before we can add new_chunk to the database, we have to determine
-         // if there is already a chunk with the same name.
-         std::vector<ConfigChunkPtr>::iterator iter =
-            std::find_if(mChunks.begin(), mChunks.end(),
-                         ChunkNamePred(new_chunk->getName()));
+      // Before we can add new_chunk to the database, we have to determine
+      // if there is already a chunk with the same name.
+      std::vector<ConfigChunkPtr>::iterator iter =
+         std::find_if(mChunks.begin(), mChunks.end(),
+                      ChunkNamePred(new_chunk->getName()));
 
-         // If no existing chunk has the same name as new_chunk, then we can
-         // just add it to the end.
-         if ( iter == mChunks.end() )
-         {
-            mChunks.push_back(new_chunk);
-         }
-         // Otherwise, overwrite the old version.
-         else
-         {
-            *iter = new_chunk;
-         }
+      // If no existing chunk has the same name as new_chunk, then we can
+      // just add it to the end.
+      if ( iter == mChunks.end() )
+      {
+         mChunks.push_back(new_chunk);
+      }
+      // Otherwise, overwrite the old version.
+      else
+      {
+         *iter = new_chunk;
       }
    }
 

@@ -110,6 +110,11 @@ const std::string chunk_db_TOKEN("ConfigChunkDB");
 const std::string vj_include_desc_file_TOKEN("vjIncludeDescFile");
 const std::string vj_include_file_TOKEN("vjIncludeFile");
 
+// Processing instruction tokens
+const std::string include_desc_INSTRUCTION("org-vrjuggler-jccl-includedesc");
+const std::string include_INSTRUCTION("org-vrjuggler-jccl-include");
+const std::string file_TOKEN("file");
+
 const std::string EMBEDDED_SEPARATOR("/");
 
 
