@@ -57,7 +57,7 @@ VPATH		= @srcdir@
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
 OBJECTS		= matrix.@OBJEXT@
-MATRIX_PROGS	= test
+MATRIX_PROGS	= test@EXEEXT@
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -66,7 +66,7 @@ default: all
 
 all: $(MATRIX_PROGS)
 
-test: $(OBJECTS)
+test@EXEEXT@: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 matrix.@OBJEXT@: matrix.cpp
@@ -78,6 +78,6 @@ matrix.@OBJEXT@: matrix.cpp
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend $(MATRIX_PROGS) *.exe *.ilk *core *.?db	\
-          *.@OBJEXT@ so_locations
+	rm -f Makedepend $(MATRIX_PROGS) *.ilk *core *.?db *.@OBJEXT@	\
+          so_locations
 	rm -rf ./ii_files

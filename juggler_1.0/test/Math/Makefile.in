@@ -56,7 +56,7 @@ VPATH		= @srcdir@
 # 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-MATH_PROGS	= testPlane testSeg
+MATH_PROGS	= testPlane@EXEEXT@ testSeg@EXEEXT@
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -65,10 +65,10 @@ default: all
 
 all: $(MATH_PROGS)
 
-testPlane: testPlane.@OBJEXT@
+testPlane@EXEEXT@: testPlane.@OBJEXT@
 	$(LINK) -o $@ testPlane.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-testSeg: testSeg.@OBJEXT@
+testSeg@EXEEXT@: testSeg.@OBJEXT@
 	$(LINK) -o $@ testSeg.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 .cpp.@OBJEXT@:
@@ -78,6 +78,6 @@ testSeg: testSeg.@OBJEXT@
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend $(MATH_PROGS) *.exe *.ilk *.@OBJEXT@	\
-          *core *.?db so_locations
+	rm -f Makedepend $(MATH_PROGS) *.ilk *.@OBJEXT@	*core *.?db	\
+          so_locations
 	rm -rf ./ii_files

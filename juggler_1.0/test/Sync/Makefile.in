@@ -61,7 +61,7 @@ VPATH		= @srcdir@
 # 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-SYNC_PROGS	= test testBarrier testCond
+SYNC_PROGS	= test@EXEEXT@ testBarrier@EXEEXT@ testCond@EXEEXT@
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -70,13 +70,13 @@ default: all
 
 all: $(SYNC_PROGS)
 
-test: test.@OBJEXT@
+test@EXEEXT@: test.@OBJEXT@
 	$(LINK) -o $@ test.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-testBarrier: testBarrier.@OBJEXT@
+testBarrier@EXEEXT@: testBarrier.@OBJEXT@
 	$(LINK) -o $@ testBarrier.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-testCond: testCond.@OBJEXT@
+testCond@EXEEXT@: testCond.@OBJEXT@
 	$(LINK) -o $@ testCond.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 .cpp.@OBJEXT@:
@@ -86,6 +86,6 @@ testCond: testCond.@OBJEXT@
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend $(SYNC_PROGS) *.exe *.ilk *.@OBJEXT@	\
-          *core *.?db so_locations
+	rm -f Makedepend $(SYNC_PROGS) *.ilk *.@OBJEXT@	*core *.?db	\
+          so_locations
 	rm -rf ./ii_files

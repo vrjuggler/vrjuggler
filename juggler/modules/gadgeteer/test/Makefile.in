@@ -60,7 +60,13 @@ VPATH		= @srcdir@:@srcdir@/../../Input/vjPosition
 # 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-PROGS		= go go-ibox go-inputgroup go-logiclass aFlockTest vjFlockTest dummyTrackd
+PROGS		= go@EXEEXT@		\
+                  go-ibox@EXEEXT@	\
+                  go-inputgroup@EXEEXT@	\
+        	  go-logiclass@EXEEXT@	\
+                  aFlockTest@EXEEXT@	\
+        	  vjFlockTest@EXEEXT@	\
+                  dummyTrackd@EXEEXT@
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -72,57 +78,56 @@ all: $(PROGS)
 # ----------------
 # aFlock test driver
 # ----------------
-aFlockTest: aFlockTest.@OBJEXT@ aFlock.@OBJEXT@
+aFlockTest@EXEEXT@: aFlockTest.@OBJEXT@ aFlock.@OBJEXT@
 	$(LINK) -o $@ aFlockTest.@OBJEXT@ aFlock.@OBJEXT@ 
 
 # ----------------
 # vjFlock test driver
 # ----------------
-vjFlockTest: vjFlockTest.@OBJEXT@
+vjFlockTest@EXEEXT@: vjFlockTest.@OBJEXT@
 	$(LINK) -o $@ vjFlockTest.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # trackd test driver
 # ----------------
-dummyTrackd: dummyTrackd.@OBJEXT@
+dummyTrackd@EXEEXT@: dummyTrackd.@OBJEXT@
 	$(LINK) -o $@ dummyTrackd.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # aMotionStar test driver
 # ----------------
-aMotionStarTest: aMotionStarTest.@OBJEXT@			\
-                 aMotionStar.@OBJEXT@
+aMotionStarTest@EXEEXT@: aMotionStarTest.@OBJEXT@ aMotionStar.@OBJEXT@
 	$(LINK) -o $@ aMotionStarTest.@OBJEXT@			\
           aMotionStar.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # new
 # ----------------
-new: new.@OBJEXT@
+new@EXEEXT@: new.@OBJEXT@
 	$(LINK) -o $@ new.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # go
 # ----------------
-go: main.@OBJEXT@
+go@EXEEXT@: main.@OBJEXT@
 	$(LINK) -o $@ main.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # go-ibox
 # ----------------
-go-ibox: main-ibox.@OBJEXT@
+go-ibox@EXEEXT@: main-ibox.@OBJEXT@
 	$(LINK) -o $@ main-ibox.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # go-inputgroup
 # ----------------
-go-inputgroup: main-inputgroup.@OBJEXT@
+go-inputgroup@EXEEXT@: main-inputgroup.@OBJEXT@
 	$(LINK) -o $@ main-inputgroup.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
 # go-logiclass
 # ----------------
-go-logiclass: main-logiclass.@OBJEXT@
+go-logiclass@EXEEXT@: main-logiclass.@OBJEXT@
 	$(LINK) -o $@ main-logiclass.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 .cpp.@OBJEXT@:
@@ -132,6 +137,5 @@ go-logiclass: main-logiclass.@OBJEXT@
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend $(PROGS) *.exe *.ilk *.@OBJEXT@ *core	\
-          *.?db so_locations
+	rm -f Makedepend $(PROGS) *.ilk *.@OBJEXT@ *core *.?db so_locations
 	rm -rf ./ii_files

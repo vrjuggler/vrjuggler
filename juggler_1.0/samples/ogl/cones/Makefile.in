@@ -68,9 +68,9 @@ OBJECTS		= cones.@OBJEXT@ ConesApp.@OBJEXT@	\
 # -----------------------------------------------------------------------------
 default: all
 
-all: cones
+all: cones@EXEEXT@
 
-cones: $(OBJECTS)
+cones@EXEEXT@: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 cones.@OBJEXT@ ConesApp.@OBJEXT@: ConesApp.h UserData.h
@@ -83,6 +83,6 @@ UserData.@OBJEXT@: UserData.h
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend cones cones.exe cones.ilk $(OBJECTS) *core	\
+	rm -f Makedepend cones@EXEEXT@ cones.ilk $(OBJECTS) *core	\
           so_locations *.?db
 	rm -rf ./ii_files

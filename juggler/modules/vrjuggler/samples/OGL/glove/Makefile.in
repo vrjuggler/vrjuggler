@@ -71,9 +71,9 @@ OBJECTS		= main.@OBJEXT@			\
 # -----------------------------------------------------------------------------
 default: all
 
-all: glove
+all: glove@EXEEXT@
 
-glove: $(OBJECTS)
+glove@EXEEXT@: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 main.@OBJEXT@: gloveApp.h
@@ -89,6 +89,6 @@ gloveApp.@OBJEXT@: gloveApp.h vjStdCaveNavigator.h
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend glove glove.exe glove.ilk $(OBJECTS) *core	\
+	rm -f Makedepend glove@EXEEXT@ glove.ilk $(OBJECTS) *core	\
           so_locations *.?db
 	rm -rf ./ii_files

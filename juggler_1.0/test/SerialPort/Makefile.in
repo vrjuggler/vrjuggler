@@ -56,25 +56,25 @@ VPATH		= @srcdir@
 # 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_END@
 
-MATH_PROGS	= reader writer first second
+PROGS		= reader@EXEEXT@ writer@EXEEXT@ first@EXEEXT@ second@EXEEXT@
 
 # -----------------------------------------------------------------------------
 # Targets.
 # -----------------------------------------------------------------------------
 default: all
 
-all: $(MATH_PROGS)
+all: $(PROGS)
 
-reader: reader.@OBJEXT@
+reader@EXEEXT@: reader.@OBJEXT@
 	$(LINK) -o $@ reader.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-writer: writer.@OBJEXT@
+writer@EXEEXT@: writer.@OBJEXT@
 	$(LINK) -o $@ writer.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-first: first.@OBJEXT@
+first@EXEEXT@: first.@OBJEXT@
 	$(LINK) -o $@ first.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-second: second.@OBJEXT@
+second@EXEEXT@: second.@OBJEXT@
 	$(LINK) -o $@ second.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 .cpp.@OBJEXT@:
@@ -84,6 +84,5 @@ second: second.@OBJEXT@
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend $(MATH_PROGS) *.exe *.ilk *.@OBJEXT@ *core	\
-          *.?db so_locations
+	rm -f Makedepend $(PROGS) *.ilk *.@OBJEXT@ *core *.?db so_locations
 	rm -rf ./ii_files

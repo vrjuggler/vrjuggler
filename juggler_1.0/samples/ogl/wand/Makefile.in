@@ -67,9 +67,9 @@ OBJECTS		= main.@OBJEXT@ wandApp.@OBJEXT@
 # -----------------------------------------------------------------------------
 default: all
 
-all: wand
+all: wand@EXEEXT@
 
-wand: $(OBJECTS)
+wand@EXEEXT@: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 main.@OBJEXT@ wandApp.@OBJEXT@: wandApp.h
@@ -81,6 +81,6 @@ main.@OBJEXT@ wandApp.@OBJEXT@: wandApp.h
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend wand wand.exe wand.ilk $(OBJECTS) *core	\
+	rm -f Makedepend wand@EXEEXT@ wand.ilk $(OBJECTS) *core	\
           so_locations *.?db
 	rm -rf ./ii_files

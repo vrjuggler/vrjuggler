@@ -61,7 +61,7 @@ VPATH		= @srcdir@
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
 OBJECTS		= main.@OBJEXT@
-PROGS		= main
+PROGS		= main@EXEEXT@
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -70,7 +70,7 @@ default: all
 
 all: $(PROGS)
 
-main: $(OBJECTS)
+main@EXEEXT@: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 .cpp.@OBJEXT@:
@@ -80,5 +80,5 @@ main: $(OBJECTS)
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend main *.exe *.ilk $(OBJECTS) *core *.?db so_locations
+	rm -f Makedepend $(PROGS) *.ilk $(OBJECTS) *core *.?db so_locations
 	rm -rf ./ii_files

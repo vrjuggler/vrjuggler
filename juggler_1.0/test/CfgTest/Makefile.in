@@ -63,9 +63,9 @@ OBJECTS		= CfgTest.@OBJEXT@
 # -----------------------------------------------------------------------------
 default: all
 
-all: CfgTest
+all: CfgTest@EXEEXT@
 
-CfgTest: $(OBJECTS)
+CfgTest@EXEEXT@: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 .cpp.@OBJEXT@:
@@ -75,6 +75,6 @@ CfgTest: $(OBJECTS)
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend CfgTest *.exe *.ilk $(OBJECTS) *core *.?db	\
+	rm -f Makedepend CfgTest@EXEEXT@ *.ilk $(OBJECTS) *core *.?db	\
           so_locations
 	rm -rf ./ii_files

@@ -67,9 +67,9 @@ OBJECTS		= torus.@OBJEXT@ torusApp.@OBJEXT@
 # -----------------------------------------------------------------------------
 default: all
 
-all: torus
+all: torus@EXEEXT@
 
-torus: $(OBJECTS)
+torus@EXEEXT@: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 torus.@OBJEXT@: torusApp.h
@@ -82,6 +82,6 @@ torusApp.@OBJEXT@: torusApp.h
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend torus torus.exe torus.ilk $(OBJECTS) *core	\
+	rm -f Makedepend torus@EXEEXT@ torus.ilk $(OBJECTS) *core	\
           so_locations *.?db
 	rm -rf ./ii_files

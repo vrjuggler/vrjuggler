@@ -67,9 +67,9 @@ OBJECTS		= PerfDataBufferTest.@OBJEXT@
 # -----------------------------------------------------------------------------
 default: all
 
-all: PerfDataBufferTest
+all: PerfDataBufferTest@EXEEXT@
 
-PerfDataBufferTest: $(OBJECTS)
+PerfDataBufferTest@EXEEXT@: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
 PerfDataBufferTest.@OBJEXT@: nullApp.h
@@ -81,5 +81,6 @@ PerfDataBufferTest.@OBJEXT@: nullApp.h
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend PerfDataBufferTest $(OBJECTS) *core so_locations
+	rm -f Makedepend PerfDataBufferTest@EXEEXT@ $(OBJECTS) *core	\
+          so_locations
 	rm -rf ./ii_files

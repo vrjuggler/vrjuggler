@@ -53,9 +53,9 @@ OBJECTS		= main.@OBJEXT@
 # -----------------------------------------------------------------------------
 default: all
 
-all: run
+all: run@EXEEXT@
 
-run: $(OBJECTS)
+run@EXEEXT@: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS)
 
 .cpp.@OBJEXT@:
@@ -65,5 +65,5 @@ run: $(OBJECTS)
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend run *.exe *.ilk $(OBJECTS) *core *.?db so_locations
+	rm -f Makedepend run@EXEEXT@ *.ilk $(OBJECTS) *core *.?db so_locations
 	rm -rf ./ii_files

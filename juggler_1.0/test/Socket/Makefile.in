@@ -56,25 +56,28 @@ VPATH		= @srcdir@
 # 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_END@
 
-MATH_PROGS	= tcp_server tcp_client udp_server udp_client
+PROGS		= tcp_server@EXEEXT@	\
+                  tcp_client@EXEEXT@	\
+                  udp_server@EXEEXT@	\
+                  udp_client@EXEEXT@
 
 # -----------------------------------------------------------------------------
 # Targets.
 # -----------------------------------------------------------------------------
 default: all
 
-all: $(MATH_PROGS)
+all: $(PROGS)
 
-tcp_server: tcp_server.@OBJEXT@
+tcp_server@EXEEXT@: tcp_server.@OBJEXT@
 	$(LINK) -o $@ tcp_server.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-tcp_client: tcp_client.@OBJEXT@
+tcp_client@EXEEXT@: tcp_client.@OBJEXT@
 	$(LINK) -o $@ tcp_client.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-udp_server: udp_server.@OBJEXT@
+udp_server@EXEEXT@: udp_server.@OBJEXT@
 	$(LINK) -o $@ udp_server.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-udp_client: udp_client.@OBJEXT@
+udp_client@EXEEXT@: udp_client.@OBJEXT@
 	$(LINK) -o $@ udp_client.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 .cpp.@OBJEXT@:
@@ -84,6 +87,5 @@ udp_client: udp_client.@OBJEXT@
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend $(MATH_PROGS) *.exe *.ilk *.@OBJEXT@ *core	\
-          *.?db so_locations
+	rm -f Makedepend $(PROGS) *.ilk *.@OBJEXT@ *core *.?db so_locations
 	rm -rf ./ii_files

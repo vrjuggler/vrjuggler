@@ -61,7 +61,11 @@ VPATH		= @srcdir@
 # 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-TEST_PROGS	= test stlTest testPool testSelfPerformance testTSD_Performance
+TEST_PROGS	= test@EXEEXT@			\
+                  stlTest@EXEEXT@		\
+                  testPool@EXEEXT@		\
+                  testSelfPerformance@EXEEXT@	\
+                  testTSD_Performance@EXEEXT@
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -70,19 +74,19 @@ default: all
 
 all: $(TEST_PROGS)
 
-test: test.@OBJEXT@
+test@EXEEXT@: test.@OBJEXT@
 	$(LINK) -o $@ test.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-stlTest: stlTest.@OBJEXT@
+stlTest@EXEEXT@: stlTest.@OBJEXT@
 	$(LINK) -o $@ stlTest.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-testPool: testPool.@OBJEXT@
+testPool@EXEEXT@: testPool.@OBJEXT@
 	$(LINK) -o $@ testPool.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 	
-testSelfPerformance: testSelfPerformance.@OBJEXT@
+testSelfPerformance@EXEEXT@: testSelfPerformance.@OBJEXT@
 	$(LINK) -o $@ testSelfPerformance.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
 	
-testTSD_Performance: testTSD_Performance.@OBJEXT@
+testTSD_Performance@EXEEXT@: testTSD_Performance.@OBJEXT@
 	$(LINK) -o $@ testTSD_Performance.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)		
 
 .cpp.@OBJEXT@:
@@ -92,6 +96,6 @@ testTSD_Performance: testTSD_Performance.@OBJEXT@
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend $(TEST_PROGS) *.exe *.ilk *.@OBJEXT@	\
-          *core *.?db so_locations
+	rm -f Makedepend $(TEST_PROGS) *.ilk *.@OBJEXT@ *core *.?db	\
+          so_locations
 	rm -rf ./ii_files
