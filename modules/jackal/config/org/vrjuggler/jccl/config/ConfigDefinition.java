@@ -45,7 +45,7 @@ public class ConfigDefinition
    /**
     * Creates a new configuration definition using the given metadata.
     */
-   public ConfigDefinition(String name, String token, String version,
+   public ConfigDefinition(String name, String token, int version,
                            String help, List categories, List propDefs)
    {
       mName = name;
@@ -101,7 +101,7 @@ public class ConfigDefinition
     * a setVersion() method since the version of a configuration definition is
     * intended to be immutable.
     */
-   public String getVersion()
+   public int getVersion()
    {
       return mVersion;
    }
@@ -263,7 +263,7 @@ public class ConfigDefinition
          ConfigDefinition d = (ConfigDefinition)obj;
          if (mName.equals(d.mName) &&
              mToken.equals(d.mToken) &&
-             mVersion.equals(d.mVersion) &&
+             mVersion == d.mVersion &&
              mCategories.equals(d.mCategories) &&
              mHelp.equals(d.mHelp) &&
              mPropertyDefs.equals(d.mPropertyDefs))/* &&
@@ -442,7 +442,7 @@ public class ConfigDefinition
    private String mToken;
 
    /** The version string for this definition. */
-   private String mVersion;
+   private int mVersion;
 
    /** The short help string for this definition. */
    private String mHelp;
