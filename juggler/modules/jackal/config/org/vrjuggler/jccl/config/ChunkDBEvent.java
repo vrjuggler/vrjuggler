@@ -31,6 +31,7 @@
  * -----------------------------------------------------------------
  */
 
+/*
  * Event type for modifications to a chunkdb : insert, remove, and
  * replace chunks...
  */
