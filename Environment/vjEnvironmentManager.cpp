@@ -51,7 +51,8 @@
 vjEnvironmentManager::vjEnvironmentManager():
                           connections(),
                           perf_buffers(),
-                          connections_mutex() {
+                          connections_mutex(),
+                          perf_buffers_mutex() {
 
     /* I want some hardcoded defaults, yes? */
     Port = 4450;
@@ -85,8 +86,10 @@ bool vjEnvironmentManager::isAccepting() {
 void vjEnvironmentManager::addPerfDataBuffer (vjPerfDataBuffer *b) {
     vjDEBUG (vjDBG_PERFORMANCE, 4) << "EM adding perf data buffer " << b->getName().c_str() << "\n"
                                    << vjDEBUG_FLUSH;
+    perf_buffers_mutex.acquire();
     perf_buffers.push_back(b);
     activatePerfBuffers();
+    perf_buffers_mutex.release();
 }
 
 
@@ -98,6 +101,7 @@ void vjEnvironmentManager::removePerfDataBuffer (vjPerfDataBuffer *b) {
     vjDEBUG (vjDBG_PERFORMANCE, 4) << "EM removing perf data buffer " << b->getName().c_str()
                                    << "\n" << vjDEBUG_FLUSH;
 
+    perf_buffers_mutex.acquire();
     b->deactivate();
     if (perf_target)
         perf_target->removeTimedUpdate (b);
@@ -108,6 +112,7 @@ void vjEnvironmentManager::removePerfDataBuffer (vjPerfDataBuffer *b) {
             break;
         }
     }
+    perf_buffers_mutex.release();
 
 }
 
@@ -179,7 +184,9 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
     }
     else if (!vjstrcasecmp (s, "PerfMeasure")) {
         current_perf_config = new vjConfigChunk (*chunk);
+        perf_buffers_mutex.acquire();
         activatePerfBuffers();
+        perf_buffers_mutex.release();
         return true;
     }
     else if (!vjstrcasecmp (s, "FileConnect")) {
@@ -288,9 +295,11 @@ void vjEnvironmentManager::removeConnect (vjConnect* con) {
 void vjEnvironmentManager::setPerformanceTarget (vjConnect* con) {
     if (con == perf_target)
         return;
+    perf_buffers_mutex.acquire();
     deactivatePerfBuffers();
     perf_target = con;
     activatePerfBuffers();
+    perf_buffers_mutex.release();
 }
 
 
