@@ -338,20 +338,8 @@ public class ConfigContextEditor
       {
          ConfigElementFactory temp_factory = new ConfigElementFactory(defs);
          
-         // TODO: Compute a unique name
-         // -We used to use the following to get a unique name, but it is gone now :(
-         //       chunk.setName(configChunkDB.getNewName(chunk.getDesc().getName()));
-
-         // -The following method can lead to problems since we do not want
-         // elements that are named the same.
-         //       chunk.setName(chunk.getDesc().getName()); 
-         
-         // -Our temporary Solution is to try to make it obvious to the user that they 
-         // need to change it.
-         
-         //ConfigElement element = temp_factory.create("CHANGEME", chooser.getSelectedDefinition());
+         // Create a unique name
          ConfigElement element = temp_factory.createUnique(chooser.getSelectedDefinition(), getContext());
-         
 
          // Make sure this add goes through successfully
          if (! getBroker().add(getContext(), element))
