@@ -21,8 +21,8 @@ inline void profileGetTicks(vpr::Interval* ticks)
 inline vpr::Interval profileGetTickRate(void)
 {
    vpr::Interval i;
-   i.secf(0.01);
-	return i;
+   i.secf(0.01f);
+   return i;
 }
 
 
