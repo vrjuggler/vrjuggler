@@ -44,7 +44,7 @@ void usage(char** argv)
    std::cout<<"_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/\n"<<std::flush;
    std::cout<<"\n"<<std::flush;
    std::cout<<"Usage:\n";
-   std::cout<<"      "<<argv[0]<<" modelfile.flt vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n] (for plib's SL library)\n";
+   std::cout<<"      "<<argv[0]<<" modelfile.flt bump_thresh vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n] (for plib's SL library)\n";
    std::cout<<"_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/\n"<<std::flush;
 }
 
@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
       std::cout<<"\n\n[ERROR!!!] you must supply a model database (then config files)\n\n"<<std::flush;
       return 1;
    }
-
+   
    std::string model_filename = argv[1];
    std::cout<<"Will load: "<<model_filename.c_str()<<"\n"<<std::flush;
 
@@ -97,7 +97,7 @@ int main(int argc, char* argv[])
    for ( int i = 2; i < argc; ++i )
    {
       std::cout<<"Loading Config File: "<<argv[i]<<"\n"<<std::flush;
-     kernel->loadConfigFile(argv[i]);
+      kernel->loadConfigFile( argv[i] );
    }
    std::cout<<"===========\n"<<std::flush;
 

@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <iostream>
+#include <fstream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -58,7 +59,7 @@
 #include <vrj/Util/FileIO.h>
 
 #ifdef USE_SONIX
-#include <snx/sonix.h>
+#include <snx/SoundHandle.h>
 #endif
 
 #include <vrj/Sound/pf/pfSoundNode.h> //performer-juggler sound node.
@@ -138,7 +139,10 @@ simplePfNavApp::simplePfNavApp() : mDisableNav( false ),
                                    mConfiguredNoCollideModels( NULL ),
                                    mSoundNodes( NULL ),
                                    mCollidableModelGroup( NULL ),
-                                   mUnCollidableModelGroup( NULL )
+                                   mUnCollidableModelGroup( NULL ),
+                                   mColliding( false ), mRiding( false ),
+                                   mWalkingCount( 0 ),
+                                   mRideCount( 0 )
 {
    mSun = NULL;
    mRootNode = NULL;
@@ -163,6 +167,71 @@ void simplePfNavApp::init()
 
    mStats.setToggleButton( "VJButton5" );
    mNavCycleButton.init( std::string( "VJButton3" ) );
+   mStopButton.init( std::string( "VJButton1" ) );
+   mGoButton.init( std::string( "VJButton0" ) );
+   
+#ifdef USE_SONIX
+   snx::SoundInfo single_shot;
+   single_shot.ambient = true;
+   single_shot.retriggerable = true;
+   single_shot.datasource = snx::SoundInfo::FILESYSTEM;
+
+   snx::SoundInfo looping;
+   looping.ambient = true;
+   looping.retriggerable = false;
+   looping.datasource = snx::SoundInfo::FILESYSTEM;
+
+   std::string filename;
+   filename = "bump.wav";
+   if (std::ifstream( filename.c_str() ).good())
+   {
+      single_shot.filename = filename;
+      mBumpSound.init( "bump" );
+      mBumpSound.configure( single_shot );
+   }
+   
+   filename = "land.wav";
+   if (std::ifstream( filename.c_str() ).good())
+   {
+      single_shot.filename = filename;
+      mLandSound.init( "land" );
+      mLandSound.configure( single_shot );
+   }
+   
+   filename = "ambience.wav";
+   if (std::ifstream( filename.c_str() ).good())
+   {
+      looping.filename = filename;
+      mAmbientSound.init( "ambience" );
+      mAmbientSound.configure( looping );
+      mAmbientSound.trigger( -1 );
+   }
+   
+   filename = "accel.wav";
+   if (std::ifstream( filename.c_str() ).good())
+   {
+      looping.filename = filename;
+      mAccelSound.init( "accel" );
+      mAccelSound.configure( looping );
+   }
+   
+   filename = "stop.wav";
+   if (std::ifstream( filename.c_str() ).good())
+   {
+      looping.filename = filename;
+      mStopSound.init( "stop" );
+      mStopSound.configure( looping );
+   }
+
+   filename = "footstep.wav";
+   if (std::ifstream( filename.c_str() ).good())
+   {
+      single_shot.filename = filename;
+      mWalkingSound.init( "step" );
+      mWalkingSound.configure( single_shot );
+   }
+
+#endif
 }
 
 //: data init
@@ -228,8 +297,6 @@ void simplePfNavApp::preFrame()
    if (mStopWatch.timeInstant < 1.0)
       mKeyFramer.update( mStopWatch.timeInstant );
 
-
-
    if (mDisableNav == true)
    {
       mNavigationDCS->setActive( false );
@@ -281,26 +348,113 @@ void simplePfNavApp::preFrame()
             gmtl::invert( quat );
             std::cout << "World: " << cur_pos << " :|: " << quat << std::endl
                       << std::endl;
-
-            // debug//./////
-            /*
-            gmtl::Matrix44f mmm = mNavigationDCS->getNavigator()->getCurPos();
-            std::cout << "MatrixNav:\n" << mmm << std::endl << std::endl;
-
-            std::cout << "-----------" << std::endl;
-
-            std::cout << mKeyFramer.time() << ": "<<(gmtl::Vec3f)mKeyFramer.key().position() << " :|: ";
-            mKeyFramer.key().rotation().outStreamReadable( std::cout );
-            std::cout << std::endl;
-
-            std::cout << "MatrixAnim:\n" << mat << std::endl << std::endl;
-            */
-                  // debug//./////
-
-         }
+        }
       }
    }
 
+   float speed = mNavigationDCS->getNavigator()->getSpeed();
+   
+   /* do stuff based on if we collided or landed on something... */
+   
+   // if we ran into something...
+   // magic number, yay... this is for the box collider.
+   gmtl::Vec3f c;
+   if (mNavigationDCS->getNavigator()->numColliders() > 0)
+      c = mNavigationDCS->getNavigator()->getCorrection( 0 ) / mStopWatch.timeInstant;
+   if (gmtl::length( c ) > 0.0001)
+   {
+      if (mColliding == false)
+      {
+         // we bumped into something, do some action...
+      #ifdef USE_SONIX
+         mBumpSound.trigger();
+         std::cout<<"mBumpSound.trigger();"<<std::endl;
+      #endif
+      }
+      mColliding = true;
+   }
+   else 
+   {
+      mColliding = false;
+   }
+   
+   // did ride collide?
+   gmtl::Vec3f c2;
+   if (mNavigationDCS->getNavigator()->numColliders() > 1)
+      c2 = mNavigationDCS->getNavigator()->getCorrection( 1 ) / mStopWatch.timeInstant;
+   if (gmtl::length( c2 ) > 0.0001f)
+   {
+      // if it was false
+      if (mRiding == false)
+      {
+         // we landed on something, do some action...
+      #ifdef USE_SONIX
+         mLandSound.trigger();
+         mWalkingSound.trigger();
+      #endif
+      }
+      mRiding = true;
+      mRideCount = 0;
+   }
+   else 
+   {
+      // if it was true
+      if (mRiding == true)
+      {
+         // stoped terrain following...
+      }
+      mRideCount += mStopWatch.timeInstant;
+      if (mRideCount > 0.2)
+      {
+         // stopped terrain following...
+         mRiding = false;
+      }
+   }
+   
+   if (speed > 0.001f)
+   {
+      mWalkingCount += mStopWatch.timeInstant;
+      const float amount = (1.0f/(speed / 30.0f));
+      if (mWalkingCount > amount)
+      {
+         mWalkingCount -= amount;
+         mWalkingSound.trigger();
+      }
+   }
+
+   // play sound while stopping...
+   if (mStopButton->getData() == gadget::Digital::TOGGLE_ON)
+   {
+      #ifdef USE_SONIX
+         mStopSound.trigger( -1 );
+      #endif
+   }
+   else if (mStopButton->getData() == gadget::Digital::TOGGLE_OFF)
+   {
+      #ifdef USE_SONIX
+         mStopSound.stop();
+      #endif
+   }
+   //std::cout << speed << std::endl;
+   mStopSound.setPitchBend( 0.2f + speed / 15.0f );
+   
+   // play sound while accelerating...
+   if (mGoButton->getData() == gadget::Digital::TOGGLE_ON)
+   {
+      #ifdef USE_SONIX
+         mAccelSound.trigger( -1 );
+      #endif
+   }
+   else if (mGoButton->getData() == gadget::Digital::TOGGLE_OFF)
+   {
+      #ifdef USE_SONIX
+         mAccelSound.stop();
+      #endif
+   }
+   mAccelSound.setPitchBend( 0.2f + speed / 15.0f );
+   mAmbientSound.trigger( -1 );
+   
+   // show stats...
    if (mUseStats && haveFocus())
       mStats.preFrame();
 }
@@ -585,7 +739,7 @@ void simplePfNavApp::initializeSounds()
       pfSoundNode* nextSound = new pfSoundNode( mSoundList[x].alias, mSoundList[x].positional );
 
       #ifdef USE_SONIX
-      sonix::instance().trigger( mSoundList[x].alias );
+      sonix::instance()->trigger( mSoundList[x].alias );
       #endif
 
       nextSoundDCS->addChild( nextSound );
@@ -674,12 +828,12 @@ void simplePfNavApp::initScene()
    // Terrain collider
    //planeCollider* collide = new planeCollider;
    pfPogoCollider*  ride_collide = new pfPogoCollider(mCollidableModelGroup);
-   vel_nav_drive->addCollider(ride_collide);
 
    // Set the navigator's collider.
    pfBoxCollider* correction_collide = new pfBoxCollider( mCollidableModelGroup );
    vel_nav_drive->addCollider( correction_collide );
    vel_nav_fly->addCollider( correction_collide );
+   vel_nav_drive->addCollider(ride_collide);
 
    // -- ADD NAVIGATORS to list --- //
    mNavigators.push_back(vel_nav_drive);
