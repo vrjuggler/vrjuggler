@@ -66,6 +66,18 @@ public class VrjConfig
       {
          e.printStackTrace();
       }
+      
+      // Try to get icons for the toolbar buttons
+      try
+      {
+         ClassLoader loader = getClass().getClassLoader();
+         mDefEditorBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/expand_toolbar.gif")));
+      }
+      catch (Exception e)
+      {
+         // Ack! No icons. Use text labels instead
+         mDefEditorBtn.setText("Definition Editor");
+      }
    }
 
    private static EnvironmentService mEnvService;
@@ -202,13 +214,58 @@ public class VrjConfig
          }
       });
       this.add(mToolbar,  BorderLayout.NORTH);
-      this.add(mDesktop, BorderLayout.CENTER);
+      
+      mDefEditorBtn.setToolTipText("Expand Definition Editor");
+      mDefEditorBtn.setActionCommand("Expand");
+      mDefEditorBtn.setFocusPainted(false);
+      
+      mDefEditorBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            toggleDefinitionEditor();
+         }
+      });
+      mToolbar.addToToolbar(mDefEditorBtn);
+
+      
+      mSplitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+      mSplitPane.setResizeWeight(1.0);
+      mDefReposEditor.setVisible(false);
+      mSplitPane.add(mDesktop, JSplitPane.LEFT);
+      mSplitPane.add(mDefReposEditor, JSplitPane.RIGHT);
+      // Default to hiding the DefinitionEditor.
+      this.add(mSplitPane, BorderLayout.CENTER);
+      mSplitPane.setDividerLocation(1.0);
+      mSplitPane.setDividerSize(0);
+   }
+
+   protected void toggleDefinitionEditor()
+   {
+      boolean show_editor = mDefEditorBtn.isSelected();
+      if (! show_editor)
+      {
+         mDefReposEditor.setVisible(false);
+         mSplitPane.setDividerLocation(1.0);
+         mSplitPane.setDividerSize(0);
+         revalidate();
+      }
+      else
+      {
+         mDefReposEditor.setVisible(true);
+         mSplitPane.setDividerLocation(0.60);
+         mSplitPane.setDividerSize(5);
+         revalidate();
+      }
    }
 
    // JBuilder GUI variables
    private BorderLayout mBaseLayout = new BorderLayout();
    private ConfigToolbar mToolbar = new ConfigToolbar();
    private JDesktopPane mDesktop = new JDesktopPane();
+   private JSplitPane mSplitPane = new JSplitPane();
+   private JToggleButton mDefEditorBtn = new JToggleButton();
+   private ConfigDefinitionRepositoryEditor mDefReposEditor = new ConfigDefinitionRepositoryEditor();
 
    /** A handle to the configuration broker. */
    private ConfigBroker mBroker;
