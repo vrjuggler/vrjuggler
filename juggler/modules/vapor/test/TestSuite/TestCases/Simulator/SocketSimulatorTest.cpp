@@ -1,6 +1,13 @@
+#include <vpr/vprConfig.h>
+
 #include <string>
 #include <vector>
+
+#ifdef HAVE_EXT_NUMERIC
+#include <ext/numeric>
+#else
 #include <numeric>
+#endif
 
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
