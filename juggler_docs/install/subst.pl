@@ -63,6 +63,9 @@ $alias_subst{"JUGGLER_MAILING_LIST"} = 'mailto:vrjuggler@vrjuggler.org';
 $alias_subst{"JUGGLER_DEV_MAILING_LIST"} = 'mailto:vrjuggler@vrjuggler.org';
 $alias_subst{"CONTACT_US_DIRECTLY"} = 'mailto:vrjuggler-contact@vrjuggler.org';
 
+$alias_subst{"JUGGLER_SOURCEFORGE"} = 'https://sourceforge.net/project/?group_id=8041';
+$alias_subst{"JUGGLER_SOURCEFORGE_IMAGE"} = 'http://sourceforge.net/sflogo.php?group_id=8041&type=1';
+
 # An alias for a New Window.
 # when you click, should bring content up in a completely new window.
 $alias_subst{"NEW_WINDOW"} = 'NewWindow';
