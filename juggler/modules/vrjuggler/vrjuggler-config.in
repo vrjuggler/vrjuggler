@@ -339,18 +339,18 @@ sub make_LDFLAGS ($;$$$)
    # Determine what VR Juggler libraries will be printed.
    my $vrj_libs = '';
 
-   if ( $LIBS{'vrj'} )
+   if ( $LIBS{'vrj'} || $LIBS{'Juggler'} )
    {
       $vrj_libs = ($echo_profiled ? qq(@vrj_prof_lib@) : qq(@vrj_lib@));
    }
 
-   if ( $LIBS{'vrj_ogl'} )
+   if ( $LIBS{'vrj_ogl'} || $LIBS{'Juggler_ogl'} )
    {
       $vrj_libs .= ($echo_profiled ? qq( @vrj_ogl_prof_lib@)
                                    : qq( @vrj_ogl_lib@));
    }
 
-   if ( $LIBS{'vrj_pf'} )
+   if ( $LIBS{'vrj_pf'} || $LIBS{'Juggler_pf'} )
    {
       $vrj_libs .= ($echo_profiled ? qq( @vrj_pf_prof_lib@)
                                    : qq( @vrj_pf_lib@));
