@@ -1,6 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
-2002-01-06 patrickh    Updated to VPR 0.22.0.
+2003-02-01 patrickh    The Tweek C++ API now builds on Windows.
+                       NEW VERSION: 0.13.4
+2003-01-06 patrickh    Updated to VPR 0.22.0.
                        NEW VERSION: 0.13.3
 2002-12-24 patrickh    Updated to VPR 0.21.0.
                        NEW VERSION: 0.13.2

@@ -8,6 +8,11 @@ For all versions:
 
 ===============================================================================
 
+ Version: 0.13.4
+Released: February 2, 2003
+   New feature:
+       * The C++ API can be built and used on Windows.
+
  Version: 0.11.0
 Released: September 10, 2002
    Required changes when upgrading from all previous versions:
