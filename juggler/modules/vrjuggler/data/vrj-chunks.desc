@@ -130,7 +130,7 @@
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="DTK" name="DTK">
-    <category>NoClue</category>
+    <category>Devices</category>
     <help>Provides input services multiple machines</help>
     <PropertyDesc token="translate" name="Translation" type="float" variable="0">
       <help>(world_T_transmitter) Translation of the transmitter from Juggler coord system.</help>
@@ -311,7 +311,7 @@
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="DummyPosition" name="Dummy Position">
-    <category>NoClue</category>
+    <category>Devices</category>
     <help>A 'dummy' position device</help>
     <PropertyDesc token="position" name="Position" type="float" variable="0">
       <help>Initial Dummy Position</help>
@@ -327,7 +327,7 @@
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="FileConnect" name="EM Connection">
-    <category>NoClue</category>
+    <category>Generic</category>
     <help>A file for outputing Environment Manager data</help>
     <PropertyDesc token="FileName" name="Filename" type="string" variable="0">
       <help>The name of the file to dump output to.</help>
@@ -346,7 +346,7 @@
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="EnvironmentManager" name="Environment Manager">
-    <category>NoClue</category>
+    <category>Generic</category>
     <help>Application-side of connection to vjcontrol GUI</help>
     <PropertyDesc token="Port" name="Port" type="int" variable="0">
       <help>Networking port to listen on</help>
@@ -695,11 +695,11 @@
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="vjIncludeDescFile" name="Include Descriptions File">
-    <category>NoClue</category>
+    <category>Generic</category>
     <help>Chunk Descriptions File that should be loaded before processing the rest of this file</help>
   </ChunkDesc>
   <ChunkDesc token="vjIncludeFile" name="Include File">
-    <category>NoClue</category>
+    <category>Generic</category>
     <help>File that should be loaded along with this one</help>
   </ChunkDesc>
   <ChunkDesc token="Isense" name="Isense">
@@ -1201,17 +1201,14 @@
   <ChunkDesc token="RIMChunk" name="Remote Input Manager Chunk">
     <help />
     <category>RIM</category>
-    <PropertyDesc name="Sync Device" token="sync_device" type="chunk" variable="0">
+    <PropertyDesc name="Sync Machine" token="sync_machine" type="chunk" variable="0">
       <help />
-      <item label="Device" defaultvalue="" />
-      <enumeration name="SimAnalog" />
-      <enumeration name="SimDigital" />
-      <enumeration name="SimPosition" />
-      <enumeration name="Isense" />
+      <item label="Machine" defaultvalue="" />
+      <enumeration name="cluster_machine" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="sigmoid_linear_pos_filter" name="SigmoidLinearPosFilter">
-    <category>NoClue</category>
+    <category>Devices</category>
     <PropertyDesc token="minDist" name="minDist" type="float" variable="0">
       <help>Low point of the sigmoid.  Anything below this is ignored.  Anything larger is interpolated.</help>
       <item label="Minimum Distance" defaultvalue="0.0" />
@@ -1439,7 +1436,7 @@
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="JugglerUser" name="VR Juggler User">
-    <category>NoClue</category>
+    <category>Devices</category>
     <help>This is a user in VR Juggler.  This is used for multi-user applications</help>
     <PropertyDesc token="headPos" name="Head Position" type="chunk" variable="0">
       <help>This is the source of head position information.</help>
@@ -1453,7 +1450,7 @@
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="Vec3" name="Vec3">
-    <category>NoClue</category>
+    <category>Generic</category>
     <PropertyDesc token="x" name="x" type="float" variable="0">
       <item label="X" defaultvalue="0.0" />
     </PropertyDesc>
