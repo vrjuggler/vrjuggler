@@ -38,53 +38,53 @@ public class NetworkTest
     * Implements the Tweek CommunicationListener interface needed for being
     * informed of connections and disconnections with remote CORBA servers.
     */
-   public void connectionStateChanged (CommunicationEvent e)
+   public void connectionStateChanged(CommunicationEvent e)
    {
-      // The first thing to do is get the CORBA service object from the
-      // event.  We need this so we know to whom we are are connecting.  Once
-      // we have the CORBA service, we get its Subject Manager since that's
-      // what contains the actual subjects we need.
-      CorbaService corba_service = e.getCorbaService();
-      SubjectManager mgr         = corba_service.getSubjectManager();
-
-      Subject subject = mgr.getSubject("SliderSubject");
-      SliderSubject slider_subject = null;
-
-      // Try to narrow the Subjet object to a SliderSubject object.  If this
-      // fails, it throws a CORBA BAD_PARAM exception.  In that case, we open
-      // a dialog box saying that the narrowing failed.
-      try
-      {
-         slider_subject = SliderSubjectHelper.narrow(subject);
-      }
-      catch (BAD_PARAM narrow_ex)
-      {
-         JOptionPane.showMessageDialog(null,
-                                       "Failed to narrow subject to SliderSubject",
-                                       "SliderSubject Narrow Error",
-                                       JOptionPane.ERROR_MESSAGE);
-      }
-
-      subject = mgr.getSubject("WhiteboardSubject");
-      WhiteboardSubject whiteboard_subject = null;
-
-      // Try to do the same narrowing as above, but this time for Subject to
-      // WhitboardSubjectHelper.
-      try
-      {
-         whiteboard_subject = WhiteboardSubjectHelper.narrow(subject);
-      }
-      catch (BAD_PARAM narrow_ex)
-      {
-         JOptionPane.showMessageDialog(null,
-                                       "Failed to narrow subject to WhiteboardSubject",
-                                       "WhiteboardSubject Narrow Error",
-                                       JOptionPane.ERROR_MESSAGE);
-      }
-
       // Handle a CORBA connection event from Tweek.
       if ( CommunicationEvent.CONNECT == e.getType() )
       {
+         // The first thing to do is get the CORBA service object from the
+         // event.  We need this so we know to whom we are are connecting.  Once
+         // we have the CORBA service, we get its Subject Manager since that's
+         // what contains the actual subjects we need.
+         CorbaService corba_service = e.getCorbaService();
+         SubjectManager mgr         = corba_service.getSubjectManager();
+
+         Subject subject = mgr.getSubject("SliderSubject");
+         SliderSubject slider_subject = null;
+
+         // Try to narrow the Subjet object to a SliderSubject object.  If this
+         // fails, it throws a CORBA BAD_PARAM exception.  In that case, we open
+         // a dialog box saying that the narrowing failed.
+         try
+         {
+            slider_subject = SliderSubjectHelper.narrow(subject);
+         }
+         catch (BAD_PARAM narrow_ex)
+         {
+            JOptionPane.showMessageDialog(null,
+                                          "Failed to narrow subject to SliderSubject",
+                                          "SliderSubject Narrow Error",
+                                          JOptionPane.ERROR_MESSAGE);
+         }
+
+         subject = mgr.getSubject("WhiteboardSubject");
+         WhiteboardSubject whiteboard_subject = null;
+
+         // Try to do the same narrowing as above, but this time for Subject to
+         // WhitboardSubjectHelper.
+         try
+         {
+            whiteboard_subject = WhiteboardSubjectHelper.narrow(subject);
+         }
+         catch (BAD_PARAM narrow_ex)
+         {
+            JOptionPane.showMessageDialog(null,
+                                          "Failed to narrow subject to WhiteboardSubject",
+                                          "WhiteboardSubject Narrow Error",
+                                          JOptionPane.ERROR_MESSAGE);
+         }
+
          // Ensure that slider_subject is a valid object just to be safe.
          if ( slider_subject != null )
          {
@@ -103,6 +103,7 @@ public class NetworkTest
             // remote subject is holding for us.
             mDataSlider.setValue(slider_subject.getValue());
             mDataSlider.addChangeListener(new SliderChangeListener(slider_subject));
+            mDataSlider.setEnabled(true);
          }
 
          if ( whiteboard_subject != null )
@@ -113,20 +114,13 @@ public class NetworkTest
             whiteboard_subject.attach(mWhiteboardObserver._this());
             mWhiteboard.setText(whiteboard_subject.getAllText());
             mWhiteboard.getDocument().addDocumentListener(new DocumentChangeListener(whiteboard_subject));
+            mWhiteboard.setEnabled(true);
          }
       }
       // Handle a CORBA disconnect event from Tweek.
       else if ( CommunicationEvent.DISCONNECT == e.getType() )
       {
-         if ( slider_subject != null )
-         {
-            slider_subject.detach(mSliderObserver._this());
-         }
-
-         if ( whiteboard_subject != null )
-         {
-            whiteboard_subject.detach(mWhiteboardObserver._this());
-         }
+         disconnect();
       }
    }
 
@@ -134,18 +128,26 @@ public class NetworkTest
    {
       if ( e.getType() == TweekFrameEvent.FRAME_CLOSE )
       {
-         if ( mSliderObserver != null )
-         {
-            mSliderObserver.detach();
-            mSliderObserver = null;
-         }
-
-         if ( mWhiteboardObserver != null )
-         {
-            mWhiteboardObserver.detach();
-            mWhiteboardObserver = null;
-         }
+         disconnect();
       }
+   }
+
+   private void disconnect()
+   {
+      if ( mSliderObserver != null )
+      {
+         mSliderObserver.detach();
+         mSliderObserver = null;
+      }
+
+      if ( mWhiteboardObserver != null )
+      {
+         mWhiteboardObserver.detach();
+         mWhiteboardObserver = null;
+      }
+
+      mDataSlider.setEnabled(false);
+      mWhiteboard.setEnabled(false);
    }
 
    private void jbInit() throws Exception
@@ -155,6 +157,7 @@ public class NetworkTest
       mDataSlider.setMajorTickSpacing(20);
       mDataSlider.setMinorTickSpacing(5);
       mDataSlider.setPaintTicks(true);
+      mDataSlider.setEnabled(false);
       mWhiteboardLabel.setHorizontalAlignment(SwingConstants.CENTER);
       mWhiteboardLabel.setText("Whiteboard");
       mWhiteboard.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -162,6 +165,7 @@ public class NetworkTest
       mWhiteboard.setPreferredSize(new Dimension(300, 200));
       mWhiteboard.setLineWrap(true);
       mWhiteboard.setWrapStyleWord(true);
+      mWhiteboardPanel.setEnabled(false);
       mSliderPanel.add(mDataSlider, null);
       mWhiteboardScroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
       mWhiteboardScroller.getViewport().add(mWhiteboard, null);
