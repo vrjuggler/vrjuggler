@@ -9,6 +9,7 @@
 #
 # Usage:
 #     install-dir.pl -i <source directory> -o <destination directory>
+#                   [-u <user name> -g <group name> -m <mode>]
 #
 #     <source directory> - The source directory to be installed
 #     <destination directory> - The location to install the source directory
@@ -30,16 +31,32 @@ use InstallOps;
 
 # Ensure that there are four command-line arguments.  If not, exit with
 # error status.
-if ( $#ARGV != 3 ) {
+if ( $#ARGV < 3 || $#ARGV > 9 ) {
     warn "Usage: $0 -i <source directory> -o <destination directory>\n";
     exit 1;
 }
 
 # Get the -i and -o options and store their values in $opt_i and $opt_o
 # respectively.
-getopt('i:o:');
+getopt('g:i:m:o:u:');
 
 my $dest_dir = "$opt_o";
+
+# Defaults for ownership and permissions.
+my($uid, $gid, $mode) = ($<, (getpwuid($<))[3], "0644");
+
+if ( $opt_u ) {
+    $uname = "$opt_u" if $opt_u;
+    $uid = (getpwnam("$uname"))[2] or die "getpwnam($uname): $!\n";
+}
+
+if ( $opt_g ) {
+    $gname = "$opt_g" if $opt_g;
+    $gid = (getgrnam("$gname"))[2] or die "getgrnam($gname): $!\n";
+}
+
+$mode = "$opt_m" if $opt_m;
+
 umask(002);
 mkpath("$dest_dir", 0, 0755);	# Make sure that $dest_dir exists
 
@@ -72,25 +89,25 @@ sub recurseAction ($) {
     SWITCH: {
 	# Match .txt or .TXT.
 	if ( $curfile =~ /\.txt$/i ) {
-	    installFile("$curfile", 0644, "$dest_dir");
+	    installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
 	    last SWITCH;
 	}
 
 	# Match .C, .c, or .h.
 	if ( $curfile =~ /\.[Cch]$/ ) {
-	    installFile("$curfile", 0644, "$dest_dir");
+	    installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
 	    last SWITCH;
 	}
 
 	# Match .cxx, .cpp, .CXX or .CPP.
 	if ( $curfile =~ /\.c(xx|pp)$/i ) {
-	    installFile("$curfile", 0644, "$dest_dir");
+	    installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
 	    last SWITCH;
 	}
 
 	# Match Makefile.
 	if ( "$curfile" eq "Makefile" ) {
-	    installFile("$curfile", 0644, "$dest_dir");
+	    installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
 	    last SWITCH;
 	}
     }
