@@ -45,6 +45,9 @@ import org.vrjuggler.tweek.beans.*;
 
 
 /**
+ * A Tweek Viewer Bean that implements a tree-based view of the loaded Panel
+ * Beans.  This can be loaded dynamically by the Tweek GUI to extend the
+ * available viewers.
  *
  * @version $Revision$
  *
@@ -71,23 +74,23 @@ public class BeanTreeViewer
       empty_left.setBackground(Color.white);
       empty_left.setMinimumSize(new Dimension(125, 200));
       viewer.add(empty_left, JSplitPane.LEFT);
-      viewer.add(m_default_bean_panel, JSplitPane.RIGHT);
+      viewer.add(mDefaultBeanPanel, JSplitPane.RIGHT);
       viewer.setDividerSize(5);
    }
 
    public void setModel (BeanTreeModel model)
    {
-      if ( m_bean_tree == null )
+      if ( mBeanTree == null )
       {
-         m_bean_tree = new BeanTree(model);
+         mBeanTree = new BeanTree(model);
          BeanRegistry.instance().addBeanRegistrationListener(this);
       }
       else
       {
-         m_bean_tree.setModel(model);
+         mBeanTree.setModel(model);
       }
 
-      m_model = model;
+      this.model = model;
    }
 
    /**
@@ -138,7 +141,7 @@ public class BeanTreeViewer
       public void valueChanged (TreeSelectionEvent e)
       {
          DefaultMutableTreeNode node =
-            (DefaultMutableTreeNode) m_bean_tree.getLastSelectedPathComponent();
+            (DefaultMutableTreeNode) mBeanTree.getLastSelectedPathComponent();
 
          if ( node != null )
          {
@@ -186,7 +189,7 @@ public class BeanTreeViewer
                   m_last_panel = null;
                }
 
-               viewer.add(m_default_bean_panel, JSplitPane.RIGHT);
+               viewer.add(mDefaultBeanPanel, JSplitPane.RIGHT);
             }
          }
       }
@@ -200,7 +203,7 @@ public class BeanTreeViewer
 
    private void refreshDataModel ()
    {
-      m_model.nodeStructureChanged((TreeNode) m_model.getRoot());
+      model.nodeStructureChanged((TreeNode) model.getRoot());
    }
 
    /**
@@ -211,43 +214,43 @@ public class BeanTreeViewer
     */
    private void jbInit() throws Exception
    {
-      m_default_bean_panel.setBackground(Color.white);
-      m_default_bean_panel.setLayout(m_default_bean_panel_layout);
+      mDefaultBeanPanel.setBackground(Color.white);
+      mDefaultBeanPanel.setLayout(mDefaultBeanPanelLayout);
 
       // Put together the BeanTree displaying the JavaBeans.
-      m_bean_tree.addTreeSelectionListener(new BeanSelectionListener());
-      m_bean_tree.setScrollsOnExpand(true);
-      m_bean_tree_pane.getViewport().add(m_bean_tree, null);
+      mBeanTree.addTreeSelectionListener(new BeanSelectionListener());
+      mBeanTree.setScrollsOnExpand(true);
+      mBeanTreePane.getViewport().add(mBeanTree, null);
 
-      m_title_panel_label.setFont(new java.awt.Font("Dialog", 1, 24));
-      m_title_panel_label.setForeground(Color.white);
-      m_title_panel_label.setText("Tweek!");
-      m_title_panel.setBackground(Color.black);
-      m_title_panel.setLayout(m_title_panel_layout);
-      m_title_panel.add(m_title_panel_label, null);
+      mTitlePanelLabel.setFont(new java.awt.Font("Dialog", 1, 24));
+      mTitlePanelLabel.setForeground(Color.white);
+      mTitlePanelLabel.setText("Tweek!");
+      mTitlePanel.setBackground(Color.black);
+      mTitlePanel.setLayout(mTitlePanelLayout);
+      mTitlePanel.add(mTitlePanelLabel, null);
 
-      m_default_bean_panel.add(m_title_panel, BorderLayout.NORTH);
+      mDefaultBeanPanel.add(mTitlePanel, BorderLayout.NORTH);
 
-      viewer.add(m_default_bean_panel, JSplitPane.RIGHT);
-      viewer.add(m_bean_tree_pane, JSplitPane.LEFT);
+      viewer.add(mDefaultBeanPanel, JSplitPane.RIGHT);
+      viewer.add(mBeanTreePane, JSplitPane.LEFT);
    }
 
    // ========================================================================
    // Private data members.
    // ========================================================================
 
-   private BeanTreeModel m_model = null;
+   private BeanTreeModel model = null;
 
    private JSplitPane  viewer = new JSplitPane();
 
    // The tree holding the bean hierarchy.
-   private JScrollPane m_bean_tree_pane = new JScrollPane();
-   private BeanTree    m_bean_tree      = null;
+   private JScrollPane mBeanTreePane = new JScrollPane();
+   private BeanTree    mBeanTree     = null;
 
    // Contents of the default panel shown in the right side of the split pane.
-   private JPanel       m_default_bean_panel        = new JPanel();
-   private BorderLayout m_default_bean_panel_layout = new BorderLayout();
-   private JPanel       m_title_panel               = new JPanel();
-   private FlowLayout   m_title_panel_layout        = new FlowLayout();
-   private JLabel       m_title_panel_label         = new JLabel();
+   private JPanel       mDefaultBeanPanel       = new JPanel();
+   private BorderLayout mDefaultBeanPanelLayout = new BorderLayout();
+   private JPanel       mTitlePanel             = new JPanel();
+   private FlowLayout   mTitlePanelLayout       = new FlowLayout();
+   private JLabel       mTitlePanelLabel        = new JLabel();
 }
