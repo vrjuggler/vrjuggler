@@ -8,9 +8,9 @@ chunk juggler_audio_manager "Juggler Audio Manager" "VR Juggler Audio Manager"
 chunk Sound "Sound" ""
   Name String 1 "Name" "Sound Alias - name that your application references"
   filename String 1 "File Name" ""
-  ambient Bool 1 "Positional" "Is it position based sound (vol changes with movement)? Or is it just ambient."
-  loop Float 1 "Loop" "How many times does the sound loop? (-1 infinite)"
+  ambient Bool 1 "Ambient" "Is it position based sound (vol changes with movement)? Or is it just ambient."
   retriggerable Bool 1 "Retriggerable" "can the sound retrigger during play?"
+  loop Int 1 "Loop" "How many times does the sound loop? (-1 infinite)"
   position Float 3 "sound position" ""
   end
 End

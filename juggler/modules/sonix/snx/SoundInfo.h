@@ -13,7 +13,7 @@ namespace aj
  */
 struct SoundInfo
 {
-   SoundInfo() : ambient( true ), triggerOnNextBind( false ), datasource( FILESYSTEM ), repeat( 1 ), repeatCountdown( 0 ), data(), filename()
+   SoundInfo() : retriggerable( false ), ambient( true ), triggerOnNextBind( false ), datasource( FILESYSTEM ), repeat( 1 ), repeatCountdown( 0 ), data(), filename()
    {
       //position.makeIdent();
    }
@@ -32,6 +32,7 @@ struct SoundInfo
    float position[3];
    
    bool ambient;  // is the sound ambient (true) or positional (false)?
+   bool retriggerable;  // can the sound be retriggered while playing?
    int repeat;           // number of times to repeat (static)
 
    // -----------------------------------------------
