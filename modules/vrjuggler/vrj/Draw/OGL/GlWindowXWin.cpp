@@ -180,7 +180,6 @@ int GlWindowXWin::open()
       }
 
       createEmptyCursor(mXDisplay, mXWindow);
-
       /***************** Set Window Name/Class/Size/Pos *********************/
    
       /* Before we map the window, we need a name for it (this is also useful for
@@ -281,6 +280,11 @@ int GlWindowXWin::open()
          // XXX: Possibly not the best way to add this to input manager
          // - What happens when the event window is removed at run-time???
          vrj::Kernel::instance()->getInputManager()->addDevice(dev_ptr);
+      }
+
+      if( mHideMouse )
+      {
+         XDefineCursor(mDisplay, mWindow, mEmptyCursor);
       }
    
       ret_val = true;
