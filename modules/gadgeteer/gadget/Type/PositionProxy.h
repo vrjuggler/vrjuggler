@@ -124,7 +124,7 @@ public:
       }
 
       Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
-      vprASSERT(ret_val != NULL);
+      vprASSERT((ret_val != NULL) && "Cross-cast in PositionProxy failed");
       return ret_val;
    }
 
