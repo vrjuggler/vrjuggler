@@ -4,6 +4,7 @@ package ConfigUpdater;
 import VjConfig.*;
 import java.io.*;
 import java.net.URL;
+import java.util.*;
 
 /** Main for ConfigUpdater utility.  uses the old dual-file-format support
  *  from vjcontrol to load & save a file, converting it to the XML format
@@ -169,7 +170,171 @@ public class Main {
     }
 
 
+    /** Looks for chunks to be modified/replaced.  There's a lot of
+     *  pretty specific info in this.
+     */
     protected static void updateChunkDB (ConfigChunkDB db) {
+        List chunks;
+        ConfigChunk ch1, ch2, ch3;
+        Property p;
+        int i;
+        int val;
+        VarValue v;
+
+        // simdisplays need to be replaced w/ displaywindows...
+        chunks = db.getOfDescToken ("simDisplay");
+        for (i = 0; i < chunks.size(); i++) {
+            ch1 = (ConfigChunk)chunks.get(i);
+            db.remove (ch1.getName());
+
+            ch2 = ChunkFactory.createChunkWithDescToken ("displayWindow");
+            ch2.setName (ch1.getName());
+
+            p = ch2.getPropertyFromToken ("origin");
+            p.setValue (ch1.getValueFromToken ("origin", 0), 0);
+            p.setValue (ch1.getValueFromToken ("origin", 1), 1);
+
+            p = ch2.getPropertyFromToken ("size");
+            p.setValue (ch1.getValueFromToken ("size", 0), 0);
+            p.setValue (ch1.getValueFromToken ("size", 1), 1);
+
+            p = ch2.getPropertyFromToken ("pipe");
+            p.setValue (ch1.getValueFromToken ("pipe", 0), 0);
+
+            // 'view' prop has value 3 for stereo...
+            p = ch2.getPropertyFromToken ("stereo");
+            p.setValue (ch1.getValueFromToken ("view", 0).getInt() == 3, 0 );
+
+            p = ch2.getPropertyFromToken ("border");
+            p.setValue (ch1.getValueFromToken ("border",0), 0);
+
+            p = ch2.getPropertyFromToken ("active");
+            p.setValue (ch1.getValueFromToken ("active",0), 0);
+
+            // and then create a single sim viewport.  yeesh.
+            ch3 = ChunkFactory.createChunkWithDescToken ("simViewport");
+            ch3.setName (ch2.getName() + " viewport");
+
+            v = new VarValue (ValType.FLOAT);
+            v.set (0.0f);
+
+            p = ch3.getPropertyFromToken ("origin");
+            p.setValue (v, 0);
+            v.set (1.0f);
+            p.setValue (v, 1);
+
+            p = ch3.getPropertyFromToken ("size");
+            v.set (0.0f);
+            p.setValue (v, 0);
+            v.set (1.0f);
+            p.setValue (v, 1);
+
+            p = ch3.getPropertyFromToken ("view");
+            p.setValue (ch3.getValueFromToken ("view",0), 0);
+
+            p = ch3.getPropertyFromToken ("cameraPos");
+            p.setValue (ch3.getValueFromToken ("cameraPos",0), 0);
+
+            p = ch3.getPropertyFromToken ("user");
+            p.setValue (ch3.getValueFromToken ("user",0), 0);
+
+            p = ch3.getPropertyFromToken ("wandPos");
+            p.setValue (ch3.getValueFromToken ("wandPos",0), 0);
+
+            p = ch3.getPropertyFromToken ("active");
+            p.setValue (ch1.getValueFromToken ("active",0), 0);
+
+            p = ch2.getPropertyFromToken ("sim_viewports");
+            v = new VarValue (ValType.EMBEDDEDCHUNK);
+            v.set (ch3);
+            p.setValue (v, 0);
+
+            db.add (ch2);
+        }
+
+
+        // surfacedisplays need to be replaced w/ displaywindows...
+        chunks = db.getOfDescToken ("surfaceDisplay");
+        for (i = 0; i < chunks.size(); i++) {
+            ch1 = (ConfigChunk)chunks.get(i);
+            db.remove (ch1.getName());
+
+            ch2 = ChunkFactory.createChunkWithDescToken ("displayWindow");
+            ch2.setName (ch1.getName());
+
+            p = ch2.getPropertyFromToken ("origin");
+            p.setValue (ch1.getValueFromToken ("origin", 0), 0);
+            p.setValue (ch1.getValueFromToken ("origin", 1), 1);
+
+            p = ch2.getPropertyFromToken ("size");
+            p.setValue (ch1.getValueFromToken ("size", 0), 0);
+            p.setValue (ch1.getValueFromToken ("size", 1), 1);
+
+            p = ch2.getPropertyFromToken ("pipe");
+            p.setValue (ch1.getValueFromToken ("pipe", 0), 0);
+
+            // 'view' prop has value 3 for stereo...
+            p = ch2.getPropertyFromToken ("stereo");
+            p.setValue (ch1.getValueFromToken ("view", 0).getInt() == 3, 0 );
+
+            p = ch2.getPropertyFromToken ("border");
+            p.setValue (ch1.getValueFromToken ("border",0), 0);
+
+            p = ch2.getPropertyFromToken ("active");
+            p.setValue (ch1.getValueFromToken ("active",0), 0);
+
+            // and then create a single sim viewport.  yeesh.
+            ch3 = ChunkFactory.createChunkWithDescToken ("surfaceViewport");
+            ch3.setName (ch2.getName() + " viewport");
+
+            v = new VarValue (ValType.FLOAT);
+            v.set (0.0f);
+
+            p = ch3.getPropertyFromToken ("origin");
+            p.setValue (v, 0);
+            v.set (1.0f);
+            p.setValue (v, 1);
+
+            p = ch3.getPropertyFromToken ("size");
+            v.set (0.0f);
+            p.setValue (v, 0);
+            v.set (1.0f);
+            p.setValue (v, 1);
+
+            p = ch3.getPropertyFromToken ("view");
+            p.setValue (ch3.getValueFromToken ("view",0), 0);
+
+            p = ch3.getPropertyFromToken ("corners");
+            p.setValue (ch3.getValueFromToken ("corners",0), 0);
+            p.setValue (ch3.getValueFromToken ("corners",1), 1);
+            p.setValue (ch3.getValueFromToken ("corners",2), 2);
+            p.setValue (ch3.getValueFromToken ("corners",3), 3);
+
+            p = ch3.getPropertyFromToken ("user");
+            p.setValue (ch3.getValueFromToken ("user",0), 0);
+
+            p = ch3.getPropertyFromToken ("active");
+            p.setValue (ch1.getValueFromToken ("active",0), 0);
+
+            p = ch3.getPropertyFromToken ("tracked");
+            p.setValue (ch1.getValueFromToken ("tracked",0), 0);
+
+            p = ch3.getPropertyFromToken ("trackerproxy");
+            p.setValue (ch1.getValueFromToken ("trackerproxy",0), 0);
+
+
+            p = ch2.getPropertyFromToken ("surface_viewports");
+            v = new VarValue (ValType.EMBEDDEDCHUNK);
+            v.set (ch3);
+            p.setValue (v, 0);
+
+            db.add (ch2);
+        }
+
+
+
+
+
     }
 
 }
