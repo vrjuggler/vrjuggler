@@ -61,7 +61,7 @@ AC_DEFUN(EQUIP_PATH,
     AC_MSG_CHECKING([if EquipExt/VectorStream.h is available])
     if test -e "$eq_standalone/include/EquipExt/VectorStream.h" ; then
         AC_MSG_RESULT(yes)
-        INCLUDES="$INCLUDES -I$eq_standalone/include -I$eq_standalone/include/Modules/equip/equip_runtime/include"
+        EQ_CXXFLAGS="-I$eq_standalone/include -I$eq_standalone/include/Modules/equip/equip_runtime/include"
 
         if test "x$OS_TYPE" = "xWin32" ; then
             EQ_LIBS="-libpath:$eq_standalone/lib$LIBBITSUF eqStandalone.lib"
