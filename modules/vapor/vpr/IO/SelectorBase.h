@@ -43,12 +43,12 @@ class VPR_CLASS_API SelectorBase
 {
 public:
    enum EventType
-      { VPR_READ = 1,          // Read - 
-        VPR_ACCEPT = 1,        // Accept - Same as READ 
-        VPR_WRITE = 2,         // Write -
-        VPR_EXCEPT = 4,        // Exception -
-        VPR_ERROR = 8,         // Error -
-        VPR_INVALID = 16       // Invalid - Invalid handle
+      { Read = 1,          // Read - 
+        Accept = 1,        // Accept - Same as READ 
+        Write = 2,         // Write -
+        Except = 4,        // Exception -
+        Error = 8,         // Error -
+        Invalid = 16       // Invalid - Invalid handle
       };
 };
 
