@@ -90,9 +90,7 @@ public:      // Global "get" interface
 
       //: Get the input manager
    vjInputManager* getInputManager()
-   {
-     return data.inputManager;
-   }
+   { return data.inputManager; }
 
 public:
    vjSystemData    data;   //: Global system data
