@@ -110,6 +110,9 @@ AFTERBUILD	= afterbuild
 # Things to do before the object files and library are built.
 beforebuild:
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
+	@echo "------------------------------------------------"
+	@echo "IDL code generation phase"
+	@echo "------------------------------------------------"
 	@$(MAKE) cxx-idl
 	@$(MAKE) java-idl
 	@$(MAKE) tweek-java
