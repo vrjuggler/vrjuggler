@@ -85,8 +85,10 @@ public:
    virtual void preFrame()
    {
       // Did we ask for an app exit
+      vprDEBUG(vprDBG_ALL, 0) << "VJAppExit: " << mAppExit->getData() << std::endl << vprDEBUG_FLUSH;
       if(mAppExit->getData())
       {
+         vprDEBUG(vprDBG_ALL, 0) << "APP EXIT KEY PRESSED: Stopping kernel and exiting.\n" << vprDEBUG_FLUSH;
          mKernel->stop();     // trigger a kernel stop
       }
    }
@@ -107,6 +109,13 @@ public:
    // Do calculations here.
    virtual void postFrame()
    {;}
+
+   //: Execute any final cleanup needed for the application
+   virtual void exit()
+   {
+      vprDEBUG(vprDBG_ALL, 0) << "torusApp::exit: Exit called. Cleaning up application.\n" << vprDEBUG_FLUSH;;
+   }
+
 
 private:
    void initGLState();
