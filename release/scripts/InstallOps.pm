@@ -85,55 +85,62 @@ sub recurseDir($$);
 #     $base_inst_dir: The base directory to which the existing directory
 #                     tree will be installed.
 # -----------------------------------------------------------------------------
-sub recurseDir ($$) {
-    my $start_dir = shift;
-    my $base_inst_dir = shift;
+sub recurseDir($$)
+{
+   my $start_dir = shift;
+   my $base_inst_dir = shift;
 
-    # Save the current directory.
-    my $prevdir = cwd();
+   # Save the current directory.
+   my $prevdir = cwd();
 
-    chdir("$start_dir") or die "ERROR: Cannot chdir to $start_dir: $!\n";
+   chdir("$start_dir") or die "ERROR: Cannot chdir to $start_dir: $!\n";
 
-    opendir(SRCDIR, ".");
-    my(@files) = readdir(SRCDIR);
-    closedir(SRCDIR);
+   opendir(SRCDIR, ".");
+   my(@files) = readdir(SRCDIR);
+   closedir(SRCDIR);
 
-    my $curfile;
+   my $curfile;
 
-    foreach $curfile ( @files ) {
-	next if $curfile =~ /^\.\.?$/;		# Skip . and ..
+   foreach $curfile ( @files )
+   {
+      next if $curfile =~ /^\.\.?$/;            # Skip . and ..
 
-	# $curfile is a directory.
-	if ( -d "$curfile" ) {
-	    next if "$curfile" eq "CVS";	# Skip CVS directories
+      # $curfile is a directory.
+      if ( -d "$curfile" )
+      {
+         next if "$curfile" eq "CVS";           # Skip CVS directories
 
-	    newDir("$base_inst_dir", "$curfile");
-	    push(@dirstack, "$curfile");
-	    recurseDir("$curfile", "$base_inst_dir");
-	    pop(@dirstack);
-	}
-	# $curfile is something other than a directory (most likely a normal
-	# file).
-	else {
-	    # Pass &$rec_func only the current file name.
-	    if ( $pass_rec_func_cur_file ) {
-		&$rec_func("$curfile");
-	    }
-	    # Pass &$rec_func the current file name and the current directory
-	    # stack.
-	    elsif ( $pass_rec_func_cur_file_dir ) {
-		&$rec_func("$curfile", join("/", @dirstack));
-	    }
-	    # Pass &$rec_func nothing.
-	    else {
-		&$rec_func();
-	    }
-	}
-    }
+         newDir("$base_inst_dir", "$curfile");
+         push(@dirstack, "$curfile");
+         recurseDir("$curfile", "$base_inst_dir");
+         pop(@dirstack);
+      }
+      # $curfile is something other than a directory (most likely a normal
+      # file).
+      else
+      {
+         # Pass &$rec_func only the current file name.
+         if ( $pass_rec_func_cur_file )
+         {
+            &$rec_func("$curfile");
+         }
+         # Pass &$rec_func the current file name and the current directory
+         # stack.
+         elsif ( $pass_rec_func_cur_file_dir )
+         {
+            &$rec_func("$curfile", join("/", @dirstack));
+         }
+         # Pass &$rec_func nothing.
+         else
+         {
+            &$rec_func();
+         }
+      }
+   }
 
-    # Go back to the previous directory so as not to intrude upon the actions
-    # of the caller.
-    chdir("$prevdir");
+   # Go back to the previous directory so as not to intrude upon the actions
+   # of the caller.
+   chdir("$prevdir");
 }
 
 # -----------------------------------------------------------------------------
@@ -148,8 +155,9 @@ sub recurseDir ($$) {
 #                 invoked by recurseDir().  This is typically passed using the
 #                 syntax \&funcName.
 # -----------------------------------------------------------------------------
-sub setRecurseAction ($) {
-    $rec_func = shift;
+sub setRecurseActio($)
+{
+   $rec_func = shift;
 }
 
 # -----------------------------------------------------------------------------
@@ -163,26 +171,28 @@ sub setRecurseAction ($) {
 #                will be added.
 #       $newdir: The new directory to add.
 # -----------------------------------------------------------------------------
-sub newDir ($$) {
-    my $base_dir = shift;
-    my $newdir = shift;
+sub newDir($$)
+{
+   my $base_dir = shift;
+   my $newdir = shift;
 
-    # Save the current directory.
-    my $prevdir = cwd();
+   # Save the current directory.
+   my $prevdir = cwd();
 
-    # As long as $newdir does not exist, use mkpath() to create it.
-    if ( ! -d "$newdir" ) {
-	chdir("$base_dir")
-	    or die "newDir(): WARNING: Could not chdir to $base_dir: $!\n";
+   # As long as $newdir does not exist, use mkpath() to create it.
+   if ( ! -d "$newdir" )
+   {
+      chdir("$base_dir")
+         or die "newDir(): WARNING: Could not chdir to $base_dir: $!\n";
 
-	umask(002);
-	mkpath("$newdir", 0, 0755)
-	    or warn "newDir(): WARNING: Could not make $newdir: $!\n";
-    }
+      umask(002);
+      mkpath("$newdir", 0, 0755)
+         or warn "newDir(): WARNING: Could not make $newdir: $!\n";
+   }
 
-    # Go back to the previous directory so as not to intrude upon the actions
-    # of the caller.
-    chdir("$prevdir");
+   # Go back to the previous directory so as not to intrude upon the actions
+   # of the caller.
+   chdir("$prevdir");
 }
 
 # -----------------------------------------------------------------------------
@@ -196,38 +206,39 @@ sub newDir ($$) {
 #         $mode: The mode bits for the file.
 #     $dest_dir: The destination directory for the file.
 # -----------------------------------------------------------------------------
-sub installFile ($$$$$) {
-    my $filename = shift;
-    my $uid = shift;
-    my $gid = shift;
-    my $mode = shift;
-    my $dest_dir = shift;
+sub installFile($$$$$)
+{
+   my $filename = shift;
+   my $uid = shift;
+   my $gid = shift;
+   my $mode = shift;
+   my $dest_dir = shift;
 
-    my $src_file = "$filename";
+   my $src_file = "$filename";
 
-    my $root = $dirstack[0];
-    $dirstack[0] = ".";
-    my $inst_path = join('/', @dirstack);
-    my $inst_dir = "$dest_dir/$inst_path";
-    $dirstack[0] = "$root";
+   my $root = $dirstack[0];
+   $dirstack[0] = ".";
+   my $inst_path = join('/', @dirstack);
+   my $inst_dir = "$dest_dir/$inst_path";
+   $dirstack[0] = "$root";
 
-    print "$inst_path/$src_file ==> $inst_dir/$filename\n";
+   print "$inst_path/$src_file ==> $inst_dir/$filename\n";
 
-    umask(002);
+   umask(002);
 
-    if ( ! -d "$inst_dir" )
-    {
-       mkpath("$inst_dir", 0, 0755) or warn "mkpath: $!\n";
-    }
+   if ( ! -d "$inst_dir" )
+   {
+      mkpath("$inst_dir", 0, 0755) or warn "mkpath: $!\n";
+   }
 
-    copy("$src_file", "$inst_dir") or warn "copy: $!\n";
+   copy("$src_file", "$inst_dir") or warn "copy: $!\n";
 
-    if ( ! $Win32 )
-    {
-       chown($uid, $gid, "$inst_dir/$filename") or die "chown: $!\n";
-    }
+   if ( ! $Win32 )
+   {
+      chown($uid, $gid, "$inst_dir/$filename") or die "chown: $!\n";
+   }
 
-    chmod(oct($mode), "$inst_dir/$filename") or die "chmod: $!\n";
+   chmod(oct($mode), "$inst_dir/$filename") or die "chmod: $!\n";
 }
 
 # -----------------------------------------------------------------------------
@@ -246,52 +257,58 @@ sub installFile ($$$$$) {
 #     The count of tags replaced in the input file (>= 0) on success.
 #     -1 on error.
 # -----------------------------------------------------------------------------
-sub replaceTags ($%) {
-    my $infile = shift;
-    my(%VARS) = @_;
+sub replaceTags($%)
+{
+   my $infile = shift;
+   my(%VARS) = @_;
 
-    my $count = 0;
+   my $count = 0;
 
-    my $progname = (fileparse("$0"))[0];
+   my $progname = (fileparse("$0"))[0];
 
-    # Open the input file, read its contents into @input_file and close it.
-    # Once it is in the array, we no longer need to worry about it.
-    if ( ! open(INPUT, "$infile") ) {
-	warn "WARNING: Cannot read from $infile: $!\n";
-	return -1;
-    }
+   # Open the input file, read its contents into @input_file and close it.
+   # Once it is in the array, we no longer need to worry about it.
+   if ( ! open(INPUT, "$infile") )
+   {
+      warn "WARNING: Cannot read from $infile: $!\n";
+      return -1;
+   }
 
-    my(@input_file) = <INPUT>;
-    close(INPUT) or warn "WARNING: Cannot close $infile: $!\n";
+   my(@input_file) = <INPUT>;
+   close(INPUT) or warn "WARNING: Cannot close $infile: $!\n";
 
-    # Loop over all the lines in @input_array and replace occurrences of the
-    # tags (the keys of %VARS) with the corresponding values.
-    my $line;
-    foreach $line ( @input_file ) {
-	my $tag;
-	foreach $tag ( keys(%VARS) ) {
-	    $count++ if $line =~ /\@$tag\@/;
-	    $line =~ s/\@$tag\@/$VARS{"$tag"}/g;
-	}
-    }
+   # Loop over all the lines in @input_array and replace occurrences of the
+   # tags (the keys of %VARS) with the corresponding values.
+   my $line;
+   foreach $line ( @input_file )
+   {
+      my $tag;
+      foreach $tag ( keys(%VARS) )
+      {
+         $count++ if $line =~ /\@$tag\@/;
+         $line =~ s/\@$tag\@/$VARS{"$tag"}/g;
+      }
+   }
 
-    # Create the output file by overwriting the input file.  The purpose is
-    # to replace the input file anyway, and overwriting it is the easiest way
-    # to accomplish this.
-    if ( ! open(OUTPUT, "> $infile") ) {
-	warn "WARNING: Cannot create $infile: $!\n";
-	return -1;
-    }
+   # Create the output file by overwriting the input file.  The purpose is
+   # to replace the input file anyway, and overwriting it is the easiest way
+   # to accomplish this.
+   if ( ! open(OUTPUT, "> $infile") )
+   {
+      warn "WARNING: Cannot create $infile: $!\n";
+      return -1;
+   }
 
-    # Now generate the new output file using the contents of @input_file with
-    # all @..@ (that can be substituted) replaced.
-    foreach ( @input_file ) {
-	print OUTPUT;
-    }
+   # Now generate the new output file using the contents of @input_file with
+   # all @..@ (that can be substituted) replaced.
+   foreach ( @input_file )
+   {
+      print OUTPUT;
+   }
 
-    close(OUTPUT) or warn "WARNING: Cannot save $infile: $!\n";
+   close(OUTPUT) or warn "WARNING: Cannot save $infile: $!\n";
 
-    return $count;
+   return $count;
 }
 
 1;
