@@ -644,6 +644,55 @@ public class ConfigToolbar
       toolbar.add(Box.createHorizontalGlue(), null);
    }
 
+   /**
+    * Pragmatically executs a sava as.
+    */
+   public boolean doSaveAs()
+   {
+       try
+       {
+           fileChooser.setDialogTitle("Save As...");
+           fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+           fileChooser.setFileFilter( new ConfigFileFilter() );
+           fileChooser.setFileView( new ConfigFileView() );
+           fileChooser.setFileHidingEnabled(false);
+           fileChooser.setAcceptAllFileFilterUsed(false);
+           ConfigBroker broker = new ConfigBrokerProxy();
+           for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
+           {
+               String old_name = (String)itr.next();
+               DataSource current_resource = broker.get( old_name );
+               if (! current_resource.isReadOnly())
+               {
+                  int result = fileChooser.showSaveDialog(this);
+                  if (result == JFileChooser.APPROVE_OPTION)
+                  {
+                     /// XXX:  This is kind of ghetto; the only way to "rename" a resource is to remove it
+                     ///       and then add it in again with a new name.
+                     String new_name = fileChooser.getSelectedFile().getAbsolutePath();
+                     if (!old_name.equals(new_name))
+                     {
+                        context.remove(old_name);
+                        getBroker().remove(old_name);
+                        FileDataSource new_resource = FileDataSource.create(new_name, getBroker().getRepository());
+                        getBroker().add(new_name, new_resource);
+                        context.add(new_name);
+                        new_resource.commit();
+                     }
+                  }
+               }
+           }
+           return true;
+       }
+       catch(IOException ioe)
+       {
+           JOptionPane.showMessageDialog(this, ioe.getMessage(), "Error",
+           JOptionPane.ERROR_MESSAGE);
+           ioe.printStackTrace();
+       }
+       return false;
+   }
+   
    // JBuilder GUI variables
    private JLabel titleLbl = new JLabel();
    private JToolBar toolbar = new JToolBar();
