@@ -142,8 +142,7 @@ public class PerformanceCommunicator
      */
     public void readStream (InputStream instream, String id) 
     throws IOException {
-        ConfigStreamTokenizer in = new ConfigStreamTokenizer (new InputStreamReader (instream));
-        perf_module.readStream (in, id);
+        perf_module.readStream (instream, id);
     }
 
 
