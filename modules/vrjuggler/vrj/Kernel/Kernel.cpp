@@ -44,6 +44,8 @@ void vjKernel::initConfig()
    loadConfigFile();
 
    setupInputManager();
+   setupEnvironmentManager();
+
 
    //apiFactory = app->api.getAPIFactory();
    sysFactory = vjSGISystemFactory::instance(); // XXX: Should not be system specific
@@ -63,9 +65,14 @@ void vjKernel::controlLoop(void* nullParam)
 
    initConfig();
 
+   perfBuffer = new vjPerfDataBuffer ("Kernel loop",
+				      500, 10, 0);
+   environmentManager->addPerfDataBuffer (perfBuffer);
+
    //while(!Exit)
    while (1)
    {
+       perfBuffer->set (0);
          vjDEBUG(3) << "vjKernel::controlLoop: app->preDraw()\n" << vjDEBUG_FLUSH;
       app->preDraw();         // Do Any application pre-draw stuff
          vjDEBUG(3) << "vjKernel::controlLoop: drawManager->draw()\n" << vjDEBUG_FLUSH;
@@ -224,3 +231,13 @@ void vjKernel::setupDrawManager()
    vjDEBUG_END(0) << "   vjKernel::setupDrawManager: Exiting." << endl << vjDEBUG_FLUSH;
 }
 
+
+void vjKernel::setupEnvironmentManager() {
+   vjDEBUG(0) << "   vjKernel::setupEnvironmentManager\n"
+              << vjDEBUG_FLUSH;
+   vjTimeStamp::initialize();
+   environmentManager = new vjEnvironmentManager();
+   environmentManager->activate();
+   vjDEBUG(0) << "      Environment Manager running & accepting "
+              << "connections\n" << vjDEBUG_FLUSH;
+} 
