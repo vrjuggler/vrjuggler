@@ -30,6 +30,8 @@
 #ifndef XDL_XDL_H
 #define XDL_XDL_H
 
+#ifndef __APPLE__
+
 #include <iostream>  // for debug output..
 #include <string>    // for std::string
 #include <memory.h>  // for NULL
@@ -311,5 +313,7 @@ namespace xdl
 #endif
 
 } // namespace xdl
+
+#endif //Stub out on OS X
 
 #endif
