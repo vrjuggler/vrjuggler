@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
    double total_avg(0.0f);
    for(int x=0;x<num_threads;x++)
    {
-      total_avg += timers[x].getTiming();
+      total_avg += (timers[x].getTiming()/(double)num_reps);
    }
 
    total_avg /= (double)num_threads;
@@ -101,16 +101,16 @@ void doFunc(void* void_thread_num)
 
    vjDEBUG(vjDBG_ALL, 0) << "Thread: " << thread_num << ": Entering.\n" << vjDEBUG_FLUSH;
          
+   timers[thread_num].startTiming();
    for(long rep=0;rep<num_reps;rep++)
-   {
-      timers[thread_num].startTiming();
-         (*tsDataItem) = rep;
-      timers[thread_num].stopTiming();
-      vjThread::self()->yield();
+   {      
+     (*tsDataItem) = rep;
    }
+   timers[thread_num].stopTiming();
+
    
    vjDEBUG(vjDBG_ALL, 0) << "Thread: " << thread_num << ": Exiting: Avg Time of: "
-                         << (timers[thread_num].getTiming()*1000.0f) << "ms" << endl << vjDEBUG_FLUSH;
+                         << ((timers[thread_num].getTiming()/(double)num_reps)*1000.0f) << "ms" << endl << vjDEBUG_FLUSH;
    thread_count_mutex.acquire();
       thread_count--;               // Removing us from the number there
    thread_count_mutex.release();
