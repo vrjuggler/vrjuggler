@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          audioworks.m4,v
-dnl Date modified: 2004/04/19 00:01:43
-dnl Version:       1.13
+dnl Date modified: 2004/07/02 11:35:55
+dnl Version:       1.14
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -49,7 +49,7 @@ dnl     AUDIOWORKS__LDFLAGS  - Extra linker flags for the AudioWorks library
 dnl                            directory.
 dnl ===========================================================================
 
-dnl audioworks.m4,v 1.13 2004/04/19 00:01:43 patrickh Exp
+dnl audioworks.m4,v 1.14 2004/07/02 11:35:55 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has AudioWorks installed.  This
@@ -71,7 +71,7 @@ dnl                           is found.  This argument is optional.
 dnl     action-if-not-found - The action to take if an AudioWorks installation
 dnl                           is not found.  This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_HAVE_AUDIOWORKS,
+AC_DEFUN([DPP_HAVE_AUDIOWORKS],
 [
    AC_REQUIRE([DPP_SYSTEM_SETUP])
 

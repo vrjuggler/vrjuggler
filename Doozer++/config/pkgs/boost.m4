@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          boost.m4,v
-dnl Date modified: 2004/02/27 22:32:16
-dnl Version:       1.22
+dnl Date modified: 2004/07/02 11:35:55
+dnl Version:       1.23
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -43,7 +43,7 @@ dnl     BOOST_INCLUDES - Extra include path for the Boost header directory.
 dnl     BOOST_LDFLAGS  - Extra library path for the Boost libraries.
 dnl ===========================================================================
 
-dnl boost.m4,v 1.22 2004/02/27 22:32:16 patrickh Exp
+dnl boost.m4,v 1.23 2004/07/02 11:35:55 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has Boost installed.  This adds the
@@ -70,7 +70,7 @@ dnl                           is found.  This argument is optional.
 dnl     action-if-not-found - The action to take if an Boost implementation
 dnl                           is not found.  This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_HAVE_BOOST,
+AC_DEFUN([DPP_HAVE_BOOST],
 [
    AC_REQUIRE([DPP_SYSTEM_SETUP])
    

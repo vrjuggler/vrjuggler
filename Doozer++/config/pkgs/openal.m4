@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          openal.m4,v
-dnl Date modified: 2004/01/29 04:28:27
-dnl Version:       1.15
+dnl Date modified: 2004/07/02 11:35:55
+dnl Version:       1.17
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -44,7 +44,7 @@ dnl     AL_INCLUDES - Extra include path for the OpenAL header directory.
 dnl     AL_LDFLAGS  - Extra linker flags for the OpenAL library directory.
 dnl ===========================================================================
 
-dnl openal.m4,v 1.15 2004/01/29 04:28:27 patrickh Exp
+dnl openal.m4,v 1.17 2004/07/02 11:35:55 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has OpenAL installed.  This
@@ -66,7 +66,7 @@ dnl                           is found.  This argument is optional.
 dnl     action-if-not-found - The action to take if an OpenAL implementation
 dnl                           is not found.  This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_HAVE_OPENAL,
+AC_DEFUN([DPP_HAVE_OPENAL],
 [
    dnl initialize returned data...
    OPENAL='no'
@@ -113,7 +113,7 @@ AC_DEFUN(DPP_HAVE_OPENAL,
       fi
    fi
 
-   CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
+   CFLAGS="$CFLAGS $ABI_FLAGS"
 
    dnl Win32 test.
    if test "x$OS_TYPE" = "xWin32" ; then
