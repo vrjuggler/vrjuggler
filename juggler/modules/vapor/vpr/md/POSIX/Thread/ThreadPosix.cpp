@@ -145,7 +145,6 @@ ThreadPosix::~ThreadPosix (void) {
     }
 
     status = 0;
-    pthread_exit((void*) &status);
 }
 
 // ---------------------------------------------------------------------------
