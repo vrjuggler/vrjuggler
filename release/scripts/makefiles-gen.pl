@@ -107,7 +107,12 @@ die "ERROR: Cannot specify file and directory recursion together!\n"
 
 # Import the extra settings for %VARS found in $var_file if it was given
 # on the command line.
-require "$var_file" if $var_file;
+if ( $var_file )
+{
+   my @path_info = fileparse("$var_file");
+   push(@INC, "$path_info[1]");
+   require "$path_info[0]";
+}
 
 umask(002);
 
