@@ -251,6 +251,14 @@ NetworkGraph::VertexListPtr NetworkGraph::getShortestPath (const NetworkGraph::n
    node_prop_map = boost::get(network_node_t(), mGraph);
    weight_map    = boost::get(boost::edge_weight_t(), mGraph);
 
+   vprASSERT(boost::out_degree(src, mGraph) > 0 && "No outgoing edges from source");
+   vprASSERT(boost::out_degree(dest, mGraph) > 0 && "No outgoing edges from destination");
+
+   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+      << "NetworkGraph::getShortestPath(): Looking up the shortest path "
+      << "between " << node_prop_map[src].getIpAddressString() << " and "
+      << node_prop_map[dest].getIpAddressString() << "\n" << vprDEBUG_FLUSH;
+
 //   boost::dijkstra_shortest_paths(mGraph, src,
 //                                  boost::distance_map(&dist[0]).predecessor_map(&pred[0]));
    boost::dijkstra_shortest_paths(mGraph, src, &pred[0], &dist[0], weight_map,
@@ -259,31 +267,32 @@ NetworkGraph::VertexListPtr NetworkGraph::getShortestPath (const NetworkGraph::n
                                   std::numeric_limits<int>::max(), 0,
                                   boost::default_dijkstra_visitor());
 
-   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-      << "Path (dest <-- src): " << node_prop_map[dest].getIpAddressString()
-      << vprDEBUG_FLUSH;
    vstack.push(dest);
 
    // Put the vertices returned in the predecessor map into a stack so that
    // the order that we can reverse the order and put them into vlist.
    while ( (q = pred[p]) != p )
    {
-      vprDEBUG_CONT(vprDBG_ALL, vprDBG_VERB_LVL)
-         << " <-- " << node_prop_map[q].getIpAddressString() << vprDEBUG_FLUSH;
-
       vstack.push(q);
       p = q;
    }
 
-   vprDEBUG_CONT_END(vprDBG_ALL, vprDBG_VERB_LVL) << "\n" << vprDEBUG_FLUSH;
-   vprASSERT(p == src && "Destination is unreachable!");
+   vprASSERT((p == src && src != dest) && "Destination is unreachable from source!");
+
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "Path (src --> dest): "
+                                         << vprDEBUG_FLUSH;
 
    while ( vstack.size() > 0 )
    {
+      vprDEBUG_CONT(vprDBG_ALL, vprDBG_VERB_LVL)
+         << " --> " << node_prop_map[vstack.top()].getIpAddressString()
+         << vprDEBUG_FLUSH;
+
       vlist->push_back(vstack.top());
       vstack.pop();
    }
 
+   vprDEBUG_CONT_END(vprDBG_ALL, vprDBG_VERB_LVL) << "\n" << vprDEBUG_FLUSH;
    return vlist;
 }
 
