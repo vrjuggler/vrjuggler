@@ -36,7 +36,7 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp .@OBJEXT@
+.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
 
 srcdir		= @srcdir@
 
@@ -60,29 +60,29 @@ VPATH		= @srcdir@
 # 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-OBJECTS		= main.@OBJEXT@ application.@OBJEXT@ cubeGeometry.@OBJEXT@
+OBJECTS		= main.@OBJ_FILE_SUFFIX@ application.@OBJ_FILE_SUFFIX@ cubeGeometry.@OBJ_FILE_SUFFIX@
 
 # -----------------------------------------------------------------------------
 # Targets.
 # -----------------------------------------------------------------------------
 default: all
 
-all: analog@EXEEXT@
+all: analog
 
-analog@EXEEXT@: $(OBJECTS)
+analog: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
-main.@OBJEXT@ application.@OBJEXT@: application.h
+main.@OBJ_FILE_SUFFIX@ application.@OBJ_FILE_SUFFIX@: application.h
 
-.cpp.@OBJEXT@:
+.cpp.@OBJ_FILE_SUFFIX@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 	
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend analog@EXEEXT@ analog.ilk $(OBJECTS) *core	\
-          so_locations *.?db
+	rm -f Makedepend analog analog.exe analog.ilk $(OBJECTS)	\
+          *core	so_locations *.?db
 
 clobber: clean
 	rm -rf ./ii_files
