@@ -2,7 +2,7 @@
 
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
-# Doozer++ is (C) Copyright 2000, 2001 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -24,7 +24,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# cvs-gather.pl,v 1.26 2002/12/16 18:03:44 patrickh Exp
+# cvs-gather.pl,v 1.29 2003/03/08 17:04:48 patrickh Exp
 
 use 5.005;
 
@@ -35,7 +35,7 @@ use Getopt::Long;
 use Pod::Usage;
 
 use strict 'vars';
-use vars qw($indent $log_file $full_path $debug_level);
+use vars qw($indent $log_file $full_path $debug_level $override);
 use vars qw($CRITICAL_LVL $WARNING_LVL $CONFIG_LVL $STATE_LVL $VERB_LVL
             $HVERB_LVL $HEX_LVL);
 
@@ -63,13 +63,14 @@ sub nextSpinnerFrame($);
 my $VERSION = '0.1.8';
 # *********************************************************************
 
-my $cfg_file      = '';
-my $help          = 0;
-my $print_version = 0;
-my $verbose       = 0;
-my $entry_mod     = 0;
-my $force_install = 0;
-my $manual        = 0;
+my $cfg_file         = '';
+my $help             = 0;
+my $ignore_overrides = 0;
+my $print_version    = 0;
+my $verbose          = 0;
+my $entry_mod        = 0;
+my $force_install    = 0;
+my $manual           = 0;
 
 my (@limit_modules) = ();
 my (@overrides)     = ();
@@ -85,6 +86,7 @@ $HEX_LVL      = 6;
 
 $debug_level = $CRITICAL_LVL;
 GetOptions('cfg=s' => \$cfg_file, 'help' => \$help, 'override=s' => \@overrides,
+           'ignore-overrides' => \$ignore_overrides,
            'debug=i' => \$debug_level, 'set=s' => \%cmd_overrides,
            'version' => \$print_version, 'verbose' => \$verbose,
            'entry-mod' => \$entry_mod, 'force-install' => \$force_install,
@@ -124,102 +126,126 @@ open(LOG_FILE, "> $log_file")
 
 my (%orig_modules) = ();
 parse("$cfg_file", \%orig_modules) or die "ERROR: Failed to parse $cfg_file\n";
+
+# %orig_modules contains the set of modules with all options set as read from
+# $cfg_file.  %override_modules is a copy of that information that will be
+# passed around to doOverride() below.  In this way, we can retain the original
+# module information if we need it for comparison purposes or something.  Once
+# all the doOverride() calls are complete, %override_modules will contain
+# exactly what the user wants in terms of modules to retrieve and what options
+# should be used in the retrieval process.
 my %override_modules = %orig_modules;
 
-if ( $#overrides == -1 )
+# If --ignore-overrides was not passed in, process any override files and
+# override command-line arguments.
+if ( ! $ignore_overrides )
 {
-   if ( -r ".gatherrc-override" )
+   # If the list of override files is empty, try the default files.
+   if ( $#overrides == -1 )
    {
-      push(@overrides, '.gatherrc-override');
-   }
-   elsif ( -r "$ENV{'HOME'}/.gatherrc-override" )
-   {
-      push(@overrides, "$ENV{'HOME'}/.gatherrc-override");
-   }
-}
-
-my $override = '';
-foreach $override ( @overrides )
-{
-   if ( open(OVERRIDE, "$override") )
-   {
-      my $line;
-      while ( $line = <OVERRIDE> )
+      if ( -r ".gatherrc-override" )
       {
-         chomp($line);
+         push(@overrides, '.gatherrc-override');
+      }
+      elsif ( -r "$ENV{'HOME'}/.gatherrc-override" )
+      {
+         push(@overrides, "$ENV{'HOME'}/.gatherrc-override");
+      }
+   }
 
-         # Strip comments.
-         $line =~ s/#.*$//;
+   # This is a global variable (argh!) that will contain the name of the
+   # current override file being processed.
+   $override = '';
 
-         # Skip blank lines.
-         next if $line =~ /^\s*$/;
-
-         # The current line has at least one wildcard.
-         if ( $line =~ /\*/ )
+   # Iterate over the list of override files passed in on the command line and
+   # apply each of them to the current environment.
+   foreach $override ( @overrides )
+   {
+      if ( open(OVERRIDE, "$override") )
+      {
+         my $line;
+         while ( $line = <OVERRIDE> )
          {
-            if ( $line !~ /\*\./ )
-            {
-               warn "ERROR: Invalid wildcard use at $override:$.\n";
-            }
-            else
-            {
-               my(@override_lines) = expandWildcardLine("$line",
-                                                        \%orig_modules);
+            chomp($line);
 
-               foreach ( @override_lines )
+            # Strip comments.
+            $line =~ s/#.*$//;
+
+            # Skip blank lines.
+            next if $line =~ /^\s*$/;
+
+            # The current line has at least one wildcard.
+            if ( $line =~ /\*/ )
+            {
+               if ( $line !~ /\*\./ )
                {
-                  doOverride("$_", \%override_modules);
+                  warn "ERROR: Invalid wildcard use at $override:$.\n";
+               }
+               else
+               {
+                  my(@override_lines) = expandWildcardLine("$line",
+                                                           \%orig_modules);
+
+                  foreach ( @override_lines )
+                  {
+                     doOverride("$_", \%override_modules);
+                  }
                }
             }
+            # The current line has no wildcards.
+            else
+            {
+               doOverride("$line", \%override_modules);
+            }
          }
-         # The current line has no wildcards.
-         else
-         {
-            doOverride("$line", \%override_modules);
-         }
-      }
 
-      close(OVERRIDE);
-   }
-   else
-   {
-      warn "WARNING: Could not open override file $override: $!\n";
-   }
-}
-
-my $key;
-foreach $key ( keys(%cmd_overrides) )
-{
-   # This is needed because expandWildcardLine() and doOverride() expect to
-   # see something of the form "<key> = <value>".
-   my $line = "$key = $cmd_overrides{$key}";
-
-   # The current line has at least one wildcard.
-   if ( $key =~ /\*/ )
-   {
-      if ( $key !~ /\*\./ )
-      {
-         warn "ERROR: Invalid wildcard use at $override:$.\n";
+         close(OVERRIDE);
       }
       else
       {
-         my(@override_lines) = expandWildcardLine("$line", \%orig_modules);
-
-         foreach ( @override_lines )
-         {
-            doOverride("$_", \%override_modules);
-         }
+         warn "WARNING: Could not open override file $override: $!\n";
       }
    }
-   # The current line has no wildcards.
-   else
+
+   # Loop over all the command-line overrides (--set key=value arguments) and
+   # apply them to the current environment.
+   my $key;
+   foreach $key ( keys(%cmd_overrides) )
    {
-      doOverride("$line", \%override_modules);
+      # This is needed because expandWildcardLine() and doOverride() expect to
+      # see something of the form "<key> = <value>".
+      my $line = "$key = $cmd_overrides{$key}";
+
+      # The current line has at least one wildcard.
+      if ( $key =~ /\*/ )
+      {
+         if ( $key !~ /\*\./ )
+         {
+            warn "ERROR: Invalid wildcard use at $override:$.\n";
+         }
+         else
+         {
+            my(@override_lines) = expandWildcardLine("$line", \%orig_modules);
+
+            foreach ( @override_lines )
+            {
+               doOverride("$_", \%override_modules);
+            }
+         }
+      }
+      # The current line has no wildcards.
+      else
+      {
+         doOverride("$line", \%override_modules);
+      }
    }
 }
 
 my (%targeted_modules) = ();
 
+# If the list of target modules is empty, then %override_modules contains the
+# module list we will use.  This hash may be different from %orig_modules
+# depending on what command-line options were given.
 if ( $#limit_modules == -1 )
 {
    %targeted_modules = %override_modules;
@@ -1170,6 +1196,12 @@ containing zero or more wildcards that describes the hierarchy of a
 given element (Project.Dep1.CVSROOT, for example).  The value is the
 new value for the named key.  Wildcards can only appear in place of
 module names.
+
+=item B<--ignore-overrides>
+
+Ignores I<all> overrides, both those that are defined explicitly (with
+the arguments B<--override> and B<--set>) and those that are read
+automatically (from B<.gatherrc-override> or B<$HOME/.gatherrc-override>).
 
 =item B<--verbose>
 
