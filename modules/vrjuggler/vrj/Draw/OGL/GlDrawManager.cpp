@@ -254,30 +254,28 @@ void GlDrawManager::addDisplay(Display* disp)
          sim_vp = dynamic_cast<SimViewport*>(vp);
          vprASSERT(NULL != sim_vp);
 
-         bool has_simulator(false);
-         has_simulator = vp_chunk->getProperty<bool>("hasSimPlugin");
          sim_vp->setDrawSimInterface(NULL);
 
          // Create the simulator stuff
-         if(has_simulator)
-         {
-            jccl::ConfigChunkPtr sim_chunk =
-               vp_chunk->getProperty<jccl::ConfigChunkPtr>("simPlugIn");
+         vprASSERT(1 == vp_chunk->getNum("simPlugIn") && "You must supply a simulator plugin.");
 
-            vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-               << "GlDrawManager::addDisplay() creating simulator of type '"
-               << sim_chunk->getDescToken() << "'\n" << vprDEBUG_FLUSH;
+         // Create the simulator stuff
+         jccl::ConfigChunkPtr sim_chunk =
+            vp_chunk->getProperty<jccl::ConfigChunkPtr>("simPlugIn");
 
-            DrawSimInterface* new_sim_i =
-               GlSimInterfaceFactory::instance()->createObject(sim_chunk->getDescToken());
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+            << "GlDrawManager::addDisplay() creating simulator of type '"
+            << sim_chunk->getDescToken() << "'\n" << vprDEBUG_FLUSH;
 
-            // XXX: Change this to an error once the new simulator loading code is
-            // more robust.  -PH (4/13/2003)
-            vprASSERT(NULL != new_sim_i && "Failed to create draw simulator");
-            sim_vp->setDrawSimInterface(new_sim_i);
-            new_sim_i->initialize(sim_vp);
-            new_sim_i->config(sim_chunk);
-         }
+         DrawSimInterface* new_sim_i =
+            GlSimInterfaceFactory::instance()->createObject(sim_chunk->getDescToken());
+
+         // XXX: Change this to an error once the new simulator loading code is
+         // more robust.  -PH (4/13/2003)
+         vprASSERT(NULL != new_sim_i && "Failed to create draw simulator");
+         sim_vp->setDrawSimInterface(new_sim_i);
+         new_sim_i->initialize(sim_vp);
+         new_sim_i->config(sim_chunk);
       }
    }
 
