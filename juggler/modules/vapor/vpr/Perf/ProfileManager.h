@@ -1,12 +1,13 @@
 #ifndef VPR_PROFILE_MANAGER_H
 #define VPR_PROFILE_MANAGER_H
 
-
 /**
  * mostly taken from:
  * Real-Time Hierarchical Profiling for Game Programming Gems 3
  * by Greg Hjelstrom & Byon Garrabrant
  */
+
+#include <vpr/vprConfig.h>
 
 #include <vpr/Perf/ProfileIterator.h>
 #include <vpr/Perf/ProfileNode.h>
@@ -17,7 +18,7 @@ namespace vpr
 /*
  * The Manager for the Profile system
  */
-class	ProfileManager {
+class VPR_CLASS_API ProfileManager {
 public:
 
    /**
