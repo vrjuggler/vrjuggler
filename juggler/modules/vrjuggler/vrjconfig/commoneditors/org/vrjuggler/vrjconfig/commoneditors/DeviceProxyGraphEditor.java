@@ -313,6 +313,12 @@ public class DeviceProxyGraphEditor
       }
    }
 
+   public void editorClosing()
+   {
+      mBroker.removeConfigListener(this);
+      this.graph = null;
+   }
+
    public DeviceGraph getGraph()
    {
       return this.graph;

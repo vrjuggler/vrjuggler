@@ -238,6 +238,7 @@ public class ProxyEditorUI
    public void editorClosing()
    {
       deviceProxyEditor.getGraph().removeGraphSelectionListener(this);
+      deviceProxyEditor.editorClosing();
       mAddButton.removeActionListener(mAddAdapter);
       mRemoveButton.removeActionListener(mRemoveAdapter);
       mSelectButton.removeActionListener(mSelectAdapter);
