@@ -30,7 +30,6 @@ import org.vrjuggler.jccl.config.parser.*;
    {
       try
       {
-         System.out.println("Parsing: "+mPersonDefFile.getAbsolutePath());
          ConfigDefinitionBuilder builder = new ConfigDefinitionBuilder();
          List defs = builder.parse(mPersonDefFile);
 

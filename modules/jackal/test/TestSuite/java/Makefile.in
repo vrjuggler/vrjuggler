@@ -29,6 +29,7 @@ TESTCASES = \
 	test.PropertyDescTest \
 	test.ValTypeTest \
 	\
+	test.ConfigurationReaderTest	     \
 	test.ConfigDefinitionTest	     \
 	test.ConfigDefinitionBuilderTest     \
 	test.ConfigDefinitionRepositoryTest  \
