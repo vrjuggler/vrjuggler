@@ -1,4 +1,7 @@
+#include <iostream.h>
+
 #include <SharedMem/vjMemPool.h>
+#include <Config/vjChunkDescDB.h>
 #include <Input/InputManager/vjInputManager.h>
 #include <Input/InputManager/vjPosInterface.h>
 #include <Math/vjCoord.h>
@@ -32,10 +35,10 @@ int main()
    cout << "vjInputManager created" << endl;
 
    // --- configure the input manager -- //
-   input_manager->FNewInput(chunkdb);
+   input_manager->ConfigureInitial(chunkdb);
    cout << "new devices have been added.." << endl << endl;
 
-   input_manager->DumpStatus();
+   cout << input_manager << endl;
 
    cout << "Sleeping..." << flush;
    sleep(2);
