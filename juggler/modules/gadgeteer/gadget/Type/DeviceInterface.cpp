@@ -94,15 +94,13 @@ void BaseDeviceInterface::addDevInterface(BaseDeviceInterface* dev)
 
 void BaseDeviceInterface::removeDevInterface(BaseDeviceInterface* dev)
 { 
-   std::vector<BaseDeviceInterface*>::iterator iter ;
-   for (iter = mAllocatedDevices.begin(); iter != mAllocatedDevices.end(); iter++)
-   {
-      if ( *iter == dev )
-      {
-         mAllocatedDevices.erase(iter);
-         return;   
-      }
-   }
+   // Attempt to find the device, if found, erase it, if not, then assert
+   std::vector<BaseDeviceInterface*>::iterator found_dev 
+         = std::find(mAllocatedDevices.begin(), mAllocatedDevices.end(), dev);
+   vprASSERT(found_dev != mAllocatedDevices.end() && "Tried to remove non-registered interface");
+         
+   if(mAllocatedDevices.end() != found_dev)
+      mAllocatedDevices.erase(found_dev);
 }
 
 void BaseDeviceInterface::refreshAllDevices()
