@@ -48,31 +48,23 @@ bundle_jardir=		$(bundle_vrj_beandir)/customeditors
 
 srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
-EXTRA_SRCS_PATH=	$(srcdir)/../tweek/idl
 INSTALL=		@INSTALL@
-INSTALL_FILES=		
-JAVA_IDL_OPTS=		@JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
-JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
 
 BEANS=			ProxyEditor
 
 JGRAPH_DIR=		$(JUGGLERROOT_ABS)/external/jgraph
 JGRAPH_JARS=		$(JGRAPH_DIR)/jgraphpad.jar
 
-_LOCAL_CLEAN=		1
-
-include $(MKPATH)/dpp.obj.mk
-
 # -----------------------------------------------------------------------------
 # Uses ant to build the java classes and JARs
 # -----------------------------------------------------------------------------
 build-editor:
 	@echo "------------------------------------------------"
-	@echo "Building ProxyEditor java sources"
+	@echo "Building ProxyEditor Java sources"
 	@echo "------------------------------------------------"
 	$(ANT)
 
-_clean:
+clean clobber:
 	$(ANT) clean
 
 # -----------------------------------------------------------------------------
@@ -89,8 +81,8 @@ ifneq ($(JARS), )
           do								\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS)					\
-                $(topdir)/vrjconfig/customeditors/proxyeditor/$$jar	\
-                $(javadir) || exit 1;					\
+                $(topdir)/customeditors/proxyeditor/$$jar $(javadir) ||	\
+                exit 1;							\
           done
 endif
 ifneq ($(BEANS), )
@@ -98,11 +90,11 @@ ifneq ($(BEANS), )
           do								\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS)					\
-                $(topdir)/vrjconfig/customeditors/proxyeditor/$$bean.jar \
+                $(topdir)/customeditors/proxyeditor/$$bean.jar		\
                 $(jardir) || exit 1 ;					\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS)					\
-                $(top_srcdir)/vrjconfig/customeditors/proxyeditor/$$bean.xml \
+                $(top_srcdir)/customeditors/proxyeditor/$$bean.xml	\
                 $(jardir) || exit 1;					\
           done
 endif
@@ -117,7 +109,7 @@ ifneq ($(JARS), )
           do								\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS)					\
-                $(topdir)/vrjconfig/customeditors/proxyeditor/$$jar	\
+                $(topdir)/customeditors/proxyeditor/$$jar		\
                 $(bundle_vrj_javadir) || exit 1 ;			\
           done
 endif
@@ -126,11 +118,11 @@ ifneq ($(BEANS), )
           do								\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS)					\
-                $(topdir)/vrjconfig/customeditors/proxyeditor/$$bean.jar \
+                $(topdir)/customeditors/proxyeditor/$$bean.jar		\
                 $(bundle_jardir) || exit 1 ;				\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS)					\
-                $(top_srcdir)/vrjconfig/customeditors/proxyeditor/$$bean.xml \
+                $(top_srcdir)/customeditors/proxyeditor/$$bean.xml	\
                 $(bundle_jardir) || exit 1;				\
           done
 endif
