@@ -48,6 +48,7 @@
 #include <vpr/IO/Selector.h>
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Status.h>
+#include <vpr/Util/Debug.h>
 
 
 namespace vpr
