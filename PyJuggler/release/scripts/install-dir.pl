@@ -25,9 +25,9 @@
 # Boston, MA 02111-1307, USA.
 #
 # -----------------------------------------------------------------
-# File:          $RCSfile$
-# Date modified: $Date$
-# Version:       $Revision$
+# File:          install-dir.pl,v
+# Date modified: 2004/10/26 14:50:40
+# Version:       1.20
 # -----------------------------------------------------------------
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
@@ -54,8 +54,9 @@ use File::Path;
 use Getopt::Std;
 
 # Do this to include the path to the script in @INC.
-BEGIN {
-    $path = (fileparse("$0"))[1];
+BEGIN
+{
+   $path = (fileparse("$0"))[1];
 }
 
 use lib("$path");
@@ -68,9 +69,10 @@ $Win32 = 1 if $ENV{'OS'} =~ /Windows/;
 
 # Ensure that there are four command-line arguments.  If not, exit with
 # error status.
-if ( $#ARGV < 3 ) {
-    warn "Usage: $0 -i <source directory> -o <destination directory>\n";
-    exit 1;
+if ( $#ARGV < 3 )
+{
+   warn "Usage: $0 -i <source directory> -o <destination directory>\n";
+   exit 1;
 }
 
 # Get the -i and -o options and store their values in $opt_i and $opt_o
@@ -91,17 +93,19 @@ if ( $opt_v )
 # Defaults.  getpwuid() is not implemented in the Win32 Perl port.
 my($uid, $gid, $mode) = ($<, (getpwuid($<))[3], "0644") unless $Win32;
 
-if ( $opt_u ) {
-    $uname = "$opt_u" if $opt_u;
-    my(@user_info) = getpwnam("$uname") or die "getpwnam($uname): $!\n";
-    $uid = $user_info[2];
+if ( $opt_u )
+{
+   $uname = "$opt_u" if $opt_u;
+   my(@user_info) = getpwnam("$uname") or die "getpwnam($uname): $!\n";
+   $uid = $user_info[2];
 }
 
 # getgrnam() is not implemented in the Win32 Perl port.
-if ( $opt_g && ! $Win32 ) {
-    $gname = "$opt_g" if $opt_g;
-    my(@group_info) = getgrnam("$gname") or die "getgrnam($gname): $!\n";
-    $gid = $group_info[2];
+if ( $opt_g && ! $Win32 )
+{
+   $gname = "$opt_g" if $opt_g;
+   my(@group_info) = getgrnam("$gname") or die "getgrnam($gname): $!\n";
+   $gid = $group_info[2];
 }
 
 $mode = "$opt_m" if $opt_m;
@@ -133,60 +137,71 @@ exit 0;
 # Arguments:
 #     $curfile - The name of the current file in the recursion process.
 # -----------------------------------------------------------------------------
-sub recurseAction {
-    my $curfile = shift;
+sub recurseAction
+{
+   my $curfile = shift;
 
-    # Install only the files with extensions listed in @exts if there are any
-    # elements in @exts.
-    if ( $#exts != -1 ) {
-        foreach ( @exts ) {
-            if ( $curfile =~ /$_$/ ) {
-                installFile("$curfile", $uid, $gid, "$mode", "$dest_dir",
-                            $make_symlink);
-                last;
-            }
-        }
-    }
-    else {
-        # If the current file is a .in template file, process it before
-        # installing.
-        if ( $curfile =~ /^(.+?)\.in$/ ) {
-            my $filename = "$1";
-
-            my $workfile;
-
-            if ( $Win32 ) {
-                $workfile = "C:/temp/$curfile";
-            } else {
-                $workfile = "/tmp/$curfile";
-            }
-
-            # Make a working copy of the input file to be safe.
-            copy("$curfile", "$workfile") unless "$curfile" eq "$workfile";
-
-            # Replace the tags in $workfile with the values in %VARS.
-            if ( replaceTags("$workfile", %VARS) < 0 ) {
-                copy("$curfile", "$filename");
-            }
-            # If replaceTags() succeeded, move the work file to the file name
-            # to be installed.
-            else {
-                copy("$workfile", "$filename");
-                unlink("$workfile")
-                    or warn "WARNING: Could not delete $workfile: $!";
-            }
-
-            installFile("$filename", $uid, $gid, "$mode", "$dest_dir",
-                        $make_symlink);
-
-            # Delete the generated file now that we are done with it.
-            unlink("$filename")
-                or warn "WARNING: Could not delete $filename: $!";
-        }
-        # Otherwise, install it as-is.
-        else {
+   # Install only the files with extensions listed in @exts if there are any
+   # elements in @exts.
+   if ( $#exts != -1 )
+   {
+      foreach ( @exts )
+      {
+         if ( $curfile =~ /$_$/ )
+         {
             installFile("$curfile", $uid, $gid, "$mode", "$dest_dir",
                         $make_symlink);
-        }
-    }
+            last;
+         }
+      }
+   }
+   else
+   {
+      # If the current file is a .in template file, process it before
+      # installing.
+      if ( $curfile =~ /^(.+?)\.in$/ )
+      {
+         my $filename = "$1";
+
+         my $workfile;
+
+         if ( $Win32 )
+         {
+            $workfile = "C:/temp/$curfile";
+         }
+         else
+         {
+            $workfile = "/tmp/$curfile";
+         }
+
+         # Make a working copy of the input file to be safe.
+         copy("$curfile", "$workfile") unless "$curfile" eq "$workfile";
+
+         # Replace the tags in $workfile with the values in %VARS.
+         if ( replaceTags("$workfile", %VARS) < 0 )
+         {
+            copy("$curfile", "$filename");
+         }
+         # If replaceTags() succeeded, move the work file to the file name
+         # to be installed.
+         else
+         {
+            copy("$workfile", "$filename");
+            unlink("$workfile")
+               or warn "WARNING: Could not delete $workfile: $!";
+         }
+
+         installFile("$filename", $uid, $gid, "$mode", "$dest_dir",
+                     $make_symlink);
+
+         # Delete the generated file now that we are done with it.
+         unlink("$filename") or warn "WARNING: Could not delete $filename: $!";
+      }
+      # Otherwise, install it as-is.
+      else
+      {
+         installFile("$curfile", $uid, $gid, "$mode", "$dest_dir",
+                     $make_symlink);
+      }
+   }
 }

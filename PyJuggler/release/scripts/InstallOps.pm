@@ -23,9 +23,9 @@
 # Boston, MA 02111-1307, USA.
 #
 # -----------------------------------------------------------------
-# File:          $RCSfile$
-# Date modified: $Date$
-# Version:       $Revision$
+# File:          InstallOps.pm,v
+# Date modified: 2004/02/17 17:20:36
+# Version:       1.26
 # -----------------------------------------------------------------
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
@@ -231,6 +231,7 @@ sub installFile($$$$$;$)
 
    if ( ! -d "$inst_dir" )
    {
+      warn "WARNING: Creating $inst_dir (incomplete installation hierarchy)!\n";
       mkpath("$inst_dir", 0, 0755) or warn "mkpath: $!\n";
    }
 
@@ -255,12 +256,17 @@ sub installFile($$$$$;$)
       copy("$src_file", "$inst_dir") or warn "copy: $!\n";
    }
 
-   if ( ! $Win32 )
+   # Do not try to change file ownership or permissions when we are using
+   # symlinks instead of file copies.
+   if ( ! $make_link )
    {
-      chown($uid, $gid, "$inst_dir/$filename") or die "chown: $!\n";
-   }
+      if ( ! $Win32 )
+      {
+         chown($uid, $gid, "$inst_dir/$filename") or die "chown: $!\n";
+      }
 
-   chmod(oct($mode), "$inst_dir/$filename") or die "chmod: $!\n";
+      chmod(oct($mode), "$inst_dir/$filename") or die "chmod: $!\n";
+   }
 }
 
 # -----------------------------------------------------------------------------
