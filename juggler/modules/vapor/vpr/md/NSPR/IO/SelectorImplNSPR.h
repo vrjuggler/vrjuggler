@@ -58,6 +58,13 @@ namespace vpr {
 class SelectorImpNSPR : public SelectorBase
 {
 public:
+   
+
+   // XXX: What should we do when we are adding a handler while
+   //    also iterating through the current handles.  Bad things "may" happend
+   // This happens ALL the time with acceptors because they add to the reactor as they
+   // are executing an handleEvent themselves
+   
    //: Add the given handle to the selector
    //! PRE: handle is a valid handle
    //! POST: handle is added to the handle set, and initialized to a mask of no-events
