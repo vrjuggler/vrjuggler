@@ -552,16 +552,8 @@ public class ConfigChunkDB implements Cloneable {
 
 
 
-    /** Builds a string representation of self.
-     *  This is a holdover from the times when ConfigChunkDB was a child
-     *  of Vector, and Vector.toString() was final.
-     */
-    public String fileRep() {
-        String s = "";
-	for (int i = 0; i < size(); i++)
-	    s = s + ((ConfigChunk)chunks.get(i)).toString();
-	s = s + "End\n";
-	return s;
+    public String toString () {
+        return xmlRep ();
     }
 
 

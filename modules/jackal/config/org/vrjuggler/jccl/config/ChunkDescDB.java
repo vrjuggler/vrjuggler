@@ -338,18 +338,8 @@ public class ChunkDescDB {
 
 
 
-    public String fileRep () {
-	String s = "";
-	ChunkDesc d;
-        synchronized (this) {
-            int n = descs.size();
-            for (int i = 0; i < n; i++) {
-                d = (ChunkDesc)descs.get(i);
-                s += d.toString();
-            }
-        }
-	s += "End\n";
-	return s;
+    public String toString () {
+        return xmlRep();
     }
 
 

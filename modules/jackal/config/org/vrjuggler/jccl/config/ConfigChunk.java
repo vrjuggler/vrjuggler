@@ -465,19 +465,9 @@ public class ConfigChunk {
 
 
     public final String toString () {
-	return toString ("");
+	return xmlRep();
     }
 
-
-
-    public String toString (String pad) {
-	String s = pad + desc.token + "\n";
-	s += pad + "  Name \"" + name + "\"\n";
-	for (int i = 0; i < props.size(); i++)
-	    s += ((Property)props.get(i)).toString(pad + "  ") + "\n";
-	s += pad + "  end\n";
-	return s;
-    }
 
 
     public String xmlRep () {

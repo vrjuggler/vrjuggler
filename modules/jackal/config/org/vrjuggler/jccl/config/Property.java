@@ -316,24 +316,10 @@ public class Property {
 
 
 
-    public String toString(String pad) {
-	VarValue v;
-	String s = pad + getToken() + " { ";
-	for (int i = 0; i < vals.size(); i++) {
-	    v = (VarValue)vals.get(i);
-
-	    if (valtype == ValType.EMBEDDEDCHUNK) {
-		s += "\n" + v.getEmbeddedChunk().toString(pad + "    ");
-	    }
-	    else {
-		s += "\"" + desc.getEnumString(v) + "\"";
-	    }
-
-	    s+= " ";
-	}
-	s += "}";
-	return s;
+    public String toString () {
+        return xmlRep ("");
     }
+
 
     public String xmlRep (String pad) {
         VarValue v;
