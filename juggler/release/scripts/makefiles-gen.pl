@@ -28,25 +28,11 @@
 #
 # Usage:
 #     makefiles-gen.pl
-#         --CXX=<C++ compiler>
-#         --DEFS=<Compile-time defs>
-#         --CPPFLAGS=<C preprocessor flags>
-#         --CXXFLAGS=<C++ compiler flags>
-#         --EXTRA_LINK_FLAGS=<Extra miscellaneous C++ linker flags>
-#         --OBJ_NAME_FLAG=<Flag used for naming a compiled object file>
-#         --INCLUDES=<Extra include dirs>
-#         --TEST_VJ_LIBS_BASIC=<Basic Juggler libraries needed for test code>
-#         --TEST_VJ_LIBS_GL=<OpenGL API libraries needed for test code>
-#         --TEST_VJ_LIBS_PF=<Performer API libraries needed for test code>
-#         --TEST_LIBS_BASIC=<Basic system libraries needed for test code>
-#         --TEST_EXTRA_LIBS_BASIC=<Basic extra libraries needed for test code>
-#         --TEST_EXTRA_LIBS_GL=<Extra OpenGL libraries needed for test code>
-#         --TEST_EXTRA_LIBS_PF=<Extra Performer libraries needed for test code>
+#         --vars=<Path to a Perl file containing @..@ substitution values>
 #         --srcdir=<Location of source code>
 #         --prefix=<Base directory where Makefile will go>
 #         --startdir=<Directory where search begins>
 #         --SUBDIRS=<Directories containing Makefile.in's>
-#         --PLATFORM=<Platform for which the Makefile is generated>
 #         --uname=<Owner's user name>
 #         --gname=<Group name>
 #         --mode=<Mode bits>
@@ -76,52 +62,34 @@ $Win32 = 1 if $ENV{'OS'} =~ /Windows/;
 # Turn off case insensitivity when parsing command-line options.
 $Getopt::Long::ignorecase = 0;
 
-if ( $#ARGV <= 5 ) {
+if ( $#ARGV < 5 ) {
     die <<USAGE_EOF;
 Usage:
     $0
-        --CXX=<C++ compiler>
-        --DEFS=<Compile-time defs>
-        --CPPFLAGS=<C preprocessor flags>
-        --CXXFLAGS=<C++ compiler flags>
-        --EXTRA_LINK_FLAGS=<Extra miscellaneous C++ linker flags>
-        --OBJ_NAME_FLAG=<Flag used for naming a compiled object file>
-        --INCLUDES=<Extra include dirs>
+        --vars=<Path to a Perl file containing @..@ substitution values>
         --srcdir=<Location of source code>
         --prefix=<Base directory where Makefile will go>
         --startdir=<Directory where search begins>
-        --TEST_VJ_LIBS_BASIC=<Basic Juggler libraries needed for test code>
-        --TEST_VJ_LIBS_GL=<OpenGL API libraries needed for test code>
-        --TEST_VJ_LIBS_PF=<Performer API libraries needed for test code>
-        --TEST_VJ_LIBS_BASIC=<Basic system libraries needed for test code>
-        --TEST_EXTRA_LIBS_BASIC=<Basic extra libraries needed for test code>
-        --TEST_EXTRA_LIBS_GL=<Extra OpenGL libraries needed for test code>
-        --TEST_EXTRA_LIBS_PF=<Extra Performer libraries needed for test code>
         --SUBDIRS=<Directories containing Makefile.in's>
-        --PLATFORM=<Platform for which the Makefile is generated>
       [ --uname=<Owner's user name> --gname=<Group name> --mode=<Mode bits> ]
 USAGE_EOF
 }
 
+# Initialize variables passed (by reference) to GetOptions();
+%VARS = ();
+($var_file, $startdir, $prefix) = ('', '', '');
+($uname, $gname, $mode) = ('', '', '');
+
 # Parse the command-line options and store the given values in %VARS which
 # is indexed by the tag name to be replaced (e.g., 'CXX').
-GetOptions("CXX=s" => \$VARS{'CXX'}, "DEFS:s" => \$VARS{'DEFS'},
-	   "CPPFLAGS:s" => \$VARS{'CPPFLAGS'},
-	   "CXXFLAGS:s" => \$VARS{'CXXFLAGS'},
-	   "EXTRA_LINK_FLAGS:s" => \$VARS{'EXTRA_LINK_FLAGS'},
-	   "INCLUDES:s" => \$VARS{'INCLUDES'},
-	   "OBJ_NAME_FLAG:s" => \$VARS{'OBJ_NAME_FLAG'},
-	   "PLATFORM:s" => \$VARS{'PLATFORM'},
-	   "TEST_VJ_LIBS_BASIC=s" => \$VARS{'TEST_VJ_LIBS_BASIC'},
-	   "TEST_VJ_LIBS_GL=s" => \$VARS{'TEST_VJ_LIBS_GL'},
-	   "TEST_VJ_LIBS_PF=s" => \$VARS{'TEST_VJ_LIBS_PF'},
-	   "TEST_LIBS_BASIC=s" => \$VARS{'TEST_LIBS_BASIC'},
-	   "TEST_EXTRA_LIBS_BASIC:s" => \$VARS{'TEST_EXTRA_LIBS_BASIC'},
-	   "TEST_EXTRA_LIBS_GL:s" => \$VARS{'TEST_EXTRA_LIBS_GL'},
-	   "TEST_EXTRA_LIBS_PF:s" => \$VARS{'TEST_EXTRA_LIBS_PF'},
-	   "srcdir=s" => \$VARS{'srcdir'}, "SUBDIRS=s" => \$VARS{'SUBDIRS'},
-	   "prefix=s" => \$prefix, "startdir=s" => \$startdir,
-	   "uname=s" => \$uname, "gname=s" => \$gname, "mode=s" => \$mode);
+GetOptions("vars=s", \$var_file, "srcdir=s" => \$VARS{'srcdir'},
+	   "SUBDIRS=s" => \$VARS{'SUBDIRS'}, "prefix=s" => \$prefix,
+	   "startdir=s" => \$startdir, "uname=s" => \$uname,
+	   "gname=s" => \$gname, "mode=s" => \$mode);
+
+# Import the extra settings for %VARS found in $var_file if it was given
+# on the command line.
+require "$var_file" if $var_file;
 
 umask(002);
 chdir("$startdir") or die "ERROR: Cannot chdir to $startdir: $!\n";

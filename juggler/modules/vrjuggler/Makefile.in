@@ -897,23 +897,11 @@ install-sample:
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.samples.dist -p ${prefix}
 	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/samples	\
           -m ${_FILE_PERMS} -g ${_GROUP_NAME} -o ${prefix}/samples
-	${PERL} ${scriptdir}/makefiles-gen.pl --CXX="${CXX}"		\
-          --DEFS="${DEFS}" --CPPFLAGS="${CPPFLAGS}"			\
-          --CXXFLAGS="${CXXFLAGS} ${DBG_FLAGS}" --PLATFORM="@PLATFORM@"	\
-          --EXTRA_LINK_FLAGS="@EXTRA_LINK_FLAGS@"			\
-          --INCLUDES="@INCLUDES@"					\
-          --OBJ_NAME_FLAG='@OBJ_NAME_FLAG_SUBST@'			\
-          --startdir="${top_srcdir}/samples"				\
-          --SUBDIRS="${SAMPLE_SUBDIRS}"	--mode="${_FILE_PERMS}"		\
+	${PERL} ${scriptdir}/makefiles-gen.pl				\
+          --vars="${topdir}/VARS.pl" --SUBDIRS="${SAMPLE_SUBDIRS}"	\
+          --startdir="${top_srcdir}/samples" --mode="${_FILE_PERMS}"	\
           --gname="${_GROUP_NAME}" --srcdir="."				\
-          --prefix="${prefix}/samples"					\
-          --TEST_VJ_LIBS_BASIC='@TEST_VJ_LIBS_BASIC_SUBST@'		\
-          --TEST_VJ_LIBS_GL='@TEST_VJ_LIBS_GL@'				\
-          --TEST_VJ_LIBS_PF='@TEST_VJ_LIBS_PF@'				\
-          --TEST_LIBS_BASIC='@TEST_LIBS_BASIC@'				\
-          --TEST_EXTRA_LIBS_BASIC="@TEST_EXTRA_LIBS_BASIC_SUBST@"	\
-          --TEST_EXTRA_LIBS_GL="@TEST_EXTRA_LIBS_GL_SUBST@"		\
-          --TEST_EXTRA_LIBS_PF="@TEST_EXTRA_LIBS_PF@"
+          --prefix="${prefix}/samples"
 
 # Install the test programs.
 install-test:
@@ -923,21 +911,10 @@ install-test:
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.test.dist -p ${prefix}
 	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/test	\
           -m ${_FILE_PERMS} -g ${_GROUP_NAME} -o ${prefix}/test
-	${PERL} ${scriptdir}/makefiles-gen.pl --CXX="${CXX}"		\
-          --DEFS="${DEFS}" --CPPFLAGS="${CPPFLAGS}"			\
-          --CXXFLAGS="${CXXFLAGS} ${DBG_FLAGS}" --PLATFORM="@PLATFORM@"	\
-          --EXTRA_LINK_FLAGS="@EXTRA_LINK_FLAGS@"			\
-          --INCLUDES="@INCLUDES@" --startdir="${top_srcdir}/test"	\
+	${PERL} ${scriptdir}/makefiles-gen.pl --prefix="${prefix}/test"	\
+          --vars="${topdir}/VARS.pl" --startdir="${top_srcdir}/test"	\
           --SUBDIRS="${TEST_SUBDIRS}" --mode="${_FILE_PERMS}"		\
-          --gname="${_GROUP_NAME}" --srcdir="."				\
-          --prefix="${prefix}/test"					\
-          --TEST_VJ_LIBS_BASIC='@TEST_VJ_LIBS_BASIC_SUBST@'		\
-          --TEST_VJ_LIBS_GL='@TEST_VJ_LIBS_GL@'				\
-          --TEST_VJ_LIBS_PF='@TEST_VJ_LIBS_PF@'				\
-          --TEST_LIBS_BASIC='@TEST_LIBS_BASIC@'				\
-          --TEST_EXTRA_LIBS_BASIC="@TEST_EXTRA_LIBS_BASIC_SUBST@"	\
-          --TEST_EXTRA_LIBS_GL="@TEST_EXTRA_LIBS_GL_SUBST@"		\
-          --TEST_EXTRA_LIBS_PF="@TEST_EXTRA_LIBS_PF@"
+          --gname="${_GROUP_NAME}" --srcdir="."
 
 # Install the standard data files.
 install-data:
