@@ -73,8 +73,6 @@
 #
 # VJ_LIBRARY    - The base name of the core Juggler library that will be built
 #                 with no file extension.
-# UTILS_LIBRARY - The base name of the Juggler utility library with no file
-#                 extension.
 # GL_LIBRARY    - The base name of the OpenGL Juggler API library with no file
 #                 extension.
 # PF_LIBRARY    - The base name of the Performer Juggler API library with no
@@ -133,7 +131,6 @@ endif
 # Library names.
 # -----------------------------------------------------------------------------
 VJ_LIBRARY	= @LIB_PREFIX@Juggler
-UTILS_LIBRARY	= @LIB_PREFIX@Juggler_utils
 GL_LIBRARY	= @LIB_PREFIX@Juggler_ogl
 PF_LIBRARY	= @LIB_PREFIX@Juggler_pf
 
