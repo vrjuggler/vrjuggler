@@ -36,12 +36,12 @@
 #include <string.h>
 
  // --- VR Juggler Stuff --- //
-#include <Kernel/vjKernel.h>
+#include <vrj/Kernel/Kernel.h>
 #include <pfBasicConfigNavApp.h>
 
 int main(int argc, char* argv[])
 {
-   Kernel* kernel = Kernel::instance();                             // Declare a new Kernel
+   vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
    pfBasicConfigNavApp* application = new pfBasicConfigNavApp();  // Delcare an instance of my application
 
    // Load config information

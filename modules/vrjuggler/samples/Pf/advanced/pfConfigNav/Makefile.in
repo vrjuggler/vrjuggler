@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/samples/pf/advanced/pfConfigNav.
+# Makefile.in for vrjuggler/samples/Pf/advanced/pfConfigNav.
 # It requires GNU make.
 #
 # Generated for use on @PLATFORM@
@@ -49,9 +49,9 @@ LINK		= @APP_LINK@ @APP_DEBUG_LFLAGS@ @APP_LINK_FLAGS@ $(EXTRA_LFLAGS)
 
 VJ_INCLUDES	= @APP_INCLUDES@ $(AW_INCLUDES) -I$(srcdir)		\
                   -I$(VJ_BASE_DIR)/include				\
-                  -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/nav \
-                  -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/pfNav \
-                  -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/pfTools
+                  -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/nav \
+                  -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/pfNav \
+                  -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/pfTools
 VJ_LIBS		= @APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
                   @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_PF@ $(VJ_AUDIO_LIBS) @APP_BASIC_LIBS_END@
 
@@ -73,10 +73,10 @@ endif
 #AW_LIBS		= @APP_EXTRA_LIBS_AW@
 #VJ_AUDIO_LIBS	= @APP_VJ_LIBS_AW@
 
-vpath %.cpp $(srcdir) $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/nav
+vpath %.cpp $(srcdir) $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/nav
 vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/tools
-vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/pfTools
-vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/pfNav
+vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/pfTools
+vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/Pf/advanced/pfNav
 
 # This Performer sample program requires the following libraries to be linked:
 #
