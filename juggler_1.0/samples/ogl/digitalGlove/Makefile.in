@@ -35,7 +35,9 @@ OBJECTS		= main.@OBJ_FILE_SUFFIX@ simpleGloveApp.@OBJ_FILE_SUFFIX@
 # -----------------------------------------------------------------------------
 default: all
 
+
 all: simpleGlove
+
 
 simpleGlove: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
