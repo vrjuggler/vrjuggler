@@ -116,7 +116,8 @@ vrjconfig-install:
 	@echo "------------------------------------------------"
 ifeq (@OS_TYPE@, UNIX)
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VJROOT_ABS)/vrjconfig/vrjconfig.sh $(bindir)/vrjconfig
+          $(EXTRA_INSTALL_ARGS) $(VJROOT_ABS)/vrjconfig/vrjconfig.sh	\
+          $(bindir)/vrjconfig
 else
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           $(VJROOT_ABS)/vrjconfig/vrjconfig.bat $(bindir)/vrjconfig.bat
@@ -125,15 +126,18 @@ ifneq ($(JARS), )
 	for jar in $(JARS) ;						\
           do								\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
-                $(topdir)/vrjconfig/$$jar $(bindir) || exit 1;		\
+                $(EXTRA_INSTALL_ARGS) $(topdir)/vrjconfig/$$jar		\
+                $(bindir) || exit 1;					\
           done
 endif
 ifneq ($(BEANS), )
 	for bean in $(BEANS) ;						\
           do								\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
-                $(topdir)/vrjconfig/$$bean.jar $(beandir) || exit 1 ;	\
+                $(EXTRA_INSTALL_ARGS) $(topdir)/vrjconfig/$$bean.jar	\
+                $(beandir) || exit 1 ;					\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS)					\
                 $(top_srcdir)/vrjconfig/$$bean.xml $(beandir) || exit 1; \
           done
 endif
