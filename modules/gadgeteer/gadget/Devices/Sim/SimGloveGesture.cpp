@@ -98,7 +98,7 @@ bool SimGloveGesture::config(jccl::ConfigChunkPtr chunk)
 //  Returns -1 if function fails or if devNum is out of range.<BR>
 //  NOTE: If devNum is out of range, function will fail, possibly issueing
 //  an error to a log or console - but will not ASSERT.<BR>
-int SimGloveGesture::getDigitalData(int devNum)
+DigitalData* SimGloveGesture::getDigitalData(int devNum)
 {
    int openLookupTable[] = { 0,0,0,0,0,-1,0,0,0,0,0 };
    int closedLookupTable[] = { 1,1,1,1,1,-1,1,1,1,1,1 };
@@ -107,17 +107,21 @@ int SimGloveGesture::getDigitalData(int devNum)
    {
       case 0:
          //open
-         return openLookupTable[devNum];
+         mDigitalData = openLookupTable[devNum];
+         break;
       case 1:
          //closed
-         return closedLookupTable[devNum];
+         mDigitalData = closedLookupTable[devNum];
+         break;
       case 2:
          // pointing
-         return pointingLookupTable[devNum];
+         mDigitalData = pointingLookupTable[devNum];
+         break;
       default:
-         return openLookupTable[devNum];
-         //return -1;// function failed
+         mDigitalData = openLookupTable[devNum];
+         break;
    }
+   return &mDigitalData;
 }
 
 //: Get the current gesture.

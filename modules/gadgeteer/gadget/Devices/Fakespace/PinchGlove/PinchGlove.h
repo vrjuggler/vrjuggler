@@ -82,7 +82,8 @@ public:
       LTHUMB = 0, LINDEX = 1, LMIDDLE = 2, LRING = 3, LPINKY = 4,
       RTHUMB = 6, RINDEX = 7, RMIDDLE = 8, RRING = 9, RPINKY = 10
    };
-   virtual int getDigitalData(int devNum = 0);
+
+   virtual DigitalData* getDigitalData(int devNum = 0);
 
 protected:
    //: The main control loop for the object
@@ -96,6 +97,9 @@ protected:
    PinchGloveStandalone* mGlove;              // The actual glove
 
    Hand left, right;
+
+    DigitalData mDigitalData[11];           // digitals for each finger.
+                                            // doesn't store time correctly :(
 };
 
 

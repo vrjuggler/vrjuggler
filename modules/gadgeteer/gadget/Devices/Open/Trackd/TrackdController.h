@@ -113,10 +113,10 @@ public:
    }
 
    //: Return digital data
-   virtual int getDigitalData(int devNum=0)
+   virtual DigitalData* getDigitalData(int devNum=0)
    {
       vprASSERT(devNum < (int)mCurButtons.size() && "Digital index out of range");    // Make sure we have enough space
-      return mCurButtons[devNum];
+      return &(mCurButtons[devNum]);
    }
 
    //: Return "analog data"..
@@ -145,7 +145,7 @@ public:
 private:
    TrackdControllerStandalone* mTrackdController;  // The controller we are dealing with
    std::vector<float>      mCurValuators;          // The current (up-to-date) values
-   std::vector<bool>       mCurButtons;            // The current button states
+   std::vector<DigitalData>       mCurButtons;            // The current button states
 };
 
 };

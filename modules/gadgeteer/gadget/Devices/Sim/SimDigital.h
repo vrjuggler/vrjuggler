@@ -60,10 +60,10 @@ public:
    virtual bool config(jccl::ConfigChunkPtr chunk);
 
    //: Return digital data
-   virtual int getDigitalData(int devNum=0)
+   virtual DigitalData* getDigitalData(int devNum=0)
    {
       vprASSERT(devNum < (int)mDigitalData.size());    // Make sure we have enough space
-      return mDigitalData[devNum];
+      return &mDigitalData[devNum];
    }
 
    /* These functions don't do anything */
@@ -77,7 +77,7 @@ public:
    static std::string getChunkType() { return std::string("SimDigital");}
 
 private:
-   std::vector<int>          mDigitalData;   //: The digital data that we have
+   std::vector<DigitalData>  mDigitalData;   //: The digital data that we have
    std::vector<KeyModPair> mSimKeys;       //: The keys to press for digital simulation
 };
 

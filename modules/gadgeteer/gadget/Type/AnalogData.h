@@ -50,8 +50,13 @@ public:
     }
 
 
-    float getAnalogData() {
+    float getAnalogData () {
         return mAnalogData;
+    }
+
+
+    void setAnalogData (float f) {
+        mAnalogData = f;
     }
 
 

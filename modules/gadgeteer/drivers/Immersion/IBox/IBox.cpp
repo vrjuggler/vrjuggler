@@ -252,9 +252,9 @@ float IBox::getAnalogData( int d )
   int IBox::getDigitalData(int)
 
 *********************************************** ahimberg */
-int IBox::getDigitalData(int d)
+DigitalData* IBox::getDigitalData(int d)
 {
-    return theData[current].button[d];
+    return &(theData[current].button[d]);
 }
 
 /**********************************************************
