@@ -258,7 +258,7 @@ public:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    setBufferSize (const vpr::Uint8 char size) {
+    setBufferSize (const vpr::Uint8 size) {
         return m_sio_imp.setBufferSize(size);
     }
 
