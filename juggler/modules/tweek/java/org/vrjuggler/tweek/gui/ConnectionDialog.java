@@ -87,6 +87,10 @@ public class ConnectionDialog extends JDialog
       mNSPortField.setText(String.valueOf(prefs.getDefaultCorbaPort()));
       mNSIiopVerField.setText(String.valueOf(prefs.getDefaultIiopVersion()));
 
+      // At this point, we may have valid Naming Service connection
+      // information, so we should validate the network address.
+      validateNetworkAddress();
+
       // Add an input validator for the port number field.
       mNSPortField.setInputVerifier(new InputVerifier()
          {
