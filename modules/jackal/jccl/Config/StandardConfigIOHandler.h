@@ -35,9 +35,6 @@
 
 #include <jccl/jcclConfig.h>
 
-//#include <string.h>
-//#include <stdlib.h>
-
 #include <jccl/Config/ConfigIOHandler.h>
 #include <jccl/Config/ConfigChunkDB.h>
 

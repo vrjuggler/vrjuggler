@@ -40,8 +40,7 @@
 #include <parsers/DOMParser.hpp>
 #include <framework/XMLFormatter.hpp>
 #include <dom/DOM.hpp>
-#include <string.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 
 #include <jccl/Config/ConfigChunkDB.h>
 //#include <Config/ChunkFactory.h>
