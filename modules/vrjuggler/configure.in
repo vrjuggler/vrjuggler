@@ -1120,6 +1120,8 @@ AC_OUTPUT(Makefile
           samples/ogl/texture/Makefile
           samples/ogl/analog/Makefile
           samples/ogl/wand/Makefile
+          samples/OSG/Makefile
+          samples/OSG/osgNav/Makefile
           samples/pf/Makefile
           samples/pf/simple/Makefile
           samples/pf/advanced/Makefile
