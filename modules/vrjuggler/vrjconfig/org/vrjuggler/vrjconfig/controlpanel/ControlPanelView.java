@@ -208,11 +208,6 @@ public class ControlPanelView
       {
          public void actionPerformed(ActionEvent evt)
          {
-            Frame parent = 
-               (Frame) SwingUtilities.getAncestorOfClass(Frame.class,
-                                                         ControlPanelView.this);
-            JDialog dlg = new JDialog(parent, "Custom Editor", true);
-            
             ControlPanel control = (ControlPanel)evt.getSource();
             Object object = control.getModel().getUserObjectAt(evt.getID());
             if(null != object && object instanceof ConfigElement)
@@ -231,31 +226,41 @@ public class ControlPanelView
                else if(null != list && list.size() > 0)
                {
                   CustomEditor editor = (CustomEditor)list.get(0);
-                  dlg.getContentPane().add(editor.getPanel(),
-                                           BorderLayout.CENTER);
-
                   editor.setConfig(mContext, element);
-                  dlg.setTitle(editor.getTitle());
-                  dlg.pack();
-                  dlg.setVisible(true);
 
-                  ConfigBroker broker = new ConfigBrokerProxy();
-                  for ( Iterator itr = mContext.getResources().iterator();
-                        itr.hasNext(); )
+                  Frame parent = 
+                     (Frame) SwingUtilities.getAncestorOfClass(Frame.class,
+                                                               ControlPanelView.this);
+                  CustomEditorDialog dlg = new CustomEditorDialog(parent,
+                                                                  editor);
+                  int status = dlg.showDialog();
+
+                  if ( status == CustomEditorDialog.CANCEL_OPTION )
                   {
-                     DataSource data_source = broker.get((String)itr.next());
-                     if (! data_source.isReadOnly())
+                     // XXX: How do we undo all of the changes that the user
+                     // made?
+                  }
+                  // Save the user's changes.
+                  else
+                  {
+                     ConfigBroker broker = new ConfigBrokerProxy();
+                     for ( Iterator itr = mContext.getResources().iterator();
+                           itr.hasNext(); )
                      {
-                        try
+                        DataSource data_source = broker.get((String)itr.next());
+                        if (! data_source.isReadOnly())
                         {
-                           data_source.commit();
-                        }
-                        catch(IOException ioe)
-                        {
-                           JOptionPane.showMessageDialog(parent,
-                                                         ioe.getMessage(),
-                                                         "Error",
-                                                         JOptionPane.ERROR_MESSAGE);
+                           try
+                           {
+                              data_source.commit();
+                           }
+                           catch(IOException ioe)
+                           {
+                              JOptionPane.showMessageDialog(parent,
+                                                            ioe.getMessage(),
+                                                            "Error",
+                                                            JOptionPane.ERROR_MESSAGE);
+                           }
                         }
                      }
                   }
