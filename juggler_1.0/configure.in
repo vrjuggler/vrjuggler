@@ -1889,6 +1889,7 @@ AC_OUTPUT(Makefile
           samples/Makefile
           samples/ogl/Makefile
           samples/ogl/combo/Makefile
+          samples/ogl/cones/Makefile
           samples/ogl/cubes/Makefile
           samples/ogl/glove/Makefile
           samples/ogl/digitalGlove/Makefile
