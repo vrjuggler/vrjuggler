@@ -122,10 +122,10 @@ dnl                          test Plexus program], , enable_plexustest=yes)
 
         PLEXUS_CXXFLAGS_MIN=`$PLEXUS_CONFIG $plexus_config_args --cxxflags $ABI --min`
         PLEXUS_INCLUDES_MIN=`$PLEXUS_CONFIG $plexus_config_args --includes --min`
-        PLEXUS_LIBS_CC_MIN="`$PLEXUS_CONFIG $plexus_config_args --libs $ABI --min` $PLEXUS_EXTRA_LIBS_CC"
-        PLEXUS_LIBS_LD_MIN="`$PLEXUS_CONFIG $plexus_config_args --linker --libs $ABI --min` $PLEXUS_EXTRA_LIBS_LD"
-        PLEXUS_LIBS_STATIC_CC_MIN="`$PLEXUS_CONFIG $plexus_config_args --libs $ABI --static --min` $PLEXUS_EXTRA_LIBS_CC"
-        PLEXUS_LIBS_STATIC_LD_MIN="`$PLEXUS_CONFIG $plexus_config_args --linker --libs $ABI --static --min` $PLEXUS_EXTRA_LIBS_LD"
+        PLEXUS_LIBS_CC_MIN=`$PLEXUS_CONFIG $plexus_config_args --libs $ABI --min`
+        PLEXUS_LIBS_LD_MIN=`$PLEXUS_CONFIG $plexus_config_args --linker --libs $ABI --min`
+        PLEXUS_LIBS_STATIC_CC_MIN=`$PLEXUS_CONFIG $plexus_config_args --libs $ABI --static --min`
+        PLEXUS_LIBS_STATIC_LD_MIN=`$PLEXUS_CONFIG $plexus_config_args --linker --libs $ABI --static --min`
 
         AC_MSG_CHECKING([whether Plexus version is >= $min_plexus_version])
         AC_MSG_RESULT([$PLEXUS_VERSION])
