@@ -12,6 +12,12 @@ class diagram {
 @__fqn <oiref:#Package#design_examples.Testing:oiref> 
 */
 class reference {
+}/**
+@__ref <oiref:design#Class#idgckmfddbte8zlddbtjatw.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#design_examples.PresentationExamples:oiref> 
+*/
+class reference1 {
 }}/**
 @__tags
 @shapeType ClassDiagram 
@@ -22,7 +28,8 @@ class __tags {
 */
 class __options {
 }/**
-@__positions 
+@__positions <oigroup:<oiref:design#Class#id3vfmjdazpbhwvdazs63a5.diagram:oiref>=10,10,97,66,1:oigroup>
+<oigroup:<oiref:design#Class#idgckmfddbte8zlddbtjatw.diagram:oiref>=41,120,156,55,1:oigroup> 
 */
 class __positions {
 }
