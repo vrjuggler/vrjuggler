@@ -6,11 +6,11 @@ bool vjAnalogProxy::config(vjConfigChunk* chunk)
 {
    vjDEBUG_BEGIN(1) << "------------------ ANALOG PROXY -----------------\n"
                     << "   config()" << endl << vjDEBUG_FLUSH;
-   vjASSERT(((std::string)(char*)chunk->getType()) == "AnaProxy");
+   vjASSERT(((std::string)chunk->getType()) == "AnaProxy");
 
    int unitNum = chunk->getProperty("unit");
-   std::string proxy_name = (char*)chunk->getProperty("name");
-   std::string dev_name = (char*)chunk->getProperty("device");
+   std::string proxy_name = chunk->getProperty("name");
+   std::string dev_name = chunk->getProperty("device");
 
    int proxy_num = vjKernel::instance()->getInputManager()->AddAnaProxy(dev_name,unitNum,proxy_name,this);
 

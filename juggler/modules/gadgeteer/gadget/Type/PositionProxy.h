@@ -39,10 +39,17 @@ public:
    // Copy the device data to local storage, and transform it if necessary
    void UpdateData() {
       m_posData = *(m_posPtr->GetPosData(m_unitNum));
+      m_posUpdateTime = *(m_posPtr->getPosUpdateTime(m_unitNum));
 
       if(etrans)
          TransformData();
    }
+
+    //: returns time of last update...
+    vjTimeStamp* getUpdateTime () {
+	return &m_posUpdateTime;
+    }
+
 
    //: Set the transform for this vjPosProxy
    // Sets the transformation matrix to
@@ -88,6 +95,7 @@ public:
 
 private:
    vjMatrix     m_posData;
+   vjTimeStamp  m_posUpdateTime;
    vjMatrix     m_matrixTransform;
    vjPosition*  m_posPtr;
    int          m_unitNum;

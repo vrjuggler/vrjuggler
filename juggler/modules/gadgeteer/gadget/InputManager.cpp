@@ -134,7 +134,7 @@ bool vjInputManager::configCanHandle(vjConfigChunk* chunk)
 bool vjInputManager::ConfigureDevice(vjConfigChunk* chunk)
 {
    bool ret_val;
-   std::string dev_name = (std::string)(char*)chunk->getProperty("name");
+   std::string dev_name = chunk->getProperty("name");
    vjDEBUG_BEGIN(1) << "ConfigureDevice: Named: " << dev_name << endl << vjDEBUG_FLUSH;
 
    vjInput* new_device;
@@ -160,7 +160,7 @@ bool vjInputManager::ConfigureDevice(vjConfigChunk* chunk)
 // Check if the device factory or proxy factory can handle the chunk
 bool vjInputManager::ConfigureProxy(vjConfigChunk* chunk)
 {
-   std::string proxy_name = (std::string)(char*)chunk->getProperty("name");
+   std::string proxy_name = chunk->getProperty("name");
    vjDEBUG_BEGIN(1) << "ConfigureProxy: Named: " << proxy_name << endl << vjDEBUG_FLUSH;
 
    vjProxy* new_proxy;
@@ -743,7 +743,7 @@ void vjInputManager::StupifyGesture(int ProxyNum)
 // Is it a proxy alias
 bool recognizeProxyAlias(vjConfigChunk* chunk)
 {
-   return (((std::string)(char*)chunk->getType()) == "proxyAlias");
+   return (((std::string)chunk->getType()) == "proxyAlias");
 }
 
 // Configures proxy aliases in config database
@@ -752,12 +752,12 @@ bool recognizeProxyAlias(vjConfigChunk* chunk)
 bool vjInputManager::ConfigureProxyAlias(vjConfigChunk* chunk)
 {
    vjDEBUG_BEGIN(1) << "vjInputManager::ConfigureProxyAlias" << endl << vjDEBUG_FLUSH;
-   vjASSERT(((std::string)(char*)chunk->getType()) == "proxyAlias");
+   vjASSERT(((std::string)chunk->getType()) == "proxyAlias");
 
    std::string alias_name, proxy_ptr;  // The string of the alias, name of proxy to pt to
 
-   alias_name = (std::string)(char*)chunk->getProperty("aliasName");
-   proxy_ptr = (std::string)(char*)chunk->getProperty("proxyPtr");
+   alias_name = (std::string)chunk->getProperty("aliasName");
+   proxy_ptr = (std::string)chunk->getProperty("proxyPtr");
 
    if(proxyAliases.end() == proxyAliases.find(proxy_ptr))
    {
