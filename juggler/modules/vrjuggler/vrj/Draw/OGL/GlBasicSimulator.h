@@ -91,7 +91,7 @@ public:
    /**
     * Sets the event window the simulator can use to get input from the user.
     */
-   virtual void setEventWindow(gadget::EventWindowInterface ewInterface);
+   virtual void setKeyboardMouse(gadget::KeyboardMouseInterface ewInterface);
 
 public:
    gmtl::Matrix44f getCameraPos()
