@@ -67,6 +67,7 @@
 # sysconfdir      - System configuration directory (usually $(prefix)/etc).
 # topdir          - The top of the build tree.
 #
+# ANT             - Path to ant
 # AR              - Path to ar(1) (or equivalent program).
 # ARFLAGS         - Flags for $(AR).
 # CC              - Path to C compiler.
@@ -165,6 +166,7 @@ sbindir=		@sbindir@
 sysconfdir=		@sysconfdir@
 topdir=			@topdir@
 
+ANT=			@ANT@
 AR=			@AR@ $(DPP_EXTRA_ARFLAGS) $(EXTRA_ARFLAGS) $(ARFLAGS)
 ARFLAGS=		@ARFLAGS@
 AR_NAME_FLAG=		@AR_NAME_FLAG@
