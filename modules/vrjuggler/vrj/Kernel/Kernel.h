@@ -284,8 +284,8 @@ protected:
    /** Constructor: Hidden, so no instantiation is allowed. */
    Kernel();
 
-   Kernel(const vrj::Kernel& k) : jccl::ConfigElementHandler() {;}
-   void operator=(const vrj::Kernel& k) {;}
+   Kernel(const vrj::Kernel& k) : jccl::ConfigElementHandler(k) {;}
+   void operator=(const vrj::Kernel&) {;}
 
    virtual ~Kernel()
    {;}
