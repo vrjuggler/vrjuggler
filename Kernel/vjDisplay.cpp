@@ -53,6 +53,9 @@ void vjDisplay::config(vjConfigChunk* chunk)
     mView    = (vjDisplay::DisplayView)(int)chunk->getProperty("view");
     mActive  = chunk->getProperty("active");
 
+    mLatencyMeasure = new vjPerfDataBuffer ("Head Latency " + name, 500, 4);
+    vjKernel::instance()->getEnvironmentManager()->addPerfDataBuffer (mLatencyMeasure);
+
     // -- Check for error in configuration -- //
     // NOTE: If there are errors, set them to some default value
    if(sizeX <= 0)

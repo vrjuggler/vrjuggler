@@ -269,6 +269,8 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
    vjGlApp* theApp = glManager->getApp();       // Get application for easy access
    vjDisplay* theDisplay = win->getDisplay();   // Get the display for easy access
 
+   theDisplay->recordLatency (0, 1);
+
    glManager->setCurrentContext(win->getId());     // Set TSS data of context id
 
    vjDEBUG(vjDBG_DRAW_MGR,5) << "vjGlPipe::renderWindow: Set context to: "
@@ -356,6 +358,6 @@ void vjGlPipe::swapWindowBuffers(vjGlWindow* win)
 {
    win->makeCurrent();           // Set correct context
    win->swapBuffers();           // Implicitly calls a glFlush
-   //vjTimeStamp* stamp = win->getDisplay()->getUser()->getHeadUpdateTime();
-   //cout << "timestamp time is: " << stamp->usecs() << " usecs" << endl;
+   vjDisplay* theDisplay = win->getDisplay();   // Get the display for easy access
+   theDisplay->recordLatency (2, 3);
 }
