@@ -10,6 +10,90 @@ For all versions:
 
 ===============================================================================
 
+Version: 2.0 Alpha 2 (1.1.143)
+Released: July 1, 2003
+
+    Please refer to the following to get started with VR Juggler 2.0 Alpha 1:
+
+       http://www.vrjuggler.org/vrjuggler/2.0-alpha2/migration.guide/
+   
+    Required application and configuration changes for upgrading from all
+    previous versions (including 1.1.x up through 1.1 DR3):
+        * KeyboardWindows are now referred to as EventWindows. 
+
+            NOTE: DisplayWindows which contain sim_viewports are required to have
+                  the act_as_event_source property enabled.
+                  
+        * The ClusterManager loads ClusterPlugins on demand now. The
+          ClusterManager chunk must contain a lit of plugins which it should
+          load. For example if you wish to load the RemoteInputManager,
+          ApplicationDataManager, StartBarrierPlugin, and the
+          SwapLockTCPPlugin you would have the following:
+
+            <ClusterJuggler name="SouthPark Cluster">
+              <cluser_nodes>cartman</cluster_nodes>
+              <cluser_nodes>kenny</cluster_nodes>
+              <cluser_nodes>stan</cluster_nodes>
+              <cluser_nodes>kyle</cluster_nodes>
+              <cluser_nodes>chef</cluster_nodes>
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libApplicationDataManager.so</clusterPlugin>
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libRemoteInputManager.so</clusterPlugin> 
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libStartBarrierPlugin.so</clusterPlugin> 
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libSwapLockTCPPlugin.so</clusterPlugin> 
+            </ClusterManager>
+
+          On Win32, it would appear as:
+                      
+            <ClusterJuggler name="SouthPark Cluster">
+              <cluser_nodes>cartman</cluster_nodes>
+                  ...
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/ApplicationDataManager.dll</clusterPlugin>
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/RemoteInputManager.dll</clusterPlugin> 
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/StartBarrierPlugin.dll</clusterPlugin> 
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/SwapLockTCPPlugin.dll</clusterPlugin> 
+            </ClusterManager>
+
+          On Win32, it would appear as:
+          
+            <ClusterJuggler name="SouthPark Cluster">
+              <cluser_nodes>cartman</cluster_nodes>
+                  ...
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libApplicationDataManager.lylib</clusterPlugin>
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libRemoteInputManager.lylib</clusterPlugin> 
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libStartBarrierPlugin.lylib</clusterPlugin> 
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libSwapLockTCPPlugin.lylib</clusterPlugin> 
+            </ClusterManager>
+            
+        * ClusterPlugins have the following functionality:
+            * RemoteInputManager 
+               - Synchronize device data across a cluster
+               - Act as a device server for any number of machines.
+            * ApplicationDataManager
+               - Synchronize arbitrary data structures created in the
+                 developers application code across the cluster.
+            * StartBarrierPlugin
+               - Enforce a strict barrier that will force all nodes to begin
+                 calling the vrj::App callback functions at the same time.
+            * SwapLockTCPPlugin
+               - Provide SwapLock to minimize tearing across multiple displays
+                 using TCP/IP socket connection.
+            * SwapLockWiredPlugin
+               - Provide SwapLock to minimize tearing across multiple displays
+                 using a kernel module, a parallel port, and a simple external 
+                 AND gate.
+        * VR Juggler now supports custom simulators which can be created by the
+          user to meet their specific needs. Each DrawManager has also been
+          given its own "default" simulator.
+        * XSLT has been added in:
+            
+            $VJ_BASE_DIR/share/vrjuggler/data/xslt/2.0a1-2.0a2.xsl
+            
+          which will provide an easy method to later convert configuration
+          files from VR Juggler Alpha1 to a new release.
+        
+        * Update to require Boost 1.30
+
+
  Version: 2.0 Alpha 1 (1.1.135)
 Released: March 15, 2003
 

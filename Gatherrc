@@ -7,6 +7,7 @@ GMTL
    Module: GGT/macros         [macros.GGT];
    Module: GGT/modules/GMTL   [external/GMTL];
    Tag: HEAD;
+   Date: 07/01/2003 03:30:56 UTC;
    Path: .;
 };
 
@@ -23,6 +24,7 @@ Doozer      // Get Doozer for makefiles
    CVSROOT: :pserver:anonymous@cvs.doozer.sourceforge.net:/cvsroot/doozer;
    Module: Doozer;
    Tag: RELENG_2_0_0_RELEASE;
+   Date: 07/01/2003 03:30:56 UTC;
    Path: external;
 }; 
 
@@ -31,6 +33,7 @@ Doozer++
    CVSROOT: :pserver:anonymous@cvs.doozer.sourceforge.net:/cvsroot/doozer;
    Module: Doozer++;
    Tag: RELENG_1_5;
+   Date: 07/01/2003 03:30:56 UTC;
    Path: .;
 };
 
@@ -39,5 +42,6 @@ cppdom
    CVSROOT:  :pserver:anonymous@cvs.xml-cppdom.sourceforge.net:/cvsroot/xml-cppdom;
    Module: cppdom;
    Tag: HEAD;
+   Date: 07/01/2003 03:30:56 UTC;
    Path: external;
 };
