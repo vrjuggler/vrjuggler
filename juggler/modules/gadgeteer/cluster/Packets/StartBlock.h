@@ -1,21 +1,6 @@
-/****************** <VPR heading BEGIN do not edit this line> *****************
- *
- * VR Juggler Portable Runtime
- *
- * Original Authors:
- *   Allen Bierbaum, Patrick Hartling, Kevin Meinert, Carolina Cruz-Neira
- *
- * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date$
- * Version:       $Revision$
- * -----------------------------------------------------------------
- *
- ****************** <VPR heading Start do not edit this line> ******************/
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VR Juggler is (C) Copyright 1998-2002 by Iowa State University
+ * VR Juggler is (C) Copyright 1998-2003 by Iowa State University
  *
  * Original Authors:
  *   Allen Bierbaum, Christopher Just,
@@ -37,7 +22,13 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  *
- *************** <auto-copyright.pl Start do not edit this line> ***************/
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef _GADGET_RIM_START_BLOCK_H
 #define _GADGET_RIM_START_BLOCK_H
