@@ -65,7 +65,7 @@ public class PlacerSelectionEvent
    /**
     * Gets the index of the item that is selected.
     *
-    * @retrun  the selected index or -1 if nothing is selected
+    * @return  the selected index or -1 if nothing is selected
     */
    public int getIndex()
    {
