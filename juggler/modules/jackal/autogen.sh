@@ -50,4 +50,4 @@ then
   $AUTOHEADER
 fi
 echo "Running $AUTOCONF ..."
-$AUTOCONf
+$AUTOCONF
