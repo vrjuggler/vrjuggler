@@ -90,8 +90,8 @@ vpr::ReturnStatus NetworkGraph::construct (const std::string& path)
          skipToEOL(input_file);
 
          // Now create the vertex and add it to the graph.
-         NetworkNode node_prop(index, node_type, node_ip);
-         vertex_map[index] = boost::add_vertex(NodeProperty(node_prop),
+         NetworkNodePtr node_prop( new NetworkNode(index, node_type, node_ip) );
+         vertex_map[index] = boost::add_vertex(NodeProperty( node_prop),
                                                mGraph);
       }
 
@@ -191,7 +191,7 @@ vpr::ReturnStatus NetworkGraph::getNodeWithAddr (const vpr::Uint32 addr,
 
    vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
    boost::graph_traits<net_graph_t>::vertex_iterator vi, vi_end;
-   NetworkNode node_prop;
+   NetworkNodePtr node_prop;
 
    boost::tie(vi, vi_end) = boost::vertices(mGraph);
 
@@ -199,7 +199,7 @@ vpr::ReturnStatus NetworkGraph::getNodeWithAddr (const vpr::Uint32 addr,
    {
       node_prop = getNodeProperty(*vi);
 
-      if ( node_prop.getIpAddress() == addr )
+      if ( node_prop->getIpAddress() == addr )
       {
          node = *vi;
          status.setCode(vpr::ReturnStatus::Succeed);
@@ -210,7 +210,7 @@ vpr::ReturnStatus NetworkGraph::getNodeWithAddr (const vpr::Uint32 addr,
    return status;
 }
 
-vpr::sim::NetworkNode& NetworkGraph::getNodeProperty (const NetworkGraph::net_vertex_t& v)
+vpr::sim::NetworkNodePtr NetworkGraph::getNodeProperty (const NetworkGraph::net_vertex_t& v)
 {
    // XXX: Need to make an assertion that v is in mGraph!
 //   vprASSERT(... && "Given vertex not found in the graph!");
@@ -223,7 +223,7 @@ vpr::sim::NetworkNode& NetworkGraph::getNodeProperty (const NetworkGraph::net_ve
 }
 
 void NetworkGraph::setNodeProperty (const NetworkGraph::net_vertex_t& v,
-                                    const vpr::sim::NetworkNode& prop)
+                                    vpr::sim::NetworkNodePtr prop)
 {
    // XXX: Need to make an assertion that v is in mGraph!
 //   vprASSERT(... && "Given vertex not found in the graph!");
@@ -253,8 +253,8 @@ NetworkGraph::VertexListPtr NetworkGraph::getShortestPath (const NetworkGraph::n
 
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
       << "NetworkGraph::getShortestPath(): Looking up the shortest path "
-      << "between " << node_prop_map[src].getIpAddressString() << " and "
-      << node_prop_map[dest].getIpAddressString() << "\n" << vprDEBUG_FLUSH;
+      << "between " << node_prop_map[src]->getIpAddressString() << " and "
+      << node_prop_map[dest]->getIpAddressString() << "\n" << vprDEBUG_FLUSH;
 
 //   boost::dijkstra_shortest_paths(mGraph, src,
 //                                  boost::distance_map(&dist[0]).predecessor_map(&pred[0]));
@@ -267,7 +267,7 @@ NetworkGraph::VertexListPtr NetworkGraph::getShortestPath (const NetworkGraph::n
    vlist->push_back(dest);
 
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-      << "Path (dest <-- src): " << node_prop_map[dest].getIpAddressString()
+      << "Path (dest <-- src): " << node_prop_map[dest]->getIpAddressString()
       << vprDEBUG_FLUSH;
 
    // Put the vertices returned in the predecessor map into a stack so that
@@ -275,7 +275,7 @@ NetworkGraph::VertexListPtr NetworkGraph::getShortestPath (const NetworkGraph::n
    while ( (q = pred[p]) != p )
    {
       vprDEBUG_CONT(vprDBG_ALL, vprDBG_VERB_LVL)
-         << " <-- " << node_prop_map[q].getIpAddressString()
+         << " <-- " << node_prop_map[q]->getIpAddressString()
          << vprDEBUG_FLUSH;
 
       vlist->push_back(q);
@@ -306,7 +306,7 @@ vpr::ReturnStatus NetworkGraph::getAllAddresses (NetworkGraph::AddressList& list
 {
    vpr::ReturnStatus status;
    boost::graph_traits<net_graph_t>::vertex_iterator vi, vi_end;
-   NetworkNode node_prop;
+   NetworkNodePtr node_prop;
 
    boost::tie(vi, vi_end) = boost::vertices(mGraph);
 
@@ -314,7 +314,7 @@ vpr::ReturnStatus NetworkGraph::getAllAddresses (NetworkGraph::AddressList& list
    {
       node_prop = getNodeProperty(*vi);
       list.push_back(std::pair<net_vertex_t, vpr::Uint32>(*vi,
-                                                          node_prop.getIpAddress()));
+                                                          node_prop->getIpAddress()));
    }
 
    return status;

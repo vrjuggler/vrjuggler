@@ -170,7 +170,7 @@ public:
     *        pointer to this socket once the connection is complete.  In
     *        this way, the local socket is told who its peer is.
     */
-   virtual vpr::ReturnStatus addConnector(const vpr::SocketImplSIM* local,
+   virtual vpr::ReturnStatus addConnector(vpr::SocketImplSIM* local,
                                           vpr::SocketImplSIM** remote);
 
    /**
@@ -182,11 +182,12 @@ public:
       return mConnectorQueue.size();
    }
 
-   virtual vpr::ReturnStatus isReadReady(const vpr::Interval timeout = vpr::Interval::NoWait) const;
+   virtual vpr::ReturnStatus isReadReady() const;
 
-   virtual vpr::ReturnStatus isWriteReady(const vpr::Interval timeout = vpr::Interval::NoWait) const;
+   virtual vpr::ReturnStatus isWriteReady() const;
 
 protected:
+   // XXX: Look into removing the first part of this parameter
    typedef std::pair<SocketStreamImplSIM*, SocketStreamImplSIM**> queue_obj_t;
 
    std::queue<queue_obj_t> mConnectorQueue;      /**< Queue of pending

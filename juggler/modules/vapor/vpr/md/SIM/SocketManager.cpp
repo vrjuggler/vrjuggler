@@ -61,28 +61,7 @@ namespace vpr
 {
 
 namespace sim
-{
-   bool SocketManager::hasActiveSockets ()
-   {
-      bool status;
-
-      mBindListSockMutexTCP.acquire();
-      {
-         status = (! mBindListSockTCP.empty());
-      }
-      mBindListSockMutexTCP.release();
-
-      if ( ! status )
-      {
-         mBindListSockMutexUDP.acquire();
-         {
-            status = (! mBindListSockUDP.empty());
-         }
-         mBindListSockMutexUDP.release();
-      }
-
-      return status;
-   }
+{   
 
    // ===========
    // connector:
@@ -102,68 +81,46 @@ namespace sim
    //   sockets may use connect multiple times to change their association.
    //   Datagram sockets may dissolve the association by connecting to an
    //   invalid address, such as a zero-filled address.
-   vpr::ReturnStatus SocketManager::connect( const vpr::SocketImplSIM* local_socket,
-                                             vpr::SocketImplSIM** remote_socket,
+   vpr::ReturnStatus SocketManager::connect( vpr::SocketImplSIM* localSock,
+                                             vpr::SocketImplSIM** remoteSock,
                                              const vpr::InetAddrSIM& remoteName,
                                              NetworkGraph::VertexListPtr& path,
                                              vpr::Interval timeout )
    {
       vprASSERT(mActive && "Socket manager not activated yet");
+      vprASSERT(localSock->isBound() && "Precondition is that socket is bound");
+      vprASSERT(localSock->mLocalAddr != vpr::InetAddr::AnyAddr && "Must be bound to an address");
 
       vpr::ReturnStatus status;
 
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
          <<"connect( "<<remoteName<<" )\n"<<vprDEBUG_FLUSH;
 
-      const vpr::SocketStreamImplSIM* stream_socket;
-      stream_socket = dynamic_cast<const vpr::SocketStreamImplSIM*>(local_socket);
+      vpr::SocketStreamImplSIM* local_stream_socket;
+      local_stream_socket = dynamic_cast<vpr::SocketStreamImplSIM*>(localSock);
 
       // If we have a vpr::SocketStreamImplSIM* object, we perform a real
       // simulated connection.
-      if ( stream_socket != NULL )
+      if ( local_stream_socket != NULL )
       {
-         if ( isListening( remoteName ) )
+         if ( isListening( remoteName ) )                // If remote side is accepting connections
          {
-            const vpr::SocketImplSIM* sim_sock;
+            vpr::SocketImplSIM* remote_sock;
 
-            mBindListAddrMutexTCP.acquire();
+            mListenerListMutex.acquire();
             {
-               sim_sock = mBindListAddrTCP[remoteName];
+               vprASSERT(mListenerList.find(remoteName) != mListenerList.end());
+               remote_sock = (*mListenerList.find(remoteName)).second.first;
             }
-            mBindListAddrMutexTCP.release();
+            mListenerListMutex.release();
 
-            stream_socket = dynamic_cast<const vpr::SocketStreamImplSIM*>(sim_sock);
+            vpr::SocketStreamImplSIM* remote_stream_socket 
+                  = dynamic_cast<vpr::SocketStreamImplSIM*>(remote_sock);
+            vprASSERT(NULL != remote_stream_socket && "We should have a stream socket, but don't");
 
             // Queue us up in the listening socket's connection queue.
-            if ( stream_socket != NULL && isListening(stream_socket) )
-            {
-               vpr::SocketImplSIM* sock;
-
-               // We have to cast away the const-ness so that we can add the
-               // connector information.
-               sock = const_cast<vpr::SocketImplSIM*>(sim_sock);
-
-               status = sock->addConnector(local_socket, remote_socket);
-               vprASSERT(! status.failure() && "Failed to add connector");
-
-               // The local socket needs an address now if it does not already
-               // have one.
-               if ( vpr::InetAddr::AnyAddr == local_socket->mLocalAddr )
-               {
-                  vpr::SocketImplSIM* temp_sock;
-
-                  temp_sock = const_cast<vpr::SocketImplSIM*>(local_socket);
-//                  assignToNode(temp_sock);
-                  bindUnusedPort(temp_sock, temp_sock->mLocalAddr);
-               }
-            }
-            else
-            {
-               vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-                  << "vpr::sim::SocketManager: Cannot connect, no one listening on "
-                  << remoteName << std::endl << vprDEBUG_FLUSH;
-               status.setCode(vpr::ReturnStatus::Fail);
-            }
+            status = remote_stream_socket->addConnector(localSock, remoteSock);
+            vprASSERT(status.success() && "Failed to add connector");         
          }
          else
          {
@@ -176,289 +133,94 @@ namespace sim
       // We are dealing with datagram sockets.
       else
       {
-         const vpr::SocketImplSIM* sim_sock;
-         const vpr::SocketDatagramImplSIM* dgram_socket;
+         vpr::SocketImplSIM* remote_sock;
+         vpr::SocketDatagramImplSIM* remote_dgram_socket;
 
-         mBindListAddrMutexUDP.acquire();
+         mListenerListMutex.acquire();
          {
-            sim_sock = mBindListAddrUDP[remoteName];
+            vprASSERT(mListenerList.find(remoteName) != mListenerList.end());
+            remote_sock = (*mListenerList.find(remoteName)).second.first;
          }
-         mBindListAddrMutexUDP.release();
+         mListenerListMutex.release();
 
-         dgram_socket = dynamic_cast<const vpr::SocketDatagramImplSIM*>(sim_sock);
+         remote_dgram_socket = dynamic_cast<vpr::SocketDatagramImplSIM*>(remote_sock);
 
          // Ensure that we really did get a datagram socket.  Basically, the
          // only reason dgram_socket exists is for this conditional.
-         if ( dgram_socket != NULL )
-         {
-            vpr::SocketImplSIM *mod_local_sock, *mod_remote_sock;
+         vprASSERT( remote_dgram_socket != NULL );
 
-            // We have to cast away the const-ness so that we can add the
-            // connector information.
-            mod_local_sock        = const_cast<vpr::SocketImplSIM*>(local_socket);
-            mod_remote_sock       = const_cast<vpr::SocketImplSIM*>(sim_sock);
-            mod_local_sock->mPeer = mod_remote_sock;
-            *remote_socket        = mod_remote_sock;
+         // We have to cast away the const-ness so that we can add the
+         // connector information.
+         localSock->mPeer = remote_sock;
+         *remoteSock        = remote_sock;
 
-            // Now find the shortest path between u and v.
-            const NetworkGraph::net_vertex_t& u = local_socket->getNetworkNode();
-            const NetworkGraph::net_vertex_t& v = (*remote_socket)->getNetworkNode();
-            path = vpr::sim::Controller::instance()->getNetworkGraph().getShortestPath(u, v);
-
-            // The local socket needs an address now if it does not already
-            // have one.
-            if ( vpr::InetAddr::AnyAddr == local_socket->mLocalAddr )
-            {
-               vpr::SocketImplSIM* temp_sock;
-
-               temp_sock = const_cast<vpr::SocketImplSIM*>(local_socket);
-               bindUnusedPort(temp_sock, temp_sock->mLocalAddr);
-            }
-         }
-         else
-         {
-            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-               << "vpr::sim::SocketManager: Cannot set " << remoteName
-               << " to default destination\n" << vprDEBUG_FLUSH;
-            status.setCode(vpr::ReturnStatus::Fail);
-         }
+         // Now find the shortest path between u and v.
+         const NetworkGraph::net_vertex_t& u = localSock->getNetworkNode();
+         const NetworkGraph::net_vertex_t& v = (*remoteSock)->getNetworkNode();
+         path = vpr::sim::Controller::instance()->getNetworkGraph().getShortestPath(u, v);
       }
 
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "DONE: connect()\n"
                                              << vprDEBUG_FLUSH;
-
       return status;
    }
 
-   // Bind assigns a name to an unnamed socket.  When a socket is created with
-   //  open() it exists in a name space (address family) but has no name
-   //  assigned.  Bind requests that name be assigned to the socket.
-   //
-   // NOTE: bind is mostly useful when you are accepting connections (listen())
-   vpr::ReturnStatus SocketManager::bind( const vpr::SocketImplSIM* handle,
-                                          const vpr::InetAddrSIM& localName )
+   
+   /* Assign the socket to the network somwhere
+   * Case localAddr = InetAddr::Any  ==> 0x7F000001 with random port
+   * Case localAddr = Have IP and port=0 (ie. Give me a random port. I don't care)
+   * Case localAddr = Have IP and port != 0 (bind me to that exact one)
+   */
+   vpr::ReturnStatus SocketManager::bind( vpr::SocketImplSIM* handle )
+   {
+      vprASSERT(handle->isOpen() && !handle->isBound() && "Against preconditions to have a handle not open or already bound");
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "bind(" << handle << ")\n" << vprDEBUG_FLUSH;      
+      
+      vpr::ReturnStatus ret_stat = assignToNode(handle);
+        
+      return ret_stat;
+   }
+
+   vpr::ReturnStatus SocketManager::unbind( vpr::SocketImplSIM* handle )
    {
       vpr::ReturnStatus status;
 
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "bind(" << handle << ", "
-                                             << localName << ")\n"
-                                             << vprDEBUG_FLUSH;
+      vprASSERT( handle->isBound() && "Can't unbind and unbound handle");
+         
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+           << "Unbinding handle(" << handle << ")\n" << vprDEBUG_FLUSH;
 
-      if (handle->isOpen() &&
-          isBound( handle ) == false &&
-          isBound(localName, handle->getType()) == false)
-      {
-         _bind( handle, localName );
-         vprASSERT( isBound( handle ) && "_bind failed on handle." );
-         vprASSERT(isBound(localName, handle->getType()) && "_bind failed on address.");
-      }
-      else
-      {
-         if (handle->isOpen() == false)
-         {
-            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-               << "vpr::sim::SocketManager: handle is not open, call open() before bind()\n"
-               << vprDEBUG_FLUSH;
-         }
-         else if (isBound( localName, handle->getType() ) == true &&
-                  isBound( handle ) == true)
-         {
-            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-               << "vpr::sim::SocketManager: handle(" << handle << ") and address("
-               << localName << ") already bound\n"
-               << vprDEBUG_FLUSH;
-         }
-         else if (isBound( handle ) == true)
-         {
-            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-               << "vpr::sim::SocketManager: specified handle already bound to an address\n"
-               << vprDEBUG_FLUSH;
-         }
-         else if (isBound( localName, handle->getType() ) == true)
-         {
-            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-               << "vpr::sim::SocketManager: Address " << localName
-               << " is already bound by socket "
-               << (handle->getType() == vpr::SocketTypes::STREAM ? mBindListAddrTCP[localName]
-                                                                 : mBindListAddrUDP[localName])
-               << " (couldn't bind sock " << handle << ")\n"
-               << vprDEBUG_FLUSH;
-         }
-         else
-         {
-            vprASSERT( false && "unexpected error. deal with it." );
-         }
-
-         status.setCode(vpr::ReturnStatus::Fail);
-      }
+      // -- Unassign from node
+      status = unassignFromNode( handle );      
 
       return status;
    }
 
-   vpr::ReturnStatus SocketManager::unbind( const vpr::SocketImplSIM* handle )
-   {
-      vpr::ReturnStatus status;
 
-      if ( isBound(handle) )
-      {
-         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-            << "Unbinding handle(" << handle << ")\n" << vprDEBUG_FLUSH;
-
-         status = _unbind(handle);
-         vprASSERT((! isBound(handle) && status.success()) && "_unbind failed");
-
-         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-            << "Unbind for handle(" << handle << ") done\n" << vprDEBUG_FLUSH;
-     }
-
-      return status;
-   }
-
-   // set a socket s to listen for connections
-   // a willingness to accept incoming connections and a queue limit for incoming
-   //  connections are specified with listen(2), and then each new connection is
-   //  accepted with accept(2).  The listen call applies only to sockets of type
-   //  SOCK_STREAM.
-   // returns true for success
-   // returns false for error
-   vpr::ReturnStatus SocketManager::listen( const vpr::SocketStreamImplSIM* handle,
-                                         const int backlog )
+   // Add socket to the listening list
+   vpr::ReturnStatus SocketManager::listen( vpr::SocketStreamImplSIM* handle,
+                                            const int backlog )
    {
       vpr::ReturnStatus status;
 
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) <<"listen( "<<handle<<" )\n"
                                              <<vprDEBUG_FLUSH;
-      if (isBound( handle ))
-      {
-         // enter self into list for accepting connections.
-         mListenerListMutex.acquire();
-         {
-            mBindListSockMutexTCP.acquire();
-            {
-               mListenerList[mBindListSockTCP[handle]] =
-                  std::pair<const vpr::SocketStreamImplSIM*, int>(handle,
-                                                                  backlog);
-            }
-            mBindListSockMutexTCP.release();
-         }
-         mListenerListMutex.release();
-      }
-      else
-      {
-         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-            << "vpr::sim::SocketManager: specified handle is not bound to an address\n"
-            << vprDEBUG_FLUSH;
+      vprASSERT( handle->isBound() && "Can't listen on unbound socket");
+      vprASSERT( handle->getType() == vpr::SocketTypes::STREAM && "Trying to listen with not stream socket");
 
-         status.setCode(vpr::ReturnStatus::Fail);
+      // enter self into list for accepting connections.
+      mListenerListMutex.acquire();
+      {
+         mListenerList[ handle->getLocalAddr() ] = 
+               std::pair<vpr::SocketStreamImplSIM*, int>(handle, backlog);         
       }
-
+      mListenerListMutex.release();
+   
       return status;
    }
 
-   vpr::ReturnStatus SocketManager::assignToNode (vpr::SocketImplSIM* handle)
-   {
-      timeval cur_time;
-      vpr::System::gettimeofday(&cur_time);
-      srand(cur_time.tv_usec);
-      vpr::ReturnStatus status;
-      bool attached = false;
-
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-         << "SocketManager::assignToNode(): Looking up a random node for "
-         << handle << "\n" << vprDEBUG_FLUSH;
-
-      vpr::sim::NetworkGraph& net_graph =
-         vpr::sim::Controller::instance()->getNetworkGraph();
-
-      vpr::Uint32 node_count = net_graph.getNodeCount();
-      vprASSERT(node_count > 0 && "No nodes in the network!");
-
-      // Ensure that we get a network node that is not already attached to a
-      // sim socket.
-      while ( ! attached )
-      {
-         // Generate a random number to use for the network node to which the
-         // socket pointed to by handle will be attached.
-         int n = rand() % node_count;
-
-         // Assign a randomly chosen node to the socket that has just been
-         // bound to an address.
-         // XXX: This is not 100% correct.  Ideally, I think it would be best
-         // if the address to which the socket is bound corresponded to the
-         // node in the graph.  This could lead to better grouping of nodes as
-         // would occur on a real network.
-         NetworkGraph::net_vertex_t node = net_graph.getNode(n);
-         NetworkNode node_prop = net_graph.getNodeProperty(node);
-
-         if ( ! node_prop.hasSocket(handle->getLocalAddr().getPort(),
-                                    handle->getType()) )
-         {
-            vpr::InetAddrSIM new_addr;
-
-            vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-               << "SocketManager::assignToNode(): Using node "
-               << node_prop.getIpAddressString() << "\n" << vprDEBUG_FLUSH;
-            handle->setNetworkNode(node);
-
-            // Set the socket's IP address to match its node.
-            new_addr.setAddress(node_prop.getIpAddress(),
-                                handle->getLocalAddr().getPort());
-            status = handle->setLocalAddr(new_addr);
-            vprASSERT(status.success() && "Failed to assign new address to socket");
-            node_prop.addSocket(handle);
-
-            // Ensure that the property associated with node n is updated
-            // properly.  What a pain.
-            net_graph.setNodeProperty(node, node_prop);
-
-            attached = true;
-         }
-      }
-
-      return status;
-   }
-
-   vpr::ReturnStatus SocketManager::assignToNode (vpr::SocketImplSIM* handle,
-                                                  const vpr::InetAddrSIM& addr)
-   {
-      vpr::ReturnStatus status;
-      NetworkGraph::net_vertex_t node;
-      vpr::sim::NetworkGraph& net_graph =
-         vpr::sim::Controller::instance()->getNetworkGraph();
-
-      // 0x7F000001 is the integer value for 127.0.0.1.
-      if ( 0x7F000001 == addr.getAddressValue() )
-      {
-         node = getLocalhost();
-      }
-      else
-      {
-         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-            << "SocketManager::assignToNode(): Trying to find node with address "
-            << addr << "\n" << vprDEBUG_FLUSH;
-         status = net_graph.getNodeWithAddr(addr.getAddressValue(), node);
-      }
-
-      if ( status.success() )
-      {
-         vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-            << "SocketManager::assignToNode(): Found node!\n" << vprDEBUG_FLUSH;
-         NetworkNode node_prop = net_graph.getNodeProperty(node);
-         handle->setNetworkNode(node);
-         node_prop.addSocket(handle);
-         net_graph.setNodeProperty(node, node_prop);
-      }
-      // Fall back on a randomly assigned node.
-      else
-      {
-         vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-            << "SocketManager::assignToNode(): Falling back on random lookup\n"
-            << vprDEBUG_FLUSH;
-         status = assignToNode(handle);
-      }
-
-      return status;
-   }
+  
+   
 
    void SocketManager::findRoute (vpr::SocketImplSIM* src_sock,
                                   vpr::SocketImplSIM* dest_sock)
@@ -533,7 +295,8 @@ namespace sim
       // through the network.
       else
       {
-         vprASSERT(msg->getSourceSocket()->getLocalAddr().getAddressValue() == msg->getDestinationSocket()->getLocalAddr().getAddressValue() && "Could not get second node in message's path");
+         vprASSERT(msg->getSourceSocket()->getLocalAddr().getAddressValue() == msg->getDestinationSocket()->getLocalAddr().getAddressValue() 
+                   && "Could not get second node in message's path");
          vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
             << "SocketManager::sendMessage(): Loopback--delivering to "
             << msg->getDestinationSocket()->getLocalAddr() << "("
@@ -556,7 +319,7 @@ namespace sim
 
       if ( 0x7F000001 == dest_addr.getAddressValue() )
       {
-         dest_node = getLocalhost();
+         dest_node = getLocalhostVertex();
       }
       else
       {
@@ -565,23 +328,18 @@ namespace sim
 
       if ( status.success() )
       {
-         NetworkNode dest_node_prop;
+         NetworkNodePtr dest_node_prop;
 
          dest_node_prop = net_graph.getNodeProperty(dest_node);
 
-         if ( dest_node_prop.hasSocket(dest_addr.getPort(), vpr::SocketTypes::DATAGRAM) )
+         if ( dest_node_prop->hasSocket(dest_addr.getPort(), vpr::SocketTypes::DATAGRAM) )
          {
             vpr::SocketImplSIM* peer;
             NetworkGraph::VertexListPtr path;
 
-            mBindListAddrMutexUDP.acquire();
-            {
-               peer =
-                  const_cast<vpr::SocketImplSIM*>(mBindListAddrUDP[dest_addr]);
-            }
-            mBindListAddrMutexUDP.release();
-
-            vprASSERT(src_sock->mNodeAssigned && "Trying to send from socket not assigned to a node!");
+            peer = dest_node_prop->getSocket( dest_addr.getPort(), vpr::SocketTypes::DATAGRAM);
+                        
+            vprASSERT(src_sock->isBound() && "Trying to send from socket not bound.");
             path = net_graph.getShortestPath(src_sock->getNetworkNode(), dest_node);
             msg->setPath(path, src_sock, peer);
 
@@ -592,59 +350,7 @@ namespace sim
       }
    }
 
-   // is the socket bound to an address?
-   bool SocketManager::isBound( const vpr::SocketImplSIM* handle )
-   {
-      bool status;
-
-      switch (handle->getType())
-      {
-         case vpr::SocketTypes::DATAGRAM:
-            mBindListSockMutexUDP.acquire();
-            {
-               status = mBindListSockUDP.count(handle) > 0;
-            }
-            mBindListSockMutexUDP.release();
-            break;
-         case vpr::SocketTypes::STREAM:
-            mBindListSockMutexTCP.acquire();
-            {
-               status = mBindListSockTCP.count(handle) > 0;
-            }
-            mBindListSockMutexTCP.release();
-            break;
-      }
-
-      return handle->isOpen() && status;
-   }
-
-   // is the address bound to a socket?
-   bool SocketManager::isBound( const vpr::InetAddrSIM& addr,
-                                const vpr::SocketTypes::Type addr_type )
-   {
-      bool status = false;
-
-      switch (addr_type)
-      {
-         case vpr::SocketTypes::DATAGRAM:
-            mBindListAddrMutexUDP.acquire();
-            {
-               status = mBindListAddrUDP.count(addr) > 0;
-            }
-            mBindListAddrMutexUDP.release();
-            break;
-         case vpr::SocketTypes::STREAM:
-            mBindListAddrMutexTCP.acquire();
-            {
-               status = mBindListAddrTCP.count(addr) > 0;
-            }
-            mBindListAddrMutexTCP.release();
-            break;
-      }
-
-      return status;
-   }
-
+   
    // is there someone listening on the address?
    bool SocketManager::isListening( const vpr::InetAddrSIM& address )
    {
@@ -652,247 +358,121 @@ namespace sim
 
       mListenerListMutex.acquire();
       {
-         status = mListenerList.count( address ) > 0;
+         status = (mListenerList.find( address) != mListenerList.end());
       }
       mListenerListMutex.release();
 
       return status;
    }
 
-   // is this socket in a listening state?
-   bool SocketManager::isListening( const vpr::SocketStreamImplSIM* handle )
-   {
-      bool status = false;
 
-      if (isBound( handle ))
+
+   // --------------------------------------------------------
+   //             INTERNAL HELPERS 
+   // --------------------------------------------------------
+
+   vpr::ReturnStatus SocketManager::assignToNode (vpr::SocketImplSIM* handle)   
+   {
+      vpr::ReturnStatus status; 
+      NetworkGraph net_graph = Controller::instance()->getNetworkGraph();
+
+      // --- Get the local address setup correctly --- //
+      vpr::InetAddrSIM local_addr;
+      local_addr = handle->getLocalAddr();
+
+      // If any addr, then set it to local host
+      // Case localAddr = InetAddr::Any  ==> 0x7F000001 with random port
+      if(local_addr == vpr::InetAddr::AnyAddr)
       {
-         mListenerListMutex.acquire();
-         {
-            mBindListSockMutexTCP.acquire();
-            {
-               status = mListenerList.count(mBindListSockTCP[handle]) > 0;
-            }
-            mBindListSockMutexTCP.release();
-         }
-         mListenerListMutex.release();
+         local_addr.setAddress(0x7F000001, 0);         
+      }
+            
+      // Make sure that we know about the node of the given address
+      ensureNetworkNodeIsRegistered(local_addr.getAddressValue() );
+      vprASSERT( mNetworkNodes.find(local_addr.getAddressValue()) != mNetworkNodes.end());
+
+      // --- Bind the socket to an actual node in the graph -- //
+      // - Get the node
+      // - Register this socket with that node
+      NetworkNodePtr net_node = mNetworkNodes[local_addr.getAddressValue()];
+      
+      // - Deal with port assignment issues
+      // Case localAddr = Have IP and port=0 (ie. Give me a random port. I don't care)
+      // Case localAddr = Have IP and port != 0 (bind me to that exact one)
+      if(local_addr.getPort() == 0)
+      {
+         vpr::Uint32 port_num;
+         if(handle->getType() == vpr::SocketTypes::STREAM)
+         {  port_num = net_node->getUnassignedTcpPortNumber(); }
+         else
+         {  port_num = net_node->getUnassignedUdpPortNumber(); }
       }
 
+      // Set the final local address and add the socket to the node
+      handle->setLocalAddr(local_addr);
+      net_node->addSocket( handle );
+
+      // Store the network node version in the socket for fast access
+      NetworkGraph::net_vertex_t node_vertex;
+      status = net_graph.getNodeWithAddr(local_addr.getAddressValue(), node_vertex);
+      vprASSERT(status.success());
+      handle->setNetworkNode( node_vertex );
+      
       return status;
    }
 
-   vpr::InetAddrSIM SocketManager::getBoundAddress( const vpr::SocketImplSIM* handle )
+   vpr::ReturnStatus SocketManager::unassignFromNode (vpr::SocketImplSIM* handle)   
    {
-      vpr::InetAddrSIM addr;
+      vpr::ReturnStatus status; 
+      vpr::InetAddrSIM local_addr = handle->getLocalAddr();
+      vprASSERT( mNetworkNodes.find(local_addr.getAddressValue()) != mNetworkNodes.end());
 
-      vprASSERT( isBound( handle ) && "need to check isBound before using" );
-
-      switch (handle->getType())
-      {
-         case vpr::SocketTypes::DATAGRAM:
-            mBindListSockMutexUDP.acquire();
-            {
-               vprASSERT( mBindListSockUDP.count( handle ) > 0 && "if handle is bound, then it should appear in the bindlist, but it doesn't" );
-               addr = mBindListSockUDP[handle];
-            }
-            mBindListSockMutexUDP.release();
-            break;
-         case vpr::SocketTypes::STREAM:
-            mBindListSockMutexTCP.acquire();
-            {
-               vprASSERT( mBindListSockTCP.count( handle ) > 0 && "if handle is bound, then it should appear in the bindlist, but it doesn't" );
-               addr = mBindListSockTCP[handle];
-            }
-            mBindListSockMutexTCP.release();
-            break;
-      }
-
-      return addr;
-   }
-
-   vpr::ReturnStatus SocketManager::bindUnusedPort( vpr::SocketImplSIM* sock,
-                                                    vpr::InetAddrSIM& addr )
-   {
-      vpr::Guard<vpr::Mutex> guard(mPortMutex);
-
-      addr.setPort(genUnusedPort(sock->getType()));
-
-      return bind(sock, addr);
-   }
-
-   void SocketManager::_bind( const vpr::SocketImplSIM* handle,
-                              const vpr::InetAddrSIM& addr )
-   {
-      switch (handle->getType())
-      {
-         case vpr::SocketTypes::DATAGRAM:
-            mBindListSockMutexUDP.acquire();
-            {
-               mBindListSockUDP[handle] = addr;
-            }
-            mBindListSockMutexUDP.release();
-
-            mBindListAddrMutexUDP.acquire();
-            {
-               mBindListAddrUDP[addr] = handle;
-            }
-            mBindListAddrMutexUDP.release();
-
-            break;
-         case vpr::SocketTypes::STREAM:
-            mBindListSockMutexTCP.acquire();
-            {
-               mBindListSockTCP[handle] = addr;
-            }
-            mBindListSockMutexTCP.release();
-
-            mBindListAddrMutexTCP.acquire();
-            {
-               mBindListAddrTCP[addr] = handle;
-            }
-            mBindListAddrMutexTCP.release();
-
-            break;
-      }
-      vprASSERT( isBound( handle ) == true );
-      vprASSERT( isBound( addr, handle->getType() ) == true );
-
-   }
-
-   vpr::ReturnStatus SocketManager::_unbind( const vpr::SocketImplSIM* handle )
-   {
-      vpr::InetAddrSIM addr;
-      const vpr::SocketImplSIM* hand;
-      vpr::ReturnStatus status;
-
-      vprASSERT( isBound( handle ) == true );
-
-      switch (handle->getType())
-      {
-         case vpr::SocketTypes::DATAGRAM:
-            mBindListSockMutexUDP.acquire();
-            {
-               vprASSERT( isBound( mBindListSockUDP[handle], handle->getType() ) == true );
-
-               addr = mBindListSockUDP[handle];
-               hand = handle;                // Temporary storage ...
-
-               vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-                  << "_unbind() unmapping: " << mBindListSockUDP[handle] << " "
-                  << handle << "\n" << vprDEBUG_FLUSH;
-
-               mBindListAddrMutexUDP.acquire();
-               {
-                  mBindListAddrUDP.erase(mBindListSockUDP[handle]);
-               }
-               mBindListAddrMutexUDP.release();
-
-               mBindListSockUDP.erase( handle );
-            }
-            mBindListSockMutexUDP.release();
-            break;
-         case vpr::SocketTypes::STREAM:
-            mBindListSockMutexTCP.acquire();
-            {
-               vprASSERT( isBound( mBindListSockTCP[handle], handle->getType() ) == true );
-
-               addr = mBindListSockTCP[handle];
-               hand = handle;                // Temporary storage ...
-
-               vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-                  << "_unbind() unmapping: " << mBindListSockTCP[handle] << " "
-                  << handle << "\n" << vprDEBUG_FLUSH;
-
-               mBindListAddrMutexTCP.acquire();
-               {
-                  mBindListAddrTCP.erase(mBindListSockTCP[handle]);
-               }
-               mBindListAddrMutexTCP.release();
-
-               mBindListSockTCP.erase( handle );
-            }
-            mBindListSockMutexTCP.release();
-            break;
-      }
-
-      vpr::sim::NetworkGraph& net_graph =
-         vpr::sim::Controller::instance()->getNetworkGraph();
-      NetworkNode node_prop = net_graph.getNodeProperty(handle->getNetworkNode());
-
-      status = node_prop.removeSocket(handle);
-      vprASSERT(status.success() && "Tried to remove a socket from the wrong node");
-
-      net_graph.setNodeProperty(handle->getNetworkNode(), node_prop);
-
-      vprASSERT( isBound( hand ) == false );
-      vprASSERT( isBound( addr, hand->getType() ) == false );
-
+      // Get the network node
+      NetworkNodePtr net_node = mNetworkNodes[local_addr.getAddressValue()];
+      
+      // Remove the socket from the node   
+      status = net_node->removeSocket( handle );
+      vprASSERT(status.success());
+      
       return status;
    }
+   
+vpr::ReturnStatus SocketManager::ensureNetworkNodeIsRegistered(const vpr::Uint32& ipAddr)
+{
+   vpr::ReturnStatus ret_stat(vpr::ReturnStatus::Succeed);
 
-   vpr::sim::NetworkGraph::net_vertex_t SocketManager::getLocalhost ()
+   if( mNetworkNodes.find(ipAddr) == mNetworkNodes.end())    // If not registered yet
+   {
+      NetworkGraph::net_vertex_t node_vertex;
+      NetworkGraph net_graph = Controller::instance()->getNetworkGraph();
+      
+      ret_stat = net_graph.getNodeWithAddr(ipAddr, node_vertex);
+            
+      vprASSERT(ret_stat.success());
+
+      NetworkNodePtr node_prop = net_graph.getNodeProperty(node_vertex);
+      vprASSERT(node_prop.get() != NULL);
+
+      mNetworkNodes.insert( std::pair<node_map_t::key_type, node_map_t::data_type>(ipAddr, node_prop) );
+   }
+
+   return ret_stat;
+}
+
+     
+   vpr::sim::NetworkGraph::net_vertex_t SocketManager::getLocalhostVertex ()
    {
       vpr::sim::NetworkGraph& net_graph =
          vpr::sim::Controller::instance()->getNetworkGraph();
       vpr::Uint32 last_node = net_graph.getNodeCount() - 1;
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-         << "SocketManager::getLocalhost(): Using last node (#" << last_node
+         << "SocketManager::getLocalhostVertex(): Using last node (#" << last_node
          << ") for localhost\n" << vprDEBUG_FLUSH;
       return net_graph.getNode(last_node);
    }
 
-   // XXX: This needs to be rethough since we can now have 2^64 port numbers
-   // (2^32 at each node, and 2^32 nodes).
-   // return an unused port at some existing address, or 0 for error.
-   vpr::Uint32 SocketManager::genUnusedPort (const vpr::SocketTypes::Type addr_type)
-   {
-      //vpr::Uint32 full = -1;
-      vpr::Uint32 full = 0xFFFF;    // Max 32 bit value
-      vpr::InetAddrSIM address;
-
-      switch (addr_type)
-      {
-         case vpr::SocketTypes::DATAGRAM:
-            {
-               // This guard must be used because return is called from within
-               // the for loop.
-               vpr::Guard<vpr::Mutex> guard(mBindListAddrMutexUDP);
-
-               // NOTE: this is pretty dumb, but it works.
-               for ( vpr::Uint32 x = 1; x < full; ++x)
-               {
-                  address.setPort(x);
-
-                  if ( mBindListAddrUDP.count(address) == 0 )
-                  {
-                     return x;
-                  }
-               }
-            }
-            vprASSERT( false && "should never fail" );
-            break;
-         case vpr::SocketTypes::STREAM:
-            {
-               // This guard must be used because return is called from within
-               // the for loop.
-               vpr::Guard<vpr::Mutex> guard(mBindListAddrMutexTCP);
-
-               // NOTE: this is pretty dumb, but it works.
-               for ( vpr::Uint32 x = 1; x < full; ++x)
-               {
-                  address.setPort(x);
-
-                  if ( mBindListAddrTCP.count(address) == 0 )
-                  {
-                     return x;
-                  }
-               }
-            }
-            vprASSERT( false && "should never fail" );
-            break;
-      }
-      return 0; //error
-   }
-
+   
 } // End of sim namespace
 
 } // End of vpr namespace
+
