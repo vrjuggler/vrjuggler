@@ -9,17 +9,9 @@
       <help>MSFT Speech Recognition String Device</help>
       <parent>speech_recog_digital_string</parent>
       <category>/Devices</category>
-      <property valuetype="string" variable="false" name="port">
-         <help>Serial port the Flock is attached to</help>
-         <value label="Port" defaultvalue="/dev/ttyd1"/>
-      </property>
-      <property valuetype="integer" variable="false" name="baud">
+      <property valuetype="string" variable="false" name="grammar_file">
          <help>Serial port speed</help>
-         <value label="Baud Rate" defaultvalue="115200"/>
-      </property>
-      <property valuetype="string" variable="false" name="grammer_file">
-         <help>Serial port speed</help>
-         <value label="Grammer XML File Location" defaultvalue=""/>
+         <value label="Grammar XML File Location" defaultvalue=""/>
       </property>
       <upgrade_transform/>
    </definition_version>
