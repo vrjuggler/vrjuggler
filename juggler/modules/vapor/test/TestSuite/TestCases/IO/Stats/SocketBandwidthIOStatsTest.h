@@ -34,11 +34,11 @@
 namespace vprTest
 {
 
-class SocketBandwidthIOStatsTest : public ThreadTestCase
+class SocketBandwidthIOStatsTest : public CppUnit::ThreadTestCase
 {
 public:
-   SocketBandwidthIOStatsTest( std::string name )
-   : ThreadTestCase (name)
+   SocketBandwidthIOStatsTest()
+   : CppUnit::ThreadTestCase ()
    {;}
 
    virtual ~SocketBandwidthIOStatsTest()
@@ -76,8 +76,8 @@ public:
            connector_functor( this, &SocketBandwidthIOStatsTest::testBandwidth_connector );
        vpr::Thread connector_thread( &connector_functor);
 
-       assertTest( acceptor_thread.valid() && "Invalid acceptor thread");
-       assertTest( connector_thread.valid() && "Invalid connector thread");
+       CPPUNIT_ASSERT( acceptor_thread.valid() && "Invalid acceptor thread");
+       CPPUNIT_ASSERT( connector_thread.valid() && "Invalid connector thread");
 
        if(!acceptor_thread.valid())
           std::cerr << "Invalid acceptor thread\n";
@@ -230,22 +230,15 @@ public:
       }
    }
 
-   static Test* suite()
+   void registerTests (CppUnit::TestSuite* suite)
    {
-      TestSuite *test_suite = new TestSuite ("SocketBandwidthIOStatsTest");
-
-      //test_suite->addTest( new TestCaller<SocketConnectorAcceptorTest>("testAcceptorConstruction", &SocketConnectorAcceptorTest::testAcceptorConstruction));
-      //test_suite->addTest( new TestCaller<SocketConnectorAcceptorTest>("testSpawnedAcceptor", &SocketConnectorAcceptorTest::testSpawnedAcceptor));
-      return test_suite;
+      //suite->addTest( new CppUnit::TestCaller<SocketConnectorAcceptorTest>("testAcceptorConstruction", &SocketConnectorAcceptorTest::testAcceptorConstruction));
+      //suite->addTest( new CppUnit::TestCaller<SocketConnectorAcceptorTest>("testSpawnedAcceptor", &SocketConnectorAcceptorTest::testSpawnedAcceptor));
    }
 
-   static Test* metric_suite()
+   void registerMetricsTests (CppUnit::TestSuite* suite)
    {
-      TestSuite *test_suite = new TestSuite ("SocketBandwidthIOStatsTest_metric");
-
-      test_suite->addTest( new TestCaller<SocketBandwidthIOStatsTest>("testBandwidth", &SocketBandwidthIOStatsTest::testBandwidth));
-
-      return test_suite;
+      suite->addTest( new CppUnit::TestCaller<SocketBandwidthIOStatsTest>("testBandwidth", &SocketBandwidthIOStatsTest::testBandwidth));
    }
 
 

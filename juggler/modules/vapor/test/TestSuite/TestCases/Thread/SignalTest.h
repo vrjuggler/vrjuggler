@@ -12,15 +12,16 @@ namespace vprTest
 
 static RETSIGTYPE handlerSIGSEGV (int signum)
 {
-   std::cout << "Signal caught\n" << std::flush;
-   throw new std::exception();
+//   std::cout << "\n\n\nSignal caught\n" << std::flush;
+//   throw new CppUnit::Exception("stuff");
+   return;
 }
 
-class SignalTest : public TestCase
+class SignalTest : public CppUnit::TestCase
 {
 public:
-   SignalTest (std::string name)
-      : TestCase(name)
+   SignalTest ()
+      : CppUnit::TestCase()
    {
       /* Do nothing. */ ;
    }
@@ -38,21 +39,18 @@ public:
       vpr::ReturnStatus status;
 
       status = vpr::SigHandler::registerHandler(SIGSEGV, segv_action);
-      assertTest(status.success() && "Handler registration failed");
+      CPPUNIT_ASSERT(status.success() && "Handler registration failed");
 
       bad_addr = (char*) 0x1;
       memcpy(buffer, bad_addr, sizeof(buffer));
 
-      assertTest(false);  // Execution should not reach this point
+      CPPUNIT_ASSERT(false);  // Execution should not reach this point
    }
 
-   static Test* suite(void)
+   void registerTests (CppUnit::TestSuite* suite)
    {
-      TestSuite* test_suite = new TestSuite ("SignalTest");
-      test_suite->addTest(new TestCaller<SignalTest>("testSegFault",
-                                                     &SignalTest::testSegFault));
-
-      return test_suite;
+      suite->addTest(new CppUnit::TestCaller<SignalTest>("testSegFault",
+                                                         &SignalTest::testSegFault));
    }
 };
 
