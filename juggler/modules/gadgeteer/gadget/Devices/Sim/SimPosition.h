@@ -84,7 +84,8 @@ private:
 
 
 private:
-   int            mCoordSystem;                 //: What coord system should I be in?
+   int            mTransCoordSystem;                 //: What coord system for translations?
+   int            mRotCoordSystem;              //: What coord system for rotations?
    vjMatrix       mPos;                         //: The current position being simulated
    vjKeyModPair   mSimKeys[NUM_POS_CONTROLS];   //: The keys to press for digital simulation
    float          mDTrans;                      //: Delta translation
