@@ -94,11 +94,6 @@ bool InputWindowWin32::config(jccl::ConfigElementPtr e)
 void InputWindowWin32::controlLoop(void* devPtr)
 {
    mControlLoopDone = false;
-	
-	vprDEBUG(gadgetDBG_INPUT_MGR, 0)
-		<< "XXXX: controlLoop1:" 
-		<< mInstName.c_str() << std::endl
-		<< vprDEBUG_FLUSH;
 
    // Open the window...
    // The Window has to be created in the same thread that
@@ -107,16 +102,6 @@ void InputWindowWin32::controlLoop(void* devPtr)
    // the window.  (And we want to receive the messages
    // in the spawned thread)
    this->createWindowWin32();
-
-	vprDEBUG(gadgetDBG_INPUT_MGR, 0)
-		<< "XXXX: controlLoop2:" 
-		<< mInstName.c_str() << std::endl
-		<< vprDEBUG_FLUSH;
-
-	vprDEBUG(gadgetDBG_INPUT_MGR, 0)
-		<< "controlLoop 3:" 
-		<< mInstName.c_str() << std::endl
-		<< vprDEBUG_FLUSH;
 
    // If we have initial locked, then we need to lock the system
    if ( mLockState == Lock_LockKey )     // Means that we are in the initially locked state
@@ -130,7 +115,7 @@ void InputWindowWin32::controlLoop(void* devPtr)
 
    // When there are messages, process them all.  Otherwise,
    // sleep for a while...
-	mExitFlag = false;
+   mExitFlag = false;
    while ( !mExitFlag )
    {
       this->sample();
@@ -220,7 +205,7 @@ LONG APIENTRY MenuWndProc(HWND hWnd, UINT message, UINT wParam, LONG lParam)
 
 void InputWindowWin32::createWindowWin32()
 {
-	int root_height;
+   int root_height;
 
    InitCommonControls();
 
@@ -296,7 +281,7 @@ BOOL InputWindowWin32::MenuInit(HINSTANCE hInstance)
 
 bool InputWindowWin32::sample()
 {
-	// Handle all input events.
+   // Handle all input events.
    handleEvents();
 
    return true;
