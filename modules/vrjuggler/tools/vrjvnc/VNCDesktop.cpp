@@ -259,7 +259,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
 
    // Find start point of copy
    // - start = fbstart + (y line offset) + x offset
-   // XXX: I think there is a bug here where it should take into account bits per pixel
+   // XXX: There is a bug here where it should take into account bits per pixel
    const char* src = mVncIf.getFramebuffer() + (r.y * mVncWidth) + r.x;
    char* dest = mTextureData + (r.y * mTexWidth) + r.x;
 
