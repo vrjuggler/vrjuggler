@@ -203,6 +203,12 @@ ifndef NO_JAVA_GUI
           sed -e 's,#JCCL_SHARE_DIR#,${JCCL_SHARE_DIR},g'			\
               ${JCCLROOT_ABS}/VjControl/vjcontrol.sh > vjcontrol &&		\
           chmod ${EXEC_PERMS} vjcontrol
+	cd $(instlinks)/bin && rm -f ./ConfigUpdater.jar &&		\
+          $(LN_S) $(topdir)/tools/ConfigUpdater/ConfigUpdater.jar ./
+	cd $(instlinks)/bin && rm -f ./cfgupdater &&			\
+          sed -e 's,#JCCL_SHARE_DIR#,${JCCL_SHARE_DIR},g'			\
+              ${JCCLROOT_ABS}/tools/ConfigUpdater/cfgupdater.sh > cfgupdater &&		\
+          chmod ${EXEC_PERMS} cfgupdater
 endif
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
             -t $(JCCLROOT_ABS)/jccl-config.in -p 'use_base_dir=yes'	\
@@ -339,6 +345,21 @@ install-tools:
           --prefix="$(datadir)/tools" --vars="$(topdir)/VARS.pl"	\
           --startdir="$(top_srcdir)/tools" --mode="$(FILE_PERMS)"	\
           $(_GROUP_OPT_PL) --srcdir="."
+ifndef NO_JAVA_GUI
+ifeq (@OS_TYPE@, UNIX)
+	@sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'			\
+          $(JCCLROOT_ABS)/tools/ConfigUpdater/cfgupdater.sh > cfgupdater
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+          cfgupdater $(bindir)/cfgupdater && rm -f cfgupdater
+else
+	@sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'			\
+          $(JCCLROOT_ABS)/tools/ConfigUpdater/cfgupdater.bat > cfgupdater.bat
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX) 			\
+          cfgupdater.bat $(bindir)/cfgupdater.bat && rm -f cfgupdater.bat
+endif	# if OS_TYPE == UNIX
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/tools/ConfigUpdater/ConfigUpdater.jar $(bindir)
+endif	# ifndef NO_JAVA_GUI
 
 # Install the standard data files.
 install-data:
