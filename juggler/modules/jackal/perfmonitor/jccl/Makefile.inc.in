@@ -32,6 +32,6 @@
 links:
 	cd $(instlinks)/include/jccl && \
           for dir in $(SUBDIR) ; do \
-              rm -f ./$$dir ; \
-              ln -s $(JCCLROOT_ABS)/perfmonitor/jccl/$$dir ./$$dir ; \
+              $(RM_LN) ./$$dir ; \
+              $(LN_S) $(JCCLROOT_ABS)/perfmonitor/jccl/$$dir ./$$dir ; \
           done
