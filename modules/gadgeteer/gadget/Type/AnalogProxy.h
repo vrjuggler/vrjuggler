@@ -109,8 +109,10 @@ public:
 
    virtual Input* getProxiedInputDevice()
    {
-      if((NULL == mTypedDevice) || (isStupified()))
+      if((NULL == mTypedDevice) || (mStupified))
+      {
          return NULL;
+      }
 
       Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
       vprASSERT((ret_val != NULL) && "Cross-cast in AnalogProxy failed");
