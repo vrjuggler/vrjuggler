@@ -103,10 +103,12 @@ public:
 
       vpr::SocketStream*	sock;
       sock = new vpr::SocketStream(vpr::InetAddr(port), vpr::InetAddr::AnyAddr);	
-      sock->setReuseAddr(true);
       if ( sock->openServer() ) {
          vpr::SocketStream* client_sock;
          thread_args_t* tArgs;
+
+         sock->setReuseAddr(true);
+
          while ( num<mNumSServer) {
             client_sock = sock->accept();
             tArgs = new thread_args_t;
@@ -131,7 +133,7 @@ public:
       vpr::SocketStream*	sock;
 
       sock = new vpr::SocketStream(vpr::InetAddr("localhost"), vpr::InetAddr("localhost", 5432));
-      sock->setReuseAddr(true);
+
       if ( sock->open() ) {
          char buffer1[40];
 //         char buffer2[] = "What's up?";
