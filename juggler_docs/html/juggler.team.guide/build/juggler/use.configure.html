@@ -357,6 +357,21 @@
               by the site administrator.  If the group name is not found,
               no group is specified during installation which is typically
               fine.  <I>The default is ``vrjuggler''.</I>
+        <DT><TT>--with-file-perms=&lt;FILE PERMISSIONS&gt;</TT>
+          <DD>Provide permissions for installed (normal) files.  This will
+              be used for header files, source code, config files, etc.
+              The format must be UNIX octal-style (e.g., 0644).  <I>The
+              default is 0644.</I>
+        <DT><TT>--with-exec-perms=&lt;EXEC PERMISSIONS&gt;</TT>
+          <DD>Provide permissions for installed executable files.  This
+              will be used for scripts, executables and shared libraries.
+              The format must be UNIX octal-style (e.g., 0644).  <I>The
+              default is 0755.</I>
+        <DT><TT>--with-dir-perms=&lt;DIR PERMISSIONS&gt;</TT>
+          <DD>Provide permissions for directories created in the
+              installation tree.  This option is not currently used for
+              anything but may be used in the future for <TT>mtree</TT>
+              directory specification files.  <I>The default is 0755.</I>
         <DT><TT>--enable-gl-api</TT>
           <DD>Enable the OpenGL API in the library.  <I>This option cannot be
               disabled and is on by default.</I>
