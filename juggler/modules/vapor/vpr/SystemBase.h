@@ -37,6 +37,7 @@
 
 #include <math.h>
 
+#include <vprTypes.h>
 #include <Threads/Thread.h>
 
 namespace vpr {
@@ -48,21 +49,21 @@ public:
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
     inline static int
-    usleep (uint32_t micro) {
+    usleep (vpr::Uint32 micro) {
         return Thread::usleep(micro);
     }
 
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
     inline static int
-    msleep (uint32_t milli) {
+    msleep (vpr::Uint32 milli) {
         return Thread::msleep(milli);
     }
 
     // -----------------------------------------------------------------------
     // -----------------------------------------------------------------------
     inline static int
-    sleep (uint32_t seconds) {
+    sleep (vpr::Uint32 seconds) {
         return Thread::sleep(seconds);
     }
 
