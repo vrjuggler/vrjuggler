@@ -101,7 +101,7 @@ namespace cluster
       // Starting Barrier Stuff
       /////////////////////////////////////         
       
-      if (mBarrierMasterHostname == ClusterNetwork::instance()->getLocalHostname())
+      if (ClusterNetwork::isLocalHost(mBarrierMasterHostname))
       {
          mIsMaster = true;
          // TODO: Get this from config file.
@@ -249,8 +249,12 @@ namespace cluster
          // Send request
          // Wait for responce
          // return result
-   
-         std::string local_host_name = ClusterNetwork::instance()->getLocalHostname();
+         
+         // Get the localhost name.
+         vpr::InetAddr local;
+         vpr::InetAddr::getLocalHost(local);
+         
+         std::string local_host_name = local.getHostname();
          
          SyncRequest sync_request(local_host_name, mTCPport);
          
@@ -496,7 +500,11 @@ namespace cluster
             
             SwapLockTCPPlugin::instance()->setActive(true);
 
-            std::string host = ClusterNetwork::instance()->getLocalHostname();
+            // Get the localhost name.
+            vpr::InetAddr local;
+            vpr::InetAddr::getLocalHost(local);
+            
+            std::string host = local.getHostname();
             vpr::Uint16 temp_port = mTCPport;
             
             SyncAck temp_ack(host, temp_port, true);

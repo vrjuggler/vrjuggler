@@ -119,10 +119,16 @@ public:
    
    void removePendingBarrierSlave(const std::string& hostname)
    {
+      vpr::InetAddr searching_for_node;
+      searching_for_node.setAddress(hostname, 0);
+      
       for (std::vector<std::string>::iterator i = mPendingSlaves.begin();
            i != mPendingSlaves.end() ; i++)
       {
-         if (hostname == (*i))
+         vpr::InetAddr testing_node;
+         testing_node.setAddress(*i,0);
+         
+         if (searching_for_node.getAddressString() == testing_node.getAddressString())
          {
             mPendingSlaves.erase(i);
             return;
@@ -146,6 +152,7 @@ private:
    std::vector<std::string>      mPendingSlaves;
    bool                          mBarrierMaster;
    std::string                   mBarrierMasterHostname;
+   std::string                   mBarrierMachineElementName;
    bool                          mComplete;
    bool                          mSlaveWaitingOnPlugins;
    int                           mSlowDownMaster;

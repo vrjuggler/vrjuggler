@@ -50,7 +50,12 @@ namespace cluster
       mDeviceName = device_name;
       mDeviceBaseType = device_base_type;
       mAck = ack;
-      mHostname = ClusterNetwork::instance()->getLocalHostname();
+      
+      // Get the localhost name.
+      vpr::InetAddr local;
+      vpr::InetAddr::getLocalHost(local);
+         
+      mHostname = local.getHostname();
       
       // Create a Header for this packet with the correect type and size.
       mHeader = new Header(Header::RIM_PACKET,
