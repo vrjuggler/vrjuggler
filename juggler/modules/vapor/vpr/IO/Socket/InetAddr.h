@@ -53,13 +53,19 @@ namespace vpr {
 };
 #endif
 
-#include <hash_map>
+#include <hash_map.h>
+
+namespace std {
 
 // Nice little helper class for hashing an inetaddr
 template<>
-struct std::hash<vpr::InetAddr> {
-   size_t operator()(vpr::InetAddr addr) const { return ((addr.getAddressValue() << 16) | addr.getPort()); }
+struct hash<vpr::InetAddr> {
+   size_t operator() (vpr::InetAddr addr) const {
+      return ((addr.getAddressValue() << 16) | addr.getPort());
+   }
 };
+
+}
 
 inline bool operator<(const vpr::InetAddr& addr1, const vpr::InetAddr& addr2)
 {
