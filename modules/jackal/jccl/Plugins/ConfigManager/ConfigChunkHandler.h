@@ -11,6 +11,7 @@
 // and queried using the specified interface.
 //
 //---------------------------------------------
+//! PUBLIC_API:
 class vjConfigChunkHandler
 {
 public:
