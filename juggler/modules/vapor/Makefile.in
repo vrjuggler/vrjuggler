@@ -230,6 +230,12 @@ buildworld: all
 # ------------------------------------------------------------------------
 installworld: install-all
 
+.PHONY: test
+
+test:
+	$(MAKE) -C test/TestSuite runner
+	test/TestSuite/runner noninteractive
+
 # =============================================================================
 # Automatically generated documentation.
 # =============================================================================
