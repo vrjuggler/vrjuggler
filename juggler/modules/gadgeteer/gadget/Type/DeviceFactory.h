@@ -86,7 +86,6 @@ public:
    { return DEV::getChunkType(); }
 };
 
-
 //: Object used for creating devices
 //!NOTE: Singleton
 class vjDeviceFactory
