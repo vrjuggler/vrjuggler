@@ -491,12 +491,6 @@ public:
    }
 
    /**
-    * Gets the current number of connectors waiting to connect to this
-    * socket.
-    */
-   virtual vpr::Uint32 getConnectorCount(void) = 0;
-
-   /**
     * Tests if this socket can read without blocking.
     *
     * @post Depending on the state of the socket, the caller is informed if
@@ -516,7 +510,7 @@ public:
     *         ready for reading.  This can happen if the socket is not open,
     *         not connected, or without any received data.
     */
-   vpr::ReturnStatus isReadReady(const vpr::Interval timeout = vpr::Interval::NoWait);
+   virtual vpr::ReturnStatus isReadReady(const vpr::Interval timeout = vpr::Interval::NoWait) const;
 
    /**
     * Tests if this socket can write without blocking.
@@ -538,7 +532,7 @@ public:
     *         ready for writing.  This can happen if the socket is not open or
     *         not connected.
     */
-   vpr::ReturnStatus isWriteReady(const vpr::Interval timeout = vpr::Interval::NoWait);
+   virtual vpr::ReturnStatus isWriteReady(const vpr::Interval timeout = vpr::Interval::NoWait) const;
 
    /**
     * Tests if this socket is in an exceptional state.

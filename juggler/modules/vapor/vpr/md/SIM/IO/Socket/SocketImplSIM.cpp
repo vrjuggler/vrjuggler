@@ -256,6 +256,7 @@ vpr::ReturnStatus SocketImplSIM::setOption (const vpr::SocketOptions::Types opti
 }
 
 vpr::ReturnStatus SocketImplSIM::isReadReady (const vpr::Interval timeout)
+   const
 {
    vpr::ReturnStatus status;
 
@@ -272,11 +273,6 @@ vpr::ReturnStatus SocketImplSIM::isReadReady (const vpr::Interval timeout)
       {
          status.setCode(vpr::ReturnStatus::Fail);
       }
-
-      if ( mOpen && getConnectorCount() > 0 )
-      {
-         status.setCode(vpr::ReturnStatus::Succeed);
-      }
 //   }
 /*
    XXX: Will there be a way to handle waiting until the timeout expires?
@@ -289,6 +285,7 @@ vpr::ReturnStatus SocketImplSIM::isReadReady (const vpr::Interval timeout)
 }
 
 vpr::ReturnStatus SocketImplSIM::isWriteReady (const vpr::Interval timeout)
+   const
 {
    vpr::ReturnStatus status;
 
@@ -301,7 +298,7 @@ vpr::ReturnStatus SocketImplSIM::isWriteReady (const vpr::Interval timeout)
 
 //   if ( vpr::Interval::NoWait == timeout )
 //   {
-      if ( ! mOpen || NULL == mPeer )
+      if ( ! mOpen )
       {
          status.setCode(vpr::ReturnStatus::Fail);
       }

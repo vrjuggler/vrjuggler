@@ -177,9 +177,33 @@ public:
     * Gets the current number of connectors waiting to connect to this
     * socket.
     */
-   virtual vpr::Uint32 getConnectorCount (void)
+   vpr::Uint32 getConnectorCount (void) const
    {
       return mConnectorQueue.size();
+   }
+
+   virtual vpr::ReturnStatus isReadReady (void) const
+   {
+      vpr::ReturnStatus status = SocketImplSIM::isReadReady();
+
+      if ( status.success() && mOpen && getConnectorCount() > 0 )
+      {
+         status.setCode(vpr::ReturnStatus::Succeed);
+      }
+
+      return status;
+   }
+
+   virtual vpr::ReturnStatus isWriteReady (void) const
+   {
+      vpr::ReturnStatus status = SocketImplSIM::isWriteReady();
+
+      if ( status.success() && mPeer != NULL )
+      {
+         status.setCode(vpr::ReturnStatus::Succeed);
+      }
+
+      return status;
    }
 
 protected:
