@@ -42,6 +42,29 @@
 namespace jccl
 {
 
+RTRCInterface::RTRCInterface()
+   : mCorbaManager(NULL), mInterface(NULL), mInterfaceName("RTRCInterface")
+{}
+
+RTRCInterface::~RTRCInterface()
+{
+   //Clean up interface by disconnecting first
+   if (mInterface != NULL)
+   {
+      disable(); 
+      delete mInterface;
+      mInterface = NULL;
+   }
+
+   //Clean up the corba manager and delete it
+   if (mCorbaManager != NULL)
+   {
+      //Corba manager has its own destructor cleanup
+      delete mCorbaManager;
+      mCorbaManager = NULL;
+   }
+}
+
 void RTRCInterface::init()
 {
    //Create new corba manager and initialize it
