@@ -23,6 +23,11 @@ OUT_INT		= ./internal_doc
 OUT_PUB		= ./public_doc
 TEMPLATES_INT	= ${PERCEPS_DIR}/templates/internal
 TEMPLATES_PUB	= ${PERCEPS_DIR}/templates/public
+SRCDIR = @srcdir@
+SRC = $(SRCDIR)/Sync $(SRCDIR)/Config $(SRCDIR)/Input $(SRCDIR)/Sound \
+      $(SRCDIR)/Kernel $(SRCDIR)/SharedMem $(SRCDIR)/Threads \
+      $(SRCDIR)/Environment $(SRCDIR)/Math $(SRCDIR)/Performance \
+      $(SRCDIR)/Utils
 
 # -----------------------------------------------------------------------------
 # Documentation generation targets.
