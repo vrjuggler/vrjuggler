@@ -53,10 +53,10 @@ DIRPRFX		= vrj/Sound/
 SUBDIR		= pf
 
 # Subdirectories to compile.
-ifeq (@USE_AUDIOJUGGLER@, Y)
-INCLUDES	+= -I$(AJ_BASE_DIR)/include
-SRCS		+= ajSoundManager.cpp
-CXXFLAGS	+= -DUSE_AUDIOJUGGLER
+ifeq (@USE_SONIX@, Y)
+INCLUDES	+= -I$(SNX_BASE_DIR)/include
+SRCS		+= SoundManagerSonix.cpp
+CXXFLAGS	+= -DUSE_SONIX
 endif
 
 SRCS		+= SoundManagerFactory.cpp
