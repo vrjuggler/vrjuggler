@@ -29,6 +29,11 @@ public class SliderObserverImpl extends ObserverPOA
       System.out.println("Update processed");
    }
 
+   public void detach ()
+   {
+      slider_subject.detach(this._this());
+   }
+
    private SliderSubject slider_subject = null;
    private JSlider       slider         = null;
 }

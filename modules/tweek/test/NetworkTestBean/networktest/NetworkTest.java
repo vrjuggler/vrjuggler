@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
+import org.vrjuggler.tweek.event.*;
 import org.vrjuggler.tweek.net.*;
 import org.vrjuggler.tweek.net.corba.*;
 import tweek.*;
@@ -12,7 +13,9 @@ import tweek.*;
 /**
  * @version 1.0
  */
-public class NetworkTest extends JPanel implements CommunicationListener
+public class NetworkTest
+   extends JPanel
+   implements CommunicationListener, TweekFrameListener
 {
    public NetworkTest()
    {
@@ -55,6 +58,24 @@ public class NetworkTest extends JPanel implements CommunicationListener
       {
          slider_subject.detach(m_slider_observer._this());
          whiteboard_subject.detach(m_whiteboard_observer._this());
+      }
+   }
+
+   public void frameStateChanged (TweekFrameEvent e)
+   {
+      if ( e.getType() == TweekFrameEvent.FRAME_CLOSE )
+      {
+         if ( m_slider_observer != null )
+         {
+            m_slider_observer.detach();
+            m_slider_observer = null;
+         }
+
+         if ( m_whiteboard_observer != null )
+         {
+            m_whiteboard_observer.detach();
+            m_whiteboard_observer = null;
+         }
       }
    }
 
