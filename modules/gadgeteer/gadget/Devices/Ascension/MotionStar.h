@@ -31,15 +31,15 @@
  * -----------------------------------------------------------------
  */
 
- 
+
 #ifndef _VJ_ASCENSION_MOTION_STAR_H_
 #define _VJ_ASCENSION_MOTION_STAR_H_
- 
+
 #include <vjConfig.h>
 #include <Input/vjPosition/vjPosition.h>
 #include <Threads/vjThread.h>
 #include <Input/vjPosition/aMotionStar.h>
- 
+
 //----------------------------------------------------------------------------
 //: Position derived class for running a Flock of Birds.
 //: , also a wrapper class for the real ascension flock class "aFlock"
@@ -75,28 +75,28 @@ class vjMotionStar : public vjPosition {
                   );
 
     ~vjMotionStar();
- 
+
     //: configure the flock with a config chunk
     virtual bool config(vjConfigChunk* c);
- 
+
     //: begin sampling
     int startSampling();
- 
+
     //: stop sampling
     int stopSampling();
- 
+
     //: sample data
     int sample();
- 
+
     //: update to the sampled data.
     void updateData();
- 
+
     //: get the device name
     char* getDeviceName() { return "vjMotionStar"; }
- 
+
     //: return what chunk type is associated with this class.
     static std::string getChunkType() { return std::string("MotionStar");}
- 
+
     //: Get the reciever transform
     //! ARGS: dev - is the reciever number
     //! POST: returns a pointer to the reciever's matrix
@@ -104,13 +104,13 @@ class vjMotionStar : public vjPosition {
     //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
     //+  then you can access them, in order, as 0,1,2.
     vjMatrix* getPosData( int dev = 0); // 0 base
-    
+
     //  Not used currently -- needed for interface
-    vjTimeStamp* getPosUpdateTime (int d); 
- 
+    vjTimeStamp* getPosUpdateTime (int d);
+
     //: see if the flock is active or not
     inline bool isActive() { return mMotionStar.isActive(); }
- 
+
     void            setHemisphere(int i );
     inline unsigned int  getHemisphere()  { return mMotionStar.getHemisphere();}
 
@@ -119,7 +119,7 @@ class vjMotionStar : public vjPosition {
 
     void            setNumBirds( unsigned int n );
     inline unsigned int  getNumBirds()  { return mMotionStar.getNumBirds();}
- 
+
     void            setBirdRate( double n );
     inline double  getBirdRate() { return mMotionStar.getBirdRate();}
 
@@ -131,36 +131,36 @@ class vjMotionStar : public vjPosition {
 
     void            setIpAddress( const char* n );
     inline char* getIpAddress () {return mMotionStar.getIpAddress();}
- 
+
         //: get the x position of the i'th reciever
         inline float       xPos( int i ) { return mMotionStar.xPos(i); }
- 
+
         //: get the y position of the i'th reciever
         inline float       yPos( int i ) { return mMotionStar.yPos( i); }
- 
+
         //: get the z position of the i'th reciever
         inline float       zPos( int i ) { return mMotionStar.zPos( i); }
- 
+
         //: get the z rotation of the i'th reciever
         inline float       zRot( int i ) { return mMotionStar.zRot( i); };
- 
+
         //: get the y rotation of the i'th reciever
         inline float       yRot( int i ) { return mMotionStar.yRot( i); }
- 
+
         //: get the x rotation of the i'th reciever
         inline float       xRot( int i ) { return mMotionStar.xRot( i); }
- 
- 
- 
+
+
+
 private:
     void positionCorrect(float&x,float&y,float&z);
     void initCorrectionTable(const char*);
- 
+
     int getBirdIndex(int birdNum, int bufferIndex);
- 
+
     vjThread*   myThread;      // The thread doing the flock sampling
- 
+
     aMotionStar mMotionStar;
 };
- 
+
 #endif

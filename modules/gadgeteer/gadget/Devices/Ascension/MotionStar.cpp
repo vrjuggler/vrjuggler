@@ -25,13 +25,13 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date$
- * Version:       $Revision$
+ * File:          $RCSfile: vjMotionStar.cpp,v
+ * Date modified: $Date: 2000/05/11 17:57:49
+ * Version:       $Revision: 1.9
  * -----------------------------------------------------------------
  */
 
- 
+
 #include <vjConfig.h>
 #include <sys/file.h>
 #include <sys/ioctl.h>
@@ -39,11 +39,11 @@
 #include <Input/vjPosition/aMotionStar.h>
 #include <Input/vjPosition/vjMotionStar.h>
 #include <Math/vjCoord.h>
- 
+
 #include <Kernel/vjDebug.h>
- 
+
 #include <fstream.h>
- 
+
 // Helper to return the index for theData array
 // given the birdNum we are dealing with and the bufferIndex
 // to get
@@ -58,7 +58,7 @@ int vjMotionStar::getBirdIndex(int birdNum, int bufferIndex)
    //assertIndexes();   // Can't assert here because it is possible the indexes are switching right now
    return ret_val;
 }
- 
+
 vjMotionStar::vjMotionStar(char* ipAddress,
                 int hemisphere,
                 unsigned int birdFormat,
@@ -77,14 +77,14 @@ vjMotionStar::vjMotionStar(char* ipAddress,
 {
    myThread = NULL;
 }
- 
+
 bool vjMotionStar::config(vjConfigChunk *c)
 {
 
    if (!vjPosition::config(c))
        return false;
    vjDEBUG(vjDBG_INPUT_MGR,3) << "       vjMotionStar::vjMotionStar(vjConfigChunk*)" << endl << vjDEBUG_FLUSH;
- 
+
    // set mMotionStar with the config info.
    mMotionStar.setHemisphere((unsigned int)(static_cast<int> (c->getProperty("hemisphere"))));
    mMotionStar.setBirdFormat((unsigned int)(static_cast<int> (c->getProperty("bformat"))));
@@ -92,8 +92,8 @@ bool vjMotionStar::config(vjConfigChunk *c)
    mMotionStar.setBirdRate((double)(static_cast<int>(c->getProperty("brate"))));
    mMotionStar.setRunMode((static_cast<int> (c->getProperty("mode"))));
    mMotionStar.setIpAddress(static_cast<std::string>(c->getProperty("ipaddress")).c_str());
-//   mMotionStar.setReportRate( (static_cast<unsigned char>(c->getProperty("rrate"))) ); 
- 
+//   mMotionStar.setReportRate( (static_cast<unsigned char>(c->getProperty("rrate"))) );
+
 /*
    // output what was read.
    vjDEBUG(vjDBG_INPUT_MGR,1) << "        Flock Settings: " << endl
@@ -105,29 +105,29 @@ bool vjMotionStar::config(vjConfigChunk *c)
       << "              instance name : " << instName << endl
       << endl << vjDEBUG_FLUSH;
 */
- 
+
    return true;
 }
- 
+
 vjMotionStar::~vjMotionStar()
 {
    this->stopSampling();
    if (theData != NULL)
       getMyMemPool()->deallocate((void*)theData);
 }
- 
+
 static void sampleBirds(void* pointer)
 {
    vjDEBUG(vjDBG_INPUT_MGR,3) << "vjMotionStar: Spawned SampleBirds starting" << endl
  << vjDEBUG_FLUSH;
- 
+
    vjMotionStar* devPointer = (vjMotionStar*) pointer;
    for (;;)
    {
       devPointer->sample();
    }
 }
- 
+
 int vjMotionStar::startSampling()
 {
    // make sure birds aren't already started
@@ -136,22 +136,22 @@ int vjMotionStar::startSampling()
       vjDEBUG(vjDBG_INPUT_MGR,2)  << "vjMotionStar was already started." << endl << vjDEBUG_FLUSH;
       return 0;
    }
- 
+
    if (myThread == NULL)
    {
       if (theData != NULL)
          getMyMemPool()->deallocate((void*)theData);
- 
+
       // Allocate buffer space for birds
       int numbuffs = (mMotionStar.getNumBirds()+1)*3;
       theData = (vjMatrix*) new vjMatrix[numbuffs];
- 
+
       // Reset current, progress, and valid indices
       resetIndexes();
- 
+
          vjDEBUG(vjDBG_INPUT_MGR,1) << "    Getting flock ready....\n" << vjDEBUG_FLUSH;
       mMotionStar.start();
- 
+
       //sanity check.. make sure birds actually started
       if (this->isActive() == false)
       {
@@ -160,11 +160,11 @@ int vjMotionStar::startSampling()
       }
 
       vjDEBUG(vjDBG_INPUT_MGR,1)  << "vjMotionStar ready to go.." << endl << vjDEBUG_FLUSH;
- 
+
       vjMotionStar* devicePtr = this;
- 
+
       myThread = new vjThread(sampleBirds, (void*) devicePtr, 0);
- 
+
       if ( myThread == NULL )
       {
           assert (false);
@@ -178,7 +178,7 @@ int vjMotionStar::startSampling()
    else
       return 0; // already sampling
 }
- 
+
 int vjMotionStar::sample()
 {
    if (this->isActive() == false)
@@ -188,80 +188,80 @@ int vjMotionStar::sample()
    }
    mMotionStar.sample();
    int i;
-  
+
    // For each bird
    for (i=0; i < (mMotionStar.getNumBirds()); i++)
-      
+
       {
       // Get the index to the current read buffer
       int index = getBirdIndex(i,progress);
- 
-      //if (i==0) 
+
+      //if (i==0)
       //vjDEBUG(vjDBG_ALL,0) << "i:  " << i << "  x: " << xPos(i) << "  y: " << yPos(i) << endl << vjDEBUG_FLUSH;
-      
+
       theData[index].makeZYXEuler(mMotionStar.zRot( i ),
                                   mMotionStar.yRot( i ),
                                   mMotionStar.xRot( i ));
- 
+
       theData[index].setTrans(mMotionStar.xPos( i ),
                               mMotionStar.yPos( i ),
                               mMotionStar.zPos( i ));
- 
+
 //      if (i==1)
 //         vjDEBUG(vjDBG_ALL,2) << "Flock: bird1:    orig:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
- 
+
       // Transforms between the cord frames
       // See transform documentation and VR System pg 146
       // Since we want the reciver in the world system, Rw
       // wTr = wTt*tTr
       vjMatrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
- 
+
       world_T_transmitter = xformMat;                    // Set transmitter offset from local info
       transmitter_T_reciever = theData[index];           // Get reciever data from sampled data
       world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);   // compute total transform
       theData[index] = world_T_reciever;                                     //Store corrected xform back into data
- 
- 
+
+
 //      if (i == 1)
 //         vjDEBUG(vjDBG_ALL,2) << "Flock: bird1: xformed:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
    }
- 
+
    // Locks and then swaps the indices
    swapValidIndexes();
- 
+
    return 1;
 }
- 
+
 int vjMotionStar::stopSampling()
 {
    if (this->isActive() == false)
       return 0;
- 
+
    if (myThread != NULL)
    {
       vjDEBUG(vjDBG_INPUT_MGR,1) << "Stopping the flock thread..." << vjDEBUG_FLUSH;
- 
+
       myThread->kill();
       delete myThread;
       myThread = NULL;
- 
+
       vjDEBUG(vjDBG_INPUT_MGR,1) << "  Stopping the flock..." << vjDEBUG_FLUSH;
- 
+
       mMotionStar.stop();
- 
+
       // sanity check: did the flock actually stop?
       if (this->isActive() == true)
       {
          vjDEBUG(vjDBG_INPUT_MGR,0) << "Flock didn't stop." << endl << vjDEBUG_FLUSH;
          return 0;
       }
- 
+
       vjDEBUG(vjDBG_INPUT_MGR,1) << "stopped." << endl << vjDEBUG_FLUSH;
    }
- 
+
    return 1;
 }
- 
+
 vjMatrix* vjMotionStar::getPosData( int d ) // d is 0 based
 {
     if (this->isActive() == false)
@@ -271,8 +271,8 @@ vjMatrix* vjMotionStar::getPosData( int d ) // d is 0 based
     }
     return (&theData[getBirdIndex(d,current)]);
 }
- 
-vjTimeStamp* vjMotionStar::getPosUpdateTime (int d) 
+
+vjTimeStamp* vjMotionStar::getPosUpdateTime (int d)
 {
     return (&mDataTimes[getBirdIndex(d,current)]);
 }
@@ -285,17 +285,17 @@ void vjMotionStar::updateData()
       return;
    }
    vjGuard<vjMutex> updateGuard(lock);
- 
+
    // Copy the valid data to the current data so that both are valid
    for(int i=0;i<getNumBirds();i++)
       theData[getBirdIndex(i,current)] = theData[getBirdIndex(i,valid)];   // first hand
- 
+
    // Locks and then swap the indices
    swapCurrentIndexes();
- 
+
    return;
 }
- 
+
 
 
 void vjMotionStar::setHemisphere ( int i)
@@ -363,7 +363,7 @@ void vjMotionStar::setReportRate (unsigned char ch)
     mMotionStar.setReportRate ( ch );
 }
 
-void vjMotionStar::setIpAddress (const char* n)    
+void vjMotionStar::setIpAddress (const char* n)
 {
     if (this->isActive())
     {
@@ -372,4 +372,3 @@ void vjMotionStar::setIpAddress (const char* n)
     }
     mMotionStar.setIpAddress ( n );
 }
-
