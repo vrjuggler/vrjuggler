@@ -132,11 +132,11 @@ public:
   /** Reads vjConfigChunks from the named file and adds them to self 
    *  until EOF is reached.  Returns false if an error occurs.
    */
-  bool load (char *fname);
+  bool load (const char *fname);
   /** Writes all vjConfigChunks in self to the named file.  Returns
    *  false if an error occurs.
    */
-  bool save (char *fname);
+  bool save (const char *fname);
 
 };
 

@@ -217,7 +217,7 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
 
 
 
-bool vjConfigChunkDB::load (char *fname) {
+bool vjConfigChunkDB::load (const char *fname) {
   ifstream in(fname);
 
   vjDEBUG(4) << "vjConfigChunkDB::load(): opening file " << fname << endl << vjDEBUG_FLUSH;
@@ -235,7 +235,7 @@ bool vjConfigChunkDB::load (char *fname) {
   return true;
 }
 
-bool vjConfigChunkDB::save (char *fname) {
+bool vjConfigChunkDB::save (const char *fname) {
   ofstream out(fname);
   if (!out) {
     vjDEBUG(1) << "ERROR: vjConfigChunkDB::save() - Unable to open file '"
