@@ -216,6 +216,7 @@ vpr::ReturnStatus ThreadPosix::spawn(BaseThreadFunctor* functorPtr)
    sched_param_t prio_param;
 
    pthread_attr_init(&thread_attrs);
+   pthread_attr_setdetachstate(&thread_attrs, vprThreadStateToPOSIX(mState));
 
    // If thread priority scheduling is available, set the thread's priority
    // if it is set to be higher than 0.
