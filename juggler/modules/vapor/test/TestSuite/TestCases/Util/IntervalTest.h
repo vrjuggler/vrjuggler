@@ -142,6 +142,21 @@ public:
       assertDoublesEqual(val.usecf(), 12345678.0f, 1.0f);
    }
 
+   void testSubtract()
+   {
+      vpr::Interval val1;
+      vpr::Interval val2;
+      vpr::Interval diff;
+
+      val1.set(5000000,vpr::Interval::Usec);
+      val2.set(5000100,vpr::Interval::Usec);
+
+      diff = val2 - val1;
+
+      assertLongsEqual(diff.usec(), 100);
+      assertDoublesEqual(diff.secf(), .000100f, 0.0001f);
+   }
+
 
    void testSetNowOverhead()
    {
@@ -177,7 +192,8 @@ public:
       test_suite->addTest( new TestCaller<IntervalTest>("testMsecf", &IntervalTest::testMsecf));
       test_suite->addTest( new TestCaller<IntervalTest>("testUsec", &IntervalTest::testUsec));
       test_suite->addTest( new TestCaller<IntervalTest>("testUsecf", &IntervalTest::testUsecf));
-      
+      test_suite->addTest( new TestCaller<IntervalTest>("testSubtract", &IntervalTest::testSubtract));
+            
       return test_suite;
    }
 
