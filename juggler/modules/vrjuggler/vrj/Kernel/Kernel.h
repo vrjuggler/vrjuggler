@@ -41,7 +41,6 @@ class vjApp;
 
     // Config stuff
 #include <Config/vjConfigChunkDB.h>
-#include <Config/vjChunkDescDB.h>
 #include <Kernel/vjQueuedConfigChunkHandler.h>
 
 //-------------------------------------------------------
@@ -200,7 +199,6 @@ protected:
    bool              performanceEnabled;
 
    /// Config Stuff
-   vjChunkDescDB*    mConfigDesc;
    vjConfigChunkDB*  mChunkDB;            //: The current chunk db for the system
    vjConfigChunkDB*  mInitialChunkDB;     //: Initial chunks added to system before it is started
    //vjSemaphore       mRuntimeConfigSema;  //: Protects run-time config.  Only when this semaphore
@@ -231,7 +229,6 @@ protected:
 
       mInitialChunkDB = NULL;
       mChunkDB = NULL;
-      mConfigDesc = NULL;
 
       sharedMemPool = NULL;
    }

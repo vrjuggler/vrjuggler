@@ -343,20 +343,10 @@ void vjKernel::loadConfigFile(std::string filename)
       exit(1);
    }
 
-   if (NULL == mConfigDesc)
-   {
-      char chunk_desc_file[250];
-      strcpy(chunk_desc_file, vj_base_dir);
-      strcat(chunk_desc_file, "/Data/chunksDesc");
-
-      mConfigDesc = new vjChunkDescDB;
-      vjChunkFactory::setChunkDescDB (mConfigDesc);
-      if (!mConfigDesc->load(chunk_desc_file))
-      {
-         vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjKernel::loadConfig: Config Desc failed to load file: " << endl << vjDEBUG_FLUSH;
-         exit(1);
-      }
-   }
+   char chunk_desc_file[250];
+   strcpy(chunk_desc_file, vj_base_dir);
+   strcat(chunk_desc_file, "/Data/chunksDesc");
+   vjChunkFactory::loadDescs (chunk_desc_file);
 
    // Create chunk Data bases
    if(NULL == mInitialChunkDB)
