@@ -183,7 +183,9 @@ void simplePfNavApp::preForkInit()
    if(mUseStats && haveFocus())
       mStats.preForkInit();
 
+#ifndef VJ_OS_Win32
    pfSoundTraverser::preForkInit();
+#endif
 }
 
 /// Return the current scene graph
@@ -488,16 +490,19 @@ void simplePfNavApp::initializeModels()
    mCollidableModelGroup->addChild( mConfiguredCollideModels );
    mUnCollidableModelGroup->addChild( mConfiguredNoCollideModels );
 
+#ifndef VJ_OS_Win32
    // replace all nodes with _Sound_ with pfSoundNodes...
    std::string extension = "_Sound_";
    pfSoundTraverser::replace( mConfiguredCollideModels, extension );
    pfSoundTraverser::replace( mConfiguredNoCollideModels, extension );
+#endif
 }
 
 // func needs to destroy all previous pf nodes associated with sound
 // and then reading mSoundList, create them all again.
 void simplePfNavApp::initializeSounds()
 {
+#ifndef VJ_OS_Win32
    if (NULL == mRootNode)      // If we haven't had initScene called yet
    {
       return;
@@ -532,6 +537,7 @@ void simplePfNavApp::initializeSounds()
    }
 
    mUnCollidableModelGroup->addChild( mSoundNodes );
+#endif
 }
 
 // Initialize the scene graph
