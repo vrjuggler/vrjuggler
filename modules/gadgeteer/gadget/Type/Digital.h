@@ -49,18 +49,22 @@ namespace gadget
 
    const unsigned short MSG_DATA_DIGITAL = 420;
 
-   /** Digital is the abstract base class that devices with digital data derive from.
-   *
-   *  Digital is the base class that digital devices must derive from.
-   *  Digital inherits from Input, so it has pure virtual function
-   *  constraints from Input in the following functions: StartSampling,
-   *  StopSampling, Sample, and UpdateData. <br>
-   *  Digital adds one new pure virtual function, getDigitalData() for
-   *  retreiving the digital data, similar to the addition for gadget::Position
-   *  and gadget::Analog.
-   *
-   * @see Input
-   */
+   /**
+    * Digital is the abstract base class from which devices with digital data
+    * derive.
+    *
+    * Through gadget::InputMixer, gadget::Digital is the base class from which
+    * digital devices must derive.  This is in addition to gadget::Input.
+    * gadget::Input provides pure virtual function constraints in the
+    * following functions: startSampling(), stopSampling(), sample(), and
+    * updateData().
+    *
+    * Digital adds one new pure virtual function, getDigitalData(), for
+    * retreiving the digital data, similar to the addition for gadget::Position
+    * and gadget::Analog.
+    *
+    * @see Input, InputMixer
+    */
    class GADGET_CLASS_API Digital : public vpr::SerializableObject
    {
    public:
@@ -73,7 +77,12 @@ namespace gadget
        */
       enum State
       {
-         OFF=0, ON=1, TOGGLE_ON=2, TOGGLE_OFF=3
+         OFF = 0,       /**< Device is in the "off" state. */
+         ON = 1,        /**< Device is in the "on" state. */
+         TOGGLE_ON = 2, /**< Device was in the "off" state and has changed to
+                             "on" since the last frame. */
+         TOGGLE_OFF = 3 /**< Device was in the "on" state and has changed to
+                             "off" since the last frame. */
       };
 
    public:
@@ -99,6 +108,7 @@ namespace gadget
        *
        * @return Digital 0 or 1, if devNum makes sense.
        *         -1 is returned if function fails or if devNum is out of range.
+       *
        * @note If devNum is out of range, function will fail, possibly issuing
        *       an error to a log or console - but will not ASSERT.
        */
@@ -125,11 +135,14 @@ namespace gadget
          }
       }
 
-      /** Helper method to add a sample to the sample buffers.
-      * This MUST be called by all digital devices to add a new sample.
-      * The data samples passed in will then be modified by any local filters.
-      * @post Sample is added to the buffers and the local filters are run on that sample.
-      */
+      /**
+       * Helper method to add a sample to the sample buffers.
+       * This MUST be called by all digital devices to add a new sample.
+       * The data samples passed in will then be modified by any local filters.
+       *
+       * @post Sample is added to the buffers and the local filters are run on
+       *       that sample.
+       */
       void addDigitalSample(const std::vector< DigitalData >& digSample)
       {
          // Locks and then swaps the indices.
@@ -138,9 +151,11 @@ namespace gadget
          mDigitalSamples.unlock();
       }
 
-      /** Swap the digital data buffers.
-       * @post If ready has values, then copy values from ready to stable
-       *        if not, then stable keeps its old values
+      /**
+       * Swap the digital data buffers.
+       *
+       * @post If ready has values, then copy values from ready to stable.
+       *       If not, then stable keeps its old values.
        */
       void swapDigitalBuffers()
       {
