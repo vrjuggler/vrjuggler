@@ -175,6 +175,17 @@ DPP_CXX_RTTI(AC_MSG_ERROR(*** The library requires C++ RTTI support ***))
 DPP_CXX_STATIC_CAST(AC_MSG_ERROR(*** The library requires C++ static_cast<> ***))
 DPP_CXX_DYNAMIC_CAST(AC_MSG_ERROR(*** The library requires C++ dynamic_cast<> ***))
 
+# Check for the JDK
+DPP_PATH_JAVA
+
+# If there is still no value in $JAVAC, then warn that VRJConfig will not be
+# built
+BUILD_JAVA='Y'
+if test "x$JAVAC" = "xno" ; then
+    AC_MSG_WARN([*** VRJConfig requires javac -- it will not be built ***])
+    BUILD_JAVA='N'
+fi
+
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
 DPP_PERL_VER(5.004)
 
@@ -187,7 +198,7 @@ DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 # -----------------------------------------------------------------------------
 VPR_PATH([0.15.0], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
 VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
-JCCL_PATH([0.2.0], , [AC_MSG_ERROR(*** Jackal required for VR Juggler ***)])
+JCCL_PATH([0.5.0], , [AC_MSG_ERROR(*** Jackal required for VR Juggler ***)])
 GADGETEER_PATH([0.2.3], ,
                [AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***)])
 
@@ -569,6 +580,8 @@ AC_SUBST(RM_LN)
 AC_SUBST(EXTRA_LINK_FLAGS)
 AC_SUBST(VPR_SUBSYSTEM)
 
+AC_SUBST(BUILD_JAVA)
+
 AC_SUBST(OPENGL_API)
 AC_SUBST(PERFORMER_API)
 AC_SUBST(OSGROOT)
@@ -628,6 +641,8 @@ AC_OUTPUT(vrjuggler-config
           vrj/Sound/pf/Makefile
           vrj/Util/Makefile
           vrj.appdefs.mk
+          vrjconfig/Makefile
+          vrjconfig/Makefile.inc
           samples/Makefile
           samples/OGL/Makefile
           samples/OGL/glove/Makefile
