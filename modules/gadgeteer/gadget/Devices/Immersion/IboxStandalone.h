@@ -42,6 +42,7 @@
 #define NUM_ANALOGS     8       /* Max # of A/D channels supported */
 #define NUM_BUTTONS     7       /* Max # of buttons supported */
 
+//enum(
 
 
 /* These numbers are the maximum numbers available in Immersion HCI hardware.
@@ -61,7 +62,8 @@
 //typedef const char*   ibox_result;
 
 /* Shorthand for a byte */
-typedef unsigned char   byte;
+typedef unsigned char   byte;	
+//vpr::Uint8
 
 /* # of bytes in longest possible packet, plus some extra room */
 #define MAX_PACKET_SIZE         40
@@ -77,26 +79,24 @@ typedef unsigned char   byte;
 
 /* Space for arguments to config commands */
 
-/* Record for packet
+/** Record for packet
  */
-class packet_rec
+struct packet_rec
 {
-public:
-	int     parsed;         /* Flag tells whether this packet has been parsed */
+	int     parsed;         /**< Flag tells whether this packet has been parsed */
     int     error;          /* Flag tells whether there has been com error */
 	int     num_bytes_needed;
     byte    cmd_byte;
 	byte    data[MAX_PACKET_SIZE];
 	byte    *data_ptr;
-	void clear(void)
+
+	void clear()
 	{
 		num_bytes_needed = 0;
 		cmd_byte = 0;
 		parsed = 1;
         error = 0;
 		data_ptr = data;
-		//packets_expected = 0;
-		std::cout << "Cleared: " << num_bytes_needed << cmd_byte << parsed << error << std::endl;
 	}
 
 };
@@ -135,7 +135,9 @@ namespace
 	/* Low-level Constants */
 	/*---------------------*/
 
-    /* Command bit-field place values */
+
+    /** @name Command bit-field place values */
+	//@{
 	const byte PACKET_MARKER   =0x80;
 	const byte CONFIG_BIT      =0x40;
 	const byte TIMER_BIT       =0x20;
@@ -146,6 +148,7 @@ namespace
 	const byte ENCODER_BITS    =0x03;
 	const byte ENCODER_HI_BIT  =0x02;
 	const byte ENCODER_LO_BIT  =0x01;
+	//@}
 
 	/* Labels for the Special Configuration Commands */
 	const byte CONFIG_MIN      =0xC0;    /* Minimum cmd byte for a config cmd */
@@ -213,6 +216,7 @@ public:
      *         CANT_OPEN_PORT if connecting to the serial port was unsuccessful.
      */
     vpr::ReturnStatus    connect(char* port_name, long int baud);
+	vpr::ReturnStatus    connect();
     
 	/**
      * ibox_wait_update() updates ibox data.
@@ -562,6 +566,8 @@ public:
     //--------------------------------------------------------------------
     // Error handling
     //-------------------------------------------------------------------
+
+	char* getString(byte cmnd);
 
 	void setPort(char* port_name)
 	{
