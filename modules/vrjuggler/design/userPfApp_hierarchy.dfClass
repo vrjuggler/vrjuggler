@@ -49,11 +49,11 @@ class __tags {
 */
 class __options {
 }/**
-@__positions <oigroup:<oiref:cpp#Extends#vrj::PfApp#vrj::App:oiref>=280,103,250,103:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::PfApp:oiref>=280,10,270,210,0:oigroup>
-<oigroup:<oiref:cpp#Extends#userPfApp#vrj::PfApp:oiref>=284,330,330,330,330,220:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,10,240,186,0:oigroup>
-<oigroup:<oiref:cpp#Class#userPfApp:oiref>=170,260,114,181,1:oigroup>
+@__positions <oigroup:<oiref:cpp#Extends#vrj::PfApp#vrj::App:oiref>=280,135,230,135:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::PfApp:oiref>=280,10,200,260,0:oigroup>
+<oigroup:<oiref:cpp#Extends#userPfApp#vrj::PfApp:oiref>=304,330,330,330,330,270:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,10,220,250,0:oigroup>
+<oigroup:<oiref:cpp#Class#userPfApp:oiref>=190,290,114,181,1:oigroup>
 */
 class __positions {
 }
