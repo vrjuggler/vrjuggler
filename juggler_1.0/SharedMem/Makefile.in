@@ -49,7 +49,7 @@ SUBOBJDIR	= $(VJ_LIBRARY)
 VJROOT		= $(top_srcdir)
 VJ_SRCDIR	= @VJ_SRCDIR@/SharedMem
 
-SRCS		= vjMemory.cpp
+SRCS		=
 
 ifeq (@SHMEM_SYS@, IRIX_SPROC)
     SRCS	+= vjMemPoolSGI.cpp
