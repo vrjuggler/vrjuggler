@@ -622,7 +622,17 @@ else
     BUILD_GUI='Y'
 fi
 
-AC_PROG_INSTALL
+dnl # If we are on a Win32 system, use $ac_install_sh for the install
+dnl # program.  This prevents problems with paths if an install program is
+dnl # found elsewhere on the system.
+dnl # XXX: This may not be a safe value to use since it is internal to the
+dnl # generated configure script.  (patrick 1/10/2000)
+if test "$OS_TYPE" = "Win32" ; then
+    INSTALL="$ac_install_sh"
+dnl # Otherwise, use the safe AC_PROG_INSTALL macro.
+else
+    AC_PROG_INSTALL
+fi
 
 dnl # Ensure that a version of Perl greater than or equal to 5.004 is
 dnl # available.
