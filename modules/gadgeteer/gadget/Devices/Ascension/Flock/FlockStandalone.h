@@ -213,6 +213,8 @@ public:
     */
    void setBlocking( const bool& blVal );
 
+   void setExtendedRange( const bool& blVal );
+
    /**
     * Gets the Flock's blocking type.  See the Flock manual for details.
     */
@@ -420,6 +422,7 @@ private:
    int     mBaud;
    int     mSyncStyle;
    bool    mBlocking;
+   bool    mExtendedRange;
    int     mNumBirds;
    int     mXmitterUnitNumber;
    bool    mUsingCorrectionTable;
@@ -456,8 +459,8 @@ private:
     * @param yRot Storage for the rotation about the y-axis.
     * @param xRot Storage for the rotation about the x-axis.
     */
-   int getReading(const int& n, float& xPos, float& yPos, float& zPos,
-                  float& zRot, float& yRot, float& xRot );
+   vpr::ReturnStatus getReading(const int& n, float& xPos, float& yPos, float& zPos,
+                                float& zRot, float& yRot, float& xRot );
 
    float rawToFloat(char& r1, char& r2);
 };

@@ -64,14 +64,13 @@ const unsigned short MSG_DEVICE_DATA 	= 401;
 const unsigned short MSG_DEVICE_REQ 	= 402;
 const unsigned short MSG_DEVICE_ACK 	= 403;
 const unsigned short MSG_DEVICE_NACK 	= 404;
-const unsigned short MSG_CLOCK_SRC 		= 405;
+const unsigned short MSG_CLOCK_SRC 	= 405;
 const unsigned short MSG_CLOCK_SYNC 	= 406;
-const unsigned short MSG_HANDSHAKE 		= 407;
+const unsigned short MSG_HANDSHAKE 	= 407;
 const unsigned short MSG_CLUSTER_SYNC	= 408;
-
-const unsigned short MSG_END_BLOCK 		= 410;
-
-const unsigned short RIM_HEAD_LENGTH = 8;
+const unsigned short MSG_END_BLOCK 	= 410;
+const unsigned short MSG_BARRIER	= 5;
+const unsigned short RIM_HEAD_LENGTH 	= 8;
 
 
 #ifndef ulong

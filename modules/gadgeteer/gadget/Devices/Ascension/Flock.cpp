@@ -98,6 +98,7 @@ bool Flock::config(jccl::ConfigChunkPtr c)
    mFlockOfBirds.setBlocking( c->getProperty<bool>("blocking") );
    mFlockOfBirds.setNumBirds( c->getProperty<int>("num") );
    mFlockOfBirds.setTransmitter( c->getProperty<int>("transmitter") );
+   mFlockOfBirds.setExtendedRange( c->getProperty<bool>("extendedRange") );
    mFlockOfBirds.setHemisphere( (BIRD_HEMI) c->getProperty<int>("hemi") ); //LOWER_HEMI
    mFlockOfBirds.setFilterType( (BIRD_FILT) c->getProperty<int>("filt") ); //
 

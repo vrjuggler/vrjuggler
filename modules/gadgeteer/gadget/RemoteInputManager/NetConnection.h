@@ -136,6 +136,8 @@ namespace gadget
          return mSockStream;
       }
 
+      void sendBarrier();
+      void receiveBarrier();
       void sendNetworkData();
 
       void addTransmittingNetDevice(NetDevice* net_device);
@@ -143,6 +145,7 @@ namespace gadget
       void addReceivingNetDevice(NetDevice* net_device);
       NetDevice* findReceivingNetDevice(const std::string& device_name);
       NetDevice* findReceivingNetDeviceByLocalId(VJ_NETID_TYPE local_id);
+      NetConnection* findNetDeviceConnection(const std::string& device_name);
 
       void sendDeviceRequest(NetDevice* net_device );
       void resendRequestsForNackedDevices();

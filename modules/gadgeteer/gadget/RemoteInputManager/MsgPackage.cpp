@@ -462,9 +462,9 @@ namespace gadget
       vprASSERT(object_reader != NULL && "Object Reader does not exist!!!");
       
          //Read the device data from the packet
-      std::cout << "SENDING A DELTA OF: " << *delta << std::endl;
+      //std::cout << "SENDING A DELTA OF: " << *delta << std::endl;
       virtual_device->readObject(object_reader, delta);
-      std::cout << "SENDING A DELTA OF: " << *delta << std::endl;
+      //std::cout << "SENDING A DELTA OF: " << *delta << std::endl;
 
       vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  clrOutBOLD(clrCYAN,"[Parse Packet]RECEIVEING A DEVICE DATA PACKET\n") << vprDEBUG_FLUSH;
       return true;
@@ -646,7 +646,7 @@ namespace gadget
 
       vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  clrSetBOLD(clrYELLOW) << "SEND BOOL: " << accept_reject << "\n" << clrRESET << vprDEBUG_FLUSH;
       mTempWriter->writeBool(accept_reject);    //Must use two because of alignment issues
-      
+//      mTempWriter->writeBool(sync);    //Must use two because of alignment issues
       
       // Write hostname
       mTempWriter->writeUint16(host.size());
@@ -766,6 +766,7 @@ namespace gadget
       if ( rimcode == RIM_PACKET_MSG && opcode == MSG_HANDSHAKE )
       {
          accept_reject = reader->readBool();
+         //sync = reader->readBool();
          vpr::Uint16 temp_string_len = reader->readUint16();
          receivedHostname = reader->readString(temp_string_len);
          receivedPort = reader->readUint16();

@@ -36,6 +36,7 @@
 
 #include <vpr/vpr.h>
 #include <vpr/Util/Assert.h> /* for vprASSERT */
+#include <gadget/Util/Debug.h>
 #include <vpr/System.h>
 
 #include <gadget/Devices/Ascension/FlockStandalone.h>
@@ -168,12 +169,16 @@ void FlockStandalone::setBaudRate(const int& baud)
 int FlockStandalone::start()
 {
    int retval;
-
+   std::cout << "1" << std::endl;
    if ( ! mActive )
    {
+       std::cout << "2" << std::endl;
       if ( openPort() == -1 )
       {
+          std::cout << "3" << std::endl;
+        vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "ERROR, can't open serial port: " <<  mPort << "\n" << vprDEBUG_FLUSH;
          retval = 0;
+         std::cout << "4" << std::endl;
       }
       else
       {
@@ -230,9 +235,11 @@ int FlockStandalone::start()
    }
    else
    {
+       std::cout << "5" << std::endl;
       retval = 0; // already sampling
    }
 
+   std::cout << "6" << std::endl;
    return retval;
 }
 
@@ -242,42 +249,38 @@ int FlockStandalone::sample()
 {
    // can't sample when not active.
    vprASSERT( mActive == true );
-   int i;
-   int loopCount = mNumBirds + 1;
-   if ( mXmitterUnitNumber <= mNumBirds )
-   {
-      loopCount++;
-   }
 
-   // for [1..n] birds, get their reading:
-   int j = 0;
-   for ( i=1; i < loopCount && i < MAX_SENSORS; i++ )
+   int loop_count = mNumBirds;
+   if (mExtendedRange)
    {
-      j++;
-// If the transmitter number is less than or equal to the number of birds, we need to ignore it.
-
-      if ( i == mXmitterUnitNumber )
+      loop_count++;
+   }    
+   
+   int buffer_location=0;
+   for (int bird_id=1;bird_id<loop_count && bird_id<MAX_SENSORS;bird_id++)
+   {
+      if (!mExtendedRange && bird_id != mXmitterUnitNumber)
       {
-         j--;
-         continue;
+         vprASSERT( bird_id < MAX_SENSORS );
+         vpr::ReturnStatus status = getReading(bird_id, xPos(buffer_location), yPos(buffer_location), zPos(buffer_location), 
+                                                        zRot(buffer_location), yRot(buffer_location), xRot(buffer_location));
+         if (!status.success())
+         {
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "[Flock of Birds] Error reading packet for bird: "
+                  << bird_id << "\n" << vprDEBUG_FLUSH;
+         }
+         if ( mUsingCorrectionTable )
+         {
+            this->positionCorrect( this->xPos(buffer_location),
+                                   this->yPos(buffer_location),
+                                   this->zPos(buffer_location) );
+         }
+
+         buffer_location++;
       }
 
-// However, we need to still copy the data into consecutive values in the wrapper class, so we
-// introduce "j" to account for that correction.  It is equal to "i" while we haven't encountered
-// the transmitter, but equal to "i-1" afterwards.
 
-      // you can never go above the maximum number of sensors.
-      vprASSERT( i < MAX_SENSORS );
-      getReading(i, xPos(j), yPos(j), zPos(j), zRot(j), yRot(j), xRot(j));
-
-      if ( mUsingCorrectionTable )
-      {
-         this->positionCorrect( this->xPos(j),
-                                this->yPos(j),
-                                this->zPos(j) );
-      }
    }
-
    return 1;
 }
 
@@ -445,6 +448,20 @@ void FlockStandalone::setBlocking( const bool& blVal )
    }
 }
 
+void FlockStandalone::setExtendedRange( const bool& blVal )
+{
+   if ( mActive )
+   {
+      std::cout << "Flock: Cannot extended range\n" << std::flush;
+      return;
+   }
+   else
+   {
+      // Set it.
+      mExtendedRange = blVal;
+   }
+}
+
 //: with the calibration table info, correct a given position
 //  give - a position in x, y, z euclidian coordinates
 //  returns - a corrected position in x, y, z euclidian coordinates
@@ -583,75 +600,51 @@ float& FlockStandalone::xRot( const int& i )
 //  give - port: the flock port number <BR>
 //  give - xyz positions               <BR>
 //  give - zyx rotations
-int FlockStandalone::getReading (const int& n, float& xPos, float& yPos,
+
+// NOTE: CHANGE A VPR::RETURNSTSTUS
+vpr::ReturnStatus FlockStandalone::getReading (const int& n, float& xPos, float& yPos,
                                  float& zPos, float& zRot, float& yRot,
                                  float& xRot)
 {
    int addr;
    vpr::Uint64 timeout=10000;  // How long to wait for data to arrive
    vpr::Uint32 num_read;
+   char buff[14];
+
    if ( mSerialPort != NULL )
    {
-      char buff[12], group;
-      int  c, i;
+      //int  counter = 0;
+
+      
 
       do
       {
-         c = i = 0;
-
-         while ( ! i && c < 99999 )
+         vpr::ReturnStatus status = mSerialPort->read(&buff,14,num_read,vpr::Interval(timeout, vpr::Interval::Msec));
+         if (status.success())
          {
-            c++;
-            mSerialPort->readn(&buff[0], 1, num_read,
-                               vpr::Interval(timeout, vpr::Interval::Msec));
-            if ( (num_read == 1) )
-            {
-               i = 1;
-            }
+            return status;
          }
-
-
-         while ( i != 12 && c < 99999 )
-         {
-            c++;
-            mSerialPort->read(&buff[i], 12 - i, num_read,
-                              vpr::Interval(timeout, vpr::Interval::Msec));
-            i += num_read;
-         }
-
-         mSerialPort->read(&group, 1, num_read,
-                           vpr::Interval(timeout, vpr::Interval::Msec));
-         while ( (num_read == 0) &&
-                 (c < 99999) )
-         {
-            vpr::System::usleep(100 * mSleepFactor);
-            c++;
-            mSerialPort->read(&group, 1, num_read,
-                              vpr::Interval(timeout, vpr::Interval::Msec));
-         }
-
-         addr = group;
-      } while ( addr != n );
+      } while(addr != (int)buff[14]);
 
       //std::cout << "addr: " << addr << std::endl;
 
       // Position
-      xPos = rawToFloat(buff[1], buff[0]) * POSITION_RANGE;
-      yPos = rawToFloat(buff[3], buff[2]) * POSITION_RANGE;
-      zPos = rawToFloat(buff[5], buff[4]) * POSITION_RANGE;
+      xPos = rawToFloat(buff[2], buff[1]) * POSITION_RANGE;
+      yPos = rawToFloat(buff[4], buff[3]) * POSITION_RANGE;
+      zPos = rawToFloat(buff[6], buff[5]) * POSITION_RANGE;
 
 
       // Orientation
-      zRot = rawToFloat(buff[7], buff[6])   * ANGLE_RANGE;
-      yRot = rawToFloat(buff[9], buff[8])   * ANGLE_RANGE;
-      xRot = rawToFloat(buff[11], buff[10]) * ANGLE_RANGE;
+      zRot = rawToFloat(buff[8], buff[7])   * ANGLE_RANGE;
+      yRot = rawToFloat(buff[10], buff[9])   * ANGLE_RANGE;
+      xRot = rawToFloat(buff[12], buff[11]) * ANGLE_RANGE;
+      
+      return vpr::ReturnStatus::Succeed;
    }
    else
    {
-      addr = -1;
+      return vpr::ReturnStatus::Fail;
    }
-
-   return addr;
 }
 
 float FlockStandalone::rawToFloat (char& r1, char& r2)
@@ -697,24 +690,30 @@ int FlockStandalone::openPort ()
    {
       mSerialPort->setOpenReadWrite();
 
+      //vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Trying to open serial port: " << mPort << "\n" << vprDEBUG;
+      std::cout << "Trying to open serial port: " << mPort << std::endl;
 
+      std::cout << "1" << std::endl;
       if ( ! mSerialPort->open().success() )
       {
-         std::cerr << "[FlockStandalone] Port reset failed (because port "
+         std::cout << "[FlockStandalone] Port reset failed (because port "
                    << "open failed)\n";
          retval = -1;
       }
       else
       {
+         std::cout << "2" << std::endl;
          vpr::System::sleep(2);
+         std::cout << "3" << std::endl;
          mSerialPort->close();
+         std::cout << "4" << std::endl;
 
          std::cout << "[FlockStandalone] Port reset successfully (port was "
                    << "opened then closed)\n" << std::flush;
 
          if ( ! mSerialPort->open().success() )
          {
-            std::cerr << "[FlockStandalone] Port open failed\n";
+            std::cout << "[FlockStandalone] Port open failed\n";
             retval = -1;
          }
          else
