@@ -383,20 +383,23 @@ if test "$OS_TYPE" = "UNIX" ; then
         osx_frameworks="-framework AGL -framework ApplicationServices -framework Carbon"
     fi
 
-    if test "x$PLATFORM" = "xDarwin" ; then
-        if test "x$VRJ_USE_X11" = "xyes" ; then
-            DYLIB_DEPS_GL="$DYLIB_DEPS_GL -lGLU -lGL $X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS $osx_frameworks"
-        else
-            DYLIB_DEPS_GL="$DYLIB_DEPS_GL $OGL_LDFLAGS $LIBOPENGL $osx_frameworks"
-        fi
-    else
-        DYLIB_DEPS_GL="$DYLIB_DEPS_GL $OGL_LDFLAGS $LIBOPENGL"
-    fi
-
     REQ_EXTRA_PROF_LIBS="$LDFLAGS $GADGET_PROF_LIBS_CC_MIN $JCCL_PROF_LIBS_CC_MIN $JCCL_EXTRA_LIBS_CC $LIBS -lm"
     DYLIB_PROF_DEPS_VJ="$SNX_PROF_LIBS_CC $REQ_EXTRA_PROF_LIBS"
     DYLIB_PROF_DEPS_GL="-L\$(LIBDIR) -lvrj_p $OGL_LDFLAGS $LIBOPENGL $REQ_EXTRA_PROF_LIBS"
     DYLIB_PROF_DEPS_PF="-L\$(LIBDIR) -lvrj_p $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_PROF_LIBS"
+
+    if test "x$PLATFORM" = "xDarwin" ; then
+        if test "x$VRJ_USE_X11" = "xyes" ; then
+            DYLIB_DEPS_GL="$DYLIB_DEPS_GL -lGLU -lGL $X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS $osx_frameworks"
+            DYLIB_PROF_DEPS_GL="$DYLIB_PROF_DEPS_GL -lGLU -lGL $X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS $osx_frameworks"
+        else
+            DYLIB_DEPS_GL="$DYLIB_DEPS_GL $OGL_LDFLAGS $LIBOPENGL $osx_frameworks"
+            DYLIB_PROF_DEPS_GL="$DYLIB_DEPS_GL $OGL_LDFLAGS $LIBOPENGL $osx_frameworks"
+        fi
+    else
+        DYLIB_DEPS_GL="$DYLIB_DEPS_GL $OGL_LDFLAGS $LIBOPENGL"
+        DYLIB_PROF_DEPS_GL="$DYLIB_PROF_DEPS_GL $OGL_LDFLAGS $LIBOPENGL"
+    fi
 
     if test "x$VRJ_USE_X11" = "xyes" ; then
         APP_EXTRA_LIBS_X11="$X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS"
