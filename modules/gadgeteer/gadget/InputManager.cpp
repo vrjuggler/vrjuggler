@@ -50,7 +50,8 @@
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <jccl/RTRC/ConfigManager.h>
 
-//#include <gadget/RemoteInputManager/RemoteInputManager.h>
+// NEED TO FIX!!!!
+#include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
 #include <gadget/Type/BaseTypeFactory.h>
 
 #include <gadget/InputLogger.h>
@@ -110,10 +111,16 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
    vprASSERT(configCanHandle(chunk));
 
    bool ret_val = false;      // Flag to return success
-
-   //if (mRemoteInputManager->configCanHandle(chunk))
-   //   ret_val = mRemoteInputManager->configAdd(chunk);
-   if(DeviceFactory::instance()->recognizeDevice(chunk))
+   
+   // NEED TO FIX!!!!
+   if (cluster::RemoteInputManager::instance()->recognizeRemoteDeviceConfig(chunk))
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+         << "InputManager can not handle remote devices, we must use Remote Input Manager."
+         << vprDEBUG_FLUSH;
+      ret_val = false;
+   }
+   else if(DeviceFactory::instance()->recognizeDevice(chunk))
       ret_val = configureDevice(chunk);
    else if(ProxyFactory::instance()->recognizeProxy(chunk))
       ret_val = configureProxy(chunk);
@@ -243,9 +250,15 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
    bool ret_val = false;      // Flag to return success
 
-   //if (mRemoteInputManager->configCanHandle(chunk))
-   //     ret_val = mRemoteInputManager->configRemove(chunk);
-   if(DeviceFactory::instance()->recognizeDevice(chunk))
+   // NEED TO FIX!!!!
+   if (cluster::RemoteInputManager::instance()->recognizeRemoteDeviceConfig(chunk))
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+         << "InputManager can not handle remote devices, we must use Remote Input Manager."
+         << vprDEBUG_FLUSH;
+      ret_val = false;
+   }
+   else if(DeviceFactory::instance()->recognizeDevice(chunk))
       ret_val = removeDevice(chunk);
    else if(recognizeProxyAlias(chunk))
       ret_val = removeProxyAlias(chunk);
@@ -276,8 +289,9 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 // Return true if:
 //  It is recognized device, proxy, or alias.
 bool InputManager::configCanHandle(jccl::ConfigChunkPtr chunk)
-{
-   return ( DeviceFactory::instance()->recognizeDevice(chunk) ||
+{           // NEED TO FIX!!!!
+   return ( (DeviceFactory::instance()->recognizeDevice(chunk) && 
+             !cluster::RemoteInputManager::instance()->recognizeRemoteDeviceConfig(chunk)) ||
             ProxyFactory::instance()->recognizeProxy(chunk) ||
             recognizeProxyAlias(chunk) ||
             //mRemoteInputManager->configCanHandle(chunk) ||
