@@ -640,7 +640,7 @@ fi
 
 # Information needed to generate vpr-config.
 case $SUBSYSTEM in
-    IRIX_SPROC)
+    SPROC)
         subsystem_cflags="$INCLUDES"
         subsystem_cxxflags="$INCLUDES"
         subsystem_libs="$SEM_LIB $SOCKET_LIB"
