@@ -129,7 +129,7 @@ public:
     // -----------------------------------------------------------------------
     //: Signal all waiting threads.
     //
-    //! PRE: The mutex variable associated with teh condition variable
+    //! PRE: The mutex variable associated with the condition variable
     //+      should be locked.
     //! POST: The condition variable is unlocked, and all waiting threads
     //+       are signaled of this event.
