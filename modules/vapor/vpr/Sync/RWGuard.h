@@ -39,36 +39,34 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_Guard_h_
-#define _VPR_Guard_h_
+#ifndef _VPR_RWGuard_h_
+#define _VPR_RWGuard_h_
 
 #include <vpr/vprConfig.h>
 #include <vpr/Util/ReturnStatus.h>
+#include <vpr/Sync/RWMutex.h>
 
 
 namespace vpr
 {
 
 /**
- * Guard wrapper.
- *
- * @date 1-31-97
+ * Read Guard wrapper.
  */
-template <class LOCK_TYPE>
-class Guard
+class ReadGuard
 {
 public:
    /**
     * Acquires the lock implicitly.
     * If block = 1 then use a blocking acquire.
     */
-   Guard(LOCK_TYPE &lock, int block = 1) : mTheLock(&lock)
+   ReadGuard(RWMutex& lock, int block = 1) : mTheLock(&lock)
    {
       mLockStatus = block ? acquire().success() : tryAcquire().success();
    }
 
-   /// Releases the lock.
-   ~Guard()
+   /** Releases the lock. */
+   ~ReadGuard()
    {
       if ( mLockStatus )
       {
@@ -88,13 +86,13 @@ public:
    /// Acquires the lock.
    vpr::ReturnStatus acquire()
    {
-      return mTheLock->acquire();
+      return mTheLock->acquireRead();
    }
 
    /// Tries to acquire lock.
    vpr::ReturnStatus tryAcquire()
    {
-      return mTheLock->tryAcquire();
+      return mTheLock->tryAcquireRead();
    }
 
    /// Explicity releases the lock.
@@ -104,8 +102,64 @@ public:
    }
 
 private:
-   LOCK_TYPE* mTheLock;    /**< The lock that we are using */
-   bool       mLockStatus; /**< Are we locked or not */
+   RWMutex* mTheLock;    /**< The lock that we are using */
+   bool     mLockStatus; /**< Are we locked or not */
+};
+
+/**
+ * Write Guard wrapper.
+ */
+class WriteGuard
+{
+public:
+   /**
+    * Acquires the lock implicitly.
+    * If block = 1 then use a blocking acquire.
+    */
+   WriteGuard(RWMutex& lock, int block = 1) : mTheLock(&lock)
+   {
+      mLockStatus = block ? acquire().success() : tryAcquire().success();
+   }
+
+   /** Releases the lock. */
+   ~WriteGuard()
+   {
+      if ( mLockStatus )
+      {
+         mTheLock->release();
+      }
+   }
+
+   /**
+    * @return true is returned if this guard is locked.
+    *         false is returned if this guard is not locked.
+    */
+   const bool& locked()
+   {
+      return mLockStatus;
+   }
+
+   /// Acquires the lock.
+   vpr::ReturnStatus acquire()
+   {
+      return mTheLock->acquireRead();
+   }
+
+   /// Tries to acquire lock.
+   vpr::ReturnStatus tryAcquire()
+   {
+      return mTheLock->tryAcquireRead();
+   }
+
+   /// Explicity releases the lock.
+   vpr::ReturnStatus release()
+   {
+      return mTheLock->release();
+   }
+
+private:
+   RWMutex* mTheLock;    /**< The lock that we are using */
+   bool     mLockStatus; /**< Are we locked or not */
 };
 
 
