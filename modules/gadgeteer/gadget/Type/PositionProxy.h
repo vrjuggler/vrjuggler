@@ -144,7 +144,7 @@ public:
    void transformData()
    { mPositionData.getPositionData()->postMult(mMatrixTransform); }
 
-   static std::string getChunkType() { return "PositionProxy"; }
+   static std::string getChunkType() { return "PosProxy"; }
 
    bool config(jccl::ConfigChunkPtr chunk);
 
