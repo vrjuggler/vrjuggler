@@ -3734,6 +3734,49 @@ private:
           </section>
         </section>
 
+        <section id="section.stupefied.proxies">
+          <title>Stupefied Proxies</title>
+
+          <indexterm zone="section.stupefied.proxies">
+            <primary>proxy</primary>
+
+            <secondary>stupefied</secondary>
+          </indexterm>
+
+          <para>The indirection provided by device proxies facilitates
+          run-time reconfiguration of hardware devices. If a hardware device
+          breaks down while an application is running, the device can be
+          replaced without shutting down and restarting the application. To
+          support this capability, proxies can become
+          <quote>stupefied,</quote> which means that they are not connected to
+          a device and cannot return new data.</para>
+
+          <para>In general, application programmers do not need to worry about
+          stupefied proxies. Data will be returned by the proxy whether it is
+          stupefied or not, but if the proxy is stupefied, it cannot return
+          <emphasis>new</emphasis> data. Stupefied proxies can occur as a
+          result of an error in the VR Juggler configuration or because the
+          hardware device pointed at by the proxy failed to start up
+          correctly.</para>
+
+          <para>To determine whether a proxy is stupefied, the method
+          <methodname>gadget::Proxy::isStupefied()</methodname> can be used.
+          The stupefication state cannot be changed programatically by user
+          code, however. Only the Input Manager is capable of reconfiguring a
+          proxy to point at a new valid device. Hence, changing the
+          stupefication state of a proxy from an application object will have
+          no effect and may cause the application to crash.</para>
+
+          <warning>
+            <para>In all versions of VR Juggler prior to 2.0 Beta 3, the word
+            <quote>stupefied</quote> was misspelled as stupified. The method
+            <methodname>gadget::Proxy::isStupified()</methodname> is retained
+            in Gadgeteer 1.0 for backwards compatibility, but it will be
+            removed in Gadgeteer 1.2 (which will ship as part of VR Juggler
+            2.2).</para>
+          </warning>
+        </section>
+
         <section id="section.device.interface.details">
           <title>The Gory Details</title>
 
@@ -10587,6 +10630,17 @@ public:
           to perform special functionality. This takes advantage of C++
           operator overloading to hide extra processing steps behind a
           familiar syntax.</para>
+        </glossdef>
+      </glossentry>
+
+      <glossentry id="gloss.stupefied.proxy">
+        <glossterm>stupefied proxy</glossterm>
+
+        <glossdef>
+          <para>A device proxy that has no device. Such a proxy always returns
+          the same data because it cannot query new data from an input device.
+          Proxies become stupefied when there is an error in the configuration
+          or when the proxied device is unavailable for some reason.</para>
         </glossdef>
       </glossentry>
     </glossdiv>
