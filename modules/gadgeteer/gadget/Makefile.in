@@ -58,9 +58,10 @@ SUBDIR=		Devices/Keyboard	\
 		Type			\
 		Util
 
-SRCS=		InputManager.cpp	\
-		ProxyDepChecker.cpp	\
-		ProxyFactory.cpp
+SRCS=		InputLogger.cpp \
+            InputManager.cpp	\
+            ProxyDepChecker.cpp	\
+            ProxyFactory.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 

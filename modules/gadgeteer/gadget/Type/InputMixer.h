@@ -114,16 +114,20 @@ public:
 
    vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
    {
-     ComposedParent::writeObject(writer);
-     NewParent::writeObject(writer);
-     return(vpr::ReturnStatus::Succeed);
+      writer->beginTag(InputMixer<ComposedParent,NewParent>::getBaseType());
+      ComposedParent::writeObject(writer);
+      NewParent::writeObject(writer);
+      writer->endTag();
+      return(vpr::ReturnStatus::Succeed);
    }
 
    vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
    {
-     ComposedParent::readObject(reader);
-     NewParent::readObject(reader);
-     return(vpr::ReturnStatus::Succeed);
+      reader->beginTag(InputMixer<ComposedParent,NewParent>::getBaseType());
+      ComposedParent::readObject(reader);
+      NewParent::readObject(reader);
+      reader->endTag();
+      return(vpr::ReturnStatus::Succeed);
    }
 
    std::string getBaseType()

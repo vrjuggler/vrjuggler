@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jan-13-2003 allenb    Add initial version of input logger.  This version
+                      can record input data but can not yet play it back.
 Jan-09-2003 allenb    Removed delta value hack for remote input manager.
                       Also removed SerializableDevice interface.  We now just
                       use the SerializableObject interface.
