@@ -177,7 +177,7 @@ vpr::ReturnStatus ThreadNSPR::start()
    return status;
 }
 
-int ThreadNSPR::join(void** status = NULL)
+int ThreadNSPR::join(void** status)
 {
    boost::ignore_unused_variable_warning(status);
    return PR_JoinThread(mThread);
