@@ -377,7 +377,7 @@ if test "$OS_TYPE" = "UNIX" ; then
     DYLIB_PROF_DEPS_GL="-L\$(LIBDIR) -lJuggler_p $OGL_LDFLAGS $LIBOPENGL $REQ_EXTRA_PROF_LIBS"
     DYLIB_PROF_DEPS_PF="-L\$(LIBDIR) -lJuggler_p $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_PROF_LIBS"
 
-    APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11 -lXext"
+    APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11"
     APP_EXTRA_LIBS_OSG='-L$(OSGHOME)/lib -losg -losgDB -losgGA -losgUtil'
 
     if test "x$OGL_LDFLAGS" != "x" ; then
