@@ -392,13 +392,21 @@ public class PrefsDialog extends JDialog implements TableModelListener
       // ----------------------------------------------------------------------
       // Handle the Look-and-Feel box.
       UIManager.LookAndFeelInfo[] lafs = UIManager.getInstalledLookAndFeels();
+      int selected_index = 0;
+      String cur_laf = mPrefs.getLookAndFeel();
 
       // Add the available look-and-feel objects to the combo box.
       for ( int i = 0; i < lafs.length; ++i )
       {
          mLafBox.addItem(lafs[i]);
+
+         if ( lafs[i].getClassName().equals(cur_laf) )
+         {
+            selected_index = i;
+         }
       }
 
+      mLafBox.setSelectedIndex(selected_index);
       mLafBox.setRenderer(new LAFBoxRenderer());
       mLafBox.addActionListener(new ActionListener()
          {
