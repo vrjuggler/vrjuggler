@@ -43,6 +43,7 @@
 #include <ctype.h>
 
 
+/*static*/ const std::string vjConfigChunk::embedded_separator("->");
 
 vjConfigChunk::vjConfigChunk (): props(), type_as_varvalue(T_STRING) {
     desc = 0;
@@ -165,6 +166,58 @@ bool vjConfigChunk::operator< (const vjConfigChunk& c) const {
     std::string s1 = getProperty ("name");
     std::string s2 = c.getProperty ("name");
     return s1 < s2;
+}
+
+
+
+// used for dependency resolution
+vjConfigChunk* vjConfigChunk::getEmbeddedChunk (const std::string &path) {
+    std::string propname, chunkname, subpath;
+    vjProperty* prop;
+    int i;
+    vjConfigChunk *ch = this;
+    vjConfigChunk *ch2, *ch3;
+        
+    if (vjstrcasecmp (ch->getName(), getFirstNameComponent (path))) {
+        return 0;
+    }
+    else {
+        if (!hasSeparator(path))
+            return ch;
+        else {
+            subpath = getRemainder(path); // strip chunkname
+            propname = getFirstNameComponent(path);
+            subpath = getRemainder(path); // strip propname
+            chunkname = getFirstNameComponent (path);
+            prop = getPropertyPtrFromName(propname);
+            if (prop) {
+                for (i = 0; i < prop->getNum(); i++) {
+                    ch2 = (vjConfigChunk*)prop->getValue(i);
+                    if (ch2) {
+                        ch3 = ch2->getEmbeddedChunk(path);
+                        if (ch3)
+                            return ch3;
+                    }
+                }
+            }
+            else {
+                // this next bit is insurance against some of my 
+                // own most likely mistakes
+                prop = getPropertyPtrFromToken(propname);
+                if (prop) {
+                    for (i = 0; i < prop->getNum(); i++) {
+                        ch2 = (vjConfigChunk*)prop->getValue(i);
+                        if (ch2) {
+                            ch3 = ch2->getEmbeddedChunk(path);
+                            if (ch3)
+                                return ch3;
+                        }
+                    }
+                }
+            }
+            return 0;
+        }
+    }
 }
 
 
