@@ -88,12 +88,6 @@ GADGET_LIB_DYNAMIC=		$(GADGET_LIBRARY).$(DYNAMICLIB_EXT)
 GADGET_PROF_LIB_STATIC=		$(GADGET_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
 GADGET_PROF_LIB_DYNAMIC=	$(GADGET_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 
-# On Linux, we have to compile the Performer library with -O for things to
-# link properly.
-ifeq ($(PLATFORM), Linux)
-    EXTRA_LDOPTS = -O
-endif
-
 # Version information.
 PARAM_HEADER=	gadget/gadgetParam.h
 BRANCH=		HEAD
