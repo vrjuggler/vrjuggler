@@ -33,7 +33,6 @@
 
 #include <sax/SAXParseException.hpp>
 #include <jccl/XMLUtil/XercesXMLError.h>
-#include <iostream.h>
 #include <stdlib.h>
 #include <string.h>
 #include <dom/DOMString.hpp>

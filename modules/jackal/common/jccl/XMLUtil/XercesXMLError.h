@@ -33,9 +33,9 @@
 #ifndef _JCCL_XERCESXMLERROR_H_
 #define _JCCL_XERCESXMLERROR_H_
 
+#include <jccl/jcclConfig.h>
 #include <util/XercesDefs.hpp>
 #include <sax/ErrorHandler.hpp>
-#include <iostream.h>
 
 namespace jccl {
 

@@ -189,7 +189,7 @@ bool XercesXMLParser::writeFile (const std::string& file_name, DOM_Node& doc) {
 
 
 bool XercesXMLParser::writeStream (std::ostream& output, DOM_Node& doc) {
-    output << "<Not_Implemented/>" << endl;
+    output << "<Not_Implemented/>" << std::endl;
     return false;
 }
 
