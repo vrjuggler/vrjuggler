@@ -1343,9 +1343,13 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>GestureProxy</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="RIMChunk" name="Remote Input Manager Chunk">
+  <ChunkDesc token="ClusterManager" name="Cluster Configuration">
     <help>Contains all ClusterJuggler settings.</help>
     <category>Cluster Juggler</category>
+    <PropertyDesc name="Cluster Plugin" token="clusterPlugin" type="string" variable="1">
+      <item label="Cluster Plugin Path" defaultvalue="" />
+      <help>The name of the ClusterPlugin to load</help>
+    </PropertyDesc>
     <PropertyDesc name="Cluster Nodes" token="cluster_nodes" type="chunk" variable="1">
       <help>List of all active Cluster nodes and their Machine Specific settings</help>
       <item label="Machine" defaultvalue="" />
