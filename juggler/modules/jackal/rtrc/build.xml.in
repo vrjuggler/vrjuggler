@@ -23,7 +23,7 @@
              deprecation="on"
              debug="${debug}"
              optimize="${optimize}">
-         <src path="${srcdir}" />
+         <src path="." />
          <include name="jccl/*.java" />
          <classpath>
             <pathelement path="${tweek.classpath}" />
