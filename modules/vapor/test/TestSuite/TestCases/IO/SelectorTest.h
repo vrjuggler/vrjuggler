@@ -77,8 +77,8 @@ public:
    {
        testAssertReset();
        mRendevousPort = 47000 + (random() % 71);     // Get a partially random port       
-       mNumRendevousPorts = 10;
-       mNumIters = 30;
+       mNumRendevousPorts = 13;
+       mNumIters = 50;
        mMessageValue = std::string("The Data");
        mMessageLen = mMessageValue.length();
        
@@ -189,7 +189,8 @@ public:
       // Connect randomly to the rendevous ports
       for(int i=0;i<mNumIters;i++)
       {         
-         PRUint16 port_num = mRendevousPort+(i % mNumRendevousPorts);
+         PRUint16 port_num = mRendevousPort+(random() % mNumRendevousPorts);
+         //std::cout << " p: " << port_num << std::flush;
          remote_addr.setAddress("localhost", port_num);
          vpr::SocketStream con_sock;
          std::string       data;
