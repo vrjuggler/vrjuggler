@@ -30,7 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #include <jccl/jcclConfig.h>
 #include <ctype.h>
 #include <jccl/Config/VarValue.h>
@@ -40,173 +39,178 @@
 #include <jccl/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 
+
 namespace jccl
 {
 
 VarValue* VarValue::invalid_instance = NULL;
 const std::string VarValue::using_invalid_msg = "Casting from VJ_T_INVALID VarValue - this may mean we're confused";
 
-
 /*static*/ VarValue& VarValue::getInvalidInstance ()
 {
-    if (invalid_instance == NULL)
-        invalid_instance = new VarValue (VJ_T_INVALID);
-    return *invalid_instance;
-}
+   if ( invalid_instance == NULL )
+   {
+      invalid_instance = new VarValue (VJ_T_INVALID);
+   }
 
+   return *invalid_instance;
+}
 
 VarValue::VarValue (const VarValue &v)
 {
-    validation = 1;
+   validation = 1;
 
-    //strval = std::string("");
-    intval = 0;
-    floatval = 0.0;
-    //embeddedchunkval = NULL;
-    boolval = false;
-    *this = v;
+   //strval = std::string("");
+   intval = 0;
+   floatval = 0.0;
+   //embeddedchunkval = NULL;
+   boolval = false;
+   *this = v;
 }
-
 
 VarValue::VarValue (const ConfigChunkPtr ch)
 {
-    validation = 1;
+   validation = 1;
 
-    //strval = std::string("");
-    intval = 0;
-    floatval = 0.0;
-    //embeddedchunkval = NULL;
-    boolval = false;
-    type = T_EMBEDDEDCHUNK;
-    embeddedchunkval = ch;
+   //strval = std::string("");
+   intval = 0;
+   floatval = 0.0;
+   //embeddedchunkval = NULL;
+   boolval = false;
+   type = T_EMBEDDEDCHUNK;
+   embeddedchunkval = ch;
 //      if (ch)
 //          embeddedchunkval = new ConfigChunk(*ch);
 }
 
-
 VarValue::VarValue ( VarType t )
 {
-    validation = 1;
+   validation = 1;
 
-    //strval = std::string("");
-    type = t;
-    intval = 0;
-    floatval = 0.0;
-    //embeddedchunkval = NULL;
-    boolval = false;
+   //strval = std::string("");
+   type = t;
+   intval = 0;
+   floatval = 0.0;
+   //embeddedchunkval = NULL;
+   boolval = false;
 }
-
-
 
 VarValue::~VarValue()
 {
-    validation = 0;
+   validation = 0;
 }
-
 
 #ifdef JCCL_DEBUG
 void VarValue::assertValid () const
 {
-    vprASSERT (validation == 1 && "Trying to use deleted VarValue");
-    if ((type == T_EMBEDDEDCHUNK) && embeddedchunkval.get())
-        embeddedchunkval->assertValid();
+   vprASSERT (validation == 1 && "Trying to use deleted VarValue");
+   if ( (type == T_EMBEDDEDCHUNK) && embeddedchunkval.get() )
+   {
+      embeddedchunkval->assertValid();
+   }
 }
 #endif
 
-
-
 VarValue& VarValue::operator= (const VarValue &v)
 {
-    assertValid();
-    v.assertValid();
+   assertValid();
+   v.assertValid();
 
-    if (&v == this)
-        return *this;
+   if ( &v == this )
+   {
+      return *this;
+   }
 
-    type = v.type;
+   type = v.type;
 
-    intval = v.intval;
-    floatval = v.floatval;
-    boolval = v.boolval;
-    strval = v.strval;
-    embeddedchunkval = v.embeddedchunkval;
-//      if (v.embeddedchunkval) {
-
-//          embeddedchunkval = new ConfigChunk (*v.embeddedchunkval);
+   intval = v.intval;
+   floatval = v.floatval;
+   boolval = v.boolval;
+   strval = v.strval;
+   embeddedchunkval = v.embeddedchunkval;
+//      if (v.embeddedchunkval)
+//      {
+//         embeddedchunkval = new ConfigChunk (*v.embeddedchunkval);
 //      }
-    return *this;
+   return *this;
 }
-
-
 
 //: Equality Operator
 bool VarValue::operator == (const VarValue& v) const
 {
-    assertValid();
-    v.assertValid();
+   assertValid();
+   v.assertValid();
 
-    if (type != v.type)
-        return false;
-    switch (type) {
-    case T_INT:
-        return (intval == v.intval);
-    case T_FLOAT:
-        return (floatval == v.floatval);
-    case T_STRING:
-    case T_CHUNK:
-        return (strval == v.strval);
-    case T_BOOL:
-        return (boolval == v.boolval);
-    case T_EMBEDDEDCHUNK:
-        if (embeddedchunkval.get()) {
-            if (v.embeddedchunkval.get())
-                return (*embeddedchunkval == *(v.embeddedchunkval));
+   if ( type != v.type )
+   {
+      return false;
+   }
+
+   switch ( type )
+   {
+      case T_INT:
+         return(intval == v.intval);
+      case T_FLOAT:
+         return(floatval == v.floatval);
+      case T_STRING:
+      case T_CHUNK:
+         return(strval == v.strval);
+      case T_BOOL:
+         return(boolval == v.boolval);
+      case T_EMBEDDEDCHUNK:
+         if ( embeddedchunkval.get() )
+         {
+            if ( v.embeddedchunkval.get() )
+            {
+               return(*embeddedchunkval == *(v.embeddedchunkval));
+            }
             else
-                return false;
-        }
-        else
-            return (!v.embeddedchunkval.get());
-    case VJ_T_INVALID:
-        return (v.type == VJ_T_INVALID);
-    default:
-        return false;
-    }
+            {
+               return false;
+            }
+         }
+         else
+         {
+            return(!v.embeddedchunkval.get());
+         }
+      case VJ_T_INVALID:
+         return(v.type == VJ_T_INVALID);
+      default:
+         return false;
+   }
 }
-
-
-
 
 VarValue::operator int() const
 {
-    assertValid();
+   assertValid();
 
-    switch (type) {
-    case T_INT:
-        return intval;
-    case T_BOOL:
-        return boolval?1:0;
-    case T_FLOAT:
-        return (int)floatval;
-    case VJ_T_INVALID:
-        vprDEBUG(jcclDBG_CONFIG,4) << using_invalid_msg.c_str() << 1
-                                << std::endl << vprDEBUG_FLUSH;
-        return 0;
-    default:
-        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in cast to int.\n"
-                               << vprDEBUG_FLUSH;
-        return 0;
-    }
+   switch ( type )
+   {
+      case T_INT:
+         return intval;
+      case T_BOOL:
+         return boolval?1:0;
+      case T_FLOAT:
+         return(int)floatval;
+      case VJ_T_INVALID:
+         vprDEBUG(jcclDBG_CONFIG,4) << using_invalid_msg.c_str() << 1
+                                    << std::endl << vprDEBUG_FLUSH;
+         return 0;
+      default:
+         vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in cast to int.\n"
+                                  << vprDEBUG_FLUSH;
+         return 0;
+   }
 }
-
-
 
 VarValue::operator ConfigChunkPtr() const
 {
-    assertValid();
+   assertValid();
 
-    switch (type) {
-    case T_EMBEDDEDCHUNK:
-        return embeddedchunkval;
+   switch ( type )
+   {
+      case T_EMBEDDEDCHUNK:
+         return embeddedchunkval;
 //          // we need to make a copy because if the value is deleted, it deletes
 //          // its embeddedchunk
 //          if (embeddedchunkval)
@@ -214,312 +218,345 @@ VarValue::operator ConfigChunkPtr() const
 //          else {
 //              return NULL;
 //          }
-    case VJ_T_INVALID:
-        vprDEBUG(jcclDBG_CONFIG,4) << using_invalid_msg.c_str() << 2
-                 << std::endl << vprDEBUG_FLUSH;
-        return ConfigChunkPtr(0);
-    default:
-        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in cast to ConfigChunkPtr - real type is " << typeString(type) << ".\n" << vprDEBUG_FLUSH;
-        return ConfigChunkPtr(0);
-    }
+      case VJ_T_INVALID:
+         vprDEBUG(jcclDBG_CONFIG,4) << using_invalid_msg.c_str() << 2
+                                    << std::endl << vprDEBUG_FLUSH;
+         return ConfigChunkPtr(0);
+      default:
+         vprDEBUG(vprDBG_ERROR,0)
+            << "VarValue: type mismatch in cast to ConfigChunkPtr - real type is "
+            << typeString(type) << ".\n" << vprDEBUG_FLUSH;
+         return ConfigChunkPtr(0);
+   }
 }
-
-
 
 VarValue::operator bool() const
 {
-    assertValid();
+   assertValid();
 
-    if ((type == T_BOOL))
-        return boolval;
-    switch (type) {
-    case T_BOOL:
-        return boolval?1.0f:0.0f;
-    case T_INT:
-        return (bool)intval;
-    case T_FLOAT:
-        return (bool)floatval;
-    case VJ_T_INVALID:
-        vprDEBUG(jcclDBG_CONFIG,4) << using_invalid_msg.c_str() << 3
-                                << std::endl << vprDEBUG_FLUSH;
-        return false;
-    default:
-        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in cast to bool.\n"
-                               << vprDEBUG_FLUSH;
-   return false;
-    }
+   if ( (type == T_BOOL) )
+   {
+      return boolval;
+   }
+
+   switch ( type )
+   {
+      case T_BOOL:
+         return boolval?1.0f:0.0f;
+      case T_INT:
+         return(bool)intval;
+      case T_FLOAT:
+         return(bool)floatval;
+      case VJ_T_INVALID:
+         vprDEBUG(jcclDBG_CONFIG,4) << using_invalid_msg.c_str() << 3
+                                    << std::endl << vprDEBUG_FLUSH;
+         return false;
+      default:
+         vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in cast to bool.\n"
+                                  << vprDEBUG_FLUSH;
+         return false;
+   }
 }
-
-
 
 VarValue::operator float () const
 {
-    assertValid();
+   assertValid();
 
-    switch (type) {
-    case T_FLOAT:
-        return floatval;
-    case T_INT:
-        return (float)intval;
-    case T_BOOL:
-        return (float)boolval;
-    case VJ_T_INVALID:
-        vprDEBUG(jcclDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 4
-                                << std::endl << vprDEBUG_FLUSH;
-        return 0.0f;
-    default:
-        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in cast to float.\n" << vprDEBUG_FLUSH;
-        return 0.0f;
-    }
+   switch ( type )
+   {
+      case T_FLOAT:
+         return floatval;
+      case T_INT:
+         return(float)intval;
+      case T_BOOL:
+         return(float)boolval;
+      case VJ_T_INVALID:
+         vprDEBUG(jcclDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 4
+                                    << std::endl << vprDEBUG_FLUSH;
+         return 0.0f;
+      default:
+         vprDEBUG(vprDBG_ERROR,0)
+            << "VarValue: type mismatch in cast to float.\n" << vprDEBUG_FLUSH;
+         return 0.0f;
+   }
 }
-
-
 
 char* VarValue::cstring () const
 {
-    assertValid();
-    char buf[256];
+   assertValid();
+   char buf[256];
 
-    switch (type) {
-    case T_STRING:
-    case T_CHUNK:
-        return strdup (strval.c_str());
-    case T_INT:
-        sprintf (buf, "%i", intval);
-        return strdup (buf);
-    case T_FLOAT:
-        sprintf (buf, "%f", floatval);
-        return strdup (buf);
-    case T_BOOL:
-        return strdup (boolval?"true":"false");
-    case VJ_T_INVALID:
-        vprDEBUG(jcclDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 5
-                                << std::endl << vprDEBUG_FLUSH;
-        return strdup("");
-    default:
-        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in cstring().\n" << vprDEBUG_FLUSH;
-        return strdup("");
-    }
+   switch ( type )
+   {
+      case T_STRING:
+      case T_CHUNK:
+         return strdup (strval.c_str());
+      case T_INT:
+         sprintf (buf, "%i", intval);
+         return strdup (buf);
+      case T_FLOAT:
+         sprintf (buf, "%f", floatval);
+         return strdup (buf);
+      case T_BOOL:
+         return strdup (boolval?"true":"false");
+      case VJ_T_INVALID:
+         vprDEBUG(jcclDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 5
+                                    << std::endl << vprDEBUG_FLUSH;
+         return strdup("");
+      default:
+         vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in cstring().\n"
+                                  << vprDEBUG_FLUSH;
+         return strdup("");
+   }
 }
-
-
 
 VarValue::operator std::string () const
 {
-    assertValid();
-    //std::string s;
-    //char* c;
-    switch (type)
-    {
-    case T_STRING:
-    case T_CHUNK:
-        return strval;
-    case T_INT:
-        {
+   assertValid();
+   //std::string s;
+   //char* c;
+   switch ( type )
+   {
+      case T_STRING:
+      case T_CHUNK:
+         return strval;
+      case T_INT:
+         {
             char buf[256];
             sprintf (buf, "%i", intval);
             return std::string (buf);
-        }
-    case T_FLOAT:
-        {
+         }
+      case T_FLOAT:
+         {
             char buf[256];
             sprintf (buf, "%f", floatval);
             return std::string (buf);
-        }
-    case T_BOOL:
-        return boolval? std::string("true") : std::string("false");
-    case VJ_T_INVALID:
-        vprDEBUG(jcclDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 6
-                                << std::endl << vprDEBUG_FLUSH;
-        return std::string("");
-    default:
-        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in cast to std::string.\n" << vprDEBUG_FLUSH;
-        return std::string("");
-    }
+         }
+      case T_BOOL:
+         return boolval? std::string("true") : std::string("false");
+      case VJ_T_INVALID:
+         vprDEBUG(jcclDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 6
+                                    << std::endl << vprDEBUG_FLUSH;
+         return std::string("");
+      default:
+         vprDEBUG(vprDBG_ERROR,0)
+            << "VarValue: type mismatch in cast to std::string.\n"
+            << vprDEBUG_FLUSH;
+         return std::string("");
+   }
 }
-
-
 
 VarValue &VarValue::operator = (int i)
 {
-    assertValid();
+   assertValid();
 
-    switch (type) {
-    case T_INT:
-        intval = i;
-        break;
-    case T_FLOAT:
-        floatval = (float)i;
-        break;
-    case T_BOOL:
-        boolval = (bool)i;
-        break;
-    default:
-        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = int.\n" << vprDEBUG_FLUSH;
-    }
-    return *this;
+   switch ( type )
+   {
+      case T_INT:
+         intval = i;
+         break;
+      case T_FLOAT:
+         floatval = (float)i;
+         break;
+      case T_BOOL:
+         boolval = (bool)i;
+         break;
+      default:
+         vprDEBUG(vprDBG_ERROR,0)
+            << "VarValue: type mismatch in assignment - VarValue("
+            << typeString(type) << ") = int.\n" << vprDEBUG_FLUSH;
+   }
+   return *this;
 }
-
-
 
 VarValue& VarValue::operator = (bool i)
 {
-    assertValid();
+   assertValid();
 
-    switch (type) {
-    case T_INT:
-        intval = (int)i;
-        break;
-    case T_BOOL:
-        boolval = i;
-        break;
-    default:
-        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = bool.\n" << vprDEBUG_FLUSH;
-    }
-    return *this;
+   switch ( type )
+   {
+      case T_INT:
+         intval = (int)i;
+         break;
+      case T_BOOL:
+         boolval = i;
+         break;
+      default:
+         vprDEBUG(vprDBG_ERROR,0)
+            << "VarValue: type mismatch in assignment - VarValue("
+            << typeString(type) << ") = bool.\n" << vprDEBUG_FLUSH;
+   }
+   return *this;
 }
-
-
 
 VarValue &VarValue::operator = (float i)
 {
-    assertValid();
+   assertValid();
 
-    switch (type) {
-    case T_INT:
-        intval = (int)i;
-        break;
-    case T_FLOAT:
-    case T_DISTANCE:
-        floatval = i;
-        break;
-    case T_BOOL:
-        boolval = (i==0.0f)?false:true;
-        break;
-    default:
-        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = float.\n" << vprDEBUG_FLUSH;
-    }
-    return *this;
+   switch ( type )
+   {
+      case T_INT:
+         intval = (int)i;
+         break;
+      case T_FLOAT:
+      case T_DISTANCE:
+         floatval = i;
+         break;
+      case T_BOOL:
+         boolval = (i==0.0f)?false:true;
+         break;
+      default:
+         vprDEBUG(vprDBG_ERROR,0)
+            << "VarValue: type mismatch in assignment - VarValue("
+            << typeString(type) << ") = float.\n" << vprDEBUG_FLUSH;
+   }
+   return *this;
 }
-
-
 
 VarValue &VarValue::operator = (const std::string& s)
 {
-    assertValid();
+   assertValid();
 
-    return *this = s.c_str();
+   return *this = s.c_str();
 }
-
-
 
 VarValue &VarValue::operator = (const char *val)
 {
-    assertValid();
+   assertValid();
 
-    bool err = false;
-    char* endval;
-    int i;
-    float f;
-    bool b;
+   bool err = false;
+   char* endval;
+   int i;
+   float f;
+   bool b;
 
-    if (val == NULL) {
-        val = "";
-    }
+   if ( val == NULL )
+   {
+      val = "";
+   }
 
-    switch (type) {
-    case T_STRING:
-    case T_CHUNK:
-        strval = val;
-        break;
-    case T_INT:
-        i = strtol (val, &endval, 0);
-        if (*endval == '\0')
+   switch ( type )
+   {
+      case T_STRING:
+      case T_CHUNK:
+         strval = val;
+         break;
+      case T_INT:
+         i = strtol (val, &endval, 0);
+         if ( *endval == '\0' )
+         {
             intval = i;
-        else
+         }
+         else
+         {
             err = true;
-        break;
-    case T_FLOAT:
-        f = (float)strtod (val, &endval);
-        if (*endval == '\0')
-            floatval = f;
-        else
-            err = true;
-        break;
-    case T_BOOL:
-        if (!strcasecmp (val, true_TOKEN))
-            boolval = true;
-        else if (!strcasecmp (val, false_TOKEN))
-            boolval = false;
-        else { // we'll try to accept a numeric value
-            b = strtol (val, &endval, 0);
-            if (*endval == '\0')
-                boolval = b;
-            else
-                err = true;
-        }
-        break;
-    default:
-        vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = string/char*.\n" << vprDEBUG_FLUSH;
-        break;
-    }
-    if (err)
-        vprDEBUG(vprDBG_ERROR,0) << "VarValue: couldn't assign string '"
-                               << val << "'.\n" << vprDEBUG_FLUSH;
-    return *this;
-}
+         }
 
+         break;
+      case T_FLOAT:
+         f = (float)strtod (val, &endval);
+         if ( *endval == '\0' )
+         {
+            floatval = f;
+         }
+         else
+         {
+            err = true;
+         }
+         break;
+      case T_BOOL:
+         if ( !strcasecmp (val, true_TOKEN) )
+         {
+            boolval = true;
+         }
+         else if ( !strcasecmp (val, false_TOKEN) )
+         {
+            boolval = false;
+         }
+         else
+         { // we'll try to accept a numeric value
+            b = strtol (val, &endval, 0);
+            if ( *endval == '\0' )
+            {
+               boolval = b;
+            }
+            else
+            {
+               err = true;
+            }
+         }
+         break;
+      default:
+         vprDEBUG(vprDBG_ERROR,0)
+            << "VarValue: type mismatch in assignment - VarValue("
+            << typeString(type) << ") = string/char*.\n" << vprDEBUG_FLUSH;
+         break;
+   }
+
+   if ( err )
+   {
+      vprDEBUG(vprDBG_ERROR,0) << "VarValue: couldn't assign string '"
+                               << val << "'.\n" << vprDEBUG_FLUSH;
+   }
+
+   return *this;
+}
 
 VarValue &VarValue::operator = (const ConfigChunkPtr ch)
 {
    assertValid();
 
-   switch (type)
-       {
-       case T_EMBEDDEDCHUNK:
-           embeddedchunkval = ch;
+   switch ( type )
+   {
+      case T_EMBEDDEDCHUNK:
+         embeddedchunkval = ch;
 //             if (s)
 //                 embeddedchunkval = new ConfigChunk (*s);
 //             else
 //                 embeddedchunkval = NULL;
-           break;
-       default:
-           vprDEBUG(vprDBG_ERROR,0) << "VarValue: type mismatch in assignment - VarValue(" << typeString(type) << ") = ConfigChunkPtr.\n" << vprDEBUG_FLUSH;
-       }
+         break;
+      default:
+         vprDEBUG(vprDBG_ERROR,0)
+            << "VarValue: type mismatch in assignment - VarValue("
+            << typeString(type) << ") = ConfigChunkPtr.\n" << vprDEBUG_FLUSH;
+         break;
+   }
    return *this;
 }
 
-
-
 std::ostream& operator << (std::ostream& out, const VarValue& v)
 {
-    v.assertValid();
+   v.assertValid();
 
-    //      vprDEBUG(vprDBG_ERROR,0) << "in << func" << vprDEBUG_FLUSH;
+   //      vprDEBUG(vprDBG_ERROR,0) << "in << func" << vprDEBUG_FLUSH;
 
-    switch (v.type) {
-    case T_INT:
-        out << v.intval;
-        return out;
-    case T_FLOAT:
-    case T_DISTANCE:
-        out << v.floatval;
-        return out;
-    case T_BOOL:
-        out << ((v.boolval)?"true":"false");
-        return out;
-    case T_STRING:
-    case T_CHUNK:
-        out << v.strval.c_str();
-        return out;
-    case T_EMBEDDEDCHUNK:
-        if (v.embeddedchunkval.get())
+   switch ( v.type )
+   {
+      case T_INT:
+         out << v.intval;
+         return out;
+      case T_FLOAT:
+      case T_DISTANCE:
+         out << v.floatval;
+         return out;
+      case T_BOOL:
+         out << ((v.boolval) ? "true" : "false");
+         return out;
+      case T_STRING:
+      case T_CHUNK:
+         out << v.strval.c_str();
+         return out;
+      case T_EMBEDDEDCHUNK:
+         if ( v.embeddedchunkval.get() )
+         {
             out << *(v.embeddedchunkval);
-        return out;
-    default:
-        out << "[can't print value for type " << (int)v.type << " ]";
-        return out;
-    }
+         }
+
+         return out;
+      default:
+         out << "[can't print value for type " << (int)v.type << " ]";
+         return out;
+   }
 }
 
-};
+} // End of jccl namespace

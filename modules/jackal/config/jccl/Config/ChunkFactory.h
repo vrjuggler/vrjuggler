@@ -30,7 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #ifndef _JCCL_CHUNKFACTORY_H_
 #define _JCCL_CHUNKFACTORY_H_
 
@@ -42,8 +41,8 @@
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Singleton.h>
 
-namespace jccl {
-   
+namespace jccl
+{
 
 //------------------------------------------------------------------
 //: Generator of ConfigChunks...  (singleton)
@@ -62,54 +61,50 @@ namespace jccl {
 // February 1999
 //------------------------------------------------------------------
 
-class JCCL_CLASS_API ChunkFactory {
-
+class JCCL_CLASS_API ChunkFactory
+{
 public:
-    //: Adds descriptions in _descdb to the factory
-    void addDescs (ChunkDescDB* _descdb) {
-        descdb.insert (_descdb);
-    }
+   //: Adds descriptions in _descdb to the factory
+   void addDescs (ChunkDescDB* _descdb)
+   {
+      descdb.insert (_descdb);
+   }
 
+   //: Adds descriptions in file 'filename' to the factory
+   bool loadDescs (const std::string& filename);
 
-    //: Adds descriptions in file 'filename' to the factory
-    bool loadDescs (const std::string& filename);
+   // we actually do need this so that the EM can send the descdb to the gui...
+   ChunkDescDB* getChunkDescDB ()
+   {
+      return &descdb;
+   }
 
+   ChunkDescPtr getChunkDesc (const std::string& token)
+   {
+      return descdb.getChunkDesc (token);
+   }
 
-    // we actually do need this so that the EM can send the descdb to the gui...
-    ChunkDescDB* getChunkDescDB () {
-         return &descdb;
-    }
+   //: Creates a Chunk using the named description
+   //! RETURNS: chunk - a ConfigChunk based on a ChunkDesc
+   //+          whose token matches the argument.  If no such
+   //+          ChunkDesc is found, an "empty" ChunkDesc,
+   //+          containing only a Name PropertyDesc, is used.
+   ConfigChunkPtr createChunk (const std::string& desctoken, bool use_defaults = true)
+   {
+      return createChunk (descdb.getChunkDesc (desctoken), use_defaults);
+   }
 
-    ChunkDescPtr getChunkDesc (const std::string& token) {
-        return descdb.getChunkDesc (token);
-    }
-
-    //: Creates a Chunk using the named description
-    //! RETURNS: chunk - a ConfigChunk based on a ChunkDesc
-    //+          whose token matches the argument.  If no such
-    //+          ChunkDesc is found, an "empty" ChunkDesc,
-    //+          containing only a Name PropertyDesc, is used.
-    ConfigChunkPtr createChunk (const std::string& desctoken, bool use_defaults = true) {
-        return createChunk (descdb.getChunkDesc (desctoken), use_defaults);
-    }
-
-    //: Creates a Chunk using the given description
-    ConfigChunkPtr createChunk (ChunkDescPtr d, bool use_defaults = true);
-
-
-
+   //: Creates a Chunk using the given description
+   ConfigChunkPtr createChunk (ChunkDescPtr d, bool use_defaults = true);
 
 private:
-    ChunkFactory ();
+   ChunkFactory ();
 
-    ChunkDescDB descdb;
+   ChunkDescDB descdb;
 
-vprSingletonHeader(ChunkFactory);
-
-
+   vprSingletonHeader(ChunkFactory);
 }; // class ChunkFactory
 
-
-}; // namespace jccl
+} // namespace jccl
 
 #endif

@@ -30,8 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-
 #ifndef _JCCL_PARSEUTIL_H_
 #define _JCCL_PARSEUTIL_H_
 
@@ -40,7 +38,6 @@
 
 namespace jccl
 {
-   
 
 /** Converts a char* to a jccl::VarType.
  *  @param str A non-NULL c string.
@@ -48,19 +45,14 @@ namespace jccl
  */
 VarType stringToVarType (const char* str);
 
-
 /** Converts a VarType enum elem to a c string.
  *  @param t A VarType (see jccl/Config/VarValue.h)
  *  @return A non-NULL c string.
  */
 char *typeString (VarType t);
 
-
-
 /** Converts a CfgUnit to a c string. */
 char *unitString (CfgUnit t);
-
-
 
 /** Converts a value to feet.
  *  @param val A distance in some unit.
@@ -69,8 +61,6 @@ char *unitString (CfgUnit t);
  */
 float toFeet (float val, CfgUnit unit);
 
-
-
 /** A variant of stdlib's strcasecmp, but with std::string args.
  *  @param a An std::string
  *  @param b An std::string
@@ -78,8 +68,6 @@ float toFeet (float val, CfgUnit unit);
  *            is not case sensitive.
  */
 bool vjstrcasecmp (const std::string& a, const std::string& b);
-
-
 
 /** A variant of stdlib's strncasecmp, but with std::string args.
  *  @param a An std::string
@@ -91,8 +79,6 @@ bool vjstrcasecmp (const std::string& a, const std::string& b);
  */
 bool vjstrncasecmp (const std::string& a, const std::string& b, int _n = -1);
 
-
-
 /** A variant of stdlib's strncmp, but with std::string args.
  *  @param a An std::string
  *  @param b An std::string
@@ -103,37 +89,34 @@ bool vjstrncasecmp (const std::string& a, const std::string& b, int _n = -1);
  */
 bool vjstrncmp (const std::string& a, const std::string& b, int _n = -1);
 
-
-
 /** Mangles a filename so that it can be passed to open().
  *  @param n A filename.
  *  @param parentfile The name of the file that n is being loaded
  *         relative to.
  *  @return A "mangled" version of the string n.  All environment variables
  *          are expanded.  If n is not an absolute path and parentfile
- *          is not "", the path part of parentfile will be prepended to 
+ *          is not "", the path part of parentfile will be prepended to
  *          the result.  Note that parentfile is always assumed to refer
  *          to a file, so if n is "included_file" and parentfile is
  *          "mydir/including_file", the result will be "mydir/included_file".
  */
 std::string demangleFileName (const std::string& n, std::string parentfile);
 
-
-
 /** Looks for a file in a path, and opens it if found.
- *  @param in An input stream.  If the file is found during the path 
+ *  @param in An input stream.  If the file is found during the path
  *            search, the in will be open for reading.
  *  @param file_name The name of a file to search for.
  *  @param env_name The environment variable containing a path.  The
  *                  path is a set of directories separated by a delimiter
- *                  character (';' on windows, ':' on real operating 
+ *                  character (';' on windows, ':' on real operating
  *                  systems).
  *  @return The full name of the file if it was found, or empty string
  *          if it was not found.
  */
-const std::string findFileUsingPathVar (std::ifstream& in, const std::string& file_name, const std::string& env_name);
+const std::string findFileUsingPathVar (std::ifstream& in,
+                                        const std::string& file_name,
+                                        const std::string& env_name);
 
-
-};
+} // End of jccl namespace
 
 #endif

@@ -30,8 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-
 #include <jccl/Config/ParseUtil.h>
 #include <jccl/Config/ChunkDesc.h>
 #include <jccl/Util/Debug.h>
@@ -39,183 +37,239 @@
 #include <jccl/Config/ConfigTokens.h>
 #include <jccl/Config/ConfigIO.h>
 
-namespace jccl {
-   
-PropertyDesc::PropertyDesc () : valuelabels(), enumv() {
-    validation = 1;
-    name = "";
-    token = "";
-    num = 0;
-    type = VJ_T_INVALID;
-    help = "";
-    enum_val = 0;
+
+namespace jccl
+{
+
+PropertyDesc::PropertyDesc () : valuelabels(), enumv()
+{
+   validation = 1;
+   name = "";
+   token = "";
+   num = 0;
+   type = VJ_T_INVALID;
+   help = "";
+   enum_val = 0;
 }
 
-
-PropertyDesc::PropertyDesc (const PropertyDesc& d): valuelabels(), enumv() {
-    validation = 1;
-    *this = d;
+PropertyDesc::PropertyDesc (const PropertyDesc& d): valuelabels(), enumv()
+{
+   validation = 1;
+   *this = d;
 }
-
-
 
 PropertyDesc::PropertyDesc (const std::string& n, int i, VarType t,
-            const std::string& h): valuelabels(), enumv() {
-    validation = 1;
-    name = n;
-    token = n;
-    help = h;
-    num = i;
-    type = t;
-    enum_val = 0;
+                            const std::string& h): valuelabels(), enumv()
+{
+   validation = 1;
+   name = n;
+   token = n;
+   help = h;
+   num = i;
+   type = t;
+   enum_val = 0;
 }
 
+PropertyDesc::~PropertyDesc ()
+{
+   unsigned int i;
+   for ( i = 0; i < enumv.size(); i++ )
+   {
+      delete enumv[i];
+   }
 
+   for ( i = 0; i < valuelabels.size(); i++ )
+   {
+      delete valuelabels[i];
+   }
 
-PropertyDesc::~PropertyDesc () {
-    unsigned int i;
-    for (i = 0; i < enumv.size(); i++)
-        delete enumv[i];
-    for (i = 0; i < valuelabels.size(); i++)
-        delete valuelabels[i];
-    validation = 0;
+   validation = 0;
 }
-
-
 
 #ifdef JCCL_DEBUG
-void PropertyDesc::assertValid () const {
-    vprASSERT (validation == 1 && "Trying to use deleted PropertyDesc");
+void PropertyDesc::assertValid () const
+{
+   vprASSERT (validation == 1 && "Trying to use deleted PropertyDesc");
 }
 #endif
 
-
-
-void PropertyDesc::appendValueLabel (const std::string& _label) {
-    valuelabels.push_back (new EnumEntry (_label, T_STRING));
+void PropertyDesc::appendValueLabel (const std::string& _label)
+{
+   valuelabels.push_back (new EnumEntry (_label, T_STRING));
 }
 
 // used as a possible return value below.
 static const std::string PropertyDesc_empty_string ("");
 
-const std::string& PropertyDesc::getValueLabel (unsigned int i) const {
-    assertValid();
+const std::string& PropertyDesc::getValueLabel (unsigned int i) const
+{
+   assertValid();
 
-    if (i < valuelabels.size())
-        return valuelabels[i]->getName();
-    else
-        return PropertyDesc_empty_string;
+   if ( i < valuelabels.size() )
+   {
+      return valuelabels[i]->getName();
+   }
+   else
+   {
+      return PropertyDesc_empty_string;
+   }
 }
 
+void PropertyDesc::appendEnumeration (const std::string& _label,
+                                      const std::string& _value)
+{
+   VarValue *v;
+   // this is slightly kludgey.  We make a varvalue to store the enumeration
+   // value... except for T_CHUNK and T_EMBEDDEDCHUNK where we store a chunk
+   // name type...
+   if ( (type == T_CHUNK) || (type == T_EMBEDDEDCHUNK) )
+   {
+      v = new VarValue (T_STRING);
+   }
+   else
+   {
+      v = new VarValue (type);
+   }
 
-void PropertyDesc::appendEnumeration (const std::string& _label, 
-                                        const std::string& _value) {
-    VarValue *v;
-    // this is slightly kludgey.  We make a varvalue to store the enumeration
-    // value... except for T_CHUNK and T_EMBEDDEDCHUNK where we store a chunk
-    // name type...
-    if ((type == T_CHUNK) || (type == T_EMBEDDEDCHUNK))
-        v = new VarValue (T_STRING);
-    else
-        v = new VarValue (type);
-
-    if (type == T_STRING || type == T_CHUNK ||
-        type == T_EMBEDDEDCHUNK) {
-        *v = (_value == "")?_label : _value;
-    }
-    else {
-        if (_value == "")
-            *v = enum_val;
-        else 
-            *v = _value;
-        //*v = (_value == "")?enum_val:_value;
-    }
-    enum_val++;
-    enumv.push_back (new EnumEntry (_label, *v));
+   if ( type == T_STRING || type == T_CHUNK ||
+        type == T_EMBEDDEDCHUNK )
+   {
+      *v = (_value == "")?_label : _value;
+   }
+   else
+   {
+      if ( _value == "" )
+      {
+         *v = enum_val;
+      }
+      else
+      {
+         *v = _value;
+      }
+      //*v = (_value == "")?enum_val:_value;
+   }
+   enum_val++;
+   enumv.push_back (new EnumEntry (_label, *v));
 }
 
-EnumEntry* PropertyDesc::getEnumEntry (const std::string& s) const {
-    assertValid();
+EnumEntry* PropertyDesc::getEnumEntry (const std::string& s) const
+{
+   assertValid();
 
-    for (unsigned int i = 0; i < enumv.size(); i++) {
-        if (!vjstrcasecmp (enumv[i]->getName(), s))
-            return enumv[i];
-    }
-    return NULL;
+   for ( unsigned int i = 0; i < enumv.size(); i++ )
+   {
+      if ( !vjstrcasecmp (enumv[i]->getName(), s) )
+      {
+         return enumv[i];
+      }
+   }
+   return NULL;
 }
 
+EnumEntry* PropertyDesc::getEnumEntryAtIndex (unsigned int index) const
+{
+   assertValid();
 
-EnumEntry* PropertyDesc::getEnumEntryAtIndex (unsigned int index) const {
-    assertValid();
-
-    if (enumv.size() > index)
-        return enumv[index];
-    else
-        return NULL;
+   if ( enumv.size() > index )
+   {
+      return enumv[index];
+   }
+   else
+   {
+      return NULL;
+   }
 }
 
+EnumEntry* PropertyDesc::getEnumEntryWithValue (const VarValue& val) const
+{
+   assertValid();
 
-EnumEntry* PropertyDesc::getEnumEntryWithValue (const VarValue& val) const {
-    assertValid();
+   for ( unsigned int i = 0; i < enumv.size(); i++ )
+   {
+      if ( enumv[i]->getValue() == val )
+      {
+         return enumv[i];
+      }
+   }
 
-    for (unsigned int i = 0; i < enumv.size(); i++) {
-        if (enumv[i]->getValue() == val)
-            return enumv[i];
-    }
-    return NULL;
+   return NULL;
 }
 
-
-std::ostream& operator << (std::ostream& out, const PropertyDesc& self) {
-    self.assertValid();
-    ConfigIO::instance()->writePropertyDesc (out, self);
-    return out;
+std::ostream& operator << (std::ostream& out, const PropertyDesc& self)
+{
+   self.assertValid();
+   ConfigIO::instance()->writePropertyDesc (out, self);
+   return out;
 }
 
+PropertyDesc& PropertyDesc::operator= (const PropertyDesc& pd)
+{
+   assertValid();
 
+   unsigned int i;
+   if ( &pd == this )
+   {
+      return *this;
+   }
 
-PropertyDesc& PropertyDesc::operator= (const PropertyDesc& pd) {
-    assertValid();
+   name = pd.name;
+   token = pd.token;
+   help = pd.help;
+   type = pd.type;
+   num = pd.num;
 
-    unsigned int i;
-    if (&pd == this)
-        return *this;
-    name = pd.name;
-    token = pd.token;
-    help = pd.help;
-    type = pd.type;
-    num = pd.num;
+   for ( i = 0; i < valuelabels.size(); i++ )
+   {
+      delete valuelabels[i];
+   }
 
-    
-    for (i = 0; i < valuelabels.size(); i++)
-        delete valuelabels[i];
-    for (i = 0; i < enumv.size(); i++)
-        delete enumv[i];
-    valuelabels.clear();
-    enumv.clear();
-    for (i = 0; i < pd.valuelabels.size(); i++)
-        valuelabels.push_back (new EnumEntry(*(pd.valuelabels[i])));
-    for (i = 0; i < pd.enumv.size(); i++)
-        enumv.push_back (new EnumEntry(*(pd.enumv[i])));
-    return *this;
+   for ( i = 0; i < enumv.size(); i++ )
+   {
+      delete enumv[i];
+   }
+
+   valuelabels.clear();
+   enumv.clear();
+   for ( i = 0; i < pd.valuelabels.size(); i++ )
+   {
+      valuelabels.push_back (new EnumEntry(*(pd.valuelabels[i])));
+   }
+
+   for ( i = 0; i < pd.enumv.size(); i++ )
+   {
+      enumv.push_back (new EnumEntry(*(pd.enumv[i])));
+   }
+
+   return *this;
 }
-
 
 //: Equality Operator
 // BUG (IPTHACK) - doesn't check equality of enumerations and valuelabels
-bool PropertyDesc::operator== (const PropertyDesc& pd) const {
-    assertValid();
+bool PropertyDesc::operator== (const PropertyDesc& pd) const
+{
+   assertValid();
 
-    if (vjstrcasecmp (name, pd.name))
-        return false;
-    if (vjstrcasecmp (token, pd.token))
-        return false;
-    if (type != pd.type)
-        return false;
-    if (num != pd.num)
-        return false;
-    return true;
+   if ( vjstrcasecmp (name, pd.name) )
+   {
+      return false;
+   }
+
+   if ( vjstrcasecmp (token, pd.token) )
+   {
+      return false;
+   }
+
+   if ( type != pd.type )
+   {
+      return false;
+   }
+
+   if ( num != pd.num )
+   {
+      return false;
+   }
+
+   return true;
 }
 
-
-};
+} // End of jccl namespace

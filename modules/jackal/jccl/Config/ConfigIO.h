@@ -38,100 +38,91 @@
 #include <jccl/Config/ConfigIOHandler.h>
 #include <vpr/Util/Singleton.h>
 
-namespace jccl {
-   
+namespace jccl
+{
+
 //: Singleton object which can handle multi-format reading and writing of
 //+ ConfigChunkDB and ChunkDescDB files.
 //  Internally, this class knows a lot of specifics about the different
 //  config_io handlers.  while this isn't great in terms of modularity, if
 //  we ever actually have more than 2 or 3 config io handlers, this'll be the
 //  least of our problems.
-class ConfigIO {
+class ConfigIO
+{
 
 public:
+   // one of the 3 constants defined by this class
+   ConfigIOHandler* getHandler ();
 
+   // puts handler back in the pool.
+   void releaseHandler (ConfigIOHandler* handler);
 
-    // one of the 3 constants defined by this class
-    ConfigIOHandler* getHandler ();
+   //---------- ConfigChunkDB methods -----------
 
-    // puts handler back in the pool.
-    void releaseHandler (ConfigIOHandler* handler);
+   //: Read db from the named file.
+   //  If handler_name is "", we use a heuristic to determine which
+   //  kind of IO handler to use for reading the file.
+   bool readConfigChunkDB (std::string file_name, ConfigChunkDB& db);
 
+   //: Read db from the stream in.
+   //  If handler_name is "", uses the default handler class.
+   //  Note that we can't guess which handler to use because we can't
+   //  back up the stream by an arbitrary amount.
+   bool readConfigChunkDB (std::istream& input, ConfigChunkDB& db);
 
-    //---------- ConfigChunkDB methods -----------
+   //: Write db to the named file.
+   //  If handler_name is "", uses the default handler class.
+   bool writeConfigChunkDB (const std::string& file_name, const ConfigChunkDB& db);
 
-    //: Read db from the named file.
-    //  If handler_name is "", we use a heuristic to determine which
-    //  kind of IO handler to use for reading the file.
-    bool readConfigChunkDB (std::string file_name, ConfigChunkDB& db);
+   //: Write db to output.
+   //  If handler_name is "", uses the default handler class.
+   bool writeConfigChunkDB (std::ostream& output, const ConfigChunkDB& db);
 
+   bool writeConfigChunk (std::ostream& output, const ConfigChunk& ch);
 
-    //: Read db from the stream in.
-    //  If handler_name is "", uses the default handler class.
-    //  Note that we can't guess which handler to use because we can't
-    //  back up the stream by an arbitrary amount.
-    bool readConfigChunkDB (std::istream& input, ConfigChunkDB& db);
+   bool writeProperty (std::ostream& out, const Property& p);
 
+   //---------- ChunkDescDB methods -----------
 
-    //: Write db to the named file.
-    //  If handler_name is "", uses the default handler class.
-    bool writeConfigChunkDB (const std::string& file_name, const ConfigChunkDB& db);
+   //: Read db from the named file.
+   //  If handler_name is "", we use a heuristic to determine which
+   //  kind of IO handler to use for reading the file.
+   bool readChunkDescDB (std::string file_name, ChunkDescDB& db);
 
+   //: Read db from the stream in.
+   //  If handler_name is "", uses the default handler class.
+   //  Note that we can't guess which handler to use because we can't
+   //  back up the stream by an arbitrary amount.
+   bool readChunkDescDB (std::istream& input, ChunkDescDB& db);
 
-    //: Write db to output.
-    //  If handler_name is "", uses the default handler class.
-    bool writeConfigChunkDB (std::ostream& output, const ConfigChunkDB& db);
+   //: Write db to the named file.
+   //  If handler_name is "", uses the default handler class.
+   bool writeChunkDescDB (const char* file_name, const ChunkDescDB& db);
 
-    bool writeConfigChunk (std::ostream& output, const ConfigChunk& ch);
+   //: Write db to output.
+   //  If handler_name is "", uses the default handler class.
+   bool writeChunkDescDB (std::ostream& output, const ChunkDescDB& db);
 
-    bool writeProperty (std::ostream& out, const Property& p);
+   bool writeChunkDesc (std::ostream& output, const ChunkDesc& ch);
 
-
-    //---------- ChunkDescDB methods -----------
-
-    //: Read db from the named file.
-    //  If handler_name is "", we use a heuristic to determine which
-    //  kind of IO handler to use for reading the file.
-    bool readChunkDescDB (std::string file_name, ChunkDescDB& db);
-
-
-    //: Read db from the stream in.
-    //  If handler_name is "", uses the default handler class.
-    //  Note that we can't guess which handler to use because we can't
-    //  back up the stream by an arbitrary amount.
-    bool readChunkDescDB (std::istream& input, ChunkDescDB& db);
-
-
-    //: Write db to the named file.
-    //  If handler_name is "", uses the default handler class.
-    bool writeChunkDescDB (const char* file_name, const ChunkDescDB& db);
-
-
-    //: Write db to output.
-    //  If handler_name is "", uses the default handler class.
-    bool writeChunkDescDB (std::ostream& output, const ChunkDescDB& db);
-
-
-    bool writeChunkDesc (std::ostream& output, const ChunkDesc& ch);
-
-    bool writePropertyDesc (std::ostream& out, const PropertyDesc& p);
-
+   bool writePropertyDesc (std::ostream& out, const PropertyDesc& p);
 
 protected:
 
-    //: Constructor - private for singleton.
-    ConfigIO ();
+   //: Constructor - private for singleton.
+   ConfigIO ();
 
-    ~ConfigIO ();
+   ~ConfigIO ();
 
 private:
-    //: pool of io handlers.
-    std::vector<ConfigIOHandler*> xml_config_handlers;
+   //: pool of io handlers.
+   std::vector<ConfigIOHandler*> xml_config_handlers;
 
-
-vprSingletonHeader(ConfigIO);
-
-};
+   vprSingletonHeader(ConfigIO);
 
 };
+
+} // End of jccl namespace
+
+
 #endif
