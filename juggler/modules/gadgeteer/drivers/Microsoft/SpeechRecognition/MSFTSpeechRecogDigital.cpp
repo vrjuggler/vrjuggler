@@ -50,7 +50,7 @@ MSFTSpeechRecogDigital::MSFTSpeechRecogDigital()
 
 bool MSFTSpeechRecogDigital::config(jccl::ConfigElementPtr c)
 {
-   if(! (Input::config(c) && SpeechRecogDigital::config(c)))
+   if(! (Input::config(c) && Command::config(c)))
    {
       return false;
    }
@@ -157,7 +157,7 @@ bool MSFTSpeechRecogDigital::sample()
    mLastSampleToggle.setDigital( SpeechManagerStringState );
    temp.push_back( mLastSampleToggle );
 
-   addDigitalSample(temp);
+   addCommandSample(temp);
 
    return true;
 }
@@ -194,7 +194,7 @@ void MSFTSpeechRecogDigital::updateData()
    }
 
    mSpeechManager->resetData();
-   swapDigitalBuffers();
+   swapCommandBuffers();
 }
 
 }
