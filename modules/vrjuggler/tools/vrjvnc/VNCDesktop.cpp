@@ -317,6 +317,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          {
             // Handle keyboard input.
          }
+         mSelectState = Nothing;
       }
       // ---- Check corner selection --- //
       else if( gmtl::isInVolume(mURCorner, isect_point))
@@ -363,6 +364,52 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
             std:: cout << "State: LRCornerSelect" << std::endl;
          }
       }
+      // ---- Check border selection --- //
+      else if( gmtl::isInVolume(mTopBorder, isect_point))
+      {
+         if(select_button_state)
+         {
+         }
+         else     // Just select it
+         {
+            mSelectState = TopBorderSelect;
+            std:: cout << "State: TopBorderSelect" << std::endl;
+         }
+      }
+      else if( gmtl::isInVolume(mBottomBorder, isect_point))
+      {
+         if(select_button_state)
+         {
+         }
+         else     // Just select it
+         {
+            mSelectState = BottomBorderSelect;
+            std:: cout << "State: BottomBorderSelect" << std::endl;
+         }
+      }
+      else if( gmtl::isInVolume(mLeftBorder, isect_point))
+      {
+         if(select_button_state)
+         {
+         }
+         else     // Just select it
+         {
+            mSelectState = LeftBorderSelect;
+            std:: cout << "State: LeftBorderSelect" << std::endl;
+         }
+      }
+      else if( gmtl::isInVolume(mRightBorder, isect_point))
+      {
+         if(select_button_state)
+         {
+         }
+         else     // Just select it
+         {
+            mSelectState = RightBorderSelect;
+            std:: cout << "State: RightBorderSelect" << std::endl;
+         }
+      }
+
       else     // Default to resetting to nothing
       {
          mSelectState = Nothing;
@@ -399,12 +446,15 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
 void VNCDesktop::draw()
 {
    const gmtl::Vec3f micro_gui_blue(0.39f,0.51f,0.77f);
+   const gmtl::Vec3f micro_gui_blue_selected(0.39f,0.71f,0.97f);
    const gmtl::Vec3f micro_gui_yellow(0.97f,0.92f,0.22f);
    const gmtl::Vec3f micro_gui_yellow_selected(0.97f,0.4f,0.22f);
    const gmtl::Vec3f ximian_orange(0.98f,0.70f,0.098f);
 
    const gmtl::Vec3f corner_color(micro_gui_yellow);
    const gmtl::Vec3f corner_color_selected(micro_gui_yellow_selected);
+   const gmtl::Vec3f border_color(micro_gui_blue);
+   const gmtl::Vec3f border_color_selected(micro_gui_blue_selected);
 
 
    // XXX: Should probably use an attribute stack or something here.
@@ -425,10 +475,13 @@ void VNCDesktop::draw()
    setColorIfState(corner_color_selected, corner_color, ULCornerSelect, ULCornerGrab);
    drawBox(mULCorner);
 
-   glColor3fv( micro_gui_blue.mData );
+   setColorIfState(border_color_selected, border_color, LeftBorderSelect, LeftBorderSelect);
    drawBox(mLeftBorder);
+   setColorIfState(border_color_selected, border_color, RightBorderSelect, RightBorderSelect);
    drawBox(mRightBorder);
+   setColorIfState(border_color_selected, border_color, TopBorderSelect, TopBorderSelect);
    drawBox(mTopBorder);
+   setColorIfState(border_color_selected, border_color, BottomBorderSelect, BottomBorderSelect);
    drawBox(mBottomBorder);
 
    glDisable(GL_LIGHTING);    // The stuff below doesn't like the light...
