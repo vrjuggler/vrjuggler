@@ -469,7 +469,7 @@ public class DisplayWindowEditorPanel
 
       JInternalFrame new_frame = new DisplayWindowFrame(elt.getName(),
                                                         getResolution(),
-                                                        desktop_size, elt);
+                                                        desktop_size, mContext, elt);
 
       // Attempt to set an icone for the newly created frame.
       try
