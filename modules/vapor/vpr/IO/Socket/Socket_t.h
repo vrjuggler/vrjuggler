@@ -43,6 +43,7 @@
 
 #include <vpr/Util/Interval.h>
 #include <vpr/Util/Status.h>
+#include <vpr/Util/Assert.h>
 
 
 namespace vpr {
@@ -428,10 +429,11 @@ public:
     // ------------------------------------------------------------------------
     inline Status
     send (const std::string& buffer, const size_t length,
-          ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout)
+          ssize_t& bytes_written,
+          const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-       assert( length <= buffer.size() && "length was bigger than the data given" );
-       return write(buffer, buf_len, bytes_written, timeout);
+       vprASSERT( length <= buffer.size() && "length was bigger than the data given" );
+       return write(buffer, length, bytes_written, timeout);
     }
 
     // ------------------------------------------------------------------------
@@ -450,10 +452,11 @@ public:
     // ------------------------------------------------------------------------
     inline Status
     send (const std::vector<vpr::Uint8>& buffer, const size_t length,
-          ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout)
+          ssize_t& bytes_written,
+          const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-       assert( length <= buffer.size() && "length was bigger than the data given" );
-       return write(buffer, buf_len, bytes_written,timeout);
+       vprASSERT( length <= buffer.size() && "length was bigger than the data given" );
+       return write(buffer, length, bytes_written,timeout);
     }
 
     // ------------------------------------------------------------------------
