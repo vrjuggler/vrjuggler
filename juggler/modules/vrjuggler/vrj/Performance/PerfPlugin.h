@@ -42,69 +42,72 @@ namespace vrj
 {
 
 /** */
-class PerfPlugin
-{
-public:
-   virtual ~PerfPlugin()
+   class PerfPlugin
    {
-      /* Do nothing. */ ;
-   }
+   public:
+      virtual ~PerfPlugin()
+      {
+         /* Do nothing. */ 
+         ;
+      }
 
-   /**
-    * Initializes the performance monitoring interface.
-    */
-   virtual vpr::ReturnStatus init() = 0;
+      /**
+       * Initializes the performance monitoring interface.
+       */
+      virtual vpr::ReturnStatus init() = 0;
 
-   /**
-    * Turns on the interface to performance monitoring (allow incoming
-    * connections).
-    */   
-   virtual vpr::ReturnStatus enable() = 0;
+      /**
+       * Turns on the interface to performance monitoring (allow incoming
+       * connections).
+       */   
+      virtual vpr::ReturnStatus enable() = 0;
 
-   /** Indicates whether this performance monitoring object is active. */
-   virtual bool isEnabled() const = 0;
+      /** Indicates whether this performance monitoring object is active. */
+      virtual bool isEnabled() const = 0;
 
-   /**
-    * Turns off the interface to performance monitoring (disallow incoming
-    * connections).
-    */
-   virtual void disable() = 0;
+      /**
+       * Turns off the interface to performance monitoring (disallow incoming
+       * connections).
+       */
+      virtual void disable() = 0;
 
 #ifdef VPR_OS_Win32
-   /**
-    * Overlaod delete so that we can delete our memory correctly.  This is
-    * necessary for DLLs on Win32 to release memory from the correct memory
-    * space.  All subclasses must overload delete similarly.
-    */
-   void operator delete(void* p)
-   {
-      if ( NULL != p )
+      /**
+       * Overlaod delete so that we can delete our memory correctly.  This is
+       * necessary for DLLs on Win32 to release memory from the correct memory
+       * space.  All subclasses must overload delete similarly.
+       */
+      void operator delete(void* p)
       {
-         PerfPlugin* obj_ptr = static_cast<PerfPlugin*>(p);
-         obj_ptr->destroy();
+         if ( NULL != p )
+         {
+            PerfPlugin* obj_ptr = static_cast<PerfPlugin*>(p);
+            obj_ptr->destroy();
+         }
       }
-   }
 #endif
- 
-protected:
-   /**
-    * Subclasses must implement this so that dynamically loaded device drivers
-    * delete themselves in the correct memory space.  This uses a template
-    * pattern.
-    */
-   virtual void destroy() = 0;
 
-protected:
-   PerfPlugin()
-   {
-      /* Do nothing. */ ;
-   }
+   protected:
+      /**
+       * Subclasses must implement this so that dynamically loaded device drivers
+       * delete themselves in the correct memory space.  This uses a template
+       * pattern.
+       */
+      virtual void destroy() = 0;
 
-   PerfPlugin(const PerfPlugin&)
-   {
-      /* Do nothing. */ ;
-   }
-};
+   protected:
+      PerfPlugin()
+      {
+         /* Do nothing. */ 
+         ;
+      }
+
+      PerfPlugin(const PerfPlugin&)
+      {
+         /* Do nothing. */ 
+         ;
+      }
+   };
 
 } // namespace vrj
 

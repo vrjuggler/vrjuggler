@@ -47,26 +47,32 @@
 namespace vrj
 {
 
-class PerfPlugin;
+   class PerfPlugin;
 
-class VJ_CLASS_API PerformanceMediator
-{
-public:
-   PerformanceMediator();
-   virtual ~PerformanceMediator();
-   void setPerfPlugin(vrj::PerfPlugin* plugin);
+   class VJ_CLASS_API PerformanceMediator
+   {
+   public:
+      PerformanceMediator();
+      virtual ~PerformanceMediator();
+      void setPerfPlugin(vrj::PerfPlugin* plugin);
 
-protected:
-   /** Enables the remote performance monitoring interface object. */
-   void loadPerfPlugin();
+   protected:
+      /** Enables the remote performance monitoring interface object. */
+      void loadPerfPlugin();
 
-   // needed for windows:
-   PerformanceMediator(const PerformanceMediator&) {;}
-   void operator= (const PerformanceMediator&) {;}
-private:
-   vpr::LibraryLoader mPluginLoader;
-   PerfPlugin* mPerfIf;
-}; // class Mediator
+      // needed for windows:
+      PerformanceMediator(const PerformanceMediator&)
+      {
+         ;
+      }
+      void operator= (const PerformanceMediator&)
+      {
+         ;
+      }
+   private:
+      vpr::LibraryLoader mPluginLoader;
+      PerfPlugin* mPerfIf;
+   }; // class Mediator
 
 } // namespace vrj
 
