@@ -28,6 +28,7 @@ vjBird::vjBird()
   hemisphere = LOWER_HEM;
   repRate = 'Q';
   baudRate = 38400;
+  myThread = NULL;
 
   deviceAbilities = deviceAbilities | DEVICE_POSITION;
 }
