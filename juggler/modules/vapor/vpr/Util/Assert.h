@@ -51,7 +51,6 @@
  *
  * @author Allen Bierbaum
  */
-#define VPR_DEBUG
 #ifdef VPR_DEBUG
 #   include <assert.h>
 #   define vprASSERT(val) assert((val))
