@@ -119,8 +119,15 @@ void AudiereSoundImplementation::trigger( const std::string& alias, const int& l
    vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "Audiere| playing sound\n") << vprDEBUG_FLUSH;
    
    snx::SoundImplementation::trigger( alias, looping );
-   this->bind(alias);
-   mCurrentTrack->play();
+   
+   snx::SoundInfo si = this->lookup(alias);
+
+   if(si.streaming)
+   {
+      this->bind(alias);
+ //     mCurrentTrack->play();
+      trackMap[alias]->play();
+   }
 }
 
 bool AudiereSoundImplementation::isPlaying( const std::string& alias )
@@ -332,7 +339,7 @@ void AudiereSoundImplementation::bind( const std::string& alias )
    // are we streaming this sound from disk?
    if(soundInfo.streaming)
    {
-      mCurrentTrack = audiere::OpenSound(mDev.get(), soundInfo.filename.c_str());
+      trackMap[alias] = audiere::OpenSound(mDev.get(), soundInfo.filename.c_str());
    }
    
 
@@ -374,4 +381,4 @@ void AudiereSoundImplementation::unbind( const std::string& alias )
    }
 }
 
-}; // end namespace
+} // end namespace

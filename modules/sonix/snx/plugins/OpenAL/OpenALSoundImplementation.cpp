@@ -678,4 +678,4 @@ void OpenALSoundImplementation::unbind( const std::string& alias )
    assert( mBindLookup.count( alias ) == 0 && "unbind failed" );
 }
 
-}; // end namespace
+} // end namespace
