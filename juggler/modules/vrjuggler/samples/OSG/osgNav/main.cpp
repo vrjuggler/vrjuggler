@@ -35,8 +35,6 @@
 //
 // main.cpp
 //----------------------------------------
-#include <vpr/vpr.h>
-#include <vpr/System.h>
 
 #include <OsgNav.h>
 
@@ -83,10 +81,7 @@ int main(int argc, char* argv[])
    */
 
    kernel->setApplication(application);
+   kernel->waitForKernelStop();
 
-   while(1)
-   {
-      vpr::System::usleep(250000);
-   }
-   return (1);
+   return 0;
 }

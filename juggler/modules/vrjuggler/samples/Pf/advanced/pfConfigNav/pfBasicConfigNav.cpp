@@ -30,11 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
  // --- VR Juggler Stuff --- //
 #include <vrj/Kernel/Kernel.h>
 #include <pfBasicConfigNavApp.h>
@@ -54,10 +49,7 @@ int main(int argc, char* argv[])
 
    kernel->start();
    kernel->setApplication( application );    // Set up the kernel
+   kernel->waitForKernelStop();
 
-   //while(!kernel->done())
-   while (1)
-   {
-      usleep( 100000 );
-   }
+   return 0;
 }
