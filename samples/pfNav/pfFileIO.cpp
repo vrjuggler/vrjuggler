@@ -56,7 +56,7 @@ void pfFileIO::writeOptimizedFile( pfNode* node, std::string optimizedName )
 bool pfFileIO::isOptimized( const std::string& fileName )
 {
    int size = fileName.find( ".pfb" );
-   
+
    if (size == 0)
       return false;
    else
@@ -74,8 +74,11 @@ pfNode* pfFileIO::autoloadFile( const std::string& fileName, const pfFileIO::uni
    pfNode* node = NULL;
 
    std::string optimizedFileName = optimizedName( fileName );
-   if (fileIO::fileExists(optimizedFileName) ||
-         fileIO::isOptimized( fileName ) )
+   if(isOptimized(fileName))
+   {
+      node = loadFile(fileName);
+   }
+   else if (fileIO::fileExists(optimizedFileName))
    {
       // don't need to output this, because performer already does. :)
       //cout<<"Loading "<<optimizedFileName.data()<<"\n"<<flush;
