@@ -237,7 +237,7 @@ char* vjVarValue::cstring () const {
 			        << std::endl << vjDEBUG_FLUSH;
 	return strdup("");
     default:
-       vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cstring().\n" << vjDEBUG_FLUSH << vjDEBUG_FLUSH;
+       vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cstring().\n" << vjDEBUG_FLUSH;
 	return strdup("");
     }
 }
@@ -389,7 +389,7 @@ vjVarValue &vjVarValue::operator = (vjConfigChunk *s) {
 
 
 std::ostream& operator << (std::ostream& out, const vjVarValue& v) {
-    //      vjDEBUG(vjDBG_ERROR,0) << "in << func" <<flush;
+    //      vjDEBUG(vjDBG_ERROR,0) << "in << func" << vjDEBUG_FLUSH;
 
     switch (v.type) {
     case T_INT:

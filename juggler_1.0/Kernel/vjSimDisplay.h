@@ -71,7 +71,7 @@ public:
          vjDEBUG(vjDBG_ERROR,0)
             << clrOutNORM(clrRED,"ERROR:")
             << "vjSimDisplay:: Fatal Error: Camera not found named: "
-            << camera_proxy_str.c_str() << std::endl;
+            << camera_proxy_str.c_str() << vjDEBUG_FLUSH;
          exit(1);
       }
 

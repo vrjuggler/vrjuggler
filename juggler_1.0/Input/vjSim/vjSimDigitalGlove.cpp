@@ -87,7 +87,7 @@ bool vjSimDigitalGlove::config( vjConfigChunk* chunk )
       else
          vjDEBUG( vjDBG_INPUT_MGR, 0 )
             << "[ERROR]: vjSimPinchglove::config(): Can't find posProxy, config fails."
-            << std::endl << vjDEBUG_FLUSH << std::endl;
+            << std::endl << std::endl << vjDEBUG_FLUSH;
    }
       
     
@@ -111,7 +111,7 @@ bool vjSimDigitalGlove::config( vjConfigChunk* chunk )
       else
          vjDEBUG( vjDBG_INPUT_MGR, 0 )
             << "[ERROR]: vjSimPinchglove::config(): Can't find posProxy, config fails."
-            << std::endl << vjDEBUG_FLUSH << std::endl;
+            << std::endl << std::endl << vjDEBUG_FLUSH;
    }
    
          

@@ -79,7 +79,7 @@ bool vjSimGloveGesture::config(vjConfigChunk* chunk)
    else
       vjDEBUG(vjDBG_INPUT_MGR,0)
          << "ERROR: vjSimGloveGesture::vjCyberGlove: Can't find posProxy."
-         << std::endl << vjDEBUG_FLUSH << std::endl;
+         << std::endl << std::endl << vjDEBUG_FLUSH;
 
    // Set the indexes to defaults
    resetIndexes();
