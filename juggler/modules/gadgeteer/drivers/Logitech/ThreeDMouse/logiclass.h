@@ -184,7 +184,7 @@ private:
 
    int  logitechOpen (const std::string& port_name);
 
-   void eulerToAbsolute (byte record[], gmtl::Matrix44f& data);
+   void eulerToAbsolute (vpr::Uint8 record[], gmtl::Matrix44f& data);
    void printBin (char a);
 };
 }

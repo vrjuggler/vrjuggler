@@ -30,18 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-/////////////////////////////////////////////////////////////////////////////
-// Base class for all Gadgeteer Input devices
-//
-// History:
-//
-// Andy Himberger:    v0.1 (10/12/97) - Integeration to new libraries,
-//                                      support for
-//              Abilities, Instance Names, Device Names, Config element
-//              constructors
-// Andy Himberger:    v0.0  - Inital version
-////////////////////////////////////////////////////////////////////////////
-
 #ifndef _GADGET_INPUT_H_
 #define _GADGET_INPUT_H_
 
@@ -56,29 +44,6 @@
 //#include <vpr/IO/ObjectReader.h>
 //#include <vpr/IO/ObjectWriter.h>
 #include <vpr/IO/SerializableObject.h>
-
-// consider moving this
-// XXX: How about REmoving it?  -PH (5/1/2003)
-typedef unsigned char byte;
-
-/** Abilities List
- *
- *  Input devices can have one or more 'Abilities'
- *  The function FDeviceSupport(ability) allows a user
- *  of a Input object to query which types it may be
- *  casted up to.
- */
-/*
-const unsigned int DEVICE_POSITION = 1;
-const unsigned int DEVICE_GESTURE  = 2;
-const unsigned int DEVICE_DIGITAL  = 4;
-const unsigned int DEVICE_ANALOG   = 8;
-const unsigned int DEVICE_GLOVE    = 16;
-const unsigned int DEVICE_EVENT_WINDOW = 32;
-const unsigned int DEVICE_GROW1    = 64;
-const unsigned int DEVICE_GROW2    = 128;
-*/
-
 
 namespace gadget
 {
@@ -99,7 +64,7 @@ namespace gadget
 *  added pure virtual functions providing a simple and equal interface to
 *  themselves.
 *
-* @note  We make the assumption in all devices that while UpdateData() is being
+* @note  We make the assumption in all devices that while updateData() is being
 *       called, no other process will try to read the current data.
 *       We can make this assumption because the whole idea of UpdateData() is
 *       to bring in a current copy of the data for threads to process for a
@@ -129,45 +94,51 @@ public:
    }
 #endif
 
-   /** Config method.
+   /**
+    * Config method.
     *
-    *  This baselevel config will fill the base datamembers
-    *  when found in the jccl::ConfigElementPtr such as instance name.
+    * This baselevel config will fill the base datamembers
+    * when found in the jccl::ConfigElementPtr such as instance name.
     */
    virtual bool config(jccl::ConfigElementPtr e);
 
-   /** Sample the device.
+   /**
+    * Sample the device.
     *
-    *  Read the next set of input.  This method is normally used internally
-    *  by threaded drivers to repetively sample data in a separate thread.
-    *  (This new data is not accessable until UpdateData is called)
+    * Read the next set of input.  This method is normally used internally
+    * by threaded drivers to repetively sample data in a separate thread.
+    * (This new data is not accessable until UpdateData is called)
     */
    virtual bool sample() = 0;
 
-   /** Start a device sampling.
+   /**
+    * Start a device sampling.
     *
-    *  Start the device sampling, normally this will spawn a thread which will
-    *  just repeatedly call Sample().
-    *  This function should return true when it sucessfully starts,
-    *  false otherwise.
+    * Start the device sampling, normally this will spawn a thread which will
+    * just repeatedly call Sample().
+    * This function should return true when it sucessfully starts,
+    * false otherwise.
     */
    virtual bool startSampling() = 0;
 
-   /* StopSampling.
+   /** 
+    * StopSampling.
     *
-    *  Reverse the effects of StartSampling().
+    * Reverse the effects of StartSampling().
     */
    virtual bool stopSampling() = 0;
 
-   /** Update the data.
+   /**
+    * Update the data.
     *
-    *  After this function is called subsequent calls to GetData(d) will
-    *  return the most recent data at the time of THIS function call.  Data is
-    *  guaranteed to be valid and static until the next call to UpdateData.
+    * After this function is called subsequent calls to GetData(d) will
+    * return the most recent data at the time of THIS function call.  Data is
+    * guaranteed to be valid and static until the next call to UpdateData.
     */
    virtual void updateData() = 0;
 
-   /** Returns the string rep of the element type used to config this device.
+   /**
+    * Returns the string rep of the element type used to config this device.
     * This string is used by the device factory to look up device drivers
     * based up the type of element it is trying to load.
     */
@@ -187,17 +158,27 @@ public:
       return mInstName;
    }
 
+   /**
+    * Get the BaseType used later by the BaseTypeFactory to build a "virtual"
+    * representation of this to be used for remote input.
+    */
    virtual std::string getBaseType()
    {
       return std::string("Input");
    }
 
+   /**
+    * Serialize this device's data.
+    */
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
    {
       boost::ignore_unused_variable_warning(writer);
       return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }
 
+   /**
+    * De-serialize this devices data.
+    */
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
    {
       boost::ignore_unused_variable_warning(reader);
