@@ -43,6 +43,7 @@
 #include <vpr/Util/GUID.h>
 #include <jccl/Util/Debug.h>
 #include <vpr/Util/Singleton.h>
+#include <vpr/Util/Interval.h>
 
 namespace jccl {
 
@@ -78,9 +79,9 @@ class JCCL_CLASS_API LabeledPerfDataBuffer {
 
         const std::string      *index;
         char*                   index_cstring;
-        vpr::GUID        category;
+        const vpr::GUID*              category;
         
-        TimeStamp        stamp;
+        vpr::Interval        stamp;
         
         buf_entry() {
             index = 0;
@@ -89,15 +90,15 @@ class JCCL_CLASS_API LabeledPerfDataBuffer {
     };
 
 
-    buf_entry*  buffer;
-    int         numbufs;
-    int         lost;
-    vpr::Mutex     lost_lock;
+    buf_entry*  mBuffer;
+    int         mBufferCount;
+    int         mLost;
+    vpr::Mutex  mLostLock;
 
-    int         read_begin;
-    int         write_pos;
+    int         mReadBegin;
+    int         mWritePos;
 
-    std::string name;
+    std::string mName;
 
 public:
 
@@ -126,25 +127,13 @@ public:
 
     /** Returns the name of this instance. */
     virtual const std::string& getName() const {
-        return name;
+        return mName;
     }
 
 
     virtual void setName (std::string& _name) {
-        name = _name;
+        mName = _name;
     }
-
-//      inline static void activate() {
-//          LabeledPerfDataGlobal::instance()->activate();
-//      }
-
-//      inline static void deactivate() {
-//          LabeledPerfDataGlobal::instance()->activate();
-//      }
-
-//      inline static void isActive() {
-//          LabeledPerfDataGlobal::instance()->isActive();
-//      }
 
 
     /** Records a new data point.
@@ -176,17 +165,17 @@ public:
      *  @param _value A TimeStamp.
      */
     void set (const vpr::GUID &category, const std::string& index_name,
-              TimeStamp& _value);
+              vpr::Interval& _value);
 
     void set (const vpr::GUID &category, char* index_name,
-              TimeStamp& _value);
+              vpr::Interval& _value);
 
 
-    /** Marks the "top" of the calling thread's loop. 
-     *  This is necessary for some analysis and graphing of the 
-     *  performance data.
-     */
-    void setBeginCycle (const vpr::GUID& category);
+//        /** Marks the "top" of the calling thread's loop. 
+//         *  This is necessary for some analysis and graphing of the  
+//         *  performance data. 
+//         */ 
+//        void setBeginCycle (const vpr::GUID& category);
 
 
     /** Writes buffer contents to an ostream.
