@@ -7,9 +7,9 @@
 #include <time.h>
 #include <sys/time.h>
 
-#include <Threads/C2ThreadPool.h>
-#include <SharedMem/C2Memory.h>
-#include <Kernel/C2Debug.h>
+#include <Threads/vjThreadPool.h>
+#include <SharedMem/vjMemory.h>
+#include <Kernel/vjDebug.h>
 
 void doIt(void*);
 
@@ -23,8 +23,8 @@ std::vector<int> intVector;
     
 void main(void)
 {
-    C2SharedPool myPool(65536, 16);    // size, num threads
-    C2ThreadPool* thePool = new(&myPool) C2ThreadPool(NUMTHREADS);
+    vjSharedPool myPool(65536, 16);    // size, num threads
+    vjThreadPool* thePool = new(&myPool) vjThreadPool(NUMTHREADS);
     
     cout << "\nMax: " << intVector.max_size() << endl;
     
