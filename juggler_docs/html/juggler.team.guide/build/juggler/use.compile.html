@@ -12,6 +12,7 @@
     <LI><A HREF="#intro">Introduction</A>
     <LI><A HREF="#required">Required Reading</A>
     <LI><A HREF="#recommend">Recommended Reading</A>
+    <LI><A HREF="#quick">General Quick Start</A>
     <LI><A HREF="#targets">Targets</A>
     <LI><A HREF="#variables">Useful Variables</A>
     <LI><A HREF="#options">GNU Make Options</A>
@@ -84,6 +85,84 @@
       <A HREF="http://www.ora.com/">O'Reilly &amp; Associates</A>)
     </LI>
   </UL>
+
+<A NAME="quick"><H4>General Quick Start</H4></A>
+
+  <P>
+    As mentioned in the introduction, Juggler requires the use of GNU make
+    for compiling.  This section provides a very short introduction to the
+    use of make in general.  It is assumed that the GNU make command is
+    ``gmake''.  To verify that the version of GNU available is one of the
+    known working versions, do:
+
+<PRE>
+    % <B>gmake -v</B>
+</PRE>
+
+    It will return something similar to the following output:
+
+<PRE>
+    <B>GNU Make version 3.76.1</B>, by Richard Stallman and Roland McGrath.
+    Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97
+            Free Software Foundation, Inc.
+    This is free software; see the source for copying conditions.
+    There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
+    PARTICULAR PURPOSE.
+
+    Report bugs to <bug-gnu-utils@prep.ai.mit.edu>.
+</PRE>
+
+    The text in bold is the version information.  For best results, this
+    should be one of the version numbers listed in the
+    <A HREF="#intro">introduction</A>.
+  </P>
+
+  <P>
+    Most, if not all, versions of make (not just GNU make) use the following
+    syntax for execution:
+
+<PRE>
+    make [VARIABLE1=&lt;value1&gt;] [VARIABLE2=&lt;value2&gt;] [...] [target1] [target2] [...]
+</PRE>
+
+    The options in square brackets are not required.  The <TT>[...]</TT>
+    strings mean that any number of the previous option can be given.  If
+    executed with no arguments, the default target will be built.  This is
+    either the first target defined in the corresponding makefile or one
+    explicitly denoted as `<TT>default</TT>' in the makefile.  Typically,
+    the default target is `<TT>all</TT>'.  Any target(s) can be built by
+    simply naming them on the command line.
+  </P>
+
+  <P>
+    Variables used in the makefile can be overridden by command-line
+    arguments.  Simply name the variable (e.g., <TT>CC</TT>, the C compiler
+    command) and give it a value (e.g., <TT>CC=/usr/local/bin/gcc</TT>).
+    This forces all references to the variable in the makefile to use
+    what is on the command line.
+  </P>
+
+  <P>
+    Other useful options for GNU make are the following:
+
+    <UL>
+      <LI>
+        <TT>-k</TT>: Keep going even when errors are encountered
+      </LI>
+      <LI>
+        <TT>-f &lt;filename&gt;</TT>: Explicitly name the makefile to use
+        instead of the default (either <TT>Makefile</TT> or
+        <TT>makefile</TT> found in the current directory)
+      </LI>
+      <LI>
+        <TT>-j</TT>: Do a parallel build of the target(s)
+      </LI>
+      <LI>
+        <TT>-l &lt;float-value&gt;</TT>: Limit the load on the machine to
+        the specified value when doing a parallel build
+      </LI>
+    </UL>
+  </P>
 
 <A NAME="targets"><H4>Targets</H4></A>
 
