@@ -33,7 +33,11 @@ class JCCL_CLASS_API RTRCInterface
 {
 public:
    RTRCInterface()
-   {;}
+   {
+      mCorbaManager = NULL;
+      mInterface = NULL;
+      mInterfaceName = "RTRCInterface";
+   }
 
    ~RTRCInterface()
    {
@@ -55,11 +59,12 @@ public:
     *  Turn off the interface to RTRC (disallow incoming connections)
     */
    void disable();
-   
+
 private:
 
    tweek::CorbaManager* mCorbaManager;
    jccl::RTRCInterfaceSubjectImpl* mInterface;
+   std::string mInterfaceName;
 
 };
 
