@@ -67,10 +67,21 @@ java-install:
 links:
 ifndef NO_JAVA
 ifeq ($(BUILD_JAVA), Y)
+ifneq ($(JARS), )
 	cd $(instlinks)/bin && \
 		for jar in $(JARS); do \
 			$(RM_LN) ./$$jar && $(LN_S) $(topdir)/vjcontrol/$$jar ./$$jar; \
 		done
+endif
+ifneq ($(BEANS), )
+	cd $(instlinks)/bin/beans && \
+		for bean in $(BEANS); do \
+			$(RM_LN) ./$$bean.jar && \
+			$(LN_S) $(topdir)/vjcontrol/$$bean.jar ./$$bean.jar; \
+			$(RM_LN) ./$$bean.xml && \
+			$(LN_S) $(top_srcdir)/vjcontrol/$$bean.xml ./$$bean.xml; \
+		done
+endif
 	cd $(instlinks)/bin && rm -f ./vjcontrol && \
 		sed -e 's,#JCCL_SHARE_DIR#,${JCCL_SHARE_DIR},g' \
 			 -e 's,#JDOM_JAR#,${JDOM_JAR},g' \

@@ -59,6 +59,7 @@ ifeq ($(BUILD_PROF_CXX), Y)
 endif
 endif
 
+beandir					= $(bindir)/beans
 srcdir					= @srcdir@
 top_srcdir				= @top_srcdir@
 EXTRA_JAVA_SRCS_PATH	= $(srcdir)
@@ -70,7 +71,7 @@ INSTALL_FILES			=
 # Java-related setup
 # -----------------------------------------------------------------------------
 JDOM_JAR	= @JDOM_JAR@
-CLASSPATH	= $(JDOM_JAR)$(JCPS)$(topdir)/config$(JCPS)$(topdir)/editorgui$(JCPS)$(topdir)/net
+CLASSPATH	= $(JDOM_JAR)$(JCPS)$(topdir)/config$(JCPS)$(topdir)/editorgui$(JCPS)$(topdir)/net$(JCPS)$(TWEEK_BASE_DIR)/bin/TweekBeans.jar
 JAVA_SRC_PATH	= $(top_srcdir)/editorgui
 
 VJCONTROL_PKG		= org.vrjuggler.jccl.vjcontrol
@@ -95,7 +96,8 @@ WIZARDS_CLASSES	= $(WIZARDS_SRCS:.java=.class)
 
 JAVA_SRCS 		= $(VJCONTROL_SRCS) $(VJCONTROL_UI_SRCS) $(VJCONTROL_UI_WIDGETS_SRCS) $(WIZARDS_SRCS)
 JAVA_CLASSES	= $(VJCONTROL_CLASSES) $(VJCONTROL_UI_CLASSES) $(VJCONTROL_UI_WIDGETS_CLASSES) $(WIZARDS_CLASSES)
-JARS		 		= jccl_vjcontrol.jar
+JARS		 		=
+BEANS				= jccl_vjcontrol
 
 # List the packages for which JavaDoc documentation will be generated.
 DOC_PKGS		= $(VJCONTROL_PKG) $(VJCONTROL_UI_PKG) $(VJCONTROL_UI_WIDGETS_PKG) $(WIZARDS_PKG)
@@ -115,10 +117,17 @@ include $(MKPATH)/dpp.obj.mk
 # -----------------------------------------------------------------------------
 # Extra targets.
 # -----------------------------------------------------------------------------
-jars: $(JARS)
+jars: $(JARS) $(addsuffix .jar, $(BEANS))
 ifdef GLOBAL_BUILD
 	@$(MKINSTALLDIRS) $(top_srcdir)/bin
+	@$(MKINSTALLDIRS) $(top_srcdir)/bin/beans
+	@$(MKINSTALLDIRS) $(top_srcdir)/bin/beans
+ifneq ($(JARS), )
 	cp $(JARS) $(top_srcdir)/bin
+endif
+ifneq ($(BEANS), )
+	cp $(addsuffix .jar, $(BEANS)) $(top_srcdir)/bin/beans
+endif
 endif
 
 jccl_vjcontrol.jar: $(JAVA_CLASSES)
@@ -141,10 +150,17 @@ vjcontrol-install:
 	@echo "------------------------------------------------"
 	@echo "Installing the JCCL vjcontrol Java code base"
 	@echo "------------------------------------------------"
-	for jar in $(JARS) ; \
+#	for jar in $(JARS) ; \
+#          do \
+#              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
+#                $(topdir)/vjcontrol/$$jar $(bindir) ; \
+#          done
+	for bean in $(BEANS) ; \
           do \
-              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(topdir)/vjcontrol/$$jar $(bindir) ; \
+               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
+                 $(topdir)/vjcontrol/$$bean.jar $(beandir) ; \
+               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
+                 $(top_srcdir)/vjcontrol/$$bean.xml $(beandir) ; \
           done
 	for jar in `echo "$(JDOM_JAR)" | sed -e 's/$(JCPS)/ /g'` ; \
           do \

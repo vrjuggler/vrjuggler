@@ -45,6 +45,8 @@ import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.vjcontrol.*;
 import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
 
+import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
+
 /** Base UI for VjControl.
  *
  *  ControlUIModule creates the main VjControl window.  It includes a menu
@@ -58,8 +60,6 @@ import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
  *  <p>
  *  The utilities provided by ControlUIModule include an IconFactory,
  *  the EasyMenuBar, and an EasyFileDialog.
- *
- *  @version $Revision$
  */
 public class ControlUIModule
    extends JFrame
@@ -222,16 +222,14 @@ public class ControlUIModule
       //Core.vjcontrol_chunkdb.addChunkDBListener (this);
       //Core.addLogMessageListener (this);
 
-      icon_factory.registerIcon ("new file", 0,
-                                 ClassLoader.getSystemResource ("VjFiles/new.gif"));
-      icon_factory.registerIcon ("open file", 0,
-                                 ClassLoader.getSystemResource ("VjFiles/open.gif"));
-      icon_factory.registerIcon ("save file", 0,
-                                 ClassLoader.getSystemResource ("VjFiles/save.gif"));
-      icon_factory.registerIcon ("close file", 0,
-                                 ClassLoader.getSystemResource ("VjFiles/close.gif"));
-
-
+      icon_factory.registerIcon("new file", 0,
+               BeanJarClassLoader.instance().getResource("VjFiles/new.gif"));
+      icon_factory.registerIcon("open file", 0,
+               BeanJarClassLoader.instance().getResource("VjFiles/open.gif"));
+      icon_factory.registerIcon("save file", 0,
+               BeanJarClassLoader.instance().getResource("VjFiles/save.gif"));
+      icon_factory.registerIcon("close file", 0,
+               BeanJarClassLoader.instance().getResource("VjFiles/close.gif"));
    }
 
 
@@ -569,10 +567,10 @@ public class ControlUIModule
    public void loadHelp (String s)
    {
       System.out.println ("loadhelp: " + s);
-      URL url = ClassLoader.getSystemResource (s);
+      URL url = BeanJarClassLoader.instance().getResource(s);
       HTMLFrame help_frame = new HTMLFrame ("VjControl Help", url);
       help_frame.addActionListener (this);
-      help_frame.setContentsURL (ClassLoader.getSystemResource ("VjFiles/VjControlIndex.html"));
+      help_frame.setContentsURL(BeanJarClassLoader.instance().getResource("VjFiles/VjControlIndex.html"));
       child_frames.add (help_frame);
       help_frame.show();
    }

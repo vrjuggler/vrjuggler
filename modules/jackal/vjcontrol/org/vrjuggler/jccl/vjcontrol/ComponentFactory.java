@@ -38,8 +38,10 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Vector;
+import java.util.jar.JarFile;
 
 import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 
 /** Factory object to create VjComponents and manage loading of .jars.
  *  Extensions to VjControl can be added in the form of external .jar
@@ -102,13 +104,10 @@ public class ComponentFactory
    /** Contains all objects which are listening for ComponentFactoryEvents. */
    public Vector component_factory_targets;
 
-   public VjClassLoader loader;
-
    /** Constructor */
    public ComponentFactory ()
    {
       component_factory_targets = new Vector ();
-      loader = new VjClassLoader(new URL[0]);
    }
 
    /** Loads a new extension .jar archive.
@@ -120,21 +119,22 @@ public class ComponentFactory
     */
    public void registerJarURL (String jar_file_url)
    {
-      // need to mangle filename;
-      if( !jar_file_url.startsWith ("jar:") )
-      {
-         jar_file_url = "jar:" + jar_file_url;
-      }
-
-      if( !jar_file_url.endsWith ("!/") )
-      {
-         jar_file_url = jar_file_url + "!/";
-      }
-
       try
       {
          System.out.println ("Loading jar file: " + jar_file_url);
-         loader.addURL (new URL(jar_file_url));
+         BeanJarClassLoader.instance().addJarFile(new JarFile(jar_file_url));
+
+         // We need to build up a URL for the contents.config and contents.desc
+         // files that may be stored in the jar we just loaded.
+         if( !jar_file_url.startsWith ("jar:") )
+         {
+            jar_file_url = "jar:" + jar_file_url;
+         }
+
+         if( !jar_file_url.endsWith ("!/") )
+         {
+            jar_file_url = jar_file_url + "!/";
+         }
 
          // need to get the description file out of the jar.
          // pity i don't think the manifest is versatile enough
@@ -191,7 +191,7 @@ public class ComponentFactory
       try
       {
          // Get an optional chunkdescs file "contents.desc"
-         is = loader.getSystemResourceAsStream ("contents.desc");
+         is = BeanJarClassLoader.instance().getResourceAsStream ("contents.desc");
          if( is != null )
          {
             ChunkDescDB descdb = new ChunkDescDB();
@@ -209,7 +209,7 @@ public class ComponentFactory
       try
       {
          // Get the required contents file "contents.config"
-         is = loader.getSystemResourceAsStream ("contents.config");
+         is = BeanJarClassLoader.instance().getResourceAsStream ("contents.config");
          if( is != null )
          {
             ConfigChunkDB chunkdb = new ConfigChunkDB();
@@ -279,7 +279,7 @@ public class ComponentFactory
       {
          //Class cl = loader.loadClass (class_name);
          //Object o = cl.newInstance();
-         Object o = Beans.instantiate (loader, class_name);
+         Object o = Beans.instantiate (BeanJarClassLoader.instance(), class_name);
          return(VjComponent)Beans.getInstanceOf (o, VjComponent.class);
       }
       catch( Exception e )
@@ -301,7 +301,7 @@ public class ComponentFactory
       //return (registered_classes.get(class_name) != null);
       try
       {
-         loader.loadClass (class_name);
+         BeanJarClassLoader.instance().loadClass (class_name);
          return true;
       }
 //          catch (java.lang.Error e1) {
@@ -327,7 +327,7 @@ public class ComponentFactory
    {
       try
       {
-         Class cl = loader.loadClass (class_name);
+         Class cl = BeanJarClassLoader.instance().loadClass (class_name);
          return inter.isAssignableFrom (cl);
       }
       catch( Exception ex )
