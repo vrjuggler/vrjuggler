@@ -684,26 +684,27 @@ if test "x$OS_TYPE" = "xWin32" ; then
 else
    AC_PATH_PROG(CPPDOM_CONFIG, [cppdom-config], [no], [$cppdom_path])
 
-   if test "x$CPPDOM_CONFIG" != "xno" ; then
-      if test "x$cppdom_root" = "x" ; then
-         # XXX: This expression is not as robust as it ought to be.  It assumes
-         # that cppdom-config is in a directory called 'bin'.  That is not
-         # entirely invalid, but it is not flexible either.
-         cppdom_root=`echo $CPPDOM_CONFIG | sed -e 's|\(.*\)/bin/cppdom-config$|\1|'`
-      fi
-
-      CPPDOM_CXXFLAGS=`CPPDOM_BASE_DIR=$cppdom_root $CPPDOM_CONFIG --cxxflags --basedir`
-      cppdom_lib_output=`CPPDOM_BASE_DIR=$cppdom_root $CPPDOM_CONFIG --libs --basedir`
-      changequote(<<, >>)
-      # XXX: These sed(1) expressions could be improved.
-      CPPDOM_LDFLAGS=`echo $cppdom_lib_output | sed -e 's/-l[^ ]*//g'`
-      CPPDOM_LIBS=`echo $cppdom_lib_output | sed -e 's/-L[^ ]*//g'`
-      changequote([, ])
-
-      cppdom_version=`$CPPDOM_CONFIG --version`
-   else
+   if test "x$CPPDOM_CONFIG" = "xno" ; then
       AC_MSG_ERROR([*** CppDOM is required for VPR ***])
    fi
+
+   # XXX: This expression is not as robust as it ought to be.  It assumes
+   # that cppdom-config is in a directory called 'bin'.  That is not
+   # entirely invalid, but it is not flexible either.
+   # Using `cppdom-config --prefix` would be simpler, but it wouldn't handle
+   # the case when CppDOM was transplanted without updating cppdom-config.
+   found_cppdom_root=`echo $CPPDOM_CONFIG | sed -e 's|\(.*\)/bin/cppdom-config$|\1|'`
+
+   CPPDOM_CXXFLAGS=`CPPDOM_BASE_DIR=$found_cppdom_root $CPPDOM_CONFIG --cxxflags --basedir`
+   cppdom_lib_output=`CPPDOM_BASE_DIR=$found_cppdom_root $CPPDOM_CONFIG --libs --basedir`
+
+   changequote(<<, >>)
+   # XXX: These sed(1) expressions could be improved.
+   CPPDOM_LDFLAGS=`echo $cppdom_lib_output | sed -e 's/-l[^ ]*//g'`
+   CPPDOM_LIBS=`echo $cppdom_lib_output | sed -e 's/-L[^ ]*//g'`
+   changequote([, ])
+
+   cppdom_version=`$CPPDOM_CONFIG --version`
 fi
 
 # Verify that we have a new enough version of CppDOM.
