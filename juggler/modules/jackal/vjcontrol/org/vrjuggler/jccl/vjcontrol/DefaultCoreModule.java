@@ -29,11 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjControl;
-
-import VjControl.CoreModule;
+package org.vrjuggler.jccl.vjcontrol;
 
 /** Base interface for all CoreModules.
  *  This doesn't add anything in particular to VjComponent but is needed

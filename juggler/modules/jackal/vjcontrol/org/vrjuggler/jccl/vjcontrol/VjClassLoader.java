@@ -29,12 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.vjcontrol;
 
-
-package VjControl;
-
-import java.net.URLClassLoader;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
 
 /** URL class loader used for _all_ VjControl extension components.

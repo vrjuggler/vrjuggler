@@ -1,7 +1,7 @@
 
-package VjControl;
+package org.vrjuggler.jccl.vjcontrol;
 
-import VjConfig.*;
+import org.vrjuggler.jccl.config.*;
 
 public class UserProfile {
 

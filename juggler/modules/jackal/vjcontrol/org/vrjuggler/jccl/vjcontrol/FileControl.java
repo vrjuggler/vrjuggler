@@ -30,19 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-
-package VjControl;
+package org.vrjuggler.jccl.vjcontrol;
 
 import java.io.*;
 import java.util.*;
-
 
 /** File utility functions.
  *  Utility functions for managing file names, doing environment variable
  *  replacement, and loading VjControl extension modules.
  * 
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class FileControl {
