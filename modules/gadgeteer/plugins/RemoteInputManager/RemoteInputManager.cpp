@@ -78,7 +78,7 @@ extern "C"
 
 namespace cluster
 {
-   RemoteInputManager::RemoteInputManager() 
+   RemoteInputManager::RemoteInputManager()
    : mPluginGUID("a35b834d-e7e8-4f34-830b-755c282845b5")
    {
       mFrameNumber = 0;
@@ -93,22 +93,22 @@ namespace cluster
          {
             delete (*j).second;
          }
-      }  
+      }
       for ( std::vector<DeviceServer*>::iterator j = mDeviceServers.begin(); j != mDeviceServers.end(); j++ )
       {
          if ( (*j) != NULL )
          {
             delete (*j);
          }
-      }  
+      }
    }
 
    void RemoteInputManager::recoverFromLostNode(ClusterNode* lost_node)
    {
       removeVirtualDevicesOnHost(lost_node->getHostname());
       removeDeviceClientsForHost(lost_node->getHostname());
-      
-      // Since we have lost a connection we need to set a flag so 
+
+      // Since we have lost a connection we need to set a flag so
       // that when we gain a new connection we will reconfigure.
       setReconfigurationNeededOnConnection(true);
    }
@@ -159,9 +159,9 @@ namespace cluster
                }
                else
                {
-                  vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
+                  vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
                   << clrOutBOLD(clrRED,"Pending List is not stale(Config Manager is still configuring the local system) ")
-                  << clrOutBOLD(clrRED,"So we can not process this device request right now.") << std::endl << vprDEBUG_FLUSH;            
+                  << clrOutBOLD(clrRED,"So we can not process this device request right now.") << std::endl << vprDEBUG_FLUSH;
 
                   std::string temp_string = "";
                   vpr::GUID empty_id;
@@ -187,13 +187,13 @@ namespace cluster
 
                   if ( getVirtualDevice(device_name) != NULL )
                   {
-                     vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrRED, "ERROR:") 
+                     vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrRED, "ERROR:")
                      << "Somehow we already have a virtual device named: " << device_name << std::endl << vprDEBUG_FLUSH;
                   }
                   else
                   {
                      addVirtualDevice(temp_device_ack->getId(), device_name, temp_device_ack->getDeviceBaseType(), temp_device_ack->getHostname());
-                     
+
                      // Add this virtual device to the InputManager's list of devices.
                      gadget::InputManager::instance()->addRemoteDevice(getVirtualDevice(device_name), device_name);
                   }
@@ -210,13 +210,13 @@ namespace cluster
             {
                DataPacket* temp_data_packet = dynamic_cast<DataPacket*>(packet);
                vprASSERT(NULL != temp_data_packet && "Dynamic cast failed!");
-               
+
                //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "RIM::handlePacket()..." << std::endl <<  vprDEBUG_FLUSH;
                //temp_data_packet->printData(1);
 
                gadget::Input* virtual_device = getVirtualDevice(temp_data_packet->getObjectId());
                if ( virtual_device != NULL )
-               {                  
+               {
                   vpr::BufferObjectReader* temp_reader = new vpr::BufferObjectReader(temp_data_packet->getDeviceData());
 
                   temp_reader->setAttrib("rim.timestamp.delta", node->getDelta());
@@ -234,7 +234,7 @@ namespace cluster
    }
 
 
-   vpr::ReturnStatus RemoteInputManager::addVirtualDevice(const vpr::GUID& device_id, const std::string& name, 
+   vpr::ReturnStatus RemoteInputManager::addVirtualDevice(const vpr::GUID& device_id, const std::string& name,
                                                           const std::string& device_base_type, const std::string& hostname)
    {
       vpr::Guard<vpr::Mutex> guard(mVirtualDevicesLock);
@@ -380,7 +380,7 @@ namespace cluster
       for ( std::map<vpr::GUID, VirtualDevice*>::iterator j = mVirtualDevices.begin(); j != mVirtualDevices.end(); j++ )
       {
          (*j).second->debugDump(debug_level);
-      }  
+      }
    }
 
 
@@ -388,7 +388,7 @@ namespace cluster
 
    vpr::ReturnStatus RemoteInputManager::addDeviceServer(const std::string& name, gadget::Input* device)
    {
-      vpr::Guard<vpr::Mutex> guard(mDeviceServersLock);      
+      vpr::Guard<vpr::Mutex> guard(mDeviceServersLock);
 
       DeviceServer* temp_device_server = new cluster::DeviceServer(name, device, mPluginGUID);
       mDeviceServers.push_back(temp_device_server);
@@ -448,7 +448,7 @@ namespace cluster
       for ( std::vector<DeviceServer*>::iterator j = mDeviceServers.begin(); j != mDeviceServers.end(); j++ )
       {
          (*j)->debugDump(debug_level);
-      }  
+      }
    }
 
    void RemoteInputManager::preDraw()
@@ -474,7 +474,7 @@ namespace cluster
       for ( unsigned int i=0; i<mDeviceServers.size(); i++ )
          mDeviceServers[i]->sync();
 
-      unlockDeviceServers();  
+      unlockDeviceServers();
 
       //      second.setNow();
       //      vpr::Interval diff_time4(second-first);
@@ -490,7 +490,7 @@ namespace cluster
 
       ClusterNetwork::instance()->lockClusterNodes();
 
-      sendDeviceRequests();      
+      sendDeviceRequests();
 
       ClusterNetwork::instance()->unlockClusterNodes();
 
@@ -522,14 +522,14 @@ namespace cluster
          {
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[RemoteInputManager] ")
             << "Cluster node: " << device_host
-            << " does not exist! WE SHOULD NEVER REACH THIS HERE!!!!\n" << vprDEBUG_FLUSH;            
+            << " does not exist! WE SHOULD NEVER REACH THIS HERE!!!!\n" << vprDEBUG_FLUSH;
             return false;
          }
          else if ( !node->isConnected() )
          {
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[RemoteInputManager] ")
             << "Cluster node: " << device_host
-            << " is not connected! WE SHOULD NEVER REACH THIS HERE!!!!\n" << vprDEBUG_FLUSH;            
+            << " is not connected! WE SHOULD NEVER REACH THIS HERE!!!!\n" << vprDEBUG_FLUSH;
             return false;
          }
 
@@ -543,7 +543,7 @@ namespace cluster
       }
       else
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL)
          << clrOutBOLD(clrRED,"[RemoteInputManager::ConfigAdd] ERROR, Something is seriously wrong, we should never get here\n")
          << vprDEBUG_FLUSH;
          return(false);
@@ -561,7 +561,7 @@ namespace cluster
       if ( ClusterManager::instance()->recognizeRemoteDeviceConfig(element) )
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[RemoteInputManager] ")
-         << "Removing the Remote Device: " << element->getName() 
+         << "Removing the Remote Device: " << element->getName()
          << " from the active configuration \n" << vprDEBUG_FLUSH;
 
          removeVirtualDevice(element->getName());
@@ -610,7 +610,7 @@ namespace cluster
 
       cfg_mgr->lockActive();
       std::vector<jccl::ConfigElementPtr>::iterator active_begin = cfg_mgr->getActiveBegin();
-      std::vector<jccl::ConfigElementPtr>::iterator active_end   = cfg_mgr->getActiveEnd();      
+      std::vector<jccl::ConfigElementPtr>::iterator active_end   = cfg_mgr->getActiveEnd();
       std::vector<jccl::ConfigElementPtr>::iterator i;
 
       // Find the active device that we want to remove
@@ -618,13 +618,7 @@ namespace cluster
       {
          if ( /*recognizeRemoteDeviceConfig(*i) && */(*i)->getName() == device_name )
          {
-            jccl::ConfigManager::PendingElement pending;
-            pending.mType = jccl::ConfigManager::PendingElement::REMOVE;
-            pending.mElement = (*i);
-
-            cfg_mgr->lockPending();
-            cfg_mgr->addPending(pending);
-            cfg_mgr->unlockPending();
+            cfg_mgr->addConfigElement(*i, jccl::ConfigManager::PendingElement::REMOVE);
 
             cfg_mgr->unlockActive();
             cfg_mgr->removeActive(device_name);
@@ -641,27 +635,14 @@ namespace cluster
 
       cfg_mgr->lockActive();
       std::vector<jccl::ConfigElementPtr>::iterator active_begin = cfg_mgr->getActiveBegin();
-      std::vector<jccl::ConfigElementPtr>::iterator active_end   = cfg_mgr->getActiveEnd();      
+      std::vector<jccl::ConfigElementPtr>::iterator active_end   = cfg_mgr->getActiveEnd();
       std::vector<jccl::ConfigElementPtr>::iterator i;
       for ( i = active_begin ; i != active_end ; i++ )
       {
          if ( /*recognizeRemoteDeviceConfig(*i) && */(*i)->getName() == device_name )
          {
-            jccl::ConfigManager::PendingElement pending_remove;
-            pending_remove.mType = jccl::ConfigManager::PendingElement::REMOVE;
-            pending_remove.mElement = (*i);
-
-            cfg_mgr->lockPending();
-            cfg_mgr->addPending(pending_remove);
-            cfg_mgr->unlockPending();
-
-            jccl::ConfigManager::PendingElement pending_add;
-            pending_add.mType = jccl::ConfigManager::PendingElement::ADD;
-            pending_add.mElement = (*i);
-
-            cfg_mgr->lockPending();
-            cfg_mgr->addPending(pending_add);
-            cfg_mgr->unlockPending();
+            cfg_mgr->addConfigElement(*i, jccl::ConfigManager::PendingElement::REMOVE);
+            cfg_mgr->addConfigElement(*i, jccl::ConfigManager::PendingElement::ADD);
 
             cfg_mgr->unlockActive();
             cfg_mgr->removeActive(device_name);
@@ -677,7 +658,7 @@ namespace cluster
       if ( getReconfigurationNeededOnConnection() )
       {
          jccl::ConfigManager::instance()->refreshPendingList();
-         setReconfigurationNeededOnConnection(false);         
+         setReconfigurationNeededOnConnection(false);
       }
    }
    void RemoteInputManager::addPendingDeviceRequest(DeviceRequest* new_device_req, ClusterNode* node)
