@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          cplusplus.m4,v
-dnl Date modified: 2004/07/02 11:35:54
-dnl Version:       1.21
+dnl Date modified: 2005/01/08 22:44:39
+dnl Version:       1.22
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -52,7 +52,7 @@ dnl Command-line options added:
 dnl     --enable-std
 dnl ===========================================================================
 
-dnl cplusplus.m4,v 1.21 2004/07/02 11:35:54 patrickh Exp
+dnl cplusplus.m4,v 1.22 2005/01/08 22:44:39 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Add a command line option to enable or disable the use of standard C++ by

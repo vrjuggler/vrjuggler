@@ -1,5 +1,5 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.subdir.mk,v
-# Date modified: 2004/01/29 04:28:00
-# Version:       1.6
+# Date modified: 2005/01/08 22:44:43
+# Version:       1.7
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.subdir.mk,v 1.6 2004/01/29 04:28:00 patrickh Exp
+# dpp.subdir.mk,v 1.7 2005/01/08 22:44:43 patrickh Exp
 #
 # This include file <dpp.subdir.mk> handles recursive builds using a target
 # called 'recursive'.
