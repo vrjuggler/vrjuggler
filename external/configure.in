@@ -79,7 +79,7 @@ AC_ARG_WITH(cppunit,
 AC_ARG_WITH(cxx-orb,
             [  --with-cxx-orb=<NAME>   Name of C++ ORB to use          [default=omniORB4]
                           Allowed values are:
-                            omniORB3, omniORB4],
+                            omniORB3, omniORB4, TAO],
             [CXX_ORB_NAME="$withval"], [CXX_ORB_NAME='omniORB4'])
 
 AC_ARG_WITH(cxx-orb-root,
@@ -207,6 +207,10 @@ case $CXX_ORB_NAME in
       have_cxx_orb='Y'
       orb='omniORB'
       ;;
+   TAO)
+      have_cxx_orb='Y'
+      orb='TAO'
+      ;;
    *)
       have_cxx_orb='N'
       orb='unknown'
@@ -217,10 +221,9 @@ USE_OMNIPYTHON='N'
 OMNIPYTHON=''
 
 if test "x$have_cxx_orb" = "xY" ; then
-   if test -d "$CXX_ORB_ROOT/include/$CXX_ORB_NAME" ; then
-      TARGETS="$TARGETS $CXX_ORB_NAME"
-
-      if test "x$orb" = "xomniORB" ; then
+   if test "x$orb" = "xomniORB" ; then
+      if test -d "$CXX_ORB_ROOT/include/$CXX_ORB_NAME" ; then
+         TARGETS="$TARGETS $CXX_ORB_NAME"
          OMNIORB_CMDS='catior convertior genior nameclt omkdepend omniMapper omniNames omnicpp omniidl omniidlrun.py'
 
          if test "x$CXX_ORB_BIN_DIR" = "xnone" ; then
@@ -245,9 +248,26 @@ if test "x$have_cxx_orb" = "xY" ; then
          if test "x$CXX_ORB_LIB_DIR" = "xnone" ; then
             CXX_ORB_LIB_DIR="$CXX_ORB_ROOT/lib"
          fi
-      else
-         AC_MSG_ERROR([*** We have a C++ ORB, but we don't know its name! ***])
       fi
+   elif test "x$orb" = "xTAO" ; then
+      if test -d "$CXX_ORB_ROOT/include/tao" ; then
+         TARGETS="$TARGETS $CXX_ORB_NAME"
+
+         # XXX: This is obviously a lot of programs to be installing.  I do
+         # not know which of these are absolutely required and which can be
+         # ignored.
+         TAO_CMDS='Basic_Logging_Service Concurrency_Service CosEvent_Service Dump_Schedule Event_Logging_Service Event_Service FT_ReplicationManager Fault_Detector Fault_Notifier IFR_Service ImR_Activator ImplRepo_Service LifeCycle_Service LoadManager LoadMonitor NT_Naming_Service NT_Notify_Service NameService Naming_Service Notify_Logging_Service Notify_Service RTEvent_Logging_Service Scheduling_Service TAO_Service Time_Service_Clerk Time_Service_Server Trading_Service catior consumer ftec ftrt_eventservice ftrtec_factory_service ftrtec_gateway_service nsadd nsdel nslist psdl_tao supplier tao_idl tao_ifr tao_imr gperf'
+
+         if test "x$CXX_ORB_BIN_DIR" = "xnone" ; then
+            CXX_ORB_BIN_DIR="$CXX_ORB_ROOT/bin"
+         fi
+
+         if test "x$CXX_ORB_LIB_DIR" = "xnone" ; then
+            CXX_ORB_LIB_DIR="$CXX_ORB_ROOT/lib"
+         fi
+      fi
+   else
+      AC_MSG_ERROR([*** We have a C++ ORB, but we don't know its name! ***])
    fi
 fi
 
@@ -295,6 +315,8 @@ AC_SUBST(OMNI_PYTHON_VERSION)
 AC_SUBST(USE_OMNIPYTHON)
 AC_SUBST(OMNIPYTHON)
 AC_SUBST(OMNIPYTHON_HOME)
+
+AC_SUBST(TAO_CMDS)
 
 AC_CONFIG_FILES(Makefile)
 
