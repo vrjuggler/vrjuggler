@@ -48,6 +48,7 @@
 
 #include <string>
 #include <vpr/Util/Singleton.h>
+#include <vpr/DynLoad/Library.h>
 
 #include "snx/xdl.h"
 #include "snx/ISoundImplementation.h"

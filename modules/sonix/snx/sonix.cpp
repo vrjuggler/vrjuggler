@@ -23,7 +23,7 @@
     * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
     * @semantics Triggers a sound
     */
-   void sonix::trigger( const std::string& alias, const int& repeat = 1 )
+   void sonix::trigger( const std::string& alias, const int& repeat )
    {
       this->impl().trigger( alias, repeat );
    }
@@ -90,7 +90,7 @@
     * when listener moves...
     * or is the sound positional - changes volume as listener nears or retreats..
     */
-    void sonix::setAmbient( const std::string& alias, bool setting = false )
+    void sonix::setAmbient( const std::string& alias, bool setting )
    {
       this->impl().setAmbient( alias, setting );
    }
@@ -199,7 +199,11 @@
          delete &oldImpl;
       
       // startup the new API
-      mImplementation->startAPI();
+      if(!mImplementation->startAPI()) // if it fails to start then we revert back to stub
+      {
+         std::cout <<"[snx] NOTIFY: startAPI return 0, changing API back to stub" << std::endl;
+         changeAPI("stub");
+      }
 
       // load all sound data
       mImplementation->bindAll();
