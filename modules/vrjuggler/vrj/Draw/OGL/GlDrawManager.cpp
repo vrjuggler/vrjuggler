@@ -160,23 +160,31 @@ void GlDrawManager::sync()
 void GlDrawManager::main(void* nullParam)
 {
    boost::ignore_unused_variable_warning(nullParam);
+   bool stop_requested(false);
 
-   while(mRunning)
+   while ( ! stop_requested )
    {
-      //**// Runtime config will happen here
-      // Because the kernel is the only one that can trigger it
-      // we will be waiting here at that time
+      //**// Runtime config will happen sometime after
+      // drawDoneSema.release() because the kernel is the only one that
+      // can trigger it
 
       // Wait for trigger
       drawTriggerSema.acquire();
 
-      // While closing the GlDrawManager this thread will be waiting at
-      // drawTriggerSema.acquire(). To properly stop this thread we must
-      // allow it to fall through the semaphore and not execute drawAllPipes()
+      // To properly stop this thread we must allow it to fall through the
+      // semaphore and not execute drawAllPipes(). Test mRunning here only
+      // and not outside of drawTriggerSema.acquire() / drawDoneSema.release()
+      // so we know we will always reach drawTriggerSema.acquire() when
+      // closing, since closeAPI() expects a final drawTriggerSema.acquire()
+      // and drawDoneSema.release().
       if (mRunning)
       {
          // THEN --- Do Rendering --- //
          drawAllPipes();
+      }
+      else
+      {
+         stop_requested = true;
       }
 
       // -- Done rendering --- //
