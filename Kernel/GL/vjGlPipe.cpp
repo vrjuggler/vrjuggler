@@ -71,6 +71,7 @@ void vjGlPipe::triggerRender()
    while(!mThreadRunning)
    {
       vjDEBUG(vjDBG_DRAW_MGR,3) << "Waiting in for thread to start triggerRender.\n" << vjDEBUG_FLUSH;
+      vjThread::self()->yield();
    }
 
    renderTriggerSema.release();
