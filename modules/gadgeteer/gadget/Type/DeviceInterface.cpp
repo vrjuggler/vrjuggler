@@ -52,7 +52,7 @@ BaseDeviceInterface::~BaseDeviceInterface()
 }
 
 
-void BaseDeviceInterface::init(const std::string proxyName)
+void BaseDeviceInterface::init(const std::string& proxyName)
 {
    mProxyName = proxyName;    // Set the name
    mNameSet = true;
