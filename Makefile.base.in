@@ -1,7 +1,103 @@
+# -----------------------------------------------------------------------------
+# $Id$
+#
+# This file <Makefile.base> provides variable information and targets shared
+# by all Makefiles in the VR Juggler source tree.  It requires GNU make.
+# -----------------------------------------------------------------------------
+# All Makefiles in the source tree should include this file for maximum
+# information sharing.
+#
+# ** NOTE:                                                                  **
+# **   Shared targets are defined here, so any files that include this file **
+# **   should define a default target BEFORE including this file.           **
+# -----------------------------------------------------------------------------
+# Variables defined here are:
+#
+# SHELL          - The shell to use when make(1) executes shell commands.
+#
+# bindir         - Path to bin directory containing executables (usually
+#                  ${exec_prefix}/bin).
+# datadir        - Path to a directory generally sharing platform-independent
+#                  data (usually ${prefix}/share).
+# exec_prefix    - Path to base directory where executables will be (usually
+#                  ${prefix}).
+# libdir         - Path to directory containing shared and static libraries
+#                  (usually ${exec_prefix}/lib).
+# libexecdir     - Path to libexec directory that generally contains
+#                  executables not called directly by users (usually
+#                  ${exec_prefix}/libexec).
+# prefix         - Base path used for installation and other things.
+# releasedir     - The absolute path to the release directory.
+# sbindir        - Path to sbin directory containing executables (usually
+#                  ${exec_prefix}/sbin).
+# scriptdir      - The path to the directory containing scripts used in the
+#                  build and install/release process.
+# sysconfdir     - System configuration directory (usually ${prefix}/etc).
+# VJROOT_ABS     - The absolute path to the root of the VR Juggler source
+#                  tree.
+#
+# AR             - Path to ar(1) (or equivalent program).
+# CC             - Path to C compiler.
+# CXX            - Path to C++ compiler.
+# CPP            - Command for invoking the C preprocessor.
+# CXXCPP         - Command for invoking the C preprocessor used by the C++
+#                  compiler.
+# CFLAGS         - Flags for ${CC}.
+# CPPFLAGS       - Flags for ${CPP} and ${CXXCPP}.
+# CXXFLAGS       - Flags for ${CXX}.
+# DEFS           - Command-line preprocessor definitions (-Dvariable=value).
+# DEPENDFLAGS    - Flags passed to makedepend(1) (or equivalent program for
+#                  generating dependencies).
+# DEPEND_EXTRAS  - Flags not recognized by makedepend(1) that may be necessary
+#                  in ${CFLAGS} or ${CXXFLAGS}.
+# INCLUDES       - Additions to the include path (-I/path/to/include).
+# LD             - Path to ld(1) (or equivalent program).
+# LDFLAGS        - Flags for ${LD}.
+# LIBOPTS        - Extra, often platform-specific, options for the linker.
+# LIBS           - Extra external libraries needed at link time.
+# MKPATH         - Path to shared vj.*.mk file directory.
+# OBJDIR         - Path to the directory where the object files will be built.
+#
+# C_COMPILE      - Command for compiling C code.
+# CXX_COMPILE    - Command for compiling C++ code.
+#
+# ABI            - Application Binary Interface type (on IRIX).  This may be
+#                  used for other binary types when supported by the operating
+#                  system (e.g., "ELF" or "AOUT").
+# LIBBITSUF      - Suffix for the library path used by the linker on IRIX
+#                  only.  For o32 binaries, it will be blank.  For n32
+#                  binaries, it will be 32.  For 64-bit binaries, it will be
+#                  64.
+# PLATFORM       - The operating system abbreviation on which the library is
+#                  being built (e.g., SGI -> IRIX on an SGI computer,
+#                  HP => HP-UX on an HP workstation).
+#
+# LIBRARY        - The base name of the library that will be built with no
+#                  file extension.
+# -----------------------------------------------------------------------------
+# Targets defined here are:
+#
+# Suffix rules for .c => .o and .C => .o.
+# clean: Standard directory clean-up target.
+# -----------------------------------------------------------------------------
 
-#------------------------------------------
-# Base definitions needed by all Makefiles
-#------------------------------------------
+SHELL		= /bin/sh
+
+# -----------------------------------------------------------------------------
+# Base variables needed by all Makefiles.
+# -----------------------------------------------------------------------------
+bindir		= @bindir@
+datadir		= @datadir@
+exec_prefix	= @exec_prefix@
+libdir		= @libdir@
+libexecdir	= @libexecdir@
+prefix		= @prefix@
+releasedir	= ${VJROOT_ABS}/release
+sbindir		= @sbindir@
+scriptdir	= ${releasedir}/scripts
+sysconfdir	= @sysconfdir@
+VJROOT_ABS	= @VJROOT_ABS@
+
 AR		= @AR@
 CC		= @CC@
 CXX		= @CXX@
@@ -14,23 +110,47 @@ DEFS		= @DEFS@
 DEPENDFLAGS	= @DEPENDFLAGS@ @INCLUDES@ -I${VJROOT_ABS} -I${topdir}
 DEPEND_EXTRAS	= @DEPEND_EXTRAS@ ${DEFS}
 INCLUDES	= @INCLUDES@ -I${VJROOT} -I${topdir}
+INSTALL		= @INSTALL@
+LD		= @LD@
 LDFLAGS		= @LDFLAGS@ -L/usr/lib${LIBBITSUF} -L/usr/lib
+LIBOPTS		= @LIBOPTS@
 LIBS		= @LIBS@
+MKPATH		= ${VJROOT_ABS}/mk
 OBJDIR		= .
 
+# -----------------------------------------------------------------------------
+# Compiler command lines.
+# -----------------------------------------------------------------------------
 C_COMPILE	= ${CC} ${DEFS} ${INCLUDES} ${CPPFLAGS} ${CFLAGS}
 CXX_COMPILE	= ${CXX} ${DEFS} ${INCLUDES} ${CPPFLAGS} ${CXXFLAGS}
 
-#------------------------------
-# Build rule for OBJDIR code
-#-------------------------------
-$(OBJDIR)/%.o : %.c
+# -----------------------------------------------------------------------------
+# Platform- and binary-specific options.
+# -----------------------------------------------------------------------------
+ABI		= @ABI@
+LIBBITSUF	= @LIBBITSUF@
+PLATFORM	= @PLATFORM@
+
+# -----------------------------------------------------------------------------
+# Library name.
+# -----------------------------------------------------------------------------
+LIBRARY		= libJuggler
+
+@SET_MAKE@
+
+# -----------------------------------------------------------------------------
+# Build rule for ${OBJDIR} code.
+# -----------------------------------------------------------------------------
+${OBJDIR}/%.o : %.c
 	${C_COMPILE} -c -o $@ $<
 
-$(OBJDIR)/%.o : %.C
+${OBJDIR}/%.o : %.C
 	${CXX_COMPILE} -c -o $@ $<
 
-$(OBJDIR)/%.o : %.cpp
+${OBJDIR}/%.o : %.cpp
 	${CXX_COMPILE} -c -o $@ $<
 
-#----
+# -----------------------------------------------------------------------------
+# Include a common 'clean' target.
+# -----------------------------------------------------------------------------
+include ${MKPATH}/vj.clean.mk
