@@ -2,7 +2,7 @@ default: all
 
 include @topdir@/make.defs.mk
 
-SRCS = main.cpp ajOpenALSoundImplementation.cpp
+SRCS = main.cpp ajOpenALSoundImplementation.cpp ajSoundFactory.cpp
 
 includedir	= @includedir@/aj
 srcdir		= @srcdir@
