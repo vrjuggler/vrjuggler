@@ -160,12 +160,6 @@ dnl # -------------------------------------------------------------------------
 dnl # System-dependent stuff.
 dnl # -------------------------------------------------------------------------
 DPP_WIN32_SETUP
-
-dnl # We use AC_CANONICAL SYSTEM so that we can find out information about
-dnl # the build, target and host platforms rather than only the host.
-dnl AC_CANONICAL_SYSTEM
-
-dnl DPP_SYSTEM_SETUP($target_os, $target_cpu)
 DPP_SYSTEM_SETUP
 
 dnl # These are used on all platforms.
