@@ -79,7 +79,7 @@ void OpenALSoundImplementation::remove( const std::string alias )
 {
    snx::SoundImplementation::remove( alias );
 }
-OpenALSoundImplementation::OpenALSoundImplementation() : snx::SoundImplementation(), mContextId( NULL ), mDev( NULL ), mBindLookup()
+OpenALSoundImplementation::OpenALSoundImplementation() : snx::SoundImplementation(), mBindLookup(), mContextId( NULL ), mDev( NULL )
 {
    // TODO: set up the defaults for openal...
    //mSoundAPIInfo.

@@ -81,9 +81,9 @@ namespace snxEndian
    template< class Type >
    inline void  byteReverse( Endianness& e, Type& bytes )
    {
-      if (e == BIG && this->isLittle())
+      if (e == BIG && snxEndian::isLittle())
          byteReverse( bytes );
-      if (e == LITTLE && this->isBig())
+      if (e == LITTLE && snxEndian::isBig())
          byteReverse( bytes );
    }   
    

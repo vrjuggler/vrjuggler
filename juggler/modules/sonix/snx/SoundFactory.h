@@ -106,7 +106,7 @@ class SoundFactoryReg
 public:
    _type mSoundAPI;
    std::string mNameOfAPI;
-   SoundFactoryReg( const std::string& apiName ) : mNameOfAPI( apiName ), mSoundAPI()
+   SoundFactoryReg( const std::string& apiName ) : mSoundAPI(), mNameOfAPI( apiName )
    {
       snx::SoundFactory::instance()->reg( mNameOfAPI, &mSoundAPI );
    }
