@@ -53,6 +53,7 @@ IDL_PYTHON_FILES=	SubjectManager_idl.py	\
 
 UI_FILES=		pytweek/aboutbox.ui		\
 			pytweek/globalprefsdialog.ui	\
+			pytweek/orbdisconnectbox.ui	\
 			pytweek/orbconnectbox.ui	\
 			pytweek/tweekframe.ui
 PY_FILES=		$(UI_FILES:.ui=.py)
@@ -66,23 +67,31 @@ beforebuild:
 
 afterbuild:
 
-qt-gui: $(PY_FILES)
+qt-gui: $(PY_FILES) pytweek/net.py
 
 vpath %.ui $(srcdir)
 vpath %.h $(srcdir)
+vpath %.py.in $(srcdir)/pytweek
 
 pytweek/%.py: %.ui
 	$(PYUIC) $< > $@
 
+fix-pyuic-mess:
+	$(PYUIC) $(UI_FILE) > $(UI_FILE)-temp
+	cat $(UI_FILE)-temp | sed -e 's/^Extracting.*$$//' > $(PY_FILE)
+	rm -f $(UI_FILE)-temp
+
 pytweek/tweekframe.py: tweekframe.ui tweekframe.ui.h
-	$(PYUIC) $< > tweekframe-temp.py
-	cat tweekframe-temp.py | sed -e 's/^Extracting.*$$//' > $@
-	rm -f tweekframe-temp.py
+	@$(MAKE) UI_FILE=$< PY_FILE=$@ fix-pyuic-mess
 
 pytweek/orbconnectbox.py: orbconnectbox.ui orbconnectbox.ui.h
-	$(PYUIC) $< > orbconnectbox-temp.py
-	cat orbconnectbox-temp.py | sed -e 's/^Extracting.*$$//' > $@
-	rm -f orbconnectbox-temp.py
+	@$(MAKE) UI_FILE=$< PY_FILE=$@ fix-pyuic-mess
+
+pytweek/orbdisconnectbox.py: orbdisconnectbox.ui orbdisconnectbox.ui.h
+	@$(MAKE) UI_FILE=$< PY_FILE=$@ fix-pyuic-mess
+
+pytweek/net.py: net.py.in
+	cat $< | sed -e 's/=PYTHON_ORB_MODULE=/@PYTHON_ORB_MODULE@/' > $@
 
 Observer_idl.py: Observer.idl
 	$(PYTHON_IDL) $(PYTHON_IDL_OPTS) $(PYTHON_IDL_INCLUDES) $<

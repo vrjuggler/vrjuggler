@@ -61,18 +61,36 @@ void TweekFrame::networkConnect()
    orb_box.hostLineEdit.setText(self.globalPrefs.corbaHost)
    orb_box.portLineEdit.setText(self.globalPrefs.corbaPort)
    orb_box.iiopVersionLineEdit.setText(self.globalPrefs.iiopVersion)
-   
-   if orb_box.exec_loop():       
-      host = orb_box.hostLineEdit.text()
-      port = orb_box.portLineEdit.text()
-      iiop_ver = orb_box.iiopVersionLineEdit.text()
-      subcontext = orb_box.subcontextLineEdit.text()
+   orb_box.verifyInput()
+   orb_box.subjMgrListBox.clear()
+
+   # When the box is closed with "accept" status, we want to add the selected
+   # SubjectManager reference to self.subjMgrList.
+   if orb_box.exec_loop():
+      self.subjMgrList.append(orb_box.subjMgr)
+      self.networkDisconnectAction.setEnabled(True)
 }
 
 
 void TweekFrame::networkDisconnect()
 {
+   orb_box = OrbDisconnectBox(self, None, True)
+   orb_box.subjMgrListBox.clear()
 
+   for subj_mgr in self.subjMgrList:
+      item = SubjectManagerWrapper(subj_mgr)
+      orb_box.subjMgrListBox.insertItem(str(item))
+
+   if orb_box.exec_loop():
+      i = orb_box.subjMgrListBox.currentItem()
+      
+      if -1 != i:
+         subj_mgr = self.subjMgrList[i]
+         print "Removing", subj_mgr
+         self.subjMgrList.remove(subj_mgr)
+
+         if len(self.subjMgrList) == 0:
+            self.networkDisconnectAction.setEnabled(False)
 }
 
 

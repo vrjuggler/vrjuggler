@@ -57,5 +57,6 @@ prefs.parse()
 frame = tweekframe.TweekFrame()
 # XXX: This is a hack because I am lame.
 frame.globalPrefs = prefs
+frame.subjMgrList = []
 frame.show()
 app.exec_loop()
