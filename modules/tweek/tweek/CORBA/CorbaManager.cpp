@@ -36,6 +36,8 @@
 
 #include <tweek/tweekConfig.h>
 
+#include <vpr/vpr.h>
+#include <vpr/System.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 
@@ -276,6 +278,18 @@ vpr::ReturnStatus CorbaManager::initNamingService (const std::string& ref_name,
 {
    CORBA::Object_var name_obj;
    vpr::ReturnStatus status;
+
+   // If the user does not have the OMNIORB_CONFIG environment variable set,
+   // there will most likely be problems finding and/or contacting the
+   // Naming Service.  To that end, print a warning saying as much when the
+   // variable is not set.
+   std::string temp;
+   if ( vpr::System::getenv("OMNIORB_CONFIG", temp).failure() )
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "WARNING: OMNIORB_CONFIG not set!  Expect problems contacting the Naming Service\n")
+         << vprDEBUG_FLUSH;
+   }
 
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "Requesting Name Service\n"
                                           << vprDEBUG_FLUSH;
