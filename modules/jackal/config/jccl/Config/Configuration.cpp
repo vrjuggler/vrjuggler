@@ -154,7 +154,6 @@ std::istream& operator>>(std::istream& in, Configuration& self)
    }
 
    // Go through the <include> XML elements.
-   /*
    cppdom::NodeList inc_list = cfg_node->getChildren(tokens::INCLUDE);
    for ( cppdom::NodeList::iterator itr = inc_list.begin();
          itr != inc_list.end();
@@ -165,10 +164,11 @@ std::istream& operator>>(std::istream& in, Configuration& self)
          << "Including " << cfg_filename << std::endl
          << vprDEBUG_FLUSH;
 
-      // Load the file
-      load(cfg_filename, filename);
+      // Load the file.
+      // NOTE: Loading from a stream means that we have no parent file name to
+      // provide to jccl::Configuration::load().
+      self.load(cfg_filename);
    }
-   */
 
    return in;
 }
