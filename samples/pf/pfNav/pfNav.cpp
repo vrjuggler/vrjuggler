@@ -81,9 +81,10 @@ public:
 
    virtual void init()
    {
-      vjDEBUG(vjDBG_ALL, 1) << "app::init\n" << vjDEBUG_FLUSH;
-      vjProjection::setNearFar(0.5, 1000);
-
+      vjDEBUG(vjDBG_ALL, 1) << "pfNavJugglerApplication::init\n" << vjDEBUG_FLUSH;
+      //vjProjection::setNearFar(0.5, 1000);
+      vjProjection::setNearFar( 0.4, 200000 );
+      
       mWand.init( "VJWand" );
       mHead.init( "VJHead" );
       mActionButton.init( "VJButton0" );
@@ -95,13 +96,13 @@ public:
 
    virtual void apiInit()
    {
-      vjDEBUG(vjDBG_ALL,1) << "app::apiInit\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,1) << "pfNavJugglerApplication::apiInit\n" << vjDEBUG_FLUSH;
    }
 
    virtual void preForkInit()
    {
       // Initialize type system
-      vjDEBUG(vjDBG_ALL,1) << "app::preForkInit: Initializing new types.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,1) << "pfNavJugglerApplication::preForkInit: Initializing new types.\n" << vjDEBUG_FLUSH;
 
       // Initialize loaders
       pfdInitConverter("terrain.flt");
@@ -128,7 +129,7 @@ public:
    virtual void initScene()
    {
       // Load the scene
-      vjDEBUG(vjDBG_ALL, 0) << "app::initScene\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL, 0) << "pfNavJugglerApplication::initScene\n" << vjDEBUG_FLUSH;
 
       // Allocate all the nodes needed
       rootNode                = new pfGroup;          // Root of our graph
@@ -140,8 +141,8 @@ public:
 
       std::string    pf_file_path( "" );
       const float    world_dcs_scale( 1.0f );
-      const pfVec3   world_dcs_trans( 0.0f, 0.0f, 0.0f );
-      vjVec3         initial_nav_pos( 0.0f, 6.0f, 0.0f );
+      const pfVec3   world_dcs_trans( 0.0f, 0.0f, -250.0f ); //PF coords
+      vjVec3         initial_nav_pos( 0.0f, 6.0f, 0.0f ); //OGL coords
       bool           use_gravity( true );
 
 
@@ -159,7 +160,7 @@ public:
       pfFileIO::addFilePath( pf_file_path );
 
       // LOAD file
-      world_model = pfFileIO::autoloadFile( filename );
+      world_model = pfFileIO::autoloadFile( filename, pfFileIO::FEET );
 
       // --- CONSTRUCT SCENE GRAPH --- //
       //                           /-- sun1
@@ -201,7 +202,7 @@ public:
    /// Return the current scene graph
    virtual pfGroup* getScene()
    {
-      vjDEBUG(vjDBG_ALL, 0) << "app::getScene\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL, 0) << "pfNavJugglerApplication::getScene\n" << vjDEBUG_FLUSH;
       return rootNode;
    }
 
@@ -271,7 +272,7 @@ public:
    /// Function called after pfDraw
    virtual void intraFrame()
    {
-      //vjDEBUG(vjDBG_ALL,1) << "app::intraFrame\n" << vjDEBUG_FLUSH;
+      //vjDEBUG(vjDBG_ALL,1) << "pfNavJugglerApplication::intraFrame\n" << vjDEBUG_FLUSH;
    }
 
 public:
