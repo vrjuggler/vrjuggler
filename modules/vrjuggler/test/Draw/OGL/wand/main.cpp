@@ -7,7 +7,10 @@
 
       // --- Lib Stuff --- //
 #include <Kernel/vjKernel.h>
+
+#ifndef WIN32
 #include <sched.h>
+#endif
 
 int main(int argc, char* argv[])
 {
@@ -24,6 +27,10 @@ int main(int argc, char* argv[])
 
    while(1)
    {
+#ifdef WIN32
+      Sleep(0);
+#else
       sched_yield();
+#endif
    }
 }
