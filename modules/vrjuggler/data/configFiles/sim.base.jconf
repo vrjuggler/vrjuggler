@@ -74,28 +74,30 @@
       <alias name="VJKeyboard" version="1">
          <proxy>MainSimevent_window</proxy>
       </alias>
-      <event_window name="Head Event Window" version="1">
-         <width>300</width>
-         <height>100</height>
+      <event_window name="Head Event Window" version="2">
+         <event_source_name />
+         <mouse_sensitivity>1.0</mouse_sensitivity>
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
          <origin>950</origin>
          <origin>850</origin>
-         <mouse_sensitivity>1.0</mouse_sensitivity>
+         <size>300</size>
+         <size>100</size>
          <display_number>0</display_number>
-         <lock_key>KEY_NONE</lock_key>
-         <start_locked>false</start_locked>
-         <sleep_time>75</sleep_time>
          <device_host />
       </event_window>
-      <event_window name="Sim View Cameras Control" version="1">
-         <width>300</width>
-         <height>100</height>
-         <origin>950</origin>
-         <origin>600</origin>
+      <event_window name="Sim View Cameras Control" version="2">
+         <event_source_name />
          <mouse_sensitivity>2.0</mouse_sensitivity>
-         <display_number>0</display_number>
          <lock_key>KEY_NONE</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
+         <origin>950</origin>
+         <origin>600</origin>
+         <size>300</size>
+         <size>100</size>
+         <display_number>0</display_number>
          <device_host />
       </event_window>
       <event_window_proxy name="MainSimevent_window" version="1">
@@ -184,7 +186,7 @@
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
-         <translation_delta>0.005</translation_delta>
+         <translation_delta>0.0050</translation_delta>
          <rotation_delta>0.1</rotation_delta>
          <translation_coordinate_system>Local</translation_coordinate_system>
          <rotation_coordinate_system>Local</rotation_coordinate_system>
@@ -288,7 +290,7 @@
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
-         <translation_delta>0.005</translation_delta>
+         <translation_delta>0.0050</translation_delta>
          <rotation_delta>0.1</rotation_delta>
          <translation_coordinate_system>Global</translation_coordinate_system>
          <rotation_coordinate_system>Local</rotation_coordinate_system>
@@ -392,7 +394,7 @@
          <initial_rotation>-15.0</initial_rotation>
          <initial_rotation>10.0</initial_rotation>
          <initial_rotation>0.0</initial_rotation>
-         <translation_delta>0.005</translation_delta>
+         <translation_delta>0.0050</translation_delta>
          <rotation_delta>0.1</rotation_delta>
          <translation_coordinate_system>Local</translation_coordinate_system>
          <rotation_coordinate_system>Local</rotation_coordinate_system>
@@ -569,7 +571,7 @@
          <x11_pipes>:0.0</x11_pipes>
          <x11_pipes>:0.0</x11_pipes>
       </display_system>
-      <display_window name="SimWindow1" version="3">
+      <display_window name="SimWindow1" version="4">
          <origin>0</origin>
          <origin>200</origin>
          <size>600</size>
@@ -589,21 +591,6 @@
          <stereo>false</stereo>
          <border>true</border>
          <hide_mouse>false</hide_mouse>
-         <act_as_event_source>true</act_as_event_source>
-         <event_window_device>
-            <event_window name="Event window configuration 0" version="1">
-               <width>0</width>
-               <height>0</height>
-               <origin>0</origin>
-               <origin>0</origin>
-               <mouse_sensitivity>0.0</mouse_sensitivity>
-               <display_number>0</display_number>
-               <lock_key>0</lock_key>
-               <start_locked>false</start_locked>
-               <sleep_time>0</sleep_time>
-               <device_host />
-            </event_window>
-         </event_window_device>
          <active>true</active>
          <simulator_viewports>
             <simulator_viewport name="Contained Sim Viewports 0" version="3">

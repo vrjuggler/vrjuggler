@@ -34,16 +34,17 @@
          <initial_value>0.0</initial_value>
          <device_host />
       </simulated_analog_device>
-      <event_window name="Sim Analog Input" version="1">
-         <width>300</width>
-         <height>100</height>
-         <origin>870</origin>
-         <origin>100</origin>
+      <event_window name="Sim Analog Input" version="2">
+         <event_source_name />
          <mouse_sensitivity>1.0</mouse_sensitivity>
-         <display_number>0</display_number>
          <lock_key>KEY_NONE</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>0</sleep_time>
+         <origin>870</origin>
+         <origin>100</origin>
+         <size>300</size>
+         <size>100</size>
+         <display_number>0</display_number>
          <device_host />
       </event_window>
       <event_window_proxy name="SimEventWindow Ana Proxy" version="1">

@@ -2,16 +2,17 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <event_window name="Sim Input" version="1">
-         <width>300</width>
-         <height>800</height>
-         <origin>870</origin>
-         <origin>100</origin>
+      <event_window name="Sim Input" version="2">
+         <event_source_name />
          <mouse_sensitivity>1.0</mouse_sensitivity>
-         <display_number>0</display_number>
          <lock_key>0</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>0</sleep_time>
+         <origin>870</origin>
+         <origin>100</origin>
+         <size>300</size>
+         <size>800</size>
+         <display_number>0</display_number>
          <device_host />
       </event_window>
       <event_window_proxy name="SimEventWindow Proxy" version="1">
@@ -442,7 +443,7 @@
          </key_pair>
          <device_host />
       </simulated_digital_device>
-      <display_window name="SimWindow" version="3">
+      <display_window name="SimWindow" version="4">
          <origin>50</origin>
          <origin>100</origin>
          <size>800</size>
@@ -462,21 +463,6 @@
          <stereo>false</stereo>
          <border>true</border>
          <hide_mouse>false</hide_mouse>
-         <act_as_event_source>true</act_as_event_source>
-         <event_window_device>
-            <event_window name="Event window configuration 0" version="1">
-               <width>0</width>
-               <height>0</height>
-               <origin>0</origin>
-               <origin>0</origin>
-               <mouse_sensitivity>0.0</mouse_sensitivity>
-               <display_number>0</display_number>
-               <lock_key>KEY_NONE</lock_key>
-               <start_locked>false</start_locked>
-               <sleep_time>0</sleep_time>
-               <device_host />
-            </event_window>
-         </event_window_device>
          <active>true</active>
          <simulator_viewports>
             <simulator_viewport name="Contained Sim Viewports 0" version="3">

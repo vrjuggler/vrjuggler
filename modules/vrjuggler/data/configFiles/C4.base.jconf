@@ -36,16 +36,17 @@
       <event_window_proxy name="MainSimEventWindow" version="1">
          <device>Exit Event Window</device>
       </event_window_proxy>
-      <event_window name="Exit Event Window" version="1">
-         <width>200</width>
-         <height>100</height>
-         <origin>0</origin>
-         <origin>0</origin>
+      <event_window name="Exit Event Window" version="2">
+         <event_source_name />
          <mouse_sensitivity>1.0</mouse_sensitivity>
-         <display_number>7</display_number>
          <lock_key>KEY_NONE</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
+         <origin>0</origin>
+         <origin>0</origin>
+         <size>200</size>
+         <size>100</size>
+         <display_number>7</display_number>
          <device_host />
       </event_window>
       <corba_remote_reconfig name="CORBA Remote Run-Time Reconfiguration" version="1">
