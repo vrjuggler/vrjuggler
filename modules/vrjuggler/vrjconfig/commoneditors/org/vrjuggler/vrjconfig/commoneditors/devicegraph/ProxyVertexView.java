@@ -57,12 +57,19 @@ import org.jgraph.graph.VertexView;
 import info.clearthought.layout.*;
 
 import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.config.event.ConfigElementEvent;
+import org.vrjuggler.jccl.config.event.ConfigElementListener;
 import org.vrjuggler.jccl.editors.DataFlavorRepository;
 import org.vrjuggler.jccl.editors.TransferableConfigElement;
 
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
 
 
+/**
+ * A custom vertex view for graph cells representing device proxy config
+ * elements.  This view makes use of heavy-weight renderers so that users may
+ * interact with components in the vertex view.
+ */
 public class ProxyVertexView
    extends VertexView
 {
@@ -83,9 +90,13 @@ public class ProxyVertexView
       return renderer;
    }
 
+   /**
+    * A heavy-weight renderer for use by ProxyVertexView.
+    */
    private static class ProxyVertexRenderer
       extends AbstractCustomVertexRenderer
       implements ClipboardOwner
+               , ConfigElementListener
    {
       private static final int LABEL_START_COLUMN   = 1;
       private static final int LABEL_END_COLUMN     = 1;
@@ -308,6 +319,8 @@ public class ProxyVertexView
                // need to change the cell view size because it is still being
                // set up by JGraph at this stage of execution.
                this.revalidate();
+
+               mProxyInfo.getElement().addConfigElementListener(this);
             }
             catch (Exception ex)
             {
@@ -328,6 +341,23 @@ public class ProxyVertexView
       }
 
       public void lostOwnership(Clipboard clipboard, Transferable contents)
+      {
+      }
+
+      public void nameChanged(ConfigElementEvent evt)
+      {
+         nameLabel.setText(mProxyInfo.getElement().getName());
+      }
+
+      public void propertyValueAdded(ConfigElementEvent evt)
+      {
+      }
+
+      public void propertyValueChanged(ConfigElementEvent evt)
+      {
+      }
+
+      public void propertyValueRemoved(ConfigElementEvent evt)
       {
       }
 
