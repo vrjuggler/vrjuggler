@@ -58,6 +58,7 @@ import VjComponents.ConfigEditor.ConfigUIHelper;
  *  VarValuePanels are a source of ActionEvents.  The commands associated
  *  with the events (accessible via ActionEvent.getActionCommand()), are:
  *    "Remove" - if the panel's remove button was pressed.
+ *    "Rename" - if it's an embedded chunk panel & the chunk's renamed.
  */
 abstract public class VarValuePanel extends JPanel {
 
