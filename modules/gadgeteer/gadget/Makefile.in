@@ -23,9 +23,8 @@ WORKDIR		= ${topdir}/Input
 DIRPRFX		= Input/
 
 # Subdirectories to compile.
-SUBDIRS		= vjGlove vjInput vjPosition \
-		  InputManager ibox vjKeyboard \
-		  vjSim vjGesture
+SUBDIRS		= ibox vjGesture vjGlove vjInput vjKeyboard vjPosition	\
+                  vjSim InputManager
 
 # Include the recursive target code.
 include ${MKPATH}/vj.rec.mk
