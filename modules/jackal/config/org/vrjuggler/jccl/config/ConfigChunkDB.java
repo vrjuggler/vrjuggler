@@ -392,6 +392,25 @@ public class ConfigChunkDB
       return retval;
    }
 
+   /**
+    * Tests if the given ConfigChunk is contained in this database.
+    *
+    * @param chunk   the chunk to test for
+    *
+    * @return  true if the chunk is in the database, false otherwise
+    */
+   public boolean contains(ConfigChunk chunk)
+   {
+      for (Iterator itr = chunks.iterator(); itr.hasNext(); )
+      {
+         if (itr.next() == chunk)
+         {
+            return true;
+         }
+      }
+      return false;
+   }
+
    /** Find the named ConfigChunk.
     * @return A ConfigChunk in self whose name matches the parameter, or
     *         null if none is found.
