@@ -213,25 +213,36 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       }
    }
 
-   public void messageAdded (MessageAdditionEvent e)
+   /**
+    * Handles events from the message panel's document indicating that a new
+    * message has been added.  Depending on the state of the message panel, the
+    * button for opening and closing the panel is updated to reflect that a new
+    * message is present.
+    */
+   public void messageAdded(MessageAdditionEvent e)
    {
-      if ( mBulbOnIcon != null )
+      // If the message panel is closed, change mStatusMsgButton to indicate
+      // that a new message has been added.
+      if ( ! mMsgPanelExpanded )
       {
-         mStatusMsgButton.setIcon(mBulbOnIcon);
-      }
-      else
-      {
-         mStatusMsgButton.setForeground(Color.red);
-      }
+         if ( null != mBulbOnIcon )
+         {
+            mStatusMsgButton.setIcon(mBulbOnIcon);
+         }
+         else
+         {
+            mStatusMsgButton.setForeground(Color.red);
+         }
 
-      // If the user's skill level is below intermediate, give them a hint that
-      // there is a message printed in the message panel.  They may not have
-      // noticed the icon change made above.
-      GlobalPreferencesService prefs =
-         (GlobalPreferencesService)BeanRegistry.instance().getBean( "GlobalPreferences" );
-      if ( prefs.getUserLevel() <= 5 )
-      {
-         mStatusMsgLabel.setText("New message in message panel ");
+         // If the user's skill level is below intermediate, give them a hint
+         // that there is a message printed in the message panel.  They may not
+         // have noticed the icon change made above.
+         GlobalPreferencesService prefs =
+            (GlobalPreferencesService)BeanRegistry.instance().getBean("GlobalPreferences");
+         if ( prefs.getUserLevel() <= 5 )
+         {
+            mStatusMsgLabel.setText("New message in message panel");
+         }
       }
    }
 
