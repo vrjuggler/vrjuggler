@@ -37,11 +37,11 @@
   using version 3.0 of the file format.  Such files can be updated to
   version 3.1 using an XSLT processor, as follows:
 
-     xsltproc -o output.jdef desc_3.0-3.1.xsl input.jdef
+     xsltproc -o output.jdef jdef_3.0-3.1.xsl input.jdef
 
   or
 
-     xalan -in input.jdef -xsl desc_3.0-3.1.xsl -out output.jdef
+     xalan -in input.jdef -xsl jdef_3.0-3.1.xsl -out output.jdef
  -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
