@@ -25,6 +25,7 @@ TESTCASES = \
 	test.ChunkDescTest \
 	test.ChunkDescEventTest \
 	test.ConfigChunkTest \
+	test.ConfigElementTest \
 	test.DescEnumTest \
 	test.PropertyDescTest \
 	test.ValTypeTest
