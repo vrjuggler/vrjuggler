@@ -38,9 +38,16 @@
 #include <dtk.h>
 #include <dlfcn.h>
 
-#include <gadget/Util/Debug.h>
 #include <jccl/Config/ConfigChunk.h>
+#include <gadget/Type/DeviceConstructor.h>
+#include <gadget/Util/Debug.h>
 #include <gadget/Devices/Open/DTK/DTK.h>
+
+
+GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+{
+   new gadget::DeviceConstructor<gadget::DTK>(inputMgr);
+}
 
 // Helper to return the index for theData array
 // given the stationNum we are dealing with and the bufferIndex

@@ -31,22 +31,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
+#include <typeinfo>
 #include <vpr/vpr.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <gadget/Type/DeviceFactory.h>
-
-// Platform-independent devices.
-#include <gadget/Devices/Ascension/Flock.h>
-#include <gadget/Devices/Ascension/MotionStar.h>
-
-// XXX: Undo this once the Intersense driver is ported to VPR serial ports.
-#if !defined(VPR_OS_FreeBSD) && !defined(VPR_OS_Darwin)
-#include <gadget/Devices/Intersense/Intersense.h>
-#endif
-
-#include <gadget/Devices/Immersion/Ibox.h>
-#include <gadget/Devices/Fakespace/PinchGlove.h>
-#include <gadget/Devices/5DT/DataGlove.h>
-#include <gadget/Devices/Polhemus/Fastrack.h>
+#include <gadget/Type/DeviceConstructor.h>
 
 // Sims
 #include <gadget/Devices/Sim/SimAnalog.h>
@@ -58,30 +47,26 @@
 #include <gadget/Devices/Sim/SimSetablePosition.h>
 #include <gadget/Devices/Sim/SimDigitalGlove.h>
 
-/* Physical devices */
-#ifndef VPR_OS_Win32
-
-#   ifdef VPR_OS_Darwin
-#      include <gadget/Devices/Keyboard/KeyboardOSX.h>
-#   else
-//#      include <gadget/Devices/VirtualTechnologies/CyberGlove.h>
-#      include <gadget/Devices/Keyboard/KeyboardXWin.h>
-#      include <gadget/Devices/Keyboard/KeyboardDepCheckerXWin.h>
-#      include <gadget/Devices/Open/Trackd/TrackdController.h>
-#      include <gadget/Devices/Open/Trackd/TrackdSensor.h>
-#   endif
-
-#   include <gadget/Devices/Logitech/logiclass.h>
+#if defined(VPR_OS_Win32)
+#  include <gadget/Devices/Keyboard/KeyboardWin32.h>
+#elif defined(VPR_OS_Darwin)
+#  include <gadget/Devices/Keyboard/KeyboardOSX.h>
 #else
-#   include <gadget/Devices/Keyboard/KeyboardWin32.h>
+#  include <gadget/Devices/Keyboard/KeyboardXWin.h>
+#  include <gadget/Devices/Keyboard/KeyboardDepCheckerXWin.h>
 #endif
+
+/* Physical devices */
+#ifdef STATIC_DRIVERS
 
 /* PThread Dependant Driver */
 #ifdef GADGET_HAVE_DTK
 #   include <gadget/Devices/Open/DTK/DTK.h>
 #endif
 
-#include <typeinfo>
+#endif /* STATIC_DRIVERS */
+
+#include <gadget/Util/Debug.h>
 
 namespace gadget
 {
@@ -97,47 +82,29 @@ vprSingletonImpWithInitFunc( DeviceFactory, hackLoadKnownDevices );
  */
 void DeviceFactory::hackLoadKnownDevices()
 {
-   // NOTE: These will all given unused variable errors in compiling.
-   // That is okay, because the don't actually have to do anything.
-   // They just register themselves in their constructor.
+   gadget::InputManager* input_mgr = gadget::InputManager::instance();
 
-   // Platform-independent devices.
-   DeviceConstructor<Flock>* flock = new DeviceConstructor<Flock>;
-   DeviceConstructor<MotionStar>* motion_star = new DeviceConstructor<MotionStar>;
+#ifdef STATIC_DRIVERS
 
-// XXX: Undo this once the Intersense driver is ported to VPR serial ports.
-#if !defined(VPR_OS_FreeBSD) && !defined(VPR_OS_Darwin)
-   DeviceConstructor<Intersense>* intersense = new DeviceConstructor<Intersense>;
-#endif
-
-   DeviceConstructor<IBox>* ibox = new DeviceConstructor<IBox>;
-   DeviceConstructor<PinchGlove>* pinch_glove = new DeviceConstructor<PinchGlove>;
-   DeviceConstructor<DataGlove>* data_glove = new DeviceConstructor<DataGlove>;
-   DeviceConstructor<Fastrack>* fastrack = new DeviceConstructor<Fastrack>;
-
-   if( (NULL == flock)        ||
-// XXX: Undo this once the Intersense driver is ported to VPR serial ports.
-#if !defined(VPR_OS_FreeBSD) && !defined(VPR_OS_Darwin)
-       (NULL == intersense)   ||
-#endif
-       (NULL == ibox)         ||
-       (NULL == pinch_glove)  ||
-       (NULL == data_glove)   ||
-       (NULL == fastrack)     ||
-       (NULL == motion_star)   )
+#ifdef GADGET_HAVE_DTK
+   DeviceConstructor<DTK>* dtk_wrapper = new DeviceConstructor<DTK>;
+   if( (NULL == dtk_wrapper))
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
    }
+#endif
 
-   DeviceConstructor<SimAnalog>* sim_analog = new DeviceConstructor<SimAnalog>;
-   DeviceConstructor<SimDigital>* sim_digital = new DeviceConstructor<SimDigital>;
-   DeviceConstructor<SimPosition>* sim_position = new DeviceConstructor<SimPosition>;
-   //DeviceConstructor<SimKeyboardDigital>* sim_keyboard_digital = new DeviceConstructor<SimKeyboardDigital>;
-   DeviceConstructor<SimSetablePosition>* sim_setable = new DeviceConstructor<SimSetablePosition>;
-   DeviceConstructor<SimRelativePosition>* sim_relative = new DeviceConstructor<SimRelativePosition>;
+#endif /* STATIC_DRIVERS */
 
-   DeviceConstructor<SimGloveGesture>* sim_glove = new DeviceConstructor<SimGloveGesture>;
-   DeviceConstructor<SimDigitalGlove>* simpinch_glove = new DeviceConstructor<SimDigitalGlove>;
+   DeviceConstructor<SimAnalog>* sim_analog = new DeviceConstructor<SimAnalog>(input_mgr);
+   DeviceConstructor<SimDigital>* sim_digital = new DeviceConstructor<SimDigital>(input_mgr);
+   DeviceConstructor<SimPosition>* sim_position = new DeviceConstructor<SimPosition>(input_mgr);
+   //DeviceConstructor<SimKeyboardDigital>* sim_keyboard_digital = new DeviceConstructor<SimKeyboardDigital>(input_mgr);
+   DeviceConstructor<SimSetablePosition>* sim_setable = new DeviceConstructor<SimSetablePosition>(input_mgr);
+   DeviceConstructor<SimRelativePosition>* sim_relative = new DeviceConstructor<SimRelativePosition>(input_mgr);
+
+   DeviceConstructor<SimGloveGesture>* sim_glove = new DeviceConstructor<SimGloveGesture>(input_mgr);
+   DeviceConstructor<SimDigitalGlove>* simpinch_glove = new DeviceConstructor<SimDigitalGlove>(input_mgr);
 
    if( (NULL == sim_analog)   ||
        (NULL == sim_digital)  ||
@@ -150,48 +117,33 @@ void DeviceFactory::hackLoadKnownDevices()
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
    }
 
-#ifndef VPR_OS_Win32
-#ifdef VPR_OS_Darwin
-   DeviceConstructor<KeyboardOSX>* osx_keyboard = new DeviceConstructor<KeyboardOSX>;
-   if( (NULL == osx_keyboard) )
-   {
-      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
-   }
-
-#else
-   DeviceConstructor<TrackdSensor>* trackd_sensor = new DeviceConstructor<TrackdSensor>;
-   DeviceConstructor<TrackdController>* trackd_controller = new DeviceConstructor<TrackdController>;
-//   DeviceConstructor<CyberGlove>* cyber_glove = new DeviceConstructor<CyberGlove>;
-   DeviceConstructor<KeyboardXWin>* xwin_key = new DeviceConstructor<KeyboardXWin>;
-   jccl::DependencyManager::instance()->registerChecker(new KeyboardDepCheckerXWin());
-   DeviceConstructor<ThreeDMouse>* threed_mouse = new DeviceConstructor<ThreeDMouse>;
-   if( (NULL == trackd_sensor)      ||
-       (NULL == trackd_controller)  ||
-       (NULL == data_glove)   ||
-//       (NULL == cyber_glove)  ||
-       (NULL == xwin_key)     ||
-       (NULL == threed_mouse))
-   {
-      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
-   }
-
-#endif
-#else
-
-   DeviceConstructor<KeyboardWin32>* key_win32 = new DeviceConstructor<KeyboardWin32>;
+#if defined(VPR_OS_Win32)
+   DeviceConstructor<KeyboardWin32>* key_win32 = new DeviceConstructor<KeyboardWin32>(input_mgr);
    if( (NULL == key_win32))
    {
-      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n"
+         << vprDEBUG_FLUSH;
    }
-
-#endif
-#ifdef GADGET_HAVE_DTK
-   DeviceConstructor<DTK>* dtk_wrapper = new DeviceConstructor<DTK>;
-   if( (NULL == dtk_wrapper))
+#elif defined(VPR_OS_Darwin)
+   DeviceConstructor<KeyboardOSX>* osx_keyboard = new DeviceConstructor<KeyboardOSX>(input_mgr);
+   if( (NULL == osx_keyboard) )
    {
-      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n"
+         << vprDEBUG_FLUSH;
+   }
+#else
+   DeviceConstructor<KeyboardXWin>* xwin_key = new DeviceConstructor<KeyboardXWin>(input_mgr);
+   jccl::DependencyManager::instance()->registerChecker(new KeyboardDepCheckerXWin());
+   if( (NULL == xwin_key) )
+   {
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n"
+         << vprDEBUG_FLUSH;
    }
 #endif
+
 }
 
 void DeviceFactory::registerDevice(DeviceConstructorBase* constructor)

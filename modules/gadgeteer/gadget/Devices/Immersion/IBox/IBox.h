@@ -40,12 +40,19 @@
 #define _GADGET_IBOX_H_
 
 #include <gadget/gadgetConfig.h>
+#include <vector>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/InputMixer.h>
-#include <gadget/Devices/Immersion/IboxStandalone.h>
-#include <vector>
+#include <gadget/Devices/Immersion/IBox/IBoxStandalone.h>
+
+namespace gadget
+{
+   class InputManager;
+}
+
+extern "C" GADGET_API(void) initDevice(gadget::InputManager* inputMgr);
 
 namespace gadget
 {
@@ -106,6 +113,25 @@ public:
    void updateData();
 
    static std::string getChunkType() { return std::string( "IBox" ); }
+
+   /**
+    * Invokes the global scope delete operator.  This is required for proper
+    * releasing of memory in DLLs on Win32.
+    */
+   void operator delete(void* p)
+   {
+      ::operator delete(p);
+   }
+
+protected:
+   /**
+    * Deletes this object.  This is an implementation of the pure virtual
+    * gadget::Input::destroy() method.
+    */
+   virtual void destroy()
+   {
+      delete this;
+   }
 
 private:
    // juggler ibox data in the range of [0..255]

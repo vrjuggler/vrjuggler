@@ -45,7 +45,7 @@
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/Util/Debug.h>
 
-#include <gadget/Devices/Ascension/MotionStarStandalone.h>
+#include <gadget/Devices/Ascension/MotionStar/MotionStarStandalone.h>
 
 #ifdef VPR_OS_Win32
 #define M_PI   3.14159265358979323846

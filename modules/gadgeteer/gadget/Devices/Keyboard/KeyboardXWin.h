@@ -116,7 +116,25 @@ public:
    int isKeyPressed(int Key)
    {  return m_curKeys[Key];}
 
+   /**
+    * Invokes the global scope delete operator.  This is required for proper
+    * releasing of memory in DLLs on Win32.
+    */
+   void operator delete(void* p)
+   {
+      ::operator delete(p);
+   }
+
 protected:
+   /**
+    * Deletes this object.  This is an implementation of the pure virtual
+    * gadget::Input::destroy() method.
+    */
+   void destroy()
+   {
+      delete this;
+   }
+
    //: Do any extra event processing needed
    virtual void processEvent(XEvent event)
    {;}
@@ -147,8 +165,8 @@ private:
    void unlockMouse();
 
 protected:
-   bool         mWeOwnTheWindow;       // True if this class owns the window (is reposible for opening, closing, and event processing)                                       
-      
+   bool         mWeOwnTheWindow;       // True if this class owns the window (is reposible for opening, closing, and event processing)
+
    ::Window       m_window;
    ::XVisualInfo* m_visual;
    ::Display*     m_display;

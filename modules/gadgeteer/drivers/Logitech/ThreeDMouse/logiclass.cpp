@@ -55,15 +55,21 @@
 #include <unistd.h>   // for close()
 #include <sys/time.h>
 
-#include <vpr/System.h>
-#include <gadget/Devices/Logitech/logiclass.h>   /* classprototypes and data types */
-#include <jccl/Config/ConfigChunk.h>
-
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
 
+#include <vpr/System.h>
+#include <jccl/Config/ConfigChunk.h>
+#include <gadget/Type/DeviceConstructor.h>
+#include <gadget/Devices/Logitech/ThreeDMouse/logiclass.h>   /* classprototypes and data types */
+
+
+GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+{
+   new gadget::DeviceConstructor<gadget::ThreeDMouse>(inputMgr);
+}
 
 // uncommenting the following will produce debug print statements */
 //

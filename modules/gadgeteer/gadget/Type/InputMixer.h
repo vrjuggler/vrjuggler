@@ -42,21 +42,40 @@ namespace gadget
 {
 
 template <class ParentType>
-class InputPlaceHolder	: public ParentType
+class InputPlaceHolder  : public ParentType
 {
 public:
    virtual int sample()
-	{return(0);}
+    {return(0);}
 
    virtual int startSampling()
-	{return(0);}
+    {return(0);}
 
    virtual int stopSampling()
-	{return(0);}
+    {return(0);}
 
    virtual void updateData()
-	{;}
-};		
+    {;}
+
+   /**
+    * Invokes the global scope delete operator.  This is required for proper
+    * releasing of memory in DLLs on Win32.
+    */
+   void operator delete(void* p)
+   {
+      ::operator delete(p);
+   }
+
+protected:
+   /**
+    * Deletes this object.  This is an implementation of the pure virtual
+    * gadget::Input::destroy() method.
+    */
+   virtual void destroy()
+   {
+      delete this;
+   }
+};
 
 
 /**
@@ -66,33 +85,33 @@ public:
 * This allows us to implement any custom functions that are needed
 * such as writeObject and readObject.
 *
-* InputMixer<InputMixer<InputMixer<Input,Digital>,Analog>,Position> 
+* InputMixer<InputMixer<InputMixer<Input,Digital>,Analog>,Position>
 */
 template <class ComposedParent, class NewParent>
 class InputMixer : public ComposedParent, public NewParent
 {
 public:
    typedef InputPlaceHolder< InputMixer<ComposedParent, NewParent> > MixedPlaceholderType;
-   
+
    vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
    {
      ComposedParent::writeObject(writer);
      NewParent::writeObject(writer);
      return(vpr::ReturnStatus::Succeed);
    }
-   
+
    vpr::ReturnStatus readObject(vpr::ObjectReader* reader, vpr::Uint64* delta)
    {
      ComposedParent::readObject(reader, delta);
      NewParent::readObject(reader, delta);
      return(vpr::ReturnStatus::Succeed);
    }
-   
+
    std::string getBaseType()
    {
-     return(ComposedParent::getBaseType() + NewParent::getBaseType());	  //Input,Digital,Analog,Position, NEED THIS TOO
+     return(ComposedParent::getBaseType() + NewParent::getBaseType());    //Input,Digital,Analog,Position, NEED THIS TOO
    }
-   
+
    void setDelta(vpr::Uint64 delta)
    {
       ComposedParent::setDelta(delta);

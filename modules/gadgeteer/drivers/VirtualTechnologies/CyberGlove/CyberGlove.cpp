@@ -39,13 +39,19 @@
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 #include <jccl/Config/ConfigChunk.h>
-#include <gadget/InputManager.h>
+#include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Util/Debug.h>
-#include <gadget/Devices/VirtualTechnologies/vt_types.h>
-#include <gadget/Devices/VirtualTechnologies/vt_globals.h>
-#include <gadget/Devices/VirtualTechnologies/vt_types.h>
-#include <gadget/Devices/VirtualTechnologies/vt_error.h>
-#include <gadget/Devices/VirtualTechnologies/CyberGlove.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_types.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_globals.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_types.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_error.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/CyberGlove.h>
+
+
+GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+{
+   new gadget::DeviceConstructor<gadget::CyberGlove>(inputMgr);
+}
 
 namespace gadget
 {

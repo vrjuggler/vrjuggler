@@ -18,11 +18,11 @@
 
 #include <X11/Intrinsic.h>
 
-#include <gadget/Devices/VirtualTechnologies/CyberGlove.h>
-#include <gadget/Devices/VirtualTechnologies/vt_globals.h>
-#include <gadget/Devices/VirtualTechnologies/vt_math3d.h>
-#include <gadget/Devices/VirtualTechnologies/vt_error.h>
-#include <gadget/Devices/VirtualTechnologies/vt_read_object-types.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/CyberGlove.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_globals.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_math3d.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_error.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_read_object-types.h>
 
 int
 vt_prev_index(int current_index, int numelems)

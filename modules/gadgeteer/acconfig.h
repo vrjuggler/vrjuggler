@@ -54,9 +54,6 @@
 #undef WIN32
 #undef _MBCS
 
-/* Definte if DTK is installed. */
-#undef GADGET_HAVE_DTK
-
 @BOTTOM@
 
 #endif  /* _GADGET_DEFINES_H_ */

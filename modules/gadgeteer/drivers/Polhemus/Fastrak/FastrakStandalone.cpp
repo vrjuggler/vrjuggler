@@ -36,7 +36,7 @@
 #include <vpr/System.h>
 #include <vpr/Util/Assert.h>
 
-#include <gadget/Devices/Polhemus/FastrackStandalone.h>
+#include <gadget/Devices/Polhemus/Fastrack/FastrackStandalone.h>
 
 vpr::ReturnStatus FastrackStandalone::open()
 {

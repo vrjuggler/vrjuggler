@@ -42,7 +42,7 @@
 #include <vpr/IO/Socket/Socket.h>
 #include <vpr/Util/ReturnStatus.h>
 
-#include <gadget/Devices/Ascension/MotionStarExceptions.h>
+#include <gadget/Devices/Ascension/MotionStar/MotionStarExceptions.h>
 
 
 /** Ascension Flock namespace. */

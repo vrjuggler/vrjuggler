@@ -17,12 +17,12 @@
 #include <gadget/gadgetConfig.h>
 #include <ctype.h>
 
-#include <gadget/Devices/VirtualTechnologies/vt_read_user_cal-types.h>
-#include <gadget/Devices/VirtualTechnologies/vt_math3d.h>
-#include <gadget/Devices/VirtualTechnologies/vt_init.h>
-#include <gadget/Devices/VirtualTechnologies/vt_glove-types.h>
-#include <gadget/Devices/VirtualTechnologies/vt_types.h> /* Included for Boolean declaration */
-#include <gadget/Devices/VirtualTechnologies/vt_read_hand_model-types.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_read_user_cal-types.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_math3d.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_init.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_glove-types.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_types.h> /* Included for Boolean declaration */
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_read_hand_model-types.h>
 
 
 typedef struct

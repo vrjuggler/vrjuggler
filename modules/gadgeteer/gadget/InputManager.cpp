@@ -32,6 +32,8 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <vpr/Util/FileUtils.h>
+
 #include <gadget/InputManager.h> // my header...
 #include <gadget/Type/Proxy.h>
 #include <gadget/Type/DeviceFactory.h>
@@ -117,6 +119,50 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       mDisplaySystemChunk = chunk;     // Keep track of the display system chunk
       ret_val = true;
    }
+   else if(chunk->getDescToken() == std::string("InputManager"))
+   {
+      vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+                                       std::string("Handling InputManager chunk:\n"),
+                                       std::string("-- end state -- \n"));
+
+      const std::string prop_name("driver");
+      int driver_count = chunk->getNum(prop_name);
+      std::string driver_dso;
+
+      for ( int i = 0; i < driver_count; ++i )
+      {
+         driver_dso =
+            vpr::replaceEnvVars(chunk->getProperty<std::string>(prop_name, i));
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << "Loading driver DSO '" << driver_dso << "'\n" << vprDEBUG_FLUSH;
+
+         // If any part of the driver loading fails, the object driver_library
+         // will go out of scope at the end of this iteration, thereby freeing
+         // the allocated memory.
+         vpr::LibraryPtr driver_library =
+            vpr::LibraryPtr(new vpr::Library(driver_dso));
+
+         if ( driver_library->load().success() )
+         {
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+               << "Loaded driver DSO successfully\n" << vprDEBUG_FLUSH;
+
+            void (*creator)(gadget::InputManager*);
+
+            creator = (void (*)(gadget::InputManager*)) driver_library->findSymbol("initDevice");
+
+            if ( NULL != creator )
+            {
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                  << "Got pointer to driver factory\n" << vprDEBUG_FLUSH;
+               mDeviceDrivers.push_back(driver_library);
+               (*creator)(this);
+            }
+         }
+      }
+
+      ret_val = true;
+   }
 
    //DumpStatus();                      // Dump the status
    {
@@ -188,8 +234,9 @@ bool InputManager::configCanHandle(jccl::ConfigChunkPtr chunk)
             ProxyFactory::instance()->recognizeProxy(chunk) ||
             recognizeProxyAlias(chunk) ||
             mRemoteInputManager->configCanHandle(chunk) ||
-            (chunk->getDescToken() == std::string("displaySystem"))
-           );
+            (chunk->getDescToken() == std::string("displaySystem")) ||
+            (chunk->getDescToken() == std::string("InputManager"))
+          );
 }
 
 jccl::ConfigChunkPtr InputManager::getDisplaySystemChunk()
@@ -390,6 +437,11 @@ Input* InputManager::getDevice(std::string deviceName)
       return ret_dev->second;
    else
       return NULL;
+}
+
+DeviceFactory* InputManager::getDeviceFactory()
+{
+   return gadget::DeviceFactory::instance();
 }
 
 // Remove the device that is pointed to by devPtr
