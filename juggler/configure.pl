@@ -320,6 +320,9 @@ sub configureModule ($)
    die "ERROR: No module $module_name defined\n"
       unless defined($MODULES{"$module_name"});
 
+   # Use ksh to run configure if we are on Solaris.  Otherwise, use sh
+   my $shell = ((getPlatform() =~ /solaris/i) ? 'ksh' : '/bin/sh');
+
    my $depencency;
    foreach $depencency ( $MODULES{"$module_name"}->getDependencies() )
    {
@@ -351,8 +354,8 @@ sub configureModule ($)
          $src_root = "$cwd/$base_dir";
       }
 
-      print "Running $src_root/$mod_path/configure @ARGV\n";
-      system("$src_root/$mod_path/configure @ARGV 2>&1") == 0
+      print "Running $shell $src_root/$mod_path/configure @ARGV\n";
+      system("$shell $src_root/$mod_path/configure @ARGV 2>&1") == 0
          or die "Configuration of $module_name in $ENV{'PWD'} failed\n" .
                 "Check $ENV{'PWD'}/config.log for details\n";
 
