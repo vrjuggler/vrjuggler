@@ -106,6 +106,7 @@ vjConnect::vjConnect(vjConfigChunk* c): output(), fin(), commands_mutex() {
 
 vjConnect::~vjConnect() {
     stopProcess();
+    //close (fd);
 }
 
 
@@ -145,11 +146,13 @@ bool vjConnect::startProcess() {
 
 bool vjConnect::stopProcess() {
     read_die = write_die = true;
-    fin.close();
     if (read_connect_thread)
 	read_connect_thread->kill();
     if (write_connect_thread)
 	write_connect_thread->kill();
+    output.close();
+    fin.close();
+    //close(fd);
     return true;
 }
 
@@ -369,17 +372,17 @@ bool vjConnect::readCommand(ifstream& fin) {
       }
       else if (!strcasecmp (s, "chunks"))
       {
-         vjConfigChunkDB remove_chunk_db;
+         vjConfigChunkDB* remove_chunk_db = new vjConfigChunkDB();
 
          vjDEBUG(vjDBG_ENV_MGR,5) << "vjConnect: Remove: chunks: Starting...\n"  << vjDEBUG_FLUSH;
 
-         fin >> remove_chunk_db;       // Read in the chunks to remove
+         fin >> *remove_chunk_db;       // Read in the chunks to remove
 
-         vjDEBUG(vjDBG_ENV_MGR,5) << remove_chunk_db << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ENV_MGR,5) << *remove_chunk_db << endl << vjDEBUG_FLUSH;
 
          // Tell kernel to remove the chunks
 
-         vjKernel::instance()->configRemove(&remove_chunk_db);
+         vjKernel::instance()->configRemove(remove_chunk_db);
          vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect: Kernel has removed the chunks\n" << vjDEBUG_FLUSH;
       }
       else
