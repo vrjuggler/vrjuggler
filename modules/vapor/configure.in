@@ -643,8 +643,7 @@ fi
 
 # Add these C++ options when compiling with G++.
 if test "x$GXX" = "xyes" ; then
-#   CXXFLAGS="-fhonor-std -Wall $CXXFLAGS"
-   CXXFLAGS="-Wall $CXXFLAGS"
+#   CXXFLAGS="-fhonor-std $CXXFLAGS"
 
    _vpr_gxx_ver=`$CXX -dumpversion`
 
@@ -670,14 +669,14 @@ if test "x$ac_cv_header_sys_sysinfo_h" = "xyes" ; then
 fi
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
-    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
-    CXXFLAGS="$CXXFLAGS -woff 1388,3322 -w2"
+#    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
+    CXXFLAGS="$CXXFLAGS -w2"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     vc_cflags='/QIfdiv /QI0f'
     vc_cxxflags='/GR /GX /EHc /QIfdiv /QI0f'
-    CFLAGS="$CFLAGS /W3 $vc_cflags"
-    CXXFLAGS="$CXXFLAGS /W3 $vc_cxxflags"
+    CFLAGS="$CFLAGS $vc_cflags"
+    CXXFLAGS="$CXXFLAGS $vc_cxxflags"
     DBG_FLAGS="$DBG_FLAGS /MDd"
     OPT_FLAGS="$OPT_FLAGS /MD"
     UUID_DEFS="$UUID_DEFS -DWININC"
