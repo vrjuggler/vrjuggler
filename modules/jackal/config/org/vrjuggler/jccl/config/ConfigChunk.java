@@ -48,7 +48,7 @@ public class ConfigChunk {
     public String    name;
     public ChunkDesc desc;
 
-
+    public final static String embedded_separator = "->";
 
     public ConfigChunk (ConfigChunk c) {
 	desc = c.desc;
@@ -89,6 +89,18 @@ public class ConfigChunk {
 
     public final void setName (String s) {
 	name = s;
+    }
+
+    public final String getLastNameComponent() {
+        // there are probably more efficient ways to do this.
+        // but this is low-impact on the implementation.
+        int i = name.lastIndexOf (embedded_separator);
+        return (i < 0)?name:name.substring(i+embedded_separator.length());
+    }
+
+    public final void setLastNameComponent (String last) {
+        int i = name.lastIndexOf (embedded_separator);
+        name = name.substring (0, i+embedded_separator.length()) + last;
     }
 
     public final String getDescName() {
