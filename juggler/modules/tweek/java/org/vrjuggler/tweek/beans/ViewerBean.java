@@ -46,11 +46,14 @@ import org.vrjuggler.tweek.beans.loader.BeanInstantiationException;
  */
 public class ViewerBean extends TweekBean
 {
-   public ViewerBean (String viewer_name, String jar_path,
-                      String bean_entry_name, java.util.Vector deps)
+   /**
+    * Creates a new ViewerBean with the given common TweekBean attributes.
+    *
+    * @param attrs         the attributes of this bean
+    */
+   public ViewerBean( BeanAttributes attrs )
    {
-      super(bean_entry_name, jar_path, deps);
-      viewerName = viewer_name;
+      super( attrs );
    }
 
    public void instantiate () throws BeanInstantiationException
@@ -63,13 +66,8 @@ public class ViewerBean extends TweekBean
       {
          throw new BeanInstantiationException("org.vrjuggler.tweek.beans.BeanModelViewer " +
                                               "is not a superclass of " +
-                                              m_bean_name.replace('/', '.'));
+                                              getName().replace('/', '.'));
       }
-   }
-
-   public String getViewerName ()
-   {
-      return viewerName;
    }
 
    public BeanModelViewer getViewer ()
@@ -78,5 +76,4 @@ public class ViewerBean extends TweekBean
    }
 
    protected BeanModelViewer viewer     = null;
-   protected String          viewerName = null;
 }
