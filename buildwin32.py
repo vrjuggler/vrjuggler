@@ -249,6 +249,12 @@ def setVars():
          boost_ver = result
          options['BOOST_INCLUDES'] = boost_dir + r'\include\boost-' + boost_ver
 
+   # Check for Boost 1.32 Visual C++ toolset names.
+   match = re.compile(r'vc-(\d)_(\d)').match(options['BOOST_TOOL'])
+
+   if match is not None:
+      options['BOOST_TOOL'] = 'vc%s%s' % (match.group(1), match.group(2))
+
    print "+++ Optional Settings"
    processInput(options, 'deps-prefix', 'Dependency installation prefix')
 
