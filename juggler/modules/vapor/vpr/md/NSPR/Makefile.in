@@ -50,23 +50,23 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vpr/md/NSPR
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(VPR_LIBRARY)
+includedir=	@includedir@/vpr/md/NSPR
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(VPR_LIBRARY)
 
 # Prefix for recursive stuff.
-DIRPRFX		= vpr/md/NSPR/
+DIRPRFX=	vpr/md/NSPR/
 
-SUBDIR		= DynLoad	\
-                  IO		\
-                  Sync		\
-                  Thread	\
-                  Util
+SUBDIR=		DynLoad		\
+		IO		\
+		Sync		\
+		Thread		\
+		Util
 
 ifeq (@SUBSYSTEM@, NSPR)
-SRCS		= NSPRHelpers.cpp
+   SRCS=	NSPRHelpers.cpp
 endif
 
 include $(MKPATH)/dpp.obj-subdir.mk
@@ -76,6 +76,6 @@ include $(MKPATH)/dpp.obj-subdir.mk
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
 ifndef DO_BEFOREBUILD
-    -include $(DEPEND_FILES)
+   -include $(DEPEND_FILES)
 endif
 endif

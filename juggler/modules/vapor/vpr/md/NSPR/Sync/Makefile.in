@@ -39,7 +39,6 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-
 # -----------------------------------------------------------------------------
 # Makefile.in for vapor/vpr/md/NSPR/Sync.  It requires GNU make.
 #
@@ -51,14 +50,14 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vpr/md/NSPR/Sync
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(VPR_LIBRARY)
+includedir=	@includedir@/vpr/md/NSPR/Sync
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(VPR_LIBRARY)
 
 ifeq (@SUBSYSTEM@, NSPR)
-SRCS		= RWMutexNSPR.cpp
+   SRCS=	RWMutexNSPR.cpp
 endif
 
 include $(MKPATH)/dpp.obj.mk
@@ -68,6 +67,6 @@ include $(MKPATH)/dpp.obj.mk
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
 ifndef DO_BEFOREBUILD
-    -include $(DEPEND_FILES)
+   -include $(DEPEND_FILES)
 endif
 endif
