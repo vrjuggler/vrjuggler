@@ -37,6 +37,7 @@
 
 #include <IO/BlockIO.h>
 #include <IO/Socket/SocketTypes.h>
+#include <IO/Socket/InetAddr.h>
 
 
 namespace vpr {
@@ -299,17 +300,31 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Get the port for this socket.
+    //: Get the type of this socket (e.g., vpr::SocketTypes::STREAM).
     //
     //! PRE: The socket implementation pointer is valid.
-    //! POST: The port number for m_socket_imp is returned to the caller.
+    //! POST: The socket type for m_socket_imp is returned to the caller.
     //
-    //! RETURNS: An unsigned short (16-bit value) giving the port number for
+    //! RETURNS: A vpr::SocketTypes::Type value giving the socket type for
     //+          this socket.
     // ------------------------------------------------------------------------
-    inline unsigned short
-    getPort (void) const {
-        return m_socket_imp->getPort();
+    inline const SocketTypes::Type&
+    getType (void) const {
+        return m_socket_imp->getType();
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    inline const InetAddr&
+    getLocalAddr (void) const {
+        return m_socket_imp->getLocalAddr();
+    }
+
+    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+    inline const InetAddr&
+    getRemoteAddr (void) const {
+        return m_socket_imp->getRemoteAddr();
     }
 
 protected:
