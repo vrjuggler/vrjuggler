@@ -180,6 +180,13 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
       }
 
 
+    /** Set the maximum number of samples to store.
+     *  When new samples are added, self will remove the oldest samples
+     *  to make room.
+     *  @param n Maximum number of samples to allow.  If n = -1, no
+     *           purging will be done and the collector will add new
+     *           samples so long as memory is available.
+     */
     public void setMaxSamples (int n) {
 	maxdatalines = n;
 	System.out.println ("collector: max lines set to " + maxdatalines);
@@ -199,14 +206,16 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	Iterator i;
 	DataLine dl;
 
-	while (datalines.size() > maxdatalines) {
-	    dl = (DataLine)datalines.remove(0);
-	    i = dl.iterator();
-	    while (i.hasNext()) {
-		DataElem de = (DataElem)i.next();
-		de.index_info.removeSample (de.stamp);
-	    }
-	}
+        if (maxdatalines >= 0) {
+            while (datalines.size() > maxdatalines) {
+                dl = (DataLine)datalines.remove(0);
+                i = dl.iterator();
+                while (i.hasNext()) {
+                    DataElem de = (DataElem)i.next();
+                    de.index_info.removeSample (de.stamp);
+                }
+            }
+        }
 
 	datalines.add(new_dl);
     }
