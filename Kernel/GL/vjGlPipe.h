@@ -68,11 +68,11 @@ public:
         renderTriggerSema(0), renderCompleteSema(0), swapTriggerSema(0), swapCompleteSema(0)
    {
       mThreadRunning = false;
-      char* namebuf = new char[42];
+      char namebuf[42];  // careful with that buffer, eugene
       sprintf (namebuf, "vjGlPipe %d", (int)this);
       // we need to check if we should be enabled... It looks like vjGlPipe
       // is gonna need a configure method, though...
-      mPerfBuffer = new vjPerfDataBuffer (namebuf, 500, 36);
+      mPerfBuffer = new vjPerfDataBuffer (namebuf, 500, 40);
 
     }
 
