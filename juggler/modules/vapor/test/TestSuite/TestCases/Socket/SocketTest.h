@@ -1152,6 +1152,9 @@ public:
    {
       CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("SocketTest");
 
+// None of these tests can be used with the simulator because they all
+// expect blocking sockets.
+#ifndef VPR_SIMULATOR
       test_suite->addTest( new CppUnit::TestCaller<SocketTest>("testOpenClose", &SocketTest::testOpenClose));
       //test_suite->addTest( new CppUnit::TestCaller<SocketTest>("bind-Again Failure Test", &SocketTest::bindAgainFailTest));
       test_suite->addTest( new CppUnit::TestCaller<SocketTest>("sameAddressOpenBindCloseTest", &SocketTest::sameAddressOpenBindCloseTest));
@@ -1169,6 +1172,7 @@ public:
       //test_suite->addTest( new CppUnit::TestCaller<SocketTest>("testReadn", &SocketTest::testReadn));
       test_suite->addTest(new CppUnit::TestCaller<SocketTest>("testIsConnected",
                           &SocketTest::testIsConnected));
+#endif
 
       return test_suite;
    }
