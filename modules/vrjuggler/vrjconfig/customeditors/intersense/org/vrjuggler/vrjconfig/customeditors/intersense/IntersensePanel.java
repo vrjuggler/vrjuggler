@@ -44,10 +44,13 @@ import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.*;
 import org.jdom.*;
 
+import org.vrjuggler.vrjconfig.commoneditors.*;
+
 public class IntersensePanel extends JPanel implements CustomEditor
 {
    /** Panel which contains all general Intersense information. */
    private JPanel mDeviceInfoPanel = new JPanel();
+   private JPanel mTopSectionPanel = new JPanel();
    private GridLayout mInfoPanelLayout = new GridLayout();
    private JLabel mBaudLbl = new JLabel();
    private JTextField mBaudText = new JTextField();
@@ -55,6 +58,8 @@ public class IntersensePanel extends JPanel implements CustomEditor
    private JTextField mDriverText = new JTextField();
    private JTextField mPortText = new JTextField();
    private JLabel mDriverLbl = new JLabel();
+   
+   private JLabel mISenseIconLbl = new JLabel();
    
    /** ConfigElement for this Intersense device. */
    private ConfigElement mConfigElement = null;
@@ -82,6 +87,8 @@ public class IntersensePanel extends JPanel implements CustomEditor
    private JButton mRemoveBtn = new JButton();
    private JButton mAttachBtn = new JButton();
    private JButton mDisconnectBtn = new JButton();
+
+   private JButton mVisualizeBtn = new JButton("3D Visualization");
 
    /**
     * Constructor.
@@ -130,6 +137,7 @@ public class IntersensePanel extends JPanel implements CustomEditor
          mRemoveBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/customeditors/intersense/images/Delete16.gif")));
          mAttachBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/customeditors/intersense/images/Import16.gif")));
          mDisconnectBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/customeditors/intersense/images/Export16.gif")));
+         mISenseIconLbl.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/customeditors/intersense/images/IS_logo.gif")));
       }
       catch (Exception e)
       {
@@ -138,6 +146,8 @@ public class IntersensePanel extends JPanel implements CustomEditor
          mRemoveBtn.setText("Delete");
          mAttachBtn.setText("Attach");
          mDisconnectBtn.setText("Disconnect");
+         System.out.println(e);
+         e.printStackTrace();
       }
    }
 
@@ -248,14 +258,48 @@ public class IntersensePanel extends JPanel implements CustomEditor
       mStationsTable.setBackground(UIManager.getColor("Menu"));
       mInfoPanelLayout.setColumns(2);
       mInfoPanelLayout.setRows(3);
+      
+      
       mDeviceInfoPanel.setLayout(mInfoPanelLayout);
-      this.add(mDeviceInfoPanel, BorderLayout.NORTH);
       mDeviceInfoPanel.add(mDriverLbl, null);
       mDeviceInfoPanel.add(mDriverText, null);
       mDeviceInfoPanel.add(mPortLbl, null);
       mDeviceInfoPanel.add(mPortText, null);
       mDeviceInfoPanel.add(mBaudLbl, null);
       mDeviceInfoPanel.add(mBaudText, null);
+
+      mVisualizeBtn.addActionListener(new ActionListener()
+            {
+               public void actionPerformed(ActionEvent evt)
+               {
+                  JDialog dlg = new JDialog(
+                     (Frame)SwingUtilities.getAncestorOfClass(Frame.class, IntersensePanel.this),
+                     "3D Visualization", true);
+            
+
+               
+                  PositionalDeviceEditor pos_editor = new PositionalDeviceEditor();
+                  ConfigElement pos_filter = (ConfigElement)mConfigElement.getProperty("position_filters", 0);
+                  
+                  // Make sure to set the context first.
+                  pos_editor.setContext(mConfigContext);
+                  pos_editor.setConfigElement(pos_filter);
+                  
+                  dlg.getContentPane().add(pos_editor, BorderLayout.CENTER);
+                  dlg.pack();
+                  dlg.setVisible(true);
+                  //frame.setSize(750, 750);
+                  //frame.show();                  
+               }
+            });
+            
+      mTopSectionPanel.setLayout(new BoxLayout(mTopSectionPanel, BoxLayout.X_AXIS));
+      mTopSectionPanel.add(mISenseIconLbl);
+      mTopSectionPanel.add(Box.createHorizontalGlue());
+      mTopSectionPanel.add(mDeviceInfoPanel);
+      mTopSectionPanel.add(mVisualizeBtn);
+      
+      this.add(mTopSectionPanel, BorderLayout.NORTH);
 
       Border raisedbevel = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
       TitledBorder title = BorderFactory.createTitledBorder(raisedbevel, "Intersense Stations");

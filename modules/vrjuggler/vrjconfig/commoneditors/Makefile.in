@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/vrjconfig.  It requires GNU make.
+# Makefile.in for vrjuggler/vrjconfig/commoneditors/proxyeditor.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,7 +41,11 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-beandir=		$(bindir)/beans
+# Install common editors in same place as custom editors
+# so that they are loaded automatically.
+beandir=		$(libdir)/vrjuggler/customeditors
+jardir=			$(libdir)/vrjuggler/customeditors
+
 srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
 EXTRA_SRCS_PATH=	$(srcdir)/../tweek/idl
@@ -50,47 +54,27 @@ INSTALL_FILES=
 JAVA_IDL_OPTS=		@JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
 JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
 
-JARS		= ClusterWizard.jar Devices.jar Simulator.jar
-BEANS		= VRJConfig
+BEANS		= CommonEditors
 
-# List the packages for which JavaDoc documentation will be generated.
-DOC_PKGS	= $(VRJCONFIG_PKG)
-
-webroot		= $(HOME)/public_html/jugglerweb
-instdir		= vrjuggler/vrjconfig/1.0
-doc_prefix	= $(webroot)/$(instdir)
-DOC_ROOT	= programmer.reference.java
+JOGL_DIR=		$(JUGGLERROOT_ABS)/external/jogl
+JOGL_JARS=		$(JOGL_DIR)/jogl-demos-data.jar \
+			$(JOGL_DIR)/jogl-demos.jar	\
+			$(JOGL_DIR)/jogl-demos-util.jar	\
+			$(JOGL_DIR)/jogl.jar
 
 _LOCAL_CLEAN=1
 JAVA_AFTERBUILD=java_afterbuild
 
-include $(MKPATH)/dpp.obj-subdir.mk
-
-# Prefix for recursive stuff.
-DIRPRFX=	vrjconfig/
-
-# Subdirectories used for recursion through the source tree.
-SUBDIR=		commoneditors	\
-		customeditors
-
-$(RECTARGET): recursive
+include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
 # Uses ant to build the java classes and JARs
 # -----------------------------------------------------------------------------
-java_afterbuild:
+commoneditors:
 	@echo "------------------------------------------------"
-	@echo "Building java sources"
+	@echo "Building Common Editors java sources"
 	@echo "------------------------------------------------"
 	$(ANT)
-	@echo "------------------------------------------------"
-	@echo "Building Common Editors"
-	@echo "------------------------------------------------"
-	$(MAKE) -C commoneditors commoneditors
-	@echo "------------------------------------------------"
-	@echo "Building Custom Editors"
-	@echo "------------------------------------------------"
-	$(MAKE) -C customeditors customeditors
 
 _clean:
 	$(ANT) clean
@@ -100,48 +84,39 @@ _clean:
 # -----------------------------------------------------------------------------
 
 # This cannot be named 'install' because Doozer++ already defines that.
-vrjconfig-install:
+install-commoneditors:
 	@echo "------------------------------------------------"
-	@echo "Installing the VRJConfig code base"
+	@echo "Installing the Common Editors code base"
 	@echo "------------------------------------------------"
-ifeq (@OS_TYPE@, UNIX)
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(VJROOT_ABS)/vrjconfig/vrjconfig.sh	\
-          $(bindir)/vrjconfig
-else
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VJROOT_ABS)/vrjconfig/vrjconfig.bat $(bindir)/vrjconfig.bat
-endif	# if OS_TYPE == UNIX
+	$(MKINSTALLDIRS) $(beandir)
+	$(MKINSTALLDIRS) $(jardir)
 ifneq ($(JARS), )
 	for jar in $(JARS) ;						\
           do								\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
-                $(EXTRA_INSTALL_ARGS) $(topdir)/vrjconfig/$$jar		\
-                $(bindir) || exit 1;					\
+                $(EXTRA_INSTALL_ARGS)
+		$(topdir)/vrjconfig/commoneditors/$$jar		\
+                $(jardir) || exit 1;					\
           done
 endif
 ifneq ($(BEANS), )
 	for bean in $(BEANS) ;						\
           do								\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
-                $(EXTRA_INSTALL_ARGS) $(topdir)/vrjconfig/$$bean.jar	\
+                $(EXTRA_INSTALL_ARGS) $(topdir)/vrjconfig/commoneditors/$$bean.jar	\
                 $(beandir) || exit 1 ;					\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS)					\
-                $(top_srcdir)/vrjconfig/$$bean.xml $(beandir) || exit 1; \
+                $(top_srcdir)/vrjconfig/commoneditors/$$bean.xml $(beandir) || exit 1; \
           done
 endif
-# Install all custom editors recursivly
-	@echo "------------------------------------------------"
-	@echo "Installing Common Editors"
-	@echo "------------------------------------------------"
-	$(MAKE) -C commoneditors install-commoneditors
 
-	@echo "------------------------------------------------"
-	@echo "Installing Custom Editors"
-	@echo "------------------------------------------------"
-	$(MAKE) -C customeditors install-customeditors
-	
+	for jar in `echo "$(JOGL_JARS)" | sed -e 's/$(JCPS)/ /g'` ;	\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $$jar $(bindir) ;			\
+          done
+
 install-docs:
 	$(MKINSTALLDIRS) $(doc_prefix)
 	rm -rf $(doc_prefix)/$(DOC_ROOT)
