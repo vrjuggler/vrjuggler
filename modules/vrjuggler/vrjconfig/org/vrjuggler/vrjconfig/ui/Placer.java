@@ -32,10 +32,12 @@
 package org.vrjuggler.vrjconfig.ui;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -51,6 +53,32 @@ import org.vrjuggler.vrjconfig.ui.placer.*;
 public class Placer
    extends JPanel
 {
+   /**
+    * Drag type where the user hasn't selected anything making dragging invalid.
+    */
+   private static final int INVALID = 0;
+
+   /**
+    * Drag type for moving the component.
+    */
+   private static final int MOVE = 1;
+
+   /**
+    * Drag type for resizing the component.
+    */
+   private static final int RESIZE = 2;
+
+   /**
+    * The current drag mode.
+    */
+   private int dragMode = MOVE;
+
+   /**
+    * The resize direction. This can be any logical combindation of the
+    * Rectangle OUT_XXX types
+    */
+   private int resizeDirection = Rectangle.OUT_LEFT;
+
    /**
     * Whether displays may be resized.
     */
@@ -319,6 +347,11 @@ public class Placer
          {
             this_mouseDragged(e);
          }
+
+         public void mouseMoved(MouseEvent e)
+         {
+            this_mouseMoved(e);
+         }
       });
       this.add(rendererPane);
    }
@@ -328,21 +361,28 @@ public class Placer
     */
    void this_mousePressed(MouseEvent e)
    {
-      // Find the display that has been selected
-      int idx = getModel().getIndexOfElementAt(e.getPoint());
-      if (idx == -1)
+      // If this is the start of a resize action, the point may be outside the
+      // bounds of the object, but we want to give them a bit of a larger region
+      // to hit. In such a case, don't try to select a different window.
+      if (dragMode != RESIZE)
       {
-         selectedIndex = -1;
-      }
-      else
-      {
-         // Move the selected element up to the front
-         getModel().moveToFront(idx);
-         selectedIndex = 0;
+         // Find the display that has been selected
+         int idx = getModel().getIndexOfElementAt(e.getPoint());
+         if (idx == -1)
+         {
+            selectedIndex = -1;
+         }
+         else
+         {
+            // Move the selected element up to the front
+            getModel().moveToFront(idx);
+            selectedIndex = 0;
+            updateCursor(e.getPoint(), getBoundsFor(selectedIndex));
+         }
+         repaint();
+         fireItemSelected(selectedIndex);
       }
       lastMouse = e.getPoint();
-      repaint();
-      fireItemSelected(selectedIndex);
    }
 
    /**
@@ -357,34 +397,231 @@ public class Placer
          Point diff = new Point(mousePt.x - lastMouse.x,
                                 mousePt.y - lastMouse.y);
 
-         // Move the selected display along
-         Point newPos = new Point(getModel().getLocationOf(selectedIndex));
-         newPos.translate(diff.x, diff.y);
+         // User wants to move the selected object
+         if (dragMode == MOVE)
+         {
+            // Move the selected display along
+            Point newPos = new Point(getModel().getLocationOf(selectedIndex));
+            newPos.translate(diff.x, diff.y);
 
-         // Make sure we don't allow the user to drag a display outside of the
-         // viewable area.
-         Dimension dim = getModel().getSizeOf(selectedIndex);
-         Dimension visDim = this.getSize();
-         if (newPos.x + dim.width > visDim.width)
-         {
-            newPos.x = visDim.width - dim.width;
-         }
-         if (newPos.y + dim.height > visDim.height)
-         {
-            newPos.y = visDim.height - dim.height;
-         }
-         if (newPos.x < 0)
-         {
-            newPos.x = 0;
-         }
-         if (newPos.y < 0)
-         {
-            newPos.y = 0;
-         }
-         getModel().setLocationOf(selectedIndex, newPos);
+            // Make sure we don't allow the user to drag a display outside of the
+            // viewable area.
+            Dimension dim = getModel().getSizeOf(selectedIndex);
+            Dimension visDim = this.getSize();
+            if (newPos.x + dim.width > visDim.width)
+            {
+               newPos.x = visDim.width - dim.width;
+            }
+            if (newPos.y + dim.height > visDim.height)
+            {
+               newPos.y = visDim.height - dim.height;
+            }
+            if (newPos.x < 0)
+            {
+               newPos.x = 0;
+            }
+            if (newPos.y < 0)
+            {
+               newPos.y = 0;
+            }
+            getModel().setLocationOf(selectedIndex, newPos);
 
-         lastMouse = mousePt;
-         repaint();
+            lastMouse = mousePt;
+            repaint();
+         }
+         // User want to resize the current object
+         else if (dragMode == RESIZE)
+         {
+            Point old_pos = getModel().getLocationOf(selectedIndex);
+            Dimension old_size = getModel().getSizeOf(selectedIndex);
+            Point new_pos = null;
+            Dimension new_size = null;
+
+            switch (resizeDirection)
+            {
+            // left
+            case Rectangle.OUT_LEFT:
+               System.out.println("Resizing left");
+               new_pos = new Point(mousePt.x, old_pos.y);
+               new_size = new Dimension(old_size.width + (old_pos.x - new_pos.x),
+                                        old_size.height);
+               break;
+            // top left
+            case (Rectangle.OUT_LEFT | Rectangle.OUT_TOP):
+               new_pos = new Point(mousePt);
+               new_size = new Dimension(old_size.width + (old_pos.x - new_pos.x),
+                                        old_size.height + (old_pos.y - new_pos.y));
+               break;
+            // top
+            case Rectangle.OUT_TOP:
+               new_pos = new Point(old_pos.x, mousePt.y);
+               new_size = new Dimension(old_size.width,
+                                        old_size.height + (old_pos.y - new_pos.y));
+               break;
+            // top right
+            case (Rectangle.OUT_RIGHT | Rectangle.OUT_TOP):
+               new_pos = new Point(old_pos.x, mousePt.y);
+               new_size = new Dimension(mousePt.x - old_pos.x,
+                                        old_size.height + (old_pos.y - new_pos.y));
+               break;
+            // right
+            case Rectangle.OUT_RIGHT:
+               new_size = new Dimension(mousePt.x - old_pos.x,
+                                        old_size.height);
+               break;
+            // bottom right
+            case (Rectangle.OUT_RIGHT | Rectangle.OUT_BOTTOM):
+               new_size = new Dimension(mousePt.x - old_pos.x,
+                                        mousePt.y - old_pos.y);
+               break;
+            // bottom
+            case Rectangle.OUT_BOTTOM:
+               new_size = new Dimension(old_size.width,
+                                        mousePt.y - old_pos.y);
+               break;
+            // bottom left
+            case (Rectangle.OUT_LEFT | Rectangle.OUT_BOTTOM):
+               new_pos = new Point(mousePt.x, old_pos.y);
+               new_size = new Dimension(old_size.width + (old_pos.x - new_pos.x),
+                                        mousePt.y - old_pos.y);
+               break;
+            }
+
+            // Update the object as necessary
+            if (new_pos != null)
+            {
+               System.out.println("Updated location to: ("+new_pos.x+", "+new_pos.y+")");
+               getModel().setLocationOf(selectedIndex, new_pos);
+            }
+            if (new_size != null)
+            {
+               System.out.println("Updated size to: ("+new_size.width+", "+new_size.height+")");
+               getModel().setSizeOf(selectedIndex, new_size);
+            }
+
+            lastMouse = mousePt;
+            repaint();
+         }
+      }
+   }
+
+   /**
+    * Handles movement of the mouse inside this placer when no buttons are being
+    * held down. This method will check if the mouse cursor is suitably close
+    * to the edge of the currently selected item and change the cursor to allow
+    * for resizing.
+    */
+   void this_mouseMoved(MouseEvent e)
+   {
+      if (selectedIndex != -1)
+      {
+         // Figure out where we are
+         Point mousePt = e.getPoint();
+
+         // Get the bounds of the currently selected item
+         Rectangle bounds = getBoundsFor(selectedIndex);
+
+         // Update the cursor accordingly
+         updateCursor(mousePt, bounds);
+      }
+   }
+
+   /**
+    * Computes the bounds of the object at the given index.
+    *
+    * @param index   a valid index into the model
+    */
+   private Rectangle getBoundsFor(int index)
+   {
+      return new Rectangle(model.getLocationOf(selectedIndex),
+                           model.getSizeOf(selectedIndex));
+   }
+
+   /**
+    * Updates the state of the cursor for the currently selected object based
+    * on the given mouse cursor position and the given bounds.
+    */
+   private void updateCursor(Point mousePt, Rectangle bounds)
+   {
+      // Compute an inner bounds rectangle 5 pixels smaller than the bounds
+      // of the selected object. Note we are  being careful not to create an
+      // invalid rectangle.
+      Rectangle inner = new Rectangle(bounds);
+      if (inner.width > 10)
+      {
+         inner.x += 5;
+         inner.width -= 10;
+      }
+      if (inner.height > 10)
+      {
+         inner.y += 5;
+         inner.height -= 10;
+      }
+
+      // Computer an outer bounds rectangle 5 pixels bigger than the bounds
+      // of the selected object.
+      Rectangle outer = new Rectangle(bounds);
+      outer.x -= 5;
+      outer.y -= 5;
+      outer.width += 10;
+      outer.height += 10;
+
+      // Check if the mouse cursor is located in the non-overlapping region
+      // of inner and outer.
+      if (outer.contains(mousePt.x, mousePt.y) &&
+          !inner.contains(mousePt.x, mousePt.y))
+      {
+         // Figure out which part of the region the mouse is in
+         int outcode = inner.outcode((double)mousePt.x, (double)mousePt.y);
+         switch (outcode)
+         {
+         // left
+         case Rectangle.OUT_LEFT:
+            setCursor(new Cursor(Cursor.W_RESIZE_CURSOR));
+            break;
+         // top left
+         case (Rectangle.OUT_LEFT | Rectangle.OUT_TOP):
+            setCursor(new Cursor(Cursor.NW_RESIZE_CURSOR));
+            break;
+         // top
+         case Rectangle.OUT_TOP:
+            setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));
+            break;
+         // top right
+         case (Rectangle.OUT_RIGHT | Rectangle.OUT_TOP):
+            setCursor(new Cursor(Cursor.NE_RESIZE_CURSOR));
+            break;
+         // right
+         case Rectangle.OUT_RIGHT:
+            setCursor(new Cursor(Cursor.E_RESIZE_CURSOR));
+            break;
+         // bottom right
+         case (Rectangle.OUT_RIGHT | Rectangle.OUT_BOTTOM):
+            setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR));
+            break;
+         // bottom
+         case Rectangle.OUT_BOTTOM:
+            setCursor(new Cursor(Cursor.S_RESIZE_CURSOR));
+            break;
+         // bottom left
+         case (Rectangle.OUT_LEFT | Rectangle.OUT_BOTTOM):
+            setCursor(new Cursor(Cursor.SW_RESIZE_CURSOR));
+            break;
+         }
+
+         dragMode = RESIZE;
+         resizeDirection = outcode;
+      }
+      // Check if cursor is inside the object's bounds, but not on an edge
+      else if (bounds.contains(mousePt.x, mousePt.y))
+      {
+         setCursor(new Cursor(Cursor.MOVE_CURSOR));
+         dragMode = MOVE;
+      }
+      // Cursor is nowhere near the selected object
+      else
+      {
+         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
       }
    }
 
