@@ -32,11 +32,12 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-branch='-1'
+branch=''
 date='-1'
 ver_file='-1'
 input='-1'
 output='-1'
+name='-1'
 subsystem='-1'
 version='-1'
 
@@ -59,6 +60,11 @@ while [ $# -gt 0 ]; do
             ;;
         -i)
             input="$2"
+            shift
+            shift
+            ;;
+        -n)
+            name="$2"
             shift
             shift
             ;;
@@ -85,6 +91,7 @@ if [ "x$date" = "x-1" -o "x$subsystem" = "x-1" -o "x$input" = "x-1" -o	\
 then
     echo "Usage: $0 [-b branch] -d <date> -i <input file> -o <output file>"
     echo "       -s <subsystem> [ -f <VERSION file> | -v <version> ]"
+    echo "       [-n <name>]"
     exit 1
 fi
 
@@ -107,11 +114,11 @@ else
     ver_num=`echo $ver_line |  sed -e 's/^\(.*\) @.*/\1/'`
 fi
 
-# If a branch name was given, include it.
-if [ "x$branch" != "x-1" ]; then
-    string="v$ver_num ($subsystem) $branch $date"
+# If a canonical name was given, include it.
+if [ "x$name" != "x-1" ]; then
+    string="v$ver_num '$name' ($subsystem) $branch $date"
 else
-    string="v$ver_num ($subsystem) $date"
+    string="v$ver_num ($subsystem) $branch $date"
 fi
 
 # Make sure we can read from $input.
