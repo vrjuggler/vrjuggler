@@ -40,7 +40,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 AC_INIT
-AC_CONFIG_HEADER(simple_config.h)
+AC_CONFIG_AUX_DIR(../../share/config)
 DPP_PREREQ([1.4.106])
 DPP_INIT
 
