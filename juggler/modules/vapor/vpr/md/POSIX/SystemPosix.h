@@ -92,8 +92,8 @@ public:
     static vpr::Uint64 Ntohll(vpr::Uint64 conversion)
     {
        vpr::Uint64 ret_val;
-       *((vpr::Uint32*)(&ret_val)) = SystemNSPR::Ntohl(*((vpr::Uint32*)(&conversion)));
-       *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemNSPR::Ntohl( *( ((vpr::Uint32*)(&conversion))+1) );
+       *((vpr::Uint32*)(&ret_val)) = SystemPosix::Ntohl(*((vpr::Uint32*)(&conversion)));
+       *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemPosix::Ntohl( *( ((vpr::Uint32*)(&conversion))+1) );
        return ret_val;
     }
 
@@ -110,8 +110,8 @@ public:
     static vpr::Uint64 Htonll(vpr::Uint64 conversion)
     {
      vpr::Uint64 ret_val;
-      *((vpr::Uint32*)(&ret_val)) = SystemNSPR::Htonl(*((vpr::Uint32*)(&conversion)));
-      *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemNSPR::Htonl( *( ((vpr::Uint32*)(&conversion))+1) );
+      *((vpr::Uint32*)(&ret_val)) = SystemPosix::Htonl(*((vpr::Uint32*)(&conversion)));
+      *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemPosix::Htonl( *( ((vpr::Uint32*)(&conversion))+1) );
       return ret_val;
     }
 
