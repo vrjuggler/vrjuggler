@@ -97,7 +97,7 @@ PARAM_HEADER	= tweek/tweekParam.h
 BRANCH		= HEAD
 CANON_NAME	= Harbucks Coffee
 VER_ARGS	= -f $(TWEEKROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@	\
-                  -b $(BRANCH) -o $(TWEEK_PARAM) -n "$(CANON_NAME)"	\
+                  -b $(BRANCH) -o $(PARAM_HEADER) -n "$(CANON_NAME)"	\
                   -i $(TWEEKROOT_ABS)/tweek/tweekParam.h.in		\
                   -d "`date '+%b %e, %Y %H:%M:%S'`"
 
