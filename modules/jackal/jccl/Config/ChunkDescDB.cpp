@@ -168,7 +168,7 @@ std::istream& operator >> (std::istream& in, ChunkDescDB& self) {
 
 bool ChunkDescDB::load (const std::string& filename, const std::string& parentfile) {
     std::string fname = demangleFileName (filename, parentfile);
-    bool retval = ConfigIO::instance()->readChunkDescDB (filename, *this);
+    bool retval = ConfigIO::instance()->readChunkDescDB (fname, *this);
 
     return retval;
 }
