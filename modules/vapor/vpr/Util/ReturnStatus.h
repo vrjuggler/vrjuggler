@@ -39,8 +39,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef RETURN_STATUS_VPR_ERROR_CODE
-#define RETURN_STATUS_VPR_ERROR_CODE
+#ifndef _VPR_RETURN_STATUS_H_
+#define _VPR_RETURN_STATUS_H_
 
 #include <vpr/vprConfig.h>
 
@@ -54,7 +54,7 @@ namespace vpr
    class VPR_CLASS_API ReturnStatus
    {
    public:
-      /// Possible status codes
+      /// Possible status codes.
       enum Code
       {
          Succeed,          /**< Succeedful status */
@@ -65,19 +65,19 @@ namespace vpr
          NotConnected      /**< The given IO device is closed */
       };
 
-      /// Default constructor.  vpr::ReturnStatus:;Succeed is default
-      ReturnStatus() : mReturnStatus( vpr::ReturnStatus::Succeed )
+      /// Default constructor.  vpr::ReturnStatus::Succeed is default.
+      ReturnStatus() : mReturnStatus(vpr::ReturnStatus::Succeed)
       {
       }
 
       /**
        * Copies the given object into this object.
        *
-       * @post this = status
+       * @post This object is a copy of status.
        *
-       * @param status The <code>vpr::ReturnStatus</code> object to be copied.
+       * @param status The vpr::ReturnStatus object to be copied.
        */
-      void copy( const ReturnStatus& status )
+      void copy(const ReturnStatus& status)
       {
          mReturnStatus = status.mReturnStatus;
       }
@@ -93,31 +93,31 @@ namespace vpr
       }
 
       /**
-       * Gets status code
+       * Gets status code.
        */
       const Code& code() const
       {
          return mReturnStatus;
       }
 
-      /// copy constructor
-      ReturnStatus( const ReturnStatus& status )
+      /// Copy constructor.
+      ReturnStatus(const ReturnStatus& status)
       {
-         this->copy( status );
+         this->copy(status);
       }
 
-      /// ReturnStatus::Code constructor
+      /// vpr::ReturnStatus::Code constructor.
       ReturnStatus(const Code& c)
       {
          this->setCode(c);
       }
 
       /**
-       * operator=
+       * Assignment operator for vpr::ReturnStatus objects.
        *
-       * @post this = status
+       * @post This object is a copy of status.
        */
-      ReturnStatus& operator=( const ReturnStatus& status )
+      ReturnStatus& operator=(const ReturnStatus& status)
       {
          if((&status) != this)
          {
@@ -127,9 +127,9 @@ namespace vpr
       }
 
       /**
-       * operator=
+       * Assignment operator for vpr::ReturnStatus::Code values.
        *
-       * @post this = status
+       * @post this->mReturnStatus == c.
        */
       ReturnStatus& operator=(const Code& c)
       {
@@ -138,19 +138,19 @@ namespace vpr
       }
 
       /**
-       * operator==
+       * Equality operator for comparison with a vpr::ReturnStatus object.
        *
-       * @return true if equal, false if not
+       * @return true if equal, false if not.
        */
-      bool operator==( const ReturnStatus& status ) const
+      bool operator==(const ReturnStatus& status) const
       {
          return status.mReturnStatus == mReturnStatus;
       }
 
       /**
-       * operator==
+       * Equality operator for comparison with a vpr::ReturnStatus::Code value.
        *
-       * @return true if equal, false if not
+       * @return true if equal, false if not.
        */
       bool operator==(const Code& c) const
       {
@@ -158,19 +158,20 @@ namespace vpr
       }
 
       /**
-       * operator!=
+       * Inequality operator for comparison with a vpr::ReturnStatus object.
        *
-       * @return false if equal, true if not
+       * @return false if equal, true if not.
        */
-      bool operator!=( const ReturnStatus& status ) const
+      bool operator!=(const ReturnStatus& status) const
       {
          return status.mReturnStatus != mReturnStatus;
       }
 
       /**
-       * operator!=
+       * Inequality operator for comparison with a vpr::ReturnStatus::Code
+       * values.
        *
-       * @return false if equal, true if not
+       * @return false if equal, true if not.
        */
       bool operator!=(const Code& c) const
       {
@@ -178,11 +179,33 @@ namespace vpr
       }
 
    public:
-      bool success() const { return mReturnStatus == vpr::ReturnStatus::Succeed; }
-      bool failure() const { return mReturnStatus == vpr::ReturnStatus::Fail; }
-      bool wouldBlock() const { return mReturnStatus == vpr::ReturnStatus::WouldBlock; }
-      bool inProgress() const { return mReturnStatus == vpr::ReturnStatus::InProgress; }
-      bool timeout() const { return mReturnStatus == vpr::ReturnStatus::Timeout; }
+      /** @name State test helpers. */
+      //@{
+      bool success() const
+      {
+         return mReturnStatus == vpr::ReturnStatus::Succeed;
+      }
+
+      bool failure() const
+      {
+         return mReturnStatus == vpr::ReturnStatus::Fail;
+      }
+
+      bool wouldBlock() const
+      {
+         return mReturnStatus == vpr::ReturnStatus::WouldBlock;
+      }
+
+      bool inProgress() const
+      {
+         return mReturnStatus == vpr::ReturnStatus::InProgress;
+      }
+
+      bool timeout() const
+      {
+         return mReturnStatus == vpr::ReturnStatus::Timeout;
+      }
+      //@}
 
    private:
       ReturnStatus::Code mReturnStatus;
