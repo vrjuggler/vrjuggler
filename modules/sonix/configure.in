@@ -236,12 +236,12 @@ fi
 dnl -------------------------------------------------------------
 dnl project specific stuff....
 dnl -------------------------------------------------------------
-application_includes="$(AJ_BASE_DIR)/include $INCLUDES"
+application_includes="\$(AJ_BASE_DIR)/include $INCLUDES"
 application_ldflags="$LDFLAGS"
 if test "x$dpp_os_type" = "xWin32" ; then
-   application_libs="/LIBPATH:$(AJ_BASE_DIR)/lib$LIBBITSUF -lAudioJuggler $LIBS"
+   application_libs="/LIBPATH:\$(AJ_BASE_DIR)/lib$LIBBITSUF -lAudioJuggler $LIBS"
 else
-   application_libs="-L$(AJ_BASE_DIR)/lib$LIBBITSUF -lAudioJuggler $LIBS -lm"
+   application_libs="-L\$(AJ_BASE_DIR)/lib$LIBBITSUF -lAudioJuggler $LIBS -lm"
 fi
 
 AC_SUBST(application_includes)
