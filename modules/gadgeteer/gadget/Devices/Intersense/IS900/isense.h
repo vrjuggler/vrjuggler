@@ -41,10 +41,10 @@
     typedef float               FLOAT;
     typedef long                LONG;
     typedef int                 INT;
-    #define REVERSE_BYTE_ORDER
+#   define REVERSE_BYTE_ORDER
 #else
-    #include <windows.h>
-    #include <winbase.h>
+#   include <windows.h>
+#   include <winbase.h>
 #endif
 
 /* tracking system type */
