@@ -48,19 +48,18 @@
 #define SONIX___H
 #include <string>
 #include "snx/SoundInfo.h"
-#include "snx/Isonix.h"
 #include "snx/SoundFactory.h"
 #include "snx/SoundImplementation.h"
 #include "snx/SoundAPIInfo.h"
 #include "vpr/Util/Singleton.h"
 
-class sonix : public Isonix, public vpr::Singleton<sonix>
+class sonix : public vpr::Singleton<sonix>
 {
 protected:
    friend class vpr::Singleton<sonix>;
 
    //: default constructor
-   sonix() : Isonix(), mImplementation( NULL )
+   sonix() : mImplementation( NULL )
    {
    }
 
