@@ -178,7 +178,7 @@ public:
    void processNextEvent(void);
 
    /**
-    * Limits the time frame for the occurrence of the next event to the given
+    * Limits the time frame for the occurrence of the next events to the given
     * time step.  There may not be an event in the queue that occurs between
     * the current time and the time step, and in that case, no event will be
     * processed.
@@ -186,7 +186,7 @@ public:
     * @param time_step The maximum time step allowed for the simulation in
     *                  tens of microseconds.
     */
-   void processNextEvent(const vpr::Uint32 time_step);
+   void processEvents(const vpr::Uint32 time_step);
 
    const vpr::sim::Clock& getClock (void) const
    {
