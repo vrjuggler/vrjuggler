@@ -55,7 +55,7 @@ use SourceList;
 
 # Subroutine prototypes.
 sub printHelp();
-sub findSources(@);
+sub findSources($$);
 sub readSources($);
 sub printObjMakefile($$@);
 sub printAppMakefile($$$);
@@ -74,14 +74,15 @@ my $gmake   = 0;
 my $help    = 0;
 my @srcdirs = ();
 my @subdirs = ();
+my @nosrcs  = ();
 
 $dir_prfx   = '';
 $sub_objdir = '';
 
 GetOptions('app=s' => \$app, 'apps=s' => \%apps, 'dirprefix=s' => \$dir_prfx,
            'dotin!' => \$dotin, 'expfile=s' => \$exp_file, 'gmake' => \$gmake,
-           'help' => \$help, 'srcdir=s' => \@srcdirs, 'subdirs=s' => \@subdirs,
-           'subobjdir=s' => \$sub_objdir)
+           'help' => \$help, 'nosrcs=s' => \@nosrcs, 'srcdir=s' => \@srcdirs,
+           'subdirs=s' => \@subdirs, 'subobjdir=s' => \$sub_objdir)
     or printHelp() && exit(1);
 
 printHelp() && exit(0) if $help;
@@ -90,8 +91,9 @@ printHelp() && exit(0) if $help;
 # options and/or using the form --srcdir=dir1,dir2,...,dirN.
 @srcdirs = split(/,/, join(',', @srcdirs));
 @subdirs = split(/,/, join(',', @subdirs));
+@nosrcs  = split(/,/, join(',', @nosrcs));
 
-my $all_src = findSources(@srcdirs);
+my $all_src = findSources(\@srcdirs, \@nosrcs);
 
 # Set the generated file name once since all the subroutines will create a
 # file with the same name.
@@ -177,7 +179,7 @@ For object makefiles:
     --subobjdir=<dir>
         Name the subdirectory of \$(OBJDIR) where the object files will go.
 
-For both types of makefiles:
+For all types of makefiles:
 
     --dotin (default)
         Generate Makefile.in
@@ -187,14 +189,22 @@ For both types of makefiles:
     --nodotin --expfile=<Perl file>
         Generate a fully expanded Makefile using the %VARS hash in the
         file named as the argument to --expfile.
+
+    --nosrcs=<file1> --nosrcs=<file2> ... --nosrcs=<fileN>
+        List files that should be excluded when preparing the source list.
+        Each file can be given as an argument to a separate --nosrcs option,
+        or they can all be passed to a single --nosrcs option as a
+        comma-separated list (no spaces).  Any paths used must be the same
+        as used for --srcdir.
 EOF
 }
 
 # -----------------------------------------------------------------------------
 # Find all the source files in the given directories.
 # -----------------------------------------------------------------------------
-sub findSources (@) {
-    my @dirs = @_;
+sub findSources ($$) {
+    my @dirs   = @{$_[0]};
+    my @nosrcs = @{$_[1]};
 
     # Make sure that the current directory is in the list of directories to
     # search.
@@ -217,7 +227,8 @@ sub findSources (@) {
     # Loop over the given source directories.
     foreach $dir ( @dirs ) {
         next if $srcs->hasDirectory("$dir");
-        $srcs->readSources("$dir") or warn "Failed to read sources in $dir\n";
+        $srcs->readSources("$dir", @nosrcs)
+            or warn "Failed to read sources in $dir\n";
     }
 
     return $srcs;
