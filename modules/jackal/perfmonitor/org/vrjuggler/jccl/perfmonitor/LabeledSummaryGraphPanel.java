@@ -68,7 +68,7 @@ public class LabeledSummaryGraphPanel
 	    setPreferredSize (d);
 	    setMinimumSize(d);
 	    setSize (d);
-	    //System.out.println ("vert scale set: " + vertmult);
+	    System.out.println ("vert scale set: " + vertmult);
 	    //validate();
 	    repaint();
 
@@ -113,7 +113,7 @@ public class LabeledSummaryGraphPanel
 		maxval = Math.ceil(maxval/10000) * 10000;
 	    if (newmaxval > maxval)
 		maxval = Math.ceil(newmaxval/10000) * 10000;
-	    //System.out.println ("repaint called for this panel");
+	    System.out.println ("repaint called for this panel");
 	    repaint();
 	}
 
@@ -159,10 +159,14 @@ public class LabeledSummaryGraphPanel
 	public void paint (Graphics g) {
 
 	    cursize = getSize();
-	    cursize.width = col.datalines.size();
-	    setSize (cursize);
-	    setPreferredSize (cursize);
-	    
+	    if (cursize.width < col.datalines.size()) {
+		//System.out.println ("resizing...");
+		cursize.width = col.datalines.size();
+		setSize (cursize);
+		setPreferredSize (cursize);
+		return; // cuz resizing will trigger another paint
+	    }	    
+
 	    //System.out.println ("set size is: " + cursize);
 
 	    newmaxval = 0.0;
@@ -248,10 +252,6 @@ public class LabeledSummaryGraphPanel
     LabeledPerfDataCollector col;
     SummaryDisplayPanel summarypanel;
     JComboBox vertscale_box;
-    //java.util.List phase_active;       // list of boolean
-    //java.util.List phase_active_boxes; // list of JCheckBox
-    //boolean phase_active[];
-    //JCheckBox phase_active_boxes[];
     java.util.List indices;
     int num;
 
