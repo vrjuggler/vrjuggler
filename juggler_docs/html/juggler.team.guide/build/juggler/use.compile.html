@@ -1,0 +1,373 @@
+<HEAD>
+<TITLE>Compiling Juggler (Makefile Use)</TITLE>
+</HEAD>
+
+<BODY>
+<H2>Compiling VR Juggler</H2>
+
+<H3>Table of Contents:</H3>
+
+  <OL>
+    <LI><A HREF="#intro">Introduction</A>
+    <LI><A HREF="#required">Required Reading</A>
+    <LI><A HREF="#targets">Targets</A>
+    <LI><A HREF="#variables">Useful Variables</A>
+    <LI><A HREF="#options">GNU Make Options</A>
+    <LI><A HREF="#steps">Process of Building (Individual Steps)</A>
+    <LI><A HREF="#devel">Developer ``Installation''</A>
+  </OL>
+
+<A NAME="intro"><H4>Introduction</H4></A>
+
+  <P>
+    To improve portability and consistency across platforms, VR Juggler
+    uses GNU make for building the library (installation is covered
+    <A HREF="${TEAMGUIDE}/build/juggler/use.install.html">elsewhere</A>).
+    The makefiles used employ many features that are unique to GNU make
+    thus requiring that people who wish to compile Juggler from its source
+    are required to have it installed.  The Juggler makefiles are known to
+    to work with versions 3.76.1, 3.77.x and 3.78.1 of GNU make.  To make
+    sense of this documentation, please understand the concepts listed in
+    <A HREF="#required">Required Reading</A>.  Posting about these subjects
+    to the mailing list will probably be ignored.
+  </P>
+
+  <P>
+    In this file, the following conventions are used for text formatting
+    and naming:
+
+    <UL>
+      <LI>
+        Program, file and directory names are written in <TT>fixed-width
+        font</TT>.
+      </LI>
+      <LI>
+        Commands that are intended to be run by the user are written in
+        <TT><B>bold fixed-width font</B></TT>.
+      </LI>
+      <LI>
+        References to system and library calls are written as
+        <I>call_name</I>(##) where ``##'' is the manual section where that
+        call's documentation can be found.
+      </LI>
+      <LI>
+        Makefile targets are named as `<TT>target</TT>', and makefile
+        variables are named as <TT>${VAR_NAME}</TT>.
+      </LI>
+      <LI>
+        Environment variables are named as <TT>ENV_VAR_NAME</TT>.  (This is
+        to avoid confusion between UNIX and Win32 environments where
+        environment variables are evaluated using <TT>$</TT>'s and
+        <TT>%</TT>'s respectively.)
+      </LI>
+    </UL>
+  </P>
+
+<A NAME="required"><H4>Required Reading</H4></A>
+
+  <UL>
+    <LI>
+      <A HREF="${TEAMGUIDE}/build/juggler/use.configure.html">Using the
+      Juggler Configure Script</A>
+    </LI>
+    <LI>
+      <A HREF="http://www.gnu.org/software/make/make.html">GNU make</A>
+      documentation (try doing a <TT>man</TT> or <TT>info</TT> on `gmake' or
+      on `make'; there also is a good book by
+      <A HREF="http://www.ora.com/">O'Reilly &amp; Associates</A>)
+    </LI>
+  </UL>
+
+<A NAME="targets"><H4>Targets</H4></A>
+
+  <P>
+    This section describes all the targets related to building VR Juggler
+    from its source code.  The targets are grouped together depending upon
+    how they are related.  For information on what is actually done as part
+    of the compiling process, <A HREF="#steps">see below</A>.  A current
+    list of all the targets (with descriptions) can be found at the top of
+    <TT>Makefile.in</TT> in the top-level Juggler source directory.
+  </P>
+
+  <DL>
+    <DT>`<TT>world</TT>'
+      <DD>Clean up the build environment and then build and install
+          everything using the default ABI and ISA.  This is a simple target
+          for those who just want to build and install VR Juggler as simply
+          as possible.  ``Everything'' in this case is the following:
+
+          <UL>
+            <LI>
+              Debugging and optimized versions of the library binaries
+            </LI>
+            <LI>
+              Shared and static versions of the library binaries (if both are
+              supported on the target platform)
+            </LI>
+            <LI>
+              Header files
+            </LI>
+            <LI>
+              Sample applications, test code and user tools
+            </LI>
+            <LI>
+              Data files (sample config files, model files, etc.)
+            </LI>
+            <LI>
+              VJ Control (if it was built)
+            </LI>
+          </UL>
+
+    <DT>`<TT>world-all-abi</TT>'
+      <DD>This is the same as the `<TT>world</TT>' target except that it
+          builds and installs <I>all possible</I> ABI and ISA combinations
+          for the target platform.  On IRIX, for example, this means that
+          all combinations of N32, 64, mips3 and mips4 (debugging and
+          optimized versions) are built and installed.  Most platforms
+          currently support only one ABI/ISA combination thus making this
+          target the same as `<TT>world</TT>'.
+    <DT>`<TT>buildworld</TT>' (same as `<TT>all</TT>')
+      <DD>Build everything.  This target is another name for the
+          `<TT>all</TT>' target.  It executes the first phase of the
+          `<TT>world</TT>' target (i.e., only the build phase, not the
+          install phase).  Since it builds both debugging and optimized
+          versions of VR Juggler without installing, it is useful for
+          testing changes to the library code to ensure that it works in
+          both the debugging and optimized cases.
+    <DT>`<TT>all-abi</TT>'
+      <DD>In the same manner as `<TT>world-all-abi</TT>', this target
+          builds, but <I>does not install</I>, all possible ABI/ISA
+          combinations for the target platform.  Thus, it provides
+          functionality that could also be called
+          `<TT>buildworld-all-abi</TT>', but the length of such a target's
+          name is unwieldy.
+    <DT>`<TT>debug</TT>' (default target)
+      <DD>Build only the debugging version of the library binaries (both
+          static and dynamic).  In other words, the libraries are built so
+          that debugging symbols are turned on.  It is the combination of
+          `<TT>dbg</TT>' and `<TT>ddso</TT>' (see below). <I>This is the
+          default target and is what gets built if running <TT>make</TT>
+          with no arguments.</I>
+    <DT>`<TT>optim</TT>'
+      <DD>Build only the optimized version of the library binaries (both
+          static and dynamic).  This is built with <I>no</I> debugging
+          symbols at all.  It is the combination of `<TT>opt</TT>' and
+          `<TT>dso</TT>'.
+    <DT>`<TT>dbg</TT>'
+      <DD>Build only the <I>static</I> debugging version of the libraries.
+          This does the same thing as `<TT>debug</TT>' but does not compile
+          the dynamic libraries.
+    <DT>`<TT>ddso</TT>'
+      <DD>Build only the <I>dynamic</I> debugging version of the libraries.
+          This does the same thing as `<TT>debug</TT>' but does not compile
+          the static libraries.
+    <DT>`<TT>opt</TT>'
+      <DD>Build only the <I>static</I> optimized version of the libraries.
+          This does the same thing as `<TT>optim</TT>' but does not compile
+          the dynamic libraries.
+    <DT>`<TT>dso</TT>'
+      <DD>Build only the <I>dynamic</I> optimized version of the libraries.
+          This does the same thing as `<TT>optim</TT>' but does not compile
+          the static libraries.
+    <DT>`<TT>gui</TT>'
+      <DD>Compile the VJ Control Java files and collect them into
+          <TT>VjControl.jar</TT>.  This is only done if the configure
+          script found a working Java compiler during its phase of the
+          compile process.
+    <DT>`<TT>links</TT>'
+      <DD>Set up the developer pseudo-installation environment.  More
+          detail is given on this subject <A HREF="#devel">below</A>.
+    <DT>`<TT>clean</TT>'
+      <DD>Clean up everything in the build environment.  This uses a
+          `<TT>clean</TT>' target defined in <TT>Makefile.base</TT> that
+          is automatically shared by all makefiles that include that file.
+          The cleaning process is recursive just as the build process is.
+          Each makefile defines which files are safe for cleaning, but
+          generally core files, compiler-generated files and object files
+          are the only things removed during this process.
+    <DT>`<TT>cleandepend</TT>'
+      <DD>Clean up the automatically generated dependency files (the
+          <TT>.d</TT> files in each directory).  This method for cleaning
+          up deletes only these files and nothing else--ever.
+    <DT>`<TT>clean-links</TT>'
+      <DD>Remove the developer pseudo-installation environment.  More detail
+          is given on this subject <A HREF="#devel">below</A>.
+    <DT>`<TT>clobber</TT>'
+      <DD>Clean up (clobber) the entire build environment except what was
+          generated by <TT>configure</TT>.  This runs the previous clean-up
+          targets and removes the object directory(ies) and <TT>lib</TT>
+          directory(ies).  Its purpose is to totally reset the build
+          environment to its state just prior to running
+          <TT>configure</TT>.
+    <DT>`<TT>info</TT>'
+      <DD>Print out all the targets with short descriptions as well as
+          default values for some variables that may be overridden by the
+          user.  For more information about variables in the Juggler
+          makefiles, <A HREF="#variables">see below</A>.
+  </DL>
+
+<A NAME="variables"><H4>Useful Variables</H4></A>
+
+  <P>
+    As with all make-based build systems, variables used in the makefiles
+    can be overridden by the user.  This section describes variables that
+    developers may find useful to override while compiling.  The variables
+    are listed alphabetically.
+  </P>
+
+  <DL>
+    <DT><TT>prefix</TT>
+      <DD>Provide an alternate installation prefix than what was set at
+          configuration time.  Refer to the
+          <A HREF="${TEAMGUIDE}/build/juggler/use.install.html">installation
+          documentation</A> for more information about installing Juggler.
+    <DT><TT>vjABI</TT>
+      <DD>Define an alternate ABI/ISA combination than the default set by
+          <TT>configure</TT>.  This accepts exactly the same values as the
+          <TT>--with-abi</TT> argument to the configure script.  Results of
+          its use can be seen near the bottom of <TT>Makefile.base</TT>.
+    <DT><TT>NO_CLEAN</TT>
+      <DD>Do not clobber the build environment (via the `<TT>clobber</TT>'
+          target) before running the `<TT>world</TT>' target.  Set this
+          variable to <TT>1</TT> to enable it.
+    <DT><TT>NO_JAVA_GUI</TT>
+      <DD>Disable compiling and installing of VJ Control by setting this
+          variable to <TT>1</TT> when building.  This is very handy when
+          VJ Control is not building properly or is not needed for whatever
+          reason.
+    <DT><TT>OBJDIR</TT>
+      <DD>Set an alternate directory in which object files are created.
+          The default method is to use the platform- and ABI-specific
+          directory when compiling from the top-level directory or to use
+          the current directory when compiling in a subdirectory.
+    <DT><TT>OBJ_FILE_SUFFIX</TT>
+      <DD>Choose an alternate suffix for object files that are compiled.
+          When compiling with MS Visual C++, ``<TT>obj</TT>'' is the default.
+          In all other cases, ``<TT>o</TT>'' is the default.  Only specify
+          the suffix, not the `<TT>.</TT>' as that is always present.
+    <DT><TT>PERL</TT>
+      <DD>Provide a different version of a Perl 5.004 or newer binary than
+          what <TT>configure</TT> found.
+  </DL>
+
+<A NAME="options"><H4>GNU Make Options</H4></A>
+
+  <P>
+    Two options can be used with GNU make when compiling VR Juggler.  They
+    provide the capability to build the library in parallel to take
+    advantage of hardware that can do this effectively.  To enable parallel
+    building, specify the <TT>-j</TT> argument on the command line.  With
+    no argument, there is no limit to the number of jobs that are spawned
+    by the build process.  An integer argument limits the number of jobs
+    to that value.  (<I>NOTE: Thus far, we have not had any success in
+    using this argument to limit the number of jobs and instead have had to
+    limit the load on the machine.</I>)
+  </P>
+
+  <P>
+    The second argument enforces load balancing on the machine while doing
+    a parallel build.  To do this, use the <TT>-l</TT> option with a
+    floating-point value as the load limit.  Note that to be allowed to do
+    this, GNU make must be installed setgid on many platforms.  When used
+    in combination with the <TT>-j</TT> option, parallel compiling can be
+    done while not loading the machine down too heavily.
+  </P>
+
+<A NAME="steps"><H4>Process of Building (Individual Steps)</H4></A>
+
+  <P>
+    This section describes the steps taken by the `<TT>world</TT>' target
+    as it <I>builds</I> Juggler.  All other build targets are subsets of
+    `<TT>world</TT>', and this information can be applied accordingly.
+    The steps are:
+    
+    <OL>
+      <LI>
+        Clobber the build environment so that it is as it would be after
+        running <TT>configure</TT> in a clean directory tree.
+      </LI>
+      <LI>
+        Build the object files for the optimized version of the library
+        binaries.  Part of this process is to generate dependencies for
+        each <TT>.c</TT> and <TT>.cpp</TT> file on the fly.  These
+        dependencies are listed in corresponding <TT>.d</TT> files and are
+        updated automatically whenever a change in a source or header file
+        is detected.  All targets, except `<TT>cleandepend</TT>', run in
+        the subdirectories of the source tree (not just the one that builds
+        optimized object files) ensure that dependencies are up to date all
+        the time.  Compiling from the top-level directory of the build
+        environment puts the optimized object files in a platform- and
+        ABI-specific subdirectory named as
+        <TT>obj/&lt;platform&gt;/&lt;ABI&gt;/&lt;ISA&gt;/opt</TT>.
+      </LI>
+      <LI>
+        Create the static and dynamic versions of the library binaries from
+        the optimized object files.  The binaries are built in the
+        subdirectory named as <TT>lib/&lt;ISA&gt;/opt</TT> and are linked to
+        from the <TT>lib</TT> directory.  Note that <TT>lib</TT> may be
+        named differently on some platforms.  On IRIX, for example, depending
+        on the default ABI, it may be named <TT>lib32</TT> or
+        <TT>lib64</TT>.  It is referred to as ``<TT>lib</TT>'' for
+        simplicity.
+      </LI>
+      <LI>
+        Repeat steps 2 and 3 for the debugging version of the object files
+        and library binaries.
+      </LI>
+      <LI>
+        Once all libraries are built, links are set up in the <TT>lib</TT>
+        directory and its ISA subdirectory (if there is one) that point to
+        the default library version.  This is currently the debugging
+        version since that is what developers are likely to use most
+        frequently.  These links overwrite those made in step 3 (and
+        repeated in step 4).
+      </LI>
+      <LI>
+        Compile VJ Control if the Java compiler is available and compiling
+        of it has not been disabled by the user (<A HREF="#variables">see
+        above</A> for more information).
+      </LI>
+    </OL>
+
+    The remainder of the work done is installation.  More information
+    on installing is available in the
+    <A HREF="${TEAMGUIDE}/build/juggler/use.install.html">installation
+    documentation</A>.
+  </P>
+
+<A NAME="devel"><H4>Developer ``Installation''</H4></A>
+
+  <P>
+    To facilitate development of VR Juggler applications, an environment
+    is created after compiling that simulates a fully installed version of
+    the library and its components.  This is done entirely within the build
+    environment and is rooted in a directory called <TT>instlinks</TT> (a
+    subdirectory of the top-level build directory).
+  </P>
+
+  <P>
+    When the build process completes, a message is printed telling the
+    developer the value to which s/he should set the environment variable
+    <TT>VJ_BASE_DIR</TT>.  By doing this simple step, the developer is
+    given a pseudo-installation where Juggler applications (that are part
+    of the source tree) can be compiled and executed.  These applications
+    are linked statically on IRIX, but on all other UNIX-based platforms,
+    they are linked dynamically.  In those cases, <TT>LD_LIBRARY_PATH</TT>
+    should be set to the value ``<TT>$VJ_BASE_DIR/lib</TT>'' which is a
+    normal step in the setup process for using an actual installation.
+  </P>
+
+  <P>
+    As of this writing, this environment is not available on a Win32
+    platform.  This is because the creation of it relies heavily on
+    symbolic links.  Because of this, Juggler must be fully installed for
+    application development.  Suggestions for enabling an equivalent
+    development environment for Win32 are welcomed.  It is possible, after
+    installing Juggler, to continue working within the build environment.
+    Set <TT>VJ_BASE_DIR</TT> to the installation directory and continue
+    working as on any other platform.  All library binaries and headers
+    will be referenced from the installed version, but source code (for
+    applications as an example) comes from the Juggler source tree.
+  </P>
+
+</BODY>
