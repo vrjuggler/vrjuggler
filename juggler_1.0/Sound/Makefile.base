@@ -10,15 +10,16 @@ VJ_LIBS		= -B static -L$(VJ_BASE_DIR)/lib32 -L/usr/lib32 -lJuggler -B dynamic -l
 VJ_COMPILE_OPTS = -DHAVE_CONFIG_H -ptv -woff 3322 -w2 -g -gslim
 VJ_LINK_OPTS = -ptv  -woff 3322 -w2
 
+# defines the locations for the various sound APIs
+include Makefile.locations
+
 # Normal definitions
 SHELL = sh
 CXX_COMPILE = CC
-AW_LIB = 	-L/usr/lib32/PSI -law -lawhwi -lpsi -laudiofile
-AW_INCLUDES = -I/usr/include/PSI
-INCLUDE_PATHS =  -I. -I../src -I../../samples/pfNav $(VJ_INCLUDES) $(AW_INCLUDES) -I../sl 
+INCLUDE_PATHS =  -I. -I../src -I../../samples/pfNav $(VJ_INCLUDES) $(ADDITIONAL_INCLUDES)
 LIB_PATHS = -L.
 XLIBS = -lXmu -lXext -lX11
-LIBS =   $(AW_LIB) -laudio $(VJ_LIBS) -lm -lC 
+LIBS = $(ADDITIONAL_LIBS) $(VJ_LIBS) -lm -lC
 CXX_COMPILE = CC
 CXX_FLAGS = -n32 -mips3 -c -DHAVE_SLEEP -DHAVE_USLEEP $(VJ_COMPILE_OPTS)
 EXE_LINKER = CC

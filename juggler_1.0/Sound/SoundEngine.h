@@ -6,6 +6,8 @@
 
 class Sound;
 
+// Normally, use the SoundFactory factory to create a new sound engine.
+// You shouldn't create one directly (but you could if you wanted).
 class SoundEngine
 {
 public:
