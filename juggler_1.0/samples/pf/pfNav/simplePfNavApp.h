@@ -143,8 +143,7 @@ public: // Model and sound member classes
 
 public:
    simplePfNavApp() : mStatusMessageEmitCount(0),// mWorldDcsTrans( 0.0f, 0.0f, 0.0f ),
-      mInitialNavPos( 0.0f, 0.0f, 0.0f ),
-      mBoundingSize(0.0f),
+      mInitialNavPos( 0.0f, 12.0f, 0.0f ),
       mUseDriveMode( true ),
       mConfiguredNoCollideModels( NULL ),
       mSoundNodes( NULL ),
@@ -156,7 +155,6 @@ public:
       mConfiguredCollideModels = NULL;
       //mWorldDCS = NULL;
       mCollidableModelGroup = NULL;
-      mUseDriveMode = false;
 
       mVelNavDrive = NULL;
       mNavigationDCS = NULL;
@@ -296,35 +294,38 @@ public:  // Configure the application
    void addSound(Sound s)
    { mSoundList.push_back(s); }
 
-   void addFilePath(const std::string path)
-   {
+   void addFilePath(const std::string path)     
+   { 
       // initScene could be called already,
       // so, delegate to the the static fileIO func
       pfFileIO::addFilePath( mFilePath );
+      vjDEBUG( vjDBG_ALL, 0 ) << clrOutNORM(clrCYAN,"addFilePath: ") << mFilePath <<"\n"<<vjDEBUG_FLUSH;
    }
    void setFilePath( const std::string path )
    {
       // initScene could be called already,
       // so, delegate to the the static fileIO func
       mFilePath = path;
-
+      
       // set some common paths first...
       pfFileIO::setFilePath( ".:./data:/usr/share/Performer/data:/usr/share/Performer/data/town:");
       pfFileIO::addFilePath( mFilePath );
-   }
-   void setInitialNavPos(const vjVec3 initialPos)
-   {
+      
+      vjDEBUG( vjDBG_ALL, 0 ) << clrOutNORM(clrCYAN,"setFilePath: ") << mFilePath <<"\n"<<vjDEBUG_FLUSH;
+   }   
+   void setInitialNavPos(const vjVec3 initialPos) 
+   { 
       mInitialNavPos = initialPos;
-
-      // if the navigator is already created,
+      
+      // if the navigator is already created, 
       // then initScene has been called,
-      // so we need to set the home pos in the nav,
+      // so we need to set the home pos in the nav, 
       // not just the member var.
       // FIXME: some code duplication here.
       if (mVelNavDrive != NULL)
       {
          vjDEBUG(vjDBG_ALL,0) << "setting pos\n" <<flush;
-
+      
          vjMatrix initial_nav;              // Initial navigation position
          initial_nav.setTrans( mInitialNavPos );
 
@@ -346,7 +347,6 @@ public:
    // CONFIG PARAMS
    std::string    mFilePath;
    vjVec3         mInitialNavPos;
-   float          mBoundingSize;       // XXX: This is a hack and should be refactored
    bool           mUseDriveMode;
 
    int mStatusMessageEmitCount;
@@ -430,6 +430,11 @@ void simplePfNavApp::initializeModels()
    // --- CONSTRUCT SCENE GRAPH --- //
    mCollidableModelGroup->addChild( mConfiguredCollideModels );
    mUnCollidableModelGroup->addChild( mConfiguredNoCollideModels );
+   
+   // replace all nodes with _Sound_ with pjSoundNodes...
+   std::string extension = "_Sound_";
+   pjSoundReplaceTrav::traverse( mConfiguredCollideModels, extension );
+   pjSoundReplaceTrav::traverse( mConfiguredNoCollideModels, extension );
 }
 
 // func needs to destroy all previous pf nodes associated with sound
@@ -486,7 +491,32 @@ void simplePfNavApp::initScene()
    //mWorldDCS             = new pfDCS;
 
    mRootNode->addChild( mNoNav );
-
+   /*  SHOWS The feet and the head...
+   pfNode* no = pfdLoadFile( "ball.flt" ) ;  // ball is at 0.0.0
+   pfDCS* noo = new pfDCS;
+   if (no == NULL)
+   {
+      cout<<"@!#$##@$@#!$#@!%#!$^%#!$%^@$!#*%(@!$*%@(#*%(@#*%(@!#*%*@!#$(*%@#*%@(#*%@#\n"<<flush;
+      cout<<"@!#$##@$@#!$#@!%#!$^%#!$%^@$!#*%(@!$*%@(#*%(@#*%(@!#*%*@!#$(*%@#*%@(#*%@#\n"<<flush;
+      cout<<"@!#$##@$@#!$#@!%#!$^%#!$%^@$!#*%(@!$*%@(#*%(@#*%(@!#*%*@!#$(*%@#*%@(#*%@#\n"<<flush;
+      cout<<"@!#$##@$@#!$#@!%#!$^%#!$%^@$!#*%(@!$*%@(#*%(@#*%(@!#*%*@!#$(*%@#*%@(#*%@#\n"<<flush;
+      cout<<"@!#$##@$@#!$#@!%#!$^%#!$%^@$!#*%(@!$*%@(#*%(@#*%(@!#*%*@!#$(*%@#*%@(#*%@#\n"<<flush;
+      cout<<"@!#$##@$@#!$#@!%#!$^%#!$%^@$!#*%(@!$*%@(#*%(@#*%(@!#*%*@!#$(*%@#*%@(#*%@#\n"<<flush;
+      cout<<"@!#$##@$@#!$#@!%#!$^%#!$%^@$!#*%(@!$*%@(#*%(@#*%(@!#*%*@!#$(*%@#*%@(#*%@#\n"<<flush;
+      cout<<"@!#$##@$@#!$#@!%#!$^%#!$%^@$!#*%(@!$*%@(#*%(@#*%(@!#*%*@!#$(*%@#*%@(#*%@#\n"<<flush;
+      cout<<"@!#$##@$@#!$#@!%#!$^%#!$%^@$!#*%(@!$*%@(#*%(@#*%(@!#*%*@!#$(*%@#*%@(#*%@#\n"<<flush;
+      cout<<"@!#$##@$@#!$#@!%#!$^%#!$%^@$!#*%(@!$*%@(#*%(@#*%(@!#*%*@!#$(*%@#*%@(#*%@#\n"<<flush;
+   }
+   else
+   {
+      cout<<"KEVINKEVINKEVINKEVINKEVINKEVINKEVINKEVINKEVINKEVINKEVINKEVINKEVINKEVIN\n"<<flush;
+   }
+   mRootNode->addChild( no );
+   mRootNode->addChild( noo );
+   noo->setTrans( 0.0f, 0.0f, 6.0f );
+   noo->addChild( no );
+   */
+         
    // Create the SUN
    mLightGroup = new pfGroup;
    mSun = new pfLightSource;
@@ -534,14 +564,10 @@ void simplePfNavApp::initScene()
 
    mNavigationDCS->setNavigator(mVelNavDrive);
 
-   // make sure config is processed, before doing sound replace traversal.
-   this->configProcessPending();
-
    // replace all nodes with _Sound_ with pjSoundNodes...
    std::string extension = "_Sound_";
    pjSoundReplaceTrav::traverse( mRootNode, extension );
-
-
+   
    // load these files into perfly to see just what your scenegraph
    // looked like. . . . .useful for debugging.
    //cout<<"[pfNav] Saving entire scene into lastscene.pfb, COULD TAKE A WHILE!\n"<<flush;
