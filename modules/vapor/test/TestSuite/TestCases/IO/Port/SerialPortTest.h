@@ -55,58 +55,58 @@ CPPUNIT_TEST( testSendRecv );
 CPPUNIT_TEST_SUITE_END();
 
 public:
-   SerialPortTest (std::string name)
+   SerialPortTest(std::string name)
       : CppUnit::ThreadTestCase(name), mDataBuffer("This is a test...")
    {
       /* Do nothing. */ ;
    }
 
-   SerialPortTest (void)
+   SerialPortTest()
       : CppUnit::ThreadTestCase(), mDataBuffer("This is a test...")
    {
       /* Do nothing. */ ;
    }
 
-   virtual ~SerialPortTest (void)
+   virtual ~SerialPortTest()
    {
       /* Do nothing. */ ;
    }
 
-   virtual void setUp(void);
-   virtual void tearDown(void);
+   virtual void setUp();
+   virtual void tearDown();
 
    // These tests do not require opening the serial port.
-   void testGetName(void);
-   void testChangeUpdateAction(void);
+   void testGetName();
+   void testChangeUpdateAction();
 
    // These tests require opening the serial port.
-   void testOpen(void);
-   void testRepeatedOpen(void);
-   void testOpenModes(void);
-   void testBlockingOpen(void);
-   void testNonBlockingOpen(void);
-   void testEnableBlocking(void);
-   void testEnableNonBlocking(void);
-   void testChangeMinInputSize(void);
-   void testChangeTimeout(void);
-   void testChangeCharacterSize(void);
-   void testChangeReadState(void);
-   void testChangeStopBits(void);
-   void testChangeCanonicalInput(void);
-   void testChangeBadByteIgnore(void);
-   void testChangeInputParityCheck(void);
-   void testChangeBitStripping(void);
-   void testChangeStartStopInput(void);
-   void testChangeStartStopOutput(void);
-   void testChangeParityGeneration(void);
-   void testChangeParityErrorMarking(void);
-   void testChangeParity(void);
-   void testChangeInputBaudRate(void);
-   void testChangeOutputBaudRate(void);
-   void testChangeHardwareFlowControl(void);
-   void testChangeSoftwareFlowControl(void);
+   void testOpen();
+   void testRepeatedOpen();
+   void testOpenModes();
+   void testBlockingOpen();
+   void testNonBlockingOpen();
+   void testEnableBlocking();
+   void testEnableNonBlocking();
+   void testChangeMinInputSize();
+   void testChangeTimeout();
+   void testChangeCharacterSize();
+   void testChangeReadState();
+   void testChangeStopBits();
+   void testChangeCanonicalInput();
+   void testChangeBadByteIgnore();
+   void testChangeInputParityCheck();
+   void testChangeBitStripping();
+   void testChangeStartStopInput();
+   void testChangeStartStopOutput();
+   void testChangeParityGeneration();
+   void testChangeParityErrorMarking();
+   void testChangeParity();
+   void testChangeInputBaudRate();
+   void testChangeOutputBaudRate();
+   void testChangeHardwareFlowControl();
+   void testChangeSoftwareFlowControl();
 
-   void testSendRecv(void);
+   void testSendRecv();
    void testSendRecv_sender(void* arg);
    void testSendRecv_receiver(void* arg);   
 

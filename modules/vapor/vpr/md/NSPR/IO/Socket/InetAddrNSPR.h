@@ -76,7 +76,7 @@ public:
     * @post Zero out the address and set everything to ANY
     */
 
-   InetAddrNSPR ()
+   InetAddrNSPR()
    {
       memset(&mAddr, 0, sizeof(mAddr));
       setFamily(SocketTypes::INET);
@@ -92,7 +92,7 @@ public:
     *
     * @param addr The vpr::InetAddr object to be copied into this object.
     */
-   InetAddrNSPR (const InetAddrNSPR& addr)
+   InetAddrNSPR(const InetAddrNSPR& addr)
    {
       mAddr = addr.mAddr;
    }
@@ -127,8 +127,8 @@ public:
     *                address).
     * @param port    The port to associate with the IP address.
     */
-   vpr::ReturnStatus setAddress (const std::string& address,
-                                 const vpr::Uint16 port)
+   vpr::ReturnStatus setAddress(const std::string& address,
+                                const vpr::Uint16 port)
    {
       vpr::ReturnStatus retval;
       retval = lookupAddress(address);
@@ -144,8 +144,8 @@ public:
     * @param address A 32-bit integer IP address.
     * @param port    The port to associate with the IP address.
     */
-   vpr::ReturnStatus setAddress (const vpr::Uint32 address,
-                                 const vpr::Uint16 port)
+   vpr::ReturnStatus setAddress(const vpr::Uint32 address,
+                                const vpr::Uint16 port)
    {
       setAddressValue(address);
       setPort(port);
@@ -163,7 +163,7 @@ public:
     * @return A vpr::SocketTypes::Domain value representing this object's
     *         protocol family.
     */
-   vpr::SocketTypes::Domain getFamily(void) const;
+   vpr::SocketTypes::Domain getFamily() const;
 
    /**
     * Sets the protocol family of this address structure.
@@ -187,7 +187,7 @@ public:
     * @return A Uint16 giving the port for this address structure in host byte
     *         order.
     */
-   vpr::Uint16 getPort (void) const
+   vpr::Uint16 getPort() const
    {
       return PR_ntohs(PR_NetAddrInetPort(&mAddr));
    }
@@ -202,7 +202,7 @@ public:
     * @param port A Uint16 port number for this address structure in host byte
     *             order.
     */
-   void setPort (const vpr::Uint16 port)
+   void setPort(const vpr::Uint16 port)
    {
       PR_NetAddrInetPort(&mAddr) = PR_htons(port);
    }
@@ -218,7 +218,7 @@ public:
     * @return An unsigned int (32-bit value) giving the IP address for this
     *         address structure in host byte order.
     */
-   vpr::Uint32 getAddressValue (void) const
+   vpr::Uint32 getAddressValue() const
    {
       return PR_ntohl(mAddr.inet.ip);
    }
@@ -234,18 +234,18 @@ public:
     * @return A std::string object containing this structure's IP address in
     *         the human-readable "dotted-decimal" notation.
     */
-   std::string getAddressString(void) const;
+   std::string getAddressString() const;
 
    /**
     * Returns the fully qualified hostname for this address.
     */
-   std::string getHostname(void) const;
+   std::string getHostname() const;
 
    /**
     * Returns the fully qualified primary hostname for this address and all
     * known aliases.
     */
-   std::vector<std::string> getHostnames(void) const;
+   std::vector<std::string> getHostnames() const;
 
    /**
     * Overloaded assignment operator to ensure that assignments work
@@ -309,7 +309,7 @@ protected:
     * @param port An unsigned int IP address for this address object in host
     *             byte order.
     */
-   void setAddressValue (const vpr::Uint32 addr_value)
+   void setAddressValue(const vpr::Uint32 addr_value)
    {
       mAddr.inet.ip = PR_htonl(addr_value);
    }
