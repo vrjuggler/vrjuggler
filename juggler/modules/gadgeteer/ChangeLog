@@ -1,8 +1,9 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Mar-10-2002 patrickh  Renamed the class ibox2 to IboxStandalone.
 Feb-24-2002 allenb    Added interface to Digital, Analog, and Position to
                       allow returning of current sample buffer.  This feature
-					  had been overlooked in the original impl.
+                      had been overlooked in the original impl.
 Feb-21-2002 allenb    Made SampleBuffers smarter in the way the swap.  Now
                       they do not swap unless there is new data.  Also removed
                       an assertion that was invalid and was thus causing

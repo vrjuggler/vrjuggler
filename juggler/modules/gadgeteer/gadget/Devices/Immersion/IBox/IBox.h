@@ -43,7 +43,7 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
-#include <gadget/Devices/Immersion/ibox2.h>
+#include <gadget/Devices/Immersion/IboxStandalone.h>
 #include <vector>
 
 namespace gadget
@@ -112,9 +112,9 @@ private:
    //IBOX_DATA   theData[3];
 
    // ibox native data in the range of [0..255]
-   ibox2       mPhysicalIbox;
-   std::string mPortStr;
-   long        mBaudRate;
+   IboxStandalone mPhysicalIbox;
+   std::string    mPortStr;
+   long           mBaudRate;
 };
 
 };

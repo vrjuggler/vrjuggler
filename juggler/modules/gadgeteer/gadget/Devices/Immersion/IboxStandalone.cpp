@@ -16,7 +16,7 @@
 
 #include <gadget/gadgetConfig.h>
 #include <stdio.h>
-#include <gadget/Devices/Immersion/ibox2.h>
+#include <gadget/Devices/Immersion/IboxStandalone.h>
 
 
 char SIGNON_STR[5] = "IMMC";
@@ -26,7 +26,7 @@ char BEGIN_STR[6] = "BEGIN";
 // ----------------------------------------------------------------------------
 // Constructor:  This sets all the default values for the ibox.
 // ----------------------------------------------------------------------------
-ibox2::ibox2() {
+IboxStandalone::IboxStandalone() {
         port = NULL;
         slow_timeout = 30; // Set to 3 seconds
         fast_timeout = 1;  // Set to 1 tenth of a second
@@ -56,12 +56,12 @@ ibox2::ibox2() {
 // ----------------------------------------------------------------------------
 // Destructor. Deletes the port
 // ----------------------------------------------------------------------------
-ibox2::~ibox2(){
+IboxStandalone::~IboxStandalone(){
         delete port;
 }
 
-ibox2_result ibox2::connect(const std::string& port_name,  long int baud){
-        ibox2_result result=SUCCESS;
+ibox_result IboxStandalone::connect(const std::string& port_name,  long int baud){
+        ibox_result result=SUCCESS;
         name = port_name;
         port = new vpr::SerialPort(name);
         port->setOpenReadWrite();
@@ -86,8 +86,8 @@ ibox2_result ibox2::connect(const std::string& port_name,  long int baud){
         return result;
 }
 
-ibox2_result ibox2::fancy_connect(const std::string& port_name, long int baud , void (*installer_fun)()){
-        ibox2_result result;
+ibox_result IboxStandalone::fancy_connect(const std::string& port_name, long int baud , void (*installer_fun)()){
+        ibox_result result;
         port = new vpr::SerialPort(name);
         port->setOpenReadWrite();
         (*installer_fun)();
@@ -106,20 +106,20 @@ ibox2_result ibox2::fancy_connect(const std::string& port_name, long int baud , 
         return result;
 }
 
-ibox2_result ibox2::wait_update(int timer_flag, int num_analogs ,int num_encoders){
+ibox_result IboxStandalone::wait_update(int timer_flag, int num_analogs ,int num_encoders){
         std_cmd(timer_flag, num_analogs, num_encoders);
         return wait_packet();
 
 }
 
-void ibox2::disconnect(){
+void IboxStandalone::disconnect(){
         port->flushQueue(vpr::SerialTypes::IO_QUEUES);
         end();
         port->close();
 }
 
 
-void ibox2::std_cmd(int timer_flag, int analog_reports, int encoder_reports){
+void IboxStandalone::std_cmd(int timer_flag, int analog_reports, int encoder_reports){
         vpr::Uint32 written;
         char cmnd = CMD_BYTE(timer_flag, analog_reports, encoder_reports);
         port->write(&cmnd, 1, written);
@@ -129,7 +129,7 @@ void ibox2::std_cmd(int timer_flag, int analog_reports, int encoder_reports){
 }
 
 
-void ibox2::simple_cfg_cmd(byte cmnd){
+void IboxStandalone::simple_cfg_cmd(byte cmnd){
         vpr::Uint32 written;
         char temp = cmnd;
         char* buffer = &temp;
@@ -140,9 +140,9 @@ void ibox2::simple_cfg_cmd(byte cmnd){
 
 }
 
-ibox2_result ibox2::string_cmd(byte cmnd){
+ibox_result IboxStandalone::string_cmd(byte cmnd){
         vpr::Uint16 size;
-        ibox2_result result;
+        ibox_result result;
         char temp= cmnd;
         char ch[2];
         vpr::Uint32 written;
@@ -188,7 +188,7 @@ ibox2_result ibox2::string_cmd(byte cmnd){
         return result;
 }
 
-ibox2_result ibox2::passwd_cmd(byte cmnd){
+ibox_result IboxStandalone::passwd_cmd(byte cmnd){
         char temp = cmnd;
         char* buffer = &temp;
         vpr::Uint16 size;
@@ -219,7 +219,7 @@ ibox2_result ibox2::passwd_cmd(byte cmnd){
 }
 
 
-void ibox2::insert_marker(byte marker){
+void IboxStandalone::insert_marker(byte marker){
         simple_cfg_cmd(INSERT_MARKER);
         char temp = marker;
         char* buffer = &temp;
@@ -227,7 +227,7 @@ void ibox2::insert_marker(byte marker){
         port->write( buffer, 1, written);
 }
 
-ibox2_result ibox2::get_params(byte *block, int *block_size){
+ibox_result IboxStandalone::get_params(byte *block, int *block_size){
         char ch[2];
         vpr::Uint16 size;
         vpr::Uint32 written;
@@ -247,19 +247,19 @@ ibox2_result ibox2::get_params(byte *block, int *block_size){
 
 }
 
-ibox2_result ibox2::set_params(byte *block, int block_size){
+ibox_result IboxStandalone::set_params(byte *block, int block_size){
         int i;
         num_cfg_args = block_size;
         for(i=0;i<block_size; i++) cfg_args[i] = block[i];
         return passwd_cmd(SET_PARAMS);
 }
 
-ibox2_result ibox2::get_home_ref(){
+ibox_result IboxStandalone::get_home_ref(){
         simple_cfg_cmd(GET_HOME_REF);
         return wait_packet();
 }
 
-ibox2_result ibox2::set_home_ref(int *homeref){
+ibox_result IboxStandalone::set_home_ref(int *homeref){
         num_cfg_args = 2*NUM_ENCODERS;
         cfg_args[0] = homeref[0] >> 8;
         cfg_args[1] = homeref[0] & 0x00FF;
@@ -276,12 +276,12 @@ ibox2_result ibox2::set_home_ref(int *homeref){
         return passwd_cmd(SET_HOME_REF);
 }
 
-ibox2_result    ibox2::go_home_pos(){
+ibox_result    IboxStandalone::go_home_pos(){
         simple_cfg_cmd(HOME_POS);
         return wait_packet();
 }
 
-ibox2_result    ibox2::set_home_pos(int *homepos){
+ibox_result    IboxStandalone::set_home_pos(int *homepos){
         num_cfg_args = 2*NUM_ENCODERS;
         cfg_args[0] = homepos[0] >> 8;
         cfg_args[1] = homepos[0] & 0x00FF;
@@ -298,19 +298,19 @@ ibox2_result    ibox2::set_home_pos(int *homepos){
         return passwd_cmd(SET_HOME);
 }
 
-ibox2_result    ibox2::get_maxes(){
+ibox_result    IboxStandalone::get_maxes(){
         simple_cfg_cmd(GET_MAXES);
         return wait_packet();
 }
 
-ibox2_result    ibox2::factory_settings(){
-        ibox2_result result;
+ibox_result    IboxStandalone::factory_settings(){
+        ibox_result result;
         num_cfg_args = 0;
         result = passwd_cmd(RESTORE_FACTORY);
         return result;
 }
 
-void            ibox2::report_motion(int timer_flag, int analog_reports, int encoder_reports, int delay, byte active_btns, int *analog_deltas, int *encoder_deltas){
+void            IboxStandalone::report_motion(int timer_flag, int analog_reports, int encoder_reports, int delay, byte active_btns, int *analog_deltas, int *encoder_deltas){
 
         int i;
         vpr::Uint32 written;
@@ -338,21 +338,21 @@ void            ibox2::report_motion(int timer_flag, int analog_reports, int enc
         }
 }
 
-void   ibox2::end_motion(){
+void   IboxStandalone::end_motion(){
         vpr::Uint32 written;
         port->write(0, 1, written);
         port->flushQueue(vpr::SerialTypes::IO_QUEUES);
 }
 
-ibox2_result    ibox2::wait_packet(){
-        ibox2_result result;
+ibox_result    IboxStandalone::wait_packet(){
+        ibox_result result;
         port->setTimeout(fast_timeout);
         while( (result = check_packet()) == NO_PACKET_YET);
         return result;
 }
 
-ibox2_result    ibox2::check_packet(){
-        ibox2_result result;
+ibox_result    IboxStandalone::check_packet(){
+        ibox_result result;
         vpr::Uint16 size;
         if(build_packet()){
                 result = parse_packet();
@@ -366,8 +366,8 @@ ibox2_result    ibox2::check_packet(){
         }
 }
 
-ibox2_result    ibox2::check_motion(){
-        ibox2_result result;
+ibox_result    IboxStandalone::check_motion(){
+        ibox_result result;
         if(build_packet()){
                 result = parse_packet();
                 if(result==SUCCESS) return result;
@@ -376,7 +376,7 @@ ibox2_result    ibox2::check_motion(){
         else return NO_PACKET_YET;
 }
 
-int  ibox2::build_packet(){
+int  IboxStandalone::build_packet(){
         char ch;
         int temp;
         vpr::Uint32 written;
@@ -407,9 +407,9 @@ int  ibox2::build_packet(){
         return (packet.num_bytes_needed <= 0);
 }
 
-ibox2_result    ibox2::parse_packet(){
+ibox_result    IboxStandalone::parse_packet(){
         char cmnd = packet.cmd_byte, bits, temp;
-        ibox2_result result = SUCCESS;
+        ibox_result result = SUCCESS;
         byte *dp;
         int *p, *q;
 
@@ -500,8 +500,8 @@ ibox2_result    ibox2::parse_packet(){
         return result;
 }
 
-ibox2_result    ibox2::parse_cfg_packet(){
-        ibox2_result result = SUCCESS;
+ibox_result    IboxStandalone::parse_cfg_packet(){
+        ibox_result result = SUCCESS;
         byte *dp = packet.data;
         int *p;
 
@@ -562,7 +562,7 @@ ibox2_result    ibox2::parse_cfg_packet(){
         return result;
 }
 
-int    ibox2::packet_size(int cmd){
+int    IboxStandalone::packet_size(int cmd){
         int size = 1;   /* Regular cmds always include buttons byte */
         int bits;
 
@@ -614,14 +614,14 @@ int    ibox2::packet_size(int cmd){
         return size;
 }
 
-ibox2_result   ibox2:: read_string(char *str){
+ibox_result   IboxStandalone:: read_string(char *str){
         vpr::Uint32 written;
         if(port->read(str, MAX_STRING_SIZE, written).success()) return SUCCESS;
         else return TIMED_OUT;
 
 }
 
-ibox2_result ibox2::read_block(byte *block, int *num_bytes){
+ibox_result IboxStandalone::read_block(byte *block, int *num_bytes){
         int count;
         vpr::Uint32 written;
         char *ch;
@@ -643,7 +643,7 @@ ibox2_result ibox2::read_block(byte *block, int *num_bytes){
         }
 }
 
-void   ibox2::invalidate_fields(){
+void   IboxStandalone::invalidate_fields(){
         timer_updated = 0;
         analog_updated[0] = 0;
         analog_updated[1] = 0;
@@ -663,8 +663,8 @@ void   ibox2::invalidate_fields(){
 }
 
 
-ibox2_result    ibox2::error(ibox2_result condition){
-        ibox2_result (*handler) ();
+ibox_result    IboxStandalone::error(ibox_result condition){
+        ibox_result (*handler) ();
 
         /* These two are not really errors */
         if (condition == SUCCESS) return SUCCESS;
@@ -697,7 +697,7 @@ ibox2_result    ibox2::error(ibox2_result condition){
         return (*handler)();
 }
 
-int ibox2::autosynch(){
+int IboxStandalone::autosynch(){
         vpr::Uint16 size;
         //ssize_t ch=0;
         vpr::Uint32 written;
@@ -733,7 +733,7 @@ int ibox2::autosynch(){
         else return false;
 }
 
-int ibox2::begin(){
+int IboxStandalone::begin(){
 //        int ch;
         vpr::Uint32 written;
 //        char* temp;
@@ -747,7 +747,7 @@ int ibox2::begin(){
 }
 
 
-int ibox2::end(){
+int IboxStandalone::end(){
         vpr::Uint32 written;
 
         char temp = END_SESSION;
@@ -759,10 +759,10 @@ int ibox2::end(){
         }
 }
 
-int ibox2::buttonFunc(int pos){
+int IboxStandalone::buttonFunc(int pos){
         return button[pos];
 }
 
-int ibox2::analogFunc(int pos){
+int IboxStandalone::analogFunc(int pos){
         return analog[pos];
 }
