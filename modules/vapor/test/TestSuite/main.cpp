@@ -1,5 +1,5 @@
-#include <CppUnit/framework/TestSuite.h>
-#include <CppUnit/textui/TestRunner.h>
+#include <framework/TestSuite.h>
+#include <textui/TestRunner.h>
 
 #include <TestCases/Socket/SocketTest.h>
 #include <TestCases/Socket/NonBlockingSocketsTest.h>
