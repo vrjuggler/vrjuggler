@@ -906,6 +906,7 @@ cd "$topdir"
 dnl # Define the base path to the source directory using ${VJROOT_ABS} as an
 dnl # alternative to using ${srcdir}.
 VJ_SRCDIR='${VJROOT_ABS}'
+UNIX_VJROOT_ABS="$VJROOT_ABS"
 
 dnl # Variables set in Makefiles found in the test tree.  All variables
 dnl # listed are for use only in the Makefile.in's found in that tree unless
@@ -957,6 +958,8 @@ TEST_EXTRA_LIBS_BASIC_SUBST="$LDFLAGS $LIBS"
 TEST_EXTRA_LIBS_GL="-L${OGLROOT}/lib${LIBBITSUF} ${_SYSTEM_OPENGL}"
 TEST_EXTRA_LIBS_GL_SUBST="-L${OGLROOT}/lib\${LIBBITSUF} ${_SYSTEM_OPENGL}"
 TEST_EXTRA_LIBS_PF="${_PFOGLLIB}"
+
+SAFE_VJROOT_ABS="$VJROOT_ABS"
 
 AC_SUBST(topdir)
 AC_SUBST(VJROOT_ABS)

@@ -107,12 +107,12 @@ libexecdir	= @libexecdir@
 mtreedir	= ${releasedir}/mtree
 mtreedir_os	= ${mtreedir}/${PLATFORM}
 prefix		= @prefix@
-releasedir	= ${VJROOT_ABS}/release
+releasedir	= @UNIX_VJROOT_ABS@/release
 sbindir		= @sbindir@
 scriptdir	= ${releasedir}/scripts
 sysconfdir	= @sysconfdir@
 topdir		= @topdir@
-VJROOT_ABS	= @VJROOT_ABS@
+VJROOT_ABS	= @SAFE_VJROOT_ABS@
 
 AR		= @AR@ ${EXTRA_ARFLAGS} ${ARFLAGS}
 ARFLAGS		= @ARFLAGS@
