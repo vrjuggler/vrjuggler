@@ -34,7 +34,8 @@ void samplem_keys(void*);
 
 bool vjKeyboardWin32::config(vjConfigChunk *c)
 {
-    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "vjKeyboardWin32::config " << endl << vjDEBUG_FLUSH;
+    vjDEBUG_BEGIN(vjDBG_INPUT_MGR, vjDBG_STATE_LVL)
+                     << "vjKeyboardWin32::config " << endl << vjDEBUG_FLUSH;
 
     // Call base class config function first
     if(!vjKeyboard::config(c))
@@ -58,8 +59,9 @@ bool vjKeyboardWin32::config(vjConfigChunk *c)
     m_mouse_sensitivity = c->getProperty("msens");
     if (0 == m_mouse_sensitivity) m_mouse_sensitivity = 0.5;
 
-    vjDEBUG(vjDBG_INPUT_MGR,3) << "Mouse Sensititivty: " << m_mouse_sensitivity << endl << vjDEBUG_FLUSH;
-    vjDEBUG_END(vjDBG_INPUT_MGR,3) << endl << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "Mouse Sensititivty: "
+               << m_mouse_sensitivity << endl << vjDEBUG_FLUSH;
+    vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << endl << vjDEBUG_FLUSH;
 
     return true;
 }
@@ -77,7 +79,9 @@ int vjKeyboardWin32::startSampling()
 
       m_x = 100; m_y = 200;
 
-      vjDEBUG(vjDBG_INPUT_MGR,0) << "vjWin32Keyboard::startSampling() : ready to go.." << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CONFIG_LVL)
+                 << "vjWin32Keyboard::startSampling() : ready to go.." << endl
+                 << vjDEBUG_FLUSH;
 
       vjKeyboard* devicePtr = this;
 
@@ -153,7 +157,7 @@ void vjKeyboardWin32::updateData()
 
    if (m_keys[VJKEY_CTRL] || m_keys[VJKEY_ALT] || m_keys[VJKEY_SHIFT])
    {
-      vjDEBUG(vjDBG_ALL,0) << instName << ": Modifier key is down\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << instName << ": Modifier key is down\n" << vjDEBUG_FLUSH;
    }
 */
 
@@ -173,7 +177,7 @@ void vjKeyboardWin32::updateData()
 // to forward on messages to be handled from in the keyboard object.
 void vjKeyboardWin32::updKeys(UINT message, UINT wParam, LONG lParam)
 {
-   //vjDEBUG(vjDBG_ALL,0) << instName << ": vjKeyWin32::updKeys: Processing keys.\n" << vjDEBUG_FLUSH;
+   //vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << instName << ": vjKeyWin32::updKeys: Processing keys.\n" << vjDEBUG_FLUSH;
 
    int key;
    //static HWND lCapture;
@@ -200,13 +204,16 @@ void vjKeyboardWin32::updKeys(UINT message, UINT wParam, LONG lParam)
                 key = VKKeyTovjKey(wParam);
                 m_realkeys[key] = 1;
                 m_framekeys[key] += 1;
-                vjDEBUG(vjDBG_ALL,0) << instName << ": WM_KEYDOWN: " << key << ": " << getKeyName(key).c_str() << endl << vjDEBUG_FLUSH;
+                vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << instName
+                           << ": WM_KEYDOWN: " << key << ": "
+                           << getKeyName(key).c_str() << endl << vjDEBUG_FLUSH;
                 break;
 
         case WM_KEYUP:
                 key = VKKeyTovjKey(wParam);
                 m_realkeys[key] = 0;
-                vjDEBUG(vjDBG_ALL,0) << instName << ": WM_KEYUP: " << key << endl << vjDEBUG_FLUSH;
+                vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << instName
+                           << ": WM_KEYUP: " << key << endl << vjDEBUG_FLUSH;
                 break;
 
       // mouse buttons
@@ -217,31 +224,37 @@ void vjKeyboardWin32::updKeys(UINT message, UINT wParam, LONG lParam)
         case WM_LBUTTONDOWN:
                 m_framekeys[VJMBUTTON1] = 1;
                 m_realkeys[VJMBUTTON1] = 1;
-                vjDEBUG(vjDBG_ALL,0) << "LeftButtonDown\n" << vjDEBUG_FLUSH;
+                vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "LeftButtonDown\n"
+                           << vjDEBUG_FLUSH;
                 break;
         case WM_LBUTTONUP:
                 m_realkeys[VJMBUTTON1] = 0;
-                vjDEBUG(vjDBG_ALL,0) << "LeftButtonUp\n" << vjDEBUG_FLUSH;
+                vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "LeftButtonUp\n"
+                           << vjDEBUG_FLUSH;
                 break;
 
         case WM_MBUTTONDOWN:
                 m_framekeys[VJMBUTTON2] = 1;
                 m_realkeys[VJMBUTTON2] = 1;
-                vjDEBUG(vjDBG_ALL,0) << "MiddleButtonDown\n" << vjDEBUG_FLUSH;
+                vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL)
+                           << "MiddleButtonDown\n" << vjDEBUG_FLUSH;
                 break;
         case WM_MBUTTONUP:
                 m_realkeys[VJMBUTTON2] = 0;
-                vjDEBUG(vjDBG_ALL,0) << "MiddleButtonUp\n" << vjDEBUG_FLUSH;
+                vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "MiddleButtonUp\n"
+                           << vjDEBUG_FLUSH;
                 break;
 
         case WM_RBUTTONDOWN:
                 m_framekeys[VJMBUTTON3] = 1;
                 m_realkeys[VJMBUTTON3] = 1;
-                vjDEBUG(vjDBG_ALL,0) << "RightButtonDown\n" << vjDEBUG_FLUSH;
+                vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL)
+                           << "RightButtonDown\n" << vjDEBUG_FLUSH;
                 break;
         case WM_RBUTTONUP:
                 m_realkeys[VJMBUTTON3] = 0;
-                vjDEBUG(vjDBG_ALL,0) << "RightButtonUp\n" << vjDEBUG_FLUSH;
+                vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "RightButtonUp\n"
+                           << vjDEBUG_FLUSH;
                 break;
 
         // mouse movement
@@ -286,10 +299,18 @@ void vjKeyboardWin32::updKeys(UINT message, UINT wParam, LONG lParam)
                         // reset the oldx oldy values in UpdateData
                         //  oldx = newx; oldy = newy;
 
-                    vjDEBUG(vjDBG_ALL,0) << "move PosX: " << m_framekeys[VJMOUSE_POSX] << endl << vjDEBUG_FLUSH;
-                    vjDEBUG(vjDBG_ALL,0) << "move NegX: " << m_framekeys[VJMOUSE_NEGX] << endl << vjDEBUG_FLUSH;
-                    vjDEBUG(vjDBG_ALL,0) << "move PosY: " << m_framekeys[VJMOUSE_POSY] << endl << vjDEBUG_FLUSH;
-                    vjDEBUG(vjDBG_ALL,0) << "move NegY: " << m_framekeys[VJMOUSE_NEGY] << endl << vjDEBUG_FLUSH;
+                    vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "move PosX: "
+                               << m_framekeys[VJMOUSE_POSX] << endl
+                               << vjDEBUG_FLUSH;
+                    vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "move NegX: "
+                               << m_framekeys[VJMOUSE_NEGX] << endl
+                               << vjDEBUG_FLUSH;
+                    vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "move PosY: "
+                               << m_framekeys[VJMOUSE_POSY] << endl
+                               << vjDEBUG_FLUSH;
+                    vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "move NegY: "
+                               << m_framekeys[VJMOUSE_NEGY] << endl
+                               << vjDEBUG_FLUSH;
                 }
 
                 break;
