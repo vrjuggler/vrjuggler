@@ -38,87 +38,82 @@
 #include <Sync/vjGuard.h>
 #include <iostream>
 
-//
 // Double checked locking version
-//
 
-///*
-#define vjSingletonHeader(TYPE) \
-public:                                        \
-   static TYPE* instance(void)                 \
-   {                                           \
-      if(_instance == NULL)                    \
-      {                                        \
-         vjGuard<vjMutex> guard(_inst_lock);   \
-         if (_instance == NULL)                \
-         { _instance = new TYPE; }             \
-      }                                        \
-      return _instance;                        \
-   }                                           \
-private:                                       \
-   static vjMutex _inst_lock;                  \
-   static TYPE* _instance
+#define vjSingletonHeader( TYPE )                    \
+public:                                              \
+   static TYPE* instance( void )
 
-#define vjSingletonHeaderWithInitFunc(TYPE, INIT_FUNC_NAME) \
-public:                                        \
-   static TYPE* instance(void)                 \
-   {                                           \
-      if(_instance == NULL)                    \
-      {                                        \
-         vjGuard<vjMutex> guard(_inst_lock);   \
-         if (_instance == NULL)                \
-         {                                     \
-            _instance = new TYPE;              \
-            _instance->INIT_FUNC_NAME();       \
-         }                                     \
-      }                                        \
-      return _instance;                        \
-   }                                           \
-private:                                       \
-   static vjMutex _inst_lock;                  \
-   static TYPE* _instance
+#define vjSingletonHeaderWithInitFunc( TYPE, INIT_FUNC_NAME ) \
+public:                                                       \
+   static TYPE* instance( void )
 
+#define vjSingletonImp( TYPE )                       \
+   TYPE* TYPE::instance( void )                      \
+   {                                                 \
+      static vjMutex singleton_lock1;                \
+      static TYPE* the_instance1 = NULL;             \
+                                                     \
+      if (the_instance1 == NULL)                     \
+      {                                              \
+         vjGuard<vjMutex> guard( singleton_lock1 );  \
+         if (the_instance1 == NULL)                  \
+         { the_instance1 = new TYPE; }               \
+      }                                              \
+      return the_instance1;                          \
+   }
 
-#define vjSingletonImp(TYPE) \
-            TYPE* TYPE::_instance = NULL; \
-            vjMutex  TYPE::_inst_lock
-//*/
+#define vjSingletonImpWithInitFunc( TYPE, INIT_FUNC_NAME )    \
+   TYPE* TYPE::instance( void )                               \
+   {                                                          \
+      static vjMutex singleton_lock2;                         \
+      static TYPE* the_instance2 = NULL;                      \
+                                                              \
+      if (the_instance2 == NULL)                              \
+      {                                                       \
+         vjGuard<vjMutex> guard( singleton_lock2 );           \
+         if (the_instance2 == NULL)                           \
+         {                                                    \
+            the_instance2 = new TYPE;                         \
+            the_instance2->INIT_FUNC_NAME();                  \
+         }                                                    \
+      }                                                       \
+      return the_instance2;                                   \
+   }
+
 
 //
 // Non-locking version
 //
 /*
-#define vjSingletonHeader(TYPE) \
-public:                                        \
-   static TYPE* instance(void)                 \
-   {                                           \
-      if (_instance == NULL)                   \
-      {                                        \
+#define vjSingletonHeader( TYPE )                                \
+public:                                                          \
+   static TYPE* instance( void )                                 \
+   {                                                             \
+      static TYPE* the_instance = NULL;                          \
+      if (the_instance == NULL)                                  \
+      {                                                          \
          std::cout << "Creating instance of: TYPE" << std::endl; \
-         _instance = new TYPE;                 \
-      }                                        \
-      return _instance;                        \
-   }                                           \
-private:                                       \
-   static TYPE* _instance
+         the_instance = new TYPE;                                \
+      }                                                          \
+      return the_instance;                                       \
+   }
 
-#define vjSingletonHeaderWithInitFunc(TYPE, INIT_FUNC_NAME) \
-public:                                        \
-   static TYPE* instance(void)                 \
-   {                                           \
-      if (_instance == NULL)                   \
-      {                                        \
+#define vjSingletonHeaderWithInitFunc( TYPE, INIT_FUNC_NAME )    \
+public:                                                          \
+   static TYPE* instance( void )                                 \
+   {                                                             \
+      static TYPE* the_instance = NULL;                          \
+      if (the_instance == NULL)                                  \
+      {                                                          \
          std::cout << "Creating instance of: TYPE" << std::endl; \
-         _instance = new TYPE;                 \
-         _instance->INIT_FUNC_NAME();          \
-      }                                        \
-      return _instance;                        \
-   }                                           \
-private:                                       \
-   static TYPE* _instance
+         the_instance = new TYPE;                                \
+         the_instance->INIT_FUNC_NAME();                         \
+      }                                                          \
+      return the_instance;                                       \
+   }
 
-#define vjSingletonImp(TYPE) \
-            TYPE* TYPE::_instance = NULL
+#define vjSingletonImp( TYPE ) ;
 */
 
 #endif

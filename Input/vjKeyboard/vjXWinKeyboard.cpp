@@ -86,7 +86,6 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
 
    vjDEBUG(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "Mouse Sensititivty: "
    << m_mouse_sensitivity << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << std::endl << vjDEBUG_FLUSH;
 
    mSleepTimeMS = c->getProperty("sleep_time");
 
@@ -100,12 +99,12 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
 // Main thread of control for this active object
 void vjXWinKeyboard::controlLoop(void* nullParam)
 {
-   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "vjXWinKeyboard::controlLoop: Thread started.\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard::controlLoop: Thread started.\n" << vjDEBUG_FLUSH;
 
    while (NULL == vjThread::self())
    {
       usleep(50);
-      vjDEBUG(vjDBG_ALL,1) << "vjXWinKeyboard: Waiting for (thread::self() != NULL)\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,vjDBG_VERB_LVL) << "vjXWinKeyboard: Waiting for (thread::self() != NULL)\n" << vjDEBUG_FLUSH;
    }
    myThread = (vjThread*) vjThread::self();
 
@@ -115,7 +114,7 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
    // If we have initial locked, then we need to lock the system
    if(mLockState == Lock_LockKey)      // Means that we are in the initially locked state
    {
-      vjDEBUG(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "vjXWinKeyboard::controlLoop: Mouse set to initial lock. Locking it now.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard::controlLoop: Mouse set to initial lock. Locking it now.\n" << vjDEBUG_FLUSH;
       lockMouse();                     // Lock the mouse
    }
 
@@ -566,18 +565,29 @@ int vjXWinKeyboard::openTheWindow()
    int nVisuals;
 
    vis_infos = XGetVisualInfo( m_display, vMask, &vTemplate, &nVisuals);
-   XVisualInfo* p_visinfo;
-   for (i = 0, p_visinfo = vis_infos; i < nVisuals; i++, p_visinfo++)
-   {
-      if (p_visinfo->depth > 8)
-      {
-         m_visual = p_visinfo;
-         break;
+
+   // Verify that we got at least one visual from XGetVisualInfo(3).
+   if ( vis_infos != NULL && nVisuals >= 1 ) {
+      XVisualInfo* p_visinfo;
+
+      // Try to find a visual with color depth of at least 8 bits.  Having
+      // such a visual ensures that the keyboard windows at least have a
+      // black background.
+      for ( i = 0, p_visinfo = vis_infos; i < nVisuals; i++, p_visinfo++ ) {
+         if ( p_visinfo->depth >= 8 ) {
+            m_visual = p_visinfo;
+            break;
+         }
+      }
+
+      // If we couldn't find a visual with at least 8-bit color, just use the
+      // first one in the list.
+      if ( i == nVisuals ) {
+          m_visual = vis_infos;
       }
    }
-
-   if (i == nVisuals)
-   {
+   // If we didn't get a matching visual, we're in trouble.
+   else {
       vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:")
                   << "vjKeyboard::startSampling() : find visual failed"
                   << std::endl << vjDEBUG_FLUSH;
@@ -608,7 +618,7 @@ int vjXWinKeyboard::openTheWindow()
    XRaiseWindow(m_display,m_window);
    XClearWindow(m_display,m_window);    // Try to clear the background
 
-   vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CONFIG_LVL)
+   vjDEBUG(vjDBG_INPUT_MGR, vjDBG_STATE_LVL)
               << "vjXWinKeyboard::openTheWindow() : done." << std::endl
               << vjDEBUG_FLUSH;
 
@@ -742,7 +752,7 @@ char* vjXWinKeyboard::checkArgs(char* look_for)
     if (i < argc) {
        return argv[i];
     } else {
-      std::cerr << "ERROR: Usage is:\n" << look_for << " value\n";
+      std::cerr << clrOutNORM(clrRED, "ERROR:") << " Usage is:\n" << look_for << " value\n";
     }
    }
    i++;

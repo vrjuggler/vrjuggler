@@ -159,10 +159,10 @@ bool vjDisplayManager::configAddDisplay(vjConfigChunk* chunk)
       vjDisplay* newDisp = new vjSurfaceDisplay();    // Create display
       newDisp->config(chunk);                         // Config it
       addDisplay(newDisp, true);                            // Add it
-      vjDEBUG(vjDBG_DISP_MGR,vjDBG_WARNING_LVL) << "Adding display: "
+      vjDEBUG(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "Adding display: "
                                                 << newDisp->getName().c_str()
                                                 << std::endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_DISP_MGR,vjDBG_VERB_LVL) << "Display: "  << newDisp
+      vjDEBUG(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "Display: "  << newDisp
                                              << std::endl << vjDEBUG_FLUSH;
    }
 
@@ -272,8 +272,8 @@ bool vjDisplayManager::isMemberDisplay(vjDisplay* disp)
    if(i != mActiveDisplays.end())
       return true;
 
-   i = std::find(mInactiveDisplays.begin(),mActiveDisplays.end(),disp);
-   if(i != mActiveDisplays.end())
+   i = std::find(mInactiveDisplays.begin(),mInactiveDisplays.end(),disp);
+   if(i != mInactiveDisplays.end())
       return true;
 
    return false;  // Didn't find any

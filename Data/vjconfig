@@ -170,7 +170,7 @@ DigProxy
   end
 apiPerformer
   Name "performerConfig"
-  simHeadModel { "/home/users/allenb/Source/c2lib/Data/models/head.flt" }
-  simWandModel { "/home/users/allenb/Source/c2lib/Data/models/wand.flt" }
+  simHeadModel { "${VJ_BASE_DIR}/share/Data/models/head.flt" }
+  simWandModel { "${VJ_BASE_DIR}/share/Data/models/wand.flt" }
   end
 End

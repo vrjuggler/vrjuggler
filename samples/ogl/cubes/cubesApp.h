@@ -41,8 +41,6 @@
 
 #include <Kernel/GL/vjGlApp.h>
 #include <Kernel/GL/vjGlContextData.h>
-#include <Kernel/vjDebug.h>
-
 #include <Math/vjMatrix.h>
 #include <Math/vjVec3.h>
 #include <Kernel/vjDebug.h>
@@ -61,13 +59,13 @@ class ContextData
 public:
    ContextData()
    {
-      firstTime = true;
-      cubeDLIndex = -1;
+      dlIndex  = -1;
+      maxIndex = -1;
    }
 
 public:
-   bool  firstTime;
-   int   cubeDLIndex;
+   int   dlIndex;
+   int   maxIndex;     // For debugging purposes only!
 };
 
 // Class to hold all data for a specific user
@@ -81,6 +79,7 @@ public:
    UserData(vjUser* user, std::string wandName, std::string incButton,
             std::string decButton, std::string stopButton)
    {
+      mCurVelocity = 0.0;
       mNavMatrix.makeIdent();
 
       mUser = user;
@@ -125,7 +124,8 @@ public:
 
    virtual ~cubesApp() {}
 
-   // Execute any initialization needed before the API is started
+   // Execute any initialization needed before the API is started.  Put device
+   // initialization here.
    virtual void init();
 
    // Execute any initialization needed <b>after</b> API is started
@@ -135,19 +135,15 @@ public:
       vjDEBUG(vjDBG_ALL,0) << "---- cubesApp::apiInit() ----\n" << vjDEBUG_FLUSH;
    }
 
-   // Called immediately upon opening a new OpenGL context
+   // Called immediately upon opening a new OpenGL context.  This is called
+   // once for every display window that is opened.  Put OpenGL resource
+   // allocation here.
    virtual void contextInit();
 
-   /** Function to draw the scene
-    * PRE: OpenGL state has correct transformation and buffer selected
-    * POST: The current scene has been drawn
-    */
-   virtual void draw()
-   {
-      initGLState();    // This should really be in another function
-
-      myDraw(vjGlDrawManager::instance()->currentUserData()->getUser());
-   }
+   // Called immediately upon closing an OpenGL context 
+   // (called for every window that is closed)
+   // put your opengl deallocation here...
+   virtual void contextClose();
 
    /**   name Drawing Loop Functions
     *
@@ -166,27 +162,40 @@ public:
     *
     */
 
-   /// Function called after tracker update but before start of drawing
+   // Function called after tracker update but before start of drawing.  Do
+   // calculations and state modifications here.
    virtual void preFrame()
    {
-       vjDEBUG(vjDBG_ALL,2) << "cubesApp::preFrame()" << std::endl
+       vjDEBUG(vjDBG_ALL,5) << "cubesApp::preFrame()" << std::endl
                             << vjDEBUG_FLUSH;
 
        for(unsigned int i=0;i<mUserData.size();i++)
           mUserData[i]->updateNavigation();       // Update the navigation matrix
    }
 
+   // Function to draw the scene.  Put OpenGL draw functions here.
+   //
+   // PRE: OpenGL state has correct transformation and buffer selected
+   // POST: The current scene has been drawn
+   virtual void draw()
+   {
+      initGLState();    // This should really be in another function
+
+      myDraw(vjGlDrawManager::instance()->currentUserData()->getUser());
+   }
+
    /// Function called after drawing has been triggered but BEFORE it completes
    virtual void intraFrame()
    {
-      vjDEBUG(vjDBG_ALL,2) << "cubesApp::intraFrame()" << std::endl
+      vjDEBUG(vjDBG_ALL,5) << "cubesApp::intraFrame()" << std::endl
                            << vjDEBUG_FLUSH;
    }
 
-   /// Function called before updating trackers but after the frame is drawn
+   // Function called before updating trackers but after the frame is drawn.
+   // Do calculations here.
    virtual void postFrame()
    {
-      vjDEBUG(vjDBG_ALL,2) << "cubesApp::postFrame" << std::endl
+      vjDEBUG(vjDBG_ALL,5) << "cubesApp::postFrame" << std::endl
                            << vjDEBUG_FLUSH;
    }
 
@@ -210,7 +219,7 @@ private:
 
    void drawCube()
    {
-       glCallList(mDlData->cubeDLIndex);
+       glCallList(mDlData->dlIndex);
        //drawbox(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, GL_QUADS);
    }
 
@@ -219,6 +228,7 @@ private:
 
 public:
    vjGlContextData<ContextData>  mDlData;       // Data for display lists
+   vjGlContextData<ContextData>  mDlDebugData;  // Data for debugging display lists
    std::vector<UserData*>        mUserData;     // All the users in the program
 };
 

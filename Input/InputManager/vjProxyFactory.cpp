@@ -46,7 +46,8 @@
 
 // Initialize the singleton ptr
 //vjProxyFactory* vjProxyFactory::mInstance = NULL;
-vjSingletonImp(vjProxyFactory);
+//vjSingletonImp( vjProxyFactory ); // kevin
+vjSingletonImpWithInitFunc( vjProxyFactory, loadKnownProxies );
 
 template <class PROXY>
 vjProxyConstructor<PROXY>::vjProxyConstructor()
@@ -69,10 +70,10 @@ void vjProxyFactory::loadKnownProxies()
 void vjProxyFactory::registerProxy(vjProxyConstructorBase* constructor)
 {
    mConstructors.push_back(constructor);     // Add the constructor to the list
-   vjDEBUG(vjDBG_INPUT_MGR,1) << "vjProxyFactory::registerProxy: Constructor registered for: "
-              << constructor->getChunkType().c_str()
-              << "   :" << (void*)constructor
-              << " type:" << typeid(*constructor).name() << std::endl
+   vjDEBUG(vjDBG_INPUT_MGR,1) << "vjProxyFactory: Constructor registered for: "
+              << std::setiosflags(std::ios::right) << std::setw(25) << std::setfill(' ') << constructor->getChunkType().c_str() << std::resetiosflags(std::ios::right)
+              //<< "   :" << (void*)constructor
+              << " type: " << typeid(*constructor).name() << std::endl
               << vjDEBUG_FLUSH;
 }
 

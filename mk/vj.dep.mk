@@ -79,13 +79,19 @@ _MKDEP_SED_EXP	= '\''s/.*\($*\)\.${OBJ_FILE_SUFFIX}[ :]*/$${OBJDIR}\/\1.${OBJ_FI
 
 %.d: %.c
 	@echo "Updating dependency file $@ ..."
-ifeq (${CC}, cl)
+ifeq (${PLATFORM}, HP)
 	@${SHELL} -ec 'makedepend -f- -o.${OBJ_FILE_SUFFIX}		\
                        ${DEPENDFLAGS} -- ${DEPEND_EXTRAS} -- $< |	\
                        sed ${_MKDEP_SED_EXP} > $@ ; [ -s $@ ] || rm -f $@'
 else
+  ifeq (${CC}, cl)
+	@${SHELL} -ec 'makedepend -f- -o.${OBJ_FILE_SUFFIX}		\
+                       ${DEPENDFLAGS} -- ${DEPEND_EXTRAS} -- $< |	\
+                       sed ${_MKDEP_SED_EXP} > $@ ; [ -s $@ ] || rm -f $@'
+  else
 	@${SHELL} -ec '${MKDEPS_C_COMPILE} ${DEP_GEN_FLAG} $< |		\
                        sed ${_CC_SED_EXP} > $@ ; [ -s $@ ] || rm -f $@'
+  endif
 endif
 
 %.d: %.cpp

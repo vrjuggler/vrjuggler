@@ -120,7 +120,7 @@ public:
 
         // The mutex variable must be locked when passed to
         // pthread_cond_wait().
-        return pthread_cond_wait(&mCondVar, mCondMutex->mMutex);
+        return pthread_cond_wait(&mCondVar, &(mCondMutex->mMutex));
     }
 
     // -----------------------------------------------------------------------

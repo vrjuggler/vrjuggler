@@ -80,7 +80,7 @@ public:
    // TODO: keep a list of these handles so engine can clean up. :)
    //         memory leaks for now.
    // returns NULL if invalid name.
-   vjSound* getHandle( const char* const alias );
+   virtual vjSound* getHandle( const char* const alias );
    
    //: Factory function to create a new sound.
    // memory managed by engine

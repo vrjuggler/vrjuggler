@@ -1,6 +1,0 @@
-chmod +x config.guess
-chmod +x config.sub
-chmod +x install-sh
-chmod +x GUI/vjcontrol
-chmod +x GUI/vjcontrol1.1
-chmod +x release/scripts/mkinstalldirs

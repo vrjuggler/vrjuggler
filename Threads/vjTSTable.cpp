@@ -48,7 +48,7 @@ vjTSTable::~vjTSTable()
 //: Get the object with the spcified key
 vjTSBaseObject* vjTSTable::getObject(unsigned int objectKey)
 {
-   vjASSERT((objectKey >= 0) && (objectKey < mTSObjects.size()));    // Did you check to make sure the table contained it
+   vjASSERT(objectKey < mTSObjects.size());    // Did you check to make sure the table contained it
    return mTSObjects[objectKey];
 }
 
@@ -59,7 +59,7 @@ vjTSBaseObject* vjTSTable::getObject(unsigned int objectKey)
 void vjTSTable::setObject(vjTSBaseObject* object, long key)
 {
    vjASSERT(key >= 0);
-   while(mTSObjects.size() <= key)
+   while(mTSObjects.size() <= (unsigned)key)
       mTSObjects.push_back(NULL);
    mTSObjects[key] = object;
 }
@@ -71,7 +71,7 @@ void vjTSTable::setObject(vjTSBaseObject* object, long key)
 //-----------------------------------------------------------------
 void vjTSTable::releaseObject(unsigned long key)
 {
-   vjASSERT( (key>=0) && (key<mTSObjects.size()) );
+   vjASSERT(key < mTSObjects.size());
    if (mTSObjects[key] != NULL)
       delete mTSObjects[key];
    mTSObjects[key] = NULL;

@@ -50,12 +50,12 @@
 class ContextData {
 public:
     ContextData (void) {
-        firstTime   = true;
-        coneDLIndex = -1;
+        dlIndex  = -1;
+        maxIndex = -1;
     }
 
-    bool  firstTime;
-    int   coneDLIndex;
+    int   dlIndex;
+    int   maxIndex;     // For debugging purposes only!
 };
 
 // ----------------------------------------------------------------------------
@@ -75,7 +75,8 @@ public:
     virtual ~ConesApp(void);
 
     // ------------------------------------------------------------------------
-    // Execute any initialization needed before the API is started.
+    // Execute any initialization needed before the API is started.  Put
+    // device initialization here.
     // ------------------------------------------------------------------------
     virtual void init(void);
 
@@ -86,17 +87,17 @@ public:
     virtual void apiInit(void);
 
     // ------------------------------------------------------------------------
-    // Called immediately upon opening a new OpenGL context.
+    // Called immediately upon opening a new OpenGL context.  This is called
+    // for every display window that is opened.  Put OpenGL resource
+    // allocation here.
     // ------------------------------------------------------------------------
     virtual void contextInit(void);
 
     // ------------------------------------------------------------------------
-    // Function to draw the scene.
-    //
-    // PRE: OpenGL state has correct transformation and buffer selected.
-    // POST: The current scene has been drawn.
+    // Called immediately upon closing an OpenGL context.  This is called for
+    // every display window that is closed.  Put OpenGL deallocation here.
     // ------------------------------------------------------------------------
-    virtual void draw(void);
+    virtual void contextClose(void);
 
     /**   name Drawing Loop Functions
      *
@@ -117,8 +118,17 @@ public:
 
     // ------------------------------------------------------------------------
     // Function called after tracker update but before start of drawing.
+    // Do calculations here.
     // ------------------------------------------------------------------------
     virtual void preFrame(void);
+
+    // ------------------------------------------------------------------------
+    // Function to render the scene.  Put OpenGL draw calls here.
+    //
+    // PRE: OpenGL state has correct transformation and buffer selected.
+    // POST: The current scene has been drawn.
+    // ------------------------------------------------------------------------
+    virtual void draw(void);
 
     // ------------------------------------------------------------------------
     // Function called after drawing has been triggered but BEFORE it
@@ -128,6 +138,7 @@ public:
 
     // ------------------------------------------------------------------------
     // Function called before updating trackers but after the frame is drawn.
+    // Do calculations here.
     // ------------------------------------------------------------------------
     virtual void postFrame(void);
 
@@ -137,8 +148,9 @@ public:
     // ------------------------------------------------------------------------
     virtual bool depSatisfied(void);
 
-    vjGlContextData<ContextData>  mDlData;     // Data for display lists
-    std::vector<UserData*>        mUserData;   // All the users in the program
+    vjGlContextData<ContextData>  mDlData;      // Data for display lists
+    vjGlContextData<ContextData>  mDlDebugData; // Data for debugging display lists
+    std::vector<UserData*>        mUserData;    // All the users in the program
 
 private:
     // ------------------------------------------------------------------------
@@ -153,7 +165,7 @@ private:
     // ------------------------------------------------------------------------
     inline void
     drawCone (void) {
-        glCallList(mDlData->coneDLIndex);
+        glCallList(mDlData->dlIndex);
 //        drawCone(1.5, 2.0, 20, 10);
     }
 

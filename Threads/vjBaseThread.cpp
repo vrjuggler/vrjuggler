@@ -44,7 +44,7 @@ std::ostream& operator<<(std::ostream& out, vjBaseThread* threadPtr)
    if(threadPtr != NULL)
       threadPtr->outStream(out);
    else
-      out << "TID: N/A ";
+      out << " TID: N/A  ";
 
    return out;
 }

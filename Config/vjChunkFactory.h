@@ -64,6 +64,7 @@
 class vjChunkFactory {
 
 public:
+
     //: Adds descriptions in _descdb to the factory
     void addDescs (vjChunkDescDB* _descdb) {
         descdb.insert (_descdb);
@@ -95,56 +96,29 @@ public:
     }
 
     //: Creates a Chunk using the given description
-    vjConfigChunk* createChunk (vjChunkDesc* d) {
-        if (d) {
-            d->assertValid();
-            return new vjConfigChunk (d);
-        }
-        else
-            return 0;
-    }
+    vjConfigChunk* createChunk (vjChunkDesc* d);
+
 
 protected:
-   // Setup the intial environment needed for creating chunks
-   void setupInitialEnvironment()
-   {
-      // ------ OPEN chunksDesc file ----- //
-      char* vj_base_dir = getenv("VJ_BASE_DIR");
-      if(vj_base_dir == NULL)
-      {
-         vjDEBUG(vjDBG_ERROR,0) << "vjChunkFactory::setupInitialEnvironment: Env var VJ_BASE_DIR not defined." << std::endl << vjDEBUG_FLUSH;
-         exit(1);
-      }
 
-      char chunk_desc_file[250];
-      strcpy(chunk_desc_file, vj_base_dir);
-      strcat(chunk_desc_file, "/Data/chunksDesc");
-      vjDEBUG(vjDBG_ALL,0) << "vjChunkFactory::setupInitialEnvironment: Loading chunk description file: ["
-                           << chunk_desc_file << "]\n" << vjDEBUG_FLUSH;
+    //: Setup the intial environment needed for creating chunks.
+    //  This just means that we load VJ_BASE_DIR/VJ_SHARE_DIR/Data/chunksDesc.
+    void setupInitialEnvironment();
 
-      this->loadDescs(std::string(chunk_desc_file));
-      /*
-      vjChunkDescDB* cfg_desc = new vjChunkDescDB;
-      if (!cfg_desc->load(chunk_desc_file))
-      {
-         vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjChunkFactory::setupInitialEnvironment: Config Desc failed to load file: " << endl << vjDEBUG_FLUSH;
-         exit(1);
-      }
-      this->addDescs(cfg_desc);
-      */
-
-   }
 
 private:
-   vjChunkFactory()
-   {
-      setupInitialEnvironment();
-   }
 
-private:
+    //: Constructor.  Calls setupInitialEnvironment.
+    vjChunkFactory() {
+        setupInitialEnvironment();
+    }
+
+
     vjChunkDescDB descdb;
 
-vjSingletonHeader(vjChunkFactory);
+
+    vjSingletonHeader(vjChunkFactory);
+
 /*
 public:
    //: Get instance of singleton object

@@ -78,10 +78,6 @@
 
 /* Define all of the following if building on HP-UX. */
 #undef VJ_OS_HPUX
-#undef _HPUX_SOURCE
-#undef _INCLUDE_TERMIO
-#undef _CMA_NOWRAPPERS_
-#undef notdef
 
 /* Define if building on Digital UNIX. */
 #undef VJ_OS_DUX
@@ -154,6 +150,9 @@
 /* Define if you have the sinf function.  */
 #undef HAVE_SINF
 
+/* Define if you have the cosf function.  */
+#undef HAVE_COSF
+
 /* Define if you have the sqrtf function.  */
 #undef HAVE_SQRTF
 
@@ -165,6 +164,9 @@
 
 /* Define if you have the atan2f function.  */
 #undef HAVE_ATAN2F
+
+/* Define if you have the atan2f function.  */
+#undef HAVE_FABSF
 
 @BOTTOM@
 

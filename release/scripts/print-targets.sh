@@ -49,6 +49,8 @@ Primary build/install targets are:
                       requires that 'buildworld' be successfully completed
                       beforehand.
     release         - Build and install a release version.
+    release-all-abi - Build and install a release version using all supported
+                      ABIs.
 
 Build targets are:
     all             - Build everything.

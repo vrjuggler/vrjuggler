@@ -47,20 +47,25 @@ VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(srcdir)
 VJ_LIBS		= @APP_VJ_LIBS_BEGIN@ @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_END@ @APP_LIBS_BASIC@
 VPATH		= @srcdir@:@srcdir@/../../Input/vjPosition
 
-# These test programs require the following libraries to be linked:
+# OpenGL test programs require the following libraries to be linked:
 #
-#     -lGLU -lGL -lXext -lXmu -lX11 -lm
+#     -lGLU -lGL -lX11 -lXext -lm
 #
-# If the library uses POSIX threads, "-lpthread" must also be added to the
-# list of libraries.
+# If the library uses POSIX threads, the appropriate pthread enabling option
+# must also be added to the list of libraries.  In most cases, this will be
+# "-lpthread".
 #
 # The proper library path must be specified depending on the Application
-# Binary Interface (ABI) used.  For o32 binaries, -L/usr/lib is the
-# appropriate path.  For n32 binaries, use -L/usr/lib32.  For 64-bit binaries,
-# use -L/usr/lib64.
+# Binary Interface (ABI) used.  For n32 binaries, use -L/usr/lib32.  For
+# 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-PROGS		= go go-ibox go-inputgroup go-logiclass aFlockTest vjFlockTest dummyTrackd
+PROGS		= go-ibox		\
+                  aFlockTest		\
+                  vjFlockTest		\
+                  aMotionStarTest	\
+                  dummyTrackd		\
+                  fsPinchGloveTest
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -93,7 +98,7 @@ dummyTrackd: dummyTrackd.@OBJ_FILE_SUFFIX@
 aMotionStarTest: aMotionStarTest.@OBJ_FILE_SUFFIX@			\
                  aMotionStar.@OBJ_FILE_SUFFIX@
 	$(LINK) -o $@ aMotionStarTest.@OBJ_FILE_SUFFIX@			\
-          aMotionStar.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+          aMotionStar.@OBJ_FILE_SUFFIX@ -lm
 
 # ----------------
 # new
@@ -102,28 +107,17 @@ new: new.@OBJ_FILE_SUFFIX@
 	$(LINK) -o $@ new.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
-# go
-# ----------------
-go: main.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ main.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
-
-# ----------------
 # go-ibox
 # ----------------
 go-ibox: main-ibox.@OBJ_FILE_SUFFIX@
 	$(LINK) -o $@ main-ibox.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
-# go-inputgroup
+# fsPinchGloveTest
 # ----------------
-go-inputgroup: main-inputgroup.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ main-inputgroup.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
-
-# ----------------
-# go-logiclass
-# ----------------
-go-logiclass: main-logiclass.@OBJ_FILE_SUFFIX@
-	$(LINK) -o $@ main-logiclass.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+fsPinchGloveTest: fsPinchGloveTest.@OBJ_FILE_SUFFIX@
+	$(LINK) -o $@ fsPinchGloveTest.@OBJ_FILE_SUFFIX@ $(VJ_LIBS)	\
+          $(EXTRA_LIBS)
 
 .cpp.@OBJ_FILE_SUFFIX@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<

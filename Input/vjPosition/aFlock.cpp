@@ -41,7 +41,7 @@
 #include <sys/stat.h>      // for open
 #include <assert.h>        // for assert
 
-#ifdef __sun__
+#if defined(__sun__) || defined(__hpux)
 #include <sys/file.h>
 #endif
 
@@ -648,7 +648,9 @@ int aFlock::open_port( const char* const serialPort,
 	
 #ifndef _POSIX_SOURCE
 	case 57600: magicBaudRate = B57600; break;
-	case 76800: magicBaudRate = B76800; break;
+#   ifdef B76800
+	    case 76800: magicBaudRate = B76800; break;
+#   endif
 	case 115200: magicBaudRate = B115200; break;
 #endif
 

@@ -50,7 +50,6 @@
 
 #include <vjConfig.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <pthread.h>
 #include <errno.h>
 
@@ -70,13 +69,11 @@ public:
     //+       with it.
     // -----------------------------------------------------------------------
     vjMutexPosix (void) {
-        // ----- Allocate the mutex ----- //
-        mMutex = (pthread_mutex_t *) malloc(sizeof(pthread_mutex_t));
-
+        // Initialize the mutex.
 #ifdef _PTHREADS_DRAFT_4
-        pthread_mutex_init(mMutex, pthread_mutexattr_default);
+        pthread_mutex_init(&mMutex, pthread_mutexattr_default);
 #else
-        pthread_mutex_init(mMutex, NULL);
+        pthread_mutex_init(&mMutex, NULL);
 #endif
     }
 
@@ -90,12 +87,10 @@ public:
     // -----------------------------------------------------------------------
     ~vjMutexPosix (void) {
         // Destroy the mutex.
-        if ( pthread_mutex_destroy(mMutex) == -1 ) {
-            pthread_mutex_unlock(mMutex);
-            pthread_mutex_destroy(mMutex);
+        if ( pthread_mutex_destroy(&mMutex) == -1 ) {
+            pthread_mutex_unlock(&mMutex);
+            pthread_mutex_destroy(&mMutex);
         }
-
-        free(mMutex);
     }
 
     // -----------------------------------------------------------------------
@@ -110,10 +105,10 @@ public:
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
     inline int
-    acquire (void) const {
+    acquire (void) {
         int retval;
 
-        retval = pthread_mutex_lock(mMutex) ;
+        retval = pthread_mutex_lock(&mMutex);
 
         // Locking succeeded.
         if ( retval == 0 ) {
@@ -123,7 +118,7 @@ public:
         // This thread tried to lock the mutex twice and a deadlock condition
         // was reported.
         else if ( retval == EDEADLK ) {
-            perror("Tried to lock mutex twice (vjMutexPosix.cpp:52)");
+            perror("Tried to lock mutex twice (vjMutexPosix.h:111)");
 
             return -1;
         }
@@ -148,7 +143,7 @@ public:
     //! NOTE: No special read mutex has been defined for now.
     // -----------------------------------------------------------------------
     inline int
-    acquireRead (void) const {
+    acquireRead (void) {
         return this->acquire();
     }
 
@@ -166,7 +161,7 @@ public:
     //! NOTE: No special write mutex has been defined for now.
     // -----------------------------------------------------------------------
     inline int
-    acquireWrite (void) const {
+    acquireWrite (void) {
         return this->acquire();
     }
 
@@ -182,8 +177,8 @@ public:
     //! RETURNS: 0 - Mutex is busy
     // -----------------------------------------------------------------------
     inline int
-    tryAcquire (void) const {
-        if ( pthread_mutex_trylock(mMutex) == 0 ) {
+    tryAcquire (void) {
+        if ( pthread_mutex_trylock(&mMutex) == 0 ) {
             return 1;
         } else {
             return 0;
@@ -202,7 +197,7 @@ public:
     //! RETURNS: 0 - Mutex is busy
     // -----------------------------------------------------------------------
     inline int
-    tryAcquireRead (void) const {
+    tryAcquireRead (void) {
         return this->tryAcquire();
     }
 
@@ -218,7 +213,7 @@ public:
     //! RETURNS: 0 - Mutex is busy
     // -----------------------------------------------------------------------
     inline int
-    tryAcquireWrite (void) const {
+    tryAcquireWrite (void) {
         return this->tryAcquire();
     }
 
@@ -232,8 +227,8 @@ public:
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
     inline int
-    release (void) const {
-        return pthread_mutex_unlock(mMutex);
+    release (void) {
+        return pthread_mutex_unlock(&mMutex);
     }
 
     // -----------------------------------------------------------------------
@@ -274,7 +269,7 @@ public:
 friend class  vjCondPosix;
 
 protected:
-    pthread_mutex_t* mMutex;    //: Mutex variable for the class.
+    pthread_mutex_t mMutex;    //: Mutex variable for the class.
 
     // = Prevent assignment and initialization.
     void operator= (const vjMutexPosix &) {}
