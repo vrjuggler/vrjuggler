@@ -147,4 +147,37 @@ public class ConfigUtilities
    {
       return getElementsWithDefinition(elts, def.getToken());
    }
+
+   /**
+    * Gets all embedded elements within the given element recursively.
+    *
+    * @param src        the element in which to retrieve embedded elements
+    */
+   public static List getEmbeddedElementsRecursive(ConfigElement src)
+   {
+      List result = new ArrayList();
+
+      // Get a list of all embedded elements
+      List emb_elements = new ArrayList();
+      for (Iterator itr = src.getDefinition().getPropertyDefinitions().iterator(); itr.hasNext(); )
+      {
+         PropertyDefinition prop_def = (PropertyDefinition)itr.next();
+         if (prop_def.getType() == ConfigElement.class)
+         {
+            emb_elements.addAll(src.getPropertyValues(prop_def.getToken()));
+         }
+      }
+
+      // Recurse on each newly found embedded element
+      for (Iterator itr = emb_elements.iterator(); itr.hasNext(); )
+      {
+         ConfigElement elt = (ConfigElement)itr.next();
+         result.add(elt);
+
+         // Look for embedded elements within the current element
+         result.addAll(getEmbeddedElementsRecursive(elt));
+      }
+
+      return result;
+   }
 }

@@ -257,6 +257,30 @@ public class ConfigBrokerImpl
 
       return all_elts;
    }
+   
+   /**
+    * Gets a list of all the configuration elements within the given context
+    * includeing embedded elements.
+    *
+    * @param context    the context from which to retrieve elements
+    *
+    * @return  a list of the configuration elements
+    */
+   public List getElementsIncludingEmbedded(ConfigContext context)
+   {
+      List all_elts = getElements(context);
+      List result = new ArrayList();
+      
+      // Get the chunks embedded within the current element
+      for (Iterator itr = all_elts.iterator(); itr.hasNext(); )
+      {
+         ConfigElement elt = (ConfigElement)itr.next();
+         result.add(elt);
+         result.addAll(ConfigUtilities.getEmbeddedElementsRecursive(elt));
+      }
+
+      return result;
+   }
 
    /**
     * Gets a list of all the configuration elements within the given
