@@ -54,5 +54,3 @@ install-books:
 	$(PSGEN) $(PSGEN_FLAGS) $< > $*.ps
 	$(PDFGEN) $(PDFGEN_FLAGS) $*.ps
 	rm -f $*.ps
-
-#getting.started.guide.pdf: getting.started.guide.html
