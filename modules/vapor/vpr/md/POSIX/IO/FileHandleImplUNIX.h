@@ -39,6 +39,7 @@
 
 #include <vpr/IO/BlockIO.h>
 #include <vpr/IO/IOSys.h>
+#include <vpr/Util/Debug.h>
 
 
 namespace vpr {
@@ -120,6 +121,20 @@ public:
     //+                  reason.
     // ------------------------------------------------------------------------
     Status enableNonBlocking(void);
+
+    // ------------------------------------------------------------------------
+    //: Return the contained handle
+    // ------------------------------------------------------------------------
+    inline IOSys::Handle
+    getHandle (void) {
+#ifdef VPR_USE_NSPR
+       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+           << "ERROR: Cannot get handle for UNIX file descriptor with NSPR!\n";
+       return NULL;
+#else
+       return m_handle->m_fdesc;
+#endif
+    }
 
     // ========================================================================
     // vpr::FileHandle implementation.
