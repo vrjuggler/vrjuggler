@@ -115,7 +115,7 @@ public class ConfigDefinitionEditor
  */     
       mTitleLbl.setBackground(UIManager.getColor("textHighlight"));
       mTitleLbl.setFont(new java.awt.Font("Serif", 1, 18));
-      mTitleLbl.setForeground(Color.black);
+      mTitleLbl.setForeground(UIManager.getColor("textHighlightText"));
       mTitleLbl.setBorder(BorderFactory.createRaisedBevelBorder());
       mTitleLbl.setOpaque(true);
       mTitleLbl.setHorizontalAlignment(SwingConstants.RIGHT);
