@@ -69,8 +69,7 @@ public class VrjConfig
             // File exists and is readable. Lets see if we can load it.
             FileDataSource data_source = new FileDataSource(desc_filename,
                                                             FileDataSource.DEFINITIONS);
-            String res_name = desc_file.getAbsolutePath();
-            getConfigBroker().add(res_name, data_source);
+            getConfigBroker().add(desc_filename, data_source);
          }
          else
          {
