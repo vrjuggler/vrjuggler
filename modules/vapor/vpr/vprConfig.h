@@ -100,12 +100,14 @@
  * The code below works around that behavior by bringing the __gnu_cxx
  * namespace into the std namespace.
  *
- * NOTE: The Intel C++ compiler masquerades as GCC by defining __GNUC__.  It
- * does not, however, do the __gnu_cxx namespace stuff, so we have to make
- * sure we are not using the Intel compiler when performing this operation.
+ * NOTE: The Intel C++ compiler masquerades as GCC by defining __GNUC__.
+ * Versions prior to 8.1 did not make use of any GCC headers, so we have to
+ * make sure we are not using a version of the Intel compiler older than 8.1
+ * when performing this operation.
  */
-#if ! defined(__INTEL_COMPILER) && defined(__GNUC__) && \
-    ((__GNUC__ == 3 && __GNUC_MINOR__ >= 1) || __GNUC__ > 3)
+#if (! defined(__INTEL_COMPILER) && defined(__GNUC__) && \
+     ((__GNUC__ == 3 && __GNUC_MINOR__ >= 1) || __GNUC__ > 3)) || \
+    (defined(__INTEL_COMPILER) && __INTEL_COMPILER >= 810 && defined(__GNUC__))
 namespace std
 {
    using namespace __gnu_cxx;
