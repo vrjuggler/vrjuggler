@@ -41,6 +41,9 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import org.jdom.input.*;
+import org.jdom.Document;
+
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
@@ -51,6 +54,10 @@ import org.vrjuggler.tweek.wizard.*;
 import org.vrjuggler.vrjconfig.ui.*;
 import org.vrjuggler.jccl.editors.*;
 
+import org.vrjuggler.tweek.TweekCore;
+import org.vrjuggler.tweek.beans.XMLBeanFinder;
+import org.vrjuggler.tweek.beans.BeanPathException;
+
 /**
  * Provides a control panel view into a config element collection.
  */
@@ -59,6 +66,30 @@ public class ControlPanelView
 {
    public ControlPanelView()
    {
+      System.out.println("Defaut Bean: XXXX ");
+     
+      // This needs to be the first step to ensure that all the basic services
+      // and viewers get loaded.
+      String default_path = System.getProperty("VJ_BASE_DIR")
+                            + File.separator + "lib"
+                            + File.separator + "vrjuggler"
+                            + File.separator + "customeditors";
+
+      try
+      {
+         // Get the beans in the given path and add them to the dependency manager
+         XMLBeanFinder finder = new XMLBeanFinder(false);
+         List beans = finder.find(default_path);
+         System.out.println(beans);
+         
+         TweekCore tc = TweekCore.instance();
+         tc.loadBeans(beans);
+      }
+      catch (BeanPathException e)
+      {
+         System.out.println("WARNING: Invalid path " + default_path);
+      }
+      
       try
       {
          jbInit();
@@ -155,7 +186,11 @@ public class ControlPanelView
                
                //XXX:This will be used after making findEditors -> findEditor
                //if(null != editor)
-               if(null != list && list.size() > 0)
+               if(null == list || list.size() == 0)
+               {
+                  System.out.println("No CustomEditors registered for token: " + token);
+               }
+               else if(null != list && list.size() > 0)
                {
                   CustomEditor editor = (CustomEditor)list.get(0);
                   dlg.getContentPane().add(editor.getPanel(), BorderLayout.CENTER);
@@ -179,61 +214,44 @@ public class ControlPanelView
 
    private void showWizardPanel(WizardNode root)
    {
-      System.out.println("Wizard Node");
-      
       final JDialog dialog = new JDialog();
       dialog.setSize(590, 430);
       dialog.setModal(true);
       dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
       dialog.getContentPane().setLayout(new BorderLayout());
-
-      // Load wizard
-      Wizard wizard = null;
-      JFileChooser chooser = mFileChooser;
-      int result = chooser.showOpenDialog(this);
-      if (result == JFileChooser.CANCEL_OPTION)
-      {
-         return;
-      }
-      File file = chooser.getSelectedFile();
-      String newFilename = file.getAbsolutePath();
+    
       try
       {
-         WizardInputStream in = new WizardInputStream(newFilename);
-         wizard = in.readWizard();
-         in.close();
-      }
-      catch (IOException ioe)
-      {
-         ioe.printStackTrace();
-         JOptionPane.showMessageDialog(this,
-                        "Open failed: "+ioe.getMessage(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-         return;
-      }
+         Wizard wizard = WizardLoader.loadWizard(root.getWizardLocation(),
+            this.getClass().getClassLoader());
 
-      
-      WizardViewerBean viewer = new WizardViewerBean();
-      viewer.setWizard(wizard);
-      viewer.setSidebarImage(new ImageIcon(this.getClass().getClassLoader().getResource("org/vrjuggler/tweek/wizard/images/juggler_sidebar.png")));
-      viewer.addWizardViewListener(new WizardViewListener()
-      {
-         public void wizardStarted(WizardViewEvent evt) {}
-
-         public void wizardCancelled(WizardViewEvent evt)
+         WizardViewerBean viewer = new WizardViewerBean();
+         viewer.setWizard(wizard);
+         viewer.setSidebarImage(new ImageIcon(this.getClass().getClassLoader().getResource("org/vrjuggler/tweek/wizard/images/juggler_sidebar.png")));
+         viewer.addWizardViewListener(new WizardViewListener()
          {
-            dialog.setVisible(false);
-            dialog.dispose();
-         }
+            public void wizardStarted(WizardViewEvent evt) {}
 
-         public void wizardFinished(WizardViewEvent evt)
-         {
-            dialog.setVisible(false);
-            dialog.dispose();
-         }
-      });
-      dialog.getContentPane().add(viewer, BorderLayout.CENTER);
-      dialog.setVisible(true);
+            public void wizardCancelled(WizardViewEvent evt)
+            {
+               dialog.setVisible(false);
+               dialog.dispose();
+            }
+
+            public void wizardFinished(WizardViewEvent evt)
+            {
+               dialog.setVisible(false);
+               dialog.dispose();
+            }
+         });
+         dialog.getContentPane().add(viewer, BorderLayout.CENTER);
+         dialog.setVisible(true);
+      }
+      catch(IOException ex)
+      {
+         System.out.println("Wizard: " + root.getWizardLocation() + " failed to load.");
+         ex.printStackTrace();
+      }
    }
    
    private void showCategoryPanel(CategoryNode root)
