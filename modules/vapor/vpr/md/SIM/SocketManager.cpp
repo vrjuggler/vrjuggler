@@ -327,19 +327,21 @@ namespace sim
 
    vpr::ReturnStatus SocketManager::unbind( const vpr::SocketImplSIM* handle )
    {
+      vpr::ReturnStatus status;
+
       if ( isBound(handle) )
       {
          vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
             << "Unbinding handle(" << handle << ")\n" << vprDEBUG_FLUSH;
 
-         _unbind(handle);
-         vprASSERT(! isBound(handle) && "_unbind failed");
+         status = _unbind(handle);
+         vprASSERT((! isBound(handle) && status.success()) && "_unbind failed");
 
          vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
             << "Unbind for handle(" << handle << ") done\n" << vprDEBUG_FLUSH;
      }
 
-      return vpr::ReturnStatus();
+      return status;
    }
 
    // set a socket s to listen for connections
@@ -678,10 +680,11 @@ namespace sim
 
    }
 
-   void SocketManager::_unbind( const vpr::SocketImplSIM* handle )
+   vpr::ReturnStatus SocketManager::_unbind( const vpr::SocketImplSIM* handle )
    {
       vpr::InetAddrSIM addr;
       const vpr::SocketImplSIM* hand;
+      vpr::ReturnStatus status;
 
       vprASSERT( isBound( handle ) == true );
 
@@ -706,8 +709,20 @@ namespace sim
       }
       mBindListSockMutex.release();
 
+      NetworkNode node_prop =
+         vpr::sim::Controller::instance()->getNetworkGraph().getNodeProperty(handle->getNetworkNode());
+
+      status = node_prop.removeSocket(handle);
+
+      if ( status.success() )
+      {
+         vpr::sim::Controller::instance()->getNetworkGraph().setNodeProperty(handle->getNetworkNode(), node_prop);
+      }
+
       vprASSERT( isBound( hand ) == false );
       vprASSERT( isBound( addr ) == false );
+
+      return status;
    }
 
    // XXX: This needs to be rethough since we can now have 2^64 port numbers

@@ -88,6 +88,8 @@ public:
 
    void addSocket(vpr::SocketImplSIM* sock);
 
+   vpr::ReturnStatus removeSocket(const vpr::SocketImplSIM* sock);
+
    /**
     * Checks to see if this node currently has a socket of the given type in
     * use on the named port.

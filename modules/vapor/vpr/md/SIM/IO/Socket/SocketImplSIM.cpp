@@ -54,6 +54,26 @@
 namespace vpr
 {
 
+SocketImplSIM::~SocketImplSIM ()
+{
+   if ( mNodeAssigned )
+   {
+      // Release the node to which we were bound.
+      vpr::sim::Controller::instance()->getSocketManager().unbind(this);
+      mNodeAssigned = false;
+   }
+
+   // cant do this because accept retuns an imp, which gets deleted
+   // after constructing the returned Socket_t
+/*
+   if (this->isOpen())
+   {
+      std::cout<<"~SocketImplSIM(), closing...\n"<<std::flush;
+      this->close();
+   }
+*/
+}
+
 vpr::ReturnStatus SocketImplSIM::close ()
 {
    vpr::ReturnStatus status;
@@ -68,6 +88,12 @@ vpr::ReturnStatus SocketImplSIM::close ()
    }
 
    status = vpr::sim::Controller::instance()->getSocketManager().unbind(this);
+
+   if ( status.success() )
+   {
+      mNodeAssigned = false;
+   }
+
    mOpen  = false;
    mBound = false;
 

@@ -252,7 +252,7 @@ private:
     */
    void _bind( const vpr::SocketImplSIM* handle, const vpr::InetAddrSIM& addr );
 
-   void _unbind( const vpr::SocketImplSIM* handle );
+   vpr::ReturnStatus _unbind(const vpr::SocketImplSIM* handle);
 
    /**
     * Returns an unused port at some existing address, or 0 for error.
