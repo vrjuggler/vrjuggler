@@ -49,18 +49,10 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(SNX_LIBRARY)
 
-ifeq ($(OS_TYPE), Win32)
-   EXTRA_DEFS+=	-DWIN32
-endif
-
 SRCS=		FileIO.cpp			\
 		SoundFactory.cpp		\
 		SoundImplementation.cpp 	\
 		sonix.cpp
-
-ifeq ($(OS_TYPE), Win32)
-   SRCS+=	dirent-win32.cpp
-endif
 
 SUBDIR=		Util
 
