@@ -72,20 +72,24 @@ void ConfigManager::addPendingAdds(ConfigChunkDB* db)
    pending.mType = PendingChunk::ADD;
 
    // Begin Machine Specific Code
+   if(mCachedLocalHostName.empty())
+   {
       // Get Local Host Name
-   vpr::InetAddr local_addr;
-   vpr::InetAddr::getLocalHost(local_addr);
-   std::string host_name = local_addr.getHostname();
-   if ( host_name.find('.') != std::string::npos )
-   {
-      host_name = host_name.substr(0, host_name.find('.'));
-   }
-   if ( host_name.find(':') != std::string::npos )
-   {
-      host_name = host_name.substr(0, host_name.find('.'));
+      vpr::InetAddr local_addr;
+      vpr::InetAddr::getLocalHost(local_addr);
+      std::string host_name = local_addr.getHostname();
+      if ( host_name.find('.') != std::string::npos )
+      {
+         host_name = host_name.substr(0, host_name.find('.'));
+      }
+      if ( host_name.find(':') != std::string::npos )
+      {
+         host_name = host_name.substr(0, host_name.find('.'));
+      }
+      mCachedLocalHostName = host_name;
    }
    // End Machine Specific Code
-   
+
    for ( std::vector<ConfigChunkPtr>::iterator i = db->vec().begin();
          i != db->vec().end();
          ++i )
@@ -96,14 +100,14 @@ void ConfigManager::addPendingAdds(ConfigChunkDB* db)
       // Begin Machine Specific Code
       if ( (*i)->getDescToken() == std::string("cluster_machine") )
       {
-         if ( (*i)->getProperty<std::string>("host_name") == host_name ||
+         if ( (*i)->getProperty<std::string>("host_name") == mCachedLocalHostName ||
               (*i)->getProperty<std::string>("host_name") == "localhost")
          {
             // NOTE: Add all machine dependent ConfigChunkPtr's here
             vprASSERT((*i)->getNum("display_system") == 1 && "A Cluster System Chunk must have exactly 1 display_system chunk");
-            
+
             std::vector<jccl::ConfigChunkPtr> machine_specific_chunks = (*i)->getEmbeddedChunks();
-            
+
             for (std::vector<jccl::ConfigChunkPtr>::iterator i= machine_specific_chunks.begin();
                  i != machine_specific_chunks.end();
                  i++)
@@ -112,7 +116,7 @@ void ConfigManager::addPendingAdds(ConfigChunkDB* db)
                pending.mType = PendingChunk::ADD;
                pending.mChunk = (*i);
                mPendingConfig.push_back(pending);
-               vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << clrSetBOLD(clrCYAN) 
+               vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << clrSetBOLD(clrCYAN)
                   << "[ConfigManager] Adding Machine specific ConfigChunk: "
                   << (*i)->getName() << clrRESET << std::endl << vprDEBUG_FLUSH;
             }
