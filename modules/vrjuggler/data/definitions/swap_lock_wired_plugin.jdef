@@ -4,7 +4,7 @@
    <definition_version version="1" label="Swap Lock Plugin">
       <help/>
       <parent/>
-      <category>/Cluster Juggler</category>
+      <category>/Cluster</category>
       <property valuetype="configelementpointer" variable="false" name="sync_server">
          <help>Cluster Node that is responsible for syncronizing all other nodes.</help>
          <value label="Sync Server Machine"/>
@@ -15,7 +15,7 @@
    <definition_version version="2" label="Swap Lock Plugin">
       <help/>
       <parent/>
-      <category>/Cluster Juggler</category>
+      <category>/Cluster</category>
       <property valuetype="configelementpointer" variable="false" name="sync_server">
          <help>Cluster Node that is responsible for syncronizing all other nodes.</help>
          <value label="Sync Server Machine"/>

@@ -4,7 +4,7 @@
    <definition_version version="1" label="Machine Specific">
       <help>Settings for the specified machine.</help>
       <parent/>
-      <category>/Cluster Juggler</category>
+      <category>/Cluster</category>
       <property valuetype="configelement" variable="false" name="display_system">
          <help>Embedded display system for this specific machine.</help>
          <value label="Display System"/>
@@ -40,7 +40,7 @@
    <definition_version version="2" label="Machine Specific">
       <help>Settings for the specified machine.</help>
       <parent/>
-      <category>/Cluster Juggler</category>
+      <category>/Cluster</category>
       <property valuetype="configelement" variable="false" name="display_system">
          <help>Embedded display system for this specific machine.</help>
          <value label="Display System"/>
