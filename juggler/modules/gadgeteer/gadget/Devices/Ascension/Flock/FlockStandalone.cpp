@@ -29,27 +29,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
+//hi josh
 #include <iostream>        // for std::cout
 #include <fstream>         // for std::ifstream
 #include <string.h>
-		
-#include <fcntl.h>         // for open
-#include <termios.h>
-#include <unistd.h>        // for sleep, and ioctl
-#include <sys/types.h>     // for open
-#include <sys/stat.h>      // for open
-#include <assert.h>        // for assert
 
-#if defined(__sun__) || defined(__hpux)
-#include <sys/file.h>
-#endif
+#include <unistd.h>        // for sleep, and ioctl
+#include <assert.h>        // for assert
 
 #include <Input/vjPosition/aFlock.h>
 
-
 const int aFlock::MAXCHARSTRINGSIZE = 256;
-const int aFlock::mSleepFactor = 3;
 
 
 //: Configure Constructor
@@ -80,17 +70,22 @@ aFlock::aFlock(const char* const port,
 		  _reportRate(report),
 		  _hemisphere(hemi),
 		  _filter( filt ),
-		  _portId(-1),
 		  _baud(baud),
 		  _syncStyle(sync),
 		  _blocking(block),
 		  _numBirds(numBrds),
 		  _xmitterUnitNumber(transmit),
 		  _usingCorrectionTable(false),
-		  _active(false)
+		  _active(false),
+		  mSleepFactor(3)
 {
-  if (port != NULL)
-  	strncpy( _port, port, aFlock::MAXCHARSTRINGSIZE );
+  if (port != NULL) {
+    strncpy(_port, port, aFlock::MAXCHARSTRINGSIZE);
+    _serial_port = new vpr::SerialPort(_port);
+  }
+  else {
+    _serial_port = NULL;
+  }
 
   // fix the report rate if it makes no sense.
   if ((_reportRate != 'Q') && (_reportRate != 'R') &&
@@ -113,6 +108,11 @@ aFlock::aFlock(const char* const port,
 aFlock::~aFlock()
 {
     this->stop();
+
+    if ( _serial_port != NULL ) {
+        delete _serial_port;
+        _serial_port = NULL;
+    }
 }
 
 //: see if the flock is active or not
@@ -132,8 +132,16 @@ void aFlock::setPort(const char* const serialPort)
 	std::cout << "Flock: Cannot change the serial Port while active\n";
 	return;
     }
-    if (serialPort != NULL)
-  	strncpy( _port, serialPort, aFlock::MAXCHARSTRINGSIZE );
+
+    if ( serialPort != NULL ) {
+        strncpy(_port, serialPort, aFlock::MAXCHARSTRINGSIZE);
+
+        if ( _serial_port != NULL ) {
+            delete _serial_port;
+        }
+
+        _serial_port = new vpr::SerialPort(_port);
+    }
 }
 
 //: get the port used
@@ -160,60 +168,62 @@ void aFlock::setBaudRate(const int& baud)
 
 //: call this to connect to the flock device.
 //  NOTE: flock.isActive() must be false to use this function
-int aFlock::start()
-{
-    if (!_active)
-    {
-      std::cout << "aFlock: Getting ready....\n\n" << std::flush;
+int
+aFlock::start() {
+    int retval;
 
-      std::cout<<"aFlock: Opening port\n"<<std::flush;
-      aFlock::open_port( _port, _baud, _portId );
-      if (_portId == -1)
-	       return 0;
+    if (!_active) {
+        if (open_port() == -1 ) {
+           retval = 0;
+        }
+        else {
+            std::cout << "[aFlock] Setting blocking state ("
+                      << (_blocking ? "" : "non-") << "blocking)\n"
+                      << std::flush;
+            set_blocking();
 
-      std::cout<<"aFlock: Setting blocking\n"<<std::flush;
-      aFlock::set_blocking( _portId, _blocking );
+            std::cout << "[aFlock] Setting sync\n" << std::flush;
+            set_sync();
 
-      std::cout<<"aFlock: Setting sync\n"<<std::flush;
-      aFlock::set_sync( _portId, _syncStyle );
+            std::cout << "[aFlock] Setting group\n" << std::flush;
+            set_group();
 
-      std::cout<<"aFlock: Setting group\n"<<std::flush;
-      aFlock::set_group( _portId );
+            std::cout << "[aFlock] Setting autoconfig\n" << std::flush;
+            set_autoconfig();
 
-      std::cout<<"aFlock: Setting autoconfig\n"<<std::flush;
-      aFlock::set_autoconfig( _portId, _numBirds );
+            std::cout << "[aFlock] Setting transmitter\n" << std::flush;
+            set_transmitter();
 
-      std::cout<<"aFlock: Setting transmitter\n"<<std::flush;
-      aFlock::set_transmitter( _portId, _xmitterUnitNumber );
+            std::cout << "[aFlock] Setting filter\n" << std::flush;
+            set_filter();
 
-      std::cout<<"aFlock: Setting filter\n"<<std::flush;
-      aFlock::set_filter( _portId, _filter );
+            std::cout << "[aFlock] Setting hemisphere\n" << std::flush;
+            set_hemisphere();
 
-      std::cout<<"aFlock: Setting hemisphere\n"<<std::flush;
-      aFlock::set_hemisphere( _portId, _hemisphere, _xmitterUnitNumber, _numBirds );
+            std::cout << "[aFlock] Setting pos_angles\n" << std::flush;
+            set_pos_angles();
 
-      std::cout<<"aFlock: Setting pos_angles\n"<<std::flush;
-      aFlock::set_pos_angles( _portId, _xmitterUnitNumber, _numBirds );
+            std::cout << "[aFlock] Setting pickBird\n" << std::flush;
+            pickBird(_xmitterUnitNumber);
 
-      std::cout<<"aFlock: Setting pickBird\n"<<std::flush;
-      aFlock::pickBird( _xmitterUnitNumber,_portId );
+            std::cout << "[aFlock] Setting rep_and_stream\n" << std::flush;
+            set_rep_and_stream();
 
-      std::cout<<"aFlock: Setting rep_and_stream\n"<<std::flush;
-      aFlock::set_rep_and_stream( _portId, _reportRate );
+            std::cout  << "[aFlock] Ready to go!\n\n" << std::flush;
 
-      std::cout  << "aFlock: ready to go.." << std::endl << std::flush;
+            // flock is active.
+            _active = true;
 
-      // flock is active.
-      _active = true;
+            // return success
+            retval = 1;
+        }
+    }
+    else {
+        retval = 0; // already sampling
+    }
 
-      // return success
-      return 1;
-    } 
-    
-    else
-	   return 0; // already sampling
+    return retval;
 }
-
 
 //: call this repeatedly to update the data from the birds.
 //  NOTE: flock.isActive() must be true to use this function
@@ -244,14 +254,8 @@ int aFlock::sample()
 
 	// you can never go above the maximum number of sensors.
 	assert( i < MAX_SENSORS );
-	aFlock::getReading(i, _portId,
-		this->xPos(j),
-		this->yPos(j),
-		this->zPos(j),
-		this->zRot(j),
-		this->yRot(j),
-		this->xRot(j));	
-		
+	getReading(i, xPos(j), yPos(j), zPos(j), zRot(j), yRot(j), xRot(j));
+
 	if (_usingCorrectionTable)
 	{
 	    this->positionCorrect( this->xPos(j),
@@ -264,33 +268,39 @@ int aFlock::sample()
 }
 
 //: stop the flock
-int aFlock::stop()
-{
-    char   bird_command[4];
+int
+aFlock::stop () {
+    int retval;
+    vpr::Uint32 written;
+    if ( _serial_port != NULL ) {
+        char bird_command[4];
 
-    std::cout << "Flock: Stopping the flock..." << std::flush;
+        std::cout << "[aFlock] Stopping the flock ...\n" << std::flush;
 
-    bird_command[0] = 'B';
-    write( _portId, bird_command, 1 );
+        bird_command[0] = 'B';
+        _serial_port->write(bird_command, 1, written);
+        _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
+        usleep(500 * mSleepFactor);
 
-    tcflush(_portId, TCIOFLUSH);
+        bird_command[0] = 'G';
+        _serial_port->write(bird_command, 1, written);
+        _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
+        usleep(200 * aFlock::mSleepFactor);
 
-    usleep( 500 * aFlock::mSleepFactor );
-    bird_command[0] = 'G';
-    write( _portId, bird_command, 1 );
+        _serial_port->close();
 
-    tcflush(_portId, TCIOFLUSH);
+        // flock is not active now.
+        _active = false;
 
-    usleep( 200 * aFlock::mSleepFactor );
-    close( _portId );
-    _portId = -1;
+        std::cout << "[aFlock] Stopped." << std::endl << std::flush;
 
-    // flock is not active now.
-    _active = false;
+        retval = 1;
+    }
+    else {
+        retval = 0;
+    }
 
-    std::cout << "stopped." << std::endl << std::flush;
-
-    return 1;
+    return retval;
 }
 
 //: Set the hemisphere that the transmitter transmits from.
@@ -509,58 +519,80 @@ void aFlock::initCorrectionTable( const char* const fName )
 //  give - port: the flock port number <BR>
 //  give - xyz positions               <BR>
 //  give - zyx rotations
-int aFlock::getReading( const int& n, const int& port,
-    float& xPos, float& yPos, float& zPos,
-    float& zRot, float& yRot, float& xRot )
+int
+aFlock::getReading (const int& n, float& xPos, float& yPos, float& zPos,
+                    float& zRot, float& yRot, float& xRot)
 {
-    char buff[12], group;
-    int  c,i, addr;
+    int addr;
+    vpr::Uint32 num_read;
+    if ( _serial_port != NULL ) {
+        char buff[12], group;
+        int  c, i;
 
-    do
-    {
-	c=i = 0;
-	while (!i && c < 99999)
-	{
-	    c++;
-	    if ((read( port,buff,1 ) == 1) && (buff[0] & 0x80))
-		i = 1;
-	}
-	while (i != 12 && c < 99999)
-	{
-	    c++;
-	    i += read( port,&buff[i], 12-i );
-	}
-	
-	while ((read( port,&group,1 ) == 0) && c < 99999)
-	{
-	    usleep(100 * aFlock::mSleepFactor);
-	    c++;
-	}
-	
-	if (c >= 5000)
-	    std::cout << "aFlock: tracker timeout (" << c << ")" << std::endl
-                      << std::flush;
-	
-	addr = group;
-    } while (addr != n);
+        do {
+            c = i = 0;
 
-    //std::cout << "addr: " << addr << std::endl;
+            while ( ! i && c < 99999 ) {
+                c++;
+                _serial_port->readn(&group, 1, num_read);
+                if ( (num_read == 1) /* && 
+                     (buff[0] & 0x80) */)
+                {
+                    i = 1;
+                }
+            }
 
-    // Position
-    xPos = rawToFloat(buff[1],buff[0])   * POSITION_RANGE;
-    yPos = rawToFloat(buff[3],buff[2])   * POSITION_RANGE;
-    zPos = rawToFloat(buff[5],buff[4])   * POSITION_RANGE;
+//std::cerr << "After first loop -- c: " << c << std::endl;
 
-    // Orientation
-    zRot = rawToFloat(buff[7],buff[6])   * ANGLE_RANGE;
-    yRot = rawToFloat(buff[9],buff[8])   * ANGLE_RANGE;
-    xRot = rawToFloat(buff[11],buff[10]) * ANGLE_RANGE;
+            while ( i != 12 && c < 99999 ) {
+                c++;
+                _serial_port->read(&buff[i], 12 - i, num_read);
+                i += num_read;
+            }
+
+//std::cerr << "After second loop -- c: " << c << std::endl;
+            _serial_port->read(&group,/* sizeof(group)*/ 1,num_read);
+            while ( (num_read == 0) &&
+                   (c < 99999) )
+            {
+                usleep(100 * mSleepFactor);
+                c++;
+                _serial_port->read(&group, 1, num_read);
+            }
+
+//std::cerr << "After third loop -- c: " << c << std::endl;
+
+
+            if ( c >= 5000 ) {
+                std::cerr << "[aFlock] Tracker timeout (" << c << ")\n";
+            }
+
+            addr = group;
+        } while ( addr != n );
+
+        //std::cout << "addr: " << addr << std::endl;
+
+        // Position
+        xPos = rawToFloat(buff[1], buff[0]) * POSITION_RANGE;
+        yPos = rawToFloat(buff[3], buff[2]) * POSITION_RANGE;
+        zPos = rawToFloat(buff[5], buff[4]) * POSITION_RANGE;
+
+//        std::cerr << "Pos: " << xPos << " : " << yPos << " : " << zPos << std::endl;
+
+        // Orientation
+        zRot = rawToFloat(buff[7], buff[6])   * ANGLE_RANGE;
+        yRot = rawToFloat(buff[9], buff[8])   * ANGLE_RANGE;
+        xRot = rawToFloat(buff[11], buff[10]) * ANGLE_RANGE;
+    }
+    else {
+        addr = -1;
+    }
 
     return addr;
 }
 
-float aFlock::rawToFloat( char& r1, char& r2 )
-{
+float
+aFlock::rawToFloat (char& r1, char& r2) {
    // return ((float) (((r1 & 0x7f) << 9) | (r2 & 0x7f) << 2) / 0x7fff);
 
    short int ival1,ival2,val;
@@ -570,14 +602,17 @@ float aFlock::rawToFloat( char& r1, char& r2 )
    return ((float)val) / 0x7fff;
 }
 
-void  aFlock::pickBird( const int& birdID, const int& port )
-{
-    char buff = 0xF0 + birdID;
-    write( port, &buff, 1 );
+void
+aFlock::pickBird (const int birdID) {
+    vpr::Uint32 written;
+    if ( _serial_port != NULL ) {
+        char buff = 0xF0 + birdID;
 
-    tcflush(port, TCIOFLUSH);
+        _serial_port->write(&buff, sizeof(buff), written);
+        _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
-    usleep ( 100 * aFlock::mSleepFactor );
+        usleep(100 * mSleepFactor);
+    }
 }
 
 //: Open the port.
@@ -586,131 +621,88 @@ void  aFlock::pickBird( const int& birdID, const int& port )
 //  returns portId twice (created by the open function)
 //  NOTE: portId is returned from both ends of this function.
 //  if portId == -1 then function failed to open the port.
-int aFlock::open_port( const char* const serialPort,
-			const int& baud,
-			int& portId )
-{
+int
+aFlock::open_port () {
+    int retval;
+
     ///////////////////////////////////////////////////////////////////
     // Open and close the port to reset the tracker, then
     // Open the port
     ///////////////////////////////////////////////////////////////////
-    portId = open( serialPort, O_RDWR | O_NDELAY);
-    if (portId == -1)
-    {
-	std::cout << "  port reset failed (because port open failed)\n"
-                  << std::flush;
-	return portId;
-    } else {
-	sleep(2);
-	close( portId );
-	std::cout << "  port reset successfully (port was opened then closed)\n"
-                  << std::flush;
+    if ( _serial_port != NULL ) {
+        _serial_port->setOpenReadWrite();
+
+
+        if ( ! _serial_port->open().success() ) {
+            std::cerr << "[aFlock] Port reset failed (because port open "
+                      << "failed)\n";
+            retval = -1;
+        }
+        else {
+            sleep(2);
+            _serial_port->close();
+ 
+            std::cout << "[aFlock] Port reset successfully (port was opened "
+                      << "then closed)\n" << std::flush;
+
+            if ( ! _serial_port->open().success() ) {
+                std::cerr << "[aFlock] Port open failed\n";
+                retval = -1;
+            }
+            else {
+                std::cout << "[aFlock] Port opened successfully\n"
+                          << std::flush;
+
+                _serial_port->setUpdateAction(vpr::SerialTypes::NOW);
+
+                // Setup the port.
+                std::cout << "[aFlock] Setting new baud rate: " << _baud
+                          << " bits per second\n" << std::flush;
+
+                _serial_port->setInputBaudRate(_baud);
+                std::cout << "Setting output baud rate\n" << std::flush;
+                _serial_port->setOutputBaudRate(_baud);
+                std::cout << "Setting character size\n" << std::flush;
+                _serial_port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
+/*
+                std::cout << "Setting local attachment\n" << std::flush;
+                _serial_port->enableLocalAttach();
+*/
+                std::cout << "Setting read stuff\n" << std::flush;
+                if (_serial_port->enableRead().failure()) retval = -1;
+            }    
+        }
+    }
+    else{
+        std::cerr << "[aFlock] ERROR -- No port has been set in aFlock::open_port()!\n";
+        retval = -1;
     }
 
-    portId = open( serialPort, O_RDWR | O_NDELAY);
-
-    if (portId == -1)
-    {
-	std::cout << "  port open failed\n" << std::flush;
-	return portId;
-    } else {
-	std::cout << "  port open successfully\n" << std::flush;
-    }
-
-    //////////////////////////////////////////////////////////////////
-    // Setup the port, current setting is 38400 baud
-    //
-    //////////////////////////////////////////////////////////////////
-
-    std::cout << "  Getting current term setting\n" << std::flush;
-    termios termIoPort;
-    tcgetattr(portId, &termIoPort);
-
-    // Set the flags to 0 to clear out any cruft and to ensure that we are
-    // setting fresh values.
-    termIoPort.c_iflag = termIoPort.c_oflag = termIoPort.c_lflag = 0;
-
-    // get the B* format baud rate
-    // i.e.: B38400 is baud = 38400
-    int magicBaudRate = 0;
-    switch (baud)
-    {
-	case 150: magicBaudRate = B150; break;
-	case 200: magicBaudRate = B200; break;
-	case 300: magicBaudRate = B300; break;
-	case 600: magicBaudRate = B600; break;
-	case 1200: magicBaudRate = B1200; break;
-	case 1800: magicBaudRate = B1800; break;
-	case 2400: magicBaudRate = B2400; break;
-	case 4800: magicBaudRate = B4800; break;
-	case 9600: magicBaudRate = B9600; break;
-	case 19200: magicBaudRate = B19200; break;
-	
-#ifndef _POSIX_SOURCE
-	case 57600: magicBaudRate = B57600; break;
-#   ifdef B76800
-	case 76800: magicBaudRate = B76800; break;
-#   endif
-	case 115200: magicBaudRate = B115200; break;
-#endif
-
-        case 38400:
-        default:
-          magicBaudRate = B38400;
-          break;
-    }
-
-    termIoPort.c_cflag = CS8 | CLOCAL | CREAD;
-
-    // Set the baud rate flag.
-    cfsetospeed(&termIoPort, magicBaudRate);
-    cfsetispeed(&termIoPort, magicBaudRate);
-
-    // make sure we're not going off the end
-    assert( NCCS >= 16 );
-
-    // Set the new attributes
-    int result = 0;
-    std::cout << "  Setting new term setting: "<<baud<<" baud..." << std::flush;
-    result = tcsetattr(portId, TCSANOW, &termIoPort);
-
-    // did it succeed?
-    if (result == 0)
-	std::cout<<" success\n"<<std::flush;
-    else
-	std::cout<<" failed\n"<<std::flush;
-
-    // return the portID
-    return portId;
+    return retval;
 }
 
-void aFlock::set_blocking( const int& port, const int& blocking )
-{
+void
+aFlock::set_blocking () {
     //////////////////////////////////////////////////////////////////
     // Setup a non/blocked port & Flush port
     //////////////////////////////////////////////////////////////////
-    static int blockf,nonblock;
-    int flags;
+    if ( _serial_port != NULL ) {
+        if ( _blocking ) {
+            _serial_port->enableBlocking();
+            std::cerr << "enable Blocking" << std::endl;
+        }
+        else {
+            _serial_port->enableNonBlocking();
+        }
 
-    flags = fcntl( port,F_GETFL,0 );
+        _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
-    // Turn blocking on
-    blockf   = flags & ~FNDELAY;
-
-    // Turn blocking off
-    nonblock = flags | FNDELAY;
-
-    // 0 Non Blocked
-    // 1 Blocked
-    fcntl( port, F_SETFL, blocking ? blockf : nonblock );
-
-    tcflush(port, TCIOFLUSH);
-
-    usleep( 1000 * aFlock::mSleepFactor );
+        usleep(1000 * mSleepFactor);
+    }
 }
 
-void aFlock::set_sync( const int& port, const int& sync )
-{
+void
+aFlock::set_sync () {
     /////////////////////////////////////////////////////////////////
     // Set CRT sync: (manual page 82)
     //   set crt sync
@@ -718,19 +710,19 @@ void aFlock::set_sync( const int& port, const int& sync )
     //   > 72Hz    -   1 (type 1)
     //                 2 (type 2)
     /////////////////////////////////////////////////////////////////
-    unsigned char buff[4] = {'A', 1};
-    buff[1] = sync;
-    write( port,buff,2 );
+    vpr::Uint32 written;
+    if ( _serial_port != NULL ) {
+        unsigned char buff[4] = {'A', 1};
+        buff[1] = _syncStyle;
 
-    tcflush(port, TCIOFLUSH);
+        _serial_port->write(buff, 2, written);
+        _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
+    }
 }
 
 
-void aFlock::set_hemisphere( const int& port,
-			const BIRD_HEMI& hem,
-			const int& transmitter,
-			const int& numbirds )
-{
+void
+aFlock::set_hemisphere() {
     /////////////////////////////////////////////////////////////////
     // Set Hemisphere for birds taking input
     //
@@ -742,167 +734,195 @@ void aFlock::set_hemisphere( const int& port,
     // Left : 0x06, 0x01
     // Right: 0x06, 0x00
     /////////////////////////////////////////////////////////////////
-    char buff[3];
-    buff[0] = 'L';
-    for (int i = 1; i < (numbirds+1); i++)
-    {
-	if (i == transmitter)
-		continue;
-	pickBird( i,port );
-	switch (hem)
-	{
-	case FRONT_HEM:
-	    buff[1] = 0x00;
-	    buff[2] = 0x00;
-	    break;
-	case AFT_HEM:
-	    buff[1] = 0x00;
-	    buff[2] = 0x01;
-	    break;
-	case UPPER_HEM:
-	    buff[1] = 0x0C;
-	    buff[2] = 0x01;
-	    break;
-	case LOWER_HEM:
-	    buff[1] = 0x0C;
-	    buff[2] = 0x00;
-	    break;		
-	case LEFT_HEM:
-	    buff[1] = 0x06;
-	    buff[2] = 0x01;
-	    break;
-	case RIGHT_HEM:
-	    buff[1] = 0x06;
-	    buff[2] = 0x00;
-	    break;
-	}
-	write( port, buff, 3 );
+    vpr::Uint32 written;
+    if ( _serial_port != NULL ) {
+        char buff[3];
 
-        tcflush(port, TCIOFLUSH);
+        buff[0] = 'L';
 
-	usleep( 500 * aFlock::mSleepFactor );
+        for ( int i = 1; i < (_numBirds + 1); i++ ) {
+            // Skip the transmitter.
+            if ( i == _xmitterUnitNumber ) {
+                continue;
+            }
+
+            pickBird(i);
+
+            switch (_hemisphere) {
+              case FRONT_HEM:
+                buff[1] = 0x00;
+                buff[2] = 0x00;
+                break;
+              case AFT_HEM:
+                buff[1] = 0x00;
+                buff[2] = 0x01;
+                break;
+              case UPPER_HEM:
+                buff[1] = 0x0C;
+                buff[2] = 0x01;
+                break;
+              case LOWER_HEM:
+                buff[1] = 0x0C;
+                buff[2] = 0x00;
+                break;
+              case LEFT_HEM:
+                buff[1] = 0x06;
+                buff[2] = 0x01;
+                break;
+              case RIGHT_HEM:
+                buff[1] = 0x06;
+                buff[2] = 0x00;
+                break;
+            }
+
+            _serial_port->write(buff, sizeof(buff), written);
+            _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
+
+            usleep(500 * mSleepFactor);
+        }
     }
 }
 
-void aFlock::set_rep_and_stream(const int& port, const char& reportRate)
-{
-    char buff[1];
-    /////////////////////////////////////////////////////////////////
-    // Set report rate
-    //             Q  Every cycle
-    //  buff[0] - 'R' Every other bird cycle
-    //             S  every 8 cycles
-    //             T  every 32 cycles
-    /////////////////////////////////////////////////////////////////
-    buff[0] = reportRate;
-    write( port, buff, 1 );
+void
+aFlock::set_rep_and_stream () {
+    vpr::Uint32 written;
+    if ( _serial_port != NULL ) {
+        char buff[1];
+        /////////////////////////////////////////////////////////////////
+        // Set report rate
+        //             Q  Every cycle
+        //  buff[0] - 'R' Every other bird cycle
+        //             S  every 8 cycles
+        //             T  every 32 cycles
+        /////////////////////////////////////////////////////////////////
+        buff[0] = _reportRate;
+        _serial_port->write(buff, sizeof(buff), written);
+        _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
+        usleep(2000 * mSleepFactor);
 
-    tcflush(port, TCIOFLUSH);
-
-    usleep( 2000 * aFlock::mSleepFactor );
-
-    ////////////////////////////////////////////////////////////////
-    // set stream mode
-    ////////////////////////////////////////////////////////////////
-    buff[0] = '@';
-    write( port, buff, 1 );
-
-    tcflush(port, TCIOFLUSH);
-
-    usleep( 500 * aFlock::mSleepFactor );
+        ////////////////////////////////////////////////////////////////
+        // set stream mode
+        ////////////////////////////////////////////////////////////////
+        buff[0] = '@';
+        _serial_port->write(buff, sizeof(buff), written);
+        _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
+        usleep(500 * mSleepFactor);
+    }
 }
 
-void aFlock::set_pos_angles(const int& port, const int& transmitter, const int& numbirds)
-{
+void
+aFlock::set_pos_angles () {
     //////////////////////////////////////////////////////////////////
     // Set Position Angles
     /////////////////////////////////////////////////////////////////
-    char buff[1];
-    for (int i = 1; i < (numbirds + 1); i++)
-    {
-	if (i == transmitter)
-		continue;
-	aFlock::pickBird( i,port );
-	buff[0] = 'Y';
-	write( port, buff, 1 );
+    vpr::Uint32 written;
+    if ( _serial_port != NULL ) {
+        char buff[1];
 
-        tcflush(port, TCIOFLUSH);
+        for ( int i = 1; i < (_numBirds + 1); i++ ) {
+            // Skip the transmitter unit.
+            if ( i == _xmitterUnitNumber ) {
+                continue;
+            }
 
-	usleep( 500 * aFlock::mSleepFactor );
+            pickBird(i);
+
+            buff[0] = 'Y';
+            _serial_port->write(buff, sizeof(buff), written);
+            _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
+
+            usleep(500 * mSleepFactor);
+        }
     }
 }
 
-void aFlock::set_filter(const int& port, const BIRD_FILT& filter)
-{
+void
+aFlock::set_filter () {
     ///////////////////////////////////////////////////////////////
     // Turn filters on (manual page 48)
     // 0s turn AC NARROW notch filter ON
     //         AC WIDE notch filter ON
     //         DC filter ON
     ///////////////////////////////////////////////////////////////
-    char buff[4];
-    buff[0] = 'P';
-    buff[1] = 0x04;
-    buff[2] = 0x00;
-    buff[3] = 0;
-    write(port, buff, 4);
+    vpr::Uint32 written;
+    if ( _serial_port != NULL ) {
+        char buff[4];
 
-    tcflush(port, TCIOFLUSH);
+        buff[0] = 'P';
+        buff[1] = 0x04;
+        buff[2] = 0x00;
+        buff[3] = 0;
 
-    //TODO: Do I need to sleep here?
-    usleep(12000 * aFlock::mSleepFactor);
+        _serial_port->write(buff, sizeof(buff), written);
+        _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
+
+        //TODO: Do I need to sleep here?
+        usleep(12000 * mSleepFactor);
+    }
 }
 
-void aFlock::set_transmitter(const int& port, const int& transmitter)
-{
+void
+aFlock::set_transmitter () {
     ///////////////////////////////////////////////////////////////
     // Sets up the device for Transmitting (manual page 67)
     // Command (0x30) for Next Transmitter
     ///////////////////////////////////////////////////////////////
-    char buff[2];
-    buff[0] = (unsigned char) (0x30);
-    buff[1] = (unsigned char) transmitter  << 4;
-    write(port, buff, 2);
+    vpr::Uint32 written;
+    if ( _serial_port != NULL ) {
+        char buff[2];
 
-    tcflush(port, TCIOFLUSH);
+        buff[0] = (unsigned char) (0x30);
+        buff[1] = (unsigned char) _xmitterUnitNumber << 4;
 
-    usleep(12000 * aFlock::mSleepFactor);
+        _serial_port->write(buff, sizeof(buff), written);
+        _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
+
+        usleep(12000 * aFlock::mSleepFactor);
+    }
 }
 
 
-void aFlock::set_autoconfig(const int& port, const int& numbirds)
-{
+void
+aFlock::set_autoconfig () {
     ///////////////////////////////////////////////////////////////
     // FBB AUTO-CONFIGURATION (manual page 60)
     //
     // Must wait 300 milliseconds before and after this command
     ///////////////////////////////////////////////////////////////
-    char buff[3];
-    buff[0] = 'P';
-    buff[1] = 0x32;
-    buff[2] = numbirds+1;  //number of input devices + 1 for transmitter
-    write(port, buff,3);
+    vpr::Uint32 written;
+    if ( _serial_port != NULL ) {
+        char buff[3];
 
-    tcflush(port, TCIOFLUSH);
+        buff[0] = 'P';
+        buff[1] = 0x32;
+        buff[2] = _numBirds + 1;  //number of input devices + 1 for transmitter
 
-    sleep(2);
+        _serial_port->write(buff, sizeof(buff), written);
+        _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
+        sleep(2);
+    }
 }
 
-void aFlock::set_group(const int& port)
-{
+void
+aFlock::set_group () {
     ////////////////////////////////////////////////////////////////
     // Setup group mode: (manual page 59)
     // 'P' Change Parameter
     // Number 35 (hex 23),
     // Set flag to 1 enabling group mode.
     ////////////////////////////////////////////////////////////////
-    char buff[3];
-    buff[0] = 'P';
-    buff[1] = 0x23;
-    buff[2] = 0x01;
-    write(port, buff, 3);
+    vpr::Uint32 written;
+    if ( _serial_port != NULL ) {
+        char buff[3];
 
-    tcflush(port, TCIOFLUSH);
+        buff[0] = 'P';
+        buff[1] = 0x23;
+        buff[2] = 0x01;
 
-    sleep(2);
+        _serial_port->write(buff, sizeof(buff), written);
+	_serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
+        sleep(2);
+    }
 }
+
+

@@ -1,4 +1,4 @@
-/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
  *
@@ -45,15 +45,13 @@
 #ifndef _ASCENSION_FLOCKOFBIRD_H_
 #define _ASCENSION_FLOCKOFBIRD_H_
 
+#include <VPR/IO/Port/vjSerialPort.h>
+#include </home/users/browner/vpr/vapor/vpr/IO/Port/SerialPort.h>
+
 #define POSITION_RANGE 12.0f
 #define ANGLE_RANGE   180.0f
 #define MAX_SENSORS    128
 
-/*  #ifndef _BOOL */
-/*  typedef bool int; */
-/*  #define true 1 */
-/*  #define false 0 */
-/*  #endif */
 
 typedef struct {
         float xmin, ymin, zmin;
@@ -249,8 +247,8 @@ private:
 	static const int   MAXCHARSTRINGSIZE;
 	char	    _port[256];
 	char	    _calibrationFileName[256];
-	
-	int	    _portId;
+
+        vpr::SerialPort* _serial_port;
 	int	    _baud;
 	int	    _syncStyle;
 	int	    _blocking;
@@ -263,32 +261,34 @@ private:
 	float _position[MAX_SENSORS][3], _orientation[MAX_SENSORS][3];
 	
 	bool _active;
-	
-// static bird functions.
-private:	
-	//: get a reading
-	//  give - n:    the bird unit number  <BR>
-	//  give - port: the flock port number <BR>
-	//  give - xyz positions               <BR>
-	//  give - zyx rotations
-	static int   getReading( const int& n, const int& port,
-				float& xPos, float& yPos, float& zPos,
-				float& zRot, float& yRot, float& xRot );
-	static float rawToFloat(char& r1, char& r2);
-	static void  pickBird(const int& sensor, const int& port_id);
-	static int   open_port(const char* const serialPort, const int& baud, int& port_id );
-	static void  set_blocking(const int& port, const int& blocking);
-	static void  set_sync(const int& port, const int& sync);
-	static void  set_hemisphere(const int& port, const BIRD_HEMI& hem, const int& transmitter, const int& numbirds);
-	static void  set_rep_and_stream(const int& port, const char& repRate);
-	static void  set_pos_angles(const int& port, const int& transmitter, const int& numbirds);
-	static void  set_filter(const int& port, const BIRD_FILT& filter);
-	static void  set_transmitter(const int& port, const int& transmitter);
-	static void  set_autoconfig(const int& port, const int& numbirds);
-	static void  set_group(const int& port);
-   static const int   mSleepFactor;
+
+        const int mSleepFactor;
+
+private:
+        int open_port(void);
+        void set_blocking(void);
+        void set_sync(void);
+        void set_group(void);
+        void set_autoconfig(void);
+        void set_transmitter(void);
+        void set_filter(void);
+        void set_hemisphere(void);
+        void set_pos_angles(void);
+        void pickBird(const int birdID);
+        void set_rep_and_stream(void);
+
+        //: get a jreading
+        //  give - n:    the bird unit number  <BR>
+        //  give - port: the flock port number <BR>
+        //  give - xyz positions               <BR>
+        //  give - zyx rotations
+        int getReading(const int& n, float& xPos, float& yPos, float& zPos,
+                       float& zRot, float& yRot, float& xRot );
+
+        float rawToFloat(char& r1, char& r2);
 };
 
 
-
 #endif
+
+
