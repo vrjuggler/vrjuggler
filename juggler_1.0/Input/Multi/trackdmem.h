@@ -21,6 +21,38 @@ struct CAVE_SENSOR_ST
    int32_t     frame;
    };
 
+struct CAVE_TRACKDTRACKER_HEADER
+{
+   uint32_t version;       /* CAVElib version (see constants below) */
+   uint32_t numSensors;    /* Total number of sensors */
+   uint32_t sensorOffset;  /* Byte offset from of header to start of sensor array */
+   uint32_t sensorSize;    /* sizeof() of a sensor struct */
+   uint32_t timestamp[2];  /* NB: *Not* a struct timeval - that changes */
+                           /* size between 32 & 64 bit mode */
+   uint32_t command;       /* For sending commands (such as 'reset') to daemon */
+} ;
+
+struct CAVE_TRACKDCONTROLLER_HEADER
+{
+   uint32_t version;          /* CAVElib version (see constants below) */
+   uint32_t buttonOffset;     /* Byte offset from start of header to start of button data */
+   uint32_t valuatorOffset;   /* Byte offset from start of header to start of valuator data */
+   uint32_t numButtons;
+   uint32_t numValuators;
+   uint32_t timestamp[2];
+   uint32_t command;          /* For sending commands (such as 'reset') to daemon */
+};
+
+/* Command values for header.command */
+/*   header.command should be 0 when no command is pending */
+#define CAVE_TRACKD_NO_COMMAND      0
+#define CAVE_TRACKD_RESET_COMMAND      1
+
+/* ID Numbers for CAVElib version */
+/*  Increasing values should be assigned for newer library versions whenever
+    either the header, sensor, or controller struct definition is expanded */
+#define CAVELIB_2_6  1
+
 
 void * trackd_attach_tracker_mem(int shmKey);
 void trackd_release_tracker_mem(void *mem);
