@@ -34,44 +34,43 @@
 
 #include <vrj/Display/TrackedSurfaceProjection.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
+
+#include <gmtl/Vec.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
+#include <gmtl/Output.h>
+#include <gmtl/Xforms.h>
+
 
 
 namespace vrj
 {
 
-void TrackedSurfaceProjection::updateWallParams()
+void TrackedSurfaceProjection::calcViewMatrix(gmtl::Matrix44f& eyePos, const float scaleFactor)
 {
-   // Compute the correct rotation matrix
-   // mWallRotationMatrix_bak ==> surfMbase
-   // tracker_mat ==> baseMtracker
-   // We want surfMbase <=== surfMbase*trackerMbase
-   // NOTE: wallRotMat's base is the base of the tracking system
+   updateSurfaceParams(scaleFactor);
 
-   gmtl::Matrix44f tracker_mat = mTracker->getData(gadget::PositionUnitConversion::ConvertToMeters);     // baseMtracker
+   calcViewFrustum(eyePos, scaleFactor);
 
-   // Method 1:
-   // baseMsurf = baseMtracker*baseMsurf
-   // surfMbase = inv(baseMsurf)
-   // Cost: 2 inversions, 1 mult, 2 temp matrices
-#if 0
-   gmtl::Matrix44f wall_rot_bak_inv;
-   gmtl::invert(wall_rot_bak_inv, mWallRotationMatrix_bak);
-   gmtl::Matrix44f base_m_surf;
-   base_m_surf = tracker_mat * wall_rot_bak_inv;
-   gmtl::invert(mWallRotationMatrix,base_m_surf);
-#endif
+   //Coord eye_coord(eyePos);
+   gmtl::Vec3f   eye_pos( gmtl::makeTrans<gmtl::Vec3f>(eyePos) );             // Non-xformed pos
 
-#if 0 // use this one
-   // Method 2:
-   // surfMbase = surfMbase*trackerMbase
-   // Cost: 1 inversion, 1 mult, 1 temp matrix
-   gmtl::Matrix44f tracker_mat_inv;                 // trackerMbase
-   gmtl::invert( tracker_mat_inv, tracker_mat);
-   mWallRotationMatrix = mWallRotationMatrix_bak * tracker_mat_inv;
+   // Need to post translate to get the view matrix at the position of the eye
+   // View mat = base_M_
+   mViewMat = m_surface_M_base; // * gmtl::makeTrans<gmtl::Matrix44f>( -eye_pos );
+}
 
-   std::cout << "Walrotation: pos: " << gmtl::makeTrans<gmtl::Vec3f>(mWallRotationMatrix) << std::endl;
-#endif
+// @post: All projection transforms must be updates
+void TrackedSurfaceProjection::updateSurfaceParams(const float scaleFactor)
+{
+   // Get the tracking data for the surface offset
+   gmtl::Matrix44f base_M_surftrans = mTracker->getData(scaleFactor);     // baseMtracker
+
+   // Compute new transformation
+   // Cost: 1 mat mult and one inversion
+   m_base_M_surface = base_M_surftrans * m_surftrans_M_surf;               // Compute new
+   m_surface_M_base = gmtl::invert(m_surface_M_base, m_base_M_surface);    // Set the inverse matrix for later
 }
 
 std::ostream& TrackedSurfaceProjection::outStream(std::ostream& out)
