@@ -550,29 +550,29 @@ public class DisplayWindowFrame
 
             Point3D[] corners = dlg.getCorners();
             mSelectedViewport.setProperty("lower_left_corner", 0,
-                                          new Double(corners[0].x));
+                                          new Float(corners[0].x));
             mSelectedViewport.setProperty("lower_left_corner", 1,
-                                          new Double(corners[0].y));
+                                          new Float(corners[0].y));
             mSelectedViewport.setProperty("lower_left_corner", 2,
-                                          new Double(corners[0].z));
+                                          new Float(corners[0].z));
             mSelectedViewport.setProperty("lower_right_corner", 0,
-                                          new Double(corners[1].x));
+                                          new Float(corners[1].x));
             mSelectedViewport.setProperty("lower_right_corner", 1,
-                                          new Double(corners[1].y));
+                                          new Float(corners[1].y));
             mSelectedViewport.setProperty("lower_right_corner", 2,
-                                          new Double(corners[1].z));
+                                          new Float(corners[1].z));
             mSelectedViewport.setProperty("upper_right_corner", 0,
-                                          new Double(corners[2].x));
+                                          new Float(corners[2].x));
             mSelectedViewport.setProperty("upper_right_corner", 1,
-                                          new Double(corners[2].y));
+                                          new Float(corners[2].y));
             mSelectedViewport.setProperty("upper_right_corner", 2,
-                                          new Double(corners[2].z));
+                                          new Float(corners[2].z));
             mSelectedViewport.setProperty("upper_left_corner", 0,
-                                          new Double(corners[3].x));
+                                          new Float(corners[3].x));
             mSelectedViewport.setProperty("upper_left_corner", 1,
-                                          new Double(corners[3].y));
+                                          new Float(corners[3].y));
             mSelectedViewport.setProperty("upper_left_corner", 2,
-                                          new Double(corners[3].z));
+                                          new Float(corners[3].z));
 
             mSelectedViewport.setProperty("tracked", 0, dlg.isTracked());
 

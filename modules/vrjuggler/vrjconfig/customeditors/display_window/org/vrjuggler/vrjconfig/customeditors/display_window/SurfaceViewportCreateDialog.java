@@ -172,8 +172,8 @@ public class SurfaceViewportCreateDialog
 
    public Point3D[] getCorners()
    {
-      double wall_width = ((Number) mWallWidthField.getValue()).doubleValue();
-      double wall_height = ((Number) mWallHeightField.getValue()).doubleValue();
+      float wall_width = ((Number) mWallWidthField.getValue()).floatValue();
+      float wall_height = ((Number) mWallHeightField.getValue()).floatValue();
 
       Plane surface_plane = new Plane(wall_width, wall_height);
 
@@ -191,18 +191,18 @@ public class SurfaceViewportCreateDialog
       }
       else
       {
-         double x_angle = ((Number) mCustomPlaneXField.getValue()).doubleValue();
-         double y_angle = ((Number) mCustomPlaneYField.getValue()).doubleValue();
-         double z_angle = ((Number) mCustomPlaneZField.getValue()).doubleValue();
+         float x_angle = ((Number) mCustomPlaneXField.getValue()).floatValue();
+         float y_angle = ((Number) mCustomPlaneYField.getValue()).floatValue();
+         float z_angle = ((Number) mCustomPlaneZField.getValue()).floatValue();
          surface_plane.setOrientation(x_angle, y_angle, z_angle);
       }
 
       // Pull the value for the corner that the user entered.  This information
       // will be used to reposition surface_plane relative to the selected
       // corner.
-      double corner_x = ((Number) mCornerXField.getValue()).doubleValue();
-      double corner_y = ((Number) mCornerYField.getValue()).doubleValue();
-      double corner_z = ((Number) mCornerZField.getValue()).doubleValue();
+      float corner_x = ((Number) mCornerXField.getValue()).floatValue();
+      float corner_y = ((Number) mCornerYField.getValue()).floatValue();
+      float corner_z = ((Number) mCornerZField.getValue()).floatValue();
       surface_plane.setCorner(new Point3D(corner_x, corner_y, corner_z),
                               mCornerChooser.getSelectedIndex());
 
@@ -279,15 +279,15 @@ public class SurfaceViewportCreateDialog
       try
       {
          jbInit();
-         mCustomPlaneXField.setValue(new Double(0.0));
-         mCustomPlaneYField.setValue(new Double(0.0));
-         mCustomPlaneZField.setValue(new Double(0.0));
-         mWallWidthField.setValue(new Double(0.0));
-         mWallHeightField.setValue(new Double(0.0));
+         mCustomPlaneXField.setValue(new Float(0.0));
+         mCustomPlaneYField.setValue(new Float(0.0));
+         mCustomPlaneZField.setValue(new Float(0.0));
+         mWallWidthField.setValue(new Float(0.0));
+         mWallHeightField.setValue(new Float(0.0));
          mPlaneChooser.setRenderer(new PlaneRenderer());
-         mCornerXField.setValue(new Double(0.0));
-         mCornerYField.setValue(new Double(0.0));
-         mCornerZField.setValue(new Double(0.0));
+         mCornerXField.setValue(new Float(0.0));
+         mCornerYField.setValue(new Float(0.0));
+         mCornerZField.setValue(new Float(0.0));
       }
       catch(Exception e)
       {
@@ -516,12 +516,12 @@ public class SurfaceViewportCreateDialog
 
       if ( mWallWidthField.getValue() != null )
       {
-         wall_width_set = ((Number) mWallWidthField.getValue()).doubleValue() > 0.0;
+         wall_width_set = ((Number) mWallWidthField.getValue()).floatValue() > 0.0;
       }
 
       if ( mWallHeightField.getValue() != null )
       {
-         wall_height_set = ((Number) mWallHeightField.getValue()).doubleValue() > 0.0;
+         wall_height_set = ((Number) mWallHeightField.getValue()).floatValue() > 0.0;
       }
 
       if ( mTracked )
