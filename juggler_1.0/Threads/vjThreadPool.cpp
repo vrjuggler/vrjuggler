@@ -48,15 +48,17 @@
 // ---------------------------------------------------------------------------
 vjThreadPool::vjThreadPool (int numToStartWith) : readyThreads(0) {
     DebugLock.acquire();
-      vjDEBUG(vjDBG_ALL,6) << "vjThreadPool::vjThreadPool: Entering.\n" << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_ALL,5) << "\tvjThreadPool::vjThreadPool: Number threads: "
-                 << numToStartWith << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL, vjDBG_DETAILED_LVL)
+         << "vjThreadPool::vjThreadPool: Entering.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL, vjDBG_HVERB_LVL)
+         << "\tvjThreadPool::vjThreadPool: Number threads: " << numToStartWith
+         << endl << vjDEBUG_FLUSH;
     DebugLock.release();
 
     listHead = NULL;
     workingCount = 0;
-    listLock.release();	    // release threadList
-    finishedLock.release();	    // Initialize if to threads being done
+    listLock.release();             // release threadList
+    finishedLock.release();         // Initialize if to threads being done
 
        //-- Start the initial # of threads ---//
     for (int index=0;index < numToStartWith;index++)
@@ -78,9 +80,10 @@ vjThreadPool::vjThreadPool (int numToStartWith) : readyThreads(0) {
 void
 vjThreadPool::threadLoop(void* theThreadAsVoid) {
    DebugLock.acquire();
-   vjDEBUG(vjDBG_ALL,6) << vjThread::self() << " vjThreadPool::threadLoop: Entering."
-   << endl << vjDEBUG_FLUSH;
-//      vjDEBUG(vjDBG_ALL,5) << vjThread::self()
+   vjDEBUG(vjDBG_ALL, vjDBG_DETAILED_LVL) << vjThread::self()
+                                          << " vjThreadPool::threadLoop: Entering."
+                                          << endl << vjDEBUG_FLUSH;
+//      vjDEBUG(vjDBG_ALL, vjDBG_HVERB_LVL) << vjThread::self()
 //      << " vjThreadPool::threadLoop: theThreadAsVoid:"
 //      << theThreadAsVoid << endl << vjDEBUG_FLUSH;
    DebugLock.release();
@@ -129,12 +132,12 @@ vjThreadPool::threadLoop(void* theThreadAsVoid) {
 // ---------------------------------------------------------------------------
 void
 vjThreadPool::threadSleep(vjOneThread* theThread) {
-    listLock.acquire();		      // acquire exclusive rights to threadList
+    listLock.acquire();               // acquire exclusive rights to threadList
         theThread->next = listHead;   // put self on head of the list
         listHead = theThread;
-    listLock.release();		      // release threadList
+    listLock.release();               // release threadList
 
-    readyThreads.release();	      // notify master, at least 1 on the list
+    readyThreads.release();           // notify master, at least 1 on the list
 
     theThread->threadWait.acquire();  // sleep until master needs/releases me
 }
@@ -148,12 +151,12 @@ vjOneThread*
 vjThreadPool::getThread (void) {
     vjOneThread* theThread;
 
-    readyThreads.acquire();	    // wait until at least 1 thread is free
+    readyThreads.acquire();           // wait until at least 1 thread is free
 
-    listLock.acquire();		    // acquire exclusive rights to threadList
-        theThread = listHead;           // get address of first free vjOneThread
-        listHead = theThread->next;     // make next in list, the head of list
-    listLock.release();		    // release threadList/
+    listLock.acquire();               // acquire exclusive rights to threadList
+        theThread = listHead;         // get address of first free vjOneThread
+        listHead = theThread->next;   // make next in list, the head of list
+    listLock.release();               // release threadList
 
     return theThread;
 }
@@ -180,13 +183,15 @@ vjOneThread* vjThreadPool::addThread (void)
 {
     static int numTimes = 0;
     DebugLock.acquire();
-      vjDEBUG(vjDBG_ALL,6) << vjThread::self() << " vjThreadPool::addThread: Entering: "
-                 << ++numTimes << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL, vjDBG_DETAILED_LVL) << vjThread::self()
+                                             << " vjThreadPool::addThread: Entering: "
+                                             << ++numTimes << endl
+                                             << vjDEBUG_FLUSH;
     DebugLock.release();
 
     vjGuard<vjMutex> guard(listLock);   // Protect the head
 
-    vjOneThread* newThread = new (this->getMyMemPool()->allocate(sizeof(vjOneThread))) vjOneThread;	// Used placement new
+    vjOneThread* newThread = new (this->getMyMemPool()->allocate(sizeof(vjOneThread))) vjOneThread;    // Used placement new
     newThread->next = NULL;
 
 //    vjThreadMemberFunctor<vjThreadPool>* memberFunctor = new vjThreadMemberFunctor<vjThreadPool>(this, vjThreadPool::threadLoop, (void*)newThread);
@@ -195,8 +200,9 @@ vjOneThread* vjThreadPool::addThread (void)
     newThread->thread = new vjThread(memberFunctor, 0);
 
     DebugLock.acquire();
-        vjDEBUG(vjDBG_ALL,5) << newThread->thread
-                   << " vjThreadPool::addThread: List at end\n" << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_ALL, vjDBG_HVERB_LVL) << newThread->thread
+                                            << " vjThreadPool::addThread: List at end\n"
+                                            << vjDEBUG_FLUSH;
         printList();
     DebugLock.release();
 

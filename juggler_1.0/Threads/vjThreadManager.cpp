@@ -27,16 +27,26 @@ vjThreadManager* vjThreadManager::_instance = NULL;
 //: Dump the state of the manager to debug
 void vjThreadManager::debugDump()
 {
-   vjDEBUG(vjDBG_ALL,0) << "------- Thread Manager DUMP -------\n" << vjDEBUG_FLUSH;
-   vjDEBUG_BEGIN(vjDBG_ALL,0) << "--- Thread List ----\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL, vjDBG_CRITICAL_LVL)
+      << "------- Thread Manager DUMP -------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_ALL, vjDBG_CRITICAL_LVL) << "--- Thread List ----\n"
+                                                << vjDEBUG_FLUSH;
    for (int i=0;i<mThreads.size();i++)
    {
       if (mThreads[i] != NULL)
-         vjDEBUG(vjDBG_ALL,0) << i << ": [" << (void*)mThreads[i] << "] "<< mThreads[i] << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL, vjDBG_CRITICAL_LVL) << i << ": ["
+                                                << (void*)mThreads[i] << "] "
+                                                << mThreads[i] << endl
+                                                << vjDEBUG_FLUSH;
       else
-         vjDEBUG(vjDBG_ALL,0) << i << ": [" << (void*)mThreads[i] << "] No thread\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL, vjDBG_CRITICAL_LVL) << i << ": ["
+                                                << (void*)mThreads[i]
+                                                << "] No thread\n"
+                                                << vjDEBUG_FLUSH;
    }
-   vjDEBUG_END(vjDBG_ALL,0) << "---------------------\n" << vjDEBUG_FLUSH;
+
+   vjDEBUG_END(vjDBG_ALL, vjDBG_CRITICAL_LVL) << "---------------------\n"
+                                              << vjDEBUG_FLUSH;
 }
 
 
@@ -74,16 +84,16 @@ vjTSTable* vjThreadManager::getCurrentTSTable()
    vjBaseThread* cur_thread;
    int32_t thread_id;
 
-   cur_thread = vjThread::self();		   // Get current thread
-   thread_id = cur_thread->getTID();		// Get thread id
+   cur_thread = vjThread::self();               // Get current thread
+   thread_id = cur_thread->getTID();            // Get thread id
 
    vjTSTable* ret_val = cur_thread->getTSTable();     // Get the cached copy
 
    if(ret_val == NULL)     // If it's null, then it needs set
    {
-   vjGuard<vjMutex> guard(mTSMutex);		// MUTEX Protection
+   vjGuard<vjMutex> guard(mTSMutex);            // MUTEX Protection
       vjASSERT((thread_id >= 0) && (thread_id < mTSTables.size()));
-      ret_val =  mTSTables[thread_id];                    // Get the table for that id
+      ret_val =  mTSTables[thread_id];          // Get the table for that id
       cur_thread->setTSTable(ret_val);
    }
    return ret_val;
