@@ -44,7 +44,6 @@
 #endif
 
 #include <vpr/Util/Debug.h>
-#include <vpr/IO/Selector.h>
 #include <vpr/md/POSIX/IO/FileHandleUNIX.h>
 
 
