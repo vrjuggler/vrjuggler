@@ -7,16 +7,16 @@ vjThreadManager* vjThreadManager::_instance = NULL;
 //: Dump the state of the manager to debug
 void vjThreadManager::debugDump()
 {
-   vjDEBUG(0) << "------- Thread Manager DUMP -------\n" << vjDEBUG_FLUSH;
-   vjDEBUG_BEGIN(0) << "--- Thread List ----\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,0) << "------- Thread Manager DUMP -------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_ALL,0) << "--- Thread List ----\n" << vjDEBUG_FLUSH;
    for (int i=0;i<mThreads.size();i++)
    {
       if (mThreads[i] != NULL)
-         vjDEBUG(0) << i << ": [" << (void*)mThreads[i] << "] "<< mThreads[i] << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << i << ": [" << (void*)mThreads[i] << "] "<< mThreads[i] << endl << vjDEBUG_FLUSH;
       else
-         vjDEBUG(0) << i << ": [" << (void*)mThreads[i] << "] No thread\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << i << ": [" << (void*)mThreads[i] << "] No thread\n" << vjDEBUG_FLUSH;
    }
-   vjDEBUG_END(0) << "---------------------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_ALL,0) << "---------------------\n" << vjDEBUG_FLUSH;
 }
 
 

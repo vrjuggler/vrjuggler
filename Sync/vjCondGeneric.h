@@ -115,10 +115,10 @@ public:
 
    void dump (void) const
    {
-      vjDEBUG_BEGIN(0) << "-------------  vjCondGeneric::Dump ---------\n" << vjDEBUG_FLUSH;
-      vjDEBUG(0) << "waiters: " << waiters << endl << vjDEBUG_FLUSH;
+      vjDEBUG_BEGIN(vjDBG_ALL,0) << "-------------  vjCondGeneric::Dump ---------\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "waiters: " << waiters << endl << vjDEBUG_FLUSH;
       condMutex->dump();
-      vjDEBUG_END(0) << "-----------------------------------\n" << vjDEBUG_FLUSH;
+      vjDEBUG_END(vjDBG_ALL,0) << "-----------------------------------\n" << vjDEBUG_FLUSH;
    }
 
 

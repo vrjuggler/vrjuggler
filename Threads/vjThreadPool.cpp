@@ -26,8 +26,8 @@
 // ---------------------------------------------------------------------------
 vjThreadPool::vjThreadPool (int numToStartWith) : readyThreads(0) {
     DebugLock.acquire();
-      vjDEBUG(6) << "vjThreadPool::vjThreadPool: Entering.\n" << vjDEBUG_FLUSH;
-      vjDEBUG(5) << "\tvjThreadPool::vjThreadPool: Number threads: "
+      vjDEBUG(vjDBG_ALL,6) << "vjThreadPool::vjThreadPool: Entering.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,5) << "\tvjThreadPool::vjThreadPool: Number threads: "
                  << numToStartWith << endl << vjDEBUG_FLUSH;
     DebugLock.release();
 
@@ -56,9 +56,9 @@ vjThreadPool::vjThreadPool (int numToStartWith) : readyThreads(0) {
 void
 vjThreadPool::threadLoop(void* theThreadAsVoid) {
    DebugLock.acquire();
-   vjDEBUG(6) << vjThread::self() << " vjThreadPool::threadLoop: Entering."
+   vjDEBUG(vjDBG_ALL,6) << vjThread::self() << " vjThreadPool::threadLoop: Entering."
    << endl << vjDEBUG_FLUSH;
-//      vjDEBUG(5) << vjThread::self()
+//      vjDEBUG(vjDBG_ALL,5) << vjThread::self()
 //      << " vjThreadPool::threadLoop: theThreadAsVoid:"
 //      << theThreadAsVoid << endl << vjDEBUG_FLUSH;
    DebugLock.release();
@@ -158,7 +158,7 @@ vjOneThread* vjThreadPool::addThread (void)
 {
     static int numTimes = 0;
     DebugLock.acquire();
-      vjDEBUG(6) << vjThread::self() << " vjThreadPool::addThread: Entering: "
+      vjDEBUG(vjDBG_ALL,6) << vjThread::self() << " vjThreadPool::addThread: Entering: "
                  << ++numTimes << endl << vjDEBUG_FLUSH;
     DebugLock.release();
 
@@ -173,7 +173,7 @@ vjOneThread* vjThreadPool::addThread (void)
     newThread->thread = new vjThreadspawn(memberFunctor, 0);
 
     DebugLock.acquire();
-        vjDEBUG(5) << newThread->thread
+        vjDEBUG(vjDBG_ALL,5) << newThread->thread
                    << " vjThreadPool::addThread: List at end\n" << vjDEBUG_FLUSH;
         printList();
     DebugLock.release();
