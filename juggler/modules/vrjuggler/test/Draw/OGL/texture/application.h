@@ -34,32 +34,29 @@
 #define _TEXTURE_APP_
 
 // C++ and STL (standard template library - http://www.sgi.com/Technology/STL)
-#include <iostream>
-#include <vector>
+#include <iostream> // for std::cout
+#include <vector>   // for std::vector
 
 // C
 #include <math.h>
 
 // OpenGL
-#include <GL/gl.h>
-#include <GL/glu.h>
+#include <GL/gl.h>  // OpenGL API
+#include <GL/glu.h> // GLU functions (extended opengl stuff)
 
 // VR juggler
-#include <vjConfig.h>
-#include <Kernel/GL/vjGlApp.h>
-#include <Kernel/GL/vjGlContextData.h>
-#include <Kernel/vjDebug.h>
-#include <Math/vjMatrix.h>
-#include <Math/vjVec3.h>
+#include <vjConfig.h>          // needed by other juggler classes
+#include <Kernel/GL/vjGlApp.h>     // base OpenGL application API
+#include <Kernel/GL/vjGlContextData.h> // for OpenGL resource IDs
 
 // texture application objects
-#include "renderGeometry.h"
-#include "cubeGeometry.h"
-#include "Image.h"
-#include "Texture.h"
-#include "hexImage.h"
-#include "squareImage.h"
-#include "renderTexture.h"
+#include "renderGeometry.h"  // render interleaved vertex array data 
+#include "cubeGeometry.h"    // cube geometry data
+#include "Image.h"           // Image class
+#include "Texture.h"         // Texture class
+#include "hexImage.h"        // the floor texture's image data
+#include "squareImage.h"     // the cube texture's image data
+#include "renderTexture.h"   // render Texture class to OpenGL hardware
 
 //: VR Juggler application demonstration to show you 
 //  how to do texturing in an OpenGL juggler application
