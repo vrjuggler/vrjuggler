@@ -118,7 +118,8 @@ public class DeviceProxyGraphEditor
             proxy_elts.add(0, added_elt);
          }
 
-         populateGraph(device_elts, proxy_elts, mBroker.getElements(mContext));
+         populateGraph(device_elts, proxy_elts, mBroker.getElements(mContext),
+                       false);
       }
    }
 
@@ -230,7 +231,7 @@ public class DeviceProxyGraphEditor
          }
       }
 
-      populateGraph(proxy_elts, device_elts, all_elts);
+      populateGraph(proxy_elts, device_elts, all_elts, true);
    }
 
    /**
@@ -301,7 +302,7 @@ public class DeviceProxyGraphEditor
 
          List proxy_elts = new ArrayList(1);
          proxy_elts.add(0, proxyElt);
-         populateGraph(proxy_elts, device_elts, all_elts);
+         populateGraph(proxy_elts, device_elts, all_elts, true);
       }
       else
       {
@@ -502,7 +503,8 @@ public class DeviceProxyGraphEditor
       this.add(this.graph, BorderLayout.CENTER);
    }
 
-   private void populateGraph(List proxyElts, List deviceElts, List allElts)
+   private void populateGraph(List proxyElts, List deviceElts, List allElts,
+                              boolean applyLayout)
    {
       List cells = new ArrayList();
       ConnectionSet cs = new ConnectionSet();
@@ -595,8 +597,13 @@ public class DeviceProxyGraphEditor
       }
 
       Object[] cell_array = cells.toArray();
-      this.graph.getModel().insert(cell_array, attributes, cs, null, null);
-      applyGraphLayoutAlgorithm(cell_array);
+      this.graph.getGraphLayoutCache().insert(cell_array, attributes, cs,
+                                              null, null);
+
+      if ( applyLayout )
+      {
+         applyGraphLayoutAlgorithm(cell_array);
+      }
    }
 
    private ConfigBroker  mBroker      = null;
