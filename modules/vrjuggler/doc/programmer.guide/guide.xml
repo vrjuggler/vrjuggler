@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="file://localhost/home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
-<!DOCTYPE book SYSTEM "file:/home/users/patrick/Morphon_XML-Editor/examples/docbook/dtd/docbookx.dtd" [
-]>
+<?xml-stylesheet href="../../../../../../docs/stylesheet/docbook_ab.css" type="text/css"?>
+<!DOCTYPE book SYSTEM "../../../../../../../../../../../../home/users/patrick/Morphon_XML-Editor/examples/docbook/dtd/docbookx.dtd">
 <book>
    <title>VR Juggler Programmer's Guide</title>
    <chapter id="ch1">
@@ -158,22 +157,7 @@ int main (int argc, char* argv[])
                         <para>This statement finally tells the kernel what application it should run. The method call reconfigures the kernel so that it will now start invoking the application object's member functions. It is at this time that the application is now running in the VR system.</para>
                      </callout>
                   </calloutlist>
-               </programlistingco><programlisting>#include &lt;simpleApp.h&gt;
-
-int main (int argc, char* argv[])
-{
-   vjKernel* kernel = vjKernel::instance();  // Get the kernel
-   simpleApp* app   = new simpleApp();       // Create the app object
-
-   kernel-&gt;loadConfigFile(...);              // Configure the kernel
-   kernel-&gt;start();                          // Start the kernel thread
-   kernel-&gt;setApplication(app);              // Give application to kernel
-
-   while ( ! exit )
-   {
-     // sleep
-   }
-}</programlisting></para>
+               </programlistingco></para>
             <section>
                <title>Get the kernel handle</title>
                <para><programlisting>vjKernel* kernel = vjKernel::instance();  // Get the kernel</programlisting></para>
@@ -2262,10 +2246,10 @@ int main(int argc, char* argv[])
                         <para><ulink url="http://www.oreilly.com/catalog/pthread/"><emphasis>Pthreads Programming</emphasis></ulink> by Bradford Nichols, Dick Buttlar, and Jacqueline Proulx Farrell.</para>
                      </listitem>
                      <listitem>
-                        <para>The <function>sproc(2)</function> manual page on IRIX or on <ulink url="http://techpubs.sgi.com/library/tpl/cgi-bin/getdoc.cgi?coll=0650&#38;db=man&#38;fname=/usr/share/catman/p_man/cat2/standard/nsproc.z&#38;srch=sproc">SGI's technical publications site</ulink>.</para>
+                        <para>The <function>sproc(2)</function> manual page on IRIX or on <ulink url="http://techpubs.sgi.com/library/tpl/cgi-bin/getdoc.cgi?coll=0650&amp;db=man&amp;fname=/usr/share/catman/p_man/cat2/standard/nsproc.z&amp;srch=sproc">SGI's technical publications site</ulink>.</para>
                      </listitem>
                      <listitem>
-                        <para><function></function><ulink url="http://techpubs.sgi.com/library/tpl/cgi-bin/getdoc.cgi?coll=0650&#38;db=man&#38;fname=/usr/share/catman/p_man/cat2/standard/nsproc.z&#38;srch=sproc"></ulink>The <function>pthread(3)</function> manual page for your operating system. The pthread functions are part of a POSIX standard and will be the same across platforms.</para>
+                        <para><function></function><ulink url="http://techpubs.sgi.com/library/tpl/cgi-bin/getdoc.cgi?coll=0650&amp;db=man&amp;fname=/usr/share/catman/p_man/cat2/standard/nsproc.z&amp;srch=sproc"></ulink>The <function>pthread(3)</function> manual page for your operating system. The pthread functions are part of a POSIX standard and will be the same across platforms.</para>
                      </listitem>
                   </itemizedlist>
                </section>
