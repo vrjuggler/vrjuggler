@@ -294,7 +294,8 @@ class DisplayPlacerModel
    public void setConfigChunkDB(ConfigChunkDB db)
    {
       chunkDB = db;
-      windows = chunkDB.getOfDescToken("displayWindow");
+      windows = ConfigUtilities.getChunksWithDescToken(chunkDB.getAll(),
+                                                       "displayWindow");
       for (Iterator itr = windows.iterator(); itr.hasNext(); )
       {
          ConfigChunk chunk = (ConfigChunk)itr.next();

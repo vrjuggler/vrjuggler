@@ -375,7 +375,9 @@ public class ControlPanelView
    {
       ClassLoader loader = BeanJarClassLoader.instance();
       DefaultControlPanelModel model = new DefaultControlPanelModel();
-      List devices = getConfigManager().getActiveConfig().getOfDescToken(token);
+      List devices = ConfigUtilities.getChunksWithDescToken(
+                           getConfigManager().getActiveConfig().getAll(),
+                           token);
       for (Iterator itr = devices.iterator(); itr.hasNext(); )
       {
          ConfigChunk chunk = (ConfigChunk)itr.next();
