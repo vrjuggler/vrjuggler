@@ -683,6 +683,7 @@ hier:
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.install.dist -p ${prefix}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.data.dist -p ${prefix}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.include.dist -p ${prefix}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.lib.dist -p ${prefix}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.samples.dist -p ${prefix}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.test.dist -p ${prefix}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.tools.dist -p ${prefix}
@@ -767,8 +768,7 @@ install-dbg:
 	@echo "------------------------------------------------"
 	@echo "Installing static debugging libraries"
 	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ude -p ${prefix}					\
-          -f ${mtreedir_os}/VJ.lib${LIBBITSUF}${ISA}.dist
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.lib.dist -p ${prefix}
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_DBG_LIBDIR}/${VJ_LIB_STATIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
 ifeq (${GL_API}, Y)
@@ -789,8 +789,7 @@ ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Installing dynamic debugging libraries"
 	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ude -p ${prefix}					\
-          -f ${mtreedir_os}/VJ.lib${LIBBITSUF}${ISA}.dist
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.lib.dist -p ${prefix}
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_DBG_LIBDIR}/${VJ_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
 ifeq (${GL_API}, Y)
@@ -824,8 +823,7 @@ install-opt:
 	@echo "------------------------------------------------"
 	@echo "Installing static optimized libraries"
 	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ud -p ${prefix}					\
-          -f ${mtreedir_os}/VJ.lib${LIBBITSUF}${ISA}.dist
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.lib.dist -p ${prefix}
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_OPT_LIBDIR}/${VJ_LIB_STATIC} ${_install_libdir_abs}/${_OPT_DIR}/
 ifeq (${GL_API}, Y)
@@ -846,8 +844,7 @@ ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Installing dynamic optimizied libraries"
 	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ude -p ${prefix}					\
-          -f ${mtreedir_os}/VJ.lib${LIBBITSUF}${ISA}.dist
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.lib.dist -p ${prefix}
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
           ${_OPT_LIBDIR}/${VJ_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
 ifeq (${GL_API}, Y)
