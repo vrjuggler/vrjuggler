@@ -50,7 +50,7 @@
 namespace tweek
 {
 
-CorbaManager::CorbaManager () : m_my_thread(NULL), m_subj_mgr(NULL)
+CorbaManager::CorbaManager() : m_my_thread(NULL), m_subj_mgr(NULL)
 {
    std::string tweek_ver = getVersionString();
 
@@ -66,8 +66,8 @@ CorbaManager::CorbaManager () : m_my_thread(NULL), m_subj_mgr(NULL)
       << vprDEBUG_FLUSH;
 }
 
-vpr::ReturnStatus CorbaManager::init (const std::string& local_id, int& argc,
-                                      char** argv)
+vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
+                                     char** argv)
 {
    vpr::ReturnStatus status;
 
@@ -132,7 +132,7 @@ vpr::ReturnStatus CorbaManager::init (const std::string& local_id, int& argc,
    return status;
 }
 
-void CorbaManager::shutdown (bool wait_for_completion)
+void CorbaManager::shutdown(bool wait_for_completion)
 {
    if ( ! CORBA::is_nil(m_root_poa) )
    {
@@ -148,7 +148,7 @@ void CorbaManager::shutdown (bool wait_for_completion)
    }
 }
 
-vpr::ReturnStatus CorbaManager::createSubjectManager ()
+vpr::ReturnStatus CorbaManager::createSubjectManager()
 {
    vprASSERT(! CORBA::is_nil(m_root_context) && "No naming service available");
    vprASSERT(! CORBA::is_nil(m_local_context) && "No naming service available");
@@ -237,7 +237,7 @@ vpr::ReturnStatus CorbaManager::createSubjectManager ()
    return status;
 }
 
-vpr::ReturnStatus CorbaManager::destroySubjectManager ()
+vpr::ReturnStatus CorbaManager::destroySubjectManager()
 {
    vpr::ReturnStatus status;
 
@@ -312,7 +312,7 @@ vpr::ReturnStatus CorbaManager::destroySubjectManager ()
 // Private methods.
 // ============================================================================
 
-vpr::ReturnStatus CorbaManager::createChildPOA (const std::string& local_id)
+vpr::ReturnStatus CorbaManager::createChildPOA(const std::string& local_id)
 {
    vpr::ReturnStatus status;
    CORBA::Object_var obj;
@@ -381,8 +381,8 @@ vpr::ReturnStatus CorbaManager::createChildPOA (const std::string& local_id)
  * @post The root context is retrieved through m_orb, and a sub-context is
  *       created for use within this memory space.
  */
-vpr::ReturnStatus CorbaManager::initNamingService (const std::string& ref_name,
-                                                   const std::string& local_id)
+vpr::ReturnStatus CorbaManager::initNamingService(const std::string& ref_name,
+                                                  const std::string& local_id)
 {
    CORBA::Object_var name_obj;
    vpr::ReturnStatus status;
