@@ -32,6 +32,8 @@
 
 #include <gadget/gadgetConfig.h>
 #include <boost/concept_check.hpp>
+#include <vpr/IO/ObjectWriter.h>
+#include <vpr/IO/ObjectReader.h>
 #include <gadget/Type/Digital.h>
 
 namespace gadget
@@ -140,5 +142,3 @@ namespace gadget
       }
 
 } // End of gadget namespace
-
-

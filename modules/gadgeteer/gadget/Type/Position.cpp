@@ -34,6 +34,8 @@
 #include <float.h>
 #include <boost/concept_check.hpp>
 #include <vpr/Util/Debug.h>
+#include <vpr/IO/ObjectReader.h>
+#include <vpr/IO/ObjectWriter.h>
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/Position.h>
 
