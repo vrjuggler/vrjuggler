@@ -375,6 +375,10 @@ private:
    void Configure3DMouse(vjConfigChunkDB *cdb);
 #endif
    void ConfigureKeyboard(vjConfigChunkDB* cdb);
+
+   void ConfigureSimAnalog(vjConfigChunkDB* cdb);
+   void ConfigureSimDigital(vjConfigChunkDB* cdb);
+   void ConfigureSimPosition(vjConfigChunkDB* cdb);
    void ConfigureSimGloveGesture(vjConfigChunkDB* cdb);
 
    void ConfigurePosProxy(vjConfigChunkDB* cdb);
