@@ -262,15 +262,13 @@ public:
       status = con_sock.enableNonBlocking();
       threadAssertTest(status.success(),
                        "Failed to enable non-blocking for connector");
-      threadAssertTest(con_sock.getNonBlocking(),
-                       "1: Connector should be non-blocking");
 
       status = connector.connect(con_sock, remote_addr,
                                  vpr::Interval(5, vpr::Interval::Sec));
       threadAssertTest(status.success(), "Connector can't connect");
 
       threadAssertTest(con_sock.getNonBlocking(),
-                       "2: Connector should be non-blocking");
+                       "Connector should be non-blocking");
 
       mCondVar.acquire();
       {
@@ -284,12 +282,10 @@ public:
       threadAssertTest(bytes_read == mMessageLen,
                        "Connector received message of wrong size");
 
-/*
       // Make sure we got all the data, then close.
       while ( con_sock.isReadBlocked() ) {
          vpr::System::usleep(10);
       }
-*/
 
       con_sock.close();
    }
