@@ -65,21 +65,43 @@ public:
 
    ~CorbaManager (void)
    {
+      // If the Subject Manager exists, we need to deactivate it, remove it
+      // from the Naming Service, and free its memory.
       if ( m_subj_mgr != NULL )
       {
+         m_child_poa->deactivate_object(m_subj_mgr_id);
          delete m_subj_mgr;
          m_subj_mgr = NULL;
       }
 
-      // XXX: Need to perform other shutdown stuff ...
+      shutdown();
    }
 
    /**
-    * Gets CORBA ready.
-    * Creates a thread and runs the CORBA server.
+    * Initializes the ORB and POA associated with this object.  A child POA of
+    * the root POA (RootPOA) is created, and all servants registered with this
+    * manager are activated within that child POA.
+    *
+    * @param local_id A string providing a unique identifier for the local POA.
+    * @param argc     The size of the following argument vector.
+    * @param argv     The command-line arguments passed to the application.
+    *                 These may include parameters defining the ORB's
+    *                 behavior.
     */
    vpr::ReturnStatus init(const std::string& local_id, int argc = 0,
                           char** argv = NULL);
+
+   /**
+    * Shuts down the ORB and the POA (if they were successfully initialized).
+    *
+    * @post If the ORB and root POA were initialized successfully in init(),
+    *       they are destroyed and shut down.
+    *
+    * @param wait_for_completion If true, block until all pending requests and
+    *                            events are completed.  This parameter is
+    *                            optional and defaults to true.
+    */
+   void shutdown (bool wait_for_completion = true);
 
    /**
     * Checks the validity of this service object to ensure that initialization
@@ -137,11 +159,11 @@ private:
    CORBA::ORB_var m_orb;
    PortableServer::POA_var m_root_poa;
    PortableServer::POA_var m_child_poa;
-   PortableServer::ObjectId_var m_subj_mgr_id;
    CosNaming::NamingContext_var m_root_context;
    CosNaming::NamingContext_var m_local_context;
 
-   tweek::SubjectManagerImpl* m_subj_mgr;
+   tweek::SubjectManagerImpl*   m_subj_mgr;
+   PortableServer::ObjectId_var m_subj_mgr_id;
 };
 
 } // End of tweek namespace
