@@ -24,6 +24,21 @@ gmtl::Matrix44f TrackdSensorStandalone::getSensorPos(int sensorNum)
    CAVE_SENSOR_ST* sensor_val;
    sensor_val = trackd_sensor(mMem, sensorNum);
 
+   // For Anthony Steed
+   gmtl::Matrix44f ret_val;
+
+   gmtl::Quatf rx,ry,rz,rt;
+
+   gmtl::setRot( rx, gmtl::AxisAnglef(gmtl::Math::deg2Rad(sensor_val->elev), 1.0, 0.0, 0.0));
+   gmtl::setRot( ry, gmtl::AxisAnglef(gmtl::Math::deg2Rad(sensor_val->azim), 0.0, 1.0, 0.0));
+   gmtl::setRot( rz, gmtl::AxisAnglef(gmtl::Math::deg2Rad(sensor_val->roll), 0.0, 0.0, 1.0));
+
+   rt = ry*rx*rz;
+
+   gmtl::setRot( ret_val, rt );
+   gmtl::setTrans( ret_val, gmtl::Vec3f( sensor_val->x, sensor_val->y, sensor_val->z) );
+
+   /*
    // XXX: This is untested and is probably wrong. :(
    gmtl::Matrix44f ret_val;
 
@@ -32,6 +47,7 @@ gmtl::Matrix44f TrackdSensorStandalone::getSensorPos(int sensorNum)
                                gmtl::Math::deg2Rad(sensor_val->roll) );
    gmtl::setRot( ret_val, euler );
    gmtl::setTrans( ret_val, gmtl::Vec3f( sensor_val->x, sensor_val->y, sensor_val->z) );
+   */
 
    return ret_val;
 }

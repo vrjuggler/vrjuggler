@@ -471,6 +471,11 @@ private:
                                 float& zRot, float& yRot, float& xRot );
 
    float rawToFloat(char& r1, char& r2);
+
+   /**
+    * Tests if the given bird ID is mapped to the transmitter.
+    */
+   bool isTransmitter(int birdID) const;
 };
 
 

@@ -240,6 +240,11 @@ class SimDisplayPlacerModel
    private List displays = new ArrayList();
 
    /**
+    * The size of the desktop in which the windows are placed.
+    */
+   private Dimension mDesktopSize = new Dimension(1600, 1200);
+
+   /**
     * Adds a new display to this model at the front.
     */
    public void add(Object obj)
@@ -327,6 +332,17 @@ class SimDisplayPlacerModel
    public int getSize()
    {
       return displays.size();
+   }
+
+   public Dimension getDesktopSize()
+   {
+      return mDesktopSize;
+   }
+
+   public void setDesktopSize(Dimension desktopSize)
+   {
+      mDesktopSize = desktopSize;
+      fireDesktopSizeChanged();
    }
 
    /**

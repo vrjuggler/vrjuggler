@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ConfigUpdater" default="dist" basedir=".">
+   <property name="srcdir" location="@srcdir@" />
+   <property name="debug" value="on" />
+   <property name="optimize" value="off" />
+
+   <!-- Compile all java sources -->
+   <target name="compile">
+      <javac destdir="."
+             deprecation="on"
+             debug="${debug}"
+             optimize="${optimize}">
+         <src path="${srcdir}/src" />
+         <include name="ConfigUpdater/**" />
+         <include name="VjConfig/**" />
+      </javac>
+   </target>
+
+   <!-- Create the distribution jar -->
+   <target name="dist" depends="compile">
+      <jar destfile="ConfigUpdater.jar" basedir=".">
+         <include name="ConfigUpdater/**" />
+         <include name="VjConfig/**" />
+         <fileset dir="${srcdir}"
+                  includes="ConfigUpdater.desc" />
+      </jar>
+   </target>
+
+   <!-- Clean up -->
+   <target name="clean">
+      <delete dir="VjConfig" />
+      <delete dir="ConfigUpdater" />
+      <delete file="ConfigUpdater.jar" />
+   </target>
+</project>

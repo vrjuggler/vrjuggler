@@ -136,6 +136,28 @@ public abstract class AbstractPlacerModel
    }
 
    /**
+    * Notifies all listeners that the size of the desktop has changed.
+    */
+   public void fireDesktopSizeChanged()
+   {
+      // Notify all interested listeners
+      PlacerModelEvent evt = null;
+      Object[] listenerList = listeners.getListenerList();
+      for (int i=listenerList.length-2; i>=0; i-=2)
+      {
+         if (listenerList[i] == PlacerModelListener.class)
+         {
+            // lazily instantiate the list
+            if (evt == null)
+            {
+               evt = new PlacerModelEvent(this, null, null);
+            }
+            ((PlacerModelListener)listenerList[i+1]).placerDesktopSizeChanged(evt);
+         }
+      }
+   }
+
+   /**
     * List of all listeners of this model.
     */
    protected EventListenerList listeners = new EventListenerList();

@@ -294,7 +294,7 @@ int FlockStandalone::sample()
         bird_id <= loop_count && bird_id < MAX_SENSORS;
         bird_id++)
    {
-      if (!mExtendedRange || bird_id != mXmitterUnitNumber)
+      if (! isTransmitter(bird_id))
       {
          vprASSERT( bird_id < MAX_SENSORS );
          vpr::ReturnStatus status = getReading(bird_id, xPos(buffer_location), yPos(buffer_location), zPos(buffer_location), 
@@ -1242,9 +1242,8 @@ void FlockStandalone::sendHemisphere()
       for ( int i = 1; i <= (mNumBirds + 1); i++ )
       {
          // Skip the transmitter.
-         if (!mExtendedRange || i != mXmitterUnitNumber)
+         if (! isTransmitter(i))
          {
-            
             pickBird(i);
             
             switch ( mHemisphere )
@@ -1334,7 +1333,7 @@ void FlockStandalone::sendPosAngles ()
       for ( int bird_id = 1; bird_id < loop_count; bird_id++ )
       {
          // Skip the transmitter unit.
-         if (!mExtendedRange || bird_id != mXmitterUnitNumber)
+         if (! isTransmitter(bird_id))
          {
             pickBird(bird_id);
             buff[0] = 'Y';
@@ -1412,7 +1411,7 @@ void FlockStandalone::sendAutoconfig ()
 
       buff[0] = 'P';
       buff[1] = 0x32;
-      buff[2] = mNumBirds + (mExtendedRange)?1:0; //number of input devices + 1 for transmitter
+      buff[2] = mNumBirds + (mExtendedRange ? 1 : 0); //number of input devices + 1 for transmitter
 
       vpr::System::msleep(600);
       mSerialPort->write(buff, sizeof(buff), written);
@@ -1927,6 +1926,24 @@ int FlockStandalone::checkError()
    printError( bird_command[0], bird_command[1] );
    
    return bird_command[0];
+}
+
+bool FlockStandalone::isTransmitter(int birdID) const
+{
+   // This flock is configured for extended range and thus has a transmitter on
+   // the FBB.
+   if (mExtendedRange)
+   {
+      // Check if the given ID is the ID for the transmitter
+      if (birdID == mXmitterUnitNumber)
+      {
+         // Yay ... this is a transmitter. God help us all.
+         return true;
+      }
+   }
+
+   // Must not be a transmitter
+   return false;
 }
 
 
