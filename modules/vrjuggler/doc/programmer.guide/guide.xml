@@ -329,7 +329,7 @@ simpleApp* app = new simpleApp();    // Create the app object</programlisting></
          <section>
             <title>OpenGL Performer Application Class</title>
             <para>The OpenGL Performer application base class adds interface functions that deal with OpenGL Performer scenegraph. Some of the interface extensions are shown in <xref linkend="vjPfApp_class_diag"/>. The following is a description of only two methods in the <classname>vjPfApp</classname> interface. More detailed discussion on this clas is provided in later sections.</para>
-            <figure id="vjPfApp_class_diag">
+            <figure float="1" id="vjPfApp_class_diag">
                <title><classname>vjPfApp</classname> interface extensions to <classname>vjApp</classname></title>
                <mediaobject>
                   <imageobject>
@@ -1419,7 +1419,7 @@ public:
       </section>
       <section id="ogl_app_sect">
          <title>OpenGL Applications</title>
-         <para>We are now ready to describe how to write OpenGL applications in VR Juggler. An OpenGL-based VR Juggler application must be derived from <classname>vjGlApp</classname>. This in turn is derived from <classname>vjApp</classname>. As was discussed in the application object section, <classname>vjApp</classname> defines the base interface that VR Juggler expects of all applications. The <classname>vjGlApp</classname> class extends this interface by adding members that the VR Juggler OpenGL draw manager needs to render an OpenGL application correctly.</para>
+         <para>We can now describe how to write OpenGL applications in VR Juggler. An OpenGL-based VR Juggler application must be derived from <classname>vjGlApp</classname>. This in turn is derived from <classname>vjApp</classname>. As was discussed in the application object section, <classname>vjApp</classname> defines the base interface that VR Juggler expects of all applications. The <classname>vjGlApp</classname> class extends this interface by adding members that the VR Juggler OpenGL draw manager needs to render an OpenGL application correctly.</para>
          <figure float="1" id="vjGlApp_class_fig">
             <title><classname>vjGlApp</classname> application class</title>
             <mediaobject>
@@ -1758,7 +1758,221 @@ public:
       </section>
       <section>
          <title>OpenGL Performer Applications</title>
-         <para></para>
+         <para>Programmers familiar with the use of scenegraphs may prefer that data structure rather than writing OpenGL manually. While VR Juggler does not provide a scenegraph of its own, its design allows the use of existing scenegraph software. In VR Juggler 1.0, the supported scenegraphs are OpenGL Performer from SGI and OpenSceneGraph. This section explains how to use OpenGL Performer to write VR Juggler applications.</para>
+         <para>A Performer-based VR Juggler application must derive from <classname>vjPfApp</classname>. Similar to <classname>vjGlApp</classname> presented in the previous section, <classname>vjPfApp</classname> derives from <classname>vjApp</classname>. <classname>vjPfApp</classname> extends <classname>vjApp</classname> by adding methods that deal with scenegraph initialization and access. <xref linkend="vjPfApp_class_diag2"/> shows how <classname>vjPfApp</classname> fits into the class hierarchy of a Performer-based VR Juggler application.</para>
+         <figure float="1" id="vjPfApp_class_diag2">
+            <title><classname>vjPfApp</classname> application class</title>
+            <mediaobject>
+               <imageobject>
+                  <imagedata fileref="myAppHierarchy-highlightVjPfApp.gif" format="GIF"/>
+               </imageobject>
+            </mediaobject>
+         </figure>
+         <para>Two of the methods added to the application interface by <classname>vjPfApp</classname> are <methodname>initScene()</methodname> and <methodname>getScene()</methodname>. These are called by the Performer Draw Manager to initialize the application scenegraph and to get the root of the scenegraph respectively. They must be implemented by the application (they are pure virtual methods within <classname>vjPfApp</classname>). Additional methods will be discussed in this section, but in many cases the default implementations of these other methods may be used. A simple tutorial application will be provided to illustrate the concepts presented.</para>
+         <section>
+            <title>Scenegraph Initialization: <methodname>vjPfApp::initScene()</methodname></title>
+            <para>In an application using OpenGL Performer, the scenegraph must be initialized before it can be used. The method <methodname>vjPfApp::initScene()</methodname> is provided for that purpose. Within this method, the root of the application scenegraph should be created, and any required models should be loaded and attached to the root in some way. The exact mechanisms for accomplishing this will vary depending on what the application will do.</para>
+            <para>During the initialization of OpenGL Performer by VR Juggler, <methodname>vjPfApp::initScene()</methodname> is invoked after the Performer functions <function>pfInit()</function> and <function>pfConfig()</function> but before <methodname>vjApp::apiInit()</methodname>.</para>
+         </section>
+         <section>
+            <title>Scenegraph Access: <methodname>vjPfApp::getScene()</methodname></title>
+            <para>In order for Performer to render the application scenegraph, it must get access to the scenegraph root. The method <methodname>vjPfApp::getScene()</methodname> will be called by the Performer Draw Manager so that it can give the scenegraph root node to Performer. Since the job of <methodname>getScene()</methodname> is straightforward, its implementation can be very simple. A typical implementation will have a single statement that returns a member variable that holds a pointer to the application scenegraph root node.<note>
+                  <para>Make sure that the node return is <emphasis>not</emphasis> a <classname>pfScene</classname> object. If it is, then lighting will not work.</para>
+               </note></para>
+            <section>
+               <title>Possible Misuses</title>
+               <para>Do not load any models in this member function. Those sorts of operations should be done within <methodname>initScene()</methodname>.</para>
+            </section>
+         </section>
+         <section>
+            <title>Tutorial: Loading a Model with OpenGL Performer</title>
+            <informaltable>
+               <tgroup cols="2">
+                  <tbody>
+                     <row>
+                        <entry>Description</entry>
+                        <entry>Simple OpenGL Performer application that loads a model</entry>
+                     </row>
+                     <row>
+                        <entry>Objectives</entry>
+                        <entry>Understand how to load a model, add it to a scenegraph, and return the root to VR Juggler</entry>
+                     </row>
+                     <row>
+                        <entry>Member functions</entry>
+                        <entry><itemizedlist>
+                              <listitem>
+                                 <para><methodname>vjPfApp::initScene()</methodname></para>
+                              </listitem>
+                              <listitem>
+                                 <para><methodname>vjPfApp::getScene()</methodname></para>
+                              </listitem>
+                           </itemizedlist></entry>
+                     </row>
+                     <row>
+                        <entry>Directory</entry>
+                        <entry><filename>$VJ_BASE_DIR/share/samples/tutorials/simplePf</filename></entry>
+                     </row>
+                     <row>
+                        <entry>Files</entry>
+                        <entry><itemizedlist>
+                              <listitem>
+                                 <para><filename>simplePfApp.h</filename></para>
+                              </listitem>
+                              <listitem>
+                                 <para><filename>simplePfApp.cpp</filename></para>
+                              </listitem>
+                           </itemizedlist></entry>
+                     </row>
+                  </tbody>
+               </tgroup>
+            </informaltable>
+            <section>
+               <title>Class Declaration</title>
+               <para>The following application class is called <classname>simplePfApp</classname>. It is derived from <classname>vjPfApp</classname> and has custom <methodname>initScene()</methodname> and <methodname>getScene()</methodname> methods declared. Note that this application uses <methodname>preForkInit()</methodname> which will be discussed later. Refer to simplePfApp.h for the implementations of <methodname>preForkInit()</methodname> and <methodname>setModel()</methodname>.</para>
+               <programlisting>class simplePfApp : public vjPfApp
+{
+public:
+   simplePfApp();
+   virtual ~simplePfApp();
+
+   virtual void preForkInit();
+   virtual void initScene();
+   virtual pfGroup* getScene();
+   void setModel(std::string modelFile);
+
+public:
+   std::string    mModelFileName;
+
+   pfGroup*       mLightGroup;
+   pfLightSource* mSun;
+   pfGroup*       mRootNode;
+   pfNode*        mModelRoot;
+};</programlisting>
+            </section>
+            <section>
+               <title>The <methodname>initScene()</methodname> Member Function</title>
+               <para>The implementation of <methodname>initScene()</methodname> is in <filename>simplePfApp.cpp</filename>. Within this method, we create the scenegraph root node, the lighting node, and load a user-specified model. The implementation follows:</para>
+               <programlisting>void simplePfApp::initScene ()
+{
+   // Allocate all the nodes needed
+   mRootNode = new pfGroup;
+
+   // Create the SUN light source
+   mLightGroup = new pfGroup;
+   mSun = new pfLightSource;
+   mLightGroup-&gt;addChild(mSun);
+   mSun-&gt;setPos(0.3f, 0.0f, 0.3f, 0.0f);
+   mSun-&gt;setColor(PFLT_DIFFUSE, 1.0f, 1.0f, 1.0f);
+   mSun-&gt;setColor(PFLT_AMBIENT, 0.3f, 0.3f, 0.3f);
+   mSun-&gt;setColor(PFLT_SPECULAR, 1.0f, 1.0f, 1.0f);
+   mSun-&gt;on();
+
+   // --- LOAD THE MODEL -- //
+   mModelRoot = pfdLoadFile(mModelFileName.c_str());
+
+   // -- CONSTRUCT STATIC STRUCTURE OF SCENEGRAPH -- //
+   mRootNode-&gt;addChild(mModelRoot);
+   mRootNode-&gt;addChild(mLightGroup);
+}</programlisting>
+               <para>In the above, the root node is constructed as a <classname>pfGroup</classname> object. Following this, some steps are taken to create a light source for the application. Finally, the model is loaded using <function>pfdLoadFile()</function>, and the model scenegraph root node is stored in <varname>mModelRoot</varname>. (The model loader must be initialized prior to calling <function>pfdLoadFile()</function>. This is done in <methodname>preForkInit()</methodname>.)</para>
+            </section>
+            <section>
+               <title>The <methodname>getScene()</methodname> Member Function</title>
+               <para>The VR Juggler Performer Draw Manager will call the application's <methodname>getScene()</methodname> method to get the root of the scenegraph. The implementation of this method can be found in <filename>simplePfApp.h</filename>. The code is as follows:</para>
+               <programlisting>pfGroup* simplePfApp::getScene ()
+{
+   return mRootNode;
+}</programlisting>
+               <para>The simplicity of this method implementation is not limited to the simple tutorial from which it is taken. All Performer-based VR Juggler applications can take advantage of this simple idiom where the root node is a member variable returned in <methodname>getScene()</methodname>.</para>
+            </section>
+         </section>
+         <section>
+            <title>Other <classname>vjPfApp</classname> Methods</title>
+            <para>Besides the two methods discussed so far, there are several other methods in <classname>vjPfApp</classname> that extend the basic <classname>vjApp</classname> interface. Each is discussed in this section.</para>
+            <section>
+               <title><methodname>preForkInit()</methodname></title>
+               <para>Prototype: <methodsynopsis>
+                     <modifier>public</modifier>
+                     <type>void</type>
+                     <methodname>preForkInit</methodname>
+                     <void/>
+                  </methodsynopsis></para>
+               <para>This member function allows the user application to do any processing that needs to happen before Performer forks its processes but after <function>pfInit()</function> is called. In other words, it is invoked after <function>pfInit()</function> but before <function>pfConfig()</function>.</para>
+            </section>
+            <section>
+               <title><methodname>appChanFunc()</methodname></title>
+               <para>Prototype: <methodsynopsis>
+                     <modifier>public</modifier>
+                     <type>void</type>
+                     <methodname>appChanFunc</methodname>
+                     <methodparam>
+                        <parameter>pfChannel* chan</parameter>
+                     </methodparam>
+                  </methodsynopsis></para>
+               <para>This method is called every frame in the application process for each active channel. It is called immediately before rendering (<function>pfFrame()</function>).</para>
+            </section>
+            <section>
+               <title><methodname>configPWin()</methodname></title>
+               <para>Prototype: <methodsynopsis>
+                     <modifier>public</modifier>
+                     <type>void</type>
+                     <methodname>configPWin</methodname>
+                     <methodparam>
+                        <parameter>pfPipeWindow* pWin</parameter>
+                     </methodparam>
+                  </methodsynopsis></para>
+               <para>This method is used to initialize a pipe window. It is called as soon as the pipe window is opened.</para>
+            </section>
+            <section>
+               <title><methodname>getFrameBufferAttrs()</methodname></title>
+               <para>Prototype: <methodsynopsis>
+                     <modifier>public</modifier>
+                     <type>void</type>
+                     <methodname>getFrameBufferAttrs</methodname>
+                     <void/>
+                  </methodsynopsis></para>
+               <para>Return the needed parameters for the Performer frame buffer. Stereo, double buffering, depth buffering, and RGBA are all requested by default.</para>
+            </section>
+            <section>
+               <title><methodname>drawChan()</methodname></title>
+               <para>Prototype: <methodsynopsis>
+                     <modifier>public</modifier>
+                     <type>void</type>
+                     <methodname>drawChan</methodname>
+                     <methodparam>
+                        <funcparams>pfChannel* chan, void* chandata</funcparams>
+                     </methodparam>
+                  </methodsynopsis></para>
+               <para>This is the method called in the channel draw function to do the actual rendering. For most programs, the default behavior of this function is correct. It simply does the following:</para>
+               <programlisting>chan-&gt;clear();
+pfDraw();</programlisting>
+               <para>Advanced users may want to override this behavior for advanced rendering effects such as overlays or multi-pass rendering. (See the OpenGL Performer manual pages about overriding the draw traversal function.) This function is the draw traversal function but with the projections set correctly for the given displays and eye. Prior to the invocation of this method, <varname>chan</varname> is ready to draw.</para>
+            </section>
+            <section>
+               <title><methodname>preDrawChan()</methodname></title>
+               <para>Prototype: <methodsynopsis>
+                     <modifier>public</modifier>
+                     <type>void</type>
+                     <methodname>preDrawChan</methodname>
+                     <methodparam>
+                        <funcparams>pfChannel* chan, void* chandata</funcparams>
+                     </methodparam>
+                  </methodsynopsis></para>
+               <para>This is the function called by the <emphasis>default</emphasis> <methodname>drawChan()</methodname> member function before clearing the channel and drawing the next frame (<function>pfFrame()</function>).</para>
+            </section>
+            <section>
+               <title><methodname>postDrawChan()</methodname></title>
+               <para>Prototype: <methodsynopsis>
+                     <modifier>public</modifier>
+                     <type>void</type>
+                     <methodname>postDrawChan</methodname>
+                     <methodparam>
+                        <funcparams>pfChannel* chan, void* chandata</funcparams>
+                     </methodparam>
+                  </methodsynopsis></para>
+               <para>This is the function called by the <emphasis>default</emphasis> <methodname>drawChan()</methodname> member function after clearing the channel and drawing the next frame (<function>pfFrame()</function>).</para>
+            </section>
+         </section>
       </section>
       <section>
          <title>VTK Applications</title>
@@ -2249,7 +2463,7 @@ int main(int argc, char* argv[])
                         <para>The <function>sproc(2)</function> manual page on IRIX or on <ulink url="http://techpubs.sgi.com/library/tpl/cgi-bin/getdoc.cgi?coll=0650&amp;db=man&amp;fname=/usr/share/catman/p_man/cat2/standard/nsproc.z&amp;srch=sproc">SGI's technical publications site</ulink>.</para>
                      </listitem>
                      <listitem>
-                        <para><function></function><ulink url="http://techpubs.sgi.com/library/tpl/cgi-bin/getdoc.cgi?coll=0650&amp;db=man&amp;fname=/usr/share/catman/p_man/cat2/standard/nsproc.z&amp;srch=sproc"></ulink>The <function>pthread(3)</function> manual page for your operating system. The pthread functions are part of a POSIX standard and will be the same across platforms.</para>
+                        <para>The <function>pthread(3)</function> manual page for your operating system. The pthread functions are part of a POSIX standard and will be the same across platforms.</para>
                      </listitem>
                   </itemizedlist>
                </section>
