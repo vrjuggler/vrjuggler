@@ -397,7 +397,7 @@ APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(VJ_BASE_DIR)'
 
 if test "$OS_TYPE" = "UNIX" ; then
-    DYLIB_DEPS_VJ="$APP_EXTRA_LIBS"
+    DYLIB_DEPS_VJ="$LDFLAGS $VPR_LIBS_CC $JCCL_LIBS_CC $SNX_LIBS_CC $LIBS -lm"
     DYLIB_DEPS_GL="$OGL_LDFLAGS $LIBOPENGL -lm"
     DYLIB_DEPS_PF="$PF_LDFLAGS $LIBPERFORMER -lm"
 
@@ -433,7 +433,7 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_EXTRA_LIBS_OSG="$LIBOSG"
     fi
 elif test "$OS_TYPE" = "Win32" ; then
-    DYLIB_DEPS_BASIC="$APP_EXTRA_LIBS"
+    DYLIB_DEPS_BASIC="$LDFLAGS $VPR_LIBS_LD $JCCL_LIBS_LD $SNX_LIBS_LD $LIBS comctl32.lib user32.lib gdi32.lib ws2_32.lib"
     DYLIB_DEPS_VJ="/libpath:\$(LIBDIR) Juggler_utils.lib $DYLIB_DEPS_BASIC"
     DYLIB_DEPS_UTILS="$DYLIB_DEPS_BASIC"
     DYLIB_DEPS_GL="/libpath:\$(LIBDIR) Juggler.lib Juggler_utils.lib $DYLIB_DEPS_BASIC $OGL_LDFLAGS $LIBOPENGL"
