@@ -73,10 +73,11 @@ JAVA_ORB_JAR=	@JAVA_ORB_JAR@
 
 #SKIN_LAF_DIR=	$(LAF_DIR)/skinlf/lib
 #SKIN_LAF_JARS=	$(SKIN_LAF_DIR)/skinlf.jar$(JCPS)$(SKIN_LAF_DIR)/themepack.zip
+LIQUID_JAR=	$(LAF_DIR)/liquid/liquidlnf.jar
 METOUIA_JAR=	$(LAF_DIR)/metouia/metouia.jar
 JGOODIES_JAR=	$(LAF_DIR)/jgoodies-looks/looks.jar
 
-LAF_JARS=	$(METOUIA_JAR)$(JCPS)$(JGOODIES_JAR)
+LAF_JARS=	$(LIQUID_JAR)$(JCPS)$(METOUIA_JAR)$(JCPS)$(JGOODIES_JAR)
 
 IDL_JAVA_FILES=	SubjectManager.java		\
 		Subject.java			\
