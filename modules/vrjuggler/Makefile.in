@@ -7,11 +7,11 @@
 #
 # all             - Build everything.
 # all-abi         - Build everything using all supported ABIs.
-# dbg             - Build a debugging, static copy of the library.
-# ddso            - Build a debugging, dynamic shared object version of the
-#                   library.
-# opt             - Build an optimized, static copy of the library.
-# dso             - Build a dynamic shared object version of the library.
+# dbg             - Build the debugging, static copy of the libraries.
+# ddso            - Build the debugging, dynamic shared object version of the
+#                   libraries.
+# opt             - Build the optimized, static version of the libraries.
+# dso             - Build the dynamic shared object version of the libraries.
 # obj             - Build the object files using the default value for
 #                   ${OBJDIR}.
 # gui             - Build the Java-based configuration GUI.
@@ -21,24 +21,24 @@
 #                   environment variable.
 # clean-links     - Remove the symlinks created by 'links'.
 #
-# lib-static      - Build the static version of the library.  This target
+# static-libs     - Build the static version of the libraries.  This target
 #                   depends on a correct value for ${LIBDIR} (that does not
 #                   have a default value).
-# lib-dynamic     - Build the dynamic shared version of the library.  This
+# shared-libs     - Build the dynamic shared version of the libraries.  This
 #                   target depends on a correct value for ${LIBDIR} (that does
 #                   not have a default value).
 #
-# install-all     - Install all versions of the library, all header files,
+# install-all     - Install all versions of the libraries, all header files,
 #                   the Data directory, the configuration GUI and the test
 #                   code.
 # install-all-abi - Install every ABI possible on the target platform.
-# install         - Install the library, all header files, the Data
+# install         - Install the libraries, all header files, the Data
 #                   directory, the configuration GUI and the test code.
-# install-dbg     - Install the debugging, static version of the library.
+# install-dbg     - Install the debugging, static version of the libraries.
 # install-ddso    - Install the debugging, dynamic shared object version of
-#                   the library.
-# install-opt     - Install the optimized, static version of the library.
-# install-dso     - Install the dynamic shared object version of the library.
+#                   the libraries.
+# install-opt     - Install the optimized, static version of the libraries.
+# install-dso     - Install the dynamic shared object version of the libraries.
 # install-headers - Install only the header files.
 # install-test    - Install only the test code.
 # install-data    - Install only the Data directory.
@@ -50,13 +50,13 @@
 #
 # clean           - Clean up everything (uses common 'clean' target).
 # clobber         - Clean up everything and remove the directory containing
-#                   the compiled library.
+#                   the compiled libraries.
 #
 # info            - Print out information about the build process that may be
 #                   useful to the user.
 #
 # The default target is 'dbg'.  'install' will install the debugging, static
-# version of the library.
+# version of the libraries.
 # -----------------------------------------------------------------------------
 
 default: dbg
@@ -79,9 +79,6 @@ VJROOT		= ${top_srcdir}
 VJ_SRCDIR	= @VJ_SRCDIR@
 WORKDIR		= ${topdir}
 
-# Include recursive target code.
-include ${MKPATH}/vj.rec.mk
-
 # Extra compiler and linker options needed only by this file.
 OPT_FLAGS	= -O @OPT_FLAGS@
 
@@ -89,6 +86,14 @@ OPT_FLAGS	= -O @OPT_FLAGS@
 DSOREGFILE	= @DSOREGFILE@
 DSOVERSION	= @DSOVERSION@
 DSOVERSIONOPTS	= @DSOVERSIONOPTS@
+
+# Append ${DSOVERSIONOPTS} to ${LDOPTS} so that those extra options (if any)
+# will be used by ${LD}.
+LDOPTS		:= ${LDOPTS} ${DSOVERSIONOPTS}
+
+# Include library building and recursive target code.
+include ${MKPATH}/vj.lib.mk
+include ${MKPATH}/vj.rec.mk
 
 # -----------------------------------------------------------------------------
 # Build and installation directory naming information.
@@ -110,29 +115,40 @@ _OPT_BUILDDIR	= ${_BUILDDIR}/${_OPT_DIR}
 # --------------------------------------------
 
 # ${_install_libdir} is the base directory (minus any debugging or optimized
-# subdirectories) where the library will be installed.
+# subdirectories) where the libraries will be installed.
 _install_libdir = ${libdir}${LIBBITSUF}/${ISA}
 
 # ${_LIBDIR_NAME} is the name of the library directory including an ABI suffix
 # if applicable.
 _LIBDIR_NAME	= lib${LIBBITSUF}
 
-# ${_LIBDIR_BASE} is the base directory where the library will be built.
+# ${_LIBDIR_BASE} is the base directory where the libraries will be built.
 _LIBDIR_BASE	= ${topdir}/${_LIBDIR_NAME}
 
 # ${_LIBDIR} is the first-level subdirectory of ${_LIBDIR_BASE} that is
 # named by the instruction set being used (${ISA}).
 _LIBDIR		= ${_LIBDIR_BASE}/${ISA}
 
-# ${_DBG_LIBDIR} and ${_OPT_LIBDIR} are the directories where the library
-# is actually built.  The first is for a debugging copy of the library and
-# the second is for an optimized version of the library.
+# ${_DBG_LIBDIR} and ${_OPT_LIBDIR} are the directories where the libraries
+# are actually built.  The first is for a debugging copy of the libraries and
+# the second is for an optimized version of the libraries.
 _DBG_LIBDIR	= ${_LIBDIR}/${_DEBUG_DIR}
 _OPT_LIBDIR	= ${_LIBDIR}/${_OPT_DIR}
 
-# Full name of the static and dynamic versions of the library.
-LIB_STATIC	= ${LIBRARY}.a
-LIB_DYNAMIC	= ${LIBRARY}.@SHAREDLIB_EXT@
+SHLIB_MAJOR	= 1
+SHLIB_MINOR	= 0
+
+# Full names of the static and dynamic versions of the libraries.
+VJ_LIB_STATIC	= ${VJ_LIBRARY}.a
+VJ_LIB_DYNAMIC	= ${VJ_LIBRARY}.@SHAREDLIB_EXT@
+
+GL_API		= @OPENGL_API@
+GL_LIB_STATIC	= ${GL_LIBRARY}.a
+GL_LIB_DYNAMIC	= ${GL_LIBRARY}.@SHAREDLIB_EXT@
+
+PF_API		= @PERFORMER_API@
+PF_LIB_STATIC	= ${PF_LIBRARY}.a
+PF_LIB_DYNAMIC	= ${PF_LIBRARY}.@SHAREDLIB_EXT@
 
 # -----------------------------------------------------------------------------
 # Lists used for various types of recursion.
@@ -156,9 +172,9 @@ all: opt dso dbg ddso
 	@echo "Creating symlinks in ${_LIBDIR}"
 	@echo "------------------------------------------------"
 	cd ${_LIBDIR} &&						\
-          rm -f ${LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${LIB_STATIC} ./
+          rm -f ${VJ_LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
 	cd ${_LIBDIR} &&						\
-          rm -f ${LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${LIB_DYNAMIC} ./
+          rm -f ${VJ_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
 	@echo "------------------------------------------------"
 	@echo "Library build complete"
 	@echo "------------------------------------------------"
@@ -167,36 +183,72 @@ all-abi:
 	@abi_list='${ABI_LIST}' ;					\
           for abi in $$abi_list ; do					\
               echo "------------------------------------------------" ;	\
-              echo "Building ${LIBRARY} using $$abi" ;			\
+              echo "Building libraries using $$abi" ;			\
               echo "------------------------------------------------" ;	\
               echo "${MAKE} vjABI=$$abi all" ;				\
               ${MAKE} vjABI=$$abi all ;					\
           done
 
-# Make a debugging version of the library.
+# Make the debugging version of the libraries.
 dbg: _build_dbg gui
-	${MAKE} OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}" lib-static
-	${MAKE} OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}" links
+	${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
+          ${VJ_LIB_STATIC}
+ifeq (${GL_API}, Y)
+	${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/GL"			\
+          LIBDIR="${_DBG_LIBDIR}" ${GL_LIB_STATIC}
+endif
+ifeq (${PF_API}, Y)
+	${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Pf"			\
+          LIBDIR="${_DBG_LIBDIR}" ${PF_LIB_STATIC}
+endif
+	${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}" links
 
-# Make a debugging version of the library that uses DSOs.
+# Make the debugging version of the libraries that uses DSOs.
 ddso: _build_dbg gui
-	${MAKE} OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}" lib-dynamic
-	${MAKE} OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}" links
+	${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
+          ${VJ_LIB_DYNAMIC}
+ifeq (${GL_API}, Y)
+	${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/GL"			\
+          LIBDIR="${_DBG_LIBDIR}" ${GL_LIB_DYNAMIC}
+endif
+ifeq (${PF_API}, Y)
+	${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Pf"			\
+          LIBDIR="${_DBG_LIBDIR}" ${PF_LIB_DYNAMIC}
+endif
+	${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}" links
 
-# Make an optimized version of the library.
+# Make the optimized version of the libraries.
 opt: _build_opt gui
-	${MAKE} OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}" lib-static
-	${MAKE} OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}" links
+	${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
+          ${VJ_LIB_STATIC}
+ifeq (${GL_API}, Y)
+	${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/GL"			\
+          LIBDIR="${_OPT_LIBDIR}" ${GL_LIB_STATIC}
+endif
+ifeq (${PF_API}, Y)
+	${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Pf"			\
+          LIBDIR="${_OPT_LIBDIR}" ${PF_LIB_STATIC}
+endif
+	${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}" links
 
-# Make an optimized version of the library that uses DSOs.
+# Make the optimized version of the libraries that uses DSOs.
 dso: _build_opt gui
-	${MAKE} OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}" lib-dynamic
-	${MAKE} OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}" links
+	${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
+          ${VJ_LIB_DYNAMIC}
+ifeq (${GL_API}, Y)
+	${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/GL"			\
+          LIBDIR="${_OPT_LIBDIR}" ${GL_LIB_DYNAMIC}
+endif
+ifeq (${PF_API}, Y)
+	${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Pf"			\
+          LIBDIR="${_OPT_LIBDIR}" ${PF_LIB_DYNAMIC}
+endif
+	${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}" links
 
 # Build the object files with the debugging flags enabled.
 _build_dbg:
 	@echo "------------------------------------------------"
-	@echo "Making DBG version of ${LIBRARY}"
+	@echo "Making DBG version of libraries"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${_DBG_BUILDDIR}
 	${MAKE} depend
@@ -204,12 +256,12 @@ _build_dbg:
 	@echo "Building object files"
 	@echo "------------------------------------------------"
 	${MAKE} RECTARGET="dbg" OPTIMIZER="-g"			\
-          OBJDIR="${_DBG_BUILDDIR}" recursive
+          BASE_OBJDIR="${_DBG_BUILDDIR}" recursive
 
 # Build the object files with the optimization flags enabled.
 _build_opt:
 	@echo "------------------------------------------------"
-	@echo "Making OPT version of ${LIBRARY}"
+	@echo "Making OPT version of libraries"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${_OPT_BUILDDIR}
 	${MAKE} depend
@@ -217,12 +269,12 @@ _build_opt:
 	@echo "Building object files"
 	@echo "------------------------------------------------"
 	${MAKE} RECTARGET="opt" OPTIMIZER="${OPT_FLAGS}"	\
-          OBJDIR="${_OPT_BUILDDIR}" recursive
+          BASE_OBJDIR="${_OPT_BUILDDIR}" recursive
 
 # Build only the object files using the default values for ${OBJDIR}.
 obj:
 	@echo "------------------------------------------------"
-	@echo "Making ${LIBRARY} object files"
+	@echo "Making library object files"
 	@echo "------------------------------------------------"
 	${MAKE} RECTARGET="$@" recursive
 	@echo "------------------------------------------------"
@@ -245,29 +297,32 @@ else
 	@echo "------------------------------------------------"
 endif
 
-# Construct the static version of the library from the object files.
-lib-static ${LIB_STATIC}:
+# Construct the static version of the libraries.
+static-libs: ${VJ_LIB_STATIC} ${PF_LIB_STATIC} ${GL_LIB_STATIC}
+
+${VJ_LIB_STATIC} ${PF_LIB_STATIC} ${GL_LIB_STATIC}:
 	@echo "------------------------------------------------"
-	@echo "Creating ${LIB_STATIC}"
+	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${LIBDIR}
-	cd ${LIBDIR} && ${AR} ${LIB_STATIC} ${OBJDIR}/*.o
-	cd ${_LIBDIR_BASE} && ln -sf ${LIBDIR}/${LIB_STATIC} ./
+	${MAKE} LIBDIR="${LIBDIR}" LIBNAME="$@" OBJS="${OBJDIR}/*.o" static-lib
+	cd ${_LIBDIR_BASE} && ln -sf ${LIBDIR}/$@ ./
 	@echo "------------------------------------------------"
-	@echo "${LIB_STATIC} done"
+	@echo "$@ done"
 	@echo "------------------------------------------------"
 
-# Construct the dynamic shared version of the library from the object files.
-lib-dynamic ${LIB_DYNAMIC}:
+# Construct the dynamic shared version of the libraries.
+shared-libs: ${VJ_LIB_DYNAMIC} ${PF_LIB_DYNAMIC} ${GL_LIB_DYNAMIC}
+
+${VJ_LIB_DYNAMIC} ${PF_LIB_DYNAMIC} ${GL_LIB_DYNAMIC}:
 	@echo "------------------------------------------------"
-	@echo "Creating ${LIB_DYNAMIC}"
+	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${LIBDIR}
-	cd ${LIBDIR} && 						\
-          ${LD} ${LDOPTS} ${DSOVERSIONOPTS} -o ${LIB_DYNAMIC} ${OBJDIR}/*.o
-	cd ${_LIBDIR_BASE} && ln -sf ${LIBDIR}/${LIB_DYNAMIC} ./
+	${MAKE} LIBDIR="${LIBDIR}" LIBNAME="$@" OBJS="${OBJDIR}/*.o" shared-lib
+	cd ${_LIBDIR_BASE} && ln -sf ${LIBDIR}/$@ ./
 	@echo "------------------------------------------------"
-	@echo "${LIB_DYNAMIC} done"
+	@echo "$@ done"
 	@echo "------------------------------------------------"
 
 # Make links for developer use that provide the needed functionality for
@@ -315,9 +370,21 @@ install-all: install-opt install-dso install-dbg install-ddso		\
 	@echo "Creating symlinks in ${_install_libdir}"
 	@echo "------------------------------------------------"
 	cd ${_install_libdir} && umask 002 &&				\
-          rm -f ${LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${LIB_STATIC} ./
+          rm -f ${VJ_LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
 	cd ${_install_libdir} && umask 002 &&				\
-          rm -f ${LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${LIB_DYNAMIC} ./
+          rm -f ${VJ_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
+ifeq (${GL_API}, Y)
+	cd ${_install_libdir} && umask 002 &&				\
+          rm -f ${GL_LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
+	cd ${_install_libdir} && umask 002 &&				\
+          rm -f ${GL_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
+endif
+ifeq (${PF_API}, Y)
+	cd ${_install_libdir} && umask 002 &&				\
+          rm -f ${PF_LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
+	cd ${_install_libdir} && umask 002 &&				\
+          rm -f ${PF_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
+endif
 	@echo "------------------------------------------------"
 	@echo "Library installation complete"
 	@echo "------------------------------------------------"
@@ -326,7 +393,7 @@ install-all-abi:
 	@abi_list='${ABI_LIST}' ;					\
           for abi in $$abi_list ; do					\
               echo "------------------------------------------------" ;	\
-              echo "Installing $$abi version of ${LIBRARY}" ;		\
+              echo "Installing $$abi version of libraries" ;		\
               echo "------------------------------------------------" ;	\
               ${MAKE} vjABI=$$abi install-all ;				\
           done
@@ -348,43 +415,91 @@ install: install-dbg
 
 install-dbg: dbg
 	@echo "------------------------------------------------"
-	@echo "Installing static debugging library"
+	@echo "Installing static debugging libraries"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${_install_libdir}/${_DEBUG_DIR}
-	${INSTALL} -m 644 ${_DBG_LIBDIR}/${LIB_STATIC}			\
+	${INSTALL} -m 644 ${_DBG_LIBDIR}/${VJ_LIB_STATIC}		\
           ${_install_libdir}/${_DEBUG_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
-          ln -sf ${_install_libdir}/${_DEBUG_DIR}/${LIB_STATIC} ./
+          ln -sf ${_install_libdir}/${_DEBUG_DIR}/${VJ_LIB_STATIC} ./
+ifeq (${GL_API}, Y)
+	${INSTALL} -m 644 ${_DBG_LIBDIR}/${GL_LIB_STATIC}		\
+          ${_install_libdir}/${_DEBUG_DIR}/
+	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
+          ln -sf ${_install_libdir}/${_DEBUG_DIR}/${GL_LIB_STATIC} ./
+endif
+ifeq (${PF_API}, Y)
+	${INSTALL} -m 644 ${_DBG_LIBDIR}/${PF_LIB_STATIC}		\
+          ${_install_libdir}/${_DEBUG_DIR}/
+	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
+          ln -sf ${_install_libdir}/${_DEBUG_DIR}/${PF_LIB_STATIC} ./
+endif
 
 install-ddso: ddso
 	@echo "------------------------------------------------"
-	@echo "Installing dynamic debugging library"
+	@echo "Installing dynamic debugging libraries"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${_install_libdir}/${_DEBUG_DIR}
-	${INSTALL} -m 755 ${_DBG_LIBDIR}/${LIB_DYNAMIC}			\
+	${INSTALL} -m 755 ${_DBG_LIBDIR}/${VJ_LIB_DYNAMIC}		\
           ${_install_libdir}/${_DEBUG_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
-          ln -sf ${_install_libdir}/${_DEBUG_DIR}/${LIB_DYNAMIC} ./
+          ln -sf ${_install_libdir}/${_DEBUG_DIR}/${VJ_LIB_DYNAMIC} ./
+ifeq (${GL_API}, Y)
+	${INSTALL} -m 644 ${_DBG_LIBDIR}/${GL_LIB_DYNAMIC}		\
+          ${_install_libdir}/${_DEBUG_DIR}/
+	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
+          ln -sf ${_install_libdir}/${_DEBUG_DIR}/${GL_LIB_DYNAMIC} ./
+endif
+ifeq (${PF_API}, Y)
+	${INSTALL} -m 644 ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC}		\
+          ${_install_libdir}/${_DEBUG_DIR}/
+	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
+          ln -sf ${_install_libdir}/${_DEBUG_DIR}/${PF_LIB_DYNAMIC} ./
+endif
 
 install-opt: opt
 	@echo "------------------------------------------------"
-	@echo "Installing static optimized library"
+	@echo "Installing static optimized libraries"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${_install_libdir}/${_OPT_DIR}
-	${INSTALL} -m 644 ${_OPT_LIBDIR}/${LIB_STATIC}			\
+	${INSTALL} -m 644 ${_OPT_LIBDIR}/${VJ_LIB_STATIC}		\
           ${_install_libdir}/${_OPT_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
-          ln -sf ${_install_libdir}/${_OPT_DIR}/${LIB_STATIC} ./
+          ln -sf ${_install_libdir}/${_OPT_DIR}/${VJ_LIB_STATIC} ./
+ifeq (${GL_API}, Y)
+	${INSTALL} -m 644 ${_OPT_LIBDIR}/${GL_LIB_STATIC}		\
+          ${_install_libdir}/${_OPT_DIR}/
+	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
+          ln -sf ${_install_libdir}/${_OPT_DIR}/${GL_LIB_STATIC} ./
+endif
+ifeq (${PF_API}, Y)
+	${INSTALL} -m 644 ${_OPT_LIBDIR}/${PF_LIB_STATIC}		\
+          ${_install_libdir}/${_OPT_DIR}/
+	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
+          ln -sf ${_install_libdir}/${_OPT_DIR}/${PF_LIB_STATIC} ./
+endif
 
 install-dso: dso
 	@echo "------------------------------------------------"
-	@echo "Installing dynamic optimizied library"
+	@echo "Installing dynamic optimizied libraries"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${_install_libdir}/${_OPT_DIR}
-	${INSTALL} -m 755 ${_OPT_LIBDIR}/${LIB_DYNAMIC}			\
+	${INSTALL} -m 755 ${_OPT_LIBDIR}/${VJ_LIB_DYNAMIC}		\
           ${_install_libdir}/${_OPT_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
-          ln -sf ${_install_libdir}/${_OPT_DIR}/${LIB_DYNAMIC} ./
+          ln -sf ${_install_libdir}/${_OPT_DIR}/${VJ_LIB_DYNAMIC} ./
+ifeq (${GL_API}, Y)
+	${INSTALL} -m 644 ${_OPT_LIBDIR}/${GL_LIB_DYNAMIC}		\
+          ${_install_libdir}/${_OPT_DIR}/
+	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
+          ln -sf ${_install_libdir}/${_OPT_DIR}/${GL_LIB_DYNAMIC} ./
+endif
+ifeq (${PF_API}, Y)
+	${INSTALL} -m 644 ${_OPT_LIBDIR}/${PF_LIB_DYNAMIC}		\
+          ${_install_libdir}/${_OPT_DIR}/
+	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
+          ln -sf ${_install_libdir}/${_OPT_DIR}/${PF_LIB_DYNAMIC} ./
+endif
 
 install-headers:
 	@echo "------------------------------------------------"
@@ -403,8 +518,12 @@ install-test:
           --INCLUDES="@INCLUDES@" --startdir="${top_srcdir}/test" 	\
           --SUBDIRS="${TEST_SUBDIRS}" --srcdir="."			\
           --prefix="${prefix}/test"					\
-          --TEST_VJ_LIBS='@TEST_VJ_LIBS_SUBST@'				\
-          --TEST_EXTRA_LIBS="@TEST_EXTRA_LIBS_SUBST@"
+          --TEST_VJ_LIBS_BASIC='@TEST_VJ_LIBS_BASIC_SUBST@'		\
+          --TEST_VJ_LIBS_GL='@TEST_VJ_LIBS_GL@'				\
+          --TEST_VJ_LIBS_PF='@TEST_VJ_LIBS_PF@'				\
+          --TEST_EXTRA_LIBS_BASIC="@TEST_EXTRA_LIBS_BASIC_SUBST@"	\
+          --TEST_EXTRA_LIBS_GL="@TEST_EXTRA_LIBS_GL_SUBST@"		\
+          --TEST_EXTRA_LIBS_PF="@TEST_EXTRA_LIBS_PF@"
 
 install-data:
 	@echo "------------------------------------------------"
@@ -512,7 +631,7 @@ clobber: _clean
 # Human-readable information about the build system.
 # -----------------------------------------------------------------------------
 info::
-	@echo "\nInfo for the make of ${LIBRARY}"
+	@echo "\nInfo for the make of ${VJ_LIBRARY}"
 	@echo "\nOBJDIR: ${OBJDIR}"
 	@echo "VJROOT_ABS: ${VJROOT_ABS}"
 	@echo "Default ABI: ${ABI}"
