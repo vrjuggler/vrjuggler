@@ -31,23 +31,23 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/vrjConfig.h>
-#include <gad/Type/PosProxy.h>
+#include <gad/Type/PositionProxy.h>
 #include <vrj/Config/ConfigChunk.h>
 
-#include <gad/Type/PosFilter.h>
-#include <gad/Type/LinearSigmoidPosFilter.h>
+#include <gad/Type/PositionFilter.h>
+#include <gad/Type/LinearSigmoidPositionFilter.h>
 
 namespace vrj
 {
 
-//: Set the transform for this PosProxy
+//: Set the transform for this PositionProxy
 // Sets the transformation matrix to
 //    mMatrixTransform = M<sub>trans</sub>.post(M<sub>rot</sub>)
 //! NOTE: This means that to set transform, you specific the translation
 //+       followed by rotation that takes the device from where it physically
 //+       is in space to where you want it to be.
-void PosProxy::setTransform( float xoff, float yoff, float zoff,    // Translate
-                   float xrot, float yrot, float zrot)   // Rotate
+void PositionProxy::setTransform(float xoff, float yoff, float zoff,    // Translate
+                                 float xrot, float yrot, float zrot)   // Rotate
 {
    mETrans = true;
    mMatrixTransform.makeIdent();
@@ -64,10 +64,10 @@ void PosProxy::setTransform( float xoff, float yoff, float zoff,    // Translate
 
 
 
-bool PosProxy::config(ConfigChunk* chunk)
+bool PositionProxy::config(ConfigChunk* chunk)
 {
    vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,3) << "------------------ POS PROXY config() -----------------\n" << vprDEBUG_FLUSH;
-   vprASSERT(((std::string)chunk->getType()) == "PosProxy");
+   vprASSERT(((std::string)chunk->getType()) == "PositionProxy");
 
    mUnitNum = chunk->getProperty("unit");
    mDeviceName = (std::string)chunk->getProperty("device");
@@ -95,8 +95,8 @@ bool PosProxy::config(ConfigChunk* chunk)
    {
       vprDEBUG_NEXT(vrjDBG_INPUT_MGR,3) << "Using filter: Linear sigmoid."
                                       << std::endl << vprDEBUG_FLUSH;
-      LinearSigmoidPosFilter* sig_filter;
-      sig_filter = new LinearSigmoidPosFilter();
+      LinearSigmoidPositionFilter* sig_filter;
+      sig_filter = new LinearSigmoidPositionFilter();
 
       ConfigChunk* sigmoid_params = (ConfigChunk*)chunk->getProperty("sigmoidParams");
       if(sigmoid_params == NULL)

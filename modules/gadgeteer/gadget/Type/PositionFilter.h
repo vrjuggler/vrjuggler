@@ -41,7 +41,7 @@ namespace vrj
 {
 
 //: Base class for all position filters in VR Juggler
-class PosFilter
+class PositionFilter
 {
 public:
    // Get the position to use

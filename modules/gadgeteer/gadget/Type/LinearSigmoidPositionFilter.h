@@ -35,17 +35,17 @@
 
 #include <gad/gadConfig.h>
 
-#include <gad/Type/PosFilter.h>
+#include <gad/Type/PositionFilter.h>
 #include <vrj/Math/Quat.h>
 
 namespace vrj
 {
 
 //: A pos filter class that uses a linear sigmoid
-class LinearSigmoidPosFilter : public PosFilter
+class LinearSigmoidPositionFilter : public PositionFilter
 {
 public:
-   LinearSigmoidPosFilter()
+   LinearSigmoidPositionFilter()
    {
       mMinDist = 0.0f;
       mMaxDist = 0.05f;
@@ -101,7 +101,7 @@ private:
 // If the scale factor is 0.0 or 1.0, then just return the matrix directly
 // Else, perform a quaternion slerp on the rotation and linear calculation
 // on position and return that matrix.
-Matrix LinearSigmoidPosFilter::getPos(const Matrix newPos)
+Matrix LinearSigmoidPositionFilter::getPos(const Matrix newPos)
 {
    // If value is the same, then return immediately
    if(newPos == mLastReturnedPos)
@@ -170,7 +170,7 @@ Matrix LinearSigmoidPosFilter::getPos(const Matrix newPos)
    }
 }
 
-float LinearSigmoidPosFilter::getScaleFactor(const float distance)
+float LinearSigmoidPositionFilter::getScaleFactor(const float distance)
 {
    if(distance < mMinDist)
    {
