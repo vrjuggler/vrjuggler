@@ -84,33 +84,6 @@ public:
    }
 
    /**
-    * Sets the blocking flags so that the socket is opened in blocking mode.
-    *
-    * @pre None.
-    * @post The open flags are updated so that when the socket is opened, it
-    *       is opened in blocking mode.  If the socket is already open, this
-    *       has no effect.
-    */
-   void setOpenBlocking()
-   {
-      mOpenBlocking = true;
-   }
-
-   /**
-    * Sets the blocking flags so that the socket is opened in non-blocking
-    * mode.
-    *
-    * @pre None.
-    * @post The open flags are updated so that when the socket is opened, it
-    *       is opened in non-blocking mode.  If the socket is already open,
-    *       this has no effect.
-    */
-   void setOpenNonBlocking()
-   {
-      mOpenBlocking = false;
-   }
-
-   /**
     * Opens the socket.  This creates a new socket using the domain and type
     * options set through member variables.
     *
@@ -194,8 +167,9 @@ public:
 
    /**
     * Reconfigures the socket so that it is in blocking or non-blocking mode.
+    * If this socket has not been opened yet, it will be opened in blocking
+    * or non-blocking mode appropriately when open() is called.
     *
-    * @pre The socket is open.
     * @post Processes will block (or not) when accessing the socket.
     *
     * @param blocking A value of true indicates that the socket will be
@@ -205,7 +179,7 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if the blocking mode was
     *         changed successfully; vpr::ReturnStatus::Fail otherwise.
     */
-   vpr::ReturnStatus setBlocking(const bool& blocking);
+   vpr::ReturnStatus setBlocking(bool blocking);
 
    /**
     * Gets the current blocking state for the socket.
@@ -451,9 +425,13 @@ protected:
     *       defaults.
     */
    SocketImplBSD(const vpr::SocketTypes::Type sock_type)
-      : mOpen(false), mOpenBlocking(true), mBound(false),
-        mConnected(false), mBlockingFixed(false), mHandle(NULL),
-        mType(sock_type)
+      : mOpen(false)
+      , mOpenBlocking(true)
+      , mBound(false)
+      , mConnected(false)
+      , mBlockingFixed(false)
+      , mHandle(NULL)
+      , mType(sock_type)
    {
       mHandle = new FileHandleImplUNIX();
    }
@@ -471,9 +449,15 @@ protected:
    SocketImplBSD(const vpr::InetAddr& local_addr,
                  const vpr::InetAddr& remote_addr,
                  const vpr::SocketTypes::Type sock_type)
-      : mOpen(false), mOpenBlocking(true), mBound(false),
-        mConnected(false), mBlockingFixed(false), mHandle(NULL),
-        mLocalAddr(local_addr), mRemoteAddr(remote_addr), mType(sock_type)
+      : mOpen(false)
+      , mOpenBlocking(true)
+      , mBound(false)
+      , mConnected(false)
+      , mBlockingFixed(false)
+      , mHandle(NULL)
+      , mLocalAddr(local_addr)
+      , mRemoteAddr(remote_addr)
+      , mType(sock_type)
    {
       mHandle = new FileHandleImplUNIX(remote_addr.getAddressString());
    }
@@ -483,7 +467,7 @@ protected:
    // in FileHandleUNIX.  For some reason, doing that causes all kinds of
    // problems in SocketStreamImplBSD::accept().
    bool mOpen;
-   bool mOpenBlocking;
+   bool mOpenBlocking; /**< Used for working around socket(2) semantics */
    bool mBound;
    bool mConnected;
    bool mBlockingFixed;

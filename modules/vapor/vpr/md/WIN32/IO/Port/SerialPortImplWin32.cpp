@@ -131,7 +131,32 @@ vpr::ReturnStatus SerialPortImplWin32::close()
    return retval;
 }
 
-vpr::SerialTypes::UpdateActionOption SerialPortImplWin32::getUpdateAction(void)
+vpr::ReturnStatus SerialPortImplWin32::setBlocking(bool blocking)
+{
+   if ( ! mOpen )
+   {
+       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+          << "ERROR: Enabling blocking mode after port open is unsuported in Win32."
+          << std::endl << vprDEBUG_FLUSH;
+   }
+   else
+   {
+      if ( blocking )
+      {
+         mBlocking &= ~FILE_FLAG_OVERLAPPED;
+      }
+      else
+      {
+         // XXX: Still not sure why this is not supported.
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << "ERROR: Non-Blocking not currently supported in win32."
+            << std::endl << vprDEBUG_FLUSH;
+//         mBlocking |= FILE_FLAG_OVERLAPPED;
+      }
+   }
+}
+
+vpr::SerialTypes::UpdateActionOption SerialPortImplWin32::getUpdateAction()
 {
    std::cout << "Update Action is always NOW in Win32" << std::endl;
    vpr::SerialTypes::UpdateActionOption update;

@@ -141,7 +141,7 @@ void SerialPortTest::testBlockingOpen()
 {
    vpr::SerialPort port(mSendPortName);
 
-   port.setOpenBlocking();
+   port.setBlocking(true);
 
    CPPUNIT_ASSERT(port.open().success() && "Port opening failed");
    CPPUNIT_ASSERT(port.isBlocking() && "Port should be in blocking mode");
@@ -152,7 +152,7 @@ void SerialPortTest::testNonBlockingOpen()
 {
    vpr::SerialPort port(mSendPortName);
 
-   port.setOpenNonBlocking();
+   port.setBlocking(false);
 
    CPPUNIT_ASSERT(port.open().success() && "Port opening failed");
    CPPUNIT_ASSERT(! port.isBlocking() && "Port should not be in blocking mode");
@@ -165,7 +165,7 @@ void SerialPortTest::testEnableBlocking()
 
    // Open the port in non-blocking mode so that we can change its blocking
    // state after opening.
-   port.setOpenNonBlocking();
+   port.setBlocking(false);
 
    CPPUNIT_ASSERT(port.open().success() && "Port opening failed");
    CPPUNIT_ASSERT(port.setBlocking(true).success() && "Failed to enable blocking");
@@ -179,7 +179,7 @@ void SerialPortTest::testEnableNonBlocking()
 
    // Open the port in blocking mode so that we can change its blocking state
    // after opening.
-   port.setOpenBlocking();
+   port.setBlocking(true);
 
    CPPUNIT_ASSERT(port.open().success() && "Port opening failed");
    CPPUNIT_ASSERT(port.setBlocking(false).success() && "Failed to enable non-blocking");
@@ -576,7 +576,7 @@ void SerialPortTest::testSendRecv_receiver(void* arg)
    vpr::ReturnStatus status;
 
    recv_port.setOpenReadOnly();
-   recv_port.setOpenBlocking();
+   recv_port.setBlocking(true);
 
    status = recv_port.open();
    assertTestThread(status.success() && "Failed to open receiver");
@@ -635,7 +635,7 @@ void SerialPortTest::testSendRecv_sender(void* arg)
    vpr::ReturnStatus status;
 
    send_port.setOpenWriteOnly();
-   send_port.setOpenBlocking();
+   send_port.setBlocking(true);
 
    status = send_port.open();
    assertTestThread(status.success() && "Failed to open sender");

@@ -40,7 +40,7 @@ void NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenClose()
    local_addr.setPort( port );
    vpr::SocketStream acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
 
-   acceptor_socket.setOpenNonBlocking();
+   acceptor_socket.setBlocking(false);
 
    result = acceptor_socket.open().success();
    CPPUNIT_ASSERT( result );
@@ -57,7 +57,7 @@ void NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenEnableNonBlockThen
    local_addr.setPort( port );
    vpr::SocketStream acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
 
-   acceptor_socket.setOpenNonBlocking(); // for opening
+   acceptor_socket.setBlocking(false); // for opening
    result = acceptor_socket.open().success();
    CPPUNIT_ASSERT( result );
 
@@ -308,8 +308,8 @@ void NonBlockingSocketTest::testConnect2NonBlockingSocketsUsingSelect()
    vpr::SocketStream connector_socket( vpr::InetAddr::AnyAddr, local_addr );
 
    // a/c: Set OpenNonBlocking
-   acceptor_socket.setOpenNonBlocking();
-   connector_socket.setOpenNonBlocking();
+   acceptor_socket.setBlocking(false);
+   connector_socket.setBlocking(false);
 
    // a/c: Open
    status = acceptor_socket.open();
