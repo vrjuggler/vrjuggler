@@ -199,7 +199,8 @@ AC_SUBST(EXTRA_LINK_FLAGS)
 
 
 AC_OUTPUT(vj/Makefile 
-          aj/Makefile 
+          aj/Makefile
+          TestSuite/Makefile
           Makefile 
           make.defs.mk)
 
