@@ -34,14 +34,6 @@
 
 #include <stdio.h>
 
-#ifdef VPR_OS_Win32
-#include <wininet.h>
-
-#define MAXHOSTNAMELEN INTERNET_MAX_HOST_NAME_LENGTH
-#else
-#include <sys/param.h>
-#endif
-
 #include <md/NSPR/InetAddrNSPR.h>
 #include <md/NSPR/NSPRHelpers.h>
 
@@ -139,7 +131,7 @@ InetAddrNSPR::lookupAddress (const std::string& address) {
    Status retval;
    PRStatus ret_status;
    PRHostEnt host_entry;
-   char buffer[MAXHOSTNAMELEN];
+   char buffer[PR_NETDB_BUF_SIZE];
 
    ret_status = PR_GetHostByName(address.c_str(), buffer, sizeof(buffer),
                                  &host_entry);
