@@ -66,6 +66,7 @@ class VJ_CLASS_API GlWindow
 public:
    GlWindow()
    {
+      // XXX: Sync problem on window id value assignment
       mWindowId = getNextWindowId();
       in_stereo = false;
       window_is_open = false;

@@ -112,25 +112,29 @@ public:
 protected:
    //: Return a ptr to the correct data element in the current context
    //! PRE: We are in the draw function
+   // @sync Synchronized
    ContextDataType*  getPtrToCur()
    {
+   vpr::Guard<vpr::Mutex>  guard(mDataVectorMutex);      // Only allow a single thread in (protect resize and addition)
+
       // Get current context
       int context_id = getCurContext();
 
       // Make sure that we will reference a valid element
       while((int)mContextDataVector.size() <= context_id)
       {
-         mContextDataVector.push_back(ContextDataType());
+         mContextDataVector.push_back(new ContextDataType());
          vprDEBUG(vrjDBG_DRAW_MGR,3)
             << "Adding ContextDataVector element: size now: "
             << mContextDataVector.size() << std::endl << vprDEBUG_FLUSH;
       }
 
-      return &(mContextDataVector[context_id]);
+      return mContextDataVector[context_id];
    }
 
 private:
-   std::vector<ContextDataType> mContextDataVector;   //: Vector of user data
+   std::vector<ContextDataType*> mContextDataVector;   //: Vector of user data
+   vpr::Mutex                   mDataVectorMutex;     //: Mutex to protect that data vector
 };
 
 };
