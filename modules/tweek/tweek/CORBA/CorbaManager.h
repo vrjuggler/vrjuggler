@@ -102,6 +102,7 @@ private:
    PortableServer::POA_var m_poa;
    PortableServer::ObjectId_var m_subj_mgr_id;
    CosNaming::NamingContext_var m_root_context;
+   CosNaming::NamingContext_var m_local_context;
 };
 
 } // End of tweek namespace

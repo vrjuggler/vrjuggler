@@ -76,8 +76,40 @@ vpr::ReturnStatus CorbaManager::init (int argc, char** argv)
 
          if ( CORBA::is_nil(m_root_context) )
          {
+            status.setCode(vpr::ReturnStatus::Fail);
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-               << "Failed to narrow. CorbaManager::init\n" << vprDEBUG_FLUSH;
+               << "Failed to narrow Naming Service root context\n"
+               << vprDEBUG_FLUSH;
+         }
+         else
+         {
+            const char* id   = "tweek";
+            const char* kind = "context";
+            CosNaming::Name tweek_context_name;
+
+            tweek_context_name.length(1);
+            tweek_context_name[0].id   = CORBA::string_dup(id);
+            tweek_context_name[0].kind = CORBA::string_dup(kind);
+
+            try
+            {
+               m_local_context = m_root_context->bind_new_context(tweek_context_name);
+            }
+            catch (CosNaming::NamingContext::AlreadyBound& ex)
+            {
+               CORBA::Object_var temp_obj;
+
+               temp_obj        = m_root_context->resolve(tweek_context_name);
+               m_local_context = CosNaming::NamingContext::_narrow(temp_obj);
+
+               if ( CORBA::is_nil(m_local_context) )
+               {
+                  status.setCode(vpr::ReturnStatus::Fail);
+                  vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                     << "Failed to narrow Naming Service local Tweek context\n"
+                     << vprDEBUG_FLUSH;
+               }
+            }
          }
       }
       catch (CORBA::ORB::InvalidName& ex)
@@ -130,6 +162,7 @@ vpr::ReturnStatus CorbaManager::init (int argc, char** argv)
 vpr::ReturnStatus CorbaManager::registerSubjectManager (tweek::SubjectManagerImpl* mgr)
 {
    vprASSERT(! CORBA::is_nil(m_root_context) && "No naming service available");
+   vprASSERT(! CORBA::is_nil(m_local_context) && "No naming service available");
    vpr::ReturnStatus status;
 
    try
@@ -151,8 +184,8 @@ vpr::ReturnStatus CorbaManager::registerSubjectManager (tweek::SubjectManagerImp
       // only want one Subject Manager per address space.
       try
       {
-         m_root_context->bind(context_name, mgr_ptr);
-         m_subj_mgr_id = m_poa->activate_object(mgr);
+         m_local_context->bind(context_name, mgr_ptr);
+//         m_subj_mgr_id = m_poa->activate_object(mgr);
       }
       catch (CosNaming::NamingContext::AlreadyBound& ex)
       {
