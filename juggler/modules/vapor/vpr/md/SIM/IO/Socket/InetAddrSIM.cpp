@@ -93,10 +93,10 @@ namespace vpr
          vpr::Uint32 value;
       } addr;
 
-      addr.value = vpr::System::Ntohl(mAddress);
+      addr.value = vpr::System::Htonl(mAddress);
       memset(buffer, '\0', sizeof(buffer));
-      sprintf(buffer, "%u.%u.%u.%u", addr.bytes[3], addr.bytes[2],
-              addr.bytes[1], addr.bytes[0]);
+      sprintf(buffer, "%u.%u.%u.%u", addr.bytes[0], addr.bytes[1],
+              addr.bytes[2], addr.bytes[3]);
       std::string result = buffer;
 
       return result;

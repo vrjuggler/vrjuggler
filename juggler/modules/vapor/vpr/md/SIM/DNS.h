@@ -49,7 +49,6 @@
 #include <string>
 #include <iostream>
 #include <vpr/Util/Singleton.h>
-#include <vpr/System.h>
 #include <vpr/vprTypes.h> /* Uint32 */
 
 namespace vpr
