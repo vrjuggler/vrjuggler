@@ -691,7 +691,7 @@ void simplePfNavApp::initScene()
    mNavigationDCS->setNavigator(mNavigators[mCurNavIndex]);
 
    // make sure config is processed, before doing sound replace traversal.
-   this->configProcessPending();
+   //this->configProcessPending();
 
    // replace all nodes with _Sound_ with pfSoundNodes...
    //std::string extension = "_Sound_";
