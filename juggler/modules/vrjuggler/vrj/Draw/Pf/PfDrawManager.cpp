@@ -333,36 +333,7 @@ void vjPfDrawManager::initDrawing()
    vjASSERT(mMasterChan != NULL);
 
    // Setup all Shared properties
-   //mMasterChan->setNearFar(0.05, 10000.0f);      // XXX: Look here near far information
-
-   vjASSERT(mMasterChan != NULL);
-
-
-   int cur_master_share = mMasterChan->getShare();          // Get current setting, and OR the new stuff on
-   mMasterChan->setShare(cur_master_share | PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
-                        PFCHAN_STRESS | PFCHAN_LOD | PFCHAN_SWAPBUFFERS |
-                        PFCHAN_APPFUNC | PFCHAN_CULLFUNC | PFCHAN_STATS_DRAWMODE );
-
-
-   /*
-   unsigned cur_share = pfGetChanShare(mMasterChan);              // Get the current attribs
-   pfChanShare(mMasterChan, cur_share | PFCHAN_APPFUNC);          // Set share mode with APPFUNC
-   */
-
-   /*
-   pfChanShare(mMasterChan, cur_share | PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
-                        PFCHAN_STRESS | PFCHAN_LOD | PFCHAN_SWAPBUFFERS |
-                        PFCHAN_APPFUNC | PFCHAN_CULLFUNC | PFCHAN_STATS_DRAWMODE );
-                        */
-
-
-   /*
-   mMasterChan->setTravFunc(PFTRAV_APP, vjPfAppFunc);
-
-   mMasterChan->setShare(PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
-                        PFCHAN_STRESS | PFCHAN_SWAPBUFFERS |
-                        PFCHAN_APPFUNC | PFCHAN_CULLFUNC );
-   */
+   initMasterChanAtrribs();
 
    // ----- SETUP CHANNEL GROUP ---- //
    unsigned dispIndex=0;
@@ -374,7 +345,7 @@ void vjPfDrawManager::initDrawing()
 
       vjASSERT(NULL != left_ch);
 
-      if (dispIndex != 0)                    // Assumes that all displays will have a valid left channel
+      if (dispIndex != 0)                    // XXX: Assumes that all displays will have a valid left channel
          mMasterChan->attach(left_ch);
       if(right_ch != NULL)
          mMasterChan->attach(right_ch);
@@ -405,6 +376,35 @@ void vjPfDrawManager::initDrawing()
    debugDump();
 
    vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "vjPfDrawManager::initDrawing: Exiting." << endl << vjDEBUG_FLUSH;
+}
+
+// Initialize the parameters of the master channel
+// Sets the attribs to share
+void vjPfDrawManager::initMasterChanAtrribs()
+{
+   //mMasterChan->setNearFar(0.05, 10000.0f);      // XXX: Look here near far information
+
+   vjASSERT(mMasterChan != NULL);
+
+   mMasterChan->setShare(PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
+                        PFCHAN_STRESS | PFCHAN_LOD | PFCHAN_SWAPBUFFERS |
+                        PFCHAN_APPFUNC | PFCHAN_CULLFUNC | PFCHAN_STATS_DRAWMODE );
+
+   /*
+   unsigned cur_share = mMasterChan->getShare();          // Get current setting, and OR the new stuff on
+   mMasterChan->setShare(cur_share | PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
+                        PFCHAN_STRESS | PFCHAN_LOD | PFCHAN_SWAPBUFFERS |
+                        PFCHAN_APPFUNC | PFCHAN_CULLFUNC | PFCHAN_STATS_DRAWMODE );
+   */
+
+
+   /*
+   mMasterChan->setTravFunc(PFTRAV_APP, vjPfAppFunc);
+
+   mMasterChan->setShare(PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
+                        PFCHAN_STRESS | PFCHAN_SWAPBUFFERS |
+                        PFCHAN_APPFUNC | PFCHAN_CULLFUNC );
+   */
 }
 
 
