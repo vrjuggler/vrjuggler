@@ -54,7 +54,7 @@ INSTALL_FILES=
 
 # Java targets
 JARS=		wizard.jar ui.jar
-BEANS=		WizardBuilder
+BEANS=		
 
 _LOCAL_CLEAN=	1
 JAVA_AFTERBUILD=java_afterbuild
