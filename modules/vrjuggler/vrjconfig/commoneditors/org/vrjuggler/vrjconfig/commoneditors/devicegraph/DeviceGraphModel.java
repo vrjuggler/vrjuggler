@@ -68,28 +68,37 @@ public class DeviceGraphModel
 
       if ( port != null )
       {
-         try
-         {
-            DefaultPort proxy_port = (DefaultPort) port;
-            DefaultPort unit_port  = (DefaultPort) ((Edge) edge).getTarget();
-            DefaultGraphCell dev_cell =
-               (DefaultGraphCell) unit_port.getParent();
-            DefaultGraphCell proxy_cell =
-               (DefaultGraphCell) proxy_port.getParent();
+         Object[] out_edges = getOutgoingEdges(this, port);
 
-            accepts =
-               checkProxyDeviceConnection(
-                  (ProxyInfo) proxy_cell.getUserObject(),
-                  (DeviceInfo) dev_cell.getUserObject()
-               );
-         }
-         // If we catch a ClassCastException at any point, then we are not
-         // working with the cells and/or user objects that we expect.  Hence,
-         // the source cannot be accepted.
-         catch (ClassCastException ex)
+         // Restrict proxies to having at most one out-going edge.  If the
+         // given edge is the same as the proxy port's out-going edge, that
+         // is fine.
+         if ( out_edges == null || out_edges.length == 0 ||
+              (out_edges.length == 1 && out_edges[0] == edge) )
          {
-            ex.printStackTrace();
-            /* Oh well. */ ;
+            try
+            {
+               DefaultPort proxy_port = (DefaultPort) port;
+               DefaultPort unit_port  = (DefaultPort) ((Edge) edge).getTarget();
+               DefaultGraphCell dev_cell =
+                  (DefaultGraphCell) unit_port.getParent();
+               DefaultGraphCell proxy_cell =
+                  (DefaultGraphCell) proxy_port.getParent();
+
+               accepts =
+                  checkProxyDeviceConnection(
+                     (ProxyInfo) proxy_cell.getUserObject(),
+                     (DeviceInfo) dev_cell.getUserObject()
+                  );
+            }
+            // If we catch a ClassCastException at any point, then we are not
+            // working with the cells and/or user objects that we expect.
+            // Hence, the source cannot be accepted.
+            catch (ClassCastException ex)
+            {
+               ex.printStackTrace();
+               /* Oh well. */ ;
+            }
          }
       }
 
