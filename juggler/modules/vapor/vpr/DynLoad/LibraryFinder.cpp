@@ -43,6 +43,7 @@
 
 #include <boost/filesystem/operations.hpp>
 
+#include <vpr/Util/Debug.h>
 #include <vpr/DynLoad/LibraryFinder.h>
 
 namespace fs = boost::filesystem;
@@ -58,7 +59,7 @@ void LibraryFinder::rescan()
    // vpr::Library to be invoked.
    mLibList.clear();
 
-   if ( fs::exists(mLibDir) )
+   if ( fs::is_directory(mLibDir) )
    {
       fs::directory_iterator end_itr;
 
@@ -75,10 +76,16 @@ void LibraryFinder::rescan()
 
             if ( file_ext == mLibExt )
             {
-               mLibList.push_back(vpr::LibraryPtr(new vpr::Library(file->file_path())));
+               mLibList.push_back(vpr::LibraryPtr(new vpr::Library(file->native_file_string())));
             }
          }
       }
+   }
+   else
+   {
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrRED, "ERROR") << ": " << mLibDir.native_file_string()
+         << " is not a directory\n" << vprDEBUG_FLUSH;
    }
 }
 

@@ -57,7 +57,7 @@ void BoostTest::shared_ptr_upcast ()
 
 void BoostTest::testFunctionBasic()
 {
-   boost::function< vpr::ReturnStatus, int, float > func;
+   boost::function2< vpr::ReturnStatus, int, float > func;
 
    func = retstat_int_float_functor();    // Make a new one
 

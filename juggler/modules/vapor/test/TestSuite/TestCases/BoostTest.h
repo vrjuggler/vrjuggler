@@ -70,7 +70,7 @@ public:
             return vpr::ReturnStatus::Fail;
       }
    };
-   bool doSomethingWithFunc( boost::function< vpr::ReturnStatus, int, float > f)
+   bool doSomethingWithFunc( boost::function2< vpr::ReturnStatus, int, float > f)
    {
       vpr::ReturnStatus ret = f(50,21.1f);
       return ( ret == vpr::ReturnStatus::Succeed);
