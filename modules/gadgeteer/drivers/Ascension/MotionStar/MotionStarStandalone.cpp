@@ -1814,14 +1814,13 @@ void MotionStarStandalone::storeSample(FBB::Device* birdDev,
                                     toYPos((unsigned char*) data),
                                     toZPos((unsigned char*) data)));
 
-         gmtl::EulerAngleZYXf euler;
-         euler.set(gmtl::Math::deg2Rad(toZRot(&(data->POSITION_ANGLES[6]))),
-                   gmtl::Math::deg2Rad(toYRot(&(data->POSITION_ANGLES[6]))),
-                   gmtl::Math::deg2Rad(toXRot(&(data->POSITION_ANGLES[6]))));
-         gmtl::setRot(rot_mat, euler);
+         gmtl::setRot(rot_mat,
+                      gmtl::EulerAngleZYXf(gmtl::Math::deg2Rad(toZRot(&(data->POSITION_ANGLES[6]))),
+                                           gmtl::Math::deg2Rad(toYRot(&(data->POSITION_ANGLES[6]))),
+                                           gmtl::Math::deg2Rad(toXRot(&(data->POSITION_ANGLES[6])))));
 
          gmtl::mult(sample_matrix, trans_mat, rot_mat);
-//         sample_matrix = (trans_mat * rot_mat);
+
          break;
       }
       case FLOCK::POSITION_MATRIX:
@@ -1842,7 +1841,6 @@ void MotionStarStandalone::storeSample(FBB::Device* birdDev,
          gmtl::setRot(rot_mat, euler);
 
          gmtl::mult(sample_matrix, trans_mat, rot_mat);
-//         sample_matrix = trans_mat * rot_mat;
          break;
       }
       case FLOCK::QUATERNION:
@@ -1867,7 +1865,6 @@ void MotionStarStandalone::storeSample(FBB::Device* birdDev,
                    gmtl::Quatf(quat[1], quat[2], quat[3], quat[0]));
 
          gmtl::mult(sample_matrix, trans_mat, rot_mat);
-//         sample_matrix = trans_mat * rot_mat;
          break;
       }
       case FLOCK::FEEDTHROUGH_DATA:
