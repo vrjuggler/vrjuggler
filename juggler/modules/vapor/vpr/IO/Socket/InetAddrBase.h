@@ -168,8 +168,8 @@ public:
     //! RETURNS: false - The address could not be looked up.  An error message
     //+                  is printed to stderr explaining what went wrong.
     // ------------------------------------------------------------------------
-    bool setAddress (const std::string& addr)
-    {vprASSERT(false && "Implement me"); return false; }
+    Status setAddress (const std::string& addr)
+    {vprASSERT(false && "Implement me"); return Status(Status::Failure); }
 
     // ------------------------------------------------------------------------
     //: Set the address for this object using the given address and port
@@ -183,8 +183,8 @@ public:
     //! RETURNS: false - The address could not be looked up.  An error message
     //+                  is printed to stderr explaining what went wrong.
     // ------------------------------------------------------------------------
-    bool setAddress (const std::string& addr, const Uint16 port)
-    {vprASSERT(false && "Implement me"); return false; }
+    Status setAddress (const std::string& addr, const Uint16 port)
+    {vprASSERT(false && "Implement me"); return Status(Status::Failure); }
 
     // ------------------------------------------------------------------------
     //: Set the address for this object using the given address and port
@@ -196,8 +196,8 @@ public:
     //! ARGS: address - A 32-bit integer IP address.
     //! ARGS: port    - The port to associate with the IP address.
     // ------------------------------------------------------------------------
-    bool setAddress (const Uint32 address, const Uint16 port)
-    {vprASSERT(false && "Implement me"); return false; }
+    Status setAddress (const Uint32 address, const Uint16 port)
+    {vprASSERT(false && "Implement me"); return Status(Status::Failure); }
 
     // ------------------------------------------------------------------------
     //: Overloaded assignment operator to ensure that assignments work
