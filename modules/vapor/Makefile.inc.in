@@ -173,7 +173,7 @@ ifneq (@OS_TYPE@, Win32)
 	@echo "---------------------------------------------------------------"
 else
 	@echo "---------------------------------------------------------------"
-	@echo 'You must now install VR Juggler and set %VJ_BASE_DIR% to:'
+	@echo 'You must now install VPR and set %VPR_BASE_DIR% to:'
 	@echo "  ${prefix}"
 	@echo "---------------------------------------------------------------"
 endif
