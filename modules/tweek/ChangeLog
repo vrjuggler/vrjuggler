@@ -1,5 +1,9 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2002-10-10 patrickh    Made the IIOP version used when making the initial
+                       Naming Service connection a configurable option in the
+                       Java GUI.
+                       NEW VERSION: 0.12.1
 2002-09-21 patrickh    Added the ability to send Beans from a C++ servant to a
                        client.  The Tweek Java GUI makes use of this so that it
                        can receive Beans easily from user code.
