@@ -103,28 +103,6 @@ vpr::Uint32 Message::resize (const vpr::Uint32 bytes_read)
    return resize_amount;
 }
 
-vpr::ReturnStatus Message::getNextHop (NetworkGraph::net_vertex_t& hop,
-                                       const bool increment_next_hop)
-{
-   vpr::ReturnStatus status;
-
-   if ( mMsgPath->size() > 0 && mNextHop != mMsgPath->end() )
-   {
-      hop = *mNextHop;
-
-      if ( increment_next_hop )
-      {
-         ++mNextHop;
-      }
-   }
-   else
-   {
-      status.setCode(vpr::ReturnStatus::Fail);
-   }
-
-   return status;
-}
-
 } // End of sim namespace
 
 } // End of vpr namespace

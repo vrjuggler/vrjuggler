@@ -166,62 +166,55 @@ void Controller::processEvents (const vpr::Interval& time_step)
 void Controller::moveMessage (vpr::sim::MessagePtr msg,
                               const vpr::Interval& cur_time)
 {
-   NetworkGraph::net_vertex_t next_hop;
+   NetworkGraph::net_vertex_t next_hop = msg->getNextHop();
 
-   if ( msg->getNextHop(next_hop).success() )
+   bool end_of_path;
+   msg->incNextHop(end_of_path);
+
+   // Pass the message on to the next line.
+   if ( ! end_of_path )
    {
-      NetworkGraph::net_vertex_t next_next_hop;
+      NetworkGraph::net_vertex_t next_next_hop = msg->getNextHop();
+      NetworkGraph::net_edge_t next_line;
+      bool got_next_line;
+      vpr::sim::NetworkLine next_line_prop;
+      NetworkLine::LineDirection dir;
 
-      // Pass the message on to the next line.
-      if ( msg->getNextHop(next_next_hop, false).success() )
-      {
-         NetworkGraph::net_edge_t next_line;
-         bool got_next_line;
-         vpr::sim::NetworkLine next_line_prop;
-         NetworkLine::LineDirection dir;
+      boost::tie(next_line, got_next_line) = mGraph.getEdge(next_hop,
+                                                            next_next_hop);
+      vprASSERT(got_next_line && "Edge between nodes not found!");
 
-         boost::tie(next_line, got_next_line) = mGraph.getEdge(next_hop,
-                                                               next_next_hop);
-         vprASSERT(got_next_line && "Edge between nodes not found!");
+      vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+         << "Controller::moveMessage(): Passing message on to next hop -- "
+         << next_line << "\n" << vprDEBUG_FLUSH;
 
-         vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-            << "Controller::moveMessage(): Passing message on to next hop -- "
-            << next_line << "\n" << vprDEBUG_FLUSH;
+      dir = mGraph.isSource(next_hop, next_line) ? NetworkLine::FORWARD
+                                                 : NetworkLine::REVERSE;
 
-         dir = mGraph.isSource(next_hop, next_line) ? NetworkLine::FORWARD
-                                                    : NetworkLine::REVERSE;
+      next_line_prop = mGraph.getLineProperty(next_line);
+      next_line_prop.calculateMessageEventTimes(msg, cur_time, dir);
 
-         next_line_prop = mGraph.getLineProperty(next_line);
-         next_line_prop.calculateMessageEventTimes(msg, cur_time, dir);
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+         << "New message times: "
+         << "starts = " << msg->whenStartOnWire().getBaseVal() << ", "
+         << "transmits = " << msg->whenFullyOnWire().getBaseVal() << ", "
+         << "arrives = " << msg->whenArrivesFully().getBaseVal()
+         << std::endl << vprDEBUG_FLUSH;
 
-         vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-            << "New message times: "
-            << "starts = " << msg->whenStartOnWire().getBaseVal() << ", "
-            << "transmits = " << msg->whenFullyOnWire().getBaseVal() << ", "
-            << "arrives = " << msg->whenArrivesFully().getBaseVal()
-            << std::endl << vprDEBUG_FLUSH;
-
-         next_line_prop.addMessage(msg, dir);
-         mGraph.setLineProperty(next_line, next_line_prop);
-         addEvent(msg->whenArrivesFully(), next_line, dir);
-      }
-      // End of the path--we have reached our destination.
-      else
-      {
-         vpr::sim::NetworkNode next_hop_prop;
-
-         next_hop_prop = mGraph.getNodeProperty(next_hop);
-         next_hop_prop.deliverMessage(msg);
-
-         // The above should be the last use of the memory held by msg,
-         // so the memory should  get deleted when the value of msg
-         // changes.
-      }
+      next_line_prop.addMessage(msg, dir);
+      mGraph.setLineProperty(next_line, next_line_prop);
+      addEvent(msg->whenArrivesFully(), next_line, dir);
    }
-   // This should not happen!
+   // End of the path--we have reached our destination.
    else
    {
-      vprASSERT(false && "Tried to pass message past the last hop");
+      vpr::sim::NetworkNode next_hop_prop;
+
+      next_hop_prop = mGraph.getNodeProperty(next_hop);
+      next_hop_prop.deliverMessage(msg);
+
+      // The above should be the last use of the memory held by msg, so the
+      // should get deleted when the value of msg changes.
    }
 }
 
