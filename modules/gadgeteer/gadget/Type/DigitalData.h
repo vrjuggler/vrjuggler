@@ -30,9 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _GADGET_DIGITALDATA_H_
-#define _GADGET_DIGITALDATA_H_
+#ifndef _GADGET_DIGITAL_DATA_H_
+#define _GADGET_DIGITAL_DATA_H_
 
 #include <gadget/Type/InputData.h>
 
@@ -40,10 +39,9 @@ namespace gadget
 {
 
 /** InputData subclass for digital data. */
-class GADGET_CLASS_API DigitalData: public InputData 
+class DigitalData : public InputData 
 {
 public:
-
    /** Constructor. */
    DigitalData()
       : InputData()
@@ -91,10 +89,9 @@ public:
 
 protected:
    int mDigitalData;
-
 }; // class DigitalData
 
 } // namespace gadget
 
 
-#endif
+#endif /* _GADGET_DIGITAL_DATA_H_ */
