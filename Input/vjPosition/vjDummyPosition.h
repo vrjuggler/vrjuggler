@@ -30,17 +30,17 @@ class vjDummyPosition: public vjPosition {
 
 
     //: vjInput pure virtual functions
-    int StartSampling();
-    int StopSampling();
-    int Sample();
-    void UpdateData();
+    int startSampling();
+    int stopSampling();
+    int sample();
+    void updateData();
 
     //: vjInput virtual functions
-    char* GetDeviceName() { return "vjDummyPosition"; }
+    char* getDeviceName() { return "vjDummyPosition"; }
 
 	
     //: vjPosition pure virtual functions
-    vjMatrix* GetPosData (int d = 0);
+    vjMatrix* getPosData (int d = 0);
     vjTimeStamp* getPosUpdateTime(int d = 0);
 	
 	

@@ -37,12 +37,12 @@ public:
 
    //: Update the proxy's copy of the data
    // Copy the device data to local storage, and transform it if necessary
-   void UpdateData() {
-      m_posData = *(m_posPtr->GetPosData(m_unitNum));
+   void updateData() {
+      m_posData = *(m_posPtr->getPosData(m_unitNum));
       m_posUpdateTime = *(m_posPtr->getPosUpdateTime(m_unitNum));
 
       if(etrans)
-         TransformData();
+         transformData();
    }
 
     //: returns time of last update...
@@ -57,26 +57,26 @@ public:
    //! NOTE: This means that to set transform, you specific the translation
    //+       followed by rotation that takes the device from where it physically
    //+       is in space to where you want it to be.
-   void SetTransform( float xoff, float yoff, float zoff,    // Translate
+   void setTransform( float xoff, float yoff, float zoff,    // Translate
                       float xrot, float yrot, float zrot);   // Rotate
 
    //: Set the vjPosProxy to now point to another device and subDevicenumber
-   void Set(vjPosition* posPtr, int unitNum);
+   void set(vjPosition* posPtr, int unitNum);
 
    //: Get the data
-   vjMatrix* GetData()
+   vjMatrix* getData()
    { return &m_posData; }
 
    //: Return this device's subunit number
-   int GetUnit()
+   int getUnit()
    { return m_unitNum; }
 
    //: Return the vjPosition pointer held by this proxy
-   vjPosition* GetPositionPtr()
+   vjPosition* getPositionPtr()
    { return m_posPtr; }
 
    //: Get the transform being using by this proxy
-   vjMatrix& GetTransform()
+   vjMatrix& getTransform()
    { return m_matrixTransform; }
 
 
@@ -86,7 +86,7 @@ public:
    //+       m_posData = old(m_posData).pre(xformMatrix)
    //!NOTE: This moves the wMr to the modifed reciever system wMmr
    //+  where w = world, mr = world of the reciever, and r = reciever
-   void TransformData()
+   void transformData()
    { m_posData.postMult(m_matrixTransform); }
 
    static std::string getChunkType() { return "PosProxy"; }

@@ -36,9 +36,9 @@ bool vjSimGloveGesture::config(vjConfigChunk* chunk)
       return false;
    }
    // init glove proxy interface
-   int proxy_index = vjKernel::instance()->getInputManager()->GetProxyIndex(glove_pos_proxy);
+   int proxy_index = vjKernel::instance()->getInputManager()->getProxyIndex(glove_pos_proxy);
    if(proxy_index != -1)
-      mGlovePos[0] = vjKernel::instance()->getInputManager()->GetPosProxy(proxy_index);
+      mGlovePos[0] = vjKernel::instance()->getInputManager()->getPosProxy(proxy_index);
    else
       vjDEBUG(vjDBG_ALL,0) << "ERROR: vjSimGloveGesture::vjCyberGlove: Can't find posProxy." << endl << vjDEBUG_FLUSH << endl;
 
@@ -56,7 +56,7 @@ int vjSimGloveGesture::getGesture()
 //: Update the device data
 // -Get the gesture id
 // -Set the glove params
-void vjSimGloveGesture::UpdateData()
+void vjSimGloveGesture::updateData()
 {
    // Get the current gesture
    for(int i=0;i<mSimKeys.size();i++)

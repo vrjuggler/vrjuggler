@@ -77,7 +77,7 @@ void vjKernel::controlLoop(void* nullParam)
       perfBuffer->set(5);
 
          vjDEBUG(vjDBG_KERNEL,3) << "vjKernel::controlLoop: Update Trackers\n" << vjDEBUG_FLUSH;
-      getInputManager()->UpdateAllData();    // Update the trackers
+      getInputManager()->updateAllData();    // Update the trackers
          perfBuffer->set(6);
          vjDEBUG(vjDBG_KERNEL,3) << "vjKernel::controlLoop: Update Projections\n" << vjDEBUG_FLUSH;
       updateFrameData();         // Update the projections, etc.
@@ -408,7 +408,7 @@ void vjKernel::initialSetupInputManager()
 {
    vjDEBUG(vjDBG_KERNEL,1) << "   vjKernel::initialSetupInputManager\n" << vjDEBUG_FLUSH;
    mInputManager = new (sharedMemPool) vjInputManager;
-   mInputManager->ConfigureInitial(mInitialChunkDB);
+   mInputManager->configureInitial(mInitialChunkDB);
 }
 
 

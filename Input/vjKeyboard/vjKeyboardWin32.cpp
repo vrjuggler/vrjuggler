@@ -93,7 +93,7 @@ vjKeyboard::vjKeyboard(vjConfigChunk *c) : vjPosition(c), vjDigital(c),
          << "           Rot CW  :" << m_pos0key[ROT_ROLL_CW] << "   " << m_pos0mod[ROT_ROLL_CW] << endl
            << endl;}
 
-int vjKeyboard::StartSampling()
+int vjKeyboard::startSampling()
 { 
 
 if (myThreadID == 0) {
@@ -110,12 +110,12 @@ if (myThreadID == 0) {
 
   
 
-  cerr << "vjKeyboard::StartSampling() : ready to go.." << endl;
+  cerr << "vjKeyboard::startSampling() : ready to go.." << endl;
   
   vjKeyboard* devicePtr = this;
   void Samplem_keys(void*);
   
-    if (0 == (myThreadID = vjThread::spawn(Samplem_keys,(void*)devicePtr,0))) 
+    if (0 == (myThreadID = vjThread::spawn(samplem_keys,(void*)devicePtr,0))) 
      return 0; //fail
   else {
     //samplePID = processID;
@@ -128,7 +128,7 @@ if (myThreadID == 0) {
 
 }
 
-void Samplem_keys(void* devPtr)
+void samplem_keys(void* devPtr)
 {
 	MSG msg;
 	// hack:
@@ -151,7 +151,7 @@ void Samplem_keys(void* devPtr)
 
 }
 
-int vjKeyboard::OnlyModifier(int mod)
+int vjKeyboard::onlyModifier(int mod)
 {
   switch (mod) {
      case vjKEY_NONE:
@@ -171,7 +171,7 @@ int vjKeyboard::OnlyModifier(int mod)
 
 }
 
-void vjKeyboard::UpdateData()
+void vjKeyboard::updateData()
 { 
   int i;
 //  UpdKeys();
@@ -189,79 +189,79 @@ void vjKeyboard::UpdateData()
 	}*/
 
   // --- Update position 0 --- //
-  if (m_keys[m_pos0key[FORWARD]] && OnlyModifier(m_pos0mod[FORWARD]))
+  if (m_keys[m_pos0key[FORWARD]] && onlyModifier(m_pos0mod[FORWARD]))
       MoveFor( 1 * m_keys[m_pos0key[FORWARD]] , 0);
-  if (m_keys[m_pos0key[BACK]] && OnlyModifier(m_pos0mod[BACK]))
+  if (m_keys[m_pos0key[BACK]] && onlyModifier(m_pos0mod[BACK]))
       MoveFor( -1 * m_keys[m_pos0key[BACK]] , 0 );
-  if (m_keys[m_pos0key[LEFT]] && OnlyModifier(m_pos0mod[LEFT]))
+  if (m_keys[m_pos0key[LEFT]] && onlyModifier(m_pos0mod[LEFT]))
       MoveLeft( 1 * m_keys[m_pos0key[LEFT]] , 0 );
-  if (m_keys[m_pos0key[RIGHT]] && OnlyModifier(m_pos0mod[RIGHT]))
+  if (m_keys[m_pos0key[RIGHT]] && onlyModifier(m_pos0mod[RIGHT]))
       MoveLeft( -1 * m_keys[m_pos0key[RIGHT]] , 0);
-  if (m_keys[m_pos0key[UP]] && OnlyModifier(m_pos0mod[UP]))
+  if (m_keys[m_pos0key[UP]] && onlyModifier(m_pos0mod[UP]))
       MoveUp ( 1 * m_keys[m_pos0key[UP]] , 0);
-  if (m_keys[m_pos0key[DOWN]] && OnlyModifier(m_pos0mod[DOWN]))
+  if (m_keys[m_pos0key[DOWN]] && onlyModifier(m_pos0mod[DOWN]))
       MoveUp (-1 * m_keys[m_pos0key[DOWN]] , 0 );
       
-  if (m_keys[m_pos0key[ROTR]] && OnlyModifier(m_pos0mod[ROTR]))
+  if (m_keys[m_pos0key[ROTR]] && onlyModifier(m_pos0mod[ROTR]))
       RotLeft( -1 * m_keys[m_pos0key[ROTR]] , 0);
-  if (m_keys[m_pos0key[ROTL]] && OnlyModifier(m_pos0mod[ROTL]))
+  if (m_keys[m_pos0key[ROTL]] && onlyModifier(m_pos0mod[ROTL]))
       RotLeft( 1  * m_keys[m_pos0key[ROTL]] , 0);
-  if (m_keys[m_pos0key[ROTU]] && OnlyModifier(m_pos0mod[ROTU]))
+  if (m_keys[m_pos0key[ROTU]] && onlyModifier(m_pos0mod[ROTU]))
       RotUp( 1 * m_keys[m_pos0key[ROTU]] , 0);
-  if (m_keys[m_pos0key[ROTD]] && OnlyModifier(m_pos0mod[ROTD]))
+  if (m_keys[m_pos0key[ROTD]] && onlyModifier(m_pos0mod[ROTD]))
       RotUp( -1 * m_keys[m_pos0key[ROTD]] , 0);
-  if (m_keys[m_pos0key[ROT_ROLL_CCW]] && OnlyModifier(m_pos0mod[ROT_ROLL_CCW]))
+  if (m_keys[m_pos0key[ROT_ROLL_CCW]] && onlyModifier(m_pos0mod[ROT_ROLL_CCW]))
       RotRollCCW( 1 * m_keys[m_pos0key[ROT_ROLL_CCW]] , 0);
-  if (m_keys[m_pos0key[ROT_ROLL_CW]] && OnlyModifier(m_pos0mod[ROT_ROLL_CW]))
+  if (m_keys[m_pos0key[ROT_ROLL_CW]] && onlyModifier(m_pos0mod[ROT_ROLL_CW]))
       RotRollCCW( -1 * m_keys[m_pos0key[ROT_ROLL_CW]] , 0); 
 
   // --- Update position 1 --- //
-  if (m_keys[m_pos1key[FORWARD]] && OnlyModifier(m_pos1mod[FORWARD]))
+  if (m_keys[m_pos1key[FORWARD]] && onlyModifier(m_pos1mod[FORWARD]))
       MoveFor( 1 * m_keys[m_pos1key[FORWARD]] , 1);
-  if (m_keys[m_pos1key[BACK]] && OnlyModifier(m_pos1mod[BACK]))
+  if (m_keys[m_pos1key[BACK]] && onlyModifier(m_pos1mod[BACK]))
       MoveFor( -1 * m_keys[m_pos1key[BACK]] , 1 );
-  if (m_keys[m_pos1key[LEFT]] && OnlyModifier(m_pos1mod[LEFT]))
+  if (m_keys[m_pos1key[LEFT]] && onlyModifier(m_pos1mod[LEFT]))
       MoveLeft( 1 * m_keys[m_pos1key[LEFT]] , 1 );
-  if (m_keys[m_pos1key[RIGHT]] && OnlyModifier(m_pos1mod[RIGHT]))
+  if (m_keys[m_pos1key[RIGHT]] && onlyModifier(m_pos1mod[RIGHT]))
       MoveLeft( -1 * m_keys[m_pos1key[RIGHT]] , 1);
-  if (m_keys[m_pos1key[UP]] && OnlyModifier(m_pos1mod[UP]))
+  if (m_keys[m_pos1key[UP]] && onlyModifier(m_pos1mod[UP]))
       MoveUp ( 1 * m_keys[m_pos1key[UP]] , 1);
-  if (m_keys[m_pos1key[DOWN]] && OnlyModifier(m_pos1mod[DOWN]))
+  if (m_keys[m_pos1key[DOWN]] && onlyModifier(m_pos1mod[DOWN]))
       MoveUp (-1 * m_keys[m_pos1key[DOWN]] , 1 );
       
-  if (m_keys[m_pos1key[ROTR]] && OnlyModifier(m_pos1mod[ROTR]))
+  if (m_keys[m_pos1key[ROTR]] && onlyModifier(m_pos1mod[ROTR]))
       RotLeft( -1 * m_keys[m_pos1key[ROTR]] , 1);
-  if (m_keys[m_pos1key[ROTL]] && OnlyModifier(m_pos1mod[ROTL]))
+  if (m_keys[m_pos1key[ROTL]] && onlyModifier(m_pos1mod[ROTL]))
       RotLeft( 1  * m_keys[m_pos1key[ROTL]] , 1);
-  if (m_keys[m_pos1key[ROTU]] && OnlyModifier(m_pos1mod[ROTU]))
+  if (m_keys[m_pos1key[ROTU]] && onlyModifier(m_pos1mod[ROTU]))
       RotUp( 1 * m_keys[m_pos1key[ROTU]] , 1);
-  if (m_keys[m_pos1key[ROTD]] && OnlyModifier(m_pos1mod[ROTD]))
+  if (m_keys[m_pos1key[ROTD]] && onlyModifier(m_pos1mod[ROTD]))
       RotUp( -1 * m_keys[m_pos1key[ROTD]] , 1);
-  if (m_keys[m_pos1key[ROT_ROLL_CCW]] && OnlyModifier(m_pos1mod[ROT_ROLL_CCW]))
+  if (m_keys[m_pos1key[ROT_ROLL_CCW]] && onlyModifier(m_pos1mod[ROT_ROLL_CCW]))
       RotRollCCW( 1 * m_keys[m_pos1key[ROT_ROLL_CCW]] , 1);
-  if (m_keys[m_pos1key[ROT_ROLL_CW]] && OnlyModifier(m_pos1mod[ROT_ROLL_CW]))
+  if (m_keys[m_pos1key[ROT_ROLL_CW]] && onlyModifier(m_pos1mod[ROT_ROLL_CW]))
       RotRollCCW( -1 * m_keys[m_pos1key[ROT_ROLL_CW]] , 1); 
 
   // -- Update digital data -- //
   if (m_toggleoff)
   {
     for (i = 0; i < 4; i++)
-      if (m_keys[m_digkeys[i]] && OnlyModifier(m_digmods[i]))
+      if (m_keys[m_digkeys[i]] && onlyModifier(m_digmods[i]))
         m_digdata[i] = 1;
       else
         m_digdata[i] = 0;
   } else
   {
     for (i = 0; i < 4; i++)
-      if (m_keys[m_digkeys[i]] && OnlyModifier(m_digmods[i]))
+      if (m_keys[m_digkeys[i]] && onlyModifier(m_digmods[i]))
 		  m_digdata[i] = !m_digdata[i]; 
   } 
       
   // -- Update analog data --- //
   for (i = 0; i < 4; i++)
   {
-      m_anadata[i] += m_keys[m_anakeysup[i]] * OnlyModifier(m_anamodsup[i]) * m_anastep;
-      m_anadata[i] -= m_keys[m_anakeysdn[i]] * OnlyModifier(m_anamodsdn[i]) * m_anastep;
+      m_anadata[i] += m_keys[m_anakeysup[i]] * onlyModifier(m_anamodsup[i]) * m_anastep;
+      m_anadata[i] -= m_keys[m_anakeysdn[i]] * onlyModifier(m_anamodsdn[i]) * m_anastep;
   
       if (m_anadata[i] < 0) m_anadata[i] = 0;
       if (m_anadata[i] > 255) m_anadata[i] = 255;
@@ -284,7 +284,7 @@ void vjKeyboard::UpdateData()
 
 // Move forward the given amount on position data n
 // Forward is in th -Z direction
-void vjKeyboard::MoveFor(float amt, int n)
+void vjKeyboard::moveFor(float amt, int n)
 {
    OutputDebugString(instName);
    OutputDebugString(": MoveFor\n");
@@ -293,7 +293,7 @@ void vjKeyboard::MoveFor(float amt, int n)
 
 // Move left the given amount on position data n
 // Left is -X dir
-void vjKeyboard::MoveLeft(float amt, int n)
+void vjKeyboard::moveLeft(float amt, int n)
 {
    OutputDebugString(instName);
    OutputDebugString(": MoveLeft\n");
@@ -302,7 +302,7 @@ void vjKeyboard::MoveLeft(float amt, int n)
 
 // Move up the given amount on position data n
 // Up is in th +Y dir
-void vjKeyboard::MoveUp(float amt, int n)
+void vjKeyboard::moveUp(float amt, int n)
 {
 	   OutputDebugString(instName);
    OutputDebugString(": MoveUp\n");
@@ -310,7 +310,7 @@ void vjKeyboard::MoveUp(float amt, int n)
 }
 
 // Pitch up - rot +x axis
-void vjKeyboard::RotUp(float amt, int n)
+void vjKeyboard::rotUp(float amt, int n)
 {
 	   OutputDebugString(instName);
    OutputDebugString(": RotUp\n");
@@ -319,7 +319,7 @@ void vjKeyboard::RotUp(float amt, int n)
 }
 
 // Yaw left - rot +Y axis
-void vjKeyboard::RotLeft(float amt, int n)
+void vjKeyboard::rotLeft(float amt, int n)
 {
 	   OutputDebugString(instName);
    OutputDebugString(": RotLeft\n");
@@ -328,7 +328,7 @@ void vjKeyboard::RotLeft(float amt, int n)
 }
 
 // Roll Left - rot -z axis
-void vjKeyboard::RotRollCCW(float amt, int n)
+void vjKeyboard::rotRollCCW(float amt, int n)
 {
 	   OutputDebugString(instName);
    OutputDebugString(": RotRollCCw\n");
@@ -339,7 +339,7 @@ void vjKeyboard::RotRollCCW(float amt, int n)
 // UpdKeys: translates windows message into key updates
 // The WNDPROC uses its USERDATA pointer to the keyboard
 // to forward on messages to be handled from in the keyboard object.
-void vjKeyboard::UpdKeys(	UINT message,	UINT wParam,
+void vjKeyboard::updKeys(	UINT message,	UINT wParam,
 	LONG lParam)
 {
 	int key;
@@ -442,7 +442,7 @@ void vjKeyboard::UpdKeys(	UINT message,	UINT wParam,
 }
 
 
-int vjKeyboard::StopSampling()
+int vjKeyboard::stopSampling()
 {
   if (myThreadID != 0)
   {

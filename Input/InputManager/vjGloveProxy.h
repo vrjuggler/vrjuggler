@@ -33,9 +33,9 @@ public:
   {}
 
   //: Set the gloveProxy to point to another device and subUnit number.
-  void Set(vjGlove* glovePtr, int unitNum)
+  void set(vjGlove* glovePtr, int unitNum)
   {
-     vjASSERT( glovePtr->FDeviceSupport(DEVICE_GLOVE) );
+     vjASSERT( glovePtr->fDeviceSupport(DEVICE_GLOVE) );
      mGlovePtr = glovePtr;
      mUnitNum = unitNum;
   }

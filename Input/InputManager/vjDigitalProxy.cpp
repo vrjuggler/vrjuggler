@@ -13,7 +13,7 @@ bool vjDigitalProxy::config(vjConfigChunk* chunk)
    std::string proxy_name = chunk->getProperty("name");
    std::string dev_name = chunk->getProperty("device");
 
-   int proxy_num = vjKernel::instance()->getInputManager()->AddDigProxy(dev_name,unitNum,proxy_name,this);
+   int proxy_num = vjKernel::instance()->getInputManager()->addDigProxy(dev_name,unitNum,proxy_name,this);
 
    if ( proxy_num != -1)
    {
@@ -28,9 +28,9 @@ bool vjDigitalProxy::config(vjConfigChunk* chunk)
 }
 
 
-void vjDigitalProxy::UpdateData()
+void vjDigitalProxy::updateData()
 {
-    int new_state = m_digPtr->GetDigitalData(m_unitNum);
+    int new_state = m_digPtr->getDigitalData(m_unitNum);
     int old_state = m_data;
     if(vjDigital::OFF == old_state)
 	{

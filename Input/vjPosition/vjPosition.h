@@ -46,18 +46,18 @@ class vjPosition : virtual public vjInput {
 
 
     //:vjInput pure virtual functions
-    virtual int StartSampling() = 0;
-    virtual int StopSampling() = 0;
-    virtual int Sample() = 0;
-    virtual void UpdateData() = 0;
+    virtual int startSampling() = 0;
+    virtual int stopSampling() = 0;
+    virtual int sample() = 0;
+    virtual void updateData() = 0;
 
     
     //: Get the device name
-    char* GetDeviceName() { return "vjPosition"; }
+    char* getDeviceName() { return "vjPosition"; }
     
     /* New pure virtual functions */
     //: Get Position data
-    virtual vjMatrix* GetPosData(int devNum = 0) = 0;
+    virtual vjMatrix* getPosData(int devNum = 0) = 0;
     virtual vjTimeStamp* getPosUpdateTime (int devNum = 0) {
 	cout << "FOO, I FORGOT TO IMPLEMENT SOMETHING!!!!" << endl;
 	return NULL;

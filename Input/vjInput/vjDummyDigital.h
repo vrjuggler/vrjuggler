@@ -32,10 +32,10 @@ public:
 	 *  pure virtual functions required by vjInput
 	 */
 	//@{
-	int StartSampling() { return 1; }
-	int StopSampling() { return 0; }
-	int Sample() { return 1;}
-	void UpdateData() { return ; }
+	int startSampling() { return 1; }
+	int stopSampling() { return 0; }
+	int sample() { return 1;}
+	void updateData() { return ; }
 	//@}
 	
 	/** @name vjInput virtual functions
@@ -44,7 +44,7 @@ public:
 	 *  override but are not required to
 	 */
 	//@{
-	char* GetDeviceName() { return "vjDummyDigital"; }
+	char* getDeviceName() { return "vjDummyDigital"; }
 	//@}
 
 	/** @name vjAnalog pure virtual functions
@@ -52,7 +52,7 @@ public:
 	 *  pure virtual functions required by vjAnalog
 	 */
 	//@{
-	int GetDigitalData (int d) { return 0; }
+	int getDigitalData (int d) { return 0; }
 	//@}
 };
 

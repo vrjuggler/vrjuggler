@@ -33,14 +33,14 @@ public:
    bool modifierOnly(int modKey)
    { return false; }
 
-   char* GetDeviceName()
+   char* getDeviceName()
    { return "vjDummyKeyboard"; }
 
    /* These functions don't do anything */
-   int StartSampling() { return 1; }
-	int StopSampling() { return 0; }
-	int Sample() { return 1;}
-	void UpdateData() { return ; }
+   int startSampling() { return 1; }
+	int stopSampling() { return 0; }
+	int sample() { return 1;}
+	void updateData() { return ; }
 };
 
 

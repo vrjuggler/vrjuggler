@@ -26,12 +26,12 @@ public:
 		int id;
 	};
 	
-	virtual char* GetDeviceName() { return "vjSpeech";}
+	virtual char* getDeviceName() { return "vjSpeech";}
 
-       virtual int StartSampling() = 0;
-       virtual int StopSampling() = 0;
-       virtual int Sample() = 0;
-       virtual void UpdateData () = 0;
+       virtual int startSampling() = 0;
+       virtual int stopSampling() = 0;
+       virtual int sample() = 0;
+       virtual void updateData () = 0;
     
 protected:
 	std::list<asdfjlk>	_wordQueue;

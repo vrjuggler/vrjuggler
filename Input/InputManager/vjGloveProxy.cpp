@@ -12,7 +12,7 @@ bool vjGloveProxy::config(vjConfigChunk* chunk)
    std::string proxy_name = chunk->getProperty("name");
    std::string dev_name = chunk->getProperty("device");
 
-   int proxy_num = vjKernel::instance()->getInputManager()->AddGloveProxy(dev_name,unitNum,proxy_name,this);
+   int proxy_num = vjKernel::instance()->getInputManager()->addGloveProxy(dev_name,unitNum,proxy_name,this);
 
    if ( proxy_num != -1)
    {

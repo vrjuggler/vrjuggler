@@ -76,9 +76,9 @@ protected:
    void updateInternalData()
    {
       mHeadPos = *(mUser->getHeadPos());
-      mWandPos = *(mWand->GetData());
+      mWandPos = *(mWand->getData());
 
-      mCameraPos = *(mCamera->GetData());
+      mCameraPos = *(mCamera->getData());
       mCameraPos.invert(mCameraPos);         // Invert to get viewing version
    }
 

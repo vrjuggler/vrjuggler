@@ -39,17 +39,17 @@ public:
    { return vjInput::config(c); }
 
 	/* vjInput pure virtual functions */
-	virtual int StartSampling() = 0;
-	virtual int StopSampling() = 0;
-	virtual int Sample() = 0;
-	virtual void UpdateData() = 0;
+	virtual int startSampling() = 0;
+	virtual int stopSampling() = 0;
+	virtual int sample() = 0;
+	virtual void updateData() = 0;
 	
 	//: Get the device name
-	char* GetDeviceName() { return "vjAnalog"; }
+	char* getDeviceName() { return "vjAnalog"; }
 	
 	/* New pure virtual functions */
 	//: Return analog data
-	virtual int GetAnalogData(int devNum = 0) = 0;
+	virtual int getAnalogData(int devNum = 0) = 0;
 };
 
 
