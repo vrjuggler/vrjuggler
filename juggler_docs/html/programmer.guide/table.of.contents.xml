@@ -154,7 +154,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 	  	info="Run-time configuration"
 	  	image="Leaf_Script2.gif">
 	  	<item title="Howto"
-			link="${PROGRAMMERGUIDE}/adv.topics/run.time.config/run-time/how-to.html"
+			link="${PROGRAMMERGUIDE}/adv.topics/run.time.config/run-time-how-to.html"
 			info="">
 	</folder>
 </folder>
