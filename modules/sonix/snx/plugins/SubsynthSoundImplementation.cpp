@@ -385,8 +385,10 @@ void SubsynthSoundImplementation::startAPI()
    // init the listener...
    this->setListenerPosition( mListenerPos );
 
+   mRunner.stop();
    this->reschedule();
    mRunner.run( 1 );
+     
    mIsOpen = true;
 }
 
@@ -476,36 +478,41 @@ void SubsynthSoundImplementation::bind( const std::string& alias )
          // open the file as readonly binary
          if (!snxFileIO::fileExists( soundInfo.filename.c_str() )) 
          {
-            std::cerr<<"[snx]Subsynth| alias '" << alias << "', file '"<<soundInfo.filename<<"' doesn't exist\n" << std::flush;
+            std::cerr<<"[snx]Subsynth| While loading .wav data for sound object, alias '" << alias << "', file '"<<soundInfo.filename<<"' doesn't exist\n" << std::flush;
             break;
          }
 
-         // set up the subsynth instrument...
-         mBindLookup[alias].inst->setInstanceName( alias );
-         std::cout<<"[snx]Subsynth| NOTIFY: loading: "<<soundInfo.filename<<"... " << std::endl;
-         mBindLookup[alias].inst->setParam( "filename", soundInfo.filename );
-         mBindLookup[alias].inst->setParam( "loop", false );
-         mBindLookup[alias].inst->setParam( "samplebased", true );
-         mBindLookup[alias].inst->setParam( "basefreq", 22050.0f );
-         this->setPitchBend( alias, soundInfo.pitchbend );
-         this->setCutoff( alias, soundInfo.cutoff );
-         this->setVolume( alias, soundInfo.volume );
-         this->setAmbient( alias, soundInfo.ambient );
-         this->setPosition( alias, soundInfo.position[0], soundInfo.position[1], soundInfo.position[2] );
-
-         // connect the instrument to the mixer...
          mRunner.pause();
-         
-         syn::TerminalPtr output, input;
-         bool result = false;
-         result = mBindLookup[alias].inst->getOutput( "mono audio", output );
-         if (result == false) { std::cout<<"[snx]Subsynth| ERORR: couldn't get inst out-term"<<std::endl; return; }
-         if (mMixer->isInput( alias ))
-            mMixer->removeInput( alias );
-         input = mMixer->createInput( alias );
-         
-         syn::Terminal::connect( input, output );
-         this->reschedule();
+         {
+            // set up the subsynth instrument...
+            mBindLookup[alias].inst->setInstanceName( alias );
+            std::cout<<"[snx]Subsynth| NOTIFY: loading: "<<soundInfo.filename<<"... " << std::endl;
+            mBindLookup[alias].inst->setParam( "filename", soundInfo.filename );
+            mBindLookup[alias].inst->setParam( "loop", false );
+            mBindLookup[alias].inst->setParam( "samplebased", true );
+            mBindLookup[alias].inst->setParam( "basefreq", 22050.0f );
+            this->setPitchBend( alias, soundInfo.pitchbend );
+            this->setCutoff( alias, soundInfo.cutoff );
+            this->setVolume( alias, soundInfo.volume );
+            this->setAmbient( alias, soundInfo.ambient );
+            this->setPosition( alias, soundInfo.position[0], soundInfo.position[1], soundInfo.position[2] );
+
+            // connect the instrument to the mixer...
+            syn::TerminalPtr output, input;
+            bool result = false;
+            result = mBindLookup[alias].inst->getOutput( "mono audio", output );
+            if (result == false) 
+            { 
+               std::cout << "[snx]Subsynth| ERORR: couldn't get inst out-term" << std::endl; 
+               return; 
+            }
+            if (mMixer->isInput( alias ))
+               mMixer->removeInput( alias );
+            input = mMixer->createInput( alias );
+            
+            syn::Terminal::connect( input, output );
+            this->reschedule();
+         }
          mRunner.unpause();
          break;
       }
@@ -532,32 +539,27 @@ void SubsynthSoundImplementation::unbind( const std::string& alias )
       return;
    }
  
-   // is it currently playing?  if so, stop it
-   if (this->isPlaying( alias ) == true)
-   {
-      this->stop( alias );
-      
-      // should trigger next time, since we just stopped it
-      if (mSounds.count( alias ) > 0)
-      {
-         mSounds[alias].triggerOnNextBind = true;
-      }
-      else
-      {
-         std::cout<<"[snx]Subsynth| ERROR: can't trigger on next bind. alias not registered when it should be\n"<<std::flush;
-      }      
-   }
-   
    // if alias is bound, then unbind it...
    if (mBindLookup.count( alias ) > 0)
    {
-      mRunner.pause();
-      mMixer->removeInput( alias );
-      mBindLookup.erase( alias );
-      this->reschedule();
+      // is it currently playing?  if so, stop it
+      if (this->isPlaying( alias ) == true)
+      {
+         this->stop( alias );
+         
+         // should trigger next time, since we just unbound it
+         mSounds[alias].triggerOnNextBind = true;    
+      }
+
+      mRunner.pause();          
+      {
+         mMixer->removeInput( alias );
+         mBindLookup.erase( alias );
+         this->reschedule();
+      }
       mRunner.unpause();
    }
-
+   
    assert( mBindLookup.count( alias ) == 0 && "unbind failed" );
 }
 
