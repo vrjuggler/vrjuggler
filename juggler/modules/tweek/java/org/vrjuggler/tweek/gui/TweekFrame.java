@@ -76,6 +76,11 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
    {
       enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 
+      // This needs to be done as early as possible so that we receive events
+      // that happen during initialization.
+      msgDocument.addMessageAdditionListener(this);
+      mMsgDocument = msgDocument;
+
       // Install extra look and feels.
       UIManager.installLookAndFeel("Kunststoff",
                                    KunststoffLookAndFeel.class.getName());
@@ -85,10 +90,8 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
                                    KunststoffMiniLookAndFeel.class.getName());
       KunststoffMiniLookAndFeel.setIsInstalled(true);
 
-      // This needs to be done as early as possible so that we receive events
-      // that happen during initialization.
-      msgDocument.addMessageAdditionListener(this);
-      mMsgDocument = msgDocument;
+      UIManager.installLookAndFeel("Metouia",
+                                   net.sourceforge.mlf.metouia.MetouiaLookAndFeel.class.getName());
 
       mBeanPrefsDialog =
          new BeanPrefsDialog(this, "Bean-Specific Preferences Editor");
