@@ -25,7 +25,7 @@ vjMatrix::vjMatrix(vjCoord coord)
    makeXYZEuler(coord.orient[0], coord.orient[1], coord.orient[2]);
    setTrans(coord.pos[0], coord.pos[1], coord.pos[2]);
 }
- 
+
 void vjMatrix::makeXYZEuler(float xRot, float yRot, float zRot)
 {
    float sx = sin(VJ_DEG2RAD(xRot));  float cx = cos(VJ_DEG2RAD(xRot));
@@ -171,22 +171,29 @@ void vjMatrix::makeDirCos(vjVec3 secXAxis, vjVec3 secYAxis, vjVec3 secZAxis)
        0,  0,  0, 1);
 }
 
-
+// From gdmag
 void    vjMatrix::makeQuaternion(float* q)
 {
-    mat[0][0] = 1.0 - 2.0 * (q[1] * q[1] + q[2] * q[2]);
-    mat[0][1] = 2.0 * (q[0] * q[1] - q[2] * q[3]);
-    mat[0][2] = 2.0 * (q[2] * q[0] + q[1] * q[3]);
+   float wx, wy, wz, xx, yy, yz, xy, xz, zz, x2, y2, z2;
+
+   x2 = q[VJ_X] + q[VJ_X]; y2 = q[VJ_Y] + q[VJ_Y]; z2 = q[VJ_Z] + q[VJ_Z];
+   xx = q[VJ_X] * x2;   xy = q[VJ_X] * y2;   xz = q[VJ_X] * z2;
+   yy = q[VJ_Y] * y2;   yz = q[VJ_Y] * z2;   zz = q[VJ_Z] * z2;
+   wx = q[VJ_W] * x2;   wy = q[VJ_W] * y2;   wz = q[VJ_W] * z2;
+
+   mat[0][0] = 1.0 - (yy+zz);
+    mat[0][1] = xy-wz;
+    mat[0][2] = xz+wy;
     mat[0][3] = 0.0;
 
-    mat[1][0] = 2.0 * (q[0] * q[1] + q[2] * q[3]);
-    mat[1][1] = 1.0 - 2.0 * (q[2] * q[2] + q[0] * q[0]);
-    mat[1][2] = 2.0 * (q[1] * q[2] - q[0] * q[3]);
+    mat[1][0] = xy+wz;
+    mat[1][1] = 1.0 - (xx+zz);
+    mat[1][2] = yz-wx;
     mat[1][3] = 0.0;
 
-    mat[2][0] = 2.0 * (q[2] * q[0] - q[1] * q[3]);
-    mat[2][1] = 2.0 * (q[1] * q[2] + q[0] * q[3]);
-    mat[2][2] = 1.0 - 2.0 * (q[1] * q[1] + q[0] * q[0]);
+    mat[2][0] = xz-wy;
+    mat[2][1] = yz+wx;
+    mat[2][2] = 1.0 - (xx+yy);
     mat[2][3] = 0.0;
 
     mat[3][0] = 0.0;
@@ -197,7 +204,7 @@ void    vjMatrix::makeQuaternion(float* q)
 
 void vjMatrix::makeQuaternion(vjQuat& q)
 {makeQuaternion(q.vec);}
-        
+
 void	vjMatrix::makeRot(float _degrees, vjVec3 _axis)
 {
     _axis.normalize();	// NOTE: This could be eliminated by passing normalized
@@ -209,7 +216,7 @@ void	vjMatrix::makeRot(float _degrees, vjVec3 _axis)
     float x = _axis[0];
     float y = _axis[1];
     float z = _axis[2];
-    
+
     /*
     mat[0][0] = (t*x*x)+c;     mat[1][0] = (t*x*y)+(s*z); mat[2][0] = (t*x*z)-(s*y); mat[3][0] = 0.0f;
     mat[0][1] = (t*x*y)-(s*z); mat[1][1] = (t*y*y)+c;     mat[2][1] = (t*y*z)+(s*x); mat[3][1] = 0.0f;
@@ -222,7 +229,7 @@ void	vjMatrix::makeRot(float _degrees, vjVec3 _axis)
     mat[0][1] = (t*x*y)+(s*z); mat[1][1] = (t*y*y)+c;     mat[2][1] = (t*y*z)-(s*x); mat[3][1] = 0.0f;
     mat[0][2] = (t*x*z)-(s*y); mat[1][2] = (t*y*z)+(s*x); mat[2][2] = (t*z*z)+c;     mat[3][2] = 0.0f;
     mat[0][3] = 0.0f;          mat[1][3] = 0.0f;          mat[2][3] = 0.0f;          mat[3][3] = 1.0f;
-   
+
     zeroClamp();     // Clamp ~ zero values
 }
 
@@ -238,14 +245,14 @@ void vjMatrix::setTrans(float _x, float _y, float _z)
 {
    mat[3][0] = _x;
    mat[3][1] = _y;
-   mat[3][2] = _z; 
+   mat[3][2] = _z;
 }
 
 void vjMatrix::getTrans(float& _x, float& _y, float& _z)
 {
    _x = mat[3][0];
    _y = mat[3][1];
-   _z = mat[3][2]; 
+   _z = mat[3][2];
 }
 
 void	vjMatrix::makeScale(float _x, float _y, float _z)
@@ -349,23 +356,23 @@ void vjMatrix::postMult(const vjMatrix&  _m)
 {
     vjMatrix prevMat = *this;	    // May be sloooow!!!
     zero();
-    
+
     for(int i=0;i<4;i++)
 	for(int j=0;j<4;j++)
 	    for(int k=0;k<4;k++)
-		mat[j][i] += ( prevMat.mat[k][i] * _m.mat[j][k]);    
+		mat[j][i] += ( prevMat.mat[k][i] * _m.mat[j][k]);
 }
-    
+
     // mat = m * mat
 void vjMatrix::preMult(const vjMatrix&  _m)
 {
     vjMatrix prevMat = *this;	    // May be sloooow!!!
     zero();
-    
+
     for(int i=0;i<4;i++)
 	for(int j=0;j<4;j++)
 	    for(int k=0;k<4;k++)
-		mat[i][j] += ( prevMat.mat[i][k] * _m.mat[k][j]);; 
+		mat[i][j] += ( prevMat.mat[i][k] * _m.mat[k][j]);;
 }
 
 
@@ -395,7 +402,7 @@ int vjMatrix::invert(vjMatrix& _m)
    int     i, j, k;
         int     r[ 4], c[ 4], row[ 4], col[ 4];
         float  m[ 4][ 4*2], pivot, max_m, tmp_m, fac;
-        
+
 	
         /* Initialization */
         for ( i = 0; i < n; i ++ )
@@ -490,8 +497,8 @@ ostream& operator<<(ostream& out, vjMatrix& _mat)
          out << _mat.mat[i][j] << " ";
       out << endl;
    }
-    
-   return out;	   
+
+   return out;	
 }
 
 #ifdef VJ_API_PERFORMER    // --- Performer conversion --- //
@@ -506,8 +513,8 @@ ostream& operator<<(ostream& out, vjMatrix& _mat)
    pfMatrix vjMatrix::getPfMatrix()
    {
       pfMatrix perf_mat;
-      
-      perf_mat.set(getFloatPtr());      
+
+      perf_mat.set(getFloatPtr());
       perf_mat.preRot(-90, 1, 0, 0, perf_mat);
       perf_mat.postRot(perf_mat, 90, 1, 0, 0);
       return perf_mat;
