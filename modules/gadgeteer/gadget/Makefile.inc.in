@@ -34,5 +34,5 @@ links:
 	cd $(instlinks)/include/gad &&					\
           for dir in $(SUBDIR) ; do					\
               rm -f ./$$dir ;						\
-              ln -s $(VJROOT_ABS)/gad/$$dir ./$$dir ;			\
+              ln -s $(GADROOT_ABS)/gad/$$dir ./$$dir ;			\
           done
