@@ -40,7 +40,7 @@ package org.vrjuggler.jccl.config;
  * @note It may be worthwhile standardize the naming convention used for these
  *       constants.
  */
-public class ConfigTokens
+public interface ConfigTokens
 {
    public static final String SETTINGS_INSTRUCTION  = "org-vrjuggler-jccl-settings";
 
