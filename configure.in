@@ -26,14 +26,6 @@ AC_ARG_WITH(abi,
                           Interface to use                [default=N32_M3]],
             _abi_type="$withval", _abi_type='N32_M3')
 
-dnl # Define the location where the library will be built.  This is not
-dnl # currently used anyhwere in this script.
-dnl # The default is "$srcdir/lib".
-AC_ARG_WITH(builddir,
-            [  --with-builddir=<PATH>  Define the location where
-                          VR Juggler will be built        [default=\$srcdir/lib]],
-            _vj_builddir="$withval")
-
 dnl # Define which threading model to use.  Possible values are "SGI_IPC" or
 dnl # "POSIX".
 dnl # The default is "SGI_IPC".
@@ -795,20 +787,6 @@ if test "$PLATFORM" = "HP" ; then
     DEPEND_EXTRAS="-I${_aCC_ROOT} -I${_aCC_ROOT}/include -I${_aCC_ROOT}/include/iostream"
 fi
 
-dnl # This build directory stuff is not presently being used.
-if test -z "${_vj_builddir}" ; then
-    builddir='${top_srcdir}/lib'
-else
-    if test -d "${_vj_builddir}" ; then
-        _old_wd=`pwd`
-        cd "${_vj_builddir}"
-        builddir=`pwd`
-        cd "${_old_wd}"
-    else
-        AC_MSG_ERROR(Build directory ${_vj_builddir} does not exist!)
-    fi
-fi
-
 dnl # $srcdir is the root directory of the juggler source tree.  To get a
 dnl # value for $VJROOT_ABS, we cd there and save the value of running pwd.
 dnl # Then return to the directory where configure is being run ($topdir).
@@ -862,7 +840,6 @@ TEST_EXTRA_LIBS_GL="-L${OGLROOT}/lib${LIBBITSUF} ${_SYSTEM_OPENGL}"
 TEST_EXTRA_LIBS_GL_SUBST="-L${OGLROOT}/lib\${LIBBITSUF} ${_SYSTEM_OPENGL}"
 TEST_EXTRA_LIBS_PF="${_PFOGLLIB}"
 
-dnl # AC_SUBST(builddir)
 AC_SUBST(topdir)
 AC_SUBST(VJROOT_ABS)
 AC_SUBST(VJ_SRCDIR)
