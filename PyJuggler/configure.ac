@@ -44,6 +44,11 @@ DPP_INIT
 
 DPP_STD_CPP([yes])
 
+AC_ARG_ENABLE([boost-hacks],
+              [  --disable-boost-hacks   Turn off workarounds for Boost
+                          versioning madness],
+              [BOOST_HACKS="$withval"], [BOOST_HACKS='yes'])
+
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
 # -------------------------------------------- #
@@ -57,6 +62,12 @@ AC_ARG_WITH([boost-python],
                           Path to a Boost.Python V2
                           installation                    [default=/usr/local]],
             [BOOST_PYTHON_DIR="$withval"], [BOOST_PYTHON_DIR='/usr/local'])
+
+AC_ARG_WITH([boost-version],
+            [  --with-boost-version=<VER>
+                          Boost version number (for
+                          example, 1.31)                  [default=1.31]],
+            [BOOST_VERSION="$withval"], [BOOST_VERSION='1.31'])
 
 AC_ARG_WITH([pyste],
             [  --with-pyste=<PATH>     Full path to pyste.py script    [No default]],
@@ -211,11 +222,57 @@ else
    PYTHON_LIB_DBG="$PYTHON_LIB_OPT"
 fi
 
+boost_ver_exp=`echo $BOOST_VERSION | sed -e 's/\./ /g'`
+boost_major_ver=`echo $boost_ver_exp | awk '{ print $1 }' -`
+boost_minor_ver=`echo $boost_ver_exp | awk '{ print $2 }' -`
+
+if test $boost_minor_ver -ge 31; then
+   boost_debug_suffix='-d'
+else
+   boost_debug_suffix='_debug'
+fi
+
+if test "x$BOOST_HACKS" = "xyes" -a $boost_minor_ver -ge 31; then
+   boost_ver_str=`echo $BOOST_VERSION | sed -e 's/\./_/g'`
+   boost_extra_inc_dir="/boost-$boost_ver_str"
+
+   case $CC in
+      gcc)
+         toolset='gcc'
+         ;;
+      cygcl|msvccc|cl*|CL*)
+         toolset=${BOOST_TOOL:='vc7'}
+         ;;
+      cc)
+         if test "x$GCC" = "xyes" ; then
+            toolset='gcc'
+         else
+            case $PLATFORM in
+               IRIX)
+                  toolset='mp'
+                  ;;
+               Solaris)
+                     toolset='sw'
+               ;;
+            esac
+         fi
+         ;;
+   esac
+
+   # We can only use multi-threading versions of Boost libraries if we are not
+   # using SPROC threads.  Boost does not support SPROC.
+   if test "x$VPR_SUBSYSTEM" != "xSPROC" ; then
+      threading='-mt'
+   fi
+
+   BOOST_PYTHON_LIB="boost_python-$toolset$threading"
+else
+   BOOST_PYTHON_LIB="boost_python"
+fi
+
 CPPFLAGS="${_pyj_save_CPPFLAGS}"
 LIBS="${_pyj_save_LIBS}"
 LDFLAGS="${_pyj_save_LDFLAGS}"
-
-BOOST_PYTHON_LIB="boost_python"
 
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
@@ -230,10 +287,10 @@ _pyj_save_CPPFLAGS="$CPPFLAGS"
 _pyj_save_LIBS="$LIBS"
 _pyj_save_LDFLAGS="$LDFLAGS"
 
-CPPFLAGS="$CPPFLAGS $PYTHON_INCLUDES -I$BOOST_PYTHON_DIR/include"
+CPPFLAGS="$CPPFLAGS $PYTHON_INCLUDES -I$BOOST_PYTHON_DIR/include$boost_extra_inc_dir"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
-   CPPFLAGS="$CPPFLAGS -I$BOOST_PYTHON_DIR/include/boost/compatibility/cpp_c_headers"
+   CPPFLAGS="$CPPFLAGS -I$BOOST_PYTHON_DIR/include$boost_extra_inc_dir/boost/compatibility/cpp_c_headers"
 fi
 
 LIBS="$LIBS $bpl_link_option $PYTHON_LIB $UTIL_LIB $PYTHON_LIB_DEPS"
@@ -256,20 +313,20 @@ LIBS="${_pyj_save_LIBS}"
 LDFLAGS="${_pyj_save_LDFLAGS}"
 
 if test "x$ac_cv_boost__python__handle_in_boost_python" = "xyes" ; then
-   BOOST_PYTHON_INCLUDES="-I$BOOST_PYTHON_DIR/include"
+   BOOST_PYTHON_INCLUDES="-I$BOOST_PYTHON_DIR/include$boost_extra_inc_dir"
 
    if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
-      BOOST_PYTHON_INCLUDES="$BOOST_PYTHON_INCLUDES -I$BOOST_PYTHON_DIR/include/boost/compatibility/cpp_c_headers"
+      BOOST_PYTHON_INCLUDES="$BOOST_PYTHON_INCLUDES -I$BOOST_PYTHON_DIR/include$boost_extra_inc_dir/boost/compatibility/cpp_c_headers"
    fi
 
    if test "x$OS_TYPE" = "xWin32" ; then
       bpl_dir="/libpath:$PYTHON_ROOT/libs /libpath:$BOOST_PYTHON_DIR/lib"
-      BOOST_PYTHON_LDFLAGS_OPT="$bpl_dir boost_python.lib"
-      BOOST_PYTHON_LDFLAGS_DBG="$bpl_dir boost_python_debug.lib"
+      BOOST_PYTHON_LDFLAGS_OPT="$bpl_dir $BOOST_PYTHON_LIB.lib"
+      BOOST_PYTHON_LDFLAGS_DBG="$bpl_dir $BOOST_PYTHON_LIB$boost_debug_suffix.lib"
    else
       bpl_dir="-L$BOOST_PYTHON_DIR/lib"
-      BOOST_PYTHON_LDFLAGS_OPT="$bpl_dir -lboost_python"
-      BOOST_PYTHON_LDFLAGS_DBG="$bpl_dir -lboost_python_debug"
+      BOOST_PYTHON_LDFLAGS_OPT="$bpl_dir -l$BOOST_PYTHON_LIB"
+      BOOST_PYTHON_LDFLAGS_DBG="$bpl_dir -l$BOOST_PYTHON_LIB$boost_debug_suffix"
    fi
 else
    AC_MSG_ERROR([*** Boost.Python v2 is required for PyJuggler ***])
