@@ -1,5 +1,7 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2002-08-13 patrickh    Added the Kunststoff look and feel to the collection of
+                       installed code.
 2002-08-11 patrickh    Changed the URL for the beanlist XML Schema to include
                        version information:
                        http://www.vrjuggler.org/tweek/xsd/1.0/beanlist.xsd
