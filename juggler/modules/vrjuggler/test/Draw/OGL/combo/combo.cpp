@@ -48,7 +48,7 @@
 
 int main(int argc, char* argv[])
 {
-   vrj::Projection::setNearFar(0.01, 10000.0f);
+   vrj::Projection::setNearFar(0.01f, 10000.0f);
 
    vrj::Kernel* kernel = vrj::Kernel::instance();        // Get the kernel
    vrjTest::torusApp* torus_app = new vrjTest::torusApp(kernel);   // Declare an instance of the app
