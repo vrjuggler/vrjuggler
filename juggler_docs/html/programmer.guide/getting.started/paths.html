@@ -5,19 +5,16 @@
 </head>
 
 <body>
-<h2><img border=0 src="${IMAGES}/teddy3.gif"> Search Path</H2>
+<h2><img border=0 src="${IMAGES}/teddy3.gif"> Search Paths</H2>
 
-<blockquote>
-  <p>The search path must have VJ_BASE_DIR/bin added to it in order for the java programs to
+<h3>PATH</H3>
+  <p>The search path must have <a href="environment.variables.html">VJ_BASE_DIR</a>/bin added to it in order for the java programs to
   be found correctly.&nbsp; The following line will add the correct path to the user search
   path.</p>
-  <p><font color="#ff0000">set path = ( $VJ_BASE_DIR/bin $path )</font></p>
+  <p><font color="#ff0000">set path = ( $<a href="environment.variables.html">VJ_BASE_DIR</a>/bin $path )</font></p>
   
-  
-Also, when using shared objects on UNIX, you will need your LD paths set:<BR>
-	<p><strong>For N32:</strong> <font color="#ff0000">setenv LD_LIBRARYN32_PATH $VJ_BASE_DIR/lib32</font><br>
-    	<strong>For 64:</strong> <font color="#ff0000">setenv LD_LIBRARY64_PATH $VJ_BASE_DIR/lib64</font></p>
-  
-</blockquote>
+<h3>LD_LIBRARYxx_PATH</H3>
+<!-- install-web include ld.paths.html -->
+
 </body>
 </html>

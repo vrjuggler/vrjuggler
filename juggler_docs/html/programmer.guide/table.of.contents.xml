@@ -33,6 +33,10 @@ Builder: JExplorerBuilder V 1. 0. 7
 					link="getting.started/installing.html" 
 					info="Install Juggler." 
 					image="Leaf.gif" >
+				< item title="Configuration Files" 
+					link="getting.started/configuration.html" 
+					info="Set up your default Juggler configuration." 
+					image="Leaf.gif">
 				< item title="Environment Variables" 
 					link="getting.started/environment.variables.html" 
 					info="Environment Variables: You need these to run some things." 
@@ -48,10 +52,6 @@ Builder: JExplorerBuilder V 1. 0. 7
 				< item title="Compiling" 
 					link="getting.started/compiling.html" 
 					info="Compile a sample application.  Make sure you have everything set up." 
-					image="Leaf.gif">
-				< item title="Setup Your Configuration" 
-					link="getting.started/configuration.html" 
-					info="Set up your default Juggler configuration." 
 					image="Leaf.gif">
 				< item title="Run The Application" 
 					link="getting.started/running.html" 
