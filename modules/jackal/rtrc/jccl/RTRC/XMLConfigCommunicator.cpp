@@ -128,7 +128,7 @@ bool XMLConfigCommunicator::interpretNode (Connect* con, cppdom::XMLNodePtr doc)
             if ( node_name == cppdom::XMLString("apply_chunks") )
             {
                // we've received a set of configchunks to apply.
-               newchunkdb.clear();
+               newchunkdb.vec().clear();
 
                cppdom::XMLNodeList& children = doc->getChildren();
                for ( cppdom::XMLNodeList::iterator i = children.begin();

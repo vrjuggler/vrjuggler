@@ -51,9 +51,11 @@ ConfigChunkDB::ConfigChunkDB (ConfigChunkDB& db)
    *this = db;
 }
 
-ConfigChunkPtr ConfigChunkDB::get (const std::string& name) const
+ConfigChunkPtr ConfigChunkDB::get(const std::string& name) const
 {
-   for ( ConfigChunkDB::const_iterator i = begin(); i != end(); i++)
+   for ( std::vector<ConfigChunkPtr>::const_iterator i = mChunks.begin();
+         i != mChunks.end();
+         ++i )
    {
       if ( name == (*i)->getName() )
       {
@@ -66,7 +68,9 @@ ConfigChunkPtr ConfigChunkDB::get (const std::string& name) const
 void ConfigChunkDB::getByType(const std::string& typeName, std::vector<ConfigChunkPtr>& chunks) const
 {
 
-   for ( ConfigChunkDB::const_iterator i = begin(); i != end(); i++)
+   for ( std::vector<ConfigChunkPtr>::const_iterator i = mChunks.begin();
+         i != mChunks.end();
+         ++i )
    {
       if ( typeName == (*i)->getDescToken() )
       {
@@ -77,11 +81,13 @@ void ConfigChunkDB::getByType(const std::string& typeName, std::vector<ConfigChu
 
 bool ConfigChunkDB::remove(const std::string& name)
 {
-   for ( ConfigChunkDB::iterator i = begin(); i != end(); i++)
+   for ( std::vector<ConfigChunkPtr>::iterator i = mChunks.begin();
+         i != mChunks.end();
+         ++i )
    {
       if ( name == (*i)->getName() )
       {
-         erase(i);
+         mChunks.erase(i);
          return true;
       }
    }
@@ -104,12 +110,12 @@ bool ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
 #ifdef JCCL_DEBUG
    vprDEBUG_BEGIN(jcclDBG_CONFIG,4) << "---- Dependencies -----------\n" << vprDEBUG_FLUSH;
 
-   for ( unsigned int i=0; i< this->size(); i++ )
+   for ( unsigned int i=0; i< mChunks.size(); i++ )
    {
-      vprDEBUG(jcclDBG_CONFIG,4) << "Chunk:" << (*this)[i]->getName()
+      vprDEBUG(jcclDBG_CONFIG,4) << "Chunk:" << mChunks[i]->getName()
                                  << std::endl << "\tDepends on:\n"
                                  << vprDEBUG_FLUSH;
-      std::vector<std::string> deps = (*this)[i]->getChunkPtrDependencies();
+      std::vector<std::string> deps = mChunks[i]->getChunkPtrDependencies();
 
       if (!deps.empty())
       {
@@ -135,8 +141,8 @@ bool ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
    // If it's dependencies are already in the local list, add it to the local list
    // else go on to the next one
    // Kinda like an insertion sort
-   std::vector<ConfigChunkPtr> src_chunks = *this;
-   this->clear();                   // Zero out the current state
+   std::vector<ConfigChunkPtr> src_chunks = mChunks;
+   mChunks.clear();                 // Zero out the current state
 
    bool dep_pass(true);             // Flag for Pass dependency check
    std::vector<std::string> deps;   // Dependencies of current item
@@ -185,7 +191,7 @@ bool ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
 
       if ( dep_pass )      // If all dependencies are accounted for
       {
-         push_back(*cur_item);               // Copy src to dst
+         mChunks.push_back(*cur_item);       // Copy src to dst
          src_chunks.erase(cur_item);         // Erase it from source
          cur_item = src_chunks.begin();      // Goto first item
       }
@@ -226,7 +232,7 @@ bool ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
             << clrOutNORM(clrRED, "Check for missing files or missing chunks in loaded files.\n")
             << vprDEBUG_FLUSH;
       }
-      this->insert(this->end(), src_chunks.begin(), src_chunks.end());   // Copy over the rest anyway
+      mChunks.insert(mChunks.end(), src_chunks.begin(), src_chunks.end());   // Copy over the rest anyway
 
       return false;
    }
@@ -237,14 +243,14 @@ bool ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
       vprDEBUG_BEGIN(jcclDBG_CONFIG,4) << "---- After sort ----"
                                        << std::endl << vprDEBUG_FLUSH;
 
-      for ( unsigned i=0; i<this->size(); i++ )
+      for ( unsigned i=0; i<mChunks.size(); ++i )
       {
          vprDEBUG(jcclDBG_CONFIG,4) << "Chunk:"
-                                    << (*this)[i]->getName()
+                                    << mChunks[i]->getName()
                                     << "\n\tDepends on:\n"
                                     << vprDEBUG_FLUSH;
 
-         std::vector<std::string> deps = (*this)[i]->getChunkPtrDependencies();
+         std::vector<std::string> deps = mChunks[i]->getChunkPtrDependencies();
          if ( deps.size() > 0 )
          {
             for ( unsigned j=0; j<deps.size(); j++ )
@@ -383,15 +389,15 @@ bool ConfigChunkDB::loadFromChunkDBNode(cppdom::XMLNodePtr chunkDBNode,
 
          // Before we can add new_chunk to the database, we have to determine
          // if there is already a chunk with the same name.
-         ConfigChunkDB::iterator iter =
-            std::find_if(this->begin(), this->end(),
+         std::vector<ConfigChunkPtr>::iterator iter =
+            std::find_if(mChunks.begin(), mChunks.end(),
                          ChunkNamePred(new_chunk->getName()));
 
          // If no existing chunk has the same name as new_chunk, then we can
          // just add it to the end.
-         if ( iter == this->end() )
+         if ( iter == mChunks.end() )
          {
-            push_back(new_chunk);
+            mChunks.push_back(new_chunk);
          }
          // Otherwise, overwrite the old version.
          else
@@ -409,9 +415,9 @@ void ConfigChunkDB::createChunkDBNode(cppdom::XMLNodePtr& chunkDBNode) const
    chunkDBNode = ChunkFactory::instance()->createXMLNode();
    chunkDBNode->setName(chunk_db_TOKEN);
 
-   ConfigChunkDB::const_iterator cur_chunk;
+   std::vector<ConfigChunkPtr>::const_iterator cur_chunk;
 
-   for(cur_chunk = begin(); cur_chunk != end(); cur_chunk++)
+   for(cur_chunk = mChunks.begin(); cur_chunk != mChunks.end(); ++cur_chunk)
    {
       cppdom::XMLNodePtr child_node = (*cur_chunk)->getNode();
       chunkDBNode->addChild( child_node );

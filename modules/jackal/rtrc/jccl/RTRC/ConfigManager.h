@@ -244,7 +244,7 @@ public:   // ----- ACTIVE LIST ----- //
     *  CONCURRENCY: concurrent
     */
    bool isActiveEmpty()
-   { return mActiveConfig.empty(); }
+   { return mActiveConfig.vec().empty(); }
 
 
    /** Locks the active list.
@@ -269,20 +269,20 @@ public:   // ----- ACTIVE LIST ----- //
    /** Get an iterator to the beginning of the active list.
     *  The caller of this method must have locked the active list.
     */
-   ConfigChunkDB::iterator getActiveBegin()
+   std::vector<jccl::ConfigChunkPtr>::iterator getActiveBegin()
    {
       vprASSERT(1 == mActiveLock.test());
-      return mActiveConfig.begin();
+      return mActiveConfig.vec().begin();
    }
 
 
    /** Get an iterator to the end of the active list.
     *  The caller of this method must have locked the active list.
     */
-   ConfigChunkDB::iterator getActiveEnd()
+   std::vector<jccl::ConfigChunkPtr>::iterator getActiveEnd()
    {
       vprASSERT(1 == mActiveLock.test());
-      return mActiveConfig.end();
+      return mActiveConfig.vec().end();
    }
 
 
