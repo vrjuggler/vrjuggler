@@ -82,6 +82,11 @@ Apr-03-2001 allenb    Added vjGlApp::bufferPreDraw method to the vjGlApp
                       glClear's ONLY within bufferPreDraw().
 Mar-28-2001 kevn      vjQuat interface is more fully featured, and now 
                       contains documentation.  Added tan and atan to vjSystem
+Mar-01-2001 patrick   Added support for a new environment variable $VJ_CFG_PATH
+                      that allows users to specify a colon-separated path (or
+                      semi-colon-separated on Win32) where config files can
+                      be found.  This alleviates the need to specify the full
+                      path all the time.
 Feb-17-2001 patrick   Added support for NSPR as an operating system
                       abstraction.  The operating system abstraction layer has
                       been completely restructured into the VR Juggler
