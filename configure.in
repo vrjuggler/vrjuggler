@@ -1447,10 +1447,11 @@ LIBS="${_vjsave_LIBS}"
 dnl # In a Win32 environment with MS Visual C++ as the compiler, these math
 dnl # functions are not in any special library.  Test for them normally.
 if test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
-    AC_CHECK_FUNCS(sinf sqrtf asinf acosf atan2f fabsf)
+    AC_CHECK_FUNCS(sinf cosf sqrtf asinf acosf atan2f fabsf)
 dnl # Otherwise, they are in libmath if they are anywhere.
 else
     AC_CHECK_LIB(m, sinf, AC_DEFINE(HAVE_SINF))
+    AC_CHECK_LIB(m, cosf, AC_DEFINE(HAVE_COSF))
     AC_CHECK_LIB(m, sqrtf, AC_DEFINE(HAVE_SQRTF))
     AC_CHECK_LIB(m, asinf, AC_DEFINE(HAVE_ASINF))
     AC_CHECK_LIB(m, acosf, AC_DEFINE(HAVE_ACOSF))

@@ -154,6 +154,9 @@
 /* Define if you have the sinf function.  */
 #undef HAVE_SINF
 
+/* Define if you have the cosf function.  */
+#undef HAVE_COSF
+
 /* Define if you have the sqrtf function.  */
 #undef HAVE_SQRTF
 

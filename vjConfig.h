@@ -127,6 +127,10 @@ inline void VJ_LERP( float& result, const float& lerp, const float& a,
 #   define asinf(x) ((float) asin(x))
 #endif
 
+#ifndef HAVE_COSF
+#   define cosf(x) ((float) cos(x))
+#endif
+
 #ifndef HAVE_ACOSF
 #   define acosf(x) ((float) acos(x))
 #endif
