@@ -40,6 +40,8 @@
 #include <jccl/RTRC/ConfigChunkHandler.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 
+#include <cluster/IdGenerator.h>
+                                           
 #include <vpr/IO/Socket/SocketStream.h>
 //#include <list>
 
@@ -284,7 +286,13 @@ public:
     * Return the chunk type for MachineSpecific chunks that we configure here.
     */
    static std::string getMachineSpecificChunkType() { return std::string( "MachineSpecific" ); }
-   
+
+   vpr::Uint16 generateLocalId()
+   { return mLocalIdGen.generateNewId(); }
+
+   void releaseLocalId(vpr::Uint16 remove)
+   { mLocalIdGen.releaseId(remove); }
+
 private:   
    std::vector<cluster::ClusterNode*>     mClusterNodes;       /**< Current configuration.     */
    vpr::Mutex                             mClusterNodesLock;   /**< Lock on active config list.*/
@@ -298,6 +306,7 @@ private:
    vpr::InetAddr                          mListenAddr;         /**< Address to listen for incoming connections on. */
    std::string                            mLocalHostnameShort; /**< Local hostname with domain included */
    std::string                            mLocalHostnameLong;  /**< Local hostname without domain */
+   IdGenerator<vpr::Uint16>               mLocalIdGen;         /**< Keeps track of used/free virtual ids. */
 };
 
 } // end namespace gadget
