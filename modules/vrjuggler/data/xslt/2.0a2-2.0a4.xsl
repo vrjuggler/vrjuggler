@@ -2140,6 +2140,21 @@
       </xsl:element>
    </xsl:template>
 
+   <!-- Vrpn property "position_filters". -->
+   <xsl:template match="Vrpn/position_filters">
+      <xsl:element name="position_filters">
+         <xsl:apply-templates select="./*" />
+      </xsl:element>
+   </xsl:template>
+
+   <!-- Vrpn property "deviceHost". -->
+   <xsl:template match="Vrpn/deviceHost">
+      <xsl:element name="device_host">
+         <xsl:value-of select="." />
+      </xsl:element>
+      <xsl:value-of select="$newline"/>
+   </xsl:template>
+
 
 <!-- EVERYTHING ELSE ======================================================= -->
    <!--
