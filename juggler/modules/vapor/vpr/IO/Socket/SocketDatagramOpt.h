@@ -61,7 +61,7 @@ public:
      * Default destructor.  This does nothing and exists only so that we can
      * build a DLL on Win32.
      */
-    ~SocketDatagramOpt(void);
+    virtual ~SocketDatagramOpt(void);
 
     /**
      * Gets the multicast interface for this datagram socket.
