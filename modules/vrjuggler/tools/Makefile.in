@@ -22,7 +22,7 @@ COMMON_INC	= -I$(srcdir)/common
 
 VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(srcdir)	\
                   $(COMMON_INC) $(GLUT_INC) $(GLUI_INC)
-VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_LIBS_BASIC@
+VJ_LIBS		= @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_LIBS_BASIC@
 VPATH		= @srcdir@:@srcdir@/common
 
 # This test program requires the following libraries to be linked:
@@ -36,7 +36,7 @@ VPATH		= @srcdir@:@srcdir@/common
 # Binary Interface (ABI) used.  For o32 binaries, -L/usr/lib is the
 # appropriate path.  For n32 binaries, use -L/usr/lib32.  For 64-bit binaries,
 # use -L/usr/lib64.
-EXTRA_LIBS	= $(GLUI_LIB) $(GLUT_LIB) -B dynamic @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_GL@
+EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ $(GLUI_LIB) $(GLUT_LIB) -B dynamic @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ -lXmu @APP_EXTRA_LIBS_END@
 
 TRACKER_CONFIG_OBJECTS = trackerConfig.@OBJ_FILE_SUFFIX@	\
                          sgGlutApp.@OBJ_FILE_SUFFIX@		\
