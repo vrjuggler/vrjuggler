@@ -31,28 +31,28 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/samples/ogl
+# Makefile.in for juggler/samples/OSG
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-APPS	= osgNav
+DIRS= simple
 
 # -----------------------------------------------------------------------------
 # Build targets.
 # -----------------------------------------------------------------------------
 default: all
 
-all: $(APPS)
+all: $(DIRS)
 
-$(APPS)::
+$(DIRS)::
 	cd $@ && $(MAKE)
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	@for app in $(APPS) ; do		\
-            cd $$app && $(MAKE) clean ;		\
+	@for dir in $(DIRS) ; do		\
+            cd $$dir && $(MAKE) clean ;		\
             cd .. ;				\
         done
