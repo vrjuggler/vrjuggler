@@ -35,9 +35,14 @@ public:
    vjDisplay();
 
    enum DisplayType { PROJ, SIM};      // What type of display is it
+
 public:
       //: Takes a display chunk and configures the display based one it.
-      //!NOTE: All derived display classes MUST call this function
+      //! PRE: chunk is a valid chunk
+      //! POST: display is configured
+      //+       If there is an error is the specified config, we output error
+      //+       and "fix" the error.
+      //! NOTE: All derived display classes MUST call this function
       //+       after doing local configuration.
    void config(vjConfigChunk* chunk);
 
