@@ -704,6 +704,9 @@ sub processIncludes($)
             xmlFilter(\$xml_data, "", $use_abs_paths,
                       $use_abs_paths_within_jit);
             xmlToc_htmlBookActions::useme();
+            xmlToc_htmlBookActions::setAction('include',
+                                              \&processIncludesRecursive);
+            xmlToc_htmlBookActions::setAction('tag', \&replaceTagsRecursive);
             xmlToc::traverse(\$html_data, "$xml_data");
          }
 

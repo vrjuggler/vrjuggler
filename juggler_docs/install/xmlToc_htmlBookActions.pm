@@ -19,7 +19,7 @@ require Exporter;
 # print $htmldata;
 ##################################################
 
-@EXPORT = qw(useme pushFolder_action popFolder_action pushFont_action
+@EXPORT = qw(useme setAction pushFolder_action popFolder_action pushFont_action
              popFont_action item_action defaults_action treecontrol_action);
 
 # Prototypes.
@@ -33,10 +33,19 @@ $book{'chapters'}   = [];
 $book{'appendices'} = [];
 
 my $new_page_str = '<!--NewPage-->';
+my $html_comment_begin = '<!--';
+my $html_comment_end   = '-->';
 
 # Commands to ignore a block when generating the book.
 my $book_ignore_b = 'book-ignore-begin';
 my $book_ignore_e = 'book-ignore-end';
+
+sub dummyAction ($) {
+}
+
+# ============================================================================
+# Public interface functions.
+# ============================================================================
 
 sub useme () {
     xmlToc::setAction("folder", \&xmlToc_htmlBookActions::pushFolder_action);
@@ -48,6 +57,37 @@ sub useme () {
     xmlToc::setAction("treecontrol",
                       \&xmlToc_htmlBookActions::treecontrol_action);
 }
+
+my $include_processor = \&dummyAction;    # Callback for processing includes
+my $tag_processor     = \&dummyAction;    # Callback for processing tags
+
+sub setAction ($$) {
+    my $action_name = shift;
+    my $callback    = shift;
+
+    my $status = 1;
+
+    SWITCH: {
+        if ( "$action_name" eq "include" ) {
+            $include_processor = $callback;
+            last SWITCH;
+        }
+
+        if ( "$action_name" eq "tag" ) {
+            $tag_processor = $callback;
+            last SWITCH;
+        }
+
+        # Unknown value in $action_name--return failure status.
+        $status = 0;
+    }
+
+    return $status;
+}
+
+# ============================================================================
+# XML parsing callbacks follow.
+# ============================================================================
 
 sub pushFolder_action ($$$$$) {
     my $xmlToc_data_out       = shift; # reference to the data
@@ -209,9 +249,6 @@ sub loadHTML ($$$) {
 
         filterHTML(\$body);
 
-        my $html_comment_begin = $InstallWeb::html_comment_begin;
-        my $html_comment_end   = $InstallWeb::html_comment_end;
-
         # Strip out tables of contents.  We will let the HTML -> PostScript
         # or HTML -> PDF converter make the TOC.
         $body =~ s/${html_comment_begin}\s+install-web\s+toc-begin\s*${html_comment_end}.*?${html_comment_begin}\s+install-web\s+toc-end\s*${html_comment_end}//ogis;
@@ -250,9 +287,6 @@ sub filterHTML ($) {
     my $ignore_footer_str = 'install-web no-footer';
     my $include_footer_str = 'install-web common-footer';
 
-    my $html_comment_begin = $InstallWeb::html_comment_begin;
-    my $html_comment_end   = $InstallWeb::html_comment_end;
-
     ### Check for IGNORE ALL ####
     if ( $$file_contents =~ m/$ignore_all_str/is ) {
         print "ignoring file.\n";
@@ -265,7 +299,7 @@ sub filterHTML ($) {
             print "[ignoring includes...]";
         }
         else {
-            InstallWeb::processIncludesRecursive($file_contents);
+            &$include_processor($file_contents);
         }
 
         if ( $$file_contents =~ /${html_comment_begin}\s*?$ignore_tags_str\s*?${html_comment_end}/ois )
@@ -273,7 +307,7 @@ sub filterHTML ($) {
             print "[ignoring tags...]";
         }
         else {
-            InstallWeb::replaceTagsRecursive($file_contents, 0);
+            &$tag_processor($file_contents, 0);
         }
         #
         ############### end of search and replace (tags and includes) #########
