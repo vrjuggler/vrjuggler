@@ -49,10 +49,8 @@
 // a totally cheezy kludge to avoid asserts becasue of some disagreement
 // between xerces & jackal/juggler/etc.  Doing this causes the loader code
 // to leak memory like a sieve.
-#ifdef VJ_OS_Win32
-
-#define delete[] //
-
+#ifdef VPR_OS_Win32
+#define JCCL_WIN32_KLUDGE
 #endif
 
 
@@ -389,9 +387,10 @@ bool XMLConfigIOHandler::buildProperty (ConfigChunk* ch, const DOM_Node& doc, bo
         vprDEBUG(jcclDBG_CONFIG,2) << "XMLConfigIOHandler::buildProperty:"
             " Unexpected DOM_Node.\n" << vprDEBUG_FLUSH;
     }
-
+#ifndef JCCL_WIN32_KLUDGE
     delete[] name;
     delete[] value;
+#endif
     return retval;
 }
 
@@ -446,7 +445,9 @@ ConfigChunk* XMLConfigIOHandler::buildConfigChunk (const DOM_Node& doc, bool use
         vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::build"
             "ConfigChunk: Unexpected DOM_Node.\n" << vprDEBUG_FLUSH;
     }
+#ifndef JCCL_WIN32_KLUDGE
     delete[] name;
+#endif
     if (!retval) {
         // in the event of a failure, we completely skip the chunk. 
         // don't risk actually sending on some mangled thing.
@@ -522,7 +523,9 @@ bool XMLConfigIOHandler::buildChunkDB (ConfigChunkDB& db, const DOM_Node& doc) {
         vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::build"
             "ConfigChunkDB: Unexpected DOM_Node.\n" << vprDEBUG_FLUSH;
     }
+#ifndef JCCL_WIN32_KLUDGE
     delete[] name;
+#endif
     return retval;
 }
 
@@ -736,7 +739,9 @@ bool XMLConfigIOHandler::buildChunkDescDB (ChunkDescDB& db, const DOM_Node& doc)
         vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::build"
             "ChunkDescDB: Unexpected DOM_Node.\n" << vprDEBUG_FLUSH;
     }
+#ifndef JCCL_WIN32_KLUDGE
     delete[] name;
+#endif
     return retval;
 }
 
@@ -772,8 +777,10 @@ ChunkDesc* XMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
                     desc->setToken (child_value);
                 else if (!vjstrcasecmp (child_name, "name"))
                     desc->setName (child_value);
+#ifndef JCCL_WIN32_KLUDGE
                 delete[] child_name;
                 delete[] child_value;
+#endif
             }
             if (desc->getToken() == "") {
                 retval = false;
@@ -807,7 +814,9 @@ ChunkDesc* XMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
         vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::build"
             "ConfigChunk: Unexpected DOM_Node.\n" << vprDEBUG_FLUSH;
     }
+#ifndef JCCL_WIN32_KLUDGE
     delete[] name;
+#endif
     if (!retval) {
         // in the event of a failure, we completely skip the chunk. 
         // don't risk actually sending on some mangled thing.
@@ -864,8 +873,10 @@ bool XMLConfigIOHandler::parseChunkDescChildElement (ChunkDesc& desc, DOM_Node d
                         "attribute '" << child_name << "=\"" << child_value <<
                         "\"'.\n" << vprDEBUG_FLUSH;
                 }
+#ifndef JCCL_WIN32_KLUDGE
                 delete[] child_name;
                 delete[] child_value;
+#endif
             }
             if (p->getToken() == "") {
                 retval = false;
@@ -910,7 +921,9 @@ bool XMLConfigIOHandler::parseChunkDescChildElement (ChunkDesc& desc, DOM_Node d
                         "parseChunkDescChildElement: Unexpected DOM_Node.\n"<< 
                         vprDEBUG_FLUSH;
                 }
+#ifndef JCCL_WIN32_KLUDGE
                 delete[] child_value;
+#endif
                 child = child.getNextSibling();
             }
             desc.setHelp (h);
@@ -964,7 +977,9 @@ bool XMLConfigIOHandler::parseChunkDescChildElement (ChunkDesc& desc, DOM_Node d
             "Unexpected DOM Node.\n" << vprDEBUG_FLUSH;
         break;
     }
+#ifndef JCCL_WIN32_KLUDGE
     delete[] name;
+#endif
     return retval;
 }
 
@@ -1001,8 +1016,10 @@ bool XMLConfigIOHandler::parsePropertyDescChildElement (PropertyDesc &p, DOM_Nod
                         "attribute '" << child_name << "=\"" << child_value <<
                         "\"'.\n" << vprDEBUG_FLUSH;
                 }
+#ifndef JCCL_WIN32_KLUDGE
                 delete[] child_name;
                 delete[] child_value;
+#endif
             }
         }
         else if (!vjstrcasecmp (name, "enumeration")) {
@@ -1023,17 +1040,23 @@ bool XMLConfigIOHandler::parsePropertyDescChildElement (PropertyDesc &p, DOM_Nod
                         "attribute '" << child_name << "=\"" << child_value <<
                         "\"'.\n" << vprDEBUG_FLUSH;
                 }
+#ifndef JCCL_WIN32_KLUDGE
                 delete[] child_name;
+#endif
             }
             if (enum_name) {
                 if (enum_value)
                     p.appendEnumeration (enum_name, enum_value);
                 else 
                     p.appendEnumeration (enum_name, "");
+#ifndef JCCL_WIN32_KLUDGE
                 delete[] enum_name;
+#endif
             }
+#ifndef JCCL_WIN32_KLUDGE
             if (enum_value)
                 delete[] enum_value;
+#endif
         }
         else if (!vjstrcasecmp (name, "help")) {
             std::string h = "";
@@ -1053,7 +1076,9 @@ bool XMLConfigIOHandler::parsePropertyDescChildElement (PropertyDesc &p, DOM_Nod
                         "parsing PropertyDesc Help: Unexpected DOM_Node.\n" << 
                         vprDEBUG_FLUSH;
                 }
+#ifndef JCCL_WIN32_KLUDGE
                 delete[] child_value;
+#endif
                 child = child.getNextSibling();
             }
             p.setHelp (h);
@@ -1077,7 +1102,9 @@ bool XMLConfigIOHandler::parsePropertyDescChildElement (PropertyDesc &p, DOM_Nod
             "Unexpected DOM Node.\n" << vprDEBUG_FLUSH;
         break;
     }
+#ifndef JCCL_WIN32_KLUDGE
     delete[] name;
+#endif
     return retval;
 }
 
