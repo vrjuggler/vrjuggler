@@ -52,9 +52,6 @@ INSTALL=		@INSTALL@
 
 BEANS=			ProxyEditor
 
-JGRAPH_DIR=		$(JUGGLERROOT_ABS)/external/jgraph
-JGRAPH_JARS=		$(JGRAPH_DIR)/jgraphpad.jar
-
 # -----------------------------------------------------------------------------
 # Uses ant to build the java classes and JARs
 # -----------------------------------------------------------------------------
@@ -98,11 +95,6 @@ ifneq ($(BEANS), )
                 $(jardir) || exit 1;					\
           done
 endif
-	for jar in `echo "$(JGRAPH_JARS)" | sed -e 's/$(JCPS)/ /g'` ;	\
-          do								\
-              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
-                $(GROUP_OPT_UNIX) $$jar $(javadir) ;			\
-          done
 ifeq (@PLATFORM@, Darwin)
 ifneq ($(JARS), )
 	for jar in $(JARS) ;						\
@@ -126,9 +118,4 @@ ifneq ($(BEANS), )
                 $(bundle_jardir) || exit 1;				\
           done
 endif
-	for jar in `echo "$(JGRAPH_JARS)" | sed -e 's/$(JCPS)/ /g'` ;	\
-          do								\
-              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
-                $(GROUP_OPT_UNIX) $$jar $(bundle_vrj_javadir) ;		\
-          done
 endif
