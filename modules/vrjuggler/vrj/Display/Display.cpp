@@ -58,6 +58,7 @@ void vjDisplay::config(vjConfigChunk* chunk)
     }
 
     // Setup head interface
+    /*
     char* head_str = NULL;
     head_str  = chunk->getProperty("headPos");
     mHeadInterface.init(head_str);
@@ -66,6 +67,16 @@ void vjDisplay::config(vjConfigChunk* chunk)
     {
       cerr << "Fatal Error: Head not found named: " << head_str << endl;
       exit(1);
+    }
+    */
+
+    // Setup head pos by getting user
+    string user_name = (string)(char*)chunk->getProperty("user");
+    mUser = vjKernel::instance()->getUser(user_name);
+
+    if(NULL == mUser)
+    {
+       vjDEBUG(0) << "ERROR: User not found named: " << user_name << endl << vjDEBUG_FLUSH;
     }
 
     // XXX HACK: This should not be here
@@ -91,7 +102,7 @@ void vjDisplay::updateProjections()
    vjMatrix left_eye_pos, right_eye_pos;     // NOTE: Eye coord system is -z forward, x-right, y-up
 
    // -- Calculate Eye Positions -- //
-   vjMatrix cur_head_pos = *(mHeadInterface->GetData());
+   vjMatrix cur_head_pos = *(mUser->getHeadPos());
    vjCoord  head_coord(cur_head_pos);       // Create a user readable version
 
    vjDEBUG(4) << "vjDisplay::updateProjections: Getting head position" << endl << vjDEBUG_FLUSH;
@@ -126,6 +137,7 @@ ostream& operator<<(ostream& out,  vjDisplay& disp)
     out << "\t  Size:" << disp._xs << ", " << disp._ys << endl;
     out << "\t  Pipe:" << disp.mPipe << endl;
     out << "\t  Stereo:" << disp.mStereo << endl;
+    out << "\t  User:" << disp.mUser->getName() << endl;
     out << "---------------------------------------\n";
 
     return out;	

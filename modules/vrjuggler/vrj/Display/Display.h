@@ -8,6 +8,7 @@ class vjDisplayManager;		    // Because prev include includes us
 #include <Math/vjVec3.h>
 #include <Input/vjPosition/vjPosition.h>
 #include <Input/InputManager/vjPosInterface.h>
+#include <Kernel/vjUser.h>
 class vjSimulator;
 
     // Config stuff
@@ -96,7 +97,8 @@ public:
    vjProjection*   cameraProj;            // Camera projection. (For sim, etc.)
 
    vjSimulator*      mSim;                // Simulator. if we are one.
-   vjPosInterface    mHeadInterface;      //: The proxy interface for the head
+   //vjPosInterface    mHeadInterface;      //: The proxy interface for the head
+   vjUser*           mUser;               //: The user being rendered by this window
 
 
 protected:
