@@ -96,9 +96,9 @@ public abstract class DefaultNetCommunicator
      *  readStream (and anything called by it) can safely throw
      *  IOExceptions, and in case of EOF etc. this is encouraged.
      */
-    public boolean readStream (InputStream instream, String id)
+    public void readStream (InputStream instream, String id)
         throws IOException {
-        return false;
+        return;
     }
 
 
