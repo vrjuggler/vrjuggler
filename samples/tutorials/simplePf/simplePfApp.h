@@ -47,7 +47,6 @@
 // --- VR Juggler Stuff --- //
 #include <Kernel/vjKernel.h>
 #include <Kernel/Pf/vjPfApp.h>    // the performer application base type
-#include <Kernel/vjDebug.h>
 #include <Kernel/vjProjection.h>  // for setNearFar (for setting clipping planes)
 
 // Declare my application class
@@ -98,37 +97,5 @@ public:
    pfNode*        mModelRoot;                // Root of the model
 };
 
-// ------- SCENE GRAPH ----
-// a standard organized interface for derived applications:
-//
-//            /-- mLightGroup -- mSun
-// mRootNode -- mModelRoot
-//
-void simplePfApp::initScene()
-{
-   // Load the scene
-   vjDEBUG(vjDBG_ALL, 0) << "simplePfApp::initScene\n" << vjDEBUG_FLUSH;
-
-   // Allocate all the nodes needed
-   mRootNode             = new pfGroup;            // Root of our graph
-
-   // Create the SUN light source
-   mLightGroup = new pfGroup;
-   mSun = new pfLightSource;
-   mLightGroup->addChild( mSun );
-   mSun->setPos( 0.3f, 0.0f, 0.3f, 0.0f );
-   mSun->setColor( PFLT_DIFFUSE,1.0f,1.0f,1.0f );
-   mSun->setColor( PFLT_AMBIENT,0.3f,0.3f,0.3f );
-   mSun->setColor( PFLT_SPECULAR, 1.0f, 1.0f, 1.0f );
-   mSun->on();
-
-   // --- LOAD THE MODEL --- //
-   mModelRoot = pfdLoadFile(mModelFileName.c_str());
-
-   // --- CONSTRUCT STATIC Structure of SCENE GRAPH -- //
-   mRootNode->addChild( mModelRoot );
-   mRootNode->addChild(mLightGroup);
-}
 
 #endif
-

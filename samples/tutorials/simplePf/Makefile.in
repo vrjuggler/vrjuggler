@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/samples/pf/pfNav.  It requires GNU make.
+# Makefile.in for juggler/samples/tutorials/simplePf.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -66,7 +66,7 @@ vpath %.cpp $(srcdir)
 # 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ $(AW_LIBS) @APP_EXTRA_LIBS_PF@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-SIMPLEPF_OBJECTS	= main.@OBJ_FILE_SUFFIX@
+SIMPLEPF_OBJECTS	= main.@OBJ_FILE_SUFFIX@ simplePfApp.@OBJ_FILE_SUFFIX@
 
 # -----------------------------------------------------------------------------
 # Targets.
