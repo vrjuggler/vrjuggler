@@ -205,13 +205,9 @@ public class ConfigUtilities
       }
       else if (type == ValType.BOOL)
       {
-         if ( valueStr.equals("1") )
+         if ( valueString.equals("1") )
          {
-            valueStr = "true";
-         }
-         else if ( valueStr.equals("0") )
-         {
-            valueStr = "false";
+            valueString = "true";
          }
 
          return new Boolean(valueString);
