@@ -28,7 +28,12 @@ namespace vprTest
 void SocketBandwidthIOStatsTest::testBandwidth()
 {
    threadAssertReset();
-   mRendevousPort = 47000 + (random() % 71);     // Get a partially random port
+#ifdef VPR_OS_Win32
+   long rand_num(rand());
+#else
+   long rand_num(random());
+#endif
+   mRendevousPort = 47000 + (rand_num % 71);     // Get a partially random port
    mNumItersA = 1;
    mNumItersB = 5000;
    mMessageValue = std::vector<vpr::Uint8>(1000, 21);      // 10000 bytes of data

@@ -1,5 +1,9 @@
 #include <vpr/vprConfig.h>
 
+#ifdef VPR_OS_Win32
+#include <winsock2.h>
+#endif
+
 #include <cppunit/TestSuite.h>
 #include <cppunit/ui/text/TestRunner.h>
 #include <cppunit/extensions/MetricRegistry.h>
@@ -66,7 +70,9 @@ int main (int argc, char **argv)
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << " Random seed: " << random_seed << std::endl
                           << vprDEBUG_FLUSH;
 
+#ifndef VPR_OS_Win32
    srandom(random_seed);
+#endif
    srand(random_seed);
 
 #ifdef VPR_SIMULATOR       // ------ CONFIGURE SIM NETWORK ------ //
