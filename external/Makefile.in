@@ -83,10 +83,6 @@ links-gmtl:
 	cd $(instlinks)/include && $(RM_LN) ./gmtl &&			\
           $(LN_S) $(EXTROOT_ABS)/GMTL/gmtl ./
 
-links-init:
-	cd $(instlinks)/include && $(RM_LN) ./init && \
-          $(LN_S) $(EXTROOT_ABS)/init ./
-
 links-doozer:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/share
 	cd $(instlinks)/share && $(RM_LN) ./Doozer &&			\
@@ -100,9 +96,6 @@ ifneq ($(TARGETS), )
             $(MAKE) install-$$target || exit 1;				\
           done
 endif
-
-install-init:
-	@$(MAKE) DIRS="init" generic-header-install
 
 install-gmtl:
 	@$(MAKE) DIRS="GMTL/gmtl" generic-header-install
