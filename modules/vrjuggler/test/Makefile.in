@@ -47,6 +47,8 @@ SUBDIRS	= TestSuite	\
           Matrix	\
           Performance	\
           Quat		\
+          SerialPort	\
+          Socket	\
           Sync		\
           input		\
           threads
