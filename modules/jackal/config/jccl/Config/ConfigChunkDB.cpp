@@ -319,12 +319,12 @@ bool ConfigChunkDB::load(const std::string& filename, const std::string& parentf
          cppdom::XMLNodePtr pi = *itr;
          if (pi->getName() == include_desc_INSTRUCTION)
          {
-            std::string desc_filename = pi->getAttribute(file_TOKEN).getValue<std::string>();
+            std::string desc_filename = pi->getAttribute(file_TOKEN).template getValue<std::string>();
             ChunkFactory::instance()->loadDescs(desc_filename, filename);
          }
          else if (pi->getName() == include_INSTRUCTION)
          {
-            std::string chunk_filename = pi->getAttribute(file_TOKEN).getValue<std::string>();
+            std::string chunk_filename = pi->getAttribute(file_TOKEN).template getValue<std::string>();
             load(chunk_filename, filename);
          }
       }
