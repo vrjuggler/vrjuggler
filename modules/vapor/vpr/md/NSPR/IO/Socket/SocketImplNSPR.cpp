@@ -34,7 +34,7 @@
 #include <string.h>
 #include <prinrval.h>
 
-#include <md/POSIX/SocketImpBSD.h>
+#include <md/POSIX/SocketImpNSPR.h>
 
 
 // ============================================================================
@@ -407,7 +407,7 @@ SocketImpNSPR::SocketImpNSPR (const InetAddr& local_addr,
 // ----------------------------------------------------------------------------
 // Destructor.  This currently does nothing.
 // ----------------------------------------------------------------------------
-SocketImpBSD::~SocketImpBSD ()
+SocketImpNSPR::~SocketImpNSPR ()
 {
     if ( m_handle != NULL ) {
        // PRClose(m_handle);     // XXX: Let it dangle
