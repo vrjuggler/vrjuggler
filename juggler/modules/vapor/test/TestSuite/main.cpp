@@ -78,9 +78,10 @@ int main (int ac, char **av)
 
    if ( ! vpr::System::getenv("VPR_TEST_DIR", path_base).success() )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
          << clrOutBOLD(clrRED, "WARNING: Could not construct sim network graph -- $VPR_TEST_DIR not set\n")
          << vprDEBUG_FLUSH;
+      exit(0);
    }
    else
    {
@@ -94,7 +95,7 @@ int main (int ac, char **av)
    CppUnit::MetricRegistry* metric_reg = CppUnit::MetricRegistry::instance();
    std::string metric_prefix;    // Prefix for all metric labels (mode/hostname)
 
-   std::string host_name = vpr::System::getHostname();   
+   std::string host_name = vpr::System::getHostname();
    metric_prefix = host_name + "/";
 #ifdef _DEBUG
    metric_prefix += "Debug/";
@@ -105,7 +106,7 @@ int main (int ac, char **av)
 #ifdef VPR_SIMULATOR
    metric_prefix += "Sim/";
 #endif
-   
+
    std::cout << "Setting up metrics for host: " << host_name << std::endl;
    std::cout << "                     prefix: " << metric_prefix << std::endl;
 
