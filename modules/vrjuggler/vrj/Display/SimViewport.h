@@ -66,7 +66,7 @@ public:
    virtual void config(jccl::ConfigChunkPtr chunk)
    {
       vprASSERT(chunk.get() != NULL);
-      vprASSERT((std::string)chunk->getType() == std::string("simViewport"));
+      vprASSERT(chunk->getDescToken() == std::string("simViewport"));
 
       Viewport::config(chunk);
 
@@ -82,8 +82,8 @@ public:
       mRightProj->setEye(Projection::RIGHT);
       mRightProj->setViewport(this);
 
-      std::string camera_proxy_str = chunk->getProperty("cameraPos");
-      std::string wand_proxy_str = chunk->getProperty("wandPos");
+      std::string camera_proxy_str = chunk->getProperty<std::string>("cameraPos");
+      std::string wand_proxy_str = chunk->getProperty<std::string>("wandPos");
 
       mCamera.init(camera_proxy_str);
       mWand.init(wand_proxy_str);      // Configure the wand to use
@@ -98,10 +98,10 @@ public:
       }
 
       // Get drawing parameters
-      mDrawProjections = chunk->getProperty("drawProjections");
-      mSurfaceColor[0] = chunk->getProperty("surfaceColor", 0);
-      mSurfaceColor[1] = chunk->getProperty("surfaceColor", 1);
-      mSurfaceColor[2] = chunk->getProperty("surfaceColor", 2);
+      mDrawProjections = chunk->getProperty<bool>("drawProjections");
+      mSurfaceColor[0] = chunk->getProperty<float>("surfaceColor", 0);
+      mSurfaceColor[1] = chunk->getProperty<float>("surfaceColor", 1);
+      mSurfaceColor[2] = chunk->getProperty<float>("surfaceColor", 2);
    }
 
    virtual void updateProjections()

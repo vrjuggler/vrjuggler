@@ -348,7 +348,7 @@ void GlWindowXWin::config(vrj::Display* disp)
    mPipe = disp->getPipe();
    vprASSERT(mPipe >= 0);
 
-   mXDisplayName = (std::string)dispSysChunk->getProperty("xpipes", mPipe);
+   mXDisplayName = dispSysChunk->getProperty<std::string>("xpipes", mPipe);
    if(mXDisplayName == neg_one_STRING)    // Use display env
    {
        const std::string DISPLAY_str("DISPLAY");    // DISPLAY_str[] = "DISPLAY";
@@ -357,17 +357,18 @@ void GlWindowXWin::config(vrj::Display* disp)
    vprDEBUG(vrjDBG_DRAW_MGR,4) << "glxWindow::config: display name is: "
                              << mXDisplayName << std::endl << vprDEBUG_FLUSH;
 
-   mAreKeyboardDevice = (bool)displayChunk->getProperty("act_as_keyboard_device");
+   mAreKeyboardDevice = displayChunk->getProperty<bool>("act_as_keyboard_device");
    // if should have keyboard device
    if(true == mAreKeyboardDevice)
    {
       mAreKeyboardDevice = true;       // Set flag saying that we need to have the local device
 
       // Configure keyboard device portion
-      jccl::ConfigChunkPtr keyboard_chunk = displayChunk->getProperty("keyboard_device_chunk");
+      jccl::ConfigChunkPtr keyboard_chunk =
+         displayChunk->getProperty<jccl::ConfigChunkPtr>("keyboard_device_chunk");
 
       // Set the name of the chunk to the same as the parent chunk (so we can point at it)
-      //keyboard_chunk->setProperty("name", (std::string)displayChunk->getProperty("name"));
+      //keyboard_chunk->setProperty("name", displayChunk->getName();
 
       gadget::KeyboardXWin::config(keyboard_chunk);
 

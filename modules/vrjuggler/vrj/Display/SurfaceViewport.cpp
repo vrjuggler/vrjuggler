@@ -51,38 +51,40 @@ namespace vrj
 void SurfaceViewport::config(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(chunk.get() != NULL);
-   vprASSERT((std::string)chunk->getType() == std::string("surfaceViewport"));
+   vprASSERT(chunk->getDescToken() == std::string("surfaceViewport"));
 
    Viewport::config(chunk);     // Call base class config
 
    mType = SURFACE;
 
    // Read in the corners
-   jccl::ConfigChunkPtr ll_corner_chunk = chunk->getProperty("corners",0);
-   jccl::ConfigChunkPtr lr_corner_chunk = chunk->getProperty("corners",1);
-   jccl::ConfigChunkPtr ur_corner_chunk = chunk->getProperty("corners",2);
-   jccl::ConfigChunkPtr ul_corner_chunk = chunk->getProperty("corners",3);
-   mLLCorner.set(ll_corner_chunk->getProperty("x"),
-                 ll_corner_chunk->getProperty("y"),
-                 ll_corner_chunk->getProperty("z"));
-   mLRCorner.set(lr_corner_chunk->getProperty("x"),
-                 lr_corner_chunk->getProperty("y"),
-                 lr_corner_chunk->getProperty("z"));
-   mURCorner.set(ur_corner_chunk->getProperty("x"),
-                 ur_corner_chunk->getProperty("y"),
-                 ur_corner_chunk->getProperty("z"));
-   mULCorner.set(ul_corner_chunk->getProperty("x"),
-                 ul_corner_chunk->getProperty("y"),
-                 ul_corner_chunk->getProperty("z"));
+   jccl::ConfigChunkPtr ll_corner_chunk = chunk->getProperty<jccl::ConfigChunkPtr>("corners",0);
+   jccl::ConfigChunkPtr lr_corner_chunk = chunk->getProperty<jccl::ConfigChunkPtr>("corners",1);
+   jccl::ConfigChunkPtr ur_corner_chunk = chunk->getProperty<jccl::ConfigChunkPtr>("corners",2);
+   jccl::ConfigChunkPtr ul_corner_chunk = chunk->getProperty<jccl::ConfigChunkPtr>("corners",3);
+   mLLCorner.set(ll_corner_chunk->getProperty<float>("x"),
+                 ll_corner_chunk->getProperty<float>("y"),
+                 ll_corner_chunk->getProperty<float>("z"));
+   mLRCorner.set(lr_corner_chunk->getProperty<float>("x"),
+                 lr_corner_chunk->getProperty<float>("y"),
+                 lr_corner_chunk->getProperty<float>("z"));
+   mURCorner.set(ur_corner_chunk->getProperty<float>("x"),
+                 ur_corner_chunk->getProperty<float>("y"),
+                 ur_corner_chunk->getProperty<float>("z"));
+   mULCorner.set(ul_corner_chunk->getProperty<float>("x"),
+                 ul_corner_chunk->getProperty<float>("y"),
+                 ul_corner_chunk->getProperty<float>("z"));
 
    // Calculate the rotation and the pts
    calculateSurfaceRotation();
    calculateCornersInBaseFrame();
 
    // Get info about being tracked
-   mTracked = chunk->getProperty("tracked");
+   mTracked = chunk->getProperty<bool>("tracked");
    if(mTracked)
-      mTrackerProxyName = (std::string)chunk->getProperty("trackerproxy");
+   {
+      mTrackerProxyName = chunk->getProperty<std::string>("trackerproxy");
+   }
 
    // Create Projection objects
    // NOTE: The -'s are because we are measuring distance to

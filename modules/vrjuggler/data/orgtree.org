@@ -41,7 +41,7 @@ Begin "Zelda"
             "Remote Input Host Address"
         End
     End
-    "Juggler User"
+    "VR Juggler User"
     Begin "API-specific"
         "Performer API"
         "SL Sound Engine"
