@@ -795,14 +795,7 @@ fi
 
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
-
-_vjsave_CXX="$CXX"
-
-dnl # When compiling on Windows, we need to force the compiler to treat the
-dnl # source file as a .cpp file even though it will end in .c.
-if test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
-    CXX="$CXX -TP"
-fi
+ac_ext='cpp'
 
 AC_CACHE_CHECK(whether the C++ compiler handles templates properly,
     ac_cv_CXX_is_current,
@@ -811,8 +804,6 @@ AC_CACHE_CHECK(whether the C++ compiler handles templates properly,
                    [ ac_cv_CXX_is_current='yes' ; rm -rf ./ii_files ],
                    [ ac_cv_CXX_is_current='no' ;
                      AC_MSG_ERROR(*** The library requires a current C++ compiler) ]))
-
-CXX="${_vjsave_CXX}"
 
 AC_LANG_RESTORE
 
