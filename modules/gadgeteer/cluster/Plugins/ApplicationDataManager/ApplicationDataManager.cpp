@@ -39,6 +39,10 @@
 
 #include <cluster/Packets/EndBlock.h>
 
+//XXX: Need to remove this since we can not depend on another plug-in
+//     This is currently here so that we can generate ID's that will
+//     not overlap between RIM & ADM. These ID's are checked in the 
+//     DataPacket->action() method
 #include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>                                                                    
 #include <gadget/Type/DeviceFactory.h>
 
@@ -52,9 +56,7 @@
 
 // UserData
 #include <cluster/SerializableData.h>
-
 #include <cluster/Plugins/ApplicationDataManager/UserDataServer.h>
-
 #include <cluster/Packets/UserDataRequest.h>
 
 
