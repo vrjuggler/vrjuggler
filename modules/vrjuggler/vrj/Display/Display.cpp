@@ -49,6 +49,7 @@ void vjDisplay::config(vjConfigChunk* chunk)
       mType = SIM;
       cameraProj = new vjCameraProjection;
       cameraProj->config(chunk);
+      cameraProj->setEye(vjProjection::SIM);
       mSim = new vjSimulator;
       mSim->config(chunk);
     }
