@@ -329,7 +329,7 @@ public class PerfDataCollector {
     try {
       for (;;) {
 	  st.nextToken();
-	  index = Integer.parseInt(st.sval);//(int)st.nval;
+	  index = Integer.parseInt(st.sval);
 	  st.nextToken();
 	  //System.out.println ("index is " + index + "\nval is " + st.nval);
 	  if (index == -1) {
@@ -346,7 +346,7 @@ public class PerfDataCollector {
 	      break;
 	  }
 	  //System.out.println ("place1 is " + place); 
-	  val = new Double(st.sval).doubleValue();//(double)st.nval;
+          val = Double.parseDouble (st.sval);
 	  for (; place != index; place++) {
 	      //System.out.println ("place1 is " + place);
 	      if (place >= num) {
@@ -372,7 +372,6 @@ public class PerfDataCollector {
 	  place = (place+1);
 	  if (place >= num) {
 	      addDataLine(dl);
-	      //datalines.addElement(dl);
 	      dl = new DataLine(num);
 	      place = 0;
 	  }
