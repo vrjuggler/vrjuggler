@@ -17,39 +17,41 @@ vjVarValue::vjVarValue (vjConfigChunk* ch) {
 
 
 vjVarValue& vjVarValue::operator= (vjVarValue &v) {
-    if ((type == T_STRING) || (type == T_CHUNK))
-	if (val.strval) {
-	    delete val.strval;
-	    val.strval = NULL;
-	}
-    type = v.type;
-    switch (type) {
-    case T_INVALID:
-	break;
-    case T_INT:
-	val.intval = v.val.intval;
-	break;
-    case T_FLOAT:
-	val.floatval = v.val.floatval;
-	break;
-    case T_BOOL:
-	val.boolval = v.val.boolval;
-	break;
-    case T_EMBEDDEDCHUNK:
-	val.embeddedchunkval = new vjConfigChunk (*v.val.embeddedchunkval);
-	break;
-    case T_STRING:
-    case T_CHUNK:
-	if (v.val.strval == NULL)
-	    val.strval = NULL;
-	else
-	    val.strval = strdup (v.val.strval);
-	break;
-    default:
-	//cout << "something's wrong with varvalue assign" << endl;
-	break;
-    }
-    return *this;
+   if ((type == T_STRING) || (type == T_CHUNK))
+      if (val.strval)
+      {
+         delete val.strval;
+         val.strval = NULL;
+      }
+   type = v.type;
+   switch (type)
+   {
+   case T_INVALID:
+      break;
+   case T_INT:
+      val.intval = v.val.intval;
+      break;
+   case T_FLOAT:
+      val.floatval = v.val.floatval;
+      break;
+   case T_BOOL:
+      val.boolval = v.val.boolval;
+      break;
+   case T_EMBEDDEDCHUNK:
+      val.embeddedchunkval = new vjConfigChunk (*v.val.embeddedchunkval);
+      break;
+   case T_STRING:
+   case T_CHUNK:
+      if (v.val.strval == NULL)
+         val.strval = NULL;
+      else
+         val.strval = strdup (v.val.strval);
+      break;
+   default:
+      //cout << "something's wrong with varvalue assign" << endl;
+      break;
+   }
+   return *this;
 }
 
 
@@ -238,7 +240,7 @@ vjVarValue &vjVarValue::operator = (vjConfigChunk *s) {
 
 ostream& operator << (ostream& out, vjVarValue& v) {
     //      cerr << "in << func" <<flush;
-    
+
     switch (v.type) {
     case T_INT:
 	out << v.val.intval;
