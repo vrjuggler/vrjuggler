@@ -12,7 +12,6 @@
          <cluster_node>Node(ptah-2)</cluster_node>
          <cluster_node>Node(ptah-3)</cluster_node>
          <cluster_node>Node(ptah-4)</cluster_node>
-         <barrier_master>Node(ptah-1)</barrier_master>
       </cluster_manager>
       <swap_lock_tcp_plugin name="Swap Lock" version="1">
          <sync_server>Node(ptah-1)</sync_server>
