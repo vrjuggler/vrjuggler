@@ -4,6 +4,7 @@
 #include <TestCases/VarValueTest.h>
 #include <TestCases/ChunkDescTest.h>
 #include <TestCases/IncludesTest.h>
+#include <TestCases/LabeledPerfDataBufferTest.h>
 
 #include <vpr/Util/Debug.h>
 #include <vpr/System.h>
@@ -54,7 +55,7 @@ int main (int ac, char **av)
    // ------------------------------
    CppUnit::TestSuite* metrics_suite = new CppUnit::TestSuite("metrics");
 
-//     metrics_suite->addTest(vprTest::IntervalTest::metric_suite());
+     metrics_suite->addTest(jcclTest::LabeledPerfDataBufferTest::metric_suite());
 //     metrics_suite->addTest(vprTest::GUIDTest::metric_suite());
 //     metrics_suite->addTest(vprTest::SocketBandwidthIOStatsTest::metric_suite());
 
