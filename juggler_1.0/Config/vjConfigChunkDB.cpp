@@ -19,7 +19,11 @@ vjConfigChunkDB::vjConfigChunkDB (vjChunkDescDB *d): chunks() {
 
 
 vjConfigChunkDB::~vjConfigChunkDB () {
-  erase();
+    // this erase turned out to be a really bad idea, becuase inside of
+    // juggler several dbs can have pointers to the same chunks.  ah.
+    // so if you do want to erase a chunkdb _and_ all the chunks inside
+    // of it, call erase() yourself.
+    //erase();
 }
 
 
