@@ -206,9 +206,9 @@ JScrollPane sp;
 
 
     /** Update look-n-feel.
-     *  We need to override this ourselves so that child panels which aren't being
-     *  displayed (and therefore aren't in the normal awt component hierarcy) get
-     *  updated appropriately.
+     *  We need to override this ourselves so that child panels which aren't 
+     *  being displayed (and therefore aren't in the normal awt component 
+     *  hierarcy) get updated appropriately.
      *  This still doesn't seem to be propogating correctly to the plugpanel's 
      *  children JComponents.
      */
@@ -219,7 +219,7 @@ JScrollPane sp;
         if (child_panels != null) { 
             int n = child_panels.size();
             for (i = 0; i < n; i++) {
-                p = (JComponent)child_panels.elementAt(i);
+                p = (JComponent)child_panels.get(i);
                 if (p != (JComponent)active_panel)
                     p.updateUI();
             }
@@ -233,7 +233,7 @@ JScrollPane sp;
     public void insertPanel (PlugPanel p) {
         try {
             int index = 0;
-            child_panels.addElement (p);
+            child_panels.add (p);
 
             // add to the tree
             DefaultMutableTreeNode tn = new DefaultMutableTreeNode (new tscUserObject (p.getComponentName(), p.getComponentIcon(), p, tscUserObject.LEAF), false);
