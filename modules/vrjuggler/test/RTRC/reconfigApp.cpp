@@ -404,7 +404,6 @@ bool reconfigApp::verifyProxy( std::string proxyName, std::string deviceName )
 
    return true;
 
-
 }
 
 vrj::Display* reconfigApp::getDisplay( std::string name )
@@ -1148,6 +1147,7 @@ bool reconfigApp::reconfigSimDigital_exec()
 
 bool reconfigApp::reconfigSimDigital_check()
 {
+
    //Get the sim digital pointer
    gadget::SimDigital* device = (gadget::SimDigital*)gadget::InputManager::instance()->getDevice( "SimWandButtons02" );
 
@@ -1172,13 +1172,13 @@ bool reconfigApp::reconfigSimDigital_check()
       key_status = false;
 
       //Scan the sim digital config chunk to see if was defined there
-      for ( int i=0; i < fileChunks[0]->getNum("keyPairs"); i++ )
+      for ( int j=0; j < fileChunks[0]->getNum("keyPairs"); j++ )
       {
-         jccl::ConfigChunkPtr key_mod_pair = fileChunks[0]->getProperty<jccl::ConfigChunkPtr>("keyPairs", i);
+         jccl::ConfigChunkPtr key_mod_pair = fileChunks[0]->getProperty<jccl::ConfigChunkPtr>("keyPairs", j);
 
          //If they are the same..
-         if (( keypairs[0].mModifier == key_mod_pair->getProperty<int>("modKey", 0))
-            && keypairs[1].mKey == key_mod_pair->getProperty<int>("key", 0))
+         if (( keypairs[i].mModifier == key_mod_pair->getProperty<int>("modKey", 0))
+            && keypairs[i].mKey == key_mod_pair->getProperty<int>("key", 0))
          {
             key_status = true;
             continue;
@@ -1195,17 +1195,80 @@ bool reconfigApp::reconfigSimDigital_check()
    }
 
    return true;
+
 }
 
 
 bool reconfigApp::reconfigSimAnalog_exec()
 {
    std::cout << "Beginning test for reconfiguring a sim analog device...\n" << std::flush;
-   return true;
+
+   return swapChunkFiles( "./Chunks/startup/sim.analogdevice1.config",
+                          "./Chunks/sim.analogdevice1.reconfig.config" );
 }
 
 bool reconfigApp::reconfigSimAnalog_check()
 {
+
+   //Get the sim analog pointer
+   gadget::SimAnalog* device = (gadget::SimAnalog*)gadget::InputManager::instance()->getDevice( "AnalogDevice1" );
+
+   if ( device == NULL )
+   {
+      std::cout << "\tError: Could not find the sim analog device\n" << std::flush;
+      return false;      
+   }
+
+   //Get the vector of keymodpairs
+   std::vector<gadget::SimInput::KeyModPair> keypairsup = device->getUpKeys();
+   std::vector<gadget::SimInput::KeyModPair> keypairsdown = device->getDownKeys();
+
+   //Load up the config file.
+   jccl::ConfigChunkDB fileDB ; fileDB.load( "./Chunks/sim.analogdevice1.reconfig.config" );
+   std::vector<jccl::ConfigChunkPtr> fileChunks;
+   fileDB.getByType( "SimAnalog", fileChunks );
+
+   bool key_status;
+
+   //Scan the sim digital config chunk to see if was defined there
+   for ( int i=0; i < fileChunks[0]->getNum("keyPairs"); i++ )
+   {
+      key_status = false;
+
+      jccl::ConfigChunkPtr key_mod_pair = fileChunks[0]->getProperty<jccl::ConfigChunkPtr>("keyPairs", i);
+
+      //Scan the up keys
+      for (int j=0; j < keypairsup.size(); j++)
+      {
+         //If they are the same..
+         if (( keypairsup[j].mModifier == key_mod_pair->getProperty<int>("modKey", 0))
+            && keypairsup[j].mKey == key_mod_pair->getProperty<int>("key", 0))
+         {
+            key_status = true;
+            continue;
+         }
+      }  
+
+      //Scan the down keys
+      for (int j=0; j < keypairsdown.size(); j++)
+      {
+         //If they are the same..
+         if (( keypairsdown[j].mModifier == key_mod_pair->getProperty<int>("modKey", 0))
+            && keypairsdown[j].mKey == key_mod_pair->getProperty<int>("key", 0))
+         {
+            key_status = true;
+            continue;
+         }
+      }  
+
+      //If we have not found a key that matches...
+      if (key_status == false)
+      {
+         std::cout << "\tError: One or more of the key pair definitions are incorrect\n" << std::flush;
+         return false;
+      }
+   }
+
    return true;
 }
 
