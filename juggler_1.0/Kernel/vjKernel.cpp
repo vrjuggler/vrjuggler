@@ -27,10 +27,10 @@
 #include <Threads/vjThread.h>
 
 // Get the system factory we need
-#if defined(VJ_OS_IRIX) || defined(VJ_OS_Linux) || defined(VJ_OS_Solaris)
+#if defined(VJ_OS_IRIX) || defined(VJ_OS_Linux) ||		\
+    defined(VJ_OS_Solaris) || defined(VJ_OS_FreeBSD)
 #include <Kernel/vjSGISystemFactory.h>
-#endif
-#ifdef WIN32
+#elif defined(VJ_OS_Win32)
 #include <Kernel/vjWin32SystemFactory.h>
 #endif
 
@@ -218,17 +218,14 @@ void vjKernel::initConfig()
 
 #ifdef VJ_OS_IRIX
    mSysFactory = vjSGISystemFactory::instance(); // XXX: Should not be system specific
-#else
-#if defined(VJ_OS_Linux) || defined(VJ_OS_Solaris)
+#elif defined(VJ_OS_Linux) || defined(VJ_OS_Solaris) ||		\
+      defined(VJ_OS_FreeBSD)
    mSysFactory = vjSGISystemFactory::instance(); // HACK - this could be trouble, using SGI factory
-#else
-#ifdef WIN32
+#elif defined(VJ_OS_Win32)
    mSysFactory = vjWin32SystemFactory::instance();
 #else
    vjDEBUG (vjDBG_ERROR,0) << "ERROR!: Don't know how to create System Factory!\n" << vjDEBUG_FLUSH;
    vjASSERT(false);
-#endif
-#endif
 #endif
 
    vjDEBUG_END(vjDBG_KERNEL,3) << "vjKernel::initConfig: Done.\n" << vjDEBUG_FLUSH;

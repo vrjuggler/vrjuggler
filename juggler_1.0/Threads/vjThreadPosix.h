@@ -43,6 +43,8 @@
 
 #ifdef VJ_OS_Solaris
 typedef unsigned int thread_id_t;
+#elif defined(VJ_OS_FreeBSD)
+typedef caddr_t thread_id_t;
 #else
 typedef u_int32_t thread_id_t;
 #endif
@@ -332,8 +334,8 @@ public:
 
 // All private member variables and functions.
 private:
-    pthread_t  mThread; //: pthread_t data structure for this thread
-    int     mScope;     //: Scope (process or system) of this thread
+    pthread_t   mThread;        //: pthread_t data structure for this thread
+    int         mScope;         //: Scope (process or system) of this thread
 
     void checkRegister(int status);
 
@@ -353,8 +355,9 @@ private:
 #elif defined(VJ_OS_HPUX)
         return mThread.field1;
 #else
-        return mThread;
-#endif   /* VJ_OS_IRIX */
+        // This works on Linux, Solaris and FreeBSD.
+        return (thread_id_t) mThread;
+#endif    /* VJ_OS_IRIX */
     }
 
     // -----------------------------------------------------------------------
@@ -376,8 +379,9 @@ private:
 #elif defined(VJ_OS_HPUX)
         return thread.field1;
 #else
-        return thread;
-#endif   /* VJ_OS_IRIX */
+        // This works on Linux, Solaris and FreeBSD.
+        return (thread_id_t) thread;
+#endif
     }
 
     // -----------------------------------------------------------------------
