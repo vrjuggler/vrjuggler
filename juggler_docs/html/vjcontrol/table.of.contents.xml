@@ -5,14 +5,14 @@ Builder: JExplorerBuilder V 1. 0. 7
 
 			< rootfolder title="VJ Control" 
 				expand
-				link="${VJCONTROL}/table.of.contents.html" 
+				link="${VJCONTROL}/index.html" 
 				target="Body" 
 				info="VJ Control" 
 				image="Book_Closed.gif" 
 				imagetwo="Book_Open.gif" >
 
 			< folder title="Installing and Using VjControl" 
-			link="../html.protected/" 
+			link="${VJCONTROL}/index.html" 
 			target="Body" 
 			info="Installing and Using VjControl" 
 			image="Leaf.gif" >
@@ -29,12 +29,12 @@ Builder: JExplorerBuilder V 1. 0. 7
 			</folder>
 
       			< folder title="Technical Specifications" 
-			link="../html.protected/" 
+			link="${VJCONTROL}/index.html" 
 			target="Body" 
 			info="Technical Specifications" 
 			image="Leaf.gif" >
-				< item title="Config File Format" link="${VJCONTROL}/" info="Configuration File Format" target="Body" image="Leaf.gif" >
-				< item title="ChunkDesc File Format" link="${VJCONTROL}/" info="Chunk Description File Format" target="Body" image="Leaf.gif" >
+				< item title="Config File Format" link="${VJCONTROL}/ConfigChunkFormat.html" info="Configuration File Format" target="Body" image="Leaf.gif" >
+				< item title="ChunkDesc File Format" link="${VJCONTROL}/ChunkDescFormat.html" info="Chunk Description File Format" target="Body" image="Leaf.gif" >
 				< item title="ChunkOrgTree File Format" link="${VJCONTROL}/OrgTreeFormat.html" info="ChunkOrgTree File Format" target="Body" image="Leaf.gif" >
 			</folder>	
 			

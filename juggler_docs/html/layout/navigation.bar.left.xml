@@ -8,7 +8,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 < rootfolder selectID="2" selectURL="${NEWS}/index.html" title="VR Juggler" link="../index.html" info="Juggler Virtual Reality Platform" target="_top" image="Home.gif" imagetwo="Home.gif" >
 
     < item title="Mission Statement" link="${MISC}/mission.statement.html"  info="VR Juggler Mission Statement: What is juggler's intent, how will it be used in the future." image="Speaker.gif" >
-
+    
     < item title="News" link="${NEWS}/index.html"  info="The latest Juggler news" image="Newspaper.gif" >
     < item title="FAQ" link="${MISC}/faq.html"  info="Frequently Asked Questions" image="Leaf.gif" >
 
@@ -22,10 +22,11 @@ Builder: JExplorerBuilder V 1. 0. 7
                 < item title="Learning VR Juggler.  VRAC 99" info="A presentation given at VRAC: Learning VR Juggler.  VRAC 99" link="publications/howtoprogramjuggler/index.html" image="slide.gif" >
     </folder>
 
-        < item title="History" link="${MISC}/history.html"  info="Project History" image="Leaf.gif" >
     < item title="User Community" link="contact.info/usercommunity.html"  info="Can't find it in the Books?  Reach out and ask someone." image="Chat.gif" >
     < item title="Download" link="download/index.html" info="Download VR Juggler library in source or binary form." image="Inbox.gif" >
 
+    < item title="Features" link="${MISC}/features.html"  info="List of Juggler features: present and future" image="Leaf_Script.gif" >
+    < item title="History" link="${MISC}/history.html"  info="Project History" image="Leaf.gif" >
     < folder title="Bugs" link="${BUGS}/bugs.html"  info="Find something wrong with Juggler?  Let us know, submit a bug report." image="Bug.gif" >
                 < item title="Juggler" link="${BUGS}/known.bugs.juggler.html"  info="A list of known Check this list of known bugs." image="Leaf.gif" >
                 < item title="VJControl" link="${BUGS}/known.bugs.vjcontrol.html"  info="Check this list of known bugs." image="Leaf.gif" >
