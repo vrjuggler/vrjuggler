@@ -10,7 +10,15 @@ DIE=0
 : ${GGT_MACRO_PATH=`pwd`/macros.GGT}
 
 if [ -n "$DPP_PATH" ]; then
-   ACLOCAL_FLAGS="-I $DPP_PATH/config -I $MACRO_PATH -I $GGT_MACRO_PATH $ACLOCAL_FLAGS"
+   ACLOCAL_FLAGS="-I $DPP_PATH/config $ACLOCAL_FLAGS"
+fi
+
+if [ -n "$MACRO_PATH" ]; then
+   ACLOCAL_FLAGS="-I $MACRO_PATH $ACLOCAL_FLAGS"
+fi
+
+if [ -n "$GGT_MACRO_PATH" ]; then
+   ACLOCAL_FLAGS="-I $GGT_MACRO_PATH $ACLOCAL_FLAGS"
 fi
 
 : ${AUTOCONF=autoconf}
@@ -47,7 +55,7 @@ do
     echo processing $dr
     macrodirs=`sed -n -e 's,AM_ACLOCAL_INCLUDE(\(.*\)),\1,gp' < $coin`
     ( cd $dr
-      macrosdir=`find . -name macros -print`
+#      macrosdir=`find . -name macros -print`
 #      for i in $macrodirs; do
 #      done
 
