@@ -26,7 +26,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 import string
-__all__     = ["vrj", "gadget", "jccl", "vpr", "gmtl"]
+__all__     = ["vrj", "gadget", "jccl", "gmtl"]
 __build__   = 1
 __version__ = '0.3.0.%d' % __build__
 __date__    = string.join(string.split('$Date$')[1:3], ' ')
