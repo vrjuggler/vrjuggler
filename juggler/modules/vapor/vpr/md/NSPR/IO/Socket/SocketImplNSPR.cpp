@@ -87,6 +87,10 @@ SocketImplNSPR::open () {
       else {
          m_handle = new_sock;
          m_open = true;
+
+         if ( ! m_open_blocking ) {
+            enableNonBlocking();
+         }
       }
    }
 
@@ -168,6 +172,9 @@ SocketImplNSPR::enableBlocking () {
          NSPR_PrintError("SocketImplNSPR::enableBlocking: Failed to set.");
          retval.setCode(Status::Failure);
       }
+      else {
+         m_blocking = true;
+      }
    }
 
    return retval;
@@ -200,6 +207,9 @@ SocketImplNSPR::enableNonBlocking () {
       {
          NSPR_PrintError("SocketImplNSPR::enableNonBlocking: Failed to set.");
          retval.setCode(Status::Failure);
+      }
+      else {
+         m_blocking = false;
       }
    }
 
