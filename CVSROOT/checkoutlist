@@ -24,3 +24,4 @@ logcheck
 rcstemplate
 unwrap
 wrap
+ciabot_cvs.pl

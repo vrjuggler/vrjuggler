@@ -23,3 +23,4 @@
 # and root does not have a path set on the machine
 # NOTE: BIG security hole lives here as well.  We should find a way to fix.
 ALL	$CVSROOT/CVSROOT/log_accum.pl %s
+ALL     $CVSROOT/CVSROOT/ciabot_cvs.pl %{,,,s} $USER

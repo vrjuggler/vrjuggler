@@ -42,10 +42,10 @@ use vars qw ($project $from_email $dest_email $rpc_uri $sendmail $sync_delay
 ### Configuration
 
 # Project name (as known to CIA).
-$project = 'YOUR_PROJECT_HERE';
+$project = 'VRJuggler';
 
 # The from address in generated mails.
-$from_email = 'YOUR_EMAIL_HERE';
+$from_email = 'aronb@vrac.iastate.edu';
 
 # Mail all reports to this address.
 $dest_email = 'cia@cia.navi.cx';
