@@ -104,7 +104,7 @@ void SocketBandwidthIOStatsTest::testBandwidth_acceptor(void* arg)
          mCondVar.wait();
       mCondVar.release();
 
-      vpr::BaseIOStatsStrategy<>* stats = sock->getIOStatStrategy();
+      vpr::BaseIOStatsStrategy* stats = sock->getIOStatStrategy();
       vpr::BandwidthIOStatsStrategy* bw_interface = dynamic_cast<vpr::BandwidthIOStatsStrategy*>(stats );
 
       if(bw_interface != NULL)
@@ -165,7 +165,7 @@ void SocketBandwidthIOStatsTest::testBandwidth_connector(void* arg)
          assertTestThread((bytes_read == mMessageLen) && "Connector recieved message of wrong size" );
       }
 
-      vpr::BaseIOStatsStrategy<>* stats = con_sock.getIOStatStrategy();
+      vpr::BaseIOStatsStrategy* stats = con_sock.getIOStatStrategy();
       vpr::BandwidthIOStatsStrategy* bw_interface = dynamic_cast<vpr::BandwidthIOStatsStrategy*>(stats );
 
       if(bw_interface != NULL)

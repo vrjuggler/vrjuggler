@@ -1,6 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
-2001-01-07 patrickh When a sim socket closes, undelivered messages are flushed
+2002-01-10 patrickh Reverted vpr::BaseIOStatsStrategy back to a normal class
+                    rather than a templatized class (see version 0.5.0 below).
+                    NEW VERSION: 0.10.0
+2002-01-07 patrickh When a sim socket closes, undelivered messages are flushed
                     from the network.
 2002-01-03 patrickh Added support for connection initiation events, connection
                     completion events, and localhost message delivery events
