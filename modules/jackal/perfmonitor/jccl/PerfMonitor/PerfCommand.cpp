@@ -32,8 +32,8 @@
 
 
 
-#include <jccl/Performance/PerfCommand.h>
-#include <jccl/Performance/PerfDataBuffer.h>
+#include <jccl/Plugins/PerformanceMonitor/PerfCommand.h>
+#include <jccl/Plugins/PerformanceMonitor/PerfDataBuffer.h>
 
 namespace jccl {
 

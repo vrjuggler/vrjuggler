@@ -38,7 +38,7 @@
 #define _JCCL_COMMAND_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Performance/TimeStamp.h>
+#include <jccl/Plugins/PerformanceMonitor/TimeStamp.h>
 
 namespace jccl {
 

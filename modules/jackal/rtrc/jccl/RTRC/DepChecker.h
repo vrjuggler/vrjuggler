@@ -35,9 +35,8 @@
 #define _JCCL_DEP_CHECKER_H_
 
 #include <jccl/jcclConfig.h>
-//#include <Input/vjInput/vjInput.h>
 #include <jccl/Config/ConfigChunk.h>
-#include <jccl/ConfigManager/ConfigManager.h>
+#include <jccl/Plugins/ConfigManager/ConfigManager.h>
 
 namespace jccl {
 

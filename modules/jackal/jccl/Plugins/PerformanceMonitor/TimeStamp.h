@@ -44,21 +44,21 @@
 
 #if VJ_PERFORMANCE == VJ_PERF_SGI
 
-#include <jccl/Performance/TimeStampSGI.h>
+#include <jccl/Plugins/PerformanceMonitor/TimeStampSGI.h>
 namespace jccl {
 typedef class TimeStampSGI TimeStamp;
 };
 
 #elif VJ_PERFORMANCE == VJ_PERF_POSIX
 
-#include <jccl/Performance/TimeStampPosix.h>
+#include <jccl/Plugins/PerformanceMonitor/TimeStampPosix.h>
 namespace jccl {
 typedef class TimeStampPosix TimeStamp;
 };
 
 #else
 
-#include <jccl/Performance/TimeStampNone.h>
+#include <jccl/Plugins/PerformanceMonitor/TimeStampNone.h>
 namespace jccl {
 typedef class TimeStampNone TimeStamp;
 }
