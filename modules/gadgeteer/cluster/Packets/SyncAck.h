@@ -87,22 +87,6 @@ public:
    vpr::Uint16 getPort() { return mPort; }
    std::string getManagerId() { return mManagerId; }
    bool getAck() { return mAck; }
-   
-   virtual bool action(ClusterNode* node)
-   {
-      // - If Ack is TRUE
-      //   - Set isConnected on current node
-      //   - Save all interesting data on SyncNode
-      //     - Remote ManagerID (etc
-      
-      if (node == NULL)
-      {
-         return false;
-      }
-
-      std::cout << "Alright, I will sync you already..." << std::endl;
-      return true;
-   }
 private:
    std::string mHostname;
    vpr::Uint16 mPort;

@@ -196,13 +196,7 @@ namespace cluster
       ConnectionRequest request(ClusterNetwork::instance()->getLocalHostname(),0/*Might be needed, look above*/, 
                                    std::string("We do not use the managerID anymore"));
       
-      // THIS COULD BREAK IN THE FUTURE
-      // We may need to convert this over to
-      // using the ClusterNode send method soon
-      request.send(mSockStream);
-      
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         << "Waiting for a responce! MIGHT WANT TO CHANGE THIS" << std::endl << vprDEBUG_FLUSH;
+      send(&request);
       
       Packet* temp_packet = PacketFactory::instance()->recvPacket(mSockStream);
 
@@ -212,7 +206,8 @@ namespace cluster
          << "We have a responce" << std::endl << vprDEBUG_FLUSH;
 
       temp_packet->printData(vprDBG_CONFIG_LVL);
-      temp_packet->action(this);
+      ClusterManager::instance()->handlePacket(temp_packet,this);
+      
       delete temp_packet;
       if (getConnected() == NEWCONNECTION)
       {
@@ -361,9 +356,6 @@ namespace cluster
       // Print Packet Information
       temp_packet->printData(vprDBG_CONFIG_LVL);
       
-      //Moving the handling from the next line to the plugins
-      //temp_packet->action(this);
-
       ClusterManager::instance()->handlePacket(temp_packet,this);
 
       delete temp_packet;
@@ -435,11 +427,64 @@ namespace cluster
       mClusterNodeDoneSema.acquire();
    }
 
-   void ClusterNode::send(Packet* out_packet)
+   vpr::ReturnStatus ClusterNode::send(Packet* out_packet)
    {
-      lockSockWrite();
-      out_packet->send(getSockStream());
-      unlockSockWrite();
+      vpr::Guard<vpr::Mutex> guard(mSockWriteLock);
+      
+      // -Send header data
+      // -Send packet data
+
+      if (mSockStream == NULL)
+      {
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED) 
+            << "ERROR: SocketSteam is NULL\n" << clrRESET << vprDEBUG_FLUSH;
+         throw cluster::ClusterException("ClusterNode::send() - SocketStream is NULL!");
+      }
+      
+      Header* mHeader = out_packet->getHeader();
+
+      if (mHeader == NULL)
+      {
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED) 
+            << "ERROR: Packet Header is NULL\n" << clrRESET << vprDEBUG_FLUSH;
+         throw cluster::ClusterException("ClusterNode::send() - Packet Header is NULL!");
+      }
+      
+      if (!mHeader->send(mSockStream).success())
+      {
+         mSockStream->close();
+         delete mSockStream;
+         mSockStream = NULL;
+         throw cluster::ClusterException("Packet::recv() - Sending Header Data failed!");
+      }
+      
+      vpr::Uint32 bytes_written;
+
+      std::vector<vpr::Uint8>* mData = out_packet->getData();
+      
+      if(mHeader->getPacketLength() != Header::RIM_PACKET_HEAD_SIZE)
+      {
+         vpr::ReturnStatus status = mSockStream->send(*mData,mHeader->getPacketLength()-Header::RIM_PACKET_HEAD_SIZE,bytes_written);
+         if (!status.success())
+         {
+            mSockStream->close();
+            delete mSockStream;
+            mSockStream = NULL;
+            throw cluster::ClusterException("Packet::recv() - Sending Packet Data failed!!");
+         }
+         return(status);   
+      }
+      else  //We might just want to send the header (ex. END_BLOCK)
+      {
+         return(vpr::ReturnStatus::Succeed);
+      }
+      
+      /*if (bytes_written != mPacketLength)
+      {
+         std::cout << "Something is seriously wrong here!" << std::endl;
+         return(vpr::ReturnStatus::Fail);
+      }
+      return(vpr::ReturnStatus::Succeed);*/
    }
 
 }  // end namespace cluster

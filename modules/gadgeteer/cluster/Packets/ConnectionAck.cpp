@@ -166,32 +166,4 @@ namespace cluster
       << vprDEBUG_FLUSH;      
       */      
    }
-   
-   bool ConnectionAck::action(ClusterNode* node)
-   {
-      // - If Ack is TRUE
-      //   - Set isConnected on current node
-      //   - Save all interesting data on ClusterNode
-      //     - Remote ManagerID (etc.)
-      if (node == NULL)
-      {
-         return false;
-      }
-
-      if ( mAck )
-      {
-         //node->setConnected(ClusterNode::CONNECTED);
-         node->setConnected(ClusterNode::NEWCONNECTION);
-         node->setHostname(mHostname);
-         node->setRemoteManagerId(mManagerId);
-      }
-      else
-      {
-         //node->setConnected(ClusterNode::DISCONNECTED);
-      }
-      
-      return true;
-   }
-
-
 }   // end namespace gadget

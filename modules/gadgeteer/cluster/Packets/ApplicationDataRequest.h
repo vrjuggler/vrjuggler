@@ -82,8 +82,6 @@ public:
    }
    vpr::GUID getId() { return mId; }
    
-   virtual bool action(ClusterNode* node);
-
 private:
    vpr::GUID   mId;
 };

@@ -137,11 +137,13 @@ namespace cluster
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
             "ClusterBarrierTCP Barrier Method: TCP/IP Sockets \n" << vprDEBUG_FLUSH;
          break;
+      /* NOT USED ANYMORE
       case 2:
          mBarrier = new ClusterBarrierSerial;
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
             "ClusterBarrierSerial Barrier Method: TCP/IP Sockets & Serial Port \n" << vprDEBUG_FLUSH;
          break;
+      */
       case 3:
 #ifndef VPR_OS_Win32
          mBarrier = new ClusterBarrierWired;

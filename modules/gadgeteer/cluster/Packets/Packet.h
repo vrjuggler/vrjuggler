@@ -62,34 +62,64 @@ public:
    Packet(std::vector<vpr::Uint8>* data);
    
    /**
-    * Directly read the needed header data from socket(blocking), and parse the header 
+    * Free all memory used by internal data.
     */
-//   Packet(vpr::SocketStream* stream);
-
    virtual ~Packet();
-   
+
+   /**
+    * Construct a packet using the given packet header and socketstream.
+    */
    void recv(Header* packet_head, vpr::SocketStream* stream) throw(cluster::ClusterException);
-   virtual vpr::ReturnStatus send(vpr::SocketStream* socket);
+   
+   /**
+    * Dump all internal data to the screen.
+    */
    void dump();
 
+   /**
+    * Get the type of this packet.
+    */
    vpr::Uint16 getPacketType();
    
-   virtual bool action(ClusterNode* node) = 0;
+   /**
+    * Print the internal data in a readable format.
+    */
    virtual void printData(int debug_level) = 0;
    
+   /**
+    * Return the vpr::PacketReader object used to retrieve data from the packet.
+    */
    vpr::ObjectReader* getPacketReader()
    {
       return mPacketReader;
    }
+
+   /**
+    * Get the GUID of the Plugin that should handle this packet.
+    */
    vpr::GUID getPluginId() { return mPluginId; }
-protected:
-   Header* mHeader;
    
-   // Needed by all derived classes
-   vpr::BufferObjectReader* mPacketReader;	
-   vpr::BufferObjectWriter* mPacketWriter;
-   std::vector<vpr::Uint8> mData;
-   vpr::GUID mPluginId;
+   /**
+    * Get the header for this packet.
+    */
+   Header* getHeader()
+   {
+      return mHeader;
+   }
+
+   /**
+    * Get a std::vector containing all internal data.
+    */
+   std::vector<vpr::Uint8>* getData()
+   {
+      return &mData;
+   }
+protected:
+   Header* mHeader;                          /**< Header used to specify the type/size of this packet.*/
+   vpr::BufferObjectReader* mPacketReader;	 /**< ObjectReader that is used to parse all data. */
+   vpr::BufferObjectWriter* mPacketWriter;	 /**< ObjectWriter that is used to serialize all data. */
+   std::vector<vpr::Uint8> mData;            /**< std::vector which contains all internal data */
+   vpr::GUID mPluginId;                      /**< GUID that specifies which plugin is responcsible for this packet */
 };
 }
 

@@ -31,9 +31,14 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 //#include <gadget/gadgetConfig.h>
+#include <gadget/Util/Debug.h>
+
+#include <vpr/IO/BufferObjectReader.h>
+#include <vpr/IO/BufferObjectWriter.h>
+#include <vpr/IO/Socket/SocketStream.h>
+
 #include <cluster/Packets/Header.h>
 #include <cluster/Packets/Packet.h>
-#include <gadget/Util/Debug.h>
 
 
 namespace cluster
@@ -93,55 +98,6 @@ namespace cluster
             << "ERROR: SocketSteam is NULL\n" << clrRESET << vprDEBUG_FLUSH;
          throw cluster::ClusterException("Packet::recv() - SocketStream is NULL!");
       }
-   }
-   
-
-   vpr::ReturnStatus Packet::send(vpr::SocketStream* socket)
-   {
-      // -Send header data
-      // -Send packet data
-
-      if (socket == NULL)
-      {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED) 
-            << "ERROR: SocketSteam is NULL\n" << clrRESET << vprDEBUG_FLUSH;
-         throw cluster::ClusterException("Packet::send() - SocketStream is NULL!");
-      }
-      
-      if (!mHeader->send(socket).success())
-      {
-         socket->close();
-         delete socket;
-         socket = NULL;
-         throw cluster::ClusterException("Packet::recv() - Sending Header Data failed!");
-      }
-      
-      
-      vpr::Uint32 bytes_written;
-      
-      if(mHeader->getPacketLength() != Header::RIM_PACKET_HEAD_SIZE)
-      {
-         vpr::ReturnStatus status = socket->send(mData,mHeader->getPacketLength()-Header::RIM_PACKET_HEAD_SIZE,bytes_written);
-         if (!status.success())
-         {
-            socket->close();
-            delete socket;
-            socket = NULL;
-            throw cluster::ClusterException("Packet::recv() - Sending Packet Data failed!!");
-         }
-         return(status);   
-      }
-      else  //We might just want to send the header (ex. END_BLOCK)
-      {
-         return(vpr::ReturnStatus::Succeed);
-      }
-      
-      /*if (bytes_written != mPacketLength)
-      {
-         std::cout << "Something is seriously wrong here!" << std::endl;
-         return(vpr::ReturnStatus::Fail);
-      }
-      return(vpr::ReturnStatus::Succeed);*/
    }
    
    void Packet::dump()

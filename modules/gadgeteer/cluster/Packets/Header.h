@@ -90,7 +90,6 @@ public:
    void parseHeader();
    vpr::ReturnStatus send(vpr::SocketStream* socket);
    void dump();
-    //virtual bool action(ClusterNode* node);
 
    vpr::Uint16 getRIMCode() { return mRIMCode; }
    vpr::Uint16 getPacketType() { return mPacketType; }

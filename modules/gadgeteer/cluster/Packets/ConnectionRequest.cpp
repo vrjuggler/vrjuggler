@@ -156,32 +156,4 @@ namespace cluster
       << vprDEBUG_FLUSH;      
       */
    }
-   
-   bool ConnectionRequest::action(ClusterNode* node)
-   {
-      // - Check if ClusterNode already exists
-      //   - If true delete old one (In case the other end has lost the connection)
-      // - Create a ClusterNode
-      //   -(Set isConnected on new node)
-      // - Send a Connection_Ack
-
-      // MUST ADD ANOTHER FUNCTION HERE SINCE A CLUSTER NODE IS NOT CALLING THIS
-      // RIM GETS THIS FROM LISTNING
-      // We could make the RIM responsible for creating the new ClusterNode when
-      // it receives a network connection then all we need to do is:
-      //   - Save remote ManagerId
-      if (node == NULL)
-      {
-         return false;
-      }
-
-      node->setHostname(mHostname);
-      node->setPort(mPort);
-      node->setRemoteManagerId(mManagerId);
-      // Does not do anything here since it all happens in the acceptLoop
-      //node->setConnected(true);
-      
-      return true;
-   }
-
 }   // end namespace gadget

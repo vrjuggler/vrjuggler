@@ -86,9 +86,6 @@ public:
    std::string getHostname() { return mHostname; }
    vpr::Uint16 getPort() { return mPort; }
    std::string getManagerId() { return mManagerId; }
-
-   virtual bool action(ClusterNode* node);
-
 private:
    std::string mHostname;
    vpr::Uint16 mPort;      // Do not need

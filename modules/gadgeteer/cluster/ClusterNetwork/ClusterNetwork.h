@@ -56,6 +56,7 @@ namespace cluster
 {
 
 class ClusterNode;
+class Packet;
 
 class GADGET_CLASS_API ClusterNetwork : public jccl::ConfigChunkHandler
 {
@@ -63,6 +64,8 @@ class GADGET_CLASS_API ClusterNetwork : public jccl::ConfigChunkHandler
 public:
    ClusterNetwork();
    virtual ~ClusterNetwork();
+
+   void handlePacket(Packet* packet, ClusterNode* node);
      
    bool isClusterNetworkReady();
 

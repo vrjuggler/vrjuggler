@@ -99,9 +99,6 @@ public:
    
    //
    // =============== Packet Specific =================
-
-   virtual bool action(ClusterNode* node);
-
 private:
    // =============== Packet Specific =================
    //
