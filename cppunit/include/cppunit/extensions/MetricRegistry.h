@@ -182,7 +182,7 @@ protected:
          {
             mMetricMap[key] = value;
 
-            std::cout << "[r] metric: " << key << " -- " << value << std::endl;
+            //std::cout << "[r] metric: " << key << " -- " << value << std::endl;
          }
 
          while( isspace(input_file.peek()) && (input_file))
@@ -207,7 +207,7 @@ protected:
       {
          output_file << std::setw(50) << (*i).first << "    " << (*i).second << "\n";
 
-         std::cout << "[w] metric: " << (*i).first << " -- " << (*i).second << std::endl;
+         //std::cout << "[w] metric: " << (*i).first << " -- " << (*i).second << std::endl;
       }
 
       output_file.close();
