@@ -41,6 +41,9 @@
 
 #include <vpr/vprConfig.h>
 
+#include <uuid/sysdep.h>
+#include <uuid/uuid.h>
+
 #include <stdio.h>
 #include <string.h>
 
@@ -73,7 +76,7 @@ std::string GUID::toString () const
 
 bool GUID::operator== (const GUID& guid) const
 {
-   return (uuid_compare(&m_guid.leach, &guid.m_guid.leach) == 0 ? true :
+   return (uuid_compare( (uuid_t*)(&m_guid.standard), (uuid_t*)(&guid.m_guid.standard) ) == 0 ? true :
                                                                   false);
 }
 
@@ -83,7 +86,7 @@ bool GUID::operator== (const GUID& guid) const
 
 GUID::GUID ()
 {
-   uuid_create(&m_guid.leach);
+   uuid_create( (uuid_t*)(&m_guid.standard));
 }
 
 GUID::GUID (const struct vpr::GUID::StdGUID& guid)
@@ -111,7 +114,10 @@ GUID::GUID (const std::string& guid_string)
 
 GUID::GUID (const GUID& ns_guid, const std::string& name)
 {
-   uuid_create_from_name(&m_guid.leach, ns_guid.m_guid.leach,
+   uuid_t temp_ns_id = *((uuid_t*)(&ns_guid.m_guid.standard));    // nasty, but works
+   
+   uuid_create_from_name((uuid_t*)(&m_guid.standard), 
+                         temp_ns_id,
                          (void*) name.c_str(), name.length());
 }
 
