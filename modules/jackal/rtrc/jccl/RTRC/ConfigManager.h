@@ -96,16 +96,53 @@ class JCCL_CLASS_API ConfigManager
 public:
    struct PendingElement
    {
-      PendingElement() : mType(0)
+      PendingElement() : mType(ADD)
       {;}
 
-      enum { ADD=0, REMOVE=1};
-      unsigned mType;           // What type of element is it (ADD or REMOVE)
+      enum Type
+      {
+         ADD    = 0,  /**< Pending element is to be added to the active configuration. */
+         REMOVE = 1   /**< Pending element is to be removed from the active configuration. */
+      };
+
+      unsigned mType;           /**< What type of element is it (ADD or REMOVE) */
       ConfigElementPtr mElement;
    };
 
 
 public: // -- Query functions --- //
+
+   //@{
+   /** @name Query functions. */
+
+   /**
+    * Attempts to find a config element matching the given name in the active
+    * list.  If such an element is found, it is returned to the caller.  If
+    * not, an empty jccl::ConfigElementPtr is returned.
+    *
+    * @param elementName The name of the element to find.
+    */
+   jccl::ConfigElementPtr getElementFromActive(const std::string& elementName);
+
+   /**
+    * Attempts to find a config element matching the given name in the pending
+    * list.  If such an element is found, it is returned to the caller.  If
+    * not, an empty jccl::ConfigElementPtr is returned.
+    *
+    * @param elementName The name of the element to find.
+    */
+   jccl::ConfigElementPtr getElementFromPending(const std::string& elementName);
+
+   /**
+    * Attempts to find a config element matching the given name, first in the
+    * active list.  If the element is not found in the active list, the pending
+    * list is searched.  If an element with a matching name is found in either
+    * list, it is returned to the caller.  If not, an empty
+    * jccl::ConfigElementPtr is returned.
+    *
+    * @param elementName The name of the element to find.
+    */
+   jccl::ConfigElementPtr getElementNamed(const std::string& elementName);
 
    /** Checks if the named ConfigElement is in the active configuration.
     *  This locks the active list to do processing.
@@ -127,6 +164,20 @@ public: // -- Query functions --- //
     *  @note This should not be used often. Use this at your own risk.
     */
    bool isElementTypeInPendingList(const std::string& elementType);
+
+   /**
+    * Searches the active list for an element matching the given type.  If
+    * none is found, the pending list is searched.
+    *
+    * @param elementType The type of config element for which a search of the
+    *                    pending and active lists will be performed.
+    *
+    * @return true is returned if an element of the given type is found in
+    *         either the active or the pending list (in that order).  false is
+    *         returned if no such element is found in either list.
+    */
+   bool hasElementType(const std::string& elementType);
+   //@}
 
 public:   // ----- PENDING LIST ----- //
 
@@ -156,49 +207,12 @@ public:   // ----- PENDING LIST ----- //
     */
    void refreshPendingList();
 
-   /** Add the config elements in cfg to pending list as adds.
-    *  The pending list must not be (already) locked.
-    *  The config elements in cfg are copied.
-    *
-    *  @post Config elements are copied out of configuration, so the memory
-    *        pointed to by cfg may be deleted by calling method.
-    */
-   void addPendingAdds(Configuration* cfg);
-
-   /** Add the config elements in db to pending list as removes.
-    *  The pending list must not be (already) locked.
-    *  The config elements in cfg are copied.
-    */
-   void addPendingRemoves(Configuration* cfg);
-
-   /** Add an entry to the pending list.
-    *  The pending list must not be locked.
-    *  A copy of the pendingElement is placed on the pending list.
-    *
-    * @pre mPendingLock mutex must be locked.
-    */
-   void addPending(PendingElement& pendingElement);
-
    /** Erases an item from the pending list.
     *  The pending list must be locked && item must be in list.
     *  Item is invalid after this operation.
     */
    void removePending(std::list<PendingElement>::iterator item);
 
-private:
-   /** Checks if we need to check the pending list.
-    *  Checks if the pending list is "fresh" or if it should be marked
-    *  as "stale".  If the pending list has been checked several times
-    *  without changing at all, we can assume that the elements inside of
-    *  it cannot be processed by the application.
-    *  This is a utility function for attemptReconfiguration.
-    *  CONCURRENCY: concurrent.
-    *
-    *  @see attemptReconfiguration
-    */
-   bool pendingNeedsChecked();
-
-public:
    /** Checks to see if the Pending List is stale, meaning that the
     *  ConfigManager is not actively trying to configure anything
     *  right now.
@@ -243,11 +257,6 @@ public:
       return mPendingConfig.end();
    }
 
-   /** Print a copy of the pending list to vprDEBUG.
-    *  The caller of this method must have locked the pending list.
-    */
-   void debugDumpPending(int debug_level);
-
    /** Get the size of the pending list.
     *  CONCURRENCY: concurrent
     */
@@ -256,6 +265,42 @@ public:
       return mPendingConfig.size();
    }
    //@}
+
+private:
+   /** Add an entry to the pending list.
+    *  The pending list must not be locked.
+    *  A copy of the pendingElement is placed on the pending list.
+    *
+    * @pre mPendingLock mutex must be locked.
+    */
+   void addPending(PendingElement& pendingElement);
+
+   /** Print a copy of the pending list to vprDEBUG.
+    *  The caller of this method must have locked the pending list.
+    */
+   void debugDumpPending(int debug_level);
+
+   /** Checks if we need to check the pending list.
+    *  Checks if the pending list is "fresh" or if it should be marked
+    *  as "stale".  If the pending list has been checked several times
+    *  without changing at all, we can assume that the elements inside of
+    *  it cannot be processed by the application.
+    *  This is a utility function for attemptReconfiguration.
+    *  CONCURRENCY: concurrent.
+    *
+    *  @see attemptReconfiguration
+    */
+   bool pendingNeedsChecked();
+
+   /**
+    * Merges the contents of the incoming config element list to the
+    * pending list.
+    *
+    * @pre The pending list is not locked.
+    * @post Everything in the incoming list is moved to the pending list.
+    *       The incoming list is empty.
+    */
+   void mergeIncomingToPending();
 
 public:   // ----- ACTIVE LIST ----- //
    //@{
@@ -337,6 +382,27 @@ public:   // ----- ACTIVE LIST ----- //
    }
    //@}
 
+public:   // ----- INCOMING LIST ----- //
+   //@{
+   /** @name Incoming List accessors and manipulators. */
+
+   /**
+    * Adds all the config elements in the given Configuration object to the
+    * incoming list.  No modifications are made to the pending or active
+    * lists, so this method is safe for a ConfigElementHandler object to call
+    * when it needs to add config elements from its configAdd method.
+    *
+    * @post All the config elements in cfg are appended to mIncomingConfig.
+    */
+   void addConfigurationAdditions(jccl::Configuration* cfg);
+
+   void addConfigurationRemovals(jccl::Configuration* cfg);
+
+   void addConfigElement(jccl::ConfigElementPtr elt, PendingElement::Type t);
+
+   std::list<PendingElement>::size_type getNumIncoming();
+   //@}
+
 public:
    /** Scan the active list for items that don't have their dependencies
     *  filled.
@@ -349,16 +415,6 @@ public:
     *  @return The number of lost dependencies found.
     */
    int scanForLostDependencies();
-
-   /** Reset pending check count, so that pending list is made not stale.
-    *  Delay config from becoming stale.  ConfigManager must try to
-    *  config items in pending list again before the list can
-    *  become stale.
-    */
-   void delayStalePendingList()
-   {
-     mLastPendingSize = mPendingConfig.size() + 1;
-   }
 
    //@{
    /** @name Default dynamic reconfiguration handling code. */
@@ -391,13 +447,16 @@ private:
    vpr::Mutex                mPendingLock;   /**< Lock on pending list.      */
    vpr::Mutex                mActiveLock;    /**< Lock on active config list.*/
 
+   std::list<PendingElement> mIncomingConfig;
+   vpr::Mutex                mIncomingLock;
+
    /** List of objects that know how to handle configuration changes. */
    std::vector<ConfigElementHandler*> mElementHandlers;
 
    //@{
    /**
-    * The following variables are used to implement some logic
-    * that "stales" the pending list.
+    * @name Variables used to implement some logic that "stales" the pending
+    *       list.
     *
     * @see pendingNeedsChecked
     */
