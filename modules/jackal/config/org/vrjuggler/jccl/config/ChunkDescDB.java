@@ -310,34 +310,6 @@ public class ChunkDescDB {
 
 
 
-    public boolean read (ConfigStreamTokenizer st) {
-	String name;
-	ChunkDesc c;
-
-	try {
-	    while (true) {
-		st.nextToken();
-		if (st.sval.equalsIgnoreCase ("end"))
-		    return true;
-		if (!st.sval.equalsIgnoreCase("chunk"))
-		    throw new IOException();
-		st.nextToken();
-		name = st.sval;
-		//System.err.println ("Reading chunkDesc: " + name);
-		c = new ChunkDesc (name);
-		c.read(st);
-		add(c);
-	    }
-
-	}
-	catch (IOException io) {
-	    System.err.println ("IO Error in ChunkDescDB.read()");
-	    return false;
-	}
-    }
-
-
-
     public String toString () {
         return xmlRep();
     }

@@ -223,39 +223,6 @@ public class ChunkDesc implements Cloneable {
 
 
 
-    public boolean read (ConfigStreamTokenizer st) {
-        /* the first line of the description ("chunk name") has already been
-         * read. So, we need to read a series of property lines terminated
-         * with an "end"
-         */
-        String s;
-        PropertyDesc p;
-        try {
-            st.nextToken();
-            name = st.sval;
-            st.nextToken();
-            help = st.sval;
-            while (true) {
-                st.nextToken();
-                if (st.sval.equalsIgnoreCase ("end"))
-                    break;
-                else
-                    st.pushBack();
-                // else it's a property description.
-                p = new PropertyDesc (st);
-                if (p != null && p.getName() != null)
-                    if (!p.getName().equalsIgnoreCase("Name"))
-                        props.add (p);
-            }
-            return true;
-        }
-        catch (IOException io) {
-            System.err.println ("IOException in ChunkDesc read");
-            return false;
-        }   
-    }
-
-
     public String toString() {
         return xmlRep("");
     }

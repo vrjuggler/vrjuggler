@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.DataInputStream;
 import java.io.IOException;
-import VjConfig.ConfigStreamTokenizer;
 import VjConfig.ChunkDesc;
 
 
@@ -415,52 +414,6 @@ public class ConfigChunk {
 	}
 	return results;
     }
-
-
-
-    public boolean read (ConfigStreamTokenizer st) {
-	try {
-	    while (true) {
-		st.nextToken();
-		if (st.ttype == ConfigStreamTokenizer.TT_EOF)
-		    break;
-		if ((st.ttype != ConfigStreamTokenizer.TT_WORD) && 
-		    (st.ttype != '"'))
-		    continue;
-		if (st.sval.equalsIgnoreCase("end"))
-		    break;
-
-		/* begin reading property info out of s */
-		if (st.sval.equalsIgnoreCase("name")) {
-		    st.nextToken();
-		    if (st.ttype == '{') {
-			st.nextToken();
-			name = st.sval;
-			st.nextToken();
-		    }
-		    else
-			name = st.sval;
-		}
-		else {
-		    Property p = getPropertyFromToken(st.sval);
-		    if (p != null) {
-			p.read(st);
-		    }
-		    else {
-			System.err.println ("Error: ConfigChunk.Read() - no such property "
-					    + st.sval);
-		    }
-		}
-		/* finished reading property info from s */
-	    }
-            //validateEmbeddedChunkNames();
-	    return true;
-	}
-	catch (IOException io) {
-	    System.err.println ("IO Error in ConfigChunk.read()");
-	    return false;
-	}
-    }  
 
 
 
