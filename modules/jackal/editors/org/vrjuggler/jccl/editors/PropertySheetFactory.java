@@ -239,7 +239,7 @@ public class PropertySheetFactory extends PropertyComponent
     */
    private void addDeleteButton(PropertySheet sheet, ConfigContext ctx,
                                 ConfigElement elm, PropertyDefinition propDef,
-                                int row)
+                                int row, JComponent label, JComponent editor)
    {
       ClassLoader loader = getClass().getClassLoader();
       Icon remove_icon =
@@ -261,13 +261,20 @@ public class PropertySheetFactory extends PropertyComponent
          final ConfigContext temp_ctx = ctx;
          final ConfigElement temp_elm = elm;
 
+         // XXX: Having to store the label and the editor this way is really
+         // pathetic, but it is not clear how to acquire the component
+         // references that need to be removed when the "delete" button is
+         // clicked.  This is such a hack.
+         final JComponent saved_label  = label;
+         final JComponent saved_editor = editor;
+
          remove_button.addActionListener(new ActionListener()
          {
             public void actionPerformed(ActionEvent evt)
             {
                Component source = (Component) evt.getSource();
-               PropertyComponent temp = (PropertyComponent) source.getParent();
-               TableLayout tl = (TableLayout)temp.getLayout();
+               PropertyComponent sheet = (PropertyComponent) source.getParent();
+               TableLayout tl = (TableLayout) sheet.getLayout();
 
                // Get the row that this panel is in.
                TableLayoutConstraints tlc = tl.getConstraints(source);
@@ -277,11 +284,25 @@ public class PropertySheetFactory extends PropertyComponent
                int value_index = row - PropertySheet.VAR_LIST_VALUE_START_ROW;
                temp_elm.removeProperty(temp_string, value_index, temp_ctx);
 
-               temp.remove(source);
+               // The components in this row have to be removed from the
+               // container.
+               if ( saved_label != null )
+               {
+                  sheet.remove(saved_label);
+               }
+
+               if ( saved_editor != null )
+               {
+                  sheet.remove(saved_editor);
+               }
+
+               sheet.remove(source);
+
+               // Remove the row that is now empty from the layout.
                tl.deleteRow(row);
 
-               temp.revalidate();
-               temp.repaint();
+               sheet.revalidate();
+               sheet.repaint();
             }
          });
       }
@@ -320,7 +341,7 @@ public class PropertySheetFactory extends PropertyComponent
 
    public void addNormalEditor(PropertySheet sheet, ConfigContext ctx,
                                ConfigElement elm, Object value,
-                               PropertyDefinition propDef, String label,
+                               PropertyDefinition propDef, String labelText,
                                int row, int propValueIndex)
    {
       PropertyEditorPanel editor = new PropertyEditorPanel(ctx, value,
@@ -336,10 +357,10 @@ public class PropertySheetFactory extends PropertyComponent
                                     PropertySheet.EDITOR_COLUMN, row,
                                     TableLayout.FULL, TableLayout.FULL);
       sheet.add(editor, c);
-      sheet.add(new JLabel(label),
-                PropertySheet.LABEL_COLUMN + "," + row + ",F,F");
+      JLabel label = new JLabel(labelText);
+      sheet.add(label, PropertySheet.LABEL_COLUMN + "," + row + ",F,F");
 
-      addDeleteButton(sheet, ctx, elm, propDef, row);
+      addDeleteButton(sheet, ctx, elm, propDef, row, label, editor);
 
       revalidate();
       repaint();
@@ -364,7 +385,7 @@ public class PropertySheetFactory extends PropertyComponent
                                     TableLayout.FULL, TableLayout.FULL);
       sheet.add(editor_list, c);
 
-      addDeleteButton(sheet, ctx, elm, propDef, row);
+      addDeleteButton(sheet, ctx, elm, propDef, row, null, editor_list);
 
       revalidate();
       repaint();
