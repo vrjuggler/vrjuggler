@@ -104,6 +104,11 @@
 
 /* --- Macros ---- */
 
+/* Define this macro to replace calls to sleep(3) if it is not avialable. */
+#ifndef HAVE_SLEEP
+#   define sleep(x) (Sleep(x * 1000))        /* Win32-specific */
+#endif
+
 /* Define this macro to replace calls to usleep(3) if it is not avialable. */
 #ifndef HAVE_USLEEP
 #   define usleep(x) (Sleep(x / 1000))       /* Win32-specific */
