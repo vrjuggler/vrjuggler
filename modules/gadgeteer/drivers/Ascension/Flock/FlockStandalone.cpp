@@ -149,20 +149,28 @@ vpr::ReturnStatus FlockStandalone::openPort ()
    vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_CONFIG_LVL) << "====== Opening fob serial port: " << mPort << " =====\n" << vprDEBUG_FLUSH;
 
    mSerialPort->setOpenReadWrite();
-   //mSerialPort->setOpenBlocking();              // Open in blocking mode
+   mSerialPort->setOpenBlocking();              // Open in blocking mode
 
    if (mSerialPort->open().success() )
    {
-      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Resetting bird, then closing re-opening connection.\n" << vprDEBUG_FLUSH;
-      //mSerialPort->setRequestToSend(true);      // Reset the flock
-      vpr::System::msleep(200);
-      //mSerialPort->setRequestToSend(false);
-      // XXX: Add reset command here
-      mSerialPort->close();
-      vpr::System::msleep(400);
+      // Reset the port by opening it and then closing it
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Resetting bird port:\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) <<"   holding port open" << vprDEBUG_FLUSH;
+      for(unsigned i=0;i<5;++i)
+      {
+         vpr::System::msleep(40);
+         vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_LVL) << "." << vprDEBUG_FLUSH;
+      }
+      vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL) << " ok\n" << vprDEBUG_FLUSH;
 
-      //mSerialPort->setOpenReadWrite();
-     // mSerialPort->setOpenBlocking();              // Open in blocking mode
+      mSerialPort->close();
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) <<"   holding port closed" << vprDEBUG_FLUSH;
+      for(unsigned i=0;i<5;++i)
+      {
+         vpr::System::msleep(40);
+         vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_LVL) << "." << vprDEBUG_FLUSH;
+      }
+      vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL) << " ok\n" << vprDEBUG_FLUSH;
       
       // - Open the port for the last time
       //   - Set the port attributes to use
@@ -186,7 +194,26 @@ vpr::ReturnStatus FlockStandalone::openPort ()
          mSerialPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
          mSerialPort->setHardwareFlowControl(false);
          mSerialPort->setParityGeneration(false);       // No parity checking
-         mSerialPort->setRequestToSend(false);          // Lower the RTS bit otherwise bird is in reset mode
+         
+         // --- Reset the flock with RTS signal --- //
+         // - When RTS signal is high, bird is put into reset mode
+         // So, to reset it: put signal high, wait, put signal low, wait
+         // 1 second of wait seems to work best
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Resetting flock (using RTS signal)." << vprDEBUG_FLUSH;
+         mSerialPort->setRequestToSend(true);
+         for(unsigned i=0;i<5;++i)
+         {
+            vpr::System::msleep(200);
+            vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_LVL) << "." << vprDEBUG_FLUSH;
+         }
+         
+         mSerialPort->setRequestToSend(false);              // Set RTS low to allow the flock to start back up
+         for(unsigned i=0;i<5;++i)
+         {
+            vpr::System::msleep(200);
+            vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_LVL) << "." << vprDEBUG_FLUSH;
+         }
+         vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL) << " done.\n" << vprDEBUG_FLUSH;
 
          vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Port setup completed.\n" << vprDEBUG_FLUSH;
 
