@@ -57,7 +57,7 @@ namespace vpr {
 // Implementation site of the Selector_t bridge.
 // ----------------------------------------------------------------------------
 //!PUBLIC_API:
-class SelectorImplNSPR : public SelectorBase
+class VPR_CLASS_API SelectorImplNSPR : public SelectorBase
 {
 public:
    

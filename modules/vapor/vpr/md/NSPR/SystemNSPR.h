@@ -70,7 +70,7 @@ struct timezone {
 
 namespace vpr {
 
-class SystemNSPR 
+class VPR_CLASS_API SystemNSPR 
      : public SystemBase
 {
 public:
