@@ -36,7 +36,7 @@ VPATH		= @srcdir@:@srcdir@/common
 # Binary Interface (ABI) used.  For o32 binaries, -L/usr/lib is the
 # appropriate path.  For n32 binaries, use -L/usr/lib32.  For 64-bit binaries,
 # use -L/usr/lib64.
-EXTRA_LIBS	= $(GLUI_LIB) $(GLUT_LIB) @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_GL@
+EXTRA_LIBS	= $(GLUI_LIB) $(GLUT_LIB) -B dynamic @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_GL@
 
 TRACKER_CONFIG_OBJECTS = trackerConfig.@OBJ_FILE_SUFFIX@	\
                          sgGlutApp.@OBJ_FILE_SUFFIX@		\

@@ -38,6 +38,7 @@
 #include <Math/vjVec3.h>
 //#include <sgSeg.h>
 //#include <sgPlane.h>
+#include <GL/gl.h>
 class sgChan;
 
 /**
