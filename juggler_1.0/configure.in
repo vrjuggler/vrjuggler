@@ -104,6 +104,7 @@ AC_ARG_WITH(gcc,
             _use_gcc="$withval")
 
 dnl # Define the binary format.  Possible values are the following:
+dnl #     O32        - On IRIX, use old 32-bit mips2 binaries
 dnl #     N32_M3     - On IRIX, use N32 mips3 binaries
 dnl #     N32_M4     - On IRIX, use N32 mips4 binaries
 dnl #     64_M3      - On IRIX, use 64-bit mips3 binaries
@@ -113,7 +114,7 @@ dnl #     ALPHA      - On an Alpha running Digital UNIX, use COFF binaries
 dnl #     ELF_i386   - On an i386 OS (e.g., Linux/i386), use ELF binaries
 dnl #     WIN32_i386 - On an i386 Win32 OS, Linux), use Win32 binaries
 AC_ARG_WITH(abi,
-            [  --with-abi=<N32_M3|N32_M4|64_M3|64_M4|HP|ALPHA|ELF_i386|WIN32_i386>
+            [  --with-abi=<O32|N32_M3|N32_M4|64_M3|64_M4|HP|ALPHA|ELF_i386|WIN32_i386>
                           Define the Application Binary Interface to use],
             _abi_type="$withval")
 
@@ -286,6 +287,9 @@ case "x${_abi_type}" in
     xN32_M4)
         VJ_ABI_CFG('N32', 'mips4', '32', '-n32 -mips4')
         ;;
+    xO32)
+        VJ_ABI_CFG('O32', 'mips2', , '-o32 -mips2')
+        ;;
     xHP)
         VJ_ABI_CFG(HP, PA-RISC)
         ;;
@@ -372,6 +376,9 @@ case $target_os in
         elif test "$ABI" = "N32" ; then
             DSOREGFILE='/usr/lib32/so_locations'
             OPT_FLAGS='-O -OPT:Olimit=0'
+        elif test "$ABI" = "O32" ; then
+            DSOREGFILE='/usr/lib/so_locations'
+            OPT_FLAGS='-O -Olimit 0'
         fi
 
         AR='${CXX}'
@@ -1030,6 +1037,7 @@ else
 fi
 
 _LIBOPENGL=''
+_SYSTEM_OPENGL=''
 
 dnl # Test for the OpenGL library if the OpenGL API was enabled.
 if test "x${_enable_gl_api}" = "xyes" ; then
@@ -1143,6 +1151,12 @@ if test "x${_enable_gl_api}" = "xyes" ; then
             _LIBOPENGL="-l${MESA}GLU -l${MESA}GL -lX11 -lXext"
         else
             _LIBOPENGL='opengl32.lib glu32.lib'
+        fi
+
+        if test "$PLATFORM" = "IRIX" -a "$ABI" = "O32" ; then
+            _SYSTEM_OPENGL="-lmpc -lGLw ${_LIBOPENGL} -lfpe -lXm -lXt -lmalloc"
+        else
+            _SYSTEM_OPENGL="${_LIBOPENGL}"
         fi
     dnl # No OpenGL API files were added, so restore $INCLUDES and $LDFLAGS so
     dnl # that no OpenGL stuff in included in them.
@@ -1628,7 +1642,7 @@ if test "$OS_TYPE" = "UNIX" ; then
     APP_VJ_LIBS_PF="-lJuggler_pf"
     APP_VJ_LIBS_UTILS="-lJuggler_utils"
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
-    APP_EXTRA_LIBS_GL="${_LIBOPENGL}"
+    APP_EXTRA_LIBS_GL="${_SYSTEM_OPENGL}"
     APP_EXTRA_LIBS_PF="${_PFOGLLIB}"
 elif test "$OS_TYPE" = "Win32" ; then
     APP_VJ_LIBS_BASIC="-link -libpath:\$(VJ_BASE_DIR)/lib/debug Juggler.lib"
@@ -1638,7 +1652,7 @@ elif test "$OS_TYPE" = "Win32" ; then
     APP_VJ_LIBS_PF='Juggler_pf.lib'
     APP_VJ_LIBS_UTILS='Juggler_utils.lib'
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
-    APP_EXTRA_LIBS_GL="${_LIBOPENGL}"
+    APP_EXTRA_LIBS_GL="${_SYSTEM_OPENGL}"
     APP_EXTRA_LIBS_PF="${_PFOGLLIB}"
 fi
 
@@ -1853,12 +1867,19 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           Performance/Makefile SharedMem/Makefile Sound/Makefile
           Sound/aw/Makefile Sound/pf/Makefile Sound/sl/Makefile Sync/Makefile
           Threads/Makefile Utils/Makefile
-          test/Makefile test/CfgTest/Makefile test/GLWindow/Makefile
-          test/Math/Makefile test/Matrix/Makefile test/Performance/Makefile
-          test/Performance/analyzer/Makefile
-          test/Performance/perfdatabuffer-test/Makefile test/Quat/Makefile
-          test/Sync/Makefile test/input/Makefile
-          test/testDynamicCastSTL/Makefile test/threads/Makefile
+          test/old/Makefile 
+          test/old/CfgTest/Makefile 
+          test/old/GLWindow/Makefile
+          test/old/Math/Makefile 
+          test/old/Matrix/Makefile 
+          test/old/Performance/Makefile
+          test/old/Performance/analyzer/Makefile
+          test/old/Performance/perfdatabuffer-test/Makefile 
+          test/old/Quat/Makefile
+          test/old/Sync/Makefile 
+          test/old/input/Makefile
+          test/old/testDynamicCastSTL/Makefile 
+          test/old/threads/Makefile
           samples/Makefile samples/ogl/Makefile samples/ogl/combo/Makefile
           samples/ogl/cubes/Makefile samples/ogl/glove/Makefile
           samples/ogl/digitalGlove/Makefile samples/ogl/simpleGlove/Makefile
@@ -1869,6 +1890,11 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           release/mtree/VJ.data.dist release/mtree/VJ.include.dist
           release/mtree/VJ.install.dist release/mtree/VJ.samples.dist
           release/mtree/VJ.test.dist release/mtree/VJ.tools.dist
+          test/Makefile
+          test/mk/mk.defs
+          test/mk/mk.objs
+          test/mk/mk.depend
+          test/mk/mk.hosttype
           VARS.pl)
 
 cat <<BUILD_INFO
