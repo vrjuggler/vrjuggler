@@ -31,12 +31,18 @@ public:
 protected:
    void drawOverlayText();
 
+   void drawFrameRateGraph();
+
 public:
    std::deque<float>    mFrameTimes;      /**< Used to track most recent set of frame times. */
    vpr::Interval        mLastUpdateTime;  /**< Time of the last update. */
    float                mFrameRate;       /**< Running inst average frame rate. */
 
    std::stringstream    mOverlayTextStream;  /**< Text to write out each frame. */
+
+   std::deque<float>    mFrameRateHistory;
+   unsigned             mNumTrackedFrames;   /**< Number of frame rates to keep. */
+   float                mMaxFrameRate;
 };
 
 #endif
