@@ -44,7 +44,10 @@
  * This is the "human-readable" JCCL version _string_.  It is of the form
  * <major>.<minor>.<days since last major release>.
  */
-#define JCCL_VERSION @VER_STRING@
+namespace jccl
+{
+   const char* JCCL_VERSION  = @VER_STRING@;
+}
 
 
 #endif	/* _JCCL_PARAM_H_ */
