@@ -40,7 +40,6 @@ import javax.swing.*;
 import javax.swing.border.*;
 import info.clearthought.layout.*;
 import org.vrjuggler.jccl.config.*;
-import org.vrjuggler.jccl.config.event.ConfigElementEvent;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 
 
@@ -81,8 +80,81 @@ public class SurfaceViewportCreateDialog
          mUnitsComboBox.addItem(((UnitConversion) i.next()).name);
       }
 
-      mUnitsComboBox.setSelectedIndex(2);
+      // If we were given nothing for default input values, then we set up
+      // the physical units to be in feet for general convenience (at least
+      // for those of us in the United States).
+      if ( elt == null )
+      {
+         mUnitsComboBox.setSelectedIndex(2);
+      }
+      // For input coming in through a config element, all units will be in
+      // meters.  We will not attempt to guess what units the user would
+      // prefer.
+      else
+      {
+         mUnitsComboBox.setSelectedIndex(0);
 
+         float[] ll_corner = new float[3], lr_corner = new float[3],
+                 ul_corner = new float[3];
+         ll_corner[0] = ((Number) mViewportElement.getProperty("lower_left_corner", 0)).floatValue();
+         ll_corner[1] = ((Number) mViewportElement.getProperty("lower_left_corner", 1)).floatValue();
+         ll_corner[2] = ((Number) mViewportElement.getProperty("lower_left_corner", 2)).floatValue();
+         lr_corner[0] = ((Number) mViewportElement.getProperty("lower_right_corner", 0)).floatValue();
+         lr_corner[1] = ((Number) mViewportElement.getProperty("lower_right_corner", 1)).floatValue();
+         lr_corner[2] = ((Number) mViewportElement.getProperty("lower_right_corner", 2)).floatValue();
+         ul_corner[0] = ((Number) mViewportElement.getProperty("upper_left_corner", 0)).floatValue();
+         ul_corner[1] = ((Number) mViewportElement.getProperty("upper_left_corner", 1)).floatValue();
+         ul_corner[2] = ((Number) mViewportElement.getProperty("upper_left_corner", 2)).floatValue();
+
+         float wall_width, wall_height;
+
+         if ( ll_corner[0] == lr_corner[0] )
+         {
+            mPlaneChooser.setSelectedIndex(YZ_PLANE);
+            wall_width  = ll_corner[2] - lr_corner[2];
+            wall_height = ul_corner[1] - ll_corner[1];
+         }
+         else if ( ll_corner[2] == lr_corner[2] )
+         {
+            mPlaneChooser.setSelectedIndex(XY_PLANE);
+            wall_width  = lr_corner[0] - ll_corner[0];
+            wall_height = ul_corner[1] - ll_corner[1];
+         }
+         else if ( ll_corner[1] == ul_corner [1] )
+         {
+            mPlaneChooser.setSelectedIndex(XZ_PLANE);
+            wall_width  = lr_corner[0] - ll_corner[0];
+            wall_height = ll_corner[2] - lr_corner[2];
+         }
+         else
+         {
+            mPlaneChooser.setSelectedIndex(CUSTOM_PLANE);
+
+            float x_diff = lr_corner[0] - ll_corner[0];
+            float y_diff = lr_corner[1] - ll_corner[1];
+            float z_diff = lr_corner[2] - ll_corner[2];
+            float len_sq = x_diff * x_diff + y_diff * y_diff + z_diff * z_diff;
+            wall_width = (float) Math.sqrt(len_sq);
+
+            x_diff = ul_corner[0] - ll_corner[0];
+            y_diff = ul_corner[1] - ll_corner[1];
+            z_diff = ul_corner[2] - ll_corner[2];
+            float width_sq = x_diff * x_diff + y_diff * y_diff + z_diff * z_diff;
+            wall_height = (float) Math.sqrt(width_sq);
+
+            // XXX: At this point, there needs to be code that figures out the
+            // rotational angles for the custom-defined plane.  Those angles
+            // then need to go into the text fields.
+         }
+
+         mCornerXField.setValue(new Float(ll_corner[0]));
+         mCornerYField.setValue(new Float(ll_corner[1]));
+         mCornerZField.setValue(new Float(ll_corner[2]));
+         mWallWidthField.setValue(new Float(wall_width));
+         mWallHeightField.setValue(new Float(wall_height));
+      }
+
+      validateUserInput();
       this.pack();
    }
 
@@ -309,29 +381,29 @@ public class SurfaceViewportCreateDialog
       mCustomPlaneZField.setHorizontalAlignment(SwingConstants.TRAILING);
       jLabel1.setText("(");
       mCornerXField.setMinimumSize(new Dimension(35, 19));
-      mCornerXField.setPreferredSize(new Dimension(35, 19));
+      mCornerXField.setPreferredSize(new Dimension(60, 19));
       mCornerXField.setToolTipText("X-coordinate for the surface corner");
       mCornerXField.setHorizontalAlignment(SwingConstants.TRAILING);
       jLabel2.setText(",");
       mCornerYField.setMinimumSize(new Dimension(35, 19));
-      mCornerYField.setPreferredSize(new Dimension(35, 19));
+      mCornerYField.setPreferredSize(new Dimension(60, 19));
       mCornerYField.setToolTipText("Y-coordinate for the surface corner");
       mCornerYField.setHorizontalAlignment(SwingConstants.TRAILING);
       jLabel3.setText(",");
       mCornerZField.setMinimumSize(new Dimension(35, 19));
-      mCornerZField.setPreferredSize(new Dimension(35, 19));
+      mCornerZField.setPreferredSize(new Dimension(60, 19));
       mCornerZField.setToolTipText("Z-coordinate for the surface corner");
       mCornerZField.setHorizontalAlignment(SwingConstants.TRAILING);
       jLabel4.setText(")");
       mDimensionsLabel.setLabelFor(mDimensionsPanel);
       mDimensionsLabel.setText("Surface Dimensions");
       mWallWidthField.setMinimumSize(new Dimension(40, 19));
-      mWallWidthField.setPreferredSize(new Dimension(40, 19));
+      mWallWidthField.setPreferredSize(new Dimension(60, 19));
       mWallWidthField.addPropertyChangeListener(new SurfaceViewportCreateDialog_mWallWidthField_propertyChangeAdapter(this));
       mWallWidthField.setHorizontalAlignment(SwingConstants.TRAILING);
       mDimensionsXLabel.setText("\u00d7");
       mWallHeightField.setMinimumSize(new Dimension(40, 19));
-      mWallHeightField.setPreferredSize(new Dimension(40, 19));
+      mWallHeightField.setPreferredSize(new Dimension(60, 19));
       mWallHeightField.addPropertyChangeListener(new SurfaceViewportCreateDialog_mWallHeightField_propertyChangeAdapter(this));
       mCornerLabel.setHorizontalAlignment(SwingConstants.CENTER);
       mCornerLabel.setHorizontalTextPosition(SwingConstants.LEADING);
