@@ -78,7 +78,7 @@ public:
     * Return the transform matrix of the component tip of the specified component
     */
    gmtl::Matrix44f getTipTransform(GloveData::GloveComponent component, int devNum);
-   
+
    /**
     * Returns the transform matrix of the specified joint in world space.
     */
@@ -86,7 +86,7 @@ public:
 
    /** Returns a copy of the glove data struct. */
    GloveData getGloveData(int devNum);
-   
+
    /* Buffer functions */
 
    /** Helper method to add a sample to the sample buffers.
@@ -116,14 +116,14 @@ public:
       return mGloveSamples.stableBuffer();
    }
 
-   virtual std::string getBaseType()
+   virtual std::string getInputTypeName()
    {
       return std::string("Glove");
    }
 
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
- 
+
    /** Utility function to generate GloveData from DigitalData */
    std::vector<GloveData> getGloveDataFromDigitalData(const std::vector<DigitalData>& digitalData);
 

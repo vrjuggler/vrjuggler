@@ -141,7 +141,7 @@ namespace gadget
       {
          return mDigitalSamples.stableBuffer();
       }
-      virtual std::string getBaseType()
+      virtual std::string getInputTypeName()
       {
          return std::string("SpeechRecogDigital");
       }

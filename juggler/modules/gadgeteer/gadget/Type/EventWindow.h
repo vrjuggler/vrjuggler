@@ -76,7 +76,7 @@ public:
       /* Do nothing. */ ;
    }
 
-   virtual std::string getBaseType();
+   virtual std::string getInputTypeName();
 
    /**
     * Write both mCurKeys and mCurEventQueueLock to a stream using the given ObjectWriter.

@@ -69,9 +69,9 @@ bool Glove::config(jccl::ConfigElementPtr e)
    mGlovePositions.resize(positionProxyNames.size());
    unsigned int i;
    for(i=0;i<positionProxyNames.size();i++)
-	{
+   {
       if(positionProxyNames[i]!="")
-		{
+      {
          mGlovePositions[i].init(positionProxyNames[i]);
       }
    }
@@ -83,7 +83,7 @@ vpr::ReturnStatus Glove::writeObject(vpr::ObjectWriter* writer)
 {
    SampleBuffer_t::buffer_t& stable_buffer = mGloveSamples.stableBuffer();
 
-   writer->beginTag(Glove::getBaseType());
+   writer->beginTag(Glove::getInputTypeName());
    writer->beginAttribute(gadget::tokens::DataTypeAttrib);
       writer->writeUint16(MSG_DATA_GLOVE);                               // Write out the data type so that we can assert if reading in wrong place
    writer->endAttribute();
@@ -139,7 +139,7 @@ vpr::ReturnStatus Glove::readObject(vpr::ObjectReader* reader)
    vprASSERT(reader->attribExists("rim.timestamp.delta"));
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
 
-   reader->beginTag(Glove::getBaseType());
+   reader->beginTag(Glove::getInputTypeName());
    reader->beginAttribute(gadget::tokens::DataTypeAttrib);
       vpr::Uint16 temp = reader->readUint16();
    reader->endAttribute();
@@ -307,7 +307,7 @@ std::vector<GloveData> Glove::getGloveDataFromDigitalData(const std::vector<Digi
    {
       for(unsigned int j=0;j<GloveData::NUM_COMPONENTS-1;j++)
       {
-		   // Use funky indexing here to access the correct digitalData
+         // Use funky indexing here to access the correct digitalData
          if( digitalData[i*(GloveData::NUM_COMPONENTS-1)+j].getDigital() == 1)
          {
             for(unsigned int k=0;k<GloveData::NUM_JOINTS;k++)
@@ -324,7 +324,7 @@ std::vector<GloveData> Glove::getGloveDataFromDigitalData(const std::vector<Digi
          }
       }
    }
-   
+
    gloveData[0].calcXforms();
    gloveData[1].calcXforms();
 
