@@ -51,7 +51,7 @@ namespace vpr
 {
 
 /**
- * Common base for all selectors and imp's
+ * Common base for platform specific error management
  */
 class VPR_CLASS_API ErrorBase
 {

@@ -53,10 +53,6 @@ namespace vpr
 
 /** NSPR Implementation of ---> Cross-platform Error reporting class.
 *
-* A selector is used to wait on a set of Handles untils any of the
-* events occur that the user is interested in.
-*
-* Implementation site of the Selector_t bridge.
 */
 class VPR_CLASS_API ErrorImplNSPR : public ErrorBase
 {
