@@ -27,5 +27,7 @@ int main(int argc, char* argv[])
       //- Load user local config
 
    while(1)
-   {;}
+   {
+       usleep (250000);
+   }
 }

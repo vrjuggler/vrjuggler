@@ -39,7 +39,8 @@ int main(int argc, char* argv[])
       sleep(2);
       kernel->setApplication(application);
       */
+       usleep (250000);
       
-      sched_yield();
+       //sched_yield();
    }
 }
