@@ -60,7 +60,7 @@ protected:
    friend class snx::Singleton<sonix>;
 
    //: default constructor
-   sonix() : ISonix(), mImplementation( NULL )
+   sonix() : Isonix(), mImplementation( NULL )
    {
    }
 
