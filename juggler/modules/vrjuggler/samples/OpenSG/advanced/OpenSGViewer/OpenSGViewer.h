@@ -98,6 +98,10 @@ public:
     virtual OSG::NodePtr getSceneRoot()
     { return mSceneRoot; }
 
+    /** Return the root of the firtual world */
+    virtual OSG::NodePtr getWorldRoot()
+    { return mWorldRoot; }
+
     virtual void draw();
 
     virtual void contextInit();
@@ -149,8 +153,8 @@ public:     // RECONFIG STUFF
 
     User*               mUser;            /**< The user that this is a viewer for */
 
-    OSG::NodePtr        mCurSelectedNode; /**< Currently selected node */
     std::vector<OSG::NodePtr> mSelectableNodes; /**< List of selectable nodes */
+    SelectionMethod*          mSelectionMethod; /**< The current selection method being used */
 
     //   mSceneRoot:[mSceneTransform]
     //         |

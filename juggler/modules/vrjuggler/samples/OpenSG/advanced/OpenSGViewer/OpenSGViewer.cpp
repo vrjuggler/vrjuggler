@@ -59,6 +59,11 @@ void OpenSGViewer::init()
 {
    vrj::OpenSGApp::init();      // Call base class init
    mUser->init();
+
+   // Setup the selection and manipulation methods
+   mSelectionMethod = new HoverSelectionMethod;
+
+   mSelectionMethod->setViewer(this);
 }
 
 /** Called once per context at context creation */
@@ -82,6 +87,9 @@ void OpenSGViewer::preFrame()
    osg::beginEditCP(mSceneTransform); 
       mSceneTransform->getMatrix().setValue( mUser->viewPlatform().getTransform_platMvirt().getData() );
    osg::endEditCP(mSceneTransform);
+
+   // Update manipulation
+   mSelectionMethod->updateSelection();
 }
 
 /** Initialize GL state. Hold over from regular OGL apps */
