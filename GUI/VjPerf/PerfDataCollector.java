@@ -22,10 +22,33 @@ public class PerfDataCollector {
     public double sums[];
     int prevplace = -1;
     double prevval = 0.0;
-    DataLine dl;
+    DataLine dl = null;
     int place;
     ConfigChunk infochunk;
     int maxdatalines;
+
+
+    public void write (DataOutputStream out) throws IOException {
+	out.writeBytes ("PerfData1 \"" + name + "\" " + num + "\n");
+	ListIterator li = datalines.listIterator(0);
+	while (li.hasNext()) {
+	    DataLine dl = (DataLine)li.next();
+	    int i = 0;
+	    while ((i < num) && Double.isNaN(dl.vals[i]))
+		i++;
+	    while ((i < num) && !Double.isNaN(dl.vals[i])) {
+		if (dl.vals[i] > 0.0f)
+		    out.writeBytes (" " + i + "  " + dl.vals[i] + "\n");
+		i++;
+	    }
+	    if (i != num) {
+		out.writeBytes ("-1 " + dl.numlost + "\n");
+		out.writeBytes ("PerfData1 \"" + name + "\" " + num + "\n");
+	    }
+	}
+	out.writeBytes ("-1 0\n");
+    }
+
 
     private void addDataLine (DataLine dl) {
 	int i;

@@ -12,11 +12,21 @@ public class PerfDataCollection {
     public Vector collectors;  // v of PerfDataCollector
     public Vector listeners; // actionListeners
     public int max_samples;
+    public File file;
+
+    public void write (DataOutputStream out) throws IOException {
+	for (int i = 0; i < collectors.size(); i++) {
+	    PerfDataCollector col = (PerfDataCollector)collectors.elementAt(i);
+	    col.write (out);
+	}
+    }
+
 
     public PerfDataCollection () {
 	collectors = new Vector();
 	listeners = new Vector();
 	max_samples = 500;
+	file = new File(System.getProperty("user.dir",""), "perfdata");
     }
 
 

@@ -132,6 +132,7 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
 		gblayout.setConstraints (b, gbc);
 		panel.add(b);
 		b = anomalies_buttons[j] = new AnomaliesButton (col, j);
+		b.setEnabled(false);
 		b.addActionListener (PerfAnalyzerPanel.this);
 		b.setMargin(insets);
 		gbc.gridwidth = gbc.REMAINDER;
@@ -186,7 +187,7 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
     }
 
 
-    JComboBox  collection_choice;
+//    JComboBox  collection_choice;
     JComboBox  display_choice;
     JComboBox  max_samples_box;
     JTextField preskip_box;
@@ -246,7 +247,7 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
 	epanel.add (load_button);
 	load_button.addActionListener (this);
 
-	epanel.add (savecontents_button = new JButton ("Save Contents"));
+	epanel.add (savecontents_button = new JButton ("Save Data"));
 	savecontents_button.addActionListener (this);
 
 //  	print_button = new JButton ("Print");
@@ -277,8 +278,7 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
 
 	display_pane = new JScrollPane (data_panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-	setCollectionList();
-	setCurrentCollector (null);
+	//setCurrentCollector (null);
 
 	add (display_pane, "Center");
 
@@ -286,20 +286,20 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
 
 
 
-    public void setCurrentCollector (PerfDataCollector c) {
-	if (c == null) {
-	    current_collector = null;
-	    savecontents_button.setEnabled (false);
-	    //print_button.setEnabled (false);
-	    //print_all_button.setEnabled (false);
-	}
-	else {
-	    current_collector = c;
-	    savecontents_button.setEnabled (true);
-	    //print_button.setEnabled (true);
-	    print_all_button.setEnabled (true);
-	}
-    }
+//      public void setCurrentCollector (PerfDataCollector c) {
+//  	if (c == null) {
+//  	    current_collector = null;
+//  	    savecontents_button.setEnabled (false);
+//  	    //print_button.setEnabled (false);
+//  	    //print_all_button.setEnabled (false);
+//  	}
+//  	else {
+//  	    current_collector = c;
+//  	    savecontents_button.setEnabled (true);
+//  	    //print_button.setEnabled (true);
+//  	    print_all_button.setEnabled (true);
+//  	}
+//      }
 
 
 
@@ -334,15 +334,15 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
 	}
 	else if (e.getSource() == display_choice)
 	    refreshDisplay();
-	else if (e.getSource() == collection_choice) {
-	    Object o = collection_choice.getSelectedItem();
-	    if (o instanceof String)
-		setCurrentCollector (null);
-	    else 
-		setCurrentCollector ((PerfDataCollector)collection_choice.getSelectedItem());
-	    //current_collector = (PerfDataCollector)collection_choice.getSelectedItem();
-	    //refreshDisplay();
-	}
+//  	else if (e.getSource() == collection_choice) {
+//  	    Object o = collection_choice.getSelectedItem();
+//  	    if (o instanceof String)
+//  		setCurrentCollector (null);
+//  	    else 
+//  		setCurrentCollector ((PerfDataCollector)collection_choice.getSelectedItem());
+//  	    //current_collector = (PerfDataCollector)collection_choice.getSelectedItem();
+//  	    //refreshDisplay();
+//  	}
 	else if (e.getSource() == preskip_box) {
 	    preskip = Integer.parseInt (preskip_box.getText().trim());
 	    refreshDisplay();
@@ -352,13 +352,10 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
 	    refreshDisplay();
 	}
 	else if (e.getSource() == savecontents_button) {
-	    if (text_area != null) {
-		System.out.println (text_area.getText());
-	    }
+	    FileControl.savePerfDataFile (collection);
 	}
 	else if (e.getSource() == load_button) {
 	    String name = FileControl.loadNewPerfDataFile ("", true);
-	    setCollectionList();
 	    refreshDisplay();
 	}
 	else if (e.getSource() == print_button) {
@@ -397,18 +394,9 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
 	refreshDataPanel();
     }
 
-    public void setCollectionList() {
-//  	while (collection_choice.getItemCount() != 0) 
-//  	    collection_choice.removeItemAt(0);
-//  	//collection_choice.removeAllItems();
-//  	collection_choice.addItem ("None Selected");
-//  	for (int i = 0; i < collection.collectors.size(); i++) {
-//  	    collection_choice.addItem (collection.collectors.elementAt(i));
-//  	}
-    }
+
 
     public void refresh() {
-	setCollectionList();
 	refreshDisplay();
     }
 
