@@ -74,6 +74,7 @@ public:
       , mDirtyViewport(true)
       , in_stereo(false)
       , border(false)
+      , mHideMouse(false)
       , window_is_open(false)
       , window_width(0)
       , window_height(0)
@@ -284,6 +285,7 @@ protected:
    bool in_stereo;
 
    bool border;         /**<  Do we have a border? */
+   bool mHideMouse;     /**<  Should we hide the mouse pointer? */
    bool window_is_open; /**< Is the window open? */
    int  window_width, window_height;
    int  origin_x, origin_y;         /**< lower-left corner of window */

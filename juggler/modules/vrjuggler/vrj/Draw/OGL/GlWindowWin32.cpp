@@ -144,6 +144,10 @@ int GlWindowWin32::open()
       this->becomeEventWindowDevice();
    }
 
+   // If mHideMouse is true we must pass false to ShowCursor
+   ShowCursor( !mHideMouse );
+   
+
    return 1;
 }
 
