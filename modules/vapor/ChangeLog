@@ -1,6 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
-2003-08-31 allenb   Added interface to ObjectReader for resetting the reader
+2003-09-02 allenb   Fixed bug in XML Object reader where empty strings
+                    could not be read correctly.
+2003-09-01 allenb   Added interface to ObjectReader for resetting the reader
                     to the intial read state for another read pass.
                     NEW VERSION: 0.27.8
 2003-08-31 allenb   Refactored vprASSERT to print stacktrace.  Refined stack

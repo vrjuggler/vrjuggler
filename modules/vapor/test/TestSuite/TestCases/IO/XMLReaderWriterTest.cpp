@@ -3,6 +3,7 @@
 #include <vpr/IO/SerializableObject.h>
 
 #include <TestCases/IO/XMLReaderWriterTest.h>
+#include <fstream>
 
 
 namespace vprTest
@@ -19,6 +20,7 @@ void XMLReaderWriterTest::testBasicWriteRead()
    const double      data_double(1.2211975);
    const std::string data_string1("test string1");
    const std::string data_string2("test string2");
+   const std::string empty_string("");                      // Empty on purpose
    const bool        data_bool(true);
    std::string long_string("X");
    for(unsigned s=0;s<1500;s++)
@@ -32,6 +34,8 @@ void XMLReaderWriterTest::testBasicWriteRead()
    float       read_float;
    double      read_double;
    std::string read_string;
+   std::string read_empty_string("XXX");
+   std::string read_empty_string_attrib("XXX");
    std::string read_string_attrib;
    std::string read_long_string;
    bool        read_bool;
@@ -70,6 +74,12 @@ void XMLReaderWriterTest::testBasicWriteRead()
          xml_writer.endTag();
          xml_writer.writeString(data_string2);
          xml_writer.writeBool(data_bool);
+         xml_writer.beginTag("EmptyString");
+            xml_writer.beginAttribute("Empty");
+               xml_writer.writeString(empty_string);
+            xml_writer.endAttribute();
+            xml_writer.writeString(empty_string);
+         xml_writer.endTag();
          xml_writer.beginTag("DataLevel");
             xml_writer.writeString(long_string);
          xml_writer.endTag();
@@ -77,9 +87,15 @@ void XMLReaderWriterTest::testBasicWriteRead()
          xml_writer.endTag();
       xml_writer.endTag();
 
+      std::ofstream xml_out("XMLReaderWriterTest-testBasicWriteRead.out");
+      xml_writer.getRootNode()->save(xml_out);
+      xml_out.close();
+
+      /*
       std::cout << "------ Current data -----\n";
       xml_writer.getRootNode()->save(std::cout);
       std::cout << "------ End data -----\n";
+      */
 
       data_buffer = xml_writer.getData();
 
@@ -108,6 +124,12 @@ void XMLReaderWriterTest::testBasicWriteRead()
             xml_reader.endTag();
             xml_reader.readString(read_string);
             xml_reader.readBool(read_bool);
+            xml_reader.beginTag("EmptyString");
+               xml_reader.beginAttribute("EmptyStringAttrib");
+                  xml_reader.readString(read_empty_string_attrib);
+               xml_reader.endAttribute();
+               xml_reader.readString(read_empty_string);
+            xml_reader.endTag();
             xml_reader.beginTag("DataLevel");
                xml_reader.readString(read_long_string);
             xml_reader.endTag();
@@ -124,6 +146,8 @@ void XMLReaderWriterTest::testBasicWriteRead()
          CPPUNIT_ASSERT_DOUBLES_EQUAL(data_double, read_double, 0.001f);
          CPPUNIT_ASSERT_EQUAL(data_string1, read_string_attrib);
          CPPUNIT_ASSERT_EQUAL(data_string2, read_string);
+         CPPUNIT_ASSERT_EQUAL(read_empty_string, empty_string);
+         CPPUNIT_ASSERT_EQUAL(read_empty_string_attrib, empty_string);
          CPPUNIT_ASSERT_EQUAL(data_bool, read_bool);
          CPPUNIT_ASSERT_EQUAL(long_string, read_long_string);
 
