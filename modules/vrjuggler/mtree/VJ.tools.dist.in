@@ -40,8 +40,6 @@
     tools
         common
         ..
-        pfStatLinux
-        ..
         vrjvnc
             example
             ..
