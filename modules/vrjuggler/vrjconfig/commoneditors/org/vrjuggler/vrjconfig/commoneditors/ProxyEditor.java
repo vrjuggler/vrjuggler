@@ -127,6 +127,7 @@ public class ProxyEditor
       mProxyAddButton.setText("Add");
       mProxyAddButton.addActionListener(new
          ProxyEditor_mProxyAddButton_actionAdapter(this));
+      mProxyRemoveButton.setEnabled(false);
       mProxyRemoveButton.setText("Remove");
       mProxyRemoveButton.addActionListener(new
          ProxyEditor_mProxyRemoveButton_actionAdapter(this));
@@ -230,6 +231,8 @@ public class ProxyEditor
 
       if ( proxy != null )
       {
+         mProxyRemoveButton.setEnabled(true);
+
          ConfigElement elt = proxy.getProxyElt();
          mInputSourceField.setValue(elt.getProperty("unit", 0));
          mProxyEditorPanelTitle.setTitle(elt.getName() + " Properties");
@@ -240,6 +243,7 @@ public class ProxyEditor
       }
       else
       {
+         mProxyRemoveButton.setEnabled(false);
          mCurEditor = null;
       }
    }
