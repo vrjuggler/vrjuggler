@@ -107,7 +107,7 @@ public class ConfigurationParser
       }
 
       // Get the list of elements in this configuration
-      List config_elts = parseElements(root.getChild(ELEMENTS, CFG_NS), path);
+      List config_elts = parseElements(root.getChild(ELEMENTS, CFG_NS)/*, path*/);
       for (Iterator itr = config_elts.iterator(); itr.hasNext(); )
       {
          // Add the given configuration element to the configuration
@@ -147,7 +147,7 @@ public class ConfigurationParser
     * Parses an elements node in the DOM tree. The result is a list of the
     * configuration elements that are children of the node.
     */
-   private List parseElements(Element root, List searchPath)
+   private List parseElements(Element root/*, List searchPath*/)
       throws ParseException
    {
       // Verify that the root element is an elements node
@@ -156,8 +156,8 @@ public class ConfigurationParser
          throw new ParseException("Root element must be: "+ELEMENTS);
       }
 
-      ConfigElementParser parser = new ConfigElementParser(mDefinitionRepos,
-                                                           searchPath);
+      ConfigElementParser parser = new ConfigElementParser(mDefinitionRepos/*,
+                                                           searchPath*/);
       List config_elts = new ArrayList();
 
       // Parse each child of the elements node for a configuration element

@@ -73,7 +73,9 @@ public class ConfigurationReader
          doc = upgrade(doc);
 
          // Create the parser for the file and parse the document
-         return (new ConfigurationParser()).parse(doc);
+         ConfigurationParser parser = new ConfigurationParser();
+         parser.setRepository(mDefinitionRepos);
+         return (parser.parse(doc));
       }
       catch (JDOMException e)
       {
