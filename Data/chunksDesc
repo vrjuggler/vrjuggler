@@ -197,7 +197,7 @@ chunk simDisplay "Simulator Display" "This is a surface that images are projecte
   drawProjections Bool 1 "drawProjections" "Should projections be drawn in the simulator?"
   surfaceColor Float 3 "surfaceColor" vj_valuelabels { "red" "green" "blue" } "What color should the surfaces be?"
   vert_fov Float 1 "Vertical FOV" "Vertical field of view in degrees"
-  aspect_ration Float 1 "Aspect Ratio" "Aspect ratio of the window (w/h)"
+  aspect_ratio Float 1 "Aspect Ratio" "Aspect ratio of the window (w/h)"
   end
 chunk simKeyDigital "simKeyDigital" "This chunk holds a key and a modifier key.  It is for key events."
   Name String 1 "Name" "Unique name of an instance of this chunk type"
