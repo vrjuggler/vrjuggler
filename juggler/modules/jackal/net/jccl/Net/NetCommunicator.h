@@ -34,79 +34,76 @@
 
 #include <jccl/jcclConfig.h>
 
-namespace jccl {
+namespace jccl
+{
 
 class Connect;
 
 //---------------------------------------------------------------
 //: Communications protocol handler for the Environment Manager.
-//  This design is based off of VjControl's 
+//  This design is based off of VjControl's
 //  vjComponents/Network/NetCommunicator pluggable communications
 //  interface.
-//
-// @author Christopher Just
 //---------------------------------------------------------------
-class NetCommunicator {
+class NetCommunicator
+{
 protected:
 
-    //: The Connect this communicator is servicing. Initially NULL.
-    Connect* connection;
+   //: The Connect this communicator is servicing. Initially NULL.
+   Connect* connection;
 
 public:
 
-    //: Constructor
-    NetCommunicator ();
+   //: Constructor
+   NetCommunicator();
 
-    //: Destructor
-    virtual ~NetCommunicator ();
+   //: Destructor
+   virtual ~NetCommunicator();
 
-    //: Called when a new connection is established.
-    //  Used to send any initial messages on a new connection.
-    //  Useful for any initial data queries that need to be sent
-    //  when a new connection is opened.  Frex, requesting the
-    //  current configuration of whatever's on the other side of
-    //  the connection.
-    //! PRE: _connection is open & valid for writing to; connection
-    //+      is NULL.
-    //! POST: true.
-    virtual void initConnection(Connect* _connection);
+   //: Called when a new connection is established.
+   //  Used to send any initial messages on a new connection.
+   //  Useful for any initial data queries that need to be sent
+   //  when a new connection is opened.  Frex, requesting the
+   //  current configuration of whatever's on the other side of
+   //  the connection.
+   //! PRE: _connection is open & valid for writing to; connection
+   //+      is NULL.
+   //! POST: true.
+   virtual void initConnection(Connect* _connection);
 
+   //: Called when the connection is shut down.
+   //  Useful for doing things like removing the Active chunkdb/descdb
+   //  (at least on vjcontrol's side).
+   //! PRE: connection != NULL.
+   //! POST: connection = NULL.
+   virtual void shutdownConnection();
 
-    //: Called when the connection is shut down.
-    //  Useful for doing things like removing the Active chunkdb/descdb
-    //  (at least on vjcontrol's side).
-    //! PRE: connection != NULL.
-    //! POST: connection = NULL.
-    virtual void shutdownConnection();
+   //: True if the identifier represents a stream we can read.
+   //  The id is the token in the handler attribute of a
+   //  protocol tag in the EM/VjC command stream.  A given
+   //  NetCommunicator can theoretically serve several handlers;
+   //  this is useful for backwards compatibility.
+   //! RETURNS: True - if self knows how to parse this stream.
+   //! RETURNS: False - otherwise.
+   virtual bool acceptsStreamIdentifier(const std::string& id);
 
-
-    //: True if the identifier represents a stream we can read.
-    //  The id is the token in the handler attribute of a
-    //  protocol tag in the EM/VjC command stream.  A given 
-    //  NetCommunicator can theoretically serve several handlers;
-    //  this is useful for backwards compatibility.
-    //! RETURNS: True - if self knows how to parse this stream.
-    //! RETURNS: False - otherwise.
-    virtual bool acceptsStreamIdentifier (const std::string& id);
-
-
-    //: Reads data from a communications stream.
-    //  This should only be called by a Connect object. 
-    //  readStream MUST be reentrant - it can be called by multiple
-    //  Connect objects simultaneously.
-    //  The Communicator should read data until it reaches the end of
-    //  the protocol stream (signified by the character string
-    //  "</protocol>".  readStream should read that string and
-    //  absolutely no further (as this can confuse parsing of later
-    //  protocol streams on the same connection).
-    //! PRE: connection != NULL;
-    //! RETURNS: true - if reading the protocol stream was succesful.
-    //! RETURNS: false - if EOF or a fatal error occurs.  This will
-    //+                  kill the vjConnect.
-    virtual bool readStream (Connect* con, std::istream& instream, const std::string& id);
-
+   //: Reads data from a communications stream.
+   //  This should only be called by a Connect object.
+   //  readStream MUST be reentrant - it can be called by multiple
+   //  Connect objects simultaneously.
+   //  The Communicator should read data until it reaches the end of
+   //  the protocol stream (signified by the character string
+   //  "</protocol>".  readStream should read that string and
+   //  absolutely no further (as this can confuse parsing of later
+   //  protocol streams on the same connection).
+   //! PRE: connection != NULL;
+   //! RETURNS: true - if reading the protocol stream was succesful.
+   //! RETURNS: false - if EOF or a fatal error occurs.  This will
+   //+                  kill the vjConnect.
+   virtual bool readStream(Connect* con, std::istream& instream,
+                           const std::string& id);
 };
 
-};
+} // End of jccl namespace
 
 #endif
