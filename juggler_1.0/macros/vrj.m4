@@ -80,8 +80,7 @@ AC_DEFUN(VJ_COMPILER_SETUP,
             CXX_ERR='*** The library requires the HP-UX aCC C++ compiler ***'
         # On Windows, we have to use the Microsoft Visual C++ compiler CL.EXE.
         elif test "$OS_TYPE" = "Win32" -a "x$USE_GCC" != "xyes" ; then
-            CXX='cl'
-            CC="$CXX"
+            DPP_PROG_MSVCCC
             CXX_ERR='*** The library requires the MS Visual C++ compiler ***'
         # On IRIX, we have to use CC (not g++).
         elif test "x$PLATFORM" = "xIRIX" ; then
@@ -94,6 +93,7 @@ AC_DEFUN(VJ_COMPILER_SETUP,
 
     DPP_PROG_CC($CC, , AC_MSG_ERROR($CC_ERR))
     DPP_PROG_CXX($CXX, , AC_MSG_ERROR($CXX_ERR))
+    DPP_GET_EXT
 
     if test "x$GXX" = "xyes" ; then
         # If we are using GCC as the compiler, we need to be using at least

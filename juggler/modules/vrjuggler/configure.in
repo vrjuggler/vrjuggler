@@ -40,7 +40,7 @@
 AC_REVISION($Revision$)
 AC_INIT(vjConfig.h)
 AC_CONFIG_HEADER(vjDefines.h)
-DPP_PREREQ(1.3)
+DPP_PREREQ(1.3.9)
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -143,18 +143,7 @@ DPP_WIN32_SETUP
 # We use AC_CANONICAL SYSTEM so that we can find out information about the
 # build, target and host platforms rather than only the host.
 AC_CANONICAL_SYSTEM
-
-_vjsave_CC="$CC"
-
-# On Win32, force the use of CL.EXE as the C compiler in DPP_SYSTEM_SETUP.
-# This ensures that $OBJEXT and $EXEEXT are set properly.
-if test "x$target_os" = "xcygwin" -a "x$USE_GCC" != "xyes" ; then
-    CC='cl'
-fi
-
 DPP_SYSTEM_SETUP
-
-CC="${_vjsave_CC}"
 
 # These are used on all platforms.
 AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "$OS_REL_STR")
@@ -424,14 +413,7 @@ else
     THREAD_SYS='NSPR'
     MUTEX_SYS='NSPR'
     SHMEM_SYS='NSPR'
-
-    NSPR_INCLUDES="-I$NSPR_ROOT/include"
-    NSPR_LIBS="-L$NSPR_ROOT/lib -lnspr$NSPR_VER $UCB_LIB"
 fi
-
-# Get the path to the X-Window libraries and header files.  We will need these
-# for all UNIX applications.
-AC_PATH_X
 
 # ------------
 # OpenGL API.
@@ -495,8 +477,8 @@ if test "x${_with_dtk}" != "xno" -a "x$try_dtk" = "xyes" ; then
     $ If dtk-config was found, $DTK_CONFIG has the path to it, so we can
     # set things up to compile with DTK.
     else
-        AC_LANG_SAVE
-        AC_LANG_CPLUSPLUS
+        DPP_LANG_SAVE
+        DPP_LANG_CPLUSPLUS
 
         _vjsave_CXXFLAGS="$CXXFLAGS"
         _vjsave_CPPFLAGS="$CPPFLAGS"
@@ -543,7 +525,7 @@ void dtkMath_matrixPrint(FILE *file, dtkMath_matrix* m); ],
         LDFLAGS="${_vjsave_LDFLAGS}"
         LIBS="${_vjsave_LIBS}"
 
-        AC_LANG_RESTORE
+        DPP_LANG_RESTORE
     fi
 # If the user wanted to compile the DTK wrapper but this script determined that
 # the subsystem configuation would not allow its use, warn the user.
@@ -559,8 +541,8 @@ AW_INC=''
 AW_LIB=''
 
 if test "x${_with_aw}" != "xno" ; then
-    AC_LANG_SAVE
-    AC_LANG_CPLUSPLUS
+    DPP_LANG_SAVE
+    DPP_LANG_CPLUSPLUS
 
     _vjsave_CPPFLAGS="$CPPFLAGS"
     _vjsave_LDFLAGS="$LDFLAGS"
@@ -588,7 +570,7 @@ if test "x${_with_aw}" != "xno" ; then
         _aw_libs='-law -lawhwi -lpsi -laudiofile'
     fi
 
-    AC_LANG_RESTORE
+    DPP_LANG_RESTORE
 fi
 
 # -----------
@@ -621,8 +603,8 @@ if test "x${_with_sl}" != "xno" ; then
 
     # Do not bother to check for SL unless ${_have_audio} is 'Y'.
     if test "x${_have_audio}" = "xY" ; then
-        AC_LANG_SAVE
-        AC_LANG_CPLUSPLUS
+        DPP_LANG_SAVE
+        DPP_LANG_CPLUSPLUS
 
         _vjsave_CPPFLAGS="$CPPFLAGS"
         _vjsave_LDFLAGS="$LDFLAGS"
@@ -659,7 +641,7 @@ if test "x${_with_sl}" != "xno" ; then
             AC_MSG_WARN(*** SL library will not be used ***)
         fi
 
-        AC_LANG_RESTORE
+        DPP_LANG_RESTORE
     fi
 fi
 
@@ -763,9 +745,9 @@ if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
     CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
     EXTRA_LINK_FLAGS="-all"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
-    CFLAGS="$CFLAGS -W3 -GR -GX -EHc -QIfdiv -QI0f"
-    CXXFLAGS="$CXXFLAGS -W3 -GR -GX -EHc -QIfdiv -QI0f"
-    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -MTd"
+    CFLAGS="$CFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
+    CXXFLAGS="$CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
+    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /MTd"
 fi
 
 DPP_SYSTEM_SUBST
@@ -890,7 +872,7 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_VJ_LIBS_BASIC_INST='-lJuggler'
 
         APP_EXTRA_LIBS_BEGIN='-B dynamic'
-        APP_EXTRA_LIBS_END="$NSPR_LIBS $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm"
+        APP_EXTRA_LIBS_END="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm"
     elif test "x$GXX" = "xyes" ; then
         APP_VJ_LIBS_BEGIN="-Wl,-Bstatic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
         APP_VJ_LIBS_END='-lJuggler_utils'
@@ -901,7 +883,7 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
 
         APP_EXTRA_LIBS_BEGIN='-Wl,-Bdynamic'
-        APP_EXTRA_LIBS_END="$NSPR_LIBS $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm"
+        APP_EXTRA_LIBS_END="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm"
     else
         # For now, we are disabling static linking for the sample
         # applications when compiled in a developer's build tree.  This
@@ -914,7 +896,7 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_VJ_LIBS_END_INST="$APP_VJ_LIBS_END"
         APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
 
-        APP_EXTRA_LIBS_END="$NSPR_LIBS $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm"
+        APP_EXTRA_LIBS_END="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB -lm"
     fi
 
     # FreeBSD needs to use libcompat for linking.
