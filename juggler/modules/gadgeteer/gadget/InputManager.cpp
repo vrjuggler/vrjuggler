@@ -350,7 +350,11 @@ bool InputManager::configureDevice(jccl::ConfigChunkPtr chunk)
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
                     << "new dev " << clrSetBOLD(clrCYAN) << dev_name.c_str() << clrRESET << " failed to start.. deleting instance" << std::endl << vprDEBUG_FLUSH;
-      delete new_device;
+      if ( NULL != new_device )
+      {
+         delete new_device;
+      }
+
       ret_val = false;
    }
 
