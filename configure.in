@@ -1652,7 +1652,7 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_VJ_LIBS_BASIC='-lJuggler -lJuggler_utils'
 
         APP_VJ_LIBS_BEGIN_INST="-B dynamic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
-        APP_VJ_LIBS_END_INST=''
+        APP_VJ_LIBS_END_INST="-Wl,-rpath,\$(VJ_BASE_DIR)/lib$LIBBITSUF"
         APP_VJ_LIBS_BASIC_INST='-lJuggler -lJuggler_utils'
 
         APP_EXTRA_LIBS_BEGIN='-B dynamic'
@@ -1665,7 +1665,7 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_VJ_LIBS_BASIC='-lJuggler -lJuggler_utils'
 
         APP_VJ_LIBS_BEGIN_INST="-Wl,-Bdynamic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
-        APP_VJ_LIBS_END_INST="$APP_VJ_LIBS_END"
+        APP_VJ_LIBS_END_INST="-Wl,-rpath,\$(VJ_BASE_DIR)/lib$LIBBITSUF"
         APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
 
         APP_EXTRA_LIBS_BEGIN='-Wl,-Bdynamic'
