@@ -8,43 +8,41 @@
     test
 	TestSuite
 	..
-	old
-	    CfgTest
+	CfgTest
+	..
+	GLWindow
+	..
+	Math
+	..
+	Matrix
+	..
+	Mempool
+	..
+	Performance
+	    analyzer
 	    ..
-	    GLWindow
+	    perfdatabuffer-test
 	    ..
-	    Math
+	    timestamp-test
 	    ..
-	    Matrix
+	..
+	Quat
+	..
+	Sync
+	..
+	Win32k
+	..
+	input
+	    cbird
 	    ..
-	    Mempool
+	    fob
 	    ..
-	    Performance
-		analyzer
-		..
-		perfdatabuffer-test
-		..
-		timestamp-test
-		..
+	    fsPinchGlove
 	    ..
-	    Quat
-	    ..
-	    Sync
-	    ..
-	    Win32k
-	    ..
-	    input
-		cbird
-		..
-		fob
-		..
-		fsPinchGlove
-		..
-	    ..
-	    testDynamicCastSTL
-	    ..
-	    threads
-	    ..
+	..
+	testDynamicCastSTL
+	..
+	threads
 	..
     ..
 ..
