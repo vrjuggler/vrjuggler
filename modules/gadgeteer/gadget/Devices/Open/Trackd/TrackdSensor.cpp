@@ -41,29 +41,30 @@
 namespace gadget
 {
 
- // ------------------------------------------------------------------------
- //: Constructor.
- // ------------------------------------------------------------------------
- TrackdSensor::TrackdSensor(): mTrackdSensors(NULL)
- {;}
+/**
+ * Constructor.
+ */
+TrackdSensor::TrackdSensor(): mTrackdSensors(NULL)
+{;}
 
- // ------------------------------------------------------------------------
- //: Destructor.
- //
- //! PRE: None.
- //! POST: Shared memory is released
- // ------------------------------------------------------------------------
- TrackdSensor::~TrackdSensor()
- {
-    delete mTrackdSensors;
- }
+/**
+ * Destructor.
+ *
+ * @pre None.
+ * @post Shared memory is released
+ */
+TrackdSensor::~TrackdSensor()
+{
+   delete mTrackdSensors;
+}
 
- // ------------------------------------------------------------------------
- //: Configure the trackd sensor with the given config chunk.
- //
- // -Create the trackdSensor based on config info
- // -set to active
- // -grow the vector to however many values we need
+ /**
+  * Configures the trackd sensor with the given configuration element.
+  *
+  * -Create the trackdSensor based on config info<br>
+  * -set to active<br>
+  * -grow the vector to however many values we need
+  */
  bool TrackdSensor::config(jccl::ConfigChunkPtr c)
  {
     if(! (Input::config(c) && Position::config(c)))
@@ -88,12 +89,12 @@ namespace gadget
  }
 
 
- // ------------------------------------------------------------------------
- //: Update to the sampled data.
- //
- //! PRE: None.
- //! POST: Most recent value is copied over to temp area
- // ------------------------------------------------------------------------
+ /**
+  * Updates to the sampled data.
+  *
+  * @pre None.
+  * @post Most recent value is copied over to temp area
+  */
  void TrackdSensor::updateData()
  {
     vprASSERT(mTrackdSensors != NULL && "Make sure that trackd sensors has been initialized");

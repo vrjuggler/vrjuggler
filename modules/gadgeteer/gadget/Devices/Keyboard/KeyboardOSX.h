@@ -44,44 +44,45 @@
 namespace gadget
 {
 
-// Call back function to register with the carbon event loop.  The userData
-// argument contains a reference to the instance of the KeyboardOSX class that
-// registered to receive the event for its window
-
-
+/**
+ * Call back function to register with the carbon event loop.  The userData
+ * argument contains a reference to the instance of the KeyboardOSX class that
+ * registered to receive the event for its window.
+ */
 pascal OSStatus keyboardHandlerOSX ( EventHandlerCallRef  nextHandler,
                                      EventRef             theEvent,
                                      void*                userData);
 
-//---------------------------------------------------------------
-//: OSX Keyboard class
-// Converts keyboard input into simulated input devices
-//
-// This device is a source of keyboard events.  The device should not be
-// used directly, it should be referenced through proxies.
-//
-// Change to reflect the removal of the mouse lock on every button press
-//
-// Mouse Locking:
-//    This device receives input from the carbon event loop.  As such,
-//  the window must have focus to generate events.  In order to help
-//  users keep the window in focus, there are two cases where the
-//  driver will "lock" the mouse to the window, thus preventing loss of focus.
-//  CASE 1: The user holds down any key. (ie. a,b, ctrl, shift, etc)
-//  CASE 2: The user can toggle locking using a special "locking" key
-//           defined in the configuration chunk.
-//
-// See also: Keyboard, KeyboardProxy
-//--------------------------------------------------------------
-
+/**
+ * OSX Keyboard class.
+ * Converts keyboard input into simulated input devices.
+ *
+ * This device is a source of keyboard events.  The device should not be
+ * used directly, it should be referenced through proxies.
+ *
+ * Change to reflect the removal of the mouse lock on every button press.
+ *
+ * Mouse Locking:<br>
+ *    This device receives input from the carbon event loop.  As such,
+ *  the window must have focus to generate events.  In order to help
+ *  users keep the window in focus, there are two cases where the
+ *  driver will "lock" the mouse to the window, thus preventing loss of focus.<br>
+ *  CASE 1: The user holds down any key. (ie. a,b, ctrl, shift, etc)<br>
+ *  CASE 2: The user can toggle locking using a special "locking" key
+ *           defined in the configuration chunk.
+ *
+ * @see Keyboard, KeyboardProxy
+ */
 class KeyboardOSX : public InputMixer<Input,Keyboard>
 {
 public:
-   // Enum to keep track of current lock state for state machine
-   // Unlocked - The mouse is free
-   // Lock_LockKey - The mouse is locked due to lock toggle key press
-   // Lock_LockKeyDown - The mouse is locked due to a key being held down
-   enum lockState { Unlocked, Lock_LockKey, Lock_KeyDown};
+   /** Enum to keep track of current lock state for state machine. */
+   enum lockState
+   {
+      Unlocked,     /**< The mouse is free */
+      Lock_LockKey, /**< The mouse is locked due to lock toggle key press */
+      Lock_KeyDown  /**< The mouse is locked due to a key being held down */
+   };
 
    KeyboardOSX()
    {
@@ -98,29 +99,35 @@ public:
 
    virtual bool config(jccl::ConfigChunkPtr c);
 
-   // Pure Virtuals required by Input //
+   /** @name Pure Virtuals required by Input */
+   //@{
    int startSampling();
    int stopSampling();
+   //@}
 
-
-
-   // Do nothing the events are handled by call backs from the
-   // Carbon event manager
+   /**
+    * Do nothing the events are handled by call backs from the
+    * Carbon event manager.
+    */
    int sample() { return 1; }
    void updateData();
 
    static std::string getChunkType() { return std::string("Keyboard");}
 
-   // returns the number of times the key was pressed during the
-   // last frame, so you can put this in an if to check if was
-   // pressed at all, or if you are doing processing based on this
-   // catch the actual number..
+   /**
+    * Returns the number of times the key was pressed during the
+    * last frame, so you can put this in an if to check if was
+    * pressed at all, or if you are doing processing based on this
+    * catch the actual number..
+    */
    int isKeyPressed(int Key)
    {  return m_curKeys[Key];}
 
 
-   // Called by callback function
-   // processes the event
+   /**
+    * Called by callback function.
+    * Processes the event.
+    */
    pascal OSStatus gotKeyEvent (  EventHandlerCallRef  nextHandler,
                                   EventRef             theEvent,
                                   void*                userData);
@@ -145,20 +152,26 @@ protected:
    }
 
 private:
-   // Private functions for processing input data //
+   /** @name Private functions for processing input data */
+   //@{
    int onlyModifier(int);
+   //@}
 
-   // OSX utility functions //
-   //: Convert OSXKey to VjKey
-   //! NOTE: Keypad keys are transformed ONLY to number keys
+   /** @name OSX utility functions */
+   //@{
+   /**
+    * Converts OSXKey to VjKey.
+    * @note Keypad keys are transformed ONLY to number keys.
+    */
    int osxKeyToKey( UInt32 osxKey );
 
-   // Open the carbon window to get events from
+   /** Opens the carbon window to get events from. */
    int openTheWindow();
 
-   //: Perform anything that must be done when state switches
+   /** Performs anything that must be done when state switches. */
    void lockMouse();
    void unlockMouse();
+   //@}
 
 
 
@@ -166,37 +179,39 @@ protected:
   // bool         mWeOwnTheWindow;       // True if this class owns the window (is reposible for opening and closing)
                                        // NOTE: In a case where it does not, then the window vars must be set prior
                                        //    to starting the controlLoop (startSampling)
-   bool           mShared;   // True if the window is shared between multiple processes
-//   vpr::Mutex     mXfuncLock;      // Lock for exclusive access to x functions.  Must be held if mshared==true
+   bool           mShared;   /**< True if the window is shared between multiple processes */
+//   vpr::Mutex     mXfuncLock;      /**< Lock for exclusive access to x functions.  Must be held if mshared==true */
 
 //   ::Window       m_window;
 //   ::XVisualInfo* m_visual;
 //   ::Display*     m_display;
 //   ::XSetWindowAttributes m_swa;
-   int          m_screen, m_x, m_y;    // screen id, x_origin, y_origin
+   int          m_screen, m_x, m_y;    /**< screen id, x_origin, y_origin */
    unsigned int m_width,m_height;
 
-   // Keyboard state holders //
+   /** @name Keyboard state holders */
+   //@{
    // NOTE: This driver does not use the normal triple buffering mechanism.
    // Instead, it just uses a modified double buffering system.
-   int      m_keys[256];         // (0,*): The num key presses during an UpdateData (ie. How many keypress events)
-   int      m_realkeys[256];     // (0,1): The real keyboard state, all events processed (ie. what is the key now)
-   vpr::Mutex  mKeysLock;           // Must hold this lock when accessing m_keys OR mHandleEventsHasBeenCalled
-   bool     mHandleEventsHasBeenCalled;  // This flag keeps track of wether or not HandleEvents has been called since the last updateData.
-                                    // It is used by updateData to make sure we don't get a "blank" update where no keys are pressed.
-   //bool     mExitFlag;           // Should we exit
+   int      m_keys[256];         /**< (0,*): The num key presses during an UpdateData (ie. How many keypress events). */
+   int      m_realkeys[256];     /**< (0,1): The real keyboard state, all events processed (ie. what is the key now). */
+   vpr::Mutex  mKeysLock;           /**< Must hold this lock when accessing m_keys OR mHandleEventsHasBeenCalled. */
+   bool     mHandleEventsHasBeenCalled;  /**< This flag keeps track of wether or not HandleEvents has been called since the last updateData.
+                                              It is used by updateData to make sure we don't get a "blank" update where no keys are pressed. */
+   //bool     mExitFlag;           /**< Should we exit? */
 
-   lockState   mLockState;       // The current state of locking
-   int         mLockStoredKey;   // The key that was pressed down
-   int         mLockToggleKey;   // The key that toggles the locking
+   lockState   mLockState;       /**< The current state of locking. */
+   int         mLockStoredKey;   /**< The key that was pressed down. */
+   int         mLockToggleKey;   /**< The key that toggles the locking. */
+   //@}
 
-   //std::string mXDisplayString;   // The display string to use from systemDisplay config info
+   //std::string mXDisplayString;   /**< The display string to use from systemDisplay config info. */
 
    float m_mouse_sensitivity;
-   //int   mSleepTimeMS;            // Amount of time to sleep in milliseconds between updates
-   //int   mPrevX, mPrevY;          // Previous mouse location
+   //int   mSleepTimeMS;            /**< Amount of time to sleep in milliseconds between updates. */
+   //int   mPrevX, mPrevY;          /**< Previous mouse location. */
    bool  mAmSampling;
-   WindowRef mWindow;           // The carbon window
+   WindowRef mWindow;           /**< The carbon window. */
 };
 
 
