@@ -148,73 +148,27 @@ Table of contents:
 ==============================================================================
 
    A. Details
-      i.  The following script should give you an idea of how to configure
-          and build sonix right now (yes, it is very ugly).  This script
-          was written under redhat 7.2
+      i.  sonix is very easy to configure and build. 
+          it requires the GMTL math library (ggt.sf.net)
+          it optionally can use OpenAL or audioworks as its audio backend.
+          (www.openal.org LGPL or multigen.com closed source)
 
-      # you need to change these to your setup...
-      set HOSTTYPE=linux
-      set juggler_root=$HOME/src/juggler2/modules
-      set install_dir=$HOME/software/$HOSTTYPE
-      setenv OALROOT $HOME/software/$HOSTTYPE
-      setenv XERCESROOT $HOME/../allenb/Linux/xerces-c-src1_5_1
-      set parallel_compile=6
+      1. cd juggler/modules/sonix
 
-      # base directories (shouldn't need to change)
-      setenv VPR_BASE_DIR $juggler_root/vapor/build.$HOSTTYPE/instlinks
-      setenv GADGET_BASE_DIR $juggler_root/gadgeteer/build.$HOSTTYPE/instlinks
-      setenv JCCL_BASE_DIR $juggler_root/jackal/build.$HOSTTYPE/instlinks
-      setenv VJ_BASE_DIR $juggler_root/vrjuggler/build.$HOSTTYPE/instlinks
-      setenv SNX_BASE_DIR $juggler_root/sonix/build.$HOSTTYPE/install-clone
+      2. Choose one of the following depending on which subsystem (or both) you
+         want to enable in sonix...
 
-      # make sure all directories exist...
-      mkdir install_dir
-      mkdir $juggler_root/vapor/build.$HOSTTYPE
-      mkdir $juggler_root/gadgeteer/build.$HOSTTYPE
-      mkdir $juggler_root/jackal/build.$HOSTTYPE
-      mkdir $juggler_root/vrjuggler/build.$HOSTTYPE
-      mkdir $juggler_root/sonix/build.$HOSTTYPE
+       ./configure --prefix=$HOME/vrjuggler-2.0
+          --with-gmtl-include=/yourhomedir/juggler/modules/GMTL --enable-openal
+          --with-oalroot=/usr/local
 
-      # configure all projects needed to make sonix...
-      cd $juggler_root/vapor
-      autogen.sh
-      cd $juggler_root/vapor/build.$HOSTTYPE
-      ../configure  --prefix=$install_dir 
-      gmake -j $parallel_compile
+       ./configure --prefix=$HOME/vrjuggler-2.0
+          --with-gmtl-include=/yourhomedir/juggler/modules/GMTL
+          --enable-audioworks
 
-      cd $juggler_root/jackal
-      autogen.sh
-      cd $juggler_root/jackal/build.$HOSTTYPE
-      ../configure  --prefix=$install_dir --with-xercesroot=$XERCESROOT
-      gmake -j $parallel_compile
+      3. gmake debug install
 
-
-      cd $juggler_root/gadgeteer
-      autogen.sh
-      cd $juggler_root/gadgeteer/build.$HOSTTYPE
-      ../configure  
-      gmake links
-
-      cd $juggler_root/vrjuggler
-      autogen.sh
-      cd $juggler_root/vrjuggler/build.$HOSTTYPE
-      ../configure  
-      gmake links
-
-      cd $juggler_root/vrjuggler/build.$HOSTTYPE
-      gmake -j $parallel_compile
-
-      cd $juggler_root/gadgeteer/build.$HOSTTYPE
-      gmake -j $parallel_compile
-
-      cd $juggler_root/vrjuggler/build.$HOSTTYPE
-      gmake -j $parallel_compile
-
-      cd $juggler_root/sonix
-      autogen.sh
-      cd $juggler_root/sonix/build.$HOSTTYPE
-      ../configure  --enable-openal --with-oalroot=$OALROOT --prefix=$install_dir 
-      gmake -j $parallel_compile
+      4. setenv SNX_BASE_DIR $HOME/vrjuggler-2.0
 
       
    C. Advanced topics
