@@ -71,129 +71,134 @@ class vjFlock : public vjPosition {
    //: configure the flock with a config chunk
    virtual bool config(vjConfigChunk* c);
 
-	//: begin sampling
-	int StartSampling();
+    //: begin sampling
+    int StartSampling();
 	
-	//: stop sampling
-	int StopSampling();
+    //: stop sampling
+    int StopSampling();
 	
-	//: sample data
-	int Sample();
+    //: sample data
+    int Sample();
 	
-	//: update to the sampled data.
-	void UpdateData();
+    //: update to the sampled data.
+    void UpdateData();
 	
-	//: get the device name
-	char* GetDeviceName() { return "vjFlock"; }
+    //: get the device name
+    char* GetDeviceName() { return "vjFlock"; }
 	
-	//: return what chunk type is associated with this class.
-	static std::string getChunkType() { return std::string("Flock");}
+    //: return what chunk type is associated with this class.
+    static std::string getChunkType() { return std::string("Flock");}
 
-	//: Get the reciever transform
-	//! ARGS: dev - is the reciever number
-	//! POST: returns a pointer to the reciever's matrix
-	//! NOTE: Clients of juggler should access tracker recievers as [0-n]
-	//+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
-	//+  then you can access them, in order, as 0,1,2.
-	vjMatrix* GetPosData( int dev = 0); // 0 base
-		
-	//: see if the flock is active or not
-	inline const bool& isActive() const { return mFlockOfBirds.isActive(); }
+    //: Get the reciever transform
+    //! ARGS: dev - is the reciever number
+    //! POST: returns a pointer to the reciever's matrix
+    //! NOTE: Clients of juggler should access tracker recievers as [0-n]
+    //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
+    //+  then you can access them, in order, as 0,1,2.
+    vjMatrix* GetPosData( int dev = 0); // 0 base
 
-	//: set the port to use
-	//  this will be a string in the form of the native OS descriptor <BR>
-	//  ex: unix - "/dev/ttyd3", win32 - "COM3" <BR>
-	//! PRE: flock.isActive() must be false to use this function
-	void	    setPort( const char* const serialPort );
+    //: Get time of last update for this receiver
+    //! ARGS: dev - is the reciever number
+    //! POST: returns a pointer to the reciever's timestamp
+    vjTimeStamp* getPosUpdateTime (int dev = 0);
+
+    //: see if the flock is active or not
+    inline const bool& isActive() const { return mFlockOfBirds.isActive(); }
+
+    //: set the port to use
+    //  this will be a string in the form of the native OS descriptor <BR>
+    //  ex: unix - "/dev/ttyd3", win32 - "COM3" <BR>
+    //! PRE: flock.isActive() must be false to use this function
+    void	    setPort( const char* const serialPort );
+    
+    //: get the port used
+    //  this will be a string in the form of the native OS descriptor <BR>
+    //  ex: unix - "/dev/ttyd3", win32 - "COM3"
+    inline const char*  getPort() const { return mFlockOfBirds.getPort(); }
+    
 	
-	//: get the port used
-	//  this will be a string in the form of the native OS descriptor <BR>
-	//  ex: unix - "/dev/ttyd3", win32 - "COM3"
-	inline const char*  getPort() const { return mFlockOfBirds.getPort(); }
+    //: set the baud rate
+    //  this is generally 38400, consult flock manual for other rates. <BR>
+    //! NOTE: flock.isActive() must be false to use this function
+    void	    setBaudRate( const int& baud );
 	
+    //: get the baud rate
+    //  this is generally 38400, consult flock manual for other rates. <BR>
+    inline const int&  getBaudRate()  const { return mFlockOfBirds.getBaudRate();}
+
+    //: Set the unit number of the transmitter
+    //! ARGS: Transmit - an integer that is the same as the dip switch
+    //+         setting on the transmitter box (for the unit number) <BR>
+    //! NOTE: flock.isActive() must be false to use this function
+    void	    setTransmitter( const int& Transmit );
 	
-	//: set the baud rate
-	//  this is generally 38400, consult flock manual for other rates. <BR>
-	//! NOTE: flock.isActive() must be false to use this function
-	void	    setBaudRate( const int& baud );
+    //: Get the unit number of the transmitter
+    //! POST: returns an integer that is the same as the dip switch
+    //         setting on the transmitter box (for the unit number) <BR>
+    inline const int&  getTransmitter() const { return mFlockOfBirds.getTransmitter(); }
+
+
+    //: Set the number of birds to use in the flock.
+    //! ARGS: n - an integer number not more than the number of
+    //+         birds attached to the system <BR>
+    //! NOTE: flock.isActive() must be false to use this function
+    void	    setNumBirds( const int& n );
 	
-	//: get the baud rate
-	//  this is generally 38400, consult flock manual for other rates. <BR>
-	inline const int&  getBaudRate()  const { return mFlockOfBirds.getBaudRate();}
+    //: Get the number of birds to use in the flock.
+    //! POST: - an integer number not more than the number of
+    //+         birds attached to the system <BR>
+    inline const int&  getNumBirds() const { return mFlockOfBirds.getNumBirds(); }
 
-	//: Set the unit number of the transmitter
-	//! ARGS: Transmit - an integer that is the same as the dip switch
-	//+         setting on the transmitter box (for the unit number) <BR>
-	//! NOTE: flock.isActive() must be false to use this function
-	void	    setTransmitter( const int& Transmit );
+
+    //: set the video sync type
+    //  this option allows the Flock to syncronize its pulses with
+    //  your video display.  This will eliminate most flicker caused
+    //  by the magnetic distortion. <BR>
+    //! NOTE: Refer to your flock manual for what number to use.
+    //! PRE: flock.isActive() must be false to use this function
+    void	    setSync( const int& sync );
 	
-	//: Get the unit number of the transmitter
-	//! POST: returns an integer that is the same as the dip switch
-	//         setting on the transmitter box (for the unit number) <BR>
-	inline const int&  getTransmitter() const { return mFlockOfBirds.getTransmitter(); }
+    //: Get the video sync type
+    //  this option allows the Flock to syncronize its pulses with
+    //  your video display.  This will eliminate most flicker caused
+    //  by the magnetic distortion. <BR>
+    //! POST: returns the sync type
+    //! NOTE: Refer to your flock manual for what the return number means
+    inline const int&  getSync() const {return mFlockOfBirds.getSync(); }
 
 
-	//: Set the number of birds to use in the flock.
-	//! ARGS: n - an integer number not more than the number of
-	//+         birds attached to the system <BR>
-	//! NOTE: flock.isActive() must be false to use this function
-	void	    setNumBirds( const int& n );
+    //: Set blocking of flock
+    //! PRE: flock.isActive() must be false to use this function
+    //! NOTE: see flock manual for details.
+    void	    setBlocking( const int& blVal );
 	
-	//: Get the number of birds to use in the flock.
-	//! POST: - an integer number not more than the number of
-	//+         birds attached to the system <BR>
-	inline const int&  getNumBirds() const { return mFlockOfBirds.getNumBirds(); }
+    //: Get flock's blocking type
+    //! NOTE: see flock manual for details.
+    inline const int&  getBlocking() const { return mFlockOfBirds.getBlocking(); }
 
 
-	//: set the video sync type
-	//  this option allows the Flock to syncronize its pulses with
-	//  your video display.  This will eliminate most flicker caused
-	//  by the magnetic distortion. <BR>
-	//! NOTE: Refer to your flock manual for what number to use.
-	//! PRE: flock.isActive() must be false to use this function
-	void	    setSync( const int& sync );
+    //: Set the type of filtering that the flock uses
+    //! NOTE: flock.isActive() must be false to use this function
+    void	    setFilterType( const BIRD_FILT& f );
 	
-	//: Get the video sync type
-	//  this option allows the Flock to syncronize its pulses with
-	//  your video display.  This will eliminate most flicker caused
-	//  by the magnetic distortion. <BR>
-	//! POST: returns the sync type
-	//! NOTE: Refer to your flock manual for what the return number means
-	inline const int&  getSync() const {return mFlockOfBirds.getSync(); }
+    //: Set the type of filtering that the flock uses
+    inline const BIRD_FILT&  getFilterType() const { return mFlockOfBirds.getFilterType(); }
 
 
-	//: Set blocking of flock
-	//! PRE: flock.isActive() must be false to use this function
-	//! NOTE: see flock manual for details.
-	void	    setBlocking( const int& blVal );
+    //: Set the hemisphere that the transmitter transmits from.
+    //! NOTE: flock.isActive() must be false to use this function
+    void	    setHemisphere( const BIRD_HEMI& h );
 	
-	//: Get flock's blocking type
-	//! NOTE: see flock manual for details.
-	inline const int&  getBlocking() const { return mFlockOfBirds.getBlocking(); }
+    //: Set the hemisphere that the transmitter transmits from.
+    inline const BIRD_HEMI&  getHemisphere() const {return mFlockOfBirds.getHemisphere(); }
 
 
-	//: Set the type of filtering that the flock uses
-	//! NOTE: flock.isActive() must be false to use this function
-	void	    setFilterType( const BIRD_FILT& f );
-	
-	//: Set the type of filtering that the flock uses
-	inline const BIRD_FILT&  getFilterType() const { return mFlockOfBirds.getFilterType(); }
+    //: Set the report rate that the flock uses
+    //! NOTE: flock.isActive() must be false to use this function
+    void	    setReportRate( const char& rRate );
 
-
-	//: Set the hemisphere that the transmitter transmits from.
-	//! NOTE: flock.isActive() must be false to use this function
-	void	    setHemisphere( const BIRD_HEMI& h );
-	
-	//: Set the hemisphere that the transmitter transmits from.
-	inline const BIRD_HEMI&  getHemisphere() const {return mFlockOfBirds.getHemisphere(); }
-
-
-	//: Set the report rate that the flock uses
-	//! NOTE: flock.isActive() must be false to use this function
-	void	    setReportRate( const char& rRate );
-
-	//: Set the report rate that the flock uses
-	inline const char& getReportRate() const {return mFlockOfBirds.getReportRate(); }
+    //: Set the report rate that the flock uses
+    inline const char& getReportRate() const {return mFlockOfBirds.getReportRate(); }
 
 
 

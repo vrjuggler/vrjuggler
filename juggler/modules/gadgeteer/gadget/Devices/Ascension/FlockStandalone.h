@@ -12,16 +12,16 @@
 #ifndef _ASCENSION_FLOCKOFBIRD_H_
 #define _ASCENSION_FLOCKOFBIRD_H_
 
-
+#define _OLD_TERMIOS
 #define POSITION_RANGE 12.0f
 #define ANGLE_RANGE   180.0f
 #define MAX_SENSORS    128
 
-#ifndef _BOOL
-typedef bool int;
-#define true 1
-#define false 0
-#endif
+/*  #ifndef _BOOL */
+/*  typedef bool int; */
+/*  #define true 1 */
+/*  #define false 0 */
+/*  #endif */
 
 typedef struct {
         float xmin, ymin, zmin;

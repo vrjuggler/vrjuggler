@@ -1,4 +1,3 @@
-
 /*
     struct termio {
 	tcflag_t    c_iflag;     // input modes
@@ -18,7 +17,7 @@
 #define _OLD_TERMIOS
 
 #include <termio.h>        // for definition of NCCS
-#include <sys/termio.h>    // for termio structure used by some ioctls
+//#include <sys/termio.h>    // for termio structure used by some ioctls
 #include <sys/types.h>     // for open
 #include <sys/stat.h>      // for open
 #include <fcntl.h>         // for open
@@ -31,6 +30,7 @@
 
 #include <Input/vjPosition/aFlock.h>
 
+#define sginap(x) (usleep(x * 333333))
 
 const int aFlock::MAXCHARSTRINGSIZE = 256;
 
@@ -670,15 +670,22 @@ int aFlock::open_port( const char* const serialPort,
 	cout<<" success\n"<<flush;
     else
 	cout<<" failed\n"<<flush;
+    //<<<<<<< aFlock.cpp
+    
+    //cout << "  Disconnect calling process from terminal and session (TIOCNOTTY)..." << flush;
+    //result = ioctl( portId, TIOCNOTTY );
+    
+// =======
 
-    cout << "  Disconnect calling process from terminal and session (TIOCNOTTY)..." << flush;
-    result = ioctl( portId, TIOCNOTTY );
+//     cout << "  Disconnect calling process from terminal and session (TIOCNOTTY)..." << flush;
+//     result = ioctl( portId, TIOCNOTTY );
 
-    // did it succeed?
-    if (result == 0)
-	cout<<" success\n"<<flush;
-    else
-	cout<<" failed\n"<<flush;
+// >>>>>>> 1.11
+//     // did it succeed?
+//     if (result == 0)
+// 	cout<<" success\n"<<flush;
+//     else
+// 	cout<<" failed\n"<<flush;
 	
     // return the portID
     return portId;

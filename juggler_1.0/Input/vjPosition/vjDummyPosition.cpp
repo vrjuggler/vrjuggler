@@ -23,6 +23,7 @@ bool vjDummyPosition::config(vjConfigChunk *c)
    coord.orient[VJ_Z] = c->getProperty("ori",2);
 
    mydata = vjMatrix(coord);
+   mTimeStamp.set();
 
    active = 1;
 
@@ -46,6 +47,12 @@ int vjDummyPosition::StopSampling() {
 vjMatrix* vjDummyPosition::GetPosData (int d) {
     return (&mydata);
 }
+
+
+vjTimeStamp* vjDummyPosition::getPosUpdateTime(int d) {
+    return &mTimeStamp;
+}
+
 
 void vjDummyPosition::UpdateData () {
 
