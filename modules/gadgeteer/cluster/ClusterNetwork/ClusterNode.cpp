@@ -133,11 +133,11 @@ namespace cluster
       }*/
      
          // If ClusterNode is already connected
+      // XXX: FIX THIS, it should not return SUCCESS or WOULDBLOCK
       if (isConnected())
       {
-         return(vpr::ReturnStatus::Succeed);
+         return(vpr::ReturnStatus::WouldBlock);
       }
-
          // If we currently have a pending connection request
       if (getConnected() == NEWCONNECTION)
       {
