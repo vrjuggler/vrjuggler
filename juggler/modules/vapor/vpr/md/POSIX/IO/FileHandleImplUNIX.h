@@ -267,11 +267,11 @@ protected:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool isReadable(const vpr::Interval timeout);
+    Status isReadable(const vpr::Interval timeout);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    bool isWriteable(const vpr::Interval timeout);
+    Status isWriteable(const vpr::Interval timeout);
 
     int m_fdesc;    //: File descriptor
 };
