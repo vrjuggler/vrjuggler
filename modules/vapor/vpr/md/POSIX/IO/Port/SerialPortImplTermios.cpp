@@ -155,12 +155,12 @@ SerialPortImpTermios::setUpdateAction (SerialTypes::UpdateActionOption action)
 // Query the serial port for the maximum buffer size.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::getBufferSize (Uint8& size) {
+SerialPortImpTermios::getBufferSize (Uint16& size) {
     Status retval;
     struct termios term;
 
     if ( (retval = getAttrs(&term)).success() ) {
-        size = term.c_cc[VMIN];
+        size = (Uint16) term.c_cc[VMIN];
     }
 
     return retval;
