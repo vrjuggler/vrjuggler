@@ -147,20 +147,6 @@ public:
    vpr::ReturnStatus constructNetwork(const std::string& graph_file);
 
    /**
-    * Prepares the simulation for execution.  This initializes the simulation
-    * clock to 0.
-    *
-    * @pre  The simulation has not already been started.
-    * @post The Sim Socket Manager's simulation clock is reset to 0 so that the
-    *       simulation may begin.
-    */
-   void start (void)
-   {
-      vprASSERT((mGraph.isValid() && ! m_started) && "Simulation already running!");
-      m_started = true;
-   }
-
-   /**
     * Queries the running state of this socket simulation.  The simulation is
     * considered running if it has been started and if the Sim Socket
     * Manager still has active sockets registered.
@@ -169,7 +155,7 @@ public:
     */
    bool isRunning (void)
    {
-      return m_started && mSocketManager.hasActiveSockets();
+      return mGraph.isValid() && mSocketManager.hasActiveSockets();
    }
 
    /**
@@ -239,8 +225,6 @@ private:
 
    static Controller* mPrimordialInstance;
    static vpr::TSObjectProxy<ControllerTS> mInstance;
-
-   bool m_started; /**< Flag telling the running state of the simulation */
 
    vpr::sim::Clock         mClock;
    vpr::sim::SocketManager mSocketManager;
