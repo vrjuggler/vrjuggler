@@ -46,6 +46,11 @@
 
 #include <fcntl.h>
 #include <sys/ioctl.h>
+
+#ifdef HAVE_SYS_FILIO_H
+#   include <sys/filio.h>
+#endif
+
 #include <sys/types.h>
 #include <string>
 #include <vector>
