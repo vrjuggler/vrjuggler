@@ -504,72 +504,71 @@ clean-links:
 #     7) Install the Java-based config editor (if possible).
 # =============================================================================
 
-# Steps to take before beginning the installation process.
+# Steps to take before beginning the installation process.  This target is
+# independent of the current ABI.
 beforeinstall:
 	${scriptdir}/mkinstalldirs ${prefix}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.install.dist -p ${prefix}
 
-# Steps to take after the installation process is complete.
+# Steps to take after the installation process is complete.  This target is
+# independent of the current ABI.
 afterinstall:
 	@echo "------------------------------------------------"
 	@echo "Library installation complete"
 	@echo "------------------------------------------------"
 
+# ------------------------------------------------------------------------
 # Do a full installation all versions of the libraries and the associated
 # files.
+# ------------------------------------------------------------------------
 install-all:
 	${MAKE} beforeinstall
-	${MAKE} install-opt
-	${MAKE} install-dso
-	${MAKE} install-dbg
-	${MAKE} install-ddso
-	${MAKE} install-headers
-	${MAKE} install-test
-	${MAKE} install-data
-	${MAKE} install-gui
-	@echo "------------------------------------------------"
-	@echo "Creating symlinks in ${_install_libdir_abs}"
-	@echo "------------------------------------------------"
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          rm -f ${VJ_LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          rm -f ${VJ_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
-ifeq (${GL_API}, Y)
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          rm -f ${GL_LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          rm -f ${GL_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
-endif
-ifeq (${PF_API}, Y)
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          rm -f ${PF_LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
-	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
-          rm -f ${PF_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
-endif
+	@${MAKE} _install_libs
+	@${MAKE} _install_post_libs
 	${MAKE} afterinstall
 
+# -----------------------------------------------------------------------------
 # Do a full installation of all versions of the libraries built in each of the
 # ABIs in ${ABI_LIST}.
+# -----------------------------------------------------------------------------
 install-all-abi:
+	@${MAKE} beforeinstall
 	@abi_list='${ABI_LIST}' ;					\
           for abi in $$abi_list ; do					\
               echo "------------------------------------------------" ;	\
               echo "Installing $$abi version of libraries" ;		\
               echo "------------------------------------------------" ;	\
-              ${MAKE} vjABI=$$abi install-all ;				\
+              ${MAKE} vjABI=$$abi _install_libs ;			\
           done
-	@echo "------------------------------------------------"
-	@echo "install-all-abi done"
-	@echo "------------------------------------------------"
+	@${MAKE} _install_post_libs
+	@${MAKE} afterinstall
 
+# Install all versions of the libraries (static optimized, shared optimized,
+# static debugging and shared debugging).  The final step of this is to
+# make the syminks using the default value for ${_DEFAULT_DIR}.  None of the
+# library installation targets are allowed to make their symlinks through
+# the use of the ${NOLINK} variable.
+_install_libs:
+	@${MAKE} NOLINK=1 install-opt
+	@${MAKE} NOLINK=1 install-dso
+	@${MAKE} NOLINK=1 install-dbg
+	@${MAKE} NOLINK=1 install-ddso
+	@${MAKE} _install_lib_links
+
+# Do everything needed after installing the library binaries.
+_install_post_libs:
+	@${MAKE} install-headers
+	@${MAKE} install-test
+	@${MAKE} install-data
+	@${MAKE} install-gui
+
+# -------------------------------------------------------------------------
 # Do a full installation of the static debugging version of the libraries.
+# -------------------------------------------------------------------------
 install:
 	${MAKE} beforeinstall
 	${MAKE} install-dbg
-	${MAKE} install-headers
-	${MAKE} install-test
-	${MAKE} install-data
-	${MAKE} install-gui
+	@${MAKE} _install_post_libs
 	${MAKE} afterinstall
 
 # ------------------------------------------------------------
@@ -584,20 +583,15 @@ install-dbg:
           -f ${mtreedir_os}/VJ.lib${LIBBITSUF}${ISA}.dist
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
           ${_DBG_LIBDIR}/${VJ_LIB_STATIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir_rel}/${_DEBUG_DIR}/${VJ_LIB_STATIC} ./
 ifeq (${GL_API}, Y)
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
           ${_DBG_LIBDIR}/${GL_LIB_STATIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir_rel}/${_DEBUG_DIR}/${GL_LIB_STATIC} ./
 endif
 ifeq (${PF_API}, Y)
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
           ${_DBG_LIBDIR}/${PF_LIB_STATIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir_rel}/${_DEBUG_DIR}/${PF_LIB_STATIC} ./
 endif
+	@${MAKE} _DEFAULT_DIR="${_DEBUG_DIR}" _install_lib_links
 
 # -------------------------------------------------------------
 # Install only the dynamic debugging version of the libraries.
@@ -611,20 +605,15 @@ install-ddso:
           -f ${mtreedir_os}/VJ.lib${LIBBITSUF}${ISA}.dist
 	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
           ${_DBG_LIBDIR}/${VJ_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir_rel}/${_DEBUG_DIR}/${VJ_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
 	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
           ${_DBG_LIBDIR}/${GL_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir_rel}/${_DEBUG_DIR}/${GL_LIB_DYNAMIC} ./
 endif
 ifeq (${PF_API}, Y)
 	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
           ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir_rel}/${_DEBUG_DIR}/${PF_LIB_DYNAMIC} ./
 endif
+	@${MAKE} _DEFAULT_DIR="${_DEBUG_DIR}" _install_lib_links
 
 # ------------------------------------------------------------
 # Install only the static optimized version of the libraries.
@@ -638,20 +627,15 @@ install-opt:
           -f ${mtreedir_os}/VJ.lib${LIBBITSUF}${ISA}.dist
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
           ${_OPT_LIBDIR}/${VJ_LIB_STATIC} ${_install_libdir_abs}/${_OPT_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir_rel}/${_OPT_DIR}/${VJ_LIB_STATIC} ./
 ifeq (${GL_API}, Y)
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
           ${_OPT_LIBDIR}/${GL_LIB_STATIC} ${_install_libdir_abs}/${_OPT_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir_rel}/${_OPT_DIR}/${GL_LIB_STATIC} ./
 endif
 ifeq (${PF_API}, Y)
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
           ${_OPT_LIBDIR}/${PF_LIB_STATIC} ${_install_libdir_abs}/${_OPT_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir_rel}/${_OPT_DIR}/${PF_LIB_STATIC} ./
 endif
+	@${MAKE} _DEFAULT_DIR="${_OPT_DIR}" _install_lib_links
 
 # -------------------------------------------------------------
 # Install only the dynamic optimized version of the libraries.
@@ -665,20 +649,59 @@ install-dso:
           -f ${mtreedir_os}/VJ.lib${LIBBITSUF}${ISA}.dist
 	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
           ${_OPT_LIBDIR}/${VJ_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir_rel}/${_OPT_DIR}/${VJ_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
 	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
           ${_OPT_LIBDIR}/${GL_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir_rel}/${_OPT_DIR}/${GL_LIB_DYNAMIC} ./
 endif
 ifeq (${PF_API}, Y)
 	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
           ${_OPT_LIBDIR}/${PF_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir_rel}/${_OPT_DIR}/${PF_LIB_DYNAMIC} ./
 endif
+	@${MAKE} _DEFAULT_DIR="${_OPT_DIR}" _install_lib_links
+
+# Install symlinks to the installed library binaries in the destination
+# directory.
+_install_lib_links:
+ifndef NOLINK
+	@echo "------------------------------------------------"
+	@echo "Creating symlinks in ${libdir}${LIBBITSUF}"
+	@echo "------------------------------------------------"
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
+          ln -sf ${_install_libdir_rel}/${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
+          ln -sf ${_install_libdir_rel}/${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
+ifeq (${GL_API}, Y)
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
+          ln -sf ${_install_libdir_rel}/${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
+          ln -sf ${_install_libdir_rel}/${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
+endif
+ifeq (${PF_API}, Y)
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
+          ln -sf ${_install_libdir_rel}/${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
+          ln -sf ${_install_libdir_rel}/${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
+endif
+	@echo "------------------------------------------------"
+	@echo "Creating symlinks in ${_install_libdir_abs}"
+	@echo "------------------------------------------------"
+	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
+          ln -sf ${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
+	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
+          ln -sf ${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
+ifeq (${GL_API}, Y)
+	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
+          ln -sf ${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
+	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
+          ln -sf ${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
+endif
+ifeq (${PF_API}, Y)
+	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
+          ln -sf ${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
+	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
+          ln -sf ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
+endif
+endif	# ifndef NOLINK
 
 # Install the header files.
 install-headers:
