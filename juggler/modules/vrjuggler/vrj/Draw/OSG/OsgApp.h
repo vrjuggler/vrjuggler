@@ -63,13 +63,22 @@ class OsgApp : public GlApp
 public:
    OsgApp(Kernel* kern) : GlApp(kern)
    {;}
-   
+
    OsgApp() : GlApp()
    {;}
 
    virtual ~OsgApp() {;}
 
+   /**
+   * Initialize the scene.
+   * Called by init() to initialize the scene.
+   */
    virtual void initScene() = 0;
+
+   /**
+   * Get the root of the scene to render.
+   * Called each frame to get the current scene to render.
+   */
    virtual osg::Group* getScene() = 0;
 
    /**
@@ -170,14 +179,14 @@ inline void OsgApp::contextInit()
    osgUtil::SceneView* new_sv = new osgUtil::SceneView;
    this->configSceneView(new_sv);            // Configure the new viewer
    new_sv->getState()->setContextID(unique_context_id);
-   
+
    // This will eventually be changed to no light and all lighting will be handled
    // by the application.  For the time being it fixes the lighting inconsistanies
    // over multiple screens
    new_sv->setLightingMode(osgUtil::SceneView::SKY_LIGHT);
-   
+
    (*sceneViewer) = new_sv;
-        
+
     //Setup OpenGL light
     //This should actualy be done in the simulator code
     GLfloat light0_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
@@ -221,7 +230,7 @@ inline void OsgApp::draw()
 
    GlDrawManager*    gl_manager;    /**< The openGL manager that we are rendering for. */
    gl_manager = GlDrawManager::instance();
-   
+
    // Set the up the viewport (since OSG clears it out)
    float vp_ox, vp_oy, vp_sx, vp_sy;         // The float vrj sizes of the view ports
    unsigned w_ox, w_oy, w_width, w_height;   // Origin and size of the window
