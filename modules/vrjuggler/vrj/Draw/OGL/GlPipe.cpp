@@ -21,6 +21,8 @@
  */
 int vjGlPipe::start()
 {
+   vjASSERT(mThreadRunning == false);        // We should not be running yet
+   
    // Create a new thread to handle the control loop
    vjThreadId* controlPid;
 
@@ -38,6 +40,8 @@ int vjGlPipe::start()
  */
 void vjGlPipe::triggerRender()
 {
+   vjASSERT(mThreadRunning == true);      // We must be running
+
    renderCond.acquire();
    {
       renderState = RENDERING;
@@ -51,6 +55,8 @@ void vjGlPipe::triggerRender()
  */
 void vjGlPipe::completeRender()
 {
+   vjASSERT(mThreadRunning == true);      // We must be running
+
    renderCond.acquire();
    {        // Wait for renderState == WAITING
       while (renderState != WAITING)
@@ -72,6 +78,7 @@ void vjGlPipe::addWindow(vjGlWindow* win)
 // The main loop routine
 void vjGlPipe::controlLoop(void* nullParam)
 {
+   mThreadRunning = true;     // We are running
 
    while (!controlExit)
    {
@@ -104,6 +111,8 @@ void vjGlPipe::controlLoop(void* nullParam)
       }
       renderCond.release();
    }
+
+   mThreadRunning = false;     // We are not running
 }
 
 /**  Checks for any new windows to add to the pipe
