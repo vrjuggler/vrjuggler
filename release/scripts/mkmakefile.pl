@@ -32,6 +32,30 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+# This script can generate three types of template Makefile.in's from use with
+# a configure script:
+# 
+#    1. A Doozer++ makefile that can do one of the following three build
+#       processes:
+#           A. Build object files from an auto-detected list of sources
+#              coming from one or more user-specified directories
+#           B. Recurse through a list of directories
+#           C. A and B together
+#    2. A makefile capable of compiling a single application from an
+#       arbitrary auto-detected list of sources from an arbitrary list of
+#       user-specified directories.
+#    3. A makefile capable of compiling multiple applications from an
+#       arbitrary list of user-specified sources (compared against an
+#       auto-detected list for error checking) from an arbitrary list of
+#       user-specified directories.
+# 
+# Given the right information, a "real" Makefile can be generated automatically
+# for any of the above types as part of the creation process.
+# 
+# The makefiles generated can be used without modification, though in typical
+# use, they will probably serve as more of a starting point requiring only
+# minor modifications.
+
 require 5.004;
 
 use strict 'vars';
