@@ -114,7 +114,7 @@ public:
 
    void configWindow(Display* _display);
 
-   virtual bool createHardwareSwapGroup(std::vector<GlWindow*> wins);
+   virtual bool createHardwareSwapGroup(const std::vector<GlWindow*>& wins);
 
 protected:
     OSStatus BuildGLFromWindow(WindowPtr pWindow, AGLContext* paglContext,
