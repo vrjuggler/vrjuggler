@@ -93,20 +93,29 @@ class GlWindowOSX: public GlWindow, public gadget::EventWindowOSX
 {
 public:
     GlWindowOSX();
-    ~GlWindowOSX();
+    virtual ~GlWindowOSX();
 
     void swapBuffers();
     int open();
     int close();
     bool makeCurrent();
 
-    int startSampling();
-    //int stopSampling();
+   /**
+    * @name Pure virtuals required by gadget::Input.
+    */
+   //@{
+
+   /**
+    * Override the version from gadget::EventWindowOSX so we can do our
+    * own thing here.
+    */
+   int startSampling();
+   //int stopSampling();
+   //@}
 
    void configWindow(Display* _display);
 
-public:  /**** Static Helpers *****/
-   /* static */ virtual bool createHardwareSwapGroup(std::vector<GlWindow*> wins);
+   virtual bool createHardwareSwapGroup(std::vector<GlWindow*> wins);
 
 protected:
     OSStatus BuildGLFromWindow(WindowPtr pWindow, AGLContext* paglContext,
