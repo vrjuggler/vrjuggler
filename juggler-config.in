@@ -54,16 +54,19 @@ usage()
     cat <<EOF
 Usage: $0 [OPTIONS] [LIBRARIES]
 Options:
-        [--basedir]
-        [--prefix[=DIR]]
-        [--exec-prefix[=DIR]]
-        [--version]
-        [--libs]
-        [--extra-libs]
-        [--cflags]
-        [--cxxflags]
-        [--subsystem]
-Libraries:
+        [--basedir]           Use \$VJ_BASE_DIR when printing paths
+        [--prefix[=DIR]]      Print the installation prefix or set an
+                              alternate prefix to use when printing paths
+        [--exec-prefix[=DIR]] Print the executable prefix or set an alternate
+                              executable prefix to use when printing paths
+        [--libs]              Print the basic VR Juggler libraries
+        [--extra-libs]        Print the extra linker options needed for
+                              making an executable
+        [--cflags]            Print the flags for the C compiler
+        [--cxxflags]          Print the flags for the C++ compiler
+        [--subsystem]         Print the OS abstraction layer being used
+
+Libraries (prints the linker options for one or more of these libraries):
         vrj (all basic libraries)
         Juggler
         Juggler_utils
