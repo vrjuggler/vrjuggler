@@ -159,4 +159,19 @@ chunk SimPosition "SimPosition" "A simulated position device."
   drot Float 1 "drot" "delta rotation.  How many degrees to rotate each keypress."
   xformCoordSystem Int 1 "xformCoordSystem" vj_enumeration { "Local=0" "Global=1" } "Do the tranformations apply to the tracker's local coordinate system?  Ex. Wand - global, Camera - Local"
   end
+chunk EnvironmentManager "Environment Manager" "GUI server-side config"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  Port Int 1 "Port" "Networking port to listen on"
+  AcceptConnections Bool 1 "Accept Connections" "Whether or not we should accept network connections"
+  PerformanceTarget Chunk 1 "Performance Target" vj_enumeration { "FileConnect" "NetworkConnect" } "File or network connection that performance data should be sent to."
+  end
+chunk FileConnect "EM File Output" "A file for outputing Environment Manager data"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  FileName String 1 "File Name" ""
+  Enabled Bool 1 "Enabled" "Should file be opened & used?"
+  Readable Bool 1 "Readable" "Should the file be open for reading?"
+  end
+chunk PerfMeasure "Performance Measurements" "Controls performance monitoring of Juggler library"
+  KernelEnabled Bool 1 "Kernel Testing" "Enables/disables performance measurements in vjKernel control loop"
+  End
 End
