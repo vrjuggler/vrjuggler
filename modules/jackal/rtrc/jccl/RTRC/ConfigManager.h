@@ -260,7 +260,7 @@ public:   // ----- PENDING LIST ----- //
    /** Get the size of the pending list.
     *  CONCURRENCY: concurrent
     */
-   int getNumPending()
+   std::list<PendingElement>::size_type getNumPending()
    {
       return mPendingConfig.size();
    }
