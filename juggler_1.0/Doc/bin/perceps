@@ -1089,6 +1089,8 @@ sub GENTEXT {
               (($arg[1] eq "hasinlines") && $hasinlines{$cname})  ||
               (($arg[1] eq "abstract") && $isabstract{$cname})  ||
               (($arg[1] eq "pure") && $mname && $ispure{$mloc,$mnm})  ||
+	      ( ("$arg[1]" eq "constructor") && $mnm &&
+	        isconstructor("$cname", "$mnm") ) ||
 	      ( ("$arg[1]" eq "mpublic") && $mname &&
 	        ispublic("$cname", "$mname") ) ||
 	      ( ("$arg[1]" eq "mprivate") && $mname &&
@@ -2853,6 +2855,19 @@ sub mkLastBuildFile {
   print LBT "Last Build $buildtime";
 
   close (LBT) or warn "ERROR: Could not save $lastbuildFile: $!\n";
+}
+
+sub isconstructor ($$) {
+  my $class_name = shift;
+  my $method = shift;
+
+  $method =~ s/^(\S+)\(.+$/\1/;
+
+  if ( "$method" eq "$class_name" ) {
+    return 1;
+  } else {
+    return 0;
+  }
 }
 
 sub ispublic ($$) {
