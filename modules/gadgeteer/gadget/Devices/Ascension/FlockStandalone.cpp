@@ -37,22 +37,14 @@
 // it allows this driver to work under 6.5 (6.2 worked fine)
 #define _OLD_TERMIOS
 
+#include <iostream.h>      // for cout
+#include <fstream.h>       // for ifstream
+#include <fcntl.h>         // for open
 #include <termios.h>
-
-// including sys/termio.h is bad for linux, and totally useless since
-// we just included termio.h which #includes it...
-// #include <sys/termio.h>    // for termio structure used by some ioctls
-
-
+#include <unistd.h>        // for sleep, and ioctl
 #include <sys/types.h>     // for open
 #include <sys/stat.h>      // for open
-#include <fcntl.h>         // for open
-
-#include <unistd.h>        // for sleep, and ioctl
-
 #include <assert.h>        // for assert
-#include <fstream.h>       // for ifstream
-#include <iostream.h>      // for cout
 
 #include <Input/vjPosition/aFlock.h>
 
