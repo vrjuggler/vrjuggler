@@ -55,7 +55,7 @@ class vjPosProxy;
 //+         application
 //!PUBLIC_API:
 //------------------------------------------------------------------------------
-class vjBaseDeviceInterface
+class VJ_CLASS_API vjBaseDeviceInterface
 {
 protected:
    vjBaseDeviceInterface(const vjBaseDeviceInterface& other) {;}
@@ -103,7 +103,7 @@ private:    // Static information
 // ---- Type specific interfaces ----
 
 template<class PROXY_TYPE>
-class vjDeviceInterface : public vjBaseDeviceInterface
+class VJ_CLASS_API vjDeviceInterface : public vjBaseDeviceInterface
 {
 protected:
    vjDeviceInterface(vjDeviceInterface& other) {;}

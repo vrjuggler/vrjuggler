@@ -190,13 +190,17 @@ const std::string vjDBG_CONFIGstr("DBG_CONFIGDB");
 //
 //!PUBLIC_API:
 //-----------------------------------------
-class vjDebug
+class VJ_CLASS_API vjDebug
 {
 private:
    // Set default values
    // Set up default categories
    // Get debug config from environment
    vjDebug();
+
+   // This must be here so that Visual C++ does not try to export them.
+   vjDebug(const vjDebug& o) {;}
+   void operator=(const vjDebug& o) {;}
 
 public:
    // Get the debug stream to use

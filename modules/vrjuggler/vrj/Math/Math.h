@@ -33,6 +33,7 @@
 #ifndef _VJ_MATH_H_
 #define _VJ_MATH_H_
 
+#include <vjConfig.h>
 #include <math.h>
 
 // some math.h do not have M_PI defined.
@@ -58,7 +59,7 @@ extern const float VJ_PI_4;
 #define VJ_EPSILON_DEFAULT 1e-6f
 
 //: x-platform standard math routines.
-class vjMath 
+class VJ_CLASS_API vjMath 
 {
 public:
    //: sin returns the trigonometric sin of the radian argument x

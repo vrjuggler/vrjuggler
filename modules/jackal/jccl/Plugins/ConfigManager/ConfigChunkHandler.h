@@ -52,7 +52,7 @@ class vjConfigChunk;
 // default one will work in most cases.
 //---------------------------------------------
 //! PUBLIC_API:
-class vjConfigChunkHandler
+class VJ_CLASS_API vjConfigChunkHandler
 {
 public:
    //: Can the handler handle the given chunk?
