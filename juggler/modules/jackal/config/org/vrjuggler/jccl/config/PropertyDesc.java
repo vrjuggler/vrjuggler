@@ -58,21 +58,21 @@ public class PropertyDesc
    // items for assisting in GUI displays of chunks.
 
    /** Creates an "empty" PropertyDesc */
-   public PropertyDesc (Element root)
+   public PropertyDesc(Element root)
    {
       mDomElement = root;
       changeSupport = new PropertyChangeSupport(this);
    }
 
-   public PropertyDesc ()
+   public PropertyDesc()
    {
       mDomElement = new Element(property_desc_TOKEN);
       changeSupport = new PropertyChangeSupport(this);
-      this.setName("");
-      this.setToken("");
+      setName("");
+      setToken("");
    }
 
-   public Object clone ()
+   public Object clone()
       throws CloneNotSupportedException
    {
       PropertyDesc p = (PropertyDesc)super.clone();
@@ -80,7 +80,7 @@ public class PropertyDesc
       return p;
    }
 
-   public void setName (String newName)
+   public void setName(String newName)
    {
       String old = getName();
       mDomElement.setAttribute("name", newName);
@@ -93,7 +93,7 @@ public class PropertyDesc
     * @return The empty string will be returned if this property description
     *         has no name.
     */
-   public String getName ()
+   public String getName()
    {
       String name = "";
 
@@ -105,7 +105,7 @@ public class PropertyDesc
       return name;
    }
 
-   public void setToken (String newToken)
+   public void setToken(String newToken)
    {
       String old = getToken();
       mDomElement.setAttribute("token", newToken);
@@ -130,7 +130,7 @@ public class PropertyDesc
       return token;
    }
 
-   public void setHelp (String helpText)
+   public void setHelp(String helpText)
    {
       Element help_child = mDomElement.getChild("help");
 
@@ -158,7 +158,7 @@ public class PropertyDesc
       return help_text;
    }
 
-   public void setValType (ValType t)
+   public void setValType(ValType t)
    {
       ValType old = getValType();
       mDomElement.setAttribute("type", t.toString());
@@ -181,7 +181,7 @@ public class PropertyDesc
    /**
     * Adds the given Item object as a child of this property description.
     */
-   public void addItem (Item item)
+   public void addItem(Item item)
    {
       mDomElement.addContent(item.getNode());
       changeSupport.firePropertyChange("item", null, null);
@@ -240,6 +240,80 @@ public class PropertyDesc
    }
 
    /**
+    * Adds the given token as an allowed type of this property desc. It is only
+    * used if this property is an embedded chunk or chunk pointer.
+    */
+   public void addAllowedType(String token)
+   {
+      Element elt = new Element(allowed_type_TOKEN);
+      elt.setText(token);
+      mDomElement.addContent(elt);
+      changeSupport.firePropertyChange("allowedtype", null, null);
+   }
+
+   /**
+    * Removes the given token as an allowed type of this property desc.
+    */
+   public void removeAllowedType(String token)
+   {
+      List types = mDomElement.getChildren(allowed_type_TOKEN);
+      for (Iterator itr = types.iterator(); itr.hasNext(); )
+      {
+         Element e = (Element)itr.next();
+         if (e.getText().equals(token))
+         {
+            mDomElement.removeContent(e);
+            changeSupport.firePropertyChange("allowedtype", null, null);
+            break;
+         }
+      }
+   }
+
+   /**
+    * Gets the token for the allowed type at the given index.
+    */
+   public String getAllowedType(int index)
+   {
+      Element elt = (Element)mDomElement.getChildren(allowed_type_TOKEN).get(index);
+      return elt.getText();
+   }
+
+   /**
+    * Gets a list of all the allowed types for the property.
+    */
+   public List getAllowedTypes()
+   {
+      List types = new Vector();
+
+      Iterator itr = mDomElement.getChildren(allowed_type_TOKEN).iterator();
+      while (itr.hasNext())
+      {
+         Element type = (Element)itr.next();
+         types.add(new String(type.getText()));
+      }
+
+      return types;
+   }
+
+   /**
+    * Gets the number of items in this property description.
+    */
+   public int getAllowedTypesSize()
+   {
+      return mDomElement.getChildren(allowed_type_TOKEN).size();
+   }
+
+   /**
+    * Sets the allowed type at the given index to the given token.
+    */
+   public void setAllowedTypes(int index, String token)
+   {
+      Element elt = (Element)mDomElement.getChildren(allowed_type_TOKEN).get(index);
+      elt.setText(token);
+      changeSupport.firePropertyChange("allowedtype", null, null);
+   }
+
+   /**
     * Returns a reference to the default value at the given index.  If there
     * is no such value, this method returns null.
     */
@@ -264,7 +338,7 @@ public class PropertyDesc
          else if (ValType.EMBEDDEDCHUNK == val_type)
          {
             System.out.println("PropertyDesc.getDefaultValue("+index+"): Creating new default embedded chunk");
-            String chunk_type = this.getEnumAt(0).getName();
+            String chunk_type = getAllowedType(0);
             ConfigChunk emb_chunk = ChunkFactory.createConfigChunk(chunk_type);
             emb_chunk.setName(item_child.getAttribute("label").getValue());
             val = emb_chunk;
@@ -274,9 +348,9 @@ public class PropertyDesc
       else if (ValType.EMBEDDEDCHUNK == val_type)
       {
          System.out.println("PropertyDesc.getDefaultValue("+index+"): Creating new default embedded chunk");
-         String chunk_type = this.getEnumAt(0).getName();
+         String chunk_type = getAllowedType(0);
          ConfigChunk emb_chunk = ChunkFactory.createConfigChunk(chunk_type);
-         emb_chunk.setName(this.getName());
+         emb_chunk.setName(getName());
          val = emb_chunk;
       }
       // Getting a default value past the end of the items list
