@@ -69,7 +69,7 @@ namespace gadget
 *  Position adds one new pure virtual function, GetPosData for retreiving
 *  the positional data, similar to the addition for Analog and Digital.
 */
-class Position : public SerializableDevice
+class GADGET_CLASS_API Position : public SerializableDevice
 {
 public:
    typedef gadget::SampleBuffer<PositionData> SampleBuffer_t;
