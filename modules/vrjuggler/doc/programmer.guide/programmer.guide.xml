@@ -3356,7 +3356,7 @@ thread-&gt;join();
                      <primary>vjThread</primary>
                      <secondary>suspend, resume</secondary>
                   </indexterm>
-                  <para>Sometimes, it may be necessary to suspend the execution of a running thread and resume it again later. There are two methods in the vjThread interface that do just this. Assuming that there is already a running thread pointed to by the object <varname>thread</varname>, it can be suspended as follows:</para>
+                  <para>Sometimes, it may be necessary to suspend the execution of a running thread and resume it again later. There are two methods in the <classname>vjThread</classname> interface that do just this. Assuming that there is already a running thread pointed to by the object <varname>thread</varname>, it can be suspended as follows:</para>
                   <programlisting>thread-&gt;suspend();</programlisting>
                   <para>Resuming execution of the suspended thread is just as easy:</para>
                   <programlisting>thread-&gt;resume();</programlisting>
@@ -4127,7 +4127,7 @@ vjDeviceConstructor&lt;MyNewButtonDevice&gt;* this_ptr_not_used =
    port String 1 "Port" "Serial port this device is connected to"
    baud Int 1 "Baud Rate" "Serial port speed"
    end</programlisting>
-               <para>For a real device, all of these parameters may or may not be needed. (In VR Juggler 1.0, vjInput requires <varname>baud</varname> and <varname>port</varname>, but this has been corrected in newer versions.) Again, the VjControl chunk description editor simplifies the creation of this description so that only the required elements are present.</para>
+               <para>For a real device, all of these parameters may or may not be needed. (In VR Juggler 1.0, <classname>vjInput</classname> requires <varname>baud</varname> and <varname>port</varname>, but this has been corrected in newer versions.) Again, the VjControl chunk description editor simplifies the creation of this description so that only the required elements are present.</para>
                <note>
                   <para>If the new driver is for a positional device, its name must be added to the enumeration in the <varname>PosProxy</varname> chunk description. VjControl aids this addition.</para>
                </note>
