@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.74 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -67,10 +67,8 @@ public sealed class Matrix44d
 
    public Matrix44d(gmtl.Matrix44d p0)
    {
-      
       mRawObject   = gmtl_Matrix_double_4_4__Matrix__gmtl_Matrix44d(p0);
       mWeOwnMemory = true;
-      
    }
 
    // Internal constructor needed for marshaling purposes.
@@ -212,13 +210,14 @@ public sealed class Matrix44d
 
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static double gmtl_Matrix_double_4_4__getData__0(IntPtr obj);
+   private extern static void gmtl_Matrix_double_4_4__getData__0(IntPtr obj,
+	[In, Out] double[] arrayHolder);
 
-   public  double getData()
+   public  double[] getData()
    {
-      double result;
-      result = gmtl_Matrix_double_4_4__getData__0(mRawObject);
-      return result;
+      double[] array_holder = new double[16];
+      gmtl_Matrix_double_4_4__getData__0(mRawObject, array_holder);
+      return array_holder;
    }
 
 

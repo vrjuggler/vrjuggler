@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -46,20 +46,17 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API gmtl::Coord3fQuat* gmtl_Coord_gmtl_Vec_float_3__gmtl_Quat_float____Coord__gmtl_Coord3fQuat(const gmtl::Coord3fQuat* p0)
    {
-      const gmtl::Coord3fQuat& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Coord3fQuat& marshal_p0 = *p0;
       gmtl::Coord3fQuat* obj = new gmtl::Coord3fQuat(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 
    // Constructor wrapper.
    SHARPPY_API gmtl::Coord3fQuat* gmtl_Coord_gmtl_Vec_float_3__gmtl_Quat_float____Coord__gmtl_Vec3f_gmtl_Quatf(const gmtl::Vec3f* p0, const gmtl::Quatf* p1)
    {
-      const gmtl::Vec3f& marshal_p0 = *p0; // Pre-call marshaling for p0
-      const gmtl::Quatf& marshal_p1 = *p1; // Pre-call marshaling for p1
+      const gmtl::Vec3f& marshal_p0 = *p0;
+      const gmtl::Quatf& marshal_p1 = *p1;
       gmtl::Coord3fQuat* obj = new gmtl::Coord3fQuat(marshal_p0, marshal_p1);
-      ; // Post-call marshaling for p0
-      ; // Post-call marshaling for p1
       return obj;
    }
 

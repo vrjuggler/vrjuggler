@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -44,9 +44,8 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API gmtl::EulerAngleZXYf* gmtl_EulerAngle_float_gmtl_ZXY__EulerAngle__gmtl_EulerAngleZXYf(const gmtl::EulerAngleZXYf* p0)
    {
-      const gmtl::EulerAngleZXYf& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::EulerAngleZXYf& marshal_p0 = *p0;
       gmtl::EulerAngleZXYf* obj = new gmtl::EulerAngleZXYf(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 
@@ -70,20 +69,26 @@ extern "C"
 
 
    // Wrapper for non-virtual method gmtl::EulerAngle<float,gmtl::ZXY>::getData()
-   SHARPPY_API float* gmtl_EulerAngle_float_gmtl_ZXY__getData__0(gmtl::EulerAngleZXYf* self_)
+   SHARPPY_API void gmtl_EulerAngle_float_gmtl_ZXY__getData__0(gmtl::EulerAngleZXYf* self_, float* arrayHolder)
    {
-      float* result;
-      result = self_->getData();
-      return result;
+      float* temp_array;
+      temp_array = self_->getData();
+      for ( int i = 0; i < 3; ++i )
+      {
+         arrayHolder[i] = temp_array[i];
+      }
    }
 
 /*
    // Wrapper for non-virtual method gmtl::EulerAngle<float,gmtl::ZXY>::getData()
-   SHARPPY_API const float* gmtl_EulerAngle_float_gmtl_ZXY__getData__0(gmtl::EulerAngleZXYf* self_)
+   SHARPPY_API void gmtl_EulerAngle_float_gmtl_ZXY__getData__0(gmtl::EulerAngleZXYf* self_, float* arrayHolder)
    {
-      const float* result;
-      result = self_->getData();
-      return result;
+      const float* temp_array;
+      temp_array = self_->getData();
+      for ( int i = 0; i < 3; ++i )
+      {
+         arrayHolder[i] = temp_array[i];
+      }
    }
 */
 

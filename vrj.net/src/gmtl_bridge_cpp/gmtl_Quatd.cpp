@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -51,9 +51,8 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API gmtl::Quatd* gmtl_Quat_double__Quat__gmtl_Quatd(const gmtl::Quatd* p0)
    {
-      const gmtl::Quatd& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Quatd& marshal_p0 = *p0;
       gmtl::Quatd* obj = new gmtl::Quatd(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 

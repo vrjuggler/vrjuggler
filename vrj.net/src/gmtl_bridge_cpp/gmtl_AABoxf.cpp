@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -44,20 +44,17 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API gmtl::AABoxf* gmtl_AABox_float__AABox__gmtl_Point3f_gmtl_Point3f(const gmtl::Point3f* p0, const gmtl::Point3f* p1)
    {
-      const gmtl::Point3f& marshal_p0 = *p0; // Pre-call marshaling for p0
-      const gmtl::Point3f& marshal_p1 = *p1; // Pre-call marshaling for p1
+      const gmtl::Point3f& marshal_p0 = *p0;
+      const gmtl::Point3f& marshal_p1 = *p1;
       gmtl::AABoxf* obj = new gmtl::AABoxf(marshal_p0, marshal_p1);
-      ; // Post-call marshaling for p0
-      ; // Post-call marshaling for p1
       return obj;
    }
 
    // Constructor wrapper.
    SHARPPY_API gmtl::AABoxf* gmtl_AABox_float__AABox__gmtl_AABoxf(const gmtl::AABoxf* p0)
    {
-      const gmtl::AABoxf& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::AABoxf& marshal_p0 = *p0;
       gmtl::AABoxf* obj = new gmtl::AABoxf(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -44,9 +44,8 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API gmtl::AxisAnglef* gmtl_AxisAngle_float__AxisAngle__gmtl_AxisAnglef(const gmtl::AxisAnglef* p0)
    {
-      const gmtl::AxisAnglef& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::AxisAnglef& marshal_p0 = *p0;
       gmtl::AxisAnglef* obj = new gmtl::AxisAnglef(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 
@@ -60,9 +59,8 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API gmtl::AxisAnglef* gmtl_AxisAngle_float__AxisAngle__float_gmtl_Vec3f(const float p0, const gmtl::Vec3f* p1)
    {
-      const gmtl::Vec3f& marshal_p1 = *p1; // Pre-call marshaling for p1
+      const gmtl::Vec3f& marshal_p1 = *p1;
       gmtl::AxisAnglef* obj = new gmtl::AxisAnglef(p0, marshal_p1);
-      ; // Post-call marshaling for p1
       return obj;
    }
 

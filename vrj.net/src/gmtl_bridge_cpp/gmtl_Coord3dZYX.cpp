@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -46,20 +46,17 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API gmtl::Coord3dZYX* gmtl_Coord_gmtl_Vec_double_3__gmtl_EulerAngle_double_gmtl_ZYX____Coord__gmtl_Coord3dZYX(const gmtl::Coord3dZYX* p0)
    {
-      const gmtl::Coord3dZYX& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Coord3dZYX& marshal_p0 = *p0;
       gmtl::Coord3dZYX* obj = new gmtl::Coord3dZYX(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 
    // Constructor wrapper.
    SHARPPY_API gmtl::Coord3dZYX* gmtl_Coord_gmtl_Vec_double_3__gmtl_EulerAngle_double_gmtl_ZYX____Coord__gmtl_Vec3d_gmtl_EulerAngleZYXd(const gmtl::Vec3d* p0, const gmtl::EulerAngleZYXd* p1)
    {
-      const gmtl::Vec3d& marshal_p0 = *p0; // Pre-call marshaling for p0
-      const gmtl::EulerAngleZYXd& marshal_p1 = *p1; // Pre-call marshaling for p1
+      const gmtl::Vec3d& marshal_p0 = *p0;
+      const gmtl::EulerAngleZYXd& marshal_p1 = *p1;
       gmtl::Coord3dZYX* obj = new gmtl::Coord3dZYX(marshal_p0, marshal_p1);
-      ; // Post-call marshaling for p0
-      ; // Post-call marshaling for p1
       return obj;
    }
 

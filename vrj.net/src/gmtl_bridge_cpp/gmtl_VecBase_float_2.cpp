@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -44,9 +44,8 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API gmtl::VecBase<float,2>* gmtl_VecBase_float_2__VecBase__gmtl_VecBase_float_2(const gmtl::VecBase<float,2>* p0)
    {
-      const gmtl::VecBase<float,2>& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::VecBase<float,2>& marshal_p0 = *p0;
       gmtl::VecBase<float,2>* obj = new gmtl::VecBase<float,2>(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 
@@ -112,20 +111,26 @@ extern "C"
 
 
    // Wrapper for non-virtual method gmtl::VecBase<float,2>::getData()
-   SHARPPY_API float* gmtl_VecBase_float_2__getData__0(gmtl::VecBase<float,2>* self_)
+   SHARPPY_API void gmtl_VecBase_float_2__getData__0(gmtl::VecBase<float,2>* self_, float* arrayHolder)
    {
-      float* result;
-      result = self_->getData();
-      return result;
+      float* temp_array;
+      temp_array = self_->getData();
+      for ( int i = 0; i < 2; ++i )
+      {
+         arrayHolder[i] = temp_array[i];
+      }
    }
 
 /*
    // Wrapper for non-virtual method gmtl::VecBase<float,2>::getData()
-   SHARPPY_API const float* gmtl_VecBase_float_2__getData__0(gmtl::VecBase<float,2>* self_)
+   SHARPPY_API void gmtl_VecBase_float_2__getData__0(gmtl::VecBase<float,2>* self_, float* arrayHolder)
    {
-      const float* result;
-      result = self_->getData();
-      return result;
+      const float* temp_array;
+      temp_array = self_->getData();
+      for ( int i = 0; i < 2; ++i )
+      {
+         arrayHolder[i] = temp_array[i];
+      }
    }
 */
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -44,18 +44,16 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API gmtl::Point4i* gmtl_Point_int_4__Point__gmtl_Point4i(const gmtl::Point4i* p0)
    {
-      const gmtl::Point4i& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Point4i& marshal_p0 = *p0;
       gmtl::Point4i* obj = new gmtl::Point4i(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 
    // Constructor wrapper.
    SHARPPY_API gmtl::Point4i* gmtl_Point_int_4__Point__gmtl_VecBase_int_4(const gmtl::VecBase<int,4>* p0)
    {
-      const gmtl::VecBase<int,4>& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::VecBase<int,4>& marshal_p0 = *p0;
       gmtl::Point4i* obj = new gmtl::Point4i(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 

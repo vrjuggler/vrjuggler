@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -44,22 +44,18 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API gmtl::Trii* gmtl_Tri_int__Tri__gmtl_Point3i_gmtl_Point3i_gmtl_Point3i(const gmtl::Point3i* p0, const gmtl::Point3i* p1, const gmtl::Point3i* p2)
    {
-      const gmtl::Point3i& marshal_p0 = *p0; // Pre-call marshaling for p0
-      const gmtl::Point3i& marshal_p1 = *p1; // Pre-call marshaling for p1
-      const gmtl::Point3i& marshal_p2 = *p2; // Pre-call marshaling for p2
+      const gmtl::Point3i& marshal_p0 = *p0;
+      const gmtl::Point3i& marshal_p1 = *p1;
+      const gmtl::Point3i& marshal_p2 = *p2;
       gmtl::Trii* obj = new gmtl::Trii(marshal_p0, marshal_p1, marshal_p2);
-      ; // Post-call marshaling for p0
-      ; // Post-call marshaling for p1
-      ; // Post-call marshaling for p2
       return obj;
    }
 
    // Constructor wrapper.
    SHARPPY_API gmtl::Trii* gmtl_Tri_int__Tri__gmtl_Trii(const gmtl::Trii* p0)
    {
-      const gmtl::Trii& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Trii& marshal_p0 = *p0;
       gmtl::Trii* obj = new gmtl::Trii(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 

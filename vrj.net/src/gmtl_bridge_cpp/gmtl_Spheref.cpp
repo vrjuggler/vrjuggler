@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -44,18 +44,16 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API gmtl::Spheref* gmtl_Sphere_float__Sphere__gmtl_Point3f_float(const gmtl::Point3f* p0, const float p1)
    {
-      const gmtl::Point3f& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Point3f& marshal_p0 = *p0;
       gmtl::Spheref* obj = new gmtl::Spheref(marshal_p0, p1);
-      ; // Post-call marshaling for p0
       return obj;
    }
 
    // Constructor wrapper.
    SHARPPY_API gmtl::Spheref* gmtl_Sphere_float__Sphere__gmtl_Spheref(const gmtl::Spheref* p0)
    {
-      const gmtl::Spheref& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Spheref& marshal_p0 = *p0;
       gmtl::Spheref* obj = new gmtl::Spheref(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 

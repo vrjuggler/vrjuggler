@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -44,9 +44,8 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API gmtl::Matrix44d* gmtl_Matrix_double_4_4__Matrix__gmtl_Matrix44d(const gmtl::Matrix44d* p0)
    {
-      const gmtl::Matrix44d& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Matrix44d& marshal_p0 = *p0;
       gmtl::Matrix44d* obj = new gmtl::Matrix44d(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 
@@ -105,11 +104,14 @@ extern "C"
 
 
    // Wrapper for non-virtual method gmtl::Matrix<double,4,4>::getData()
-   SHARPPY_API const double* gmtl_Matrix_double_4_4__getData__0(gmtl::Matrix44d* self_)
+   SHARPPY_API void gmtl_Matrix_double_4_4__getData__0(gmtl::Matrix44d* self_, double* arrayHolder)
    {
-      const double* result;
-      result = self_->getData();
-      return result;
+      const double* temp_array;
+      temp_array = self_->getData();
+      for ( int i = 0; i < 16; ++i )
+      {
+         arrayHolder[i] = temp_array[i];
+      }
    }
 
 

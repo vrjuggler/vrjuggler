@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.74 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -67,10 +67,8 @@ public sealed class EulerAngleZXYf
 
    public EulerAngleZXYf(gmtl.EulerAngleZXYf p0)
    {
-      
       mRawObject   = gmtl_EulerAngle_float_gmtl_ZXY__EulerAngle__gmtl_EulerAngleZXYf(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
@@ -123,24 +121,26 @@ public sealed class EulerAngleZXYf
 
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static float gmtl_EulerAngle_float_gmtl_ZXY__getData__0(IntPtr obj);
+   private extern static void gmtl_EulerAngle_float_gmtl_ZXY__getData__0(IntPtr obj,
+	[In, Out] float[] arrayHolder);
 
-   public  float getData()
+   public  float[] getData()
    {
-      float result;
-      result = gmtl_EulerAngle_float_gmtl_ZXY__getData__0(mRawObject);
-      return result;
+      float[] array_holder = new float[3];
+      gmtl_EulerAngle_float_gmtl_ZXY__getData__0(mRawObject, array_holder);
+      return array_holder;
    }
 
 /*
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static float gmtl_EulerAngle_float_gmtl_ZXY__getData__0(IntPtr obj);
+   private extern static void gmtl_EulerAngle_float_gmtl_ZXY__getData__0(IntPtr obj,
+	[In, Out] float[] arrayHolder);
 
-   public  float getData()
+   public  float[] getData()
    {
-      float result;
-      result = gmtl_EulerAngle_float_gmtl_ZXY__getData__0(mRawObject);
-      return result;
+      float[] array_holder = new float[3];
+      gmtl_EulerAngle_float_gmtl_ZXY__getData__0(mRawObject, array_holder);
+      return array_holder;
    }
 */
 

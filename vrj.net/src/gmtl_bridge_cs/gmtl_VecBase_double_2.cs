@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.74 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -67,10 +67,8 @@ public class VecBase_double_2
 
    public VecBase_double_2(gmtl.VecBase_double_2 p0)
    {
-      
       mRawObject   = gmtl_VecBase_double_2__VecBase__gmtl_VecBase_double_2(p0);
       mWeOwnMemory = true;
-      
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
@@ -189,24 +187,26 @@ public class VecBase_double_2
 
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static double gmtl_VecBase_double_2__getData__0(IntPtr obj);
+   private extern static void gmtl_VecBase_double_2__getData__0(IntPtr obj,
+	[In, Out] double[] arrayHolder);
 
-   public  double getData()
+   public  double[] getData()
    {
-      double result;
-      result = gmtl_VecBase_double_2__getData__0(mRawObject);
-      return result;
+      double[] array_holder = new double[2];
+      gmtl_VecBase_double_2__getData__0(mRawObject, array_holder);
+      return array_holder;
    }
 
 /*
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static double gmtl_VecBase_double_2__getData__0(IntPtr obj);
+   private extern static void gmtl_VecBase_double_2__getData__0(IntPtr obj,
+	[In, Out] double[] arrayHolder);
 
-   public  double getData()
+   public  double[] getData()
    {
-      double result;
-      result = gmtl_VecBase_double_2__getData__0(mRawObject);
-      return result;
+      double[] array_holder = new double[2];
+      gmtl_VecBase_double_2__getData__0(mRawObject, array_holder);
+      return array_holder;
    }
 */
 
