@@ -45,12 +45,11 @@ void usage(char** argv)
    cout<<"_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/\n"<<flush;
    cout<<"\n"<<flush;
    cout<<"Usage:\n";
-      cout<<"      "<<argv[0]<<" modelfile.flt vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n] (for plib's SL library)\n";
-      cout<<"      "<<argv[0]<<" modelfile.flt vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n] (for audioworks library)\n"<<flush;
-      cout<<"      "<<argv[0]<<" modelfile.flt vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n] (to stub out the sound)\n"<<flush;
+   cout<<"      "<<argv[0]<<" modelfile.flt vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n] (for plib's SL library)\n";
    cout<<"_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/\n"<<flush;
 }
-/*
+
+#ifdef USESOUND
 bool initSoundEngine( const std::string& arg, SoundEngine* &engine )
 {
    std::string soundConfigFile;
@@ -71,6 +70,8 @@ bool initSoundEngine( const std::string& arg, SoundEngine* &engine )
    else
    {
       engine = NULL;
+      cout<<"[soundengine] Invalid option\n"<<flush;
+         
       return false; //user didn't specify an option
    }
    
@@ -81,22 +82,23 @@ bool initSoundEngine( const std::string& arg, SoundEngine* &engine )
       
       if ( engine == NULL)
       {
-         cout<<"NULL engine\n"<<flush;
+         cout<<"[soundengine] NULL engine\n"<<flush;
          return false;
       }      
    }
       
    else
    {
-      cout<<"Couldn't find "<<soundConfigFile<<"\n"<<flush;
+      cout<<"[soundengine] Couldn't find "<<soundConfigFile<<"\n"<<flush;
       engine = NULL;
       return false;
    }    
    
-   cout<<"Good engine\n"<<flush;
+   cout<<"[soundengine] Good engine\n"<<flush;
    return true; //user specified an option
 }
-*/
+#endif
+
 void main(int argc, char* argv[])
 {
    vjKernel* kernel = vjKernel::instance(); // Declare a new Kernel
@@ -117,12 +119,18 @@ void main(int argc, char* argv[])
    int a = 1; // it's here so i can add in the sound 
               // stuff until we have a complex pfNav :)
    
-   /*
+   #ifdef USESOUND
+   cout<<"[soundengine] Kevin's Sound Stuff is enabled!  1st arg needs to be the engine\n"<<flush;
    if (initSoundEngine( argv[a], gSoundEngine ))
    {
       ++a;
    }
-   */
+   else
+   {
+      // then this will definately work.
+      initSoundEngine( "nosound", gSoundEngine );
+   }
+   #endif
    
    if (argc < a)
    {
