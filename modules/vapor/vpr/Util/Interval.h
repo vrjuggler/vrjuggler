@@ -214,6 +214,11 @@ public:
       return (mMicroSeconds <= r.mMicroSeconds);
    }
 
+   bool operator> (const Interval& r) const
+   {
+      return (mMicroSeconds > r.mMicroSeconds);
+   }
+
    Interval& operator+=(const Interval& r)
    { mMicroSeconds += r.mMicroSeconds; return *this; }
 
