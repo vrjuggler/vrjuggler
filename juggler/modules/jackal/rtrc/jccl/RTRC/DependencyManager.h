@@ -35,7 +35,7 @@
 #define _JCCL_DEP_MGR_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Plugins/ConfigManager/DepChecker.h>
+#include <jccl/RTRC/DepChecker.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <typeinfo>
 #include <vpr/Util/Singleton.h>

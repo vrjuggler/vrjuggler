@@ -32,9 +32,9 @@
 
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Plugins/ConfigManager/DepChecker.h>
+#include <jccl/RTRC/DepChecker.h>
 #include <jccl/Config/ConfigChunk.h>
-#include <jccl/Plugins/ConfigManager/ConfigManager.h>
+#include <jccl/RTRC/ConfigManager.h>
 
 namespace jccl
 {
