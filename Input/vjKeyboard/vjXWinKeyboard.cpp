@@ -63,7 +63,8 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
     // Get the X display string
     int x_disp_num = c->getProperty("display_number");
     vjConfigChunk* dispSysChunk = vjDisplayManager::instance()->getDisplaySystemChunk();
-    if(x_disp_num >= 0)
+
+    if((x_disp_num >= 0) && dispSysChunk)
        mXDisplayString = (std::string)dispSysChunk->getProperty("xpipes", x_disp_num);
     else
        mXDisplayString = std::string("-1");
