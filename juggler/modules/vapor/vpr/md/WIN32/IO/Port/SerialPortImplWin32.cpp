@@ -1,6 +1,6 @@
 #include <vpr/vprConfig.h>
 
-#include <iostream.h>
+#include <iostream>
 #include <stdlib.h>
 #include <string.h>
 
@@ -70,7 +70,7 @@ Status SerialPortImplWin32::open () {
 }
 
 vpr::SerialTypes::UpdateActionOption getUpdateAction(void){
-    cout << "Update Action is always NOW in Win32" << endl;
+    std::cout << "Update Action is always NOW in Win32" << std::endl;
     vpr::SerialTypes::UpdateActionOption update;
     update = SerialTypes::NOW;
     return update;
@@ -80,7 +80,7 @@ vpr::SerialTypes::UpdateActionOption getUpdateAction(void){
 void SerialPortImplWin32::setUpdateAction (SerialTypes::UpdateActionOption action)
 {
     /* Do Nothing */
-    cout << "Update action always NOW in Win32" << endl;
+    std::cout << "Update action always NOW in Win32" << std::endl;
 }
 
 // ----------------------------------------------------------------------------
@@ -91,7 +91,7 @@ Status SerialPortImplWin32::getBufferSize(Uint16 &size){
     COMMPROP lpCommProp;
     if(!GetCommProperties(m_handle, &lpCommProp) || (int)lpCommProp.dwCurrentTxQueue == 0){
         s.setCode(Status::Failure);
-        cout << "Maximum buffer size is unavailable.";
+        std::cout << "Maximum buffer size is unavailable.\n";
     }else{
         size = lpCommProp.dwCurrentTxQueue;
     }
@@ -106,7 +106,7 @@ Status SerialPortImplWin32::setBufferSize(const Uint8 size){
     Status s;
     if(!SetupComm(m_handle, (int)size, (int)size)){
         s.setCode(Status::Failure);
-        cout << "Could not set the minimum buffer size.";
+        std::cout << "Could not set the minimum buffer size.\n";
     }
     return s;
 }
@@ -120,7 +120,7 @@ Status SerialPortImplWin32::getTimeout (Uint8& timeout) {
     Status retval;
     if(!GetCommTimeouts(m_handle, &t)){
         retval.setCode(Status::Failure);
-        cout << "The timeout value is unavailable.";
+        std::cout << "The timeout value is unavailable.\n";
     }
     timeout = (int)t.ReadTotalTimeoutConstant/100;
     return retval;
@@ -139,9 +139,9 @@ Status SerialPortImplWin32::setTimeout (const Uint8 timeout) {
     t.ReadTotalTimeoutConstant = (int)timeout*100;
     if(!SetCommTimeouts(m_handle, &t)){
         retval.setCode(Status::Failure);
-        cout << "Could not set timeout value.";
+        std::cout << "Could not set timeout value.\n";
     }
-//        cout << t.ReadIntervalTimeout << " : " << t.ReadTotalTimeoutConstant << " : " << t.ReadTotalTimeoutMultiplier << " : " << t.WriteTotalTimeoutConstant << " : " << t.WriteTotalTimeoutMultiplier << endl;
+//        std::cout << t.ReadIntervalTimeout << " : " << t.ReadTotalTimeoutConstant << " : " << t.ReadTotalTimeoutMultiplier << " : " << t.WriteTotalTimeoutConstant << " : " << t.WriteTotalTimeoutMultiplier << std::endl;
     return retval;
 }
 
@@ -170,7 +170,7 @@ Status SerialPortImplWin32::getCharacterSize (SerialTypes::CharacterSizeOption& 
         }
     }else{
         retval.setCode(Status::Failure);
-        cout << "Error attaining bits/byte.";
+        std::cout << "Error attaining bits/byte.\n";
     }
     return retval;
 }
@@ -201,9 +201,9 @@ SerialPortImplWin32::setCharacterSize (const SerialTypes::CharacterSizeOption bp
         break;
     }
     if(!SetCommState(m_handle,&dcb)){
-        cout << GetLastError()<< endl<<endl;
+        std::cout << GetLastError()<< std::endl<<std::endl;
         retval.setCode(Status::Failure);
-        cout << "Error setting bits/byte.";
+        std::cout << "Error setting bits/byte.\n";
     }
     return retval;
 }
@@ -225,7 +225,7 @@ Status SerialPortImplWin32::getStopBits (Uint8& num_bits) {
             break;
         }
     }else{
-        cout << "Number of stop bits is unavailable.";
+        std::cout << "Number of stop bits is unavailable.\n";
         retval.setCode(Status::Failure);
     }
     return retval;
@@ -250,7 +250,7 @@ Status SerialPortImplWin32::setStopBits (const Uint8 num_bits) {
         break;
     }
     if(!SetCommState(m_handle, &dcb)){
-        cout << "Error in setting stop bits.";
+        std::cout << "Error in setting stop bits.\n";
         retval.setCode(Status::Failure);
     }
     return retval;
@@ -263,7 +263,7 @@ bool SerialPortImplWin32::getInputParityCheckState () {
     DCB dcb;
     bool b;
     if(!GetCommState(m_handle, &dcb)){
-        cout << "Error attaining parity checking state.";
+        std::cout << "Error attaining parity checking state.\n";
     }
     if(dcb.fParity == true){
         b = true;
@@ -316,7 +316,7 @@ SerialTypes::ParityType SerialPortImplWin32::getParity () {
     if(dcb.Parity == ODDPARITY){
         return vpr::SerialTypes::PORT_PARITY_ODD;
     }else{
-        cout << "error in attaining parity type";
+        std::cout << "error in attaining parity type\n";
         return vpr::SerialTypes::PORT_PARITY_ODD;
     }
 }
@@ -436,10 +436,10 @@ bool SerialPortImplWin32::getParityGenerationState () {
     DCB dcb;
     GetCommState(m_handle, &dcb);
     if(dcb.fParity = false){
-        cout << "parity checking is not true";
+        std::cout << "parity checking is not true\n";
         return false;
     }else if(dcb.Parity != NOPARITY){
-        cout << "parity generaton not invoked";
+        std::cout << "parity generaton not invoked\n";
         return false;
     }else{
         return true;
@@ -585,7 +585,7 @@ Status SerialPortImplWin32::setOutputBaudRate (const Uint32 baud) {
 // ----------------------------------------------------------------------------
 Status SerialPortImplWin32::sendBreak (const Int32 duration) {
     Status s;
-    cout << "sendBreak Not yet implemented for Win32" << endl;
+    std::cout << "sendBreak Not yet implemented for Win32" << std::endl;
     s.setCode(Status::Failure);
     return s;
 }
@@ -610,77 +610,86 @@ Status SerialPortImplWin32::flushQueue(SerialTypes::FlushQueueOption queue){
 
 
 bool SerialPortImplWin32::getCanonicalState(void){
-    cout << "Canonical State not yet implemented, EOF is enabled." << endl;
+    std::cout << "Canonical State not yet implemented, EOF is enabled."
+              << std::endl;
     return false;
 }
 
 Status SerialPortImplWin32::enableCanonicalInput(void){
     Status s;
-    cout << "Canoncial State not yet implemented, EOF is enabled." << endl;
+    std::cout << "Canoncial State not yet implemented, EOF is enabled."
+              << std::endl;
     s.setCode(Status::Failure);
     return s;
 }
 
 Status SerialPortImplWin32::disableCanonicalInput(void){
     Status s;
-    cout << "Canoncial State not yet implemented on Win32, EOF is enabled." << endl;
+    std::cout << "Canoncial State not yet implemented on Win32, EOF is enabled."
+              << std::endl;
     s.setCode(Status::Failure);
     return s;
 }
 
 bool SerialPortImplWin32::getBitStripState(void){
-    cout << "Bit Stripping is not yet implemented on Win32." << endl;
+    std::cout << "Bit Stripping is not yet implemented on Win32." << std::endl;
     return false;
 }
 
 Status SerialPortImplWin32::enableBitStripping(void){
     Status s;
-    cout << "Bit Stripping is not yet implemented on Win32." << endl;
+    std::cout << "Bit Stripping is not yet implemented on Win32." << std::endl;
     s.setCode(Status::Failure);
     return s;
 }
 
 Status SerialPortImplWin32::disableBitStripping(void){
     Status s;
-    cout << "Bit Stripping is not yet implemented on Win32." << endl;
+    std::cout << "Bit Stripping is not yet implemented on Win32." << std::endl;
     s.setCode(Status::Failure);
     return s;
 }
 
 bool SerialPortImplWin32::getStartStopInputState(void){
-    cout << "Start/Stop Input is not yet implemented on Win32." << endl;
+    std::cout << "Start/Stop Input is not yet implemented on Win32."
+              << std::endl;
     return false;
 }
 
 bool SerialPortImplWin32::getStartStopOutputState(void){
-    cout << "Start/Stop Output is not yet implemented on Win32." << endl;
+    std::cout << "Start/Stop Output is not yet implemented on Win32."
+              << std::endl;
     return false;
 }
 
 Status SerialPortImplWin32::enableStartStopInput(void){
     Status s;
-    cout << "Start/Stop Input is not yet implemented on Win32." << endl;
+    std::cout << "Start/Stop Input is not yet implemented on Win32."
+              << std::endl;
     s.setCode(Status::Failure);
     return s;
 }
 
 Status SerialPortImplWin32::disableStartStopInput(void){
     Status s;
-    cout << "Start/Stop Input is not yet implemented on Win32." << endl;
+    std::cout << "Start/Stop Input is not yet implemented on Win32."
+              << std::endl;
     s.setCode(Status::Failure);
     return s;
 }
 
 Status SerialPortImplWin32::enableStartStopOutput(void){
     Status s;
-    cout << "Start/Stop output is not yet implemented on Win32." << endl;
+    std::cout << "Start/Stop output is not yet implemented on Win32."
+              << std::endl;
     s.setCode(Status::Failure);
     return s;
 }
 
 Status SerialPortImplWin32::disableStartStopOutput(void){
     Status s;
-    cout << "Start/Stop Output is not yet implemented on Win32." << endl;
+    std::cout << "Start/Stop Output is not yet implemented on Win32."
+              << std::endl;
     s.setCode(Status::Failure);
     return s;
 }
