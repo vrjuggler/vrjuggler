@@ -47,7 +47,7 @@ sub usage($);
 sub make_CXXFLAGS($;$);
 sub make_INCLUDES($);
 sub make_LDFLAGS($;$$);
-sub make_EXTRA_LDFLAGS($;$$);
+sub make_EXTRA_LDFLAGS($;$$$);
 sub handleOptArg($$);
 sub stripDuplicateArgs($);
 
@@ -169,7 +169,7 @@ else
 my $cxxflags      = make_CXXFLAGS("$cxxflags_arg", $print_min);
 my $includes      = make_INCLUDES("$cxxflags");
 my $ldflags       = make_LDFLAGS("$libs_arg", $echo_static, $use_linker);
-my $extra_ldflags = make_EXTRA_LDFLAGS("$extra_libs_arg", $use_linker,
+my $extra_ldflags = make_EXTRA_LDFLAGS("$extra_libs_arg", $use_linker, $echo_static,
                                        $print_min);
 
 # Finally, print out the requested information.
@@ -349,10 +349,11 @@ sub make_LDFLAGS ($;$$)
    return "$full_ldflags";
 }
 
-sub make_EXTRA_LDFLAGS ($;$$)
+sub make_EXTRA_LDFLAGS ($;$$$)
 {
    my $extra_libs_arg = shift;
    my $use_linker     = shift || 0;
+   my $use_static     = shift || 0;
    my $print_min      = shift || 0;
 
    my $dep_libs       = '';
@@ -361,11 +362,12 @@ sub make_EXTRA_LDFLAGS ($;$$)
    unless ( $print_min )
    {
       my @dep_scripts = qw(@vrj_dep_scripts@);
-      my $extra_arg = ($use_linker ? '--linker' : '');
+      my $extra_arg   = ($use_linker ? '--linker' : '');
+      my $static_arg  = ($use_static ? '--static' : '');
 
       foreach ( @dep_scripts )
       {
-         my $cur_dep_libs = `$_ --min --libs $extra_libs_arg $extra_arg`;
+         my $cur_dep_libs = `$_ --min --libs $extra_libs_arg $extra_arg $static_arg`;
          chomp($cur_dep_libs);
          $dep_libs .= " $cur_dep_libs";
 
@@ -416,7 +418,7 @@ sub make_EXTRA_LDFLAGS ($;$$)
    my $extra_ldflags = ($use_linker ? qq(@vrj_extra_ldflags_linker@)
                                     : qq(@vrj_extra_ldflags_compiler@));
 
-   my $full_extra_ldflags = "$extra_ldflags $extra_libs $dep_libs $dep_extra_libs";
+   my $full_extra_ldflags = "$extra_ldflags $dep_libs $extra_libs $dep_extra_libs";
    $full_extra_ldflags    =~ s/\s{2,}/ /g;
 
    return "$full_extra_ldflags";
