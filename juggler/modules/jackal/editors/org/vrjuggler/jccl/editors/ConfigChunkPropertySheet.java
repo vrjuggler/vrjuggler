@@ -136,7 +136,8 @@ public class ConfigChunkPropertySheet
          else
          {
             PropertyDesc prop_desc = getPropertyDescForRow(row);
-            if (prop_desc.getNumEnums() > 0
+            if ((prop_desc != null)
+               && (prop_desc.getNumEnums() > 0)
                && (prop_desc.getValType() != ValType.CHUNK)
                && (prop_desc.getValType() != ValType.EMBEDDEDCHUNK))
             {
@@ -183,6 +184,7 @@ public class ConfigChunkPropertySheet
       PropertyDesc prop_desc = getPropertyDescForRow(row);
       if (prop_desc == null)
       {
+         System.out.println("Couldn't get property desc for row: "+row);
          return super.getCellEditor(row, col);
       }
 
@@ -308,6 +310,13 @@ public class ConfigChunkPropertySheet
          {
             ConfigChunk parent_chunk = (ConfigChunk)parent;
             int idx = parent_node.getIndex(node);
+
+            // If the parent is the root, take into account the first two
+            // special child nodes for the name and type of the chunk
+            if (parent_node == tableModel.getRoot())
+            {
+               idx -= 2;
+            }
             return parent_chunk.getDesc().getPropertyDesc(idx);
          }
          return null;
