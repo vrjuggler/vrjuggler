@@ -42,7 +42,7 @@
 //    Used for critical section protection
 //
 // Author:
-//	Allen Bierbaum
+// Allen Bierbaum
 //
 // Date: 1-20-97
 //-----------------------------------------------
@@ -65,7 +65,7 @@ public:
             attachedCounter = static_cast<int*>(mutexPool->allocate(sizeof(int)));
             *attachedCounter = 0;
         }
-        *attachedCounter = *attachedCounter + 1;	    // Track how many mutexes are allocated
+        *attachedCounter = *attachedCounter + 1;       // Track how many mutexes are allocated
         //vjDEBUG << " vjMutexSGI:: vjMutexSGI: attachedCounter: " << *attachedCounter << endl << vjDEBUG_FLUSH;
 
         // ----- Allocate the mutex ----- //
@@ -78,7 +78,7 @@ public:
         usfreelock(mutex, mutexPool->getArena());
 
         // ---- Deal with the pool --- //
-        *attachedCounter = *attachedCounter - 1;	    // Track how many mutexes are allocated
+        *attachedCounter = *attachedCounter - 1;       // Track how many mutexes are allocated
 
         //vjDEBUG << " vjMutexSGI::~ vjMutexSGI: attachedCounter: " << *attachedCounter << endl << vjDEBUG_FLUSH;
 
@@ -108,7 +108,7 @@ public:
     //----------------------------------------------------------
     int acquireRead() const
     {
-        return this->acquire();	    // No special "read" semaphore -- For now
+        return this->acquire();      // No special "read" semaphore -- For now
     }
 
     //----------------------------------------------------------
@@ -116,7 +116,7 @@ public:
     //----------------------------------------------------------
     int acquireWrite() const
     {
-        return this->acquire();	    // No special "write" semaphore -- For now
+        return this->acquire();      // No special "write" semaphore -- For now
     }
 
     //---------------------------------------------------------
@@ -128,7 +128,7 @@ public:
     //---------------------------------------------------------
     int tryAcquire () const
     {
-        return uscsetlock(mutex, 100);	    // Try 100 spins.
+        return uscsetlock(mutex, 100);     // Try 100 spins.
     }
 
     //----------------------------------------------------------

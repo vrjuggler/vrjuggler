@@ -41,9 +41,9 @@
 #include <Input/InputManager/vjPosInterface.h>
 #include <Math/vjMatrix.h>
 
-// TODO: 2 devs here is a hack until we make 
+// TODO: 2 devs here is a hack until we make
 //       the pinch glove act more like the flock of birds.
-#define VJ_MAX_GLOVE_DEVS 2	/* The maximum number of gloves per device */
+#define VJ_MAX_GLOVE_DEVS 2   /* The maximum number of gloves per device */
 
 //: This is the data stored about a glove
 //
@@ -114,8 +114,8 @@ class vjGlove : virtual public vjInput
 {
 public:
    vjGlove();
-   
-   virtual ~vjGlove() {}  
+
+   virtual ~vjGlove() {}
 
    // Let constructor take care of device abilities and init
    virtual bool config(vjConfigChunk* chunk)
@@ -142,15 +142,15 @@ public:  // ---- GLOVE INTERFACE ---- //
    vjGloveData getGloveData(int devNum);
 
 protected:
-   // NOTE: make sure you use the "vjInput::progress" member in the [3] slot 
+   // NOTE: make sure you use the "vjInput::progress" member in the [3] slot
    // here. Then you'll not go off the end of this array.
-   // TODO: VJ_MAX_GLOVE_DEVS = 2 here is a hack until we make 
+   // TODO: VJ_MAX_GLOVE_DEVS = 2 here is a hack until we make
    //       the pinch glove act more like the flock of birds.
    vjGloveData mTheData[VJ_MAX_GLOVE_DEVS][3];
 
    //: This is the positional proxy of the glove.  It defines the location of the
    // "center" of the glove. "center" could be different for each glove type.
-   // TODO: VJ_MAX_GLOVE_DEVS = 2 here is a hack until we make 
+   // TODO: VJ_MAX_GLOVE_DEVS = 2 here is a hack until we make
    //       the pinch glove act more like the flock of birds.
    vjPosProxy*  mGlovePos[VJ_MAX_GLOVE_DEVS];
 

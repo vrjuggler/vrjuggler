@@ -66,7 +66,8 @@ bool recognizeProxyAlias(vjConfigChunk* chunk);
   vjInputManager Constructor
 
 *********************************************** ahimberg */
-vjInputManager::vjInputManager() : m_dummyPos(), m_dummyDig(), m_dummyAna(), m_dummyGlove()
+vjInputManager::vjInputManager()
+//: m_dummyPos(), m_dummyDig(), m_dummyAna(), m_dummyGlove()
 {
    // Setup all the dummies and their proxies
    // XXX: This should really be moved to the dev interfaces when the new input system is written
