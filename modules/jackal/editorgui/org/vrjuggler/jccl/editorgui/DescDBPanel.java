@@ -29,28 +29,24 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.editorgui;
 
-
-package VjComponents.ConfigEditor;
-
-import javax.swing.*;
-import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Vector;
-import java.util.Enumeration;
 import java.io.File;
+import java.util.Enumeration;
+import java.util.Vector;
+import javax.swing.*;
+import javax.swing.tree.*;
 
-import VjConfig.*;
-import VjControl.*;
-import VjComponents.ConfigEditor.*;
-import VjComponents.UI.*;
-import VjComponents.UI.Widgets.*;
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.vjcontrol.*;
+import org.vrjuggler.jccl.vjcontrol.ui.*;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets*;
 
 
 /** PlugPanel for editing ChunkDescDB files.
  * 
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class DescDBPanel 

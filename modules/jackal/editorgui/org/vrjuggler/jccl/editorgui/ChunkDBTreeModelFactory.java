@@ -29,22 +29,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.ConfigEditor;
+package org.vrjuggler.jccl.editorgui;
 
 import java.util.Vector;
 import java.util.List;
 
-import VjComponents.ConfigEditor.ChunkDBTreeModel;
-import VjConfig.ConfigChunkDB;
-import VjControl.Core;
-import VjComponents.ConfigEditor.ChunkOrgTreeModule;
+import org.vrjuggler.jccl.config.ConfigChunkDB;
+import org.vrjuggler.jccl.vrjuggler.Core;
 
 
 /** Creates trees for the ChunkDBPanel.
  * 
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class ChunkDBTreeModelFactory {

@@ -29,9 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.ConfigEditor;
+package org.vrjuggler.jccl.editorgui;
 
 import javax.swing.*;
 import javax.swing.tree.*;
@@ -41,15 +39,10 @@ import java.awt.event.*;
 import java.util.Vector;
 import java.io.File;
 
-import VjControl.*;
-import VjConfig.*;
-import VjComponents.UI.*;
-import VjComponents.UI.Widgets.*;
-import VjComponents.ConfigEditor.ConfigCommunicator;
-import VjComponents.ConfigEditor.ConfigModule;
-import VjComponents.ConfigEditor.ConfigModuleEvent;
-import VjComponents.ConfigEditor.ConfigModuleListener;
-import VjComponents.ConfigEditor.ConfigUIHelper;
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.vjcontrol.*;
+import org.vrjuggler.jccl.vjcontrol.ui.*;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
 
 /** An individual subpanel of ConfigurePane.  
  *  ChunkDBPanel views and edits a single ChunkDB (at a time).  It has
@@ -60,12 +53,10 @@ import VjComponents.ConfigEditor.ConfigUIHelper;
 public class ChunkDBPanel 
    extends JPanel
    implements PlugPanel, 
-               ActionListener, 
-MouseListener, 
-               ConfigModuleListener
+              ActionListener, 
+              MouseListener, 
+              ConfigModuleListener
 { 
-
-
    protected ConfigModule mConfigModule;
    protected ConfigUIHelper mConfigHelperModule;
    protected ControlUIModule mUIModule;
@@ -127,8 +118,6 @@ MouseListener,
       mControlsOnSide = CONTROLS_ON_RIGHT;
    }
 
-
-
    public void updateUI ()
    {
       super.updateUI();
@@ -139,12 +128,10 @@ MouseListener,
       }
    }
 
-
    public void setControlsOnSide (int _mControlsOnSide)
    {
       mControlsOnSide = _mControlsOnSide;
    }
-
 
    // sets the target for >> and >all> buttons
    public void setSendAcrossTarget (ChunkDBPanel _target)
@@ -152,14 +139,11 @@ MouseListener,
       mSendTarget = _target;
    }
 
-
    public void setFont (Font f)
    {
       super.setFont(f);
       mCurrentFont = f;
    }
-
-
 
    protected void buildDBList ()
    {
@@ -171,8 +155,6 @@ MouseListener,
          mSelectDBBox.addItem (names[i]);
       }
    }
-
-
 
    public void selectDB (String name)
    {
@@ -214,14 +196,10 @@ MouseListener,
 
    }
 
-
-
    protected String getDBName()
    {
       return (mCurrentDB != null)? mCurrentDB.name: null;
    }
-
-
 
    // typically, one ChunkDBpanel will call this on another to perform a 
    // sendacross action
@@ -237,8 +215,6 @@ MouseListener,
       }
    }	
    
-
-
    // updates the list of chunk types which can be inserted.
    protected void updateInsertTypes ()
    {
@@ -262,8 +238,6 @@ MouseListener,
       }
    }
 
-
-
    // enables/disables some of the side panel buttons. Used when there
    // is no loaded db.
    protected void setButtonsEnabled (boolean b)
@@ -277,8 +251,6 @@ MouseListener,
       mDuplicateButton.setEnabled(b);
       mCheckDependenciesButton.setEnabled(b);
    }
-
-
 
    /******************** ActionListener Stuff ***********************/
 
@@ -472,8 +444,6 @@ MouseListener,
       }
    }
 
-
-
    public void mouseClicked(MouseEvent e)
    {
       if (mTreeModel == null)
@@ -517,15 +487,11 @@ MouseListener,
       }
    }
 
-
-
    protected void openChunkFrame (String name)
    {
       ConfigChunk ch = mCurrentDB.get (name);
       openChunkFrame (ch);
    }
-
-
 
    protected void openChunkFrame (ConfigChunk ch)
    {
@@ -534,8 +500,6 @@ MouseListener,
          mConfigHelperModule.openChunkFrame (mCurrentDB, ch);
       }
    }
-
-
 
    /******************* MouseListener Stuff ************************/
 
@@ -577,8 +541,6 @@ MouseListener,
       }
    }
 
-
-
    /****************** ConfigModuleListener stuff *********************/
    public void chunkDBAdded (ConfigModuleEvent e)
    {
@@ -612,18 +574,15 @@ MouseListener,
       return mComponentName;
    }
 
-
    public void setComponentName (String _name)
    {
       mComponentName = _name;
    }
 
-    
    public ImageIcon getComponentIcon ()
    {
       return null;
    }
-
 
    public void setConfiguration (ConfigChunk ch) throws VjComponentException
    {
@@ -661,24 +620,20 @@ MouseListener,
       }
    }
 
-
    public void setConfigModule(ConfigModule m)
    {
       mConfigModule = m;
    }
 
-   
    public void setControlUIModule (ControlUIModule m)
    {
       mUIModule = m;
    }
 
-
    public void setConfigUIHelper (ConfigUIHelper m)
    {
       mConfigHelperModule = m;
    }
-
 
    public void initialize () throws VjComponentException
    {
@@ -692,30 +647,25 @@ MouseListener,
 
    }
 
-
    public ConfigChunk getConfiguration ()
    {
       return mComponentChunk;
    }
-
 
    public VjComponent addConfig (ConfigChunk ch) throws VjComponentException
    {
       throw new VjComponentException (mComponentName + " does not support child component: " + ch.getName());
    }
 
-
    public boolean removeConfig (String s)
    {
       return false;
    }
 
-
    public JComponent getUIComponent ()
    {
       return this;
    }
-
 
    public boolean initUIComponent ()
    {
@@ -873,7 +823,6 @@ MouseListener,
       return mUiInitialized;
    }
 
-
    public void destroy ()
    {
       if (mUiInitialized)
@@ -881,7 +830,6 @@ MouseListener,
          mConfigModule.removeConfigModuleListener (this);
       }
    }
-
 
    public void rebuildDisplay ()
    {
