@@ -672,22 +672,55 @@ int omni_main_i(int argc, char** const argv)
 # Find TAO.
 setup_TAO ( )
 {
-   if test "x$cxx_orb_bin_dir" = "xnone" ; then
+   # Handle the case when $TAO_ROOT is set.  ($ACE_ROOT will probably be
+   # set, too.)  This is a little tricky because $TAO_ROOT could refer to a
+   # TAO installation or to the ACE+TAO source/build tree.
+   if test "x$TAO_ROOT" != "x" -a "x$TAO_ROOT" != "x$cxx_orb_root" ; then
+      cxx_orb_root="$TAO_ROOT"
       TAO_BIN_DIR="$cxx_orb_root/bin"
-   else
-      TAO_BIN_DIR="$cxx_orb_bin_dir"
-   fi
 
-   if test "x$cxx_orb_lib_dir" = "xnone" ; then
-      TAO_LIB_DIR="$cxx_orb_root/lib"
+      if test -d "$TAO_ROOT/include" ; then
+         tao_includes="-I$TAO_ROOT/include"
+      else
+         tao_includes="-I$TAO_ROOT -I$TAO_ROOT/orbsvcs"
+      fi
+
+      if test "x$ACE_ROOT" != "x" -a "x$TAO_ROOT" != "x$ACE_ROOT" ; then
+         if test -d "$ACE_ROOT/include/ace" ; then
+            tao_includes="-I$ACE_ROOT/include"
+         else
+            tao_extra_includes="-I$ACE_ROOT"
+         fi
+      fi
+
+      if test "x$ACE_ROOT" != "x" ; then
+         TAO_BIN_DIR="$ACE_ROOT/bin"
+         TAO_LIB_DIR="$ACE_ROOT/lib"
+      else
+         TAO_BIN_DIR="$TAO_ROOT/bin"
+         TAO_LIB_DIR="$TAO_ROOT/lib"
+      fi
    else
-      TAO_LIB_DIR="$cxx_orb_lib_dir"
+      if test "x$cxx_orb_bin_dir" = "xnone" ; then
+         TAO_BIN_DIR="$cxx_orb_root/bin"
+      else
+         TAO_BIN_DIR="$cxx_orb_bin_dir"
+      fi
+
+      if test "x$cxx_orb_lib_dir" = "xnone" ; then
+         TAO_LIB_DIR="$cxx_orb_root/lib"
+      else
+         TAO_LIB_DIR="$cxx_orb_lib_dir"
+      fi
+
+      tao_includes="-I$TAO_ROOT/include"
    fi
 
    tweek_save_CPPFLAGS="$CPPFLAGS"
+   CPPFLAGS="$CPPFLAGS $tao_extra_includes"
 
    if test "x$cxx_orb_root" != "x/usr" ; then
-      CPPFLAGS="$CPPFLAGS -I$cxx_orb_root/include"
+      CPPFLAGS="$CPPFLAGS $tao_includes"
    fi
 
    DPP_LANG_SAVE
@@ -709,7 +742,7 @@ setup_TAO ( )
          LDFLAGS="$LDFLAGS -L$TAO_LIB_DIR"
       fi
 
-      LIBS="$LIBS -lTAO"
+      LIBS="$LIBS -lTAO -lACE"
 
       DPP_LANG_SAVE
       DPP_LANG_CPLUSPLUS
@@ -717,7 +750,7 @@ setup_TAO ( )
       tweek_save_CPPFLAGS="$CPPFLAGS"
       tweek_save_CFLAGS="$CFLAGS"
 
-      CPPFLAGS="$CPPFLAGS -I$cxx_orb_root/include $EXTRA_DEFS"
+      CPPFLAGS="$CPPFLAGS $tao_extra_includes $tao_includes $EXTRA_DEFS"
       CFLAGS="$CFLAGS $ABI_FLAGS"
       LDFLAGS="$LDFLAGS $PTHREAD_ARG $ABI_FLAGS"
 
@@ -726,9 +759,9 @@ setup_TAO ( )
          [AC_TRY_LINK([
 #include <tao/corba.h>
 
-int omni_main_i(int argc, char** const argv)
+int tao_main_i(int argc, char** const argv)
 {
-   CORBA::ORB_init(argc, argv, "omniORB$OMNI_VER");
+   CORBA::ORB_init(argc, argv, "TAO");
    return 0;
 }],
                      [omni_main_i(0, NULL);],
@@ -744,9 +777,9 @@ int omni_main_i(int argc, char** const argv)
 
       DPP_LANG_RESTORE
 
-      CXX_ORB_BIN_DIR="$OMNI_BIN_DIR"
-      CXX_ORB_LIB_DIR="$OMNI_LIB_DIR"
-      tao_idl_search_path="${OMNI_BIN_DIR}:${PATH}"
+      CXX_ORB_BIN_DIR="$TAO_BIN_DIR"
+      CXX_ORB_LIB_DIR="$TAO_LIB_DIR"
+      tao_idl_search_path="${TAO_BIN_DIR}:${PATH}"
 
       AC_PATH_PROG(CXX_IDL, tao_idl, no, [$tao_idl_search_path])
 
@@ -767,11 +800,11 @@ int omni_main_i(int argc, char** const argv)
             BUILD_CXX='Y'
 
             if test "x$cxx_orb_root" != "x/usr" ; then
-               CXX_ORB_INCLUDES="-I$cxx_orb_root/include"
+               CXX_ORB_INCLUDES="$tao_extra_includes $tao_includes"
             fi
 
-            CXX_ORB_LIB="-lTAO -lTAO_PortableServer -lTAO_CosNaming"
-            CXX_ORB_LDFLAGS="-L$OMNI_LIB_DIR"
+            CXX_ORB_LIB="-lTAO -lTAO_PortableServer -lTAO_CosNaming -lACE"
+            CXX_ORB_LDFLAGS="-L$TAO_LIB_DIR"
 
             AC_DEFINE_UNQUOTED([TWEEK_USE_TAO], ,
                [Define if using TAO as the C++ CORBA implementation.])
