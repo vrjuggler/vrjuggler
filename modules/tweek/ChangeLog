@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2004-11-05 patrickh    Added EnvironmentService.getenv(), which is implemented
+                       using a Java native method.
+                       NEW VERSION: 0.19.2
 2004-11-04 patrickh    The Tweek JavaBean Loader is now installed as a bundle
                        on Mac OS X (in addition to the "traditional" UNIX
                        installation launched by a shell script).

@@ -103,6 +103,11 @@ public class EnvironmentServiceProxy
       return mEnvService.getOS();
    }
 
+   public String getenv(String envVarName)
+   {
+      return mEnvService.getenv(envVarName);
+   }
+
    /** The EnvironmentService instance to which this object is proxy. */
    private EnvironmentService mEnvService = null;
 }

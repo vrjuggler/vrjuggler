@@ -38,6 +38,8 @@
 			<string>$JAVAROOT/java.security.policy.txt</string>
 			<key>tweek.bundle</key>
 			<string>true</string>
+			<key>java.library.path</key>
+			<string>$JAVAROOT</string>
 		</dict>
 		<key>VMOptions</key>
 		<string>-Xss1m -Xmx512m</string>
