@@ -78,7 +78,8 @@ public:
    
    virtual void preDraw();
    virtual void postPostFrame();
-   //virtual bool isPluginReady();
+   virtual void sendRequests();
+   virtual bool isPluginReady();
    virtual std::string getManagerName()
    {
       return(std::string("ApplicationDataManager"));

@@ -53,10 +53,7 @@ namespace cluster
 {
 /////////////////////////////////////////
 //    Serial Protocol
-/////////////////////////////////////////
-   static vpr::Uint8 SYNC_SIGNAL = 'G';
-   static const vpr::Interval read_timeout(5,vpr::Interval::Sec);
-   
+/////////////////////////////////////////   
    ClusterBarrierSerial::ClusterBarrierSerial()
    {
    

@@ -66,17 +66,23 @@ namespace cluster
 {
    vprSingletonImp( ApplicationDataManager );
 
-	ApplicationDataManager::ApplicationDataManager()
-         : mPluginGUID("cc6ca39f-03f2-4779-aa4b-048f774ff9a5")
-	{
-       // This is done by the ClusterManager
-	   //jccl::DependencyManager::instance()->registerChecker(new ClusterDepChecker());
-       mFrameNumber = 0;
-    }
-	ApplicationDataManager::~ApplicationDataManager()
-	{
-		;
-	}
+   ApplicationDataManager::ApplicationDataManager()
+      : mPluginGUID("cc6ca39f-03f2-4779-aa4b-048f774ff9a5")
+   {
+      // This is done by the ClusterManager
+      //jccl::DependencyManager::instance()->registerChecker(new ClusterDepChecker());
+      mFrameNumber = 0;
+   }
+   ApplicationDataManager::~ApplicationDataManager()
+   {
+      ;
+   }
+
+   bool ApplicationDataManager::isPluginReady()
+   {
+      vpr::Guard<vpr::Mutex> guard(mPendingApplicationDataRequestsLock);
+      return(0 == mPendingApplicationDataRequests.size());
+   }    
 
    void ApplicationDataManager::handlePacket(Packet* packet, ClusterNode* node)
    {
@@ -244,10 +250,13 @@ namespace cluster
           (*i).second->updateLocalData();
           (*i).second->send();
        }
-       mApplicationDataServersLock.release();
-      
+       mApplicationDataServersLock.release();      
+   }
+   
+   void ApplicationDataManager::sendRequests()
+   {
       //////////////////////////////////////////////////////////////////////////////
-      //                            Send ApplicationData Reqs                            //
+      //                            Send ApplicationData Reqs                     //
       //////////////////////////////////////////////////////////////////////////////
       
       //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
