@@ -22,6 +22,14 @@ void _Export_GUID();
 // Module ======================================================================
 BOOST_PYTHON_MODULE(vpr)
 {
+    boost::python::scope().attr("__doc__") =
+      "PyJuggler.vpr is an extension module written in Boost.Python that\n"
+      "exposes some C++ classes of the VR Juggler Portable Runtime (VPR) for\n"
+      "use in writing Python code.  The exposed classes are those that tend\n"
+      "to be most useful in writing VR Juggler application objects.\n\n"
+      "Refer to the VPR C++ documentation for general usage details:\n"
+      "   http://www.vrjuggler.org/vapor/docs.php"
+    ;
     _Export_Interval();
     _Export_ReturnStatus();
     _Export_ObjectReader();
