@@ -173,6 +173,9 @@
 /* Define if you have the atan2f function.  */
 #undef HAVE_FABSF
 
+/* Define if you have the trunc function.  */
+#undef HAVE_TRUNC
+
 @BOTTOM@
 
 #endif	/* _VJ_DEFINES_H_ */
