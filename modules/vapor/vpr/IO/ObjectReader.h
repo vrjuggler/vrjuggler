@@ -49,6 +49,8 @@
 
 #include <boost/static_assert.hpp>
 
+#include <vpr/Util/ReturnStatus.h>
+#include <vpr/vprTypes.h>
 
 namespace vpr
 {
@@ -70,7 +72,7 @@ public:
    /** Starts a new section/element of name tagName.
    */
    virtual vpr::ReturnStatus beginTag(std::string tagName) = 0;
-   
+
    /** Ends the most recently named tag. */
    virtual vpr::ReturnStatus endTag() = 0;
 
