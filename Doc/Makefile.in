@@ -54,6 +54,13 @@ OUT_PUB		= ./public_doc
 TEMPLATES_INT	= ${PERCEPS_DIR}/templates/internal
 TEMPLATES_PUB	= ${PERCEPS_DIR}/templates/public
 
+# Fill these two in!!  Together, they form the installation prefix.
+webroot=	${HOME}/public_html/phpjug
+instdir=	vrjuggler/1.0/programmer.reference
+
+prefix_pub=	${webroot}/${instdir}
+prefix_int=	${webroot}/${instdir}.internal
+
 # If ${SUBDIRS} is not defined yet, include the Doc subdirs.mk file to get a
 # static list of subdirectories.
 ifndef SUBDIRS
@@ -76,41 +83,19 @@ doc-internal:
 	cp ${JAVA_CLASS}/*.class ${OUT_INT}
 
 doc-public:
-	${MAKE} BASE_OUT="${OUT_PUB}" TEMPLATES="${TEMPLATES_PUB}"	\
-          all-doc ${GROUPS}
+	${PERL} ${PERCEPS} -a -b -c -h -f -d ${OUT_PUB} -F ${FILTERS}	\
+          -t ${TEMPLATES_PUB} ${DIRS}
+	cp ${JAVA_CLASS}/*.class ${OUT_PUB}
 
-all-doc:
-	${PERL} ${PERCEPS} -a -b -c -h -f -d ${BASE_OUT} -F ${FILTERS}	\
-          -t ${TEMPLATES} ${DIRS}
-	cp ${JAVA_CLASS}/*.class ${BASE_OUT}
+install-docs: install-doc-internal install-doc-public
 
-Config:
-	${PERL} ${PERCEPS} -a -b -c -h -f -d ${BASE_OUT}/$@		\
-          -F ${FILTERS} -t ${TEMPLATES}_xml ${CONFIG_GROUP_DIRS}
+install-doc-internal:
+	if [ ! -d ${prefix_int} ]; then mkdir -p ${prefix_int} ; fi
+	mv ${OUT_INT}/* ${prefix_int}/
 
-Input:
-	${PERL} ${PERCEPS} -a -b -c -h -f -d ${BASE_OUT}/$@		\
-          -F ${FILTERS} -t ${TEMPLATES}_xml ${INPUT_GROUP_DIRS}
-
-Kernel:
-	${PERL} ${PERCEPS} -a -b -c -h -f -d ${BASE_OUT}/$@		\
-          -F ${FILTERS} -t ${TEMPLATES}_xml ${KERNEL_GROUP_DIRS}
-
-Math:
-	${PERL} ${PERCEPS} -a -b -c -h -f -d ${BASE_OUT}/$@		\
-          -F ${FILTERS} -t ${TEMPLATES}_xml ${MATH_GROUP_DIRS}
-
-Primitives:
-	${PERL} ${PERCEPS} -a -b -c -h -f -d ${BASE_OUT}/$@		\
-          -F ${FILTERS} -t ${TEMPLATES}_xml ${PRIMITIVES_GROUP_DIRS}
-
-Sound:
-	${PERL} ${PERCEPS} -a -b -c -h -f -d ${BASE_OUT}/$@		\
-          -F ${FILTERS} -t ${TEMPLATES}_xml ${SOUND_GROUP_DIRS}
-
-Utils:
-	${PERL} ${PERCEPS} -a -b -c -h -f -d ${BASE_OUT}/$@		\
-          -F ${FILTERS} -t ${TEMPLATES}_xml ${UTILS_GROUP_DIRS}
+install-doc-public:
+	if [ ! -d ${prefix_pub} ]; then mkdir -p ${prefix_pub} ; fi
+	mv ${OUT_PUB}/* ${prefix_pub}/
 
 # -----------------------------------------------------------------------------
 # Clean-up.

@@ -46,6 +46,13 @@ OUT_PUB = ./public_doc
 OUT_EX = ./ex_html
 JAVA_CLASS = $(PERCEPS_DIR)/classes
 
+# Fill these two in!!  Together, they form the installation prefix.
+webroot=	$(HOME)/public_html/phpjug
+instdir=	vrjuggler/1.0/programmer.reference
+
+prefix_pub=	$(webroot)/$(instdir)
+prefix_int=	$(webroot)/$(instdir).internal
+
 docs: doc-internal doc-public
 
 doc-internal:
@@ -54,45 +61,18 @@ doc-internal:
 	cp $(JAVA_CLASS)/*.class $(OUT_INT)
 
 doc-public:
-	$(MAKE) BASE_OUT="$(OUT_PUB)" TEMPLATES="$(TEMPLATES_PUB)"	\
-          all-doc $(GROUPS)
+	$(PERCEPS) -a -b -c -h -f -d $(OUT_PUB) -F $(FILTERS)		\
+          -t $(TEMPLATES_PUB) $(SUBDIRS)
 
-all-doc:
-	$(PERCEPS) -a -b -c -h -f -d $(BASE_OUT) -F $(FILTERS)		\
-          -t $(TEMPLATES) $(SUBDIRS)
-	cp $(JAVA_CLASS)/*.class $(BASE_OUT)
+install-docs: install-doc-internal install-doc-public
 
-Config:
-	$(PERCEPS) -a -b -c -h -f -d $(BASE_OUT)/$@ -F $(FILTERS)	\
-          -t $(TEMPLATES)_xml $(CONFIG_GROUP_DIRS)
+install-doc-internal:
+	if [ ! -d $(prefix_int) ]; then mkdir -p $(prefix_int) ; fi
+	mv $(OUT_INT)/* $(prefix_int)/
 
-Input:
-	$(PERCEPS) -a -b -c -h -f -d $(BASE_OUT)/$@ -F $(FILTERS)	\
-          -t $(TEMPLATES)_xml $(INPUT_GROUP_DIRS)
-
-Kernel:
-	$(PERCEPS) -a -b -c -h -f -d $(BASE_OUT)/$@ -F $(FILTERS)	\
-          -t $(TEMPLATES)_xml $(KERNEL_GROUP_DIRS)
-
-Math:
-	$(PERCEPS) -a -b -c -h -f -d $(BASE_OUT)/$@ -F $(FILTERS)	\
-          -t $(TEMPLATES)_xml $(MATH_GROUP_DIRS)
-
-Primitives:
-	$(PERCEPS) -a -b -c -h -f -d $(BASE_OUT)/$@ -F $(FILTERS)	\
-          -t $(TEMPLATES)_xml $(PRIMITIVES_GROUP_DIRS)
-
-Sound:
-	$(PERCEPS) -a -b -c -h -f -d $(BASE_OUT)/$@ -F $(FILTERS)	\
-          -t $(TEMPLATES)_xml $(SOUND_GROUP_DIRS)
-
-Utils:
-	$(PERCEPS) -a -b -c -h -f -d $(BASE_OUT)/$@ -F $(FILTERS)	\
-          -t $(TEMPLATES)_xml $(UTILS_GROUP_DIRS)
-
-example:
-	$(PERCEPS) -a -b -c -h -d $(OUT_EX) -t $(TEMPLATES) $(SRC_EX)
-	cp $(JAVA_CLASS)/*.class $(OUT_EX)
+install-doc-public:
+	if [ ! -d $(prefix_pub) ]; then mkdir -p $(prefix_pub) ; fi
+	mv $(OUT_PUB)/* $(prefix_pub)/
 
 clean:
 	@ if [ -f $(OUT_PUB)/* ]; then rm $(OUT_PUB)/*; fi
