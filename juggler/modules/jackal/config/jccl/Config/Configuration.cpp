@@ -291,7 +291,7 @@ struct ElementNamePred
    std::string mName;
 };
 
-/** Load the elements from a given <elements> tree into this configuration. */
+/** Load the elements from a given 'elements' tree into this configuration. */
 bool Configuration::loadFromElementNode(cppdom::NodePtr elementsNode,
                                         const std::string& currentFile)
 {

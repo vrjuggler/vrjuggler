@@ -151,14 +151,19 @@ public:
    /** Returns the string that identifies self's ConfigDefinition. */
    std::string getID() const;
 
-   /** Returns a value from one of self's properties.
-    *  @param property The token string for a property.
-    *  @param ind The index to the property's list of values.  Use
+   /**
+    * Returns a value from one of self's properties.
+    *
+    * @param prop The token string for a property.
+    * @param ind  The index to the property's list of values.  Use
     *             getNum() to determine the number of values for a
     *             given property.  The valid range is 0 to getNum()-1.
+    *
     * @note Call with a template parameter equal to the type to return
     *        ie. getProperty<int>("int_property", 3);
-    * @todo This function could throw io exceptions.  Maybe catch those and turn them into something jccl'ish
+    *
+    * @todo This function could throw I/O exceptions.  Maybe catch those and
+    *       turn them into something JCCL'ish.
     */
    template<class T>
    T getProperty(const std::string& prop, int ind) const
@@ -216,11 +221,14 @@ public:
    T getProperty(const std::string& prop) const;
 #endif
 
-   /** Sets a value for the given property.
-    *  @param property The token string for a property.
-    *  @param ind The index to the property's list of values.
-    *  @param val The value to set.
-    *  @note If property does not exist yet, then we create it in the element.
+   /**
+    * Sets a value for the given property.
+    *
+    * @param prop The token string for a property.
+    * @param ind  The index to the property's list of values.
+    * @param val  The value to set.
+    *
+    * @note If property does not exist yet, then we create it in the element.
     */
    template<class T>
    bool setProperty(const std::string& prop, const int ind, T val)
