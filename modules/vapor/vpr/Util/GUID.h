@@ -219,7 +219,7 @@ public:
 
    friend class vpr::GUIDFactory;
 
-   const static vpr::GUID NullGUID;
+   static const vpr::GUID NullGUID;
 
 private:
 
