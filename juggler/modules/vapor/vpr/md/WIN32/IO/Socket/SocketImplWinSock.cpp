@@ -178,6 +178,53 @@ SocketImpWinSock::connect () {
     return retval;
 }
 
+// ============================================================================
+// Protected methods.
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// Default constructor.  This just initializes member variables to reasonable
+// defaults.
+// ----------------------------------------------------------------------------
+SocketImpWinSock::SocketImpWinSock ()
+    : BlockIO(std::string("INADDR_ANY")), m_sockfd(-1)
+{
+    init();
+}
+
+// ----------------------------------------------------------------------------
+// Standard constructor.  This takes the given address (a string containing
+// a hostname or an IP address), port, domain and type and stores the values
+// in the member variables for use when opening the socket and performing
+// communications.
+// ----------------------------------------------------------------------------
+SocketImpWinSock::SocketImpWinSock (const InetAddr& local_addr,
+                                    const InetAddr& remote_addr,
+                                    const SocketTypes::Type type)
+    : BlockIO(std::string("INADDR_ANY")), m_sockfd(-1),
+      m_local_addr(local_addr), m_remote_addr(remote_addr)
+{
+    init();
+}
+
+// ----------------------------------------------------------------------------
+// Destructor.  This currently does nothing.
+// ----------------------------------------------------------------------------
+SocketImpWinSock::~SocketImpWinSock () {
+    init();
+}
+
+// ----------------------------------------------------------------------------
+// Do the WinSock initialization required before any socket stuff can happen.
+// This is copied from a similar function given on page 279 of _Effective
+// TCP/IP Programming_ by Jon C. Snader.
+// ----------------------------------------------------------------------------
+void
+SocketImpWinSock::init () {
+    WSADATA wsadata;
+    WSAStartup(MAKEWORD(2, 2), &wsadata);
+}
+
 // ----------------------------------------------------------------------------
 // Receive the specified number of bytes from the remote site to which the
 // local side is connected.
@@ -193,13 +240,13 @@ SocketImpWinSock::recv(void* buffer, const size_t length, const int flags) {
 // ----------------------------------------------------------------------------
 ssize_t
 SocketImpWinSock::recv (std::string& buffer, const size_t length,
-                          const int flags)
+                        const int flags)
 {
     ssize_t bytes;
     char* temp_buf;
 
     temp_buf = (char*) malloc(length);
-    bytes    = recv(temp_buf, length, flags);
+    bytes    = recv((void*) temp_buf, length, flags);
 
     // If anything was read into temp_buf, copy it into buffer.
     if ( bytes > -1 ) {
@@ -223,7 +270,7 @@ SocketImpWinSock::recv (std::vector<char>& buffer, const size_t length,
     char* temp_buf;
 
     temp_buf = (char*) malloc(length);
-    bytes    = recv(temp_buf, length, flags);
+    bytes    = recv((void*) temp_buf, length, flags);
 
     // If anything was read into temp_buf, copy it into buffer.
     if ( bytes > -1 ) {
@@ -256,7 +303,7 @@ ssize_t
 SocketImpWinSock::send (const std::string& buffer, const size_t length,
                         const int flags)
 {
-    return send(buffer.c_str(), length, flags);
+    return send((void*) buffer.c_str(), length, flags);
 }
 
 // ----------------------------------------------------------------------------
@@ -278,58 +325,11 @@ SocketImpWinSock::send (const std::vector<char>& buffer, const size_t length,
     }
 
     // Write temp_buf to the file handle.
-    bytes = send(temp_buf, length, flags);
+    bytes = send((void*) temp_buf, length, flags);
 
     free(temp_buf);
 
     return bytes;
-}
-
-// ============================================================================
-// Protected methods.
-// ============================================================================
-
-// ----------------------------------------------------------------------------
-// Default constructor.  This just initializes member variables to reasonable
-// defaults.
-// ----------------------------------------------------------------------------
-SocketImpWinSock::SocketImpWinSock ()
-    : SocketImp(), m_sockfd(-1)
-{
-    init();
-}
-
-// ----------------------------------------------------------------------------
-// Standard constructor.  This takes the given address (a string containing
-// a hostname or an IP address), port, domain and type and stores the values
-// in the member variables for use when opening the socket and performing
-// communications.
-// ----------------------------------------------------------------------------
-SocketImpWinSock::SocketImpWinSock (const std::string& address,
-                                    const unsigned short port,
-                                    const SocketTypes::Domain domain,
-                                    const SocketTypes::Type type)
-    : SocketImp(address, port, domain, type), m_sockfd(-1)
-{
-    init();
-}
-
-// ----------------------------------------------------------------------------
-// Destructor.  This currently does nothing.
-// ----------------------------------------------------------------------------
-SocketImpWinSock::~SocketImpWinSock () {
-    init();
-}
-
-// ----------------------------------------------------------------------------
-// Do the WinSock initialization required before any socket stuff can happen.
-// This is copied from a similar function given on page 279 of _Effective
-// TCP/IP Programming_ by Jon C. Snader.
-// ----------------------------------------------------------------------------
-void
-SocketImpWinSock::init () {
-    WSADATA wsadata;
-    WSAStartup(MAKEWORD(2, 2), &wsadata);
 }
 
 }; // End of vpr namespace

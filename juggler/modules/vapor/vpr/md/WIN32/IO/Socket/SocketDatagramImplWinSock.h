@@ -35,15 +35,12 @@
 
 #include <string>
 
-#include <IO/Socket/SocketDatagramImp.h>
 #include <md/WIN32/SocketImpWinSock.h>
 
 
 namespace vpr {
 
-class SocketDatagramImpWinSock : virtual public SocketImpWinSock,
-                                 virtual public SocketDatagramImp_i
-{
+class SocketDatagramImpWinSock : public SocketImpWinSock {
 public:
     // ========================================================================
     // vpr::SocketDatagram implementation.

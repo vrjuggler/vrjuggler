@@ -210,7 +210,7 @@ public:
    //! RETURNS: -1 - Bad thread. Creation error.
    //! RETURNS: other - id of thread in Juggler
    // -----------------------------------------------------------------------
-   int32_t getTID()
+   Int32 getTID()
    { return mThreadId; }
 
    // -----------------------------------------------------------------------
@@ -273,18 +273,18 @@ private:
    {;}
 
 private:
-   int32_t  mThreadId;    // The local id for the thread, -1 ==> invalid thread
+   Int32  mThreadId;    // The local id for the thread, -1 ==> invalid thread
 
    // --- STATICS ---- //
 
 private:
    // XXX: What happens when it rolls over after we have been running for a LONG time.
-   int32_t getNextThreadId()
+   Int32 getNextThreadId()
    {
       return mNextThreadId++;
    }
 
-   static int32_t mNextThreadId;    // Initialized to 0
+   static Int32 mNextThreadId;    // Initialized to 0
 };
 
 
