@@ -91,8 +91,8 @@ public:
     */
    bool containsKey(unsigned long key)
    {
-      vprASSERT((key >= 0) && "Called contains key with invalid key");
-      return ((key>=0)&&((unsigned)key<mTSObjects.size()));
+      //vprASSERT((key >= 0) && "Called contains key with invalid key");
+      return ( (unsigned)key<mTSObjects.size() );
    }
 
    /** Gets the object with the spcified key. */
@@ -122,7 +122,7 @@ private:
 //-----------------------------------------------------------------
 void TSTable::setObject(TSBaseObject* object, unsigned long key)
 {
-   vprASSERT(key >= 0);
+   //vprASSERT(key >= 0);
 #ifdef _DEBUG
    unsigned long size_before = mTSObjects.size();
 #endif
