@@ -99,14 +99,13 @@ gmtl::Vec3f result_v = mat * vec;
 gmtl::Point3f result_p = mat * point;
 
 // init the matrix using the quaternion
-gmtl::Matrix44f rot_mat( gmtl::make<gmtl::Matrix44f>( q ) );
+gmtl::Matrix44f rot_mat( gmtl::make&lt;gmtl::Matrix44f&gt;( q ) );
 
 // get the length of the vector
 float length = gmtl::length( vec );
 
 // get the cross product
-gmtl::Vec3f result_cross = gmtl::cross( vec1, vec2 );
-</programlisting>
+gmtl::Vec3f result_cross = gmtl::cross( vec1, vec2 );</programlisting>
             </listitem>
             <listitem>
                <para>Common C preprocessor symbols such as <symbol>VJ_DEG2RAD</symbol>, <symbol>VJ_RAD2DEG</symbol> found in <filename>vjConfig.h</filename> are now located as inline functions in <filename>gmtl/Math.h</filename>. These are listed in the <classname>gmtl::Math</classname> namespace. For example, <symbol>VJ_DEG2RAD</symbol> is now <function>gmtl::Math::deg2Rad()</function>. The following illustrates the new use:</para>
