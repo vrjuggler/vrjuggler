@@ -59,9 +59,9 @@ public:
    /**
     * Adds the given handle to the selector.
     *
-    * <b>PRE:</b> <code>handle</code> is a valid handle.<br>
-    * <b>POST:</b> <code>handle</code> is added to the handle set, and
-    *              initialized to a mask of no-events.
+    * @pre <code>handle</code> is a valid handle.
+    * @post <code>handle</code> is added to the handle set, and initialized to
+    *       a mask of no-events.
     *
     * @param handle The handle to be added to this selector.
     * @param mask   A bitmask specifying the handle set(s) to which the given
@@ -79,9 +79,8 @@ public:
    /**
     * Removes the named handle from the selector.
     *
-    * <b>PRE:</b> <code>handle</code> is in the selector.<br>
-    * <b>POST:</b> <code>handle</code> is removed from the set of valid
-    *              handles.
+    * @pre <code>handle</code> is in the selector.
+    * @post <code>handle</code> is removed from the set of valid handles.
     *
     * @param handle The handle to be removed from the selector's handle list.
     *
@@ -97,8 +96,8 @@ public:
     * Sets the event flags going in to the select to mask.  The flags
     * specify which events should be selected for the given handle.
     *
-    * <b>PRE:</b> <code>handle</code> has already been added to the selector
-    *             using <code>addHandle</code>.
+    * @pre <code>handle</code> has already been added to the selector using
+    *      <code>addHandle</code>.
     *
     * @param handle The handle whose event flags will be updated.
     * @param mask   A bitmask specifying the handle set(s) to which the given
@@ -116,8 +115,8 @@ public:
    /**
     * Gets the current in flag mask.
     *
-    * <b>PRE:</b> <code>handle</code> has already been added to the selector
-    *             using <code>addHandle</code>.
+    * @pre <code>handle</code> has already been added to the selector using
+    *      <code>addHandle</code>.
     *
     * @param handle The handle whose "in" event flags will be returned.
     *
@@ -133,7 +132,7 @@ public:
     * Gets the current out flag mask after a call to <code>select</code>.
     * The value 
     *
-    * <b>PRE:</b> <code>select</code> has been called.
+    * @pre <code>select</code> has been called.
     *
     * @param handle The handle whose "out" event flags will be returned.
     *

@@ -1,5 +1,4 @@
-/*************** <auto-copyright.pl BEGIN do not edit this line> **************
- *
+/*************** <auto-copyright.pl BEGIN do not edit this line> ************** *
  * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
  *
  * Original Authors:
@@ -58,6 +57,7 @@ namespace vpr {
  */
 class VPR_CLASS_API BlockIO {
 public:
+    /// Possible modes for opening I/O devices.
     enum _open_mode {
         READ_ONLY,        /**< Open read-only */
         WRITE_ONLY,       /**< Open write-only */
@@ -68,9 +68,9 @@ public:
      * Gets the name of this I/O device.  The significance of the name depends
      * on the specific device type.
      *
-     * <b>PRE:</b> None.<br>
-     * <b>POST:</b> A constant reference to the <code>m_name</code> object is
-     *              returned to the caller.
+     * @pre None.
+     * @post A constant reference to the <code>m_name</code> object is
+     *       returned to the caller.
      *
      * @return An object containing the name of this device.
      */
@@ -82,10 +82,10 @@ public:
     /**
      * Sets the open flags so that the I/O device is opened in read-only mode.
      *
-     * <b>PRE:</b> None.<br>
-     * <b>POST:</b> The open flags are updated so that when the device is
-     *              opened, it is opened in read-only mode.  If the device is
-     *              already open, this has no effect.
+     * @pre None.
+     * @post The open flags are updated so that when the device is opened, it
+     *       it is opened in read-only mode.  If the device is already open,
+     *       this has no effect.
      */
     virtual void
     setOpenReadOnly (void) {
@@ -95,10 +95,10 @@ public:
     /**
      * Sets the open flags so that the I/O device is opened in write-only mode.
      *
-     * <b>PRE:</b> None.<br>
-     * <b>POST:</b> The open flags are updated so that when the device is
-     *              opened, it is opened in write-only mode.  If the device is
-     *              already open, this has no effect.
+     * @pre None.
+     * @post The open flags are updated so that when the device is opened, it
+     *       is opened in write-only mode.  If the device is already open,
+     *       this has no effect.
      */
     virtual void
     setOpenWriteOnly (void) {
@@ -108,10 +108,10 @@ public:
     /**
      * Sets the open flags so that the I/O device is opened in read/write mode.
      *
-     * <b>PRE:</b> None.<br>
-     * <b>POST:</b> The open flags are updated so that when the device is
-     *              opened, it is opened in read/write mode.  If the device is
-     *              already open, this has no effect.
+     * @pre None.
+     * @post The open flags are updated so that when the device is opened, it
+     *       is opened in read/write mode.  If the device is already open,
+     *       this has no effect.
      */
     virtual void
     setOpenReadWrite (void) {
@@ -122,10 +122,10 @@ public:
      * Sets the blocking flags so that the I/O device is opened in blocking
      * mode.
      *
-     * <b>PRE:</b> None.<br>
-     * <b>POST:</b> The open flags are updated so that when the device is
-     *              opened, it is opened in blocking mode.  If the device is
-     *              already open, this has no effect.
+     * @pre None.
+     * @post The open flags are updated so that when the device is opened,
+     *       is opened in blocking mode.  If the device is already open,
+     *       this has no effect.
      */
     virtual void
     setOpenBlocking (void) {
@@ -136,10 +136,10 @@ public:
      * Sets the blocking flags so that the I/O device is opened in
      * non-blocking mode.
      *
-     * <b>PRE:</b> None.<br>
-     * <b>POST:</b> The open flags are updated so that when the device is
-     *              opened, it is opened in non-blocking mode.  If the device
-     *              is already open, this has no effect.
+     * @pre None.
+     * @post The open flags are updated so that when the device is opened, it
+     *       is opened in non-blocking mode.  If the device is already open,
+     *       this has no effect.
      */
     virtual void
     setOpenNonBlocking (void) {
@@ -149,10 +149,10 @@ public:
     /**
      * Opens the I/O device.
      *
-     * <b>PRE:</b> The device is not already open.<br>
-     * <b>POST:</b> An attempt is made to open the I/O device.  The resulting
-     *              status is returned to the caller.  If the I/O device is
-     *              opened, <code>m_open</code> is set to true.
+     * @pre The device is not already open.
+     * @post An attempt is made to open the I/O device.  The resulting status
+     *       is returned to the caller.  If the I/O device is opened,
+     *       <code>m_open</code> is set to true.
      *
      * @return <code>vpr::Status::Success</code> is returned if the device is
      *         opened successfully.<br>
@@ -163,10 +163,10 @@ public:
     /**
      * Closes the I/O device.
      *
-     * <b>PRE:</b> The device is open.<br>
-     * <b>POST:</b> An attempt is made to close the I/O device.  The resulting
-     *              status is returned to the caller.  If the I/O device is
-     *              closed, <code>m_open</code> is set to false.
+     * @pre The device is open.
+     * @post An attempt is made to close the I/O device.  The resulting status
+     *       is returned to the caller.  If the I/O device is closed,
+     *       <code>m_open</code> is set to false.
      *
      * @return <code>vpr::Status::Success</code> is returned if the device is
      *         closed successfully.<br>
@@ -177,8 +177,8 @@ public:
     /**
      * Gets the open state of this I/O device.
      *
-     * <b>PRE:</b> None.<br>
-     * <b>POST:</b> The boolean value in m_open is returned to the caller.
+     * @pre None.
+     * @post The boolean value in m_open is returned to the caller.
      *
      * @return <code>true</code> is returned if the device is open;
      *         <code>false</code> otherwise.
@@ -191,8 +191,8 @@ public:
     /**
      * Reconfigures the I/O device so that it is in blocking mode.
      *
-     * <b>PRE:</b> The device is open.<br>
-     * <b>POST:</b> Processes will block when accessing the device.
+     * @pre The device is open.
+     * @post Processes will block when accessing the device.
      *
      * @return <code>vpr::Status::Success</code> is returned if the device's
      *         blocking mode is set to blocking.<br>
@@ -203,8 +203,8 @@ public:
     /**
      * Reconfigures the I/O device so that it is in non-blocking mode.
      *
-     * <b>PRE:</b> The device is open.<br>
-     * <b>POST:</b> Processes will not block when accessing the device.
+     * @pre The device is open.
+     * @post Processes will not block when accessing the device.
      *
      * @return <code>vpr::Status::Success</code> is returned if the device's
      *         blocking mode is set to non-blocking.<br>
@@ -215,8 +215,8 @@ public:
     /**
      * Gets the current blocking state for the I/O device.
      *
-     * <b>PRE:</b> <code>m_blocking</code> is set correctly<br>
-     * <b>POST:</b>
+     * @pre <code>m_blocking</code> is set correctly.
+     * @post
      *
      * @return <code>true</code> is returned if the device is in blocking mode.
      *         Otherwise, <code>false</code> is returned.
@@ -229,8 +229,8 @@ public:
     /**
      * Gets the current non-blocking state for the I/O device.
      *
-     * <b>PRE:</b> m_blocking is set correctly<br>
-     * <b>POST:</b>
+     * @pre m_blocking is set correctly.
+     * @post
      *
      * @return <code>true</code> is returned if the device is in non-blocking
      *         mode.  Otherwise, <code>false</code> is returned.
@@ -254,12 +254,11 @@ public:
      * Reads at most the specified number of bytes from the I/O device into
      * the given buffer.
      *
-     * <b>PRE:</b> The device is open for reading, and the buffer is at least
-     *             <code>length</code> bytes long.<br>
-     * <b>POST:</b> The given buffer has <code>length</code> bytes copied into
-     *              it from the device, and the number of bytes read
-     *              successfully is returned to the caller via the
-     *              <code>bytes_read</code> argument.
+     * @pre The device is open for reading, and the buffer is at least
+     *      <code>length</code> bytes long.
+     * @post The given buffer has <code>length</code> bytes copied into it from
+     *       the device, and the number of bytes read successfully is returned
+     *       to the caller via the <code>bytes_read</code> argument.
      *
      * @param buffer     A pointer to the buffer where the device's buffer
      *                   contents are to be stored.
@@ -290,12 +289,11 @@ public:
      * Reads at most the specified number of bytes from the I/O device into
      * the given buffer.
      *
-     * <b>PRE:</b> The device is open for reading, and the buffer is at least
-     *             <code>length</code> bytes long.<br>
-     * <b>POST:</b> The given buffer has <code>length</code> bytes copied into
-     *              it from the device, and the number of bytes read
-     *              successfully is returned to the caller via the
-     *              <code>bytes_read</code> argument.
+     * @pre The device is open for reading, and the buffer is at least
+     *      <code>length</code> bytes long.
+     * @post The given buffer has <code>length</code> bytes copied into it
+     *       from the device, and the number of bytes read successfully is
+     *       returned to the caller via the <code>bytes_read</code> argument.
      *
      * @param buffer     A reference to the buffer (a <code>std::string</code>
      *                   object) where the device's buffer contents are to be
@@ -334,12 +332,11 @@ public:
      * Reads at most the specified number of bytes from the I/O device into
      * the given buffer.
      *
-     * <b>PRE:</b> The device is open for reading, and the buffer is at least
-     *             <code>length</code> bytes long.<br>
-     * <b>POST:</b> The given buffer has <code>length</code> bytes copied into
-     *              it from the device, and the number of bytes read
-     *              successfully is returned to the caller via the
-     *              <code>bytes_read</code> argument.
+     * @pre The device is open for reading, and the buffer is at least
+     *      <code>length</code> bytes long.
+     * @post The given buffer has <code>length</code> bytes copied into it
+     *       from the device, and the number of bytes read successfully is
+     *       returned to the caller via the <code>bytes_read</code> argument.
      *
      * @param buffer     A pointer to the buffer (a vector of
      *                   <code>char</code>s) where the device's buffer
@@ -386,12 +383,11 @@ public:
      * Reads exactly the specified number of bytes from the I/O device into
      * the given buffer.
      *
-     * <b>PRE:</b> The device is open for reading, and the buffer is at least
-     *             <code>length</code> bytes long.<br>
-     * <b>POST:</b> The given buffer has <code>length</code> bytes copied into
-     *              it from the device, and the number of bytes read
-     *              successfully is returned to the caller via the
-     *              <code>bytes_read</code> parameter.
+     * @pre The device is open for reading, and the buffer is at least
+     *      <code>length</code> bytes long.
+     * @post The given buffer has <code>length</code> bytes copied into it from
+     *       the device, and the number of bytes read successfully is returned
+     *       to the caller via the <code>bytes_read</code> parameter.
      *
      * @param buffer     A pointer to the buffer where the device's buffer
      *                   contents are to be stored.
@@ -419,12 +415,11 @@ public:
      * Reads exactly the specified number of bytes from the I/O device into
      * the given buffer.
      *
-     * <b>PRE:</b> The device is open for reading, and the buffer is at least
-     *             <code>length</code> bytes long.<br>
-     * <b>POST:</b> The given buffer has <code>length</code> bytes copied into
-     *              it from the device, and the number of bytes read
-     *              successfully is returned to the caller via the
-     *              <code>bytes_read</code> parameter.
+     * @pre The device is open for reading, and the buffer is at least
+     *      <code>length</code> bytes long.
+     * @post The given buffer has <code>length</code> bytes copied into it from
+     *       the device, and the number of bytes read successfully is returned
+     *       to the caller via the <code>bytes_read</code> parameter.
      *
      * @param buffer     A reference to the buffer (a <code>std::string</code>
      *                   object) where the device's buffer contents are to be
@@ -466,11 +461,11 @@ public:
      * Reads exactly the specified number of bytes from the I/O device into
      * the given buffer.
      *
-     * <b>PRE:</b> The device is open for reading, and the buffer is at least
-     *             <code>length</code> bytes long.<br>
-     * <b>POST:</b> The given buffer has <code>length</code> bytes copied into
-     *              it from the device, and the number of bytes read
-     *              successfully is returned to the caller.
+     * @pre The device is open for reading, and the buffer is at least
+     *      <code>length</code> bytes long.
+     * @post The given buffer has <code>length</code> bytes copied into it from
+     *       the device, and the number of bytes read successfully is returned
+     *       to the caller.
      *
      * @param buffer     A pointer to the buffer (a vector of
      *                   <code>char</code>s) where the device's buffer contents
@@ -514,10 +509,10 @@ public:
     /**
      * Write the buffer to the I/O device.
      *
-     * <b>PRE:</b> The device is open for writing.<br>
-     * <b>POST:</b> The given buffer is written to the I/O device, and the
-     *              number of bytes written successfully is returned to the
-     *              caller via the <code>bytes_written</code> parameter.
+     * @pre The device is open for writing.
+     * @post The given buffer is written to the I/O device, and the number of
+     *       bytes written successfully is returned to the caller via the
+     *       <code>bytes_written</code> parameter.
      *
      * @param buffer        A pointer to the buffer to be written.
      * @param length        The length of the buffer.
@@ -547,10 +542,10 @@ public:
     /**
      * Writes the buffer to the I/O device.
      *
-     * <b>PRE:</b> The device is open for writing.<br>
-     * <b>POST:</b> The given buffer is written to the I/O device, and the
-     *              number of bytes written successfully is returned to the
-     *              caller via the <code>bytes_written</code> parameter.
+     * @pre The device is open for writing.
+     * @post The given buffer is written to the I/O device, and the number of
+     *       bytes written successfully is returned to the caller via the
+     *       <code>bytes_written</code> parameter.
      *
      * @param buffer        A reference to the buffer (a std::string object)
      *                      to be written.
@@ -583,10 +578,10 @@ public:
     /**
      * Writes the buffer to the I/O device.
      *
-     * <b>PRE:</b> The device is open for writing.<br>
-     * <b>POST:</b> The given buffer is written to the I/O device, and the
-     *              number of bytes written successfully is returned to the
-     *              caller via the <code>bytes_written</code> parameter.
+     * @pre The device is open for writing.
+     * @post The given buffer is written to the I/O device, and the number of
+     *       bytes written successfully is returned to the caller via the
+     *       <code>bytes_written</code> parameter.
      *
      * @param buffer        A pointer to the buffer (a vector of chars) to
      *                      be written.
@@ -619,9 +614,9 @@ public:
     /**
      * Tests if the I/O device is read-only.
      *
-     * <b>PRE:</b> The I/O device is open.<br>
-     * <b>POST:</b> The access mode is tested for read-only mode, and the
-     *              result is returned to the caller.
+     * @pre The I/O device is open.
+     * @post The access mode is tested for read-only mode, and the result is
+     *       returned to the caller.
      *
      * @return <code>true</code> is returned if the device is in read-only
      *         mode; <code>false</code> otherwise.
@@ -634,9 +629,9 @@ public:
     /**
      * Tests if the I/O device is write-only.
      *
-     * <b>PRE:</b> The I/O device is open.<br>
-     * <b>POST:</b> The access mode is tested for write-only mode, and the
-     *              result is returned to the caller.
+     * @pre The I/O device is open.
+     * @post The access mode is tested for write-only mode, and the result is
+     *       returned to the caller.
      *
      * @return <code>true</code> is returned if the device is in write-only
      *         mode; <code>false</code> otherwise.
@@ -649,9 +644,9 @@ public:
     /**
      * Tests if the I/O device is read/write.
      *
-     * <b>PRE:</b> The I/O device is open.<br>
-     * <b>POST:</b> The access mode is tested for read/write mode, and the
-     *              result is returned to the caller.
+     * @pre The I/O device is open.
+     * @post The access mode is tested for read/write mode, and the result is
+     *       returned to the caller.
      *
      * @return <code>true</code> is returned if the device is in read/write
      *         mode; <code>false</code> otherwise.
@@ -664,9 +659,9 @@ public:
     /**
      * Test if reading from this I/O device will block.
      *
-     * <b>PRE:</b> getHandle() returns a valid <code>vpr::IOSys::Handle</code>
-     *             object.<br>
-     * <b>POST:</b>
+     * @pre getHandle() returns a valid <code>vpr::IOSys::Handle</code>
+     *      object.
+     * @post
      *
      * @param timeout Give a timeout period to wait for the device to
      *                unblock for reading.  This is optional and defaults to
@@ -681,9 +676,9 @@ public:
     /**
      * Test if writing to this I/O device will block.
      *
-     * <b>PRE:</b> getHandle() returns a valid <code>vpr::IOSys::Handle</code>
-     *             object.<br>
-     * <b>POST:</b>
+     * @pre getHandle() returns a valid <code>vpr::IOSys::Handle</code>
+     *      object.
+     * @post
      *
      * @param timeout Give a timeout period to wait for the device to
      *                unblock for writing.  This is optional and defaults to
@@ -699,11 +694,11 @@ protected:
     /**
      * Constructor.
      *
-     * <b>PRE:</b> None.<br>
-     * <b>POST:</b> The name object is copied into m_name; the open mode is
-     *              set to read/write and blocking; the open state is set to
-     *              <code>false</code>; and the blocking mode for reads and
-     *              writes is set to <code>true</code>.
+     * @pre None.
+     * @post The name object is copied into m_name; the open mode is set to
+     *       read/write and blocking; the open state is set to
+     *       <code>false</code>; and the blocking mode for reads and writes is
+     *       set to <code>true</code>.
      *
      * @param name The name for this device.
      */
@@ -733,8 +728,8 @@ protected:
     /**
      * Destructor.
      *
-     * <b>PRE:</b> None.
-     * <b>POST:</b> None.
+     * @pre None.
+     * @post None.
      */
     virtual ~BlockIO (void) {
         /* Do nothing. */ ;
@@ -743,12 +738,11 @@ protected:
     /**
      * Implementation of the <code>read</code> template method.
      *
-     * <b>PRE:</b> The device is open for reading, and the buffer is at least
-     *             <code>length</code> bytes long.<br>
-     * <b>POST:</b> The given buffer has length bytes copied into it from the
-     *              device, and the number of bytes read successfully is
-     *              returned to the caller via the <code>bytes_read</code>
-     *              parameter.
+     * @pre The device is open for reading, and the buffer is at least
+     *      <code>length</code> bytes long.
+     * @post The given buffer has length bytes copied into it from the device,
+     *       and the number of bytes read successfully is returned to the
+     *       caller via the <code>bytes_read</code> parameter.
      *
      * @param buffer     A pointer to the buffer where the device's buffer
      *                   contents are to be stored.
@@ -771,18 +765,16 @@ protected:
     /**
      * Implementation of the <code>readn</code> template method.
      *
-     * <b>PRE:</b> The device is open for reading, and the buffer is at least
-     *             <code>length</code> bytes long.<br>
-     * <b>POST:</b> The given buffer has <code>length</code> bytes copied into
-     *              it from the device, and the number of bytes read
-     *              successfully is returned to the caller via the
-     *              <code>bytes_read</code> parameter.
+     * @pre The device is open for reading, and the buffer is at least
+     *      <code>length</code> bytes long.
+     * @post The given buffer has <code>length</code> bytes copied into
+     *       it from the device, and the number of bytes read successfully
+     *       is returned to the caller via the <code>bytes_read</code>
+     *       parameter.
      *
      * @param buffer     A pointer to the buffer where the device's buffer
      *                   contents are to be stored.
-     * @param length     The number of bytes to be read.  This is optional
-     *                   and can be determined from the length of the vector
-     *                   if not specified.
+     * @param length     The number of bytes to be read.
      * @param bytes_read The number of bytes read into the buffer.
      *
      * @return <code>vpr::Status::Success</code> is returned if the read
@@ -801,10 +793,10 @@ protected:
     /**
      * Writes the buffer to the I/O device.
      *
-     * <b>PRE:</b> The device is open for writing.<br>
-     * <b>POST:</b> The given buffer is written to the I/O device, and the
-     *              number of bytes written successfully is returned to the
-     *              caller via the <code>bytes_written</code> parameter.
+     * @pre The device is open for writing.
+     * @post The given buffer is written to the I/O device, and the number
+     *       of bytes written successfully is returned to the caller via the
+     *       <code>bytes_written</code> parameter.
      *
      * @param buffer        A pointer to the buffer to be written.
      * @param length        The length of the buffer.
