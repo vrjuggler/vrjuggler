@@ -97,6 +97,13 @@ $Win32 = (defined($ENV{'OS'}) && $ENV{'OS'} =~ /^win/i);
 
 my $base_dir = '';
 
+# Set the location of the collection of dependencies.  If $VPR_DEPS_DIR is
+# not defined, then $deps_dir will be an empty string.  If the dependencies
+# are installed in $VPR_BASE_DIR, then the user gets the right compiler and
+# linker path options for free.  Otherwise, it is up to the user to provide
+# those paths.
+my $deps_dir = "$ENV{'VPR_DEPS_DIR'}" if defined("$ENV{'VPR_DEPS_DIR'}");
+
 # Get the directory where this script is located.
 if ( defined($ENV{'VPR_BASE_DIR'}) )
 {
@@ -256,6 +263,8 @@ sub make_CXXFLAGS ($)
    $cxxflags = qq(@vpr_cxxflags@ $vpr_extra_cxxflags @subsystem_cxxflags@ ) .
                qq(-I@includedir@ $vpr_extra_includes);
 
+   $cxxflags .= " -I$deps_dir/include" if $deps_dir;
+
    # Strip out extra whitespace.
    $cxxflags =~ s/\s{2,}/ /g;
 
@@ -336,6 +345,7 @@ sub make_EXTRA_LDFLAGS ($;$)
 
    my $extra_ldflags = ($use_linker ? qq(@vpr_extra_ldflags_linker@)
                                     : qq(@vpr_extra_ldflags_compiler@));
+   $extra_ldflags    = "-L$deps_dir/lib $extra_ldflags" if $deps_dir;
 
    my $full_extra_ldflags = qq($extra_ldflags @vpr_extra_libs@ ) .
                             "$my_subsystem_libs";
