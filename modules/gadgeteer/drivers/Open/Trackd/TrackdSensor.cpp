@@ -108,7 +108,7 @@ TrackdSensor::~TrackdSensor()
 
     // Update the data buffer
     addPositionSample(mCurSensorValues);
-            
+    swapPositionBuffers();
  }
 
 
