@@ -1295,12 +1295,14 @@ aMotionStar::configureBirds () {
                 }
 
                 // Set the current bird's format to the value in
-                // m_bird_format.  Also set the report rate to the value in
-                // m_report_rate and the hemisphere to the value in
-                // m_hemisphere.
+                // m_bird_format, and set its hemisphere to the value in
+                // m_hemisphere.  Fill in the other values with those just set
+                // in the bird_status object.  There is less chance for error
+                // this way.
                 m_birds[bird]->format      = m_bird_format;
-                m_birds[bird]->report_rate = m_report_rate;
                 m_birds[bird]->hemisphere  = m_hemisphere;
+                m_birds[bird]->report_rate = bird_status->status.reportRate;
+                m_birds[bird]->setup       = bird_status->status.setup;
 
                 // Fill in the bird_status struct.
                 bird_status->status.setup      |= FLOCK::APPEND_BUTTON_DATA;
@@ -1949,8 +1951,31 @@ aMotionStar::printDeviceStatus () {
                   << FLOCK::getHemisphereName(m_birds[i]->hemisphere)
                   << "\n";
         std::cout << std::setw(pad_width_dot) << std::setfill('.')
-                  << "*     Report Rate " << " "
+                  << "*     Report rate " << " "
                   << (unsigned int) m_birds[i]->report_rate << "\n";
+        std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                  << "*     Sudden change filtering " << " "
+                  << (m_birds[i]->setup & FLOCK::SUDDEN_OUTPUT_CHANGE ? "ON" :
+                                                                        "OFF")
+                  << "\n";
+        std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                  << "*     Button data " << " "
+                  << (m_birds[i]->setup & FLOCK::APPEND_BUTTON_DATA ? "ON" :
+                                                                      "OFF")
+                  << "\n";
+        std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                  << "*     AC narrow filter " << " "
+                  << (m_birds[i]->setup & FLOCK::AC_NARROW_FILTER ? "ON" :
+                                                                    "OFF")
+                  << "\n";
+        std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                  << "*     AC wide filter " << " "
+                  << (m_birds[i]->setup & FLOCK::AC_WIDE_FILTER ? "ON" : "OFF")
+                  << "\n";
+        std::cout << std::setw(pad_width_dot) << std::setfill('.')
+                  << "*     DC filter " << " "
+                  << (m_birds[i]->setup & FLOCK::DC_FILTER ? "ON" : "OFF")
+                  << "\n";
     }
 
     // Finish off with another line of = signs.

@@ -166,6 +166,7 @@ struct Device {
     unsigned char       buttons[2];   //: Bird button data
 
     unsigned char       addr;
+    unsigned char	setup;          //: Device setup parameters
 };
 
 };	// namespace FBB
