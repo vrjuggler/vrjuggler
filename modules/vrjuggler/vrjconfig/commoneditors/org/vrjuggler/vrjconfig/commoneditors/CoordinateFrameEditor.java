@@ -210,7 +210,8 @@ public class CoordinateFrameEditor
 
       // Using the object returned by source.getValue() seems to be safe
       // because every change in the spinner's value creates a new object.
-      mElement.setProperty("pre_rotation", value_index, source.getValue());
+      mElement.setProperty("pre_rotation", value_index, source.getValue(),
+                           mContext);
    }
 
    public void setConfig(ConfigContext ctx, ConfigElement elt)
@@ -222,6 +223,7 @@ public class CoordinateFrameEditor
                                             "' is not allowed");
       }
 
+      mContext = ctx;
       mElement = elt;
 
       String prop;
@@ -528,6 +530,7 @@ public class CoordinateFrameEditor
    }
 
    private int mCoordinateType;
+   private ConfigContext mContext;
    private ConfigElement mElement;
 
    private CoordFrame[]      mCoordFrames      = new CoordFrame[24];
