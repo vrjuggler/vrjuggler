@@ -80,9 +80,9 @@ GetOptions("CXX=s" => \$VARS{'CXX'}, "DEFS:s" => \$VARS{'DEFS'},
 	   "TEST_VJ_LIBS_BASIC=s" => \$VARS{'TEST_VJ_LIBS_BASIC'},
 	   "TEST_VJ_LIBS_GL=s" => \$VARS{'TEST_VJ_LIBS_GL'},
 	   "TEST_VJ_LIBS_PF=s" => \$VARS{'TEST_VJ_LIBS_PF'},
-	   "TEST_EXTRA_LIBS_BASIC=s" => \$VARS{'TEST_EXTRA_LIBS_BASIC'},
-	   "TEST_EXTRA_LIBS_GL=s" => \$VARS{'TEST_EXTRA_LIBS_GL'},
-	   "TEST_EXTRA_LIBS_PF=s" => \$VARS{'TEST_EXTRA_LIBS_PF'},
+	   "TEST_EXTRA_LIBS_BASIC:s" => \$VARS{'TEST_EXTRA_LIBS_BASIC'},
+	   "TEST_EXTRA_LIBS_GL:s" => \$VARS{'TEST_EXTRA_LIBS_GL'},
+	   "TEST_EXTRA_LIBS_PF:s" => \$VARS{'TEST_EXTRA_LIBS_PF'},
 	   "srcdir=s" => \$VARS{'srcdir'}, "SUBDIRS=s" => \$VARS{'SUBDIRS'},
 	   "prefix=s" => \$prefix, "startdir=s" => \$startdir);
 
