@@ -51,11 +51,11 @@ bool IBox::config(ConfigChunk *c)
 
   vprDEBUG(vrjDBG_INPUT_MGR,3) << "   IBox::config:" << std::endl
                              << vprDEBUG_FLUSH;
-  port_id = c->getProperty( "portNum" );
+  port_id = static_cast<std::string>(c->getProperty( "portNum" ));
 
   // Done in Input
   //active = 0;
-  //baudRate = c->getProperty("baud");
+  baudRate = (long) static_cast<int>(c->getProperty("baud"));
 
   vprDEBUG(vrjDBG_INPUT_MGR,1) << "   Creating an IBox.. params: " << std::endl
              << "    portnum: " << port_id << std::endl
@@ -89,14 +89,14 @@ IBox::~IBox()
 *********************************************** ahimberg */
 int IBox::startSampling()
 {
-  ibox_result result;
+  ibox2_result result;
 
   if (myThread == NULL)
   {
       resetIndexes();      // Reset the indexes for triple buffering
 
-      result = ibox_connect(&thingie, port_id, baudRate);
-      if (result == SUCCESS)
+      result = thingie.connect(port_id, baudRate);
+      if (result == thingie.SUCCESS)
       {
        active = 1;
        vprDEBUG(vrjDBG_INPUT_MGR,1) << "     Connected to IBox.\n"
@@ -113,7 +113,7 @@ int IBox::startSampling()
           << vprDEBUG_FLUSH;
        return 0;
       }
-      hci_std_cmd(&thingie, 0,0,0);
+      thingie.std_cmd(0,0,0);
 
 
       IBox* devicePtr = this;
@@ -159,17 +159,17 @@ int IBox::sample()
 {
    //struct timeval tv;
    // double start_time, stop_time;
-   ibox_result result;
+   ibox2_result result;
    //int tmp;
    //static int c = 0;
 
-   result = hci_check_packet(&thingie);
-   if (result == NO_PACKET_YET)
+   result = thingie.check_packet();
+   if (result == thingie.NO_PACKET_YET)
    {
    }
-   else if (result == SUCCESS)
+   else if (result == thingie.SUCCESS)
    {
-      hci_std_cmd( &thingie, 0,0,0 );
+      thingie.std_cmd(0,0,0);
       //    if (c == 0) {
       //      gettimeofday(&tv,0);
       //      start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
@@ -183,14 +183,14 @@ int IBox::sample()
       //      c = 0;
       //    }
 
-      theData[progress].button[0] = thingie.button[0];
-      theData[progress].button[1] = thingie.button[1];
-      theData[progress].button[2] = thingie.button[2];
-      theData[progress].button[3] = thingie.button[3];
-      theData[progress].analog[0] = thingie.analog[0];
-      theData[progress].analog[1] = thingie.analog[1];
-      theData[progress].analog[2] = thingie.analog[2];
-      theData[progress].analog[3] = thingie.analog[3];
+      theData[progress].button[0] = thingie.buttonFunc(0);
+      theData[progress].button[1] = thingie.buttonFunc(1);
+      theData[progress].button[2] = thingie.buttonFunc(2);
+      theData[progress].button[3] = thingie.buttonFunc(3);
+      theData[progress].analog[0] = thingie.analogFunc(0);
+      theData[progress].analog[1] = thingie.analogFunc(1);
+      theData[progress].analog[2] = thingie.analogFunc(2);
+      theData[progress].analog[3] = thingie.analogFunc(3);
 
       swapValidIndexes();     // Swap the buffers since we just read in a complete value
    }
@@ -214,7 +214,7 @@ int IBox::stopSampling()
 
     vpr::System::usleep(100);        // 100 uSec pause
 
-    hci_disconnect(&thingie);
+    thingie.disconnect();
     std::cout << "stopping the ibox.." << std::endl;
 
   }
