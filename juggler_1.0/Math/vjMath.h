@@ -69,11 +69,11 @@ public:
    //: sin returns the trigonometric sin of the radian argument x
    inline static float sin( const float x ) 
    {
-      #ifdef HAVE_SINF
+#ifdef HAVE_SINF
       return ::sinf( x );
-      #else
+#else
       return (float) ::sin( x );
-      #endif
+#endif
    }
 
    //: asin return the arc sine in the range -pi/2 to pi/2 
@@ -85,11 +85,11 @@ public:
    //: asin return the arc sine in the range -pi/2 to pi/2 
    inline static float asin( const float x ) 
    {
-      #ifdef HAVE_ASINF
+#ifdef HAVE_ASINF
       return ::asinf( x );
-      #else
+#else
       return (float) ::asin( x );
-      #endif
+#endif
    }
 
    //: cos returns the trigonometric cosine of the radian argument x
@@ -101,11 +101,11 @@ public:
    //: cos returns the trigonometric cosine of the radian argument x
    inline static float cos( const float x ) 
    {
-      #ifdef HAVE_COSF
+#ifdef HAVE_COSF
       return ::cosf( x );
-      #else
+#else
       return (float) ::cos( x );
-      #endif
+#endif
    }
 
    //: arc cosine returns the arc cosine in the range 0 to pi
@@ -117,11 +117,11 @@ public:
    //: arc cosine returns the arc cosine in the range 0 to pi
    inline static float acos( const float x )
    {
-      #ifdef HAVE_ACOSF
+#ifdef HAVE_ACOSF
       return ::acosf( x );
-      #else
+#else
       return (float) ::acos( x );
-      #endif
+#endif
    }
 
    //: atan2 returns the arc tangent of y/x in the range of -PI to PI
@@ -137,11 +137,11 @@ public:
    //  return value
    inline static float atan2( const float x, const float y )
    {
-      #ifdef HAVE_ATAN2F
+#ifdef HAVE_ATAN2F
       return ::atan2f( x, y );
-      #else
+#else
       return (float) ::atan2( x, y );
-      #endif
+#endif
    }
 
    //: atan returns the arc tangent of x in the range -pi/2 to pi/2
@@ -153,11 +153,11 @@ public:
    //: atan returns the arc tangent of x in the range -pi/2 to pi/2
    inline static float atan( const float x ) 
    {
-      #ifdef HAVE_ATAN2F
+#ifdef HAVE_ATAN2F
       return ::atanf( x );
-      #else
+#else
       return (float) ::atan( x );
-      #endif
+#endif
    }
 
    //: tan returns the trigonometric tangent of the radian argument x
@@ -169,11 +169,11 @@ public:
    //: tan returns the trigonometric tangent of the radian argument x
    inline static float tan( const float x ) 
    {
-      #ifdef HAVE_ATAN2F
+#ifdef HAVE_ATAN2F
       return ::tanf( x );
-      #else
+#else
       return (float) ::tan( x );
-      #endif
+#endif
    }
 
    //: sqrt returns the square root of the number x
@@ -185,11 +185,11 @@ public:
    //: sqrt returns the square root of the number x
    inline static float sqrt( const float x )
    {
-      #ifdef HAVE_SQRTF
+#ifdef HAVE_SQRTF
       return ::sqrtf( x );
-      #else
+#else
       return (float) ::sqrt( x );
-      #endif
+#endif
    }
 
    //: abs returns the absolute value of the number x
@@ -201,11 +201,11 @@ public:
    //: abs returns the absolute value of the number x
    inline static float abs( const float x )
    {
-      #ifdef HAVE_FABSF
+#ifdef HAVE_FABSF
       return ::fabsf( x );
-      #else
+#else
       return (float) ::fabs( x );
-      #endif
+#endif
    }
 
    //: convert a trigonometric value given in degrees to radians
