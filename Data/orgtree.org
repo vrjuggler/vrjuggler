@@ -32,6 +32,7 @@ Begin "Zelda"
             "Digital Simulator"
             "Glove Gesture Simulator"
             "SimRelativePosition"
+            "SimPinchGlove"
         End
     End
     "Juggler User"
