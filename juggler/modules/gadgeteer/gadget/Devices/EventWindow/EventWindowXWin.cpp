@@ -32,6 +32,7 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <iomanip>
 #include <boost/concept_check.hpp>
 
 #include <vpr/vpr.h>
