@@ -493,10 +493,14 @@ setup_omniORB_cxx ( )
       CPPFLAGS="$CPPFLAGS -I$cxx_orb_root/include"
    fi
 
-   AC_CHECK_HEADER(omniORB$OMNI_VER/omniORB.h, ,
+   DPP_LANG_SAVE
+   DPP_LANG_CPLUSPLUS
+
+   AC_CHECK_HEADER(omniORB$OMNI_VER/CORBA.h, ,
       [AC_MSG_WARN([*** $cxx_orb_name required for Tweek C++ API ***])
-       BUILD_CXX='N'
-      ])
+       BUILD_CXX='N'])
+
+   DPP_LANG_RESTORE
 
    CPPFLAGS="$tweek_save_CPPFLAGS"
 
