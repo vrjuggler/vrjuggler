@@ -25,9 +25,8 @@ class /*VJ_CLASS_API*/ OpenSGApp : public vrj::GlApp
     virtual ~OpenSGApp() { }
 
     virtual void initScene() = 0;
-    virtual OSG::RenderAction * getAction() = 0;
 
-    virtual void draw();
+    virtual void draw() = 0;
 
     // Initialize
     // Make sure to call initScene if you override this function
@@ -35,6 +34,12 @@ class /*VJ_CLASS_API*/ OpenSGApp : public vrj::GlApp
     {
         std::cout << "vjOSGApp::init called\n";
         // initScene();
+    }
+
+    virtual void initAPI()
+    {
+      std::cout << "vjOSGApp::initAPI called\n";
+      //initScene();
     }
 
     /*
@@ -54,13 +59,6 @@ class /*VJ_CLASS_API*/ OpenSGApp : public vrj::GlApp
 
 };
 
-inline void OpenSGApp::draw()
-{
-   std::cout << "vjOSGApp::draw called\n";
-
-   std::cout << "vjOSGApp::draw called\n";
-   _win->render(getAction());
-}
 
 };
 

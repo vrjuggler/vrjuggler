@@ -19,9 +19,57 @@
 #include <OpenSG/OSGThread.h>
 #include <OpenSG/OSGMPBase.h>
 
-OSG::SimpleMaterialPtr OpenSGNav::_highlightMaterial;
 OSG::UInt32 OpenSGNav::OSG_MAIN_ASPECT_ID=0;
-typedef OSG::ExternalThread OSGET;
+
+// Handle any initialization needed before API
+void OpenSGNav::init()
+{
+   vrj::OpenSGApp::init();      // Call base class init
+
+   // XXX: Complete
+   // if(!osgInitAlreadyCalled())
+   OSG::osgInit(0,0);                  // Binds to primordial thread
+   OpenSGNav::OSG_MAIN_ASPECT_ID = OSG::Thread::getAspect();   // Gets the base aspect id to use
+}
+
+void OpenSGNav::contextInit()
+{
+   context_data* c_data = &(*mContextData);
+
+   // Check for thread initialized
+   if(!c_data->mContextThreadInitialized)
+   {
+      c_data->mContextThreadInitialized = true;
+
+      char thread_name_buffer[255];
+      sprintf(thread_name_buffer, "vprThread:%d", vpr::Thread::self()->getTID());
+      c_data->mOsgThread = OSG::ExternalThread::get(thread_name_buffer);
+      c_data->mOsgThread->initialize(OSG_MAIN_ASPECT_ID);     // XXX: In future this must be different thread
+   }
+
+   // Allocate OpenSG stuff
+   c_data->mWin = OSG::PassiveWindow::create();
+   c_data->mCameraCartNode = OSG::Node::create();
+   c_data->mCameraCartTransform = OSG::Transform::create();
+   c_data->mCamera = OSG::PerspectiveCamera::create();
+
+   // Setup the cart, set internal transform node
+   OSG::beginEditCP(c_data->mCameraCartNode);
+      c_data->mCameraCartNode->setCore(c_data->mCameraCartTransform);
+   OSG::endEditCP(c_data->mCameraCartNode);
+
+   // Setup the camera
+   OSG::beginEditCP(c_data->mCamera);
+      c_data->mCamera->setBeacon (c_data->mCameraCartNode);
+      c_data->mCamera->setFov    (OSG::deg2rad(60.));
+      c_data->mCamera->setNear   (0.1);
+      c_data->mCamera->setFar    (10000);
+   OSG::endEditCP(c_data->mCamera);
+
+   //vjOSGApp::contextInit();
+   initGLState();
+}
+
 
 void OpenSGNav::draw()
 {
@@ -91,28 +139,16 @@ void OpenSGNav::draw()
    glPopMatrix();
 }
 
-/*
 void OpenSGNav::preFrame()
 {
     //std::cout << "OpenSGNav::preFrame called\n";
     //move the model around
 }
-*/
 
 void OpenSGNav::bufferPreDraw()
 {
    glClearColor(0.0, 0.0, 0.0, 0.0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-   /*
-    if (!thread2_initialized)
-    {
-       OSG::ExternalThread *new_thread = OSG::ExternalThread::get("OSGExternalThread2");
-       new_thread->initialize(OSG_MAIN_ASPECT_ID);
-       thread2_initialized=true;
-    }
-    std::cout << "OpenSGNav::preFrame called\n";
-    */
 }
 
 void OpenSGNav::initGLState()
@@ -146,104 +182,73 @@ void OpenSGNav::initGLState()
 
 void OpenSGNav::initRenderer()
 {
-   /*
-   if (!thread1_initialized)
-    {
-        OSG::ExternalThread *new_thread=OSG::ExternalThread::get("OSGExternalThread1");
-        new_thread->initialize(OSG_MAIN_ASPECT_ID);
-        thread1_initialized=true;
-    }
-    std::cout << "OpenSGNav::initRenderer called\n";
-    // the connection between GLUT and OpenSG
-//    GLUTWindowPtr gwin= GLUTWindow::create();
-//    gwin->setWinID(winid);
-//    gwin->init();
+   std::cout << "OpenSGNav::initRenderer called\n";
 
-//    _win = gwin;
-    _win = OSG::PassiveWindow::create();
-    */
+    //the rendering action
+    mRenderAction = OSG::RenderAction::create();
+
+    mRoot = OSG::Node::create();
+    mRootGroupCore = OSG::Group::create();
+
+    OSG::addRefCP(mRoot);
+    OSG::beginEditCP(mRoot);
+      mRoot->setCore(mRootGroupCore);
+    OSG::endEditCP(mRoot);
+
+    std::cout << "OpenSGNav::initRenderer finished.\n";
 }
 
-void OpenSGNav::myInit(void)
+void OpenSGNav::initScene(void)
 {
-    std::cout << "OpenSGNav::myInit called\n";
-    if (1)
+   std::cout << "OpenSGNav::initScene called\n";
+   std::string wand("VJWand");
+   mWand.init(wand);
+
+   // Load a graph
+   if (1)
     {
         std::cout << "OpenSGNav::myInit beforetorusmake\n";
-        _root = OSG::makeTorus(.5, 2, 16, 16);
+        mSceneRoot = OSG::makeTorus(.5, 2, 16, 16);
         std::cout << "OpenSGNav::myInit aftertorusmake\n";
     }
     else
     {
        std::cout << "OpenSGNav::myInit: Loading [" << mFileToLoad.c_str() << "]\n";
-       _root = OSG::SceneFileHandler::the().read((OSG::Char8 *)(mFileToLoad.c_str()));
+       mSceneRoot = OSG::SceneFileHandler::the().read((OSG::Char8 *)(mFileToLoad.c_str()));
     }
     std::cout << "OpenSGNav::myInit before RenderAction::create()\n";
-    //the rendering action
-    _action = OSG::RenderAction::create();
-    std::cout << "OpenSGNav::myInit after RenderAction::create()\n";
 
+    // -- light node --> light cart
     //the camera and light beacon
-    OSG::NodePtr cartN = OSG::Node::create();
-    _cart = OSG::Transform::create();
+    mLightNode = OSG::Node::create();
+    mLightCart = OSG::Node::create();
+    OSG::DirectionalLightPtr light_core = OSG::DirectionalLight::create();
+    OSG::TransformPtr cart_core = OSG::Transform::create();
 
-    std::cout << "OpenSGNav::myInit before bECP\n";
-    OSG::beginEditCP(cartN);
-    cartN->setCore(_cart);
-    OSG::endEditCP(cartN);
-    std::cout << "OpenSGNav::myInit after bECP\n";
-    // the headlight
-    _internalRoot = OSG::Node::create();
-    _headlight = OSG::DirectionalLight::create();
+    // Setup light cart node
+    OSG::beginEditCP(mLightCart);
+      mLightCart->setCore(cart_core);
+    OSG::endEditCP(mLightCart);
 
-    OSG::addRefCP(_internalRoot);
-    OSG::beginEditCP(_internalRoot);
-    _internalRoot->setCore(_headlight);
-    _internalRoot->addChild(cartN);
-    OSG::endEditCP(_internalRoot);
+    OSG::addRefCP(mLightNode);
+    OSG::beginEditCP(mLightNode);
+      mLightNode->setCore(light_core);
+      mLightNode->addChild(mLightCart);
+    OSG::endEditCP(mLightNode);
 
-    OSG::beginEditCP(_headlight);
-    _headlight->setAmbient   (.3, .3, .3, 1);
-    _headlight->setDiffuse   ( 1,  1,  1, 1);
-    _headlight->setSpecular  ( 1,  1,  1, 1);
-    _headlight->setDirection ( 0,  0,  1);
-    _headlight->setBeacon    (cartN);
-    OSG::endEditCP(_headlight);
+    OSG::beginEditCP(light_core);
+      light_core->setAmbient   (.3, .3, .3, 1);
+      light_core->setDiffuse   ( 1,  1,  1, 1);
+      light_core->setSpecular  ( 1,  1,  1, 1);
+      light_core->setDirection ( 0,  0,  1);
+      light_core->setBeacon    (mLightNode);
+    OSG::endEditCP(light_core);
 
-    //the camera
-    _camera = OSG::PerspectiveCamera::create();
-    OSG::beginEditCP(_camera);
-    _camera->setBeacon (cartN);
-    _camera->setFov    (OSG::deg2rad(60.));
-    _camera->setNear   (0.1);
-    _camera->setFar    (10000);
-    OSG::endEditCP(_camera);
+    OSG::addRefCP(mSceneRoot);
+    OSG::beginEditCP(mSceneRoot);
+      mSceneRoot->addChild(mLightNode);
+    OSG::endEditCP(mSceneRoot);
 
-    //need a viewport?
-    if (_win->getPort().getSize() == 0)
-    {
-        OSG::SolidBackgroundPtr bg = OSG::SolidBackground::create();
-        OSG::beginEditCP(bg);
-        bg->setColor(OSG::Color3f(0, 0, 0));
-        OSG::endEditCP(bg);
-
-        _foreground = OSG::ImageForeground::create();
-
-        OSG::ViewportPtr vp = OSG::Viewport::create();
-        OSG::beginEditCP(vp);
-        vp->setCamera(_camera);
-        vp->setRoot(_internalRoot);
-        vp->setSize(0, 0, 1, 1);
-        vp->setBackground(bg);
-        vp->getForegrounds().addValue(_foreground);
-        OSG::endEditCP(vp);
-
-        OSG::beginEditCP(_win);
-        _win->addPort(vp);
-        OSG::endEditCP(_win);
-    }
-    OSG::addRefCP(_root);
-    _internalRoot->addChild(_root);
-    std::cout << "OpenSGNav::myInit finished\n";
+    std::cout << "OpenSGNav::initScene finished\n";
 }
 
