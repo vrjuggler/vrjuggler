@@ -18,10 +18,10 @@
 
 
 #if defined(_WIN32) || defined(WIN32) || defined(__WIN32__)
-#define ISD_LIB_NAME "isense.dll"
+//#define ISD_LIB_NAME "isense.dll"
 #else
 #include <dlfcn.h>
-#define ISD_LIB_NAME "libisense"
+//#define ISD_LIB_NAME "libisense"
 #endif
 
 
@@ -82,9 +82,9 @@ ISD_GET_TIME            _ISD_GetTime              = NULL;
 *   Comments:       
 *
 ******************************************************************************/
-static DLL *load_ISLIB( void )
+static DLL *load_ISLIB(  const char *driver_name )
 {
-    if( hLib = dll_load( ISD_LIB_NAME ) )
+    if( (hLib = dll_load( driver_name )) )
     {
         _ISD_OpenTracker         = ( ISD_OPEN_FN )           dll_entrypoint( hLib, "ISD_OpenTracker" );
         _ISD_OpenAllTrackers     = ( ISD_OPEN_ALL_FN )       dll_entrypoint( hLib, "ISD_OpenAllTrackers" );
@@ -107,7 +107,7 @@ static DLL *load_ISLIB( void )
 
     if( hLib == NULL )
     {
-        printf( "Could not load %s\n", ISD_LIB_NAME );
+        printf( "Could not load %s\n", driver_name );
     }
 
     return hLib;
@@ -157,12 +157,13 @@ ISD_TRACKER_HANDLE ISD_OpenTracker(
                                    Hwnd hParent,
                                    DWORD commPort, 
                                    Bool infoScreen, 
-                                   Bool verbose 
+                                   Bool verbose,
+                                   const char *name
                                    )
 {
     if( !_ISD_OpenTracker ) /* this will be NULL if dll not loaded */
     {
-        if( !hLib ) load_ISLIB();
+        if( !hLib ) load_ISLIB( name );
 
         if( !hLib )  /* failed to load dll */
         {
@@ -182,12 +183,13 @@ DWORD ISD_OpenAllTrackers(
                           Hwnd hParent, 
                           ISD_TRACKER_HANDLE *handle, 
                           Bool infoScreen, 
-                          Bool verbose 
+                          Bool verbose,
+                          const char *name
                           )
 {
     if( !_ISD_OpenAllTrackers ) /* this will be NULL if dll is not loaded */
     {
-        if( !hLib ) load_ISLIB();
+        if( !hLib ) load_ISLIB( name );
 
         if( !hLib )  /* failed to load dll */
         {

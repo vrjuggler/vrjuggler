@@ -346,14 +346,16 @@ DLLEXPORT ISD_TRACKER_HANDLE DLLENTRY ISD_OpenTracker(
                                                       Hwnd hParent, 
                                                       DWORD commPort, 
                                                       Bool infoScreen, 
-                                                      Bool verbose 
+                                                      Bool verbose,
+                                                      const char *name
                                                       );
 
 DLLEXPORT DWORD DLLENTRY ISD_OpenAllTrackers( 
                                              Hwnd hParent, 
                                              ISD_TRACKER_HANDLE *handle, 
                                              Bool infoScreen, 
-                                             Bool verbose 
+                                             Bool verbose,
+                                             const char *name
                                              );
 
 // This function call deinitializes the tracker, closes communications port and 
