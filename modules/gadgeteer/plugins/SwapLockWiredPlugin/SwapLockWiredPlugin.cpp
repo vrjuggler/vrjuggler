@@ -133,7 +133,7 @@ namespace cluster
          mMasterWaitByte |= 0x80;
       }
       
-      if (mBarrierMasterHostname == ClusterNetwork::instance()->getLocalHostname())
+      if(ClusterNetwork::isLocalHost(mBarrierMasterHostname))
       {
          mIsMaster = true;
          mActive = true;

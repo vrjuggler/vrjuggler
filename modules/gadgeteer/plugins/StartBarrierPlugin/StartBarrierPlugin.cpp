@@ -135,17 +135,16 @@ namespace cluster
       // -Get ElementPtr to this element
       // -Get the Hostname of this node
 
-      std::string barrier_machine_element_name =
-         element->getProperty<std::string>(std::string("start_master"));
+      mBarrierMachineElementName = element->getProperty<std::string>(std::string("start_master"));
       jccl::ConfigElementPtr barrier_machine_element =
-         ClusterManager::instance()->getConfigElementPointer(barrier_machine_element_name);
+         ClusterManager::instance()->getConfigElementPointer(mBarrierMachineElementName);
       vprASSERT(NULL != barrier_machine_element.get() && "ConfigManager element MUST have a barrier_master.");
       mBarrierMasterHostname = barrier_machine_element->getProperty<std::string>(std::string("host_name"));
 
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
          << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
          << "Start Master element Name is: "
-         << barrier_machine_element_name << std::endl << vprDEBUG_FLUSH;         
+         << mBarrierMachineElementName << std::endl << vprDEBUG_FLUSH;         
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
          << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
          << "Start Master Hostname is: " << mBarrierMasterHostname
@@ -154,7 +153,7 @@ namespace cluster
       // Starting Barrier Stuff
       /////////////////////////////////////         
 
-      if (mBarrierMasterHostname == ClusterNetwork::instance()->getLocalHostname())
+      if (ClusterNetwork::isLocalHost(mBarrierMasterHostname))
       {
          mBarrierMaster = true;
       }
@@ -218,7 +217,7 @@ namespace cluster
          {
             if (!mBarrierMaster)
             {
-               ClusterNode* barrier_master = ClusterNetwork::instance()->getClusterNodeByHostname(mBarrierMasterHostname);
+               ClusterNode* barrier_master = ClusterNetwork::instance()->getClusterNodeByName(mBarrierMachineElementName);
                if (NULL == barrier_master)
                {
                   vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) 
