@@ -116,7 +116,7 @@ endif
 install-boost:
 	@$(SHELL) $(MKINSTALLDIRS) $(includedir)/boost
 	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
-          $(GROUP_OPT_UNIX) -e .hpp -o $(includedir)/boost 		\
+          $(GROUP_OPT_UNIX) -e .hpp,.h -o $(includedir)/boost 		\
           -i $(EXTROOT_ABS)/boost/boost
 	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) -o $(includedir)/boost/compatibility 	\
