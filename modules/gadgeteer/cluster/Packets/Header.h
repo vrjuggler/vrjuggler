@@ -49,26 +49,26 @@ namespace cluster
 class GADGET_CLASS_API Header
 {
 public:
-   const static unsigned short RIM_PACKET 		   = 400;
-   const static unsigned short RIM_DATA_PACKET 	   = 401;
-   const static unsigned short RIM_DEVICE_REQ 	   = 402;
-   const static unsigned short RIM_DEVICE_ACK 	   = 403;
-   const static unsigned short RIM_CONNECTION_REQ  = 404;
-   const static unsigned short RIM_CONNECTION_ACK  = 405;
-   const static unsigned short RIM_SYNC_REQ        = 406;
-   const static unsigned short RIM_SYNC_ACK        = 407;
-   const static unsigned short RIM_APPDATA_REQ     = 408;
-   const static unsigned short RIM_APPDATA_ACK     = 409;
-   const static unsigned short RIM_END_BLOCK 	   = 410;
-   const static unsigned short RIM_START_BLOCK 	   = 411;
+   static const unsigned short RIM_PACKET          = 400;
+   static const unsigned short RIM_DATA_PACKET     = 401;
+   static const unsigned short RIM_DEVICE_REQ      = 402;
+   static const unsigned short RIM_DEVICE_ACK      = 403;
+   static const unsigned short RIM_CONNECTION_REQ  = 404;
+   static const unsigned short RIM_CONNECTION_ACK  = 405;
+   static const unsigned short RIM_SYNC_REQ        = 406;
+   static const unsigned short RIM_SYNC_ACK        = 407;
+   static const unsigned short RIM_APPDATA_REQ     = 408;
+   static const unsigned short RIM_APPDATA_ACK     = 409;
+   static const unsigned short RIM_END_BLOCK       = 410;
+   static const unsigned short RIM_START_BLOCK     = 411;
 
-   //const unsigned short MSG_DEVICE_NACK 	= 404;
-   //const unsigned short MSG_CLOCK_SRC 	= 405;
-   //const unsigned short MSG_CLOCK_SYNC 	= 406;
-   //const unsigned short MSG_HANDSHAKE 	= 407;
-   //const unsigned short MSG_CLUSTER_SYNC	= 408;
-   //const unsigned short MSG_BARRIER	= 5;
-   const static unsigned short RIM_PACKET_HEAD_SIZE = 12;
+   //const unsigned short MSG_DEVICE_NACK       = 404;
+   //const unsigned short MSG_CLOCK_SRC         = 405;
+   //const unsigned short MSG_CLOCK_SYNC        = 406;
+   //const unsigned short MSG_HANDSHAKE         = 407;
+   //const unsigned short MSG_CLUSTER_SYNC      = 408;
+   //const unsigned short MSG_BARRIER           = 5;
+   static const unsigned short RIM_PACKET_HEAD_SIZE = 12;
 
 public:      
    /**
@@ -83,8 +83,8 @@ public:
    virtual ~Header()
    {
       delete mPacketReader;
-	  delete mPacketWriter;
-	  //delete mData;
+      delete mPacketWriter;
+      //delete mData;
    }
    void serializeHeader();
    void parseHeader();
@@ -100,7 +100,7 @@ public:
    virtual void printData(int debug_level);
 protected:
    // Needed to construct and parse the header data
-   vpr::BufferObjectReader* mPacketReader;	
+   vpr::BufferObjectReader* mPacketReader;
    vpr::BufferObjectWriter* mPacketWriter;
    std::vector<vpr::Uint8> mData;
    
