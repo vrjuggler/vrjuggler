@@ -35,10 +35,10 @@
 //#pragma once
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Type/Input.h>
-#include <vrj/Input/Type/Gesture.h>
-#include <vrj/Input/Type/Glove.h>
-#include <vrj/Input/Type/GloveProxy.h>
+#include <gad/Type/Input.h>
+#include <gad/Type/Gesture.h>
+#include <gad/Type/Glove.h>
+#include <gad/Type/GloveProxy.h>
 #include <vrj/Config/ConfigChunk.h>
 
 namespace vrj

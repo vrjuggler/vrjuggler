@@ -32,7 +32,7 @@
 
 #include <vrj/vrjConfig.h>
 #include <vrj/Kernel/Kernel.h>
-#include <vrj/Input/Type/KeyboardProxy.h>
+#include <gad/Type/KeyboardProxy.h>
 #include <vrj/Config/ConfigChunk.h>
 
 namespace vrj

@@ -35,7 +35,7 @@
 #include <vrj/Math/Coord.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Config/ConfigChunk.h>
-#include <vrj/Input/Devices/Ascension/MotionStar.h>
+#include <gad/Devices/Ascension/MotionStar.h>
 
 
 namespace vrj

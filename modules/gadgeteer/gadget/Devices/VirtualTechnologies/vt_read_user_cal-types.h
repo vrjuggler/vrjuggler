@@ -12,8 +12,8 @@
 #define VT_READ_USER_CAL_TYPES_H
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_math3d.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_glove-types.h>
+#include <gad/Devices/VirtualTechnologies/vt_math3d.h>
+#include <gad/Devices/VirtualTechnologies/vt_glove-types.h>
 
 typedef struct
 {

@@ -35,7 +35,7 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
 
-#include <vrj/Input/Devices/Immersion/Ibox.h>
+#include <gad/Devices/Immersion/Ibox.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Config/ConfigChunk.h>
 

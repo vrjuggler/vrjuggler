@@ -51,8 +51,8 @@
 #define _LOGICLASS_H_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Type/Input.h>
-#include <vrj/Input/Type/Position.h>    // The base class for vr_devices
+#include <gad/Type/Input.h>
+#include <gad/Type/Position.h>    // The base class for vr_devices
 #include <vrj/Math/Vec3.h>
 //#include <Inventor/SbLinear.h> // For the vec classes
 

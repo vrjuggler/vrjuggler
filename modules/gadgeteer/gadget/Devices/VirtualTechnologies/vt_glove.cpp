@@ -19,11 +19,11 @@
 #include <unistd.h>
 #include <termios.h>
 
-#include <vrj/Input/Devices/VirtualTechnologies/CyberGlove.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_types.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_globals.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_glove-types.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_error.h>
+#include <gad/Devices/VirtualTechnologies/CyberGlove.h>
+#include <gad/Devices/VirtualTechnologies/vt_types.h>
+#include <gad/Devices/VirtualTechnologies/vt_globals.h>
+#include <gad/Devices/VirtualTechnologies/vt_glove-types.h>
+#include <gad/Devices/VirtualTechnologies/vt_error.h>
 
 #define delay(t) (usleep(t*100)) /* t is in milliseconds */
 

@@ -14,11 +14,11 @@
 
 #include <X11/Intrinsic.h>
 
-#include <vrj/Input/Devices/VirtualTechnologies/CyberGlove.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_read_user_cal-types.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_virtual_hand-types.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_globals.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_error.h>
+#include <gad/Devices/VirtualTechnologies/CyberGlove.h>
+#include <gad/Devices/VirtualTechnologies/vt_read_user_cal-types.h>
+#include <gad/Devices/VirtualTechnologies/vt_virtual_hand-types.h>
+#include <gad/Devices/VirtualTechnologies/vt_globals.h>
+#include <gad/Devices/VirtualTechnologies/vt_error.h>
 
 /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 /*                                                               */

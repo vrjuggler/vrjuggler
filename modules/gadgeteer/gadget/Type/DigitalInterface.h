@@ -35,7 +35,7 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <vrj/Input/Type/DigitalProxy.h>
-#include <vrj/Input/Type/DeviceInterface.h>
+#include <gad/Type/DigitalProxy.h>
+#include <gad/Type/DeviceInterface.h>
 
 #endif

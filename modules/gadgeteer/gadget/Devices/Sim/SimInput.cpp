@@ -32,7 +32,7 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <vrj/Input/Devices/Sim/SimInput.h>
+#include <gad/Devices/Sim/SimInput.h>
 #include <vrj/Config/ConfigChunk.h>
 
 namespace vrj

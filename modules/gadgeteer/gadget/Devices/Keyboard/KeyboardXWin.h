@@ -41,8 +41,8 @@
 
 #include <vpr/Sync/Mutex.h>
 
-#include <vrj/Input/Type/Input.h>
-#include <vrj/Input/Type/Keyboard.h>
+#include <gad/Type/Input.h>
+#include <gad/Type/Keyboard.h>
 
 namespace vrj
 {

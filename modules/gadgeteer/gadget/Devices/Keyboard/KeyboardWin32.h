@@ -52,8 +52,8 @@
 #include <windows.h>
 #include <commctrl.h>
 
-#include <vrj/Input/Type/Input.h>
-#include <vrj/Input/Type/Keyboard.h>
+#include <gad/Type/Input.h>
+#include <gad/Type/Keyboard.h>
 #include <vpr/Thread/Thread.h>
 
 namespace vrj

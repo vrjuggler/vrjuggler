@@ -40,8 +40,8 @@
 #define _VRJ_DIGITALPROXY_H_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Type/Digital.h>
-#include <vrj/Input/Type/Proxy.h>
+#include <gad/Type/Digital.h>
+#include <gad/Type/Proxy.h>
 #include <vpr/Util/Assert.h>
 
 namespace vrj

@@ -35,7 +35,7 @@
 #include <dtk.h>
 
 #include <vrj/Config/ConfigChunk.h>
-#include <vrj/Input/Devices/Open/DTK/DTKMemorySegment.h>
+#include <gad/Devices/Open/DTK/DTKMemorySegment.h>
 
 namespace vrj
 {

@@ -34,8 +34,8 @@
 #define _VRJ_KEYBOARD_PROXY_H_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Type/Proxy.h>
-#include <vrj/Input/Type/Keyboard.h>
+#include <gad/Type/Proxy.h>
+#include <gad/Type/Keyboard.h>
 
 namespace vrj
 {

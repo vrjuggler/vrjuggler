@@ -9,7 +9,7 @@
 /*  ==========================================================  */
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_init.h>
+#include <gad/Devices/VirtualTechnologies/vt_init.h>
 
 extern char version_string[];
 extern int vt_error_code;

@@ -40,7 +40,7 @@
 
 #include <vrj/Util/Debug.h>
 #include <vrj/Config/ConfigChunk.h>
-#include <vrj/Input/Devices/Open/DTK/DTK.h>
+#include <gad/Devices/Open/DTK/DTK.h>
 
 // Helper to return the index for theData array
 // given the stationNum we are dealing with and the bufferIndex

@@ -33,7 +33,7 @@
 #ifndef _VRJ_POS_INTERFACE_H_
 #define _VRJ_POS_INTERFACE_H_
 
-#include <vrj/Input/Type/PosProxy.h>
-#include <vrj/Input/Type/DeviceInterface.h>
+#include <gad/Type/PosProxy.h>
+#include <gad/Type/DeviceInterface.h>
 
 #endif

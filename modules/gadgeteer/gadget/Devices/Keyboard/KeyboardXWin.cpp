@@ -39,7 +39,7 @@
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Config/ConfigChunk.h>
 
-#include <vrj/Input/Devices/Keyboard/KeyboardXWin.h> // my header
+#include <gad/Devices/Keyboard/KeyboardXWin.h> // my header
 
 namespace vrj
 {

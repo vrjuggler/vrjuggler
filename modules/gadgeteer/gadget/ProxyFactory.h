@@ -35,7 +35,7 @@
 //#pragma once
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Type/Proxy.h>
+#include <gad/Type/Proxy.h>
 #include <vrj/Config/ConfigChunk.h>
 #include <vpr/Util/Singleton.h>
 #include <vrj/Kernel/DependencyManager.h>

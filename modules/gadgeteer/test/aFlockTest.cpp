@@ -37,7 +37,7 @@
 #include <stdlib.h> 	// for system
 #include <unistd.h> 	// for sleep
 
-#include <vrj/Input/Devices/Ascension/FlockStandalone.h>
+#include <gad/Devices/Ascension/FlockStandalone.h>
 
 int main()
 {

@@ -39,7 +39,7 @@
 
 #include <vpr/System.h>
 
-#include <vrj/Input/Devices/Ascension/Bird.h>
+#include <gad/Devices/Ascension/Bird.h>
 #include <vrj/Config/ConfigChunk.h>
 
 

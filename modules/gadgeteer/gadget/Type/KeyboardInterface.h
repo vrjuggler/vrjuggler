@@ -33,7 +33,7 @@
 #ifndef _VRJ_KEYBOARD_INTERFACE_H_
 #define _VRJ_KEYBOARD_INTERFACE_H_
 
-#include <vrj/Input/Type/KeyboardProxy.h>
-#include <vrj/Input/Type/DeviceInterface.h>
+#include <gad/Type/KeyboardProxy.h>
+#include <gad/Type/DeviceInterface.h>
 
 #endif

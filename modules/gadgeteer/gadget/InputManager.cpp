@@ -32,15 +32,15 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <vrj/Input/Type/Proxy.h>
+#include <gad/Type/Proxy.h>
 #include <vrj/Util/Debug.h>
 
-#include <vrj/Input/Type/DeviceFactory.h>
-#include <vrj/Input/ProxyFactory.h>
-#include <vrj/Input/Type/DeviceInterface.h>
+#include <gad/Type/DeviceFactory.h>
+#include <gad/ProxyFactory.h>
+#include <gad/Type/DeviceInterface.h>
 #include <vrj/Config/ConfigChunk.h>
 
-#include <vrj/Input/InputManager.h> // my header...
+#include <gad/InputManager.h> // my header...
 
 
 

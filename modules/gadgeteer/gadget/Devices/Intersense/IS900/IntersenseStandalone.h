@@ -59,7 +59,7 @@
 #include <string>
 
 extern "C" {
-#include <vrj/Input/Devices/Intersense/isense.h>
+#include <gad/Devices/Intersense/isense.h>
 }
 
 struct isConfig {

@@ -37,8 +37,8 @@
 #include <stdio.h>                      /* need stdio for sprintf */
 #include <vpr/System.h>
 
-#include <vrj/Input/Devices/Fakespace/PinchGloveStandalone.h> /* fakespace pinch driver */
-#include <vrj/Input/Devices/Fakespace/PinchGlove.h> /* vrjuggler pinch driver */
+#include <gad/Devices/Fakespace/PinchGloveStandalone.h> /* fakespace pinch driver */
+#include <gad/Devices/Fakespace/PinchGlove.h> /* vrjuggler pinch driver */
 //#include <vrj/Kernel/Kernel.h>
 #include <vrj/Config/ConfigChunk.h>
 

@@ -14,8 +14,8 @@
 #include <stdlib.h>
 #include <X11/Intrinsic.h>
 
-#include <vrj/Input/Devices/VirtualTechnologies/vt_globals.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_error.h>
+#include <gad/Devices/VirtualTechnologies/vt_globals.h>
+#include <gad/Devices/VirtualTechnologies/vt_error.h>
 
 static int new_error = FALSE;
 static char routine_with_error[256];

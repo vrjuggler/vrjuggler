@@ -35,12 +35,12 @@
 //#pragma once
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Input/Type/Input.h>
-#include <vrj/Input/Devices/Fakespace/PinchGlove.h>
-#include <vrj/Input/Devices/Sim/SimInput.h>
+#include <gad/Type/Input.h>
+#include <gad/Devices/Fakespace/PinchGlove.h>
+#include <gad/Devices/Sim/SimInput.h>
 
-#include <vrj/Input/Type/Finger.h>
-#include <vrj/Input/Type/Hand.h>
+#include <gad/Type/Finger.h>
+#include <gad/Type/Hand.h>
 
 namespace vrj
 {

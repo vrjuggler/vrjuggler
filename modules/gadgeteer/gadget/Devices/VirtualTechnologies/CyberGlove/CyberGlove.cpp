@@ -36,11 +36,11 @@
 // need stdio for sprintf
 #include <stdio.h>
 
-#include <vrj/Input/Devices/VirtualTechnologies/vt_types.h>
-#include <vrj/Input/Devices/VirtualTechnologies/CyberGlove.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_globals.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_types.h>
-#include <vrj/Input/Devices/VirtualTechnologies/vt_error.h>
+#include <gad/Devices/VirtualTechnologies/vt_types.h>
+#include <gad/Devices/VirtualTechnologies/CyberGlove.h>
+#include <gad/Devices/VirtualTechnologies/vt_globals.h>
+#include <gad/Devices/VirtualTechnologies/vt_types.h>
+#include <gad/Devices/VirtualTechnologies/vt_error.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Config/ConfigChunk.h>
 #include <vpr/System.h>

@@ -34,9 +34,9 @@
 #include <iomanip>
 #include <unistd.h>
 
-#include <vrj/Input/Devices/Immersion/Ibox.h>
-#include <vrj/Input/Devices/Immersion/hci.h>
-#include <vrj/Input/Devices/Immersion/iboxStandalone.h>
+#include <gad/Devices/Immersion/Ibox.h>
+#include <gad/Devices/Immersion/hci.h>
+#include <gad/Devices/Immersion/iboxStandalone.h>
 #include <vpr/System.h>
 
 int main()
