@@ -39,8 +39,8 @@
 
 #include <GL/gl.h>
 
-#include <gadget/Devices/EventWindow/InputAreaWin32.h>
-#include <gadget/Devices/EventWindow/EventWindowWin32.h>
+#include <gadget/Devices/KeyboardMouseDevice/InputAreaWin32.h>
+//#include <gadget/Devices/KeyboardMouseDevice/EventWindowWin32.h>
 
 #include <vrj/Draw/OGL/GlWindow.h>
 
@@ -92,7 +92,7 @@ public:
    virtual void checkEvents();
 
    void configWindow( vrj::Display* disp );
-
+   /*
    virtual void setDelegate(gadget::EventWindowWin32* delegate)
    {
       InputAreaWin32::setDelegate(delegate);
@@ -102,6 +102,7 @@ public:
       gadget::InputAreaWin32::mWidth = GlWindowWin32::mWindowWidth;
       gadget::InputAreaWin32::mHeight = GlWindowWin32::mWindowHeight;
    }
+   */
 
 protected:
    // WindowProcedure to deal with the events generated.

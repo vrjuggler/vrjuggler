@@ -142,11 +142,13 @@ bool GlWindowWin32::open()
    mWindowIsOpen = true;
 
    // ----------- Event window device starting -------------- //
+   /*
    gadget::InputAreaWin32::InputAreaRegistry::InputAreaInfo input_area_info;
    input_area_info.mDisplayName = mWindowName;
    input_area_info.mInputArea = this;
 
    gadget::InputAreaWin32::InputAreaRegistry::instance()->addInputArea(mWindowName, input_area_info);
+   */
 
    // If mHideMouse is true we must pass false to ShowCursor
    ShowCursor(! mHideMouse);
@@ -231,6 +233,9 @@ void GlWindowWin32::configWindow(vrj::Display* disp)
    jccl::ConfigElementPtr disp_sys_elt =
       DisplayManager::instance()->getDisplaySystemElement();
    jccl::ConfigElementPtr display_elt = disp->getConfigElement();
+
+   // Get the lock and KeyboardMouseDevice information.
+   gadget::InputArea::config(display_elt);
 
    mWindowName = disp->getName();
    mPipe = disp->getPipe();
