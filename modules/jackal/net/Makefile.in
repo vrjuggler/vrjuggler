@@ -70,7 +70,8 @@ INSTALL_FILES			=
 # Java-related setup
 # -----------------------------------------------------------------------------
 JDOM_JAR	= @JDOM_JAR@
-CLASSPATH	= $(JDOM_JAR)$(JCPS)$(topdir)/config$(JCPS)$(topdir)/vjcontrol
+TWEEK_JARS	= @TWEEK_JARS@
+CLASSPATH	= $(JDOM_JAR)$(JCPS)$(topdir)/config$(JCPS)$(topdir)/vjcontrol$(JCPS)$(TWEEK_JARS)
 JAVA_SRC_PATH	= $(top_srcdir)/vjcontrol
 
 NET_PKG		= org.vrjuggler.jccl.net

@@ -71,7 +71,8 @@ INSTALL_FILES			=
 # Java-related setup
 # -----------------------------------------------------------------------------
 JDOM_JAR	= @JDOM_JAR@
-CLASSPATH	= $(JDOM_JAR)$(JCPS)$(topdir)/config$(JCPS)$(topdir)/editorgui$(JCPS)$(topdir)/net$(JCPS)$(TWEEK_BASE_DIR)/bin/TweekBeans.jar
+TWEEK_JARS	= @TWEEK_JARS@
+CLASSPATH	= $(JDOM_JAR)$(JCPS)$(topdir)/config$(JCPS)$(topdir)/editorgui$(JCPS)$(topdir)/net$(JCPS)$(TWEEK_JARS)
 JAVA_SRC_PATH	= $(top_srcdir)/editorgui
 
 VJCONTROL_PKG		= org.vrjuggler.jccl.vjcontrol
