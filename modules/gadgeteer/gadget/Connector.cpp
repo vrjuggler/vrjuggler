@@ -127,7 +127,7 @@ vpr::ReturnStatus Connector::attemptConnect( Node* node )
          //     - Set socket stream
          //     - Set NEWCONNECTION
 
-         vprASSERT( Node::NEWCONNECTION == node->getStatus() && "Should be NEWCONNECTION." )
+         vprASSERT( Node::NEWCONNECTION == node->getStatus() && "Should be NEWCONNECTION." );
          
          node->setSockStream( sock_stream );
          node->setStatus( Node::NEWCONNECTION );
