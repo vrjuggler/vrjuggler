@@ -113,8 +113,8 @@ implements ActionListener {
     public boolean update () {
 	if (list.getItemCount() != 0)
 	    list.removeAll();
-	System.out.println ("update: list has " + core.descs.size() + 
-			    " items.");
+	//System.out.println ("update: list has " + core.descs.size() + 
+	//	    " items.");
 	for (int i = 0; i < core.descs.size(); i++) {
 	    list.addItem (((ChunkDesc)core.descs.elementAt(i)).name);
 	}
