@@ -83,11 +83,11 @@ SoundFactory::SoundFactory()
 #endif
 
 #if defined(VPR_OS_Win32)
-         const std::string driver_ext("dll");
+   const std::string driver_ext("dll");
 #elif defined(VPR_OS_Darwin)
-         const std::string driver_ext("dylib");
+   const std::string driver_ext("dylib");
 #else
-         const std::string driver_ext("so");
+   const std::string driver_ext("so");
 #endif
 
    search_paths.push_back(snx_lib_dir);
@@ -106,21 +106,21 @@ SoundFactory::SoundFactory()
          vpr::LibraryFinder finder(search_paths[x], driver_ext);
          vpr::LibraryFinder::LibraryList libs = finder.getLibraries();
          this->loadPlugins( libs );
-         
+
 #ifdef SNX_DEBUG
          vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << "filelist:\n" << vprDEBUG_FLUSH;
          for ( unsigned int i = 0; i < libs.size(); ++i )
          {
-                vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << "\t" << libs[i]
+            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << "\t" << libs[i]
                                                 << std::endl << vprDEBUG_FLUSH;
          }
 #endif
       }
       else
       {
-        vprDEBUG(snxDBG, vprDBG_STATE_LVL) << "The directory does not exist: '" << search_paths[x]
-                                                        << "'\n"
-                                                        << vprDEBUG_FLUSH;
+         vprDEBUG(snxDBG, vprDBG_STATE_LVL)
+            << "The directory does not exist: '" << search_paths[x] << "'\n"
+            << vprDEBUG_FLUSH;
       }
    }
 }
@@ -133,12 +133,12 @@ void SoundFactory::errorOutput(vpr::LibraryPtr lib, const char* test)
 }
 
 bool SoundFactory::isPlugin(vpr::LibraryPtr lib)
-{  
+{
    if (lib->findSymbol( "newPlugin" ) == NULL)
    {
       errorOutput(lib, "newPlugin");
       return false;
-   }  
+   }
    if (lib->findSymbol( "deletePlugin" ) == NULL)
    {
       errorOutput(lib, "deletePlugin");
@@ -154,7 +154,6 @@ bool SoundFactory::isPlugin(vpr::LibraryPtr lib)
       errorOutput(lib, "getName");
       return false;
    }
-   
 
    // @todo give sonix an internal version number string!
    //getVersionFunc getVersion = (getVersionFunc)lib.lookup( "getVersion" );
@@ -171,9 +170,9 @@ void SoundFactory::loadPlugins( vpr::LibraryFinder::LibraryList libs )
    {
       // open the library
       vpr::ReturnStatus didLoad = libs[x]->load();
-        
+
       if (didLoad == vpr::ReturnStatus::Succeed)
-      {  
+      {
         //If the plug-in implements the nessiasry interface
         if ( this->isPlugin(libs[x]) )
         {
@@ -183,18 +182,18 @@ void SoundFactory::loadPlugins( vpr::LibraryFinder::LibraryList libs )
             if (getName != NULL)
             {
                 name = getName();
-                
+
                 // Check to see it plug-in is already registered
                 int pluginsWithName =  mRegisteredImplementations.count(name);
                 if ( pluginsWithName < 1 )
                 {
                     // Keep track of the plug-ins we actual use
                     mPlugins.push_back(libs[x]);
-                    
-                    vprDEBUG(snxDBG, vprDBG_STATE_LVL) << "Got plug-in '" << name
-                                                        << "'--registering\n"
-                                                        << vprDEBUG_FLUSH;
-            
+
+                    vprDEBUG(snxDBG, vprDBG_STATE_LVL)
+                       << "Got plug-in '" << name << "'--registering\n"
+                       << vprDEBUG_FLUSH;
+
                     // create the implementation
                     newPluginFunc newPlugin = (newPluginFunc)libs[x]->findSymbol( "newPlugin" );
                     ISoundImplementation* si = NULL;
@@ -236,7 +235,7 @@ void SoundFactory::unloadPlugins()
       {
          name = getName();
          impl = mRegisteredImplementations[name];
-          
+
          // unreg it.
          this->reg( name, NULL );
       }
@@ -247,7 +246,7 @@ void SoundFactory::unloadPlugins()
       {
          deletePlugin( impl );
       }
-      
+
       // close the library
       mPlugins[x]->unload();
    }
@@ -273,14 +272,14 @@ void SoundFactory::reg(const std::string& apiName,
       vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
          << "NOTICE: Unregistered sound API '" << apiName << "'\n"
          << vprDEBUG_FLUSH;
-   }      
+   }
 }
 
 /**
  * @input name of api to create
  * @output an implementation is returned for you to use
  * @postconditions if apiName is not known, then a stub implementation is returned
- * @semantics factory function used to create an implementation of a sound API 
+ * @semantics factory function used to create an implementation of a sound API
  */
 void SoundFactory::createImplementation( const std::string& apiName,
                            snx::ISoundImplementation* &mImplementation )
@@ -294,7 +293,7 @@ void SoundFactory::createImplementation( const std::string& apiName,
    {
       mImplementation = new snx::StubSoundImplementation;
    }
-   
+
    //mImplementation->setName( apiName );
 }
 
