@@ -231,48 +231,6 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Get the local attach state.  That is, test if the device is attached
-    //+ locally.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The local attach state is returned to the caller.
-    //
-    //! RETURNS: true  - The device is attached locally.
-    //! RETURNS: false - The device is not attached locally, and opening the
-    //+                  device will usually block until there is a response.
-    // ------------------------------------------------------------------------
-    inline bool
-    getLocalAttachState (void) {
-        return m_sio_imp.getLocalAttachState();
-    }
-
-    // ------------------------------------------------------------------------
-    //: Mark the device as locally attached.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The device has its local attachment state enabled.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    inline vpr::Status
-    enableLocalAttach (void) {
-        return m_sio_imp.enableLocalAttach();
-    }
-
-    // ------------------------------------------------------------------------
-    //: Mark the device as not locally attached.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The device has its local attachment state disabled.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    inline vpr::Status
-    disableLocalAttach (void) {
-        return m_sio_imp.disableLocalAttach();
-    }
-
-    // ------------------------------------------------------------------------
     //: Query the serial port for the minimum buffer size.  This is only
     //+ applicable in non-canonical mode.
     //
@@ -453,49 +411,6 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Get the current input echo state (either on or off) for the serial
-    //+ port.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The input echo state is returned to the caller.
-    //
-    //! RETURNS: true  - Input characters are echoed back to the terminal
-    //+                  device.
-    //! RETURNS: false - Input characters are echoed not back to the terminal
-    //+                  device.
-    // ------------------------------------------------------------------------
-    inline bool
-    getInputEchoState (void) {
-        return m_sio_imp.getInputEchoState();
-    }
-
-    // ------------------------------------------------------------------------
-    //: Enable input echo.
-    //
-    //! PRE: The serial port is open.
-    //! POST: Input echoing is enabled for the serial port.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    inline vpr::Status
-    enableInputEcho (void) {
-        return m_sio_imp.enableInputEcho();
-    }
-
-    // ------------------------------------------------------------------------
-    //: Disable input echo.
-    //
-    //! PRE: The serial port is open.
-    //! POST: Input echoing is disabled for the serial port.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    inline vpr::Status
-    disableInputEcho (void) {
-        return m_sio_imp.disableInputEcho();
-    }
-
-    // ------------------------------------------------------------------------
     //: Query the canonical input state of the serial port.  If canonical mode
     //+ is enabled, the characters EOF, EOL, EOL2, ERASE, KILL, REPRINT,
     //+ STATUS, and WERASE are enabled, and the input characters are
@@ -541,90 +456,6 @@ public:
     inline vpr::Status
     disableCanonicalInput (void) {
         return m_sio_imp.disableCanonicalInput();
-    }
-
-    // ------------------------------------------------------------------------
-    //: Get the current state of carriage return (CR) to newline (NL)
-    //+ translation.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The CR --> NL translation state is returned to the caller.
-    //
-    //! RETURNS: true  - Received carriage returns are converted to newlines.
-    //! RETURNS: false - Received carriage returns are not converted to
-    //+                  newlines.
-    // ------------------------------------------------------------------------
-    inline bool
-    getCRTranslateState (void) {
-        return m_sio_imp.getCRTranslateState();
-    }
-
-    // ------------------------------------------------------------------------
-    //: Enable translation of received carriage returns to newlines.
-    //
-    //! PRE: The serial port is open.
-    //! POST: CR --> NL translation is enabled.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    inline vpr::Status
-    enableCRTranslation (void) {
-        return m_sio_imp.enableCRTranslation();
-    }
-
-    // ------------------------------------------------------------------------
-    //: Disable translation of received carriage returns to newlines.
-    //
-    //! PRE: The serial port is open.
-    //! POST: CR --> NL translation is disabled.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    inline vpr::Status
-    disableCRTranslation (void) {
-        return m_sio_imp.disableCRTranslation();
-    }
-
-    // ------------------------------------------------------------------------
-    //: Get the current state of ignoring received carriage returns (CRs).  If
-    //+ CRs are not ignored, they may be translated to newlines.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The CR ignore state is returned to the caller.
-    //
-    //! RETURNS: true  - Received carriage returns are ignored.
-    //! RETURNS: false - Received carriage returns are not ignored.
-    // ------------------------------------------------------------------------
-    inline bool
-    getCRIgnoreState (void) {
-        return m_sio_imp.getCRIgnoreState();
-    }
-
-    // ------------------------------------------------------------------------
-    //: Enable ignoring of received carriage returns.
-    //
-    //! PRE: The serial port is open.
-    //! POST: CR ignoring is enabled.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    inline vpr::Status
-    enableCRIgnore (void) {
-        return m_sio_imp.enableCRIgnore();
-    }
-
-    // ------------------------------------------------------------------------
-    //: Disable ignoring of received carriage returns.  Once disabled,
-    //+ received carriage returns may be converted to newlines.
-    //
-    //! PRE: The serial port is open.
-    //! POST: CR ignoring is disabled.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    inline vpr::Status
-    disableCRIgnore (void) {
-        return m_sio_imp.disableCRIgnore();
     }
 
     // ------------------------------------------------------------------------
@@ -708,50 +539,6 @@ public:
     inline vpr::Status
     disableInputParityCheck (void) {
         return m_sio_imp.disableInputParityCheck();
-    }
-
-    // ------------------------------------------------------------------------
-    //: Get the current signal generation state.  If it is enabled, the input
-    //+ bytes are checked against signal values.  If equal, the corresponding
-    //+ signal is generated.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The current signal generation state valus is returned to the
-    //+       caller.
-    //
-    //! RETURNS: true  - Signal generation is enabled.
-    //! RETURNS: false - Signal generation is disabled.
-    // ------------------------------------------------------------------------
-    inline bool
-    getSignalGenerateState (void) {
-        return m_sio_imp.getSignalGenerateState();
-    }
-
-    // ------------------------------------------------------------------------
-    //: Enable signal generation.  The signals checked are interrupt, quit,
-    //+ and suspend.
-    //
-    //! PRE: The serial port is open.
-    //! POST: Signal generation is enabled.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    inline vpr::Status
-    enableSignalGeneration (void) {
-        return m_sio_imp.enableSignalGeneration();
-    }
-
-    // ------------------------------------------------------------------------
-    //: Disable signal generation.
-    //
-    //! PRE: The serial port is open.
-    //! POST: Signal generation is disabled.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    inline vpr::Status
-    disableSignalGeneration (void) {
-        return m_sio_imp.disableSignalGeneration();
     }
 
     // ------------------------------------------------------------------------

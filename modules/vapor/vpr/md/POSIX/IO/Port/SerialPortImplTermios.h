@@ -236,39 +236,6 @@ public:
     void setUpdateAction(SerialTypes::UpdateActionOption action);
 
     // ------------------------------------------------------------------------
-    //: Get the local attach state.  That is, test if the device is attached
-    //+ locally.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The local attach state is returned to the caller.
-    //
-    //! RETURNS: true  - The device is attached locally.
-    //! RETURNS: false - The device is not attached locally, and opening the
-    //+                  device will usually block until there is a response.
-    // ------------------------------------------------------------------------
-    bool getLocalAttachState(void);
-
-    // ------------------------------------------------------------------------
-    //: Mark the device as locally attached.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The device has its local attachment state enabled.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    Status enableLocalAttach(void);
-
-    // ------------------------------------------------------------------------
-    //: Mark the device as not locally attached.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The device has its local attachment state disabled.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    Status disableLocalAttach(void);
-
-    // ------------------------------------------------------------------------
     //: Query the serial port for the maximum buffer size.
     //
     //! PRE: The serial port is open.
@@ -360,38 +327,6 @@ public:
     Status setCharacterSize(const SerialTypes::CharacterSizeOption bpb);
 
     // ------------------------------------------------------------------------
-    //: Get the current read state for the port.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The read state (either enabled or disabled) is returne to the 
-    //+       caller.
-    //
-    //! RETURNS: true  - Bytes can be read from the device.
-    //! RETURNS: false - Bytes cannot be read from the device.
-    // ------------------------------------------------------------------------
-    bool getReadState(void);
-
-    // ------------------------------------------------------------------------
-    //: Enable the receiver so that bytes can be read from the port.
-    //
-    //! PRE: The serial port is open.
-    //! POST: An attempt is made to make the device readable.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    Status enableRead(void);
-
-    // ------------------------------------------------------------------------
-    //: Disable the receiver so that bytes cannot be read from the port.
-    //
-    //! PRE: The serial port is open.
-    //! POST: An attempt is made to make the device unreadable.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    Status disableRead(void);
-
-    // ------------------------------------------------------------------------
     //: Get the number of stop bits in use.  This will be either 1 or 2.
     //
     //! PRE: The serial port is open.
@@ -417,40 +352,6 @@ public:
     //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status setStopBits(const Uint8 num_bits);
-
-    // ------------------------------------------------------------------------
-    //: Get the current input echo state (either on or off) for the serial
-    //+ port.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The input echo state is returned to the caller.
-    //
-    //! RETURNS: true  - Input characters are echoed back to the terminal
-    //+                  device.
-    //! RETURNS: false - Input characters are echoed not back to the terminal
-    //+                  device.
-    // ------------------------------------------------------------------------
-    bool getInputEchoState(void);
-
-    // ------------------------------------------------------------------------
-    //: Enable input echo.
-    //
-    //! PRE: The serial port is open.
-    //! POST: Input echoing is enabled for the serial port.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    Status enableInputEcho(void);
-
-    // ------------------------------------------------------------------------
-    //: Disable input echo.
-    //
-    //! PRE: The serial port is open.
-    //! POST: Input echoing is disabled for the serial port.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    Status disableInputEcho(void);
 
     // ------------------------------------------------------------------------
     //: Query the canonical input state of the serial port.  If canonical mode
@@ -490,72 +391,6 @@ public:
     //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status disableCanonicalInput(void);
-
-    // ------------------------------------------------------------------------
-    //: Get the current state of carriage return (CR) to newline (NL)
-    //+ translation.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The CR --> NL translation state is returned to the caller.
-    //
-    //! RETURNS: true  - Received carriage returns are converted to newlines.
-    //! RETURNS: false - Received carriage returns are not converted to
-    //+                  newlines.
-    // ------------------------------------------------------------------------
-    bool getCRTranslateState(void);
-
-    // ------------------------------------------------------------------------
-    //: Enable translation of received carriage returns to newlines.
-    //
-    //! PRE: The serial port is open.
-    //! POST: CR --> NL translation is enabled.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    Status enableCRTranslation(void);
-
-    // ------------------------------------------------------------------------
-    //: Disable translation of received carriage returns to newlines.
-    //
-    //! PRE: The serial port is open.
-    //! POST: CR --> NL translation is disabled.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    Status disableCRTranslation(void);
-
-    // ------------------------------------------------------------------------
-    //: Get the current state of ignoring received carriage returns (CRs).  If
-    //+ CRs are not ignored, they may be translated to newlines.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The CR ignore state is returned to the caller.
-    //
-    //! RETURNS: true  - Received carriage returns are ignored.
-    //! RETURNS: false - Received carriage returns are not ignored.
-    // ------------------------------------------------------------------------
-    bool getCRIgnoreState(void);
-
-    // ------------------------------------------------------------------------
-    //: Enable ignoring of received carriage returns.
-    //
-    //! PRE: The serial port is open.
-    //! POST: CR ignoring is enabled.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    Status enableCRIgnore(void);
-
-    // ------------------------------------------------------------------------
-    //: Disable ignoring of received carriage returns.  Once disabled,
-    //+ received carriage returns may be converted to newlines.
-    //
-    //! PRE: The serial port is open.
-    //! POST: CR ignoring is disabled.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    Status disableCRIgnore(void);
 
     // ------------------------------------------------------------------------
     //: Get the current state of ignoring bytes with framing errors (other
@@ -621,41 +456,6 @@ public:
     //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
     Status disableInputParityCheck(void);
-
-    // ------------------------------------------------------------------------
-    //: Get the current signal generation state.  If it is enabled, the input
-    //+ bytes are checked against signal values.  If equal, the corresponding
-    //+ signal is generated.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The current signal generation state valus is returned to the
-    //+       caller.
-    //
-    //! RETURNS: true  - Signal generation is enabled.
-    //! RETURNS: false - Signal generation is disabled.
-    // ------------------------------------------------------------------------
-    bool getSignalGenerateState(void);
-
-    // ------------------------------------------------------------------------
-    //: Enable signal generation.  The signals checked are interrupt, quit,
-    //+ and suspend.
-    //
-    //! PRE: The serial port is open.
-    //! POST: Signal generation is enabled.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    Status enableSignalGeneration(void);
-
-    // ------------------------------------------------------------------------
-    //: Disable signal generation.
-    //
-    //! PRE: The serial port is open.
-    //! POST: Signal generation is disabled.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
-    Status disableSignalGeneration(void);
 
     // ------------------------------------------------------------------------
     //: Get the current state of bit stripping.  When enabled, input bytes are

@@ -152,33 +152,6 @@ SerialPortImpTermios::setUpdateAction (SerialTypes::UpdateActionOption action)
 }
 
 // ----------------------------------------------------------------------------
-// Get the local attach state.  That is, test if the device is attached
-// locally.
-// ----------------------------------------------------------------------------
-bool
-SerialPortImpTermios::getLocalAttachState () {
-    return getBit(CLOCAL, SerialPortImpTermios::CFLAG);
-}
-
-// ----------------------------------------------------------------------------
-// Mark the device as locally attached.
-// ----------------------------------------------------------------------------
-Status
-SerialPortImpTermios::enableLocalAttach () {
-    return setBit(CLOCAL, SerialPortImpTermios::CFLAG, true,
-                  "Could not enable local attachment");
-}
-
-// ----------------------------------------------------------------------------
-// Mark the device as not locally attached.
-// ----------------------------------------------------------------------------
-Status
-SerialPortImpTermios::disableLocalAttach () {
-    return setBit(CLOCAL, SerialPortImpTermios::CFLAG, false,
-                  "Could not disable local attachment");
-}
-
-// ----------------------------------------------------------------------------
 // Query the serial port for the maximum buffer size.
 // ----------------------------------------------------------------------------
 Status
@@ -313,32 +286,6 @@ SerialPortImpTermios::setCharacterSize (const SerialTypes::CharacterSizeOption b
 }
 
 // ----------------------------------------------------------------------------
-// Get the current read state for the port.
-// ----------------------------------------------------------------------------
-bool
-SerialPortImpTermios::getReadState () {
-    return getBit(CREAD, SerialPortImpTermios::CFLAG);
-}
-
-// ----------------------------------------------------------------------------
-// Enable the receiver so that bytes can be read from the port.
-// ----------------------------------------------------------------------------
-Status
-SerialPortImpTermios::enableRead () {
-    return setBit(CREAD, SerialPortImpTermios::CFLAG, true,
-                  "Could not enable reading");
-}
-
-// ----------------------------------------------------------------------------
-// Disable the receiver so that bytes cannot be read from the port.
-// ----------------------------------------------------------------------------
-Status
-SerialPortImpTermios::disableRead () {
-    return setBit(CREAD, SerialPortImpTermios::CFLAG, false,
-                  "Could not disable reading");
-}
-
-// ----------------------------------------------------------------------------
 // Get the number of stop bits in use.  This will be either 1 or 2.
 // ----------------------------------------------------------------------------
 Status
@@ -396,32 +343,6 @@ SerialPortImpTermios::setStopBits (const Uint8 num_bits) {
 }
 
 // ----------------------------------------------------------------------------
-// Get the current input echo state (either on or off) for the serial port.
-// ----------------------------------------------------------------------------
-bool
-SerialPortImpTermios::getInputEchoState () {
-    return getBit(ECHO, SerialPortImpTermios::LFLAG);
-}
-
-// ----------------------------------------------------------------------------
-// Enable input echo.
-// ----------------------------------------------------------------------------
-Status
-SerialPortImpTermios::enableInputEcho () {
-    return setBit(ECHO, SerialPortImpTermios::LFLAG, true,
-                  "Could not enable input echo");
-}
-
-// ----------------------------------------------------------------------------
-// Disable input echo.
-// ----------------------------------------------------------------------------
-Status
-SerialPortImpTermios::disableInputEcho () {
-    return setBit(ECHO, SerialPortImpTermios::LFLAG, false,
-                  "Could not disable input echo");
-}
-
-// ----------------------------------------------------------------------------
 // Query the canonical input state of the serial port.  If canonical mode is
 // enabled, the characters EOF, EOL, EOL2, ERASE, KILL, REPRINT, STATUS, and
 // WERASE are enabled, and the input characters are assembled into lines.
@@ -453,60 +374,6 @@ Status
 SerialPortImpTermios::disableCanonicalInput () {
     return setBit(ICANON, SerialPortImpTermios::LFLAG, false,
            "Could not disable canonical input mode");
-}
-
-// ----------------------------------------------------------------------------
-// Get the current state of carriage return (CR) to newline (NL) translation.
-// ----------------------------------------------------------------------------
-bool
-SerialPortImpTermios::getCRTranslateState () {
-    return getBit(ICRNL, SerialPortImpTermios::IFLAG);
-}
-
-// ----------------------------------------------------------------------------
-// Enable translation of received carriage returns to newlines.
-// ----------------------------------------------------------------------------
-Status
-SerialPortImpTermios::enableCRTranslation () {
-    return setBit(ICRNL, SerialPortImpTermios::IFLAG, true,
-                  "Could not enable carriage return translation mode");
-}
-
-// ----------------------------------------------------------------------------
-// Disable translation of received carriage returns to newlines.
-// ----------------------------------------------------------------------------
-Status
-SerialPortImpTermios::disableCRTranslation () {
-    return setBit(ICRNL, SerialPortImpTermios::IFLAG, false,
-                  "Could not disable carriage return translation mode");
-}
-
-// ----------------------------------------------------------------------------
-// Get the current state of ignoring received carriage returns (CRs).  If CRs
-// are not ignored, they may be translated to newlines.
-// ----------------------------------------------------------------------------
-bool
-SerialPortImpTermios::getCRIgnoreState () {
-    return getBit(IGNCR, SerialPortImpTermios::IFLAG);
-}
-
-// ----------------------------------------------------------------------------
-// Enable ignoring of received carriage returns.
-// ----------------------------------------------------------------------------
-Status
-SerialPortImpTermios::enableCRIgnore () {
-    return setBit(IGNCR, SerialPortImpTermios::IFLAG, true,
-                  "Could not enable carriage return ignoring");
-}
-
-// ----------------------------------------------------------------------------
-// Disable ignoring of received carriage returns.  Once disabled, received
-// carriage returns may be converted to newlines.
-// ----------------------------------------------------------------------------
-Status
-SerialPortImpTermios::disableCRIgnore () {
-    return setBit(IGNCR, SerialPortImpTermios::IFLAG, false,
-                  "Could not disable carriage return ignoring");
 }
 
 // ----------------------------------------------------------------------------
@@ -560,35 +427,6 @@ Status
 SerialPortImpTermios::disableInputParityCheck () {
     return setBit(INPCK, SerialPortImpTermios::IFLAG, false,
                   "Could not disable input parity checking");
-}
-
-// ----------------------------------------------------------------------------
-// Get the current signal generation state.  If it is enabled, the input bytes
-// are checked against signal values.  If equal, the corresponding signal is
-// generated.
-// ----------------------------------------------------------------------------
-bool
-SerialPortImpTermios::getSignalGenerateState () {
-    return getBit(ISIG, SerialPortImpTermios::LFLAG);
-}
-
-// ----------------------------------------------------------------------------
-// Enable signal generation.  The signals checked are interrupt, quit, and
-// suspend.
-// ----------------------------------------------------------------------------
-Status
-SerialPortImpTermios::enableSignalGeneration () {
-    return setBit(ISIG, SerialPortImpTermios::LFLAG, true,
-                  "Could not enable signal generation for input characters");
-}
-
-// ----------------------------------------------------------------------------
-// Disable signal generation.
-// ----------------------------------------------------------------------------
-Status
-SerialPortImpTermios::disableSignalGeneration () {
-    return setBit(ISIG, SerialPortImpTermios::LFLAG, false,
-                  "Could not disable signal generation for input characters");
 }
 
 // ----------------------------------------------------------------------------
