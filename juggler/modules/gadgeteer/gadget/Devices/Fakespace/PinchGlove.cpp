@@ -1,20 +1,16 @@
 /* vjPinchGlove */
 #include <vjConfig.h>
 #include <sys/time.h>
-
-// need stdio for sprintf
-#include <stdio.h>
-
-#include <Input/vjGlove/fsPinchGlove.h>
-#include <Input/vjGlove/vjPinchGlove.h>
+#include <stdio.h>                      // need stdio for sprintf
+#include <Input/vjGlove/fsPinchGlove.h> //fakespace pinch driver
+#include <Input/vjGlove/vjPinchGlove.h> //vrjuggler pinch driver
 
 
 bool vjPinchGlove::mLookupInitialized = false;
 float vjPinchGlove::mOnLookupTable[4][11];
 float vjPinchGlove::mOffLookupTable[4][11];
    
-vjPinchGlove::vjPinchGlove(vjConfigChunk *c) : vjGlove(c)
-						
+vjPinchGlove::vjPinchGlove(vjConfigChunk *c) : vjGlove(c)					
 {
     // init the lookup table if it hasn't been
     if (vjPinchGlove::mLookupInitialized == false)
@@ -26,22 +22,27 @@ vjPinchGlove::vjPinchGlove(vjConfigChunk *c) : vjGlove(c)
         mCalDir = new char [strlen(home_dir) + 1];
 	     strcpy(mCalDir,home_dir);
     }
-	myThread = NULL;
+
+    myThread = NULL;
     mGlove = new fsPinchGlove();
     
     // these params are available, i only need sPort:
     // mCalDir, sPort, baudRate
     assert( mGlove != NULL );
-};
+}
 
-int
-vjPinchGlove::StartSampling()
+vjPinchGlove::~vjPinchGlove ()
+{
+   StopSampling();      // Stop the glove
+   delete mGlove;       // Delete the glove
+}
+
+int vjPinchGlove::StartSampling()
 {
    if (myThread == NULL)
    {
       resetIndexes();
 
-	
       if (mGlove->connectToHardware( sPort ) == false)
       {
          vjDEBUG(0) << "ERROR: Can't open Pinchglove or it is already opened." << vjDEBUG_FLUSH;
@@ -112,12 +113,6 @@ int vjPinchGlove::StopSampling()
       vjDEBUG(0) << "stopping vjPinchGlove.." << endl;
    }
    return 1;
-}
-
-vjPinchGlove::~vjPinchGlove ()
-{
-   StopSampling();      // Stop the glove
-   delete mGlove;       // Delete the glove
 }
 
 void vjPinchGlove::mInitLookupTable()
