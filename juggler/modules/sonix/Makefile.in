@@ -62,7 +62,7 @@ endif
 endif
 
 includedir           = @includedir@
-instlinks            = $(topdir)/install-clone
+instlinks            = $(topdir)/instlinks
 
 # Extra compiler and linker options needed only by this file.
 DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
