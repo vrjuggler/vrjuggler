@@ -74,6 +74,8 @@
 #ifndef CFILEIO_INCLUDED
 #define CFILEIO_INCLUDED
 
+#include <snx/snxConfig.h>
+
 #include <string>
 #include <vector>
 #include <fstream>
@@ -84,7 +86,7 @@
 namespace snxFileIO
 {
    //: true - 
-   bool fileExists( const char* const name );
+   SNX_API(bool) fileExists( const char* const name );
 
    int fileSize( const char* const filename );
 
