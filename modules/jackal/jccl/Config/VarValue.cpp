@@ -116,7 +116,7 @@ vjVarValue::operator int() {
 	cerr << using_invalid_msg << endl;
 	return 0;
     default:
-	cerr << "vjVarValue: type error in cast to int" << endl;
+       vjDEBUG(vjDBG_ERROR,0) << "Type error in cast!\n" << vjDEBUG_FLUSH;
 	return 0;
     }
 }
@@ -126,14 +126,14 @@ vjVarValue::operator int() {
 vjVarValue::operator vjConfigChunk*() {
     switch (type) {
     case T_EMBEDDEDCHUNK:
-	// we need to make a copy because if the value is deleted, it deletes 
+	// we need to make a copy because if the value is deleted, it deletes
 	// its embeddedchunk
 	return new vjConfigChunk (*val.embeddedchunkval);
     case T_INVALID:
 	cerr << using_invalid_msg << endl;
 	return NULL;
     default:
-	cerr << "vjVarValue: type error in cast to vjConfigChunk*" << endl;
+       vjDEBUG(vjDBG_ERROR,0) << "Type error in cast!\n" << vjDEBUG_FLUSH;
 	return NULL;
     }
 }
@@ -154,7 +154,7 @@ vjVarValue::operator bool() {
 	cerr << using_invalid_msg << endl;
 	return false;
     default:
-	cerr << "vjVarValue: type error in cast to bool!" << endl;
+       vjDEBUG(vjDBG_ERROR,0) << "Type error in cast!\n" << vjDEBUG_FLUSH;
 	return false;
     }
 }
@@ -173,7 +173,7 @@ vjVarValue::operator float () {
 	cerr << using_invalid_msg << endl;
 	return 0.0f;
     default:
-	cerr << "vjVarValue: type error in case to float." << endl;
+       vjDEBUG(vjDBG_ERROR,0) << "Type error in cast!\n" << vjDEBUG_FLUSH;
 	return 0.0f;
     }
 }
@@ -189,7 +189,7 @@ char* vjVarValue::cstring () {
 	cerr << using_invalid_msg << endl;
 	return strdup("");
     default:
-	cerr << "vjVarValue: type error in cstring()." << endl;
+       vjDEBUG(vjDBG_ERROR,0) << "Type error in cast to char*!" << endl << vjDEBUG_FLUSH;
 	return strdup("");
     }
 }
@@ -205,7 +205,7 @@ vjVarValue::operator std::string () {
 	cerr << using_invalid_msg << endl;
 	return (std::string)"";
     default:
-	cerr << "vjVarValue: type error in cast to std::string." << endl;
+       vjDEBUG(vjDBG_ERROR,0) << "Type error in cast to std::string!" << endl << vjDEBUG_FLUSH;
 	return (std::string)"";
     }
 }
