@@ -172,7 +172,7 @@ Input* BaseTypeFactory::loadNetDevice(std::string base_type)
    BaseTypeConstructorBase* constructor = mConstructors[index];
 
    //vprDEBUG(gadgetDBG_INPUT_MGR,3)
-   //   << "gadget::DeviceFactory::loadDevice: Loading device: "
+   //   << "gadget::BaseType::loadDevice: Loading device: "
    //   << chunk->getDescToken() << "  with: " << typeid(*constructor).name()
    //   << std::endl << vprDEBUG_FLUSH;
 
