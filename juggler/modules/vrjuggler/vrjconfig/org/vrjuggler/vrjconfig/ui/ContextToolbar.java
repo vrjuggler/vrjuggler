@@ -64,7 +64,8 @@ public class ContextToolbar
    extends JComponent
    implements VrjConfigConstants, UndoableEditListener
 {
-   public ContextToolbar(File curDir, ConfigContext ctx, VrjConfig.ConfigIFrame frame)
+   public ContextToolbar(File curDir, ConfigContext ctx,
+                         VrjConfig.ConfigIFrame frame)
    {
       mConfigIFrame = frame;
 
@@ -76,7 +77,7 @@ public class ContextToolbar
       {
          e.printStackTrace();
       }
-      
+
       // This must happen after we initialize the GUI in jbInit
       // to ensure that buttons are enabled if appropriate.
       this.setConfigContext(ctx);
@@ -87,13 +88,21 @@ public class ContextToolbar
       try
       {
          ClassLoader loader = getClass().getClassLoader();
-         newBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/newchunk.gif")));
-         openBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/open.gif")));
-         saveBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/save.gif")));
-         saveAsBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/saveas.gif")));
-         undoBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/undo.gif")));
-         redoBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/redo.gif")));
-         expandBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/expand_toolbar.gif")));
+         String img_root = "org/vrjuggler/vrjconfig/images";
+         newBtn.setIcon(new ImageIcon(loader.getResource(img_root +
+                                                         "/newchunk.gif")));
+         openBtn.setIcon(new ImageIcon(loader.getResource(img_root +
+                                                          "/open.gif")));
+         saveBtn.setIcon(new ImageIcon(loader.getResource(img_root +
+                                                          "/save.gif")));
+         saveAsBtn.setIcon(new ImageIcon(loader.getResource(img_root +
+                                                            "/saveas.gif")));
+         undoBtn.setIcon(new ImageIcon(loader.getResource(img_root +
+                                                          "/undo.gif")));
+         redoBtn.setIcon(new ImageIcon(loader.getResource(img_root +
+                                                          "/redo.gif")));
+         expandBtn.setIcon(new ImageIcon(loader.getResource(img_root +
+                                                            "/expand_toolbar.gif")));
       }
       catch (Exception e)
       {
@@ -118,9 +127,10 @@ public class ContextToolbar
                doCheckReload();
             }
          };
-     
+
       System.out.println("Registering listener");
-      EventListenerRegistry.instance().registerListener(mTweekFrameListener, TweekFrameListener.class);
+      EventListenerRegistry.instance().registerListener(mTweekFrameListener,
+                                                        TweekFrameListener.class);
    }
 
    public void undoableEditHappened(UndoableEditEvent e)
@@ -130,7 +140,7 @@ public class ContextToolbar
       redoBtn.setEnabled(false);
       mConfigIFrame.setTitle("Configuration Editor < Unsaved >");
    }
-   
+
    public void addToToolbar(Component comp)
    {
       toolbar.add(comp);
@@ -193,7 +203,8 @@ public class ContextToolbar
       try
       {
          String file = expandEnvVars(filename);
-         FileDataSource data_source = FileDataSource.open(file, getBroker().getRepository());
+         FileDataSource data_source =
+            FileDataSource.open(file, getBroker().getRepository());
          getBroker().add(file, data_source);
          ctx.add(file);
       }
@@ -210,16 +221,20 @@ public class ContextToolbar
     */
    public boolean doNew()
    {
-      NewConfigDialog new_dlg = new NewConfigDialog(fileChooser.getCurrentDirectory());
+      NewConfigDialog new_dlg =
+         new NewConfigDialog(fileChooser.getCurrentDirectory());
       int option = new_dlg.showDialog(getParentFrame());
       if (option == NewConfigDialog.APPROVE_OPTION)
       {
          // Create the new config file
          try
          {
-            File new_file = new File(new_dlg.getDirectory(), new_dlg.getFileName());
+            File new_file = new File(new_dlg.getDirectory(),
+                                     new_dlg.getFileName());
             String new_filename = new_file.getAbsolutePath();
-            FileDataSource data_source = FileDataSource.create(new_filename, getBroker().getRepository());
+            FileDataSource data_source =
+               FileDataSource.create(new_filename,
+                                     getBroker().getRepository());
             getBroker().add(new_filename, data_source);
             this.context.add(new_filename);
          }
@@ -271,7 +286,8 @@ public class ContextToolbar
             {
                JOptionPane.showMessageDialog(getParentFrame(),
                                              "You must open an existing file.",
-                                             "Error", JOptionPane.ERROR_MESSAGE);
+                                             "Error",
+                                             JOptionPane.ERROR_MESSAGE);
                return false;
             }
 
@@ -289,7 +305,8 @@ public class ContextToolbar
                String res_name = expandEnvVars(res_file.getAbsolutePath());
                System.out.println("Opening included resource: "+res_name);
 
-               FileDataSource data_source = FileDataSource.open(res_name, getBroker().getRepository());
+               FileDataSource data_source =
+                  FileDataSource.open(res_name, getBroker().getRepository());
                broker.add(res_name, data_source);
                this.context.add(res_name);
 
@@ -336,7 +353,7 @@ public class ContextToolbar
             }
          }
          success = true;
-         
+
          // Inform the ConfigUndoManager that we have saved changes.
          context.getConfigUndoManager().saveHappened();
          mConfigIFrame.setTitle("Configuration Editor");
@@ -407,7 +424,7 @@ public class ContextToolbar
          if ( ds instanceof FileDataSource )
          {
             FileDataSource fds = (FileDataSource)ds;
-            
+
             if ( fds.isOutOfDate() )
             {
                int result = JOptionPane.showConfirmDialog(
@@ -436,7 +453,7 @@ public class ContextToolbar
             }
          }
       }
-      
+
       System.out.println("Reload?");
       return false;
    }
@@ -449,16 +466,20 @@ public class ContextToolbar
       if (context.getConfigUndoManager().getUnsavedChanges())
       {
          String file_names = new String();
-         for (Iterator itr = context.getResources().iterator() ; itr.hasNext() ; )
+         for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
          {
             file_names = file_names + "\n" + itr.next();
          }
-         
-         int result = JOptionPane.showConfirmDialog(null,
-                           "You have unsaved changes, do you want to save them?\n" + file_names,
-                           "Unsaved Changes",
-                           JOptionPane.YES_NO_CANCEL_OPTION ,
-                           JOptionPane.INFORMATION_MESSAGE);
+
+         int result =
+            JOptionPane.showConfirmDialog(
+               null,
+               "You have unsaved changes, do you want to save them?\n" +
+                  file_names,
+               "Unsaved Changes", JOptionPane.YES_NO_CANCEL_OPTION,
+               JOptionPane.INFORMATION_MESSAGE
+            );
+
          switch (result)
          {
             case JOptionPane.YES_OPTION:
@@ -471,15 +492,16 @@ public class ContextToolbar
                return false;
          }
       }
-      
+
       ConfigBroker broker = new ConfigBrokerProxy();
       for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
       {
          broker.remove((String)itr.next());
       }
-      
+
       System.out.println("Unregistering listener");
-      EventListenerRegistry.instance().unregisterListener(mTweekFrameListener, TweekFrameListener.class);
+      EventListenerRegistry.instance().unregisterListener(mTweekFrameListener,
+                                                          TweekFrameListener.class);
       return true;
    }
 
@@ -602,7 +624,7 @@ public class ContextToolbar
       expandBtn.setToolTipText("Expand Toolbar");
       expandBtn.setActionCommand("Expand");
       expandBtn.setFocusPainted(false);
-      
+
       newBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -610,6 +632,7 @@ public class ContextToolbar
             doNew();
          }
       });
+
       openBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -617,6 +640,7 @@ public class ContextToolbar
             doOpen();
          }
       });
+
       saveBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -624,6 +648,7 @@ public class ContextToolbar
             doSave();
          }
       });
+
       saveAsBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -631,6 +656,7 @@ public class ContextToolbar
             doSaveAs();
          }
       });
+
       undoBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -638,6 +664,7 @@ public class ContextToolbar
             doUndo();
          }
       });
+
       redoBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -645,6 +672,7 @@ public class ContextToolbar
             doRedo();
          }
       });
+
       expandBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -652,6 +680,7 @@ public class ContextToolbar
             toggleContextEditor();
          }
       });
+
       this.add(toolbar, BorderLayout.CENTER);
       toolbar.add(newBtn, null);
       toolbar.add(openBtn, null);
@@ -695,40 +724,47 @@ public class ContextToolbar
                int result = fileChooser.showSaveDialog(getParentFrame());
                if (result == JFileChooser.APPROVE_OPTION)
                {
-                  /// XXX:  This is kind of ghetto; the only way to "rename" a resource is to remove it
-                  ///       and then add it in again with a new name.
-                  String new_name = fileChooser.getSelectedFile().getAbsolutePath();
-                  ///       JFileChooser implements File Filters, but if the user types in a name, the JFile Chooser
-                  ///       does NOT automatically add the selected file extension to the name.  Go figure.
+                  // XXX: This is kind of ghetto; the only way to "rename" a
+                  //      resource is to remove it and then add it in again
+                  //      with a new name.
+                  String new_name =
+                     fileChooser.getSelectedFile().getAbsolutePath();
+
+                  // JFileChooser implements File Filters, but if the user
+                  // types in a name, the JFile Chooser does NOT automatically
+                  // add the selected file extension to the name.  Go figure.
                   if ( !new_name.matches(".*\\.jconf") )
                   {
                      new_name = new_name + ".jconf";
                   }
                   if (!old_name.equals(new_name))
                   {
-                     /// We have to buffer the adds and removes to avoid ConcurrentModificationExceptions.
+                     // We have to buffer the adds and removes to avoid
+                     // ConcurrentModificationExceptions.
                      removed_sources.add(old_name);
                      added_sources.add(new_name);
                   }
                }
             }
-            
          }
+
          for (Iterator itr = removed_sources.iterator(); itr.hasNext(); )
          {
             String cur = (String)itr.next();
             context.remove(cur);
             getBroker().remove(cur);
          }
+
          for (Iterator itr = added_sources.iterator(); itr.hasNext(); )
          {
             String cur = (String)itr.next();
-            FileDataSource new_resource = FileDataSource.create(cur, getBroker().getRepository());
+            FileDataSource new_resource =
+               FileDataSource.create(cur, getBroker().getRepository());
             getBroker().add(cur, new_resource);
             context.add(cur);
             new_resource.commit();
          }
-         
+
          // Inform the ConfigUndoManager that we have saved changes.
          context.getConfigUndoManager().saveHappened();
          mConfigIFrame.setTitle("Configuration Editor");
@@ -752,7 +788,7 @@ public class ContextToolbar
 
       return mParentFrame;
    }
-   
+
    // JBuilder GUI variables
    private JToolBar toolbar = new JToolBar();
    private JButton newBtn = new JButton();
