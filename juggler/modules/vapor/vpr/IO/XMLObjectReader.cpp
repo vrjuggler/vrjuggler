@@ -274,6 +274,21 @@ void XMLObjectReader::resetReading()
    mCurNodeStack.clear();
 }
 
+void XMLObjectReader::pushState()
+{
+   ReadState cur_state;
+   cur_state.mNodeStack = mCurNodeStack;
+   mReadStateStack.push_back(cur_state);
+}
+
+void XMLObjectReader::popState()
+{
+   ReadState new_state = mReadStateStack.back();
+   mReadStateStack.pop_back();
+   mCurNodeStack = new_state.mNodeStack;
+}
+
+
 
 vpr::Uint8 XMLObjectReader::readUint8()
 {
