@@ -109,15 +109,7 @@ BEFOREBUILD=	beforebuild
 AFTERBUILD=	afterbuild
 
 # Things to do before the object files and library are built.
-beforebuild:
-	@$(MAKE) $(PARAM_HEADER)
-	@echo "------------------------------------------------"
-	@echo "IDL code generation phase"
-	@echo "------------------------------------------------"
-	@$(MAKE) cxx-idl
-
-cxx-idl:
-	@$(MAKE) RECTARGET="cxx_idl" DO_IDL=1 recursive
+beforebuild: $(PARAM_HEADER)
 
 $(PARAM_HEADER):
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
