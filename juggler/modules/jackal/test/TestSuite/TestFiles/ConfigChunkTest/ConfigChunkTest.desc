@@ -2,18 +2,26 @@
 <ChunkDescDB>
   <ChunkDesc token="config-chuck-the-beaver" name="chuck">
     <help>wood chuckin'</help>
-    <PropertyDesc token="test prop int" type="Int" num="1">
+    <PropertyDesc token="test_prop_int" type="Int" num="1">
         <help>discrete beaver</help>
     </PropertyDesc>
-    <PropertyDesc token="test prop float" type="Float" num="1">
+    <PropertyDesc token="test_prop_float" type="Float" num="1">
         <help>variable beaver</help>
     </PropertyDesc>
-    <PropertyDesc token="test prop string" type="String" num="1">
+    <PropertyDesc token="test_prop_string" type="String" num="1">
         <help>string bikini beaver</help>
     </PropertyDesc>
-    <PropertyDesc token="test prop multi" type="String" num="1">
+    <PropertyDesc token="test_prop_multi" type="String" num="1">
         <help>multi beaver</help>
     </PropertyDesc>
+    <Defaults>
+      <config-chuck-the-beaver>
+         <test_prop_int>1029384756</test_prop_int>
+         <test_prop_float>3.1459</test_prop_float>
+         <test_prop_string>upchuck</test_prop_string>
+         <test_prop_multi>woodchuck</test_prop_multi>
+      </config-chuck-the-beaver>
+    </Defaults>
   </ChunkDesc>
   <ChunkDesc token="chunk_type_1" name="ChunkType1">
     <help>Chunk Type 1</help>
