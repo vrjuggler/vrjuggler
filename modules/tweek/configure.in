@@ -48,7 +48,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2003 by Iowa State University])
 AC_CONFIG_SRCDIR([tweek/tweekConfig.h])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../share/config])
-DPP_PREREQ([1.99.15])
+DPP_PREREQ([1.99.18])
 DPP_INIT
 
 DPP_GEN_RECONFIG
@@ -402,6 +402,10 @@ if test "x$tweek_have_java" = "xY" ; then
       [ BUILD_JAVA='N'
         AC_MSG_WARN([*** JDK 1.4 or newer required for Tweek Java API ***])
       ])
+
+   DPP_CHECK_JNI([$JDK_HOME], ,
+                 [BUILD_JAVA='N'
+                  AC_MSG_WARN([*** JNI is required for Tweek Java API ***])])
 
    # If we are building the Tweek Java code, we should try to enable building
    # the Java test suite too.

@@ -93,4 +93,17 @@ public interface EnvironmentService
     * EnvironmentService.Windows.
     */
    public int getOS();
+
+   /**
+    * Returns the value of the named environment variable or null if the
+    * variable is not set in the user's environment.
+    *
+    * @param envVarName The name of the variable to look up in the user's
+    *                   environment.
+    *
+    * @return A String object containing the value of the named environment
+    *         variable if the variable exists in the user's environment.  If
+    *         it does not exist, null is returned.
+    */
+   public String getenv(String envVarName);
 }
