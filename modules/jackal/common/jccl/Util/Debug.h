@@ -37,9 +37,9 @@
 #include <vpr/Util/Debug.h>
 
 // JCCL categories.
-const vpr::DebugCategory jcclDBG_PERF(vpr::GUID("02acc29d-6f09-4498-bf38-23b02cd39084"), "DBG_JCCL_PERF", "JCCL-PERF:");
-const vpr::DebugCategory jcclDBG_CONFIG(vpr::GUID("a0b2de1f-ce63-489b-8248-f03ef56d36f7"), "DBG_CONFIG", "JCCL-CFG:");
-const vpr::DebugCategory jcclDBG_RECONFIG(vpr::GUID("94a6e028-b810-40e5-b6fd-e41b1a74db0e"), "DBG_RECONFIG", "JCCL-RCFG:");
-const vpr::DebugCategory jcclDBG_PLUGIN(vpr::GUID("810faef0-12fb-11d8-88d1-00045a86e9cd"), "DBG_JCCL_PLUGIN", "JCCL-PLUGIN:");
+const vpr::DebugCategory jcclDBG_PERF(vpr::GUID(std::string("02acc29d-6f09-4498-bf38-23b02cd39084")), "DBG_JCCL_PERF", "JCCL-PERF:");
+const vpr::DebugCategory jcclDBG_CONFIG(vpr::GUID(std::string("a0b2de1f-ce63-489b-8248-f03ef56d36f7")), "DBG_CONFIG", "JCCL-CFG:");
+const vpr::DebugCategory jcclDBG_RECONFIG(vpr::GUID(std::string("94a6e028-b810-40e5-b6fd-e41b1a74db0e")), "DBG_RECONFIG", "JCCL-RCFG:");
+const vpr::DebugCategory jcclDBG_PLUGIN(vpr::GUID(std::string("810faef0-12fb-11d8-88d1-00045a86e9cd")), "DBG_JCCL_PLUGIN", "JCCL-PLUGIN:");
 
 #endif

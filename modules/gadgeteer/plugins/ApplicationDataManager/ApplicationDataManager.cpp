@@ -66,8 +66,8 @@ extern "C"
 namespace cluster
 {
    ApplicationDataManager::ApplicationDataManager()
-      : mHandlerGUID("cc6ca39f-03f2-4779-aa4b-048f774ff9a5"),
-      mFrameNumber(0)
+      : mHandlerGUID(std::string("cc6ca39f-03f2-4779-aa4b-048f774ff9a5"))
+      , mFrameNumber(0)
    {;}
 
    ApplicationDataManager::~ApplicationDataManager()
