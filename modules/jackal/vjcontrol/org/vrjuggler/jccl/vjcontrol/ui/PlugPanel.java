@@ -29,14 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.UI;
+package org.vrjuggler.jccl.vjcontrol.ui;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
-import VjControl.VjComponent;
+import org.vrjuggler.jccl.vjcontrol.VjComponent;
 
 
 /** Interface for PlugPanel components.
@@ -46,7 +44,6 @@ import VjControl.VjComponent;
  *  PlugPanels can inherit from JComponent, or they can contain 
  *  a JComponent that is returned via getUIComponent().
  *
- *  @author Christopher Just
  *  @version $Revision$
  */
 public interface PlugPanel

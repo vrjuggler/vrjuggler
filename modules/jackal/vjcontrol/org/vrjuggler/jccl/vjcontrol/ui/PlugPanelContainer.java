@@ -29,11 +29,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.vjcontrol.ui;
 
-
-package VjComponents.UI;
-
-import VjControl.VjComponent;
+import org.vrjuggler.jccl.vjcontrol.VjComponent;
 
 
 /** A component that attaches to ControlUI Modules and displays PlugPanels.

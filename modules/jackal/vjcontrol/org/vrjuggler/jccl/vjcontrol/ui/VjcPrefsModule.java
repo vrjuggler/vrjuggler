@@ -29,29 +29,22 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.vjcontrol.ui;
 
-
-package VjComponents.UI;
-
-import java.io.*;
 import java.awt.event.*;
-import javax.swing.JMenuItem;
+import java.io.*;
 import java.util.*;
+import javax.swing.JMenuItem;
 
-import VjComponents.UI.*;
-import VjComponents.UI.Widgets.EasyMenuBar;
-import VjControl.*;
-import VjComponents.UI.ControlUIModule;
-import VjComponents.ConfigEditor.ConfigUIHelper;
-import VjConfig.*;
-
-
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.vjcontrol.*;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.EasyMenuBar;
+import org.vrjuggler.jccl.editorgui.ConfigUIHelper;
 
 /** Provides facilities for editing VjControl's preferences.
  *  This module requires a ControlUI module and a ConfigUIHelper module, 
  *  and is used to edit/save/etc. VjControl.Core's gui_chunkdb.
  *
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class VjcPrefsModule
