@@ -90,6 +90,8 @@ DYNAMICLIB_EXT=	@DYNAMICLIB_EXT@
 ifeq (@PLATFORM@, Darwin)
 LDOPTS+=	-Wl,-dylib_compatibility_version,$(SHLIB_MAJOR).$(SHLIB_MINOR)
 LDOPTS+=	-Wl,-dylib_current_version,$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
+LDOPTS_DBG=	-g
+LDOPTS_OPT=	-Wl,-x
 endif
 
 # Full list of the libraries to build.
@@ -193,8 +195,8 @@ $(LIBDIR)/$(VJ_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 ifeq (@PLATFORM@, Darwin)
 	ld -dynamic -m -r -d -bind_at_load -o $(@:.dylib=.lo)		\
           $(OBJDIR)/*.$(OBJEXT)
-	$(CXX) -g -Wl,-dynamic -nostartfiles -Wl,-dylib -Wl,-ldylib1.o	\
-          $(LDOPTS) -o $@ $(@:.dylib=.lo) $(DYLIB_DEPS_VJ)
+	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
+          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(@:.dylib=.lo) $(DYLIB_DEPS_VJ)
 	rm -f $(@:.dylib=.lo)
 else
 	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
@@ -217,8 +219,9 @@ $(LIBDIR)/$(VJ_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 ifeq (@PLATFORM@, Darwin)
 	ld -dynamic -m -r -d -bind_at_load -o $(@:.dylib=.lo)		\
           $(OBJDIR)/*.$(OBJEXT)
-	$(CXX) -g -Wl,-dynamic -nostartfiles -Wl,-dylib -Wl,-ldylib1.o	\
-          $(LDOPTS) -o $@ $(@:.dylib=.lo) $(DYLIB_PROF_DEPS_VJ)
+	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
+          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(@:.dylib=.lo)		\
+          $(DYLIB_PROF_DEPS_VJ)
 	rm -f $(@:.dylib=.lo)
 else
 	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
@@ -241,8 +244,8 @@ $(LIBDIR)/$(GL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 ifeq (@PLATFORM@, Darwin)
 	ld -dynamic -m -r -d -bind_at_load -o $(@:.dylib=.lo)		\
           $(OBJDIR)/*.$(OBJEXT)
-	$(CXX) -g -Wl,-dynamic -nostartfiles -Wl,-dylib -Wl,-ldylib1.o	\
-          $(LDOPTS) -o $@ $(@:.dylib=.lo) $(DYLIB_DEPS_GL)
+	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
+          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(@:.dylib=.lo) $(DYLIB_DEPS_GL)
 	rm -f $(@:.dylib=.lo)
 else
 	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
@@ -265,8 +268,9 @@ $(LIBDIR)/$(GL_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 ifeq (@PLATFORM@, Darwin)
 	ld -dynamic -m -r -d -bind_at_load -o $(@:.dylib=.lo)		\
           $(OBJDIR)/*.$(OBJEXT)
-	$(CXX) -g -Wl,-dynamic -nostartfiles -Wl,-dylib -Wl,-ldylib1.o	\
-          $(LDOPTS) -o $@ $(@:.dylib=.lo) $(DYLIB_PROF_DEPS_GL)
+	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
+          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(@:.dylib=.lo)		\
+          $(DYLIB_PROF_DEPS_GL)
 	rm -f $(@:.dylib=.lo)
 else
 	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\

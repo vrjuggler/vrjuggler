@@ -82,6 +82,8 @@ endif
 ifeq (@PLATFORM@, Darwin)
 LDOPTS+=	-Wl,-dylib_compatibility_version,$(SHLIB_MAJOR).$(SHLIB_MINOR)
 LDOPTS+=	-Wl,-dylib_current_version,$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
+LDOPTS_DBG=	-g
+LDOPTS_OPT=	-Wl,-x
 endif
 
 # Full list of the libraries to build.
@@ -167,8 +169,8 @@ $(LIBDIR)/$(SNX_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 ifeq (@PLATFORM@, Darwin)
 	ld -dynamic -m -r -d -bind_at_load -o $(@:.dylib=.lo)		\
           $(OBJDIR)/*.$(OBJEXT)
-	$(CXX) -g -Wl,-dynamic -nostartfiles -Wl,-dylib -Wl,-ldylib1.o	\
-          $(LDOPTS) -o $@ $(@:.dylib=.lo) $(DYLIB_DEPS)
+	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
+          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(@:.dylib=.lo) $(DYLIB_DEPS)
 	rm -f $(@:.dylib=.lo)
 else
 	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
@@ -194,8 +196,8 @@ $(LIBDIR)/$(SNX_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 ifeq (@PLATFORM@, Darwin)
 	ld -dynamic -m -r -d -bind_at_load -o $(@:.dylib=.lo)		\
           $(OBJDIR)/*.$(OBJEXT)
-	$(CXX) -g -Wl,-dynamic -nostartfiles -Wl,-dylib -Wl,-ldylib1.o	\
-          $(LDOPTS) -o $@ $(@:.dylib=.lo) $(DYLIB_PROF_DEPS)
+	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
+          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(@:.dylib=.lo) $(DYLIB_PROF_DEPS)
 	rm -f $(@:.dylib=.lo)
 else
 	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
