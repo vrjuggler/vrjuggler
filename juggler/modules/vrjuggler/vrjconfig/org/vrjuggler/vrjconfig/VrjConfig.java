@@ -114,14 +114,20 @@ public class VrjConfig
       return "VR Juggler Configuration";
    }
 
-   public boolean canOpenMultiple() { return true; }
+   public boolean canOpenMultiple()
+   {
+      return true;
+   }
 
    public boolean openRequested()
    {
       return mToolbar.doOpen();
    }
 
-   public boolean canSave() { return true; }
+   public boolean canSave()
+   {
+      return true;
+   }
 
    public boolean saveRequested()
    {
@@ -130,7 +136,14 @@ public class VrjConfig
 
    public boolean saveAsRequested()
    {
-      return mToolbar.doSaveAs();
+      boolean status = false;
+
+      if ( mCurContextFrame != null )
+      {
+         status = mCurContextFrame.doSaveAs();
+      }
+
+      return status;
    }
 
    public boolean closeRequested()
@@ -258,6 +271,8 @@ public class VrjConfig
    private TinyBrowser mHelpBrowser      = new TinyBrowser();
    private JFrame      mHelpBrowserFrame = new JFrame();
 
+   private ConfigIFrame mCurContextFrame = null;
+
    // JBuilder GUI variables
    private BorderLayout mBaseLayout = new BorderLayout();
    private ConfigToolbar mToolbar = new ConfigToolbar();
@@ -316,6 +331,11 @@ public class VrjConfig
       public GenericConfigEditor getEditor()
       {
          return editor;
+      }
+
+      public boolean doSaveAs()
+      {
+         return mContextToolbar.doSaveAs();
       }
 
       /**
@@ -396,11 +416,13 @@ public class VrjConfig
       {
          ConfigIFrame frame = (ConfigIFrame)evt.getInternalFrame();
          mToolbar.setConfigContext(frame.getEditor().getConfigContext());
+         mCurContextFrame = frame;
       }
 
       public void internalFrameDeactivated(InternalFrameEvent evt)
       {
          ConfigIFrame frame = (ConfigIFrame)evt.getInternalFrame();
+         mCurContextFrame = null;
       }
    }
 }
