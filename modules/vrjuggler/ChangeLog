@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jun-21-2002 allenb    Fixed bug where GLX window was not processing keyup or
+                      button events.
 Jun-20-2002 allenb    Remove multi-threading from the case where GLXWindow and 
                       XWinKeyboard are sharing the window to process it as a 
                       GFX window and as a keyboard window.
