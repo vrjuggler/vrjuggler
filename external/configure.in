@@ -124,9 +124,6 @@ if test "x$install_doozer" != "xno" ; then
    TARGETS="$TARGETS doozer"
 fi
 
-# Always install the init header file
-TARGETS="$TARGETS init"
-
 # -----------------------------------------------------------------------------
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
