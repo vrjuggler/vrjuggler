@@ -43,5 +43,7 @@ ifndef INSTALL_PATH
 endif
 
 install: ${INSTALL_DEPS}
-	${INSTALL} -m ${FILE_PERMS} -g ${GROUP_NAME} ${INSTALL_FILES}	\
-            ${INSTALL_PATH}
+	for file in ${INSTALL_FILES} ; do				\
+            ${INSTALL} -m ${FILE_PERMS} -g ${GROUP_NAME} $${file}	\
+              ${INSTALL_PATH} ;						\
+        done
