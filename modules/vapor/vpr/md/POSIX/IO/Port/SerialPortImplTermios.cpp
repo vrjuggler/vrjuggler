@@ -76,7 +76,7 @@ SerialPortImplTermios::open () {
     status = m_handle->open();
 
     // If the serial port could not be opened, print an error message.
-    if ( ! status.success() ) {
+    if ( status == vpr::Status::Failure ) {
         fprintf(stderr,
                 "[vpr::SerialPortImplTermios] Could not open serial port %s: %s\n",
                 m_name.c_str(), strerror(errno));
@@ -99,7 +99,6 @@ SerialPortImplTermios::open () {
             // If we cannot set the initialized attribute flags on the port,
             // then we are not considered open.
             if ( ! setAttrs(&term, "Could not initialize flags").success() ) {
-                m_open = false;
                 status.setCode(Status::Failure);
             }
         }

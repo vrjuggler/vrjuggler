@@ -274,59 +274,21 @@ protected:
 protected:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual Status
-    read_i (void* buffer, const size_t length,
-            ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout)
-    {
-        Status retval;
-
-        bytes_read = PR_Recv(m_handle, buffer, length, 0,
-                             NSPR_getInterval(timeout) );
-
-        // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
-        if ( bytes_read == -1 ) {
-            retval.setCode(Status::Failure);
-        }
-
-        return retval;
-    }
+    virtual Status read_i(void* buffer, const size_t length,
+                          ssize_t& bytes_read,
+                          const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual Status
-    readn_i (void* buffer, const size_t length,
-             ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout)
-    {
-        Status retval;
-
-        bytes_read = PR_Recv(m_handle, buffer, length, 0,
-                             NSPR_getInterval(timeout) );
-
-        // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
-        if ( bytes_read == -1 ) {
-            retval.setCode(Status::Failure);
-        }
-
-        return retval;
-    }
+    virtual Status readn_i(void* buffer, const size_t length,
+                           ssize_t& bytes_read,
+                           const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    virtual Status
-    write_i (const void* buffer, const size_t length,
-             ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout)
-    {
-        Status retval;
-
-        bytes_written = PR_Send(m_handle, buffer, length, 0,
-                                NSPR_getInterval(timeout) );
-
-        if ( bytes_written == -1 ) {
-            retval.setCode(Status::Failure);
-        }
-
-        return retval;
-    }
+    virtual Status write_i(const void* buffer, const size_t length,
+                           ssize_t& bytes_written,
+                           const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     /**
      *

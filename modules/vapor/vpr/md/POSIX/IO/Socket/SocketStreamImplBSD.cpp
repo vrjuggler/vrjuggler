@@ -92,8 +92,8 @@ SocketStreamImplBSD::accept (SocketStreamImplBSD& sock,vpr::Interval timeout) {
 
     // If accept(2) failed, print an error message and return error stauts.
     if ( accept_sock == -1 ) {
-        if ( errno == EWOULDBLOCK ) {
-            retval.setCode(Status::WouldBlock);
+        if ( errno == EWOULDBLOCK && ! m_blocking ) {
+            retval.setCode(Status::InProgress);
         }
         else {
             fprintf(stderr,
