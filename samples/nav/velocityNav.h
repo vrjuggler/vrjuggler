@@ -82,7 +82,7 @@ public:
    void stop();
 
    //: damping [0...1], where 0 stops immediately, .99 brakes very slowly
-   //  default none (1.0f)
+   //  default is no damping (1.0f)
    void setDamping( const float& damping = 1.0f );
 
    void setMode(navMode new_mode)
@@ -180,13 +180,12 @@ void velocityNav::update()
    vjVec3         trackerZaxis(0.0f, 0.0f, 1.0f);
    vjVec3         trackerXaxis(1.0f, 0.0f, 0.0f);
    vjVec3         trackerYaxis(0.0f, 1.0f, 0.0f);
-   const vjVec3   gravity( 0.0f, -9.8f, 0.0f );
+   const vjVec3   gravity( 0.0f, -9.8f, 0.0f ); //9.8 m/s (METERS), this should be differnet for apps in FEET!
    
    // get the rotation that takes the scene from localspace (user) to modelspace
    vjMatrix currentRotation = mCurPos;
-   currentRotation( 0, 3 ) = 0.0f;
-   currentRotation( 1, 3 ) = 0.0f;
-   currentRotation( 2, 3 ) = 0.0f;  // zero out the translation...
+   currentRotation.setTrans( 0.0f, 0.0f, 0.0f ); // zero out the translation...
+   
    
    // get the inverse, we'll need it.
    vjMatrix IcurrentRotation;
@@ -356,9 +355,7 @@ bool velocityNav::correctPosition( vjVec3 prev_delta )
    
    // TODO: Kevin....
    vjMatrix rotMat = mCurPos;
-   rotMat( 0, 3 ) = 0.0f;
-   rotMat( 1, 3 ) = 0.0f;
-   rotMat( 2, 3 ) = 0.0f;
+   rotMat.setTrans( 0.0f, 0.0f, 0.0f );
    prev_delta.xformVec( rotMat, prev_delta );
    
 
