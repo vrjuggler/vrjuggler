@@ -201,60 +201,71 @@ int vjConfigChunkDB::removeMatching (char *property, char *value) {
 int vjConfigChunkDB::dependencySort()
 {
    // Print out dependancies
-   /*
+#ifdef VJ_DEBUG
+   vjDEBUG_BEGIN(2) << "---- Dependencies -----------\n" << vjDEBUG_FLUSH;
    for(int i=0;i<chunks.size();i++)
    {
-      cout << "Chunk:" << chunks[i]->getProperty("name") << endl;
-      cout << "\tDepends on:";
+      vjDEBUG(2) << "Chunk:" << chunks[i]->getProperty("name") << endl
+                 << "\tDepends on:\n" << vjDEBUG_FLUSH;
       vector<string> deps = chunks[i]->getDependencies();
       if(deps.size() > 0)
       {
          for(int j=0;j<deps.size();j++)
-            cout << deps[j] << ", ";
+            vjDEBUG(2) << "   " << j << ": " << deps[j] << endl << vjDEBUG_FLUSH;
       } else {
-         cout << "Nothing.";
+         vjDEBUG(2) << "   Nothing.\n" << vjDEBUG_FLUSH;
       }
-      cout << endl;
+      //vjDEBUG(2) << endl;
    }
-   */
+   vjDEBUG_END(2) << "-----------------------------\n" << vjDEBUG_FLUSH;
+#endif
 
    // Create new src list to work from
    // Targetting the local data
+   // So basically, we take an element from the src list one at a time
+   // If it's dependencies are already in the local list, add it to the local list
+   // else go on to the next one
    vector<vjConfigChunk*> src_chunks = chunks;
    chunks = vector<vjConfigChunk*>(0);             // Chunks is the local data - Zero it out to start
 
-   bool dep_pass(true);             // Pass dependency check
-   vector<string> deps;             // Source dependencies
+   bool dep_pass(true);             // Flag for Pass dependency check
+   vector<string> deps;             // Dependencies of current item
    vector<vjConfigChunk*>::iterator cur_item
                = src_chunks.begin();          // The current src item to look at
 
    while(cur_item != src_chunks.end())          // While not at end of src list
    {
-      deps = (*cur_item)->getDependencies();             // Get src dependencies
-      for(int dep_num=0;dep_num<deps.size();dep_num++)   // May have multiple dependencies
-         if (getChunk((char*)deps[dep_num].c_str()) == NULL)    // Check dependency
-            dep_pass = false;                            // Failed check
+      vjDEBUG(2) << "Checking depencies for: " << (*cur_item)->getProperty("name") << "\n" << vjDEBUG_FLUSH;
 
-      if(dep_pass)        // If src dependencies are accounted for
+      deps = (*cur_item)->getDependencies();             // Get src dependencies
+      for(int dep_num=0;dep_num<deps.size();dep_num++)   // For each dependency
+         if (getChunk((char*)deps[dep_num].c_str()) == NULL)    // If depency not in list yet
+            dep_pass = false;                                   // Failed check (we don't pass)
+
+      if(dep_pass)        // If all dependencies are accounted for
       {
          chunks.push_back(*cur_item);        // Copy src to dst
          src_chunks.erase(cur_item);         // Erase it from source
          cur_item = src_chunks.begin();      // Goto first item
       }
       else
-         cur_item++;             // goto next item
+         cur_item++;             // Try next item
 
       dep_pass = true;           // Reset to passing
    }
 
-   if(src_chunks.size() > 0)     // Failed to get all dependencies
+   // ASSERT:
+   //   Either, all depencies have been accounted for and the src list is empty
+   //   OR we went all the way through list without finding an item that passes
+
+   if(src_chunks.size() > 0)     // Items left, so we failed to get all dependencies
    {
       // ouput error
       for(int i=0;i<src_chunks.size();i++)
       {
-          vjDEBUG(0) << "ERROR: Dependency error:  Chunk:" << chunks[i]->getProperty("name")
+          vjDEBUG(0) << "ERROR: Dependency error:  Chunk:" << src_chunks[i]->getProperty("name")
                      << "\tDepends on: \n" << vjDEBUG_FLUSH;
-         vector<string> deps = chunks[i]->getDependencies();
+         vector<string> deps = src_chunks[i]->getDependencies();
          if(deps.size() > 0)
          {
             for(int j=0;j<deps.size();j++)
@@ -264,7 +275,7 @@ int vjConfigChunkDB::dependencySort()
          }
          vjDEBUG(0) << "Check for undefined devices that others depend upon.\n" << vjDEBUG_FLUSH;
       }
-      chunks.insert(chunks.end(), src_chunks.begin(), src_chunks.end());   // Copy over the rest
+      chunks.insert(chunks.end(), src_chunks.begin(), src_chunks.end());   // Copy over the rest anyway
 
       return -1;
    }
