@@ -9,13 +9,13 @@
 <TABLE BORDER="0" CELLPADDING="3" WIDTH="100%">
   <TR>
     <TD ALIGN="LEFT" WIDTH="13%" BGCOLOR="#008000">
-      <A HREF="http://www.vrac.iastate.edu/" TARGET="_top"><FONT COLOR="#ffffff">VRAC</FONT></A>
+      <A HREF="http://www.vrac.iastate.edu/"><FONT COLOR="#ffffff">VRAC</FONT></A>
     </TD>
     <TD ALIGN="CENTER" WIDTH="65%" BGCOLOR="#008000">
       <FONT COLOR="#ffffff" SIZE="+2">Documentation</FONT>
     </TD>
     <TD ALIGN="RIGHT" BGCOLOR="#008000">
-      <FONT COLOR="#ffffff"><a href="http://www.vrjuggler.org/" TARGET="_top"><B><I>VR Juggler</a><BR>
+      <FONT COLOR="#ffffff"><a href="http://www.vrjuggler.org/"><B><I>VR Juggler</a><BR>
       Beta 2.0</I></B></FONT>
       <BR>
     </TD>
