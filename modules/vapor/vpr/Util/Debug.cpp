@@ -120,8 +120,18 @@ Debug::Debug()
    }
 }
 
-void Debug::init()
+void Debug::init(const std::string filename)
 {
+   if(filename == "")
+   {
+      // if no filename is given then use NULL
+      mFile = NULL;
+   }else
+   {
+      // if a filename is given then we should write everything to that file.
+      mFile = new std::fstream;
+      mFile->open(filename.c_str(), std::ios_base::out );
+   }
    // --- Register primitive categories --- //
    /*
    addCategory(vprDBG_ALL, "DBG_ALL", "DBG:");
@@ -173,9 +183,23 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
    // If not, then output space if we are also using indent (assume this means
    // new line used)
    if(show_thread_info)
-      std::cout << "[" << vpr::Thread::self() << "] " << (*mCategories.find(cat.mGuid)).second.mPrefix;
+      if(mFile==NULL)
+      {
+         std::cout << "[" << vpr::Thread::self() << "] " << (*mCategories.find(cat.mGuid)).second.mPrefix;
+      }
+      else 
+      {
+         (*mFile) << "[" << vpr::Thread::self() << "] " << (*mCategories.find(cat.mGuid)).second.mPrefix;
+      }
    else if(use_indent)
-      std::cout << "                  ";
+      if(mFile==NULL)
+      {
+         std::cout << "                  ";
+      }
+      else
+      {
+         (*mFile) << "                  ";
+      }
 
 
       // Insert the correct number of tabs into the stream for indenting
@@ -227,7 +251,14 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
    if(indentChange > 0)             // If increasing indent
       indentLevel += indentChange;
 
-   return std::cout;
+   if(mFile == NULL)
+   {
+      return std::cout;
+   }
+   else
+   {
+      return *mFile;
+   }
 }
 
 void Debug::addCategory(const vpr::DebugCategory& catId)
