@@ -41,9 +41,11 @@ import org.vrjuggler.tweek.beans.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 import org.jdom.*;
+import org.jdom.filter.ContentFilter;
 import org.jdom.output.XMLOutputter;
 
 
@@ -57,6 +59,11 @@ public class GlobalPreferencesService
    extends ServiceBean
    implements BeanRegistrationListener
 {
+   public static final double PREFS_VERSION_VALUE = 1.1;
+
+   private static final String PREFS_INSTRUCTION  = "org-vrjuggler-tweek-settings";
+   private static final String PREFS_VERSION_ATTR = "global.cfg.version";
+
    /**
     * Creates a new global preferences service.
     */
@@ -342,7 +349,8 @@ public class GlobalPreferencesService
 
          try
          {
-            mPrefsDoc      = builder.build(mPrefsFile);
+            mPrefsDoc = builder.build(mPrefsFile);
+            checkVersion();
             mPrefsDocRoot = mPrefsDoc.getRootElement();
 
             // Handle the elements.
@@ -411,7 +419,10 @@ public class GlobalPreferencesService
       else
       {
          mPrefsDocRoot = new Element("tweekrc");
-         mPrefsDoc      = new Document(mPrefsDocRoot);
+         mPrefsDoc     = new Document(mPrefsDocRoot);
+
+         // Add version information to the new file.
+         addVersion();
 
          Element ui_element = new Element("laf");
          ui_element.setAttribute("name", lookAndFeel);
@@ -462,16 +473,16 @@ public class GlobalPreferencesService
          corba_element.setAttribute("port", String.valueOf(defaultCorbaPort));
          mPrefsDocRoot.addContent(corba_element);
 
-         save(true);
+         save();
       }
    }
 
    /**
     * Saves the current prefernces document.
     */
-   public synchronized void save (boolean add_newlines)
+   public synchronized void save ()
    {
-      XMLOutputter outputter = new XMLOutputter("  ", add_newlines);
+      XMLOutputter outputter = new XMLOutputter("  ", true);
       outputter.setLineSeparator(System.getProperty("line.separator"));
 
       try
@@ -513,6 +524,69 @@ public class GlobalPreferencesService
       }
 
       return path;
+   }
+
+   /**
+    * Checks the version information in the loaded document.  If there is no
+    * version information, it is added.
+    */
+   private void checkVersion()
+   {
+      // Deal with any processing instructions in the preferences file.
+      ContentFilter proc_inst_filter = new ContentFilter(ContentFilter.PI);
+      List proc_inst = mPrefsDoc.getContent(proc_inst_filter);
+
+      if ( proc_inst.size() > 0 )
+      {
+         Iterator i = proc_inst.iterator();
+         ProcessingInstruction pi;
+
+         while ( i.hasNext() )
+         {
+            pi = (ProcessingInstruction) i.next();
+
+            if ( pi.getTarget().equals(PREFS_INSTRUCTION) )
+            {
+               if ( pi.getValue(PREFS_VERSION_ATTR) != null )
+               {
+                  Float version = Float.valueOf(pi.getValue(PREFS_VERSION_ATTR));
+
+                  // Warn the uers if their configuration file is out of date.
+                  if ( PREFS_VERSION_VALUE > version.floatValue() )
+                  {
+                     System.err.println("WARNING: Preferences file is out of date (" +
+                                        version + " < " + PREFS_VERSION_VALUE +
+                                        ")");
+                  }
+               }
+            }
+         }
+      }
+      // If the preferences document does not have a version processing
+      // directive, we add it now.  We also write out the modified document to
+      // ensure that the modifications are not lost.
+      else
+      {
+         addVersion();
+         save();
+      }
+   }
+
+   /**
+    * Adds the version processing directive to mPrefsDoc.
+    */
+   private void addVersion()
+   {
+      // Create a map to hold the attributes for the processing instruction
+      // to be created.
+      java.util.Map pi_attrs = new java.util.HashMap();
+
+      // Set the version information.
+      pi_attrs.put(PREFS_VERSION_ATTR, String.valueOf(PREFS_VERSION_VALUE));
+
+      ProcessingInstruction ver =
+         new ProcessingInstruction(PREFS_INSTRUCTION, pi_attrs);
+      mPrefsDoc.addContent(ver);
    }
 
    // =========================================================================
