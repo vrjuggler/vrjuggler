@@ -58,12 +58,14 @@ PerformanceMonitor::PerformanceMonitor():
 
     perf_target_name = "";
     perf_target = NULL;
+
+    mBuffersCommand = new CommandWriteLabeledPerfData (perf_refresh_time);
 }
 
 
 
 PerformanceMonitor::~PerformanceMonitor() {
-
+    delete mBuffersCommand;
 }
 
 
@@ -217,6 +219,8 @@ bool PerformanceMonitor::configCanHandle(ConfigChunkPtr chunk) {
         }
 
         PerformanceCategories::instance()->deactivate();
+        if (perf_target)
+            perf_target->removePeriodicCommand (mBuffersCommand);
     }
 
 
@@ -233,6 +237,7 @@ bool PerformanceMonitor::configCanHandle(ConfigChunkPtr chunk) {
             return;
         }
         
+        /* individually enable/disable the old-style buffers */
         std::vector<VarValue*> v = current_perf_config->getAllProperties ("TimingTests");
         std::vector<buffer_element>::const_iterator b;
         std::vector<VarValue*>::const_iterator val;
@@ -262,7 +267,30 @@ bool PerformanceMonitor::configCanHandle(ConfigChunkPtr chunk) {
             delete (*val);
         }
 
+        /* activate/deactivate new-fangled categories.
+         * I'm not found of getAllProperties, but it's probably faster
+         * here than looking up each value with getValue.
+         */
+        v = current_perf_config->getAllProperties ("PerfCategories");
+//         std::vector<VarValue*> v = current_perf_config->getAllProperties ("PerfCategories");
+//         std::vector<VarValue*>::const_iterator val;
+//         ConfigChunkPtr ch;
+
+        for (val = v.begin(); val != v.end(); val++) {
+            ch = (ConfigChunkPtr)*(*val); // this line demonstrates a subtle danger
+            if ((bool)ch->getProperty ("Enabled")) {
+                PerformanceCategories::instance()->activateCategory ((std::string)ch->getProperty ("Name"));
+            }
+            else {
+                PerformanceCategories::instance()->activateCategory ((std::string)ch->getProperty ("Name"));
+            }
+
+            delete (*val); // delete the varvalue (copy) from getallprops
+        }
+
         PerformanceCategories::instance()->activate();
+        if (perf_target)
+            perf_target->addPeriodicCommand (mBuffersCommand);
     }
 
 

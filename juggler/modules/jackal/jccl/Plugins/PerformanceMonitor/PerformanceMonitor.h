@@ -122,6 +122,8 @@ private:
 
     vpr::TSObjectProxy<LabeledPerfDataBuffer> mTSBuffers;
 
+    PeriodicCommand* mBuffersCommand;
+
     void activatePerfBuffers();
     void deactivatePerfBuffers();
 

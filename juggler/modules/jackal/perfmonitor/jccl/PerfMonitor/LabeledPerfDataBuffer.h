@@ -184,7 +184,7 @@ public:
      *
      *  @param out An std::ostream that data is written to.
      */
-    void write (std::ostream& out);
+    void write (std::ostream& out, const std::string& pad);
 
 
 
