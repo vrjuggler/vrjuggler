@@ -11,14 +11,14 @@ import org.vrjuggler.jccl.config.PropertyDefinition;
 
 public class VarListPanel extends ExpandablePanel
 {       
-   public VarListPanel(ConfigElement elm, PropertyDefinition prop_def, List props, Color color)
+   public VarListPanel(ConfigElement elm, PropertyDefinition prop_def, Color color)
    {
       super(color);
 
       // XXX: Move this out to its own class soon.
       // Create the new property list which is actually just a variable list of
       // property values.
-      PropertySheet new_sheet = new PropertySheet(elm, prop_def, props, getNextColor());
+      PropertySheet new_sheet = new PropertySheet(elm, prop_def, getNextColor());
       mComponent = new_sheet;
       new_sheet.setBorder(BorderFactory.createEtchedBorder());
 
