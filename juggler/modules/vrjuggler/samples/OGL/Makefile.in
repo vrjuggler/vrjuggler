@@ -1,42 +1,18 @@
 # -----------------------------------------------------------------------------
-# Makefile.in for c2lib/test/ogl
+# Makefile.in for juggler/test/ogl
 # $Id$
 # -----------------------------------------------------------------------------
 
 SHELL		= /bin/sh
 
-bindir		= @bindir@
-datadir		= @datadir@
-exec_prefix	= @exec_prefix@
-includedir	= @includedir@
-libdir		= @libdir@
-libexecdir	= @libexecdir@
-prefix		= @prefix@
-sbindir		= @sbindir@
-srcdir		= @srcdir@
-sysconfdir	= @sysconfdir@
 topdir		= @topdir@
 top_srcdir	= @top_srcdir@
-C2ROOT		= ${top_srcdir}
-C2ROOT_ABS	= @C2ROOT_ABS@
-C2_SRCDIR	= @C2_SRCDIR@/test/ogl
+VJROOT		= ${top_srcdir}
+VJROOT_ABS	= @VJROOT_ABS@
+VJ_SRCDIR	= @VJ_SRCDIR@/test/ogl
 WORKDIR		= ${topdir}/test/ogl
 
-CC		= @CC@
-CXX		= @CXX@
-CPP		= @CPP@
-CXXCPP		= @CXXCPP@
-CFLAGS		= @CFLAGS@ ${OPTIMIZER}
-CPPFLAGS	= @CPPFLAGS@
-CXXFLAGS	= @CXXFLAGS@ ${OPTIMIZER}
-DEFS		= @DEFS@
-DEPENDFLAGS	= @DEPENDFLAGS@ @INCLUDES@ -I${C2ROOT_ABS} -I${topdir}
-DEPEND_EXTRAS	= @DEPEND_EXTRAS@ ${DEFS}
-INCLUDES	= @INCLUDES@ -I${C2ROOT} -I${topdir}
-LDFLAGS		= @LDFLAGS@
-LIBS		= @LIBS@
-OBJDIR		= .
-VPATH		= @srcdir@
+include @topdir@/Makefile.base
 
 SUBDIRS		= cubes
 
@@ -48,7 +24,7 @@ SUBDIRS		= cubes
 
 default: all
 
-all-recursive install-recursive depend-recursive newdepend-recursive:
+all-recursive install-recursive depend-recursive newdepend-recursive cubes:
 	@set fnord ${MAKEFLAGS}; amf=$$2;				\
             list='${SUBDIRS}';						\
             for subdir in $$list; do					\
@@ -67,20 +43,6 @@ all: all-recursive
 depend: depend-recursive
 
 newdepend: newdepend-recursive
-
-cubes:
-	@set fnord ${MAKEFLAGS}; amf=$$2;				\
-            list=$@;							\
-            for subdir in $$list; do					\
-                target=`echo $@ | sed s/-recursive//`;			\
-                echo "Making $$target in test/ogl/$$subdir";		\
-                (cd $$subdir && ${MAKE} OPTIMIZER="${OPTIMIZER}"	\
-                                    OBJDIR=${OBJDIR} $$target)		\
-                    || case "$$amf" in					\
-                         *=*) exit 1;;					\
-                         *k*) fail=yes;;				\
-                         *) exit 1;; esac;				\
-            done && test -z "$$fail"
 
 # -----------------------------------------------------------------------------
 # Clean-up.
@@ -103,5 +65,3 @@ clean-recursive:
             done && test -z "$$fail"
 
 clean: clean-recursive
-
-clobber: clean
