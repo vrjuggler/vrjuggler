@@ -243,7 +243,7 @@ struct HEADER
     *        type and the sequence fields are NOT initialized.
     */
    HEADER()
-      : xtype(0), protocol(BN_PROTOCOL), error_code(0),
+      : sequence(0), xtype(0), protocol(BN_PROTOCOL), error_code(0),
         error_code_extension(0), number_bytes(0)
    {
       /* Do nothing. */ ;
@@ -260,8 +260,8 @@ struct HEADER
     * @param msgType The type of message being constructed.
     */
    HEADER(const unsigned char msgType)
-      : type(msgType), xtype(0), protocol(BN_PROTOCOL), error_code(0),
-        error_code_extension(0), number_bytes(0)
+      : sequence(0), type(msgType), xtype(0), protocol(BN_PROTOCOL),
+        error_code(0), error_code_extension(0), number_bytes(0)
    {
       /* Do nothing. */ ;
    }
@@ -1474,15 +1474,38 @@ private:
     * @param packet     A pointer to the message to be sent to the server.
     * @param packetSize The size of the message being sent.
     *
-    * @return  0 if the message was sent without error.
-    * @return -1 if the message could not be sent to the server.  This is
-    *         usually due to a system error.
-    * @return -2 if nothing was sent to the server.  This is likely to be
-    *         caused by an attempt to send an empty packet.
+    * @return vpr::ReturnStatus::Succeed is returned if the network send
+    *         operation was successful.  Otehrwise, vpr::ReturnStatus::Fail
+    *         is returned, or an exception is thrown.
     *
     * @throws mstar::NetworkWriteException, mstar::NoDataWrittenException
     */
    vpr::ReturnStatus sendMsg(const void* packet, const size_t packetSize)
+      throw(mstar::NetworkWriteException, mstar::NoDataWrittenException);
+
+   /**
+    * Gets the server's response to a sent message.  This version takes a
+    * pointer to a BIRDNET::HEADER as its argument because most of the
+    * communication with the MotionStar chassis involves sending and
+    * receiving packets using the BIRDNET::HEADER format.  Because this
+    * version knows it has BIRDNET::HEADER data, it automatically manages
+    * information in the header that sendMsg(void*, const size_t).  In
+    * particular, it sets the sequence number of the packet being sent.
+    * As such, callers should not set packet->sequence themselves.
+    *
+    * @pre The socket to the server is open and is usable for sending data.
+    *      The sequence number in the packet is not already set.
+    * @post The packet is sent to the server.
+    *
+    * @param packet A pointer to the message to be sent to the server.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the network send
+    *         operation was successful.  Otehrwise, vpr::ReturnStatus::Fail
+    *         is returned, or an exception is thrown.
+    *
+    * @throws mstar::NetworkWriteException, mstar::NoDataWrittenException
+    */
+   vpr::ReturnStatus sendMsg(BIRDNET::HEADER* packet)
       throw(mstar::NetworkWriteException, mstar::NoDataWrittenException);
 
    /**
@@ -1495,15 +1518,36 @@ private:
     *                   server's response packet will be read.
     * @param packetSize The size of the given memory block.
     *
-    * @return  0 if the response was received without error.
-    * @return -1 if the response could not be read from the server.  This is
-    *         usually due to a system error.
-    * @return -2 if nothing was read from the server.  This is likely to be
-    *         caused by the server sending an empty packet for some reason.
+    * @return vpr::ReturnStatus::Succeed is returned if the network read
+    *         operation was successful.  Otehrwise, vpr::ReturnStatus::Fail
+    *         is returned, or an exception is thrown.
     *
     * @throws mstar::NetworkReadException, mstar::NoDataReadException
     */
    vpr::ReturnStatus getRsp(void* packet, const size_t packetSize)
+      throw(mstar::NetworkReadException, mstar::NoDataReadException);
+
+   /**
+    * Gets the server's response to a sent message.  This version takes a
+    * pointer to a BIRDNET::HEADER as its argument because most of the
+    * communication with the MotionStar chassis involves sending and
+    * receiving packets using the BIRDNET::HEADER format.  Because this
+    * version knows it has BIRDNET::HEADER data, it can perform automatic
+    * error checking that getRsp(void*, const size_t) cannot do.
+    *
+    * @pre The socket to the server is open and is usable for reading data.
+    * @post A packet in the format BIRDNET::HEADER is read from the server.
+    *
+    * @param packet A pointer to the memory block into which the server's
+    *               response packet will be read.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the network read
+    *         operation was successful.  Otehrwise, vpr::ReturnStatus::Fail
+    *         is returned, or an exception is thrown.
+    *
+    * @throws mstar::NetworkReadException, mstar::NoDataReadException
+    */
+   vpr::ReturnStatus getRsp(BIRDNET::HEADER* packet)
       throw(mstar::NetworkReadException, mstar::NoDataReadException);
 
    /**
