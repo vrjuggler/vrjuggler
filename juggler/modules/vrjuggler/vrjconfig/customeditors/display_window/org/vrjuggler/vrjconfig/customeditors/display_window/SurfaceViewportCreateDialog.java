@@ -559,8 +559,8 @@ public class SurfaceViewportCreateDialog
    private ImageIcon[] mPlaneImages = new ImageIcon[mPlaneLabels.length];
 
    private boolean  mTracked      = false;
-   private String[] mSurfaceTypes = {"Fixed-Position Wall or Immersive Desk",
-                                     "Adjustable Desk/Bench", "HMD Eye"};
+   private String[] mSurfaceTypes = {"Fixed-Position Wall/Desk",
+                                     "Adjustable Desk/Table", "HMD Eye"};
 
    private String[] mCorners = new String[4];
 
