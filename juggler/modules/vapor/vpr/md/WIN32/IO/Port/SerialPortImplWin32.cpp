@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include <vpr/md/WIN32/IO/Port/SerialPortImplWin32.h>
+#include <vpr/Util/Debug.h>
 
 
 namespace vpr{
@@ -43,7 +44,7 @@ Status SerialPortImplWin32::open () {
                      OPEN_EXISTING, // comm devices must use OPEN_EXISTING
                      0,    // not overlapped I/O
                      NULL  // hTemplate must be NULL for comm devices
-                     );  
+                     );
 
 	if (m_handle == INVALID_HANDLE_VALUE) {  // Handle the error.
 		printf ("CreateFile failed with error %d.\n", GetLastError());
@@ -346,10 +347,16 @@ Status SerialPortImplWin32::setEvenParity () {
 
 
 
-Status SerialPortImplWin32::write_i (const void* buffer, const size_t length, ssize_t& bytes_written){
+Status SerialPortImplWin32::write_i (const void* buffer, const size_t length,
+                                     ssize_t& bytes_written, const vpr::Interval timeout)
+{
 	Status s;
 	unsigned long bytes;
-	if(!WriteFile(m_handle, buffer, length, &bytes, NULL)){
+	
+   if(vpr::Interval::NoTimeout != timeout)
+       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
+
+   if(!WriteFile(m_handle, buffer, length, &bytes, NULL)){
 		s.setCode(Status::Failure);
 		bytes_written = bytes;
 	}
@@ -358,9 +365,14 @@ Status SerialPortImplWin32::write_i (const void* buffer, const size_t length, ss
 	
 }
 
-Status SerialPortImplWin32::read_i(void* buffer, const size_t length, ssize_t& bytes_read){
+Status SerialPortImplWin32::read_i(void* buffer, const size_t length,
+                                   ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout){
 	Status s;
 	unsigned long bytes;
+
+   if(vpr::Interval::NoTimeout != timeout)
+       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
+
 	if(!ReadFile( m_handle, buffer, length, &bytes,NULL)){
 		s.setCode(Status::Failure);
 	//	bytes_read = bytes;
@@ -394,7 +406,7 @@ Status SerialPortImplWin32::enableBadByteIgnore () {
 
 		s.setCode(Status::Failure);
 	}
-	return s;    
+	return s;
 }
 
 // ----------------------------------------------------------------------------
@@ -409,9 +421,9 @@ SerialPortImplWin32::disableBadByteIgnore () {
 	if(!SetCommState(m_handle, &dcb)){
 		s.setCode(Status::Failure);
 	}
-	return s;    
+	return s;
 
-    
+
 }
 
 // ----------------------------------------------------------------------------

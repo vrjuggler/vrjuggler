@@ -38,6 +38,7 @@
 
 #include <vpr/Util/Status.h>
 #include <vpr/md/WIN32/IO/Socket/SocketStreamImplWinSock.h>
+#include <vpr/Util/Debug.h>
 
 
 namespace vpr {
@@ -92,11 +93,14 @@ SocketStreamImplWinSock::listen (const int backlog) {
 // Accept an incoming connection request.
 // ----------------------------------------------------------------------------
 Status
-SocketStreamImplWinSock::accept (SocketStreamImplWinSock& sock) {
+SocketStreamImplWinSock::accept (SocketStreamImplWinSock& sock, vpr::Interval timeout) {
     SOCKET accept_sock;
     InetAddr addr;
     int addrlen;
     Status retval;
+
+    if(vpr::Interval::NoTimeout != timeout)
+       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
 
     // Accept an incoming connection request.
     addrlen = addr.size();

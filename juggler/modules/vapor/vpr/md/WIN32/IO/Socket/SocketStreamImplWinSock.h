@@ -133,7 +133,8 @@ public:
     //     This is a blocking call and will block until a connection is
     //     established.
     // ------------------------------------------------------------------------
-    virtual Status accept(SocketStreamImplWinSock& sock);
+    virtual Status accept(SocketStreamImplWinSock& sock,
+                          vpr::Interval timeout = vpr::Interval::NoTimeout);
 
 protected:
     // ------------------------------------------------------------------------
