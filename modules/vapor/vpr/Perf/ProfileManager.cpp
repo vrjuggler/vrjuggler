@@ -47,50 +47,86 @@ namespace vpr
 {
 
 // Initialize statics
-ProfileNode    ProfileManager::mRoot("Root");
-ProfileNode*   ProfileManager::mCurrentNode = &ProfileManager::mRoot;
-vpr::Mutex     ProfileManager::mTreeLock;
-vpr::Interval  ProfileManager::mResetTime;
-
-
+TSObjectProxy<ProfileManager::ThreadProfileData>  ProfileManager::mThreadData;
 
    void  ProfileManager::startProfile( const char * profileName , const unsigned int queueSize)
    {
-      mTreeLock.acquire();
-      if ( profileName != mCurrentNode->getName() )
-      {
-         mCurrentNode = mCurrentNode->getSubNode( profileName, queueSize);
-      }
-      mTreeLock.release();
+      ThreadProfileData& prof_data(*mThreadData);
 
-      mCurrentNode->startSample();
+      if ( profileName != prof_data.mCurrentNode->getName() )
+      {
+         prof_data.mCurrentNode = prof_data.mCurrentNode->getSubNode( profileName, queueSize);
+      }
+      prof_data.mCurrentNode->startSample();
    }
 
    void  ProfileManager::stopProfile( void )
    {
-      mTreeLock.acquire();
+      ThreadProfileData& prof_data(*mThreadData);
+
       // Return will indicate whether we should back up to our parent (we may
       // be profiling a recursive function)
-      if ( mCurrentNode->stopSample() )
+      if ( prof_data.mCurrentNode->stopSample() )
       {
-         mCurrentNode = mCurrentNode->getParent();
+         prof_data.mCurrentNode = prof_data.mCurrentNode->getParent();
       }
-      mTreeLock.release();
    }
+
+   ProfileNode* ProfileManager::getRootNode(vpr::Thread* thread)
+   {
+      if (NULL == thread)
+      { thread = vpr::Thread::self();}
+      ThreadProfileData* prof_data = mThreadData.getObjPtrForThread(thread);
+      return &(prof_data->mRoot);
+   }
+
+   void ProfileManager::printTree(bool forAllThreads)
+   {
+      if(!forAllThreads)
+      {
+         getRootNode()->printTree();
+      }
+      else
+      {
+         unsigned num_threads = vpr::ThreadManager::instance()->getNumThreads();
+         for(unsigned t=0;t<num_threads;t++)
+         {
+            vpr::Thread* thread = vpr::ThreadManager::instance()->getThread(t);
+            std::cout << "Print thread: " << (void*)thread << std::endl;
+            std::cout << "Thread: " << thread << std::endl;
+            ProfileNode* root_node = getRootNode(thread);
+            root_node->printTree();
+         }
+
+         /*
+         std::vector<vpr::Thread*> cur_threads = vpr::ThreadManager::instance()->getThreads();
+
+         for(unsigned t=0;t<cur_threads.size();t++)
+         {
+            std::cout << "Print thread: " << (void*)cur_threads[t] << std::endl;
+            std::cout << "Thread: " << cur_threads[t] << std::endl;
+            getRootNode(cur_threads[t])->printTree();
+         }
+         */
+      }
+   }
+
 
    void  ProfileManager::reset( void )
    {
-      mTreeLock.acquire();
-      mRoot.reset();
-      mResetTime.setNow();
-      mTreeLock.release();
+      ThreadProfileData& prof_data(*mThreadData);
+
+      prof_data.mRoot.reset();
+      prof_data.mResetTime.setNow();
    }
 
    float ProfileManager::getTimeSinceReset( void )
    {
+      ThreadProfileData& prof_data(*mThreadData);
+
       vpr::Interval time;
       time.setNow();
-      time = time - mResetTime;
+      time = time - prof_data.mResetTime;
       return time.secf();
    }
 

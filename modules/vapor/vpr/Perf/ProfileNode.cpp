@@ -228,7 +228,6 @@ namespace vpr
 
    void  ProfileNode::reset( void )
    {
-   Guard<Mutex> guard(mNodeLock);
       mTotalCalls = 0;
       mTotalTime.set(0,vpr::Interval::Base);
       mLastSample.set(0,vpr::Interval::Base);
@@ -247,7 +246,6 @@ namespace vpr
 
    void  ProfileNode::startSample( void )
    {
-   Guard<Mutex> guard(mNodeLock);
       mTotalCalls++;
       if ( mRecursionCounter++ == 0 )
       {
@@ -257,7 +255,6 @@ namespace vpr
 
    bool  ProfileNode::stopSample( void )
    {
-   Guard<Mutex> guard(mNodeLock);
       if ( --mRecursionCounter == 0 && mTotalCalls != 0 )
       {
          mLastSample.setNow();
@@ -272,6 +269,14 @@ namespace vpr
       }
 
       return( mRecursionCounter == 0 );
+   }
+
+   vpr::Interval ProfileNode::getAverage()
+   {
+      if(getTotalCalls() == 0)
+      { return vpr::Interval(); }
+      else
+      { return vpr::Interval(getTotalTime().getBaseVal()/mTotalCalls, vpr::Interval::Base); }
    }
 
    vpr::Interval ProfileNode::getSTA()
