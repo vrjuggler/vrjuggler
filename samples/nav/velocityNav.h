@@ -64,7 +64,7 @@ public:
 
    // set the highest velocity this nav can achieve.
    // default is 35
-   void setMaxVelocity( const float& velocity = 35.0f )
+   void setMaxVelocity( const float& velocity = 50.0f )
    { mMaxVelocity = velocity; }
 
    void accelerate(const vjVec3& accel);
@@ -138,7 +138,7 @@ velocityNav::velocityNav() :
    mDamping( 1.0f ),
    mVelocity( 0.0f, 0.0f , 0.0f ),
    mMode( velocityNav::GROUND ),
-   mMaxVelocity( 55.0f )
+   mMaxVelocity( 9999.0f )
 {
    stop();
    stopWatch.start();
