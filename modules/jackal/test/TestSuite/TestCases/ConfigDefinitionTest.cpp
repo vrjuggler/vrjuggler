@@ -46,7 +46,7 @@ void ConfigDefinitionTest::BasicFunctions()
 void ConfigDefinitionTest::PropertyDefinition()
 {
    jccl::ConfigDefinitionPtr def =
-      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element");
 
    CPPUNIT_ASSERT( def->getName() == "chuck" );
    CPPUNIT_ASSERT( def->getToken() == "test_element" );
@@ -63,7 +63,7 @@ void ConfigDefinitionTest::PropertyDefinition()
 void ConfigDefinitionTest::CopyConstructor()
 {
    jccl::ConfigDefinitionPtr def =
-      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element");
 
    jccl::ConfigDefinition receiving(*def);
 
@@ -75,7 +75,7 @@ void ConfigDefinitionTest::CopyConstructor()
 void ConfigDefinitionTest::BasicEquality()
 {
    jccl::ConfigDefinitionPtr def =
-      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element");
    
    jccl::ConfigDefinition receiving;
    receiving = (*def);
@@ -86,7 +86,7 @@ void ConfigDefinitionTest::BasicEquality()
 void ConfigDefinitionTest::ContentEquality()
 {
    jccl::ConfigDefinitionPtr def =
-      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element");
    
    jccl::ConfigDefinition receiving;
    
@@ -104,7 +104,7 @@ void ConfigDefinitionTest::ContentEquality()
 void ConfigDefinitionTest::BasicInequality()
 {
    jccl::ConfigDefinitionPtr def =
-      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element");
    
    jccl::ConfigDefinition receiving;
 
@@ -114,7 +114,7 @@ void ConfigDefinitionTest::BasicInequality()
 void ConfigDefinitionTest::AddPropertyDefinition()
 {
    jccl::ConfigDefinitionPtr def =
-      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element");
    
    // shouldn't exist (yet!)
    jccl::PropertyDefinition pd = def->getPropertyDefinition( "chuck e cheeze" );

@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-04-2003 patrickh    Removed the storage of multiple versions of individaul
+                        configuration definitions in
+                        jccl::ConfigDefinitionRepository.
+                        NEW VERSION: 0.13.0
 Oct-15-2003 aronb       Added automatic ConfigElement upgrades using XSLT.
 Oct-10-2003 aronb       Added multiple inheritance for config element
                         definitions.

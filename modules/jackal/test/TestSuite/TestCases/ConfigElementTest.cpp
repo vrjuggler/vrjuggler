@@ -48,7 +48,7 @@ void ConfigElementTest::SetProperty()
    // make sure they succeed with a desc
    {
       jccl::ConfigDefinitionPtr desc =
-         jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
+         jccl::ElementFactory::instance()->getConfigDefinition("test_element");
 
       // set property integer
       jccl::ConfigElementPtr elt_int =
@@ -157,7 +157,7 @@ void ConfigElementTest::PropertyValues()
 void ConfigElementTest::BasicEquality()
 {
    jccl::ConfigDefinitionPtr desc =
-      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element");
 
    // set property integer
    jccl::ConfigElement elt_int(desc);
@@ -171,7 +171,7 @@ void ConfigElementTest::BasicEquality()
 void ConfigElementTest::CopyConstructor()
 {
    jccl::ConfigDefinitionPtr desc =
-      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element");
 
    // set property integer
    jccl::ConfigElement elt_int(desc);
@@ -185,7 +185,7 @@ void ConfigElementTest::CopyConstructor()
 void ConfigElementTest::ContentEquality()
 {
    jccl::ConfigDefinitionPtr desc =
-      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element");
 
    // set property integer
    jccl::ConfigElement elt_int(desc);
@@ -205,7 +205,7 @@ void ConfigElementTest::ContentEquality()
 void ConfigElementTest::BasicInequality()
 {
    jccl::ConfigDefinitionPtr desc =
-      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element");
 
    // set property integer
    jccl::ConfigElement elt_int(desc);
@@ -219,7 +219,7 @@ void ConfigElementTest::BasicInequality()
 void ConfigElementTest::ReadPropertyValues()
 {
    jccl::ConfigDefinitionPtr desc =
-      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element");
 
    jccl::ConfigElement defaults( desc );
    CPPUNIT_ASSERT( 1029384756 == defaults.getProperty<int>( "test_prop_int", 0 ) );
