@@ -222,8 +222,6 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
                                "VNCDesktop::update()\n",
                                "VNCDesktop::update() done.\n");
 
-   enum Focus focus_val(NOT_IN_FOCUS);
-
    // --------- UPDATE NAV AND DESKTOP MATRICES ----------------------- //
    // Do all intersection testing and stuff in the local coordinate frame so we don't have
    // to deal with rotations and translations of the desktop.
@@ -233,9 +231,11 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    const float max_ray_length(100.0f);
 
    // Compute the wand xform in the local desktop coordinate frame
+   //   wand_vnc = vnc_M_vw * vw_M_world
+   gmtl::Matrix44f desktop_M_world;                               // inv(wMvw*vwMvnc) -- nav*desktop
    const gmtl::Matrix44f wand_mat_world(*(mWand->getData()));
-   gmtl::Matrix44f desktop_M_world;
-   gmtl::invert(desktop_M_world, m_vworld_M_desktop);
+   gmtl::Matrix44f world_M_desktop = navMatrix*m_vworld_M_desktop;
+   gmtl::invert(desktop_M_world, world_M_desktop);
    gmtl::Matrix44f wand_mat = desktop_M_world * wand_mat_world;
 
    const gmtl::Point3f wand_point(gmtl::makeTrans<gmtl::Point3f>(wand_mat));
@@ -307,8 +307,6 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       // Check for selecting the main desktop box
       if ( gmtl::isInVolume(mDesktopBox, mIsectPoint) )
       {
-         focus_val = IN_FOCUS;
-
          // Compute VNC button masks
          int button_mask(0);
 
@@ -332,7 +330,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          {
             // Handle keyboard input.
          }
-         mSelectState = Nothing;
+         mSelectState = Desktop;
       }
       // ---- Check corner selection --- //
       else if( gmtl::isInVolume(mURCorner, mIsectPoint))
@@ -513,6 +511,11 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    } // grab states
 
    updateDesktopParameters();
+
+   // Check status of focus
+   enum Focus focus_val(NOT_IN_FOCUS);
+   if(mSelectState != Nothing)
+      focus_val = IN_FOCUS;
 
    return focus_val;
 }

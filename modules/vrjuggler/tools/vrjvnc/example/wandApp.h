@@ -207,7 +207,7 @@ public:
 
    gadget::DigitalInterface     mLoggerPlayButton;   // Playback log file when pressed
 
-   gmtl::Matrix44f              mNavMat;              // Navigation matrix
+   gmtl::Matrix44f              mNavMat;              // Navigation matrix. world_M_vworld
 
    vpr::Uint64                      mFrameCount;          // Count of the current frame
    vpr::StatCollector<float,false>  mFrameRate;           // Frame rate stats. (time per frame)

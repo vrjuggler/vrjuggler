@@ -98,6 +98,7 @@ protected:     // Helpers
    enum Selection
    {
       Nothing,
+      Desktop,
       LRCornerSelect, URCornerSelect, LLCornerSelect, ULCornerSelect,
       TopBorderSelect, BottomBorderSelect, LeftBorderSelect, RightBorderSelect,
       GrabBegin,
