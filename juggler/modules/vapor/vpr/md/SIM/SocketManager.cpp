@@ -384,9 +384,12 @@ namespace sim
 
       // If any addr, then set it to local host
       // Case localAddr = InetAddr::Any  ==> 0x7F000001 with random port
-      if(local_addr == vpr::InetAddr::AnyAddr)
+      // Case localhost = ip addr        ==> "localhost" ip address
+      if((local_addr == vpr::InetAddr::AnyAddr) ||
+         (local_addr.getAddressValue() == LocalHostIpAddrValue) )
       {
-         local_addr.setAddress(LocalHostIpAddrValue, 0);
+         //local_addr.setAddress(LocalHostIpAddrValue, 0);
+         local_addr.setAddress(getLocalhostIpAddrValue(), 0);
       }
 
       // Make sure that we know about the node of the given address
@@ -448,14 +451,14 @@ vpr::ReturnStatus SocketManager::ensureNetworkNodeIsRegistered(const vpr::Uint32
       NetworkGraph::net_vertex_t node_vertex;
       NetworkGraph net_graph = Controller::instance()->getNetworkGraph();
 
-      if ( LocalHostIpAddrValue == ipAddr )      // If we want local host
-      {
-         node_vertex = getLocalhostVertex();
-      }
-      else
-      {
+      //if ( LocalHostIpAddrValue == ipAddr )      // If we want local host
+      //{
+      //   node_vertex = getLocalhostVertex();
+      //}
+      //else
+      //{
          ret_stat = net_graph.getNodeWithAddr(ipAddr, node_vertex);
-      }
+      //}
 
       vprASSERT(ret_stat.success());
 
@@ -478,6 +481,13 @@ vpr::ReturnStatus SocketManager::ensureNetworkNodeIsRegistered(const vpr::Uint32
          << "SocketManager::getLocalhostVertex(): Using last node (#" << last_node
          << ") for localhost\n" << vprDEBUG_FLUSH;
       return net_graph.getNode(last_node);
+   }
+
+   vpr::Uint32 SocketManager::getLocalhostIpAddrValue()
+   {
+      vpr::sim::NetworkGraph& net_graph = vpr::sim::Controller::instance()->getNetworkGraph();
+      NetworkNodePtr node_prop = net_graph.getNodeProperty(getLocalhostVertex());
+      return node_prop->getIpAddress();
    }
 
 
