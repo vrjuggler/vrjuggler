@@ -9,6 +9,7 @@ group|meisters|patrickh,allenb,nonchocoboy
 
 unavail
 avail|:meisters|CVSROOT
+avail|:meisters|cppunit
 avail||juggler_1.0
 avail||juggler_docs
 avail||juggler
