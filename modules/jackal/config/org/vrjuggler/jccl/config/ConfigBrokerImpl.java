@@ -542,6 +542,119 @@ public class ConfigBrokerImpl
    }
 
    /**
+    * Save a new version of the ConfigDefinition with the given token.
+    */
+   public void saveDefinition(String token)
+   {
+      List def_file_list = new ArrayList();
+      List def_path = getDefinitionPath();
+      final String temp_token = token;
+      
+      for (Iterator itr = def_path.iterator(); itr.hasNext(); )
+      {
+         // Check if this part of the path is a valid directory we can read
+         String dir_name = (String)itr.next();
+         File dir = new File(dir_name);
+         if (dir.exists() && dir.isDirectory() && dir.canRead())
+         {
+            // Get a list of all the config definition files in the directory
+            File[] def_files = dir.listFiles(new FilenameFilter()
+            {
+               public boolean accept(File dir, String file)
+               {
+                  // Only accept files with a .jdef extension
+                  if (file.equals(temp_token + ".jdef"))
+                  {
+                     File def_file = new File(dir, file);
+                     if (def_file.canRead())
+                     {
+                        return true;
+                     }
+                  }
+                  return false;
+               }
+            });
+
+            for (int i=0; i<def_files.length; ++i)
+            {
+               def_file_list.add(def_files[i]);
+            }
+         }
+      }
+     
+      List defs = null;
+      ConfigDefinition edited_def = mRepos.get(token);
+      int new_version = 1;
+      File def_file = null;
+
+      if(def_file_list.size() > 1)
+      {
+         // Error
+         System.out.println("ERROR: Multiple files for token " + token + " found.");
+         return;
+      }
+      else if(1 > def_file_list.size())
+      {
+         System.out.println("Saving a new configuration not yet implemented.");
+         return;
+         //def_file = new File();
+      }
+      else if(1 == def_file_list.size())
+      {
+         def_file = (File)def_file_list.get(0);
+         System.out.println("Found it:" + def_file.getAbsolutePath());
+
+         try
+         {
+            // Attempt to load in the definitions in the file
+            ConfigDefinitionReader reader = new ConfigDefinitionReader(def_file);
+            defs = reader.readDefinition();
+            
+            // Get the maximal version number
+            try
+            {
+               new_version = mRepos.getNewestVersionNumber(token).intValue() + 1;
+            }
+            catch(DefinitionLookupException dle)
+            {
+               dle.printStackTrace();
+            }
+         }
+         catch (ParseException pe)
+         {
+            pe.printStackTrace();
+         }
+         catch (IOException ioe)
+         {
+            ioe.printStackTrace();
+         }
+      }
+
+      try
+      {
+         // We want to set the XSLT to null since we do not have a way to
+         // create it here.
+         ConfigDefinition new_def = new ConfigDefinition(edited_def.getName(),
+                                                        edited_def.getToken(),
+                                                        edited_def.getIconLocation(),
+                                                        new_version,
+                                                        edited_def.getParents(),
+                                                        edited_def.getHelp(),
+                                                        edited_def.getCategories(),
+                                                        edited_def.getPropertyDefinitions(),
+                                                        null);
+         defs.add(new_def);
+         
+         ConfigDefinitionWriter writer = new ConfigDefinitionWriter(def_file);
+         writer.writeDefinition(defs);
+      }
+      catch (IOException ioe)
+      {
+         ioe.printStackTrace();
+      }
+   }
+
+   /**
     * Gets a list of the directories in which to look for configuration
     * definitions.
     */

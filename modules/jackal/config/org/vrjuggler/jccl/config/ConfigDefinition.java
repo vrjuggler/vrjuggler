@@ -33,7 +33,7 @@ package org.vrjuggler.jccl.config;
 
 import java.util.*;
 import javax.swing.event.EventListenerList;
-import javax.xml.transform.*;
+import org.jdom.*;
 import org.vrjuggler.jccl.config.event.*;
 
 /**
@@ -48,7 +48,7 @@ public class ConfigDefinition
     */
    public ConfigDefinition(String name, String token, String icon_location, 
                            int version, List parents, String help, 
-                           List categories, List propDefs, Source xslt_source)
+                           List categories, List propDefs, Element xslt_element)
    {
       mName = name;
       mToken = token;
@@ -58,7 +58,7 @@ public class ConfigDefinition
       mHelp = help;
       mCategories = categories;
       mPropertyDefs = propDefs;
-      mXsltSource = xslt_source;
+      mXsltElement = xslt_element;
    }
 
    /**
@@ -70,9 +70,9 @@ public class ConfigDefinition
       return mName;
    }
 
-   public Source getXsltSource()
+   public Element getXsltElement()
    {
-      return mXsltSource;
+      return mXsltElement;
    }
 
    /**
@@ -373,6 +373,7 @@ public class ConfigDefinition
              mVersion == d.mVersion &&
              mCategories.equals(d.mCategories) &&
              mHelp.equals(d.mHelp) &&
+             mParents.equals(d.mParents) &&
              mPropertyDefs.equals(d.mPropertyDefs) &&
              mParents.equals(d.mParents))
          {
@@ -567,7 +568,7 @@ public class ConfigDefinition
    private List mParents;
 
    /** The XSLT transformations source. */
-   private Source mXsltSource;
+   private Element mXsltElement;
    
    /** List of listeners interested in this definition. */
    private EventListenerList listenerList = new EventListenerList();
