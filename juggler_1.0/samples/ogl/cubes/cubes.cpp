@@ -16,8 +16,9 @@ int main(int argc, char* argv[])
 
    kernel->setApplication(application);         // Set application
 
-   if(argc > 1)
-      kernel->setProgramSpecifiedConfigFile(argv[1]);
+   // Load any config files specified on the command line
+   for(int i=1;i<argc;i++)
+      kernel->loadConfigFile(argv[i]);
 
    kernel->start();
       //- Kernel load global config  -- Environment variable
