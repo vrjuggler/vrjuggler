@@ -1,6 +1,0 @@
-#!/bin/sh
-
-#script for starting vjcontrol on systems with jdk1.1 & swing
-
-CLASSPATH=
-${JDK_HOME}/bin/jre -DVJ_BASE_DIR=${VJ_BASE_DIR} -cp ${VJ_BASE_DIR}/bin/VjControl.jar:${VJ_BASE_DIR}/bin/swingall.jar VjGUI.VjControl $*
