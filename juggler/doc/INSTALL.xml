@@ -455,13 +455,13 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
 
           <para>By default, the configuration process will configure VR
           Juggler and all of its dependencies. This includes Sonix, which is
-          an interesting special case. Sonix can make use of OpenAL or
-          AudioWorks to provide spatialized sound in VR Juggler applications.
-          If neither of those packages is found, Sonix will <quote>stub out</quote>
-          its sound APIs. This means that Sonix and the VR Juggler Sound
-          Manager can still be used in applications, but no audio will be
-          heard at run time. See <xref linkend="sonix.compile.section" /> for
-          more information about how to configure Sonix to use OpenAL or
+          an interesting special case. Sonix can make use of Aaudiere, OpenAL,
+          or AudioWorks to add sound to VR Juggler applications. If none of
+          those packages is found, Sonix will <quote>stub out</quote> its
+          sound APIs. This means that Sonix and the VR Juggler Sound Manager
+          can still be used in applications, but no audio will be heard at run
+          time. See <xref linkend="sonix.compile.section" /> for more
+          information about how to configure Sonix to use Audiere, OpenAL, or
           AudioWorks.</para>
 
           <para>For example uses of <command>configure.pl</command>, take a
@@ -480,7 +480,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
           depends on several external software packages. As an example,
           consider the case where the GMTL library is installed in
           <filename>/home/user1/pkgs/GMTL</filename> with the headers in
-          <filename>/home/user1/pkgs/GMTL/include</filename>. To use thi
+          <filename>/home/user1/pkgs/GMTL/include</filename>. To use this
           installation, run <command>configure.pl</command> as follows:</para>
 
           <screen>../configure.pl --with-gmtl-prefix=/home/user1/pkgs/GMTL</screen>
@@ -619,7 +619,7 @@ gmake build install</screen>
         <para>Depending on your omniORB installation, you may have to pass
         extra arguments to <command>configure.pl</command> so that the
         configuration process can find the <command>omniidl</command> binary
-        and the omniORB libraries. For example, on RedHat Linux 7.2 with
+        and the omniORB libraries. For example, on Red Hat Linux 7.2 with
         omniORB 3.0.x, the following arguments must be specified in addition
         to the above:</para>
 
