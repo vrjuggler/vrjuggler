@@ -76,8 +76,6 @@
             Kernel
             ..
             Sound
-                pf
-                ..
             ..
             Test
             ..

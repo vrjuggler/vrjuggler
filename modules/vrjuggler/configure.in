@@ -654,7 +654,6 @@ AC_CONFIG_FILES([
    vrj/Draw/Pf/Makefile
    vrj/Kernel/Makefile
    vrj/Sound/Makefile
-   vrj/Sound/pf/Makefile
    vrj/Test/Makefile
    vrj/Util/Makefile
    vrj.appdefs.mk

@@ -60,8 +60,8 @@
 
 #include <snx/SoundHandle.h>
 
-#include <vrj/Sound/pf/pfSoundNode.h> //performer-juggler sound node.
-#include <vrj/Sound/pf/pfSoundTraverser.h>
+#include <pfSoundNode.h> //performer-juggler sound node.
+#include <pfSoundTraverser.h>
 
 // nav includes
 #include <pfNavDCS.h>
