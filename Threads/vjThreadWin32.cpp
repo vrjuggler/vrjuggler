@@ -31,9 +31,9 @@
  * -----------------------------------------------------------------
  */
 
-
 #include <Threads/vjThread.h>
 #include <Threads/vjThreadWin32.h>
+#include <Threads/vjThreadManager.h>
 
 
 vjThreadTable<DWORD> vjThreadWin32::mThreadTable;
