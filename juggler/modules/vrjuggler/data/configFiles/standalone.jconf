@@ -452,7 +452,7 @@
                <height>100</height>
                <origin>800</origin>
                <origin>800</origin>
-               <msens>1.0</msens>
+               <mouse_sensitivity>1.0</mouse_sensitivity>
                <display_number>0</display_number>
                <lock_key>0</lock_key>
                <start_locked>0</start_locked>
