@@ -77,8 +77,7 @@ bool TweekGadget::config(jccl::ConfigChunkPtr c)
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL) << "TweekGadget::config()\n"
                                                    << vprDEBUG_FLUSH;
 
-   if ( Input::config(c) && Position::config(c) && Digital::config(c) &&
-        Analog::config(c) )
+   if ( Input::config(c) )
    {
       configured = true;
 
@@ -144,6 +143,7 @@ bool TweekGadget::config(jccl::ConfigChunkPtr c)
 
             jccl::ConfigChunkPtr pos_dev =
                c->getProperty<jccl::ConfigChunkPtr>(pos_dev_token, i);
+            Position::config(pos_dev);
             const std::string subject_name = pos_dev->getName();
 
             try
@@ -176,6 +176,7 @@ bool TweekGadget::config(jccl::ConfigChunkPtr c)
 
             jccl::ConfigChunkPtr dig_dev =
                c->getProperty<jccl::ConfigChunkPtr>(dig_dev_token, i);
+            Digital::config(dig_dev);
             const std::string subject_name = dig_dev->getName();
 
             try
@@ -207,6 +208,7 @@ bool TweekGadget::config(jccl::ConfigChunkPtr c)
 
             jccl::ConfigChunkPtr ana_dev =
                c->getProperty<jccl::ConfigChunkPtr>(ana_dev_token, i);
+            Analog::config(ana_dev);
             const std::string subject_name = ana_dev->getName();
 
             try
