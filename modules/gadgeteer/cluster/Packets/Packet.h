@@ -48,6 +48,7 @@
 #ifndef _GADGET_RIM_PACKET_H
 #define _GADGET_RIM_PACKET_H
 
+#include <gadget/gadgetConfig.h>
 #include <vpr/vprTypes.h>
 #include <vpr/Util/ReturnStatus.h>
 
@@ -55,7 +56,6 @@
 #include <vpr/IO/BufferObjectWriter.h>
 #include <vpr/IO/Socket/SocketStream.h>
 
-#include <gadget/gadgetConfig.h>
 #include <cluster/ClusterException.h>
 
 namespace cluster
@@ -63,7 +63,7 @@ namespace cluster
    class Header;
    class ClusterNode;
 
-class Packet
+class GADGET_CLASS_API Packet
 {
 public:
    /**

@@ -48,19 +48,20 @@
 #ifndef _GADGET_RIM_HEADER_H
 #define _GADGET_RIM_HEADER_H
 
+#include <gadget/gadgetConfig.h>
+
 #include <vpr/vprTypes.h>
 #include <vpr/IO/BufferObjectReader.h>
 #include <vpr/IO/BufferObjectWriter.h>
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/Util/ReturnStatus.h>
 
-#include <gadget/gadgetConfig.h>
 #include <cluster/ClusterException.h>
 
 namespace cluster
 {
 
-class Header
+class GADGET_CLASS_API Header
 {
 public:
    const static unsigned short RIM_PACKET 		   = 400;

@@ -49,7 +49,7 @@ namespace cluster
    class Packet;
    class ClusterNode;
 
-class ClusterPlugin : public jccl::ConfigChunkHandler
+class GADGET_CLASS_API ClusterPlugin : public jccl::ConfigChunkHandler
 {
 public:
    ClusterPlugin();
