@@ -76,6 +76,7 @@ public class TweekFrame
 {
    public TweekFrame(MessageDocument msgDocument)
    {
+      setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
       addWindowListener(this);
 
       // This needs to be done as early as possible so that we receive events
@@ -501,7 +502,39 @@ public class TweekFrame
       if ( fireFrameClosing(new TweekFrameEvent(e.getWindow(), e.getID())) )
       {
          System.out.println("Disposing");
-         dispose();
+         
+         //Note: When the last displayable window within the Java virtual machine (VM)
+         //      is disposed of, the VM may terminate. See AWT Threading Issues for
+         //      more information.
+
+         //http://java.sun.com/j2se/1.4.2/docs/api/java/awt/Window.html#dispose()
+         //http://java.sun.com/j2se/1.4.2/docs/api/java/awt/doc-files/AWTThreadIssues.html
+         //http://java.sun.com/docs/books/tutorial/uiswing/events/windowlistener.html 
+
+         //A pause so user can see the message before
+         //the window actually closes.
+         ActionListener task = new ActionListener()
+         {
+            boolean alreadyDisposed = false;
+            public void actionPerformed(ActionEvent e)
+            {
+               if (!alreadyDisposed)
+               {
+                  alreadyDisposed = true;
+                  dispose();
+               }
+               else
+               {
+                  //make sure the program exits
+                  System.exit(0);
+               }
+            }
+         };
+         // Fire every half second
+         javax.swing.Timer timer = new javax.swing.Timer(500, task);
+         // First delay 2 seconds
+         timer.setInitialDelay(2000);
+         timer.start();
       }
    }
 
