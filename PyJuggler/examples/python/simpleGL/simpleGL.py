@@ -72,15 +72,22 @@ class SimplGlApp(vrj.GlApp):
 
    def draw(self):
       box_offset = gmtl.Vec3f(0.0, 6.0, 0.0)
+      box_rotate = gmtl.EulerAngleXYZf(0.0, 0.0, 0.0)
+#      box_transform = gmtl.makeTransMatrix44(gmtl.Vec3f(0.0, 6.0, 0.0))
 
       # Move the box to the wand's position if the box is grabbed.
       if self.mGrabbed:
          wand_transform = self.mWand.getData()
          box_offset     = gmtl.makeTransVec3(wand_transform)
+         box_rotate     = gmtl.makeRotEulerAngleXYZ(wand_transform)
 
       glClear(GL_DEPTH_BUFFER_BIT)
       glPushMatrix()
       glTranslatef(box_offset[0], box_offset[1], box_offset[2])
+      glRotatef(gmtl.rad2Deg(box_rotate[0]), 1.0, 0.0, 0.0)
+      glRotatef(gmtl.rad2Deg(box_rotate[1]), 0.0, 1.0, 0.0)
+      glRotatef(gmtl.rad2Deg(box_rotate[2]), 0.0, 0.0, 1.0)
+#      glMultMatrixf(box_transform.mData)
       self.drawbox(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5, GL_QUADS)
       glPopMatrix()
 
@@ -130,22 +137,22 @@ class SimplGlApp(vrj.GlApp):
       light0_specular = [ 1.0, 1.0, 1.0, 1.0 ]
       light0_position = [ 0.0, 0.75, 0.75, 0.0 ]
 
-#      mat_ambient   = [ 0.7, 0,7, 0.7, 1.0 ]
-#      mat_diffuse   = [ 1.0, 0,5, 0.8, 1.0 ]
-#      mat_specualr  = [ 1.0, 1,0, 1.0, 1.0 ]
+#      mat_ambient   = [ 0.7, 0.7, 0.7, 1.0 ]
+#      mat_diffuse   = [ 1.0, 0.5, 0.8, 1.0 ]
+#      mat_specualr  = [ 1.0, 1.0, 1.0, 1.0 ]
 #      mat_shininess = [ 50.0 ]
-#      no_mat        = [ 0.0, 0,0, 0.0, 1.0 ]
+#      no_mat        = [ 0.0, 0.0, 0.0, 1.0 ]
 
       glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient)
       glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse)
       glLightfv(GL_LIGHT0, GL_SPECULAR, light0_specular)
       glLightfv(GL_LIGHT0, GL_POSITION, light0_position)
 
-#      glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient)
-#      glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse)
-#      glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular)
-#      glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess)
-#      glMaterialfv(GL_FRONT, GL_EMISSION, no_mat)
+#      glMaterialfv(GL_LIGHT0, GL_AMBIENT, mat_ambient)
+#      glMaterialfv(GL_LIGHT0, GL_DIFFUSE, mat_diffuse)
+#      glMaterialfv(GL_LIGHT0, GL_SPECULAR, mat_specular)
+#      glMaterialfv(GL_LIGHT0, GL_SHININESS, mat_shininess)
+#      glMaterialfv(GL_LIGHT0, GL_EMISSION, no_mat)
 
       glEnable(GL_DEPTH_TEST)
       glEnable(GL_NORMALIZE)
