@@ -95,7 +95,7 @@ void vjEnvironmentManager::addPerfDataBuffer (vjPerfDataBuffer *b) {
 void vjEnvironmentManager::removePerfDataBuffer (vjPerfDataBuffer *b) {
     std::vector<vjPerfDataBuffer*>::iterator it;
 
-    vjDEBUG (vjDBG_PERFORMANCE, 4) << "EM removing perf data buffer " << b->getName().c_str() 
+    vjDEBUG (vjDBG_PERFORMANCE, 4) << "EM removing perf data buffer " << b->getName().c_str()
                                    << "\n" << vjDEBUG_FLUSH;
 
     b->deactivate();
@@ -157,11 +157,11 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
             networkingchanged = true;
         perf_target_name = (std::string)chunk->getProperty ("PerformanceTarget");
         connections_mutex.acquire();
-   
+
         vjConnect* new_perf_target = getConnect(perf_target_name);
         if (new_perf_target != perf_target)
             setPerformanceTarget (NULL);
-        
+
         if (networkingchanged) {
             Port = newport;
             if (isAccepting())
@@ -174,7 +174,7 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
         if (new_perf_target)
             setPerformanceTarget(new_perf_target);
         connections_mutex.release();
-   
+
         return true;
     }
     else if (!vjstrcasecmp (s, "PerfMeasure")) {
@@ -236,7 +236,7 @@ bool vjEnvironmentManager::configRemove(vjConfigChunk* chunk) {
         return true;
     }
     else if (!vjstrcasecmp (s, "FileConnect")) {
-        vjDEBUG (vjDBG_ENV_MGR,1) << "EM Removing connection: " 
+        vjDEBUG (vjDBG_ENV_MGR,1) << "EM Removing connection: "
                                   << chunk->getProperty ("Name") << '\n' << vjDEBUG_FLUSH;
         connections_mutex.acquire();
         vjConnect* c = getConnect (chunk->getProperty ("Name"));
@@ -393,21 +393,21 @@ bool vjEnvironmentManager::acceptConnections() {
 
     listen_socket = new vjSocket ();
     if (!listen_socket->listen (Port)) {
-        vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << "ERROR: Environment Manager couldn't open socket\n"
+        vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:") << "Environment Manager couldn't open socket\n"
                                                 << vjDEBUG_FLUSH;
         return false;
     }
     else
-        vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL) << "LISTENING: Environment Manager accepting connections on PORT "
+        vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrGREEN,"LISTENING:") << "Environment Manager accepting connections on PORT "
                                               << Port << '\n' << vjDEBUG_FLUSH;
-    
+
     /* now we ought to spin off a thread to do the listening */
     vjThreadMemberFunctor<vjEnvironmentManager>* memberFunctor =
         new vjThreadMemberFunctor<vjEnvironmentManager>(this,
                                                         &vjEnvironmentManager::controlLoop,
                                                         NULL);
     listen_thread = new vjThread (memberFunctor, 0);
-    
+
 
     return (listen_thread != NULL);
 }
