@@ -11,26 +11,95 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <pthread.h>
 
 #include <Threads/vjThread.h>
-#include <Threads/vjThreadPosix.h>
 
+
+thread_id_t vjThreadPosix::thread_count = 1;
+hash_map<addr_t, thread_id_t, hash<addr_t>, eq_thread> vjThreadPosix::mThreadHash;
+vjThreadTable<thread_id_t> vjThreadPosix::mThreadTable;
 
 typedef struct sched_param	sched_param_t;
 
 
 // ---------------------------------------------------------------------------
-//: Create a new thread that will execute functorPtr.
+//: Spawning constructor
 //
-//! PRE: None.
-//! POST: A thread (with any specified attributes) is created that begins
-//+      executing func().  Depending on the scheduler, it may begin
-//+      execution immediately, or it may block for a short time before
-//+      beginning execution.
+//  This will actually start a new thread that will execute the specified
+//+ function.
+// ---------------------------------------------------------------------------
+vjThreadPosix::vjThreadPosix (THREAD_FUNC func, void* arg, long flags,
+                              u_int priority, void* stack_addr,
+                              size_t stack_size)
+{
+    vjThreadManager::instance()->lock();
+    {
+        int ret_val;
+        vjThreadNonMemberFunctor* NonMemFunctor;
+
+        NonMemFunctor = new vjThreadNonMemberFunctor(func, arg);
+
+        ret_val = spawn(NonMemFunctor, flags, priority, stack_addr,
+                        stack_size);
+        checkRegister(ret_val);
+
+        mThread.exited = false;
+    }
+    vjThreadManager::instance()->unlock();
+}
+
+// ---------------------------------------------------------------------------
+// Spawning constructor with arguments (functor version).
+//
+// This will start a new thread that will execute the specified function.
+// ---------------------------------------------------------------------------
+vjThreadPosix::vjThreadPosix (vjBaseThreadFunctor* functorPtr, long flags,
+                              u_int priority, void* stack_addr,
+                              size_t stack_size)
+{
+    vjThreadManager::instance()->lock();
+    {
+        int ret_val;
+
+        ret_val = spawn(functorPtr, flags, priority, stack_addr, stack_size);
+        checkRegister(ret_val);
+
+        mThread.exited = false;
+    }
+    vjThreadManager::instance()->unlock();
+}
+
+// ---------------------------------------------------------------------------
+// Destructor.
+//
+// PRE: None.
+// POST: This thread is removed from the thread table and from the local
+//       thread hash.
+// ---------------------------------------------------------------------------
+vjThreadPosix::~vjThreadPosix (void) {
+    // If the thread has not already exited (which is likely if we have
+    // reached this stage of execution), call the exit() method.
+    if ( ! mThread.exited ) {
+        int status;
+
+        status = 0;
+        exit((void*) &status);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Create a new thread that will execute functorPtr.
+//
+// PRE: None.
+// POST: A thread (with any specified attributes) is created that begins
+//       executing func().  Depending on the scheduler, it may begin
+//       execution immediately, or it may block for a short time before
+//       beginning execution.
 // ---------------------------------------------------------------------------
 int
 vjThreadPosix::spawn (vjBaseThreadFunctor* functorPtr, long flags,
-                       u_int priority, void* stack_addr, size_t stack_size)
+                      u_int priority, void* stack_addr, size_t stack_size)
 {
     int ret_val;
     pthread_attr_t thread_attrs;
@@ -85,25 +154,21 @@ vjThreadPosix::spawn (vjBaseThreadFunctor* functorPtr, long flags,
 
     // Finally create the thread.
 #ifdef _PTHREADS_DRAFT_4
-    ret_val = pthread_create(&threadID, thread_attrs,
+    ret_val = pthread_create(&(mThread.obj), thread_attrs,
                              (pthread_startroutine_t) ThreadFunctorFunction,
                              (pthread_addr_t) functorPtr);
 #else
-    ret_val = pthread_create(&threadID, &thread_attrs, &ThreadFunctorFunction,
-                             (void *) functorPtr);
+    ret_val = pthread_create(&(mThread.obj), &thread_attrs,
+                             ThreadFunctorFunction, (void *) functorPtr);
 #endif
 
     // Inform the caller if the thread was not created successfully.
     if ( ret_val != 0 ) {
-        perror("vjThreadPosix::create() - Cannot create thread");
+        perror("vjThreadPosix::spawn() - Cannot create thread");
     }
 
     return ret_val;
 }
-
-
-
-
 
 // ---------------------------------------------------------------------------
 // Get this thread's priority.
@@ -118,7 +183,7 @@ vjThreadPosix::getPrio (int* prio) {
     int policy, ret_val;
     sched_param_t fifo_sched_param;
 
-    ret_val = pthread_getschedparam(threadID, &policy, &fifo_sched_param);
+    ret_val = pthread_getschedparam(mThread.obj, &policy, &fifo_sched_param);
     *prio = fifo_sched_param.sched_priority;
 
     return ret_val;
@@ -142,10 +207,64 @@ vjThreadPosix::setPrio (int prio) {
 
     fifo_sched_param.sched_priority = prio;
 
-    return pthread_setschedparam(threadID, SCHED_FIFO, &fifo_sched_param);
+    return pthread_setschedparam(mThread.obj, SCHED_FIFO, &fifo_sched_param);
 #else
     cerr << "vjThreadPosix::setprio(): Not supported\n";
 
     return -1;
 #endif
+}
+
+// ===========================================================================
+// Private methods follow.
+// ===========================================================================
+
+// ---------------------------------------------------------------------------
+//: Check the status of the thread creation in order to determine if this
+//+ thread should be registered in the thread table or not.
+//
+//! PRE: An attempt must have been made to create a thread using spawn().
+//! POST: If status is 0, the thread gets registered in the thread table and
+//+       in the local thread hash.  The count of created threads is
+//+       incremented as well.
+//
+//! ARGS: status - The integer status returned by spawn().
+// ---------------------------------------------------------------------------
+void
+vjThreadPosix::checkRegister (int status) {
+    if ( status == 0 ) {
+        mThread.id = thread_count;
+        mThreadHash[(addr_t) &mThread] = mThread.id;
+        registerThread(true);
+        mThreadTable.addThread(this, mThread.id);
+        thread_count++;
+    } else {
+        registerThread(false);	// Failed to create
+    }
+}
+
+// ---------------------------------------------------------------------------
+//: Get this thread's ID (a non-decreasing, positive number strictly greater
+//+ than 0).
+//
+//! PRE: None.
+//! POST: If this thread is found in the local thread hash, its unique ID is
+//        returned to the caller.
+//
+//! RETURNS: 0 - This thread was not found in the thread hash.
+//! RETURNS: Nonzero - The ID of this tread.
+// ---------------------------------------------------------------------------
+thread_id_t
+vjThreadPosix::gettid (void) {
+    vjPthreadObj me;
+    hash_map<addr_t, thread_id_t, hash<addr_t>, eq_thread>::iterator i;
+
+    me.obj = pthread_self();
+    i = mThreadHash.find((addr_t) &me);
+
+    if ( i == mThreadHash.end() ) {
+        return 0;		// There is no thread with ID 0
+    } else {
+        return (*i).second;
+    }
 }
