@@ -3,6 +3,7 @@ package org.vrjuggler.perfmon;
 import javax.swing.*;
 import java.lang.reflect.*;
 import org.jfree.data.time.*;
+import vrj.PerformanceMonitorSubjectPackage.SampleTimeMap;
 import vrj.*;
 
 public class Updater implements Runnable
@@ -50,13 +51,13 @@ public class Updater implements Runnable
   {
      if(mObserver == null)
      { System.out.println("[DBG] mObserver is null!!!!!"); }
-    SampleTimeMap value_map = mObserver.getValueMap();
-    int length = Array.getLength(value_map.mNames);
+    SampleTimeMap[] value_map = mObserver.getValueMap();
+    int length = Array.getLength(value_map);
     System.out.println("[DBG] Got a samples list of length " + length);
     for (int i = 0; i < length; ++i)
     {
-      System.out.println("[DBG] Adding a new series for " + value_map.mNames[i]);
-      TimeSeries s = new TimeSeries(value_map.mNames[i]);
+      System.out.println("[DBG] Adding a new series for " + value_map[i].mName);
+      TimeSeries s = new TimeSeries(value_map[i].mName);
       mTimeSeriesCollection.addSeries(s);
     }
     while ( true )
@@ -74,7 +75,7 @@ public class Updater implements Runnable
       length = Array.getLength(value_map);
       for (int i = 0; i < length; ++i)
       {
-         mTimeSeriesCollection.getSeries(i).add( new Millisecond(), value_map.mSampleTimes[i] );
+         mTimeSeriesCollection.getSeries(i).add( new Millisecond(), value_map[i].mSampleTime );
          System.out.println("[DBG] Setting value for series " + i);
       }
       

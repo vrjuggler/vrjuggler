@@ -68,7 +68,7 @@ public:
     *
     * @return   the newly created SampleTimeMap
     */
-   virtual SampleTimeMap* getValueMap();
+   virtual vrj::PerformanceMonitorSubject::SampleValueMap* getValueMap();
 
    /**
     * This overriding method is needed so that the correct type is returned

@@ -55,18 +55,17 @@ namespace vrj
       return param;
    }
    
-   SampleTimeMap*
-   PerformanceMonitorSubjectImpl::getValueMap()
+   vrj::PerformanceMonitorSubject::SampleValueMap* PerformanceMonitorSubjectImpl::getValueMap()
    {
-      using vrj::PerformanceMonitorSubject;
-      SampleTimeMap* value_map = new SampleTimeMap();
+      vrj::PerformanceMonitorSubject::SampleValueMap* value_map = 
+                        new vrj::PerformanceMonitorSubject::SampleValueMap();
       std::map<std::string, float> sample_time_map = vpr::ProfileManager::getValueMap();
       std::map<std::string, float>::iterator itr;
       unsigned long i = 0;
       for (itr = sample_time_map.begin(); itr != sample_time_map.end(); ++itr,++i)
       {
-         value_map->mNames[i] = itr->first.c_str();
-         value_map->mSampleTimes[i] = itr->second;
+         (*value_map)[i].mName = itr->first.c_str();
+         (*value_map)[i].mSampleTime = itr->second;
       }
       return value_map;
    }
