@@ -104,6 +104,7 @@ public class TransformTranslationEditor
                                             "'");
       }
 
+      mContext = ctx;
       mElement = elt;
 
       double x_pos =
@@ -210,6 +211,7 @@ public class TransformTranslationEditor
                                       new Insets(0, 3, 0, 0), 0, 0));
    }
 
+   private ConfigContext mContext;
    private ConfigElement mElement;
    private MeasurementUnit[] mTranslationUnits = null;
    private String mTranslateProp;
@@ -302,7 +304,8 @@ public class TransformTranslationEditor
 
       mElement.setProperty(mTranslateProp, index,
                            new Float((float) toMeters(value.doubleValue(),
-                                     units)));
+                                     units)),
+                           mContext);
    }
 
    void mTrackerXPosField_propertyChange(PropertyChangeEvent propertyChangeEvent)
