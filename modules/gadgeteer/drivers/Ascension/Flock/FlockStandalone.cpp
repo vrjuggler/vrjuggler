@@ -1,137 +1,90 @@
-#include <vjConfig.h>
-#include <sys/file.h>
-#include <sys/ioctl.h>
-#include <sys/time.h>
+//#include <sys/file.h>
+//#include <sys/ioctl.h>
+//#include <sys/time.h>
 
-#include <Input/vjPosition/vjFlock.h>
-
+#include "aFlock.h"
 #include <Kernel/vjDebug.h>
 
+int   getReading(int i, vjMatrix* data, int port);
+float rawToFloat(char& r1, char& r2);
+void  pickBird(int sensor, int port_id);
+int   open_port(char* serialPort, int baud);
+void  set_blocking(int port, int blocking);
+void  set_sync(int port, int sync);
+void  set_hemisphere(int port, BIRD_HEMI hem, int transmitter, int numbirds);
+void  set_rep_and_stream(int port, char repRate);
+void  set_pos_angles(int port, int transmitter, int numbirds);
+void  set_filter(int port, BIRD_FILT filter);
+void  set_transmitter(int port, int transmitter);
+void  set_autoconfig(int port, int numbirds);
+void  set_group(int port);
 
-inline int getReading(int i, vjMatrix* data, int port);
-inline float rawToFloat(char& r1, char& r2);
-inline void  pickBird(int sensor, int port_id);
-static int open_port(char* serialPort, int baud);
-static void set_blocking(int port, int blocking);
-static void set_sync(int port, int sync);
-static void set_hemisphere(int port, BIRD_HEMI hem, int transmitter, int numbirds);
-static void set_rep_and_stream(int port, char repRate);
-static void set_pos_angles(int port, int transmitter, int numbirds);
-static void set_filter(int port, BIRD_FILT filter);
-static void set_transmitter(int port, int transmitter);
-static void set_autoconfig(int port, int numbirds);
-static void set_group(int port);
-
-vjFlock::vjFlock()
+//: Configure Constructor
+// Give:
+//   port - such as "/dev/ttyd3"
+//   baud - such as 38400, 19200, 9600, 14400, etc...
+//   sync - sync type.
+//   block - blocking
+//   numBrds - number of birds in flock,
+//   transmit - transmitter unit number,
+//   hemi - hemisphere to track from,
+//   filt - filtering type,
+//   report -
+//   calfile - a calibration file, if "", then use none.
+// 
+// Result: configures internal data members, 
+//         doesn't actually talk to the FOB yet.
+aFlock::aFlock(const char* const port, 
+		const int& baud, 
+		const int& sync, 
+		const int& block, 
+		const int& numBrds, 
+		const int& transmit, 
+		const BIRD_HEMI& hemi, 
+		const BIRD_FILT& filt, 
+		const char& report, 
+		const char* const calfile) : 
+		  port_id(-1),
+		  active(0),
+		  _port(port),
+		  _baud(baud),
+		  _syncStyle(sync),
+		  _blocking(block),
+		  _numBirds(numBrds),
+		  _xmitterUnitNumber(transmit),
+		  _hemisphere(hemi),
+		  _filter( filt ),
+		  _reportRate(report),
+		  _calibrationFileName( calfile )
 {
-;
-}
-
-bool vjFlock::config(vjConfigChunk *c)
-{
-  vjDEBUG(0) << "	 vjFlock::vjFlock(vjConfigChunk*)" << endl << vjDEBUG_FLUSH;
-
-  if(!vjPosition::config(c))
-     return false;
-
-  syncStyle = static_cast<int>(c->getProperty("sync"));//1;
-  blocking = static_cast<int>(c->getProperty("blocking"));//0;
-
-  // to be added to config:
-  theTransmitter = static_cast<int>(c->getProperty("transmitter"));
-  numBirds = static_cast<int>(c->getProperty("num"));
-  hemisphere = (BIRD_HEMI)(static_cast<int>(c->getProperty("hemi")));  //LOWER_HEMI
-  char r = static_cast<char*>(c->getProperty("report"))[0];
-  if ((r != 'Q') && (r != 'R') &&
-      (r != 'S') && (r != 'T'))
+  // fix the report rate if it makes no sense.
+  if ((_reportRate != 'Q') && (_reportRate != 'R') &&
+      (_reportRate != 'S') && (_reportRate != 'T'))
   {
-     vjDEBUG(0)  << "   illegal report rate from configChunk, defaulting to every other cycle (R)" << endl << vjDEBUG_FLUSH;
-     repRate = 'R';
+     // illegal report rate, defaulting to "every other cycle" (R)
+     assert(false)
+     _reportRate = 'R';
   }
-  else
-     repRate = r;
 
-  vjDEBUG(0)   << "	  Flock Settings: " << endl
-               << "	        theTransmitter: " << theTransmitter << endl
-	            << "             numBirds      : " << numBirds << endl
-               << "	        baudRate      : " << baudRate << endl
-               << "	        deviceAbilities:" << deviceAbilities << endl
-               << "	        sPort         : " << sPort << endl
-               << "		instance name : " << instName << endl
-               << endl << vjDEBUG_FLUSH;
-
-  InitCorrectionTable(c->getProperty("calfile"));
-
-  return true;
+  if (calfile != NULL && calfile[0] != '\0')
+  {
+  	InitCorrectionTable(calfile);
+  	_usingCorrectionTable = true;
+  }	
 }
 
-vjFlock::vjFlock(int sync, int block, int numBrds, int transmit,
-      BIRD_HEMI hemi, BIRD_FILT filt,
-      char report, const char* calfile) : vjPosition(), vjInput()
+aFlock::~aFlock()
 {
-  vjDEBUG(0)   << "        vjFlock::vjFlock(" << sync << "," << block << ","
-               << numBrds << "," << transmit
-               << "," << hemi << "," << report << "," << calfile << ") " << endl << vjDEBUG_FLUSH;
-
-  port_id = -1; active = 0;
-  syncStyle = sync;
-  blocking = block;
-  theTransmitter = transmit;
-  numBirds = numBrds;
-  hemisphere = hemi;
-  repRate = report;
-
-  myThread = NULL;
-
-  InitCorrectionTable(calfile);
-}
-
-vjFlock::~vjFlock()
-{
-  vjDEBUG(0)  << "	vjFlock::~vjFlock()" << endl << vjDEBUG_FLUSH;
-  StopSampling();
+    StopSampling();
     if (theData != NULL)
        getMyMemPool()->deallocate((void*)theData);
 }
 
-static void SampleBirds(void* pointer)
+int aFlock::StartSampling()
 {
-
-   //struct timeval tv;
-   //double start_time, stop_time;
-
-   vjDEBUG(0) << "vjFlock: Spawned SampleBirds starting" << endl << vjDEBUG_FLUSH;
-
-   vjFlock* devPointer = (vjFlock*) pointer;
-   for (;;)
-   {
-
-//**     gettimeofday(&tv,0);
-//**     start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
-
-      //for (int i = 0; i < 60; i++)
-         devPointer->Sample();
-
-//**     gettimeofday(&tv,0);
-//**     stop_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
-      //   cout << 1/((stop_time-start_time) / 60)
-      //      << "  " << endl;
-
-
-   }
-
-}
-
-int vjFlock::StartSampling()
-{
-   if (myThread == NULL)
-   {
-      //int i;
-
       if (theData != NULL)
          getMyMemPool()->deallocate((void*)theData);
-//  theData = (vjPOS_DATA*)allocate((theTransmitter-1)*3*sizeof(vjPOS_DATA));
-      theData = (vjMatrix*) new vjMatrix[(numBirds+1)*3];
+      theData = (vjMatrix*) new vjMatrix[(_numBirds+1)*3];
 
       current = 0;
       valid = 1;
@@ -139,96 +92,56 @@ int vjFlock::StartSampling()
 
       vjDEBUG(0) << "    Getting flock ready....\n" << vjDEBUG_FLUSH;
 
-      port_id = open_port(sPort, baudRate);
+      port_id = open_port( _port, _baud );
       if (port_id == -1) return 0;
       set_blocking(port_id, blocking);
       set_sync(port_id,syncStyle);
       set_group(port_id);
-      set_autoconfig(port_id, numBirds);
-      set_transmitter(port_id, theTransmitter);
-      set_filter(port_id, filter);
-      set_hemisphere(port_id, hemisphere, theTransmitter, numBirds);
-      set_pos_angles(port_id, theTransmitter, numBirds);
-      pickBird(theTransmitter,port_id);
-      set_rep_and_stream(port_id, repRate);
+      set_autoconfig(port_id, _numBirds);
+      set_transmitter(port_id, _xmitterUnitNumber);
+      set_filter(port_id, _filter);
+      set_hemisphere(port_id, _hemisphere, _xmitterUnitNumber, _numBirds);
+      set_pos_angles(port_id, _xmitterUnitNumber, _numBirds);
+      pickBird(_xmitterUnitNumber,port_id);
+      set_rep_and_stream(port_id, _reportRate);
 
-//  cout << "port_id:" << port_id << endl;
-
-      vjDEBUG(0)  << "vjFlock ready to go.." << endl << vjDEBUG_FLUSH;
-
-      vjFlock* devicePtr = this;
-
-      myThread = new vjThread(SampleBirds, (void*) devicePtr, 0);
-
-      if ( myThread == NULL ) {
-        return 0;	// Fail
-      } else {
-        return 1;
-      }
-   }
+      vjDEBUG(0)  << "aFlock ready to go.." << endl << vjDEBUG_FLUSH;
+      
    else return 0; // already sampling
-
 }
 
-int vjFlock::Sample()
+
+// call this repeatedly to update the data from the birds.
+int aFlock::Sample()
 {
      int i;
      int tmp;
 
-     for(i=1; i < (numBirds+1); i++)
+     // for [1..n] birds, get their reading:
+     for (i=1; i < (_numBirds+1); i++)
      {
-	if (i == theTransmitter)
+	if (i == _xmitterUnitNumber)
 		continue;
+	
+	if (_usingCorrectionTable)
+	{
+	    //correct the position...
+	}
 
-      	int index = progress*(numBirds+1)+i-1;
-	// Sets index to current read buffer
+      	// Sets index to current read buffer
+	int index = progress*(_numBirds+1)+i-1;
+	
 
          getReading(i, &theData[index], port_id);	
-      	//Position_Correct(theData[index].pos[0],
-      	//		           theData[index].pos[1],
-      	//		           theData[index].pos[2]);
-      	
-         if(i==1)
-         {
-            //cout << "orig pt:" << theData[index].pos;
-         }
 
-         //theData[index].pos.xformFull(xformMat, theData[index].pos );
-      	
-         if(i==1)
-         {
-               //cout << "\tnew pt:" << theData[index].pos << flush;
-         }
-
-         if(i==1)
-         {
-             //cout << "\torig or:" << theData[index].orient;
-         }
-
-
-            // Transforms between the cord frames
-            // See transform documentation and VR System pg 146
+	// Transforms between the cord frames
+	// See transform documentation and VR System pg 146
          vjMatrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
 
-         //world_T_transmitter = rotMat;                   // Set transmitter offset from local info
          world_T_transmitter = xformMat;                   // Set transmitter offset from local info
          transmitter_T_reciever = theData[index];        // Get reciever data from sampled data
-         world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);   // compute total transform
+         world_T_reciever.mult( world_T_transmitter, transmitter_T_reciever);   // compute total transform
          theData[index] = world_T_reciever;                                     // Store corrected xform back into data
-
-         if(i==1)
-         {
-                /*
-                cout << "\nnew or:" << theData[index].orient << flush;
-
-                new_dir.xformVec(transmitter_or_reciever, tracker_base_dir);
-                cout << "   Base Tracker dir: " << tracker_base_dir << endl;
-                cout << "\nXformed Tracker dir (in T): " << new_dir << endl;
-
-                new_dir.xformVec(c2_or_reciever, tracker_base_dir);
-                cout << "\nXformed Tracker dir: (in W)" << new_dir << endl;
-                */
-         }
      }
 	
      lock.acquire();
@@ -240,44 +153,36 @@ int vjFlock::Sample()
      return 1;
 }
 
-int vjFlock::StopSampling()
+int aFlock::StopSampling()
 {
-   if (myThread != NULL)
-   {
-      myThread->kill();
-      delete myThread;
-      myThread = NULL;
+  char   bird_command[4];
 
-      sginap(1);
-      char   bird_command[4];
+  vjDEBUG(0) << "Stopping the flock..." << vjDEBUG_FLUSH;
 
-      vjDEBUG(0) << "Stopping the flock..." << vjDEBUG_FLUSH;
+  bird_command[0] = 'B';
+  write(port_id, bird_command, 1);
+  ioctl(port_id, TCFLSH, (char *) 0);
+  sginap( 5 );
+  bird_command[0] = 'G';
+  write(port_id, bird_command, 1);
+  ioctl(port_id, TCFLSH, (char *) 0);
+  sleep( 2 );
+  close(port_id);
+  port_id = -1;
 
-      bird_command[0] = 'B';
-      write(port_id, bird_command, 1);
-      ioctl(port_id, TCFLSH, (char *) 0);
-      sginap(5);
-      bird_command[0] = 'G';
-      write(port_id, bird_command, 1);
-      ioctl(port_id, TCFLSH, (char *) 0);
-      sleep(2);
-      close(port_id);
-      port_id = -1;
-
-      vjDEBUG(0) << "stopped." << endl << vjDEBUG_FLUSH;
-   }
+  vjDEBUG(0) << "stopped." << endl << vjDEBUG_FLUSH;
+  
    return 1;
 }
 
-vjMatrix* vjFlock::GetPosData( int d) // d is 0 based
+vjMatrix& aFlock::GetMatrix( int d ) // d is 0 based
 {
-  return (&theData[current*(numBirds+1)+d]);
+  return theData[current*(_numBirds+1)+d] ;
 }
 
-void vjFlock::UpdateData()
+void aFlock::UpdateData()
 {
   // swap the indicies for the pointers
-
   lock.acquire();
   int tmp = current;
   current = valid;
@@ -287,81 +192,93 @@ void vjFlock::UpdateData()
   return;
 }
 
-void vjFlock::SetHemisphere(BIRD_HEMI h)
+void aFlock::SetHemisphere(BIRD_HEMI h)
 {
-  if (active) {
-      vjDEBUG(0) << "Cannot change the hemisphere\n" << vjDEBUG_FLUSH;
-      return;
-   }
-   hemisphere = h;
+    if (active) 
+    {
+	vjDEBUG(0) << "Cannot change the hemisphere\n" << vjDEBUG_FLUSH;
+	return;
+    } else {
+	// Set it.
+        _hemisphere = h;
+    }
 }
 
-void vjFlock::SetFilters(BIRD_FILT f)
+void aFlock::SetFilters(BIRD_FILT f)
 {
-  if (active) {
-      vjDEBUG(0) << "Cannot change filters while active\n" << vjDEBUG_FLUSH;
-      return;
-  }
-  filter = f;
+    if (active) 
+    {
+	vjDEBUG(0) << "Cannot change filters while active\n" << vjDEBUG_FLUSH;
+	return;
+    } else {
+	// Set it.
+	_filter = f;
+    }
 }
 
-void vjFlock::SetReportRate(char rRate)
+void aFlock::SetReportRate(char rRate)
 {
-  if (active) {
-      vjDEBUG(0) << "Cannot change report rate while active\n" << vjDEBUG_FLUSH;
-      return;
-  }
-  repRate = rRate;
+    if (active) 
+    {
+	vjDEBUG(0) << "Cannot change report rate while active\n" << vjDEBUG_FLUSH;
+	return;
+    } else {
+	// Set it.
+	_reportRate = rRate;
+    }
 }
 
-void vjFlock::SetTransmitter(int Transmit)
+void aFlock::SetTransmitter(int Transmit)
 {
-  if (active) {
+  if (active) 
+  {
       vjDEBUG(0) << "Cannot change transmitter while active\n" << vjDEBUG_FLUSH;
       return;
+  } else {
+      // Set it.
+      _xmitterUnitNumber = Transmit;
   }
-  theTransmitter = Transmit;
 }
-void vjFlock::SetNumBirds(int n)
+void aFlock::SetNumBirds(int n)
 {
-  if (active) {
-      vjDEBUG(0) << "Cannot change num birds while active\n" << vjDEBUG_FLUSH;
-      return;
-  }
-  numBirds = n;
+    if (active) 
+    {
+	vjDEBUG(0) << "Cannot change num birds while active\n" << vjDEBUG_FLUSH;
+	return;
+    } else {
+	// Set it.
+	_numBirds = n;
+    }
 }
-void vjFlock::SetSync(int sync)
+void aFlock::SetSync(int sync)
 {
-  if (active) {
+  if (active) 
+  {
       vjDEBUG(0) << "Cannot change report rate while active\n" << vjDEBUG_FLUSH;
       return;
+  } else {
+      // Set it.
+      syncStyle = sync;
   }
-  syncStyle = sync;
 }
 
-void vjFlock::SetBlocking(int blVal)
+void aFlock::SetBlocking(int blVal)
 {
-  if (active) {
+  if (active) 
+  {
       vjDEBUG(0) << "Cannot change report rate while active\n" << vjDEBUG_FLUSH;
       return;
+  } else {
+      // Set it.
+      blocking = blVal;
   }
-  blocking = blVal;
 }
 
-void vjFlock::Position_Correct(float&x,float&y,float&z) {
+void aFlock::Position_Correct(float&x,float&y,float&z) 
+{
   int xlo,ylo,zlo,xhi,yhi,zhi;
   float a,b,c,a1,b1,c1;
 
- /*   if(x<caltable.xmin || y<caltable.ymin || z<caltable.zmin ||
-        x>=caltable.xmax || y>=caltable.ymax || z>=caltable.zmax){
-        cerr << "Point out of range " << x << " " <<  y << " " << z << endl;
-        cerr <<"                   "
-             <<caltable.xmin<<" "<< caltable.xmax << " " <<  caltable.ymin
-             <<caltable.ymax<<" "<< caltable.zmin << " " << caltable.zmax
-             << endl;
-        return;
-    }
-*/
     // Find corners
     xlo = (int)(x-caltable.xmin);
     ylo = (int)(y-caltable.ymin);
@@ -400,7 +317,7 @@ void vjFlock::Position_Correct(float&x,float&y,float&z) {
     return;
 }
 
-void vjFlock::InitCorrectionTable(const char* fName)
+void aFlock::InitCorrectionTable(const char* fName)
 {
   int i,j,k, xsize,ysize,zsize;
   float dump;
@@ -440,9 +357,9 @@ void vjFlock::InitCorrectionTable(const char* fName)
 
 
 ///////////////////////////////////////////////////////////////////
-// Local functions to vjFlock.cpp
+// Local functions to aFlock.cpp
 //////////////////////////////////////////////////////////////////
-inline int getReading(int n, vjMatrix* data, int port)
+int aFlock::getReading(int n, vjMatrix* data, int port)
 {
    char buff[12], group;
    int  c,i, addr;
@@ -469,7 +386,7 @@ inline int getReading(int n, vjMatrix* data, int port)
 	}
 	
       if (c >= 5000)
-         vjDEBUG(0) << "vjFlock: tracker timeout (" << c << ")" << endl << vjDEBUG_FLUSH;
+         vjDEBUG(0) << "aFlock: tracker timeout (" << c << ")" << endl << vjDEBUG_FLUSH;
 
       addr = group;
    }
@@ -494,7 +411,7 @@ inline int getReading(int n, vjMatrix* data, int port)
    return addr;
 }
 
-inline float rawToFloat(char& r1, char& r2)
+float aFlock::rawToFloat(char& r1, char& r2)
 {
    // return ((float) (((r1 & 0x7f) << 9) | (r2 & 0x7f) << 2) / 0x7fff);
    short int ival1,ival2,val;
@@ -504,7 +421,7 @@ inline float rawToFloat(char& r1, char& r2)
    return ((float)val) / 0x7fff;
 }
 
-inline void  pickBird(int birdID, int port)
+void  aFlock::pickBird(int birdID, int port)
 {
    char buff = 0xF0 + birdID;
    write(port, &buff, 1);
@@ -512,7 +429,7 @@ inline void  pickBird(int birdID, int port)
    sginap(1);
 }
 
-static int open_port(char* serialPort, int baud)
+int aFlock::open_port(char* serialPort, int baud)
 {
    ///////////////////////////////////////////////////////////////////
    // Open and close the port to reset the tracker, then
@@ -521,24 +438,24 @@ static int open_port(char* serialPort, int baud)
    int port_id = open(serialPort, O_RDWR | O_NDELAY);
    if (port_id == -1)
    {
-      vjDEBUG(0) << "!!vjFlock port open (1 of 2) failed\n" << vjDEBUG_FLUSH ;
+      vjDEBUG(0) << "!!aFlock port open (1 of 2) failed\n" << vjDEBUG_FLUSH ;
       return port_id;
    }
    else
    {
-      vjDEBUG(0) << "vjFlock port open (1 of 2) successfully\n" << vjDEBUG_FLUSH;
+      vjDEBUG(0) << "aFlock port open (1 of 2) successfully\n" << vjDEBUG_FLUSH;
    }
    sleep(2);
    close(port_id);
    port_id = open(serialPort,O_RDWR | O_NDELAY);
    if (port_id == -1)
    {
-      vjDEBUG(0) << "!!vjFlock port open (2 of 2) failed\n" << vjDEBUG_FLUSH;
+      vjDEBUG(0) << "!!aFlock port open (2 of 2) failed\n" << vjDEBUG_FLUSH;
       return port_id;
    }
    else
    {
-      vjDEBUG(0) << "vjFlock port open (2 of 2) successfully\n" << vjDEBUG_FLUSH;
+      vjDEBUG(0) << "aFlock port open (2 of 2) successfully\n" << vjDEBUG_FLUSH;
    }
 
    //////////////////////////////////////////////////////////////////
@@ -572,8 +489,8 @@ static int open_port(char* serialPort, int baud)
    return port_id;
 }
 
-  void set_blocking(int port, int blocking)
-  {
+void aFlock::set_blocking(int port, int blocking)
+{
  //////////////////////////////////////////////////////////////////
  // Setup a non/blocked port & Flush port
  //////////////////////////////////////////////////////////////////
@@ -592,9 +509,9 @@ static int open_port(char* serialPort, int baud)
   read(port, junk, 1024);
   sleep(1);
 
-  }
+}
 
-static void set_sync(int port, int sync)
+void aFlock::set_sync(int port, int sync)
 {
 /////////////////////////////////////////////////////////////////
  // Set CRT sync: (manual page 82)
@@ -610,7 +527,7 @@ static void set_sync(int port, int sync)
 }
 
 
-static void set_hemisphere(int port, BIRD_HEMI hem, int transmitter, int numbirds)
+void set_hemisphere(int port, BIRD_HEMI hem, int transmitter, int numbirds)
 {
  /////////////////////////////////////////////////////////////////
  // Set Hemisphere for birds taking input
@@ -662,7 +579,7 @@ static void set_hemisphere(int port, BIRD_HEMI hem, int transmitter, int numbird
   }
 }
 
-static void set_rep_and_stream(int port, char repRate)
+void set_rep_and_stream(int port, char reportRate)
 {
  char buff[1];
  /////////////////////////////////////////////////////////////////
@@ -672,7 +589,7 @@ static void set_rep_and_stream(int port, char repRate)
  //             S  every 8 cycles
  //             T  every 32 cycles
  /////////////////////////////////////////////////////////////////
-  buff[0] = repRate;
+  buff[0] = _reportRate;
   write(port, buff, 1);
   ioctl(port, TCFLSH, (char *) 0);
   sginap(20);
@@ -687,7 +604,7 @@ static void set_rep_and_stream(int port, char repRate)
 
 }
 
-static void set_pos_angles(int port, int transmitter, int numbirds)
+void set_pos_angles(int port, int transmitter, int numbirds)
 {
  //////////////////////////////////////////////////////////////////
  // Set Position Angles
@@ -706,7 +623,7 @@ static void set_pos_angles(int port, int transmitter, int numbirds)
 
 }
 
-static void set_filter(int port, BIRD_FILT filter)
+void set_filter(int port, BIRD_FILT filter)
 {
  ///////////////////////////////////////////////////////////////
  // Turn filters on (manual page 48)
@@ -722,10 +639,10 @@ static void set_filter(int port, BIRD_FILT filter)
   write(port,buff,4);
   ioctl(port,TCFLSH,(char*)0);
  // Do I need to sleep here?
-
+    sginap(120);
 }
 
-static void set_transmitter(int port, int transmitter)
+void set_transmitter(int port, int transmitter)
 {
 ///////////////////////////////////////////////////////////////
  // Sets up the device for Transmitting (manual page 67)
@@ -737,10 +654,10 @@ static void set_transmitter(int port, int transmitter)
   write(port, buff, 2);
   ioctl(port, TCFLSH,(char*) 0);
   sginap(120);
- }
+}
 
 
-static void set_autoconfig(int port, int numbirds)
+void set_autoconfig(int port, int numbirds)
 {
  ///////////////////////////////////////////////////////////////
  // FBB AUTO-CONFIGURATION (manual page 60)
@@ -756,7 +673,7 @@ static void set_autoconfig(int port, int numbirds)
   sleep(2);
 }
 
-static void set_group(int port)
+void set_group(int port)
 {
  ////////////////////////////////////////////////////////////////
  // Setup group mode: (manual page 59)

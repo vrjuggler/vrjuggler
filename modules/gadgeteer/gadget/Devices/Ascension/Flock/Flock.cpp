@@ -67,7 +67,7 @@ bool vjFlock::config(vjConfigChunk *c)
 
 vjFlock::vjFlock(int sync, int block, int numBrds, int transmit,
       BIRD_HEMI hemi, BIRD_FILT filt,
-      char report, char* calfile) : vjPosition(), vjInput()
+      char report, const char* calfile) : vjPosition(), vjInput()
 {
   vjDEBUG(0)   << "        vjFlock::vjFlock(" << sync << "," << block << ","
                << numBrds << "," << transmit
@@ -109,7 +109,7 @@ static void SampleBirds(void* pointer)
 //**     gettimeofday(&tv,0);
 //**     start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
 
-      for (int i = 0; i < 60; i++)
+      //for (int i = 0; i < 60; i++)
          devPointer->Sample();
 
 //**     gettimeofday(&tv,0);
@@ -400,7 +400,7 @@ void vjFlock::Position_Correct(float&x,float&y,float&z) {
     return;
 }
 
-void vjFlock::InitCorrectionTable(char* fName)
+void vjFlock::InitCorrectionTable(const char* fName)
 {
   int i,j,k, xsize,ysize,zsize;
   float dump;
@@ -463,10 +463,13 @@ inline int getReading(int n, vjMatrix* data, int port)
       }
 
       while ((read(port,&group,1) == 0) && c < 99999)
-         c++;
-
+      {
+         sgi_nap(1);
+	 c++;
+	}
+	
       if (c >= 5000)
-         vjDEBUG(0) << "vjFlock: tracker timeout" << endl << vjDEBUG_FLUSH;
+         vjDEBUG(0) << "vjFlock: tracker timeout (" << c << ")" << endl << vjDEBUG_FLUSH;
 
       addr = group;
    }
