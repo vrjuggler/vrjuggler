@@ -1,0 +1,36 @@
+sonix (high level, easy to use, audio abstraction for vr/games)
+-----------------
+subsystem abstraction for audio hardware or audio APIs, reconfigurable
+allowing audio APIs to be safely swapped out at runtime without the
+dependant systems noticing.  systems using this layer expect to be
+completely portable.  changing sound APIs at run time will be useful so
+that the user can play with quality and latency differences of different
+hardware and different soud APIs
+
+requirement specification:
+- an application should be able to change APIs or hardware device API is using
+  without the resource handles having to be reset manually.
+- Changing a resource through its resource handle should reflect properly
+  in all other handles to that same resource (rsrc will have multiple users)
+- support basic operations common to simple vr and game applications
+  - load file
+  - play
+  - stop
+  - pause
+  - set position
+  - maybe pitch?
+
+(how it is implemented now)
+- implemented directly on top of openal and audioworks.
+- very high level and easy to use.
+- eventually this high level thing could/should be moved on top of subsynth
+- designed to be very simple, not the end-all be-all audio system
+  very good at simply playing 3D sounds without any hassle to the user.
+- sounds are accessed by std::string handles, if invalid string is used,
+  then system does nothing - no assert, no dump, just silence.
+- C style monolithic singleton class that hides all the resource management.
+  - pass a string into each func to designate what resource user is acting on.
+- currently provides convenience functions for playing prebuffered sound files
+- supports OpenAL (OAL) and AudioWorks (AW)
+- needs to support file formats other than aif (AW), and wav (OAL)
+- needs an API for streaming data, required for the synth.
