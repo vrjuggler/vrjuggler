@@ -38,4 +38,13 @@
   <property category="sys" name="VersionLabel" value="@since"/>
   <property category="sys" name="WorkingDirectory" value="."/>
   <node name="org.vrjuggler.tweek" type="Package"/>
+  <node name="org.vrjuggler.tweek.beans" type="Package"/>
+  <node name="org.vrjuggler.tweek.beans.loader" type="Package"/>
+  <node name="org.vrjuggler.tweek.event" type="Package"/>
+  <node name="org.vrjuggler.tweek.gui" type="Package"/>
+  <node name="org.vrjuggler.tweek.iconviewer" type="Package"/>
+  <node name="org.vrjuggler.tweek.net" type="Package"/>
+  <node name="org.vrjuggler.tweek.net.corba" type="Package"/>
+  <node name="org.vrjuggler.tweek.services" type="Package"/>
+  <node name="org.vrjuggler.tweek.treeviewer" type="Package"/>
 </project>
