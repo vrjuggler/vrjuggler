@@ -67,6 +67,10 @@ DPP_STD_CPP(yes)
 # usable on Windows.
 DPP_WITH_GCC(no)
 
+AC_ARG_WITH(trackdroot,
+            [  --with-trackdroot=<PATH> Trackd API installation root   [default=/usr/local]],
+            [trackdapi_root="$withval"], [trackdapi_root='/usr/local'])
+
 # Build the DTK wrapper using the DTK installation found at the given path.
 # There is default path.
 AC_ARG_WITH(dtk,
@@ -179,6 +183,35 @@ if test "x$GMTL_ROOT" != "x$JUGGLERROOT_ABS/external/GMTL" ; then
 fi
 
 AC_PATH_X
+
+# -----------
+# Trackd API
+# -----------
+DPP_LANG_SAVE
+DPP_LANG_C
+
+gadget_save_CFLAGS="$CFLAGS"
+gadget_save_CPPFLAGS="$CPPFLAGS"
+
+if test "x$trackdapi_root" != "x/usr" ; then
+   TRACKD_API_INCLUDES="-I$trackdapi_root/include"
+fi
+
+CFLAGS="$CFLAGS $TRACKD_API_INCLUDES"
+CPPFLAGS="$CPPFLAGS $TRACKD_API_INCLUDES"
+
+# Test to see if trackdAPI.h is available.  If so, we leave
+# $TRACKD_API_INCLUDES alone so that it may be used again later.  If it is
+# not there, we clear $TRACKD_API_INCLUDES to avoid polluting the compile
+# line.
+AC_CHECK_HEADER([trackdAPI.h], [gadget_have_trackdapi='yes'],
+                [gadget_have_trackdapi='no'
+                 TRACKD_API_INCLUDES=''])
+
+CFLAGS="$gadget_save_CFLAGS"
+CPPFLAGS="$gadget_save_CPPFLAGS"
+
+DPP_LANG_RESTORE
 
 # ----
 # DTK
@@ -314,9 +347,15 @@ gadget_cxxflags="$STDFLAGS"
 # right to left.
 gadget_dep_scripts='jccl-config vpr-config'
 
+# Note that we do not have to add to $gadget_cxxflags because user code
+# would never need to know where the Trackd API headers live.
+if test "x$TRACKD_API_INCLUDES" != "x" ; then
+   INCLUDES="$INCLUDES $TRACKD_API_INCLUDES"
+fi
+
+# The same is true for DTK headers WRT $gadget_cxxflags.
 if test "x$DTK_INCLUDES" != "x" ; then
    INCLUDES="$INCLUDES $DTK_INCLUDES"
-   gadget_cxxflags="$gadget_cxxflags $DTK_INCLUDES"
 fi
 
 if test "x$LOCAL_GMTL" = "xY" ; then
