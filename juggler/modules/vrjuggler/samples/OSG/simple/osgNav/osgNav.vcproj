@@ -84,7 +84,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Juggler.lib Juggler_ogl.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib MSVCPRTD.lib MSVCRTD.lib kernel32.lib user32.lib gdi32.lib uuid.lib wsock32.lib osg.lib osgUtil.lib osgDB.lib glut32.lib opengl32.lib"
+				AdditionalDependencies="vrj.lib vrj_ogl.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib MSVCPRTD.lib MSVCRTD.lib kernel32.lib user32.lib gdi32.lib uuid.lib wsock32.lib osg.lib osgUtil.lib osgDB.lib glut32.lib opengl32.lib"
 				OutputFile=".\Release/osgNav.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(OSGHOME)/lib,$(VJ_BASE_DIR)/lib/opt,$(NSPR_ROOT)/lib"
