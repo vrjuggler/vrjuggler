@@ -201,7 +201,7 @@ endif
 
 # Subdirectories used for recursion through the source tree.
 SUBDIRS		= Math Config Kernel Environment Performance Input	\
-                  SharedMem Sound Sync Threads
+                  SharedMem Sound Sync Threads Utils
 
 # Subdirectories used for recursion through the application source trees when
 # installing.
@@ -708,6 +708,8 @@ ifndef NO_JAVA_GUI
           ${LN_S} ${VJROOT_ABS}/GUI/vjcontrol ./vjcontrol
 	cd ${instlinks}/bin && rm -f ./vjcontrol1.1 &&			\
           ${LN_S} ${VJROOT_ABS}/GUI/vjcontrol1.1 ./vjcontrol1.1
+	cd ${instlinks}/bin && rm -f ./catadf.pl &&			\
+          ${LN_S} ${VJROOT_ABS}/tools/catadf.pl ./catadf.pl
 endif
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
@@ -1098,6 +1100,8 @@ install-tools:
           --prefix="${prefix}/tools" --vars="${topdir}/VARS.pl"		\
           --startdir="${top_srcdir}/tools" --SUBDIRS="${TOOLS_SUBDIRS}"	\
           --mode="${FILE_PERMS}" ${_GROUP_OPT_PL} --srcdir="."
+	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${VJROOT_ABS}/tools/catadf.pl ${bindir}/catadf.pl
 
 # Install the standard data files.
 install-data:
