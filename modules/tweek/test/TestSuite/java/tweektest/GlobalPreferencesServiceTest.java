@@ -39,21 +39,21 @@ public class GlobalPreferencesServiceTest extends TestCase
 
       String bean_viewer = "SomeViewer";
       mPrefs.setBeanViewer(bean_viewer);
-      mPrefs.save(true);
+      mPrefs.save();
 
       mPrefs.load();
       assertTrue(mPrefs.getBeanViewer().equals(bean_viewer));;
 
       int user_level = mPrefs.getUserLevel() + 1;
       mPrefs.setUserLevel(user_level);
-      mPrefs.save(true);
+      mPrefs.save();
 
       mPrefs.load();
       assertTrue(mPrefs.getUserLevel() == user_level);
 
       String chooser_start = "${HOME}/bin";
       mPrefs.setChooserStartDir(chooser_start);
-      mPrefs.save(true);
+      mPrefs.save();
 
       mPrefs.load();
       assertTrue(mPrefs.getChooserStartDir().equals(chooser_start));;
@@ -63,14 +63,14 @@ public class GlobalPreferencesServiceTest extends TestCase
             ? GlobalPreferencesService.EMACS_CHOOSER
             : GlobalPreferencesService.WINDOWS_CHOOSER);
       mPrefs.setChooserOpenStyle(chooser_open);
-      mPrefs.save(true);
+      mPrefs.save();
 
       mPrefs.load();
       assertTrue(mPrefs.getChooserOpenStyle() == chooser_open);
 
       boolean lazyinst = ! mPrefs.getLazyPanelBeanInstantiation();
       mPrefs.setLazyPanelBeanInstantiation(lazyinst);
-      mPrefs.save(true);
+      mPrefs.save();
 
       mPrefs.load();
       assertTrue(mPrefs.getLazyPanelBeanInstantiation() == lazyinst);
