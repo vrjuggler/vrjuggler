@@ -37,7 +37,7 @@
 
 bool IntersenseAPIStandalone::open(const std::string& dsoLocation)
 {
-   if(!mActive)
+   if (!mActive)
    {
       int port_num = convertPort(mPort); 
       mHandle = ISD_OpenTracker((Hwnd) NULL, port_num, true, true,
@@ -54,20 +54,19 @@ int IntersenseAPIStandalone::convertPort(const std::string& port)
 {
    std::string result;
 
-   for(unsigned int i = 0 ; i < port.size() ; i++)
+   for (unsigned int i = 0 ; i < port.size() ; i++)
    {
-      if(isdigit(port[i]))
+      if (isdigit(port[i]))
       {
          result += port[i];
       }
    }
+   
    // If we did not find a valid number, autodetect
-   if("" == result)
+   if ("" == result)
    {
       result = "0";
    }
-   std::cout << "Converted port: " << port << " to port #" << result
-             << std::endl;
    return(atoi(result.c_str()));
 }
 
@@ -88,7 +87,7 @@ bool IntersenseAPIStandalone::updateData()
 int IntersenseAPIStandalone::buttonState(const unsigned int i,
                                          const unsigned int f)
 {
-   if(f < ISD_MAX_BUTTONS && i < mNumStations)
+   if (f < ISD_MAX_BUTTONS && i < ISD_MAX_STATIONS)
    {
       return mData.Station[i].ButtonState[f];
    }
@@ -99,7 +98,7 @@ int IntersenseAPIStandalone::buttonState(const unsigned int i,
 int IntersenseAPIStandalone::analogData(const unsigned int i,
                                         const unsigned int j)
 {
-   if(j < ISD_MAX_CHANNELS && i < mNumStations)
+   if (j < ISD_MAX_CHANNELS && i < ISD_MAX_STATIONS)
    {
       return mData.Station[i].AnalogData[j];
    }

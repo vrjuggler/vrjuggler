@@ -43,9 +43,7 @@ class IntersenseAPIStandalone
 public:
    IntersenseAPIStandalone()
       : mActive(false)
-      , mCurrentStation(0)
       , mHandle(-1)
-      , mNumStations(0)
       , mPort("")
       , mVerbose(false) 
    {;}
@@ -66,11 +64,6 @@ public:
       mPort = port;
    }
 
-   void setNumStations(const unsigned int num)
-   {
-      mNumStations = num;
-   }
-
    void setVerbose(const bool verb)
    {
       mVerbose = verb;
@@ -79,11 +72,6 @@ public:
    const std::string getPort() const
    {
       return mPort;
-   }
-
-   unsigned int getNumStations() const
-   {
-      return mNumStations;
    }
 
    bool getVerbose() const
@@ -348,9 +336,7 @@ private:
    int convertPort(const std::string& port);
 
    bool                 mActive;
-   unsigned int         mCurrentStation; //0-3 for current 9/2000 IS900
    ISD_TRACKER_HANDLE   mHandle;    /**< The handle used to communicate with the Intersense tracker.*/
-   unsigned int         mNumStations;
    std::string          mPort;
    bool                 mVerbose;
 

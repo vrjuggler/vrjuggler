@@ -70,20 +70,6 @@ GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 namespace gadget
 {
 
-// Helper to return the index for theData array given the stationNum we are
-// dealing with and the bufferIndex to get.
-//! ARGS:stationNum - The number of the cube we care about
-//! ARGS:bufferIndex - the value of current, progress, or valid (it is an
-//                     offset in the array)
-// XXX: We are going to say the cubes are zero-based.
-unsigned int IntersenseAPI::getStationIndex(unsigned int stationNum,
-                                            int bufferIndex)
-{
-   unsigned int ret_val = (stationNum*3)+bufferIndex;
-   vprASSERT(ret_val < ((mTracker.getNumStations()+1)*3));
-   return ret_val;
-}
-
 IntersenseAPI::IntersenseAPI()
    : mDone(false)
 {
@@ -102,39 +88,24 @@ bool IntersenseAPI::config(jccl::ConfigElementPtr e)
       << "*** IntersenseAPI::config() ***" << std::endl << vprDEBUG_FLUSH;
 
    // Configure the subclasses
-   if( ! (Input::config(e) && Position::config(e)
-            && Digital::config(e) && Analog::config(e)) )
+   if (!(Input::config(e) && Position::config(e) &&
+         Digital::config(e) && Analog::config(e)))
    {
       return false;
    }
 
    // Set various attributes of the Intersense driver
    mTracker.setPort( e->getProperty<std::string>("port") );
-   mTracker.setNumStations(e->getNum("stations"));
    mTracker.setVerbose(e->getProperty<bool>("verbose"));
 
    // Get the location of the Intersense DSO
    mISenseDriverLocation = e->getProperty<std::string>("driver");
 
    // Create a new array of StationConfigs
-   mStations.resize(mTracker.getNumStations());
-
-   vprASSERT(mTracker.getNumStations() == e->getNum("stations") &&
-             "ERROR: IntersenseAPI is configured incorrectly. " &&
-             "The number of stations specified does not match the number of embedded elements.");
-
-   // Still print out an error, even if the above ASSERT gets compiled out for
-   // an optimied build.
-   if(mTracker.getNumStations() != e->getNum("stations"))
-   {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-         << "ERROR: IntersenseAPI is configured incorrectly. "
-         << "The number of stations specified does not match the number of "
-         << "embedded elements." << std::endl << vprDEBUG_FLUSH;
-   }
+   mStations.resize(e->getNum("stations"));
 
    // Configure each station
-   for( unsigned int i = 0; i < mTracker.getNumStations(); ++i )
+   for( unsigned int i = 0; i < mStations.size(); ++i )
    {
       jccl::ConfigElementPtr station_config =
          e->getProperty<jccl::ConfigElementPtr>("stations", i);
@@ -178,7 +149,7 @@ void IntersenseAPI::controlLoop(void* nullParam)
 bool IntersenseAPI::startSampling()
 {
    // Configure the stations used by the configuration
-   for( unsigned int i = 0; i < mTracker.getNumStations(); ++i )
+   for( unsigned int i = 0; i < mStations.size(); ++i )
    {
       int station_index = mStations[i].stationIndex;
 
@@ -251,7 +222,7 @@ bool IntersenseAPI::sample()
    }
 
    // Create the data buffers to put the new data into.
-   std::vector<gadget::PositionData> cur_pos_samples(mTracker.getNumStations());
+   std::vector<gadget::PositionData> cur_pos_samples(mStations.size());
    std::vector<gadget::DigitalData>  cur_digital_samples;
    std::vector<gadget::AnalogData>   cur_analog_samples;
 
@@ -267,7 +238,7 @@ bool IntersenseAPI::sample()
 
    vpr::Thread::yield();
 
-   for ( unsigned int i = 0 ; i < (mTracker.getNumStations()); ++i )
+   for ( unsigned int i = 0 ; i < mStations.size() ; ++i )
    {
       // Get the station index for the given station.
       int stationIndex = mStations[i].stationIndex;

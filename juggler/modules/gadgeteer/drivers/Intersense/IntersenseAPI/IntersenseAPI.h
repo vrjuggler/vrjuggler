@@ -139,8 +139,6 @@ private:
       bool useAnalog;
    };
 
-   unsigned int getStationIndex(unsigned int stationNum, int bufferIndex);
-
    IntersenseAPIStandalone mTracker;
 
    std::vector<ISStationConfig> mStations;
