@@ -1,4 +1,4 @@
-#!/bin/sh
+#!@PERL@ -w
 
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
@@ -32,61 +32,159 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-%{
-%}
+use 5.004;
 
-gadget_extra_cxxflags="@gadget_extra_cxxflags@"
-gadget_libs="@gadget_libs@"
+use strict 'vars';
+use vars qw($ECHO_CXXFLAGS $ECHO_EXEC_PREFIX $ECHO_EXTRA_LIBS $ECHO_LIBS
+            $ECHO_PREFIX);
+use vars qw($exec_prefix $EXEC_PREFIX_SET $prefix $PREFIX_SET $LIBBITSUF
+            $GADGET_ABI_FLAGS $GADGET_ISA_FLAGS $Win32);
 
-gadget_default_abi="@ABI@"
-gadget_default_isa="@ISA@"
-gadget_n32_flags="@gadget_n32_flags@"
-gadget_64_flags="@gadget_64_flags@"
-LIBBITSUF='@LIBBITSUF@'
+use File::Basename;
+use Getopt::Long;
 
-USE_GCC='@USE_GCC@'
+sub usage($);
+sub make_CXXFLAGS($;$);
+sub make_INCLUDES($);
+sub make_LDFLAGS($;$$);
+sub make_EXTRA_LDFLAGS($;$$);
+sub handleOptArg($$);
+sub stripDuplicateArgs($);
 
-if [ "x$gadget_default_abi" = "xN32" ]; then
-    gadget_abi_flags="$gadget_n32_flags"
-elif [ "x$gadget_default_abi" = "x64" ]; then
-    gadget_abi_flags="$gadget_64_flags"
-else
-    gadget_abi_flags=''
-fi
+# TODO: Do not use @prefix@ if possible.  Make use of @LOCAL_BOOST@.
 
-gadget_isa_flags=''
+usage(1) if $#ARGV == -1;
 
-if [ "x$USE_GCC" != "xyes" ]; then
-   if [ "x$gadget_default_isa" = "xmips3" -o "x$gadget_default_isa" = "xmips4" ]
-   then
-      gadget_isa_flags="-$gadget_default_isa"
-   fi
-fi
+my $gadget_default_abi = qq(@ABI@);
+my $gadget_default_isa = qq(@ISA@);
+my $gadget_n32_flags   = qq(@gadget_n32_flags@);
+my $gadget_64_flags    = qq(@gadget_64_flags@);
+$LIBBITSUF          = qq(@LIBBITSUF@);
 
-prefix=@prefix@
-exec_prefix=@exec_prefix@
-prefix_set='no'
-exec_prefix_set='no'
-print_all='no'
-use_linker='no'
+my $use_gcc = '@USE_GCC@';
 
-usage()
+$GADGET_ABI_FLAGS = '';
+
+if ( $gadget_default_abi =~ /n32/i )
 {
-    if test "x$2" != "x" ; then
-       echo "Unrecognized option '$2'"
-    fi
+   $GADGET_ABI_FLAGS = "$gadget_n32_flags";
+}
+elsif ( $gadget_default_abi =~ /64/ )
+{
+   $GADGET_ABI_FLAGS = "$gadget_64_flags";
+}
 
-    cat <<EOF
-Usage: gadgeteer-config [OPTIONS] [LIBRARIES]
+$GADGET_ISA_FLAGS = '';
+
+# If we are not using GCC and a known ISA is defined, add define the ISA
+# argument for the compiler and linker.
+if ( $use_gcc !~ /^y/i && $gadget_default_isa =~ /^mips[34]/ )
+{
+   $GADGET_ISA_FLAGS = "-$gadget_default_isa";
+}
+
+# Set up variables used to determine what the real prefix is.  This is
+# important when this script has been installed.
+$Win32 = (defined($ENV{'OS'}) && $ENV{'OS'} =~ /^win/i);
+
+my $base_dir = '';
+
+# Get the directory where this script is located.
+if ( defined($ENV{'GADGET_BASE_DIR'}) )
+{
+   $base_dir = "$ENV{'GADGET_BASE_DIR'}";
+}
+else
+{
+   $base_dir = (fileparse("$0"))[1];
+
+   # If we are on Windows and $base_dir contains \'s, set $path_sep to \.
+   # Otherwise, we use / for the path separator.
+   my $path_sep = (($Win32 && $base_dir =~ /\\/) ? "\\" : "/");
+
+   $base_dir =~ s|$path_sep$||o;       # Strip off the trailing slash
+   $base_dir =~ s|${path_sep}bin$||io; # If the path ends in "/bin", strip it
+}
+
+# If we are on Windows, make sure that $base_dir is a full DOS path.
+if ( $Win32  && $base_dir !~ /^[A-Za-z]:/ )
+{
+   chomp($base_dir = `cygpath -w $base_dir`);
+   $base_dir =~ s|\\|/|g;   # We want / as the path separator
+}
+
+# $exec_prefix may refer to $prefix, so it must be set after $prefix is
+# defined.
+$prefix      = "$base_dir";
+$exec_prefix = qq(@exec_prefix@);
+
+$ECHO_PREFIX      = 0;
+$ECHO_EXEC_PREFIX = 0;
+$PREFIX_SET       = 0;
+$EXEC_PREFIX_SET  = 0;
+$ECHO_CXXFLAGS    = 0;
+$ECHO_LIBS        = 0;
+$ECHO_EXTRA_LIBS  = 0;
+
+my $script_help    = 0;
+my $print_all      = 0;
+my $echo_includes  = 0;
+my $echo_subsystem = 0;
+my $echo_version   = 0;
+my $echo_static    = 0;
+my $use_linker     = 0;
+
+my $cxxflags_arg   = '';
+my $libs_arg       = '';
+my $extra_libs_arg = '';
+
+GetOptions('help|?' => \$script_help, 'all' => \$print_all,
+           'version' => \$echo_version, 'subsystem' => \$echo_subsystem,
+           'prefix:s' => \&handleOptArg, 'exec-prefix:s' => \&handleOptArg,
+           'cxxflags:s' => \&handleOptArg, 'includes' => \$echo_includes,
+           'libs:s' => \&handleOptArg, 'extra-libs:s' => \&handleOptArg,
+           'linker' => \$use_linker, 'static' => \$echo_static);
+
+usage(0) if $script_help;
+
+# Construct the (potentially complex) strings that may be printed.
+my $cxxflags      = make_CXXFLAGS("$cxxflags_arg", $print_all);
+my $includes      = make_INCLUDES("$cxxflags");
+my $ldflags       = make_LDFLAGS("$libs_arg", $echo_static, $use_linker);
+my $extra_ldflags = make_EXTRA_LDFLAGS("$extra_libs_arg", $use_linker,
+                                       $print_all);
+
+# Finally, print out the requested information.
+print "$prefix\n" if $ECHO_PREFIX;
+print "$exec_prefix\n" if $ECHO_EXEC_PREFIX;
+print "@VPR_SUBSYSTEM@\n" if $echo_subsystem;
+print "@MAJOR_VERSION@.@MINOR_VERSION@.@MICRO_VERSION@\n" if $echo_version;
+print "$cxxflags\n" if $ECHO_CXXFLAGS;
+print "$includes\n" if $echo_includes;
+print "$ldflags\n" if $ECHO_LIBS;
+print "$extra_ldflags\n" if $ECHO_EXTRA_LIBS;
+
+exit(0);
+
+# =============================================================================
+# Subroutines follow.
+# =============================================================================
+
+sub usage ($)
+{
+    print <<EOF;
+Usage: $0 [OPTIONS] [LIBRARIES]
 Options:
-        [--basedir]             Use \$GADGET_BASE_DIR when printing paths
         [--prefix[=DIR]]        Print the installation prefix or set an
                                 alternate prefix to use when printing paths
-        [--exec-prefix[=DIR]]   Print the executable prefix or set an alternate
-                                executable prefix to use when printing paths
+        [--exec-prefix[=DIR]]   Print the executable prefix or set an
+                                alternate executable prefix to use when
+                                printing paths
         [--version]             Print the installed Gadgeteer's version number
         [--cxxflags [N32|64]]   Print the Gadgeteer-specific flags for the C++
                                 compiler
+        [--includes]            Print out only the header path extension
+                                arguments
         [--libs [N32|64]]       Print the basic Gadgeteer-specific libraries
         [--extra-libs [N32|64]] Print the extra linker options needed for
                                 making an executable
@@ -97,212 +195,224 @@ Options:
         [--subsystem]           Print the VPR OS abstraction layer being used
 EOF
 
-    exit $1
+    exit($_[0]);
 }
 
-if test $# -eq 0; then
-    usage 1 1>&2
-fi
+sub make_CXXFLAGS ($;$)
+{
+   my $cxxflags_arg = shift;
+   my $print_all    = shift || 0;
 
-while test $# -gt 0; do
-    case "$1" in
-        -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
-        *) optarg= ;;
-    esac
+   my $cxxflags = '';
 
-    case $1 in
-        --help)
-            usage 0 1>&2
-            ;;
-        --all)
-            print_all='yes'
-            ;;
-        --basedir)
-            use_base_dir=yes
-            ;;
-        --prefix=*)
-            prefix=$optarg
-            prefix_set='yes'
+   # Default setting from configure.
+   my $gadget_extra_cxxflags = qq(@gadget_extra_cxxflags@);
 
-            if test $exec_prefix_set = no ; then
-                exec_prefix=$optarg
-            fi
-            ;;
-        --prefix)
-            echo_prefix=yes
-            ;;
-        --exec-prefix=*)
-            exec_prefix=$optarg
-            exec_prefix_set=yes
-            ;;
-        --exec-prefix)
-            echo_exec_prefix=yes
-            ;;
-        --version)
-            echo @MAJOR_VERSION@.@MINOR_VERSION@.@MICRO_VERSION@
-            ;;
-        --cxxflags)
-            echo_cxxflags=yes
-            case $2 in
-                --*)
-                    # This is another option flag, so leave it alone.
-                    ;;
-                N32)
-                    gadget_extra_cxxflags="$gadget_extra_cxxflags $gadget_n32_flags $gadget_isa_flags"
-                    shift
-                    ;;
-                64)
-                    gadget_extra_cxxflags="$gadget_extra_cxxflags $gadget_64_flags $gadget_isa_flags"
-                    shift
-                    ;;
-                *)
-                    gadget_extra_cxxflags="$gadget_extra_cxxflags $gadget_abi_flags $gadget_isa_flags"
-                    if [ "x$2" != "x" ] ; then
-                        shift
-                    fi
-                    ;;
-            esac
-            ;;
-        --subsystem)
-            echo @VPR_SUBSYSTEM@
-            ;;
-        --libs)
-            echo_libs=yes
-            case $2 in
-                --*)
-                    # This is another option flag, so leave it alone.
-                    ;;
-                N32)
-                    ldflags="$gadget_n32_flags $gadget_isa_flags"
-                    LIBBITSUF='32'
-                    shift
-                    ;;
-                64)
-                    ldflags="$gadget_64_flags $gadget_isa_flags"
-                    LIBBITSUF='64'
-                    shift
-                    ;;
-                *)
-                    ldflags="$gadget_abi_flags $gadget_isa_flags"
-                    if [ "x$2" != "x" ] ; then
-                        shift
-                    fi
-                    ;;
-            esac
-            ;;
-        --extra-libs)
-            echo_extra_libs=yes
-            case $2 in
-                --*)
-                    # This is another option flag, so leave it alone.
-                    ;;
-                N32)
-                    LIBBITSUF='32'
-                    shift
-                    ;;
-                64)
-                    LIBBITSUF='64'
-                    shift
-                    ;;
-                *)
-                    if [ "x$2" != "x" ] ; then
-                        shift
-                    fi
-                    ;;
-            esac
-            ;;
-        --linker)
-            use_linker='yes'
-            ;;
-        --static)
-            echo_static=yes
-            ;;
-#        gad)
-#            lib_gad_all=yes
-#            ;;
-        *)
-            usage 1 1>&2
-            ;;
-    esac
-    shift
-done
+   if ( $cxxflags_arg =~ /n32/i )
+   {
+      $gadget_extra_cxxflags = "$gadget_extra_cxxflags $gadget_n32_flags $GADGET_ISA_FLAGS";
+   }
+   elsif ( $cxxflags_arg =~ /64/ )
+   {
+      $gadget_extra_cxxflags = "$gadget_extra_cxxflags $gadget_64_flags $GADGET_ISA_FLAGS";
+   }
+   elsif ( "$cxxflags_arg" eq '' )
+   {
+      $gadget_extra_cxxflags = "$gadget_extra_cxxflags $GADGET_ABI_FLAGS $GADGET_ISA_FLAGS";
+   }
 
-# If we are using $GADGET_BASE_DIR, overwrite $prefix and $exec_prefix unless
-# they were set explicitly on the command line.
-if test "$use_base_dir" = "yes" ; then
-    if test "$prefix_set" = "no" ; then
-        prefix="$GADGET_BASE_DIR"
-    fi
+   my $gadget_extra_includes     = '';
+#   my $gadget_extra_include_dirs = qq(@gadget_extra_include_dirs@);
 
-    if test "$exec_prefix_set" = "no" ; then
-        exec_prefix="$GADGET_BASE_DIR"
-    fi
-fi
+#   if ( "$gadget_extra_include_dirs" ne "" )
+#   {
+#      my $dir;
+#      foreach $dir ( split(/\s+/, "$gadget_extra_include_dirs") )
+#      {
+#         $gadget_extra_includes .= " -I@includedir@/$dir";
+#      }
+#   }
 
-if test "$echo_prefix" = "yes"; then
-    echo $prefix
-fi
+   my $gadget_cxxflags_addtl = ($print_all ? qq(@gadget_cxxflags_all@) : '');
 
-if test "$echo_exec_prefix" = "yes"; then
-    echo $exec_prefix
-fi
+   $cxxflags =
+      qq(@gadget_cxxflags@ $gadget_cxxflags_addtl $gadget_extra_cxxflags ) .
+      qq(-I@includedir@ $gadget_extra_includes);
 
-#if test "x$lib_gad_all" = "x" ; then
-#    lib_gad_all=yes
-#fi
+   # Strip out extra whitespace.
+   $cxxflags =~ s/\s{2,}/ /g;
 
-if test "$echo_cxxflags" = "yes"; then
-    if test "x$print_all" = "xyes" ; then
-        gadget_cxxflags_addtl="@gadget_cxxflags_all@"
-    else
-        gadget_cxxflags_addtl=''
-    fi
+   return stripDuplicateArgs("$cxxflags");
+}
 
-    echo @gadget_cxxflags@ $gadget_cxxflags_addtl $gadget_extra_cxxflags -I$prefix/include $gadget_extra_includes
-fi
+sub make_INCLUDES ($)
+{
+   my(@compiler_flags) = split(/\s+/, "$_[0]");
+   return join(" ", grep(/^-I/, @compiler_flags));
+}
 
-if test "$echo_static" = "yes" ; then
-    static_begin='@static_begin@'
-    static_end='@static_end@'
-fi
+sub make_LDFLAGS ($;$$)
+{
+   my $libs_arg     = shift;
+   my $echo_static  = shift || 0;  # Echo static linking flags
+   my $use_linker   = shift || 0;  # Use flags for direct use of the linker
 
-if test "$echo_libs" = "yes"; then
-    if test "$use_base_dir" = "yes"; then
-        ldflags="$ldflags -L$GADGET_BASE_DIR/lib$LIBBITSUF"
-    else
-        if test "$use_linker" = "yes" ; then
-            ldflags="$ldflags @gadget_ldflags_linker@"
-        else
-            ldflags="$ldflags @gadget_ldflags_compiler@"
-        fi
-    fi
+   my $static_begin = '';
+   my $static_end   = '';
 
-#    if test "x$lib_gad_all" = "xyes" ; then
-#        gadget_libs="@gadget_libs@"
-#    else
-#        if test "x$lib_gad" = "xyes" ; then
-#            gadget_libs="$gad_lib"
-#        fi
-#    fi
+   if ( $echo_static )
+   {
+      $static_begin = qq(@static_begin@);
+      $static_end   = qq(@static_end@);
+   }
 
-    echo $ldflags $static_begin $gadget_libs $static_end
-fi      
+   my $ldflags = '';
 
-if test "x$echo_extra_libs" = "xyes"; then
-    if test "x$print_all" = "xyes" ; then
-        gadget_extra_libs_addtl="@gadget_extra_libs_juggler@"
-    else
-        gadget_extra_libs_addtl=''
-    fi
+   if ( $libs_arg =~ /n32/i )
+   {
+      $ldflags   = "$gadget_n32_flags $GADGET_ISA_FLAGS";
+      $LIBBITSUF = '32';
+   }
+   elsif ( $libs_arg =~ /64/ )
+   {
+      $ldflags   = "$gadget_64_flags $GADGET_ISA_FLAGS";
+      $LIBBITSUF = '64';
+   }
+   elsif ( "$libs_arg" eq '' )
+   {
+      $ldflags = "$GADGET_ABI_FLAGS $GADGET_ISA_FLAGS";
+   }
 
-    if test "$use_linker" = "yes" ; then
-        gadget_extra_ldflags="$ldflags @gadget_extra_ldflags_linker@"
-    else
-        gadget_extra_ldflags="$ldflags @gadget_extra_ldflags_compiler@"
-    fi
+   $ldflags .= ($use_linker ? qq( @gadget_ldflags_linker@)
+                            : qq( @gadget_ldflags_compiler@));
 
-    gadget_extra_libs="@gadget_extra_libs@"
-    echo $gadget_extra_ldflags $gadget_extra_libs $gadget_extra_libs_addtl
-fi
+   my $full_ldflags = qq($ldflags $static_begin @gadget_libs@ $static_end);
+   $full_ldflags    =~ s/\s{2,}/ /g;
 
-exit 0
+   return "$full_ldflags";
+}
+
+sub make_EXTRA_LDFLAGS ($;$$)
+{
+   my $extra_libs_arg = shift;
+   my $use_linker     = shift || 0;
+   my $print_all      = shift || 0;
+
+   if ( $extra_libs_arg =~ /n32/i )
+   {
+      $LIBBITSUF = '32';
+   }
+   elsif ( $extra_libs_arg =~ /64/ )
+   {
+      $LIBBITSUF = '64';
+   }
+
+   my $extra_ldflags = ($use_linker ? qq(@gadget_extra_ldflags_linker@)
+                                    : qq(@gadget_extra_ldflags_compiler@));
+
+   # Add the full set of extra flags if the user specified --all on the
+   # command line.
+   my $gadget_extra_libs_addtl = ($print_all ? qq(@gadget_extra_libs_juggler@)
+                                             : '');
+
+   my $full_extra_ldflags = qq($extra_ldflags @gadget_extra_libs@ ) .
+                            "$gadget_extra_libs_addtl";
+   $full_extra_ldflags    =~ s/\s{2,}/ /g;
+
+   return "$full_extra_ldflags";
+}
+
+# Subroutine for handling command-line parameters that have an optional
+# argument.
+sub handleOptArg ($$)
+{
+   my $name  = shift;
+   my $value = shift || '';
+
+   SWITCH:
+   {
+      if ( "$name" eq "prefix" )
+      {
+         # If $value is defined, we set $prefix to its value.  The value of
+         # $prefix will not be printed in this case.
+         if ( $value )
+         {
+            $prefix      = "$value";
+            $ECHO_PREFIX = 0;
+            $PREFIX_SET  = 1;
+         }
+         # If $value is undefined, that means that --prefix was specified, but
+         # no value was given.  In that case, we just want to print the
+         # prefix.
+         else
+         {
+            $ECHO_PREFIX = 1;
+         }
+
+         last SWITCH;
+      }
+
+      if ( "$name" eq "exec-prefix" )
+      {
+         # If $value is defined, we set $exec_prefix to its value.  The value
+         # of $exec_prefix will not be printed in this case.
+         if ( $value )
+         {
+            $exec_prefix      = "$value";
+            $EXEC_PREFIX_SET  = 1;
+            $ECHO_EXEC_PREFIX = 0;
+         }
+         # If $value is undefined, that means that --exec-prefix was specified,
+         # but no value was given.  In that case, we just want to print the
+         # exec prefix.
+         else
+         {
+            $ECHO_EXEC_PREFIX = 1;
+         }
+
+         last SWITCH;
+      }
+
+      if ( "$name" eq "cxxflags" )
+      {
+         $ECHO_CXXFLAGS = 1;
+         $cxxflags_arg  = $value;
+         last SWITCH;
+      }
+
+      if ( "$name" eq "libs" )
+      {
+         $ECHO_LIBS = 1;
+         $libs_arg  = $value;
+         last SWITCH;
+      }
+
+      if ( "$name" eq "extra-libs" )
+      {
+         $ECHO_EXTRA_LIBS = 1;
+         $extra_libs_arg  = $value;
+         last SWITCH;
+      }
+   }
+}
+
+# This is a fairly brute-force method for removing duplicated arguments from
+# the given string.  It should not be used for argument lists such as those
+# passed to the linker where functionality can be turned on and off (for
+# example, the repeated use of -Wl,-Bstatic ... -Wl,-Bdynamic for selective
+# static linking).
+sub stripDuplicateArgs ($)
+{
+   my @arg_list   = split(/\s+/, "$_[0]");
+   my %known_args = ();
+   my @new_args   = ();
+
+   foreach ( @arg_list )
+   {
+      next if exists($known_args{"$_"});  # Skip previously seen arguments
+      $known_args{"$_"} = 1;              # Register this argument
+      push(@new_args, "$_");              # Add the argument to the new list
+   }
+
+   return join(" ", @new_args);
+}
