@@ -35,6 +35,7 @@
 
 #include <gadget/gadgetConfig.h>
 #include <vpr/vprTypes.h>
+#include <vpr/Util/GUID.h>
 #include <vpr/Util/ReturnStatus.h>
 
 #include <vpr/IO/BufferObjectReader.h>
