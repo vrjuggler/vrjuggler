@@ -25,6 +25,7 @@ typedef OSG::ExternalThread OSGET;
 
 void OpenSGNav::draw()
 {
+   /*
     std::cout << "OpenSGNav::draw called\n";
     vrj::GlDrawManager* drawMan = dynamic_cast<vrj::GlDrawManager*> ( this->getDrawManager() );
     vprASSERT(drawMan != NULL);
@@ -34,6 +35,7 @@ void OpenSGNav::draw()
     vrj::Projection* project = userData->getProjection();
     float * vj_proj_view_mat = project->mViewMat.getFloatPtr();
     OSGMat.setValue(vj_proj_view_mat);
+    */
 
 /*	//Get the frustrum
 	vjFrustum frustum = project->mFrustum;
@@ -49,32 +51,60 @@ void OpenSGNav::draw()
 	
     //Set the look at
     the_cam->attachTransform(osg::Camera::MODEL_TO_EYE, &osgMat);*/
+    /*
     OSGMat.setValue(1.0f,0.0f,0.0f,0.0f,
                     0.0f,1.0f,0.0f,0.0f,
                     0.0f,0.0f,1.0f,0.0f,
                     0.0f,0.0f,0.0f,1.0f);
+                    */
 
+    /*
     _cart->getSFMatrix()->setValue(OSGMat);
     updateHighlight();
+    */
     //vjOSGApp::draw();
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
-    glTranslatef(-1.5f,0.0f,6.0f);
-    glBegin(GL_TRIANGLES);
-    glVertex3f(0.0f,1.0f,0.0f);
-    glVertex3f(-1.0f,-1.0f,0.0f);
-    glVertex3f(1.0f,-1.0f,0.0f);
-    glEnd();
+    std::cout << "OpenSGNav::draw called\n";
+
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+     // Set material color
+   float onyx_red = 59.0f/255.0f;
+   float onyx_blue = 57.0f/255.0f;
+   GLfloat mat_ambient[] = { onyx_red, 0.0, onyx_blue, 1.0};
+   GLfloat mat_diffuse[] = { onyx_red, 0.0, onyx_blue, 1.0};
+   GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0};
+   GLfloat mat_shininess[] = { 50.0};
+
+   glMaterialfv( GL_FRONT, GL_AMBIENT, mat_ambient );
+   glMaterialfv( GL_FRONT,  GL_DIFFUSE, mat_diffuse );
+   glMaterialfv( GL_FRONT, GL_SPECULAR, mat_specular );
+   glMaterialfv( GL_FRONT,  GL_SHININESS, mat_shininess );
+   //glColor4f(1.0, 1.0, 1.0, 1.0);
+
+    //glLoadIdentity();
+   glPushMatrix();
+      glTranslatef(-1.5f,0.0f,6.0f);
+       glBegin(GL_TRIANGLES);
+         glVertex3f(0.0f,1.0f,0.0f);
+         glVertex3f(-1.0f,-1.0f,0.0f);
+         glVertex3f(1.0f,-1.0f,0.0f);
+       glEnd();
+   glPopMatrix();
 }
 
+/*
 void OpenSGNav::preFrame()
 {
     //std::cout << "OpenSGNav::preFrame called\n";
     //move the model around
 }
+*/
 
 void OpenSGNav::bufferPreDraw()
 {
+   glClearColor(0.0, 0.0, 0.0, 0.0);
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+   /*
     if (!thread2_initialized)
     {
        OSG::ExternalThread *new_thread = OSG::ExternalThread::get("OSGExternalThread2");
@@ -82,19 +112,18 @@ void OpenSGNav::bufferPreDraw()
        thread2_initialized=true;
     }
     std::cout << "OpenSGNav::preFrame called\n";
+    */
 }
 
 void OpenSGNav::initGLState()
 {
     std::cout << "OpenSGNav::initGLState called\n";
+    /*
     glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
     glPixelStorei( GL_PACK_ALIGNMENT, 1 );
+    */
 
-    glDepthFunc( GL_LEQUAL );
-    glEnable( GL_DEPTH_TEST );
-
-
-/*   GLfloat light0_ambient[] = { .2,  .2,  .2,  1.0};
+    GLfloat light0_ambient[] = { .2,  .2,  .2,  1.0};
    GLfloat light0_diffuse[] = { 1.0,  1.0,  1.0,  1.0};
    GLfloat light0_specular[] = { 1.0,  1.0,  1.0,  1.0};
    GLfloat light0_position[] = {6.0, 6,0, 6.0, 1.0};
@@ -108,15 +137,17 @@ void OpenSGNav::initGLState()
    glEnable(GL_NORMALIZE);
    glEnable(GL_LIGHTING);
    glEnable(GL_LIGHT0);
-   glDisable(GL_COLOR_MATERIAL);
+   glEnable(GL_COLOR_MATERIAL);
    glShadeModel(GL_SMOOTH);
 
-   glMatrixMode(GL_MODELVIEW);    */
+   glMatrixMode(GL_MODELVIEW);
+
 }
 
 void OpenSGNav::initRenderer()
 {
-    if (!thread1_initialized)
+   /*
+   if (!thread1_initialized)
     {
         OSG::ExternalThread *new_thread=OSG::ExternalThread::get("OSGExternalThread1");
         new_thread->initialize(OSG_MAIN_ASPECT_ID);
@@ -130,10 +161,12 @@ void OpenSGNav::initRenderer()
 
 //    _win = gwin;
     _win = OSG::PassiveWindow::create();
+    */
 }
 
 void OpenSGNav::myInit(void)
 {
+    /*
     std::cout << "OpenSGNav::myInit called\n";
     if (1)
     {
@@ -215,10 +248,12 @@ void OpenSGNav::myInit(void)
     _highlight = _root;
     highlightChanged();
     std::cout << "OpenSGNav::myInit finished\n";
+    */
 }
 
 void OpenSGNav::highlightChanged(void)
 {
+    /*
     std::cout << "OpenSGNav::highlightChanged called\n";
     // init as needed
     if(_highlightMaterial == OSG::NullFC)
@@ -316,10 +351,12 @@ void OpenSGNav::highlightChanged(void)
     }
     // update the highlight geometry
     updateHighlight();
+    */
 }
 
 void OpenSGNav::updateHighlight(void)
 {
+    /*
     std::cout << "OpenSGNav::updateHighlight called\n";
     if(_highlight == OSG::NullFC)
         return;
@@ -344,4 +381,5 @@ void OpenSGNav::updateHighlight(void)
 
     OSG::beginEditCP(_highlightNode->getCore(), OSG::Geometry::PositionsFieldMask);
     OSG::endEditCP  (_highlightNode->getCore(), OSG::Geometry::PositionsFieldMask);
+    */
 }
