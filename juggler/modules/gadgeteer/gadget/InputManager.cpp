@@ -32,6 +32,7 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <iomanip>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/exception.hpp>
 #include <boost/filesystem/operations.hpp>
