@@ -114,6 +114,10 @@ public:      // Global "get" interface
    //! RETURNS: NULL - Not found
    vjUser*  getUser(string userName);
 
+   //: Get a list of the users back
+   vector<vjUser*> getUsers()
+   { return mUsers; }
+
 private:
    vjSystemData    data;   //: Global system data
 
