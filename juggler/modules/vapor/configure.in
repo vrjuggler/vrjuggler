@@ -240,7 +240,7 @@ fi
 # If no alternate C++ compiler was specified, check to see if it is
 # necessary to force the use of a specific compiler on a given platform.
 if test "x${_alt_cxx}" = "xnone" ; then
-    if test "x$USE_GCC" = "xyes" ; then
+    if test "x$USE_GCC" != "xyes" ; then
         CXX_HP='aCC'
         CXX_IRIX='CC'
         CXX_PIC_IRIX='-KPIC'
