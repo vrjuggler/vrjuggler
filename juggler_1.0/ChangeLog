@@ -1,6 +1,10 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
 Sep-15-2000 patrick   Fixed positioning of keyboard input windows on Win32
+Sep-03-2000 allenb    Fixed a couple of race conditions on start up.
+Sep-03-2000 allenb    Fixed bug that prevented X-Win keyboards from
+                      reconfiguring
+Sep-02-2000 allenb    Fixed several lingering seg fault bugs
 Aug-30-2000 allenb    Added ability to specify FOV and aspect ratio in sim
                       windows.
 Aug-29-2000 allenb    Fixed bug with Performer calling app traversals
