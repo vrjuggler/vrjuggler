@@ -354,7 +354,11 @@ public class ChunkDescDBEditor
          ChunkDesc desc = (ChunkDesc)itr.next();
          addDesc(desc);
       }
-   }
+
+      // Make sure the root node is expanded
+      TreePath path = new TreePath(treeModel.getPathToRoot((TreeNode)treeModel.getRoot()));
+      descPropTree.expandPath(path);
+  }
 
    /**
     * Adds the given chunk description into the tree in all of its categories.
@@ -556,7 +560,7 @@ public class ChunkDescDBEditor
          }
       }
 
-      parent.insert(child, insert_idx);
+      treeModel.insertNodeInto(child, parent, insert_idx);
    }
 
    /**
@@ -625,7 +629,17 @@ public class ChunkDescDBEditor
    {
       for (Iterator itr = getNodesFor(desc).iterator(); itr.hasNext(); )
       {
-         treeModel.removeNodeFromParent((MutableTreeNode)itr.next());
+         MutableTreeNode desc_node = (MutableTreeNode)itr.next();
+         MutableTreeNode parent = (MutableTreeNode)desc_node.getParent();
+         treeModel.removeNodeFromParent(desc_node);
+
+         // Walk our way up the tree cleaning up empty parents
+         while ((parent.getParent() != null) && (parent.getChildCount() == 0))
+         {
+            MutableTreeNode next_parent = (MutableTreeNode)parent.getParent();
+            treeModel.removeNodeFromParent(parent);
+            parent = next_parent;
+         }
       }
    }
 
