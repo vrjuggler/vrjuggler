@@ -98,6 +98,8 @@ private:
    gadget::DigitalInterface  mResetButton;
    gadget::DigitalInterface  mDumpStateButton;
 
+   gadget::DigitalInterface     mLoggerPlayButton;   // Playback log file when pressed
+
    gmtl::Point3f mSphereCenter;
    float         mSphereRadius;
    gmtl::Spheref mSphere;
