@@ -27,6 +27,9 @@
 #ifdef VJ_OS_SGI
 #include <Kernel/vjSGISystemFactory.h>
 #endif
+#ifdef VJ_OS_Linux
+#include <Kernel/vjSGISystemFactory.h>
+#endif
 #ifdef WIN32
 #include <Kernel/vjWin32SystemFactory.h>
 #endif
