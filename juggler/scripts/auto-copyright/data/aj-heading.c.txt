@@ -1,0 +1,12 @@
+ *
+ * Audio Juggler
+ *
+ * Original Authors:
+ *   Kevin Meinert, Carolina Cruz-Neira
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
