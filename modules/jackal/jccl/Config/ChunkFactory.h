@@ -118,8 +118,10 @@ private:
 
 vprSingletonHeader(ChunkFactory);
 
-};
 
-};
+}; // class ChunkFactory
+
+
+}; // namespace jccl
 
 #endif
