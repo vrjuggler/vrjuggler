@@ -244,7 +244,7 @@ public:
     */
    virtual void changeAPI( const std::string& apiName )
    {
-      snx::SoundImplementation& oldImpl = this->impl();
+      snx::ISoundImplementation& oldImpl = this->impl();
       assert( &oldImpl != NULL && "this->impl() should ensure that oldImpl is non-NULL" );
       
       std::cout<<"[snx] NOTIFY: Changing API from "<<oldImpl.name();
@@ -254,9 +254,12 @@ public:
 
       std::cout<<" to "<<mImplementation->name()<<".\n"<<std::flush;
       
-      
       // copy sound state from old to current (doesn't do binding yet)
-      mImplementation->copy( oldImpl );
+      snx::SoundImplementation* si = dynamic_cast<snx::SoundImplementation*>( mImplementation );
+      assert( NULL != si && "implementation is not of type SoundImplementation, cast fails" );
+      snx::SoundImplementation& old_si = dynamic_cast<snx::SoundImplementation&>( oldImpl );
+      assert( NULL != &old_si && "implementation is not of type SoundImplementation, cast fails" );
+      si->copy( old_si );
 
          // unload all sound data
          oldImpl.unbindAll();
@@ -314,7 +317,7 @@ public:
    }
    
 protected:
-   snx::SoundImplementation& impl()
+   snx::ISoundImplementation& impl()
    {
       if (mImplementation == NULL)
       {
@@ -331,7 +334,7 @@ private:
    /** @link aggregation 
     * @clientCardinality 1
     * @supplierCardinality 1*/
-   snx::SoundImplementation* mImplementation;
+   snx::ISoundImplementation* mImplementation;
         
    /** sonix API includes objects of this type
     * @link dependency */
