@@ -125,7 +125,6 @@ public class BeanRegistry
          if ( testClass.isAssignableFrom( bean.getClass() ) ) {
             // We have a match! Remember the bean and move on
             matches.add( bean );
-            break;
          }
       }
 
@@ -197,7 +196,7 @@ public class BeanRegistry
     * @link
     * @shapeType PatternLink
     * @pattern Singleton
-    * @supplierRole Singleton factory 
+    * @supplierRole Singleton factory
     */
    /*# private BeanRegistry _beanRegistry; */
    private static BeanRegistry instance = null;
