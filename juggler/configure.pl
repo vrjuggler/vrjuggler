@@ -261,14 +261,6 @@ sub printHelp ()
       }
    }
 
-   print "Modules that may be built:\n";
-   foreach ( keys(%MODULES) )
-   {
-      print "\t$_\n";
-   }
-
-   print "\n";
-
    for ( $i = 0; $i < $LAST_ARG_GROUP; $i++ )
    {
       SWITCH:
@@ -309,6 +301,16 @@ sub printHelp ()
          print "  ${$help_output[$i]}{$_}\n";
       }
    }
+
+   print "\n";
+
+   print "Modules that may be built:\n";
+   foreach ( keys(%MODULES) )
+   {
+      print "\t$_\n";
+   }
+
+   print "\nDefault module is $DEFAULT_MODULE\n" if $DEFAULT_MODULE;
 
    return 1;
 }
