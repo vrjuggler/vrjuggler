@@ -28,9 +28,15 @@
 
 # Shell script for running Tweek under jdk 1.2 using the 'java' command.
 
-if test "x$TWEEK_BASE_DIR" = "x" ; then
-    echo "FATAL ERROR: TWEEK_BASE_DIR environment variable not set!"
+if test "x$VJ_BASE_DIR" = "x" ; then
+    echo "FATAL ERROR: VJ_BASE_DIR environment variable not set!"
     exit 1
+fi
+
+if test "x$TWEEK_BASE_DIR" = "x" ; then
+    echo "WARNING: Setting TWEEK_BASE_DIR to $VJ_BASE_DIR"
+    TWEEK_BASE_DIR="$VJ_BASE_DIR"
+    export TWEEK_BASE_DIR
 fi
 
 EXTRA_JDK_ARGS="-DVJ_BASE_DIR=${VJ_BASE_DIR}"
