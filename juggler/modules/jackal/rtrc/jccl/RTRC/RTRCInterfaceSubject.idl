@@ -8,7 +8,7 @@ module RTRCInterface
       void add( in string chunkDBString );
       void remove( in string chunkDBString );
       void swap( in string addChunkDBString, in string removeChunkDBString );
-      const string getChunks();
+      string getChunks();
 
    };
 
