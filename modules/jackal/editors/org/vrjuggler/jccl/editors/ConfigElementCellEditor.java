@@ -279,7 +279,8 @@ public class ConfigElementCellEditor
          {
             // Create a new dialog to contain the custom editor
             int result = JOptionPane.showConfirmDialog(
-                                    (Component)evt.getSource(),
+                                    SwingUtilities.getAncestorOfClass(java.awt.Frame.class,
+                                                                      (Component)evt.getSource()),
                                     mEditor.getCustomEditor(),
                                     "Custom Editor",
                                     JOptionPane.OK_CANCEL_OPTION,
