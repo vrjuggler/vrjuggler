@@ -111,6 +111,19 @@ public class ConfigBrokerProxy
    }
 
    /**
+    * Tests if the given resource is currently open and being managed by this
+    * broker.
+    *
+    * @param name    the name of the resource to check
+    *
+    * @return  true if the resource is open, false otherwise
+    */
+   public boolean isOpen(String name)
+   {
+      return broker.isOpen(name);
+   }
+
+   /**
     * Adds the given config chunk to the current context. If the context
     * contains more than one resource, a dialog will prompt the user for which
     * resource they wish to add the chunk to.
