@@ -1,9 +1,14 @@
-/////////////////////////////////////////////////////////////////////////
-// aFlock.h
+//===============================================================
+// aFlock
 //
-// Flock of birds tracking class
+// Purpose:
+//      Ascention Flock of birds tracking class
 //
-////////////////////////////////////////////////////////////////////////
+// Author:
+//	Kevin Meinert
+//
+// Last Modified: 4-22-99
+//===============================================================
 #ifndef _ASCENSION_FLOCKOFBIRD_H_
 #define _ASCENSION_FLOCKOFBIRD_H_
 
@@ -34,20 +39,19 @@ class aFlock
 {
 public:
 	//: Configure Constructor
-	// Give:                                                 <BR>
-	//   port - such as "/dev/ttyd3"                         <BR>
-	//   baud - such as 38400, 19200, 9600, 14400, etc...    <BR>
-	//   sync - sync type.                                   <BR>
-	//   block - blocking                                    <BR>
-	//   numBrds - number of birds in flock,                 <BR>
-	//   transmit - transmitter unit number,                 <BR>
-	//   hemi - hemisphere to track from,                    <BR>
-	//   filt - filtering type,                              <BR>
-	//   report -                                            <BR>
-	//   calfile - a calibration file, if "", then use none. <BR>
+	//! ARGS: port - such as "/dev/ttyd3"                         <BR>
+	//! ARGS: baud - such as 38400, 19200, 9600, 14400, etc...    <BR>
+	//! ARGS: sync - sync type.                                   <BR>
+	//! ARGS: block - blocking                                    <BR>
+	//! ARGS: numBrds - number of birds in flock,                 <BR>
+	//! ARGS: transmit - transmitter unit number,                 <BR>
+	//! ARGS: hemi - hemisphere to track from,                    <BR>
+	//! ARGS: filt - filtering type,                              <BR>
+	//! ARGS: report - flock report rate.                         <BR>
+	//! ARGS: calfile - a calibration file, if "", then use none. <BR>
 	//                                                       <BR>
-	// Result: configures internal data members, 
-	//         doesn't actually talk to the FOB yet.
+	//! POST: configures internal data members,
+	//+         doesn't actually talk to the FOB yet.
 	aFlock(const char* const port = "/dev/ttyd3", 
 		const int& baud = 38400, 
 		const int& sync = 1, 

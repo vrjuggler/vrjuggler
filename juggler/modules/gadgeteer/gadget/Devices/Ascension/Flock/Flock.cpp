@@ -1,3 +1,14 @@
+//===============================================================
+// vjFlock (a Wrapper for aFlock)
+//
+// Purpose:
+//      VR Juggler Ascention Flock of birds tracking class
+//
+// Author:
+//	Kevin Meinert
+//
+// Date: 4-22-99
+//===============================================================
 #include <vjConfig.h>
 #include <sys/file.h>
 #include <sys/ioctl.h>
