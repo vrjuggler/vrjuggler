@@ -215,7 +215,7 @@ endif
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(JCCLROOT_ABS)/ChangeLog $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(JCCLROOT_ABS)/COPYING.txt $(projdatadir)
+          $(EXTRA_INSTALL_ARGS) $(JUGGLERROOT_ABS)/COPYING.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(JCCLROOT_ABS)/README.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
