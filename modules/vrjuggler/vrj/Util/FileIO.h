@@ -49,11 +49,7 @@ public:
    // or: ./rgbfiles
    // or: ${HOME}/VR/juggler
    // NOTE: you can use ${VARIABLE} in the path, to use env variables...
-   static void addFilePath( const std::string& filepath = "." )
-   {
-      std::string demangled = replaceEnvVars( filepath );
-      mPaths.push_back( demangled );
-   }
+   static void addFilePath( const std::string& filepath = "." );
 
    /** filename handling routines **/
 

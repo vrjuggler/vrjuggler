@@ -85,6 +85,15 @@ std::ostream& vjProjection::outStream(std::ostream& out)
    return out;
 }
 
+void vjProjection::setNearFar(float near_val, float far_val)
+{
+   vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << clrOutNORM(clrCYAN,"vjProjection::setNearFar:")
+                           << "near: " << near_val << " far:" << far_val
+                           << std::endl << vjDEBUG_FLUSH;
+   mNearDist = near_val;
+   mFarDist = far_val;
+}
+
 VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, vjProjection& proj)
 {
    return proj.outStream(out);

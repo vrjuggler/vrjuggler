@@ -74,7 +74,25 @@ vjConfigChunk::~vjConfigChunk () {
         */
 }
 
+bool vjConfigChunk::hasSeparator (const std::string &path) {
+    return (path.find(embedded_separator) != path.npos);
+}
 
+std::string vjConfigChunk::getRemainder (const std::string &path) {
+    std::string::size_type i = path.find (embedded_separator);
+    if (i == path.npos)
+        return path;
+    else 
+        return path.substr (i + embedded_separator.length());
+}
+
+std::string vjConfigChunk::getFirstNameComponent (const std::string& path) {
+    std::string::size_type i = path.find (embedded_separator);
+    if (i == path.npos)
+        return path;
+    else 
+        return path.substr (0, i);
+}
 
 #ifdef VJ_DEBUG
 void vjConfigChunk::assertValid () const {

@@ -35,6 +35,12 @@
 
 std::vector<std::string> vjFileIO::mPaths;
 
+void vjFileIO::addFilePath( const std::string& filepath )
+{
+   std::string demangled = replaceEnvVars( filepath );
+   mPaths.push_back( demangled );
+}
+
 //: true - 
 bool vjFileIO::fileExists( const char* const name )
 {

@@ -176,6 +176,10 @@ void vjGlWindow::setCameraProjection(vjCameraProjection* camProj)
 #endif
 }
 
+int vjGlWindow::getNextWindowId()
+{
+   return mCurMaxWinId++;
+}
 
 std::ostream& operator<<(std::ostream& out, vjGlWindow* win)
 {
