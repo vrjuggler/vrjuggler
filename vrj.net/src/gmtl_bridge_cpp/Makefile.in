@@ -85,6 +85,7 @@ SRCS=		Gmtl.cpp			\
 		gmtl_Spheref.cpp		\
 		gmtl_Trid.cpp			\
 		gmtl_Trif.cpp			\
+		gmtl_Trii.cpp			\
 		gmtl_Vec3d.cpp			\
 		gmtl_Vec3f.cpp			\
 		gmtl_Vec3i.cpp			\
