@@ -33,6 +33,8 @@
 #include <gadget/gadgetConfig.h>
 
 #include <boost/filesystem/exception.hpp>
+#include <boost/filesystem/operations.hpp>
+
 #include <vpr/DynLoad/LibraryFinder.h>
 #include <vpr/Util/FileUtils.h>
 
@@ -133,6 +135,8 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                                        std::string("Handling InputManager chunk:\n"),
                                        std::string("-- end state -- \n"));
 
+      // --- Load device driver dsos -- //
+      // - Load individual drivers
       const std::string driver_prop_name("driver");
       int driver_count = chunk->getNum(driver_prop_name);
       std::string driver_dso;
@@ -141,17 +145,21 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       {
          driver_dso =
             vpr::replaceEnvVars(chunk->getProperty<std::string>(driver_prop_name, i));
-         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-            << "Loading driver DSO '" << driver_dso << "'\n" << vprDEBUG_FLUSH;
+         if(!driver_dso.empty())
+         {
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+               << "InputMgr::config: Loading driver DSO '" << driver_dso << "'\n" << vprDEBUG_FLUSH;
 
-         // If any part of the driver loading fails, the object driver_library
-         // will go out of scope at the end of this iteration, thereby freeing
-         // the allocated memory.
-         vpr::LibraryPtr driver_library =
-            vpr::LibraryPtr(new vpr::Library(driver_dso));
-         this->loadDriverDSO(driver_library);
+            // If any part of the driver loading fails, the object driver_library
+            // will go out of scope at the end of this iteration, thereby freeing
+            // the allocated memory.
+            vpr::LibraryPtr driver_library =
+               vpr::LibraryPtr(new vpr::Library(driver_dso));
+            this->loadDriverDSO(driver_library);
+         }
       }
 
+      // - Load driver directory
       const std::string dir_prop_name("driverDirectory");
       const std::string dso_ext_name("dsoExtName");
       int dir_count = chunk->getNum(dir_prop_name);
@@ -161,24 +169,34 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
       for ( int i = 0; i < dir_count; ++i )
       {
-         driver_dir =
-            vpr::replaceEnvVars(chunk->getProperty<std::string>(dir_prop_name, i));
-         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-            << "Searching for driver DSOs in '" << driver_dir << "'\n"
-            << vprDEBUG_FLUSH;
+         driver_dir = vpr::replaceEnvVars(chunk->getProperty<std::string>(dir_prop_name, i));
 
          // The vpr::LibraryFinder will throw an exception if driver_dir is
          // (somehow) an invalid path.
          try
          {
-            vpr::LibraryFinder finder(driver_dir, driver_ext);
-            vpr::LibraryFinder::LibraryList libs = finder.getLibraries();
-
-            for ( vpr::LibraryFinder::LibraryList::iterator lib = libs.begin();
-                  lib != libs.end();
-                  ++lib )
+            if (boost::filesystem::exists(driver_dir))
             {
-               this->loadDriverDSO(*lib);
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                  << "Searching for driver DSOs in '" << driver_dir << "'\n"
+                  << vprDEBUG_FLUSH;
+
+               vpr::LibraryFinder finder(driver_dir, driver_ext);
+               vpr::LibraryFinder::LibraryList libs = finder.getLibraries();
+
+               for ( vpr::LibraryFinder::LibraryList::iterator lib = libs.begin();
+                     lib != libs.end();
+                     ++lib )
+               {
+                  this->loadDriverDSO(*lib);
+               }
+            }
+            else
+            {
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                  << clrOutBOLD(clrYELLOW, "WARNING:")
+                  << " Invalid directory for driver dso's: " << driver_dir
+                  << std::endl << vprDEBUG_FLUSH;
             }
          }
          catch (boost::filesystem::filesystem_error& fsEx)
@@ -715,14 +733,22 @@ bool InputManager::removeProxy(jccl::ConfigChunkPtr chunk)
 vpr::ReturnStatus InputManager::loadDriverDSO(vpr::LibraryPtr driverDSO)
 {
    vprASSERT(driverDSO.get() != NULL && "Invalid vpr::LibraryPtr object");
-   vpr::ReturnStatus status;
 
+   const int lib_name_width(50);
+
+   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+      << "Loading device library: " << std::setiosflags(std::ios::right)
+      << std::setfill(' ') << std::setw(lib_name_width) << driverDSO->getName()
+      << std::resetiosflags(std::ios::right) << "     " << vprDEBUG_FLUSH;
+
+   // Load the driver
+   vpr::ReturnStatus status;
    status = driverDSO->load();
 
    if ( status.success() )
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-         << "Loaded driver DSO successfully\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+         << "Loaded DSO success.\n" << vprDEBUG_FLUSH;
 
       void (*creator)(gadget::InputManager*);
 
@@ -730,13 +756,16 @@ vpr::ReturnStatus InputManager::loadDriverDSO(vpr::LibraryPtr driverDSO)
 
       if ( NULL != creator )
       {
-         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL) << "[ " << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]\n" << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
             << "Got pointer to driver factory\n" << vprDEBUG_FLUSH;
+
          mDeviceDrivers.push_back(driverDSO);
          (*creator)(this);
       }
       else
       {
+         vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL) << "[ " << clrSetNORM(clrRED) << "FAILED lookup" << clrRESET << " ]\n" << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
             << clrOutNORM(clrYELLOW, "WARNING")
             << ": Failed to look up factory function in driver DSO '"
@@ -745,10 +774,7 @@ vpr::ReturnStatus InputManager::loadDriverDSO(vpr::LibraryPtr driverDSO)
    }
    else
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-         << clrOutNORM(clrYELLOW, "WARNING")
-         << ": Failed to load driver DSO '" << driverDSO << "'\n"
-         << vprDEBUG_FLUSH;
+      vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL) << "[ " << clrSetNORM(clrRED) << "FAILED" << clrRESET << " ]\n" << vprDEBUG_FLUSH;
    }
 
    return status;
@@ -756,14 +782,14 @@ vpr::ReturnStatus InputManager::loadDriverDSO(vpr::LibraryPtr driverDSO)
 
 /** Get the input logger connected to the system */
 gadget::InputLoggerPtr InputManager::getInputLogger()
-{ 
+{
    // Make sure it is allocated -- Lazy allocation
    if(mInputLogger.get() == NULL)
    {
       mInputLogger = boost::shared_ptr<InputLogger>(new InputLogger);
    }
 
-   return mInputLogger; 
+   return mInputLogger;
 }
 
 
