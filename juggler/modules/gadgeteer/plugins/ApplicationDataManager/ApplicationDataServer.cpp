@@ -36,7 +36,7 @@
 
 #include <plugins/ApplicationDataManager/ApplicationDataServer.h> // my header...
 #include <plugins/ApplicationDataManager/ApplicationData.h>
-#include <cluster/ClusterNetwork/ClusterNode.h>
+#include <gadget/Node.h>
 #include <cluster/Packets/DataPacket.h>
 
 #include <vpr/IO/BufferObjectWriter.h>
@@ -101,7 +101,7 @@ namespace cluster
       vpr::Guard<vpr::Mutex> guard(mClientsLock);
       
       // Send DataPacket to all nodes in mClients
-      for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin();
+      for (std::vector<gadget::Node*>::iterator i = mClients.begin();
            i != mClients.end() ; i++)
       {
          //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Sending data to: "
@@ -123,14 +123,14 @@ namespace cluster
                << std::endl << vprDEBUG_FLUSH;
 
             // If we receive an exception because we have lost the connection we need
-            // to flag the ClusterNode as disconnected and print debug information
-            (*i)->setConnected(ClusterNode::DISCONNECTED);
+            // to flag the Node as disconnected and print debug information
+            (*i)->setStatus(gadget::Node::DISCONNECTED);
             debugDump(vprDBG_CONFIG_LVL);
          }
       }
    }
 
-   void ApplicationDataServer::addClient(ClusterNode* new_client_node)
+   void ApplicationDataServer::addClient(gadget::Node* new_client_node)
    {
       vprASSERT(new_client_node != NULL && "You can not add a new client that is NULL");
       
@@ -144,7 +144,7 @@ namespace cluster
    {
       vpr::Guard<vpr::Mutex> guard(mClientsLock);
 
-      for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin() ;
+      for (std::vector<gadget::Node*>::iterator i = mClients.begin() ;
             i!= mClients.end() ; i++)
       {
          if ((*i)->getHostname() == host_name)
@@ -168,7 +168,7 @@ namespace cluster
       vpr::DebugOutputGuard dbg_output2(gadgetDBG_RIM,debug_level,
                         std::string("------------ Clients ------------\n"),
                         std::string("---------------------------------\n"));
-      for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin() ;
+      for (std::vector<gadget::Node*>::iterator i = mClients.begin() ;
             i!= mClients.end() ; i++)
       {
          vprDEBUG(gadgetDBG_RIM,debug_level) << "-------- " << (*i)->getName() << " --------" << std::endl << vprDEBUG_FLUSH;

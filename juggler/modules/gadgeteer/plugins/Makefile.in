@@ -135,7 +135,7 @@ endif
 
 # Subdirectories used for recursion through the source tree.
 SUBDIR=	ApplicationDataManager		\
-	RemoteInputManager		\
+	RIMPlugin			\
 	StartBarrierPlugin		\
 	SwapLockTCPPlugin		\
 	SwapLockWiredPlugin

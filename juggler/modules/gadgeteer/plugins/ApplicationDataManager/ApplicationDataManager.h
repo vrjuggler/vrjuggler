@@ -41,7 +41,6 @@
 #include <vpr/Util/GUID.h>
 #include <vpr/Sync/Mutex.h>
 
-// Must implement the Abstract Base Class in order to be a manager used on the ClusterNetwork
 #include <cluster/ClusterPlugin.h>
 
 #include <jccl/Config/ConfigElementPtr.h>
@@ -66,15 +65,15 @@ public:
    /**
     * Get the GUID associated with this plugin.
     */
-   vpr::GUID getPluginGUID()
+   vpr::GUID getHandlerGUID()
    {
-      return mPluginGUID;
+      return mHandlerGUID;
    }
 
    /**
     * Handle a incoming packet.
     */
-   void handlePacket(Packet* packet, ClusterNode* node);
+   void handlePacket(Packet* packet, gadget::Node* node);
    
    /**
     * Called each frame by the kernel to update all application level data(ApplicationData).
@@ -87,7 +86,7 @@ public:
    virtual void postPostFrame();
 
    /**
-    * Send all pending requests for ApplicationData to other ClusterNodes.
+    * Send all pending requests for ApplicationData to other Nodes.
     */
    virtual void sendRequests();
 
@@ -103,8 +102,15 @@ public:
    {
       return(std::string("ApplicationDataManager"));
    }
+   virtual std::string getHandlerName()
+   {
+      return(std::string("ApplicationDataManager"));
+   }
    
-
+   virtual void recoverFromLostNode(gadget::Node* lost_node) 
+   {
+      boost::ignore_unused_variable_warning(lost_node);
+   }
 
    // ---------- ConfigElementHandler Interface ----------- //
 public:   
@@ -195,7 +201,7 @@ private:
    std::map<vpr::GUID, ApplicationDataServer*>     mApplicationDataServers;             /**< ApplicationData Server list. */
    vpr::Mutex                                      mApplicationDataServersLock;         /**< Lock ApplicationData Server list.*/   
 
-   vpr::GUID                                       mPluginGUID;
+   vpr::GUID                                       mHandlerGUID;
    vpr::Uint32                                     mFrameNumber;                 /**< Keeps track of the local frame number */   
 };
 
