@@ -421,12 +421,9 @@ namespace cluster
            if (device_host_ptr.get() != NULL)
            {
               std::string host_name = device_host_ptr->getProperty<std::string>("host_name");
-              std::string local_host_name = cluster::ClusterNetwork::instance()->getLocalHostname();
-              //std::cout << "Host Name: " << host_name << std::endl;
-              //std::cout << "Local Host Name: " << local_host_name << std::endl;
-              if (host_name != local_host_name)
-              {
-                 return(true);
+              if (!ClusterNetwork::isLocalHost(host_name))
+              { 
+                 return true;
               }// Device is on the local machine
            }// Could not find the deviceHost in the configuration
         }// Device is not a remote device since there is no name in the deviceHost field
@@ -470,7 +467,7 @@ namespace cluster
                << "configAdd() New Node Hostname: " << new_node_hostname
                << "\n" << vprDEBUG_FLUSH;
 
-            if (new_node_hostname != ClusterNetwork::instance()->getLocalHostname())
+            if (!ClusterNetwork::isLocalHost(new_node_hostname))
             {
                vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
                   << clrOutBOLD(clrCYAN,"[ClusterManager] ")

@@ -262,9 +262,9 @@ public:
    bool configRemove(jccl::ConfigElementPtr element);
    
    /**
-    * Return the hostname of the local machine.
+    * Determine if the given hostname matches the local machine's hostname.
     */
-   std::string getLocalHostname() { return mLocalHostnameShort; }
+   static bool isLocalHost(const std::string& test_host_name);
 
    /**
     * Return the element type for MachineSpecific element that we configure
@@ -283,8 +283,6 @@ private:
    
    vpr::Thread*                           mAcceptThread;       /**< Thread that listens for incoming connections. */
    vpr::InetAddr                          mListenAddr;         /**< Address to listen for incoming connections on. */
-   std::string                            mLocalHostnameShort; /**< Local hostname with domain included */
-   std::string                            mLocalHostnameLong;  /**< Local hostname without domain */
 };
 
 } // end namespace gadget

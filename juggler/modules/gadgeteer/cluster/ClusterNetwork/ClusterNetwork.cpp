@@ -32,16 +32,11 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <iomanip>
 #include <boost/concept_check.hpp>
-
-#include <gadget/Util/Debug.h>
-#include <vpr/Util/ReturnStatus.h>	
-#include <vpr/IO/Socket/InetAddr.h>
-
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
 #include <cluster/ClusterManager.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
-
 #include <cluster/Packets/PacketFactory.h>
 #include <cluster/Packets/ConnectionRequest.h>
 #include <cluster/Packets/ConnectionAck.h>
@@ -49,14 +44,14 @@
 #include <cluster/Packets/ConnectionAck.h>
 #include <cluster/Packets/Packet.h>
 #include <cluster/ClusterDelta.h>
-
+#include <gadget/Util/Debug.h>
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/RTRC/ConfigManager.h>
+#include <vpr/Util/ReturnStatus.h>	
+#include <vpr/IO/Socket/InetAddr.h>
 
 namespace cluster
 {
-   std::string getShortHostnameFromLong(const std::string& long_name);
-
    vprSingletonImp( ClusterNetwork );
 	
    ClusterNetwork::ClusterNetwork()
@@ -64,17 +59,88 @@ namespace cluster
       mAcceptThread = NULL;
       vpr::InetAddr local_addr;
       vpr::InetAddr::getLocalHost(local_addr);
-      mLocalHostnameLong = local_addr.getHostname();
-      
-      // Strip the tail of the address to get just the computer name
-      // TODO: We should fix this to make the user fully specify the hostname
-      mLocalHostnameShort = cluster::getShortHostnameFromLong(mLocalHostnameLong);
    }
 
    ClusterNetwork::~ClusterNetwork()
    {
       shutdown();
    }
+   
+   /**
+    * Determine if the given hostname matches the local machine's hostname.
+    */
+   bool ClusterNetwork::isLocalHost(const std::string& test_host_name)
+   {
+      vpr::InetAddr local;
+      vpr::InetAddr test;
+
+      // Get the hostname to check against.
+      test.setAddress(test_host_name, 0);
+      
+      // Get the localhost name.
+      vpr::InetAddr::getLocalHost(local);
+
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         << "===== Test Hostname =====" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         << test.getHostname() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         << test.getAddressString() << std::endl << vprDEBUG_FLUSH;
+      
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         << "+================= Local Hostnames ==================+" 
+         << std::endl << vprDEBUG_FLUSH;
+      std::vector<std::string> names = local.getHostnames();
+      for(std::vector<std::string>::iterator itr = names.begin() ; itr != names.end() ; ++itr)
+      {
+         vpr::InetAddr temp;
+         temp.setAddress((*itr), 0);
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+            << "| Name: " << std::setw(25) << (*itr) << " | "
+            << std::setw(16) << temp.getAddressString() << " | " 
+            << std::endl << vprDEBUG_FLUSH;
+      }
+      
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         << "+================= Test Hostnames ===================+" 
+         << std::endl << vprDEBUG_FLUSH;
+      std::vector<std::string> test_names = test.getHostnames();
+      for(std::vector<std::string>::iterator itr = test_names.begin() ; itr != test_names.end() ; ++itr)
+      {
+         vpr::InetAddr temp;
+         temp.setAddress((*itr), 0);
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+            << "| Name: " << std::setw(25) << (*itr) << " | "
+            << std::setw(16) << temp.getAddressString() << " | " 
+            << std::endl << vprDEBUG_FLUSH;
+      }
+      
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         << "+====================================================+" 
+         << std::endl << vprDEBUG_FLUSH;
+     
+      bool result = false;
+      if(local.getAddressString() == test.getAddressString())
+      {
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+            << "| We have a match.                                   |"
+            << std::endl << vprDEBUG_FLUSH;
+            result = true;
+      }
+      else
+      {
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+            << "| NO match.                                          |" 
+            << std::endl << vprDEBUG_FLUSH;
+            result = false;
+      }
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         << "+====================================================+" 
+         << std::endl << vprDEBUG_FLUSH;
+      
+      return result;
+   }
+
 
    void ClusterNetwork::handlePacket(Packet* packet, ClusterNode* node)
    {
@@ -98,7 +164,11 @@ namespace cluster
                         << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
                         << "Creating a new ConnectionAck Packet" << std::endl << vprDEBUG_FLUSH;
 
-         ConnectionAck* responce_packet = new ConnectionAck(ClusterNetwork::instance()->getLocalHostname(),
+         // Get the localhost name.
+         vpr::InetAddr local;
+         vpr::InetAddr::getLocalHost(local);
+         
+         ConnectionAck* responce_packet = new ConnectionAck(local.getHostname(),
                                                             mListenAddr.getPort(),true); 
 
          // Try to send a responce packet
@@ -199,18 +269,25 @@ namespace cluster
       }
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Removing node: " << node_hostname
 	     << std::endl << vprDEBUG_FLUSH;
-	}
+   }
 
+   //XXX: ClusterNode hostname match.
    ClusterNode* ClusterNetwork::getClusterNodeByHostname(const std::string& host_name)
    { 
       vpr::Guard<vpr::Mutex> guard(mClusterNodesLock);
+      
+      vpr::InetAddr searching_for_node;
+      searching_for_node.setAddress(host_name, 0);
       
       // -Find ClusterNode with given hostname and return a pointer to it.
       // -If we do not find one, return NULL
       for (std::vector<cluster::ClusterNode*>::iterator i = mClusterNodes.begin();
            i != mClusterNodes.end() ; i++)
       {
-         if ((*i)->getHostname() == host_name)
+         vpr::InetAddr testing_node;
+         testing_node.setAddress((*i)->getHostname(),0);
+         
+         if (searching_for_node.getAddressString() == testing_node.getAddressString())
          {
             return(*i);
          }
@@ -407,7 +484,6 @@ namespace cluster
             client_sock->setNoDelay(true);  
 
             std::string remote_host_name = client_sock->getRemoteAddr().getHostname();
-            remote_host_name = cluster::getShortHostnameFromLong(remote_host_name);
             
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
                << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
@@ -538,19 +614,6 @@ namespace cluster
 		}  
    }
    
-   //-------- Helper Functions --------
-   std::string getShortHostnameFromLong(const std::string& long_name)
-   {
-      int first_period_pos = long_name.find(".");
-      std::string temp = long_name.substr(0, first_period_pos);
-      // just in case it is trailed by a ":port";
-      int colon_pos = temp.find(":");
-      std::string temp2 = temp.substr(0,colon_pos);
-      return temp2;
-   }
-
-
-
    ////////////////// Config Functions ///////////////
    bool ClusterNetwork::recognizeClusterMachineConfig(jccl::ConfigElementPtr element)
    {
@@ -571,7 +634,7 @@ namespace cluster
          // -Else
          //   -Add Node to ClusterNetwork
 
-         if (element->getProperty<std::string>("host_name") == getLocalHostname())
+         if (isLocalHost(element->getProperty<std::string>("host_name")))
          {
             const int listen_port = element->getProperty<int>("listen_port");
             startListening(listen_port);

@@ -128,7 +128,7 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigElementPtr element)
             return(false);
          }
          std::string host_name = node_element->getProperty<std::string>("host_name");
-         if (host_name != ClusterNetwork::instance()->getLocalHostname())
+         if (!ClusterNetwork::isLocalHost(host_name))
          {
             ClusterNode* node = ClusterNetwork::instance()->getClusterNodeByName(node_name);
             if (node == NULL)
@@ -198,7 +198,7 @@ void ClusterDepChecker::debugOutDependencies(jccl::ConfigElementPtr element,
       //      return;
       //   }
       //   std::string host_name = node_element->getProperty<std::string>("host_name");
-      //   if (host_name != ClusterNetwork::instance()->getLocalHostname())
+      //   if (!ClusterNetwork::isLocalHost(host_name))
       //   {
       //      ClusterNode* node = ClusterNetwork::instance()->getClusterNodeByName(node_name);
       //      if (node == NULL)
