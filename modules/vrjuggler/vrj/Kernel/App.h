@@ -171,7 +171,7 @@ protected:
 
 public:
    //vjAPI       api;        // Used to signal which API this application works with
-   Kernel*   kernel;     // The library kernel (here for convienence)
+   Kernel*     mKernel;     // The library kernel (here for convienence)
    bool        mHaveFocus;
 
 public:  // --- Factory functions --- //
