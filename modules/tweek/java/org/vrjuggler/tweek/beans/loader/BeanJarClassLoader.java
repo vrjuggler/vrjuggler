@@ -58,7 +58,7 @@ public class BeanJarClassLoader extends ClassLoader
     */
    public synchronized void addJarFile (JarFile file)
    {
-      m_jars.add(file);
+      mJars.add(file);
    }
 
    /**
@@ -83,7 +83,7 @@ public class BeanJarClassLoader extends ClassLoader
             }
 
             String cur_dir = path.substring(begin_index, end_index);
-            m_dirs.add(cur_dir);
+            mDirs.add(cur_dir);
             begin_index = end_index + 1;
             end_index   = path.indexOf(';', begin_index);
          }
@@ -106,19 +106,19 @@ public class BeanJarClassLoader extends ClassLoader
 
          // If our set of found classes already contains the name of the item
          // being looked up, don't bother searching for it again.
-         if ( ! m_found_classes.contains(name) )
+         if ( ! mFoundClasses.contains(name) )
          {
             File jar_file = null;
 
-            for ( int j = 0; j < m_dirs.size(); j++ )
+            for ( int j = 0; j < mDirs.size(); j++ )
             {
-               File temp = new File(((String) m_dirs.elementAt(j)) +
+               File temp = new File(((String) mDirs.elementAt(j)) +
                                     File.separator + name);
 
                if ( temp.exists() )
                {
                   jar_file = temp;
-                  m_found_classes.add(name);
+                  mFoundClasses.add(name);
                   break;
                }
             }
@@ -127,9 +127,9 @@ public class BeanJarClassLoader extends ClassLoader
             {
                try
                {
-                  synchronized (m_jars)
+                  synchronized (mJars)
                   {
-                     m_jars.add(new JarFile(jar_file));
+                     mJars.add(new JarFile(jar_file));
                   }
                }
                catch (IOException e)
@@ -162,9 +162,9 @@ public class BeanJarClassLoader extends ClassLoader
    {
       URL path = null;
 
-      for ( int i = 0; i < m_jars.size(); i++ )
+      for ( int i = 0; i < mJars.size(); i++ )
       {
-         JarFile jar_file = (JarFile) m_jars.elementAt(i);
+         JarFile jar_file = (JarFile) mJars.elementAt(i);
          JarEntry entry   = jar_file.getJarEntry(name);
 
          if ( entry != null )
@@ -207,12 +207,12 @@ public class BeanJarClassLoader extends ClassLoader
     */
    public static BeanJarClassLoader instance ()
    {
-      if ( m_instance == null )
+      if ( mInstance == null )
       {
-         m_instance = new BeanJarClassLoader();
+         mInstance = new BeanJarClassLoader();
       }
 
-      return m_instance;
+      return mInstance;
    }
 
    // ========================================================================
@@ -242,13 +242,13 @@ public class BeanJarClassLoader extends ClassLoader
       int size = 0;
 
       // Search the collection of known JAR files for the named class.
-      synchronized (m_jars)
+      synchronized (mJars)
       {
-         for ( int i = 0; i < m_jars.size(); i++ )
+         for ( int i = 0; i < mJars.size(); i++ )
          {
             // First look up the class as a .class entry in the JAR file.
             String entry_name = name.replace('.', '/') + ".class";
-            JarFile jar_file  = (JarFile) m_jars.elementAt(i);
+            JarFile jar_file  = (JarFile) mJars.elementAt(i);
             JarEntry entry    = jar_file.getJarEntry(entry_name);
 
             // If no such entry was found, try looking it up as a .ser entry.
@@ -307,9 +307,9 @@ public class BeanJarClassLoader extends ClassLoader
       return class_bytes;
    }
 
-   protected static BeanJarClassLoader m_instance = null;
+   protected static BeanJarClassLoader mInstance = null;
 
-   protected Vector m_jars          = new Vector();
-   protected Vector m_dirs          = new Vector();
-   protected Set    m_found_classes = new HashSet();
+   protected Vector mJars         = new Vector();
+   protected Vector mDirs         = new Vector();
+   protected Set    mFoundClasses = new HashSet();
 }
