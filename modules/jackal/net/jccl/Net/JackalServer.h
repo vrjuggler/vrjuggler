@@ -43,7 +43,7 @@
 namespace jccl {
 
 class Connect;
-class PerfDataBuffer;
+class JackalControl;
 class ConfigChunkDB;
 
 
@@ -91,12 +91,12 @@ public:
 
 
 
-    //: registers a buffer containing perf data... 
-    void addPerfDataBuffer (PerfDataBuffer *v);
+    //: registers a Jackal control unit. 
+    void addJackalControl (JackalControl* jc);
 
 
-    //: unregisters a buffer of perf data
-    void removePerfDataBuffer (PerfDataBuffer *v);
+    //: unregisters a Jackal control unit.
+    void removeJackalControl (JackalControl* jc);
 
 
 
@@ -133,25 +133,17 @@ public:
 private:
     std::string               perf_target_name;
     std::vector<Connect*>   connections;
-    std::vector<PerfDataBuffer*> perf_buffers;
+    std::vector<JackalControl*> jackal_controls;
     vpr::Thread*                 listen_thread;
     int                       Port;
     Socket*                 listen_socket;
-    Connect*                perf_target;
-    float                     perf_refresh_time;  // in milliseconds
     bool                      configured_to_accept;
-    ConfigChunk*            current_perf_config;
     vpr::Mutex                   connections_mutex;
-    vpr::Mutex                   perf_buffers_mutex;
+    vpr::Mutex                   jackal_controls_mutex;
 
     // PRIVATE utility functions
 
     void controlLoop (void* nullParam);
-
-    void activatePerfBuffers();
-    void deactivatePerfBuffers();
-
-    void setPerformanceTarget (Connect* con);
 
     void removeConnect (Connect* con);
 

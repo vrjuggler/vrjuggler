@@ -37,9 +37,8 @@
 
 
 #include <jccl/JackalServer/JackalServer.h>
-//#include <Kernel/Kernel.h>
+#include <jccl/JackalServer/JackalControl.h>
 #include <jccl/JackalServer/Connect.h>
-#include <jccl/Performance/PerfDataBuffer.h>
 #include <jccl/Config/ChunkDescDB.h>
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ParseUtil.h>
@@ -51,20 +50,15 @@ namespace jccl {
 
 JackalServer::JackalServer():
                           connections(),
-                          perf_buffers(),
+                          jackal_controls(),
                           connections_mutex(),
-                          perf_buffers_mutex() {
+                          jackal_controls_mutex() {
 
     /* I want some hardcoded defaults, yes? */
     Port = 4450;
     listen_thread = NULL;
     listen_socket = NULL;
     configured_to_accept = false;
-    perf_refresh_time = 500;
-
-    perf_target_name = "";
-    perf_target = NULL;
-    current_perf_config = NULL;
 }
 
 
@@ -84,37 +78,32 @@ bool JackalServer::isAccepting() {
 
 
 
-void JackalServer::addPerfDataBuffer (PerfDataBuffer *b) {
-    vprDEBUG (vprDBG_PERFORMANCE, 4) << "EM adding perf data buffer " << b->getName().c_str() << "\n"
-                                   << vprDEBUG_FLUSH;
-    perf_buffers_mutex.acquire();
-    perf_buffers.push_back(b);
-    activatePerfBuffers();
-    perf_buffers_mutex.release();
+void JackalServer::addJackalControl (JackalControl* jc) {
+    vprASSERT (jc != NULL);
+
+    jackal_controls_mutex.acquire();
+    jackal_controls.push_back (jc);
+    // eeks... scary deadlock warnings are going off in my head...
+    connections_mutex.acquire();
+    for (unsigned int i = 0, n = connections.size(); i < n; i++)
+        jc->addConnect (connections[i]);
+    connections_mutex.release();
+    jackal_controls_mutex.release();
 }
 
 
+void JackalServer::removeJackalControl (JackalControl* jc) {
+    vprASSERT (jc != NULL);
 
-
-void JackalServer::removePerfDataBuffer (PerfDataBuffer *b) {
-    std::vector<PerfDataBuffer*>::iterator it;
-
-    vprDEBUG (vprDBG_PERFORMANCE, 4) << "EM removing perf data buffer " << b->getName().c_str()
-                                   << "\n" << vprDEBUG_FLUSH;
-
-    perf_buffers_mutex.acquire();
-    b->deactivate();
-    if (perf_target)
-        perf_target->removeTimedUpdate (b);
-    // this is one of those things I really hate:
-    for (it = perf_buffers.begin(); it != perf_buffers.end(); it++) {
-        if (*it == b) {
-            perf_buffers.erase(it);
+    std::vector<JackalControl*>::iterator it;
+    jackal_controls_mutex.acquire();
+    for (it = jackal_controls.begin(); it != jackal_controls.end(); it++) {
+        if (*it == jc) {
+            jackal_controls.erase(it);
             break;
         }
     }
-    perf_buffers_mutex.release();
-
+    jackal_controls_mutex.release();
 }
 
 
@@ -164,9 +153,9 @@ bool JackalServer::configAdd(ConfigChunk* chunk) {
         perf_target_name = (std::string)chunk->getProperty ("PerformanceTarget");
         connections_mutex.acquire();
 
-        Connect* new_perf_target = getConnect(perf_target_name);
-        if (new_perf_target != perf_target)
-            setPerformanceTarget (NULL);
+//          Connect* new_perf_target = getConnect(perf_target_name);
+//          if (new_perf_target != perf_target)
+//              setPerformanceTarget (NULL);
 
         if (networkingchanged) {
             Port = newport;
@@ -177,17 +166,10 @@ bool JackalServer::configAdd(ConfigChunk* chunk) {
             else
                 killConnections();
         }
-        if (new_perf_target)
-            setPerformanceTarget(new_perf_target);
+//          if (new_perf_target)
+//              setPerformanceTarget(new_perf_target);
         connections_mutex.release();
 
-        return true;
-    }
-    else if (!vjstrcasecmp (s, "PerfMeasure")) {
-        current_perf_config = new ConfigChunk (*chunk);
-        perf_buffers_mutex.acquire();
-        activatePerfBuffers();
-        perf_buffers_mutex.release();
         return true;
     }
     else if (!vjstrcasecmp (s, "FileConnect")) {
@@ -205,8 +187,8 @@ bool JackalServer::configAdd(ConfigChunk* chunk) {
             connections_mutex.acquire();
             connections.push_back (vn);
             vn->startProcess();
-            if (!vjstrcasecmp (vn->getName(), perf_target_name))
-                setPerformanceTarget (vn);
+//              if (!vjstrcasecmp (vn->getName(), perf_target_name))
+//                  setPerformanceTarget (vn);
             connections_mutex.release();
         }
         return true;
@@ -228,19 +210,6 @@ bool JackalServer::configRemove(ConfigChunk* chunk) {
         rejectConnections();
         Port = 4450;
         configured_to_accept = false;
-        return true;
-    }
-    else if (!vjstrcasecmp (s, "PerfMeasure")) {
-        if (current_perf_config) {
-            if (!vjstrcasecmp (current_perf_config->getProperty ("Name"),
-                               chunk->getProperty ("Name"))) {
-                delete (current_perf_config);
-                current_perf_config = NULL;
-                connections_mutex.acquire();
-                deactivatePerfBuffers ();
-                connections_mutex.release();
-            }
-        }
         return true;
     }
     else if (!vjstrcasecmp (s, "FileConnect")) {
@@ -267,7 +236,6 @@ bool JackalServer::configRemove(ConfigChunk* chunk) {
 bool JackalServer::configCanHandle(ConfigChunk* chunk) {
     std::string s = chunk->getType();
     return (!vjstrcasecmp (s, "EnvironmentManager") ||
-            !vjstrcasecmp (s, "PerfMeasure") ||
             !vjstrcasecmp (s, "FileConnect"));
 }
 
@@ -277,30 +245,16 @@ bool JackalServer::configCanHandle(ConfigChunk* chunk) {
 
 // should only be called when we own connections_mutex
 void JackalServer::removeConnect (Connect* con) {
-    if (!con)
-        return;
-    if (con == perf_target)
-        setPerformanceTarget (NULL);
+    vprASSERT (con != 0);
+
     std::vector<Connect*>::iterator i;
-    for (i = connections.begin(); i != connections.end(); i++)
+    for (i = connections.begin(); i != connections.end(); i++) {
         if (con == *i) {
             connections.erase (i);
             delete con;
             break;
         }
-}
-
-
-
-// should only be called when we own connections_mutex
-void JackalServer::setPerformanceTarget (Connect* con) {
-    if (con == perf_target)
-        return;
-    perf_buffers_mutex.acquire();
-    deactivatePerfBuffers();
-    perf_target = con;
-    activatePerfBuffers();
-    perf_buffers_mutex.release();
+    }
 }
 
 
@@ -341,63 +295,6 @@ void JackalServer::controlLoop (void* nullParam) {
 
 
 
-// should only be called while we have the connections mutex...
-void JackalServer::deactivatePerfBuffers () {
-    std::vector<PerfDataBuffer*>::iterator i;
-    for (i = perf_buffers.begin(); i != perf_buffers.end(); i++) {
-        (*i)->deactivate();
-        if (perf_target)
-            perf_target->removeTimedUpdate (*i);
-    }
-}
-
-
-
-// should only be called while we own connections_mutex
-void JackalServer::activatePerfBuffers () {
-    // activates all perf buffers configured to do so
-    // this is still a bit on the big and bulky side.
-
-    if (perf_buffers.empty())
-        return;
-
-    if (perf_target == NULL || current_perf_config == NULL) {
-        deactivatePerfBuffers();
-        return;
-    }
-
-    std::vector<VarValue*> v = current_perf_config->getAllProperties ("TimingTests");
-    std::vector<PerfDataBuffer*>::const_iterator b;
-    std::vector<VarValue*>::const_iterator val;
-    bool found;
-    ConfigChunk* ch;
-
-    for (b = perf_buffers.begin(); b != perf_buffers.end(); b++) {
-        found = false;
-        for (val = v.begin(); val != v.end(); val++) {
-            ch = *(*val); // this line demonstrates a subtle danger
-            if ((bool)ch->getProperty ("Enabled")) {
-                if (!vjstrncasecmp(ch->getProperty("Prefix"), (*b)->getName()))
-                    found = true;
-            }
-        }
-        if (found) {
-            (*b)->activate();
-            perf_target->addTimedUpdate ((*b), perf_refresh_time);
-        }
-        else if ((*b)->isActive()) {
-            (*b)->deactivate();
-            perf_target->removeTimedUpdate (*b);
-        }
-    }
-    for (val = v.begin(); val != v.end(); val++) {
-        delete (*val);
-    }
-
-}
-
-
-
 bool JackalServer::acceptConnections() {
 
     if (listen_thread != NULL)
@@ -405,13 +302,13 @@ bool JackalServer::acceptConnections() {
 
     listen_socket = new Socket ();
     if (!listen_socket->listen (Port)) {
-        vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:") << "Environment Manager couldn't open socket\n"
+        vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:") << "Jackal Server couldn't open socket\n"
                                                 << vprDEBUG_FLUSH;
         return false;
     }
     else
         vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
-            << clrOutNORM(clrCYAN, "Environment Manager")
+            << clrOutNORM(clrCYAN, "Jackal Server")
             << " listening on port " << clrOutNORM(clrMAGENTA, Port) << "\n"
             << vprDEBUG_FLUSH;
 
