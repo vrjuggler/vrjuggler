@@ -44,6 +44,9 @@ import java.awt.event.*;
  */
 public class IntegerTextField extends JTextField {
 
+    public IntegerTextField () {
+        super ();
+    }
     public IntegerTextField (int i) {
 	super(i);
     }

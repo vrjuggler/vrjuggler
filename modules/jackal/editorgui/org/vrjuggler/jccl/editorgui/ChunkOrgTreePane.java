@@ -94,28 +94,26 @@ public class ChunkOrgTreePane
 
     private TreePath treeitem_menu_path;
     private JMenuItem addfolder_mi, remove_mi, cremove_mi, unnameddesc_mi;
-    EasyPopupMenu treeitem_menu, childlesstreeitem_menu;
+    private EasyPopupMenu treeitem_menu, childlesstreeitem_menu;
 
-    ChunkOrgTree orgtree;
+    private ChunkOrgTree orgtree;
 
-    JScrollPane scroll_pane;
-    JTree     tree;
-    DefaultTreeModel treemodel;
-    DefaultMutableTreeNode root;
-    boolean ignore_next_reload; // used so we don't reload tree as a result
+    private JScrollPane            scroll_pane;
+    private JTree                  tree;
+    private DefaultTreeModel       treemodel;
+    private DefaultMutableTreeNode root;
+    private boolean                ignore_next_reload; 
+                                // used so we don't reload tree as a result
                                 // of message sent because of an apply
                                 // ie. we already knew that.
-
+    private boolean ui_initialized;
 
     public ChunkOrgTreePane () {
         super();
 
-        component_name = "OrgTree";
+        component_name = "Unconfigured ChunkOrgTreePane";
         component_chunk = null;
 
-        JPanel south_panel;
-        JPanel side_panel;
-        Box center_panel;
 
 	ignore_next_reload = false;
 
@@ -123,83 +121,7 @@ public class ChunkOrgTreePane
         orgtree_module = null;
         ui_module = null;
 
-
-	// popup menu for tree
-	treeitem_menu_path = null;
-        treeitem_menu = new EasyPopupMenu("foo", 25);
-        addfolder_mi = 
-            treeitem_menu.addMenuItem ("Add Folder");
-        unnameddesc_mi =
-            treeitem_menu.addMenuItem ("Add ChunkDesc/Unnamed");
-        remove_mi = 
-            treeitem_menu.addMenuItem ("Remove");
-
-        childlesstreeitem_menu = new EasyPopupMenu ("foo", 25);
-        cremove_mi =
-            childlesstreeitem_menu.addMenuItem ("Remove");
-
-
-        setBorder (new EmptyBorder (5,5,5,5));
-        setLayout (new BorderLayout (5, 5));
-
-	root = new DefaultMutableTreeNode ("nothing", false);
-	treemodel = new DefaultTreeModel(root, true);
-	tree = new JTree (treemodel);
-
-        center_panel = new Box (BoxLayout.Y_AXIS);
-	scroll_pane = new JScrollPane (tree, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                                       JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-	center_panel.add (scroll_pane);
-        add (center_panel, "Center");
-
-	orgtree = new ChunkOrgTree();
-
-	JTextField editfield = new JTextField();
-	DefaultCellEditor editor = new DefaultCellEditor (editfield);
-	tree.setEditable (true);
-	tree.setCellEditor (editor);
-	editor.addCellEditorListener (this);
-
-	// Side Panel
-	side_panel = new JPanel();
-	side_panel.setLayout (new GridLayout (9, 1));
-
-        //ImageIcon new_icn, load_icn, save_icn, close_icn;
-	
-	load_button = new JButton ("Load");
-	save_button = new JButton ("Save");
-	new_button = new JButton ("New");
-	//close_button = new JButton ("Close");
-
-        Insets ins = new Insets (0,0,0,0);
-        new_button.setMargin (ins);
-        load_button.setMargin (ins);
-        save_button.setMargin (ins);
-        //close_button.setMargin (ins);
- 
-	apply_button = new JButton ("Apply");
-	remove_button = new JButton ("Remove");
-
-	side_panel.add (new JLabel ("File"));
-	side_panel.add (new_button);
-	side_panel.add (load_button);
-	side_panel.add (save_button);
-	side_panel.add (apply_button);
-	side_panel.add (new JLabel ("Element"));
-	side_panel.add (remove_button);
-	add (side_panel, "East");
-
-	new_button.addActionListener (this);
-	load_button.addActionListener (this);
-	save_button.addActionListener (this);
-	apply_button.addActionListener (this);
-	remove_button.addActionListener (this);
-	tree.addMouseListener (this);
-
-	addfolder_mi.addActionListener (this);
-	remove_mi.addActionListener (this);
-	unnameddesc_mi.addActionListener (this);
-	cremove_mi.addActionListener (this);
+        ui_initialized = false;
 
     }
 
@@ -224,7 +146,7 @@ public class ChunkOrgTreePane
 
 
 
-    public void buildTree (ChunkOrgTree orgtree) {
+    private void buildTree (ChunkOrgTree orgtree) {
 	root = buildTreeHelper (orgtree.root);
 	treemodel.setRoot (root);
 	treemodel.reload();
@@ -232,9 +154,12 @@ public class ChunkOrgTreePane
 
 
 
+    /** Helper function for buildTree.
+     *  Recursively builds the swing JTree model from a ChunkOrgTree.
+     */
     private DefaultMutableTreeNode buildTreeHelper (Object orgtree) {
 	OrgTreeElem ot;
-	int i;
+	int i, n;
 	DefaultMutableTreeNode n1, n2;
 	if (orgtree instanceof String) {
 	    n1 = new DefaultMutableTreeNode ((String)orgtree, 
@@ -245,23 +170,26 @@ public class ChunkOrgTreePane
 	    ot = (OrgTreeElem)orgtree;
 	    n1 = new DefaultMutableTreeNode (ot.label, 
 					     true);
-	    for (i = 0; i < ot.children.size(); i++)
-		n1.add (buildTreeHelper (ot.children.elementAt(i)));
+            n = ot.children.size();
+	    for (i = 0; i < n; i++)
+		n1.add (buildTreeHelper (ot.children.get(i)));
 	    return n1;
 	}
 	else
+            // shouldn't ever happen
 	    return null;
     }
 	
 
 
-    public void setCOTValue (ChunkOrgTree ot) {
+    private void setCOTValue (ChunkOrgTree ot) {
 	// replaces the old value of ot w/ the value defined by the panel's tree
 	ignore_next_reload = true;
 	ot.setRoot ((OrgTreeElem)setCOTValueHelper (root));
     }
    
-    protected Object setCOTValueHelper (DefaultMutableTreeNode n) {
+
+    private Object setCOTValueHelper (DefaultMutableTreeNode n) {
 	DefaultMutableTreeNode n1, n2;
 	OrgTreeElem ot;
 	Enumeration e;
@@ -272,7 +200,7 @@ public class ChunkOrgTreePane
 	    ot = new OrgTreeElem(n.toString());
 	    e = n.children();
 	    while (e.hasMoreElements()) {
-		ot.children.addElement (setCOTValueHelper ((DefaultMutableTreeNode)e.nextElement()));
+		ot.children.add (setCOTValueHelper ((DefaultMutableTreeNode)e.nextElement()));
 	    }
 	    return ot;
 	}
@@ -282,6 +210,7 @@ public class ChunkOrgTreePane
 
     public void actionPerformed (ActionEvent e) {
 	ChunkOrgTree ot;
+        MutableTreeNode child, parent;
 	Object source = e.getSource();
 	if (e.getActionCommand().equalsIgnoreCase ("reload")) {
 	    if (ignore_next_reload)
@@ -318,34 +247,31 @@ public class ChunkOrgTreePane
 	    if (tp == null)
 		return;
 	    tree.removeSelectionPaths (tp);
-	    DefaultMutableTreeNode n, n1;
 	    for (int i = 0; i < tp.length; i++) {
-		n = (DefaultMutableTreeNode)tp[i].getLastPathComponent();
-		n1 = (DefaultMutableTreeNode)n.getParent();
-		n.removeFromParent();
-		treemodel.reload(n1);
+		child = (MutableTreeNode)tp[i].getLastPathComponent();
+                treemodel.removeNodeFromParent (child);
 	    }
 	}
 	else if ((source == remove_mi) || (source == cremove_mi)) {
-	    DefaultMutableTreeNode n, n1;
-	    n = (DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent();
-	    n1 = (DefaultMutableTreeNode)n.getParent();
-	    n.removeFromParent();
-	    treemodel.reload(n1);
+	    child = (MutableTreeNode)treeitem_menu_path.getLastPathComponent();
+            treemodel.removeNodeFromParent (child);
 	}
 	else if (source == addfolder_mi) {
-	    DefaultMutableTreeNode n = (DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent();
-	    if (n != null && n.getAllowsChildren()) {
-		n.add (new DefaultMutableTreeNode ("New Folder", true));
-		treemodel.reload(n);
+	    parent = (MutableTreeNode)treeitem_menu_path.getLastPathComponent();
+	    if (parent != null && parent.getAllowsChildren()) {
+                child = new DefaultMutableTreeNode ("New Folder", true);
+                treemodel.insertNodeInto (child, parent, 
+                                          parent.getChildCount());
 	    }
 	}
 	else if (e.getSource() instanceof JMenuItem) {
 	    /* well, it's got to be something in the chunkdesc menu */
-	    DefaultMutableTreeNode n = (DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent();
-	    if (n != null && n.getAllowsChildren()) {
-		n.add (new DefaultMutableTreeNode (e.getActionCommand(), false));
-		treemodel.reload(n);
+	    parent = (MutableTreeNode)treeitem_menu_path.getLastPathComponent();
+	    if (parent != null && parent.getAllowsChildren()) {
+                child = 
+                    new DefaultMutableTreeNode (e.getActionCommand(), false);
+                treemodel.insertNodeInto (child, parent, 
+                                          parent.getChildCount());
 	    }
 
 	}
@@ -451,23 +377,6 @@ public class ChunkOrgTreePane
         orgtree_filter = new SuffixFilter ("Chunk Org Tree Files (*.org)", ".org");
         ui_module.getEasyFileDialog().addFilter (orgtree_filter, "ConfigOrgTree");
 
-        // set up initial info from config module
-	config_module.addConfigModuleListener (this);
-        updateInsertTypes();
-
-        // set up initial org tree
-	orgtree_module.getOrgTree().addActionListener (this);
-	orgtree.copyValueFrom (orgtree_module.getOrgTree());
-	//orgtree.addActionListener (this);
-	//orgtree = chunkorgtree;
-	buildTree (orgtree/*_module.getOrgTree()*/);
-
-        // this is fairly horrific. do all this button stuff here just cuz we
-        // can't get the icons inside the constructor
-        load_button.setIcon (ui_module.getIcon ("open file", 0));
-        save_button.setIcon (ui_module.getIcon ("save file", 0));
-        new_button.setIcon (ui_module.getIcon ("new file", 0));
-
         return true;
     }
 
@@ -486,6 +395,109 @@ public class ChunkOrgTreePane
         return false;
     }
 
+
+    public JComponent getUIComponent() {
+        return this;
+    }
+
+    public boolean initUIComponent() {
+        if (!ui_initialized) {
+            JPanel south_panel;
+            JPanel side_panel;
+            Box center_panel;
+
+            // popup menu for tree
+            treeitem_menu_path = null;
+            treeitem_menu = new EasyPopupMenu("foo", 25);
+            addfolder_mi = 
+                treeitem_menu.addMenuItem ("Add Folder");
+            unnameddesc_mi =
+                treeitem_menu.addMenuItem ("Add ChunkDesc/Unnamed");
+            remove_mi = 
+                treeitem_menu.addMenuItem ("Remove");
+
+            childlesstreeitem_menu = new EasyPopupMenu ("foo", 25);
+            cremove_mi =
+                childlesstreeitem_menu.addMenuItem ("Remove");
+
+            setBorder (new EmptyBorder (5,5,5,5));
+            setLayout (new BorderLayout (5, 5));
+            
+            root = new DefaultMutableTreeNode ("nothing", false);
+            treemodel = new DefaultTreeModel(root, true);
+            tree = new JTree (treemodel);
+
+            center_panel = new Box (BoxLayout.Y_AXIS);
+            scroll_pane = new JScrollPane (tree, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                                           JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            center_panel.add (scroll_pane);
+            add (center_panel, "Center");
+
+            orgtree = new ChunkOrgTree();
+
+            JTextField editfield = new JTextField();
+            DefaultCellEditor editor = new DefaultCellEditor (editfield);
+            tree.setEditable (true);
+            tree.setCellEditor (editor);
+            editor.addCellEditorListener (this);
+            
+            // Side Panel
+            side_panel = new JPanel();
+            side_panel.setLayout (new GridLayout (9, 1));
+
+            //ImageIcon new_icn, load_icn, save_icn, close_icn;
+	
+            load_button = new JButton ("Load", 
+                                       ui_module.getIcon ("open file", 0));
+            save_button = new JButton ("Save", 
+                                       ui_module.getIcon ("save file", 0));
+            new_button = new JButton ("New",
+                                      ui_module.getIcon ("new file", 0));
+
+            Insets ins = new Insets (0,0,0,0);
+            new_button.setMargin (ins);
+            load_button.setMargin (ins);
+            save_button.setMargin (ins);
+            //close_button.setMargin (ins);
+ 
+            apply_button = new JButton ("Apply");
+            remove_button = new JButton ("Remove");
+
+            side_panel.add (new JLabel ("File"));
+            side_panel.add (new_button);
+            side_panel.add (load_button);
+            side_panel.add (save_button);
+            side_panel.add (apply_button);
+            side_panel.add (new JLabel ("Element"));
+            side_panel.add (remove_button);
+            add (side_panel, "East");
+
+            new_button.addActionListener (this);
+            load_button.addActionListener (this);
+            save_button.addActionListener (this);
+            apply_button.addActionListener (this);
+            remove_button.addActionListener (this);
+            tree.addMouseListener (this);
+
+            addfolder_mi.addActionListener (this);
+            remove_mi.addActionListener (this);
+            unnameddesc_mi.addActionListener (this);
+            cremove_mi.addActionListener (this);
+
+            // set up initial info from config module
+            config_module.addConfigModuleListener (this);
+            updateInsertTypes();
+
+            // set up initial org tree
+            orgtree_module.getOrgTree().addActionListener (this);
+            orgtree.copyValueFrom (orgtree_module.getOrgTree());
+            //orgtree.addActionListener (this);
+            buildTree (orgtree);
+
+            ui_initialized = true;
+        }
+        return ui_initialized;
+    }
 
     public void destroy () {
         ;

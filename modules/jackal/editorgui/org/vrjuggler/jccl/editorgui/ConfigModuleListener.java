@@ -38,6 +38,14 @@ import VjComponents.ConfigEditor.ConfigModuleEvent;
  *  By becoming a ConfigModuleListener, an object can receive 
  *  events about addition or removal of ConfigChunkDBs and 
  *  ChunkDescDBs.
+ *  <p>
+ *  ConfigModuleEvents may be sent by any thread; a listener intending
+ *  to update GUI components based on the event must use 
+ *  SwingUtilities.invokeLater or something similar to ensure correct
+ *  synchronization.
+ * 
+ *  @author Christopher Just
+ *  @version $Revision$
  */
 public interface ConfigModuleListener extends java.util.EventListener {
 

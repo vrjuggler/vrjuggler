@@ -34,9 +34,9 @@
 package VjComponents.Network;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import VjControl.VjComponent;
-import VjConfig.ConfigStreamTokenizer;
 import VjComponents.Network.NetworkModule;
 
 
@@ -88,7 +88,13 @@ public interface NetCommunicator extends VjComponent {
      *  readStream (and anything called by it) can safely throw
      *  IOExceptions, and in case of EOF etc. this is encouraged.
      */
-    public boolean readStream (ConfigStreamTokenizer instream, String id)
+    public boolean readStream (InputStream instream, String id)
     throws IOException;
 
+
+    /** Requests the "current status" of this Communicator's data.
+     *  For example, the ConfigCommunicator requests the current
+     *  active ChunkDB.
+     */
+    public boolean requestUpdate ();
 }

@@ -31,24 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-
-/* VarValuePanel is just a little panel that we'll stick several of 
- * in a PropertyPanel.
- *
- *     -----------------------------------------------------
- *     |                                                   |
- *     | Type(optional) valuegadget  removebutton(optional)|
- *     |                                                   |
- *     -----------------------------------------------------
- *
- * the value gadget is going to be either a TextArea or a multisetSelectedItem
- * with the acceptable values in it.  removebutton will be there if the
- * associated property has var numbers of values.
- */
-
 package VjComponents.ConfigEditor.ConfigChunkUI;
-
-// displays an entire configchunk as a miniature VarValuePanel. I hope
 
 import java.awt.*;
 import java.awt.event.*;
@@ -59,25 +42,33 @@ import VjConfig.*;
 import VjComponents.ConfigEditor.*;
 import VjComponents.UI.Widgets.*;
 
+/** Panel for displaying an embedded chunk varvalue "inline".
+ *  This panel tries to display a small embedded ConfigChunk with all its
+ *  properties on a single horizontal line.  For obvious reasons, this can
+ *  only work with a fairly small ConfigChunk - one with only a few 
+ *  properties.  Its algorithms fail completely if the embedded chunk has
+ *  any properties with variable numbers of values.
+ *
+ * @author Christopher Just
+ * @version $Revision$
+ */
 public class VarValueMiniChunkPanel extends VarValuePanel implements ActionListener, VarValuePanel.VarValuePanelParent {
 
     VarValuePanelParent     parent; // the parent is a listener on the remove button
     JButton           removebutton;
     ConfigChunk       chunk;
-    ChunkDescDB       descdb;
-    Property          prop;
-    Vector panels;
+    //Property          prop;
+    boolean           use_remove_button;
+    Vector            panels;
 
-    public VarValueMiniChunkPanel(VarValuePanelParent par, Property _prop, ConfigChunk _chunk) {
+    public VarValueMiniChunkPanel(VarValuePanelParent par, boolean _use_remove_button, ConfigChunk _chunk) {
 	super();
 	parent = par;
-	prop = _prop;
+	//prop = _prop;
+        use_remove_button = _use_remove_button;
 	chunk = new ConfigChunk (_chunk);
 
-	setLayout(new BorderLayout (1,1));
-
-	JPanel mainp = new JPanel();
-	mainp.setLayout (new BoxLayout (mainp, BoxLayout.X_AXIS));
+        setLayout (new BoxLayout (this, BoxLayout.X_AXIS));
 
 	VarValue v2;
 	Property p;
@@ -85,28 +76,26 @@ public class VarValueMiniChunkPanel extends VarValuePanel implements ActionListe
 
 	panels = new Vector();
 
-	for (i = 0, l=0; i < chunk.props.size(); i++) {
-	    p = (Property)chunk.props.elementAt(i);
-	    mainp.add (new JLabel (p.name));
+        int n = chunk.getPropertiesSize();
+	for (i = 0, l=0; i < n; i++) {
+	    p = chunk.getProperty(i);
+            add (new JLabel (p.getName(), JLabel.RIGHT));
 	    j = p.getNum();
 	    for (k = 0; k < j; k++) {
 		v2 = p.getValue (j);
-		VarValuePanel vp = new VarValueStandardPanel (this, p.desc);
+		VarValuePanel vp = new VarValueStandardPanel (this, p.getDesc());
 		if (v2 != null)
 		    vp.setValue (v2);
-		mainp.add (vp);
-		panels.addElement (vp);
+                add (vp);
+		panels.add (vp);
 	    }
 	}
 
-	add (mainp, "Center");
-
-	if (prop.desc.num == -1) {
-	    /* then it's a variable # of values */
+	if (use_remove_button) {
 	    removebutton = new JButton("Remove");
 	    Insets in = new Insets (0,0,0,0);
 	    removebutton.setMargin (in);
-	    add (removebutton,"East");
+            add (removebutton);
 	    removebutton.addActionListener(this);
 	}
     }
@@ -119,11 +108,12 @@ public class VarValueMiniChunkPanel extends VarValuePanel implements ActionListe
 	    VarValue v2;
 	    Property p;
 	    int i,j,k,l;
-	    for (i = 0, l=0; i < chunk.props.size(); i++) {
-		p = (Property)chunk.props.elementAt(i);
+            int n = chunk.getPropertiesSize();
+	    for (i = 0, l=0; i < n; i++) {
+		p = chunk.getProperty(i);
 		j = p.getNum();
 		for (k = 0; k < j; k++) {
-		    VarValuePanel vp = (VarValuePanel)panels.elementAt(l);
+		    VarValuePanel vp = (VarValuePanel)panels.get(l);
 		    v2 = p.getValue (k);
 		    vp.setValue (v2);
 		    l++;
@@ -141,10 +131,11 @@ public class VarValueMiniChunkPanel extends VarValuePanel implements ActionListe
 	 */
 	int i,j,k,l;
 	Property p;
-	for (i = 0, l = 0; i < chunk.props.size(); i++) {
-	    p = (Property)chunk.props.elementAt(i);
+        int n = chunk.getPropertiesSize();
+	for (i = 0, l = 0; i < n; i++) {
+	    p = chunk.getProperty(i);
 	    for (j = 0; j < p.getNum(); j++) {
-		p.setValue (((VarValuePanel)panels.elementAt(l++)).getValue(),j);
+		p.setValue (((VarValuePanel)panels.get(l++)).getValue(),j);
 	    }
 	}
 	return new VarValue(chunk);

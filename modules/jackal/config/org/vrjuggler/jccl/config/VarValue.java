@@ -70,6 +70,9 @@ public final class VarValue {
     public VarValue (ValType t) {
 	valtype = t;
 	strval = "";
+        intval = 0;
+        floatval = 0.0f;
+        boolval = false;
 	embeddedchunkval = null;
     }
 
@@ -273,7 +276,8 @@ public final class VarValue {
     }
 
 
-    public boolean getBool() {
+
+    public boolean getBoolean() {
 	if (valtype.equals(ValType.t_bool))
 	    return boolval;
 	else

@@ -34,6 +34,7 @@
 package VjComponents.UI;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 
 import VjControl.VjComponent;
 
@@ -51,6 +52,28 @@ import VjControl.VjComponent;
  */
 public interface PlugPanel
     extends VjComponent {
+
+    /** Returns the UI component associated with this panel.
+     *  Many PlugPanels simply inherit from JComponent and return
+     *  themselves.
+     *  Note that this method may be called before initUIComponent,
+     *  for example when initializing a JTabbedPane as a container
+     *  of plugpanels.  Simply return the empty panel; 
+     *  initUIComponent will be called when the panel is actually
+     *  displayed to the user.
+     */
+    public JComponent getUIComponent();
+
+    /** Initializes the PlugPanel's graphical elements.
+     *  This function is called immediately before the panel is displayed
+     *  to the user.  Creation and layout of a PlugPanel's graphical
+     *  elements should be placed in this function instead of the
+     *  constructor or configure methods, to ensure the fastest
+     *  possible VjControl startup time.
+     *  Note that initUIComponent may be called repeatedly for a single
+     *  PlugPanel; be prepared to ignore redundant calls.
+     */
+    public boolean initUIComponent();
 
     /** Rebuild display in case of emergency.
      *  This function provides a workaround for various graphical 

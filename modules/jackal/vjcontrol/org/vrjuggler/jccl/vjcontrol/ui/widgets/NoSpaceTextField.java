@@ -43,6 +43,9 @@ import java.awt.event.*;
  */
 public class NoSpaceTextField extends JTextField {
 
+    public NoSpaceTextField () {
+        super ();
+    }
     public NoSpaceTextField (int i) {
 	super(i);
     }

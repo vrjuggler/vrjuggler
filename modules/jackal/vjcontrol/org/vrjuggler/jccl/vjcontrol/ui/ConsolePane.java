@@ -56,15 +56,18 @@ public class ConsolePane extends JPanel implements PlugPanel, LogMessageListener
 
     JTextArea textarea;
     JScrollPane sp;
+    StringBuffer tmpbuffer;
 
     public ConsolePane () {
         component_name = "Unconfigured ConsolePane";
         component_chunk = null;
+        textarea = null;
+        tmpbuffer = new StringBuffer (256);
 
-	setLayout (new BorderLayout (5, 5));
-	textarea = new JTextArea ("");
-	textarea.setEditable (false);
-	add (sp = new JScrollPane (textarea), "Center");
+//  	setLayout (new BorderLayout (5, 5));
+//  	textarea = new JTextArea ("");
+//  	textarea.setEditable (false);
+//  	add (sp = new JScrollPane (textarea), "Center");
 
 	Core.addLogMessageListener (this);
     }
@@ -76,10 +79,16 @@ public class ConsolePane extends JPanel implements PlugPanel, LogMessageListener
 	case LogMessageEvent.TEMPORARY_MESSAGE:
 	    break;
 	case LogMessageEvent.PERMANENT_MESSAGE:
-	    textarea.append ("(" + e.getSourceName() + "): " + e.getMessage() + "\n");
+            if (textarea == null)
+                tmpbuffer.append ("(" + e.getSourceName() + "): " + e.getMessage() + "\n");
+            else
+                textarea.append ("(" + e.getSourceName() + "): " + e.getMessage() + "\n");
 	    break;
 	case LogMessageEvent.PERMANENT_ERROR:
-	    textarea.append ("ERROR (" + e.getSourceName() + "): " + e.getMessage() + "\n");
+            if (textarea == null)
+                tmpbuffer.append ("ERROR (" + e.getSourceName() + "): " + e.getMessage() + "\n");
+            else
+                textarea.append ("ERROR (" + e.getSourceName() + "): " + e.getMessage() + "\n");
 	    break;
 	}
     }
@@ -118,6 +127,20 @@ public class ConsolePane extends JPanel implements PlugPanel, LogMessageListener
         return false;
     }
 
+
+    public JComponent getUIComponent() {
+        return this;
+    }
+
+    public boolean initUIComponent() {
+        if (textarea == null) {
+            setLayout (new BorderLayout (5, 5));
+            textarea = new JTextArea (tmpbuffer.toString());
+            textarea.setEditable (false);
+            add (sp = new JScrollPane (textarea), "Center");
+        }
+        return true;
+    }
 
     public void destroy () {
         Core.removeLogMessageListener(this);

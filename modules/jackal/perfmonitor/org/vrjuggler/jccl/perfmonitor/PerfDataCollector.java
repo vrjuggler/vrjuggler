@@ -35,7 +35,7 @@
 package VjComponents.PerfMonitor;
 
 import java.io.*;
-import java.util.Vector;
+import java.util.List;
 
 import VjComponents.PerfMonitor.DataLine;
 import VjConfig.*;
@@ -147,11 +147,11 @@ public class PerfDataCollector {
 	maxdatalines = maxsamples;
 	System.out.println ("creating PerfDataCollector " + _name + " with " + _num + " elements.");
 
-        Vector infochunks = Core.gui_chunkdb.getOfDescToken ("PerfData");
+        List infochunks = Core.vjcontrol_chunkdb.getOfDescToken ("PerfData");
         infochunk = null;
         ConfigChunk ch;
         for (int j = 0; j < infochunks.size(); j++) {
-            ch = (ConfigChunk)infochunks.elementAt(j);
+            ch = (ConfigChunk)infochunks.get(j);
             if (name.startsWith (ch.getName())) {
                 infochunk = ch;
                 break;
@@ -279,10 +279,10 @@ public class PerfDataCollector {
   	String label;
 
         // kludgey - make sure we have latest perfdata labels chunk
-        Vector infochunks = Core.gui_chunkdb.getOfDescToken ("PerfData");
+        List infochunks = Core.vjcontrol_chunkdb.getOfDescToken ("PerfData");
         ConfigChunk ch;
         for (int j = 0; j < infochunks.size(); j++) {
-            ch = (ConfigChunk)infochunks.elementAt(j);
+            ch = (ConfigChunk)infochunks.get(j);
             if (name.startsWith (ch.getName())) {
                 infochunk = ch;
                 break;

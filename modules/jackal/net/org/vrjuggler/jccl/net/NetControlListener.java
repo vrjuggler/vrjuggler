@@ -34,6 +34,16 @@ package VjComponents.Network;
 
 import VjComponents.Network.NetControlEvent;
 
+/** Listener for network connection events.
+ *  <p>
+ *  NetControlEvents may be sent by any thread; a listener intending
+ *  to update GUI components based on the event must use 
+ *  SwingUtilities.invokeLater or something similar to ensure correct
+ *  synchronization.
+ *
+ *  @author Christopher Just
+ *  @version $Revision$
+ */
 public interface NetControlListener extends java.util.EventListener {
 
     public abstract void openedConnection (NetControlEvent e);
