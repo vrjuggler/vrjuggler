@@ -1,5 +1,5 @@
-#ifndef _VRJ_TEST_TEST_H
-#define _VRJ_TEST_TEST_H
+#ifndef _VRJ_TEST_TESTCASE_H
+#define _VRJ_TEST_TESTCASE_H
 
 #include <vpr/vpr.h>
 #include <vrj/vrjConfig.h>
@@ -9,7 +9,8 @@
 
 #include <vrj/Test/Test.h>
 
-namespace vrj::test
+namespace vrj {
+namespace test
 {
 
 /**
@@ -20,7 +21,7 @@ namespace vrj::test
 class TestCase : public Test
 {
 public:
-   Test(std::string name)
+   TestCase(std::string name)
       : mName(name)
    {;}
 
@@ -35,7 +36,7 @@ protected:
    std::string mName;         /**< Name of the test */
 };
 
-}
+} }
 
 #endif
 

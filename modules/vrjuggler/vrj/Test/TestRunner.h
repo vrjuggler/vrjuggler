@@ -14,7 +14,8 @@
 #include <string>
 #include <vector>
 
-namespace vrj::test
+namespace vrj {
+namespace test
 {
 
 /**
@@ -25,8 +26,15 @@ namespace vrj::test
 class TestRunner
 {
 public:
+   enum State
+   { Uninitialized,
+     Processing,
+     DoneProcessing
+   };
+
+public:
    TestRunner()
-      : mApp(NULL), mDoneProcessing(false), mCurTestIndex(-1)
+      : mApp(NULL), mCurState(Uninitialized), mCurTestIndex(-1)
    {;}
 
    /** Initialize the test suite.
@@ -46,6 +54,8 @@ public:
 
       // Clear the failures
       mTestFailures.clear();
+
+      mCurState = Processing;
    }
 
    /** Progresses the state of testing 
@@ -78,11 +88,16 @@ public:
 
             if(test_failed || mTests[mCurTestIndex]->isDone())    // If current test is done or failed
             {
-               mTest[mCurTestIndex]->tearDown();               // Tear down the test
+               mTests[mCurTestIndex]->tearDown();               // Tear down the test
                mCurTestIndex++;                                // Goto the next test
                if(mCurTestIndex < (int)mTests.size())          // If test is in range
                {
                   mTests[mCurTestIndex]->setUp();              // - Initialize it
+               }
+               else
+               {
+                  mCurState = DoneProcessing;
+                  printFailures();
                }
             }
          }
@@ -93,9 +108,9 @@ public:
    /** Are the tests done processing
    * @return true - There is no more processing to do
    */
-   bool doneProcessing()
-   { return mDoneProcessing; }
-
+   State getState()
+   { return mCurState; }
+      
    void addTest(Test* test)
    {
       mTests.push_back(test);
@@ -114,22 +129,21 @@ public:
 
          for(unsigned f=0; f<mTestFailures.size(); ++f)
          {
-            TestFailure cur_failure = mTestFailures[f];
-            std::cout << "   Failed: " << cur_failure.getFullDescription() << std::endl;
+            TestFailure* cur_failure = mTestFailures[f];
+            std::cout << "   Failed: " << cur_failure->getFullDescription() << std::endl;
          }
       }
    }
 
-
 protected:
    vrj::App*                  mApp;             /**< The application to test */
-   bool                       mDoneProcessing;  /**< Flag to indicate completion of testing */
+   State                      mCurState;        /**< Store the current state of processing */
    int                        mCurTestIndex;    /**< Index of the current test to run. -1 means that we have to start. */
    std::vector<Test*>         mTests;           /**< List of tests to run */
    std::vector<TestFailure*>   mTestFailures;    /**< List of test failures */
 };
 
-}
+} }
 
 #endif
 
