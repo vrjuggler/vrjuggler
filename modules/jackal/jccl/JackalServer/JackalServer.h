@@ -39,6 +39,7 @@
 #include <Kernel/vjConfigChunkHandler.h>
 #include <Threads/vjThread.h>
 #include <Environment/vjSocket.h>
+#include <Sync/vjMutex.h>
 
 class vjConnect;
 class vjPerfDataBuffer;
@@ -140,6 +141,7 @@ private:
     bool                      configured_to_accept;
     vjConfigChunk*            current_perf_config;
     vjMutex                   connections_mutex;
+    vjMutex                   perf_buffers_mutex;
 
     // PRIVATE utility functions
 
