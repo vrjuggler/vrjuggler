@@ -335,8 +335,8 @@ else
 fi
 
 VPR_PATH([0.27], , [AC_MSG_ERROR([*** VPR is required for PyJuggler ***])])
-JCCL_PATH([0.12], ,
-          [AC_MSG_ERROR([*** JCCL is required for PyJuggler ***])])
+JCCL_PATH_CXX([0.12], ,
+              [AC_MSG_ERROR([*** JCCL is required for PyJuggler ***])])
 GADGETEER_PATH([0.13], ,
                [AC_MSG_ERROR([*** Gadgeteer is required for PyJuggler ***])])
 VRJUGGLER_PATH([1.1.148], ,
