@@ -91,8 +91,9 @@
 #       define _declspec(x) __declspec(x)
 #   endif
 
-#   define VPR_EXPORT(__type)      extern _declspec(dllexport) __type
-#   define VPR_EXPORT_DATA(__type) extern _declspec(dllexport) __type
+#   define VPR_EXPORT(__type)      _declspec(dllexport) __type
+#   define VPR_EXPORT_CLASS        _declspec(dllexport)
+#   define VPR_EXPORT_DATA(__type) _declspec(dllexport) __type
 #   define VPR_IMPORT(__type)      _declspec(dllimport) __type
 #   define VPR_IMPORT_DATA(__type) _declspec(dllimport) __type
 
@@ -107,8 +108,9 @@
 
 #else   /* UNIX (where this stuff is simple!) */
 
-#   define VPR_EXPORT(__type)      extern __type
-#   define VPR_EXPORT_DATA(__type) extern __type
+#   define VPR_EXPORT(__type)      __type
+#   define VPR_EXPORT_CLASS
+#   define VPR_EXPORT_DATA(__type) __type
 #   define VPR_IMPORT(__type)      extern __type
 #   define VPR_IMPORT_DATA(__type) extern __type
 
