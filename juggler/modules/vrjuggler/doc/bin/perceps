@@ -130,6 +130,9 @@ $GLOBAL_EQUALS='=';
 #         -t tdir :	Directory to scan for template files.
 #         		Defaults to the output directory.
 #
+#         -F fdir :	Directory to scan for filter files.
+#         		Defaults to the template directory.
+#
 #         -o tdir :	Same as -t but uses the contents of the
 #			PERCEPS environment variable as a base path
 #         		
@@ -199,7 +202,7 @@ $PRIVATE_DOC = 0;
 
 $infourl="http://friga.mer.utexas.edu/mark/perl/perceps/";
 
-&Getopts('abrcefumnqhd:t:i:s:o:');
+&Getopts('abrcefumnqhd:t:F:i:s:o:');
 
   if ($opt_s) {
     @default_suffixes=split(",",$opt_s);
@@ -219,22 +222,31 @@ $infourl="http://friga.mer.utexas.edu/mark/perl/perceps/";
   
   if (!$outdir) { $outdir=$HereDir; }
   if ($opt_t) { $tmpldir=$opt_t; }
+  if ($opt_F) { $filterdir=$opt_F; }
   elsif ($opt_o) {       #J.S.
-    $tmpldir = "";
-    if($ENV{PERCEPS}) {
-      $tmpldir = $ENV{PERCEPS};
+    $filterdir = $tmpldir = "";
+    if($ENV{'PERCEPS'}) {
+      $filterdir = $tmpldir = $ENV{'PERCEPS'};
     }
     if (! ($tmpldir =~ /$X$/)) {
       $tmpldir .= $X;
     }
     $tmpldir .= $opt_o;
+
+    if ( ! ($filterdir =~ /$X$/) ) {
+      $filterdir .= "$X";
+    }
+    $filterdir .= "$tmpldir";
   }   
-  else { $tmpldir=$outdir; }
+  else {
+    $filterdir = $tmpldir = "$outdir";
+  }
   
    
   # RWD: used $X in pathing
   $outdir=~s/$X$//o;
   $tmpldir=~s/$X$//o;
+  $filterdir =~ s/$X$//o;
   $incpath=~s/$X$//o;
    
   $anynewer=0;
@@ -586,8 +598,8 @@ sub GENTEXT {
       }
       elsif ($arg[0] eq "name") {
         if ($curglob) {
-          $cleaned=&FILTER($curglobval{$curglob},"$tmpldir$X$curglob.flt");
-          $cleaned=&FILTER($cleaned,"$tmpldir${X}comment.flt");
+          $cleaned=&FILTER($curglobval{$curglob},"$filterdir${X}$curglob.flt");
+          $cleaned=&FILTER($cleaned,"$filterdir${X}comment.flt");
           %filterflags=();
           if ($arg[1] eq "@") { $cleaned=~s/(\s|$X)/\_/g; }
           $str=~s/$TO([^$TO$TC]*)$TC/$cleaned/;
@@ -645,11 +657,11 @@ sub GENTEXT {
         $str=~s/$TO([^$TO$TC]*)$TC/$linkname/;
       }
       elsif ($arg[0] eq "buildtime") {
-        $cleaned=&FILTER($buildtime,"$tmpldir${X}time.flt");
+        $cleaned=&FILTER($buildtime,"$filterdir${X}time.flt");
         $str=~s/$TO([^$TO$TC]*)$TC/$cleaned/;
       }
       elsif ($arg[0] eq "modtime") {
-        $cleaned=&FILTER(&ctime($modtime{$cname}),"$tmpldir${X}time.flt");
+        $cleaned=&FILTER(&ctime($modtime{$cname}),"$filterdir${X}time.flt");
         $str=~s/$TO([^$TO$TC]*)$TC/$cleaned/;
       }
       elsif ($arg[0] eq "member") {
@@ -687,8 +699,8 @@ sub GENTEXT {
         $str=~s/$TO([^$TO$TC]*)$TC/$cleaned/;
       }
       elsif ($arg[0] eq "global") {
-        $cleaned=&FILTER($curglobval{$curglob},"$tmpldir$X$curglob.flt");
-        $cleaned=&FILTER($cleaned,"$tmpldir${X}comment.flt");
+        $cleaned=&FILTER($curglobval{$curglob},"$filterdir$X$curglob.flt");
+        $cleaned=&FILTER($cleaned,"$filterdir${X}comment.flt");
         %filterflags=();
         $str=~s/$TO([^$TO$TC]*)$TC/$cleaned/;
       }
@@ -696,7 +708,7 @@ sub GENTEXT {
         if ($mname) { $cleaned=$args{$mloc,$mnm}; }
         else { $cleaned=$args{$cname}; }
         $cleaned=&REPLACE_SPECIAL($cleaned);
-        $cleaned=&FILTER($cleaned,"$tmpldir${X}args.flt");
+        $cleaned=&FILTER($cleaned,"$filterdir${X}args.flt");
         %filterflags=();
         $cleaned=&CLEANTEXT($cleaned);
         $str=~s/$TO([^$TO$TC]*)$TC/$cleaned/;
@@ -711,7 +723,7 @@ sub GENTEXT {
         if ($mname) { $cleaned=$exargs{$mloc,$mnm}; }
         else { $cleaned=$exargs{$cname}; }
         $cleaned=&REPLACE_SPECIAL($cleaned);
-        $cleaned=&FILTER($cleaned,"$tmpldir${X}args.flt");
+        $cleaned=&FILTER($cleaned,"$filterdir${X}args.flt");
         %filterflags=();
         $cleaned=&CLEANTEXT($cleaned);
         $str=~s/$TO([^$TO$TC]*)$TC/$cleaned/;
@@ -741,9 +753,9 @@ sub GENTEXT {
           if ($arg[1] eq "wrap") {
             $cleaned=&WRAP($cleaned,$arg[2],$arg[3]);
           }
-          $cleaned=&FILTER($cleaned,"$tmpldir${X}brief_m.flt");
-          $cleaned=&FILTER($cleaned,"$tmpldir${X}brief.flt");
-          $cleaned=&FILTER($cleaned,"$tmpldir${X}comment.flt");
+          $cleaned=&FILTER($cleaned,"$filterdir${X}brief_m.flt");
+          $cleaned=&FILTER($cleaned,"$filterdir${X}brief.flt");
+          $cleaned=&FILTER($cleaned,"$filterdir${X}comment.flt");
           %filterflags=();
           $cleaned=&CLEANTEXT($cleaned,$htmlcomm);
         }
@@ -752,9 +764,9 @@ sub GENTEXT {
           if ($arg[1] eq "wrap") {
             $cleaned=&WRAP($cleaned,$arg[2],$arg[3]);
           }
-          $cleaned=&FILTER($cleaned,"$tmpldir${X}brief_c.flt");
-          $cleaned=&FILTER($cleaned,"$tmpldir${X}brief.flt");
-          $cleaned=&FILTER($cleaned,"$tmpldir${X}comment.flt");
+          $cleaned=&FILTER($cleaned,"$filterdir${X}brief_c.flt");
+          $cleaned=&FILTER($cleaned,"$filterdir${X}brief.flt");
+          $cleaned=&FILTER($cleaned,"$filterdir${X}comment.flt");
           %filterflags=();
           $cleaned=&CLEANTEXT($cleaned,$htmlcomm);
         }
@@ -771,9 +783,9 @@ sub GENTEXT {
           if ($arg[1] eq "wrap") {
             $cleaned=&WRAP($cleaned,$arg[2],$arg[3]);
           }
-          $cleaned=&FILTER($cleaned,"$tmpldir${X}detail_m.flt");
-          $cleaned=&FILTER($cleaned,"$tmpldir${X}detail.flt");
-          $cleaned=&FILTER($cleaned,"$tmpldir${X}comment.flt");
+          $cleaned=&FILTER($cleaned,"$filterdir${X}detail_m.flt");
+          $cleaned=&FILTER($cleaned,"$filterdir${X}detail.flt");
+          $cleaned=&FILTER($cleaned,"$filterdir${X}comment.flt");
           %filterflags=();
           $cleaned=&CLEANTEXT($cleaned,$htmlcomm);
         }
@@ -782,9 +794,9 @@ sub GENTEXT {
           if ($arg[1] eq "wrap") {
             $cleaned=&WRAP($cleaned,$arg[2],$arg[3]);
           }
-          $cleaned=&FILTER($cleaned,"$tmpldir${X}detail_c.flt");
-          $cleaned=&FILTER($cleaned,"$tmpldir${X}detail.flt");
-          $cleaned=&FILTER($cleaned,"$tmpldir${X}comment.flt");
+          $cleaned=&FILTER($cleaned,"$filterdir${X}detail_c.flt");
+          $cleaned=&FILTER($cleaned,"$filterdir${X}detail.flt");
+          $cleaned=&FILTER($cleaned,"$filterdir${X}comment.flt");
           %filterflags=();
           $cleaned=&CLEANTEXT($cleaned,$htmlcomm);
         }
@@ -1181,7 +1193,7 @@ sub GENTEXT {
         $srcstr=&GETBLOCK($str,"${TO}filter","${TO}endfilter","$TC");
         $tmpstr=&GENTEXT(1,$srcstr,$ord,$cname,$mname,$curglob,%curglobval);
         if ($arg[1]=~/^\//) { $tmpstr=&FILTER($tmpstr,"$arg[1].flt"); }
-        else { $tmpstr=&FILTER($tmpstr,"$tmpldir${X}$arg[1].flt"); }
+        else { $tmpstr=&FILTER($tmpstr,"$filterdir${X}$arg[1].flt"); }
         %filterflags=();
         if (!($arg[2]=~/kt/i)) {
           $tmpstr=~s/$TO/$TO_sub/g;
@@ -1261,9 +1273,9 @@ sub GENTEXT {
  	if ($arg[1] eq "wrap") {
  	  $cleaned=&WRAP($cleaned,$arg[2],$arg[3]);
  	}
-        $cleaned=&FILTER($cleaned,"$tmpldir$X$arg[0]_m.flt");
-        $cleaned=&FILTER($cleaned,"$tmpldir$X$arg[0].flt");
-        $cleaned=&FILTER($cleaned,"$tmpldir${X}comment.flt");
+        $cleaned=&FILTER($cleaned,"$filterdir$X$arg[0]_m.flt");
+        $cleaned=&FILTER($cleaned,"$filterdir$X$arg[0].flt");
+        $cleaned=&FILTER($cleaned,"$filterdir${X}comment.flt");
         %filterflags=();
         $cleaned=&CLEANTEXT($cleaned,$htmlcomm);
         $str=~s/$TO([^$TO$TC]*)$TC/$cleaned/;
@@ -1273,16 +1285,16 @@ sub GENTEXT {
  	if ($arg[1] eq "wrap") {
  	  $cleaned=&WRAP($cleaned,$arg[2],$arg[3]);
  	}
-        $cleaned=&FILTER($cleaned,"$tmpldir$X$arg[0]_c.flt");
-        $cleaned=&FILTER($cleaned,"$tmpldir$X$arg[0].flt");
-        $cleaned=&FILTER($cleaned,"$tmpldir${X}comment.flt");
+        $cleaned=&FILTER($cleaned,"$filterdir$X$arg[0]_c.flt");
+        $cleaned=&FILTER($cleaned,"$filterdir$X$arg[0].flt");
+        $cleaned=&FILTER($cleaned,"$filterdir${X}comment.flt");
         %filterflags=();
         $cleaned=&CLEANTEXT($cleaned,$htmlcomm);
         $str=~s/$TO([^$TO$TC]*)$TC/$cleaned/;
       }
       elsif (!$mname && $curglobval{$arg[0]}) {
-        $cleaned=&FILTER($curglobval{$arg[0]},"$tmpldir$X$arg[0].flt");
-        $cleaned=&FILTER($cleaned,"$tmpldir${X}comment.flt");
+        $cleaned=&FILTER($curglobval{$arg[0]},"$filterdir$X$arg[0].flt");
+        $cleaned=&FILTER($cleaned,"$filterdir${X}comment.flt");
         %filterflags=();
         if ($arg[1] eq "@") { $cleaned=~s/(\s|$X)/\_/g; }
         $str=~s/$TO([^$TO$TC]*)$TC/$cleaned/;
@@ -1322,7 +1334,7 @@ sub PROCINPUT  {
 
   $anynewer = 1 if $modtime > $lastbuild;
 
-  $buffer=&FILTER($buffer,"$tmpldir${X}input.flt");
+  $buffer=&FILTER($buffer,"$filterdir${X}input.flt");
 
   $*=1;
   
