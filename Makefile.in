@@ -5,6 +5,12 @@
 # -----------------------------------------------------------------------------
 # Targets are:
 #
+# world           - Build and install everything.
+# world-all-abi   - Build and install everything usnig all supported ABIs.
+# buildworld      - Build everything (same as 'all').
+# installworld    - Install everything (same as 'install-all').  This requires 
+#                   that 'buildworld' be successfully completed beforehand.
+#
 # all             - Build everything.
 # all-abi         - Build everything using all supported ABIs.
 # dbg             - Build the debugging, static copy of the libraries.
@@ -189,14 +195,76 @@ ABI_LIST	= @ABI_LIST@
 #    5) Set up the developer installation links.
 # =============================================================================
 
+# ------------------------------------------------
+# Build and install everything (i.e., the world).
+# ------------------------------------------------
+world:
+	@echo "==============================================================="
+	@echo ">>> VR Juggler make world started on `LTIME=C date`"
+	@echo "==============================================================="
+ifndef NO_CLEAN
+	@${MAKE} clobber
+endif
+	@${MAKE} depend
+	@${MAKE} _libs
+	@${MAKE} _check_gui
+	@echo "---------------------------------------------------------------"
+	@echo "Beginning VR Juggler installation process"
+	@echo "---------------------------------------------------------------"
+	@${MAKE} beforeinstall
+	@${MAKE} _install_libs
+	@${MAKE} _install_post_libs
+	@echo "==============================================================="
+	@echo ">>> VR Juggler make world completed on `LTIME=C date`"
+	@echo "==============================================================="
+
+# ------------------------------------------------------------------------
+# Build and install everything (i.e., the world) using all possible ABIs.
+# ------------------------------------------------------------------------
+world-all-abi:
+	@echo "==============================================================="
+	@echo ">>> VR Juggler make world started on `LTIME=C date`"
+	@echo "==============================================================="
+ifndef NO_CLEAN
+	@${MAKE} clobber
+endif
+	@${MAKE} depend
+	@abi_list='${ABI_LIST}' ;					\
+          for abi in $$abi_list ; do					\
+              echo "------------------------------------------------" ;	\
+              echo "Building libraries using $$abi" ;			\
+              echo "------------------------------------------------" ;	\
+              ${MAKE} vjABI=$$abi _libs ;				\
+          done
+	@${MAKE} _check_gui
+	@echo "---------------------------------------------------------------"
+	@echo "Beginning VR Juggler installation process"
+	@echo "---------------------------------------------------------------"
+	@${MAKE} beforeinstall
+	@abi_list='${ABI_LIST}' ;					\
+          for abi in $$abi_list ; do					\
+              echo "------------------------------------------------" ;	\
+              echo "Installing $$abi version of libraries" ;		\
+              echo "------------------------------------------------" ;	\
+              ${MAKE} vjABI=$$abi _install_libs ;			\
+          done
+	@${MAKE} _install_post_libs
+	@echo "==============================================================="
+	@echo ">>> VR Juggler make world completed on `LTIME=C date`"
+	@echo "==============================================================="
+
+# ------------------------------------------
 # Build all four versions of the libraries.
-all:
+# ------------------------------------------
+all buildworld:
 	@${MAKE} beforebuild
 	@${MAKE} _libs
 	@${MAKE} _check_gui
 	@${MAKE} afterbuild
 
+# -------------------------------
 # Build all ABIs in ${ABI_LIST}.
+# -------------------------------
 all-abi:
 	@${MAKE} beforebuild
 	@abi_list='${ABI_LIST}' ;					\
@@ -216,9 +284,6 @@ beforebuild:
 # Things to do after the object files and library are built.
 afterbuild:
 	@${MAKE} links
-	@echo "------------------------------------------------"
-	@echo "Library build complete"
-	@echo "------------------------------------------------"
 
 # Build the optimized and debugging object files, static libraries and
 # shared libraries.  Once this has been done, make the links in ${_LIBDIR}.
@@ -453,6 +518,7 @@ _check_gui:
 
 # Build the Java-based configuration GUI.
 gui:
+ifndef NO_JAVA_GUI
 ifeq (${BUILD_GUI}, Y)
 	@echo "------------------------------------------------"
 	@echo "Building GUI"
@@ -466,6 +532,7 @@ else
 	@echo "GUI cannot be built without javac"
 	@echo "------------------------------------------------"
 endif
+endif	# ifndef NO_JAVA_GUI
 
 # =============================================================================
 # Make links for developer use that provide the needed functionality for
@@ -490,8 +557,10 @@ links:
 	cd ${instlinks}/include && ln -sf ${VJROOT_ABS}/vjConfig.h ./vjConfig.h
 	cd ${instlinks}/include && ln -sf ${topdir}/vjDefines.h ./vjDefines.h
 	${scriptdir}/mkinstalldirs ${instlinks}/bin
+ifndef NO_JAVA_GUI
 	cd ${instlinks}/bin && ln -sf ${topdir}/GUI/VjControl.jar ./
 	cd ${instlinks}/bin && ln -sf ${VJROOT_ABS}/GUI/vjcontrol ./vjcontrol
+endif
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$VJ_BASE_DIR to:'
@@ -510,13 +579,12 @@ clean-links:
 # the static debugging version of the libraries.  The steps taken for a full
 # installation are:
 #
-#     1) Ensure that everything is built.
-#     2) Create the installation directory.
-#     3) Install the libraries.
-#     4) Install the header files.
-#     5) Install the test programs.
-#     6) Install the contents of the Data directory.
-#     7) Install the Java-based config editor (if possible).
+#     1) Create the installation directory.
+#     2) Install the libraries.
+#     3) Install the header files.
+#     4) Install the test programs.
+#     5) Install the contents of the Data directory.
+#     6) Install the Java-based config editor (if possible).
 # =============================================================================
 
 # Steps to take before beginning the installation process.  This target is
@@ -536,7 +604,7 @@ afterinstall:
 # Do a full installation all versions of the libraries and the associated
 # files.
 # ------------------------------------------------------------------------
-install-all:
+install-all installworld:
 	@${MAKE} beforeinstall
 	@${MAKE} _install_libs
 	@${MAKE} _install_post_libs
@@ -590,7 +658,6 @@ install:
 # Install only the static debugging version of the libraries.
 # ------------------------------------------------------------
 install-dbg:
-	@${MAKE} dbg
 	@echo "------------------------------------------------"
 	@echo "Installing static debugging libraries"
 	@echo "------------------------------------------------"
@@ -612,7 +679,6 @@ endif
 # Install only the dynamic debugging version of the libraries.
 # -------------------------------------------------------------
 install-ddso:
-	@${MAKE} ddso
 	@echo "------------------------------------------------"
 	@echo "Installing dynamic debugging libraries"
 	@echo "------------------------------------------------"
@@ -634,7 +700,6 @@ endif
 # Install only the static optimized version of the libraries.
 # ------------------------------------------------------------
 install-opt:
-	@${MAKE} opt
 	@echo "------------------------------------------------"
 	@echo "Installing static optimized libraries"
 	@echo "------------------------------------------------"
@@ -656,7 +721,6 @@ endif
 # Install only the dynamic optimized version of the libraries.
 # -------------------------------------------------------------
 install-dso:
-	@${MAKE} dso
 	@echo "------------------------------------------------"
 	@echo "Installing dynamic optimizied libraries"
 	@echo "------------------------------------------------"
@@ -767,7 +831,6 @@ install-data:
 
 # Install the Java-based config editor if possible.
 install-gui:
-	@${MAKE} _check_gui
 ifeq (${BUILD_GUI}, Y)
 	@echo "------------------------------------------------"
 	@echo "Installing vjcontrol"
