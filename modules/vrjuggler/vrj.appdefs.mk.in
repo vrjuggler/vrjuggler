@@ -43,6 +43,24 @@ CXX=			@APP_CXX@
 LD=			@APP_LINK@
 CXX_PLUGIN=		@APP_CXX_PLUGIN@
 
+ABI=			@ABI@
+ISA=			@ISA@
+
+ifneq ($(ABI),)
+   # XXX: In general, we need to convert $(ABI) to a lower-case value to
+   # match what Doozer expects for $(OS_ABI).  This little hack should be good
+   # enough for now, though.  -PH 4/21/2004
+   ifeq ($(ABI), N32)
+      OS_ABI?=		n32
+   else
+      OS_ABI?=		$(ABI)
+   endif
+endif
+
+ifneq ($(ISA),)
+   OS_ISA?=		$(ISA)
+endif
+
 # Set to either 'dbg' or 'opt'.  We default to 'dbg'.
 BUILD_TYPE?=		dbg
 
