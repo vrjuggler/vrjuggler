@@ -178,22 +178,22 @@
 				RelativePath="..\..\src\gadget\_Event.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\gadget\_EventWindow.cpp">
+				RelativePath="..\..\src\gadget\_gadget_Type_KeyboardMouse_Event_h.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\gadget\_EventWindowInterface.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\gadget\_EventWindowProxy.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\gadget\_gadget_Type_EventWindow_Event_h.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\gadget\_gadget_Type_EventWindow_Keys_h.cpp">
+				RelativePath="..\..\src\gadget\_gadget_Type_KeyboardMouse_Keys_h.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\gadget\_InputManager.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\gadget\_KeyboardMouse.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\gadget\_KeyboardMouseInterface.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\gadget\_KeyboardMouseProxy.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\gadget\_KeyEvent.cpp">
