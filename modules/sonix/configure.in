@@ -41,7 +41,7 @@
 
 AC_INIT
 AC_CONFIG_AUX_DIR(../../share/config)
-DPP_PREREQ([1.4.108])
+DPP_PREREQ([1.5.1])
 DPP_INIT
 
 dnl make the nice reconfig script.
@@ -108,18 +108,6 @@ if test "x$CYGPATH" != "xno" ; then
 else
    JUGGLERROOT_ABS="$UNIX_JUGGLERROOT_ABS"
 fi
-
-dnl ===========================================================================
-dnl Define macros useful when working in a Win32/DOS-based environment.
-dnl ---------------------------------------------------------------------------
-dnl Macros:
-dnl     DPP_WIN32_SETUP - Define path conversion (DOS to UNIX and UNIX to DOS)
-dnl                       subroutines.
-dnl 
-dnl Subroutines defined:
-dnl     unix2dos - Convert a UNIX-style path into a DOS-style path.
-dnl     dos2unix - Convert a DOS-style path into a UNIX-style path.
-dnl ===========================================================================
 
 # We use AC_CANONICAL SYSTEM so that we can find out information about the
 
@@ -230,25 +218,25 @@ UNIX_SNXROOT_ABS="$SNXROOT_ABS"
 if test "x$OS_TYPE" = "xWin32" ; then
     LN_S='cp -pr'
     RM_LN='rm -rf'
-    SAFE_SNXROOT_ABS=`unix2dos -p "$SNXROOT_ABS"`
-    SAFE_JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
-    SNX_SRCDIR=`unix2dos "$SNX_SRCDIR"`
+    SAFE_SNXROOT_ABS=`dospath -p "$SNXROOT_ABS"`
+    SAFE_JUGGLERROOT_ABS=`dospath -p "$JUGGLERROOT_ABS"`
+    SNX_SRCDIR=`dospath "$SNX_SRCDIR"`
 
     if test "x$DEPEND_EXTRAS" != "x" ; then
-        DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
+        DEPEND_EXTRAS=`dospath "$DEPEND_EXTRAS"`
     fi
 
     if test "x$INCLUDES" != "x" ; then
-        INCLUDES=`unix2dos "$INCLUDES"`
+        INCLUDES=`dospath "$INCLUDES"`
     fi
 
     if test "x$LIBS" != "x" ; then
-        LIBS=`unix2dos "$LIBS"`
+        LIBS=`dospath "$LIBS"`
     fi
 
-    MTREE_CMD=`unix2dos "$MTREE_CMD"`
+    MTREE_CMD=`dospath "$MTREE_CMD"`
 
-    APP_EXTRA_LIBS_BASIC=`unix2dos "$APP_EXTRA_LIBS_BASIC"`
+    APP_EXTRA_LIBS_BASIC=`dospath "$APP_EXTRA_LIBS_BASIC"`
 else
     RM_LN='rm -f'
     SAFE_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"

@@ -41,7 +41,7 @@ AC_REVISION($Revision$)
 AC_INIT(common/jccl/jcclConfig.h)
 AC_CONFIG_AUX_DIR(../../share/config)
 AC_CONFIG_HEADER(common/jccl/jcclDefines.h)
-DPP_PREREQ([1.4.108])
+DPP_PREREQ([1.5.1])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -405,25 +405,25 @@ DYLIB_PROF_DEPS_JCCL="$APP_EXTRA_PROF_LIBS"
 
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
-    JCCLROOT_ABS=`unix2dos -p "$JCCLROOT_ABS"`
+    JCCLROOT_ABS=`dospath -p "$JCCLROOT_ABS"`
 
     if test "x$DEPEND_EXTRAS" != "x" ; then
-        DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
+        DEPEND_EXTRAS=`dospath "$DEPEND_EXTRAS"`
     fi
 
     if test "x$INCLUDES" != "x" ; then
-        INCLUDES=`unix2dos "$INCLUDES"`
+        INCLUDES=`dospath "$INCLUDES"`
     fi
 
     if test "x$LIBS" != "x" ; then
-        LIBS=`unix2dos "$LIBS"`
+        LIBS=`dospath "$LIBS"`
     fi
 
     LN_S='cp -pr'
     RM_LN='rm -rf'
-    MTREE_CMD=`unix2dos "$MTREE_CMD"`
-    JDK_HOME=`unix2dos -p "$JDK_HOME"`
-#    APP_EXTRA_LIBS=`unix2dos "$APP_EXTRA_LIBS"`
+    MTREE_CMD=`dospath "$MTREE_CMD"`
+    JDK_HOME=`dospath -p "$JDK_HOME"`
+#    APP_EXTRA_LIBS=`dospath "$APP_EXTRA_LIBS"`
 else
     RM_LN='rm -f'
     JCCLROOT_ABS="$JCCLROOT_ABS"
