@@ -43,14 +43,22 @@ public:
    //: From the given angle data, calculate the xforms
    calcXforms();
 
+public:  // --- I/O Functions --- //
+   //: Output the angles
+   ostream& outputAngles(ostream& out) const;
+   istream& inputAngles(istream& in);
+
 public:
    float     angles[NUM_COMPONENTS][NUM_JOINTS];
+
+   //: These are the xforms from TO the coord system of the given joint
    vjMatrix  xforms[NUM_COMPONENTS][(NUM_JOINTS-1)];
+
    // Finger params
    //  XXX: Should put better info about hand dimensions in here
    // For now this is the translations FROM the previous joint to
-   // the SPECIFIED joint
-   vjVec3    dims[NUM_COMPONENTS][(NUM_JOINTS-1)];
+   // the SPECIFIED joint.  In case of (DIJ+1), length to tip of finger
+   vjVec3    dims[NUM_COMPONENTS][NUM_JOINTS];
 };
 
 
@@ -84,22 +92,17 @@ public:  // ---- GLOVE INTERFACE ---- //
    //: This returns the position of given components.
    // Defaults to returning the palm position.
    // Can also get finger tips.
-   vjVec3 getGlovePos(vjGloveData::vjGloveComponent component = vjGloveData::WRIST, int devNum = 0);
+   vjMatrix getGlovePos(vjGloveData::vjGloveComponent component = vjGloveData::WRIST, int devNum = 0);
 
    //: This returns a copy of the glove data struct
    vjGloveData getGloveData(int devNum);
-
-   //: Gets a list of all the angles.
-   // This is in no specific order.
-   // This is used for gesture recognition
-   virtual vector<float> getGloveAngles(int devNum);
 
 protected:
    vjGloveData mTheData[VJ_MAX_GLOVE_DEVS][3];
 
   //: This is the positional proxy of the glove.  It defines the location of the
   // "center" of the glove. "center" could be different for each glove type.
-  vjPosInterface  mGlovePos;
+  vjPosProxy*  mGlovePos[VJ_MAX_GLOVE_DEVS];
 
 };
 
