@@ -249,7 +249,7 @@ public class Editor
       // Set Default Size
       frame.setSize(520, 390);
       // Show Frame
-      frame.show();
+      frame.setVisible(true);
    }
 
    //
