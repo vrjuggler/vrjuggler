@@ -320,7 +320,7 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline vpr::Int8
+    inline vpr::SerialTypes::ParityType
     getParity (void) {
         return m_sio_imp.getParity();
     }

@@ -649,17 +649,17 @@ SerialPortImpTermios::disableParityErrorMarking () {
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-Int8
+SerialTypes::ParityType
 SerialPortImpTermios::getParity () {
-    Int8 retval;
+    SerialTypes::ParityType retval;
 
     // Odd parity if PARODD is set.
     if ( getBit(PARODD, SerialPortImpTermios::CFLAG) ) {
-        retval = 1;
+        retval = SerialTypes::PARITY_ODD;
     }
     // Even parity if PARODD is not set.
     else {
-        retval = 0;
+        retval = SerialTypes::PARITY_EVEN;
     }
 
     return retval;

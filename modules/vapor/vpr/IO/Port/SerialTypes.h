@@ -71,6 +71,11 @@ namespace SerialTypes {
         CS_BITS_7 = 7,  // 7 bits per byte
         CS_BITS_8 = 8   // 8 bits per byte
     };
+
+    enum ParityType {
+        PARITY_EVEN = 0, // Even parity
+        PARITY_ODD  = 1  // Odd parity
+    };
 };
 
 }; // End of namespace
