@@ -78,8 +78,6 @@ public class ContextToolbar
          openBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/open.gif")));
          saveBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/save.gif")));
          saveAsBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/saveas.gif")));
-         undoBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/undo.gif")));
-         redoBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/redo.gif")));
          expandBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/expand_toolbar.gif")));
       }
       catch (Exception e)
@@ -89,8 +87,6 @@ public class ContextToolbar
          openBtn.setText("Open");
          saveBtn.setText("Save");
          saveAsBtn.setText("Save As");
-         undoBtn.setText("Undo");
-         redoBtn.setText("Redo");
          expandBtn.setText("Expand");
       }
    }
@@ -315,22 +311,6 @@ public class ContextToolbar
    }
 
    /**
-    * Programmatically execute an undo action.
-    */
-   public void doUndo()
-   {
-      System.err.println("Undo not yet implemented");
-   }
-
-   /**
-    * Programmatically execte a redo action.
-    */
-   public void doRedo()
-   {
-      System.err.println("Redo not yet implemented");
-   }
-
-   /**
     * Programmatically execute a close action.
     */
    public boolean doClose()
@@ -452,14 +432,6 @@ public class ContextToolbar
       saveAsBtn.setToolTipText("Save Configuration As");
       saveAsBtn.setActionCommand("SaveAs");
       saveAsBtn.setFocusPainted(false);
-      undoBtn.setEnabled(false);
-      undoBtn.setToolTipText("Undo");
-      undoBtn.setActionCommand("Undo");
-      undoBtn.setFocusPainted(false);
-      redoBtn.setEnabled(false);
-      redoBtn.setToolTipText("Redo");
-      redoBtn.setActionCommand("Redo");
-      redoBtn.setFocusPainted(false);
       expandBtn.setEnabled(false);
       expandBtn.setToolTipText("Expand Toolbar");
       expandBtn.setActionCommand("Expand");
@@ -492,20 +464,6 @@ public class ContextToolbar
             doSaveAs();
          }
       });
-      undoBtn.addActionListener(new ActionListener()
-      {
-         public void actionPerformed(ActionEvent evt)
-         {
-            doUndo();
-         }
-      });
-      redoBtn.addActionListener(new ActionListener()
-      {
-         public void actionPerformed(ActionEvent evt)
-         {
-            doRedo();
-         }
-      });
       expandBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -519,8 +477,6 @@ public class ContextToolbar
       toolbar.add(saveBtn, null);
       toolbar.add(saveAsBtn, null);
       toolbar.addSeparator();
-      toolbar.add(undoBtn, null);
-      toolbar.add(redoBtn, null);
       toolbar.add(Box.createHorizontalGlue(), null);
       toolbar.add(expandBtn, null);
    }
@@ -531,8 +487,6 @@ public class ContextToolbar
    private JButton openBtn = new JButton();
    private JButton saveBtn = new JButton();
    private JButton saveAsBtn = new JButton();
-   private JButton undoBtn = new JButton();
-   private JButton redoBtn = new JButton();
    private JToggleButton expandBtn = new JToggleButton();
    private JFileChooser fileChooser = new JFileChooser();
 
