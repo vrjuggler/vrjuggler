@@ -181,9 +181,11 @@ namespace sim
    vpr::ReturnStatus SocketManager::bind( vpr::SocketImplSIM* handle )
    {
       vprASSERT(handle->isOpen() && !handle->isBound() && "Against preconditions to have a handle not open or already bound");
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "bind(" << handle << ")\n" << vprDEBUG_FLUSH;
+      vprDEBUG_BEGIN(vprDBG_ALL, vprDBG_STATE_LVL) << "bind(" << handle << ")\n" << vprDEBUG_FLUSH;
 
       vpr::ReturnStatus ret_stat = assignToNode(handle);
+
+      vprDEBUG_END(vprDBG_ALL, vprDBG_STATE_LVL) << "bind complete\n" << vprDEBUG_FLUSH;
 
       return ret_stat;
    }
