@@ -95,7 +95,7 @@ public class BeanTreeViewer extends DefaultBeanModelViewer
 
    public void refreshDataModel (BeanTreeModel model)
    {
-      /* Nothing to do. */ ;
+      model.nodeStructureChanged((TreeNode) model.getRoot());
    }
 
    public JComponent getViewer ()
