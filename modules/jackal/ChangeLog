@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Feb-17-2005 patrickh    Allow org.vrjuggler.jccl.config.ConfigElementPointer
+                        references to be passed as the property value for
+                        org.vrjuggler.jccl.config.ConfigElement.setProperty().
+                        NEW VERSION: 0.92.4
 Feb-15-2005 patrickh    Extended org.vrjuggler.jccl.config.ConfigUndoManager to
                         provide automatmed multiple undo/redo operations.
                         NEW VERSION: 0.92.3
