@@ -35,13 +35,13 @@ package org.vrjuggler.vrjconfig.customeditors.display_window;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import info.clearthought.layout.*;
 import javax.swing.border.*;
+
+import org.vrjuggler.jccl.config.ConfigElement;
 
 
 public class DisplayWindowStartDialog
@@ -66,6 +66,63 @@ public class DisplayWindowStartDialog
          setSpinnerModel(mBlueDepthSpinner, 1, 1, 8);
          setSpinnerModel(mAlphaDepthSpinner, 1, 1, 8);
          setSpinnerModel(mDepthBufferSpinner, 1, 1, 32);
+
+         // Validate the default values for the various text fields.
+         validateUserInput();
+      }
+      catch(Exception e)
+      {
+         e.printStackTrace();
+      }
+
+      this.setResizable(false);
+      this.pack();
+   }
+
+   public DisplayWindowStartDialog(ConfigElement winElt, Dimension resolution)
+      throws HeadlessException
+   {
+      super();
+      this.setTitle(winElt.getName() + " Properties");
+      this.setModal(true);
+      enableEvents(AWTEvent.WINDOW_EVENT_MASK);
+
+      mResolution = resolution;
+      mVisualIdField.setDocument(new HexidecimalDocument());
+
+      try
+      {
+         jbInit();
+
+         mNameField.setText(winElt.getName());
+
+         ConfigElement fb_cfg =
+            (ConfigElement) winElt.getProperty("frame_buffer_config", 0);
+
+         int val;
+         val = ((Integer) fb_cfg.getProperty("red_size", 0)).intValue();
+         setSpinnerModel(mRedDepthSpinner, val, 1, 8);
+         val = ((Integer) fb_cfg.getProperty("green_size", 0)).intValue();
+         setSpinnerModel(mGreenDepthSpinner, val, 1, 8);
+         val = ((Integer) fb_cfg.getProperty("blue_size", 0)).intValue();
+         setSpinnerModel(mBlueDepthSpinner, val, 1, 8);
+         val = ((Integer) fb_cfg.getProperty("alpha_size", 0)).intValue();
+         setSpinnerModel(mAlphaDepthSpinner, val, 1, 8);
+         val = ((Integer) fb_cfg.getProperty("depth_buffer_size", 0)).intValue();
+         setSpinnerModel(mDepthBufferSpinner, val, 1, 32);
+
+         mVisualIdField.setText(((Integer) fb_cfg.getProperty("visual_id", 0)).toString());
+         mFSAACheckbox.setSelected(fb_cfg.getProperty("fsaa_enable", 0).equals(Boolean.TRUE));
+
+         mPositionXField.setValue(winElt.getProperty("origin", 0));
+         mPositionYField.setValue(winElt.getProperty("origin", 1));
+         mWidthField.setValue(winElt.getProperty("size", 0));
+         mHeightField.setValue(winElt.getProperty("size", 1));
+
+         mStereoCheckbox.setSelected(winElt.getProperty("stereo", 0).equals(Boolean.TRUE));
+         mBorderCheckbox.setSelected(winElt.getProperty("border", 0).equals(Boolean.TRUE));
+         mHideMouseCheckbox.setSelected(winElt.getProperty("hide_mouse", 0).equals(Boolean.TRUE));
+         mEventSourceCheckbox.setSelected(winElt.getProperty("act_as_event_source", 0).equals(Boolean.TRUE));
 
          // Validate the default values for the various text fields.
          validateUserInput();
