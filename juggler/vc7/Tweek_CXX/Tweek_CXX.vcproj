@@ -29,7 +29,7 @@
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="1"
-				DisableSpecificWarnings="4244;4251;4311;4312"/>
+				DisableSpecificWarnings="4244;4251;4275;4311;4312"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -89,7 +89,7 @@ $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../..
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4244;4251;4311;4312"/>
+				DisableSpecificWarnings="4244;4251;4275;4311;4312"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -147,7 +147,7 @@ $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../..
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="1"
-				DisableSpecificWarnings="4244;4251;4311;4312"/>
+				DisableSpecificWarnings="4244;4251;4275;4311;4312"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -195,7 +195,7 @@ $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../..
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4244;4251;4311;4312"/>
+				DisableSpecificWarnings="4244;4251;4275;4311;4312"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
