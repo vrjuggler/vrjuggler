@@ -36,6 +36,7 @@
 #include <vpr/Util/Debug.h>
 
 #include <gadget/Util/Debug.h>
+#include <gadget/Devices/Tweek/TweekGadget.h>
 #include <gadget/Devices/Tweek/TweekDigitalSubjectImpl.h>
 
 
@@ -53,6 +54,8 @@ void TweekDigitalSubjectImpl::setState(CORBA::Boolean state)
       mState = state;
    }
    mStateLock.release();
+
+   mMyDev->notifySample();
 
    tweek::SubjectImpl::notify();
 }
