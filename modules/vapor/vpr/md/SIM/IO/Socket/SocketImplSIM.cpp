@@ -61,7 +61,11 @@ SocketImplSIM::~SocketImplSIM()
 vpr::DebugOutputGuard dbg_output(vprDBG_ALL, vprDBG_STATE_LVL,
                                  std::string("SocketImplSIM destructor: Deleting socket\n"),
                                  std::string("Done deleting socket.\n"));
-   close();
+
+   if ( mOpen )
+   {
+      close();
+   }
 }
 
 vpr::ReturnStatus SocketImplSIM::close()
@@ -71,7 +75,7 @@ vpr::DebugOutputGuard dbg_output(vprDBG_ALL, vprDBG_STATE_LVL,
                                  std::string("Done closing socket.\n"));
    vpr::ReturnStatus status;
 
-   vprDEBUG_BEGIN(vprDBG_ALL, vprDBG_STATE_LVL)
+   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
       << "SocketImplSIM::close: " << mLocalAddr << std::endl << vprDEBUG_FLUSH;
 
    if ( mPeer != NULL )
@@ -94,9 +98,7 @@ vpr::DebugOutputGuard dbg_output(vprDBG_ALL, vprDBG_STATE_LVL,
       mBound = false;
    }
 
-   mOpen  = false;
-
-   vprDEBUG_CONT_END(vprDBG_ALL, vprDBG_STATE_LVL) << "" << vprDEBUG_FLUSH;
+   mOpen = false;
 
    return status;
 }
