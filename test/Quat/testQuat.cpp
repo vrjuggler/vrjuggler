@@ -1,3 +1,36 @@
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+
+
 #include <iostream>
 #include <Math/vjQuat.h>
 #include <glquat.h>
@@ -6,6 +39,7 @@
 std::ostream& operator<<(std::ostream& out, GL_QUAT& quat);
 void testMatch(vjQuat& vj_quat, GL_QUAT& gl_quat);
 
+int number_failed = 0;
 
 int main(void)
 {
@@ -56,8 +90,11 @@ int main(void)
    if(mat == gl_mat)
       std::cout << "passed.\n" << std::flush;
    else
+   {
+      ++number_failed;
       std::cout << "FAILED!!!\n" << std::flush;
-
+   }
+      
    // --- Inverse ---- //
    std::cout << "Test Invert\n";
    vjQuat vj_inv;
@@ -129,38 +166,6 @@ int main(void)
       mat1.getXYZEuler(angles[0], angles[1], angles[2]);
       std::cout << "Orig angles:" << angles << std::endl;
 
-      /*************** <auto-copyright.pl BEGIN do not edit this line> **************
- *
- * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
- *
- * Original Authors:
- *   Allen Bierbaum, Christopher Just,
- *   Patrick Hartling, Kevin Meinert,
- *   Carolina Cruz-Neira, Albert Baker
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- *
- * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date$
- * Version:       $Revision$
- * -----------------------------------------------------------------
- *
- *************** <auto-copyright.pl END do not edit this line> ***************/
-
       quat.makeQuat(mat1);
       mat1.makeQuaternion(quat);
 
@@ -169,6 +174,7 @@ int main(void)
       std::cout << "Final angles:" << angles << std::endl;
    }
 
+   std::cout<<"\n\n\n -->>> RESULTS::: "<<number_failed<<" tests failed (scroll up to see)\n\n."<<std::flush;
 }
 
 
@@ -187,7 +193,9 @@ void testMatch(vjQuat& vj_quat, GL_QUAT& gl_quat)
       (vj_quat[VJ_W] == gl_quat.w))
    {
       std::cout << "Passed.\n" << std::flush;
-   } else {
+   } else 
+   {
+      ++number_failed;
       std::cout << "FAILED!!!\n" << std::flush;
    }
 }
