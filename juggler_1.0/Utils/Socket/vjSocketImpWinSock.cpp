@@ -349,7 +349,7 @@ vjSocketImpWinSock::vjSocketImpWinSock (const std::string& address,
                                         const vjSocketTypes::Type type)
     : vjSocketImp(address, port, domain, type), m_sockfd(-1)
 {
-//    bzero((void*) &m_host_addr, sizeof(m_host_addr));
+    /* Do nothing. */ ;
 }
 
 // ----------------------------------------------------------------------------
