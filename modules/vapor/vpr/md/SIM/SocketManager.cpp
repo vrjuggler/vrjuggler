@@ -531,8 +531,7 @@ namespace sim
             << msg->getDestinationSocket()->getLocalAddr() << "("
             << msg->getDestinationSocket() << ") immediately\n"
             << vprDEBUG_FLUSH;
-         NetworkNode node_prop = vpr::sim::Controller::instance()->getNetworkGraph().getNodeProperty(first_hop);
-         node_prop.deliverMessage(msg);
+         msg->getDestinationSocket()->addArrivedMessage(msg);
       }
    }
 

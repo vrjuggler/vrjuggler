@@ -586,6 +586,7 @@ public:
 
    void addArrivedMessage (vpr::sim::MessagePtr msg)
    {
+      vprASSERT(msg->getDestinationSocket() == this && "Message delivered to incorrect destination");
       vpr::Guard<vpr::Mutex> guard(mArrivedQueueMutex);
       mArrivedQueue.push_back(msg);
    }

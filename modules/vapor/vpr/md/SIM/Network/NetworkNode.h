@@ -133,11 +133,6 @@ public:
       return mIpStr;
    }
 
-   /**
-    * Passes a copy of the given message on to the socket using this node.
-    */
-   void deliverMessage(vpr::sim::MessagePtr msg);
-
 private:
    vpr::Uint32 mIndex;
    vpr::Uint8  mType;
