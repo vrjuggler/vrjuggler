@@ -125,8 +125,6 @@ afterbuild:
 ifdef GLOBAL_BUILD
 	@$(MAKE) links
 endif
-	@$(MAKE) plugins
-	@$(MAKE) drivers
 	@echo ""
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$GADGET_BASE_DIR to:'
@@ -223,6 +221,8 @@ endif
 DSO_DRIVER_SUBDIR=	gadgeteer/drivers
 DSO_DRIVER_DIR=		$(LIBDIR_BASE)/$(DSO_DRIVER_SUBDIR)
 
+# XXX: There is no directory hierarchy in place to separate optimized and
+# debugging drivers.  See SF Bug #704190.
 drivers:
 ifdef BUILD_TYPE
 	$(MAKE) drivers-$(BUILD_TYPE)
@@ -328,6 +328,16 @@ afterinstall:
 	@echo "==============================================================="
 	@echo "Gadgeteer installation complete"
 	@echo "==============================================================="
+	@$(MAKE) plugins
+	@$(MAKE) install-plugins
+	@echo "==============================================================="
+	@echo "ClusterJuggler plug-in installation complete"
+	@echo "==============================================================="
+	@$(MAKE) drivers
+	@$(MAKE) install-drivers
+	@echo "==============================================================="
+	@echo "Gadgeteer driver plug-in complete"
+	@echo "==============================================================="
 
 PREINSTALL=	pre-install
 POSTINSTALL=	post-install
@@ -336,10 +346,7 @@ pre-install:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.lib.dist -p $(prefix)
 
 # Do everything needed after installing the library binaries.
-# XXX: See Source Forge Bug #667204.
 post-install:
-	@$(MAKE) install-drivers
-	@$(MAKE) install-plugins
 	@$(MAKE) install-test
 	@$(MAKE) install-tools
 	@$(MAKE) install-data
