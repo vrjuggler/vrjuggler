@@ -124,6 +124,8 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
   }
 
   /* parsing enumerations, if there are any */
+  if (!strcasecmp (str, "vj_enumeration"))
+      readString (in, str, 512);
   if (!strcasecmp (str, "{")) {
     if (self.type == T_BOOL) {
       vjDEBUG(1) << "ERROR: " << self.name << ": Enumerations not supported for "
