@@ -67,8 +67,9 @@ void main(int argc, char* argv[])
    simplePfNavApp* application = new simplePfNavApp();  // Delcare an instance of my application
 
    std::string file_path( "" );
-   //const float dcs_scale( 1.0f );
-   //const vjVec3 dcs_trans( 0.0f, 0.0f, 0.0f );
+   const float dcs_scale( 1.0f );
+   const vjVec3 dcs_trans( 0.0f, 0.0f, 0.0f );
+   const vjVec3 dcs_rot(0.0,0.0,0.0);
    const vjVec3 initial_pos( 0.0f, 0.0f, 0.0f );
 
    if (argc < 2)
@@ -80,7 +81,7 @@ void main(int argc, char* argv[])
 
    std::string model_filename = argv[1];
    cout<<"Will load: "<<model_filename<<"\n"<<flush;
-   
+
    if (argc < 3)
    {
       cout<<"\n\n[ERROR!!!] you must supply config files after the model file...\n\n"<<flush;
@@ -93,15 +94,13 @@ void main(int argc, char* argv[])
       cout<<"Loading Config File: "<<argv[i]<<"\n"<<flush;
      kernel->loadConfigFile(argv[i]);
    }
- cout<<"===========\n"<<flush;
-   
+   cout<<"===========\n"<<flush;
+
     kernel->start();
 
     // Configure that application
-    application->addModel( model_filename );
+    application->addModel( simplePfNavApp::Model(model_filename,model_filename,dcs_scale,dcs_trans, dcs_rot,true));
     application->setFilePath( file_path );
-    //application->setWorldDcsScale( dcs_scale );
-    //application->setWorldDcsTrans( dcs_trans );
     application->setInitialNavPos( initial_pos );
 
     kernel->setApplication( application );    // Set up the kernel
