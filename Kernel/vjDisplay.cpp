@@ -22,16 +22,16 @@ void vjDisplay::config(vjConfigChunk* chunk)
     // -- Check for error in configuration -- //
     // NOTE: If there are errors, set them to some default value
    if(sizeX <= 0)
-   {  vjDEBUG(vjDBG_ALL,0) << "WARNING: window sizeX set to: " << sizeX << ".  Setting to 10." << endl << vjDEBUG_FLUSH;
+   {  vjDEBUG(vjDBG_DISP_MGR,2) << "WARNING: window sizeX set to: " << sizeX << ".  Setting to 10." << endl << vjDEBUG_FLUSH;
       sizeX = 10; }
 
    if(sizeY <= 0)
-   {  vjDEBUG(vjDBG_ALL,0) << "WARNING: window sizeY set to: " << sizeY << ".  Setting to 10." << endl << vjDEBUG_FLUSH;
+   {  vjDEBUG(vjDBG_DISP_MGR,2) << "WARNING: window sizeY set to: " << sizeY << ".  Setting to 10." << endl << vjDEBUG_FLUSH;
       sizeY = 10; }
 
    if(pipe < 0)
    {
-      vjDEBUG(vjDBG_ALL,0) << "WARNING: pipe set to: " << pipe << ".  Setting to 0.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DISP_MGR,2) << "WARNING: pipe was negative, pipe set to: " << pipe << ".  Setting to 0.\n" << vjDEBUG_FLUSH;
       pipe = 0;
    }
 
@@ -44,7 +44,7 @@ void vjDisplay::config(vjConfigChunk* chunk)
 
     if(NULL == mUser)
     {
-       vjDEBUG(vjDBG_ALL,0) << "ERROR: User not found named: " << user_name << endl << vjDEBUG_FLUSH;
+       vjDEBUG(vjDBG_ERROR,0) << "ERROR: User not found named: " << user_name << endl << vjDEBUG_FLUSH;
       vjASSERT(false);
     }
 
@@ -53,40 +53,6 @@ void vjDisplay::config(vjConfigChunk* chunk)
 
     mDisplayChunk = chunk;        // Save the chunk for later use
 }
-
-// void vjDisplay::updateProjections()
-// {
-//    vjMatrix left_eye_pos, right_eye_pos;     // NOTE: Eye coord system is -z forward, x-right, y-up
-
-//    // -- Calculate Eye Positions -- //
-//    vjMatrix cur_head_pos = *(mUser->getHeadPos());
-//    mHeadUpdateTime = mUser->getHeadUpdateTime();
-
-//    vjCoord  head_coord(cur_head_pos);       // Create a user readable version
-
-//    vjDEBUG(4) << "vjDisplay::updateProjections: Getting head position" << endl << vjDEBUG_FLUSH;
-//    vjDEBUG(4) << "\tHeadPos:" << head_coord.pos << "\tHeadOr:" << head_coord.orient << endl << vjDEBUG_FLUSH;
-
-//    // Compute location of left and right eyes
-//    float interocularDist = 2.75/12.0f;
-//    float eye_offset = interocularDist/2.0f;      // Distance to move eye
-
-//    left_eye_pos.postTrans(cur_head_pos, -eye_offset, 0, 0);
-//    right_eye_pos.postTrans(cur_head_pos, eye_offset, 0, 0);
-
-
-//    if (mType == PROJ)
-//    {
-//       leftProj->calcViewMatrix(left_eye_pos);
-//       rightProj->calcViewMatrix(right_eye_pos);
-//    }
-//    else
-//    {
-//       mSim->update();
-//       vjMatrix camera_pos = mSim->getCameraPos();
-//       cameraProj->calcViewMatrix(camera_pos);
-//    }
-// }
 
 	
     // ---- FRIEND FUNCTIONS ---- //

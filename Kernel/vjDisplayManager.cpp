@@ -20,7 +20,7 @@ std::vector<vjDisplay*> vjDisplayManager::getAllDisplays()
 
 void vjDisplayManager::setDrawManager(vjDrawManager* drawMgr)
 {
-   vjDEBUG(vjDBG_DISP_MGR,0) << "vjDisplayManager::setDrawManager: Entered.\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DISP_MGR,3) << "vjDisplayManager: Setting draw manager.\n" << vjDEBUG_FLUSH;
 
    // set the draw manager
    mDrawManager = drawMgr;
@@ -44,7 +44,7 @@ bool vjDisplayManager::configAdd(vjConfigChunk* chunk)
 {
    vjASSERT(configCanHandle(chunk));      // We must be able to handle it first of all
 
-   vjDEBUG_BEGIN(vjDBG_DISP_MGR,1) << "------- vjDisplayManager::configAdd() Entering -------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_DISP_MGR,3) << "------- vjDisplayManager::configAdd -------\n" << vjDEBUG_FLUSH;
 
    // Find out if we already have a window of this name
    // If so, then close it before we open a new one of the same name
@@ -52,7 +52,7 @@ bool vjDisplayManager::configAdd(vjConfigChunk* chunk)
    vjDisplay* cur_disp = findDisplayNamed(chunk->getProperty("name"));
    if(cur_disp != NULL)                         // We have an old display
    {
-      vjDEBUG(vjDBG_DISP_MGR,1) << "Found old window named: " << cur_disp->getName() << ".  Removing it first..." << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DISP_MGR,1) << "Removing old window: " << cur_disp->getName() << vjDEBUG_FLUSH;
       closeDisplay(cur_disp,true);              // Close the display and notify the draw manager to close the window
    }
 
@@ -62,7 +62,8 @@ bool vjDisplayManager::configAdd(vjConfigChunk* chunk)
       vjDisplay* newDisp = new vjSurfaceDisplay();    // Create display
       newDisp->config(chunk);                         // Config it
       addDisplay(newDisp, true);                            // Add it
-      vjDEBUG(vjDBG_DISP_MGR,1) << "Display: "  << newDisp << endl << flush << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DISP_MGR,1) << "Adding display: " << newDisp->getName() << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DISP_MGR,4) << "Display: "  << newDisp << endl << vjDEBUG_FLUSH;
    }
 
    if((std::string)chunk->getType() == std::string("simDisplay"))      // Surface DISPLAY
@@ -70,10 +71,11 @@ bool vjDisplayManager::configAdd(vjConfigChunk* chunk)
       vjDisplay* newDisp = new vjSimDisplay();     // Create display
       newDisp->config(chunk);                      // Config it
       addDisplay(newDisp, true);                         // Add it
-      vjDEBUG(vjDBG_DISP_MGR,1) << "Display: "  << newDisp << endl << flush << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DISP_MGR,1) << "Adding Display: " << newDisp->getName() << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DISP_MGR,4) << "Display: "  << newDisp << endl << flush << vjDEBUG_FLUSH;
    }
 
-   vjDEBUG_END(vjDBG_DISP_MGR,1) << "------- vjDisplayManager::configAdd() Exiting --------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_DISP_MGR,3) << "------- vjDisplayManager::configAdd Done. --------\n" << vjDEBUG_FLUSH;
    return true;
 }
 
@@ -84,7 +86,7 @@ bool vjDisplayManager::configRemove(vjConfigChunk* chunk)
 {
    vjASSERT(configCanHandle(chunk));      // We must be able to handle it first of all
 
-   vjDEBUG_BEGIN(vjDBG_DISP_MGR,1) << "------- vjDisplayManager::configRemove() Entering -------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_DISP_MGR,4) << "------- vjDisplayManager::configRemove -------\n" << vjDEBUG_FLUSH;
 
    bool success_flag(false);
 
@@ -99,7 +101,7 @@ bool vjDisplayManager::configRemove(vjConfigChunk* chunk)
       }
    }
 
-   vjDEBUG_END(vjDBG_DISP_MGR,1) << "------- vjDisplayManager::configRemove() Exiting --------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_DISP_MGR,4) << "------- vjDisplayManager::configRemove done. --------\n" << vjDEBUG_FLUSH;
    return success_flag;
 }
 
@@ -117,7 +119,7 @@ bool vjDisplayManager::configCanHandle(vjConfigChunk* chunk)
 // notifyDrawMgr = 0; Defaults to 0
 int vjDisplayManager::addDisplay(vjDisplay* disp, bool notifyDrawMgr)
 {
-   vjDEBUG(vjDBG_DISP_MGR,1) << "vjDisplayManager::addDisplay: Entered.\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DISP_MGR,4) << "vjDisplayManager::addDisplay \n" << vjDEBUG_FLUSH;
 
    // Test if active or not, to determine correct list
    // The place it in the list
@@ -196,13 +198,6 @@ vjDisplay* vjDisplayManager::findDisplayNamed(std::string name)
    return NULL;  // Didn't find any
 }
 
-
-/*
-vjDisplay* vjDisplayManager::getDisplay(int dispId)
-{
-    return mDisplays[dispId];
-}
-*/
 
 void vjDisplayManager::updateProjections()
 {

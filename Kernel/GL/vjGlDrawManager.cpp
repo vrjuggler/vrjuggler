@@ -50,7 +50,7 @@ void vjGlDrawManager::start()
 
 	control_thread = new vjThread(memberFunctor, 0);
 
-   vjDEBUG(vjDBG_DRAW_MGR,0) << "vjGlDrawManager::thread: " << control_thread << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,1) << "vjGlDrawManager started. thread: " << control_thread << endl << vjDEBUG_FLUSH;
 }
 
 
@@ -99,7 +99,7 @@ void vjGlDrawManager::main(void* nullParam)
 
 void vjGlDrawManager::drawAllPipes()
 {
-   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,3) << "vjGLDrawManager::drawAllPipes: Enter" << endl << flush << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,3) << "vjGLDrawManager::drawAllPipes: " << endl << flush << vjDEBUG_FLUSH;
    int pipeNum;
 
    // RENDER
@@ -121,7 +121,7 @@ void vjGlDrawManager::drawAllPipes()
       pipes[pipeNum]->completeSwap();
 
 
-   vjDEBUG_END(vjDBG_DRAW_MGR,3) << "vjGLDrawManager::drawAllPipes: Exit" << endl << flush << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_DRAW_MGR,3) << "vjGLDrawManager::drawAllPipes: Done" << endl << flush << vjDEBUG_FLUSH;
 }
 
 //: Initialize the drawing API (if not already running)
@@ -142,8 +142,6 @@ void vjGlDrawManager::initAPI()
 void vjGlDrawManager::initDrawing()
 {
    vjDEBUG(vjDBG_DRAW_MGR,3) << "vjGlDrawManager::initDrawing: Entering." << endl << vjDEBUG_FLUSH;
-
-
 }
 	
 
@@ -158,7 +156,7 @@ void vjGlDrawManager::addDisplay(vjDisplay* disp)
 {
    vjASSERT(disp != NULL);    // Can't add a null display
 
-   vjDEBUG(vjDBG_DRAW_MGR,0) << "vjGlDrawManager:addDisplay: " << disp << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,3) << "vjGlDrawManager:addDisplay: " << disp << endl << vjDEBUG_FLUSH;
 
    //	-- Create a window for new display
    //	-- Store the window in the wins vector
@@ -186,8 +184,10 @@ void vjGlDrawManager::addDisplay(vjDisplay* disp)
    pipe->addWindow(new_win);              // Window has been added
 
    vjASSERT(isValidWindow(new_win));      // Make sure it was added to draw manager
+
    // Dump the state
-   vjDEBUG(vjDBG_ALL, 0) << (*this) << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR, 1) << "Reconfiged the glDrawManager.\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR, 1) << (*this) << vjDEBUG_FLUSH;
 }
 
 
@@ -229,7 +229,7 @@ void vjGlDrawManager::removeDisplay(vjDisplay* disp)
 /// Shutdown the drawing API
 void vjGlDrawManager::closeAPI()
 {
-   vjDEBUG(vjDBG_DRAW_MGR,0) << "vjGlDrawManager::closeAPI: Closing.\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,0) << "vjGlDrawManager::closeAPI: NOT IMPLEMENTED.\n" << vjDEBUG_FLUSH;
     // Stop all pipes
    ;
     // Delete all pipes
@@ -318,14 +318,6 @@ void vjGlDrawManager::drawObjects()
 void vjGlDrawManager::drawProjections(vjSimDisplay* sim)
 {
    const float ALPHA_VALUE(0.25f);
-   /*
-   static float ALPHA_VALUE(0.0f);
-   ALPHA_VALUE += 0.001f;
-   if(ALPHA_VALUE > 1.0f)
-      ALPHA_VALUE = 0.0f;
-
-   vjDEBUG(vjDBG_ALL,0) << "ALPHA_VALUE: " << ALPHA_VALUE << endl << vjDEBUG_FLUSH;
-   */
 
    std::vector<vjDisplay*> disps = displayManager->getAllDisplays();
 
@@ -469,7 +461,8 @@ void vjGlDrawManager::outStream(ostream& out)
 
     for(int i = 0; i < mWins.size(); i++)
     {
-	   out << "\n\t\tvjGlWindow:\n" << mWins[i] << endl;
+	    vjASSERT(mWins[i] != NULL);
+       out << "\n\t\tvjGlWindow:\n" << mWins[i] << endl;
     }
     out << "=======================================" << endl;
 }

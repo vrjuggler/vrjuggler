@@ -25,7 +25,7 @@ int vjGlPipe::start()
 
     mActiveThread = new vjThread(memberFunctor, 0);
 
-    vjDEBUG(vjDBG_ALL,0) << "vjGlPipe::start: Started control loop.  " << mActiveThread << endl << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_DRAW_MGR,1) << "vjGlPipe::start: Started control loop. " << mActiveThread << endl << vjDEBUG_FLUSH;
     return 1;
 }
 
@@ -36,7 +36,7 @@ void vjGlPipe::triggerRender()
    //vjASSERT(mThreadRunning == true);      // We must be running
    while(!mThreadRunning)
    {
-      vjDEBUG(vjDBG_ALL,1) << "Waiting in for thread to start triggerRender.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DRAW_MGR,3) << "Waiting in for thread to start triggerRender.\n" << vjDEBUG_FLUSH;
    }
 
    renderTriggerSema.release();
@@ -71,7 +71,7 @@ void vjGlPipe::completeSwap()
 void vjGlPipe::addWindow(vjGlWindow* win)
 {
    vjGuard<vjMutex> guardNew(newWinLock);       // Protect the data
-   vjDEBUG(vjDBG_ALL,1) << "vjGlPipe::addWindow: Pipe: " << mPipeNum << " adding window (to new wins):\n" << win << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,3) << "vjGlPipe::addWindow: Pipe: " << mPipeNum << " adding window (to new wins):\n" << win << endl << vjDEBUG_FLUSH;
    newWins.push_back(win);
 }
 
@@ -80,7 +80,7 @@ void vjGlPipe::addWindow(vjGlWindow* win)
 void vjGlPipe::removeWindow(vjGlWindow* win)
 {
    vjGuard<vjMutex> guardClosing(mClosingWinLock);
-   vjDEBUG(vjDBG_ALL,1) << "vjGlPipe:: removeWindow: Pipe: " << mPipeNum << " window added to closingWins.\n" << win << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,3) << "vjGlPipe:: removeWindow: Pipe: " << mPipeNum << " window added to closingWins.\n" << win << endl << vjDEBUG_FLUSH;
    mClosingWins.push_back(win);
 }
 
@@ -197,7 +197,7 @@ void vjGlPipe::checkForNewWindows()
       {
          newWins[winNum]->open();
          newWins[winNum]->makeCurrent();
-         vjDEBUG(vjDBG_ALL,1) << "vjGlPipe::checkForNewWindows: Just opened window:\n" << newWins[winNum] << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_DRAW_MGR,1) << "vjGlPipe::checkForNewWindows: Just opened window:\n" << newWins[winNum] << endl << vjDEBUG_FLUSH;
          openWins.push_back(newWins[winNum]);
       }
 
@@ -215,14 +215,11 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
 
    glManager->setCurrentContext(win->getId());     // Set TSS data of context id
 
-   vjDEBUG(vjDBG_ALL,4) << "vjGlPipe::renderWindow: Set context to: " << vjGlDrawManager::instance()->getCurrentContext() << endl << vjDEBUG_FLUSH;
-
-   mPerfBuffer->set(++mPerfPhase);
-
+   vjDEBUG(vjDBG_DRAW_MGR,5) << "vjGlPipe::renderWindow: Set context to: " << vjGlDrawManager::instance()->getCurrentContext() << endl << vjDEBUG_FLUSH;
+      mPerfBuffer->set(++mPerfPhase);
 
    // --- SET CONTEXT --- //
    win->makeCurrent();
-
 
    // CONTEXT INIT(): Check if we need to call contextInit()
    if(win->hasDirtyContext())
