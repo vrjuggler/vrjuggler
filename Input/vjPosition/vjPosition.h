@@ -21,7 +21,7 @@ typedef struct {
 //: vjPosition is the abstract base class that devices with digital data derive from.
 //
 //  vjPosition is the base class that digital devices must derive from.  vjPosition
-//  inherits from vjInput, so it has pure virtual function constraints from 
+//  inherits from vjInput, so it has pure virtual function constraints from
 //  vjInput in the following functions: StartSampling,StopSampling,Sample,
 //  and UpdateData.
 //
@@ -39,7 +39,7 @@ class vjPosition : virtual public vjInput {
 	//@}
 
 	/** @name vjInput pure virtual functions
-	 *  
+	 *
 	 *  pure virtual functions required from vjInput
 	 */
 	//@{
@@ -62,6 +62,7 @@ class vjPosition : virtual public vjInput {
 	//: Get Position data
 	virtual vjMatrix* GetPosData(int devNum = 0) = 0;
 
+public:
 	vjMatrix* theData;   // Ptr to matrix that holds the actually position data
 	vjMatrix xformMat;   // The total xform matrix.  T*R
    vjMatrix rotMat;     // Only the rotation matrix
