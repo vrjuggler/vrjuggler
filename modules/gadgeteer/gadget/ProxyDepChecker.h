@@ -69,7 +69,8 @@ public:
    // Write out the dependencies to the vprDEBUG macro
    virtual void debugOutDependencies(jccl::ConfigChunkPtr chunk,int dbg_lvl=vprDBG_WARNING_LVL)
    {
-      ;
+      jccl::DepChecker::debugOutDependencies(chunk,dbg_lvl); ;
+      vprDEBUG_NEXT_BEGIN(vprDBG_ALL,dbg_lvl) << "Proxies should never have dependencies!!!" << vprDEBUG_FLUSH;
    }
 };
 
