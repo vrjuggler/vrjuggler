@@ -73,7 +73,7 @@
 
 struct vjIsense_Data {
     int digital[IS_BUTTON_NUM];
-    float analog[MAX_ANALOG_CHANNELS];
+    float analog[IS_ANALOG_NUM];
 };
 
 
