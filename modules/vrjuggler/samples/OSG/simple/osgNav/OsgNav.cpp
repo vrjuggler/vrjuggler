@@ -72,7 +72,9 @@ cout  << "Wand Buttons:"
    mPos[0] += posInc;
 
    //Do the actual move
-    mModelTrans->getMatrix().setTrans(mPos[0], mPos[1], mPos[2]);
+    osg::Matrix cur_xform = mModelTrans->getMatrix();
+    cur_xform.setTrans(mPos);
+    mModelTrans->setMatrix(cur_xform);
 
    // -- Get wand info -- //
     vrj::Matrix* wandMatrix;
@@ -106,7 +108,8 @@ cout  << "Wand Buttons:"
     vrj::Vec3 direction;
     vrj::Vec3 Zdir = vrj::Vec3(0.0f, 0.0f, speed);
     direction.xformVec(*wandMatrix, Zdir);
-    mNavTrans->preTranslate(direction[0], direction[1], direction[2]);
+    //mNavTrans->preTranslate(direction[0], direction[1], direction[2]);
+     mNavTrans->preMult(osg::Matrix::translate(direction[0], direction[1], direction[2]));
 }
 
 void OsgNav::bufferPreDraw()
@@ -175,7 +178,9 @@ void OsgNav::myInit()
 
    // Could use this to correct for incorrectly rotated models
    mModelBaseXform = new osg::Transform();
-    mModelBaseXform->preRotate(90.0f, 1.0f, 0.0f, 0.0f);
+   //mModelBaseXform->preRotate(90.0f, 1.0f, 0.0f, 0.0f);
+   mModelBaseXform->preMult( osg::Matrix::rotate(90.0f, 1.0f, 0.0f, 0.0f));
+   mModelBaseXform->setMatrix( osg::Matrix::scale(50.0f, 50.0f, 50.0f));
 
    // Add model to the tree
    mModelTrans->addChild(mModel);
