@@ -67,7 +67,7 @@ class vjConfigChunkDB;
 // Date 2-27-98
 //---------------------------------------
 
-class vjEnvironmentManager: public vjConfigChunkHandler {
+class VJ_CLASS_API vjEnvironmentManager: public vjConfigChunkHandler {
 
 public:
 
@@ -173,7 +173,9 @@ private:
     //: Kills all open connections
     void killConnections();
 
-
+    // These are needed to appease Visual C++ in its creation of DLLs.
+    vjEnvironmentManager(const vjEnvironmentManager&) {;}
+    void operator=(const vjEnvironmentManager&) {;}
 
 }; // end vjEnvironmentManager
 

@@ -55,7 +55,7 @@ class vjConfigChunk;
 // specific data.  Ex. Navigation matrices, input devices
 //---------------------------------------------
 //! PUBLIC_API:
-class vjUser
+class VJ_CLASS_API vjUser
 {
 public:
    // Cosntruct the user

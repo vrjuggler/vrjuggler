@@ -44,7 +44,7 @@ class vjTimedUpdate;
 class vjConfigChunkDB;
 class vjChunkDescDB;
 
-class vjCommand {
+class VJ_CLASS_API vjCommand {
 public:
     float next_fire_time; // milliseconds
     float refresh_time;      // millisecs
@@ -61,7 +61,7 @@ public:
 
 
 
-class vjCommandRefresh: public vjCommand {
+class VJ_CLASS_API vjCommandRefresh: public vjCommand {
 private:
     static const std::string command_name;
 
@@ -75,7 +75,7 @@ public:
 
 
 
-class vjCommandSendChunkDB: public vjCommand {
+class VJ_CLASS_API vjCommandSendChunkDB: public vjCommand {
 private:
     vjConfigChunkDB* db;
     bool all;
@@ -91,7 +91,7 @@ public:
 
 
 
-class vjCommandSendDescDB: public vjCommand {
+class VJ_CLASS_API vjCommandSendDescDB: public vjCommand {
 private:
     vjChunkDescDB* db;
     bool all;

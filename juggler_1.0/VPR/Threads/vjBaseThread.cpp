@@ -36,7 +36,7 @@
 #include <VPR/Threads/vjBaseThread.h>
 #include <VPR/Threads/vjThreadManager.h>
 
-int32_t vjBaseThread::mNextThreadId = 0;
+VJ_IMPLEMENT_DATA(int32_t) vjBaseThread::mNextThreadId = 0;
 
 	// ---- Ouput operator ---- //
 std::ostream& operator<<(std::ostream& out, vjBaseThread* threadPtr)

@@ -58,15 +58,15 @@ void vjVec3::xformVec(const vjMatrix& _m, const vjVec3& _v)
     vec[2] = tempVec.vec[2];
 }
 
-vjVec3 operator *(float _s, const vjVec3& _v) {
+VJ_IMPLEMENT(vjVec3) operator *(float _s, const vjVec3& _v) {
     return vjVec3(_v[0]*_s, _v[1]*_s, _v[2]*_s);
 }
 
-vjVec3 operator *(const vjVec3& _v, float _s) {
+VJ_IMPLEMENT(vjVec3) operator *(const vjVec3& _v, float _s) {
     return vjVec3(_v[0]*_s, _v[1]*_s, _v[2]*_s);
 }
 
-vjVec3 operator /(const vjVec3& _v, float _s) {
+VJ_IMPLEMENT(vjVec3) operator /(const vjVec3& _v, float _s) {
     _s = 1.0f/_s;
     return vjVec3(_v[0]*_s, _v[1]*_s, _v[2]*_s);
 }
@@ -77,7 +77,7 @@ vjVec3 operator /(const vjVec3& _v, float _s) {
 //    vjVec3 dst; dst.xformPt(_v, _m); return dst;
 //}
 
-std::ostream& operator<<( std::ostream& out, const vjVec3& _v )
+VJ_IMPLEMENT(std::ostream&) operator<<( std::ostream& out, const vjVec3& _v )
 {
     for(int j=0;j<3;j++)
     {

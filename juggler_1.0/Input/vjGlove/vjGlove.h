@@ -64,7 +64,7 @@
 // NOTE: More docs needed here
 //
 //!PUBLIC_API:
-class vjGloveData
+class VJ_CLASS_API vjGloveData
 {
 public:
    enum { NUM_JOINTS = 4, NUM_COMPONENTS = 6 };

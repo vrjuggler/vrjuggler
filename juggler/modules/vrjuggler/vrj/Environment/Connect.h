@@ -54,7 +54,7 @@ enum vjConnectMode { VJC_INTERACTIVE, VJC_INPUT, VJC_OUTPUT };
 // @author  Christopher Just
 //
 //---------------------------------------
-class vjConnect {
+class VJ_CLASS_API vjConnect {
  public:
 
     vjConnect (vjSocket* s, const std::string& _name="unnamed", 
@@ -163,6 +163,10 @@ private:
     bool readCommand (std::istream& fin);
 
     std::vector<vjNetCommunicator*> communicators;
+
+    // These are needed to appease Visual C++ in its creation of DLLs.
+    vjConnect(const vjConnect&) {;}
+    void operator=(const vjConnect&) {;}
 
 }; // end vjConnect
 

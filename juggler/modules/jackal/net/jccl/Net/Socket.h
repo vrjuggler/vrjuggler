@@ -98,7 +98,7 @@ typedef vjSocketIDPosix vjSocketID;
 typedef SOCKET vjSocketIDWin32;
 extern const int vjSOCKID_INVALID;
 
-class vjSocketWin32 {
+class VJ_CLASS_API vjSocketWin32 {
 
 private:
 

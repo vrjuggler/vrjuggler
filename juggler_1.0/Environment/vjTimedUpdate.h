@@ -48,7 +48,7 @@
 // Date: 6-9-98
 //------------------------------------------------
 
-class vjTimedUpdate {
+class VJ_CLASS_API vjTimedUpdate {
 
     public:
 
