@@ -69,9 +69,20 @@ main (int argc, char* argv[]) {
                 printf("Read %d bytes from server\n", bytes);
                 printf("    Got '%s'\n", buffer);
             }
+            else if ( bytes == -1 ) {
+                printf("Error reading!\n");
+            }
+            else {
+                printf("What the ???\n");
+            }
+
+            fflush(stdout);
 
             sock->close();
         }
+    }
+    else {
+        printf("Socket failed to open!\n");
     }
 
     delete sock;
