@@ -93,25 +93,25 @@ bool ConfigApp::configAdd(ConfigElementPtr element)
    const std::string ul_color("upper_left_color");
 
    // Get the color settings for the lower left corner (ll).
-   for ( int i = 0; i < element->getNum(ll_color); ++i )
+   for ( unsigned int i = 0; i < element->getNum(ll_color); ++i )
    {
       mSurfaceColor_ll[i] = element->getProperty<float>(ll_color, i);
    }
 
    // Get the color settings for the lower right corner (lr).
-   for ( int i = 0; i < element->getNum(lr_color); ++i )
+   for ( unsigned int i = 0; i < element->getNum(lr_color); ++i )
    {
       mSurfaceColor_lr[i] = element->getProperty<float>(lr_color, i);
    }
 
    // Get the color settings for the upper right corner (ur).
-   for ( int i = 0; i < element->getNum(ur_color); ++i )
+   for ( unsigned int i = 0; i < element->getNum(ur_color); ++i )
    {
       mSurfaceColor_ur[i] = element->getProperty<float>(ur_color, i);
    }
 
    // Get the color settings for the upper left corner (ul).
-   for ( int i = 0; i < element->getNum(ul_color); ++i )
+   for ( unsigned int i = 0; i < element->getNum(ul_color); ++i )
    {
       mSurfaceColor_ul[i] = element->getProperty<float>(ul_color, i);
    }
