@@ -36,8 +36,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.Insets;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
@@ -619,8 +619,8 @@ public class MultiUnitDeviceVertexView
          List removed_edges    = new ArrayList();
          List removed_vertices = new ArrayList();
 
-         Frame parent = (Frame) SwingUtilities.getAncestorOfClass(Frame.class,
-                                                                  this);
+         Window parent =
+            (Window) SwingUtilities.getAncestorOfClass(Window.class, this);
 
          // For each of the edges associated with port (port will always be a
          // target), update the proxy on the other end of te edge (the source).

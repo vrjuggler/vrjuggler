@@ -33,6 +33,7 @@
 package org.vrjuggler.vrjconfig.commoneditors;
 
 import java.awt.BorderLayout;
+import java.awt.Window;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -522,7 +523,14 @@ public class DeviceProxyGraphEditor
          }
          catch (IllegalArgumentException ex)
          {
-            System.err.println(ex.getMessage());
+            Window parent =
+               (Window) SwingUtilities.getAncestorOfClass(Window.class, this);
+            JOptionPane.showMessageDialog(
+               parent,
+               "Could not create a vertex for config element '" +
+                  elt.getName() + "'\nReason:" + ex.getMessage(),
+               "Device Vertex Creation Failed", JOptionPane.WARNING_MESSAGE
+            );
          }
       }
 
