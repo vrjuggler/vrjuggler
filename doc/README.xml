@@ -107,28 +107,6 @@
          </section>
       </section>
       <section>
-         <title>Plexus</title>
-         <section>
-            <title>Directory</title>
-            <para><filename>juggler/modules/plexus</filename></para>
-         </section>
-         <section>
-            <title>Description</title>
-            <para>Plexus is a network data routing library that operates at the application level on top of the TCP/IP stack. The focus of Plexus is to make low-latency data networks for use within virtual environments. It is not strictly limited to use with virtual reality (VR), but its design focuses on the needs of VR. Those needs include soft real-time responsiveness to enhance the users' suspension of disbelief.</para>
-         </section>
-      </section>
-      <section>
-         <title>Distributed Shared Objects (DSO)</title>
-         <section>
-            <title>Directory</title>
-            <para><filename>juggler/modules/dso</filename></para>
-         </section>
-         <section>
-            <title>Description</title>
-            <para>Distributed Shared Objects (DSO) are useful. It provides a simple intuitive interface to share data between applications. The DSO has been engineered with soft real-time requirements in mind and is suitable for collaborative virtual reality applications.</para>
-         </section>
-      </section>
-      <section>
          <title>Tweek</title>
          <section>
             <title>Directory</title>
