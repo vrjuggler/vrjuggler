@@ -3,6 +3,8 @@
 # $Id$
 # -----------------------------------------------------------------------------
 
+.SUFFIXES: .cpp
+
 srcdir		= @srcdir@
 
 COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
@@ -31,18 +33,20 @@ all: testQuat
 testQuat: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
-testQuat.o:
+testQuat.o: testQuat.cpp
 	${COMPILE} -c -o $@ ${srcdir}/testQuat.cpp
 
-glquat.o:
-	${COMPILE} -c -o $@ ${srcdir}/glquat.c
+glquat.o: glquat.c
+
+.c.o:
+	${COMPILE} -c ${srcdir}/$<
 
 .cpp.o:
-	${COMPILE} -c -o $@ $<
+	${COMPILE} -c ${srcdir}/$<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend cubes ${OBJECTS} core so_locations
+	rm -f Makedepend testQuat ${OBJECTS} core so_locations
 	rm -rf ./ii_files
