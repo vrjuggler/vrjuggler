@@ -185,6 +185,9 @@ inline void OsgApp::draw()
    glGetIntegerv(GL_VIEWPORT, view);      //Get the view port that juggler sets
    sv->setViewport(view[0],view[1],view[2],view[3]);
 
+//   vprDEBUG(vprDBG_ALL, 0) << "view: " << view[0] << ", " << view[1] << ", "
+//                                       << view[2] << ", " << view[3] << std::endl << vprDEBUG_FLUSH;
+
    //Get the view matrix and the frustrum form the draw manager
    GlDrawManager* drawMan = dynamic_cast<GlDrawManager*> ( this->getDrawManager() );
    vprASSERT(drawMan != NULL);
