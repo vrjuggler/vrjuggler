@@ -13,7 +13,7 @@
          <value label="Sync Server Machine" defaultvalue=""/>
          <allowed_type>machine_specific</allowed_type>
       </property>
-      <property valuetype="int" variable="false" name="listen_port">
+      <property valuetype="integer" variable="false" name="listen_port">
          <help>Port on which the Remote Input Manager listens for incoming cluster connections.</help>
          <value label="Listen Port" defaultvalue="0" />
       </property>
