@@ -36,10 +36,9 @@ dnl ---------------------------------------------------------------------------
 AC_DEFUN(_JCCL_PATH_SETUP,
 [
     dnl Get the cflags and libraries from the jccl-config script
-    AC_ARG_WITH(jccl-prefix,
-                [  --with-jccl-prefix=<PATH>
-                          Prefix where JCCL is installed
-                          (optional)                      [No default]],
+    AC_ARG_WITH(jccl,
+                [  --with-jccl=<PATH>      Directory where JCCL is
+                          installed                       [No default]],
                 jccl_config_prefix="$withval", jccl_config_prefix="")
     AC_ARG_WITH(jccl-exec-prefix,
                 [  --with-jccl-exec-prefix=<PATH>
@@ -47,9 +46,6 @@ AC_DEFUN(_JCCL_PATH_SETUP,
                           installed (optional)            [No default]],
                 jccl_config_exec_prefix="$withval",
                 jccl_config_exec_prefix="")
-dnl    AC_ARG_ENABLE(jccltest,
-dnl                  [  --disable-jccltest     Do not try to compile and run a
-dnl                          test JCCL program], , enable_jccltest=yes)
 
     if test "x$jccl_config_exec_prefix" != "x" ; then
         jccl_config_args="$jccl_config_args --exec-prefix=$jccl_config_exec_prefix"

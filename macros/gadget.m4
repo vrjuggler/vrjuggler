@@ -53,20 +53,16 @@ dnl ---------------------------------------------------------------------------
 AC_DEFUN(GADGETEER_PATH,
 [
     dnl Get the cflags and libraries from the gadgeteer-config script
-    AC_ARG_WITH(gadget-prefix,
-                [  --with-gadget-prefix=<PATH>
-                          Prefix where Gadgeteer is
-                          installed (optional)            [No default]],
+    AC_ARG_WITH(gadgeteer,
+                [  --with-gadgeteer=<PATH> Directory where Gadgeteer is
+                          installed                       [No default]],
                 gadget_config_prefix="$withval", gadget_config_prefix="")
-    AC_ARG_WITH(gadget-exec-prefix,
-                [  --with-gadget-exec-prefix=<PATH>
+    AC_ARG_WITH(gadgeteer-exec-prefix,
+                [  --with-gadgeteer-exec-prefix=<PATH>
                           Exec prefix where Gadgeteer is
                           installed (optional)            [No default]],
                 gadget_config_exec_prefix="$withval",
                 gadget_config_exec_prefix="")
-dnl    AC_ARG_ENABLE(gadgettest,
-dnl                  [  --disable-gadgettest    Do not try to compile and run a
-dnl                          test Gadgeteer program], , enable_gadgettest=yes)
 
     if test "x$gadget_config_exec_prefix" != "x" ; then
         gadget_config_args="$gadget_config_args --exec-prefix=$gadget_config_exec_prefix"

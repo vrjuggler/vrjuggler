@@ -47,18 +47,15 @@ dnl ---------------------------------------------------------------------------
 AC_DEFUN(VPR_PATH,
 [
     dnl Get the cflags and libraries from the vpr-config script
-    AC_ARG_WITH(vpr-prefix,
-                [  --with-vpr-prefix=<PATH> Prefix where VPR is installed
-                          (optional)                      [No default]],
+    AC_ARG_WITH(vpr,
+                [  --with-vpr=<PATH>       Directory where VPR is
+                          installed (optional)            [No default]],
                 vpr_config_prefix="$withval", vpr_config_prefix="")
     AC_ARG_WITH(vpr-exec-prefix,
                 [  --with-vpr-exec-prefix=<PATH>
                           Exec prefix where VPR is
                           installed (optional)            [No default]],
                 vpr_config_exec_prefix="$withval", vpr_config_exec_prefix="")
-dnl    AC_ARG_ENABLE(vprtest,
-dnl                  [  --disable-vprtest       Do not try to compile and run a
-dnl                          test VPR program], , enable_vprtest=yes)
 
     if test "x$vpr_config_exec_prefix" != "x" ; then
         vpr_config_args="$vpr_config_args --exec-prefix=$vpr_config_exec_prefix"
