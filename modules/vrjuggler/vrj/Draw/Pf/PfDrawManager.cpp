@@ -829,7 +829,7 @@ void PfDrawManager::configFrameBuffer(vrj::Display* disp,
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
       << "Frame buffer visual settings for " << disp->getName()
       << ": R:" << red_size << " G:" << green_size << " B:" << blue_size
-      << " A:" << alpha_size << " DB:" << db_size << " MS:" << wand_fsaa << std::endl
+      << " A:" << alpha_size << " DB:" << db_size << " MS:" << want_fsaa << std::endl
       << vprDEBUG_FLUSH;
 
    attrs.push_back(PFFB_RED_SIZE);   attrs.push_back(red_size);
@@ -839,7 +839,7 @@ void PfDrawManager::configFrameBuffer(vrj::Display* disp,
    attrs.push_back(PFFB_DEPTH_SIZE); attrs.push_back(db_size);
    if (want_fsaa)
    {
-      attrs.push_back(PFB_SAMPLE_BUFFER); attrs.push_back(1);
+      attrs.push_back(PFFB_SAMPLE_BUFFER); attrs.push_back(1);
       attrs.push_back(PFFB_SAMPLES); attrs.push_back(1);
    }
 }
