@@ -13,6 +13,12 @@ import org.vrjuggler.jccl.config.event.*;
  */
 public class VarListPanel extends ExpandablePanel implements ConfigElementListener
 {
+   public void finalize()
+   {
+      mConfigElement.removeConfigElementListener(this);
+      super.finalize();
+   }
+   
    /**
     * Construct a panel to hold the sheet that actually contains the list of
     * properties.
@@ -20,14 +26,17 @@ public class VarListPanel extends ExpandablePanel implements ConfigElementListen
    public VarListPanel(ConfigElement elm, PropertyDefinition prop_def, Color color)
    {
       super(color);
+
+      mConfigElement = elm;
    
-      elm.addConfigElementListener(this);
+      mConfigElement.addConfigElementListener(this);
             
       // Create the new property list which is actually just a variable list of
       // property values.
-      PropertySheet new_sheet = PropertySheetFactory.instance().makeVarSheet(elm, prop_def, getNextColor());
+      PropertySheet new_sheet = PropertySheetFactory.instance().makeVarSheet(mConfigElement, prop_def, getNextColor());
 
       mComponent = new_sheet;
+      mPropDef = prop_def;
       new_sheet.setBorder(BorderFactory.createEtchedBorder());
 
       setBorder(BorderFactory.createEtchedBorder());
@@ -44,10 +53,18 @@ public class VarListPanel extends ExpandablePanel implements ConfigElementListen
     */
    public void propertyValueAdded(ConfigElementEvent evt)
    {
-      System.out.println("Property value added...");
+      // XXX: We could also test against mConfigElement == elm
       ConfigElement elm = (ConfigElement)evt.getSource();
       PropertyDefinition prop_def =
          elm.getDefinition().getPropertyDefinition(evt.getProperty());
+      
+      if(!prop_def.equals(mPropDef))
+      {
+         return;      
+      }
+      
+      System.out.println("Property value added...");
+      
       if(ConfigElement.class == prop_def.getType())
       {
          // Use the PropertySheetFactory to add an additional embedded element.
@@ -75,4 +92,7 @@ public class VarListPanel extends ExpandablePanel implements ConfigElementListen
    {
       System.out.println("Property value removed...");
    }
+   
+   private PropertyDefinition   mPropDef = null;
+   private ConfigElement        mConfigElement = null;
 }
