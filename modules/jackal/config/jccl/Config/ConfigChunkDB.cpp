@@ -7,7 +7,6 @@
 
 
 #include <vjConfig.h>
-#include <fstream.h>
 #include <sys/types.h>
 
 #include <Kernel/vjDebug.h>
