@@ -500,7 +500,29 @@ void vjInputManager::refreshAllProxies()
 
 }
 
+bool vjInputManager::removeProxy(std::string proxyName)
+{
+   vjDEBUG_BEGIN(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjInputManager::removeProxy" << std::endl << vjDEBUG_FLUSH;
+
+   if(mProxyTable.end() == mProxyTable.find(proxyName))
+   {
+      vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL)
+                 << clrOutNORM(clrRED,"ERROR:") << "vjInputManager::removeProxy: proxy: " << proxyName.c_str()
+                 << "  cannot find proxy: " << proxyName.c_str() << std::endl << vjDEBUG_FLUSH;
+      return false;
+   }
+
+   mProxyTable.erase(proxyName);
+
+   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "   proxy:" << proxyName.c_str() << "  has been removed."\
+                                             << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << std::endl << vjDEBUG_FLUSH;
+   return true;
+}
+
 bool vjInputManager::removeProxy(vjConfigChunk* chunk)
 {
-   return true;
+   std::string proxy_name;
+   proxy_name = (std::string)chunk->getProperty("name");
+   return removeProxy(proxy_name);
 }
