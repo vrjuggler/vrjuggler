@@ -73,31 +73,9 @@ LINKALL_ON=	@APP_LINKALL_ON@
 LINKALL_OFF=	@APP_LINKALL_OFF@
 
 # -----------------------------------------------------------------------------
-# CppUnit stuff.
-# -----------------------------------------------------------------------------
-CPPUNIT_SRCS=		Asserter.cpp		\
-			Exception.cpp		\
-			NotEqualException.cpp	\
-			SourceLine.cpp		\
-			SynchronizedObject.cpp	\
-			TestAssert.cpp		\
-			TestCase.cpp		\
-			TestFailure.cpp		\
-			TestResult.cpp		\
-			TestResultCollector.cpp	\
-			TestSucessListener.cpp	\
-			TestSuite.cpp
-CPPUNIT_UI_SRCS=	TestRunner.cpp			\
-			TextTestProgressListener.cpp	\
-			TextOutputter.cpp
-CPPUNIT_EXTS=		MetricRegistry.cpp
-EXTRA_SRCS_PATH=	$(CPP_UNIT)/src/cppunit		\
-			$(CPP_UNIT)/src/cppunit/extensions
-
-# -----------------------------------------------------------------------------
 # Build stuff.
 # -----------------------------------------------------------------------------
-SRCS=		$(CPPUNIT_SRCS) $(CPPUNIT_UI_SRCS) $(CPPUNIT_EXTS) main.cpp
+SRCS=		main.cpp
 ALL_OBJS=	$(OBJDIR)/*.@OBJEXT@
 SUBDIR=		TestCases
 
@@ -107,7 +85,10 @@ SUBDIR=		TestCases
 BASIC_LIBS=	@APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
 		@APP_BASIC_EXT_LIBS@ @APP_BASIC_LIBS_END@	\
 		$(NULL)
-EXTRA_LIBS=	@APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS@ @APP_EXTRA_LIBS_END@
+EXTRA_LIBS=	@APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS@		\
+		@APP_EXTRA_LIBS_END@				\
+		@CPPUNIT_LDFLAGS@ @LIBCPPUNIT@			\
+		$(NULL)
 
 $(APP): $(ALL_OBJS) $(JCCL_BASE_DIR)/lib$(LIBBITSUF)/libjccl.a
 	$(LINK) @EXE_NAME_FLAG@ $(ALL_OBJS) $(LDFLAGS) $(BASIC_LIBS)	\
