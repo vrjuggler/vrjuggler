@@ -40,8 +40,6 @@
 #include <jccl/Config/ChunkDescDB.h>
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ChunkFactory.h>
-#include <jccl/JackalServer/TimedUpdate.h>
-//#include <Kernel/ConfigManager.h>
 #include <jccl/Config/ConfigTokens.h>
 #include <vpr/System.h>
 

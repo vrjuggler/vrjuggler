@@ -37,7 +37,6 @@
 #define _JCCL_PERF_DATA_BUFFER_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/JackalServer/TimedUpdate.h>
 #include <jccl/Performance/TimeStamp.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Debug.h>
@@ -71,7 +70,7 @@ namespace jccl {
 // write() call.
 //
 //----------------------------------------------------------------
-class VJ_CLASS_API PerfDataBuffer: public TimedUpdate {
+class VJ_CLASS_API PerfDataBuffer {
 
     struct buf_entry {
 
@@ -101,7 +100,6 @@ class VJ_CLASS_API PerfDataBuffer: public TimedUpdate {
 
 public:
     std::string name;
-    std::string handler_name;
     int         nindex;
 
  public:
@@ -111,13 +109,8 @@ public:
     //! POST: self is created and has _numbufs buffers
     //! ARGS: _numbufs - number of buffers to allocate
     //+       (default 50)
-    PerfDataBuffer (char* _name, int _numbufs, int _nindex) {
-        init (_name, _numbufs, _nindex);
-    }
+    PerfDataBuffer (const std::string& _name, int _numbufs, int _nindex);
 
-    PerfDataBuffer (const std::string& _name, int _numbufs, int _nindex) {
-        init (_name.c_str(), _numbufs, _nindex);
-    }
 
     //: destructor
     //: POST: all memory & buffers have been freed.
@@ -127,10 +120,6 @@ public:
 
     virtual const std::string& getName() const {
         return name;
-    }
-
-    virtual const std::string& getProtocolHandlerName() const {
-        return handler_name;
     }
 
     //: activates the buffer
@@ -165,7 +154,7 @@ public:
     //+       that calls set. e.g. 1 = point right before
     //+       entering some big computation, and 2 = point
     //+       right after.
-    void set(int _phase);
+    void set (int _phase);
 
     void set (int _phase, TimeStamp& _value);
 
@@ -198,7 +187,6 @@ public:
     void dumpData();
 
 private:
-    void init (const char* _name, int _numbufs, int _nindex);
    
     PerfDataBuffer (const PerfDataBuffer& o) {;}
     void operator= (const PerfDataBuffer& o) {;}
