@@ -200,9 +200,9 @@ private:
       /* Do nothing. */ ;
    }
 
-   void operator=(const BeanDeliverySubjectImpl& subj)
+   BeanDeliverySubject& operator=(const BeanDeliverySubjectImpl& subj)
    {
-      /* Do nothing. */ ;
+      return *this;
    }
 
    /** The collection of all JavaBeans about which we have been informed. */
