@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 /////////////////////////////////////////////////////////////////////////////
-// Base class for all vj Input devices
+// Base class for all Gadgeteer Input devices
 //
 // History:
 //
@@ -49,7 +49,6 @@
 #include <vpr/vpr.h>
 
 #include <vpr/Sync/Mutex.h>
-#include <vpr/Sync/Guard.h>
 #include <vpr/Thread/Thread.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 
@@ -58,6 +57,7 @@
 #include <vpr/IO/SerializableObject.h>
 
 // consider moving this
+// XXX: How about REmoving it?  -PH (5/1/2003)
 typedef unsigned char byte;
 
 /** Abilities List
@@ -108,76 +108,75 @@ namespace gadget
 class GADGET_CLASS_API Input : public vpr::SerializableObject
 {
 public:
-   /** Default Constructor
-   *
-   *  The default constructor is intended only for use by the DummyProxies
-   *  which do not need to have their serial port and baud rate etc set up.
-   * Also, initializes mThread, and active to null values
-   */
+   /** Default Constructor.
+    *
+    * The default constructor is intended only for use by the DummyProxies
+    * which do not need to have their serial port and baud rate etc set up.
+    * Also, initializes mThread and mActive to null values.
+    */
    Input();
 
 #ifndef VPR_OS_Win32
-   /** Input Destructor
-   *
-   * Free the memory for the Instance Name and Serial Port strings if
-   * allocated
-   */
+   /** Input Destructor.
+    *
+    * Free the memory for the Instance Name and Serial Port strings if
+    * allocated.
+    */
    virtual ~Input()
    {
       ;
    }
 #endif
 
-   /** Config method
-   *
-   *  This baselevel config will fill the base datamembers
-   *  when found in the ConfigChunkPtr such as serial port, instance name
-   *  and baud rate.
-   */
+   /** Config method.
+    *
+    *  This baselevel config will fill the base datamembers
+    *  when found in the jccl::ConfigChunkPtr such as instance name.
+    */
    virtual bool config(jccl::ConfigChunkPtr c);
 
-   /** Sample the device
-   *
-   *  Every input device should have a sample function, after which the
-   *  device has been sampled to have new data.  (This new data is not
-   *  accessable until UpdateData is called, however)
-   */
+   /** Sample the device.
+    *
+    *  Every input device should have a sample function, after which the
+    *  device has been sampled to have new data.  (This new data is not
+    *  accessable until UpdateData is called, however.)
+    */
    virtual int sample() = 0;
 
    /** Start a device sampling.
-   *
-   *  Start the device sampling, normally this will spawn a thread which will
-   *  just repeatedly call Sample().
-   *  This function should return true when it sucessfully starts,
-   *      false otherwise.
-   */
+    *
+    *  Start the device sampling, normally this will spawn a thread which will
+    *  just repeatedly call Sample().
+    *  This function should return true when it sucessfully starts,
+    *  false otherwise.
+    */
    virtual int startSampling() = 0;
 
    /* StopSampling.
-   *
-   *  Reverse the effects of StartSampling()
-   */
+    *
+    *  Reverse the effects of StartSampling().
+    */
    virtual int stopSampling() = 0;
 
-   /** Update the data
-   *
-   *  After this function is called subsequent calls to GetData(d) will
-   *  return the most recent data at the time of THIS function call.  Data is
-   *  guaranteed to be valid and static until the next call to UpdateData.
-   */
+   /** Update the data.
+    *
+    *  After this function is called subsequent calls to GetData(d) will
+    *  return the most recent data at the time of THIS function call.  Data is
+    *  guaranteed to be valid and static until the next call to UpdateData.
+    */
    virtual void updateData() = 0;
 
-   /** Returns the string rep of the chunk type used to config this device
-   * This string is used by the device factory to look up device drivers
-   * based up the type of chunk it is trying to load.
-   */
+   /** Returns the string rep of the chunk type used to config this device.
+    * This string is used by the device factory to look up device drivers
+    * based up the type of chunk it is trying to load.
+    */
    static std::string getChunkType() { return std::string("Undefined"); }
 
-   /** getInstanceName()
-   *
-   *  Returns the name identifying this instance of the device.
-   * This is the name given to the device in it's config chunk (ie. "MyFlockOfBirds", "TheIbox", etc)
-   */
+   /**
+    * Returns the name identifying this instance of the device.
+    * This is the name given to the device in its config element (e.g.,
+    * "MyFlockOfBirds", "The Ibox", etc.).
+    */
    std::string getInstanceName()
    {
       if (mInstName.empty())
@@ -232,11 +231,9 @@ protected:
     */
    virtual void destroy() = 0;
 
-   std::string    mPort;
    std::string    mInstName;
-   vpr::Thread*   mThread;       /**< The thread being used by the driver */
+   vpr::Thread*   mThread;       /**< The thread being used by the driver. */
    bool           mActive;       /**< Is the driver active? */
-   int            mBaudRate;     /**< Baud rate of the device (if it is serial device) */
 
    Input(const Input& o) : vpr::SerializableObject(o)
    {;}

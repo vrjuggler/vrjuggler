@@ -32,22 +32,18 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <vpr/Thread/Thread.h>
-#include <vpr/Util/Assert.h>
-
-#include <gadget/Type/Input.h>
+#include <stdlib.h>
 #include <jccl/Config/ConfigChunk.h>
+#include <gadget/Type/Input.h>
 
 
 namespace gadget
 {
 
 Input::Input()
- : mPort(""),
-   mInstName(""),
+ : mInstName(""),
    mThread(NULL),
-   mActive(false),
-   mBaudRate(0)
+   mActive(false)
 {
 }
 
@@ -61,9 +57,7 @@ bool Input::config( jccl::ConfigChunkPtr c)
   //   return true;
   //}
 
-  //mPort     = c->getProperty<std::string>("port");
   mInstName = c->getFullName();
-  //mBaudRate = c->getProperty<int>("baud");
 
   return true;
 }
