@@ -15,7 +15,7 @@ import ServerConfig
 from qt import *
 import qt
 
-use_test_facade = False
+use_test_facade = True
 use_qtpe = True
 
 # See if we are on an embedded system
