@@ -57,6 +57,7 @@
 #include "snx/SoundImplementation.h"
 #include "snx/SoundInfo.h"
 #include "snx/SoundAPIInfo.h"
+#include "snx/Util/Debug.h"
 
 namespace snx
 {
@@ -156,7 +157,7 @@ public:
     */
    virtual void startAPI()
    {
-      std::cout << "[snx]Stub::startAPI (does nothing)\n"<<std::flush;
+       vpr::DebugOutputGuard output1(snxDBG, vprDBG_CONFIG_LVL, std::string("Stub::startAPI (does nothing)\n"), std::string("\n"));
    }
    
    /**
@@ -166,7 +167,7 @@ public:
     */
    virtual void shutdownAPI()
    {
-      std::cout << "[snx]Stub::shutdownAPI (does nothing)\n"<<std::flush;
+      vpr::DebugOutputGuard output2(snxDBG, vprDBG_CONFIG_LVL, std::string("Stub::shutdownAPI (does nothing)\n"), std::string("\n"));
    }   
 
    /**
