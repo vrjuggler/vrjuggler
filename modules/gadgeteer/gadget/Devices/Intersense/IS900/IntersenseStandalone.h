@@ -76,7 +76,7 @@ struct isConfig {
 
 class IntersenseStandalone {
 public:
-    IntersenseStandalone()
+    IntersenseStandalone() : mPortName("")
     {
        init();
     }
@@ -84,7 +84,6 @@ public:
     ~IntersenseStandalone()
     {
        if(script != NULL) delete [] script;
-       if(mPortName != NULL) delete [] mPortName;
     }
 
     bool open();
@@ -101,10 +100,8 @@ public:
     int& rPort() {return mPort;}
     int Port() {return mPort;}
 
-    char *setPortName(const char* portname) {
-       if(mPortName != NULL) delete [] mPortName;
-       mPortName = new char[strlen(portname)+3];
-       strcpy(mPortName,  portname);
+    std::string setPortName(const std::string& portname) {
+       mPortName = portname;
        return mPortName;
     }
 
@@ -247,7 +244,7 @@ private:
     int mPort;
     bool mVerbose;
     bool mActive;
-    char* mPortName; //fix was implemented in all c drivers to allow precise control over the port used
+    std::string mPortName; //fix was implemented in all c drivers to allow precise control over the port used
     char* script;
 //Station level data
     int mCurrentStation; //0-3 for current 9/2000 IS900

@@ -43,7 +43,7 @@ namespace gadget
 {
 
 Input::Input()
- : mPort(NULL),
+ : mPort(""),
    mInstName(""),
    mPortId(0),
    mThread(NULL),
@@ -54,14 +54,11 @@ Input::Input()
 
 Input::~Input()
 {
-    if (mPort != NULL)
-        delete [] mPort;
 }
 
 bool Input::config( jccl::ConfigChunkPtr c)
 {
-  //mPort = NULL;
-  if((mPort != NULL) && (!mInstName.empty()))
+  if((!mPort.empty()) && (!mInstName.empty()))
   {
      // ASSERT: We have already been configured
      //         this prevents config from being called multiple times (once for each derived class)
@@ -69,13 +66,7 @@ bool Input::config( jccl::ConfigChunkPtr c)
      return true;
   }
 
-  char* t = c->getProperty("port").cstring();
-  if (t != NULL)
-  {
-    mPort = new char[ strlen(t) + 1 ];
-    strcpy(mPort,t);
-  }
-
+  mPort = (std::string) c->getProperty("port");
   mInstName = (std::string)c->getProperty("name");
   mBaudRate = c->getProperty("baud");
 
@@ -83,18 +74,18 @@ bool Input::config( jccl::ConfigChunkPtr c)
 }
 
 
-void Input::setPort(const char* serialPort)
+void Input::setPort(const std::string& serialPort)
 {
 if (mThread != NULL) {
      std::cerr << "Cannot change the serial Port while active\n";
      return;
   }
-  strncpy(mPort,serialPort,(size_t)30);
+  mPort = serialPort;
 }
 
-char* Input::getPort()
+std::string Input::getPort()
 {
-  if (mPort == NULL) return "No port";
+  if (mPort.empty()) return std::string("No port");
   return mPort;
 }
 

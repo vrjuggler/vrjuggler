@@ -54,7 +54,7 @@ namespace gadget
 int getReading(gmtl::Matrix44f* data, int port);
 float rawToFloat(char& r1, char& r2);
 void  pickBird(int sensor, int port);
-static int open_port(char* serialPort, int baud);
+static int open_port(const std::string& serialPort, int baud);
 static void set_blocking(int port, int blocking);
 static void set_sync(int port, int sync);
 static void set_hemisphere(int port, BIRD_HEMI hem);//, int transmitter);
@@ -83,7 +83,7 @@ bool Bird::config(jccl::ConfigChunkPtr c)
    if(! (Input::config(c) && Position::config(c)))
       return false;
 
-  strncpy(mPort,"/dev/ttyd3", 30);
+  mPort = std::string("/dev/ttyd3");
   initCorrectionTable();
 
   return true;
@@ -427,20 +427,20 @@ inline void  pickBird(int birdID, int port)
    vpr::System::usleep(100);
 }
 
-static int open_port(char* serialPort, int baud)
+static int open_port(const std::string& serialPort, int baud)
 {
  ///////////////////////////////////////////////////////////////////
  // Open and close the port to reset the tracker, then
  // Open the port
  ///////////////////////////////////////////////////////////////////
-  int port_num = open(serialPort, O_RDWR | O_NDELAY);
+  int port_num = open(serialPort.c_str(), O_RDWR | O_NDELAY);
   if (port_num == -1)
    { std::cerr << "tracker port open failed\n";
     return port_num;
    }
   vpr::System::sleep(2);
   close(port_num);
-  port_num = open(serialPort,O_RDWR | O_NDELAY);
+  port_num = open(serialPort.c_str(),O_RDWR | O_NDELAY);
   if (port_num == -1)
    { std::cerr << "tracker port open failed\n";
     return port_num;

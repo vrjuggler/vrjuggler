@@ -68,7 +68,7 @@ FlockStandalone::FlockStandalone(const char* const port, const int& baud,
      _active(false), mSleepFactor(3)
 {
   if (port != NULL) {
-    strncpy(_port, port, FlockStandalone::MAXCHARSTRINGSIZE);
+    _port = port;
     _serial_port = new vpr::SerialPort(_port);
   }
   else {
@@ -114,7 +114,7 @@ const bool& FlockStandalone::isActive() const
 //  this will be a string in the form of the native OS descriptor <BR>
 //  ex: unix - "/dev/ttyd3", win32 - "COM3" <BR>
 //  NOTE: flock.isActive() must be false to use this function
-void FlockStandalone::setPort(const char* const serialPort)
+void FlockStandalone::setPort(const std::string& serialPort)
 {
     if (_active)
     {
@@ -122,8 +122,8 @@ void FlockStandalone::setPort(const char* const serialPort)
    return;
     }
 
-    if ( serialPort != NULL ) {
-        strncpy(_port, serialPort, FlockStandalone::MAXCHARSTRINGSIZE);
+    if ( ! serialPort.empty() ) {
+        _port = serialPort;
 
         if ( _serial_port != NULL ) {
             delete _serial_port;
@@ -136,7 +136,7 @@ void FlockStandalone::setPort(const char* const serialPort)
 //: get the port used
 //  this will be a string in the form of the native OS descriptor <BR>
 //  ex: unix - "/dev/ttyd3", win32 - "COM3"
-const char* FlockStandalone::getPort() const
+const std::string& FlockStandalone::getPort() const
 {
     return _port;
 }

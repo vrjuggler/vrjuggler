@@ -147,7 +147,7 @@ int DataGloveStandalone::ReadRecordsFromHardware( float *ch0, float *ch1, float 
 }
 
 // Connect to the DataGlove hardware
-bool DataGloveStandalone::connectToHardware(const char* const ttyPort, int mBaudRate)
+bool DataGloveStandalone::connectToHardware(const std::string& ttyPort, int mBaudRate)
 {
     std::cout<<"\n[dataglove] Connecting To DataGlove Hardware\n"<<std::flush;
     int result = mConnectToHardware( ttyPort , mBaudRate);
@@ -166,7 +166,7 @@ bool DataGloveStandalone::connectToHardware(const char* const ttyPort, int mBaud
 ///////////////////////////////////////////////////////////
 // Private methods
 ///////////////////////////////////////////////////////////
-int DataGloveStandalone::mConnectToHardware(const char* const ttyPort, int baud)
+int DataGloveStandalone::mConnectToHardware(const std::string& ttyPort, int baud)
 {
    const int BUFFER_LEN = 100;
    char buf[BUFFER_LEN];

@@ -147,7 +147,7 @@ bool ThreeDMouse::config(jccl::ConfigChunkPtr c)
 //
 // Open the mouse device and set the fd
 ////////////////////////////////////////////////////////////
-int ThreeDMouse::openMouse(char* portName)
+int ThreeDMouse::openMouse(const std::string& portName)
 {
     int fd;
     fd = ThreeDMouse::logitechOpen(portName);
@@ -166,15 +166,15 @@ int ThreeDMouse::openMouse(char* portName)
 //
 // Return: file descriptor to serial port or -1 if error opening port
 //////////////////////////////////////////////////////////////////////////
-int ThreeDMouse::logitechOpen (char* port_name)
+int ThreeDMouse::logitechOpen (const std::string& port_name)
 {
   int fd;
   struct termios t;
   unsigned char data[DIAGNOSTIC_SIZE]; /* for diagnostics info */
 
   /* open a serial port, read/write */
-  if ((fd = open (port_name, O_RDWR)) < 0) {
-    perror (port_name);
+  if ((fd = open (port_name.c_str(), O_RDWR)) < 0) {
+    perror (port_name.c_str());
     return (-1);
   }
 
