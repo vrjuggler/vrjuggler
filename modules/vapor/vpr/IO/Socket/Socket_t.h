@@ -70,10 +70,6 @@ namespace vpr {
  * objects cannot be instantiated.  Instead, see vpr::SocketStream
  * and vpr::SocketDatagram.
  *
- * @author Patrick Hartling
- * @author Allen Bierbaum
- * @author Kevin Meinert
- *
  * @see vpr::SocketStream_t
  * @see vpr::SocketDatagram_t
  */

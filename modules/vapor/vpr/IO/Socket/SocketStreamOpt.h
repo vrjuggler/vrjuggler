@@ -54,8 +54,6 @@ namespace vpr {
 
 /**
  * Options for stream sockets.
- *
- * @author Patrick Hartling
  */
 class VPR_CLASS_API SocketStreamOpt : public vpr::SocketOptionWrapper {
 public:

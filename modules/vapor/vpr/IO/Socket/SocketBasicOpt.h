@@ -54,8 +54,6 @@ namespace vpr {
 
 /**
  * Options common to all types of sockets.
- *
- * @author Patrick Hartling
  */
 class VPR_CLASS_API SocketBasicOpt : public vpr::SocketOptionWrapper {
 public:

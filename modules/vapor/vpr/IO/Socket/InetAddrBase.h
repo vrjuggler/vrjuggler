@@ -54,8 +54,6 @@ namespace vpr {
 
 /**
  * Cross-platform abstraction to Internet address structures.
- *
- * @author Allen Bierbaum
  */
 class VPR_CLASS_API InetAddrBase {
 public:

@@ -49,8 +49,6 @@ namespace vpr {
 
 /**
  * IP-level options for sockets.
- *
- * @author Patrick Hartling
  */
 class VPR_CLASS_API SocketIpOpt : public SocketBasicOpt {
 public:
