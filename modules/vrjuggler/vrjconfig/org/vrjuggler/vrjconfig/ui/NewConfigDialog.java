@@ -521,9 +521,9 @@ public class NewConfigDialog
       includesListSP.getViewport().add(includesList, null);
       */
       buttonPnl.add(Box.createHorizontalGlue());
-      buttonPnl.add(cancelBtn, null);
-      buttonPnl.add(Box.createHorizontalStrut(8));
       buttonPnl.add(okBtn, null);
+      buttonPnl.add(Box.createHorizontalStrut(8));
+      buttonPnl.add(cancelBtn, null);
    }
 
    // JBuilder GUI variables
