@@ -30,16 +30,16 @@ float vjProjection::mFarDist = 10000.0f;
 //+      The matrix viewMat transforms from eye to clip
 void vjProjection::getFrustumApexAndCorners(vjVec3& apex, vjVec3& ur, vjVec3& lr, vjVec3& ul, vjVec3& ll)
 {
-   vjMatrix viewMatInv;
-   viewMatInv.invert(viewMat);   // Get the inverse matrix
+   vjMatrix view_mat_inv;
+   view_mat_inv.invert(mViewMat);   // Get the inverse matrix
 
    //float near_dist = mFocusPlaneDist;
    // User like triangles to get the params for the focus surface
-   float mult_factor = mFocusPlaneDist/frustum[vjFrustum::VJ_NEAR];
-   float bot = frustum[vjFrustum::VJ_BOTTOM]*mult_factor;
-   float left = frustum[vjFrustum::VJ_LEFT]*mult_factor;
-   float top = frustum[vjFrustum::VJ_TOP]*mult_factor;
-   float right = frustum[vjFrustum::VJ_RIGHT]*mult_factor;
+   float mult_factor = mFocusPlaneDist/mFrustum[vjFrustum::VJ_NEAR];
+   float bot = mFrustum[vjFrustum::VJ_BOTTOM]*mult_factor;
+   float left = mFrustum[vjFrustum::VJ_LEFT]*mult_factor;
+   float top = mFrustum[vjFrustum::VJ_TOP]*mult_factor;
+   float right = mFrustum[vjFrustum::VJ_RIGHT]*mult_factor;
 
    // Create points in clip space
    vjVec3 apexClip(0.0f, 0.0f, 0.0f);
@@ -48,11 +48,11 @@ void vjProjection::getFrustumApexAndCorners(vjVec3& apex, vjVec3& ur, vjVec3& lr
    vjVec3 ulClip(left, top, -mFocusPlaneDist);
    vjVec3 llClip(left, bot, -mFocusPlaneDist);
 
-   apex.xformFull(viewMatInv, apexClip);
-   ur.xformFull(viewMatInv, urClip);
-   lr.xformFull(viewMatInv, lrClip);
-   ul.xformFull(viewMatInv, ulClip);
-   ll.xformFull(viewMatInv, llClip);
+   apex.xformFull(view_mat_inv, apexClip);
+   ur.xformFull(view_mat_inv, urClip);
+   lr.xformFull(view_mat_inv, lrClip);
+   ul.xformFull(view_mat_inv, ulClip);
+   ll.xformFull(view_mat_inv, llClip);
 }
 
 
@@ -68,7 +68,7 @@ ostream& vjProjection::outStream(ostream& out)
       out << "Right";
       break;
    }
-   out << "\nFrustum: " << frustum << endl;
+   out << "\nFrustum: " << mFrustum << endl;
    return out;
 }
 

@@ -24,12 +24,34 @@
 
 void vjTrackedWallProjection::updateWallParams()
 {
-   vjMatrix tracker_mat = *(mTracker->getData());
-
    // Compute the correct rotation matrix
-   mWallRotationMatrix.mult(tracker_mat,mWallRotationMatrix_bak);
+   // mWallRotationMatrix_bak ==> surfMbase
+   // tracker_mat ==> baseMtracker
+   // We want surfMbase <=== surfMbase*trackerMbase
+   // NOTE: wallRotMat's base is the base of the tracking system
+   
+   vjMatrix tracker_mat = *(mTracker->getData());     // baseMtracker
+   
+   // Method 1:
+   // baseMsurf = baseMtracker*baseMsurf
+   // surfMbase = inv(baseMsurf)
+   // Cost: 2 inversions, 1 mult, 2 temp matrices
+#if 0
+   vjMatrix wall_rot_bak_inv;
+   wall_rot_bak_inv.invert(mWallRotationMatrix_bak);
+   vjMatrix base_m_surf;
+   base_m_surf.mult(tracker_mat,wall_rot_bak_inv);
+   mWallRotationMatrix.invert(base_m_surf);
+#endif
 
-   // Compute the correct rotation parameters
+#if 1
+   // Method 2:
+   // surfMbase = surfMbase*trackerMbase
+   // Cost: 1 inversion, 1 mult, 1 temp matrix
+   vjMatrix tracker_mat_inv;                 // trackerMbase
+   tracker_mat_inv.invert(tracker_mat);
+   mWallRotationMatrix.mult(mWallRotationMatrix_bak,tracker_mat_inv);
+#endif  
 }
 
 ostream& vjTrackedWallProjection::outStream(ostream& out)
