@@ -47,7 +47,7 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(JCCL_LIBRARY)
 
-SRCS		= PerformanceManager.cpp \
+SRCS		= PerformanceMonitor.cpp \
 		  PerfDataBuffer.cpp	\
 		  PerfCommand.cpp	\
                   TimeStamp.cpp
