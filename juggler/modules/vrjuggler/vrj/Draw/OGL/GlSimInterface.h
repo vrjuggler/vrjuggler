@@ -52,8 +52,8 @@ namespace vrj
    class GlSimInterface : public gadget::InputMixer<
                                     gadget::InputMixer<
                                        gadget::InputMixer<gadget::Input,
-                                          gadget::Digital>
-                                       gadget::Analog>
+                                          gadget::Digital>,
+                                       gadget::Analog>,
                                     gadget::Position>
    {
    public:
@@ -69,7 +69,7 @@ namespace vrj
        * Sets the keyboard the simulator can use to get input from the user.
        */
       virtual void setKeyboard(gadget::Keyboard* keyboard) = 0;
-   }
+   };
 }
 
 #endif
