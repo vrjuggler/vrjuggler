@@ -264,6 +264,9 @@ ifneq (@LOCAL_BOOST@, Y)
 	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) -e .hpp -o $(includedir)/../boost		\
           -i $(JUGGLERROOT_ABS)/external/boost/boost
+	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) -o $(includedir)/../boost/compatibility	\
+          -i $(JUGGLERROOT_ABS)/external/boost/boost/compatibility
 endif
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(VPRROOT_ABS)/vpr/System.h $(includedir)
