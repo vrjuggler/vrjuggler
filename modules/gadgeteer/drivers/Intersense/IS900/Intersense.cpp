@@ -296,7 +296,7 @@ float vjIsense::getAnalogData( int d )
 {
  
     if(this->isActive() == false)
-	return NULL;
+	return 0.0;
   
     return mInput[current].analog[d];
  
