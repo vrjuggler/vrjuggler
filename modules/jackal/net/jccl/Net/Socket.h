@@ -35,7 +35,6 @@
 #define _JCCL_SOCKET_H_
 
 #include <jccl/jcclConfig.h>
-#include <iostream>
 #include <vpr/IO/Socket/Socket.h>
 
 
