@@ -163,15 +163,15 @@ public:
       threadAssertReset();
 
       // spawn an acceptor thread
-      vpr::ThreadMemberFunctor<SocketTest> acceptor_functor( this, &SocketTest::testOpenCloseOpen_acceptor );
-      vpr::Thread acceptor_thread( &acceptor_functor );
+      vpr::ThreadMemberFunctor<SocketTest>* acceptor_functor = new vpr::ThreadMemberFunctor<SocketTest>( this, &SocketTest::testOpenCloseOpen_acceptor );
+      vpr::Thread acceptor_thread( acceptor_functor );
 
       // let the acceptor get a chance to start before connecting (sleep a while)
       vpr::System::msleep( 500 );
 
       // spawn a connector thread
-      vpr::ThreadMemberFunctor<SocketTest> connector_functor( this, &SocketTest::testOpenCloseOpen_connector );
-      vpr::Thread connector_thread( &connector_functor );
+      vpr::ThreadMemberFunctor<SocketTest>* connector_functor = new vpr::ThreadMemberFunctor<SocketTest>( this, &SocketTest::testOpenCloseOpen_connector );
+      vpr::Thread connector_thread( connector_functor );
 
       // wait for both threads to terminate, then continue
       //vpr::System::sleep( 7 );
@@ -308,15 +308,17 @@ public:
       threadAssertReset();
 
       // spawn an acceptor thread
-      vpr::ThreadMemberFunctor<SocketTest> acceptor_functor( this, &SocketTest::testSendRecv_acceptor );
-      vpr::Thread acceptor_thread( &acceptor_functor );
+      vpr::ThreadMemberFunctor<SocketTest>* acceptor_functor =
+            new vpr::ThreadMemberFunctor<SocketTest>( this, &SocketTest::testSendRecv_acceptor );
+      vpr::Thread acceptor_thread( acceptor_functor );
 
       // let the acceptor get a chance to start before connecting (sleep a while)
       vpr::System::msleep( 500 );
 
       // spawn a connector thread
-      vpr::ThreadMemberFunctor<SocketTest> connector_functor( this, &SocketTest::testSendRecv_connector );
-      vpr::Thread connector_thread( &connector_functor );
+      vpr::ThreadMemberFunctor<SocketTest>* connector_functor =
+         new vpr::ThreadMemberFunctor<SocketTest>( this, &SocketTest::testSendRecv_connector );
+      vpr::Thread connector_thread( connector_functor );
 
       // wait for both threads to terminate, then continue
       //vpr::System::sleep( 7 );
@@ -594,15 +596,17 @@ public:
       threadAssertReset();
 
       // spawn an acceptor thread
-      vpr::ThreadMemberFunctor<SocketTest> acceptor_functor( this, &SocketTest::reuseAddrTest_acceptor );
-      vpr::Thread acceptor_thread( &acceptor_functor );
+      vpr::ThreadMemberFunctor<SocketTest>* acceptor_functor =
+            new vpr::ThreadMemberFunctor<SocketTest>( this, &SocketTest::reuseAddrTest_acceptor );
+      vpr::Thread acceptor_thread( acceptor_functor );
 
       // let the acceptor get a chance to start before connecting (sleep a while)
       vpr::System::msleep( 500 );
 
       // spawn a connector thread
-      vpr::ThreadMemberFunctor<SocketTest> connector_functor( this, &SocketTest::reuseAddrTest_connector );
-      vpr::Thread connector_thread( &connector_functor );
+      vpr::ThreadMemberFunctor<SocketTest>* connector_functor =
+         new vpr::ThreadMemberFunctor<SocketTest>( this, &SocketTest::reuseAddrTest_connector );
+      vpr::Thread connector_thread( connector_functor );
 
       // wait for both threads to terminate, then continue
       //vpr::System::sleep( 1 );
@@ -786,15 +790,17 @@ public:
       threadAssertReset();
 
       // spawn an acceptor thread
-      vpr::ThreadMemberFunctor<SocketTest> acceptor_functor( this, &SocketTest::testBlocking_acceptor );
-      vpr::Thread acceptor_thread( &acceptor_functor );
+      vpr::ThreadMemberFunctor<SocketTest>* acceptor_functor =
+         new vpr::ThreadMemberFunctor<SocketTest>( this, &SocketTest::testBlocking_acceptor );
+      vpr::Thread acceptor_thread( acceptor_functor );
 
       // let the acceptor get a chance to start before connecting (sleep a while)
       vpr::System::msleep( 500 );
 
       // spawn a connector thread
-      vpr::ThreadMemberFunctor<SocketTest> connector_functor( this, &SocketTest::testBlocking_connector );
-      vpr::Thread connector_thread( &connector_functor );
+      vpr::ThreadMemberFunctor<SocketTest>* connector_functor =
+         new vpr::ThreadMemberFunctor<SocketTest>( this, &SocketTest::testBlocking_connector );
+      vpr::Thread connector_thread( connector_functor );
 
       // wait for both threads to terminate, then continue
 
@@ -965,10 +971,10 @@ public:
       assert(server_sock.listen().success() && "Server socket listen failed");
 
       // Start the client thread.
-      vpr::ThreadMemberFunctor<SocketTest> func =
-          vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::testReadnClient,
+      vpr::ThreadMemberFunctor<SocketTest>* func =
+         new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::testReadnClient,
                                                (void*) &server_port);
-      vpr::Thread* client_thread = new vpr::Thread(&func);
+      vpr::Thread* client_thread = new vpr::Thread(func);
       assert(client_thread->valid() && "Server could not create client thread");
 
       vpr::SocketStream client_sock;
@@ -1004,14 +1010,14 @@ public:
       mAcceptorPort = 34568;
 
       // Spawn acceptor thread
-      vpr::ThreadMemberFunctor<SocketTest>
-          acceptor_functor(this, &SocketTest::testIsConnected_acceptor);
-      vpr::Thread acceptor_thread(&acceptor_functor);
+      vpr::ThreadMemberFunctor<SocketTest>* acceptor_functor =
+         new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::testIsConnected_acceptor);
+      vpr::Thread acceptor_thread(acceptor_functor);
 
       // Spawn connector thread
-      vpr::ThreadMemberFunctor<SocketTest>
-          connector_functor(this, &SocketTest::testIsConnected_connector);
-      vpr::Thread connector_thread(&connector_functor);
+      vpr::ThreadMemberFunctor<SocketTest>* connector_functor =
+            new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::testIsConnected_connector);
+      vpr::Thread connector_thread(connector_functor);
 
       // Wait for threads
       acceptor_thread.join();

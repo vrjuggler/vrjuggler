@@ -58,11 +58,11 @@ public:
       // Have each one increment counter n times
       // join all threads
       // Make sure counter is of valid value
-      
-      
-      //std::cout<<"]==================================================\n"<<std::flush; 
-      //std::cout<<" Thread CreateJoin: \n"<<std::flush; 
-      
+
+
+      //std::cout<<"]==================================================\n"<<std::flush;
+      //std::cout<<" Thread CreateJoin: \n"<<std::flush;
+
       const int num_threads(10);
       std::vector<vpr::ThreadMemberFunctor<ThreadTest>*> functors(num_threads);
       std::vector<vpr::Thread*> threads(num_threads);
@@ -86,7 +86,7 @@ public:
       CppUnit::TestAssert::assertEquals<long>((num_threads*ThreadTest_INC_COUNT),
                                               mCounter);
       //CPPUNIT_ASSERT(mCounter == (num_threads*50000));
-      
+
       std::cout << " done\n" << std::flush;
    }
 
@@ -105,7 +105,7 @@ public:
          //gfx::Thread::yield();
       }
    }
-   
+
    // =========================================================================
    // thread SuspendResume test
    // =========================================================================
@@ -122,14 +122,14 @@ public:
             mCounter = temp_counter + 1;
          }
          mCounterMutex.release();
-      }         
-   } 
-     
+      }
+   }
+
    long sampleCompare(int num)
    {
       long sampleValue1=0;
       long sampleValue2=0;
-      
+
       if (num==1) {
          mCounterMutex.acquire();
             sampleValue1=mCounter;
@@ -140,9 +140,9 @@ public:
             sampleValue1=mCounter1;
          mCounter1Mutex.release();
       }
-      
-      vpr::System::msleep(500 );      
-      
+
+      vpr::System::msleep(500 );
+
       if (num==1) {
          mCounterMutex.acquire();
             sampleValue2=mCounter;
@@ -157,41 +157,42 @@ public:
       return sampleValue2-sampleValue1;
    }
 
-   
+
    void testSuspendResume()
    {
-      //std::cout<<"]==================================================\n"<<std::flush; 
+      //std::cout<<"]==================================================\n"<<std::flush;
       //std::cout<<" Thread SuspendResume: \n"<<std::flush;
-      
+
       mCounter=0;
-      
+
       // spawn an counter thread
-      vpr::ThreadMemberFunctor<ThreadTest> counter_functor( this, &ThreadTest::counter1Func );
-      vpr::Thread counter_thread( & counter_functor);
-      
+      vpr::ThreadMemberFunctor<ThreadTest>* counter_functor =
+         new vpr::ThreadMemberFunctor<ThreadTest>( this, &ThreadTest::counter1Func );
+      vpr::Thread counter_thread( counter_functor);
+
       vpr::System::msleep(100 );
-      
+
       CPPUNIT_ASSERT(sampleCompare(1)!=0 && "Counter doesn't work");
-      
+
       counter_thread.suspend();
       vpr::System::msleep(100);
-        
+
       CPPUNIT_ASSERT(sampleCompare(1)==0 && "thread can not be suspended");
-      
+
       counter_thread.resume();
       vpr::System::msleep(100);
-      
+
       CPPUNIT_ASSERT(sampleCompare(1)!=0 && "thread can not be resumed");
-      
+
       counter_thread.kill();
       std::cout << " done\n" << std::flush;
    }
 
-   
+
    // =========================================================================
    // thread Priority test
    // =========================================================================
-    
+
    void counter2Func(void* arg)
    {
       for(int i=0;i<10000;i++)
@@ -205,57 +206,59 @@ public:
             mCounter1 = temp_counter + 1;
          }
          mCounter1Mutex.release();
-      }         
+      }
    }
-   
+
    void testPriority()
    {
-      //std::cout<<"]==================================================\n"<<std::flush; 
+      //std::cout<<"]==================================================\n"<<std::flush;
       //std::cout<<" Thread Priority: \n"<<std::flush;
-      
+
       mCounter=0;
       mCounter1=0;
-      
+
       long diff1=0;
       long diff2=0;
-      
+
       // spawn two counter threads
-      vpr::ThreadMemberFunctor<ThreadTest> counter1_functor( this, &ThreadTest::counter1Func );
-      vpr::Thread counter1_thread( & counter1_functor);      
+      vpr::ThreadMemberFunctor<ThreadTest>* counter1_functor =
+         new vpr::ThreadMemberFunctor<ThreadTest>( this, &ThreadTest::counter1Func );
+      vpr::Thread counter1_thread( counter1_functor);
       vpr::System::msleep(500 );
-      
-      vpr::ThreadMemberFunctor<ThreadTest> counter2_functor( this, &ThreadTest::counter2Func );
-      vpr::Thread counter2_thread( & counter2_functor);
+
+      vpr::ThreadMemberFunctor<ThreadTest>* counter2_functor =
+         new vpr::ThreadMemberFunctor<ThreadTest>( this, &ThreadTest::counter2Func );
+      vpr::Thread counter2_thread( counter2_functor);
 //      counter2_thread.suspend();
       vpr::System::msleep(500 );
 //      counter2_thread.resume();
-      
+
       diff1=sampleCompare(1);
       diff2=sampleCompare(2);
       std::cout<<"diff1= "<<diff1<<" : "<<std::endl;
       std::cout<<"diff2= "<<diff2<<" : "<<std::endl;
-//      CPPUNIT_ASSERT(abs(diff2-diff1)<2 && "Counters don't work correctly); 
-      
+//      CPPUNIT_ASSERT(abs(diff2-diff1)<2 && "Counters don't work correctly);
+
       counter1_thread.setPrio(vpr::BaseThread::VPR_PRIORITY_HIGH);
       counter2_thread.setPrio(vpr::BaseThread::VPR_PRIORITY_LOW);
       vpr::System::msleep(100 );
-      
+
       diff1=sampleCompare(1);
       diff2=sampleCompare(2);
       std::cout<<"diff1= "<<diff1<<" : "<<std::endl;
       std::cout<<"diff2= "<<diff2<<" : "<<std::endl;
-//      CPPUNIT_ASSERT(abs(diff2-diff1)<2 && "Counters don't work correctly); 
+//      CPPUNIT_ASSERT(abs(diff2-diff1)<2 && "Counters don't work correctly);
 
       counter1_thread.setPrio(vpr::BaseThread::VPR_PRIORITY_LOW);
       counter2_thread.setPrio(vpr::BaseThread::VPR_PRIORITY_HIGH);
       vpr::System::msleep(100 );
-      
+
       diff1=sampleCompare(1);
       diff2=sampleCompare(2);
       std::cout<<"diff1= "<<diff1<<" : "<<std::endl;
       std::cout<<"diff2= "<<diff2<<" : "<<std::endl;
-//      CPPUNIT_ASSERT(abs(diff2-diff1)<2 && "Counters don't work correctly); 
-      
+//      CPPUNIT_ASSERT(abs(diff2-diff1)<2 && "Counters don't work correctly);
+
       counter1_thread.kill();
       counter2_thread.kill();
    }
