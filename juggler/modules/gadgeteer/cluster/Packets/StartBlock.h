@@ -48,9 +48,12 @@
 #include <vpr/IO/Socket/SocketStream.h>
 
 #include <gadget/gadgetConfig.h>
+#include <gadget/Util/Debug.h>
 #include <cluster/Packets/Header.h>                                                       
 #include <cluster/Packets/Packet.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
+#include <cluster/ClusterNetwork/ClusterNetwork.h>
+#include <cluster/ClusterManager.h>
                                                                                                           
 //#define RIM_PACKET_HEAD_SIZE 8
 
@@ -145,15 +148,31 @@ public:
       
    virtual bool action(ClusterNode* node)
    {
-      // -Set New State
+      // On Barrier Recv
+      // -If Master
+      //   -Remove Pending slave
+      //   -If all recved
+      //     -Send responce to all nodes
+      //     -Set Running TRUE
+      // -Else
+      //   -Set Running TRUE
+
       if (node == NULL)
       {
          return false;
       }
-
-      //node->setState(mNewState);
-      node->setRunning(true);
-      
+      if (ClusterManager::instance()->isBarrierMaster())
+      {
+         ClusterManager::instance()->removePendingBarrierSlave(node->getHostname());
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[XXX] ")
+            << "StartBlock::action() - Barrier Master!\n" << vprDEBUG_FLUSH;         
+      }
+      else
+      {
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[XXX] ")
+            << "StartBlock::Action() - Slave\n" << vprDEBUG_FLUSH;         
+         ClusterManager::instance()->setRunning(true);
+      }
       return true;
    }
 private:

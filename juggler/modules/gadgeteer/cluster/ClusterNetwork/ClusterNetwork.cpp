@@ -66,7 +66,7 @@ namespace cluster
       // Strip the tail of the address to get just the computer name
       //XXX: We should fix this to make the user fully specify the hostname
       mLocalHostnameShort = cluster::getShortHostnameFromLong(mLocalHostnameLong);
-      startUpdating();
+//      startUpdating();
    }
 
    ClusterNetwork::~ClusterNetwork()
@@ -630,6 +630,19 @@ namespace cluster
    }
    void ClusterNetwork::updateNewConnections()
    {
+      if (getNumPendingNodes() > 0)
+      {
+         if(attemptPendingNodes())
+         {
+            // -If the pending list is stale
+            //   - refresh the list               
+            if(jccl::ConfigManager::instance()->isPendingStale())
+            {
+               jccl::ConfigManager::instance()->refreshPendingList();
+            }
+         }
+      }
+      
       // This fuction is needed in order to gurantee that all cluster
       // nodes become active at the same time, the beginning of the frame
       //
