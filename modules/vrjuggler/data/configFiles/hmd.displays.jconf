@@ -39,40 +39,24 @@
          </event_window_device>
          <active>true</active>
          <surface_viewports>
-            <surface_viewport name="Contained Surface Viewports 0" version="1">
+            <surface_viewport name="Contained Surface Viewports 0" version="2">
                <origin>0.0</origin>
                <origin>0.0</origin>
                <size>1.0</size>
                <size>1.0</size>
                <view>Left Eye</view>
-               <corners>
-                  <vec3 name="lower left" version="1">
-                     <x>-0.6096</x>
-                     <y>-0.4572</y>
-                     <z>-1.560576</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="lower right" version="1">
-                     <x>0.6096</x>
-                     <y>-0.4572</y>
-                     <z>-1.560576</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper right" version="1">
-                     <x>0.6096</x>
-                     <y>0.4572</y>
-                     <z>-1.560576</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper left" version="1">
-                     <x>-0.6096</x>
-                     <y>0.4572</y>
-                     <z>-1.560576</z>
-                  </vec3>
-               </corners>
+               <lower_left_corner>-0.6096</lower_left_corner>
+               <lower_left_corner>-0.4572</lower_left_corner>
+               <lower_left_corner>-1.560576</lower_left_corner>
+               <lower_right_corner>0.6096</lower_right_corner>
+               <lower_right_corner>-0.4572</lower_right_corner>
+               <lower_right_corner>-1.560576</lower_right_corner>
+               <upper_right_corner>0.6096</upper_right_corner>
+               <upper_right_corner>0.4572</upper_right_corner>
+               <upper_right_corner>-1.560576</upper_right_corner>
+               <upper_left_corner>-0.6096</upper_left_corner>
+               <upper_left_corner>0.4572</upper_left_corner>
+               <upper_left_corner>-1.560576</upper_left_corner>
                <user>User1</user>
                <active>true</active>
                <tracked>true</tracked>
@@ -117,40 +101,24 @@
          </event_window_device>
          <active>false</active>
          <surface_viewports>
-            <surface_viewport name="Contained Surface Viewports 0" version="1">
+            <surface_viewport name="Contained Surface Viewports 0" version="2">
                <origin>0.0</origin>
                <origin>0.0</origin>
                <size>1.0</size>
                <size>1.0</size>
                <view>Right Eye</view>
-               <corners>
-                  <vec3 name="lower left" version="1">
-                     <x>-0.6096</x>
-                     <y>-0.4572</y>
-                     <z>-1.560576</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="lower right" version="1">
-                     <x>0.6096</x>
-                     <y>-0.4572</y>
-                     <z>-1.560576</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper right" version="1">
-                     <x>0.6096</x>
-                     <y>0.4572</y>
-                     <z>-1.560576</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper left" version="1">
-                     <x>-0.6096</x>
-                     <y>0.4572</y>
-                     <z>-1.560576</z>
-                  </vec3>
-               </corners>
+               <lower_left_corner>-0.6096</lower_left_corner>
+               <lower_left_corner>-0.4572</lower_left_corner>
+               <lower_left_corner>-1.560576</lower_left_corner>
+               <lower_right_corner>0.6096</lower_right_corner>
+               <lower_right_corner>-0.4572</lower_right_corner>
+               <lower_right_corner>-1.560576</lower_right_corner>
+               <upper_right_corner>0.6096</upper_right_corner>
+               <upper_right_corner>0.4572</upper_right_corner>
+               <upper_right_corner>-1.560576</upper_right_corner>
+               <upper_left_corner>-0.6096</upper_left_corner>
+               <upper_left_corner>0.4572</upper_left_corner>
+               <upper_left_corner>-1.560576</upper_left_corner>
                <user>User1</user>
                <active>false</active>
                <tracked>true</tracked>

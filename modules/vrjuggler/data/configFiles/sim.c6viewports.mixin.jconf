@@ -39,40 +39,24 @@
          </event_window_device>
          <active>true</active>
          <surface_viewports>
-            <surface_viewport name="right surface" version="1">
+            <surface_viewport name="right surface" version="2">
                <origin>0.5</origin>
                <origin>0.333</origin>
                <size>0.25</size>
                <size>0.333</size>
                <view>Left Eye</view>
-               <corners>
-                  <vec3 name="lower left" version="1">
-                     <x>1.524</x>
-                     <y>0.0</y>
-                     <z>-1.524</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="lower right" version="1">
-                     <x>1.524</x>
-                     <y>0.0</y>
-                     <z>1.524</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper right" version="1">
-                     <x>1.524</x>
-                     <y>3.048</y>
-                     <z>1.524</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper left" version="1">
-                     <x>1.524</x>
-                     <y>3.048</y>
-                     <z>-1.524</z>
-                  </vec3>
-               </corners>
+               <lower_left_corner>1.524</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_left_corner>-1.524</lower_left_corner>
+               <lower_right_corner>1.524</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <lower_right_corner>1.524</lower_right_corner>
+               <upper_right_corner>1.524</upper_right_corner>
+               <upper_right_corner>3.048</upper_right_corner>
+               <upper_right_corner>1.524</upper_right_corner>
+               <upper_left_corner>1.524</upper_left_corner>
+               <upper_left_corner>3.048</upper_left_corner>
+               <upper_left_corner>-1.524</upper_left_corner>
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
@@ -80,40 +64,24 @@
             </surface_viewport>
          </surface_viewports>
          <surface_viewports>
-            <surface_viewport name="front surface" version="1">
+            <surface_viewport name="front surface" version="2">
                <origin>0.25</origin>
                <origin>0.333</origin>
                <size>0.25</size>
                <size>0.333</size>
                <view>Left Eye</view>
-               <corners>
-                  <vec3 name="lower left" version="1">
-                     <x>-1.524</x>
-                     <y>0.0</y>
-                     <z>-1.524</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="lower right" version="1">
-                     <x>1.524</x>
-                     <y>0.0</y>
-                     <z>-1.524</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper right" version="1">
-                     <x>1.524</x>
-                     <y>3.048</y>
-                     <z>-1.524</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper left" version="1">
-                     <x>-1.524</x>
-                     <y>3.048</y>
-                     <z>-1.524</z>
-                  </vec3>
-               </corners>
+               <lower_left_corner>-1.524</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_left_corner>-1.524</lower_left_corner>
+               <lower_right_corner>1.524</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <lower_right_corner>-1.524</lower_right_corner>
+               <upper_right_corner>1.524</upper_right_corner>
+               <upper_right_corner>3.048</upper_right_corner>
+               <upper_right_corner>-1.524</upper_right_corner>
+               <upper_left_corner>-1.524</upper_left_corner>
+               <upper_left_corner>3.048</upper_left_corner>
+               <upper_left_corner>-1.524</upper_left_corner>
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
@@ -121,40 +89,24 @@
             </surface_viewport>
          </surface_viewports>
          <surface_viewports>
-            <surface_viewport name="left surface" version="1">
+            <surface_viewport name="left surface" version="2">
                <origin>0.0</origin>
                <origin>0.333</origin>
                <size>0.25</size>
                <size>0.333</size>
                <view>Left Eye</view>
-               <corners>
-                  <vec3 name="lower left" version="1">
-                     <x>-1.524</x>
-                     <y>0.0</y>
-                     <z>1.524</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="lower right" version="1">
-                     <x>-1.524</x>
-                     <y>0.0</y>
-                     <z>-1.524</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper right" version="1">
-                     <x>-1.524</x>
-                     <y>3.048</y>
-                     <z>-1.524</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper left" version="1">
-                     <x>-1.524</x>
-                     <y>3.048</y>
-                     <z>1.524</z>
-                  </vec3>
-               </corners>
+               <lower_left_corner>-1.524</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_left_corner>1.524</lower_left_corner>
+               <lower_right_corner>-1.524</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <lower_right_corner>-1.524</lower_right_corner>
+               <upper_right_corner>-1.524</upper_right_corner>
+               <upper_right_corner>3.048</upper_right_corner>
+               <upper_right_corner>-1.524</upper_right_corner>
+               <upper_left_corner>-1.524</upper_left_corner>
+               <upper_left_corner>3.048</upper_left_corner>
+               <upper_left_corner>1.524</upper_left_corner>
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
@@ -162,40 +114,24 @@
             </surface_viewport>
          </surface_viewports>
          <surface_viewports>
-            <surface_viewport name="floor surface" version="1">
+            <surface_viewport name="floor surface" version="2">
                <origin>0.25</origin>
                <origin>0.0</origin>
                <size>0.25</size>
                <size>0.333</size>
                <view>Left Eye</view>
-               <corners>
-                  <vec3 name="lower left" version="1">
-                     <x>-1.524</x>
-                     <y>0.0</y>
-                     <z>1.524</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="lower right" version="1">
-                     <x>1.524</x>
-                     <y>0.0</y>
-                     <z>1.524</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper right" version="1">
-                     <x>1.524</x>
-                     <y>0.0</y>
-                     <z>-1.524</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper left" version="1">
-                     <x>-1.524</x>
-                     <y>0.0</y>
-                     <z>-1.524</z>
-                  </vec3>
-               </corners>
+               <lower_left_corner>-1.524</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_left_corner>1.524</lower_left_corner>
+               <lower_right_corner>1.524</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <lower_right_corner>1.524</lower_right_corner>
+               <upper_right_corner>1.524</upper_right_corner>
+               <upper_right_corner>0.0</upper_right_corner>
+               <upper_right_corner>-1.524</upper_right_corner>
+               <upper_left_corner>-1.524</upper_left_corner>
+               <upper_left_corner>0.0</upper_left_corner>
+               <upper_left_corner>-1.524</upper_left_corner>
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
@@ -203,40 +139,24 @@
             </surface_viewport>
          </surface_viewports>
          <surface_viewports>
-            <surface_viewport name="top surface" version="1">
+            <surface_viewport name="top surface" version="2">
                <origin>0.25</origin>
                <origin>0.666</origin>
                <size>0.25</size>
                <size>0.333</size>
                <view>Left Eye</view>
-               <corners>
-                  <vec3 name="lower left" version="1">
-                     <x>-1.524</x>
-                     <y>3.048</y>
-                     <z>-1.524</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="lower right" version="1">
-                     <x>1.524</x>
-                     <y>3.048</y>
-                     <z>-1.524</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper right" version="1">
-                     <x>1.524</x>
-                     <y>3.048</y>
-                     <z>1.524</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper left" version="1">
-                     <x>-1.524</x>
-                     <y>3.048</y>
-                     <z>1.524</z>
-                  </vec3>
-               </corners>
+               <lower_left_corner>-1.524</lower_left_corner>
+               <lower_left_corner>3.048</lower_left_corner>
+               <lower_left_corner>-1.524</lower_left_corner>
+               <lower_right_corner>1.524</lower_right_corner>
+               <lower_right_corner>3.048</lower_right_corner>
+               <lower_right_corner>-1.524</lower_right_corner>
+               <upper_right_corner>1.524</upper_right_corner>
+               <upper_right_corner>3.048</upper_right_corner>
+               <upper_right_corner>1.524</upper_right_corner>
+               <upper_left_corner>-1.524</upper_left_corner>
+               <upper_left_corner>3.048</upper_left_corner>
+               <upper_left_corner>1.524</upper_left_corner>
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
@@ -244,40 +164,24 @@
             </surface_viewport>
          </surface_viewports>
          <surface_viewports>
-            <surface_viewport name="entrance surface" version="1">
+            <surface_viewport name="entrance surface" version="2">
                <origin>0.75</origin>
                <origin>0.333</origin>
                <size>0.25</size>
                <size>0.333</size>
                <view>Left Eye</view>
-               <corners>
-                  <vec3 name="lower left" version="1">
-                     <x>1.524</x>
-                     <y>0.0</y>
-                     <z>1.524</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="lower right" version="1">
-                     <x>-1.524</x>
-                     <y>0.0</y>
-                     <z>1.524</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper right" version="1">
-                     <x>-1.524</x>
-                     <y>3.048</y>
-                     <z>1.524</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper left" version="1">
-                     <x>1.524</x>
-                     <y>3.048</y>
-                     <z>1.524</z>
-                  </vec3>
-               </corners>
+               <lower_left_corner>1.524</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_left_corner>1.524</lower_left_corner>
+               <lower_right_corner>-1.524</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <lower_right_corner>1.524</lower_right_corner>
+               <upper_right_corner>-1.524</upper_right_corner>
+               <upper_right_corner>3.048</upper_right_corner>
+               <upper_right_corner>1.524</upper_right_corner>
+               <upper_left_corner>1.524</upper_left_corner>
+               <upper_left_corner>3.048</upper_left_corner>
+               <upper_left_corner>1.524</upper_left_corner>
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
