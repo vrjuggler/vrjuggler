@@ -35,7 +35,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 				link="${GETTINGSTARTED}/app.running.html" 
 				info="How do I run a compiled sample program?" 
 				image="Leaf.gif" >
-			</folder>
+</rootfolder>
 		</idefault>
 	</font>
 </treecontrol>

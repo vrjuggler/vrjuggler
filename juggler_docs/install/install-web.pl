@@ -28,6 +28,9 @@ use Getopt::Std;
 use File::stat;
 #use strict;
 
+use xmlToc;
+use xmlToc_htmlTocActions;
+
 # Do this to include the path to the script in @INC.
 BEGIN {
     $path = (fileparse("$0"))[1];
@@ -55,10 +58,14 @@ my $html_footer_filename = "$opt_f";
 my $html_install_prefix = "$opt_h";
 my $subst_file = "$opt_w";
 my $levels_of_recursion_allowed = 4; # you may have to change this ...
-   
+
+my $html_comment_begin = "<!-- ";
+my $html_comment_end = " -->";
+
+my $usedebugoutput = "0";
    
 my $check_file_mtime = 1;     # should we check file modification time in recurseAction?
-if($opt_a == 1)
+if ($opt_a == 1)
 {
    $check_file_mtime = 0;
    print "--- FORCING ALL FILES TO BE PROCESSED ---\n";
@@ -136,7 +143,7 @@ $html_footer="";
 sub initWebSubstTags()
 {
    #$file = "someprog.pl";
-   if($subst_file)
+   if ($subst_file)
    {
       unless ($return = do $subst_file) {
           warn "couldn't parse $subst_file: $@"         if $@;
@@ -188,7 +195,7 @@ sub initHtmlFilter($$)
    print "CSS Header: $css_header_file_name\n------- begin --------\n", $css_header, "\n------- end ----------\n";
 
    #### --- GET HTML HEADER --- ####
-   if(!open(HTML_HEADER, "$header_file_name"))
+   if (!open(HTML_HEADER, "$header_file_name"))
    {
       warn "WARNING: Cannot read HTML Header info from $header_file_name: $!\n";
       warn "WARNING: Did you specify a file?????\n;";
@@ -203,7 +210,7 @@ sub initHtmlFilter($$)
    print "HTML Header: $header_file_name\n------- begin --------\n", $html_header, "\n------- end ----------\n";
 
    #### --- GET HTML FOOTER --- ####
-   if(!open(HTML_FOOTER, "$footer_file_name"))
+   if (!open(HTML_FOOTER, "$footer_file_name"))
    {
       warn "WARNING: Cannot read HTML Footer info from $footer_file_name: $!\n";
       warn "WARNING: Did you specify a file?????\n;";
@@ -216,9 +223,6 @@ sub initHtmlFilter($$)
    }
 
    print "HTML Footer: $footer_file_name\n------- begin --------\n", $html_footer, "\n------- end ----------\n";
-   
-   
-
 }
 
 
@@ -227,15 +231,15 @@ sub initHtmlFilter($$)
 # syntax:
 #     htmlFilter($filename)
 # args:
-#     filename: The name of the file to run the filter on
+#     file_contents: The contents of the file to run the filter on
+#
 #
 sub htmlFilter($)
 {
+   outputDebug( "==> htmlFilter\n" );
    my $head_tag_begin = "<head>";
    my $head_tag_end = "<\/head>";
    my $html_tag_begin = "<html>";
-   my $html_comment_begin = "<!-- ";
-   my $html_comment_end = " -->";
    my $body_tag_end = "<\/body>";
    my $ignore_all_str = 'install-web ignore';
    my $ignore_tags_str = 'install-web no-tags';
@@ -244,27 +248,11 @@ sub htmlFilter($)
    my $ignore_header_str = 'install-web no-header';
    my $ignore_footer_str = 'install-web no-footer';
    my $include_footer_str = 'install-web common-footer';
-
-   my $filename = shift;
-   ##print "     |--> HTML filter: $filename ...";
-
-   # Read in the entire file first into a single string
-   my $file_contents;
-
-   if(!open(HTML_FILE, $filename))
-   {
-      warn "WARNING: Cannot read from $filename: $!\n";
-      return -1;
-   }
-
-   while(<HTML_FILE>)
-   {
-      $file_contents .= $_;
-   }
-   close(HTML_FILE) or warn "WARNING: Cannot close $filename: $!\n";
-
+   
+   my $file_contents = shift;
+   
    ### Check for IGNORE ALL ####
-   if($file_contents =~ m/$ignore_all_str/is)
+   if ($$file_contents =~ m/$ignore_all_str/is)
    {
       print "ignoring file.\n";
       return 1;
@@ -274,20 +262,20 @@ sub htmlFilter($)
    
    ################# search and replace (tags and includes) ##################
    #
-   if($file_contents =~ m/$ignore_includes_str/is)
+   if ($$file_contents =~ m/$ignore_includes_str/is)
    {
    }
    else
    { 
-      processIncludesRecursive(\$file_contents);
+      processIncludesRecursive( $file_contents );
    }
    
-   if($file_contents =~ m/$ignore_tags_str/is)
+   if ($$file_contents =~ m/$ignore_tags_str/is)
    {
    }
    else
    { 
-      replaceTagsRecursive(\$file_contents);
+      replaceTagsRecursive( $file_contents );
    }
    #
    ################# end of search and replace (tags and includes) ##################
@@ -299,29 +287,29 @@ sub htmlFilter($)
    # ----------- HEADER INSERT ----------- #
    # Insert header
    # Look for <BODY> and put it right after that
-   if($file_contents =~ m/$ignore_header_str/is)  ### Check for IGNORE HEADER ####
+   if ($$file_contents =~ m/$ignore_header_str/is)  ### Check for IGNORE HEADER ####
    {
       print "[ignoring header...]";
    }
    else
    {
-      $file_contents =~ s/($head_tag_end)/\n$html_header\n$1\n/is;
+      $$file_contents =~ s/($head_tag_end)/\n$html_header\n$1\n/is;
    }
    
    # ----------- CSS HEADER INSERT ----------- #
    # if there is </head> then insert before it
    # if not, then look for <html> and insert after it with <head>...</head> around it
-   if($file_contents =~ m/$ignore_css_str/is)  ### Check for IGNORE HEADER ####
+   if ($$file_contents =~ m/$ignore_css_str/is)  ### Check for IGNORE HEADER ####
    {
       print "[ignoring stylesheet...]";
    }
    else
    {
-      if($file_contents =~ s/($head_tag_end)/\n$css_header\n$1\n/is)
+      if ($$file_contents =~ s/($head_tag_end)/\n$css_header\n$1\n/is)
       {
       #print "added css (</head>)...";
       }
-      elsif($file_contents =~ s/($html_tag_begin)/$1\n$head_tag_begin\n$css_header\n$head_tag_end\n/is)
+      elsif ($$file_contents =~ s/($html_tag_begin)/$1\n$head_tag_begin\n$css_header\n$head_tag_end\n/is)
       {
       #print "added css (<html>)...";
       }
@@ -333,26 +321,26 @@ sub htmlFilter($)
       # ------ Edit the CSS link path ----- #
       # ASSERT: The path in the css file is relative to the
       #         root directory of the web install
-      $file_contents =~ s/<link(.*?)\"stylesheet\"(.*?)href(.*?)\"/$&$html_install_prefix/gis;
+      $$file_contents =~ s/<link(.*?)\"stylesheet\"(.*?)href(.*?)\"/$&$html_install_prefix/gis;
    }
 
    # ----------- FOOTER INSERT ----------- #
    # Insert footer
    # Look for </BODY> and put it right before that
-   if($file_contents =~ m/$ignore_footer_str/is)  ### Check for IGNORE FOOTER ####
+   if ($$file_contents =~ m/$ignore_footer_str/is)  ### Check for IGNORE FOOTER ####
    {
       print "[ignoring footer...]";
    }
    else
    {
-      if($file_contents =~ m/$html_comment_begin$include_footer_str$html_comment_end/is)
+      if ($$file_contents =~ m/$html_comment_begin$include_footer_str$html_comment_end/is)
       {
          print "[Putting footer in custom place...]";
-         $file_contents =~ s/$html_comment_begin$include_footer_str$html_comment_end/\n$html_footer\n$1\n/is;
+         $$file_contents =~ s/$html_comment_begin$include_footer_str$html_comment_end/\n$html_footer\n$1\n/is;
       }
       else
       {
-         $file_contents =~ s/($body_tag_end)/\n$html_footer\n$1\n/is;
+         $$file_contents =~ s/($body_tag_end)/\n$html_footer\n$1\n/is;
       }
    }
    #
@@ -361,73 +349,50 @@ sub htmlFilter($)
    
    ################# search and replace (tags and includes) ##################
    #
-   if($file_contents =~ m/$ignore_includes_str/is)
+   if ($$file_contents =~ m/$ignore_includes_str/is)
    {
    }
    else
    { 
-      processIncludesRecursive(\$file_contents);
+      processIncludesRecursive( $file_contents );
    }
    
-   if($file_contents =~ m/$ignore_tags_str/is)
+   if ($$file_contents =~ m/$ignore_tags_str/is)
    {
    }
    else
    { 
-      replaceTagsRecursive(\$file_contents);
+      replaceTagsRecursive( $file_contents );
    }
    #
    ################# end of search and replace (tags and includes) ##################
-   
-   
-   # -----------  SAVE FILE ----------- #
-   if ( ! open(HTML_FILE, ">$filename") ) {
-       warn "WARNING: Cannot create $filename: $!\n";
-       return -1;
-   }
-
-   print HTML_FILE $file_contents;
-   print HTML_FILE $html_comment_begin, "Processed by install-web: ", scalar(localtime()), $html_comment_end;
-   close(HTML_FILE) or warn "WARNING: Cannot close $filename: $!\n";
-
-   #print "done.\n";
 }
 
+sub outputDebug($)
+{
+   if ($usedebugoutput == 1)
+   {
+      my $outputdebug = shift;
+      print $outputdebug;
+   }
+}
 
 #  Initialize the HTML filter that we will use
 #
 # syntax:
-#     xmlFilter("$full_dest_path/$curfile","$rel_path")
+#     xmlFilter($filecontents, $rel_path)
 # args:
-#     filename: The name of the file to run the filter on
-#     $relpath: The relative path to the given file from the "root" web dir
+#     $filecontents (string reference): The contents of the file to run the filter on
+#     $relpath (string): The relative path to the given file-contents from the "root" web dir
 #
-sub xmlFilter($$)
+sub xmlFilter($$$)
 {
-   my $html_comment_begin = "<!-- ";
-   my $html_comment_end = " -->";
-
-   my $filename = shift;
+   outputDebug( "==> xmlFilter\n" );
+   my $file_contents = shift;
    my $rel_path = shift;
-
-   #print "     |--> XML filter: $filename ....";
-
-   # Read in the entire file first into a single string
-   my $file_contents;
-
-   if(!open(XML_FILE, $filename))
-   {
-      warn "WARNING: Cannot read from $filename: $!\n";
-      return -1;
-   }
-
-   while(<XML_FILE>)
-   {
-      $file_contents .= $_;
-   }
-   close(XML_FILE) or warn "WARNING: Cannot close $filename: $!\n";
-
-   processIncludesRecursive(\$file_contents);
+   my $nohttp = shift;
+ 
+   processIncludesRecursive( $file_contents );
 
    # ---- PATH REPLACE ----
    # If it is not a tag, then do a simple replace
@@ -437,50 +402,47 @@ sub xmlFilter($$)
    #       OR that use a ${TAG} format for the paths
    #$file_contents ~= s/link(.*?)=(.*?)\"(?!\$)/link=\"$html_install_prefix$rel_path\//gis;
    #$file_contents =~ s/(rlink|jit|link)(\s*?)=(\s*?)\"(?!\$)/$1=\"$html_install_prefix\/$rel_path\//gis;
-   $file_contents =~ s/(linkurl)(\s*?)=(\s*?)\"(?!\$)/$1=\"$html_install_prefix\/$rel_path\//gis;
+   $$file_contents =~ s/(linkurl)(\s*?)=(\s*?)\"(?!\$)/$1=\"$html_install_prefix\/$rel_path\//gis;
 
    ## REPLACE TAGS
-   replaceTagsRecursive(\$file_contents);
+   replaceTagsRecursive( $file_contents, $nohttp );
 
    ## Replace white space
-   processRemoveWhitespace(\$file_contents);
-
-   # -----------  SAVE FILE ----------- #
-   if ( ! open(XML_FILE, ">$filename") ) {
-       warn "WARNING: Cannot create $filename: $!\n";
-       return -1;
-   }
-
-   print XML_FILE $file_contents;
-   print XML_FILE $html_comment_begin, "Processed by install-web: ", scalar(localtime()), $html_comment_end;
-   close(XML_FILE) or warn "WARNING: Cannot close $filename: $!\n";
-
-   #print "done.\n";
+   processRemoveWhitespace( $file_contents );
+   
+   # causes jexplorer to go catatonic...
+   #processRemoveNewlines( $file_contents );
+   
+   outputDebug( "<== xmlFilter\n" );
 }
 
 #  replaceTags Recursive version (see other for documentation)
 #
 sub replaceTagsRecursive($$)
 {
+   outputDebug( "==> replaceTagsRecursive\n" );
+   
    my $contents_ref = shift;
    my $in_include = shift;
-  
+   
    # fix filename, if it contains a tag
    my $found_a_tag = 1;
    my $levels_of_recursion = 0;
    while( $found_a_tag == 1 )
    {
-      $found_a_tag = replaceTags( \$$contents_ref, \$$in_include );
+      $found_a_tag = replaceTags( $contents_ref, $in_include );
       
       # bail if too many recursions.
       $levels_of_recursion = $levels_of_recursion + 1;
-      if($levels_of_recursion > $levels_of_recursion_allowed)
+      if ($levels_of_recursion > $levels_of_recursion_allowed)
       {
          ## bail!
          print "replaceTagsRecursive: too much recursion, bailing (you need to fix it or set the recursion level higher in install-web.pl...)\n";
          exit(0);
       }
    }
+   
+   outputDebug( "<== replaceTagsRecursive\n" );
 }
 
 # Replace the tags in the file contents passed to the subroutine
@@ -492,12 +454,10 @@ sub replaceTagsRecursive($$)
 # returns whether a tag was found 0=false 1=true
 sub replaceTags($$)
 {
+   outputDebug( "==> replaceTags\n" );
    my $contents_ref = shift;
    my $in_include = shift;
    my $found_a_tag = 0;
-
-   #print "File contents???---\n\n";
-   #print $$contents_ref;
   
    # find subst tags and replace with <html_inst_dir>/<tag value>
    while (($tag,$tag_value) = each(%path_subst))
@@ -509,7 +469,7 @@ sub replaceTags($$)
          
          #print "Checking web subst: $tag ==> $tag_value\n";
          # Look for ${tag} or $(tag)
-         if ($$in_include == 0)
+         if ($in_include == 0)
          {
             $$contents_ref =~ s/(\$)[{(]$tag[})]/$html_install_prefix$tag_value/gis;
          }
@@ -532,14 +492,69 @@ sub replaceTags($$)
       }
    }
    
+   outputDebug( "<== replaceTags\n" );
    return $found_a_tag;
 }
 
+# args: data_out (string reference, returns loaded data here)
+#       filename (string, name of xmlToc formatted file)
+sub load($$$$)
+{
+   outputDebug( "==> load\n" );
+   my $data = shift;
+   my $inputFile = shift;
+   my $whocalledme = shift;
+   my $use_feedback = shift;
+
+   if (open(INPUT, "$inputFile"))
+   {
+      # gather each line of the source file into one string so we can do regexs across multiple lines.
+      while (<INPUT>)
+      {
+         $$data .= $_;
+         if ($use_feedback == 1)
+         {
+            print ".";
+         }
+      }
+      close(INPUT) or warn "WARNING ($whocalledme): Cannot close $inputFile: $!\n";
+
+      # success
+      return 1;
+   }
+
+   else
+   {
+      warn "WARNING ($whocalledme): Could not open $inputFile for reading: $!\n";
+      return -1;
+   }
+}
+
+
+sub save($$)
+{
+   outputDebug( "==> save\n" );
+   my $data = shift;
+   my $filename = shift;
+
+   # -----------  SAVE FILE ----------- #
+   if ( ! open(XML_FILE, ">$filename") ) {
+       warn "WARNING: Cannot create $filename: $!\n";
+       return -1;
+   }
+
+   print XML_FILE $data;
+   print XML_FILE $html_comment_begin, "Processed by install-web: ", scalar(localtime()), $html_comment_end;
+   close(XML_FILE) or warn "WARNING: Cannot close $filename: $!\n";
+   
+   return 1;
+}
 
 # recursive-capable process includes (see other for documentation)
-#
+# arg: file_contents (reference to string)
 sub processIncludesRecursive($)
 {
+   outputDebug( "==> processIncludesRecursive\n" );
    my $contents_ref = shift;
    
    ## Check includes ##
@@ -548,15 +563,15 @@ sub processIncludesRecursive($)
    while( $found_an_include == 1 )
    {
       my $prev_name = $$contents_ref;
-      $found_an_include = processIncludes(\$$contents_ref);
-      #if( $found_an_include == 1 )
+      $found_an_include = processIncludes( $contents_ref );
+      #if ( $found_an_include == 1 )
       #{
       #   print "including file: changing $prev_name to $filename\n";
       #}
       
       # count number of times we recurse
       $levels_of_recursion = $levels_of_recursion + 1;
-      if($levels_of_recursion > $levels_of_recursion_allowed)
+      if ($levels_of_recursion > $levels_of_recursion_allowed)
       {
          ## bail!
          print "processIncludesRecursive: too much recursion, bailing...\n";
@@ -569,56 +584,73 @@ sub processIncludesRecursive($)
 #
 # Check for includes and do them
 # returns whether or not includes did exist 0=false or 1=true
+# arg: file_contents (reference to string)
 sub processIncludes($)
 {
+   outputDebug( "==> processIncludes\n" );
+   my $include_command = 'install-web include';
+   my $include_toc_command = 'install-web include-toc';
+   my $include_tocdocs_command = 'install-web include-tocdocs';
+  
    my $contents_ref = shift;
-
-   #print "Processing includes....";
+   
    my $includes_existed = 0;
-
+   
    # While we have some more includes to deal with
-   while($$contents_ref =~ m/<!--(\s*?)install-web(\s*?)include(\s*?)(\S*?)(\s*?)-->/is)
+   while ($$contents_ref =~ m/($html_comment_begin[ ]*$include_command.*?\s*?(\S*?)\s*?$html_comment_end)/is)
    {
-      my $orig_filename = $4;      # Get filename from the match
-      my $include_contents = "";   # contents of the file
+      my $include_statement = $1; # what was that match?
+      my $orig_filename = $2;     # Get filename from the match
+      
+      # fix filename, if it contains tag(s)
       my $expandvars_filename = $orig_filename;
+      replaceTagsRecursive( \$expandvars_filename, "1" );
+      $expandvars_filename =~ s/"//g;
       
-      # fix filename, if it contains a tag
-      my $one = 1;
-      replaceTagsRecursive( \$expandvars_filename, \$one );
-      $expandvars_filename =~ s/"//g;  # for some reason there was spurious "'s
-      $orig_filename =~ s/"//g;  # for some reason there was spurious "'s
+      # fix the $ char so the regex doesn't think its an end-line char.
+      $include_statement =~ s/\$/\\\$/gs;  
       
-      ###  LOAD the INCLUDE FILE ###
-      print "[including: \"$expandvars_filename\" ";
-      if(open(INC_FILE, $expandvars_filename))
-      {
-         # gather contents together into one var
-         while(<INC_FILE>)
-         { 
-            $include_contents .= $_; 
-            print ".";
-         }
+      #print "\n\nMatched: incl: $include_statement\n";
+      #print "Matched: orig: $orig_filename\n";
+      #print "Matched: expd: $expandvars_filename\n\n";
 
-         close(INC_FILE) or warn "WARNING: Cannot close $expandvars_filename: $!\n";
+      # ----------- TOC include ----------- #
+      if ($include_statement =~ m/$include_toc_command/)
+      {
+         my $xmltoc_data = "";
+         my $htmltoc_data = "";
+         print "[including TOC: \"$expandvars_filename\" ";
+         if (xmlToc::load( \$xmltoc_data, $expandvars_filename ))
+         {
+            xmlFilter( \$xmltoc_data, "", "1" );  # must filter the loaded xml file...
+            xmlToc_htmlTocActions::useme();
+            xmlToc::traverse( \$htmltoc_data, $xmltoc_data );
+         }
+         $$contents_ref =~ s/$include_statement/$htmltoc_data/gis;
+         print "]";
+         $includes_existed = 1;
       }
+      
+      # ----------- TOC-DOCS include ----------- #
+      elsif ($expandvars_filename =~ m/$include_tocdocs_command/)
+      {
+         print "==========================\n======================\nImplementME!\n\n====================\n";
+      }
+      
+      # ----------- text file include ----------- #
       else
       {
-         my $curdirrrr = `pwd`;
-         warn "WARNING: Cannot read from [$orig_filename] == [$expandvars_filename]: $!... skipping\n";
-         warn "         current directory is $curdirrrr\n";
+         my $text_data = "";
+         print "[including: \"$expandvars_filename\" ";
+         main::load( \$text_data, $expandvars_filename, "include text", "1" );
+
+         $$contents_ref =~ s/$include_statement/$text_data/is;
+
+         print "]";
+
+         $includes_existed = 1;
       }
-      
-      # in case $orig_filename has $ in it, then 
-      # make it \$, so that the regex doesn't interpret the $ as "line end"
-      $orig_filename =~ s/\$/\\\$/g;
-      $$contents_ref =~ s/<!--(\s*?)install-web(\s*?)include(\s*?)($orig_filename)(\s*?)-->/$include_contents/is;
-      
-      print "]";
-      
-      $includes_existed = 1;
    }
-   #print " done processing includes.\n";
    
    return $includes_existed;
 }
@@ -626,13 +658,22 @@ sub processIncludes($)
 # Get rid of white space lines to make the file smaller to download
 #
 # This function basically only looks for blank lines and deletes them.
-sub processRemoveWhitespace (\$)
+sub processRemoveWhitespace($)
 {
+   outputDebug( "==> processRemoveWhitespace\n" );
    my $contents_ref = shift;
 
    $$contents_ref =~ s/(\s*)\n/\n/gis;
 }
 
+sub processRemoveNewlines($)
+{
+   outputDebug( "==> processRemoveNewlines\n" );
+   my $data = shift;
+   
+   # eliminate newlines
+   $$data =~ s/[\n]//gis;
+}
 # -----------------------------------------------------------------------------
 # Copy the current file to the appropriate place in the destination directory
 # tree.
@@ -643,7 +684,9 @@ sub processRemoveWhitespace (\$)
 # Arguments:
 #     $curfile - The name of the current file in the recursion process.
 # -----------------------------------------------------------------------------
-sub recurseAction ($) {
+sub recurseAction($) 
+{
+    #outputDebug( "==> recurseAction\n" );
     my $curfile = shift;
     my $full_src_path = shift;
     my $full_dest_path = shift;
@@ -656,9 +699,9 @@ sub recurseAction ($) {
     # Check if the file already exists
     # && if the file does not need updating. (It is newer than the source file)
     $full_dest_file = $full_dest_path . "/" . $curfile;
-    if(($check_file_mtime == 1) && (-e $full_dest_file))
+    if (($check_file_mtime == 1) && (-e $full_dest_file))
     {
-       if(stat($full_dest_file)->mtime > stat($curfile)->mtime)  # ASSERT: Dest file is newer
+       if (stat($full_dest_file)->mtime > stat($curfile)->mtime)  # ASSERT: Dest file is newer
        {
           #print "   Skipping $curfile\n";
           return;    # We will skip it
@@ -677,37 +720,46 @@ sub recurseAction ($) {
       }
       
       # Match html.placeholder
-      if ( $curfile =~ /\.(html.placeholder)$/i ) {
-	  my $strippedFile = $curfile;
-	  $strippedFile =~ s/\.(placeholder)$//;
-	  if(!(-e $strippedFile))
-	  {
-	  	print "File $strippedFile doesn't exist, using placeholder\n";
-	  	copy("$curfile", "$strippedFile");
-          	htmlFilter("$full_dest_path/$strippedFile");
-		installFile("$strippedFile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
-	  }
-          last SWITCH;
+      if ( $curfile =~ /\.(html.placeholder)$/i ) 
+      {
+         my $strippedFile = $curfile;
+         $strippedFile =~ s/\.(placeholder)$//;
+         if (!(-e $strippedFile))
+         {
+	         print "File $strippedFile doesn't exist, using placeholder\n";
+	         copy("$curfile", "$strippedFile");
+
+            my $file_contents = "";
+            main::load( \$file_contents, $strippedFile, "recurse", "0" );
+            htmlFilter( \$file_contents );
+            installContents( $file_contents, $strippedFile, $uid, $gid, "$mode", "$full_dest_path", $full_src_path );
+         }
+         last SWITCH;
       }
       
       # Match .placeholder
-      if ( $curfile =~ /\.(placeholder)$/i ) {
-	  my $strippedFile = $curfile;
-	  $strippedFile =~ s/\.(placeholder)$//;
-	  if(!(-e $strippedFile))
-	  {
-	  	print "File $strippedFile doesn't exist, using placeholder\n";
-	  	copy("$curfile", "$strippedFile");
-          	installFile("$strippedFile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
-	  }
-          last SWITCH;
+      if ( $curfile =~ /\.(placeholder)$/i ) 
+      {
+         my $strippedFile = $curfile;
+         $strippedFile =~ s/\.(placeholder)$//;
+         if (!(-e $strippedFile))
+         {
+            print "File $strippedFile doesn't exist, using placeholder\n";
+            copy("$curfile", "$strippedFile");
+            installFile("$strippedFile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
+         }
+         last SWITCH;
       }
 
       # Match .html,.htm
-      if ( $curfile =~ /\.(htm|HTM|html|HTML)$/ ) {
-          installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
-          htmlFilter("$full_dest_path/$curfile");
-          last SWITCH;
+      if ( $curfile =~ /\.(htm|HTM|html|HTML)$/ ) 
+      {
+         my $file_contents = "";
+         main::load( \$file_contents, $curfile, "recurse", "0" );
+         htmlFilter( \$file_contents );
+         installContents( $file_contents, $curfile, $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
+         
+         last SWITCH;
       }
 
       # Match .gif,.jpg, .png
@@ -725,8 +777,14 @@ sub recurseAction ($) {
 
       # Match .xml
       if ( $curfile =~ /\.(xml|XML)$/ ) {
-          installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
-          xmlFilter("$full_dest_path/$curfile","$rel_path");
+          my $file_contents = "";
+          
+          main::load( \$file_contents, $curfile, "recurse", "0" );
+          xmlFilter( \$file_contents, "$rel_path", "0" );
+          installContents( $file_contents, "$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
+          
+          #print "$file_contents\n crap!\n================\n";
+          
           last SWITCH;
       }
 
@@ -737,14 +795,19 @@ sub recurseAction ($) {
       }
 
       # Style sheets
-      if ( $curfile =~ /\.(css|CSS)$/ ) {
-          installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
-          htmlFilter("$full_dest_path/$curfile");
-          last SWITCH;
+      if ( $curfile =~ /\.(css|CSS)$/ ) 
+      {
+         my $file_contents = "";
+         main::load( \$file_contents, $curfile, "recurse", "0" );
+         htmlFilter( \$file_contents );
+         installContents($file_contents, "$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
+
+         last SWITCH;
       }
 
       # PGP files (public key ring)
-      if ( $curfile =~ /\.(pkr|PKR)$/ ) {
+      if ( $curfile =~ /\.(pkr|PKR)$/ ) 
+      {
           installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
           last SWITCH;
       }
@@ -757,7 +820,7 @@ sub create_script($)
 {
    my $script_name = shift;
 
-   if(!open(OUTFILE, ">$script_name"))
+   if (!open(OUTFILE, ">$script_name"))
    {
       warn "WARNING: Cannot read from $filename: $!\n";
       return -1;
@@ -793,7 +856,7 @@ sub create_script($)
    print OUTFILE "\$command .= \" -h \$html_install_prefix\";\n";
    print OUTFILE "\$command .= \" -w \$subst_file\";\n";
    print OUTFILE "\$command .= \" -z use.last.build.pl\";\n";
-   print OUTFILE "if(\$opt_a == 1)\n{\n";
+   print OUTFILE "if (\$opt_a == 1)\n{\n";
    print OUTFILE "    \$command .= \" -a\";\n}";
    print OUTFILE "\n\n";
 
@@ -801,7 +864,7 @@ sub create_script($)
    print OUTFILE "system(\"\$command\");\n";
 
    ## Netscape executing command ##
-   print OUTFILE "if(\$opt_n == 0)\n";
+   print OUTFILE "if (\$opt_n == 0)\n";
    print OUTFILE "{\n";
    print OUTFILE "    my \$netscape_command = \"netscape \" . \$html_install_prefix . \"index.html &\";\n";
    print OUTFILE "    print \"\$netscape_command\\n\";\n";

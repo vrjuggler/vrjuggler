@@ -27,6 +27,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 					image="Leaf_Script2.gif" >
 									
 			</folder>						
+                        </rootfolder>
 		</idefault>
 	</font>
 </treecontrol>

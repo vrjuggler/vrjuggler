@@ -56,7 +56,7 @@ $path_subst{"FAQ"} = 'html/misc/FAQ.html';
 
 # html files
 $path_subst{"JUGGLER_USER_COMMUNITY"} = 'html/contact.info/usercommunity.html';
-$path_subst{"SITEMAP"} = 'html/misc/usertype.sitemap.html';
+$path_subst{"SITEMAP"} = 'html/misc/sitemap.html';
 
 
 

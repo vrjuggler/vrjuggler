@@ -43,7 +43,7 @@ use File::Path;
 require Exporter;
 
 @ISA = qw(Exporter);
-@EXPORT = qw(recurseDir newDir installFile replaceTags);
+@EXPORT = qw(recurseDir newDir installFile installContents replaceTags);
 
 # List of directories that we have recursed into so far along the way
 # NOTE: The program must push on the source directory to start from
@@ -217,6 +217,45 @@ sub installFile ($$$$$$) {
     #chmod(oct($mode), "$dest_dir/$filename") or die "DIE: chmod: $dest_dir/$filename: $!\n";
 }
 
+sub installContents ($$$$$$$) {
+    my $contents = shift;
+    my $filename = shift;
+    my $uid = shift;
+    my $gid = shift;
+    my $mode = shift;
+    my $dest_dir = shift;
+    my $src_dir = shift;
+   my $full_dest_file = $dest_dir . "/" . $filename;
+    
+    
+    # get relative path just for kicks to show in print out
+    $dirstack[0] = ".";                               # Get rid of the root path for now
+    my $rel_src_path = join('/', @dirstack);          # Path to the src file area
+    $dirstack[0] = "$root";
+
+    # Give some info
+    ##print "$rel_src_path/$filename -> $dest_dir/$filename\n";
+
+    umask(002);
+    mkpath("$dest_dir", 0, 0755) or "mkpath: $!\n";
+    
+   # -----------  SAVE FILE ----------- 
+   #print "][][][] saving to $full_dest_file\n";
+   if ($full_dest_file =~ m/^$filename$/)
+   {
+      print "cant overwrite... bailing.\n";
+      exit( 0 );
+   }
+   
+   if ( ! open(SAVE_FILE, ">$full_dest_file") ) {
+       warn "WARNING: Cannot create $full_dest_file: $!\n";
+       return -1;
+   }
+
+   print SAVE_FILE $contents;
+   close(SAVE_FILE) or warn "WARNING: Cannot close $full_dest_file: $!\n";
+}
+
 # -----------------------------------------------------------------------------
 # Replace tags of the form "@...@" found in $infile with known values that
 # will be written to $outfile.  The values for the tags are given in the
@@ -274,4 +313,4 @@ sub replaceTags ($%) {
     return $count;
 }
 
-# 1;
+1;

@@ -49,7 +49,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 				< item title="ChunkDesc File Format" link="${VJCONTROL}/ChunkDescFormat.html" info="Chunk Description File Format" target="Body" image="Leaf.gif" >
 				< item title="ChunkOrgTree File Format" link="${VJCONTROL}/OrgTreeFormat.html" info="ChunkOrgTree File Format" target="Body" image="Leaf.gif" >
 			</folder>	
-			
+</rootfolder>			
 		</idefault>
 	</font>
 </treecontrol>

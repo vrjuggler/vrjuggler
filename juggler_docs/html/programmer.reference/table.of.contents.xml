@@ -17,6 +17,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 				image="Leaf.gif" >
 
 			<!-- install-web include classes/class_nav.xml -->		
+</rootfolder>
 		</idefault>
 	</font>
 </treecontrol>
