@@ -150,6 +150,7 @@ namespace cluster
          << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
          << "Start Master Hostname is: " << mBarrierMasterHostname
          << std::endl << vprDEBUG_FLUSH;         
+
       // Starting Barrier Stuff
       /////////////////////////////////////         
 
@@ -258,11 +259,19 @@ namespace cluster
                   for (std::vector<std::string>::iterator i = mSlaves.begin();
                        i != mSlaves.end() ; i++)
                   {
+                     vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
+                        << "Sending start signal to slave: " << (*i) << std::endl << vprDEBUG_FLUSH;              
                      // Dead lock since we are actually in a recursion of ClusterNodes
                      ClusterNode* node = ClusterNetwork::instance()->getClusterNodeByHostname(*i);
-                     node->send(&temp_start_block);
-                     vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
-                        << "Sending start signal to slave: " << (*i) << std::endl << vprDEBUG_FLUSH;              
+                     if(NULL == node)
+                     {
+                        vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
+                           << "Error, could not find a ClusterNode by the name of: " << (*i) << std::endl << vprDEBUG_FLUSH;              
+                     }
+                     else
+                     {
+                        node->send(&temp_start_block);
+                     }
                   }
                }//End (0==num_pending_nodes)
             }//End (mBarrierMaster)
