@@ -199,10 +199,7 @@ protected:
 private:
    static int mCurMaxWinId;             // The current maximum window id
 
-   static int getNextWindowId()
-   {
-      return mCurMaxWinId++;
-   }
+   static int getNextWindowId();
 };
 
 // ostream& operator<<(ostream& out, vjGlWindow& win);

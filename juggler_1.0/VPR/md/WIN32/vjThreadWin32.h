@@ -308,15 +308,7 @@ public:
     //
     //! RETURNS: pointer - A pointer to this vjThreadWin32 object's address.
     // -----------------------------------------------------------------------
-    static vjBaseThread* self () {
-        DWORD thread_id = GetCurrentThreadId();   // Get our pid or handle
-
-        // Get the entry in the thread table.
-        vjBaseThread* cur_thread = mThreadTable.getThread(thread_id);
-
-        // Return us.
-        return cur_thread;
-    }
+    static vjBaseThread* self(void);
 
 private:
     static vjThreadTable<DWORD> mThreadTable;

@@ -70,3 +70,10 @@ void vjBaseThread::registerThread(bool succesfulCreation)
       mThreadId = -1;      // We have an invalid thread
    }
 }
+
+// XXX: What happens when it rolls over after we have been running for a LONG
+// time.
+int32_t vjBaseThread::getNextThreadId()
+{
+   return mNextThreadId++;
+}

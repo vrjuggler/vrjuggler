@@ -110,3 +110,14 @@ vjThreadWin32::spawn (vjBaseThreadFunctor* functorPtr,
 
     return 1;
 }
+
+vjBaseThread* vjThreadWin32::self ()
+{
+   DWORD thread_id = GetCurrentThreadId();   // Get our pid or handle
+
+   // Get the entry in the thread table.
+   vjBaseThread* cur_thread = mThreadTable.getThread(thread_id);
+
+   // Return us.
+   return cur_thread;
+}

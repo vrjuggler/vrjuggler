@@ -275,11 +275,7 @@ private:
    // --- STATICS ---- //
 
 private:
-   // XXX: What happens when it rolls over after we have been running for a LONG time.
-   int32_t getNextThreadId()
-   {
-      return mNextThreadId++;
-   }
+   int32_t getNextThreadId();
 
    static int32_t mNextThreadId;    // Initialized to 0
 };

@@ -68,27 +68,11 @@ private:
 
 public:
 
-    static bool hasSeparator (const std::string &path) {
-        return (path.find(embedded_separator) != path.npos);
-    }
+    static bool hasSeparator (const std::string &path);
 
-    static std::string getRemainder (const std::string &path) {
-        std::string::size_type i = path.find (embedded_separator);
-        if (i == path.npos)
-            return path;
-        else 
-            return path.substr (i + embedded_separator.length());
-    }
+    static std::string getRemainder (const std::string &path);
 
-    static std::string getFirstNameComponent (const std::string& path) {
-        std::string::size_type i = path.find (embedded_separator);
-        if (i == path.npos)
-            return path;
-        else 
-            return path.substr (0, i);
-    }
-
-
+    static std::string getFirstNameComponent (const std::string& path);
 
 public:
 
