@@ -105,10 +105,19 @@ FileHandleUNIX::open () {
     // If the file handle was not returned successfully, print an error
     // message explaining why.
     if ( m_fdesc == -1 ) {
-        vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << "[vpr::FileHandleUNIX] Could not open " << m_name << ": "
-            << strerror(errno) << std::endl << vprDEBUG_FLUSH;
-        status.setCode(Status::Failure);
+        // If we are opening in non-blocking mode, we do not want to bomb out.
+        if ( errno == EWOULDBLOCK && ! m_open_blocking ) {
+            status.setCode(Status::InProgress);
+            m_open = true;
+        }
+        // Otherwise, report the error.
+        else {
+            vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+                << "[vpr::FileHandleUNIX] Could not open " << m_name << ": "
+                << strerror(errno) << std::endl << vprDEBUG_FLUSH;
+            status.setCode(Status::Failure);
+            m_open = false;
+        }
     }
     // Otherwise, set m_open to true.
     else {
@@ -391,7 +400,7 @@ FileHandleUNIX::read_i (void* buffer, const size_t length,
         // Something went wrong while attempting to read from the file.
         if ( bytes_read < 0 ) {
             if ( errno == EAGAIN && ! m_blocking ) {
-                status.setCode(Status::WouldBlock);
+                status.setCode(Status::InProgress);
             }
             // If the error is EAGAIN and we are in non-blocking mode, we do not
             // bother to print the message.
@@ -477,7 +486,7 @@ FileHandleUNIX::write_i (const void* buffer, const size_t length,
 
         if ( bytes_written <= 0 ) {
             if ( errno == EAGAIN && ! m_blocking ) {
-                status.setCode(Status::WouldBlock);
+                status.setCode(Status::InProgress);
             }
             else {
                 vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)

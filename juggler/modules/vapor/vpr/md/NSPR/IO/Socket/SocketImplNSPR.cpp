@@ -36,6 +36,7 @@
 #include <string.h>
 #include <prinrval.h>
 #include <prio.h>
+#include <prerror.h>
 
 #include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
 #include <vpr/md/NSPR/NSPRHelpers.h>
@@ -229,10 +230,11 @@ SocketImplNSPR::connect (vpr::Interval timeout) {
 
       if ( status == PR_FAILURE )
       {
-         if ( PR_GetError() == PR_WOULD_BLOCK_ERROR ) {
-            retval.setCode(Status::WouldBlock);
-         }
-         else if (PR_GetError() == PR_IN_PROGRESS_ERROR) {
+         PRInt32 err;
+
+         err = PR_GetError();
+
+         if ( err == PR_WOULD_BLOCK_ERROR || err == PR_IN_PROGRESS_ERROR  ) {
             retval.setCode( Status::InProgress );
          }
          else {
@@ -288,6 +290,76 @@ SocketImplNSPR::~SocketImplNSPR ()
        // PRClose(m_handle);     // XXX: Let it dangle
        m_handle = NULL;
     }
+}
+
+// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
+Status
+SocketImplNSPR::read_i (void* buffer, const size_t length, ssize_t& bytes_read,
+                        const vpr::Interval timeout)
+{
+   Status retval;
+
+   bytes_read = PR_Recv(m_handle, buffer, length, 0, NSPR_getInterval(timeout));
+
+   // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
+   if ( bytes_read == -1 ) {
+      if ( PR_GetError() == PR_WOULD_BLOCK_ERROR ) {
+         retval.setCode(Status::InProgress);
+      }
+      else {
+         retval.setCode(Status::Failure);
+      }
+   }
+
+   return retval;
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+Status
+SocketImplNSPR::readn_i (void* buffer, const size_t length,
+                         ssize_t& bytes_read,
+                         const vpr::Interval timeout)
+{
+   Status retval;
+
+   bytes_read = PR_Recv(m_handle, buffer, length, 0, NSPR_getInterval(timeout));
+
+   // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
+   if ( bytes_read == -1 ) {
+      if ( PR_GetError() == PR_WOULD_BLOCK_ERROR ) {
+         retval.setCode(Status::InProgress);
+      }
+      else {
+         retval.setCode(Status::Failure);
+      }
+   }
+
+   return retval;
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+Status
+SocketImplNSPR::write_i (const void* buffer, const size_t length,
+                         ssize_t& bytes_written, const vpr::Interval timeout)
+{
+   Status retval;
+
+   bytes_written = PR_Send(m_handle, buffer, length, 0,
+                           NSPR_getInterval(timeout));
+
+   if ( bytes_written == -1 ) {
+      if ( PR_GetError() == PR_WOULD_BLOCK_ERROR ) {
+         retval.setCode(Status::InProgress);
+      }
+      else {
+         retval.setCode(Status::Failure);
+      }
+   }
+
+   return retval;
 }
 
 /**
