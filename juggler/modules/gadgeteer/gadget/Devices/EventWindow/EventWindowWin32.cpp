@@ -63,12 +63,10 @@ bool EventWindowWin32::config(jccl::ConfigElementPtr e)
       return false;
    }
 
-   for ( int i =0; i < gadget::LAST_KEY; ++i )
+   for ( int i = 0; i < gadget::LAST_KEY; ++i )
    {
-      mCurKeys[i] = mRealkeys[i] = mKeys[i] = 0;
+      mRealkeys[i] = mKeys[i] = mCurKeys[i];
    }
-
-   mCurKeys[0] = mRealkeys[0] = mKeys[0] = 1;
 
    // Get size and position
    mWidth  = e->getProperty<int>("width");

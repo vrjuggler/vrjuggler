@@ -49,10 +49,23 @@
 namespace gadget
 {
 
+EventWindow::EventWindow()
+{
+   for ( int i = 0; i < gadget::LAST_KEY; ++i )
+   {
+      mCurKeys[i] = 0;
+   }
+
+   // XXX: This is copied from the old code, but why is it necessary?
+   // -PH 4/1/2004
+   mCurKeys[gadget::KEY_NONE] = 1;
+}
+
 std::string EventWindow::getBaseType()
 {
    return "event_window";
 }
+
 /**
  * Write both mCurKeys and mCurEventQueueLock to a stream using the given ObjectWriter.
  */
@@ -68,7 +81,7 @@ vpr::ReturnStatus EventWindow::writeObject(vpr::ObjectWriter* writer)
    {
       writer->writeUint32(mCurKeys[i]);
    }
-   
+
    // Write Events to a stream using the given ObjectWriter
    writer->writeUint16(mCurEventQueue.size());
    

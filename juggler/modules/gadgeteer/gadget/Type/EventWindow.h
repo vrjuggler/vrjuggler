@@ -70,10 +70,7 @@ public:
    //typedef std::queue<gadget::EventPtr> EventQueue;
    typedef std::vector<gadget::EventPtr> EventQueue;
 
-   EventWindow()
-   {
-      /* Do nothing. */ ;
-   }
+   EventWindow();
 
    virtual ~EventWindow()
    {
