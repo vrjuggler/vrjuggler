@@ -25,6 +25,8 @@ XALAN_FO_PARAMS=	-PARAM fop.extensions "1" # -PARAM column.count "2"
 #XALAN_FO_PARAMS=	-PARAM passivetex.extensions "1"	\
 			-PARAM tex.math.in.alt "latex"
 
+XALAN_HTML_PARAMS=	
+
 XALAN_TXT_PARAMS=	-PARAM page.margin.bottom "0in"	\
 			-PARAM page.margin.inner "0in"	\
 			-PARAM page.margin.outer "0in"	\
@@ -65,15 +67,16 @@ images:
 # Basic XSL conversions -------------------------------------------------------
 
 .xml.html:
-	$(XALAN) -in $< -xsl $(XSL_DIR)/html/docbook.xsl -out $@
+	$(XALAN) -in $< -xsl $(XSL_DIR)/html/docbook.xsl -out $@	\
+          $(XALAN_HTML_PARAMS) $(EXTRA_XALAN_HTML_PARAMS)
 
 .xml.fo:
 	$(XALAN) -in $< -xsl $(XSL_DIR)/fo/docbook.xsl -out $@		\
-          $(XALAN_FO_PARAMS)
+          $(XALAN_FO_PARAMS) $(EXTRA_XALAN_FO_PARAMS)
 
 .xml.txt:
 	$(XALAN) -in $< -xsl $(XSL_DIR)/fo/docbook.xsl -out $@		\
-          $(XALAN_TXT_PARAMS)
+          $(XALAN_TXT_PARAMS) $(EXTRA_XALAN_TXT_PARAMS)
 	$(FOP) -fo $< -txt $@
 
 # Generate a PDF file from an FO file using FOP.
