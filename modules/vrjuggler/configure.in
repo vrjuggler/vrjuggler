@@ -1549,6 +1549,10 @@ dnl #     * TEST_VJ_LIBS_GL: The VR Juggler OpenGL API library.
 dnl #     * TEST_VJ_LIBS_PF: The VR Juggler Performer API library.
 dnl #     * TEST_LIBS_BASIC: The _most basic_ basic libraries needed for
 dnl #       compiling (e.g., -lC).
+dnl #     * TEST_EXTRA_LIBS_BEGIN: Options used at the beginning of the list
+dnl #       of extra libraries.
+dnl #     * TEST_EXTRA_LIBS_END: Options used at the end of the list of extra
+dnl #       libraries.
 dnl #     * TEST_EXTRA_LIBS_BASIC: A basic set of extra libraries and linker
 dnl #       flags needed for compiling.  These are put after those listed in
 dnl #       the previous variables in the compile line.
@@ -1579,14 +1583,15 @@ if test "$OS_TYPE" = "UNIX" ; then
     if test "$PLATFORM" = "IRIX" ; then
         TEST_VJ_LIBS_BASIC="-B static -L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
         TEST_VJ_LIBS_BASIC_INST="-B dynamic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
-        TEST_LIBS_BASIC="-B dynamic -lm -lC"
+        TEST_EXTRA_LIBS_BEGIN='-B dynamic'
+        TEST_EXTRA_LIBS_END='-lm -lC'
     else
         dnl # For now, we are disabling static linking for the sample
         dnl # applications when compiled in a developer's build tree.  This
         dnl # is only the case on non-IRIX platforms.
         TEST_VJ_LIBS_BASIC="-L\$(VJ_BASE_DIR)/lib${LIBBITSUF} -lJuggler"
         TEST_VJ_LIBS_BASIC_INST="$TEST_VJ_LIBS_BASIC"
-        TEST_LIBS_BASIC="-lm"
+        TEST_EXTRA_LIBS_END="-lm"
     fi
 
     TEST_VJ_LIBS_GL="-lJuggler_ogl"
@@ -1704,6 +1709,8 @@ AC_SUBST(TEST_VJ_LIBS_BASIC_INST)
 AC_SUBST(TEST_VJ_LIBS_GL)
 AC_SUBST(TEST_VJ_LIBS_PF)
 AC_SUBST(TEST_LIBS_BASIC)
+AC_SUBST(TEST_EXTRA_LIBS_BEGIN)
+AC_SUBST(TEST_EXTRA_LIBS_END)
 AC_SUBST(TEST_EXTRA_LIBS_BASIC)
 AC_SUBST(TEST_EXTRA_LIBS_GL)
 AC_SUBST(TEST_EXTRA_LIBS_PF)
