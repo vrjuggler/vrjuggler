@@ -120,12 +120,30 @@ public:
       return this->impl().isAmbient( alias );
    }
 
-   /** alters the frequency of the sample, 0 is no change. */
+   /** alters the frequency of the sample.
+    *  1 is no change
+    *  < 1 is low
+    *  > 1 is high.
+    */
    virtual void setPitchBend( const std::string& alias, float amount )
    {
       this->impl().setPitchBend( alias, amount );
    }
 
+   /** affect volume.  set to a value between [0..1]. */
+   virtual void setVolume( const std::string& alias, float amount )
+   {
+      this->impl().setVolume( alias, amount );
+   }
+   
+   /** affect cutoff.
+    *  set to a value between [0..1]... 1 is no change.  0 is total cutoff.
+    */
+   virtual void setCutoff( const std::string& alias, float amount )
+   {
+      this->impl().setCutoff( alias, amount );
+   }
+   
    /**
     * @semantics stop the sound
     * @input alias of the sound to be stopped
