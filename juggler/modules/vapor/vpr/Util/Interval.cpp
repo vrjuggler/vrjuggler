@@ -135,14 +135,14 @@ void Interval::setNowReal()
          unsigned int now = *(unsigned int*)mTimerAddr, temp;
          unsigned int residual = mResidual;
          unsigned int previous = mPrevious;
-          
+
          //if (now < previous)
          //   std::cout << "wraparound occurred!!!" << std::endl;
 
          temp = now - previous + residual;
          residual = temp & mClockMask;
          ticks += temp;
-         
+
          mPrevious = now;
          mResidual = residual;
          mTicks = ticks;
@@ -155,12 +155,14 @@ void Interval::setNowReal()
       // use gettimeofday as our fallback.
       timeval cur_time;
       gettimeofday(&cur_time);
-      mMicroSeconds = (cur_time.tv_usec + (1000000 * cur_time.tv_sec));
+      vpr::Uint64 storage = vpr::Uint64(1000000u) * vpr::Uint64(cur_time.tv_sec);
+      mMicroSeconds = vpr::Uint64(cur_time.tv_usec) + storage;
    }
 #else    // Default to POSIX time setting
    timeval cur_time;
    vpr::System::gettimeofday(&cur_time);
-   mMicroSeconds = (cur_time.tv_usec + (1000000 * cur_time.tv_sec));
+   vpr::Uint64 storage = vpr::Uint64(1000000u) * vpr::Uint64(cur_time.tv_sec);
+   mMicroSeconds = vpr::Uint64(cur_time.tv_usec) + storage;
 
 #endif
 }
@@ -191,19 +193,19 @@ void Interval::setNowReal()
    {
       int poffmask = getpagesize() - 1;
       __psunsigned_t phys_addr, raddr, cycleval;
-      
+
       phys_addr = syssgi(SGI_QUERY_CYCLECNTR, &cycleval);
       raddr = phys_addr & ~poffmask;
       mTimerAddr = mmap(
          0, poffmask, PROT_READ, MAP_PRIVATE, mMmem_fd, (__psint_t)raddr);
-      
+
       mClockWidth = syssgi(SGI_CYCLECNTR_SIZE);
       if (mClockWidth < 0)
       {
-         /* 
+         /*
           * We must be executing on a 6.0 or earlier system, since the
           * SGI_CYCLECNTR_SIZE call is not supported.
-          * 
+          *
           * The only pre-6.1 platforms with 64-bit counters are
           * IP19 and IP21 (Challenge, PowerChallenge, Onyx).
           */
@@ -217,9 +219,9 @@ void Interval::setNowReal()
             mClockWidth = 32;
          }
       }
-      
+
       //std::cout << "cycleval is " << cycleval << " ps." << std::endl;
-      
+
       mTicksToMicroseconds = cycleval / 1000000.0L;
       mClockMask = (1 << mClockWidth) -1;
       mTimerAddr = (void*)
