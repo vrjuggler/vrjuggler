@@ -12,7 +12,7 @@
 /*  --    Authors:  Larry Edwards, William L. Chapin        --  */
 /*  ==========================================================  */
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <math.h>
 
 #define epsilon 0.000001

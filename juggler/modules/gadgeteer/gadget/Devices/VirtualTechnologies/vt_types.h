@@ -9,7 +9,7 @@
 /*  --  Copyright (C) 1991,92,93 Virtual Technologies       --  */
 /*  ==========================================================  */
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 
 #ifndef FALSE
 #define FALSE 0

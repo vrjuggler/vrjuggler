@@ -33,7 +33,7 @@
 #ifndef _VRJ_DTK_MEMORY_SEGMENT_H_
 #define _VRJ_DTK_MEMORY_SEGMENT_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <gad/Devices/Open/DTK/DTK.h>
 
 namespace vrj

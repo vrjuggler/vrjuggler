@@ -39,7 +39,7 @@
 #ifndef _VRJ_BIRD_H_
 #define _VRJ_BIRD_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <vpr/Thread/Thread.h>
 #include <gad/Type/Input.h>
 #include <gad/Type/Position.h>

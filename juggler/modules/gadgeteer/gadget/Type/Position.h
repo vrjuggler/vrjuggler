@@ -39,7 +39,7 @@
 #ifndef _VRJ_POSITION_H_
 #define _VRJ_POSITION_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <typeinfo>
 #include <gad/Type/Input.h>
 #include <vrj/Math/Vec3.h>

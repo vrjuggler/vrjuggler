@@ -38,7 +38,7 @@
 #ifndef _VRJ_ANALOG_H_
 #define _VRJ_ANALOG_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <vrj/Config/ConfigChunk.h>
 #include <vrj/Util/Debug.h>
 

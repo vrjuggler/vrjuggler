@@ -33,7 +33,7 @@
 #ifndef _VRJ_ASCENSION_MOTION_STAR_H_
 #define _VRJ_ASCENSION_MOTION_STAR_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 
 #include <string>
 #include <vpr/Thread/Thread.h>

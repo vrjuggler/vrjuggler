@@ -33,7 +33,7 @@
 #ifndef _VRJ_DIGITAL_INTERFACE_H_
 #define _VRJ_DIGITAL_INTERFACE_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 
 #include <gad/Type/DigitalProxy.h>
 #include <gad/Type/DeviceInterface.h>

@@ -33,7 +33,7 @@
 #ifndef _VJ_POS_FILTER_H_
 #define _VJ_POS_FILTER_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 
 #include <vrj/Math/Matrix.h>
 

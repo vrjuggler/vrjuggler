@@ -33,7 +33,7 @@
 #ifndef _VRJ_DIVERSE_TOOLKIT_H_
 #define _VRJ_DIVERSE_TOOLKIT_H_
 
-#include <vrj/vrjConfig.h>
+#include <gad/gadConfig.h>
 #include <gad/Type/Digital.h>
 #include <gad/Type/Analog.h>
 #include <gad/Type/Position.h>
