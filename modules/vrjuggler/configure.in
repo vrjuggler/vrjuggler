@@ -80,6 +80,11 @@ AC_ARG_WITH(java3d,
             [  --with-java3d=<PATH>    Path to Java3D JAR file(s) ],
             JAVA3D_JAR="$withval", JAVA3D_JAR='none')
 
+# Specify where JOGL is located
+AC_ARG_WITH(jogl,
+            [  --with-jogl=<PATH>      Path to JOGL JAR file(s) ],
+            JOGL_JARS="$withval", JOGL_JARS='none')
+
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
 # -------------------------------------------- #
@@ -256,6 +261,29 @@ if test "x$BUILD_JAVA" = "xY" ; then
          [ AC_MSG_WARN([*** Java3D required for Java3D custom editor ***])
            BUILD_JAVA_3D_EDITOR='N' ],
          $JAVA3D_JAR)
+   fi
+fi
+
+# --------
+# JOGL.
+# --------
+BUILD_JOGL_EDITOR='N'
+if test "x$BUILD_JAVA" = "xY" ; then
+   # If we are building VRJConfig, we can try to enable building the
+   # JOGL-based editor(s).
+   if test "x$BUILD_JAVA" = "xY" ; then
+      DPP_CHECK_JAVA_STATIC_METHOD(net.java.games.jogl.Version, getVersion() , ,
+         BUILD_JOGL_EDITOR='Y',
+         [ AC_MSG_WARN([*** JOGL required for JOGL custom editor ***])
+           BUILD_JOGL_EDITOR='N' ],
+         $JOGL_JARS)
+      if test "x$BUILD_JOGL_EDITOR" = "xY" ; then
+         DPP_CHECK_JAVA_STATIC_METHOD(gleem.ManipManager, getManipManager() , ,
+            BUILD_JOGL_EDITOR='Y',
+            [ AC_MSG_WARN([*** Gleem required for JOGL custom editor ***])
+              BUILD_JOGL_EDITOR='N' ],
+            $JOGL_JARS)
+      fi
    fi
 fi
 
@@ -592,6 +620,7 @@ AC_SUBST(BUILD_JAVA)
 AC_SUBST(BUILD_PROXY_EDITOR)
 AC_SUBST(BUILD_JAVA_3D_EDITOR)
 AC_SUBST(JAVA3D_JAR)
+AC_SUBST(JOGL_JARS)
 
 AC_SUBST(OPENGL_API)
 AC_SUBST(PERFORMER_API)
@@ -659,6 +688,9 @@ AC_CONFIG_FILES([
    vrjconfig/build.xml
    vrjconfig/Makefile
    vrjconfig/Makefile.inc
+   vrjconfig/commoneditors/build.xml
+   vrjconfig/commoneditors/Makefile
+   vrjconfig/commoneditors/Makefile.inc
    vrjconfig/customeditors/Makefile
    vrjconfig/customeditors/display_window/build.xml
    vrjconfig/customeditors/display_window/Makefile
