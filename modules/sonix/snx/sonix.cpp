@@ -1,4 +1,14 @@
-#include "snx/sonix.h"
+#include <snx/snxConfig.h>
+
+#include <stdlib.h>
+#include <gmtl/Math.h>
+#include <gmtl/Vec.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/VecOps.h>
+#include <gmtl/Xforms.h>
+
+#include <snx/SoundFactory.h>
+#include <snx/sonix.h>
 
    //:  destructor
    sonix::~sonix()
