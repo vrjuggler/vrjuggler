@@ -41,8 +41,8 @@ import java.awt.event.*;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.*;
-import org.vrjuggler.tweek.services.GlobalPreferencesService;
 import javax.swing.border.*;
+import org.vrjuggler.tweek.services.GlobalPreferencesService;
 
 
 /**
@@ -55,13 +55,13 @@ public class PrefsDialog extends JDialog
    {
       super(owner, title);
 
-      m_prefs = prefs;
+      mPrefs = prefs;
 
-      userLevel        = m_prefs.getUserLevel();
-      lookAndFeel      = m_prefs.getLookAndFeel();
-      beanViewer       = m_prefs.getBeanViewer();
-      chooserStartDir  = m_prefs.getChooserStartDir();
-      chooserOpenStyle = m_prefs.getChooserOpenStyle();
+      userLevel        = mPrefs.getUserLevel();
+      lookAndFeel      = mPrefs.getLookAndFeel();
+      beanViewer       = mPrefs.getBeanViewer();
+      chooserStartDir  = mPrefs.getChooserStartDir();
+      chooserOpenStyle = mPrefs.getChooserOpenStyle();
 
       try
       {
@@ -97,7 +97,7 @@ public class PrefsDialog extends JDialog
 
    public void setBeanViewer (String v)
    {
-      m_prefs.setBeanViewer(v);
+      mPrefs.setBeanViewer(v);
    }
 
    public int getStatus ()
@@ -121,31 +121,31 @@ public class PrefsDialog extends JDialog
 
    private void jbInit() throws Exception
    {
-      java.util.Vector viewers = m_prefs.getBeanViewers();
+      java.util.Vector viewers = mPrefs.getBeanViewers();
 
       for ( int i = 0; i < viewers.size(); i++ )
       {
-         m_viewer_box.addItem(viewers.elementAt(i));
+         mViewerBox.addItem(viewers.elementAt(i));
       }
 
       mFileChooserBorder = new TitledBorder(BorderFactory.createEtchedBorder(Color.white,new Color(142, 142, 142)),"File Chooser Configuration");
       mGenBorder = new TitledBorder(BorderFactory.createEtchedBorder(Color.white,new Color(142, 142, 142)),"General Configuration");
-      m_viewer_box.setMinimumSize(new Dimension(126, 10));
-      m_viewer_box.setPreferredSize(new Dimension(130, 10));
-      m_viewer_box.setSelectedItem(m_prefs.getBeanViewer());
+      mViewerBox.setMinimumSize(new Dimension(126, 10));
+      mViewerBox.setPreferredSize(new Dimension(130, 10));
+      mViewerBox.setSelectedItem(mPrefs.getBeanViewer());
 
       for ( int i = 1; i <= 10; i++ )
       {
-         m_level_box.addItem(String.valueOf(i));
+         mLevelBox.addItem(String.valueOf(i));
       }
 
-      m_level_box.setMinimumSize(new Dimension(126, 10));
-      m_level_box.setPreferredSize(new Dimension(130, 10));
-      m_level_box.setSelectedIndex(m_prefs.getUserLevel() - 1);
+      mLevelBox.setMinimumSize(new Dimension(126, 10));
+      mLevelBox.setPreferredSize(new Dimension(130, 10));
+      mLevelBox.setSelectedIndex(mPrefs.getUserLevel() - 1);
 
-      m_ok_button.setMnemonic('O');
-      m_ok_button.setText("OK");
-      m_ok_button.addActionListener(new ActionListener()
+      mOkButton.setMnemonic('O');
+      mOkButton.setText("OK");
+      mOkButton.addActionListener(new ActionListener()
       {
          public void actionPerformed (ActionEvent e)
          {
@@ -153,9 +153,9 @@ public class PrefsDialog extends JDialog
          }
       });
 
-      m_save_button.setMnemonic('S');
-      m_save_button.setText("Save");
-      m_save_button.addActionListener(new ActionListener()
+      mSaveButton.setMnemonic('S');
+      mSaveButton.setText("Save");
+      mSaveButton.addActionListener(new ActionListener()
       {
          public void actionPerformed (ActionEvent e)
          {
@@ -163,9 +163,9 @@ public class PrefsDialog extends JDialog
          }
       });
 
-      m_cancel_button.setMnemonic('C');
-      m_cancel_button.setText("Cancel");
-      m_cancel_button.addActionListener(new ActionListener()
+      mCancelButton.setMnemonic('C');
+      mCancelButton.setText("Cancel");
+      mCancelButton.addActionListener(new ActionListener()
       {
          public void actionPerformed (ActionEvent e)
          {
@@ -173,9 +173,9 @@ public class PrefsDialog extends JDialog
          }
       });
 
-      m_content_layout.setColumns(1);
-      m_content_layout.setRows(0);
-      m_content_panel.setLayout(m_content_layout);
+      mContentLayout.setColumns(1);
+      mContentLayout.setRows(0);
+      mContentPanel.setLayout(mContentLayout);
       mFileChooserPanel.setLayout(mFileChooserLayout);
       mGenConfigPanel.setLayout(mGenConfigLayout);
       mGeneralPanel.setBorder(mGenBorder);
@@ -221,51 +221,51 @@ public class PrefsDialog extends JDialog
       mFcOpenStyleButtonPanel.setLayout(mFcOpenStyleButtonLayout);
       mFcOpenStyleButtonLayout.setColumns(1);
       mFcOpenStyleButtonLayout.setRows(0);
-      m_laf_label.setMaximumSize(new Dimension(74, 13));
-      m_laf_label.setMinimumSize(new Dimension(24, 13));
-      m_laf_label.setPreferredSize(new Dimension(24, 13));
-      m_laf_label.setHorizontalAlignment(SwingConstants.RIGHT);
-      m_level_label.setMinimumSize(new Dimension(24, 13));
-      m_level_label.setPreferredSize(new Dimension(24, 13));
-      m_level_label.setHorizontalAlignment(SwingConstants.RIGHT);
-      m_viewer_label.setMaximumSize(new Dimension(24, 13));
-      m_viewer_label.setMinimumSize(new Dimension(24, 13));
-      m_viewer_label.setPreferredSize(new Dimension(24, 13));
-      m_viewer_label.setHorizontalAlignment(SwingConstants.RIGHT);
-      m_laf_box.setMinimumSize(new Dimension(126, 10));
-      m_laf_box.setPreferredSize(new Dimension(130, 10));
+      mLafLabel.setMaximumSize(new Dimension(74, 13));
+      mLafLabel.setMinimumSize(new Dimension(24, 13));
+      mLafLabel.setPreferredSize(new Dimension(24, 13));
+      mLafLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+      mLevelLabel.setMinimumSize(new Dimension(24, 13));
+      mLevelLabel.setPreferredSize(new Dimension(24, 13));
+      mLevelLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+      mViewerLabel.setMaximumSize(new Dimension(24, 13));
+      mViewerLabel.setMinimumSize(new Dimension(24, 13));
+      mViewerLabel.setPreferredSize(new Dimension(24, 13));
+      mViewerLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+      mLafBox.setMinimumSize(new Dimension(126, 10));
+      mLafBox.setPreferredSize(new Dimension(130, 10));
       mFcOpenStyleButtonPanel.setMinimumSize(new Dimension(128, 50));
       mFcOpenStyleButtonPanel.setPreferredSize(new Dimension(128, 50));
-      mLazyInstanceButton.setSelected(m_prefs.getLazyPanelBeanInstantiation());
+      mLazyInstanceButton.setSelected(mPrefs.getLazyPanelBeanInstantiation());
       mLazyInstanceButton.setText("Lazy Panel Bean Instantiaion");
       mGeneralPanel.add(mGenConfigPanel, BorderLayout.CENTER);
-      m_content_panel.add(mGeneralPanel, null);
-      m_content_panel.add(mFileChooserPanel, null);
+      mContentPanel.add(mGeneralPanel, null);
+      mContentPanel.add(mFileChooserPanel, null);
 
-      m_level_label.setText("User Level");
-      m_level_box.addActionListener(new ActionListener()
+      mLevelLabel.setText("User Level");
+      mLevelBox.addActionListener(new ActionListener()
          {
             public void actionPerformed (ActionEvent e)
             {
-               userLevel = m_level_box.getSelectedIndex() + 1;
+               userLevel = mLevelBox.getSelectedIndex() + 1;
             }
          });
-      mGenConfigPanel.add(m_level_label,     new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+      mGenConfigPanel.add(mLevelLabel,     new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
-      mGenConfigPanel.add(m_level_box,   new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
+      mGenConfigPanel.add(mLevelBox,   new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 14));
 
-      m_laf_label.setText("Look and Feel");
-      m_laf_box.addItem("Metal");
-      m_laf_box.addItem("Motif");
-      m_laf_box.addItem("Windows");
-      m_laf_box.addItem("Mac");
-      m_laf_box.addItem("System");
-      m_laf_box.addActionListener(new ActionListener()
+      mLafLabel.setText("Look and Feel");
+      mLafBox.addItem("Metal");
+      mLafBox.addItem("Motif");
+      mLafBox.addItem("Windows");
+      mLafBox.addItem("Mac");
+      mLafBox.addItem("System");
+      mLafBox.addActionListener(new ActionListener()
          {
             public void actionPerformed (ActionEvent e)
             {
-               String val = (String) m_laf_box.getSelectedItem();
+               String val = (String) mLafBox.getSelectedItem();
 
                if ( val.equals("Metal") )
                {
@@ -289,32 +289,32 @@ public class PrefsDialog extends JDialog
                }
             }
          });
-      mGenConfigPanel.add(m_laf_label,    new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
+      mGenConfigPanel.add(mLafLabel,    new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
-      mGenConfigPanel.add(m_laf_box,   new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
+      mGenConfigPanel.add(mLafBox,   new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 14));
 
-      m_viewer_label.setText("Bean Viewer");
-      m_viewer_box.addActionListener(new ActionListener()
+      mViewerLabel.setText("Bean Viewer");
+      mViewerBox.addActionListener(new ActionListener()
          {
             public void actionPerformed (ActionEvent e)
             {
-               beanViewer = (String) m_viewer_box.getSelectedItem();
+               beanViewer = (String) mViewerBox.getSelectedItem();
             }
          });
-      mGenConfigPanel.add(m_viewer_label,     new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0
+      mGenConfigPanel.add(mViewerLabel,     new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
-      mGenConfigPanel.add(m_viewer_box,   new GridBagConstraints(1, 3, 1, 1, 1.0, 0.0
+      mGenConfigPanel.add(mViewerBox,   new GridBagConstraints(1, 3, 1, 1, 1.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 14));
       mGenConfigPanel.add(mLazyInstanceButton,   new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
-      m_button_panel.add(m_ok_button, null);
-      m_button_panel.add(m_save_button, null);
-      m_button_panel.add(m_cancel_button, null);
+      mButtonPanel.add(mOkButton, null);
+      mButtonPanel.add(mSaveButton, null);
+      mButtonPanel.add(mCancelButton, null);
 
-      this.getContentPane().add(m_content_panel, BorderLayout.CENTER);
-      this.getContentPane().add(m_button_panel, BorderLayout.SOUTH);
+      this.getContentPane().add(mContentPanel, BorderLayout.CENTER);
+      this.getContentPane().add(mButtonPanel, BorderLayout.SOUTH);
       mFileChooserPanel.add(mFcConfigPanel, BorderLayout.CENTER);
       mFcConfigPanel.add(mFcStartDirLabel,       new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 95, 23));
@@ -373,14 +373,14 @@ public class PrefsDialog extends JDialog
    {
       status = OK_OPTION;
       commit();
-      m_prefs.save(false);
+      mPrefs.save(false);
       setVisible(false);
    }
 
    private void saveButtonAction (ActionEvent e)
    {
       commit();
-      m_prefs.save(false);
+      mPrefs.save(false);
    }
 
    private void cancelButtonAction (ActionEvent e)
@@ -391,12 +391,12 @@ public class PrefsDialog extends JDialog
 
    private void commit ()
    {
-      m_prefs.setUserLevel(userLevel);
-      m_prefs.setLookAndFeel(lookAndFeel);
-      m_prefs.setBeanViewer(beanViewer);
-      m_prefs.setChooserStartDir(chooserStartDir);
-      m_prefs.setChooserOpenStyle(chooserOpenStyle);
-      m_prefs.setLazyPanelBeanInstantiation(mLazyInstanceButton.isSelected());
+      mPrefs.setUserLevel(userLevel);
+      mPrefs.setLookAndFeel(lookAndFeel);
+      mPrefs.setBeanViewer(beanViewer);
+      mPrefs.setChooserStartDir(chooserStartDir);
+      mPrefs.setChooserOpenStyle(chooserOpenStyle);
+      mPrefs.setLazyPanelBeanInstantiation(mLazyInstanceButton.isSelected());
    }
 
    private int status;
@@ -407,10 +407,10 @@ public class PrefsDialog extends JDialog
    private String chooserStartDir  = GlobalPreferencesService.DEFAULT_START;
    private int    chooserOpenStyle = GlobalPreferencesService.DEFAULT_CHOOSER;
 
-   private GlobalPreferencesService m_prefs = null;
+   private GlobalPreferencesService mPrefs = null;
 
-   private JPanel m_content_panel = new JPanel();
-   private GridLayout m_content_layout = new GridLayout();
+   private JPanel     mContentPanel  = new JPanel();
+   private GridLayout mContentLayout = new GridLayout();
 
    private JPanel       mGeneralPanel     = new JPanel();
    private TitledBorder mGenBorder;
@@ -419,12 +419,12 @@ public class PrefsDialog extends JDialog
    private JPanel        mGenConfigPanel  = new JPanel();
    private GridBagLayout mGenConfigLayout = new GridBagLayout();
 
-   private JLabel    m_level_label  = new JLabel();
-   private JComboBox m_level_box    = new JComboBox();
-   private JLabel    m_laf_label    = new JLabel();
-   private JComboBox m_laf_box      = new JComboBox();
-   private JLabel    m_viewer_label = new JLabel();
-   private JComboBox m_viewer_box   = new JComboBox();
+   private JLabel    mLevelLabel  = new JLabel();
+   private JComboBox mLevelBox    = new JComboBox();
+   private JLabel    mLafLabel    = new JLabel();
+   private JComboBox mLafBox      = new JComboBox();
+   private JLabel    mViewerLabel = new JLabel();
+   private JComboBox mViewerBox   = new JComboBox();
 
    private JPanel       mFileChooserPanel = new JPanel();
    private TitledBorder mFileChooserBorder;
@@ -442,9 +442,9 @@ public class PrefsDialog extends JDialog
    private JRadioButton mWindowsStyleButton      = new JRadioButton();
    private JRadioButton mEmacsStyleButton        = new JRadioButton();
 
-   private JPanel  m_button_panel  = new JPanel();
-   private JButton m_cancel_button = new JButton();
-   private JButton m_save_button   = new JButton();
-   private JButton m_ok_button     = new JButton();
+   private JPanel  mButtonPanel  = new JPanel();
+   private JButton mCancelButton = new JButton();
+   private JButton mSaveButton   = new JButton();
+   private JButton mOkButton     = new JButton();
    private JCheckBox mLazyInstanceButton = new JCheckBox();
 }
