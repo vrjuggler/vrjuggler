@@ -7,9 +7,9 @@ DPP_GEN_RECONFIG
 
 
 DPP_STD_CPP(yes)
+# Define the binary format.
 DPP_ABI_SETUP
 
-DPP_CXX_TEMPLATES
 
 DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 
@@ -30,9 +30,31 @@ dnl ===========================================================================
 DPP_WIN32_SETUP
 
 # We use AC_CANONICAL SYSTEM so that we can find out information about the
+
+# -------------------------------------------- #
+# --with-pkg[=arg] and --without-pkg arguments #
+# -------------------------------------------- #
+
+# Override the C compiler that configure would otherwise find itself.
+AC_ARG_WITH(cc, [  --with-cc=<PATH>        Alternate C compiler ],
+            _alt_cc="$withval", _alt_cc='none')
+
+# Override the C++ compiler that configure would otherwise find itself.
+AC_ARG_WITH(cxx, [  --with-cxx=<PATH>       Alternate C++ compiler ],
+            _alt_cxx="$withval", _alt_cxx='none')
+
+# Force the use of GCC as the compiler.
+# NOTE: This is not fully implemented yet for any platform, but it is
+# partially usable on Windows.
+DPP_WITH_GCC(no)
+
+
+
+
 # build, target and host platforms rather than only the host.
 AC_CANONICAL_SYSTEM
 DPP_SYSTEM_SETUP
+
 
 # -----------------------------------------------------------------------------
 # Checks for programs.
@@ -83,19 +105,20 @@ else
 fi
 
 DPP_PROG_CC($CC, , AC_MSG_ERROR($CC_ERR))
-DPP_PROG_CXX($CXX, , AC_MSG_ERROR($CXX_ERR))
 DPP_GET_EXT
+DPP_PROG_CXX($CXX, , AC_MSG_ERROR($CXX_ERR))
+
 
 # Ensure that the C++ compiler we've found is capable of compiling the newer
 # newer C++ features that we need.
-DPP_CXX_NAMESPACE(AC_MSG_ERROR(*** jfx requires C++ namespace support ***))
-DPP_CXX_TEMPLATES(AC_MSG_ERROR(*** jfx requires C++ template support ***))
-DPP_CXX_INLINE(AC_MSG_ERROR(*** jfx requires C++ inline support ***))
+DPP_CXX_NAMESPACE(AC_MSG_ERROR(*** project requires C++ namespace support ***))
+DPP_CXX_TEMPLATES(AC_MSG_ERROR(*** project requires C++ template support ***))
+DPP_CXX_INLINE(AC_MSG_ERROR(*** project requires C++ inline support ***))
 
 if test "x$GXX" = "xyes" ; then
     # If we are using GCC as the compiler, we need to be using at least
     # egcs 1.1.2.  A newer version (e.g., 2.95.2) is even better.
-    DPP_GPLUSPLUS_MODERN(AC_MSG_ERROR(*** jfx requires a modern G++ ***))
+    DPP_GPLUSPLUS_MODERN(AC_MSG_ERROR(*** project requires a modern G++ ***))
 fi
 
 DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
@@ -162,14 +185,19 @@ else
     SAFE_PLXROOT_ABS="$PLXROOT_ABS"
 fi
 
+
 DPP_SUBST
+DPP_GET_SRCDIR_ABSOLUTE
 
 # Export variables defined above.
 AC_SUBST(topdir)
 AC_SUBST(EXTRA_LINK_FLAGS)
 
 
-AC_OUTPUT(Makefile 
+AC_OUTPUT(vj/Makefile 
+          aj/Makefile 
+          hack
+          Makefile 
           make.defs.mk)
 
 cat <<BUILD_INFO
