@@ -43,6 +43,8 @@ import javax.swing.tree.*;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.ConfigContextEvent;
 import org.vrjuggler.jccl.config.event.ConfigContextListener;
+import org.vrjuggler.jccl.editors.net.TinyBrowser;
+
 
 public class ConfigContextEditor
    extends JPanel
@@ -59,6 +61,12 @@ public class ConfigContextEditor
       {
          e.printStackTrace();
       }
+
+      helpPane.addHyperlinkListener(new DocLinkListener());
+      helpBrowserFrame.setContentPane(helpBrowser);
+      helpBrowserFrame.setSize(new Dimension(640, 480));
+      helpBrowserFrame.setTitle("Config Element Help Browser");
+      helpBrowserFrame.validate();
 
       // Hack around JSplitPane bug where it can't handle setting the divider
       // location until it's visible. JDC Bug #4182558.
@@ -469,6 +477,19 @@ public class ConfigContextEditor
       return color;
    }
 
+   private class DocLinkListener
+      implements HyperlinkListener
+   {
+      public void hyperlinkUpdate(HyperlinkEvent e)
+      {
+         if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
+         {
+            helpBrowser.setPage(e.getURL());
+            helpBrowserFrame.setVisible(true);
+         }
+      }
+   }
+
    private BorderLayout mBaseLayout = new BorderLayout();
    private JSplitPane mBaseSplitPane = new JSplitPane();
    private JScrollPane mElementTreeScrollPane = new JScrollPane();
@@ -491,7 +512,9 @@ public class ConfigContextEditor
       public boolean getScrollableTracksViewportWidth() { return true; }
       public boolean getScrollableTracksViewportHeight() { return true; }
    };
-   
+   private JFrame helpBrowserFrame = new JFrame();
+   private TinyBrowser helpBrowser = new TinyBrowser();
+
    private BorderLayout treeLayout = new BorderLayout();
    private JPanel treePane = new JPanel();
    private JToolBar treeToolbar = new JToolBar();
