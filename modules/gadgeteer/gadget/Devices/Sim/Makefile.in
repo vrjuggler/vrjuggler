@@ -51,10 +51,10 @@ VJ_SRCDIR	= @VJ_SRCDIR@/Input/vjSim
 
 SRCS		= vjSimAnalog.cpp		\
                   vjSimDigital.cpp		\
+                  vjSimDigitalGlove.cpp		\
                   vjSimGloveGesture.cpp		\
                   vjSimInput.cpp		\
                   vjSimPosition.cpp		\
-                  vjSimDigitalGlove.cpp		\
                   vjSimRelativePosition.cpp
 
 include $(MKPATH)/dpp.obj.mk
