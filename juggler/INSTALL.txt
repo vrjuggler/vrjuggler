@@ -6,6 +6,27 @@
 
      ----------------------------------------------------------------------
 
+   Table of Contents
+
+   Introduction
+
+                Important Notes for IRIX Users
+
+                Important Note for Win32 Users
+
+   Getting the Source Code
+
+                How to get the Juggler Suite and external package
+                dependencies
+
+                Using cvs-gather
+
+   Compiling
+
+                Important Note Regarding Compiling
+
+                Compiling the Juggler Suite of Tools
+
 Introduction
 
    This document explains how to build the modules of the Juggler Project
@@ -249,11 +270,11 @@ Compiling
    following provides a workaround for running autogen.sh on Win32 using the
    default BASH environment:
 
- ACLOCAL=/usr/autotools/stable/bin/aclocal ./autogen.sh
+ ACLOCAL=/usr/autotool/stable/bin/aclocal ./autogen.sh
 
    If you are using tcsh, use the following command instead:
 
- env ACLOCAL=/usr/autotools/stable/bin/aclocal ./autogen.sh
+ env ACLOCAL=/usr/autotool/stable/bin/aclocal ./autogen.sh
 
       Using configure.pl
 
