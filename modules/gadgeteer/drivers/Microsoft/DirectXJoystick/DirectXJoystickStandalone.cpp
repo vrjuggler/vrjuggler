@@ -40,60 +40,28 @@
 #include <drivers/Microsoft/DirectXJoystick/DirectXJoystickStandalone.h>
 
 
-static LPDIRECTINPUT8       sDxObject;      // DirectInput object
-static LPDIRECTINPUTDEVICE8 sDxJoystick;    // DirectInput device
-static DIDEVICEINSTANCE     sDxDeviceInfo;
-static DIJOYSTATE           sJsData;        // joystick state data-structure
-
-namespace
+namespace gadget
 {
 
 BOOL CALLBACK enumerateJoysticksCallback(const DIDEVICEINSTANCE* dInstance,
                                          void* pContext)
 {
-   // Obtain an interface to the enumerated joystick.
-   sDxObject->CreateDevice(dInstance->guidInstance, &sDxJoystick, NULL);
-   return DIENUM_STOP;
-/* // FIXME: allow configurable joystick station
-   static int count = 0;
-   ++count;
-   if( count == 2 )
-   {
-      mDxObject->CreateDevice(dInstance->guidInstance, &sDxJoystick, NULL);
-      return DIENUM_STOP;
-   }
-   return DIENUM_CONTINUE;
-*/
+   DirectXJoystickStandalone* obj =
+      static_cast<DirectXJoystickStandalone*>(pContext);
+   return obj->enumerateJoysticks(dInstance);
 }
 
 BOOL CALLBACK enumerateAxesCallback(const DIDEVICEOBJECTINSTANCE* doi,
                                     void* pContext)
 {
-   // For each axis enumrated, this function will set
-   // the minimum and maximum range values for it.
-   DIPROPRANGE diprg;
-   diprg.diph.dwSize       = sizeof(DIPROPRANGE);
-   diprg.diph.dwHeaderSize = sizeof(DIPROPHEADER);
-   diprg.diph.dwHow        = DIPH_BYOFFSET;
-   diprg.diph.dwObj        = doi->dwOfs; // Specify the enumerated axis
-   diprg.lMin              = -100;
-   diprg.lMax              = +100;
-
-   // Set the range for the axis
-   if( FAILED(sDxJoystick->SetProperty(DIPROP_RANGE, &diprg.diph)) )
-   {
-      return DIENUM_STOP;
-   }
-
-   return DIENUM_CONTINUE;
+   DirectXJoystickStandalone* obj =
+      static_cast<DirectXJoystickStandalone*>(pContext);
+   return obj->enumerateAxes(doi);
 }
-
-}
-
-namespace gadget
-{
 
 DirectXJoystickStandalone::DirectXJoystickStandalone()
+   : mDxObject(NULL)
+   , mDxJoystick(NULL)
 {
 }
 
@@ -101,7 +69,7 @@ HRESULT DirectXJoystickStandalone::init()
 {
    // Create a DInput object.
    HRESULT err = DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION,
-                                    IID_IDirectInput8, (VOID**) &sDxObject,
+                                    IID_IDirectInput8, (VOID**) &mDxObject,
                                     NULL);
 
    // some error.
@@ -110,27 +78,28 @@ HRESULT DirectXJoystickStandalone::init()
       return err;
    }
 
-   // Look for joystick .
-   sDxObject->EnumDevices(DI8DEVCLASS_GAMECTRL, enumerateJoysticksCallback,
-                          (LPVOID) NULL, (DWORD) DIEDFL_ATTACHEDONLY);
+   // Look for joystick.
+   mDxObject->EnumDevices(DI8DEVCLASS_GAMECTRL, enumerateJoysticksCallback,
+                          (void*) this, (DWORD) DIEDFL_ATTACHEDONLY);
 
-   sDxJoystick->SetDataFormat(&c_dfDIJoystick);
+   mDxJoystick->SetDataFormat(&c_dfDIJoystick);
 
    // Set the cooperative level to let DInput know how this device should
    // interact with the system and with other DInput applications.
-   sDxJoystick->SetCooperativeLevel((HWND) NULL,
+   mDxJoystick->SetCooperativeLevel((HWND) NULL,
                                     DISCL_EXCLUSIVE | DISCL_FOREGROUND);
 
    // Enumerate the axes of the joystick and set the range of each axis found.
-   sDxJoystick->EnumObjects(enumerateAxesCallback, (VOID*) NULL, DIDFT_AXIS);
+   mDxJoystick->EnumObjects(enumerateAxesCallback, (void*) this, DIDFT_AXIS);
 
-   sDxJoystick->Acquire();
+   mDxJoystick->Acquire();
 
-   // Get device specific information
-   sDxJoystick->GetDeviceInfo(&sDxDeviceInfo);
-   mType = sDxDeviceInfo.dwDevType;
-   mProductName = std::string(sDxDeviceInfo.tszProductName);
-   if ( mProductName.size() == 0 )
+   // Get device-specific information.
+   DIDEVICEINSTANCE dx_dev_info;
+   mDxJoystick->GetDeviceInfo(&dx_dev_info);
+   mType = dx_dev_info.dwDevType;
+   mProductName = std::string(dx_dev_info.tszProductName);
+   if ( mProductName.empty() )
    {
       mProductName = "unknown";
    }
@@ -164,9 +133,9 @@ std::string DirectXJoystickStandalone::getProductName()
 HRESULT DirectXJoystickStandalone::poll()
 {
    //DIJOYSTATE  js; // DInput joystick state data-structure
-   sDxJoystick->Poll();
+   mDxJoystick->Poll();
    // FIXME: error tracking
-   sDxJoystick->GetDeviceState(sizeof(DIJOYSTATE), &sJsData);
+   mDxJoystick->GetDeviceState(sizeof(DIJOYSTATE), &mJsData);
    return S_OK;
 }
 
@@ -191,28 +160,63 @@ button is up or does not exist.
 
 DIJOYSTATE DirectXJoystickStandalone::getData()
 {
-   return sJsData;
+   return mJsData;
 }
 
 void DirectXJoystickStandalone::close()
 {
    // Unacquire & release any DirectInputDevice objects.
-   if( sDxJoystick != NULL )
+   if ( mDxJoystick != NULL )
    {
-      sDxJoystick->Unacquire();
-      if ( sDxJoystick )
-      {
-         sDxJoystick->Release();
-         sDxJoystick = NULL;
-      }
+      mDxJoystick->Unacquire();
+      mDxJoystick->Release();
+      mDxJoystick = NULL;
    }
 
    // Release any DirectInput objects.
-   if( sDxObject )
+   if ( mDxObject != NULL )
    {
-      sDxObject->Release();
-      sDxObject = NULL;
+      mDxObject->Release();
+      mDxObject = NULL;
    }
+}
+
+BOOL DirectXJoystickStandalone::enumerateJoysticks(const DIDEVICEINSTANCE* dInstance)
+{
+   // Obtain an interface to the enumerated joystick.
+   HRESULT hr = mDxObject->CreateDevice(dInstance->guidInstance, &mDxJoystick, NULL);
+   return (FAILED(hr) ? DIENUM_CONTINUE : DIENUM_STOP);
+/* // FIXME: allow configurable joystick station
+   static int count = 0;
+   ++count;
+   if( count == 2 )
+   {
+      mDxObject->CreateDevice(dInstance->guidInstance, &mDxJoystick, NULL);
+      return DIENUM_STOP;
+   }
+   return DIENUM_CONTINUE;
+*/
+}
+
+BOOL DirectXJoystickStandalone::enumerateAxes(const DIDEVICEOBJECTINSTANCE* doi)
+{
+   // For each axis enumrated, this function will set
+   // the minimum and maximum range values for it.
+   DIPROPRANGE diprg;
+   diprg.diph.dwSize       = sizeof(DIPROPRANGE);
+   diprg.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+   diprg.diph.dwHow        = DIPH_BYOFFSET;
+   diprg.diph.dwObj        = doi->dwOfs; // Specify the enumerated axis
+   diprg.lMin              = -100;
+   diprg.lMax              = +100;
+
+   // Set the range for the axis
+   if( FAILED(mDxJoystick->SetProperty(DIPROP_RANGE, &diprg.diph)) )
+   {
+      return DIENUM_STOP;
+   }
+
+   return DIENUM_CONTINUE;
 }
 
 } // End of gadget namespace
