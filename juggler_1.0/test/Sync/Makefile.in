@@ -3,8 +3,15 @@
 # $Id$
 # -----------------------------------------------------------------------------
 
+.SUFFIXES: .cpp
+
 srcdir		= @srcdir@
 
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# NOTE: When compiling against the debugging version of VR Juggler, you
+# *MUST* add -D_DEBUG to ${COMPILE} for these test programs to work properly.
+# If compiling against the optimized version, you must add -D_OPT instead.
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
 VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir}
 VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_LIBS_BASIC@
@@ -17,7 +24,7 @@ VPATH		= @srcdir@
 # Binary Interface (ABI) used.  For o32 binaries, -L/usr/lib is the
 # appropriate path.  For n32 binaries, use -L/usr/lib32.  For 64-bit binaries,
 # use -L/usr/lib64.
-EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@
+EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_GL@
 
 SYNC_PROGS	= test testBarrier testCond
 
@@ -31,23 +38,20 @@ all: ${SYNC_PROGS}
 test: test.o
 	${COMPILE} -o $@ test.o ${VJ_LIBS} ${EXTRA_LIBS}
 
-test.o:
-	${COMPILE} -c -o $@ ${srcdir}/test.cpp
+test.o: test.cpp
 
 testBarrier: testBarrier.o
 	${COMPILE} -o $@ testBarrier.o ${VJ_LIBS} ${EXTRA_LIBS}
 
-testBarrier.o:
-	${COMPILE} -c -o $@ ${srcdir}/testBarrier.cpp
+testBarrier.o: testBarrier.cpp
 
 testCond: testCond.o
 	${COMPILE} -o $@ testCond.o ${VJ_LIBS} ${EXTRA_LIBS}
 
-testCond.o:
-	${COMPILE} -c -o $@ ${srcdir}/testCond.cpp
+testCond.o: testCond.cpp
 
 .cpp.o:
-	${COMPILE} -c -o $@ $<
+	${COMPILE} -c ${srcdir}/$<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
