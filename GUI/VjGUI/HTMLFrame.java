@@ -198,7 +198,7 @@ public class HTMLFrame extends JFrame
         if (url == null)
             url = getFileURL (System.getProperty ("VJ_BASE_DIR") + "/share/Data/" + name);
         if (url == null)
-            url = getFileURL ("Data/" + name);
+            url = getFileURL ("share/Data/" + name);
         if (url == null)
             url = ClassLoader.getSystemResource ("VjFiles/" + name);
         if (url == null)
