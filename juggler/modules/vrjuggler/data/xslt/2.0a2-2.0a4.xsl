@@ -135,6 +135,9 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
       <xsl:value-of select="$newline"/>
@@ -174,6 +177,9 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -318,6 +324,9 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -344,7 +353,7 @@
    </xsl:template>
 
    <!-- CyberGlove property "deviceHost". -->
-   <xsl:template match="CyberGlove/deviceHoste">
+   <xsl:template match="CyberGlove/deviceHost">
       <xsl:element name="device_host">
          <xsl:value-of select="." />
       </xsl:element>
@@ -426,6 +435,9 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -527,6 +539,9 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -644,6 +659,9 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -688,6 +706,9 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -878,6 +899,9 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -986,6 +1010,9 @@
          <xsl:attribute name="version">
             <xsl:text>2</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -1044,6 +1071,9 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -1130,6 +1160,9 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -1166,6 +1199,9 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -1271,6 +1307,9 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -1343,6 +1382,16 @@
             <xsl:text>1</xsl:text>
          </xsl:attribute>
          <xsl:value-of select="$newline"/>
+         <xsl:if test="count(./visualID) = 0">
+            <xsl:element name="visual_id">
+               <xsl:text>-1</xsl:text>
+            </xsl:element>
+         </xsl:if>
+         <xsl:if test="count(./fsaaEnable) = 0">
+            <xsl:element name="fsaa_enable">
+               <xsl:text>false</xsl:text>
+            </xsl:element>
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
       <xsl:value-of select="$newline"/>
@@ -1415,6 +1464,9 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -1488,6 +1540,9 @@
          <xsl:attribute name="version">
             <xsl:text>2</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -1592,6 +1647,9 @@
          <xsl:attribute name="version">
             <xsl:text>2</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -1635,6 +1693,9 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -1650,6 +1711,9 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -1887,6 +1951,9 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -1938,6 +2005,9 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -2011,6 +2081,9 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -2200,6 +2273,9 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:if test="count(./deviceHost) = 0">
+            <xsl:element name="device_host" />
+         </xsl:if>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
