@@ -60,6 +60,7 @@ class PfApp;
 class Projection;
 class SimViewport;
 class Viewport;
+class DrawSimInterface;
 
     // Performer Config function called in draw proc after window is set up
 void PFconfigPWin(pfPipeWindow* pWin);
@@ -170,6 +171,9 @@ public:
    /** Shutdown the drawing API */
    virtual void closeAPI();
 
+   /** Return a default Performer simlulator. */
+   virtual DrawSimInterface* createDefaultSimulator();
+   
    /** Update all the projections for the displays
    * @post All windows have the projections correctly set.
    */

@@ -68,8 +68,9 @@
 
 namespace vrj
 {
-
-VRJ_REGISTER_SIM_INTERFACE_CREATOR(PfBasicSimulator);
+// Do not register the default simulator since it will be used 
+// automatically when the factory can not find the specified simulator.
+//VRJ_REGISTER_SIM_INTERFACE_CREATOR(PfBasicSimulator);
 
 PfBasicSimulator::PfBasicSimulator() : mRootWithSim(NULL),
    mSimTree(NULL), mHeadDCS(NULL), mWandDCS(NULL)

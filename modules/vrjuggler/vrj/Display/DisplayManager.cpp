@@ -98,6 +98,12 @@ void DisplayManager::setDrawManager(DrawManager* drawMgr)
    }
 }
 
+DrawManager* DisplayManager::getDrawManager()
+{ 
+   return mDrawManager; 
+}
+
+
 /**
  * Adds the chunk to the configuration.
  * @pre configCanHandle(chunk) == true

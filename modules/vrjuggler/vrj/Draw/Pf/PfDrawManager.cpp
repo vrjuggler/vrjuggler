@@ -56,6 +56,7 @@
 #include <vrj/Draw/Pf/PfDrawManager.h>
 #include <vrj/Draw/Pf/PfApp.h>
 #include <vrj/Draw/Pf/PfSimInterface.h>
+#include <vrj/Draw/Pf/PfBasicSimulator.h>
 #include <vrj/Util/Debug.h>
 
 #include <vrj/Display/Display.h>
@@ -84,6 +85,12 @@ void PfPipeSwapFunc(pfPipe *p, pfPipeWindow *pw);
 
 //vjPfDrawManager* PfDrawManager::_instance = NULL;
 vprSingletonImp(PfDrawManager);
+
+DrawSimInterface* PfDrawManager::createDefaultSimulator()
+{
+   return(new PfBasicSimulator()); 
+}
+
 
 // Configure the Performer display settings that are needed
 // - Number of pipes to allow
