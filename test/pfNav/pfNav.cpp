@@ -76,20 +76,20 @@ public:
    /// Function called before pfSync
    virtual void preSync()
    {
-      vjDEBUG(vjDBG_ALL, 1) << "app::preSync\n" << vjDEBUG_FLUSH;
+      //vjDEBUG(vjDBG_ALL, 1) << "app::preSync\n" << vjDEBUG_FLUSH;
    }
 
    /// Function called after pfSync and before pfDraw
    virtual void preDraw()
    {
-      vjDEBUG(vjDBG_ALL, 1) << "app::preDraw\n" << vjDEBUG_FLUSH;
+      //vjDEBUG(vjDBG_ALL, 1) << "app::preDraw\n" << vjDEBUG_FLUSH;
    }
 
    /// Function called after pfDraw
    virtual void postDraw()
    {
-      vjDEBUG(vjDBG_ALL,1) << "app::postDraw\n" << vjDEBUG_FLUSH;
-  }
+      //vjDEBUG(vjDBG_ALL,1) << "app::postDraw\n" << vjDEBUG_FLUSH;
+   }
 
 public:
    int   wandIndex;     // the index of the wand
