@@ -324,7 +324,7 @@ void Connect::writeControlLoop(void* nullParam) {
 
         while (!periodic_commands.empty()) {
             pcmd = periodic_commands.top();
-            if (current_time.msecf() < (pcmd->next_fire_time * 1000))
+            if (current_time.msecf() < pcmd->next_fire_time)
                 break;
             periodic_commands.pop();
             *outstream << "<protocol handler=\"" << pcmd->getProtocolName()
