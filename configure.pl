@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl -w
 
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
