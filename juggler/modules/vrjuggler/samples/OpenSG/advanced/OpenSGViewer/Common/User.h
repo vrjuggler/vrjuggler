@@ -3,8 +3,13 @@
 
 #include <vpr/vpr.h>
 #include <gmtl/Matrix.h>
+#include <Common/ViewPlatform.h>
 
-class ViewPlatform;
+#include <gadget/Type/DeviceInterface.h>
+#include <gadget/Type/PositionProxy.h>
+#include <gadget/Type/DigitalProxy.h>
+#include <gadget/Type/AnalogProxy.h>
+
 
 /** Representation and holder for User related data.
 *
@@ -49,14 +54,18 @@ public:
    gadget::DigitalInterface& getButton(unsigned buttonNum)
    { return *(mButtonInterfaces[buttonNum]); }
 
+   ViewPlatform& viewPlatform()
+   {  return mViewPlatform;   }
+
 public:
    /**
    * Update the user state
    */
-   void update(ViewPlatform* vp);
+   void update();
    
 protected:
-    gmtl::Matrix44f  M_vwMuser;        /**< Position of user in virtual world */
+   ViewPlatform      mViewPlatform;    /**< The viewplatform for this user */ 
+   gmtl::Matrix44f   M_vwMuser;        /**< Position of user in virtual world */
     //gmtl::Matrix44f  mUserMworld;      /**< Matrix to convert for world coords to virtual world coords */
 
 protected:
@@ -65,7 +74,6 @@ protected:
    gadget::PositionInterface              mWandInterface;      /**< The wand position interface */
    std::vector<gadget::DigitalInterface*> mButtonInterfaces;   /**< Button interfaces */
 };
-
 
 #endif //USER_H
 
