@@ -102,6 +102,11 @@ AC_ARG_WITH(gmtl,
             [  --with-gmtl=<PATH>      Prefix where GMTL is installed  [default=/usr/local]],
             [GMTL_ROOT="$withval"], [GMTL_ROOT=/usr/local])
 
+AC_ARG_WITH(gmtl-includes,
+            [  --with-gmtl-includes=<DIR>
+                          GMTL header file directory      [default=/usr/local/include]],
+            [GMTL_INC_DIR="$withval"], [GMTL_INC_DIR="$GMTL_ROOT/include"])
+
 AC_ARG_WITH(nspr,
             [  --with-nspr=<PATH>      NSPR installation directory     [default=/usr]],
             NSPR_ROOT="$withval", NSPR_ROOT='/usr')
@@ -235,6 +240,7 @@ AC_SUBST(BOOST_ROOT)
 AC_SUBST(BOOST_INCLUDES)
 AC_SUBST(CPPDOM_ROOT)
 AC_SUBST(GMTL_ROOT)
+AC_SUBST(GMTL_INC_DIR)
 
 AC_SUBST(AUDIERE_ROOT)
 AC_SUBST(CPPUNIT_ROOT)
