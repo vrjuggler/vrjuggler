@@ -467,7 +467,7 @@ AC_HEADER_TIME
 AC_CHECK_HEADERS([bstring.h fcntl.h limits.h signal.h strings.h sys/file.h \
                  sys/filio.h sys/ioctl.h sys/sysinfo.h sys/time.h \
                  termios.h unistd.h sys/capability.h sys/stdsyms.h \
-                 uuid/uuid.h])
+                 uuid.h uuid/uuid.h])
 
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
@@ -494,17 +494,44 @@ AC_CHECK_FUNC([gethostbyname], [SOCKET_LIB=''],
     [AC_CHECK_LIB([socket], [gethostbyname], [SOCKET_LIB='-lsocket'])])
 LIBS="${_vpr_save_LIBS}"
 
-_vpr_save_LIBS="$LIBS"
+# Default to using the Leach UUID implementation found in
+# juggler/external/leach-uuid.
 USE_LEACH_UUID='Y'
-AC_CHECK_FUNC([uuid_generate],
-   [AC_DEFINE(HAVE_UUID_GENERATE)
+
+# Test for the DCE 1.1 UUID interface.
+_vpr_save_LIBS="$LIBS"
+AC_CHECK_FUNC([uuid_create],
+   [AC_DEFINE(HAVE_UUID_CREATE)
     UUID_LIB=''
     USE_LEACH_UUID='N'],
-   [AC_CHECK_LIB([uuid], [uuid_generate],
-      [AC_DEFINE(HAVE_UUID_GENERATE)
+   [AC_CHECK_LIB([uuid], [uuid_create],
+      [AC_DEFINE(HAVE_UUID_CREATE)
        UUID_LIB='-luuid'
        USE_LEACH_UUID='N'])])
 LIBS="${_vpr_save_LIBS}"
+
+# If $USE_LEACH_UUID is still "Y", then we did not find uuid_create(3).
+# Let's try uuid_generate(3) instead.  This comes from libuuid (only on
+# Linux), typically.
+if test "x$USE_LEACH_UUID" = "xY" ; then
+   _vpr_save_LIBS="$LIBS"
+   USE_LEACH_UUID='Y'
+   AC_CHECK_FUNC([uuid_generate],
+      [AC_DEFINE(HAVE_UUID_GENERATE)
+       UUID_LIB=''
+       USE_LEACH_UUID='N'],
+      [AC_CHECK_LIB([uuid], [uuid_generate],
+         [AC_DEFINE(HAVE_UUID_GENERATE)
+          UUID_LIB='-luuid'
+          USE_LEACH_UUID='N'])])
+   LIBS="${_vpr_save_LIBS}"
+fi
+
+# If we do not have the DCE 1.1 UUID interface or the libuuid stuff, we have
+# to use the local Leach UUID implementation.
+if test "x$USE_LEACH_UUID" = "xY" ; then
+   AC_DEFINE([VPR_USE_LEACH_UUID])
+fi
 
 # Ensure that we have sched_yield(3).  On Solaris, sched_yield(3) and its
 # synchronization friends are in libposix4.

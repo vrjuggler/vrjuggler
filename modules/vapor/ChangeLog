@@ -2,6 +2,9 @@ DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
 2002-11-04 patrickh vpr::GUID now uses the DCE 1.1 UUID interface internally if
                     it is available.
+                    NEW VERSION: 0.19.6
+2002-11-04 patrickh vpr::GUID now uses the Linux e2fsprogs libuuid API if it is
+                    available.
                     NEW VERSION: 0.19.5
 2002-11-01 aronb    Fixed another nasty bug in vpr::FileHandleUNIX::readn()
            patrickh that caused readn() to read the wrong buffer size.
