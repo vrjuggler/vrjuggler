@@ -44,6 +44,7 @@ bool vjPosition::config(vjConfigChunk *c)
   if(!vjInput::config(c))
      return false;
 
+fprintf(stderr, "<<<<<<<<<<<<<<<<<<<<<<<<<<< In vjPosition::config()\n");
   if ((c->getNum("translate") == 3) && (c->getNum("rotate") == 3))
   {
     // These are the transforms from the base tracker coord system
