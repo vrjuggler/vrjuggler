@@ -178,7 +178,7 @@ JCCL_PATH_CXX([0.2.0], ,
 min_tweek_ver='0.13.1'
 
 TWEEK_PATH_CXX([$min_tweek_ver], [HAVE_TWEEK_CXX='Y'],
-   [AC_MSG_WARN([*** Tweek C++ required for gadget::TweekDevice ***])
+   [AC_MSG_WARN([*** Tweek C++ required for gadget::TweekGadget ***])
     HAVE_TWEEK_CXX='N'
    ])
 
