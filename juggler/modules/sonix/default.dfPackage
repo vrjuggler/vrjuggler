@@ -22,7 +22,7 @@ class __tags {
 class __options {
 }/**
 @__positions <oigroup:<oiref:cpp#Member#ISoundInterface#remove#(##)#:oiref>=29,116,0,0,1:oigroup>
-<oigroup:<oiref:cpp#Class#ISoundInterface:oiref>=10,10,131,176,1:oigroup>
+<oigroup:<oiref:cpp#Class#ISoundInterface:oiref>=10,10,119,176,1:oigroup>
 */
 class __positions {
 }
