@@ -22,7 +22,7 @@
 #endif		/* ifdef HAVE_SYS_PRCTL_H */
 #endif		/* ifndef WIN32 */
 
-#include <limits.h> //sginap
+#include <limits.h>
 #include <iostream.h>
 #include <fstream.h>
 #include <string.h>
@@ -36,13 +36,6 @@
 #include <Threads/vjThread.h>
 #include <Config/vjConfigChunkDB.h>
 
-// Define a temporary macro for replacing all sginap(2) calls on HP-UX with
-// a call to usleep(2).
-/*
-#ifdef VJ_OS_HPUX
-#   define sginap(x)	(usleep(x * 333333))
-#endif
-*/
 
 typedef unsigned char byte;
 
