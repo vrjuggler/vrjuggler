@@ -82,7 +82,7 @@ public:
    /**
     * Configures the user object.
     * @post User has valid ids (int and string).
-    * @posr Positional device for user location has been set.
+    *       Positional device for user location has been set.
     */
    virtual bool config(jccl::ConfigElementPtr element);
 
