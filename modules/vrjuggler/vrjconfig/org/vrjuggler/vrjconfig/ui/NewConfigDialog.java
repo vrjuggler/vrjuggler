@@ -154,7 +154,7 @@ public class NewConfigDialog
          return;
       }
       
-      File file = new File(getDirectory(), getName());
+      File file = new File(getDirectory(), getFileName());
       // If the file does not exist the user that they have entered an invalid
       // location.
       // If file exists ask the user if we should overwrite(delete it now)
@@ -192,7 +192,7 @@ public class NewConfigDialog
    /**
     * Gets the name of the configuration file.
     */
-   public String getName()
+   public String getFileName()
    {
       return nameTxt.getText().trim();
    }
