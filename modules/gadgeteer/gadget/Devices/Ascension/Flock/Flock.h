@@ -123,16 +123,6 @@ class Flock : public Input, public Position {
     //: return what chunk type is associated with this class.
     static std::string getChunkType() { return std::string("Flock");}
 
-    /** Get current data from the receiver.
-     *  @arg dev - the receiver number.  Clients of juggler should access
-     *             tracker receivers as [0-n].  For example, if you have
-     *             receivers 1, 2, and 4, with transmitter on 3, then
-     *             you can access them as devs 0, 1, and 2.
-     *  @return a pointer to the receiver's current PositionData.
-     */
-    PositionData* getPositionData (int dev=0);
-
-
     //: see if the flock is active or not
     inline const bool& isActive() const { return mFlockOfBirds.isActive(); }
 
@@ -146,7 +136,6 @@ class Flock : public Input, public Position {
     //  this will be a string in the form of the native OS descriptor <BR>
     //  ex: unix - "/dev/ttyd3", win32 - "COM3"
     inline const char*  getPort() const { return mFlockOfBirds.getPort(); }
-
 
     //: set the baud rate
     //  this is generally 38400, consult flock manual for other rates. <BR>
@@ -259,11 +248,8 @@ private:
 
     int getBirdIndex(int birdNum, int bufferIndex);
 
-    vpr::Thread*   mThread;      // The thread doing the flock sampling
-
-    PositionData* mData;
-
-    FlockStandalone mFlockOfBirds;
+    vpr::Thread*     mThread;      // The thread doing the flock sampling    
+    FlockStandalone  mFlockOfBirds;
 };
 
 };

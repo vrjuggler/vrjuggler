@@ -77,13 +77,6 @@ public:
    //@}
 
 
-    /** Get current data from the bird.
-     *  @arg dev - the bird number.  Probably 0.
-     *  @return a pointer to the bird's current PositionData.
-     */
-    PositionData* getPositionData (int dev=0);
-
-
    /** @name Bird settings functions
     *
     *  Functions for chaning the Bird settings, set functions can only be
@@ -121,9 +114,6 @@ private:
    char repRate;
    BIRD_HEMI hemisphere;
    BIRD_FILT filter;
-
-    PositionData* mData;
-
 };
 
 };

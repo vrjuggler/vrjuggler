@@ -58,20 +58,6 @@
 namespace gadget
 {
 
-// Helper to return the index for mData array
-// given the birdNum we are dealing with and the bufferIndex
-// to get
-//! ARGS: birdNum - The number of the bird we care about
-//! ARGS:bufferIndex - the value of current, progress, or valid (it is an offset in the array)
-// XXX: We are going to say the birds are 0 based
-int Flock::getBirdIndex(int birdNum, int bufferIndex)
-{
-   int ret_val = (birdNum*3)+bufferIndex;
-   vprASSERT((ret_val >= 0) && (ret_val < ((getNumBirds()+1)*3)));
-   //assertIndexes();   // Can't assert here because it is possible the indexes are switching right now
-   return ret_val;
-}
-
 //: Configure Constructor
 // Give:                                                 <BR>
 //   port - such as "/dev/ttyd3"                         <BR>
@@ -107,8 +93,7 @@ Flock::Flock(const char* const port,
                       report,
                       calfile)
 {
-   mThread = NULL;
-   mData = NULL;
+   mThread = NULL;   
 }
 
 bool Flock::config(jccl::ConfigChunkPtr c)
@@ -167,9 +152,7 @@ bool Flock::config(jccl::ConfigChunkPtr c)
 
 Flock::~Flock()
 {
-   this->stopSampling();
-   if (mData != NULL)
-      delete[] mData;
+   this->stopSampling();   
 }
 
 void Flock::controlLoop(void* nullParam)
@@ -195,16 +178,6 @@ int Flock::startSampling()
 
    if (mThread == NULL)
    {
-      if (mData != NULL)
-         delete[] mData;
-
-      // Allocate buffer space for birds
-      int numbuffs = (mFlockOfBirds.getNumBirds()+1)*3;
-      mData = new PositionData[numbuffs];
-
-      // Reset current, progress, and valid indices
-      resetIndexes();
-
          vprDEBUG(vrjDBG_INPUT_MGR,1) << "    Getting flock ready....\n" << vprDEBUG_FLUSH;
       mFlockOfBirds.start();
 
@@ -243,6 +216,8 @@ int Flock::startSampling()
 
 int Flock::sample()
 {
+   std::vector< gadget::PositionData > cur_samples(mFlockOfBirds.getNumBirds());
+
    if (this->isActive() == false)
       return 0;
 
@@ -252,54 +227,52 @@ int Flock::sample()
 
    // get an initial timestamp for this entire sample. we'll copy it into
    // each PositionData for this sample.
-   int firstindex;
-   if (mFlockOfBirds.getNumBirds() > 0) {
-       firstindex = getBirdIndex (0, progress);
-       mData[firstindex].setTime();
+   if (!cur_samples.empty()) {
+       cur_samples[0].setTime();
    }
 
    vpr::Thread::yield();
 
    // For each bird
-   for (i=0; i < (mFlockOfBirds.getNumBirds()); i++)
+   for (i=0; i < (mFlockOfBirds.getNumBirds()); ++i)
    {
-      // Get the index to the current read buffer
-      int index = getBirdIndex(i,progress);
-
-      // We add 1 to "i" to account for the fact that FlockStandalone is
-      // 1-based
-      mData[index].getPositionData()->makeZYXEuler(mFlockOfBirds.zRot( i+1 ),
-                                                   mFlockOfBirds.yRot( i+1 ),
-                                                   mFlockOfBirds.xRot( i+1 ));
-
-      mData[index].getPositionData()->setTrans(mFlockOfBirds.xPos( i+1 ),
-                                               mFlockOfBirds.yPos( i+1 ),
-                                               mFlockOfBirds.zPos( i+1 ));
-      mData[index].setTime (mData[firstindex].getTime());
-
-
-      //if (i==1)
-         //vprDEBUG(vprDBG_ALL,2) << "Flock: bird1:    orig:" << Coord(theData[index]).pos << std::endl << vprDEBUG_FLUSH;
-
       // Transforms between the cord frames
       // See transform documentation and VR System pg 146
       // Since we want the reciver in the world system, Rw
       // wTr = wTt*tTr
       vrj::Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
-      // is all this copying really necessary?
+
+      // We add 1 to "i" to account for the fact that FlockStandalone is
+      // 1-based
+      transmitter_T_reciever.makeZYXEuler(mFlockOfBirds.zRot( i+1 ),
+                                                   mFlockOfBirds.yRot( i+1 ),
+                                                   mFlockOfBirds.xRot( i+1 ));
+
+      transmitter_T_reciever.setTrans(mFlockOfBirds.xPos( i+1 ),
+                                               mFlockOfBirds.yPos( i+1 ),
+                                               mFlockOfBirds.zPos( i+1 ));
+      
+      //if (i==1)
+         //vprDEBUG(vprDBG_ALL,2) << "Flock: bird1:    orig:" << Coord(theData[index]).pos << std::endl << vprDEBUG_FLUSH;
+
+      // XXX: is all this copying really necessary?
 
       world_T_transmitter = xformMat;                    // Set transmitter offset from local info
-      transmitter_T_reciever = *(mData[index].getPositionData());           // Get reciever data from sampled data
+      //transmitter_T_reciever = *(mData[index].getPositionData());           // Get reciever data from sampled data
       world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);   // compute total transform
-      *(mData[index].getPositionData()) = world_T_reciever;                                     // Store corrected xform back into data
+      
+      *(cur_samples[i].getPositionData()) = world_T_reciever;                                     // Store corrected xform back into data
+      cur_samples[i].setTime (cur_samples[0].getTime());
 
 
       //if (i == 1)
          //vprDEBUG(vprDBG_ALL,2) << "Flock: bird1: xformed:" << Coord(theData[index]).pos << std::endl << vprDEBUG_FLUSH;
    }
 
-   // Locks and then swaps the indices
-   swapValidIndexes();
+   // Locks and then swaps the indices.
+   mPosSamples.lock();
+   mPosSamples.addSample(cur_samples);
+   mPosSamples.unlock();
 
    return 1;
 }
@@ -336,28 +309,12 @@ int Flock::stopSampling()
 }
 
 
-PositionData* Flock::getPositionData (int dev) {
-    if (this->isActive() == false)
-        return NULL;
-    else
-        return &mData[getBirdIndex (dev, current)];
-}
-
-
 void Flock::updateData()
 {
    if (this->isActive() == false)
       return;
 
-   // this unlocks when this object is destructed (upon return of the function)
-   vpr::Guard<vpr::Mutex> updateGuard(lock);
-
-   // Copy the valid data to the current data so that both are valid
-   for(int i=0;i<getNumBirds();i++)
-      mData[getBirdIndex(i,current)] = mData[getBirdIndex(i,valid)];   // first hand
-
-   // Locks and then swap the indicies
-   swapCurrentIndexes();
+   mPosSamples.swapBuffers();
 
    return;
 }

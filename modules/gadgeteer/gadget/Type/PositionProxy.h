@@ -159,7 +159,7 @@ public:
    }
 
 private:
-    PositionData     mPositionData;
+   PositionData      mPositionData;
    vrj::Matrix       mMatrixTransform;    // reciever_t_modifiedReciever
    int               mUnitNum;
    bool              mETrans;             // Are transformation enabled;
