@@ -180,12 +180,12 @@ Options:
         [--exec-prefix[=DIR]]   Print the executable prefix or set an
                                 alternate executable prefix to use when
                                 printing paths
-        [--version]             Print the installed Gadgeteer's version number
-        [--cxxflags [N32|64]]   Print the Gadgeteer-specific flags for the C++
+        [--version]             Print the installed Sonix' version number
+        [--cxxflags [N32|64]]   Print the Sonix-specific flags for the C++
                                 compiler
         [--includes]            Print out only the header path extension
                                 arguments
-        [--libs [N32|64]]       Print the basic Gadgeteer-specific libraries
+        [--libs [N32|64]]       Print the basic Sonix-specific libraries
         [--extra-libs [N32|64]] Print the extra linker options needed for
                                 making an executable
         [--all]                 Print all the flags used for compiling or
