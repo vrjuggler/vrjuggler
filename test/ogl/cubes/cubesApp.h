@@ -112,7 +112,7 @@ public:
    {
        vjDEBUG(2) << "cubesApp::preDraw()" << endl << vjDEBUG_FLUSH;
 
-       //updateNavigation();       // Update the navigation matrix
+       updateNavigation();       // Update the navigation matrix
    }
    
    /// Function called after drawing has been triggered but BEFORE it completes
@@ -164,9 +164,9 @@ private:
    {
       vjDEBUG(2) << "\n--- myDraw() ---\n" << vjDEBUG_FLUSH;
       
-      //static const float SCALE = 100;
-      static const float SCALE = 10;
-      static const float INCR = 0.25;
+      static const float SCALE = 100;
+      //static const float SCALE = 10;
+      static const float INCR = 0.1;
    
       glClearColor(0.0, 0.0, 0.0, 0.0);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -176,7 +176,7 @@ private:
          glMultMatrixf(navMatrix.getFloatPtr());
          
          
-      /*
+      
          //---- Main box loop -----///
          for (float x=0;x<1;x += INCR)
             for (float y=0;y<1; y += INCR)
@@ -185,13 +185,14 @@ private:
                   glColor3f(x, y, z);     // Set the Color
                   glPushMatrix();
                      glTranslatef( (x-0.5)*SCALE, (y-0.5)*SCALE, (z-0.5)*SCALE);
-                     glScalef(5.0f, 5.0f, 5.0f);
+                     glScalef(1.5f, 1.5f, 1.5f);
    		            drawCube();
                   glPopMatrix();
                }
-       */  
+         
 
        
+        /*
             // --- Draw corner boxes --- //
          for(float x=0;x<=1.0;x++)
             for(float y=0.0;y<=1.0;y++)
@@ -207,37 +208,7 @@ private:
                   }
                   glPopMatrix();
                }
-       
-      glPopMatrix();
-   
-         // -- Draw box on wand --- //
-      
-      
-      vjMatrix* wandMatrix;
-      vjMatrix* wandEndMatrix;
-      wandMatrix = mWand->GetData();
-      wandEndMatrix = mWandEnd->GetData();
-
-      glPushMatrix();         
-         // cout << "wand:\n" << *wandMatrix << endl;
-         glMultMatrixf(wandMatrix->getFloatPtr());
-         glColor3f(1.0f, 0.0f, 1.0f);
-         glScalef(0.25f, 0.25f, 0.25f);
-         drawCube();
-
-         glBegin(GL_LINES);
-            glColor3f(0.0,1.0,0.0);
-            glVertex3f(0.0,0.0,0.0);
-            glVertex3f(8.0,0.0,0.0);
-         glEnd();
-      glPopMatrix();
-
-      glPushMatrix();
-         // cout << "End:\n" << *wandEndMatrix << endl;
-         glMultMatrixf(wandEndMatrix->getFloatPtr());
-         glColor3f(0.0f, 1.0f, 1.0f);
-         glScalef(0.1f, 0.1f, 0.1f);
-         drawCube();
+        */
 
       glPopMatrix();
       
@@ -293,7 +264,7 @@ private:
 
       glCallList(contextData().cubeDLIndex);
       
-      drawbox(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5, GL_QUADS);
+      //drawbox(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5, GL_QUADS);
    }
    
    
