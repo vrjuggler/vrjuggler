@@ -51,10 +51,14 @@ vpr::TSTable vpr::BaseThread::gTSTable;
 	// ---- Ouput operator ---- //
 std::ostream& vpr::operator<<(std::ostream& out, vpr::BaseThread* threadPtr)
 {
-   if(threadPtr != NULL)
+   if (threadPtr != NULL)
+   {
       threadPtr->outStream(out);
+   }
    else
+   {
       out << " TID: N/A  ";
+   }
 
    return out;
 }
