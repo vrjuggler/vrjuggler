@@ -135,7 +135,7 @@
       </property>
       <property valuetype="float" variable="false" name="measurement_rate">
          <help>Measurement rate for the chassis.  This must be set to a valid value based on the configuration of the hardware and the allowed values documented in the MotionStar Wireless manual. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0b1/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
-         <value label="Chassis Measurement Rate" defaultvalue="0.0"/>
+         <value label="Chassis Measurement Rate" defaultvalue="86.1"/>
       </property>
       <upgrade_transform>
          <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
