@@ -1319,7 +1319,7 @@ if test "x${_with_sl}" != "xno" ; then
                           AC_MSG_WARN(*** SL library will not be used ***) ]))
 
         CPPFLAGS="${_vjsave_CPPFLAGS}"
-        LDLFAGS="${_vjsave_LDLFAGS}"
+        LDFLAGS="${_vjsave_LDFLAGS}"
         LIBS="${_vjsave_LIBS}"
 
         if test "$SL" = "Y" ; then
