@@ -133,14 +133,23 @@ public:
       return mIpStr;
    }
 
+   /** Get an unused TCP port number */
+   vpr::Uint32 getUnassignedTcpPortNumber();
+
+   /** Get an unused TCP port number */
+   vpr::Uint32 getUnassignedUdpPortNumber();
+
+
 private:
    vpr::Uint32 mIndex;
    vpr::Uint8  mType;            /**< ???? - Int value from tiers for WAN/LAN, etc*/
    std::string mIpStr;           /**< String for the IP address */
    vpr::Uint32 mIpAddr;          /**< IP Address of the node */
 
-   std::map<vpr::Uint32, vpr::SocketImplSIM*> mStreamSocketMap;
-   std::map<vpr::Uint32, vpr::SocketImplSIM*> mDgramSocketMap;
+   
+   typedef std::map<vpr::Uint32, vpr::SocketImplSIM*>  socket_map_t;
+   socket_map_t mStreamSocketMap;   /**< Map of all the TCP type sockets on this node */
+   socket_map_t mDgramSocketMap;    /**< Map of all the UDP type sockets on this node */
 };
 
 } // End of sim namespace
