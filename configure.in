@@ -1649,27 +1649,45 @@ if test "$OS_TYPE" = "UNIX" ; then
     if test "$PLATFORM" = "IRIX" ; then
         APP_VJ_LIBS_BEGIN="-B static -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
         APP_VJ_LIBS_END=''
-        APP_VJ_LIBS_BASIC='-lJuggler'
+        APP_VJ_LIBS_BASIC='-lJuggler -lJuggler_utils'
 
         APP_VJ_LIBS_BEGIN_INST="-B dynamic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
         APP_VJ_LIBS_END_INST=''
-        APP_VJ_LIBS_BASIC_INST='-lJuggler'
+        APP_VJ_LIBS_BASIC_INST='-lJuggler -lJuggler_utils'
 
         APP_EXTRA_LIBS_BEGIN='-B dynamic'
         APP_EXTRA_LIBS_END='-lm'
+    dnl # If we are compiling with GNU C++, we can pass -Bstatic and -Bdynamic
+    dnl # to the GNU linker to link only the VR Juggler libs statically.
+    elif test "x$GXX" = "xyes" ; then
+        APP_VJ_LIBS_BEGIN="-Wl,-Bstatic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
+        APP_VJ_LIBS_END=''
+        APP_VJ_LIBS_BASIC='-lJuggler -lJuggler_utils'
+
+        APP_VJ_LIBS_BEGIN_INST="-Wl,-Bdynamic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
+        APP_VJ_LIBS_END_INST="$APP_VJ_LIBS_END"
+        APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
+
+        APP_EXTRA_LIBS_BEGIN='-Wl,-Bdynamic'
+        APP_EXTRA_LIBS_END="-lm"
     else
         dnl # For now, we are disabling static linking for the sample
         dnl # applications when compiled in a developer's build tree.  This
         dnl # is only the case on non-IRIX platforms.
         APP_VJ_LIBS_BEGIN="-L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
         APP_VJ_LIBS_END=''
-        APP_VJ_LIBS_BASIC='-lJuggler'
+        APP_VJ_LIBS_BASIC='-lJuggler -lJuggler_utils'
 
         APP_VJ_LIBS_BEGIN_INST="$APP_VJ_LIBS_BEGIN"
         APP_VJ_LIBS_END_INST="$APP_VJ_LIBS_END"
         APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
 
         APP_EXTRA_LIBS_END="-lm"
+    fi
+
+    dnl # FreeBSD needs to use libcompat for linking.
+    if test "x$PLATFORM" = "xFreeBSD" ; then
+        APP_EXTRA_LIBS_END="$APP_EXTRA_LIBS_END -lcompat"
     fi
 
     APP_VJ_LIBS_GL="-lJuggler_ogl"
@@ -1685,7 +1703,7 @@ if test "$OS_TYPE" = "UNIX" ; then
 elif test "$OS_TYPE" = "Win32" ; then
     APP_VJ_LIBS_BEGIN="-link -libpath:\$(VJ_BASE_DIR)/lib/debug"
     APP_VJ_LIBS_END=''
-    APP_VJ_LIBS_BASIC='Juggler.lib'
+    APP_VJ_LIBS_BASIC='Juggler.lib Juggler_utils.lib'
     APP_VJ_LIBS_BEGIN_INST="$APP_VJ_LIBS_BEGIN"
     APP_VJ_LIBS_END_INST="$APP_VJ_LIBS_END"
     APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
