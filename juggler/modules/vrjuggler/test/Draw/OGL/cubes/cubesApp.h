@@ -61,12 +61,10 @@ class ContextData
 public:
    ContextData()
    {
-      firstTime = true;
       dlIndex   = -1;
    }
 
 public:
-   bool  firstTime;
    int   dlIndex;
    int   maxIndex;     // For debugging purposes only!
 };
