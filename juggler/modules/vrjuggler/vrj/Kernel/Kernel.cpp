@@ -92,15 +92,14 @@ void vjKernel::controlLoop(void* nullParam)
        performanceEnabled = (*perfchunks)[0]->getProperty ("KernelEnabled");
        delete perfchunks;
    }
-   perfBuffer = new vjPerfDataBuffer ("Kernel loop",
-				      500, 7, performanceEnabled);
+   perfBuffer = new vjPerfDataBuffer ("Kernel loop", 500, 7);
    environmentManager->addPerfDataBuffer (perfBuffer);
 
 
    //while(!Exit)
    while (1)
    {
-       // perfBuffer->set (0);
+       //perfBuffer->set (0);
          vjDEBUG(3) << "vjKernel::controlLoop: app->preDraw()\n" << vjDEBUG_FLUSH;
       app->preDraw();         // PREDRAW: Do Any application pre-draw stuff
          perfBuffer->set (0);
@@ -168,6 +167,8 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB)
          added_chunk = displayManager->configAdd(chunks[i]);
       if(drawManager->configCanHandle(chunks[i]))        // drawMgr
          added_chunk = drawManager->configAdd(chunks[i]);
+      if(environmentManager->configCanHandle(chunks[i])) // envMgr
+	  added_chunk = environmentManager->configAdd(chunks[i]);
       if(app->configCanHandle(chunks[i]))                // App
          added_chunk = app->configAdd(chunks[i]);
 

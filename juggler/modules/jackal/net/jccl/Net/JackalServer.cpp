@@ -20,7 +20,8 @@
 
 vjEnvironmentManager::vjEnvironmentManager():
                           connections(),
-                          updaters() {
+                          updaters(),
+                          perf_buffers() {
 
     /* I want some hardcoded defaults, yes? */
     Port = 4450;
@@ -32,7 +33,6 @@ vjEnvironmentManager::vjEnvironmentManager():
     perf_buffer_reader = new vjTuPerfBufReader(NULL, 500);
     updaters.push_back (perf_buffer_reader);
 
-    //reconfigure();
 }
 
 
@@ -44,7 +44,7 @@ vjEnvironmentManager::~vjEnvironmentManager() {
 
 
 void vjEnvironmentManager::activate() {
-    reconfigure();
+    //reconfigure();
 
     /* start updaters */
     for (int i = 0; i < updaters.size(); i++) {
@@ -142,19 +142,35 @@ bool vjEnvironmentManager::isAccepting() {
 
 
 void vjEnvironmentManager::addPerfDataBuffer (vjPerfDataBuffer *v) {
-    perf_buffer_reader->addBuffer(v);
+    perf_buffers.push_back(v);
+    if (configuredToActivate(v)) {
+	v->activate();
+	perf_buffer_reader->addBuffer(v);
+    }
 }
 
 
-void vjEnvironmentManager::removePerfDataBuffer (vjPerfDataBuffer *v) {
-    perf_buffer_reader->removeBuffer(v);
+void vjEnvironmentManager::removePerfDataBuffer (vjPerfDataBuffer *b) {
+    std::vector<vjPerfDataBuffer*>::iterator it;
+
+    b->deactivate();
+
+    // this is one of those things I really hate:
+    for (it = perf_buffers.begin(); it != perf_buffers.end(); it++) {
+        if (*it == b) {
+            perf_buffers.erase(it);
+            break;
+        }
+    }
+
+    perf_buffer_reader->removeBuffer(b);
 }
 
 
 
-vjConnect* vjEnvironmentManager::getConnect (char* s) {
+vjConnect* vjEnvironmentManager::getConnect (std::string s) {
     for (int i = 0; i < connections.size(); i++)
-	if (!strcasecmp (s, connections[i]->name))
+	if (s == connections[i]->name)
 	    return connections[i];
     return NULL;
 }
@@ -190,72 +206,72 @@ void vjEnvironmentManager::controlLoop (void* nullParam) {
 
 
 
-void vjEnvironmentManager::reconfigure () {
-    int i;
-    vjConfigChunk *c;
-    std::vector<vjConfigChunk*>* v;
-    vjConnect* vn;
-    char* s;
-    bool networkingchanged;
-    int newport;
+// void vjEnvironmentManager::reconfigure () {
+//     int i;
+//     vjConfigChunk *c;
+//     std::vector<vjConfigChunk*>* v;
+//     vjConnect* vn;
+//     char* s;
+//     bool networkingchanged;
+//     int newport;
 
-    chunkdb = vjKernel::instance()->getInitialChunkDB();
-    v = chunkdb->getMatching ("EnvironmentManager");
+//     chunkdb = vjKernel::instance()->getInitialChunkDB();
+//     v = chunkdb->getMatching ("EnvironmentManager");
 
-    if (v->size() == 0) {
-	vjDEBUG(1) << "ERROR: vjEnvironmentManager::reconfigure()"
-		   << " - can't find ConfigChunk. Using defaults.\n"
-		   << vjDEBUG_FLUSH;
-	return;
-    }
-    if (v->size() > 1) {
-	vjDEBUG(2) << "vjEnvironmentManager::reconfigure()"
-		   << " - multiple EM ConfigChunks found. Using "
-		   << "first one.\n" << vjDEBUG_FLUSH;
-    }
+//     if (v->size() == 0) {
+// 	vjDEBUG(1) << "ERROR: vjEnvironmentManager::reconfigure()"
+// 		   << " - can't find ConfigChunk. Using defaults.\n"
+// 		   << vjDEBUG_FLUSH;
+// 	return;
+//     }
+//     if (v->size() > 1) {
+// 	vjDEBUG(2) << "vjEnvironmentManager::reconfigure()"
+// 		   << " - multiple EM ConfigChunks found. Using "
+// 		   << "first one.\n" << vjDEBUG_FLUSH;
+//     }
 
-    c = (*v)[0];
-    delete v;
+//     c = (*v)[0];
+//     delete v;
 
-    configured_to_accept = c->getProperty ("AcceptConnections");
-    newport = c->getProperty("Port");
+//     configured_to_accept = c->getProperty ("AcceptConnections");
+//     newport = c->getProperty("Port");
 
-    if (newport == 0)
-	newport = Port;
-    if (newport != Port || configured_to_accept != isAccepting())
-	networkingchanged = 1;
+//     if (newport == 0)
+// 	newport = Port;
+//     if (newport != Port || configured_to_accept != isAccepting())
+// 	networkingchanged = 1;
 
-    /* BUG: we need to
-     *    a) delete current connects that aren't in v
-     *    b) not add connects for ones that are in v
-     * otherwise we won't reconfigure correctly
-     */
-    v = chunkdb->getMatching ("FileConnect");
-    for (i = 0; i < v->size(); i++) {
-	vn = new vjConnect ((*v)[i]);
-	connections.push_back (vn);
-	vn->startProcess();
-    }
-    delete v;
+//     /* BUG: we need to
+//      *    a) delete current connects that aren't in v
+//      *    b) not add connects for ones that are in v
+//      * otherwise we won't reconfigure correctly
+//      */
+//     v = chunkdb->getMatching ("FileConnect");
+//     for (i = 0; i < v->size(); i++) {
+// 	vn = new vjConnect ((*v)[i]);
+// 	connections.push_back (vn);
+// 	vn->startProcess();
+//     }
+//     delete v;
 
-    s = c->getProperty ("PerformanceTarget");
-    perf_buffer_reader->setTarget(getConnect(s));
-    delete s;
+//     s = c->getProperty ("PerformanceTarget");
+//     perf_buffer_reader->setTarget(getConnect(s));
+//     delete s;
 
-    if (networkingchanged) {
-	Port = newport;
-	if (isAccepting())
-	    rejectConnections();
-	if (configured_to_accept)
-	    acceptConnections();
-	else
-	    killConnections();
-    }
+//     if (networkingchanged) {
+// 	Port = newport;
+// 	if (isAccepting())
+// 	    rejectConnections();
+// 	if (configured_to_accept)
+// 	    acceptConnections();
+// 	else
+// 	    killConnections();
+//     }
 
-    /* repeat above w/ various tu's */
+//     /* repeat above w/ various tu's */
 
 
-}
+// }
 
 
 
@@ -264,4 +280,71 @@ void vjEnvironmentManager::sendRefresh() {
 	connections[i]->sendRefresh();
     }
 
+}
+
+
+
+//: ConfigChunkHandler stuff
+//! PRE: configCanHandle(chunk) == true
+//! RETURNS: success
+bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) { 
+    bool networkingchanged;
+    int newport;
+
+    cout << "EM configAdd recv'd chunk:\n" << *chunk << endl;
+    std::string s = chunk->getType();
+    if (s == "EnvironmentManager") {
+	configured_to_accept = chunk->getProperty ("AcceptConnections");
+	newport = chunk->getProperty("Port");
+
+	if (newport == 0)
+	    newport = Port;
+	if (newport != Port || configured_to_accept != isAccepting())
+	    networkingchanged = 1;
+	std::string s = chunk->getProperty ("PerformanceTarget");
+	perf_buffer_reader->setTarget(getConnect(s));
+
+	if (networkingchanged) {
+	    Port = newport;
+	    if (isAccepting())
+		rejectConnections();
+	    if (configured_to_accept)
+		acceptConnections();
+	    else
+		killConnections();
+	}
+	return true;
+    }
+    else if (s == "PerfMeasure") {
+	return false;
+    }
+    else if (s == "FileConnect") {
+	vjConnect* vn = new vjConnect (chunk);
+	connections.push_back (vn);
+	vn->startProcess();
+	return true;
+    }
+    vjDEBUG(1) << "EnvironmentManager::configAdd - Unrecognized Chunk " + s << endl 
+	       << vjDEBUG_FLUSH;
+    return false; 
+}
+
+//: Remove the chunk from the current configuration
+//! PRE: configCanHandle(chunk) == true
+//!RETURNS: success
+bool vjEnvironmentManager::configRemove(vjConfigChunk* chunk)
+{ return false; }
+    
+//: Can the handler handle the given chunk?
+//! RETURNS: true - Can handle it
+//+          false - Can't handle it
+bool vjEnvironmentManager::configCanHandle(vjConfigChunk* chunk) {
+    std::string s = chunk->getType();
+    if (s == "EnvironmentManager")
+	return true;
+    if (s == "PerfMeasure")
+	return true;
+    if (s == "FileConnect")
+	return true;
+    return false;
 }

@@ -10,6 +10,8 @@ class vjGlDrawManager;
 #include <Sync/vjCond.h>
 #include <Sync/vjSemaphore.h>
 
+#include <Performance/vjPerfDataBuffer.h>
+
 
 //--------------------------------------------------------------------------------------
 //: Handles the rendering on multiple GLWindows in a single process.
@@ -32,7 +34,13 @@ public:
         mActiveThread(NULL), mPipeNum(num)
    {
       mThreadRunning = false;
-   }
+      char* namebuf = new char[42];
+      sprintf (namebuf, "vjGlPipe %d", (int)this);
+      // we need to check if we should be enabled... It looks like vjGlPipe
+      // is gonna need a configure method, though...
+      mPerfBuffer = new vjPerfDataBuffer (namebuf, 500, 36);
+
+    }
 
       //: Start the pipe running
       //! PRE: The pipe should not have a thread of control yet
@@ -139,6 +147,8 @@ private:
 
    vjThread*   mActiveThread;      //: The thread running this object
    bool        mThreadRunning;      //: Do we have a running thread?
+
+    vjPerfDataBuffer* mPerfBuffer;  //: Performance data for this pipe
 };
 
 #endif
