@@ -78,13 +78,12 @@ public class EnumeratedPropertyValueEditor
       else
       {
          Map enums = mPropertyDef.getEnums();
-         if (enums.containsKey(text))
+         if (!enums.containsKey(text))
          {
-            setValue(enums.get(text));
+            // If we got here, we didn't get a valid string value
+            throw new IllegalArgumentException(text);
          }
-
-         // If we got here, we didn't get a valid string value
-         throw new IllegalArgumentException(text);
+         setValue(enums.get(text));
       }
    }
 
