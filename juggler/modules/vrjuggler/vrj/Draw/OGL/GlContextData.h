@@ -35,6 +35,7 @@
 //#pragma once
 
 #include <vrj/vrjConfig.h>
+#include <vector>
 #include <vrj/Draw/OGL/GlDrawManager.h>
 #include <vrj/Util/Debug.h>
 #include <vpr/Thread/TSObjectProxy.h>
