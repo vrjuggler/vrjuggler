@@ -41,6 +41,7 @@
 #include <gadget/Devices/Sim/SimInput.h>
 #include <gadget/Type/InputMixer.h>
 
+#define TRACKD_DLL_EXPORTS 0
 #include <trackdAPI.h>
 
 namespace gadget
