@@ -109,7 +109,7 @@ namespace vpr
       {
          out << (*iter).getName() << " total calls: " << (*iter).getTotalCalls()
              << " total time: " << (*iter).getTotalTime().msecf()
-             << " ave: " << (*iter).getAverage().msecf()
+             << " avg: " << (*iter).getAverage().msecf()
              << " history: ";
 
          ProfileNode::NodeHistoryRange p = (*iter).getNodeHistoryRange();

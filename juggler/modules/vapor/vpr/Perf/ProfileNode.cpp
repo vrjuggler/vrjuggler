@@ -162,7 +162,7 @@ namespace vpr
          << clrSetBOLD(clrRED) << getName() << clrRESET
          << clrSetBOLD(clrYELLOW) << " total calls: " << clrRESET << getTotalCalls()
          << clrSetBOLD(clrYELLOW) << " total time: " << clrRESET << getTotalTime().msecf()
-         << clrSetBOLD(clrYELLOW) << " ave: " << clrRESET
+         << clrSetBOLD(clrYELLOW) << " avg: " << clrRESET
          << getAverage().msecf() << std::endl << vprDEBUG_FLUSH;
 
       std::stringstream s;
