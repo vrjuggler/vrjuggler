@@ -1,6 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
-Sep-23-2002 nonchocoboy VRJConfig can now successfully close files.
+Sep-23-2002 nonchocoboy DataSources are reference counted in the ConfigBroker.
 Sep-20-2002 jahare      Removed old JCCL network code.
 Sep-15-2002 nonchocoboy ConfigChunks are now created on the fly as needed when
                         requested from a ConfigChunkDB. This allows client code
