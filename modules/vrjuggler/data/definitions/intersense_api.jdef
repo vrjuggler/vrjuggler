@@ -12,11 +12,11 @@
       <parent>analog_device</parent>
       <category>/Devices</category>
       <property valuetype="string" variable="false" name="driver">
-         <help>Each value is the full path to a driver DSO (.so or .dll, usually).  The path may make use of environment variables.  For example: ${VJ_BASE_DIR}/lib/gadgeteer/drivers/libPinchGlove.so.</help>
-         <value label="DSO Path" defaultvalue=""/>
+         <help>The directory containing the DLL Intersense distributes for communicating with their hardware.</help>
+         <value label="Intersense DLL Path" defaultvalue=""/>
       </property>
       <property valuetype="string" variable="false" name="port">
-         <help>Serial port the Flock is attached to</help>
+         <help>Serial port the Intersense is attached to</help>
          <value label="Port" defaultvalue="/dev/ttyd1"/>
       </property>
       <property valuetype="integer" variable="false" name="baud">
