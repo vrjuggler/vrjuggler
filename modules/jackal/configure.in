@@ -429,13 +429,13 @@ case $OS_TYPE in
         jccl_ldflags_compiler="-L\$prefix/lib\$LIBBITSUF"
 	jccl_ldflags_linker="$jccl_ldflags_compiler"
         jccl_libs='-ljccl'
-        jccl_lib='-ljccl'
+        jccl_prof_libs='-ljccl_p'
         ;;
     Win32)
         jccl_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
         jccl_ldflags_linker="/libpath:\$prefix/lib/debug"
         jccl_libs='jccl.lib'
-        jccl_lib='jccl.lib'
+        jccl_prof_libs='jccl.lib'
         ;;
 esac
 
@@ -491,7 +491,7 @@ AC_SUBST(jccl_cxxflags)
 AC_SUBST(jccl_ldflags_compiler)
 AC_SUBST(jccl_ldflags_linker)
 AC_SUBST(jccl_libs)
-AC_SUBST(jccl_lib)
+AC_SUBST(jccl_prof_libs)
 AC_SUBST(jccl_extra_cxxflags)
 AC_SUBST(jccl_extra_include_dirs)
 AC_SUBST(jccl_extra_ldflags)
