@@ -46,11 +46,11 @@
 
 #include <stdlib.h>
 #include <string>
-#include <queue>
 #include <vector>
 
 #include <vpr/vprTypes.h>
 #include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/Guard.h>
 #include <vpr/IO/Socket/SocketOptions.h>
 #include <vpr/Util/Interval.h>
 #include <vpr/Util/Assert.h>
@@ -360,6 +360,11 @@ public:
    }
 
    /**
+    * Returns the number of bytes currently available for reading.
+    */
+   virtual vpr::Uint32 availableBytes(void);
+
+   /**
     * Implementation of the read template method.  This reads at
     * most the specified number of bytes from the socket into the given
     * buffer.
@@ -553,11 +558,8 @@ public:
 
    void addArrivedMessage (vpr::sim::MessagePtr msg)
    {
-      mArrivedQueueMutex.acquire();
-      {
-         mArrivedQueue.push(msg);
-      }
-      mArrivedQueueMutex.release();
+      vpr::Guard<vpr::Mutex> guard(mArrivedQueueMutex);
+      mArrivedQueue.push_back(msg);
    }
 
    void setPathToPeer (vpr::sim::NetworkGraph::VertexListPtr path)
@@ -620,7 +622,7 @@ protected:
 
    vpr::SocketImplSIM* mPeer; /**< Our peer socket */
 
-   std::queue<vpr::sim::MessagePtr> mArrivedQueue; /**< FIFO of arrived msgs */
+   std::vector<vpr::sim::MessagePtr> mArrivedQueue; /**< FIFO of arrived msgs */
 
    vpr::Mutex mArrivedQueueMutex; /**< Mutex for the arrived message queue */
 
