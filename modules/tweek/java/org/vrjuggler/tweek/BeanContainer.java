@@ -198,7 +198,7 @@ public class BeanContainer extends JScrollPane
     * If it is so determined, the Bean is automatically added to the
     * collection of listeners for CommunicationEvents.
     */
-   public void beanInstantiation (BeanInstantiationEvent event)
+   public void beanInstantiated (BeanInstantiationEvent event)
    {
       Object bean = event.getBean();
 
