@@ -171,14 +171,13 @@ public class DescEnum
    /**
     * Tests if the given enumeration is equal to this enumeration.
     */
-   public boolean equals(DescEnum descEnum)
+   public boolean equals(Object obj)
    {
-      if (descEnum == null)
+      if (obj instanceof DescEnum)
       {
-         return false;
+         return mDomElement == ((DescEnum)obj).mDomElement;
       }
-
-      return mDomElement == descEnum.mDomElement;
+      return false;
    }
 
    /**

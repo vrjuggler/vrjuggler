@@ -336,9 +336,13 @@ public class ChunkDesc
     * Tests if this ChunkDesc is equal to the given ChunkDesc. They are
     * considered equal if they use the same DOM element object.
     */
-   public boolean equals(ChunkDesc c)
+   public boolean equals(Object obj)
    {
-      return (mDomElement == c.mDomElement);
+      if (obj instanceof ChunkDesc)
+      {
+         return mDomElement == ((ChunkDesc)obj).mDomElement;
+      }
+      return false;
    }
 
    public PropertyDesc getPropertyDesc(String propDescToken)

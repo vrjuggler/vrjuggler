@@ -322,7 +322,7 @@ public class PropertyDesc
       boolean result;
 
       // If, for some weird reason, this property description does not have a
-      // variable attribute, this is a good place to add it. The default is 
+      // variable attribute, this is a good place to add it. The default is
       // 0 (false), so that's the value we'll use.
       if ( mDomElement.getAttribute("variable") == null )
       {
@@ -512,14 +512,13 @@ public class PropertyDesc
       return enums;
    }
 
-   public boolean equals (PropertyDesc d)
+   public boolean equals(Object obj)
    {
-      if (d == null)
+      if (obj instanceof PropertyDesc)
       {
-         return false;
+         return mDomElement == ((PropertyDesc)obj).mDomElement;
       }
-
-      return mDomElement == d.mDomElement;
+      return false;
    }
 
    public String toString()

@@ -102,12 +102,14 @@ public final class VarValue
       embeddedchunkval = v;
    }
 
-   public boolean equals(VarValue v)
+   public boolean equals(Object obj)
    {
-      if (v == null)
+      if ((obj == null) || !(obj instanceof VarValue))
       {
          return false;
       }
+
+      VarValue v = (VarValue)obj;
       if (valtype != v.valtype)
       {
          return false;
