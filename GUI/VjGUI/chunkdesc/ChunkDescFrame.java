@@ -35,7 +35,7 @@ public class ChunkDescFrame
     JButton cancelbutton;
     JButton okbutton;
     boolean editable;
-    JPanel mainpanel, buttonspanel, northpanel;
+    JPanel mainpanel, buttonspanel;
 
 
     public ChunkDescFrame (JFrameParent p, 
@@ -53,34 +53,53 @@ public class ChunkDescFrame
 	
 	//setFont(core.ui.windowfont);
 	
+	/******************* North Panel **********************/
 	mainpanel = new JPanel();
-	mainpanel.setBorder (new EmptyBorder (10,5,10,5));
-	mainpanel.setLayout(new BorderLayout(10,2));
 	getContentPane().add(mainpanel);
 	
-	/******************* North Panel **********************/
-	northpanel = new JPanel();
-        northpanel.setLayout(new BoxLayout (northpanel, BoxLayout.Y_AXIS));
+	mainpanel.setBorder (BorderFactory.createEmptyBorder (3,3,3,3));
 
-        JPanel p1, p2;
-        p1 = new JPanel();
-        p2 = new JPanel();
-        northpanel.add (p1);
-        northpanel.add (p2);
+	JLabel l;
+	GridBagLayout gbl;
+	GridBagConstraints gbc = new GridBagConstraints();
+	mainpanel.setLayout (gbl = new GridBagLayout());
+	
+	gbc.fill = gbc.HORIZONTAL;
+	gbc.insets = new Insets (2,4,2,4);
+	gbc.gridwidth = 1;
+	
+	l = new JLabel ("ChunkDesc Name: ", JLabel.RIGHT);
+	gbl.setConstraints (l, gbc);
+	mainpanel.add (l);
+	
+	namefield = new JTextField (desc.name, 15);
+	gbc.weightx = 0.5;
+	gbl.setConstraints (namefield, gbc);
+	mainpanel.add (namefield);
 
-        p1.add (new JLabel ("ChunkDesc Token:", 
-                                   JLabel.RIGHT));
-        tokenfield = new JTextField (desc.token, 15);
-        p1.add (tokenfield);
-        JLabel l = new JLabel ("Descriptive Name:", Label.RIGHT);
-        namefield = new JTextField (desc.name, 15);
-        p1.add(l);
-        p1.add(namefield);
-        p2.add (new JLabel ("Help Text:", Label.RIGHT));
-        helpfield = new JTextField (desc.help, 50);
-        p2.add (helpfield);
+	l = new JLabel ("Token: ", JLabel.RIGHT);
+	gbc.weightx = 0;
+	gbl.setConstraints (l, gbc);
+	mainpanel.add (l);
 
-        mainpanel.add(northpanel,"North");
+	tokenfield = new JTextField (desc.token, 15);
+	gbc.gridwidth = gbc.REMAINDER;
+	gbc.weightx = 0.5;
+	gbl.setConstraints (tokenfield, gbc);
+	mainpanel.add (tokenfield);
+
+	l = new JLabel ("Help String: ", JLabel.RIGHT);
+	gbc.gridwidth = 1;
+	gbc.weightx = 0;
+	gbl.setConstraints (l, gbc);
+	mainpanel.add (l);
+
+	helpfield = new JTextField (desc.help, 50);
+	gbc.weightx = 1;
+	gbc.gridwidth = gbc.REMAINDER;
+	gbl.setConstraints (helpfield, gbc);
+	mainpanel.add (helpfield);
+
 
 	/******************* Center Panel ********************/
 	properties = new JPanel ();
@@ -88,7 +107,13 @@ public class ChunkDescFrame
 			     JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         sp.getVerticalScrollBar().setUnitIncrement(40);
         sp.getHorizontalScrollBar().setUnitIncrement(40);
-	mainpanel.add(sp,"Center");
+
+	gbc.weighty = 1;
+	gbc.weightx = 1;
+	gbc.fill = gbc.BOTH;
+	gbc.gridheight = gbc.RELATIVE;
+	gbl.setConstraints (sp, gbc);
+	mainpanel.add(sp);
 	
 	properties.setLayout (new BoxLayout (properties, BoxLayout.Y_AXIS));
 
@@ -100,20 +125,20 @@ public class ChunkDescFrame
 				       !prop.name.equalsIgnoreCase("name") && editable,
 				       prop);
 	    proppanels.addElement(t);
-	    //	    propertieslayout.setConstraints(t,constraints);
 	    properties.add(t);
 	}
 
 	/****************** South Panel ***********************/
+
 	if (editable) {
 	    buttonspanel = new JPanel();
-	    removebutton = new JButton ("Remove");
-	    removebutton.addActionListener (this);
-	    buttonspanel.add (removebutton);
 	    insertbutton = new JButton ("Insert");
 	    insertbutton.addActionListener (this);
 	    buttonspanel.add (insertbutton);
-	    okbutton = new JButton ("OK");
+	    removebutton = new JButton ("Remove");
+	    removebutton.addActionListener (this);
+	    buttonspanel.add (removebutton);
+	    okbutton = new JButton ("  OK  ");
 	    okbutton.addActionListener (this);
 	    buttonspanel.add (okbutton);
 	    cancelbutton = new JButton ("Cancel");
@@ -127,18 +152,21 @@ public class ChunkDescFrame
 	    buttonspanel.add (cancelbutton);
 	}
 	
-	mainpanel.add (buttonspanel, "South");
+	gbc.weighty = 0;
+	gbc.fill = gbc.HORIZONTAL;
+	gbc.gridwidth = 1;
+	gbc.gridheight = gbc.REMAINDER;
+	gbc.gridwidth = gbc.REMAINDER;
+	gbl.setConstraints (buttonspanel, gbc);
+	mainpanel.add (buttonspanel);
 	
 	addWindowListener (this);
 
-	pack();
-	Dimension d = properties.getPreferredSize();
-	d.width += 45;
-	d.height += getMinimumSize().height;
-	d.height = Math.min (d.height, Core.screenHeight);
+	Dimension d = getPreferredSize();
+	d.height = Math.min (d.height + 28, Core.screenHeight);
 	d.width = Math.min (d.width, Core.screenWidth);
 	setSize(d);
-	properties.setSize (properties.getMinimumSize());
+	//properties.setSize (properties.getMinimumSize());
 
         setVisible(true);
 
@@ -175,8 +203,7 @@ public class ChunkDescFrame
 		else
 		    i++;
 	    }
-	    //setReasonableSize();
-	    validate();
+	    repaint();
 	}
 	if (e.getSource() == insertbutton) {
 	    PropertyDescPanel t = new PropertyDescPanel (this, true);
@@ -195,49 +222,49 @@ public class ChunkDescFrame
 
 
 
-  public ChunkDesc getOldValue() {
-    return desc;
-  }
-
-
-
-  public ChunkDesc getNewValue() {
-    // returns the value currently shown in the panel...
-    if (tokenfield.getText().equals("")) {
-      /* this really oughtta bring up a dialog box */
-      System.err.println ("Error: Must fill in ChunkDesc token field");
-      return null;
+    public ChunkDesc getOldValue() {
+	return desc;
     }
+
+
+
+    public ChunkDesc getNewValue() {
+	// returns the value currently shown in the panel...
+	if (tokenfield.getText().equals("")) {
+	    /* this really oughtta bring up a dialog box */
+	    System.err.println ("Error: Must fill in ChunkDesc token field");
+	    return null;
+	}
 	    
-    ChunkDesc d = new ChunkDesc();
-    d.token = tokenfield.getText();
-    d.help = helpfield.getText();
-    d.name = namefield.getText();
-    if (d.name.equals(""))
-      d.name = d.token;
+	ChunkDesc d = new ChunkDesc();
+	d.token = tokenfield.getText();
+	d.help = helpfield.getText();
+	d.name = namefield.getText();
+	if (d.name.equals(""))
+	    d.name = d.token;
 
-    /* start at one to skip instance name field which is already there */
-    for (int i = 1; i < proppanels.size(); i++) {
-      PropertyDesc p = 
-	((PropertyDescPanel)proppanels.elementAt(i)).getPropertyDesc();
-      if (p != null)
-	  d.props.addElement(p);
+	/* start at one to skip instance name field which is already there */
+	for (int i = 1; i < proppanels.size(); i++) {
+	    PropertyDesc p = 
+		((PropertyDescPanel)proppanels.elementAt(i)).getPropertyDesc();
+	    if (p != null)
+		d.props.addElement(p);
+	}
+	
+	return d;
     }
+    
 
-    return d;
-  }
-
-
-  /* WindowListener Stuff */
-  public void windowActivated(WindowEvent e) {}
-  public void windowClosed(WindowEvent e) {}
-  public void windowClosing(WindowEvent e) {
-    closeFrame (false);
-  }
-  public void windowDeactivated(WindowEvent e) {}
-  public void windowDeiconified(WindowEvent e) {}
-  public void windowIconified(WindowEvent e) {}
-  public void windowOpened(WindowEvent e) {}
+    /* WindowListener Stuff */
+    public void windowActivated(WindowEvent e) {}
+    public void windowClosed(WindowEvent e) {}
+    public void windowClosing(WindowEvent e) {
+	closeFrame (false);
+    }
+    public void windowDeactivated(WindowEvent e) {}
+    public void windowDeiconified(WindowEvent e) {}
+    public void windowIconified(WindowEvent e) {}
+    public void windowOpened(WindowEvent e) {}
 
 
 }
