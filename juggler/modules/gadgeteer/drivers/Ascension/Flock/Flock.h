@@ -43,17 +43,17 @@ class vjFlock : public vjPosition {
 	//   report - flock report rate.                         <BR>
 	//   calfile - a calibration file, if "", then use none. <BR>
 	//                                                       <BR>
-	// Result: configures internal data members, 
+	// Result: configures internal data members,
 	//         doesn't actually talk to the FOB yet.
-	vjFlock(const char* const port = "/dev/ttyd3", 
-		const int& baud = 38400, 
-		const int& sync = 1, 
-		const int& block = 0, 
-		const int& numBrds = 3, 
-		const int& transmit = 3, 
-		const BIRD_HEMI& hemi = LOWER_HEM, 
-		const BIRD_FILT& filt = AC_NARROW, 
-		const char& report = 'R', 
+	vjFlock(const char* const port = "/dev/ttyd3",
+		const int& baud = 38400,
+		const int& sync = 1,
+		const int& block = 0,
+		const int& numBrds = 3,
+		const int& transmit = 3,
+		const BIRD_HEMI& hemi = LOWER_HEM,
+		const BIRD_FILT& filt = AC_NARROW,
+		const char& report = 'R',
 		const char* const calfile = "");
 	~vjFlock();
 
@@ -113,42 +113,42 @@ class vjFlock : public vjPosition {
 	//: get the baud rate
 	//  this is generally 38400, consult flock manual for other rates. <BR>
 	inline const int&  getBaudRate()  const { return mFlockOfBirds.getBaudRate();}
-   
+
 	//: Set the unit number of the transmitter
-	//  give - an integer that is the same as the dip switch 
+	//  give - an integer that is the same as the dip switch
 	//         setting on the transmitter box (for the unit number) <BR>
 	//  NOTE: flock.isActive() must be false to use this function
 	void	    setTransmitter( const int& Transmit );
 	
 	//: Get the unit number of the transmitter
-	//  returns - an integer that is the same as the dip switch 
+	//  returns - an integer that is the same as the dip switch
 	//         setting on the transmitter box (for the unit number) <BR>
 	inline const int&  getTransmitter() const { return mFlockOfBirds.getTransmitter(); }
 
 
 	//: Set the number of birds to use in the flock.
-	//  give - an integer number not more than the number of 
+	//  give - an integer number not more than the number of
 	//         birds attached to the system <BR>
 	//  NOTE: flock.isActive() must be false to use this function
 	void	    setNumBirds( const int& n );
 	
 	//: Get the number of birds to use in the flock.
-	//  returns - an integer number not more than the number of 
+	//  returns - an integer number not more than the number of
 	//         birds attached to the system <BR>
 	inline const int&  getNumBirds() const { return mFlockOfBirds.getNumBirds(); }
 
 
 	//: set the video sync type
-	//  this option allows the Flock to syncronize its pulses with 
-	//  your video display.  This will eliminate most flicker caused 
+	//  this option allows the Flock to syncronize its pulses with
+	//  your video display.  This will eliminate most flicker caused
 	//  by the magnetic distortion. <BR>
 	//  - Refer to your flock manual for what number to use.
 	//  NOTE: flock.isActive() must be false to use this function
 	void	    setSync( const int& sync );
 	
 	//: Get the video sync type
-	//  this option allows the Flock to syncronize its pulses with 
-	//  your video display.  This will eliminate most flicker caused 
+	//  this option allows the Flock to syncronize its pulses with
+	//  your video display.  This will eliminate most flicker caused
 	//  by the magnetic distortion. <BR>
 	//  - Refer to your flock manual for what the return number means
 	inline const int&  getSync() const {return mFlockOfBirds.getSync(); }
@@ -183,7 +183,7 @@ class vjFlock : public vjPosition {
 	//: Set the report rate that the flock uses
 	//  NOTE: flock.isActive() must be false to use this function
 	void	    setReportRate( const char& rRate );
-        
+
 	//: Set the report rate that the flock uses
 	inline const char& getReportRate() const {return mFlockOfBirds.getReportRate(); }
 
@@ -212,6 +212,9 @@ class vjFlock : public vjPosition {
      private:
 	void Position_Correct(float&x,float&y,float&z);
 	void InitCorrectionTable(const char*);
+
+   int vjFlock::getBirdIndex(int birdNum, int bufferIndex);
+
 	vjThread*   myThread;      // The thread doing the flock sampling
 	
 	aFlock mFlockOfBirds;
