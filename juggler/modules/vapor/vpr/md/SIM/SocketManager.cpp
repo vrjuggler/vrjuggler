@@ -266,8 +266,12 @@ namespace sim
    vpr::ReturnStatus SocketManager::bind( const vpr::SocketImplSIM* handle,
                                           const vpr::InetAddrSIM& localName )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)<<"bind( "<<handle<<", "
-                                            <<localName<<vprDEBUG_FLUSH;
+      vpr::ReturnStatus status;
+
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "bind(" << handle << ", "
+                                             << localName << ")\n"
+                                             << vprDEBUG_FLUSH;
+
       if (handle->isOpen() &&
           isBound( handle ) == false &&
           isBound( localName ) == false)
@@ -275,8 +279,6 @@ namespace sim
          _bind( handle, localName );
          vprASSERT( isBound( handle ) && "_bind failed on handle." );
          vprASSERT( isBound( localName ) && "_bind failed on address." );
-
-         return vpr::ReturnStatus();
       }
       else
       {
@@ -316,8 +318,11 @@ namespace sim
          {
             vprASSERT( false && "unexpected error. deal with it." );
          }
-         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+
+         status.setCode(vpr::ReturnStatus::Fail);
       }
+
+      return status;
    }
 
    vpr::ReturnStatus SocketManager::unbind( const vpr::SocketImplSIM* handle )
@@ -384,8 +389,11 @@ namespace sim
       vpr::System::gettimeofday(&cur_time);
       srand(cur_time.tv_usec);
       vpr::ReturnStatus status;
-
       bool attached = false;
+
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+         << "SocketManager::assignToNode(): Looking up a random node for "
+         << handle << "\n" << vprDEBUG_FLUSH;
 
       vpr::Uint32 node_count = vpr::sim::Controller::instance()->getNetworkGraph().getNodeCount();
       vprASSERT(node_count > 0 && "No nodes in the network!");
@@ -404,14 +412,19 @@ namespace sim
          // if the address to which the socket is bound corresponded to the
          // node in the graph.  This could lead to better grouping of nodes as
          // would occur on a real network.
-         NetworkGraph::net_vertex_t node = vpr::sim::Controller::instance()->getNetworkGraph().getNode(n);
-         NetworkNode node_prop           = vpr::sim::Controller::instance()->getNetworkGraph().getNodeProperty(node);
+         NetworkGraph::net_vertex_t node =
+            vpr::sim::Controller::instance()->getNetworkGraph().getNode(n);
+         NetworkNode node_prop =
+            vpr::sim::Controller::instance()->getNetworkGraph().getNodeProperty(node);
 
          if ( ! node_prop.hasSocket(handle->getLocalAddr().getPort(),
                                     handle->getType()) )
          {
             vpr::InetAddrSIM new_addr;
 
+            vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+               << "SocketManager::assignToNode(): Using node "
+               << node_prop.getIpAddressString() << "\n" << vprDEBUG_FLUSH;
             handle->setNetworkNode(node);
 
             // Set the socket's IP address to match its node.
@@ -438,10 +451,15 @@ namespace sim
       NetworkGraph::net_vertex_t node;
       vpr::ReturnStatus status;
 
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+         << "SocketManager::assignToNode(): Trying to find node with address "
+         << addr << "\n" << vprDEBUG_FLUSH;
       status = vpr::sim::Controller::instance()->getNetworkGraph().getNodeWithAddr(addr.getAddressValue(), node);
 
       if ( status.success() )
       {
+         vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+            << "SocketManager::assignToNode(): Found node!\n" << vprDEBUG_FLUSH;
          NetworkNode node_prop = vpr::sim::Controller::instance()->getNetworkGraph().getNodeProperty(node);
          handle->setNetworkNode(node);
          node_prop.addSocket(handle);
@@ -450,6 +468,9 @@ namespace sim
       // Fall back on a randomly assigned node.
       else
       {
+         vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+            << "SocketManager::assignToNode(): Falling back on random lookup\n"
+            << vprDEBUG_FLUSH;
          status = assignToNode(handle);
       }
 
@@ -497,21 +518,22 @@ namespace sim
 
          first_edge_prop = vpr::sim::Controller::instance()->getNetworkGraph().getLineProperty(first_edge);
 
-         dir = vpr::sim::Controller::instance()->getNetworkGraph().isSource(first_hop, first_edge) ? NetworkLine::FORWARD
-                                                       : NetworkLine::REVERSE;
+         dir = vpr::sim::Controller::instance()->getNetworkGraph().isSource(first_hop, first_edge) ? NetworkLine::FORWARD : NetworkLine::REVERSE;
 
          // XXX: The direction will not always be forward!
          first_edge_prop.calculateMessageEventTimes(msg, vpr::Interval::now(),
                                                     dir);
 
          vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-            << "Starting message on wire "
+            << "SocketManager::sendMessage(): Starting message on wire "
             << first_edge_prop.getNetworkAddressString() << ": ("
             << msg->whenStartOnWire().usec() << ", "
             << msg->whenFullyOnWire().usec() << ", "
             << msg->whenArrivesFully().usec() << ")\n" << vprDEBUG_FLUSH;
 
          event_time = msg->whenStartOnWire();
+         first_edge_prop.addReadyMessage(msg, dir);
+         vpr::sim::Controller::instance()->getNetworkGraph().setLineProperty(first_edge, first_edge_prop);
          vpr::sim::Controller::instance()->addEvent(event_time, first_edge);
       }
    }
