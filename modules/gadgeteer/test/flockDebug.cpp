@@ -38,6 +38,12 @@
 #include <iomanip>      // for std::setw
 #include <sstream>
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/time.h>
+#include <sys/ioctl.h>
+#include <sgtty.h>
+
 #include <stdlib.h>     // for system
 #include <unistd.h>     // for sleep
 #include <signal.h>     // to trap Ctrl-C
@@ -57,8 +63,15 @@ void changeSettings();
 void printBirdDetails();
 void setRtsValue();
 void printSamples();
+void printContinuousSamples();
 
 void readTest();
+
+int kbhit();
+
+
+
+
 
 FlockStandalone flock("/dev/ttyS0");
 
@@ -121,6 +134,7 @@ int main()
          << "8 - Configure the flock.\n"
          << "9 - Toggle streaming mode.\n"
          << "a - Print samples.\n"
+         << "c - Print samples continuously.\n"
          << "   -- Test modes --.\n"
          << "r - Read in 10 OK's from bird (test mode 1)\n"
          << "Q - Quit\n";
@@ -183,6 +197,10 @@ int main()
       case 'a':
          printSamples();
          break;
+      case 'c':
+         printContinuousSamples();
+         break;
+         
       case 'r':
          readTest();
          break;
@@ -306,9 +324,26 @@ void printSamples()
       gmtl::Coord3fXYZ coord;
       gmtl::set(coord, s0);
       std::cout << s << ":  p:" << coord.mPos << "  r:" << coord.mRot << std::endl;
-   }
-   
+   }  
 }
+
+void printContinuousSamples()
+{
+   std::cout << "Printing samples:" << std::endl;
+   
+   unsigned num_samples(1000);
+
+   //for(unsigned s=0;s<num_samples;++s)
+   while(!kbhit())
+   {
+      flock.sample();
+      gmtl::Matrix44f s0 = flock.getSensorPosition(0);
+      gmtl::Coord3fXYZ coord;
+      gmtl::set(coord, s0);
+      std::cout << "p:" << coord.mPos << "  r:" << coord.mRot << "\r";
+   }  
+}
+
 
 void readTest()
 {
@@ -411,3 +446,70 @@ void readTest()
 }
 
 
+#define TTY_DESCR 0
+/*===============================================================
+ ROUTINE: kbhit
+ PURPOSE: Use select to see if a key has been pressed.
+ RETURNS: 0 If no key has been hit.
+          1 If a key has been pressed.
+================================================================*/
+/*
+int kbhit()
+{
+    struct timeval wait;
+    fd_set readfd;
+    int ret;
+        
+    wait.tv_sec  = 0;
+    wait.tv_usec = 0;
+    //readfd = 1 << TTY_DESCR;
+    FD_ZERO(&readfd);
+    FD_SET(TTY_DESCR,&readfd);
+    ret = select(TTY_DESCR + 1, &readfd, NULL,NULL, &wait);
+    return(ret);
+}
+*/
+
+int kbhit()
+{
+   fd_set readfs;
+   struct timeval timeout;
+
+   FD_ZERO(&readfs);
+   FD_SET(0, &readfs);
+
+   timeout.tv_sec = 0;
+   timeout.tv_usec = 0;
+
+   select(1, &readfs, NULL, NULL, &timeout);
+
+   return FD_ISSET(0, &readfs);
+}
+
+/*
+
+ int kbhit(void)
+ {
+   fd_set readset;
+   int keyPressed = 0, rc;
+   struct timeval waitDuration;
+
+   waitDuration.tv_sec = 0;
+   waitDuration.tv_usec = 0;
+
+   FD_ZERO(&readset);
+   FD_SET(STDIN_FILENO,&readset);
+   
+   rc = select(STDIN_FILENO + 1,
+               &readset,
+               NULL,
+               NULL,
+               &waitDuration);
+
+   if (rc > 0)
+     if (FD_ISSET(STDIN_FILENO,&readset))
+       keyPressed = 1;
+
+   return keyPressed;
+ }
+ */
