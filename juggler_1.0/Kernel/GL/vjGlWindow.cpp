@@ -9,8 +9,11 @@
 #include <Kernel/vjSimDisplay.h>
 #include <Kernel/vjSurfaceDisplay.h>
 
+// This variable determines which matrix stack we put the viewing transformation
+// If it is on the proj matrix, then lighting and env maps work but fog breaks.
 #define USE_PROJECTION_MATRIX 1        // Should we put the camera transforms on the
                                        // Projection or modelview matrix
+
 
 int vjGlWindow::mCurMaxWinId = 0;
 
