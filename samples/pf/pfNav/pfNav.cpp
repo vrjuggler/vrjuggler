@@ -82,7 +82,7 @@ public:
    {
       vjDEBUG(vjDBG_ALL, 1) << "app::init\n" << vjDEBUG_FLUSH;
       vjProjection::setNearFar(0.5, 1000);
-      
+
       mWand.init( "VJWand" );
       mHead.init( "VJHead" );
       mActionButton.init( "VJButton0" );
@@ -111,85 +111,79 @@ public:
          pfEnable( PFEN_TEXTURE );
          pfOverride(PFSTATE_ENTEXTURE, PF_ON);
       }
-      
+
       else
       {
          pfDisable( PFEN_TEXTURE );
          pfOverride(PFSTATE_ENTEXTURE, PF_OFF);
-      }      
-   }   
-   
+      }
+   }
+
    /// Initialize the scene graph
    virtual void initScene()
    {
-      // Setup the state like we need
-
-      //int cur_light_state = pfGetEnable(PFEN_LIGHTING);
-      //vjDEBUG(vjDBG_ALL,0) << "initScene: Current lighting state: " << cur_light_state << endl << vjDEBUG_FLUSH;
-
       // Load the scene
       vjDEBUG(vjDBG_ALL, 0) << "app::initScene\n" << vjDEBUG_FLUSH;
-      rootNode = new pfGroup;
 
-      mNavigationDCS = new pfDCS();
+      // Allocate all the nodes needed
+      rootNode                = new pfGroup;          // Root of our graph
+      mNavigationDCS          = new pfDCS;      // DCS to navigate with
+      pfNode* world_model;
+      pfDCS*  world_model_dcs = new pfDCS;
 
+      // CONFIG PARAMS
+      std::string    pf_file_path("");
+      const float    world_dcs_scale(1.0f);
+      const pfVec3   world_dcs_trans(0.0,5.0,0.0f);
+      vjVec3         initial_nav_pos(0,6,0);
+      bool           use_gravity(true);
+
+      // Create the SUN
       sun1 = new pfLightSource;
       sun1->setPos(0.3f, 0.0f, 0.3f, 0.0f);
       sun1->setColor(PFLT_DIFFUSE,0.3f,0.0f,0.95f);
       sun1->setColor(PFLT_AMBIENT,0.4f,0.4f,0.4f);
       sun1->setColor(PFLT_SPECULAR, 1.0f, 1.0f, 1.0f);
       sun1->on();
-      mNavigationDCS->addChild(sun1);
 
-      // Light the root node
-      ///*
-      pfDCS* sun_position = new pfDCS;
-      sun_position->addChild(sun1);
-      rootNode->addChild(sun_position);
-      //*/
+      /// Load SIMPLE geometry
+      pfFileIO::addFilePath(".:/usr/share/Performer/data:/usr/share/Performer/data/town");
+      pfFileIO::addFilePath(pf_file_path);
 
-      //sun1->on();     // By default
+      // LOAD file
+      world_model = pfFileIO::autoloadFile( filename );
 
-            /// Load SIMPLE geometry
-      ///*
-      pfFileIO::setFilePath(".:/usr/share/Performer/data");
-      
-      // calls pfdLoadFile on the .flt, or the .pfb if available
-      pfNode* obj = autoloadFltData( filename );
+      // Construct scene graph
+      //                           /-- sun1
+      // rootNode -- mNavigationDCS -- world_model_dcs -- world_model
+      //
       rootNode->addChild( mNavigationDCS );
+      world_model_dcs->addChild(world_model);
+      world_model_dcs->setScale(world_dcs_scale);
+      world_model_dcs->setTrans(world_dcs_trans[0], world_dcs_trans[1], world_dcs_trans[2]);
+      mNavigationDCS->addChild(sun1);
+      mNavigationDCS->addChild(world_model_dcs);
 
-      pfDCS* world_model = new pfDCS;    // The node with the world under it
-      world_model->addChild(obj);
-      world_model->setScale(0.25f);
-      world_model->setTrans(0.0,5.0,-5.0);
-      mNavigationDCS->addChild(world_model);
-      
-      // Load the TOWN
-      //pfFilePath("/usr/share/Performer/data:/usr/share/Performer/data/town");
-      //pfNode* obj = pfdLoadFile("/usr/share/Performer/data/town/town_ogl_pfi.pfb");
-      //pfDCS* world_model = new pfDCS;    // The node with the world under it
-      //rootNode->addChild(mNavigationDCS);
-      //world_model->addChild(obj);
-      //world_model->setScale(3.0f);
-      
       // Configure the Navigator DCS node:
-      // Set it's initial position:
-      vjMatrix initial_pos;
-      //initial_pos.setTrans(7500,50,-7500);
-      initial_pos.setTrans(0, 6, 0);
-      mNavigator.getNavigator()->setCurPos(initial_pos);
+      vjMatrix initial_nav;              // Initial navigation position
+      initial_nav.setTrans(initial_nav_pos);
+      mNavigator.getNavigator()->setCurPos(initial_nav);
+      if(use_gravity)
+         mNavigator.setGravity(CaveNavigator::ON);
+      else
+         mNavigator.setGravity(CaveNavigator::OFF);
 
-      // Set its terrain follower
+      // --- COLLISION DETECTORS --- //
+      // Terrain collider
       //planeCollider* collide = new planeCollider;
-      pfPogoCollider*  ride_collide = new pfPogoCollider(world_model);
+      pfPogoCollider*  ride_collide = new pfPogoCollider(world_model_dcs);
       mNavigator.getNavigator()->addCollider(ride_collide);
 
       // Set the navigator's collider.
-      pfBoxCollider* correction_collide = new pfBoxCollider( world_model );
+      pfBoxCollider* correction_collide = new pfBoxCollider( world_model_dcs );
       mNavigator.getNavigator()->addCollider( correction_collide );
-      
 
-      // load these files into perfly to see just what your scenegraph 
+      // load these files into perfly to see just what your scenegraph
       // looked like. . . . .useful for debugging.
       cout<<"Saving entire scene into lastscene.pfb, COULD TAKE A WHILE!\n"<<flush;
       pfuTravPrintNodes( rootNode, "lastscene.out" );
@@ -217,40 +211,46 @@ public:
       //vjDEBUG(vjDBG_ALL, 1) << "app::preSync\n" << vjDEBUG_FLUSH;
    }
 
-   /// Function called after pfSync and before pfDraw
-   virtual void preFrame()
+   // Update the navigation based on user input
+   virtual void updateNavigation()
    {
-      // Keep time, for FPS measurments...
-      stopWatch.stop();
-      stopWatch.start();
-      
-      /////////////////////////////////////////////////////////
-      //: Handle navigation
-
       if (mActionButton2->getData() == vjDigital::TOGGLE_ON)
          cout<<"Brake\n"<<flush;
       if (mActionButton->getData() == vjDigital::TOGGLE_ON)
          cout<<"Accelerate\n"<<flush;
 
       // let the navigator collect some instructions from input devices...
-      mNavigator.accelerate( mActionButton->getData() == vjDigital::ON ||
-                             mActionButton->getData() == vjDigital::TOGGLE_ON );
-      mNavigator.brake( mActionButton2->getData() == vjDigital::ON ||
-                       mActionButton2->getData() == vjDigital::TOGGLE_ON );
-      mNavigator.rotate( mActionButton2->getData() != vjDigital::ON && 
-                         mActionButton2->getData() != vjDigital::TOGGLE_ON );
-      vjMatrix* wandMatrix = mWand->getData();
-      vjMatrix rotMatrix = *wandMatrix;
+      mNavigator.accelerate( mActionButton->getData() == vjDigital::ON);
+      mNavigator.brake( mActionButton2->getData() == vjDigital::ON);
+      mNavigator.rotate( mActionButton2->getData() == vjDigital::OFF );
+
+      // Update the navigators rotation information
+      vjMatrix rotMatrix = *(mWand->getData());;
       rotMatrix.setTrans(0, 0, 0);
       mNavigator.setMatrix( rotMatrix );
-      
+
       // tell the navigator to update itself with any new instructions just given to it.
       mNavigator.update();
-      
-      // notify the navigator DCS of the mNavigator's new matrix
+
+      // Output current position in environment
+      vjVec3 cur_pos = mNavigator.getTrans();
+      cout << "Cur pos:" << cur_pos << endl;
+   }
+
+   /// Function called after pfSync and before pfDraw
+   virtual void preFrame()
+   {
+      // Keep time, for FPS measurments...
+      stopWatch.stop();
+      stopWatch.start();
+
+      // Do any NAVIGATION
+      updateNavigation();
+
+      // Set the navigation DCS to the new navigation matrix
       pfMatrix mNavigator_pf = vjGetPfMatrix( mNavigator );
       mNavigationDCS->setMat( mNavigator_pf );
-      
+
       // output the FPS so the team artist can get metrics on their model
       ++mFpsEmitCount;
       if (mFpsEmitCount >= 15)
@@ -262,7 +262,7 @@ public:
 
    int mFpsEmitCount;
    StopWatch stopWatch;
-   
+
    /// Function called after pfDraw
    virtual void intraFrame()
    {
@@ -276,14 +276,14 @@ public:
    // navigation objects.
    CaveNavigator  mNavigator;
    pfDCS*         mNavigationDCS;
-   
+
    // juggler device interface objects
    vjPosInterface          mWand;      // the Wand
    vjPosInterface          mHead;      // the Head
    vjDigitalInterface      mActionButton;
    vjDigitalInterface      mActionButton2;
    vjDigitalInterface      mModeChangeButton;
-   
+
    // scene's root (as far as we're concerned here)
    pfGroup*   rootNode;
 };
@@ -296,24 +296,24 @@ int main(int argc, char* argv[])
 {
     vjKernel* kernel = vjKernel::instance(); // Declare a new Kernel
     pfNavJugglerApplication* application = new pfNavJugglerApplication(kernel);  // Delcare an instance of my application
-       
-    cout<<"Usage: "<<argv[0]<<" modelfile.flt vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n"<<flush;
+
+    cout<<"Usage: "<<argv[0]<<" modelfile vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n"<<flush;
     cout<<"\n"<<flush;
-  
+
     if (argc < 2)
     {
-       cout<<"\n\n[ERROR!!!] you must supply a .flt database (then config files)\n\n"<<flush;
+       cout<<"\n\n[ERROR!!!] you must supply a model database (then config files)\n\n"<<flush;
        return 0;
-    }    
-    
+    }
+
     filename = argv[1];
-    
+
     if (argc <= 2)
     {
-       cout<<"\n\n[ERROR!!!] you must supply config files after the .flt file...\n\n"<<flush;
+       cout<<"\n\n[ERROR!!!] you must supply config files after the model file...\n\n"<<flush;
        return 0;
-    }    
-    
+    }
+
     for ( int i = 2; i < argc; i++ ) {
         kernel->loadConfigFile(argv[i]);
     }
