@@ -58,6 +58,7 @@
 #                    programs, and sample apps are installed.  This is only the
 #                    name of the directory, not the full path to it.
 #
+# DPP_SCRIPTDIR   - The directory containing Doozer++ helper scripts.
 # MKDEPS_CC       - Compiler for C dependencies.
 # MKDEPS_CXX      - Compiler for CXX dependencies.
 # MKINSTALLDIRS   - Path to shell script for making directories.
@@ -88,12 +89,12 @@ scriptdir	= $(releasedir)/scripts
 topdir		= @topdir@
 CXX_IDL		= @CXX_IDL@
 JAVA_IDL	= @JAVA_IDL@
+DPP_SCRIPTDIR	= $(JUGGLERROOT_ABS)/Doozer++/scripts
 MAKEFLAGS	+= --no-print-directory
 DEPGEN_TOOL_CC	= @CC@
 DEPGEN_TOOL_CXX	= @CXX@
 MKINSTALLDIRS	= $(scriptdir)/mkinstalldirs
-DPP_DIR		= $(JUGGLERROOT_ABS)/Doozer++
-MKPATH		= $(DPP_DIR)/mk
+MKPATH		= $(JUGGLERROOT_ABS)/Doozer++/mk
 MTREE_CMD	= @MTREE_CMD@
 PROFLIB_EXT	= _p
 PROF_OPT_FLAGS	= $(DBG_FLAGS)
