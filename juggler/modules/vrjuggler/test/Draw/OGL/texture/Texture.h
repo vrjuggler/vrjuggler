@@ -11,6 +11,8 @@
 #ifndef TEXTURE_INCLUDED
 #define TEXTURE_INCLUDED
 
+#include <assert.h>
+
 #include "Image.h"
 
 //: Texture node.

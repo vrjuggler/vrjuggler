@@ -1,3 +1,5 @@
+#ifndef _DEFINES_H_
+#define _DEFINES_H_
 
 namespace kev
 {
@@ -14,3 +16,5 @@ namespace kev
       return (a<b) ? a : b; 
    }
 };
+
+#endif /* _DEFINES_H_ */

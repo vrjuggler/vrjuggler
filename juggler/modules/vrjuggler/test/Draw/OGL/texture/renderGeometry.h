@@ -1,3 +1,6 @@
+#ifndef _RENDER_GEOMETRY_H_
+#define _RENDER_GEOMETRY_H_
+
 
 class geom
 {
@@ -14,3 +17,6 @@ public:
       glDrawArrays( GL_TRIANGLES, 0, size );
    }
 };
+
+
+#endif /* _RENDER_GEOMETRY_H_ */

@@ -1,3 +1,5 @@
+#ifndef _RENDER_TEXTURE_H_
+#define _RENDER_TEXTURE_H_
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -8,8 +10,8 @@
 // http://www.bigfoot.com/~KevinMeinert/html/software/index.html
 // -- Kevin Meinert, kevinmeinert@bigfoot.com
 //////////////////////////////////////////////////////////////////////////////
-#include "Texture.h"
 #include <GL/gl.h>
+#include "Texture.h"
 #include "defines.h" // min
 class tex
 {
@@ -28,13 +30,13 @@ public:
 
       // create the texture object, setting the texObjectID
       unsigned int id;
-      #ifdef GL_VERSION_1_1
+#ifdef GL_VERSION_1_1
          ::glGenTextures( 1, &id );
          ::glBindTexture( texDimension, id );
-      #else
+#else
          ::glGenTexturesEXT( 1, &id );
          ::glBindTextureEXT( texDimension, id );
-      #endif
+#endif
       texObjectID = id;
 
       // load the texture into hardware that will be referenced by the texObjectID
@@ -47,11 +49,11 @@ public:
       assert( texObjectID != -1 && "texture object already deleted" );
 
       unsigned int id( texObjectID );
-      #ifdef GL_VERSION_1_1
+#ifdef GL_VERSION_1_1
          ::glDeleteTextures( 1, &id );
-      #else
+#else
          ::glDeleteTexturesEXT( 1, &id );
-      #endif
+#endif
 
       texObjectID = -1; // unused
    }
@@ -63,11 +65,11 @@ public:
          return false;
       
       unsigned int id( texObjectID );
-      #ifdef GL_VERSION_1_1
+#ifdef GL_VERSION_1_1
          return ::glIsTexture( id ) == GL_TRUE;
-      #else
+#else
          return ::glIsTextureEXT( id ) == GL_TRUE;
-      #endif
+#endif
    }
    
    // load texture data to hardware, making the texture current
@@ -198,20 +200,20 @@ public:
       if (image.height() == 1 || image.width() == 1 )
       {
          texDimension = GL_TEXTURE_1D;	
-         #ifdef GL_VERSION_1_1
+#ifdef GL_VERSION_1_1
             texBindDimension = GL_TEXTURE_1D_BINDING_EXT;
-         #else
+#else
             texBindDimension = GL_TEXTURE_1D_BINDING;
-         #endif
+#endif
       }
       else 
       {
          texDimension = GL_TEXTURE_2D;
-         #ifdef GL_VERSION_1_1
+#ifdef GL_VERSION_1_1
             texBindDimension = GL_TEXTURE_2D_BINDING_EXT;
-         #else
+#else
             texBindDimension = GL_TEXTURE_2D_BINDING;
-         #endif
+#endif
       }
       
       // enable texturing for this dimension if not already
@@ -282,11 +284,11 @@ public:
 	   
       if (texObjectID != -1) 
       {
-         #ifdef GL_VERSION_1_1
+#ifdef GL_VERSION_1_1
             ::glBindTexture( texDimension, texObjectID );
-         #else
+#else
             ::glBindTextureEXT( texDimension, texObjectID );
-         #endif
+#endif
       }               
       // if the texture object is invalid, 
       // just load the pixels from memory to the graphics hardware
@@ -299,3 +301,5 @@ public:
       }
    }  
 };
+
+#endif /* _RENDER_TEXTURE_H_ */

@@ -33,6 +33,8 @@
 #ifndef _TEXTURE_APP_
 #define _TEXTURE_APP_
 
+#include <vjConfig.h>          // needed by other juggler classes
+
 // C++ and STL (standard template library - http://www.sgi.com/Technology/STL)
 #include <iostream> // for std::cout
 #include <vector>   // for std::vector
@@ -45,7 +47,6 @@
 #include <GL/glu.h> // GLU functions (extended opengl stuff)
 
 // VR juggler
-#include <vjConfig.h>          // needed by other juggler classes
 #include <Kernel/GL/vjGlApp.h>     // base OpenGL application API
 #include <Kernel/GL/vjGlContextData.h> // for OpenGL resource IDs
 #include <Utils/vjTimer.h> // so that the cube always spins the same speed
