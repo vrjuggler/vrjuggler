@@ -8,6 +8,7 @@
 
 #include <deque>
 #include <utility>
+#include <typeinfo>
 
 namespace vpr
 {
@@ -59,6 +60,8 @@ public:
    double getMaxSTA() const
    {  return mMaxSTA; }
 
+   void print(std::ostream& out);
+
 private:
    TYPE        mCurTotal;     // Running total of the data
    vpr::Uint32 mSampleCount;  // Number of samples taken
@@ -72,6 +75,24 @@ private:
 
    std::deque< std::pair<TYPE,vpr::Interval> >  mSampleBuffer;    // Buffer of samples used to calc STA
 };
+
+template <class TYPE, bool TimeBased>
+void StatCollector<TYPE, TimeBased>::print(std::ostream& out)
+{
+   out << "type: " << typeid(TYPE).name() << "   time based:" << ( TimeBased ? "Y" : "N" ) << std::endl
+       << "total: " << mCurTotal << "   samples:" << mSampleCount << std::endl
+       << "mean: " << getMean() << std::endl
+       << "staMaxTime: " << mSTAMaxTime.secf() << "s    Initial Sample Time:" << mInitialSampleTime.getMinutesf() << std::endl
+       << "prev sampTime: " << mPrevSampleTime1.secf() << "s   prev sampTime2:" << mPrevSampleTime2.secf() << std::endl 
+       << "prev samp: " << mPrevSample1 << "   prev samp2:" << mPrevSample2 << std::endl
+       << " --- data --- time --- " << std::endl;
+
+   for(std::deque< std::pair<TYPE,vpr::Interval> >::iterator i = mSampleBuffer.begin();
+       i!= mSampleBuffer.end(); ++i)
+   {
+      out << (*i).first << "   " << (*i).second.msec() << "ms\n";
+   }
+}
 
 
 template <class TYPE, bool TimeBased>
@@ -239,7 +260,7 @@ double StatCollector<TYPE, TimeBased>::getSTA()
 }
 
 
-
-
 }; // namespace vpr
+
+
 #endif
