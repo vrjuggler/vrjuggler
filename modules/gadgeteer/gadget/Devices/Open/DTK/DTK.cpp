@@ -89,7 +89,7 @@ bool DTK::config(jccl::ConfigChunkPtr c)
 
 /* Dynamically Load the DTK Library
     void* handle;
-    char *DTKFileName = c->getProperty("dlfilename").cstring();
+    char *DTKFileName = c->getProperty<std::string>("dlfilename").c_str();
     handle = dlopen(DTKFileName, RTLD_NOW|RTLD_GLOBAL);
     if(handle == NULL) return false;
 */
@@ -104,7 +104,7 @@ bool DTK::config(jccl::ConfigChunkPtr c)
 
     for(i = 0; i < numSegments; i++)
     {
-        embeddedChunk = static_cast<jccl::ConfigChunkPtr>(c->getProperty("segments", i));
+        embeddedChunk = c->getProperty<jccl::ConfigChunkPtr>("segments", i);
         _dtkSegments[i] = new DTKMemorySegment;
         if(embeddedChunk != NULL)
         {

@@ -442,7 +442,7 @@ public:
    // XXX debug function
    void configureTestProxy(jccl::ConfigChunkPtr chunk){
       NetDigitalProxy* dig_proxy = new NetDigitalProxy(chunk, this->generateLocalId());
-      std::string name = (std::string) chunk->getProperty("name");
+      std::string name = chunk->getName();
       mInputManager->addProxy(name, dynamic_cast<Proxy*>(dig_proxy));
 
    }

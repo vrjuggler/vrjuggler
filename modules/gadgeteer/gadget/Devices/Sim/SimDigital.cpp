@@ -31,8 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/Devices/Sim/SimDigital.h>
 #include <jccl/Config/ConfigChunk.h>
+#include <gadget/Devices/Sim/SimDigital.h>
 
 namespace gadget
 {
@@ -55,7 +55,12 @@ bool SimDigital::config(jccl::ConfigChunkPtr chunk)
    if(! (Input::config(chunk) && Digital::config(chunk) && SimInput::config(chunk)))
       return false;
 
-   std::vector<jccl::VarValue*> key_list = chunk->getAllProperties("keyPairs");
+   std::vector<jccl::ConfigChunkPtr> key_list;
+   int key_count = chunk->getNum("keyPairs");
+   for ( int i = 0; i < key_count; ++i )
+   {
+      key_list.push_back(chunk->getProperty<jccl::ConfigChunkPtr>("keyPairs", i));
+   }
    mSimKeys = readKeyList(key_list);   
 
    return true;

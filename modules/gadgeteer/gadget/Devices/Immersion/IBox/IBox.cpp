@@ -54,7 +54,7 @@ bool IBox::config(jccl::ConfigChunkPtr c)
   mPortStr = Input::getPort();
   // Done in Input
   //active = 0;
-  mBaudRate = (long) static_cast<int>(c->getProperty("baud"));
+  mBaudRate = c->getProperty<long>("baud");
 
   vprDEBUG(gadgetDBG_INPUT_MGR,1)
      << "   Creating an IBox.. params: " << std::endl

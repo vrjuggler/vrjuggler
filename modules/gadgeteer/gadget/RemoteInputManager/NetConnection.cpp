@@ -180,7 +180,7 @@ void NetConnection::addReceivingNetInput(NetInput* net_input)
 NetInput* NetConnection::createReceivingNetInput(jccl::ConfigChunkPtr chunk)
 {
    NetInput* net_input;
-   std::string chunk_type = (std::string)chunk->getType();
+   std::string chunk_type = chunk->getDescToken();
    if ( chunk_type == "DigProxy" )
    {
       NetDigital* net_digital = new NetDigital(chunk, this->generateLocalId());

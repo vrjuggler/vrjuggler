@@ -59,22 +59,22 @@ bool KeyboardXWin::config(jccl::ConfigChunkPtr c)
    m_curKeys[0] = m_realkeys[0] = m_keys[0] = 1;
 
    // Get size and position
-   m_width = (int)c->getProperty("width");
-   m_height = (int)c->getProperty("height");
+   m_width = c->getProperty<int>("width");
+   m_height = c->getProperty<int>("height");
    if (m_width == 0) m_width = 400;
    if (m_height == 0) m_height = 400;
 
-   m_x = c->getProperty("origin", 0);
-   m_y = c->getProperty("origin", 1);
+   m_x = c->getProperty<int>("origin", 0);
+   m_y = c->getProperty<int>("origin", 1);
 
    // Get the X display string
-   int x_disp_num = c->getProperty("display_number");
+   int x_disp_num = c->getProperty<int>("display_number");
    jccl::ConfigChunkPtr dispSysChunk = gadget::InputManager::instance()->getDisplaySystemChunk();
 
    if ((x_disp_num >= 0) && (dispSysChunk.get() != NULL) )
    {
       std::string xpipe_str;
-      xpipe_str = (std::string)dispSysChunk->getProperty("xpipes", x_disp_num);
+      xpipe_str = dispSysChunk->getProperty<std::string>("xpipes", x_disp_num);
       mXDisplayString = xpipe_str;
    }
    else
@@ -87,12 +87,12 @@ bool KeyboardXWin::config(jccl::ConfigChunkPtr c)
    }
 
    // Get the lock information
-   mLockToggleKey = c->getProperty("lock_key");
-   bool start_locked = c->getProperty("start_locked");
+   mLockToggleKey = c->getProperty<int>("lock_key");
+   bool start_locked = c->getProperty<bool>("start_locked");
    if (start_locked)
       mLockState = Lock_LockKey;      // Initialize to the locked state
 
-   m_mouse_sensitivity = c->getProperty("msens");
+   m_mouse_sensitivity = c->getProperty<float>("msens");
    if (0.0f == m_mouse_sensitivity)
       m_mouse_sensitivity = 0.5;
 
@@ -100,7 +100,7 @@ bool KeyboardXWin::config(jccl::ConfigChunkPtr c)
       << "Mouse Sensititivty: " << m_mouse_sensitivity << std::endl
       << vprDEBUG_FLUSH;
 
-   mSleepTimeMS = c->getProperty("sleep_time");
+   mSleepTimeMS = c->getProperty<int>("sleep_time");
 
    // HACK: Use a default time until config file has defaults
    if (mSleepTimeMS == 0)

@@ -35,9 +35,9 @@
 //#pragma once
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/Type/KeyboardInterface.h>
+#include <vector>
 #include <jccl/Config/ConfigChunkPtr.h>
-#include <jccl/Config/VarValue.h>
+#include <gadget/Type/KeyboardInterface.h>
 
 
 namespace gadget
@@ -57,6 +57,9 @@ protected:
    {
    public:
       KeyModPair() : mKey(-1), mModifier(-1)
+      {;}
+
+      KeyModPair(int key, int modifier) : mKey(key), mModifier(modifier)
       {;}
 
       KeyModPair (const KeyModPair& in) {
@@ -104,7 +107,7 @@ protected:
    //! PRE: keyList must be full of var values containing chunks of the type "KeyModPair"
    //+      The KeyModPair chunk type must have fields name key and modKey
    //! RETURNS: vector of KeyModPairs
-   std::vector<KeyModPair> readKeyList(std::vector<jccl::VarValue*>& keyList);
+   std::vector<KeyModPair> readKeyList(std::vector<jccl::ConfigChunkPtr>& keyList);
 
 protected:
    KeyboardInterface     mKeyboard;        //: The keyboard we are getting events from

@@ -44,9 +44,9 @@ bool KeyboardProxy::config(jccl::ConfigChunkPtr chunk)
    vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,3)
       << "------------------ KEYBOARD PROXY config()-----------------\n"
       << vprDEBUG_FLUSH;
-   vprASSERT(((std::string)chunk->getType()) == "KeyboardProxy");
+   vprASSERT(chunk->getDescToken() == "KeyboardProxy");
 
-   mDeviceName = (std::string)chunk->getProperty("device");
+   mDeviceName = chunk->getProperty<std::string>("device");
 
    refresh();
 

@@ -70,7 +70,7 @@ bool TrackdController::config(jccl::ConfigChunkPtr c)
       return false;
 
    // Create sensor
-   int shm_key = (int)c->getProperty("shm_key");
+   int shm_key = c->getProperty<int>("shm_key");
    if (shm_key == 0)
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "vjTrackdSensor::config: Bad shm_key sent: Had value of 0.\n" << vprDEBUG_FLUSH;

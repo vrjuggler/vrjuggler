@@ -66,19 +66,19 @@ bool KeyboardWin32::config(jccl::ConfigChunkPtr c)
     m_realkeys[0] = m_keys[0] = 1;
 
     // Get size and position
-    m_width = (int)c->getProperty("width");
-    m_height = (int)c->getProperty("height");
+    m_width = c->getProperty<int>("width");
+    m_height = c->getProperty<int>("height");
 
     if (m_width == 0) m_width = 400;
     if (m_height == 0) m_height = 400;
 
-    m_x = c->getProperty("origin", 0);
-    m_y = c->getProperty("origin", 1);
+    m_x = c->getProperty<int>("origin", 0);
+    m_y = c->getProperty<int>("origin", 1);
 
     newx = oldx = 0xfffff;
     newy = oldy = 0xfffff;
 
-    m_mouse_sensitivity = c->getProperty("msens");
+    m_mouse_sensitivity = c->getProperty<float>("msens");
     if (0 == m_mouse_sensitivity) m_mouse_sensitivity = 0.5;
 
     vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)

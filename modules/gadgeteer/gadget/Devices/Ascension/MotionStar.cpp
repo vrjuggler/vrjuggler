@@ -119,15 +119,15 @@ bool MotionStar::config (jccl::ConfigChunkPtr c)
          << vprDEBUG_FLUSH;
 
       // Configure m_motion_star with the config info.
-      setAddressName(static_cast<std::string>(c->getProperty("address")).c_str());
-      setServerPort((unsigned short) static_cast<int>(c->getProperty("serverPort")));
-      setMasterStatus(static_cast<bool>(c->getProperty("serverType")));
-      setHemisphere((unsigned char) static_cast<int>(c->getProperty("hemisphere")));
-      setNumBirds((unsigned int) static_cast<int>(c->getProperty("num")));
-      setBirdFormat((unsigned int) static_cast<int>(c->getProperty("bformat")));
-      setRunMode((unsigned int) static_cast<int>(c->getProperty("mode")));
-      setReportRate((unsigned char) static_cast<int>(c->getProperty("reportRate")));
-      setMeasurementRate((float) static_cast<float>(c->getProperty("measurementRate")));
+      setAddressName(c->getProperty<std::string>("address").c_str());
+      setServerPort((unsigned short) c->getProperty<int>("serverPort"));
+      setMasterStatus(c->getProperty<bool>("serverType"));
+      setHemisphere((unsigned char) c->getProperty<int>("hemisphere"));
+      setNumBirds((unsigned int) c->getProperty<int>("num"));
+      setBirdFormat((unsigned int) c->getProperty<int>("bformat"));
+      setRunMode((unsigned int) c->getProperty<int>("mode"));
+      setReportRate((unsigned char) c->getProperty<int>("reportRate"));
+      setMeasurementRate(c->getProperty<float>("measurementRate"));
       retval = true;
    }
 

@@ -53,11 +53,16 @@ bool SimGloveGesture::config(jccl::ConfigChunkPtr chunk)
 
    mCurGesture = 0;     // We are in no gesture yet
 
-   std::vector<jccl::VarValue*> key_list = chunk->getAllProperties("keyPairs");
+   std::vector<jccl::ConfigChunkPtr> key_list;
+   int key_count = chunk->getNum("keyPairs");
+   for ( int i = 0; i < key_count; ++i )
+   {
+      key_list.push_back(chunk->getProperty<jccl::ConfigChunkPtr>("keyPairs", i));
+   }
    mSimKeys = readKeyList(key_list);
 
    // Get sample filename
-   std::string sample_file = chunk->getProperty("trainedFilename");
+   std::string sample_file = chunk->getProperty<std::string>("trainedFilename");
    loadTrainedFile(vpr::replaceEnvVars(sample_file));
 
    // Trim the lengths
@@ -71,7 +76,7 @@ bool SimGloveGesture::config(jccl::ConfigChunkPtr chunk)
    }
 
    // Find pos proxy
-   std::string glove_pos_proxy = chunk->getProperty("glovePos");    // Get the name of the pos_proxy
+   std::string glove_pos_proxy = chunk->getProperty<std::string>("glovePos");    // Get the name of the pos_proxy
    if(glove_pos_proxy == std::string(""))
    {
       vprDEBUG(gadgetDBG_INPUT_MGR,0)

@@ -111,27 +111,27 @@ bool Intersense::config(jccl::ConfigChunkPtr c)
     jccl::ConfigChunkPtr stationConfig;
     for( int i = 0; i < mTracker.rNumStations(); i++)
     {
-    stationConfig = static_cast<jccl::ConfigChunkPtr>(c->getProperty("stations", i));
-    stations[i].enabled = static_cast<bool>(stationConfig->getProperty("enabled"));
-    stations[i].stationIndex = static_cast<int>(stationConfig->getProperty("stationIndex"));
-    stations[i].useDigital = static_cast<bool>(stationConfig->getProperty("useDigital"));
-    stations[i].useAnalog = static_cast<bool>(stationConfig->getProperty("useAnalog"));
+       stationConfig = c->getProperty<jccl::ConfigChunkPtr>("stations", i);
+       stations[i].enabled = stationConfig->getProperty<bool>("enabled");
+       stations[i].stationIndex = stationConfig->getProperty<int>("stationIndex");
+       stations[i].useDigital = stationConfig->getProperty<bool>("useDigital");
+       stations[i].useAnalog = stationConfig->getProperty<bool>("useAnalog");
 
-    stations[i].dig_min = static_cast<int>(stationConfig->getProperty("digitalFirst"));
-    stations[i].dig_num = static_cast<int>(stationConfig->getProperty("digitalNum"));
-    stations[i].ana_min = static_cast<int>(stationConfig->getProperty("analogFirst"));
-    stations[i].ana_num = static_cast<int>(stationConfig->getProperty("analogNum"));
+       stations[i].dig_min = stationConfig->getProperty<int>("digitalFirst");
+       stations[i].dig_num = stationConfig->getProperty<int>("digitalNum");
+       stations[i].ana_min = stationConfig->getProperty<int>("analogFirst");
+       stations[i].ana_num = stationConfig->getProperty<int>("analogNum");
     }
 
 // load an init script for the tracker and then pass it to mTracker
-    char* filename = c->getProperty("script").cstring();
-    std::strstream        script;
-    std::ifstream        scriptFile;
+    const char* filename = c->getProperty<std::string>("script").c_str();
+    std::strstream script;
+    std::ifstream scriptFile;
     scriptFile.open(filename);
     script<<scriptFile.rdbuf();
     mTracker.setScript(script.str());
     scriptFile.close();
-    mTracker.rVerbose() = static_cast<bool>(c->getProperty("verbose"));
+    mTracker.rVerbose() = c->getProperty<bool>("verbose");
 
     return true;
 }

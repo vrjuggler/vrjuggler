@@ -43,10 +43,10 @@ bool AnalogProxy::config(jccl::ConfigChunkPtr chunk)
    vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
       << "----------- configuring ANALOG PROXY -----------------\n"
       << vprDEBUG_FLUSH;
-   vprASSERT(((std::string)chunk->getType()) == "AnaProxy");
+   vprASSERT(chunk->getDescToken() == "AnaProxy");
 
-   m_unitNum = chunk->getProperty("unit");
-   mDeviceName = (std::string)chunk->getProperty("device");
+   m_unitNum = chunk->getProperty<int>("unit");
+   mDeviceName = chunk->getProperty<std::string>("device");
 
    refresh();     // Refresh the device now that we have something to point at
 

@@ -64,7 +64,7 @@ public:
    /// We can handle only keyboard configuration information.
    virtual bool canHandle(jccl::ConfigChunkPtr chunk)
    {
-      std::string chunk_type = (std::string)chunk->getType();
+      std::string chunk_type = chunk->getDescToken();
       return (chunk_type == KeyboardXWin::getChunkType());      // Return true if we have a KeyboardXWin chunk type
    }
 
@@ -110,13 +110,11 @@ public:
          vprDEBUG_CONT(vprDBG_ALL,dbg_lvl) << "passed.\n" << vprDEBUG_FLUSH;
       }
 
-      vprDEBUG_NEXT(vprDBG_ALL,dbg_lvl) << "Extra Dependencies for: item: "
-                                      << chunk->getProperty("name")
-                                      << " type: "
-                                      << ((std::string)chunk->getType()).c_str()
-                                      << std::endl
-                                      << "   Dependant upon displaySystemChunk in display Manager. (Needs it to find display strings)"
-                                      << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vprDBG_ALL,dbg_lvl)
+         << "Extra Dependencies for: item: " << chunk->getFullName()
+         << " type: " << chunk->getDescToken() << std::endl
+         << "   Dependent upon displaySystemChunk in display Manager. (Needs it to find display strings)"
+         << vprDEBUG_FLUSH;
 
       vprDEBUG_NEXT_END(vprDBG_ALL,dbg_lvl) << std::endl << vprDEBUG_FLUSH;
    }

@@ -44,9 +44,9 @@ bool GestureProxy::config(jccl::ConfigChunkPtr chunk)
    vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,3)
       << "------------------ GESTURE PROXY config() -----------------\n"
       << vprDEBUG_FLUSH;
-   vprASSERT(((std::string)chunk->getType()) == "GestureProxy");
+   vprASSERT(chunk->getDescToken() == "GestureProxy");
 
-   mDeviceName = (std::string)chunk->getProperty("device");
+   mDeviceName = chunk->getProperty<std::string>("device");
 
    refresh();
 
