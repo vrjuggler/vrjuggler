@@ -57,6 +57,9 @@
 #include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Assert.h>
+// It is safe to include Debug.h in this file because Debug.h does not
+// include vpr/Thread/Thread.h or ThreadPosix.h.
+#include <vpr/Util/Debug.h>
 #include <vpr/md/POSIX/Thread/ThreadPosix.h>
 
 
@@ -514,6 +517,24 @@ BaseThread::VPRThreadScope ThreadPosix::posixThreadScopeToVPR(const int scope)
       case PTHREAD_SCOPE_SYSTEM:
          vpr_scope = VPR_GLOBAL_THREAD;
          break;
+      default:
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << clrOutNORM(clrYELLOW, "WARNING:")
+            << " Unexpected value " << scope
+            << " in vpr::ThreadPosix::posixThreadScopeToVPR()" << std::endl
+            << vprDEBUG_FLUSH;
+#if VPR_THREAD_SCOPE == PTHREAD_SCOPE_PROCESS
+         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Defaulting to VPR_LOCAL_THREAD for return value." << std::endl
+            << vprDEBUG_FLUSH;
+         vpr_scope = VPR_LOCAL_THREAD;
+#else
+         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Defaulting to VPR_GLOBAL_THREAD for return value." << std::endl
+            << vprDEBUG_FLUSH;
+         vpr_scope = VPR_GLOBAL_THREAD;
+#endif
+         break;
    };
 
    return vpr_scope;
@@ -530,6 +551,17 @@ BaseThread::VPRThreadState ThreadPosix::posixThreadStateToVPR(const int state)
          break;
       case PTHREAD_CREATE_DETACHED:
          vpr_state = VPR_UNJOINABLE_THREAD;
+         break;
+      default:
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << clrOutNORM(clrYELLOW, "WARNING:")
+            << " Unexpected value " << state
+            << " in vpr::ThreadPosix::posixThreadStateToVPR()" << std::endl
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Defaulting to VPR_JOINABLE_THREAD for return value."
+            << std::endl << vprDEBUG_FLUSH;
+         vpr_state = VPR_JOINABLE_THREAD;
          break;
    };
 
