@@ -142,7 +142,7 @@ ifndef NO_CLEAN
 	@$(MAKE) clobber
 endif
 	@$(MAKE) $(BEFOREBUILD)
-	@$(MAKE) libs build-java
+	@$(MAKE) libs
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning JCCL plug-in installation process"
 	@echo "---------------------------------------------------------------"
@@ -202,7 +202,7 @@ ifndef NO_CLEAN
 	@$(MAKE) clobber
 endif
 	@$(MAKE) $(BEFOREBUILD)
-	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N libs build-java
+	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N libs
 ifdef GLOBAL_BUILD
 	@$(MAKE) links
 endif
