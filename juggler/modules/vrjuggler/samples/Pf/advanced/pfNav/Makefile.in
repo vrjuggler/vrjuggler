@@ -44,17 +44,21 @@ EXTRA_FLAGS	= @APP_EXTRA_FLAGS@ @APP_EXTRA_FLAGS_PF@
 COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@ $(EXTRA_FLAGS)
 LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
 
-AW_INCLUDES 	= @APP_EXTRA_INC_AW@
-AW_LIBS		= @APP_EXTRA_LIBS_AW@
 VJ_INCLUDES	= @INCLUDES@ $(AW_INCLUDES) -I$(VJ_BASE_DIR)/include	\
                   -I$(srcdir) -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/nav \
                   -I$(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/pfTools
-VJ_LIBS		= @APP_VJ_LIBS_BEGIN@ @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_PF@ @APP_VJ_LIBS_AW@ @APP_VJ_LIBS_END@  @APP_LIBS_BASIC@ 
+VJ_LIBS		= @APP_VJ_LIBS_BEGIN@ @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_PF@ $(VJ_AUDIO_LIBS) @APP_VJ_LIBS_END@  @APP_LIBS_BASIC@ 
 
 VJ_LIB_DEPS	= $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler.a		\
                   $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler_ogl.a	\
                   $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler_pf.a
 
+# Uncomment all of the following lines if you have AudioWorks and your
+# application needs audio.
+#AW_INCLUDES 	= @APP_EXTRA_INC_AW@
+#AW_LIBS		= @APP_EXTRA_LIBS_AW@
+#VJ_AUDIO_LIBS	= @APP_VJ_LIBS_AW@
+  
 vpath %.cpp $(srcdir) $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/nav
 vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/tools
 vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/advanced/pfTools
