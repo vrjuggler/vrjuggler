@@ -1471,7 +1471,7 @@ unsigned int MotionStarStandalone::configureBirds()
          // requested birds, handle the setup steps.
          if ( bird < m_birds_requested )
          {
-            unsigned char format;
+            unsigned char format(0);
 
             // XXX: Eventually, we would like to have all birds get their
             // format value set individually.

@@ -7,7 +7,7 @@
 
     <subtitle>Getting Started Guide</subtitle>
 
-    <releaseinfo>Version 2.0 Alpha 1</releaseinfo>
+    <releaseinfo>Version 2.0 Alpha 2</releaseinfo>
 
     <pubdate>$Date$</pubdate>
   </bookinfo>
@@ -912,12 +912,12 @@ value</screen>
         window, choose the <guilabel>Debugging</guilabel> item. There will be
         an empty text entry field under the heading <guilabel>Command
         Arguments</guilabel>. Here, enter the full paths to the VR Juggler
-        configuration files that will be used to run the torus application.
-        The <envar>VJ_BASE_DIR</envar> environment variable cannot be used
-        here, unfortunately, so the <emphasis>full path</emphasis> to
-        <emphasis>every</emphasis> file must be used. The following shows the
-        beginning of the program arguments listing <filename>sim.base.config</filename>
-        and <filename>sim.wand.mixin.config</filename>:</para>
+        configuration files that will be used to run the torus application. To
+        use the <envar>VJ_BASE_DIR</envar> environment variable, makefile
+        syntax must be used. In other words, to load <filename>sim.base.config</filename>,
+        use <filename>$(VJ_BASE_DIR)/share/vrjuggler/data/configFiles/sim.base.config</filename>.
+        The following shows the beginning of the program arguments listing
+        <filename>sim.base.config</filename> and <filename>sim.wand.mixin.config</filename>:</para>
 
         <figure id="visual.studio.project-settings.dialog.figure">
           <title>Project Settings Dialog</title>

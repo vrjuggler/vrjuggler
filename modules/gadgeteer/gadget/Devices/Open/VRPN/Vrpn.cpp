@@ -143,27 +143,14 @@ namespace gadget
     
     mButtonNumber = c->getProperty<int>("numButtons");
 
-    if (true == c->getProperty<bool>("etrans") )
-      {
-	setPreTransform
-	  ( c->getProperty<float>("pretranslate",0) , // xtrans
-            c->getProperty<float>("pretranslate",1) , // ytrans
-            c->getProperty<float>("pretranslate",2) , // ztrans
-            c->getProperty<float>("prerotate",0) , // xrot
-            c->getProperty<float>("prerotate",1) , // yrot
-            c->getProperty<float>("prerotate",2) ,// zrot
-            c->getProperty<float>("prescale",0) , // xrot
-            c->getProperty<float>("prescale",1) , // yrot
-            c->getProperty<float>("prescale",2) );// zrot
-	setPostTransform
-	  ( c->getProperty<float>("postscale",0) , // xrot
-            c->getProperty<float>("postscale",1) , // yrot
-            c->getProperty<float>("postscale",2) );// zrot
-      }
-    
+    mPositions.resize(mTrackerNumber);
+    mQuats.resize(mTrackerNumber);
+    mButtons.resize(mButtonNumber);
+
+    mCurPositions.resize(mTrackerNumber);
+    mCurButtons.resize(mButtonNumber);
 
     return true;
-
   }
 
   Vrpn::~Vrpn()
@@ -195,13 +182,7 @@ namespace gadget
     else {
 	std::cout << "Not null\n";
     }
-    
-    mPositions.resize(mTrackerNumber);
-    mQuats.resize(mTrackerNumber);
-    mButtons.resize(mButtonNumber);
-    
-    mCurPositions.resize(mTrackerNumber);
-    mCurButtons.resize(mButtonNumber);
+
     return status;
   }
 
@@ -277,11 +258,9 @@ namespace gadget
 
   int Vrpn::sample()
   {
-     gmtl::Matrix44f temp;
       for(int i=0;i<mTrackerNumber;i++)
       {
-         temp = mPreMatrixTransform*getSensorPos(i);
-         mCurPositions[i].setPosition(temp * mPostMatrixTransform);
+         mCurPositions[i].setPosition(getSensorPos(i));
          mCurPositions[i].setTime();
       }
     
@@ -293,8 +272,8 @@ namespace gadget
     
     // Update the data buffer
     addPositionSample(mCurPositions);
-    
     addDigitalSample(mCurButtons);
+
     return 1;
   }
 
@@ -303,58 +282,6 @@ namespace gadget
   {
     return 1;
   }
-  
-  // Set pre-multiplication transform (usually called, room->tracker
-  // base transformation
-
-  void Vrpn::setPreTransform(float xoff, float yoff, float zoff,    // Translate
-			  float xrot, float yrot, float zrot,   // Rotate
-			  float xscale, float yscale, float zscale)   // Scale
-  {
-    gmtl::identity(mPreMatrixTransform);
-    
-    gmtl::Matrix44f trans_mat;
-    gmtl::Matrix44f rot_mat;
-    gmtl::Matrix44f scale_mat;
-    
-    if((xoff != 0.0f) || (yoff != 0.0f) || (zoff != 0.0f))
-      {
-	//trans_mat .makeTrans(xoff, yoff, zoff);
-	gmtl::setTrans(trans_mat, gmtl::Vec3f(xoff, yoff, zoff));
-      }
-    if((xrot != 0.0f) || (yrot != 0.0f) || (zrot != 0.0f))
-      {
-	//rot_mat.makeXYZEuler(xrot, yrot, zrot);
-	gmtl::EulerAngleXYZf euler( gmtl::Math::deg2Rad(xrot),
-				    gmtl::Math::deg2Rad(yrot),
-				    gmtl::Math::deg2Rad(zrot) );
-	gmtl::setRot( rot_mat, euler );
-      }
-    
-    if((xscale != 0.0f) || (yscale != 0.0f) || (zscale != 0.0f))
-      {
-	gmtl::setScale( scale_mat,  gmtl::Vec3f(xscale, yscale, zscale));
-      }
-    
-    mPreMatrixTransform = (trans_mat * rot_mat * scale_mat);
-  }
-
-
-  // Post transformation (axis flip only really)
-  void Vrpn::setPostTransform(float xscale, float yscale, float zscale)   // Scale
-  {
-    gmtl::identity(mPostMatrixTransform);
-    
-    gmtl::Matrix44f scale_mat;
-    
-    if((xscale != 0.0f) || (yscale != 0.0f) || (zscale != 0.0f))
-      {
-	gmtl::setScale( scale_mat,  gmtl::Vec3f(xscale, yscale, zscale));
-      }
-    
-    mPostMatrixTransform = (scale_mat);
-  }
-  
   
   void Vrpn::updateData()
   {

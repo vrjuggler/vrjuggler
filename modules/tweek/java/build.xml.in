@@ -22,7 +22,7 @@
              deprecation="on"
              debug="${debug}"
              optimize="${optimize}">
-         <src path="${srcdir}" />
+         <src path="." />
          <include name="tweek/**" />
          <classpath>
             <pathelement path="@JAVA_ORB_JAR@" />

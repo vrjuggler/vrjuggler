@@ -206,6 +206,14 @@ AC_DEFUN(VJ_COMPILER_SETUP,
                           [AC_MSG_ERROR([*** VR Juggler requires a modern G++ ***])])
     fi
 
+    # Test to see if the C and C++ compilers support the -pipe (or equivalent)
+    # argument.  If one or both of them do, then it is added to $CFLAGS and
+    # $CXXFLAGS respectively.
+    DPP_PROG_CC_PIPE
+    DPP_PROG_CXX_PIPE
+    CFLAGS="$CFLAGS $CC_PIPE_FLAGS"
+    CXXFLAGS="$CXXFLAGS $CXX_PIPE_FLAGS"
+
     # The following sets up the warning levels for the compilers we support.
     # The levels we want for C++ are as follows (in increasing order of
     # noisiness):
