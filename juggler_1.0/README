@@ -48,7 +48,7 @@ Table of contents:
 
             HP-UX 11.00
             FreeBSD 4.2 and 5.0-CURRENT (x86)
-            Sun Solaris 7 (x86)
+            Sun Solaris 7 (x86) with patches up through June 6, 2001
             Mac OS X
 
     B. Minimum requirements (by operating system)
