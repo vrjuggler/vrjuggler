@@ -384,11 +384,19 @@ case $target_os in
         fi
 
         AR='ar -r'
+        CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
         INCLUDES="$INCLUDES -I/usr/include"
         LD='${CXX} -shared'
         LDOPTS=''
+        DBG_FLAGS='-g'
         OPT_FLAGS='-O2'
         SHAREDLIB_EXT='so'
+
+        dnl # We have to use POSIX threads on FreeBSD.
+        if test "x${_thread_pkg}" != "xPOSIX" ; then
+            AC_MSG_WARN(*** POSIX threads must be used on $host ***)
+            _thread_pkg='POSIX'
+        fi
 
         AC_DEFINE(VJ_OS_FreeBSD,)
         ABI_LIST='ELF'
@@ -432,8 +440,10 @@ case $target_os in
         fi
 
         AR='ar -r'
+        CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
         LD='${CXX} -G'
         LDOPTS=''
+        DBG_FLAGS='-g'
         OPT_FLAGS='-O2'
         SHAREDLIB_EXT='so'
 
