@@ -37,12 +37,13 @@
 
 #include <vjConfig.h>
 #include <Input/vjGlove/vjGlove.h>
+#include <Input/vjInput/vjDigital.h>
 #include <Input/vjGlove/fsPinchGlove.h>
 #include <string>
 
 //: Fakespace Pinchglove Device
 //!PUBLIC_API:
-class vjPinchGlove : public vjGlove
+class vjPinchGlove : public vjGlove, public vjDigital
 {
 public:
    //: Construct
@@ -62,6 +63,21 @@ public:
    virtual int sample();
    virtual void updateData ();
 
+   //: Get the digital data for the given devNum
+   //  Returns digital 0 or 1, if devNum makes sense.<BR>
+   //  Returns -1 if function fails or if devNum is out of range.<BR>
+   //  NOTE: If devNum is out of range, function will fail, possibly issueing 
+   //  an error to a log or console - but will not ASSERT.<BR><BR>
+   //  
+   //  Use one of these indices to get the glove's digital data<BR>
+   //  EX: int result = mGlove.getDigitalData( vjPinchGlove::LTHUMB );
+   enum finger 
+   {
+	   LTHUMB = 0, LINDEX = 1, LMIDDLE = 2, LRING = 3, LPINKY = 4, 
+	   RTHUMB = 6, RINDEX = 7, RMIDDLE = 8, RRING = 9, RPINKY = 10
+   };
+   virtual int getDigitalData(int devNum = 0);
+   
 protected:
 	//: The main control loop for the object
    void controlLoop(void* nullParam);
