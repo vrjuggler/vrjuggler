@@ -44,7 +44,7 @@ namespace cluster
 class ApplicationData : public vpr::SerializableObject
 {
 public:
-   ApplicationData(const vpr::GUID& guid, const std::string& host)
+   ApplicationData(const vpr::GUID& guid, const std::string& host) : mIsLocal(false)
    {
       mId = guid;
       mHostname = host;
