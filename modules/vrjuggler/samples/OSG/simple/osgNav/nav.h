@@ -98,8 +98,12 @@ public:
    {
       mActive = true;
       vpr::GUID new_guid("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2");
-      std::string hostname = "crash";              // XXX: Hardcoded for now.  Change to name of server machine.
-      mNavData.init(new_guid, hostname);
+      mNavData.init(new_guid);
+
+      // Could hardcode the hostname like the following, but it is better to rely 
+      // on the ApplicationData configuration element to get the hostname.
+      //std::string hostname = "crash";
+      //mNavData.init(new_guid, hostname);
    }
 
    void setWalkMode(bool walk_mode)
