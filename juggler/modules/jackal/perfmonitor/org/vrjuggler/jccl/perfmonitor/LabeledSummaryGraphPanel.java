@@ -217,14 +217,19 @@ public class LabeledSummaryGraphPanel
 
 	    // draw some markings...
 	    float horizbarsinterval;
-	    if (maxval > 200000)
+            //horizbarsinterval = ((float)maxval/2.0f);
+            if (maxval > 1000000)
+                horizbarsinterval = 100000.0f;
+	    else if (maxval > 200000)
 		horizbarsinterval = 20000.0f;
 	    else if (maxval > 20000)
 		horizbarsinterval = 10000.0f;
 	    else if (maxval > 5000)
 		horizbarsinterval = 2000.0f;
-	    else
+	    else if (maxval > 500)
 		horizbarsinterval = 500.0f;
+            else
+                horizbarsinterval = 100.0f;
 
 	    for (float horizbar = horizbarsinterval; horizbar < maxval; horizbar += horizbarsinterval) {
 		y = (int)(horizbar * heightscale);
