@@ -13,34 +13,9 @@
 
 #define MIN_TIMEOUT 0.1
 
-
-//#include <stdio.h>
-//#include <termio.h>
-//#include <ctype.h>
-//#include <fcntl.h>
-//#include <sys/time.h>
-//#include <stropts.h>
-
-
-
 #include <gadget/gadgetConfig.h>
 #include <stdio.h>
 #include <gadget/Devices/Immersion/IboxStandalone.h>
-
-
-
-//#define OFLAGS	(OPOST | OLCUC | ONLCR | OCRNL | ONOCR  \
-//			| ONLRET | OFILL | OFDEL)
-//#define LFLAGS	(ICANON | ISIG | XCASE | ECHO | ECHOE | ECHOK  \
-//			| ECHONL | NOFLSH)
-//#define IFLAGS	(IGNBRK | BRKINT | IGNPAR | PARMRK | INPCK | INLCR  \
-//			| ICRNL | IGNCR | IUCLC | ISTRIP | IXON  \
-//			| IXOFF)
-
-
-
-// Global variables for local file only
-
 
 // ----------------------------------------------------------------------------
 // Constructor:  This sets all the default values for the ibox.
