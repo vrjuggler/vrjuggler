@@ -482,13 +482,15 @@ case $OS_TYPE in
             static_end="-B dynamic"
         fi
 
-        jccl_ldflags="-L\$prefix/lib$LIBBITSUF"
+        jccl_ldflags_compiler="-L\$prefix/lib$LIBBITSUF"
+	jccl_ldflags_linker="$jccl_ldflags_compiler"
         jccl_libs='-ljccl'
         jccl_lib='-ljccl'
 
         ;;
     WIN32)
-        jccl_ldflags="/link /libpath:\$prefix/lib/debug "
+        jccl_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
+        jccl_ldflags_linker="libpath:\$prefix/lib/debug"
         jccl_libs='jccl.lib'
         jccl_lib='jccl.lib'
 
@@ -534,7 +536,8 @@ AC_SUBST(APP_EXTRA_LIBS)
 #AC_SUBST(subsystem_libs)
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
-AC_SUBST(jccl_ldflags)
+AC_SUBST(jccl_ldflags_compiler)
+AC_SUBST(jccl_ldflags_linker)
 AC_SUBST(jccl_libs)
 AC_SUBST(jccl_lib)
 AC_SUBST(jccl_extra_cxxflags)
