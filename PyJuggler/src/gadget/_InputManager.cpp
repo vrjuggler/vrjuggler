@@ -64,7 +64,7 @@ struct gadget_InputManager_Wrapper: gadget::InputManager
 // Module ======================================================================
 void _Export_InputManager()
 {
-    class_< gadget::InputManager, boost::noncopyable, pyj::gadget_InputManager_Wrapper >("InputManager"
+    class_< gadget::InputManager, boost::noncopyable, pyj::gadget_InputManager_Wrapper >("InputManager",
          "The Input Manager holds and managed all Gadgeteer input devices.\n\n"
          "The Input Manager handles all the details behind organizing the\n"
          "input devices in the library.  It provides an API for adding\n"

@@ -142,7 +142,7 @@ struct gadget_PositionProxy_Wrapper: gadget::PositionProxy
 // Module ======================================================================
 void _Export_PositionProxy()
 {
-    class_< gadget::PositionProxy, pyj::gadget_PositionProxy_Wrapper >("PositionProxy"
+    class_< gadget::PositionProxy, pyj::gadget_PositionProxy_Wrapper >("PositionProxy",
          "A proxy class to positional devices used by the Input Manager.\n\n"
          "A position proxy always points to a positional device and a unit\n"
          "number within that device.  The Input Manager can therefore keep\n"
