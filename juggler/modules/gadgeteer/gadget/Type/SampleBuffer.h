@@ -43,8 +43,8 @@
 namespace gadget
 {
 
-
-/**
+/** \class SampleBuffer SampleBuffer.h gadget/Type/SampleBuffer.h
+ *
  * Buffer class for input data.
  *
  * The SampleBuffer stores the readings from an input device.

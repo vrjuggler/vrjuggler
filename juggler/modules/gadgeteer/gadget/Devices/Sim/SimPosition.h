@@ -44,7 +44,8 @@
 namespace gadget
 {
 
-/**
+/** \class SimPosition SimPosition.h gadget/Devices/Sim/SimPosition.h
+ *
  * Simulated positional device.
  * Simulates a positional device from an event source.
  * This class should not be accessed directly by the user.
@@ -136,6 +137,7 @@ private:
 
    /** Moves up (+Y) the given amount. */
    void moveUp(const float amt);
+   //@}
 
    /** @name Rotation helpers */
    //@{

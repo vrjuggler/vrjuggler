@@ -37,27 +37,34 @@
 
 namespace gadget
 {
-                              
+
+/** \class SerializableDevice SerializableDevice.h cluster/SerializableDevice.h
+ *
+ * Base type for serializable devices.
+ */
 class SerializableDevice //: public vpr::SerializableObject
 {
 public:
    SerializableDevice()
    {
-     
+      ;
    }
+
    virtual vpr::ReturnStatus writeObject(vpr::BufferObjectWriter* writer) = 0;
-   virtual vpr::ReturnStatus readObject(vpr::BufferObjectReader* reader, vpr::Uint64* delta) = 0;
+   virtual vpr::ReturnStatus readObject(vpr::BufferObjectReader* reader,
+                                        vpr::Uint64* delta) = 0;
+
    /*
    * Template method for reading object.
    * POST: All object data is read from the reader
    */
 protected:
-   
    /** @link dependency 
     * @stereotype use*/
    /*#  BufferObjectReader lnkBufferObjectReader; */
 };
 
 } // namespace vpr
+
 
 #endif

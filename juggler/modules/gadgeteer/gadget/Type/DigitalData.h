@@ -38,7 +38,10 @@
 namespace gadget 
 {
 
-/** InputData subclass for digital data. */
+/** \class DigitalData DigitalData.h gadget/Type/DigitalData.h
+ *
+ * InputData subclass for digital data.
+ */
 class DigitalData : public InputData 
 {
    // Hack around a GCC 3.3 bug on Mac OS X 10.3 that shows up with

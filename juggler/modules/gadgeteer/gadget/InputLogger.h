@@ -49,7 +49,8 @@
 namespace gadget
 {
 
-/**
+/** \class InputLogger InputLogger.h gadget/InputLogger.h
+ *
  * Input data logger.
  */
 class GADGET_CLASS_API InputLogger

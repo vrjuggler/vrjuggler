@@ -48,7 +48,8 @@
 namespace gadget
 {
 
-/**
+/** \class GloveProxy GloveProxy.h gadget/Type/GloveProxy.h
+ *
  * Glove proxy class.
  */
 class GADGET_CLASS_API GloveProxy : public TypedProxy<Glove>
@@ -83,7 +84,8 @@ public:
          return mTypedDevice->getTipTransform(component,mUnitNum);
    }
   
-   gmtl::Matrix44f getJointTransform( GloveData::GloveComponent component, GloveData::GloveJoint joint)
+   gmtl::Matrix44f getJointTransform(GloveData::GloveComponent component,
+                                     GloveData::GloveJoint joint)
    {
       if(isStupified())
          return gmtl::Matrix44f();

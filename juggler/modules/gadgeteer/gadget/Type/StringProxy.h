@@ -41,7 +41,8 @@
 namespace gadget
 {
 
-/**
+/** \class StringProxy StringProxy.h gadget/Type/StringProxy.h
+ *
  * A proxy class to string speech recognition devices, used by the Input
  * Manager.
  *

@@ -55,7 +55,8 @@ class Proxy;
 class Input;
 class DeviceFactory;
 
-/**
+/** \class InputManager InputManager.h gadget/InputManager.h
+ *
  * The Input Manager holds and manages all Gadgeteer Input devices.
  *
  * The Input Manager handles all the details behind organizing the input

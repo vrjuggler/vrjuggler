@@ -47,7 +47,8 @@ GADGET_REGISTER_EVENT_CREATOR( MouseEvent, MouseButtonPressEvent );
 GADGET_REGISTER_EVENT_CREATOR( MouseEvent, MouseButtonReleaseEvent );
 GADGET_REGISTER_EVENT_CREATOR( MouseEvent, MouseMoveEvent );
 
-/**
+/** \class MouseEvent MouseEvent.h gadget/Type/KeyboardMouse/MouseEvent.h
+ *
  * Mouse event class.  This captures the state of the mouse when any mouse
  * event occurs.  This includes button presses, button releases, and mouse
  * motion.

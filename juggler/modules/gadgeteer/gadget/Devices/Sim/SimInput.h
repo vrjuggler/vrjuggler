@@ -47,7 +47,8 @@
 namespace gadget
 {
 
-/**
+/** \class SimInput SimInput.h gadget/Devices/Sim/SimInput.h
+ *
  * Base class for all simulated input devices.
  * Has the common routines for accessing and seting up keyboard interface.
  */
@@ -133,12 +134,12 @@ protected:
     *      "key_modifier_pair".  The KeyModPair element type must have fields
     *      named key and modifier_key.
     *
-    * @return vector of KeyModPairs
+    * @return vector of KeyModPair objects.
     */
    std::vector<KeyModPair> readKeyList(std::vector<jccl::ConfigElementPtr>& keyList);
 
 protected:
-   /**< The keyboard/mouse device from which we receive events. */
+   /** The keyboard/mouse device from which we receive events. */
    KeyboardMouseInterface mKeyboardMouse;
 };
 

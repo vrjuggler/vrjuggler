@@ -54,6 +54,10 @@ namespace cluster
 {
    class Packet;
 
+/** \class ClusterPlugin ClusterPlugin.h cluster/ClusterPlugin.h
+ *
+ * Interface for cluster plugins.
+ */
 class GADGET_CLASS_API ClusterPlugin 
    : public jccl::ConfigElementHandler, public gadget::PacketHandler
 {

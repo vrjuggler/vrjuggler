@@ -37,9 +37,9 @@
 #include <vpr/Util/Singleton.h>
 
 /** Register a creator for the Event classes
-*
-* Ex: GADGET_REGISTER_EVENT_CREATOR( EventType, event_id )
-*/
+ *
+ * Ex: GADGET_REGISTER_EVENT_CREATOR( EventType, event_id )
+ */
 #define GADGET_REGISTER_EVENT_CREATOR( EventType, id ) \
 class EventType; \
 const bool reg_ctr_ ## id = gadget::EventFactory::instance()->registerCreator( id, \
@@ -48,8 +48,13 @@ const bool reg_ctr_ ## id = gadget::EventFactory::instance()->registerCreator( i
 namespace gadget
 {
 
-class EventFactory : public vpr::Factory<Event, EventType>,
-                              public vpr::Singleton<EventFactory>
+/** \class EventFactory EventFactory.h gadget/Type/KeyboardMouse/EventFactory.h
+ *
+ * Event factory.
+ */
+class EventFactory
+   : public vpr::Factory<Event, EventType>
+   , public vpr::Singleton<EventFactory>
 {};
 
 } // End of gadget namespace

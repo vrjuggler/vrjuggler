@@ -53,19 +53,23 @@ namespace cluster
 {
    class Header;
 
+/** \class Packet Packet.h cluster/Packets/Packet.h
+ *
+ * Cluster packet base type.
+ */
 class GADGET_CLASS_API Packet
 {
 public:
    /**
-    * Create a new empty packet
+    * Create a new empty packet.
     */
    Packet();
-   
+
    /**
-    * Copy the given data, and parse the header 
+    * Copy the given data, and parse the header.
     */
    Packet(std::vector<vpr::Uint8>* data);
-   
+
    /**
     * Free all memory used by internal data.
     */
@@ -74,8 +78,9 @@ public:
    /**
     * Construct a packet using the given packet header and socketstream.
     */
-   void recv(Header* packet_head, gadget::Node* node) throw(cluster::ClusterException);
-   
+   void recv(Header* packet_head, gadget::Node* node)
+      throw(cluster::ClusterException);
+
    /**
     * Dump all internal data to the screen.
     */
@@ -85,12 +90,12 @@ public:
     * Get the type of this packet.
     */
    vpr::Uint16 getPacketType();
-   
+
    /**
     * Print the internal data in a readable format.
     */
    virtual void printData(int debug_level) = 0;
-   
+
    /**
     * Return the vpr::PacketReader object used to retrieve data from the packet.
     */
@@ -102,8 +107,11 @@ public:
    /**
     * Get the GUID of the Plugin that should handle this packet.
     */
-   vpr::GUID getPluginId() { return mPluginId; }
-   
+   vpr::GUID getPluginId()
+   {
+      return mPluginId;
+   }
+
    /**
     * Get the header for this packet.
     */

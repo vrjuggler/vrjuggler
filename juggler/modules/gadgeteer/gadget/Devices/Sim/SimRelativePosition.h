@@ -43,16 +43,15 @@
 
 namespace gadget
 {
-/**
- * Simulated a position device by making.
- * An existing device behave relative to another one.
+
+/** \class SimRelativePosition SimRelativePosition.h gadget/Devices/Sim/SimRelativePosition.h
  *
- * One device is the base coordinate system frame of reference.
- * The other device has it's position information transformed
- * to be relative to that frame.
- * ie. There is a matrix multiply.
+ * Simulates a position device by making an existing device behave relative to
+ * another one.  One device is the base coordinate system frame of reference.
+ * The other device has its position information transformed to be relative to
+ * that frame (there is a matrix multiply).
  *
- * This class should not be used directly by the user.
+ * @note This class should not be used directly by the user.
  */
 //class SimRelativePosition : public Input, public Position
 class SimRelativePosition : public InputMixer<Input,Position>
@@ -64,9 +63,9 @@ public:
    virtual bool config(jccl::ConfigElementPtr element);
 
    /** These functions don't do anything. */
-   bool startSampling() { return 1; }
-   bool stopSampling() { return 1; }
-   bool sample() { return 1; }
+   bool startSampling() { return true; }
+   bool stopSampling() { return true; }
+   bool sample() { return true; }
 
    /** Updates the data. */
    virtual void updateData();
@@ -93,10 +92,9 @@ protected:
    }
 
 private:
-   PositionData      mPos;                   /**< The current position being simulated */
-   PositionInterface mBaseFrame;             /**< The base frame of reference */
-   PositionInterface mRelativePos;           /**< the relative position */
-
+   PositionData      mPos;         /**< The current position being simulated */
+   PositionInterface mBaseFrame;   /**< The base frame of reference */
+   PositionInterface mRelativePos; /**< the relative position */
 };
 
 } // End of gadget namespace

@@ -38,6 +38,9 @@
 namespace gadget
 {
 
+/** \class Speech Speech.h gadget/Type/Speech.h
+ *
+ */
 class Speech
 {
 public:
@@ -60,8 +63,6 @@ public:
       ON,
       OFF
    };
-
-
 
    class asdfjlk
    {

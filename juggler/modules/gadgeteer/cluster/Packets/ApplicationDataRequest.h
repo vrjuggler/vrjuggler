@@ -39,12 +39,16 @@
 #include <vpr/IO/BufferObjectWriter.h>
 #include <vpr/IO/Socket/SocketStream.h>
 
-#include <cluster/Packets/Header.h>                                                       
+#include <cluster/Packets/Header.h>
 #include <cluster/Packets/Packet.h>
 
 namespace cluster
 {
 
+/** \class ApplicationDataRequest ApplicationDataRequest.h cluster/Packets/ApplicationDataRequest.h
+ *
+ * Application-specific request packet.
+ */
 class GADGET_CLASS_API ApplicationDataRequest : public Packet
 {
 public:
@@ -61,7 +65,7 @@ public:
     *                    requesting.
     */
    ApplicationDataRequest(const vpr::GUID plugin_guid, const vpr::GUID& id);
-   
+
    /**
     * Serializes member variables into a data stream.
     */
@@ -71,12 +75,12 @@ public:
     * Parses the data stream into the local member variables.
     */
    virtual void parse(vpr::BufferObjectReader* reader);
-   
+
    /**
     * Print the data to the screen in a readable form.
     */
    virtual void printData(int debug_level);
-   
+
    /**
     * Return the type of this packet.
     */
@@ -84,18 +88,19 @@ public:
    {
        return(Header::RIM_APPDATA_REQ);
    }
-   
+
    /**
     * Return the GUID of the ApplicationData object being requested.
     */
-   vpr::GUID getId() { return mId; }   
+   vpr::GUID getId()
+   {
+   return mId;
+   }
+
 private:
-   vpr::GUID mId;    /**< GUID for the ApplicationData object being requested. */
+   vpr::GUID mId;  /**< GUID for the ApplicationData object being requested. */
 };
+
 }// end namespace cluster
 
 #endif
-
-
-
-

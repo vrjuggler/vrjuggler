@@ -47,6 +47,10 @@
 namespace gadget
 {
 
+/** \class DeviceConstructor DeviceConstructor.h gadget/Type/DeviceConstructor.h
+ *
+ * Type-specific device object creator.
+ */
 template <class DEV>
 class DeviceConstructor : public DeviceConstructorBase
 {

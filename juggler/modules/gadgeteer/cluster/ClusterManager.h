@@ -56,7 +56,8 @@ namespace cluster
 {
 class ClusterPlugin;
 
-/**
+/** \class ClusterManager ClusterManager.h cluster/ClusterManager.h
+ *
  * Manages the synchronization of all ClusterPlugins.
  */
 class GADGET_CLASS_API ClusterManager : public jccl::ConfigElementHandler

@@ -40,12 +40,16 @@
 #include <vpr/IO/BufferObjectWriter.h>
 #include <vpr/IO/Socket/SocketStream.h>
 
-#include <cluster/Packets/Header.h>                                                       
+#include <cluster/Packets/Header.h>
 #include <cluster/Packets/Packet.h>
 
 namespace cluster
 {
 
+/** \class DeviceRequest DeviceRequest.h cluster/Packets/DeviceRequest.h
+ *
+ * Device request packet.
+ */
 class GADGET_CLASS_API DeviceRequest : public Packet
 {
 public:
@@ -57,10 +61,10 @@ public:
     *
     * @param plugin_guid GUID of the ClusterPlugin that should handle this
     *                    packet.
-    * @param device_name Name of the remote device being requested.    
+    * @param device_name Name of the remote device being requested.
     */
    DeviceRequest(const vpr::GUID& plugin_guid, const std::string& device_name);
-   
+
    /**
     * Serializes member variables into a data stream.
     */
@@ -70,12 +74,12 @@ public:
     * Parses the data stream into the local member variables.
     */
    virtual void parse(vpr::BufferObjectReader* reader);
-   
+
    /**
     * Print the data to the screen in a readable form.
     */
    virtual void printData(int debug_level);
-   
+
    /**
     * Return the type of this packet.
     */
@@ -87,14 +91,16 @@ public:
    /**
     * Return the name of the remote device being requested.
     */
-   std::string getDeviceName() { return mDeviceName; }
+   std::string getDeviceName()
+   {
+      return mDeviceName;
+   }
+
 private:
    std::string mDeviceName;   /**< The name of the remote device being requested */
 };
+
 }
 
+
 #endif
-
-
-
-

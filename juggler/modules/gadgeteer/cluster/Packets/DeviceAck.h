@@ -40,12 +40,16 @@
 #include <vpr/IO/BufferObjectWriter.h>
 #include <vpr/IO/Socket/SocketStream.h>
 
-#include <cluster/Packets/Header.h>                                                       
+#include <cluster/Packets/Header.h>
 #include <cluster/Packets/Packet.h>
 
 namespace cluster
 {
 
+/** \class DeviceAck DeviceAck.h cluster/Packets/DeviceAck.h
+ *
+ * Device acknowledgement packet.
+ */
 class GADGET_CLASS_API DeviceAck : public Packet
 {
 public:
@@ -63,10 +67,10 @@ public:
     * @param ack              Boolean determining if this is a positive (ACK)
     *                         or a negative (NACK) responce.
     */
-   DeviceAck(const vpr::GUID& plugin_id, const vpr::GUID& id, 
-             const std::string& device_name, 
+   DeviceAck(const vpr::GUID& plugin_id, const vpr::GUID& id,
+             const std::string& device_name,
              const std::string& device_base_type, bool ack);
-   
+
    /**
     * Serializes member variables into a data stream.
     */
@@ -76,7 +80,7 @@ public:
     * Parses the data stream into the local member variables.
     */
    virtual void parse(vpr::BufferObjectReader* reader);
-   
+
    /**
     * Print the data to the screen in a readable form.
     */
@@ -87,33 +91,50 @@ public:
     */
    static vpr::Uint16 getPacketFactoryType()
    {
-       return(Header::RIM_DEVICE_ACK);
+      return(Header::RIM_DEVICE_ACK);
    }
-   
+
    /**
     * Return the GUID of the Device that we are acknowledging.
     */
-   vpr::GUID getId() { return mId; }
-   
+   vpr::GUID getId()
+   {
+      return mId;
+   }
+
    /**
     * Return the name of the device that we are acknowledging.
     */
-   std::string getDeviceName() { return mDeviceName; }
-   
+   std::string getDeviceName()
+   {
+      return mDeviceName;
+   }
+
    /**
     * Return the basetype of the device that we are acknowledging.
     */
-   std::string getDeviceBaseType() { return mDeviceBaseType; }
+   std::string getDeviceBaseType()
+   {
+      return mDeviceBaseType;
+   }
 
    /**
     * Return the hostname of the node that is acknowledging the DeviceRequest
     */
-   std::string getHostname() { return mHostname; }
+   std::string getHostname()
+   {
+      return mHostname;
+   }
 
    /**
-    * Return a boolean determining if this is a positive(ACK) or a negative(NACK) responce.
+    * Return a boolean determining if this is a positive(ACK) or a
+    * negative(NACK) responce.
     */
-   bool getAck() { return mAck; }
+   bool getAck()
+   {
+      return mAck;
+   }
+
 private:
    vpr::GUID   mId;              /**< GUID of the Device that we are acknowledging. */
    std::string mDeviceName;      /**< Name of the device that we are acknowledging. */

@@ -47,7 +47,8 @@
 namespace gadget
 {
 
-/**
+/** \class AnalogProxy AnalogProxy.h gadget/Type/AnalogProxy.h
+ *
  * A proxy class to analog devices, used by the Input Manager.
  *
  * An analog proxy always points to an analog  device and unit number within

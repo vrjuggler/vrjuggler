@@ -45,10 +45,11 @@
 namespace gadget
 {
 
-/**
+/** \class ProxyConstructorBase ProxyFactory.h gadget/ProxyFactory.h
+ *
  * Base class for virtual construction of proxies.
  * Implementations of this class are registered with the proxy factory
- * for each proxy tyep in the system.
+ * for each proxy type in the system.
  */
 class ProxyConstructorBase
 {
@@ -70,6 +71,10 @@ public:
 };
 
 
+/** \class ProxyConstructor ProxyFactory.h gadget/ProxyFactory.h
+ *
+ * Type-specific proxy constructor.
+ */
 template <class PROXY>
 class ProxyConstructor : public ProxyConstructorBase
 {
@@ -104,14 +109,15 @@ public:
 };
 
 
-/**
+/** \class ProxyFactory ProxyFactory.h gadget/ProxyFactory.h
+ *
  * Object used for creating proxies.
  * @note Singleton
  */
 class ProxyFactory
 {
 private:
-   // Singleton so must be private
+   /** Singleton so must be private. */
    ProxyFactory() {;}
 
    /**
@@ -126,7 +132,7 @@ public:
    /**
     * Queries if the factory knows about the given proxy.
     *
-    * @pre element != NULL, element is a valid config element.
+    * @pre \p element != NULL, element is a valid config element.
     * @param element The element we are requesting about knowledge to create.
     * @return true if the factory knows how to create the proxy; false if not.
     */

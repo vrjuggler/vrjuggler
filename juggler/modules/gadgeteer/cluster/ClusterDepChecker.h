@@ -42,7 +42,8 @@
 namespace cluster
 {
 
-/**
+/** \class ClusterDepChecker ClusterDepChecker.h cluster/ClusterDepChecker.h
+ *
  * Dependency checker for Remote Input Manager.
  * Implement the basic stuff plus a check for whether
  * the system knows about Remote Input Manager yet.
@@ -58,7 +59,9 @@ public:
     * Used to output messages in checker listings.
     */
    virtual std::string getCheckerName()
-   { return std::string("Cluster Dependency Checker"); }
+   {
+      return std::string("Cluster Dependency Checker");
+   }
 
    /** We can handle only remote device configuration information. */
    virtual bool canHandle(jccl::ConfigElementPtr element);

@@ -46,10 +46,11 @@
 namespace gadget
 {
 
-/**
- *  Simulated digital device
- * Simulates a digital device from a keyboard device.
- * It allows any number of simulated digital devices to be created.
+/** \class SimDigitalGlove SimDigitalGlove.h gadget/Devices/Sim/SimDigitalGlove.h
+ *
+ * Simulated digital glove device.
+ * Simulates a digital glove device from a keyboard device.
+ * It allows any number of simulated digital glove devices to be created.
  *
  * When the key configured is held down, the digital device is on.
  * When the key is released, the device is no longer set.
@@ -59,29 +60,15 @@ namespace gadget
 class SimDigitalGlove : virtual public InputMixer< InputMixer< InputMixer<Input,Digital>, SimInput>, Glove>
 {
 public:
-   /**  Default Constructor */
+   /** Default constructor. */
    SimDigitalGlove();
 
-   /**  Destructor */
+   /** Destructor. */
    virtual ~SimDigitalGlove();
 
-   /** Configures this device.  */
+   /** Configures this device. */
    virtual bool config(jccl::ConfigElementPtr element);
 
-   /**
-    * Gets the digital data for the given "finger".
-    * Returns digital 0 or 1, if "finger" makes sense.
-    * Returns -1 if function fails or if devNum is out of range.
-    * Use one of these indices to get the glove's digital data.
-    * EX: int result = mGlove.getDigitalData( SimDigitalGlove::LTHUMB );
-    *
-    * @return 0 == open, 1 == contact.
-    *
-    * @note If devNum is out of range, function will fail, possibly issueing
-    *       an error to a log or console - but will not ASSERT.<BR><BR>
-    *
-    * @note These should be the same integers as PinchGlove's
-    */
    enum finger
    {
       LTHUMB = 0, LINDEX = 1, LMIDDLE = 2, LRING = 3, LPINKY = 4,

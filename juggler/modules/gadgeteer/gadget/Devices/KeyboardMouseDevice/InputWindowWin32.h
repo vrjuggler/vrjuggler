@@ -56,6 +56,10 @@
 namespace gadget
 {
 
+/** \class InputWindowWin32 InputWindowWin32.h gadget/Devices/KeyboardMouseDevice/InputWindowWin32.h
+ *
+ * Basic Win32 input window type.
+ */
 class GADGET_CLASS_API InputWindowWin32
    : public Input, public InputAreaWin32
 {

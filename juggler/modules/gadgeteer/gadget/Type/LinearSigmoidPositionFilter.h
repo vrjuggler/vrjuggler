@@ -41,7 +41,10 @@
 namespace gadget
 {
 
-/** A pos filter class that uses a linear sigmoid */
+/** \class LinearSigmoidPositionFilter LinearSigmoidPositionFilter.h gadget/Type/LinearSigmoidPositionFilter.h 
+ *
+ * A position filter class that uses a linear sigmoid.
+ */
 class LinearSigmoidPositionFilter : public PositionFilter
 {
 public:

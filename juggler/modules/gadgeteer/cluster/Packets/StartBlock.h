@@ -39,12 +39,16 @@
 #include <vpr/IO/BufferObjectReader.h>
 
 #include <gadget/Util/Debug.h>
-#include <cluster/Packets/Header.h>                                                       
+#include <cluster/Packets/Header.h>
 #include <cluster/Packets/Packet.h>
 
 namespace cluster
 {
 
+/** \class StartBlock StartBlock.h cluster/Packets/StartBlock.h
+ *
+ * Data sequence start block packet.
+ */
 class GADGET_CLASS_API StartBlock : public Packet
 {
 public:
@@ -60,22 +64,22 @@ public:
     * @param frame_number The current number of frames that have been drawn.
     */
    StartBlock(const vpr::GUID& plugin_id, const vpr::Uint32& frame_number);
-   
+
    /**
     * Serializes member variables into a data stream.
     */
    void serialize();
-   
+
    /**
     * Parses the data stream into the local member variables.
     */
    virtual void parse(vpr::BufferObjectReader* reader);
-   
+
    /**
     * Print the data to the screen in a readable form.
     */
    virtual void printData(int debug_level);
-   
+
    /**
     * Return the type of this packet.
     */
@@ -84,10 +88,8 @@ public:
        return(Header::RIM_START_BLOCK);
    }
 };
+
 }
 
+
 #endif
-
-
-
-

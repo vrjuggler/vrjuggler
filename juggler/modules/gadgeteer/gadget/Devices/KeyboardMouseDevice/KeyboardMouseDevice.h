@@ -50,11 +50,16 @@
 namespace gadget
 {
 
+/** \class KeyboardMouseDevice KeyboardMouseDevice.h gadget/Devices/KeyboardMouseDevice/KeyboardMouseDevice.h
+ *
+ * Base class for keyboard/mouse input devices.
+ */
 class KeyboardMouseDevice : public InputMixer<Input,KeyboardMouse>
 {
 public:  // --- Internal helper class ----- //
-   /** Holds list of registered windows that may be used for X-Input.
-    * This is used by KeyboardMouse routines to find any windows
+   /**
+    * Holds list of registered windows that may be used for keyboard/moues
+    * Input.  This is used by KeyboardMouseDevice routines to find any windows
     * opened by other system components but that we still want to get input
     * from.
     */
@@ -158,7 +163,8 @@ public:
    // NOTE: This driver does not use the normal triple buffering mechanism.
    // Instead, it just uses a modified double buffering system.
 
-   /* Event window state holders */
+   /** @name Event window state holders */
+   //@{
    /**
     * (0,*): The num key presses during an UpdateData (ie. How many keypress
     * events).
@@ -170,6 +176,7 @@ public:
     * key now).
     */
    int mRealkeys[gadget::LAST_KEY];
+   //@}
 };
 
 

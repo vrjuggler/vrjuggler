@@ -44,6 +44,10 @@ namespace gadget
 {
 class Node;
 
+/** \class Connector Connector.h gadget/Connector.h
+ *
+ * Simple connector type.
+ */
 class GADGET_CLASS_API Connector
 {
 private:

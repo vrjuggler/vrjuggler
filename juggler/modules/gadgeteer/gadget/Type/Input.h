@@ -48,29 +48,32 @@
 namespace gadget
 {
 
-/** Input is the abstract base class that all input objects derive from.
-*
-*  Input is the base class for all Input Devices, all the devices are
-*  therefore forced to implement the pure virtual functions of Sample,
-*  StartSampling, StopSampling, and UpdateData. <br> <br>
-*
-*  Dummy devices can use a default constructor, but physical devices should
-*  have a Constructor which takes a config element and calls the Input
-*  constructor taking a jccl::ConfigElementPtr. <br> <br>
-*
-*  All Physical devices will inherit from not Input but another abstract
-*  class which inherits from Input, currently there is support for
-*  Positional Devices, Analog Devices, and Digital devices, each has its own
-*  added pure virtual functions providing a simple and equal interface to
-*  themselves.
-*
-* @note  We make the assumption in all devices that while updateData() is being
-*       called, no other process will try to read the current data.
-*       We can make this assumption because the whole idea of UpdateData() is
-*       to bring in a current copy of the data for threads to process for a
-*       frame.  Because of this, threads should not be reading data while
-*       it is being updated to the most recent copy.
-*/
+/** \class Input Input.h gadget/Type/Input.h
+ *
+ * gadget::Input is the abstract base class from which all input objects
+ * derive.
+ *
+ * gadget::Input is the base class for all Input Devices, all the devices are
+ * therefore forced to implement the pure virtual functions of sample(),
+ * startSampling(), stopSampling(), and updateData().
+ *
+ * Dummy devices can use a default constructor, but physical devices should
+ * have a Constructor which takes a config element and calls the Input
+ * constructor taking a jccl::ConfigElementPtr.
+ *
+ * All Physical devices will inherit from not Input but another abstract
+ * class which inherits from Input, currently there is support for
+ * Positional Devices, Analog Devices, and Digital devices, each has its own
+ * added pure virtual functions providing a simple and equal interface to
+ * themselves.
+ *
+ * @note We make the assumption in all devices that while updateData() is being
+ *       called, no other process will try to read the current data.
+ *       We can make this assumption because the whole idea of UpdateData() is
+ *       to bring in a current copy of the data for threads to process for a
+ *       frame.  Because of this, threads should not be reading data while
+ *       it is being updated to the most recent copy.
+ */
 class GADGET_CLASS_API Input : public vpr::SerializableObject
 {
 public:
@@ -159,8 +162,11 @@ public:
    }
 
    /**
-    * Get the string name of the current device type.  This is used later by the BaseTypeFactory to build
-    * a "virtual" representation of this to be used for remote input.
+    * Get the string name of the current device type.  This is used later by
+    * the BaseTypeFactory to build a "virtual" representation of this to be
+    * used for remote input.
+    *
+    * @see gadget::BaseTypeFactory
     */
    virtual std::string getInputTypeName()
    {
