@@ -47,15 +47,15 @@
 
 namespace vpr {
 
-//----------------------------------------------------
-//: Manager that maintains data about all threads.
-//
-// This class holds data on: <br>
-// - List of all threads in system <br>
-// - Thread Specific data items
-//
-//-----------------------------------------------------
-//!PUBLIC_API:
+/**
+ * Manager that maintains data about all threads.
+ *
+ * This class holds data on: <br>
+ * - List of all threads in system <br>
+ * - Thread Specific data items
+ *
+ * @author Allen Bierbaum
+ */
 class VPR_CLASS_API ThreadManager
 {
 public:

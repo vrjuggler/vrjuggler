@@ -41,18 +41,19 @@
 
 namespace vpr {
 
-// --------------------------------------------------------------------------
-// NOTES:
-//    - This is used as the base class for all thread classes.
-// -------------------------------------------------------------------------- 
+/**
+ * This is used as the base class for all thread classes.
+ *
+ * @author Allen Bierbaum
+ */
 class VPR_CLASS_API BaseThread
 {
 public:
    enum VPRThreadPriority {
-       VPR_PRIORITY_LOW,      //: The lowest possible priority
-       VPR_PRIORITY_NORMAL,   //: The most common priority
-       VPR_PRIORITY_HIGH,     //: Slightly higher priority
-       VPR_PRIORITY_URGENT    //: The highest priority
+       VPR_PRIORITY_LOW,      /**< The lowest possible priority */
+       VPR_PRIORITY_NORMAL,   /**< The most common priority */
+       VPR_PRIORITY_HIGH,     /**< Slightly higher priority */
+       VPR_PRIORITY_URGENT    /**< The highest priority */
    };
 
    enum VPRThreadScope {
@@ -333,7 +334,7 @@ private:
    //std::hash_map<IdxType, BaseThread*> mThreadMap;
 };
 
-// Ouput operator
+/// Ouput operator
 std::ostream& operator<<(std::ostream& out, BaseThread* threadPtr);
 
 }; // End of vpr namespace
