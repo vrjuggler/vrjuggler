@@ -43,8 +43,10 @@
 #define _VPR_BASE_THREAD_H_
 
 #include <vpr/vprConfig.h>
-#include <vpr/vprTypes.h>
+
+#include <iomanip>
 #include <map>
+#include <vpr/vprTypes.h>
 #include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/Thread/TSTable.h>            /* Needed to cache a copy here */
 
