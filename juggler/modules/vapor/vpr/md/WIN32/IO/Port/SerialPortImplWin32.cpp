@@ -86,7 +86,7 @@ vpr::ReturnStatus SerialPortImplWin32::open ()
                          0,    // comm devices must be opened w/exclusive-access
                          NULL, // no security attributes
                          OPEN_EXISTING, // comm devices must use OPEN_EXISTING
-                         0,    // not overlapped I/O
+                         mBlocking,    // not overlapped I/O
                          NULL  // hTemplate must be NULL for comm devices
                        );
 
@@ -107,7 +107,6 @@ vpr::ReturnStatus SerialPortImplWin32::open ()
    }
    DCB dcb;
    GetCommState(mHandle, &dcb);
-   dcb.ErrorChar = 122;
    SetCommState(mHandle, &dcb);
 
 
@@ -443,10 +442,15 @@ vpr::ReturnStatus SerialPortImplWin32::write_i (const void* buffer,
    if ( vpr::Interval::NoTimeout != timeout )
       vprDEBUG(vprDBG_ALL,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
 
+   std::cout << "in write, before write" << bytes_written << ":" << bytes << std::endl;
    if ( !WriteFile(mHandle, buffer, length, &bytes, NULL) )
    {
       s.setCode(vpr::ReturnStatus::Fail);
+      bytes_written = 0;
+      std::cout << "failure: " << bytes_written << ":" << bytes << std::endl;
+   }else{
       bytes_written = bytes;
+      std::cout << "success: " << bytes_written << ":" << bytes << std::endl;
    }
    return s;
 
@@ -459,6 +463,8 @@ vpr::ReturnStatus SerialPortImplWin32::read_i(void* buffer, const vpr::Uint32 le
 {
    vpr::ReturnStatus s;
    unsigned long bytes;
+
+   std::cout << "ruled out" << std::endl;
 
    if ( vpr::Interval::NoTimeout != timeout )
       vprDEBUG(vprDBG_ALL,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
@@ -731,23 +737,17 @@ bool SerialPortImplWin32::getHardwareFlowControlState ()
 
 vpr::ReturnStatus SerialPortImplWin32::enableHardwareFlowControl ()
 {
-   vpr::ReturnStatus status;
-   DCB dcb;
-   GetCommState(mHandle, &dcb);
-   dcb.fRtsControl=RTS_CONTROL_ENABLE;
-   dcb.fDtrControl=DTR_CONTROL_ENABLE;
-   EscapeCommFunction(mHandle, &dcb);
+   vpr::ReturnStatus s;
+   EscapeCommFunction(mHandle,SETDTR);
+   EscapeCommFunction(mHandle,SETRTS);
    return s;
 }
 
 vpr::ReturnStatus SerialPortImplWin32::disableHardwareFlowControl ()
 {
-   vpr::ReturnStatus status;
-   DBC dcb;
-   GetCommState(mHandle, &dcb);
-   dcb.fTrsControl=RTS_CONTROL_DISABLE;
-   dcb.fDtrControl=DTR_CONTROL_DISABLE;
-   EscapeCommFunction(mHandle, &dcb);
+   vpr::ReturnStatus s;
+   EscapeCommFunction(mHandle,CLRDTR );
+   EscapeCommFunction(mHandle,CLRRTS);
    return s;
 }
 
