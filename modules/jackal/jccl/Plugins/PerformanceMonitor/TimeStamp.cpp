@@ -1,7 +1,10 @@
 
-#include <Performance/vjTimeStamp.h>
+// these should all be in separate .cpp files.  fix later
 
-#ifdef _VJ_SGI_TIMING_
+#if VJ_PERFORMANCE == VJ_PERF_SGI
+
+#include <Performance/vjTimeStampSGI.h>
+
 /*
  * SGI cyclecounter timing
  *
@@ -16,7 +19,7 @@
 #include <sys/errno.h>
 #include <Kernel/vjDebug.h>
 
-void vjTimeStamp::initialize() {
+void vjTimeStampSGI::initialize() {
     int cyclevalue;
     static unsigned long long enodev_dummy_address = 0;
 
@@ -54,37 +57,62 @@ void vjTimeStamp::initialize() {
 
 
 
-float vjTimeStamp::usecs () {
+float vjTimeStampSGI::usecs () {
     /* returns timestamp value in usecs from intialize() */
     return val*resolution;
 }
 
 
+vjTimeStampSGI::vjTimeStampSGI() {
+    set();
+}
+
+
+float vjTimeStampSGI::operator - (const vjTimeStampSGI& t2) const {
+    /* returns self - t2, in usecs */
+    return (val - t2.val)*resolution;
+}
+
+
+ostream& operator << (ostream& out, vjTimeStampSGI& ts) {
+    out << ts.usecs();
+    return out;
+}
+
+
+
+float vjTimeStampSGI::getResolution() {
+    return resolution;
+}
+
 
 /* these need to be here to avoid "Unresolved data symbols" 
  * problem w/ linker.
  */
-__psunsigned_t vjTimeStamp::phys_addr = 0;
-__psunsigned_t vjTimeStamp::raddr = 0;
-volatile void* vjTimeStamp::iotimer_addr;
-volatile unsigned long long vjTimeStamp::longcount;
-int vjTimeStamp::fd, 
-    vjTimeStamp::poffmask;
-float vjTimeStamp::resolution; // in usecs.
-int vjTimeStamp::cyclecntrsize;  // either 32 or 64 bits. depends on hardware
-long long vjTimeStamp::initval;
-long long vjTimeStamp::maxval;
+__psunsigned_t vjTimeStampSGI::phys_addr = 0;
+__psunsigned_t vjTimeStampSGI::raddr = 0;
+volatile void* vjTimeStampSGI::iotimer_addr;
+volatile unsigned long long vjTimeStampSGI::longcount;
+int vjTimeStampSGI::fd, 
+    vjTimeStampSGI::poffmask;
+float vjTimeStampSGI::resolution; // in usecs.
+int vjTimeStampSGI::cyclecntrsize;  // either 32 or 64 bits. depends on hardware
+long long vjTimeStampSGI::initval;
+long long vjTimeStampSGI::maxval;
 
 
-#else
+#elif VJ_PERFORMANCE == VJ_PERF_POSIX
 
 /*
  * gettimeofday version 
  */
+#include "Performance/vjTimeStampPosix.h"
 
-float vjTimeStamp::initval = 0.0;
+float vjTimeStampPosix::initval = 0.0;
 
-#endif
+#elif VJ_PERFORMANCE == VJ_PERF_NONE
+// nothing to do here
+#endif // VJ_PERF_NONE
 
 
 
