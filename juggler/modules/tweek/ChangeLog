@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2004-07-13 aronb       Inter-step communication in wizards now occurs using a
+                       hash map.
+                       NEW VERSION: 0.17.0
 2004-05-08 patrickh    Updated to VPR 0.36.0.
                        NEW VERSION: 0.16.3
 2004-04-10 patrickh    Added a new Swing look and feel called Liquid.
