@@ -499,8 +499,8 @@ void GlDrawManager::drawSimulator(SimViewport* sim_vp)
 
       bool use_lighting_in_sim = (lighting_on == GL_TRUE);
 
-      vprDEBUG(vprDBG_ALL,0) << "lighting on: " << ((lighting_on == GL_TRUE)?"Y":"N")
-                             << "  light0_on:" << ((light0_on == GL_TRUE)?"Y":"N") << std::endl << vprDEBUG_FLUSH;
+      //vprDEBUG(vprDBG_ALL,0) << "lighting on: " << ((lighting_on == GL_TRUE)?"Y":"N")
+      //                       << "  light0_on:" << ((light0_on == GL_TRUE)?"Y":"N") << std::endl << vprDEBUG_FLUSH;
 
       //-----------------set up materials....
       float mat_ambient[] = {0.1f, 0.1f, 0.1f, 1.0f};
