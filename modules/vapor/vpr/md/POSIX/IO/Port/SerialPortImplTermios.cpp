@@ -289,6 +289,32 @@ SerialPortImplTermios::setCharacterSize (const SerialTypes::CharacterSizeOption 
 }
 
 // ----------------------------------------------------------------------------
+// Get the current read state for the port.
+// ----------------------------------------------------------------------------
+bool
+SerialPortImplTermios::getReadState () {
+    return getBit(CREAD, SerialPortImplTermios::CFLAG);
+}
+
+// ----------------------------------------------------------------------------
+// Enable the receiver so that bytes can be read from the port.
+// ----------------------------------------------------------------------------
+Status
+SerialPortImplTermios::enableRead () {
+    return setBit(CREAD, SerialPortImplTermios::CFLAG, true,
+                  "Could not enable reading");
+}
+
+// ----------------------------------------------------------------------------
+// Disable the receiver so that bytes cannot be read from the port.
+// ----------------------------------------------------------------------------
+Status
+SerialPortImplTermios::disableRead () {
+    return setBit(CREAD, SerialPortImplTermios::CFLAG, false,
+                  "Could not disable reading");
+}
+
+// ----------------------------------------------------------------------------
 // Get the number of stop bits in use.  This will be either 1 or 2.
 // ----------------------------------------------------------------------------
 Status
