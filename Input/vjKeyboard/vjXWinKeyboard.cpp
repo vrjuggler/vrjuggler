@@ -48,8 +48,11 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
    // Done in vjInput --- myThread = NULL;
    int i;
    for (i =0; i < 256; i++)
-      m_realkeys[i] = m_keys[i] = 0;
-   m_realkeys[0] = m_keys[0] = 1;
+   {
+      m_curKeys[i] = m_realkeys[i] = m_keys[i] = 0;
+   }
+
+   m_curKeys[0] = m_realkeys[0] = m_keys[0] = 1;
 
    // Get size and position
    m_width = (int)c->getProperty("width");
