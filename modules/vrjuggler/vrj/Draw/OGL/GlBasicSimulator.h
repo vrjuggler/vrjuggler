@@ -63,7 +63,7 @@ class GlBasicSimulator : public GlSimInterface
 public:
    GlBasicSimulator();
 
-   virtual ~GlBasicSimulator() {}
+   virtual ~GlBasicSimulator();
 
    /**
     * Configures the basic OpenGL simulator.
