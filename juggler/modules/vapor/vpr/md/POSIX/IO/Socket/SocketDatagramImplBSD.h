@@ -54,7 +54,11 @@ public:
     //! PRE: None.
     //! POST: None.
     // ------------------------------------------------------------------------
-    SocketDatagramImpBSD(void);
+    SocketDatagramImpBSD (void)
+        : SocketImpBSD()
+    {
+        /* Do nothing. */ ;
+    }
 
     // ------------------------------------------------------------------------
     //
@@ -63,8 +67,12 @@ public:
     //+       set to vpr::SocketTypes::DATAGRAM.
     //
     // ------------------------------------------------------------------------
-    SocketDatagramImpBSD(const InetAddr& local_addr,
-                         const InetAddr& remote_addr);
+    SocketDatagramImpBSD (const InetAddr& local_addr,
+                          const InetAddr& remote_addr)
+        : SocketImpBSD(local_addr, remote_addr, SocketTypes::DATAGRAM)
+    {
+        /* Do nothing. */ ;
+    }
 
     // ------------------------------------------------------------------------
     // Copy constructor.

@@ -53,42 +53,6 @@ namespace vpr {
 // ============================================================================
 
 // ----------------------------------------------------------------------------
-// Constructor.  This takes the address (either hostname or IP address) of a
-// remote site and a port and stores the values for later use in the member
-// variables of the object.
-// ----------------------------------------------------------------------------
-SocketStreamImpBSD::SocketStreamImpBSD (void)
-    : SocketImpBSD()
-{
-fprintf(stderr, "vpr::SocketStreamImpBSD default constructor\n");
-    /* Do nothing. */ ;
-}
-
-// ----------------------------------------------------------------------------
-// Constructor.  This takes the address (either hostname or IP address) of a
-// remote site and a port and stores the values for later use in the member
-// variables of the object.
-// ----------------------------------------------------------------------------
-SocketStreamImpBSD::SocketStreamImpBSD (const InetAddr& local_addr,
-                                        const InetAddr& remote_addr)
-    : SocketImpBSD(local_addr, remote_addr, SocketTypes::STREAM)
-{
-fprintf(stderr, "vpr::SocketStreamImpBSD(address, port) constructor\n");
-fprintf(stderr, "    Local Address: %s -> %s\n",
-        local_addr.getAddressString().c_str(),
-        m_local_addr.getAddressString().c_str());
-fprintf(stderr, "    Local Port: %hu -> %hu\n", local_addr.getPort(),
-        m_local_addr.getPort());
-fprintf(stderr, "    Remote Address: %s -> %s\n",
-        remote_addr.getAddressString().c_str(),
-        m_remote_addr.getAddressString().c_str());
-fprintf(stderr, "    Remote Port: %hu -> %hu\n", remote_addr.getPort(),
-        m_remote_addr.getPort());
-fprintf(stderr, "    Domain: %d\n", m_local_addr.getFamily());
-fprintf(stderr, "    Type: %d\n", m_type);
-}
-
-// ----------------------------------------------------------------------------
 // Listen on the socket for incoming connection requests.
 // ----------------------------------------------------------------------------
 bool
@@ -98,7 +62,8 @@ SocketStreamImpBSD::listen (const int backlog) {
     // Put the socket into listning mode.  If that fails, print an error and
     // return error status.
     if ( ::listen(m_handle->m_fdesc, backlog) == -1 ) {
-        fprintf(stderr, "[vpr::SocketStreamImpBSD] Cannot listen on socket: %s\n",
+        fprintf(stderr,
+                "[vpr::SocketStreamImpBSD] Cannot listen on socket: %s\n",
                 strerror(errno));
         retval = false;
     }
@@ -153,11 +118,7 @@ SocketStreamImpBSD::SocketStreamImpBSD (const int sock,
                                         const InetAddr& remote_addr)
     : SocketImpBSD()
 {
-fprintf(stderr, "Protected vpr::SocketStreamImpBSD constructor\n");
-// XXX: Merge
-    std::string addr = remote_addr.getAddressString();
-fprintf(stderr, "Client addr: %s:%hu\n", addr.c_str(), remote_addr.getPort());
-    m_handle          = new FileHandleUNIX(addr);
+    m_handle          = new FileHandleUNIX(remote_addr.getAddressString());
     m_handle->m_fdesc = sock;
     m_type            = SocketTypes::STREAM;
 

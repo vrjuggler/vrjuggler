@@ -238,7 +238,11 @@ protected:
     // POST: The member variables are initialized accordingly to reasonable
     //       defaults.
     // ------------------------------------------------------------------------
-    SocketImpBSD(void);
+    SocketImpBSD (void)
+        : BlockIO(std::string("INADDR_ANY")), m_handle(NULL)
+    {
+        /* Do nothing. */ ;
+    }
 
     // ------------------------------------------------------------------------
     // Standard constructor.  This takes two InetAddr objects, a local address
@@ -251,8 +255,14 @@ protected:
     //     local_addr  - The local address for the socket.
     //     remote_addr - The remote address for the socket.
     // ------------------------------------------------------------------------
-    SocketImpBSD(const InetAddr& local_addr, const InetAddr& remote_addr,
-                 const SocketTypes::Type sock_type);
+    SocketImpBSD (const InetAddr& local_addr, const InetAddr& remote_addr,
+                  const SocketTypes::Type sock_type)
+        : BlockIO(std::string("INADDR_ANY")), m_handle(NULL),
+          m_local_addr(local_addr), m_remote_addr(remote_addr),
+          m_type(sock_type)
+    {
+        m_handle = new FileHandleUNIX(m_name);
+    }
 
     // ------------------------------------------------------------------------
     // Destructor.  This currently does nothing.
