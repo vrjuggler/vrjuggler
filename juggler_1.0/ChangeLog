@@ -2,6 +2,7 @@ DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
 Nov-02-2000 patrick   Finished new MotionStar driver--config files must be
                       updated to reflect some new options
+Oct-28-2000 allenb    Fixed bug preventing right eye only mono in Performer
 Sep-30-2000 allenb    Moved src to SourceForge.net
 Sep-18-2000 allenb    Added interocular distance configuration
 Sep-15-2000 patrick   Fixed positioning of keyboard input windows on Win32
