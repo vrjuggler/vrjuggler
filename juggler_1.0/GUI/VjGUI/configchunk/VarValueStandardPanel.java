@@ -59,13 +59,7 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 
 	setLayout(new BorderLayout (1,1));
 
-	if (desc.valtype.equals(ValType.t_bool)) {
-	    choice = new JComboBox();
-	    choice.addItem("True");
-	    choice.addItem("False");
-	    add (choice,"East");
-	}
-	else if (desc.valtype.equals(ValType.t_chunk)) {
+	if (desc.valtype.equals(ValType.t_chunk)) {
 	    /* we build up a choice of all chunks in the db of allowed types */
 	    ConfigChunkDB db;
 	    ConfigChunk ch;
@@ -113,6 +107,12 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 	    choice.setSelectedItem ("<No Selection>");
 	    add(choice, "Center");
 	}
+	else if (desc.valtype.equals(ValType.t_bool)) {
+	    choice = new JComboBox();
+	    choice.addItem("True");
+	    choice.addItem("False");
+	    add (choice,"East");
+	}
 	else {
 	    /* just add a type label & the text string */
 	    add (new JLabel ("(" + desc.valtype.toString() + ")"), "West");
@@ -141,66 +141,34 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 	// sets the displayed value.
 	ValType tp = v.getValType();
 
-	try {
-	    if (tp.equals(ValType.t_bool)) {
-		choice.setSelectedItem(((Boolean)v.get()).booleanValue()?"True":"False");
-	    }
-	    else if (choice != null) {
-		/* then we're looking at a multisetSelectedItem enumeration thing */
-		if (tp.equals(ValType.t_int))
-		    choice.setSelectedItem(desc.getEnumString(v.getInt()));
-		else if (tp.equals(ValType.t_float))
-		    choice.setSelectedItem(desc.getEnumString(v.getFloat()));
-		else if (tp.equals(ValType.t_string))
-		    choice.setSelectedItem((String)v.get());
-		else if (tp.equals(ValType.t_chunk))
-		    choice.setSelectedItem((String)v.get());
-	    }
-	    else
-		/* set text in textbox */
-		text.setText(v.toString());
-	}
-	catch (java.util.NoSuchElementException e) {
-	    ;
-	}
+	if (choice != null)
+	    choice.setSelectedItem(desc.getEnumString(v));
+	else
+	    /* set text in textbox */
+	    text.setText(v.toString());
     }
 
 
 
     public VarValue getValue () {
 	VarValue v = new VarValue(desc.valtype);
-	if (desc.valtype.equals(ValType.t_bool)) {
-	    v.set((choice.getSelectedIndex() == 0)?true:false);
-	}
-	else if (choice != null) {
+	if (choice != null) {
 	    /* enumeration */
 	    String s = desc.getEnumValue((String)choice.getSelectedItem()).toString();
 	    if ((s == null) || (s.equals("<No Selection>")))
 		s = "";
-	    // remove the "filename: " prefix if it's there...
-	    int i = s.indexOf(": ");
-	    if (i != -1)
-		s = s.substring(i+2);
+
+	    if (desc.valtype.equals (ValType.t_chunk)) {
+		// remove the "filename: " prefix if it's there...
+		int i = s.indexOf(": ");
+		if (i != -1)
+		    s = s.substring(i+2);
+	    }
+
 	    v.set(s);
 	}
-	else if (desc.valtype.equals(ValType.t_int)) {
-	    try {
-		v.set(Integer.parseInt(text.getText()));
-	    }
-	    catch (NumberFormatException e) {
-		v.set (0);
-	    }
-	}
-	else if (desc.valtype.equals(ValType.t_float)) {
-	    try {
-		v.set(Float.valueOf(text.getText()).floatValue());
-	    }
-	    catch (NumberFormatException e) {
-		v.set (0.0f);
-	    }
-	}
 	else
-	    v.set(text.getText());
+	    v.set (text.getText());
 	
 	return v;
     }

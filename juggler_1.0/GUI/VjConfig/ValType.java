@@ -95,5 +95,13 @@ public class ValType {
 	return (val == v.val);
     }
 
+
+    // returns the int representation of type.  need this to do
+    // switch() on ValType
+    public int getInt() {
+	return val;
+    }
+	
+
 }
 
