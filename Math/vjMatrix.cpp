@@ -263,11 +263,11 @@ void vjMatrix::constrainRotAxis( const bool& allowXRot, const bool& allowYRot, c
    // temporary matrix
    vjMatrix constrainedMatrix;
    constrainedMatrix = *this;
-   vjMatrix inv_mat;
+   //vjMatrix inv_mat;
 
    // Restrict the rotation to only the axis specified
    float xRot, yRot, zRot;
-   vjVec3 xAxis( 1, 0, 0 ), yAxis( 0, 1, 0 ), zAxis( 0, 0, 1 );
+   //vjVec3 xAxis( 1, 0, 0 ), yAxis( 0, 1, 0 ), zAxis( 0, 0, 1 );
 
    // Add back the translation:
    /*
