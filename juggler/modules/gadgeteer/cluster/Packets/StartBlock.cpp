@@ -35,6 +35,8 @@
 #include <cluster/Packets/PacketFactory.h>
 #include <cluster/Packets/StartBlock.h>
 
+#include <boost/concept_check.hpp>
+
 namespace cluster
 {
 CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(StartBlock);
@@ -91,18 +93,19 @@ CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(StartBlock);
     */
    void StartBlock::printData(int debug_level)
    {
-      vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
+      boost::ignore_unused_variable_warning(debug_level);
+      
+      vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_VERB_LVL) 
          <<  clrOutBOLD(clrYELLOW,"====== Start BLOCK ======\n") << vprDEBUG_FLUSH;
       
-      Packet::printData(debug_level);
+      Packet::printData(vprDBG_VERB_LVL);
       
-      vprDEBUG(gadgetDBG_RIM,debug_level) 
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) 
          << clrOutBOLD(clrYELLOW, "Plugin ID:    ") << mPluginId.toString()
          << std::endl << vprDEBUG_FLUSH;
 
-      vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
+      vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) 
          <<  clrOutBOLD(clrYELLOW,"=======================\n") << vprDEBUG_FLUSH;
-         
    }
 } // end namespace cluster
 
