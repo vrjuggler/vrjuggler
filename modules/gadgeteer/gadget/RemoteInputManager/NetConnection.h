@@ -40,6 +40,7 @@
 //#include <vpr/IO/ObjectWriter.h>
 #include <vpr/IO/ObjectReader.h>
 #include <jccl/RTRC/ConfigChunkHandler.h>
+#include <gadget/RemoteInputManager/ClusterSync.h>
 
 namespace gadget
 {
@@ -51,6 +52,8 @@ namespace gadget
       std::string mName;                     /**< NetConnection name */
       std::string mHostname;                 /**< Host that it is connected to */
       int mPort;                             /**< host:port */
+
+      ClusterSync                   mClusterSync;
 
       vpr::SocketStream* mSockStream;
       //vpr::ObjectReader* mObjectReader;
@@ -96,6 +99,22 @@ namespace gadget
       gadget::MsgPackage* getMsgPackage()
       {
          return(&mMsgPackage);
+      }
+      
+      void getClusterSync()
+      {
+         mDelta = mClusterSync.getClusterSync(mSockStream);
+      }
+      
+      vpr::Uint64 getDelta()
+      {
+         return(mDelta.getBaseVal());
+      }
+
+
+      void clientClusterSync()
+      {
+         mClusterSync.clientClusterSync(mSockStream);
       }
 
       //-----------Alias Stuff---------------------

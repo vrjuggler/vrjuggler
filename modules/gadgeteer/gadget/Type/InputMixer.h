@@ -72,26 +72,33 @@ template <class ComposedParent, class NewParent>
 class InputMixer : public ComposedParent, public NewParent
 {
 public:
-	typedef InputPlaceHolder< InputMixer<ComposedParent, NewParent> > MixedPlaceholderType;
-
-    vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
-	{
-		ComposedParent::writeObject(writer);
-		NewParent::writeObject(writer);
-		return(vpr::ReturnStatus::Succeed);
-	}
-	
-	vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
-	{
-		ComposedParent::readObject(reader);
-		NewParent::readObject(reader);
-		return(vpr::ReturnStatus::Succeed);
-	}
+   typedef InputPlaceHolder< InputMixer<ComposedParent, NewParent> > MixedPlaceholderType;
    
-	std::string getBaseType()
-	{
-		return(ComposedParent::getBaseType() + NewParent::getBaseType());	  //Input,Digital,Analog,Position, NEED THIS TOO
-	}
+   vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
+   {
+     ComposedParent::writeObject(writer);
+     NewParent::writeObject(writer);
+     return(vpr::ReturnStatus::Succeed);
+   }
+   
+   vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
+   {
+     ComposedParent::readObject(reader);
+     NewParent::readObject(reader);
+     return(vpr::ReturnStatus::Succeed);
+   }
+   
+   std::string getBaseType()
+   {
+     return(ComposedParent::getBaseType() + NewParent::getBaseType());	  //Input,Digital,Analog,Position, NEED THIS TOO
+   }
+   
+   void setDelta(vpr::Uint64 delta)
+   {
+      ComposedParent::setDelta(delta);
+      NewParent::setDelta(delta);
+   }
+
 
 };
 
