@@ -15,7 +15,7 @@
          <device>Vrpn</device>
          <unit>1</unit>
          <position_filters>
-            <position_transform_filter name="Position Filters">
+            <position_transform_filter name="Position Filters" version="1">
                <pre_translate>0.0</pre_translate>
                <pre_translate>0.0</pre_translate>
                <pre_translate>0.0</pre_translate>
@@ -37,7 +37,7 @@
          <device>Vrpn</device>
          <unit>0</unit>
          <position_filters>
-            <position_transform_filter name="Position Filters">
+            <position_transform_filter name="Position Filters" version="1">
                <pre_translate>0.0</pre_translate>
                <pre_translate>0.0</pre_translate>
                <pre_translate>0.0</pre_translate>
@@ -61,7 +61,7 @@
          <tracker_count>2</tracker_count>
          <button_count>4</button_count>
          <position_filters>
-            <position_transform_filter name="Position Filters">
+            <position_transform_filter name="Position Filters" version="1">
                <pre_translate>0.0</pre_translate>
                <pre_translate>0.42672</pre_translate>
                <pre_translate>0.0</pre_translate>
