@@ -1,5 +1,10 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Nov-30-2001 cjust     ConfigIO's API now uses const ints to explicitly
+                      give the file format for reading/writing.  Most
+        	      callers of these APIs just use the default argument
+                      for that parameter anyway, so the effect on user 
+                      code is small.
 Oct-23-2001 cjust     Made JackalServer a singleton, allow JackalControls
 	              to access its list of connections (e.g. for 
 	              broadcasting messages).
