@@ -30,9 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vprConfig.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
 
 #include <md/WIN32/SocketImpWinSock.h>
 
@@ -178,18 +182,338 @@ SocketImpWinSock::connect () {
     return retval;
 }
 
+/**
+ * Define a simple union used as the optval argument to [gs]etsockopt(2).
+ */
+union sockopt_data {
+    Int32          enabled;
+    size_t         size;
+    struct linger  linger_val;
+    struct ip_mreq mcast_req;
+    struct in_addr mcast_if;
+    Uint8          mcast_ttl;
+    Uint8          mcast_loop;
+};
+
 int
 SocketImpWinSock::getOption (const SocketOptions::Types option,
                              struct SocketOptions::Data& data)
 {
-    return -1;
+    int opt_name, opt_level, retval;
+    socklen_t opt_size;
+    union sockopt_data opt_data;
+    bool do_get;
+
+    do_get = true;
+
+    switch (option) {
+      // Socket-level options.
+      case SocketOptions::Linger:
+        opt_level = SOL_SOCKET;
+        opt_name  = SO_LINGER;
+        break;
+      case SocketOptions::ReuseAddr:
+        opt_level = SOL_SOCKET;
+        opt_name  = SO_REUSEADDR;
+        break;
+      case SocketOptions::KeepAlive:
+        opt_level = SOL_SOCKET;
+        opt_name  = SO_KEEPALIVE;
+        break;
+      case SocketOptions::RecvBufferSize:
+        opt_level = SOL_SOCKET;
+        opt_name  = SO_RCVBUF;
+        break;
+      case SocketOptions::SendBufferSize:
+        opt_level = SOL_SOCKET;
+        opt_name  = SO_SNDBUF;
+        break;
+
+      // IP-level options.
+      case SocketOptions::IpTimeToLive:
+        opt_level = IPPROTO_IP;
+        opt_name  = IP_TTL;
+        break;
+      case SocketOptions::IpTypeOfService:
+        opt_level = IPPROTO_IP;
+        opt_name  = IP_TOS;
+        break;
+      case SocketOptions::AddMember:
+        opt_level = IPPROTO_IP;
+        opt_name  = IP_ADD_MEMBERSHIP;
+        break;
+      case SocketOptions::DropMember:
+        opt_level = IPPROTO_IP;
+        opt_name  = IP_DROP_MEMBERSHIP;
+        break;
+      case SocketOptions::McastInterface:
+        opt_level = IPPROTO_IP;
+        opt_name  = IP_MULTICAST_IF;
+        break;
+      case SocketOptions::McastTimeToLive:
+        opt_level = IPPROTO_IP;
+        opt_name  = IP_MULTICAST_TTL;
+        break;
+      case SocketOptions::McastLoopback:
+        opt_level = IPPROTO_IP;
+        opt_name  = IP_MULTICAST_LOOP;
+        break;
+
+      // TCP-level options.
+      case SocketOptions::NoDelay:
+        opt_level = IPPROTO_TCP;
+        opt_name  = TCP_NODELAY;
+        break;
+      case SocketOptions::MaxSegment:
+        fprintf(stderr,
+                "[vpr::SocketImpWinSock] WARNING: This platform does not "
+                "support the TCP max segment option!\n");
+        do_get = false;
+        break;
+    }
+
+    if ( do_get ) {
+        retval = getsockopt(m_sockfd, opt_level, opt_name, (char*) &opt_data,
+                            &opt_size);
+
+        if ( retval == 0 ) {
+            // This extracts the information from the union passed to getsockopt(2)
+            // and puts it in our friendly SocketOptions::Data object.  This code
+            // depends on the type of that object being a union!
+            switch (option) {
+              case SocketOptions::Linger:
+                data.linger.enabled = (opt_data.linger_val.l_onoff != 0 ? true
+                                                                        : false);
+                data.linger.seconds = opt_data.linger_val.l_linger;
+                break;
+              case SocketOptions::ReuseAddr:
+                data.reuse_addr = (opt_data.enabled != 0 ? true : false);
+                break;
+              case SocketOptions::KeepAlive:
+                data.keep_alive = (opt_data.enabled != 0 ? true : false);
+                break;
+              case SocketOptions::RecvBufferSize:
+                data.recv_buffer_size = opt_data.size;
+                break;
+              case SocketOptions::SendBufferSize:
+                data.send_buffer_size = opt_data.size;
+                break;
+              case SocketOptions::IpTimeToLive:
+                data.ip_ttl = opt_data.size;
+                break;
+              case SocketOptions::IpTypeOfService:
+/*
+                switch (opt_data.size) {
+#ifdef IPTOS_LOWDELAY
+                  case IPTOS_LOWDELAY:
+                    data.type_of_service = SocketOptions::LowDelay;
+                    break;
+#endif
+#ifdef IPTOS_THROUGHPUT
+                  case IPTOS_THROUGHPUT:
+                    data.type_of_service = SocketOptions::Throughput;
+                    break;
+#endif
+#ifdef IPTOS_RELIABILITY
+                  case IPTOS_RELIABILITY:
+                    data.type_of_service = SocketOptions::Reliability;
+                    break;
+#endif
+#ifdef IPTOS_LOWCOST
+                  case IPTOS_LOWCOST:
+                    data.type_of_service = SocketOptions::LowCost;
+                    break;
+#endif
+                }
+*/
+
+                break;
+              case SocketOptions::McastInterface:
+                data.mcast_if = InetAddr(opt_data.mcast_if.s_addr, 0);
+                break;
+              case SocketOptions::McastTimeToLive:
+                data.mcast_ttl = opt_data.mcast_ttl;
+                break;
+              case SocketOptions::McastLoopback:
+                data.mcast_loopback = opt_data.mcast_loop;
+                break;
+              case SocketOptions::NoDelay:
+                data.no_delay = (opt_data.enabled != 0 ? true : false);
+                break;
+              case SocketOptions::MaxSegment:
+                data.max_segment = opt_data.size;
+                break;
+            }
+        }
+        else {
+            fprintf(stderr,
+                    "[vpr::SocketImpWinSock] ERROR: Could not get socket "
+                    "option for socket %s: %s\n", getName().c_str(),
+                    strerror(errno));
+        }
+    }
+    else {
+        retval = -1;
+    }
+
+    return retval;
 }
 
 int
 SocketImpWinSock::setOption (const SocketOptions::Types option,
                              const struct SocketOptions::Data& data)
 {
-    return -1;
+    int opt_name, opt_level;
+    socklen_t opt_size;
+    union sockopt_data opt_data;
+    bool do_set;
+    int retval;
+
+    do_set = true;
+
+    switch (option) {
+      // Socket-level options.
+      case SocketOptions::Linger:
+        opt_level                    = SOL_SOCKET;
+        opt_name                     = SO_LINGER;
+        opt_data.linger_val.l_onoff  = (data.linger.enabled ? 1 : 0);
+        opt_data.linger_val.l_linger = data.linger.seconds;
+        opt_size                     = sizeof(struct linger);
+        break;
+      case SocketOptions::ReuseAddr:
+        opt_level        = SOL_SOCKET;
+        opt_name         = SO_REUSEADDR;
+        opt_data.enabled = (data.reuse_addr ? 1 : 0);
+        opt_size         = sizeof(int);
+        break;
+      case SocketOptions::KeepAlive:
+        opt_level        = SOL_SOCKET;
+        opt_name         = SO_KEEPALIVE;
+        opt_data.enabled = (data.keep_alive ? 1 : 0);
+        opt_size         = sizeof(int);
+        break;
+      case SocketOptions::RecvBufferSize:
+        opt_name      = SO_RCVBUF;
+        opt_level     = SOL_SOCKET;
+        opt_data.size = data.recv_buffer_size;
+        opt_size      = sizeof(size_t);
+        break;
+      case SocketOptions::SendBufferSize:
+        opt_level     = SOL_SOCKET;
+        opt_name      = SO_SNDBUF;
+        opt_data.size = data.send_buffer_size;
+        opt_size      = sizeof(size_t);
+        break;
+
+      // IP-level options.
+      case SocketOptions::IpTimeToLive:
+        opt_level     = IPPROTO_IP;
+        opt_name      = IP_TTL;
+        opt_data.size = data.ip_ttl;
+        opt_size      = sizeof(size_t);
+        break;
+      case SocketOptions::IpTypeOfService:
+        opt_level     = IPPROTO_IP;
+        opt_name      = IP_TOS;
+
+        switch (data.type_of_service) {
+          case SocketOptions::LowDelay:
+#ifdef IPTOS_LOWDELAY
+            opt_data.size = IPTOS_LOWDELAY;
+#else
+            fprintf(stderr,
+                    "[vpr::SocketImpWinSock] WARNING: This platform does not "
+                    "support LowDelay type of service!\n");
+#endif
+            break;
+          case SocketOptions::Throughput:
+#ifdef IPTOS_THROUGHPUT
+            opt_data.size = IPTOS_THROUGHPUT;
+#else
+            fprintf(stderr,
+                    "[vpr::SocketImpWinSock] WARNING: This platform does not "
+                    "support LowDelay type of service!\n");
+#endif
+            break;
+          case SocketOptions::Reliability:
+#ifdef IPTOS_RELIABILITY
+            opt_data.size = IPTOS_RELIABILITY;
+#else
+            fprintf(stderr,
+                    "[vpr::SocketImpWinSock] WARNING: This platform does not "
+                    "support LowDelay type of service!\n");
+#endif
+            break;
+          case SocketOptions::LowCost:
+#ifdef IPTOS_LOWCOST
+            opt_data.size = IPTOS_LOWCOST;
+#else
+            fprintf(stderr,
+                    "[vpr::SocketImpWinSock] WARNING: This platform does not "
+                    "support LowCost type of service!\n");
+#endif
+            break;
+        }
+
+        opt_size      = sizeof(size_t);
+        break;
+      case SocketOptions::AddMember:
+        opt_level = IPPROTO_IP;
+        opt_name  = IP_ADD_MEMBERSHIP;
+        opt_data.mcast_req.imr_multiaddr.s_addr = data.mcast_add_member.getMulticastAddr().getAddressValue();
+        opt_data.mcast_req.imr_interface.s_addr = data.mcast_add_member.getInterfaceAddr().getAddressValue();
+        opt_size  = sizeof(struct ip_mreq);
+        break;
+      case SocketOptions::DropMember:
+        opt_level          = IPPROTO_IP;
+        opt_name           = IP_DROP_MEMBERSHIP;
+        opt_data.mcast_req.imr_multiaddr.s_addr = data.mcast_drop_member.getMulticastAddr().getAddressValue();
+        opt_data.mcast_req.imr_interface.s_addr = data.mcast_drop_member.getInterfaceAddr().getAddressValue();
+        opt_size           = sizeof(struct ip_mreq);
+        break;
+      case SocketOptions::McastInterface:
+        opt_level                = IPPROTO_IP;
+        opt_name                 = IP_MULTICAST_IF;
+        opt_data.mcast_if.s_addr = data.mcast_if.getAddressValue();
+        opt_size                 = sizeof(struct in_addr);
+        break;
+      case SocketOptions::McastTimeToLive:
+        opt_level          = IPPROTO_IP;
+        opt_name           = IP_MULTICAST_TTL;
+        opt_data.mcast_ttl = data.mcast_ttl;
+        opt_size           = sizeof(Uint8);
+        break;
+      case SocketOptions::McastLoopback:
+        opt_level           = IPPROTO_IP;
+        opt_name            = IP_MULTICAST_LOOP;
+        opt_data.mcast_loop = data.mcast_loopback;
+        opt_size            = sizeof(Uint8);
+        break;
+
+      // TCP-level options.
+      case SocketOptions::NoDelay:
+        opt_level        = IPPROTO_TCP;
+        opt_name         = TCP_NODELAY;
+        opt_data.enabled = (data.no_delay ? 1 : 0);
+        opt_size         = sizeof(int);
+        break;
+      case SocketOptions::MaxSegment:
+        fprintf(stderr,
+                "[vpr::SocketImpWinSock] WARNING: This platform does not "
+                "support the TCP max segment option!\n");
+        do_set = false;
+        break;
+    }
+
+    if ( do_set ) {
+        retval = setsockopt(m_sockfd, opt_level, opt_name, (char*) &opt_data,
+                            opt_size);
+    }
+    else {
+        retval = -1;
+    }
+
+    return retval;
 }
 
 // ============================================================================
