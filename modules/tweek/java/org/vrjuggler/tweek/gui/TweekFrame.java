@@ -53,6 +53,7 @@ import org.vrjuggler.tweek.net.CommunicationEvent;
 import org.vrjuggler.tweek.net.CommunicationListener;
 import org.vrjuggler.tweek.net.corba.*;
 import org.vrjuggler.tweek.services.*;
+import org.vrjuggler.tweek.text.*;
 
 
 /**
@@ -69,9 +70,15 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
                                                   MessageAdditionListener,
                                                   BeanInstantiationListener
 {
-   public TweekFrame ()
+   public TweekFrame(MessageDocument msgDocument)
    {
       enableEvents(AWTEvent.WINDOW_EVENT_MASK);
+
+      // This needs to be done as early as possible so that we receive events
+      // that happen during initialization.
+      msgDocument.addMessageAdditionListener(this);
+      mMsgDocument = msgDocument;
+
       BeanInstantiationCommunicator.instance().addBeanInstantiationListener(this);
    }
 
@@ -89,7 +96,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          }
          else
          {
-            MessagePanel.instance().printWarning("WARNING: Unknown viewer type: '" + viewer + "'\n");
+            mMsgDocument.printWarning("WARNING: Unknown viewer type: '" + viewer + "'\n");
             List viewers = registry.getBeansOfType(ViewerBean.class.getName());
 
             if ( viewers.size() > 0 )
@@ -99,7 +106,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
             }
             else
             {
-               MessagePanel.instance().printWarning("WARNING: No Viewer Beans loaded");
+               mMsgDocument.printWarning("WARNING: No Viewer Beans loaded");
                mBeanViewer = null;
             }
          }
@@ -123,9 +130,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
     */
    public void initGUI ()
    {
-      // This needs to be done as early as possible so that we receive events
-      // that happen during initialization.
-      MessagePanel.instance().addMessageAdditionListener(this);
+      mMessagePanel = new MessagePanel(mMsgDocument);
 
       try
       {
@@ -169,8 +174,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
    {
       if ( e.getFocusType() == BeanFocusChangeEvent.BEAN_FOCUSED )
       {
-         MessagePanel.instance().printStatus("Bean " + e.getBean() +
-                                             " focused!\n");
+         mMsgDocument.printStatus("Bean " + e.getBean() + " focused!\n");
 
          Object panel_bean = e.getBean().getBean();
 
@@ -202,8 +206,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       }
       else if ( e.getFocusType() == BeanFocusChangeEvent.BEAN_UNFOCUSED )
       {
-         MessagePanel.instance().printStatus("Bean " + e.getBean() +
-                                             " unfocused!\n");
+         mMsgDocument.printStatus("Bean " + e.getBean() + " unfocused!\n");
 
          // Disable the Open menu item in the File menu just to be safe.
          disableFileHandlingItems();
@@ -249,9 +252,9 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          }
          catch (java.io.IOException io_ex)
          {
-            MessagePanel.instance().printWarning("Failed to load preferences for " +
-                                                 ((TweekBean) e.getBean()).getName() +
-                                                 ": " + io_ex.getMessage());
+            mMsgDocument.printWarning("Failed to load preferences for " +
+                                      ((TweekBean) e.getBean()).getName() +
+                                      ": " + io_ex.getMessage());
          }
 
          mBeanPrefsDialog.addPrefsBean((BeanPreferences) new_bean);
@@ -457,8 +460,8 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       }
       catch (NullPointerException e)
       {
-         MessagePanel.instance().printWarning("WARNING: Failed to load icon " +
-                                              bulb_on_icon_name + "\n");
+         mMsgDocument.printWarning("WARNING: Failed to load icon " +
+                                   bulb_on_icon_name + "\n");
       }
 
       try
@@ -467,8 +470,8 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       }
       catch (NullPointerException e)
       {
-         MessagePanel.instance().printWarning("WARNING: Failed to load icon " +
-                                              bulb_off_icon_name + "\n");
+         mMsgDocument.printWarning("WARNING: Failed to load icon " +
+                                   bulb_off_icon_name + "\n");
       }
 
       if ( mBulbOffIcon != null )
@@ -768,7 +771,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       }
       else
       {
-         mMainPanel.setBottomComponent(MessagePanel.instance().getPanel());
+         mMainPanel.setBottomComponent(mMessagePanel);
          mMainPanel.setDividerLocation(0.85);
          mMsgPanelExpanded = true;
 
@@ -843,6 +846,8 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
    // Networking stuff.
    private Vector mORBs = new Vector();
 
+   private MessagePanel    mMessagePanel    = null;
+   private MessageDocument mMsgDocument     = null;
    private FileLoader      mFileLoader      = null;
    private BeanPrefsDialog mBeanPrefsDialog = null;
 }

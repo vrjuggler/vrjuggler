@@ -97,7 +97,8 @@ BEANS=		Viewers
 # dependencies of .jar targets.
 
 TWEEK_CLASSES=	org/vrjuggler/tweek/*.class			\
-		org/vrjuggler/tweek/gui/*.class
+		org/vrjuggler/tweek/gui/*.class			\
+		org/vrjuggler/tweek/text/*.class
 TWEEK_EXTRAS=	org/vrjuggler/tweek/gui/*.gif LICENSE-java-laf.txt
 
 BEANS_MF=	$(srcdir)/beans.MF

@@ -46,6 +46,7 @@ import org.vrjuggler.tweek.beans.*;
 import org.vrjuggler.tweek.beans.loader.BeanInstantiationException;
 import org.vrjuggler.tweek.gui.TweekFrame;
 import org.vrjuggler.tweek.services.*;
+import org.vrjuggler.tweek.text.MessageDocument;
 import org.vrjuggler.tweek.net.corba.*;
 
 
@@ -125,10 +126,11 @@ public class TweekCore
       }
       catch (ClassCastException e)
       {
+         // Use System.err here because the GUI has not been displayed yet.
          System.err.println("WARNING: Failed to register command-line arguments");
       }
 
-      m_gui = new TweekFrame();
+      m_gui = new TweekFrame(mMsgDocument);
 
       // Now we need to register the TweekFrame instance as a listener for
       // BeanFocusChangeEvents.
@@ -144,16 +146,17 @@ public class TweekCore
       // Now select the default bean if necessary
       if (defaultBean != null)
       {
-         System.out.println("Trying to focus default bean: "+defaultBean);
+         mMsgDocument.printStatusnl("Trying to focus default bean: " + defaultBean);
          TweekBean bean = BeanRegistry.instance().getBean(defaultBean);
+
          // Valid the bean registered under the default bean's name
          if (bean == null)
          {
-            System.err.println("WARNING: Default bean doesn't exist");
+            mMsgDocument.printWarningnl("WARNING: Default Bean doesn't exist");
          }
          else if (! (bean instanceof PanelBean))
          {
-            System.err.println("WARNING: Default bean is not a panel bean");
+            mMsgDocument.printWarningnl("WARNING: Default Bean is not a Panel Bean");
          }
          else
          {
@@ -238,9 +241,9 @@ public class TweekCore
          }
          catch (BeanInstantiationException e)
          {
-            System.err.println("WARNING: Failed to instantiate bean'" +
-                               bean.getName() + "': " +
-                               e.getMessage());
+            mMsgDocument.printWarningnl("WARNING: Failed to instantiate Bean'" +
+                                       bean.getName() + "': " +
+                                       e.getMessage());
          }
       }
    }
@@ -344,6 +347,7 @@ public class TweekCore
    private boolean mValidateXML = false;
    private List    mBeanDirs    = new ArrayList();
 
+   private MessageDocument mMsgDocument = new MessageDocument();
    private TweekFrame m_gui = null;
 
    private BeanTreeModel panelTreeModel =
