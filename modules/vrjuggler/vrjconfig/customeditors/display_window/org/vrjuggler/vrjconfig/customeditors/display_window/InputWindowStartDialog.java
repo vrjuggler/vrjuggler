@@ -108,6 +108,8 @@ public class InputWindowStartDialog
          e.printStackTrace();
       }
 
+      this.getRootPane().setDefaultButton(mOkButton);
+
       this.setResizable(false);
       this.pack();
       this.setLocationRelativeTo(parent);
@@ -166,6 +168,8 @@ public class InputWindowStartDialog
       {
          e.printStackTrace();
       }
+
+      this.getRootPane().setDefaultButton(mOkButton);
 
       this.setResizable(false);
       this.pack();
