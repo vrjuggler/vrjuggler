@@ -50,6 +50,13 @@ void _Export_Matrix_float_3_3()
         .def("isError", &gmtl::Matrix<float,3,3>::isError)
         .def("setError", &gmtl::Matrix<float,3,3>::setError)
         .def("__getitem__", (gmtl::Matrix<float,3,3>::RowAccessor (gmtl::Matrix<float,3,3>::*)(const unsigned) )&gmtl::Matrix<float,3,3>::operator[])
+        .def(self * self)
+        .def(self *= self)
+//        .def(self * float())
+        .def(self *= float())
+        .def(self == self)
+        .def(self != self)
+//        .def(str(self))
     );
 
     class_< gmtl::Matrix<float,3,3>::RowAccessor >("RowAccessor", no_init)

@@ -29,6 +29,7 @@
 // Includes ====================================================================
 #include <boost/python.hpp>
 #include <gmtl/VecBase.h>
+#include <gmtl/Output.h>
 #include <gmtl-wrappers.h>
 
 // Using =======================================================================
@@ -50,6 +51,20 @@ void _Export_VecBase_float_2()
         .def("set", (void (gmtl::VecBase<float,2>::*)(const float &, const float &, const float &, const float &) )&gmtl::VecBase<float,2>::set)
         .def("__getitem__", (float& (gmtl::VecBase<float,2>::*)(const unsigned) ) &gmtl::VecBase<float,2>::operator[], return_value_policy<copy_non_const_reference>())
         .def("__setitem__", (void (*)(gmtl::VecBase<float,2>*, const unsigned, float)) &gmtlWrapper::setArrayElement)
+        .def(-self)
+        .def(self += self)
+        .def(self += self)
+        .def(self + self)
+        .def(self -= self)
+        .def(self - self)
+        .def(self *= float())
+        .def(self * float())
+        .def(float() * self)
+        .def(self /= float())
+        .def(self / float())
+        .def(self == self)
+        .def(self != self)
+        .def(self_ns::str(self))
     );
 
     enum_< gmtl::VecBase<float,2>::Params >("Params")

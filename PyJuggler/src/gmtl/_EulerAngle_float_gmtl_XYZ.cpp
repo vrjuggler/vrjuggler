@@ -29,6 +29,8 @@
 // Includes ====================================================================
 #include <boost/python.hpp>
 #include <gmtl/EulerAngle.h>
+#include <gmtl/EulerAngleOps.h>
+#include <gmtl/Output.h>
 #include <gmtl-wrappers.h>
 
 // Using =======================================================================
@@ -44,6 +46,9 @@ void _Export_EulerAngle_float_gmtl_XYZ()
         .def("set", &gmtl::EulerAngle<float,gmtl::XYZ>::set)
         .def("__getitem__", (float& (gmtl::EulerAngle<float,gmtl::XYZ>::*)(const unsigned) ) &gmtl::EulerAngle<float,gmtl::XYZ>::operator[], return_value_policy<copy_non_const_reference>())
         .def("__setitem__", (void (*)(gmtl::EulerAngle<float,gmtl::XYZ>*, const unsigned, float)) &gmtlWrapper::setArrayElement)
+        .def(self == self)
+        .def(self != self)
+        .def(self_ns::str(self))
     );
 
     enum_< gmtl::EulerAngle<float,gmtl::XYZ>::Params >("Params")

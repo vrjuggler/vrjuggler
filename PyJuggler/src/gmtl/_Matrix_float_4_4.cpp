@@ -29,6 +29,7 @@
 // Includes ====================================================================
 #include <boost/python.hpp>
 #include <gmtl/Matrix.h>
+#include <gmtl/Output.h>
 #include <gmtl-wrappers.h>
 
 // Using =======================================================================
@@ -50,6 +51,13 @@ void _Export_Matrix_float_4_4()
         .def("isError", &gmtl::Matrix<float,4,4>::isError)
         .def("setError", &gmtl::Matrix<float,4,4>::setError)
         .def("__getitem__", (gmtl::Matrix<float,4,4>::RowAccessor (gmtl::Matrix<float,4,4>::*)(const unsigned) )&gmtl::Matrix<float,4,4>::operator[])
+        .def(self * self)
+        .def(self *= self)
+//        .def(self * float())
+        .def(self *= float())
+        .def(self == self)
+        .def(self != self)
+        .def(self_ns::str(self))
     );
 
     class_< gmtl::Matrix<float,4,4>::RowAccessor >("RowAccessor", no_init)

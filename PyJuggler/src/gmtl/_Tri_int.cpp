@@ -29,6 +29,8 @@
 // Includes ====================================================================
 #include <boost/python.hpp>
 #include <gmtl/Tri.h>
+#include <gmtl/TriOps.h>
+#include <gmtl/Output.h>
 
 // Using =======================================================================
 using namespace boost::python;
@@ -41,6 +43,9 @@ void _Export_Tri_int()
         .def(init< const gmtl::Tri<int> & >())
         .def("edge", &gmtl::Tri<int>::edge)
         .def("set", &gmtl::Tri<int>::set)
+        .def(self == self)
+        .def(self != self)
+        .def(self_ns::str(self))
     ;
 
 }

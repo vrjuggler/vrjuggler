@@ -38,8 +38,17 @@ gmtl.identity(mat1)
 mat3 = gmtl.Matrix44f()
 gmtl.mult(mat3, mat1, mat2)
 
+mat4 = mat1 * mat2
+
+if gmtl.isEqual(mat3, mat4):
+   print "mat1 * mat2 pass"
+else:
+   print "mat1 * mat2 fail"
+
 gmtl.sub(mat3, mat2, mat1)
+print mat3
 gmtl.add(mat3, mat2, mat1)
+print mat3
 
 gmtl.preMult(mat3, mat1)
 gmtl.postMult(mat3, mat1)
@@ -63,9 +72,14 @@ else:
    print "gmtl.isEqual(mat1, mat2) fail"
 
 if gmtl.isEqual(mat1, mat1):
-   print "gmtl.isEqual(mat1, mat2) pass"
+   print "gmtl.isEqual(mat1, mat1) pass"
 else:
-   print "gmtl.isEqual(mat1, mat2) fail"
+   print "gmtl.isEqual(mat1, mat1) fail"
+
+if mat1 == mat1:
+   print "mat1 == mat1 pass"
+else:
+   print "mat1 == mat1 fail"
 
 print "mat1[1][1] =", mat1[1][1]
 mat1[1][1] = 5
@@ -82,6 +96,15 @@ vec3 = gmtl.Vec3f()
 vec1.set(1, 2, 3)
 vec2.set(4, 5, 6)
 vec3.set(7, 8, 9)
+
+print "vec1: %s" % vec1
+print "vec2: %s" % vec2
+print "vec3: %s" % vec3
+
+if vec1 != vec2:
+   print "vec1 != vec2 pass"
+else:
+   print "vec1 != vec2 fail"
 
 if vec1[0] == 1.0:
    print "gmtl.Vec3f element accessor pass"
@@ -131,7 +154,7 @@ else:
    print "gmtl.length(vec3) fail"
    print "Normalized length of vec3 = ", gmtl.length(vec3)
 
-vec4 = gmtl.cross(vec1, vec2)
+vec4 = gmtl.makeCross(vec1, vec2)
 
 # Create a translation matrix and then create a vector from it.
 trans_mat = gmtl.makeTransMatrix44(vec2)

@@ -29,6 +29,8 @@
 // Includes ====================================================================
 #include <boost/python.hpp>
 #include <gmtl/Plane.h>
+#include <gmtl/PlaneOps.h>
+#include <gmtl/Output.h>
 
 // Using =======================================================================
 using namespace boost::python;
@@ -47,6 +49,9 @@ void _Export_Plane_double()
         .def("setNormal", &gmtl::Plane<double>::setNormal)
         .def("getOffset", &gmtl::Plane<double>::getOffset, return_value_policy< copy_const_reference >())
         .def("setOffset", &gmtl::Plane<double>::setOffset)
+        .def(self == self)
+        .def(self != self)
+        .def(self_ns::str(self))
     ;
 
 }

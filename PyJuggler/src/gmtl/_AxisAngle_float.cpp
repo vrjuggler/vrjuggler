@@ -29,6 +29,7 @@
 // Includes ====================================================================
 #include <boost/python.hpp>
 #include <gmtl/AxisAngle.h>
+#include <gmtl/Output.h>
 
 // Using =======================================================================
 using namespace boost::python;
@@ -47,6 +48,9 @@ void _Export_AxisAngle_float()
         .def("setAngle", &gmtl::AxisAngle<float>::setAngle)
         .def("getAxis", &gmtl::AxisAngle<float>::getAxis)
         .def("getAngle", &gmtl::AxisAngle<float>::getAngle, return_value_policy< copy_const_reference >())
+        .def(self == self)
+        .def(self != self)
+        .def(self_ns::str(self))
     );
 
     enum_< gmtl::AxisAngle<float>::Params >("Params")

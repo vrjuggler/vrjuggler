@@ -29,6 +29,8 @@
 // Includes ====================================================================
 #include <boost/python.hpp>
 #include <gmtl/AABox.h>
+#include <gmtl/AABoxOps.h>
+#include <gmtl/Output.h>
 
 // Using =======================================================================
 using namespace boost::python;
@@ -48,6 +50,9 @@ void _Export_AABox_float()
         .def("setMin", &gmtl::AABox<float>::setMin)
         .def("setMax", &gmtl::AABox<float>::setMax)
         .def("setEmpty", &gmtl::AABox<float>::setEmpty)
+        .def(self == self)
+        .def(self != self)
+        .def(self_ns::str(self))
     ;
 
 }

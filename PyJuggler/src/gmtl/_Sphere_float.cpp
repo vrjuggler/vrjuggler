@@ -29,6 +29,8 @@
 // Includes ====================================================================
 #include <boost/python.hpp>
 #include <gmtl/Sphere.h>
+#include <gmtl/SphereOps.h>
+#include <gmtl/Output.h>
 
 // Using =======================================================================
 using namespace boost::python;
@@ -45,6 +47,9 @@ void _Export_Sphere_float()
         .def("getRadius", &gmtl::Sphere<float>::getRadius, return_value_policy< copy_const_reference >())
         .def("setCenter", &gmtl::Sphere<float>::setCenter)
         .def("setRadius", &gmtl::Sphere<float>::setRadius)
+        .def(self == self)
+        .def(self != self)
+        .def(self_ns::str(self))
     ;
 
 }

@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-18-2003 patrickh    Enabled the use of overloaded operators with GMTL
+                        objects.
+                        NEW VERSION: 0.4.2
 Apr-18-2003 patrickh    Updated to GMTL 0.3.0.
                         NEW VERSION: 0.4.1
 Apr-18-2003 patrickh    Moved C++ utility code into the new pyjutil library

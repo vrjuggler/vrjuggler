@@ -29,6 +29,7 @@
 // Includes ====================================================================
 #include <boost/python.hpp>
 #include <gmtl/Quat.h>
+#include <gmtl/Output.h>
 #include <gmtl-wrappers.h>
 
 // Using =======================================================================
@@ -46,6 +47,22 @@ void _Export_Quat_double()
         .def("get", &gmtl::Quat<double>::get)
         .def("__getitem__", (double& (gmtl::Quat<double>::*)(const int)) &gmtl::Quat<double>::operator[], return_value_policy<copy_non_const_reference>())
         .def("__setitem__", (void (*)(gmtl::Quatd*, const unsigned, double)) &gmtlWrapper::setArrayElement)
+        .def(self * self)
+        .def(self *= self)
+        .def(-self)
+        .def(self * double())
+        .def(self *= double())
+        .def(self / self)
+        .def(self /= self)
+        .def(self / double())
+//        .def(self /= double())
+        .def(self + self)
+        .def(self += self)
+        .def(self - self)
+        .def(self -= self)
+        .def(self == self)
+        .def(self != self)
+        .def(self_ns::str(self))
     );
 
     enum_< gmtl::Quat<double>::Params >("Params")
