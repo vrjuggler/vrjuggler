@@ -11,6 +11,15 @@ For all versions:
  Version: 1.0.0
 Released: <month> <day>, 2001
 
+ Version: 0.4.0
+Released: September 4, 2001
+    Required changes when upgrading from 0.3.x:
+        * vpr::ReturnStatus::Success has been renamed to
+          vpr::ReturnStatus::Succeed, and vpr::ReturnStatus::Failure has
+          been renamed to vpr::ReturnStatus::Fail.  This has been done to
+          work around yet another problem with the X Window System where
+          Success is used as a #define symbol.
+
  Version: 0.3.0
 Released: July 23, 2001
     New features:
