@@ -52,16 +52,16 @@ import org.vrjuggler.tweek.beans.PanelBean;
  */
 public class BeanIconPanel extends JPanel
 {
-   public BeanIconPanel (DefaultMutableTreeNode _node, String _name)
+   public BeanIconPanel (DefaultMutableTreeNode node, String name)
    {
-      name = _name;
-      init(_node);
+      this.name = name;
+      init(node);
    }
 
-   public BeanIconPanel (DefaultMutableTreeNode _node)
+   public BeanIconPanel (DefaultMutableTreeNode node)
    {
-      name = _node.getUserObject().toString();
-      init(_node);
+      name = node.getUserObject().toString();
+      init(node);
    }
 
    public DefaultMutableTreeNode getNode ()
@@ -98,9 +98,9 @@ public class BeanIconPanel extends JPanel
       this.add(icon, null);
    }
 
-   private void init (DefaultMutableTreeNode _node)
+   private void init (DefaultMutableTreeNode node)
    {
-      node = _node;
+      this.node = node;
 
       try
       {
@@ -114,13 +114,13 @@ public class BeanIconPanel extends JPanel
 
    private void jbInit() throws Exception
    {
-      m_icon_layout.setAlignment(FlowLayout.LEFT);
+      mIconLayout.setAlignment(FlowLayout.LEFT);
       this.setBackground(Color.white);
-      this.setLayout(m_icon_layout);
+      this.setLayout(mIconLayout);
    }
 
    private DefaultMutableTreeNode node  = null;
    private String                 name  = null;
 
-   private FlowLayout m_icon_layout = new FlowLayout();
+   private FlowLayout mIconLayout = new FlowLayout();
 }
