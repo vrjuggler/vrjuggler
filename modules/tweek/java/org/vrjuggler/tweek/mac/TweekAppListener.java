@@ -82,8 +82,7 @@ public class TweekAppListener extends ApplicationAdapter
 
    public void handleQuit(ApplicationEvent e)
    {
-      mFrame.handleQuit();
-      e.setHandled(true);
+      e.setHandled(mFrame.handleQuit());
    }
 
    private TweekFrame mFrame = null;
