@@ -112,6 +112,17 @@ public class SimDisplayEditor
             wndPlacer.repaint();
          }
       });
+      removeBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            int idx = wndPlacer.getSelectedIndex();
+            if (idx != -1)
+            {
+               model.remove(idx);
+            }
+         }
+      });
       this.add(placerPanel,  BorderLayout.CENTER);
       placerPanel.add(wndPlacer, BorderLayout.CENTER);
       placerPanel.add(placerToolbar,  BorderLayout.SOUTH);
