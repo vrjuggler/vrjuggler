@@ -339,8 +339,15 @@ fi
 if test "x${_idl_java}" = "xno" ; then
    AC_PATH_PROG(JAVA_IDL, idlj, no, $JDK_HOME/bin:$PATH)
 else
-   if test "x${_idl_java}" != "x" -a -x "${_idl_java}" ; then
-      JAVA_IDL="${_idl_java}"
+   if test "x${_idl_java}" != "x" ; then
+      AC_MSG_CHECKING([execute bit on ${_idl_java}])
+
+      if test -x "${_idl_java}" ; then
+          JAVA_IDL="${_idl_java}"
+          AC_MSG_RESULT(yes)
+      else
+          AC_MSG_RESULT(no)
+      fi
    else
       JAVA_IDL='no'
    fi
