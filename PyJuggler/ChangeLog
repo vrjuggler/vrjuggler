@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jul-02-2004 patrickh    NEW VERSION: 0.9.1
 Jul-01-2004 patrickh    Fixed a problem with multiple threads and Python 2.3 on
                         Windows.
 May-03-2004 patrickh    Added a Visual Studio build for use on Windows.
