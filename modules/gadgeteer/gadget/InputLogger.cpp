@@ -338,7 +338,7 @@ void InputLogger::addRecordingSample()
 */
 void InputLogger::playNextSample()
 {
-   vprDEBUG_OutputGuard(gadgetDBG_INPUT_MGR, 0, "InputLogger::playNextSample", "done playing sample");
+   vprDEBUG_OutputGuard(gadgetDBG_INPUT_MGR, 0, "InputLogger::playNextSample\n", "done playing sample\n");
 
    vprASSERT(mNextSample_i != mEndSample_i && "Overran the logger sample list");
    gadget::InputManager* input_mgr = gadget::InputManager::instance();
@@ -358,7 +358,7 @@ void InputLogger::playNextSample()
       gadget::Input* dev_ptr = input_mgr->getDevice(dev_name);
       if(NULL != dev_ptr)
       {
-         vprDEBUG(gadgetDBG_INPUT_MGR,0) << "Reading device: " << dev_name << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG_OutputGuard(gadgetDBG_INPUT_MGR,0, std::string("Reading device: ") + dev_name + std::string("\n"), "done reading");
 
          vpr::XMLObjectReader xml_reader(serial_dev_node);     // Create XML reader
          xml_reader.setAttrib("rim.timestamp.delta", 0);       // Hack for now to work around RIM

@@ -161,95 +161,9 @@ namespace gadget
          return std::string("Digital");
       }
 
-      virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
-      {
-         writer->beginTag(Digital::getBaseType());
-         //std::cout << "[Remote Input Manager] In Digital write" << std::endl;
-         SampleBuffer_t::buffer_t& stable_buffer = mDigitalSamples.stableBuffer();
-         writer->beginAttribute(gadget::tokens::DataTypeAttrib);
-            writer->writeUint16(MSG_DATA_DIGITAL);                               // Write out the data type so that we can assert if reading in wrong place
-         writer->endAttribute();
-
-         writer->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
-            writer->writeUint16(stable_buffer.size());                           // Write the # of vectors in the stable buffer
-         writer->endAttribute();
-
-         if ( !stable_buffer.empty() )
-         {
-            mDigitalSamples.lock();
-            for ( unsigned j=0;j<stable_buffer.size();j++ )                               // For each vector in the stable buffer
-            {
-               writer->beginTag(gadget::tokens::BufferSampleTag);
-               writer->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
-                  writer->writeUint16(stable_buffer[j].size());                           // Write the # of DigitalDatas in the vector
-               writer->endAttribute();
-               for ( unsigned i=0;i<stable_buffer[j].size();i++ )                         // For each DigitalData in the vector
-               {
-                  writer->writeUint32((vpr::Uint32)stable_buffer[j][i].getDigital());  // Write Digital Data(int)
-                  writer->writeUint64(stable_buffer[j][i].getTime().usec());           // Write Time Stamp vpr::Uint64
-               }
-               writer->endTag();
-            }
-            mDigitalSamples.unlock();
-         }
-         writer->endTag();
-
-         return vpr::ReturnStatus::Succeed;
-      }
-
-      virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
-      {
-            //std::cout << "[Remote Input Manager] In Digital read" << std::endl;
-         vprASSERT(reader->attribExists("rim.timestamp.delta"));
-         vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
-
-            // ASSERT if this data is really not Digital Data
-         reader->beginTag(Digital::getBaseType());
-         reader->beginAttribute(gadget::tokens::DataTypeAttrib);
-            vpr::Uint16 temp = reader->readUint16();
-         reader->endAttribute();
-
-         vprASSERT(temp==MSG_DATA_DIGITAL && "[Remote Input Manager]Not Digital Data");
-
-         std::vector<DigitalData> dataSample;
-
-         unsigned numDigitalDatas;
-         vpr::Uint32 value;
-         vpr::Uint64 timeStamp;
-         DigitalData temp_digital_data;
-
-         reader->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
-            unsigned numVectors = reader->readUint16();
-         reader->endAttribute();
-
-         //std::cout << "Stable Digital Buffer Size: "  << numVectors << std::endl;
-         mDigitalSamples.lock();
-         for ( unsigned i=0;i<numVectors;i++ )
-         {
-            reader->beginTag(gadget::tokens::BufferSampleTag);
-            reader->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
-               numDigitalDatas = reader->readUint16();
-            reader->endAttribute();
-
-            dataSample.clear();
-            for ( unsigned j=0;j<numDigitalDatas;j++ )
-            {
-               value = reader->readUint32();       //Write Digital Data(int)
-               timeStamp = reader->readUint64();                  //Write Time Stamp vpr::Uint64
-               temp_digital_data.setDigital(value);
-               temp_digital_data.setTime(vpr::Interval(timeStamp + delta,vpr::Interval::Usec));
-               dataSample.push_back(temp_digital_data);
-            }
-            mDigitalSamples.addSample(dataSample);
-            reader->endTag();
-         }
-         mDigitalSamples.unlock();
-         mDigitalSamples.swapBuffers();
-
-         reader->endTag();
-
-         return vpr::ReturnStatus::Succeed;
-      }
+      virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
+      
+      virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
 
    private:
       SampleBuffer_t    mDigitalSamples; /**< Position samples */
