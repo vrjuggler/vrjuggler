@@ -91,6 +91,10 @@ links-gmtl:
 	cd $(instlinks)/include && $(RM_LN) ./gmtl &&			\
           $(LN_S) $(EXTROOT_ABS)/GMTL/gmtl ./
 
+links-init:
+	cd $(instlinks)/include && $(RM_LN) ./init && \
+          $(LN_S) $(EXTROOT_ABS)/init ./
+
 links-doozer:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/share
 	cd $(instlinks)/share && $(RM_LN) ./Doozer &&			\
@@ -117,6 +121,9 @@ install-boost:
 	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) -o $(includedir)/boost/compatibility 	\
           -i $(EXTROOT_ABS)/boost/boost/compatibility
+
+install-init:
+	@$(MAKE) DIRS="init" generic-header-install
 
 install-cppdom:
 	@$(MAKE) DIRS="cppdom/cppdom" generic-header-install
