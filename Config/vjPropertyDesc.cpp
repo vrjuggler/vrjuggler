@@ -18,6 +18,7 @@
 
 
 
+#include <Config/vjParseUtil.h>
 #include <Config/vjChunkDesc.h>
 #include <Kernel/vjDebug.h>
 
@@ -151,7 +152,7 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
 	//cout << "reading valuelabels" << endl;
 	readString (in,str,size);
 	if (strcasecmp (str, "{"))
-	    vjDEBUG(vjDBG_ALL,1) << "ERROR: expected '{'" << endl << vjDEBUG_FLUSH;
+	    vjDEBUG(vjDBG_ERROR,1) << "ERROR: expected '{'" << endl << vjDEBUG_FLUSH;
 	
 	vjEnumEntry *e;
 	readString (in, str, size);
@@ -169,7 +170,7 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
     if (!strcasecmp (str, "{")) {
 	//cout << "parsing enumerations" << endl;
 	if (self.type == T_BOOL) {
-	    vjDEBUG(vjDBG_ALL,1) << "ERROR: " << self.name << ": Enumerations not supported for "
+	    vjDEBUG(vjDBG_ERROR,1) << "ERROR: " << self.name << ": Enumerations not supported for "
 		"boolean types.\n" << vjDEBUG_FLUSH;
 	    do {
 		readString (in, str, size);
@@ -180,7 +181,6 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
 	    vjEnumEntry *e;
 	    readString (in, str, size);
 	    while (strcasecmp (str, "}") && !in.eof()) {
-		//cout << "reading enumentry: " << str << endl;
 		if (self.type == T_INT)
 		    for (j = 0; j < strlen(str); j++) {
 			if (str[j] == '=') {
@@ -203,6 +203,18 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
 }
 
 
+vjPropertyDesc& vjPropertyDesc::operator= (vjPropertyDesc& pd) {
+    //cout << "propdesc operator= is called!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+    if (&pd == this)
+    return *this;
+    name = pd.name;
+    token = pd.token;
+    help = pd.help;
+    type = pd.type;
+    valuelabels.erase (valuelabels.begin(), valuelabels.end());
+    enumv.erase (enumv.begin(), enumv.end());
+    return *this;
+}
 
 
 

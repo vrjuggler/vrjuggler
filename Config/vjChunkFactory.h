@@ -72,18 +72,15 @@ public:
     //+          containing only a Name vjPropertyDesc, is used.
     static vjConfigChunk* createChunk (const std::string& desctoken) {
 	vjConfigChunk* ch;
-	//cout << " createChunk with val " << flush << desctoken << endl;
 
 	if (!descdb)
 	    return NULL;
 
 	vjChunkDesc* desc = descdb->getChunkDesc (desctoken);
-	//cout <<" chunkdesc is " << flush << *desc << endl;
 	if (desc)
 	    ch = new vjConfigChunk (desc);
 	else
 	    ch = NULL; //return new vjConfigChunk (nulldesc);
-	//cout << " chunk is :\n" << flush << *ch << endl;
 	return ch;
     }
 
