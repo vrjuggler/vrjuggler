@@ -447,7 +447,7 @@ public class BeanIconViewer
    private void addFolderIcon (BeanIconPanel childPanel,
                                BeanIconPanel parentPanel)
    {
-      JLabel folder_icon = new JLabel(childPanel.getName());
+      JButton folder_icon = new JButton(childPanel.getName());
 
       String icon_name = "org/vrjuggler/tweek/iconviewer/bean_folder.gif";
 
@@ -469,7 +469,7 @@ public class BeanIconViewer
     */
    private void addPanelIcon (PanelBean panel, BeanIconPanel panelParent)
    {
-      JLabel panel_icon = new JLabel(panel.toString());
+      JButton panel_icon = new JButton(panel.toString());
 
       if ( panel.getIcon() == null )
       {
