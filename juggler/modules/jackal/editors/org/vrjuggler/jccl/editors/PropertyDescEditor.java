@@ -63,6 +63,7 @@ public class PropertyDescEditor
       // JBuilder can't handle BoxLayout ...
       setupGeneralTab();
       setupEnumTab();
+      setupAllowedTypesTab();
 
       try
       {
@@ -94,6 +95,10 @@ public class PropertyDescEditor
       // Setup the enums table
       enumTable.setModel(enumsTableModel);
       enumTable.setBackground(UIManager.getColor("Menu"));
+
+      // Setup the allowed types list
+      allowedTypesTable.setModel(allowedTypesTableModel);
+      allowedTypesTable.setBackground(UIManager.getColor("Menu"));
 
       // Setup the inital property desc to empty
       setPropertyDesc(null);
@@ -127,6 +132,7 @@ public class PropertyDescEditor
       basicTableModel.setPropertyDesc(desc);
       itemsTableModel.setPropertyDesc(desc);
       enumsTableModel.setPropertyDesc(desc);
+      allowedTypesTableModel.setPropertyDesc(desc);
       if (desc != null)
       {
          helpTextArea.setText(propertyDesc.getHelp());
@@ -148,6 +154,19 @@ public class PropertyDescEditor
          }
       }
       setEnabledAt(indexOfTab("Enumerations"), enable_enum);
+
+      // Enable the allowed types tab only if the type is a chunk pointer or
+      // embedded chunk.
+      boolean enable_allowed_types = false;
+      if (desc != null)
+      {
+         ValType type = desc.getValType();
+         if (type == ValType.CHUNK || type == ValType.EMBEDDEDCHUNK)
+         {
+            enable_allowed_types = true;
+         }
+      }
+      setEnabledAt(indexOfTab("Allowed Types"), enable_allowed_types);
       
       revalidate();
    }
@@ -155,11 +174,10 @@ public class PropertyDescEditor
    public void revalidate()
    {
       // Tweak the max sizes of the components
-      Dimension maxSize;
 
       if (basicTable != null)
       {
-         maxSize = basicTable.getPreferredSize();
+         Dimension maxSize = basicTable.getPreferredSize();
          maxSize.width = Integer.MAX_VALUE;
          basicTable.setPreferredScrollableViewportSize(maxSize);
          basicScrollPane.setMaximumSize(maxSize);
@@ -167,7 +185,7 @@ public class PropertyDescEditor
 
       if (itemsTable != null)
       {
-         maxSize = itemsTable.getPreferredSize();
+         Dimension maxSize = itemsTable.getPreferredSize();
          maxSize.width = Integer.MAX_VALUE;
          itemsTable.setPreferredScrollableViewportSize(maxSize);
          itemsScrollPane.setMaximumSize(maxSize);
@@ -175,10 +193,18 @@ public class PropertyDescEditor
 
       if (enumTable != null)
       {
-         maxSize = enumTable.getPreferredSize();
+         Dimension maxSize = enumTable.getPreferredSize();
          maxSize.width = Integer.MAX_VALUE;
          enumTable.setPreferredScrollableViewportSize(maxSize);
          enumScrollPane.setMaximumSize(maxSize);
+      }
+
+      if (allowedTypesTable != null)
+      {
+         Dimension maxSize = allowedTypesTable.getPreferredSize();
+         maxSize.width = Integer.MAX_VALUE;
+         allowedTypesTable.setPreferredScrollableViewportSize(maxSize);
+         allowedTypesScrollPane.setMaximumSize(maxSize);
       }
 
       super.revalidate();
@@ -287,6 +313,50 @@ public class PropertyDescEditor
    }
 
    /**
+    * JBuilder can't handle BoxLayout which the Allowed Types tab requires, so
+    * we set it up here for JBuilder.
+    */
+   private void setupAllowedTypesTab()
+   {
+      // Setup the allowed types table
+      allowedTypesScrollPane.setViewportView(allowedTypesTable);
+      allowedTypesScrollPane.setAlignmentX(LEFT_ALIGNMENT);
+      
+      // Setup the allowed types button panel
+      addAllowedTypeBtn.setText("Add");
+      removeAllowedTypeBtn.setText("Remove");
+      addAllowedTypeBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            addAllowedType();
+         }
+      });
+      removeAllowedTypeBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            removeAllowedType();
+         }
+      });
+      JPanel allowedTypesButtonPane = new JPanel();
+      allowedTypesButtonPane.setAlignmentX(LEFT_ALIGNMENT);
+      allowedTypesButtonPane.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+      allowedTypesButtonPane.setLayout(new BoxLayout(allowedTypesButtonPane, BoxLayout.X_AXIS));
+      allowedTypesButtonPane.add(Box.createHorizontalGlue());
+      allowedTypesButtonPane.add(addAllowedTypeBtn);
+      allowedTypesButtonPane.add(Box.createHorizontalStrut(10));
+      allowedTypesButtonPane.add(removeAllowedTypeBtn);
+
+      // Setup the base part of this panel
+      Box box = new Box(BoxLayout.Y_AXIS);
+      allowedTypesTab.setViewportView(box);
+      box.add(allowedTypesScrollPane);
+      box.add(allowedTypesButtonPane);
+      box.add(Box.createVerticalGlue());
+   }
+
+   /**
     * Adds a new item to the current property desc.
     */
    protected void addItem()
@@ -332,6 +402,27 @@ public class PropertyDescEditor
    }
 
    /**
+    * Adds a new allowed type to the current property desc.
+    */
+   protected void addAllowedType()
+   {
+      propertyDesc.addAllowedType("");
+   }
+
+   /**
+    * Removes the currently selected allowed type from the current property desc.
+    */
+   protected void removeAllowedType()
+   {
+      int row = allowedTypesTable.getSelectedRow();
+      if (row != -1)
+      {
+         String type = allowedTypesTableModel.getAllowedTypeAt(row);
+         propertyDesc.removeAllowedType(type);
+      }
+   }
+
+   /**
     * Let Jbuilder init the UI.
     */
    private void jbInit()
@@ -340,6 +431,7 @@ public class PropertyDescEditor
       this.setEnabled(true);
       this.add(generalTab, "General");
       this.add(enumTab, "Enumerations");
+      this.add(allowedTypesTab, "Allowed Types");
       this.add(helpTab,  "Help");
       helpTab.setViewportView(helpTextArea);
    }
@@ -360,6 +452,11 @@ public class PropertyDescEditor
    EnumTableModel enumsTableModel = new EnumTableModel();
 
    /**
+    * The table model for the allowed types table.
+    */
+   AllowedTypesTableModel allowedTypesTableModel = new AllowedTypesTableModel();
+
+   /**
     * The property desc for this editor.
     */
    PropertyDesc propertyDesc = null;
@@ -373,6 +470,9 @@ public class PropertyDescEditor
    private JScrollPane enumTab = new JScrollPane();
    private JScrollPane enumScrollPane = new JScrollPane();
    private JTable enumTable = new JTable();
+   private JScrollPane allowedTypesTab = new JScrollPane();
+   private JScrollPane allowedTypesScrollPane = new JScrollPane();
+   private JTable allowedTypesTable = new JTable();
    private JScrollPane helpTab = new JScrollPane();
    private JTextArea helpTextArea = new JTextArea();
    private JScrollPane generalTab = new JScrollPane();
@@ -384,6 +484,8 @@ public class PropertyDescEditor
    private JButton removeItemBtn = new JButton();
    private JButton addEnumBtn = new JButton();
    private JButton removeEnumBtn = new JButton();
+   private JButton addAllowedTypeBtn = new JButton();
+   private JButton removeAllowedTypeBtn = new JButton();
 
    /**
     * Listens to changes to the current property description.
@@ -722,6 +824,96 @@ public class PropertyDescEditor
        * The names of the columns.
        */
       private String[] columnNames = { "Name", "Value" };
+
+      /**
+       * The PropertyDesc this table model represents.
+       */
+      private PropertyDesc propertyDesc = null;
+   }
+
+   /**
+    * A table model for the allowed types table.
+    */
+   class AllowedTypesTableModel
+      extends AbstractTableModel
+      implements PropertyChangeListener
+   {
+      public void setPropertyDesc(PropertyDesc desc)
+      {
+         // Update our listener status
+         if (propertyDesc != null)
+         {
+            propertyDesc.removePropertyChangeListener(this);
+         }
+         propertyDesc = desc;
+         if (propertyDesc != null)
+         {
+            propertyDesc.addPropertyChangeListener(this);
+         }
+         fireTableDataChanged();
+      }
+
+      public void propertyChange(PropertyChangeEvent evt)
+      {
+         // We only care if the allowed types have changed
+         if (evt.getPropertyName().equals("allowedtype"))
+         {
+            // TODO: Someday, fire off a more specific event with information
+            // about only the allowed types that have actually changed
+            fireTableDataChanged();
+         }
+      }
+
+      public PropertyDesc getPropertyDesc()
+      {
+         return propertyDesc;
+      }
+
+      public String getColumnName(int col)
+      {
+         return columnNames[col].toString();
+      }
+
+      public int getRowCount()
+      {
+         // We only have rows if we have a property desc to model
+         if (propertyDesc != null)
+         {
+            return propertyDesc.getAllowedTypesSize();
+         }
+         else
+         {
+            return 0;
+         }
+      }
+
+      public int getColumnCount() { return columnNames.length; }
+
+      public Object getValueAt(int row, int col)
+      {
+         return propertyDesc.getAllowedType(row);
+      }
+
+      public String getAllowedTypeAt(int row)
+      {
+         return propertyDesc.getAllowedType(row);
+      }
+
+      public boolean isCellEditable(int row, int col)
+      {
+         return true;
+      }
+
+      public void setValueAt(Object value, int row, int col)
+      {
+         propertyDesc.setAllowedType(row, (String)value);
+         fireTableCellUpdated(row, col);
+      }
+
+      /**
+       * The names of the columns.
+       */
+      private String[] columnNames = { "Type" };
 
       /**
        * The PropertyDesc this table model represents.
