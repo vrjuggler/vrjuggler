@@ -139,7 +139,8 @@ void UserData::updateNavigation()
 // cubesApp methods.
 // ----------------------------------------------------------------------------
 
-// Execute any initialization needed before the API is started
+// Execute any initialization needed before the API is started.  Put device
+// initialization here.
 void cubesApp::init()
 {
    vjDEBUG(vjDBG_ALL,0) << "---------- cubes:App:init() ---------------"
@@ -171,7 +172,9 @@ void cubesApp::init()
    }
 }
 
-// Called immediately upon opening a new OpenGL context
+// Called immediately upon opening a new OpenGL context.  This is called once
+// for every display window that is opened.  Put OpenGL resource allocation
+// here.
 void cubesApp::contextInit()
 {
    // Create display list

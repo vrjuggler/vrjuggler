@@ -62,7 +62,8 @@ ConesApp::~ConesApp () {
 }
 
 // ----------------------------------------------------------------------------
-// Execute any initialization needed before the API is started.
+// Execute any initialization needed before the API is started.  Put device
+// initialization here.
 // ----------------------------------------------------------------------------
 void
 ConesApp::init () {
@@ -109,7 +110,8 @@ ConesApp::apiInit () {
 }
 
 // ----------------------------------------------------------------------------
-// Called immediately upon opening a new OpenGL context.
+// Called immediately upon opening a new OpenGL context.  This is called for
+// every display window that is opened.  Put OpenGL resource allocation here.
 // ----------------------------------------------------------------------------
 void
 ConesApp::contextInit () {
@@ -134,20 +136,8 @@ ConesApp::contextInit () {
 }
 
 // ----------------------------------------------------------------------------
-// Function to draw the scene.
-//
-// PRE: OpenGL state has correct transformation and buffer selected.
-// POST: The current scene has been drawn.
-// ----------------------------------------------------------------------------
-void
-ConesApp::draw () {
-    initGLState();    // This should really be in another function
-
-    myDraw(vjGlDrawManager::instance()->currentUserData()->getUser());
-}
-
-// ----------------------------------------------------------------------------
 // Function called after tracker update but before start of drawing.
+// Do calculations here.
 // ----------------------------------------------------------------------------
 void
 ConesApp::preFrame () {
@@ -161,6 +151,19 @@ ConesApp::preFrame () {
 }
 
 // ----------------------------------------------------------------------------
+// Function to render the scene.  Put OpenGL draw calls here.
+//
+// PRE: OpenGL state has correct transformation and buffer selected.
+// POST: The current scene has been drawn.
+// ----------------------------------------------------------------------------
+void
+ConesApp::draw () {
+    initGLState();    // This should really be in another function
+
+    myDraw(vjGlDrawManager::instance()->currentUserData()->getUser());
+}
+
+// ----------------------------------------------------------------------------
 // Function called after drawing has been triggered but BEFORE it completes.
 // ----------------------------------------------------------------------------
 void
@@ -170,7 +173,8 @@ ConesApp::intraFrame () {
 }
 
 // ----------------------------------------------------------------------------
-// Function called before updating trackers but after the frame is drawn.
+// Function called before updating trackers but after the frame is drawn.  Do
+// calculations here.
 // ----------------------------------------------------------------------------
 void
 ConesApp::postFrame () {
