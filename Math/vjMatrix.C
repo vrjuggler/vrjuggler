@@ -504,22 +504,3 @@ ostream& operator<<(ostream& out, vjMatrix& _mat)
    return out;	
 }
 
-#ifdef VJ_API_PERFORMER    // --- Performer conversion --- //
-   vjMatrix::vjMatrix(pfMatrix& perfMat)
-   {
-      vjVec3 x_axis(1,0,0);
-      set(&(perfMat.mat[0][0]));
-      preRot(90, x_axis, *this);
-      postRot(*this, -90, x_axis);
-   }
-
-   pfMatrix vjMatrix::getPfMatrix()
-   {
-      pfMatrix perf_mat;
-
-      perf_mat.set(getFloatPtr());
-      perf_mat.preRot(-90, 1, 0, 0, perf_mat);
-      perf_mat.postRot(perf_mat, 90, 1, 0, 0);
-      return perf_mat;
-   }
-#endif
