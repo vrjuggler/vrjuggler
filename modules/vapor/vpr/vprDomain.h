@@ -98,13 +98,29 @@ namespace vpr
       typedef class SocketImplNSPR           SocketImpl;
       typedef class SocketDatagramImplNSPR   SocketDatagramImpl;
       typedef class SocketStreamImplNSPR     SocketStreamImpl;
+
+#ifdef __SUNPRO_CC
+      class BaseIOStatsStrategy;
+      class BandwidthIOStatsStrategy;
+      class IOStatsStrategyAdapter<class T1, class T2>;
+
+      typedef IOStatsStrategyAdapter<BaseIOStatsStrategy, BandwidthIOStatsStrategy> SocketIOStatsStrategy;
+#else
       typedef class IOStatsStrategyAdapter<class BaseIOStatsStrategy, class BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
+#endif
    };
 
    typedef class InetAddrNSPR InetAddr;
    typedef class IOSysNSPR    IOSys;
 
+#ifdef __SUNPRO_CC
+   class Selector_t<class T>;
+   class SelectorImplNSPR;
+
+   typedef Selector_t<SelectorImplNSPR> Selector;
+#else
    typedef class Selector_t<class SelectorImplNSPR> Selector;
+#endif
 
 #  ifdef VPR_OS_Win32
       typedef SerialPort_t<class SerialPortImplWin32>   SerialPort;
