@@ -76,25 +76,32 @@ extern "C" {
 #  endif
 #endif
 
+#include <boost/concept_check.hpp>  // for ignore_unused_variable_warning
 #include <vpr/System.h>
 #include <vpr/Util/Assert.h>
+#include <vpr/IO/ObjectWriter.h>
+#include <vpr/IO/ObjectReader.h>
 #include <vpr/Util/GUID.h>
 
 
 namespace vpr
 {
 
- vpr::GUID::StdGUID null_guid_struct = { 0x00000000, 0x0000, 0x0000, 0x00, 0x00,
-        { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
-      };
+vpr::GUID::StdGUID null_guid_struct = { 0x00000000, 0x0000, 0x0000, 0x00, 0x00,
+   { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+};
 
- const vpr::GUID GUID::NullGUID( null_guid_struct );
+const vpr::GUID GUID::NullGUID(null_guid_struct);
 
- vpr::GUID::GenerateTag GUID::generateTag;
-//
+vpr::GUID::GenerateTag GUID::generateTag;
 
+GUID::GUID(const GenerateTag& tag)
+{
+   boost::ignore_unused_variable_warning(tag);
+   generate();
+}
 
-std::string GUID::toString () const
+std::string GUID::toString() const
 {
    std::string guid_str;
    char guid_c_str[37];
@@ -135,18 +142,18 @@ bool GUID::operator== (const GUID& guid) const
 // Private methods.
 // ============================================================================
 
-GUID::GUID ()
-   :  mGuid( GUID::NullGUID.mGuid )     // Assign a null guid
+GUID::GUID()
+   : mGuid(GUID::NullGUID.mGuid)     // Assign a null guid
 {
    ; /* Do nothing */
 }
 
-GUID::GUID (const struct vpr::GUID::StdGUID& guid)
+GUID::GUID(const struct vpr::GUID::StdGUID& guid)
 {
    memcpy(&mGuid, &guid, sizeof(vpr::GUID::StdGUID));
 }
 
-GUID::GUID (const GUID& ns_guid, const std::string& name)
+GUID::GUID(const GUID& ns_guid, const std::string& name)
 {
    generate(ns_guid,name);
 }
@@ -225,7 +232,39 @@ void GUID::generate(const GUID& ns_guid, const std::string& name)
 #endif
 }
 
-void GUID::fromString (const std::string& guid_string)
+vpr::ReturnStatus GUID::writeObject(vpr::ObjectWriter* writer)
+{
+   writer->writeUint32(mGuid.standard.m0);
+   writer->writeUint16(mGuid.standard.m1);
+   writer->writeUint16(mGuid.standard.m2);
+   writer->writeUint8(mGuid.standard.m3);
+   writer->writeUint8(mGuid.standard.m4);
+   writer->writeUint8(mGuid.standard.m5[0]);
+   writer->writeUint8(mGuid.standard.m5[1]);
+   writer->writeUint8(mGuid.standard.m5[2]);
+   writer->writeUint8(mGuid.standard.m5[3]);
+   writer->writeUint8(mGuid.standard.m5[4]);
+   writer->writeUint8(mGuid.standard.m5[5]);
+   return vpr::ReturnStatus::Succeed;
+}
+
+vpr::ReturnStatus GUID::readObject(vpr::ObjectReader* reader)
+{
+   mGuid.standard.m0 = reader->readUint32();
+   mGuid.standard.m1 = reader->readUint16();
+   mGuid.standard.m2 = reader->readUint16();
+   mGuid.standard.m3 = reader->readUint8();
+   mGuid.standard.m4 = reader->readUint8();
+   mGuid.standard.m5[0] = reader->readUint8();
+   mGuid.standard.m5[1] = reader->readUint8();
+   mGuid.standard.m5[2] = reader->readUint8();
+   mGuid.standard.m5[3] = reader->readUint8();
+   mGuid.standard.m5[4] = reader->readUint8();
+   mGuid.standard.m5[5] = reader->readUint8();
+   return vpr::ReturnStatus::Succeed;
+}
+
+void GUID::fromString(const std::string& guid_string)
 {
    vpr::Uint32 m3[8];
 
@@ -237,7 +276,7 @@ void GUID::fromString (const std::string& guid_string)
           &m3[0], &m3[1], &m3[2], &m3[3], &m3[4], &m3[5], &m3[6], &m3[7]);
 
    // Fill the mGuid struct with the values read into m3[] above.
-   for ( int i = 0; i < 8; i++ )
+   for ( int i = 0; i < 8; ++i )
    {
       mGuid.moz.m3[i] = (vpr::Uint8) m3[i];
    }
