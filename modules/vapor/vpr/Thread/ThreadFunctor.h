@@ -85,7 +85,7 @@ public:
     virtual void setArg(void*) = 0;
 
     /**
-     * Function to see if we have avlid functor
+     * Function to see if we have a valid functor.
      */
     virtual bool isValid() = 0;
 };
@@ -102,16 +102,16 @@ public:
 
     ThreadMemberFunctor(OBJ_TYPE* theObject, FunPtr func, void* arg = NULL)
     {
-    	mObject = theObject;
-    	mFunction = func;
-    	mArgument = arg;
+        mObject = theObject;
+        mFunction = func;
+        mArgument = arg;
     }
 
     virtual ~ThreadMemberFunctor()
     {
-    	mObject = (OBJ_TYPE*)0xDEADBEEF;
-    	//mFunction = 0xDEADBEEF;
-    	mArgument = (void*)0xDEADBEEF;
+        mObject = (OBJ_TYPE*)0xDEADBEEF;
+        //mFunction = 0xDEADBEEF;
+        mArgument = (void*)0xDEADBEEF;
     }
 
     void
@@ -207,7 +207,7 @@ public:
 // This is the actual function that is called.
 // It must be extern "C"
 //---------------------------------------------
-#if defined(VPR_USE_IRIX_SPROC)	/* ---- SGI IPC Barrier ------ */
+#if defined(VPR_USE_IRIX_SPROC) /* ---- SGI IPC Barrier ------ */
     extern "C" void vprThreadFunctorFunction(void* args);
 #elif defined(VPR_USE_PTHREADS)
 #   ifdef _PTHREADS_DRAFT_4
@@ -218,8 +218,8 @@ public:
         vprThreadFunctorFunction(void* args);
 #else
     extern "C" void vprThreadFunctorFunction(void* args);
-#endif	/* VPR_USE_IRIX_SPROC */
+#endif  /* VPR_USE_IRIX_SPROC */
 
 }; // End of vpr namespace
 
-#endif	/* _VPR_THREAD_FUNCTOR_H_ */
+#endif  /* _VPR_THREAD_FUNCTOR_H_ */
