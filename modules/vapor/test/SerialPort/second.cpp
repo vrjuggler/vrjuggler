@@ -56,7 +56,7 @@ int main (int argc, char* argv[])
    port = new vpr::SerialPort(argv[1]);
 
    port->setOpenReadWrite();
-   port->setOpenBlocking();
+   port->setBlocking(true);
 
    if ( port->open().success() )
    {
@@ -67,10 +67,10 @@ int main (int argc, char* argv[])
       std::cerr << "Port opened\n";
       val = 1;
 
-      port->disableCanonicalInput();
+      port->setCanonicalInput(false);
       port->setUpdateAction(vpr::SerialTypes::NOW);
       port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
-      port->enableRead();
+      port->setRead(true);
 
       for ( int i = 0; i < 10; i++ )
       {
@@ -78,7 +78,7 @@ int main (int argc, char* argv[])
          sprintf(write_buffer, "%d", val);
          port->write(write_buffer, strlen(write_buffer) + 1, bytes);
          std::cerr << "Wrote '" << write_buffer << "' (" << bytes
-         << " bytes)\n";
+                   << " bytes)\n";
 
          memset((void*) &read_buffer, '\0', sizeof(read_buffer));
          port->read(read_buffer, sizeof(read_buffer), bytes);

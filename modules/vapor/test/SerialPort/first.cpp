@@ -56,7 +56,7 @@ int main (int argc, char* argv[])
    port = new vpr::SerialPort(argv[1]);
 
    port->setOpenReadWrite();
-   port->setOpenBlocking();
+   port->setBlocking(true);
 
    if ( port->open().success() )
    {
@@ -66,10 +66,10 @@ int main (int argc, char* argv[])
 
       std::cerr << "Port opened\n";
 
-      port->disableCanonicalInput();
+      port->setCanonicalInput(false);
       port->setUpdateAction(vpr::SerialTypes::NOW);
       port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
-      port->enableRead();
+      port->setRead(true);
 
       for ( int i = 0; i < 10; i++ )
       {
