@@ -1,5 +1,85 @@
-Changes from Ant 1.6.B3 to Ant 1.6
-==================================
+Changes from Ant 1.6.0 to Ant 1.6.1
+===================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+* License is now Apache Software License 2.0
+  see http://www.apache.org/licenses/ for more information
+
+Fixed bugs:
+-----------
+
+* Fix handling of default ant namespace for nested elements.
+
+* Fix jboss element of ejb task (introduced in ant 1.6.0).
+
+* <whichresource> failed to load classes correctly.
+
+* Ant could fail to start with a NullPointerException if
+  ANT_HOME/lib/ant-launcher.jar was part of the system CLASSPATH.
+
+* Fix spurious infinite loop detection for filters (introduced in ant 1.6.0).
+  Bugzilla Report 23154.
+
+* presetdef'ed types did not work with the ant-type attribute
+
+* fixed case handling of macrodef attributes and elements. Bugzilla
+  Reports 25687 and 26225.
+
+* <java> ignored the append attribute, Bugzilla Report 26137.
+
+* The gcj compiler adapter for <javac> failed if the destination
+  directory didn't exist.  Bugzilla Report 25856.
+
+* Ant now fails with a more useful message if a new process will be
+  forked in a directory and that directory doesn't exist.
+
+* junitreport was failing for long string litterals
+  Bugzilla Report 19301.
+
+* <splash> used to break the build on non-GUI environments.  Bugzilla
+  report 11482.
+
+Other changes:
+--------------
+
+* Shipped XML parser is now Xerces-J 2.6.1
+
+* upgrade to xml-apis.jar from Xerces-J 2.6.1.
+
+* <fixcrlf> has a new attribute - fixlast. Bugzilla Report 23262.
+
+* <p4submit> has 2 new attributes, needsresolveproperty and changeproperty.
+  Bugzilla Report 25711.
+
+* Extending ClearCase Tasks :
+ - Added an extra option to 'failonerr' to each ClearCase task/command.
+ - Extended the functionality of cccheckout. It can check (notco) to see if
+  the desired element is already checked out to the current view. Thus it
+   won't attempt to check it out again.
+ - Added three new ClearCase commands: ccmkattr, ccmkdir, ccmkelem
+  Bugzilla Report 26253.
+
+* add description attributes to macrodef attributes and elements.
+  Bugzilla Report 24711.
+
+* added nested text support to <macrodef>
+  
+* added initial support for Java 1.5.  Java 1.5 is now correctly
+  detected by Ant and treated just like Java 1.4.  You can now specify
+  source="1.5" in the <javac> task.
+
+* created new task <cvsversion>
+
+* added support for branch logging via the tag attribute in <cvschangelog>
+  Bugzilla Report 13510.
+
+* added support the groovy language in the script and scriptdef tasks.
+
+
+Changes from Ant 1.6.B3 to Ant 1.6.0
+====================================
 
 Changes that could break older environments:
 --------------------------------------------
