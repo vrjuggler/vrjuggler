@@ -36,7 +36,7 @@
 #include <Kernel/vjDebug.h>
 
 
-vjPerfDataBuffer::vjPerfDataBuffer (char* _name, int _numbufs,
+void vjPerfDataBuffer::init (const char* _name, int _numbufs,
 				    int _nindex) {
     name = strdup (_name);
     numbufs = _numbufs;
@@ -132,6 +132,29 @@ void vjPerfDataBuffer::set(int _phase) {
     }
 }
 
+
+void vjPerfDataBuffer::set (int _phase, vjTimeStamp& _value) {
+    int tw;
+
+    if (!active)
+	return;
+
+    if (write_pos == read_begin) {
+	lost_lock.acquire();
+        lost++;
+        lost_lock.release();
+
+        // overwrite last buffer pos with most recent
+	tw = (write_pos + numbufs - 1) % numbufs;
+	buffer[tw].phase = _phase;
+	buffer[tw].ts = _value;
+    }
+    else {
+	buffer[write_pos].phase = _phase;
+	buffer[write_pos].ts = _value;
+	write_pos = (write_pos+1)%numbufs;
+    }
+}
 
 
     // for below: need a version w/ max # buffers to write
