@@ -172,7 +172,7 @@ ifndef NO_CLEAN
 endif
 	@$(MAKE) $(BEFOREBUILD)
 	@$(MAKE) libs
-	@$(MAKE) BUILD_TYPE=opt $(AFTERBUILD)
+	@$(MAKE) BUILD_TYPE=opt CALLER=world $(AFTERBUILD)
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning VPR installation process"
 	@echo "---------------------------------------------------------------"
@@ -201,7 +201,7 @@ endif
             echo "------------------------------------------------" ;	\
             $(MAKE) vprABI=$$abi libs ;					\
           done
-	@$(MAKE) BUILD_TYPE=opt $(AFTERBUILD)
+	@$(MAKE) BUILD_TYPE=opt CALLER=world $(AFTERBUILD)
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning VPR installation process"
 	@echo "---------------------------------------------------------------"
