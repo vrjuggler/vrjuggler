@@ -36,7 +36,7 @@ DIE=0
 : ${VJ_MACRO_PATH="$VJ_BASE_DIR/share/aclocal"}
 
 if [ -n "$DPP_PATH" ]; then
-	ACLOCAL_FLAGS="-I $DPP_PATH/config $ACLOCAL_FLAGS"
+	ACLOCAL_FLAGS="-I $DPP_PATH/config -I $DPP_PATH/config/pkgs $ACLOCAL_FLAGS"
 fi
 
 if [ -n "$VJ_MACRO_PATH" ]; then
