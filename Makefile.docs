@@ -45,7 +45,6 @@ distroot=	$(HOME)/vrj-docs.dist
 
 SUBDIR=		doc/build.system				\
 		modules/gadgeteer/doc				\
-		modules/gadgeteer/doc/clusterjuggler.guide	\
 		modules/gadgeteer/doc/device.driver.guide	\
 		modules/jackal/doc				\
 		modules/sonix/doc				\
