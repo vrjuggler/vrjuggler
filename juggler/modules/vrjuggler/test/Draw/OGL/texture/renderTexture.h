@@ -43,7 +43,7 @@ public:
    // texObjectID must == -1 (to mean unused tex object)
    static void bind( Texture& texture, int& texObjectID, int mipmapLevelOfDetail = 0, int bordersize = 0 );
 
-   static void render( const Texture& texture, const int& texObjectID )
+   static void render( const Texture& texture, const int& texObjectID );
 };
 
 
