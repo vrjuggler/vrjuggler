@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-08-02 patrickh Developer installations are now constructed using the
+                    standard installation targets.
 2002-06-23 patrickh The vpr-config script is now written in Perl.  It is
                     capable of determining its installation path at runtime.
 2002-06-07 patrickh Moved the object serialization code from Plexus to VPR.
