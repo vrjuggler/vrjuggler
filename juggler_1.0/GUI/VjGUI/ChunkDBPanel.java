@@ -39,7 +39,7 @@ public class ChunkDBPanel extends JPanel
     TreePath treeitem_menu_path;
     JPopupMenu desctreeitem_menu;
     JPopupMenu chunktreeitem_menu;
-    JMenuItem help1_mi, help2_mi, remove_mi;
+    JMenuItem help1_mi, help2_mi, remove_mi, insert_mi;
 
     public ChunkDBPanel (int _controls_on_side) {
 	super();
@@ -160,6 +160,7 @@ public class ChunkDBPanel extends JPanel
 	treeitem_menu_path = null;
 	desctreeitem_menu = new JPopupMenu ();
 	desctreeitem_menu.add (help1_mi = new JMenuItem ("Chunk Help"));
+	desctreeitem_menu.add (insert_mi = new JMenuItem ("Insert"));
 	chunktreeitem_menu = new JPopupMenu ();
 	chunktreeitem_menu.add (help2_mi = new JMenuItem ("Chunk Help"));
 	chunktreeitem_menu.add (remove_mi = new JMenuItem ("Remove"));
@@ -167,6 +168,7 @@ public class ChunkDBPanel extends JPanel
 	help1_mi.addActionListener (this);
 	help2_mi.addActionListener (this);
 	remove_mi.addActionListener (this);
+	insert_mi.addActionListener (this);
     }
 
 
@@ -340,7 +342,7 @@ public class ChunkDBPanel extends JPanel
 	else if (source == insert_button) {
 	    ChunkDesc cd = Core.descdb.getByName ((String)insert_type.getSelectedItem());
 	    if (cd != null) {
-		ch = new ConfigChunk (cd, Core.descdb);
+		ch = ChunkFactory.createChunk (cd);
 		ch.name = (current_treemodel.chunkdb.getNewName(cd.name));
 		current_treemodel.insertNode (ch);
 	    }
@@ -394,6 +396,15 @@ public class ChunkDBPanel extends JPanel
 	    ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent()).getUserObject());
 	    if (ni.isChunkNode())
 		current_treemodel.removeNode(ni.ch.getName());
+	}
+	else if (source == insert_mi) {
+	    ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent()).getUserObject());
+	    if (ni.isDescNode()) {
+		ch = ChunkFactory.createChunkWithDescName (ni.toString());
+		ch.name = (current_treemodel.chunkdb.getNewName(ni.toString()));
+		current_treemodel.insertNode (ch);
+	    }
+	    current_treemodel.tree.expandPath(treeitem_menu_path);
 	}
     }
 

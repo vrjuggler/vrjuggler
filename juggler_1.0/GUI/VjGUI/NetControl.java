@@ -351,6 +351,11 @@ public class NetControl implements Runnable {
 		//core.ui.update();
 		return true;
 	    }
+	    else if (instream.sval.equalsIgnoreCase ("PerfData1")) {
+		instream.pushBack();
+		Core.perf_collection.read(instream);
+		return true;
+	    }
 	    else if (instream.sval.equalsIgnoreCase ("refresh")) {
 		// juggler is telling the GUI it needs to refresh itself.
 		getChunks();
