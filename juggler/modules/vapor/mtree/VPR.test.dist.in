@@ -42,6 +42,44 @@
         ..
         Sync
         ..
+        TestSuite
+            CppUnit
+                doc
+                ..
+                framework
+                    extensions
+                    ..
+                ..
+                samples
+                    Multicaster
+                    ..
+                    textui
+                    ..
+                ..
+                textui
+                ..
+            ..
+            TestCases
+                IO
+                    Socket
+                    ..
+                ..
+                Socket
+                ..
+                Thread
+                ..
+                examples
+                    GMTL
+                    ..
+                    SGA
+                    ..
+                    Threads
+                    ..
+                ..
+                mk
+                ..
+            ..
+        ..
         Threads
         ..
     ..
