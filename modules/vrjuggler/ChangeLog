@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
------------ ---------   ---------------------------------------------------------
+----------- ---------   -------------------------------------------------------
+Jul-19-2002 subatomic   Sonix is now required to compile VR Juggler.
 Jul-16-2002 nonchocoboy New VRJConfig Tweek bean to replace VjControl.
 Jul-12-2002 allenb      Added OpenSG section to programmers guide.
 Jul-05-2002 subatomic   Enabled GlWindowWin32 to get window events.
