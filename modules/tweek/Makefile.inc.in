@@ -196,7 +196,7 @@ ifneq (@OS_TYPE@, Win32)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
 	@$(MAKE) -C tweek instlinks="$(instlinks)" links
 	cd $(instlinks)/$(LIBDIR_NAME) && rm -f ./* &&			\
-          ln -s $(LIBDIR_BASE)/* ./
+          $(LN_S) $(LIBDIR_BASE)/* ./
 	cd $(instlinks)/include/tweek && rm -f ./*.h &&			\
           $(LN_S) $(TWEEKROOT_ABS)/tweek/*.h ./
 	cd $(instlinks)/include/tweek && rm -f ./tweekDefines.h &&	\
@@ -207,6 +207,8 @@ ifneq (@OS_TYPE@, Win32)
 ifndef NO_JAVA
 ifeq ($(BUILD_JAVA), Y)
 	@$(MAKE) -C java instlinks="$(instlinks)" tweek-gui-links
+	cd $(instlinks)/bin && rm -f ./idl* &&				\
+          $(LN_S) $(JUGGLERROOT_ABS)/external/JacORB/idl* ./
 endif
 endif
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
