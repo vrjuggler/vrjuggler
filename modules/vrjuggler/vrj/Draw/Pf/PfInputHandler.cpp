@@ -67,7 +67,7 @@ void PfInputHandler::handlePerformerEvent(::XEvent& event)
    if ( NULL != mKeyboardMouseDevice )
    {
       // Forward events on to subclass. The magic of inheritance :)
-      InputAreaXWin::handleEvent( event );
+      handleEvent(event);
    }
 }
 #endif
