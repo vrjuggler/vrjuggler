@@ -86,7 +86,7 @@ vjThreadPool::threadLoop(void* theThreadAsVoid) {
 
    vjOneThread* myThread = (vjOneThread*)theThreadAsVoid;
 
-#ifdef VJ_SGI_IPC
+#ifdef VJ_IRIX_SPROC
    // --- SIGNAL Handlers ---- //
    prctl(PR_TERMCHILD);       // What should I do with. FIX - Allen
 #endif

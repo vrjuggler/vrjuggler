@@ -23,7 +23,7 @@
 
 #include <vjConfig.h>
 
-#ifdef VJ_SGI_IPC    // ---- SGI IPC Barrier ------ //
+#ifdef VJ_IRIX_SPROC    // ---- SGI IPC Barrier ------ //
 #   include <ulocks.h>
 #   include <Sync/vjBarrierSGI.h>
     typedef  vjBarrierSGI vjBarrier;
@@ -143,5 +143,5 @@ private:
 };
 
 
-#endif	/* VJ_SGI_IPC */
+#endif	/* VJ_IRIX_SPROC */
 #endif	/* _VJBarrier_h_ */

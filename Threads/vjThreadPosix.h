@@ -213,7 +213,7 @@ public:
     // -----------------------------------------------------------------------
     virtual int
     setRunOn (int cpu) {
-#ifdef VJ_OS_SGI
+#ifdef VJ_OS_IRIX
         return pthread_setrunon_np(cpu);
 #else
         cerr << "vjThreadPosix::setRunOn(): Not available on this system.\n";
@@ -242,7 +242,7 @@ public:
     // -----------------------------------------------------------------------
     virtual int
     getRunOn (int* cur_cpu) {
-#ifdef VJ_OS_SGI
+#ifdef VJ_OS_IRIX
         return pthread_getrunon_np(cur_cpu);
 #else
         cerr << "vjThreadPosix::getRunOn(): Not available on this system.\n";
@@ -348,7 +348,7 @@ private:
     // -----------------------------------------------------------------------
     inline thread_id_t
     hash (void) {
-#ifdef VJ_OS_SGI
+#ifdef VJ_OS_IRIX
         return mThread;
 #else
 #ifdef VJ_OS_HPUX
@@ -356,7 +356,7 @@ private:
 #else
         return mThread;
 #endif	/* VJ_OS_HPUX */
-#endif	/* VJ_OS_SGI */
+#endif	/* VJ_OS_IRIX */
     }
 
     // -----------------------------------------------------------------------
@@ -373,7 +373,7 @@ private:
     // -----------------------------------------------------------------------
     inline static thread_id_t
     hash (pthread_t thread) {
-#ifdef VJ_OS_SGI
+#ifdef VJ_OS_IRIX
         return thread;
 #else
 #ifdef VJ_OS_HPUX
@@ -381,7 +381,7 @@ private:
 #else
         return thread;
 #endif	/* VJ_OS_HPUX */
-#endif	/* VJ_OS_SGI */
+#endif	/* VJ_OS_IRIX */
     }
 
     // -----------------------------------------------------------------------

@@ -28,7 +28,7 @@
 //--------------------------------------------
 // This is the actual function that is called.
 //--------------------------------------------
-#if defined(VJ_SGI_IPC)		// ---- Using SGI IPC (Sproc) ------ //
+#if defined(VJ_IRIX_SPROC)	// ---- Using IRIX Sproc ------ //
     void
     ThreadFunctorFunction (void* args) {
         vjBaseThreadFunctor& func = *(vjBaseThreadFunctor*)args;
@@ -70,4 +70,4 @@
         vjBaseThreadFunctor& func = *(vjBaseThreadFunctor*)args;
         func();
     }
-#endif	/* VJ_SGI_IPC */
+#endif	/* VJ_IRIX_SPROC */

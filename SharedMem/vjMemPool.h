@@ -49,7 +49,7 @@ public:
 
 };
 
-#if defined(VJ_SGI_IPC)
+#if defined(VJ_IRIX_SPROC)
 #   include <SharedMem/vjMemPoolSGI.h>
 #   include <SharedMem/vjMemPoolHeap.h>
 
@@ -70,6 +70,6 @@ public:
     typedef vjMemPool_malloc	vjSharedPool;
     typedef vjMemPoolHeap	vjHeapPool;
     typedef vjMemPool_malloc	vjSyncPool;
-#endif	/* VJ_SGI_IPC */
+#endif	/* VJ_IRIX_SPROC */
 
 #endif // ifdef vjMemPool_h

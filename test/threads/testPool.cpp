@@ -3,7 +3,7 @@
 #include <iostream.h>
 #include <stdio.h>
 
-#ifdef VJ_OS_SGI
+#ifdef VJ_OS_IRIX
 #   include <ulocks.h>
 #endif
 

@@ -23,7 +23,7 @@
 
 #include <vjConfig.h>
 
-#if defined(VJ_SGI_IPC)
+#if defined(VJ_IRIX_SPROC)
 #    include <ulocks.h>
 #    include <Sync/vjCondGeneric.h>
     
@@ -38,6 +38,6 @@
 #    include <Sync/vjCondGeneric.h>
     
     typedef  vjCondGeneric vjCond;
-#endif	/* VJ_SGI_IPC */
+#endif	/* VJ_IRIX_SPROC */
 
 #endif
