@@ -62,7 +62,10 @@ endif
 # -----------------------------------------------------------------------------
 # Inital options, commands, etc.
 # -----------------------------------------------------------------------------
-APP		= runner@EXEEXT@
+APP_NAME	= runner
+#APP_PROF_EXT	= _p
+APP		= $(APP_NAME)$(EXEEXT)
+APP_PROF	= $(APP_NAME)$(APP_PROF_EXT)$(EXEEXT)
 builddir	= $(test_topdir)
 srcdir		= @srcdir@
 topdir		= @topdir@
@@ -113,6 +116,10 @@ EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS@ @APP_EXTRA_LIBS_END@
 $(APP): $(ALL_OBJS) $(VPR_BASE_DIR)/lib$(LIBBITSUF)/libvpr.a
 	$(LINK) @EXE_NAME_FLAG@ $(ALL_OBJS) $(LDFLAGS) $(BASIC_LIBS)	\
           $(EXTRA_LIBS)
+
+#$(APP_PROF): $(ALL_OBJS) $(VPR_BASE_DIR)/lib$(LIBBITSUF)/libvpr_p.a
+#	$(LINK) @EXE_NAME_FLAG@ $(ALL_OBJS) $(LDFLAGS) $(BASIC_LIBS)	\
+#          $(EXTRA_LIBS)
 
 include $(MKPATH)/dpp.simple-app.mk
 include $(MKPATH)/dpp.subdir.mk
