@@ -211,6 +211,9 @@ public interface EditorConstants
    /** Property type border. */
    public static final String BORDER_PROPERTY = "border";
 
+   /** Property type button_count. */
+   public static final String BUTTON_COUNT_PROPERTY = "button_count";
+
    /** Property type camera_pos. */
    public static final String CAMERA_POS_PROPERTY = "camera_pos";
 
@@ -324,6 +327,9 @@ public interface EditorConstants
 
    /** Property type tracked. */
    public static final String TRACKED_PROPERTY = "tracked";
+
+   /** Property type tracker_count. */
+   public static final String TRACKER_COUNT_PROPERTY = "tracker_count";
 
    /** Property type tracker_proxy. */
    public static final String TRACKER_PROXY_PROPERTY = "tracker_proxy";
