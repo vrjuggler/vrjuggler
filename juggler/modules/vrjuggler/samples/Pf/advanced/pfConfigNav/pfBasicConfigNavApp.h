@@ -74,14 +74,14 @@ public:
    }
 
 public:     // RECONFIG STUFF
-   virtual bool configCanHandle(jccl::ConfigChunk* chunk)
+   virtual bool configCanHandle(jccl::ConfigChunkPtr chunk)
    {
       return configCanHandleChunk(chunk);
    }
 
    // This function is so that others can query this object to
    // see if it can be configured with the given information
-   static bool configCanHandleChunk(jccl::ConfigChunk* chunk)
+   static bool configCanHandleChunk(jccl::ConfigChunkPtr chunk)
    {
       std::string chunk_type = (std::string)chunk->getType();
 
@@ -102,21 +102,21 @@ public:     // RECONFIG STUFF
 
 protected:
    //! NOTE: Inherited from jccl::ConfigChunkHandler
-   virtual bool configAdd(jccl::ConfigChunk* chunk);
+   virtual bool configAdd(jccl::ConfigChunkPtr chunk);
 
    //! NOTE: INherited from jccl::ConfigChunkHandler
-   virtual bool configRemove(jccl::ConfigChunk* chunk)
+   virtual bool configRemove(jccl::ConfigChunkPtr chunk)
    { vprASSERT(false); return false; }
 
 protected:
-   jccl::ConfigChunk* mCurrentConfig;      // config chunk that is current configuring this thingie
+   jccl::ConfigChunkPtr mCurrentConfig;      // config chunk that is current configuring this thingie
 };
 
 // Get the properties from the chunks
 // XXX: Smart update
 // Set the properties
 // Load with new settings
-bool pfBasicConfigNavApp::configAdd( jccl::ConfigChunk* chunk )
+bool pfBasicConfigNavApp::configAdd( jccl::ConfigChunkPtr chunk )
 {
    int x;
 
