@@ -426,18 +426,7 @@ if test "x$ac_cv_has_socklen_t" = "xno" ; then
     AC_DEFINE(socklen_t, int)
 fi
 
-dnl # The following checks for availability of the in_addr_t type.  Since it
-dnl # is supposed to be defined in netinet/in.h, the usual AC_CHECK_TYPE
-dnl # method will not work.
-AC_CACHE_CHECK(for in_addr_t, ac_cv_has_in_addr_t,
-    AC_TRY_COMPILE([#include <netinet/in.h>],
-                   [ in_addr_t var; ],
-                   ac_cv_has_in_addr_t='yes',
-                   ac_cv_has_in_addr_t='no'))
-
-if test "x$ac_cv_has_in_addr_t" = "xno" ; then
-    AC_DEFINE(in_addr_t, int)
-fi
+AC_CHECK_TYPE(in_addr_t, int)
 
 # The following checks for availability of the ssize_t type.  Since it is
 # supposed to be defined in sys/types.h, the usual AC_CHECK_TYPE method will
