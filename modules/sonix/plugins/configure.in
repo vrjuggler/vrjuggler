@@ -155,61 +155,51 @@ SNX_PATH([0.4.0], [BUILD_PLUGINS='Y'],
          ])
 
 if test "x$BUILD_PLUGINS" = "xY" ; then
-   # Test for Audiere
+   # Test for Audiere.
    HAVE_AUDIERE='N'
    if test "x$AUDIERE_ENABLED" = "xyes" ; then
-      DPP_HAVE_AUDIERE([/usr], ,
-         [AC_MSG_WARN([*** Audiere plug-in cannot be built. ***])])
-
-      if test "x$AUDIERE" = "xyes" ; then
-         if test "x$VPR_SUBSYSTEM" = "xPOSIX" ; then
-            HAVE_AUDIERE='Y'
-         else
-            AC_MSG_WARN([*** Audiere connot be used with a VPR installation that does not use POSIX. ***])
-         fi
+      if test "x$VPR_SUBSYSTEM" != "xSPROC" ; then
+         DPP_HAVE_AUDIERE([/usr/local], [HAVE_AUDIERE='Y'],
+            [AC_MSG_WARN([*** Audiere plug-in cannot be built. ***])])
+      else
+         AC_MSG_WARN([*** Audiere connot be used with a VPR installation that ues SPROC threads. ***])
       fi
    fi
 
    # Test for AudioWorks.
    HAVE_AUDIOWORKS='N'
    if test "x$AUDIOWORKS_ENABLED" = "xyes" ; then
-      DPP_HAVE_AUDIOWORKS([/usr], ,
-         [AC_MSG_WARN([*** AudioWorks plug-in cannot be built. ***])])
-   
-      if test "x$AUDIOWORKS" = "xyes" ; then
-         if test "x$VPR_SUBSYSTEM" = "xSPROC"; then
-            HAVE_AUDIOWORKS='Y'
-         else
-            AC_MSG_WARN([*** AudioWorks cannot be used with a VPR installation that does not use SPROC. ***])
-         fi
+      if test "x$VPR_SUBSYSTEM" = "xSPROC"; then
+         DPP_HAVE_AUDIOWORKS([/usr], [HAVE_AUDIOWORKS='Y'],
+            [AC_MSG_WARN([*** AudioWorks plug-in cannot be built. ***])])
+      else
+         AC_MSG_WARN([*** AudioWorks cannot be used with a VPR installation that does not use SPROC threads. ***])
       fi
    fi
 
    # Test for OpenAL.
    HAVE_OPENAL='N'
    if test "x$OPENAL_ENABLED" = "xyes" ; then
-      snx_save_LIBS="$LIBS"
-      LIBS="$LIBS $DYN_LOAD_LIB"
+      if test "x$VPR_SUBSYSTEM" != "xSPROC"; then
+         snx_save_LIBS="$LIBS"
+         LIBS="$LIBS $DYN_LOAD_LIB"
 
-      DPP_HAVE_OPENAL([/usr/local], ,
-         [AC_MSG_WARN([*** OpenAL plug-in cannot be built. ***])])
+         DPP_HAVE_OPENAL([/usr/local], [HAVE_OPENAL='Y'],
+            [AC_MSG_WARN([*** OpenAL plug-in cannot be built. ***])])
 
-      LIBS="$snx_save_LIBS"
-
-      if test "x$OPENAL" = "xyes" ; then
-         if test "x$VPR_SUBSYSTEM" != "xSPROC"; then
+         LIBS="$snx_save_LIBS"
+         if test "x$HAVE_OPENAL" = "xyes" ; then
             DPP_PTHREAD_FINISH
-            HAVE_OPENAL='Y'
-         else
-            AC_MSG_WARN([*** OpenAL cannot be used with a VPR installation using SPROC. ***])
          fi
+      else
+         AC_MSG_WARN([*** OpenAL cannot be used with a VPR installation that uses SPROC threads. ***])
       fi
    fi
 
    # Test for Subsynth.
    HAVE_SUBSYNTH='N'
    if test "x$SUBSYNTH_ENABLED" = "xyes" ; then
-      DPP_HAVE_SUBSYNTH([/usr], HAVE_SUBSYNTH='Y',
+      DPP_HAVE_SUBSYNTH([/usr], [HAVE_SUBSYNTH='Y'],
          [AC_MSG_WARN([*** Subsynth plug-in cannot be built. ***])])
    fi
 fi
