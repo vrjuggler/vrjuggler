@@ -11,6 +11,7 @@ srcdir	= @srcdir@
 
 # JDK-related variables.  ${JAVAC_CMD} is the compile line for javac when
 # building .java files.
+JDK_HOME	= @JDK_HOME@
 GUI_CLASSPATH	= ${srcdir}:${JDK_HOME}/lib/classes.zip
 JAR		= @JAR@
 JAVAC		= @JAVAC@
@@ -19,7 +20,6 @@ ifeq (@OS_TYPE@, Win32)
 else
     JAVAC_CMD	= ${JAVAC} -d . -classpath ${GUI_CLASSPATH}
 endif
-JDK_HOME	= @JDK_HOME@
 
 # If the user defined ${CLASSPATH} (either as an environment variable or a
 # command-line argument), put it in ${GUI_CLASSPATH}.  Otherwise, leave it
