@@ -89,7 +89,7 @@ vpr::ReturnStatus NetworkLine::getArrivedMessageFromQueue (const vpr::Interval& 
 
    vprASSERT(! queue.empty() && "Queue must have an event!");
 
-   msg = (*queue.begin()).second;
+   msg = queue.front().second;
    vprASSERT(msg->whenArrivesFully() <= event_time && "This must be the event on the front of the queue");
 
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
@@ -112,8 +112,7 @@ void NetworkLine::calculateMessageEventTimes (vpr::sim::MessagePtr msg,
    // Need to set the message's times for wire stuff...
    if ( ! queue.empty() )
    {
-      msg_queue_t::reverse_iterator last = queue.rbegin();
-      vpr::sim::MessagePtr tail_msg      = (*last).second;
+      vpr::sim::MessagePtr tail_msg = queue.back().second;
 
       // Set the start time for the transmission of the given message to the
       // max of the current time and the full transmission time of the last
@@ -145,7 +144,8 @@ void NetworkLine::addMessageToQueue (vpr::sim::MessagePtr msg, msg_queue_t& queu
       << mNetworkIPStr << " (" << msg->whenStartOnWire().getBaseVal() << ", "
       << msg->whenFullyOnWire().getBaseVal() << ", "
       << msg->whenArrivesFully().getBaseVal() << ")\n" << vprDEBUG_FLUSH;
-   queue[msg->whenArrivesFully()] = msg;
+   vprASSERT(queue.back().first < msg->whenArrivesFully() && "Message queued out of order");
+   queue.push_back(std::pair<vpr::Interval, vpr::sim::MessagePtr>(msg->whenArrivesFully(), msg));
 }
 
 } // End of sim namespace
