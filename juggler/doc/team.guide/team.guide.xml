@@ -948,7 +948,7 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
                      <para>Clean up the build environment and then build and install everything using the default ABI and ISA. This is a simple target for those who just want to build and install VR Juggler as simply as possible. <quote>Everything</quote> in this case is the following:</para>
                      <itemizedlist>
                         <listitem>
-                           <para>Debugging and optimized versions of the library binaries</para>
+                           <para>Debugging, optimized, and profiled versions of the library binaries</para>
                         </listitem>
                         <listitem>
                            <para>Shared and static versions of the library binaries (if both are supported on the target platform)</para>
@@ -957,13 +957,13 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
                            <para>Header files</para>
                         </listitem>
                         <listitem>
-                           <para>Sample applications, test code and user tools</para>
+                           <para>Sample applications, test code, and user tools</para>
                         </listitem>
                         <listitem>
                            <para>Data files (sample config files, model files, etc.)</para>
                         </listitem>
                         <listitem>
-                           <para>VjControl (if it was built)</para>
+                           <para>VRJConfig (if it was built)</para>
                         </listitem>
                      </itemizedlist>
                   </listitem>
@@ -971,13 +971,25 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
                <varlistentry>
                   <term>world-all-abi</term>
                   <listitem>
-                     <para>This is the same as the '<literal>world</literal>' target except that it builds and installs <emphasis>all possible</emphasis> ABI and ISA combinations for the target platform. On IRIX, for example, this means that all combinations of N32, 64, mips3 and mips4 (debugging and optimized versions) are built and installed. Most platforms currently support only one ABI/ISA combination thus making this target the same as '<literal>world</literal>'.</para>
+                     <para>This is the same as the '<literal>world</literal>' target except that it builds and installs <emphasis>all possible</emphasis> ABI and ISA combinations for the target platform. On IRIX, for example, this means that all combinations of N32, 64, mips3, and mips4 (debugging and optimized versions) are built and installed. Most platforms currently support only one ABI/ISA combination thus making this target the same as '<literal>world</literal>'.</para>
+                  </listitem>
+               </varlistentry>
+               <varlistentry>
+                  <term>release</term>
+                  <listitem>
+                     <para>This target is similar to '<literal>world</literal>' except that the installation tree is suitable for redistribution. Extra files such as the change logs, the release notes, and the license files are installed. In addition, the tree is stamped with a build time to help track possible differences between two releases of the same version. (This has only occurred for one VR Juggler beta release, but it seems like a good idea to have the build time included with a distribution.)</para>
+                  </listitem>
+               </varlistentry>
+               <varlistentry>
+                  <term>release-all-abi</term>
+                  <listitem>
+                     <para>This is the same as the '<literal>release</literal>' target except that it builds and installs <emphasis>all possible</emphasis> ABI and ISA combinations for the target platform. On IRIX, for example, this means that all combinations of N32, 64, mips3, and mips4 (debugging and optimized versions) are built and installed. Most platforms currently support only one ABI/ISA combination thus making this target the same as '<literal>release</literal>'.</para>
                   </listitem>
                </varlistentry>
                <varlistentry>
                   <term>buildworld</term>
                   <listitem>
-                     <para>This target is the same as '<literal>all</literal>'.; In other words, it builds everything. It executes the first phase of the '<literal>world</literal>' target (i.e., only the build phase, not the install phase). Since it builds both debugging and optimized versions of VR Juggler without installing, it is useful for testing changes to the library code to ensure that it works in both the debugging and optimized cases.</para>
+                     <para>This target is the same as '<literal>all</literal>'. In other words, it builds everything. It executes the first phase of the '<literal>world</literal>' target (i.e., only the build phase, not the install phase). Since it builds both debugging and optimized versions of VR Juggler without installing, it is useful for testing changes to the library code to ensure that it works in both the debugging and optimized cases.</para>
                   </listitem>
                </varlistentry>
                <varlistentry>
@@ -989,13 +1001,19 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
                <varlistentry>
                   <term>debug</term>
                   <listitem>
-                     <para>Build only the debugging version of the library binaries (both static and dynamic). In other words, the libraries are built so that debugging symbols are turned on. It is the combination of '<literal>dbg</literal>' and '<literal>ddso</literal>' (see below). <emphasis>This is the default target and is what gets built if running <command>make</command> with no arguments.</emphasis></para>
+                     <para>Build only the debugging version of the library binaries (both static and dynamic). In other words, the libraries are built so that debugging symbols are turned on. It is the combination of '<literal>dbg</literal>' and '<literal>dbg-dso</literal>' (see below). <emphasis>This is the default target and is what gets built if running <command><command>make</command></command>(1) with no arguments.</emphasis></para>
                   </listitem>
                </varlistentry>
                <varlistentry>
                   <term>optim</term>
                   <listitem>
-                     <para>Build only the optimized version of the library binaries (both static and dynamic). This is built with no debugging symbols at all. It is the combination of '<literal>opt</literal>' and '<literal>dso</literal>'.</para>
+                     <para>Build only the optimized version of the library binaries (both static and dynamic). This is built with no debugging symbols at all. It is the combination of '<literal>opt</literal>' and '<literal>opt-dso</literal>'.</para>
+                  </listitem>
+               </varlistentry>
+               <varlistentry>
+                  <term>profiled</term>
+                  <listitem>
+                     <para>Build only the profiled version of the library binaries (both static and dynamic). This capability is dependent on the compiler being used. Not all compilers support the process of generating profiled code, so this target may have no effect. Profiled libares are built with debugging symbols. This target is the combination of '<literal>prof</literal>' and '<literal>prof-dso</literal>'.</para>
                   </listitem>
                </varlistentry>
                <varlistentry>
@@ -1023,6 +1041,18 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
                   </listitem>
                </varlistentry>
                <varlistentry>
+                  <term>prof</term>
+                  <listitem>
+                     <para>Build only the <emphasis>static</emphasis> profiled version of the libraries. This does the same thing as '<literal>profiled</literal>' but does not compile the dynamic libraries.</para>
+                  </listitem>
+               </varlistentry>
+               <varlistentry>
+                  <term>prof-dso</term>
+                  <listitem>
+                     <para>Build only the <emphasis>dynamic</emphasis> profiled version of the libraries. This does the same thing as '<literal>profiled</literal>' but does not compile the static libraries.</para>
+                  </listitem>
+               </varlistentry>
+               <varlistentry>
                   <term>gui</term>
                   <listitem>
                      <para>Compile the VjControl Java files and collect them into <filename>VjControl.jar</filename>. This is only done if the configure script found a working Java compiler during its phase of the compile process.</para>
@@ -1037,7 +1067,7 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
                <varlistentry>
                   <term>clean</term>
                   <listitem>
-                     <para>Clean up everything in the build environment. This uses a '<literal>clean</literal>' target defined in <filename>Makefile.base</filename> that is automatically shared by all makefiles that include that file. The cleaning process is recursive just as the build process is. Each makefile defines which files are safe for cleaning, but generally core files, compiler-generated files and object files are the only things removed during this process.</para>
+                     <para>Clean up everything in the build environment. This uses the '<literal>clean</literal>' target defined by Doozer++ that is automatically included by all makefiles. The cleaning process is recursive just as the build process is. Each makefile may define which files are safe for cleaning, but generally core files, compiler-generated files, and object files are the only things removed during this process.</para>
                   </listitem>
                </varlistentry>
                <varlistentry>
@@ -1055,7 +1085,7 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
                <varlistentry>
                   <term>clobber</term>
                   <listitem>
-                     <para>Clean up (clobber) the entire build environment except what was generated by <command>configure</command>. This runs the previous clean-up targets and removes the object directory(ies) and <filename>lib</filename> directory(ies). Its purpose is to totally reset the build environment to its state just prior to running <command>configure</command>.</para>
+                     <para>Clean up (clobber) the entire build environment except what was generated by <command>configure</command>. This runs the above clean-up targets and removes the object directory(ies) and <filename>lib</filename> directory(ies). Its purpose is to reset the build environment to its state just prior to running <command>configure</command>.</para>
                   </listitem>
                </varlistentry>
                <varlistentry>
@@ -1217,7 +1247,7 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
                <varlistentry>
                   <term>install-debug</term>
                   <listitem>
-                     <para>This target is the same as '<literal>install</literal>'. It installs only the debugging version of the library binaries (both static and dynamic) and all associated files. It includes the combination of '<literal>install-dbg</literal>' and '<literal>install-ddso</literal>' (see below). The steps taken for this installation follow those described below. This is the target that is run when using the traditional <command>make install</command> command.</para>
+                     <para>This target is the same as '<literal>install</literal>'. It installs only the debugging version of the library binaries (both static and dynamic) and all associated files. It includes the combination of '<literal>install-dbg</literal>' and '<literal>install-dbg-dso</literal>' (see below). The steps taken for this installation follow those described below. This is the target that is run when using the traditional <command>make install</command> command.</para>
                   </listitem>
                </varlistentry>
             </variablelist>
@@ -1231,7 +1261,7 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
             </variablelist>
             <variablelist>
                <varlistentry>
-                  <term>install-ddso</term>
+                  <term>install-dbg-dso</term>
                   <listitem>
                      <para>Install only the <emphasis>dynamic</emphasis> debugging version of the library binaries. Nothing besides the libraries is installed.</para>
                   </listitem>
@@ -1241,7 +1271,7 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
                <varlistentry>
                   <term>install-optim</term>
                   <listitem>
-                     <para>Install only the optimized version of the library binaries (both static and dynamic) and all associated files. It includes the combination of '<literal>install-opt</literal>' and '<literal>install-dso</literal>' (see below). The steps taken for this installation follow those described in <xref linkend="install-process-sect"/>.</para>
+                     <para>Install only the optimized version of the library binaries (both static and dynamic) and all associated files. It includes the combination of '<literal>install-opt</literal>' and '<literal>install-opt-dso</literal>' (see below). The steps taken for this installation follow those described in <xref linkend="install-process-sect"/>.</para>
                   </listitem>
                </varlistentry>
             </variablelist>
@@ -1255,9 +1285,33 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
             </variablelist>
             <variablelist>
                <varlistentry>
-                  <term>install-dso</term>
+                  <term>install-opt-dso</term>
                   <listitem>
                      <para>Install only the <emphasis>dynamic</emphasis> optimized version of the library binaries. Nothing besides the libraries is installed.</para>
+                  </listitem>
+               </varlistentry>
+            </variablelist>
+            <variablelist>
+               <varlistentry>
+                  <term>install-profiled</term>
+                  <listitem>
+                     <para>This target installs only the profiled version of the library binaries (both static and dynamic) and all associated files. It includes the combination of '<literal>install-prof</literal>' and '<literal>install-prof-dso</literal>' (see below). The steps taken for this installation follow those described below.</para>
+                  </listitem>
+               </varlistentry>
+            </variablelist>
+            <variablelist>
+               <varlistentry>
+                  <term>install-prof</term>
+                  <listitem>
+                     <para>Install only the <emphasis>static</emphasis> profiled version of the library binaries. Nothing besides the libraries is installed.</para>
+                  </listitem>
+               </varlistentry>
+            </variablelist>
+            <variablelist>
+               <varlistentry>
+                  <term>install-prof-dso</term>
+                  <listitem>
+                     <para>Install only the <emphasis>dynamic</emphasis> profiled version of the library binaries. Nothing besides the libraries is installed.</para>
                   </listitem>
                </varlistentry>
             </variablelist>
