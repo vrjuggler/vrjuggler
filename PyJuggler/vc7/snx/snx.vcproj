@@ -145,9 +145,6 @@
 				RelativePath="..\..\src\snx\_SoundAPIInfo.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\snx\_SoundFactory.cpp">
-			</File>
-			<File
 				RelativePath="..\..\src\snx\_SoundHandle.cpp">
 			</File>
 			<File
