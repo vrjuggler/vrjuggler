@@ -745,7 +745,7 @@ AC_OUTPUT(vpr-config
           mtree/VPR.include.dist
           mtree/VPR.install.dist
           mtree/VPR.test.dist
-          VARS.pl, ,
+          VARS.pl,
     [ sed -e 's/^\(%.*\)/#\1/g' vpr-config > vpr-config.tmp
       mv vpr-config.tmp vpr-config
       chmod a+x vpr-config ])

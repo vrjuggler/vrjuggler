@@ -665,7 +665,7 @@ AC_OUTPUT(tweek-config
           test/corba/Makefile
           mtree/TWEEK.include.dist
           mtree/TWEEK.install.dist
-          mtree/TWEEK.test.dist, ,
+          mtree/TWEEK.test.dist,
    [ sed -e 's/^\(%.*\)/#\1/g' tweek-config > tweek-config.tmp
      mv tweek-config.tmp tweek-config
      chmod a+x tweek-config ])
