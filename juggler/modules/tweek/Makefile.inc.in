@@ -49,6 +49,7 @@ includedir	= @includedir@
 instlinks	= $(topdir)/instlinks
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
+JACORB_DIR	= $(JUGGLERROOT_ABS)/external/JacORB
 
 BUILD_CXX		= @BUILD_CXX@
 BUILD_JAVA		= @BUILD_JAVA@
@@ -252,7 +253,7 @@ links:
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation"
 	@echo "------------------------------------------------"
-	@$(MAKE) SYMLINK=-l prefix="$(instlinks)"			\
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)"		\
           DEFAULT_DIR="$(DBG_DIR)" installworld
 	@echo ""
 	@echo "---------------------------------------------------------------"
@@ -321,25 +322,25 @@ post-install:
 	@$(MAKE) install-test
 	@$(MAKE) install-m4
 	@$(MAKE) install-java-idl
-	$(INSTALL) $(SYMLINK) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)	\
-          $(topdir)/tweek-config $(bindir)
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(topdir)/tweek-config $(bindir)
 
 install-java-idl:
 ifeq ($(BUILD_JAVA), Y)
-	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
-          $(JUGGLERROOT_ABS)/external/JacORB/COPYING.LIB-2.0 $(projdatadir)
-	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
-          $(JUGGLERROOT_ABS)/external/JacORB/COPYRIGHT $(projdatadir)
-	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
-          $(JUGGLERROOT_ABS)/external/JacORB/README.source $(projdatadir)
-	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
-          $(JUGGLERROOT_ABS)/external/JacORB/idl.jar $(bindir)
-ifeq (@OS_TYPE@, Win32)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JUGGLERROOT_ABS)/external/JacORB/idl.bat $(bindir)
+          $(EXTRA_INSTALL_ARGS) $(JACORB_DIR)/COPYING.LIB-2.0 $(projdatadir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(JACORB_DIR)/COPYRIGHT $(projdatadir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(JACORB_DIR)/README.source $(projdatadir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(JACORB_DIR)/idl.jar $(bindir)
+ifeq (@OS_TYPE@, Win32)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)
+          $(JACORB_DIR)/idl.bat $(bindir)
 else
-	$(INSTALL) $(SYMLINK) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)	\
-          $(JUGGLERROOT_ABS)/external/JacORB/idl $(bindir)
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(JACORB_DIR)/idl $(bindir)
 endif
 endif
 
@@ -352,15 +353,18 @@ pre-install-headers:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/TWEEK.include.dist -p $(prefix)
 
 post-install-headers:
-	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
-          $(TWEEKROOT_ABS)/tweek/tweekConfig.h				\
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(TWEEKROOT_ABS)/tweek/tweekConfig.h	\
           $(includedir)/tweek/tweekConfig.h
-	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
-          $(TWEEKROOT_ABS)/tweek/tweek.h $(includedir)/tweek/tweek.h
-	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
-          $(topdir)/tweek/tweekDefines.h $(includedir)/tweek
-	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
-          $(topdir)/tweek/tweekParam.h $(includedir)/tweek
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(TWEEKROOT_ABS)/tweek/tweek.h		\
+          $(includedir)/tweek/tweek.h
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(topdir)/tweek/tweekDefines.h		\
+          $(includedir)/tweek
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(topdir)/tweek/tweekParam.h		\
+          $(includedir)/tweek
 
 # Install the Java-based software if possible.
 install-tweek-gui:
@@ -395,8 +399,9 @@ install-m4:
 	@echo "Installing Autoconf m4 macros"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)/aclocal
-	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
-          $(JUGGLERROOT_ABS)/macros/tweek.m4 $(datadir)/aclocal
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(JUGGLERROOT_ABS)/macros/tweek.m4	\
+          $(datadir)/aclocal
 
 # =============================================================================
 # Clean-up targets.  '_clobber' removes the developer installation links.
