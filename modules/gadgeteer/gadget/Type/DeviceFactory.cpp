@@ -35,8 +35,10 @@
 #include <gadget/Type/DeviceFactory.h>
 
 // Platform-independent devices.
+#include <gadget/Devices/Ascension/Flock.h>
 #include <gadget/Devices/Ascension/MotionStar.h>
 #include <gadget/Devices/Intersense/Intersense.h>
+#include <gadget/Devices/Immersion/Ibox.h>
 
 // Sims
 #include <gadget/Devices/Sim/SimAnalog.h>
@@ -54,13 +56,11 @@
 
 /* Physical devices */
 #ifndef VPR_OS_Win32
-#   include <gadget/Devices/Ascension/Flock.h>
 
 #   ifdef VPR_OS_Darwin
 #      include <gadget/Devices/Keyboard/OSXKeyboard.h>
 #   else
 #      include <gadget/Devices/5DT/DataGlove.h>
-#      include <gadget/Devices/Immersion/Ibox.h>
 //#      include <gadget/Devices/VirtualTechnologies/CyberGlove.h>
 #      include <gadget/Devices/Fakespace/PinchGlove.h>
 #      include <gadget/Devices/Keyboard/KeyboardXWin.h>
@@ -108,8 +108,18 @@ void DeviceFactory::hackLoadKnownDevices()
    // They just register themselves in their constructor.
 
    // Platform-independent devices.
+   DeviceConstructor<Flock>* flock = new DeviceConstructor<Flock>;
    DeviceConstructor<MotionStar>* motion_star = new DeviceConstructor<MotionStar>;
    DeviceConstructor<Intersense>* intersense = new DeviceConstructor<Intersense>;
+   DeviceConstructor<IBox>* ibox = new DeviceConstructor<IBox>;
+
+   if( (NULL == flock)        ||
+       (NULL == intersense)   ||
+       (NULL == ibox)         ||
+       (NULL == motion_star)   )
+   {
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
+   }
 
    DeviceConstructor<SimAnalog>* sim_analog = new DeviceConstructor<SimAnalog>;
    DeviceConstructor<SimDigital>* sim_digital = new DeviceConstructor<SimDigital>;
@@ -146,7 +156,6 @@ void DeviceFactory::hackLoadKnownDevices()
    DeviceConstructor<DataGlove>* data_glove = new DeviceConstructor<DataGlove>;
    DeviceConstructor<TrackdSensor>* trackd_sensor = new DeviceConstructor<TrackdSensor>;
    DeviceConstructor<TrackdController>* trackd_controller = new DeviceConstructor<TrackdController>;
-   DeviceConstructor<IBox>* ibox = new DeviceConstructor<IBox>;
    DeviceConstructor<PinchGlove>* pinch_glove = new DeviceConstructor<PinchGlove>;
 //   DeviceConstructor<CyberGlove>* cyber_glove = new DeviceConstructor<CyberGlove>;
    DeviceConstructor<KeyboardXWin>* xwin_key = new DeviceConstructor<KeyboardXWin>;
@@ -154,7 +163,6 @@ void DeviceFactory::hackLoadKnownDevices()
    DeviceConstructor<ThreeDMouse>* threed_mouse = new DeviceConstructor<ThreeDMouse>;
    if( (NULL == trackd_sensor)      ||
        (NULL == trackd_controller)  ||
-       (NULL == ibox)         ||
        (NULL == data_glove)   ||
        (NULL == pinch_glove)  ||
 //       (NULL == cyber_glove)  ||
@@ -165,14 +173,6 @@ void DeviceFactory::hackLoadKnownDevices()
    }
 
 #endif
-   DeviceConstructor<Flock>* flock = new DeviceConstructor<Flock>;
-
-   if( (NULL == flock)        ||
-       (NULL == intersense)   ||
-       (NULL == motion_star)   )
-   {
-      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
-   }
 #else
 
    DeviceConstructor<KeyboardWin32>* key_win32 = new DeviceConstructor<KeyboardWin32>;

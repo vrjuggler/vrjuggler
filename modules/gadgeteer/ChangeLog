@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+May-30-2002 patrickh  Enabled the Ascension Flock of BIrds and Immersion Tech
+                      Interface Box drivers on Win32.
+                      NEW VERSION: 0.2.4
 May-29-2002 patrickh  Build a DLL on Win32.
 May-23-2002 patrickh  Updated to use JCCL 0.2.0 API.
                       NEW VERSION: 0.2.3
