@@ -70,6 +70,56 @@ this:
 <img alt="Description Editing Window" src="gfx/DescFrame1.png"></img>
 <p>
 
+The uppermost part of the window displays basic information about the
+ChunkDesc.  Every ChunkDesc has two identifiers: a descriptive name which
+is used for GUI displays, and a shorter token, which is used in the file
+format and internally by VR Juggler.  The name can be any short descriptive 
+phrase; the token should be terse and may not contain spaces.
+<p>
+There is also a help string, which can be used to provide a general
+one-line description of what the ChunkDesc is for.
+
+<p>
+The center of the ChunkDesc editing window displays a scrollable list of
+all the properties that ConfigChunks using this description should have.
+Every ChunkDesc includes a Name property, which is actually used to store
+the instance name for ConfigChunks of that type.  The number and type of
+other properties can vary.
+<p>
+Users can add a new property by pressing the "Insert" button at the bottom of 
+the window.  Properties can be removed by selecting them (clicking on the 
+background of the property's box) and then pressing the "Remove" button.
+
+<p>
+As with the ChunkDesc itself, each property has a descriptive name and
+short token, as well as a help string.  Some properties can have multiple
+values (e.g. a position with separate x, y, and z values); this can be
+defined by entering the desired number of values in the "Number" box, or
+by selecting the "Var Arguments" value, for a property with a variable
+number of values.
+
+<p>
+Every property has a specific type of legal values (integers, strings, 
+etc.); this is selected in the "Type" box.  The meanings of the different
+types are explained in the <a href="chunkprimer.html">ConfigChunk 
+Primer</a>.
+
+<p>
+If a property allows multiple values, it may be helpful to provide 
+individual lables for each one.  For example, a "Window Size" parameter
+may have values labeled "Width" and "Height".  To define labels, click
+on the property's "Value Labels" button.  A window like this one will be
+displayed:
+
+<p>
+<img src="ValueLabels1.png" alt="Value labels editor window"></img>
+
+<p>
+Enumerations/allowed chunks
+
+<p>
+How to use DescHelp files
+
 (under construction)
 
 <br><br>
