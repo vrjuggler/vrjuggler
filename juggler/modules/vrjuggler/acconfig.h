@@ -54,20 +54,12 @@
 /* Define all of the following if building on IRIX or Darwin. */
 #undef _BSD_TYPES
 
-/* Define to be either IRIX5 or IRIX6 depending on your system. */
-#undef IRIXREL
-
 /* Define all of the following if building on HP-UX. */
 #undef VJ_HPUX_VERSION
-#undef _INCLUDE_TERMIO
-#undef _CMA_NOWRAPPERS_
 
 /* Define if building on a Win32 platform. */
 #undef WIN32
 #undef _MBCS
-
-/* Definte if DTK is installed. */
-#undef VJ_HAVE_DTK
 
 /* Define if you have the sinf function.  */
 #undef HAVE_SINF
