@@ -167,6 +167,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
             mMenuFileOpen.setText("Open " + loader.getFileType() + " ...");
             mMenuFileClose.setText("Close " + loader.getFileType() + " ...");
             mMenuFileOpen.setEnabled(true);
+            mMenuFileSave.setEnabled(loader.canSave());
 
             if ( loader.getOpenFileCount() > 0 )
             {
@@ -369,7 +370,19 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       // the Quit option.
       mMenuFile.setText("File");
       mMenuFile.setMnemonic('F');
+      mMenuFileSave.setEnabled(false);
+      mMenuFileSave.setMnemonic('S');
+      mMenuFileSave.setText("Save ...");
+      mMenuFileSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(83, java.awt.event.KeyEvent.CTRL_MASK, false));
+      mMenuFileSave.addActionListener(new java.awt.event.ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            fileSaveAction(e);
+         }
+      });
       mMenuFile.add(mMenuFileOpen);
+      mMenuFile.add(mMenuFileSave);
       mMenuFile.add(mMenuFileClose);
       mMenuFile.addSeparator();
       mMenuFile.add(mMenuFileQuit);
@@ -502,6 +515,14 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
             mMenuFileOpen.setEnabled(false);
          }
       }
+   }
+
+   /**
+    * File | Save action performed.
+    */
+   private void fileSaveAction (ActionEvent e)
+   {
+      mFileLoader.saveRequested();
    }
 
    /**
@@ -776,6 +797,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       mFileLoader = null;
       mMenuFileOpen.setText("Open ...");
       mMenuFileOpen.setEnabled(false);
+      mMenuFileSave.setEnabled(false);
       mMenuFileClose.setText("Close ...");
       mMenuFileClose.setEnabled(false);
    }
@@ -806,6 +828,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
    private JMenuBar mMenuBar              = new JMenuBar();
    private JMenu mMenuFile                = new JMenu();
    private JMenuItem mMenuFileOpen        = new JMenuItem();
+   private JMenuItem mMenuFileSave        = new JMenuItem();
    private JMenuItem mMenuFileClose       = new JMenuItem();
    private JMenuItem mMenuFileQuit        = new JMenuItem();
    private JMenu mMenuNetwork             = new JMenu();
