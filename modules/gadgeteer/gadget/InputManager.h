@@ -220,8 +220,7 @@ protected:
 
 public:
    /** Get the input logger connected to the system */
-   gadget::InputLoggerPtr getInputLogger()
-   { return mInputLogger; }
+   gadget::InputLoggerPtr getInputLogger();
 
    /* friends */
    friend class InputLogger;  /**< Make input logger a friend */
