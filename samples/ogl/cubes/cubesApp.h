@@ -19,10 +19,13 @@
 #include <Input/InputManager/vjAnalogInterface.h>
 #include <Input/InputManager/vjDigitalInterface.h>
 
-class UserData
+#include <Kernel/vjUser.h>
+
+// Class to hold all context specific data
+class ContextData
 {
 public:
-   UserData()
+   ContextData()
    {
       firstTime = true;
       cubeDLIndex = -1;
@@ -33,104 +36,26 @@ public:
    int   cubeDLIndex;
 };
 
-
-//--------------------------------------------------
-// Demonstration OpenGL application class
-//
-// This application simply renders a field of cubes.
-//---------------------------------------------------
-class cubesApp : public vjGlApp
+// Class to hold all data for a specific user
+class UserData
 {
 public:
-   cubesApp(vjKernel* kern) : vjGlApp(kern)
+   // Constructor
+   // Takes the string names of the devices to use
+   // NOTE: This means that we cannot construct a user until the input manager is loaded
+   //       Ex. The Init function
+   UserData(vjUser* user, string wandName, string incButton, string decButton, string stopButton)
    {
       mNavMatrix.makeIdent();
+
+      mUser = user;
+      // Initialize devices
+      mWand.init(wandName);
+      mIncVelocityButton.init(incButton);
+      mDecVelocityButton.init(decButton);
+      mStopButton.init(stopButton);
    }
 
-   // Execute any initialization needed before the API is started
-   virtual void init()
-   {
-      cout << "---------- App:init() ---------------" << endl;
-         // Initialize devices
-      mWand.init("VJWand");
-      mIncVelocityButton.init("VJButton0");
-      mDecVelocityButton.init("VJButton1");
-      mStopButton.init("VJButton2");
-   }
-
-   // Execute any initialization needed <b>after</b> API is started
-   //  but before the drawManager starts the drawing loops.
-   virtual void apiInit()
-   {
-      ;
-   }
-
-   // Called immediately upon opening a new OpenGL context
-   virtual void contextInit()
-   {
-      // Create display list
-      vjASSERT(mDlData->firstTime == true);   // We should not have been here yet
-      mDlData->firstTime = false;
-
-      glGenLists(rand()%25);        // Generate some random lists.  NOTE: Needed for testing only
-      mDlData->cubeDLIndex = glGenLists(1);
-
-      vjDEBUG(0) << "Creating DL:" << mDlData->cubeDLIndex << endl << vjDEBUG_FLUSH;
-
-      glNewList(mDlData->cubeDLIndex, GL_COMPILE);
-         drawbox(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5, GL_QUADS);
-      glEndList();
-   }
-
-   /** Function to draw the scene
-    * PRE: OpenGL state has correct transformation and buffer selected
-    * POST: The current scene has been drawn
-    */
-   virtual void draw()
-   {
-      initGLState();    // This should really be in another function
-      myDraw();
-   }
-
-   /**   name Drawing Loop Functions
-    *
-    *  The drawing loop will look similar to this:
-    *
-    *  while (drawing)
-    *  {
-    *        preDraw();
-    *	      draw();
-    *	       postDraw();      // Drawing is happening while here
-    *       sync();
-    *        postSync();      // Drawing is now done
-    *
-    *	      UpdateTrackers();
-    *  }
-    *
-    */
-
-   /// Function called after tracker update but before start of drawing
-   virtual void preDraw()
-   {
-       vjDEBUG(2) << "cubesApp::preDraw()" << endl << vjDEBUG_FLUSH;
-
-       updateNavigation();       // Update the navigation matrix
-   }
-
-   /// Function called after drawing has been triggered but BEFORE it completes
-   virtual void postDraw()
-   {
-       vjDEBUG(2) << "cubesApp::postDraw()" << endl << vjDEBUG_FLUSH;
-   }
-
-   /// Function called before updating trackers but after the frame is drawn
-   virtual void postSync()
-   {
-      vjDEBUG(2) << "cubesApp::postSync" << endl << vjDEBUG_FLUSH;
-   }
-
-
-private:
    // Update the navigation matrix
    //
    // Uses a quaternion to do rotation in the environment
@@ -211,22 +136,146 @@ private:
       vjDEBUG(2) << "Transform   Rot: " << xyzAngles << endl << vjDEBUG_FLUSH;
       vjDEBUG(2) << "Transform Trans: " << xyzTrans << endl << vjDEBUG_FLUSH;
       vjDEBUG(2) << "-------------------------------------------" << endl << vjDEBUG_FLUSH;
-
-
-      /*
-      vjMatrix rot_mat;
-      rot_mat.makeXYZEuler(0.0, -0.05f, 0.0);
-      mNavMatrix.postMult(rot_mat);
-
-      mNavMatrix.postTrans(mNavMatrix, 0,0,0.01);
-      */
    }
+
+
+public:
+      // Devices to use for the given user
+   vjPosInterface       mWand;                  // the Wand
+   vjDigitalInterface   mIncVelocityButton;     // Button for velocity
+   vjDigitalInterface   mDecVelocityButton;
+   vjDigitalInterface   mStopButton;            // Button to stop
+
+      // Navigation info for the user
+   float                mCurVelocity;  // The current velocity
+   vjMatrix             mNavMatrix;    // Matrix for navigation in the application
+
+   vjUser*              mUser;         // The user we hold data for
+};
+
+//--------------------------------------------------
+// Demonstration OpenGL application class
+//
+// This application simply renders a field of cubes.
+//---------------------------------------------------
+class cubesApp : public vjGlApp
+{
+public:
+   cubesApp(vjKernel* kern) : vjGlApp(kern)
+   {
+      ;
+   }
+
+   // Execute any initialization needed before the API is started
+   virtual void init()
+   {
+      cout << "---------- App:init() ---------------" << endl;
+      vector<vjUser*> users = kernel->getUsers();
+      int num_users = users.size();
+
+      UserData* new_user=NULL;
+      mUserData = vector<UserData*>(num_users,NULL);
+
+      switch (num_users)
+      {
+      case (2):
+         new_user = new UserData(users[1],"VJWand1", "VJButton0_1", "VJButton1_1", "VJButton2_1");
+         mUserData[1] = new_user;
+         vjASSERT(users[1]->getId() == 1);
+      case (1):
+         new_user = new UserData(users[0],"VJWand", "VJButton0", "VJButton1", "VJButton2");
+         mUserData[0] = new_user;
+         vjASSERT(users[0]->getId() == 0);
+         break;
+      default:
+         vjDEBUG(0) << "ERROR: Bad number of users." << vjDEBUG_FLUSH;
+         exit();
+         break;
+      }
+   }
+
+   // Execute any initialization needed <b>after</b> API is started
+   //  but before the drawManager starts the drawing loops.
+   virtual void apiInit()
+   {
+      ;
+   }
+
+   // Called immediately upon opening a new OpenGL context
+   virtual void contextInit()
+   {
+      // Create display list
+      vjASSERT(mDlData->firstTime == true);   // We should not have been here yet
+      mDlData->firstTime = false;
+
+      glGenLists(rand()%25);        // Generate some random lists.  NOTE: Needed for testing only
+      mDlData->cubeDLIndex = glGenLists(1);
+
+      vjDEBUG(0) << "Creating DL:" << mDlData->cubeDLIndex << endl << vjDEBUG_FLUSH;
+
+      glNewList(mDlData->cubeDLIndex, GL_COMPILE);
+         drawbox(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5, GL_QUADS);
+      glEndList();
+   }
+
+   /** Function to draw the scene
+    * PRE: OpenGL state has correct transformation and buffer selected
+    * POST: The current scene has been drawn
+    */
+   virtual void draw()
+   {
+      initGLState();    // This should really be in another function
+
+      myDraw(vjGlDrawManager::instance()->currentUserData()->getUser());
+   }
+
+   /**   name Drawing Loop Functions
+    *
+    *  The drawing loop will look similar to this:
+    *
+    *  while (drawing)
+    *  {
+    *        preDraw();
+    *	      draw();
+    *	       postDraw();      // Drawing is happening while here
+    *       sync();
+    *        postSync();      // Drawing is now done
+    *
+    *	      UpdateTrackers();
+    *  }
+    *
+    */
+
+   /// Function called after tracker update but before start of drawing
+   virtual void preDraw()
+   {
+       vjDEBUG(2) << "cubesApp::preDraw()" << endl << vjDEBUG_FLUSH;
+
+       for(int i=0;i<mUserData.size();i++)
+          mUserData[i]->updateNavigation();       // Update the navigation matrix
+   }
+
+   /// Function called after drawing has been triggered but BEFORE it completes
+   virtual void postDraw()
+   {
+       vjDEBUG(2) << "cubesApp::postDraw()" << endl << vjDEBUG_FLUSH;
+   }
+
+   /// Function called before updating trackers but after the frame is drawn
+   virtual void postSync()
+   {
+      vjDEBUG(2) << "cubesApp::postSync" << endl << vjDEBUG_FLUSH;
+   }
+
+
+private:
+
 
    //----------------------------------------------
    //  Draw the scene.  A bunch of boxes of differing color and stuff
    //----------------------------------------------
 
-   void myDraw()
+   void myDraw(vjUser* user)
    {
       vjDEBUG(2) << "\n--- myDraw() ---\n" << vjDEBUG_FLUSH;
 
@@ -238,9 +287,10 @@ private:
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
       glPushMatrix();
-            // --- Push on Navigation matrix --- //
-         glMultMatrixf(mNavMatrix.getFloatPtr());
+            // --- Push on Navigation matrix for the user --- //
 
+         vjMatrix nav_matrix = mUserData[user->getId()]->mNavMatrix;
+         glMultMatrixf(nav_matrix.getFloatPtr());
 
 
          //---- Main box loop -----///
@@ -255,7 +305,6 @@ private:
    		            drawCube();
                   glPopMatrix();
                }
-
 
 
         /*
@@ -375,16 +424,8 @@ private:
    }
 
 public:
-   vjPosInterface       mWand;      // the Wand
-   vjPosInterface       mWandEnd;   // The index to the end of the wand
-   vjDigitalInterface   mIncVelocityButton;   // Button for velocity
-   vjDigitalInterface   mDecVelocityButton;
-   vjDigitalInterface   mStopButton;         // Button to stop
-
-   float                      mCurVelocity;  // The current velocity
-   vjMatrix                   mNavMatrix;    // Matrix for navigation in the application
-   vjGlContextData<UserData>  mDlData;       // Data for display lists
-
+   vjGlContextData<ContextData>  mDlData;       // Data for display lists
+   vector<UserData*>             mUserData;     // All the users in the program
 };
 
 #endif
