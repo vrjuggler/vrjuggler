@@ -43,6 +43,7 @@
 #define VPR_INTERVAL_
 
 #include <vpr/vprConfig.h>
+#include <vpr/vprTypes.h>
 #include <vpr/Util/Assert.h>
 
 #if defined(VPR_USE_NSPR)
