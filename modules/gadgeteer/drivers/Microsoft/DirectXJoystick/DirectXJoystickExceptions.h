@@ -30,71 +30,86 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_DIRECTX_JOYSTICK_STANDALONE_H_
-#define _GADGET_DIRECTX_JOYSTICK_STANDALONE_H_
+#ifndef _GADGET_DIRECTX_JOYSTICK_EXCEPTIONS_H_
+#define _GADGET_DIRECTX_JOYSTICK_EXCEPTIONS_H_
 
-#include <windows.h>
-#include <dinput.h>
+#include <exception>
 #include <string>
 
 
 namespace gadget
 {
 
-class DirectXJoystickStandalone
+class DirectXJoystickException : public std::exception
 {
 public:
-   DirectXJoystickStandalone();
-
-   void init();
-
-   void close();
-
-   bool poll();
-
-   const DIJOYSTATE& getData() const;
-
-   DWORD getType() const;
-
-   const std::string& getProductName() const;
-
-   /** @name Direct Input callbacks */
-   //@{
-   BOOL enumerateJoysticks(const DIDEVICEINSTANCE* dInstance);
-   BOOL enumerateAxes(const DIDEVICEOBJECTINSTANCE* doi);
-   //@}
-
-   static int getAxisMin()
+   DirectXJoystickException(const std::string& msg)
+      : std::exception()
+      , mMsg(msg)
    {
-      return -100;
+      ;
    }
 
-   static int getAxisMax()
+   virtual ~DirectXJoystickException() throw()
    {
-      return 100;
+      ;
    }
 
-private:
-   /** @name Direct Input data */
-   //@{
-   LPDIRECTINPUT8       mDxObject;    /**< DirectInput object */
-   LPDIRECTINPUTDEVICE8 mDxJoystick;  /**< DirectInput device */
-   //@}
+   virtual const char* what() const throw()
+   {
+      return mMsg.c_str();
+   }
 
-   /** @name Data format information */
-   //@{
-   // Use DIJOYSTATE for the data format.  We do not need the extended capabilities
-   // of DIJOYSTATE2.
-   DIJOYSTATE           mJsData;      /**< Joystick state data structure */
+protected:
+   std::string mMsg;
+};
 
-   const DIDATAFORMAT* mDataFormatObj;
-   size_t              mDataFormatSize;
-   //@}
+class DirectXJoystickDataFormatException : public DirectXJoystickException
+{
+public:
+   DirectXJoystickDataFormatException(const std::string& msg)
+      : DirectXJoystickException(msg)
+   {
+      ;
+   }
 
-   DWORD mType;
-   std::string mProductName;
+   virtual ~DirectXJoystickDataFormatException() throw()
+   {
+      ;
+   }
+};
+
+class DirectXJoystickCooperationException : public DirectXJoystickException
+{
+public:
+   DirectXJoystickCooperationException(const std::string& msg)
+      : DirectXJoystickException(msg)
+   {
+      ;
+   }
+
+   virtual ~DirectXJoystickCooperationException() throw()
+   {
+      ;
+   }
+};
+
+class DirectXJoystickAccessException : public DirectXJoystickException
+{
+public:
+   DirectXJoystickAccessException(const std::string& msg)
+      : DirectXJoystickException(msg)
+   {
+      ;
+   }
+
+   virtual ~DirectXJoystickAccessException() throw()
+   {
+      ;
+   }
 };
 
 }
 
-#endif
+
+#endif /* _GADGET_DIRECTX_JOYSTICK_EXCEPTIONS_H_ */
