@@ -60,7 +60,7 @@ class GADGET_CLUSTER_PLUGIN_CLASS_API SwapLockTCPPlugin
    vprSingletonHeader( SwapLockTCPPlugin );
 public:
    SwapLockTCPPlugin()  : mPluginGUID("5edfc033-1b3e-4741-b0e0-6ebb47967644"),
-      SYNC_SIGNAL('G'), read_timeout(1000,vpr::Interval::Msec), mActive(false), mIsMaster(false)
+      SYNC_SIGNAL('G'), read_timeout(1000,vpr::Interval::Msec), mIsMaster(false), mActive(false)
    {;}
 
    virtual ~SwapLockTCPPlugin()
