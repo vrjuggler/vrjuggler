@@ -98,8 +98,7 @@ dummyTrackd@EXEEXT@: dummyTrackd.@OBJEXT@
 # aMotionStar test driver
 # ----------------
 aMotionStarTest@EXEEXT@: aMotionStarTest.@OBJEXT@ aMotionStar.@OBJEXT@
-	$(LINK) -o $@ aMotionStarTest.@OBJEXT@			\
-          aMotionStar.@OBJEXT@ $(VJ_LIBS) $(EXTRA_LIBS)
+	$(LINK) -o $@ aMotionStarTest.@OBJEXT@ aMotionStar.@OBJEXT@ -lm
 
 # ----------------
 # new
