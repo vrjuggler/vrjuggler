@@ -41,6 +41,7 @@
 #include <gadget/Devices/Sim/SimGloveGesture.h>
 //#include <gadget/Devices/Sim/SimKeyboardDigital.h>
 #include <gadget/Devices/Sim/SimRelativePosition.h>
+#include <gadget/Devices/Sim/SimSetablePosition.h>
 #include <gadget/Devices/Sim/SimDigitalGlove.h>
 
 // RemoteInputManager Dependency Checker
@@ -104,7 +105,7 @@ void DeviceFactory::hackLoadKnownDevices()
    DeviceConstructor<SimDigital>* sim_digital = new DeviceConstructor<SimDigital>;
    DeviceConstructor<SimPosition>* sim_position = new DeviceConstructor<SimPosition>;
    //vjDeviceConstructor<SimKeyboardDigital>* sim_keyboard_digital = new DeviceConstructor<SimKeyboardDigital>;
-   DeviceConstructor<SimRelativePosition>* sim_relative = new DeviceConstructor<SimRelativePosition>;
+   DeviceConstructor<SimSetablePosition>* sim_relative = new DeviceConstructor<SimSetablePosition>;
    
    
    DeviceConstructor<SimGloveGesture>* sim_glove = new DeviceConstructor<SimGloveGesture>;
