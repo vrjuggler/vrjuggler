@@ -82,10 +82,13 @@ public:
 
    EventWindowXWin()
       : mWeOwnTheWindow(true), mVisual(NULL), mDisplay(NULL),
+        mScreen(-1), mX(-1), mY(-1), mWidth(0), mHeight(0),
         mEmptyCursorSet(false), mExitFlag(false),
-        mLockState(Unlocked), mPrevX(0), mPrevY(0)
+        mLockState(Unlocked), mLockStoredKey(-1), mLockToggleKey(-1),
+        mMouseSensitivity(1.0f), mSleepTimeMS(0),
+        mPrevX(0), mPrevY(0)
    {
-      //mThread = NULL; -- Should be done in base constructor
+      vprASSERT(NULL == mThread);      // Should have been initialized in base constructor
    }
 
    ~EventWindowXWin()
