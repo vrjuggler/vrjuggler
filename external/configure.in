@@ -168,6 +168,13 @@ if test "x$PYTHON" != "xno" ; then
 fi
 
 # -----------------------------------------------------------------------------
+# Perform extra handling of input from the command line.
+# -----------------------------------------------------------------------------
+if test "x$BOOST_INCLUDES" = "xno" ; then
+   BOOST_INCLUDES="$BOOST_ROOT/include"
+fi
+
+# -----------------------------------------------------------------------------
 # Deal with installing our external dependencies.
 # -----------------------------------------------------------------------------
 TARGETS=''
