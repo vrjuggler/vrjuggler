@@ -84,15 +84,6 @@ public class DisplayPlacer
       model.setConfigChunkDB(getConfigManager().getActiveConfig());
       wndPlacer.setModel(model);
       wndPlacer.setRenderer(new DisplayRenderer());
-
-      // Connect the display placer to the property sheet
-      wndPlacer.addPlacerSelectionListener(new PlacerSelectionListener()
-      {
-         public void valueChanged(PlacerSelectionEvent evt)
-         {
-            // TODO: notify listeners of this component
-         }
-      });
    }
 
    public void setDesktopSize(Dimension desktopSize)
@@ -103,6 +94,25 @@ public class DisplayPlacer
    public Dimension getDimensionSize()
    {
       return wndPlacer.getDesktopSize();
+   }
+
+   /**
+    * Gets the currently selected displayWindow config chunk.
+    *
+    * @return  the config chunk for the currently selected display window;
+    *          null if nothing is selected
+    */
+   public ConfigChunk getSelectedDisplay()
+   {
+      return (ConfigChunk)wndPlacer.getSelectedValue();
+   }
+
+   /**
+    * Gets the placer used internally by this display placer.
+    */
+   public Placer getPlacer()
+   {
+      return wndPlacer;
    }
 
    /**
