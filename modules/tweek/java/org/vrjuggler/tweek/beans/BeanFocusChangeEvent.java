@@ -45,26 +45,19 @@ package org.vrjuggler.tweek.beans;
  */
 public class BeanFocusChangeEvent extends java.util.EventObject
 {
-   public static final int BEAN_UNFOCUSED = 0;
-   public static final int BEAN_FOCUSED   = 1;
-
-   public BeanFocusChangeEvent (Object source, PanelBean _bean, int type)
+   /**
+    * @since 0.92.7
+    */
+   public BeanFocusChangeEvent(Object source, PanelBean bean)
    {
       super(source);
-      bean      = _bean;
-      focusType = type;
+      this.bean = bean;
    }
 
-   public PanelBean getBean ()
+   public PanelBean getBean()
    {
       return bean;
    }
 
-   public int getFocusType ()
-   {
-      return focusType;
-   }
-
    private PanelBean bean = null;
-   private int       focusType;
 }
