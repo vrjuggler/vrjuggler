@@ -592,7 +592,7 @@ case $CC in
       toolset='gcc'
       ;;
    cygcl|msvccc|cl*|CL*)
-      toolset='vc'
+      toolset=${BOOST_TOOL:=vc7}
       ;;
    cc)
       if test "x$GCC" = "xyes" ; then
