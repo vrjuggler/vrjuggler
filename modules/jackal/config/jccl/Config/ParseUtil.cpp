@@ -43,36 +43,6 @@ namespace tokens = jccl::types_tokens;
 namespace jccl
 {
 
-VarType stringToVarType(const std::string& str)
-{
-   if (str == tokens::INTEGER)
-   {
-      return T_INT;
-   }
-   if (str == tokens::FLOAT)
-   {
-      return T_FLOAT;
-   }
-   if (str == tokens::BOOLEAN)
-   {
-      return T_BOOL;
-   }
-   if (str == tokens::STRING)
-   {
-      return T_STRING;
-   }
-   if (str == tokens::CONFIGELEMENTPOINTER)
-   {
-      return T_ELEMENT_PTR;
-   }
-   if (str == tokens::CONFIGELEMENT)
-   {
-      return T_CHILD_ELEMENT;
-   }
-
-   return VJ_T_INVALID;
-}
-
 /** Is n an absolute path name? */
 bool isAbsolutePathName(const std::string& n)
 {
