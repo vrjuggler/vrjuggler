@@ -51,7 +51,7 @@ SUBOBJDIR	= $(GADGET_LIBRARY)
 SRCS		=
 
 ifneq (@OS_TYPE@, Win32)
-ifneq (@OS_TYPE@, Darwin)
+ifneq (@PLATFORM@, Darwin)
 SRCS		+= TrackdController.cpp			\
                    TrackdControllerStandalone.cpp	\
                    TrackdSensor.cpp			\
