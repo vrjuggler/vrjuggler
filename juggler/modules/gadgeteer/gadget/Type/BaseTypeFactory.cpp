@@ -67,57 +67,60 @@ void BaseTypeFactory::hackLoadKnownDevices()
 
    // Platform-independent devices.
 
-
-
-    // Input Digital
+   // Input Digital
    BaseTypeConstructor< InputMixer<Input,Digital>::MixedPlaceholderType >* input_digital
-        =new BaseTypeConstructor< InputMixer<Input,Digital>::MixedPlaceholderType >;
+         = new BaseTypeConstructor< InputMixer<Input,Digital>::MixedPlaceholderType >;
 
-    // Input Analog
-    BaseTypeConstructor< InputMixer<Input,Analog>::MixedPlaceholderType >* input_analog
-        =new BaseTypeConstructor< InputMixer<Input,Analog>::MixedPlaceholderType >;
+   // Input Analog
+   BaseTypeConstructor< InputMixer<Input,Analog>::MixedPlaceholderType >* input_analog
+         = new BaseTypeConstructor< InputMixer<Input,Analog>::MixedPlaceholderType >;
 
-    // Input Position
-    BaseTypeConstructor< InputMixer<Input,Position>::MixedPlaceholderType >* input_position
-        =new BaseTypeConstructor< InputMixer<Input,Position>::MixedPlaceholderType >;
+   // Input Position
+   BaseTypeConstructor< InputMixer<Input,Position>::MixedPlaceholderType >* input_position
+         = new BaseTypeConstructor< InputMixer<Input,Position>::MixedPlaceholderType >;
 
    // Input Digital Analog
-    // Input Analog Digital
-    BaseTypeConstructor< InputMixer< InputMixer<Input,Digital> , Analog>::MixedPlaceholderType >* input_digital_analog
-            =new BaseTypeConstructor< InputMixer< InputMixer<Input,Digital> , Analog>::MixedPlaceholderType >;
+   // Input Analog Digital
+   BaseTypeConstructor< InputMixer< InputMixer<Input,Digital> , Analog>::MixedPlaceholderType >* input_digital_analog
+         = new BaseTypeConstructor< InputMixer< InputMixer<Input,Digital> , Analog>::MixedPlaceholderType >;
 
    // Input Digital Position
-    // Input Position Digital
-    BaseTypeConstructor< InputMixer< InputMixer<Input,Digital> , Position>::MixedPlaceholderType >* input_digital_position
-            =new BaseTypeConstructor< InputMixer< InputMixer<Input,Digital> , Position>::MixedPlaceholderType >;
+   // Input Position Digital
+   BaseTypeConstructor< InputMixer< InputMixer<Input,Digital> , Position>::MixedPlaceholderType >* input_digital_position
+         = new BaseTypeConstructor< InputMixer< InputMixer<Input,Digital> , Position>::MixedPlaceholderType >;
 
    // Input Analog Position
-    // Input Position   Analog
-    BaseTypeConstructor< InputMixer< InputMixer<Input,Analog> , Position>::MixedPlaceholderType >* input_analog_position
-            =new BaseTypeConstructor< InputMixer< InputMixer<Input,Analog> , Position>::MixedPlaceholderType >;
+   // Input Position Analog
+   BaseTypeConstructor< InputMixer< InputMixer<Input,Analog> , Position>::MixedPlaceholderType >* input_analog_position
+         = new BaseTypeConstructor< InputMixer< InputMixer<Input,Analog> , Position>::MixedPlaceholderType >;
 
-    // Input Digital Analog Position
-    BaseTypeConstructor< InputMixer< InputMixer< InputMixer<Input,Digital> , Analog> , Position>::MixedPlaceholderType >* input_digital_analog_position
-            =new BaseTypeConstructor< InputMixer< InputMixer< InputMixer<Input,Digital> , Analog> , Position>::MixedPlaceholderType >;
+   // Input Digital Analog Position
+   BaseTypeConstructor< InputMixer< InputMixer< InputMixer<Input,Digital> , Analog> , Position>::MixedPlaceholderType >* input_digital_analog_position
+         = new BaseTypeConstructor< InputMixer< InputMixer< InputMixer<Input,Digital> , Analog> , Position>::MixedPlaceholderType >;
 
-    // SimInput Input Position
-    BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Position>::MixedPlaceholderType >* siminput_input_position
-            =new BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Position>::MixedPlaceholderType >;
+   // SimInput Input Position
+   BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Position>::MixedPlaceholderType >* siminput_input_position
+         = new BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Position>::MixedPlaceholderType >;
 
-    // SimInput Input Digital
-    BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Digital>::MixedPlaceholderType >* siminput_input_digital
-            =new BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Digital>::MixedPlaceholderType >;
+   // SimInput Input Digital
+   BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Digital>::MixedPlaceholderType >* siminput_input_digital
+         = new BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Digital>::MixedPlaceholderType >;
 
-    // SimInput Input Analog
-    BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Analog>::MixedPlaceholderType >* siminput_input_analog
-            =new BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Analog>::MixedPlaceholderType >;
+   // SimInput Input Analog
+   BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Analog>::MixedPlaceholderType >* siminput_input_analog
+         = new BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Analog>::MixedPlaceholderType >;
 
-    // Input event window
-    BaseTypeConstructor< InputMixer<Input,EventWindow>::MixedPlaceholderType >* input_keyboard
-            =new BaseTypeConstructor< InputMixer<Input,EventWindow>::MixedPlaceholderType >;
+   // Input event window
+   BaseTypeConstructor< InputMixer<Input,EventWindow>::MixedPlaceholderType >* input_keyboard
+         = new BaseTypeConstructor< InputMixer<Input,EventWindow>::MixedPlaceholderType >;
 
+   // Input SpeechRecogString
+   BaseTypeConstructor< InputMixer<Input, SpeechRecogString>::MixedPlaceholderType >* input_speech_string
+         = new BaseTypeConstructor< InputMixer<Input, SpeechRecogString>::MixedPlaceholderType >;
 
-
+   // Input SpeechRecogDigital
+   BaseTypeConstructor< InputMixer<Input, SpeechRecogDigital>::MixedPlaceholderType >* input_speech_digital
+         = new BaseTypeConstructor< InputMixer<Input, SpeechRecogDigital>::MixedPlaceholderType >;
 
    if( (NULL == input_digital) ||
        (NULL == input_analog) ||
@@ -129,7 +132,9 @@ void BaseTypeFactory::hackLoadKnownDevices()
        (NULL == siminput_input_position) ||
        (NULL == siminput_input_digital) ||
        (NULL == siminput_input_analog) ||
-       (NULL == input_keyboard) )
+       (NULL == input_keyboard) ||
+       (NULL == input_speech_string) ||
+       (NULL == input_speech_digital) )
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
    }
