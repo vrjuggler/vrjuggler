@@ -112,8 +112,8 @@ public:
    void testSpawnedAcceptor()
    {
        testAssertReset();
-       mRendevousPort = 45123;
-       mNumItersA = 50;
+       mRendevousPort = 47021;
+       mNumItersA = 5;
        mMessageValue = std::string("The Data");
        mMessageLen = mMessageValue.length();
        //mSyncMutex.acquire();                    // Get it here so the acceptor can release it when ready
@@ -182,7 +182,7 @@ public:
        {
            vpr::SocketStream    con_sock;
            std::string      data;
-            ret_val = connector.connect(con_sock, remote_addr);
+            ret_val = connector.connect(con_sock, remote_addr, 100);
             threadAssertTest((ret_val == true), "Connector can't connect");
        
             vpr::Uint16 size = con_sock.read(data, mMessageLen);   // Recieve data
