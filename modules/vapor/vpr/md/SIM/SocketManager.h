@@ -46,12 +46,8 @@
 
 #include <list>
 
-#if defined(HAVE_HASH_MAP)
-#  include <hash_map>
-#elif defined(HAVE_EXT_HASH_MAP_H)
-#  include <ext/hash_map>
-#elif defined(HAVE_HASH_MAP_H)
-#  include <hash_map.h>
+#ifdef VPR_HASH_MAP_INCLUDE
+#  include VPR_HASH_MAP_INCLUDE
 #else
 #  include <map>
 #endif
@@ -243,7 +239,7 @@ protected:
 
    bool mActive;
 
-#if defined(HAVE_HASH_MAP) || defined(HAVE_HASH_MAP_H)
+#ifdef VPR_HASH_MAP_INCLUDE
    typedef std::hash_map<vpr::InetAddr, vpr::SocketStreamImplSIM* > listener_map_t;
    typedef std::hash_map<vpr::Uint32, vpr::sim::NetworkNodePtr> node_map_t;
 #else
