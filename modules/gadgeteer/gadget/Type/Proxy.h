@@ -104,7 +104,7 @@ namespace gadget
       }
 
       /** Get the name of the proxy. */
-      std::string getName()
+      std::string getName() const
       {
          return mName;
       }
@@ -118,12 +118,14 @@ namespace gadget
       /** Is the proxy current stupified?
       * If the device we are proxying doesn't exist then this will return true
       */
-      virtual bool isStupified() const { return mStupified; }
+      virtual bool isStupified() const 
+      { return mStupified; }
 
       /** Set the stupification state.
       * @param newState - The new state of stupification
       */
-      void stupify(bool newState = true) {mStupified = newState;}
+      void stupify(bool newState = true) 
+      {mStupified = newState;}
       
 
    protected:
@@ -201,7 +203,8 @@ namespace gadget
       }
 
    /** Get the name of the device that we are proxying. */
-   virtual std::string getDeviceName() const { return mDeviceName; } 
+   virtual std::string getDeviceName() const 
+   { return mDeviceName; } 
 
 protected:
    std::string    mDeviceName;   /**< Name of the device to link up with */

@@ -37,13 +37,15 @@
 #include <gadget/gadgetConfig.h>
 #include <vpr/Util/Interval.h>
 
-namespace gadget {
+namespace gadget 
+{
 
     /** Base class for all input data returned by Gadgeteer.
      *  This provides all input data with a standard timestamping
      *  system used to calculate input latency.
      */
-class GADGET_CLASS_API InputData {
+class GADGET_CLASS_API InputData 
+{
 
 public:
 
@@ -52,27 +54,31 @@ public:
 
 
    /** Record the current time using the vpr::Interval. */
-   void setTime () {
-      mInterval.setNow();
+   void setTime () 
+   {
+      mTimeStamp.setNow();
    }
 
    /** Record the given time. */
-   void setTime (const vpr::Interval& iv) {
-      mInterval = iv;
+   void setTime (const vpr::Interval& iv) 
+   {
+      mTimeStamp = iv;
    }
 
    /** Return the last marked time using the vpr::Interval. */
-   vpr::Interval getTime () {
-      return mInterval;
+   vpr::Interval getTime () const
+   {
+      return mTimeStamp;
    }
 
 protected:
 
-   void copy (const InputData& id) {
-      mInterval = id.mInterval;
+   void copy (const InputData& id) 
+   {
+      mTimeStamp = id.mTimeStamp;
    }
 
-   vpr::Interval    mInterval;
+   vpr::Interval    mTimeStamp;
 
 
 }; // class InputData

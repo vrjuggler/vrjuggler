@@ -36,16 +36,21 @@
 
 #include <gadget/Type/InputData.h>
 
-namespace gadget {
+namespace gadget 
+{
 
     /** InputData subclass for positional data. */
-class GADGET_CLASS_API AnalogData: public InputData {
-
+class GADGET_CLASS_API AnalogData: public InputData 
+{
 public:
 
     /** Constructor. */
     AnalogData (): InputData()
     { mAnalogData = 0.0f; }
+
+    AnalogData(float f) 
+      : InputData(), mAnalogData(f)
+    {;}
 
 
     float getAnalog () const
