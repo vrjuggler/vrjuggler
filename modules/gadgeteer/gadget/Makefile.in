@@ -36,12 +36,12 @@ SUBDIRS		= vjGlove vjInput vjPosition \
 all: dbg opt dso ddso
 
 dbg opt dso ddso obj depend newdepend install:
-	${MAKE} RECTARGET="$@" OPTIMIZER="${OPTIMIZER}"		\
+	@${MAKE} RECTARGET="$@" OPTIMIZER="${OPTIMIZER}"		\
             BASE_OBJDIR="${BASE_OBJDIR}" recursive
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 _clean:
-	${MAKE} RECTARGET="clean" OPTIMIZER="${OPTIMIZER}"	\
+	@${MAKE} RECTARGET="clean" OPTIMIZER="${OPTIMIZER}"	\
             DIRPRFX="Input/" OBJDIR="${OBJDIR}" recursive
