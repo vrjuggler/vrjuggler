@@ -92,7 +92,7 @@ vjSocketImpUNIX::open () {
         domain = PF_RAW;
 #else
         fprintf(stderr,
-                "[vjSocketImpUNIX] WARNING: Cannot use LINK sockets\n",
+                "[vjSocketImpUNIX] WARNING: Cannot use LINK sockets. domain %d\n",
                 m_addr.getFamily());
 #endif
         break;
