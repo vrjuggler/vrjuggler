@@ -3658,7 +3658,7 @@ public:
 
    void init()
    {
-      mKeyboard("VJKeyboard");
+      mKeyboard.init("VJKeyboard");
    }
 
    void preFrame()
