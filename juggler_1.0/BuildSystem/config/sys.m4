@@ -46,6 +46,8 @@ dnl                       makedepend(1)).
 dnl     DEPEND_EXTRAS   - Miscellaneous flags that the dependency generator
 dnl                       may or may not recognize.  If it does not
 dnl                       recognize them, they will be ignored.
+dnl     DYLIB_NAME_FLAG - Flag used for naming a compiled dynamic library.
+dnl     EXE_NAME_FLAG   - Flag used for naming a compiled executable file.
 dnl     INCLUDES        - Extensions to the compiler's default include path.
 dnl     LD              - The linker program (ld(1) for example).
 dnl     LIBS            - Libraries needed for linking.
@@ -54,8 +56,8 @@ dnl     LDOPTS_DBG      - Options for $LD when making a library with debugging
 dnl                       symbols.
 dnl     LDOPTS_OPT      - Options for $LD when making an optimized library.
 dnl     OBJ_NAME_FLAG   - Flag used for naming a compiled object file.
-dnl     OBJ_BUILD_FLAG  - Flag passed to compiler to build a compiled object file.
-dnl     EXE_NAME_FLAG   - Flag used for naming a compiled executable file.
+dnl     OBJ_BUILD_FLAG  - Flag passed to compiler to build a compiled object
+dnl                       file.
 dnl
 dnl     DBG_FLAGS       - Complier flags for adding debugging symbols.
 dnl     OPT_FLAGS       - Complier flags for compiling optimized code.
@@ -88,7 +90,7 @@ dnl     IRIXREL      - Defined to the string "IRIX5" or "IRIX6" based on the
 dnl                    determined version of IRIX.
 dnl ===========================================================================
 
-dnl sys.m4,v 1.31 2001/06/19 21:51:19 subatomic Exp
+dnl sys.m4,v 1.34 2001/06/21 14:58:41 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Based on the given target host and CPU, set up the system-specific
@@ -139,6 +141,7 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
     OBJ_NAME_FLAG='-o $[@]'
     OBJ_BUILD_FLAG='-c'
     EXE_NAME_FLAG='-o $[@]'
+    DYLIB_NAME_FLAG="$EXE_NAME_FLAG"
 
     dnl Library naming conventions (prefix, extension for static libraries,
     dnl extension for dynamic libraries respectively).
@@ -209,16 +212,17 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
                 AR_NAME_FLAG='/out:'
                 CFLAGS="$CFLAGS /nologo"
                 CXXFLAGS="$CXXFLAGS /nologo"
-                DBG_FLAGS='/Od /GZ /MTd /Z7'
+                DBG_FLAGS='/Od /GZ /Z7'
                 DEP_GEN_FLAG='/FD'
-                OPT_FLAGS="/Ogityb$dpp_opt_level /GB /MT"
+                OPT_FLAGS="/Ogityb$dpp_opt_level /GB"
                 LD='link /dll'
                 LDOPTS="$LDOPTS /nologo"
                 LDOPTS_DBG='/LDd /MDd /PDB:NONE'
                 LDOPTS_OPT='/LD /MD'
                 OBJ_NAME_FLAG='/Fo$[@]'
-                OBJ_BUILD_FLAG=''
+                OBJ_BUILD_FLAG='/c'
                 EXE_NAME_FLAG='/OUT:$[@]'
+                DYLIB_NAME_FLAG="$EXE_NAME_FLAG"
 
                 USE_MAKEDEPEND='Y'
             fi
@@ -561,6 +565,7 @@ AC_DEFUN(DPP_SYSTEM_SUBST,
     AC_SUBST(OBJ_NAME_FLAG)
     AC_SUBST(OBJ_BUILD_FLAG)
     AC_SUBST(EXE_NAME_FLAG)
+    AC_SUBST(DYLIB_NAME_FLAG)
 
     AC_SUBST(DBG_FLAGS)
     AC_SUBST(OPT_FLAGS)

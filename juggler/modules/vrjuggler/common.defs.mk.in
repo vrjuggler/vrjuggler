@@ -23,7 +23,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# common.defs.mk.in,v 1.17 2001/06/19 22:22:59 patrickh Exp
+# common.defs.mk.in,v 1.18 2001/06/20 20:45:38 patrickh Exp
 #
 # This file <common.defs.mk> provides variable assignments based on the
 # results of running a Doozer++-aware configure script.
@@ -76,8 +76,9 @@
 # GROUP_NAME      - The name of the group that will own the files.
 # FILE_PERMS      - Normal file permissions.
 # EXEC_PERMS      - Executable file permissions.
-# EXE_NAME_FLAG   - Flag passed to the linker to name an executable file.
 # DIR_PERMS       - Directory permissions.
+# DYLIB_NAME_FLAG - Flag passed to the linker to name a dynamic library.
+# EXE_NAME_FLAG   - Flag passed to the linker to name an executable file.
 # INCLUDES        - Additions to the include path (-I/path/to/include).
 # JAR             - Command for creating Java JAR files.
 # JAVAC           - Java compiler.
@@ -151,6 +152,7 @@ DEFS		= @DEFS@ $(EXTRA_DEFS)
 DEP_GEN_FLAG	= @DEP_GEN_FLAG@
 DEPEND_FLAGS	= @DEPEND_FLAGS@ @INCLUDES@ -I$(topdir) $(EXTRA_DEPEND_FLAGS)
 DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
+DYLIB_NAME_FLAG	= @DYLIB_NAME_FLAG@
 EXE_NAME_FLAG	= @EXE_NAME_FLAG@
 INCLUDES	= @INCLUDES@ -I$(topdir) $(EXTRA_INCLUDES)
 INSTALL		= @INSTALL@

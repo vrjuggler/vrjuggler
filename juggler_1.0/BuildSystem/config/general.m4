@@ -39,10 +39,10 @@ dnl     DPP_GEN_RECONFIG      - Generate a script called 'reconfig' that will
 dnl                             reconfigure a build directory from scratch.
 dnl ===========================================================================
 
-dnl general.m4,v 1.26 2001/06/20 14:02:26 patrickh Exp
+dnl general.m4,v 1.27 2001/06/21 15:01:31 patrickh Exp
 
 dnl Set the version of Doozer++.
-define(DPP_DPPVERSION, 1.3.9)
+define(DPP_DPPVERSION, 1.3.10)
 
 dnl ---------------------------------------------------------------------------
 dnl Change the dots in NUMBER into commas.
