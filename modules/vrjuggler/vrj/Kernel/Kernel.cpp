@@ -288,10 +288,11 @@ void Kernel::changeApplication(App* newApp)
       {
          stopDrawManager();                           // Stop old one
          cfg_mgr->removeConfigChunkHandler (mDrawManager);
-         mDrawManager = mApp->getDrawManager();       // Get the new one
-         mSoundManager = mApp->getSoundManager();       // Get the new one
-         cfg_mgr->addConfigChunkHandler (mDrawManager);
-         cfg_mgr->addConfigChunkHandler (mSoundManager);
+
+         mDrawManager = mApp->getDrawManager();             // Get the new draw manager
+         mSoundManager = mApp->getSoundManager();           // Get the new sound manager
+         cfg_mgr->addConfigChunkHandler (mDrawManager);     // Tell config manager about them
+         cfg_mgr->addConfigChunkHandler (mSoundManager);    // Tell config manager about them
          startDrawManager(true);                      // Start the new one
       }
       else     // SAME draw manager
@@ -300,7 +301,7 @@ void Kernel::changeApplication(App* newApp)
       }
 
       cfg_mgr->addConfigChunkHandler (mApp);
-      cfg_mgr->refreshPendingList();
+      cfg_mgr->refreshPendingList();                  // New managers, so we may be able to handle config requests now
    }
    else                 // No app, clear to NULL
    {
@@ -530,8 +531,7 @@ void Kernel::startDrawManager(bool newMgr)
    if(newMgr)
    {
       mDrawManager->setDisplayManager(mDisplayManager);
-      //mDrawManager->configProcessPending(environmentManager->getConfigManager());           // See if there are any config chunks for us
-      environmentManager->getConfigManager()->refreshPendingList();
+      mDrawManager->configProcessPending();                 // Handle any pending configuration requests BEFORE we init and start it going
    }
    mDrawManager->setApp(mApp);
 
