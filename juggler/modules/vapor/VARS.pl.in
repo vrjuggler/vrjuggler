@@ -51,37 +51,55 @@
 # Generated for use on @PLATFORM@
 # ------------------------------------------------------------------------------
 
+# Compiler information.
 $VARS{'topdir'}               = '@topdir@';
 $VARS{'top_srcdir'}           = '@top_srcdir@';
-$VARS{'CXX'}                  = '@CXX@';
-$VARS{'CPPFLAGS'}             = '@CPPFLAGS@';
-$VARS{'CXXFLAGS'}             = '@CXXFLAGS@';
-$VARS{'DBG_FLAGS'}            = '@DBG_FLAGS@';
-$VARS{'DEFS'}                 = '@DEFS@';
+$VARS{'APP_CC'}               = '@APP_CC@';
+$VARS{'APP_CFLAGS'}           = '@APP_CFLAGS@';
+$VARS{'APP_CXX'}              = '@APP_CXX@';
+$VARS{'APP_CXXFLAGS'}         = '@APP_CXXFLAGS@';
+$VARS{'APP_DEBUG_CFLAGS'}     = '@APP_DEBUG_CFLAGS@';
+$VARS{'APP_OPTIM_CFLAGS'}     = '@APP_OPTIM_CFLAGS@';
+$VARS{'APP_EXTRA_CFLAGS'}     = '@APP_EXTRA_CFLAGS@';
+$VARS{'APP_DEFS'}             = '@APP_DEFS@';
+$VARS{'APP_INCLUDES'}         = '@APP_INCLUDES@';
 $VARS{'DEP_GEN_FLAG'}         = '@DEP_GEN_FLAG@';
+
+# Linker information.
+$VARS{'APP_LINK'}             = '@APP_LINK@';
+$VARS{'APP_LINK_FLAGS'}       = '@APP_LINK_FLAGS@';
+$VARS{'APP_DEBUG_LFLAGS'}     = '@APP_DEBUG_LFLAGS@';
+$VARS{'APP_OPTIM_LFLAGS'}     = '@APP_OPTIM_LFLAGS@';
+$VARS{'APP_EXTRA_LFLAGS'}     = '@APP_EXTRA_LFLAGS@';
+$VARS{'APP_BASIC_LIBS_BEGIN'} = '@APP_BASIC_LIBS_BEGIN_INST@';
+$VARS{'APP_BASIC_LIBS_END'}   = '@APP_BASIC_LIBS_END_INST@';
+$VARS{'APP_BASIC_LIBS'}       = '@APP_BASIC_LIBS@';
+$VARS{'APP_BASIC_EXT_LIBS'}   = '@APP_BASIC_EXT_LIBS@';
+$VARS{'APP_EXTRA_LIBS_BEGIN'} = '@APP_EXTRA_LIBS_BEGIN@';
+$VARS{'APP_EXTRA_LIBS_END'}   = '@APP_EXTRA_LIBS_END@';
+$VARS{'APP_EXTRA_LIBS'}       = '@APP_EXTRA_LIBS@';
+
+# Miscellaneous options.
+$VARS{'EXEEXT'}          = '@EXEEXT@';
+$VARS{'OBJEXT'}          = '@OBJEXT@';
+$VARS{'EXE_NAME_FLAG'}   = '@EXE_NAME_FLAG@';
+$VARS{'OBJ_BUILD_FLAG'}  = '@OBJ_BUILD_FLAG@';
+$VARS{'OBJ_NAME_FLAG'}   = '@OBJ_NAME_FLAG@';
+$VARS{'PLATFORM'}        = '@PLATFORM@';
+$VARS{'LIBBITSUF'}       = '@LIBBITSUF@';
+
 $VARS{'DEPEND_EXTRAS'}        = '@DEPEND_EXTRAS@';
 $VARS{'DEPEND_FLAGS'}         = '@DEPEND_FLAGS@';
-$VARS{'EXEEXT'}               = '@EXEEXT@';
 $VARS{'EXTRA_LINK_FLAGS'}     = '@EXTRA_LINK_FLAGS@';
-$VARS{'INCLUDES'}             = '@INCLUDES@';
-$VARS{'OBJEXT'}               = '@OBJEXT@';
-$VARS{'OBJ_NAME_FLAG'}        = '@OBJ_NAME_FLAG@';
-$VARS{'PLATFORM'}             = '@PLATFORM@';
+
 $VARS{'LD'}                   = '@LD@';
 $VARS{'LDFLAGS'}              = '@LDFLAGS@';
-$VARS{'LIBBITSUF'}            = '@LIBBITSUF@';
 $VARS{'LIBS'}                 = '@LIBS@';
 $VARS{'OS_TYPE'}              = '@OS_TYPE@';
 $VARS{'MAKEDEPEND'}           = '@MAKEDEPEND@';
 $VARS{'USE_MAKEDEPEND'}       = '@USE_MAKEDEPEND@';
+
 $VARS{'APP_BASE_DIR'}         = '@APP_BASE_DIR_INST@';
 $VARS{'APP_EXTRA_FLAGS'}      = '@APP_EXTRA_FLAGS@';
-$VARS{'APP_VPR_LIBS_BEGIN'}   = '@APP_VPR_LIBS_BEGIN_INST@';
-$VARS{'APP_VPR_LIBS_END'}     = '@APP_VPR_LIBS_END_INST@';
-$VARS{'APP_VPR_LIBS_BASIC'}   = '@APP_VPR_LIBS_BASIC_INST@';
-$VARS{'APP_LIBS_BASIC'}       = '@APP_LIBS_BASIC@';
-$VARS{'APP_EXTRA_LIBS_BEGIN'} = '@APP_EXTRA_LIBS_BEGIN@';
-$VARS{'APP_EXTRA_LIBS_END'}   = '@APP_EXTRA_LIBS_END@';
-$VARS{'APP_EXTRA_LIBS_BASIC'} = '@APP_EXTRA_LIBS_BASIC@';
 
 1;
