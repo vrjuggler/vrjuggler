@@ -264,7 +264,9 @@ sub htmlFilter($)
    my $ignore_header_str = 'install-web no-header';
    my $ignore_footer_str = 'install-web no-footer';
    my $include_footer_str = 'install-web common-footer';
-   
+   my $ignore_block_begin_str = 'install-web block-ignore-begin';
+   my $ignore_block_end_str   = 'install-web block-ignore-end';
+
    my $file_contents = shift;
    
    ### Check for IGNORE ALL ####
@@ -274,7 +276,8 @@ sub htmlFilter($)
       return 1;
    }
 
-   
+   # Strip out ignored blocks of text.
+   $$file_contents =~ s/${html_comment_begin}\s*${ignore_block_begin_str}\s*${html_comment_end}.*?${html_comment_begin}\s*${ignore_block_end_str}\s*${html_comment_end}//gois;
    
    ################# search and replace (tags and includes) ##################
    #
