@@ -78,7 +78,7 @@ void vjGlPipe::controlLoop(void* nullParam)
          // --- Call the pipe pre-draw function --- //
       vjGlApp* theApp = glManager->getApp();
 
-         // Should I get into a context
+         // Can't get a context since I may not be guaranteed a window
       theApp->pipePreDraw();                    // Call pipe pre-draw function
 
       for (int winId=0;winId < openWins.size();winId++)
@@ -125,7 +125,7 @@ void vjGlPipe::checkForNewWindows()
 void vjGlPipe::renderWindow(vjGlWindow* win)
 {
    vjGlApp* theApp = glManager->getApp();       // Get application for easy access
-   vjGlDrawManager::instance()->currentContext() = win->getId();
+   vjGlDrawManager::instance()->currentContext() = win->getId();     // Set TSS data of context id
    vjDEBUG(1) << "vjGlPipe::renderWindow: Set context to: " << vjGlDrawManager::instance()->currentContext() << endl << vjDEBUG_FLUSH;
 
    win->makeCurrent();

@@ -131,6 +131,8 @@ void vjGlDrawManager::initDrawing()
    for(int pipeNum=0;pipeNum<pipes.size();pipeNum++)
    {
       //**//if(pipes[pipeNum]->hasWindows())    // Actually we want all the pipes to run
+      // Start all pipes running.  Even pipes that have no windows
+      // This way the pipe can be ready if windows are added to it
       pipes[pipeNum]->start();
    }
 

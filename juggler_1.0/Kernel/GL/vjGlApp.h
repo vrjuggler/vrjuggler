@@ -34,9 +34,11 @@ public:
    //!POST: The current scene has been drawn
    virtual void draw() = 0;
 
-   //: Function that is called at the beginning of the drawing of each pipe (ogl context)
+   //: Function that is called at the beginning of the drawing of each pipe
    //!PRE: The library is preparing to render all windows on a given pipe
    //!POST: Any pre-pipe user calls have been done
+   //!NOTE: Currently the OGL context is not set when this function is called
+   //!NOTE: This is a TEST function.  DO NOT USE!!!
    virtual void pipePreDraw()
    {;}
 
