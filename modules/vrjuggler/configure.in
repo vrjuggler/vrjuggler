@@ -172,6 +172,16 @@ if test "x$JAVAC" = "xno" ; then
     BUILD_JAVA='N'
 fi
 
+# Make sure ant is available to build the java sources
+if test "x$BUILD_JAVA" = "xY"; then
+   ANT_HOME=$JUGGLERROOT_ABS/external/ant
+   AC_PATH_PROG([ANT], [ant], [no], [${ANT_HOME}/bin])
+   if test "x$ANT" == "xno"; then
+      AC_MSG_WARN([*** VRJConfig requires ant to build the java sources -- it will not be built ***])
+      BUILD_JAVA='N'
+   fi
+fi
+
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
 DPP_PERL_VER(5.004, , , [AC_MSG_ERROR([*** Perl is required ***])])
 AC_CHECK_PROG([MTREE_CMD], [mtree], [mtree], [\$(PERL) \$(scriptdir)/mtree.pl])
@@ -656,6 +666,7 @@ AC_OUTPUT(vrjuggler-config
           vrj/Sound/pf/Makefile
           vrj/Util/Makefile
           vrj.appdefs.mk
+          vrjconfig/build.xml
           vrjconfig/Makefile
           vrjconfig/Makefile.inc
           samples/Makefile
