@@ -33,16 +33,11 @@ import VjGUI.configchunk.ConfigChunkFrame;
 import VjConfig.*;
 import VjPerf.*;
 
-// BUG: this code doesn't now deal with adding to the helpdesc_menu... code
-// such as this for when we add to the global DescDB...
-//  	for (i = 0; i < db.size(); i++) {
-//  	    d = (ChunkDesc)db.elementAt(i);
-//  	    helpdesc_menu.add (newmenu = new JMenuItem (d.getName()));
-//  	    newmenu.addActionListener(this);
 
-
-public class ControlUI  extends JFrame 
-    implements ActionListener, WindowListener, JFrameParent, LogMessageListener {
+public class ControlUI  
+    extends JFrame 
+    implements ActionListener, WindowListener, JFrameParent, 
+	       LogMessageListener, DescDBListener {
 
 
     JPanel      main_panel;
@@ -187,6 +182,14 @@ public class ControlUI  extends JFrame
 	chunkformat_mi.addActionListener (this);
 	orgtreeformat_mi.addActionListener (this);
 
+	// initial helpdesc menu stuff...
+ 	for (int i = 0; i < Core.descdb.size(); i++) {
+	    JMenuItem newmenu;
+ 	    ChunkDesc d = (ChunkDesc)Core.descdb.elementAt(i);
+ 	    helpdesc_menu.add (newmenu = new JMenuItem (d.getName()));
+ 	    newmenu.addActionListener(this);
+	}
+
 	// --------------------- FINAL WIN STUFF ---------------------------------
 
  	for (int i = 0; i < Core.descdb.size(); i++) {
@@ -206,6 +209,7 @@ public class ControlUI  extends JFrame
 	//configure_pane.setDividerLocation (0.5);
 
 	Core.addLogMessageListener (this);
+	Core.descdb.addDescDBListener (this);
     }
 
 
@@ -549,6 +553,20 @@ public class ControlUI  extends JFrame
 	    break;
 	}
     }
+
+
+    /************************ DescDBListener stuff *************************/
+    public void addDesc (DescDBEvent e) { 
+	JMenuItem newmenu;
+	ChunkDesc d = e.getNewDesc();
+	helpdesc_menu.add (newmenu = new JMenuItem (d.getName()));
+	newmenu.addActionListener(this);
+
+    }
+
+    public void removeDesc (DescDBEvent e) {}
+    public void replaceDesc (DescDBEvent e) {}
+    public void removeAllDescs (DescDBEvent e) {}
 
 }
 
