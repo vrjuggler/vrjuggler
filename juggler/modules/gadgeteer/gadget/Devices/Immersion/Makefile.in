@@ -47,10 +47,8 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(GADGET_LIBRARY)
 
-ifneq (@PLATFORM@, Darwin)
 SRCS		= Ibox.cpp		\
                   IboxStandalone.cpp
-endif
 
 include $(MKPATH)/dpp.obj.mk
 
