@@ -1605,6 +1605,19 @@ aMotionStar::convertMeasurementRate (const unsigned char rate[6]) {
 }
 
 // ----------------------------------------------------------------------------
+// Convert the given double-precision floating-point number to a 6-byte array
+// of characters representing the data rate.
+// ----------------------------------------------------------------------------
+void
+aMotionStar::convertMeasurementRate (const double rate, std::string& str_rate)
+{
+    char rate_a[7];
+
+    snprintf(rate_a, 7, "%f", rate);
+    str_rate = rate_a;
+}
+
+// ----------------------------------------------------------------------------
 // Extract the information regarding the measurement units (e.g., inches) and
 // the position scaling factor.
 // ----------------------------------------------------------------------------

@@ -1315,6 +1315,22 @@ private:
     double convertMeasurementRate(const unsigned char rate[6]);
 
     // ------------------------------------------------------------------------
+    //: Convert the given double-precision floating-point number to a 6-byte
+    //+ array of characters representing the data rate.
+    //
+    //! PRE: None.
+    //! POST: The given double-precisoin floating-point value is converted to
+    //+       the BIRDNET string representation.  It is a 6-character string
+    //+       containing the floating-point value multiplied by 1000.
+    //
+    //! ARGS: rate     - The measurement rate as a double-precision
+    //+                  floating-point number.
+    //! ARGS: str_rate - Storage for the string representation of the data
+    //+                  measurement rate.
+    // ------------------------------------------------------------------------
+    void convertMeasurementRate(const double rate, std::string& str_rate);
+
+    // ------------------------------------------------------------------------
     //: Extract the information regarding the measurement units (e.g., inches)
     //+ and the position scaling factor.
     //
