@@ -387,6 +387,52 @@ public class ConfigDefinitionChooser
             }
          }
       });
+      browseTab.addMouseWheelListener(new MouseWheelListener()
+      {
+         public void mouseWheelMoved(MouseWheelEvent e) 
+         {
+            int new_index = browseList.getSelectedIndex() + e.getWheelRotation();
+            int list_size = browseList.getModel().getSize();
+            if (new_index < list_size && new_index >= 0)
+            {
+               browseList.setSelectedIndex(new_index);
+               browseList.ensureIndexIsVisible(new_index);
+            }
+         }
+      });
+      browseList.addMouseWheelListener(new MouseWheelListener()
+      {
+         public void mouseWheelMoved(MouseWheelEvent e) 
+         {
+            int new_index = browseList.getSelectedIndex() + e.getWheelRotation();
+            int list_size = browseList.getModel().getSize();
+            if (new_index < list_size && new_index >= 0)
+            {
+               browseList.setSelectedIndex(new_index);
+               browseList.ensureIndexIsVisible(new_index);
+            }
+         }
+      });
+      browseSearchTextField.addKeyListener(new KeyAdapter()
+      {
+         public void keyPressed(KeyEvent e)
+         {
+            int list_size = browseList.getModel().getSize();
+            if (KeyEvent.VK_DOWN == e.getKeyCode() &&
+               (browseList.getSelectedIndex() + 1) < list_size)
+            {
+               browseList.setSelectedIndex(browseList.getSelectedIndex() + 1);
+               browseList.ensureIndexIsVisible(browseList.getSelectedIndex() + 1);
+            }
+            else if(KeyEvent.VK_UP == e.getKeyCode() &&
+                searchList.getSelectedIndex() != -1 )
+            {
+               browseList.setSelectedIndex(browseList.getSelectedIndex() - 1);
+               browseList.ensureIndexIsVisible(browseList.getSelectedIndex());
+            }
+         }
+      });
+
       browseList.addListSelectionListener(new ListSelectionListener()
       {
          public void valueChanged(ListSelectionEvent evt)
@@ -471,6 +517,53 @@ public class ConfigDefinitionChooser
             }
          }
       });
+      searchTab.addMouseWheelListener(new MouseWheelListener()
+      {
+         public void mouseWheelMoved(MouseWheelEvent e) 
+         {
+            int new_index = searchList.getSelectedIndex() + e.getWheelRotation();
+            int list_size = searchList.getModel().getSize();
+            if (new_index < list_size && new_index >= 0)
+            {
+               searchList.setSelectedIndex(new_index);
+               searchList.ensureIndexIsVisible(new_index);
+            }
+         }
+      });
+      searchList.addMouseWheelListener(new MouseWheelListener()
+      {
+         public void mouseWheelMoved(MouseWheelEvent e) 
+         {
+            int new_index = searchList.getSelectedIndex() + e.getWheelRotation();
+            int list_size = searchList.getModel().getSize();
+            if (new_index < list_size && new_index >= 0)
+            {
+               searchList.setSelectedIndex(new_index);
+               searchList.ensureIndexIsVisible(new_index);
+            }
+         }
+      });
+      searchSearchTextField.addKeyListener(new KeyAdapter()
+      {
+         public void keyPressed(KeyEvent e)
+         {
+            int list_size = searchList.getModel().getSize();
+            if (KeyEvent.VK_DOWN == e.getKeyCode() &&
+                searchList.getSelectedIndex() != -1 &&
+                searchList.getSelectedIndex() + 1 < list_size)
+            {
+               searchList.setSelectedIndex(searchList.getSelectedIndex() + 1);
+               searchList.ensureIndexIsVisible(searchList.getSelectedIndex());
+            }
+            else if(KeyEvent.VK_UP == e.getKeyCode() &&
+                    searchList.getSelectedIndex() != -1 &&
+                    searchList.getSelectedIndex() > 0);
+            {
+               searchList.setSelectedIndex(searchList.getSelectedIndex() - 1);
+               searchList.ensureIndexIsVisible(searchList.getSelectedIndex());
+            }
+         }
+      });
       approveBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
@@ -500,12 +593,14 @@ public class ConfigDefinitionChooser
       buttonBox.add(cancelBtn, null);
       browseTab.add(browseListScrollPane,  BorderLayout.CENTER);
       browseListScrollPane.setViewportView(browseList);
+      browseListScrollPane.setWheelScrollingEnabled(false);
       searchTab.add(searchSearchBox, BorderLayout.NORTH);
       searchSearchBox.add(searchSearchLbl, null);
       searchSearchBox.add(searchSearchBoxSpacer, null);
       searchSearchBox.add(searchSearchTextField, null);
       searchTab.add(searchListScrollPane,  BorderLayout.CENTER);
       searchListScrollPane.setViewportView(searchList);
+      searchListScrollPane.setWheelScrollingEnabled(false);
   }
 
    // JBuilder UI variables
