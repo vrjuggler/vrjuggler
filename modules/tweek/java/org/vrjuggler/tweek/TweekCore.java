@@ -40,7 +40,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;
+import com.incors.plaf.kunststoff.KunststoffLookAndFeel;
+import com.incors.plaf.kunststoff.mini.KunststoffMiniLookAndFeel;
 import org.vrjuggler.tweek.beans.*;
 import org.vrjuggler.tweek.beans.loader.BeanInstantiationException;
 import org.vrjuggler.tweek.gui.TweekFrame;
@@ -91,6 +94,12 @@ public class TweekCore
       GlobalPreferencesService global_prefs =
          (GlobalPreferencesService) BeanRegistry.instance().getBean("GlobalPreferences");
       global_prefs.load();
+
+      // Set the look and feel now so that any GUI components that are
+      // instantiated hereafter will have the correct look and feel.
+      // XXX: If there are GUI components loaded statically (see above), they
+      // will need to be updated.
+      setLookAndFeel(global_prefs);
 
       // Loop over all the known Bean directories to search for and load any
       // Beans that are found.  This must occur after the global preferences
@@ -348,6 +357,39 @@ public class TweekCore
    // ========================================================================
 
    protected static TweekCore m_instance = null;
+
+   // ========================================================================
+   // Private methods.
+   // ========================================================================
+
+   /**
+    * Sets the look and feel for the GUI.  This assumes that the GUI will be
+    * based on Swing and that Swing is available.
+    */
+   private void setLookAndFeel(GlobalPreferencesService prefs)
+   {
+      // Install extra look and feels.
+      UIManager.installLookAndFeel("Kunststoff",
+                                   KunststoffLookAndFeel.class.getName());
+      KunststoffLookAndFeel.setIsInstalled(true);
+
+      UIManager.installLookAndFeel("Kunststoff Mini",
+                                   KunststoffMiniLookAndFeel.class.getName());
+      KunststoffMiniLookAndFeel.setIsInstalled(true);
+
+      // This class installs itself with the UI Manager automatically.
+      new net.sourceforge.mlf.metouia.MetouiaLookAndFeel();
+
+     try
+      {
+         UIManager.setLookAndFeel(prefs.getLookAndFeel());
+      }
+      catch (Exception e)
+      {
+         this.mMsgDocument.printWarningnl("Failed to set look and feel to " +
+                                          prefs.getLookAndFeel());
+      }
+   }
 
    // ========================================================================
    // Private data members.
