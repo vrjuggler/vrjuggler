@@ -38,7 +38,7 @@
 # -----------------------------------------------------------------------------
 
 AC_REVISION($Revision$)
-AC_INIT(boost/boost/version.hpp)
+AC_INIT(GMTL/gmtl/Version.h)
 AC_CONFIG_AUX_DIR(../share/config)
 DPP_PREREQ([1.5.1])
 DPP_INIT
@@ -56,12 +56,6 @@ EXTROOT_ABS=`pwd`
 cd "$EXTROOT_ABS/.."
 JUGGLERROOT_ABS=`pwd`
 cd "$topdir"
-
-# Enable/disable installation of Boost from juggler/external.
-AC_ARG_ENABLE([boost-install],
-              [  --disable-boost-install Disable installation of
-                          juggler/external/boost],
-              [install_boost="$enableval"], [install_boost='yes'])
 
 # Enable/disable installation of CppDOM from juggler/external.
 AC_ARG_ENABLE([cppdom-install],
@@ -83,13 +77,6 @@ AC_ARG_ENABLE([doozer-install],
                           Disable installation of
                           juggler/external/Doozer],
               [install_doozer="$enableval"], [install_doozer='yes'])
-
-# Name the path to a Boost installation.  This defaults to
-# juggler/external/boost (using an absolute path).
-AC_ARG_WITH([boostroot],
-            [  --with-boostroot=<PATH> Boost installation directory],
-            [BOOST_ROOT="$withval"],
-            [BOOST_ROOT="$JUGGLERROOT_ABS/external/boost"])
 
 # Name the path to a CppDOM installation.  This defaults to
 # juggler/external/cppdom (using an absolute path).
@@ -134,10 +121,6 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # -----------------------------------------------------------------------------
 # Deal with installing our fun external software.
 # -----------------------------------------------------------------------------
-if test "x$BOOST_ROOT" != "x$JUGGLERROOT_ABS/external/boost" ; then
-   install_boost='no'
-fi
-
 if test "x$CPPDOM_ROOT" != "x$JUGGLERROOT_ABS/external/cppdom" ; then
    install_cppdom='no'
 fi
@@ -151,10 +134,6 @@ if test "x$DOOZER_ROOT" != "x$JUGGLERROOT_ABS/external/Doozer" ; then
 fi
 
 TARGETS=''
-
-if test "x$install_boost" != "xno" ; then
-   TARGETS="$TARGETS boost"
-fi
 
 if test "x$install_cppdom" != "xno" ; then
    TARGETS="$TARGETS cppdom"
