@@ -24,17 +24,26 @@
 
 #include <Kernel/vjDebug.h>
 
+// Proxies
 #include <Input/InputManager/vjPosProxy.h>
 #include <Input/InputManager/vjAnalogProxy.h>
 #include <Input/InputManager/vjDigitalProxy.h>
 #include <Input/InputManager/vjGloveProxy.h>
 #include <Input/InputManager/vjKeyboardProxy.h>
+#include <Input/InputManager/vjGestureProxy.h>
+
+// Dummies
 #include <Input/vjPosition/vjDummyPosition.h>
 #include <Input/vjInput/vjDummyDigital.h>
 #include <Input/vjInput/vjDummyAnalog.h>
 #include <Input/vjGlove/vjDummyGlove.h>
 #include <Input/vjKeyboard/vjDummyKeyboard.h>
+#include <Input/vjGesture/vjDummyGesture.h>
 
+// Sims
+#include <Input/vjSim/vjSimGloveGesture.h>
+
+// Physical devices
 #ifndef WIN32
 #include <Input/vjPosition/vjFlock.h>
 #include <Input/vjInput/vjIbox.h>
