@@ -36,7 +36,7 @@ ifeq (@OS_TYPE@, Win32)
 		/I$(srcdir) /I$(top_srcdir) /Zc:wchar_t,forScope	\
 		$(CXXFLAGS_DBG)
    CXXFLAGS_DBG=/Z7 /Od /Ob0 /MDd /D_DEBUG
-   CXXFLAGS_OPT=/Ogity /O2 /Gs /Ob2 /MD /D_OPT
+   CXXFLAGS_OPT=/Ogity /O2 /Gs /Ob2 /MD /D_OPT /DNDEBUG
    LDFLAGS_DBG=	/DEBUG
    LDFLAGS_OPT=	/RELEASE
    LDFLAGS=	$(LDFLAGS_DBG)
@@ -44,7 +44,7 @@ else
    CXXFLAGS=	$(shell vrjuggler-config --cxxflags) -I$(srcdir)	\
 		-I$(top_srcdir) $(CXXFLAGS_DBG)
    CXXFLAGS_DBG=-D_DEBUG -g
-   CXXFLAGS_OPT=-D_OPT -O2
+   CXXFLAGS_OPT=-D_OPT -DNDEBUG -O2
    LDFLAGS_DBG=	-g
    LDFLAGS_OPT=	-O2
    LDFLAGS=	-Wl,--export-dynamic $(LDFLAGS_DBG)
