@@ -39,18 +39,19 @@
 #include <vrj/Util/Debug.h>
 #include <vrj/Input/Devices/Keyboard/KeyboardWin32.h>
 
-// The message loop
-void samplem_keys(void*);
-
 #ifndef GET_X_LPARAM
 #define GET_X_LPARAM(lp)   ((int)(short)LOWORD(lp))
 #endif
 #ifndef GET_Y_LPARAM
 #define GET_Y_LPARAM(lp)   ((int)(short)HIWORD(lp))
 #endif
+
 namespace vrj
 {
    
+// The message loop
+void samplem_keys(void*);
+
 bool KeyboardWin32::config(ConfigChunk *c)
 {
     vjDEBUG_BEGIN(vjDBG_INPUT_MGR, vjDBG_STATE_LVL)
