@@ -56,11 +56,12 @@ public:
 
     void releaseParser (XercesXMLParser* parser);
 
-private:
+protected:
 
     //: Constructor - private for singleton.
     XercesXMLParserPool ();
 
+private:
     typedef std::vector<XercesXMLParser*> parser_v;
 
     parser_v free_parsers;
