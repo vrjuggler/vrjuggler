@@ -72,6 +72,11 @@ vpr::ReturnStatus Controller::constructNetwork (const std::string& graph_file)
 {
    vpr::ReturnStatus status;
 
+   if ( mGraph.isValid() )
+   {
+      mGraph.clear();
+   }
+
    status = mGraph.construct(graph_file);
 
    if ( status.success() )

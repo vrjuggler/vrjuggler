@@ -146,6 +146,11 @@ public:
 
    vpr::ReturnStatus constructNetwork(const std::string& graph_file);
 
+   void destroyNetworkGraph (void)
+   {
+      mGraph.clear();
+   }
+
    /**
     * Queries the running state of this socket simulation.  The simulation is
     * considered running if it has been started and if the Sim Socket

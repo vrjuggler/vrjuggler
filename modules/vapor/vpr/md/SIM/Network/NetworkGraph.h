@@ -112,6 +112,14 @@ public:
    }
 
    /**
+    * Removes all the lines (edges) and nodes (vertices) from the network.
+    */
+   void clear (void)
+   {
+      mGraph.clear();
+   }
+
+   /**
     * Type of the BGL graph encapsulated by this class.  boost::vecS is chosen
     * because graph traversal speed is important, and memory consumption is
     * an issue for very large simulations.  boost::listS does not perform well
