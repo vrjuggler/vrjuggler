@@ -212,7 +212,7 @@ inline void gloveApp::myDraw()
     glPushMatrix();
 	glTranslatef( 0.0f, 0.0f, -20.0f );
 	glEnable(GL_TEXTURE_2D);
-	scene->renderWoodTexture();
+	//scene->renderWoodTexture();
 	scene->drawTable();
 	glDisable(GL_TEXTURE_2D);
     glPopMatrix();
