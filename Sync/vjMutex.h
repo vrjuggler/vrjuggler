@@ -26,7 +26,7 @@
 	typedef vjMutexWin32 vjMutex;
 #else
 #ifdef VJ_USE_PTHREADS
-#   include <Sync/ vjMutexPosix.h>
+#   include <Sync/vjMutexPosix.h>
 
     typedef  vjMutexPosix vjMutex;
 #endif	/* VJ_USE_PTHREADS */
