@@ -66,8 +66,12 @@ endif
 # Library build information.
 # --------------------------------------------
 
-SHLIB_MAJOR	= 1
-SHLIB_MINOR	= 0
+SHLIB_MAJOR	= @MAJOR_VERSION@
+SHLIB_MINOR	= @MINOR_VERSION@
+
+ifneq (@OS_TYPE@, Win32)
+DYNAMICLIB_VER	= .$(SHLIB_MAJOR).$(SHLIB_MINOR)
+endif
 
 STATICLIB_EXT	= @STATICLIB_EXT@
 DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
