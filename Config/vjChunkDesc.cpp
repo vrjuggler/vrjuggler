@@ -65,8 +65,11 @@ vjChunkDesc& vjChunkDesc::operator= (const vjChunkDesc& other) {
    return *this;
 
     for (i = 0; i < plist.size(); i++)
-   delete plist[i];
-    plist.erase (plist.begin(), plist.end());
+    {
+       delete plist[i];
+       plist[i] = NULL;       // Overwrite dangling pointer
+    }
+    plist.clear();
 
     name = other.name;
     token = other.token;
@@ -133,18 +136,21 @@ vjPropertyDesc* vjChunkDesc::getPropertyDesc (const std::string& _token) {
 
 
 
-bool vjChunkDesc::remove (const std::string& _token) {
-
-    std::vector<vjPropertyDesc*>::iterator begin = plist.begin();
-    while (begin != plist.end()) {
-   if (!vjstrcasecmp ((*begin)->getToken(), _token)) {
-       delete (*begin);
-       plist.erase(begin);
-       return 1;
+bool vjChunkDesc::remove (const std::string& _token)
+{
+   std::vector<vjPropertyDesc*>::iterator begin = plist.begin();
+   while (begin != plist.end())
+   {
+      if (!vjstrcasecmp ((*begin)->getToken(), _token))
+      {
+         delete (*begin);
+         *begin = NULL;
+         plist.erase(begin);
+         return true;
+      }
+      begin++;
    }
-   begin++;
-    }
-    return 0;
+   return false;
 }
 
 
@@ -160,38 +166,45 @@ std::ostream& operator << (std::ostream& out, vjChunkDesc& self) {
 
 
 
-std::istream& operator >> (std::istream& in, vjChunkDesc& self) {
-    const int buflen = 512;
-    char str[buflen];
-    vjPropertyDesc *p;
+std::istream& operator >> (std::istream& in, vjChunkDesc& self)
+{
+   const int buflen = 512;
+   char str[buflen];
+   vjPropertyDesc *p;
 
-    readString (in, str, buflen);
-    self.token = str;
+   readString (in, str, buflen);
+   self.token = str;
 
-    readString (in, str, buflen);
-    self.name = str;
+   readString (in, str, buflen);
+   self.name = str;
 
-    readString (in, str, buflen);
-    self.help = str;
+   readString (in, str, buflen);
+   self.help = str;
 
-    for (unsigned int i = 0; i < self.plist.size(); i++)
-   delete self.plist[i];
-    self.plist.erase (self.plist.begin(), self.plist.end());
-
-    // this could use improvement
-    do {
-   p = new vjPropertyDesc();
-   in >> *p;
-   if (!vjstrcasecmp (p->getToken(),std::string("end"))) {
-       delete p;
-       break;
+   for (unsigned int i = 0; i < self.plist.size(); i++)
+   {
+      delete self.plist[i];
+      self.plist[i] = NULL;                  // Get rid of dangling pointer
    }
-   self.add(p);
-    } while (!in.eof());
+   //self.plist.erase (self.plist.begin(), self.plist.end());
+   self.plist.clear();
 
-    if (!self.getPropertyDesc ("name"))
-   self.plist.insert (self.plist.begin(), new vjPropertyDesc("name",1,T_STRING," "));
-    return in;
+   // this could use improvement
+   do
+   {
+      p = new vjPropertyDesc();
+      in >> *p;
+      if (!vjstrcasecmp (p->getToken(),std::string("end")))
+      {
+         delete p;
+         break;
+      }
+      self.add(p);
+   } while (!in.eof());
+
+   if (!self.getPropertyDesc ("name"))
+      self.plist.insert (self.plist.begin(), new vjPropertyDesc("name",1,T_STRING," "));
+   return in;
 }
 
 
