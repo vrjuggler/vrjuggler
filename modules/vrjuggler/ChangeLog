@@ -1,5 +1,10 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jan-31-2002 allenb    Moved left and right projections from surface viewport
+                      to the base viewport class.  Now simulator viewports
+					  create to camera projections and just use one by default
+					  This simplifies the code and eliminates some redundancy.
+					  This should allow for stereo simulator views as well.
 Jan-31-2002 allenb    Moved Projection Enum values into an Enum named Eye.
 Jan-31-2002 allenb    Removed unneeded mType parameter from Projection classes.
 Jan-31-2002 allenb    Modified viewports to have handles to parent displays,
