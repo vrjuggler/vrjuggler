@@ -140,7 +140,7 @@ public abstract class TweekBean
 
          bean_loader.loadBeanFromJar(getJarURL(), depJarFiles, class_path);
          beanObject = bean_loader.instantiate(BeanJarClassLoader.instance(),
-                                        attrs.getEntry());
+                                        attrs.getClassname());
 
          instantiated = true;
 
