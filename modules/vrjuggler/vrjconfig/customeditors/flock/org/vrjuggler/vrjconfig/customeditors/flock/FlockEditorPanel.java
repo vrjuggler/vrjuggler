@@ -39,12 +39,15 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
+import org.vrjuggler.vrjconfig.commoneditors.DeviceTypeEditor;
 import org.vrjuggler.vrjconfig.commoneditors.ProxyEditor;
 import org.vrjuggler.vrjconfig.commoneditors.SerialPortChooser;
 import org.vrjuggler.vrjconfig.commoneditors.TransmitterTransformPanel;
 
+
 public class FlockEditorPanel
    extends JPanel
+   implements DeviceTypeEditor
 {
    public FlockEditorPanel()
    {
