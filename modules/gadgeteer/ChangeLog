@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-30-2003 patrickh    Added all (U.S. Latin) keyboard keys as recognized
+                        input from event windows.
+                        NEW VERSION: 0.11.1
 Apr-30-2003 patrickh    Refactored gadget::Event and subclasses to be less
                         lame.  gadget::EventType now contains more specific
                         values.

@@ -112,7 +112,11 @@ public:
     */
    EventQueue getEventQueue();
 
-   int mCurKeys[256]; /**< (0,*): Copy of m_keys that the user reads from between updates. */
+   /**
+    * (0,*): Copy of keys for this frame that the user reads from between
+    * updates.
+    */
+   int mCurKeys[gadget::LAST_KEY];
 
 protected:
    /**

@@ -46,7 +46,7 @@ namespace gadget
 /**
  * Key press or release event class.
  */
-class GADGET_CLASS_API KeyEvent : public gadget::Event
+class KeyEvent : public gadget::Event
 {
 public:
    /**
@@ -64,12 +64,16 @@ public:
     *                   operating system or windowing system event data
     *                   structure.  The time at which the event was processed
     *                   is not an acceptable value.
+    * @param asciiKey   The ASCII value of the key associated with this event.
+    *                   This parameter is optional, and it defaults to 0 if not
+    *                   specified.
     *
     * @see gadget::ModifierMask
     */
    KeyEvent(const gadget::EventType& type, const gadget::Keys& key,
-            const int& mask, const unsigned long& time)
-      : gadget::Event(type, time), mKey(key), mModifierMask(mask)
+            const int& mask, const unsigned long& time, char asciiKey = 0)
+      : gadget::Event(type, time), mKey(key), mModifierMask(mask),
+        mAsciiKey(asciiKey)
    {
    }
 
@@ -94,11 +98,15 @@ public:
    /**
     * Returns the ASCII character corresponding to the key that was pressed.
     */
-   char getKeyChar() const;
+   const char& getKeyChar() const
+   {
+      return mAsciiKey;
+   }
 
 protected:
    gadget::Keys mKey;          /**< The actual key pressed. */
    int          mModifierMask; /**< The mask of any modifiers in addition to mKey. */
+   char         mAsciiKey;     /**< ASCCI representation of key pressed. */
 };
 
 } // End of gadget namespace
