@@ -292,7 +292,7 @@ public:
     //! RETURNS:
     // ------------------------------------------------------------------------
     Status
-    read (std::vector<char>& buffer, const size_t length, ssize_t& bytes_read)
+    read (std::vector<vpr::Uint8>& buffer, const size_t length, ssize_t& bytes_read)
     {
        Status status;
        buffer.resize( length );
@@ -391,7 +391,7 @@ public:
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     Status
-    readn (std::vector<char>& buffer, const size_t length, ssize_t& bytes_read)
+    readn (std::vector<vpr::Uint8>& buffer, const size_t length, ssize_t& bytes_read)
     {
         Status status;
         
@@ -464,7 +464,7 @@ public:
     //! RETURNS:
     // ------------------------------------------------------------------------
     Status
-    write (const std::vector<char>& buffer, const size_t length,
+    write (const std::vector<vpr::Uint8>& buffer, const size_t length,
            ssize_t& bytes_written)
     {
         assert( length <= buffer.size() && "length was bigger than the data given" );
