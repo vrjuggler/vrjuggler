@@ -53,7 +53,7 @@
 #include <Input/vjKeyboard/vjXWinKeyboard.h>
 #include <Input/vjKeyboard/vjXWinKBDepChecker.h>
 #include <Input/vjPosition/logiclass.h>
-//#include <Input/vjPosition/vjMotionStar.h>
+#include <Input/vjPosition/vjMotionStar.h>
 #else
 #include <Input/vjKeyboard/vjKeyboardWin32.h>
 #endif
@@ -88,7 +88,7 @@ void vjDeviceFactory::hackLoadKnownDevices()
 
 #ifndef WIN32
    vjDeviceConstructor<vjFlock>* flock = new vjDeviceConstructor<vjFlock>;
-   //vjDeviceConstructor<vjMotionStar>* MotionStar = new vjDeviceConstructor<vjMotionStar>;
+   vjDeviceConstructor<vjMotionStar>* MotionStar = new vjDeviceConstructor<vjMotionStar>;
    vjDeviceConstructor<vjIBox>* ibox = new vjDeviceConstructor<vjIBox>;
    vjDeviceConstructor<vjPinchGlove>* pinch_glove = new vjDeviceConstructor<vjPinchGlove>;
    vjDeviceConstructor<vjCyberGlove>* cyber_glove = new vjDeviceConstructor<vjCyberGlove>;
