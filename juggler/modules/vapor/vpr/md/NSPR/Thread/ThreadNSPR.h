@@ -56,6 +56,7 @@
 
 #include <prthread.h>
 #include <prtypes.h>
+#include <boost/concept_check.hpp>
 
 #include <vpr/Thread/BaseThread.h>
 #include <vpr/Thread/ThreadFunctor.h>
@@ -226,6 +227,7 @@ public:
     */
    virtual int kill(int signum)
    {
+      boost::ignore_unused_variable_warning(signum);
       return -1;
    }
 
