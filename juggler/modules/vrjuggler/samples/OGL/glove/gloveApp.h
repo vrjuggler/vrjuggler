@@ -38,7 +38,6 @@
 #include <Kernel/GL/vjGlApp.h>
 #include <Math/vjMatrix.h>
 #include <Math/vjVec3.h>
-#include <Math/vjQuat.h>
 
 #include <Kernel/GL/vjGlContextData.h>
 #include <Input/InputManager/vjGloveInterface.h>
@@ -49,14 +48,8 @@
 
 #include "defines.h"
 #include "Scene.h"
+#include "navigation.h"
 
-// particle system
-#include "physics/Particle.h"
-#include "physics/ParticleODEsolver.h"
-#include "physics/ParticleOperator.h"
-#include "physics/EulerODEsolver.h"
-#include "physics/ParticleSystem.h"
-        
 
 //: GloveApp - A Demonstration OpenGL application class
 // This application has a table with objects to grab
@@ -75,6 +68,11 @@
 //
 //       UpdateTrackers();
 //  }
+//
+// NOTE: this application has a really BAD example of navigation.
+// the nav is a hack, and well, it works for this silly little app.
+// be warned, it (navigation.h) won't be fun to extend 
+
 class gloveApp : public vjGlApp
 {
 // utility functions
@@ -83,7 +81,7 @@ protected:
 
 // Application Functions:
 public:
-   gloveApp(vjKernel* kern) : vjGlApp( kern ),
+   gloveApp(vjKernel* kern) : vjGlApp(kern),
                                 mCubeSelected(false),
                                 mSphereSelected(false),
                                 mConeSelected(false),
@@ -104,16 +102,16 @@ public:
       mGlove.init("VJGlove");
       
       // for the glove fingers.
-      mPinchLeftThumb.init("PinchLeftThumb");
-      mPinchLeftIndex.init("PinchLeftIndex");
-      mPinchLeftMiddle.init("PinchLeftMiddle");
-      mPinchLeftRing.init("PinchLeftRing");
-      mPinchLeftPinky.init("PinchLeftPinky");
-      mPinchRightThumb.init("PinchRightThumb");
-      mPinchRightIndex.init("PinchRightIndex");
-      mPinchRightMiddle.init("PinchRightMiddle");
-      mPinchRightRing.init("PinchRightRing");
-      mPinchRightPinky.init("PinchRightPinky");
+      mPinchLeftThumb.init("LeftThumb");
+      mPinchLeftIndex.init("LeftIndex");
+      mPinchLeftMiddle.init("LeftMiddle");
+      mPinchLeftRing.init("LeftRing");
+      mPinchLeftPinky.init("LeftPinky");
+      mPinchRightThumb.init("RightThumb");
+      mPinchRightIndex.init("RightIndex");
+      mPinchRightMiddle.init("RightMiddle");
+      mPinchRightRing.init("RightRing");
+      mPinchRightPinky.init("RightPinky");
 
       //mGloveTracker.init("GlovePos Proxy");
    }
@@ -167,7 +165,6 @@ public:
    // POST: The current scene has been drawn
    virtual void draw()
    {
-      vjGlApp::draw();
       myDraw();
    }
 
@@ -214,9 +211,8 @@ protected:
    vjVec3               mConePos;
    vjVec3               mSpherePos;
 
-   // physics system
-   ParticleSystem           mParticleSystem;
-   
+   vjMatrix    mNavigation;
+
    vjGlContextData<Scene> mScene;
 };
 
