@@ -125,7 +125,7 @@ public:
    static std::string getElementType();
 
    /**  see if the flock is active or not */
-   inline const bool& isActive() const
+   bool isActive() const
    {
       return mFlockOfBirds.isActive();
    }
