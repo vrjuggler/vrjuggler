@@ -207,7 +207,6 @@ esac
 # -----------------------------------------------------------------------------
 VJ_COMPILER_SETUP
 DPP_PROG_CC_NOSTDINC
-DPP_PROG_CXX_PROF_FLAG
 
 # Ensure that the C++ compiler we've found is capable of compiling the newer
 # newer C++ features that we need.
