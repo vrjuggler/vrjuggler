@@ -1,0 +1,16 @@
+# This file defines the specification for the base installation directory
+# tree for VR Juggler.
+#
+# $Id$
+
+/set type=dir gname=c2dev mode=0775
+.
+    Data
+    ..
+    bin
+    ..
+    include
+    ..
+    test
+    ..
+..

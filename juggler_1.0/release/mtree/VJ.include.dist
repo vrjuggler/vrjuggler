@@ -1,0 +1,42 @@
+# This file defines the specification for the include directory tree for the
+# VR Juggler installation.
+#
+# $Id$
+
+/set type=dir gname=c2dev mode=0775
+.
+    include
+	Config
+	..
+	Environment
+	..
+	Input
+	    InputManager
+	    ..
+	    ibox
+	    ..
+	    vjGlove
+	    ..
+	    vjInput
+	    ..
+	    vjPosition
+	    ..
+	..
+	Kernel
+	    GL
+	    ..
+	    Pf
+	    ..
+	..
+	Math
+	..
+	Performance
+	..
+	SharedMem
+	..
+	Sync
+	..
+	Threads
+	..
+    ..
+..
