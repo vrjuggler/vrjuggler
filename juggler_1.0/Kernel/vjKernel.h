@@ -15,6 +15,8 @@
 #include <Environment/vjEnvironmentManager.h>
 #include <Performance/vjPerfDataBuffer.h>
 
+#include <Kernel/vjUser.h>
+
 	// --- HACK --- //
 	// Is this really needed??
 #include <Kernel/vjSGISystemFactory.h>
@@ -66,14 +68,19 @@ public:
    { return 1; }
 
 public:  // --- Config interface --- //
+   vjConfigChunkDB* getChunkDB()
+   { return mChunkDB; }
+
       // Add a group of config chunks
    void configAdd(vjConfigChunkDB* chunkDB);
 
       // Remove a group of config chunks
    void configRemove(vjConfigChunkDB* chunkDB);
 
-   vjConfigChunkDB* getChunkDB()
-   { return mChunkDB; }
+protected:     // Config chunks local to kernel
+   bool configKernelHandle(vjConfigChunk* chunk);
+   bool configKernelAdd(vjConfigChunk* chunk);
+   bool configKernelRemove(vjConfigChunk* chunk);
 
 protected:
    //: Updates any data that needs updated once a frame (Trackers, etc.)
@@ -101,9 +108,13 @@ public:      // Global "get" interface
 
       //: Get the input manager
    vjInputManager* getInputManager()
-   { return data.inputManager; }
+   { return mInputManager; }
 
-public:
+   //: Get the user associated with given name
+   //! RETURNS: NULL - Not found
+   vjUser*  getUser(string userName);
+
+private:
    vjSystemData    data;   //: Global system data
 
 protected:
@@ -113,11 +124,15 @@ protected:
 
    /// Factories and Managers
    vjSystemFactory*  sysFactory;          //: The current System factory
+   vjInputManager*   mInputManager;       //: The input manager for the system
    vjDrawManager*    drawManager;         //: The Draw Manager we are currently using
    vjDisplayManager* displayManager;      //: The Display Manager we are currently using
    vjEnvironmentManager* environmentManager; //: The Environment Manager object
-   vjPerfDataBuffer* perfBuffer; //: store perfdata for kernel main
-    bool performanceEnabled;  //: is performance measurement for kernel active?
+
+   /// Performance information
+   vjPerfDataBuffer* perfBuffer;          //: store perfdata for kernel main
+   bool performanceEnabled;               //: is performance measurement for kernel active?
+
    /// Config Stuff
    vjChunkDescDB*    configDesc;
    vjConfigChunkDB*  mChunkDB;            //: The current chunk db for the system
@@ -125,6 +140,9 @@ protected:
 
    /// Shared Memory stuff
    vjMemPool*       sharedMemPool;
+
+   /// Multi-user information
+   vector<vjUser*>   mUsers;              //: A list of user objects in system
 
    // ----------------------- //
    // --- SINGLETON STUFF --- //

@@ -49,7 +49,8 @@ DEPEND_SRCS	:= vjAPI.cpp			\
                    vjProjection.cpp		\
 		   vjStreamLock.cpp		\
                    vjWallProjection.cpp		\
-                   vjSGISystemFactory.cpp
+                   vjSGISystemFactory.cpp	\
+		   vjUser.cpp
 
 KERNEL_OBJECTS	= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.cpp=.o))
 

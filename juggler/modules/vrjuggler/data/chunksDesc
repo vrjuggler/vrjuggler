@@ -69,6 +69,7 @@ chunk display "display" "This is a surface that images are projected on."
   simulator Bool 1 "simulator" "Are we in simulator mode"
   simCamera Chunk 1 "simCamera" vj_enumeration { "PosProxy" "proxyAlias" } "This is the pos proxy that controls the sim view"
   headPos Chunk 1 "headPos" vj_enumeration { "proxyAlias" "PosProxy" } "The position proxy of the head position to use for this window."
+  user Chunk 1 "user" vj_enumeration { "JugglerUser" } "This is the user that the window is drawing for."
   end
 chunk InputManager "InputManager" "Configure the initial Input Manager settings."
   Name String 1 "Name" "Unique name of an instance of this chunk type"
@@ -172,6 +173,11 @@ chunk FileConnect "EM File Output" "A file for outputing Environment Manager dat
   Readable Bool 1 "Readable" "Should the file be open for reading?"
   end
 chunk PerfMeasure "Performance Measurements" "Controls performance monitoring of Juggler library"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
   KernelEnabled Bool 1 "Kernel Testing" "Enables/disables performance measurements in vjKernel control loop"
-  End
+  end
+chunk JugglerUser "JugglerUser" "This is a user in Juggler.  This is used for multi-user applications"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  headPos Chunk 1 "headPos" vj_enumeration { "proxyAlias" "PosProxy" } "This is the source of head position information."
+  end
 End

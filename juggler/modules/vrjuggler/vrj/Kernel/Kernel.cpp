@@ -104,7 +104,7 @@ void vjKernel::controlLoop(void* nullParam)
 
       //Tell trackers to swap buffers;
          vjDEBUG(3) << "vjKernel::controlLoop: Update Trackers\n" << vjDEBUG_FLUSH;
-      data.inputManager->UpdateAllData();
+      getInputManager()->UpdateAllData();
       perfBuffer->set(5);
          vjDEBUG(3) << "vjKernel::controlLoop: Update Projections\n" << vjDEBUG_FLUSH;
       drawManager->updateProjections();
@@ -140,6 +140,8 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB)
    {
       bool added_chunk = false;
 
+      if(this->configKernelHandle(chunks[i]))            // Kernel
+         added_chunk = this->configKernelAdd(chunks[i]);
       if(getInputManager()->configCanHandle(chunks[i]))  // inputMgr
          added_chunk = getInputManager()->configAdd(chunks[i]);
       if(displayManager->configCanHandle(chunks[i]))     // displayMgr
@@ -166,6 +168,47 @@ void vjKernel::configRemove(vjConfigChunkDB* chunkDB)
 {
    ;
 }
+
+
+// -------------------------------
+// Config chunks local to kernel
+// -------------------------------
+bool vjKernel::configKernelHandle(vjConfigChunk* chunk)
+{
+   string chunk_type = (string)(char*)chunk->getType();
+
+   if(string("JugglerUser") == chunk_type)
+      return true;
+   else
+      return false;
+}
+
+bool vjKernel::configKernelAdd(vjConfigChunk* chunk)
+{
+   string chunk_type = (string)(char*)chunk->getType();
+
+   vjASSERT(configKernelHandle(chunk));
+
+   if(string("JugglerUser") == chunk_type)
+   {
+      vjUser* new_user = new vjUser;
+      bool success = new_user->config(chunk);
+      if(!success)
+         delete new_user;
+      else
+         mUsers.push_back(new_user);
+
+      return success;
+   }
+   else
+      return false;
+}
+
+bool vjKernel::configKernelRemove(vjConfigChunk* chunk)
+{
+   return false;
+}
+
 
 // --- STARTUP ROUTINES --- //
 void vjKernel::loadConfigFile()
@@ -226,8 +269,8 @@ void vjKernel::loadConfigFile()
 void vjKernel::initialSetupInputManager()
 {
    vjDEBUG(0) << "   vjKernel::initialSetupInputManager\n" << vjDEBUG_FLUSH;
-   data.inputManager = new (sharedMemPool) vjInputManager;
-   data.inputManager->ConfigureInitial(mChunkDB);
+   mInputManager = new (sharedMemPool) vjInputManager;
+   mInputManager->ConfigureInitial(mChunkDB);
 }
 
 
@@ -266,3 +309,14 @@ void vjKernel::setupEnvironmentManager() {
    environmentManager->activate();
    vjDEBUG(0) << "      Environment Manager running\n" << vjDEBUG_FLUSH;
 }
+
+vjUser* vjKernel::getUser(string userName)
+{
+   for(int i=0;i<mUsers.size();i++)
+      if(userName == mUsers[i]->getName())
+         return mUsers[i];
+
+   return NULL;
+}
+
+
