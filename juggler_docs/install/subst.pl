@@ -139,6 +139,8 @@ $alias_subst{"GETCYGWIN"} = 'http://sources.redhat.com/cygwin/download.html';
 $alias_subst{"GETAUTOCONF"} = 'ftp://ftp.gnu.org/gnu/autoconf/';
 $alias_subst{"GETAUTOMAKE"} = 'ftp://ftp.gnu.org/gnu/automake/';
 $alias_subst{"OPENSOURCE"} = 'http://www.opensource.org';
+$alias_subst{"VS6SP4"} = 'http://msdn.microsoft.com/vstudio/sp/vs6sp4/default.asp';
+$alias_subst{"VS6SP5"} = 'http://msdn.microsoft.com/vstudio/sp/vs6sp5/default.asp';
 
 
 # links to books and manuals
