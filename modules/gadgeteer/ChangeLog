@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Dec-01-2004 patrickh    Renamed the config element type loaded by
+                        gadget::AbstractNetworkManager from machine_specific to
+                        cluster_node.
+                        NEW VERSION 0.21.0
 Nov-13-2004 patrickh    Renamed gadget::SpeechRecogDigital* to gadget::Command*
                         and gadget::SpeechRecogString* to gadget::String*.
                         NEW VERSION 0.20.0

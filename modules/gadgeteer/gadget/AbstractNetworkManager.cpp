@@ -359,7 +359,7 @@ namespace gadget
    
    bool AbstractNetworkManager::recognizeClusterMachineConfig(jccl::ConfigElementPtr element)
    {
-      return(element->getID() == AbstractNetworkManager::getMachineSpecificElementType());
+      return element->getID() == getClusterNodeElementType();
    }
 
    bool AbstractNetworkManager::configCanHandle(jccl::ConfigElementPtr element)
@@ -382,11 +382,12 @@ namespace gadget
             // NOTE: Add all machine dependent ConfigElementPtr's here
             vprASSERT(element->getNum("display_system") == 1 && "A Cluster System element must have exactly 1 display_system element");
 
-            std::vector<jccl::ConfigElementPtr> machine_specific_elements = element->getChildElements();
+            std::vector<jccl::ConfigElementPtr> cluster_node_elements =
+               element->getChildElements();
 
-            for (std::vector<jccl::ConfigElementPtr>::iterator i = machine_specific_elements.begin();
-                 i != machine_specific_elements.end();
-                 i++)
+            for (std::vector<jccl::ConfigElementPtr>::iterator i = cluster_node_elements.begin();
+                 i != cluster_node_elements.end();
+                 ++i)
             {
                jccl::ConfigManager::instance()->addConfigElement(*i, jccl::ConfigManager::PendingElement::ADD);
 
@@ -438,9 +439,9 @@ namespace gadget
       }
    }
 
-   std::string AbstractNetworkManager::getMachineSpecificElementType()
+   std::string AbstractNetworkManager::getClusterNodeElementType()
    {
-      return "machine_specific";
+      return "cluster_node";
    }
 
    void AbstractNetworkManager::updateNewConnections()
