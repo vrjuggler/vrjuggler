@@ -69,62 +69,116 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
 	return s;
     }
 
-    private void buildDataPanel () {
-	int i,j;
-	PerfDataCollector col;
-	JLabel l;
-	JButton b;
-	double avg;
-	data_panel.removeAll();
-	Insets insets = new Insets (1,1,1,1);
+    public class DataPanelElem {
+	public PerfDataCollector col;
+	public JLabel sep_label;
+	public JLabel colname_label;
+	public CollectorSummaryButton colsummary_button;
+	public JLabel avgs_label;
+	public JLabel[] phase_labels;
+	public JLabel[] avg_labels;
+	public GraphButton[] graph_buttons;
+	public AnomaliesButton[] anomalies_buttons;
+	public int num;
 
-	for (i = 0; i < collection.getSize(); i++) {
-	    col = collection.getCollector(i);
+	public DataPanelElem (PerfDataCollector _col, JPanel panel, 
+			      GridBagLayout gblayout, GridBagConstraints gbc) {
+	    Insets insets = new Insets (1,1,1,1);
+	    col = _col;
+	    num = col.getNumPhases();
+	    phase_labels = new JLabel[num];
+	    avg_labels = new JLabel[num];
+	    graph_buttons = new GraphButton[num];
+	    anomalies_buttons = new AnomaliesButton[num];
+
 	    col.generateAverages(preskip, postskip);
 	    gbc.gridwidth = gbc.REMAINDER;
-	    l = new JLabel ("----------------------------------------------");
-	    gblayout.setConstraints (l, gbc);
-	    data_panel.add (l);
+	    sep_label = new JLabel ("----------------------------------------------");
+	    gblayout.setConstraints (sep_label, gbc);
+	    panel.add (sep_label);
 
-	    l = new JLabel (col.getName());
+	    colname_label = new JLabel (col.getName());
 	    gbc.gridwidth = 1;
-	    gblayout.setConstraints (l, gbc);
-	    data_panel.add (l);
+	    gblayout.setConstraints (colname_label, gbc);
+	    panel.add (colname_label);
 
-	    b = new CollectorSummaryButton (col);
-	    b.addActionListener (this);
+	    colsummary_button = new CollectorSummaryButton (col);
+	    colsummary_button.addActionListener (PerfAnalyzerPanel.this);
 	    gbc.gridwidth = gbc.REMAINDER;
-	    gblayout.setConstraints (b, gbc);
-	    data_panel.add (b);
+	    gblayout.setConstraints (colsummary_button, gbc);
+	    panel.add (colsummary_button);
 
-	    l = new JLabel ("Average times in milliseconds:");
-	    gblayout.setConstraints(l, gbc);
-	    data_panel.add (l);
+	    avgs_label = new JLabel ("Average times in milliseconds:");
+	    gblayout.setConstraints(avgs_label, gbc);
+	    panel.add (avgs_label);
 
-	    for (j = 0; j < col.getNumPhases(); j++) {
-		avg = col.getAverageForPhase(j);
+	    JLabel l;
+	    JButton b;
+	    for (int j = 0; j < num; j++) {
+		double avg = col.getAverageForPhase(j);
+		// this below will cause trouble
 		if (avg == 0.0)
 		    continue;
 		gbc.gridwidth = 1;
-		l = new JLabel (j + ": " + col.getLabelForPhase(j));
+		l = phase_labels[j] = new JLabel (j + ": " + col.getLabelForPhase(j));
 		gblayout.setConstraints (l, gbc);
-		data_panel.add(l);
-		l = new JLabel (padFloat(avg/1000.0), JLabel.RIGHT);
+		panel.add(l);
+		l = avg_labels[j] = new JLabel (padFloat(avg/1000.0), JLabel.RIGHT);
 		gblayout.setConstraints (l, gbc);
-		data_panel.add(l);
-		b = new GraphButton (col, j);
-		b.addActionListener (this);
+		panel.add(l);
+		b = graph_buttons[j] = new GraphButton (col, j);
+		b.addActionListener (PerfAnalyzerPanel.this);
 		b.setMargin(insets);
 		gblayout.setConstraints (b, gbc);
-		data_panel.add(b);
-		b = new AnomaliesButton (col, j);
-		b.addActionListener (this);
+		panel.add(b);
+		b = anomalies_buttons[j] = new AnomaliesButton (col, j);
+		b.addActionListener (PerfAnalyzerPanel.this);
 		b.setMargin(insets);
 		gbc.gridwidth = gbc.REMAINDER;
 		gblayout.setConstraints (b, gbc);
-		data_panel.add(b);
+		panel.add(b);
 	    }
 	}
+
+	public void update() {
+	    col.generateAverages(preskip, postskip);
+	    for (int i = 0; i < num; i++) {
+		double avg = col.getAverageForPhase(i);
+		avg_labels[i].setText(padFloat(avg/1000.0));
+	    }
+	}
+    }
+
+    private void refreshDataPanel () {
+	int i,j;
+	PerfDataCollector col;
+	double avg;
+	//data_panel.removeAll();
+	DataPanelElem dpe;
+
+	for (i = 0; i < collection.getSize(); i++) {
+	    col = collection.getCollector(i);
+	    dpe = getDataPanelElem (col);
+	    if (dpe == null) {
+		addDataPanelElem (col);
+	    }
+	    else
+		dpe.update();
+	}
+    }
+
+    public DataPanelElem getDataPanelElem (PerfDataCollector col) {
+	DataPanelElem dpe;
+	for (int i = 0; i < datapanel_elems.size(); i++) {
+	    dpe = (DataPanelElem)datapanel_elems.elementAt(i);
+	    if (col == dpe.col)
+		return dpe;
+	}
+	return null;
+    }
+
+    public void addDataPanelElem (PerfDataCollector col) {
+	DataPanelElem dpe = new DataPanelElem (col, data_panel, gblayout, gbc);
     }
 
 
@@ -148,6 +202,7 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
     PerfDataCollection collection;
 
     Vector child_frames;  // vector of GenericGraphFrames...
+    Vector datapanel_elems;
 
     int preskip, postskip;
     float anomalycutoff;
@@ -157,6 +212,7 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
 	super();
 
 	child_frames = new Vector();
+	datapanel_elems = new Vector();
 	collection = _data_collection;
 	current_collector = null;
 	text_area = null;
@@ -340,7 +396,7 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
 	}
 	else if (e.getSource() == collection) {
 	    String s = e.getActionCommand();
-	    if (s.equalsIgnoreCase ("refresh"))
+	    if (s.equalsIgnoreCase ("update"))
 		refreshDisplay();
 	    else if (s.equalsIgnoreCase ("removealldata"))
 		removeAllData();
@@ -351,14 +407,14 @@ public class PerfAnalyzerPanel extends JPanel implements ActionListener, JFrameP
     public void refreshDisplay() {
 	for (int i = 0; i < child_frames.size(); i++)
 	    ((GenericGraphFrame)child_frames.elementAt(i)).refresh();
-	buildDataPanel();
+	refreshDataPanel();
     }
 
     public void removeAllData() {
 	for (int i = 0; i < child_frames.size(); i++)
 	    ((GenericGraphFrame)child_frames.elementAt(i)).dispose();
 	child_frames.removeAllElements();
-	buildDataPanel();
+	refreshDataPanel();
     }
 
     public void setCollectionList() {
