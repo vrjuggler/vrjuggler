@@ -119,8 +119,10 @@ protected:
    */
 
 public:
-    //: Function to config API specific stuff.
-    // Takes a chunkDB and extracts API specific stuff
+    /**
+     * Function to config API specific stuff.
+     * Takes a chunkDB and extracts API specific stuff.
+     */
    //virtual void configInitial(jccl::ConfigChunkDB*  chunkDB);
 
     /** Blocks until the end of the frame
@@ -237,8 +239,11 @@ protected:
    void initLoaders();
    void updateSimulator(SimViewport* simVp);
 
-   //: Helper to get the pfDisp given a channel
-   //! RETURNS: NULL - Not found
+   /**
+    * Helper to get the pfDisp given a channel.
+    *
+    * @return NULL to indicate that the display was not found.
+    */
    //**//pfDisp* getPfDisp(pfChannel* chan);
 
    /** Init all the pipes that may need to be used */

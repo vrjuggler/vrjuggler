@@ -47,14 +47,16 @@ namespace vrj
 {
 
 
-//: Convert Performer matrix to Juggler matrix
+/**< Converts Performer matrix to Juggler (GMTL) matrix. */
 gmtl::Matrix44f GetVjMatrix( const pfMatrix& perfMat );
 
-//: Convert Juggler Matrix to Pf Matrix
+/**< Converts Juggler (GMTL) matrix to Pf Matrix. */
 pfMatrix GetPfMatrix( const gmtl::Matrix44f& mat );
 
-
+/**< Converts Performer 3-element vector to Juggler (GMTL) vector. */
 gmtl::Vec3f GetVjVec( const pfVec3& vec );
+
+/**< Converts Juggler (GMTL) vector to Pf vector. */
 pfVec3 GetPfVec( const gmtl::Vec3f& vec );
 
 
