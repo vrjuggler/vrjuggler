@@ -143,6 +143,7 @@ world:
 ifndef NO_CLEAN
 	@$(MAKE) clobber
 endif
+	@$(MAKE) $(BEFOREBUILD)
 	@$(MAKE) libs
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning VPR installation process"
@@ -165,6 +166,7 @@ world-all-abi:
 ifndef NO_CLEAN
 	@$(MAKE) clobber
 endif
+	@$(MAKE) $(BEFOREBUILD)
 	@for abi in $(ABI_LIST) ; do					\
             echo "------------------------------------------------" ;	\
             echo "Building libraries using $$abi" ;			\
@@ -199,6 +201,7 @@ release:
 ifndef NO_CLEAN
 	@$(MAKE) clobber
 endif
+	@$(MAKE) $(BEFOREBUILD)
 	@$(MAKE) libs
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning VPR release installation process"
