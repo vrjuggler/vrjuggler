@@ -549,7 +549,7 @@ sub generateReconfig ($@)
    }
 
    print RECONFIG "rm -f config.cache\n";
-   print RECONFIG "$0 ", "@arg_list \n";
+   print RECONFIG "exec $0 ", "@arg_list \n";
    close(RECONFIG);
    chmod(0755, "reconfig");
 }
