@@ -148,11 +148,11 @@ class SimpleGlApp(vrj.GlApp):
       glLightfv(GL_LIGHT0, GL_SPECULAR, light0_specular)
       glLightfv(GL_LIGHT0, GL_POSITION, light0_position)
 
-#      glMaterialfv(GL_LIGHT0, GL_AMBIENT, mat_ambient)
-#      glMaterialfv(GL_LIGHT0, GL_DIFFUSE, mat_diffuse)
-#      glMaterialfv(GL_LIGHT0, GL_SPECULAR, mat_specular)
-#      glMaterialfv(GL_LIGHT0, GL_SHININESS, mat_shininess)
-#      glMaterialfv(GL_LIGHT0, GL_EMISSION, no_mat)
+#      glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient)
+#      glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse)
+#      glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular)
+#      glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess)
+#      glMaterialfv(GL_FRONT, GL_EMISSION, no_mat)
 
       glEnable(GL_DEPTH_TEST)
       glEnable(GL_NORMALIZE)
