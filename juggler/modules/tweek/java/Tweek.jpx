@@ -16,6 +16,7 @@
   <property category="runtime.0" name="ConfigurationName" value="Tweek"/>
   <property category="runtime.0" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
   <property category="runtime.0" name="application.class" value="org.vrjuggler.tweek.Tweek"/>
+  <property category="runtime.0" name="application.vmparameters" value="-DTWEEK_BASE_DIR=/home/patrick/src/Juggler/main/juggler/build.freebsd.posix.gcc33/instlinks"/>
   <property category="runtime.0" name="test.harness" value="junit.textui.TestRunner"/>
   <property category="sys" name="AuthorLabel" value="@author"/>
   <property category="sys" name="BackupPath" value="bak"/>
@@ -39,10 +40,10 @@
   <property category="sys" name="JbxEventListener0" value="org.vrjuggler.tweek.net.CommunicationListener"/>
   <property category="sys" name="JbxEventListener1" value="org.vrjuggler.tweek.beans.BeanInstantiationListener"/>
   <property category="sys" name="LastTag" value="113"/>
-  <property category="sys" name="Libraries" value="JDOM;Metouia LAF 1.0"/>
+  <property category="sys" name="Libraries" value="JDOM;Metouia LAF 1.0;JGoodies Looks;JUnit"/>
   <property category="sys" name="MakeStable" value="0"/>
   <property category="sys" name="OutPath" value="classes"/>
-  <property category="sys" name="SourcePath" value=".;../test/TestSuite/java;../../../external/swing-laf/kunststoff/sources"/>
+  <property category="sys" name="SourcePath" value=".;../test/TestSuite/java;../../../external/swing-laf/kunststoff/sources;../../../build.freebsd.posix.gcc33/modules/tweek/java"/>
   <property category="sys" name="TestPath" value="../test/TestSuite/java"/>
   <property category="sys" name="Title" value="Tweek JavaBean Loader"/>
   <property category="sys" name="TitleLabel" value="Title:"/>
@@ -66,4 +67,5 @@
   <node name="org.vrjuggler.tweek.text" type="Package"/>
   <node name="org.vrjuggler.tweek.treeviewer" type="Package"/>
   <node name="tweek" type="Package"/>
+  <node name="tweek.SubjectManagerPackage" type="Package"/>
 </project>
