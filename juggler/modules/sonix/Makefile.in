@@ -169,6 +169,7 @@ post-install:
 
 install-data:
 	cp -r $(ROOT_ABS)/data/*.wav $(datadir)/AudioJuggler/data
+	cp -r $(ROOT_ABS)/data/*.aiff $(datadir)/AudioJuggler/data
 
 install-samples:
 	cp -r $(ROOT_ABS)/samples/*.cpp $(topdir)/samples/Makefile $(datadir)/AudioJuggler/src
