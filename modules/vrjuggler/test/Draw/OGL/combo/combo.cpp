@@ -42,15 +42,15 @@
 #include <cubesApp.h>
 
       // --- Lib Stuff --- //
-#include <Kernel/vjKernel.h>
-#include <Kernel/vjProjection.h>
+#include <vrj/Kernel/Kernel.h>
+#include <vrj/Display/Projection.h>
 #include <vpr/System.h>
 
 int main(int argc, char* argv[])
 {
-   Projection::setNearFar(0.01, 10000.0f);
+   vrj::Projection::setNearFar(0.01, 10000.0f);
 
-   Kernel* kernel = Kernel::instance();        // Get the kernel
+   vrj::Kernel* kernel = vrj::Kernel::instance();        // Get the kernel
    torusApp* torus_app = new torusApp(kernel);   // Declare an instance of the app
    wandApp*  wand_app = new wandApp(kernel);
    cubesApp* cubes_app = new cubesApp(kernel);

@@ -33,20 +33,18 @@
 #ifndef _SIMPLE_GLOVE_APP_
 #define _SIMPLE_GLOVE_APP_
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <math.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include <Kernel/GL/vjGlApp.h>
-#include <Math/vjMatrix.h>
-#include <Math/vjVec3.h>
+#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Math/Vec3.h>
 
-#include <Input/InputManager/vjPosInterface.h>
-#include <Input/InputManager/vjGloveInterface.h>
-#include <Input/InputManager/vjGestureInterface.h>
-#include <Input/InputManager/vjDigitalInterface.h>
+#include <vrj/Input/Type/PosInterface.h>
+#include <vrj/Input/Type/GloveInterface.h>
+#include <vrj/Input/Type/GestureInterface.h>
 
 
 //----------------------------------------------------
@@ -55,12 +53,12 @@
 // This application draws a glove and some rays and spheres
 // on the glove
 //----------------------------------------------------
-class simpleGloveApp : public GlApp
+class simpleGloveApp : public vrj::GlApp
 {
 public:
    // Constructor.
-   simpleGloveApp(Kernel* kern)
-      : GlApp(kern)            // Initialize base class
+   simpleGloveApp(vrj::Kernel* kern)
+      : vrj::GlApp(kern)            // Initialize base class
    {
       mQuadObj = NULL;
    }
@@ -144,7 +142,7 @@ private:
    void initGLState();
 
 protected:
-   void drawLine(Vec3& start, Vec3& end)
+   void drawLine(vrj::Vec3& start, vrj::Vec3& end)
    {
       glBegin(GL_LINES);
          glVertex3fv(start.vec);
@@ -166,8 +164,8 @@ protected:
 
 public:
       
-   GestureInterface  mGesture;
-   GloveInterface    mGlove;      // the glove
+   vrj::GestureInterface  mGesture;
+   vrj::GloveInterface    mGlove;      // the glove
 };
 
 

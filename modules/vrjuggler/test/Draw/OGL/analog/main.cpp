@@ -31,8 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 // VR Juggler
-#include <Kernel/vjKernel.h>     // vr juggler kernel
-#include <Kernel/vjProjection.h> // for setNearFar
+#include <vrj/Kernel/Kernel.h>     // vr juggler kernel
+#include <vrj/Display/Projection.h> // for setNearFar
 #include <vpr/System.h>
 
 // the application
@@ -42,10 +42,10 @@
 //: executable entry point
 int main( int argc, char* argv[] )
 {
-   Projection::setNearFar( 0.01f, 10000.0f );
+   vrj::Projection::setNearFar( 0.01f, 10000.0f );
    
    // Get the kernel
-   Kernel* kernel = Kernel::instance();        
+   vrj::Kernel* kernel = vrj::Kernel::instance();        
    
    // Create an instance of the application
    AnalogDemoApplication* application = new AnalogDemoApplication( kernel );   

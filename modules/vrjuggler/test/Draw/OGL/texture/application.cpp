@@ -33,7 +33,8 @@
 #include <application.h>
 
 //: Constructor
-TextureDemoApplication::TextureDemoApplication( Kernel* kern ) : timer(), GlApp( kern ), x( 0.0f )
+TextureDemoApplication::TextureDemoApplication( vrj::Kernel* kern )
+   : timer(), vrj::GlApp( kern ), x( 0.0f )
 {
    // associate the textureObj ID with the actual texture.
    TextureDemoApplication::setTexObjID( mCubeTexture, mCubeTextureObj );

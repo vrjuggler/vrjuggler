@@ -33,7 +33,8 @@
 #include <application.h>
 
 //: Constructor
-AnalogDemoApplication::AnalogDemoApplication( Kernel* kern ) : GlApp( kern ), x( 0.0f )
+AnalogDemoApplication::AnalogDemoApplication( vrj::Kernel* kern )
+   : vrj::GlApp( kern ), x( 0.0f )
 {
 }
 

@@ -38,13 +38,13 @@
 #include <wandApp.h>
 
       // --- Lib Stuff --- //
-#include <Kernel/vjKernel.h>
+#include <vrj/Kernel/Kernel.h>
 #include <vpr/System.h>
 
 
 int main(int argc, char* argv[])
 {
-   Kernel* kernel = Kernel::instance();           // Get the kernel
+   vrj::Kernel* kernel = vrj::Kernel::instance();           // Get the kernel
    wandApp* application = new wandApp(kernel);       // Instantiate an instance of the app
 
    if (argc <= 1)
