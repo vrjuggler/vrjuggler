@@ -194,7 +194,12 @@ protected:
    virtual ~DisplayManager()
    {;}
 
-   DisplayManager (const DisplayManager& o) {;}
+   DisplayManager(const DisplayManager& o)
+      : jccl::ConfigChunkHandler()
+   {
+      ;
+   }
+
    void operator= (const DisplayManager& o) {;}
 
    vprSingletonHeader( DisplayManager );
