@@ -42,7 +42,7 @@
 /*
  * --------------------------------------------------------------------------
  * NOTES:
- *    - This file (vprThreadKeyPosix.h) MUST be included by vprThread.h, not
+ *    - This file (ThreadKeyPosix.h) MUST be included by Thread.h, not
  *      the other way around.
  * --------------------------------------------------------------------------
  */
@@ -75,19 +75,19 @@ class ThreadKeyPosix
 {
 public:
    /// Default constructor.
-   ThreadKeyPosix ()
+   ThreadKeyPosix()
    {
       keycreate(NULL);
    }
 
    /// Create a key that knows how to delete itself using a function pointer.
-   ThreadKeyPosix (thread_func_t destructor, void* arg)
+   ThreadKeyPosix(thread_func_t destructor, void* arg)
    {
       keycreate(destructor, arg);
    }
 
    /// Create a key that knows how to delete itself using a functor.
-   ThreadKeyPosix (BaseThreadFunctor* destructor)
+   ThreadKeyPosix(BaseThreadFunctor* destructor)
    {
       keycreate(destructor);
    }
@@ -95,7 +95,7 @@ public:
    /**
     * Releases this key.
     */
-   ~ThreadKeyPosix (void)
+   ~ThreadKeyPosix()
    {
       keyfree();
    }
@@ -120,7 +120,7 @@ public:
     *       it requires arguments.  Otherwise, use the two-argument version
     *       of keycreate().
     */
-   int keycreate (thread_func_t destructor, void* arg)
+   int keycreate(thread_func_t destructor, void* arg)
    {
       // XXX: Memory leak!
       ThreadNonMemberFunctor *NonMemFunctor = new ThreadNonMemberFunctor(destructor, arg);
@@ -143,12 +143,12 @@ public:
     * @return 0 is returned upown successful completion.<br>
     *         -1 is returned if an error occurs.
     */
-   int keycreate (BaseThreadFunctor* destructor)
+   int keycreate(BaseThreadFunctor* destructor)
    {
 #ifdef _PTHREADS_DRAFT_4
-      return pthread_keycreate(&keyID, (KeyDestructor) destructor);
+      return pthread_keycreate(&mKeyID, (KeyDestructor) destructor);
 #else
-      return pthread_key_create(&keyID, (KeyDestructor) destructor);
+      return pthread_key_create(&mKeyID, (KeyDestructor) destructor);
 #endif
    }
 
@@ -165,15 +165,15 @@ public:
     *
     * @note This is not currently supported with Pthreads Draft 4.
     */
-   int keyfree (void)
+   int keyfree()
    {
 #ifdef _PTHREADS_DRAFT_4
-      cerr << "keyfree() not supported with this POSIX threads "
-           << "implementation\n";
+      std::cerr << "keyfree() not supported with this POSIX threads "
+                << "implementation\n";
 
       return -1;
 #else
-      return pthread_key_delete(keyID);
+      return pthread_key_delete(mKeyID);
 #endif
    }
 
@@ -192,9 +192,9 @@ public:
     * @return 0 is returned upown successful completion.<br>
     *         -1 is returned if an error occurs.
     */
-   int setspecific (void* value)
+   int setspecific(void* value)
    {
-      return pthread_setspecific(keyID, value);
+      return pthread_setspecific(mKeyID, value);
    }
 
    /**
@@ -212,19 +212,19 @@ public:
     * @return 0 is returned upown successful completion.<br>
     *         -1 is returned if an error occurs.
     */
-   int getspecific (void** valuep)
+   int getspecific(void** valuep)
    {
 #ifdef _PTHREADS_DRAFT_4
-      return pthread_getspecific(keyID, valuep);
+      return pthread_getspecific(mKeyID, valuep);
 #else
-      *valuep = pthread_getspecific(keyID);
+      *valuep = pthread_getspecific(mKeyID);
 
       return 0;
 #endif
    }
 
 private:
-   pthread_key_t keyID;        /**< Thread key ID */
+   pthread_key_t mKeyID;        /**< Thread key ID */
 };
 
 } // End of vpr namespace
