@@ -151,7 +151,7 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
 	vjEnumEntry *e;
 	readString (in, str, size);
 	while (strcasecmp (str, "}") && !in.eof()) {
-	    e = new vjEnumEntry (str, 0);
+	    e = new vjEnumEntry (str, T_STRING);
 	    self.valuelabels.push_back (e);
 	    readString (in, str, size);
 	}
@@ -167,25 +167,33 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
 	vjEnumEntry *e;
 	readString (in, str, size);
 	while (strcmp (str, "}") && !in.eof()) {
-	    vjVarValue v(self.type);
+	    vjVarValue *v;
+	    // this is slightly kludgey.  We make a varvalue to store the enumeration
+	    // value... except for T_CHUNK and T_EMBEDDEDCHUNK where we store a chunk
+	    // name type...
+	    if ((self.type == T_CHUNK) || (self.type == T_EMBEDDEDCHUNK))
+		v = new vjVarValue (T_STRING);
+	    else
+		v = new vjVarValue (self.type);
+
 	    char* c = strstr (str, "=");
 	    if (c) {
 		*c = '\0';
-		v = (c+1);
+		*v = (c+1);
 	    }
 	    else {
 		if (self.type == T_STRING || self.type == T_CHUNK || 
 		    self.type == T_EMBEDDEDCHUNK)
-		    v = str;
+		    *v = str;
 		else
-		    v = i++;
+		    *v = i++;
 	    }
-	    self.enumv.push_back (new vjEnumEntry (str, v));
+	    self.enumv.push_back (new vjEnumEntry (str, *v));
+	    delete v;
 	    readString (in, str, size);
 	}
 	readString (in, str, size);
     }
-
     self.help = str;
 
     return in;
