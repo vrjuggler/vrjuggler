@@ -156,13 +156,12 @@ void SurfaceProjection::calcViewFrustum(gmtl::Matrix44f& eyePos, const float sca
 std::ostream& SurfaceProjection::outStream(std::ostream& out,
                                         const unsigned int indentLevel)
 {
-   const int pad_width_dot(20 - indentLevel);
+//   const int pad_width_dot(20 - indentLevel);
    out.setf(std::ios::left);
 
    const std::string indent_text(indentLevel, ' ');
 
-   out << indent_text << std::setw(pad_width_dot)
-       << "Type " << " vrj::SurfaceProjection\n";
+   out << indent_text << "vrj::SurfaceProjection:\n";
 
    return Projection::outStream(out, indentLevel);
 }

@@ -101,7 +101,8 @@ std::ostream& Projection::outStream(std::ostream& out,
 
    const std::string indent_text(indentLevel, ' ');
 
-   out << indent_text << std::setw(pad_width_dot) << "Eye " << " ";
+   out << indent_text << "vrj::Projection:\n";
+   out << indent_text << std::setw(pad_width_dot) << "  Eye " << " ";
 
    switch(mEye)
    {
@@ -114,7 +115,7 @@ std::ostream& Projection::outStream(std::ostream& out,
    }
    out << std::endl;
    out << indent_text << std::setw(pad_width_dot)
-       << "Frustum " << " " << mFrustum;
+       << "  Frustum " << " " << mFrustum;
    return out;
 }
 
