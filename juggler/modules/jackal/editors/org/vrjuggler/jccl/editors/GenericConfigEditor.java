@@ -85,13 +85,9 @@ public class GenericConfigEditor
       throws Exception
    {
       this.setLayout(mBaseLayout);
-      this.add(mTabPane, BorderLayout.CENTER);
-      mTabPane.add(mContextEditor,  "Configuration");
-      mTabPane.add(mDefReposEditor,  "Definitions");
+      this.add(mContextEditor, BorderLayout.CENTER);
    }
 
    private BorderLayout mBaseLayout = new BorderLayout();
-   private JTabbedPane mTabPane = new JTabbedPane();
    private ConfigContextEditor mContextEditor = new ConfigContextEditor();
-   private ConfigDefinitionRepositoryEditor mDefReposEditor = new ConfigDefinitionRepositoryEditor();
 }
