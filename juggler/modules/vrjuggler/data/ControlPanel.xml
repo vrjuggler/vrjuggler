@@ -31,15 +31,9 @@
       <type label="Digital" title="Choose a digital device"
             token="digital_device"
             icon="org/vrjuggler/vrjconfig/images/digital_devices64.png"/>
-      <category label="Positional" title="Choose a position device"
-                icon="org/vrjuggler/vrjconfig/images/positional_devices64.png">
-         <type label="MotionStar Wireless"
-               title="Choose a MotionStar Wireless device" token="motion_star"
-               icon="org/vrjuggler/vrjconfig/images/positional_devices64.png"/>
-         <type label="Flock of Birds" title="Choose a Flock of Birds device"
-               token="flock"
-               icon="org/vrjuggler/vrjconfig/images/positional_devices64.png"/>
-      </category>
+      <type label="Positional" title="Choose a position device"
+            token="positional_device"
+            icon="org/vrjuggler/vrjconfig/images/positional_devices64.png"/>
    </category>
    <editor label="Audio" class=""
            icon="org/vrjuggler/vrjconfig/images/audio64.png" />
