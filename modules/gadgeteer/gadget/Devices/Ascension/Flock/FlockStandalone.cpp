@@ -1412,7 +1412,7 @@ void FlockStandalone::sendAutoconfig ()
 
       buff[0] = 'P';
       buff[1] = 0x32;
-      buff[2] = mNumBirds + (mExtendedRange)?1:0; //number of input devices + 1 for transmitter
+      buff[2] = mNumBirds + (mExtendedRange ? 1 : 0); //number of input devices + 1 for transmitter
 
       vpr::System::msleep(600);
       mSerialPort->write(buff, sizeof(buff), written);
