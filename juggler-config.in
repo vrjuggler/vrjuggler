@@ -142,6 +142,9 @@ while test $# -gt 0; do
         --cxxflags)
             echo_cxxflags=yes
             case $2 in
+                --*)
+                    # This is another option flag, so leave it alone.
+                    ;;
                 N32)
                     vrj_extra_cxxflags="$vrj_extra_cxxflags $vrj_n32_flags $vrj_isa_flags"
                     shift
@@ -152,6 +155,9 @@ while test $# -gt 0; do
                     ;;
                 *)
                     vrj_extra_cxxflags="$vrj_extra_cxxflags $vrj_abi_flags $vrj_isa_flags"
+                    if [ "x$2" = "x" ]; then
+                        shift
+                    fi
                     ;;
             esac
             ;;
@@ -161,6 +167,9 @@ while test $# -gt 0; do
         --libs)
             echo_libs=yes
             case $2 in
+                --*)
+                    # This is another option flag, so leave it alone.
+                    ;;
                 N32)
                     ldflags="$vrj_n32_flags $vrj_isa_flags"
                     LIBBITSUF="$vrj_libbitsuf_n32"
@@ -173,6 +182,9 @@ while test $# -gt 0; do
                     ;;
                 *)
                     ldflags="$vrj_abi_flags $vrj_isa_flags"
+                    if [ "x$2" = "x" ]; then
+                        shift
+                    fi
                     ;;
             esac
             ;;
@@ -189,6 +201,11 @@ while test $# -gt 0; do
                 64)
                     LIBBITSUF='64'
                     shift
+                    ;;
+                *)
+                    if [ "x$2" = "x" ]; then
+                        shift
+                    fi
                     ;;
             esac
             ;;
