@@ -322,8 +322,8 @@
         <title>Creating Proxy Aliases (optional)</title>
 
         <para>Proxy Aliases provide a way to introduce multiple names for a
-        single Proxy. A <property>Proxy Alias</property> ConfigChunk contains
-        only two properties: its name and the name of the Proxy it points at.<footnote><para>In
+        single Proxy. A <property>Proxy Alias</property> element contains only
+        two properties: its name and the name of the Proxy it points at.<footnote><para>In
         VR Juggler 1.1 DR4, the <property>Proxy Alias</property> element
         actually contains an <property>AliasName</property> property in
         addition to the actual element name. This redundancy is likely to be
@@ -345,21 +345,21 @@
       also want to interact with the application in some way. There are many
       sorts of devices that can be used in a VR system. Wands and joysticks of
       various sorts are very popular. These are simple handheld devices,
-      usually with a position tracking sensor attached to them, and with a
-      number of buttons that the user can press to send commands to an
-      application (such as &#34;fly forward&#34; or &#34;pick up the object
-      I&#39;m touching&#34;). Gloves that sense the user&#39;s hand movements
-      are also popular (see <xref linkend="PinchGloveSection" />, below, for
-      an example). In surround-screen VR systems, it is also possible to bring
-      physical devices - for example, a bicycle or the cab of a truck - into
-      the VR system. In this case, the user can interact with the application
-      by manipulating pedals, handlebars, or steering wheels.</para>
+      usually with a position tracking sensor attached to them and a number of
+      buttons that the user can press to send commands to an application (such
+      as &#34;fly forward&#34; or &#34;pick up the object I&#39;m
+      touching&#34;). Gloves that sense the user&#39;s hand movements are also
+      popular (see <xref linkend="PinchGloveSection" />, below, for an
+      example). In surround-screen VR systems it is also possible to bring
+      physical devices, such as a bicycle or the cab of a truck, into the VR
+      system. In this case, the user can interact with the application by
+      manipulating pedals, handlebars, or steering wheels.</para>
 
       <para>In VR Juggler, we divide most of these devices into digital or
-      analog inputs. Digital devices are buttons, like on a mouse or joystick,
-      and simply have on and off values. Analog devices return a range of
-      data, and can be used for steering wheels or foot pedals, among other
-      things.</para>
+      analog inputs. Digital devices are buttons similar to those found on a
+      mouse or joystick and simply have on and off values. Analog devices
+      return a range of data and can be used for steering wheels or foot
+      pedals, among other things.</para>
 
       <para>Several tracking system manufacturers include handheld wand-style
       devices that can be used as a regular sensor in their hardware. For
@@ -371,7 +371,7 @@
       the IBox, a simple input device manufactured by Immersion Corp. The IBox
       connects to the serial port of a computer, and provides four digital
       inputs and four analog inputs. See <xref linkend="IBoxChunkFigure" />
-      for an <property>IBox</property> ConfigChunk.</para>
+      for an <property>IBox</property> element.</para>
 
       <figure id="IBoxChunkFigure">
         <title>Configuration for the Immersion Ibox.</title>
@@ -400,14 +400,14 @@
         interface to each device. For each digital and analog input source in
         each of the devices, the configuration file should include a
         <property>Digital Proxy</property> or <property>Analog Proxy</property>
-        ConfigChunk.</para>
+        configuration element.</para>
 
-        <para>These two kinds of ConfigChunks are simpler than
-        <property>Position Proxies</property>, since they do not include the
+        <para>These two kinds of configuration elements are simpler than
+        <property>Position Proxies</property> since they do not include the
         transformation properties needed for positional data. The only
-        properties that must be filled in are the name of the device, and the
-        unit number, which is used to distinguish between multiple analog or
-        digital inputs available from a single device.</para>
+        properties that must be filled in are the name of the device and the
+        unit number. The unit number is used to distinguish between multiple
+        analog or digital inputs available from a single device.</para>
 
         <para>Many VR Juggler applications (including the test and sample
         programs packaged with the VR Juggler source and binary distributions)
@@ -423,7 +423,7 @@
 
         <para>As with Position Proxies, Digital and Analog Proxies can be
         given additional names with the use of <property>Proxy Alias</property>
-        ConfigChunks.</para>
+        configuration elements.</para>
       </section>
     </section>
 
@@ -431,19 +431,20 @@
       <title>Add User Configuration</title>
 
       <para>We have trackers in our configuration now, but how do we interpret
-      the tracking data? Which sensor is the user&#39;s head, and which are
-      his hands?</para>
+      the tracking data? Which sensor corresponds to the user&#39;s head, and
+      which to his or her hands?</para>
 
-      <para>We create a <property>User</property> ConfigChunk to store a small
-      amount of information about the person using our VR system. When we
-      create displays later on, we&#39;ll tell each one which user to draw the
-      view for.</para>
+      <para>We create a <property>User</property> configuration element to
+      store a small amount of information about the person using our VR
+      system. When we create displays later on, we&#39;ll tell each one which
+      user to draw the view for.</para>
 
       <para>Typically, we will only need one <property>User</property>
-      ConfigChunk. It only has a few properties, as shown in the figure below.</para>
+      configuration element. It only has a few properties, as shown in the
+      figure below.</para>
 
       <figure id="userchunkfigure">
-        <title>User data ConfigChunk.</title>
+        <title>A User configuration.</title>
 
         <mediaobject>
           <imageobject>
@@ -453,8 +454,8 @@
         </mediaobject>
       </figure>
 
-      <para>The head position value in the User chunk is simply selected from
-      a drop-down list of all the position proxies (or aliases) we have
+      <para>The head position value in the User element is simply selected
+      from a drop-down list of all the position proxies (and aliases) we have
       created.</para>
 
       <para>The eye separation value is used to create the separate left/right
@@ -474,11 +475,10 @@
       displays on our system, as outlined below.</para>
 
       <section>
-        <title>Create a DisplaySystem Chunk</title>
+        <title>Create a DisplaySystem</title>
 
-        <para>There are two folders beneath <guilabel>Displays</guilabel> in
-        the config file editor window. First, we need to create a new chunk
-        under <guilabel>Display System</guilabel>.</para>
+        <para>First, we need to create a new <guilabel>Display System</guilabel>
+        element to support our displays.</para>
 
         <para>VR Juggler&#39;s display windows use the idea of pipe numbers -
         integer values associated with a particular X Windows display - to
@@ -494,7 +494,7 @@
         the <envar>$DISPLAY</envar> environment variable.</para>
 
         <figure id="displaysystemchunkfigure">
-          <title>DisplaySystem chunk.</title>
+          <title>DisplaySystem configuration.</title>
 
           <mediaobject>
             <imageobject>
@@ -522,10 +522,10 @@
         <title>Define Display Windows</title>
 
         <para>The next step - and the last needed to provide minimal
-        functionality - is to create ConfigChunks for our display windows. To
-        begin this step, we need some information about how the video is
-        connected to our VR system. For this example there are four screens,
-        each with a stereo display, each powered by a separate X Display on
+        functionality - is to create configuration elements for our display
+        windows. To begin this step, we need some information about how the
+        video is connected to our VR system. For this example there are four
+        screens, each with a stereo display powered by a separate X Display on
         the host computer. We also need to determine where on the screen to
         position the window so that our graphics show up on the projectors.</para>
 
@@ -541,15 +541,14 @@
         may provide better performance.</para>
 
         <para>With this information on hand, it is time to create the
-        ConfigChunks for the display windows. Under <guilabel>Displays</guilabel>
-        in the tree view of our configuration file, right-click on
-        <guilabel>Display Window</guilabel> and insert a new chunk. We&#39;ll
-        start by editing this chunk and filling in information for the right
-        wall of our surround-screen system, as shown in the figure. Most of
-        the properties will be the same for each window.</para>
+        configuration elements for the display windows. Add a new
+        <guilabel>Display Window</guilabel> element to the configuration.
+        We&#39;ll start by editing this element and filling in information for
+        the right wall of our surround-screen system, as shown in the figure.
+        Most of the properties will be the same for each window.</para>
 
         <figure id="surfacedisplaychunkfigure">
-          <title>Surface Display chunk for the front screen.</title>
+          <title>Surface Display for the front screen.</title>
 
           <mediaobject>
             <imageobject>
@@ -560,19 +559,19 @@
         </figure>
 
         <para>Most of the properties in the <property>Display Window</property>
-        chunk concern the actual placement and creation of the window on
+        element concern the actual placement and creation of the window on
         screen. In our system, the projector for the right wall is connected
         to the output of the X Display &#34;:1.0&#34; (pipe 1 according to our
-        <property>Display System</property> chunk). The X display itself
+        <property>Display System</property> element). The X display itself
         provides a 2304x1024 pixel display area, the rightmost 1024x1024
         region of which is sent to the projector. These numbers are all
         determined by the video settings and physical connections of the
         computer running the VR system.</para>
 
         <para>In <xref linkend="surfacedisplaychunkfigure" /> we have entered
-        all of this data into the <property>Surface Display</property> chunk.
-        The window position and size at the top of the window is easy to
-        understand; the important thing to remember is that the position
+        all of this data into the <property>Surface Display</property>
+        element. The window position and size at the top of the window is easy
+        to understand; the important thing to remember is that the position
         listed is the position of the window&#39;s lower-left-hand corner
         relative to the display&#39;s lower-left-corner. In this case the
         window is flush with the bottom of the display and shifted over 1284
@@ -587,7 +586,7 @@
         <para>The front wall of our example system is a 12&#39;x9&#39;
         projection screen positioned six feet in front of our origin. Its
         projector is connected to the output of the X Display &#34;:0.0&#34;
-        (pipe 0 according to our <property>Display System</property> chunk).
+        (pipe 0 according to our <property>Display System</property> element).
         The X display itself provides a 2304x1024 pixel display area, the
         rightmost 1024x1024 region of which is sent to the projector. These
         numbers are all determined by the video settings and physical
@@ -619,7 +618,7 @@
 
         <para>VR Juggler also needs to know where the user is in order to set
         up the viewing parameters for the viewport - we set this by selecting
-        our User chunk from a drop down list.</para>
+        our User element from a drop down list.</para>
 
         <para>For now, we leave the <property>Tracked</property> property
         false. The <property>Tracked</property> property is used for
@@ -627,12 +626,18 @@
         devices - we&#39;ll discuss its use later.</para>
 
         <para>There are three more displays to go, but these are easier.
-        Select the RightScreen chunk in the tree view of the configuration
+        Select the RightScreen element in the tree view of the configuration
         file and press the <guibutton>Duplicate</guibutton> button.
-        Double-click on the newly created &#34;copy of RightScreen&#34; chunk
-        to edit its values. Rename it to &#34;LeftScreen&#34; and change the
-        <property>Pipe</property> and <property>Corners</property> values
-        appropriately.</para>
+        Double-click on the newly created &#34;copy of RightScreen&#34;
+        element to edit its values. Rename it to &#34;LeftScreen&#34; and
+        change the <property>Pipe</property> and <property>Corners</property>
+        values appropriately.</para>
+
+        <note>
+          <para>Copy/Paste support has not yet been added to VRJConfig. Until
+          that time, you will have to manually create a new configuration
+          element and fill in the values.</para>
+        </note>
 
         <para>Repeat the previous step to create configurations for the front
         screen and the floor.</para>
@@ -644,9 +649,9 @@
 
       <para>At this point, our example file has all the information needed to
       start up a simple, OpenGL-based VR Juggler application. If you&#39;ve
-      been following along, making a configuration file for your own VR
-      system, you may want to give it a try with one of the sample programs in
-      VR Juggler&#39;s samples directory.</para>
+      been following along making a configuration file for your own VR system,
+      you may want to give it a try with one of the sample programs in VR
+      Juggler&#39;s samples directory.</para>
 
       <para>The next sections discuss configuration options for using other
       graphics APIs (primarily OpenGL Performer) and for enabling some of VR
@@ -657,132 +662,41 @@
 
         <para>VR Juggler includes a handful of configuration options
         specifically for applications that use the <trademark>OpenGL Performer</trademark>
-        graphics API. To configure these features, open the
-        <guilabel>API-specific</guilabel> folder and create a
-        <property>Performer API</property> chunk. This chunk lets you choose
-        the model files (e.g. in &#34;.flt&#34; format) that should be used to
-        represent the user&#39;s head and wand position in simulator mode.
-        Example model files are provided in <filename>$VJ_BASE_DIR/share/vrjuggler/data/models</filename>.</para>
+        graphics API. To configure these features, add a new
+        <property>Performer API</property> element to your configuration. This
+        element lets you choose the model files (e.g. in &#34;.flt&#34;
+        format) that should be used to represent the user&#39;s head and wand
+        position in simulator mode. Example model files are provided in
+        <filename>$VJ_BASE_DIR/share/vrjuggler/data/models</filename>.</para>
       </section>
 
       <section>
         <title>Configuring Audio Features</title>
 
-        <para>The <guilabel>API-specific</guilabel> folder also contains two
-        ConfigChunk types for configuring VR Juggler&#39;s built-in audio
-        capabilities - one for the AudioWorks driver, and one for the SL sound
-        driver. See <citetitle>Sonix: Juggler Simple Sound Interface</citetitle>
-        for more information.</para>
+        <para>There are also special configuration elements for configuring VR
+        Juggler&#39;s built-in audio capabilities - one for the AudioWorks
+        driver, and one for the SL sound driver. See <citetitle>Sonix: Juggler
+        Simple Sound Interface</citetitle> for more information.</para>
       </section>
 
       <section>
         <title>Enabling Dynamic Reconfiguration</title>
 
-        <para>Just below the <guilabel>API-specific</guilabel> folder is the
-        <guilabel>Environment Manager</guilabel> folder. The Environment
-        Manager is part of VR Juggler&#39;s dynamic reconfiguration
-        capability. When it is activated, VjControl can connect to the
-        application to monitor its performance or change its configuration.</para>
-
-        <para>To enable this feature, first create an <property>Environment
-        Manager</property> chunk. This ConfigChunk has two important
-        properties. The first is the <property>Port</property> - the network
-        port that the application will use to listen for connections. You also
-        need to supply this number to VjControl when it tries to open a
-        connection. This argument is typically an integer between 1024 and
-        65535. The second important property is <property>Accept Connections</property>.
-        Obviously, this should be set to True if you want to use
-        VjControl&#39;s monitoring and control capabilities.</para>
+        <note>
+          <para>As of VR Juggler 1.1 DR4, dynamic reconfiguration is not yet
+          fully supported. Once the feature has been added, you will be able
+          to dynamically reconfigure your application through a CORBA
+          connection.</para>
+        </note>
       </section>
 
       <section>
         <title>Logging Performance Data</title>
 
-        <para>Another service provided by the the Environment Manager is
-        performance monitoring of VR Juggler applications. Using VR
-        Juggler&#39;s performance monitoring capabilities requires two simple
-        steps.</para>
-
-        <para>First, we need to tell the application which kinds of
-        performance data to gather. There are three basic categories:</para>
-
-        <itemizedlist>
-          <listitem>
-            <para><constant>Kernel</constant> - collect statistics about VR
-            Juggler&#39;s kernel thread. This includes several
-            application-specific functions that are called by the kernel
-            thread.</para>
-          </listitem>
-
-          <listitem>
-            <para><constant>vjGlPipe</constant> - statistics about VR
-            Juggler&#39;s drawing threads for OpenGL applications. Includes
-            information about the <methodname>draw()</methodname> methods
-            supplied by applications.</para>
-          </listitem>
-
-          <listitem>
-            <para><constant>Head Latency</constant> - information about the
-            latency of the user&#39;s head position data used to draw the
-            scene.</para>
-          </listitem>
-        </itemizedlist>
-
-        <para>These categories can be individually activated and deactivated
-        with a <property>Performance Measurements</property> ConfigChunk
-        (which you can create under the <guilabel>Environment Manager</guilabel>
-        folder in VjControl&#39;s config file editing window) - see <xref
-        linkend="PerformanceChunkFigure" />.</para>
-
-        <figure id="PerformanceChunkFigure">
-          <title>ConfigChunk for activating performance measurements.</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="figures/performance_chunk.png" format="PNG"
-              scale="55" width="4in" />
-            </imageobject>
-          </mediaobject>
-        </figure>
-
-        <para>Secondly, we must tell VR Juggler where to send the performance
-        data once it is collected. This is determined by the
-        <property>Performance Target</property> property in the
-        <property>Environment Manager</property> ConfigChunk. If we are
-        dynamically reconfiguring VR Juggler so that we can view performance
-        while the application is running, the pulldown menu for the
-        <property>Performance Target</property> property will list the network
-        connection between VjControl and the application as a possible target.
-        If that connection is selected, performance data can be viewed in a
-        panel in VjControl (click on the <guilabel>Performance</guilabel>
-        tab).</para>
-
-        <para>We can also send performance data to a file for later
-        evaluation. To do this, first create an <property>EM Connection</property>
-        ConfigChunk (found in the <guilabel>Environment Manager</guilabel>
-        folder in VjControl). This chunk is illustrated in <xref
-        linkend="EMConnectionChunkFigure" />. Here we can select the name of
-        the output file and tell VR Juggler to &#34;activate&#34; it - that
-        is, to open it and write to it. Note that the <property>File Mode</property>
-        property should always be &#34;output&#34; for a log file.</para>
-
-        <para>Once we have created the <property>EM Connection</property> for
-        our log file, we can return to the <property>Environment Manager</property>
-        ConfigChunk and select it as our target for performance data. The
-        output file that results from running the application with this
-        configuration can be loaded into VjControl&#39;s Performance panel for
-        analysis.</para>
-
-        <figure id="EMConnectionChunkFigure">
-          <title>Configuring a log file for VR Juggler performance data.</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="figures/connection_chunk.png" format="PNG"
-              scale="60" width="4in" />
-            </imageobject>
-          </mediaobject>
-        </figure>
+        <note>
+          <para>As of VR Juggler 1.1 DR4, peformance monitoring is not yet
+          fully supported.</para>
+        </note>
       </section>
     </section>
   </chapter>
@@ -801,10 +715,10 @@
       a variety of physical configurations - walls, desktops, angled surfaces,
       etc. All of these display devices can be configured using the same
       technique discussed above for configuring an SSVR system. Simply create
-      a <property>Surface Display</property> chunk, and fill in the values for
-      the screen/desk&#39;s corners relative to the origin of the VR Juggler
-      coordinate system (the origin should typically be a spot on the floor
-      several feet in front of the screen, or possibly directly below a
+      a <property>Surface Display</property> element, and fill in the values
+      for the screen/desk&#39;s corners relative to the origin of the VR
+      Juggler coordinate system (the origin should typically be a spot on the
+      floor several feet in front of the screen, or possibly directly below a
       horizontal desk-type display.</para>
     </section>
 
@@ -814,17 +728,17 @@
       <para>There are a large class of head-mounted displays (HMDs), ranging
       from helmets to glasses to displays mounted on movable arms. These are
       also configured for use with VR Juggler with the <property>Surface
-      Display</property> ConfigChunk, but there are two important differences.</para>
+      Display</property> configuration element but there are two important
+      differences.</para>
 
       <para>The most obvious difference is that these displays do not have a
       fixed position. Instead, they follow the movements of the user&#39;s
       head. To enable this sort of head tracking, turn on the
-      <property>Tracked</property> property toward the bottom of the
-      <property>Surface Display</property> editor window. Next, select a
-      position proxy for the <property>TrackerProxy</property> property
-      (usually, you&#39;ll want to use VJHead for this). Now, the view drawn
-      for this display will change as if it were hooked to a video camera on
-      the user&#39;s head.</para>
+      <property>Tracked</property> property in the <property>Surface Display</property>.
+      Next, select a position proxy for the <property>TrackerProxy</property>
+      property (usually, you&#39;ll want to use VJHead for this). Now, the
+      view drawn for this display will change as if it were hooked to a video
+      camera on the user&#39;s head.</para>
 
       <para>The other difference with an HMD display is that the values for
       the <property>Corners</property> property typically won&#39;t be the
@@ -861,8 +775,8 @@
       document.</para>
 
       <figure id="TrackdChunks">
-        <title>ConfigChunks for the <trademark>Trackd</trademark> input device
-        daemon.</title>
+        <title>Configuration for the <trademark>Trackd</trademark> input
+        device daemon.</title>
 
         <mediaobject>
           <imageobject>
@@ -872,8 +786,8 @@
         </mediaobject>
       </figure>
 
-      <para>VR Juggler uses two kinds of ConfigChunks for communicating with
-      Trackd:</para>
+      <para>VR Juggler uses two kinds of configuration elements for
+      communicating with Trackd:</para>
 
       <itemizedlist>
         <listitem>
@@ -895,7 +809,7 @@
       </itemizedlist>
 
       <para>A VR Juggler configuration can include multiple sensors and
-      controllers, depending only on the number of devices Trackd itself is
+      controllers depending only on the number of devices Trackd itself is
       configured to use.</para>
     </section>
 
@@ -919,37 +833,37 @@
       </figure>
 
       <para>The first step in configuring this kind of tracker is to create an
-      <property>ISense</property> ConfigChunk. It has many of the same fields
-      as every other tracker configuration, such as serial port information
-      and translation/rotation values (see <xref linkend="BasicTrackerConfig" />,
-      above).</para>
+      <property>Intersense</property> configuratiorn element. It has many of
+      the same fields as every other tracker configuration, such as serial
+      port information and translation/rotation values (see <xref
+      linkend="BasicTrackerConfig" />, above).</para>
 
-      <para>The most interesting variation in the ISense driver configuration
-      is the <property>Stations</property> property. This property contains
-      multiple <property>Station</property> ConfigChunks - one for each
-      physical station connected to the InterSense tracking system, as seen in
-      <xref linkend="ISenseChunkFigure" />.</para>
+      <para>The most interesting variation in the InterSense driver
+      configuration is the <property>Stations</property> property. This
+      property contains multiple <property>Station</property> configuration
+      elements, one for each physical station connected to the InterSense
+      tracking system as seen in <xref linkend="ISenseChunkFigure" />.</para>
 
       <para>Each station has an integer ID value (which is determined by the
       order in which it is hooked up to the InterSense system). Since every
-      station provides positional/rotational data, the ISense driver as a
+      station provides positional/rotational data, the Intersense driver as a
       whole provides as many unique positional inputs as it has stations. When
-      you attach Position Proxies to the ISense driver, the unit number in the
-      proxy corresponds to the ID of one of the stations.</para>
+      you attach Position Proxies to the InterSense driver, the unit number in
+      the proxy corresponds to the ID of one of the stations.</para>
 
       <para>The stations may also provide digital and analog data. If the
       <property>Use Digital</property> property in a station is set to true,
-      VR Juggler&#39;s ISense driver will provide its digital data to
+      VR Juggler&#39;s InterSense driver will provide its digital data to
       applications. The <property>Digital First</property> and
       <property>Digital Count</property> properties determine how a
       station&#39;s digital inputs are mapped to unit numbers that can be used
-      to attach Digital Proxies to the ISense driver. For example, if the
+      to attach Digital Proxies to the InterSense driver. For example, if the
       <property>Digital First</property> property for a particular station is
       3, and the <property>Digital Count</property> is 4, the Digital Proxies
       with units of 3, 4, 5, and 6 will provide inputs from this station.
       Values for analog inputs are specified similarly.</para>
 
-      <para>VjControl does not check for conflicts between stations.
+      <para>VRJConfig does not check for conflicts between stations.
       Therefore, you should be careful that you do not specify two stations as
       providing the same digital or analog data unit.</para>
     </section>
@@ -965,10 +879,10 @@
 
       <para>Configuration of the Pinch Glove driver itself is simple. The
       glove hardware attaches to the serial port of the host computer, so the
-      ConfigChunk includes serial port and baud rate properties. Most users
-      attach some kind of a tracking sensor to the gloves, so VR Juggler&#39;s
-      configuration provides a property for specifying a Position Proxy
-      attached to the glove.</para>
+      configuration element includes serial port and baud rate properties.
+      Most users attach some kind of a tracking sensor to the gloves, so VR
+      Juggler&#39;s configuration provides a property for specifying a
+      Position Proxy attached to the glove.</para>
 
       <para>Every VR Juggler input device needs to be attached to a proxy so
       that it can be accessed by applications. For the Pinch Gloves there are
@@ -995,36 +909,35 @@
     in a wide range of settings, where the usual paraphernalia of VR is
     unavailable.</para>
 
-    <para>For all these reasons, VR Juggler supports a set of simulator
-    objects to replace the usual positional, analog, and digital input
-    devices. By configuring these simulated devices, users can interact with
-    an application using only a keyboard and mouse.</para>
+    <para>For all these reasons, VR Juggler supports a set of software devices
+    that simulate real positional, analog, and digital input devices. By
+    configuring these simulated devices, users can interact with an
+    application using only a keyboard and mouse.</para>
 
     <section>
       <title>Creating a Keyboard Input Window</title>
 
       <para>VR Juggler uses keyboard input windows as the source for all
       simulator data. In order to use simulated devices, a configuration file
-      needs to contain at least one <property>Keyboard</property> ConfigChunk
-      (located with all the other input device ConfigChunks in VjControl&#39;s
-      tree display). It may be convenient to use multiple keyboard windows if
-      you are trying to simulate a large number of devices - that way each
-      device can be controlled with the same key bindings, but with a
+      needs to contain at least one <property>Keyboard</property>
+      configuration element. It may be convenient to use multiple keyboard
+      windows if you are trying to simulate a large number of devices - that
+      way each device can be controlled with the same key bindings, but with a
       different keyboard window being active.</para>
 
       <para>The <citetitle>VR Juggler Getting Started Guide</citetitle> gives
       an example of running an application with simulated devices and using
       the keyboard window to control the user&#39;s position and wand buttons.</para>
 
-      <para>The <property>Keyboard</property> ConfigChunk is relatively
-      simple. Its most important properties are simply the size and position
-      of the window to open. It also has a <property>Display Number</property>
+      <para>The <property>Keyboard</property> configuration element is
+      relatively simple. Its most important properties are simply the size and
+      position of the window to open. It also has a <property>Display Number</property>
       property which, like the <property>Pipe</property> property in
       <property>Surface Displays</property> (described above), refers to one
       of the displays named in the <property>Display System</property>
-      ConfigChunk. Usually, that property is set to &#34;-1&#34;.</para>
+      element. Usually, that property is set to &#34;-1&#34;.</para>
 
-      <para>The <property>Keyboard</property> chunk has a few more esoteric
+      <para>The <property>Keyboard</property> element has a few more esoteric
       properties:</para>
 
       <itemizedlist>
@@ -1061,8 +974,8 @@
 
       <para>As with every other VR Juggler input device, in order to use a
       keyboard window you must create a proxy for it. The
-      <property>Keyboard Proxy</property> chunk is very trivial, consisting
-      only of the <property>Keyboard</property> chunk&#39;s name.</para>
+      <property>Keyboard Proxy</property> element is very trivial, consisting
+      only of the <property>Keyboard</property> element&#39;s name.</para>
 
       <para>Note that in VR Juggler 2.0, display windows will also be able to
       serve double duty as keyboard input sources.</para>
@@ -1071,9 +984,7 @@
     <section>
       <title>Creating Simulated Devices</title>
 
-      <para>When editing a configuration file in VjControl, the simulated
-      devices are located in a folder inside the <guilabel>Input</guilabel>
-      folder. There are simulator devices for each kind of input device VR
+      <para>There are simulator devices for each kind of input device VR
       Juggler recognizes.</para>
 
       <figure id="SimDevChunkFigure">
@@ -1096,17 +1007,18 @@
       example, a position simulator will have keystrokes assigned for movement
       in each direction. By comparison, a digital simulator will have a single
       keystroke to indicate &#34;on&#34;, and an analog simulator will have a
-      pair of keystrokes to increase and decrease its value. The ConfigChunks
-      for digital and analog simulators can actually configure multiple
-      instances of each, just by creating additional keystrokes. Some sample
-      simulator ConfigChunks are shown in <xref linkend="SimDevChunkFigure" />.
-      Note how the digital simulator on the right simulates 8 separate digital
-      values, using a combination of mouse buttons and number keys.</para>
+      pair of keystrokes to increase and decrease its value. The configuration
+      elements for digital and analog simulators can actually configure
+      multiple instances of each, just by creating additional keystrokes. Some
+      sample simulator configuration elements are shown in <xref
+      linkend="SimDevChunkFigure" />. Note how the digital simulator on the
+      right simulates 8 separate digital values, using a combination of mouse
+      buttons and number keys.</para>
 
       <para>Just like every other input device, simulator devices must be
       connected to proxies before they can be used by VR Juggler. Simulated
-      devices use the exact same proxy ConfigChunks as real hardware devices,
-      and the proxies are configured with the same combination of (simulated)
+      devices use the exact same proxy elements as real hardware devices and
+      the proxies are configured with the same combination of (simulated)
       device name and unit number. Note that position simulators (as well as
       the glove simulator objects) only supply one set of input data, so the
       <property>Unit</property> property for any proxy referring to them
