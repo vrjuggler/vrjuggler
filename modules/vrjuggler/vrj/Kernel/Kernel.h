@@ -71,8 +71,8 @@ class App;
 /**
  * Main control class for all vj applications.
  *
- * Takes care of all initialization and object creation for the system.
- * This class is the only class that MUST be instantiated for all application
+ * The kernel takes care of all initialization and object creation.  This
+ * class is the only class that MUST be instantiated for all application
  * objects.
  */
 class VJ_CLASS_API Kernel : public jccl::ConfigElementHandler
@@ -85,7 +85,8 @@ public:
    /**
     * Stops the kernel control loop.
     * If there is an application set, then it will be closed first.
-    * @post The kernel exits and the VR Juggler system shuts down.
+    *
+    * @post The kernel exits, and the VR Juggler system shuts down.
     */
    void stop();
 
@@ -110,16 +111,20 @@ public:
 
    /**
     * Sets the application object for the Kernel to deal with.
-    * If there is another app active, it has to stop that application first
-    * then restart all API-specific Managers.
+    * If there is another application active, the kernel has to stop that
+    * application first and then restart all the graphics API-specific
+    * Managers.
     *
     * @param newApp If NULL, stops current application.
     */
    void setApplication(vrj::App* newApp);
 
    /**
-    * Loads configuration data for Kernel.
-    * @post Config data has been read into initial buffer.
+    * Loads configuration data for the kernel.
+    *
+    * @post Config data has been read into initial the buffer.
+    *
+    * @param filename The name of the configuration file to load.
     */
    void loadConfigFile(const char* filename)
    {
@@ -128,8 +133,11 @@ public:
    }
 
    /**
-    * Loads configuration data for Kernel.
-    * @post Config data has been read into initial buffer.
+    * Loads configuration data for the kernel.
+    *
+    * @post Config data has been read into initial the buffer.
+    *
+    * @param filename The name of the configuration file to load.
     */
    void loadConfigFile(std::string filename);
 
@@ -137,14 +145,13 @@ public:
     * Scans the given directory (or directories) for .jdef files and loads all
     * discovered files into the JCCL Element Factory.
     *
-    * @post The const element factory can now manage elements with the
+    * @post The config element factory can now manage elements with the
     *       discovered types.
     *
     * @param path One or more directories, delineated by a platform-specific
     *             path separator, that will be searched for .jdef files.
     */
    void scanForConfigDefinitions(const std::string& path);
-
 
 protected:  // -- CONFIG ELEMENT HANDLER
    /**
@@ -155,7 +162,9 @@ protected:  // -- CONFIG ELEMENT HANDLER
 
    /**
     * Adds the element to the configuration.
-    * @pre    configCanHandle(element) == true.
+    *
+    * @pre configCanHandle(element) == true.
+    *
     * @return Success.
     */
    virtual bool configAdd(jccl::ConfigElementPtr element);
@@ -235,7 +244,10 @@ public:      // Global "get" interface
    gadget::InputManager* getInputManager();
 
    /**
-    * Gets the user associated with given name.
+    * Gets the user associated with the given name.
+    *
+    * @param userName The name of the user to return.
+    *
     * @return NULL if not found.
     */
    vrj::User* getUser(const std::string& userName);

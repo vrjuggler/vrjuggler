@@ -45,14 +45,14 @@ namespace vrj
 /**
  * Representation for Juggler user in multi-user environments.
  *
- * Each user has a system assigned id as well as a string name from the 'user'
- * config element the created the user.  These ids can be used to identify a
- * user at set points in a VR Juggler application where user information is
- * is given.
+ * Each user has a system-assigned ID as well as a string name from the 'user'
+ * config element that created the user.  These IDs can be used to identify a
+ * user at set points in the execution of a VR Juggler application object
+ * where user information is given.
  *
- * The system-assigned ID number can also be useful to use as an index into a
+ * The system-assigned ID number can also be useful as an index into a
  * program array (or other data structure) that stores user-specific data
- * (for example, nativgation matrices or input devices).
+ * such as navigation matrices or input devices.
  */
 class VJ_CLASS_API User
 {
@@ -74,7 +74,7 @@ public:
    int getId();
 
    /**
-    * Returns the name of the user object.
+    * Returns the name of this user object.
     * @post String name of the head.
     */
    std::string getName();
@@ -91,17 +91,23 @@ public:
       return mHead.getProxy();
    }
 
+   /** Returns the time stamp of the last head tracker update. */
    vpr::Interval getHeadUpdateTime()
-   { return mHead->getTimeStamp(); }
-   // Get eye separation
+   {
+      return mHead->getTimeStamp();
+   }
+
+   /** Gets the eye separation. */
    float getInterocularDistance()
-   { return mInterocularDist;}
+   {
+      return mInterocularDist;
+   }
 
 private:
-   int               mUserId;           /**< The ID of the user. */
-   std::string       mName;             /**< The string name of the user. */
-   gadget::PositionInterface    mHead;  /**< The head positon. */
-   float             mInterocularDist;  /**< Eye seperation */
+   int                       mUserId;      /**< The ID of the user. */
+   std::string               mName;        /**< The string name of the user. */
+   gadget::PositionInterface mHead;            /**< The head positon. */
+   float                     mInterocularDist; /**< Eye seperation */
 
 private:
    static int mNextUserId;     /**< the next user id to assign */

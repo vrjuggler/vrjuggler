@@ -45,37 +45,36 @@ namespace vrj
    class Kernel;
 
 /**
- * GlApp: Encapulates an actual OpenGL application.
- *
- * This class defines the class form which OpenGL application classes should
- * be derived.  The interface given is the interface that the kernel and
- * OpenGL Draw Manager expect in order to interact with the application.
+ * vrj::GlApp encapulates an actual OpenGL application object.
+ * This class defines the class from which OpenGL-based application classes
+ * should be derived.  The interface given is what the kernel and the OpenGL
+ * Draw Manager expect in order to interact with the application.
  *
  * The control loop will look similar to this:
  *
  * \code
- *  contextInit();                 // called for each context
- *  while (drawing)
- *  {
- *     preFrame();
- *     latePreFrame();
- *     bufferPreDraw();            // called for each draw buffer
- *     contextPreDraw();           // called for each context
- *     draw();                     // called for each viewport
- *     contextPostDraw();          // called for each context
- *     intraFrame();               // called in parallel to the draw functions
- *     sync();
- *     postFrame();
+ * glapp_obj->contextInit();        // called for each context
+ * while (drawing)
+ * {
+ *    glapp_obj->preFrame();
+ *    glapp_obj->latePreFrame();
+ *    glapp_obj->bufferPreDraw();   // called for each draw buffer
+ *    glapp_obj->contextPreDraw();  // called for each context
+ *    glapp_obj->draw();            // called for each viewport
+ *    glapp_obj->contextPostDraw(); // called for each context
+ *    glapp_obj->intraFrame();      // called in parallel to the draw functions
+ *    sync();
+ *    glapp_obj->postFrame();
  *
- *     UpdateTrackers();
- *  }
+ *    updateAllDevices();
+ * }
  *
- *  contextClose();                // called for each context
+ * glapp_obj->contextClose();       // called for each context
  * \endcode
  *
  * @note One time through the loop is a Juggler Frame.
  *
- * @see App
+ * @see vrj::App, vrj::Kernel
  */
 class VJ_CLASS_API GlApp : public App
 {
@@ -86,68 +85,82 @@ public:
 
    virtual ~GlApp();
 
-   /** Function to draw the scene.
-    * Override this function with the user draw routine.
+   /**
+    * Function that renders the scene.
+    * Override this function with the user rendering routine.
+    *
     * @pre OpenGL state has correct transformation and buffer selected.
     * @post The current scene has been drawn.
     */
    virtual void draw() = 0;
 
-   /** Function that is called immediately after a new context is created.
-    *  Use this function to create context specific data structures.
-    *  i.e. Display lists, Texture objects, etc.
+   /**
+    * Function that is called immediately after a new context is created.
+    * Use this function to create context-specific data structures such as
+    * display lists and texture objects that are known to be required when
+    * the context is created..
+    *
     * @pre The OpenGL context has been set to the new context.
-    * @post Application has completed in initialization the user wishes.
+    * @post The application has completed context-specific initialization.
     */
    virtual void contextInit()
    {;}
 
-   /** Function that is called immediately before a context is closed.
-    * Use the function to clean up any context data structures.
+   /**
+    * Function that is called immediately before a context is closed.
+    * Use this function to clean up any context-specific data structures.
     */
    virtual void contextClose()
    {;}
 
-   /** Function that is called upon entry into the context for a draw.
+   /**
+    * Function that is called upon entry into the context before rendering.
+    * This can be used to allocate context-specific data dynamically.
+    *
     * @pre The OpenGL context has been set to the context for drawing.
-    * @post User application has executed any commands that need
-    *   to only be executed once per context, per frame.
+    * @post The application object has executed any commands that need to be
+    *       executed only once per context, per frame.
+    *
     * @note This function can be used for things that need to happen
-    *       every frame, but only once per context.
-    *  <br>
-    * Ex: Dynamically Create display lists.
+    *       every frame but only once per context.
     */
    virtual void contextPreDraw()
    {;}
 
-   /** Function that is called upon exit of the context for a draw.
+   /**
+    * Function that is called upon exit of the context after rendering.
+    *
     * @pre The OpenGL context has been set to the context for drawing.
     */
    virtual void contextPostDraw()
    {;}
 
-   /** Function that is called once for each frame buffer of a gl context.
+   /**
+    * Function that is called once for each frame buffer of an OpenGL context.
     * This function is executed after contextInit() (if needed) but before
-    * contextPreDraw().  It is called once per framebuffer (see note).
+    * contextPreDraw().  It is called once per frame buffer (see note).
     *
-    * @pre The OpenGL context has been set to the context for drawing
-    * @post User application has executed any commands that need
-    *   to only be executed once per context, per buffer, per frame
-    * @note This function is designed to be used when you want to do something
-    *       only once per frame buffer (i.e. once for left buffer, once for
-    *       right buffer)
-    * <br>
-    * Ex: glClear's need to be done in this method
+    * @pre The OpenGL context has been set to the context for drawing.
+    * @post The application object has executed any commands that need to be
+    *        executed once per context, per buffer, per frame.
+    *
+    * @note This function is designed to be used when some task must be
+    *       performed only once per frame buffer (i.e., once for the left
+    *       buffer, once for the right buffer).  For example, the OpenGL clear
+    *       color should be defined and glClear(GL_COLOR_BUFFER_BIT) should be
+    *       called in this method.
     */
    virtual void bufferPreDraw()
    {;}
 
-   /** Function that is called at the beginning of the drawing of each pipe.
+   /**
+    * Function that is called at the beginning of the drawing of each pipe.
+    *
     * @pre The library is preparing to render all windows on a given pipe.
     * @post Any pre-pipe user calls have been done.
+    *
     * @note Currently the OpenGL context is not set when this function is
-    *       called.<br>
-    *       This is a TEST function.  USE AT YOUR OWN RISK!!!
+    *       called.  This is a TEST function.  USE AT YOUR OWN RISK!!!
     */
    virtual void pipePreDraw()
    {;}

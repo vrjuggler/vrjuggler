@@ -47,7 +47,7 @@ class Projection;
 class User;
 
 /**
- * Base class for window viewports.  Base class for all viewport data.
+ * Base class for window viewports and for all viewport data.
  * Stores projection data, viewport info, and relevant user.
  *
  * @date 3-5-2001
@@ -93,7 +93,7 @@ public:
       ;
    }
 
-   /** Type of viewport */
+   /** Type of viewport. */
    enum Type
    {
       UNDEFINED,  /**< Undefined type */
@@ -101,7 +101,7 @@ public:
       SIM         /**< Simulator viewport */
    };
 
-   /** Used for referencing which eye(s) to draw */
+   /** Used for referencing which eye(s) to draw. */
    enum View
    {
       NONE=0,       /**< Neither eye */
@@ -113,44 +113,52 @@ public:
 public:
    /**
     * Takes a viewport element and configures the display based one it.
+    *
     * @pre element is a valid configuration element.
     * @post viewport is configured.
-    *        If there is an error is the specified config, we output error
-    *        and "fix" the error.
+    *       If there is an error is the specified config, we output error
+    *       and "fix" the error.
     *
     * @note All derived viewport classes MUST call this function
-    *        after doing local configuration.
+    *       after doing local configuration.
     */
    virtual void config(jccl::ConfigElementPtr element);
 
    /**
-    * Updates the projection data for this display.
-    * Uses the data for the head position for this window.
-    * @param positionScale - Scale value for converting from Juggler units (meters) to the display units
+    * Updates the projection data for this viewport.  This uses the data from
+    * the head position for this viewport.
+    *
+    * @param positionScale Scale value for converting from Juggler units
+    *                      (meters) to the display units
     */
    virtual void updateProjections(const float positionScale) = 0;
 
 public:
+   /** Gets the type of this viewport. */
    Viewport::Type getType() const
    {
       return mType;
    }
 
+   /** Determines if this is a simulator viewport. */
    bool isSimulator() const
    {
       return (mType == SIM);
    }
 
+   /** Determines if this is a surface viewport. */
    bool isSurface() const
    {
       return (mType == SURFACE);
    }
 
+   /** Determines if this viewport is active. */
    bool isActive() const
    {
       return mActive;
    }
 
+   /** Sets the name of this viewport. */
    void setName(const std::string& name)
    {
       mName = name;
@@ -163,6 +171,8 @@ public:
    }
 
    /**
+    * Determines if this viewport is rendering in stereo.
+    *
     * @note If we are in simulator, we can not be in stereo.
     */
    bool inStereo() const
@@ -170,12 +180,13 @@ public:
       return (mView == STEREO);
    }
 
-   // Which view are we supposed to render
+   /** Which view are we supposed to render? */
    Viewport::View getView()
    {
       return mView;
    }
 
+   /** Sets the origin and size of this viewport. */
    void setOriginAndSize(const float xOrigin, const float yOrigin,
                          const float width, const float height)
    {
@@ -185,6 +196,7 @@ public:
       mYsize   = height;
    }
 
+   /** Gets the origin and size of this viewport. */
    void getOriginAndSize(float& xOrigin, float& yOrigin, float& width,
                          float& height)
       const
@@ -201,27 +213,31 @@ public:
       return mViewportElement;
    }
 
-   /** Gets the user associated with this display. */
+   /** Gets the user associated with this viewport. */
    User* getUser()
    {
       return mUser;
    }
 
+   /** Sets the display containing this viewport. */
    void setDisplay(Display* disp)
    {
       mDisplay = disp;
    }
 
+   /** Gets the display containing this viewport. */
    Display* getDisplay()
    {
       return mDisplay;
    }
 
+   /** Gets the left projection. */
    Projection* getLeftProj()
    {
       return mLeftProj;
    }
 
+   /** Gets the right projection. */
    Projection* getRightProj()
    {
       return mRightProj;
