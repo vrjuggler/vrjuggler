@@ -57,9 +57,7 @@ public class EditContextPopup
       }
 
       contextTable.setModel(model);
-      contextTable.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
-      contextTable.setAutoCreateColumnsFromModel(false);
-      contextTable.getColumnModel().getColumn(0).setWidth(75);
+      contextTable.getColumnModel().getColumn(0).setMaxWidth(50);
       contextTable.setShowGrid(false);
       contextTable.setRowSelectionAllowed(false);
       contextTable.setColumnSelectionAllowed(false);
