@@ -253,7 +253,16 @@ void SubjectManagerImpl::initInfoMap()
    vpr::InetAddr local_addr;
    vpr::InetAddr::getLocalHost(local_addr);
 
-   mInfoMap["Hostname"] = local_addr.getHostname();
+   std::string hostname;
+
+   if ( local_addr.getHostname(hostname).success() )
+   {
+      mInfoMap["Hostname"] = hostname;
+   }
+   else
+   {
+      mInfoMap["Hostname"] = std::string("Unknown");
+   }
 
    std::string user_name;
 
