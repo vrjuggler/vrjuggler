@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<!-- Standard header -->
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="keywords" content="VR, Virtual Reality, Audio, 
+               juggler, vrjuggler, sound, audio, abstraction, API, virtual,
+               metaverse, vis, sim, vis/sim, vissim, 3D,
+               games, game, engine, object oriented,
+               opensource, kevin, meinert, 
+               carolina, cruz, allen, bierbaum, patrick,
+               hartling, chris, just">
+   <meta name="description" content="VR Juggler sound abstraction 
+            - SONIX (cross platform open source audio abstraction)">
+   <meta name="Content-Language" content="en">
+   <meta name="author" content="Kevin Meinert">
+   <meta name="ROBOTS" content="ALL">
+   <meta name="AUDIENCE" content="All">
+   <meta name="revisit-after" content="20 days">
+   <meta name="generator" content="Kevin's Brain!">
+   <meta name="distribution" content="global">
+
+<link rel="stylesheet" type="text/css" href="base_style.css">
+<!-- Standard header end -->
+
+<HTML>
+
+<HEAD>
+<TITLE>VR Juggler sound abstraction - SONIX (cross platform open source sound abstraction)</TITLE>
+</HEAD>
+
+<BODY>
+   <H1><b class="blue">::|&nbsp;</b>SONIX</H1>
+   <small><B class="puke">VRJUGGLER</B><BR>
+   lowlevel sound abstraction</small><BR>
+   <HR>
+   <p>
+   subsystem abstraction for audio hardware or audio APIs, reconfigurable
+   allowing audio APIs to be safely swapped out at runtime without the
+   dependant systems noticing.  systems using this layer expect to be
+   completely portable.  changing sound APIs at run time will be useful so 
+   that the user can play with quality and latency differences of different 
+   hardware and different soud APIs
+
+   <p>
+   Brief technical description of Sonix capabilities:
+   <ul>
+   <li> reconfig of sound abstraction doesn't break application, 
+      sound abstraction allows only protected access to sound resources.
+   <li> an application should be able to change APIs or hardware device API is using
+     without the resource handles having to be reset manually.  
+   <li> Changing a resource through its resource handle should reflect properly 
+     in all other handles to that same resource (rsrc will have multiple users)
+   </ul>
+   
+</BODY>
+</HTML>
