@@ -12,14 +12,11 @@
 #include "aj/Matrix44.h"
 #include "aj/Vec3.h"
 #include "aj/MatVec.h"
-
 #include "aj/FileIO.h"
-
 #include "aj/SoundImplementation.h"
 #include "aj/SoundInfo.h"
 
 #include "aj/plugins/OpenALSoundImplementation.h"
-
 
 #include "aj/SoundFactory.h"
 namespace aj
