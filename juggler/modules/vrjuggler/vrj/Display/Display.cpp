@@ -112,7 +112,7 @@ void Display::configViewports(jccl::ConfigChunkPtr chunk)
    unsigned num_sim_vps = chunk->getNum("sim_viewports");
    unsigned num_surface_vps = chunk->getNum("surface_viewports");
 
-   jccl::ConfigChunkPtr vp_chunk(0);
+   jccl::ConfigChunkPtr vp_chunk;
    SimViewport* sim_vp = NULL;
    SurfaceViewport* surf_vp = NULL;
 

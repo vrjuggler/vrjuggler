@@ -59,7 +59,7 @@ Property::Property (PropertyDesc *pd): mValues()
 
    mNum = pd->getNumAllowed();
    mType = pd->getType();
-   mEmbedDesc.reset(NULL);
+   mEmbedDesc.reset();
 
    if ( mType == T_EMBEDDEDCHUNK )
    {

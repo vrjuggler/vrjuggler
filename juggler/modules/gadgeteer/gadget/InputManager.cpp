@@ -63,7 +63,7 @@ bool recognizeRemoteConnectionConfig(jccl::ConfigChunkPtr chunk);
   InputManager Constructor
 
 *********************************************** ahimberg */
-InputManager::InputManager() : mDisplaySystemChunk(NULL)
+InputManager::InputManager()
 {
    mRemoteInputManager = new RemoteInputManager(this);
 }
@@ -165,7 +165,7 @@ bool InputManager::configRemove(jccl::ConfigChunkPtr chunk)
       ret_val = removeProxy(chunk);
    else if(std::string(chunk->getType()) == std::string("displaySystem"))
    {
-      mDisplaySystemChunk.reset(0);     // Keep track of the display system chunk
+      mDisplaySystemChunk.reset();     // Keep track of the display system chunk
       ret_val = true;                  // We successfully configured.
                                        // This tell processPending to remove it to the active config
    }

@@ -84,7 +84,7 @@ ConfigChunkPtr ChunkFactory::createChunk (ChunkDescPtr d, bool use_defaults)
    }
    else
    {
-      return ConfigChunkPtr(0);
+      return ConfigChunkPtr();
    }
 }
 

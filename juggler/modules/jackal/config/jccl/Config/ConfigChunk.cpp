@@ -233,7 +233,7 @@ ConfigChunkPtr ConfigChunk::getEmbeddedChunk (const std::string &path)
 
    if ( vjstrcasecmp (ch->getName(), path /*getFirstNameComponent (path)*/) )
    {
-      return ConfigChunkPtr(0);
+      return ConfigChunkPtr();
    }
    else
    {

@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ---------   --------------------------------------------------------
+May-22-2002 allenb      Updated to work with Boost 0.1.28.
 May-02-2002 allenb      Added test cases for ConfigChunk.
 Apr-29-2002 nonchocoboy Modularized directory structure.
                         NEW VERSION: 0.1.0

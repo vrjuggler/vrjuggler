@@ -221,12 +221,12 @@ VarValue::operator ConfigChunkPtr() const
       case VJ_T_INVALID:
          vprDEBUG(jcclDBG_CONFIG,4) << using_invalid_msg.c_str() << 2
                                     << std::endl << vprDEBUG_FLUSH;
-         return ConfigChunkPtr(0);
+         return ConfigChunkPtr();
       default:
          vprDEBUG(vprDBG_ERROR,0)
             << "VarValue: type mismatch in cast to ConfigChunkPtr - real type is "
             << typeString(type) << ".\n" << vprDEBUG_FLUSH;
-         return ConfigChunkPtr(0);
+         return ConfigChunkPtr();
    }
 }
 

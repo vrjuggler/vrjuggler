@@ -64,7 +64,7 @@ ChunkDescPtr ChunkDescDB::getChunkDesc (const std::string& _token)
       }
    }
 
-   return ChunkDescPtr(NULL);
+   return ChunkDescPtr();
 }
 
 
