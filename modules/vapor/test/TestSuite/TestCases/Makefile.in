@@ -57,6 +57,7 @@ SUBDIR		= DynLoad	\
                   Util
 
 SRCS		= BoostTest.cpp		\
+                  FileUtilsTest.cpp	\
                   SystemTest.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
