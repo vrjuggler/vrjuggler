@@ -26,6 +26,8 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 GUID = Class('vpr::GUID', 'vpr/Util/GUID.h')
+exclude(GUID.readObject)
+exclude(GUID.writeObject)
 exclude(GUID.mGuid)
 
 Class('vpr::Interval', 'vpr/Util/Interval.h')
