@@ -63,7 +63,8 @@ namespace vpr
 #ifdef VPR_OS_Win32
 typedef RETSIGTYPE (__cdecl *SignalHandler_t)(int);
 #else
-#if defined(VPR_OS_IRIX) && defined(__GNUC__)
+#if defined(VPR_OS_IRIX) && defined(__GNUC__) && \
+    __GNUC__ == 3 && __GNUC_MINOR__ < 1
 typedef RETSIGTYPE (*SignalHandler_t)();
 #else
 typedef RETSIGTYPE (*SignalHandler_t)(int);
