@@ -30,16 +30,15 @@ Table of contents:
 
 --------------------------------------------------------------------------
 
-1.) Choose a directory to put Juggler.
-setenv source_code_dir /home/users/joeuser/src
+1.) Choose a directory to put Juggler. [JUGGLER_DIR]
 
 2.) Goto that directory and checkout juggler using CVS
     NOTE: make sure CVS is set up, and pointing to the Juggler repository.
-cd "$source_code_dir"
+cd [JUGGLER_DIR]
 cvs checkout juggler
 
 3.) Enter the newly checked out Juggler source directory
-cd "$source_code_dir"/juggler
+cd [JUGGLER_DIR]/juggler
 
 4.) Set the environment variable VJ_BASE_DIR
     NOTE: This is required by Juggler's build system (makefiles, etc..) 
@@ -52,7 +51,7 @@ cd "$source_code_dir"/juggler
 	      Juggler files will be created in (some-directory)/instlinks/..
 	      (in other words, files are created one dir back from instlinks)
     NOTE: Make sure this line is in your .tcshrc or .cshrc file.
-setenv VJ_BASE_DIR "$source_code_dir"/juggler/instlinks
+setenv VJ_BASE_DIR [JUGGLER_DIR]/juggler/instlinks
 
 
 5.) Compile juggler (using the autoconf system, and gnu-make):
@@ -64,7 +63,7 @@ autoconf
     
     c.) Probe the system for capabilities, generate Makefiles, etc...
         this "configures" the source tree for the current system
-"$source_code_dir"/juggler/configure
+[JUGGLER_DIR]/juggler/configure
 
     d.) "Make" the distribution using gnu-make.  
         This compiles, links, and creates the final distribution tree 
@@ -77,7 +76,7 @@ gmake
         Run this in the directory you want compiler output to go to.
 	NOTE: You can change the word "myBuildDirectory" to a name of 
 	      your choice.
-setenv a_different_build_dir myBuildDirectory
-mkdir "$source_code_dir"/juggler/"$a_different_build_dir"
-cd "$source_code_dir"/juggler/"$a_different_build_dir"
-"$source_code_dir"/juggler/configure
+Choose a build dir: [BUILD_DIR] 
+mkdir [JUGGLER_DIR]/juggler/[BUILD_DIR]
+cd [JUGGLER_DIR]/juggler/[BUILD_DIR]
+[JUGGLER_DIR]/juggler/configure
