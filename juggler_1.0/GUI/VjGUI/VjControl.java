@@ -158,54 +158,22 @@ public class VjControl {
 	p = ch.getPropertyFromToken ("descfiles");
 	for (i = 0; i < p.getNum(); i++) {
 	    s = p.getVal(i).getString();
-	    s = stringReplacements (s);
 	    auto_descdbnames.addElement (s);
 	}
 	p = ch.getPropertyFromToken ("chunkfiles");
 	for (i = 0; i < p.getNum(); i++) {
 	    s = p.getVal(i).getString();
-	    s = stringReplacements (s);
 	    auto_chunkdbnames.addElement (s);
 	}
 	p = ch.getPropertyFromToken ("defaultchunkfiles");
 	if (p != null) 
 	    for (i = 0; i < p.getNum(); i++) {
 		s = p.getVal(i).getString();
-		s = stringReplacements (s);
 		auto_defaultchunkdbnames.addElement (s);
 	    }
     }
-
     
 
-    private static String stringReplacements (String s) {
-	// replace "HOME" and "VJ_BASE_DIR" in the string buffer w/
-	// proper values i hope..........
-	int i, j;
-	String homedir, basedir;
-
-	homedir = System.getProperty ("user.home");
-	if (homedir == null)
-	    homedir = ".";
-	basedir = System.getProperty ("VJ_BASE_DIR");
-	if (basedir == null)
-	    basedir = ".";
-
-	i = s.indexOf ("HOME");
-	if (i != -1) {
-	    s = s.substring (0, i) +
-		homedir +
-		s.substring (i + 4);
-	}
-	i = s.indexOf ("VJ_BASE_DIR");
-	if (i != -1) {
-	    s = s.substring (0, i) +
-		basedir +
-		s.substring (i + 11);
-	}
-	//System.out.println ("stringReplacement: '" + s + "'");
-	return s;
-    }
 
 }
 

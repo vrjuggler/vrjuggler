@@ -18,12 +18,44 @@ import VjGUI.*;
 
 public class FileControl {
 
-    final static String basedir_varname = "VJ_BASE_DIR";
+    static String vjbasedir = null;
+    static String homedir = null;
+
+
+    private static String mangleFileName (String s) {
+	// replace "HOME" and "VJ_BASE_DIR" in the string buffer w/
+	// proper values i hope..........
+
+	if (vjbasedir == null) {
+	    homedir = System.getProperty ("user.home");
+	    if (homedir == null)
+		homedir = ".";
+	    vjbasedir = System.getProperty ("VJ_BASE_DIR");
+	    if (vjbasedir == null)
+		vjbasedir = ".";
+	}
+
+	if (s == null)
+	    return "";
+
+	if (s.startsWith ("$VJ_BASE_DIR"))
+	    s = vjbasedir + s.substring (12);
+	else if (s.startsWith ("VJ_BASE_DIR"))
+	    s = vjbasedir + s.substring (11);
+	else if (s.startsWith ("$HOME"))
+	    s = homedir + s.substring (5);
+	else if (s.startsWith ("HOME"))
+	    s = homedir + s.substring (4);
+
+	//System.out.println ("stringReplacement: '" + s + "'");
+	return s;
+    }
+
 
 
     public static void loadVjControlConfig() {
 	ConfigStreamTokenizer st;
-	File f1, f2 = null;
+	File f1 = null;
 	FileReader r;
 	InputStreamReader inr;
 	String homedir;
@@ -41,26 +73,22 @@ public class FileControl {
 	}
 		
 	try {
- 	    homedir = System.getProperty ("user.home", "");
-	    f1 = new File (homedir, ".vjconfig");
-	    f2 = new File (f1, "vjcontrol.cfg");
-	    Core.gui_chunkdb.setName (f2.getName());
-	    Core.gui_chunkdb.setFile (f2);
-	    r = new FileReader (f2);
+	    f1 = new File (mangleFileName ("$HOME/.vjconfig/vjcontrol.cfg"));
+	    Core.gui_chunkdb.setName (f1.getName());
+	    Core.gui_chunkdb.setFile (f1);
+	    r = new FileReader (f1);
 	    Core.gui_chunkdb.read (new ConfigStreamTokenizer (r));
 	}
 	catch (FileNotFoundException e2) {
 	    try {
-		homedir = System.getProperty (basedir_varname);
-		f1 = new File (homedir, "Data");
-		f2 = new File (f1, "vjcontrol.cfg");
-		Core.gui_chunkdb.setName (f2.getName());
-		Core.gui_chunkdb.setFile (f2);
-		r = new FileReader (f2);
+		f1 = new File (mangleFileName ("$VJ_BASE_DIR/Data/vjcontrol.cfg"));
+		Core.gui_chunkdb.setName (f1.getName());
+		Core.gui_chunkdb.setFile (f1);
+		r = new FileReader (f1);
 		Core.gui_chunkdb.read (new ConfigStreamTokenizer (r));
 	    }
 	    catch (FileNotFoundException e3) {
-		Core.consoleErrorMessage ("FileControl","Couldn't load " + f2);
+		Core.consoleErrorMessage ("FileControl","Couldn't load " + f1);
 		return;
 	    }
 	}
@@ -71,21 +99,17 @@ public class FileControl {
     public static void loadMainChunkOrgTree () {
 	FileReader r;
 	ConfigStreamTokenizer st;
-	File f1, f2;
+	File f1;
 	String homedir;
 
 	try {
-	    homedir = System.getProperty ("user.home", "");
-	    f1 = new File (homedir, ".vjconfig");
-	    f2 = new File (f1, "orgtree.org");
-	    r = new FileReader (f2);
+	    f1 = new File (mangleFileName ("$HOME/.vjconfig/orgtree.org"));
+	    r = new FileReader (f1);
 	}
 	catch (FileNotFoundException e) {
 	    try {
-		homedir = System.getProperty (basedir_varname);
-		f1 = new File (homedir, "Data");
-		f2 = new File (f1, "orgtree.org");
-		r = new FileReader(f2);
+		f1 = new File (mangleFileName ("$VJ_BASE_DIR/Data/orgtree.org"));
+		r = new FileReader(f1);
 	    }
 	    catch (FileNotFoundException e2) {
 		Core.consoleErrorMessage ("FileControl", "Couldn't find default organization tree");
@@ -93,10 +117,10 @@ public class FileControl {
 	    }
 	}
 
-	Core.consoleInfoMessage ("FileControl", "Loading organization tree: " + f2);
+	Core.consoleInfoMessage ("FileControl", "Loading organization tree: " + f1);
 	st = new ConfigStreamTokenizer (r);
-	Core.chunkorgtree.setName (f2.getName());
-	Core.chunkorgtree.setFile (f2);
+	Core.chunkorgtree.setName (f1.getName());
+	Core.chunkorgtree.setFile (f1);
 	Core.chunkorgtree.read(st);
 	Core.rebuildAllTrees();
     }
@@ -107,6 +131,8 @@ public class FileControl {
 	File f;
 	FileReader r;
 	ConfigStreamTokenizer st;
+
+	name = mangleFileName (name);
 
 	if (showrequester) {
 	    f = requestOpenFile(name);
@@ -138,7 +164,7 @@ public class FileControl {
 	    dir = System.getProperty("user.dir");
 	/* opens up a file requester... */
 	JFileChooser chooser = new JFileChooser(dir);
-	chooser.addChoosableFileFilter (new SuffixFilter("Config Files (*.cfg)", ".cfg"));
+	chooser.addChoosableFileFilter (new SuffixFilter("Config Files (*.config)", ".config"));
 	chooser.addChoosableFileFilter (new SuffixFilter("Description Files (*.dsc)", ".dsc"));
 	chooser.setFileHidingEnabled (false);
 	chooser.setDialogType(JFileChooser.OPEN_DIALOG);
@@ -156,6 +182,8 @@ public class FileControl {
     // adding anything into the gui's list of chunkdb's... useful
     // for loading the default chunkdb and keeping it hidden
     public static boolean loadChunkDBFileInto (ConfigChunkDB chunkdb, String currentdir) {
+	currentdir = mangleFileName (currentdir);
+
 	File f = null;
 	FileReader r;
 	ConfigStreamTokenizer st;
@@ -180,46 +208,49 @@ public class FileControl {
     }
 
 
-  public static String loadNewChunkDBFile (String currentdir, boolean showrequester) {
-    File f;
-    FileReader r;
-    ConfigStreamTokenizer st;
+    public static String loadNewChunkDBFile (String currentdir, boolean showrequester) {
+	currentdir = mangleFileName (currentdir);
 
-    if (showrequester) {
-      f = requestOpenFile(currentdir);
-      if (f == null)
-	return null;
-    }
-    else {
-      f = new File (currentdir);
-    }
-    Core.consoleInfoMessage ("FileControl", "Loading ChunkDB: " + f);
-    try {
-      r = new FileReader (f);
-      st = new ConfigStreamTokenizer(r);
-      ConfigChunkDB chunkdb = new ConfigChunkDB(Core.descdb);
-      chunkdb.setName(f.getName());
-      chunkdb.setFile(f);
-      chunkdb.read(st);
-      Core.addChunkDB (chunkdb);
+	File f;
+	FileReader r;
+	ConfigStreamTokenizer st;
 
-      // load included files...
-      Vector v = chunkdb.getOfDescToken("vjIncludeFile");
-      for (int i = 0; i < v.size(); i++)
-	  loadNewChunkDBFile(((ConfigChunk)v.elementAt(i)).getName(), false);
+	if (showrequester) {
+	    f = requestOpenFile(currentdir);
+	    if (f == null)
+		return null;
+	}
+	else {
+	    f = new File (currentdir);
+	}
+	Core.consoleInfoMessage ("FileControl", "Loading ChunkDB: " + f);
+	try {
+	    r = new FileReader (f);
+	    st = new ConfigStreamTokenizer(r);
+	    ConfigChunkDB chunkdb = new ConfigChunkDB(Core.descdb);
+	    chunkdb.setName(f.getName());
+	    chunkdb.setFile(f);
+	    chunkdb.read(st);
+	    Core.addChunkDB (chunkdb);
+	    
+	    // load included files...
+	    Vector v = chunkdb.getOfDescToken("vjIncludeFile");
+	    for (int i = 0; i < v.size(); i++)
+		loadNewChunkDBFile(((ConfigChunk)v.elementAt(i)).getName(), false);
 
-      return chunkdb.name;
+	    return chunkdb.name;
+	}
+	catch (FileNotFoundException e) {
+	    Core.consoleErrorMessage ("FileControl", "File Not Found: " + f);
+	    return null;
+	}
     }
-    catch (FileNotFoundException e) {
-      Core.consoleErrorMessage ("FileControl", "File Not Found: " + f);
-      return null;
-    }
-  }
 
 
 
     public static File requestSaveFile (File file) {
 	JFileChooser chooser;
+
 	/* opens up a file requester... */
 	if (file.isDirectory())
 	    chooser = new JFileChooser(file);
@@ -294,6 +325,8 @@ public class FileControl {
 
     public static String loadNewDescDBFile (String currentdir, 
 					    boolean showrequester) {
+	currentdir = mangleFileName (currentdir);
+
 	File f;
 	FileReader r;
 	ConfigStreamTokenizer st;
@@ -351,6 +384,8 @@ public class FileControl {
 
     public static String loadNewPerfDataFile (String currentdir, 
 					      boolean showrequester) {
+	currentdir = mangleFileName (currentdir);
+
 	File f;
 	FileReader r;
 	ConfigStreamTokenizer st;

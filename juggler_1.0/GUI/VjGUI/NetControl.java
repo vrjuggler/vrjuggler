@@ -81,8 +81,8 @@ public class NetControl implements Runnable {
 	port = portnum;
 	try {
 	    remote_name = new String (connectsource);
-	    System.out.println ("Attempting to open socket to " 
-				+ remote_name + ":" + port);
+	    //System.out.println ("Attempting to open socket to " 
+	    //			+ remote_name + ":" + port);
 	    sock = new Socket (remote_name, port);
 	    out = new DataOutputStream (sock.getOutputStream());
 	    instream = 
@@ -91,7 +91,8 @@ public class NetControl implements Runnable {
 	    Core.enableActiveDB();
 	    thread = new Thread(this);
 	    thread.start();
-	    Core.consoleInfoMessage ("Net", "Connected to " + remote_name);
+	    Core.consoleInfoMessage ("Net", "Connected to " + remote_name
+				     + ":" + port);
 
 	    Core.perf_collection.removeAllData();
 
@@ -104,7 +105,9 @@ public class NetControl implements Runnable {
 	    return false;
 	}
 	catch (IOException i) {
-	    Core.consoleErrorMessage ("Net", i.getMessage());
+	    Core.consoleErrorMessage ("Net", "Failure connecting to " 
+				      + remote_name + ":" + port + " - "
+				      + i.getMessage());
 	    //i.printStackTrace();
 	    return false;
 	}

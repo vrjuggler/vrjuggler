@@ -165,7 +165,7 @@ public class ControlUI  extends JFrame
 	totalSetFont ("", 12);
 
 	addWindowListener (this);
-	setSize(650,550);
+	setSize(750,550);
 
 	//show();
 	//configure_pane.setDividerLocation (0.5);
@@ -448,6 +448,7 @@ public class ControlUI  extends JFrame
 	    UIManager.put (keys[i], newfont);
 	} 
 	changeFont (this, newfont);
+	changeFont (Core.active_treemodel.tree, newfont);
 
 	for (i = 0; i < Core.chunkdbs.size(); i++) {
 	    dbt = (ChunkDBTreeModel)Core.chunkdbs.elementAt (i);

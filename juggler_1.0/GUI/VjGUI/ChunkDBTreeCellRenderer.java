@@ -20,6 +20,14 @@ public class ChunkDBTreeCellRenderer extends JLabel implements TreeCellRenderer 
 
     }
 
+//     private void setMyFont (Font f) {
+// 	super.setFont (f);
+//     }
+
+//     public void setFont (Font f) {
+// 	;
+//     }
+
     public Component getTreeCellRendererComponent (JTree tree,
 						   Object value,
 						   boolean selected,
@@ -52,22 +60,29 @@ public class ChunkDBTreeCellRenderer extends JLabel implements TreeCellRenderer 
 	    else 
 		setIcon (mClosedIcon);
 
-	UIDefaults def = UIManager.getDefaults();
+	//UIDefaults def = UIManager.getDefaults();
+
+	// broken - and using jdk1.2
+// 	Font main_font = def.getFont ("Tree.font");
+// 	System.out.println ("font size is " + main_font.getSize2D());
+// 	Font smaller_font = main_font.deriveFont(main_font.getSize2D()-2f);
+// 	//	Font smaller_font = new Font (main_font.getFontName(), main_font.getStyle(), main_font.getSize() - 4);
+// 	if (leaf)
+// 	    setFont (main_font);
+// 	else
+// 	    setFont (smaller_font);
+
 	if (disabled) {
 	    setForeground (Color.lightGray);
-	    setBackground (def.getColor ("Tree.textBackground"));
+	    setBackground (UIManager.getColor ("Tree.textBackground"));
 	}
 	else if (selected) {
-	    //setForeground (SystemColor.textHighlightText);
-	    //setBackground (SystemColor.textHighlight);
-	    setForeground (def.getColor ("Tree.selectionForeground"));
-	    setBackground (def.getColor ("Tree.selectionBackground"));
+	    setForeground (UIManager.getColor ("Tree.selectionForeground"));
+	    setBackground (UIManager.getColor ("Tree.selectionBackground"));
 	}
 	else {
-	    //setForeground (SystemColor.textText);
-	    //setBackground (SystemColor.window);
-	    setForeground (def.getColor("Tree.textForeground"));
-	    setBackground (def.getColor("Tree.textBackground"));
+	    setForeground (UIManager.getColor("Tree.textForeground"));
+	    setBackground (UIManager.getColor("Tree.textBackground"));
 	}
 
 	return this;
