@@ -54,6 +54,7 @@
 #include <map>
 #include <vpr/Util/Interval.h>
 #include <vpr/vprTypes.h>
+#include <vpr/Sync/Mutex.h>
 
 namespace vpr
 {
@@ -173,6 +174,9 @@ namespace vpr
       ProfileNode*   mParent;
       ProfileNode*   mChild;
       ProfileNode*   mSibling;
+
+   private:
+      vpr::Mutex     mNodeLock;
    };
 
 } // end namespace vpr
