@@ -51,6 +51,22 @@ class EnvironmentServiceImpl
    extends ServiceBean
    implements java.io.Serializable, EnvironmentService
 {
+   static
+   {
+      if ( System.getProperty("mrj.version") != null )
+      {
+         os = EnvironmentService.MacOS;
+      }
+      else if ( System.getProperty("os.name").indexOf("Windows") != -1 )
+      {
+         os = EnvironmentService.Windows;
+      }
+      else
+      {
+         os = EnvironmentService.UNIX;
+      }
+   }
+
    public EnvironmentServiceImpl(BeanAttributes attrs)
    {
       super(attrs);
@@ -176,6 +192,13 @@ class EnvironmentServiceImpl
       return prefsDir;
    }
 
+   public int getOS()
+   {
+      return os;
+   }
+
    private String[] commandLineArgs = null;
    private String   prefsDir        = null;
+
+   private static int os;
 }
