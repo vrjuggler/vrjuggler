@@ -377,7 +377,8 @@ namespace cluster
          if (temp_node != NULL)
          {
             // If the Node is connected
-            if (temp_node->isConnected())
+            if ( gadget::Node::CONNECTED == temp_node->getStatus() || 
+                 gadget::Node::NEWCONNECTION == temp_node->getStatus() )
             {
                // Send the request
                temp_node->send((*i).first);
