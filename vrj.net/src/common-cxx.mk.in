@@ -83,12 +83,12 @@ beforebuild:
 	@$(MKINSTALLDIRS) $(OBJDIR)
 
 optim:
-	$(MAKE) BUILD_TYPE=OPTIMIZED beforebuild
-	$(MAKE) BUILD_TYPE=OPTIMIZED $(DLL)
+	@$(MAKE) BUILD_TYPE=OPTIMIZED beforebuild
+	@$(MAKE) BUILD_TYPE=OPTIMIZED $(DLL)
 
 debug:
-	$(MAKE) BUILD_TYPE=DEBUG beforebuild
-	$(MAKE) BUILD_TYPE=DEBUG $(DLL)
+	@$(MAKE) BUILD_TYPE=DEBUG beforebuild
+	@$(MAKE) BUILD_TYPE=DEBUG $(DLL)
 
 $(OBJDIR)/%.$(OBJEXT): %.cpp
 	$(CXX) $(DEFS) $(CXXFLAGS) $(INCLUDES) $(OBJ_NAME_FLAG) -c $<
