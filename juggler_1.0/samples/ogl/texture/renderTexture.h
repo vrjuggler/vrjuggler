@@ -201,7 +201,7 @@ public:
       {
          texDimension = GL_TEXTURE_1D;	
 #ifdef GL_VERSION_1_1
-            texBindDimension = GL_TEXTURE_1D_BINDING_EXT;
+            texBindDimension = GL_TEXTURE_BINDING_1D;
 #else
             texBindDimension = GL_TEXTURE_1D_BINDING;
 #endif
@@ -210,7 +210,7 @@ public:
       {
          texDimension = GL_TEXTURE_2D;
 #ifdef GL_VERSION_1_1
-            texBindDimension = GL_TEXTURE_2D_BINDING_EXT;
+            texBindDimension = GL_TEXTURE_BINDING_2D;
 #else
             texBindDimension = GL_TEXTURE_2D_BINDING;
 #endif
