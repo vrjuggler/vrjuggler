@@ -41,7 +41,10 @@
 
 #include <vpr/vprConfig.h>
 
-#include <uuid/sysdep.h>
+#ifndef HAVE_UUID_GENERATE
+#  include <uuid/sysdep.h>
+#endif
+
 #include <uuid/uuid.h>
 
 #include <stdio.h>
@@ -122,16 +125,26 @@ GUID::GUID (const GUID& ns_guid, const std::string& name)
 
 void GUID::generate()
 {
+#ifdef HAVE_UUID_GENERATE
+   uuid_t storage;
+   uuid_generate(storage);
+   memcpy((void*) &mGuid.standard, storage, sizeof(mGuid));
+#else
    uuid_create( (uuid_t*)(&mGuid.standard));
+#endif
 }
 
 void GUID::generate(const GUID& ns_guid, const std::string& name)
 {
+#ifdef HAVE_UUID_GENERATE
+   vprASSERT(false && "Damn it!");
+#else
    uuid_t temp_ns_id = *((uuid_t*)(&ns_guid.mGuid.standard));    // nasty, but works
 
    uuid_create_from_name((uuid_t*)(&mGuid.standard),
                          temp_ns_id,
                          (void*) name.c_str(), name.length());
+#endif
 }
 
 void GUID::fromString (const std::string& guid_string)

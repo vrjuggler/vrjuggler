@@ -46,8 +46,6 @@
 
 #include <string>
 #include <cctype>
-//#include <uuid/sysdep.h>
-//#include <uuid/uuid.h>
 
 #include <vpr/vprTypes.h>
 #include <vpr/Util/Assert.h>
@@ -140,7 +138,9 @@ public:
     * Generates a GUID from the given string representation of the GUID using
     * a char*.
     * Format: "8x-4x-4x-2x2x-2x2x2x2x2x2x"
-    * @param   guid_string    Ptr to a string that is used to inialize guid. Must be non-NULL
+    *
+    * @param guid_string Ptr to a string that is used to inialize guid. Must
+    *                    be non-NULL.
     */
    GUID (const char* guid_string)
    {
@@ -157,6 +157,9 @@ public:
     * Generates a GUID from the given string representation of the GUID using
     * a std::string.
     * Format: "8x-4x-4x-2x2x-2x2x2x2x2x2x"
+    *
+    * @param guid_string Ptr to a string that is used to inialize guid. Must
+    *                    be non-NULL.
     */
    GUID (const std::string& guid_string)
    {
@@ -177,8 +180,6 @@ public:
       mGuid.packed.l3 = obj.mGuid.packed.l3;
    }
 
-
-
    GUID& operator= (const GUID& obj)
    {
       if(&obj == this) // Check for self
@@ -194,10 +195,14 @@ public:
    void generate();
    void generate(const GUID& ns_guid, const std::string& name);
 
+   /**
+    * Multi-format GUID/UUID container.  This will always be 128 bits, but
+    * its memory may be accessed differently depending on the needs of the
+    * code.
+    */
    union _vpr_guid
    {
-      //uuid_t leach;
-
+      /** Mozilla UUID format. */
       struct _moz
       {
          vpr::Uint32 m0;
@@ -206,8 +211,15 @@ public:
          vpr::Uint8 m3[8];
       } moz;
 
+      /** Standard GUID memory layout. */
       struct StdGUID standard;
 
+      /**
+       * Friendly packed UUID format.
+       *
+       * @note This format cannot be used for network transmission of GUIDs
+       *       due to byte ordering issues.
+       */
       struct _packed
       {
          vpr::Uint32 l0;
@@ -244,7 +256,8 @@ private:
 
 } // End of vpr namespace
 
-namespace std {
+namespace std
+{
 
 inline std::ostream& operator<<(std::ostream& out, const vpr::GUID& guid)
 {
