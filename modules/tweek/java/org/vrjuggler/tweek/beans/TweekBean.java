@@ -50,7 +50,7 @@ public abstract class TweekBean
 {
    public abstract void instantiate() throws BeanInstantiationException;
 
-   public boolean isInstantiated ()
+   public boolean isInstantiated()
    {
       return instantiated;
    }
@@ -60,12 +60,12 @@ public abstract class TweekBean
     *
     * @return  the name of this bean
     */
-   public String getName ()
+   public String getName()
    {
       return attrs.getName();
    }
    
-   public String toString ()
+   public String toString()
    {
       return getName();
    }
@@ -76,7 +76,7 @@ public abstract class TweekBean
     *
     * @return  the URL string of the JAR
     */
-   public String getJarURL ()
+   public String getJarURL()
    {
       return attrs.getJarURL();
    }
@@ -108,13 +108,14 @@ public abstract class TweekBean
     *
     * @param attrs      the attributes to assign to this bean
     */
-   protected TweekBean( BeanAttributes attrs )
+   protected TweekBean(BeanAttributes attrs)
    {
       beanObject = null;
       this.attrs = attrs;
    }
 
-   protected void doInstantiation () throws BeanInstantiationException
+   protected void doInstantiation()
+      throws BeanInstantiationException
    {
       BeanLoader bean_loader = new BeanLoader();
       beanObject = null;
