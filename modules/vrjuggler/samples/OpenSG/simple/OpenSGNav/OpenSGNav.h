@@ -80,7 +80,9 @@ public:
 
    /** Returns the scene root for this application. */
    virtual osg::NodePtr getScene()
-   {  return mRootNode; }
+   {
+      return mSceneRoot;
+   }
 
    void initRenderer();
 
@@ -115,7 +117,6 @@ private:
    //   mLightBeacon:[Transform]
    //         |
    //     mModelRoot
-   osg::NodePtr        mRootNode;        /**< The root node of the entire tree */
    osg::NodePtr        mSceneRoot;       /**< The root of the scene */
    osg::TransformPtr   mSceneTransform;  /**< Transform core */
    osg::NodePtr        mModelRoot;       /**< Root of the loaded model */
