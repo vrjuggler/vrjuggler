@@ -131,7 +131,7 @@ public sealed class Quatf
       gmtl_Quat_float__get__float_float_float_float4(mRawObject, ref p0, ref p1, ref p2, ref p3);
    }
 
-
+/*
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static float gmtl_Quat_float__getData__0(IntPtr obj);
 
@@ -141,7 +141,7 @@ public sealed class Quatf
       result = gmtl_Quat_float__getData__0(mRawObject);
       return result;
    }
-
+*/
 
    // End of non-virtual methods.
 

@@ -131,7 +131,7 @@ public sealed class Quatd
       gmtl_Quat_double__get__double_double_double_double4(mRawObject, ref p0, ref p1, ref p2, ref p3);
    }
 
-
+/*
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static double gmtl_Quat_double__getData__0(IntPtr obj);
 
@@ -141,7 +141,7 @@ public sealed class Quatd
       result = gmtl_Quat_double__getData__0(mRawObject);
       return result;
    }
-
+*/
 
    // End of non-virtual methods.
 
