@@ -232,7 +232,7 @@ printHelp() && exit(0) if $all_help;
    # he or she is doing.
    foreach ( 'make', 'gmake' )
    {
-      my $result = open(MAKE, "$_ -v |");
+      my $result = open(MAKE, "$_ -v 2>&1 |");
       next unless $result;
       my @output = <MAKE>;
       close(MAKE);
