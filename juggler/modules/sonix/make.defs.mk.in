@@ -34,6 +34,7 @@
 # AR              - Path to ar(1) (or equivalent program).
 # ARFLAGS         - Flags for $(AR).
 # AR_NAME_FLAG  - flag to name your archive file...
+# ABI_LIST
 # CC            - Path to C compiler.
 # CXX           - Path to C++ compiler.
 # CPP           - Command for invoking the C preprocessor.
@@ -48,6 +49,9 @@
 #                 generating dependencies).
 # DEPEND_EXTRAS - Flags not recognized by makedepend(1) that may be
 #                 necessary in $(CFLAGS) or $(CXXFLAGS).
+# EXEC_PERMS
+# FILE_PERMS
+# GROUP_NAME
 # INCLUDES      - Additions to the include path (-I/path/to/include).
 # LIBS          - Extra external libraries needed at link time.
 # LD
@@ -64,6 +68,7 @@
 # PERL            - Path to Perl 5 binary.
 # RANLIB          - Path to ranlib(1) binary if it is available. ':'
 #                   otherwise.
+# ROOT_ABS      - checked out project dir
 #
 # C_COMPILE     - Command for compiling C code.
 # CXX_COMPILE   - Command for compiling C++ code.
@@ -114,6 +119,9 @@ DEFS		= @DEFS@
 DEP_GEN_FLAG	= @DEP_GEN_FLAG@
 DEPEND_FLAGS	= @DEPEND_FLAGS@ @INCLUDES@ -I$(topdir) $(EXTRA_DEPEND_FLAGS)
 DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
+EXEC_PERMS = @EXEC_PERMS@
+FILE_PERMS = @FILE_PERMS@
+GROUP_NAME = @GROUP_NAME@
 INCLUDES	= @INCLUDES@ -I$(topdir) $(EXTRA_INCLUDES)
 INSTALL		= @INSTALL@
 LIBS		= @LIBS@  # doozer also uses LIBS for the .a and .so target names...
@@ -131,6 +139,7 @@ OS_TYPE		= @OS_TYPE@
 PERL            = @PERL@
 RANLIB          = @RANLIB@
 MKINSTALLDIRS = @srcdir_absolute@/mkinstalldirs
+ROOT_ABS = @srcdir_absolute@
 
 # SGI-specific dynamic-shared-object information.
 DSOREGFILE	= @DSOREGFILE@
