@@ -35,6 +35,8 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <string>
+
 #include <vpr/IO/SerializableObject.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 
@@ -114,7 +116,7 @@ const unsigned short MSG_DATA_KEYBOARD = 420;
  * That is to say, that gadget::EventWindow counts the number of key presses
  * between updates.  Updates in Juggler occur once per frame.
  */
-class EventWindow : public vpr::SerializableObject
+class GADGET_CLASS_API EventWindow : public vpr::SerializableObject
 {
 public:
    EventWindow()
