@@ -310,37 +310,47 @@ def writeCacheFile(optionDict):
 
 def generateVersionHeaders():
    class JugglerModule:
-      def __init__(self, srcDir, header, projDir, templateFile = None):
+      def __init__(self, srcDir, projDir, genFiles = None):
          self.source_dir     = os.path.join(gJugglerDir, srcDir)
-         self.header         = os.path.join(gJugglerDir, 'vc7', projDir,
-                                            header)
          self.version_params = os.path.join(self.source_dir, 'Makefile.inc.in')
          self.version_file   = os.path.join(self.source_dir, 'VERSION')
+         self.param_files    = []
 
-         if templateFile is not None:
-            self.header_template = templateFile
-         else:
-            self.header_template = os.path.join(self.source_dir, header + '.in')
+         if genFiles is not None:
+            for f in genFiles:
+               output = os.path.join(gJugglerDir, 'vc7', projDir, f[0])
 
-      def generateParamHeader(self):
-         if os.path.exists(self.header):
-            mtime = os.path.getmtime
-            # This test to determine if the module's param header needs to be
-            # regenerated is equivalent to that used by the UNIX build system.
-            if mtime(self.version_file) > mtime(self.header) or \
-               mtime(self.header_template) > mtime(self.header):
-               self.__genHeader()
-         else:
-            self.__genHeader()
+               if len(f) == 1 or f[1] is None:
+                  template = os.path.join(self.source_dir, f[0] + '.in')
+               else:
+                  template = f[1]
 
-      version_re    = re.compile(r'((\d+)\.(\d+)\.(\d+)-(\d+))\s')
-      branch_re     = re.compile(r'BRANCH\s*=\s*(\w+)')
-      canon_name_re = re.compile(r'CANON_NAME\s*=\s*(\S.+)')
-      vernum_re     = re.compile(r'@VER_NUMBER@')
-      verstr_re     = re.compile(r'@VER_STRING@')
-      zero_strip_re = re.compile(r'^0*([^0]\d+)')
+               self.param_files.append((output, template))
 
-      def __genHeader(self):
+      def generateParamFiles(self):
+         for (output, template) in self.param_files:
+            if os.path.exists(output):
+               mtime = os.path.getmtime
+               # This test to determine if the module's param header needs to
+               # be regenerated is equivalent to that used by the UNIX build
+               # system.
+               if mtime(self.version_file) > mtime(output) or \
+                  mtime(template) > mtime(output):
+                  self.__genParamFile(output, template)
+            else:
+               self.__genParamFile(output, template)
+
+      version_re      = re.compile(r'((\d+)\.(\d+)\.(\d+)-(\d+))\s')
+      branch_re       = re.compile(r'BRANCH\s*=\s*(\w+)')
+      canon_name_re   = re.compile(r'CANON_NAME\s*=\s*(\S.+)')
+      vernum_re       = re.compile(r'@VER_NUMBER@')
+      major_vernum_re = re.compile(r'@MAJOR_VER_NUMBER@')
+      minor_vernum_re = re.compile(r'@MINOR_VER_NUMBER@')
+      patch_vernum_re = re.compile(r'@PATCH_VER_NUMBER@')
+      verstr_re       = re.compile(r'@VER_STRING@')
+      zero_strip_re   = re.compile(r'^0*([^0]\d+)')
+
+      def __genParamFile(self, output, template):
          ver_file = open(self.version_file)
          cur_ver  = ver_file.readline()
          ver_file.close()
@@ -381,7 +391,7 @@ def generateVersionHeaders():
          version_number = self.zero_strip_re.match(version_number).group(1)
 
          try:
-            input_file  = open(self.header_template, 'r')
+            input_file  = open(template, 'r')
             input_lines = input_file.readlines()
             input_file.close()
 
@@ -389,34 +399,49 @@ def generateVersionHeaders():
                line = input_lines[i]
                if self.vernum_re.search(line):
                   input_lines[i] = self.vernum_re.sub(version_number, line)
+               elif self.major_vernum_re.search(line):
+                  input_lines[i] = self.major_vernum_re.sub(str(major), line)
+               elif self.minor_vernum_re.search(line):
+                  input_lines[i] = self.minor_vernum_re.sub(str(minor), line)
+               elif self.patch_vernum_re.search(line):
+                  input_lines[i] = self.patch_vernum_re.sub(str(patch), line)
                elif self.verstr_re.search(line):
                   input_lines[i] = self.verstr_re.sub(version_string, line)
 
-            printStatus("Generating updated " + self.header)
-            param_header = open(self.header, 'w')
+            printStatus("Generating updated " + output)
+            param_header = open(output, 'w')
             param_header.writelines(input_lines)
             param_header.close()
          except IOError, ex:
-            printStatus("ERROR: Could not read from %s" % self.header_template)
+            printStatus("ERROR: Could not read from %s" % template)
             printStatus(ex)
             printStatus("Cannot continue; exiting with error status.")
             sys.exit(EXIT_STATUS_MISSING_DATA_FILE)
 
    mods = []
-   mods.append(JugglerModule(r'modules\vapor', r'vpr\vprParam.h', 'VPR'))
-   mods.append(JugglerModule(r'modules\tweek', r'tweek\tweekParam.h',
-                             'Tweek_CXX'))
-   mods.append(JugglerModule(r'modules\jackal', r'jccl\jcclParam.h', 'JCCL',
-                             os.path.join(gJugglerDir,
-                                          r'modules\jackal\common\jccl\jcclParam.h.in')))
-   mods.append(JugglerModule(r'modules\sonix', r'snx\snxParam.h', 'Sonix'))
-   mods.append(JugglerModule(r'modules\gadgeteer', r'gadget\gadgetParam.h',
-                             'Gadgeteer'))
-   mods.append(JugglerModule(r'modules\vrjuggler', r'vrj\vrjParam.h',
-                             'VRJuggler'))
+   mods.append(JugglerModule(r'modules\vapor', 'VPR',
+                             [(r'vpr\vprParam.h',), (r'vpr\vprParam.cpp',)]))
+   mods.append(JugglerModule(r'modules\tweek', 'Tweek_CXX',
+                             [(r'tweek\tweekParam.h',),
+                              (r'tweek\tweekParam.cpp',)]))
+   mods.append(JugglerModule(r'modules\jackal', 'JCCL',
+                             [(r'jccl\jcclParam.h',
+                               os.path.join(gJugglerDir,
+                                            r'modules\jackal\common\jccl\jcclParam.h.in')),
+                              (r'jccl\jcclParam.cpp',
+                               os.path.join(gJugglerDir,
+                                            r'modules\jackal\common\jccl\jcclParam.cpp.in'))
+                             ]))
+   mods.append(JugglerModule(r'modules\sonix', 'Sonix',
+                             [(r'snx\snxParam.h',), (r'snx\snxParam.cpp',)]))
+   mods.append(JugglerModule(r'modules\gadgeteer', 'Gadgeteer',
+                             [(r'gadget\gadgetParam.h',),
+                              (r'gadget\gadgetParam.cpp',)]))
+   mods.append(JugglerModule(r'modules\vrjuggler', 'VRJuggler',
+                             [(r'vrj\vrjParam.h',), (r'vrj\vrjParam.cpp',)]))
 
    for m in mods:
-      m.generateParamHeader()
+      m.generateParamFiles()
 
 def generateAntBuildFiles():
    class AntTarget:
