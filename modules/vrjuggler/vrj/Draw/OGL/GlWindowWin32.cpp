@@ -43,7 +43,7 @@
 #include <vrj/Draw/OGL/GlWindow.h>
 #include <vrj/Draw/OGL/GlWindowWin32.h>
 
-#define GL_WINDOW_WIN32_CLASSNAME "vrj::GlWindowWin32"
+static const char* GL_WINDOW_WIN32_CLASSNAME("vrj::GlWindowWin32");
 
 namespace vrj
 {
@@ -107,9 +107,9 @@ int GlWindowWin32::open()
    root_height = GetSystemMetrics(SM_CYSCREEN);
 
    // Create the main application window
-   mWinHandle = CreateWindow(GL_WINDOW_WIN32_CLASSNAME,
-                             GL_WINDOW_WIN32_CLASSNAME, style,
-                             mOriginX, root_height - mOriginY - mWindowHeight,
+   mWinHandle = CreateWindow(GL_WINDOW_WIN32_CLASSNAME, mWindowName.c_str(),
+                             style, mOriginX,
+                             root_height - mOriginY - mWindowHeight,
                              mWindowWidth, mWindowHeight, NULL, NULL, hMod,
                              NULL);
 
@@ -274,7 +274,7 @@ void GlWindowWin32::configWindow(vrj::Display* disp)
       DisplayManager::instance()->getDisplaySystemElement();
    jccl::ConfigElementPtr display_elt = disp->getConfigElement();
 
-   window_name = disp->getName();
+   mWindowName = disp->getName();
    mPipe = disp->getPipe();
    vprASSERT(mPipe >= 0);
 

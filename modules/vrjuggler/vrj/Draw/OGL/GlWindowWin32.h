@@ -148,7 +148,7 @@ private:
     HGLRC mRenderContext;  /**< Permenant Rendering context */
     HDC   mDeviceContext;  /**< Private GDI Device context */
 
-    std::string    window_name;
+    std::string    mWindowName;
     int            mPipe;
     std::string    mXDisplayName;       /**<  Name of the x display to use */
 
