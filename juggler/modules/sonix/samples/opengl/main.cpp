@@ -74,6 +74,7 @@ static void OnRedisplay()
 //////////////////////////////////////////////////
 // This is called repeatedly, as fast as possible
 //////////////////////////////////////////////////
+#include "unistd.h"
 static void OnIdle()
 {
    // According to the GLUT specification, the current window is
@@ -84,6 +85,9 @@ static void OnIdle()
 
    // tell glut to call redisplay (which then calls OnRedisplay)
    glutPostRedisplay();
+   
+   usleep( 10000 );
+   AudioJuggler::instance().step( 0.1 );
 }
 
 /////////////////////////////////////////////
@@ -119,11 +123,23 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
 		break;
    case '1':
 {
+   AudioJuggler::instance().changeAPI( "Stub" );
+   aj::SoundInfo si;
+   si.filename = "../../../data/sample.wav";
+   si.datasource = aj::SoundInfo::FILESYSTEM;
+AudioJuggler::instance().configure( "kevin", si );
+
 AudioJuggler::instance().changeAPI( "OpenAL" );
 }
 break;
    case '2':
 {
+   AudioJuggler::instance().changeAPI( "Stub" );
+   aj::SoundInfo si;
+   si.filename = "../../../data/suck1.aiff";
+   si.datasource = aj::SoundInfo::FILESYSTEM;
+   AudioJuggler::instance().configure( "kevin", si );
+
 AudioJuggler::instance().changeAPI( "AudioWorks" );
 }
 break;
