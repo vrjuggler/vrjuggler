@@ -465,14 +465,32 @@ public class ConnectionDialog extends JDialog
             Object[] column_names = new Object[]{"Property", "Value"};
             DefaultTableModel table_model = new DefaultTableModel();
             table_model.setColumnIdentifiers(column_names);
-            table_model.addRow(new Object[]{"Hostname",
-                                            mSubjectManager.getHostName()});
-            table_model.addRow(new Object[]{"Application",
-                                            mSubjectManager.getApplicationName()});
-            table_model.addRow(new Object[]{"User",
-                                            mSubjectManager.getUserName()});
 
-            mSubjectMgrInfo.setModel(table_model);
+            try
+            {
+               table_model.addRow(new Object[]{"Hostname",
+                                               mSubjectManager.getHostName()});
+               table_model.addRow(new Object[]{"Application",
+                                               mSubjectManager.getApplicationName()});
+               table_model.addRow(new Object[]{"User",
+                                               mSubjectManager.getUserName()});
+
+               mSubjectMgrInfo.setModel(table_model);
+            }
+            catch (org.omg.CORBA.COMM_FAILURE commEx)
+            {
+               String msg = "Invalid Subject Manager Selected";
+
+               // If the exception has an error message, append it.
+               if ( ! commEx.getMessage().equals("") )
+               {
+                  msg += ": '" + commEx.getMessage() + "'";
+               }
+
+               JOptionPane.showMessageDialog(null, msg,
+                                             "CORBA Communication Exception",
+                                             JOptionPane.ERROR_MESSAGE);
+            }
          }
       }
    }
