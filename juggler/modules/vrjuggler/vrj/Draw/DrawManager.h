@@ -104,13 +104,6 @@ public:
     */
    virtual void closeAPI() = 0;
 
-   /**
-    * Called when projections change.  Called by display manager when
-    * projections change.  Should do any API specific stuff.
-    */
-   virtual void updateProjections()
-   {;}
-
    /// Setter for display manager variable
    void setDisplayManager(DisplayManager* _dispMgr);
 

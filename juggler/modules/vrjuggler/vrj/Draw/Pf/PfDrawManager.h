@@ -171,7 +171,7 @@ public:
    /** Update all the projections for the displays
    * @post All windows have the projections correctly set.
    */
-   virtual void updateProjections();
+   virtual void updatePfProjections();
 
    /** dumps the object's internal state */
    void debugDump(int debugLevel);

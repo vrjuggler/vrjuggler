@@ -198,6 +198,8 @@ void PfDrawManager::draw()
    vprDEBUG(vprDBG_ALL,vprDBG_VERB_LVL) << "vjPfDrawManager::calling appChanFuncs\n" << vprDEBUG_FLUSH;
    callAppChanFuncs();
 
+   updatePfProjections();
+
    vprDEBUG(vprDBG_ALL,vprDBG_VERB_LVL) << "vjPfDrawManager::draw\n" << vprDEBUG_FLUSH;
    //vprDEBUG(vprDBG_ALL,0) << "vjPfDrawManager::draw\n" << vprDEBUG_FLUSH;
 
@@ -258,7 +260,7 @@ void PfDrawManager::initAPI()
 
    // Set params for Multi-pipe and Multiprocess
    pfMultipipe(mNumPipes);
-   
+
    // XXX: One and only one of the next two lines should be uncommented
    pfMultiprocess(PFMP_APP_CULL_DRAW);    // XXX: Uncomment this line for normal operation
    //pfMultiprocess(PFMP_APPCULLDRAW);    // XXX: Uncomment this line to get synchronization on the cluster
@@ -899,9 +901,9 @@ void PfDrawManager::closeAPI()
 }
 
 
-void PfDrawManager::updateProjections()
+void PfDrawManager::updatePfProjections()
 {
-   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "vjPfDrawManager::updateProjections: Entering." << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "vjPfDrawManager::updatePfProjections: Entering." << std::endl << vprDEBUG_FLUSH;
 
    // --- Update the channel projections --- //
    //for(each pfDisp)
@@ -968,10 +970,10 @@ void PfDrawManager::updateProjections()
  */
 void PfDrawManager::updatePfProjection(pfChannel* chan, Projection* proj)  //, bool simulator)
 {
-   
+
    vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,vprDBG_HVERB_LVL) << "vjPfDrawManager::updatePfProjection: Entering. viewMat:\n"
                     << proj->mViewMat << std::endl << vprDEBUG_FLUSH;
-                    
+
 
    pfMatrix pfViewMat;
    pfViewMat.set(proj->mViewMat.mData);      // Hmm...
@@ -1151,10 +1153,10 @@ void PfAppFunc(pfChannel *chan, void* chandata)
 //template <bool left_eye, bool right_eye, bool stereo, bool simulator>
 void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo)  // , bool simulator)
 {
-   vprDEBUG_OutputGuard(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL, 
+   vprDEBUG_OutputGuard(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL,
                         std::string("--- PfDrawFunc: Enter ---.\n"),
                         std::string("--- PfDrawFunc: Exit ---.\n"));
-   
+
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
 
       // Select correct buffer to draw to
@@ -1231,15 +1233,15 @@ void PfPipeSwapFunc(pfPipe *p, pfPipeWindow *pw)
 
     // For each pfDisplay
     //    if(pw == display->pipeWindow)
-    //   
+    //
 
     // Swap the buffer
     vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfPipeSwapFunc: pipe:" << pf_draw_mgr << " -- pw:" << pw << "\n" << vprDEBUG_FLUSH;
 
     // Barrier for Cluster
-    //vprDEBUG(vprDBG_ALL,1) <<  "BARRIER: Going to sleep for: " << num << std::endl << vprDEBUG_FLUSH; 
+    //vprDEBUG(vprDBG_ALL,1) <<  "BARRIER: Going to sleep for: " << num << std::endl << vprDEBUG_FLUSH;
     gadget::InputManager::instance()->getRemoteInputManager()->createBarrier();
-    //vprDEBUG(vprDBG_ALL,1) <<  "BARRIER: IS DONE" << std::endl << vprDEBUG_FLUSH; 
+    //vprDEBUG(vprDBG_ALL,1) <<  "BARRIER: IS DONE" << std::endl << vprDEBUG_FLUSH;
 
     pw->swapBuffers();
 }

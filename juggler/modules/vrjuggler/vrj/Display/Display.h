@@ -79,10 +79,10 @@ public:
    void configDisplayWindow(jccl::ConfigChunkPtr chunk);
    void configViewports(jccl::ConfigChunkPtr chunk);
 
-   /** Updates the projection data for each contained viewport. 
+   /** Updates the projection data for each contained viewport.
    * @param positionScale - Scale value for converting from Juggler units (meters) to the display units
    */
-   void updateProjections(float positionScale);
+   void updateProjections(const float positionScale);
 
 public:
    bool isActive()

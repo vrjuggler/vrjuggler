@@ -184,14 +184,14 @@ public:  // Drawing functions used by library
    void drawObjects();
 
    /** Draws projections in OpenGL. */
-   void drawProjections(bool drawFrustum, gmtl::Vec3f surfColor);
+   void drawProjections(bool drawFrustum, gmtl::Vec3f surfColor, const float scaleFactor);
 
    /**
     * Draws a simulator using OpenGL commands.
     *
     * @note This is called internally by the library.
     */
-   void drawSimulator(SimViewport* sim, float scaleFactor);
+   void drawSimulator(SimViewport* sim, const float scaleFactor);
 
    /** Set the functor used to draw the wand */
    void setDrawWandFunctor(GlDrawObjectFunctor* functor)
@@ -272,13 +272,13 @@ protected:
 
    virtual ~GlDrawManager() {}
 
-   GlDrawManager(const GlDrawManager& o) 
+   GlDrawManager(const GlDrawManager& o)
       : DrawManager()
    {;}
    void operator=(const GlDrawManager& o) {;}
 
    vprSingletonHeader(GlDrawManager);
-   
+
 };
 
 } // end namespace
