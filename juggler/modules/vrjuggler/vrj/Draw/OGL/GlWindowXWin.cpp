@@ -645,6 +645,7 @@ void GlWindowXWin::checkEvents()
 int GlWindowXWin::EventIsMapNotify(::Display* display, ::XEvent* e,
                                    ::XPointer window)
 {
+   boost::ignore_unused_variable_warning(display);
    return((e->type == MapNotify) && (e->xmap.window == (Window)window));
 }
 

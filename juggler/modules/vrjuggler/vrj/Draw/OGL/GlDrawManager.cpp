@@ -57,6 +57,8 @@
 #include <gmtl/Vec.h>
 #include <gmtl/Output.h>
 
+#include <boost/concept_check.hpp>
+
 //#include <gadget/Type/Glove.h>
 //#include <gadget/Type/GloveProxy.h>
 
@@ -152,14 +154,14 @@ void GlDrawManager::main(void* nullParam)
       // Wait for trigger
       drawTriggerSema.acquire();
 
-      // While closing the GlDrawManager this thread will be waiting at 
-      // drawTriggerSema.acquire(). To properly stop this thread we must 
+      // While closing the GlDrawManager this thread will be waiting at
+      // drawTriggerSema.acquire(). To properly stop this thread we must
       // allow it to fall through the semaphore and not execute drawAllPipes()
       if (mRunning)
       {
          // THEN --- Do Rendering --- //
          drawAllPipes();
-      }              
+      }
 
       // -- Done rendering --- //
       drawDoneSema.release();
@@ -238,11 +240,11 @@ void GlDrawManager::addDisplay(Display* disp)
 
    // -- Finish Simulator setup
    int num_vp(disp->getNumViewports());
-   
+
    for (int i = 0 ; i < num_vp ; i++)
    {
       Viewport* vp = disp->getViewport(i);
-      
+
       if (vp->isSimulator())
       {
          jccl::ConfigChunkPtr vp_chunk = vp->getConfigChunk();
@@ -254,30 +256,30 @@ void GlDrawManager::addDisplay(Display* disp)
          bool has_simulator(false);
          has_simulator = vp_chunk->getProperty<bool>("hasSimPlugin");
          sim_vp->setDrawSimInterface(NULL);
-         
+
          // Create the simulator stuff
          if(has_simulator)
          {
             jccl::ConfigChunkPtr sim_chunk =
                vp_chunk->getProperty<jccl::ConfigChunkPtr>("simPlugIn");
-      
+
             vprDEBUG(vrjDBG_DISP_MGR, vprDBG_CONFIG_LVL)
                << "SimViewport::config() creating simulator of type '"
                << sim_chunk->getDescToken() << "'\n" << vprDEBUG_FLUSH;
-            
-            DrawSimInterface* new_sim_i = 
+
+            DrawSimInterface* new_sim_i =
                GlSimInterfaceFactory::instance()->createObject(sim_chunk->getDescToken());
-      
+
             // XXX: Change this to an error once the new simulator loading code is
             // more robust.  -PH (4/13/2003)
             vprASSERT(NULL != new_sim_i && "Failed to create draw simulator");
             sim_vp->setDrawSimInterface(new_sim_i);
             new_sim_i->initialize(sim_vp);
             new_sim_i->config(sim_chunk);
-         }   
+         }
       }
    }
-   
+
 
    // -- Create a window for new display
    // -- Store the window in the wins vector
@@ -355,12 +357,12 @@ void GlDrawManager::removeDisplay(Display* disp)
 void GlDrawManager::closeAPI()
 {
    vprDEBUG(vrjDBG_DRAW_MGR,0) << "vrj::GlDrawManager::closeAPI\n" << vprDEBUG_FLUSH;
-   
+
    mRunning = false;
-   
+
    drawTriggerSema.release();
    drawDoneSema.acquire();
-   
+
    // TODO: Must shutdown and delete all pipes.
    // Stop and delete all pipes
 
@@ -376,6 +378,7 @@ void GlDrawManager::closeAPI()
  */
 bool GlDrawManager::configAdd(jccl::ConfigChunkPtr chunk)
 {
+   boost::ignore_unused_variable_warning(chunk);
    return false;
 }
 
@@ -386,6 +389,7 @@ bool GlDrawManager::configAdd(jccl::ConfigChunkPtr chunk)
  */
 bool GlDrawManager::configRemove(jccl::ConfigChunkPtr chunk)
 {
+   boost::ignore_unused_variable_warning(chunk);
    return false;
 }
 
@@ -395,6 +399,7 @@ bool GlDrawManager::configRemove(jccl::ConfigChunkPtr chunk)
  */
 bool GlDrawManager::configCanHandle(jccl::ConfigChunkPtr chunk)
 {
+   boost::ignore_unused_variable_warning(chunk);
    return false;
 }
 

@@ -42,6 +42,7 @@
 #include <gadget/Type/PositionProxy.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
 
+#include <boost/concept_check.hpp>
 
 namespace vrj
 {
@@ -184,7 +185,10 @@ public:
 public:  // --- DEfault config handlers: (inherited from jccl::ConfigChunkHandler) --- //
    // Default to not handling anything
    virtual bool configCanHandle(jccl::ConfigChunkPtr chunk)
-   { return false; }
+   {
+      boost::ignore_unused_variable_warning(chunk);
+      return false;
+   }
 
    /** Are any application dependencies satisfied
     * If the application requires anything special of the system for successful
@@ -198,10 +202,16 @@ public:  // --- DEfault config handlers: (inherited from jccl::ConfigChunkHandle
 protected:
    //! NOTE: Inherited from jccl::ConfigChunkHandler
    virtual bool configAdd(jccl::ConfigChunkPtr chunk)
-   { vprASSERT(false);  return false; }
+   {
+     boost::ignore_unused_variable_warning(chunk);
+     vprASSERT(false);  return false;
+   }
    //! NOTE: INherited from jccl::ConfigChunkHandler
    virtual bool configRemove(jccl::ConfigChunkPtr chunk)
-   { vprASSERT(false); return false; }
+   {
+      boost::ignore_unused_variable_warning(chunk);
+      vprASSERT(false); return false;
+   }
 
 public:
    //vjAPI       api;        // Used to signal which API this application works with

@@ -53,6 +53,8 @@
 #include <vrj/Draw/OGL/GlSimInterfaceFactory.h>
 #include <vrj/Draw/OGL/GlBasicSimulator.h>
 
+#include <boost/concept_check.hpp>
+
 
 namespace vrj
 {
@@ -113,7 +115,9 @@ void GlBasicSimulator::draw(const float scaleFactor)
  * Sets the event window the simulator can use to get input from the user.
  */
 void GlBasicSimulator::setEventWindow(gadget::EventWindowInterface ewInterface)
-{;}
+{
+   boost::ignore_unused_variable_warning(ewInterface);
+}
 
 
 void GlBasicSimulator::updateProjectionData(const float positionScale,

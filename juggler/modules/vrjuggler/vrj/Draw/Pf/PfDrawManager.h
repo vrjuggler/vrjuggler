@@ -43,17 +43,14 @@
 
 #include <vrj/Draw/DrawManager.h>
 
-//#include <vrj/Draw/Pf/PfApp.h>
 #include <vrj/Draw/Pf/PfUtil.h>
 #include <vpr/Util/Singleton.h>
 
-// namespace jccl {
-//     class ConfigChunkDB;
-// }
+#include <boost/concept_check.hpp>
+
 
 namespace vrj
 {
-
 
 class Display;
 class PfApp;
@@ -191,6 +188,7 @@ public: // Chunk handlers
    */
    virtual bool configCanHandle(jccl::ConfigChunkPtr chunk)
    {
+      boost::ignore_unused_variable_warning(chunk);
       return false;
    }
 
@@ -201,6 +199,7 @@ protected:     // --- Config handling functions --- //
    */
    virtual bool configAdd(jccl::ConfigChunkPtr chunk)
    {
+      boost::ignore_unused_variable_warning(chunk);
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "vjPfDrawManager::configAdd: configAdd is not supported.\n" << vprDEBUG_FLUSH;
       return false;
    }
@@ -211,6 +210,7 @@ protected:     // --- Config handling functions --- //
    */
    virtual bool configRemove(jccl::ConfigChunkPtr chunk)
    {
+      boost::ignore_unused_variable_warning(chunk);
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "vjPfDrawManager::configRemove: configRemove is not supported.\n" << vprDEBUG_FLUSH;
       return false;
    }

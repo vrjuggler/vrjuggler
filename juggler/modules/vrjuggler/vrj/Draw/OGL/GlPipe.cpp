@@ -50,6 +50,7 @@
 #include <vrj/Display/SurfaceViewport.h>
 #include <vrj/Display/SimViewport.h>
 #include <vrj/Draw/OGL/GlSimInterface.h>
+#include <boost/concept_check.hpp>
 
 namespace vrj
 {
@@ -155,6 +156,7 @@ void GlPipe::removeWindow(GlWindow* win)
 //
 void GlPipe::controlLoop(void* nullParam)
 {
+   boost::ignore_unused_variable_warning(nullParam);
    mThreadRunning = true;     // We are running so set flag
 
    while (!controlExit)
@@ -264,7 +266,7 @@ void GlPipe::checkForNewWindows()
 
       for (unsigned int winNum=0; winNum<mNewWins.size(); winNum++)
       {
-          if (mNewWins[winNum]->open()) 
+          if (mNewWins[winNum]->open())
           {
               mNewWins[winNum]->makeCurrent();
               vprDEBUG(vrjDBG_DRAW_MGR,1) << "vjGlPipe::checkForNewWindows: Just opened window: "
@@ -273,7 +275,7 @@ void GlPipe::checkForNewWindows()
               mNewWins[winNum]->finishSetup();        // Complete any window open stuff
               mOpenWins.push_back(mNewWins[winNum]);
           }
-          else 
+          else
           {
               vprDEBUG(vprDBG_ALL,0) << clrOutBOLD(clrRED,"ERROR:") << "vjGlPipe::checkForNewWindows: Failed to open window: "
                                    << mNewWins[winNum]->getDisplay()->getName().c_str()
@@ -300,12 +302,12 @@ void GlPipe::renderWindow(GlWindow* win)
 
    GlApp* the_app = glManager->getApp();       // Get application for easy access
    Display* the_display = win->getDisplay();   // Get the display for easy access
-   
+
    // Update the projections for the display using the current app's scale factor
    // NOTE: This relies upon no other thread trying to update this display at the same time
    float scale_factor = the_app->getDrawScaleFactor();
    the_display->updateProjections(scale_factor);
-   
+
    glManager->setCurrentContext(win->getId());     // Set TSS data of context id
 
    vprDEBUG(vrjDBG_DRAW_MGR,5) << "vjGlPipe::renderWindow: Set context to: "
@@ -395,7 +397,7 @@ void GlPipe::renderWindow(GlWindow* win)
                if(NULL != draw_sim_i)
                {
                   draw_sim_i->draw(scale_factor);
-               }               
+               }
             }
             if ((Viewport::STEREO == view) || (Viewport::RIGHT_EYE == view))    // RIGHT EYE
             {
@@ -404,7 +406,7 @@ void GlPipe::renderWindow(GlWindow* win)
                glManager->currentUserData()->setProjection(viewport->getRightProj());
 
                the_app->draw();
-                              
+
                if(NULL != draw_sim_i)
                {
                   draw_sim_i->draw(scale_factor);

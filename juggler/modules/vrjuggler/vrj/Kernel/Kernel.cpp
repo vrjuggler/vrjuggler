@@ -56,6 +56,8 @@
 #include <jccl/Config/ChunkFactory.h>
 #include <jccl/RTRC/ConfigManager.h>
 
+#include <boost/concept_check.hpp>
+
 
 namespace vrj
 {
@@ -130,6 +132,7 @@ void Kernel::waitForKernelStop()
 /// The Kernel loop
 void Kernel::controlLoop(void* nullParam)
 {
+   boost::ignore_unused_variable_warning(nullParam);
    vprDEBUG(vrjDBG_KERNEL,1) << "vjKernel::controlLoop: Started.\n" << vprDEBUG_FLUSH;
 
    vprASSERT (NULL != vpr::Thread::self());
@@ -146,9 +149,9 @@ void Kernel::controlLoop(void* nullParam)
       // the ClusterManager constructor
       cluster::ClusterNetwork::instance()->updateNewConnections();
 
-      bool cluster = !(cluster::ClusterManager::instance()->isClusterActive() && 
+      bool cluster = !(cluster::ClusterManager::instance()->isClusterActive() &&
                        !cluster::ClusterManager::instance()->isClusterReady());
-      
+
       // Iff we have an app and a draw manager
       if((mApp != NULL) && (mDrawManager != NULL) && cluster)
       {
@@ -465,6 +468,7 @@ bool Kernel::addUser(jccl::ConfigChunkPtr chunk)
 // XXX: Not implemented
 bool Kernel::removeUser(jccl::ConfigChunkPtr chunk)
 {
+   boost::ignore_unused_variable_warning(chunk);
    return false;
 }
 
