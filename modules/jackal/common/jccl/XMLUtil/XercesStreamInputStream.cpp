@@ -33,59 +33,72 @@
 
 #include <jccl/XMLUtil/XercesStreamInputStream.h>
 
-namespace jccl {
+namespace jccl
+{
 
-XercesStreamInputStream::XercesStreamInputStream (std::istream& _in, const char* _terminator): terminator (_terminator) {
-    //terminator = strdup (_terminator);
-    termlength = strlen (terminator);
-    search_state = 0;
-    finished = false;
-    in = &_in;
+XercesStreamInputStream::XercesStreamInputStream (std::istream& _in, const char* _terminator): terminator (_terminator)
+{
+   //terminator = strdup (_terminator);
+   termlength = strlen (terminator);
+   search_state = 0;
+   finished = false;
+   in = &_in;
 }
 
-/*virtual*/ XercesStreamInputStream::~XercesStreamInputStream() {
-    ;
+/*virtual*/ XercesStreamInputStream::~XercesStreamInputStream()
+{
+   ;
 }
 
-/*virtual*/ unsigned int XercesStreamInputStream::curPos() const {
-    return 0;
+/*virtual*/ unsigned int XercesStreamInputStream::curPos() const
+{
+   return 0;
 }
 
-/*virtual*/ unsigned int XercesStreamInputStream::readBytes (XMLByte* const buf, const unsigned int _buflen) {
-    // we shorten buflen here so that we always know we'll have space
-    // to tack on text if we were following a false lead.
-    // the problem is that, even if we're real close to the end of the
-    // buffer, if we see something that might be the terminator it's eas
-    // ier to pursue it right here.
-    unsigned int buflen = _buflen - termlength;
-    unsigned int i;
-    char ch;
-    
-    if (finished)
-        return 0;
-    
-    for (i = 0; i < buflen;) {
-        if (!in->get(ch))
-            break; // it was eof
-        if (ch == terminator[search_state]) {
-            search_state++;
-            if (search_state == termlength) {
-                finished = true;
-                break;
-            }
-        }
-        else {
-            if (search_state > 0) {
-                // stick the false lead in the buffer
-                strncpy ((char*)&buf[i], terminator, search_state);
-                i += search_state;
-                search_state = 0;
-            }
-            buf[i++] = ch;
-        }
-    }
-    
-    return i;
+/*virtual*/ unsigned int XercesStreamInputStream::readBytes (XMLByte* const buf, const unsigned int _buflen)
+{
+   // we shorten buflen here so that we always know we'll have space
+   // to tack on text if we were following a false lead.
+   // the problem is that, even if we're real close to the end of the
+   // buffer, if we see something that might be the terminator it's eas
+   // ier to pursue it right here.
+   unsigned int buflen = _buflen - termlength;
+   unsigned int i;
+   char ch;
+
+   if ( finished )
+      return 0;
+
+   for ( i = 0; i < buflen; )
+   {
+      if ( !in->get(ch) )
+      {
+         break; // it was eof
+      }
+
+      if ( ch == terminator[search_state] )
+      {
+         search_state++;
+         if ( search_state == termlength )
+         {
+            finished = true;
+            break;
+         }
+      }
+      else
+      {
+         if ( search_state > 0 )
+         {
+            // stick the false lead in the buffer
+            strncpy ((char*)&buf[i], terminator, search_state);
+            i += search_state;
+            search_state = 0;
+         }
+         buf[i++] = ch;
+      }
+   }
+
+   return i;
 }
 
-};
+} // End of jccl namespace

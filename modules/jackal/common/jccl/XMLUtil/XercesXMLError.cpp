@@ -37,40 +37,42 @@
 
 //based on Xerces DOMPrint source code
 
-namespace jccl {
+namespace jccl
+{
 
 void XercesXMLError::warning(const SAXParseException&)
 {
-    //
-    // Ignore all warnings.
-    //
+   //
+   // Ignore all warnings.
+   //
 }
 
 void XercesXMLError::error(const SAXParseException& toCatch)
 {
-//      cerr << "Error at file \"" << DOMString(toCatch.getSystemId())
-//           << "\", line " << toCatch.getLineNumber()
-//           << ", column " << toCatch.getColumnNumber()
-//           << "\n   Message: " << DOMString(toCatch.getMessage()) << endl;
-    throw SAXParseException(toCatch);  // Copy the 'toCatch' object before throwing -
-                                       //   otherwise we would be throwing a reference to
-                                       //   a local object that gets destroyed before
-                                       //   the catch.
+//   std::cerr << "Error at file \"" << DOMString(toCatch.getSystemId())
+//             << "\", line " << toCatch.getLineNumber()
+//             << ", column " << toCatch.getColumnNumber()
+//             << "\n   Message: " << DOMString(toCatch.getMessage()) << std::endl;
+   throw SAXParseException(toCatch);  // Copy the 'toCatch' object before throwing -
+                                      //   otherwise we would be throwing a reference to
+                                      //   a local object that gets destroyed before
+                                      //   the catch.
 }
 
 void XercesXMLError::fatalError(const SAXParseException& toCatch)
 {
-//      cerr << "Fatal Error at file \"" << DOMString(toCatch.getSystemId())
-//           << "\", line " << toCatch.getLineNumber()
-//           << ", column " << toCatch.getColumnNumber()
-//           << "\n   Message: " << DOMString(toCatch.getMessage()) << endl;
-    throw SAXParseException(toCatch);
+//   std::cerr << "Fatal Error at file \"" << DOMString(toCatch.getSystemId())
+//             << "\", line " << toCatch.getLineNumber()
+//             << ", column " << toCatch.getColumnNumber()
+//             << "\n   Message: " << DOMString(toCatch.getMessage())
+//             << std::endl;
+   throw SAXParseException(toCatch);
 }
 
 void XercesXMLError::resetErrors()
 {
-    // No-op in this case
+   // No-op in this case
 }
 
 
-};
+} // End of jccl namespace

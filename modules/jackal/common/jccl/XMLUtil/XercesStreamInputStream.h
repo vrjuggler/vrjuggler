@@ -36,36 +36,38 @@
 #include <jccl/jcclConfig.h>
 #include <xercesc/util/BinInputStream.hpp>
 
-namespace jccl {
+namespace jccl
+{
 
-//: Xerces-XML compatible BinInputStream wrapper for std::istream.
-class XercesStreamInputStream: public BinInputStream {
+/** Xerces-XML compatible BinInputStream wrapper for std::istream. */
+class XercesStreamInputStream: public BinInputStream
+{
 
 private:
 
-    const char* terminator;
-    unsigned int termlength;
+   const char* terminator;
+   unsigned int termlength;
 
-    //: How many characters of the terminator we've found so far.
-    unsigned int search_state;
+   /** How many characters of the terminator we've found so far. */
+   unsigned int search_state;
 
-    //: true when we've reached the end of stream (marked by terminator).
-    bool finished;
-    std::istream* in;
+   /** true when we've reached the end of stream (marked by terminator). */
+   bool finished;
+   std::istream* in;
 
 public:
 
-    XercesStreamInputStream (std::istream& _in, const char* _terminator);
+   XercesStreamInputStream (std::istream& _in, const char* _terminator);
 
-    virtual ~XercesStreamInputStream();
+   virtual ~XercesStreamInputStream();
 
-    virtual unsigned int curPos() const;
+   virtual unsigned int curPos() const;
 
-    virtual unsigned int readBytes (XMLByte* const buf, const unsigned int _buflen);
+   virtual unsigned int readBytes (XMLByte* const buf, const unsigned int _buflen);
 
-
-};
 
 };
+
+} // End of jccl namespace
 
 #endif
