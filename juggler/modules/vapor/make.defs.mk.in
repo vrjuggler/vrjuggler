@@ -60,6 +60,7 @@
 # VPRROOT_ABS     - The absolute path to the root of the VPR source tree.
 # JUGGLERROOT_ABS - The absolute path to the root of the VPR source tree.
 #
+# DPP_SCRIPTDIR   - The directory containing Doozer++ helper scripts.
 # MKDEPS_CC       - Compiler for C dependencies.
 # MKDEPS_CXX      - Compiler for CXX dependencies.
 # MKINSTALLDIRS   - Path to shell script for making directories.
@@ -87,6 +88,7 @@ mtreedir	= $(topdir)/mtree
 releasedir	= $(JUGGLERROOT_ABS)/release
 scriptdir	= $(releasedir)/scripts
 topdir		= @topdir@
+DPP_SCRIPTDIR	= $(JUGGLERROOT_ABS)/Doozer++/scripts
 MAKEFLAGS	+= --no-print-directory
 MKDEPS_CC	= @CC@
 MKDEPS_CXX	= @CXX@

@@ -35,74 +35,78 @@
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
+# __DZR_INFO_BEGIN__
+#
 # Targets are:
 #
-# world             - Build and install everything.
-# world-all-abi     - Build and install everything using all supported ABIs.
-# buildworld        - Build everything (same as 'all').
-# installworld      - Install everything (same as 'install-all').  This
+# T<world>            Build and install everything.
+# T<world-all-abi>    Build and install everything using all supported ABIs.
+# T<buildworld>       Build everything (same as 'all').
+# T<installworld>     Install everything (same as 'install-all').  This
 #                     requires  that 'buildworld' be successfully completed
 #                     beforehand.
-# release           - Build and install a release version.
+# T<release>          Build and install a release version.
 #
-# all               - Build everything.
-# all-abi           - Build everything using all supported ABIs.
-# debug             - Build the VR Juggler libraries (dynamic and static) with
+# T<all>              Build everything.
+# T<all-abi>          Build everything using all supported ABIs.
+# T<debug>            Build the VR Juggler libraries (dynamic and static) with
 #                     debugging symbols turned on.
-# dbg               - Build the debugging, static copy of the libraries.
-# dbg-dso           - Build the debugging, dynamic shared object version of
+# T<dbg>              Build the debugging, static copy of the libraries.
+# T<dbg-dso>          Build the debugging, dynamic shared object version of
 #                     the libraries.
-# optim             - Build the VR Juggler libraries (dynamic and static) with
+# T<optim>            Build the VR Juggler libraries (dynamic and static) with
 #                     optimization flags enabled.
-# opt               - Build the optimized, static version of the libraries.
-# opt-dso           - Build the dynamic shared object version of the
+# T<opt>              Build the optimized, static version of the libraries.
+# T<opt-dso>          Build the dynamic shared object version of the
 #                     libraries.
-# profiled          - Build the VR Juggler libraries (dynamic and static) with
+# T<profiled>         Build the VR Juggler libraries (dynamic and static) with
 #                     profiling flags enabled.
-# prof              - Build the profiled, static version of the libraries.
-# prof-dso          - Build the profiled, dynamic shared object version of the
+# T<prof>             Build the profiled, static version of the libraries.
+# T<prof-dso>         Build the profiled, dynamic shared object version of the
 #                     libraries.
-# obj               - Build the object files using the default value for
+# T<obj>              Build the object files using the default value for
 #                     $(OBJDIR).
 #
-# links             - Define links (for developer use only) that provide
+# T<links>            Define links (for developer use only) that provide
 #                     functionality allowing the use of the $VJ_BASE_DIR
 #                     environment variable.
-# clean-links       - Remove the symlinks created by 'links'.
+# T<clean-links>      Remove the symlinks created by 'links'.
 #
-# hier              - Make the full directory hierarchy for the installation.
-# install-all       - Install all versions of the libraries, all header files,
+# T<hier>             Make the full directory hierarchy for the installation.
+# T<install-all>      Install all versions of the libraries, all header files,
 #                     the data directory, and the test code.
-# install-all-abi   - Install every ABI possible on the target platform.
-# install           - Install the full debugging version of VR Juggler (with
+# T<install-all-abi>  Install every ABI possible on the target platform.
+# T<install>          Install the full debugging version of VR Juggler (with
 #                     both static and dynamic libraries). 
-# install-debug     - Same as 'install'.
-# install-dbg       - Install the debugging, static version of the libraries.
-# install-dbg-dso   - Install the debugging, dynamic shared object version of
+# T<install-debug>    Same as 'install'.
+# T<install-dbg>      Install the debugging, static version of the libraries.
+# T<install-dbg-dso>  Install the debugging, dynamic shared object version of
 #                     the libraries.
-# install-optim     - Install the full optimized version of VR Juggler (with
+# T<install-optim>    Install the full optimized version of VR Juggler (with
 #                     both static and dynamic libraries).
-# install-opt       - Install the optimized, static version of the libraries.
-# install-opt-dso   - Install the dynamic shared object version of the
+# T<install-opt>      Install the optimized, static version of the libraries.
+# T<install-opt-dso>  Install the dynamic shared object version of the
 #                     libraries.
-# install-headers   - Install only the header files.
-# install-samples   - Install only the sample applications.
-# install-test      - Install only the test code.
-# install-tools     - Install only the user tools code.
-# install-data      - Install only the data directory.
+# T<install-headers>  Install only the header files.
+# T<install-samples>  Install only the sample applications.
+# T<install-test>     Install only the test code.
+# T<install-tools>    Install only the user tools code.
+# T<install-data>     Install only the data directory.
 #
-# docs              - Build the internal and the public documentation.
-# doc-internal      - Build only the internal documentation.
-# doc-public        - Build only the public documentation.
+# T<docs>             Build the internal and the public documentation.
+# T<doc-internal>     Build only the internal documentation.
+# T<doc-public>       Build only the public documentation.
 #
-# clean             - Clean up everything (uses common 'clean' target).
-# cleandepend       - Clean up the dependency files (uses common 'cleandepend'
+# T<clean>            Clean up everything (uses common 'clean' target).
+# T<cleandepend>      Clean up the dependency files (uses common 'cleandepend'
 #                     target).
-# clobber           - Clean up everything and remove the directories
+# T<clobber>          Clean up everything and remove the directories
 #                     containing the compiled libraries and its object files.
 #
-# info              - Print out information about the build process that may
+# T<info>             Print out information about the build process that may
 #                     be useful to the user.
+#
+# __DZR_INFO_END__
 #
 # The default target is 'debug'.  'install' will install the debugging, static
 # version of the libraries.
@@ -114,6 +118,8 @@ default: debug
 # Without this, the 'default' set in dpp.subdir.mk becomes the default
 # target, and that's not what we want.
 DEFAULT_SET	= 1
+
+SRC_MKFILES	= Makefile
 
 # Include common definitions.
 include @topdir@/make.defs.mk
@@ -261,22 +267,6 @@ doc-internal:
 doc-public:
 	$(MAKE) -C Doc SUBDIRS="$(SUBDIRS)" $@
 
-# =============================================================================
-# Human-readable information about the build system.
-# =============================================================================
-info:
-	@echo "\nInfo for the make of $(VJ_LIBRARY)"
-	@echo "\nOBJDIR: $(OBJDIR)"
-	@echo "VJROOT_ABS: $(VJROOT_ABS)"
-	@echo "Default ABI: $(ABI)"
-	@echo "Default instruction set architecture: $(ISA)"
-	@echo "ABI list: $(ABI_LIST)"
-	@echo "DBG_BUILDDIR: $(DBG_BUILDDIR)"
-	@echo "OPT_BUILDDIR: $(OPT_BUILDDIR)"
-	@echo "Installation prefix: $(prefix)"
-	@echo "includedir: $(includedir)"
-	@echo "libdir: $(libdir)"
-	@$(SHELL) $(scriptdir)/print-targets-vrj.sh
-
+include $(MKPATH)/dpp.info.mk
 include $(MKPATH)/dpp.subdir.mk
 include Makefile.inc
