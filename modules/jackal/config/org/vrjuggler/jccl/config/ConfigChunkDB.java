@@ -430,20 +430,15 @@ public class ConfigChunkDB {
 	}
 	for (int i = 0; i < l.size(); i++) {
 	    ChunkDBListener lis = (ChunkDBListener)l.elementAt (i);
-	    switch (e.getAction()) {
-	    case e.INSERT:
+            int a = e.getAction();
+	    if (a == e.INSERT)
 		lis.addChunk (e);
-		break;
-	    case e.REMOVE:
+	    else if (a == e.REMOVE)
 		lis.removeChunk (e);
-		break;
-	    case e.REPLACE:
+            else if (a ==  e.REPLACE)
 		lis.replaceChunk (e);
-		break;
-	    case e.REMOVEALL:
+            else if (a ==  e.REMOVEALL)
 		lis.removeAllChunks (e);
-		break;
-	    }
 	}
     }
 

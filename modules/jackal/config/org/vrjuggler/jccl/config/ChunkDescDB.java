@@ -275,20 +275,15 @@ public class ChunkDescDB {
 	}
 	for (int i = 0; i < l.size(); i++) {
 	    DescDBListener lis = (DescDBListener)l.elementAt (i);
-	    switch (e.getAction()) {
-	    case e.INSERT:
+            int a = e.getAction();
+	    if (a == e.INSERT)
 		lis.addDesc (e);
-		break;
-	    case e.REMOVE:
+	    else if (a == e.REMOVE)
 		lis.removeDesc (e);
-		break;
-	    case e.REPLACE:
+	    else if (a == e.REPLACE)
 		lis.replaceDesc (e);
-		break;
-	    case e.REMOVEALL:
+	    else if (a == e.REMOVEALL)
 		lis.removeAllDescs (e);
-		break;
-	    }
 	}
     }
 
