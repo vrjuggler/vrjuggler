@@ -231,11 +231,11 @@ aMotionStar::aMotionStar(const char* address, const unsigned short port,
                          const double measurement_rate,
                          const unsigned int birds_requested)
     : m_active(false), m_socket(-1), m_port(port), m_proto(proto),
-      m_master(master), m_seq_num(0), m_run_mode(run_mode),
+      m_master(master), m_seq_num(0), m_cur_mrate(0.0),
+      m_measurement_rate(measurement_rate), m_run_mode(run_mode),
       m_hemisphere(hemisphere), m_bird_format(bird_format),
-      m_measurement_rate(measurement_rate), m_report_rate(report_rate),
-      m_birds_requested(birds_requested),
-      m_cur_mrate(0.0), m_birds_active(0), m_unit_conv(1.0)
+      m_report_rate(report_rate), m_birds_requested(birds_requested),
+      m_birds_active(0), m_unit_conv(1.0)
 {
     union {
         char	c[sizeof(short)];
