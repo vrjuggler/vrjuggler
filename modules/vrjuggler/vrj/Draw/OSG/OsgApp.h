@@ -223,7 +223,20 @@ inline void OsgApp::contextInit()
 
 inline void OsgApp::draw()
 {
-   osgUtil::SceneView* sv(NULL);
+   glPushAttrib(GL_TRANSFORM_BIT);
+	glPushAttrib(GL_VIEWPORT_BIT);
+	
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	
+	glMatrixMode(GL_TEXTURE);
+	glPushMatrix();
+	
+	
+	osgUtil::SceneView* sv(NULL);
    sv = (*sceneViewer);    // Get context specific scene viewer
    vprASSERT( sv != NULL);
 
@@ -283,6 +296,18 @@ inline void OsgApp::draw()
    sv->update();
    sv->cull();
    sv->draw();
+	
+	glMatrixMode(GL_TEXTURE);
+	glPopMatrix();
+	
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+	
+	glPopAttrib();
+	glPopAttrib();
 }
 
 
