@@ -148,12 +148,12 @@ AC_CHECK_PROG([MTREE_CMD], [mtree], [mtree], [\$(PERL) \$(scriptdir)/mtree.pl])
 saveCXXFLAGS="$CXXFLAGS"
 saveINCLUDES="$INCLUDES"
 
-VPR_PATH(0.15.0, , AC_MSG_ERROR(*** VPR required for sonix***))
+VPR_PATH([0.19.0], [VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`],
+         [AC_MSG_ERROR([*** VPR required for sonix***])])
 INCLUDES="$INCLUDES $VPR_INCLUDES"
 LIBS="$LIBS $VPR_LIBS"
 
 CXXFLAGS="$VPR_CXXFLAGS $CXXFLAGS"
-
 
 dnl ignore the nasty paths appended by the config scripts...
 #CXXFLAGS="$saveCXXFLAGS"
@@ -246,13 +246,6 @@ else
     RM_LN='rm -f'
     SAFE_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
     SAFE_SNXROOT_ABS="$SNXROOT_ABS"
-fi
-
-# See if we have vapor
-VPR_PATH(, [HAVE_VAPOR='Y'], [HAVE_VAPOR='N'], )
-VPR_SUBSYSTEM=
-if test "x$HAVE_VAPOR" = "xY"; then
-   VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
 fi
 
 dnl append the openal stuff...
