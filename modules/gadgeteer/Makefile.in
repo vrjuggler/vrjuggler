@@ -240,6 +240,7 @@ endif
           $(EXTRA_INSTALL_ARGS) $(GADGETROOT_ABS)/RELEASE_NOTES.txt	\
           $(projdatadir)
 	@$(MAKE) BUILD_TYPE=opt afterinstall
+	@$(MAKE) BUILD_TYPE=dbg afterinstall
 	@echo "Build time: `LTIME=C date`" > $(projdatadir)/BUILD_TIME
 	@echo "==============================================================="
 	@echo ">>> Gadgeteer make release started on $(STARTTIME)"

@@ -205,6 +205,7 @@ ifdef BUILD_TYPE
 else
 	$(MAKE) links-dbg
 endif
+
 links-all:
 	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" installworld
 
@@ -331,18 +332,15 @@ hier:
 # Steps to take after the installation process is complete.  This target is
 # independent of the current ABI.
 afterinstall:
-	@echo "==============================================================="
-	@echo "Gadgeteer installation complete"
-	@echo "==============================================================="
 	@$(MAKE) plugins
 	@$(MAKE) install-plugins
 	@echo "==============================================================="
-	@echo "ClusterJuggler plug-in installation complete"
+	@echo "ClusterJuggler $(BUILD_TYPE) plug-in installation complete"
 	@echo "==============================================================="
 	@$(MAKE) drivers
 	@$(MAKE) install-drivers
 	@echo "==============================================================="
-	@echo "Gadgeteer driver plug-in complete"
+	@echo "Gadgeteer $(BUILD_TYPE) driver plug-in installation complete"
 	@echo "==============================================================="
 
 PREINSTALL=	pre-install
