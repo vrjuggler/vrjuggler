@@ -38,6 +38,9 @@
 //	Defines radiosity scene traversal routines
 //----------------------------------------------------------------
 
+#ifndef _PERFORMER_JUGGLER_SOUND_REPLACE_TRAV_H_
+#define _PERFORMER_JUGGLER_SOUND_REPLACE_TRAV_H_
+
 //   Radiosity Traversal routines
 #include <iostream.h>
 //#include <fstream.h>
@@ -148,3 +151,5 @@ protected:
 
 SoundEngine* pjSoundReplaceTrav::mSoundEnginePtr = NULL;
 
+
+#endif	/* _PERFORMER_JUGGLER_SOUND_REPLACE_TRAV_H_ */

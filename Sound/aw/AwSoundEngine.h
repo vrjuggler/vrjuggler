@@ -31,6 +31,9 @@
  * -----------------------------------------------------------------
  */
 
+#ifndef _AW_SOUND_ENGINE_H_
+#define _AW_SOUND_ENGINE_H_
+
 #include <assert.h>
 #include <unistd.h>
 #include <iostream.h>
@@ -93,3 +96,6 @@ public:
 };
 
 vjSoundEngineConstructor<AwSoundEngine> aw_constructor; 
+
+
+#endif	/* _AW_SOUND_ENGINE_H_ */
