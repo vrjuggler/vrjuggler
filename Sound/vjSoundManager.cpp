@@ -35,6 +35,8 @@
 #include <Sound/vjSoundManager.h>
 #include <Sound/vjSoundFactory.h>
 
+vjSoundManager* vjSoundManager::_instance = NULL;   //: The instance ptr
+
 //: Add the chunk to the configuration
 //! PRE: configCanHandle(chunk) == true
 bool vjSoundManager::configAdd(vjConfigChunk* chunk)

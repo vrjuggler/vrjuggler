@@ -41,6 +41,9 @@
 #include <vector>
 #include <typeinfo>
 
+// soundengines use the SEC to register themselves with the sound factory
+class vjSoundEngineConstructorBase;
+
 // use the vjSoundFactory factory to create a new sound engine.
 // do not create one directly.
 class vjSoundFactory
