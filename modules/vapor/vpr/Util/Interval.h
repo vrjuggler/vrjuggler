@@ -36,9 +36,26 @@
 #include <vpr/vprConfig.h>
 #include <vpr/Util/Assert.h>
 
+#if defined(VPR_USE_NSPR)
+#  include <prinrval.h>
+#else
+#  include <vpr/System.h>
+#endif
+
 namespace vpr
 {
 
+/**
+ * This class captures an high resolution interval
+ * 
+ * This interval is based off an unsigned always increasing
+ * counter.  This means the interval is only accurate for about 3 hours
+ * 
+ * 
+ * The interval overflows whenever the counter maxes out.
+ * The operator- will take care of the overflow automatically
+ * to make it possible to compare to interval values.
+ */
 class VPR_CLASS_API Interval
 {
 public:
@@ -93,6 +110,12 @@ public:
       }
    }
 
+   /**
+    * Set the interval to the current time.  This can them be used to compute a time 
+    * interval by subtracting two intervals from each other.
+    */
+   inline void setNow();
+
    void sec(const vpr::Uint32 num)
    { set(num, Interval::Sec); }
    vpr::Uint32 sec() const
@@ -125,16 +148,43 @@ public:
 
    bool operator !=(const Interval& r) const
    { return ! (*this == r); }
-
+   
    Interval operator +(const Interval& r) const
-   { return Interval(mUsecs+r.mUsecs, Interval::Usec); }
+   { return Interval(vpr::Uint32(mUsecs+r.mUsecs), Interval::Usec); }
+
+   /**
+    * Return the difference of two interval values
+    * 
+    * @note The interval may overflow.  If so, then it will still
+    * evaluate correctly.
+    * @param r      The parameter to subtract
+    * @return
+    */
    Interval operator -(const Interval& r) const
-   { return Interval(mUsecs-r.mUsecs, Interval::Usec); }
+   { return Interval(vpr::Uint32(mUsecs-r.mUsecs), Interval::Usec); }
 
 
 private:
    vpr::Uint32 mUsecs;
 }; // class Interval
+
+inline void Interval::setNow()
+{
+#if defined(VPR_USE_NSPR)
+   /*  Todo our own rounding
+   static vpr::Uint32 ticks_per_sec(0);
+   if(ticks_per_sec == 0)
+      ticks_per_sec = PR_TicksPerSecond();
+   */
+
+   mUsecs = PR_IntervalToMicroseconds( PR_IntervalNow() );
+#else
+
+   timeval cur_time;
+   vpr::System::gettimeofday(&cur_time);
+   mUsecs = cur_time.tv_usec + (1000000 * cur_time.tv_sec);
+#endif
+}
 
 }; // namespace vpr
 
