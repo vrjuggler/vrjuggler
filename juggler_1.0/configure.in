@@ -81,6 +81,11 @@ AC_ARG_ENABLE(perf,
               [  --enable-perf           use Perfromer API [default=yes]],
               enable_perf="$enableval", enable_perf='yes')
 
+# Enable compile-time debugging blocks.
+if test "x$enable_debug" = "xyes" ; then
+    AC_DEFINE(VJ_DEBUG,)
+fi
+
 if test "x$enable_vjstyle" = "x64" ; then
     OBJECT_STYLE='64'
     LIBBITSUF='64'
