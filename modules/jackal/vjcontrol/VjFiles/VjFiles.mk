@@ -39,12 +39,10 @@
 # VJFILES_SOURCES - The list of .java files to build
 # -----------------------------------------------------------------------------
 
-VJGUI_SOURCES = ${srcdir}/VjFiles/vjcontrol.dsc		\
-		${srcdir}/VjFiles/cut.gif		\
-		${srcdir}/VjFiles/open.gif		\
-		${srcdir}/VjFiles/save.gif		\
-		${srcdir}/VjFiles/close.gif		\
-		${srcdir}/VjFiles/paste.gif		\
-		${srcdir}/VjFiles/new.gif		
-
-
+VJGUI_SOURCES = $(srcdir)/VjFiles/vjcontrol.dsc		\
+                $(srcdir)/VjFiles/cut.gif		\
+                $(srcdir)/VjFiles/open.gif		\
+                $(srcdir)/VjFiles/save.gif		\
+                $(srcdir)/VjFiles/close.gif		\
+                $(srcdir)/VjFiles/paste.gif		\
+                $(srcdir)/VjFiles/new.gif		

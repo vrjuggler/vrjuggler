@@ -55,19 +55,18 @@ MAKEFLAGS	+= -j 1
 
 # Include the .mk files for VjConfig and VjGUI so that the Java code in those
 # directories can be built using this Makefile.
-include ${srcdir}/VjConfig/VjConfig.mk
-include ${srcdir}/VjControl/VjControl.mk
-include ${srcdir}/VjComponents/UI/UI.mk
-include ${srcdir}/VjComponents/UI/Widgets/Widgets.mk
-include ${srcdir}/VjComponents/Network/Network.mk
-include ${srcdir}/VjComponents/ConfigEditor/ConfigEditor.mk
-include ${srcdir}/VjComponents/ConfigEditor/ChunkDescUI/ChunkDescUI.mk
-include ${srcdir}/VjComponents/ConfigEditor/ConfigChunkUI/ConfigChunkUI.mk
-include ${srcdir}/VjComponents/PerfMonitor/PerfMonitor.mk
+include $(srcdir)/VjConfig/VjConfig.mk
+include $(srcdir)/VjControl/VjControl.mk
+include $(srcdir)/VjComponents/UI/UI.mk
+include $(srcdir)/VjComponents/UI/Widgets/Widgets.mk
+include $(srcdir)/VjComponents/Network/Network.mk
+include $(srcdir)/VjComponents/ConfigEditor/ConfigEditor.mk
+include $(srcdir)/VjComponents/ConfigEditor/ChunkDescUI/ChunkDescUI.mk
+include $(srcdir)/VjComponents/ConfigEditor/ConfigChunkUI/ConfigChunkUI.mk
+include $(srcdir)/VjComponents/PerfMonitor/PerfMonitor.mk
 
 # Search path information.
 vpath
-
 vpath %.java @srcdir@
 vpath %.class .
 
@@ -80,45 +79,44 @@ JAVA_TARGETS	= VjControl.jar
 
 # there's no way to append to a jar file, so this must all be done in one
 # step.  This is incredibly stupid...
-VjControl.jar: 	${VJCONFIG_SOURCES} \
-		${VJCONTROL_SOURCES} \
-		${UI_SOURCES}		\
-		${VJCUIUTIL_SOURCES}	\
-		${VJCNETWORK_SOURCES}	\
-		${VJCCONF_SOURCES}	\
-		${CHUNKDESCUI_SOURCES}	\
-		${CONFIGCHUNKUI_SOURCES}	\
-		${VJCPERF_SOURCES}	\
-		${srcdir}/contents.config
-	${JAVAC_CMD} ${srcdir}/VjConfig/*.java \
-		     ${srcdir}/VjControl/*.java \
-		     ${srcdir}/VjComponents/UI/*.java \
-		     ${srcdir}/VjComponents/UI/*/*.java \
-		     ${srcdir}/VjComponents/Network/*.java \
-		     ${srcdir}/VjComponents/ConfigEditor/*.java \
-		     ${srcdir}/VjComponents/ConfigEditor/*/*.java \
-		     ${srcdir}/VjComponents/PerfMonitor/*.java 
-	${JAR} cvf VjControl.jar VjConfig/*.class VjControl/*.class \
-		VjComponents/*/*.class VjComponents/*/*/*.class \
-		-C ${srcdir} VjFiles -C ${srcdir} contents.config
-
-
+VjControl.jar: $(VJCONFIG_SOURCES)	\
+               $(VJCONTROL_SOURCES)	\
+               $(UI_SOURCES)		\
+               $(VJCUIUTIL_SOURCES)	\
+               $(VJCNETWORK_SOURCES)	\
+               $(VJCCONF_SOURCES)	\
+               $(CHUNKDESCUI_SOURCES)	\
+               $(CONFIGCHUNKUI_SOURCES)	\
+               $(VJCPERF_SOURCES)	\
+               $(srcdir)/contents.config
+	$(JAVAC_CMD) $(srcdir)/VjConfig/*.java				\
+                     $(srcdir)/VjControl/*.java				\
+                     $(srcdir)/VjComponents/UI/*.java			\
+                     $(srcdir)/VjComponents/UI/*/*.java			\
+                     $(srcdir)/VjComponents/Network/*.java		\
+                     $(srcdir)/VjComponents/ConfigEditor/*.java		\
+                     $(srcdir)/VjComponents/ConfigEditor/*/*.java	\
+                     $(srcdir)/VjComponents/PerfMonitor/*.java
+	$(JAR) cvf VjControl.jar VjConfig/*.class VjControl/*.class	\
+            VjComponents/*/*.class VjComponents/*/*/*.class		\
+            -C $(srcdir) VjFiles -C $(srcdir) contents.config
 
 #
 # Documentation <just for show>
 #
 doc:
-	/usr/java/bin/javadoc -d ~/public_html/vjcontrol -private VjControl \
-	VjConfig VjComponents VjComponents.ConfigEditor VjComponents.ConfigEditor.ConfigChunkUI VjComponents.ConfigEditor.ChunkDescUI VjComponents.UI VjComponents.UI.Widgets VjComponents.PerfMonitor VjComponents.Network
-
+	/usr/java/bin/javadoc -d ~/public_html/vjcontrol -private	\
+            VjControl VjConfig VjComponents VjComponents.ConfigEditor	\
+            VjComponents.ConfigEditor.ConfigChunkUI			\
+            VjComponents.ConfigEditor.ChunkDescUI VjComponents.UI	\
+            VjComponents.UI.Widgets VjComponents.PerfMonitor		\
+            VjComponents.Network
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
-CLEAN_FILES	+= VjConfig/*.class VjConfig/*~                         \
-                   VjControl/*.class VjControl/*~                       \
-		   VjComponents/*/*.class VjComponents/*/*~		\
-		   VjComponents/*/*/*.class VjComponents/*/*/*~	
-
-
+CLEAN_FILES	+= VjConfig/*.class VjConfig/*~ VjControl/*.class	\
+                   VjControl/*~ VjComponents/*/*.class			\
+                   VjComponents/*/*~ VjComponents/*/*/*.class		\
+                   VjComponents/*/*/*~
 CLOBBER_FILES	+= VjControl.jar
