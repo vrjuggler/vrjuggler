@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Dec-08-2003 patrickh    Updated to VR Juggler 1.1.148.
+                        NEW VERSION: 0.8.3
 Nov-23-2003 patrickh    Updated the Autoconf-based build system to use the
                         Doozer++ HEAD branch.
 Sep-13-2003 patrickh    Added a Jamfile for easier compiling.

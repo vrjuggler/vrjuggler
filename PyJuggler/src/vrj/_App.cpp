@@ -137,6 +137,26 @@ struct vrj_App_Wrapper: vrj::App
         vrj::App::preFrame();
     }
 
+    void latePreFrame() {
+        vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
+                                 "vrj_App_Wrapper::latePreFrame()\n",
+                                 "vrj_App_Wrapper::latePreFrame() done.\n");
+        PyJuggler::InterpreterGuard guard;
+
+        try
+        {
+            call_method< void >(self, "latePreFrame");
+        }
+        catch(error_already_set)
+        {
+            PyErr_Print();
+        }
+    }
+
+    void default_latePreFrame() {
+        vrj::App::latePreFrame();
+    }
+
     void intraFrame() {
         vpr::DebugOutputGuard og(pyjDBG_CXX, vprDBG_VERB_LVL,
                                  "vrj_App_Wrapper::intraFrame()\n",
@@ -386,6 +406,7 @@ void _Export_App()
         .def("apiInit", &vrj::App::apiInit, &vrj_App_Wrapper::default_apiInit)
         .def("exit", &vrj::App::exit, &vrj_App_Wrapper::default_exit)
         .def("preFrame", &vrj::App::preFrame, &vrj_App_Wrapper::default_preFrame)
+        .def("latePreFrame", &vrj::App::latePreFrame, &vrj_App_Wrapper::default_latePreFrame)
         .def("intraFrame", &vrj::App::intraFrame, &vrj_App_Wrapper::default_intraFrame)
         .def("postFrame", &vrj::App::postFrame, &vrj_App_Wrapper::default_postFrame)
         .def("reset", &vrj::App::reset, &vrj_App_Wrapper::default_reset)

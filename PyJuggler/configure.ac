@@ -299,7 +299,7 @@ JCCL_PATH([0.12], ,
           [AC_MSG_ERROR([*** JCCL is required for PyJuggler ***])])
 GADGETEER_PATH([0.13], ,
                [AC_MSG_ERROR([*** Gadgeteer is required for PyJuggler ***])])
-VRJUGGLER_PATH([1.1.144], ,
+VRJUGGLER_PATH([1.1.148], ,
                [AC_MSG_ERROR([*** VR Juggler is required for PyJuggler ***])])
 
 pyjsave_CFLAGS="$CFLAGS"
