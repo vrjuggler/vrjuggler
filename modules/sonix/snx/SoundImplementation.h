@@ -148,6 +148,20 @@ public:
       this->lookup( alias ).pitchbend = amount;
    }
    
+   /** affect volume.  set to a value between [0..1]. */
+   virtual void setVolume( const std::string& alias, float amount )
+   {
+      this->lookup( alias ).volume = amount;
+   }
+   
+   /** affect cutoff. 
+    * set to a value between [0..1]... 1 is no change.  0 is total cutoff. 
+    */
+   virtual void setCutoff( const std::string& alias, float amount )
+   {
+      this->lookup( alias ).cutoff = amount;
+   }
+   
    /**
     * @semantics stop the sound
     * @input alias of the sound to be stopped

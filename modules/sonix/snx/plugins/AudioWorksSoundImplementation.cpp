@@ -93,8 +93,12 @@ namespace snx
 
       if (mBindTable.count( alias ) > 0)
       {
-         std::cout<<"[snx]AudioWorks| DEBUG: trigger: "<<(int)mBindTable[alias].mSound<<"\n"<<std::flush;
+         //std::cout<<"[snx]AudioWorks| DEBUG: trigger: "<<(int)mBindTable[alias].mSound<<"\n"<<std::flush;
          awProp(mBindTable[alias].mSound, AWSND_STATE, AW_ON);
+         //if (isAmbient(alias))
+         //{
+         //   awProp(mBindTable[alias].mPlayer, AWSND_STATE, AW_ON);
+         //}
       }
    }
 
@@ -130,27 +134,26 @@ namespace snx
       {
          if (isAmbient == true)
          {
+            awRemPlyrSnd( mBindTable[alias].mPlayer, mBindTable[alias].mSound );
+
             // attaches the player to observer
             awProp( mBindTable[alias].mPlayer, AWPLYR_CSREF, AWPLYR_OBS );
             awPlyrObsRef( mBindTable[alias].mPlayer, mObs );
 
             //float xyz[3] = { 0.0f, 0.0f, 0.0f }, hpr[3] = { 0.0f, 0.0f, 0.0f };
             //awXYZHPR(si.mSound, xyz, hpr);               //Set sound at origin
-            awRemPlyrSnd( mBindTable[alias].mPlayer, mBindTable[alias].mSound );
          }
 
          else
          {
             // detaches player from observer
             awProp( mBindTable[alias].mPlayer, AWPLYR_CSREF, AWPLYR_CSREFPOS );
+            awAddPlyrSnd( mBindTable[alias].mPlayer, mBindTable[alias].mSound );
 
             float xyz[3] = { mSounds[alias].position[0], mSounds[alias].position[1], mSounds[alias].position[2] };
             float hpr[3] = { 0.0f, 0.0f, 0.0f };
             // convert xyz to performer coords...
             awPlyrCSRef( mBindTable[alias].mPlayer, xyz, hpr );
-
-            awAddPlyrSnd( mBindTable[alias].mPlayer, mBindTable[alias].mSound );
-
          }
       }
    }
@@ -245,6 +248,7 @@ namespace snx
       snx::SoundImplementation::getListenerPosition( mat );
    }
 
+   /** 1 is no change.  2 is really high, 0 is really low. */
    void AudioWorksSoundImplementation::setPitchBend( const std::string& alias, float amount )
    {
       snx::SoundImplementation::setPitchBend( alias, amount );
@@ -255,7 +259,37 @@ namespace snx
          //else
          awProp( mBindTable[alias].mPlayer, AWSND_PBEND, amount );
       }
-   }   
+   }
+   
+   /** 0 - 1. */
+   void AudioWorksSoundImplementation::setVolume( const std::string& alias, float amount )
+   {
+      snx::SoundImplementation::setVolume( alias, amount );
+      if (mBindTable.count( alias ) > 0 && mSounds.count( alias ) > 0)
+      {
+         float real_amount = amount * 160.0f;
+         
+         //if (this->isAmbient( alias ) == true)
+         awProp( mBindTable[alias].mSound, AWSND_SPL, real_amount );
+         //else
+         awProp( mBindTable[alias].mPlayer, AWSND_SPL, real_amount );
+      }
+   }
+   
+   /** 1 is no change.  0 is total cutoff. */
+   void AudioWorksSoundImplementation::setCutoff( const std::string& alias, float amount )
+   {
+      snx::SoundImplementation::setCutoff( alias, amount );
+      if (mBindTable.count( alias ) > 0 && mSounds.count( alias ) > 0)
+      {
+         float true_cutoff = 22050.0f * amount;
+         
+         //if (this->isAmbient( alias ) == true)
+         awProp( mBindTable[alias].mSound, AWSND_LOPASS, true_cutoff );
+         //else
+         awProp( mBindTable[alias].mPlayer, AWSND_LOPASS, true_cutoff );
+      }
+   }  
       
    /**
     * start the sound API, creating any contexts or other configurations at startup
@@ -495,7 +529,7 @@ namespace snx
     */
    void AudioWorksSoundImplementation::bind( const std::string& alias )
    {
-      std::cout<<"[snx]AudioWorks| DEBUG: bind() "<<alias<<"\n"<<std::flush;
+      //std::cout<<"[snx]AudioWorks| DEBUG: bind() "<<alias<<"\n"<<std::flush;
 
       this->unbind( alias );
 
@@ -536,6 +570,7 @@ namespace snx
 
       // set the player
       si.mPlayer = awNewPlyr();
+      awAddPlyrSnd( si.mPlayer, si.mSound );
 
       //Set up scene object and add the sound objects to it
       awAddSceneSnd(mScene, si.mSound);         //Add the sounds to it
@@ -543,7 +578,10 @@ namespace snx
       mBindTable[alias] = si;
 
       this->setAmbient( alias, sinfo.ambient );
-
+      this->setCutoff( alias, sinfo.cutoff );
+      this->setPitchBend( alias, sinfo.pitchbend );
+      this->setVolume( alias, sinfo.volume );
+      
       std::cout<<"                        bind() done...\n"<<std::flush;
 
    }
@@ -556,14 +594,14 @@ namespace snx
    {
       if (mBindTable.count( alias ) > 0)
       {
-         awRemPlyrSnd( mBindTable[alias].mPlayer, mBindTable[alias].mSound );
+         //awRemPlyrSnd( mBindTable[alias].mPlayer, mBindTable[alias].mSound );
          awRemSceneSnd( mScene, mBindTable[alias].mSound );  // detach from the scene
          awUnMapWavToSE( mBindTable[alias].mWave );           // detach it from the engine
          awDelete( mBindTable[alias].mSound );
          awDelete( mBindTable[alias].mWave );
 
          mBindTable.erase( alias );
-         std::cout<<"[snx]AudioWorks| DEBUG: unbind() "<<alias<<"\n"<<std::flush;
+         //std::cout<<"[snx]AudioWorks| DEBUG: unbind() "<<alias<<"\n"<<std::flush;
       }
 
       assert( mBindTable.count( alias ) == 0 && "should have unbound" );
@@ -583,7 +621,7 @@ namespace snx
 
          snx::SoundImplementation::step( timeElapsed );
          double total_time_elapsed = mTotalTimeElapsed;
-         total_time_elapsed = awGetClockSecs(); // @todo remove me...
+         //total_time_elapsed = awGetClockSecs(); // @todo remove me...
          awFrame(total_time_elapsed);
 
          /*

@@ -101,6 +101,15 @@ public:
    /** bend the pitch. */
    virtual void setPitchBend( const std::string& alias, float amount );
 
+   /** affect volume.  set to a value between [0..1]. */
+   virtual void setVolume( const std::string& alias, float amount );
+   
+   /** affect cutoff. 
+    * set to a value between [0..1]... 1 is no change.  0 is total cutoff. 
+    */
+   virtual void setCutoff( const std::string& alias, float amount );
+   
+         
    /*
     * mute, sound continues to play, but you can't hear it...
     */

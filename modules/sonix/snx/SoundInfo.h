@@ -67,7 +67,9 @@ struct SoundInfo
                  repeat( 1 ),
                  triggerOnNextBind( false ), 
                  repeatCountdown( 0 ),
-                 pitchbend( 0.0f )
+                 pitchbend( 1.0f ),
+                 cutoff( 1.0f ),
+                 volume( 1.0f )
    {
       //position.makeIdent();
       position[0] = 0.0f;
@@ -108,7 +110,9 @@ struct SoundInfo
    bool retriggerable;  // can the sound be retriggered while playing?
    int repeat;           // number of times to repeat (static), -1 is infinite
 
-   bool pitchbend;
+   float pitchbend;
+   float cutoff;
+   float volume;
    
    // -----------------------------------------------
    bool triggerOnNextBind;
