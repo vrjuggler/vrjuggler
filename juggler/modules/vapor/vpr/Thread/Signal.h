@@ -206,6 +206,9 @@ public:
     SignalAction (vpr::SignalHandler_t handler,
                   const vpr::SignalSet* sig_set = NULL, const int flags = 0);
 
+    static const vpr::SignalHandler_t DefaultAction; /**< Use default action */
+    static const vpr::SignalHandler_t IgnoreAction;  /**< Ignore the signal */
+
 private:
     /**
      * Default constructor.  We do not want this to be called.

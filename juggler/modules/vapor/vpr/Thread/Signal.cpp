@@ -50,6 +50,10 @@
 
 namespace vpr {
 
+// ============================================================================
+// vpr::SignalSet stuff.
+// ============================================================================
+
 vpr::ReturnStatus
 SignalSet::emptySet () {
     vpr::ReturnStatus status;
@@ -129,6 +133,13 @@ SignalSet::isMember (const int sig_num) const {
     return is_member;
 }
 
+// ============================================================================
+// vpr::SignalAction stuff.
+// ============================================================================
+
+const vpr::SignalHandler_t SignalAction::DefaultAction = SIG_DFL;
+const vpr::SignalHandler_t SignalAction::IgnoreAction  = SIG_IGN;
+
 SignalAction::SignalAction (vpr::SignalHandler_t handler,
                             const vpr::SignalSet* sig_set, const int flags)
 {
@@ -139,6 +150,10 @@ SignalAction::SignalAction (vpr::SignalHandler_t handler,
         init(handler, sig_set->getMask(), flags);
     }
 }
+
+// ============================================================================
+// vpr::SigHandler stuff.
+// ============================================================================
 
 vpr::ReturnStatus
 SigHandler::registerHandler (const int sig_num,
