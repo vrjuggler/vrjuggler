@@ -341,9 +341,10 @@ void KeyboardWin32::updKeys( UINT message, UINT wParam, LONG lParam )
    // non-pressed from real_keys
 
    // press
+   case WM_SYSKEYDOWN:  //Need WM_SYSKEYDOWN to capture ALT key
    case WM_KEYDOWN:
       {
-         // collect data about the keypress.
+		  // collect data about the keypress.
          key = this->VKKeyToKey( wParam );
 
          // get the repeat count in case the key was pressed
@@ -403,6 +404,7 @@ void KeyboardWin32::updKeys( UINT message, UINT wParam, LONG lParam )
       break;
 
    // release
+   case WM_SYSKEYUP:  //Need WM_SYSKEYUP to capture ALT key
    case WM_KEYUP:
       key = VKKeyToKey(wParam);
       m_realkeys[key] = 0;
@@ -557,8 +559,7 @@ int KeyboardWin32::VKKeyToKey( int vkKey )
     case VK_RIGHT   : return VJKEY_RIGHT;
     case VK_CONTROL  : return VJKEY_CTRL;
     case VK_SHIFT   : return VJKEY_SHIFT;
-    case VK_TAB     : return VJKEY_ALT; // @todo why is tab mapped to ALT?
-//    case VK_ALT     : return KEY_ALT;
+    case VK_MENU     : return VJKEY_ALT;
     case /*VK_1*/0x31  : return VJKEY_1;
     case VK_NUMPAD1   : return VJKEY_1;
     case /*VK_2*/0x32  : return VJKEY_2;
