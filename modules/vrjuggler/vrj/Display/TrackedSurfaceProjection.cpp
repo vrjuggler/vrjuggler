@@ -51,32 +51,28 @@ void TrackedSurfaceProjection::calcViewMatrix(gmtl::Matrix44f& eyePos, const flo
 {
    updateSurfaceParams(scaleFactor);
 
-   calcViewFrustum(eyePos, scaleFactor);
-
-   //Coord eye_coord(eyePos);
-   //gmtl::Vec3f   eye_pos( gmtl::makeTrans<gmtl::Vec3f>(eyePos) );             // Non-xformed pos
-
-   // Need to post translate to get the view matrix at the position of the eye
-   // Don't take into account the surface transform since the eyepos already accounts for that
-   //viewMat = m_surface_M_base * gmtl::makeTrans<gmtl::Matrix44f>( -eye_pos );
-   // this does more math then needed, but it works for now.
-   gmtl::Matrix44f base_M_surf_rotonly(m_base_M_surftrans);
-   gmtl::setTrans(base_M_surf_rotonly, gmtl::Vec3f(0.0f, 0.0f, 0.0f));
-   gmtl::Matrix44f temp_surf_M_base = base_M_surf_rotonly * m_surftrans_M_surf;
-   gmtl::invert(temp_surf_M_base);
-   mViewMat = temp_surf_M_base * gmtl::makeInvert(eyePos);
+   SurfaceProjection::calcViewMatrix(eyePos,scaleFactor);
 }
 
-// @post: All projection transforms must be updates
 void TrackedSurfaceProjection::updateSurfaceParams(const float scaleFactor)
 {
-   // Get the tracking data for the surface offset
-   gmtl::Matrix44f m_base_M_surftrans = mTracker->getData(scaleFactor);     // baseMtracker
+   /* Here we rotate the original screen corners, and then have SurfaceProjection::calculateOffsets
+   *  handle the calculation of mOriginToScreen, etc.
+   */
 
-   // Compute new transformation
-   // Cost: 1 mat mult and one inversion
-   m_base_M_surface = m_base_M_surftrans * m_surftrans_M_surf;               // Compute new
-   m_surface_M_base = gmtl::invert(m_surface_M_base, m_base_M_surface);    // Set the inverse matrix for later
+   // Get the tracking data for the surface offset
+   gmtl::Matrix44f mTrackerMatrix = mTracker->getData(scaleFactor);
+
+   gmtl::Vec3f trans=gmtl::makeTrans<gmtl::Vec3f>(mTrackerMatrix);
+   trans=trans/scaleFactor;
+   gmtl::setTrans(mTrackerMatrix,trans);
+
+   mLLCorner=mTrackerMatrix * mOrigionalLLCorner;
+   mLRCorner=mTrackerMatrix * mOrigionalLRCorner;
+   mURCorner=mTrackerMatrix * mOrigionalURCorner;
+   mULCorner=mTrackerMatrix * mOrigionalULCorner;
+
+   calculateOffsets();
 }
 
 std::ostream& TrackedSurfaceProjection::outStream(std::ostream& out,

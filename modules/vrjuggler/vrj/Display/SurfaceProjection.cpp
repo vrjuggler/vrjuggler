@@ -84,7 +84,6 @@ void SurfaceProjection::calcViewMatrix( gmtl::Matrix44f& eyePos, const float sca
    gmtl::Vec3f   eye_pos( gmtl::makeTrans<gmtl::Vec3f>(eyePos) );             // Non-xformed pos
 
    // Need to post translate to get the view matrix at the position of the eye
-   // View mat = base_M_
    mViewMat = m_surface_M_base * gmtl::makeTrans<gmtl::Matrix44f>( -eye_pos );
 }
 
@@ -164,6 +163,62 @@ std::ostream& SurfaceProjection::outStream(std::ostream& out,
    out << indent_text << "vrj::SurfaceProjection:\n";
 
    return Projection::outStream(out, indentLevel);
+}
+
+void SurfaceProjection::calculateOffsets(){
+      calculateSurfaceRotation();
+
+      m_base_M_surface=mSurfaceRotation;
+      gmtl::invert(m_surface_M_base,m_base_M_surface);
+      
+      calculateCornersInBaseFrame();
+
+      mOriginToScreen=-mxLLCorner[gmtl::Zelt];
+      mOriginToRight=mxLRCorner[gmtl::Xelt];
+      mOriginToLeft=-mxLLCorner[gmtl::Xelt];
+      mOriginToTop=mxURCorner[gmtl::Yelt];
+      mOriginToBottom=-mxLRCorner[gmtl::Yelt];
+}
+
+void SurfaceProjection::calculateSurfaceRotation()
+{
+   assertPtsLegal();
+
+   // Find the base vectors for the surface axiis (in terms of the base coord system)
+   // With z out, x to the right, and y up
+   gmtl::Vec3f x_base, y_base, z_base;
+   x_base = (mLRCorner-mLLCorner);
+   y_base = (mURCorner-mLRCorner);
+   gmtl::cross( z_base, x_base, y_base);
+
+   // They must be normalized
+   gmtl::normalize(x_base); gmtl::normalize(y_base); gmtl::normalize(z_base);
+
+   // Calculate the surfaceRotMat using law of cosines
+   mSurfaceRotation = gmtl::makeDirCos<gmtl::Matrix44f>(x_base, y_base, z_base );
+}
+
+void SurfaceProjection::calculateCornersInBaseFrame()
+{
+   mxLLCorner = m_surface_M_base * mLLCorner;
+   mxLRCorner = m_surface_M_base * mLRCorner;
+   mxURCorner = m_surface_M_base * mURCorner;
+   mxULCorner = m_surface_M_base * mULCorner;
+
+   // Verify that they are all in the same x,y plane
+   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << std::setprecision(10)
+                                          << mxLLCorner[gmtl::Zelt] << " "
+                                          << mxLRCorner[gmtl::Zelt] << " "
+                                          << mxURCorner[gmtl::Zelt] << " "
+                                          << mxULCorner[gmtl::Zelt] << "\n"
+                                          << vprDEBUG_FLUSH;
+
+#ifdef VJ_DEBUG
+   // Use 1e-4f here, otherwise the floating point error can get big enough to mess this up for tracked surfaces
+   vprASSERT(gmtl::Math::isEqual(mxLLCorner[gmtl::Zelt], mxLRCorner[gmtl::Zelt], 1e-4f) &&
+             gmtl::Math::isEqual(mxURCorner[gmtl::Zelt], mxULCorner[gmtl::Zelt], 1e-4f) &&
+             gmtl::Math::isEqual(mxLLCorner[gmtl::Zelt], mxULCorner[gmtl::Zelt], 1e-4f));
+#endif
 }
 
 }

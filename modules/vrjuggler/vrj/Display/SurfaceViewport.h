@@ -82,37 +82,11 @@ public:
                                    const unsigned int indentLevel = 0);
 
 protected:
-   void calculateSurfaceRotation();
-
-   void calculateCornersInBaseFrame();
-
-   /** Checks the pts to make sure they form a legal surface. */
-   void assertPtsLegal()
-   {
-      gmtl::Vec3f norm1, norm2;
-      gmtl::Vec3f bot_side = mLRCorner-mLLCorner;
-      gmtl::Vec3f diag = mULCorner-mLRCorner;
-      gmtl::Vec3f right_side = mURCorner-mLRCorner;
-      gmtl::cross(norm1, bot_side, diag);
-      gmtl::cross(norm2, bot_side, right_side);
-      gmtl::normalize( norm1 ); gmtl::normalize(norm2);
-      if(norm1 != norm2)
-         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) << "ERROR: Invalid surface corners.\n" << vprDEBUG_FLUSH;
-   }
-
-
-protected:
    gmtl::Point3f   mLLCorner, mLRCorner, mURCorner, mULCorner;  /**< The corners in 3Space (for config) */
-   gmtl::Matrix44f mSurfaceRotation;                            /**< baseMsurf - rotation to base coordinate frame of the surface view plane */
 
    // Deal with tracked surfaces (ie. HMD, movable walls, desks, etc)
    bool           mTracked;            /**< Is this surface tracked? */
    std::string    mTrackerProxyName;   /**< If tracked, what is the name of the tracker */
-
-private:
-         // These values are used to compute the coordinates of the view plane
-         // in the transformed coord system of mSurfaceRotation
-   gmtl::Point3f  mxLLCorner, mxLRCorner, mxURCorner, mxULCorner;    /**< The corners transformed onto an x,y plane */
 };
 
 }
