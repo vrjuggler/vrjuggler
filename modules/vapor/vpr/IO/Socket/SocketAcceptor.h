@@ -58,11 +58,11 @@ public:
 
     // Construct Acceptor to accept connections on the given address    
     // - Opens the socket automatically
-    SocketAcceptor( const InetAddr& addr, const int backlog = 5);
+    SocketAcceptor( const InetAddr& addr, bool reuseAddr = true, const int backlog = 5);
 
     // Open the socket for accepting a connection
     // - Binds the connection and starts listening
-    bool open(const InetAddr& addr, const int backlog = 5);
+    bool open(const InetAddr& addr, bool reuseAddr = true, const int backlog = 5);
     
     /**
      * Accept a new connection.  Creates a new socket on the connection and returns it
@@ -85,18 +85,22 @@ private:
     SocketStream    mSocket; 
 };
 
-SocketAcceptor::SocketAcceptor(const InetAddr& addr, int backlog)
+SocketAcceptor::SocketAcceptor(const InetAddr& addr, bool reuseAddr, int backlog)
 {
-    open(addr, backlog);
+    open(addr, reuseAddr, backlog);
 }
 
-bool SocketAcceptor::open(const InetAddr& addr, int backlog)
+bool SocketAcceptor::open(const InetAddr& addr, bool reuseAddr, int backlog)
 {
     vprASSERT((!mSocket.isOpen()) && "Trying to re-open socket that has already been opened");
 
     mSocket.setLocalAddr(addr);
+
     if(!mSocket.open())
         return false;
+
+    mSocket.setReuseAddr(reuseAddr);
+
     if(!mSocket.bind())
     {
         mSocket.close();
@@ -114,6 +118,8 @@ bool SocketAcceptor::open(const InetAddr& addr, int backlog)
 SocketStream* SocketAcceptor::accept()
 {
     SocketStream* new_socket(NULL);
+
+    vprASSERT(mSocket.isOpen());
 
     new_socket = mSocket.accept();
 

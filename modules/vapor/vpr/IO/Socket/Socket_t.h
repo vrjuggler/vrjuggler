@@ -165,6 +165,18 @@ public:
         return m_socket_imp->isOpen();
     }
 
+    // ------------------------------------------------------------------
+    //: Get the status of a possibly connected socket
+    //
+    //! PRE: None
+    //! RETURNS: true - The socket is connected to a remote addr
+    //! RETURNS: false - The socket is not currently connect (the other side may have disconnected)
+    // -----------------------------------------------------------------
+    bool isConnected()
+    {
+        return m_socket_imp->isConnected();
+    }
+
     // ------------------------------------------------------------------------
     //: Reconfigure the socket so that it is in blocking mode.
     //
