@@ -33,6 +33,7 @@ package org.vrjuggler.jccl.config;
 
 import javax.swing.event.EventListenerList;
 import org.vrjuggler.jccl.config.event.*;
+import javax.swing.undo.*;
 
 /**
  * Represents a link to a configuration element within a configuration. The
@@ -69,6 +70,40 @@ public class ConfigElementPointer
       String old_target = mTarget;
       mTarget = target;
       fireTargetChanged(old_target);
+      System.out.println("Adding a new Pointer edit...");
+      ConfigUndoManager.instance().addEdit(new ConfigElementPointerEdit(old_target, target));
+   }
+
+   public class ConfigElementPointerEdit extends AbstractUndoableEdit
+   {
+      public ConfigElementPointerEdit(String old_val, String new_val)
+      {
+         super();
+         mOldTarget = old_val;
+         mNewTarget = new_val;
+         System.out.println("New edit: " + mOldTarget + " -> " + mNewTarget);
+      }
+
+      public void undo() throws CannotUndoException 
+      {
+         System.out.println("undoing..");
+         super.undo();
+         System.out.println("undoing...");
+         String old_target = mTarget;
+         mTarget = mOldTarget;
+         fireTargetChanged(old_target);
+      }
+
+      public void redo() throws CannotRedoException
+      {
+         super.redo();
+         String old_target = mTarget;
+         mTarget = mNewTarget;
+         fireTargetChanged(old_target);
+      }
+
+      private String mNewTarget;
+      private String mOldTarget;
    }
 
    /**
@@ -132,5 +167,5 @@ public class ConfigElementPointer
    private String mTarget;
 
    /** The listeners interested in this object. */
-   private EventListenerList mListenerList;
+   private EventListenerList mListenerList = new EventListenerList();
 }

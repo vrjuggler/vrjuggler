@@ -41,7 +41,7 @@ import org.vrjuggler.jccl.config.event.*;
  * for a particular system component. It stores a number of properties that
  * describe the configuration.
  */
-public class ConfigElement
+public class ConfigElement implements ConfigElementPointerListener
 {
    /**
     * Create a new configuration element with the given properties.
@@ -51,6 +51,23 @@ public class ConfigElement
       mName = name;
       mDefinition = def;
       mProps = props;
+
+      // Iterate over all properties to find ConfigElementPointers
+      Iterator itr = props.values().iterator();
+      while(itr.hasNext())
+      {
+         Iterator list_itr = ((List)itr.next()).iterator();
+         while(list_itr.hasNext())
+         {
+            Object prop = list_itr.next();
+            // If the new property is a ConfigElementPointer, add alistener to relay
+            // the change events.
+            if(prop instanceof ConfigElementPointer)
+            {
+               ((ConfigElementPointer)prop).addConfigElementPointerListener(this);
+            }
+         }
+      }
    }
 
    /**
@@ -122,7 +139,7 @@ public class ConfigElement
     * @param name    the name of the property to set
     * @param index   the index of the property value to set
     */
-   public synchronized void setProperty(String name, int index, Object value)
+   public synchronized ConfigElementPropertyEdit setProperty(String name, int index, Object value)
       throws IllegalArgumentException,
              ArrayIndexOutOfBoundsException
    {
@@ -130,14 +147,21 @@ public class ConfigElement
       List values = getPropertyValues(name);
 
       // TODO: Validate that value is of the correct type for this property.
-
+      Object old_value = values.get(index);
+      
       // Set the value in the list
       values.set(index, value);
 
       // Notify listeners of the change
       firePropertyValueChanged(name, index, value);
+      System.out.println("Adding a new Property edit...");
+      
+      //TODO:  This will only work if we make sure we do not skip over a
+      //       propertyAdd/removr event. Otherwise the index value could be
+      //       wrong.
+      return(new ConfigElementPropertyEdit(this, name, index, old_value, value));
    }
-
+             
    /**
     * Appends the given value to the list of values for this property. This only
     * applies if the property supports a variable number of values.
@@ -164,6 +188,13 @@ public class ConfigElement
       int index = values.size();
       values.add(value);
 
+      // If the new property is a ConfigElementPointer, add alistener to relay
+      // the change events.
+      if(value instanceof ConfigElementPointer)
+      {
+         ((ConfigElementPointer)value).addConfigElementPointerListener(this);
+      }
+ 
       // Notify listeners of the addition
       firePropertyValueAdded(name, index, value);
    }
@@ -356,6 +387,13 @@ public class ConfigElement
             ((ConfigElementListener)listeners[i+1]).propertyValueRemoved(evt);
          }
       }
+   }
+
+   public void targetChanged(ConfigElementPointerEvent evt)
+   {
+      //TODO:  Find a way that we can relay an event when a ConfigElementPointer
+      //       changes.
+      //firePropertyValueChanged("Pointer Changed", 0, evt.getSource());
    }
 
    /** The name of this element. */
