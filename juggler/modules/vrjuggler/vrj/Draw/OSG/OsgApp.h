@@ -63,6 +63,9 @@ class OsgApp : public GlApp
 public:
    OsgApp(Kernel* kern) : GlApp(kern)
    {;}
+   
+   OsgApp() : GlApp()
+   {;}
 
    virtual ~OsgApp() {;}
 
@@ -167,6 +170,12 @@ inline void OsgApp::contextInit()
    osgUtil::SceneView* new_sv = new osgUtil::SceneView;
    this->configSceneView(new_sv);            // Configure the new viewer
    new_sv->getState()->setContextID(unique_context_id);
+   
+   // This will eventually be changed to no light and all lighting will be handled
+   // by the application.  For the time being it fixes the lighting inconsistanies
+   // over multiple screens
+   new_sv->setLightingMode(osgUtil::SceneView::SKY_LIGHT);
+   
    (*sceneViewer) = new_sv;
         
     //Setup OpenGL light
@@ -210,7 +219,7 @@ inline void OsgApp::draw()
    sv = (*sceneViewer);    // Get context specific scene viewer
    vprASSERT( sv != NULL);
 
-   GlDrawManager*    gl_manager;    /**< The openlGL manager that we are rendering for. */
+   GlDrawManager*    gl_manager;    /**< The openGL manager that we are rendering for. */
    gl_manager = GlDrawManager::instance();
    
    // Set the up the viewport (since OSG clears it out)
@@ -252,7 +261,7 @@ inline void OsgApp::draw()
    the_cam->home();
    the_cam->setAdjustAspectRatioMode(osg::Camera::ADJUST_NONE);      // Tell it not to adjust the aspect ratio at all
 
-   //Set the frustrum (this is set with the matrix below)
+   //Set the frustrum
    //float near_val = frustum[Frustum::VJ_NEAR];
    the_cam->setFrustum(frustum[Frustum::VJ_LEFT],    frustum[Frustum::VJ_RIGHT],
                        frustum[Frustum::VJ_BOTTOM],  frustum[Frustum::VJ_TOP],
