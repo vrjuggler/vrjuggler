@@ -29,20 +29,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
 #ifndef _JCCL_LABELED_PERF_DATA_BUFFER_H_
 #define _JCCL_LABELED_PERF_DATA_BUFFER_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Plugins/PerformanceMonitor/PerformanceCategories.h>
+#include <jccl/PerfMonitor/PerformanceCategories.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/GUID.h>
 #include <jccl/Util/Debug.h>
 #include <vpr/Util/Singleton.h>
 #include <vpr/Util/Interval.h>
-
 
 namespace jccl
 {
