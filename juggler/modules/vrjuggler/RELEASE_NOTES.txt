@@ -10,6 +10,39 @@ For all versions:
 
 ===============================================================================
 
+Version: 2.0 Beta 3 (1.1.170-0)
+Released: March 28, 2005
+
+    Please refer to the following to get started with VR Juggler 2.0 Beta 2:
+
+       http://www.vrjuggler.org/twiki_public/bin/view/Juggler/MigratingToVrjTwo
+
+    In general, there are no required application or configuration changes
+    to update from VR Juggler 2.0 Beta 2 to 2.0 Beta 3.  To update from
+    2.0 Alpha 4, please refer to the instructions below for VR Juggler 2.0
+    Beta 1.  All users updating to 2.0 Beta 3 should read the following
+    carefully:
+
+       * Users of OpenSG and VR Juggler with application objects derived
+         from vrj::OpenSGApp should verify three things:
+
+          1) If vrj::App::getDrawScaleFactor() is overridden, make sure
+             that the method returns the correct scaling value.
+          2) Requests for position matrices from gadget::PositionInterface
+             (or gadget::PositionProxy) objects should use the same
+             conversion factor that is returned by getDrawScaleFactor().
+          3) The application scene graph does not have an extraneous scale
+             node left over from older VR Juggler releases.  There is no
+             need to perform manual scene scaling to handle proper
+             rendering.
+
+       * More parameters can now be configured in the OpenGL frame
+         buffer settings for display windows.  Users are encouraged to
+         load all local .jconf files containing display_window config
+         elements into VRJConfig to be updated.  (After the automatic
+         update, click the "Save All" button to save the updates.)  The
+         update is not required, but it is recommended.
+
 Version: 2.0 Beta 2 (1.1.167-0)
 Released: January 18, 2005
 
