@@ -80,7 +80,7 @@ public:
 
    virtual void preDraw();
    virtual void postPostFrame();
-   //virtual bool isPluginReady();
+   virtual bool isPluginReady();
    
    virtual std::string getManagerName()
    {
@@ -132,14 +132,6 @@ public:
       }
    }
 
-   //bool isClusterReady();
-      
-   bool isRunning()
-   { return mRunning; }
-   
-   void setRunning(bool run)
-   { mRunning = run;}
-
 private:      
    /**
     * Returns the string representation of the chunk type used for the StartBarrierPlugin
@@ -150,11 +142,11 @@ private:
    // Barrier Variables
    std::vector<std::string>      mSlaves;
    std::vector<std::string>      mPendingSlaves;
-   bool                          mRunning;
    bool                          mBarrierMaster;
    std::string                   mBarrierMasterHostname;
-   bool                          mDone;
-   
+   bool                          mComplete;
+   bool                          mSlaveWaitingOnPlugins;
+   int                           mSlowDownMaster;
    vpr::GUID                     mPluginGUID;
 };
 

@@ -141,9 +141,12 @@ public:
 
    bool isClusterReady();
 
+   bool pluginsReady();
+
    void setClusterReady(const bool ready)
    {
       vpr::Guard<vpr::Mutex> guard(mClusterReadyLock);
+      std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX DONE - Set XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" << std::endl;
       mClusterReady = ready;
    }
 
