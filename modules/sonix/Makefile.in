@@ -157,7 +157,7 @@ links:
 	cd $(instlinks)/share/sonix &&					\
            rm -f ./src && ln -s $(topdir)/samples ./src
 	cd $(instlinks)/share/sonix &&                          \
-           rm -f ./README.txt ln -s $(topdir)/README.txt ./
+           rm -f ./README.txt && ln -s $(topdir)/README.txt ./
 	cd $(instlinks)/bin && cp -p $(topdir)/sonix-config .
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
