@@ -28,7 +28,7 @@
 Kernel = Class('vrj::Kernel', 'vrj/Kernel/Kernel.h')
 exclude(Kernel.getInputManager)
 exclude(Kernel.getThread)
-set_policy(Kernel.instance, return_internal_reference())
+set_policy(Kernel.instance, return_value_policy(reference_existing_object))
 set_policy(Kernel.getUser, return_internal_reference())
 
 App = Class('vrj::App', 'vrj/Kernel/App.h')
