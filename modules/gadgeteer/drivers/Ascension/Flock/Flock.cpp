@@ -80,7 +80,7 @@ namespace gadget
 Flock::Flock(const char* const port, const int& baud,
              const int& numBrds, const int& transmit)
    : mThread(NULL),
-     mFlockOfBirds(port, numBrds, transmit, baud)
+     mFlockOfBirds(port, baud)
 
 {
    ;
@@ -112,15 +112,17 @@ bool Flock::config(jccl::ConfigElementPtr e)
    mFlockOfBirds.setBaudRate( baud_rate );
 
    // If these are non-negative, then override the auto-configuration abilities of the flock driver
-   int num_birds =  e->getProperty<int>("number_of_birds");
-   if(num_birds > 0)
-   {  mFlockOfBirds.setNumSensors(num_birds); }
-   int trans_addr =  e->getProperty<int>("transmitter_id");
-   if (trans_addr > 0)
-   {  mFlockOfBirds.setTransmitter(trans_addr); }
-      
-   // set mFlockOfBirds with the config info.
-   mFlockOfBirds.setSync( e->getProperty<int>("sync_style") );
+   // XXX: These values are auto configured now.
+   
+   //int num_birds =  e->getProperty<int>("number_of_birds");
+   //if(num_birds > 0)
+   //{  mFlockOfBirds.setNumSensors(num_birds); }
+   //int trans_addr =  e->getProperty<int>("transmitter_id");
+   //if (trans_addr > 0)
+   //{  mFlockOfBirds.setTransmitter(trans_addr); }
+   //mFlockOfBirds.setSync( e->getProperty<int>("sync_style") );
+   
+   // Set mFlockOfBirds with the config info.
    mFlockOfBirds.setHemisphere( (BIRD_HEMI) e->getProperty<int>("hemisphere") ); //LOWER_HEMI
    mFlockOfBirds.setFilterType( (BIRD_FILT) e->getProperty<int>("filter") ); //
    mFlockOfBirds.setOutputFormat(::Flock::Output::PositionQuaternion);          // Default to pos quaternion
