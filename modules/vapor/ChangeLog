@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2004-01-10 allenb   Changed Mutex::test() method to be const.
+                    NEW VERSION: 0.32.3
 2003-11-12 patrickh Removed the vpr::GUID(const char*) constructor overload.
                     NEW VERSION: 0.32.2
 2003-11-05 patrickh Fixed a bug that prevented the termios abstraction from
