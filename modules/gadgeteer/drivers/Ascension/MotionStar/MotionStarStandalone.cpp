@@ -37,12 +37,14 @@
 #endif
 
 #include <iostream.h>
+#include <string.h>
 #include <strings.h>
 #include <assert.h>
 #include <time.h>
 #include <Input/vjPosition/aMotionStar.h>
 
-aMotionStar::aMotionStar(int _hemisphere,
+aMotionStar::aMotionStar(char* _ipAddress,
+			 int _hemisphere,
 			 unsigned int _birdFormat,
 			 unsigned int _birdsRequired,
 			 int _runMode,
@@ -56,7 +58,9 @@ aMotionStar::aMotionStar(int _hemisphere,
 				birdRate(_birdRate),
 				reportRate(_reportRate)
 {
-
+  if ( _ipAddress != NULL ) {
+    strncpy(ipAddress, _ipAddress, sizeof(ipAddress));
+  }
 } // end aMotionStar::aMotionStar()
 
 
@@ -73,11 +77,7 @@ void aMotionStar::start () {
   cout << "In start" << endl;
   assert(!active);
 
-  /*    strcpy(ip_address, "192.1.2.193");      */
-   strcpy(ip_address, "129.186.232.39");
-  // strcpy(ip_address, "129.186.232.21");
-
-   rate[0] = 57; // 48
+  rate[0] = 57; // 48
   rate[1] = 48; // 50
   rate[2] = 48;
   rate[3] = 48;
@@ -126,19 +126,6 @@ void aMotionStar::start () {
   if (( s = socket(AF_INET,SOCK_STREAM,0))<0)
     printf("client: can't open stream socket");
 
-  /*
-   * Bind any local address for us.
-   */
-
-  bzero((char *)&client, sizeof(client));
-  client.sin_family=AF_INET;
-  client.sin_port=htons(MYPORT);
-  client.sin_addr.s_addr=inet_addr("129.186.232.36");           /* Indy address*/
-  /*
-    rtn = bind(s,(struct sockaddr *) &client, sizeof (client));
-    printf("bind = %4d, socket =  %4d, bind error =  %4d\n",rtn,s,errno);
-  */
-
   /* Fill in the structure with the address of the
    * server that we want to connect to.
    */
@@ -146,7 +133,7 @@ void aMotionStar::start () {
   bzero((char *)&server, sizeof(server));
   server.sin_family=AF_INET;
   server.sin_port=htons(TCP_PORT);                              /* Server port number */
-  server.sin_addr.s_addr=inet_addr(ip_address);         /* Server address */
+  server.sin_addr.s_addr=inet_addr(ipAddress);         /* Server address */
 
   cout << "connecting..." << endl;
   rtn = connect(s, (struct sockaddr *) &server, sizeof(server));
@@ -709,6 +696,7 @@ void aMotionStar::setNumBirds (unsigned int n) { birdsRequired = n; }
 void aMotionStar::setBirdRate (double n) { birdRate = n; }
 void aMotionStar::setRunMode ( int n ) { runMode = n; }
 void aMotionStar::setReportRate (unsigned char n) { reportRate = n; }
+void aMotionStar::setIpAddress (const char* n) { strcpy(ipAddress, n); }
 
 float aMotionStar::xPos( int i) {return posinfo[i][0];}
 float aMotionStar::yPos( int i) {return posinfo[i][1];}
