@@ -7,3 +7,8 @@ documentation, faq's, etc...
      NOTE: There should be a script available to generate this file. 
      Look in the Juggler source tree at:  juggler/docs/Makefile 
 -->
+
+
+The Makefile is executed if the classes are not properly installed into the
+classes directory. 
+(see InstallOps.pm in the install dir, in the recurseDir function)
