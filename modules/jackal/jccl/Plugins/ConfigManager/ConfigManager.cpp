@@ -48,10 +48,10 @@ vjConfigManager* vjConfigManager::_instance = NULL;
 // if it goes pending_repeat_limit calls without
 // changing size, then it returns false until mLastPendingSize changes
 bool vjConfigManager::pendingNeedsChecked()
-{ 
-   const int pending_repeat_limit(4);
-   int cur_pending_size(0);
-   bool ret_val(false);
+{
+   const int pending_repeat_limit = 0;
+   int cur_pending_size = 0;
+   bool ret_val = false;
 
    mPendingCountMutex.acquire();
    {
@@ -72,13 +72,13 @@ bool vjConfigManager::pendingNeedsChecked()
                                        << cur_pending_size << " items still in pending\n" << vjDEBUG_FLUSH;
             lockPending();
             debugDumpPending();     // Output the stale pending list
-            unlockPending();              
+            unlockPending();
          }
       }
       else
       {
          ret_val = false;
-      }         
+      }
    }
    mPendingCountMutex.release();
 
@@ -94,7 +94,7 @@ void vjConfigManager::addChunkDB(vjConfigChunkDB* db)
    {
       vjPendingChunk pending;
       pending.mType = vjPendingChunk::ADD;
-   
+
       for(std::vector<vjConfigChunk*>::iterator i=db->begin();i!=db->end();i++)
       {
          pending.mChunk = (*i);
@@ -117,7 +117,7 @@ void vjConfigManager::removeChunkDB(vjConfigChunkDB* db)
    {
       vjPendingChunk pending;
       pending.mType = vjPendingChunk::REMOVE;
-   
+
       for(std::vector<vjConfigChunk*>::iterator i=db->begin();i!=db->end();i++)
       {
          pending.mChunk = (*i);
@@ -135,7 +135,7 @@ void vjConfigManager::removeChunkDB(vjConfigChunkDB* db)
 
 // Look for items in the active list that don't have their dependencies filled anymore
 //
-//! POST: Any chunks in active with dependencies not filled are added to the 
+//! POST: Any chunks in active with dependencies not filled are added to the
 //+       the pending list. (A remove and an add are added to the pending)
 //! RETURNS: The number of lost dependencies found
 int vjConfigManager::scanForLostDependencies()
@@ -163,7 +163,7 @@ int vjConfigManager::scanForLostDependencies()
                                             << " type: " << ((std::string)chunks[i]->getType()).c_str()
                                             << " has lost dependencies.\n"
                                             << vjDEBUG_FLUSH;
-         
+
          num_lost_deps++;              // Keep a count of the number lost deps found
 
          // Add the pending removal
@@ -171,7 +171,7 @@ int vjConfigManager::scanForLostDependencies()
          pending.mType = vjPendingChunk::REMOVE;
          pending.mChunk = chunks[i];
          addPending(pending);
-         
+
          // Add the pending re-addition
          vjConfigChunk* copy_of_chunk;          // Need a copy so that the remove can delete the chunk
          (*copy_of_chunk) = (*chunks[i]);       // Make the copy
@@ -180,7 +180,7 @@ int vjConfigManager::scanForLostDependencies()
          addPending(pending);                   // Add the add item
       }
    }
-   
+
    vjDEBUG_END(vjDBG_ALL,1) << "vjConfigManager::scanForLostDependencies: Exiting: \n" << vjDEBUG_FLUSH;
 
    return num_lost_deps;
