@@ -57,9 +57,7 @@ JAVA_SRCS	= org/vrjuggler/tweek/Tweek.java			\
                   org/vrjuggler/tweek/beans/BeanCollectionBuilder.java	\
                   org/vrjuggler/tweek/services/EnvironmentService.java	\
                   org/vrjuggler/tweek/iconviewer/BeanIconViewer.java	\
-                  org/vrjuggler/tweek/treeviewer/BeanTreeViewer.java	\
-                  org/vrjuggler/tweek/net/rmi/Connection.java		\
-                  org/vrjuggler/tweek/net/rmi/Initializer.java
+                  org/vrjuggler/tweek/treeviewer/BeanTreeViewer.java
 
 JARS		= Tweek.jar		\
                   TweekBeans.jar	\
@@ -73,16 +71,11 @@ BEANS		= Viewers		\
 TWEEK_CLASSES	= org/vrjuggler/tweek/*.class
 
 BEANS_MF	= $(srcdir)/beans.MF
-BEANS_EXTRAS	= org/vrjuggler/tweek/beans/icon/*.gif
 BEANS_CLASSES	= org/vrjuggler/tweek/beans/*.class		\
-                  org/vrjuggler/tweek/beans/icon/*.class	\
-                  org/vrjuggler/tweek/beans/loader/*.class	\
-                  org/vrjuggler/tweek/beans/tree/*.class
+                  org/vrjuggler/tweek/beans/loader/*.class
 
-COMM_CLASSES	= org/vrjuggler/tweek/net/*.class			\
-                  org/vrjuggler/tweek/net/rmi/Connection_Stub.class	\
-                  org/vrjuggler/tweek/net/rmi/PlexusNodeInterfaceRMI.class \
-                  org/vrjuggler/tweek/net/rmi/RemoteInterface.class
+COMM_CLASSES	= org/vrjuggler/tweek/net/*.class		\
+                  org/vrjuggler/tweek/net/corba/*.class
 
 SERVICE_MF	= $(srcdir)/services.MF
 SERVICE_CLASSES	= org/vrjuggler/tweek/services/EnvironmentService.class
@@ -97,10 +90,6 @@ include $(MKPATH)/dpp.obj.mk
 # -----------------------------------------------------------------------------
 # Extra targets.
 # -----------------------------------------------------------------------------
-#plx/comm/rmi/Connection_Stub.class: plx/comm/rmi/Connection.class	\
-#                                    plx/comm/rmi/Connection.java
-#	$(RMIC) $(RMIC_FLAGS) -d $(OBJDIR) plx.comm.rmi.Connection
-
 jars: $(JARS) $(addsuffix .jar, $(BEANS))
 
 Tweek.jar: $(TWEEK_CLASSES)
@@ -111,13 +100,10 @@ TweekComm.jar: $(COMM_CLASSES)
 
 TweekBeans.jar: $(BEANS_MF) $(BEANS_CLASSES)
 	$(JAR) cvfm $@ $(BEANS_MF) $(BEANS_CLASSES)
-	cd $(srcdir) &&							\
-          $(JAR) uvf $(topdir)/org/vrjuggler/tweek/$@ $(BEANS_EXTRAS)
 
 Viewers.jar: $(VIEWERS_CLASSES)
 	$(JAR) cvfm $@ $(VIEWERS_MF) $(VIEWERS_CLASSES)
-	cd $(srcdir) &&							\
-          $(JAR) uvf $(topdir)/org/vrjuggler/tweek/$@ $(VIEWERS_EXTRAS)
+	cd $(srcdir) && $(JAR) uvf $(topdir)/java/$@ $(VIEWERS_EXTRAS)
 
 Services.jar: $(SERVICE_CLASSES)
 	$(JAR) cvfm $@ $(SERVICE_MF) $(SERVICE_CLASSES)
