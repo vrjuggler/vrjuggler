@@ -39,13 +39,16 @@
  * version number" that is intended for internal feature checks by Gadgeteer
  * itself.
  */
-#define __GAD_version @VER_NUMBER@
+#define __GADGET_version @VER_NUMBER@
 
 /*
  * This is the "human-readable" Gadgeteer version _string_.  It is of the
  * form <major>.<minor>.<days since last major release>.
  */
-#define GAD_VERSION @VER_STRING@
+namespace gadget
+{
+   const char*VPR GADGET_VERSION  = @VER_STRING@;
+}
 
 
 #endif	/* _GAD_PARAM_H_ */
