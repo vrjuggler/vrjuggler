@@ -77,13 +77,10 @@ bool EventWindowOSX::config(jccl::ConfigElementPtr e)
       return false;
    }
 
-   // Done in Input --- mThread = NULL;
    for ( int i = 0; i < gadget::LAST_KEY; ++i )
    {
-      mCurKeys[i] = m_realkeys[i] = m_keys[i] = 0;
+      m_realkeys[i] = m_keys[i] = mCurKeys[i];
    }
-
-   mCurKeys[0] = m_realkeys[0] = m_keys[0] = 1;
 
    // Get size and position
    m_width = e->getProperty<int>("width");
