@@ -264,10 +264,15 @@ private:
    */
    void copyRectToFramebuffer(char* buf, int x, int y, int w, int h);
 
-   /// Should two rectangles be merged into one?
+   /** Should two rectangles be merged into one?
+   * @return true - Rectangles should be merged.
+   */
    bool isMergeable(const Rectangle& r1, const Rectangle& r2);
 
-   /// Merges two rectangles, producing a new rectangle as a result.
+   /** Merges two rectangles.
+   * Merges the rectangles into a single rectange that covers the
+   * same space
+   */
    Rectangle merge(const Rectangle& r1, const Rectangle& r2);
 
    /// Reads data from the VNC server.

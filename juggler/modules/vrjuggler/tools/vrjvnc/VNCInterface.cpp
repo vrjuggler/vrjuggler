@@ -218,9 +218,11 @@ void VNCInterface::pointerEvent(int x, int y, int button_mask)
 {
     rfbPointerEventMsg pe;
 
+    /*
     vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
        << "VNCInterface::pointerEvent(): Pointer event at ("
        << x << ", " << y << ")\n" << vprDEBUG_FLUSH;
+       */
 
     // Initialize the message
     pe.type = rfbPointerEvent;
@@ -273,7 +275,8 @@ void VNCInterface::addUpdate(int x, int y, int w, int h)
    Rectangle r;
    r.x = x; r.y = y; r.width = w; r.height = h;
 
-   // Let's move through the rectangle queue
+   // Let's move through the rectangle queue looking for potential
+   // merges to eliminate some updates
    std::list<Rectangle>::iterator i = mRectQueue.begin();
    while (i != mRectQueue.end())
    {
@@ -283,7 +286,6 @@ void VNCInterface::addUpdate(int x, int y, int w, int h)
       // Can we merge these two rectangles?
       if (isMergeable(r, *temp) == true)
       {
-
          // Then merge and remove the original rectangle
          r = merge(r, *temp);
          mRectQueue.erase(temp);
@@ -299,14 +301,18 @@ bool VNCInterface::isMergeable(const Rectangle &r1, const Rectangle &r2)
    // @@@ NOTE: The implementation of this function is quite
    // arbitrary, we just need a heuristic that yields good
    // performance when merging rectangles.
+   // XXX: May be interesting to add a slack buffer on these tests to take into account rectangles
+   //      that are very close to each other from things like mouse movements
 
    int x1 = r1.x + r1.width;  int x2 = r2.x + r2.width;
    int y1 = r1.y + r1.height; int y2 = r2.y + r2.height;
 
    // Do the rectangles coincide horizontally?
+   // - If r1 x within range of r2 OR r2.x within range of r1
    if ( (r1.x >= r2.x && r1.x <= x2) || (r1.x <= r2.x && x1 >= r2.x) )
    {
       // Yes? Then what about vertically?
+      // - If r1.y within range of r2 OR r2.y withing range of r1
       if ((r1.y >= r2.y && r1.y <= y2) || (r1.y <= r2.y && y1 >= r2.y))
       {
          return true;
@@ -322,11 +328,12 @@ Rectangle VNCInterface::merge(const Rectangle &r1, const Rectangle &r2)
    Rectangle r;
 
    // Find the resulting rectangle that encloses both rectangles
-   r.x = std::min(r1.x, r2.x); r.y = std::min(r1.y, r2.y);
+   r.x = std::min(r1.x, r2.x);
+   r.y = std::min(r1.y, r2.y);
    int x1 = r1.x + r1.width;  int x2 = r2.x + r2.width;
    int y1 = r1.y + r1.height; int y2 = r2.y + r2.height;
-   r.width = x1 > x2 ? r1.width : r2.width;
-   r.height = y1 > y2 ? r1.height : r2.height;
+   r.width = (x1 > x2) ? r1.width : r2.width;
+   r.height = (y1 > y2) ? r1.height : r2.height;
 
    return r;
 }
