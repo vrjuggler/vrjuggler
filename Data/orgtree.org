@@ -1,42 +1,47 @@
 Begin "Zelda"
-    Begin "Display"
-        "simDisplay"
-	"surfaceDisplay"
-        "DisplaySystem"
+    "Include File"
+    Begin "Displays"
+        "Simulator Display"
+	"Surface Display"
+        "Display System"
     End
     Begin "Input"
+        "Input Manager"
         Begin "Proxies and Aliases"
-            "ProxyAlias"
-            "PosProxy"
-            "AnaProxy"
-            "DigProxy"
-            "GloveProxy"
-            "GestureProxy"
+            "Proxy Alias"
+            "Position Proxy"
+            "Analog Proxy"
+            "Digital Proxy"
+            "Glove Proxy"
+            "Gesture Proxy"
         End
         Begin "Input Devices"
             "Keyboard"
-            "flock"
-            "ibox"
-            "Cyberglove"
-            "ThreeDMouse"
-            "DummyPosition"
+            "Flock"
+            "IBox"
+            "CyberGlove"
+            "3D Mouse"
+            "Dummy Position"
         End
-        Begin "Sim Devices"
-            "SimAnalog"
-            "SimDigital"
-            "SimPosition"
-            "SimGloveGesture"
-        End
-    End
-    Begin "Expert Only"
-        Begin "Performer API"
-            "ApiPerformer"
-        End
-        Begin "Environment Manager"
-            "Environment Manager"
-            "EM File Output"
+        Begin "Simulator Devices"
+            "Position Simulator"
+            "Analog Simulator"
+            "Digital Simulator"
+            "Glove Gesture Simulator"
         End
     End
+    "Juggler User"
+
+    Begin "API-specific"
+        "Performer API"
+    End
+    
+    Begin "Environment Manager"
+        "Environment Manager"
+        "Performance Measurements"
+        "EM Connection"
+    End
+
     Begin "*"
     End
 End
