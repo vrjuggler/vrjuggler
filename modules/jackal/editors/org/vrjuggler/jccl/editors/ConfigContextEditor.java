@@ -111,6 +111,7 @@ public class ConfigContextEditor
                   for(Iterator itr = mCustomEditors.iterator() ; itr.hasNext() ; )
                   {
                      CustomEditor editor = (CustomEditor)itr.next(); 
+                     editor.setContext(getContext());
                      editor.setConfigElement(elt);
                      mTabPane.add(editor.getPanel(), editor.getTitle());
                   }

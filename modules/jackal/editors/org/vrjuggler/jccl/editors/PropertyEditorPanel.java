@@ -279,7 +279,7 @@ public class PropertyEditorPanel extends PropertyComponent
       //return mEditorComponent;
    }
 
-      /**
+   /**
     * Gets a property editor for the given property value described by the given
     * property definition.
     */
