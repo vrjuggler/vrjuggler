@@ -196,9 +196,9 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level, c
 
 void Debug::addCategory(const vpr::DebugCategory& catId)
 {
-   if(getLevel() > 4)
+   if(getLevel() > 2)
    {
-      std::cout << "\nAdding category named '" << catId.mName << "'  -- prefix: " << catId.mPrefix <<  " -- guid: " << catId.mGuid
+      std::cout << "\nAdding category named [" << catId.mName << "]  -- prefix: " << catId.mPrefix <<  " -- guid: " << catId.mGuid
                << " to debug categories:" << &mCategories << " size: " << mCategories.size() << std::endl;
    }
    mCategories.insert( std::pair<vpr::GUID,CategoryInfo>(catId.mGuid, 
@@ -341,7 +341,7 @@ void Debug::updateAllowedCategories()
    {
       if(getLevel() > 2)
       {
-         std::cout << "   vprDEBUG::Found VPR_DEBUG_DISALLOW_CATEGORIES: Updating allowed categories. (If blank, then none allowed.)\n" << std::flush;         
+         std::cout << "   vprDEBUG::Found VPR_DEBUG_DISALLOW_CATEGORIES: Updating dis-allowed categories. (If blank, then none dis-allowed.)\n" << std::flush;         
       }
 
       std::string dbg_disallow_cats(dbg_disallow_cats_env);
