@@ -35,6 +35,11 @@
 #include <Sound/vjSound.h>
 #include <Sound/vjSoundEngine.h>
 
+vjSoundEngine::vjSoundEngine() : mPosition()
+{
+   mPosition.setTrans( 0.0f, 0.0f, 0.0f );
+}
+
 // lookup a filename, given the sound's alias.
 // the "filename" returned can be used in a call to Sound::load()
 void vjSoundEngine::aliasToFileName( const char* const alias, std::string& filename )

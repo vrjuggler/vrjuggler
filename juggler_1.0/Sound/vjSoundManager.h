@@ -72,6 +72,13 @@ public:
    // memory managed by engine
    virtual vjSound* newSound();
 
+   // get the manager's soundengine
+   vjSoundEngine* engine()
+   {
+      return mSoundEngine;
+   }   
+   
+   // TODO make protected...
    vjSoundEngine* mSoundEngine;
 
 public:
