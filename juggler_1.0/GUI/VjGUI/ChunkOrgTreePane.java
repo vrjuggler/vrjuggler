@@ -172,7 +172,7 @@ public class ChunkOrgTreePane extends JPanel
 	addchunkdesc_menu.add (unnameddesc_mi);
 	addchunkdesc_menu.addSeparator();
 	for (i = 0; i < Core.descdb.size(); i++) {
-	    d = (ChunkDesc)Core.descdb.elementAt(i);
+	    d = Core.descdb.elementAt(i);
 	    mi = new JMenuItem (d.getName());
 	    mi.addActionListener (this);
 	    addchunkdesc_menu.add (mi);

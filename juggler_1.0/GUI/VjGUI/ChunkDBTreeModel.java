@@ -206,7 +206,7 @@ public class ChunkDBTreeModel extends DefaultTreeModel implements ActionListener
 		if (newon.label.equals ("*")) {
 		    newtn = new DefaultMutableTreeNode (new ChunkTreeNodeInfo (db, "All Chunks"));
 		    for (j = 0; j < Core.descdb.size(); j++) {
-			s2 = ((ChunkDesc)Core.descdb.elementAt(j)).name;
+			s2 = Core.descdb.elementAt(j).name;
 			newtn1 = new DefaultMutableTreeNode (new ChunkTreeNodeInfo (db, s2, true));
 			v = db.getOfDescName(s2);
 			for (k = 0; k < v.size(); k++) {

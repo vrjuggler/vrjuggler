@@ -31,7 +31,6 @@ package VjGUI;
 import java.lang.String;
 import java.lang.StringBuffer;
 import java.util.Vector;
-//import java.awt.Color;
 import javax.swing.*;
 import VjGUI.*;
 import VjConfig.*;
@@ -39,7 +38,7 @@ import VjPerf.*;
 
 public class Core {
 
-    static Core instance;
+    static Core instance; // dummy instance used as source of CoreDBEvents
 
     static public ChunkOrgTree chunkorgtree;
     static public Vector chunkdbs;

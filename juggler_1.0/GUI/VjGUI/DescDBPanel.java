@@ -144,7 +144,7 @@ public class DescDBPanel extends JPanel
 	    currdb = db;
 	    root = new DefaultMutableTreeNode ("root");
 	    for (i = 0; i < currdb.size(); i++) {
-		d = (ChunkDesc)currdb.elementAt(i);
+		d = currdb.elementAt(i);
 		root.add (new DefaultMutableTreeNode (d.name));
 	    }
 	    model = new DefaultTreeModel (root);

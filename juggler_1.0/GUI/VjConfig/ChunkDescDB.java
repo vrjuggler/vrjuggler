@@ -24,15 +24,22 @@ package VjConfig;
 import java.util.Vector;
 import java.io.*;
 
-public class ChunkDescDB extends Vector {
+import VjConfig.DescDBEvent;
+import VjConfig.DescDBListener;
+
+public class ChunkDescDB {
 
     public String name;
     public File file;
 
+    private Vector targets;
+    private Vector descs;
 
     public ChunkDescDB () {
 	name = "Unnamed";
 	file = new File ("");
+	targets = new Vector();
+	descs = new Vector();
     }
 
 
@@ -51,6 +58,15 @@ public class ChunkDescDB extends Vector {
     }
 
 
+    public int size () {
+	return descs.size();
+    }
+
+
+    public ChunkDesc elementAt (int i) {
+	return (ChunkDesc)descs.elementAt(i);
+    }
+
 
     public ChunkDescDB diff (ChunkDescDB d) {
 	/* builds a new ChunkDescDB that's sort of the difference of its
@@ -60,34 +76,39 @@ public class ChunkDescDB extends Vector {
 	ChunkDesc c1, c2;
 	ChunkDescDB newdb = new ChunkDescDB();
 	
-	for (int i = 0; i < d.size(); i++) {
-	    c1 = (ChunkDesc)d.elementAt(i);
+	for (int i = 0; i < d.descs.size(); i++) {
+	    c1 = (ChunkDesc)d.descs.elementAt(i);
 	    c2 = getByToken (c1.token);
 	    if ((c2 == null) || (!c1.equals(c2)))
-		newdb.addElement(c1);
+		newdb.descs.addElement(c1);
 	}
 	return newdb;
     }
 
 
     public void replace (ChunkDesc oldc, ChunkDesc newc) {
-	int i = indexOf (oldc);
+	int i = descs.indexOf (oldc);
 	if (i >= 0) {
-	    setElementAt (newc, i);
+	    DescDBEvent e = new DescDBEvent (this, DescDBEvent.REPLACE, oldc, newc);
+	    descs.setElementAt (newc, i);
+	    notifyDescDBTargets (e);
 	}
 	else
 	    addElement (newc);
     }
     
-    public boolean removeAll () {
-	removeAllElements();
-	return true;
+    public void removeAll () {
+	descs.removeAllElements();
+	notifyDescDBTargets (new DescDBEvent (this, DescDBEvent.REMOVEALL, null, null));
     }
 
     public boolean remove(String tok) {
-	for (int i = 0; i < size(); i++) {
-	    if (((ChunkDesc)elementAt(i)).token.equals(tok)) {
-		removeElementAt(i);
+	for (int i = 0; i < descs.size(); i++) {
+	    ChunkDesc d = (ChunkDesc)descs.elementAt(i);
+	    if (d.token.equals(tok)) {
+		DescDBEvent e = new DescDBEvent (this, DescDBEvent.REMOVE, d, null);
+		descs.removeElementAt(i);
+		notifyDescDBTargets (e);
 		return true;
 	    }
 	}
@@ -96,9 +117,12 @@ public class ChunkDescDB extends Vector {
 
 
     public boolean removeByName(String tok) {
-	for (int i = 0; i < size(); i++) {
-	    if (((ChunkDesc)elementAt(i)).name.equalsIgnoreCase(tok)) {
-		removeElementAt(i);
+	for (int i = 0; i < descs.size(); i++) {
+	    ChunkDesc d = (ChunkDesc)descs.elementAt(i);
+	    if (d.name.equalsIgnoreCase(tok)) {
+		DescDBEvent e = new DescDBEvent (this, DescDBEvent.REMOVE, d, null);
+		descs.removeElementAt(i);
+		notifyDescDBTargets (e);
 		return true;
 	    }
 	}
@@ -108,8 +132,8 @@ public class ChunkDescDB extends Vector {
     public Vector getTokenBegins (String tok) {
 	ChunkDesc d;
 	Vector v = new Vector();
-	for (int i = 0; i < size(); i++) {
-	    d = (ChunkDesc)elementAt(i);
+	for (int i = 0; i < descs.size(); i++) {
+	    d = (ChunkDesc)descs.elementAt(i);
 	    if (d.token.startsWith (tok))
 		v.addElement(d);
 	}
@@ -121,9 +145,9 @@ public class ChunkDescDB extends Vector {
 
 
     public ChunkDesc getByToken (String tok) {
-	for (int i = 0; i < size(); i++) {
-	    if (((ChunkDesc)elementAt(i)).token.equalsIgnoreCase(tok)) {
-		return (ChunkDesc)elementAt(i);
+	for (int i = 0; i < descs.size(); i++) {
+	    if (((ChunkDesc)descs.elementAt(i)).token.equalsIgnoreCase(tok)) {
+		return (ChunkDesc)descs.elementAt(i);
 	    }
 	}
 	return null;
@@ -132,27 +156,27 @@ public class ChunkDescDB extends Vector {
 
 
     public ChunkDesc getByName (String tok) {
-	for (int i = 0; i < size(); i++)
-	    if (((ChunkDesc)elementAt(i)).name.equalsIgnoreCase(tok))
-		return (ChunkDesc)elementAt(i);
+	for (int i = 0; i < descs.size(); i++)
+	    if (((ChunkDesc)descs.elementAt(i)).name.equalsIgnoreCase(tok))
+		return (ChunkDesc)descs.elementAt(i);
 	return null;
     }
 
 
 
     public String getTokenFromName (String n) {
-	for (int i = 0; i < size(); i++)
-	    if (((ChunkDesc)elementAt(i)).name.equalsIgnoreCase(n))
-		return ((ChunkDesc)elementAt(i)).token;
+	for (int i = 0; i < descs.size(); i++)
+	    if (((ChunkDesc)descs.elementAt(i)).name.equalsIgnoreCase(n))
+		return ((ChunkDesc)descs.elementAt(i)).token;
 	return "";
     }
 
 
 
     public String getNameFromToken (String n) {
-	for (int i = 0; i < size(); i++)
-	    if (((ChunkDesc)elementAt(i)).token.equalsIgnoreCase(n))
-		return ((ChunkDesc)elementAt(i)).name;
+	for (int i = 0; i < descs.size(); i++)
+	    if (((ChunkDesc)descs.elementAt(i)).token.equalsIgnoreCase(n))
+		return ((ChunkDesc)descs.elementAt(i)).name;
 	return "";
     }
 
@@ -160,51 +184,98 @@ public class ChunkDescDB extends Vector {
 
     public void addElement (ChunkDesc d) {
 	remove (d.token);
-	super.addElement(d);
+	descs.addElement(d);
+	DescDBEvent e = new DescDBEvent (this, DescDBEvent.INSERT, null, d);
+	notifyDescDBTargets (e);
     }
 
-  public void addElements (Vector v) {
-    for (int i = 0; i < v.size(); i++)
-      addElement ((ChunkDesc)v.elementAt(i));
-  }
 
-
-  public boolean read (ConfigStreamTokenizer st) {
-    String name;
-    ChunkDesc c;
-
-    try {
-      while (true) {
-	st.nextToken();
-	if (st.sval.equalsIgnoreCase ("end"))
-	  return true;
-	if (!st.sval.equalsIgnoreCase("chunk"))
-	  throw new IOException();
-	st.nextToken();
-	name = st.sval;
-	//System.err.println ("Reading chunkDesc: " + name);
-	c = new ChunkDesc (name);
-	c.read(st);
-	addElement(c);
-      }
-
+    public void addElements (Vector v) {
+	for (int i = 0; i < v.size(); i++)
+	    addElement ((ChunkDesc)v.elementAt(i));
     }
-    catch (IOException io) {
-      System.err.println ("IO Error in ChunkDescDB.read()");
-      return false;
-    }
-  }
 
-  public String fileRep () {
-    String s = "";
-    ChunkDesc d;
-    for (int i = 0; i < size(); i++) {
-      d = (ChunkDesc)elementAt(i);
-      s += d.toString();
+
+    public void addElements (ChunkDescDB db) {
+	addElements (db.descs);
     }
-    s += "End\n";
-    return s;
-  }
+
+    public boolean read (ConfigStreamTokenizer st) {
+	String name;
+	ChunkDesc c;
+
+	try {
+	    while (true) {
+		st.nextToken();
+		if (st.sval.equalsIgnoreCase ("end"))
+		    return true;
+		if (!st.sval.equalsIgnoreCase("chunk"))
+		    throw new IOException();
+		st.nextToken();
+		name = st.sval;
+		//System.err.println ("Reading chunkDesc: " + name);
+		c = new ChunkDesc (name);
+		c.read(st);
+		addElement(c);
+	    }
+
+	}
+	catch (IOException io) {
+	    System.err.println ("IO Error in ChunkDescDB.read()");
+	    return false;
+	}
+    }
+
+    public String fileRep () {
+	String s = "";
+	ChunkDesc d;
+	for (int i = 0; i < descs.size(); i++) {
+	    d = (ChunkDesc)descs.elementAt(i);
+	    s += d.toString();
+	}
+	s += "End\n";
+	return s;
+    }
+
+
+
+    /******************** DescDB Target Stuff *********************/
+
+    public synchronized void addDescDBListener (DescDBListener l) {
+	synchronized (targets) {
+	    targets.addElement (l);
+	}
+    }
+
+    public void removeDescDBListener (DescDBListener l) {
+	synchronized (targets) {
+	    targets.removeElement (l);
+	}
+    }
+
+    protected void notifyDescDBTargets (DescDBEvent e) {
+	Vector l;
+	synchronized (targets) {
+	    l = (Vector) targets.clone();
+	}
+	for (int i = 0; i < l.size(); i++) {
+	    DescDBListener lis = (DescDBListener)l.elementAt (i);
+	    switch (e.getAction()) {
+	    case e.INSERT:
+		lis.addDesc (e);
+		break;
+	    case e.REMOVE:
+		lis.removeDesc (e);
+		break;
+	    case e.REPLACE:
+		lis.replaceDesc (e);
+		break;
+	    case e.REMOVEALL:
+		lis.removeAllDescs (e);
+		break;
+	    }
+	}
+    }
 
 }
 
