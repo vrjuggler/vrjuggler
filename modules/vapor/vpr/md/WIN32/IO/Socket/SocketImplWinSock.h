@@ -40,6 +40,7 @@
 #include <vector>
 
 #include <vpr/IO/BlockIO.h>
+#include <vpr/IO/IOSys.h>
 #include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/IO/Socket/SocketIpOpt.h>
 
