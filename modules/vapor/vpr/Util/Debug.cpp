@@ -80,6 +80,7 @@ vprREGISTER_DBG_CATEGORY(vprDBG_VPR, DBG_VPR, "VPR:");
 vprSingletonImpWithInitFunc(Debug, init);
 
 Debug::Debug()
+   : mFile(NULL)
 {
    indentLevel = 0;     // Initialy don't indent
    debugLevel = 2;      // Should actually try to read env variable
