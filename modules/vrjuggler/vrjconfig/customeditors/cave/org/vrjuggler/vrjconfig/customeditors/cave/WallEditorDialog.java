@@ -45,7 +45,6 @@ import org.vrjuggler.jccl.config.event.ConfigElementEvent;
 import org.vrjuggler.jccl.config.event.ConfigElementListener;
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
-import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
 
 public class WallEditorDialog
    extends JDialog
@@ -54,6 +53,7 @@ public class WallEditorDialog
    private static int VP_ELT_COUNT = 0;
    protected CaveWall mCaveWall = null;
    protected ConfigContext mConfigContext = null;
+   private int mPlane;
    
    public WallEditorDialog(Container parent, ConfigContext ctx)
    {
@@ -136,6 +136,7 @@ public class WallEditorDialog
       else
       {
          mUnitsComboBox.setSelectedIndex(0);
+         mPlaneChooser.setSelectedIndex(mCaveWall.getPlane());
 
          float[] ll_corner = new float[3], lr_corner = new float[3],
                  ul_corner = new float[3];
@@ -150,40 +151,35 @@ public class WallEditorDialog
          ul_corner[1] = ((Number) mViewportElement.getProperty("upper_left_corner", 1)).floatValue();
          ul_corner[2] = ((Number) mViewportElement.getProperty("upper_left_corner", 2)).floatValue();
          */
-         ll_corner[0] = mCaveWall.getLL()[0];
-         ll_corner[1] = mCaveWall.getLL()[1];
-         ll_corner[2] = mCaveWall.getLL()[2];
-         lr_corner[0] = mCaveWall.getLR()[0];
-         lr_corner[1] = mCaveWall.getLR()[1];
-         lr_corner[2] = mCaveWall.getLR()[2];
-         ul_corner[0] = mCaveWall.getUL()[0];
-         ul_corner[1] = mCaveWall.getUL()[1];
-         ul_corner[2] = mCaveWall.getUL()[2];
+         ll_corner[0] = (float)mCaveWall.getCorners()[0].x;
+         ll_corner[1] = (float)mCaveWall.getCorners()[0].y;
+         ll_corner[2] = (float)mCaveWall.getCorners()[0].z;
+         lr_corner[0] = (float)mCaveWall.getCorners()[1].x;
+         lr_corner[1] = (float)mCaveWall.getCorners()[1].y;
+         lr_corner[2] = (float)mCaveWall.getCorners()[1].z;
+         ul_corner[0] = (float)mCaveWall.getCorners()[2].x;
+         ul_corner[1] = (float)mCaveWall.getCorners()[2].y;
+         ul_corner[2] = (float)mCaveWall.getCorners()[2].z;
          
-         System.out.println("Corners:");
-         System.out.println(ll_corner[0]);
-         System.out.println(ll_corner[1]);
-         System.out.println(ll_corner[2]);
-         System.out.println(lr_corner[0]);
-         System.out.println(lr_corner[1]);
-         System.out.println(lr_corner[2]);
-         System.out.println(ul_corner[0]);
-         System.out.println(ul_corner[1]);
-         System.out.println(ul_corner[2]);
-
          float wall_width, wall_height;
-
+         
+         mCaveWall.updateWidthHeight();
+         wall_width = (float)mCaveWall.getWidth();
+         wall_height = (float)mCaveWall.getHeight();
+         /*
          if ( ll_corner[0] == lr_corner[0] )
          {
             if ( ll_corner[2] > lr_corner[2] )
             {
                mPlaneChooser.setSelectedIndex(LEFT_PLANE);
+               mPlane = LEFT_PLANE;
                wall_width  = ll_corner[2] - lr_corner[2];
                wall_height = ul_corner[1] - ll_corner[1];
             }
             else
             {
                mPlaneChooser.setSelectedIndex(RIGHT_PLANE);
+               mPlane = RIGHT_PLANE;
                wall_width  = lr_corner[2] - ll_corner[2];
                wall_height = ul_corner[1] - ll_corner[1];
             }
@@ -193,12 +189,14 @@ public class WallEditorDialog
             if ( lr_corner[0] > ll_corner[0] )
             {
                mPlaneChooser.setSelectedIndex(FRONT_PLANE);
+               mPlane = FRONT_PLANE;
                wall_width  = lr_corner[0] - ll_corner[0];
                wall_height = ul_corner[1] - ll_corner[1];
             }
             else
             {
                mPlaneChooser.setSelectedIndex(BACK_PLANE);
+               mPlane = BACK_PLANE;
                wall_width  = ll_corner[0] - lr_corner[0];
                wall_height = ul_corner[1] - ll_corner[1];
             }
@@ -208,12 +206,14 @@ public class WallEditorDialog
             if ( ll_corner[2] > ul_corner[2] )
             {
                mPlaneChooser.setSelectedIndex(BOTTOM_PLANE);
+               mPlane = BOTTOM_PLANE;
                wall_width  = lr_corner[0] - ll_corner[0];
                wall_height = ll_corner[2] - ul_corner[2];
             }
             else
             {
                mPlaneChooser.setSelectedIndex(TOP_PLANE);
+               mPlane = TOP_PLANE;
                wall_width  = lr_corner[0] - ll_corner[0];
                wall_height = ul_corner[2] - ll_corner[2];
             }
@@ -221,6 +221,7 @@ public class WallEditorDialog
          else
          {
             mPlaneChooser.setSelectedIndex(CUSTOM_PLANE);
+            mPlane = CUSTOM_PLANE;
 
             float x_diff = lr_corner[0] - ll_corner[0];
             float y_diff = lr_corner[1] - ll_corner[1];
@@ -238,6 +239,7 @@ public class WallEditorDialog
             // rotational angles for the custom-defined plane.  Those angles
             // then need to go into the text fields.
          }
+         */
 
          mCornerXField.setValue(new Float(ll_corner[0]));
          mCornerYField.setValue(new Float(ll_corner[1]));
@@ -291,12 +293,17 @@ public class WallEditorDialog
    
    public Object getUser()
    {
-      return mCaveWall.getLeftView().getProperty("user", 0);
+      return mCaveWall.getLeftView().getProperty(USER_PROPERTY, 0);
    }
    
    public Object getTrackerProxy()
    {
       return mCaveWall.getLeftView().getProperty(TRACKER_PROXY_PROPERTY, 0);
+   }
+   
+   public int getPlane()
+   {
+      return mPlane;
    }
       
    public void nameChanged(ConfigElementEvent e)
@@ -359,7 +366,7 @@ public class WallEditorDialog
          float z_angle = ((Number) mCustomPlaneZField.getValue()).floatValue();
          surface_plane.setOrientation(x_angle, y_angle, z_angle);
       }
-
+      
       // Pull the value for the corner that the user entered.  This information
       // will be used to reposition surface_plane relative to the selected
       // corner.
@@ -373,11 +380,13 @@ public class WallEditorDialog
       // chosen by the user.
       Point3D[] corners = surface_plane.getCorners();
       Point3D[] scaled_corners = new Point3D[corners.length];
+
       for ( int i = 0; i < corners.length; ++i )
       {
          scaled_corners[i] = new Point3D(corners[i]);
          scaled_corners[i].scale(getUnitConversionFactor());
-         System.out.println(corners[i]);
+         scaled_corners[i].round();
+         //System.out.println(scaled_corners[i]);
       }
 
       return scaled_corners;
@@ -782,7 +791,8 @@ public class WallEditorDialog
 
       if ( mTracked )
       {
-         tracker_set = (((ConfigElementPointer) getTrackerProxy()).getTarget() != null);
+         String proxy = ((ConfigElementPointer) getTrackerProxy()).getTarget();
+         tracker_set = (proxy != null && !proxy.equals(""));
       }
       else
       {
@@ -801,14 +811,6 @@ public class WallEditorDialog
          mCornerIconLabel.setIcon(mCornerIcons[plane][corner]);
       }
    }
-
-   private static final int FRONT_PLANE = 0;
-   private static final int BACK_PLANE = 1;
-   private static final int LEFT_PLANE = 2;
-   private static final int RIGHT_PLANE = 3;
-   private static final int BOTTOM_PLANE = 4;
-   private static final int TOP_PLANE = 5;
-   private static final int CUSTOM_PLANE = 6;
 
    private java.util.List mUnitsList = new java.util.ArrayList();
    private Double mConversionFactor = null;
