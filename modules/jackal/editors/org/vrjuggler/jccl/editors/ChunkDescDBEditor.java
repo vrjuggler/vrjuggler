@@ -244,6 +244,31 @@ public class ChunkDescDBEditor
    }
 
    /**
+    * Called by a ChunkDesc when it has removed a category that it belongs to.
+    */
+   public void categoryRemoved(ChunkDescEvent evt)
+   {
+      ChunkDesc src = (ChunkDesc)evt.getSource();
+      String category = (String)evt.getValue();
+
+      java.util.List desc_nodes = getNodesFor(src);
+      for (Iterator itr = desc_nodes.iterator(); itr.hasNext(); )
+      {
+         DefaultMutableTreeNode node = (DefaultMutableTreeNode)itr.next();
+         DefaultMutableTreeNode parent_node = (DefaultMutableTreeNode)node.getParent();
+
+         // Check if we found the node that's in the search category
+         if (parent_node.getUserObject().equals(category))
+         {
+            // Remove the desc node from its parent. In this case, the tree model will
+            // automatically fire off the removed event for us.
+            treeModel.removeNodeFromParent(node);
+            break;
+         }
+      }
+   }
+
+   /**
     * Called by a ChunkDesc when one of its properties has been modified.
     */
    public void propertyDescChanged(ChunkDescEvent evt)
@@ -498,7 +523,7 @@ public class ChunkDescDBEditor
     * @param desc       the ChunkDesc to insert into the tree
     */
    private DefaultMutableTreeNode addDescTo(DefaultMutableTreeNode parent,
-                                          ChunkDesc desc)
+                                            ChunkDesc desc)
    {
       // Create the node for the desc and add it to the parent
       DefaultMutableTreeNode descNode = new DefaultMutableTreeNode(desc);

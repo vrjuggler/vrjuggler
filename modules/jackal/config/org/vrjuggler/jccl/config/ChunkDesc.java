@@ -218,31 +218,24 @@ public class ChunkDesc
     */
    public final void removeCategory(String category)
    {
-      boolean removed = false;
-      List dead = new ArrayList();
-
       List cats = mDomElement.getChildren(category_TOKEN);
+      int index = 0;
+
       for (Iterator itr = cats.iterator(); itr.hasNext(); )
       {
          // If we found the category, remove it and we're done
          Element element = (Element)itr.next();
          if (element.getText().equals(category))
          {
-            dead.add(element);
-            removed = true;
+            // Remove the category
+            mDomElement.removeContent(element);
+
+            // Notify listeners
+            changeSupport.firePropertyChange("category", null, null);
+            fireCategoryRemoved(index, category);
+            break;
          }
-      }
-
-      // Remove the elements marked as dead
-      for (Iterator itr = dead.iterator(); itr.hasNext(); )
-      {
-         mDomElement.removeContent((Element)itr.next());
-      }
-
-      // Notify listeners if something was actually removed
-      if (removed)
-      {
-         changeSupport.firePropertyChange("category", null, null);
+         ++index;
       }
    }
 
@@ -481,6 +474,26 @@ public class ChunkDesc
                evt = new ChunkDescEvent(this, index, category);
             }
             ((ChunkDescListener)listeners[i+1]).categoryAdded(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies listeners of this chunk desc that a category has been removed.
+    */
+   protected void fireCategoryRemoved(int index, String oldCategory)
+   {
+      ChunkDescEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ChunkDescListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ChunkDescEvent(this, index, oldCategory);
+            }
+            ((ChunkDescListener)listeners[i+1]).categoryRemoved(evt);
          }
       }
    }

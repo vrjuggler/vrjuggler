@@ -101,6 +101,7 @@ public class ChunkDescEventTest
       mDesc.addCategory("NewCategory");
       assertTrue(mListener.wasFired(CATEGORY_ADDED));
       assertEquals(mListener.getEvent().getIndex(), 1);
+      assertEquals(mListener.getEvent().getValue(), "NewCategory");
 
       // Unsuccessful insertion
       mListener.reset();
@@ -122,6 +123,7 @@ public class ChunkDescEventTest
       mDesc.removeCategory("TestCategory");
       assertTrue(mListener.wasFired(CATEGORY_REMOVED));
       assertEquals(mListener.getEvent().getIndex(), 0);
+      assertEquals(mListener.getEvent().getValue(), "TestCategory");
    }
 
 
