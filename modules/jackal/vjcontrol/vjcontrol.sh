@@ -50,11 +50,15 @@ else
     if test "x$VJ_SHARE_DIR" = "x" ; then
         VJ_SHARE_DIR=$VJ_BASE_DIR/#VJ_SHARE_DIR#
     fi
+    if test "x$JCCL_SHARE_DIR" = "x" ; then
+        JCCL_SHARE_DIR=$JCCL_BASE_DIR/#JCCL_SHARE_DIR#
+    fi
 
 #    CLASSPATH=
     ${JDK_HOME}/bin/java -DVJ_BASE_DIR="${VJ_BASE_DIR}"		\
       -DVJ_SHARE_DIR="${VJ_SHARE_DIR}"				\
-      -cp ${CLASSPATH}:${VJ_BASE_DIR}/bin/VjControl.jar VjControl.Init $*
+      -DJCCL_BASE_DIR="${JCCL_BASE_DIR}" -DJCCL_SHARE_DIR="${JCCL_SHARE_DIR}" \
+      -cp ${CLASSPATH}:${JCCL_BASE_DIR}/bin/VjControl.jar VjControl.Init $*
     status=0
 fi
 

@@ -448,12 +448,12 @@ fi
 
 # Put together the basic information needed to compile Jackal applications.
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
-                VJ_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
-VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT, VJ_BASE_DIR,
+                JCCL_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
+VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT, JCCL_BASE_DIR,
               jccl, $APP_EXTRA_LIBS)
 
 APP_BASE_DIR='$(topdir)/instlinks'
-APP_BASE_DIR_INST='$(VJ_BASE_DIR)'
+APP_BASE_DIR_INST='$(JCCL_BASE_DIR)'
 
 
 # Translate paths from UNIX-style to Win32.
@@ -487,8 +487,8 @@ fi
 # full installation prefix.  This is not foolproof, but it will work in almost
 # all cases.  A person would have to be doing something malicious or foolish
 # to make it break.
-VJ_SHARE_DIR=`echo "$datadir" | sed -e 's|^${prefix}/||'`
-VJ_SHARE_DIR=`echo "$VJ_SHARE_DIR" | sed -e "${_prefix_exp}"`
+JCCL_SHARE_DIR=`echo "$datadir" | sed -e 's|^${prefix}/||'`
+JCCL_SHARE_DIR=`echo "$JCCL_SHARE_DIR" | sed -e "${_prefix_exp}"`
 
 # Information needed to generate juggler-config.
 case $OS_TYPE in
@@ -523,7 +523,7 @@ AC_SUBST(UNIX_JCCLROOT_ABS)
 AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(JCCLROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
-AC_SUBST(VJ_SHARE_DIR)
+AC_SUBST(JCCL_SHARE_DIR)
 
 AC_SUBST(EXTRA_LINK_FLAGS)
 

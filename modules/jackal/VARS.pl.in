@@ -79,9 +79,9 @@ $VARS{'LIBBITSUF'}       = '@LIBBITSUF@';
 $VARS{'JAR'}             = '@JAR@';
 $VARS{'JAVAC'}           = '@JAVAC@';
 
-# VR Juggler stuff.
-$VARS{'VJ_SHARE_DIR'}       = '@VJ_SHARE_DIR@';
-$VARS{'APP_VJ_LIBS_X11'}    = '@APP_VJ_LIBS_X11@';
-$VARS{'APP_VJ_LIBS_UTILS'}  = '@APP_VJ_LIBS_UTILS@';
+# Jackal stuff.
+$VARS{'JCCL_SHARE_DIR'}       = '@JCCL_SHARE_DIR@';
+#$VARS{'APP_VJ_LIBS_X11'}    = '@APP_VJ_LIBS_X11@';
+#$VARS{'APP_VJ_LIBS_UTILS'}  = '@APP_VJ_LIBS_UTILS@';
 
 1;

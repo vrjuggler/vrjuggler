@@ -173,7 +173,7 @@ endif	# ifndef NO_JAVA_GUI
 
 # =============================================================================
 # Make links for developer use that provide the needed functionality for
-# the $VJ_BASE_DIR environment variable to be used when needed.  $VJ_BASE_DIR
+# the $JCCL_BASE_DIR environment variable to be used when needed.  $JCCL_BASE_DIR
 # should be set to $(instlinks).
 # =============================================================================
 links:
@@ -191,11 +191,11 @@ ifneq (@OS_TYPE@, Win32)
           done
 	cd $(instlinks) && rm -f ./$(LIBDIR_NAME) &&			\
           ln -s $(LIBDIR_BASE) ./$(LIBDIR_NAME)
-	cd $(instlinks) && rm -rf ./$(VJ_SHARE_DIR) &&			\
-          $(SHELL) $(MKINSTALLDIRS) ./$(VJ_SHARE_DIR)
-	cd $(instlinks)/$(VJ_SHARE_DIR) && rm -f ./Data &&		\
+	cd $(instlinks) && rm -rf ./$(JCCL_SHARE_DIR) &&			\
+          $(SHELL) $(MKINSTALLDIRS) ./$(JCCL_SHARE_DIR)
+	cd $(instlinks)/$(JCCL_SHARE_DIR) && rm -f ./Data &&		\
           ln -s $(JCCLROOT_ABS)/Data ./Data
-	cd $(instlinks)/$(VJ_SHARE_DIR) && rm -f ./samples &&		\
+	cd $(instlinks)/$(JCCL_SHARE_DIR) && rm -f ./samples &&		\
           ln -s $(JCCLROOT_ABS)/samples ./samples
 	cd $(instlinks)/include/jccl && rm -f ./jcclConfig.h &&		\
           $(LN_S) $(JCCLROOT_ABS)/jccl/jcclConfig.h ./jcclConfig.h
@@ -210,7 +210,7 @@ ifndef NO_JAVA_GUI
 	cd $(instlinks)/bin && rm -f ./VjControl.jar &&			\
           $(LN_S) $(topdir)/VjControl/VjControl.jar ./
 	cd $(instlinks)/bin && rm -f ./vjcontrol &&			\
-          sed -e 's,#VJ_SHARE_DIR#,${VJ_SHARE_DIR},g'			\
+          sed -e 's,#JCCL_SHARE_DIR#,${JCCL_SHARE_DIR},g'			\
               ${JCCLROOT_ABS}/VjControl/vjcontrol.sh > vjcontrol &&		\
           chmod ${EXEC_PERMS} vjcontrol
 endif
@@ -219,12 +219,12 @@ endif
             -o $(instlinks)/bin/jccl-config -x
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
-	@echo 'You should now set $$VJ_BASE_DIR to:'
+	@echo 'You should now set $$JCCL_BASE_DIR to:'
 	@cd $(instlinks) && echo "  `pwd`"
 	@echo "---------------------------------------------------------------"
 else
 	@echo "---------------------------------------------------------------"
-	@echo 'You must now install Jackal and set %VJ_BASE_DIR% to:'
+	@echo 'You must now install Jackal and set %JCCL_BASE_DIR% to:'
 	@echo "  $(prefix)"
 	@echo "---------------------------------------------------------------"
 endif
@@ -375,12 +375,12 @@ ifeq ($(BUILD_VJCONTROL), Y)
 	@echo "Installing VjControl"
 	@echo "------------------------------------------------"
 ifeq (@OS_TYPE@, UNIX)
-	@sed -e 's,#VJ_SHARE_DIR#,$(VJ_SHARE_DIR),g'			\
+	@sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'			\
           $(JCCLROOT_ABS)/VjControl/vjcontrol.sh > vjcontrol
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           vjcontrol $(bindir)/vjcontrol && rm -f vjcontrol
 else
-	@sed -e 's,#VJ_SHARE_DIR#,$(VJ_SHARE_DIR),g'			\
+	@sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'			\
           $(JCCLROOT_ABS)/VjControl/vjcontrol.bat > vjcontrol.bat
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX) 			\
           vjcontrol.bat $(bindir)/vjcontrol.bat && rm -f vjcontrol.bat
