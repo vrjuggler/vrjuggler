@@ -39,7 +39,9 @@
 
 #include <vpr/IO/Port/Port.h>
 #include <vpr/IO/Port/SerialTypes.h>
+#include <vpr/IO/IOSys.h>
 #include <vpr/md/POSIX/IO/FileHandleImplUNIX.h>
+#include <vpr/Util/Debug.h>
 
 
 namespace vpr {
@@ -205,6 +207,20 @@ public:
     inline virtual Status
     enableNonBlocking (void) {
        return m_handle->enableNonBlocking();
+    }
+
+    // ------------------------------------------------------------------------
+    //: Return the contained handle
+    // ------------------------------------------------------------------------
+    inline IOSys::Handle
+    getHandle (void) {
+#ifdef VPR_USE_NSPR
+       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+           << "ERROR: Cannot get handle for serial port with NSPR!\n";
+       return NULL;
+#else
+       return m_handle->m_fdesc;
+#endif
     }
 
     // ========================================================================
