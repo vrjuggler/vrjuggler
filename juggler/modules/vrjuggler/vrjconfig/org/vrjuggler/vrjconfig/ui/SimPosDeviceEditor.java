@@ -64,7 +64,8 @@ public class SimPosDeviceEditor
       ConfigChunkDB active_db = getConfigManager().getActiveConfig();
       if (active_db != null)
       {
-         java.util.List proxies = active_db.getOfDescToken("KeyboardProxy");
+         java.util.List proxies = ConfigUtilities.getChunksWithDescToken(
+                                    active_db.getAll(), "KeyboardProxy");
          for (Iterator itr = proxies.iterator(); itr.hasNext(); )
          {
             ConfigChunk proxy = (ConfigChunk)itr.next();

@@ -159,7 +159,8 @@ public class ConfigManagerService
       for (Iterator db_itr = mChunkDBs.iterator(); db_itr.hasNext(); )
       {
          ConfigChunkDB db = (ConfigChunkDB)db_itr.next();
-         for (Iterator chk_itr = db.getOfDescToken(token).iterator(); chk_itr.hasNext(); )
+         List matches = ConfigUtilities.getChunksWithDescToken(db.getAll(), token);
+         for (Iterator chk_itr = matches.iterator(); chk_itr.hasNext(); )
          {
             ConfigChunk chunk = (ConfigChunk)chk_itr.next();
             System.out.println("Found chunk "+chunk.getName());
