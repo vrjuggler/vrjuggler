@@ -154,6 +154,15 @@
 				RelativePath="..\..\src\gadget\_BaseDeviceInterface.cpp">
 			</File>
 			<File
+				RelativePath="..\..\src\gadget\_Command.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\gadget\_CommandInterface.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\gadget\_CommandProxy.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\gadget\_Digital.cpp">
 			</File>
 			<File
@@ -167,6 +176,15 @@
 			</File>
 			<File
 				RelativePath="..\..\src\gadget\_Event.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\gadget\_EventWindow.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\gadget\_EventWindowInterface.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\gadget\_EventWindowProxy.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\gadget\_gadget_Type_EventWindow_Event_h.cpp">
@@ -194,6 +212,21 @@
 			</File>
 			<File
 				RelativePath="..\..\src\gadget\_PositionProxy.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\gadget\_PositionUnitConversion.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\gadget\_String.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\gadget\_StringData.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\gadget\_StringInterface.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\gadget\_StringProxy.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\gadget\gadget.cpp">
