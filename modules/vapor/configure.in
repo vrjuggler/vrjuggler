@@ -845,9 +845,7 @@ AC_OUTPUT(Makefile
           release/mtree/VPR.include.dist
           release/mtree/VPR.install.dist
           release/mtree/VPR.test.dist
-          vpr-config
-          VARS.pl,
-          [chmod +x vpr-config])
+          VARS.pl)
 
 cat <<BUILD_INFO
 
