@@ -125,7 +125,7 @@ ifndef NO_CLEAN
 	@$(MAKE) clobber
 endif
 	@$(MAKE) $(BEFOREBUILD)
-	@$(MAKE) libs
+	@$(MAKE) libs build-java
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning JCCL installation process"
 	@echo "---------------------------------------------------------------"
@@ -169,6 +169,7 @@ endif
 	@echo ">>> JCCL make world started on $(STARTTIME)"
 	@echo ">>> JCCL make world completed on `LTIME=C date`"
 	@echo "==============================================================="
+
 # -----------------------------------------------------------------------------
 # A release is a superset of 'world' except that no profiled libraries are
 # built.  Beyond this, the change log, release notes, etc. are installed.
@@ -184,7 +185,7 @@ ifndef NO_CLEAN
 	@$(MAKE) clobber
 endif
 	@$(MAKE) $(BEFOREBUILD)
-	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N libs
+	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N libs build-java
 ifdef GLOBAL_BUILD
 	@$(MAKE) links
 endif
