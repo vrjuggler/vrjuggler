@@ -48,7 +48,6 @@
 #include <windows.h>
 #include <VPR/SharedMem/vjMemPool.h>
 #include <VPR/md/WIN32/vjMemPoolWin32.h>
-#include <Utils/vjDebug.h>
 #include <VPR/Threads/vjThread.h>
 
 //!PUBLIC_API:
