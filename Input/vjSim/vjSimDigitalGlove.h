@@ -37,7 +37,6 @@
 //#pragma once
 
 #include <vjConfig.h>
-#include <Input/vjGlove/vjPinchGlove.h>
 #include <Input/vjSim/vjSimInput.h>
 
 #include <Input/vjGlove/vjFinger.h>
