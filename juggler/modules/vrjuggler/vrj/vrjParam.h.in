@@ -45,7 +45,10 @@
  * This is the "human-readable" VR Juggler version _string_.  It is of the
  * form <major>.<minor>.<days since last major release>.
  */
-#define VJ_VERSION @VER_STRING@
+namespace vrj
+{
+   const char* VJ_VERSION = @VER_STRING@;
+}
 
 
 #endif	/* _VJ_PARAM_H_ */
