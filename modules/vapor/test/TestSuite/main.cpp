@@ -1,7 +1,7 @@
 #include <vpr/vprConfig.h>
 
 #include <cppunit/TestSuite.h>
-#include <cppunit/TextTestRunner.h>
+#include <cppunit/ui/text/TestRunner.h>
 #include <cppunit/extensions/MetricRegistry.h>
 
 // Common (sim and real) tests.
@@ -113,7 +113,7 @@ int main (int ac, char **av)
    metric_reg->setFilename("vapor_metrics.txt");
    metric_reg->setMetric("Main/MetricTest", 1221.75f);
 
-   CppUnit::TextTestRunner runner;
+   CppUnit::TextUi::TestRunner runner;
 
    //------------------------------------
    //  noninteractive
