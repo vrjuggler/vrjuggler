@@ -98,7 +98,11 @@ public class PropertyEditorPanel extends PropertyComponent
       mConfigElement = elm;
       mPropIndex = prop_num;
       mColor = color;
-
+      
+      if (value instanceof ConfigElementPointer)
+      {
+         value = ((ConfigElementPointer)value).getTarget();
+      }
       fillEditorComponent(value, prop_def);
      
       mConfigElement.addConfigElementListener(this);
@@ -112,9 +116,22 @@ public class PropertyEditorPanel extends PropertyComponent
 
    public void propertyValueChanged(ConfigElementEvent evt)
    {
-      if(evt.getProperty().equals(mPropName))
+      if(evt.getProperty().equals(mPropName) &&
+         evt.getIndex() == mPropIndex)
       {
-         mEditor.setValue(mConfigElement.getProperty(mPropName, mPropIndex));
+         Object value = mConfigElement.getProperty(mPropName, mPropIndex);
+         if (value instanceof ConfigElementPointer)
+         {
+            value = ((ConfigElementPointer)value).getTarget();
+         }
+
+         // XXX: If this editor actually made the change to the porperty
+         //      this will set the value twice. We could test to see if
+         //      mEditor.getValue().equals(value), but this would waste
+         //      cycles that are not needed since setting the value twice
+         //      does not currently cause any errors. This could cause
+         //      errors in the future though.
+         mEditor.setValue(value);
 
          if (mEditorComponent instanceof JComboBox)
          {
@@ -154,15 +171,30 @@ public class PropertyEditorPanel extends PropertyComponent
             JTextField txt_field = (JTextField)mEditorComponent;
             mEditor.setAsText(txt_field.getText());
          }
+
          
          Object old_value = mConfigElement.getProperty(mPropName, mPropIndex);
-         ConfigElementPropertyEdit new_edit = 
-            new ConfigElementPropertyEdit(mConfigElement, mPropName, mPropIndex, 
+         
+         if (old_value instanceof ConfigElementPointer)
+         {
+            old_value = ((ConfigElementPointer)old_value).getTarget();
+         }
+         
+         // NOTE: Wo not need to treat ConfigElementPointers as a special
+         //       case when getting the new value since it is stored as a
+         //       string in the ConfigElementPointerEditor.
+
+         // Make sure that the value acually changed.
+         if ( !old_value.equals(mEditor.getValue()) )
+         {
+            ConfigElementPropertyEdit new_edit = 
+               new ConfigElementPropertyEdit(mConfigElement, mPropName, mPropIndex, 
                                           old_value, mEditor.getValue());
             
-         mConfigElement.setProperty(mPropName, mPropIndex, mEditor.getValue());
-         System.out.println("Adding: " + new_edit);
-         ConfigUndoManager.instance().addEdit(new_edit);
+            mConfigElement.setProperty(mPropName, mPropIndex, mEditor.getValue());
+            System.out.println("Adding: " + new_edit);
+            ConfigUndoManager.instance().addEdit(new_edit);
+         }
          
       
          //return super.stopCellEditing();
@@ -202,6 +234,8 @@ public class PropertyEditorPanel extends PropertyComponent
       {
          public void actionPerformed(ActionEvent evt)
          {
+            System.out.println("Action event coming from combox: " 
+               + evt.getSource().getClass().getName() + "@" + Integer.toHexString(evt.getSource().hashCode()));
             stopCellEditing();
          }
       });
