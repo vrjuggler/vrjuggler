@@ -235,7 +235,7 @@ public class ChunkDescDB
    {
       for (Iterator itr = descs.iterator(); itr.hasNext(); )
       {
-         if (itr.next() == descs)
+         if (itr.next() == desc)
          {
             return true;
          }
