@@ -81,7 +81,8 @@ public:
    {
       LAN,
       MAN,
-      WAN
+      WAN,
+      LOOPBACK
    };
 
    /**

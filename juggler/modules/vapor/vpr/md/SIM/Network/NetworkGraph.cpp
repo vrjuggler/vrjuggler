@@ -77,13 +77,13 @@ vpr::ReturnStatus NetworkGraph::construct (const std::string& path)
       vpr::Uint32 node_count, full_edge_count, half_edge_count;
       std::map<int, boost::graph_traits<net_graph_t>::vertex_descriptor> vertex_map;
       std::string temp_str;
+      vpr::Uint32 index, last_index, localhost_index;
+      vpr::Uint16 node_type;
 
       input_file >> node_count;
 
       for ( vpr::Uint32 i = 0; i < node_count; ++i )
       {
-         vpr::Uint32 index;
-         vpr::Uint16 node_type;
          std::string node_ip;
 
          input_file >> index >> node_type >> node_ip;
@@ -94,6 +94,18 @@ vpr::ReturnStatus NetworkGraph::construct (const std::string& path)
          vertex_map[index] = boost::add_vertex(NodeProperty( node_prop),
                                                mGraph);
       }
+
+      // Add a node to the graph that will represent localhost.  It will have
+      // an edge to the last node added to the graph.
+      // index and node_type will have the values of the last vertex added to
+      // the graph.  We will use this vertex to represent localhost.
+      last_index      = index;
+      localhost_index = last_index + 1;
+      NetworkNodePtr node_prop(new NetworkNode(localhost_index, node_type,
+                                               std::string("127.0.0.1")));
+      vprASSERT(vertex_map.count(localhost_index) == 0 && "The index for localhost is already in use");
+      vertex_map[localhost_index] = boost::add_vertex(NodeProperty(node_prop),
+                                                      mGraph);
 
       input_file >> full_edge_count;
 
@@ -106,12 +118,15 @@ vpr::ReturnStatus NetworkGraph::construct (const std::string& path)
       boost::property_map<net_graph_t, boost::edge_weight_t>::type weight_map;
       weight_map = boost::get(boost::edge_weight_t(), mGraph);
 
+      // This is outside the loop so that it can be used when making the
+      // loopback link for localhost.
+      vpr::Uint16 net_id;
+
       for ( vpr::Uint32 i = 0; i < full_edge_count; ++i )
       {
          double length, delay, bw;
          vpr::Uint32 from_node, to_node;
          std::string net_type, net_ip;
-         vpr::Uint16 net_id;
 
          input_file >> from_node >> to_node >> length >> delay >> bw
                     >> net_type >> net_id >> net_ip;
@@ -146,6 +161,17 @@ vpr::ReturnStatus NetworkGraph::construct (const std::string& path)
             break;
          }
       }
+
+      // Make a very, very short, very, very high-bandwidth link for the
+      // localhost loopback.
+      NetworkLine line(0.0000001f, 100000, 0.0000001f, std::string("LOOPBACK"),
+                       net_id, std::string("127.0.0.0"));
+      boost::tie(new_edge, added) = boost::add_edge(vertex_map[localhost_index],
+                                                    vertex_map[last_index],
+                                                    LineProperty(line),
+                                                    mGraph);
+      vprASSERT(added && "Addition of loopback line for localhost failed");
+      weight_map[new_edge] = line.getWeight();
 
       mGraphValid = true;
    }
