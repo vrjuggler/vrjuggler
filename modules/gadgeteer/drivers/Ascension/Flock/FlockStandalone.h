@@ -90,6 +90,11 @@ namespace Transmitter
       { return "Standard"; }
       return "None";
    }
+
+   inline bool isErt(const Type type)
+   {
+      return ((type == Ert0) || (type == Ert1) || (type == Etr2) | (type == Ert3));
+   }
 }
 
 namespace Flock
@@ -181,6 +186,7 @@ namespace Flock
       const vpr::Uint8 Run(0x46);
       const vpr::Uint8 Sleep(0x47);
       const vpr::Uint8 Stream(0x40);
+      const vpr::Uint8 Sync(0x41);
       const vpr::Uint8 StreamStop(0x3F);
    };
 
@@ -188,13 +194,22 @@ namespace Flock
    {
       const vpr::Uint8 BirdStatus(0x0);
       const vpr::Uint8 SoftwareRevision(0x01);
+      const vpr::Uint8 CrystalSpeed(0x2);
+      const vpr::Uint8 PositionScaling(0x3);
+      const vpr::Uint8 FilterStatus(0x4);
+      const vpr::Uint8 BirdRateCount(0x6);
+      const vpr::Uint8 BirdRate(0x7);
+      const vpr::Uint8 BirdErrorCode(0xA);
+      const vpr::Uint8 BirdSuddenChange(0xE);
       const vpr::Uint8 ModelIdentification(0xF);
+      const vpr::Uint8 BirdExpandedErrorCode(0x10);
       const vpr::Uint8 AddressingMode(0x13);
       const vpr::Uint8 FbbAddress(0x15);
       const vpr::Uint8 Hemisphere(0x16);
       const vpr::Uint8 GroupMode(0x23);
       const vpr::Uint8 FlockSystemStatus(0x24);
       const vpr::Uint8 FbbAutoConfig(0x32);
+
    }
 
    // Masks for bird status return value
@@ -289,40 +304,42 @@ namespace Flock
       Every8 = 0x53,       /**< Every 8th sample */
       Every32 = 0x54       /**< Every 32nd sample */
    };
+
+   /** Mode the flock is executing in.
+   * This is not specifically defined in the flock manual, but falls out of how you need to manage the system.
+   */
+   enum Mode
+   {
+      UnknownMode = 0,     /**< Default unknown mode */
+      Standalone = 1,      /**< Mode with single unit with transmitter and bird */
+      Standard = 2,        /**< Mode with only a single standard transmitter */
+      ExtendedRange = 3    /**< Mode with one or more extended range transmitters (ERTs) */
+   };
+   inline std::string getModeString(Mode mode)
+   {
+      if(Standalone == mode) return "Standalone";
+      else if(Standard == mode) return "Standard";
+      else if(ExtendedRange == mode) return "Extended Range";
+      else return "Unknown mode";
+   }
+   
+   enum AddressingMode
+   {
+      NormalAddressing = 0,
+      ExpandedAddressing = 1,
+      SuperExpandedAddressing = 3,
+      UnknownAddressing = 16
+   };
+   inline std::string getAddressingModeString(AddressingMode addrMode)
+   {
+      if(NormalAddressing == addrMode) return "Normal Addressing";
+      else if(ExpandedAddressing == addrMode) return "Expanded Addressing";
+      else if(SuperExpandedAddressing == addrMode) return "Super Expanded Addressing";
+      else return "Uknown addressing";
+   }
+
 }
 
-/** Mode the flock is executing in.
-* This is not specifically defined in the flock manual, but falls out of how you need to manage the system.
-*/
-enum Mode
-{
-   UnknownMode = 0,     /**< Default unknown mode */
-   Standalone = 1,      /**< Mode with single unit with transmitter and bird */
-   Standard = 2,        /**< Mode with only a single standard transmitter */
-   ExtendedRange = 3    /**< Mode with one or more extended range transmitters (ERTs) */
-};
-inline std::string getModeString(Mode mode)
-{
-   if(Standalone == mode) return "Standalone";
-   else if(Standard == mode) return "Standard";
-   else if(ExtendedRange == mode) return "Extended Range";
-   else return "Unknown mode";
-}
-
-enum AddressingMode
-{
-   NormalAddressing = 0,
-   ExpandedAddressing = 1,
-   SuperExpandedAddressing = 3,
-   UnknownAddressing = 16
-};
-inline std::string getAddressingModeString(AddressingMode addrMode)
-{
-   if(NormalAddressing == addrMode) return "Normal Addressing";
-   else if(ExpandedAddressing == addrMode) return "Expanded Addressing";
-   else if(SuperExpandedAddressing == addrMode) return "Super Expanded Addressing";
-   else return "Uknown addressing";
-}
 
 /**
  * class for running a Flock of Birds.
@@ -468,7 +485,7 @@ public:
     *
     * @note flock.isActive() must be false to use this function.
     */
-   void setSync( const int& sync );
+   void setSync( const vpr::Uint8& sync );
 
    /**
     * Gets the video sync type.  This option allows the Flock to syncronize its
@@ -476,10 +493,8 @@ public:
     * by the magnetic distortion. Refer to your Flock manual for what the
     * returned number means.
     */
-   inline const int& getSync() const
-   {
-      return mSyncStyle;
-   }
+   inline vpr::Uint8 getSync() const
+   { return mSyncStyle; }
 
    void setExtendedRange( const bool& blVal );
 
@@ -537,65 +552,16 @@ public:
    /** Gets the x rotation of the i'th reciever. */
    float& xRot( const int& i );
 
-// testing functions
 public:
-   /** Reads in data from the Flock. */
-//   void readData();
-
-   /**
-    * Checks the group state.
-    * @post The group state is output to screen
-    */
-   void checkGroup();
-
-   /**
-    * Checks configuration.
-    * @post Outputs each bit of the config character to screen.
-    */
-   void checkConfig();
-
-   /**
-    * Checks position and angles.
-    * @note NOT IMPLEMENTED
-    */
-   void checkPosAngles();
-
-   /**
-    * Checks rep and stream.
-    * @note NOT IMPLEMENTED
-    */
-   void checkRepAndStream();
-
-   /**
-    * Prints the bits of the given byte.
-    *
-    * @post The binary representation of var is printed.
-    * @param var A character value.
-    */
-   void showbits(char var);
-   void showbits16(float var);
-
-   /**
-    * Expands the given list of bits to a 32-bit integer.
-    *
-    * @param var A character.
-    *
-    * @return The integer value of var.
-    */
-   int hexToInt(char var);
-
-   /**
-    * Checks the data ready char.
-    * @post Outputs to screen "I= " some number when flock returns the data
-    *       ready character.
-    */
-   void checkDataReadyChar();
-
    /** Send command.
    * @param cmd - cmd to send
    */
    void sendCommand(vpr::Uint8 cmd, std::vector<vpr::Uint8> data = std::vector<vpr::Uint8>(0));
 
+   /** Send command to all units (except excluded types)
+   */
+   void sendCommandAll(vpr::Uint8 cmd, std::vector<vpr::Uint8> data, bool excludeErc=false);
+      
    /**
     * Examines an attribute.
     *
@@ -605,47 +571,15 @@ public:
     */
    void getAttribute(vpr::Uint8 attrib, unsigned respSize, std::vector<vpr::Uint8>& respData);
 
-// additional set functions
-public:
-   /** Sets to run mode. */
-   void setRunMode();
-
-   /** Sets to sleep mode. */
-   void setSleepMode();
-
    /**
-    * Sets Value.
+    * Change an attribute.
     *
-    * @post Flock is set.
-    *
-    * @param exam    Examine paramater (see manual pg 37)
-    * @param setdata Data to assign to the paramater.
-    * @param reps    Number of repitions
+    * @param attrib - Attribute to set - see the Flock manual.
+    * @param respData - Argument data
     */
-   void setValue(char exam, char setdata, int reps);
+   void setAttribute(vpr::Uint8 attrib, std::vector<vpr::Uint8>& attribData);
 
-   /** Sets to position mode. */
-   void setPosMode();
-
-   /** Sets to poition and angle mode. */
-   void setPosAngMode();
-
-   /** Sets to stream mode. */
-   void setStreamMode();
-
-   /** Sets to point mode. */
-   void setPointMode();
-
-   /**
-    * Sets the report rate.
-    *
-    * @post Rate is set.
-    *
-    * @param rate The new report rate.
-    */
-   void setDeviceReportRate(char rate);
-
-   // ---- Query methods for flock state ---- //
+public:  // ---- Query methods for flock state ---- //
    /** Find the software revision */
    std::pair<unsigned,unsigned> querySoftwareRevision();
    
@@ -681,19 +615,58 @@ public:
    std::string getModelId()
    {  return mModelId; }
 
-   // Helpers
+protected:     // -- Bird commands --- //
+   void pickBird(const vpr::Uint8 birdID);
+
+   // -- Bird commands --- //
+   void sendGroupCmd(bool newVal);
+   void sendSyncCmd(vpr::Uint8 syncMethod);
+   void sendHemisphereCmd(BIRD_HEMI hemi, bool sendToAll);
+
+   void sendAutoconfigCmd(vpr::Uint8 numUnits);
+   void sendTransmitter(void);
+   void sendFilter(void);
+   void sendPosAngles(void);   
+   void sendRepAndStream(void);
+
+protected: // -- Helpers --- //   
+   /**
+    * Gets a reading.
+    *
+    * @param n The bird unit number.
+    * @param xPos Storage for the x position.
+    * @param yPos Storage for the y position.
+    * @param zPos Storage for the z position.
+    * @param zRot Storage for the rotation about the z-axis.
+    * @param yRot Storage for the rotation about the y-axis.
+    * @param xRot Storage for the rotation about the x-axis.
+    */
+   vpr::ReturnStatus getReading(const int& n, float& xPos, float& yPos, float& zPos,
+                                float& zRot, float& yRot, float& xRot );
+
+   float rawToFloat(char& r1, char& r2);
+
+   /**
+    * Tests if the given bird ID is mapped to the transmitter.
+    */
+   bool isTransmitter(int birdID) const;
+
+   /** Setup the internal flock units data structure.
+   * Reads data from System status and bird status to update the structure
+   * @pre Port must be opened and master address must be set.
+   */
+   void setupFlockUnitsDataStructure();
+
    /** Get the maximum bird address for the current mode */
    unsigned getMaxBirdAddr();
       
-   /** Clears the reads bytes till buffer is zeroed. */
-//  void clearBuffer();
-
-
+   
 public:   // --- Enums --- //
    enum Status
    {
       CLOSED,     /**< Flock is closed */
       OPEN,       /**< Flock is open */
+      READY,      /**< Configured and ready to run */
       STREAMING   /**< Flock is streaming data */
    };
 
@@ -740,54 +713,16 @@ private:
    Flock::ReportRate mReportRate;
    BIRD_HEMI      mHemisphere;
    BIRD_FILT      mFilter;
-   int            mSyncStyle;
+   vpr::Uint8     mSyncStyle;
 
    typedef std::vector<FlockUnit>   flock_units_t;
-   flock_units_t  mFlockUnits;         /**< List of all the flock units we have */
-   unsigned       mLastActiveUnit;     /**< Index of the last active unit */
+   flock_units_t  mFlockUnits;            /**< List of all the flock units we have */
+   unsigned       mActiveUnitEndIndex;    /**< Index of end of active units (one past last active) */
+
+   vpr::Interval  mReadTimeout;
 
    //    x,y,z,        r,y,p
    float mPosition[MAX_SENSORS][3], mOrientation[MAX_SENSORS][3];
-
-protected:
-   void pickBird(const vpr::Uint8 birdID);
-
-
-   void sendSync(void);
-   void sendGroup(void);
-   void sendAutoconfig(void);
-   void sendTransmitter(void);
-   void sendFilter(void);
-   void sendHemisphere(void);
-   void sendPosAngles(void);   
-   void sendRepAndStream(void);
-
-   /**
-    * Gets a reading.
-    *
-    * @param n The bird unit number.
-    * @param xPos Storage for the x position.
-    * @param yPos Storage for the y position.
-    * @param zPos Storage for the z position.
-    * @param zRot Storage for the rotation about the z-axis.
-    * @param yRot Storage for the rotation about the y-axis.
-    * @param xRot Storage for the rotation about the x-axis.
-    */
-   vpr::ReturnStatus getReading(const int& n, float& xPos, float& yPos, float& zPos,
-                                float& zRot, float& yRot, float& xRot );
-
-   float rawToFloat(char& r1, char& r2);
-
-   /**
-    * Tests if the given bird ID is mapped to the transmitter.
-    */
-   bool isTransmitter(int birdID) const;
-
-   /** Setup the internal flock units data structure.
-   * Reads data from System status and bird status to update the structure
-   * @pre Port must be opened and master address must be set.
-   */
-   void setupFlockUnitsDataStructure();
 };
 
 
