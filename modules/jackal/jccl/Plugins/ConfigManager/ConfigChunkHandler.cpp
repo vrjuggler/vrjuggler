@@ -51,7 +51,7 @@ void outputPendingItemState(int debugLevel, std::string chunkName, std::string c
 int ConfigChunkHandler::configProcessPending()
 {
     ConfigManager*     cfg_mgr = ConfigManager::instance();
-   DependencyManager* dep_mgr = DependencyManager::instance();
+    DependencyManager* dep_mgr = DependencyManager::instance();
 
    bool     scan_for_lost_dependants(false);       // Do we need to scan for un-filled dependencies
 
