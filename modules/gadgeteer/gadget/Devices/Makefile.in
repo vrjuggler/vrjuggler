@@ -43,7 +43,8 @@ include @topdir@/make.defs.mk
 DIRPRFX		= gadget/Devices/
 
 # Subdirectories to compile.
-SUBDIR		= Ascension		\
+SUBDIR		= 5DT                   \
+                  Ascension		\
                   Fakespace		\
                   Immersion		\
                   Intersense		\
