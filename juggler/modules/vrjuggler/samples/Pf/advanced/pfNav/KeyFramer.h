@@ -18,20 +18,20 @@ namespace kev
       class Key
       {
       public:
-         Key() : mRot(), mPos()
+         Key() : mTime( 0.0f ), mRot(), mPos()
          {
             mRot.identity();
          }
-         Key( const Key& key ) : mRot( key.mRot ), mPos( key.mPos ), mTime( key.mTime )
+         Key( const Key& key ) : mTime( key.mTime ), mRot( key.mRot ), mPos( key.mPos )
          {
             
          }
          
          Key& operator=( const Key& key ) 
          {
+            mTime = key.mTime;
             mRot = key.mRot;
             mPos = key.mPos;
-            mTime = key.mTime;
             return *this;
          }  
                 

@@ -94,15 +94,15 @@ public:
 
 //: Default constructor.
 inline StopWatch::StopWatch(const int& averageFpsRefreshRate) : 
-		_timeAccumulator(0.0), 
-		startTime(0.0), 
-		stopTime(0.0), 
-		refreshRate(averageFpsRefreshRate), 
-		count(0), 
+		timeAverage(0.0), 
+		timeInstant(0.0),
+      count(0), 
 		fpsAverage(0.0), 
 		fpsInstant(0.0), 
-		timeAverage(0.0), 
-		timeInstant(0.0)
+		refreshRate(averageFpsRefreshRate), 
+		startTime(0.0), 
+		stopTime(0.0), 
+		_timeAccumulator(0.0)
 {;}
 
 
