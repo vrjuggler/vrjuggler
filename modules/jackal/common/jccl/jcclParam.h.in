@@ -30,22 +30,21 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_PARAM_H_
-#define _VJ_PARAM_H_
+#ifndef _JCCL_PARAM_H_
+#define _JCCL_PARAM_H_
 
 
 /*
- * Define to the 9-digit VR Juggler version integer.  This is the "internal
- * version number" that is intended for internal feature checks by VR Juggler
- * itself.
+ * Define to the 9-digit JCCL version integer.  This is the "internal version
+ * number" that is intended for internal feature checks by JCCL itself.
  */
-#define __VJ_version @VER_NUMBER@
+#define __JCCL_version @VER_NUMBER@
 
 /*
- * This is the "human-readable" VR Juggler version _string_.  It is of the
- * form <major>.<minor>.<days since last major release>.
+ * This is the "human-readable" JCCL version _string_.  It is of the form
+ * <major>.<minor>.<days since last major release>.
  */
-#define VJ_VERSION @VER_STRING@
+#define JCCL_VERSION @VER_STRING@
 
 
-#endif	/* _VJ_PARAM_H_ */
+#endif	/* _JCCL_PARAM_H_ */
