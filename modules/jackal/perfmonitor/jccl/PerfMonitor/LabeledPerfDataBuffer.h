@@ -130,6 +130,10 @@ public:
     }
 
 
+    virtual void setName (std::string& _name) {
+        name = _name;
+    }
+
 //      inline static void activate() {
 //          LabeledPerfDataGlobal::instance()->activate();
 //      }

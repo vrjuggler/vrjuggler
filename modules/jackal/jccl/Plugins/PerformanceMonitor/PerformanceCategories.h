@@ -109,6 +109,8 @@ public:
 
     void removeBuffer (LabeledPerfDataBuffer* buffer);
 
+    LabeledPerfDataBuffer* getBufferNoLock (const std::string& n);
+
     void writeAllBuffers (std::ostream& out, const std::string& pad = "");
 
 
