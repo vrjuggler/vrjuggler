@@ -86,7 +86,7 @@ public:
     * @post An instance of the Sim Socket Manager is retrieved, and the
     *       simulation state is set to not started.
     */
-   Controller(void);
+   Controller();
 
    /**
     * Resets the Sim Socket Manager's clock to 0.
@@ -94,7 +94,7 @@ public:
     * @post The Sim Socket Manager's clock is reset to 0 so that the same
     *       instance may be used by another simulation.
     */
-   ~Controller (void)
+   ~Controller()
    {
       /* Do nothing. */ ;
    }
@@ -115,7 +115,7 @@ public:
     * setInstance(), that instance is returned.  If no instance is associated
     * with the current thread, the primordial (global) instance is returned.
     */
-   static Controller* instance (void)
+   static Controller* instance()
    {
       // WARNING! race condition possibility, creation of static vars
       // are not thread safe.  This is only an issue when creating
@@ -146,7 +146,7 @@ public:
 
    vpr::ReturnStatus constructNetwork(const std::string& graph_file);
 
-   void destroyNetworkGraph (void)
+   void destroyNetworkGraph()
    {
       mGraph.clear();
    }
@@ -158,7 +158,7 @@ public:
     *
     * @post The running state of this simulation is returned to the caller.
     */
-   bool isRunning (void)
+   bool isRunning()
    {
       vprASSERT(false && "Not supported right now.  If you want it, then implement it.");
       //return mGraph.isValid() && mSocketManager.hasActiveSockets();
@@ -169,7 +169,7 @@ public:
     * Sets the amount of time (in microseconds) to sleep after processing a
     * single event.
     */
-   void setSimulationPauseTime (const vpr::Uint32 sleep_time)
+   void setSimulationPauseTime(const vpr::Uint32 sleep_time)
    {
       mSleepTime = sleep_time;
    }
@@ -220,41 +220,43 @@ public:
    * Return the number of events pending in the system
    */
    vpr::Uint32 getNumPendingEvents()
-   { return mEvents.size(); }
+   {
+      return mEvents.size();
+   }
 
-
-   const vpr::sim::Clock& getClock (void) const
+   const vpr::sim::Clock& getClock() const
    {
       return mClock;
    }
 
-   vpr::sim::SocketManager& getSocketManager (void)
+   vpr::sim::SocketManager& getSocketManager()
    {
       return mSocketManager;
    }
 
-   vpr::sim::NetworkGraph& getNetworkGraph (void)
+   vpr::sim::NetworkGraph& getNetworkGraph()
    {
       return mGraph;
    }
 
 private:
-   void moveMessage(vpr::sim::MessagePtr, const vpr::Interval& cur_time, vpr::SocketImplSIM** recvSocket);
+   void moveMessage(vpr::sim::MessagePtr, const vpr::Interval& cur_time,
+                    vpr::SocketImplSIM** recvSocket);
 
    class ControllerTS
    {
    public:
-      ControllerTS (void) : mObj(NULL)
+      ControllerTS() : mObj(NULL)
       {
          /* Do nothing. */ ;
       }
 
-      Controller* getObject (void) const
+      Controller* getObject() const
       {
          return mObj;
       }
 
-      void setObject (Controller* c)
+      void setObject(Controller* c)
       {
          mObj = c;
       }
@@ -271,8 +273,8 @@ protected:  // --- Data members --- //
    // exported public symbols.  This causes problems because copying vpr::Mutex
    // objects is not allowed.  We do not want to copy sim Controller instances
    // anyway, so this should be fine.
-   Controller (const Controller& o) {;}
-   void operator= (const Controller& o) {;}
+   Controller(const Controller& o) {;}
+   void operator=(const Controller& o) {;}
 
    vpr::sim::Clock         mClock;              /**< The global clock that we are using */
    vpr::sim::SocketManager mSocketManager;      /**< The socket manager that we are using */
@@ -288,20 +290,20 @@ protected:  // --- Data members --- //
          LOCALHOST_DELIVERY   /**< Immediate localhost-delivery-of-crap event */
       };
 
-      EventData (const NetworkGraph::net_edge_t _edge,
-                 const NetworkLine::LineDirection _dir)
+      EventData(const NetworkGraph::net_edge_t _edge,
+                const NetworkLine::LineDirection _dir)
          : type(MESSAGE), edge(_edge), direction(_dir)
       {
          ;
       }
 
-      EventData (vpr::SocketImplSIM* sock, const EventType _type)
+      EventData(vpr::SocketImplSIM* sock, const EventType _type)
          : type(_type), socket(sock)
       {
          ;
       }
 
-      bool operator== (const EventData& obj) const
+      bool operator==(const EventData& obj) const
       {
          bool status = false;
 
@@ -331,9 +333,9 @@ protected:  // --- Data members --- //
    vpr::Uint32 mSleepTime;
 };
 
-}; // End of sim namespace
+} // End of sim namespace
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif
