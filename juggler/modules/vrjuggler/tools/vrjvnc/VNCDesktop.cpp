@@ -164,7 +164,7 @@ void VNCDesktop::init(const std::string& wandName,
 */
 void VNCDesktop::updateDesktopParameters()
 {
-   vprDEBUG(vrjDBG_VNC, vprDBG_CRITICAL_LVL)
+   vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
        << "VNCDesktop::updateDesktopParams() entered\n" << vprDEBUG_FLUSH;
 
    const float BorderSize(0.50f);
@@ -226,8 +226,8 @@ void VNCDesktop::updateDesktopParameters()
    // Set the translation point to be the middle of the desktop polygon.
    //gmtl::setTrans(mDesktopMatrix, gmtl::Vec3f(0.0f, 5.0f, -5.0f));
 
-   vprDEBUG(vrjDBG_VNC, vprDBG_CRITICAL_LVL)
-       << "VNCDesktop::updateDesktopParams() exitd\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
+       << "VNCDesktop::updateDesktopParams() exited\n" << vprDEBUG_FLUSH;
 }
 
 VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
@@ -563,7 +563,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
 void VNCDesktop::updateDesktopTexture()
 {
 #if 1
-   vprDEBUG(vrjDBG_VNC, vprDBG_CRITICAL_LVL)
+   vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
       << "VNCDesktop::updateDesktopTexture() entered\n" << vprDEBUG_FLUSH;
 
    const int bytes_per_pixel(mVncIf.getPixelSize() / 8);
@@ -626,14 +626,14 @@ void VNCDesktop::updateDesktopTexture()
          << gluErrorString(err) << std::endl << vprDEBUG_FLUSH;
    }
 
-   vprDEBUG(vrjDBG_VNC, vprDBG_CRITICAL_LVL)
+   vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
       << "VNCDesktop::updateDesktopTexture() exited\n" << vprDEBUG_FLUSH;
 }
 
 
 void VNCDesktop::contextPreDraw()
 {
-   vprDEBUG(vrjDBG_VNC, vprDBG_CRITICAL_LVL)
+   vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
       << "VNCDesktop::contextPreDraw() entered\n" << vprDEBUG_FLUSH;
 
    glPushAttrib(GL_TEXTURE_BIT);
@@ -676,13 +676,13 @@ void VNCDesktop::contextPreDraw()
 
    glPopAttrib();
 
-   vprDEBUG(vrjDBG_VNC, vprDBG_CRITICAL_LVL)
+   vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
       << "VNCDesktop::contextPreDraw() exited\n" << vprDEBUG_FLUSH;
 }
 
 void VNCDesktop::draw()
 {
-   vprDEBUG(vrjDBG_VNC, vprDBG_CRITICAL_LVL)
+   vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
       << "VNCDesktop::draw() entered\n" << vprDEBUG_FLUSH;
 
    // -- Const colors to choose from --//
@@ -798,7 +798,7 @@ void VNCDesktop::draw()
    }
    glPopMatrix();
 
-   vprDEBUG(vrjDBG_VNC, vprDBG_CRITICAL_LVL)
+   vprDEBUG(vrjDBG_VNC, vprDBG_STATE_LVL)
       << "VNCDesktop::draw() exited\n" << vprDEBUG_FLUSH;
 }
 
