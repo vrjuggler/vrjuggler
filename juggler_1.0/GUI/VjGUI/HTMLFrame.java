@@ -70,12 +70,96 @@ public class HTMLFrame extends JFrame
 	addWindowListener (this);
 
 	setSize (650, 550);
-	setURL (url);
+        if (url != null)
+            setURL (url);
     }
 
+    /* Utility for setURL */
+    private URL getFileURL (String fname) {
+	URL url = null;
+	try {
+	    url = new URL ("file", "localhost", -1, fname);
+	    // make sure it's really there.
+	    if (url.openConnection().getContentLength() == -1)
+		url = null;
+	}
+	catch (Exception e) {
+	    url = null;
+	}
+	return url;
+    }
 
+    public void setURL (String name) {
+
+        URL url;
+        try {
+            url = new URL (name);
+	    if (url.openConnection().getContentLength() == -1)
+		url = null;
+        }
+        catch (Exception e) {
+            url = null;
+        }
+
+        // if url is null, then the string wasn't a complete url, so
+        // we'll try appending it to a variety of search paths...
+        
+        url = getFileURL (System.getProperty ("user.dir") + "/.vjconfig/" + name);
+        if (url == null)
+            url = getFileURL (System.getProperty ("VJ_BASE_DIR") + "/Data/" + name);
+        if (url == null)
+            url = getFileURL ("Data/" + name);
+        if (url == null)
+            url = ClassLoader.getSystemResource ("VjFiles/" + name);
+        if (url == null)
+            url = ClassLoader.getSystemResource ("VjFiles/NoHelpAvailable.html");
+        
+        try {
+	    pane.setPage (url);
+	    HTMLDocument d = (HTMLDocument)pane.getDocument();
+	    String s =  (String)d.getProperty (d.TitleProperty);
+	    setTitle (s);
+	    /*
+	    String s1;
+	    d.getStyleSheet().setBaseFontSize (50);
+	    Enumeration e = d.getStyleNames();
+	    while (e.hasMoreElements()) {
+		s1 = (String)e.nextElement();
+		System.out.println (s1);
+		d.styleChanged(d.getStyle(s1));
+	    }
+	    validate();
+	    */
+	}
+	catch (IOException ex) {
+		Core.consoleErrorMessage ("GUI", "Failed to open URL " + url);
+		pane.setText ("<h2>Failed to open URL: " + url + "</h2>");
+	}
+    }
 
     public void setURL (URL url) {
+
+        /* a kludge to provide full search paths for DescHelp entries...
+         * I'm not really keen on making HTMLFrame aware of this stuff,
+         * but I need to do it to handle URLs in the documentation correctly.
+         * I should come up with a more generalized way of doing an
+         * "HTML search path" for the HTMLFrame.
+         */
+        System.out.println ("setURL: '" + url + "'");
+        int i = url.toString().indexOf("DescHelp/");
+        if (i != -1) {
+            String name = url.toString().substring(i);
+            url = getFileURL (System.getProperty ("user.dir") + "/.vjconfig/" + name);
+            if (url == null)
+                url = getFileURL (System.getProperty ("VJ_BASE_DIR") + "/Data/" + name);
+            if (url == null)
+                url = getFileURL ("Data/" + name);
+            if (url == null)
+                url = ClassLoader.getSystemResource ("VjFiles/" + name);
+            if (url == null)
+                url = ClassLoader.getSystemResource ("VjFiles/NoHelpAvailable.html");
+        }
+
 	try {
 	    pane.setPage (url);
 	    HTMLDocument d = (HTMLDocument)pane.getDocument();

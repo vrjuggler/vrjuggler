@@ -379,21 +379,9 @@ public class ControlUI
 
 
     public void loadDescHelp (String s) {
-	// where does desc help come from???
-	URL url;
-	url = getFileURL (System.getProperty ("user.dir") + "/.vjconfig/DescHelp/" + s + ".html");
-	if (url == null)
-	    url = getFileURL (System.getProperty ("VJ_BASE_DIR") + "/Data/DescHelp/" + s + ".html");
-	if (url == null)
-	    url = getFileURL ("Data/DescHelp/" +s + ".html");
-	if (url == null)
-	    url = ClassLoader.getSystemResource ("VjFiles/DescHelp/" + s + ".html");
-	if (url == null)
-	    url = ClassLoader.getSystemResource ("VjFiles/NoHelpAvailable.html");
-	if (url == null)
-	    return;
-
-	HTMLFrame help_frame = new HTMLFrame (this, "VjControl Help", url);
+        String url = "DescHelp/" + s + ".html";
+	HTMLFrame help_frame = new HTMLFrame (this, "VjControl Help", null);
+        help_frame.setURL (url);
 	child_frames.addElement (help_frame);
 	help_frame.show();
     }
@@ -402,7 +390,7 @@ public class ControlUI
 
     //: Creates an HTML frame displaying the named helpfile
     public void loadHelp (String s) {
-	//System.out.println ("loadhelp: " + s);
+	System.out.println ("loadhelp: " + s);
 	URL url = ClassLoader.getSystemResource (s);
 	HTMLFrame help_frame = new HTMLFrame (this, "VjControl Help", url);
 	child_frames.addElement (help_frame);
