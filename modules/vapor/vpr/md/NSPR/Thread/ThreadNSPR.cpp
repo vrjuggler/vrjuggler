@@ -67,17 +67,13 @@ ThreadNSPR::ThreadNSPR (thread_func_t func, void* arg,
 
    vpr_tm_inst = ThreadManager::instance();
 
-   vpr_tm_inst->lock();
-   {
-      int ret_val;
-      ThreadNonMemberFunctor* NonMemFunctor;
+   int ret_val;
+   ThreadNonMemberFunctor* NonMemFunctor;
 
-      NonMemFunctor = new ThreadNonMemberFunctor(func, arg);
+   NonMemFunctor = new ThreadNonMemberFunctor(func, arg);
 
-      ret_val = spawn(NonMemFunctor, priority, scope, state, stack_size);
-      checkRegister(ret_val);
-   }
-   vpr_tm_inst->unlock();
+   // Spawn handles the registration of the thread
+   ret_val = spawn(NonMemFunctor, priority, scope, state, stack_size);   
 }
 
 // ---------------------------------------------------------------------------
@@ -94,14 +90,10 @@ ThreadNSPR::ThreadNSPR (BaseThreadFunctor* functorPtr,
 
    vpr_tm_inst = ThreadManager::instance();
 
-   vpr_tm_inst->lock();
-   {
-      int ret_val;
+   int ret_val;
 
-      ret_val = spawn(functorPtr, priority, scope, state, stack_size);
-      checkRegister(ret_val);
-   }
-   vpr_tm_inst->unlock();
+   // Spawn handles the registration of the thread
+   ret_val = spawn(functorPtr, priority, scope, state, stack_size);   
 }
 
 // ---------------------------------------------------------------------------
@@ -139,23 +131,60 @@ int ThreadNSPR::spawn (BaseThreadFunctor* functor_ptr,
    nspr_state = vprThreadStateToNSPR(state);
 
    retval = 0;
-
+      
+   // Store the member functor and create the functor for spawning to our start routine
    vprASSERT(functor_ptr->isValid());
-
+   mUserThreadFunctor = functor_ptr;
+   ThreadMemberFunctor<ThreadNSPR>* start_functor =
+         new ThreadMemberFunctor<ThreadNSPR>(this, &ThreadNSPR::startThread,
+                                             NULL);
+   
    // Finally create the thread.
    mThread = PR_CreateThread(PR_USER_THREAD, vprThreadFunctorFunction,
-                             (void*) functor_ptr, nspr_prio, nspr_scope,
+                             (void*) start_functor, nspr_prio, nspr_scope,
                              nspr_state, (PRUint32) stack_size);
 
    // Inform the caller if the thread was not created successfully.
+   // 
    if ( mThread == NULL )
    {
+      ThreadManager::instance()->lock();
+      {
+         registerThread(false);
+      }
+      ThreadManager::instance()->unlock();
+            
       NSPR_PrintError("vpr::ThreadNSPR::spawn() - Cannot create thread");
       retval = -1;
    }
 
    return retval;
 }
+
+/**
+ * Helper method Called by the spawn routine to start the user thread function.
+ *
+ * @pre Called ONLY by a new thread
+ * @post Do any thread registration necessary
+ *       Call the user thread functor
+ *
+ * @param null_param
+ */
+void ThreadNSPR::startThread(void* null_param)
+{
+   // WE are a new thread... yeah!!!!
+   // TELL EVERYONE THAT WE LIVE!!!!
+   ThreadManager::instance()->lock();      // Lock manager
+   {
+      mThreadTable.addThread(this, mThread);    // Store local lookup
+      registerThread(true);                     // Register success
+   }
+   ThreadManager::instance()->unlock();
+
+   // --- CALL USER FUNCTOR --- //
+   (*mUserThreadFunctor)();
+}
+
 
 // ---------------------------------------------------------------------------
 // Set this thread's priority.
@@ -189,6 +218,7 @@ int ThreadNSPR::setPrio (VPRThreadPriority prio)
 // Check the status of the thread creation in order to determine if this
 // thread should be registered in the thread table or not.
 // ---------------------------------------------------------------------------
+/*
 void ThreadNSPR::checkRegister (const int status)
 {
    if ( status == 0 )
@@ -201,6 +231,7 @@ void ThreadNSPR::checkRegister (const int status)
       registerThread(false);  // Failed to create
    }
 }
+*/
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
