@@ -1054,9 +1054,9 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
                   </listitem>
                </varlistentry>
                <varlistentry>
-                  <term>gui</term>
+                  <term>vrjconfig</term>
                   <listitem>
-                     <para>Compile the VjControl Java files and collect them into <filename>VjControl.jar</filename>. This is only done if the configure script found a working Java compiler during its phase of the compile process.</para>
+                     <para>Compile the VRJConfig Java files and collect them into <filename>VRJConfig.jar</filename>. This is only done if the configure script found a working Java compiler during its phase of the compile process.</para>
                   </listitem>
                </varlistentry>
                <varlistentry>
@@ -1132,9 +1132,9 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
             </variablelist>
             <variablelist>
                <varlistentry>
-                  <term>NO_JAVA_GUI</term>
+                  <term>NO_JAVA</term>
                   <listitem>
-                     <para>Disable compiling and installing of VjControl by setting this variable to <literal>1</literal> when building. This is very handy when VjControl is not building properly or is not needed for whatever reason.</para>
+                     <para>Disable compiling and installing of VRJConfig by setting this variable to <literal>1</literal> when building. This is very handy when VRJConfig is not building properly or is not needed for whatever reason.</para>
                   </listitem>
                </varlistentry>
             </variablelist>
@@ -1188,7 +1188,7 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
                   <para>Once all libraries are built, links are set up in the <filename>lib</filename> directory and its ISA subdirectory (if there is one) that point to the default library version. This is currently the debugging version since that is what developers are likely to use most frequently. These links overwrite those made in step 3 (and repeated in step 4).</para>
                </listitem>
                <listitem>
-                  <para>Compile VjControl if the Java compiler is available and compiling of it has not been disabled by the user (refer to <xref linkend="makefile-vars-sect"/> for more information).</para>
+                  <para>Compile VRJConfig if the Java compiler is available and compiling of it has not been disabled by the user (refer to <xref linkend="makefile-vars-sect"/> for more information).</para>
                </listitem>
             </orderedlist>
             <para>The remainder of the work done is installation. More information on installing is available in <xref linkend="install-vrj-chapter"/>.</para>
@@ -1358,9 +1358,9 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
             </variablelist>
             <variablelist>
                <varlistentry>
-                  <term>install-gui</term>
+                  <term>install-vrjconfig</term>
                   <listitem>
-                     <para>Install the VjControl JAR file and its runnable files. In a UNIX environment, the <filename>vjcontrol</filename> scripts are installed. On a Win32 platform, the <filename>vjcontrol.bat</filename> batch file is installed. This is done only if the configure script found a working Java compiler and the target is not being disabled via the <varname>$(NO_JAVA_GUI)</varname> variable.</para>
+                     <para>Install the VRJConfig JAR file(s) and its runnable files. In a UNIX environment, the <filename>vjcontrol</filename> scripts are installed. On a Win32 platform, the <filename>vjcontrol.bat</filename> batch file is installed. This is done only if the configure script found a working Java compiler and the target is not being disabled via the <varname>$(NO_JAVA_GUI)</varname> variable.</para>
                   </listitem>
                </varlistentry>
             </variablelist>
@@ -1395,9 +1395,9 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
             </variablelist>
             <variablelist>
                <varlistentry>
-                  <term>NO_JAVA_GUI</term>
+                  <term>NO_JAVA</term>
                   <listitem>
-                     <para>Disable ths installation of VjControl by setting this variable to <literal>1</literal> when building. This is very handy when VjControl is not building properly or is not needed for whatever reason.</para>
+                     <para>Disable ths installation of VRJConfig by setting this variable to <literal>1</literal> when building. This is very handy when VRJConfig is not building properly or is not needed for whatever reason.</para>
                   </listitem>
                </varlistentry>
             </variablelist>
@@ -1412,7 +1412,7 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
          </section>
          <section id="install-process-sect">
             <title>Process of Full Install (Individual Steps)</title>
-            <para>This section describes the steps taken by the <quote>full</quote> installation targets '<literal>installworld</literal>', '<literal>install-all-abi</literal>', '<literal>install-debug</literal>', and '<literal>install-optim</literal>' when they are run by the user. These four targets install library binaries and all associated VR Juggler files (data files, VjControl, headers, sample apps, etc.). The steps are:</para>
+            <para>This section describes the steps taken by the <quote>full</quote> installation targets '<literal>installworld</literal>', '<literal>install-all-abi</literal>', '<literal>install-debug</literal>', and '<literal>install-optim</literal>' when they are run by the user. These four targets install library binaries and all associated VR Juggler files (data files, VRJConfig, headers, sample apps, etc.). The steps are:</para>
             <orderedlist>
                <listitem>
                   <para>Do any pre-installation steps necessary. This includes creating the entire installation directory hierarchy.</para>
@@ -1436,7 +1436,7 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
                   <para>Install all the data files (config files, gesture files, calibration tables, etc.).</para>
                </listitem>
                <listitem>
-                  <para>Install VjControl (if it was built).</para>
+                  <para>Install VRJConfig (if it was built).</para>
                </listitem>
                <listitem>
                   <para>Do any post-installation steps necessary. Currently, nothing is done at this stage except informing the user that installation is complete.</para>
@@ -1531,7 +1531,7 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
                      </listitem>
                   </varlistentry>
                </variablelist>
-               <para>Currently, this script is used to install the <filename>Data</filename> directory since it contains no source files (see <command>install-src.pl</command> below), and it is used in the process of creating <filename>VjControl.jar</filename>. Thus, it is versatile enough to be used during both the compile and install phases.</para>
+               <para>Currently, this script is used to install the <filename>Data</filename> directory since it contains no source files (see <command>install-src.pl</command> below), and it is used in the process of creating <filename>VRJConfig.jar</filename>. Thus, it is versatile enough to be used during both the compile and install phases.</para>
             </section>
             <section>
                <title><command>install-src.pl</command></title>
