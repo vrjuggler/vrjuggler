@@ -279,6 +279,16 @@ public class PropertyDefinitionEditor
     */
    private void setupEnumTab()
    {
+      enumEditableButton.setText("Editable");
+      enumEditableButton.setSelected(false);
+      enumEditableButton.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            changeEnumEditableState(enumEditableButton.isSelected());
+         }
+      });
+
       // Setup the enum table
       enumScrollPane.setViewportView(enumTable);
       enumScrollPane.setAlignmentX(LEFT_ALIGNMENT);
@@ -312,6 +322,7 @@ public class PropertyDefinitionEditor
       // Setup the base part of this panel
       Box box = new Box(BoxLayout.Y_AXIS);
       enumTab.setViewportView(box);
+      box.add(enumEditableButton);
       box.add(enumScrollPane);
       box.add(enumButtonPane);
       box.add(Box.createVerticalGlue());
@@ -382,6 +393,11 @@ public class PropertyDefinitionEditor
       {
          mPropDef.removePropertyValueDefinition(row);
       }
+   }
+
+   protected void changeEnumEditableState(boolean editable)
+   {
+      mPropDef.setEnumEditable(editable);
    }
 
    /**
@@ -507,6 +523,7 @@ public class PropertyDefinitionEditor
    //--- JBuilder generated GUI variables ---//
    private JScrollPane enumTab = new JScrollPane();
    private JScrollPane enumScrollPane = new JScrollPane();
+   private JCheckBox enumEditableButton = new JCheckBox();
    private JTable enumTable = new JTable();
    private JScrollPane allowedTypesTab = new JScrollPane();
    private JScrollPane allowedTypesScrollPane = new JScrollPane();
@@ -560,6 +577,11 @@ public class PropertyDefinitionEditor
       }
 
       public void propertyValueDefinitionRemoved(PropertyDefinitionEvent evt)
+      {
+         revalidate();
+      }
+
+      public void enumEditableChanged(PropertyDefinitionEvent evt)
       {
          revalidate();
       }
