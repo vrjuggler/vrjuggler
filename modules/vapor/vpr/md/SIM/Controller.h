@@ -186,8 +186,9 @@ public:
     * Processes the next event in the event queue no matter how far into the
     * (simulated) future it occurs.  If there is an event in the queue, it will
     * be processed by this method.
+    * @param recvSocket The socket that recv'ed the event (NULL if none)
     */
-   void processNextEvent(void);
+   void processNextEvent(vpr::SocketImplSIM** recvSocket);
 
    /**
     * Limits the time frame for the occurrence of the next events to the given
@@ -222,7 +223,7 @@ public:
    }
 
 private:
-   void moveMessage(vpr::sim::MessagePtr, const vpr::Interval& cur_time);
+   void moveMessage(vpr::sim::MessagePtr, const vpr::Interval& cur_time, vpr::SocketImplSIM** recvSocket);
 
    class ControllerTS
    {
@@ -249,7 +250,7 @@ private:
    static Controller* mPrimordialInstance;
    static vpr::TSObjectProxy<ControllerTS> mInstance;
 
-protected:  // --- Data members --- //   
+protected:  // --- Data members --- //
    vpr::sim::Clock         mClock;              /**< The global clock that we are using */
    vpr::sim::SocketManager mSocketManager;      /**< The socket manager that we are using */
    vpr::sim::NetworkGraph  mGraph;              /**< The network graph used for the simulation */
