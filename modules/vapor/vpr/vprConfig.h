@@ -96,7 +96,7 @@
 #include <strings.h>
 #endif
 
-#include <include/vprStatus.h> // for return values, error status.
+#include <Utils/Status.h> // for return values, error status.
 
 /*
  * ----------------------------------------------------------------------------
