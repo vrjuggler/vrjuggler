@@ -247,7 +247,7 @@ public class ContextToolbar
                broker.add(res_name, data_source);
                this.context.add(res_name);
 
-               // Look through the chunks in the newly loaded file and see if
+               // Look through the elements in the newly loaded file and see if
                // any of them are include directives
                java.util.List includes = data_source.getIncludes();
                for (Iterator itr = includes.iterator(); itr.hasNext(); )

@@ -356,7 +356,7 @@ public class CreateClusteredSimDevicesPanel extends JPanel
          ConfigElement display_sys_elt = (ConfigElement)mDisplaySystemElementList.get(0);
          node.setProperty("display_system", 0, display_sys_elt);
 
-         // Add every display_window chunk
+         // Add every display_window element
          for(int j = 0 ; j < mDisplayElementList.size() ; j++)
          {
             ConfigElement display_elt = (ConfigElement)mDisplayElementList.get(j);
@@ -413,7 +413,7 @@ public class CreateClusteredSimDevicesPanel extends JPanel
          }
          else
          {
-            System.out.println("ERROR: You have more than two chunks named, " + cb_name
+            System.out.println("ERROR: You have more than two elements named, " + cb_name
                                + " in the current configureation");
          }
       }
@@ -427,7 +427,7 @@ public class CreateClusteredSimDevicesPanel extends JPanel
          }
          else
          {
-            System.out.println("ERROR: You have more than two chunks named, " + cb_name
+            System.out.println("ERROR: You have more than two elements named, " + cb_name
                                + " in the current configureation");
          }
       }
@@ -441,7 +441,7 @@ public class CreateClusteredSimDevicesPanel extends JPanel
          }
          else
          {
-            System.out.println("ERROR: You have more than two chunks named, " + cb_name
+            System.out.println("ERROR: You have more than two elements named, " + cb_name
                                + " in the current configureation");
          }
       }

@@ -353,7 +353,7 @@ public class SimAnalogDeviceEditor
    }
 
    /**
-    * Specialized editor for KeyModPair config chunks.
+    * Specialized editor for KeyModPair config elements.
     */
    public class KeyModPairCellEditor
       extends AbstractCellEditor
@@ -374,7 +374,7 @@ public class SimAnalogDeviceEditor
 
       public Object getCellEditorValue()
       {
-         // Update the chunk with the new keys
+         // Update the element with the new keys
          mKeyElement.setProperty("modifier_key", 0,
                               getJavaToVRJMod(mCatcher.getLastModKey()));
          mKeyElement.setProperty("key", 0,

@@ -54,7 +54,7 @@ class ViewPort extends Object implements ConfigElementListener
    private ConfigElement[] mCornerConfigElements = { null, null, null, null };
 
    
-   public ConfigElement getConfigChunk()
+   public ConfigElement getConfigElement()
    {
       return mConfigElement;
    }
@@ -83,43 +83,43 @@ class ViewPort extends Object implements ConfigElementListener
       }		
    }
 
-   public ViewPort(ConfigElement chunk, Color3f color)
+   public ViewPort(ConfigElement elt, Color3f color)
    {
       mColor = color;
-      // Get the corners from the config chunk
-      if (!chunk.getDefinition().getToken().equals("surface_viewport"))
+      // Get the corners from the config element
+      if (!elt.getDefinition().getToken().equals("surface_viewport"))
       {
-         //throw new IOException("ConfigChunk s not a surfaceViewport!");
-         System.out.println("ConfigChunk s not a surfaceViewport!");
+         //throw new IOException("ConfigElement s not a surface_viewport!");
+         System.out.println("ConfigElement s not a surface_viewport!");
       }
 
-      mConfigElement = chunk;
+      mConfigElement = elt;
 
       for(int i = 0 ; i < 4 ; i ++)
       {
-         ConfigElement embedded_chunk = (ConfigElement)chunk.getProperty("corners", i);
-         String name = embedded_chunk.getName(); 
+         ConfigElement embedded_elt = (ConfigElement)elt.getProperty("corners", i);
+         String name = embedded_elt.getName(); 
 
          System.out.println("Viewport Constructor - Corner name: " + name);
 
          if (name.equals("lower left"))
          {
-            mCornerConfigElements[0] = embedded_chunk;
+            mCornerConfigElements[0] = embedded_elt;
             mCornerConfigElements[0].addConfigElementListener(this);
          }
          else if (name.equals("lower right"))
          {
-            mCornerConfigElements[1] = embedded_chunk;
+            mCornerConfigElements[1] = embedded_elt;
             mCornerConfigElements[1].addConfigElementListener(this);
          }
          else if(name.equals("upper right"))
          {
-            mCornerConfigElements[2] = embedded_chunk;
+            mCornerConfigElements[2] = embedded_elt;
             mCornerConfigElements[2].addConfigElementListener(this);
          }
          else if(name.equals("upper left"))
          {
-            mCornerConfigElements[3] = embedded_chunk;
+            mCornerConfigElements[3] = embedded_elt;
             mCornerConfigElements[3].addConfigElementListener(this);
          }
       }
@@ -369,7 +369,7 @@ class ViewPort extends Object implements ConfigElementListener
 
 
    /* (non-Javadoc)
-   * @see org.vrjuggler.jccl.config.ConfigChunkListener#nameChanged(org.vrjuggler.jccl.config.ConfigChunkEvent)
+   * @see org.vrjuggler.jccl.config.ConfigElementListener#nameChanged(org.vrjuggler.jccl.config.ConfigElementEvent)
    */
    public void nameChanged(ConfigElementEvent arg0)
    {
@@ -378,7 +378,7 @@ class ViewPort extends Object implements ConfigElementListener
    }
 
    /* (non-Javadoc)
-   * @see org.vrjuggler.jccl.config.ConfigChunkListener#propertyValueChanged(org.vrjuggler.jccl.config.ConfigChunkEvent)
+   * @see org.vrjuggler.jccl.config.ConfigElementListener#propertyValueChanged(org.vrjuggler.jccl.config.ConfigElementEvent)
    */
    public void propertyValueChanged(ConfigElementEvent arg0)
    {
@@ -390,7 +390,7 @@ class ViewPort extends Object implements ConfigElementListener
    }
 
    /* (non-Javadoc)
-   * @see org.vrjuggler.jccl.config.ConfigChunkListener#propertyValueAdded(org.vrjuggler.jccl.config.ConfigChunkEvent)
+   * @see org.vrjuggler.jccl.config.ConfigElementListener#propertyValueAdded(org.vrjuggler.jccl.config.ConfigElementEvent)
    */
    public void propertyValueAdded(ConfigElementEvent arg0) 
    {
@@ -399,7 +399,7 @@ class ViewPort extends Object implements ConfigElementListener
    }
 
    /* (non-Javadoc)
-   * @see org.vrjuggler.jccl.config.ConfigChunkListener#propertyValueRemoved(org.vrjuggler.jccl.config.ConfigChunkEvent)
+   * @see org.vrjuggler.jccl.config.ConfigElementListener#propertyValueRemoved(org.vrjuggler.jccl.config.ConfigElementEvent)
    */
    public void propertyValueRemoved(ConfigElementEvent arg0) 
    {
