@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Dec-01-2003 patrickh    Removed the deletePlugin() function from the required
+                        list of entry points a Sonix plug-in must implement.
+                        Now, snx::ISoundImplementation defines a pure virtual
+                        destroy() method that must be implemented.
+                        NEW VERSION: 0.3.0
 Nov-29-2003 chooze      Removed XDL in favor of using vpr::Library.
                         NEW VERSION: 0.3.0
 Nov-27-2003 patrickh    Moved the plug-in code from snx/plugins into plugins
