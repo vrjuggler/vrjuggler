@@ -34,9 +34,10 @@ top_srcdir=	@top_srcdir@
 MKINSTALLDIRS=	$(scriptdir)/mkinstalldirs
 
 CXX=		@CXX@
+CXXFLAGS=	@BOOST_PYTHON_INCLUDES@
 
 ifeq (@OS_TYPE@, Win32)
-   CXXFLAGS=	$(shell vrjuggler-config --includes) /Zm800 /GX /GR /Op	\
+   CXXFLAGS+=	$(shell vrjuggler-config --includes) /Zm800 /GX /GR /Op	\
 		/DBOOST_PYTHON_DYNAMIC_LIB /Zc:wchar_t,forScope
    CXXFLAGS_DBG=/Z7 /Od /Ob0 /MDd /D_DEBUG
    CXXFLAGS_OPT=/Ogity /O2 /Gs /Ob2 /MD /D_OPT
@@ -45,7 +46,7 @@ ifeq (@OS_TYPE@, Win32)
    MODEXT_DBG=	_d
    MODEXT_OPT=	
 else
-   CXXFLAGS=	$(shell vrjuggler-config --cxxflags)
+   CXXFLAGS+=	$(shell vrjuggler-config --cxxflags)
    CXXFLAGS_DBG=-D_DEBUG -g
    CXXFLAGS_OPT=-D_OPT -O2
    LDFLAGS_DBG=	-g
