@@ -57,9 +57,9 @@
 
    <!-- Clean up -->
    <target name="clean">
-      <delete>
+      <delete failonerror="false">
          <fileset dir="org" includes="**/*.class" />
       </delete>
-      <delete file="jccl_rtrc.jar" />
+      <delete file="jccl_rtrc.jar" failonerror="false" />
    </target>
 </project>

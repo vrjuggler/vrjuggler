@@ -33,10 +33,10 @@
 
    <!-- Clean up -->
    <target name="clean">
-      <delete>
+      <delete failonerror="false">
          <fileset dir="VjConfig" includes="**/*.class" />
       </delete>
-      <delete dir="ConfigUpdater" />
-      <delete file="ConfigUpdater.jar" />
+      <delete dir="ConfigUpdater" failonerror="false" />
+      <delete file="ConfigUpdater.jar" failonerror="false" />
    </target>
 </project>
