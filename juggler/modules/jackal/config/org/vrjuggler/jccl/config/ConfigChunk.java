@@ -95,6 +95,7 @@ public class ConfigChunk
       {
          prop_desc = (PropertyDesc) i.next();
          prop_desc_type = prop_desc.getToken();
+         System.out.println("Processing property: " + prop_desc.getName());
 
          if (prop_desc.hasVariableNumberOfValues())
          {
@@ -130,18 +131,45 @@ public class ConfigChunk
       return name_attr.getValue();
    }
 
-   public final void setName(String s)
+   /**
+    * Sets the symbolic, human-friendly name of this config chunk to the given
+    * value.
+    */
+   public final void setName(String name)
    {
-      // We assign s to name and fullName to keep them in sync.  The call to
-      // validateEmbeddedChunkNames() will deal with updating the fully
-      // qualified names of embedded chunks.
       String old = getName();
-      mDomElement.setAttribute("name", s);
+      mDomElement.setAttribute("name", name);
       fireNameChanged(old);
    }
 
    /**
-    * Returns the fully qualified, unique name of thsi chunk.  This will be
+    * Returns the version of the chunk desc this config chunk refers to.
+    */
+   public String getVersion()
+   {
+      Attribute vers_attr = mDomElement.getAttribute(version_TOKEN);
+
+      // If this chunk does not have a name, we will default to 1.1
+      if (null == vers_attr)
+      {
+         vers_attr = new Attribute(version_TOKEN, "1.1");
+      }
+      return vers_attr.getValue();
+   }
+
+   /**
+    * Sets the version of the chunk desc this config chunk refers to to the
+    * given version string.
+    */
+   public void setVersion(String version)
+   {
+      String old = getVersion();
+      mDomElement.setAttribute(version_TOKEN, version);
+      //fireVersionChanged(old);
+   }
+
+   /**
+    * Returns the fully qualified, unique name of this chunk.  This will be
     * different from the value returned by getName() if this chunk is a child
     * of another chunk.  In that case, the full name will be the path to this
     * chunk based on the chunk hierarchy and the property tokens.
