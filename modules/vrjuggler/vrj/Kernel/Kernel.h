@@ -39,7 +39,7 @@
 #include <Kernel/vjSystemFactory.h>
 #include <Performance/vjPerfDataBuffer.h>
 
-    // Config stuff
+// Config stuff
 #include <Kernel/vjConfigChunkHandler.h>
 #include <Utils/vjSingleton.h>
 
@@ -48,7 +48,10 @@ class vjDisplayManager;
 class vjDrawManager;
 class vjEnvironmentManager;
 class vjInputManager;
-class vjSoundManager;
+namespace vrj
+{
+   class SoundManager;
+};
 class vjUser;
 class vjApp;
 
@@ -172,8 +175,6 @@ public:      // Global "get" interface
     vjEnvironmentManager* getEnvironmentManager()
     { return environmentManager; }
 
-    vjSoundManager* getSoundManager();
-
    //: Get the user associated with given name
    //! RETURNS: NULL - Not found
    vjUser*  getUser(std::string userName);
@@ -196,10 +197,10 @@ protected:
    vjSystemFactory*        mSysFactory;            //: The current System factory
    vjInputManager*         mInputManager;          //: The input manager for the system
    vjDrawManager*          mDrawManager;           //: The Draw Manager we are currently using
+   vrj::SoundManager*      mSoundManager;          //: The Audio Manager we are currently using
    vjDisplayManager*       mDisplayManager;        //: The Display Manager we are currently using
    vjEnvironmentManager*   environmentManager;     //: The Environment Manager object
-   vjSoundManager*         mSoundManager;
-
+   
    /// Performance information
    vjPerfDataBuffer* perfBuffer;          //: store perfdata for kernel main
    bool              performanceEnabled;

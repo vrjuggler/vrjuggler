@@ -37,6 +37,7 @@
 #include <vjConfig.h>
 #include <Utils/vjDebug.h>
 #include <Kernel/vjConfigChunkHandler.h>
+#include <Sound/SoundManagerFactory.h>
 class vjDrawManager;
 class vjKernel;
 
@@ -172,6 +173,13 @@ public:  // --- Factory functions --- //
    //: Get the DrawManager to use
    //! NOTE: Each derived app MUST implement this function
    virtual vjDrawManager*    getDrawManager() = 0;
+
+   //: Get the SoundManager to use
+   //! NOTE: Each derived app could implement this function if needed
+   virtual vrj::SoundManager*    getSoundManager()
+   {
+      return &vrj::SoundManagerFactory::get();
+   }
 };
 
 #endif

@@ -55,7 +55,10 @@
 
 #include <Utils/vjFileIO.h>
 
-#include <Sound/vjSoundManager.h>
+#ifdef USE_AUDIOJUGGLER
+#include <aj/AudioJuggler.h>
+#endif
+
 #include <Sound/pf/pfSoundNode.h> //performer-juggler sound node.
 #include <Sound/pf/pfSoundTraverser.h>
 
@@ -123,18 +126,20 @@ simplePfNavApp::Sound::Sound( const std::string& sound_name,
 }
 
 //: default application constructor
-simplePfNavApp::simplePfNavApp() : mInitialNavPos( 0.0f, 0.0f, 0.0f ),
-      mBoundingSize(0.0f),
-      mStatusMessageEmitCount(0),     
-      mCurNavIndex(0),
-      mLightGroup( NULL ),
-      mConfiguredNoCollideModels( NULL ),
-      mSoundNodes( NULL ),
-      mUnCollidableModelGroup( NULL ), mDisableNav( false )
+simplePfNavApp::simplePfNavApp() : mDisableNav( false ), 
+                                   mInitialNavPos( 0.0f, 0.0f, 0.0f ),
+                                   mBoundingSize(0.0f),
+                                   mStatusMessageEmitCount(0),     
+                                   mCurNavIndex(0),
+                                   mLightGroup( NULL ),
+                                   mConfiguredCollideModels( NULL ),
+                                   mConfiguredNoCollideModels( NULL ),
+                                   mSoundNodes( NULL ),
+                                   mCollidableModelGroup( NULL ), 
+                                   mUnCollidableModelGroup( NULL )
 {
    mSun = NULL;
    mRootNode = NULL;
-   mConfiguredCollideModels = NULL;
    //mWorldDCS = NULL;
    mCollidableModelGroup = NULL;
 
@@ -578,10 +583,12 @@ void simplePfNavApp::initializeSounds()
             pf_nextSoundDcsTrans[1],
             pf_nextSoundDcsTrans[2]);
 
-      vjSound* vjs = vjSoundManager::instance()->getHandle( mSoundList[x].alias.c_str() );
-      pfSoundNode* nextSound = new pfSoundNode( vjs, mSoundList[x].positional );
-      vjs->trigger();  //make sure it's playing..
+      pfSoundNode* nextSound = new pfSoundNode( mSoundList[x].alias, mSoundList[x].positional );
 
+      #ifdef USE_AUDIOJUGGLER
+      AudioJuggler::instance().trigger( mSoundList[x].alias );
+      #endif
+      
       nextSoundDCS->addChild( nextSound );
       mSoundNodes->addChild( nextSoundDCS );
    }
