@@ -35,6 +35,7 @@
 //#pragma once
 
 #include <vrj/vrjConfig.h>
+#include <vector>
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -110,8 +111,7 @@ private:
    ::Window       mXWindow;
    std::string    mWindowName;
    int            mPipe;
-   std::string    mXDisplayName;       /**<  Name of the x display to use */
-   bool           mAreKeyboardDevice;  /**< Should we act as a keyboard device too? */
+   std::string    mXDisplayName;       /**<  Name of the x display to use */   
 };
 
 
