@@ -110,12 +110,20 @@ protected:
    void scaled_rotate(vjMatrix rot_mat);
 
    // util func... used to convert gravity from meters...
-   inline float meters2feet( const float& meters )
+   inline void meters2feet( const vjVec3& gravityInMeters, vjVec3& gravityInFeet )
    {
-      float convtofeet = (meters / .3048 * 100) * .01;
-      return convtofeet;
+      float meters_to_feet = (100.0f / 0.3048f) * 0.01f;
+      //float convtofeet = (meters / .3048 * 100.0f) * .01;
+      gravityInFeet = gravityInMeters * meters_to_feet;
    }
 
+   enum Units
+   {
+      METERS, FEET
+   };
+   
+   void setUnits( Units units = FEET ) { mUnits = units; }
+   
 private:
    vjVec3 mVelocity;
    vjVec3 mVelocityFromGravityAccumulator;
@@ -141,7 +149,10 @@ private:
    bool  mRotating;
    bool  mStopping;
    bool  mResetting;
-
+   
+   
+   
+   Units       mUnits;
    StopWatch   stopWatch;
    navMode     mMode;
    int         mTimeHack;
@@ -154,7 +165,8 @@ velocityNav::velocityNav() :
    mVelocityFromGravityAccumulator(0.0f,0.0f,0.0f),
    mMode( velocityNav::DRIVE ),
    mMaxVelocity( 2500.0f ),
-   mAcceleration(10.0f)
+   mAcceleration(10.0f),
+   mUnits( velocityNav::FEET )
 {
    stop();
    stopWatch.start();
@@ -277,8 +289,20 @@ void velocityNav::update()
    vjVec3         trackerZaxis(0.0f, 0.0f, 1.0f);
    vjVec3         trackerXaxis(1.0f, 0.0f, 0.0f);
    vjVec3         trackerYaxis(0.0f, 1.0f, 0.0f);
-   const vjVec3   gravity( 0.0f, meters2feet(-9.8f), 0.0f ); //9.8 m/s (METERS)
-
+   const vjVec3   gravity_meters_per_second( 0.0f, -9.8f, 0.0f ); //9.8 m/s (METERS)
+   vjVec3         gravity( 0.0f, -9.8f, 0.0f ); // to be set by switch (mUnits == METERS)
+   
+   switch (mUnits)
+   {
+   case FEET:
+      meters2feet( gravity_meters_per_second, gravity );
+      break;
+   default:
+   case METERS:
+      gravity = gravity_meters_per_second;
+      break;
+   }
+   
    if ((mAllowRot) && (mRotating))
    {
       this->scaled_rotate( mRotationalAcceleration );     // Interpolates the rotation, and updates mCurPos matrix
