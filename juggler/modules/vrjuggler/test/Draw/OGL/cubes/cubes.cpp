@@ -80,6 +80,7 @@ int main(int argc, char* argv[])
    kernel->setApplication(application);         // Set application
 
    kernel->waitForKernelStop();
+
    return 0;
 }
 #endif
