@@ -6,9 +6,9 @@ namespace vprTest
 
 void InetAddrTest::testEqual()
 {
-   vpr::InetAddr addr1(80);
-   vpr::InetAddr addr2(21);
-   vpr::InetAddr addr3(80);
+   vpr::InetAddr addr1;  addr1.setPort(80);
+   vpr::InetAddr addr2;  addr2.setPort(21);
+   vpr::InetAddr addr3;  addr3.setPort(80);
 
    CPPUNIT_ASSERT(addr1 != addr2);
    CPPUNIT_ASSERT(addr1 == addr3);
