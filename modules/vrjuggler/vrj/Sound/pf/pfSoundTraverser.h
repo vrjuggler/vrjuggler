@@ -344,7 +344,7 @@ protected:
                    << clrOutNORM( clrGREEN,"[SoundReplacer]     " )
                    << "Replaced " << clrOutNORM(clrGREEN, sn->getName())
                    << " node with a pfSoundNode referencing the "
-                   << soundName.c_str() << " sound." << vprDEBUG_FLUSH;
+                   << soundName.c_str() << " sound.\n" << vprDEBUG_FLUSH;
             }
             else
             {
