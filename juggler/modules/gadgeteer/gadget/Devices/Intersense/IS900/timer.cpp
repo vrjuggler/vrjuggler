@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <vpr/vpr.h>
+#include <vpr/Util/Interval.h>
 
 #include "isense.h"
 #include "timer.h"
@@ -29,8 +30,8 @@ static unsigned long initialTime;
 /************************************************************************/
 void initTimer()
 {
-    ftime(&t);
-    initialTime = t.time;
+    //ftime(&t);
+    //initialTime = t.time;
 }
 
 
@@ -38,8 +39,9 @@ void initTimer()
 /* Returns current time in seconds */
 float timeNow()
 {
-    ftime(&t);
-    return ((float)(t.time - initialTime) + (float)t.millitm/1000.0f);
+    //ftime(&t);
+    return(vpr::Interval::now().secf());
+    //return ((float)(t.time - initialTime) + (float)t.millitm/1000.0f);
 }
 
 
