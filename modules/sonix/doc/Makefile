@@ -1,38 +1,21 @@
 # Default targets
-default: all
 all: docs
+default: html
 
-# Builds the documentation
-docs:
-	-@echo ""
-	-@echo "-------------------------------------------"
-	-@echo "Generating Doxygen docs ..."
-	-@echo "-------------------------------------------"
-	doxygen sonix.doxy
-	-@echo ""
-	-@echo "-------------------------------------------"
-	-@echo "Generating docbook docs ..."
-	-@echo "-------------------------------------------"
-	cd programmer.guide; gmake html html-chunk pdf
+docs: html pdf
+install install-docs: install-html install-ps install-pdf
 
-install:
-	-@echo ""
-	-@echo "-------------------------------------------"
-	-@echo "Installing Doxygen docs ..."
-	-@echo "-------------------------------------------"
-	-@echo ""
-	-@echo "-------------------------------------------"
-	-@echo "Installing docbook docs ..."
-	-@echo "-------------------------------------------"
-	cd programmer.guide; gmake install
+DOXYGEN_FILE=		sonix.doxy
+HTML_DOXYGEN_FILE=	$(DOXYGEN_FILE)
+LATEX_DOXYGEN_FILE=	sonix_latex.doxy
+MAN_DOXYGEN_FILE=	$(DOXYGEN_FILE)
+HTML_OUTPUT_DIR=	html
+LATEX_OUTPUT_DIR=	latex
 
-# Remove the docs from the system
-clean:
-	-@echo ""
-	-@echo "-------------------------------------------"
-	-@echo "Removing generated documentation ..."
-	-@echo "-------------------------------------------"
-	rm -rf html latex man
+# Fill these in!!  Together, they form the installation prefix.
+webroot=	$(HOME)/public_html/phpjug
+instdir=	sonix/0.0.3/programmer.reference
 
-clobber: clean
+prefix=		$(webroot)/$(instdir)
 
+include ../../../docs/doxygen.mk
