@@ -409,11 +409,12 @@ IDL_GEN_DIRS="tweek/CORBA"
 
 for dir in "$IDL_GEN_DIRS" ; do
     IDL_GEN_INCLUDES="$IDL_GEN_INCLUDES -I\$(TWEEK_BASE_DIR)/include/$dir"
+    tweek_idl_gen_includes="$tweek_idl_gen_includes -I\${TWEEK_BASE_DIR}/include/$dir"
 done
 
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS"
 INCLUDES="$INCLUDES $OMNI_INCLUDES"
-tweek_cxxflags="$STDFLAGS $VPR_CXXFLAGS $INCLUDES $IDL_GEN_INCLUDES"
+tweek_cxxflags="$STDFLAGS $VPR_CXXFLAGS $INCLUDES $tweek_idl_gen_includes"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
