@@ -64,7 +64,9 @@ bool Position::config(jccl::ConfigChunkPtr c)
    unsigned num_filters = c->getNum("position_filters");
 
    vprDEBUG_OutputGuard(vprDBG_ALL, 0,
-                        std::string("Position::config: ") + c->getName() + std::string(":") + c->getDescToken(),
+                        std::string("Position::config: ") + c->getName() +
+                           std::string(":") + c->getDescToken() +
+                           std::string("\n"),
                         std::string("Position::config: done.\n") );
 
    vprDEBUG( vprDBG_ALL, 0) << "Num filters: " << num_filters << std::endl << vprDEBUG_FLUSH;
