@@ -16,6 +16,9 @@
 // NASA Ames Research Center, Moffett Field, CA 94035
 //////////////////////////////////////////////////////////////////////////
 
+#ifndef _LOGICLASS_H_
+#define _LOGICLASS_H_
+
 #include <vjConfig.h>
 #include <Input/vjPosition/vjPosition.h>    // The base class for vr_devices
 #include <Math/vjVec3.h>
@@ -133,3 +136,6 @@ public:
 	void EulerToAbsolute (byte record[], vjPOS_DATA * data);
 	void PrintBin (char a);
 };
+
+
+#endif	/* _LOGICLASS_H_ */
