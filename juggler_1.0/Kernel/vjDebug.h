@@ -32,13 +32,14 @@
 
 // Suggested use of val/debugLevel
 //
-// 1 - critical messages / Config data
-// 2 -
-// 3 - Object construction
-// 4 -
-// 5 - Highly verbose debug output
+// 0 - Critical messages (always need to be seen)
+// 1 - Configuration of system
+// 2 - Warnings and potential problems
+// 3 - State changes & who is doing what
+// 4 - Verbose (don't need source) ex
+// 5 - Highly verbose (may need source)
 // 6 - Function entry and exit
-// 7 - In house only type debug output
+// 7 - You will be reading hexidecimal
 
 
 #ifdef VJ_DEBUG
@@ -49,7 +50,7 @@
 #  define MAX_DBG_LEVEL 100
 #else
 #  define LOCK_DEBUG_STREAM
-#  define MAX_DBG_LEVEL 1
+#  define MAX_DBG_LEVEL 2
 //#   define vjDEBUG(cat,val) if (1) ; else cout
 //#   define vjDEBUG_BEGIN(cat,val) if (1) ; else cout
 //#   define vjDEBUG_END(cat,val) if (1) ; else cout

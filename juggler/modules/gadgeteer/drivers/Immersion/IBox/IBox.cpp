@@ -13,14 +13,14 @@ bool vjIBox::config(vjConfigChunk *c)
   if( (!vjAnalog::config(c)) || (!vjDigital::config(c)))
      return false;
 
-  vjDEBUG(vjDBG_ALL,1) << "	vjIBox::config:" << endl << vjDEBUG_FLUSH;
+  vjDEBUG(vjDBG_INPUT_MGR,3) << "	vjIBox::config:" << endl << vjDEBUG_FLUSH;
   port_id = c->getProperty("portNum");
 
   // Done in vjInput
   //active = 0;
   //baudRate = c->getProperty("baud");
 
-  vjDEBUG(vjDBG_ALL,1) << "   Creating an IBox.. params: " << endl
+  vjDEBUG(vjDBG_INPUT_MGR,1) << "   Creating an IBox.. params: " << endl
              << "	   portnum: " << port_id << endl
              << "        baud   : " << baudRate << endl
              << "   instanceName: " << instName << endl << endl << vjDEBUG_FLUSH;
@@ -61,12 +61,12 @@ int vjIBox::startSampling()
       if (result == SUCCESS)
       {
   	    active = 1;
-	    vjDEBUG(vjDBG_ALL,4) << "     Connected to IBox.\n" << flush << vjDEBUG_FLUSH;
+	    vjDEBUG(vjDBG_INPUT_MGR,1) << "     Connected to IBox.\n" << flush << vjDEBUG_FLUSH;
       }
       else
       {
 	    active = 0;
-	    vjDEBUG(vjDBG_ALL,5) << "   FAILED TO CONNECT to the Ibox named " << instName << endl
+	    vjDEBUG(vjDBG_INPUT_MGR,0) << "   FAILED TO CONNECT to the Ibox named " << instName << endl
 	     << "     Ibox settings were: " << endl
 	     << "	     port : " << port_id << endl
 	     << "	  baudRate: " << baudRate << endl << endl << vjDEBUG_FLUSH;

@@ -48,7 +48,7 @@ int vjPinchGlove::startSampling()
 
       if (mGlove->connectToHardware( sPort ) == false)
       {
-         vjDEBUG(vjDBG_ALL,0) << "ERROR: Can't open Pinchglove or it is already opened." << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_INPUT_MGR,0) << "ERROR: Can't open Pinchglove or it is already opened." << vjDEBUG_FLUSH;
          return 0;
       }
 
@@ -64,7 +64,7 @@ int vjPinchGlove::startSampling()
       }
       else
       {
-         vjDEBUG(vjDBG_ALL,1) << "vjPinchGlove is active " << endl;
+         vjDEBUG(vjDBG_INPUT_MGR,1) << "vjPinchGlove is active " << endl;
          active = 1;
          return 1;
       }
@@ -119,9 +119,9 @@ int vjPinchGlove::stopSampling()
       mControlThread = NULL;
       sginap(1);
 
-    // there is no "close"
+      // XXX: there is no "close"
       //mGlove->Close();
-      vjDEBUG(vjDBG_ALL,0) << "stopping vjPinchGlove.." << endl;
+      vjDEBUG(vjDBG_INPUT_MGR,1) << "stopping vjPinchGlove.." << endl;
    }
    return 1;
 }

@@ -13,7 +13,7 @@ bool vjDummyPosition::config(vjConfigChunk *c)
 
    vjCoord coord;
 
-   vjDEBUG(vjDBG_ALL,1) << "  vjDummyPosition::config(vjConfigChunk*) " << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,3) << "  vjDummyPosition::config(vjConfigChunk*) " << endl << vjDEBUG_FLUSH;
 
    coord.pos[VJ_X] = c->getProperty("position",0);
    coord.pos[VJ_Y] = c->getProperty("position",1);
