@@ -41,17 +41,17 @@
 namespace jccl {
 
     /** Base class for dependency checkers.
-     *  A dependency checker is responsible for figuring out if 
+     *  A dependency checker is responsible for figuring out if
      *  the system has all the required dependencies filled for
      *  a given ConfigChunk.
      *
-     *  This class also implements a default behavior for 
+     *  This class also implements a default behavior for
      *  dependency checkers, which just looks at any ConfigChunk
      *  pointer properties in the given chunk and returns true
      *  if all the chunks named by those properties exist in the
      *  ConfigManager's current configuration.
      *
-     *  Configuration information with special dependency 
+     *  Configuration information with special dependency
      *  requirements should specialize this class and register
      *  an instance with the DependencyManager.
      *
@@ -90,8 +90,8 @@ public:
     /** Write chunk's dependencies to vprDEBUG.
      *  @param dbg_level Output priority level for vprDEBUG.
      */
-    /*virtual*/ void debugOutDependencies (ConfigChunkPtr chunk,
-                                           int dbg_lvl=vprDBG_WARNING_LVL);
+    virtual void debugOutDependencies (ConfigChunkPtr chunk,
+                                       int dbg_lvl=vprDBG_WARNING_LVL);
 
 }; // class DepChecker
 
