@@ -239,8 +239,12 @@ install-boost:
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/boost
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)
 	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
-          $(GROUP_OPT_UNIX) -e .h,.hpp -i $(BOOST_INCLUDES)/boost	\
+          $(GROUP_OPT_UNIX) -e .h,.hpp,.ipp -i $(BOOST_INCLUDES)/boost	\
           -o $(deps_prefix)/include/boost
+	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX)						\
+          -i $(BOOST_INCLUDES)/boost/compatibility/cpp_c_headers	\
+          -o $(deps_prefix)/include/boost/compatibility/cpp_c_headers
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
           $(BOOST_ROOT)/lib/libboost_filesystem*.so*			\
           $(deps_prefix)/lib$(LIBBITSUF)
