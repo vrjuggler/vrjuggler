@@ -40,7 +40,6 @@
 
 namespace cluster
 {
-
    class DeviceRequest;
    class Packet;
 
@@ -55,12 +54,6 @@ namespace cluster
          NEWCONNECTION  = 3
       };
       
-      /**
-       * Create a new ClusterNode for a Node that is connecting to us 
-       * that we did not previously know about
-       */
-      ClusterNode();
-
       /**
        * Create a ClusterNode with the given attributes
        *
@@ -88,7 +81,7 @@ namespace cluster
       void printStats(int debug_level = 1);
 
       /**
-       * Return the name of the node.
+       * Return the name given to this node during configuration.
        */
       std::string getName() { return mName; }
 
@@ -103,29 +96,17 @@ namespace cluster
       vpr::Uint16 getPort() { return mPort;}
 
       /**
-       * Set the name of the ClusterNode.
-       */
-      void setName(std::string& name) { mName = name; }
-      
-      /**
-       * Set the hostname of the ClusterNode.
-       */
-      void setHostname(std::string& host_name) { mHostname = host_name; }
-      
-      /**
-       * Set the port of the ClusterNode.
-       */
-      void setPort(vpr::Uint16& port) { mPort = port;}
-            
-      /**
        * Get a pointer to the SocketStream used to communicate with this node.
        */
       vpr::SocketStream* getSockStream() { return mSockStream; }
-
+      
       /**
        * Set the SocketStream used to communicate with this node.
        */
-      void setSockStream(vpr::SocketStream* socket) { mSockStream = socket; }
+      void setSockStream(vpr::SocketStream* stream)
+      {
+         mSockStream = stream;
+      }
 
       /**
        * Return if we are connected to this node.
@@ -154,50 +135,11 @@ namespace cluster
       { mUpdated = update; }
       
       /**
-       * Return if this node is running or not.
-       */
-      bool isRunning() { return mRunning; }
-
-      /**
-       * Set the running status for this node.
-       */
-      void setRunning(bool started)
-      { mRunning = started; }
-
-      /**
        * Attempt to connect to this node.
        */
       vpr::ReturnStatus attemptConnect();
-      
-      /**
-       * Update this cluster node
-       */
-      void update();
 
-      /**
-       * Lock a mutex for Reading from the SocketStream
-       */
-      void lockSockRead()
-      { mSockReadLock.acquire(); }
-      
-      /**
-       * Unlock a mutex for Reading from the SocketStream
-       */
-      void unlockSockRead()
-      { mSockReadLock.release(); }
-      
-      /**
-       * Lock a mutex for Writing from the SocketStream
-       */
-      void lockSockWrite()
-      { mSockWriteLock.acquire(); }
-      
-      /**
-       * Unlock a mutex for Writing from the SocketStream
-       */
-      void unlockSockWrite()
-      { mSockWriteLock.release(); }
-
+   public:
       /**
        * Start the update thread for this node
        */
@@ -225,23 +167,38 @@ namespace cluster
        */
       void shutdown();
 
+      /**
+       * Get the time delta between the remote and local clock.
+       */
       vpr::Uint64* getDelta()
       {
          return &mDelta;
       }
-      
+     
+      /**
+       * Send the given packet to this node.
+       */
       vpr::ReturnStatus send(Packet* out_packet);
+
+      /**
+       * Receive a packet from the network.
+       */
       Packet* recvPacket();
+      
 private:
-      //vpr::Interval        mDelta;
-      //ClusterSync          mClusterSync;
+      /**
+       * Update this cluster node
+       */
+      void update();
+
+private:
       std::string          mName;               /**< ClusterNode name */
       std::string          mHostname;           /**< Host that it is connected to */
       vpr::Uint16          mPort;               /**< Port that it is connected to */
 
       vpr::SocketStream*   mSockStream;         /**< Socket used for communication to this node */      
-      vpr::Mutex           mSockReadLock;       /**< Lock reading from the SocketStream */
       vpr::Mutex           mSockWriteLock;      /**< Lock writing to the SocketStream */
+      vpr::Mutex           mSockReadLock;       /**< Lock reading from the SocketStream */
 
       vpr::Mutex           mConnectedLock;      /**< Lock the isConnected value */
       int                  mConnected;          /**< States if this node is connected */
@@ -254,16 +211,14 @@ private:
       std::vector<cluster::Packet*>   mPendingDeviceRequests;       /**< Vector of Pending Device Requests */
       vpr::Mutex                      mPendingDeviceRequestsLock;   /**< Lock the mPendingDeviceRequests list */
       
-      vpr::Semaphore    mUpdateTriggerSema;   /**< Semaphore trigger for UserData update  */
-      
+      vpr::Semaphore    mUpdateTriggerSema;     /**< Semaphore trigger for UserData update  */
       vpr::Semaphore    mClusterNodeDoneSema;   /**< Semaphore trigger for completion */
       
-      // Used for Update Thread
       vpr::Thread*      mControlThread;         /**< Update thread for this node */
       bool              mThreadActive;          /**< Has the update thread started? */
-      
-      vpr::Uint64       mDelta;
-      bool              mRunning;
+     
+      bool              mRunning;               /**< Thread is running the control loop */
+      vpr::Uint64       mDelta;                 /**< Time delta between remote and local clocks */
    };
 
 } // end namespace gadget
