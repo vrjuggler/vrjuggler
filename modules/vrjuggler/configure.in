@@ -712,7 +712,7 @@ AC_CACHE_CHECK(whether the C++ compiler handles templates properly,
     ac_cv_CXX_is_current,
     AC_TRY_COMPILE([#include <map> ],
                    [ std::map<const char*, int> test_map; ],
-                   ac_cv_CXX_is_current='yes',
+                   [ ac_cv_CXX_is_current='yes' ; rm -rf ./ii_files ],
                    [ ac_cv_CXX_is_current='no' ;
                      AC_MSG_ERROR(*** The library requires a current C++ compiler) ]))
 
