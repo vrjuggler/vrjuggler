@@ -88,9 +88,8 @@
 #                   other binary types when supported by the operating
 #                   system (e.g., "ELF", "N32" or "64").
 # LIBBITSUF       - Suffix for the library path used by the linker on IRIX
-#                   only.  For o32 binaries, it will be blank.  For n32
-#                   binaries, it will be 32.  For 64-bit binaries, it will be
-#                   64.
+#                   only.  For n32 binaries, it will be 32.  For 64-bit
+#                   binaries, it will be 64.
 # PLATFORM        - The operating system abbreviation on which the library is
 #                   being built.
 #
@@ -191,10 +190,6 @@ MKDEPS_CXX_COMPILE = ${MKDEPS_CXX} ${DEFS} ${INCLUDES} ${CPPFLAGS} ${CXXFLAGS}
 # ABIs.
 # -----------------------------------------------------------------------------
 ifdef vjABI
-    ifeq (${vjABI}, O32)
-        ABI	= O32
-        ISA	= mips2
-    endif
     ifeq (${vjABI}, N32_M3)
         ABI	= N32
         ISA	= mips3
@@ -223,13 +218,6 @@ endif
 
 PLATFORM	= @PLATFORM@
 
-ifeq (${ABI}, O32)
-    ARFLAGS	:= -o32 -mips2 ${ARFLAGS}
-    CFLAGS	+= -o32 -mips2
-    CXXFLAGS	+= -o32 -mips2
-    LDOPTS	+= -o32 -mips2
-    LIBBITSUF	=
-endif
 ifeq (${ABI}, N32)
     ARFLAGS	:= -n32 ${ARFLAGS}
     CFLAGS	+= -n32
