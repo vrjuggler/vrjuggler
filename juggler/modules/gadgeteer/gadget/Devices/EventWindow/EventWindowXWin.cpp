@@ -320,7 +320,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
          mRealkeys[vj_key] = 1;
          mKeys[vj_key] += 1;
 
-         vprDEBUG(gadgetDBG_INPUT_MGR, 0)
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
             << "vj_key press value: " << vj_key << std::endl
             << vprDEBUG_FLUSH;
          addKeyEvent(vj_key, gadget::KeyPressEvent, &event.xkey);
