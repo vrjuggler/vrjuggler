@@ -162,7 +162,6 @@ DPP_HAVE_GNU_MAKE(3.78, ,
 DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 DPP_PROG_INSTALL
 DPP_PROG_LINKER
-DPP_LINKER_IS_GNU_LD([$LINKER])
 
 # -----------------------------------------------------------------------------
 # Checks for libraries.
