@@ -29,10 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-package VjComponents.PerfMonitor;
+package org.vrjuggler.jccl.perfmonitor;
 
 import java.awt.event.*;
 import java.io.*;
@@ -43,7 +40,7 @@ import java.util.*;
 //import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
 
-import VjConfig.*;
+import org.vrjuggler.jccl.config.*;
 import VjControl.Core;
 
 /** Class for storing performance data from a single source.

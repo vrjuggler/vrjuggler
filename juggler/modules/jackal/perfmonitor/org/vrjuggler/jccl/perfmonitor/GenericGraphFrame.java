@@ -29,18 +29,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.perfmonitor;
 
-
-
-package VjComponents.PerfMonitor;
-
-import javax.swing.*;
 import java.awt.Dimension;
 import java.awt.event.*;
 import java.util.*;
+import javax.swing.*;
 import VjControl.Core;
 import VjComponents.UI.Widgets.ChildFrame;
-import VjComponents.PerfMonitor.GenericGraphPanel;
 
 public class GenericGraphFrame extends JFrame 
     implements ChildFrame, WindowListener {

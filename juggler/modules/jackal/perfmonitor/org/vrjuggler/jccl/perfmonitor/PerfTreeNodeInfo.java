@@ -29,13 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.perfmonitor;
 
-package VjComponents.PerfMonitor;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import VjComponents.PerfMonitor.LabeledPerfDataCollector; 
+import javax.swing.*;
 
 public class PerfTreeNodeInfo implements ActionListener
 {

@@ -29,10 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-package VjComponents.PerfMonitor;
-
-import VjComponents.PerfMonitor.PerformanceModuleEvent;
+package org.vrjuggler.jccl.perfmonitor;
 
 /** Listener interface for ConfigModule events.
  *  By becoming a ConfigModuleListener, an object can receive 

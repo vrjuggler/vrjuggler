@@ -29,15 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.PerfMonitor;
+package org.vrjuggler.jccl.perfmonitor;
 
 import java.io.*;
-import VjConfig.*;
+import org.vrjuggler.jccl.config.*;
 import VjComponents.Network.DefaultNetCommunicator;
 import VjControl.*;
-import VjComponents.PerfMonitor.PerformanceModule;
 import VjComponents.Network.NetworkModule;
 
 /** NetControl Communicator for VR Juggler performance data.
