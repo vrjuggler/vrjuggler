@@ -21,6 +21,7 @@ class vjDisplay;
 
 #include <Input/vjPosition/vjPosition.h>
 #include <Kernel/vjDebug.h>
+#include <Input/InputManager/vjPosInterface.h>
 
 //-----------------------------------------------------------------------------------
 //: Singleton Container class for all vjDisplays.
@@ -60,8 +61,8 @@ protected:
    vjDrawManager*  drawManager;     //: The current drawManager to communicate with
 
    // --- Information about the head --- //
-   int         headProxyIndex;   //: The proxy index for the head
-   vjMatrix    curHeadPos;       //: Keep cached pos here
+   vjPosInterface    mHeadInterface;   //: The proxy index for the head
+   vjMatrix          curHeadPos;       //: Keep cached pos here
 
 
    // ---- Singleton stuff ---- //
@@ -75,9 +76,7 @@ public:
 
 protected:
    vjDisplayManager()
-   {
-      headProxyIndex = -1;
-   }
+   {;}
 
 private:
    static vjDisplayManager* _instance;
