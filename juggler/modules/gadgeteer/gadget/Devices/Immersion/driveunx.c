@@ -28,21 +28,23 @@
 /* Names of serial port device files */
 
 /* Fill in your UNIX system type from the following choices:
- *   SGI_PLATFORM, SUN_PLATFORM
+ *   SGI_PLATFORM, SUN_PLATFORM, HP_PLATFORM, LINUX_PLATFORM
  * If yours is not listed, it can be added.  Contact Immersion Corp.
  */
 
-#ifdef C2_OS_SGI
+#ifdef VJ_OS_SGI
 #   define SGI_PLATFORM
 #else
-#   ifdef C2_OS_HPUX
-#       define HP_PLATFORM
-#   else			/* Fallback in case nothing is defined */
-#       define SGI_PLATFORM
-#   endif	/* ifdef C2_OS_HPUX */
-#endif		/* ifdef C2_OS_SGI */
+#ifdef VJ_OS_HPUX
+#   define HP_PLATFORM
+#else
+#ifdef VJ_OS_Linux
+#   define LINUX_PLATFORM
+#endif	/* VJ_OS_Linux */
+#endif	/* VJ_OS_HPUX */
+#endif	/* VJ_OS_SGI */
 
-#ifdef SGI_PLATFORM
+#if defined(SGI_PLATFORM) || defined(LINUX_PLATFORM)
 #define PORT1_DEV  "/dev/ttyd1"
 #define PORT2_DEV  "/dev/ttyd2"
 #define PORT3_DEV  "/dev/ttyd3"
