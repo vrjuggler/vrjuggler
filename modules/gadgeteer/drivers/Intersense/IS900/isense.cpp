@@ -12,10 +12,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <vpr/vpr.h>
 
 #include "isense.h"
 
-#if !defined UNIX
+#ifdef VPR_OS_Win32
 #include <windows.h>
 #include <winbase.h>
 #endif
@@ -31,13 +32,12 @@ InterSenseTrackerType ISD_tracker[ISD_MAX_TRACKERS];
 *   functionName:   ISD_OpenTracker
 *   Description:
 *   Created:        12/3/98
-*   Author:         Yury Altshuler
 *
 *   Comments:       Returns -1 on failure. To detect tracker automatically 
 *                   specify 0 for commPort    
 *
 ******************************************************************************/
-ISD_TRACKER_HANDLE ISD_OpenTrackerPort( const char* commPort, BOOL infoScreen, BOOL verbose, DWORD baud )
+ISD_TRACKER_HANDLE ISD_OpenTracker( std::string commPort, int baud_rate, BOOL infoScreen, BOOL verbose )
 {
     ISD_TRACKER_HANDLE i;
 
@@ -48,8 +48,8 @@ ISD_TRACKER_HANDLE ISD_OpenTrackerPort( const char* commPort, BOOL infoScreen, B
         if(ISD_tracker[i].hardware == ISD_NONE)
         {
             /* detect tracker and initialize it to defaults */
-	  /* allow*/
-	  if(ISD_openTracker( &ISD_tracker[i], commPort, infoScreen, verbose, baud ))
+            //if(ISD_openTracker( &ISD_tracker[i], commPort, infoScreen, verbose ))
+            if(ISD_openTrackerJuggler( &ISD_tracker[i], commPort, baud_rate, infoScreen, verbose))
             {
                 ISD_tracker[i].ID = i+1;
 
@@ -67,21 +67,12 @@ ISD_TRACKER_HANDLE ISD_OpenTrackerPort( const char* commPort, BOOL infoScreen, B
     return -1;
 }
 
-ISD_TRACKER_HANDLE ISD_OpenTracker( DWORD commPort, BOOL infoScreen, BOOL verbose, DWORD baud ) {
-    char *portName[4] = {"/dev/ttyd1", "/dev/ttyd2", "/dev/ttyd3", "/dev/ttyd4"}; 
-    
-    if(commPort == 0) commPort = 1;
-    
-    return ISD_OpenTrackerPort(portName[commPort-1], infoScreen, verbose, baud);
-}
-
 
 /*****************************************************************************
 *
 *   functionName:   ISD_CloseTracker
 *   Description:
 *   Created:        12/3/98
-*   Author:         Yury Altshuler
 *
 *   Comments:       
 *
@@ -111,7 +102,6 @@ BOOL  ISD_CloseTracker( ISD_TRACKER_HANDLE handle )
 *   functionName:   ISD_NumOpenTrackers
 *   Description:
 *   Created:        12/3/98
-*   Author:         Yury Altshuler
 *
 *   Comments:       Returns the number of currently opened trackers.   
 *
@@ -136,22 +126,21 @@ BOOL  ISD_NumOpenTrackers( WORD *num )
 
 /*****************************************************************************
 *
-*   functionName:   ISD_GetCommState
+*   functionName:   ISD_GetCommInfo
 *   Description:
 *   Created:        12/3/98
-*   Author:         Yury Altshuler
 *
 *   Comments:       Get RecordsPerSec and KBitsPerSec without requesting 
 *                   genlock settings from the tracker. Use this instead of 
-*                   ISD_GetTrackerState to prevent your program from stalling while
+*                   ISD_GetTrackerConfig to prevent your program from stalling while
 *                   waiting for the tracker response   
 *
 ******************************************************************************/
-BOOL ISD_GetCommState( ISD_TRACKER_HANDLE handle, ISD_TRACKER_TYPE *Tracker )
+BOOL ISD_GetCommInfo( ISD_TRACKER_HANDLE handle, ISD_TRACKER_INFO_TYPE *Tracker )
 {
     if( handle > 0 && handle <= ISD_MAX_TRACKERS)
     {
-        return ISD_getCommState( &ISD_tracker[ handle - 1 ], Tracker );
+        return ISD_getCommInfo( &ISD_tracker[ handle - 1 ], Tracker );
     }
     return FALSE;
 }
@@ -159,20 +148,20 @@ BOOL ISD_GetCommState( ISD_TRACKER_HANDLE handle, ISD_TRACKER_TYPE *Tracker )
 
 /*****************************************************************************
 *
-*   functionName:   ISD_GetTrackerState
+*   functionName:   ISD_GetTrackerConfig
 *   Description:
 *   Created:        12/3/98
-*   Author:         Yury Altshuler
+
 *
 *   Comments:          
 *
 ******************************************************************************/
-BOOL ISD_GetTrackerState( ISD_TRACKER_HANDLE handle, 
-                          ISD_TRACKER_TYPE *Tracker, BOOL verbose )
+BOOL ISD_GetTrackerConfig( ISD_TRACKER_HANDLE handle, 
+                           ISD_TRACKER_INFO_TYPE *Tracker, BOOL verbose )
 {
     if( handle > 0 && handle <= ISD_MAX_TRACKERS)
     {
-        return ISD_getTrackerState( &ISD_tracker[ handle - 1 ], Tracker, verbose );
+        return ISD_getTrackerConfig( &ISD_tracker[ handle - 1 ], Tracker, verbose );
     }
     return FALSE;
 }
@@ -180,20 +169,19 @@ BOOL ISD_GetTrackerState( ISD_TRACKER_HANDLE handle,
 
 /*****************************************************************************
 *
-*   functionName:   ISD_SetTrackerState
+*   functionName:   ISD_SetTrackerConfig
 *   Description:
 *   Created:        12/3/98
-*   Author:         Yury Altshuler
 *
 *   Comments:        
 *
 ******************************************************************************/
-BOOL ISD_SetTrackerState( ISD_TRACKER_HANDLE handle, 
-                          ISD_TRACKER_TYPE *Tracker, BOOL verbose )
+BOOL ISD_SetTrackerConfig( ISD_TRACKER_HANDLE handle, 
+                           ISD_TRACKER_INFO_TYPE *Tracker, BOOL verbose )
 {
     if( handle > 0 && handle <= ISD_MAX_TRACKERS)
     {
-        return ISD_setTrackerState( &ISD_tracker[ handle - 1 ], Tracker, verbose );
+        return ISD_setTrackerConfig( &ISD_tracker[ handle - 1 ], Tracker, verbose );
     }
     return FALSE;
 }
@@ -201,21 +189,20 @@ BOOL ISD_SetTrackerState( ISD_TRACKER_HANDLE handle,
 
 /*****************************************************************************
 *
-*   functionName:   ISD_SetStationState
+*   functionName:   ISD_SetStationConfig
 *   Description:
 *   Created:        12/3/98
-*   Author:         Yury Altshuler
 *
 *   Comments:          
 *
 ******************************************************************************/
-BOOL ISD_SetStationState( ISD_TRACKER_HANDLE handle, 
-                          ISD_STATION_CONFIG_TYPE *Station, 
-                          WORD stationNum, BOOL verbose )
+BOOL ISD_SetStationConfig( ISD_TRACKER_HANDLE handle, 
+                           ISD_STATION_INFO_TYPE *Station, 
+                           WORD stationNum, BOOL verbose )
 {
     if( handle > 0 && handle <= ISD_MAX_TRACKERS)
     {
-        return ISD_setStationState( &ISD_tracker[ handle - 1 ], Station, 
+        return ISD_setStationConfig( &ISD_tracker[ handle - 1 ], Station, 
                                      stationNum, verbose, TRUE );
     }
     return FALSE;
@@ -224,22 +211,21 @@ BOOL ISD_SetStationState( ISD_TRACKER_HANDLE handle,
 
 /*****************************************************************************
 *
-*   functionName:   ISD_GetStationState
+*   functionName:   ISD_GetStationConfig
 *   Description:
 *   Created:        12/3/98
-*   Author:         Yury Altshuler
 *
 *   Comments:          
 *
 ******************************************************************************/
-BOOL ISD_GetStationState( ISD_TRACKER_HANDLE handle, 
-                          ISD_STATION_CONFIG_TYPE *Station,
-                          WORD stationNum, BOOL verbose )
+BOOL ISD_GetStationConfig( ISD_TRACKER_HANDLE handle, 
+                           ISD_STATION_INFO_TYPE *Station,
+                           WORD stationNum, BOOL verbose )
 {
     if( handle > 0 && handle <= ISD_MAX_TRACKERS )
     {
-        return ISD_getStationState( &ISD_tracker[ handle - 1 ], Station, 
-                                     stationNum, verbose );
+        return ISD_getStationConfig( &ISD_tracker[ handle - 1 ], Station, 
+                                      stationNum, verbose );
     }
     return FALSE;
 }
@@ -250,7 +236,6 @@ BOOL ISD_GetStationState( ISD_TRACKER_HANDLE handle,
 *   functionName:   ISD_GetTrackerData
 *   Description:
 *   Created:        12/3/98
-*   Author:         Yury Altshuler
 *
 *   Comments:       get data from all configured stations    
 *
@@ -278,6 +263,7 @@ BOOL ISD_GetTrackerData( ISD_TRACKER_HANDLE handle, ISD_DATA_TYPE *Data )
             Data->Station[i].Position[1] = tracker->station[i].Position[1];
             Data->Station[i].Position[2] = tracker->station[i].Position[2];
 
+            Data->Station[i].NewData   = tracker->station[i].NewData;
             Data->Station[i].TimeStamp = tracker->station[i].TimeStamp;
 
             memcpy((void *)Data->Station[i].ButtonState, (void *)tracker->station[i].ButtonState, 
@@ -286,6 +272,49 @@ BOOL ISD_GetTrackerData( ISD_TRACKER_HANDLE handle, ISD_DATA_TYPE *Data )
             memcpy((void *)Data->Station[i].AnalogData, (void *)tracker->station[i].AnalogData, 
                 sizeof(Data->Station[i].AnalogData));
 
+            tracker->station[i].NewData = FALSE;
+        }
+        return TRUE;
+    }
+    return FALSE;
+}
+
+
+/*****************************************************************************
+*
+*   functionName:   ISD_GetCameraData
+*   Description:
+*   Created:        12/3/98
+
+*
+*   Comments:       get data from all configured stations    
+*
+******************************************************************************/
+BOOL ISD_GetCameraData( ISD_TRACKER_HANDLE handle, ISD_CAMERA_DATA_TYPE *Data )
+{
+    InterSenseTrackerType *tracker;
+    int i;
+
+    if( handle > 0 && handle <= ISD_MAX_TRACKERS )
+    {
+        tracker = &ISD_tracker[ handle - 1 ];
+
+        /* copy tracker data from internal structures to the user data */
+        for(i=0; i<ISD_MAX_STATIONS; i++)
+        {
+            Data->Camera[i].NewData             = tracker->station[i].NewCameraData;
+            Data->Camera[i].Status              = tracker->station[i].Status;
+            Data->Camera[i].Timecode            = tracker->station[i].Timecode;
+            Data->Camera[i].ApetureEncoder      = tracker->station[i].ApetureEncoder;
+            Data->Camera[i].FocusEncoder        = tracker->station[i].FocusEncoder;
+            Data->Camera[i].ZoomEncoder         = tracker->station[i].ZoomEncoder;
+            Data->Camera[i].TimeCodeUserBits    = tracker->station[i].TimeCodeUserBits;
+            Data->Camera[i].Apeture             = tracker->station[i].Apeture;
+            Data->Camera[i].Focus               = tracker->station[i].Focus;
+            Data->Camera[i].FOV                 = tracker->station[i].FOV;
+            Data->Camera[i].NodalPoint          = tracker->station[i].NodalPoint;
+
+            tracker->station[i].NewCameraData = FALSE;
         }
         return TRUE;
     }
@@ -298,7 +327,7 @@ BOOL ISD_GetTrackerData( ISD_TRACKER_HANDLE handle, ISD_DATA_TYPE *Data )
 *   functionName:   ISD_SendScript
 *   Description:
 *   Created:        12/3/98
-*   Author:         Yury Altshuler
+
 *
 *   Comments:       Send a configuration script to the tracker. Script must 
 *                   consist of valid commands as described in the interface 
@@ -354,3 +383,6 @@ BOOL ISD_SendScript( ISD_TRACKER_HANDLE handle, char *script )
     }
     return FALSE;
 }
+
+
+

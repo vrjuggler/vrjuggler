@@ -15,8 +15,9 @@
 #define _ISD_itcomh
 
 #include "isense.h"
+#include <vpr/vpr.h>
 
-#if !defined UNIX
+#ifdef VPR_IS_Win32
 #include <windows.h>
 #include <winbase.h>
 #endif
@@ -109,5 +110,17 @@ BOOL itComUpdateImu( InterSenseTrackerType *tracker, DWORD sensorNum );
 BOOL itComUpdateSensitivityVal( InterSenseTrackerType *tracker, DWORD sensorNum );
 BOOL itComUpdateSyncState( InterSenseTrackerType *tracker );
 
+void ISD_INTERTRAX_2_serviceSerialPortPolled(InterSenseTrackerType *tracker);
+
+float         byteOrderFloat(char *value);
+long          byteOrderLong (char *value);
+unsigned long byteOrderULong(char *value);
+short         byteOrderShort(char *value);
 
 #endif
+
+
+
+
+
+
