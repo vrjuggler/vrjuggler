@@ -39,6 +39,8 @@
 #include <vrj/Kernel/User.h>
 #include <jccl/Plugins/PerformanceMonitor/PerfDataBuffer.h>
 #include <jccl/Config/ConfigChunkPtr.h>
+#include <vrj/Kernel/Kernel.h>
+#include <jccl/Plugins/PerformanceMonitor/PerformanceMonitor.h>
 
 namespace vrj
 {
@@ -62,10 +64,21 @@ public:
       mXorigin = mYorigin = mXsize = mYsize = -1.0f;
       mType = Viewport::UNDEFINED;
       mActive = false;
+      mLatencyMeasure = 0;
    }
 
    virtual ~Viewport()
-   {;}
+   {
+       if (mLatencyMeasure)
+           Kernel::instance()->getEnvironmentManager()->getPerformanceMonitor()->releasePerfDataBuffer(mLatencyMeasure);
+   }
+
+
+    void recordLatency (int trackertimeindex, int currenttimeindex) {
+        jccl::TimeStamp ts = mUser->getHeadUpdateTime();
+        mLatencyMeasure->set (trackertimeindex, ts);
+        mLatencyMeasure->set (currenttimeindex);
+    }
 
 
    enum Type { UNDEFINED, SURFACE, SIM};                  // What type of viewport is it
@@ -139,6 +152,9 @@ protected:
    bool              mActive;             //: Is this viewport active
 
    jccl::ConfigChunkPtr mViewportChunk;        //: The chunk data for this display
+    jccl::PerfDataBuffer* mLatencyMeasure;
+
+
    float          mXorigin, mYorigin, mXsize, mYsize;    // Location and size of viewport
                                                          // ASSERT: all values are >= 0.0 and <= 1.0
 };

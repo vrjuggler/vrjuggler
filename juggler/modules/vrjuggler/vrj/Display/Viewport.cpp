@@ -54,6 +54,9 @@ void Viewport::config(jccl::ConfigChunkPtr chunk)
 
     setName(name);
     mViewportChunk = chunk;        // Save the chunk for later use
+
+    mLatencyMeasure = Kernel::instance()->getEnvironmentManager()->getPerformanceMonitor()->getPerfDataBuffer ("Head Latency " + name, 500, 5);
+
 }
 
 std::ostream& operator<<(std::ostream& out, Viewport& viewport)
