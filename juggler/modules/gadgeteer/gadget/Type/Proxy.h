@@ -139,7 +139,7 @@ public:
          }
 
          vprDEBUG_CONT(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "   attaching to device named: " << mDeviceName.c_str() << std::endl << vprDEBUG_FLUSH;
-         vprDEBUG_END(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL) << "   Proxy config()'ed" << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_STATE_LVL) << "   Proxy config()'ed" << std::endl << vprDEBUG_FLUSH;
 
          set(typed_dev);    // Set the proxy
       }
