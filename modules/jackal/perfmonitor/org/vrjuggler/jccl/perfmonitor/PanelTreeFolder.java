@@ -83,6 +83,7 @@ public class PanelTreeFolder extends JPanel implements ActionListener {
 	    if (mExpanded) {
 		mExpanded = false;
 		remove (mCenter);
+                revalidate();
 	    }
 	    else {
 		mExpanded = true;
