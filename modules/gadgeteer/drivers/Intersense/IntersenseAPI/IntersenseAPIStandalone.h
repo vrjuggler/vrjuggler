@@ -86,32 +86,32 @@ public:
       mBaudRate = baud_rate;
    }
 
-   void setNumStations(unsigned int num)
+   void setNumStations(const unsigned int num)
    {
       mNumStations = num;
    }
 
-   void setVerbose(bool verb)
+   void setVerbose(const bool verb)
    {
       mVerbose = verb;
    }
    
-   const std::string getPort()
+   const std::string getPort() const
    {
       return mPort;
    }
 
-   int getBaudRate()
+   int getBaudRate() const
    {
       return mBaudRate;
    }
 
-   unsigned int getNumStations() 
+   unsigned int getNumStations() const
    {
       return mNumStations;
    }
 
-   bool getVerbose() 
+   bool getVerbose() const
    {
       return mVerbose;
    }
@@ -119,7 +119,7 @@ public:
    /**
     * Return if the Station is ON or OFF.
     */
-   bool getState(int currentStation)
+   bool getState(const unsigned int currentStation) const
    {
       return mConfigData[currentStation].State;
    }
@@ -127,7 +127,7 @@ public:
    /**
     * Inertia cubes numbered 1-4.  If none is assigned the number is -1.
     */
-   int getInertiaCube(int currentStation) const 
+   int getInertiaCube(const unsigned int currentStation) const 
    {
       return mConfigData[currentStation].InertiaCube;
    }
@@ -135,7 +135,7 @@ public:
    /**
     * Return the enhancment value.
     */
-   int getEnhancement(int currentStation) const 
+   int getEnhancement(const unsigned int currentStation) const 
    {
       return mConfigData[currentStation].Enhancement;
    }
@@ -143,7 +143,7 @@ public:
    /**
     * Return the sensitivity level (Level 1-4).
     */
-   int getSensitivity(int currentStation) const 
+   int getSensitivity(const unsigned int currentStation) const 
    {
       return mConfigData[currentStation].Sensitivity;
    }
@@ -151,7 +151,7 @@ public:
    /**
     * Get the prediction time (0-50 ms).
     */
-   int getPrediction(int currentStation) const 
+   int getPrediction(const unsigned int currentStation) const 
    {
       return mConfigData[currentStation].Prediction;
    }
@@ -160,7 +160,7 @@ public:
     * Returns the format of the angles. 
     * (0 == ISD_EULER; 1 == ISD_QUATERNION)
     */
-   int getAngleFormat(int currentStation) const 
+   int getAngleFormat(const unsigned int currentStation) const 
    {
       return mConfigData[currentStation].AngleFormat;
    }
@@ -168,7 +168,7 @@ public:
    /**
     * Return whether the station should send time stamps or not.
     */
-   bool getTimeStamped(int currentStation) const 
+   bool getTimeStamped(const unsigned int currentStation) const 
    {
       return mConfigData[currentStation].TimeStamped;
    }
@@ -176,7 +176,7 @@ public:
    /**
     * Returns whether the station should send button values or not.
     */
-   bool getButtons(int currentStation) const
+   bool getButtons(const unsigned int currentStation) const
    {
       return mConfigData[currentStation].GetButtons;
    }
@@ -184,7 +184,7 @@ public:
    /**
     * Returns whether the station should send analog values or not.
     */
-   bool getAnalogData(int currentStation) const 
+   bool getAnalogData(const unsigned int currentStation) const 
    {
       return mConfigData[currentStation].GetAnalogData;
    }
@@ -195,7 +195,7 @@ public:
    /**
     * Return if the Station is ON or OFF.
     */
-   void setState(int currentStation, bool state)
+   void setState(const unsigned int currentStation, const bool state)
    {
       mConfigData[currentStation].State = state;
    }
@@ -203,15 +203,17 @@ public:
    /**
     * Inertia cubes numbered 1-4.  If none is assigned the number is -1.
     */
-   void setInertiaCube(int currentStation, int inertial_cube)
+   void setInertiaCube(const unsigned int currentStation,
+                       const int inertialCube)
    {
-      mConfigData[currentStation].InertiaCube = inertial_cube;
+      mConfigData[currentStation].InertiaCube = inertialCube;
    }
 
    /**
     * Return the enhancment value.
     */
-   void setEnhancement(int currentStation, int enhancement)
+   void setEnhancement(const unsigned int currentStation,
+                       const int enhancement)
    {
       mConfigData[currentStation].Enhancement = enhancement;
    }
@@ -219,7 +221,8 @@ public:
    /**
     * Return the sensitivity level (Level 1-4).
     */
-   void setSensitivity(int currentStation, int sensitivity) 
+   void setSensitivity(const unsigned int currentStation,
+                       const int sensitivity)
    {
       mConfigData[currentStation].Sensitivity = sensitivity;
    }
@@ -227,7 +230,7 @@ public:
    /**
     * Get the prediction time (0-50 ms).
     */
-   void setPrediction(int currentStation, int prediction)
+   void setPrediction(const unsigned int currentStation, const int prediction)
    {
       mConfigData[currentStation].Prediction = prediction;
    }
@@ -236,33 +239,36 @@ public:
     * Returns the format of the angles. 
     * (0 == ISD_EULER; 1 == ISD_QUATERNION)
     */
-   void setAngleFormat(int currentStation, int angle_format)
+   void setAngleFormat(const unsigned int currentStation,
+                       const int angleFormat)
    {
-      mConfigData[currentStation].AngleFormat = angle_format;
+      mConfigData[currentStation].AngleFormat = angleFormat;
    }
 
    /**
     * Return whether the station should send time stamps or not.
     */
-   void setTimeStamped(int currentStation, bool time_stamped)
+   void setTimeStamped(const unsigned int currentStation,
+                       const bool timeStamped)
    {
-      mConfigData[currentStation].TimeStamped = time_stamped;
+      mConfigData[currentStation].TimeStamped = timeStamped;
    }
 
    /**
     * Returns whether the station should send button values or not.
     */
-   void setButtons(int currentStation, bool get_buttons)
+   void setButtons(const unsigned int currentStation, const bool getButtons)
    {
-      mConfigData[currentStation].GetButtons = get_buttons;
+      mConfigData[currentStation].GetButtons = getButtons;
    }
 
    /**
     * Returns whether the station should send analog values or not.
     */
-   void setAnalogData(int currentStation, bool get_analog_data)
+   void setAnalogData(const unsigned int currentStation,
+                      const bool getAnalogData)
    {
-      mConfigData[currentStation].GetAnalogData = get_analog_data;
+      mConfigData[currentStation].GetAnalogData = getAnalogData;
    }
 
    //
@@ -276,7 +282,7 @@ public:
     * Load the current configuration that is stored on the physical tracker
     * device.
     */
-   void loadConfigState(int d)
+   void loadConfigState(const int d)
    {
       ISD_GetStationConfig( mHandle, &mConfigData[d], d+1, mVerbose );
    }
@@ -284,7 +290,7 @@ public:
    /**
     * Save the current configuration state to the physical tracker device.
     */
-   void saveConfigState(int d)
+   void saveConfigState(const int d)
    {
       ISD_SetStationConfig( mHandle, &mConfigData[d], d+1, mVerbose );
    }
@@ -292,7 +298,7 @@ public:
    /**
     * Get the x position of the i'th receiver. 
     */
-   float xPos( const int& i )
+   float xPos(const unsigned int i) const
    {
       return mData.Station[i].Position[0];
    }
@@ -300,7 +306,7 @@ public:
    /**
     * Gets the y position of the i'th receiver. 
     */
-   float yPos( const int& i )
+   float yPos(const unsigned int i) const
    {
       return mData.Station[i].Position[1];
    }
@@ -308,7 +314,7 @@ public:
    /**
     * Gets the z position of the i'th receiver. 
     */
-   float zPos( const int& i )
+   float zPos(const unsigned int i) const
    {
       return mData.Station[i].Position[2];
    }
@@ -316,7 +322,7 @@ public:
    /**
     * Gets the y rotation of the i'th receiver. 
     */
-   float xRot( const int& i )
+   float xRot(const unsigned int i) const
    {
       return mData.Station[i].Orientation[2];
    }
@@ -324,7 +330,7 @@ public:
    /**
     * Gets the y rotation of the i'th receiver. 
     */
-   float yRot( const int& i )
+   float yRot(const unsigned int i) const
    {
       return mData.Station[i].Orientation[1];
    }
@@ -332,7 +338,7 @@ public:
    /**
     * Gets the y rotation of the i'th receiver. 
     */
-   float zRot( const int& i )
+   float zRot(const unsigned int i) const
    {
       return mData.Station[i].Orientation[0];
    }
@@ -340,7 +346,7 @@ public:
    /**
     * Gets the x quaternion value of the i'th receiver. 
     */
-   float xQuat( const int& i ) 
+   float xQuat(const unsigned int i) const
    {
       return mData.Station[i].Orientation[2];
    }
@@ -348,7 +354,7 @@ public:
    /**
     * Gets the y quaternion value of the i'th receiver. 
     */
-   float yQuat( const int& i ) 
+   float yQuat(const unsigned int i) const
    {
       return mData.Station[i].Orientation[1];
    }
@@ -356,7 +362,7 @@ public:
    /**
     * Gets the z quaternion value of the i'th receiver. 
     */
-   float zQuat( const int& i ) 
+   float zQuat(const unsigned int i) const
    {
       return mData.Station[i].Orientation[0];
    }
@@ -364,7 +370,7 @@ public:
    /**
     * Gets the w quaternion value of the i'th receiver. 
     */
-   float wQuat( const int& i ) 
+   float wQuat(const unsigned int i) const
    {
       return mData.Station[i].Orientation[3];
    }
@@ -373,7 +379,7 @@ public:
 
    int analogData(const unsigned int i, const unsigned int j);
 
-   bool isActive() 
+   bool isActive() const
    {
       return mActive;
    }
