@@ -45,9 +45,9 @@ DPP_INIT
 DPP_STD_CPP([yes])
 
 AC_ARG_ENABLE([boost-hacks],
-              [  --disable-boost-hacks   Turn off workarounds for Boost
-                          versioning madness],
-              [BOOST_HACKS="$withval"], [BOOST_HACKS='yes'])
+              [  --enable-boost-hacks    Turn off workarounds for Boost
+                          header versioning madness],
+              [BOOST_HACKS="$withval"], [BOOST_HACKS='no'])
 
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
@@ -62,6 +62,12 @@ AC_ARG_WITH([boost-python],
                           Path to a Boost.Python V2
                           installation                    [default=/usr/local]],
             [BOOST_PYTHON_DIR="$withval"], [BOOST_PYTHON_DIR='/usr/local'])
+
+AC_ARG_WITH([boost-python-lib],
+            [  --with-boost-python-lib=<LIB NAME>
+                          The name of the Boost.Python
+                          library binary for linking      [default=Auto-detect]],
+            [bp_libname="$withval"], [bp_libname=''])
 
 AC_ARG_WITH([boost-version],
             [  --with-boost-version=<VER>
@@ -232,42 +238,48 @@ else
    boost_debug_suffix='_debug'
 fi
 
-if test "x$BOOST_HACKS" = "xyes" -a $boost_minor_ver -ge 31; then
+if test "x$BOOST_HACKS" = "xyes" ; then
    boost_ver_str=`echo $BOOST_VERSION | sed -e 's/\./_/g'`
    boost_extra_inc_dir="/boost-$boost_ver_str"
+fi
 
-   case $CC in
-      gcc)
-         toolset='gcc'
-         ;;
-      cygcl|msvccc|cl*|CL*)
-         toolset=${BOOST_TOOL:='vc7'}
-         ;;
-      cc)
-         if test "x$GCC" = "xyes" ; then
+if test "x$bp_libname" = "x" ; then
+   if test $boost_minor_ver -ge 31; then
+      case $CC in
+         gcc)
             toolset='gcc'
-         else
-            case $PLATFORM in
-               IRIX)
-                  toolset='mp'
-                  ;;
-               Solaris)
-                  toolset='sw'
-                  ;;
-            esac
-         fi
-         ;;
-   esac
+            ;;
+         cygcl|msvccc|cl*|CL*)
+            toolset=${BOOST_TOOL:='vc7'}
+            ;;
+         cc)
+            if test "x$GCC" = "xyes" ; then
+               toolset='gcc'
+            else
+               case $PLATFORM in
+                  IRIX)
+                     toolset='mp'
+                     ;;
+                  Solaris)
+                     toolset='sw'
+                     ;;
+               esac
+            fi
+            ;;
+      esac
 
-   # We can only use multi-threading versions of Boost libraries if we are not
-   # using SPROC threads.  Boost does not support SPROC.
-   if test "x$VPR_SUBSYSTEM" != "xSPROC" ; then
-      threading='-mt'
+      # We can only use multi-threading versions of Boost libraries if we are
+      # not using SPROC threads.  Boost does not support SPROC.
+      if test "x$VPR_SUBSYSTEM" != "xSPROC" ; then
+         threading='-mt'
+      fi
+
+      BOOST_PYTHON_LIB="boost_python-$toolset$threading"
+   else
+      BOOST_PYTHON_LIB="boost_python"
    fi
-
-   BOOST_PYTHON_LIB="boost_python-$toolset$threading"
 else
-   BOOST_PYTHON_LIB="boost_python"
+   BOOST_PYTHON_LIB="$bp_libname"
 fi
 
 CPPFLAGS="${_pyj_save_CPPFLAGS}"

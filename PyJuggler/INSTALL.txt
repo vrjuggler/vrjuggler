@@ -143,7 +143,9 @@ all platforms, the usage of the configure script is the same.  The
 difference will be in the path to the natively compiled Boost.Python
 installation.  The Boost.Python installation directory must contain a
 subdirectory named 'include' with the Boost headers and a subdirectory
-named 'lib' with the Boost.Python compiled libraries.
+named 'lib' with the Boost.Python compiled libraries.  If you have the
+pre-packaged VR Juggler dependencies installed, then this path can be
+the value of the environment variable $VJ_DEPS_DIR.
 
 The short version of the build instructions for UNIX-based platforms
 (including Cygwin) is this:
@@ -165,9 +167,16 @@ THE PATCH VERSION!!  This extra option is needed because the Boost
 installation procedure incldues the Boost version number in the names of
 installed files and directories.
 
+If you are using your own Boost.Python installation rather than the
+one that comes with the pre-packaged VR Juggler dependencies, you may
+have to add --enable-boost-hacks in order for the Boost headers to be
+found correctly.
+
 If, for some reason, your Boost 1.31 (or newer) installation does not
 use the new naming conventions (the Boost.Python library is named
 libboost_python.so rather than libboost_python-gcc-mt.so), then add
-the option --diable-boost-hacks when you run configure.
+the option --with-boost-python-lib=boost_python.  This option can be
+used if you want to choose a specific Boost.Python build rather than
+the auto-detected default.
 
 $Id$
