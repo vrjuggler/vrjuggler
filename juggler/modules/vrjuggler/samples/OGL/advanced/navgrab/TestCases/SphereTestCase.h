@@ -109,7 +109,7 @@ public:
          std::cout << "SphereTestCase: stamp: moved:\n" << std::flush;
          
          gmtl::Point3f sphere_center = mNavGrabApp->mSphere.getCenter();
-         gmtl::Point3f correct_center(7.07136, 3.10896, -2.16408);
+         gmtl::Point3f correct_center(7.07136f, 3.10896f, -2.16408f);
          gmtl::Vec3f diff = sphere_center-correct_center;
          std::cout << "SphereTestCase: moved: diff:" << diff << std::endl;
 
