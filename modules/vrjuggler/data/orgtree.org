@@ -2,8 +2,6 @@ Begin "Zelda"
     "Include Descriptions File"
     "Include File"
     Begin "Displays"
-        "Simulator Display"
-        "Surface Display"
         "Display System"
         "Display Window"
     End
