@@ -46,9 +46,11 @@ namespace vrj
     */
    bool SoundManagerSonix::configAdd( jccl::ConfigChunkPtr chunk )
    {
-      vprDEBUG(vprDBG_ALL, 2) << "======================================" << "\n" << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL, 2) << "SoundManagerSonix is being configured..." << "\n" << vprDEBUG_FLUSH;
-      
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+         << "======================================\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+         << "SoundManagerSonix is being configured...\n" << vprDEBUG_FLUSH;
+
       if (!configCanHandle( chunk ))
       {
          std::cerr << "ERROR: Wrong chunk type in SoundManagerSonix\n" << std::flush;
@@ -56,17 +58,22 @@ namespace vrj
       }
 
       std::string manager_name = chunk->getName();
-      vprDEBUG(vprDBG_ALL, 2) << "My Name: " << manager_name << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "My Name: " << manager_name
+                                              << "\n" << vprDEBUG_FLUSH;
       std::string api_to_use = chunk->getProperty<std::string>( "api" );
-      vprDEBUG(vprDBG_ALL, 2) << "Use API: " << api_to_use << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "Use API: " << api_to_use
+                                              << "\n" << vprDEBUG_FLUSH;
       float listener_position[3];
       listener_position[0] = (float)chunk->getProperty<float>( "listener_position", 0 );
       listener_position[1] = (float)chunk->getProperty<float>( "listener_position", 1 );
       listener_position[2] = (float)chunk->getProperty<float>( "listener_position", 2 );
-      vprDEBUG(vprDBG_ALL, 2) << "Listener Position: " << listener_position[0] << "," << listener_position[1] << "," << listener_position[2] << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+         << "Listener Position: " << listener_position[0] << ","
+         << listener_position[1] << "," << listener_position[2] << "\n" << vprDEBUG_FLUSH;
       std::string file_search_path = chunk->getProperty<std::string>( "file_search_path" );
-      vprDEBUG(vprDBG_ALL, 2) << "Search path: " << file_search_path << "\n" << vprDEBUG_FLUSH;
-      
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+         << "Search path: " << file_search_path << "\n" << vprDEBUG_FLUSH;
+
       // configure sonix
       sonix::instance()->changeAPI( api_to_use );
       gmtl::Matrix44f mat;
@@ -75,7 +82,8 @@ namespace vrj
 
       // read the list of sounds
       int size = chunk->getNum( "Sounds" );
-      vprDEBUG(vprDBG_ALL, 2) << "Configuring " << size << " sounds.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "Configuring " << size
+                                              << " sounds.\n" << vprDEBUG_FLUSH;
       for (int x = 0; x < size; ++x)
       {
          jccl::ConfigChunkPtr sound_chunk = chunk->getProperty<jccl::ConfigChunkPtr>( "Sounds", x );
@@ -106,14 +114,24 @@ namespace vrj
          si.position[0] = position[0];
          si.position[1] = position[1];
          si.position[2] = position[2];
-         vprDEBUG(vprDBG_ALL, 2) << "- Configuring " << alias << " (" << filename << ")\n" << vprDEBUG_FLUSH;
-         vprDEBUG(vprDBG_ALL, 3) << "  + pos(" << position[0] << "," << position[1] << "," << position[2] << ")," << "loop(" << loop << "),\n" << vprDEBUG_FLUSH;
-         vprDEBUG(vprDBG_ALL, 3) << "  + amb(" << ambient << ")," << "ct(" << cutoff << ")," << "vl(" << volume << "),\n" << vprDEBUG_FLUSH;
-         vprDEBUG(vprDBG_ALL, 3) << "  + freq(" << pitchbend << ")," << "retrig(" << retriggerable << ")\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+            << "- Configuring " << alias << " (" << filename << ")\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+            << "  + pos(" << position[0] << "," << position[1] << ","
+            << position[2] << ")," << "loop(" << loop << "),\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+            << "  + amb(" << ambient << ")," << "ct(" << cutoff << "),"
+            << "vl(" << volume << "),\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+            << "  + freq(" << pitchbend << ")," << "retrig(" << retriggerable
+            << ")\n" << vprDEBUG_FLUSH;
 
          sonix::instance()->configure( alias, si );
       }
-      vprDEBUG(vprDBG_ALL, 2) << "======================================" << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+         << "======================================\n" << vprDEBUG_FLUSH;
 
       return true;
    }
@@ -165,4 +183,4 @@ namespace vrj
       // whatever...
    }
 
-}; // end namespace
+} // end namespace

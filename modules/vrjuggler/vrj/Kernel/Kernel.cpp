@@ -133,7 +133,8 @@ void Kernel::waitForKernelStop()
 void Kernel::controlLoop(void* nullParam)
 {
    boost::ignore_unused_variable_warning(nullParam);
-   vprDEBUG(vrjDBG_KERNEL,1) << "vjKernel::controlLoop: Started.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_KERNEL, vprDBG_CONFIG_LVL)
+      << "vrj::Kernel::controlLoop: Started.\n" << vprDEBUG_FLUSH;
 
    vprASSERT (NULL != vpr::Thread::self());
    mControlThread = vpr::Thread::self();
@@ -190,7 +191,8 @@ void Kernel::controlLoop(void* nullParam)
       updateFrameData();         // Any frame-based manager data
    }
 
-   vprDEBUG(vrjDBG_KERNEL,1) << "vjKernel::controlLoop: Exiting. \n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_KERNEL, vprDBG_CONFIG_LVL)
+      << "vrj::Kernel::controlLoop: Exiting. \n" << vprDEBUG_FLUSH;
 
    // Set the running status to false
    mExitWaitCondVar.acquire();
@@ -259,8 +261,9 @@ void Kernel::checkForReconfig()
 //             Give it the application
 void Kernel::changeApplication(App* newApp)
 {
-   vprDEBUG(vrjDBG_KERNEL,1) << "vjKernel::changeApplication: Changing to:"
-                           << newApp << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_KERNEL, vprDBG_CONFIG_LVL)
+      << "vrj::Kernel::changeApplication: Changing to:" << newApp << std::endl
+      << vprDEBUG_FLUSH;
 
    vprASSERT(vpr::Thread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
 

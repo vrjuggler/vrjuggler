@@ -162,7 +162,7 @@ simplePfNavApp::~simplePfNavApp()
 //: data init
 void simplePfNavApp::init()
 {
-   //vprDEBUG(vprDBG_ALL, 1) << "simplePfNavApp::init\n" << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "simplePfNavApp::init\n" << vprDEBUG_FLUSH;
    /* Projection::setNearFar( 0.4f, 200000 ); XXXX: */
 
    mStats.setToggleButton( "VJButton5" );
@@ -182,14 +182,16 @@ void simplePfNavApp::init()
 //: data init
 void simplePfNavApp::apiInit()
 {
-   //vprDEBUG(vprDBG_ALL,1) << "simplePfNavApp::apiInit\n" << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "simplePfNavApp::apiInit\n" << vprDEBUG_FLUSH;
 }
 
 //: data init
 void simplePfNavApp::preForkInit()
 {
    // Initialize type system
-   vprDEBUG(vprDBG_ALL,1) << "simplePfNavApp::preForkInit: Initializing new types.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+      << "simplePfNavApp::preForkInit: Initializing new types.\n"
+      << vprDEBUG_FLUSH;
 
    // Initialize loaders
    for (unsigned int x = 0; x < mModelList.size(); ++x)
@@ -282,7 +284,7 @@ void simplePfNavApp::preFrame()
          if (0 == (mStatusMessageEmitCount++ % 60))
          {
             gmtl::Vec3f cur_pos;
-            gmtl::setTrans( cur_pos, 
+            gmtl::setTrans( cur_pos,
                             mNavigationDCS->getNavigator()->getCurPos() );
             gmtl::Quatf quat;
             gmtl::set( quat, mNavigationDCS->getNavigator()->getCurPos() );
@@ -298,9 +300,9 @@ void simplePfNavApp::preFrame()
    }
 
    float speed = mNavigationDCS->getNavigator()->getSpeed();
-   
+
    /* do stuff based on if we collided or landed on something... */
-   
+
    // if we ran into something...
    // magic number, yay... this is for the box collider.
    gmtl::Vec3f c;
@@ -316,11 +318,11 @@ void simplePfNavApp::preFrame()
       }
       mColliding = true;
    }
-   else 
+   else
    {
       mColliding = false;
    }
-   
+
    // did ride collide?
    gmtl::Vec3f c2;
    if (mNavigationDCS->getNavigator()->numColliders() > 1)
@@ -337,7 +339,7 @@ void simplePfNavApp::preFrame()
       mRiding = true;
       mRideCount = 0;
    }
-   else 
+   else
    {
       // if it was true
       if (mRiding == true)
@@ -351,7 +353,7 @@ void simplePfNavApp::preFrame()
          mRiding = false;
       }
    }
-   
+
    if (speed > 0.001f)
    {
       mWalkingCount += mStopWatch.timeInstant;
@@ -374,7 +376,7 @@ void simplePfNavApp::preFrame()
    }
    //std::cout << speed << std::endl;
    mStopSound.setPitchBend( 0.2f + speed / 15.0f );
-   
+
    // play sound while accelerating...
    if (mGoButton->getData() == gadget::Digital::TOGGLE_ON)
    {
@@ -386,7 +388,7 @@ void simplePfNavApp::preFrame()
    }
    mAccelSound.setPitchBend( 0.2f + speed / 15.0f );
    mAmbientSound.trigger( -1 );
-   
+
    // show stats...
    if (mUseStats && haveFocus())
       mStats.preFrame();

@@ -70,7 +70,9 @@ public:
     */
    static void preForkInit()
    {
-      vprDEBUG( vprDBG_ALL, 1 )<<"[pfSoundTraverser] pfSoundTraverser::preForkInit(): Initializing sound node class type with performer\n"<<vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+         << "[pfSoundTraverser] pfSoundTraverser::preForkInit(): Initializing sound node class type with Performer\n"
+         << vprDEBUG_FLUSH;
       pfSoundNode::init();
    }
 
@@ -83,7 +85,10 @@ public:
     */
    static void replace( pfNode* node, const std::string& keyName = "_Sound_" )
    {
-      vprDEBUG( vprDBG_ALL, 1 )<<clrOutNORM( clrGREEN,"pfSoundTraverser: " ) <<"Checking graph for soundnodes (nodes with the "<<keyName.c_str()<<" extension...\n"<<vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+         << clrOutNORM(clrGREEN, "pfSoundTraverser: ")
+         << "Checking graph for soundnodes (nodes with the "
+         << keyName << " extension...\n" << vprDEBUG_FLUSH;
 
       // use the performer traversal mechanism
        pfuTraverser trav;
@@ -100,7 +105,10 @@ public:
     */
    static void enable( pfNode* node )
    {
-      vprDEBUG( vprDBG_ALL, 1 )<<clrOutNORM( clrGREEN,"pfSoundTraverser: [enable]" ) << " Enabling sounds in subgraph.\n"<<vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+         << clrOutNORM(clrGREEN,"pfSoundTraverser: [enable]")
+         << " Enabling sounds in subgraph.\n"
+         << vprDEBUG_FLUSH;
 
       // use the performer traversal mechanism
        pfuTraverser trav;
@@ -118,7 +126,9 @@ public:
     */
    static void disable( pfNode* node )
    {
-      vprDEBUG( vprDBG_ALL, 1 ) << clrOutNORM( clrGREEN, "pfSoundTraverser: [disable]" ) <<" Disabling sounds in subgraph.\n"<<vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+         << clrOutNORM(clrGREEN, "pfSoundTraverser: [disable]")
+         << " Disabling sounds in subgraph.\n" << vprDEBUG_FLUSH;
 
       // use the performer traversal mechanism
        pfuTraverser trav;
@@ -133,7 +143,9 @@ public:
    /** Triggers the sound. */
    static void trigger( pfNode* node )
    {
-      vprDEBUG( vprDBG_ALL, 1 ) << clrOutNORM( clrGREEN, "pfSoundTraverser: [soundOn]" ) << " Triggering sounds in subgraph.\n"<<vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+         << clrOutNORM(clrGREEN, "pfSoundTraverser: [soundOn]")
+         << " Triggering sounds in subgraph.\n" << vprDEBUG_FLUSH;
 
       // use the performer traversal mechanism
        pfuTraverser trav;
@@ -148,7 +160,9 @@ public:
    /** Stops the sound. */
    static void stop( pfNode* node )
    {
-      vprDEBUG( vprDBG_ALL, 1 ) << clrOutNORM( clrGREEN,"pfSoundTraverser: [soundOff]" ) << " Stopping sounds in subgraph.\n"<<vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+         << clrOutNORM(clrGREEN,"pfSoundTraverser: [soundOff]")
+         << " Stopping sounds in subgraph.\n" << vprDEBUG_FLUSH;
 
       // use the performer traversal mechanism
        pfuTraverser trav;

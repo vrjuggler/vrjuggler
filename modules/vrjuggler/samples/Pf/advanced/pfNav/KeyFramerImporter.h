@@ -50,10 +50,10 @@ namespace kev
       {
          gmtl::AxisAnglef axisAngle;
          gmtl::set( axisAngle, key.rotation() );
-         vprDEBUG(vprDBG_ALL,1)
+         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
             << "KEY " << key.time() << ": " << key.position()[0] <<", \t"
             << key.position()[1] << ", \t" << key.position()[2] << ", |#| "
-            << gmtl::Math::rad2Deg( axisAngle.getAngle() ) << ", " 
+            << gmtl::Math::rad2Deg( axisAngle.getAngle() ) << ", "
             << axisAngle.getAxis() << "\n" <<vprDEBUG_FLUSH;
       }
 

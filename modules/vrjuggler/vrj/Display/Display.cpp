@@ -77,23 +77,25 @@ void Display::configDisplayWindow(jccl::ConfigChunkPtr chunk)
    // NOTE: If there are errors, set them to some default value
    if(sizeX <= 0)
    {
-      vprDEBUG(vrjDBG_DISP_MGR,2) << "WARNING: window sizeX set to: " << sizeX
-                                << ".  Setting to 10." << std::endl
-                                << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DISP_MGR, vprDBG_WARNING_LVL)
+         << "WARNING: window sizeX set to: " << sizeX
+         << ".  Setting to 10." << std::endl << vprDEBUG_FLUSH;
       sizeX = 10;
    }
 
    if(sizeY <= 0)
    {
-      vprDEBUG(vrjDBG_DISP_MGR,2) << "WARNING: window sizeY set to: " << sizeY
-                                << ".  Setting to 10." << std::endl
-                                << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DISP_MGR, vprDBG_WARNING_LVL)
+         << "WARNING: window sizeY set to: " << sizeY
+         << ".  Setting to 10." << std::endl << vprDEBUG_FLUSH;
       sizeY = 10;
    }
 
    if(pipe < 0)
    {
-      vprDEBUG(vrjDBG_DISP_MGR,2) << "WARNING: pipe was negative, pipe set to: " << pipe << ".  Setting to 0.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DISP_MGR, vprDBG_WARNING_LVL)
+         << "WARNING: pipe was negative, pipe set to: " << pipe
+         << ".  Setting to 0.\n" << vprDEBUG_FLUSH;
       pipe = 0;
    }
 
