@@ -291,6 +291,17 @@ public class ConfigModule extends DefaultCoreModule {
 	}
 	return null;
     }
+
+
+    public ConfigChunkDB getChunkDB (File f) {
+	ConfigChunkDB db;
+	for (int i = 0; i < chunkdbs.size(); i++) {
+	    db = (ConfigChunkDB)chunkdbs.get(i);
+            if (db.getFile().equals (f))
+                return db;
+	}
+	return null;
+    }
     
 
 
@@ -708,13 +719,51 @@ public class ConfigModule extends DefaultCoreModule {
         if (f == null)
             return null;
 
+        ConfigChunkDB chunkdb;
+        boolean is_new_db = true;
+
+        // check if it's already loaded
+        chunkdb = getChunkDB (f);
+        if (chunkdb == null) {
+            chunkdb = new ConfigChunkDB();
+        }
+        else {
+            // if this file has already been loaded once, we need to
+            // decide wether to revert to saved or not.
+
+            boolean should_revert = false;
+            if (chunkdb.need_to_save && java.beans.Beans.isGuiAvailable()) {
+                int result = 
+                    JOptionPane.showConfirmDialog (
+                        null, "Do you want to revert to the saved '" + 
+                        chunkdb.getName() + "'?", 
+                        "Revert file?", 
+                        JOptionPane.YES_NO_OPTION, 
+                        JOptionPane.QUESTION_MESSAGE
+                        /*, Core.save_icn*/);
+                if (result == JOptionPane.YES_OPTION)
+                    should_revert = true;
+            }
+
+            if (should_revert) {
+                // get rid of old contents & load in new
+                chunkdb.clear();
+                is_new_db = false;
+            }
+            else {
+                // don't do anything; just return the found db
+                return chunkdb.getName();
+            }
+        }                
+
+
 	Core.consoleInfoMessage (component_name, "Loading ChunkDB: " + f);
-        ConfigChunkDB chunkdb = new ConfigChunkDB();
         try {
             chunkdb.setName(f.getName());
             chunkdb.setFile(f);
             ConfigIO.readConfigChunkDB (f, chunkdb, ConfigIO.GUESS);
-            addChunkDB (chunkdb);
+            if (is_new_db) 
+                addChunkDB (chunkdb);
 
             chunkdb.need_to_save = false;
 	    
