@@ -308,6 +308,7 @@ pre-install:
 
 # Do everything needed after installing the library binaries.
 post-install:
+	@$(MAKE) install-samples
 	@$(MAKE) install-test
 	@$(MAKE) install-tools
 	@$(MAKE) install-data
@@ -350,7 +351,18 @@ install-plugins install-plugins-dbg install-plugins-opt install-plugins-prof:
         fi
 	$(MAKE) -C cluster/Plugins $@
 
-
+# Install the sample code.
+install-samples:
+	@echo "------------------------------------------------"
+	@echo "Installing sample code"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.samples.dist -p $(projdatadir)
+	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/samples	\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/samples
+	$(PERL) $(scriptdir)/makefiles-gen.pl --mode="$(FILE_PERMS)"	\
+          --prefix="$(projdatadir)/samples" --vars="$(topdir)/VARS.pl"	\
+          --startdir="$(top_srcdir)/samples" $(_GROUP_OPT_PL) --srcdir="."
 
 # Install the test programs.
 install-test:

@@ -455,6 +455,7 @@ AC_CONFIG_FILES([
    mtree/GADGET.data.dist
    mtree/GADGET.include.dist
    mtree/GADGET.install.dist
+   mtree/GADGET.samples.dist
    mtree/GADGET.test.dist
    mtree/GADGET.tools.dist
    VARS.pl
