@@ -49,6 +49,9 @@ namespace vpr {
  * Cross-platform serial port interface.
  *
  * @author Patrick Hartling
+ *
+ * @see vpr::SerialPortImplTermios
+ * @see vpr::SerialPortImplWin32
  */
 template<class RealSerialPortImpl>
 class SerialPort_t : public Port {
