@@ -79,6 +79,11 @@ use vars qw/*name *dir *prune/;
 *dir    = *File::Find::dir;
 *prune  = *File::Find::prune;
 
+sub print_exit_message {
+    print "NOTE: Please remember to add entry to ChangeLog for major 
+changes\n";
+}
+
 sub cleanup_lockfiles {
     my $base_dir = (split(/\s/, "$ARGV[0]"))[0];
     my $module = (split('/', "$base_dir"))[0];
@@ -748,4 +753,5 @@ if ($rcsidinfo == 1) {
 &mail_notification(@text);
 &cleanup_tmpfiles();
 &cleanup_lockfiles();
+&print_exit_message();
 exit 0;
