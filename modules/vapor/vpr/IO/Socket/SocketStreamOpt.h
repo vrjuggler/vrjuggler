@@ -63,18 +63,18 @@ public:
     * Default constructor.  This does nothing and exists only so that we can
     * build a DLL on Win32.
     */
-   SocketStreamOpt(void);
+   SocketStreamOpt();
 
    /**
     * Default destructor.  This does nothing and exists only so that we can
     * build a DLL on Win32.
     */
-   virtual ~SocketStreamOpt(void);
+   virtual ~SocketStreamOpt();
 
    /**
     *
     */
-   vpr::ReturnStatus getMaxSegmentSize (vpr::Int32& size)
+   vpr::ReturnStatus getMaxSegmentSize(vpr::Int32& size)
    {
       vpr::SocketOptions::Data option;
       vpr::ReturnStatus retval;
@@ -92,7 +92,7 @@ public:
    /**
     *
     */
-   vpr::ReturnStatus setMaxSegmentSize (const vpr::Int32 size)
+   vpr::ReturnStatus setMaxSegmentSize(const vpr::Int32 size)
    {
       vpr::SocketOptions::Data option;
       option.max_segment = size;
@@ -110,7 +110,7 @@ public:
     *                segements.  Otherwise, the Nagel alorithm is delaying
     *                the transmission.
     */
-   vpr::ReturnStatus getNoDelay (bool& enabled)
+   vpr::ReturnStatus getNoDelay(bool& enabled)
    {
       vpr::SocketOptions::Data option;
       vpr::ReturnStatus retval;
@@ -129,13 +129,13 @@ public:
     * Sets the current no-delay status for this socket.  If no-delay is true,
     * then the Nagel algorithm will be disabled.
     *
-    * @param enable_val The Boolean enable/disable state for no-delay on this
-    *                   socket.
+    * @param enableVal The Boolean enable/disable state for no-delay on this
+    *                  socket.
     */
-   vpr::ReturnStatus setNoDelay (const bool enable_val)
+   vpr::ReturnStatus setNoDelay(const bool enableVal)
    {
       vpr::SocketOptions::Data option;
-      option.no_delay = enable_val;
+      option.no_delay = enableVal;
       return setOption(vpr::SocketOptions::NoDelay, option);
    }
 };

@@ -64,18 +64,18 @@ public:
     * Default constructor.  This does nothing and exists only so that we can
     * build a DLL on Win32.
     */
-   SocketDatagramOpt(void);
+   SocketDatagramOpt();
 
    /**
     * Default destructor.  This does nothing and exists only so that we can
     * build a DLL on Win32.
     */
-   virtual ~SocketDatagramOpt(void);
+   virtual ~SocketDatagramOpt();
 
    /**
     * Gets the multicast interface for this datagram socket.
     */
-   vpr::ReturnStatus getMcastInterface (vpr::InetAddr& mcast_if)
+   vpr::ReturnStatus getMcastInterface(vpr::InetAddr& mcastIf)
    {
       vpr::SocketOptions::Data option;
       vpr::ReturnStatus retval;
@@ -84,7 +84,7 @@ public:
 
       if ( retval.success() )
       {
-         mcast_if = option.mcast_if;
+         mcastIf = option.mcast_if;
       }
 
       return retval;
@@ -93,10 +93,10 @@ public:
    /**
     * Sets the multicast interface for this datagram socket.
     */
-   vpr::ReturnStatus setMcastInterface (const vpr::InetAddr& mcast_if)
+   vpr::ReturnStatus setMcastInterface(const vpr::InetAddr& mcastIf)
    {
       vpr::SocketOptions::Data option;
-      option.mcast_if = mcast_if;
+      option.mcast_if = mcastIf;
       return setOption(SocketOptions::McastInterface, option);
    }
 
@@ -104,7 +104,7 @@ public:
     * Gets the multicast time-to-live parameter for packets sent on this
     * socket.
     */
-   vpr::ReturnStatus getMcastTimeToLive (vpr::Uint8& ttl)
+   vpr::ReturnStatus getMcastTimeToLive(vpr::Uint8& ttl)
    {
       vpr::SocketOptions::Data option;
       vpr::ReturnStatus retval;
@@ -123,7 +123,7 @@ public:
     * Sets the multicast time-to-live parameter for packets sent on this
     * socket.
     */
-   vpr::ReturnStatus setMcastTimeToLive (const vpr::Uint8 ttl)
+   vpr::ReturnStatus setMcastTimeToLive(const vpr::Uint8 ttl)
    {
       vpr::SocketOptions::Data option;
       option.mcast_ttl = ttl;
@@ -133,7 +133,7 @@ public:
    /**
     *
     */
-   vpr::ReturnStatus getMcastLoopback (vpr::Uint8& loop)
+   vpr::ReturnStatus getMcastLoopback(vpr::Uint8& loop)
    {
       vpr::SocketOptions::Data option;
       vpr::ReturnStatus retval;
@@ -151,7 +151,7 @@ public:
    /**
     *
     */
-   vpr::ReturnStatus setMcastLoopback (const vpr::Uint8 loop)
+   vpr::ReturnStatus setMcastLoopback(const vpr::Uint8 loop)
    {
       vpr::SocketOptions::Data option;
       option.mcast_loopback = loop;
@@ -161,7 +161,7 @@ public:
    /**
     *
     */
-   vpr::ReturnStatus addMcastMember (const vpr::McastReq& request)
+   vpr::ReturnStatus addMcastMember(const vpr::McastReq& request)
    {
       vpr::SocketOptions::Data option;
       option.mcast_add_member = request;
@@ -171,7 +171,7 @@ public:
    /**
     *
     */
-   vpr::ReturnStatus dropMcastMember (const vpr::McastReq& request)
+   vpr::ReturnStatus dropMcastMember(const vpr::McastReq& request)
    {
       vpr::SocketOptions::Data option;
       option.mcast_drop_member = request;
