@@ -55,4 +55,10 @@ public interface ConfigIOConstants
 
    /** The JDOM definition namespace object. */
    public static final Namespace DEF_NS = Namespace.getNamespace(DEF_NS_str);
+
+   /** The location of the configuration schema. */
+   public static final String CFG_SCHEMA = CFG_NS_str + ".xsd";
+
+   /** The location of the config definition schema. */
+   public static final String DEF_SCHEMA = DEF_NS_str + ".xsd";
 }
