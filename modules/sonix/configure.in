@@ -242,8 +242,8 @@ dnl                 SOUND_SUBSYSTEMS="$withval", SOUND_SUBSYSTEMS=$1)
               
 dnl does the user want top disable openal?
 AC_ARG_ENABLE(openal,
-              [  --enable-openal   Compile in OpenAL support [default=yes]],
-              OPENAL_ENABLED="$enableval", OPENAL_ENABLED=$1)
+              [  --enable-openal         Compile in OpenAL support       [default=yes]],
+              [OPENAL_ENABLED="$enableval"], [OPENAL_ENABLED='yes'])
 dnl append the openal stuff...
 OPENAL_API='N'
 if test "x$OPENAL_ENABLED" = "xno" ; then
@@ -259,7 +259,7 @@ else
       echo "+ added OpenAL to the compile and link paths"
    else
       if test "x$OPENAL_ENABLED" = "xyes" ; then
-         AC_MSG_ERROR(*** you requested to use OpenAL as one of your audio subsystems, but it was not found.  Aborting... ***)
+         AC_MSG_WARN(*** you requested to use OpenAL as one of your audio subsystems, but it was not found. ***)
       fi
    fi
 fi
@@ -267,8 +267,8 @@ fi
 
 dnl does the user want to disable subsynth?
 AC_ARG_ENABLE(subsynth,
-              [  --enable-subsynth   Compile in Subsynth support [default=yes]],
-              SUBSYNTH_ENABLED="$enableval", SUBSYNTH_ENABLED=$1)
+              [  --enable-subsynth       Compile in Subsynth support     [default=yes]],
+              [SUBSYNTH_ENABLED="$enableval"], [SUBSYNTH_ENABLED='yes'])
 dnl append the subsynth stuff...
 SUBSYNTH_API='N'
 if test "x$SUBSYNTH_ENABLED" = "xno" ; then
@@ -286,15 +286,15 @@ else
       echo "+ added Subsynth to the compile and link paths"
    else
       if test "x$SUBSYNTH_ENABLED" = "xyes" ; then
-         AC_MSG_ERROR(*** you requested to use Subsynth as one of your audio subsystems, but it was not found.  Aborting... ***)
+         AC_MSG_WARN(*** you requested to use Subsynth as one of your audio subsystems, but it was not found. ***)
       fi
    fi
 fi
 
 dnl does the user want AW?
 AC_ARG_ENABLE(audioworks,
-              [  --enable-audioworks   Compile in AudioWorks support [default=yes]],
-              AUDIOWORKS_ENABLED="$enableval", AUDIOWORKS_ENABLED=$1)
+              [  --enable-audioworks     Compile in AudioWorks support   [default=yes]],
+              [AUDIOWORKS_ENABLED="$enableval"], [AUDIOWORKS_ENABLED='yes'])
 dnl append the openal stuff...
 AUDIOWORKS_API='N'
 if test "x$AUDIOWORKS_ENABLED" = "xno" ; then
@@ -310,7 +310,7 @@ else
       echo "+ added AudioWorks to the compile and link paths"
    else
       if test "x$AUDIOWORKS_ENABLED" = "xyes" ; then
-         AC_MSG_ERROR(*** you requested to use AudioWorks as one of your audio subsystems, but it was not found.  Aborting... ***)
+         AC_MSG_WARN(*** you requested to use AudioWorks as one of your audio subsystems, but it was not found. ***)
       fi
    fi
 fi
