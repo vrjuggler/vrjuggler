@@ -33,18 +33,18 @@ public:
 
 public:
    virtual void read_s(Status& status,
-                         void* buffer, const size_t length,
-                          ssize_t& bytes_read,
+                         void* buffer, const vpr::Uint32 length,
+                          vpr::Uint32& bytes_read,
                           const vpr::Interval timeout = vpr::Interval::NoTimeout);
    
    virtual void readn_s(Status& status,
-                          void* buffer, const size_t length,
-                           ssize_t& bytes_read,
+                          void* buffer, const vpr::Uint32 length,
+                           vpr::Uint32& bytes_read,
                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    virtual void write_s(Status& status,
-                          const void* buffer, const size_t length,
-                           ssize_t& bytes_written,
+                          const void* buffer, const vpr::Uint32 length,
+                           vpr::Uint32& bytes_written,
                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
       
 protected:

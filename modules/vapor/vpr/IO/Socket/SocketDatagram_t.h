@@ -109,8 +109,8 @@ public:
      * Receives a message from the designated source.
      */
     inline Status
-    recvfrom (void* msg, const size_t len, const int flags,
-              vpr::InetAddr& from, ssize_t& bytes_read,
+    recvfrom (void* msg, const vpr::Uint32 len, const int flags,
+              vpr::InetAddr& from, vpr::Uint32& bytes_read,
               const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return m_socket_dgram_imp.recvfrom(msg, len, flags, from, bytes_read,
@@ -121,8 +121,8 @@ public:
      * Receives a message from the designated source.
      */
     Status
-    recvfrom (std::string& msg, const size_t len, const int flags,
-              vpr::InetAddr& from, ssize_t& bytes_read,
+    recvfrom (std::string& msg, const vpr::Uint32 len, const int flags,
+              vpr::InetAddr& from, vpr::Uint32& bytes_read,
               const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         msg.resize(length);
@@ -136,8 +136,8 @@ public:
      * Receives a message from the designated source.
      */
     Status
-    recvfrom (std::vector<vpr::Uint8>& msg, const size_t len, const int flags,
-              vpr::InetAddr& from, ssize_t& bytes_read,
+    recvfrom (std::vector<vpr::Uint8>& msg, const vpr::Uint32 len,
+              const int flags, vpr::InetAddr& from, vpr::Uint32& bytes_read,
               const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         Status retval;
@@ -161,8 +161,8 @@ public:
      * Sends a message to the designated recipient.
      */
     inline Status
-    sendto (const void* msg, const size_t len, const int flags,
-            const vpr::InetAddr& to, ssize_t& bytes_sent,
+    sendto (const void* msg, const vpr::Uint32 len, const int flags,
+            const vpr::InetAddr& to, vpr::Uint32& bytes_sent,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return m_socket_dgram_imp.sendto(msg, len, flags, to, bytes_sent,
@@ -173,8 +173,8 @@ public:
      * Sends a message to the designated recipient.
      */
     inline Status
-    sendto (const std::string& msg, const size_t len, const int flags,
-            const vpr::InetAddr& to, ssize_t& bytes_sent,
+    sendto (const std::string& msg, const vpr::Uint32 len, const int flags,
+            const vpr::InetAddr& to, vpr::Uint32& bytes_sent,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         vprASSERT(length <= msg.size() && "Length is bigger than data given");
@@ -185,8 +185,8 @@ public:
      * Sends a message to the designated recipient.
      */
     inline Status
-    sendto (const std::vector<vpr::Uint8>& msg, const size_t len,
-            const int flags, const vpr::InetAddr& to, ssize_t& bytes_sent,
+    sendto (const std::vector<vpr::Uint8>& msg, const vpr::Uint32 len,
+            const int flags, const vpr::InetAddr& to, vpr::Uint32& bytes_sent,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         vprASSERT(length <= msg.size() && "Length is bigger than data given");

@@ -130,7 +130,7 @@ public:
        copy_connector = new vpr::SocketStream (connector_socket);
 
        if (result1 != false) {
-         ssize_t bytes_read;
+         vpr::Uint32 bytes_read;
          vpr::Status status = copy_connector->read (buffer, 40, bytes_read);
          if (status.success())
             copy_connector->close();
@@ -199,7 +199,7 @@ public:
       assertTestThread(copy_acceptor->getLocalAddr() == acceptor_socket.getLocalAddr());
 
       if (copy_child != NULL) {
-         ssize_t bytes_written;
+         vpr::Uint32 bytes_written;
          copy_child->write(buffer, sizeof(buffer), bytes_written);
          assertTestThread(copy_child->getType() == child_socket.getType());
          assertTestThread(copy_child->getRemoteAddr() == child_socket.getRemoteAddr());

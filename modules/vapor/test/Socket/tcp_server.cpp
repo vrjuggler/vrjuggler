@@ -57,7 +57,7 @@ main (int argc, char* argv[]) {
     if ( sock.openServer().success() ) {
         vpr::SocketStream client_sock;
         vpr::Status status;
-        ssize_t bytes;
+        vpr::Uint32 bytes;
         char buffer[] = "Hello there!";
 //        std::string buffer = "Hello there!";
 

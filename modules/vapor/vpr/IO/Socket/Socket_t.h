@@ -323,7 +323,7 @@ public:
      * <code>vpr::Interval::NoTimeout</code>.
      */
     inline vpr::Status
-    recv (void* buffer, const size_t length, ssize_t& bytes_read,
+    recv (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
           const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return read(buffer, length, bytes_read, timeout);
@@ -358,7 +358,8 @@ public:
      *         could not begin within the timeout interval.
      */
     inline vpr::Status
-    recv (std::string& buffer, const size_t length, ssize_t& bytes_read,
+    recv (std::string& buffer, const vpr::Uint32 length,
+          vpr::Uint32& bytes_read,
           const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
        return read(buffer, length, bytes_read, timeout);
@@ -393,8 +394,8 @@ public:
      *         could not begin within the timeout interval.
      */
     inline vpr::Status
-    recv (std::vector<vpr::Uint8>& buffer, const size_t length,
-          ssize_t& bytes_read,
+    recv (std::vector<vpr::Uint8>& buffer, const vpr::Uint32 length,
+          vpr::Uint32& bytes_read,
           const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
        return read(buffer, length, bytes_read, timeout);
@@ -426,7 +427,7 @@ public:
      *         non-blocking mode, and there is no data to receive.
      */
     inline vpr::Status
-    recvn (void* buffer, const size_t length, ssize_t& bytes_read,
+    recvn (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return readn(buffer, length, bytes_read, timeout);
@@ -459,7 +460,8 @@ public:
      *         receive.
      */
     inline vpr::Status
-    recvn (std::string& buffer, const size_t length, ssize_t& bytes_read,
+    recvn (std::string& buffer, const vpr::Uint32 length,
+           vpr::Uint32& bytes_read,
            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return readn(buffer, length, bytes_read, timeout);
@@ -494,8 +496,8 @@ public:
      *         could not begin within the timeout interval.
      */
     inline vpr::Status
-    recvn (std::vector<vpr::Uint8>& buffer, const size_t length,
-           ssize_t& bytes_read,
+    recvn (std::vector<vpr::Uint8>& buffer, const vpr::Uint32 length,
+           vpr::Uint32& bytes_read,
            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return readn(buffer, length, bytes_read, timeout);
@@ -528,7 +530,8 @@ public:
      *         could not begin within the timeout interval.
      */
     inline vpr::Status
-    send (const void* buffer, const size_t length, ssize_t& bytes_written,
+    send (const void* buffer, const vpr::Uint32 length,
+          vpr::Uint32& bytes_written,
           const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return write(buffer, length, bytes_written, timeout);
@@ -562,8 +565,8 @@ public:
      *         could not begin within the timeout interval.
      */
     inline vpr::Status
-    send (const std::string& buffer, const size_t length,
-          ssize_t& bytes_written,
+    send (const std::string& buffer, const vpr::Uint32 length,
+          vpr::Uint32& bytes_written,
           const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
        vprASSERT( length <= buffer.size() && "length was bigger than the data given" );
@@ -598,8 +601,8 @@ public:
      *         could not begin within the timeout interval.
      */
     inline vpr::Status
-    send (const std::vector<vpr::Uint8>& buffer, const size_t length,
-          ssize_t& bytes_written,
+    send (const std::vector<vpr::Uint8>& buffer, const vpr::Uint32 length,
+          vpr::Uint32& bytes_written,
           const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
        vprASSERT( length <= buffer.size() && "length was bigger than the data given" );
@@ -726,7 +729,7 @@ protected:
      *         vpr::Status::Failure is returned if the read operation failed.
      */
     virtual vpr::Status
-    read_i (void* buffer, const size_t length, ssize_t& bytes_read,
+    read_i (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return m_socket_imp->read_i(buffer, length, bytes_read, timeout);
@@ -761,7 +764,7 @@ protected:
      *         vpr::Status::Failure is returned if the read operation failed.
      */
     virtual vpr::Status
-    readn_i (void* buffer, const size_t length, ssize_t& bytes_read,
+    readn_i (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return m_socket_imp->readn_i(buffer, length, bytes_read, timeout);
@@ -793,7 +796,8 @@ protected:
      *         vpr::Status::Failure is returned if the write operation failed.
      */
     virtual vpr::Status
-    write_i (const void* buffer, const size_t length, ssize_t& bytes_written,
+    write_i (const void* buffer, const vpr::Uint32 length,
+             vpr::Uint32& bytes_written,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return m_socket_imp->write_i(buffer, length, bytes_written, timeout);

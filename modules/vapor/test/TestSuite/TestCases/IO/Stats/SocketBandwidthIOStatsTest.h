@@ -97,7 +97,7 @@ public:
        vpr::SocketAcceptor acceptor;
        vpr::SocketStream* sock(NULL);
        vpr::Status ret_val;
-       ssize_t bytes_written;
+       vpr::Uint32 bytes_written;
 
        // Open the acceptor
        ret_val = acceptor.open(local_acceptor_addr);
@@ -165,7 +165,7 @@ public:
    void testBandwidth_connector(void* arg)
    {
       vpr::Status ret_val;
-      ssize_t bytes_read;
+      vpr::Uint32 bytes_read;
       vpr::InetAddr remote_addr;
       remote_addr.setAddress("localhost", mRendevousPort);
       vpr::SocketConnector connector;           // Connect to acceptor

@@ -268,18 +268,22 @@ SocketImplNSPR::connect (vpr::Interval timeout) {
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
 vpr::Status
-SocketImplNSPR::read_i (void* buffer, const size_t length, ssize_t& bytes_read,
+SocketImplNSPR::read_i (void* buffer, const vpr::Uint32 length,
+                        vpr::Uint32& bytes_read,
                         const vpr::Interval timeout)
 {
    vpr::Status retval;
+   PRInt32 bytes;
 
    m_blocking_fixed = true;
 
-   bytes_read = PR_Recv(m_handle, buffer, length, 0, NSPR_getInterval(timeout));
+   bytes = PR_Recv(m_handle, buffer, length, 0, NSPR_getInterval(timeout));
 
    // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
    if ( bytes_read == -1 ) {
       PRErrorCode err_code = PR_GetError();
+
+      bytes_read = 0;
 
       if ( err_code == PR_WOULD_BLOCK_ERROR ) {
          retval.setCode(vpr::Status::WouldBlock);
@@ -291,6 +295,9 @@ SocketImplNSPR::read_i (void* buffer, const size_t length, ssize_t& bytes_read,
          retval.setCode(vpr::Status::Failure);
       }
    }
+   else {
+      bytes_read = bytes;
+   }
 
    return retval;
 }
@@ -298,19 +305,22 @@ SocketImplNSPR::read_i (void* buffer, const size_t length, ssize_t& bytes_read,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 vpr::Status
-SocketImplNSPR::readn_i (void* buffer, const size_t length,
-                         ssize_t& bytes_read,
+SocketImplNSPR::readn_i (void* buffer, const vpr::Uint32 length,
+                         vpr::Uint32& bytes_read,
                          const vpr::Interval timeout)
 {
    vpr::Status retval;
+   PRInt32 bytes;
 
    m_blocking_fixed = true;
 
-   bytes_read = PR_Recv(m_handle, buffer, length, 0, NSPR_getInterval(timeout));
+   bytes = PR_Recv(m_handle, buffer, length, 0, NSPR_getInterval(timeout));
 
    // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
-   if ( bytes_read == -1 ) {
+   if ( bytes == -1 ) {
       PRErrorCode err_code = PR_GetError();
+
+      bytes_read = 0;
 
       if ( err_code == PR_WOULD_BLOCK_ERROR ) {
          retval.setCode(vpr::Status::WouldBlock);
@@ -322,6 +332,9 @@ SocketImplNSPR::readn_i (void* buffer, const size_t length,
          retval.setCode(vpr::Status::Failure);
       }
    }
+   else {
+      bytes_read = bytes;
+   }
 
    return retval;
 }
@@ -329,18 +342,21 @@ SocketImplNSPR::readn_i (void* buffer, const size_t length,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 vpr::Status
-SocketImplNSPR::write_i (const void* buffer, const size_t length,
-                         ssize_t& bytes_written, const vpr::Interval timeout)
+SocketImplNSPR::write_i (const void* buffer, const vpr::Uint32 length,
+                         vpr::Uint32& bytes_written,
+                         const vpr::Interval timeout)
 {
    vpr::Status retval;
+   PRInt32 bytes;
 
    m_blocking_fixed = true;
 
-   bytes_written = PR_Send(m_handle, buffer, length, 0,
-                           NSPR_getInterval(timeout));
+   bytes = PR_Send(m_handle, buffer, length, 0, NSPR_getInterval(timeout));
 
-   if ( bytes_written == -1 ) {
+   if ( bytes == -1 ) {
       PRErrorCode err_code = PR_GetError();
+
+      bytes_written = 0;
 
       if ( err_code == PR_WOULD_BLOCK_ERROR ) {
          retval.setCode(vpr::Status::WouldBlock);
@@ -351,6 +367,9 @@ SocketImplNSPR::write_i (const void* buffer, const size_t length,
       else {
          retval.setCode(vpr::Status::Failure);
       }
+   }
+   else {
+      bytes_written = bytes;
    }
 
    return retval;
