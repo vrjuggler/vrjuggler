@@ -51,9 +51,9 @@ class GADGET_CLASS_API MsgPackage{
     int mDataLength;
 
     // Mostly used when receiving data
-    ushort mOpcode;
-    ushort mSenderId;
-    ushort mReceiverId;
+    vpr::Uint16 mOpcode;
+    vpr::Uint16 mSenderId;
+    vpr::Uint16 mReceiverId;
     std::string mDataString;  // can hold the name of the device being requested
 
 public:
@@ -70,8 +70,8 @@ public:
    void clear(){ mDataLength = 0; }
 
    // The sender and receiver ids found inside messages
-   ushort getSenderId(){return mSenderId;}
-   ushort getReceiverId(){return mReceiverId;}
+   vpr::Uint16 getSenderId(){return mSenderId;}
+   vpr::Uint16 getReceiverId(){return mReceiverId;}
     
    // GetDataString
    // When data is part of an incoming message, this class parses the message
@@ -81,14 +81,14 @@ public:
    int getDataLength() const { return mDataLength; }
 
    // creates a device request message with the specified id and name
-   void createDeviceRequest(ushort device_id, const std::string device_name);
+   void createDeviceRequest(vpr::Uint16 device_id, const std::string device_name);
     
    // creates a device acknowledgement message with the specified id and name
-   void createDeviceAck(const ushort remote_device_id, const ushort local_device_id, const std::string device_name);
+   void createDeviceAck(const vpr::Uint16 remote_device_id, const vpr::Uint16 local_device_id, const std::string device_name);
 
    // creates a rejection (negative acknowledgement) message with the specified id and name
    // for simplicity, same as ACK, but with different opcode
-   void createDeviceNack(const ushort remote_device_id, const ushort local_device_id, const std::string device_name);
+   void createDeviceNack(const vpr::Uint16 remote_device_id, const vpr::Uint16 local_device_id, const std::string device_name);
 
    // processes a device request message
    // returns the number of bytes used from buffer (excluding the already read opcode)
