@@ -236,13 +236,13 @@ void OpenALSoundImplementation::setAmbient( const std::string& alias, bool ambie
       // if positional
       if (ambient == false)
       {
-         alSourcef( mBindLookup[alias].source, AL_SOURCE_RELATIVE, true );
+         alSourcef( mBindLookup[alias].source, AL_SOURCE_RELATIVE, AL_TRUE );
       }
       // if ambient
       else
       {
          float pos[3] = { 0, 0, 0 };
-         alSourcef( mBindLookup[alias].source, AL_SOURCE_RELATIVE, false );
+         alSourcef( mBindLookup[alias].source, AL_SOURCE_RELATIVE, AL_FALSE );
          alSourcefv( mBindLookup[alias].source, AL_POSITION, pos );
       }      
    }
@@ -271,6 +271,14 @@ void OpenALSoundImplementation::setPosition( const std::string& alias, float x, 
    {
       if (this->isAmbient( alias ) == false)
       {
+         // @todo openal has a bug where SOURCE_RELATIVE set to true causes 
+         // GAIN_LINEAR_LOKI not to work at position == 0,0,0
+         
+         // @todo openal also has a bug where SOURCE_RELATIVE set to true causes
+         // PITCH not to work at position != 0,0,0
+         
+         // this is not a good thing, since we can't write a hack that will work!...
+
          float pos[3] = { x, y, z };
          alSourcefv( mBindLookup[alias].source, AL_POSITION, pos );
          // @todo: update AL_VELOCITY based on position over time...
@@ -347,7 +355,11 @@ void OpenALSoundImplementation::setVolume( const std::string& alias, float amoun
    snx::SoundImplementation::setVolume( alias, amount );
    if (mBindLookup.count( alias ) > 0 && mSounds.count( alias ) > 0)
    {
+#ifndef WIN32
+      alSourcef( mBindLookup[alias].source, AL_GAIN_LINEAR_LOKI, amount );
+#else
       alSourcef( mBindLookup[alias].source, AL_GAIN, amount );
+#endif      
    }
 }
 
@@ -357,8 +369,12 @@ void OpenALSoundImplementation::setCutoff( const std::string& alias, float amoun
    snx::SoundImplementation::setCutoff( alias, amount );
    if (mBindLookup.count( alias ) > 0 && mSounds.count( alias ) > 0)
    {
-      // @todo: cutoff is not implemented in openal, use gain instead... :(
+      // @todo: cutoff is not defined in openal, use gain instead... :(
+#ifndef WIN32
+      alSourcef( mBindLookup[alias].source, AL_GAIN_LINEAR_LOKI, amount );
+#else
       alSourcef( mBindLookup[alias].source, AL_GAIN, amount );
+#endif      
    }
 }  
 
@@ -553,7 +569,6 @@ void OpenALSoundImplementation::bind( const std::string& alias )
             //std::cerr << "DEBUG: buffered data success [bufferID="<<bufferID<<"]\n" << std::flush;
          }
 
-      
          // associate a source with the buffer
          alGenSources( 1, &sourceID );
          if (alGetError() != AL_NO_ERROR)
@@ -564,16 +579,18 @@ void OpenALSoundImplementation::bind( const std::string& alias )
             break;
          }
          alSourcei( sourceID, AL_BUFFER, bufferID );
-         alSourcei( sourceID, AL_LOOPING, AL_FALSE );
-         alSourcef( sourceID, AL_MIN_GAIN, 0.0f ); // off
-         alSourcef( sourceID, AL_MAX_GAIN, 1.0f ); // full
-         alSourcef( sourceID, AL_SOURCE_RELATIVE, true ); // positional
 
-         this->setPosition( alias, soundInfo.position[0], soundInfo.position[1], soundInfo.position[2] );
-         
          // store the resource IDs for later use...
          mBindLookup[alias].source = sourceID;
          mBindLookup[alias].buffer = bufferID;
+         
+         // set some defaults...
+         alSourcei( sourceID, AL_LOOPING, AL_FALSE );
+         alSourcef( sourceID, AL_MIN_GAIN, 0.0f ); // off
+         alSourcef( sourceID, AL_MAX_GAIN, 1.0f ); // full
+         
+         this->setAmbient( alias, soundInfo.ambient );
+         this->setPosition( alias, soundInfo.position[0], soundInfo.position[1], soundInfo.position[2] );
          break;
       }
    }
