@@ -29,6 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 #ifndef _VJ_MATH_H_
 #define _VJ_MATH_H_
 
@@ -44,17 +45,16 @@
 /* vjMath constants */
 
 //: PI
-const float VJ_PI   = 3.14159265358979323846f;
+extern const float VJ_PI;
 
 //: PI * 0.5
-const float VJ_PI_2 = 1.57079632679489661923f;
+extern const float VJ_PI_2;
 
 //: PI * 0.25
-const float VJ_PI_4 = 0.78539816339744830962f;
+extern const float VJ_PI_4;
 
 //: default epsillon used by some juggler math routines...
-// const float VJ_EPSILLON_DEFAULT = 1e-6f;
-#define VJ_EPSILLON_DEFAULT 1e-6f
+extern const float VJ_EPSILLON_DEFAULT;
 
 //: x-platform standard math routines.
 class vjMath 
