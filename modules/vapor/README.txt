@@ -35,7 +35,7 @@ Table of contents:
         officially supported):
 
             HP-UX 10.20 and 11.00
-            FreeBSD 4.x and 5.0-CURRENT (x86)
+            FreeBSD 4.x through 5.0-CURRENT (x86)
             Sun Solaris 7 (x86)
             Sun Solaris 8 (x86 and SPARC) with patches up through June 25, 2001
             Mac OS X
@@ -43,25 +43,35 @@ Table of contents:
     B. Minimum requirements (by operating system)
 
         * All
-            GNU make 3.78 or newer
-            GNU Autoconf 2.13
+            GNU make 3.78
+            GNU Autoconf 2.53
             GNU Automake 1.4
 
-        * IRIX
-            MIPSpro Compilers 7.3.1.1m or newer
+        * IRIX 6.5.3
+            MIPSpro Compilers 7.3.1.1m
 
-        * RedHat Linux 6.x
-            GCC 2.95.3
+        * Red Hat Linux
+            GCC 3.0
 
-        * RedHat Linux 7.0
-            GCC 2.96 20000731 (Red Hat Linux 7.1 2.96-81)
+        * Windows NT 4.0
+            Microsoft Visual Studio 6.0 (SP4 or SP5)
+            Juggler Tools (http://www.vrjuggler.org/pub/juggler-tools.zip)
+            Cygwin 1.3.x including the Cygwin build of Perl
 
         * HP-UX
             aCC A.03.30
 
-        * Win32
-            Microsoft Visual Studio 6.0 (SP4 or SP5)
-            Juggler Tools (http://www.vrjuggler.org/pub/juggler-tools.zip)
+        * Solaris
+            GCC 3.0 and GNU binutils 2.12
+              or
+            Sun WorkShop 6 update 2 C++ 5.3
+            Mesa3D 3.2
+
+        * FreeBSD
+            GCC 3.0
+
+        * Mac OS 10.0.3
+            Developer package
 
 ==============================================================================
 2. Questions about VR Juggler Portable Runtime

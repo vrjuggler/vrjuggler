@@ -1,5 +1,6 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-04-26 patrickh configure.in requries Autoconf 2.53 or newer.
 2003-04-25 patrickh Fixed a problem in vpr::LibraryUNIX::load() where
                     dynamically loaded code could not dynamically load other
                     code.
