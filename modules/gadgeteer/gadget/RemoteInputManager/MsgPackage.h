@@ -35,9 +35,10 @@
 
 #include <gadget/gadgetConfig.h>
 #include <vpr/IO/Socket/SocketStream.h>
-#include <vpr/IO/ObjectReader.h>
-#include <vpr/IO/ObjectWriter.h>
+#include <vpr/IO/BufferObjectReader.h>
+#include <vpr/IO/BufferObjectWriter.h>
 #include <gadget/RemoteInputManager/NetDevice.h>
+
 
 //namespace vpr
 //{
@@ -45,19 +46,19 @@
 //   class ObjectWriter;
 //   class ObjectReader;
 //}
-  
+
 namespace gadget
 {
 
-  /** 
+  /**
    * MsgPackage
-   * 
+   *
    * Handles the packaging and unpackaging of network packets for the Remote Input Manager.
    */
    class GADGET_CLASS_API MsgPackage
    {
-      vpr::ObjectWriter* mObjectWriter;
-      vpr::ObjectWriter* mTempWriter;
+      vpr::BufferObjectWriter* mObjectWriter;
+      vpr::BufferObjectWriter* mTempWriter;
 
       // Mostly used when receiving data
       vpr::Uint16 mOpcode;
@@ -72,28 +73,28 @@ namespace gadget
    public:
       MsgPackage();
      /**
-      * Send contents of current ObjectWriter to the specified socket and 
+      * Send contents of current ObjectWriter to the specified socket and
       * clear the ObjectWriter.
-      * 
+      *
       * @pre   The ObjectWriter contains the packet(s) you want to send.
       * @post  An empty ObjectWriter and the packets sent over the network.
-      * 
-      * @param sock_stream The network socket that you want to send the 
+      *
+      * @param sock_stream The network socket that you want to send the
       *                    data over.
       */
       void sendAndClear(vpr::SocketStream* sock_stream);
-     
+
 
       bool isEmpty();
 
      /**
-      * Send contents of current ObjectWriter to the specified socket and 
+      * Send contents of current ObjectWriter to the specified socket and
       * clear the ObjectWriter.
-      * 
+      *
       * @pre   The ObjectWriter contains the packet(s) you want to send.
       * @post  An empty ObjectWriter and the packets sent over the network.
-      * 
-      * @param sock_stream The network socket that you want to send the 
+      *
+      * @param sock_stream The network socket that you want to send the
       *                    data over.
       */
       void sendAndClearDeviceData(vpr::SocketStream* sock_stream, NetDevice* net_device);
@@ -105,7 +106,7 @@ namespace gadget
       {
          return mSenderId;
       }
-      
+
      /**
       * Returns the receiver's unique ID
       */
@@ -121,7 +122,7 @@ namespace gadget
       {
          return mDeviceName;
       }
-      
+
      /**
       * Returns the BaseType of the remote device.
       */
@@ -135,7 +136,7 @@ namespace gadget
       *
       * @param send_reject Sends either a accept handshake or a rejection handshake.
       * @param host        local hostname
-      * @param port        local port 
+      * @param port        local port
       * @param manager_id  local manager ID
       *
       */
@@ -146,9 +147,9 @@ namespace gadget
       *
       * @param receivedHostname     remote hostname
       * @param receivedPort         remote port
-      * @param received_manager_id  remote manager ID 
+      * @param received_manager_id  remote manager ID
       * @param newStream            socket stream to listen on
-      * 
+      *
       */
       bool  receiveHandshake(std::string& receivedHostname, vpr::Uint16& receivedPort,std::string& received_manager_id, vpr::SocketStream* newStream,bool& sync);
 
@@ -165,9 +166,9 @@ namespace gadget
       *
       * @param object_reader The object that contains the incoming packet.
       *
-      */ 
-      bool  receiveDeviceRequest(vpr::ObjectReader* object_reader);
-      
+      */
+      bool  receiveDeviceRequest(vpr::BufferObjectReader* object_reader);
+
       /**
        * Creates a device acknowledgement packet.
        *
@@ -197,15 +198,15 @@ namespace gadget
       * Receives a device acknowledgement packet.
       *
       * @param object_reader  The object that contains the incoming packet.
-      */ 
-      bool  receiveDeviceAck(vpr::ObjectReader* object_reader);
-      
+      */
+      bool  receiveDeviceAck(vpr::BufferObjectReader* object_reader);
+
      /**
       * Creates a packet that requests the remote computer to act as a client
       * in a synchronization process.
       */
       void  createClockSyncClientRequest();
-      
+
      /**
       * Create a packet containing all of the device data that needs to be sent
       * over the network.
@@ -213,15 +214,15 @@ namespace gadget
       * @param net_device  device that we want to send the data for
       */
       bool  createDeviceDataPacket(NetDevice* net_device);
-      
+
      /**
       * Receives a packet containing all of the device data for a remote device.
       *
       * @param object_reader  The object that contains the incoming packet.
       * @param virtual_device pointer to the local "virtual" device
       */
-      bool  receiveDeviceDataPacket(vpr::ObjectReader* object_reader, Input* virtual_device, vpr::Uint64* delta);
-      
+      bool  receiveDeviceDataPacket(vpr::BufferObjectReader* object_reader, Input* virtual_device, vpr::Uint64* delta);
+
      /**
       * Creates a marker for the end of a given update cycle.
       *

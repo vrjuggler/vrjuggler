@@ -47,6 +47,8 @@
 #include <gadget/RemoteInputManager/MsgPackage.h>
 //#include <gadget/RemoteInputManager/NetUtils.h>
 //#include <gadget/RemoteInputManager/NetDevice.h>
+#include <vpr/IO/BufferObjectWriter.h>
+
 
 //namespace vpr
 //{
@@ -65,7 +67,7 @@ namespace gadget
 
    // Note the RemoteInputManager does not inherit ConfigChunkHandler like the Input Manager does.
    // That's because it is closely connected to the Input Manager and the chunks it processes must also
-   // be processed by the Input Manager.   
+   // be processed by the Input Manager.
    class GADGET_CLASS_API RemoteInputManager
    {
    protected:
@@ -84,14 +86,14 @@ namespace gadget
       std::string                   mLocalMachineChunkName;
       std::list<NetConnection*>     mTransmittingConnections;           /**< network connections to other juggler instances */
       std::list<NetConnection*>     mReceivingConnections;           /**< network connections to other juggler instances */
-      
+
       std::vector<jccl::ConfigChunkPtr>                  mPendingDeviceChunks;
       std::map<std::string, jccl::ConfigChunkPtr>        mMachineTable;
       std::map<std::string, jccl::ConfigChunkPtr>        mClusterTable;
-      
-      std::map<std::string, vpr::ObjectWriter*>          mCachedDeviceData;
+
+      std::map<std::string, vpr::BufferObjectWriter*>          mCachedDeviceData;
       std::map<std::string, gadget::Input*>          mTransmittingDevicePointers;
-      
+
       vpr::Uint16          mListenPort;
       vpr::GUID            mManagerId;
       vpr::Thread*         mAcceptThread;
@@ -109,17 +111,17 @@ namespace gadget
       RemoteInputManager(InputManager* input_manager);
 
       virtual ~RemoteInputManager();
-            
+
       /**
        * Kills the local listening thread and removes all connections.
        */
       void shutdown();
-      
-      vpr::ObjectWriter* getObjectWriter(std::string device_name, gadget::Input* input_device);
+
+      vpr::BufferObjectWriter* getObjectWriter(std::string device_name, gadget::Input* input_device);
 
 
       void debugDump();
-      
+
       //-------------------- Remote Input Manager Configuration --------------------
 
       bool configAdd(jccl::ConfigChunkPtr chunk);
@@ -129,19 +131,19 @@ namespace gadget
       bool recognizeClusterMachineConfig(jccl::ConfigChunkPtr chunk);
       bool recognizeRemoteInputManagerConfig(jccl::ConfigChunkPtr chunk);
       bool recognizeRemoteDeviceConfig(jccl::ConfigChunkPtr chunk);
-     
+
      /**
-      * Adds machines to a table of cluster machines, and configures the RIM 
+      * Adds machines to a table of cluster machines, and configures the RIM
       * if the chunk is for the local machine
       * @param	chunk The chunk that contains information about a cluster machine.
       * @post	The cluster machine added to the table. And if the chunk is for
       * 			the local machine, it is now configured and listening.
       */
       bool configureClusterMachine(jccl::ConfigChunkPtr chunk);
-      
-      /**			 
+
+      /**			
        * Determines if the device's host_chunk field is pointing to a cluster machine
-       * that is in the curent configuration. And create a connection to that machine 
+       * that is in the curent configuration. And create a connection to that machine
        * and a NetDevice to manage the communication to the new "virtual device"
        * @param	chunk The chunk for the device that we are trying to find.
        * @post		A new NetDevice, BaseType(Virtual Device), and a NetConnection,
@@ -154,15 +156,15 @@ namespace gadget
 
       //END-------------------- Remote Input Manager Configuration --------------------
 
-      
+
       //-------------------- Remote Input Manager Syncronization --------------------
       void createBarrier();
       //END-------------------- Remote Input Manager Syncronization --------------------
-      
+
       //-------------------- Remote Input Manager Flags --------------------
       bool isActive()
       {return mActive;}
-      
+
       bool isConfigured()
       {return mConfigured;}
 
@@ -184,11 +186,11 @@ namespace gadget
       void markDataUnreceived();
 
       //END-------------------- Remote Input Manager Flags --------------------
-      
-      
-      
+
+
+
       //-------------------- Remote Input Manager Getters/Setters --------------------
-      
+
       NetConnection* findReceivingDevice(const std::string device_name);
       NetConnection* findTransmittingDevice(const std::string device_name);
 
@@ -199,7 +201,7 @@ namespace gadget
        * @return  A pointer to the base class.
        */
       Input* getDevice(std::string device_name);
-      
+
       /**
        * Returns the local hostname as a string
        */
@@ -210,10 +212,10 @@ namespace gadget
 
 
       //END-------------------- Remote Input Manager Getters/Setters --------------------
-      
+
 
       //-------------------- Remote Input Manager Mutex --------------------
-      
+
       /**
        * Locks the configureation of RIM.
        */
@@ -229,11 +231,11 @@ namespace gadget
       {
          mConfigMutex.release();
       }
-      
+
       //END-------------------- Remote Input Manager Mutex --------------------
 
       //-------------------- Remote Input Manager Connection Management --------------------
-      
+
       /**
        * Sends and receives data for all NetDevices
        * @post All cluster systems have the same device data.
@@ -243,14 +245,14 @@ namespace gadget
       /**
        * If there is not already a thread for listening and the local listening
        * port is valid, then create a new thread and startListening on it.
-       * 
+       *
        *	@post	A thread that is running the acceptLoop function, and receiving
        * 		connection requests.
        */
       bool startListening();
 
       /**
-       * Open a socket and accept incoming connections. When a connection is 
+       * Open a socket and accept incoming connections. When a connection is
        * initiated we try to receive a handshake. If we do then try to create
        * a new NetConnection. If successful respond by sending a handshake back.
        *
@@ -273,9 +275,9 @@ namespace gadget
        * Send local data to all connected remote machines.
        */
       void sendNetworkData();
-      
+
       /**
-       * Read the network until all connections have received the data 
+       * Read the network until all connections have received the data
        * they need
        */
       void readReceivingConnectionData();
@@ -286,15 +288,15 @@ namespace gadget
 
       NetConnection* getReceivingConnectionByHostAndPort(const std::string& hostname, const int port); // NetConnection* getConnectionByHostAndPort(const std::string& location_name);
       NetConnection* getReceivingConnectionByManagerId(const vpr::GUID& manager_id);
-      
+
       NetDevice* findNetDeviceByLocalId(VJ_NETID_TYPE local_id);
 
       void resendRequestsForNackedDevices();
-      
+
       //END-------------------- Remote Input Manager Connection Management --------------------
 
       //-------------------- Remote Input Manager Helper Functions --------------------
-      
+
          // returns unsigned short by default
       VJ_NETID_TYPE generateLocalId()
       { return mLocalIdGen.generateNewId(); }

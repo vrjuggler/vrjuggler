@@ -37,10 +37,24 @@
 #include <vpr/vpr.h>
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/IO/ObjectWriter.h>
+#include <gadget/RemoteInputManager/SerializableDevice.h>
+
+#include <boost/type_traits.hpp>
+#include <boost/static_assert.hpp>
 
 namespace gadget
 {
 
+/** Placeholder class.
+* This class is provides a generic implementation of the virtual
+* methods of a device.
+*
+* This class is meant to be used to create "place holder" devices
+* that don't actually function on their own but instead just
+* look like a device with a given interface.
+* This can be useful for devices that are progmatically set
+* by systems such as the remote input manager
+*/
 template <class ParentType>
 class InputPlaceHolder  : public ParentType
 {
@@ -90,7 +104,12 @@ protected:
 template <class ComposedParent, class NewParent>
 class InputMixer : public ComposedParent, public NewParent
 {
+private:
+   // Make sure that we are using serializable objects
+   BOOST_STATIC_ASSERT((::boost::is_base_and_derived<SerializableDevice,NewParent>::value));
+
 public:
+   /** Type of the placeholder object that can be used to represent us */
    typedef InputPlaceHolder< InputMixer<ComposedParent, NewParent> > MixedPlaceholderType;
 
    vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)

@@ -5,13 +5,15 @@
 #include <gadget/Type/Input.h>
 #include <gadget/RemoteInputManager/NetUtils.h>
 #include <vpr/IO/ObjectWriter.h>
+#include <vpr/IO/BufferObjectWriter.h>
+
 
 namespace gadget {
 
 class GADGET_CLASS_API NetDevice
 {
 protected:
-   Input*         mRealInput;            /**< Pointer to the real/virtual device */     
+   Input*         mRealInput;            /**< Pointer to the real/virtual device */
    std::string    mDeviceName;           /**< Name of the device */
    std::string    mSrcName;              /**< Name of the local device */     //<<<<SIMPLIFY
    int            mNumDependencies;
@@ -19,12 +21,12 @@ protected:
    bool           mWaitingForData;
    bool           mNeedToResendRequest;
 
-   vpr::ObjectWriter*   mObjectWriter;
+   vpr::BufferObjectWriter*   mObjectWriter;
 
    VJ_NETID_TYPE  mLocalId;
    VJ_NETID_TYPE  mRemoteId;
 public:
-  /** 
+  /**
    * Creates a new NetDevice that is used to manage the transmission of the
    * device's data.
    *
@@ -37,7 +39,7 @@ public:
    * @post  An object that is responsible for the information regarding a
    *        device shared on a cluster
    */
-   NetDevice(const std::string& src_device_name, Input* input_ptr, VJ_NETID_TYPE local_device_id, 
+   NetDevice(const std::string& src_device_name, Input* input_ptr, VJ_NETID_TYPE local_device_id,
              VJ_NETID_TYPE rmt_device_id)
    {
       mRealInput = input_ptr;
@@ -52,8 +54,8 @@ public:
       //mObjectWriter = new vpr::ObjectWriter(temp);
       mObjectWriter = NULL;
    }
-  
-  /** 
+
+  /**
    * Creates a new NetDevice that is used to manage the reception of a remote
    * device's data.
    *
@@ -86,7 +88,7 @@ public:
       }
       // Do we need to delete mRealInput?
    }
-   
+
    void updateFromLocalSource()
    {
       mObjectWriter->getData()->clear();
@@ -94,12 +96,12 @@ public:
       mRealInput->writeObject(mObjectWriter);
    }
 
-   vpr::ObjectWriter* getObjectWriter()
+   vpr::BufferObjectWriter* getObjectWriter()
    {
       return mObjectWriter;
    }
-   
-   void setObjectWriter(vpr::ObjectWriter* writer)
+
+   void setObjectWriter(vpr::BufferObjectWriter* writer)
    {
       mObjectWriter = writer;
    }
@@ -110,13 +112,13 @@ public:
    */
    void addDependency()
    { mNumDependencies++; }
-  
+
   /**
    *  Removes a dependency for the NetDevice
    */
    void removeDependency()
    { mNumDependencies--; }
-   
+
   /**
    * Returns the number of dependencies for this NetDevice
    * @return   An integer representing the number of dependencies
@@ -130,7 +132,7 @@ public:
    */
    void setRealDevice(Input* new_device)
    { mRealInput = new_device; }
-   
+
   /**
    *  Returns a pointer to the RealDevice, or the "virtual device" which
    * is of the identical BaseType
@@ -143,19 +145,19 @@ public:
    */
    VJ_NETID_TYPE getLocalId() const
    { return mLocalId; }
-   
+
   /**
    *  Returns the unique id for the NetDevice on the remote device.
    */
    VJ_NETID_TYPE getRemoteId() const
    { return mRemoteId; }
-   
+
   /**
    *  Sets the unique id for the NetDevice on the remote device.
    */
    void setRemoteId(VJ_NETID_TYPE remote_id)
    { mRemoteId = remote_id; }
-   
+
   /**
    *  Set a flag that says that it has been Initialized
    */
@@ -167,25 +169,25 @@ public:
    */
    bool getWasInitialized() const
    { return mAckInitialization; }
-   
+
   /**
    *  Sets a flag that to make RIM try to request this device again
    */
    void setNeedToResendRequestFlag()
    { mNeedToResendRequest = true; }
-   
+
   /**
    *  Erase a flag that would make RIM try to request this device again
    */
    void clearNeedToResendRequestFlag()
    { mNeedToResendRequest = false; }
-   
+
   /**
    *  Returns true if RIM needs to request this device again
    */
    bool needsToResendRequest()
    { return mNeedToResendRequest; }
-   
+
   /**
    *  Returns the name of the device we are managing.
    */
