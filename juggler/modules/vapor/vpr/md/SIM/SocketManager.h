@@ -255,11 +255,13 @@ private:
 
    vpr::ReturnStatus _unbind(const vpr::SocketImplSIM* handle);
 
+public:
    /**
     * Returns an unused port at some existing address, or 0 for error.
     */
    vpr::Uint32 genUnusedPort(const vpr::SocketTypes::Type addr_type);
 
+private:
    vpr::sim::NetworkGraph::net_vertex_t getLocalhost(void);
 
    /**
