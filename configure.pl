@@ -682,7 +682,14 @@ __END__
 
 configure.pl
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
+
+This script acts as the "glue" for a collection of Autoconf-based configure
+scripts.  Based on a configuration file, it is capable of building a
+dependency tree and running the configure scripts in the correct order such
+that the dependencies are satisfied correctly.  Note that all modules must
+be capable of having dependencies satisfied based entirely on the results
+of running a dependent module's configure script.
 
 =head1 OPTIONS
 
@@ -709,8 +716,17 @@ Print a list of the available modules.
 =item B<--cfg>=file
 
 Name the configuration file to be used by this script.  If not specified,
-it defaults to juggler.cfg which must exist in the current working
-directory.
+it defaults to juggler.cfg.  This file is discovered based on the run-time
+path to this script, and thus the script and the configuration file must
+be in the same directory.  For example, if this script is run as:
+
+=over 4
+
+../configure.pl
+
+=back
+
+then juggler.cfg will be searched for as B<../juggler.cfg>.
 
 =item B<--module>=name
 
