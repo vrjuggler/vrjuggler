@@ -122,7 +122,15 @@ private:
 };
 
 
-#define jcclTIMESTAMP(cat, id) if (jccl::PerformanceCategories::instance()->isCategoryActive(cat)) { jccl::PerformanceMonitor::instance()->getLabeledTSBuffer()->set (cat, id) } else {;}
+#define jcclTIMESTAMP(cat, id)                                               \
+    if (jccl::PerformanceCategories::instance()->isCategoryActive(cat)) {    \
+        jccl::PerformanceMonitor::instance()->                               \
+             getLabeledTSBuffer()->set (cat, id);                            \
+    }                                                                        \
+    else {                                                                   \
+        ;                                                                    \
+    }
+
 
 /** Utility class for auto-registering a category.  Use the macros
  *  below instead of using this class directly.
