@@ -199,8 +199,7 @@ ABI_LIST	= @ABI_LIST@
 #    5) Set up the developer installation links.
 # =============================================================================
 
-# Include library building and recursive target code.
-include ${MKPATH}/vj.lib.mk
+# Include recursive target code.
 include ${MKPATH}/vj.rec.mk
 
 # ------------------------------------------------
@@ -457,14 +456,16 @@ _build_dbg_lib_static:
 	@echo "Building static debugging libraries"
 	@echo "================================================"
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
-          EXTRA_ARFLAGS="${DBG_FLAGS}" ${VJ_LIB_STATIC}
+          EXTRA_ARFLAGS="${DBG_FLAGS}" ${_DBG_LIBDIR}/${VJ_LIB_STATIC}
 ifeq (${GL_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/GL"			\
-          LIBDIR="${_DBG_LIBDIR}" EXTRA_ARFLAGS="${DBG_FLAGS}" ${GL_LIB_STATIC}
+          LIBDIR="${_DBG_LIBDIR}" EXTRA_ARFLAGS="${DBG_FLAGS}"		\
+          ${_DBG_LIBDIR}/${GL_LIB_STATIC}
 endif
 ifeq (${PF_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Pf"			\
-          LIBDIR="${_DBG_LIBDIR}" EXTRA_ARFLAGS="${DBG_FLAGS}" ${PF_LIB_STATIC}
+          LIBDIR="${_DBG_LIBDIR}" EXTRA_ARFLAGS="${DBG_FLAGS}"		\
+          ${_DBG_LIBDIR}/${PF_LIB_STATIC}
 endif
 
 # Build the shared libraries with the debugging flags enabled.
@@ -473,14 +474,16 @@ _build_dbg_lib_shared:
 	@echo "Building shared debugging libraries"
 	@echo "================================================"
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
-          EXTRA_LDFLAGS="${DBG_FLAGS}" ${VJ_LIB_DYNAMIC}
+          EXTRA_LDFLAGS="${DBG_FLAGS}" ${_DBG_LIBDIR}/${VJ_LIB_DYNAMIC}
 ifeq (${GL_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/GL"			\
-          LIBDIR="${_DBG_LIBDIR}" EXTRA_LDFLAGS="${DBG_FLAGS}" ${GL_LIB_DYNAMIC}
+          LIBDIR="${_DBG_LIBDIR}" EXTRA_LDFLAGS="${DBG_FLAGS}"		\
+          ${_DBG_LIBDIR}/${GL_LIB_DYNAMIC}
 endif
 ifeq (${PF_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Pf"			\
-          LIBDIR="${_DBG_LIBDIR}" EXTRA_LDFLAGS="${DBG_FLAGS}" ${PF_LIB_DYNAMIC}
+          LIBDIR="${_DBG_LIBDIR}" EXTRA_LDFLAGS="${DBG_FLAGS}"		\
+          ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC}
 endif
 
 # Build the static libraries with the optimization flags enabled.
@@ -488,15 +491,17 @@ _build_opt_lib_static:
 	@echo "================================================"
 	@echo "Building static optmized libraries"
 	@echo "================================================"
-	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
-          EXTRA_ARFLAGS="${OPT_FLAGS}" ${VJ_LIB_STATIC}
+	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}"	LIBDIR=${_OPT_LIBDIR}	\
+          EXTRA_ARFLAGS="${OPT_FLAGS}" ${_OPT_LIBDIR}/${VJ_LIB_STATIC}
 ifeq (${GL_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/GL"			\
-          LIBDIR="${_OPT_LIBDIR}" EXTRA_ARFLAGS="${OPT_FLAGS}" ${GL_LIB_STATIC}
+          LIBDIR=${_OPT_LIBDIR} EXTRA_ARFLAGS="${OPT_FLAGS}"		\
+          ${_OPT_LIBDIR}/${GL_LIB_STATIC}
 endif
 ifeq (${PF_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Pf"			\
-          LIBDIR="${_OPT_LIBDIR}" EXTRA_ARFLAGS="${OPT_FLAGS}" ${PF_LIB_STATIC}
+          LIBDIR=${_OPT_LIBDIR} EXTRA_ARFLAGS="${OPT_FLAGS}"		\
+          ${_OPT_LIBDIR}/${PF_LIB_STATIC}
 endif
 
 # Build the shared libraries with the optimization flags enabled.
@@ -505,14 +510,16 @@ _build_opt_lib_shared:
 	@echo "Building shared optmized libraries"
 	@echo "================================================"
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
-          EXTRA_LDFLAGS="${OPT_FLAGS}" ${VJ_LIB_DYNAMIC}
+          EXTRA_LDFLAGS="${OPT_FLAGS}" ${_OPT_LIBDIR}/${VJ_LIB_DYNAMIC}
 ifeq (${GL_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/GL"			\
-          LIBDIR="${_OPT_LIBDIR}" EXTRA_LDFLAGS="${OPT_FLAGS}" ${GL_LIB_DYNAMIC}
+          LIBDIR="${_OPT_LIBDIR}" EXTRA_LDFLAGS="${OPT_FLAGS}"		\
+          ${_OPT_LIBDIR}/${GL_LIB_DYNAMIC}
 endif
 ifeq (${PF_API}, Y)
 	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Pf"			\
-          LIBDIR="${_OPT_LIBDIR}" EXTRA_LDFLAGS="${OPT_FLAGS}" ${PF_LIB_DYNAMIC}
+          LIBDIR="${_OPT_LIBDIR}" EXTRA_LDFLAGS="${OPT_FLAGS}"		\
+          ${_OPT_LIBDIR}/${PF_LIB_DYNAMIC}
 endif
 
 # --------------------------------------------------------------------
@@ -552,13 +559,14 @@ newdepend:
 # -----------------------------------------------
 static-libs: ${VJ_LIB_STATIC} ${PF_LIB_STATIC} ${GL_LIB_STATIC}
 
-${VJ_LIB_STATIC} ${PF_LIB_STATIC} ${GL_LIB_STATIC}:
+${LIBDIR}/${VJ_LIB_STATIC} ${LIBDIR}/${PF_LIB_STATIC}			\
+${LIBDIR}/${GL_LIB_STATIC}: ${OBJDIR}/*.o
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
-	${scriptdir}/mkinstalldirs ${LIBDIR}
-	@${MAKE} LIBDIR="${LIBDIR}" LIBNAME="$@" OBJS="${OBJDIR}/*.o" static-lib
-	cd ${_LIBDIR_BASE} && ln -sf ${LIBDIR}/$@ ./
+	@${scriptdir}/mkinstalldirs ${LIBDIR}
+	${AR} $@ ${OBJDIR}/*.o
+	cd ${_LIBDIR_BASE} && ln -sf $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
@@ -568,13 +576,14 @@ ${VJ_LIB_STATIC} ${PF_LIB_STATIC} ${GL_LIB_STATIC}:
 # -------------------------------------------------------
 shared-libs: ${VJ_LIB_DYNAMIC} ${PF_LIB_DYNAMIC} ${GL_LIB_DYNAMIC}
 
-${VJ_LIB_DYNAMIC} ${PF_LIB_DYNAMIC} ${GL_LIB_DYNAMIC}:
+${LIBDIR}/${VJ_LIB_DYNAMIC} ${LIBDIR}/${PF_LIB_DYNAMIC}			\
+${LIBDIR}/${GL_LIB_DYNAMIC}: ${OBJDIR}/*.o
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
-	${scriptdir}/mkinstalldirs ${LIBDIR}
-	@${MAKE} LIBDIR="${LIBDIR}" LIBNAME="$@" OBJS="${OBJDIR}/*.o" shared-lib
-	cd ${_LIBDIR_BASE} && ln -sf ${LIBDIR}/$@ ./
+	@${scriptdir}/mkinstalldirs ${LIBDIR}
+	${LD} ${LDOPTS} -o $@ ${OBJDIR}/*.o
+	cd ${_LIBDIR_BASE} && ln -sf $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
