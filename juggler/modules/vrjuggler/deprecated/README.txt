@@ -4,12 +4,10 @@ this is provided for compatibility only!!!
 
 
 #include <vjConfig.h>
-#include <Utils/vjTimer.h> 
-#include <Utils/vjTimer.h>
-#include <Utils/vjDebug.h>
 #include <Math/vjMatrix.h>
 #include <Math/vjQuat.h>
 #include <Math/vjVec3.h>
+#include <Kernel/vjDebug.h>
 #include <Kernel/vjUser.h>
 #include <Kernel/vjKernel.h>
 #include <Kernel/GL/vjGlContextData.h>
