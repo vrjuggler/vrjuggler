@@ -153,6 +153,22 @@ public class PropertyEditorPanel extends PropertyComponent
       }
    }
 
+   /**
+    * Sets the font for the editor component contained within this panel.
+    *
+    * @param font The desired java.awt.Font for the contained editor
+    *             component.
+    */
+   public void setFont(Font font)
+   {
+      super.setFont(font);
+
+      if ( mEditorComponent != null )
+      {
+         mEditorComponent.setFont(font);
+      }
+   }
+
    public void nameChanged(ConfigElementEvent evt)
    {;}
 
@@ -389,7 +405,7 @@ public class PropertyEditorPanel extends PropertyComponent
          return;
       }
 
-      System.out.println("Using editor "+mEditor.getClass()+" for value of type "+value.getClass());
+//      System.out.println("Using editor "+mEditor.getClass()+" for value of type "+value.getClass());
       
       if (value instanceof ConfigElementPointer)
       {
