@@ -297,7 +297,7 @@ obj:
 # Build the Java-based configuration GUI.
 _check_gui:
 	@if [ ! -e ${topdir}/GUI/VjCfg.jar ] ; then	\
-            ${MAKE} gui					\
+            ${MAKE} gui ;				\
         fi
 
 gui:
