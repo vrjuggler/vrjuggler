@@ -13,6 +13,7 @@ public class BorderedPanel extends Panel {
 
   int kind, thickness;
   int top, bottom, left, right;
+  Insets insets;
 
   public BorderedPanel (int nx, int ny, int nkind, int nthickness) {
     /* x,y - horizontal and vertical insets.
@@ -27,6 +28,10 @@ public class BorderedPanel extends Panel {
     top = bottom = ny;
     kind = nkind;
     thickness = nthickness;
+
+    Insets i = super.getInsets();
+    insets = new Insets(i.top + top, i.left + left, i.bottom + bottom, i.right + right);
+    
   }
 
   public BorderedPanel (int _left, int _right, int _top, int _bottom,
@@ -38,6 +43,9 @@ public class BorderedPanel extends Panel {
     bottom = _bottom;
     kind = nkind;
     thickness = nthickness;
+   Insets i = super.getInsets();
+    insets = new Insets(i.top + top, i.left + left, i.bottom + bottom, i.right + right);
+    
   }
 
   public BorderedPanel (int nx, int ny) {
@@ -46,12 +54,16 @@ public class BorderedPanel extends Panel {
     left = right = nx;
     kind = 0;
     thickness = 1;
-  }
+  Insets i = super.getInsets();
+    insets = new Insets(i.top + top, i.left + left, i.bottom + bottom, i.right + right);
+     
+ }
 
   public void setBorderStyle (int i) {
     kind = i;
   }
 
+/*
   public Insets getInsets () {
     Insets i = super.getInsets();
     i.top += top;
@@ -60,6 +72,10 @@ public class BorderedPanel extends Panel {
     i.right += right;
     return i;
   }
+*/
+public Insets getInsets() {
+  return insets;
+}
 
   public void paint (Graphics g) {
     super.paint(g);
