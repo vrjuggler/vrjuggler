@@ -300,7 +300,7 @@ std::istream& operator>>(std::istream& in, ConfigChunkDB& self)
 bool ConfigChunkDB::load(const std::string& filename, const std::string& parentfile)
 {
    vprDEBUG_OutputGuard(jcclDBG_CONFIG, vprDBG_CONFIG_LVL,
-                        std::string("Loading config file")+filename+std::string("\n"),
+                        std::string("Loading config file ") + filename + std::string("\n"),
                         std::string("\n"));
 
    std::string absolute_filename = demangleFileName(filename, parentfile);
