@@ -98,7 +98,7 @@ void doFunc(void* void_thread_num)
    vprDEBUG(vprDBG_ALL, 0) << "Thread: " << thread_num << ": Entering.\n"
                            << vprDEBUG_FLUSH;
          
-   vprBaseThread* my_thread;
+   vpr::BaseThread* my_thread;
 
    timers[thread_num].startTiming();      
    for(long rep=0;rep<num_reps;rep++)
