@@ -38,14 +38,11 @@ import javax.swing.JPanel;
 import info.clearthought.layout.*;
 
 import org.vrjuggler.jccl.config.*;
-import org.vrjuggler.jccl.config.event.ConfigElementEvent;
 import org.vrjuggler.jccl.config.event.ConfigElementListener;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 
 
-public class ViewportUserEditorPanel
-   extends JPanel
-   implements ConfigElementListener
+public class ViewportUserEditorPanel extends JPanel
 {
    public ViewportUserEditorPanel()
    {
@@ -58,23 +55,21 @@ public class ViewportUserEditorPanel
       ConfigDefinition vp_def = broker.getRepository().get("surface_viewport");
       ConfigElementFactory factory =
          new ConfigElementFactory(broker.getRepository().getAllLatest());
-      ConfigElement elt = factory.create("ViewportUserEditorPanel Junk",
-                                         vp_def);
-      elt.addConfigElementListener(this);
+      mElt = factory.create("ViewportUserEditorPanel Junk", vp_def);
 
       if ( externalListener != null )
       {
-         elt.addConfigElementListener(externalListener);
+         mElt.addConfigElementListener(externalListener);
       }
 
       mViewpointEditor =
-         new PropertyEditorPanel(elt.getProperty("view", 0),
+         new PropertyEditorPanel(mElt.getProperty("view", 0),
                                  vp_def.getPropertyDefinition("view"),
-                                 elt, 0, Color.white);
+                                 mElt, 0, Color.white);
       mUserEditor =
-         new PropertyEditorPanel(elt.getProperty("user", 0),
+         new PropertyEditorPanel(mElt.getProperty("user", 0),
                                  vp_def.getPropertyDefinition("user"),
-                                 elt, 0, Color.white);
+                                 mElt, 0, Color.white);
 
       double[][] layout_size = {{TableLayout.PREFERRED, 5,
                                  TableLayout.PREFERRED},
@@ -94,36 +89,12 @@ public class ViewportUserEditorPanel
 
    public Object getViewpoint()
    {
-      return mViewpoint;
+      return mElt.getProperty("view", 0);
    }
 
    public Object getUser()
    {
-      return mUser;
-   }
-
-   public void nameChanged(ConfigElementEvent e)
-   {
-   }
-
-   public void propertyValueChanged(ConfigElementEvent e)
-   {
-      if ( e.getProperty().equals("view") )
-      {
-         mViewpoint = e.getValue();
-      }
-      else if ( e.getProperty().equals("user") )
-      {
-         mUser = e.getValue();
-      }
-   }
-
-   public void propertyValueAdded(ConfigElementEvent e)
-   {
-   }
-
-   public void propertyValueRemoved(ConfigElementEvent e)
-   {
+      return mElt.getProperty("user", 0);
    }
 
    private void jbInit() throws Exception
@@ -147,8 +118,7 @@ public class ViewportUserEditorPanel
                                                        TableLayout.FULL));
    }
 
-   private Object mViewpoint = null;
-   private Object mUser      = null;
+   private ConfigElement mElt = null;
 
    private TableLayout mLayout = null;
    private JLabel mViewpointLabel = new JLabel();
