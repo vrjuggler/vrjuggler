@@ -694,6 +694,7 @@ A value of -1 means do not limit the frame rate.  Run as fast as possible.</help
     </PropertyDesc>
     <PropertyDesc name="Driver DSO Directory" token="driverDirectory" type="string" variable="1">
       <help>This property defines zero or more directories containing dynamically loadable device drivers.  Within the directory, all driver DSOs that are discovered at runtime will be loaded.</help>
+      <item label="DSO directory" defaultvalue="" />
     </PropertyDesc>
     <PropertyDesc name="Driver DSO File Extension" token="dsoExtName" type="string" variable="0">
       <item label="DSO file extension" defaultvalue="so" />
