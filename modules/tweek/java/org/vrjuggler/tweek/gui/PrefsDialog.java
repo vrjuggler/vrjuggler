@@ -126,14 +126,7 @@ public class PrefsDialog extends JDialog
 
    private void jbInit() throws Exception
    {
-      mFileChooserBorder = new TitledBorder(BorderFactory.createEtchedBorder(Color.white,new Color(142, 142, 142)),"File Chooser Configuration");
-      mGenBorder = new TitledBorder(BorderFactory.createEtchedBorder(Color.white,new Color(142, 142, 142)),"General Configuration");
-      mCorbaBorder = new TitledBorder(BorderFactory.createEtchedBorder(Color.white,new Color(142, 142, 142)),"CORBA Configuration");
-      mViewerBox.setMinimumSize(new Dimension(126, 10));
-      mViewerBox.setPreferredSize(new Dimension(130, 10));
 
-      mLevelBox.setMinimumSize(new Dimension(126, 10));
-      mLevelBox.setPreferredSize(new Dimension(130, 10));
 
       mOkButton.setMnemonic('O');
       mOkButton.setText("OK");
@@ -165,15 +158,7 @@ public class PrefsDialog extends JDialog
          }
       });
 
-      mContentLayout.setColumns(1);
-      mContentLayout.setRows(0);
-      mContentPanel.setLayout(mContentLayout);
       mFileChooserPanel.setLayout(mFileChooserLayout);
-      mGenConfigPanel.setLayout(mGenConfigLayout);
-      mGeneralPanel.setBorder(mGenBorder);
-      mGeneralPanel.setToolTipText("General Tweek interface configuration");
-      mGeneralPanel.setLayout(mGenLayout);
-      mFileChooserPanel.setBorder(mFileChooserBorder);
       mFcConfigPanel.setLayout(mFcConfigLayout);
       mFcStartDirLabel.setMaximumSize(new Dimension(24, 13));
       mFcStartDirLabel.setMinimumSize(new Dimension(24, 13));
@@ -213,28 +198,36 @@ public class PrefsDialog extends JDialog
       mFcOpenStyleButtonPanel.setLayout(mFcOpenStyleButtonLayout);
       mFcOpenStyleButtonLayout.setColumns(1);
       mFcOpenStyleButtonLayout.setRows(0);
-      mLafLabel.setMaximumSize(new Dimension(74, 13));
-      mLafLabel.setMinimumSize(new Dimension(24, 13));
-      mLafLabel.setPreferredSize(new Dimension(24, 13));
-      mLafLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-      mLevelLabel.setMinimumSize(new Dimension(24, 13));
-      mLevelLabel.setPreferredSize(new Dimension(24, 13));
-      mLevelLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-      mViewerLabel.setMaximumSize(new Dimension(24, 13));
-      mViewerLabel.setMinimumSize(new Dimension(24, 13));
-      mViewerLabel.setPreferredSize(new Dimension(24, 13));
-      mViewerLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-      mLafBox.setMinimumSize(new Dimension(126, 10));
-      mLafBox.setPreferredSize(new Dimension(130, 10));
       mFcOpenStyleButtonPanel.setMinimumSize(new Dimension(128, 50));
       mFcOpenStyleButtonPanel.setPreferredSize(new Dimension(128, 50));
       mLazyInstanceButton.setSelected(mPrefs.getLazyPanelBeanInstantiation());
       mLazyInstanceButton.setText("Lazy Panel Bean Instantiaion");
-      mCorbaPanel.setBorder(mCorbaBorder);
-      mCorbaPanel.setLayout(mCorbaLayout);
-      mCorbaPortLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-      mCorbaPortLabel.setLabelFor(mCorbaPortField);
-      mCorbaPortLabel.setText("Port Number");
+      mLevelBox.setMinimumSize(new Dimension(126, 10));
+      mLevelBox.setPreferredSize(new Dimension(130, 10));
+      mViewerBox.setMinimumSize(new Dimension(126, 10));
+      mViewerBox.setPreferredSize(new Dimension(130, 10));
+      mGeneralPanel.setToolTipText("General Tweek interface configuration");
+      mGeneralPanel.setLayout(mGenLayout);
+      mLevelLabel.setMinimumSize(new Dimension(24, 13));
+      mLevelLabel.setPreferredSize(new Dimension(24, 13));
+      mLevelLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+      mLevelLabel.setLabelFor(mLevelBox);
+      mLevelLabel.setText("User Level");
+      mViewerLabel.setMaximumSize(new Dimension(24, 13));
+      mViewerLabel.setMinimumSize(new Dimension(24, 13));
+      mViewerLabel.setPreferredSize(new Dimension(24, 13));
+      mViewerLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+      mViewerLabel.setLabelFor(mViewerBox);
+      mViewerLabel.setText("Bean Viewer");
+      mGenConfigPanel.setLayout(mGenConfigLayout);
+      mLafBox.setMinimumSize(new Dimension(126, 10));
+      mLafBox.setPreferredSize(new Dimension(130, 10));
+      mLafLabel.setMaximumSize(new Dimension(74, 13));
+      mLafLabel.setMinimumSize(new Dimension(24, 13));
+      mLafLabel.setPreferredSize(new Dimension(24, 13));
+      mLafLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+      mLafLabel.setLabelFor(mLafBox);
+      mLafLabel.setText("Look and Feel");
       mCorbaPortField.setMaximumSize(new Dimension(2147483647, 15));
       mCorbaPortField.setMinimumSize(new Dimension(85, 17));
       mCorbaPortField.setPreferredSize(new Dimension(85, 17));
@@ -245,11 +238,10 @@ public class PrefsDialog extends JDialog
             corbaPortFieldChanged(e);
          }
       });
-      mCorbaHostLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-      mCorbaHostLabel.setLabelFor(mCorbaHostField);
-      mCorbaHostLabel.setText("Host Name");
-      mCorbaLayout.setColumns(2);
-      mCorbaLayout.setRows(0);
+      mCorbaPortLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+      mCorbaPortLabel.setLabelFor(mCorbaPortField);
+      mCorbaPortLabel.setText("Port Number");
+      mCorbaPanel.setLayout(mCorbaLayout);
       mCorbaHostField.setMinimumSize(new Dimension(85, 17));
       mCorbaHostField.setPreferredSize(new Dimension(85, 17));
       mCorbaHostField.addActionListener(new java.awt.event.ActionListener()
@@ -259,41 +251,42 @@ public class PrefsDialog extends JDialog
             corbaHostFieldChanged(e);
          }
       });
-      mGeneralPanel.add(mGenConfigPanel, BorderLayout.CENTER);
-      mContentPanel.add(mGeneralPanel, null);
-      mContentPanel.add(mCorbaPanel, null);
-      mCorbaPanel.add(mCorbaHostLabel, null);
-      mCorbaPanel.add(mCorbaHostField, null);
-      mCorbaPanel.add(mCorbaPortLabel, null);
-      mCorbaPanel.add(mCorbaPortField, null);
-      mContentPanel.add(mFileChooserPanel, null);
+      mCorbaHostLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+      mCorbaHostLabel.setLabelFor(mCorbaHostField);
+      mCorbaHostLabel.setText("Host Name");
+      mCorbaLayout.setColumns(2);
+      mCorbaLayout.setRows(0);
 
-      mLevelLabel.setText("User Level");
 
-      mGenConfigPanel.add(mLevelLabel,     new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
-      mGenConfigPanel.add(mLevelBox,   new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 14));
 
-      mLafLabel.setText("Look and Feel");
-      mGenConfigPanel.add(mLafLabel,    new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
-      mGenConfigPanel.add(mLafBox,   new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 14));
 
-      mViewerLabel.setText("Bean Viewer");
-      mGenConfigPanel.add(mViewerLabel,     new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
-      mGenConfigPanel.add(mViewerBox,   new GridBagConstraints(1, 3, 1, 1, 1.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 14));
-      mGenConfigPanel.add(mLazyInstanceButton,   new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
       mButtonPanel.add(mOkButton, null);
       mButtonPanel.add(mSaveButton, null);
       mButtonPanel.add(mCancelButton, null);
+      this.getContentPane().add(mContentPane, BorderLayout.NORTH);
+      mContentPane.add(mGeneralPanel,   "General");
+      mGeneralPanel.add(mGenConfigPanel, BorderLayout.CENTER);
+      mGenConfigPanel.add(mLevelLabel,  new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
+      mGenConfigPanel.add(mLevelBox,  new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 14));
+      mGenConfigPanel.add(mLafLabel,  new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
+      mGenConfigPanel.add(mLafBox,  new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 14));
+      mGenConfigPanel.add(mViewerLabel,  new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 95, 23));
+      mGenConfigPanel.add(mViewerBox,  new GridBagConstraints(1, 3, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 64, 14));
+      mGenConfigPanel.add(mLazyInstanceButton,  new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+      mContentPane.add(mCorbaPanel,   "CORBA");
+      mCorbaPanel.add(mCorbaHostLabel, null);
+      mCorbaPanel.add(mCorbaHostField, null);
+      mCorbaPanel.add(mCorbaPortLabel, null);
+      mCorbaPanel.add(mCorbaPortField, null);
 
-      this.getContentPane().add(mContentPanel, BorderLayout.CENTER);
       this.getContentPane().add(mButtonPanel, BorderLayout.SOUTH);
       mFileChooserPanel.add(mFcConfigPanel, BorderLayout.CENTER);
       mFcConfigPanel.add(mFcStartDirLabel,       new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
@@ -308,6 +301,7 @@ public class PrefsDialog extends JDialog
       mFcOpenStyleButtonPanel.add(mEmacsStyleButton, null);
       mOpenStyleButtonGroup.add(mWindowsStyleButton);
       mOpenStyleButtonGroup.add(mEmacsStyleButton);
+      mContentPane.add(mFileChooserPanel,  "File Chooser");
    }
 
    /**
@@ -501,35 +495,19 @@ public class PrefsDialog extends JDialog
 
    private int status;
 
-   private int    userLevel        = 0;
-   private String lookAndFeel      = null;
-   private String beanViewer       = null;
-   private String chooserStartDir  = GlobalPreferencesService.DEFAULT_START;
-   private int    chooserOpenStyle = GlobalPreferencesService.DEFAULT_CHOOSER;
-   private String defaultCorbaHost = "";
-   private int    defaultCorbaPort = 0;
+   private int     userLevel        = 0;
+   private String  lookAndFeel      = null;
+   private String  beanViewer       = null;
+   private Integer windowWidth      = new Integer(1024);
+   private Integer windowHeight     = new Integer(768);
+   private String  chooserStartDir  = GlobalPreferencesService.DEFAULT_START;
+   private int     chooserOpenStyle = GlobalPreferencesService.DEFAULT_CHOOSER;
+   private String  defaultCorbaHost = "";
+   private int     defaultCorbaPort = 0;
 
    private GlobalPreferencesService mPrefs = null;
 
-   private JPanel     mContentPanel  = new JPanel();
-   private GridLayout mContentLayout = new GridLayout();
-
-   private JPanel       mGeneralPanel     = new JPanel();
-   private TitledBorder mGenBorder;
-   private BorderLayout mGenLayout        = new BorderLayout();
-
-   private JPanel        mGenConfigPanel  = new JPanel();
-   private GridBagLayout mGenConfigLayout = new GridBagLayout();
-
-   private JLabel    mLevelLabel  = new JLabel();
-   private JComboBox mLevelBox    = new JComboBox();
-   private JLabel    mLafLabel    = new JLabel();
-   private JComboBox mLafBox      = new JComboBox();
-   private JLabel    mViewerLabel = new JLabel();
-   private JComboBox mViewerBox   = new JComboBox();
-
    private JPanel       mFileChooserPanel = new JPanel();
-   private TitledBorder mFileChooserBorder;
    private BorderLayout mFileChooserLayout = new BorderLayout();
 
    private JPanel        mFcConfigPanel  = new JPanel();
@@ -548,13 +526,23 @@ public class PrefsDialog extends JDialog
    private JButton mCancelButton = new JButton();
    private JButton mSaveButton   = new JButton();
    private JButton mOkButton     = new JButton();
-   private JCheckBox mLazyInstanceButton = new JCheckBox();
 
-   private JPanel mCorbaPanel = new JPanel();
-   private TitledBorder mCorbaBorder;
-   private JLabel mCorbaPortLabel = new JLabel();
+   private JTabbedPane mContentPane = new JTabbedPane();
+   private JCheckBox mLazyInstanceButton = new JCheckBox();
+   private JComboBox mLevelBox = new JComboBox();
+   private JComboBox mViewerBox = new JComboBox();
+   private JPanel mGeneralPanel = new JPanel();
+   private JLabel mLevelLabel = new JLabel();
+   private BorderLayout mGenLayout = new BorderLayout();
+   private JLabel mViewerLabel = new JLabel();
+   private GridBagLayout mGenConfigLayout = new GridBagLayout();
+   private JPanel mGenConfigPanel = new JPanel();
+   private JComboBox mLafBox = new JComboBox();
+   private JLabel mLafLabel = new JLabel();
    private JTextField mCorbaPortField = new JTextField();
+   private JLabel mCorbaPortLabel = new JLabel();
+   private JPanel mCorbaPanel = new JPanel();
+   private JTextField mCorbaHostField = new JTextField();
    private JLabel mCorbaHostLabel = new JLabel();
    private GridLayout mCorbaLayout = new GridLayout();
-   private JTextField mCorbaHostField = new JTextField();
 }
