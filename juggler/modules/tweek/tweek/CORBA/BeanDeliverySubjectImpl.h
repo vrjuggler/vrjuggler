@@ -54,7 +54,8 @@
 namespace tweek
 {
 
-/**
+/** \class BeanDeliverySubjectImpl BeanDeliverySubjectImpl.h tweek/CORBA/BeanDeliverySubjectImpl.h
+ *
  * Implementation of tweek::BeanDeliverySubject IDL interface.  This class
  * manages delivery of JavaBeans to clients via standard Java JAR files.  It
  * also allows the C++ code to make a single JavaBean active.  The idea is

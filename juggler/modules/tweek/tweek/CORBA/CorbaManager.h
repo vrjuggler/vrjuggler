@@ -58,6 +58,10 @@ namespace tweek
 
 class BeanDeliverySubjectImpl;
 
+/** \class CorbaManager CorbaManager.h tweek/CORBA/CorbaManager.h
+ *
+ * Wrapper around ORB features to simplify startup and shutdown.
+ */
 class TWEEK_CLASS_API CorbaManager
 {
 public:

@@ -56,7 +56,8 @@ namespace tweek
 class CorbaManager;
 class SubjectImpl;
 
-/**
+/** \class SubjectManagerImpl SubjectManagerImpl.h tweek/CORBA/SubjectManagerImpl.h
+ *
  * This class provides a simplified level of access to CORBA references.
  * C++ implementations of CORBA interfaces (specified with IDL) are registeered
  * with a Subject Manager.  This process activates the object (a CORBA servant)
@@ -65,8 +66,8 @@ class SubjectImpl;
  * management are hidden by this class.
  */
 class TWEEK_CLASS_API SubjectManagerImpl
-   : public POA_tweek::SubjectManager,
-     public PortableServer::RefCountServantBase
+   : public POA_tweek::SubjectManager
+   , public PortableServer::RefCountServantBase
 {
 public:
    virtual ~SubjectManagerImpl();
