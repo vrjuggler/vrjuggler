@@ -7,7 +7,6 @@
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
 
-#include <jccl/Config/VarValue.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ChunkFactory.h>
@@ -43,10 +42,17 @@ public:
       jccl::ConfigChunkDB chunkdb;
       chunkdb.load (file_path + "EnumerationsTest/enumerations_test.config");
 
-      jccl::ConfigChunkPtr ch = chunkdb.getChunk("Motion Star master");
-      CPPUNIT_ASSERT (ch.get() != NULL);
-      int port = ch->getProperty ("serverPort");
-      CPPUNIT_ASSERT (port == 5000);
+      jccl::ConfigChunkPtr ch = chunkdb.get("Motion Star master");
+      CPPUNIT_ASSERT(ch.get() != NULL);
+
+      int port = ch->getProperty<int>("serverPort");
+      CPPUNIT_ASSERT(port == 5000);
+
+      int hemisphere = ch->getProperty<int>("hemisphere");
+      CPPUNIT_ASSERT(hemisphere == 0);
+      
+      int format = ch->getProperty<int>("bformat");
+      CPPUNIT_ASSERT(format == 4);
       
     }
 

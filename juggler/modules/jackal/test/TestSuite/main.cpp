@@ -5,7 +5,7 @@
 #include <TestCases/ChunkDescTest.h>
 #include <TestCases/IncludesTest.h>
 #include <TestCases/LabeledPerfDataBufferTest.h>
-//#include <TestCases/EnumerationsTest.h>
+#include <TestCases/EnumerationsTest.h>
 #include <TestCases/ConfigChunkTest.h>
 #include <TestCases/ConfigChunkDBTest.h>
 
@@ -52,7 +52,7 @@ int main (int ac, char **av)
    //noninteractive_suite->addTest(jcclTest::VarValueTest::suite());
    noninteractive_suite->addTest(jcclTest::ChunkDescTest::suite());
    noninteractive_suite->addTest(jcclTest::IncludesTest::suite());
-   //noninteractive_suite->addTest(jcclTest::EnumerationsTest::suite());
+   noninteractive_suite->addTest(jcclTest::EnumerationsTest::suite());
 
    // Add the test suite to the runner
    runner.addTest( noninteractive_suite );
