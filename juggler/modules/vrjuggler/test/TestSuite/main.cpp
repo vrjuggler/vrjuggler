@@ -37,6 +37,7 @@
 #include <cppunit/TextTestResult.h>
 
 #include <TestCases/Math/QuatSelfTest.h>
+//#include <TestCases/Pf/QuatSelfTest.h> // needs performer linked in, doh!
 #include <vrj/Util/Debug.h>
 
 
@@ -46,7 +47,8 @@ static void addNoninteractive (CppUnit::TestSuite* suite)
 
    // Add new tests to this vector.
    tests.push_back(new vrjTest::QuatSelfTest());
-
+   //tests.push_back(new vrjTest::PfUtilTests());
+   
    for ( std::vector<vrjTest::JugglerTest*>::iterator i = tests.begin();
          i != tests.end();
          i++ )
