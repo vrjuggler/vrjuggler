@@ -92,8 +92,9 @@ namespace std
 
 /*
  * This is used to deal with various locations for the header that defines
- * std::hash_map.  Files that need the header can test for the definition of
- * VPR_HASH_MAP_INCLUDE to determine if any std::hash_map is available.
+ * std::hash_map and std::hash_set.  Files that need the header can test 
+ * for the definition of VPR_HASH_MAP_INCLUDE to determine if any std::hash_map 
+ * is available.
  */
 #if defined(HAVE_HASH_MAP)
 #  define VPR_HASH_MAP_INCLUDE <hash_map>
@@ -102,6 +103,23 @@ namespace std
 #elif defined(HAVE_HASH_MAP_H)
 #  define VPR_HASH_MAP_INCLUDE <hash_map.h>
 #endif
+
+#if defined(HAVE_HASH_MAP) || defined(HAVE_EXT_HASH_MAP) || defined(HAVE_HASH_MAP_H)
+#   define VPR_HAVE_HASH_MAP 1
+#endif
+
+#if defined(HAVE_HASH_SET)
+#  define VPR_HASH_SET_INCLUDE <hash_set>
+#elif defined(HAVE_EXT_HASH_SET)
+#  define VPR_HASH_SET_INCLUDE <ext/hash_set>
+#elif defined(HAVE_HASH_SET_H)
+#  define VPR_HASH_SET_INCLUDE <hash_set.h>
+#endif
+
+#if defined(HAVE_HASH_SET) || defined(HAVE_EXT_HASH_SET) || defined(HAVE_HASH_SET_H)
+#   define VPR_HAVE_HASH_SET  1
+#endif
+
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
