@@ -62,11 +62,12 @@ static void sampleBirds(void* arg)
 {
    MotionStar* devPointer = (MotionStar*) arg;
 
-   vprDEBUG(gadgetDBG_INPUT_MGR,3)
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
       << "gadget::MotionStar: Spawned SampleBirds starting\n"
       << vprDEBUG_FLUSH;
 
-   for (;;)
+   // Keep sampling until the device is shut down.
+   while ( devPointer->isActive() )
    {
       devPointer->sample();
    }
