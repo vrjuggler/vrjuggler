@@ -216,8 +216,8 @@ public class Property {
     }
 
 
-    public final boolean hasFixedNumberOfValues () {
-        return num != -1;
+    public final boolean getHasVariableNumberOfValues () {
+        return desc.getHasVariableNumberOfValues ();
     }
 
 

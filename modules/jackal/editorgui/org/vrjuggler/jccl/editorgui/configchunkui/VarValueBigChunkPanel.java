@@ -93,7 +93,7 @@ public class VarValueBigChunkPanel
 	edit_button.addActionListener (this);
 	add (edit_button);
 
-	if (!prop.hasFixedNumberOfValues()) {
+	if (prop.getHasVariableNumberOfValues()) {
 	    /* then it's a variable # of values */
 	    remove_button = new JButton("Remove");
 	    remove_button.setMargin (in);
