@@ -175,7 +175,7 @@ ifdef GLOBAL_BUILD
 endif
 
 jccl_net.jar: $(NET_CLASSES)
-	$(JAR) cvf $@ $(NET_CLASSES)
+	$(JAR) cvf $@ $(NET_DIR)/*.class
 
 docs:
 	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT) -sourcepath $(srcdir)	\
