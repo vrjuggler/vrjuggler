@@ -48,6 +48,8 @@
                 ..
                 digitalGlove
                 ..
+                logger
+                ..
                 simpleGlove
                 ..
                 texture
@@ -66,7 +68,7 @@
             Pf
             ..
         ..
-        Quat
+        RTRC
         ..
         TestSuite
         ..
