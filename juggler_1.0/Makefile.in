@@ -234,6 +234,8 @@ endif
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(VJROOT_ABS)/README $(prefix)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(VJROOT_ABS)/INSTALL $(prefix)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(VJROOT_ABS)/RELEASE_NOTES $(prefix)
 	@echo "Build time: `LTIME=C date`" > $(prefix)/BUILD_TIME
 	@echo "==============================================================="
