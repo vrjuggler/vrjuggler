@@ -38,6 +38,7 @@ import org.jdom.output.XMLOutputter;
 /** DescEnum -- an entry in the enum vector of a PropertyDesc */
 public class DescEnum
    implements Cloneable
+            , ConfigTokens
 {
    /**
     * Creates a new, empty enumeration.
@@ -61,7 +62,7 @@ public class DescEnum
     */
    public DescEnum(String name, VarValue value)
    {
-      this(new Element(ConfigTokens.prop_enum_TOKEN), value.getValType());
+      this(new Element(prop_enum_TOKEN), value.getValType());
       setName(name);
       setValue(value);
    }

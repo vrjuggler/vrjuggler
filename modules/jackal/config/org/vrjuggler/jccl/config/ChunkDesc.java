@@ -46,6 +46,7 @@ import org.jdom.Element;
  */
 public class ChunkDesc
    implements Cloneable
+            , ConfigTokens
             , PropertyChangeListener
 {
    public ChunkDesc(Element root)
@@ -60,7 +61,7 @@ public class ChunkDesc
     */
    public ChunkDesc()
    {
-      mDomElement = new Element(ConfigTokens.chunk_desc_TOKEN);
+      mDomElement = new Element(chunk_desc_TOKEN);
       changeSupport = new PropertyChangeSupport(this);
       this.setToken("");
       this.setName("");
@@ -151,7 +152,7 @@ public class ChunkDesc
    {
       Set result = new HashSet();
 
-      Iterator itr = mDomElement.getChildren(ConfigTokens.category_TOKEN).iterator();
+      Iterator itr = mDomElement.getChildren(category_TOKEN).iterator();
       while (itr.hasNext())
       {
          result.add(((Element)itr.next()).getText());
@@ -168,7 +169,7 @@ public class ChunkDesc
    public final String getCategory(int idx)
    {
       Element element = (Element)mDomElement.getChildren(
-                                       ConfigTokens.category_TOKEN).get(idx);
+                                       category_TOKEN).get(idx);
       return element.getText();
    }
 
@@ -179,7 +180,7 @@ public class ChunkDesc
     */
    public final int getNumCategories()
    {
-      return mDomElement.getChildren(ConfigTokens.category_TOKEN).size();
+      return mDomElement.getChildren(category_TOKEN).size();
    }
 
    /**
@@ -190,7 +191,7 @@ public class ChunkDesc
    public final void addCategory(String category)
    {
       // Check if this desc is already in the given category
-      List cats = mDomElement.getChildren(ConfigTokens.category_TOKEN);
+      List cats = mDomElement.getChildren(category_TOKEN);
       for (Iterator itr = cats.iterator(); itr.hasNext(); )
       {
          // Return if this desc is already in the category
@@ -202,7 +203,7 @@ public class ChunkDesc
       }
 
       // This desc isn't already in the category, add it
-      Element newCat = new Element(ConfigTokens.category_TOKEN);
+      Element newCat = new Element(category_TOKEN);
       newCat.setText(category);
       mDomElement.addContent(newCat);
       changeSupport.firePropertyChange("category", null, category);
@@ -217,7 +218,7 @@ public class ChunkDesc
    {
       boolean removed = false;
 
-      List cats = mDomElement.getChildren(ConfigTokens.category_TOKEN);
+      List cats = mDomElement.getChildren(category_TOKEN);
       for (Iterator itr = cats.iterator(); itr.hasNext(); )
       {
          // If we found the category, remove it and we're done
@@ -290,7 +291,7 @@ public class ChunkDesc
    {
       Vector prop_descs = new Vector();
       Iterator i =
-         mDomElement.getChildren(ConfigTokens.property_desc_TOKEN).iterator();
+         mDomElement.getChildren(property_desc_TOKEN).iterator();
 
       while ( i.hasNext() )
       {
@@ -308,7 +309,7 @@ public class ChunkDesc
     */
    public int propertyDescsSize()
    {
-      return mDomElement.getChildren(ConfigTokens.property_desc_TOKEN).size();
+      return mDomElement.getChildren(property_desc_TOKEN).size();
    }
 
    /**
@@ -323,7 +324,7 @@ public class ChunkDesc
       if ( i < this.propertyDescsSize() )
       {
          Element prop_desc_child =
-            (Element)mDomElement.getChildren(ConfigTokens.property_desc_TOKEN).get(i);
+            (Element)mDomElement.getChildren(property_desc_TOKEN).get(i);
          prop_desc = new PropertyDesc(prop_desc_child);
          prop_desc.addPropertyChangeListener(this);
       }
@@ -342,7 +343,7 @@ public class ChunkDesc
 
    public PropertyDesc getPropertyDesc(String propDescToken)
    {
-      Iterator i = mDomElement.getChildren(ConfigTokens.property_desc_TOKEN).iterator();
+      Iterator i = mDomElement.getChildren(property_desc_TOKEN).iterator();
       PropertyDesc p = null;
 
       while ( i.hasNext() )
