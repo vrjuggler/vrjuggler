@@ -116,8 +116,6 @@
          <device_host />
       </simulated_relative_position>
       <input_manager name="Input Manager" version="2">
-         <driver_path>${VJ_BASE_DIR}/lib/gadgeteer/drivers</driver_path>
-         <driver_path>${VJ_BASE_DIR}/lib32/gadgeteer/drivers</driver_path>
          <driver>Trackd_drv</driver>
       </input_manager>
       <trackd_sensor name="TrackdSensorDev" version="1">
