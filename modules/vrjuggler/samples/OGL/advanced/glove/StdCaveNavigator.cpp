@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vjStdCaveNavigator.h>
+#include <StdCaveNavigator.h>
 
 namespace vrj
 {
