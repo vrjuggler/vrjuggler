@@ -89,7 +89,6 @@ bool ThreeDMouse::startSampling()
   if (mThreadID == NULL) {
 
    openMouse(mPortName);
-   ThreeDMouse* devicePtr = this;
    void sampleMouse(void*);
   
    mExitFlag = false;
