@@ -117,7 +117,7 @@ SocketDatagramImplNSPR::sendto (const void* msg, const vpr::Uint32 length,
     bytes = PR_SendTo(m_handle, msg, length, flags, to.getPRNetAddr(),
                       NSPR_getInterval(timeout));
 
-    if ( bytes_sent == -1 ) {
+    if ( bytes == -1 ) {
         PRErrorCode err_code = PR_GetError();
 
         bytes_sent = 0;
