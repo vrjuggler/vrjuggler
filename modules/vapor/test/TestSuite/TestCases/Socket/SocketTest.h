@@ -13,11 +13,14 @@
 #include <vpr/IO/Socket/Socket.h>
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Socket/InetAddr.h>
+#include <vpr/IO/Socket/SocketAcceptor.h>
+#include <vpr/IO/Socket/SocketConnector.h>
 #include <vpr/System.h>
 
 #include <vpr/Thread/Thread.h>
 #include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/CondVar.h>
 
 #include <vector>
 
@@ -983,6 +986,136 @@ public:
    }
    // =========================================================================
 
+   // =========================================================================
+   // Test for isConnected().  In this test, two threads are spawned, one for
+   // the acceptor, and one for the connector.  The connector connects, and
+   // then informs the acceptor when it closes its side of the socket.  The
+   // acceptor and connector use isConnected() to verify the state of the
+   // connection at key times.
+   // =========================================================================
+   void testIsConnected (void)
+   {
+      threadAssertReset();
+
+      mState        = NOT_READY;                        // Initialize
+      mAcceptorPort = 34568;
+
+      // Spawn acceptor thread
+      vpr::ThreadMemberFunctor<SocketTest>
+          acceptor_functor(this, &SocketTest::testIsConnected_acceptor);
+      vpr::Thread acceptor_thread(&acceptor_functor);
+
+      // Spawn connector thread
+      vpr::ThreadMemberFunctor<SocketTest>
+          connector_functor(this, &SocketTest::testIsConnected_connector);
+      vpr::Thread connector_thread(&connector_functor);
+
+      // Wait for threads
+      acceptor_thread.join();
+      connector_thread.join();
+
+      checkThreadAssertions();
+   }
+
+   void testIsConnected_acceptor (void* arg)
+   {
+      vpr::ReturnStatus status;
+      vpr::SocketAcceptor acceptor;
+      vpr::SocketStream client_sock;
+      vpr::InetAddr acceptor_addr(mAcceptorPort);
+
+      status = acceptor.open(acceptor_addr);
+      assertTestThread(status.success() && "Failed to open acceptor");
+
+      mCondVar.acquire();
+      {
+         mState = ACCEPTOR_READY;
+         mCondVar.signal();
+      }
+      mCondVar.release();
+
+      status = acceptor.accept(client_sock);
+      assertTestThread(status.success() && "Accept failed");
+
+      assertTestThread(client_sock.isOpen() && "Accepted socket should be open");
+
+      assertTestThread(client_sock.isConnected() && "Connector not connected");
+
+      mCondVar.acquire();
+      {
+         mState = ACCEPTOR_TESTED;
+         mCondVar.signal();
+      }
+      mCondVar.release();
+
+      mCondVar.acquire();
+      {
+         while ( mState != CONNECTOR_CLOSED ) {
+            mCondVar.wait();
+         }
+      }
+      mCondVar.release();
+
+      assertTestThread(! client_sock.isConnected() && "Connector not disconnected");
+
+      status = client_sock.close();
+      assertTestThread(status.success() &&
+                       "Could not close acceptor side of client socket");
+
+      status = acceptor.close();
+      assertTestThread(status.success() && "Could not close acceptor");
+   }
+
+   void testIsConnected_connector (void* arg)
+   {
+      vpr::ReturnStatus status;
+      vpr::InetAddr remote_addr;
+      vpr::SocketConnector connector;
+      vpr::SocketStream con_sock;
+      std::string data;
+
+      remote_addr.setAddress("localhost", mAcceptorPort);
+
+      mCondVar.acquire();
+      {
+         while ( mState != ACCEPTOR_READY ) {
+            mCondVar.wait();
+         }
+      }
+      mCondVar.release();
+
+      status = con_sock.open();
+      assertTestThread(status.success() && "Failed to open connector socket");
+
+      status = connector.connect(con_sock, remote_addr,
+                                 vpr::Interval(5, vpr::Interval::Sec));
+      assertTestThread(status.success() && "Connector can't connect");
+
+//      assertTestThread(con_sock.isConnected() && "Connect didn't connect?");
+
+      mCondVar.acquire();
+      {
+         while ( mState != ACCEPTOR_TESTED ) {
+            mCondVar.wait();
+         }
+      }
+      mCondVar.release();
+
+      status = con_sock.close();
+      assertTestThread(status.success() &&
+                       "Could not close connector side of client socket");
+
+      mCondVar.acquire();
+      {
+         mState = CONNECTOR_CLOSED;
+         mCondVar.signal();
+      }
+      mCondVar.release();
+
+      assertTestThread(! con_sock.isConnected() && "Connect didn't disconnect?");
+   }
+
+   // =========================================================================
    static Test* suite()
    {
       TestSuite *test_suite = new TestSuite ("SocketTest");
@@ -1002,6 +1135,9 @@ public:
       //test_suite->addTest( new TestCaller<SocketTest>("testBlocking", &SocketTest::testBlocking));
       //test_suite->addTest( new TestCaller<SocketTest>("testTcpConnection", &SocketTest::testTcpConnection));
       //test_suite->addTest( new TestCaller<SocketTest>("testReadn", &SocketTest::testReadn));
+      test_suite->addTest(new TestCaller<SocketTest>("testIsConnected",
+                          &SocketTest::testIsConnected));
+
       return test_suite;
    }
 
@@ -1017,6 +1153,19 @@ protected:
    long           mNumClient;
    long           mClientCounter;
    long           mServerCheck;
+
+   enum State {
+      ACCEPTOR_READY,
+      ACCEPTOR_TESTED,
+      NOT_READY,
+      CONNECTOR_CLOSED,
+      DATA_SENT,
+      DONE_READING
+   };
+
+   State           mState;         // State variable
+   vpr::CondVar    mCondVar;       // Condition variable
+   vpr::Uint16     mAcceptorPort;
 };
 
 }
