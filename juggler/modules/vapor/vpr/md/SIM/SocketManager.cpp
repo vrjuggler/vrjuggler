@@ -122,7 +122,7 @@ namespace sim
 
             // Queue us up in the listening socket's connection queue.
             status = remote_stream_socket->addConnector(localSock, remoteSock);
-            vprASSERT(status.success() && "Failed to add connector");
+            vprASSERT(! status.failure() && "Failed to add connector");
          }
          else
          {
@@ -388,8 +388,8 @@ namespace sim
       if((local_addr == vpr::InetAddr::AnyAddr) ||
          (local_addr.getAddressValue() == LocalHostIpAddrValue) )
       {
-         //local_addr.setAddress(LocalHostIpAddrValue, 0);
-         local_addr.setAddress(getLocalhostIpAddrValue(), 0);
+         //local_addr.setAddress(LocalHostIpAddrValue, local_addr.getPort());
+         local_addr.setAddress(getLocalhostIpAddrValue(), local_addr.getPort());
       }
 
       // Make sure that we know about the node of the given address
