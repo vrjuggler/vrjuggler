@@ -41,8 +41,6 @@
 #     1) This file _requires_ the use of GNU make (gmake).
 # =============================================================================
 
-DZR_BASE_DIR=.
-
 # Nothing but comments should come before this line.
 default: all
 
@@ -107,8 +105,7 @@ CLEAN_DIRS=
 
 # The following include line MUST COME BEFORE the targets for compiling the
 # application.
-include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
-#include $(DZR_BASE_DIR)/ext/...
+include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 
 # IRIX
 ifeq ($(HOSTTYPE), IRIX)
@@ -117,7 +114,7 @@ endif
 
 #LiNUX
 ifeq ($(HOSTTYPE), Linux)
-   EXTRA_LIBS += -lGLU -lGL -lglut -lm -lpthread -L$(SNX_BASE_DIR)/lib $(LINKALL_BEGIN) -lsonix $(LINKALL_END) -lopenal
+   EXTRA_LIBS += -lGLU -lGL -lglut -lX11 -lXmu -lm -lpthread -L$(SNX_BASE_DIR)/lib $(LINKALL_BEGIN) -lsonix $(LINKALL_END) -lopenal
 endif
 
 # Win32
