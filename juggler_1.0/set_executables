@@ -2,3 +2,4 @@ chmod +x config.guess
 chmod +x config.sub
 chmod +x install-sh
 chmod +x GUI/vjcontrol
+chmod +x release/scripts/mkinstalldirs
