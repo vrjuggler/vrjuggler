@@ -518,11 +518,60 @@ class ElementTree
                // Remove the ConfigElement from the context.
                if( model instanceof ConfigContextModel )
                {
-                  // Try to remove the element.
-                  ConfigBroker broker = new ConfigBrokerProxy();
-                  if(!broker.remove( ((ConfigContextModel)model).getContext(), elm))
+                  Object[] nodes = getLeadSelectionPath().getPath();
+
+                  DefaultMutableTreeNode cur_node;
+
+                  cur_node = (DefaultMutableTreeNode) nodes[nodes.length - 1];
+                  ConfigElement elt_to_remove =
+                     (ConfigElement) cur_node.getUserObject();
+
+                  // We need to see if the parent of the selected config
+                  // element is a PropertyDefinition object.
+                  cur_node = (DefaultMutableTreeNode) nodes[nodes.length - 2];
+                  Object obj = cur_node.getUserObject();
+
+                  ConfigContext context =
+                     ((ConfigContextModel) model).getContext();
+
+                  // If the parent of the config element to remove is a
+                  // PropertyDefinition object, then the user wants to remove
+                  // an embedded element.  This must be done by editing the
+                  // appropriate property in the config element containing the
+                  // one to be removed.
+                  if ( obj instanceof PropertyDefinition )
                   {
-                     System.out.println("Failed...");
+                     PropertyDefinition prop_def = (PropertyDefinition) obj;
+
+                     cur_node =
+                        (DefaultMutableTreeNode) nodes[nodes.length - 3];
+                     ConfigElement owner =
+                        (ConfigElement) cur_node.getUserObject();
+                     owner.removeProperty(prop_def.getToken(), elt_to_remove,
+                                          context);
+                  }
+                  // If the parent of the config element to remove is not a
+                  // PropertyDefinition object, then we have a "top-level"
+                  // config element.  We have to remove it using the Config
+                  // Broker.
+                  else
+                  {
+                     ConfigBroker broker = new ConfigBrokerProxy();
+                     boolean removed = broker.remove(context, elt_to_remove);
+
+                     if ( ! removed )
+                     {
+                        Container parent =
+                           SwingUtilities.getAncestorOfClass(Container.class,
+                                                             this);
+                        JOptionPane.showMessageDialog(
+                           parent,
+                           "Failed to remove config element '" +
+                              elt_to_remove.getName() + "'",
+                           "Config Element Removal Failed",
+                           JOptionPane.ERROR_MESSAGE
+                        );
+                     }
                   }
                }
             }
