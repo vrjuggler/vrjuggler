@@ -305,6 +305,14 @@ public class PropertyDefinition
     */
    public List getAllowedTypes()
    {
+      return mAllowedTypes;
+   }
+
+   /**
+    * Gets a list of all the allowed types for this property definition.
+    */
+   public List getAllowedAndDerivedTypes()
+   {
       ConfigDefinitionRepository repos = getBroker().getRepository();
       List sub_defs = repos.getSubDefinitions(mAllowedTypes);
       List result = new ArrayList();
@@ -327,6 +335,14 @@ public class PropertyDefinition
    public synchronized int getAllowedTypesCount()
    {
       return getAllowedTypes().size();
+   }
+   
+   /**
+    * Gets the number of allowed types for this property definition.
+    */
+   public synchronized int getAllowedAndDerivedTypesCount()
+   {
+      return getAllowedAndDerivedTypes().size();
    }
 
    private ConfigBroker mBroker = null;

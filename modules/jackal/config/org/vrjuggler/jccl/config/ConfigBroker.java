@@ -167,4 +167,6 @@ public interface ConfigBroker
     * from this broker.
     */
    public void removeConfigBrokerListener(ConfigBrokerListener listener);
+
+   public void saveDefinition(String token);
 }
