@@ -58,8 +58,14 @@ import java.util.StringTokenizer;
  */
 public class XMLBeanFinder
 {
-   public XMLBeanFinder ()
+   public XMLBeanFinder()
    {
+      this(false);
+   }
+
+   public XMLBeanFinder(boolean validate)
+   {
+      mValidate = true;
    }
 
    /**
@@ -104,7 +110,7 @@ public class XMLBeanFinder
          }
       }
 
-      SAXBuilder builder = new SAXBuilder();
+      SAXBuilder builder = new SAXBuilder(mValidate);
       builder.setErrorHandler(new BestSAXChecker());
       File xml_file;
 
@@ -258,4 +264,6 @@ public class XMLBeanFinder
       BeanAttributes attrs = BeanAttributes.parseXMLElement( gen_bean );
       return new GenericBean(attrs);
    }
+
+   private boolean mValidate = false;
 }

@@ -216,8 +216,8 @@ public class TweekCore
       GlobalPreferencesService prefs =
          (GlobalPreferencesService) registry.getBean("GlobalPreferences");
 
-      // Get the beans in the given path
-      XMLBeanFinder finder = new XMLBeanFinder();
+      // Get the beans in the given path.
+      XMLBeanFinder finder = new XMLBeanFinder(mValidateXML);
       List beans = finder.find( path );
       for ( Iterator itr = beans.iterator(); itr.hasNext(); )
       {
@@ -300,8 +300,10 @@ public class TweekCore
          }
          else if ( args[i].startsWith("--defaultbean=") )
          {
-            int start = args[i].indexOf('=') + 1;
-            defaultBean = args[i].substring(start);
+            mValidateXML = true;
+         }
+         else if ( args[i].startsWith("--validate") )
+         {
          }
          else
          {
@@ -339,7 +341,8 @@ public class TweekCore
     */
    private String defaultBean = null;
 
-   private List mBeanDirs = new ArrayList();
+   private boolean mValidateXML = false;
+   private List    mBeanDirs    = new ArrayList();
 
    private TweekFrame m_gui = null;
 
