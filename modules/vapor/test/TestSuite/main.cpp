@@ -85,7 +85,7 @@ int main (int ac, char **av)
    }
    else
    {
-      vpr::sim::Controller::instance()->constructNetwork(path_base.append("/test_network.tiers"));
+      vpr::sim::Controller::instance()->constructNetwork(path_base.append("/test_network.vsn"));
    }
 
    vpr::Thread sim_thread(run);

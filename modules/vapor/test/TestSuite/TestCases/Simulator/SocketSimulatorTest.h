@@ -244,7 +244,7 @@ public:
       mMessage      = "The sixth sheik's sixth sheep's sick";
       mMessageLen   = mMessage.length();
 
-      status = vpr::sim::Controller::instance()->constructNetwork("test_network.tiers");
+      status = vpr::sim::Controller::instance()->constructNetwork("test_network.vsn");
       CPPUNIT_ASSERT(status.success() && "Could not construct network");
 
       vpr::ThreadMemberFunctor<SocketSimulatorTest>* acceptor_func =
@@ -437,7 +437,7 @@ protected:
       status = vpr::System::getenv("VPR_TEST_DIR", path_base);
       CPPUNIT_ASSERT(status.success() && "Could not find VPR_TEST_DIR environment variable");
 
-      status = vpr::sim::Controller::instance()->constructNetwork(path_base.append("/test_network.tiers"));
+      status = vpr::sim::Controller::instance()->constructNetwork(path_base.append("/test_network.vsn"));
       CPPUNIT_ASSERT(status.success() && "Could not construct network");
 
       return status;
