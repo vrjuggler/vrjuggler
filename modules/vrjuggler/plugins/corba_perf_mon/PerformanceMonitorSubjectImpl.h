@@ -61,6 +61,7 @@ public:
    {;}
 
    virtual vrj::PerformanceMonitorSubject::StringList* getAllSections();
+
    virtual CORBA::Float getValue(CORBA::Float param);
 
    /**
@@ -81,8 +82,6 @@ public:
    {
       return POA_vrj::PerformanceMonitorSubject::_this();
    }
-
-//private:
 
 };
 

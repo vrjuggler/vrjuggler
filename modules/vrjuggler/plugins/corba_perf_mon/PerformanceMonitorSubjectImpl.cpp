@@ -31,15 +31,17 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/Performance/PluginConfig.h>
-#include <vpr/Perf/ProfileManager.h>
+
 
 #include <string>
 #include <list>
 #include <sstream>
 
 #include <vpr/vpr.h>
-#include <vrj/Util/Debug.h>
 #include <vpr/Util/Debug.h>
+#include <vpr/Perf/ProfileManager.h>
+
+#include <vrj/Util/Debug.h>
 
 #include <corba_perf_mon/PerformanceMonitorSubjectImpl.h>
 
@@ -47,7 +49,7 @@ namespace vrj
 {
    PerformanceMonitorSubject::StringList* PerformanceMonitorSubjectImpl::getAllSections()
    {
-      // Create the sequence and size it.
+      // Create the sequence.
       vrj::PerformanceMonitorSubject::StringList* strings =
          new vrj::PerformanceMonitorSubject::StringList();
 
@@ -58,19 +60,21 @@ namespace vrj
    {
       return param;
    }
-   
+
    vrj::PerformanceMonitorSubject::SampleValueMap* PerformanceMonitorSubjectImpl::getValueMap()
    {
+      // TODO: Safeguard from changing tree...ask for names to lookup and return them
+      // or keep a master list to compare against.
       std::map<std::string, float> sample_time_map = vpr::ProfileManager::getValueMap();
 
       std::map<std::string, float>::iterator itr;
       unsigned long i = 0;
       vrj::PerformanceMonitorSubject::SampleValueMap* value_map = 
-                        new vrj::PerformanceMonitorSubject::SampleValueMap();
-      
+         new vrj::PerformanceMonitorSubject::SampleValueMap();
+
       value_map->length(sample_time_map.size());
 
-      for (itr = sample_time_map.begin(); itr != sample_time_map.end(); ++itr)
+      for ( itr = sample_time_map.begin(); itr != sample_time_map.end(); ++itr )
       {
          (*value_map)[i].mName = CORBA::string_dup(itr->first.c_str());
          (*value_map)[i].mSampleTime = itr->second;
