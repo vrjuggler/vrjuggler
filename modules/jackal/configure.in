@@ -291,6 +291,11 @@ EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
 jccl_cxxflags=''
 jccl_cxxflags_all="$VPR_CXXFLAGS"
 
+# If the user has a local copy of CppDOM, add its path to the C++ flags.
+if test "x$LOCAL_CPPDOM" = "xY" ; then
+   jccl_cxxflags="$jccl_cxxflags $CPPDOM_INCLUDES"
+fi
+
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
     CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
