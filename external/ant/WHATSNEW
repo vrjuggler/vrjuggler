@@ -1,5 +1,248 @@
-Changes from Ant 1.6.0 to Ant 1.6.1
+Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+* The import task used the canonical version of a file path. This
+  has been changed to use the absolute path. Bugzilla 28505.
+
+* ant-xalan2.jar has been removed since the only class contained in it
+  didn't depend on Xalan-J 2 at all.  Its sole dependency has always
+  been TraX and so it has been merged into ant-trax.jar.
+
+* All exceptions thrown by tasks are now wrapped in a buildexception
+  giving the location in the buildfile of the task.
+
+* Nested elements for namespaced tasks and types may belong to the
+  Ant default namespace as well as the task's or type's namespace.
+
+* <junitreport> will very likely no longer work with Xalan-J 1.
+
+  Note that Xalan-J 1 has been deprecated for a very long time and we
+  highly recommend that you upgrade.
+
+  If you really need to continue using Xalan-J 1, please copy the
+  junit-frames-xalan1.xsl from the distribution's etc directory as
+  junit-frames.xsl into a new directory and use the task's styledir
+  attribute to point to.  This is the last version of the XSLT
+  stylesheet that is expected to be compatible with Xalan-J 1.
+
+Fixed bugs:
+-----------
+
+* eliminate memory leak in AntClassLoader. Bugzilla Report 8689.
+
+* subant haltonfailure=false did not catch all failures. Bugzilla Report 27007.
+
+* macrodef @@ escaping was broken.  Bugzilla Report 27069.
+
+* SQL task did not work with Informix IDS 9.2. Bugzilla Report 27162.
+
+* MacroDef did not allow attributes named 'description'. Bugzilla Report 27175.
+
+* Throw build exception if name attribute missing from patternset#NameEntry.
+  Bugzilla Report 25982.
+
+* Throw build exception if target repeated in build file, but allow targets
+  to be repeated in imported files. 
+
+* <apply> didn't compare timestamps of source and targetfiles when
+  using a nested <filelist>.  Bugzilla Report 26985.
+
+* tagdiff.xml was broken in ant 1.6.1. Bugzilla Report 27057.
+
+* if the basedir contained .. or . dirs, and the build file name contained
+  .. or ., the basedir was set incorrectly. Bugzilla Report 26765.
+
+* regression from ant 1.5, exec task outputted two redundant trailing newlines.
+  Bugzilla Report 27546.
+
+* NPE when running commons listener. Bugzilla Report 27373.
+
+* <java> swallowed the stack trace of exceptions thrown by the
+  executed program if run in the same VM.
+
+* -projecthelp swallowed (configuration) errors silently.
+  Bugzilla report 27732.
+
+* filterset used by filtertask doesn't respect loglevel. Bugzilla Report 27568.
+
+* wrong compare used in ProjectComponent for logging. Bugzilla Report 28070.
+
+* failOnAny attribute for <parallel> was broken. Bugzilla Report 28122.
+
+* If <javac> uses gcj and any of the nested <compilerarg>s implies
+  compilation to native code (like -o or --main), Ant will not pass
+  the -C switch to gcj.  This means you can now compile to native code
+  with gcj which has been impossible in Ant < 1.6.2.
+
+* <import optional="false"> and <import optional="true">
+  behaved identically.
+
+* <xslt> now sets the context classloader if you've specified a nested
+  <classpath>.  Bugzilla Report 24802.
+
+* <zip> and friends would delete the original file when trying to update
+  a read-only archive.  Bugzilla Report 28419.
+
+* <junit> and <assertions> are working together. Bugzilla report 27218
+
+* AntClassLoader#getResource could return invalid URLs.  Bugzilla
+  Report 28060.
+
+* Ant failed to locate tools.jar if the jre directory name wasn't all
+  lowercase.  Bugzilla Report 25798.
+
+* Redirector exhibited inconsistent behavior with regard to split
+  output.  When sent to file only, files would be created in all
+  cases; when split file-property, files were only created if
+  writes were performed.
+
+* fixed case handling of scriptdef attributes and elements.
+
+* UNC pathnames did not work for ANT_HOME or -lib locations on Windows.
+  Bugzilla report 27922.
+
+* replacestring tokenfilter only replaced the first occurrence.
+
+* AntLikeTasksAtTopLevelTest failed on cygwin.
+
+* I/O-intensive processes hung when executed via <exec spawn="true">.
+  Bugzilla reports 23893/26852.
+
+* JDependTask did not close an output file. Bugzilla Report 28557.
+
+* Using <macrodef> could break XmlLogger. Bugzilla Report 28993.
+
+* <genkey> no longer requires keytool to be in your PATH.  Bugzilla
+  Report 29382.
+
+* <symlink> could create cyclic links.  Bugzilla Report 25181.
+
+* <zip whenempty="skip"> didn't work in a common situation.  Bugzilla
+  Report 22865.
+
+* <scp> now properly handles remote files and directories with spaces
+  in their names.  Bugzilla Report 26097.
+
+* <scp> now has (local|remote)tofile attributes to rename files on the
+  fly.  Bugzilla Report 26758.
+
+* <telnet> and <rexec> didn't close the session.  Bugzilla Report 25935.
+
+* <subant> and XmlLogger didn't play nicley together.
+
+Other changes:
+--------------
+* doc fix concerning the dependencies of the ftp task
+  Bugzilla Report 29334.
+
+* <xmlvalidate> has now a property nested element,
+  allowing to set string properties for the parser
+  Bugzilla Report 23395.
+
+* Docs fixes for xmlvalidate.html, javadoc.html, starteam.
+  Bugzilla Reports 27092, 27284, 27554.
+
+* <pathconvert> now accepts nested <mapper>s.  Bugzilla Report 26364.
+
+* Shipped XML parser is now Xerces-J 2.6.2.
+
+* Added nested file element to filelist.
+
+* spelling fixes, occurred. Bugzilla Report 27282.
+
+* add uid and gid to tarfileset. Bugzilla Report 19120.
+
+* <scp> has a verbose attribute to get some feedback during the
+  transfer and new [local|remote][File|Todir] alternatives to file and
+  todir that explicitly state the direction of the transfer.
+
+* The OS/2 wrapper scripts have been adapted to use the new launcher.
+  Bugzilla Report 28226.
+
+* <sshexec> now also captures stderr output.  Bugzilla Report 28349.
+
+* <xslt> now supports a nested <mapper>.  Bugzilla Report 11249.
+
+* <touch> has filelist support.
+
+* <nice> task lets you set the priority of the current thread; non-forking
+  <java> code will inherit this priority in their main thread.
+
+* New attribute "negate" on <propertyset> to invert selection criteria.
+
+* New "pattern" attribute for <date> selector.
+
+* <junit> has a new forkmode attribute that controls the number of
+  Java VMs that get created when forking tests.  This allows you to
+  run all tests in a single forked JVM reducing the overhead of VM
+  creation a lot.  Bugzilla Report 24697.
+
+* <jar> can now optionally create an index for jars different than the
+  one it currently builds as well.  See the new <indexjars> element
+  for details.  Bugzilla Report 14255.
+
+* Permit building under JDK 1.5. Bugzilla Report 28996.
+
+* minor Javadoc changes. Bugzilla Report 28998.
+
+* Misc. corrections in SignJar.java. Bugzilla Report 28999.
+
+* Remove redundant <hr> from javah.html. Bugzilla Report 28995.
+
+* Ignore built distributions. Bugzilla Report 28997.
+
+* A new roundup attribute on <zip> and related task can be used to
+  control whether the file modification times inside the archive will
+  be rounded up or down (since zips only store modification times with
+  a granularity of two seconds).  The default remains to round up.
+  Bugzilla Report 17934.
+
+* A binary option has been added to <concat>. Bugzilla Report 26312.
+
+* Added DynamicConfiguratorNS, an namespace aware version of
+  DynamicConfigurator. Bugzilla Report 28436.
+
+* Add implicit nested element to <macrodef>. Bugzilla Report 25633.
+
+* Add deleteonexit attribute to <delete>.
+
+* Target now supports a Location member.  Bugzilla Report 28599.
+
+* Added Target.getIf/Unless().  Bugzilla Report 29320.
+
+* <fail> has a status attribute that can be used to pass an exit
+  status back to the command line.
+
+* <fail> accepts a nested <condition>.
+
+* <loadproperties> supports loading from a resource.
+  Bugzilla Report 28340.
+
+* Nested file mappers and a container mapper implementation have been
+  introduced.  Additionally, the <mapper> element now accepts "defined"
+  nested FileNameMapper implementations directly, allowing a usage
+  comparable to those of <condition>, <filter>, and <selector>.
+
+* New <redirector> type introduced to provide extreme I/O flexibility.
+  Initial support for <exec>, <apply>, and <java> tasks.
+
+* <apply> has a new ignoremissing attribute (default true for BC)
+  which will allow nonexistent files specified via <filelist>s to
+  be passed to the executable.  Bugzilla Report 29585.
+
+* <junitreport> now also works with Xalan XSLTC and/or JDK 1.5.
+  Bugzilla Report 27541.
+
+* <jspc> doesn't work properly with Tomcat 5.x.  We've implemented a
+  work-around but don't intend to support future changes in Tomcat
+  5.x.  Please use the jspc task that ships with Tomcat instead of
+  Ant's.
+
+Changes from Ant 1.6.0 to Ant 1.6.1
+=============================================
 
 Changes that could break older environments:
 --------------------------------------------
@@ -9,6 +252,12 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* Remove a recursive template call in the junit xsls that could trigger a stack
+  overflow. It now uses Xalan extensions to call a Java class directly.
+  Bugzilla Report 19301
+  
+* Fix spurious infinite loop detection for filters (introduced in ant 1.6.0).
+  Bugzilla Report 23154.
 
 * Fix handling of default ant namespace for nested elements.
 
@@ -18,9 +267,6 @@ Fixed bugs:
 
 * Ant could fail to start with a NullPointerException if
   ANT_HOME/lib/ant-launcher.jar was part of the system CLASSPATH.
-
-* Fix spurious infinite loop detection for filters (introduced in ant 1.6.0).
-  Bugzilla Report 23154.
 
 * presetdef'ed types did not work with the ant-type attribute
 
@@ -35,18 +281,16 @@ Fixed bugs:
 * Ant now fails with a more useful message if a new process will be
   forked in a directory and that directory doesn't exist.
 
-* junitreport was failing for long string litterals
-  Bugzilla Report 19301.
-
 * <splash> used to break the build on non-GUI environments.  Bugzilla
   report 11482.
+
+* Ant 1.6.0 cannot run build scripts in directories with non-ASCII names.
+  Bugzilla Report 26642.
 
 Other changes:
 --------------
 
 * Shipped XML parser is now Xerces-J 2.6.1
-
-* upgrade to xml-apis.jar from Xerces-J 2.6.1.
 
 * <fixcrlf> has a new attribute - fixlast. Bugzilla Report 23262.
 
