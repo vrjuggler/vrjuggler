@@ -35,6 +35,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <GL/glx.h>
+#include <vector>
 
 #include <vpr/vpr.h>
 #include <vrj/Draw/OGL/GlWindow.h>
@@ -111,6 +112,10 @@ int GlWindowXWin::open()
         vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED,"ERROR:") << "glXChooseVisual failed\n" << vprDEBUG_FLUSH;
         goto OPEN_FAIL;
     }
+
+    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+       << "Visual ID: " << std::hex << visual_info << std::dec << std::endl
+       << vprDEBUG_FLUSH;
 
     // window attributes.
     if ((w_attrib.colormap = ::XCreateColormap (x_display,
@@ -429,20 +434,77 @@ void GlWindowXWin::checkEvents()
     *       GLX
     */
 
+   // Using 1 here requests the *largest* available size for each of these
+   // buffers.  Refer to the glXChooseVisual() manual page for more details.
+   int red_size(1), green_size(1), blue_size(1), alpha_size(1), db_size(1);
+
+   jccl::ConfigChunkPtr gl_fb_chunk = mDisplay->getGlFrameBufferConfig();
+
+   if ( gl_fb_chunk.get() != NULL )
+   {
+      red_size   = gl_fb_chunk->getProperty<int>("redSize");
+      green_size = gl_fb_chunk->getProperty<int>("greenSize");
+      blue_size  = gl_fb_chunk->getProperty<int>("blueSize");
+      alpha_size = gl_fb_chunk->getProperty<int>("alphaSize");
+      db_size    = gl_fb_chunk->getProperty<int>("depthBufferSize");
+
+      if ( red_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "WARNING: Red channel size was negative, set to: " << red_size
+            << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
+         red_size = 1;
+      }
+
+      if ( green_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "WARNING: Green channel size was negative, set to: "
+            << green_size << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
+         green_size = 1;
+      }
+
+      if ( blue_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "WARNING: Blue channel size was negative, set to: " << blue_size
+            << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
+         blue_size = 1;
+      }
+
+      if ( alpha_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "WARNING: Alpha channel size was negative, set to: "
+            << alpha_size << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
+         alpha_size = 1;
+      }
+
+      if ( db_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "WARNING: Depth buffer size was negative, set to: " << db_size
+            << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
+         db_size = 1;
+      }
+   }
+
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+      << "Frame buffer visual settings for " << mDisplay->getName()
+      << ": R:" << red_size << " G:" << green_size << " B:" << blue_size
+      << " A:" << alpha_size << " DB:" << db_size << std::endl
+      << vprDEBUG_FLUSH;
 
    ::XVisualInfo *vi;
-   const int MaxAttributes = 32;
-   int viattrib[MaxAttributes] = {
-      GLX_DOUBLEBUFFER,
-      GLX_RGBA,
-      GLX_DEPTH_SIZE, 1,
-      GLX_RED_SIZE, 1,
-      GLX_GREEN_SIZE, 1,
-      GLX_BLUE_SIZE, 1,
-      GLX_ALPHA_SIZE, 1,
-   };
-   int NumAttribs = 12;
-   int AlphaAttribIndex = 11;
+   std::vector<int> viattrib;
+   viattrib.push_back(GLX_DOUBLEBUFFER);
+   viattrib.push_back(GLX_RGBA);
+   viattrib.push_back(GLX_DEPTH_SIZE); viattrib.push_back(db_size);
+   viattrib.push_back(GLX_RED_SIZE); viattrib.push_back(red_size);
+   viattrib.push_back(GLX_GREEN_SIZE); viattrib.push_back(green_size);
+   viattrib.push_back(GLX_BLUE_SIZE); viattrib.push_back(blue_size);
+   viattrib.push_back(GLX_ALPHA_SIZE); viattrib.push_back(alpha_size);
+   const int AlphaAttribIndex = 11;
 
    /* Notes on viattrib:  by using 1 for GLX_RED_SIZE et.al. we ask
     * for the _largest_ available buffers.  If this fails,  we might
@@ -464,18 +526,18 @@ void GlWindowXWin::checkEvents()
 
    if (mDisplay->inStereo())
    {
-      viattrib[NumAttribs++] = GLX_STEREO;
+      viattrib.push_back(GLX_STEREO);
       in_stereo = true;
    }
    else
       in_stereo = false;
 
    // Add terminator
-   viattrib[NumAttribs] = None;
+   viattrib.push_back(None);
 
 
    // first, see if we can get exactly what we want.
-   if ( (vi = glXChooseVisual (display, screen, viattrib)) )
+   if ( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
       return vi;
 
    // still no luck. if we were going for stereo, let's try without.
@@ -485,8 +547,8 @@ void GlWindowXWin::checkEvents()
                  << "' couldn't get display in stereo - trying mono.\n"
                  << vprDEBUG_FLUSH;
       in_stereo = false;
-      viattrib[NumAttribs-1] = GLX_USE_GL; // should be a reasonable 'ignore' tag
-      if( (vi = glXChooseVisual (display, screen, viattrib)) )
+      viattrib[viattrib.size() - 1] = GLX_USE_GL; // should be a reasonable 'ignore' tag
+      if( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
          return vi;
    }
 
@@ -495,7 +557,7 @@ void GlWindowXWin::checkEvents()
               << "' couldn't get display with alpha channel - trying without.\n"
               << vprDEBUG_FLUSH;
    viattrib[AlphaAttribIndex] = 0;
-   if( (vi = glXChooseVisual (display, screen, viattrib)) )
+   if( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
       return vi;
 
    // Failed, so return NULL

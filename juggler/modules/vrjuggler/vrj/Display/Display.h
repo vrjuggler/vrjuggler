@@ -119,6 +119,8 @@ public:
    jccl::ConfigChunkPtr getConfigChunk()
    { return mDisplayChunk; }
 
+   jccl::ConfigChunkPtr getGlFrameBufferConfig();
+
    friend VJ_API(std::ostream&) operator<<(std::ostream& out, vrj::Display& disp);
 
    // --- Viewport handling --- //
@@ -143,4 +145,5 @@ protected:
 VJ_API(std::ostream&) operator<<(std::ostream& out, vrj::Display& disp);
 
 } // end namespace
+
 #endif
