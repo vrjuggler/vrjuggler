@@ -134,7 +134,7 @@ namespace jcclTest
                  &LabeledPerfDataBufferTest::setContentionTestLoop,
                  new SetContentionTestLoopData (&b, i, &tsbuffer));
             vpr::Thread* cur_tnread = new vpr::Thread(memberFunctor);
-            cur_thread->start();
+            CPPUNIT_ASSERT(cur_thread->valid());
         }
 
         ts1.setNow();
