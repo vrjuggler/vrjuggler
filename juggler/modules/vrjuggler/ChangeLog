@@ -1,5 +1,11 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Aug-10-2001 allenb    Added initial version of OSG (www.openscenegraph.org) 
+                      support to VR Juggler.
+                      This introduces and new application class called vjOsgApp
+                      that all OSG-based apps should derive from.
+                      There is also a new sample program called osgNav that 
+                      uses this class to create a basic navigation program.
 Aug-06-2001 allenb    tools/pfStatLinux contains a library that must be used
                       with performer application on Linux due to a bug in
                       performer.
