@@ -48,7 +48,7 @@ class LabeledPerfDataBuffer;
  *  of all buffers, this is an increasingly innacurately named
  *  class.  but there'll be time for renaming after it works.
  */
-class PerformanceCategories
+class JCCL_CLASS_API PerformanceCategories
 {
 private:
 
@@ -163,11 +163,12 @@ struct PerfCatRegistrator
 #define jcclREGISTER_PERF_CATEGORY(CAT, NAME) jccl::PerfCatRegistrator NAME ## _registrator (CAT, #NAME);
 
 
-}; // namespace jccl
+} // namespace jccl
 
 
-// Perf measurement internal to jackal itself
-extern const vpr::GUID jcclPERF_JACKAL;// ("29ecd55b-e68e-40ce-9db2-99e7682b36b4");
-extern const vpr::GUID jcclPERF_ALL;// ("0b6b599c-f90c-43f6-8fbb-08454dd78872");
+// Perf measurement internal to JCCL itself
+const vpr::GUID jcclPERF_JACKAL("29ecd55b-e68e-40ce-9db2-99e7682b36b4");
+const vpr::GUID jcclPERF_ALL("0b6b599c-f90c-43f6-8fbb-08454dd78872");
+
 
 #endif
