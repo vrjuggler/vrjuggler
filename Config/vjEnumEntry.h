@@ -7,8 +7,7 @@
 
 
 #include <vjConfig.h>
-
-//#include <strings.h>
+#include <Config/vjVarValue.h>
 
 class vjEnumEntry {
 private:
