@@ -10,7 +10,7 @@
 
 #include <IO/Socket/Socket.h>
 #include <IO/Socket/SocketStream.h>
-#include <IO/Socket/SocketDatagram.h>
+//#include <IO/Socket/SocketDatagram.h>
 #include <IO/Socket/InetAddr.h>
 
 #include <Threads/Thread.h>
