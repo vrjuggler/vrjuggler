@@ -127,7 +127,7 @@ namespace sim
                << remoteName << std::endl << vprDEBUG_FLUSH;
             
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "--------- Listening list ---------\n" << vprDEBUG_FLUSH;
-            for(std::map<vpr::InetAddrSIM, vpr::SocketStreamImplSIM* >::iterator i=mListenerList.begin();
+            for(listener_map_t::iterator i=mListenerList.begin();
                 i != mListenerList.end(); ++i)
             { vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << (*i).second->getLocalAddr() << std::endl << vprDEBUG_FLUSH; }
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "---- [End] Listening list ---------\n" << vprDEBUG_FLUSH;
@@ -215,17 +215,15 @@ namespace sim
       vprASSERT( handle->isBound() && "Can't listen on unbound socket");
       vprASSERT( handle->getType() == vpr::SocketTypes::STREAM && "Trying to listen with not stream socket");
 
-      vpr::InetAddrSIM local_addr = handle->getLocalAddr();
-
       // enter self into list for accepting connections.
       mListenerListMutex.acquire();
-      {
-         //mListenerList.insert(listener_map_t::value_type( handle;
-         mListenerList[local_addr] = handle;
+      {         
+         mListenerList[handle->getLocalAddr()] = handle;
+         //std::pair<listener_map_t::iterator, bool> ret_val =
+         //   mListenerList.insert(listener_map_t::value_type( local_addr, handle))        
       }
       mListenerListMutex.release();
-
-      vprASSERT( mListenerList.find(local_addr) != mListenerList.end());
+      
       vprASSERT( isListening(handle->getLocalAddr()) && "Didn't add listener" );
 
       return status;
@@ -479,28 +477,7 @@ vpr::ReturnStatus SocketManager::ensureNetworkNodeIsRegistered(const vpr::Uint32
 
    return ret_stat;
 }
-
-
-   /*
-   vpr::sim::NetworkGraph::net_vertex_t SocketManager::getLocalhostVertex ()
-   {
-      vpr::sim::NetworkGraph& net_graph =
-         vpr::sim::Controller::instance()->getNetworkGraph();
-      vpr::Uint32 last_node = net_graph.getNodeCount() - 1;
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-         << "SocketManager::getLocalhostVertex(): Using last node (#" << last_node
-         << ") for localhost\n" << vprDEBUG_FLUSH;
-      return net_graph.getNode(last_node);
-   }
-
-   vpr::Uint32 SocketManager::getLocalhostIpAddrValue()
-   {
-      vpr::sim::NetworkGraph& net_graph = vpr::sim::Controller::instance()->getNetworkGraph();
-      NetworkNodePtr node_prop = net_graph.getNodeProperty(getLocalhostVertex());
-      return node_prop->getIpAddress();
-   }
-   */
-
+   
 
 } // End of sim namespace
 
