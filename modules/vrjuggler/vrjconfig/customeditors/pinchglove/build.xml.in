@@ -16,7 +16,7 @@
 
    <property name="tweek.classpath" refid="tweek.classpath" />
    <property name="jccl.classpath" refid="jccl.classpath" />
-   
+
    <!-- Compile all java sources -->
    <target name="compile">
       <javac destdir="."

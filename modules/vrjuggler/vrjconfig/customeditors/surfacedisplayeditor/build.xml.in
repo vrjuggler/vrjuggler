@@ -44,24 +44,8 @@
             <include name="org/vrjuggler/vrjconfig/ui/images/*" />
             <include name="LICENSE-java-laf.txt" />
          </fileset>
-         <exclude name="org/vrjuggler/vrjconfig/wizard/cluster/**" />
-         <exclude name="org/vrjuggler/vrjconfig/wizard/devices/**" />
 -->
       </jar>
-<!--
-      <jar destfile="ClusterWizard.jar" basedir=".">
-         <include name="org/vrjuggler/vrjconfig/wizard/cluster/**" />
-         <fileset dir="${srcdir}">
-            <include name="org/vrjuggler/vrjconfig/wizard/cluster/images/*" />
-         </fileset>
-      </jar>
-      <jar destfile="Devices.jar" basedir=".">
-         <include name="org/vrjuggler/vrjconfig/wizard/devices/**" />
-         <fileset dir="${srcdir}">
-            <include name="org/vrjuggler/vrjconfig/wizard/devices/images/*" />
-         </fileset>
-      </jar>
--->      
    </target>
 
 
@@ -71,9 +55,5 @@
          <fileset dir="org" includes="**/*.class" />
       </delete>
       <delete file="SurfaceDisplayEditor.jar" failonerror="false" />
-<!--
-      <delete file="ClusterWizard.jar" failonerror="false" />
-      <delete file="Devices.jar" failonerror="false" />
--->
    </target>
 </project>

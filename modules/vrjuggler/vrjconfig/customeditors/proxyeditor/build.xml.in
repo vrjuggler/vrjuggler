@@ -17,7 +17,7 @@
    <property name="tweek.classpath" refid="tweek.classpath" />
    <property name="jccl.classpath" refid="jccl.classpath" />
    <property name="jgraphdir" value="@JUGGLERROOT_ABS@/external/jgraph" />
-   
+
    <!-- Compile all java sources -->
    <target name="compile">
       <javac destdir="."
@@ -41,25 +41,7 @@
          <fileset dir="${srcdir}">
             <include name="org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/*" />
          </fileset>
-<!--
-         <exclude name="org/vrjuggler/vrjconfig/wizard/cluster/**" />
-         <exclude name="org/vrjuggler/vrjconfig/wizard/devices/**" />
--->
       </jar>
-<!--
-      <jar destfile="ClusterWizard.jar" basedir=".">
-         <include name="org/vrjuggler/vrjconfig/wizard/cluster/**" />
-         <fileset dir="${srcdir}">
-            <include name="org/vrjuggler/vrjconfig/wizard/cluster/images/*" />
-         </fileset>
-      </jar>
-      <jar destfile="Devices.jar" basedir=".">
-         <include name="org/vrjuggler/vrjconfig/wizard/devices/**" />
-         <fileset dir="${srcdir}">
-            <include name="org/vrjuggler/vrjconfig/wizard/devices/images/*" />
-         </fileset>
-      </jar>
--->      
    </target>
 
 
@@ -69,9 +51,5 @@
          <fileset dir="org" includes="**/*.class" />
       </delete>
       <delete file="ProxyEditor.jar" failonerror="false" />
-<!--
-      <delete file="ClusterWizard.jar" failonerror="false" />
-      <delete file="Devices.jar" failonerror="false" />
--->
    </target>
 </project>

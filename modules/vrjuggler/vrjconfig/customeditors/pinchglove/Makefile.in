@@ -31,7 +31,8 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/vrjconfig/customeditors/proxyeditor.  It requires GNU make.
+# Makefile.in for vrjuggler/vrjconfig/customeditors/pinchglove.  It requires
+# GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -52,18 +53,10 @@ INSTALL_FILES=
 JAVA_IDL_OPTS=		@JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
 JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
 
-BEANS		= PinchGloveEditor
+BEANS=			PinchGloveEditor
 
-# List the packages for which JavaDoc documentation will be generated.
-#DOC_PKGS	= $(VRJCONFIG_PKG)
-
-#webroot		= $(HOME)/public_html/jugglerweb
-#instdir		= vrjuggler/vrjconfig/customeditors/proxyeditor/1.0
-#doc_prefix	= $(webroot)/$(instdir)
-#DOC_ROOT	= programmer.reference.java
-
-_LOCAL_CLEAN=1
-JAVA_AFTERBUILD=java_afterbuild
+_LOCAL_CLEAN=		1
+JAVA_AFTERBUILD=	java_afterbuild
 
 include $(MKPATH)/dpp.obj.mk
 
@@ -108,12 +101,7 @@ ifneq ($(BEANS), )
                 $(top_srcdir)/vrjconfig/customeditors/pinchglove/$$bean.xml $(beandir) || exit 1; \
           done
 endif
-	  
-install-docs:
-	$(MKINSTALLDIRS) $(doc_prefix)
-	rm -rf $(doc_prefix)/$(DOC_ROOT)
-	mv $(DOC_ROOT) $(doc_prefix)
-
+ 
 ifdef GLOBAL_BUILD
    CLEAN_DIRS+=	$(top_srcdir)/bin
 endif
