@@ -155,7 +155,7 @@ void ConfigManager::loadRemoteReconfig()
 void ConfigManager::setRemoteReconfigPlugin(jccl::RemoteReconfig* plugin)
 {
    // If we already have a remote reconfig plug-in, discard it first.
-   if ( NULL != mReconfigIf && NULL != plugin )
+   if ( NULL != mReconfigIf )
    {
       vprDEBUG(jcclDBG_RECONFIG, vprDBG_STATE_LVL)
          << "[ConfigManager::setRemoteReconfigPlugin()] "
