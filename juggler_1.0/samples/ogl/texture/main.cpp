@@ -30,31 +30,39 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <application.h>
-
+// VR Juggler
 #include <Kernel/vjKernel.h>     // vr juggler kernel
 #include <Kernel/vjProjection.h> // for setNearFar
 
-int main(int argc, char* argv[])
+// the application
+#include <application.h>         // the application
+
+
+//: executable entry point
+int main( int argc, char* argv[] )
 {
    vjProjection::setNearFar( 0.01f, 10000.0f );
+   
+   // Get the kernel
+   vjKernel* kernel = vjKernel::instance();        
+   
+   // Create an instance of the application
+   TextureDemoApplication* application = new TextureDemoApplication( kernel );   
 
-   vjKernel* kernel = vjKernel::instance();        // Get the kernel
-   textureApp* application = new textureApp(kernel);   // Declare an instance of the app
-
+   // display usage if needed...
    if (argc <= 1)
    {
       // display some usage info (holding the user by the hand stuff)
       //  this will probably go away once the kernel becomes separate 
       //  and can load application plugins.
-      std::cout<<"\n"<<std::flush;
-      std::cout<<"\n"<<std::flush;
-      std::cout<<"Usage: "<<argv[0]
-               <<" vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n"
-               <<std::flush;
-      std::cout<<"\n"<<std::flush;
-      std::cout<<"\n"<<std::flush;
-      exit(1);
+      std::cout << "\n" << std::flush;
+      std::cout << "\n" << std::flush;
+      std::cout << "Usage: " << argv[0]
+                << " vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n"
+                << std::flush;
+      std::cout << "\n" << std::flush;
+      std::cout << "\n" << std::flush;
+      exit( 1 );
    }
    
    // Load any config files specified on the command line
@@ -63,15 +71,16 @@ int main(int argc, char* argv[])
       kernel->loadConfigFile( argv[i] );
    }
       
+   // start the kernel
    kernel->start();
-      //- Kernel load global config  -- Environment variable
-      //- App KernelConfig function
-      //- Load user local config
+   
+   // Set application that the kernel will run now.
+   kernel->setApplication( application );         
 
-   kernel->setApplication( application );         // Set application
-
+   // spin wildly until dizzy, then fall over. (press ctrl-c to exit)
+   std::cout << "Press CTRL-C to exit\n" << std::flush;
    while (1)
    {
-       ::usleep( 100000 );
+      ::usleep( 100000 );
    }
 }

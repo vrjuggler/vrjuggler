@@ -33,119 +33,59 @@
 #ifndef _TEXTURE_APP_
 #define _TEXTURE_APP_
 
-#include <vjConfig.h>
-
-#include <GL/gl.h>
-#include <GL/glu.h>
+// C++ and STL (standard template library - http://www.sgi.com/Technology/STL)
+#include <iostream>
 #include <vector>
 
+// C
+#include <math.h>
+
+// OpenGL
+#include <GL/gl.h>
+#include <GL/glu.h>
+
+// VR juggler
+#include <vjConfig.h>
 #include <Kernel/GL/vjGlApp.h>
 #include <Kernel/GL/vjGlContextData.h>
 #include <Kernel/vjDebug.h>
-
 #include <Math/vjMatrix.h>
 #include <Math/vjVec3.h>
-#include <Kernel/vjDebug.h>
 
+// texture application objects
 #include "renderGeometry.h"
 #include "cubeGeometry.h"
-
 #include "Image.h"
 #include "Texture.h"
 #include "hexImage.h"
 #include "renderTexture.h"
 
-/*
-#include <Input/InputManager/vjPosInterface.h>
-#include <Input/InputManager/vjAnalogInterface.h>
-#include <Input/InputManager/vjDigitalInterface.h>
-#include <Kernel/vjUser.h>
-*/
-
-class textureApp : public vjGlApp
+//: VR Juggler application demonstration to show you 
+//  how to do texturing in an OpenGL juggler application
+class TextureDemoApplication : public vjGlApp
 {
 public:
-   textureApp( vjKernel* kern ) : vjGlApp( kern ), x( 0.0f )
-   {
-   }
+   //: Constructor
+   TextureDemoApplication( vjKernel* kern );
 
-   virtual ~textureApp() 
-   {
-   }
+   //: destructor
+   virtual ~TextureDemoApplication();
 
-   // Execute any initialization needed before the API is started
-   virtual void init();
-
-   // Execute any initialization needed <b>after</b> API is started
-   //  but before the drawManager starts the drawing loops.
-   virtual void apiInit()
-   {
-   }
-
-   // Called immediately upon opening a new OpenGL context
+   //: Called immediately upon opening a new OpenGL context
+   //  put your opengl initialization here...
    virtual void contextInit();
 
-   /** Function to draw the scene
-    * PRE: OpenGL state has correct transformation and buffer selected
-    * POST: The current scene has been drawn
-    */
-   virtual void draw()
-   {
-      ::glClearColor( 0.0f, 0.0f, 0.3f, 1.0f );
-      ::glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT );
-      ::glDisable( GL_LIGHTING );
-      ::glShadeModel( GL_SMOOTH );
-      ::glEnable( GL_DEPTH_TEST );
-      
-      // enable alpha colors
-      ::glEnable( GL_BLEND );
-      ::glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA ); 
-      
-      ::glMatrixMode( GL_MODELVIEW );
-      ::glPushMatrix();
-         ::glLoadIdentity();      
-
-         // move the cube to at the front of an average cave wall.
-         ::glTranslatef( 0.0f, 6.0f, -6 ); 
-         
-         // spin the cube
-         ::glRotatef( x, 1.0f, 0.7f, 0.1f );
-         
-         // render the cube texture (texture object)
-         tex::render( mCubeTexture, textureApp::getTexObjID( mCubeTexture ) );
-
-         // render the cube geometry (display listed)
-         ::glCallList( mCubeDisplayList->id );
-      ::glPopMatrix();
-      
-      // draw a floor
-      float size = 20.0f;
-      ::glPushMatrix();
-         ::glLoadIdentity();    
-         ::glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );
-         ::glNormal3f( 0.0f, 1.0f, 0.0f );
-         ::glBegin( GL_QUADS );
-            ::glTexCoord2f( 1.0f, 1.0f );
-            ::glVertex3f(  size, 0, -size );
-            
-            ::glTexCoord2f( 0.0f, 1.0f );
-            ::glVertex3f( -size, 0, -size );
-            
-            ::glTexCoord2f( 0.0f, 0.0f );
-            ::glVertex3f( -size, 0,  size );
-            
-            ::glTexCoord2f( 1.0f, 0.0f );
-            ::glVertex3f(  size, 0,  size );
-         ::glEnd();
-      ::glPopMatrix();
-   }
-
+   //: Function to "draw" the scene 
+   //  put your opengl draw functions here...
+   //  PRE: OpenGL state has correct transformation and buffer selected
+   //  POST: The current scene has been drawn
+   virtual void draw();
+   
    // Function called before updating trackers but after the frame is drawn
-   virtual void postFrame()
-   {
-      x += 5;
-   }
+   // do calculations here...
+   virtual void postFrame();
 
+// private stuff!
 private:
    float x;
 
