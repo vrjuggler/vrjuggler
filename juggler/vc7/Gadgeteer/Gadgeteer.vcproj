@@ -38,7 +38,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="jccl_d.lib vpr_d.lib cppdom_d.lib  libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/gadget_d.dll"
-				Version="0.19.0"
+				Version="0.20.0"
 				LinkIncremental="0"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;..\JCCL\DebugDLL;..\VPR\DebugDLL"
 				GenerateDebugInformation="TRUE"
@@ -91,7 +91,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="jccl.lib vpr.lib cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/gadget.dll"
-				Version="0.19.0"
+				Version="0.20.0"
 				LinkIncremental="0"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;..\JCCL\ReleaseDLL;..\VPR\ReleaseDLL"
 				GenerateDebugInformation="FALSE"
@@ -155,6 +155,12 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\ClusterPlugin.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\Command.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\CommandProxy.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\ConnectionAck.cpp">
@@ -295,19 +301,13 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\Devices\Sim\SimSetablePosition.cpp">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\SpeechRecogDigital.cpp">
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\SpeechRecogDigitalProxy.cpp">
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\SpeechRecogString.cpp">
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\SpeechRecogStringProxy.cpp">
-			</File>
-			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\StartBlock.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\String.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\StringProxy.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\SyncAck.cpp">
@@ -375,6 +375,15 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\ClusterPlugin.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\Command.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\CommandInterface.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\CommandProxy.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\ConnectionAck.h">
@@ -608,28 +617,19 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Speech.h">
 			</File>
 			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\SpeechRecogDigital.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\SpeechRecogDigitalInterface.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\SpeechRecogDigitalProxy.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\SpeechRecogString.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\SpeechRecogStringInterface.h">
-			</File>
-			<File
-				RelativePath="..\..\modules\gadgeteer\gadget\Type\SpeechRecogStringProxy.h">
-			</File>
-			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\StartBlock.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\String.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\StringData.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\StringInterface.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\StringProxy.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\SyncAck.h">
