@@ -20,14 +20,14 @@ bool vjCyberGlove::config(vjConfigChunk *c)
 
    vjASSERT(myThread == NULL);      // This should have been set by vjInput(c)
 
-    char* home_dir = c->getProperty("calDir");
+    char* home_dir = c->getProperty("calDir").cstring();
     if (home_dir != NULL)
     {
         mCalDir = new char [strlen(home_dir) + 1];
 	     strcpy(mCalDir,home_dir);
     }
 
-    std::string glove_pos_proxy = (char*)c->getProperty("glovePos");    // Get the name of the pos_proxy
+    std::string glove_pos_proxy = c->getProperty("glovePos");    // Get the name of the pos_proxy
     if(glove_pos_proxy == std::string(""))
     {
        vjDEBUG(0) << "ERROR: vjCyberglove has no posProxy." << endl << vjDEBUG_FLUSH;

@@ -40,11 +40,11 @@ bool vjPosProxy::config(vjConfigChunk* chunk)
 {
    vjDEBUG_BEGIN(1) << "------------------ POS PROXY -----------------\n"
                     << "   config()" << endl << vjDEBUG_FLUSH;
-   vjASSERT(((std::string)(char*)chunk->getType()) == "PosProxy");
+   vjASSERT(((std::string)chunk->getType()) == "PosProxy");
 
    int unitNum = chunk->getProperty("unit");
-   std::string proxy_name = (char*)chunk->getProperty("name");
-   std::string dev_name = (char*)chunk->getProperty("device");
+   std::string proxy_name = chunk->getProperty("name");
+   std::string dev_name = chunk->getProperty("device");
 
    if (true == (bool)chunk->getProperty("etrans") )
    {

@@ -23,13 +23,13 @@ vjInput::~vjInput()
 bool vjInput::config( vjConfigChunk *c)
 {
   sPort = NULL;
-  char* t = c->getProperty("port");
+  char* t = c->getProperty("port").cstring();
   if (t != NULL)
   {
     sPort = new char[ strlen(t) + 1 ];
     strcpy(sPort,t);
   }
-  t = c->getProperty("name");
+  t = c->getProperty("name").cstring();
   if (t != NULL)
   {
     instName = new char[ strlen(t) + 1];
