@@ -51,12 +51,12 @@ public class ConfigBrokerProxy
     * @throws Exception    if the ConfigBroker service could not be found
     */
    public ConfigBrokerProxy()
-      throws Exception
+      throws RuntimeException
    {
       TweekBean bean = BeanRegistry.instance().getBean("ConfigBroker");
       if (bean == null)
       {
-         throw new Exception("Could not find ConfigBroker service");
+         throw new RuntimeException("Could not find ConfigBroker service");
       }
       if (bean.getBean() instanceof ConfigBroker)
       {
@@ -64,7 +64,7 @@ public class ConfigBrokerProxy
       }
       else
       {
-         throw new Exception("The bean registered as ConfigBroker is not a ConfigBroker implementation.");
+         throw new RuntimeException("The bean registered as ConfigBroker is not a ConfigBroker implementation.");
       }
    }
 
