@@ -38,6 +38,7 @@
 #include <vpr/Util/FileUtils.h>
 
 #include <gadget/Util/Debug.h>
+#include <gadget/gadgetParam.h>
 #include <gadget/Type/DeviceFactory.h>
 #include <gadget/Node.h>
 
@@ -64,13 +65,13 @@ namespace cluster
 
    /**
     * This struct implements a callable object (a functor, basically).  An
-    * instance can be passed in where a boost::function1<bool, void*> is expected.
-    * In cluster::ClusterManager::configAdd(), instances are used to handle dynamic
-    * loading of cluster plugins via vpr::LibraryLoader.
+    * instance can be passed in where a boost::function1<bool, void*> is
+    * expected.  In cluster::ClusterManager::configAdd(), instances are used
+    * to handle version checking of cluster plug-ins via vpr::LibraryLoader.
     */
-   struct Callable
+   struct VersionCheckCallable
    {
-      Callable( cluster::ClusterManager* clusterMgr ) : mgr( clusterMgr )
+      VersionCheckCallable()
       {
       }
 
@@ -78,17 +79,69 @@ namespace cluster
        * This will be invoked as a callback by methods of vpr::LibraryLoader.
        *
        * @param func A function pointer for the entry point in a dynamically
-       *             loaded device driver.  This must be cast to the correct
+       *             loaded cluster plug-in.  This must be cast to the correct
+       *             signature before being invoked.
+       */
+      bool operator()(void* func)
+      {
+         vpr::Uint32 (*version_func)();
+         version_func = (vpr::Uint32 (*)()) func;
+
+         // Call the entry point function, which, in this case, returns the
+         // version of Gadgeteer against which the plug-in was compiled.
+         vpr::Uint32 plugin_gadget_ver = (*version_func)();
+
+         bool match = (plugin_gadget_ver == mGadgetVersion);
+
+         if ( ! match )
+         {
+            vprDEBUG(gadgetDBG_RIM, vprDBG_WARNING_LVL)
+               << clrOutBOLD(clrYELLOW, "WARNING")
+               << ": Gadgeteer version mismatch!\n" << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_WARNING_LVL)
+               << "Cluster plug-in was compiled against Gadgeteer version "
+               << plugin_gadget_ver << ",\n" << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_WARNING_LVL)
+               << "but this is Gadgeteer version " << mGadgetVersion
+               << std::endl << vprDEBUG_FLUSH;
+         }
+
+         return match;
+      }
+
+      static const vpr::Uint32 mGadgetVersion;
+   };
+
+   const vpr::Uint32 VersionCheckCallable::mGadgetVersion(__GADGET_version);
+
+   /**
+    * This struct implements a callable object (a functor, basically).  An
+    * instance can be passed in where a boost::function1<bool, void*> is
+    * expected.  In cluster::ClusterManager::configAdd(), instances are used
+    * to handle dynamic loading of cluster plugins via vpr::LibraryLoader.
+    */
+   struct PluginInitCallable
+   {
+      PluginInitCallable(cluster::ClusterManager* clusterMgr)
+         : mgr(clusterMgr)
+      {
+      }
+
+      /**
+       * This will be invoked as a callback by methods of vpr::LibraryLoader.
+       *
+       * @param func A function pointer for the entry point in a dynamically
+       *             loaded cluster plug-in.  This must be cast to the correct
        *             signature before being invoked.
        */
       bool operator()( void* func )
       {
          void (*init_func)(ClusterManager*);
 
-         // Cast the entry point function to the correct signature so that we can
-         // call it.  All dynamically loaded drivers must have an entry point
-         // function that takes a pointer to a cluster::ClusterManager instance and
-         // returns nothing.
+         // Cast the entry point function to the correct signature so that we
+         // can call it.  All dynamically loaded plug-ins must have an entry
+         // point function that takes a pointer to a cluster::ClusterManager
+         // instance and returns nothing.
          init_func = (void (*)(ClusterManager*)) func;
 
          // Call the entry point function.
@@ -538,7 +591,7 @@ namespace cluster
                }
             }
 
-            // Append a default driver search path to search_path.
+            // Append a default plug-in search path to search_path.
             const std::string gadget_base_dir( "GADGET_BASE_DIR" );
             const std::string vj_base_dir( "VJ_BASE_DIR" );
             std::string base_dir;
@@ -551,7 +604,7 @@ namespace cluster
                if ( !vpr::System::getenv( vj_base_dir, base_dir ).success() )
                {
                   // If neither $GADGET_BASE_DIR nor $VJ_BASE_DIR is set, then
-                  // we cannot append a default driver search path.
+                  // we cannot append a default plug-in search path.
                   append_default = false;
                }
             }
@@ -583,7 +636,9 @@ namespace cluster
             // --- Load cluster plugin dsos -- //
             // - Load individual plugins
             const std::string plugin_prop_name( "plugin" );
+            const std::string get_version_func( "getGadgeteerVersion" );
             const std::string plugin_init_func( "initPlugin" );
+
             int plugin_count = element->getNum( plugin_prop_name );
             std::string plugin_dso_name;
 
@@ -599,18 +654,49 @@ namespace cluster
                      << "plugin DSO '" << plugin_dso_name << "'"
                      << std::endl << vprDEBUG_FLUSH;
 
-                  vpr::ReturnStatus load_status;
-                  Callable functor( this );
-                  vpr::LibraryPtr dso;
-                  load_status =
-                     vpr::LibraryLoader::findDSOAndLookup(plugin_dso_name,
-                                                          search_path,
-                                                          plugin_init_func,
-                                                          functor, dso);
+                  vpr::LibraryPtr dso =
+                     vpr::LibraryLoader::findDSO(plugin_dso_name, search_path);
 
-                  if ( load_status.success() )
+                  if ( dso.get() != NULL )
                   {
-                     mLoadedPlugins.push_back(dso);
+                     vpr::ReturnStatus version_status;
+                     VersionCheckCallable version_functor;
+                     version_status =
+                        vpr::LibraryLoader::findEntryPoint(dso,
+                                                           get_version_func,
+                                                           version_functor);
+
+                     if ( ! version_status.success() )
+                     {
+                        vprDEBUG(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
+                           << clrOutBOLD(clrRED, "ERROR")
+                           << ": Version mismatch while loading cluster plug-in DSO '"
+                           << plugin_dso_name << "'\n" << vprDEBUG_FLUSH;
+                        vprDEBUG_NEXT(gadgetDBG_RIM, vprDBG_CRITICAL_LVL)
+                           << "This plug-in will not be usable.\n"
+                           << vprDEBUG_FLUSH;
+                     }
+                     else
+                     {
+                        vpr::ReturnStatus load_status;
+                        PluginInitCallable init_functor(this);
+                        load_status =
+                           vpr::LibraryLoader::findEntryPoint(dso,
+                                                              plugin_init_func,
+                                                              init_functor);
+
+                        if ( load_status.success() )
+                        {
+                           mLoadedPlugins.push_back(dso);
+                        }
+                     }
+                  }
+                  else
+                  {
+                     vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                        << clrOutBOLD(clrRED, "ERROR")
+                        << ": Failed to find cluster plug-in DSO '"
+                        << plugin_dso_name << "'\n" << vprDEBUG_FLUSH;
                   }
                }
             }

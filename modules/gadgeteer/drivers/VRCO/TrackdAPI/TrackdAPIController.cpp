@@ -35,12 +35,18 @@
 #include <drivers/VRCO/TrackdAPI/TrackdAPISensor.h>
 #include <jccl/Config/ConfigElement.h>
 #include <vpr/Util/Debug.h>
+#include <gadget/gadgetParam.h>
 
 #include <gadget/Type/DeviceConstructor.h>
 
 
 extern "C"
 {
+
+GADGET_DRIVER_EXPORT(vpr::Uint32) getGadgeteerVersion()
+{
+   return __GADGET_version;
+}
 
 GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 {

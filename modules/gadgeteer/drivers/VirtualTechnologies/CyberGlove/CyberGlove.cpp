@@ -41,6 +41,7 @@
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Util/Debug.h>
+#include <gadget/gadgetParam.h>
 #include <drivers/VirtualTechnologies/CyberGlove/vt_types.h>
 #include <drivers/VirtualTechnologies/CyberGlove/vt_globals.h>
 #include <drivers/VirtualTechnologies/CyberGlove/vt_types.h>
@@ -50,6 +51,11 @@
 
 extern "C"
 {
+
+GADGET_DRIVER_EXPORT(vpr::Uint32) getGadgeteerVersion()
+{
+   return __GADGET_version;
+}
 
 GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 {

@@ -38,12 +38,18 @@
 
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
+#include <gadget/gadgetParam.h>
 #include <drivers/5DT/DataGlove/DataGloveStandalone.h> /* standalone dataglove driver */
 #include <drivers/5DT/DataGlove/DataGlove.h> /* Gadgeteer dataglove driver */
 
 
 extern "C"
 {
+
+GADGET_DRIVER_EXPORT(vpr::Uint32) getGadgeteerVersion()
+{
+   return __GADGET_version;
+}
 
 GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 {
