@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-03-28 patrickh Turned on exceptions by default when using GCC 3.  This is
+                    in line with behavior of all other supported compilers.
 2002-03-13 patrickh Fixed vpr::Interval time calculations on Win32.
                     NEW VERSION: 0.11.4
 2002-02-24 allenb   Added Factory Pattern template class.
