@@ -260,6 +260,9 @@ public:
     *  @post Set the definintion for this element.
     */
    void setDefinition(ConfigDefinitionPtr d);
+   
+   /** Returns the Config Definition for this ConfigElement. */
+   ConfigDefinitionPtr getConfigDefinition();
 
    cppdom::NodePtr getNode() const;
 
