@@ -77,9 +77,9 @@ $alias_subst{"MAILTO_JUGGLER_DEV_MAILING_LIST"} = 'mailto:vrjuggler-devel@lists.
 
 $alias_subst{"CONTACT_US_DIRECTLY"} = 'mailto:vrjuggler-contact@vrjuggler.org';
 
-$alias_subst{"SOURCEFORGE"} = 'https://sourceforge.net';
-$alias_subst{"JUGGLER_SOURCEFORGE"} = 'https://sourceforge.net/project/?group_id=8041';
-$alias_subst{"JUGGLER_SOURCEFORGE_CVS"} = 'https://sourceforge.net/cvs/?group_id=8041';
+$alias_subst{"SOURCEFORGE"} = 'http://sourceforge.net';
+$alias_subst{"JUGGLER_SOURCEFORGE"} = 'http://sourceforge.net/project/?group_id=8041';
+$alias_subst{"JUGGLER_SOURCEFORGE_CVS"} = 'http://sourceforge.net/cvs/?group_id=8041';
 $alias_subst{"JUGGLER_SOURCEFORGE_IMAGE"} = 'http://sourceforge.net/sflogo.php?group_id=8041&type=1';
 
 # An alias for a New Window.
@@ -87,9 +87,9 @@ $alias_subst{"JUGGLER_SOURCEFORGE_IMAGE"} = 'http://sourceforge.net/sflogo.php?g
 $alias_subst{"NEW_WINDOW"} = 'NewWindow';
 
 # Juggler bug submission program
-$alias_subst{"JUGGLERBUGS"} = 'https://sourceforge.net/bugs/?group_id=8041';
-$alias_subst{"VJCONTROLBUGS"} = 'https://sourceforge.net/bugs/index.php?group_id=8041&set=custom&_assigned_to=100&_status=1&_category=2959&_bug_group=100&SUBMIT=Browse';
-$alias_subst{"SUBMITBUGS"} = 'https://sourceforge.net/bugs/?func=addbug&group_id=8041';
+$alias_subst{"JUGGLERBUGS"} = 'http://sourceforge.net/bugs/?group_id=8041';
+$alias_subst{"VJCONTROLBUGS"} = 'http://sourceforge.net/bugs/index.php?group_id=8041&set=custom&_assigned_to=100&_status=1&_category=2959&_bug_group=100&SUBMIT=Browse';
+$alias_subst{"SUBMITBUGS"} = 'http://sourceforge.net/bugs/?func=addbug&group_id=8041';
 
 # Contact information
 $alias_subst{"ALLENB"} = 'http://www.vrac.iastate.edu/~allenb';
