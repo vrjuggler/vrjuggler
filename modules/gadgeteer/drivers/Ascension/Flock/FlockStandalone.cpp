@@ -546,7 +546,7 @@ int FlockStandalone::getReading (const int& n, float& xPos, float& yPos,
                 i += num_read;
             }
 
-            _serial_port->read(&group, 1,num_read, vpr::Interval(timeout, vpr::Interval::Msec));
+            _serial_port->read(&group, 1, num_read, vpr::Interval(timeout, vpr::Interval::Msec));
             while ( (num_read == 0) &&
                    (c < 99999) )
             {
@@ -637,7 +637,7 @@ int FlockStandalone::open_port ()
                 retval = -1;
             }
             else {
-                // ---- Begin almighty code ----
+                /* ---- Begin almighty code ----
 		vpr::IOSys::Handle handle = _serial_port->getHandle();
 		struct termios tty;
 		tcgetattr(handle, &tty);
@@ -648,8 +648,16 @@ int FlockStandalone::open_port ()
 		tty.c_cflag &= ~HUPCL;
 		tcsetattr(handle, TCSANOW, &tty);
 		// ---- End almighty code
+                */
+// temp hack - fix asap
+                termios tty;
+                vpr::IOSys::Handle handle = _serial_port->getHandle();
+		_serial_port->clearAll();
+                _serial_port->enableRead();
+                _serial_port->enableLocalAttach();
+                _serial_port->enableBreakByteIgnore();
 
-		    
+ 
 		    
 		std::cout << "[FlockStandalone] Port opened successfully\n"
                           << std::flush;
@@ -1065,6 +1073,70 @@ void FlockStandalone::examine_value(char exam, int data, int reps, int format)
     }
      _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
      usleep(500 * mSleepFactor);
+}
+
+
+void FlockStandalone::read_data(){
+//    char exam1[1];
+//    exam1[0] = 'B';  // POINT mode
+    vpr::Uint32 buf=0, buf1=0;
+    char in[1];
+    int j = 0, i = 0, k=0, thirteencount = 0;
+
+    int currBytes = 0, lastBytes = 0;
+    int timeout = 10000;
+ 
+    vpr::IOSys::Handle handle = _serial_port->getHandle();
+
+    i = 0;
+    while(true){
+        j++;
+	
+	lastBytes = currBytes;
+
+	// Wait until something comes in
+	do{
+	  ioctl(handle, FIONREAD, &currBytes);
+	}while(! currBytes);
+
+	_serial_port->readn(in, sizeof(in), buf1);
+	showbits(in[k]);
+
+    	if (timeout)
+	  usleep(timeout); 
+	
+	
+	std::cout << " t/o: " << timeout << " Buffer: "<< currBytes;
+
+	if (currBytes > 3000 && timeout > 50)
+	  timeout -= 50;
+
+//  if (currBytes < lastBytes){
+//  	  std::cout << " t/o: " << timeout << " Buffer: "<< currBytes;
+//  	  timeout += 250;
+//  	}
+//  	else if (currBytes == lastBytes){
+//  	  std::cout << " t/o: " << timeout << " Buffer: "<< currBytes ;
+//  	}
+//  	else{
+//  	  std::cout << " t/o: " << timeout << " Buffer: " << currBytes;
+//  	  timeout -= 250;
+//  	  if (timeout < 0) timeout = 0;
+//  	}
+
+	if (hextoint(in[k]) == 1 || hextoint(in[k]) == 2){
+	  std::cout << " j = " << j;
+	  if (j == 13)
+	    thirteencount++;
+	  else{
+	    std::cout << " 13count = " << thirteencount;
+	    thirteencount = 0;
+	  }
+	  j = 0;
+	}
+
+	std::cout << std::endl;
+    }
 }
 
 
