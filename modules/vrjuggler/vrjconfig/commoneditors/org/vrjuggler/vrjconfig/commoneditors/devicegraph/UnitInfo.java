@@ -159,7 +159,7 @@ public class UnitInfo
       {
          result = true;
       }
-      else if ( obj instanceof UnitInfo )
+      else if ( obj != null && obj.getClass().equals(this.getClass()) )
       {
          UnitInfo info_obj = (UnitInfo) obj;
 
@@ -173,12 +173,17 @@ public class UnitInfo
       return result;
    }
 
+   public int hashCode()
+   {
+      return 0;
+   }
+
    /**
     * Strig-ifies this object.
     */
    public String toString()
    {
-      return "UnitInfo@" + Integer.toHexString(hashCode()) + ": [Type=" +
+      return "UnitInfo: [Type=" +
              UnitTypeHelpers.getUnitTypeName(this.unitType) + "(" +
              this.unitType + "),Number=" + this.unitNumber + "]";
    }
