@@ -105,7 +105,7 @@ chunk GloveProxy "Glove Proxy" "A Glove Proxy points to a glove device and unit"
   end
 chunk KeyboardProxy "Keyboard Proxy" "This proxy points to a keyboard device."
   Name String 1 "Name" "Unique name of an instance of this chunk type"
-  device Chunk 1 "Device" vj_enumeration { "Keyboard" "simKeyboardDigital" "surfaceDisplay" "simDisplay" } "The keyboard device to hook the proxy to."
+  device Chunk 1 "Device" vj_enumeration { "Keyboard" "simKeyboardDigital" } "The keyboard device to hook the proxy to."
   end
 chunk MotionStar "MotionStar" "Ascension MotionStar server chassis configuration"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
