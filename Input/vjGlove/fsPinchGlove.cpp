@@ -66,7 +66,7 @@
 #include <sys/file.h>
 #endif
 
-#include "fsPinchGlove.h"
+#include <Input/vjGlove/fsPinchGlove.h>
 
 const std::string fsPinchGlove::mOpenHandString = "00000.00000";
 

@@ -34,7 +34,7 @@
 #include <assert.h>
 #include <unistd.h>
 #include <iostream>
-#include "sl.h"
+#include <sl.h>
 #include <Sound/vjSoundEngine.h> // base class..
 #include <Sound/sl/SlSound.h>     // my sound handle type...
 
