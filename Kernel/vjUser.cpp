@@ -16,7 +16,7 @@ std::string vjUser::getName()
 bool vjUser::config(vjConfigChunk* chunk)
 {
    vjASSERT(chunk != NULL);
-   vjASSERT((std::string)(char*)chunk->getType() == std::string("JugglerUser"));
+   vjASSERT((std::string)chunk->getType() == std::string("JugglerUser"));
 
    vjDEBUG_BEGIN(1) << "vjUser::config: Creating a new user\n" << vjDEBUG_FLUSH;
 
@@ -24,10 +24,10 @@ bool vjUser::config(vjConfigChunk* chunk)
    mUserId = mNextUserId++;
 
    // Setup user name
-   mName = (std::string)(char*)chunk->getProperty("Name");
+   mName = (std::string)chunk->getProperty("Name");
 
    // Initialize the head stuff
-   std::string head_alias = (std::string)(char*)chunk->getProperty("headPos");
+   std::string head_alias = (std::string)chunk->getProperty("headPos");
    mHead.init(head_alias);
 
    vjDEBUG(1) << "id: " << mUserId << "   Name:" << mName << "   headPos:" << head_alias << endl << vjDEBUG_FLUSH;
