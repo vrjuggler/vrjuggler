@@ -56,37 +56,17 @@
 #  include VPR_HASH_MAP_INCLUDE
 #endif
 
-#if defined(__GNUC__) && __GNUC__ == 3 && __GNUC_MINOR__ >= 1
-namespace __gnu_cxx
-#else
-namespace std
-#endif
+namespace vpr
 {
 
-#ifdef VPR_HASH_MAP_INCLUDE
 /// Nice little helper class for hashing a <code>vpr::InetAddr</code>
-template<>
-#ifdef VPR_OS_Win32
-struct _Hash<vpr::InetAddr>
-#else
-struct hash<vpr::InetAddr>
-#endif
+struct InetAddrHash
 {
    size_t operator() (vpr::InetAddr addr) const
    {
       return ((addr.getAddressValue() << 16) | addr.getPort());
    }
 };
-#else
-/// Nice little helper class for hashing a <code>vpr::InetAddr</code>
-struct hash
-{
-   size_t operator() (vpr::InetAddr addr) const
-   {
-      return ((addr.getAddressValue() << 16) | addr.getPort());
-   }
-};
-#endif
 
 } // End of std namespace
 
