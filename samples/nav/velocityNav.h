@@ -56,24 +56,31 @@ public:
    void setNavPosControl(std::string wand_dev);
 
    // Specify the combination of keys necessary to trigger the given state
-   void setAccelActionCombo(std::vector<ActionState> combo) { mAccelCombo = combo; }
+   void setAccelForwardActionCombo(std::vector<ActionState> combo) { mAccelForwardCombo = combo; }
    void setBrakeActionCombo(std::vector<ActionState> combo) { mBrakeCombo = combo; }
    void setStopActionCombo(std::vector<ActionState> combo) { mStopCombo = combo; }
    void setRotationActionCombo(std::vector<ActionState> combo) { mRotateCombo = combo; }
    void setResetActionCombo(std::vector<ActionState> combo) { mResetCombo = combo; }
 
+   // pass in velocity to add per second
+   void setAccel( const float& vel_per_sec ) { mAcceleration = vel_per_sec; }
+   
    // set the highest velocity this nav can achieve.
    // default is 35
    void setMaxVelocity( const float& velocity = 50.0f )
    { mMaxVelocity = velocity; }
 
+   //: arbitrary acceleration in any direction.
+   //  nice for straefing, rising or diving. :)
+   //  accel = velocity per second
    void accelerate(const vjVec3& accel);
 
    //: zero all velocity
    void stop();
-
-   bool braking() { return mBraking; }
-   bool accelerating() { return mAccelerating;}
+   
+   // TODO: add other directions to accelerate. (since it's hard coded to 0,0,-x in updateInteraction)
+   bool acceleratingForward() { return mAcceleratingForward;}
+   bool braking() { return mBraking; }   
    bool rotating() { return mRotating;}
    bool stopping() { return mStopping;}
    bool reseting() { return mReseting;}
@@ -106,13 +113,14 @@ private:
    float    mMaxVelocity;
    vjMatrix mRotationalAcceleration;
    float    mDamping;
+   float    mAcceleration;
 
    // digitalInterfaces
    std::vector<vjDigitalInterface*> mActionButtons;
    vjPosInterface mNavWand;
 
    // State combos
-   std::vector<ActionState> mAccelCombo;
+   std::vector<ActionState> mAccelForwardCombo;
    std::vector<ActionState> mBrakeCombo;
    std::vector<ActionState> mStopCombo;
    std::vector<ActionState> mRotateCombo;
@@ -120,7 +128,7 @@ private:
 
    // State flags for the navigation
    bool  mBraking;
-   bool  mAccelerating;
+   bool  mAcceleratingForward;
    bool  mRotating;
    bool  mStopping;
    bool  mReseting;
@@ -159,7 +167,7 @@ velocityNav::velocityNav() :
    rotate_combo[0] = OFF;  rotate_combo[1] = OFF;  rotate_combo[2] = ON;    // 001
    reset_combo[0] = OFF;   reset_combo[1] = ON;    reset_combo[2] = ON;     // 011
 
-   setAccelActionCombo(accel_combo);
+   setAccelForwardActionCombo(accel_combo);
    setBrakeActionCombo(brake_combo);
    setStopActionCombo(stop_combo);
    setRotationActionCombo(rotate_combo);
@@ -192,11 +200,11 @@ void velocityNav::setNavPosControl(std::string wand_dev)
 
 void velocityNav::updateInteraction()
 {
-   mAccelerating = checkForAction(mActionButtons,mAccelCombo);
-   mBraking = checkForAction(mActionButtons,mBrakeCombo);
-   mStopping = checkForAction(mActionButtons,mStopCombo);
-   mReseting = checkForAction(mActionButtons,mResetCombo);
-   mRotating = checkForAction(mActionButtons,mRotateCombo);
+   mAcceleratingForward = checkForAction( mActionButtons, mAccelForwardCombo );
+   mBraking = checkForAction( mActionButtons, mBrakeCombo );
+   mStopping = checkForAction( mActionButtons, mStopCombo );
+   mReseting = checkForAction( mActionButtons, mResetCombo );
+   mRotating = checkForAction( mActionButtons, mRotateCombo );
 
    // Braking
    if(mBraking)
@@ -210,9 +218,10 @@ void velocityNav::updateInteraction()
       setDamping(0.0f);
    }
 
-   // Accelerate
-   if(mAccelerating)
-   { accelerate(vjVec3(0,0,-1)); }
+   // Accelerate Forward
+   // TODO: add other directions to accelerate. (since it's hard coded to forward (0,0,-x) here...)
+   if(mAcceleratingForward)
+   { accelerate(vjVec3(0, 0, -mAcceleration)); }
 
    // Reseting
    if(mReseting)
@@ -350,7 +359,9 @@ void velocityNav::scaled_rotate(vjMatrix rot_mat)
    navigator::navRotate(transform);                   // update the mCurPos navigation matrix
 }
 
-
+// accel = velocity per second
+// TODO: hook this up to the vel accumulator..., 
+//        and get rid of mVelocity weirdness.
 void velocityNav::accelerate(const vjVec3& accel)
 {
    if(mVelocity.length() < mMaxVelocity)
