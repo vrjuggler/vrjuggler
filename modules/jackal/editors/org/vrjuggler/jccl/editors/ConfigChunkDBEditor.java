@@ -68,6 +68,12 @@ public class ConfigChunkDBEditor
     */
    final static String CUSTOM          = "CustomPane";
 
+   /**
+    * The ID used to reference the Category panel in the CardLayout for the
+    * editorPane.
+    */
+   final static String CATEGORY        = "CategoryPane";
+
    private final static String ADD_VALUE_ACTION       = "Add Value";
    private final static String REMOVE_VALUE_ACTION    = "Remove Value";
 
@@ -109,6 +115,7 @@ public class ConfigChunkDBEditor
             }
          }
       });
+
       // Update the action panel as things get selected
       genericEditor.addActionListener(new ActionListener()
       {
@@ -173,6 +180,11 @@ public class ConfigChunkDBEditor
       genericEditorScrollPane.setPreferredSize(genericEditor.getPreferredSize());
       editorPane.add(genericEditorScrollPane, GENERIC);
 
+      categoryEditorScrollPane.setViewportView(categoryEditor);
+      categoryEditorScrollPane.setMinimumSize(new Dimension(0, 0));
+      categoryEditorScrollPane.setPreferredSize(categoryEditor.getPreferredSize());
+      editorPane.add(categoryEditorScrollPane, CATEGORY);
+
       // Init the ConfigChunkDB tree
       DefaultMutableTreeNode root = new DefaultMutableTreeNode("Config");
       treeModel = new DefaultTreeModel(root);
@@ -190,13 +202,21 @@ public class ConfigChunkDBEditor
             // Show basic help if nothing is selected
             if (node == null)
             {
-               // TODO: Show the basic help
+               // Disable the add/remove buttons
+               addBtn.setEnabled(false);
+               removeBtn.setEnabled(false);
+
+               // TODO: Show the basic help. For now show nothing.
                return;
             }
 
             // Edit an entire chunk
             else if (node.getUserObject() instanceof ConfigChunk)
             {
+               // Disable the add button. Enable the remove button.
+               addBtn.setEnabled(false);
+               removeBtn.setEnabled(true);
+
                // Show an editor for the given chunk
                ConfigChunk chunk = (ConfigChunk)node.getUserObject();
                genericEditor.setConfigChunk(chunk);
@@ -204,7 +224,19 @@ public class ConfigChunkDBEditor
                // Compute the string version of the path to the chunk
                String path = convertFullNameToTreePath(chunk.getFullName());
                locationLbl.setText(path);
+               editorPaneLayout.show(editorPane, GENERIC);
                propsPane.updateUI();
+            }
+
+            // Selected a category
+            else if (node.getUserObject() instanceof String)
+            {
+               // Enable the add button. Disable the remove button.
+               addBtn.setEnabled(true);
+               removeBtn.setEnabled(false);
+
+               // TODO: Switch to a category panel. Clear the editing panel.
+               editorPaneLayout.show(editorPane, CATEGORY);
             }
          }
       });
@@ -1086,6 +1118,16 @@ public class ConfigChunkDBEditor
     * ScrollPane for the generic editor component.
     */
    JScrollPane genericEditorScrollPane = new JScrollPane();
+
+   /**
+    * The category editor.
+    */
+   JPanel categoryEditor = new JPanel();
+
+   /**
+    * ScrollPane for the category editor component.
+    */
+   JScrollPane categoryEditorScrollPane = new JScrollPane();
 
    //--- JBuilder generated GUI variables ---//
    private BorderLayout baseLayout = new BorderLayout();
