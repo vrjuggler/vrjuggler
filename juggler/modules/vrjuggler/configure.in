@@ -140,19 +140,6 @@ AC_ARG_WITH(dtk,
             [  --with-dtk=<PATH>       DTK installation],
             _with_dtk="$withval", _with_dtk='no')
 
-# Use AudioWorks (which can be found at the given path) in the sound wrapper.
-# The default is to use it with the path being /usr.
-AC_ARG_WITH(audioworks,
-            [  --with-audioworks=<PATH>
-                          AudioWorks installation         [default=/usr]],
-            _with_aw="$withval", _with_aw='/usr')
-
-# Use SL (which can be found at the given path) in the sound wrapper.
-# The default is to use it with the path being /usr.
-AC_ARG_WITH(sl,
-            [  --with-sl=<PATH>        SL installation                 [default=/usr]],
-            _with_sl="$withval", _with_sl='/usr')
-
 # Define the root directory for the Xerces-c installation.
 AC_ARG_WITH(xercesroot,
             [  --with-xercesroot=<PATH>
@@ -654,121 +641,6 @@ elif test "x${_with_dtk}" != "xno" -a "x$try_dtk" = "xno" ; then
 fi
 
 # -----------
-# AudioWorks
-# -----------
-AUDIO_WORKS='N'
-AW_INC=''
-AW_LIB=''
-
-if test "x${_with_aw}" != "xno" ; then
-    DPP_LANG_SAVE
-    DPP_LANG_CPLUSPLUS
-
-    _vjsave_CPPFLAGS="$CPPFLAGS"
-    _vjsave_LDFLAGS="$LDFLAGS"
-    _vjsave_LIBS="$LIBS"
-
-    CPPFLAGS="$CPPFLAGS -I${_with_aw}/include/PSI"
-    LDFLAGS="$LDFLAGS -L${_with_aw}/lib$LIBBITSUF/PSI"
-
-    AC_CHECK_LIB(aw, awInitSys,
-        AC_CHECK_HEADER(aw.h,
-            AUDIO_WORKS='Y',
-            AC_MSG_WARN(*** AudioWorks will not be used (aw.h not found) ***)),
-        AC_MSG_WARN(*** AudioWorks will not be used (library not found) ***),
-        -lawhwi -lpsi -laudiofile -lm)
-
-    CPPFLAGS="${_vjsave_CPPFLAGS}"
-    LDFLAGS="${_vjsave_LDFLAGS}"
-    LIBS="${_vjsave_LIBS}"
-
-    if test "x$AUDIO_WORKS" = "xY" ; then
-        AW_INC="-I${_with_aw}/include/PSI"
-        AW_LIB="-L${_with_aw}/lib${LIBBITSUF}/PSI"
-
-        # This will be used later in test and sample application substitutions.
-        _aw_libs='-law -lawhwi -lpsi -laudiofile'
-    fi
-
-    DPP_LANG_RESTORE
-fi
-
-# -----------
-# SL Library
-# -----------
-SL='N'
-SL_INC=''
-SL_LIB=''
-
-if test "x${_with_sl}" != "xno" ; then
-    # Default to 'Y' for this value since this will not actually be required
-    # by SL on all platforms.
-    _have_audio='Y'
-
-    # If we are on IRIX, we need to check for the SGI Audio Library if we want
-    # to use SL.  If it is not found, ${_have_audio} is set to 'N', and the
-    # check for SL is not performed.
-    if test "x$PLATFORM" = "xIRIX" ; then
-        _vjsave_LIBS="$LIBS"
-
-        AC_CHECK_LIB(audio, alNewConfig,
-            AC_CHECK_HEADER(audio.h,
-                _have_audio='Y',
-                [ _have_audio='N' ;
-                  AC_MSG_WARN(*** SGI Audio headers required for SL ***) ]),
-            AC_MSG_WARN(*** SGI Audio library required for SL ***))
-
-        AC_CHECK_FUNC(pthread_attr_setstack,
-            AC_DEFINE(HAVE_PTHREAD_ATTR_SETSTACK, 1))
-
-        LIBS="${_vjsave_LIBS}"
-    fi
-
-    # Do not bother to check for SL unless ${_have_audio} is 'Y'.
-    if test "x${_have_audio}" = "xY" ; then
-        DPP_LANG_SAVE
-        DPP_LANG_CPLUSPLUS
-
-        _vjsave_CPPFLAGS="$CPPFLAGS"
-        _vjsave_LDFLAGS="$LDFLAGS"
-        _vjsave_LIBS="$LIBS"
-
-        CPPFLAGS="$CPPFLAGS -I${_with_sl}/include/sl"
-        LDFLAGS="$LDFLAGS -L${_with_sl}/lib"
-        LIBS="$LIBS -lsl -laudio -lm"
-
-        AC_CACHE_CHECK(for slScheduler::getCurrent in -lsl,
-            ac_cv_getCurrent_in_sl,
-            AC_TRY_LINK([#include <sl.h> ],
-                        [ slScheduler::getCurrent(); ],
-                        [ ac_cv_getCurrent_in_sl='yes' ; rm -rf ./ii_files ;
-                          SL='Y' ],
-                        ac_cv_getCurrent_in_sl='no'))
-
-        CPPFLAGS="${_vjsave_CPPFLAGS}"
-        LDFLAGS="${_vjsave_LDFLAGS}"
-        LIBS="${_vjsave_LIBS}"
-
-        if test "x$SL" = "xY" ; then
-            SL_INC="-I${_with_sl}/include/sl"
-            SL_LIB="-L${_with_sl}/lib"
-
-            # This will be used later in test and sample application
-            # substitutions.
-            _sl_libs="-lsl"
-
-            if test "x$PLATFORM" = "xIRIX" ; then
-                _sl_libs="${_sl_libs} -laudio"
-            fi
-        else
-            AC_MSG_WARN(*** SL library will not be used ***)
-        fi
-
-        DPP_LANG_RESTORE
-    fi
-fi
-
-# -----------
 # Xerces-c
 # -----------
 _vjsave_CFLAGS="$CFLAGS"
@@ -986,12 +858,8 @@ fi
 #
 #     * APP_EXTRA_FLAGS_PF: Extra flags for the compiler and linker when
 #       building Performer applications.
-#     * APP_VJ_INC_AW: The include path for the AudioWorks header files.
-#     * APP_VJ_INC_SL: The include path for hte SL header files.
 #     * APP_VJ_LIBS_GL: The VR Juggler OpenGL API library.
 #     * APP_VJ_LIBS_PF: The VR Juggler Performer API library.
-#     * APP_VJ_LIBS_AW: The VR Juggler AudioWorks API library.
-#     * APP_VJ_LIBS_SL: The VR Juggler SL API library.
 #     * APP_VJ_LIBS_UTILS: The VR Juggler general utilities library.
 #     * APP_EXTRA_LIBS_GL: The OpenGL libraries needed for compiling with the
 #       OpenGL API.
@@ -999,10 +867,6 @@ fi
 #       the Performer API.
 #     * APP_EXTRA_LIBS_OSG: The OpenScenegraph libraries needed for compiling
 #       with the OpenScenegraph API.
-#     * APP_EXTRA_LIBS_AW: The AudioWorks libraries needed for compiling with
-#       the AudioWorks sound system.
-#     * APP_EXTRA_LIBS_SL: The SL libraries needed for compiling with the SL
-#       sound libraries.
 
 # Put together the basic information needed to compile VR Juggler applications.
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
@@ -1010,29 +874,6 @@ VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
 VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, VJ_BASE_DIR, Juggler Juggler_utils,
               $APP_EXTRA_LIBS)
 
-# If we have AudioWorks, make it available in the application makefiles.
-if test "$AUDIO_WORKS" = "Y" ; then
-    if test "$OS_TYPE" = "Win32" ; then
-        APP_VJ_LIBS_AW='Juggler_aw.lib'
-    else
-        APP_VJ_LIBS_AW='-lJuggler_aw'
-    fi
-
-    APP_EXTRA_INC_AW="$AW_INC"
-    APP_EXTRA_LIBS_AW="$AW_LIB ${_aw_libs}"
-fi
-
-# If we have SL, make it available in the application makefiles.
-if test "$SL" = "Y" ; then
-    if test "$OS_TYPE" = "Win32" ; then
-        APP_VJ_LIBS_SL='Juggler_sl.lib'
-    else
-        APP_VJ_LIBS_SL='-lJuggler_sl'
-    fi
-
-    APP_EXTRA_INC_SL="$SL_INC"
-    APP_EXTRA_LIBS_SL="$SL_LIB ${_sl_libs}"
-fi
 
 if test "$OS_TYPE" = "UNIX" ; then
     DYLIB_DEPS_VJ="$APP_EXTRA_LIBS"
@@ -1099,8 +940,6 @@ if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS_GL=`unix2dos "$APP_EXTRA_LIBS_GL"`
     APP_EXTRA_LIBS_PF=`unix2dos "$APP_EXTRA_LIBS_PF"`
     APP_EXTRA_LIBS_OSG=`unix2dos "$APP_EXTRA_LIBS_OSG"`
-    APP_EXTRA_LIBS_AW=`unix2dos "$APP_EXTRA_LIBS_AW"`
-    APP_EXTRA_LIBS_SL=`unix2dos "$APP_EXTRA_LIBS_SL"`
 else
     SAFE_VJROOT_ABS="$VJROOT_ABS"
 fi
@@ -1178,13 +1017,6 @@ case $OS_TYPE in
             Juggler_pf_lib='-lJuggler_pf'
         fi
 
-        if test "x$AUDIO_WORKS" = "xY" ; then
-            Juggler_aw_lib='-lJuggler_aw'
-        fi
-
-        if test "x$SL" = "xY" ; then
-            Juggler_sl_lib='-lJuggler_sl'
-        fi
         ;;
     WIN32)
         Juggler_lib='Juggler.lib'
@@ -1224,33 +1056,18 @@ AC_SUBST(SHMEM_SYS)
 AC_SUBST(MUTEX_SYS)
 AC_SUBST(THREAD_SYS)
 
-AC_SUBST(AUDIO_WORKS)
-AC_SUBST(AW_INC)
-AC_SUBST(AW_LIB)
-AC_SUBST(SL)
-AC_SUBST(SL_INC)
-AC_SUBST(SL_LIB)
-
 AC_SUBST(DYLIB_DEPS_VJ)
 AC_SUBST(DYLIB_DEPS_UTILS)
 AC_SUBST(DYLIB_DEPS_GL)
 AC_SUBST(DYLIB_DEPS_PF)
-AC_SUBST(DYLIB_DEPS_AW)
-AC_SUBST(DYLIB_DEPS_SL)
 
 AC_SUBST(APP_EXTRA_FLAGS_PF)
-AC_SUBST(APP_EXTRA_INC_AW)
-AC_SUBST(APP_EXTRA_INC_SL)
 AC_SUBST(APP_VJ_LIBS_GL)
 AC_SUBST(APP_VJ_LIBS_PF)
-AC_SUBST(APP_VJ_LIBS_AW)
-AC_SUBST(APP_VJ_LIBS_SL)
 AC_SUBST(APP_VJ_LIBS_UTILS)
 AC_SUBST(APP_EXTRA_LIBS_GL)
 AC_SUBST(APP_EXTRA_LIBS_PF)
 AC_SUBST(APP_EXTRA_LIBS_OSG)
-AC_SUBST(APP_EXTRA_LIBS_AW)
-AC_SUBST(APP_EXTRA_LIBS_SL)
 
 AC_SUBST(subsystem_cxxflags)
 AC_SUBST(subsystem_libs)
@@ -1261,8 +1078,6 @@ AC_SUBST(vrj_libs)
 AC_SUBST(Juggler_lib)
 AC_SUBST(Juggler_utils_lib)
 AC_SUBST(Juggler_ogl_lib)
-AC_SUBST(Juggler_pf_lib)
-AC_SUBST(Juggler_aw_lib)
 AC_SUBST(Juggler_pf_lib)
 AC_SUBST(vrj_extra_ldflags)
 AC_SUBST(vrj_extra_libs)

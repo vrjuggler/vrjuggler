@@ -56,11 +56,11 @@ SUBDIR		= pf
 
 
 # Subdirectories to compile.
-#ifeq (@USE_AUDIOJUGGLER@, Y)
+ifeq (@USE_AUDIOJUGGLER@, Y)
     INCLUDES += -I${AJ_BASE_DIR}/include
     SRCS += ajSoundManager.cpp
     CXXFLAGS += -DUSE_AUDIOJUGGLER
-#endif
+endif
 
 SRCS += SoundManagerFactory.cpp
 

@@ -54,11 +54,11 @@ VJ_LIBS		= @APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
                   @APP_BASIC_LIBS_END@
 
 
-#ifeq (@USE_AUDIOJUGGLER@, Y)
+ifeq (@USE_AUDIOJUGGLER@, Y)
     VJ_INCLUDES +=  -I$(AJ_BASE_DIR)/include
     VJ_LIBS += -L$(AJ_BASE_DIR)/lib@LIBBITSUF@ -lAudioJuggler
     CXXFLAGS += -DUSE_AUDIOJUGGLER
-#endif
+endif
 
 
 VJ_LIB_DEPS	= $(VJ_BASE_DIR)/lib@LIBBITSUF@/libJuggler.a		\
