@@ -37,6 +37,7 @@
 
 #include <vjConfig.h>
 #include <Kernel/vjSystemFactory.h>
+#include <Utils/vjSingleton.h>
 
 class vjDisplayManager;
 
@@ -64,6 +65,8 @@ protected:
    vjWin32SystemFactory()   // Do nothing, but hide
    {;}
 
+   vjSingletonHeader(vjWin32SystemFactory);
+/*
 public:
    /// Get instance of singleton object
    static vjWin32SystemFactory* instance()
@@ -76,6 +79,7 @@ public:
 private:
    /// The instance
    static vjWin32SystemFactory* _instance;
+   */
 };
 
 #endif

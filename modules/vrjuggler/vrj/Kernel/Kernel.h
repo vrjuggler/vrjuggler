@@ -56,6 +56,7 @@ class vjApp;
 //#include <Config/vjChunkDescDB.h>
 // #include <Kernel/vjQueuedConfigChunkHandler.h>
 #include <Kernel/vjConfigChunkHandler.h>
+#include <Utils/vjSingleton.h>
 
 class vjEnvironmentManager;
 
@@ -257,6 +258,8 @@ protected:
    virtual ~vjKernel()
    {;}
 
+   vjSingletonHeader(vjKernel);
+/*
 public:
    //: Get instance of singleton object
    static vjKernel* instance()
@@ -268,6 +271,7 @@ public:
 
 private:
    static vjKernel* _instance;   //: The instance
+   */
 };
 
 

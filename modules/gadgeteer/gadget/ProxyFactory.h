@@ -39,6 +39,8 @@
 #include <vjConfig.h>
 #include <Input/InputManager/vjProxy.h>
 #include <Config/vjConfigChunk.h>
+#include <Utils/vjSingleton.h>
+
 
 //: Base class for virtual construction of proxies
 // Implementations of this class are registered with the proxy factory
@@ -123,6 +125,8 @@ private:
    std::vector<vjProxyConstructorBase*> mConstructors;   //: List of the proxy constructors
 
 
+vjSingletonHeader(vjProxyFactory);
+/*
 public:     // ------ SINGLETON ----- ///
    //: Return singleton instance of the class
    static vjProxyFactory* instance()
@@ -137,6 +141,7 @@ public:     // ------ SINGLETON ----- ///
 
 private:
    static vjProxyFactory* mInstance;
+   */
 };
 
 

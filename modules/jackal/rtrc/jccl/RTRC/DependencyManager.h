@@ -40,6 +40,8 @@
 #include <Kernel/vjDepChecker.h>
 #include <Config/vjConfigChunk.h>
 #include <typeinfo>
+#include <Utils/vjSingleton.h>
+
 
 //: Object used for creating devices
 //!NOTE: Singleton
@@ -98,6 +100,8 @@ private:
    std::vector<vjDepChecker*> mDepCheckers;     //: List of the device constructors
    vjDepChecker               mDefaultChecker;  //: The default checker
 
+vjSingletonHeader(vjDependencyManager);
+/*
 public:     // ------ SINGLETON ----- ///
    //: Return singleton instance of the class
    static vjDependencyManager* instance()
@@ -112,6 +116,7 @@ public:     // ------ SINGLETON ----- ///
 
 private:
    static vjDependencyManager* mInstance;
+   */
 };
 
 #endif
