@@ -59,6 +59,8 @@
 #include <errno.h>
 #include <stdio.h>
 
+#include <vpr/Util/ReturnStatus.h>
+
 
 namespace vpr {
 
@@ -111,16 +113,16 @@ public:
      *       and is suspended until such time as it can be freed and allowed
      *       to acquire the semaphore itself.
      *
-     * @return 1 is returned if the lock is acquired.<br>
-     *         -1 is returnd if an error occurred.
+     * @return vpr::ReturnStatus::Succeed is returned if the lock is acquired.
+     *         vpr::ReturnStatus::Fail is returnd if an error occurred.
      */
-    inline int
+    inline vpr::ReturnStatus
     acquire (void) const {
         if ( sem_wait(mSema) == 0 ) {
-            return 1;
+            return vpr::ReturnStatus();
         } else {
             perror("sem_wait() error");
-            return -1;
+            return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
         }
     }
 
@@ -133,12 +135,13 @@ public:
      *       and is suspended until such time as it can be freed and allowed
      *       to acquire the semaphore itself.
      *
-     * @return 1 is returned if the read lock is acquired.<br>
-     *         -1 is returnd if an error occurred.
+     * @return vpr::ReturnStatus::Succeed is returned if the read lock is
+     *         acquired.  vpr::ReturnStatus::Fail is returnd if an error
+     *         occurred.
      *
      * @note There is no special read lock for now.
      */
-    inline int
+    inline vpr::ReturnStatus
     acquireRead (void) const {
         return this->acquire();
     }
@@ -152,12 +155,13 @@ public:
      *       and is suspended until such time as it can be freed and allowed
      *       to acquire the semaphore itself.
      *
-     * @return 1 is returned if the write lock is acquired.<br>
-     *         -1 is returnd if an error occurred.
+     * @return vpr::ReturnStatus::Succeed is returned if the write lock is
+     *         acquired.  vpr::ReturnStatus::Fail is returnd if an error
+     *         occurred.
      *
      * @note There is no special write lock for now.
      */
-    inline int
+    inline vpr::ReturnStatus
     acquireWrite (void) const {
         return this->acquire();
     }
@@ -171,12 +175,20 @@ public:
      *       locked, the routine returns immediately without suspending the
      *       calling thread.
      *
-     * @return 1 is returned if the lock on this semaphore is acquired.<br>
-     *         0 is returned if the lock is not acquired.
+     * @return vpr::ReturnStatus::Succeed is returned if the lock on this
+     *         semaphore is acquired.  vpr::ReturnStatus::Fail is returned if
+     *         the lock is not acquired.
      */
-    inline int
+    inline vpr::ReturnStatus
     tryAcquire (void) const {
-        return sem_trywait(mSema);
+        if ( sem_trywait(mSema) == 0 )
+        {
+           return vpr::ReturnStatus();
+        }
+        else
+        {
+           return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+        }
     }
 
     /**
@@ -188,10 +200,11 @@ public:
      *       locked, the routine returns immediately without suspending the
      *       calling thread.
      *
-     * @return 1 is returned if the lock on this semaphore is acquired.<br>
-     *         0 is returned if the lock is not acquired.
+     * @return vpr::ReturnStatus::Succeed is returned if the lock on this
+     *         semaphore is acquired.  vpr::ReturnStatus::Fail is returned if
+     *         the lock is not acquired.
      */
-    inline int
+    inline vpr::ReturnStatus
     tryAcquireRead (void) const {
         return this->tryAcquire();
     }
@@ -205,10 +218,11 @@ public:
      *       locked, the routine returns immediately without suspending the
      *       calling thread.
      *
-     * @return 1 is returned if the lock on this semaphore is acquired.<br>
-     *         0 is returned if the lock is not acquired.
+     * @return vpr::ReturnStatus::Succeed is returned if the lock on this
+     *         semaphore is acquired.  vpr::ReturnStatus::Fail is returned if
+     *         the lock is not acquired.
      */
-    inline int
+    inline vpr::ReturnStatus
     tryAcquireWrite (void) const {
         return this->tryAcquire();
     }
@@ -220,12 +234,20 @@ public:
      * @post The semaphore is released and the thread at the haed of the
      *       wait queue is allowed to execute again.
      *
-     * @return 0 is returned if the lock on this semaphore is released.<br>
-     *         -1 is returned if an error occurred.
+     * @return vpr::ReturnStatus::Succeed is returned if the lock on this
+     *         semaphore is released.  vpr::ReturnStatus::Fail is returned if
+     *         an error occurred.
      */
-    inline int
+    inline vpr::ReturnStatus
     release (void) const {
-        return sem_post(mSema);
+        if ( sem_post(mSema) == 0 )
+        {
+           return vpr::ReturnStatus();
+        }
+        else
+        {
+           return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+        }
     }
 
     /**
@@ -236,20 +258,28 @@ public:
      *
      * @param val The value to which the semaphore is reset.
      *
-     * @return 0 is returned if this semaphore is reset with the given value
-     *         successfully.<br>
-     *         -1 is returned if this semaphore could not be reset.
+     * @return vpr::ReturnStatus::Succeed is returned if this semaphore is
+     *         reset with the given value successfully.
+     *         vpr::ReturnStatus::Fail is returned if this semaphore could not
+     *         be reset.
      *
      * @note If processes are waiting on the semaphore, the results are
      *       undefined.
      */
-    inline int
+    inline vpr::ReturnStatus
     reset (int val) {
         // First destroy the current semaphore.
         sem_destroy(mSema);
 
         // Now recreate it with the new value in val.
-        return sem_init(mSema, 0, val);
+        if ( sem_init(mSema, 0, val) == 0 )
+        {
+           return vpr::ReturnStatus();
+        }
+        else
+        {
+           return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+        }
     }
 
     /**
@@ -277,7 +307,7 @@ public:
     }
 
 protected:
-    sem_t* mSema;	/**< Semaphore variable for the class. */
+    sem_t* mSema;   /**< Semaphore variable for the class. */
 
     // Prevent assignment and initialization.
     void operator= (const SemaphorePosix &) {;}
@@ -287,4 +317,4 @@ protected:
 }; // End of vpr namespace
 
 
-#endif	/* _VPR_SEMAPHORE_POSIX_H_ */
+#endif  /* _VPR_SEMAPHORE_POSIX_H_ */

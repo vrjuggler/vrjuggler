@@ -59,6 +59,7 @@
 #include <ulocks.h>
 #include <vpr/md/SPROC/SharedMem/MemPool.h>
 #include <vpr/Util/Assert.h>
+#include <vpr/Util/ReturnStatus.h>
 
 
 namespace vpr {
@@ -116,16 +117,23 @@ public:
    //! RETURNS:  1 - Acquired
    //! RETURNS: -1 - Error
    //---------------------------------------------------------
-   int acquire() const
+   vpr::ReturnStatus acquire() const
    {
       vprASSERT(mutex != NULL && "in vpr::MutexSGI::aquire() mutex is NULL");
-      return ussetlock( mutex );
+      if ( ussetlock(mutex) == 1 )
+      {
+         return vpr::ReturnStatus();
+      }
+      else
+      {
+         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+      }
    }
 
    //----------------------------------------------------------
    //: Acquire a read mutex.
    //----------------------------------------------------------
-   int acquireRead() const
+   vpr::ReturnStatus acquireRead() const
    {
       return this->acquire();      // No special "read" semaphore -- For now
    }
@@ -133,7 +141,7 @@ public:
   //----------------------------------------------------------
   //: Acquire a write mutex.
   //----------------------------------------------------------
-   int acquireWrite() const
+   vpr::ReturnStatus acquireWrite() const
    {
       return this->acquire();      // No special "write" semaphore -- For now
    }
@@ -145,15 +153,23 @@ public:
    //! RETURNS: 1 - Acquired
    //! RETURNS: 0 - Not acquired
    //---------------------------------------------------------
-   int tryAcquire () const
+   vpr::ReturnStatus tryAcquire () const
    {
-      return uscsetlock(mutex, 100);     // Try 100 spins.
+      // Try 100 spins.
+      if ( uscsetlock(mutex, 100) == 1 )
+      {
+         return vpr::ReturnStatus();
+      }
+      else
+      {
+         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+      }
    }
 
    //----------------------------------------------------------
    //: Try to acquire a read mutex.
    //----------------------------------------------------------
-   int tryAcquireRead () const
+   vpr::ReturnStatus tryAcquireRead () const
    {
       return this->tryAcquire();
    }
@@ -161,7 +177,7 @@ public:
    //----------------------------------------------------------
    //: Try to acquire a write mutex.
    //----------------------------------------------------------
-   int tryAcquireWrite () const
+   vpr::ReturnStatus tryAcquireWrite () const
    {
       return this->tryAcquire();
    }
@@ -172,9 +188,16 @@ public:
    //! RETURNS:  0 - Succeed
    //! RETURNS: -1 - Error
    //---------------------------------------------------------
-   int release() const
+   vpr::ReturnStatus release() const
    {
-      return usunsetlock(mutex);
+      if ( usunsetlock(mutex) == 0 )
+      {
+         return vpr::ReturnStatus();
+      }
+      else
+      {
+         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+      }
    }
 
    //------------------------------------------------------

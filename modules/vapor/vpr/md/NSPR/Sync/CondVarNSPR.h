@@ -118,17 +118,20 @@ public:
     //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     wait ( vpr::Interval timeToWait = vpr::Interval::NoTimeout) {
-        PRStatus retval;
+        vpr::ReturnStatus status;
 
         // ASSERT:  We have been locked.
-        retval = PR_WaitCondVar(mCondVar, NSPR_getInterval(timeToWait));
+        if ( PR_WaitCondVar(mCondVar, NSPR_getInterval(timeToWait)) != PR_SUCCESS )
+        {
+           status.setCode(vpr::ReturnStatus::Fail);
+        }
 
         // XXX: Use error status to print a message before the assertion.
-        vprASSERT(retval != PR_FAILURE);
+        vprASSERT(status.success());
 
-        return retval;
+        return status;
     }
 
     // -----------------------------------------------------------------------
@@ -141,15 +144,19 @@ public:
     //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     signal (void) {
-        PRStatus retval;
+        vpr::ReturnStatus status;
 
         // ASSERT:  We have been locked
-        retval = PR_NotifyCondVar(mCondVar);
-        vprASSERT(retval != PR_FAILURE);
+        if ( PR_NotifyCondVar(mCondVar) != PR_SUCCESS )
+        {
+           status.setCode(vpr::ReturnStatus::Fail);
+        }
 
-        return retval;
+        vprASSERT(status.success());
+
+        return status;
     }
 
     // -----------------------------------------------------------------------
@@ -163,15 +170,19 @@ public:
     //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     broadcast (void) {
-        PRStatus retval;
+        vpr::ReturnStatus status;
 
         // ASSERT:  We have been locked
-        retval = PR_NotifyAllCondVar(mCondVar);
-        vprASSERT(retval != PR_FAILURE);
+        if ( PR_NotifyAllCondVar(mCondVar) != PR_SUCCESS )
+        {
+           status.setCode(vpr::ReturnStatus::Fail);
+        }
 
-        return retval;
+        vprASSERT(status.success());
+
+        return status;
     }
 
     // -----------------------------------------------------------------------
@@ -187,7 +198,7 @@ public:
     //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     acquire (void) {
         return mCondMutex->acquire();
     }
@@ -204,7 +215,7 @@ public:
     //! RETURNS:  0 - Succeedful completion
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     tryAcquire (void) {
         return mCondMutex->tryAcquire();
     }
@@ -216,7 +227,7 @@ public:
     //! PRE: None.
     //! POST: The lock held by the caller on the mutex variable is released.
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     release (void) {
         return mCondMutex->release();
     }
@@ -255,10 +266,10 @@ public:
     }
 
 private:
-    PRCondVar*		mCondVar;	//: Condition variable
-    MutexNSPR*		mCondMutex;	//: Mutex for the condition variable
+    PRCondVar*      mCondVar;   //: Condition variable
+    MutexNSPR*      mCondMutex; //: Mutex for the condition variable
 
-    MutexNSPR		mDefaultMutex;	//: A default mutex variable
+    MutexNSPR       mDefaultMutex;  //: A default mutex variable
 
     // = Prevent assignment and initialization.
     void operator= (const CondVarNSPR&) {
@@ -273,4 +284,4 @@ private:
 }; // End of vpr namespace
 
 
-#endif	/* _VPR_COND_VAR_NSPR_H_ */
+#endif  /* _VPR_COND_VAR_NSPR_H_ */

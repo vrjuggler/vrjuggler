@@ -103,7 +103,7 @@ public:
     //! RETURNS:  1 - Lock acquired
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     acquire (void) {
         mCondVar->acquire();
             PR_AtomicDecrement(&mValue);
@@ -113,7 +113,7 @@ public:
             }
         mCondVar->release();
 
-        return 1;
+        return vpr::ReturnStatus();
     }
 
     // -----------------------------------------------------------------------
@@ -130,7 +130,7 @@ public:
     //
     //! NOTE: There is no special read semaphore for now.
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     acquireRead (void) {
         return this->acquire();
     }
@@ -149,7 +149,7 @@ public:
     //
     //! NOTE: There is no special write semaphore for now.
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     acquireWrite (void) {
         return this->acquire();
     }
@@ -166,17 +166,15 @@ public:
     //! RETURNS: 1 - Acquired
     //! RETURNS: 0 - Not acquired
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     tryAcquire (void) {
-        int retval;
-
-        retval = 0;
+        vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
 
         if ( mValue >= 0 ) {
-            retval = this->acquire();
+            status = this->acquire();
         }
 
-        return retval;
+        return status;
     }
 
     // -----------------------------------------------------------------------
@@ -191,7 +189,7 @@ public:
     //! RETURNS: 1 - Acquired
     //! RETURNS: 0 - Not acquired
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     tryAcquireRead (void) {
         return this->tryAcquire();
     }
@@ -208,7 +206,7 @@ public:
     //! RETURNS: 1 - Acquired
     //! RETURNS: 0 - Not acquired
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     tryAcquireWrite (void) {
         return this->tryAcquire();
     }
@@ -223,16 +221,16 @@ public:
     //! RETURNS:  0 - Succeed
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     release (void) {
-        int retval;
+        vpr::ReturnStatus status;
 
         mCondVar->acquire();
             PR_AtomicIncrement(&mValue);
-            retval = mCondVar->signal();
+            status = mCondVar->signal();
         mCondVar->release();
 
-        return retval;
+        return status;
     }
 
     // -----------------------------------------------------------------------
@@ -249,16 +247,16 @@ public:
     //! NOTE: If processes are waiting on the semaphore, the results are
     //+       undefined.
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     reset (int val) {
-        int retval;
+        vpr::ReturnStatus status;
 
         mCondVar->acquire();
             PR_AtomicSet(&mValue, val);
-            retval = mCondVar->broadcast();
+            status = mCondVar->broadcast();
         mCondVar->release();
 
-        return retval;
+        return status;
     }
 
     // -----------------------------------------------------------------------

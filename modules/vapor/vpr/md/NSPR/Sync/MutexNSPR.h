@@ -61,6 +61,7 @@
 #include <prlock.h>
 
 #include <vpr/Util/Assert.h>
+#include <vpr/Util/ReturnStatus.h>
 
 
 namespace vpr {
@@ -106,12 +107,12 @@ public:
     //
     //! RETURNS: 1 - Lock acquired
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     acquire (void) {
         PR_Lock(mMutex);
         mLocked = 1;
 
-        return 1;
+        return vpr::ReturnStatus();
     }
 
     // -----------------------------------------------------------------------
@@ -126,7 +127,7 @@ public:
     //
     //! NOTE: No special read mutex has been defined for now.
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     acquireRead (void) {
         return this->acquire();
     }
@@ -143,7 +144,7 @@ public:
     //
     //! NOTE: No special write mutex has been defined for now.
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     acquireWrite (void) {
         return this->acquire();
     }
@@ -160,14 +161,14 @@ public:
     //! RETURNS: 0 - Mutex is busy
     // XXX: Possible race condition exists in this function implementation
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     tryAcquire (void) {
-        if ( mLocked == 0 ) 
+        if ( mLocked == 0 )
         {
             this->acquire();
-            return 1;
+            return vpr::ReturnStatus();
         } else {
-            return 0;
+            return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
         }
     }
 
@@ -182,7 +183,7 @@ public:
     //! RETURNS: 1 - Acquired
     //! RETURNS: 0 - Mutex is busy
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     tryAcquireRead (void) {
         return this->tryAcquire();
     }
@@ -198,7 +199,7 @@ public:
     //! RETURNS: 1 - Acquired
     //! RETURNS: 0 - Mutex is busy
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     tryAcquireWrite (void) {
         return this->tryAcquire();
     }
@@ -212,10 +213,17 @@ public:
     //! RETURNS:  0 - Succeed
     //! RETURNS: -1 - Error
     // -----------------------------------------------------------------------
-    inline int
+    inline vpr::ReturnStatus
     release (void) {
         mLocked = 0;
-        return PR_Unlock(mMutex);
+        if ( PR_Unlock(mMutex) == PR_SUCCESS )
+        {
+           return vpr::ReturnStatus();
+        }
+        else
+        {
+           return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+        }
     }
 
     // -----------------------------------------------------------------------

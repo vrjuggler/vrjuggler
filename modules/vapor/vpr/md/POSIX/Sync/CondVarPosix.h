@@ -50,7 +50,6 @@
 #ifndef _VPR_COND_VAR_POSIX_H_
 #define _VPR_COND_VAR_POSIX_H_
 
-
 #include <vpr/vprConfig.h>
 #include <pthread.h>
 #include <vpr/md/POSIX/Sync/MutexPosix.h>
@@ -117,14 +116,14 @@ public:
     * @post The condition variable is locked.  If it was previously locked,
     *       the caller blocks until signaled.
     *
-    * @return 0 is returned after blocking.<br>
-    *         -1 is returned if an error occurred when trying to wait on the
-    *         condition variable.
+    * @return vpr::ReturnStatus::Succeed is returned after blocking.
+    *         vpr::ReturnStatus::Fail is returned if an error occurred when
+    *         trying to wait on the condition variable.
     */
-   int wait (vpr::Interval time_to_wait = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus wait (vpr::Interval time_to_wait = vpr::Interval::NoTimeout)
    {
       // ASSERT:  We have been locked
-      int status;
+      vpr::ReturnStatus status;
 
       // If not locked ...
       if ( mCondMutex->test() == 0 )
@@ -132,7 +131,7 @@ public:
          std::cerr << "vpr::CondVarPosix::wait: INCORRECT USAGE: Mutex was not "
                    << "locked when wait invoked!!!\n";
 
-         status = -1;
+         status.setCode(vpr::ReturnStatus::Fail);
       }
       else
       {
@@ -140,7 +139,10 @@ public:
          // pthread_cond_wait().
          if ( vpr::Interval::NoTimeout == time_to_wait )
          {
-            return pthread_cond_wait(&mCondVar, &(mCondMutex->mMutex));
+            if ( pthread_cond_wait(&mCondVar, &(mCondMutex->mMutex)) != 0 )
+            {
+               status.setCode(vpr::ReturnStatus::Fail);
+            }
          }
          else
          {
@@ -148,8 +150,10 @@ public:
             abstime.tv_sec  = time_to_wait.sec();
             abstime.tv_nsec = time_to_wait.usec();
 
-            return pthread_cond_timedwait(&mCondVar, &(mCondMutex->mMutex),
-                                          &abstime);
+            if ( pthread_cond_timedwait(&mCondVar, &(mCondMutex->mMutex), &abstime) != 0 )
+            {
+               status.setCode(vpr::ReturnStatus::Fail);
+            }
          }
       }
 
@@ -163,13 +167,21 @@ public:
     * @post The condition variable is unlocked, and a signal is sent to a
     *       thread waiting on it.
     *
-    * @return 0 is returned if the signal is sent successfully.<br>
-    *         -1 is returned if the signalling failed.
+    * @return vpr::ReturnStatus::Succeed is returned if the signal is sent
+    *         successfully.  vpr::ReturnStatus::Fail is returned if the
+    *         signalling failed.
     */
-   int signal (void)
+   vpr::ReturnStatus signal (void)
    {
       // ASSERT:  We have been locked
-      return pthread_cond_signal(&mCondVar);
+      if ( pthread_cond_signal(&mCondVar) == 0 )
+      {
+         return vpr::ReturnStatus(vpr::ReturnStatus::Succeed);
+      }
+      else
+      {
+         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+      }
    }
 
    /**
@@ -180,11 +192,12 @@ public:
     * @post The condition variable is unlocked, and all waiting threads
     *       are signaled of this event.
     *
-    * @return 0 is returned if a signal was broadcast to all waiting threads
-    *         successfully.
-    *         -1 is returned to indicate an error with the signal broadcast.
+    * @return vpr::ReturnStatus::Succeed is returned if a signal was broadcast
+    *         to all waiting threads successfully.
+    *         vpr::ReturnStatus::Fail is returned to indicate an error with the
+    *         signal broadcast.
     */
-   int broadcast (void)
+   vpr::ReturnStatus broadcast (void)
    {
       // ASSERT:  We have been locked
 
@@ -195,7 +208,14 @@ public:
                    << "broadcast called!!!\n";
       }
 
-      return pthread_cond_broadcast(&mCondVar);
+      if ( pthread_cond_broadcast(&mCondVar) == 0 )
+      {
+         return vpr::ReturnStatus(vpr::ReturnStatus::Succeed);
+      }
+      else
+      {
+         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
+      }
    }
 
    /**
@@ -208,10 +228,10 @@ public:
     *      the mutex variable.  If it was previously locked, the caller
     *      blocks until it is unlocked.
     *
-    * @return 0 is returned if the lock was acquired successfully.<br>
-    *         -1 is returned otherwise.
+    * @return vpr::ReturnStatus::Succeed is returned if the lock was acquired
+    *         successfully. vpr::ReturnStatus::Fail is returned otherwise.
     */
-   int acquire (void)
+   vpr::ReturnStatus acquire (void)
    {
       return mCondMutex->acquire();
    }
@@ -225,10 +245,11 @@ public:
     *       obtains a lock on it.  If it is already locked, the routine
     *       returns immediately to the caller.
     *
-    * @return 0 is returned if the lock was acquired successfully.<br>
-    *         -1 is returned if the lock could not be acquired.
+    * @return vpr::ReturnStatus::Succeed is returned if the lock was acquired
+    *         successfully.  vpr::ReturnStatus::Fail is returned if the lock
+    *         could not be acquired.
     */
-   int tryAcquire (void)
+   vpr::ReturnStatus tryAcquire (void)
    {
       return mCondMutex->tryAcquire();
    }
@@ -240,7 +261,7 @@ public:
     * @pre None.
     * @post The lock held by the caller on the mutex variable is released.
     */
-   int release (void)
+   vpr::ReturnStatus release (void)
    {
       return mCondMutex->release();
    }
@@ -291,4 +312,4 @@ private:
 }; // End of vpr namespace
 
 
-#endif	/* _VPR_COND_POSIX_H_ */
+#endif  /* _VPR_COND_POSIX_H_ */
