@@ -44,6 +44,8 @@
 
 #include <vpr/vprConfig.h>
 
+#include <boost/shared_ptr.hpp>
+
 #ifdef VPR_USE_NSPR
 #include <vpr/md/NSPR/DynLoad/LibraryNSPR.h>
 
