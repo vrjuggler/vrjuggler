@@ -112,7 +112,8 @@ FileHandleUNIX::open () {
     }
     // Otherwise, set m_open to true.
     else {
-        m_open = true;
+        m_open     = true;
+        m_blocking = m_open_blocking;
     }
 
     return status;
