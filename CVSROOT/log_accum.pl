@@ -80,8 +80,7 @@ use vars qw/*name *dir *prune/;
 *prune  = *File::Find::prune;
 
 sub print_exit_message {
-    print "NOTE: Please remember to add entry to ChangeLog for major 
-changes\n";
+    print "** NOTE: Add entry to ChangeLog for major changes **\n";
 }
 
 sub cleanup_lockfiles {
