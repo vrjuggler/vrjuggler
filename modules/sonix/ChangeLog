@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Dec-23-2004 patrickh    NEW VERSION: 0.91.0
 Nov-18-2004 patrickh    Moved the sonix class into the snx namespace.  Renamed
                         the namespaces snxEndian and snxFileIO to snx::Endian
                         and snx::FileIO.
