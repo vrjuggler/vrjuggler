@@ -25,5 +25,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-def myFunc(wandX, wandY, wandZ):
-   print "Wand position: ", wandX, " ", wandY, " ", wandZ, "\n"
+from PyJuggler import gmtl
+
+def myFunc(vec):
+   print "Wand position:", vec[0], vec[1], vec[2]

@@ -76,12 +76,7 @@ void PyExtApp::preFrame()
 
       try
       {
-         // mPythonFunc points to a Python function that takes three float
-         // arguments and returns nothing.  When PyJuggler grows up, maybe
-         // it will be possible for the function to take a gmtl::Vec3f
-         // argument--or better yet a gmtl::Matrix44f.
-         python::call<void, float, float, float>(mPythonFunc.get(), wand_pos[0],
-                                                 wand_pos[1], wand_pos[2]);
+         python::call<void, gmtl::Vec3f>(mPythonFunc.get(), wand_pos);
       }
       catch(...)
       {
