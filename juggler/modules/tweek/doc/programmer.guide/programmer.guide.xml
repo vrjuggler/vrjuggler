@@ -241,11 +241,10 @@
    </part>
    <part>
       <title>Programming</title>
-      <chapter>
-         <title>Programming Basics</title>
+      <partintro>
          <para>In the following chapters, we present the basic information needed to start programming with Tweek. There will be discussion covering IDL, C++, Java, and CORBA. To use Tweek effectively, a good understanding of C++ and Java is required. The IDL aspect of Tweek is minimal, and programmers familiar with basic object-oriented concepts should be able to understand IDL code easily. Discussion related to CORBA is based on the brief introduction given in <xref linkend="intro.corba.section"/>. The Tweek Java and C++ APIs are designed to hide most CORBA details. Whenever possible, references are given to good sources of information on all of the aforementioned topics.</para>
          <para>Before proceeding, it is important to know that Tweek is designed and implemented to work with VR Juggler 1.1 and 2.0. It can be used with VR Juggler 1.0, but there have been reports of conflicts occurring between VR Juggler 1.0 and the VR Juggler Portable Runtime (VPR) that is part of VR Juggler 1.1. The Tweek C++ code uses VPR for threading, but it is possible to replace the VPR objects with VR Juggler 1.0 thread objects.</para>
-      </chapter>
+      </partintro>
       <chapter id="prog.idl.chapter">
          <title>IDL</title>
          <para>In this chapter, we present the basic information needed to define interfaces that will be used by Tweek. This is not a detailed introduction to IDL programming. Readers are referred to <xref linkend="Hen99"/>.</para>
