@@ -148,6 +148,13 @@ bool Vrpn::config(jccl::ConfigElementPtr e)
 
    mButtonNumber = e->getProperty<int>("button_count");
 
+   mPositions.resize(mTrackerNumber);
+   mQuats.resize(mTrackerNumber);
+   mButtons.resize(mButtonNumber);
+
+   mCurPositions.resize(mTrackerNumber);
+   mCurButtons.resize(mButtonNumber);
+
    return true;
 }
 
@@ -160,8 +167,8 @@ int Vrpn::startSampling()
 {
    int status(0);
 
-
    std::cout << "Going to create fine\n";
+
    if ( NULL == mReadThread )
    {
       vpr::ThreadMemberFunctor<Vrpn>* read_func =
@@ -182,12 +189,6 @@ int Vrpn::startSampling()
       std::cout << "Not null\n";
    }
 
-   mPositions.resize(mTrackerNumber);
-   mQuats.resize(mTrackerNumber);
-   mButtons.resize(mButtonNumber);
-
-   mCurPositions.resize(mTrackerNumber);
-   mCurButtons.resize(mButtonNumber);
    return status;
 }
 
