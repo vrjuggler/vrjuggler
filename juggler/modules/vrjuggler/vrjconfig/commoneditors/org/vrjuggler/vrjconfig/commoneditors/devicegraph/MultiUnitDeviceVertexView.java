@@ -309,8 +309,8 @@ public class MultiUnitDeviceVertexView
                   ConfigElement elt = mDeviceInfo.getElement();
                   int unit_num =
                      elt.getPropertyValueCount(prop_def.getToken()) - 1;
-                  DefaultPort port =
-                     new DefaultPort(new UnitInfo(type, new Integer(unit_num)));
+                  DefaultPort port = GraphHelpers.createDevicePort(type,
+                                                                   unit_num);
                   ((DefaultGraphCell) mView.getCell()).add(port);
                   addUnitRow(port, true);
 
@@ -347,11 +347,11 @@ public class MultiUnitDeviceVertexView
                   // Unit addition.  This always appends the new unit.
                   if ( cur_count > old_count )
                   {
-                     // XXX: This should be done in GraphHelpers
-                     UnitInfo port_obj =
+                     UnitInfo new_unit_info =
                         new UnitInfo(type, new Integer(cur_count - 1));
-                     DefaultPort port = new DefaultPort(port_obj);
-                                                    
+                     DefaultPort port =
+                        GraphHelpers.createDevicePort(new_unit_info);
+
                      ((DefaultGraphCell) mView.getCell()).add(port);
                      addUnitRow(port, true);
 
@@ -359,7 +359,8 @@ public class MultiUnitDeviceVertexView
                      // These may need to be removed later as a result of an
                      // undo operation.
                      mAddedUnitRows.push( 
-                        new UnitRow(port_obj, (List) mUnitRowMap.get(port_obj))
+                        new UnitRow(new_unit_info,
+                                    (List) mUnitRowMap.get(port_obj))
                      );
                   }
                   // Unit removal.
