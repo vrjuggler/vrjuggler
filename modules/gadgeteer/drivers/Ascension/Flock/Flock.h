@@ -98,7 +98,7 @@ public:
    Flock(const char* const port = "/dev/ttyd3",
          const int& baud = 38400,
          const int& sync = 1,
-         const int& block = 0,
+         const bool& block = false,
          const int& numBrds = 3,
          const int& transmit = 3,
          const BIRD_HEMI& hemi = LOWER_HEM,
@@ -233,13 +233,13 @@ public:
     * @pre flock.isActive() must be false to use this function.
     * @note See the Flock manual for details.
     */
-   void setBlocking( const int& blVal );
+   void setBlocking( const bool& blVal );
 
    /**
     * Gets the Flock's blocking type.
     * @note See the Flock manual for details.
     */
-   inline const int& getBlocking() const
+   inline const bool& getBlocking() const
    {
       return mFlockOfBirds.getBlocking();
    }
