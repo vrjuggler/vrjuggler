@@ -883,6 +883,8 @@ if test "$OS_TYPE" = "UNIX" ; then
     APP_VJ_LIBS_PF="-lJuggler_pf"
     APP_VJ_LIBS_UTILS="-lJuggler_utils"
 
+    APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11 -lXext"
+
     if test "x$OGL_LDFLAGS" != "x" ; then
         if test "x$PLATFORM" = "xDarwin" ; then
             APP_EXTRA_LIBS_GL="$OGL_LDFLAGS -framework AGL -framework DrawSprocket -framework Carbon -framework ApplicationServices"
@@ -1064,6 +1066,7 @@ AC_SUBST(APP_EXTRA_FLAGS_PF)
 AC_SUBST(APP_VJ_LIBS_GL)
 AC_SUBST(APP_VJ_LIBS_PF)
 AC_SUBST(APP_VJ_LIBS_UTILS)
+AC_SUBST(APP_EXTRA_LIBS_X11)
 AC_SUBST(APP_EXTRA_LIBS_GL)
 AC_SUBST(APP_EXTRA_LIBS_PF)
 AC_SUBST(APP_EXTRA_LIBS_OSG)
