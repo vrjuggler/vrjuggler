@@ -94,7 +94,10 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 	westpanel.add (l1);
 
 	if (!pr.hasFixedNumberOfValues()) {
-	    addbutton = new JButton ("Add Value");
+            if (pr.getDesc().getValType().equals (ValType.t_embeddedchunk))
+                addbutton = new JButton ("Add " + pr.getEmbeddedDesc().getName());
+            else
+                addbutton = new JButton ("Add Value");
 	    westpanel.add(addbutton);
 	    addbutton.addActionListener(this);
 	}
