@@ -50,8 +50,8 @@ bool IBox::config(jccl::ConfigChunkPtr c)
 
   vprDEBUG(gadgetDBG_INPUT_MGR,3) << "   IBox::config:" << std::endl
                                   << vprDEBUG_FLUSH;
-  mPortStr = static_cast<std::string>(c->getProperty( "port" ));
-
+  //mPortStr = static_cast<std::string>(c->getProperty( "port" ));
+  mPortStr = Input::getPort();
   // Done in Input
   //active = 0;
   mBaudRate = (long) static_cast<int>(c->getProperty("baud"));
@@ -89,12 +89,12 @@ IBox::~IBox()
 *********************************************** ahimberg */
 int IBox::startSampling()
 {
-   ibox_result result;
+   vpr::ReturnStatus result;
 
    if (mThread == NULL)
    {
       result = mPhysicalIbox.connect(mPortStr, mBaudRate);
-      if (result == mPhysicalIbox.SUCCESS)
+      if (result == vpr::ReturnStatus::Succeed)
       {
          mActive = true;
          vprDEBUG(gadgetDBG_INPUT_MGR,1) << "     Connected to IBox.\n"
@@ -110,7 +110,7 @@ int IBox::startSampling()
             << vprDEBUG_FLUSH;
          return 0;
       }
-      mPhysicalIbox.std_cmd(0,0,0);
+      mPhysicalIbox.std_cmd(0,4,0);
 
 
       IBox* devicePtr = this;
@@ -156,18 +156,18 @@ int IBox::sample()
 {
    //struct timeval tv;
    // double start_time, stop_time;
-   ibox_result result;
+   vpr::ReturnStatus result;
    //int tmp;
    //static int c = 0;
    IboxData cur_reading;
 
    result = mPhysicalIbox.check_packet();
-   if (result == mPhysicalIbox.NO_PACKET_YET)
+   if (result == vpr::ReturnStatus::InProgress)
    {
    }
-   else if (result == mPhysicalIbox.SUCCESS)
+   else if (result == vpr::ReturnStatus::Succeed)
    {
-      mPhysicalIbox.std_cmd(0,0,0);
+      mPhysicalIbox.std_cmd(0,4,0);
       //    if (c == 0) {
       //      vpr::System::gettimeofday(&tv,0);
       //      start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
