@@ -1,4 +1,5 @@
-#include "aj.h"    // interface
+#include "ajSoundInfo.h"
+#include "AudioJuggler.h"    // interface
 #include "CFileIO.h"
 #include "unistd.h"
 
@@ -20,21 +21,34 @@ int main( int argc, char* argv[] )
       }      
    }
    */
-         
+   
    ajSoundInfo si;
    si.filename = argv[1];
    si.datasource = ajSoundInfo::FILESYSTEM;
       
    
-   ajOpenALSoundImplementation al;
+   std::cout<<"AudioJuggler: \n" << std::flush;
+   AudioJuggler aj;
    
-   al.startAPI();
-   al.associate( "kevin", si );
+   //aj.startAPI();
+   std::cout<<"associate: \n" << std::flush;
+   aj.associate( "kevin", si );
    
-   al.trigger( "kevin" );
+   std::cout<<"trigger: \n" << std::flush;
+   aj.trigger( "kevin" );
    
+   std::cout<<"sleep: \n" << std::flush;
+   sleep( 1 );
+   
+   aj.changeAPI( "OpenAL" );
+   
+   std::cout<<"trigger: \n" << std::flush;
+   aj.trigger( "kevin" );
+   
+   std::cout<<"sleep: \n" << std::flush;
    sleep( 3 );
-   al.shutdownAPI();
+   
+   aj.changeAPI( "stub" );
    
    return 1;
 }

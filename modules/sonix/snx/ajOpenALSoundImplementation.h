@@ -3,13 +3,14 @@
 #ifndef AJOPENALSOUNDIMPLEMENTATION_H
 #define AJOPENALSOUNDIMPLEMENTATION_H
 
-#include <string>
 #include <vector>
+#include <string>
+#include <stdio.h> // for FILE
+
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <AL/alext.h>
 #include <AL/alut.h>
-#include <stdio.h> // for FILE
 
 #include "CFileIO.h"
 
@@ -39,20 +40,20 @@ public:
    {
       ajSoundImplementation::trigger( alias, looping );
 
-      if (mAlias2ResourceLookup.count( alias ) > 0)
+      if (mBindLookup.count( alias ) > 0)
       {
-         alSourcePlay( mAlias2ResourceLookup[alias].source );
+         alSourcePlay( mBindLookup[alias].source );
       }
    }
    
    bool isPlaying( const std::string& alias )
    {
-      if (mAlias2ResourceLookup.count( alias ) > 0)
+      if (mBindLookup.count( alias ) > 0)
       {
-         assert( alIsSource( mAlias2ResourceLookup[alias].source ) != AL_FALSE && "weird, shouldn't happen...\n" );
+         assert( alIsSource( mBindLookup[alias].source ) != AL_FALSE && "weird, shouldn't happen...\n" );
 		 
          ALint state( AL_INITIAL ); // initialized
-	      alGetSourceiv( mAlias2ResourceLookup[alias].source, AL_SOURCE_STATE, &state );
+	      alGetSourceiv( mBindLookup[alias].source, AL_SOURCE_STATE, &state );
          
          switch(state) 
          {
@@ -76,9 +77,9 @@ public:
    {
       ajSoundImplementation::stop( alias );
       
-      if (mAlias2ResourceLookup.count( alias ) > 0)
+      if (mBindLookup.count( alias ) > 0)
       {
-         alSourceStop( mAlias2ResourceLookup[alias].source );
+         alSourceStop( mBindLookup[alias].source );
       }
    }
 
@@ -120,11 +121,11 @@ public:
    {
       ajSoundImplementation::setPosition( alias, x, y, z );
 
-      if (mAlias2ResourceLookup.count( alias ) > 0)
+      if (mBindLookup.count( alias ) > 0)
       {
          float pos[3];
          pos[0] = x; pos[1] = y; pos[2] = z;
-         alSourcefv( mAlias2ResourceLookup[alias].source, AL_POSITION, pos );
+         alSourcefv( mBindLookup[alias].source, AL_POSITION, pos );
       }
    }
 
@@ -197,7 +198,7 @@ public:
          attrlist.push_back( ALC_FREQUENCY );
          attrlist.push_back( 22050 );
          attrlist.push_back( ALC_INVALID );
-         
+               
          // create context
 	      mContextId = alcCreateContext( mDev, &attrlist[0] );
          if (mContextId == NULL) 
@@ -250,7 +251,12 @@ public:
     */
    virtual void _bindAll()
    {
-      this->_unbindAll();
+      std::map< std::string, ajSoundInfo >::iterator it;
+      for( it = mSounds.begin(); it != mSounds.end(); ++it)
+      {
+         std::cout<<(*it).first<<"\n"<<std::flush;
+         this->_bind( (*it).first );
+      }
    }   
 
    /**
@@ -259,6 +265,13 @@ public:
     */
    virtual void _unbindAll()
    {
+      std::map< std::string, ajAlSoundInfo >::iterator it;
+      for( it = mBindLookup.begin(); it != mBindLookup.end(); ++it)
+      {
+         this->_unbind( (*it).first );
+      }
+      
+      assert( mBindLookup.size() == 0 && "_unbindAll failed" );
    }
 
    
@@ -269,9 +282,17 @@ public:
     */
    virtual void _bind( const std::string& alias )
    {
-      ajSoundInfo& bok = this->lookup( alias );
+      ajSoundInfo& soundInfo = this->lookup( alias );
       
-      switch (bok.datasource)
+      // if alias is already bound, then unbind it...
+      // TODO: we want a way to force a rebind, but do we _always_ want to force it?
+      if (mBindLookup.count( alias ) > 0)
+      {
+         this->_unbind( alias );
+      }
+      
+      // load the data 
+      switch (soundInfo.datasource)
       {
          default:
          case ajSoundInfo::FILESYSTEM:
@@ -284,22 +305,25 @@ public:
 
             
             // open the file as readonly binary
-	         if (!CFileIO::fileExists( bok.filename.c_str() )) 
+	         if (!CFileIO::fileExists( soundInfo.filename.c_str() )) 
             {
-		         std::cerr<<"file doesn't exist: "<<bok.filename<<"\n" << std::flush;
+		         std::cerr<<"file doesn't exist: "<<soundInfo.filename<<"\n" << std::flush;
                return;
 	         }
 
             // read the data from the file.
-            std::vector<unsigned char> data;
-            CFileIO::fileLoad( bok.filename.c_str(), data );
-	         
+            std::cout<<"loading: "<<soundInfo.filename<<"... " << std::flush;
+            CFileIO::fileLoad( soundInfo.filename.c_str(), mBindLookup[alias].data );
+            std::cout<<"done\n" << std::flush;
+            
 	         // put the data in an OpenAL buffer
 	         alGenBuffers( 1, &bufferID );
-            alBufferData( bufferID, AL_FORMAT_WAVE_EXT, &data[0], filelen, 0 );
+            alBufferData( bufferID, AL_FORMAT_WAVE_EXT, &(mBindLookup[alias].data[0]), filelen, 0 );
 	         if (alGetError() != AL_NO_ERROR)
             {
 		         std::cerr << "Could not buffer data\n" << std::flush;
+               alDeleteBuffers( 1, &bufferID );
+               mBindLookup.erase( alias );
 		         return;
 	         }
 
@@ -308,6 +332,8 @@ public:
             if (alGetError() != AL_NO_ERROR)
             {
 		         std::cerr << "Could not gen a source\n" << std::flush;
+               alDeleteBuffers( 1, &bufferID );
+               mBindLookup.erase( alias );
 		         return;
 	         }
             
@@ -315,8 +341,8 @@ public:
 	         alSourcei( sourceID, AL_LOOPING, AL_FALSE );
             
             // store the resource IDs for later use...
-            mAlias2ResourceLookup[alias].source = sourceID;
-            mAlias2ResourceLookup[alias].buffer = bufferID;
+            mBindLookup[alias].source = sourceID;
+            mBindLookup[alias].buffer = bufferID;
             break;
          }
       }
@@ -329,12 +355,14 @@ public:
     */
    virtual void _unbind( const std::string& alias )
    {
-      if (mAlias2ResourceLookup.count( alias ) > 0)
+      if (mBindLookup.count( alias ) > 0)
       {
-         alDeleteSources( 1, &mAlias2ResourceLookup[alias].source );
-         alDeleteBuffers( 1, &mAlias2ResourceLookup[alias].buffer );
-         mAlias2ResourceLookup.erase( alias );
-      }      
+         alDeleteSources( 1, &mBindLookup[alias].source );
+         alDeleteBuffers( 1, &mBindLookup[alias].buffer );
+         mBindLookup.erase( alias );
+      }
+      
+      assert( mBindLookup.count( alias ) == 0 && "_unbind failed" );
    }
    
 private:
@@ -344,8 +372,9 @@ private:
    struct ajAlSoundInfo
    {
       ALuint source, buffer;
+      std::vector<unsigned char> data;
    };
-   std::map< std::string, ajAlSoundInfo > mAlias2ResourceLookup;
+   std::map< std::string, ajAlSoundInfo > mBindLookup;
    void*       mContextId;
    ALCdevice*  mDev;
 };
