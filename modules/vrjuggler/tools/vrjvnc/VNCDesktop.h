@@ -76,6 +76,14 @@ public:
    void draw();
 
 protected:     // Helpers
+
+   /** Updates the desktop parameters
+   * @pre mDesktopWidth, mDesktopHeight, and pos matrix are update
+   * @post Everything else is updated correspondingly
+   */
+   void updateDesktopParameters();
+
+
    void drawSphere(float radius, gmtl::Point3f offset, int parts=4);
 
 private:
@@ -91,9 +99,12 @@ private:
 
    bool mHaveKeyboard;
 
-   // The desktop window (ie. the texture of the desktop) is assumed to be
-   // centered on 0,0,0 in the local coordinate frame with
-   //
+private:
+   /** @name Desktop parameters
+   * The desktop window (ie. the texture of the desktop) is assumed to be
+   * centered on 0,0,0 in the local coordinate frame with
+   */
+   //@{
    float mDesktopWidth, mDesktopHeight;      /**< Width and height of the virtual desktop. VRJ units */
    int   mTexWidth, mTexHeight;             /**< Width and height of the texture in pixels */
    int   mVncWidth, mVncHeight;              /**< The width and height of the vnc/X desktop */
@@ -106,6 +117,7 @@ private:
 
    gmtl::Matrix44f  mDesktopMatrix;  /**< vnc_T_world */
    gmtl::AABoxf     mDesktopBox;
+   //@}
 
    bool mDesktopWandIsect;
    bool mDesktopGrabbed;
