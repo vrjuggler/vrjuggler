@@ -36,7 +36,6 @@
 #include <vpr/vpr.h>
 #include <vpr/Sync/Guard.h>
 #include <vpr/Util/Assert.h>
-#include <vpr/Util/Debug.h>
 
 #include <gadget/Type/EventWindow.h>
 #include <gadget/Type/EventWindow/Event.h>
@@ -74,16 +73,8 @@ vpr::ReturnStatus EventWindow::writeObject(vpr::ObjectWriter* writer)
    for ( unsigned int i = 0; i < gadget::LAST_KEY; ++i )
    {
       writer->writeUint32(mCurKeys[i]);
-      if ( mCurKeys[i] != 0 )
-      {
-         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-            << "writeObject key " << getKeyName((gadget::Keys) i)
-            << " pressed " << mCurKeys[i] << " times" << std::endl
-            << vprDEBUG_FLUSH;
-      }
    }
 
-   
    // Write Events to a stream using the given ObjectWriter
    writer->writeUint16(mCurEventQueue.size());
    
@@ -136,13 +127,6 @@ vpr::ReturnStatus EventWindow::readObject(vpr::ObjectReader* reader)
    for ( unsigned int i = 0; i < num_keys; ++i )
    {
       mCurKeys[i] = reader->readUint32();
-      if ( mCurKeys[i] != 0 )
-      {
-         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-            << "readObject key " << getKeyName((gadget::Keys) i)
-            << " pressed " << mCurKeys[i]
-            << " times" << std::endl << vprDEBUG_FLUSH;
-      }
    }
 
    // Read all events using the given ObjectReader
