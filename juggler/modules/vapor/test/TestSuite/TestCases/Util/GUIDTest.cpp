@@ -84,24 +84,15 @@ void GUIDTest::testCreationOverhead()
    vpr::Uint32 loops = iters;
    vpr::GUID guid1;
 
-   vpr::Interval time_in, time_out;
-   time_in.setNowReal();
+   CPPUNIT_METRIC_START_TIMING();
 
    while(loops--)
    {
      guid1.generate();    // = *(vpr::GUIDFactory::createRandomGUID());
    }
 
-   time_out.setNowReal();
-   vpr::Interval diff = time_out - time_in;
-
-   double per_call;      // Num ms per call
-   per_call = diff.usecf() / double(iters);
-
-   //vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "vpr::GUID(): overhead = " << per_call << "us per call\n"
-   //          << vprDEBUG_FLUSH;
-
-   CPPUNIT_ASSERT_METRIC_LE("GUIDTest/CreationOverhead", per_call, 0.05f, 0.1f);
+   CPPUNIT_METRIC_STOP_TIMING();
+   CPPUNIT_ASSERT_METRIC_TIMING_LE("GUIDTest/CreationOverhead", iters, 0.05f, 0.1f);
 }
 
 void GUIDTest::testDebugOutput()
