@@ -6,7 +6,7 @@
 # Contributors (Alphabetically): 
 #     Albert Baker, Allen Bierbaum, Aaron Bryden, Carolina Cruz-Neira, 
 #     Patrick Hartling, Andrew Himberger, Chris Johanson, Christopher Just,
-#     Kevin Meinert, Kevin Puetz, Nicolas Tarrin, Ben Thompson
+#     Kevin Meinert, Eric Olson, Kevin Puetz, Nicolas Tarrin, Ben Thompson
 # 
 
 ------------------
