@@ -680,8 +680,11 @@ if test "x${_enable_gl_api}" = "xyes" ; then
     if test ! -z "$OPENGL_API" ; then
         _LIBOPENGL="-L${OGLROOT} -lGLU -lGL -lXext"
 
-        if test "$PLATFORM" = "HP" ; then
+        dnl # On non-SGI platforms, we need to add only -lX11 when linking
+        dnl # OpenGL applications.
+        if test "$PLATFORM" != "SGI" ; then
             _SYSTEM_OPENGL="${_LIBOPENGL} -lX11"
+        dnl # SGI's, on the other hand, need all kinds of extra information.
         else
             if test "$ABI" = "64" ; then
                 _SYSTEM_OPENGL="-limage ${_LIBOPENGL} -lXmu -lX11"
@@ -827,11 +830,21 @@ dnl #       for the $TEST_VJ_LIBS_GL variable.
 dnl #     * TEST_VJ_LIBS_PF: The Performer libraries needed for compiling
 dnl #       with the Performer API.
 dnl #
-TEST_VJ_LIBS_BASIC="-B static -L\${VJ_BASE_DIR}/lib${LIBBITSUF} -lJuggler"
-TEST_VJ_LIBS_BASIC_SUBST="-B dynamic -L$\${VJ_BASE_DIR}/lib\${LIBBITSUF} -lJuggler"
+if test "$PLATFORM" = "SGI" ; then
+    TEST_VJ_LIBS_BASIC="-B static -L\${VJ_BASE_DIR}/lib${LIBBITSUF} -lJuggler"
+    TEST_VJ_LIBS_BASIC_SUBST="-B dynamic -L$\${VJ_BASE_DIR}/lib\${LIBBITSUF} -lJuggler"
+    TEST_LIBS_BASIC="-B dynamic -lm -lC"
+else
+    dnl # For now, we assume that a non-SGI compiler has the -static flag for
+    dnl # static linking.  This is probably going to be the case since almost
+    dnl # all other platforms will be using GCC.
+    TEST_VJ_LIBS_BASIC="-static -L\${VJ_BASE_DIR}/lib${LIBBITSUF} -lJuggler"
+    TEST_VJ_LIBS_BASIC_SUBST="-L$\${VJ_BASE_DIR}/lib\${LIBBITSUF} -lJuggler"
+    TEST_LIBS_BASIC="-lm"
+fi
+
 TEST_VJ_LIBS_GL="-lJuggler_ogl"
 TEST_VJ_LIBS_PF="-lJuggler_pf"
-TEST_LIBS_BASIC="-B dynamic -lm -lC"
 TEST_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
 TEST_EXTRA_LIBS_BASIC_SUBST="$LDFLAGS $LIBS"
 TEST_EXTRA_LIBS_GL="-L${OGLROOT}/lib${LIBBITSUF} ${_SYSTEM_OPENGL}"
