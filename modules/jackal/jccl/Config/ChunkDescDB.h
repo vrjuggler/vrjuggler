@@ -69,6 +69,26 @@ public:
     ~vjChunkDescDB ();
 
 
+    typedef std::vector<vjChunkDesc*>::iterator iterator;
+    typedef std::vector<vjChunkDesc*>::const_iterator const_iterator;
+
+    inline iterator begin() {
+        return descs.begin();
+    }
+
+    inline const_iterator begin() const {
+        return descs.begin();
+    }
+
+    inline iterator end() {
+        return descs.end();
+    }
+
+    inline const_iterator end() const {
+        return descs.end();
+    }
+
+
     //:Searches for a particular vjChunkDesc
     //!RETURNS: desc - a vjChunkDesc whose token matches _token
     //!RETURNS: NULL - if no such vjChunkDesc is found
@@ -110,7 +130,7 @@ public:
 
     //:Returns the number of vjChunkDescs in self.
     //!RETURNS: n - the number of vjChunkDescs in self.
-    int size ();
+    int size () const;
 
 
     //:Writes self to out
@@ -118,7 +138,7 @@ public:
     //!RETURNS: out
     //!NOTE: The output format is zero or more vjChunkDescs
     //+      followed by "end"
-    friend std::ostream& operator << (std::ostream& out, vjChunkDescDB& self);
+    friend std::ostream& operator << (std::ostream& out, const vjChunkDescDB& self);
 
 
     //:Reads from in

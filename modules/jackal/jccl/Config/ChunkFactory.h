@@ -72,6 +72,7 @@ public:
 
     //: Adds descriptions in file 'filename' to the factory
     void loadDescs (const std::string& filename) {
+        //vjConfigIO::instance->readChunkDescDB (filename, descdb);
         descdb.load(filename.c_str());
     }
 
@@ -90,12 +91,12 @@ public:
     //+          whose token matches the argument.  If no such
     //+          vjChunkDesc is found, an "empty" vjChunkDesc,
     //+          containing only a Name vjPropertyDesc, is used.
-    vjConfigChunk* createChunk (const std::string& desctoken) {
-        return createChunk (descdb.getChunkDesc (desctoken));
+    vjConfigChunk* createChunk (const std::string& desctoken, bool use_defaults = true) {
+        return createChunk (descdb.getChunkDesc (desctoken), use_defaults);
     }
 
     //: Creates a Chunk using the given description
-    vjConfigChunk* createChunk (vjChunkDesc* d);
+    vjConfigChunk* createChunk (vjChunkDesc* d, bool use_defaults = true);
 
 
 protected:

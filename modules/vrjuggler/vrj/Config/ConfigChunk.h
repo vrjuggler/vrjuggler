@@ -39,12 +39,6 @@
 #include <Config/vjProperty.h>
 #include <Config/vjVarValue.h>
 
-#ifdef VJ_OS_HPUX
-#   include <float.h>
-#   include <stddef.h>
-#endif
-
-
 
 struct VJCFGToken;
 
@@ -111,7 +105,7 @@ public:
     //!PRE: desc points to a valid vjChunkDesc
     //!POST: self has been created, and all its vjPropertys
     //+      initialized to their default values.
-    vjConfigChunk (vjChunkDesc *_desc);
+    vjConfigChunk (vjChunkDesc *_desc, bool use_defaults = true);
 
 
 
@@ -137,7 +131,7 @@ public:
     //!NOTE:  When this function is called, any previous properties etc.
     //+       of this Chunk are destroyed, and new (blank) properties are
     //+       created.
-    void associateDesc (vjChunkDesc* d);
+    void associateDesc (vjChunkDesc* d, bool use_defaults = true);
 
 
     vjConfigChunk& operator = (const vjConfigChunk& c);
@@ -158,6 +152,26 @@ public:
 
 
 
+    typedef std::vector<vjProperty*>::iterator iterator;
+    typedef std::vector<vjProperty*>::const_iterator const_iterator;
+
+    inline iterator begin() {
+        return props.begin();
+    }
+
+    inline const_iterator begin() const {
+        return props.begin();
+    }
+
+    inline iterator end() {
+        return props.end();
+    }
+
+    inline const_iterator end() const {
+        return props.end();
+    }
+
+
     // used for dependency resolution
     vjConfigChunk* getEmbeddedChunk (const std::string &path);
 
@@ -168,7 +182,7 @@ public:
     //!RETURNS: out - the output stream
     //!ARGS: out - a valid ostream.
     //!ARGS: self - a valid vjConfigChunk
-    friend std::ostream& operator << (std::ostream& out, vjConfigChunk& self);
+    friend std::ostream& operator << (std::ostream& out, const vjConfigChunk& self);
 
 
 
@@ -203,8 +217,13 @@ public:
 
 
     //: Returns the name of this ConfigChunk.
-    std::string getName () const {
+    const std::string getName () const {
         return getProperty("Name");
+    }
+
+    //: Returns token of this ConfigChunk's ChunkDesc.
+    const std::string& getDescToken () const {
+        return desc->getToken();
     }
 
 
@@ -221,7 +240,7 @@ public:
     //: Return all the values for a given property
     // This is just a simple helper function
     //! NOTE: The vector has COPIES of the var values.
-    std::vector<vjVarValue*> getAllProperties(const std::string& property);
+    std::vector<vjVarValue*> getAllProperties (const std::string& property) const;
 
 
     //: Sets a value for the given property.
@@ -272,15 +291,10 @@ public:
     // that are pointed to by chunk ptrs of this chunk
     std::vector<std::string> getChunkPtrDependencies() const;
 
-private:
     vjProperty *getPropertyPtrFromName (const std::string& name) const;
     
     vjProperty *getPropertyPtrFromToken (const std::string& token) const;
 
-    //: Attempts to assign a value (in tok) to the vjProperty's ith value.
-    //!NOTE:  This function does a certain amount of type-mangling, and also
-    //+        handles enumeration lookups.  Return value is success/failure.
-    bool tryassign (vjProperty *p, int i, const char* val);
 
 };
 

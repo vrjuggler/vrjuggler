@@ -64,12 +64,21 @@ private:
 public:
 
     typedef std::vector<vjConfigChunk*>::iterator iterator;
+    typedef std::vector<vjConfigChunk*>::const_iterator const_iterator;
 
-    iterator begin() {
+    inline iterator begin() {
         return chunks.begin();
     }
 
-    iterator end() {
+    inline const_iterator begin() const {
+        return chunks.begin();
+    }
+
+    inline iterator end() {
+        return chunks.end();
+    }
+
+    inline const_iterator end() const {
         return chunks.end();
     }
 
@@ -95,14 +104,22 @@ public:
 
 
     //: Assignment operator
-    vjConfigChunkDB& operator = (vjConfigChunkDB& db);
+    vjConfigChunkDB& operator = (const vjConfigChunkDB& db);
 
 
+
+    const std::string& getFileName() {
+        return file_name;
+    }
+
+    void setFileName(const std::string& _name) {
+        file_name = _name;
+    }
 
     //: Checks if self is empty
     //! RETURNS: true - if self contains no vjConfigChunks
     //! RETURNS: false - otherwise
-    bool isEmpty();
+    bool isEmpty() const;
 
 
 
@@ -130,13 +147,13 @@ public:
     //+          the argument, or NULL if no such element exists.
     //! NOTE: The memory associated with the return value belongs to
     //+       the ConfigChunkDB, and should not be delete()d
-    vjConfigChunk *getChunk (const std::string& name);
+    vjConfigChunk *getChunk (const std::string& name) const;
 
 
     //: return a vector of all the chunks
     //! POST: returns
     //! RETURNS: Copy of the pointers to the chunks in this.
-    std::vector<vjConfigChunk*> getChunks();
+    std::vector<vjConfigChunk*> getChunks() const;
 
 
 
@@ -149,7 +166,7 @@ public:
     //: Add chunks to self
     //! PRE: db is non-null.
     //! POST: self has added copies of all chunks in db.
-    void addChunks(vjConfigChunkDB *db);
+    void addChunks(const vjConfigChunkDB *db);
 
 
 
@@ -169,7 +186,7 @@ public:
     //! NOTE: The memory for the vector should be deleted by the
     //+       caller when it is no longer needed.  The individual
     //+       vjConfigChunks in the vector should not be freed.
-    std::vector<vjConfigChunk*>* getMatching (const std::string& mytypename) {
+    std::vector<vjConfigChunk*>* getMatching (const std::string& mytypename) const {
         return getMatching ("type", mytypename);
     }
 
@@ -187,9 +204,9 @@ public:
     //! NOTE: The memory for the vector should be deleted by the
     //+       caller when it is no longer needed.  The individual
     //+       ConfigChunks in the vector should not be freed.
-    std::vector<vjConfigChunk*>* getMatching (const std::string& property, const std::string value);
-    std::vector<vjConfigChunk*>* getMatching (const std::string& property, int value);
-    std::vector<vjConfigChunk*>* getMatching (const std::string& property, float value);
+    std::vector<vjConfigChunk*>* getMatching (const std::string& property, const std::string value) const;
+    std::vector<vjConfigChunk*>* getMatching (const std::string& property, int value) const;
+    std::vector<vjConfigChunk*>* getMatching (const std::string& property, float value) const;
 
 
 
@@ -241,7 +258,7 @@ public:
     //! ARGS: out - an output stream
     //! ARGS: self - a ConfigChunkDB
     //! RETURNS: out
-    friend std::ostream& operator << (std::ostream& out, vjConfigChunkDB& self);
+    friend std::ostream& operator << (std::ostream& out, const vjConfigChunkDB& self);
 
 
 
@@ -274,7 +291,7 @@ public:
     //! RETURNS: true - file was opened succesfully.
     //! RETURNS: false - otherwise.
     //! NOTE: This function calls operator << to do its work.
-    bool save (const std::string& fname);
+    bool save (const std::string& fname) const;
 
 };
 

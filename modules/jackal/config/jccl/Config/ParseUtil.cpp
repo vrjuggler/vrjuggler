@@ -144,14 +144,7 @@ bool readString (std::istream &in, char *buffer, int size, bool *quoted) {
     return retval;
 }
 
-
-
-VarType readType (std::istream &in) {
-    char str[256];
-
-    if (!readString (in, str, 256))
-        return VJ_T_INVALID;
-
+VarType stringToVarType (const char* str) {
     if (!strcasecmp (str, int_TOKEN))
         return T_INT;
     if (!strcasecmp (str, integer_TOKEN))
@@ -172,6 +165,16 @@ VarType readType (std::istream &in) {
         return T_EMBEDDEDCHUNK;
 
     return VJ_T_INVALID;
+}
+
+
+VarType readType (std::istream &in) {
+    char str[256];
+
+    if (!readString (in, str, 256))
+        return VJ_T_INVALID;
+
+    return stringToVarType (str);
 }
 
 
@@ -346,3 +349,101 @@ std::string demangleFileName (const std::string& n, std::string parentfile) {
 
     return fname;
 }
+
+
+const std::string findFileUsingPathVar (std::ifstream& in, const std::string& file_name, const std::string& env_name) {
+    // based on patrick's code to support VJ_CFG_PATH
+    // if we find file_name on any path in the variable env_var, we'll
+    // open it.  someone calling this function should check in to see
+    // if it's an open file afterwards.
+
+    bool found = false;
+    
+    char* path_string_tmp;
+    std::string path_string;
+    std::string retval;
+    
+    // Read the value in the config path environment variable.  If it is
+    // non-NULL, store the value in cfg_path since std::string's are
+    // easier to use.
+    if ( (path_string_tmp = getenv(env_name.c_str())) != NULL ) {
+        path_string = path_string_tmp;
+        
+        vjDEBUG(vjDBG_ALL, vjDBG_STATE_LVL)
+            << "Falling back on " << env_name << ": " << path_string << "\n"
+            << vjDEBUG_FLUSH;
+    }
+
+    // If the user set a value for $VJ_CFG_PATH, parse it, baby!
+    if ( path_string.length() > 0 ) {
+        std::string::size_type cur_pos = 0, old_pos = 0;
+        std::string full_path;
+        
+// Define the separator character for the elements of $VJ_CFG_PATH.  On Win32,
+// we use ";", and on everything else, we use ":".
+#ifdef VJ_OS_Win32
+        char elem_sep[] = ";";
+        char ostype_var[] = "OSTYPE";
+        char* ostype;
+
+        // If we are in a Cygwin environment, use ":" as the element
+        // separator.
+        if ( (ostype = getenv(ostype_var)) != NULL ) {
+            if ( strcmp(ostype, "cygwin") == 0 ) {
+                elem_sep[0] = ':';
+            }
+        }
+#else
+        char elem_sep[] = ":";
+#endif
+        
+        while ( ! found ) {
+            // Clear the flags on in so that we can try opening a new file.
+            in.clear();
+            
+            // Find the next occurrence of an element separator.
+            cur_pos = path_string.find(elem_sep, old_pos);
+
+            // If cur_pos is greater than the length of the path, there
+            // are no more :'s in the path.
+            if ( cur_pos > path_string.length() ) {
+                // If old_pos is still less than the length of the path,
+                // there is one more directory to be read, so set cur_pos
+                // to the length of the path string so we can read it.
+                // Once it's read, we'll be done.
+                if ( old_pos < path_string.length() ) {
+                    cur_pos = path_string.length();
+                }
+                // At this point, both old_pos and cur_pos point beyond
+                // the end of the path string.
+                else {
+                    break;
+                }
+            }
+
+            // Extract the current directory from the path and point
+            // old_pos to be one character past the current position
+            // (which points at a ':').
+            full_path = path_string.substr(old_pos, cur_pos - old_pos);
+            old_pos   = cur_pos + 1;
+
+            // Append "/" + file_name to the current directory.
+            full_path += "/";
+            full_path += file_name;
+            
+            vjDEBUG(vjDBG_CONFIG, vjDBG_STATE_LVL)
+                << "vjConfigChunkDB::load(): opening file " << full_path
+                << "\n" << vjDEBUG_FLUSH;
+            
+            // Try to open the file name constructed above.
+            in.open(full_path.c_str());
+            
+            if ( in ) {
+                found = true;
+                retval = full_path;
+            }
+        }
+    }
+    return retval;
+}
+

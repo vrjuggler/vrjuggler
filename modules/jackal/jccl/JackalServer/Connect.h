@@ -37,6 +37,7 @@
 #include <vjConfig.h>
 #include <queue>
 #include <Environment/vjSocket.h>
+#include <Environment/vjNetCommunicator.h>
 #include <VPR/Threads/vjThread.h>
 #include <Performance/vjTimeStamp.h>
 #include <Environment/vjCommand.h>
@@ -161,6 +162,7 @@ private:
     //: utility for controlLoop()
     bool readCommand (std::istream& fin);
 
+    std::vector<vjNetCommunicator*> communicators;
 
 }; // end vjConnect
 

@@ -39,7 +39,7 @@
 #include <Config/vjChunkDescDB.h>
 #include <Config/vjParseUtil.h>
 #include <Config/vjConfigTokens.h>
-
+#include <Config/vjConfigIO.h>
 
 vjChunkDescDB::vjChunkDescDB (): descs() {
     ;
@@ -121,13 +121,13 @@ void vjChunkDescDB::removeAll () {
 
 
 
-int vjChunkDescDB::size () {
+int vjChunkDescDB::size () const {
     return descs.size();
 }
 
 
 
-std::ostream& operator << (std::ostream& out, vjChunkDescDB& self) {
+std::ostream& operator << (std::ostream& out, const vjChunkDescDB& self) {
     for (unsigned int i = 0; i < self.descs.size(); i++)
         out << "Chunk " << *(self.descs[i]) << std::endl;
     out << "End" << std::endl;
@@ -165,19 +165,23 @@ std::istream& operator >> (std::istream& in, vjChunkDescDB& self) {
 
 bool vjChunkDescDB::load (const std::string& filename, const std::string& parentfile) {
     std::string fname = demangleFileName (filename, parentfile);
-    std::ifstream in(fname.c_str());
+    bool retval = vjConfigIO::instance()->readChunkDescDB (fname, *this);
 
-    if (!in) {
-        vjDEBUG(vjDBG_ERROR, vjDBG_CRITICAL_LVL)
-            << clrOutNORM(clrYELLOW, "WARNING:") << " vjChunkDescDB::load(): Unable to open file\n"
-            << vjDEBUG_FLUSH;
-        vjDEBUG_NEXT(vjDBG_ERROR, vjDBG_CRITICAL_LVL)
-            << "'" << fname.c_str() << "'" << clrRESET << std::endl
-            << vjDEBUG_FLUSH;
-        return false;
-    }
-    in >> *this;
-    return true;
+    return retval;
+
+//      std::ifstream in(fname.c_str());
+
+//      if (!in) {
+//          vjDEBUG(vjDBG_ERROR, vjDBG_CRITICAL_LVL)
+//              << clrOutNORM(clrYELLOW, "WARNING:") << " vjChunkDescDB::load(): Unable to open file\n"
+//              << vjDEBUG_FLUSH;
+//          vjDEBUG_NEXT(vjDBG_ERROR, vjDBG_CRITICAL_LVL)
+//              << "'" << fname.c_str() << "'" << clrRESET << std::endl
+//              << vjDEBUG_FLUSH;
+//          return false;
+//      }
+//      in >> *this;
+//      return true;
 }
 
 

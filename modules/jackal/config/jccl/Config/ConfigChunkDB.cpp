@@ -42,6 +42,7 @@
 #include <Config/vjParseUtil.h>
 #include <Utils/vjDebug.h>
 #include <Config/vjConfigTokens.h>
+#include <Config/vjConfigIO.h>
 
 #include <sys/types.h>
 
@@ -66,12 +67,12 @@ vjConfigChunkDB::vjConfigChunkDB (vjConfigChunkDB& db): chunks() {
 
 
 
-vjConfigChunkDB& vjConfigChunkDB::operator = (vjConfigChunkDB& db) {
-    unsigned int i;
+vjConfigChunkDB& vjConfigChunkDB::operator = (const vjConfigChunkDB& db) {
+    unsigned int i, size;
     //for (i = 0; i < chunks.size(); i++)
     //    delete chunks[i];
     chunks.clear();
-    for (i = 0; i < db.chunks.size(); i++) {
+    for (i = 0, size = db.chunks.size(); i < size; i++) {
         chunks.push_back (new vjConfigChunk(*(db.chunks[i])));
     }
     return *this;
@@ -79,10 +80,11 @@ vjConfigChunkDB& vjConfigChunkDB::operator = (vjConfigChunkDB& db) {
 
 
 
-vjConfigChunk* vjConfigChunkDB::getChunk (const std::string& name) {
+vjConfigChunk* vjConfigChunkDB::getChunk (const std::string& name) const {
     /* returns a chunk with the given name, if such exists, or NULL.
      */
-    for (unsigned int i = 0; i < chunks.size(); i++) {
+    unsigned int i, size;
+    for (i = 0, size = chunks.size(); i < size; i++) {
         if (!vjstrcasecmp (name, chunks[i]->getProperty("name")))
             return chunks[i];
     }
@@ -92,7 +94,7 @@ vjConfigChunk* vjConfigChunkDB::getChunk (const std::string& name) {
 
 
 // Return a copy of the chunks vector
-std::vector<vjConfigChunk*> vjConfigChunkDB::getChunks() {
+std::vector<vjConfigChunk*> vjConfigChunkDB::getChunks() const {
     return chunks;
 }
 
@@ -101,14 +103,14 @@ std::vector<vjConfigChunk*> vjConfigChunkDB::getChunks() {
 // Add the given chunks to the end of the chunk list
 void vjConfigChunkDB::addChunks(std::vector<vjConfigChunk*> new_chunks) {
     // no! must make copies of all chunks. sigh...
-    //chunks.insert(chunks.end(), new_chunks.begin(), new_chunks.end());
-    for (unsigned int i = 0; i < new_chunks.size(); i++)
+    unsigned int i, size;
+    for (i = 0, size = new_chunks.size(); i < size; i++)
         addChunk (new vjConfigChunk (*new_chunks[i]));
 }
 
 
 
-void vjConfigChunkDB::addChunks(vjConfigChunkDB *db) {
+void vjConfigChunkDB::addChunks(const vjConfigChunkDB *db) {
     addChunks (db->chunks);
 }
 
@@ -127,7 +129,7 @@ void vjConfigChunkDB::addChunk(vjConfigChunk* new_chunk) {
 // second argument.  The returned vector may be empty.
 // NOTE:  The caller is responsible for delete()ing the vector, but not
 // its contents.
-std::vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (const std::string& property, const std::string value) {
+std::vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (const std::string& property, const std::string value) const {
     std::vector<vjConfigChunk*>* v = new std::vector<vjConfigChunk*>;
 
     for (unsigned int i = 0; i < chunks.size(); i++) {
@@ -137,7 +139,7 @@ std::vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (const std::string& pr
     return v;
 }
 
-std::vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (const std::string& property, int value) {
+std::vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (const std::string& property, int value) const {
     int c;
     std::vector<vjConfigChunk*>* v = new std::vector<vjConfigChunk*>;
     for (unsigned int i = 0; i < chunks.size(); i++) {
@@ -149,7 +151,7 @@ std::vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (const std::string& pr
 }
 
 
-std::vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (const std::string& property, float value) {
+std::vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (const std::string& property, float value) const {
     float c;
     std::vector<vjConfigChunk*>* v = new std::vector<vjConfigChunk*>;
     for (unsigned int i = 0; i < chunks.size(); i++) {
@@ -362,7 +364,7 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
 
 /* IO functions: */
 
-std::ostream& operator << (std::ostream& out, vjConfigChunkDB& self) {
+std::ostream& operator << (std::ostream& out, const vjConfigChunkDB& self) {
     for (unsigned int i = 0; i < self.chunks.size(); i++) {
         out << *(self.chunks[i]) << std::endl;
     }
@@ -402,12 +404,13 @@ std::istream& operator >> (std::istream& in, vjConfigChunkDB& self) {
             //std::cerr << "read chunk: " << *ch << std::endl;
 
             if (!vjstrcasecmp (ch->getType(), "vjIncludeFile")) {
-                // this is another one of those bits of code where we need to make some
-                // real decisions about memory management of ConfigChunks
                 std::string s = ch->getProperty ("Name");
-                vjConfigChunkDB newdb;
-                newdb.load (s, self.file_name);
-                self.addChunks(&newdb);
+                //vjConfigChunkDB newdb;
+                std::string fname = self.getFileName();
+                self.load (s, fname);
+                // load changes the filename, so reset it.
+                self.setFileName(fname);
+                //self.addChunks(&newdb);
             }
             else if (!vjstrcasecmp (ch->getType(), "vjIncludeDescFile")) {
                 // the descs could be needed by everybody else in this file,
@@ -437,120 +440,19 @@ std::istream& operator >> (std::istream& in, vjConfigChunkDB& self) {
 
 
 bool vjConfigChunkDB::load (const std::string& filename, const std::string& parentfile) {
+
     file_name = demangleFileName (filename, parentfile);
-
-    std::ifstream in;
-
     vjDEBUG(vjDBG_CONFIG,3) << "vjConfigChunkDB::load(): opening file " << file_name.c_str() << " -- " << vjDEBUG_FLUSH;
+    bool retval = vjConfigIO::instance()->readConfigChunkDB (file_name, *this);
 
-    in.open(file_name.c_str());
-
-    // If the given file could not be opened, fall back on searching the
-    // paths given in the $VJ_CFG_PATH environment variable.
-    if (!in) {
-        char cfg_path_env[]  = "VJ_CFG_PATH";
-        char* cfg_path_tmp;
-        std::string cfg_path;
-        bool found = false;
-
-        // Read the value in the config path environment variable.  If it is
-        // non-NULL, store the value in cfg_path since std::string's are
-        // easier to use.
-        if ( (cfg_path_tmp = getenv(cfg_path_env)) != NULL ) {
-            cfg_path = cfg_path_tmp;
-
-            vjDEBUG(vjDBG_ALL, vjDBG_STATE_LVL)
-                << "Falling back on VJ_CFG_PATH: " << cfg_path << "\n"
-                << vjDEBUG_FLUSH;
-        }
-
-        // If the user set a value for $VJ_CFG_PATH, parse it, baby!
-        if ( cfg_path.length() > 0 ) {
-            std::string::size_type cur_pos = 0, old_pos = 0;
-            std::string full_path;
-
-// Define the separator character for the elements of $VJ_CFG_PATH.  On Win32,
-// we use ";", and on everything else, we use ":".
-#ifdef VJ_OS_Win32
-            char elem_sep[] = ";";
-            char ostype_var[] = "OSTYPE";
-            char* ostype;
-
-            // If we are in a Cygwin environment, use ":" as the element
-            // separator.
-            if ( (ostype = getenv(ostype_var)) != NULL ) {
-                if ( strcmp(ostype, "cygwin") == 0 ) {
-                    elem_sep[0] = ':';
-                }
-            }
-#else
-            char elem_sep[] = ":";
-#endif
-
-            while ( ! found ) {
-                // Clear the flags on in so that we can try opening a new file.
-                in.clear();
-
-                // Find the next occurrence of an element separator.
-                cur_pos = cfg_path.find(elem_sep, old_pos);
-
-                // If cur_pos is greater than the length of the path, there
-                // are no more :'s in the path.
-                if ( cur_pos > cfg_path.length() ) {
-                    // If old_pos is still less than the length of the path,
-                    // there is one more directory to be read, so set cur_pos
-                    // to the length of the path string so we can read it.
-                    // Once it's read, we'll be done.
-                    if ( old_pos < cfg_path.length() ) {
-                        cur_pos = cfg_path.length();
-                    }
-                    // At this point, both old_pos and cur_pos point beyond
-                    // the end of the path string.
-                    else {
-                        break;
-                    }
-                }
-
-                // Extract the current directory from the path and point
-                // old_pos to be one character past the current position
-                // (which points at a ':').
-                full_path = cfg_path.substr(old_pos, cur_pos - old_pos);
-                old_pos   = cur_pos + 1;
-
-                // Append "/" + file_name to the current directory.
-                full_path += "/";
-                full_path += file_name;
-
-                vjDEBUG(vjDBG_CONFIG, vjDBG_STATE_LVL)
-                    << "vjConfigChunkDB::load(): opening file " << full_path
-                    << "\n" << vjDEBUG_FLUSH;
-
-                // Try to open the file name constructed above.
-                in.open(full_path.c_str());
-
-                if ( in ) {
-                    found = true;
-                }
-            }
-        }
-
-        if ( ! found ) {
-            vjDEBUG(vjDBG_ALL, vjDBG_CRITICAL_LVL)
-                << "\nvjConfigChunkDB::load(): Unable to open file '"
-                << file_name.c_str() << "'" << std::endl << vjDEBUG_FLUSH;
-            return false;
-        }
-    }
-    vjDEBUG(vjDBG_CONFIG,5) << " succeeded.\n" << vjDEBUG_FLUSH;
-    in >> *this;
-    vjDEBUG(vjDBG_CONFIG,3) << " finished.. read " << chunks.size() << " chunks\n"
-                            << vjDEBUG_FLUSH;
-    return true;
+    vjDEBUG(vjDBG_CONFIG,3) << " finished.. read " << chunks.size() 
+                            << " chunks\n" << vjDEBUG_FLUSH;
+    return retval;
 }
 
 
 
-bool vjConfigChunkDB::save (const std::string& fname) {
+bool vjConfigChunkDB::save (const std::string& fname) const {
 
     std::ofstream out(fname.c_str());
     if (!out) {
@@ -564,7 +466,7 @@ bool vjConfigChunkDB::save (const std::string& fname) {
 
 
 
-bool vjConfigChunkDB::isEmpty() {
+bool vjConfigChunkDB::isEmpty() const {
     return (chunks.size() == 0);
 }
 

@@ -98,7 +98,8 @@ class vjPerfDataBuffer: public vjTimedUpdate {
     bool        active;
 
 public:
-    char*       name;
+    std::string name;
+    std::string handler_name;
     int         nindex;
 
  public:
@@ -122,8 +123,12 @@ public:
 
 
 
-    virtual std::string getName() {
-        return (std::string)name;
+    virtual const std::string& getName() const {
+        return name;
+    }
+
+    virtual const std::string& getProtocolHandlerName() const {
+        return handler_name;
     }
 
     //: activates the buffer

@@ -36,13 +36,11 @@
 
 #include <vjConfig.h>
 #include <Config/vjPropertyDesc.h>
-
-// #ifdef VJ_OS_HPUX
-// #   include <float.h>
-// #   include <stddef.h>
-// #endif
+//#include <dom/DOM.hpp>
 
 
+class vjConfigChunk;
+class DOM_Node;
 
 //-----------------------------------------------------------------
 //:Defines name and properties for a kind of vjConfigChunk
@@ -73,15 +71,9 @@ public:
 
     unsigned int validation;
 
-    //:equality operator
-    // a little stricter than it needs to be.. it shouldn't care about the order of
-    // propertydescs...
-    bool operator== (const vjChunkDesc& d);
-
-    inline bool operator!= (const vjChunkDesc& d) {
-        return !(*this == d);
-    }
-
+    vjConfigChunk* default_chunk;
+    // be very careful with this
+    DOM_Node *default_node;
 
     //:Constructor
     //!POST: Self is created with name and token "Unnamed",
@@ -109,6 +101,36 @@ public:
     }
     #endif
 
+
+
+    typedef std::vector<vjPropertyDesc*>::iterator iterator;
+    typedef std::vector<vjPropertyDesc*>::const_iterator const_iterator;
+
+    inline iterator begin() {
+        return plist.begin();
+    }
+
+    inline const_iterator begin() const {
+        return plist.begin();
+    }
+
+    inline iterator end() {
+        return plist.end();
+    }
+
+    inline const_iterator end() const {
+        return plist.end();
+    }
+
+
+    //:equality operator
+    // a little stricter than it needs to be.. it shouldn't care about the order of
+    // propertydescs...
+    bool operator== (const vjChunkDesc& d) const;
+
+    inline bool operator!= (const vjChunkDesc& d) const {
+        return !(*this == d);
+    }
 
 
     //:Assignment operator
@@ -139,10 +161,15 @@ public:
 
 
 
-    std::string getName();
-    std::string getToken();
-    std::string getHelp();
+    const std::string& getName() const;
+    const std::string& getToken() const;
+    const std::string& getHelp() const;
 
+    void setDefaultChunk (DOM_Node* n);
+    void setDefaultChunk (vjConfigChunk* ch) {
+        default_chunk = ch;
+    }
+    vjConfigChunk* getDefaultChunk() const;
 
     //:Adds a vjPropertyDesc to self.
     //!NOTE: Any vjPropertyDesc previously in self with the
@@ -164,12 +191,12 @@ public:
     //!RETURNS: pdesc - Pointer to propertydesc in self with
     //+         matching token
     //!RETURNS: NULL - if no match is found
-    vjPropertyDesc *getPropertyDesc (const std::string& _token);
+    vjPropertyDesc *getPropertyDesc (const std::string& _token) const;
 
 
  
     //: Writes self to the given output stream
-    friend std::ostream& operator << (std::ostream& out, vjChunkDesc& self);
+    friend std::ostream& operator << (std::ostream& out, const vjChunkDesc& self);
 
 
     //: Reads self's value from the given input stream
