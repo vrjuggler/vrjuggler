@@ -447,6 +447,8 @@ setup_omniORB ( )
    tweek_omni_lib="omniORB$OMNI_VER"
    tweek_extra_libs=`$VPR_CONFIG --extra-libs`
 
+   tweek_save_CPPFLAGS="$CPPFLAGS"
+
    if test "x$cxx_orb_root" != "x/usr" ; then
       CPPFLAGS="$CPPFLAGS -I$cxx_orb_root/include"
    fi
@@ -456,7 +458,12 @@ setup_omniORB ( )
        BUILD_CXX='N'
       ])
 
+   CPPFLAGS="$tweek_save_CPPFLAGS"
+
    if test "x$BUILD_CXX" != "xN" ; then
+      tweek_save_LDFLAGS="$LDFLAGS"
+      tweek_save_LIBS="$LIBS"
+
       if test "x$OMNI_LIB_DIR" != "x/usr/lib" ; then
          LDFLAGS="$LDFLAGS -L$OMNI_LIB_DIR"
       fi
@@ -489,17 +496,42 @@ setup_omniORB ( )
          LIBS="$LIBS -lomniGK_stub"
       fi
 
-      # XXX: This is a hack to deal with omniORB 4.0.0 not compiling out of
-      # the box on IRIX.
+      # This is done to deal with omniORB 4.0.0 not compiling out of the box
+      # on IRIX.
       if test "x$OMNI_VER" = "x4" -a "x$PLATFORM" = "xIRIX" ; then
-         EXTRA_DEFS="$EXTRA_DEFS -DOMNI_REQUIRES_FQ_BASE_CTOR"
+         DPP_LANG_SAVE
+         DPP_LANG_CPLUSPLUS
+
+         tweek_save_CPPFLAGS="$CPPFLAGS"
+         CPPFLAGS="$CPPFLAGS -I$cxx_orb_root/include $EXTRA_DEFS"
+
+         AC_CACHE_CHECK([whether OMNI_REQUIRES_FQ_BASE_CTOR is defined],
+            [tweek_cv_IRIX_ctor_defined],
+            [AC_TRY_COMPILE([#include <omniORB$OMNI_VER/CORBA.h>],
+               [
+#ifndef OMNI_REQUIRES_FQ_BASE_CTOR
+   crash
+#endif
+],
+               [tweek_cv_IRIX_ctor_defined='yes'],
+               [tweek_cv_IRIX_ctor_defined='no'])])
+
+         CPPFLAGS="$tweek_save_CPPFLAGS"
+
+         DPP_LANG_RESTORE
+
+         # If OMNI_REQUIRES_FQ_BASE_CTOR is not defined, then we have to add
+         # it manually.
+         if test "x$tweek_cv_IRIX_ctor_defined" = "xno" ; then
+            EXTRA_DEFS="$EXTRA_DEFS -DOMNI_REQUIRES_FQ_BASE_CTOR"
+         fi
       fi
 
       DPP_LANG_SAVE
       DPP_LANG_CPLUSPLUS
 
       tweek_save_CPPFLAGS="$CPPFLAGS"
-      CPPFLAGS="$CPPFLAGS $EXTRA_DEFS"
+      CPPFLAGS="$CPPFLAGS -I$cxx_orb_root/include $EXTRA_DEFS"
 
       AC_CACHE_CHECK([for CORBA::ORB_init in -l$tweek_omni_lib],
          [tweek_cv_CORBA__ORB_init_in_omniORB],
@@ -516,7 +548,10 @@ int omni_main_i(int argc, char** const argv)
                        rm -rf ./ii_files ],
                      [tweek_cv_CORBA__ORB_init_in_omniORB='no'])])
 
+      # We're done testing things now, so we can restore the original flags.
       CPPFLAGS="$tweek_save_CPPFLAGS"
+      LDFLAGS="$tweek_save_LDFLAGS"
+      LIBS="$tweek_save_LIBS"
 
       DPP_LANG_RESTORE
 
@@ -734,7 +769,7 @@ tweek_dep_scripts="vpr-config"
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
 #   CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
 #   CXXFLAGS="$CXXFLAGS -woff 1234,1388,3303,3322 -w2"
-   CXXFLAGS="$CXXFLAGS -woff 1047,1174 -w2"
+   CXXFLAGS="$CXXFLAGS -woff 1174 -w2"
    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4 -all"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
    vc_cflags='/QIfdiv /QI0f'
