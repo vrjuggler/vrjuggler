@@ -166,8 +166,10 @@ ifneq (@OS_TYPE@, Win32)
 	cd $(instlinks)/include &&					\
           for dir in $(SUBDIR) ; do					\
               rm -f ./$$dir ;						\
-              ln -s $(VPRROOT_ABS)/$$dir ./$$dir ;			\
+              $(LN_S) $(VPRROOT_ABS)/$$dir ./$$dir ;			\
           done
+	cd $(instlinks)/include && rm -f ./boost &&			\
+          $(LN_S) $(VPRROOT_ABS)/contrib/boost ./
 	cd $(instlinks) && rm -f ./$(LIBDIR_NAME) &&			\
           ln -s $(LIBDIR_BASE) ./$(LIBDIR_NAME)
 	cd $(instlinks)/include/vpr && rm -f ./*.h &&			\
