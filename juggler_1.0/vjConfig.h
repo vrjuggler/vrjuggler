@@ -132,6 +132,10 @@
 #   define sqrtf(x) ((float) sqrt(x))
 #endif
 
+#ifndef HAVE_FABSF
+#   define fabsf(x) ((float) fabs(x))
+#endif
+
 #define VJ_EPS 1e-8
 #define VJ_DEG2RAD(x) ((x)*M_PI/180.0)
 #define VJ_RAD2DEG(x) ((x)*180.0/M_PI)
