@@ -7,7 +7,7 @@
 // -Load the sample file
 // -Trim the smallest so they are same length
 vjSimGloveGesture::vjSimGloveGesture(vjConfigChunk* chunk)
-   : vjGesture(chunk), vjGlove(chunk), vjSimInput(chunk)
+   :  vjGloveGesture(chunk), vjGlove(chunk), vjSimInput(chunk)
 {
    mCurGesture = 0;     // We are in no gesture yet
 
@@ -26,7 +26,7 @@ vjSimGloveGesture::vjSimGloveGesture(vjConfigChunk* chunk)
    }
 
    // Get sample filename
-   string sample_file = chunk->getProperty("trainedFilename");
+   string sample_file = (char*)chunk->getProperty("trainedFilename");
    loadTrainedFile(sample_file);
 
    // Trim the lengths
@@ -36,6 +36,8 @@ vjSimGloveGesture::vjSimGloveGesture(vjConfigChunk* chunk)
       mSimKeys.pop_back();
       vjDEBUG(0) << "vjSimGloveGesture: Not enough gestures. Trimming" << endl << vjDEBUG_FLUSH;
    }
+
+   resetIndexes();
 }
 
 //: Get the current gesture.
@@ -54,7 +56,7 @@ void vjSimGloveGesture::UpdateData()
       if(checkKeyPair(mSimKeys[i]) > 0)
       {
          mCurGesture = i;
-         vjDEBUG(0) << "vjSimGloveGesture: Got gesture: " << getGestureString(mGestureId) << endl << vjDEBUG_FLUSH;
+         vjDEBUG(0) << "vjSimGloveGesture: Got gesture: " << getGestureString(mCurGesture) << endl << vjDEBUG_FLUSH;
       }
    }
 
@@ -68,7 +70,7 @@ void vjSimGloveGesture::UpdateData()
 // Loads the file for trained data
 void vjSimGloveGesture::loadTrainedFile(string fileName)
 {
-   ifstream inFile(fileName);
+   ifstream inFile(fileName.c_str());
 
    this->loadFileHeader(inFile);
 }

@@ -1,8 +1,8 @@
-#include <vjSimInput.h>
+#include <Input/vjSim/vjSimInput.h>
 
 // Configure the keyboard interface
 // Grabs it out of the given config chunk
-void vjSimInput::vjSimInput(vjConfigChunk* chunk)
+vjSimInput::vjSimInput(vjConfigChunk* chunk)
 {
    string keyboardName = (char*)chunk->getProperty("keyboardProxy");    // Get the event source
    mKeyboard.init(keyboardName);
