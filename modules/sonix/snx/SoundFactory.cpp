@@ -45,12 +45,14 @@
 #include <fstream>
 #include <string>
 
-#include <vpr/Util/FileUtils.h>
-
 #include <boost/filesystem/exception.hpp>
 #include <boost/filesystem/operations.hpp>
 
+#include <vpr/vpr.h>
+#include <vpr/System.h>
+#include <vpr/Util/FileUtils.h>
 #include <vpr/DynLoad/LibraryFinder.h>
+
 #include <snx/PluginAPI.h>
 #include <snx/Util/Debug.h>
 #include "snx/ISoundImplementation.h"
@@ -67,6 +69,18 @@ vprSingletonImp(SoundFactory);
 SoundFactory::SoundFactory()
 {
    std::vector<std::string> search_paths;
+
+   const std::string envvar("SNX_BASE_DIR");
+   std::string dummy_result;
+
+   if ( vpr::System::getenv(envvar, dummy_result).failure() )
+   {
+      vprDEBUG(snxDBG, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING:")
+         << " SNX_BASE_DIR environment variable not set!\n" << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(snxDBG, vprDBG_WARNING_LVL)
+         << "Plug-in loading may fail.\n" << vprDEBUG_FLUSH;
+   }
 
 #if defined(_ABIN32)
    std::string snx_lib_dir("${SNX_BASE_DIR}/lib32/snx/plugins");
