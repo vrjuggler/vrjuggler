@@ -36,7 +36,7 @@ namespace vpr
        *
        * @param status The <code>vpr::Status</code> object to be copied.
        */
-      void copy( const vpr::Status& status )
+      void copy( const Status& status )
       {
          mStatus = status.mStatus;
       }
@@ -45,7 +45,7 @@ namespace vpr
        * Sets the status code.
        * RESULT: set status to code
        */
-      void setCode( const vpr::Status::Code& code )
+      void setCode( const Code& code )
       {
          mStatus = code;
       }
@@ -53,19 +53,19 @@ namespace vpr
       /**
        * Gets status code
        */
-      const vpr::Status::Code& code() const
+      const Code& code() const
       {
          return mStatus;
       }
 
       /// copy constructor
-      Status( const vpr::Status& status )
+      Status( const Status& status )
       {
          this->copy( status );
       }
 
       /// Status::Code constructor
-      Status( const vpr::Status::Code& code )
+      Status( const Code& code )
       {
          this->setCode( code );
       }
