@@ -134,7 +134,7 @@ editorgui-install:
 	for jar in $(JARS) ; \
           do \
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(topdir)/vjcontrol/$$jar $(bindir) ; \
+                $(topdir)/editorgui/$$jar $(bindir) ; \
           done
 
 install-docs:
