@@ -55,25 +55,29 @@ vpr::ReturnStatus Analog::writeObject(vpr::ObjectWriter* writer)
    SampleBuffer_t::buffer_t& stable_buffer = mAnalogSamples.stableBuffer();
    writer->beginTag(Analog::getBaseType());
    writer->beginAttribute(gadget::tokens::DataTypeAttrib);
-      writer->writeUint16(MSG_DATA_ANALOG);                                           // Write out the data type so that we can assert if reading in wrong place
+      writer->writeUint16(MSG_DATA_ANALOG);                                   // Write out the data type so that we can assert if reading in wrong place
    writer->endAttribute();
 
    if ( !stable_buffer.empty() )
    {
       mAnalogSamples.lock();
       writer->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
-         writer->writeUint16(stable_buffer.size());                                          // Write the # of vectors in the stable buffer
+         writer->writeUint16(stable_buffer.size());                           // Write the # of vectors in the stable buffer
       writer->endAttribute();
-      for ( unsigned j=0;j<stable_buffer.size();j++ )                                            // For each vector in the stable buffer
+      for ( unsigned j=0;j<stable_buffer.size();j++ )                         // For each vector in the stable buffer
       {
          writer->beginTag(gadget::tokens::BufferSampleTag);
          writer->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
-            writer->writeUint16(stable_buffer[j].size());                                   // Write the # of AnalogDatas in the vector
+            writer->writeUint16(stable_buffer[j].size());                     // Write the # of AnalogDatas in the vector
          writer->endAttribute();
-         for ( unsigned i=0;i<stable_buffer[j].size();i++ )                                 // For each AnalogData in the vector
+         for ( unsigned i=0;i<stable_buffer[j].size();i++ )                   // For each AnalogData in the vector
          {
-            writer->writeFloat(stable_buffer[j][i].getAnalog());    // Write Analog Data(int)
-            writer->writeUint64(stable_buffer[j][i].getTime().usec());              // Write Time Stamp vpr::Uint64
+            writer->beginTag(gadget::tokens::AnalogValue);
+            writer->beginAttribute(gadget::tokens::TimeStamp);
+               writer->writeUint64(stable_buffer[j][i].getTime().usec());        // Write Time Stamp vpr::Uint64
+            writer->endAttribute();
+            writer->writeFloat(stable_buffer[j][i].getAnalog());              // Write Analog Data(int)
+            writer->endTag();
          }
          writer->endTag();
       }
@@ -128,9 +132,13 @@ vpr::ReturnStatus Analog::readObject(vpr::ObjectReader* reader)
       //std::cout << "ME: ";
       for ( unsigned j=0;j<numAnalogDatas;j++ )
       {
-         value = reader->readFloat();            //Write Analog Data(int)
-         //std::cout << value;
-         timeStamp = reader->readUint64();                       //Write Time Stamp vpr::Uint64
+         reader->beginTag(gadget::tokens::AnalogValue);
+         reader->beginAttribute(gadget::tokens::TimeStamp);
+            timeStamp = reader->readUint64();                  // Write Time Stamp vpr::Uint64
+         reader->endAttribute();
+         value = reader->readFloat();                       // Write Analog Data(int)
+         reader->endTag();
+
          temp_analog_data.setAnalog(value);
          temp_analog_data.setTime(vpr::Interval(timeStamp + delta,vpr::Interval::Usec));
          dataSample.push_back(temp_analog_data);

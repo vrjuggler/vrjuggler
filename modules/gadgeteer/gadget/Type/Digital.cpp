@@ -59,8 +59,12 @@ namespace gadget
                writer->endAttribute();
                for ( unsigned i=0;i<stable_buffer[j].size();i++ )                         // For each DigitalData in the vector
                {
+                  writer->beginTag(gadget::tokens::DigitalValue);
+                  writer->beginAttribute(gadget::tokens::TimeStamp);
+                     writer->writeUint64(stable_buffer[j][i].getTime().usec());           // Write Time Stamp vpr::Uint64
+                  writer->endAttribute();
                   writer->writeUint32((vpr::Uint32)stable_buffer[j][i].getDigital());  // Write Digital Data(int)
-                  writer->writeUint64(stable_buffer[j][i].getTime().usec());           // Write Time Stamp vpr::Uint64
+                  writer->endTag();
                }
                writer->endTag();
             }
@@ -108,8 +112,13 @@ namespace gadget
             dataSample.clear();
             for ( unsigned j=0;j<numDigitalDatas;j++ )
             {
-               value = reader->readUint32();       //Write Digital Data(int)
-               timeStamp = reader->readUint64();                  //Write Time Stamp vpr::Uint64
+               reader->beginTag(gadget::tokens::DigitalValue);
+               reader->beginAttribute(gadget::tokens::TimeStamp);
+                  timeStamp = reader->readUint64();               // read Time Stamp vpr::Uint64
+               reader->endAttribute();
+               value = reader->readUint32();                   // read Digital Data(int)
+               reader->endTag();
+
                temp_digital_data.setDigital(value);
                temp_digital_data.setTime(vpr::Interval(timeStamp + delta,vpr::Interval::Usec));
                dataSample.push_back(temp_digital_data);
@@ -124,7 +133,7 @@ namespace gadget
 
          return vpr::ReturnStatus::Succeed;
       }
-   
+
 } // End of gadget namespace
 
 
