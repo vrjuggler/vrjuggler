@@ -121,6 +121,7 @@ endif
 # Library names.
 # -----------------------------------------------------------------------------
 JCCL_LIBRARY	      = @LIB_PREFIX@jccl
+JCCL_COMMON_LIBRARY  = @LIB_PREFIX@jccl_common
 JCCL_CONFIG_LIBRARY  = @LIB_PREFIX@jccl_config
 
 include $(topdir)/common.defs.mk
