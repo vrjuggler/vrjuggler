@@ -11,10 +11,8 @@ ECHO [ERR] check the path and try again.
 GOTO ERREXIT
 :ELSE2
 IF NOT "%TWEEK_BASE_DIR%"=="" GOTO ELSE3
-ECHO [ERR] TWEEK_BASE_DIR unset; please set the environment variable 
-ECHO [ERR] TWEEK_BASE_DIR to point to your Tweek installation.  For more 
-ECHO [ERR] information, please see INSTALL.html
-GOTO ERREXIT
+ECHO  WARNING: Setting TWEEK_BASE_DIR to "%VJ_BASE_DIR%"
+set TWEEK_BASE_DIR=%VJ_BASE_DIR%
 :ELSE3
 IF EXIST "%TWEEK_BASE_DIR%" GOTO RUNJAVA
 ECHO [ERR] The TWEEK_BASE_DIR %TWEEK_BASE_DIR does not appear to exist.  Please 
