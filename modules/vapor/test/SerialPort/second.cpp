@@ -59,6 +59,7 @@ main (int argc, char* argv[]) {
 
         port->setUpdateAction(vpr::SerialTypes::NOW);
         port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
+        port->enableRead();
 
         for ( int i = 0; i < 10; i++ ) {
             memset((void*) &write_buffer, '\0', sizeof(write_buffer));
