@@ -53,7 +53,7 @@ vjPropertyDesc::vjPropertyDesc (const std::string& n, int i, VarType t,
 
 
 vjPropertyDesc::~vjPropertyDesc () {
-    int i;
+    unsigned int i;
     for (i = 0; i < enumv.size(); i++)
    delete enumv[i];
     for (i = 0; i < valuelabels.size(); i++)
@@ -72,7 +72,7 @@ std::string vjPropertyDesc::getValueLabel (int i) {
 
 
 vjEnumEntry* vjPropertyDesc::getEnumEntry (const std::string& s) {
-    for (int i = 0; i < enumv.size(); i++) {
+    for (unsigned int i = 0; i < enumv.size(); i++) {
    if (!vjstrcasecmp (enumv[i]->getName(), s))
        return enumv[i];
     }

@@ -128,6 +128,14 @@ protected:  // -- CHUNK HANDLER
    //!RETURNS: success
    virtual bool configRemove(vjConfigChunk* chunk);
 
+protected:  // Local config functions
+   //: Add a vjUser to the system
+   bool addUser(vjConfigChunk* chunk);
+
+   //: Remove a vjUser from the system
+   //! NOTE: Currently not implemented
+   bool removeUser(vjConfigChunk* chunk);
+
 protected:
    //: Updates any data that needs updated once a frame (Trackers, etc.)
    //! POST: All tracker data is ready for next frame

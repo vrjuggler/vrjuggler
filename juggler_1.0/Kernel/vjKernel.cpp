@@ -123,6 +123,7 @@ void vjKernel::controlLoop(void* nullParam)
 // XXX: Should have protection here
 void vjKernel::setApplication(vjApp* _app)
 {
+   vjDEBUG(vjDBG_KERNEL,vjDBG_CONFIG_LVL) << "vjKernel::setApplication: New application set\n" << vjDEBUG_FLUSH;
    mNewApp = _app;
    mNewAppSet = true;
 }
@@ -148,8 +149,16 @@ void vjKernel::checkForReconfig()
    // check for a new applications
    if(mNewAppSet)
    {
-      mNewAppSet = false;
-      changeApplication(mNewApp);
+      if(mNewApp->depSatisfied())
+      {
+         vjDEBUG(vjDBG_KERNEL,vjDBG_CONFIG_LVL) << "vjKernel: New application dependencies: Satisfied.\n" << vjDEBUG_FLUSH;
+         mNewAppSet = false;
+         changeApplication(mNewApp);
+      }
+      else
+      {
+         vjDEBUG(vjDBG_KERNEL,vjDBG_WARNING_LVL) << "vjKernel: New application dependencies: Not satisfied yet.\n" << vjDEBUG_FLUSH;
+      }
    }
 }
 
@@ -229,7 +238,7 @@ void vjKernel::initConfig()
 #elif defined(VJ_OS_Win32)
    mSysFactory = vjWin32SystemFactory::instance();
 #else
-   vjDEBUG (vjDBG_ERROR,0) << "ERROR!: Don't know how to create System Factory!\n" << vjDEBUG_FLUSH;
+   //vjDEBUG(0,0) << "ERROR!: Don't know how to create System Factory!\n" << vjDEBUG_FLUSH;
    vjASSERT(false);
 #endif
 
@@ -256,6 +265,8 @@ int vjKernel::configProcessPending(bool lockIt)
    int chunks_processed(0);     // Needs to return this value
    if(vjConfigManager::instance()->pendingNeedsChecked())
    {
+      vjDEBUG_BEGIN(vjDBG_ALL,vjDBG_CONFIG_LVL) << "vjKernel::configProcessPending: Examining pending list.\n" << vjDEBUG_FLUSH;
+      
       chunks_processed += vjConfigChunkHandler::configProcessPending(lockIt);      // Process kernels pending chunks   
       chunks_processed += getInputManager()->configProcessPending(lockIt);
       chunks_processed += mDisplayManager->configProcessPending(lockIt);
@@ -265,6 +276,8 @@ int vjKernel::configProcessPending(bool lockIt)
          chunks_processed += environmentManager->configProcessPending(lockIt);
       if(NULL != mApp)
          chunks_processed += mApp->configProcessPending(lockIt);
+      
+      vjDEBUG_ENDlg(vjDBG_ALL,vjDBG_CONFIG_LVL,false,false) << endl << vjDEBUG_FLUSH;
    }
    return chunks_processed;
 }
@@ -288,14 +301,7 @@ bool vjKernel::configAdd(vjConfigChunk* chunk)
 
    if(std::string("JugglerUser") == chunk_type)
    {
-      vjUser* new_user = new vjUser;
-      bool success = new_user->config(chunk);
-      if(!success)
-         delete new_user;
-      else
-         mUsers.push_back(new_user);
-
-      return success;
+      return addUser(chunk);
    }
    else
       return false;
@@ -303,10 +309,49 @@ bool vjKernel::configAdd(vjConfigChunk* chunk)
 
 bool vjKernel::configRemove(vjConfigChunk* chunk)
 {
+   std::string chunk_type = (std::string)chunk->getType();
+
    vjASSERT(configCanHandle(chunk));
-   return false;
+
+   if(std::string("JugglerUser") == chunk_type)
+   {
+      return removeUser(chunk);
+   }
+   else
+      return false;
 }
 
+//: Add a new user to the kernel
+bool vjKernel::addUser(vjConfigChunk* chunk)
+{
+   vjASSERT((std::string)chunk->getType() == std::string("JugglerUser"));
+   
+   vjUser* new_user = new vjUser;
+   bool success = new_user->config(chunk);
+   
+   if(!success)
+   {
+      vjDEBUG(vjDBG_CONFIG,vjDBG_CRITICAL_LVL)
+                     << "ERROR: Failed to add new vjUser: "
+                     << chunk->getProperty("name") << endl << vjDEBUG_FLUSH;
+      delete new_user;
+   }
+   else
+   {
+      vjDEBUG(vjDBG_CONFIG,vjDBG_CONFIG_LVL)
+                             << "vjKernel: Added new vjUser: "
+                             << new_user->getName().c_str() << endl << vjDEBUG_FLUSH;
+      mUsers.push_back(new_user);
+   }
+
+   return success;
+}
+
+// XXX: Not implemented
+bool vjKernel::removeUser(vjConfigChunk* chunk)
+{
+   return false;
+}
 
 // --- STARTUP ROUTINES --- //
 void vjKernel::loadConfigFile(std::string filename)

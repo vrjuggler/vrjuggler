@@ -110,8 +110,9 @@ void cubesApp::init()
 {
    vjDEBUG(vjDBG_ALL,0) << "---------- cubes:App:init() ---------------"
                         << endl << vjDEBUG_FLUSH;
-   std::vector<vjUser*> users = kernel->getUsers();
+   std::vector<vjUser*> users = kernel->getUsers();   
    int num_users = users.size();
+   vjASSERT(num_users > 0);		// Make sure that we actually have users defined
 
    UserData* new_user=NULL;
    mUserData = std::vector<UserData*>(num_users);

@@ -129,7 +129,8 @@ std::vector<std::string> vjConfigChunk::getChunkPtrDependencies() const
 {
    std::string chunkname;
    std::vector<std::string> dep_list;     // Create return vector
-   int i, j;
+   unsigned int i;
+   int j;
 
    //cout << "Dependency test for " << getProperty ("name") << endl;
    for (i=0;i<props.size();i++)                       // For each property
@@ -163,7 +164,7 @@ std::vector<std::string> vjConfigChunk::getChunkPtrDependencies() const
 
 
 vjProperty* vjConfigChunk::getPropertyPtrFromName (const std::string& property) const {
-    for (int i = 0; i < props.size(); i++) {
+    for (unsigned int i = 0; i < props.size(); i++) {
         if (!vjstrcasecmp (props[i]->getName(), property))
             return props[i];
     }
@@ -173,7 +174,7 @@ vjProperty* vjConfigChunk::getPropertyPtrFromName (const std::string& property) 
 
 
 vjProperty* vjConfigChunk::getPropertyPtrFromToken (const std::string& token) const {
-    for (int i = 0; i < props.size(); i++) {
+    for (unsigned int i = 0; i < props.size(); i++) {
         if (!vjstrcasecmp(props[i]->description->getToken(), token))
             return props[i];
     }
@@ -204,7 +205,7 @@ ostream& operator << (ostream& out, vjConfigChunk& self) {
     // outputting an uninitialized chunk would be a mistake...
     if (self.desc) {
         out << self.desc->token.c_str() << endl;
-        for (int i =0; i < self.props.size(); i++) {
+        for (unsigned int i =0; i < self.props.size(); i++) {
             out << "  " << *(self.props[i]) << endl;
         }
         out << "  End" << endl;

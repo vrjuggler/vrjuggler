@@ -103,7 +103,7 @@ protected:
       int context_id = getCurContext();
 
       // Make sure that we will reference a valid element
-      while(mContextDataVector.size() <= context_id)
+      while((int)mContextDataVector.size() <= context_id)
       {
          mContextDataVector.push_back(ContextDataType());
          vjDEBUG(vjDBG_DRAW_MGR,3) << "Adding ContextDataVector element: size now: " << mContextDataVector.size() << endl << vjDEBUG_FLUSH;
