@@ -490,7 +490,7 @@ if test "x${_enable_osg_api}" = "xyes" ; then
     if test "x$OSGROOT" != "x/usr" ; then
         CPPFLAGS="-I$OSGROOT/include $CPPFLAGS"
         INCLUDES="-I$OSGROOT/include $INCLUDES"
-        LDFLAGS="-L$OSGROOT/lib$LIBBITSUF $LDFLAGS"
+        LDFLAGS="-L$OSGROOT/lib $LDFLAGS"
     fi
 
     CFLAGS="$CFLAGS $INCLUDES ${_EXTRA_FLAGS}"
@@ -501,10 +501,15 @@ if test "x${_enable_osg_api}" = "xyes" ; then
     DPP_LANG_SAVE
     DPP_LANG_CPLUSPLUS
 
+    _vjsave_CPPFLAGS="$CPPFLAGS"
+    CPPFLAGS="$CPPFLAGS $STDFLAGS"
+
     AC_CHECK_LIB(osg, osgGetVersion,
         AC_CHECK_HEADER(osg/Vec3, vj_have_osg='yes',
             AC_MSG_WARN(*** OpenScenegraph API will not be used (headers not found) ***)),
         AC_MSG_WARN(*** OpenScenegraph API will not be used (libraries not found) ***), -lX11 -lXext)
+
+    CPPFLAGS="${_vjsave_CPPFLAGS}"
 
     DPP_LANG_RESTORE
 
@@ -514,7 +519,7 @@ if test "x${_enable_osg_api}" = "xyes" ; then
 
         LIBOSG='-losg -losgGLUT -losgUtil -losgDB'
         OSG_INCLUDES="-I$OSGROOT/include"
-        OSG_LDFLAGS="-L$OSGROOT/lib\$(LIBBITSUF)"
+        OSG_LDFLAGS="-L$OSGROOT/lib"
     fi
 
     CFLAGS="${_vjsave_CFLAGS}"
