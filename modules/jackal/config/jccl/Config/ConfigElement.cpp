@@ -464,7 +464,7 @@ std::ostream& operator<<(std::ostream& out, const ConfigElement& self)
    return out;
 }
 
-int ConfigElement::getNum(const std::string& property_token) const
+unsigned int ConfigElement::getNum(const std::string& property_token) const
 {
    assertValid();
    return mNode->getChildren(property_token).size();
