@@ -39,8 +39,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_PARAM_H_
-#define _VJ_PARAM_H_
+#ifndef _SNX_PARAM_H_
+#define _SNX_PARAM_H_
 
 
 /*
@@ -60,4 +60,4 @@ namespace snx
 }
 
 
-#endif	/* _VJ_PARAM_H_ */
+#endif	/* _SNX_PARAM_H_ */
