@@ -163,7 +163,7 @@ double StatCollector<TYPE, TimeBased>::getInstAverage()
    else
    {
       // Just approximate it with the average of the last two entries
-      inst_average = double(mPrevSample1 + mPrevSample)/2.0;
+      inst_average = double(mPrevSample1 + mPrevSample2)/2.0;
    }
 
    return inst_average;
