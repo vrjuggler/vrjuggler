@@ -22,6 +22,7 @@ INSTALL_FILES=	$(webroot)/base_style.css
 NEED_DB_IMAGES=	1
 
 programmer.guide.html: programmer.guide.xml
+programmer.guide/index.html: programmer.guide.xml
 programmer.guide.pdf: programmer.guide.xml programmer.guide.fo
 
 include ../version.mk
