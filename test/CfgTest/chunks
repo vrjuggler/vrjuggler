@@ -38,6 +38,7 @@ chunk display "Display CFG" ""
   lowerleft float 3 lowerleft ""
   lowerright float 3 lowerright ""
   upperleft float 3 upperleft ""
+  sillyptr chunk -1 "sillyptr" { display inputgroup } ""
   end
 
 chunk InputGroup "InputGroup" ""
