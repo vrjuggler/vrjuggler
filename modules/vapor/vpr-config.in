@@ -47,7 +47,7 @@ use strict 'vars';
 use vars qw($ECHO_CXXFLAGS $ECHO_EXEC_PREFIX $ECHO_EXTRA_LIBS $ECHO_LIBS
             $ECHO_PREFIX);
 use vars qw($exec_prefix $EXEC_PREFIX_SET $prefix $PREFIX_SET $LIBBITSUF
-            $VPR_ABI_FLAGS $VPR_ISA_FLAGS $Win32);
+            $PLATFORM $VPR_ABI_FLAGS $VPR_ISA_FLAGS $Win32);
 
 use File::Basename;
 use Getopt::Long;
@@ -68,6 +68,7 @@ my $vpr_default_isa = qq(@ISA@);
 my $vpr_n32_flags   = qq(@vpr_n32_flags@);
 my $vpr_64_flags    = qq(@vpr_64_flags@);
 $LIBBITSUF          = qq(@LIBBITSUF@);
+$PLATFORM           = qq(@PLATFORM@);
 
 my $use_gcc = '@USE_GCC@';
 
@@ -248,16 +249,14 @@ sub make_CXXFLAGS ($)
       $vpr_extra_cxxflags = "$vpr_extra_cxxflags $VPR_ABI_FLAGS $VPR_ISA_FLAGS";
    }
 
-   my $vpr_extra_include_dirs     = qq(@vpr_extra_include_dirs@);
-   my $vpr_extra_includes         = '';
+   my $vpr_extra_includes = '';
 
-   if ( "$vpr_extra_include_dirs" ne "" && "$deps_dir" ne "" )
+   # XXX: This is pretty lame, but I cannot think of a better way to ensure
+   # that this extra directory is added when it is needed.
+   if ( "$PLATFORM" eq "IRIX" )
    {
-      my $dir;
-      foreach $dir ( split(/\s+/, "$vpr_extra_include_dirs") )
-      {
-         $vpr_extra_includes .= qq( -I$deps_dir/include/$dir);
-      }
+      my $hack_deps_dir = ("$deps_dir" ne "" ? "$deps_dir" : "$base_dir");
+      $vpr_extra_includes = "-I$hack_deps_dir/include/boost/compatibility/cpp_c_headers";
    }
 
    $cxxflags = qq(@vpr_cxxflags@ $vpr_extra_cxxflags @subsystem_cxxflags@ ) .
