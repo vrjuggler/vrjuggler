@@ -155,7 +155,6 @@ vpr::ReturnStatus SocketImplBSD::open()
 
       mHandle->mFdesc = sock;
       mHandle->mOpen  = true;
-      mOpen           = true;
 
       // Since socket(2) cannot open a socket in non-blocking mode, we call
       // vpr::FileHandleUNIX::setBlocking() directly.
@@ -167,12 +166,7 @@ vpr::ReturnStatus SocketImplBSD::open()
 
 vpr::ReturnStatus SocketImplBSD::close()
 {
-   vpr::ReturnStatus retval;
-
-   retval = mHandle->close();
-   mOpen = (retval.success() ? false : true);
-
-   return retval;
+   return mHandle->close();
 }
 
 // Reconfigures the socket so that it is in blocking mode.
@@ -187,7 +181,7 @@ vpr::ReturnStatus SocketImplBSD::setBlocking(bool blocking)
    {
       status = mHandle->setBlocking(blocking);
 
-      if ( ! mOpen )
+      if ( ! isOpen() )
       {
          mOpenBlocking = blocking;
       }
@@ -322,7 +316,7 @@ bool SocketImplBSD::isConnected ()
 {
    bool connected(false);
 
-   if ( mOpen && mConnected )
+   if ( isOpen() && mConnected )
    {
       vpr::ReturnStatus status;
       vpr::Int32 bytes;
@@ -790,8 +784,7 @@ SocketImplBSD::~SocketImplBSD()
 // ============================================================================
 
 SocketImplBSD::SocketImplBSD(const vpr::SocketTypes::Type sock_type)
-   : mOpen(false)
-   , mOpenBlocking(true)
+   : mOpenBlocking(true)
    , mBound(false)
    , mConnected(false)
    , mBlockingFixed(false)
@@ -804,8 +797,7 @@ SocketImplBSD::SocketImplBSD(const vpr::SocketTypes::Type sock_type)
 SocketImplBSD::SocketImplBSD(const vpr::InetAddr& local_addr,
                              const vpr::InetAddr& remote_addr,
                              const vpr::SocketTypes::Type sock_type)
-   : mOpen(false)
-   , mOpenBlocking(true)
+   : mOpenBlocking(true)
    , mBound(false)
    , mConnected(false)
    , mBlockingFixed(false)

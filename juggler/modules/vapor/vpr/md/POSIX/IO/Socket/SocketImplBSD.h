@@ -115,7 +115,7 @@ public:
     */
    bool isOpen()
    {
-      return mOpen;
+      return mHandle->isOpen();
    }
 
    bool isBound() const
@@ -427,10 +427,6 @@ protected:
                  const vpr::SocketTypes::Type sock_type);
 
 protected:
-   // XXX: This class should not need mOpen and should instead use the one
-   // in FileHandleUNIX.  For some reason, doing that causes all kinds of
-   // problems in SocketStreamImplBSD::accept().
-   bool mOpen;
    bool mOpenBlocking; /**< Used for working around socket(2) semantics */
    bool mBound;
    bool mConnected;
