@@ -47,6 +47,7 @@ DRIVERS+=	Intersense/IS900
 DRIVERS+=	Intersense/IntersenseAPI
 DRIVERS+=	Logitech/ThreeDMouse
 #DRIVERS+=	Open/DTK
+DRIVERS+=       Open/LinuxJoydev
 DRIVERS+=	Open/Trackd
 DRIVERS+=	Open/VRPN
 DRIVERS+=	Polhemus/Fastrak

@@ -790,6 +790,7 @@ AC_CONFIG_FILES([
    gadget/Devices/Logitech/ThreeDMouse/Makefile
    gadget/Devices/Open/Makefile
    gadget/Devices/Open/DTK/Makefile
+   gadget/Devices/Open/LinuxJoydev/Makefile
    gadget/Devices/Open/Trackd/Makefile
    gadget/Devices/Open/VRPN/Makefile
    gadget/Devices/Polhemus/Makefile
