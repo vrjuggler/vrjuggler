@@ -129,17 +129,26 @@ namespace vpr
          return ProfileIterator(&mRoot);
       }
 
+      /**
+       * @return Returns a new Iterator that is set to NULL.
+       */
       static   ProfileIterator     end()
       {
          return ProfileIterator(NULL);
       }
 
 
+      /**
+       * @return Returns the Root Node.
+       */
       static   ProfileNode*         getRootNode()
       {
          return &mRoot;
       }
 
+      /**
+       * @return Profile Tree has been printed out using vpr::DBG.
+       */
       static   void                 printTree()
       {
          mTreeLock.acquire();
@@ -150,6 +159,9 @@ namespace vpr
          mTreeLock.release();
       }
 
+      /**
+       * @return Returns a new vector of the names in the Profile.
+       */
       static std::vector<std::string> getNames()
       {
             mTreeLock.acquire();
@@ -160,6 +172,10 @@ namespace vpr
       }
 
       
+      /**
+       * @return Returns a SampleTimeMap that has the names in the profile
+       *         and their last sample.
+       */
       static SampleTimeMap getValueMap( )
       {
          SampleTimeMap sample_time_map;
@@ -169,6 +185,9 @@ namespace vpr
          return sample_time_map;
       }
 
+      /**
+       * @return Returns the last sample from the specified nodeName.
+       */
        static float getNamedNodeSample( const char * nodeName )
        {
            mTreeLock.acquire();
