@@ -162,8 +162,8 @@ GetOptions('help|?' => \$script_help, 'min' => \$print_min,
            'idlincflag=s' => \$idlincflag_arg,
            'idlgendir=s' => \$idlgendir_arg, 'jars' => \$echo_jars,
            'ext-jars' => \$echo_ext_jars,
-           'too-much-pressure' => \$echo_has_cxx,
-           'is-jittery' => \$echo_has_java);
+           'too-much-pressure' => \$echo_has_cxx, 'has-cxx' => \$echo_has_cxx,
+           'is-jittery' => \$echo_has_java, 'has-java' => \$echo_has_java);
 
 usage(0) if $script_help;
 
@@ -297,6 +297,8 @@ Options:
         [--static]              Print the library arguments using static
                                 linking flags
         [--profiled]            Print the profiled library names
+        [--has-cxx]             Prints "Y" is the C++ API is available
+        [--has-java]            Prints "Y" is the Java API is available
         [--idl cxx|java]        Print path to the IDL compiler used for
                                 generating C++ or Java based on the given
                                 parameter
