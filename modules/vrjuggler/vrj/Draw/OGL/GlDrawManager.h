@@ -40,6 +40,7 @@
 //#include <vpr/Sync/CondVar.h>
 #include <vpr/Sync/Semaphore.h>
 #include <vpr/Util/Singleton.h>
+#include <vpr/Thread/Thread.h>
 #include <vpr/Thread/TSObjectProxy.h>
 
 #ifdef VPR_OS_Darwin
@@ -223,18 +224,25 @@ protected:
    //                                     *  is acquired can run-time config occur */
    bool              mRunning;         /**< Used to stop the drawing thread. */
 
+   vpr::ThreadMemberFunctor<GlDrawManager>* mMemberFunctor;
+   vpr::Thread* mControlThread;
+
 protected:
    GlDrawManager();
 
-   virtual ~GlDrawManager() {}
+   virtual ~GlDrawManager()
+   {
+      // XXX: Need to shut down the control thread and free the memory pointed
+      // to by mMemberFunctor and mControlThread.
+   }
 
    GlDrawManager(const GlDrawManager& o)
       : DrawManager()
    {;}
+
    void operator=(const GlDrawManager& o) {;}
 
    vprSingletonHeader(GlDrawManager);
-
 };
 
 } // end namespace
