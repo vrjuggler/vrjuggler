@@ -23,10 +23,9 @@ require Exporter;
              popFont_action item_action defaults_action treecontrol_action);
 
 my(%book) = ();
-my(@dummy) = ();
 
 $book{'title'}    = '';
-$book{'chapters'} = \@dummy;     # This seems like a hack...
+$book{'chapters'} = [];
 
 sub useme () {
     xmlToc::setAction("folder", \&xmlToc_htmlBookActions::pushFolder_action);
