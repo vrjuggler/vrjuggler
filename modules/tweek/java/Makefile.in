@@ -58,12 +58,15 @@ JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
 JDOM_JAR=	@JDOM_JAR@
 JAVA_ORB_JAR=	@JAVA_ORB_JAR@
 
+LAF_DIR=	$(JUGGLERROOT_ABS)/external/swing-laf
+LAF_JARS=	$(LAF_DIR)/kunststoff/kunststoff.jar
+
 # The following check is done this way to prevent unwanted spaces from
 # appearing in $(CLASSPATH)
 ifneq ($(JAVA_ORB_JAR), none)
-CLASSPATH=	$(JDOM_JAR)$(JCPS)$(JAVA_ORB_JAR)
+CLASSPATH=	$(JDOM_JAR)$(JCPS)$(JAVA_ORB_JAR)$(JCPS)$(LAF_JARS)
 else
-CLASSPATH=	$(JDOM_JAR)
+CLASSPATH=	$(JDOM_JAR)$(JCPS)$(LAF_JARS)
 endif
 
 IDL_JAVA_FILES=	SubjectManager.java	\
@@ -264,6 +267,11 @@ ifneq ($(JAVA_ORB_JAR), none)
                 $$jar $(bindir) ;					\
           done
 endif
+	for jar in `echo "$(LAF_JARS)" | sed -e 's/$(JCPS)/ /g'` ;	\
+          do								\
+              $(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
+                $$jar $(bindir) ;					\
+          done
 
 CLEAN_FILES+=	$(JARS) $(addsuffix .jar, $(BEANS)) $(JAVA_CLASSES)
 CLEAN_DIRS+=	tweek $(srcdir)/tweek
