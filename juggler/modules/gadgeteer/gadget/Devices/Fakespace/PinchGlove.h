@@ -83,8 +83,7 @@ public:
       RTHUMB = 6, RINDEX = 7, RMIDDLE = 8, RRING = 9, RPINKY = 10
    };
 
-   virtual const DigitalData getDigitalData(int devNum = 0);
-
+   
 protected:
    //: The main control loop for the object
    void controlLoop( void* nullParam );
@@ -97,8 +96,7 @@ protected:
    PinchGloveStandalone* mGlove;              // The actual glove
 
    Hand left, right;
-
-    DigitalData mDigitalData[11];           // digitals for each finger.
+   std::vector<DigitalData> mDigitalData;   // digitals for each finger.
                                             // doesn't store time correctly :(
 };
 
