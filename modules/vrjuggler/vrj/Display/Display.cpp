@@ -119,19 +119,25 @@ void Display::configViewports(jccl::ConfigChunkPtr chunk)
    unsigned i(0);
 
    // Create sim viewports
+   // - Set the parent display
+   // - Configure it
    for(i=0;i<num_sim_vps;i++)
    {
       vp_chunk = chunk->getProperty("sim_viewports",i);
       sim_vp = new SimViewport;
+      sim_vp->setDisplay(this);
       sim_vp->config(vp_chunk);
       mViewports.push_back(sim_vp);
    }
 
    // Create sim viewports
+   // - Set the parent display
+   // - Configure it
    for(i=0;i<num_surface_vps;i++)
    {
       vp_chunk = chunk->getProperty("surface_viewports",i);
       surf_vp = new SurfaceViewport;
+      surf_vp->setDisplay(this);
       surf_vp->config(vp_chunk);
       mViewports.push_back(surf_vp);
    }

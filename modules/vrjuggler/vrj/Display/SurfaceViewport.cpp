@@ -108,8 +108,11 @@ void SurfaceViewport::config(jccl::ConfigChunkPtr chunk)
    // Configure the projections
    mLeftProj->config(chunk);
    mLeftProj->setEye(Projection::LEFT);
+   mLeftProj->setViewport(this);
+
    mRightProj->config(chunk);
    mRightProj->setEye(Projection::RIGHT);
+   mRightProj->setViewport(this);
 }
 
 void SurfaceViewport::updateProjections()
