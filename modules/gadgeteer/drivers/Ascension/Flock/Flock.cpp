@@ -32,6 +32,8 @@
 
 #include <gadget/Devices/DriverConfig.h>
 
+#include <vector>
+
 #include <boost/concept_check.hpp>
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
@@ -45,9 +47,7 @@
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/Type/DeviceConstructor.h>
-#include <gadget/Devices/Ascension/Flock/Flock.h>
-
-#include <vector>
+#include <drivers/Ascension/Flock/Flock.h>
 
 
 void initDevice(gadget::InputManager* inputMgr)

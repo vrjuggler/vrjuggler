@@ -41,7 +41,7 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
 #include <gadget/Type/InputMixer.h>
-#include <gadget/Devices/Ascension/MotionStar/MotionStarStandalone.h>
+#include <drivers/Ascension/MotionStar/MotionStarStandalone.h>
 
 
 namespace gadget
