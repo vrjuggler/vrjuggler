@@ -77,6 +77,10 @@ public:
     /** Get Positional data. */
     PositionData* getPositionData (int devNum = 0)
     {
+       vprASSERT(!mPosSamples.stableBuffer().empty() && "Empty stable buffer, can't get sample");
+       vprASSERT((mPosSamples.stableBuffer().back().size() > (unsigned)devNum) && 
+                "Trying to get out of range device. No device available"); 
+       
        // XXX: Fill in
        return &(mPosSamples.stableBuffer().back()[devNum]);
     }
