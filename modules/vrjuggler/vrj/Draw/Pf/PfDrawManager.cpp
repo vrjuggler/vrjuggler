@@ -39,6 +39,7 @@
 #include <Performer/pf/pfScene.h>
 #include <Performer/pf/pfChannel.h>
 #include <Performer/pf/pfLightSource.h>
+#include <Performer/pfdu.h>
 
 #include <Kernel/Pf/vjPfDrawManager.h>
 #include <Kernel/Pf/vjPfApp.h>
@@ -440,22 +441,41 @@ void vjPfDrawManager::initPerformerApp()
 
 void vjPfDrawManager::initLoaders()
 {
-   pfdInitConverter(mHeadModel.c_str());
-   pfdInitConverter(mWandModel.c_str());
+   if(!mHeadModel.empty())
+      pfdInitConverter(mHeadModel.c_str());
+   if(!mWandModel.empty())
+      pfdInitConverter(mWandModel.c_str());
 }
 
 void vjPfDrawManager::initSimulator()
 {
-   pfNode* head_node = pfdLoadFile(mHeadModel.c_str());     // Load head model
-   pfNode* wand_node = pfdLoadFile(mWandModel.c_str());     // Load wand model
+   pfNode* head_node(NULL);
+   pfNode* wand_node(NULL);
+   
+   if(!mHeadModel.empty())
+   {
+      pfNode* head_node = pfdLoadFile(mHeadModel.c_str());     // Load head model
+   } else {
+      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: No wand head specified.\n" << vjDEBUG_FLUSH;  
+   }
+   
+   if(!mWandModel.empty())
+   {
+      pfdLoadFile(mWandModel.c_str());     // Load wand model
+   } else {
+      vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "vjPfDrawManager: No wand model specified.\n" << vjDEBUG_FLUSH;
+   }
+
    mSimTree = new pfGroup;
    mRootWithSim = new pfScene;
    mHeadDCS = new pfDCS;
    mWandDCS = new pfDCS;
    mSimTree->addChild(mHeadDCS);
    mSimTree->addChild(mWandDCS);
-   mHeadDCS->addChild(head_node);
-   mWandDCS->addChild(wand_node);
+   if(NULL != head_node)
+      mHeadDCS->addChild(head_node);
+   if(NULL != wand_node)
+      mWandDCS->addChild(wand_node);
    mRootWithSim->addChild(mSimTree);      // Put sim stuff in the graph
 }
 
