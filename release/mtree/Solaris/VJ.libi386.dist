@@ -1,0 +1,14 @@
+# This file defines the specification for the VR Juggler lib diretory tree
+# for machines running Solaris.
+#
+# $Id$
+
+/set type=dir mode=0775
+.
+    lib
+	debug
+	..
+	opt
+	..
+    ..
+..
