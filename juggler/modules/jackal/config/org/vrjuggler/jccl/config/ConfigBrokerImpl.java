@@ -222,9 +222,69 @@ public class ConfigBrokerImpl
          String data_source_name = (String)resources.get(0);
          target_ds = get(data_source_name);
       }
-     
-      target_ds.add(elt);
-      fireConfigElementAdded(getNameFor(target_ds), elt);
+
+      return add(context, elt, target_ds);
+   }
+
+   /**
+    * Adds the given configuration element to the given context and the named
+    * resource within that context.  The named resource must exist and must
+    * be associated with the given context.  Upon successful addition of the
+    * element to the context and resource, an undoable edit is logged with
+    * the ConfigUndoManager associated with the given context.
+    *
+    * @param context            the context in which to add the element
+    * @param elt                the configuration element to add
+    * @param dataSourceName     the name of the resource to which the element
+    *                           will be added
+    *
+    * @return  true if the addition was successful, false otherwise
+    *
+    * @since 0.92.5
+    */
+   public boolean add(ConfigContext context, ConfigElement elt,
+                      String dataSourceName)
+   {
+      DataSource data_source = get(dataSourceName);
+
+      // Make sure that the named data source is known to us.
+      if ( data_source == null )
+      {
+         throw new IllegalArgumentException("Unknown DataSource (" +
+                                            dataSourceName + ") given");
+      }
+
+      return add(context, elt, data_source);
+   }
+
+   /**
+    * Adds the given configuration element to the given context and the given
+    * resource within that context.  The given resource must exist and must
+    * be associated with the given context.  Upon successful addition of the
+    * element to the context and resource, an undoable edit is logged with
+    * the ConfigUndoManager associated with the given context.
+    *
+    * @param context    the context in which to add the element
+    * @param elt        the configuration element to add
+    * @param dataSource the resource to which the element will be added
+    *
+    * @return  true if the addition was successful, false otherwise
+    *
+    * @since 0.92.5
+    */
+   public boolean add(ConfigContext context, ConfigElement elt,
+                      DataSource dataSource)
+   {
+      String data_source_name = getNameFor(dataSource);
+
+      // Ensure that we were given a data source that is known to us.
+      if ( data_source_name == null )
+      {
+         throw new IllegalArgumentException("Unknown DataSource given");
+      }
+
+      dataSource.add(elt);
+      fireConfigElementAdded(data_source_name, elt);
       
       // Inform everyone of the new edit.
       ConfigContextEdit new_edit = new ConfigContextEdit(context, elt, true);
@@ -233,11 +293,14 @@ public class ConfigBrokerImpl
    }
 
    /**
-    * Removes the given configuration element from the current context. If the
-    * element appears in more than one resource in the context, a dialog will
-    * prompt the user for which resource they wish to remove the element from.
-    * If the element does not appear in any resource in the context, this method
-    * will return false.
+    * Removes the given configuration element from the current context.  All
+    * the resources in the given context are searched for the given element.
+    * If the element appears in more than one resource in the context, it will
+    * be removed from the first resource found.  If the element does not
+    * appear in any resource in the context, this method will return false.
+    * Upon successful removal of the element from the context and resource, an
+    * undoable edit is logged with the ConfigUndoManager associated with the
+    * given context.
     *
     * @param context    the context from which to remove the element
     * @param elt        the element to remove
@@ -254,14 +317,64 @@ public class ConfigBrokerImpl
          DataSource data_source = get(data_source_name);
          if (data_source.contains(elt))
          {
-            data_source.remove(elt);
-            fireConfigElementRemoved(getNameFor(data_source), elt);
-            
-            // Inform everyone of the new edit.
-            ConfigContextEdit new_edit = new ConfigContextEdit(context, elt, false);
-            context.postEdit(new_edit);
-            return true;
+            return remove(context, elt, data_source);
          }
+      }
+      return false;
+   }
+
+   /**
+    * Removes the given configuration element from the current context and the
+    * named resource within that context.  The named resource must exist and
+    * must be associated with the given context.  If the element does not
+    * appear in any resource in the context, this method will return false.
+    * Upon successful removal of the element from the context and resource, an
+    * undoable edit is logged with the ConfigUndoManager associated with the
+    * given context.
+    *
+    * @param context            the context from which to remove the element
+    * @param elt                the element to remove
+    * @param dataSourceName     the name of the resource from which the element
+    *                           will be removed
+    *
+    * @return  true if the removal was successful, false if the user cancelled
+    *          the removal or the element does not exist in any resource
+    */
+   public boolean remove(ConfigContext context, ConfigElement elt,
+                         String dataSourceName)
+   {
+      return remove(context, elt, get(dataSourceName));
+   }
+
+   /**
+    * Removes the given configuration element from the current context and the
+    * given resource within that context.  The given resource must exist and
+    * must be associated with the given context.  If the element does not
+    * appear in any resource in the context, this method will return false.
+    * Upon successful removal of the element from the context and resource, an
+    * undoable edit is logged with the ConfigUndoManager associated with the
+    * given context.
+    *
+    * @param context    the context from which to remove the element
+    * @param elt        the element to remove
+    * @param dataSource the resource from which the element will be removed
+    *
+    * @return  true if the removal was successful, false if the user cancelled
+    *          the removal or the element does not exist in any resource
+    */
+   public boolean remove(ConfigContext context, ConfigElement elt,
+                         DataSource dataSource)
+   {
+      if ( dataSource.contains(elt) )
+      {
+         dataSource.remove(elt);
+         fireConfigElementRemoved(getNameFor(dataSource), elt);
+         
+         // Inform everyone of the new edit.
+         ConfigContextEdit new_edit = new ConfigContextEdit(context, elt,
+                                                            false);
+         context.postEdit(new_edit);
+         return true;
       }
       return false;
    }
