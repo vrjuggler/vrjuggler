@@ -38,81 +38,28 @@
 #include <string>
 #include <vector>
 
-#include <vpr/IO/BlockIO.h>
+#include <vpr/IO/FileHandle_t.h> /* include bridge class */
 
 
+// make the connection
+#if defined(VPR_USE_NSPR)
+#   include <vpr/md/NSPR/IO/FileHandleImplNSPR.h>
 namespace vpr {
+  typedef FileHandle_t<FileHandleImplNSPR> Socket;
+}
 
-// ----------------------------------------------------------------------------
-//: Extension to the vpr::BlockIO interface defining a cross-platform file
-//+ handle interface.
-// ----------------------------------------------------------------------------
-//!PUBLIC_API:
-class FileHandle : public BlockIO {
-public:
-    // ------------------------------------------------------------------------
-    //: Reconfigure the file handle to be in append mode.
-    //
-    //! PRE: The file handle is open.
-    //! POST: The file handle's write mode is set to append.
-    //
-    //! RETURNS: true  - The write mode was changed successfully.
-    //! RETURNS: false - The write mode could not be changed for some reason.
-    // ------------------------------------------------------------------------
-    virtual Status enableAppend(void) = 0;
+#elif defined(VPR_USE_WIN32)
+#   include <vpr/md/WIN32/IO/FileHandleImplWinSock.h>
+namespace vpr {
+  typedef FileHandle_t<FileHandleImplWinSock> FileHandle;
+}
 
-    // ------------------------------------------------------------------------
-    //: Reconfigure the file handle so that it is not in append mode.
-    //
-    //! PRE: The file handle is open.
-    //! POST: The file handle's write mode is set so that writes are appended.
-    //
-    //! RETURNS: true  - The write mode was changed successfully.
-    //! RETURNS: false - The write mode could not be changed for some reason.
-    // ------------------------------------------------------------------------
-    virtual Status disableAppend(void) = 0;
-
-    // ------------------------------------------------------------------------
-    //: Reconfigure the file handle so that writes are synchronous.
-    //
-    //! PRE: The file handle is open.
-    //! POST: Writes are performed synchronously.
-    //
-    //! RETURNS: true  - The write mode was changed successfully.
-    //! RETURNS: false - The write mode could not be changed for some reason.
-    // ------------------------------------------------------------------------
-    virtual Status enableSynchronousWrite(void) = 0;
-
-    // ------------------------------------------------------------------------
-    //: Reconfigure the file handle so that writes are asynchronous.
-    //
-    //! PRE: The file handle is open.
-    //! POST: Writes are performed asynchronously.
-    //
-    //! RETURNS: true  - The write mode was changed successfully.
-    //! RETURNS: false - The write mode could not be changed for some reason.
-    // ------------------------------------------------------------------------
-    virtual Status enableAsynchronousWrite(void) = 0;
-
-protected:
-    // ------------------------------------------------------------------------
-    //: Constructor.
-    // ------------------------------------------------------------------------
-    FileHandle (const std::string& file_name)
-        : BlockIO(file_name)
-    {
-        /* Do nothing. */ ;
-    }
-
-    // ------------------------------------------------------------------------
-    //: Destructor.
-    // ------------------------------------------------------------------------
-    virtual ~FileHandle (void) {
-        /* Do nothing. */ ;
-    }
-};
-
-}; // End of vpr namespace
+#else
+#   include <vpr/md/POSIX/IO/FileHandleImplUNIX.h>
+namespace vpr {
+  typedef FileHandle_t<FileHandleImplUNIX> FileHandle;
+}
+#endif
 
 
 #endif	/* _VPR_FILE_HANDLE_H_ */
