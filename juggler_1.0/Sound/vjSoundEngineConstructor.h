@@ -38,6 +38,7 @@
 #include <string>
 #include <Config/vjConfigChunk.h>
 #include <Kernel/vjDebug.h>
+#include <Sound/vjSoundFactory.h>
 
 //: Base class for virtual construction of sound engines
 // Implementations of this class are registered with the device factory
@@ -57,8 +58,10 @@ public:
    }
 
    //: Get the string desc of the type of chunk we can create
-   virtual std::string    getChunkType()
-   { return std::string("BaseConstructor: Invalid type"); }
+   virtual std::string getChunkType()
+   {
+      return std::string("BaseConstructor: Invalid type"); 
+   }
 };
 
 
@@ -86,6 +89,7 @@ public:
 };
 
 
+// self registrator with the soundfactory.
 template <class ENGINE>
 vjSoundEngineConstructor<ENGINE>::vjSoundEngineConstructor()
 {

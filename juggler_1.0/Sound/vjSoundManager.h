@@ -73,7 +73,18 @@ public:
    virtual vjSound* newSound();
    
    vjSoundEngine* mSoundEngine;
-};
 
+public:
+   //: Get instance of singleton object
+   static vjSoundManager* instance()
+   {
+      if (_instance == NULL)
+         _instance = new vjSoundManager;
+      return _instance;
+   }
+
+private:
+   static vjSoundManager* _instance;   //: The instance
+};
 
 #endif	/* _VJ_SOUND_MANAGER_H_ */
