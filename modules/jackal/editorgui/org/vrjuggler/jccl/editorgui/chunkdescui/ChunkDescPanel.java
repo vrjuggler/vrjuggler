@@ -159,7 +159,7 @@ public class ChunkDescPanel
         PropertyDesc[] props = desc.getPropertyDescs();
 	for (int i = 0; i < props.length; i++) {
 	    t = new PropertyDescPanel (this, 
-				       !props[i].name.equalsIgnoreCase("name") && editable,
+				       !props[i].getName().equalsIgnoreCase("name") && editable,
 				       props[i]);
 	    proppanels.add(t);
 	    properties.add(t);

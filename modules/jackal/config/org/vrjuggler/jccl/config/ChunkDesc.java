@@ -178,7 +178,7 @@ public class ChunkDesc implements Cloneable {
         int n = props.size();
 	for (int i = 0; i < n; i++) {
 	    p1 = (PropertyDesc) props.get(i);
-	    p2 = c.getPropertyDesc(p1.token);
+	    p2 = c.getPropertyDesc(p1.getToken());
 	    if ((p2 == null) || (!p1.equals(p2)))
 		return false;
 	}
@@ -195,13 +195,12 @@ public class ChunkDesc implements Cloneable {
 	named = getPropertyDesc("Name");
 	if (named == null) {
 	    named = new PropertyDesc();
-	    named.name = named.token = "Name";
-	    named.help = "Unique name of an instance of this chunk type";
-	    named.valtype = new ValType("string");
+            named.setName ("Name");
+            named.setToken ("Name");
+	    named.setHelp ("Unique name of an instance of this chunk type");
+	    named.setValType (new ValType("string"));
 	    props.add(0, named);
 	}
-	else
-	    named.help = "Unique name of an instance of this chunk type";
     }
 
 
@@ -223,7 +222,7 @@ public class ChunkDesc implements Cloneable {
         int n = props.size();
 	for (int i = 0; i < n; i++) {
 	    p = (PropertyDesc)props.get(i);
-	    if (p.token.equalsIgnoreCase(tok))
+	    if (p.getToken().equalsIgnoreCase(tok))
 		return p;
 	}
 	return null;
@@ -251,8 +250,8 @@ public class ChunkDesc implements Cloneable {
                     st.pushBack();
                 // else it's a property description.
                 p = new PropertyDesc (st);
-                if (p != null && p.name != null)
-                    if (!p.name.equalsIgnoreCase("Name"))
+                if (p != null && p.getName() != null)
+                    if (!p.getName().equalsIgnoreCase("Name"))
                         props.add (p);
             }
             return true;
