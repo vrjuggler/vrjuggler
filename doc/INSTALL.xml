@@ -203,6 +203,29 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
       </listitem>
     </itemizedlist>
 
+    <para>The following are fully optional packages that are primarily of
+    interest only to people doing development on the Juggler Suite
+    itself:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>JUnit (<ulink
+        url="http://www.junit.org/">http://www.junit.org/</ulink>): A unit
+        testing framework for Java.</para>
+      </listitem>
+
+      <listitem>
+        <para>CppUnit (<ulink
+        url="http://cppunit.sourceforge.net/">http://cppunit.sourceforge.net/</ulink>):
+        A unit testing framework for C++. The Juggler C++ test suties make use
+        of extensions to CppUnit. An extended version of the CppUnit source
+        that includes these extensions can be acquired from the Juggler CVS
+        repository in the module <literal>cppunit</literal>. Refer to <xref
+        linkend="section.cvs.access" /> for instructions about accessing the
+        Juggler CVS repository.</para>
+      </listitem>
+    </itemizedlist>
+
     <para>The third-party dependencies must be downloaded from the sites
     listed above and installed manually. You may also have to compile one or
     more of the packages if binary distributions are not available. Which
@@ -211,7 +234,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
     installed and what versions of tools (such as the JDK) that you
     download.</para>
 
-    <section>
+    <section id="section.cvs.access">
       <title>How to Get the Juggler Suite from CVS</title>
 
       <para>You can optionally get the Juggler Project as a source code
