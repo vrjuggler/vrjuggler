@@ -322,78 +322,83 @@ public:
      */
     vpr::SerialTypes::UpdateActionOption getUpdateAction(void);
 
-    // ------------------------------------------------------------------------
-    //: Change the current update action to take place as described by the
-    //+ given value.
-    //
-    //! PRE: None.
-    //! POST: The update action is modified to use the new value.  The results
-    //+       will be seen with the next device operation.
-    //
-    //! ARGS: action - The new update action value.
-    // ------------------------------------------------------------------------
+    /**
+     * Changes the current update action to take place as described by the
+     * given value.
+     *
+     * @post The update action is modified to use the new value.  The results
+     *       will be seen with the next device operation.
+     *
+     * @param action The new update action value.
+     */
     void setUpdateAction(SerialTypes::UpdateActionOption action);
 
-    // ------------------------------------------------------------------------
-    //: Query the serial port for the maximum buffer size.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The maximum buffer size is returned to the caller through the
-    //+       by-reference argument.
-    //
-    //! ARGS: size - A reference to a vpr::Uint16 where the buffer size is
-    //+              stored for return to the caller.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Queries the serial port for the maximum buffer size.
+     *
+     * @pre The serial port is open.
+     * @post The maximum buffer size is returned to the caller through the
+     *       by-reference argument.
+     *
+     * @param size A reference to a vpr::Uint8 where the buffer size is
+     *             stored for return to the caller.
+     *
+     * @return vpr::Status::Success is returned if the buffer size was
+     *         retrieved successfully; vpr::Status::Failure otherwise.
+     */
     Status getBufferSize(Uint16& size);
 
-    // ------------------------------------------------------------------------
-    //: Attempt to change the buffer size to the given argument.
-    //
-    //! PRE: The serial port is open.
-    //! POST: If the buffer size is usable on the port, the port attributes
-    //+       are updated and success is returned.  Otherwise, a failure
-    //+       status is returned.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    // ------------------------------------------------------------------------
+    /**
+     * Attempts to change the buffer size to the given argument.
+     *
+     * @pre The serial port is open.
+     * @post If the buffer size is usable on the port, the port attributes
+     *       are updated and success is returned.  Otherwise, a failure
+     *       status is returned.
+     *
+     * @param size The new size for the buffer.
+     *
+     * @return vpr::Status::Success is returned if the buffer size was set
+     *         successfully; vpr::Status::Failure otherwise.
+     */
     Status setBufferSize(const Uint8 size);
 
-    // ------------------------------------------------------------------------
-    //: Get the value of the timeout (in tenths of a second) to wait for data
-    //+ to arrive.  This is only applicable in non-canonical mode.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The current timeout setting is returned to the caller in the
-    //+       by-reference argument.
-    //
-    //! ARGS: timeout - A reference to a vpr::Uint8 to be used as storage for
-    //+                 the timeout value.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    //
-    //! NOTE: See page 353 of <I>Advanced Programming in the UNIX
-    //+       Environment</I> for more details.
-    // ------------------------------------------------------------------------
+    /**
+     * Gets the value of the timeout (in tenths of a second) to wait for data
+     * to arrive.  This is only applicable in non-canonical mode.
+     *
+     * @pre The serial port is open.
+     * @post The current timeout setting is returned to the caller in the
+     *       by-reference argument.
+     *
+     * @param timeout A reference to a vpr::Uint8 to be used as storage for
+     *                the timeout value.
+     *
+     * @return vpr::Status::Success is returned if the timeout was requested
+     *         successfully; vpr::Status::Failure otherwise.
+     *
+     * @see Refer to page 353 of <I>Advanced Programming in the UNIX
+     *      Environment</I> for more details.
+     */
     Status getTimeout(Uint8& timeout);
 
-    // ------------------------------------------------------------------------
-    //: Set the value of the timeout to wait for data to arrive.  The value
-    //+ given must be in tenths of a second.  This is only applicable in
-    //+ non-canonical mode.
-    //
-    //! PRE: The serial port is open.
-    //! POST: The timeout interval is updated to use the given value.
-    //
-    //! ARGS: timeout_val - The new timeout value measured in tenths of a
-    //+                     second.
-    //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
-    //
-    //! NOTE: See page 353 of <I>Advanced Programming in the UNIX
-    //+       Environment</I> for more details.
-    // ------------------------------------------------------------------------
+    /**
+     * Sets the value of the timeout to wait for data to arrive.  The value
+     * given must be in tenths of a second.  This is only applicable in
+     * non-canonical mode.
+     *
+     * @pre The serial port is open.
+     * @post The timeout interval is updated to use the given value.
+     *
+     * @param timeout_val The new timeout value measured in tenths of a
+     *                    second.
+     *
+     * @return vpr::Status::Success is returned if the timeout was set
+     *         successfully; vpr::Status::Failure otherwise.
+     *
+     * @see Refer to page 353 of <I>Advanced Programming in the UNIX
+     *      Environment</I> for more details.
+     */
     Status setTimeout(const Uint8 timeout);
 
     // ------------------------------------------------------------------------
