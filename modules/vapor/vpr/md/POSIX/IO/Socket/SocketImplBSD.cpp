@@ -163,43 +163,33 @@ SocketImplBSD::open () {
 }
 
 // ----------------------------------------------------------------------------
-//: Reconfigure the socket so that it is in blocking mode.
+// Reconfigures the socket so that it is in blocking mode.
 // ----------------------------------------------------------------------------
 vpr::Status
 SocketImplBSD::enableBlocking (void) {
     vpr::Status status;
-    vprASSERT(isOpen() && "precondition says you must open() the socket first");
 
-    if ( m_blocking_fixed ) {
-        vprDEBUG(0,0)
-            << "[SocketImplBSD] Cannot enable blocking after a blocking call!\n"
-            << vprDEBUG_FLUSH;
-        status.setCode(vpr::Status::Failure);
-    }
-    else {
-        status = m_handle->enableBlocking();
-    }
+    vprASSERT(isOpen() && "precondition says you must open() the socket first");
+    vprASSERT(! m_blocking_fixed &&
+              "Cannot enable blocking after a blocking call!");
+
+    status = m_handle->enableBlocking();
 
     return status;
 }
 
 // ----------------------------------------------------------------------------
-//: Reconfigure the socket so that it is in non-blocking mode.
+// Reconfigures the socket so that it is in non-blocking mode.
 // ----------------------------------------------------------------------------
 vpr::Status
 SocketImplBSD::enableNonBlocking (void) {
     vpr::Status status;
-    vprASSERT(isOpen() && "precondition says you must open() the socket first");
 
-    if ( m_blocking_fixed ) {
-        vprDEBUG(0,0)
-            << "[SocketImplBSD] Cannot disable blocking after a blocking call!\n"
-            << vprDEBUG_FLUSH;
-        status.setCode(vpr::Status::Failure);
-    }
-    else {
-        status = m_handle->enableNonBlocking();
-    }
+    vprASSERT(isOpen() && "precondition says you must open() the socket first");
+    vprASSERT(! m_blocking_fixed &&
+             "Cannot disable blocking after a blocking call!");
+
+    status = m_handle->enableNonBlocking();
 
     return status;
 }
