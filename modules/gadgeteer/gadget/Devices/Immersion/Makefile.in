@@ -50,7 +50,7 @@ VJROOT		= $(top_srcdir)
 VJ_SRCDIR	= @VJ_SRCDIR@/Input/ibox
 
 ifneq (@OS_TYPE@, Win32)
-ifneq (@PLATFORM@, MacOSX)
+ifneq (@PLATFORM@, Darwin)
 SRCS		= drivers.c	\
                   driveunx.c 	\
                   hci.c 	\

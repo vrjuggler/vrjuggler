@@ -48,16 +48,16 @@
 #include <Input/vjPosition/vjFlock.h>
 #include <Input/vjPosition/vjIsense.h>
 
-#ifdef VJ_OS_MACOSX
-	#include <Input/vjKeyboard/vjOSXKeyboard.h>
+#ifdef VJ_OS_Darwin
+#   include <Input/vjKeyboard/vjOSXKeyboard.h>
 #else
-	#include <Input/vjInput/vjIbox.h>
-	#include <Input/vjGlove/vjCyberGlove.h>
-	#include <Input/vjGlove/vjPinchGlove.h>
-	#include <Input/vjKeyboard/vjXWinKeyboard.h>
-	#include <Input/vjKeyboard/vjXWinKBDepChecker.h>
-	#include <Input/Multi/vjTrackdController.h>
-	#include <Input/Multi/vjTrackdSensor.h>
+#   include <Input/vjInput/vjIbox.h>
+#   include <Input/vjGlove/vjCyberGlove.h>
+#   include <Input/vjGlove/vjPinchGlove.h>
+#   include <Input/vjKeyboard/vjXWinKeyboard.h>
+#   include <Input/vjKeyboard/vjXWinKBDepChecker.h>
+#   include <Input/Multi/vjTrackdController.h>
+#   include <Input/Multi/vjTrackdSensor.h>
 #endif
 
 #include <Input/vjPosition/logiclass.h>
@@ -112,7 +112,7 @@ void vjDeviceFactory::hackLoadKnownDevices()
    }
 
 #ifndef WIN32
-#ifdef VJ_OS_MACOSX
+#ifdef VJ_OS_Darwin
    vjDeviceConstructor<vjOSXKeyboard>* osx_keyboard = new vjDeviceConstructor<vjOSXKeyboard>;
    if( (NULL == osx_keyboard) )
    {

@@ -107,8 +107,8 @@
 #undef WIN32
 #undef _MBCS
 
-/* Define if building on Mac OS X. */
-#undef VJ_OS_MACOSX
+/* Define if building on Darwin (aka, Mac OS X). */
+#undef VJ_OS_Darwin
 
 /* Define if building on a platform not specified above. */
 #undef VJ_OS_GENERIC
