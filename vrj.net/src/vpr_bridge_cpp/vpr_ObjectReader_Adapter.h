@@ -141,13 +141,13 @@ public:
       return result;
    }
 
-   typedef long long unsigned int (*readUint64_callback_t)();
+   typedef vpr::Uint64 (*readUint64_callback_t)();
    readUint64_callback_t readUint64_callback;
 
    /// Override for virtual function vpr::ObjectReader::readUint64.
-   virtual long long unsigned int readUint64()
+   virtual vpr::Uint64 readUint64()
    {
-      long long unsigned int result = readUint64_callback();
+      vpr::Uint64 result = readUint64_callback();
       return result;
    }
 
@@ -218,11 +218,11 @@ public:
       readUint32_callback_unsigned_int(p0);
    }
 
-   typedef void (*readUint64_callback_long_long_unsigned_int_t)(long long unsigned int&);
+   typedef void (*readUint64_callback_long_long_unsigned_int_t)(vpr::Uint64&);
    readUint64_callback_long_long_unsigned_int_t readUint64_callback_long_long_unsigned_int;
 
    /// Override for virtual function vpr::ObjectReader::readUint64.
-   virtual void readUint64(long long unsigned int& p0)
+   virtual void readUint64(vpr::Uint64& p0)
    {
       readUint64_callback_long_long_unsigned_int(p0);
    }

@@ -113,7 +113,7 @@ extern "C"
 
 
    // Wrapper for virtual method vpr::ObjectWriter::writeUint64()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeUint64__long_long_unsigned_int1(vpr_ObjectWriter_Adapter* self_, long long unsigned int p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeUint64__long_long_unsigned_int1(vpr_ObjectWriter_Adapter* self_, vpr::Uint64 p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->writeUint64(p0));

@@ -134,9 +134,9 @@ extern "C"
 
 
    // Wrapper for virtual method vpr::ObjectReader::readUint64()
-   SHARPPY_API long long unsigned int vpr_ObjectReader_readUint64__0(vpr_ObjectReader_Adapter* self_)
+   SHARPPY_API vpr::Uint64 vpr_ObjectReader_readUint64__0(vpr_ObjectReader_Adapter* self_)
    {
-      long long unsigned int result;
+      vpr::Uint64 result;
       result = self_->readUint64();
       return result;
    }
@@ -202,7 +202,7 @@ extern "C"
 
 
    // Wrapper for virtual method vpr::ObjectReader::readUint64()
-   SHARPPY_API void vpr_ObjectReader_readUint64__long_long_unsigned_int1(vpr_ObjectReader_Adapter* self_, long long unsigned int& p0)
+   SHARPPY_API void vpr_ObjectReader_readUint64__long_long_unsigned_int1(vpr_ObjectReader_Adapter* self_, vpr::Uint64& p0)
    {
       self_->vpr::ObjectReader::readUint64(p0);
    }

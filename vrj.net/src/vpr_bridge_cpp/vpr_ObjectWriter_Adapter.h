@@ -114,11 +114,11 @@ public:
       return result;
    }
 
-   typedef vpr::ReturnStatus* (*writeUint64_callback_long_long_unsigned_int_t)(long long unsigned int);
+   typedef vpr::ReturnStatus* (*writeUint64_callback_long_long_unsigned_int_t)(vpr::Uint64);
    writeUint64_callback_long_long_unsigned_int_t writeUint64_callback_long_long_unsigned_int;
 
    /// Override for virtual function vpr::ObjectWriter::writeUint64.
-   virtual vpr::ReturnStatus writeUint64(long long unsigned int p0)
+   virtual vpr::ReturnStatus writeUint64(vpr::Uint64 p0)
    {
       vpr::ReturnStatus result = *(writeUint64_callback_long_long_unsigned_int(p0));
       return result;

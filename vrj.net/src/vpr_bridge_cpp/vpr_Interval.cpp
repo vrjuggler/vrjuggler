@@ -50,7 +50,7 @@ extern "C"
    }
 
    // Constructor wrapper.
-   SHARPPY_API vpr::Interval* vpr_Interval_Interval__long_long_unsigned_int_vpr_Interval_Unit2(const long long unsigned int p0, const vpr::Interval::Unit p1)
+   SHARPPY_API vpr::Interval* vpr_Interval_Interval__long_long_unsigned_int_vpr_Interval_Unit2(const vpr::Uint64 p0, const vpr::Interval::Unit p1)
    {
       vpr::Interval* obj = new vpr::Interval(p0, p1);
       return obj;
@@ -62,7 +62,7 @@ extern "C"
    }
 
    // Wrapper for non-virtual method vpr::Interval::set()
-   SHARPPY_API void vpr_Interval_set__long_long_unsigned_int_vpr_Interval_Unit2(vpr::Interval* self_, const long long unsigned int p0, const vpr::Interval::Unit p1)
+   SHARPPY_API void vpr_Interval_set__long_long_unsigned_int_vpr_Interval_Unit2(vpr::Interval* self_, const vpr::Uint64 p0, const vpr::Interval::Unit p1)
    {
       self_->set(p0, p1);
    }
@@ -97,16 +97,16 @@ extern "C"
 
 
    // Wrapper for non-virtual method vpr::Interval::sec()
-   SHARPPY_API void vpr_Interval_sec__long_long_unsigned_int1(vpr::Interval* self_, const long long unsigned int p0)
+   SHARPPY_API void vpr_Interval_sec__long_long_unsigned_int1(vpr::Interval* self_, const vpr::Uint64 p0)
    {
       self_->sec(p0);
    }
 
 
    // Wrapper for non-virtual method vpr::Interval::sec()
-   SHARPPY_API long long unsigned int vpr_Interval_sec__0(vpr::Interval* self_)
+   SHARPPY_API vpr::Uint64 vpr_Interval_sec__0(vpr::Interval* self_)
    {
-      long long unsigned int result;
+      vpr::Uint64 result;
       result = self_->sec();
       return result;
    }
@@ -145,16 +145,16 @@ extern "C"
 
 
    // Wrapper for non-virtual method vpr::Interval::msec()
-   SHARPPY_API void vpr_Interval_msec__long_long_unsigned_int1(vpr::Interval* self_, const long long unsigned int p0)
+   SHARPPY_API void vpr_Interval_msec__long_long_unsigned_int1(vpr::Interval* self_, const vpr::Uint64 p0)
    {
       self_->msec(p0);
    }
 
 
    // Wrapper for non-virtual method vpr::Interval::msec()
-   SHARPPY_API long long unsigned int vpr_Interval_msec__0(vpr::Interval* self_)
+   SHARPPY_API vpr::Uint64 vpr_Interval_msec__0(vpr::Interval* self_)
    {
-      long long unsigned int result;
+      vpr::Uint64 result;
       result = self_->msec();
       return result;
    }
@@ -193,16 +193,16 @@ extern "C"
 
 
    // Wrapper for non-virtual method vpr::Interval::usec()
-   SHARPPY_API void vpr_Interval_usec__long_long_unsigned_int1(vpr::Interval* self_, const long long unsigned int p0)
+   SHARPPY_API void vpr_Interval_usec__long_long_unsigned_int1(vpr::Interval* self_, const vpr::Uint64 p0)
    {
       self_->usec(p0);
    }
 
 
    // Wrapper for non-virtual method vpr::Interval::usec()
-   SHARPPY_API long long unsigned int vpr_Interval_usec__0(vpr::Interval* self_)
+   SHARPPY_API vpr::Uint64 vpr_Interval_usec__0(vpr::Interval* self_)
    {
-      long long unsigned int result;
+      vpr::Uint64 result;
       result = self_->usec();
       return result;
    }
@@ -241,9 +241,9 @@ extern "C"
 
 
    // Wrapper for non-virtual method vpr::Interval::getBaseVal()
-   SHARPPY_API long long unsigned int vpr_Interval_getBaseVal__0(vpr::Interval* self_)
+   SHARPPY_API vpr::Uint64 vpr_Interval_getBaseVal__0(vpr::Interval* self_)
    {
-      long long unsigned int result;
+      vpr::Uint64 result;
       result = self_->getBaseVal();
       return result;
    }
