@@ -598,6 +598,16 @@ This is useful for decreasing the amount of data logged (ie. keeps the file smal
 A value of -1 means do not limit the frame rate.  Run as fast as possible.</help>
       <item label="Max Framerate" defaultvalue="-1" />
     </PropertyDesc>
+    <PropertyDesc name="Compress factor" token="compress_factor" type="int" variable="0">
+      <help>The is the compression factor to use.  The number means the number of equivalent frames to allow in a row.
+
+So for example a rate of:
+
+0 - Means allow no duplications (maximum compression)
+5 - Allow 5 frames of equivalence (medium compression)
+1000 - Allow full duplication (basically no compression)</help>
+      <item label="Compression value" defaultvalue="0" />
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="GestureProxy" name="Gesture Proxy">
     <category>Proxies</category>
