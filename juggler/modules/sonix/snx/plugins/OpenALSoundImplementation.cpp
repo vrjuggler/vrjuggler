@@ -60,15 +60,31 @@
 #include <gmtl/VecOps.h>
 #include <gmtl/Xforms.h>
 
+#include "snx/xdl.h"
 #include "snx/FileIO.h"
 #include "snx/SoundImplementation.h"
 #include "snx/SoundInfo.h"
 #include "snx/SoundFactory.h"
 #include "snx/plugins/OpenALSoundImplementation.h"
 
+static snx::SoundImplementation* gPlugPtr = NULL;
+
+/////////////////////////
+// plugin API:
+extern "C"
+{
+XDL_EXPORT const char* getVersion() { return "sonix xx.xx.xx"; }
+XDL_EXPORT const char* getName() { return "OpenAL"; }
+XDL_EXPORT void* newPlugin() { return (void*)(gPlugPtr = new snx::OpenALSoundImplementation); }
+XDL_EXPORT void deletePlugin() { if (NULL == gPlugPtr) return; delete gPlugPtr; gPlugPtr = NULL; }
+}
+/////////////////////////
+
 namespace snx
 {
+#ifndef NO_SELF_REGISTER
 snx::SoundFactoryReg<OpenALSoundImplementation> openAlRegistrator( "OpenAL" );
+#endif
 
 void OpenALSoundImplementation::step( const float & timeElapsed )
 {
