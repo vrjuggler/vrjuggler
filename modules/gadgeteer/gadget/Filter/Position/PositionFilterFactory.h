@@ -50,6 +50,10 @@ const bool reg_ctr_ ## FilterType = gadget::PositionFilterFactory::instance()->r
 namespace gadget
 {
 
+/** \class PositionFilterFactory PositionFilterFactory.h gadget/Filter/Position/PositionFilterFactory.h
+ *
+ * Position filter factory singleton.
+ */
 class GADGET_CLASS_API PositionFilterFactory :
    public vpr::Factory<PositionFilter, std::string> 
 {

@@ -49,6 +49,10 @@ namespace gadget
 {
    class AbstractNetworkManager;
 
+/** \class Node Node.h gadget/Node.h
+ *
+ * Network node.
+ */
 class GADGET_CLASS_API Node
 {
 public:

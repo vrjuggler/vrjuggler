@@ -53,8 +53,9 @@
 namespace gadget
 {
 
-/**
- * X Winndow System input window class.
+/** \class InputWindowXWin InputWindowXWin.h gadget/Devices/KeyboardMouseDevice/InputWindowXWin.h
+ *
+ * X Window System input window class.
  * This device is a source of keyboard events.  The device should not be
  * used directly, it should be referenced through proxies.
  *
@@ -62,25 +63,28 @@ namespace gadget
  *
  * 1. Controlling local window
  *
- *    In this mode, the device opens and manages it's own
- *    x window for getting input.
+ *    In this mode, the device opens and manages its own X11 window for
+ *    getting input.
  *
  * 2. Connecting to remotely management window
  *
- *    In this mode, the device connects through X to a
+ *    In this mode, the device connects through X11 to a
  *    window (and display) that have been opened by
- *    another process (normally an GLX window from VR Juggler).
+ *    another process (normally a GLX window from VR Juggler).
  *
- * Mouse Locking:<br>
- *    This device recieves input from the XWindows display.  As such,
+ * Mouse Locking:
+ *
+ *  This device recieves input from the XWindows display.  As such,
  *  the xwindow must have focus to generate events.  In order to help
  *  users keep the window in focus, there are two cases where the
- *  driver will "lock" the mouse to the window, thus preventing loss of focus.<br>
- *  CASE 1: The user holds down any key. (ie. a,b, ctrl, shift, etc)<br>
- *  CASE 2: The user can toggle locking using a special "locking" key
- *           defined in the configuration element.
+ *  driver will "lock" the mouse to the window, thus preventing loss of focus.
  *
- * @see KeyboardMouseWindow, KeyboardMouseProxy
+ *  CASE 1: The user holds down any key (for example, a, b, ctrl, shift,
+ *          etc.).<br>
+ *  CASE 2: The user can toggle locking using a special "locking" key
+ *          defined in the configuration element.
+ *
+ * @see KeyboardMouseDevice, KeyboardMouseProxy
  */
 class InputWindowXWin : public InputAreaXWin, public Input
 {
@@ -171,9 +175,9 @@ private:
 
    void setupWindowWidthAndHeight();
 
-   ::Window createWindow(::Window parent, const unsigned int borderWidth);
+   Window createWindow(Window parent, const unsigned int borderWidth);
 
-   void setHints(::Window window, char*  window_name, char*  icon_name,
+   void setHints(Window window, char*  window_name, char*  icon_name,
                  char* class_name, char* class_type);
    //@}
 

@@ -67,6 +67,9 @@ namespace vpr
 namespace cluster
 {
 
+/** \class ClusterDelta ClusterDelta.h cluster/ClusterDelta.h
+ *
+ */
 class GADGET_CLASS_API ClusterDelta
 {
 public:

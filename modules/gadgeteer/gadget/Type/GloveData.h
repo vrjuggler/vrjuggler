@@ -41,24 +41,25 @@
 namespace gadget
 {
 
-/**
+/** \class GloveData GloveData.h gadget/Type/GloveData.h
+ *
  * This is the data stored about a glove
  *
  * The angles are the joint angles for all fingers and the wrist
- * DIJ = Distal Interphalangeal Joint  --- finger tip
- * PIJ = Proximal "              "     --- Middle joint
- * MPJ = Metacarpo "             "     --- closest to hand
+ *
+ * DIJ = Distal Interphalangeal Joint  --- finger tip<br>
+ * PIJ = Proximal "              "     --- Middle joint<br>
+ * MPJ = Metacarpo "             "     --- closest to hand<br>
  * ABDUCT = spread of fingers
  *
- * YAW and PITCH apply only to WRIST
+ * YAW and PITCH apply only to WRIST.
  *
- * xforms transfer you from one coord system to the other.
- * If the xforms are tied together, then they can return
+ * Transforms transfer you from one coord system to the other.
+ * If the transforms are tied together, then they can return
  * complete transformations.
  *
  * @note More docs needed here.
  */
-
 class GADGET_CLASS_API GloveData : public InputData
 {
 public:

@@ -48,7 +48,8 @@
 namespace gadget
 {
 
-/**
+/** \class BaseTypeConstructorBase BaseTypeFactory.h gadget/Type/BaseTypeFactory.h
+ *
  * Base class for virtual construction of devices.
  * Implementations of this class are registered with the device factory
  * for each device in the system.
@@ -77,7 +78,8 @@ public:
    }
 };
 
-/**
+/** \class BaseTypeFactory BaseTypeFactory.h gadget/Type/BaseTypeFactory.h
+ *
  * Object used for creating devices.
  */
 class GADGET_CLASS_API BaseTypeFactory
@@ -135,13 +137,16 @@ private:
 
    void debugDump();
 
-
 private:
    std::vector<BaseTypeConstructorBase*> mConstructors;  /**<  List of the device constructors */
 
    vprSingletonHeaderWithInitFunc(BaseTypeFactory, hackLoadKnownDevices);
 };
 
+/** \class BaseTypeConstructor BaseTypeFactory.h gadget/Type/BaseTypeFactory.h
+ *
+ * Type-specific input device creator.
+ */
 template <class DEV>
 class BaseTypeConstructor : public BaseTypeConstructorBase, public DEV
 {

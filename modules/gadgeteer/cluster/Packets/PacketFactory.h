@@ -57,6 +57,10 @@ const bool reg_ctr_ ## PacketType = \
 namespace cluster
 {
 
+/** \class PacketFactory PacketFactory.h cluster/Packets/PacketFactory.h
+ *
+ * Cluster packet factory.
+ */
 class GADGET_CLASS_API PacketFactory :
    public vpr::Factory<Packet, vpr::Uint16>
 {

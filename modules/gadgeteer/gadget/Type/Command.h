@@ -50,7 +50,8 @@ namespace gadget
 
    typedef DigitalData CommandData;
 
-   /**
+   /** \class Command Command.h gadget/Type/Command.h
+    *
     * Command is the abstract base class for devices that translate spoken
     * commends into integer-identified commands.  Drivers for all such
     * devices must derive from this class (through gadget::InputMixer).  This

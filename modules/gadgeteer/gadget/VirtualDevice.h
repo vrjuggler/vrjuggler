@@ -41,11 +41,17 @@
 
 namespace gadget
 {
+   /** \class VirtualDevice VirtualDevice.h gadget/VirtualDevice.h
+    *
+    * Virtual input device type.
+    */
    class GADGET_CLASS_API VirtualDevice
    {
    public:
-      VirtualDevice(const std::string& name, const vpr::GUID& local_id, const std::string& base_type, 
-                    const std::string& hostname, gadget::Input* device);
+      VirtualDevice(const std::string& name, const vpr::GUID& local_id,
+                    const std::string& base_type, const std::string& hostname,
+                    gadget::Input* device);
+
       ~VirtualDevice();
 
       void debugDump(int debug_level);

@@ -49,8 +49,9 @@
 namespace gadget
 {
 
-/**
- *  Proxy to Gesture object
+/** \class GestureProxy GestureProxy.h gadget/Type/GestureProxy.h
+ *
+ * Proxy to Gesture object.
  *
  * A proxy is used by the user to actually acces the gesture data.
  * The proxy allows the user to query the current gesture information.

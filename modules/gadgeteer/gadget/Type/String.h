@@ -48,7 +48,8 @@ namespace gadget
 
    const unsigned short MSG_DATA_STRING = 430;
 
-   /**
+   /** \class String String.h gadget/Type/String.h
+    *
     * gadget::String is the abstract base class for devices that return
     * spoken commends.  Drivers for all such devices must derive from this
     * class (through gadget::InputMixer).  This is in addition to
@@ -107,8 +108,8 @@ namespace gadget
        *
        * @post The given string samples are added to the buffers.
        *
-       * @param digSample A vector of StringData objects that represent the
-       *                  newest samples taken.
+       * @param stringSample A vector of StringData objects that represent the
+       *                     newest samples taken.
        */
       void addStringSample(const std::vector< StringData >& stringSample)
       {

@@ -170,10 +170,10 @@ vpr::ReturnStatus Analog::readObject(vpr::ObjectReader* reader)
    return vpr::ReturnStatus::Succeed;
 }
 
-bool Analog::config(jccl::ConfigElementPtr e)
+bool Analog::config(jccl::ConfigElementPtr element)
 {
-   mMin = e->getProperty<float>("min");
-   mMax = e->getProperty<float>("max");
+   mMin = element->getProperty<float>("min");
+   mMax = element->getProperty<float>("max");
 
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
       << "[gadget::Analog::config()] min:" << mMin

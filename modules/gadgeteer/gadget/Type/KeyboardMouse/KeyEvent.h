@@ -47,7 +47,8 @@ namespace gadget
 GADGET_REGISTER_EVENT_CREATOR( KeyEvent, KeyPressEvent );
 GADGET_REGISTER_EVENT_CREATOR( KeyEvent, KeyReleaseEvent );
 
-/**
+/** \class KeyEvent KeyEvent.h gadget/Type/KeyboardMouse/KeyEvent.h
+ *
  * Key press or release event class.
  */
 class GADGET_CLASS_API KeyEvent : public gadget::Event

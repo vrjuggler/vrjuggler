@@ -41,7 +41,10 @@
 namespace gadget
 {
 
-/** InputData subclass for positional data. */
+/** \class PositionData PositionData.h gadget/Type/PositionData.h
+ *
+ * InputData subclass for positional data.
+ */
 class PositionData : public InputData
 {
 public:

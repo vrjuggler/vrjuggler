@@ -42,6 +42,10 @@
 namespace cluster
 {
 
+/** \class SerializableData SerializableData.h cluster/SerializableData.h
+ *
+ * Base type for serializable data.
+ */
 class SerializableData : public vpr::AttributeMapBase
 {
 public:

@@ -53,7 +53,8 @@ namespace gadget
 
 const unsigned short MSG_DATA_EVENT_WINDOW = 420;
 
-/**
+/** \class KeyboardMouse KeyboardMouse.h gadget/Type/KeyboardMouse.h
+ *
  * gadget::KeyboardMouse is an abstract class for interfacing with keyboard
  * (and other key-based) devices.  Informally, a keyboard/mouse device can be
  * thought of as a map of keyboard and mouse events (presses, releases, and

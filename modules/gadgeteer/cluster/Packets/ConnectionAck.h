@@ -40,11 +40,15 @@
 #include <vpr/IO/BufferObjectWriter.h>
 #include <vpr/IO/Socket/SocketStream.h>
 
-#include <cluster/Packets/Header.h>                                                       
+#include <cluster/Packets/Header.h>
 #include <cluster/Packets/Packet.h>
 
 namespace cluster
 {
+   /** \class ConnectionAck ConnectionAck.h cluster/Packets/ConnectionAck.h
+    *
+    * Connection acknowledgement packet.
+    */
    class GADGET_CLASS_API ConnectionAck : public Packet
    {
    public:
@@ -77,7 +81,7 @@ namespace cluster
        * Print the data to the screen in a readable form.
        */
       virtual void printData(int debug_level);
-      
+
       /**
        * Return the type of this packet.
        */
@@ -87,19 +91,31 @@ namespace cluster
       }
 
       /**
-       * Return the hostname of the machine that is acknowledging the connection.
+       * Return the hostname of the machine that is acknowledging the
+       * connection.
        */
-      std::string getHostname() { return mHostname;}
+      std::string getHostname()
+      {
+         return mHostname;
+      }
 
       /**
        * Return the port that the acknowledging machine is listening on.
        */
-      vpr::Uint16 getPort() { return mPort;}
-      
+      vpr::Uint16 getPort()
+      {
+         return mPort;
+      }
+
       /**
-       * Return a boolean determining if this is a positive(ACK) or a negative(NACK) responce.
+       * Return a boolean determining if this is a positive(ACK) or a
+       * negative(NACK) responce.
        */
-      bool getAck() { return mAck;}
+      bool getAck()
+      {
+         return mAck;
+      }
+
    private:
       std::string mHostname;  /**< The hostname of the machine that is acknowledging the connection. */
       vpr::Uint16 mPort;      /**< The port that the acknowledging machine is listening on. */
@@ -107,8 +123,5 @@ namespace cluster
    };
 }
 
+
 #endif
-
-
-
-

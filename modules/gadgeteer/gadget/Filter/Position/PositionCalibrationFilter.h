@@ -48,7 +48,8 @@
 
 namespace gadget
 {
-   /**
+   /** \class PositionCalibrationFilter PositionCalibrationFilter.h gadget/Filter/Position/PositionCalibrationFilter.h 
+    *
     * A calibration filter that uses a calibration table to correct 
     * electromagnetic interference error from the tracker.
     */
@@ -73,29 +74,30 @@ namespace gadget
       
    private:
 
-      /// The calibration table.
+      /** The calibration table. */
       std::vector< std::pair< gmtl::Vec3f, gmtl::Vec3f > > mTable;
 
-      /// The name of the calibration file.
-      std::string                                         mFileName;
+      /** The name of the calibration file. */
+      std::string mFileName;
 
-      /// The "W" matrix.
-      /// The "W" Matrix is an NxN matrix where N = mTable.size()
-      /// It is composed of elements computed using the w(p) function:
-      /// w[j](p) = sqrt( length(p - p[j]) + R*R )
-      /// where 10 <= R*R <= 1000.
-      /// The matrix looks like:
-      /// ( w[1](p[1]) w[2](p[1]) w[3](p[1]) ... w[N](p[1]) )
-      /// ( w[1](p[2]) w[2](p[2]) w[3](p[2]) ... w[N](p[2]) )
-      /// ( w[1](p[3]) w[2](p[3]) w[3](p[3]) ... w[N](p[3]) )
-      /// (                      .                          )
-      /// (                      .                          )
-      /// (                      .                          )
-      /// ( w[1](p[N]) w[2](p[N]) w[3](p[N]) ... w[N](p[N]) )
-      float**                                             mWMatrix;
+      /** The "W" matrix.
+       * The "W" Matrix is an NxN matrix where N = mTable.size()
+       * It is composed of elements computed using the w(p) function:
+       * w[j](p) = sqrt( length(p - p[j]) + R*R )
+       * where 10 <= R*R <= 1000.
+       * The matrix looks like:
+       * ( w[1](p[1]) w[2](p[1]) w[3](p[1]) ... w[N](p[1]) )
+       * ( w[1](p[2]) w[2](p[2]) w[3](p[2]) ... w[N](p[2]) )
+       * ( w[1](p[3]) w[2](p[3]) w[3](p[3]) ... w[N](p[3]) )
+       * (                      .                          )
+       * (                      .                          )
+       * (                      .                          )
+       * ( w[1](p[N]) w[2](p[N]) w[3](p[N]) ... w[N](p[N]) )
+       */
+      float** mWMatrix;
 
-      /// The Alpha Vector.
-      gmtl::Vec3f*                                        mAlphaVec;
+      /** The Alpha Vector. */
+      gmtl::Vec3f* mAlphaVec;
       
       /**
        * Performs Backsubstitution on a matrix; designed to be used
@@ -123,9 +125,10 @@ namespace gadget
        * => (L * U) * x = B
        * => L * (U * x) = B
        * 
-       * This routine actually does the LU Decomposition of a rowwise permutation of 
-       * the given matrix, and then hands that to luBacksubstitution for completion,
-       * as described in _Numerical Recipes in C_.  
+       * This routine actually does the LU Decomposition of a rowwise
+       * permutation of *the given matrix, and then hands that to
+       * luBacksubstitution for completion, as described in
+       * <i>Numerical Recipes in C</i>.
        *
        * @note    matrix will be destroyed through this process!
        * 

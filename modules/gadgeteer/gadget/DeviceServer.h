@@ -43,6 +43,10 @@ namespace gadget
 {
    class Node;
    
+   /** \class DeviceServer DeviceServer.h gadget/DeviceServer.h
+    *
+    * Device server class.
+    */
    class GADGET_CLASS_API DeviceServer
    {
    public:

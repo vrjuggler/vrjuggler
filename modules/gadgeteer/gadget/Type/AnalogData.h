@@ -38,7 +38,10 @@
 namespace gadget
 {
 
-/** InputData subclass for analog data. */
+/** \class AnalogData AnalogData.h gadget/Type/AnalogData.h
+ *
+ * InputData subclass for analog data.
+ */
 class AnalogData : public InputData
 {
    // Hack around a GCC 3.3 bug on Mac OS X 10.3 that shows up with

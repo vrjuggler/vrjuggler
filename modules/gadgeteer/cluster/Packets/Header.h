@@ -46,6 +46,10 @@
 namespace cluster
 {
 
+/** \class Header Header.h cluster/Packets/Header.h
+ *
+ * Cluster packet header block.
+ */
 class GADGET_CLASS_API Header
 {
 public:
@@ -63,9 +67,10 @@ public:
    static const unsigned short RIM_START_BLOCK     = 411;
    static const unsigned short RIM_PACKET_HEAD_SIZE = 12;
 
-public:      
+public:
    /**
-    * Directly read the needed header data from socket(blocking), and parse the header 
+    * Directly read the needed header data from socket(blocking), and parse the
+    * header.
     */
    Header( vpr::SocketStream* stream ) throw( cluster::ClusterException );
 
@@ -85,46 +90,46 @@ public:
          mPacketWriter = NULL;
       }
    }
-   
+
    void serializeHeader();
-   
+
    void parseHeader();
-   
+
    vpr::ReturnStatus send( vpr::SocketStream* socket );
-   
+
    void dump();
 
    vpr::Uint16 getRIMCode()
    {
       return mRIMCode;
    }
-   
+
    vpr::Uint16 getPacketType()
    {
       return mPacketType;
    }
-   
+
    vpr::Uint32 getPacketLength()
    {
       return mPacketLength;
    }
-   
+
    void setPacketLength( const vpr::Uint32 length )
    {
       mPacketLength = length;
    }
-   
+
    vpr::Uint32 getFrame()
    {
       return mFrame;
    }
-   
+
    virtual void printData( const int debug_level );
 protected:
    vpr::BufferObjectReader* mPacketReader;
    vpr::BufferObjectWriter* mPacketWriter;
    std::vector<vpr::Uint8> mData;
-   
+
    vpr::Uint16 mRIMCode;
    vpr::Uint16 mPacketType;
    vpr::Uint32 mPacketLength;

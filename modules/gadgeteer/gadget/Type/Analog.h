@@ -48,7 +48,8 @@ namespace gadget
 
 const unsigned short MSG_DATA_ANALOG = 421;
 
-/**
+/** \class Analog Analog.h gadget/Type/Analog.h
+ *
  * Analog is the abstract base class from which devices returning analog data
  * must derive (through the use of gadget::InputMixer).  This is in addition
  * to gadget::Input.  gadget::Input provides pure virtual function constraints
@@ -90,10 +91,10 @@ public:
     * @post mMin and mMax are set to the values contained in the given config
     *       element.
     *
-    * @param e The config element for an analog device.  It must derive from
-    *          the base config element type 'analog'.
+    * @param element The config element for an analog device.  It must derive
+    *                from the base config element type 'analog'.
     */
-   virtual bool config(jccl::ConfigElementPtr e);
+   virtual bool config(jccl::ConfigElementPtr element);
 
    /**
     * Returns analog data.

@@ -44,7 +44,10 @@
 namespace gadget
 {
 
-/** Dependency checker for Proxies. */
+/** \class ProxyDepChecker ProxyDepChecker.h gadget/ProxyDepChecker.h
+ *
+ * Dependency checker for proxies.
+ */
 class ProxyDepChecker : public jccl::DepChecker
 {
 public:
@@ -58,7 +61,7 @@ public:
    virtual std::string getCheckerName()
    { return std::string("gadget::ProxyChecker Checker"); }
 
-   // We can handle only keyboard configuration information.
+   /** We can handle only keyboard configuration information. */
    virtual bool canHandle(jccl::ConfigElementPtr element);
 
    /**
