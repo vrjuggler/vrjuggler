@@ -3,5 +3,5 @@
      Look in the Juggler source tree at:  juggler/docs/Makefile 
 -->
 <font style="Plain" color="880000">
- < item title="You need to auto-generate class documentation!" link="${JUGGLER_DEV_MAILING_LIST}" info="Error! Class docs not generated, see class_nav.xml file in the ${PROGRAMMERREF} directory" image="Bug.gif">
+ < item title="Missing!" link="${JUGGLER_DEV_MAILING_LIST}" info="Error! Class documentation not generated, read the Juggler Team Guide for info on how to build this" image="Bug.gif">
 </font>

@@ -23,6 +23,7 @@ require 5.004;
 
 use File::Basename;
 use File::Path;
+use File::Copy;
 use Getopt::Std;
 use File::stat;
 #use strict;
@@ -506,7 +507,6 @@ sub recurseAction ($) {
     }
 
     print "   Processing file: $curfile...";
-
     #installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
 
      # This is equivalent to a C switch block.
@@ -514,6 +514,19 @@ sub recurseAction ($) {
       # Match .txt or .TXT.
       if ( $curfile =~ /\.(txt|pdf)$/i ) {
           installFile("$curfile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
+          last SWITCH;
+      }
+      
+      # Match .placeholder
+      if ( $curfile =~ /\.(placeholder)$/i ) {
+	  my $strippedFile = $curfile;
+	  $strippedFile =~ s/\.(placeholder)$//;
+	  if(!(-e $strippedFile))
+	  {
+	  	print "File $strippedFile doesn't exist, using placeholder\n";
+	  	copy("$curfile", "$strippedFile");
+          	installFile("$strippedFile", $uid, $gid, "$mode", "$full_dest_path", $full_src_path);
+	  }
           last SWITCH;
       }
 

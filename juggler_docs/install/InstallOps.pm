@@ -96,14 +96,6 @@ sub recurseDir ($$@) {
     # get into the new start directory to start up
     chdir("$start_dir") or die "ERROR: Cannot chdir to $start_dir: $!\n";
 
-    # If the file Makefile.pl exists in this directory, then execute it
-    # for some custom behaviour... --Kevin
-    if (open(SOME_MAKE_FILE, "Makefile.pl") ) 
-    {
-    	print "Running custion Makefile.pl in ($start_dir)...\n";
-	system("perl Makefile.pl");
-    }
-
     opendir(SRCDIR, ".");
       my(@files) = readdir(SRCDIR);
     closedir(SRCDIR);
