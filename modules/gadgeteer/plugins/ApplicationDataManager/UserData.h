@@ -146,7 +146,8 @@ public:
     * @param host_name  network address of cluster node responsible for 
     *                   updating the ApplicationData object
     */
-   void init(vpr::GUID id, std::string host_name = std::string(""))
+   void init(const vpr::GUID& id,
+             const std::string& host_name = std::string(""))
    {
       mAppData = AppDataPtr(new AppDataMixin<TYPE>(id, host_name));
    }
