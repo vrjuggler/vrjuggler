@@ -309,7 +309,7 @@ public:
     * @return true is returned if this socket is still connected.<br>
     *         false is returned if this socket is not currently connected.
     */
-   bool isConnected()
+   bool isConnected() const
    {
       return mConnected;
    }
@@ -595,10 +595,23 @@ protected:
                  const vpr::InetAddr& remote_addr,
                  const vpr::SocketTypes::Type sock_type);
 
+   /**
+    * Sets this socket's connected state using the given pointer value.
+    * Depending on the value, the connected state of thsi socket is updated
+    * accordingly.
+    *
+    * @post mConnected will be set to true if  peer is non-NULL and false
+    *       otherwise.
+    */
+   void setConnectState(vpr::SocketImplSIM* peer)
+   {
+      mPeer      = peer;
+      mConnected = (NULL != mPeer); // We are connected if mPeer is non-NULL
+   }
+
    std::string mName;
    bool        mOpen;
    bool        mBound;
-   bool        mConnected;
    bool        mOpenBlocking;
    bool        mBlocking;
 
@@ -609,8 +622,6 @@ protected:
 
    bool mReuseAddr;  /**< reuse this address? */
 
-   vpr::SocketImplSIM* mPeer; /**< Our peer socket */
-
    typedef std::deque<vpr::sim::MessagePtr> arrival_queue_t;
    arrival_queue_t mArrivedQueue; /**< FIFO of arrived msgs */
 
@@ -620,6 +631,10 @@ protected:
 
    ///
    vpr::sim::NetworkGraph::VertexListPtr mPathToPeer;
+
+private:
+   bool                mConnected;  /**< Our connected state. */
+   vpr::SocketImplSIM* mPeer;       /**< Our peer sockeat. */
 };
 
 } // End of vpr namespace

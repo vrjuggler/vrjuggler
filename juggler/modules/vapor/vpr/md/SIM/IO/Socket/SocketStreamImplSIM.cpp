@@ -80,7 +80,7 @@ vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
       client_sock.mRemoteAddr = peer_ptr->mLocalAddr;    // Get the remote node's address (it must have called bind, so this is final)
       client_sock.mOpen       = true;
       client_sock.mBlocking   = mBlocking;
-      client_sock.mPeer       = peer_ptr;
+      client_sock.setConnectState(peer_ptr);
 
       // Get an address for the new socket, bind it, and attach the socket to
       // the correct node.
@@ -138,12 +138,14 @@ vpr::ReturnStatus SocketStreamImplSIM::isReadReady () const
 {
    vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
 
-   if ( mOpen && (NULL != mPeer) && (! mArrivedQueue.empty()) )
+   // To be able to read, we must be open, connected, and have a non-empty
+   // queue of arrived messages.
+   if ( isOpen() && isConnected() && (! mArrivedQueue.empty()) )
    {
       status.setCode(vpr::ReturnStatus::Succeed);
    }
 
-   if ( mOpen && getConnectorCount() > 0 )
+   if ( isOpen() && getConnectorCount() > 0 )
    {
       status.setCode(vpr::ReturnStatus::Succeed);
    }
@@ -155,7 +157,8 @@ vpr::ReturnStatus SocketStreamImplSIM::isWriteReady () const
 {
    vpr::ReturnStatus status;
 
-   if ( !mOpen || (NULL == mPeer) )
+   // We cannot write if we are not open or we not are connected.
+   if ( ! isOpen() || ! isConnected() )
    {
       status.setCode(vpr::ReturnStatus::Fail);
    }
