@@ -100,8 +100,8 @@ public:
    /* IO functions: */
 
    /** Write contents of self to out. */
-   friend std::ostream& operator<< (std::ostream& out,
-                                    const Configuration& self);
+   friend JCCL_API(std::ostream&) operator<< (std::ostream& out,
+                                              const Configuration& self);
 
    /** Reads contents of self from in.
     *  Note that the previous contents of self are not removed (although
@@ -111,7 +111,8 @@ public:
     *  @param self A Configuration.
     *  @return in.
     */
-   friend std::istream& operator>> (std::istream& in, Configuration& self);
+   friend JCCL_API(std::istream&) operator>> (std::istream& in,
+                                              Configuration& self);
 
    /** Loads ConfigElements from the given file.
     *  @param filename Name of the file to load.
