@@ -39,15 +39,13 @@
 
 #include <vpr/vpr.h>
 #include <vpr/Util/GUID.h>
-#include <vpr/Util/Singleton.h>
+#include <vpr/Sync/Mutex.h>
 
 // Must implement the Abstract Base Class in order to be a manager used on the ClusterNetwork
 #include <cluster/ClusterPlugin.h>
 
 #include <jccl/Config/ConfigElementPtr.h>
 
-
-extern "C" GADGET_CLUSTER_PLUGIN_API(cluster::ClusterPlugin*) initPlugin();
 
 namespace cluster
 {
@@ -59,8 +57,6 @@ namespace cluster
 class GADGET_CLUSTER_PLUGIN_CLASS_API ApplicationDataManager
    : public cluster::ClusterPlugin
 {
-   vprSingletonHeader( ApplicationDataManager );
-
 public:
    ApplicationDataManager();
    virtual ~ApplicationDataManager();

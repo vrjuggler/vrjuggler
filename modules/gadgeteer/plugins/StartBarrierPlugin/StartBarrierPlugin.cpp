@@ -46,15 +46,16 @@
 
 #include <cluster/Packets/StartBlock.h>
 
-cluster::ClusterPlugin* initPlugin()
+extern "C"
 {
-   return cluster::StartBarrierPlugin::instance();
+   GADGET_CLUSTER_PLUGIN_EXPORT(void) initPlugin(cluster::ClusterManager* mgr)
+   {
+      mgr->addPlugin(new cluster::StartBarrierPlugin());
+   }
 }
 
 namespace cluster
 {
-   vprSingletonImp( StartBarrierPlugin );
-   
    StartBarrierPlugin::StartBarrierPlugin()
       : mBarrierMaster(false)
       , mComplete(false)
