@@ -247,8 +247,9 @@ int DeviceFactory::findConstructor(jccl::ConfigChunkPtr chunk)
 
 void DeviceFactory::debugDump()
 {
-   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,0)
-      << "gadget::DeviceFactory::debugDump\n" << vprDEBUG_FLUSH;
+   vprDEBUG_OutputGuard(gadgetDBG_INPUT_MGR, 0,
+      std::string("gadget::DeviceFactory::debugDump\n"),
+      std::string("------ END DUMP ------\n"));
    vprDEBUG(gadgetDBG_INPUT_MGR,0) << "num constructors:"
                                    << mConstructors.size() << "\n"
                                    << vprDEBUG_FLUSH;
@@ -263,9 +264,6 @@ void DeviceFactory::debugDump()
                                       << dev_constr->getChunkType() << "\n"
                                       << vprDEBUG_FLUSH;
    }
-
-   vprDEBUG_END(gadgetDBG_INPUT_MGR,0) << "------ END DUMP ------\n"
-                                       << vprDEBUG_FLUSH;
 }
 
 };

@@ -270,8 +270,10 @@ vpr::ReturnStatus SocketImplBSD::connect (vpr::Interval timeout)
       }
       else
       {
-         fprintf(stderr, "[vpr::SocketImplBSD] Error connecting to %s: %s\n",
-                 mRemoteAddr.getAddressString().c_str(), strerror(errno));
+//         fprintf(stderr, "[vpr::SocketImplBSD] Error connecting to %s: %s\n",
+//                 mRemoteAddr.getAddressString().c_str(), strerror(errno));
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "[vpr::SocketImplBSD] Error connecting to "
+            << mRemoteAddr.getAddressString() << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
          retval.setCode(vpr::ReturnStatus::Fail);
       }
    }
