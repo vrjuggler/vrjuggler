@@ -65,14 +65,16 @@ libs:
           $(LIB_PREFIX)cxxmod.$(DYNAMICLIB_EXT)
 
 $(LIB_PREFIX)dsomod1.$(DYNAMICLIB_EXT): $(OBJDIR)/DsoLoaderModule1.$(OBJEXT)
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/DsoLoaderModule1.$(OBJEXT)
+	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG)		\
+          $(OBJDIR)/DsoLoaderModule1.$(OBJEXT)
 
 $(LIB_PREFIX)dsomod2.$(DYNAMICLIB_EXT): $(OBJDIR)/DsoLoaderModule2.$(OBJEXT)
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/DsoLoaderModule2.$(OBJEXT)
+	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG)		\
+          $(OBJDIR)/DsoLoaderModule2.$(OBJEXT)
 
 $(LIB_PREFIX)cmod.$(DYNAMICLIB_EXT): $(OBJDIR)/c_module.$(OBJEXT)
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/c_module.$(OBJEXT)
+	$(C_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/c_module.$(OBJEXT)
 
 $(LIB_PREFIX)cxxmod.$(DYNAMICLIB_EXT): $(OBJDIR)/cxx_module.$(OBJEXT)
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/cxx_module.$(OBJEXT)
-
+	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG)		\
+          $(OBJDIR)/cxx_module.$(OBJEXT)
