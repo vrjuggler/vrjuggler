@@ -38,7 +38,7 @@
  *
  * Chalmers Medialab
  * 	<http://www.medialab.chalmers.se>
- * 
+ *
  * ------------------------------------------------------------------------
  * File created 2000-09-23 by Niklas Elmqvist.
  *
@@ -48,12 +48,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
@@ -270,7 +270,11 @@ private:
    /// Adds a rectangle update to the update queue.
    void addUpdate(int x, int y, int w, int h);
 
-   /// Copies a rectangle buffer to the framebuffer.
+   /** Copies a rectangle buffer to the framebuffer.
+   * @param buf - Source buffer.
+   * @param x,y - Destination origin.
+   * @param w,h - width and height of source and destination rect
+   */
    void copyRectToFramebuffer(char* buf, int x, int y, int w, int h);
 
    /// Should two rectangles be merged into one?
@@ -328,9 +332,13 @@ private:
 
    PixelFormat mPf;
    PixelFormat mNativePf;
-   int mWidth;
-   int mHeight;
+   int mWidth;                /**< Width of frame buffer */
+   int mHeight;               /**< Height of frame buffer */
 
+   /** The frame buffer of data.
+   * This is an array of pixels of size mWidth x mHeight
+   * with mPf.size() bits per pixel
+   */
    char* mFramebuffer;
 
    // Read buffer (used in framebuffer updates)

@@ -69,11 +69,13 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
    mSelectState = Nothing;
    mActiveState = Normal;
 
-   mVncWidth = mVncIf.getWidth();
+   mVncWidth = mVncIf.getWidth();                                 // Get real size of the desktop
    mVncHeight = mVncIf.getHeight();
 
-   mTexWidth  = getNearestMultipleOfTwo(mVncIf.getWidth());
-   mTexHeight = getNearestMultipleOfTwo(mVncIf.getHeight());
+   mTexWidth  = getNearestMultipleOfTwo(mVncIf.getWidth());       // Create a texture of multiple
+   mTexHeight = getNearestMultipleOfTwo(mVncIf.getHeight());      // of two sized
+
+   vprASSERT((mVncWidth <= mTexWidth) && (mVncHeight <= mTexHeight));   // Make sure tex is large enough
 
    mMaxSize = mDesktopWidth*1.75f;
    mMinSize = mDesktopWidth*0.50f;
@@ -133,6 +135,11 @@ void VNCDesktop::init(const std::string& wandName,
 
    // Allocate a new quadric that will be used to render the sphere.
    mSphereQuad = gluNewQuadric();
+
+   mCylinderQuad = gluNewQuadric();
+   gluQuadricDrawStyle(mCylinderQuad,GLU_FILL);
+   gluQuadricNormals(mCylinderQuad,GLU_SMOOTH);
+   gluQuadricTexture(mCylinderQuad,GL_FALSE);
 }
 
 /** Updates the desktop parameters
@@ -142,7 +149,9 @@ void VNCDesktop::init(const std::string& wandName,
 void VNCDesktop::updateDesktopParameters()
 {
    const float BorderSize(0.50f);
+   const float BorderDepth(BorderSize/2.0f);
    const float CornerSize(BorderSize+0.2f);
+   const float CornderDepth(CornerSize/2.0f);
 
    // --- Update scales and bounds. --- //
    mDesktopToVncWidthScale  = mVncWidth / mDesktopWidth;
@@ -160,20 +169,20 @@ void VNCDesktop::updateDesktopParameters()
 
    // --- Update corners --- //
    // LL
-   mLLCorner.setMin(gmtl::Point3f(far_left, far_bottom,-CornerSize));
-   mLLCorner.setMax(gmtl::Point3f(0.0f, 0.0f, CornerSize));
+   mLLCorner.setMin(gmtl::Point3f(far_left, far_bottom,-CornderDepth));
+   mLLCorner.setMax(gmtl::Point3f(0.0f, 0.0f, CornderDepth));
    mLLCorner.setEmpty(false);
    // LR
-   mLRCorner.setMin(gmtl::Point3f(mDesktopWidth, far_bottom,-CornerSize));
-   mLRCorner.setMax(gmtl::Point3f(far_right, 0.0f, CornerSize));
+   mLRCorner.setMin(gmtl::Point3f(mDesktopWidth, far_bottom,-CornderDepth));
+   mLRCorner.setMax(gmtl::Point3f(far_right, 0.0f, CornderDepth));
    mLRCorner.setEmpty(false);
    // UR
-   mURCorner.setMin(gmtl::Point3f(mDesktopWidth, mDesktopHeight, -CornerSize));
-   mURCorner.setMax(gmtl::Point3f(far_right, far_top, CornerSize));
+   mURCorner.setMin(gmtl::Point3f(mDesktopWidth, mDesktopHeight, -CornderDepth));
+   mURCorner.setMax(gmtl::Point3f(far_right, far_top, CornderDepth));
    mURCorner.setEmpty(false);
    // UL
-   mULCorner.setMin(gmtl::Point3f(far_left, mDesktopHeight,-CornerSize));
-   mULCorner.setMax(gmtl::Point3f(0.0f, far_top, CornerSize));
+   mULCorner.setMin(gmtl::Point3f(far_left, mDesktopHeight,-CornderDepth));
+   mULCorner.setMax(gmtl::Point3f(0.0f, far_top, CornderDepth));
    mULCorner.setEmpty(false);
 
    far_left = -BorderSize;
@@ -182,17 +191,17 @@ void VNCDesktop::updateDesktopParameters()
    far_top = mDesktopHeight+BorderSize;
 
    // Update borders -- Goto the far's so they puncture the corners
-   mLeftBorder.setMin(gmtl::Point3f(far_left,far_bottom,-BorderSize));
-   mLeftBorder.setMax(gmtl::Point3f(0.0f,far_top,BorderSize));
+   mLeftBorder.setMin(gmtl::Point3f(far_left,far_bottom,-BorderDepth));
+   mLeftBorder.setMax(gmtl::Point3f(0.0f,far_top,BorderDepth));
    mLeftBorder.setEmpty(false);
-   mRightBorder.setMin(gmtl::Point3f(mDesktopWidth,far_bottom,-BorderSize));
-   mRightBorder.setMax(gmtl::Point3f(far_right,far_top,BorderSize));
+   mRightBorder.setMin(gmtl::Point3f(mDesktopWidth,far_bottom,-BorderDepth));
+   mRightBorder.setMax(gmtl::Point3f(far_right,far_top,BorderDepth));
    mRightBorder.setEmpty(false);
-   mBottomBorder.setMin(gmtl::Point3f(far_left,far_bottom,-BorderSize));
-   mBottomBorder.setMax(gmtl::Point3f(far_right,0.0f,BorderSize));
+   mBottomBorder.setMin(gmtl::Point3f(far_left,far_bottom,-BorderDepth));
+   mBottomBorder.setMax(gmtl::Point3f(far_right,0.0f,BorderDepth));
    mBottomBorder.setEmpty(false);
-   mTopBorder.setMin(gmtl::Point3f(far_left,mDesktopHeight,-BorderSize));
-   mTopBorder.setMax(gmtl::Point3f(far_right,far_top,BorderSize));
+   mTopBorder.setMin(gmtl::Point3f(far_left,mDesktopHeight,-BorderDepth));
+   mTopBorder.setMax(gmtl::Point3f(far_right,far_top,BorderDepth));
    mTopBorder.setEmpty(false);
 
    // Set the translation point to be the middle of the desktop polygon.
@@ -208,15 +217,16 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    enum Focus focus_val(NOT_IN_FOCUS);
 
    // -------- COPY OVER TEXTURE DATA --------- //
-   Rectangle r;
+   Rectangle r;      // The dimensions of the fb area to to local texture
 
+   // Default to just copying the entire thing
    r.x      = 0;
    r.y      = 0;
-   r.width  = mTexWidth;
-   r.height = mTexHeight;
+   r.width  = mVncWidth;
+   r.height = mVncHeight;
 
    const int bytes_per_pixel(mVncIf.getPixelSize() / 8);
-   const size_t update_size(r.width * r.height * bytes_per_pixel);
+   const size_t update_size(r.width * r.height * bytes_per_pixel);   // Size of update in bytes
 
    vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
       << "bytes_per_pixel == " << bytes_per_pixel << std::endl
@@ -229,18 +239,23 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    // not change.
    if ( NULL == mTextureData )
    {
-      mTextureData = (char*) malloc(update_size);
+      const size_t tex_size(mTexWidth*mTexHeight*bytes_per_pixel);
+      mTextureData = (char*) malloc(tex_size);
+
+      // Zero out the texture data.
+      memset(mTextureData, 0, tex_size);
    }
 
-   // Zero out the texture data.
-   memset(mTextureData, 0, update_size);
 
-   // Scary math ...
-   const char* src = mVncIf.getFramebuffer() + r.y * mVncIf.getWidth() + r.x;
-   char* dest = mTextureData;
+   // Find start point of copy
+   // - start = fbstart + (y line offset) + x offset
+   // XXX: I think there is a bug here where it should take into account bits per pixel
+   const char* src = mVncIf.getFramebuffer() + (r.y * mVncWidth) + r.x;
+   char* dest = mTextureData + (r.y * mTexWidth) + r.x;
 
-   const int copy_width  = std::min(mVncIf.getWidth() - r.x, r.width);
-   const int copy_height = std::min(mVncIf.getHeight() - r.y, r.height);
+   // Clip the copy so it doesn't go around "edge of screen"
+   const int copy_width  = std::min(mVncWidth - r.x, r.width);
+   const int copy_height = std::min(mVncHeight - r.y, r.height);
 
    vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
       << "copy_width == " << copy_width << std::endl << vprDEBUG_FLUSH;
@@ -248,11 +263,12 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       << "copy_height == " << copy_height << std::endl << vprDEBUG_FLUSH;
 
    // Copy the frame buffer into our texture data buffer.
+   // - Copies one line at a time
    for ( int i = 0; i < copy_height; ++i )
    {
       memcpy(dest, src, copy_width * bytes_per_pixel);
-      src  += mVncIf.getWidth() * bytes_per_pixel;
-      dest += r.width * bytes_per_pixel;
+      src  += (mVncWidth * bytes_per_pixel);          // Move source to next line
+      dest += (mTexWidth * bytes_per_pixel);          // Move dest to next line
    }
 
    // --------- UPDATE NAV AND DESKTOP MATRICES ----------------------- //
@@ -589,13 +605,13 @@ void VNCDesktop::draw()
       drawBox(mULCorner);
 
       setColorIfState(border_color_selected, border_color, LeftBorderSelect, LeftBorderSelect);
-      drawBox(mLeftBorder);
+      drawCylinder(mLeftBorder,1);
       setColorIfState(border_color_selected, border_color, RightBorderSelect, RightBorderSelect);
-      drawBox(mRightBorder);
+      drawCylinder(mRightBorder,1);
       setColorIfState(border_color_selected, border_color, TopBorderSelect, TopBorderSelect);
-      drawBox(mTopBorder);
+      drawCylinder(mTopBorder,0);
       setColorIfState(border_color_selected, border_color, BottomBorderSelect, BottomBorderSelect);
-      drawBox(mBottomBorder);
+      drawCylinder(mBottomBorder,0);
 
       glDisable(GL_LIGHTING);    // The stuff below doesn't like the light...
 
@@ -628,6 +644,12 @@ void VNCDesktop::draw()
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+
+      // Compute texture stats
+      const double one_mb(1024.0*1024.0);
+      double tex_size_mb = (mTexWidth*mTexHeight*8.0*1.0)/one_mb;
+      mTextureUploadRate.addSample(tex_size_mb);
+      mTextureUpdateCount.addSample(tex_size_mb);
 
       // XXX: I don't think GL_RGBA should be hard-coded since VNC may not
       // actually use 8 bytes per pixel.
@@ -689,11 +711,42 @@ void VNCDesktop::draw()
    glEnable(GL_LIGHTING);
 }
 
+void VNCDesktop::printStats()
+{
+   std::cout << "Texture upload/sec: mean: " << mTextureUploadRate.getMean() << "  sta: " << mTextureUploadRate.getSTA() << std::endl;
+   std::cout << "Texture counts:     mean: " << mTextureUpdateCount.getMean() << "  sta: " << mTextureUpdateCount.getSTA() << std::endl;
+}
+
 void VNCDesktop::drawSphere(float radius, gmtl::Point3f offset, int parts)
 {
    glPushMatrix();
       glTranslatef(offset[0], offset[1], offset[2]);
       gluSphere(mSphereQuad, radius, parts, parts);
+   glPopMatrix();
+}
+
+void VNCDesktop::drawCylinder(const gmtl::AABoxf& cyBox, unsigned majorAxis, unsigned slices )
+{
+   // Find the axis to use for non major axis stuff (like radius)
+   unsigned non_major = majorAxis+1;
+   if(3 == non_major) non_major = 0;
+   const float radius((cyBox.mMax[non_major] - cyBox.mMin[non_major])/2.0f);
+
+   // Compute the point at the center of the base of this cylinder
+   gmtl::Point3f center_base((cyBox.mMax + cyBox.mMin)/2);     // Average 2 points
+   center_base[majorAxis] = cyBox.mMin[majorAxis];             // Project down to the min side of major axis
+
+   //std::cout << " cy: box: " << cyBox << "   major:" << majorAxis << "   center:" << center_base << std::endl;
+   float height = cyBox.mMax[majorAxis] - cyBox.mMin[majorAxis];
+
+   glPushMatrix();
+      glTranslatef(center_base.mData[0], center_base.mData[1], center_base.mData[2] );
+      if(0 == majorAxis)
+         glRotatef(90.0f, 0.0f, 1.0f, 0.0f);    // Rotate to x-axis
+      else if(1 == majorAxis)
+         glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);   // Rotate to y-axis
+
+      gluCylinder(mCylinderQuad, radius, radius, height, slices, 1);
    glPopMatrix();
 }
 
