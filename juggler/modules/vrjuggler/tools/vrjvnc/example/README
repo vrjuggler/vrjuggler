@@ -1,7 +1,13 @@
 This example creates a vnc desktop viewer and draws it using OpenGL.
 
-The example allows the user to grab, move, and resize the vnc desktop interactively.
+The example allows the user to grab, move, and resize the vnc desktop
+interactively.
 
-This is not meant to be a full application but is only meant to show how vnc could be used inside a user application.
+This is not meant to be a full application but is only meant to show how
+VNC could be used inside a user application.
 
-Please note that vrjvnc.desc configuration description file in the local directory.  It is used to create a configuration chunk that is needed to configure the application with the correct vnc desktop parameters.  This is optional in end-user applications, but is provided with this sample to make it easier to customize the applciation.
+Please note that vrjvnc.desc configuration description file in the local
+directory.  It is used to create a configuration chunk that is needed to
+configure the application with the correct vnc desktop parameters.  This
+is optional in end-user applications, but is provided with this sample to
+make it easier to customize the applciation.
