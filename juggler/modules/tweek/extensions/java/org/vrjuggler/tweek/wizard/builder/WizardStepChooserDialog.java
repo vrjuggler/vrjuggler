@@ -37,7 +37,11 @@ package org.vrjuggler.tweek.wizard.builder;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+import java.util.*;
+import java.util.jar.*;
 import javax.swing.*;
+import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.wizard.*;
 
 /**
@@ -57,8 +61,11 @@ public class WizardStepChooserDialog
    JScrollPane sequenceScrollPane = new JScrollPane();
    JList sequencesList = new JList();
    JPanel buttonsPanel = new JPanel();
+   BoxLayout buttonsLayout = new BoxLayout(buttonsPanel, BoxLayout.X_AXIS);
+   Component buttonsGlue;
+   Component buttonsStrut;
+   JButton newStepBtn = new JButton();
    JButton okBtn = new JButton();
-   FlowLayout buttonsLayout = new FlowLayout();
    JButton cancelBtn = new JButton();
 
    public WizardStepChooserDialog()
@@ -127,17 +134,13 @@ public class WizardStepChooserDialog
       });
       sequencesList.setCellRenderer(new WizardStepListCellRenderer());
 
-      // Add in the default panes
-      for (int i=0; i<WizardStepFactory.getNumWizardSteps(); ++i)
-      {
-         panesModel.addElement(WizardStepFactory.getWizardStep(i));
-      }
-//      panesModel.addElement("org.vrjuggler.tweek.wizard.panes.WelcomePane");
-//      panesModel.addElement("org.vrjuggler.vrjconfig.wizard.panes.SimDisplayPane");
+      refreshLists();
    }
 
    private void jbInit() throws Exception
    {
+      buttonsGlue = Box.createGlue();
+      buttonsStrut = Box.createHorizontalStrut(8);
       setSize(400, 300);
       basePnl.setLayout(baseLayout);
       msgPanel.setLayout(msgPanelLayout);
@@ -148,6 +151,15 @@ public class WizardStepChooserDialog
       msgText.setOpaque(false);
       msgText.setEditable(false);
       msgText.setLineWrap(true);
+      buttonsPanel.setLayout(buttonsLayout);
+      newStepBtn.setText("Add New");
+      newStepBtn.addActionListener(new java.awt.event.ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            addNewStep();
+         }
+      });
       okBtn.setText("OK");
       okBtn.addActionListener(new java.awt.event.ActionListener()
       {
@@ -156,8 +168,6 @@ public class WizardStepChooserDialog
             okPressed();
          }
       });
-      buttonsPanel.setLayout(buttonsLayout);
-      buttonsLayout.setAlignment(FlowLayout.RIGHT);
       cancelBtn.setText("Cancel");
       cancelBtn.addActionListener(new java.awt.event.ActionListener()
       {
@@ -168,7 +178,10 @@ public class WizardStepChooserDialog
       });
       buttonsPanel.setBorder(BorderFactory.createEtchedBorder());
       msgPanel.setBorder(BorderFactory.createEtchedBorder());
+      buttonsPanel.add(newStepBtn, null);
+      buttonsPanel.add(buttonsGlue, null);
       buttonsPanel.add(cancelBtn, null);
+      buttonsPanel.add(buttonsStrut, null);
       this.getContentPane().add(basePnl, BorderLayout.CENTER);
       basePnl.add(msgPanel, BorderLayout.NORTH);
       msgPanel.add(msgText, BorderLayout.NORTH);
@@ -213,6 +226,87 @@ public class WizardStepChooserDialog
       }
 
       this.setVisible(false);
+   }
+
+   /**
+    * Adds new wizard steps to the builder by asking the user to specify JAR
+    * files where the steps can be found.
+    */
+   void addNewStep()
+   {
+      try
+      {
+         // Ask the user for the location of the JAR to add to the search path.
+         JFileChooser chooser = new JFileChooser();
+         int result = chooser.showOpenDialog(this);
+         if (result == JFileChooser.APPROVE_OPTION)
+         {
+            File file = chooser.getSelectedFile();
+            JarFile jar = new JarFile(file);
+            WizardStepFinder finder = new WizardStepFinder();
+            java.util.List steps = finder.find(jar);
+            if (steps.size() == 0)
+            {
+               JOptionPane.showMessageDialog(this,
+                                             "There are no wizard steps in " + file.getName(),
+                                             "No Wizard Steps",
+                                             JOptionPane.INFORMATION_MESSAGE);
+            }
+            else
+            {
+               JOptionPane.showMessageDialog(this,
+                                             "Found " + steps.size() + " Wizard Steps.",
+                                             "Success",
+                                             JOptionPane.INFORMATION_MESSAGE);
+               // Add the jar file to the classpath.
+               BeanJarClassLoader loader = BeanJarClassLoader.instance();
+               loader.addJarFile(jar);
+
+               // Add the wizard steps to the factory.
+               for (Iterator itr = steps.iterator(); itr.hasNext(); )
+               {
+                  String classname = (String) itr.next();
+                  System.out.println("Found: " + classname);
+                  try
+                  {
+                     Class cls = loader.loadClass(classname);
+                     WizardStepFactory.registerWizardStep(cls);
+                  }
+                  catch (ClassNotFoundException cnfe)
+                  {
+                     cnfe.printStackTrace();
+                     JOptionPane.showMessageDialog(this,
+                                                   "Error: Could not load Wizard Step. "+cnfe.getMessage(),
+                                                   "Error",
+                                                   JOptionPane.ERROR_MESSAGE);
+                  }
+               }
+               refreshLists();
+            }
+         }
+      }
+      catch (IOException ioe)
+      {
+         ioe.printStackTrace();
+         JOptionPane.showMessageDialog(this,
+                                       "Error: "+ioe.getMessage(),
+                                       "Error",
+                                       JOptionPane.ERROR_MESSAGE);
+      }
+   }
+
+   /**
+    * Refreshes the contents of the wizard step lists.
+    */
+   private void refreshLists()
+   {
+      panesModel.clear();
+
+      // Add in the all the registered panes
+      for (int i=0; i<WizardStepFactory.getNumWizardSteps(); ++i)
+      {
+         panesModel.addElement(WizardStepFactory.getWizardStep(i));
+      }
    }
 
    /**
