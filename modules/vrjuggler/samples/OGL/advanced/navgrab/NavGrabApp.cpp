@@ -88,11 +88,11 @@ void NavGrabApp::updateGrabbing()
    gmtl::Matrix44f wand_matrix = vw_M_w * mWand->getData();
 
    // Get the point in space where the wand is located.
-   gmtl::Point3f wand_point = gmtl::makeTrans<gmtl::Point3f>(wand_matrix);
+   gmtl::Point3f wand_pt = gmtl::makeTrans<gmtl::Point3f>(wand_matrix);
 
    // Check for intersection with the wand and our shapes.
-   mSphereIsect = gmtl::isInVolume(mSphere, wand_point);
-   mCubeIsect   = gmtl::isInVolume(mCube, wand_point);
+   mSphereIsect = gmtl::isInVolume(mSphere, wand_pt);
+   mCubeIsect   = gmtl::isInVolume(mCube, wand_pt);
 
    // If button 0 is pressed, check to see if we are grabbing anything.
    if ( mGrabButton->getData() == gadget::Digital::ON )
@@ -102,7 +102,7 @@ void NavGrabApp::updateGrabbing()
       if ( mSphereIsect || mSphereSelected )
       {
          mSphereSelected = true;
-         mSphere.setCenter(wand_point);
+         mSphere.setCenter(wand_pt);
       }
       else
       {
@@ -116,8 +116,8 @@ void NavGrabApp::updateGrabbing()
          mCubeSelected = true;
          
          gmtl::Point3f corner_offset(mCubeEdgeLength, mCubeEdgeLength, mCubeEdgeLength);
-         mCube.setMin(wand_point - corner_offset);   // Bottom rear left corner
-         mCube.setMax(wand_point + corner_offset);   // Top front right corner
+         mCube.setMin(wand_pt - corner_offset);   // Bottom rear left corner
+         mCube.setMax(wand_pt + corner_offset);   // Top front right corner
       }
       else
       {
@@ -143,9 +143,9 @@ void NavGrabApp::updateNavigation()
    float rotation(0.0f);
    if(mForwardButton->getData())
    {
-      gmtl::Vec3f Zdir = gmtl::Vec3f(0.0f, 0.0f, velocity);
-      gmtl::Vec3f direction(wandMatrix * Zdir);
-      gmtl::preMult(mNavMatrix, gmtl::makeTrans<gmtl::Matrix44f>(direction));
+      gmtl::Vec3f z_dir = gmtl::Vec3f(0.0f, 0.0f, velocity);
+      gmtl::Vec3f dir(wand_matrix * z_dir);
+      gmtl::preMult(mNavMatrix, gmtl::makeTrans<gmtl::Matrix44f>(dir));
    }   
 
    if(mRotateButton->getData())
