@@ -260,6 +260,37 @@ ConfigChunkPtr ConfigChunk::getProperty_ChunkPtr(const std::string& prop, int in
    return ret_val;
 }
 
+std::vector<jccl::ConfigChunkPtr> ConfigChunk::getEmbeddedChunks() const
+{
+   assertValid();
+
+   std::vector<jccl::ConfigChunkPtr> embedded_list;     // Create return vector
+   std::string prop_token;
+   unsigned i,j;
+
+   std::vector<PropertyDesc> prop_descs = mDesc->getAllPropertyDesc();
+
+   //cout << "Dependency test for " << getProperty ("name") << endl;
+   for ( i=0; i<prop_descs.size(); i++ )                       // For each property desc
+   {
+      VarType var_type = prop_descs[i].getVarType();
+      if ( (var_type == T_EMBEDDEDCHUNK) )   // If property is an embedded chunk
+      {
+         prop_token = prop_descs[i].getToken();         // Get the property name
+         unsigned int num_props = getNum(prop_token);    // How many entries
+
+         for ( j=0; j<num_props; j++ )             // For each entry
+         {
+            ConfigChunkPtr embedded_chunk = this->getProperty<ConfigChunkPtr>(prop_token, j);
+            vprASSERT(embedded_chunk.get() != NULL);
+            embedded_list.push_back(embedded_chunk);
+         }
+      }
+   }
+   return embedded_list;      // Return the list
+}
+
+
 
 // This is used to sort a db by dependancy.
 // - For each chunk ptr, add the names of the chunk ptrs

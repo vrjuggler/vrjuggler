@@ -226,6 +226,12 @@ public:
     */
    std::vector<std::string> getChunkPtrDependencies() const;
 
+   /** Return a list of self's embedded chunks.
+    *  @return A vector of ConfigChunkPtrs to embedded ConfigChunks 
+    *          within self.
+    */
+   std::vector<jccl::ConfigChunkPtr> getEmbeddedChunks() const;
+
    /** Associates the description d with this Chunk
     *  @post Set the description for the chunk
     */
