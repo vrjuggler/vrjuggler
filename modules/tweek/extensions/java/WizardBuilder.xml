@@ -5,11 +5,13 @@
       <file name="${TWEEK_BASE_DIR}/bin/beans/WizardBuilder.jar"
             class="org.vrjuggler.tweek.wizard.builder.WizardBuilder" />
       <dependencies>
+         <bean>ConfigBroker</bean>
+         <jar path="${TWEEK_BASE_DIR}/bin/beans">jccl_editors.jar</jar>
          <jar path="${TWEEK_BASE_DIR}/bin">ui.jar</jar>
          <jar path="${TWEEK_BASE_DIR}/bin">wizard.jar</jar>
          <jar path="${TWEEK_BASE_DIR}/bin">Devices.jar</jar>
          <jar path="${TWEEK_BASE_DIR}/bin">ClusterWizard.jar</jar>
-         <jar path="${TWEEK_BASE_DIR}/bin/beans">VRJConfig.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/bin">Simulator.jar</jar>
       </dependencies>
       <tree path="/Wizards/" />
    </guipanel>
