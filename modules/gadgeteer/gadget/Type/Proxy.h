@@ -38,7 +38,6 @@
 #include <typeinfo>
 
 #include <gadget/InputManager.h>
-#include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
 #include <gadget/Type/Input.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <gadget/Util/Debug.h>

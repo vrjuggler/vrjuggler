@@ -35,100 +35,86 @@
 
 #include <gadget/gadgetConfig.h>
 #include <cluster/Plugins/ApplicationDataManager/ApplicationDataManager.h>
+#include <cluster/Plugins/ApplicationDataManager/ApplicationData.h>
 #include <cluster/SerializableData.h>
 #include <vpr/IO/SerializableObject.h>
-#include <vpr/Util/AttributeMapBase.h>
+#include <vpr/IO/ObjectReader.h>
+#include <vpr/IO/ObjectWriter.h>
+#include <vpr/Util/ReturnStatus.h>
+
+#include <boost/type_traits.hpp>
+#include <boost/static_assert.hpp>
+
 
 namespace cluster
 {
 
-template <class DEV_TYPE>
-class UserData : public SerializableData
+template<class BASE>
+class AppDataMixin : public BASE, public ApplicationData
 {
 public:
-   typedef DEV_TYPE DevType;
-   UserData(std::string name, std::string hostname = "")
+   AppDataMixin(vpr::GUID id, std::string host_name) : ApplicationData::ApplicationData(id, host_name)
+   {;
+   }
+   
+   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
    {
-      this->setAttrib("cluster.userdata.name", name);
-      this->setAttrib("cluster.userdata.hostname", hostname);
-      this->setAttrib("cluster.userdata.local", false);
-      ApplicationDataManager::instance()->addUserData(this);
-
-      mData = new DEV_TYPE;
+      BASE::writeObject(writer);
+   }
+   
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
+   {
+      BASE::readObject(reader);
    }
 
+private:      
+   // Make sure that we are not already deriving from ApplicationData
+   BOOST_STATIC_ASSERT(!(::boost::is_base_and_derived<cluster::ApplicationData,BASE>::value));
+   
+//   // Make sure that we are deriving from a SerializableObject class
+//   BOOST_STATIC_ASSERT((::boost::is_base_and_derived<cluster::ApplicationData,BASE>::value));
+
+};
+
+/* Allows the user to have a copy constructor
+ * and also not have to know the exact type
+ */
+template <class TYPE>
+class UserData
+{
+public:
+   typedef TYPE Type;
+   
+   UserData(vpr::GUID id, std::string host_name = std::string(""))
+   {
+      mAppData = new AppDataMixin<TYPE>(id, host_name);
+   }
+   
    virtual ~UserData()
    {
-      ApplicationDataManager::instance()->removeUserData(this);
-      delete mData;
-   }
-
-/*   vpr::ReturnStatus writeObject(vpr::BufferObjectWriter* writer)
-   {
-      ;
+      delete mAppData;
    }
    
-   vpr::ReturnStatus readObject(vpr::BufferObjectReader* reader)
-   {
-      ;
-   }
-*/
    bool isLocal()
    {
-      return(getAttrib<bool>("cluster.userdata.local"));
+      return(mAppData->isLocal());
    }
    
-   DEV_TYPE* operator->()
-   { return mData; }
+   TYPE* operator->()
+   { return mAppData; }
    
-   DEV_TYPE& operator*()
-   { return *(mData); }
+   TYPE& operator*()
+   { return *(mAppData); }
+
+private:      
+   // Make sure that we are wrapping a type that is derived from ApplicationData
+   BOOST_STATIC_ASSERT((::boost::is_base_and_derived<vpr::SerializableObject,TYPE>::value));
 
 private:
-   DEV_TYPE*    mData;
+   cluster::AppDataMixin<TYPE>*    mAppData;
 };
+
    
-// Default Specilizations
-template<>
-vpr::ReturnStatus UserData<vpr::Uint16>::writeObject(vpr::BufferObjectWriter* writer)
-{
-   writer->writeUint16(*mData);
-}
-
-template<>
-vpr::ReturnStatus UserData<vpr::Uint16>::readObject(vpr::BufferObjectReader* reader)
-{
-   (*mData) = reader->readUint16();
-}
-
-template<>
-vpr::ReturnStatus UserData<vpr::Uint32>::writeObject(vpr::BufferObjectWriter* writer)
-{
-   writer->writeUint32(*mData);
-}
-
-template<>
-vpr::ReturnStatus UserData<vpr::Uint32>::readObject(vpr::BufferObjectReader* reader)
-{
-   (*mData) = reader->readUint32();
-}
-
-// Vector Impl
-/*template<>
-template<class DEV>
-vpr::ReturnStatus UserData< std::vector<DEV> >::writeObject(vpr::BufferObjectWriter* writer)
-{
-   std::cout << "Write vpr::Uint32: " << *mData << std::endl;
-}
-
-template<>
-template<class DEV>
-vpr::ReturnStatus UserData< std::vector<DEV> >::readObject(vpr::BufferObjectReader* reader)
-{
-   std::cout << "Read vpr::Uint32:  " << *mData << std::endl;
-}
-*/
-
 } // end namespace gadget
 
 #endif

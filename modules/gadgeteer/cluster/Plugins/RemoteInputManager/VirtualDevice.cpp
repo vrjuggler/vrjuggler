@@ -36,11 +36,11 @@
 
 namespace cluster
 {
-   VirtualDevice::VirtualDevice(std::string name, vpr::Uint16 local_id, std::string base_type, 
-                                std::string hostname, gadget::Input* device)
+   VirtualDevice::VirtualDevice(const std::string& name, const vpr::GUID& id, const std::string& base_type, 
+                                const std::string& hostname, gadget::Input* device)
    {
       mName = name;
-      mLocalId = local_id;
+      mId = id;
       mBaseType = base_type;
       mRemoteHostname = hostname;
       mDevice = device;
@@ -66,7 +66,7 @@ namespace cluster
                                  std::string("-------------- VirtualDevice --------------\n"),
                                  std::string("-----------------------------------------\n"));
 
-      vprDEBUG(gadgetDBG_RIM,debug_level) << "Local ID: " << mLocalId << std::endl << vprDEBUG_FLUSH; 
+      vprDEBUG(gadgetDBG_RIM,debug_level) << "Local ID: " << mId.toString() << std::endl << vprDEBUG_FLUSH; 
       vprDEBUG(gadgetDBG_RIM,debug_level) << "Name:     " << mName << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,debug_level) << "BaseType: " << mBaseType << std::endl << vprDEBUG_FLUSH;
    }

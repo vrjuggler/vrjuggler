@@ -54,7 +54,7 @@
 #include <cluster/Packets/PacketFactory.h>
 #include <cluster/Packets/ConnectionRequest.h>
 #include <cluster/Packets/DeviceRequest.h>
-#include <cluster/Packets/UserDataRequest.h>
+#include <cluster/Packets/ApplicationDataRequest.h>
 #include <cluster/Packets/EndBlock.h>
 
 // Configuration
@@ -76,7 +76,7 @@ namespace cluster
 
 	RemoteInputManager::~RemoteInputManager()
 	{
-      for(std::map<vpr::Uint16, VirtualDevice*>::iterator j = mVirtualDevices.begin(); j != mVirtualDevices.end(); j++)
+      for(std::map<vpr::GUID, VirtualDevice*>::iterator j = mVirtualDevices.begin(); j != mVirtualDevices.end(); j++)
       {
          if ((*j).second != NULL)
          {
@@ -92,7 +92,7 @@ namespace cluster
       }  
    }
       
-   vpr::ReturnStatus RemoteInputManager::addVirtualDevice(const vpr::Uint16& device_id, const std::string& name, 
+   vpr::ReturnStatus RemoteInputManager::addVirtualDevice(const vpr::GUID& device_id, const std::string& name, 
                                                           const std::string& device_base_type, const std::string& hostname)
    {
       vpr::Guard<vpr::Mutex> guard(mVirtualDevicesLock);
@@ -113,14 +113,14 @@ namespace cluster
    {
       vpr::Guard<vpr::Mutex> guard(mVirtualDevicesLock);
       
-      mVirtualDevices[device->getLocalId()] = device;
+      mVirtualDevices[device->getId()] = device;
    }
 
-   gadget::Input* RemoteInputManager::getVirtualDevice(const vpr::Uint16& device_id)
+   gadget::Input* RemoteInputManager::getVirtualDevice(const vpr::GUID& device_id)
    {
       vpr::Guard<vpr::Mutex> guard(mVirtualDevicesLock);
 
-      for (std::map<vpr::Uint16, VirtualDevice*>::iterator i = mVirtualDevices.begin();
+      for (std::map<vpr::GUID, VirtualDevice*>::iterator i = mVirtualDevices.begin();
            i != mVirtualDevices.end() ; i++)
       {
          if ((*i).first == device_id)
@@ -135,7 +135,7 @@ namespace cluster
    { 
       vpr::Guard<vpr::Mutex> guard(mVirtualDevicesLock);
 
-      for (std::map<vpr::Uint16, VirtualDevice*>::iterator i = mVirtualDevices.begin();
+      for (std::map<vpr::GUID, VirtualDevice*>::iterator i = mVirtualDevices.begin();
            i != mVirtualDevices.end() ; i++)
       {
          if ((*i).second->getName() == device_name)
@@ -153,7 +153,7 @@ namespace cluster
       vpr::Guard<vpr::Mutex> guard(mVirtualDevicesLock);
       
       std::vector<std::string> devices_to_remove;
-      for (std::map<vpr::Uint16, VirtualDevice*>::iterator i = mVirtualDevices.begin();
+      for (std::map<vpr::GUID, VirtualDevice*>::iterator i = mVirtualDevices.begin();
            i != mVirtualDevices.end() ; i++)
       {
          if ((*i).second->getRemoteHostname() == host_name)
@@ -190,11 +190,11 @@ namespace cluster
       return vpr::ReturnStatus::Succeed;
    }
 
-   void RemoteInputManager::removeVirtualDevice(const vpr::Uint16& device_id)
+   void RemoteInputManager::removeVirtualDevice(const vpr::GUID& device_id)
    {
       vpr::Guard<vpr::Mutex> guard(mVirtualDevicesLock);
       
-      for (std::map<vpr::Uint16, VirtualDevice*>::iterator i = mVirtualDevices.begin();
+      for (std::map<vpr::GUID, VirtualDevice*>::iterator i = mVirtualDevices.begin();
            i != mVirtualDevices.end() ; i++)
       {
          if ((*i).first == device_id)
@@ -210,7 +210,7 @@ namespace cluster
    { 
       vpr::Guard<vpr::Mutex> guard(mVirtualDevicesLock);
       
-      for (std::map<vpr::Uint16, VirtualDevice*>::iterator i = mVirtualDevices.begin();
+      for (std::map<vpr::GUID, VirtualDevice*>::iterator i = mVirtualDevices.begin();
            i != mVirtualDevices.end() ; i++)
       {
          if ((*i).second->getName() == device_name)
@@ -230,7 +230,7 @@ namespace cluster
       vpr::DebugOutputGuard dbg_output(gadgetDBG_RIM,debug_level,
 													std::string("-------------- Virtual Devices --------------\n"),
 													std::string("---------------------------------------------\n"));
-		for(std::map<vpr::Uint16, VirtualDevice*>::iterator j = mVirtualDevices.begin(); j != mVirtualDevices.end(); j++)
+		for(std::map<vpr::GUID, VirtualDevice*>::iterator j = mVirtualDevices.begin(); j != mVirtualDevices.end(); j++)
 		{
 			(*j).second->debugDump(debug_level);
 		}  
@@ -387,7 +387,10 @@ namespace cluster
            return false;
         }
         
-        vpr::Uint16 new_id = ClusterNetwork::instance()->generateLocalId();
+        //vpr::Uint16 new_id = ClusterNetwork::instance()->generateLocalId();
+        vpr::GUID new_id;
+        new_id.generate();
+
         DeviceRequest* device_req = new DeviceRequest(new_id, device_name);
         //device_req->send(node->getSockStream());
         //delete device_req;

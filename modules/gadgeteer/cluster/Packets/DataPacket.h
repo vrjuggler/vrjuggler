@@ -81,7 +81,7 @@ public:
 
    virtual vpr::ReturnStatus send();
 
-   void send(vpr::SocketStream* socket, vpr::Uint16 device_id, std::vector<vpr::Uint8>* device_data);
+   void send(vpr::SocketStream* socket, vpr::GUID device_id, std::vector<vpr::Uint8>* device_data);
 
    /**
     * Helper for the above creation of a device request to be sent
@@ -98,13 +98,13 @@ public:
    {
        return(Header::RIM_DATA_PACKET);
    }
-   vpr::Uint16 getVirtualId() { return mVirtualId; }
+   vpr::GUID getId() { return mId; }
 //   std::string getDeviceName() { return mDeviceName; }
 
    virtual bool action(ClusterNode* node);
 
 private:
-   vpr::Uint16 mVirtualId;
+   vpr::GUID mId;
    //std::string mDeviceName;
    //std::vector<vpr::Uint8>* mDeviceData;
 };

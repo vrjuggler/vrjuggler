@@ -61,7 +61,7 @@ namespace cluster
       void send();
       void updateLocalData();
 
-      void addClient(ClusterNode* new_client_node, vpr::Uint16& remote_id);
+      void addClient(ClusterNode* new_client_node, vpr::GUID& remote_id);
       void removeClient(const std::string& host_name);
 
       void debugDump(int debug_level);
@@ -99,7 +99,7 @@ namespace cluster
 
    private:
       std::string                                  mName;   /**< DeviceServer name */
-      std::map<cluster::ClusterNode*,vpr::Uint16>  mClients;
+      std::map<cluster::ClusterNode*,vpr::GUID>  mClients;
       vpr::Mutex                                   mClientsLock;   /**< Lock on active config list.*/   
       
       gadget::Input*                               mDevice;

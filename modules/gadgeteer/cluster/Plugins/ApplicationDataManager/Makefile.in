@@ -48,7 +48,7 @@ INSTALL=	@INSTALL@
 SUBOBJDIR=	$(GADGET_LIBRARY)
 
 SRCS=		ApplicationDataManager.cpp   \
-		UserDataServer.cpp
+		ApplicationDataServer.cpp
 
 #ifneq (@OS_TYPE@, Win32)
 #SRCS+=		ClusterBarrierWired.cpp

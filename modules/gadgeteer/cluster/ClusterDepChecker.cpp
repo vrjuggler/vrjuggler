@@ -34,7 +34,7 @@
 
 #include <gadget/Util/Debug.h>
 #include <cluster/ClusterDepChecker.h>
-#include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
+//#include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
 #include <cluster/ClusterManager.h>
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
