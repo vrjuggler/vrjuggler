@@ -1,6 +1,6 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 #
-# $Id$
+# $FreeBSD: CVSROOT/commit_prep.pl,v 1.62 2001/12/12 01:32:36 joe Exp $
 #
 #
 # Perl filter to handle pre-commit checking of files.  This program
@@ -25,47 +25,52 @@
 
 require 5.003;	# to be sure.  log_accum needs perl5
 
-############################################################
-#
-# Configurable options
-#
-############################################################
-#
-# Check each file (except dot files) for an RCS "Id" keyword.
-#
-$check_id = 0;
+use strict;
+use lib $ENV{CVSROOT};
+use CVSROOT::cfg;
+my $CVSROOT = $ENV{'CVSROOT'} || die "Can't determine \$CVSROOT!";
 
-#
-# Record the directory for later use by the log_accumulate stript.
-#
-$record_directory = 1;
 
 ############################################################
 #
 # Constants
 #
 ############################################################
-$LAST_FILE     = "/tmp/#cvs.files.lastdir";
-$ENTRIES       = "CVS/Entries";
+my $ENTRIES       = "CVS/Entries";
 
-$NoId = "
-%s - Does not contain a line with the keyword \"Id:\".
-    Please see the template files for an example.\n";
+
+# The "Id" header to check for.
+my $HEADER	= $cfg::IDHEADER;
+
+############################################################
+#
+# Error messages
+#
+############################################################
+my $NoId = "
+%s - \"\$$HEADER\$\" keyword is either missing or corrupt.\n";
 
 # Protect string from substitution by RCS.
-$NoName = "
-%s - The ID line should contain only \"\$\I\d\:\ \$\" for a newly created file.\n";
+my $NoName = "
+%s - The ID line should contain only \$$HEADER\$ for a newly created file.\n";
 
-$BadName = "
-%s - The file name '%s' in the ID line does not match
-    the actual filename.\n";
+#$DelPath = "
+#%s - The old path and version has been deleted from \$$HEADER\$.\n";
 
-$BadVersion = "
-%s - How dare you!!  You replaced your copy of the file '%s',
-    which was based upon version %s, with an %s version based
-    upon %s.  Please move your '%s' out of the way, perform an
-    update to get the current version, and them merge your changes
-    into that file.\n";
+my $BadName = "
+%s - The pathname '%s'
+    in the \$$HEADER\$ line does not match the actual filename.\n";
+
+my $BadVersion = "
+%s - GRRR!!  You spammed your copy of the file
+    which was based upon version %s, with a different version based
+    upon %s.  Please move your '%s' out of the way,
+    perform an update to get the current version, and then
+    CAREFULLY merge your changes into that file.\n";
+
+my $DOSLineBreak = "%s - Dos/Windows/Mac linebreaks encountered (line %d).\n";
+my $DOSLineErr = "PLEASE use only UNIX linebreaks.\n";
+
 
 ############################################################
 #
@@ -73,55 +78,166 @@ $BadVersion = "
 #
 ############################################################
 
+# Write a single line to a file.
 sub write_line {
-    local($filename, $line) = @_;
-    open(FILE, ">$filename") || die("Cannot open $filename, stopped");
-    print(FILE $line, "\n");
-    close(FILE);
+	my $filename = shift;	# File to write to.
+	my $line = shift;	# Line to write to the file.
+
+	open FILE, ">$filename" or die "Cannot open $filename, stopped\n";
+	print FILE "$line\n";
+	close FILE;
+}
+
+# Check to see whether a file is mentioned in the exclusion file.
+sub exclude_file {
+	my $filename = shift;
+	my $directory = shift;
+
+	my $path = "$directory/$filename";
+	if (open(EX, "< $cfg::EXCLUDE_FILE")) {
+		while (<EX>) {
+			chomp;
+			my $ex_entry = $_;
+
+			# Skip comments and blank lines.
+			next if $ex_entry =~ /^#/;
+			next if $ex_entry =~ /^$/;
+
+			if ($path =~ /$ex_entry/) {
+				close(EX);
+				return(1);
+			}
+		}
+		close(EX);
+	}
+
+	# File shouldn't be excluded.
+	return(0);
 }
 
 sub check_version {
-    local($i, $id, $rname, $version);
-    local($filename, $cvsversion) = @_;
+	my $filename = shift;
+	my $directory = shift;
+	my $hastag = shift;
+	my $lastversion = shift;
 
-    open(FILE, $filename) || die("Cannot open $filename, stopped");
-    for ($i = 1; $i < 10; $i++) {
-	$pos = -1;
-	last if eof(FILE);
-	$line = <FILE>;
-	$pos = index($line, "Id: ");
-	last if ($pos >= 0);
-    }
+	my $found_rcsid;	# True if our rcsid was found in the file.
+	my $rcsid;		# The rcsid that was in the file.
+	my $rcsid_info;		# The expanded values of the rcsid.
+	my $rname;		# The file pathname, parsed from the rcsid.
+	my $version;		# The file version, parsed from the rcsid.
+	my $dos_line_brk_found;	# True if we found a DOS line break in the file.
+	my $line_number;	# Keep track of where the line break is.
 
-    if ($pos == -1) {
-	printf($NoId, $filename);
-	return(1);
-    }
+	# not present - either removed or let cvs deal with it.
+	return 0 unless -f $filename;
 
-    ($id, $rname, $version) = split(' ', substr($line, $pos));
-    if ($cvsversion{$filename} == 0) {
-	if ($rname ne "\$") {
-	    printf($NoName, $filename);
-	    return(1);
+	# Search the file for our rcsid.
+	open FILE, $filename or die "Cannot open $filename, stopped\n";
+	$found_rcsid = 0;
+	$dos_line_brk_found = 0;
+	$line_number = 0;
+	$rcsid_info = "";
+	while (<FILE>) {
+		$line_number++;
+		if ( /^.*(\$$HEADER(: ([^\$]* )?)?\$)/) {
+			$rcsid = $1;
+			$rcsid_info = $3 || "";
+			$found_rcsid = 1;
+		} elsif ( $cfg::NO_DOS_LINEBREAKS and /\r/ ) {
+			# Found a DOS linebreak
+			printf($DOSLineBreak, "$directory/$filename",
+			    $line_number);
+			$dos_line_brk_found = 1;
+		}
+	}
+	close FILE;
+	($rname, $version) = split /\s/, $rcsid_info;
+
+	# The file must not contain DOS linebreaks.
+	if ($dos_line_brk_found) {
+		print $DOSLineErr;
+		return(1);
+	}
+
+	# The file should have had an rcsid in it!
+	unless ($found_rcsid) {
+		printf($NoId, "$directory/$filename");
+		return(1);
+	}
+
+	# Ignore version mismatches (MFC spamming etc) on branches.
+	if ($hastag) {
+		return (0);
+	}
+
+	# A new file should have an unexpanded rcsid.
+	if ($lastversion eq '0') {
+		unless ($rcsid_info eq "") {
+			printf($NoName, "$directory/$filename");
+			return(1);
+		}
+		return(0);
+	}
+
+	# It's ok for the rcsid to be not expanded.
+	if ($rcsid_info eq "") {
+		return (0);
+#		if ($directory =~ /^ports\//) {
+#			return (0);	# ok for ports
+#		}
+#		# Don't know whether to allow or trap this.  It means
+#		# one could bypass the version spam checks by simply
+#		# using a bare tag.
+#		printf($DelPath, "$directory/$filename");
+#		return(1);
+	}
+
+	# Check that the file name in the rcsid matches reality.
+	if ($rname ne "$directory/$filename,v") {
+		# If ports and the pathname is just the basename
+		# (eg: somebody sent in a port with $Id$ and the
+		# committer changed Id -> $HEADER and the version
+		# numbers otherwise match.
+		if (!($directory =~ /^ports\// && $rname eq "$filename,v")) {
+			printf($BadName, "$directory/$filename,v", $rname);
+			return(1);
+		}
+	}
+
+	# Check that the version in the rcsid matches reality.
+	if ($lastversion ne $version) {
+		printf($BadVersion, $filename, $lastversion,
+		    $version, "$directory/$filename");
+		return(1);
 	}
 	return(0);
-    }
+}
 
-    if ($rname ne "$filename,v") {
-	printf($BadName, $filename, substr($rname, 0, length($rname)-2));
-	return(1);
-    }
-    if ($cvsversion{$filename} < $version) {
-	printf($BadVersion, $filename, $filename, $cvsversion{$filename},
-	       "newer", $version, $filename);
-	return(1);
-    }
-    if ($cvsversion{$filename} > $version) {
-	printf($BadVersion, $filename, $filename, $cvsversion{$filename},
-	       "older", $version, $filename);
-	return(1);
-    }
-    return(0);
+
+# Do file fixups, i.e. replacing $ Id: .* $ with $ Id $.
+sub fix_up_file {
+	my $filename = shift;
+
+	# not present - either removed or let cvs deal with it.
+	return 0 unless -f $filename;
+
+	open F, "< $filename" or die "Can't open $filename!\n";
+	my @file = <F>;
+	close F;
+
+	open F, "> $filename.tmp" or die "Can't create $filename tmpfile!\n";
+	while (@file) {
+		my $line = shift @file;
+
+		$line =~ s/\$$HEADER:.*?\$/\$$HEADER\$/g;
+		print F $line or die "Out of disk space?\n";
+	}
+	close F;
+
+	# overwrite the original file......
+	system($cfg::PROG_MV, "$filename.tmp", $filename);
+	die "Can't recreate $filename!\n" if $? >> 8;
 }
 
 #############################################################
@@ -130,36 +246,63 @@ sub check_version {
 #
 ############################################################
 
-$id = getpgrp();
 #print("ARGV - ", join(":", @ARGV), "\n");
-#print("id   - ", id, "\n");
+#print("id   - ", $cfg::PID, "\n");
 
 #
 # Suck in the Entries file
 #
-open(ENTRIES, $ENTRIES) || die("Cannot open $ENTRIES.\n");
+my %cvsversion;
+my %cvstag;
+open ENTRIES, $ENTRIES or die "Cannot open $ENTRIES.\n";
 while (<ENTRIES>) {
-    local($filename, $version) = split('/', substr($_, 1));
-    $cvsversion{$filename} = $version;
-}
+	chomp;
+	next if /^D/;
 
-$directory = $ARGV[0];
+	my ($filename, $ver, $stamp, $opt, $tag) = split '/', substr($_, 1);
+	$cvsversion{$filename} = $ver;
+	$cvstag{$filename} = $tag;
+	$stamp = $opt;	#silence -w
+}
+close ENTRIES;
+
+my $directory = $ARGV[0];
 shift @ARGV;
 
+$directory =~ s,^$CVSROOT[/]+,,;
+
+my $check_id = 0;
+if ($directory =~ /^src\/contrib/) {
+	$check_id = 3;
+}
+if ($directory =~ /^src\/crypto/) {
+	$check_id = 3;
+}
 #
-# Now check each file name passed in, except for dot files.  Dot files
-# are considered to be administrative files by this script.
+# Now check each file name passed in, except those excluded.
 #
-if ($check_id != 0) {
-    $failed = 0;
-    foreach $arg (@ARGV) {
-	next if (index($arg, ".") == 0);
-	$failed += &check_version($arg);
-    }
-    if ($failed) {
-	print "\n";
-	exit(1);
-    }
+if ($cfg::CHECK_HEADERS) {
+	my $failed = 0;
+	foreach my $arg (@ARGV) {
+		my $hastag = ($cvstag{$arg} ne '');
+		next if ($check_id == 3 && $hastag);
+
+		# Ignore the file if it's in the exclude list.
+		next if exclude_file($arg, $directory);
+
+		# Check to make sure that the file hasn't had
+		# it's revision string changed.
+		$failed += &check_version($arg, $directory, $hastag,
+		    $cvsversion{$arg});
+
+		# Unexpand the rcsid if required.
+		fix_up_file($arg) if $cfg::UNEXPAND_RCSID and !$failed;
+	}
+	if ($failed and not $cfg::WARN_HEADERS) {
+		print "\n";
+		unlink($cfg::LAST_FILE);
+		exit(1);
+	}
 }
 
 #
@@ -167,7 +310,6 @@ if ($check_id != 0) {
 # by the log_accumulate script to determine when it is processing
 # the final directory of a multi-directory commit.
 #
-if ($record_directory != 0) {
-    &write_line("$LAST_FILE.$id", $directory);
-}
+&write_line($cfg::LAST_FILE, $directory);
+
 exit(0);

@@ -11,9 +11,14 @@
 #	[<whitespace>]<filename><whitespace><error message><end-of-line>
 #
 # comment lines begin with '#'
+cfg.pm
+cfg_local.pm
 commit_prep.pl
 commitcheck
 log_accum.pl
 log_verify
 log_verify.pl
+logcheck
 rcstemplate
+unwrap
+wrap

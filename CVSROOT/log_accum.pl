@@ -1,6 +1,6 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 #
-# $FreeBSD: /c/ncvs/CVSROOT/log_accum.pl,v 1.73 2001/05/07 20:31:12 joe Exp $
+# $FreeBSD: CVSROOT/log_accum.pl,v 1.118 2001/12/28 14:29:41 joe Exp $
 #
 # Perl filter to handle the log messages from the checkin of files in
 # a directory.  This script will group the lists of files by log
@@ -15,78 +15,18 @@
 # Extensively hacked for FreeBSD by Peter Wemm <peter@netplex.com.au>,
 #  with parts stolen from Greg Woods <woods@most.wierd.com> version.
 #
-# Lightly hacked by Mark Murray to allow it to work unmodified
-#  on both the master repository (freefall) and the international
-#  crypto repository (internat).
-#
+# Extensively cleaned up and re-worked to use an external configuration
+# file by Josef Karthauser <joe@tao.org.uk>.
 
-#
-# $Id$
-#
-
-require 5.005;		# might work with older perl5
-
-###use strict;
-use Sys::Hostname;	# get hostname() function
+require 5.004;
 use File::Find ();
 
-############################################################
-#
-# Configurable options
-#
-############################################################
-#
-# Where do you want the RCS ID and delta info?
-# 0 = none,
-# 1 = in mail only,
-# 2 = rcsids in both mail and logs.
-#
-my $RCSIDINFO = 2;
+use strict;
+use Text::Tabs;
 
-# Debug level, 0 = off
-my $DEBUG = 0;
-
-# The command used to mail the log messages.  Usually something
-# like '/usr/sbin/sendmail'.  
-my $MAILCMD = "/usr/local/bin/mailsend -H";
-$MAILCMD = "/usr/lib/sendmail -odb -oem -t";
-
-
-# Email addresses of recipients of commit mail. (might be overridden below)
-my $MAILADDRS = "nobody";
-
-
-# Extra banner to add to top of commit messages.
-# i.e. $MAILBANNER = "Project X CVS Repository";
-my $MAILBANNER = "";
-
-
-# Location of temporary directory.
-my $TMPDIR = "/tmp/";
-
-
-# The file prefix used for the temporary files.
-my $FILE_PREFIX = "#cvs.files";
-
-
-#-------------------------------------------------------
-# FreeBSD site localisation
-# Remember to comment out if using for other purposes.
-#-------------------------------------------------------
-#if (hostname() =~ /^(freefall|internat)\.freebsd\.org$/i) {
-#	my $meister;
-#
-#	$MAILADDRS='cvs-committers@FreeBSD.org cvs-all@FreeBSD.org';
-#	if ($1 =~ /freefall/i) {
-#		$meister = 'peter@FreeBSD.org';
-#	} else {
-#		$meister = 'markm@FreeBSD.org';
-#		$MAILBANNER = "FreeBSD International Crypto Repository";
-#	}
-#	$MAILADDRS = $meister if $DEBUG;
-#}
-
-$MAILADDRS = 'vrjuggler-checkins@lists.sourceforge.net';
+use lib $ENV{CVSROOT};
+use CVSROOT::cfg;
+my $CVSROOT = $ENV{'CVSROOT'} || die "Can't determine \$CVSROOT!";
 
 ############################################################
 #
@@ -99,22 +39,17 @@ my $STATE_ADDED   = 2;
 my $STATE_REMOVED = 3;
 my $STATE_LOG     = 4;
 
-my $BASE_FN       = "$TMPDIR/$FILE_PREFIX";
-my $LAST_FILE     = "$BASE_FN.lastdir";
+my $BASE_FN       = "$cfg::TMPDIR/$cfg::FILE_PREFIX";
+my $LAST_FILE     = $cfg::LAST_FILE;
 my $CHANGED_FILE  = "$BASE_FN.changed";
 my $ADDED_FILE    = "$BASE_FN.added";
 my $REMOVED_FILE  = "$BASE_FN.removed";
 my $LOG_FILE      = "$BASE_FN.log";
 my $SUMMARY_FILE  = "$BASE_FN.summary";
-my $MAIL_FILE     = "$BASE_FN.mail";
+my $LOGNAMES_FILE = "$BASE_FN.lognames";
 my $SUBJ_FILE     = "$BASE_FN.subj";
 my $TAGS_FILE     = "$BASE_FN.tags";
-
-my $X_BRANCH_HDR  = "X-VRJuggler-CVS-Branch:";
-
-my $CVSROOT       = $ENV{'CVSROOT'} || "/cvsroot/vrjuggler";
-
-my $PID = getpgrp();		# Process id; used for generating filenames.
+my $DIFF_FILE     = "$BASE_FN.diff";
 
 
 ############################################################
@@ -123,9 +58,11 @@ my $PID = getpgrp();		# Process id; used for generating filenames.
 #
 ############################################################
 
+use vars qw($cwd);
+
 BEGIN {
     require Cwd;
-    my $cwd = Cwd::cwd();
+    $cwd = Cwd::cwd();
 }
 
 # for the convenience of &wanted calls, including -eval statements:
@@ -165,7 +102,7 @@ sub handle {
         doexec(0, 'rmdir', '{}');
     }
     else {
-        unlink("$name") || warn "$name: $!\n";
+        unlink($name) || warn "$name: $!\n";
     }
 }
 
@@ -182,7 +119,6 @@ sub doexec {
         return 0 unless <STDIN> =~ /^y/;
     }
     chdir $cwd; #sigh
-    print "@cmd\n";
     system @cmd;
     chdir $File::Find::dir;
     return !$?;
@@ -193,14 +129,14 @@ sub cleanup_tmpfiles {
 	my @files;		# The list of temporary files.
 
 	# Don't clean up afterwards if in debug mode.
-	return if $DEBUG;
+	return if $cfg::DEBUG;
 
-	opendir DIR, $TMPDIR or die "Cannot open directory: $TMPDIR!";
-	push @files, grep /^$FILE_PREFIX\..*$PID$/, readdir(DIR);
+	opendir DIR, $cfg::TMPDIR or die "Cannot open directory: $cfg::TMPDIR!";
+	push @files, grep /^$cfg::FILE_PREFIX\..*$/, readdir(DIR);
 	closedir DIR;
 
 	foreach (@files) {
-		unlink "$TMPDIR/$_";
+		unlink "$cfg::TMPDIR/$_";
 	}
 }
 
@@ -259,7 +195,7 @@ sub write_logfile {
 
 	open FILE, ">$filename" or
 	    die "Cannot open for write log file $filename.";
-	print FILE join("\n", @lines), "\n";
+	print FILE map { "$_\n" } @lines;
 	close FILE;
 }
 
@@ -275,7 +211,7 @@ sub format_names {
 
 	my @lines = (sprintf($format, $dir));
 
-	if ($DEBUG) {
+	if ($cfg::DEBUG) {
 		print STDERR "format_names(): dir = ", $dir;
 		#print STDERR "; tag = ", $tag;
 		print STDERR "; files = ", join(":", @files), ".\n";
@@ -296,26 +232,26 @@ sub format_lists {
 	my $header = shift;
 	my @lines = @_;
 
-	my @text = ();
-	my @files = ();
+	print STDERR "format_lists(): ", join(":", @lines), "\n" if $cfg::DEBUG;
+
 	my $lastdir = '';
 	my $lastsep = '';
-
-	print STDERR "format_lists(): ", join(":", @lines), "\n" if $DEBUG;
-
+	my $tag = '';
+	my @files = ();
+	my @text = ();
 	foreach my $line (@lines) {
 		if ($line =~ /.*\/$/) {
-			if ($lastdir) {
-				push @text, &format_names($lastdir, @files);
-			}
+			push @text, &format_names($lastdir, @files) if $lastdir;
+			@files = ();
 
 			$lastdir = $line;
 			$lastdir =~ s,/$,,;
+
 			$tag = "";	# next thing is a tag
-			@files = ();
 		} elsif (!$tag) {
 			$tag = $line;
-			next if ($header . $tag eq $lastsep);
+			next if "$header$tag" eq $lastsep;
+
 			$lastsep = $header . $tag;
 			if ($tag eq 'HEAD') {
 				push @text, "  $header files:";
@@ -327,7 +263,7 @@ sub format_lists {
 			push @files, $line;
 		}
 	}
-	push @text, &format_names($lastdir, @files);
+	push @text, &format_names($lastdir, sort @files);
 
 	return @text;
 }
@@ -345,14 +281,79 @@ sub append_names_to_file {
 
 	print FILE $dir, "\n";
 	print FILE $tag, "\n";
-	print FILE join("\n", @files), "\n";
+	print FILE map { "$_\n" } @files;
 	close FILE;
 }
 
 
 #
-# Summarise the file changes in the commit using 'cvs -Qn status'
-# on each file to extract the info.
+# Use cvs status to obtain the current revision number of a given file.
+#
+sub get_revision_number {
+	my $file = shift;
+
+	my $rcsfile = "";
+	my $revision = "";
+
+	open(RCS, "-|") || exec $cfg::PROG_CVS, '-Qn', 'status', $file;
+	while (<RCS>) {
+		if (/^[ \t]*Repository revision/) {
+			chomp;
+			my @revline = split;
+			$revision = $revline[2];
+			$revline[3] =~ m|^$CVSROOT/+(.*),v$|;
+			$rcsfile = $1;
+			last;
+		}
+	}
+	close RCS;
+
+	$rcsfile =~ s|/Attic/|/|;	# Remove 'Attic/' if present.
+	return($revision, $rcsfile);
+}
+
+
+#
+# Return the previous revision number.
+#
+sub previous_revision {
+	my $rev = shift;
+
+	$rev =~ /(?:(.*)\.)?([^\.]+)\.([^\.]+)$/;
+	my ($base, $r1, $r2) = ($1, $2, $3);
+
+	my $prevrev = "";
+	if ($r2 == 1) {
+		$prevrev = $base;
+	} else {
+		$prevrev = "$base." if $base;
+		$prevrev .= "$r1." . ($r2 - 1);
+	}
+	return $prevrev;
+}
+
+
+#
+# Count the number of lines in a given revision of a file.
+#
+sub count_lines_in_revision {
+	my $file = shift;	# File in repository.
+	my $rev = shift;	# Revision number.
+
+	my $lines = 0;
+	open(RCS, "-|") ||
+	    exec $cfg::PROG_CVS, '-Qn', 'update', '-p', "-r$rev", $file;
+	while (<RCS>) {
+		++$lines;
+	}
+	close RCS;
+
+	return $lines;
+}
+
+
+#
+# Summarise details of the file modifications.
 #
 sub change_summary_changed {
 	my $outfile = shift;		# File name of output file.
@@ -361,25 +362,12 @@ sub change_summary_changed {
 	foreach my $file (@filenames) {
 		next unless $file;
 
-		my $rev = "";
 		my $delta = "";
-		my $rcsfile = "";
-
-		open(RCS, "-|") || exec 'cvs', '-Qn', 'status', $file;
-		while (<RCS>) {
-			if (/^[ \t]*Repository revision/) {
-				chomp;
-				my @revline = split;
-				$rev = $revline[2];
-				$revline[3] =~ m|^$CVSROOT/+(.*),v$|;
-				$rcsfile = $1;
-				last;
-			}
-		}
-		close RCS;
+		my ($rev, $rcsfile) = get_revision_number($file);
 
 		if ($rev and $rcsfile) {
-			open(RCS, "-|") || exec 'cvs', '-Qn', 'log', "-r$rev", $file;
+			open(RCS, "-|") ||
+			    exec $cfg::PROG_CVS, '-Qn', 'log', "-r$rev", $file;
 			while (<RCS>) {
 				if (/^date:.*lines:\s(.*)$/) {
 					$delta = $1;
@@ -389,15 +377,57 @@ sub change_summary_changed {
 			close RCS;
 		}
 
-		&append_line($outfile, "$rev,$delta,$rcsfile");
+		&append_line($outfile, "$rev,$delta,,$rcsfile");
 	}
 }
 
-# Write these one day.
+
+#
+# Summarise details of added files.
+#
 sub change_summary_added {
+	my $outfile = shift;		# File name of output file.
+	my @filenames = @_;		# List of files to check.
+
+	foreach my $file (@filenames) {
+		next unless $file;
+
+		my $delta = "";
+		my ($rev, $rcsfile) = get_revision_number($file);
+
+		if ($rev and $rcsfile) {
+			my $lines = count_lines_in_revision($file, $rev);
+			$delta = "+$lines -0";
+		}
+
+		&append_line($outfile, "$rev,$delta,new,$rcsfile");
+	}
 }
+
+
+#
+# Summarise details of removed files.
+#
 sub change_summary_removed {
+	my $outfile = shift;		# File name of output file.
+	my @filenames = @_;		# List of files to check.
+
+	foreach my $file (@filenames) {
+		next unless $file;
+
+		my $delta = "";
+		my ($rev, $rcsfile) = get_revision_number($file);
+
+		if ($rev and $rcsfile) {
+			my $prevrev = previous_revision($rev);
+			my $lines = count_lines_in_revision($file, $prevrev);
+			$delta = "+0 -$lines";
+		}
+
+		&append_line($outfile, "$rev,$delta,dead,$rcsfile");
+	}
 }
+
 
 sub build_header {
 	delete $ENV{'TZ'};
@@ -405,96 +435,61 @@ sub build_header {
 	my $datestr = `/bin/date +"%Y/%m/%d %H:%M:%S %Z"`;
 	chomp $datestr;
 
-	my $header = sprintf("%-8s    %s", $login, $datestr);
+	my $header = sprintf("%-8s    %s", $cfg::COMMITTER, $datestr);
 
 	my @text;
 	push @text, $header;
 	push @text, "";
-	push @text, "$MAILBANNER\n" if $MAILBANNER;
+	push @text, "  $cfg::MAILBANNER", "" if $cfg::MAILBANNER;
 
 	return @text;
 }
 
+
 # !!! Mailing-list and commitlog history file mappings here !!!
 # This needs pulling out as a configuration block somewhere so
 # that others can easily change it.
-sub mlist_map {
+sub get_log_name {
 	my $dir = shift;	# Directory name
 
-	if ( $dir =~ /^vpr/ ) {
-		$MAILADDRS .= ', eolson99@vrac.iastate.edu';
-		$MAILADDRS .= ', browner@vrac.iastate.edu';
-		$MAILADDRS .= ', mknight@vrac.iastate.edu';
-		$MAILADDRS .= ', oballing@vrac.iastate.edu';
-		$MAILADDRS .= ', camaro@iastate.edu';
+
+	for my $i (0 .. ($#cfg::LOG_FILE_MAP - 1) / 2) {
+		my $log = $cfg::LOG_FILE_MAP[$i * 2];
+		my $pattern = $cfg::LOG_FILE_MAP[$i * 2 + 1];
+
+		return $log if $dir =~ /$pattern/;
 	}
 
-	return 'cvs-CVSROOT'	if $dir =~ /^CVSROOT\//;
-	return 'cvs-ports'	if $dir =~ /^ports\//;
-	return 'cvs-www'	if $dir =~ /^www\//;
-	return 'cvs-doc'	if $dir =~ /^doc\//;
-	return 'cvs-distrib'	if $dir =~ /^distrib\//;
+	return 'other';
+}
 
-	return 'cvs-other'	unless $dir =~ /^src\//;
-
-	$dir =~ s,^src/,,;
-
-	return 'cvs-bin'	if $dir =~ /^bin\//;
-	return 'cvs-contrib'	if $dir =~ /^contrib\//;
-	return 'cvs-eBones'	if $dir =~ /^eBones\//;
-	return 'cvs-etc'	if $dir =~ /^etc\//;
-	return 'cvs-games'	if $dir =~ /^games\//;
-	return 'cvs-gnu'	if $dir =~ /^gnu\//;
-	return 'cvs-include'	if $dir =~ /^include\//;
-	return 'cvs-kerberosIV'	if $dir =~ /^kerberosIV\//;
-	return 'cvs-lib'	if $dir =~ /^lib\//;
-	return 'cvs-libexec'	if $dir =~ /^libexec\//;
-	return 'cvs-lkm'	if $dir =~ /^lkm\//;
-	return 'cvs-release'	if $dir =~ /^release\//;
-	return 'cvs-sbin'	if $dir =~ /^sbin\//;
-	return 'cvs-share'	if $dir =~ /^share\//;
-	return 'cvs-sys'	if $dir =~ /^sys\//;
-	return 'cvs-tools'	if $dir =~ /^tools\//;
-	return 'cvs-usrbin'	if $dir =~ /^usr\.bin\//;
-	return 'cvs-usrsbin'	if $dir =~ /^usr\.sbin\//;
-
-	return 'cvs-user';
-}    
 
 sub do_changes_file {
 	my @text = @_;
 
 	my %unique = ();
-	my @mailaddrs = &read_logfile("$MAIL_FILE.$PID");
+	my @mailaddrs = &read_logfile($LOGNAMES_FILE);
 	foreach my $category (@mailaddrs) {
 		next if ($unique{$category});
 		$unique{$category} = 1;
-		if ($category =~ /^cvs-/) {
-			# convert mailing list name back to category
-			chomp $category;
-			$category =~ s/^cvs-//;
 
-#			my $changes = "$CVSROOT/CVSROOT/commitlogs/$category";
-#			open CHANGES, ">>$changes"
-#				or die "Cannot open $changes.\n";
-#			print CHANGES join("\n", @text), "\n\n";
-#			close CHANGES;
-		}
+		my $changes = "$CVSROOT/CVSROOT/commitlogs/$category";
+		open CHANGES, ">>$changes"
+			or die "Cannot open $changes.\n";
+		print CHANGES map { "$_\n" } @text;
+		print CHANGES "\n\n\n";
+		close CHANGES;
 	}
 }
+
 
 sub mail_notification {
 	my @text = @_;
 
-	print "Mailing the commit message...\n";
-
-	my @mailaddrs = &read_logfile("$MAIL_FILE.$PID");
-	open MAIL, "| $MAILCMD" or die 'Please check $MAILCMD.';
-
-	print MAIL "To: $MAILADDRS\n";
 # This is turned off since the To: lines go overboard.
 # Also it has bit-rotted since, and can't just be switched on again.
 # - but keep it for the time being in case we do something like cvs-stable
+#	my @mailaddrs = &read_logfile($LOGNAMES_FILE);
 #	print(MAIL 'To: cvs-committers' . $dom . ", cvs-all" . $dom);
 #	foreach $line (@mailaddrs) {
 #		next if ($unique{$line});
@@ -504,18 +499,25 @@ sub mail_notification {
 #	}
 #	print(MAIL "\n");
 
+	my @email = ();
+
+	my $to = $cfg::MAILADDRS;
+	print "Mailing the commit message to '$to'.\n";
+
+	push @email, "To: $to" if $cfg::ADD_TO_LINE;
+
 	my $subject = 'Subject: cvs commit:';
-	my @subj = &read_logfile("$SUBJ_FILE.$PID");
+	my @subj = &read_logfile($SUBJ_FILE);
 	my $subjlines = 0;
 	my $subjwords = 0;	# minimum of two "words" per line
 	LINE: foreach my $line (@subj) {
 		foreach my $word (split(/ /, $line)) {
 			if ($subjwords > 2 &&
-			    length($subject . " " . $word) > 75) {
+			    length("$subject $word") > 75) {
 				if ($subjlines > 2) {
 					$subject .= " ...";
 				}
-				print MAIL $subject, "\n";
+				push @email, $subject;
 				if ($subjlines > 2) {
 					$subject = "";
 					last LINE;
@@ -530,19 +532,43 @@ sub mail_notification {
 			$subjwords++;
 		}
 	}
-	print MAIL "$subject\n" if $subject;
+	push @email, $subject if $subject;
 
 	# If required add a header to the mail msg showing
 	# which branches were modified during the commit.
-	if ($X_BRANCH_HDR) {
-		my %tags = map { $_ => 1 } &read_logfile("$TAGS_FILE.$PID");
-		print MAIL "$X_BRANCH_HDR ", join(",", sort keys %tags), "\n";
+	if ($cfg::MAIL_BRANCH_HDR) {
+		my %tags = map { $_ => 1 } &read_logfile($TAGS_FILE);
+		if (keys %tags) {
+			push @email, $cfg::MAIL_BRANCH_HDR . ": " .
+			    join(",", sort keys %tags);
+		}
 	}
 
-	print MAIL "\n";
-	print MAIL join("\n", @text);
-	close MAIL or die "ERROR: Could not close pipe to mail command (to send the mail): $!\n";
+	push @email, "";
+	push @email, @text;
+
+	# Transform the email message?
+	if (defined($cfg::MAIL_TRANSFORM) && $cfg::MAIL_TRANSFORM) {
+		die 'log_accum.pl: $cfg::MAIL_TRANSFORM isn\'t a sub!'
+		    unless ref($cfg::MAIL_TRANSFORM) eq "CODE";
+
+		if ($cfg::DEBUG) {
+			print "Email transform.\n";
+			print map { "Before: $_\n" } @email;
+		}
+
+		@email = &$cfg::MAIL_TRANSFORM(@email);
+
+		print map { "After: $_\n" } @email if $cfg::DEBUG;
+	}
+
+	# Send the email.
+	open MAIL, "| $cfg::MAILCMD $to"
+	    or die "Please check $cfg::MAILCMD.";
+	print MAIL map { "$_\n" } @email;
+	close MAIL;
 }
+
 
 # Return the length of the longest value in the list.
 sub longest_value {
@@ -552,25 +578,28 @@ sub longest_value {
 	return $sorted[0];
 }
 
+
 sub format_summaries {
 	my @filenames = @_;
 
 	my @revs;
 	my @deltas;
 	my @files;
+	my @statuses;
 
 	# Parse the summary file.
 	foreach my $filename (@filenames) {
 		open FILE, $filename or next;
 		while (<FILE>) {
 			chomp;
-			my ($r, $d, $f) = split /,/, $_;
+			my ($r, $d, $s, $f) = split(/,/, $_, 4);
 			push @revs, $r;
 			push @deltas, $d;
+			push @statuses, $s;
 			push @files, $f;
 		}
 		close FILE;
-	}    
+	}
 
 	# Format the output, extra spaces after "Changes"
 	# to match historic formatting.
@@ -580,26 +609,81 @@ sub format_summaries {
 	my @text;
 	my $fmt = "%-" . $r_max . "s%-" . $d_max . "s%s";
 	push @text, sprintf $fmt, "Revision", "Changes", "Path";
-	foreach (0 .. $#revs) {
-		push @text, sprintf $fmt, $revs[$_], $deltas[$_], $files[$_];
-	}
 
-	# Add URLs for the SourceForge cvsweb paths to the HTML diffs between
-	# all revisions.
-	push(@text, "");
-
-	my $rev;
-	foreach $rev (0 .. $#revs) {
-		$revs[$rev] =~ /^((\d+\.)*\d+)\.(\d+)$/;
-		my($major_rev, $minor_rev) = ($1, $3);
-
-		if ( $minor_rev > 1 ) {
-			my $old_minor_rev = $minor_rev - 1;
-			push(@text, "http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/vrjuggler/$files[$rev].diff?r1=$major_rev.$old_minor_rev\&r2=$revs[$rev]");
-		}
+	my @order = sort { $files[$a] cmp $files[$b] } (0 .. $#revs);
+	foreach (@order) {
+		my $file = $files[$_];
+		my $status = $statuses[$_];
+		$file .= " ($status)" if $status;
+		push @text, sprintf $fmt, $revs[$_], $deltas[$_], $file;
 	}
 
 	return @text;
+}
+
+
+#
+# Make a diff of the changes.
+#
+sub do_diff {
+	my $outfile = shift;
+	my @filenames = @_;		# List of files to check.
+
+	foreach my $file (@filenames) {
+		next unless $file;
+
+		my $diff;
+
+		my ($rev, $rcsfile) = get_revision_number($file);
+
+		#
+		# If this is a binary file, don't try to report a diff;
+		# not only is it meaningless, but it also screws up some
+		# mailers.  We rely on Perl's 'is this binary' algorithm;
+		# it's pretty good.  But not perfect.
+		#
+		if (($file =~ /\.(?:pdf|gif|jpg|tar|tgz|gz)$/i) or (-B $file)) {
+			$diff .= "Index: $file\n";
+			$diff .= "=" x 67 . "\n";
+			$diff .= "\t<<Binary file>>\n";
+		} else {
+			#
+			# Get the differences between this and the previous
+			# revision, being aware that new files always have
+			# revision '1.1' and new branches always end in '.n.1'.
+			#
+			if ($rev =~ /^(.*)\.([0-9]+)$/) {
+				my $prev_rev = previous_revision($rev);
+
+				my @args = ();
+				if ($rev eq '1.1') {
+					$diff .= "Index: $file\n"
+					    . "=" x 68 . "\n";
+					@args = ('-Qn', 'update', '-p',
+					    '-r1.1', $file);
+				} else {
+					@args = ('-Qn', 'diff', '-u',
+					    "-r$prev_rev", "-r$rev", $file);
+				}
+
+				print "Generating diff: $cfg::PROG_CVS " .
+				    "@args" if  $cfg::DEBUG;
+				open(DIFF, "-|") || exec $cfg::PROG_CVS, @args;
+				while(<DIFF>) {
+					$diff .= $_;
+				}
+				close DIFF;
+			}
+		}
+
+		my $diff_length = length($diff);
+		if ($diff_length > $cfg::MAX_DIFF_SIZE * 1024) {
+			$diff = "File/diff for $file is too large (" .
+			    $diff_length . " bytes > " .
+			    $cfg::MAX_DIFF_SIZE * 1024 . " bytes)!\n";
+		}
+		&append_line($outfile, "\n\n$diff");
+	}
 }
 
 #############################################################
@@ -616,9 +700,12 @@ umask (002);
 #
 # Initialize basic variables
 #
-$login = $ENV{'USER'} || getlogin || (getpwuid($<))[0] || sprintf("uid#%d",$<);
-@files = split(' ', $ARGV[0]);
-@path = split('/', $files[0]);
+my $input_params = $ARGV[0];
+my ($directory, @filenames) = split " ", $input_params;
+#@files = split(' ', $input_params);
+
+my @path = split('/', $directory);
+my $dir;
 if ($#path == 0) {
 	$dir = ".";
 } else {
@@ -626,30 +713,33 @@ if ($#path == 0) {
 }
 $dir = $dir . "/";
 
-if ($DEBUG) {
-	print("ARGV  - ", join(":", @ARGV), "\n");
-	print("files - ", join(":", @files), "\n");
-	print("path  - ", join(":", @path), "\n");
-	print("dir   - ", $dir, "\n");
-	print("pid   - ", $PID, "\n");
+#
+# Throw some values at the developer if in debug mode
+#
+if ($cfg::DEBUG) {
+	print "ARGV      - ", join(":", @ARGV), "\n";
+	print "directory - ", $directory, "\n";
+	print "filenames - ", join(":", @filenames), "\n";
+	print "path      - ", join(":", @path), "\n";
+	print "dir       - ", $dir, "\n";
+	print "pid       - ", $cfg::PID, "\n";
 }
 
 # Was used for To: lines, still used for commitlogs naming.
-&append_line("$MAIL_FILE.$PID", &mlist_map($files[0] . "/"));
-&append_line("$SUBJ_FILE.$PID", $ARGV[0]);
+#&append_line($LOGNAMES_FILE, &get_log_name("$directory/"));
+&append_line($SUBJ_FILE, "$directory " . join(" ", sort @filenames));
 
 #
 # Check for a new directory first.  This will always appear as a
 # single item in the argument list, and an empty log message.
 #
-if ($ARGV[0] =~ /New directory/) {
-	@text = &build_header();
+if ($input_params =~ /New directory/) {
+	my @text = &build_header();
 
-	push(@text, "  ".$ARGV[0]);
+	push @text, "  $input_params";
 	&do_changes_file(@text);
-	#&mail_notification(@text);
+	&mail_notification(@text) if $cfg::MAIL_ON_DIR_CREATION;
 	&cleanup_tmpfiles();
-	&cleanup_lockfiles();
 	exit 0;
 }
 
@@ -657,22 +747,25 @@ if ($ARGV[0] =~ /New directory/) {
 # Check for an import command.  This will always appear as a
 # single item in the argument list, and a log message.
 #
-if ($ARGV[0] =~ /Imported sources/) {
-	@text = &build_header();
+if ($input_params =~ /Imported sources/) {
+	my @text = &build_header();
+	my $vendor_tag;
 
-	push(@text, "  ".$ARGV[0]);
+	push @text, "  $input_params";
 
 	while (<STDIN>) {
-		chop;                   # Drop the newline
-		push(@text, "  ".$_);
+		chomp;
+		push @text, "  $_";
+
+		$vendor_tag = $1 if /Vendor Tag:\s*(\S*)/;
 	}
+	&append_line($TAGS_FILE, $vendor_tag) if $vendor_tag;
 
 	&do_changes_file(@text);
 	&mail_notification(@text);
 	&cleanup_tmpfiles();
-	&cleanup_lockfiles();
 	exit 0;
-}    
+}
 
 #
 # Iterate over the body of the message collecting information.
@@ -708,15 +801,9 @@ while (<STDIN>) {
 
 	# collect the log line (ignoring empty template entries)?
 	if ($state == $STATE_LOG) {
-		unless (
-		    /^PR:$/i ||
-		    /^Reviewed by:$/i ||
-		    /^Submitted by:$/i ||
-		    /^Obtained from:$/i ||
-		    /^Approved by:$/i) {
-			push @log_lines, $_;
-		}
-		next;
+		next if /^(.*):$/ and $cfg::TEMPLATE_HEADERS{$1};
+
+		push @log_lines, $_;
 	}
 
 	# otherwise collect information about which files changed.
@@ -725,78 +812,82 @@ while (<STDIN>) {
 	push @{ $added_files{$tag} },	@files if $state == $STATE_ADDED;
 	push @{ $removed_files{$tag} },	@files if $state == $STATE_REMOVED;
 }
-&append_line("$TAGS_FILE.$PID", $tag);
+&append_line($TAGS_FILE, $tag);
 
 #
-# Strip leading and trailing blank lines from the log message.  Also
-# compress multiple blank lines in the body of the message down to a
+# Strip leading and trailing blank lines from the log message.
+# Compress multiple blank lines in the body of the message down to a
 # single blank line.
+# Convert tabs to spaces, so that when we indent the email message and
+# log file everything still lines up.
 # (Note, this only does the mail and changes log, not the rcs log).
 #
-while ($#log_lines > -1) {
-	last if ($log_lines[0] ne "");
-	shift(@log_lines);
-}
-while ($#log_lines > -1) {
-	last if ($log_lines[$#log_lines] ne "");
-	pop(@log_lines);
-}
-for (my $l = $#log_lines; $l > 0; $l--) {
-	if (($log_lines[$l - 1] eq "") && ($log_lines[$l] eq "")) {
-		splice(@log_lines, $l, 1);
-	}
-}
+my $log_message = join "\n", @log_lines;
+$log_message =~ s/\n{3,}/\n\n/g;
+$log_message =~ s/^\n+//;
+$log_message =~ s/\n+$//;
+@log_lines = expand(split /\n/, $log_message);
+
 
 #
 # Find the log file that matches this log message
 #
-for ($i = 0; ; $i++) {
-	last if (! -e "$LOG_FILE.$i.$PID");
-	@text = &read_logfile("$LOG_FILE.$i.$PID");
-	last if ($#text == -1);
-	last if (join(" ", @log_lines) eq join(" ", @text));
+my $message_index;		# The index of this log message
+for ($message_index = 0; ; $message_index++) {
+	last unless -e "$LOG_FILE.$message_index";
+
+	my @text = &read_logfile("$LOG_FILE.$message_index");
+	last unless @text;
+	last if "@log_lines" eq "@text";
 }
 
 #
 # Spit out the information gathered in this pass.
 #
 foreach my $tag ( keys %added_files ) {
-	&append_names_to_file("$ADDED_FILE.$i.$PID",   $dir, $tag,
+	&append_names_to_file("$ADDED_FILE.$message_index",   $dir, $tag,
 	    @{ $added_files{$tag} });
 }
 foreach my $tag ( keys %changed_files ) {
-	&append_names_to_file("$CHANGED_FILE.$i.$PID", $dir, $tag,
+	&append_names_to_file("$CHANGED_FILE.$message_index", $dir, $tag,
 	    @{ $changed_files{$tag} });
 }
 foreach my $tag ( keys %removed_files ) {
-	&append_names_to_file("$REMOVED_FILE.$i.$PID", $dir, $tag,
+	&append_names_to_file("$REMOVED_FILE.$message_index", $dir, $tag,
 	    @{ $removed_files{$tag} });
 }
-&write_logfile("$LOG_FILE.$i.$PID", @log_lines);
+&write_logfile("$LOG_FILE.$message_index", @log_lines);
 
-if ($RCSIDINFO) {
-	foreach my $tag ( keys %added_files ) {
-		&change_summary_added("$SUMMARY_FILE.$i.$PID",
-		    @{ $added_files{$tag} });
-	}
-	foreach my $tag ( keys %changed_files ) {
-		&change_summary_changed("$SUMMARY_FILE.$i.$PID",
-		    @{ $changed_files{$tag} });
-	}
-	foreach my $tag ( keys %removed_files ) {
-		&change_summary_removed("$SUMMARY_FILE.$i.$PID",
-		    @{ $removed_files{$tag} });
-	}
+#
+# Save the info for the commit summary.
+#
+foreach my $tag ( keys %added_files ) {
+	&change_summary_added("$SUMMARY_FILE.$message_index",
+	    @{ $added_files{$tag} });
+	&do_diff("$DIFF_FILE.$message_index", @{ $added_files{$tag} })
+		if ( $cfg::MAX_DIFF_SIZE > 0 );
+}
+foreach my $tag ( keys %changed_files ) {
+	&change_summary_changed("$SUMMARY_FILE.$message_index",
+	    @{ $changed_files{$tag} });
+	&do_diff("$DIFF_FILE.$message_index", @{ $changed_files{$tag} })
+		if ( $cfg::MAX_DIFF_SIZE > 0 );
+}
+foreach my $tag ( keys %removed_files ) {
+	&change_summary_removed("$SUMMARY_FILE.$message_index",
+	    @{ $removed_files{$tag} });
 }
 
 #
 # Check whether this is the last directory.  If not, quit.
+# The last directory name was written by commit_prep.pl on
+# the way in.
 #
-if (-e "$LAST_FILE.$PID") {
-	$_ = &read_line("$LAST_FILE.$PID");
-	my $tmpfiles = $files[0];
+if (-e $LAST_FILE) {
+	$_ = &read_line($LAST_FILE);
+	my $tmpfiles = $directory;
 	$tmpfiles =~ s,([^a-zA-Z0-9_/]),\\$1,g;
-	if (! grep(/$tmpfiles$/, $_)) {
+	unless (grep(/$tmpfiles$/, $_)) {
 		print "More commits to come...\n";
 		exit 0
 	}
@@ -811,54 +902,65 @@ if (-e "$LAST_FILE.$PID") {
 #
 # Produce the final compilation of the log messages
 #
-my @log_msg = &build_header();
+my $diff_num_lines = $cfg::DIFF_BLOCK_TOTAL_LINES;
 for (my $i = 0; ; $i++) {
-	last unless -e "$LOG_FILE.$i.$PID";
+	last unless -e "$LOG_FILE.$i";
 
-	my @mod_lines = &read_logfile("$CHANGED_FILE.$i.$PID");
+	my @log_msg = &build_header();
+
+	my @mod_lines = &read_logfile("$CHANGED_FILE.$i");
 	push @log_msg, &format_lists("Modified", @mod_lines) if @mod_lines;
 
-	my @add_lines = &read_logfile("$ADDED_FILE.$i.$PID");
+	my @add_lines = &read_logfile("$ADDED_FILE.$i");
 	push @log_msg, &format_lists("Added", @add_lines) if @add_lines;
 
-	my @rem_lines = &read_logfile("$REMOVED_FILE.$i.$PID");
+	my @rem_lines = &read_logfile("$REMOVED_FILE.$i");
 	push @log_msg, &format_lists("Removed", @rem_lines) if @rem_lines;
 
-	my @msg_lines = &read_logfile("$LOG_FILE.$i.$PID");
+	my @msg_lines = &read_logfile("$LOG_FILE.$i");
 	push @log_msg, "  Log:", (map { "  $_" } @msg_lines) if @msg_lines;
 
 
-	if ($RCSIDINFO == 2) {
-		if (-e "$SUMMARY_FILE.$i.$PID") {
-			push @log_msg, "  ", map {"  $_"}
-			    format_summaries("$SUMMARY_FILE.$i.$PID");
+	if (-e "$SUMMARY_FILE.$i") {
+		push @log_msg, "  ", map {"  $_"}
+		    format_summaries("$SUMMARY_FILE.$i");
+	}
+
+	#
+	# Add a copy of the message in the relevant log files.
+	#
+	&do_changes_file(@log_msg);
+
+	#
+	# Add the diff after writing the log files.
+	#
+	if (-e "$DIFF_FILE.$i" and $diff_num_lines > 0) {
+		my @diff_block = read_logfile("$DIFF_FILE.$i");
+
+		my $lines_to_use = scalar @diff_block;
+		$lines_to_use = $diff_num_lines
+		    if $lines_to_use > $diff_num_lines;
+
+		push @log_msg, "  ",
+		    map {"  $_"} @diff_block[0 .. $lines_to_use - 1];
+
+		$diff_num_lines -= $lines_to_use;
+		if ($diff_num_lines <= 0) {
+			push @log_msg, "",
+			    "----------------------------------------------",
+			    "Diff block truncated.  (Max lines = " .
+			        $cfg::DIFF_BLOCK_TOTAL_LINES . ")",
+			    "----------------------------------------------",
+			    "";
 		}
 	}
 
-	push @log_msg, "", "";
-}
-#
-# Put the log message at the beginning of the Changes file
-#
-&do_changes_file(@log_msg);
-
-#
-# Now generate the extra info for the mail message.
-#
-if ($RCSIDINFO == 1) {
-	my @summary_files;
-	for (my $i = 0; ; $i++) {
-		last unless -e "$LOG_FILE.$i.$PID";
-		push @summary_files, "$SUMMARY_FILE.$i.$PID";
-	}
-	push @log_msg, format_summaries(@summary_files);
-	push @log_msg, "";
+	#
+	# Mail out the notification.
+	#
+	&mail_notification(@log_msg);
 }
 
-#
-# Mail out the notification.
-#
-&mail_notification(@log_msg);
 &cleanup_tmpfiles();
 &cleanup_lockfiles();
 &print_exit_message();
