@@ -48,7 +48,7 @@
 namespace tweek
 {
 
-vpr::ReturnStatus CorbaManager::init (const std::string& local_id, int argc,
+vpr::ReturnStatus CorbaManager::init (const std::string& local_id, int& argc,
                                       char** argv)
 {
    vpr::ReturnStatus status;
