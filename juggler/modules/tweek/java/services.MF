@@ -1,0 +1,8 @@
+Name: org/vrjuggler/tweek/services/EnvironmentService.class
+Java-Bean: True
+Specification-Title: Environment Service
+Specification-Version: 0.0.1
+Specification-Vendor: vrjuggler.org
+Implementation-Title: org.vrjuggler.tweek.services.EnvironmentService
+Implementation-Version: 1.0 alpha1
+Implementation-Vendor: vrjuggler.org
