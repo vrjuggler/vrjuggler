@@ -55,11 +55,11 @@ public class PropertyDescPanel extends JPanel
     Vector                newvalues; // list of string
     ChunkDescPanel        parent;
     PropertyDesc          desc;
-    JTextField             namefield;
-    JTextField             helpfield;
-    JTextField             tokenfield;
+    JTextField             name_field;
+    JTextField             help_field;
+    JTextField             token_field;
     JCheckBox              varbox;
-    JTextField             numfield;
+    JTextField             num_field;
     JComboBox                typechoice;
     JButton                enumsbutton;
     JButton                valuelabelsbutton;
@@ -77,21 +77,21 @@ public class PropertyDescPanel extends JPanel
 	 * of the fields in the panel.
 	 */
 	PropertyDesc pd = new PropertyDesc();
-	pd.name = namefield.getText();
-	pd.token = tokenfield.getText();
-	pd.help = helpfield.getText();
-	pd.valtype = new ValType((String)typechoice.getSelectedItem());
+	pd.setToken (token_field.getText());
+	if (pd.getToken().equals (""))
+	    return null;
+	pd.setName (name_field.getText());
+	pd.setHelp (help_field.getText());
+	pd.setValType (new ValType((String)typechoice.getSelectedItem()));
 	if (varbox.isSelected())
-	    pd.num = -1;
+	    pd.setHasVariableNumberOfValues (true);
 	else
-	    pd.num = Integer.parseInt(numfield.getText());
+	    pd.setNumValues (Integer.parseInt(num_field.getText()));
 	pd.setEnumerations (newenum);
 	pd.setValueLabels (newvalues);
 
-	if (pd.name == null || pd.name.equals(""))
-	    pd.name = pd.token;
-	if (pd.token == null || pd.token.equals (""))
-	    return null;
+	if (pd.getName().equals(""))
+	    pd.setName (pd.getToken());
 	return pd;
     }
 
@@ -167,15 +167,15 @@ public class PropertyDescPanel extends JPanel
 	gblayout = new GridBagLayout();
 	setLayout (gblayout);
 
-	namefield = new StringTextField (d.name, 15);
+	name_field = new StringTextField (d.getName(), 15);
 	gbc.gridwidth = 2;
-	gblayout.setConstraints(namefield,gbc);
-	add (namefield);
+	gblayout.setConstraints(name_field,gbc);
+	add (name_field);
 	addLabel ("Token");
-	tokenfield = new NoSpaceTextField (d.token, 15);
+	token_field = new NoSpaceTextField (d.getToken(), 15);
 	gbc.gridwidth = GridBagConstraints.RELATIVE;
-	gblayout.setConstraints(tokenfield,gbc);
-	add (tokenfield);
+	gblayout.setConstraints(token_field,gbc);
+	add (token_field);
 	
 	gbc.gridwidth = GridBagConstraints.REMAINDER;
 	valuelabelsbutton = new JButton ("Edit Value Labels");
@@ -183,14 +183,14 @@ public class PropertyDescPanel extends JPanel
 	valuelabelsbutton.addActionListener(this);
 	add (valuelabelsbutton); 
 	
-	varbox = new JCheckBox ("Var Arguments", (d.num == -1));
+	varbox = new JCheckBox ("Var Arguments", (d.getHasVariableNumberOfValues()));
 	add (varbox);
 	varbox.addItemListener(this);
 	addLabel ("Number");
-	numfield = new IntegerTextField (Integer.toString(d.num), 3);
-	if (d.num == -1)
-	    numfield.setEnabled(false);
-	add (numfield);
+	num_field = new IntegerTextField (Integer.toString(d.getNumValues()), 3);
+	if (d.getHasVariableNumberOfValues())
+	    num_field.setEnabled(false);
+	add (num_field);
 	addLabel ("Type");
 	typechoice = new JComboBox();
 	typechoice.addItem ("Int");
@@ -199,7 +199,7 @@ public class PropertyDescPanel extends JPanel
 	typechoice.addItem ("String");
 	typechoice.addItem ("Chunk");
 	typechoice.addItem ("EmbeddedChunk");
-	typechoice.setSelectedItem ( d.valtype.toString());
+	typechoice.setSelectedItem ( d.getValType().toString());
 	add (typechoice);
 	typechoice.addActionListener (this);
 
@@ -210,17 +210,17 @@ public class PropertyDescPanel extends JPanel
 	add(enumsbutton);
 	
 	addLabel ("Help Text");
-	helpfield = new StringTextField (d.help, 45);
+	help_field = new StringTextField (d.getHelp(), 45);
 	gbc.gridwidth = GridBagConstraints.REMAINDER;
 	gbc.fill = GridBagConstraints.HORIZONTAL;
-	gblayout.setConstraints(helpfield,gbc);
-	add (helpfield);
+	gblayout.setConstraints(help_field,gbc);
+	add (help_field);
 	
 	if (editable == false) {
-	    namefield.setEditable(false);
-	    tokenfield.setEditable(false);
-	    numfield.setEditable(false);
-	    helpfield.setEditable(false);
+	    name_field.setEditable(false);
+	    token_field.setEditable(false);
+	    num_field.setEditable(false);
+	    help_field.setEditable(false);
 	    varbox.setEnabled(false);
 	    typechoice.setEnabled(false);
 	    enumsbutton.setEnabled(false);
@@ -248,7 +248,7 @@ public class PropertyDescPanel extends JPanel
 
 
     public void toggleSelected() {
-	if (!desc.name.equalsIgnoreCase("Name"))
+	if (!desc.getName().equalsIgnoreCase("Name"))
 	    setSelected (!selected);
     }
 
@@ -262,7 +262,7 @@ public class PropertyDescPanel extends JPanel
 
     public void itemStateChanged (ItemEvent e) {
 	if (e.getSource() == varbox) {
-	  numfield.setEnabled (!varbox.isSelected());
+	  num_field.setEnabled (!varbox.isSelected());
 	}
     }
 
@@ -290,14 +290,14 @@ public class PropertyDescPanel extends JPanel
 	    if ((valuesframe == null) || valuesframe.closed) {
 		if (varbox.isSelected()) {
 		    valuesframe = new ValueLabelFrame (this, newvalues,
-						     namefield.getText(),
+						     name_field.getText(),
 						     true, 1
 						     );
 		}
 		else {
 		    valuesframe = new ValueLabelFrame (this, newvalues,
-						     namefield.getText(),
-						     false, Integer.parseInt(numfield.getText())
+						     name_field.getText(),
+						     false, Integer.parseInt(num_field.getText())
 						     );
 		}
 	    }
@@ -307,13 +307,13 @@ public class PropertyDescPanel extends JPanel
 		if (((String)typechoice.getSelectedItem()).equalsIgnoreCase 
 		    ("EmbeddedChunk")) {
 		    enumsframe = new DescEnumFrame (this, newenum,
-						    namefield.getText(),
+						    name_field.getText(),
 						    new ValType((String)typechoice.getSelectedItem()),
 						    false, 1);
 		}
 		else {
 		    enumsframe = new DescEnumFrame (this, newenum,
-						    namefield.getText(),
+						    name_field.getText(),
 						    new ValType((String)typechoice.getSelectedItem()),
 						    true, 0);
 		}

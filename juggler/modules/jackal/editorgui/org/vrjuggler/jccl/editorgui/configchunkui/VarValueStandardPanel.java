@@ -81,7 +81,7 @@ public class VarValueStandardPanel
 
 	setLayout(new BorderLayout (1,1));
 
-	if (desc.valtype.equals(ValType.t_chunk)) {
+	if (desc.getValType().equals(ValType.t_chunk)) {
 	    /* we build up a choice of all chunks in the db of allowed types */
 	    ConfigChunkDB db;
 	    ConfigChunk ch;
@@ -103,7 +103,7 @@ public class VarValueStandardPanel
 	    choice.setSelectedItem ("<No Selection>");
 	    add(choice, "Center");
 	}
-	else if (desc.valtype.equals(ValType.t_bool)) {
+	else if (desc.getValType().equals(ValType.t_bool)) {
 	    choice = new JComboBox();
 	    choice.addItem("True");
 	    choice.addItem("False");
@@ -111,17 +111,17 @@ public class VarValueStandardPanel
 	}
 	else {
 	    /* just add a type label & the text string */
-	    add (new JLabel ("(" + desc.valtype.toString() + ")"), "West");
-	    if (desc.valtype.equals(ValType.t_int))
+	    add (new JLabel ("(" + desc.getValType().toString() + ")"), "West");
+	    if (desc.getValType().equals(ValType.t_int))
 		text = new IntegerTextField (5);
-	    else if (desc.valtype.equals(ValType.t_float))
+	    else if (desc.getValType().equals(ValType.t_float))
 		text = new FloatTextField (5);
 	    else
 		text = new StringTextField (10);
 	    add(text,"Center");
 	}
 
-	if (desc.num == -1) {
+	if (desc.getHasVariableNumberOfValues()) {
 	    /* then it's a variable # of values */
 	    removebutton = new JButton("Remove");
 	    Insets in = new Insets (0,0,0,0);
@@ -196,14 +196,14 @@ public class VarValueStandardPanel
 
 
     public VarValue getValue () {
-	VarValue v = new VarValue(desc.valtype);
+	VarValue v = new VarValue(desc.getValType());
 	if (choice != null) {
 	    /* enumeration */
 	    String s = desc.getEnumValue((String)choice.getSelectedItem()).toString();
 	    if ((s == null) || (s.equals("<No Selection>")))
 		s = "";
 
-	    if (desc.valtype.equals (ValType.t_chunk)) {
+	    if (desc.getValType().equals (ValType.t_chunk)) {
 		// remove the "filename: " prefix if it's there...
 		int i = s.indexOf(": ");
 		if (i != -1)

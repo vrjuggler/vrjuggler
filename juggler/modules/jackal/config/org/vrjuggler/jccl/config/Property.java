@@ -43,7 +43,6 @@ import VjConfig.ChunkFactory;
 
 public class Property {
 
-    protected String token;
     protected int num;
     protected PropertyDesc desc;
     protected ValType valtype;
@@ -57,7 +56,6 @@ public class Property {
      */
     public void applyNewDesc (PropertyDesc _desc) {
         desc = _desc;
-        token = desc.getToken();
         num = desc.getNumValues();
         if (!valtype.equals(desc.getValType())) {
             vals.clear();
@@ -87,7 +85,6 @@ public class Property {
 
 
     public Property (Property p) {
-	token = p.token;
 	num = p.num;
 	desc = p.desc;
 	embeddesc = p.embeddesc;
@@ -102,7 +99,6 @@ public class Property {
 
     public Property (PropertyDesc d) {
 	desc = d;
-	token = desc.getToken();
 	valtype = desc.getValType();
 	num = desc.getNumValues();
 	vals = new ArrayList();
@@ -132,7 +128,7 @@ public class Property {
 	    if (i < desc.getValueLabelsSize())
 		ch.setName (desc.getValueLabel(i));
 	    else
-		ch.setName (desc.name + " " + i);
+		ch.setName (desc.getName() + " " + i);
 	    return new VarValue (ch);
 	}
 	else
@@ -145,7 +141,7 @@ public class Property {
     }
 
     public final String getToken () {
-	return token;
+	return desc.getToken();
     }
 
 
@@ -236,7 +232,7 @@ public class Property {
             return false;
 	if (num != p.num)
 	    return false;
-	if (!desc.getToken().equals(p.desc.getToken()))
+	if (!getToken().equals(p.getToken()))
 	    return false;
 	if (!valtype.equals(p.valtype))
 	    return false;
@@ -256,7 +252,7 @@ public class Property {
 
     public String toString(String pad) {
 	VarValue v;
-	String s = pad + desc.token + " { ";
+	String s = pad + getToken() + " { ";
 	for (int i = 0; i < vals.size(); i++) {
 	    v = (VarValue)vals.get(i);
 
@@ -276,9 +272,10 @@ public class Property {
     public String xmlRep (String pad) {
         VarValue v;
         StringBuffer s = new StringBuffer (128);
+        String tok = XMLConfigIOHandler.escapeString (getToken());
         s.append(pad);
         s.append('<');
-        s.append(XMLConfigIOHandler.escapeString(desc.token));
+        s.append(tok);
         s.append('>');
         int i, n = vals.size();
         for (i = 0; i < n; i++) {
@@ -295,12 +292,14 @@ public class Property {
             }
         }
         s.append("</");
-        s.append(XMLConfigIOHandler.escapeString(desc.token));
+        s.append(tok);
         s.append(">\n");
         return s.toString();
     }
 
 
+    /** Reads a Property using the "old" Juggler1.0 syntax.
+     */
     public boolean read (ConfigStreamTokenizer st) throws IOException {
 	/* the idea here is that st holds the string, less the property name
 	 * which was already read by ConfigChunk.read()

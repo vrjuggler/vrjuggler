@@ -192,11 +192,11 @@ public class PropertyPanel extends JPanel implements ActionListener {
 
         int nvals = 0;
         for (int i = 0; i < props.length; i++) {
-            if (props[i].num == -1)
+            if (props[i].getHasVariableNumberOfValues())
                 return false;
-            if (props[i].valtype.equals(ValType.t_embeddedchunk))
+            if (props[i].getValType().equals(ValType.t_embeddedchunk))
                 return false;
-            nvals += props[i].num;
+            nvals += props[i].getNumValues();
         }
         return (nvals <= maxwidth);
     }
