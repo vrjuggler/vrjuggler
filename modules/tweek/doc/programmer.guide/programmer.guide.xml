@@ -191,7 +191,39 @@
             </indexterm>
             <para>All JavaBeans loaded by the Tweek Java GUI are describe by at least one <glossterm linkend="gloss.xml.main">XML</glossterm> file<indexterm>
                   <primary>XML</primary>
-               </indexterm>. The XML file can contain information about many Beans or about a single Bean.</para>
+               </indexterm>. The XML file can contain information about many Beans or about a single Bean. The XML file itself is a <quote>beanlist</quote> document. The four Bean categories, described above, each have an XML element that has children giving information about the specific Bean. The elements are <sgmltag>&lt;service&gt;</sgmltag>, <sgmltag>&lt;viewer&gt;</sgmltag>, <sgmltag>&lt;guipanel&gt;</sgmltag>, and <sgmltag>&lt;generic&gt;</sgmltag>.</para>
+            <para>All Bean XML entries must contain a <sgmltag>&lt;file&gt;</sgmltag> element. Through its <literal>source</literal> attribute, this element provides the path to the JAR file that contains the full Bean code. When specifying the JAR file path, envrionment variables may be used. They must use the syntax <varname>${ENV_VAR}</varname> (the curly braces are required). The <literal>entry</literal> element gives the entry within the JAR file of the class that will be instantiated. The value must be specified using a /-separated list giving the path to the class entry within the JAR file. The extension <filename>.class</filename> must not be specified, however. This is to allow the use of serialized classes which have the extension <filename>.ser</filename>. The Tweek Bean-loading code will figure out what is available and take the right actions.</para>
+            <para>In addition to the <sgmltag>&lt;file&gt;</sgmltag> element, there may be zero or more <sgmltag>&lt;dependency&gt;</sgmltag> elements. These list dependencies of the Bean named as other external JAR files. The <sgmltag>&lt;dependency&gt;</sgmltag> element has two attributes: <literal>file</literal> and <literal>path</literal>. The attribute <literal>file</literal> names the JAR file; <literal>path</literal> gives the path (a semi-colon separated list of directories) where the JAR file may be found.</para>
+            <para>Of the four Bean categories, the XML for Panel Beans can contain the most information. In addition to the previously mentioned elements, Panel Bean entries may have two optional elements: <sgmltag>&lt;tree&gt;</sgmltag> and <sgmltag>&lt;icon&gt;</sgmltag>. The element <sgmltag>&lt;tree&gt;</sgmltag> specifies the path within the Bean tree hierarchy where the Panel Bean will be placed. The path is given as a /-separated list of directories. If the named path does not exist when the Bean is loaded, it will be created. The element <sgmltag>&lt;icon&gt;</sgmltag> names a custom icon for the Bean and a tooltip. An example of a Panel Bean XML entry is shown in <xref linkend="PlexusGraphView.xml.example"/>. Note that this is not the full file--it is only the <sgmltag>&lt;guipanel&gt;</sgmltag> element for a single Bean.</para>
+            <example id="PlexusGraphView.xml.example">
+               <title>PlexusGraphView.xml snippet</title>
+               <programlisting>&lt;guipanel name="Graph View"&gt;
+  &lt;file name="${PLX_BASE_DIR}/bin/beans/PlexusGraphView.jar" 
+        entry="plx/graphview/GraphView" /&gt;
+  &lt;tree path="/" /&gt;
+  &lt;dependency file="openjgraph.jar" path="${PLX_BASE_DIR}/bin" /&gt;
+  &lt;dependency file="jgraph.jar" path="${PLX_BASE_DIR}/bin" /&gt;
+  &lt;dependency file="PlexusComm.jar" path="${PLX_BASE_DIR}/bin" /&gt;
+  &lt;icon source="jar:file:${PLX_BASE_DIR}/bin/beans/PlexusGraphView.jar!/plx/graphview/icon.gif"
+        tooltip="Plexus Network Graph Visualization" /&gt;
+&lt;/guipanel&gt;</programlisting>
+            </example>
+            <para>This shows the use of all the elements that may be children of <sgmltag>&lt;guipanel&gt;</sgmltag>. Note that the <literal>source</literal> attribute of <sgmltag>&lt;icon&gt;</sgmltag> gets its icon image using a JAR URL.</para>
+            <para>Another example XML file is shown in <xref linkend="Viewers.xml.example"/>. This is the actual file used to load the two Viewer Beans that come with the Tweek distribution. This is a complete file containing two Viewer Bean entries.</para>
+            <example id="Viewers.xml.example">
+               <title>Viewers.xml</title>
+               <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beanlist&gt;
+  &lt;viewer name="Tree Viewer"&gt;
+    &lt;file name="${TWEEK_BASE_DIR}/bin/beans/Viewers.jar" 
+          entry="org/vrjuggler/tweek/treeviewer/BeanTreeViewer" /&gt;
+  &lt;/viewer&gt;
+  &lt;viewer name="Icon Viewer"&gt;
+    &lt;file name="${TWEEK_BASE_DIR}/bin/beans/Viewers.jar" 
+          entry="org/vrjuggler/tweek/iconviewer/BeanIconViewer" /&gt;
+  &lt;/viewer&gt;
+&lt;/beanlist&gt;</programlisting>
+            </example>
          </section>
       </chapter>
    </part>
@@ -200,6 +232,7 @@
       <chapter>
          <title>Programming Basics</title>
          <para>In the following chapters, we present the basic information needed to start programming with Tweek. There will be discussion covering IDL, C++, Java, and CORBA. To use Tweek effectively, a good understanding of C++ and Java is required. The IDL aspect of Tweek is minimal, and programmers familiar with basic object-oriented concepts should be able to understand IDL code easily. Discussion related to CORBA is based on the brief introduction given in <xref linkend="intro.corba.section"/>. The Tweek Java and C++ APIs are designed to hide most CORBA details. Whenever possible, references are given to good sources of information on all of the aforementioned topics.</para>
+         <para>Before proceeding, it is important to know that Tweek is designed and implemented to work with VR Juggler 1.1 and 2.0. It can be used with VR Juggler 1.0, but there have been reports of conflicts occuring between VR Juggler 1.0 and the VR Juggler Portable Runtime (VPR) that is part of VR Juggler 1.1. The Tweek C++ code uses VPR for threading, but it is possible to replace the VPR objects with VR Juggler 1.0 thread objects.</para>
       </chapter>
       <chapter id="prog.idl.chapter">
          <title>IDL</title>
@@ -208,7 +241,7 @@
          <para>In <xref linkend="Subject.idl.example"/>, we show the Tweek <interfacename>Subject</interfacename><indexterm>
                <primary>interfaces</primary>
                <secondary>tweek::Subject</secondary>
-            </indexterm> interface. Note the similarity to a C++ header file. The IDL file can be included by other IDL files, and thus it must <quote>protect</quote> the contents in the same manner as a header file. The actual <interfacename>Subject</interfacename> interface is defined within the <literal>tweek</literal> module. An IDL module corresponds to a C++ namespace or to a Java package. The interface itself has three methods: <methodname>attach()</methodname>, <methodname>detach()</methodname>, and <methodname>notify()</methodname>. The first two take a read-only argument of type <interfacename>Observer</interfacename>. The fact that the argument is read-only is specified by the <literal>in</literal> modifier. Other modifiers are <literal>out</literal> (write-only) and <literal>inout</literal> (read/write). The third method, <methodname>notify()</methodname>, takes no arguments, and none of the methods have a return type.</para>
+            </indexterm> interface. Note the similarity to a C++ header file. The IDL file can be included by other IDL files, and thus it must <quote>protect</quote> the contents in the same manner as a header file. The actual <interfacename>Subject</interfacename> interface is defined within the <literal>tweek</literal> module. An IDL module corresponds to a C++ namespace or to a Java package. The interface itself has three methods: <methodname>attach()</methodname>, <methodname>detach()</methodname>, and <methodname>notify()</methodname>. The first two take a read-only argument of type <interfacename>Observer</interfacename>. The fact that the argument is read-only (to the server) is specified by the <literal>in</literal> modifier. Other modifiers are <literal>out</literal> (sent from server to client) and <literal>inout</literal> (initialized by the client, writable by the server). The third method, <methodname>notify()</methodname>, takes no arguments, and none of the methods have a return type.</para>
          <example id="Subject.idl.example">
             <title>Subject.idl</title>
             <indexterm>
@@ -235,8 +268,7 @@ interface Subject
 
 #endif</programlisting>
          </example>
-         <para>By definition, all parameters are passed by reference in CORBA. The modifier stating the readability and/or writability in the IDL file determines how the referenced object may be modified, if at all, within the method.</para>
-         <remark> This explanation is missing what is required by the using code when out and inout are used.</remark>
+         <para>By definition, all objects are passed by reference in CORBA. The modifier stating the readability and/or writability in the IDL file determines how the referenced object may be modified, if at all, within the method.</para>
       </chapter>
       <chapter id="prog.cplusplus.chapter">
          <title>C++</title>
@@ -518,7 +550,6 @@ long SliderSubjectImpl::getValue ()
                         </calloutlist>
                      </programlistingco>
                   </example>
-                  <para></para>
                </section>
             </section>
             <section>
@@ -982,7 +1013,7 @@ public void connectionStateChanged (CommunicationEvent e)
                            <para>The call to <methodname>getSubject()</methodname> returns a reference of type <interfacename>tweek.Subject</interfacename>, but we need to narrow it to <interfacename>networktest.SliderSubject</interfacename> so we can use it. Among the code generated by the IDL compiler is a class named <classname>networktest.SliderSubjectHelper</classname>. Its <methodname>narrow()</methodname> method is used to narrow the CORBA reference type to a more specific type. If the narrowing fails, an exception of type <exceptionname>org.omg.CORBA.BAD_PARAM</exceptionname> is thrown, and it is best to handle it here.</para>
                         </callout>
                         <callout arearefs="NetworkTest.java.connect">
-                           <para>If the event delivered to the Bean was of type <varname>org.vrjuggler.tweek.net.CommunicationEvent.CONNECT</varname>, there is a new CORBA service available, so we will create a new observer to communicate through that service.</para>
+                           <para>If the event delivered to the Bean was of type <constant>org.vrjuggler.tweek.net.CommunicationEvent.CONNECT</constant>, there is a new CORBA service available, so we will create a new observer to communicate through that service.</para>
                         </callout>
                         <callout arearefs="NetworkTest.java.observer.create">
                            <para>Once we have the subject reference, we create an observer servant that we will attach to the subject. This is where <classname>networktest.SliderObserverImpl</classname> comes into the picture.</para>
@@ -1000,7 +1031,7 @@ public void connectionStateChanged (CommunicationEvent e)
                            <para>As part of the collaborative slider, we need to register a change listener with the GUI slider so that it will be informed of changes made by the local user. These changes are reported to the remote subject so that other users get the update. The class <classname>SliderChangeListener</classname> is shown later.</para>
                         </callout>
                         <callout arearefs="NetworkTest.java.shutdown">
-                           <para>If the event delivered to the Bean was of type <varname>org.vrjuggler.tweek.net.CommunicationEvent.DISCONNECT</varname>, the CORBA service is being shut down. When the CORBA service is shut down, we need to detach the local observer from the remote subject to prevent further update notification attempts for this observer.</para>
+                           <para>If the event delivered to the Bean was of type <constant>org.vrjuggler.tweek.net.CommunicationEvent.DISCONNECT</constant>, the CORBA service is being shut down. When the CORBA service is shut down, we need to detach the local observer from the remote subject to prevent further update notification attempts for this observer.</para>
                         </callout>
                      </calloutlist>
                   </programlistingco>
@@ -1136,9 +1167,274 @@ public void connectionStateChanged (CommunicationEvent e)
                </orderedlist>
             </section>
          </section>
-         <section>
+         <section id="file.loader.section">
             <title>File Loader</title>
-            <para>Not everything written in Tweek must use Java, C++, IDL, and CORBA. The Tweek Java GUI is a generalized Bean-loading environment, and as such, its main focus is to load JavaBeans and present them to the user. Those Beans may take advantage of CORBA, but they are not required to do so.</para>
+            <para>Not everything written in Tweek must use Java, C++, IDL, and CORBA. The Tweek Java GUI is a generalized Bean-loading environment, and as such, its main focus is to load JavaBeans and present them to the user. Those Beans may take advantage of CORBA, but they are not required to do so. In this section, we show another sample Bean that is much simpler than the previous example.</para>
+            <para>The Bean shown in this example can open and close multiple text files. To do this, the Bean implements the interface <interfacename>org.vrjuggler.tweek.beans.FileLoader</interfacename>. The Java code will be shown in separate pieces to make it easier to understand. The full code is in <filename>$TWEEK_BASE_DIR/share/test/FileOpenTestBean/fileopentestbean/FileOpenTestBean.java</filename>. An example makefile can be found in <xref linkend="FileLoader.makefile.section"/>. within <xref linkend="makefile.appendix"/>..</para>
+            <section>
+               <title>The JavaBean</title>
+               <para>As in the previous example, we focus on the imported classes first. They are as follows:</para>
+               <programlistingco>
+                  <areaspec>
+                     <area coords="1" id="FileOpenTestBean.java.package"/>
+                     <areaset coords="" id="FileOpenTestBean.java.std-imports">
+                        <area coords="3" id="FileOpenTestBean.java.import.awt"/>
+                        <area coords="4" id="FileOpenTestBean.java.import.io-File"/>
+                        <area coords="5" id="FileOpenTestBean.java.import.io-FileInputStream"/>
+                        <area coords="6" id="FileOpenTestBean.java.import.swing"/>
+                     </areaset>
+                     <area coords="7" id="FileOpenTestBean.java.import.ext-filter"/>
+                     <area coords="8" id="FileOpenTestBean.java.import.FileLoader"/>
+                  </areaspec>
+                  <programlisting>package fileopentestbean;
+
+import java.awt.*;
+import java.io.File;
+import java.io.FileInputStream;
+import javax.swing.*;
+import org.vrjuggler.tweek.services.ExtensionFileFilter;
+import org.vrjuggler.tweek.beans.FileLoader;
+</programlisting>
+                  <calloutlist>
+                     <callout arearefs="FileOpenTestBean.java.package">
+                        <para>This Bean will be in the package <literal>fileopentestbean</literal>.</para>
+                     </callout>
+                     <callout arearefs="FileOpenTestBean.java.std-imports">
+                        <para>These are the imports of standard Java classes. In this Bean, we need two Java file I/O classes so that we may load files.</para>
+                     </callout>
+                     <callout arearefs="FileOpenTestBean.java.import.ext-filter">
+                        <para>This line imports the Tweek Service Bean known as the <classname>ExtensionFileFilter</classname>. This provides a simplified mechanism for making file filters typically used with <classname>JFileChooser</classname> instances.</para>
+                     </callout>
+                     <callout arearefs="FileOpenTestBean.java.import.FileLoader">
+                        <para>This line imports the interface from the Tweek Bean library that we will implement.</para>
+                     </callout>
+                  </calloutlist>
+               </programlistingco>
+               <para>Next, we show the class declaration and the member variables.</para>
+               <programlistingco>
+                  <areaspec>
+                     <area coords="1 75" id="FileOpenTestBean.java.superclass"/>
+                     <area coords="2 75" id="FileOpenTestBean.java.interfaces"/>
+                     <area coords="6 75" id="FileOpenTestBean.java.openFileCount"/>
+                     <area coords="10 75" id="FileOpenTestBean.java.mTextContainer"/>
+                  </areaspec>
+                  <programlisting>public class FileOpenTestBean extends JPanel
+                              implements java.io.Serializable, FileLoader
+{
+   // Methods ...
+
+   private int openFileCount = 0;
+
+   private BorderLayout mMainLayout    = new BorderLayout();
+   private JLabel       mBeanTitle     = new JLabel();
+   private JTabbedPane  mTextContainer = new JTabbedPane();
+}</programlisting>
+                  <calloutlist>
+                     <callout arearefs="FileOpenTestBean.java.superclass">
+                        <para>As the primary class for a Panel Bean, this class must from <classname>javax.swing.JComponent</classname> or some subclass thereof. In this case, the class will be <classname>javax.swing.JPanel</classname>.</para>
+                     </callout>
+                     <callout arearefs="FileOpenTestBean.java.interfaces">
+                        <para>JavaBeans are expected to implement <interfacename>java.io.Serializable</interfacename>, and this class does that. The more interesting interface for this example is <interfacename>org.vrjuggler.tweek.beans.FileLoader</interfacename>. By implementing this interface, the Tweek Java GUI will know that this Bean can manage files.</para>
+                     </callout>
+                     <callout arearefs="FileOpenTestBean.java.openFileCount">
+                        <para>This is a property of the class that keeps track of hte number of currently open files.</para>
+                     </callout>
+                     <callout arearefs="FileOpenTestBean.java.mTextContainer">
+                        <para>This Bean is capable of opening multiple files, and it will manage them with a <classname>JTabbedPane</classname>.</para>
+                     </callout>
+                  </calloutlist>
+               </programlistingco>
+               <para>Now that we have the basics for the class, we can start implementing the <interfacename>FileLoader</interfacename> interface. Of the methods that must be implemented, the most complex is <methodname>openRequested()</methodname>. It will be shown last because of its length. We will begin instead with the simplest methods.</para>
+               <programlistingco>
+                  <areaspec>
+                     <area coords="3 70" id="FileOpenTestBean.java.getFileType"/>
+                     <area coords="8 70" id="FileOpenTestBean.java.canOpenMultiple"/>
+                     <area coords="13 70" id="FileOpenTestBean.java.canSave"/>
+                     <area coords="18 70" id="FileOpenTestBean.java.saveRequested"/>
+                     <area coords="23 70" id="FileOpenTestBean.java.closeRequested"/>
+                     <area coords="30 70" id="FileOpenTestBean.java.getOpenFileCount"/>
+                  </areaspec>
+                  <programlisting linenumbering="numbered">public String getFileType ()
+{
+   return "Text";
+}
+
+public boolean canOpenMultiple ()
+{
+   return true;
+}
+
+public boolean canSave ()
+{
+   return false;
+}
+
+public boolean saveRequested ()
+{
+   return false;
+}
+
+public boolean closeRequested ()
+{
+   mTextContainer.remove(mTextContainer.getSelectedComponent());
+   openFileCount--;
+   return true;
+}
+
+public int getOpenFileCount ()
+{
+   return openFileCount;
+}</programlisting>
+                  <calloutlist>
+                     <callout arearefs="FileOpenTestBean.java.getFileType">
+                        <para>This returns the type of file (or files) that can be loaded by the Bean. In this case, we are just loading plain text files.</para>
+                     </callout>
+                     <callout arearefs="FileOpenTestBean.java.canOpenMultiple">
+                        <para>This method is used to determine if the Bean can open multiple files at one time. This Bean can because of its tabbed pane.</para>
+                     </callout>
+                     <callout arearefs="FileOpenTestBean.java.canSave">
+                        <para>This method is used to determine if the Bean can save files, and this Bean does not.</para>
+                     </callout>
+                     <callout arearefs="FileOpenTestBean.java.saveRequested">
+                        <para>Because this Bean does not save files, it simply returns <constant>false</constant> if a save is requested.</para>
+                     </callout>
+                     <callout arearefs="FileOpenTestBean.java.closeRequested">
+                        <para>When a close is requested, the currently selected tab is removed and the open file count is decremented.</para>
+                     </callout>
+                     <callout arearefs="FileOpenTestBean.java.getOpenFileCount">
+                        <para>This simply returns the number of currently open files.</para>
+                     </callout>
+                  </calloutlist>
+               </programlistingco>
+               <para>The above are all the methods of the <interfacename>FileLoader</interfacename> interface except <methodname>openRequested()</methodname>. We are now ready to move on to it.</para>
+               <programlistingco>
+                  <areaspec>
+                     <area coords="8 75" id="FileOpenTestBean.java.openRequested.chooser"/>
+                     <area coords="14 75" id="FileOpenTestBean.java.openRequested.filter"/>
+                     <area coords="18 75" id="FileOpenTestBean.java.openRequested.show-chooser"/>
+                     <areaset coords="" id="FileOpenTestBean.java.openRequested.read">
+                        <area coords="24 75" id="FileOpenTestBean.java.openRequested.canRead"/>
+                        <area coords="31 75" id="FileOpenTestBean.java.openRequested.do-read"/>
+                     </areaset>
+                     <area coords="34 75" id="FileOpenTestBean.java.openRequested.text-area"/>
+                     <area coords="41 75" id="FileOpenTestBean.java.openRequested.scroll-pane"/>
+                     <area coords="46 75" id="FileOpenTestBean.java.openRequested.open-inc"/>
+                  </areaspec>
+                  <programlisting linenumbering="numbered">public boolean openRequested ()
+{
+   // Initialize this to false since a lot of things can go wrong in the
+   // process of opening files.  Once the file is opened and read
+   // successfully, this can be changed to true.
+   boolean opened = false;
+
+   JFileChooser chooser = new JFileChooser();
+   chooser.setMultiSelectionEnabled(false);
+   chooser.setDialogTitle("Text File Loader");
+   chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+   // Only load .txt files.
+   ExtensionFileFilter filter = new ExtensionFileFilter("Text Files");
+   filter.addExtension("txt");
+   chooser.addChoosableFileFilter(filter);
+
+   int status = chooser.showOpenDialog(this);
+
+   if ( status == JFileChooser.APPROVE_OPTION )
+   {
+      File file = chooser.getSelectedFile();
+
+      if ( file.canRead() )
+      {
+         try
+         {
+            // Read the contents of the file into a byte[] object.
+            FileInputStream input_file = new FileInputStream(file);
+            byte[] file_data = new byte[(int) file.length()];
+            input_file.read(file_data);
+
+            // Create a text area to hold the contents of the file.
+            JTextArea text_area = new JTextArea();
+            text_area.setEditable(false);
+            text_area.insert(new String(file_data), 0);
+
+            // Create a scroll pane to hold the text area; add it to the
+            // tabbed pane with all the other previously loaded scroll
+            // panes; and make the new scroll pane the selected component.
+            JScrollPane text_comp = new JScrollPane(text_area);
+            mTextContainer.add(text_comp, file.getName());
+            mTextContainer.setSelectedComponent(text_comp);
+
+            // Our work is done.
+            openFileCount++;
+            opened = true;
+         }
+         catch (java.io.FileNotFoundException ex)
+         {
+            JOptionPane.showMessageDialog(null, "Cannot find '" +
+                                          file.getAbsolutePath() + "'",
+                                          "Read Error",
+                                          JOptionPane.ERROR_MESSAGE);
+         }
+         catch (java.io.IOException ex)
+         {
+            JOptionPane.showMessageDialog(null, "Error reading from '" +
+                                          file.getAbsolutePath() + "':" +
+                                          ex.getMessage(), "Read Error",
+                                          JOptionPane.ERROR_MESSAGE);
+         }
+      }
+      else
+      {
+         JOptionPane.showMessageDialog(null, "Cannot read from file '" +
+                                       file.getAbsolutePath() + "'",
+                                       "Read Error",
+                                       JOptionPane.ERROR_MESSAGE);
+      }
+   }
+
+   return opened;
+}</programlisting>
+                  <calloutlist>
+                     <callout arearefs="FileOpenTestBean.java.openRequested.chooser">
+                        <para>First, we create a <classname>JFileChooser</classname> that will be used to select a text file. It is configured to allow selection of only a single file each time.</para>
+                     </callout>
+                     <callout arearefs="FileOpenTestBean.java.openRequested.filter">
+                        <para>Next, we create a filter for <filename>.txt</filename> files that will be used by the file chooser.</para>
+                     </callout>
+                     <callout arearefs="FileOpenTestBean.java.openRequested.show-chooser">
+                        <para>With those steps taken, we now open the chooser and wait for the user to select a file.</para>
+                     </callout>
+                     <callout arearefs="FileOpenTestBean.java.openRequested.read">
+                        <para>If a readable file was chosen, we open it and read its contents into an array of <type>byte</type>s.</para>
+                     </callout>
+                     <callout arearefs="FileOpenTestBean.java.openRequested.text-area">
+                        <para>With the bytes read, we can now put the contents of the text file into a read-only <classname>JTexArea</classname> object.</para>
+                     </callout>
+                     <callout arearefs="FileOpenTestBean.java.openRequested.scroll-pane">
+                        <para>Next, we put the <classname>JTextArea</classname> in a <classname>JScrollPane</classname> so that long files can be viewed more easily. The scroll pane is added to the tabbed pane and made the currently selected panel.</para>
+                     </callout>
+                     <callout arearefs="FileOpenTestBean.java.openRequested.open-inc">
+                        <para>At this point, we are done, so we increment the number of open files and set the return value to <constant>true</constant> to indicate that a file was opened successfully.</para>
+                     </callout>
+                  </calloutlist>
+               </programlistingco>
+               <para>This Bean uses no CORBA code and does not require C++ code to act as a peer. This may be the case for many Panel Beans written for Tweek. Of course, this Bean could be extended to open files that are then handed off to C++ code through CORBA.</para>
+            </section>
+            <section>
+               <title>XML File</title>
+               <para>The XML file for this Bean is very simple. It simply lists the Bean file information and puts the Bean at the root of the Bean tree. The full file is shown in <xref linkend="FileOpenTestBean.xml.example"/>.</para>
+               <example id="FileOpenTestBean.xml.example">
+                  <title>FileOpenTestBean.xml</title>
+                  <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beanlist&gt;
+  &lt;guipanel name="File Open Test Bean"&gt;
+    &lt;file name="${TWEEK_BASE_DIR}/bin/beans/FileOpenTestBean.jar" 
+          entry="fileopentestbean/FileOpenTestBean" /&gt;
+    &lt;tree path="/" /&gt;
+  &lt;/guipanel&gt;
+&lt;/beanlist&gt;</programlisting>
+               </example>
+            </section>
          </section>
       </chapter>
    </part>
@@ -1167,7 +1463,7 @@ JAVA_IDL_INCLUDES	= -I$(TWEEK_BASE_DIR)/include
 OPENORB_JAR	= $(HOME)/OpenORB-1.2.0/lib/openorb-1.2.0.jar
 
 TWEEK_EVENT_LIB	= $(TWEEK_BASE_DIR)/bin/TweekEvents.jar
-TWEEK_NET_LIB	= $(TWEEK_BASE_DIR)/bin/TweekEvents.jar
+TWEEK_NET_LIB	= $(TWEEK_BASE_DIR)/bin/TweekNet.jar
 CLASSPATH	= $(TWEEK_EVENT_LIB):$(TWEEK_NET_LIB):$(OPENORB_JAR)
 DEFS		= -D__linux__ -D__OSVERSION__=2 -D__x86__
 EXTRA_CFLAGS	= $(DEBUG_CFLAGS)
@@ -1276,6 +1572,65 @@ clean:
 clobber:
 	@$(MAKE) clean
 	rm -f server </programlisting>
+         </section>
+         <section id="FileLoader.makefile.section">
+            <title>File Loader</title>
+            <para>The following is a makefile that shows how to compile the code related to the file loader Bean example presented in <xref linkend="file.loader.section"/>. All it must do is compile the Java code for the Bean.</para>
+            <programlisting># Generated automatically from Makefile.in by configure.
+default: all
+
+# Basic options.
+srcdir		= .
+JAVAC_FLAGS	= -classpath $(CLASSPATH) -sourcepath $(srcdir) -d .
+JCPS		= :
+
+JDOM_JAR		= $(JDOM_ROOT)/jdom.jar:$(JDOM_ROOT)/xerces.jar
+
+TWEEK_SERV_LIB	= $(TWEEK_BASE_DIR)/bin/TweekServices.jar
+TWEEK_NET_LIB	= $(TWEEK_BASE_DIR)/bin/TweekEvents.jar
+CLASSPATH	= $(TWEEK_SERV_LIB):$(TWEEK_NET_LIB):$(JDOM_JAR)
+
+# Commands to execute.
+JAVA_COMPILE	= javac $(JAVAC_FLAGS)
+JAR		= jar
+
+VPATH		= .
+
+CLASSES		= fileopentestbean/FileOpenTestBean.class
+ALL_CLASSES	= fileopentestbean/*.class
+
+# -----------------------------------------------------------------------------
+# Application build targets.
+# -----------------------------------------------------------------------------
+all:
+	$(MAKE) java
+	$(MAKE) FileOpenTestBean.jar
+	-$(MAKE) install
+
+java: $(CLASSES)
+
+FileOpenTestBean.jar: $(CLASSES)
+	$(JAR) cvfm $@ $(srcdir)/opener_test.MF $(ALL_CLASSES)
+
+install:
+	cp FileOpenTestBean.jar $(TWEEK_BASE_DIR)/bin/beans
+	cp $(srcdir)/FileOpenTestBean.xml $(TWEEK_BASE_DIR)/bin/beans
+
+# Suffix rules for building object files.
+.SUFFIXES: .java .class
+
+.java.class:
+	$(JAVA_COMPILE) $&lt;
+
+# -----------------------------------------------------------------------------
+# Clean-up targets.
+# -----------------------------------------------------------------------------
+clean:
+	rm -rf fileopentestbean
+
+clobber:
+	@$(MAKE) clean
+	rm -f FileOpenTestBean.jar</programlisting>
          </section>
       </appendix>
       <appendix id="orb-impl.appendix">
