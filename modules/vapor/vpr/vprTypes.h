@@ -84,10 +84,13 @@ namespace vpr {
 
 
 // --- HASH Functions ---- //
-#if defined(HAVE_HASH_MAP) || defined(HAVE_HASH_MAP_H)
+#if defined(HAVE_HASH_MAP) || defined(HAVE_EXT_HASH_MAP) || \
+    defined(HAVE_HASH_MAP_H)
 
-#ifdef HAVE_HASH_MAP
+#if defined(HAVE_HASH_MAP)
 #   include <hash_map>
+#elif defined(HAVE_EXT_HASH_MAP)
+#   include <ext/hash_map>
 #else
 #   include <hash_map.h>
 #endif
