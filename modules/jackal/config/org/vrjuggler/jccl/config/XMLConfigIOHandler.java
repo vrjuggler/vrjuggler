@@ -168,6 +168,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
     public boolean writeConfigChunkDB (File out, ConfigChunkDB db) {
         try {
             DataOutputStream ostream = new DataOutputStream (new FileOutputStream (out));
+            ostream.writeBytes ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
             ostream.writeBytes (db.xmlRep());
             return true;
         }
@@ -489,6 +490,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
     public boolean writeChunkDescDB (File out, ChunkDescDB db) {
         try {
             DataOutputStream ostream = new DataOutputStream (new FileOutputStream (out));
+            ostream.writeBytes ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
             ostream.writeBytes (db.xmlRep());
             return true;
         }
