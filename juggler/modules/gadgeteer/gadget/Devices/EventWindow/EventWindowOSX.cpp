@@ -32,6 +32,7 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <boost/concept_check.hpp>
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
 
@@ -159,11 +160,11 @@ void EventWindowOSX::updateData()
            m_keys[j] = m_realkeys[j];
         }
 
-        //clear the mose movement
-        m_keys[gadget::MOUSE_POSX] = 0.0;
-        m_keys[gadget::MOUSE_NEGX] = 0.0;
-        m_keys[gadget::MOUSE_POSY] = 0.0;
-        m_keys[gadget::MOUSE_NEGY] = 0.0;
+        //clear the mouse movement
+        m_keys[gadget::MOUSE_POSX] = 0;
+        m_keys[gadget::MOUSE_NEGX] = 0;
+        m_keys[gadget::MOUSE_POSY] = 0;
+        m_keys[gadget::MOUSE_NEGY] = 0;
    }
    updateEventQueue();
 }
@@ -411,6 +412,8 @@ pascal OSStatus EventWindowOSX::gotKeyEvent(EventHandlerCallRef  nextHandler,
                                             EventRef             theEvent,
                                             void*                userData)
 {
+   boost::ignore_unused_variable_warning(userData);
+
             //The type of event
             UInt32     eventClass;
             UInt32     eventKind;
