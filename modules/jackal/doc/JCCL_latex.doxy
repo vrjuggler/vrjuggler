@@ -1,5 +1,5 @@
 # Include default values
-@INCLUDE = Jackal.doxy
+@INCLUDE = JCCL.doxy
 
 # If the BRIEF_MEMBER_DESC tag is set to YES (the default) Doxygen will 
 # include brief member descriptions after the members that are listed in 
