@@ -36,10 +36,9 @@
 #include <vpr/Util/Factory.h>
 #include <vpr/Util/Singleton.h>
 
-/** Register a creator for the PositionFilter classes
-* @pre Requires that the method std::string getChunkType() be defined for class FilterClass
+/** Register a creator for the Event classes
 *
-* Ex: GADGET_REGISTER_POSFILTER_CREATOR( PosXformFilter )
+* Ex: GADGET_REGISTER_EVENT_CREATOR( EventType, event_id )
 */
 #define GADGET_REGISTER_EVENT_CREATOR( EventType, id ) \
 class EventType; \
@@ -49,7 +48,7 @@ const bool reg_ctr_ ## id = gadget::EventFactory::instance()->registerCreator( i
 namespace gadget
 {
 
-class EventFactory : public vpr::Factory<Event, EventType>, 
+class EventFactory : public vpr::Factory<Event, EventType>,
                               public vpr::Singleton<EventFactory>
 {};
 
