@@ -43,27 +43,30 @@
 namespace gadget
 {
 
-enum SyncState { SYNC_NONE,       
-                 SYNC_INITIATE,   /** Our clock will be used in sync() **/
-                 SYNC_RESPOND} ;  /** Will receive a clock in sync() **/
+enum SyncState
+{
+   SYNC_NONE,
+   SYNC_INITIATE,   /**< Our clock will be used in sync() */
+   SYNC_RESPOND     /**< Will receive a clock in sync() **/
+};
 
 
-/** This Struct stores information for a pending time sync **/
-
-struct _SyncConnection{ 
-  SyncState state;  // do we start exchange or respond
-  NetConnection *connection;
-  std::vector<char> recv_buffer;
-} ;
+/** This Struct stores information for a pending time sync */
+struct _SyncConnection
+{
+   SyncState state;  /**< Do we start exchange or respond? */
+   NetConnection *connection;
+   std::vector<char> recv_buffer;
+};
 typedef struct _SyncConnection SyncConnection;
 
 
 
-/** This class is used to synchronize the base performance 
-  * clocks on two vrjuggler instances connected through the 
+/** This class is used to synchronize the base performance
+  * clocks on two vrjuggler instances connected through the
   * remote input manager.
   * The initiator's clock will be stored in the responder.
-  * 
+  *
   * To Initiate sync:
   * Two nodes call SyncWithMyClock() and SyncWithOtherClock()
   * during the same frame (usually after just connecting) and
@@ -74,29 +77,36 @@ typedef struct _SyncConnection SyncConnection;
   * host to verify the responder needs synchronizing.
   * A loop then passes messages containing clock/time info
   * back and forth until the responder believes its clock
-  * is synchronized well enough with the initiator.  
-  * 
+  * is synchronized well enough with the initiator.
+  *
   * Not yet Implemented: after the setting of its clock,
   * the responder could attempt to synchronize its new clock with
-  * all of its existing connections -- although much recursive 
+  * all of its existing connections -- although much recursive
   * synchronizing would be detrimental to clock accuracy.  The need
   * for recursive syncs can be avoided by adding connections one at
   * a time -- all this is only necessary if using clock sync
   * performance measurements.
   */
 
-class GADGET_CLASS_API NetClockSync{
+class GADGET_CLASS_API NetClockSync
+{
 
 public:
-   NetClockSync(){ mErrorThreshold = 0.00005; } // start at .5 milliseconds
+   NetClockSync()
+   {
+      mErrorThreshold = 0.00005;
+   } // start at .5 milliseconds
 
-   /** Set the host/manager that our clock originated from **/
-   void setClockSrcId(const vpr::GUID& id){ mSrcManagerId = id; }
+   /** Set the host/manager that our clock originated from */
+   void setClockSrcId(const vpr::GUID& id)
+   {
+      mSrcManagerId = id;
+   }
 
-   /** Stores information to sync clocks at end of this frame **/
+   /** Stores information to sync clocks at end of this frame */
    void syncWithMyClock(NetConnection* connection);
 
-   /** Stores information to sync clocks at end of this frame **/
+   /** Stores information to sync clocks at end of this frame */
    void syncWithOtherClock(NetConnection* connection);
 
    /** Is sync needed **/
@@ -107,13 +117,13 @@ public:
 
 protected:
 
-/* Information about the manager/host that our clock originated 
- * from.  Lets us we know if we are updated already.
- */
+   /** Information about the manager/host that our clock originated
+    * from.  Lets us we know if we are updated already.
+    */
    vpr::GUID mSrcManagerId;
 
-   double mErrorThreshold; /// target clock error threshold in seconds
-   std::vector<SyncConnection*> mConnections; /// connections that need sync-ing
+   double mErrorThreshold; /**< target clock error threshold in seconds */
+   std::vector<SyncConnection*> mConnections; /**< connections that need sync-ing */
 
 
    /** ---internal functions called from sync()--------------- **/
@@ -130,5 +140,3 @@ protected:
 }  // end namespace gadget
 
 #endif
-
-

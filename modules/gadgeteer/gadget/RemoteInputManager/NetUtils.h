@@ -39,12 +39,12 @@
 #include <vpr/vpr.h>
 
 #if defined __WIN32__ || defined WIN32 || defined _Windows || defined _WIN32
-#include <winsock2.h>
-#include <windows.h>
+#  include <winsock2.h>
+#  include <windows.h>
 #else
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <netdb.h>
+#  include <sys/types.h>
+#  include <netinet/in.h>
+#  include <netdb.h>
 #endif
 
 #include <vpr/IO/Socket/SocketStream.h>
@@ -75,11 +75,13 @@ typedef unsigned short ushort;
 // utility function to make sure all bytes are sent in one function call
 // Todo: instead of sending all at once -- try putting in a buffer and sending later or in another thread
 //    it may (fewer calls to send) or may not (waiting for thread to become active) be faster
-inline bool sendAtOnce(vpr::SocketStream& sock_stream, const char* buf, unsigned int bytes_to_send_param){
+inline bool sendAtOnce(vpr::SocketStream& sock_stream, const char* buf, unsigned int bytes_to_send_param)
+{
    vpr::Uint32 total_bytes_sent = 0;
    vpr::Uint32 bytes_just_sent = 0;
    vpr::Uint32 bytes_to_send = bytes_to_send_param;
-   while(total_bytes_sent < bytes_to_send){
+   while ( total_bytes_sent < bytes_to_send )
+   {
       sock_stream.send(buf, bytes_to_send - total_bytes_sent, bytes_just_sent);
       total_bytes_sent += bytes_just_sent;
    }
@@ -88,23 +90,29 @@ inline bool sendAtOnce(vpr::SocketStream& sock_stream, const char* buf, unsigned
 
 // Buffer for transmitting network data.  Important for remote input manager performance since the manager
 // needs to send and receive a group of messages once per frame, and the send() function is expensive.
-class SendBuffer{
+class SendBuffer
+{
    std::vector<char> mBuffer;
    unsigned int mValidBytes;
 public:
-   SendBuffer(){
+   SendBuffer()
+   {
       mValidBytes = 0;
-      this->resizeBuffer(512);  // default is just a guess 
+      this->resizeBuffer(512);  // default is just a guess
    }
 
-   void store(const char* buf, unsigned int bytes_to_send_param){ 
-      if (mValidBytes + bytes_to_send_param > mBuffer.size()){
+   void store(const char* buf, unsigned int bytes_to_send_param)
+   {
+      if ( mValidBytes + bytes_to_send_param > mBuffer.size() )
+      {
          this->resizeBuffer(mValidBytes + bytes_to_send_param);
       }
 
       char* array = &(mBuffer[0]);
-      for(unsigned int i = 0; i < bytes_to_send_param; i++)
+      for ( unsigned int i = 0; i < bytes_to_send_param; i++ )
+      {
          array[mValidBytes + i] = buf[i];
+      }
 
       mValidBytes += bytes_to_send_param;
 
@@ -115,17 +123,19 @@ public:
 
    }
 
-   void resizeBuffer(unsigned int new_size){
+   void resizeBuffer(unsigned int new_size)
+   {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
          << "SendBuffer: Resizing mBuffer to: " <<  new_size  << std::endl
-         << vprDEBUG_FLUSH; 
+         << vprDEBUG_FLUSH;
       mBuffer.resize(new_size);
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
          << "SendBuffer: Successful resize: " <<  new_size  << std::endl
          << vprDEBUG_FLUSH;
    }
 
-   bool sendAllAndClear(vpr::SocketStream& sock_stream){
+   bool sendAllAndClear(vpr::SocketStream& sock_stream)
+   {
       sendAtOnce(sock_stream, &(mBuffer[0]), mValidBytes);  // transmit data
 
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
@@ -135,18 +145,19 @@ public:
       this->clearBuffer();
       return true;
    }
-  
-   void clearBuffer(){
+
+   void clearBuffer()
+   {
       mValidBytes = 0;  // buffer is empty
    }
 };
 
 // Given a hostname, use gethostbyname to get Ip address
-inline std::string getIpFromHostname(const std::string& hostname){
-   
+inline std::string getIpFromHostname(const std::string& hostname)
+{
    char* name = new char[hostname.length() + 1];             // create a char* string to be passed to gethostbyname
    strcpy(name, hostname.c_str());
-   
+
    struct hostent* host_info = gethostbyname(name);              // request the host's info
    std::string return_ip = host_info->h_addr_list[0];    // get the main (or first) ip address
 
@@ -157,36 +168,45 @@ inline std::string getIpFromHostname(const std::string& hostname){
 // Endian-safe network to host float
 inline float vj_ntohf(float f)
 {
-  if(vpr::System::isLittleEndian()){
-    ulong temp = (ulong) ntohl (*(ulong *)&f);
-    return *((float *)&temp);
-  }
-  else
-    return f;
+   if ( vpr::System::isLittleEndian() )
+   {
+      ulong temp = (ulong) ntohl (*(ulong *)&f);
+      return *((float *)&temp);
+   }
+   else
+   {
+      return f;
+   }
 }
 
 // Endian-safe host to network float
 inline float vj_htonf(float f)
 {
-  if(vpr::System::isLittleEndian()){
-    ulong temp = (ulong) htonl (*(ulong *)&f);
-    return *((float *)&temp);
-  }
-  else
-    return f;
+   if ( vpr::System::isLittleEndian() )
+   {
+      ulong temp = (ulong) htonl (*(ulong *)&f);
+      return *((float *)&temp);
+   }
+   else
+   {
+      return f;
+   }
 }
 
 // Note the next two functions are (implicitly) limited by the size of integers
-inline int binaryToInt(const char* a, const int len){
-    int return_int = 0;
-    for (int i = 0; i < len; i++) {
-        return_int += (int)(a[i]) * (int)(pow((double)256,i));  // that means += a[i] * 256 ^ i
-    }
-    return return_int;
+inline int binaryToInt(const char* a, const int len)
+{
+   int return_int = 0;
+   for ( int i = 0; i < len; i++ )
+   {
+      return_int += (int)(a[i]) * (int)(pow((double)256,i));  // that means += a[i] * 256 ^ i
+   }
+   return return_int;
 }
 
 
-inline unsigned short binaryToUshort(const char* a, const int len){
+inline unsigned short binaryToUshort(const char* a, const int len)
+{
    // len must be >= 2
    unsigned short return_short = 0;
    ((char*) &return_short)[0] = a[1];
@@ -194,7 +214,8 @@ inline unsigned short binaryToUshort(const char* a, const int len){
    return return_short;
 }
 
-inline short binaryToShort(const char* a, const int len){
+inline short binaryToShort(const char* a, const int len)
+{
    // len must be >= 2
    short return_short = 0;
    ((char*) &return_short)[0] = a[1];
@@ -202,18 +223,21 @@ inline short binaryToShort(const char* a, const int len){
    return return_short;
 }
 
-inline void ushortTo2Bytes(char* dst, const unsigned short in_code){    
-    dst[0] = ((char*) &in_code)[1]; // (char)(in_code % 256);
-    dst[1] = ((char*) &in_code)[0];  // (char)(in_code / 256);    
+inline void ushortTo2Bytes(char* dst, const unsigned short in_code)
+{
+   dst[0] = ((char*) &in_code)[1]; // (char)(in_code % 256);
+   dst[1] = ((char*) &in_code)[0];  // (char)(in_code / 256);
 }
 
-inline void shortTo2Bytes(char* dst, const short in_code){    
-    dst[0] = ((char*) &in_code)[1]; // (char)(in_code % 256);
-    dst[1] = ((char*) &in_code)[0];  // (char)(in_code / 256);    
+inline void shortTo2Bytes(char* dst, const short in_code)
+{
+   dst[0] = ((char*) &in_code)[1]; // (char)(in_code % 256);
+   dst[1] = ((char*) &in_code)[0];  // (char)(in_code / 256);
 }
 
 // simply copy four bytes of float into a char buffer
-inline void floatTo4Bytes(char* dst, const float& in_float){
+inline void floatTo4Bytes(char* dst, const float& in_float)
+{
    dst[0] = ((char*) &in_float)[3];
    dst[1] = ((char*) &in_float)[2];
    dst[2] = ((char*) &in_float)[1];
@@ -221,7 +245,8 @@ inline void floatTo4Bytes(char* dst, const float& in_float){
 }
 
 // simply copy four bytes from char buffer to float
-inline void bytes4ToFloat(float& dst, const char* in_char){
+inline void bytes4ToFloat(float& dst, const char* in_char)
+{
    char* f = (char*)(&dst);
    f[3] = in_char[0];
    f[2] = in_char[1];
@@ -229,58 +254,74 @@ inline void bytes4ToFloat(float& dst, const char* in_char){
    f[0] = in_char[3];
 }
 
-template <class T> class IdGenerator{
+template <class T> class IdGenerator
+{
 private:
    T mMAXID;
    T mLargestActiveId;
    std::list<T> mReleasedIds;
 public:
-   IdGenerator(T max_id) : mMAXID(max_id) {
-      mLargestActiveId = 0; // 0 is not used      
+   IdGenerator(T max_id) : mMAXID(max_id)
+   {
+      mLargestActiveId = 0; // 0 is not used
    }
 
-   IdGenerator() : mMAXID(255) {
-      mLargestActiveId = 0; // 0 is not used      
+   IdGenerator() : mMAXID(255)
+   {
+      mLargestActiveId = 0; // 0 is not used
    }
 
-   T generateNewId(){
-      if(mReleasedIds.size() > 0){
+   T generateNewId()
+   {
+      if ( mReleasedIds.size() > 0 )
+      {
          T return_value = mReleasedIds.back();   // get a previously released id
          mReleasedIds.pop_back();             // remote it from list
          // std::cout << "GENERATE ID: " << return_value << std::endl;
          return return_value;                            // and return it
       }
-      else if (mLargestActiveId + 1 < mMAXID){
+      else if ( mLargestActiveId + 1 < mMAXID )
+      {
          // std::cout << "GENERATE ID: " << mLargestActiveId + 1 << std::endl;
          return ++mLargestActiveId;      // use the next free id
       }
       else
+      {
          // std::cout << "GENERATE ID: None available, returned 0 " << mLargestActiveId + 1 << std::endl;
          return 0;
+      }
    }
 
-   void releaseId(int id){
-      if (mLargestActiveId == id) {
+   void releaseId(int id)
+   {
+      if ( mLargestActiveId == id )
+      {
          mLargestActiveId--;
 
          std::list<int>::iterator result;
-         do {
-            result = find(L.begin(), L.end(), mLargestActiveId); 
-            if (result != L.end()){                       // if max id has been released
+         do
+         {
+            result = find(L.begin(), L.end(), mLargestActiveId);
+            if ( result != L.end() )
+            {                       // if max id has been released
                mReleasedIds.remove(mLargestActiveId);        // remove it from list
-               mLargestActiveId--;                           
-            }        
-         } while (result = L.end());
+               mLargestActiveId--;
+            }
+         } while ( result = L.end() );
       }
       else
+      {
          mReleasedIds--;
+      }
    }
-   
+
    // following function should only be used before ids are generated.
-   void setMaxId(T max_id){ mMAXID = max_id; }
+   void setMaxId(T max_id)
+   {
+      mMAXID = max_id;
+   }
 };
 
 }  // end namespace gadget
 
 #endif
-

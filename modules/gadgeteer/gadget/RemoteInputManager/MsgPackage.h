@@ -46,15 +46,16 @@ namespace gadget
 // Handles the packaging and unpackaging of network messages for the Remote Input Manager.
 // It packages and processes configuration messages for the manager's network connections.
 
-class GADGET_CLASS_API MsgPackage{
-    char mBuffer[256];
-    int mDataLength;
+class GADGET_CLASS_API MsgPackage
+{
+   char mBuffer[256];
+   int mDataLength;
 
-    // Mostly used when receiving data
-    vpr::Uint16 mOpcode;
-    vpr::Uint16 mSenderId;
-    vpr::Uint16 mReceiverId;
-    std::string mDataString;  // can hold the name of the device being requested
+   // Mostly used when receiving data
+   vpr::Uint16 mOpcode;
+   vpr::Uint16 mSenderId;
+   vpr::Uint16 mReceiverId;
+   std::string mDataString;  // can hold the name of the device being requested
 
 public:
    MsgPackage();
@@ -67,28 +68,47 @@ public:
    void sendAndClear(vpr::SocketStream& sock_stream);
 
    // clear our current message buffer
-   void clear(){ mDataLength = 0; }
+   void clear()
+   {
+      mDataLength = 0;
+   }
 
    // The sender and receiver ids found inside messages
-   vpr::Uint16 getSenderId(){return mSenderId;}
-   vpr::Uint16 getReceiverId(){return mReceiverId;}
-    
+   vpr::Uint16 getSenderId()
+   {
+      return mSenderId;
+   }
+   vpr::Uint16 getReceiverId()
+   {
+      return mReceiverId;
+   }
+
    // GetDataString
    // When data is part of an incoming message, this class parses the message
    //   and stores the data. it can be retrieved with the following two functions
    //   Not used in all messages.
-   const std::string& getDataString(){return mDataString; }
-   int getDataLength() const { return mDataLength; }
+   const std::string& getDataString()
+   {
+      return mDataString;
+   }
+   int getDataLength() const
+   {
+      return mDataLength;
+   }
 
    // creates a device request message with the specified id and name
    void createDeviceRequest(vpr::Uint16 device_id, const std::string device_name);
-    
+
    // creates a device acknowledgement message with the specified id and name
-   void createDeviceAck(const vpr::Uint16 remote_device_id, const vpr::Uint16 local_device_id, const std::string device_name);
+   void createDeviceAck(const vpr::Uint16 remote_device_id,
+                        const vpr::Uint16 local_device_id,
+                        const std::string device_name);
 
    // creates a rejection (negative acknowledgement) message with the specified id and name
    // for simplicity, same as ACK, but with different opcode
-   void createDeviceNack(const vpr::Uint16 remote_device_id, const vpr::Uint16 local_device_id, const std::string device_name);
+   void createDeviceNack(const vpr::Uint16 remote_device_id,
+                         const vpr::Uint16 local_device_id,
+                         const std::string device_name);
 
    // processes a device request message
    // returns the number of bytes used from buffer (excluding the already read opcode)
@@ -97,7 +117,7 @@ public:
 
    // This works for both ACK and NACK
    // returns the number of bytes used from buffer (excluding the already read opcode)
-   // A return value of zero means unable to process -- complete message not received yet. 
+   // A return value of zero means unable to process -- complete message not received yet.
    int receiveDeviceAck(char* ptr, int len);
 
    void createClockSync(const float& time_a, const float& time_b, const bool clock_is_synced);
