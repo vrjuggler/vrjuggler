@@ -13,7 +13,7 @@
 
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/Devices/VirtualTechnologies/vt_types.h> /* Included for Boolean declaration */
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_types.h> /* Included for Boolean declaration */
 
 enum
 {

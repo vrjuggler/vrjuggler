@@ -32,15 +32,22 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <gadget/Util/Debug.h>
-#include <jccl/Config/ConfigChunk.h>
-#include <gadget/Devices/Ascension/MotionStar.h>
-
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
 
+#include <jccl/Config/ConfigChunk.h>
+#include <gadget/Type/DeviceConstructor.h>
+#include <gadget/Util/Debug.h>
+
+#include <gadget/Devices/Ascension/MotionStar/MotionStar.h>
+
+
+GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+{
+   new gadget::DeviceConstructor<gadget::MotionStar>(inputMgr);
+}
 
 namespace gadget
 {
@@ -739,6 +746,5 @@ void MotionStar::initCorrectionTable(const char* table_file)
 {
    /* Implement me! */ ;
 }
-
 
 } // End of gadget namespace

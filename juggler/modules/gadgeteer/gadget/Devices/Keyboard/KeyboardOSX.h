@@ -125,8 +125,25 @@ public:
                                   EventRef             theEvent,
                                   void*                userData);
 
+   /**
+    * Invokes the global scope delete operator.  This is required for proper
+    * releasing of memory in DLLs on Win32.
+    */
+   void operator delete(void* p)
+   {
+      ::operator delete(p);
+   }
+
 protected:
-   //: Do any extra event processing needed
+   /**
+    * Deletes this object.  This is an implementation of the pure virtual
+    * gadget::Input::destroy() method.
+    */
+   void destroy()
+   {
+      delete this;
+   }
+
 private:
    // Private functions for processing input data //
    int onlyModifier(int);

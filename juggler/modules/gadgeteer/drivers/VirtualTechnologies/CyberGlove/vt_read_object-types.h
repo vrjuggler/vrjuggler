@@ -12,7 +12,7 @@
 /*  ==============================================================  */
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/Devices/VirtualTechnologies/vt_math3d.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_math3d.h>
 
 #ifndef NULL
 #define NULL 0

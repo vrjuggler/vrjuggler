@@ -44,7 +44,13 @@
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 
-#include <gadget/Devices/Polhemus/Fastrack.h>
+#include <gadget/Type/DeviceConstructor.h>
+#include <gadget/Devices/Polhemus/Fastrack/Fastrack.h>
+
+GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+{
+   new gadget::DeviceConstructor<gadget::Fastrack>(inputMgr);
+}
 
 static void printError(std::string errorMsg)
 {

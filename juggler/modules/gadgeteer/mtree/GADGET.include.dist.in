@@ -40,31 +40,9 @@
     include
         gadget
             Devices
-                5DT
-                ..
-                Ascension
-                ..
-                Fakespace
-                ..
-                Immersion
-                ..
-                Intersense
-                ..
                 Keyboard
                 ..
-                Logitech
-                ..
-                Open
-                    DTK
-                    ..
-                    Trackd
-                    ..
-                ..
-                Polhemus
-                ..
                 Sim
-                ..
-                VirtualTechnologies
                 ..
             ..
             RemoteInputManager

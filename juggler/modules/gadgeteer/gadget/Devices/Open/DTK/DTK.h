@@ -40,6 +40,14 @@
 #include <gadget/Type/InputMixer.h>
 #include <gadget/Devices/Open/DTK/DTKMemorySegment.h>
 
+
+namespace gadget
+{
+   class InputManager;
+}
+
+extern "C" GADGET_API(void) initDevice(gadget::InputManager* inputMgr);
+
 namespace gadget
 {
 
@@ -50,7 +58,7 @@ class dtkClient;
 
 //class GADGET_CLASS_API DTK : public Input, public Position, public Digital,
 //                           public Analog
-class GADGET_CLASS_API_DTK : public InputMixer<InputMixer<InputMixer<Input,Digital>,Analog>,Position>
+class GADGET_CLASS_API DTK : public InputMixer<InputMixer<InputMixer<Input,Digital>,Analog>,Position>
 {
 public:
     // ------------------------------------------------------------------------
@@ -112,6 +120,25 @@ public:
 
 //: see if the DTK is active or not
     inline bool isActive() { return active; };
+
+   /**
+    * Invokes the global scope delete operator.  This is required for proper
+    * releasing of memory in DLLs on Win32.
+    */
+   void operator delete(void* p)
+   {
+      ::operator delete(p);
+   }
+
+protected:
+   /**
+    * Deletes this object.  This is an implementation of the pure virtual
+    * gadget::Input::destroy() method.
+    */
+   virtual void destroy()
+   {
+      delete this;
+   }
 
 private:
     int getStationIndex(int stationNum, int bufferIndex);

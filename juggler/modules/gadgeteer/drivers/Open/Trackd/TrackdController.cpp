@@ -31,11 +31,19 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
+#include <vpr/Util/Debug.h>
+#include <jccl/Config/ConfigChunk.h>
+#include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Devices/Open/Trackd/TrackdControllerStandalone.h>
 #include <gadget/Devices/Open/Trackd/TrackdController.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <gadget/Devices/Open/Trackd/TrackdSensor.h>
 
-#include <vpr/Util/Debug.h>
+
+GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+{
+   new gadget::DeviceConstructor<gadget::TrackdController>(inputMgr);
+   new gadget::DeviceConstructor<gadget::TrackdSensor>(inputMgr);
+}
 
 namespace gadget
 {

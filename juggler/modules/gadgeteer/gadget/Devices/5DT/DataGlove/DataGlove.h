@@ -41,7 +41,14 @@
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/InputMixer.h>
-#include <gadget/Devices/5DT/DataGloveStandalone.h>
+#include <gadget/Devices/5DT/DataGlove/DataGloveStandalone.h>
+
+namespace gadget
+{
+   class InputManager;
+}
+
+extern "C" GADGET_API(void) initDevice(gadget::InputManager* inputMgr);
 
 namespace gadget
 {
@@ -74,8 +81,26 @@ public:
    virtual int stopSampling();
    virtual int sample();
    virtual void updateData ();
-   
+
+   /**
+    * Invokes the global scope delete operator.  This is required for proper
+    * releasing of memory in DLLs on Win32.
+    */
+   void operator delete(void* p)
+   {
+      ::operator delete(p);
+   }
+
 protected:
+   /**
+    * Deletes this object.  This is an implementation of the pure virtual
+    * gadget::Input::destroy() method.
+    */
+   virtual void destroy()
+   {
+      delete this;
+   }
+
    /** The main control loop for the object. */
    void controlLoop( void* nullParam );
    void copyDataFromGlove();

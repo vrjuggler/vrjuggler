@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Sep-27-2002 patrickh  Device drivers are now loaded as dynamic shared objects.
+                      NEW VERSION: 0.5.0
 Sep-27-2002 allenb    trackdAPI wrapper additions.  This allows gadgeteer to
                       be compatible with the latest version of trackd.
                       This change submitted by:

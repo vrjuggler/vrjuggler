@@ -74,9 +74,6 @@ ifneq (@OS_TYPE@, Win32)
 DYNAMICLIB_VER	= .$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
 endif
 
-STATICLIB_EXT	= @STATICLIB_EXT@
-DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
-
 # Full list of the libraries to build.
 LIBS		= $(GADGET_LIBRARY)
 STATIC_LIBS	= $(LIBS)
@@ -126,6 +123,13 @@ $(PARAM_HEADER): $(GADGETROOT_ABS)/$(PARAM_HEADER).in $(GADGETROOT_ABS)/VERSION
 # Things to do after the object files and library are built.
 afterbuild:
 	@$(MAKE) links
+	@$(MAKE) drivers
+	@echo ""
+	@echo "---------------------------------------------------------------"
+	@echo 'You should now set $$GADGET_BASE_DIR to:'
+	@cd $(instlinks) && echo "  `pwd`"
+	@echo "---------------------------------------------------------------"
+
 
 # -----------------------------------------------
 # Construct the static version of the libraries.
@@ -195,12 +199,6 @@ ifdef BUILD_TYPE
 else
 	$(MAKE) links-dbg
 endif
-	@echo ""
-	@echo "---------------------------------------------------------------"
-	@echo 'You should now set $$GADGET_BASE_DIR to:'
-	@cd $(instlinks) && echo "  `pwd`"
-	@echo "---------------------------------------------------------------"
-
 links-all:
 	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" installworld
 
@@ -221,6 +219,36 @@ ifndef GLOBAL_BUILD
 	@echo "------------------------------------------------"
 	rm -rf $(instlinks)
 endif
+
+DSO_DRIVER_SUBDIR=	gadgeteer/drivers
+DSO_DRIVER_DIR=		$(LIBDIR_BASE)/$(DSO_DRIVER_SUBDIR)
+
+drivers:
+ifdef BUILD_TYPE
+	$(MAKE) drivers-$(BUILD_TYPE)
+else
+	$(MAKE) drivers-dbg
+endif
+	$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-drivers
+
+drivers-all drivers-opt:
+	$(MKINSTALLDIRS) $(DSO_DRIVER_DIR)
+	$(MAKE) -C gadget/Devices RECTARGET="$(BUILD_TYPE)"		\
+          DSO_DRIVER_DIR="$(DSO_DRIVER_DIR)" OPTIMIZER="$(OPT_FLAGS)"	\
+          BASE_OBJDIR="$(OPT_BUILDDIR)" LIBDIR="$(LIBDIR)" recursive
+
+drivers-dbg:
+	$(MKINSTALLDIRS) $(DSO_DRIVER_DIR)
+	$(MAKE) -C gadget/Devices RECTARGET="$(BUILD_TYPE)"		\
+          DSO_DRIVER_DIR="$(DSO_DRIVER_DIR)" OPTIMIZER="$(DBG_FLAGS)"	\
+          BASE_OBJDIR="$(DBG_BUILDDIR)" LIBDIR="$(LIBDIR)" recursive
+
+drivers-prof:
+	$(MKINSTALLDIRS) $(DSO_DRIVER_DIR)
+	$(MAKE) -C gadget/Devices RECTARGET="$(BUILD_TYPE)"		\
+          DSO_DRIVER_DIR="$(DSO_DRIVER_DIR)" LIBDIR="$(LIBDIR)"		\
+          BASE_OBJDIR="$(PROF_BUILDDIR)" OPTIMIZER="$(PROF_OPT_FLAGS)"	\
+          recursive
 
 # =============================================================================
 # Installation targets.  The default (what is done by 'install') is to install
@@ -271,6 +299,7 @@ pre-install:
 
 # Do everything needed after installing the library binaries.
 post-install:
+	@$(MAKE) install-drivers
 	@$(MAKE) install-test
 	@$(MAKE) install-tools
 	@$(MAKE) install-data
@@ -294,6 +323,15 @@ post-install-headers:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(topdir)/gadget/gadgetParam.h		\
           $(includedir)/gadget
+
+# Install dynamically loadable drivers (if any exist in $(DSO_DRIVER_DIR)).
+install-drivers install-drivers-dbg install-drivers-opt install-drivers-prof:
+	if [ -d $(DSO_DRIVER_DIR) ] ; then				\
+          $(PERL) $(scriptdir)/install-dir.pl -m $(EXEC_PERMS)		\
+            $(GROUP_OPT_UNIX) -e .so $(EXTRA_INSTALL_ARGS)		\
+            -o $(libdir)$(LIBBITSUF)/$(DSO_DRIVER_SUBDIR) -i		\
+            $(DSO_DRIVER_DIR) ;						\
+        fi
 
 # Install the test programs.
 install-test:

@@ -32,7 +32,7 @@
 
 #include <iostream>
 
-#include <gadget/Devices/Intersense/IntersenseStandalone.h>
+#include <gadget/Devices/Intersense/IS900/IntersenseStandalone.h>
 
 void IntersenseStandalone::init()
 {

@@ -32,18 +32,25 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <vpr/vpr.h>
-#include <vpr/System.h>
-#include <vpr/Util/FileUtils.h>
-
-#include <gadget/Util/Debug.h>
-#include <jccl/Config/ConfigChunk.h>
-#include <gadget/Devices/Ascension/Flock.h>
-
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
 #include <gmtl/EulerAngle.h>
+
+#include <vpr/vpr.h>
+#include <vpr/System.h>
+#include <vpr/Util/FileUtils.h>
+
+#include <jccl/Config/ConfigChunk.h>
+#include <gadget/Util/Debug.h>
+#include <gadget/Type/DeviceConstructor.h>
+#include <gadget/Devices/Ascension/Flock/Flock.h>
+
+
+GADGET_IMPLEMENT(void) initDevice(gadget::InputManager* inputMgr)
+{
+   new gadget::DeviceConstructor<gadget::Flock>(inputMgr);
+}
 
 namespace gadget
 {

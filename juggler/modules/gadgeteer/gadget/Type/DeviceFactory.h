@@ -35,41 +35,14 @@
 //#pragma once
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/Type/Input.h>
+#include <vector>
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <vpr/Util/Singleton.h>
 
-#include <vpr/Util/Debug.h>
-#include <vpr/Util/Assert.h>
+#include <gadget/Type/DeviceConstructorBase.h>
 
 namespace gadget
 {
-
-/**
- * Base class for virtual construction of devices.
- * Implementations of this class are registered with the device factory
- * for each device in the system.
- */
-class DeviceConstructorBase
-{
-public:
-   /**
-    * Constructor.
-    * @post Device is registered.
-    */
-   DeviceConstructorBase() {;}
-
-   /** Creates the device. */
-   virtual Input* createDevice(jccl::ConfigChunkPtr chunk)
-   {
-      vprDEBUG(vprDBG_ALL,0) << "ERROR: DeviceConstructorBase::createDevice: Should never be called" << vprDEBUG_FLUSH;
-      return NULL;
-   }
-
-   /** Gets the string desc of the type of chunk we can create. */
-   virtual std::string    getChunkType()
-   { return std::string("BaseConstructor: Invalid type"); }
-};
 
 /**
  * Object used for creating devices.
@@ -126,35 +99,6 @@ private:
    std::vector<DeviceConstructorBase*> mConstructors;  /**<  List of the device constructors */
 
    vprSingletonHeaderWithInitFunc(DeviceFactory, hackLoadKnownDevices);
-};
-
-template <class DEV>
-class DeviceConstructor : public DeviceConstructorBase
-{
-public:
-   DeviceConstructor()
-   {
-      vprASSERT(DeviceFactory::instance() != NULL);
-      DeviceFactory::instance()->registerDevice(this);
-   }
-
-   Input* createDevice(jccl::ConfigChunkPtr chunk)
-   {
-      DEV* new_dev = new DEV;
-      bool success = new_dev->config(chunk);
-      if(success)
-      {
-         return new_dev;
-      }
-      else
-      {
-         delete new_dev;
-         return NULL;
-      }
-   }
-
-   virtual std::string getChunkType()
-   { return DEV::getChunkType(); }
 };
 
 } // end namespace gadget

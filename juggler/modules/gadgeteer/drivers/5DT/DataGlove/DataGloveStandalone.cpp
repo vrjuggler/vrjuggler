@@ -39,7 +39,7 @@
 
 #include <vpr/Util/Assert.h> // for vprASSERT
 
-#include <gadget/Devices/5DT/DataGloveStandalone.h>
+#include <gadget/Devices/5DT/DataGlove/DataGloveStandalone.h>
 
 ///////////////////////////////////////////////////////////
 // Public Methods

@@ -116,12 +116,17 @@ public:
    */
    Input();
 
+#ifndef VPR_OS_Win32
    /** Input Destructor
    *
    * Free the memory for the Instance Name and Serial Port strings if
    * allocated
    */
-   virtual ~Input();
+   virtual ~Input()
+   {
+      ;
+   }
+#endif
 
    /** Config method
    *
@@ -181,7 +186,7 @@ public:
       }
       return mInstName;
    }
-   
+
    virtual std::string getBaseType()
    {
       return std::string("Input");
@@ -203,14 +208,37 @@ public:
       return mActive;
    }
 
+#ifdef VPR_OS_Win32
+   /**
+    * Overlaod delete so that we can delete our memory correctly.  This is
+    * necessary for DLLs on Win32 to release memory from the correct memory
+    * space.  All subclasses must overload delete similarly.
+    */
+   void operator delete(void* p)
+   {
+      if ( NULL != p )
+      {
+         Input* input_ptr = static_cast<Input*>(p);
+         input_ptr->destroy();
+      }
+   }
+#endif
+
 protected:
+   /**
+    * Subclasses must implement this so that dynamically loaded device drivers
+    * delete themselves in the correct memory space.  This uses a template
+    * pattern.
+    */
+   virtual void destroy() = 0;
+
    std::string    mPort;
    std::string    mInstName;
    vpr::Thread*   mThread;       /**< The thread being used by the driver */
    int            mActive;       /**< Is the driver active? */
    int            mBaudRate;     /**< Baud rate of the device (if it is serial device) */
 
-   Input (const Input& o) 
+   Input (const Input& o)
       : SerializableDevice()
    {;}
    void operator= (const Input& o) {;}

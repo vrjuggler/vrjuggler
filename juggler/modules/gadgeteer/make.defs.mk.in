@@ -94,6 +94,9 @@ RM_LN=			@RM_LN@
 GADGETROOT_ABS=		@GADGETROOT_ABS@
 JUGGLERROOT_ABS=	@JUGGLERROOT_ABS@
 
+STATICLIB_EXT=          @STATICLIB_EXT@
+DYNAMICLIB_EXT=         @DYNAMICLIB_EXT@
+
 # -----------------------------------------------------------------------------
 # Extra information for the Doozer++ file common.defs.mk.
 # -----------------------------------------------------------------------------

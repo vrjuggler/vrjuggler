@@ -51,7 +51,8 @@ SUBOBJDIR	= $(GADGET_LIBRARY)
 DIRPRFX	= gadget/
 
 # Subdirectories to compile.
-SUBDIR	= Devices		\
+SUBDIR	= Devices/Keyboard	\
+          Devices/Sim		\
           RemoteInputManager	\
           Type			\
           Util
