@@ -165,7 +165,7 @@ public:
     * @return The number of times the key was pressed since last update.
     */
    //virtual int keyPressed(int keyId) =0;
-   const int keyPressed(int keyId)
+   int keyPressed(int keyId)
    { return m_curKeys[keyId]; }
 
    /**
@@ -173,7 +173,7 @@ public:
     * @return true if key pressed exclusively.
     */
    //virtual bool modifierOnly(int modKey) =0;
-   const bool modifierOnly(int modKey)
+   bool modifierOnly(int modKey)
    {
       switch (modKey)
       {
