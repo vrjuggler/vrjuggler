@@ -44,6 +44,7 @@ SRCS= \
 	ConfigurationTest.cpp		\
 	ConfigDefinitionTest.cpp	\
 	ConfigElementTest.cpp		\
+	ConfigManagerTest.cpp		\
 	EnumerationsTest.cpp		\
 	IncludesTest.cpp
 
