@@ -13,7 +13,7 @@
          <data_format>Position and Angles</data_format>
          <mode>Run Continuous</mode>
          <report_rate>1</report_rate>
-         <measurement_rate>68.4</measurement_rate>
+         <measurement_rate>86.1</measurement_rate>
          <position_filters>
             <position_transform_filter name="Position Filter 0" version="1">
                <pre_translate>2.065</pre_translate>
@@ -42,7 +42,7 @@
          <data_format>Position and Angles</data_format>
          <mode>Run Continuous</mode>
          <report_rate>1</report_rate>
-         <measurement_rate>68.4</measurement_rate>
+         <measurement_rate>86.1</measurement_rate>
          <position_filters>
             <position_transform_filter name="Position Filter 0" version="1">
                <pre_translate>2.065</pre_translate>
