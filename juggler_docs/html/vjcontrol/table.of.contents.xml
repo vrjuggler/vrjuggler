@@ -12,7 +12,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 				imagetwo="Book_Open.gif" >
 
 			< folder title="Configuration Basics" 
-			link="${VJCONTROL}/index.html" 
+			link="${VJCONTROL}/ConfigurationBasics.html" 
 			target="Body" 
 			info="General information about Configuring Juggler" 
 			image="Leaf.gif" >
@@ -24,7 +24,7 @@ Builder: JExplorerBuilder V 1. 0. 7
                         </folder>
 
 			< folder title="Using VjControl" 
-			link="${VJCONTROL}/index.html" 
+			link="${VJCONTROL}/UsingVjControl.html" 
 			target="Body" 
 			info="Installing and Using VjControl" 
 			image="Leaf.gif" >
@@ -41,7 +41,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 			</folder>
 
       			< folder title="Technical Specifications" 
-			link="${VJCONTROL}/index.html" 
+			link="${VJCONTROL}/TechnicalSpecifications.html" 
 			target="Body" 
 			info="Technical Specifications" 
 			image="Leaf.gif" >
