@@ -38,6 +38,7 @@
 
 #include <vpr/Sync/Guard.h>
 #include <vpr/Util/Debug.h>
+#include <vpr/IO/Socket/InetAddr.h>
 
 #include <tweek/Util/Debug.h>
 #include <tweek/CORBA/CorbaManager.h>
@@ -48,8 +49,8 @@
 namespace tweek
 {
 
-void SubjectManagerImpl::registerSubject (SubjectImpl* subject_servant,
-                                          const char* name)
+void SubjectManagerImpl::registerSubject(SubjectImpl* subject_servant,
+                                         const char* name)
 {
    std::string name_str(name);
 
@@ -64,7 +65,7 @@ void SubjectManagerImpl::registerSubject (SubjectImpl* subject_servant,
    registerSubject(subject_servant->_this(), name_str);
 }
 
-vpr::ReturnStatus SubjectManagerImpl::unregisterSubject (const char* name)
+vpr::ReturnStatus SubjectManagerImpl::unregisterSubject(const char* name)
 {
    vpr::ReturnStatus status;
    std::string name_str(name);
@@ -94,8 +95,8 @@ vpr::ReturnStatus SubjectManagerImpl::unregisterSubject (const char* name)
    return status;
 }
 
-void SubjectManagerImpl::registerSubject (Subject_ptr subject,
-                                          const std::string& name)
+void SubjectManagerImpl::registerSubject(Subject_ptr subject,
+                                         const std::string& name)
 {
    vpr::Guard<vpr::Mutex> guard(m_subjects_mutex);
 
@@ -105,7 +106,7 @@ void SubjectManagerImpl::registerSubject (Subject_ptr subject,
    m_subjects[name] = Subject::_duplicate(subject);
 }
 
-Subject_ptr SubjectManagerImpl::getSubject (const char* name)
+Subject_ptr SubjectManagerImpl::getSubject(const char* name)
 {
    Subject_ptr subject;
    std::string name_str(name);
@@ -132,7 +133,7 @@ Subject_ptr SubjectManagerImpl::getSubject (const char* name)
    return subject;
 }
 
-tweek::SubjectManager::SubjectList* SubjectManagerImpl::getAllSubjects ()
+tweek::SubjectManager::SubjectList* SubjectManagerImpl::getAllSubjects()
 {
    subject_map_t::iterator i;
    CORBA::ULong j;
@@ -167,6 +168,24 @@ tweek::SubjectManager::SubjectList* SubjectManagerImpl::getAllSubjects ()
       << "Returning all subjects to caller\n" << vprDEBUG_FLUSH;
 
    return subjects;
+}
+
+char* SubjectManagerImpl::getHostName()
+{
+   vpr::InetAddr local_addr;
+   vpr::InetAddr::getLocalHost(local_addr);
+   return CORBA::string_dup(local_addr.getHostname().c_str());
+}
+
+char* SubjectManagerImpl::getApplicationName()
+{
+   return CORBA::string_dup(mAppName.c_str());
+}
+
+char* SubjectManagerImpl::getUserName()
+{
+   std::string user_name("unknown");
+   return CORBA::string_dup(user_name.c_str());
 }
 
 } // End of tweek namespace

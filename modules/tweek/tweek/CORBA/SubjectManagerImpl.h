@@ -43,6 +43,7 @@
 #include <map>
 #include <vpr/vpr.h>
 #include <vpr/Sync/Mutex.h>
+#include <vpr/Util/GUID.h>
 
 #include <tweek/CORBA/Subject.h>
 #include <tweek/CORBA/SubjectManager.h>
@@ -67,6 +68,35 @@ public:
 
    virtual tweek::SubjectManager::SubjectList* getAllSubjects(void);
 
+   /**
+    * Returns the name of the host on which the Subject Manager servant
+    * resides.
+    */
+   virtual char* getHostName();
+
+   /**
+    * Returns the name of the application within which the Subject Manager
+    * servant exists.  If the application name is not known, the string
+    * "unknown" is returned.
+    */
+   virtual char* getApplicationName();
+
+   void setApplicationName(const std::string& appName)
+   {
+      mAppName = appName;
+   }
+
+   /**
+    * Returns the name/ID of the user running the application.  If the user's
+    * name cannot be determined, the string "unknown" is returned.
+    */
+   virtual char* getUserName();
+
+   const vpr::GUID& getGUID() const
+   {
+      return mGUID;
+   }
+
 protected:
    // Only this class can instantiate me.
    friend class tweek::CorbaManager;
@@ -75,26 +105,32 @@ protected:
     * Default constructor.  It is protected because only instances of
     * tweek::CorbaManager may create objects of this type.
     */
-   SubjectManagerImpl (const CorbaManager& corba_mgr) : m_corba_mgr(corba_mgr)
+   SubjectManagerImpl(const CorbaManager& corba_mgr)
+      : m_corba_mgr(corba_mgr), mAppName("unknown"), mGUID()
    {
-      /* Do nothing. */ ;
+      mGUID.generate();
    }
 
    // These two have to be here because Visual C++ will try to make them
    // exported public symbols.  This causes problems because copying
    // vpr::Mutex objects is not allowed.
-   SubjectManagerImpl (const SubjectManagerImpl& sm)
+   SubjectManagerImpl(const SubjectManagerImpl& sm)
       : m_corba_mgr(sm.m_corba_mgr)
    {
       /* Do nothing. */ ;
    }
 
-   void operator= (const SubjectManagerImpl& sm) {;}
+   void operator=(const SubjectManagerImpl& sm)
+   {
+      /* Do nothing. */ ;
+   }
 
    void registerSubject(Subject_ptr subject, const std::string& name);
 
 private:
    const CorbaManager& m_corba_mgr;
+   std::string         mAppName;
+   vpr::GUID           mGUID;
 
    typedef std::map<std::string, Subject_ptr> subject_map_t;
    subject_map_t m_subjects;

@@ -64,6 +64,25 @@ interface SubjectManager
     * structure RegisteredSubject.
     */
    SubjectList getAllSubjects();
+
+   /**
+    * Returns the name of the host on which the Subject Manager servant
+    * resides.
+    */
+   string getHostName();
+
+   /**
+    * Returns the name of the application within which the Subject Manager
+    * servant exists.
+    */
+   string getApplicationName();
+
+   /**
+    * Returns the name/ID of the user running the application.
+    *
+    * XXX: Is this feasible?
+    */
+   string getUserName();
 };
 
 };

@@ -50,7 +50,8 @@
 namespace tweek
 {
 
-CorbaManager::CorbaManager() : m_my_thread(NULL), m_subj_mgr(NULL)
+CorbaManager::CorbaManager()
+   : mAppName("unknown"), m_my_thread(NULL), m_subj_mgr(NULL)
 {
    std::string tweek_ver = getVersionString();
 
@@ -70,6 +71,12 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
                                      char** argv)
 {
    vpr::ReturnStatus status;
+
+   // Retrieve the application name from argv if argv is non-NULL.
+   if ( NULL != argv )
+   {
+      mAppName = argv[0];
+   }
 
    try
    {
@@ -158,6 +165,7 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
 
    vprASSERT(m_subj_mgr == NULL && "Subject Manager already exists for this CORBA Manager!");
    m_subj_mgr = new SubjectManagerImpl(*this);
+   m_subj_mgr->setApplicationName(mAppName);
 
    // Try to activate the given servant with our child POA before anyone tries
    // to use it.
@@ -190,8 +198,15 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
       // naming service.
       try
       {
-         const char* id   = "SubjectManager";
+         // Construct the SubjectManager's name using its GUID so that it is
+         // guaranteed to be unique.
+         std::string id_str("SubjectManager.");
+         id_str += m_subj_mgr->getGUID().toString();
+
          const char* kind = "Object";
+
+         vprDEBUG(tweekDBG_CORBA, vprDBG_VERB_LVL)
+            << "Subject Manager ID: " << id_str << std::endl << vprDEBUG_FLUSH;
 
          // This gives us our reference from the POA to the servant that was
          // registered above.  This does not perform object activation because
@@ -201,7 +216,7 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
          vprASSERT(! CORBA::is_nil(mgr_ptr) && "CORBA object not activated in POA");
 
          m_subj_mgr_name.length(1);
-         m_subj_mgr_name[0].id   = CORBA::string_dup(id);
+         m_subj_mgr_name[0].id   = CORBA::string_dup(id_str.c_str());
          m_subj_mgr_name[0].kind = CORBA::string_dup(kind);
 
          // Bind the Subject Manager reference and activate the object within
