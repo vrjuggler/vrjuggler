@@ -14,6 +14,17 @@
 #include <Kernel/vjKernel.h>
 #include <Kernel/vjDebug.h>
 
+// this simple motif-esqe definition was taken from GLUT
+typedef struct {
+#define MWM_HINTS_DECORATIONS   2
+  long flags;
+  long functions;
+  long decorations;
+  long input_mode;
+} MotifWmHints;
+
+
+
 //------------------------------------
 //: A GLX specific glWindow
 //------------------------------------
@@ -107,6 +118,32 @@ public:
       classhint->res_class = "vj GLX";
       XSetClassHint (x_display, x_window, classhint);
       XFree (classhint);
+
+
+      /* Get rid of window border, if configured to do so.
+       * This technique doesn't require any modifications to the .XDefaults file
+       * or anything, but it will only work with window managers based on MWM
+       * (the Motif window manager).  That covers most cases.
+       * Unfortunately, the generic X resources for communicating with a window
+       * manager don't support this feature.
+       */
+      if (!border) {
+	cout << "attempting to make window borderless" << endl;
+	Atom vjMotifHints = XInternAtom (x_display, "_MOTIF_WM_HINTS", 0);
+	if (vjMotifHints == None) {
+	  vjDEBUG(2) << "ERROR: Could not get X atom for _MOTIF_WM_HINTS." << endl;
+	}
+	else {
+	  MotifWmHints hints;
+	  hints.flags = MWM_HINTS_DECORATIONS;
+	  hints.decorations = 0;
+	  XChangeProperty(x_display, x_window,
+			  vjMotifHints, vjMotifHints, 32,
+			  PropModeReplace, (unsigned char *) &hints, 4);
+	}
+      }
+	/* END_BORDERLESS_STUFF*/
+
 
       /* The next few lines of crud are needed to get it through the window
        * manager's skull that yes, we DO have a REASON for wanting the window
