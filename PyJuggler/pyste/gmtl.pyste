@@ -32,11 +32,15 @@ Matrix44f = Matrix('float 4 4')
 rename(Matrix44f, 'Matrix44f')
 exclude(Matrix44f.getData)
 exclude(Matrix44f.mData)
+#set_policy(Matrix44f.operator['()'], return_internal_reference())
+exclude(Matrix44f.operator['()'])
 
 Matrix33f = Matrix('float 3 3')
 rename(Matrix33f, 'Matrix33f')
 exclude(Matrix33f.getData)
 exclude(Matrix33f.mData)
+#set_policy(Matrix33f.operator['()'], return_internal_reference())
+exclude(Matrix33f.operator['()'])
 
 Matrix_identity = Function('gmtl::identity', 'gmtl-functions.h')
 set_policy(Matrix_identity, return_internal_reference())
@@ -95,7 +99,13 @@ exclude(Vec4f.getData)
 Function('gmtl::dot', 'gmtl-functions.h')
 Function('gmtl::length', 'gmtl-functions.h')
 Function('gmtl::lengthSquared', 'gmtl-functions.h')
-Function('gmtl::normalize', 'gmtl-functions.h')
+
+# XXX: This isn't quite right.  gmtl::normalize() does not return a reference
+# in the vector case, but it does in the quaternion case.  What I need is a
+# way to tell Pyste which version is which...
+set_policy(Function('gmtl::normalize', 'gmtl-functions.h'),
+           return_internal_reference())
+
 Function('gmtl::isNormalized', 'gmtl-functions.h')
 
 # XXX: This isn't quite right.  One version of gmtl::cross() returns a
@@ -177,7 +187,62 @@ rename(EulerAngleZXYf, 'EulerAngleZXYf')
 exclude(EulerAngleZXYf.getData)
 # ========================================================== gmtl::EulerAngle<>
 
-# General operations.
+# gmtl::AxisAngle<> ===========================================================
+AxisAngle = Template('gmtl::AxisAngle', 'gmtl/AxisAngle.h')
+
+AxisAnglef = AxisAngle('float')
+rename(AxisAnglef, 'AxisAnglef')
+
+AxisAngled = AxisAngle('double')
+rename(AxisAngled, 'AxisAngled')
+# =========================================================== gmtl::AxisAngle<>
+
+# Generator operations ========================================================
+Function('gmtlWrapper::makeRotMatrix33', 'gmtl-functions.h')
+Function('gmtlWrapper::makeRotMatrix44', 'gmtl-functions.h')
+Function('gmtlWrapper::makeRotQuat', 'gmtl-functions.h')
+Function('gmtlWrapper::makeRotEulerAngleXYZ', 'gmtl-functions.h')
+Function('gmtlWrapper::makeRotEulerAngleZYX', 'gmtl-functions.h')
+Function('gmtlWrapper::makeRotEulerAngleZXY', 'gmtl-functions.h')
+
+Function('gmtlWrapper::makeDirCosMatrix33', 'gmtl-functions.h')
+Function('gmtlWrapper::makeDirCosMatrix44', 'gmtl-functions.h')
+
+Function('gmtlWrapper::makeTransMatrix44', 'gmtl-functions.h')
+Function('gmtlWrapper::makeTransVec3', 'gmtl-functions.h')
+
+Function('gmtlWrapper::makeScaleMatrix44', 'gmtl-functions.h')
+
+Function('gmtlWrapper::makeAxesMatrix44', 'gmtl-functions.h')
+
+set_policy(Function('gmtl::setRot', 'gmtl-functions.h'),
+                    return_internal_reference())
+Function('gmtl::makeVec', 'gmtl-functions.h')
+Function('gmtl::makeNormal', 'gmtl-functions.h')
+set_policy(Function('gmtl::setTrans', 'gmtl-functions.h'),
+                    return_internal_reference())
+set_policy(Function('gmtl::setPure', 'gmtl-functions.h'),
+                    return_internal_reference())
+Function('gmtl::makePure', 'gmtl-functions.h')
+Function('gmtl::makeConj', 'gmtl-functions.h')
+Function('gmtl::makeInvert', 'gmtl-functions.h')
+set_policy(Function('gmtl::set', 'gmtl-functions.h'),
+                    return_internal_reference())
+set_policy(Function('gmtl::setScale', 'gmtl-functions.h'),
+                    return_internal_reference())
+
+Function('gmtl::makeYRot', 'gmtl-functions.h')
+Function('gmtl::makeXRot', 'gmtl-functions.h')
+Function('gmtl::makeZRot', 'gmtl-functions.h')
+set_policy(Function('gmtl::setDirCos', 'gmtl-functions.h'),
+                    return_internal_reference())
+set_policy(Function('gmtl::setAxes', 'gmtl-functions.h'),
+                    return_internal_reference())
+Function('gmtl::makeTranspose', 'gmtl-functions.h')
+Function('gmtl::makeInverse', 'gmtl-functions.h')
+# ======================================================== Generator operations
+
+# General operations ==========================================================
 set_policy(Function('gmtl::operator+=', 'gmtl-functions.h'),
            return_internal_reference())
 Function('gmtl::operator+', 'gmtl-functions.h')
@@ -194,3 +259,4 @@ Function('gmtl::operator==', 'gmtl-functions.h')
 Function('gmtl::operator!=', 'gmtl-functions.h')
 
 Function('gmtl::isEqual', 'gmtl-functions.h')
+# ========================================================== General operations
