@@ -9,13 +9,16 @@ DVIPDF?=	dvipdf
 DVIPS?=		dvips
 FOP?=		sh $(DOCBOOK_ROOT)/fop/fop.sh
 JADE?=		openjade
+JADEPROC?=	$(DOCBOOK_ROOT)/jadeproc.pl
 JADETEX?=	$(TEX_BINDIR)/jadetex
 PDFJADETEX?=	$(TEX_BINDIR)/pdfjadetex
 PDFLATEX?=	$(TEX_BINDIR)/pdflatex
 PDFTEX?=	$(TEX_BINDIR)/pdftex
 RM=		rm -f
 SAXON?=		$(DOCBOOK_ROOT)/saxon-$(SAXON_VERSION)/saxon.sh
-TEX_BINDIR?=	/usr/bin
+TEX_DIR?=	$(DOCBOOK_ROOT)/TeX
+TEX_BINDIR?=	$(TEX_DIR)/bin/i386-linux
+TEX_ENV?=	PATH=$(TEX_BINDIR):$(PATH) VARTEXMF=$(TEX_DIR)/texmf-var
 XALAN?=		$(DOCBOOK_ROOT)/xalan-j_$(XALAN_VERSION)/bin/xalan.sh
 XEP?=		sh $(DOCBOOK_ROOT)/XEP/run.sh
 XSLTPROC?=	/usr/bin/xsltproc
@@ -52,9 +55,10 @@ XALAN_TXT_PARAMS=	-PARAM page.margin.bottom "0in"	\
 DOCBOOK_ROOT?=	/home/vr/Juggler/docbook
 SGML_ROOT?=	/usr/share/sgml/docbook
 
+DB_SGML_DTD?=	$(DOCBOOK_ROOT)/docbook-sgml-4.1.dtd
 DSSSL_DIR?=	$(DOCBOOK_ROOT)/docbook-dsssl-1.76
 XSL_DIR?=	$(DOCBOOK_ROOT)/docbook-xsl-1.49
-TEXINPUTS=	.:$(DOCBOOK_ROOT)/latex/passivetex:$(DOCBOOK_ROOT)/latex/base:
+#TEXINPUTS=	.:$(DOCBOOK_ROOT)/latex/passivetex:$(DOCBOOK_ROOT)/latex/base:
 
 txt: $(TXT_FILES)
 
@@ -70,7 +74,7 @@ chunk-html:
           cd $$cur_dir ; \
         done
 
-LINK_DEPS=	images pdfxmltex.fmt
+LINK_DEPS=	images # pdfxmltex.fmt
 
 pdf: $(LINK_DEPS) $(PDF_FILES)
 
@@ -134,13 +138,18 @@ endif
 # Jade/JadeTex conversions ----------------------------------------------------
 
 # Generate a TeX file using Jade.
-ifdef USE_JADE
+ifdef USE_JADEPROC
+.xml.pdf:
+	$(TEX_ENV) $(JADEPROC) -i $< -o $@ -d $(DB_SGML_DTD)		\
+          -s $(DSSSL_DIR)/print/docbook.dsl
+         
+else
 .xml.tex:
 	$(JADE) -t tex -d $(DSSSL_DIR)/print/docbook.dsl $<
 
 # $(PDFJADETEX) has to be run twice for page references to be calculated.  :(
 .tex.pdf:
-	-$(PDFJADETEX) $<
+	-$(TEX_ENV) $(PDFJADETEX) $<
 endif
 
 # -----------------------------------------------------------------------------
@@ -151,8 +160,8 @@ endif
 # that a simple TeX file be generated from the XML first (see below).
 ifeq ($(FO_VERSION), PASSIVE_TEX)
 .fo.pdf:
-	TEXINPUTS="$(TEXINPUTS)" $(PDFLATEX) "&pdfxmltex" $*.fo
-#	TEXINPUTS="$(TEXINPUTS)" $(PDFLATEX) "&pdfxmltex" $*.fo
+	$(TEX_ENV) $(PDFLATEX) "&pdfxmltex" $*.fo
+#	$(TEX_ENV) $(PDFLATEX) "&pdfxmltex" $*.fo
 
 # Generate a TeX file for use with PassiveTeX.
 #.xml.tex:
