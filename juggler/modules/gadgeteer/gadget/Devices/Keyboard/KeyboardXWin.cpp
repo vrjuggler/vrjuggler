@@ -100,7 +100,10 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
    vjDEBUG(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "vjXWinKeyboard::controlLoop: Thread started.\n" << vjDEBUG_FLUSH;
 
    while (NULL == vjThread::self())
-   { vjDEBUG(vjDBG_ALL,1) << "vjXWinKeyboard: Waiting for (thread::self() != NULL)\n" << vjDEBUG_FLUSH;}
+   {
+      usleep(50);
+      vjDEBUG(vjDBG_ALL,1) << "vjXWinKeyboard: Waiting for (thread::self() != NULL)\n" << vjDEBUG_FLUSH;
+   }
    myThread = (vjThread*) vjThread::self();
 
    // Open the x-window
