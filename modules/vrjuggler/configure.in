@@ -374,6 +374,7 @@ fi
 # ----
 try_dtk='no'
 vpr_subsystem=`$VPR_CONFIG --subsystem`
+SUBSYSTEM="$vpr_subsystem"
 
 # We can use DTK in one of the following two situations:
 #     1) If the NSPR subsystem is enabled, the target platform is UNIX-based,
@@ -809,6 +810,7 @@ AC_SUBST(SAFE_VJROOT_ABS)
 AC_SUBST(SAFE_JUGGLERROOT_ABS)
 AC_SUBST(VJ_SRCDIR)
 AC_SUBST(VJ_SHARE_DIR)
+AC_SUBST(SUBSYSTEM)
 
 AC_SUBST(EXTRA_LINK_FLAGS)
 
