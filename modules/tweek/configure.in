@@ -682,12 +682,14 @@ if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
    CXXFLAGS="$CXXFLAGS -woff 1234,1388,3303,3322 -w2"
    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4 -all"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
-   CFLAGS="$CFLAGS /W3 /GR /GX -EHc /QIfdiv /QI0f"
-   CXXFLAGS="$CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
+   vc_cflags='/QIfdiv /QI0f'
+   vc_cxxflags='/GR /GX /EHc /QIfdiv /QI0f'
+   CFLAGS="$CFLAGS /W3 $vc_cflags"
+   CXXFLAGS="$CXXFLAGS /W3 $vc_cxxflags"
    DBG_FLAGS="$DBG_FLAGS /MDd"
    OPT_FLAGS="$OPT_FLAGS /MD"
    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
-   tweek_cxxflags="$CXXFLAGS $EXTRA_DEFS $INCLUDES $IDL_GEN_INCLUDES"
+   tweek_cxxflags="$vc_cxxflags $EXTRA_DEFS $INCLUDES $IDL_GEN_INCLUDES"
 fi
 
 if test "x$BUILD_CXX" = "xY" ; then
