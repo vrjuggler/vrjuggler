@@ -29,6 +29,7 @@ DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
 INCLUDES	= @INCLUDES@ -I$(topdir) -I$(VPR_BASE_DIR)/include	\
                  -I$(srcdir) -I$(srcdir)/TestCases			\
                  -I$(srcdir)/CppUnit/framework -I$(srcdir)/CppUnit/textui
+OPTIMIZER	= @DBG_FLAGS@
 INSTALL		= @INSTALL@
 LD		= @LD@
 LDFLAGS		= @LDFLAGS@ -L/usr/lib$(LIBBITSUF) -L/usr/lib		\
