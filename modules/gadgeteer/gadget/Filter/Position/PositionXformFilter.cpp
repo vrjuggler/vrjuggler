@@ -143,24 +143,14 @@ void PositionXformFilter::apply(std::vector< PositionData >& posSample)
    {                               
       cur_mat = (*i).getPosition();
 
-      //vprDEBUG(vprDBG_ALL,0) << "cur_mat: \n" << *cur_mat << "\n" << vprDEBUG_FLUSH;
-
       gmtl::postMult(*cur_mat, mPostXform);           // POST xform: cur = cur*postTrans*postRot
-
-      //vprDEBUG(vprDBG_ALL,0) << "postXform: \n" << mPostXform << "\n" << vprDEBUG_FLUSH;
-      //vprDEBUG(vprDBG_ALL,0) << "cur_mat*postXform: \n" << *cur_mat << "\n" << vprDEBUG_FLUSH;
 
       gmtl::Vec3f trans;                              // SCALE:
       gmtl::setTrans(trans, *cur_mat);                // Get the translational vector
       trans *= mScaleValue;                           // Scale the translation and set the value again
       gmtl::setTrans(*cur_mat, trans);
 
-      //vprDEBUG(vprDBG_ALL,0) << "cur_mat [setTrans]: \n" << *cur_mat << "\n" << vprDEBUG_FLUSH;
-            
-      gmtl::preMult(*cur_mat, mPreXform);        // PRE: S_world = wMs * S_sensor  
-
-      //vprDEBUG(vprDBG_ALL,0) << "preXform: \n" << mPreXform << "\n" << vprDEBUG_FLUSH;
-      //vprDEBUG(vprDBG_ALL,0) << "preXform*S*cur_mat*postXform: \n" << *cur_mat << "\n" << vprDEBUG_FLUSH;
+      gmtl::preMult(*cur_mat, mPreXform);        // PRE: S_world = wMs * S_sensor       
    }
 }
 
