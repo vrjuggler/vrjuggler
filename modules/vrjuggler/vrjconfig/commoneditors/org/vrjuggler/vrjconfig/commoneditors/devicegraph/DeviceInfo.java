@@ -32,19 +32,17 @@
 
 package org.vrjuggler.vrjconfig.commoneditors.devicegraph;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import javax.swing.event.EventListenerList;
 
-import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.config.ConfigContext;
+import org.vrjuggler.jccl.config.ConfigDefinition;
+import org.vrjuggler.jccl.config.ConfigElement;
 import org.vrjuggler.jccl.config.event.ConfigElementEvent;
 import org.vrjuggler.jccl.config.event.ConfigElementListener;
 
-import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
-import org.vrjuggler.vrjconfig.commoneditors.event.DeviceUnitEvent;
 import org.vrjuggler.vrjconfig.commoneditors.event.DeviceUnitListener;
 
 
@@ -79,10 +77,13 @@ public class DeviceInfo
 {
    /**
     * Creates a new <code>DeviceInfo</code> object for a device that has
-    * exactly one input source (unit) at all times.
+    * exactly one input source (unit) at all times.  The default device unit
+    * handler delegate is created to manage the units.
     * 
     * @param devElt     the device config element
     * @param ctx        the config context that contains <code>devElt</code>
+    *
+    * @see DefaultUnitPropertyHandler
     */
    public DeviceInfo(ConfigElement devElt, ConfigContext ctx)
    {
@@ -97,6 +98,7 @@ public class DeviceInfo
     * definition.  This version of the constructor should be used when the
     * config element has a proeprty with a variable number of values that
     * indicate how many input sources (units) are available in the device.
+    * The default device unit handler delegate is created to manage the units.
     *
     * @param devElt             the device config element
     * @param ctx                the config context that contains
@@ -104,6 +106,8 @@ public class DeviceInfo
     * @param unitPropertyName   the name of the property that represents
     *                           the number of available input sources (units)
     *                           the device has (may be null)
+    *
+    * @see DefaultUnitPropertyHandler
     */
    public DeviceInfo(ConfigElement devElt, ConfigContext ctx,
                      String unitPropertyName)
@@ -115,53 +119,79 @@ public class DeviceInfo
       ConfigDefinition def = devElt.getDefinition();
       Integer unit_type = UnitTypeHelpers.getSingleUnitType(def);
 
+      Map unit_type_map = new HashMap();
+
       // If unitPropertyName contains a non-empty string, then we have a device
       // that supports a variable number of units, each of the same input type.
       if ( unitPropertyName != null && ! unitPropertyName.equals("") )
       {
-         mUnitTypeMap = new HashMap();
-         mUnitTypeMap.put(unit_type,
-                          def.getPropertyDefinition(unitPropertyName));
+         unit_type_map.put(unit_type,
+                           def.getPropertyDefinition(unitPropertyName));
 
-         this.unitTypes     = mUnitTypeMap.keySet();
          mVariableUnitCount = true;
       }
       // Otherwise, our device supports a fixed number of units (one or more),
       // each of the same input type.
       else
       {
-         this.unitTypes = new ArrayList(1);
-         this.unitTypes.add(unit_type);
-
+         unit_type_map.put(unit_type, null);
          mVariableUnitCount = false;
       }
+
+      initUnitPropHandler(ctx, devElt, unit_type_map);
    }
 
    /**
     * This version of the constructor should be used when the config element
     * has a <i>variable</i> number of input sources (units) <i>and</i> supports
-    * multiipe input source types.
+    * multiipe input source types.  The default device unit handler delegate
+    * is created to manage the units.
     *
     * @param devElt             the device config element
     * @param ctx                the config context that contains
     *                           <code>devElt</code>
-    * @param unitTypeMap        a mapping from unit types to property
-    *                           definitions (<code>Integer</code> to
-    *                           <code>PropertyDefinition</code>)
+    * @param unitTypeMap        a mapping from unit types (as defined in
+    *                           <code>UnitConstants</code> to some value that
+    *                           the default device unit property handler knows
+    *                           how to manage
     *
     * @see UnitConstants
-    * @see org.vrjuggler.jccl.config.PropertyDefinition
+    * @see DefaultUnitPropertyHandler
     */
    public DeviceInfo(ConfigElement devElt, ConfigContext ctx,
                      Map unitTypeMap)
+   {
+      this(devElt, ctx, unitTypeMap, new DefaultUnitPropertyHandler());
+   }
+
+   /**
+    * This version of the constructor should be used when the config element
+    * has a <i>variable</i> number of input sources (units) <i>and</i> supports
+    * multiipe input source types.  The given unit handler delegate is stored
+    * to manage the device units.
+    *
+    * @param devElt             the device config element
+    * @param ctx                the config context that contains
+    *                           <code>devElt</code>
+    * @param unitTypeMap        a mapping from unit types (as defined in
+    *                           <code>UnitConstants</code> to some value that
+    *                           the device unit property handler knows how to
+    *                           manage
+    * @param handler            the delegate for managing the device unit
+    *                           properties
+    *
+    * @see UnitConstants
+    */
+   public DeviceInfo(ConfigElement devElt, ConfigContext ctx,
+                     Map unitTypeMap, DeviceUnitPropertyHandler handler)
    {
       super(devElt, ctx);
 
       devElt.addConfigElementListener(this);
 
       mVariableUnitCount = true;
-      mUnitTypeMap       = unitTypeMap;
-      this.unitTypes     = unitTypeMap.keySet();
+
+      initUnitPropHandler(ctx, devElt, unitTypeMap, handler);
    }
 
    /**
@@ -183,142 +213,88 @@ public class DeviceInfo
       devElt.addConfigElementListener(this);
 
       mVariableUnitCount = false;
-      this.unitTypes     = unitTypes;
 
-      mUnitTypeMap = new HashMap();
-      for ( java.util.Iterator i = this.unitTypes.iterator(); i.hasNext(); )
+      Map unit_type_map = new HashMap();
+      for ( java.util.Iterator i = unitTypes.iterator(); i.hasNext(); )
       {
-         mUnitTypeMap.put(i.next(), null);
+         unit_type_map.put(i.next(), null);
       }
+
+      initUnitPropHandler(ctx, devElt, unit_type_map);
    }
 
    /**
-    * Adds the given number of units to the artificial unit property and
-    * stores the result in the given unit type map.  If there is already an
-    * artificial unit property for the given unit type in the map, then
-    * <code>numUnits</code> are added to the current set of units.
-    *
-    * @param unitTypeMap        the unit type map providing a mapping from
-    *                           unit types (instances of
-    *                           <code>java.lang.Integer</code>) to the
-    *                           artificial unit property for that type
-    * @param unitType           the type of the artificial unit property
-    *                           (one of the <code>UnitConstants</code>
-    *                           values)
-    * @param numUnits           the number of units to add to the artificial
-    *                           unit property
-    *
-    * @see UnitConstants
+    * Invoked when the name of our config element changes.
     */
-   public static void addArtificialUnits(Map unitTypeMap, Integer unitType,
-                                         int numUnits)
-   {
-      if ( unitTypeMap.get(unitType) == null )
-      {
-         unitTypeMap.put(unitType, new Integer(numUnits));
-      }
-      else
-      {
-         Integer cur_count = (Integer) unitTypeMap.get(unitType);
-         unitTypeMap.put(unitType,
-                         new Integer(cur_count.intValue() + numUnits));
-      }
-   }
-
    public void nameChanged(ConfigElementEvent evt)
    {
       /* Do nothing. */ ;
    }
 
+   /**
+    * Invoked when a property value is added to our config element.  The event
+    * is handed off to the device unit delegate for this instance if the
+    * device managed by this instance has a variable unit count.
+    */
    public void propertyValueAdded(ConfigElementEvent evt)
    {
       if ( hasVariableUnitCount() )
       {
-         Collection unit_types = getUnitTypes();
-
-         for ( Iterator t = unit_types.iterator(); t.hasNext(); )
-         {
-            Integer type = (Integer) t.next();
-            String prop_token = getUnitPropertyToken(type);
-
-            // If the device has a variable unit count and the value added
-            // was for the device unit property, then we need to add another
-            // row to the renderer to repersent the new unit.
-            if ( evt.getProperty().equals(prop_token) )
-            {
-               fireDeviceUnitAdded(type, getUnitCount(type) - 1);
-               break;
-            }
-         }
+         this.unitPropHandler.propertyValueAdded(evt);
       }
    }
 
+   /**
+    * Invoked when a property value is chagned in our config element.  The
+    * event is handed off to the device unit delegate for this instance if the
+    * device managed by this instance has a variable unit count.
+    */
    public void propertyValueChanged(ConfigElementEvent evt)
    {
       if ( hasVariableUnitCount() )
       {
-         Collection unit_types = getUnitTypes();
-
-         for ( Iterator t = unit_types.iterator(); t.hasNext(); )
-         {
-            Integer type = (Integer) t.next();
-            String prop_token = getUnitPropertyToken(type);
-
-            // If the device has a variable unit count and the value added
-            // was for the device unit property, then we need to add another
-            // row to the renderer to repersent the new unit.
-            if ( evt.getProperty().equals(prop_token) )
-            {
-               int cur_count = getUnitCount(type);
-               int old_count = ((Number) evt.getValue()).intValue();
-
-               // Unit addition.  This always appends the new unit.
-               if ( cur_count > old_count )
-               {
-                  fireDeviceUnitAdded(type, cur_count - 1);
-               }
-               // Unit removal.
-               else
-               {
-                  fireDeviceUnitRemoved(type, cur_count);
-               }
-
-               break;
-            }
-         }
+         this.unitPropHandler.propertyValueChanged(evt);
       }
    }
 
+   /**
+    * Invoked when a property value is removed from our config element.  The
+    * event is handed off to the device unit delegate for this instance if the
+    * device managed by this instance has a variable unit count.
+    */
    public void propertyValueRemoved(ConfigElementEvent evt)
    {
       if ( hasVariableUnitCount() )
       {
-         Collection unit_types = getUnitTypes();
-
-         for ( Iterator t = unit_types.iterator(); t.hasNext(); )
-         {
-            Integer type = (Integer) t.next();
-            String prop_token = getUnitPropertyToken(type);
-
-            if ( evt.getProperty().equals(prop_token) )
-            {
-               fireDeviceUnitRemoved(type, evt.getIndex());
-               break;
-            }
-         }
+         this.unitPropHandler.propertyValueRemoved(evt);
       }
    }
 
+   /**
+    * Adds the given <code>DeviceUnitListener</code> to the list of listeners.
+    */
    public void addDeviceUnitListener(DeviceUnitListener l)
    {
-      listenerList.add(DeviceUnitListener.class, l);
+      this.unitPropHandler.addDeviceUnitListener(l);
    }
 
+   /**
+    * Removes the given <code>DeviceUnitListener</code> to from list of
+    * listeners.
+    */
    public void removeDeviceUnitListener(DeviceUnitListener l)
    {
-      listenerList.remove(DeviceUnitListener.class, l);
+      this.unitPropHandler.removeDeviceUnitListener(l);
    }
 
+   /**
+    * Adds a new unit of the given type to our device.
+    *
+    * @param unitType   the type (as defined in <code>UnitConstants</code> of
+    *                   the device unit to be added)
+    *
+    * @see UnitConstants
+    */
    public void addUnit(Integer unitType)
       throws IllegalArgumentException
    {
@@ -328,74 +304,18 @@ public class DeviceInfo
                                             "variable unit numbers");
       }
 
-      Object unit_prop_obj = mUnitTypeMap.get(unitType);
-
-      if ( unit_prop_obj instanceof PropertyDefinition )
-      {
-         PropertyDefinition prop_def = (PropertyDefinition) unit_prop_obj;
-
-         if ( prop_def.isVariable() )
-         {
-            PropertyValueDefinition value_def =
-               prop_def.getPropertyValueDefinition(0);
-            String token = prop_def.getToken();
-
-            Object default_value = value_def.getDefaultValue();
-
-            if ( default_value == null )
-            {
-               if ( prop_def.getType() == ConfigElement.class )
-               {
-                  ConfigBroker broker = new ConfigBrokerProxy();
-                  ConfigDefinitionRepository repos = broker.getRepository();
-                  ConfigElementFactory factory =
-                     new ConfigElementFactory(repos.getAllLatest());
-
-                  // XXX: How do we deal with this?  The flexibility of allowed
-                  // types makes this tricky.
-                  int count = getElement().getPropertyValueCount(token);
-                  default_value =
-                     factory.create(value_def.getLabel() + " " + count,
-                                    repos.get(prop_def.getAllowedType(0)));
-               }
-               else
-               {
-                  System.out.println("Don't know what to do for type " +
-                                     prop_def.getType());
-               }
-            }
-
-            System.out.println("[DeviceVertexRenderer.addUnit()] " +
-                               "default_value == " + default_value + " (type: " +
-                               prop_def.getType() + ")");
-            getElement().addProperty(token, default_value, getContext());
-         }
-         else
-         {
-            if ( prop_def.getType() == Integer.class )
-            {
-               Integer old_value =
-                  (Integer) getElement().getProperty(prop_def.getToken(), 0);
-               Integer new_value = new Integer(old_value.intValue() + 1);
-               getElement().setProperty(prop_def.getToken(), 0, new_value,
-                                        getContext());
-            }
-            else
-            {
-               throw new IllegalArgumentException("Don't know how to add a " +
-                                                  "new unit to property " +
-                                                  prop_def.getToken());
-            }
-         }
-      }
-      else
-      {
-         int cur_value = ((Number) unit_prop_obj).intValue();
-         mUnitTypeMap.put(unitType, new Integer(cur_value + 1));
-         fireDeviceUnitAdded(unitType, cur_value);
-      }
+      this.unitPropHandler.addUnit(unitType);
    }
 
+   /**
+    * Removes the identified unit of the given type from our device.
+    *
+    * @param unitType   the type (as defined in <code>UnitConstants</code> of
+    *                   the device unit to be added)
+    * @param untiNumber the index of the unit to remove
+    *
+    * @see UnitConstants
+    */
    public void removeUnit(Integer unitType, int unitNumber)
       throws IllegalArgumentException
    {
@@ -405,117 +325,7 @@ public class DeviceInfo
                                             "variable unit numbers");
       }
 
-      Object unit_prop_obj = mUnitTypeMap.get(unitType);
-
-      if ( unit_prop_obj instanceof PropertyDefinition )
-      {
-         PropertyDefinition prop_def = (PropertyDefinition) unit_prop_obj;
-
-         if ( prop_def.isVariable() )
-         {
-            getElement().removeProperty(prop_def.getToken(), unitNumber,
-                                        getContext());
-         }
-         else
-         {
-            if ( prop_def.getType() == Integer.class )
-            {
-               Integer value =
-                  (Integer) getElement().getProperty(prop_def.getToken(), 0);
-               Integer new_value = new Integer(value.intValue() - 1);
-               getElement().setProperty(prop_def.getToken(), 0, new_value,
-                                        getContext());
-            }
-            else
-            {
-               throw new IllegalArgumentException("Don't know how to remove " +
-                                                  "unit for property " +
-                                                  prop_def.getToken());
-            }
-         }
-      }
-      else
-      {
-         int unit_number = ((Number) unit_prop_obj).intValue() - 1;
-         mUnitTypeMap.put(unitType, new Integer(unit_number));
-         fireDeviceUnitRemoved(unitType, unit_number);
-      }
-   }
-
-   private int getUnitCount(Integer unitType)
-   {
-      int count = 0;
-      Object unit_prop_obj = mUnitTypeMap.get(unitType);
-
-      if ( unit_prop_obj instanceof PropertyDefinition )
-      {
-         PropertyDefinition prop_def = (PropertyDefinition) unit_prop_obj;
-
-         if ( prop_def.isVariable() )
-         {
-            count = getElement().getPropertyValueCount(prop_def.getToken());
-         }
-         else
-         {
-            Number val = (Number) getElement().getProperty(prop_def.getToken(),
-                                                           0);
-            count = val.intValue();
-         }
-      }
-      else
-      {
-         count = ((Number) unit_prop_obj).intValue();
-      }
-
-      return count;
-   }
-
-   private int getUnitCount(String propToken)
-   {
-      int count = 0;
-      Collection unit_types = getUnitTypes();
-
-      for ( Iterator t = unit_types.iterator(); t.hasNext(); )
-      {
-         Integer type = (Integer) t.next();
-         String cur_prop_token = getUnitPropertyToken(type);
-
-         if ( propToken.equals(cur_prop_token) )
-         {
-            count = getUnitCount(type);
-            break;
-         }
-      }
-
-      return count;
-   }
-
-   private String getUnitPropertyToken(Integer unitType)
-   {
-      String result = null;
-
-      Object unit_prop_obj = mUnitTypeMap.get(unitType);
-
-      if ( unit_prop_obj instanceof PropertyDefinition )
-      {
-         result = ((PropertyDefinition) unit_prop_obj).getToken();
-      }
-
-      return result;
-   }
-
-   public Class getUnitPropertyType(Integer unitType)
-   {
-      Class result = null;
-
-      Object unit_prop_obj = mUnitTypeMap.get(unitType);
-
-      if ( unit_prop_obj instanceof PropertyDefinition )
-      {
-         result = ((PropertyDefinition) unit_prop_obj).getType();
-      }
-
-      return result;
+      this.unitPropHandler.removeUnit(unitType, unitNumber);
    }
 
    /**
@@ -540,51 +350,26 @@ public class DeviceInfo
     */
    public Collection getUnitTypes()
    {
-      return unitTypes;
+      return this.unitPropHandler.getUnitTypes();
    }
 
-   protected void fireDeviceUnitAdded(Integer type, int unitNum)
+   private void initUnitPropHandler(ConfigContext ctx, ConfigElement elt,
+                                    Map unitTypeMap)
    {
-      DeviceUnitEvent evt = null;
-      Object[] listeners = listenerList.getListenerList();
-
-      for ( int i = listeners.length - 2; i >= 0; i -= 2 )
-      {
-         if ( listeners[i] == DeviceUnitListener.class )
-         {
-            if (evt == null)
-            {
-               evt = new DeviceUnitEvent(this, type, unitNum);
-            }
-
-            ((DeviceUnitListener) listeners[i + 1]).deviceUnitAdded(evt);
-         }
-      }
+      initUnitPropHandler(ctx, elt, unitTypeMap,
+                          new DefaultUnitPropertyHandler());
    }
 
-   protected void fireDeviceUnitRemoved(Integer type, int unitNum)
+   private void initUnitPropHandler(ConfigContext ctx, ConfigElement elt,
+                                    Map unitTypeMap,
+                                    DeviceUnitPropertyHandler handler)
    {
-      DeviceUnitEvent evt = null;
-      Object[] listeners = listenerList.getListenerList();
-
-      for ( int i = listeners.length - 2; i >= 0; i -= 2 )
-      {
-         if ( listeners[i] == DeviceUnitListener.class )
-         {
-            if (evt == null)
-            {
-               evt = new DeviceUnitEvent(this, type, unitNum);
-            }
-
-            ((DeviceUnitListener) listeners[i + 1]).deviceUnitRemoved(evt);
-         }
-      }
+      this.unitPropHandler = handler;
+      this.unitPropHandler.setConfig(ctx, elt);
+      this.unitPropHandler.setUnitTypeMap(unitTypeMap);
    }
 
    private boolean mVariableUnitCount = false;
-   private Map     mUnitTypeMap       = null;
 
-   private EventListenerList listenerList = new EventListenerList();
-
-   private Collection unitTypes = null;
+   private DeviceUnitPropertyHandler unitPropHandler = null;
 }
