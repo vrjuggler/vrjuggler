@@ -47,6 +47,10 @@ Builder: JExplorerBuilder V 1. 0. 7
 					link="build/juggler/use.configure.html"
 					info="How to use the configure script"
 					image="Leaf_Script2.gif">
+					<item title="Compiling"
+					link="build/juggler/use.compile.html"
+					info="How to compile Juggler"
+					image="Leaf_Script2.gif">
 				</folder>
 				< item title="Juggler Docs" 
 				link="build/juggler_docs/index.html" 
