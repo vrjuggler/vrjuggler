@@ -482,6 +482,7 @@ AC_OUTPUT(gadgeteer-config
           gadget/Makefile
           gadget/Makefile.inc
           gadget/Devices/Makefile
+          gadget/Devices/5DT/Makefile
           gadget/Devices/Ascension/Makefile
           gadget/Devices/Fakespace/Makefile
           gadget/Devices/Immersion/Makefile

@@ -67,14 +67,14 @@ void ProxyFactory::loadKnownProxies()
    ProxyConstructor<AnalogProxy>* analog_proxy = new ProxyConstructor<AnalogProxy>;
    ProxyConstructor<DigitalProxy>* digital_proxy = new ProxyConstructor<DigitalProxy>;
    ProxyConstructor<PositionProxy>* pos_proxy = new ProxyConstructor<PositionProxy>;
-//   ProxyConstructor<GloveProxy>* glove_proxy = new ProxyConstructor<GloveProxy>;
+   ProxyConstructor<GloveProxy>* glove_proxy = new ProxyConstructor<GloveProxy>;
 //   ProxyConstructor<GestureProxy>* gesture_proxy = new ProxyConstructor<GestureProxy>;
    ProxyConstructor<KeyboardProxy>* keyboard_proxy = new ProxyConstructor<KeyboardProxy>;
 
    if( (NULL == analog_proxy) ||
        (NULL == digital_proxy) ||
        (NULL == pos_proxy) ||
-//       (NULL == glove_proxy) ||
+       (NULL == glove_proxy) ||
 //       (NULL == gesture_proxy) ||
        (NULL == keyboard_proxy) )
    {

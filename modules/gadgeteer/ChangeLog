@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Apr-29-2002 patrickh  Added a device driver for the 5DT Data Glove (submitted
+                      by Chang Kim <changkim@vrac.iastate.edu>).
 Apr-20-2002 patrickh  Enabled the Ascension MotionStar and Intersense IS-900
                       drivers on Win32.
 Apr-09-2002 allenb    GMTL port.
