@@ -84,19 +84,19 @@ namespace cluster
       //  SwapLock Barrier Stuff
       //
       // -Set flag we have started configuring the cluster
-      // -Get Sync Machine Chunk Name
-      // -Get ChunkPtr to this element
+      // -Get Sync Machine Element Name
+      // -Get ElementPtr to this element
       // -Get the Hostname of this node
 
       std::string barrier_machine_element_name = element->getProperty<std::string>(std::string("sync_server"));
       jccl::ConfigElementPtr barrier_machine_element = ClusterManager::instance()->getConfigElementPointer(barrier_machine_element_name);
-      vprASSERT(NULL != barrier_machine_element.get() && "ConfigManager Chunk MUST have a barrier_master.");
+      vprASSERT(NULL != barrier_machine_element.get() && "ConfigManager Element MUST have a barrier_master.");
       mBarrierMasterHostname = barrier_machine_element->getProperty<std::string>(std::string("host_name"));
       
       mTCPport = element->getProperty<int>(std::string("listen_port"));
 
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[SwapLockTCPPlugin] ")
-         << "SwapLock Master Chunk Name is: " << barrier_machine_element_name << std::endl << vprDEBUG_FLUSH;         
+         << "SwapLock Master Element Name is: " << barrier_machine_element_name << std::endl << vprDEBUG_FLUSH;         
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[SwapLockTCPPlugin] ")
          << "SwapLock Master Hostname is: " << mBarrierMasterHostname << std::endl << vprDEBUG_FLUSH;         
       // Starting Barrier Stuff
