@@ -1,28 +1,15 @@
-/*
- * vjChunkDesc.h
- *
- * Author: Christopher Just
- *
- * A vjChunkDesc is a description for a kind of ConfigChunk.  The vjChunkDesc
- * includes a typename and a list of property descriptions.
- *
- */
-
 #ifndef _VJ_CHUNKDESC_H_
 #define _VJ_CHUNKDESC_H_
 
 #include <vjConfig.h>
-#include <strings.h>
+#include <Config/vjEnumEntry.h>
+#include <Config/vjPropertyDesc.h>
 
 #ifdef VJ_OS_HPUX
 #   include <float.h>
 #   include <stddef.h>
 #endif
 
-#include <Config/vjVarValue.h>
-#include <Config/vjParseUtil.h>
-#include <Config/vjEnumEntry.h>
-#include <Config/vjPropertyDesc.h>
 
 
 //-----------------------------------------------------------------
@@ -32,6 +19,7 @@
 //       vjChunkDescs will probably only need to be used by the
 //       vjChunkDescDB, vjChunkFactory, and the GUI.
 //
+// @author  Christopher Just
 //
 //!PUBLIC_API:
 //------------------------------------------------------------------------

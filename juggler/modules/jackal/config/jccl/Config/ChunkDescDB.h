@@ -1,11 +1,3 @@
-/*
- * vjChunkDescDB.h
- *
- * Author: Christopher Just
- *
- */
-
-
 #ifndef _VJ_CHUNKDESCDB_H_
 #define _VJ_CHUNKDESCDB_H_
 
@@ -19,7 +11,7 @@
 //  functions to search for particular vjChunkDescs, and to read
 //  and write ChunkDesc files.
 //
-// @author: Christopher Just
+// @author Christopher Just
 // October 1997
 //!PUBLIC_API:
 //-----------------------------------------------------------------
