@@ -489,7 +489,7 @@ ConfigChunkPtr XMLConfigIOHandler::buildConfigChunk (const DOM_Node& doc, bool u
             << "Rejecting ConfigChunk due to errors:\n"
             << *ch << vprDEBUG_FLUSH;
          // delete ch;
-         ch.reset(0);
+         ch.reset();
       }
    }
    return ch;
@@ -953,7 +953,7 @@ ChunkDescPtr XMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc)
             << "Rejecting ChunkDesc due to errors:\n"
             << *desc << vprDEBUG_FLUSH;
          // delete desc;
-         desc.reset(0);
+         desc.reset();
       }
    }
    return desc;

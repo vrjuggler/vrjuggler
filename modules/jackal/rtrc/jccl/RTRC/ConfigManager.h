@@ -94,7 +94,7 @@ class JCCL_CLASS_API ConfigManager: public JackalControl
 public:
    struct PendingChunk
    {
-      PendingChunk() : mType(0), mChunk(0)
+      PendingChunk() : mType(0)
       {;}
 
       enum { ADD=0, REMOVE=1};

@@ -56,7 +56,7 @@ namespace vrj
 class Display
 {
 public:
-   Display() : mDisplayChunk(NULL)
+   Display()
    {
       _xo = _yo = _xs = _ys = -1;
       mPipe = -1;
