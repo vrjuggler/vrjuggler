@@ -221,21 +221,17 @@ void _Export_UserData()
        init<>()
       )
       .def("init", &cluster::UserData<pyj::PickleObject>::init,
-           pyj::cluster_UserData_PickleObject_init_overloads_1_2()
-/*
-           ,
-           "init(guid)\n"
+           (args("id"), args("writerAddr") = ""),
+           "init(id, writerAddr = '')\n"
            "Initializes this application-specific shared data object with\n"
            "the given vpr.GUID instance.  There must be a distinct GUID for\n"
            "for each instance of shared data, even if the instances are all\n"
-           "of the same type.  With this variant, the writer (master) host\n"
+           "of the same type.\n\n"
+           "If the second argument is not given, the writer (master) host\n"
            "must be identified using a configuration element of type\n"
-           "application_data.\n\n"
-           "init(guid, writerAddr)\n"
-           "The same as the single-argument variant except that the writer\n"
-           "host is explicitly identified.  This is somewhat easier to use\n"
-           "than the other variant, but it can be less flexible."
-*/
+           "application_data.  Otherwise, the given string object is used\n"
+           "to identify the writer host.  Naming the writer host explicitly\n"
+           "is somewhat easier to use, but it can be less flexible."
        )
       .def("isLocal", &cluster::UserData<pyj::PickleObject>::isLocal,
            "isLocal() -> Boolean\n"
