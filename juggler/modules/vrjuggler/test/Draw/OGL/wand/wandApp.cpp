@@ -46,7 +46,7 @@ void wandApp::myDraw()
 
    yRotMat.getXYZEuler(xRot,yRot,zRot);
 
-   cerr << "yRot: " << yRot << endl;
+   //cerr << "yRot: " << yRot << endl;
 
    //yRotMat.postMult(mzInverse);
 

@@ -31,7 +31,8 @@ VJSIM_SRCS	:= vjSimAnalog.cpp		\
                    vjSimDigital.cpp		\
                    vjSimGloveGesture.cpp	\
                    vjSimInput.cpp		\
-                   vjSimPosition.cpp
+                   vjSimPosition.cpp            \
+		   vjSimRelativePosition.cpp
 
 VJSIM_OBJECTS	:= ${addprefix ${OBJDIR}/,${VJSIM_SRCS:.cpp=.o}}
 DEPEND_FILES	:= ${VJSIM_SRCS:.cpp=.d}
