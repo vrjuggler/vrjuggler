@@ -42,7 +42,7 @@
 #include <Kernel/vjConfigManager.h>
 
 //: Base class for dependency checkers
-// 
+//
 // A dependency checker is responsible for figuring out
 // if the system has all the required dependencies filled
 // for a given configChunk
@@ -52,7 +52,15 @@
 // ptrs in the given chunk and returns true if
 // all chunk ptrs have those corresponding chunks
 // loaded in the current configuration.
-//
+// <br>
+// Configuration information with special
+// dependency requirements should implement
+// a specialization of this class and register
+// it with the dependency checker.
+// <br>
+// NOTE: It must be registered BEFORE
+// a chunk of the given type is checked for dependencies.
+//!PUBLIC_API
 class vjDepChecker
 {
 public:
@@ -68,7 +76,7 @@ public:
    // Default to true, because the default checker can check anything
    virtual bool canHandle(vjConfigChunk* chunk)
    {
-      return true;  
+      return true;
    }
 
    //: Are the dependencies satisfied?
@@ -78,7 +86,7 @@ public:
       bool pass=true;
 
       vjConfigManager* cfg_mgr = vjConfigManager::instance();
-      
+
       // Get the list of dependencies
       std::vector<std::string> dependencies = chunk->getChunkPtrDependencies();
 
@@ -86,7 +94,7 @@ public:
       for(unsigned int i=0;i<dependencies.size();i++)
       {
          if(!cfg_mgr->isChunkInActiveList(dependencies[i]))
-            pass = false;      
+            pass = false;
       }
       return pass;
    }
@@ -99,13 +107,13 @@ public:
                                               << "------------\n" << vjDEBUG_FLUSH;
 
       vjConfigManager* cfg_mgr = vjConfigManager::instance();
-      
+
       // Get the list of dependencies
       std::vector<std::string> dependencies = chunk->getChunkPtrDependencies();
 
       // Check to see if they are loaded already
       for(unsigned int i=0;i<dependencies.size();i++)
-      {         
+      {
          vjDEBUGlg(vjDBG_ALL,dbg_lvl,false,true) << i << ": "
                                                  << dependencies[i].c_str()
                                                  << " ==> " << vjDEBUG_FLUSH;

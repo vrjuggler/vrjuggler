@@ -30,11 +30,11 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  */
-
-
 #include <vjConfig.h>
 #include <Input/vjKeyboard/vjXWinKeyboard.h>
 #include <Kernel/vjDebug.h>
+#include <Kernel/vjDisplayManager.h>
+
 
 //: Constructor
 bool vjXWinKeyboard::config(vjConfigChunk *c)
@@ -46,9 +46,6 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
       return false;
 
     // Done in vjInput --- myThread = NULL;
-
-    oldMouseX = 0; oldMouseY = 0;
-
     int i;
     for(i =0; i < 256; i++)
          m_realkeys[i] = m_keys[i] = 0;
@@ -63,8 +60,25 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
     m_x = c->getProperty("origin", 0);
     m_y = c->getProperty("origin", 1);
 
+    // Get the X display string
+    int x_disp_num = c->getProperty("display_number");
+    vjConfigChunk* dispSysChunk = vjDisplayManager::instance()->getDisplaySystemChunk();
+    if(x_disp_num >= 0)
+       mXDisplayString = (std::string)dispSysChunk->getProperty("xpipes", x_disp_num);
+    else
+       mXDisplayString = std::string("-1");
+
+    if((mXDisplayString.empty()) || (strcmp(mXDisplayString.c_str(), "-1") == 0))    // Use display env
+      mXDisplayString = (std::string)getenv("DISPLAY");
+
+    // Get the lock information
+    mLockToggleKey = c->getProperty("lock_key");
+    bool mStartLocked = c->getProperty("start_locked");
+    if(mStartLocked)
+       mLockState = Lock_LockKey;      // Initialize to the locked state
+
     m_mouse_sensitivity = c->getProperty("msens");
-    if (0 == m_mouse_sensitivity)
+    if (0.0f == m_mouse_sensitivity)
        m_mouse_sensitivity = 0.5;
 
     vjDEBUG(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "Mouse Sensititivty: "
@@ -83,7 +97,7 @@ int vjXWinKeyboard::startSampling()
 
       resetIndexes();      // Reset the buffering variables
 
-      m_display = XOpenDisplay(NULL);
+      m_display = XOpenDisplay(mXDisplayString.c_str());    // Open display on given XDisplay
       if (m_display == NULL)
       {
          cerr << "vjKeyboard::StartSampling() : failed to open display" << endl;
@@ -178,6 +192,7 @@ void vjXWinKeyboard::updKeys()
 {
    XEvent event;
    KeySym key;
+   int    vj_key;    // The key in vj space
 
    for(int i = 0; i < 256; i++)
       m_keys[i] = m_realkeys[i];
@@ -196,16 +211,57 @@ void vjXWinKeyboard::updKeys()
       case KeyPress:
          // Convert the pressed key from the event to a VJ key.
          key = XLookupKeysym((XKeyEvent*)&event,0);
-         m_realkeys[xKeyTovjKey(key)] = 1;
-         m_keys[xKeyTovjKey(key)] += 1;
+         vj_key = xKeyTovjKey(key);
+         m_realkeys[vj_key] = 1;
+         m_keys[vj_key] += 1;
 
-         // Grab the keyboard input so that holding down a key works even
-         // if the window loses focus.  While the keyboard is grabbed,
-         // keyboard and pointer events will be processed normally
-         // (GrabModeAsync).
-         m_keyboard_grabbed = XGrabKeyboard(m_display, m_window, True,
-                                            GrabModeAsync, GrabModeAsync,
-                                            CurrentTime);
+         // -- Update lock state -- //
+         // Any[key == ESC]/unlock(ifneeded) -> Unlocked
+         // Unlocked[key!=lockKey]/lockMouse -> lock_keydown
+         // Unlocked[key==lockKey]/lockMouse -> lock_keylock
+         // lock_keydown[key==lockKey] -> lock_keylock
+         // lock_keylock[key==lockKey] -> Unlocked
+         if (vj_key == VJKEY_ESC)       // Check for Escape from bad state
+         {
+            vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: Trying to ESCAPE from current state.\n" << vjDEBUG_FLUSH;
+            if(mLockState != Unlocked)
+            {
+               vjDEBUG_NEXT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: STATE switch: <ESCAPE> --> Unlocked\n" << vjDEBUG_FLUSH;
+               mLockState = Unlocked;
+               unlockMouse();
+            }
+            else
+            {
+               vjDEBUG_NEXT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: Already unlocked.  Cannot ESCAPE." << vjDEBUG_FLUSH;
+            }
+         }
+         else if(mLockState == Unlocked)
+         {
+            if(vj_key != mLockToggleKey)
+            {
+               mLockState = Lock_KeyDown;       // Switch state
+               mLockStoredKey = vj_key;         // Store the VJ key that is down
+               vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: STATE switch: Unlocked --> Lock_KeyDown\n" << vjDEBUG_FLUSH;
+               lockMouse();
+            }
+            else if(vj_key == mLockToggleKey)
+            {
+               mLockState = Lock_LockKey;
+               vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: STATE switch: Unlocked --> Lock_LockKey\n" << vjDEBUG_FLUSH;
+               lockMouse();
+            }
+         }
+         else if((mLockState == Lock_KeyDown) && (vj_key == mLockToggleKey))
+         {
+            mLockState = Lock_LockKey;
+            vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: STATE switch: Lock_KeyDown --> Lock_LockKey\n" << vjDEBUG_FLUSH;
+         }
+         else if((mLockState == Lock_LockKey) && (vj_key == mLockToggleKey))
+         {
+            mLockState = Unlocked;
+            vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: STATE switch: Lock_LockKey --> Unlocked\n" << vjDEBUG_FLUSH;
+            unlockMouse();
+         }
 
          vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "KeyPress:  " << hex
                     << key << " state:" << ((XKeyEvent*)&event)->state
@@ -217,18 +273,18 @@ void vjXWinKeyboard::updKeys()
       case KeyRelease:
          // Convert the released key from the event to a VJ key.
          key = XLookupKeysym((XKeyEvent*)&event,0);
-         m_realkeys[xKeyTovjKey(key)] = 0;
+         vj_key = xKeyTovjKey(key);
+         m_realkeys[vj_key] = 0;
 
-         // Ungrab the keyboard now that we're no longer holding down the key.
-         XUngrabKeyboard(m_display, CurrentTime);
-         m_keyboard_grabbed = -1;
-
-         // If the mouse pointer is grabbed, ungrab it since our modifier
-         // is no longer being pressed.
-         if ( m_pointer_grabbed == GrabSuccess ) {
-            XUngrabPointer(m_display, CurrentTime);
-            m_pointer_grabbed = -1;
+         // -- Update lock state -- //
+         // lock_keyDown[key==storedKey]/unlockMouse -> unlocked
+         if((mLockState == Lock_KeyDown) && (vj_key == mLockStoredKey))
+         {
+            mLockState = Unlocked;
+            vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: STATE switch: Lock_KeyDown --> Unlocked\n" << vjDEBUG_FLUSH;
+            unlockMouse();
          }
+
 
          vjDEBUG(vjDBG_INPUT_MGR, vjDBG_HVERB_LVL) << "KeyRelease:" << hex
                     << key << " state:" << ((XKeyEvent*)&event)->state
@@ -239,56 +295,62 @@ void vjXWinKeyboard::updKeys()
       // If motion occurs within the window, determine how far the pointer
       // moved since the last time anything was read.
       case MotionNotify:
-         int win_x, win_y, delta_x, delta_y;
+         int win_center_x(m_width/2),win_center_y(m_height/2);
 
-         // If the keyboard is currently grabbed, this is now the combination
-         // of a modifier key and movement.  Grab the mouse so that if it
-         // moves outside the window, we still get its events.
-         if ( m_keyboard_grabbed == GrabSuccess ) {
-            unsigned int event_mask;
-
-            event_mask = ButtonPressMask | ButtonReleaseMask |
-                         PointerMotionMask | ButtonMotionMask;
-
-            // While the pointer is grabbed, we will watch for the events in
-            // event_mask, and keyboard and pointer events will be processed
-            // normally (GrabModeAsync).
-            m_pointer_grabbed = XGrabPointer(m_display, m_window, True,
-                                             event_mask, GrabModeAsync,
-                                             GrabModeAsync, None, None,
-                                             CurrentTime);
-         }
+         int cur_x, cur_y, dx, dy;
 
          // Determine how far the mouse pointer moved since the last event.
-         win_x = event.xmotion.x;
-         win_y = event.xmotion.y;
-         delta_x = win_x - oldMouseX;
-         delta_y = win_y - oldMouseY;
+         // event.xmotion.x & y are relative to the x window
+         cur_x = event.xmotion.x;
+         cur_y = event.xmotion.y;
+
+         vjDEBUG(vjDBG_ALL,vjDBG_HVERB_LVL) << "MotionNotify: x:" << setw(6) << cur_x << "  y:" << setw(6) << cur_y << endl << vjDEBUG_FLUSH;
+
+         if(mLockState == Unlocked)
+         {
+            dx = cur_x - mPrevX;
+            dy = cur_y - mPrevY;
+
+            mPrevX = cur_x;
+            mPrevY = cur_y;
+         }
+         else
+         {
+            dx = cur_x - win_center_x;    // Base delta off of center of window
+            dy = cur_y - win_center_y;
+            mPrevX = win_center_x;        // Must do this so if state changes, we have accurate dx,dy next time
+            mPrevY = win_center_y;
+
+            // Warp back to center, IF we are not there already
+            // This prevents us from sending an event based on our XWarp event
+            if((dx != 0) && (dy != 0))
+            {
+               vjDEBUG(vjDBG_ALL,vjDBG_HVERB_LVL) << "CORRECTING: x:" << setw(6) << dx << "  y:" << setw(6) << dy << endl << vjDEBUG_FLUSH;
+               XWarpPointer(m_display, None, m_window, 0,0, 0,0, win_center_x, win_center_y);
+            }
+         }
 
          // Positive movement in the x direction.
-         if ( delta_x > 0 ) {
-            m_keys[VJMOUSE_POSX] = int(delta_x * m_mouse_sensitivity);
+         if ( dx > 0 ) {
+            m_keys[VJMOUSE_POSX] = int(dx * m_mouse_sensitivity);
             m_keys[VJMOUSE_NEGX] = 0;
          }
          // Negative movement in the x direction.
-         else if ( delta_x < 0 ) {
-            m_keys[VJMOUSE_NEGX] = int(-delta_x * m_mouse_sensitivity);
+         else if ( dx < 0 ) {
+            m_keys[VJMOUSE_NEGX] = int(-dx * m_mouse_sensitivity);
             m_keys[VJMOUSE_POSX] = 0;
          }
 
          // Positive movement in the y direction.
-         if ( delta_y > 0 ) {
-            m_keys[VJMOUSE_POSY] = int(delta_y * m_mouse_sensitivity);
+         if ( dy > 0 ) {
+            m_keys[VJMOUSE_POSY] = int(dy * m_mouse_sensitivity);
             m_keys[VJMOUSE_NEGY] = 0;
          }
          // Negative movement in the y direction.
          else {
-            m_keys[VJMOUSE_NEGY] = int(-delta_y * m_mouse_sensitivity);
+            m_keys[VJMOUSE_NEGY] = int(-dy * m_mouse_sensitivity);
             m_keys[VJMOUSE_POSY] = 0;
          }
-
-         oldMouseX = win_x;
-         oldMouseY = win_y;
 
          break;
 
@@ -467,13 +529,13 @@ void vjXWinKeyboard::setHints(Window window,
     /*
      * Generate window and icon names.
      */
-	status = XStringListToTextProperty(&window_name,
-			1,	/* 1 string to convert */
-			&w_name);
+   status = XStringListToTextProperty(&window_name,
+         1, /* 1 string to convert */
+         &w_name);
 
-	status = XStringListToTextProperty(&icon_name,
-			1,	/* 1 string to convert */
-			&i_name);
+   status = XStringListToTextProperty(&icon_name,
+         1, /* 1 string to convert */
+         &i_name);
 
     sizehints.x           = m_x;        /* -- Obsolete in R4 */
     sizehints.y           = m_y;        /* -- Obsolete in R4 */
@@ -504,12 +566,12 @@ void vjXWinKeyboard::setHints(Window window,
         &i_name,
         //argv, argc, /* Note reversed order. */
         NULL,0,
-	&sizehints,
+   &sizehints,
         &wmhints,
         &classhints);
 
-	XFree(w_name.value);
-	XFree(i_name.value);
+   XFree(w_name.value);
+   XFree(i_name.value);
 
 }
 
@@ -578,7 +640,7 @@ char* vjXWinKeyboard::checkArgs(char* look_for)
 } /*CheckArgs*/
 
 int vjXWinKeyboard::filterEvent( XEvent* event, int want_exposes,
-		  int width, int height)
+        int width, int height)
 {
     int status = 1;
     if (XFilterEvent( event, (Window)NULL ) )
@@ -588,20 +650,68 @@ int vjXWinKeyboard::filterEvent( XEvent* event, int want_exposes,
     switch (event->type) {
        case Expose:
          if (!want_exposes ) {
-	   if (event->xexpose.count != 0) {
-	     status = 0;
-	     }
-	 }
-	 break;
+      if (event->xexpose.count != 0) {
+        status = 0;
+        }
+    }
+    break;
         case ConfigureNotify:
-	  if ((width == event->xconfigure.width ) && (height == event->xconfigure.height))
-	  {  status = 0; }
-	  break;
-	case MappingNotify:
-	  XRefreshKeyboardMapping ( (XMappingEvent*) event );
-	  status = 0;
-	  break;
-	default: ;
+     if ((width == event->xconfigure.width ) && (height == event->xconfigure.height))
+     {  status = 0; }
+     break;
+   case MappingNotify:
+     XRefreshKeyboardMapping ( (XMappingEvent*) event );
+     status = 0;
+     break;
+   default: ;
      }
      return status;
+}
+
+// Called when locking states
+// - Recenter the mouse
+void vjXWinKeyboard::lockMouse()
+{
+   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: LOCKING MOUSE..." << vjDEBUG_FLUSH;
+
+   // Grab the keyboard input so that holding down a key works even
+   // if the window loses focus.  While the keyboard is grabbed,
+   // keyboard and pointer events will be processed normally
+   // (GrabModeAsync).
+   XGrabKeyboard(m_display, m_window, True,
+                GrabModeAsync, GrabModeAsync,
+                                  CurrentTime);
+
+   // While the pointer is grabbed, we will watch for the events in
+   // event_mask, and keyboard and pointer events will be processed
+   // normally (GrabModeAsync).
+   unsigned int event_mask;
+   event_mask = ButtonPressMask | ButtonReleaseMask |
+                PointerMotionMask | ButtonMotionMask;
+
+   XGrabPointer(m_display, m_window, True,
+                event_mask, GrabModeAsync,
+                GrabModeAsync, None, None,
+                               CurrentTime);
+
+   // Center the mouse
+   int win_center_x(m_width/2),win_center_y(m_height/2);
+   mPrevX = win_center_x;
+   mPrevY = win_center_y;
+   XWarpPointer(m_display, None, m_window, 0,0, 0,0, win_center_x, win_center_y);
+   vjDEBUG_CONT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "lock finished.\n" << vjDEBUG_FLUSH;
+}
+
+// Called when locking ends
+void vjXWinKeyboard::unlockMouse()
+{
+   vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard: UN-LOCKING MOUSE..." << vjDEBUG_FLUSH;
+
+   // Un-grab the keyboard now
+   XUngrabKeyboard(m_display, CurrentTime);
+
+   // Un-grab the pointer as well
+   XUngrabPointer(m_display, CurrentTime);
+
+   vjDEBUG_CONT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "un-lock finished.\n" << vjDEBUG_FLUSH;
 }
