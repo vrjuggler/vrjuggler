@@ -176,28 +176,30 @@ inline void OsgApp::draw()
    sv = (*sceneViewer);    // Get context specific scene viewer
    vprASSERT( sv != NULL);
 
-   // Add the tree to the scene viewer
+   GlDrawManager*    gl_manager;    /**< The openlGL manager that we are rendering for. */
+   gl_manager = GlDrawManager::instance();
+   
+   // Set the up the viewport (since OSG clears it out)
+   float vp_ox, vp_oy, vp_sx, vp_sy;         // The float vrj sizes of the view ports
+   unsigned w_ox, w_oy, w_width, w_height;   // Origin and size of the window
+   gl_manager->currentUserData()->getViewport()->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
+   gl_manager->currentUserData()->getGlWindow()->getOriginSize(w_ox, w_oy, w_width, w_height);
+
+   // compute unsigned versions of the viewport info (for passing to glViewport)
+   unsigned ll_x = unsigned(vp_ox*float(w_width));
+   unsigned ll_y = unsigned(vp_oy*float(w_height));
+   unsigned x_size = unsigned(vp_sx*float(w_width));
+   unsigned y_size = unsigned(vp_sy*float(w_height));
+
+   // Add the tree to the scene viewer and set properties
    sv->setSceneData(getScene());
    sv->setCalcNearFar(false);
-
-   //Take care of the view port
-   GLint view[4];
-   glGetIntegerv(GL_VIEWPORT, view);      //Get the view port that juggler sets
-   sv->setViewport(view[0],view[1],view[2],view[3]);
-
-//   vprDEBUG(vprDBG_ALL, 0) << "view: " << view[0] << ", " << view[1] << ", "
-//                                       << view[2] << ", " << view[3] << std::endl << vprDEBUG_FLUSH;
+   sv->setViewport(ll_x, ll_y, x_size, y_size);
 
    //Get the view matrix and the frustrum form the draw manager
    GlDrawManager* drawMan = dynamic_cast<GlDrawManager*> ( this->getDrawManager() );
    vprASSERT(drawMan != NULL);
    GlUserData* userData = drawMan->currentUserData();
-
-   // Configure the viewport information
-   //vjViewport* cur_vp = userData->getViewport();
-   //float xo, yo, xs, ys;
-   //cur_vp->getOriginAndSize(xo,yo,xs,ys);
-   //sv->setViewport(xo, yo, xs, ys);
 
    // Copy the matrix
    Projection* project = userData->getProjection();
