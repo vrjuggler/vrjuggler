@@ -608,9 +608,9 @@ UNIX_VJROOT_ABS="$VJROOT_ABS"
 UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $LIBS $XERCES_LDFLAGS $XERCES_LIB.lib comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD $LIBS $XERCES_LDFLAGS $XERCES_LIB.lib comctl32.lib user32.lib gdi32.lib ws2_32.lib"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS $XERCES_LDFLAGS -l$XERCES_LIB $LIBS $DTK_LDFLAGS -lm"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC $XERCES_LDFLAGS -l$XERCES_LIB $LIBS $DTK_LDFLAGS -lm"
 fi
 
 # Variables set in Makefiles found in the application trees.  All variables
