@@ -54,19 +54,19 @@ public class Init {
     /** Main() routine for VjControl. */
     public static void main (String args[]) {
 
-	Core.initInstance();
+        Core.initInstance();
         Core.setCommandLine (args);
 
-	/* do config stuff... 	 */
-	loadVjControlConfig();
-	configurationSanityCheck();
+        /* do config stuff... */
+        loadVjControlConfig();
+        configurationSanityCheck();
 
         /* load extensions... */
         ArrayList extension_dirs = new ArrayList();
         //extension_dirs.add ("$JCCL_BASE_DIR/bin/VjControl.jar");
 
         /* we'll look thru the command line for extension .jars */
- 	for (int i = 0; i < args.length; i++) {
+        for (int i = 0; i < args.length; i++) {
             if (args[i].equalsIgnoreCase ("-j")) {
                 extension_dirs.add (args[++i]);
             }
@@ -78,9 +78,8 @@ public class Init {
         Core.component_factory.registerBaseJar();
 
         loadExtensions (extension_dirs);
-     	
-	Core.consoleInfoMessage ("VjControl 1.0", "VR Juggler Control and Configuration Program");
-	
+
+        Core.consoleInfoMessage ("VjControl 1.0", "VR Juggler Control and Configuration Program");
     }
 
 
@@ -92,20 +91,20 @@ public class Init {
      *  values in ChunkDescs.
      */
     protected static void configurationSanityCheck() {
-	ConfigChunk ch;
-	List v = Core.vjcontrol_chunkdb.getOfDescToken ("vjcontrol");
-	if (v.size() == 0) {
-	    System.err.println ("didn't get chunk");
-	    ch = ChunkFactory.createChunkWithDescToken ("vjcontrol");
+        ConfigChunk ch;
+        List v = Core.vjcontrol_chunkdb.getOfDescToken ("vjcontrol");
+        if (v.size() == 0) {
+            System.err.println ("didn't get chunk");
+            ch = ChunkFactory.createChunkWithDescToken ("vjcontrol");
             ch.setName ("VjControl global preferences");
-	    ch.setPropertyFromToken ("fontname", new VarValue ("Courier"), 0);
-	    ch.setPropertyFromToken ("fontsize", new VarValue (12), 0);
-	    ch.setPropertyFromToken ("looknfeel", new VarValue ("Java"), 0);
-	    ch.setPropertyFromToken ("name", new VarValue ("VjControl Config"), 0);
-	    ch.setPropertyFromToken ("host", new VarValue ("localhost"), 0);
-	    ch.setPropertyFromToken ("port", new VarValue (4450), 0);
-	    Core.vjcontrol_chunkdb.add (ch);
-	}
+            ch.setPropertyFromToken ("fontname", new VarValue ("Courier"), 0);
+            ch.setPropertyFromToken ("fontsize", new VarValue (12), 0);
+            ch.setPropertyFromToken ("looknfeel", new VarValue ("Java"), 0);
+            ch.setPropertyFromToken ("name", new VarValue ("VjControl Config"), 0);
+            ch.setPropertyFromToken ("host", new VarValue ("localhost"), 0);
+            ch.setPropertyFromToken ("port", new VarValue (4450), 0);
+            Core.vjcontrol_chunkdb.add (ch);
+        }
     }
 
 
@@ -130,20 +129,18 @@ public class Init {
         }
     }
 
-
-
     public static void loadVjControlConfig() {
-	ConfigStreamTokenizer st;
+        ConfigStreamTokenizer st;
         ConfigIOStatus iostatus;
-	File f1 = null;
+        File f1 = null;
         File f2 = null;
-	FileReader r;
-	InputStreamReader inr;
-	String homedir;
+        FileReader r;
+        InputStreamReader inr;
+        String homedir;
 
-	// 1st - load the chunkdesc into memory...
+        // 1st - load the chunkdesc into memory...
 
-	URL descurl = ClassLoader.getSystemResource ("VjFiles/vjcontrol.dsc");
+        URL descurl = ClassLoader.getSystemResource ("VjFiles/vjcontrol.dsc");
 
         try {
             iostatus = ConfigIO.readChunkDescDB (descurl.openStream(), Core.descdb);
@@ -161,7 +158,7 @@ public class Init {
             System.exit(1);
         }
 
-		
+
         f1 = new File (Core.file.mangleFileName ("$HOME/.vjconfig/vjcontrol.cfg"));
         Core.vjcontrol_chunkdb.setName (f1.getName());
         Core.vjcontrol_chunkdb.setFile (f1);
@@ -172,15 +169,10 @@ public class Init {
             iostatus = ConfigIO.readConfigChunkDB (f2, Core.vjcontrol_chunkdb);
             Core.consoleInfoMessage ("Init", iostatus.toString());
             if (iostatus.getStatus() == iostatus.FAILURE) {
-		Core.consoleErrorMessage ("Init","Couldn't load VjControl prefs '" + f1 + "' or '" + f2 + "'.");
+                Core.consoleErrorMessage ("Init","Couldn't load VjControl prefs '" + f1 + "' or '" + f2 + "'.");
             }
         }
         else
             Core.consoleInfoMessage ("Init", iostatus.toString());
     }
-
-
 }
- 
-
-
