@@ -77,7 +77,7 @@ AC_ARG_ENABLE(pf-api,
 
 # Specify where Java3D is located
 AC_ARG_WITH(java3d,
-            [  --with-java3d=<PATH>     Path to Java3D JAR file(s) ],
+            [  --with-java3d=<PATH>    Path to Java3D JAR file(s) ],
             JAVA3D_JAR="$withval", JAVA3D_JAR='none')
 
 # -------------------------------------------- #
@@ -737,7 +737,10 @@ AC_OUTPUT
 cat <<BUILD_INFO
 
  Remember that you need to build Juggler with GNU make.
- GNU make is called 'gmake' on most systems.
- See the file README for more details on compiling the Juggler distribution.
+ GNU make is sometimes installed as 'gmake'.
+ To build and install everything into $prefix,
+ run the following:
+
+    gmake build install
 
 BUILD_INFO
