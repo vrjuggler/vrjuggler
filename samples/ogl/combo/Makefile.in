@@ -1,6 +1,8 @@
 # -----------------------------------------------------------------------------
 # Makefile.in for juggler/samples/ogl/combo
 # $Id$
+#
+# Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 # IMPORTANT NOTE FOR IRIX USERS:
 #     This application will not compile using the standard IRIX 6.x make(1).

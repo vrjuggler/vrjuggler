@@ -3,6 +3,8 @@
 #
 # This file <Makefile.base> provides variable information and targets shared
 # by all Makefiles in the VR Juggler source tree.  It requires GNU make.
+#
+# Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 # All Makefiles in the source tree should include this file for maximum
 # information sharing.
