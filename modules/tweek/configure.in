@@ -702,6 +702,7 @@ fi
 tweek_extra_ldflags="$EXTRA_LDFLAGS $CXX_ORB_LDFLAGS"
 
 jars='TweekBeans.jar TweekEvents.jar TweekNet.jar TweekServices.jar'
+ext_jars='wizard.jar ui.jar'
 
 if test "x$JAVA_ORB_JAR" != "xnone" ; then
    jars="$jars $JAVA_ORB_JAR"
@@ -709,6 +710,7 @@ fi
 
 changequote(<<, >>)
 tweek_java_api_jars=`echo "$jars" | sed -e 's/\(Tweek[A-Za-z]*\.jar\)/${prefix}\/bin\/\1/g' -e "s/ /$JCPS/g"`
+tweek_ext_jars=`echo "$ext_jars" | sed -e 's/\([a-z][a-z]*\.jar\)/${prefix}\/bin\/\1/g' -e "s/ /$JCPS/g"`
 changequote([, ])
 
 VJ_VERSION_GROK(VERSION)
@@ -785,6 +787,7 @@ AC_SUBST(tweek_idlflags_java)
 AC_SUBST(tweek_idl_incflag_java)
 AC_SUBST(tweek_idlgendir_java)
 AC_SUBST(tweek_java_api_jars)
+AC_SUBST(tweek_ext_jars)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.

@@ -136,6 +136,7 @@ my $echo_version   = 0;
 my $echo_static    = 0;
 my $use_linker     = 0;
 my $echo_jars      = 0;
+my $echo_ext_jars  = 0;
 my $echo_has_cxx   = 0;
 my $echo_has_java  = 0;
 
@@ -156,6 +157,7 @@ GetOptions('help|?' => \$script_help, 'min' => \$print_min,
            'idl=s' => \$idl_arg, 'idlflags=s' => \$idlflags_arg,
            'idlincflag=s' => \$idlincflag_arg,
            'idlgendir=s' => \$idlgendir_arg, 'jars' => \$echo_jars,
+           'ext-jars' => \$echo_ext_jars,
            'too-much-pressure' => \$echo_has_cxx,
            'is-jittery' => \$echo_has_java);
 
@@ -246,6 +248,7 @@ print "$idlflags\n" if $idlflags_arg;
 print "$idlincflag\n" if $idlincflag_arg;
 print "$idlgendir\n" if $idlgendir_arg;
 print qq(@tweek_java_api_jars@\n) if $echo_jars;
+print qq(@tweek_ext_jars@\n) if $echo_ext_jars;
 print "@BUILD_CXX@\n" if $echo_has_cxx;
 print "@BUILD_JAVA@\n" if $echo_has_java;
 
@@ -288,6 +291,8 @@ Options:
                                 based on the given parameter) are written
         [--jars]                Print JAR files making up the Tweek Java API
                                 libraries
+        [--ext-jars]            Print JAR files making up extensions to the
+                                basic Tweek Java API
         [--subsystem]           Print the VPR OS abstraction layer being used
 EOF
 
