@@ -74,12 +74,8 @@ DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
 
 # Full list of the libraries to build.
 LIBS		= $(GADGET_LIBRARY)
-
 STATIC_LIBS	= $(LIBS)
-
-ifneq (@OS_TYPE@, Win32)
 DYNAMIC_LIBS	= $(LIBS)
-endif
 
 # Dependencies for each of the various dynamic libraries we build.
 DYLIB_DEPS		= @DYLIB_DEPS@
@@ -129,7 +125,7 @@ afterbuild:
 # Construct the static version of the libraries.
 # -----------------------------------------------
 $(LIBDIR)/$(GADGET_LIB_STATIC) $(LIBDIR)/$(GADGET_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
-#ifneq (@OS_TYPE@, Win32)
+ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -140,7 +136,7 @@ $(LIBDIR)/$(GADGET_LIB_STATIC) $(LIBDIR)/$(GADGET_PROF_LIB_STATIC): $(OBJDIR)/*.
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
-#endif
+endif
 
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
