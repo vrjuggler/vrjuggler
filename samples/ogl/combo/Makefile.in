@@ -64,8 +64,15 @@ VPATH		= @srcdir@:@srcdir@/../cubes:@srcdir@/../wand:@srcdir@/../torus
 # 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-OBJECTS		= combo.@OBJ_FILE_SUFFIX@ cubesApp.@OBJ_FILE_SUFFIX@	\
-                  wandApp.@OBJ_FILE_SUFFIX@ torusApp.@OBJ_FILE_SUFFIX@
+CUBES_OBJS	= cubesApp.@OBJ_FILE_SUFFIX@
+WAND_OBJS	= wandApp.@OBJ_FILE_SUFFIX@
+TORUS_OBJS	= torusApp.@OBJ_FILE_SUFFIX@
+
+APP_OBJS	= $(CUBES_OBJS)	\
+                  $(WAND_OBJS)	\
+                  $(TORUS_OBJS)
+
+OBJECTS		= combo.@OBJ_FILE_SUFFIX@ $(APP_OBJS)
 
 # -----------------------------------------------------------------------------
 # Targets.
