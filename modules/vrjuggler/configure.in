@@ -717,6 +717,7 @@ AC_CONFIG_FILES([
    samples/OGL/simple/ConfigApp/Makefile
    samples/OGL/simple/MPApp/Makefile
    samples/OGL/simple/SimpleApp/Makefile
+   samples/OGL/simple/WallTest/Makefile
    samples/OGL/simple/contextApp/Makefile
    samples/OGL/simple/simpleInput/Makefile
    samples/OGL/ext/Makefile
