@@ -67,9 +67,11 @@ public class IntersensePanel extends JPanel implements CustomEditor
    private JPanel mStationsPanel = null;
    
    private JPanel mProxyPanel = new JPanel();
+
    /** Toolbar for controling ProxyTree. */
    private JToolBar mToolbar = new JToolBar();
    private JScrollPane mProxyTreeScrollPane = new JScrollPane();
+   
    /** Representation of proxies pointing at this device. */
    private ProxyTree mProxyTree = new ProxyTree(); 
    
