@@ -34,25 +34,11 @@
 #define _JCCL_RTRC_INTERFACE_SUBJECT_IMPL_H_
 
 #include <jccl/jcclConfig.h>
-#include <list>
-#include <sstream>
 
-#include <jccl/Net/JackalControl.h>
-#include <jccl/Config/ChunkFactory.h>
-#include <jccl/Config/ConfigChunkDB.h>
-#include <jccl/Config/ChunkDescDB.h>
-#include <jccl/Config/ConfigChunk.h>
-#include <jccl/RTRC/XMLConfigCommunicator.h>
-#include <jccl/Util/Debug.h>
-
-#include <tweek/tweekConfig.h>
 #include <tweek/CORBA/SubjectImpl.h>
-#include <tweek/CORBA/Observer.h>
 
 #include <jccl/RTRC/RTRCInterfaceSubject.h>
-#include <tweek/CORBA/SubjectImpl.h>
 
-#include <jccl/RTRC/ConfigManager.h>
 
 namespace jccl 
 {

@@ -30,6 +30,18 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <jccl/jcclConfig.h>
+
+#include <string>
+#include <list>
+#include <sstream>
+
+#include <jccl/Config/ChunkFactory.h>
+#include <jccl/Config/ConfigChunkDB.h>
+#include <jccl/Config/ChunkDescDB.h>
+#include <jccl/Config/ConfigChunk.h>
+#include <jccl/RTRC/ConfigManager.h>
+
 #include <jccl/RTRC/RTRCInterfaceSubjectImpl.h>
 
 namespace jccl
