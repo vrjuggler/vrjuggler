@@ -75,6 +75,40 @@
          <help>The initial value of all the analog inputs on this device.</help>
          <value label="Initial Value" defaultvalue="0.0"/>
       </property>
-      <upgrade_transform/>
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+
+            <xsl:template match="jconf:simulated_analog_device">
+               <xsl:element namespace="{$jconf}" name="simulated_analog_device">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">
+                     <xsl:text>2</xsl:text>
+                  </xsl:attribute>
+                  <xsl:element namespace="{$jconf}" name="keyboard_mouse_proxy">
+                     <xsl:value-of select="./jconf:event_window_proxy"/>
+                  </xsl:element>
+                  <xsl:for-each select="./jconf:increment_keypress">
+                     <xsl:copy-of select="."/>
+                  </xsl:for-each>
+                  <xsl:for-each select="./jconf:decrement_keypress">
+                     <xsl:copy-of select="."/>
+                  </xsl:for-each>
+                  <xsl:copy-of select="./jconf:delta"/>
+                  <xsl:copy-of select="./jconf:min"/>
+                  <xsl:copy-of select="./jconf:max"/>
+                  <xsl:copy-of select="./jconf:initial_value"/>
+                  <xsl:copy-of select="./jconf:device_host"/>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
    </definition_version>
 </definition>
