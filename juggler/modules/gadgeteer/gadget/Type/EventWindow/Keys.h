@@ -109,8 +109,8 @@ enum Keys
    KEY_SYSREQ,
    KEY_HOME,
    KEY_END,
-   KEY_PRIOR,
-   KEY_NEXT,
+   KEY_PRIOR,           /**< Page up */
+   KEY_NEXT,            /**< Page down */
    KEY_CAPS_LOCK,
    KEY_NUM_LOCK,
    KEY_SCROLL_LOCK,
@@ -157,36 +157,38 @@ enum Keys
    KEY_HELP,
    KEY_SPACE,
    KEY_ANY,
-   KEY_EXCLAM,
-   KEY_QUOTE_DBL,
-   KEY_NUMBER_SIGN,
-   KEY_DOLLAR,
-   KEY_PERCENT,
-   KEY_AMPERSAND,
-   KEY_APOSTROPHE,
-   KEY_PAREN_LEFT,
-   KEY_PAREN_RIGHT,
-   KEY_ASTERISK,
-   KEY_PLUS,
-   KEY_COMMA,
-   KEY_MINUS,
-   KEY_PERIOD,
-   KEY_SLASH,
-   KEY_COLON,
-   KEY_SEMICOLON,
-   KEY_LESS,
-   KEY_EQUAL,
-   KEY_GREATER,
-   KEY_QUESTION,
-   KEY_BRACKET_LEFT,
-   KEY_BRACKET_RIGHT,
+   KEY_EXCLAM,          /**< ! */
+   KEY_QUOTE_DBL,       /**< " */
+   KEY_NUMBER_SIGN,     /**< # */
+   KEY_DOLLAR,          /**< $ */
+   KEY_PERCENT,         /**< % */
+   KEY_AMPERSAND,       /**< & */
+   KEY_APOSTROPHE,      /**< ' */
+   KEY_PAREN_LEFT,      /**< ( */
+   KEY_PAREN_RIGHT,     /**< ) */
+   KEY_ASTERISK,        /**< * */
+   KEY_PLUS,            /**< + */
+   KEY_COMMA,           /**< , */
+   KEY_MINUS,           /**< - */
+   KEY_PERIOD,          /**< . */
+   KEY_SLASH,           /**< / */
+   KEY_COLON,           /**< : */
+   KEY_SEMICOLON,       /**< ; */
+   KEY_LESS,            /**< < */
+   KEY_EQUAL,           /**< = */
+   KEY_GREATER,         /**< > */
+   KEY_QUESTION,        /**< ? */
+   KEY_AT,              /**< @ */
+   KEY_BRACKET_LEFT,    /**< [ */
+   KEY_BACKSLASH,       /**< \ */
+   KEY_BRACKET_RIGHT,   /**< ] */
    KEY_ASCII_CIRCUM,
-   KEY_UNDERSCORE,
+   KEY_UNDERSCORE,      /**< _ */
    KEY_QUOTE_LEFT,
-   KEY_BRACE_LEFT,
-   KEY_BAR,
-   KEY_BRACE_RIGHT,
-   KEY_ASCII_TILDE,
+   KEY_BRACE_LEFT,      /**< { */
+   KEY_BAR,             /**< | */
+   KEY_BRACE_RIGHT,     /**< } */
+   KEY_ASCII_TILDE,     /**< ~ */
 
 /*
    KEY_EXCLAM_DOWN,
