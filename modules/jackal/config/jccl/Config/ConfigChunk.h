@@ -188,7 +188,10 @@ public:
 
    /** Specialization for ConfigChunkPtrs */
    bool setProperty(const std::string& prop, int ind, ConfigChunkPtr val)
-   { vprASSERT(false && "Not implemented"); }
+   {
+      vprASSERT(false && "Not implemented");
+      return true;
+   }
 
    /** Return a list of self's depenencies.
     *  Dependencies are any ConfigChunks named by a "Chunk Pointer" property
