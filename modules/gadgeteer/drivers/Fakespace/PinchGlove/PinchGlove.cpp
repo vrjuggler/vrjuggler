@@ -32,6 +32,7 @@
 
 #include <gadget/Devices/DriverConfig.h>
 
+#include <iomanip>
 #include <algorithm>
 #include <boost/concept_check.hpp>
 

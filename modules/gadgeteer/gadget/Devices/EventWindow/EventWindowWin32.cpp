@@ -32,6 +32,7 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <iomanip>
 #include <sys/types.h>
 
 #include <jccl/Config/ConfigElement.h>

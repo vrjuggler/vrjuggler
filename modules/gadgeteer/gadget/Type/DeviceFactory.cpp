@@ -31,7 +31,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
+
+#include <iomanip>
 #include <typeinfo>
+
 #include <vpr/vpr.h>
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceFactory.h>
