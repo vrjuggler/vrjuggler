@@ -75,8 +75,9 @@ public:
               vec[2] == _v[2]);
    }
 
-   //: Compute dot product
-   //! RETURNS: Dot product of this and _v
+   //: Compute dot product 
+   //! RETURNS: Dot product of this and _v (returns 
+   //! RETURNS:      cos of the angle [this] and [v] make)
    float dot(const vjVec3&  _v) const {
       return (vec[0] * _v[0] +
               vec[1] * _v[1] +
