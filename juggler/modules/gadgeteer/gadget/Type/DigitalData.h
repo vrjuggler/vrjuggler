@@ -73,6 +73,11 @@ public:
     }
 
 
+    operator int() const {
+        return mDigitalData;
+    }
+
+
 protected:
 
     int mDigitalData;
