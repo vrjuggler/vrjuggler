@@ -112,7 +112,7 @@ public:
    //  Find the devNum of the device whose name is instName
    //
    //  returns -1 if fails
-   int FindDeviceNum(char* instName);
+   int FindDeviceNum(const char* instName);
 
    //: Get a pointer to the instance at devNum.
    // return the pointer at the devNum position in the array. <br>
@@ -308,6 +308,37 @@ public:
    //! POST:  m_keyboardProxyArray[proxyNum]' = m_dummyKeyboard
    void StupifyKeyboard(int ProxyNum);
 
+   /**************************************************************
+    *  Gesture Proxy Level
+    *  Functions for Gesture proxies
+    **************************************************************/
+   //: Set the index ProxyNum in the gestureProxy array to proxy
+   // device at devNum in the device array<br>
+   // <br>
+   //! MODIFIES: self <br>
+   //! POST: m_gestureProxyArray[proxyNum]' = new Proxy at DevNum
+   //       return = 0 for fail, other for success
+   int SetGestureProxy(int ProxyNum, int DevNum);
+
+   //: Get the gesture proxy at the given index
+   vjGestureProxy* GetGestureProxy(int gestureProxyIndex)
+   {
+      vjASSERT(m_gestureProxyVector.size() > gestureProxyIndex);    // Check array bounds
+      return m_gestureProxyVector[gestureProxyIndex];
+   }
+
+   //: Add a gesture proxy.
+   // A gesture proxy to the dev is created
+   //! RETURNS: = index of new gesture proxy
+   int AddGestureProxy(int DevNum);
+
+   //: Turn the gesture proxy at index ProxyNum to point back
+   // to the default dummy gesture proxy. <br>
+   // <br>
+   //! MODIFIES: self <br>
+   //! POST:  m_gestureProxyArray[proxyNum]' = m_gestureKeyboard
+   void StupifyGesture(int ProxyNum);
+
 
 protected:
 
@@ -318,12 +349,14 @@ protected:
    vector<vjAnalogProxy*>     m_anaProxyVector;
    vector<vjGloveProxy*>      m_gloveProxyVector;
    vector<vjKeyboardProxy*>   m_keyboardProxyVector;
+   vector<vjGestureProxy*>    m_gestureProxyVector;
 
    vjDummyPosition   m_dummyPos;
    vjDummyDigital    m_dummyDig;
    vjDummyAnalog     m_dummyAna;
    vjDummyGlove      m_dummyGlove;
    vjDummyKeyboard   m_dummyKeyboard;
+   vjDummyGesture    m_dummyGesture;
 
    vjPosProxy*      m_dummyPosProxy;      // Proxy to the dummy pos
 
@@ -340,12 +373,15 @@ private:
    void ConfigureCyberGlove(vjConfigChunkDB *cdb);
    void Configure3DMouse(vjConfigChunkDB *cdb);
 #endif
-   void ConfigureKeyboard(vjConfigChunkDB *cdb);
+   void ConfigureKeyboard(vjConfigChunkDB* cdb);
+   void ConfigureSimGloveGesture(vjConfigChunkDB* cdb);
+
    void ConfigurePosProxy(vjConfigChunkDB* cdb);
    void ConfigureDigProxy(vjConfigChunkDB* cdb);
    void ConfigureAnaProxy(vjConfigChunkDB* cdb);
    void ConfigureGloveProxy(vjConfigChunkDB* cdb);
    void ConfigureKeyboardProxy(vjConfigChunkDB* cdb);
+   void ConfigureGestureProxy(vjConfigChunkDB* cdb);
 
    //@}
 
