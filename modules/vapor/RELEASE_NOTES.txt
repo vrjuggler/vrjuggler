@@ -19,6 +19,25 @@ Released: May 23, 2002
           parameter be specified.  This parameter names the hasher.  The
           hashers are vpr::InetAddrHash and vpr::Uint64Hash.
 
+ Version: 0.12.0
+Released: April 1, 2002
+    Required changes when upgrading from all previous versions:
+        * The serial port abstraction open() method no longer clears the
+          attribute bits on the newly created port on any platform.  This
+          must be done manually using the new clearAll() method.  Not all
+          platforms may deal with this correctly, so users should not
+          assume that clearing all the bits is necessarily the best route
+          to take during port initialization.
+
+ Version: 0.11.0
+Released: February 16, 2002
+    Required changes when upgrading from all previous versions:
+        * Calls to methods in the synchronization primitives classes
+          (vpr::Mutex, vpr::CondVar, etc.) return vpr::ReturnStatus instead
+          of integer values.  Code that checks return values on such methods
+          should now test for vpr::ReturnStatus::Success and
+          vpr::ReturnStatus::Fail.
+
  Version: 0.4.0
 Released: September 4, 2001
     Required changes when upgrading from 0.3.x:
