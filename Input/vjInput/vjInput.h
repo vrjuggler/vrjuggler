@@ -25,8 +25,6 @@
 #endif		/* ifndef WIN32 */
 
 #include <limits.h>
-#include <iostream.h>
-#include <fstream.h>
 #include <string.h>
 #include <sys/types.h>
 #include <fcntl.h>
@@ -176,11 +174,11 @@ protected:  // Helpers
    void swapValidIndexes();
 
 protected:
-   char *sPort;
-   char *instName;
-   int port_id;
-   vjThread* myThread;
-   int active;
+   char*       sPort;
+   char*       instName;
+   int         port_id;
+   vjThread*   myThread;   //: The thread being used by the driver
+   int         active;     //: Is the driver active
 
    //: Index holders
    // Current is the index to the current data being returned by GetData
@@ -191,12 +189,9 @@ protected:
    // UpdateData switches)
    int current, progress, valid;
 
-   // Mutex for swapping the pointers.. (Issue: move this to the device level
-   // so dummys don't have
-   //                        an unused datamember?)
-   vjMutex lock;
-   int baudRate;
-   unsigned int deviceAbilities;
+   vjMutex lock;        //: Mutex for swapping the pointers.
+   int baudRate;        //: Baud rate of the device (if it is serial device)
+   unsigned int deviceAbilities;    //: Combined mask of device abilities
 };
 
 #endif	/* VJ_INPUT_H */

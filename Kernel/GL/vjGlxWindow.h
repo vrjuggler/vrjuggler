@@ -1,4 +1,6 @@
-
+#ifndef _VJ_GLX_WIN_H
+#define _VJ_GLX_WIN_H
+#pragma once
 
 /* vjGLXWindow.h
  *
@@ -8,7 +10,6 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <GL/glx.h>
-#include <iostream.h>
 
 #include <Kernel/GL/vjGlWindow.h>
 #include <Kernel/vjKernel.h>
@@ -50,7 +51,7 @@ public:
       /* attempts to open the glxWindow & create the gl context.  Does nothing
        * if the window is already open (& returns true).
        * returns true for success, false for failure.
-       * The newly opened window will be set as the calling proccess' 
+       * The newly opened window will be set as the calling proccess'
        * current gl context.
        */
 
@@ -82,9 +83,9 @@ public:
       }
 
       // window attributes.
-      if ((w_attrib.colormap = XCreateColormap (x_display, 
-                                                RootWindow(x_display, screen),  
-                                                visual_info->visual,  
+      if ((w_attrib.colormap = XCreateColormap (x_display,
+                                                RootWindow(x_display, screen),
+                                                visual_info->visual,
                                                 AllocNone)) == NULL)
       {
          vjDEBUG(0) << "ERROR: XCreateColorMap failed on " << display_name << endl << vjDEBUG_FLUSH;
@@ -96,13 +97,13 @@ public:
 
       // create window
       if ((x_window = XCreateWindow (x_display, RootWindow(x_display, screen),
-                                     origin_x, origin_y - window_height, 
+                                     origin_x, origin_y - window_height,
                                      window_width, window_height,
                                      0, visual_info->depth,
-                                     InputOutput, 
+                                     InputOutput,
                                      visual_info->visual,
-                                     CWEventMask | CWColormap | CWBorderPixel, 
-                                     /* ^--attrib mask*/ 
+                                     CWEventMask | CWColormap | CWBorderPixel,
+                                     /* ^--attrib mask*/
                                      &w_attrib))  /* Attributes */
           == NULL)
       {
@@ -148,16 +149,16 @@ public:
       /* The next few lines of crud are needed to get it through the window
        * manager's skull that yes, we DO have a REASON for wanting the window
        * to be positioned WHERE WE TOLD YOU TO, and not where YOU think it should
-       * go, thank you very much, I'M the APPLICATION so stop $%^*&%#@! SECOND 
+       * go, thank you very much, I'M the APPLICATION so stop $%^*&%#@! SECOND
        * GUESSING ME!
        */
       XSizeHints *sizehints = XAllocSizeHints();
       sizehints->flags = USPosition;
       XSetWMNormalHints (x_display, x_window, sizehints);
-      XFree (sizehints);  
+      XFree (sizehints);
 
-      /* Now that we've straightened that out with a minimum of bloodshed, 
-       * we can actually map the window.  The XIfEvent lets us wait until 
+      /* Now that we've straightened that out with a minimum of bloodshed,
+       * we can actually map the window.  The XIfEvent lets us wait until
        * it's actually on screen.
        */
 
@@ -166,10 +167,10 @@ public:
 
       vjDEBUG(1) << "glxcWindow: done map" << endl << vjDEBUG_FLUSH;
 
-      if (! (glx_context = glXCreateContext (x_display, 
+      if (! (glx_context = glXCreateContext (x_display,
                                              visual_info, NULL, True)))
       {
-         vjDEBUG(0) << "ERROR: Couldn't create GlxContext for " << display_name << vjDEBUG_FLUSH 
+         vjDEBUG(0) << "ERROR: Couldn't create GlxContext for " << display_name << vjDEBUG_FLUSH
          << endl;
          return false;
       }
@@ -238,7 +239,7 @@ public:
 
 
    bool makeCurrent() {
-      /* returns true for success, 
+      /* returns true for success,
        * false for failure (eg window not open or glXMakeCurrent fails)
        */
       if (!window_is_open)
@@ -256,14 +257,14 @@ public:
     window_width = 400;
     window_height = 400;
 */
-      
+
        // Get the vector of display chunks
       vector<vjConfigChunk*>* dispSysChunk;
       dispSysChunk = vjKernel::instance()->getChunkDB()->getMatching("displaySystem");
 
       window_name = display->getName();
       pipe = display->pipe();
-      
+
       vjConfigChunk *cfg = display->configChunk();
       display_name = (*dispSysChunk)[0]->getProperty("xpipes", pipe);
       if(strcmp(display_name, "-1") == 0)    // Use display env
@@ -300,19 +301,19 @@ private:
       XVisualInfo *vi;
       const int MaxAttributes = 32;
       int viattrib[MaxAttributes] = {
-         GLX_DOUBLEBUFFER, 
-         GLX_RGBA, 
-         GLX_DEPTH_SIZE, 1, 
-         GLX_RED_SIZE, 1, 
-         GLX_GREEN_SIZE, 1, 
+         GLX_DOUBLEBUFFER,
+         GLX_RGBA,
+         GLX_DEPTH_SIZE, 1,
+         GLX_RED_SIZE, 1,
+         GLX_GREEN_SIZE, 1,
          GLX_BLUE_SIZE, 1,
-         GLX_ALPHA_SIZE, 1,  
+         GLX_ALPHA_SIZE, 1,
       };
       /* Notes on viattrib:  by using 1 for GLX_RED_SIZE et.al. we ask
        * for the _largest_ available buffers.  If this fails,  we might
        * want to try setting alpha size to 0 (smallest possible, maybe 0)
        * which is required eg. for alpha on the indys.
-       * 
+       *
        * Implementation note: the code below makes assumptions about the
        * exact order of the arguments in viattrib.  Alter those, & you'll
        * Need to redo the indices used.
@@ -321,7 +322,7 @@ private:
 
       if (!glXQueryExtension (display, NULL, NULL))
       {
-         vjDEBUG(0) << "ERROR: Display "<< display_name << 
+         vjDEBUG(0) << "ERROR: Display "<< display_name <<
          "doesn't support GLX.\n  Aborting.\n" <<flush << vjDEBUG_FLUSH;
          return NULL;
       }
@@ -353,7 +354,7 @@ private:
       }
 
       // if we reach here, we didn't.  Maybe we should make alpha optional.
-      vjDEBUG(0) << "WARNING: Display process for " << display_name 
+      vjDEBUG(0) << "WARNING: Display process for " << display_name
                  << "\n  Couldn't get display with alpha channel."
                  << "\n  Trying without." << endl << vjDEBUG_FLUSH;
       viattrib[11] = 0;
@@ -362,7 +363,7 @@ private:
 
       // But they told me to please go f___ myself
       // You know you just can't win.  -d. gilmour
-      return NULL; 
+      return NULL;
    }
 
    //!PRE:  window is an xwindow under display
@@ -370,11 +371,13 @@ private:
    //!NOTE: this is a utility function for InitGfx,  used to wait
    //+       until a window has actually been mapped.
    static int EventIsMapNotify (Display *display,  XEvent *e,  XPointer window) {
-      
+
       return ((e->type == MapNotify) && (e->xmap.window == (Window)window));
    }
 
 };
+
+#endif
 
 
 

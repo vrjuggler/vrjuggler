@@ -1,11 +1,11 @@
 #ifndef _THREAD_SGI_H_
 #define _THREAD_SGI_H_
+#pragma once
 
 // NOTE: This file(vjThreadSGI.h) MUST be included by vjThread.h.
 // Not the other way around
 
 #include <vjConfig.h>
-#include <iostream.h>
 #include <sys/resource.h>
 #include <sys/types.h>
 #include <sys/prctl.h>

@@ -1,5 +1,7 @@
 #ifndef _MemPoolHeap_h_
 #define _MemPoolHeap_h_
+#pragma once
+
 //----------------------------------------------
 // vjMemPoolHeap
 //
@@ -14,7 +16,6 @@
 
 #include <vjConfig.h>
 #include <stdlib.h>
-#include <iostream.h>
 #include <SharedMem/vjMemPool.h>
 
 
@@ -30,7 +31,7 @@ public:
     {
 	free(ptr);
     }
-    
+
     virtual void* reallocate(void *ptr, size_t new_sz)
     {
 	return realloc(ptr, new_sz);

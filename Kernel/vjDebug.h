@@ -9,8 +9,6 @@
 // --------------- //
 // --- Headers --- //
 // --------------- //
-#include <iostream.h>
-#include <iomanip.h>
 #include <stdlib.h>
 #include <assert.h>
 

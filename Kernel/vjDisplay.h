@@ -3,7 +3,6 @@
 
 class vjProjection;
 #include <vjConfig.h>
-#include <iostream.h>
 class vjDisplayManager;		    // Because prev include includes us
 
 #include <Math/vjVec3.h>
@@ -21,9 +20,9 @@ class vjSimulator;
 //  Since this captures all machine/OS/Window System specific stuff,
 //  no API specific details should be added to this area.  API specific
 //  window information should stay in the DrawManager which is API
-//  specific.
+//  specific. <br>
 //
-// Display also knows what type of display it is: Normal, Simulator, ...
+// Display also knows what type of display it is: Normal, Simulator, ... <br>
 //
 // @author Allen Bierbaum
 //  Date: 9-8-97
@@ -58,6 +57,7 @@ public:
          strncpy(mName, name, 99);
    }
 
+   //: Get the name of the display
    char* getName()
    { return mName;}
 

@@ -21,12 +21,11 @@
 //  the inputgroup can therefore keep an array of these around and
 //  treat them as positional devices which only return a single
 //  subDevice's amount of data.  (one vjPOS_DATA)
+//
+// See also: vjPosition
 //------------------------------------------------------------------------
 class vjPosProxy : public vjMemory
 {
-
-   /** @name Construction/Destruction */
-   //@{
 public:
    vjPosProxy(vjPosition* posPtr, int unitNum)  {
       assert( posPtr->FDeviceSupport(DEVICE_POSITION) );
@@ -36,10 +35,10 @@ public:
    }
 
    ~vjPosProxy() {}
-   //@}
 
 
-   /// Copy the device data to local storage, and transform it if necessary
+
+   //: Copy the device data to local storage, and transform it if necessary
    void UpdateData() {
       m_posData = *(m_posPtr->GetPosData(m_unitNum));
 
@@ -47,7 +46,7 @@ public:
          TransformData();
    }
 
-   /// Set the transform for this vjPosProxy
+   //: Set the transform for this vjPosProxy
    void SetTransform( float xoff, float yoff, float zoff,    // Translate
                       float xrot, float yrot, float zrot)   // Rotate
    {
@@ -56,7 +55,7 @@ public:
       m_matrixTransform.postTrans(m_matrixTransform, xoff, yoff, zoff);
    }
 
-   /// Set the vjPosProxy to now point to another device and subDevicenumber
+   //: Set the vjPosProxy to now point to another device and subDevicenumber
    void Set(vjPosition* posPtr, int unitNum, int useTransform = 0)
    {
       assert( posPtr->FDeviceSupport(DEVICE_POSITION) );
@@ -67,37 +66,26 @@ public:
       etrans = useTransform;
    }
 
-   /// Get the data
+   //: Get the data
    vjMatrix* GetData()
-   {
-      return &m_posData;
-   }
+   { return &m_posData; }
 
-   /// Return this device's subunit number
+   //: Return this device's subunit number
    int GetUnit()
-   {
-      return m_unitNum;
-   }
+   { return m_unitNum; }
 
-   /// Return the vjPosition pointer held by this proxy
+   //: Return the vjPosition pointer held by this proxy
    vjPosition* GetPositionPtr()
-   {
-      return m_posPtr;
-   }
+   { return m_posPtr; }
 
-   /// Get the transform being using by this proxy
+   //: Get the transform being using by this proxy
    vjMatrix& GetTransform()
-   {
-      return m_matrixTransform;
-   }
+   { return m_matrixTransform; }
 
 
-   /// Transform the data in m_posData
+   //: Transform the data in m_posData
    void TransformData()
-   {
-         // Need to fill in
-      m_posData.postMult(m_matrixTransform);
-   }
+   { m_posData.postMult(m_matrixTransform); }
 
 private:
    vjMatrix     m_posData;

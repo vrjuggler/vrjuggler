@@ -1,5 +1,6 @@
 #ifndef _VJ_BASE_THREAD_H_
 #define _VJ_BASE_THREAD_H_
+#pragma once
 // --------------------------------------------------------------------------
 // vjBaseThread.h
 // $Revision$
@@ -10,7 +11,6 @@
 // --------------------------------------------------------------------------
 
 #include <vjConfig.h>
-#include <iostream.h>
 #include <hash_map.h>
 #include <Threads/vjThreadFunctor.h>
 
