@@ -43,6 +43,15 @@ public:
       vpr::GUID* guid2 = vpr::GUIDFactory::createGUID(guid_struct);
       assertTest(*guid1 == *guid2);
 
+      // Test assignment
+      vpr::GUID guid3(true), guid4(true);
+      guid3 = guid4;
+      assertTest(guid3 == guid4);
+
+      // Test copy constructor
+      vpr::GUID guid5(guid3);
+      assertTest(guid5 == guid3);
+
       delete guid1;
       delete guid2;
    }
@@ -62,13 +71,14 @@ public:
    {
       const vpr::Uint32 iters(100000);
       vpr::Uint32 loops = iters;
+      vpr::GUID guid1;
 
       vpr::Interval time_in, time_out;
       time_in.setNow();
 
       while(loops--)
       {
-        vpr::GUIDFactory::createRandomGUID();
+        guid1 = vpr::GUIDFactory::createRandomGUID();
       }
 
       vpr::Interval diff = time_out - time_in;
