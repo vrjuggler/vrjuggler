@@ -30,13 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJ_OPENSG_APP__
-#define _VJ_OPENSG_APP__
+#ifndef _VJ_OPENSG_APP_H_
+#define _VJ_OPENSG_APP_H_
 
 #include <vrj/vrjConfig.h>
 #include <iostream>
 #include <iomanip>
 
+#include <vpr/Util/Debug.h>
 #include <vrj/Draw/OGL/GlContextData.h>
 
 /*-----------------------------OpenSG includes--------------------------------*/
@@ -150,7 +151,9 @@ protected:
 // Handle any initialization needed before API
 inline void OpenSGApp::init()
 {
-   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "OpenSGApp::init: Called.\n" << vprDEBUG_FLUSH;
+   vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_VERB_LVL,
+                        "vrj::OpenSGApp::init() entered.\n",
+                        "vrj::OpenSGApp::init() exited.\n");
 
    GlApp::init();
 
@@ -174,7 +177,9 @@ inline void OpenSGApp::init()
 
 inline void OpenSGApp::apiInit()
 {
-   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "OpenSGApp::initAPI: Called.\n" << vprDEBUG_FLUSH;
+   vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_VERB_LVL,
+                        "vrj::OpenSGApp::apiInit() entered.\n",
+                        "vrj::OpenSGApp::apiInit() exited.\n");
 
    this->initScene();
    vprASSERT(getSceneRoot() != OSG::NullFC);
@@ -182,8 +187,9 @@ inline void OpenSGApp::apiInit()
 
 inline void OpenSGApp::exit()
 {
-   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "OpenSGApp::exit: Called.\n"
-                                         << vprDEBUG_FLUSH;
+   vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_VERB_LVL,
+                        "vrj::OpenSGApp::exit() entered.\n",
+                        "vrj::OpenSGApp::exit() exited.\n");
 
    OSG::osgExit();
 }
@@ -191,7 +197,9 @@ inline void OpenSGApp::exit()
 /** Called once per context at context creation */
 inline void OpenSGApp::contextInit()
 {
-   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "OpenSGApp::contextInit: Called.\n" << vprDEBUG_FLUSH;
+   vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_VERB_LVL,
+                        "vrj::OpenSGApp::contextInit() entered.\n",
+                        "vrj::OpenSGApp::contextInit() exited.\n");
 
    context_data* c_data = &(*mContextData);  // Context specific data. Should be one copy per context
 
@@ -260,6 +268,10 @@ inline void OpenSGApp::contextPostDraw()
 
 inline void OpenSGApp::draw()
 {
+   vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_HVERB_LVL,
+                        "vrj::OpenSGApp::draw() entered.\n",
+                        "vrj::OpenSGApp::draw() exited.\n");
+
    glClear(GL_DEPTH_BUFFER_BIT);
 
    context_data* c_data = &(*mContextData);
