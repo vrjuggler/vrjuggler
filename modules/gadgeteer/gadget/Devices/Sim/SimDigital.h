@@ -14,11 +14,14 @@
 // When the key is released, the device is no longer set.
 //
 // This class should not be used directly by the user.
+//!PUBLIC_API
 class vjSimDigital : virtual public vjDigital, public vjSimInput
 {
 public:
-   vjSimDigital(vjConfigChunk* chunk);
+   vjSimDigital() {;}
    ~vjSimDigital() {;}
+
+   virtual bool config(vjConfigChunk* chunk);
 
    //: Return analog data
    virtual int GetDigitalData(int devNum=0)
@@ -37,6 +40,7 @@ public:
 
    //: Get the name of the digital device
    char* GetDeviceName() { return "vjSimDigital";}
+   static string getChunkType() { return string("SimDigital");}
 
 private:
    vector<int>             mDigitalData;     //: The digital data that we have

@@ -104,12 +104,17 @@ void vjThreeDMouse::GetPosData(vjPOS_DATA* &data){
 }
 
 
-vjThreeDMouse::vjThreeDMouse(vjConfigChunk *c) : vjPosition(c)
+bool vjThreeDMouse::config(vjConfigChunk *c)
     // PURPOSE: Constructor - Setup all vars
 {
 //   strncpy(sPort,"/dev/ttyd2",11);
 //    baseVector.setValue(0, 0, 0);   // Setup base offest as origin
-  baseVector[0] = baseVector[1] = baseVector[2] = 0;
+   if(!vjPosition::config(c))
+      return false;
+
+   baseVector[0] = baseVector[1] = baseVector[2] = 0;
+
+   return true;
 }
 
 

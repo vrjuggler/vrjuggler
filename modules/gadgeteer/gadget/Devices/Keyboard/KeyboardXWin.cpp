@@ -3,10 +3,14 @@
 #include <Kernel/vjDebug.h>
 
 //: Constructor
-vjXWinKeyboard::vjXWinKeyboard(vjConfigChunk *c) : vjInput(c), vjKeyboard(c)
+bool vjXWinKeyboard::config(vjConfigChunk *c)
 {
-    cout << "     vjKeyboard::vjKeyboard(vjConfigChunk*c) " << endl;
-    myThread = NULL;
+    vjDEBUG_BEGIN(1) << "vjXWinKeyboard::config:\n" << vjDEBUG_FLUSH;
+
+    if(!vjKeyboard::config(c))
+      return false;
+
+    // Done in vjInput --- myThread = NULL;
 
     oldMouseX = 0; oldMouseY = 0;
 
@@ -29,6 +33,9 @@ vjXWinKeyboard::vjXWinKeyboard(vjConfigChunk *c) : vjInput(c), vjKeyboard(c)
        m_mouse_sensitivity = 0.5;
 
     vjDEBUG(1) << "Mouse Sensititivty: " << m_mouse_sensitivity << endl << vjDEBUG_FLUSH;
+    vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
+
+    return true;
 }
 
 int vjXWinKeyboard::StartSampling()

@@ -1,9 +1,11 @@
 #include <Input/vjSim/vjSimPosition.h>
 #include <Math/vjCoord.h>
 
-vjSimPosition::vjSimPosition(vjConfigChunk* chunk)
-   : vjPosition(chunk), vjSimInput(chunk), vjInput(chunk)
-{
+bool vjSimPosition::config(vjConfigChunk* chunk)
+ {
+   if(!vjPosition::config(chunk) || !vjSimInput::config(chunk))
+      return false;
+
    mDTrans = chunk->getProperty("dtrans");
    mDRot   = chunk->getProperty("drot");
 
@@ -30,6 +32,8 @@ vjSimPosition::vjSimPosition(vjConfigChunk* chunk)
       mPos.makeTrans(x_pos, y_pos, z_pos);
    if((x_rot != 0.0f) || (y_rot != 0.0f) || (z_rot != 0.0f))
       mPos.postXYZEuler(mPos, x_rot, y_rot, z_rot);
+
+   return true;
 }
 
 

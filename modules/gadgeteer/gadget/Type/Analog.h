@@ -21,6 +21,7 @@
 //
 //  vjAnalog adds one new pure virtual function, GetAnalogData for retreiving
 //  the digital data, similar to the addition for vjPosition and vjDigital.
+//!PUBLIC_API
 //-----------------------------------------------------------------------------
 class vjAnalog : virtual public vjInput
 {
@@ -29,11 +30,13 @@ public:
 	//: Constructor
    //! POST: Set device abilities
    //! NOTE: Must be called from all derived classes
-   vjAnalog(vjConfigChunk *c) : vjInput(c) {
-	    deviceAbilities = deviceAbilities | DEVICE_ANALOG; }
-	vjAnalog () {  deviceAbilities = deviceAbilities | DEVICE_ANALOG; }
+   vjAnalog () {  deviceAbilities = deviceAbilities | DEVICE_ANALOG; }
 	~vjAnalog() {}
 	
+   // Just call base class config
+   //! NOTE: Let constructor set device abilities
+   virtual bool config(vjConfigChunk* c)
+   { return vjInput::config(c); }
 
 	/* vjInput pure virtual functions */
 	virtual int StartSampling() = 0;

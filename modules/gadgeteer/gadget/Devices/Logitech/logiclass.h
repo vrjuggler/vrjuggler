@@ -49,41 +49,29 @@
 //
 //  Digital driver support could/should be added in the future.
 //
-class vjThreeDMouse : public vjPosition {
-
-    public:
-	/** @name Construction/Destruction */
-	//@{
-	vjThreeDMouse(vjConfigChunk *c);
-	//@}
+//!PUBLIC_API
+class vjThreeDMouse : public vjPosition
+{
+public:
+	//: Default constructor
+	vjThreeDMouse() {;}
 	
-	/** @name vjInput pure virtual functions */
-	//@{
-        int StartSampling();
+   virtual bool config(vjConfigChunk* c);
+
+	/** vjInput pure virtual functions **/
+	int StartSampling();
 	int StopSampling();
 	void UpdateData();
 	int Sample()	
 	    { return GetRecord(&theData[current]); }
-	//@}
 	
-	/** @name vjInput virtual functions
-	 *
-	 *  virtual functions that inherited members should
-	 *  override but are not required to
-	 */
-	//@{
+	/** vjInput virtual functions **/
 	char* GetDeviceName() { return "vjThreeDMouse"; }
-	//@}
+	static string getChunkType() { return string("ThreeDMouse");}
 	
-	/** @name vjPosition pure virtual functions
-	 *
-	 *  pure virtual functions required by vjPosition
-	 */
-	//@{
+	/** vjPosition pure virtual functions **/
 	vjMatrix* GetPosData(int devNum = 0);
 	void GetPosData(vjPOS_DATA* &data);
-	//@}
-	
 	
 	/** @name Internal functions from original implementation
 	 *

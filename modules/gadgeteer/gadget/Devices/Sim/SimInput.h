@@ -16,6 +16,7 @@
 // Has the common routines for accessing and seting
 // up keyboard interface
 //
+//!PUBLIC_API
 class vjSimInput
 {
 protected:
@@ -27,7 +28,9 @@ protected:
    };
 
 public:
-   vjSimInput(vjConfigChunk* chunk);
+   vjSimInput() {;}
+
+   bool config(vjConfigChunk* chunk);
 
 protected:
    //: Check the given keypair

@@ -22,12 +22,17 @@ static void set_transmitter(int port, int transmitter);
 static void set_autoconfig(int port, int numbirds);
 static void set_group(int port);
 
-vjFlock::vjFlock(vjConfigChunk *c) : vjPosition(c), vjInput(c)
+vjFlock::vjFlock()
+{
+;
+}
+
+bool vjFlock::config(vjConfigChunk *c)
 {
   vjDEBUG(0) << "	 vjFlock::vjFlock(vjConfigChunk*)" << endl << vjDEBUG_FLUSH;
-  port_id = -1;
-  active = 0;
-  myThread = NULL;
+
+  if(!vjPosition::config(c))
+     return false;
 
   syncStyle = static_cast<int>(c->getProperty("sync"));//1;
   blocking = static_cast<int>(c->getProperty("blocking"));//0;
@@ -56,6 +61,8 @@ vjFlock::vjFlock(vjConfigChunk *c) : vjPosition(c), vjInput(c)
                << endl << vjDEBUG_FLUSH;
 
   InitCorrectionTable(c->getProperty("calfile"));
+
+  return true;
 }
 
 vjFlock::vjFlock(int sync, int block, int numBrds, int transmit,

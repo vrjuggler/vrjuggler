@@ -27,14 +27,18 @@ struct vjIBOX_DATA {
 //  the HCI library for a simple interface to the IBox.
 //
 //-----------------------------------------------------------------------------
+//!PUBLIC_API
 class vjIBox : public vjDigital, public vjAnalog
 {
 public:
    /** @name Construction/Destruction */
    //@{
-   vjIBox(vjConfigChunk *c);
+   vjIBox()
+   {;}
    ~vjIBox();
    //@}
+
+   virtual bool config(vjConfigChunk* c);
 
    /** @name vjInput Pure Virtual Functions */
    //@{
@@ -44,6 +48,8 @@ public:
    void UpdateData();
    char* GetDeviceName() { return "IBox";}
    //@}
+
+   static string getChunkType() { return string("IBox");}
 
    /** @name vjDigital Pure Virtual Functions */
    //@{

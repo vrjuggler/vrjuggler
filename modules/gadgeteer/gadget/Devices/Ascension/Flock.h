@@ -36,15 +36,18 @@ enum BIRD_FILT  {AC_NARROW, AC_WIDE, DC_FILTER};
 //    consistent with the vjInput/vjPosition functionality these
 //    are only left for building apps without vjConfigChunks
 //---------------------------------------------------------------------------
+//!PUBLIC_API
 class vjFlock : public vjPosition {
     public:
         /** @name Construction/Destruction */
 	//@{
-	vjFlock(vjConfigChunk *c);
+	vjFlock();
 	vjFlock(int sync, int block, int numBrds, int transmit, BIRD_HEMI
 		hemi, BIRD_FILT filt, char report, char* calfile);
 	~vjFlock();
 	//@}
+
+   virtual bool config(vjConfigChunk* c);
 
 	/** @name vjInput pure virtual functions
 	 *
@@ -66,6 +69,8 @@ class vjFlock : public vjPosition {
 	char* GetDeviceName() { return "vjFlock"; }
 	//@}
 	
+   static string getChunkType() { return string("Flock");}
+
 	/** @name vjPosition pure virtual functions
 	 *
 	 *  pure virtual functions required by vjPosition

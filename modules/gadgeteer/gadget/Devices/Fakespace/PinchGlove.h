@@ -5,16 +5,21 @@
 #include <Input/vjGlove/vjGlove.h>
 #include <Input/vjGlove/fsPinchGlove.h>
 
+//!PUBLIC_API
 class vjPinchGlove : public vjGlove
 {
 public:
-   //: Construct using chunk
-   vjPinchGlove(vjConfigChunk *c);
+   //: Construct
+   vjPinchGlove() : mGlove(NULL)
+   {;}
 
    //: Destroy the glove
    ~vjPinchGlove ();
 
+   virtual bool config(vjConfigChunk* c);
+
    virtual char* GetDeviceName() { return "vjPinchGlove";}
+   static string getChunkType() { return string("PinchGlove");}
 
    virtual int StartSampling();
    virtual int StopSampling();

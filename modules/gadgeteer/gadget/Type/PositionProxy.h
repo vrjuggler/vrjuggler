@@ -12,6 +12,7 @@
 #include <assert.h>
 
 #include <Input/vjPosition/vjPosition.h>
+#include <Input/InputManager/vjProxy.h>
 #include <Math/vjMatrix.h>
 
 //-----------------------------------------------------------------------
@@ -24,18 +25,14 @@
 //
 // See also: vjPosition
 //------------------------------------------------------------------------
-class vjPosProxy : public vjMemory
+//!PUBLIC_API
+class vjPosProxy : public vjMemory, public vjProxy
 {
 public:
-   vjPosProxy(vjPosition* posPtr, int unitNum)  {
-      assert( posPtr->FDeviceSupport(DEVICE_POSITION) );
-      m_posPtr = posPtr;
-      m_unitNum = unitNum;
-      etrans = false;            // Default to no transformation
-   }
+   vjPosProxy() : m_posPtr(NULL), m_unitNum(-1), etrans(false)
+   {;}
 
    ~vjPosProxy() {}
-
 
 
    //: Update the proxy's copy of the data
@@ -54,25 +51,10 @@ public:
    //+       followed by rotation that takes the device from where it physically
    //+       is in space to where you want it to be.
    void SetTransform( float xoff, float yoff, float zoff,    // Translate
-                      float xrot, float yrot, float zrot)   // Rotate
-   {
-      etrans = true;
-      if((xoff != 0.0f) || (yoff != 0.0f) || (zoff != 0.0f))
-         m_matrixTransform.makeTrans(xoff, yoff, zoff);
-      if((xrot != 0.0f) || (yrot != 0.0f) || (xrot != 0.0f))
-         m_matrixTransform.postXYZEuler(m_matrixTransform, xrot, yrot, zrot);
-   }
+                      float xrot, float yrot, float zrot);   // Rotate
 
    //: Set the vjPosProxy to now point to another device and subDevicenumber
-   void Set(vjPosition* posPtr, int unitNum, int useTransform = 0)
-   {
-      assert( posPtr->FDeviceSupport(DEVICE_POSITION) );
-      vjDEBUG(0) << "posPtr: " << posPtr << endl
-                 << "unit  : " << unitNum << endl << endl << vjDEBUG_FLUSH;
-      m_posPtr = posPtr;
-      m_unitNum = unitNum;
-      etrans = useTransform;
-   }
+   void Set(vjPosition* posPtr, int unitNum, int useTransform = 0);
 
    //: Get the data
    vjMatrix* GetData()
@@ -99,6 +81,10 @@ public:
    //+      specified in SetTransform
    void TransformData()
    { m_posData.postMult(m_matrixTransform); }
+
+   static string getChunkType() { return "PosProxy"; }
+
+   bool config(vjConfigChunk* chunk);
 
 private:
    vjMatrix     m_posData;
