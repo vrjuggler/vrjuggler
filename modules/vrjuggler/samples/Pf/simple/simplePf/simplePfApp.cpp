@@ -38,8 +38,8 @@ using namespace vrj;
 // ------- SCENE GRAPH ----
 // a standard organized interface for derived applications:
 //
-//            /-- mLightGroup -- mSun
-// mRootNode -- mModelRoot
+//                         /-- mLightGroup -- mSun
+// mRootNode -- mSceneScale -- mModelRoot
 //
 void simplePfApp::initScene()
 {
@@ -47,7 +47,11 @@ void simplePfApp::initScene()
    vprDEBUG(vprDBG_ALL, 0) << "simplePfApp::initScene\n" << vprDEBUG_FLUSH;
 
    // Allocate all the nodes needed
-   mRootNode             = new pfGroup;            // Root of our graph
+   mRootNode      = new pfGroup;            // Root of our graph
+   mSceneScale    = new pfDCS;
+
+   float scene_scale = 1.0f/gadget::PositionUnitConversion::ConvertToFeet;    // Scene uses feet as units
+   mSceneScale->setScale(scene_scale);
 
    // Create the SUN light source
    mLightGroup = new pfGroup;
@@ -63,6 +67,7 @@ void simplePfApp::initScene()
    mModelRoot = pfdLoadFile(mModelFileName.c_str());
 
    // --- CONSTRUCT STATIC Structure of SCENE GRAPH -- //
-   mRootNode->addChild( mModelRoot );
-   mRootNode->addChild(mLightGroup);
+   mRootNode->addChild(mSceneScale);
+   mSceneScale->addChild( mModelRoot );
+   mSceneScale->addChild(mLightGroup);
 }
