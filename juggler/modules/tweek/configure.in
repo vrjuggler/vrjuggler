@@ -809,34 +809,16 @@ if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
    tweek_64_flags='-64'
 fi
 
-
-# Helper function that removes any path information leading up to a JAR file
-# name (i.e, a file that ends in .jar).
-strip_jar_path ( ) {
-   jar_list=`echo $1 | sed -e "s/$JCPS/ /g"`
-
-   changequote(<<, >>)
-   for jar in $jar_list ; do
-      no_path_jar=`echo $jar | sed -e 's/^.*[/\]\([A-Za-z0-9_][A-Za-z0-9_.-]*\.jar\)/\1/'`
-      no_path_jar_list="$no_path_jar_list $no_path_jar"
-   done
-   changequote([, ])
-
-   # Strip off any leading spaces that would have been added in the above loop.
-   retval=`echo "$no_path_jar_list" | sed -e 's/^  *//'`
-   echo "$retval"
-}
-
 jars='Tweek.jar TweekBeans.jar TweekEvents.jar TweekNet.jar TweekBeanDelivery.jar TweekServices.jar kunststoff-mod.jar metouia.jar'
 ext_jars='wizard.jar ui.jar'
 
 if test "x$JDOM_JAR" != "xnone" ; then
-   strip_jdom=`strip_jar_path $JDOM_JAR`
+   VJ_STRIP_JAR_PATH(strip_jdom, [$JDOM_JAR])
    jars="$jars $strip_jdom"
 fi
 
 if test "x$JAVA_ORB_JAR" != "xnone" ; then
-   strip_java_orb=`strip_jar_path $JAVA_ORB_JAR`
+   VJ_STRIP_JAR_PATH(strip_java_orb, [$JAVA_ORB_JAR])
    jars="$jars $strip_java_orb"
 fi
 
