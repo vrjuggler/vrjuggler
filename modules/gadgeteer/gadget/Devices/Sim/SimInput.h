@@ -99,7 +99,7 @@ public:
    }
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
    {return(vpr::ReturnStatus::Succeed);}
-   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader, vpr::Uint64* delta)
    {return(vpr::ReturnStatus::Succeed);}
 
 protected:

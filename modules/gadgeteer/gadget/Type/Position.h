@@ -114,7 +114,7 @@ public:
 	}
 
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
-   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader, vpr::Uint64* delta);
 
 
 

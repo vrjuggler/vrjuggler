@@ -80,6 +80,7 @@ public:
    {
       mTol = 2;
       mAccept = false;
+      mReader = new vpr::ObjectReader(&syncPacket);
    }
    void getPacket(unsigned num);
    void sendAndClear();

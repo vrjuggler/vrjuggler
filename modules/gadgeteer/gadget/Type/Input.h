@@ -203,7 +203,7 @@ public:
       return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }
 
-   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader, vpr::Uint64* delta)
    {
       return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }

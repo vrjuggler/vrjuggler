@@ -439,7 +439,7 @@ namespace gadget
       return true;
    }
 
-   bool MsgPackage::recieveDeviceDataPacket(vpr::ObjectReader* object_reader, Input* virtual_device)
+   bool MsgPackage::recieveDeviceDataPacket(vpr::ObjectReader* object_reader, Input* virtual_device, vpr::Uint64* delta)
    {
       //////////////////////////////////////////////////////////////////////////////////////
       //																			      //
@@ -462,7 +462,9 @@ namespace gadget
       vprASSERT(object_reader != NULL && "Object Reader does not exist!!!");
       
          //Read the device data from the packet
-      virtual_device->readObject(object_reader);
+      std::cout << "SENDING A DELTA OF: " << *delta << std::endl;
+      virtual_device->readObject(object_reader, delta);
+      std::cout << "SENDING A DELTA OF: " << *delta << std::endl;
 
       vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  clrOutBOLD(clrCYAN,"[Parse Packet]RECEIVEING A DEVICE DATA PACKET\n") << vprDEBUG_FLUSH;
       return true;

@@ -81,10 +81,10 @@ public:
      return(vpr::ReturnStatus::Succeed);
    }
    
-   vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
+   vpr::ReturnStatus readObject(vpr::ObjectReader* reader, vpr::Uint64* delta)
    {
-     ComposedParent::readObject(reader);
-     NewParent::readObject(reader);
+     ComposedParent::readObject(reader, delta);
+     NewParent::readObject(reader, delta);
      return(vpr::ReturnStatus::Succeed);
    }
    
