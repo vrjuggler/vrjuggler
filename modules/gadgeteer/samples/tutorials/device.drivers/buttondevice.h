@@ -67,14 +67,33 @@ public:
       }
    }
 
-   virtual bool config(jccl::ConfigElementPtr e);
-   virtual void updateData();
+   /**
+    * Returns a string that matches this device's configuration element type.
+    */
+   static std::string getElementType();
 
+   /**
+    * When the system detects a configuration change for your driver, it will
+    * pass the jccl::ConfigElementPtr into this function.  See the
+    * documentation on config elements, for information on how to access them.
+    */
+   virtual bool config(jccl::ConfigElementPtr e);
+
+   /**
+    * Spanws the sample thread, which calls ButtonDevice::sample() repeatedly.
+    */
    virtual bool startSampling();
+
+   /**
+    * Records (or samples) the current data.  This is called repeatedly by the
+    * sample thread created by startSampling().
+    */
    virtual bool sample();
+
+   /** Kills the sample thread. */
    virtual bool stopSampling();
 
-   static std::string getElementType();
+   virtual void updateData();
 
    /**
     * Invokes the global scope delete operator.  This is required for proper
@@ -96,7 +115,13 @@ protected:
    }
 
 private:
-   static void   threadedSampleFunction(void* classPointer);
+   /**
+    * Our sampling function that is executed by the spawned sample thread.
+    * This function is declared as a static member of ButtonDevice.  It simply
+    * calls ButtonDevice::sample() over and over.
+    */
+   static void threadedSampleFunction(void* classPointer);
+
    int           mDigitalData;
    vpr::Thread*  mSampleThread;
    bool          mRunning;
