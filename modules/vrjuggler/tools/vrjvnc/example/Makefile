@@ -35,6 +35,7 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
+
 APP_NAME=	wand$(OS_EXE_EXT)
 
 all: $(APP_NAME)
@@ -55,6 +56,9 @@ EXTRA_PATH_FOR_SOURCES=	$(srcdir)/..
 
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
+
+#OBJDIR = $(DZR_HOSTTYPE).obj
+#DEPDIR = $(DZR_HOSTTYPE).obj
 
 # -----------------------------------------------------------------------------
 # Application build targets.
