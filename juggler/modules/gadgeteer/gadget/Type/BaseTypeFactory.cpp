@@ -31,7 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <vpr/vpr.h>
+#include <typeinfo>
+
 #include <gadget/Type/BaseTypeFactory.h>
 
 // Platform-independent devices.
@@ -40,16 +41,11 @@
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/Position.h>
+#include <gadget/Type/Keyboard.h>
 #include <gadget/Type/InputMixer.h>
 //#include <gadget/Type/BaseTypes.h>
+#include <gadget/Util/Debug.h>
 
-
-/* PThread Dependant Driver */
-#ifdef GADGET_HAVE_DTK
-#   include <gadget/Devices/Open/DTK/DTK.h>
-#endif
-
-#include <typeinfo>
 
 namespace gadget
 {
