@@ -56,7 +56,6 @@ public class PropertyPanel extends JPanel implements ActionListener {
     
     protected static AbstractBorder border=null;
     public Property prop;
-    public JPanel parent;
     private java.util.List valuepanels;  // vector of VarValuePanel
     private JPanel centerpanel, eastpanel;
     private JButton addbutton;
@@ -66,7 +65,7 @@ public class PropertyPanel extends JPanel implements ActionListener {
     protected GridBagConstraints c;
 
 
-    public PropertyPanel (Property pr, JPanel par, 
+    public PropertyPanel (Property pr,
                           ConfigUIHelper _uihelper_module) {
 	super();
         uihelper_module = _uihelper_module;
@@ -76,7 +75,6 @@ public class PropertyPanel extends JPanel implements ActionListener {
 					  new EmptyBorder (5,5,5,5));
 
 	prop = pr;
-	parent = par;
 	int i, n;
 	String label;
 	int newlen;
@@ -142,7 +140,7 @@ public class PropertyPanel extends JPanel implements ActionListener {
 
 	    VarValuePanel p;
 	    p = makeVarValuePanel (pr, i);
-	    p.setValue(pr.getValue(i));
+	    //p.setValue(pr.getValue(i));
 	    valuepanels.add(p);
 	    eastpanellayout.setConstraints(p, c);
 	    eastpanel.add (p);
@@ -156,6 +154,7 @@ public class PropertyPanel extends JPanel implements ActionListener {
 
 
     private VarValuePanel makeVarValuePanel (Property pr, int valindex) {
+        VarValuePanel retval;
 	if (pr.getDesc().getValType() == ValType.EMBEDDEDCHUNK) {
 	    ConfigChunk ch;
             PropertyDesc d = pr.getDesc();
@@ -169,12 +168,21 @@ public class PropertyPanel extends JPanel implements ActionListener {
                     ch.setName (d.getName() + " " + valindex);
             }
 	    if (useMiniPanel (ch))
-		return new VarValueMiniChunkPanel (pr.getHasVariableNumberOfValues(), ch, uihelper_module);
+		retval = new VarValueMiniChunkPanel ();
 	    else
-		return new VarValueBigChunkPanel (pr, ch, uihelper_module);
+		retval = new VarValueBigChunkPanel ();
+            retval.setConfigUIHelper (uihelper_module);
+            retval.setPropertyDesc (pr.getDesc());
+            retval.setValue (new VarValue (ch));
+            return retval;
 	}
-	else
-	    return new VarValueStandardPanel(pr.getDesc(), uihelper_module);
+	else {
+	    retval = new VarValueStandardPanel ();
+            retval.setConfigUIHelper (uihelper_module);
+            retval.setPropertyDesc (pr.getDesc());
+            retval.setValue (pr.getValue (valindex));
+            return retval;
+        }
     }
 
 
@@ -244,7 +252,7 @@ public class PropertyPanel extends JPanel implements ActionListener {
 	    eastpanellayout.setConstraints(p,c);
 	    eastpanel.add (p);
 	    validate();
-	    parent.validate();
+            getParent().validate();
 	}
         else if (e.getSource() instanceof VarValuePanel) {
             if (e.getActionCommand().equals ("Remove")) {
@@ -257,11 +265,9 @@ public class PropertyPanel extends JPanel implements ActionListener {
                     if (comps[i] == p) {
                         eastpanel.remove (comps[i-1]);
                         eastpanel.remove(p);
-                        Box pr = (Box)getParent();
-                        pr.validate();
-                        //pr.repaint (pr.getBounds());
-                        pr.repaint();  // in jdk < 1.4, box isn't a JComponent.
-                        // what in cthulhu's name were they thinking?
+                        Container parent = getParent();
+                        parent.validate();
+                        parent.repaint();
                         break;
                     }
                 }

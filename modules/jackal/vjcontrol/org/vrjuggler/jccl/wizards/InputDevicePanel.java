@@ -570,7 +570,9 @@ public class InputDevicePanel
                     keys_panel_int.add (l);
                     gbc.gridwidth = gbc.REMAINDER;
                     gbc.weightx = 1.0;
-                    vp = new VarValueMiniChunkPanel (false, ch, uihelper_module);
+                    vp = new VarValueMiniChunkPanel ();
+                    vp.setConfigUIHelper (uihelper_module);
+                    vp.setPropertyDesc (p.getDesc());
                     vp.setValue (p.getValue(0)); // yech... this api sucks
                     keys_panel_int_layout.setConstraints (vp, gbc);
                     keys_panel_int.add (vp);
@@ -585,7 +587,9 @@ public class InputDevicePanel
                     keys_panel_int.add (l);
                     gbc.gridwidth = gbc.REMAINDER;
                     gbc.weightx = 1.0;
-                    vp = new VarValueMiniChunkPanel (false, ch, uihelper_module);
+                    vp = new VarValueMiniChunkPanel ();
+                    vp.setConfigUIHelper (uihelper_module);
+                    vp.setPropertyDesc (p.getDesc());
                     vp.setValue (p.getValue(0)); // yech... this api sucks
                     keys_panel_int_layout.setConstraints (vp, gbc);
                     keys_panel_int.add (vp);
@@ -612,7 +616,9 @@ public class InputDevicePanel
                         keys_panel_int.add (l);
                         gbc.gridwidth = gbc.REMAINDER;
                         gbc.weightx = 1.0;
-                        vp = new VarValueMiniChunkPanel (false, ch, uihelper_module);
+                        vp = new VarValueMiniChunkPanel ();
+                        vp.setConfigUIHelper (uihelper_module);
+                        vp.setPropertyDesc (p.getDesc());
                         vp.setValue (p.getValue(i)); // yech... this api sucks
                         keys_panel_int_layout.setConstraints (vp, gbc);
                         keys_panel_int.add (vp);

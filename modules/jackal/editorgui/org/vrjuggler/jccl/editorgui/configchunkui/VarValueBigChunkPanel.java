@@ -64,7 +64,7 @@ public class VarValueBigChunkPanel
     implements ActionListener {
 
 
-    protected Property           prop;
+    protected PropertyDesc          desc;
     protected ConfigChunk        chunk;
     protected JButton            remove_button;
     protected JButton            edit_button;
@@ -73,14 +73,11 @@ public class VarValueBigChunkPanel
     protected java.util.List     action_listeners;
 
 
-    public VarValueBigChunkPanel(Property _prop, 
-                                 ConfigChunk _chunk, 
-                                 ConfigUIHelper _uihelper_module) {
+    public VarValueBigChunkPanel () {
 	super();
-	prop = _prop;
-	chunk = new ConfigChunk (_chunk);
+        chunk = null;
 	chunkframe = null;
-        uihelper_module = _uihelper_module;
+        uihelper_module = null;
         action_listeners = new ArrayList();
 
 	//setLayout (new BoxLayout (this, BoxLayout.X_AXIS));
@@ -93,15 +90,30 @@ public class VarValueBigChunkPanel
 	edit_button.addActionListener (this);
 	add (edit_button);
 
-	if (prop.getHasVariableNumberOfValues()) {
-	    /* then it's a variable # of values */
-	    remove_button = new JButton("Remove");
-	    remove_button.setMargin (in);
-	    add (remove_button);
-	    remove_button.addActionListener(this);
-	}
     }
 
+
+
+    public void setConfigUIHelper (ConfigUIHelper helper) {
+        if (uihelper_module == null) {
+            uihelper_module = helper;
+        }
+    }
+
+
+    public void setPropertyDesc (PropertyDesc _desc) {
+        if (desc == null) {
+            desc = _desc;
+
+	    if (desc.getHasVariableNumberOfValues()) {
+                remove_button = new JButton("Remove");
+                Insets in = new Insets (0,0,0,0);
+                remove_button.setMargin (in);
+                add (remove_button);
+                remove_button.addActionListener(this);
+            }
+        }
+    }
 
 
     public void setValue (VarValue v) {

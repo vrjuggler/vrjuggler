@@ -60,70 +60,94 @@ public class VarValueMiniChunkPanel
     protected java.util.List    action_listeners;
     protected JButton           remove_button;
     protected ConfigChunk       chunk;
-    protected boolean           use_remove_button;
+    protected PropertyDesc         desc;
     protected Vector            panels;
     protected ConfigUIHelper    uihelper_module;
 
 
-    public VarValueMiniChunkPanel(boolean _use_remove_button, 
-                                  ConfigChunk _chunk,
-                                  ConfigUIHelper _uihelper_module) {
+    public VarValueMiniChunkPanel () {
 	super();
-        use_remove_button = _use_remove_button;
-	chunk = new ConfigChunk (_chunk);
-        uihelper_module = _uihelper_module;
+
         action_listeners = new ArrayList();
 
         setLayout (new BoxLayout (this, BoxLayout.X_AXIS));
 
-	VarValue v2;
-	Property p;
-	int i,j,k,l;
-
 	panels = new Vector();
-
-        int n = chunk.getPropertiesSize();
-	for (i = 0, l=0; i < n; i++) {
-	    p = chunk.getProperty(i);
-            add (new JLabel (p.getName(), JLabel.RIGHT));
-	    j = p.getNum();
-	    for (k = 0; k < j; k++) {
-		v2 = p.getValue (j);
-		VarValuePanel vp = new VarValueStandardPanel (p.getDesc(), uihelper_module);
-		if (v2 != null)
-		    vp.setValue (v2);
-                add (vp);
-		panels.add (vp);
-	    }
-	}
-
-	if (use_remove_button) {
-	    remove_button = new JButton("Remove");
-	    Insets in = new Insets (0,0,0,0);
-	    remove_button.setMargin (in);
-            add (remove_button);
-	    remove_button.addActionListener(this);
-	}
     }
 
 
 
+    public void setConfigUIHelper (ConfigUIHelper helper) {
+        if (uihelper_module == null) {
+            uihelper_module = helper;
+            int i, n = panels.size();
+            for (i = 0; i < n; i++)
+                ((VarValuePanel)panels.get(i)).setConfigUIHelper (helper);
+        }
+    }
+
+
+    public void setPropertyDesc (PropertyDesc _desc) {
+        if (desc == null) {
+            desc = _desc;
+
+	    if (desc.getHasVariableNumberOfValues()) {
+                remove_button = new JButton("Remove");
+                Insets in = new Insets (0,0,0,0);
+                remove_button.setMargin (in);
+                //add (remove_button);
+                remove_button.addActionListener(this);
+            }
+        }
+    }
+
+
     public void setValue (VarValue v) {
 	if (v.getValType() == ValType.EMBEDDEDCHUNK) {
-	    chunk = new ConfigChunk (v.getEmbeddedChunk());
-	    VarValue v2;
-	    Property p;
-	    int i,j,k,l;
-            int n = chunk.getPropertiesSize();
-	    for (i = 0, l=0; i < n; i++) {
-		p = chunk.getProperty(i);
-		j = p.getNum();
-		for (k = 0; k < j; k++) {
-		    VarValuePanel vp = (VarValuePanel)panels.get(l);
-		    v2 = p.getValue (k);
-		    vp.setValue (v2);
-		    l++;
-		}
+            if (chunk == null) {
+                // first-time assignment, build UI
+                chunk = new ConfigChunk (v.getEmbeddedChunk());
+                VarValue v2;
+                Property p;
+                int i,j,k,l;
+                
+                int n = chunk.getPropertiesSize();
+                for (i = 0, l=0; i < n; i++) {
+                    p = chunk.getProperty(i);
+                    add (new JLabel (p.getName(), JLabel.RIGHT));
+                    j = p.getNum();
+                    for (k = 0; k < j; k++) {
+                        v2 = p.getValue (k);
+                        VarValuePanel vp = new VarValueStandardPanel ();
+                        vp.setConfigUIHelper (uihelper_module);
+                        vp.setPropertyDesc (p.getDesc());
+                        if (v2 != null)
+                            vp.setValue (v2);
+                        add (vp);
+                        panels.add (vp);
+                    }
+                }
+
+                if (remove_button != null)
+                    add (remove_button);
+            }
+            else {
+                // refresh values
+                chunk = new ConfigChunk (v.getEmbeddedChunk());
+                VarValue v2;
+                Property p;
+                int i,j,k,l;
+                int n = chunk.getPropertiesSize();
+                for (i = 0, l=0; i < n; i++) {
+                    p = chunk.getProperty(i);
+                    j = p.getNum();
+                    for (k = 0; k < j; k++) {
+                        VarValuePanel vp = (VarValuePanel)panels.get(l);
+                        v2 = p.getValue (k);
+                        vp.setValue (v2);
+                        l++;
+                    }
+                }
 	    }
 	}
     }

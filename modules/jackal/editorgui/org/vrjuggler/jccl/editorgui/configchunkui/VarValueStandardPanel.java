@@ -71,64 +71,83 @@ public class VarValueStandardPanel
 
     ConfigUIHelper    uihelper_module;
 
-    public VarValueStandardPanel(PropertyDesc d,
-                                 ConfigUIHelper _uihelper_module) {
+    public VarValueStandardPanel () {
 	super();
-	desc = d;
-        uihelper_module = _uihelper_module;
+        desc = null;
+        uihelper_module = null;
         action_listeners = new ArrayList();
-	int i, j, k;
 
 	setLayout(new BorderLayout (1,1));
 
-	if (desc.getValType() == ValType.CHUNK) {
-	    /* we build up a choice of all chunks in the db of allowed types */
-	    ConfigChunkDB db;
-	    ConfigChunk ch;
-	    String s;
+    }
 
-	    choice = new JComboBox(generateChunkSelectionList(desc.getEnumerations()));
-	    choice.setSelectedItem ("<No Selection>");
-	    add (choice, "Center");
-	}
-	else if (desc.getEnumerationsSize() > 0) {
-	    /* just present the enumeration names as choices */
-	    choice = new JComboBox();
-	    ListBoxModel bm = new ListBoxModel();
-	    //bm.addObject ("<No Selection>"); may not be safe for enums
-            DescEnum[] e = desc.getEnumerations();
-	    for (i = 0; i < e.length; i++)
-		bm.addObject(e[i].str);
-	    choice.setModel(bm);
-	    choice.setSelectedItem ("<No Selection>");
-	    add(choice, "Center");
-	}
-	else if (desc.getValType() == ValType.BOOL) {
-	    choice = new JComboBox();
-	    choice.addItem("True");
-	    choice.addItem("False");
-	    add (choice,"East");
-	}
-	else {
-	    /* just add a type label & the text string */
-	    add (new JLabel ("(" + desc.getValType().toString() + ")"), "West");
-	    if (desc.getValType() == ValType.INT)
-		text = new IntegerTextField (5);
-	    else if (desc.getValType() == ValType.FLOAT)
-		text = new FloatTextField (5);
-	    else
-		text = new StringTextField (10);
-	    add(text,"Center");
-	}
 
-	if (desc.getHasVariableNumberOfValues()) {
-	    /* then it's a variable # of values */
-	    removebutton = new JButton("Remove");
-	    Insets in = new Insets (0,0,0,0);
-	    removebutton.setMargin (in);
-	    add (removebutton,"East");
-	    removebutton.addActionListener(this);
-	}
+    public void setConfigUIHelper (ConfigUIHelper helper) {
+        if (uihelper_module == null) {
+            uihelper_module = helper;
+            if ((desc != null) && (desc.getValType() == ValType.CHUNK)) {
+                choice.setModel (generateChunkSelectionList (desc.getEnumerations()));
+                choice.setSelectedItem ("<No Selection>");
+            }
+        }
+    }
+
+
+    public void setPropertyDesc (PropertyDesc _desc) {
+        if (desc == null) {
+            desc = _desc;
+            int i, j, k;
+
+            if (desc.getValType() == ValType.CHUNK) {
+                /* we build up a choice of all chunks in the db of allowed types */
+                choice = new JComboBox ();
+                add (choice, "Center");
+
+                if (uihelper_module != null) {
+                    choice.setModel (generateChunkSelectionList (desc.getEnumerations()));
+                    choice.setSelectedItem ("<No Selection>");
+                }
+            }
+           else if (desc.getEnumerationsSize() > 0) {
+                /* just present the enumeration names as choices */
+                choice = new JComboBox();
+                ListBoxModel bm = new ListBoxModel();
+                //bm.addObject ("<No Selection>"); may not be safe for enums
+                DescEnum[] e = desc.getEnumerations();
+                for (i = 0; i < e.length; i++)
+                    bm.addObject(e[i].str);
+                choice.setModel(bm);
+                choice.setSelectedItem ("<No Selection>");
+                add(choice, "Center");
+            }
+            else if (desc.getValType() == ValType.BOOL) {
+                choice = new JComboBox();
+                choice.addItem("True");
+                choice.addItem("False");
+                add (choice,"East");
+            }
+            else {
+                /* just add a type label & the text string */
+                add (new JLabel ("(" + desc.getValType().toString() + ")"), "West");
+                if (desc.getValType() == ValType.INT)
+                    text = new IntegerTextField (5);
+                else if (desc.getValType() == ValType.FLOAT)
+                    text = new FloatTextField (5);
+                else
+                    text = new StringTextField (10);
+                add(text,"Center");
+            }
+
+            if (desc.getHasVariableNumberOfValues()) {
+                /* then it's a variable # of values */
+                removebutton = new JButton("Remove");
+                Insets in = new Insets (0,0,0,0);
+                removebutton.setMargin (in);
+                add (removebutton,"East");
+                removebutton.addActionListener(this);
+            }
+
+        }
     }
 
 
