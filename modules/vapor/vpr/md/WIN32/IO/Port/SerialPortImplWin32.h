@@ -97,7 +97,7 @@ public:
     // ------------------------------------------------------------------------
     inline virtual void
     setOpenBlocking (void) {
-		cout << "'setOpenBlocking' not implemented for Win32" << endl;
+        cout << "'setOpenBlocking' not implemented for Win32" << endl;
     }
 
     // ------------------------------------------------------------------------
@@ -147,9 +147,9 @@ public:
         Status retval;
 
         if(!CloseHandle(m_handle)){
-			retval.setCode(Status::Failure);
-		}
-		return retval;
+            retval.setCode(Status::Failure);
+        }
+        return retval;
     }
 
 
@@ -165,10 +165,10 @@ public:
     // ------------------------------------------------------------------------
     inline virtual Status
     enableBlocking (void) {
-		Status status;
-		status.setCode(Status::Failure);
-		cout << "Enabling blocking mode after port open is unsuported in Win32." << endl;
-		return status;
+        Status status;
+        status.setCode(Status::Failure);
+        cout << "Enabling blocking mode after port open is unsuported in Win32." << endl;
+        return status;
     }
 
     // ------------------------------------------------------------------------
@@ -182,10 +182,10 @@ public:
     // ------------------------------------------------------------------------
     inline virtual Status
     enableNonBlocking (void) {
-		Status status;
-		status.setCode(Status::Failure);
-		cout << "Enabling Nonblocking mode after port open is unsuported in Win32." << endl;
-		return status;
+        Status status;
+        status.setCode(Status::Failure);
+        cout << "Enabling Nonblocking mode after port open is unsuported in Win32." << endl;
+        return status;
     }
 
 
@@ -216,7 +216,7 @@ public:
     //
     //! ARGS: action - The new update action value.
     // ------------------------------------------------------------------------
-	void setUpdateAction (SerialTypes::UpdateActionOption action);
+    void setUpdateAction (SerialTypes::UpdateActionOption action);
 
     // ------------------------------------------------------------------------
     //: Query the serial port for the maximum buffer size.
@@ -261,7 +261,7 @@ public:
     //+       Environment</I> for more details.
     // ------------------------------------------------------------------------
     Status getTimeout(Uint8& timeout);
-	
+
     // ------------------------------------------------------------------------
     //: Set the value of the timeout to wait for data to arrive.  The value
     //+ given must be in tenths of a second.  This is only applicable in
@@ -631,7 +631,7 @@ public:
     //+          checking being done.
     // ------------------------------------------------------------------------
     SerialTypes::ParityType getParity(void);
-	
+
     // ------------------------------------------------------------------------
     //: Enable odd parity.
     //
@@ -808,9 +808,11 @@ public:
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     virtual Status readn_i (void* buffer, const size_t length,
-                            ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
+                            ssize_t& bytes_read,
+                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
         Status status;
-		return status;
+        return status;
     }
 
     // ------------------------------------------------------------------------
@@ -832,11 +834,11 @@ public:
              ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
 
-	HANDLE m_handle; // handle to communication file
-	DWORD openFlag; //flag to specify how to open comm port
-	const char* pName; //name of communication device
-	bool blocking; //flag for blocking io
-	bool parityMark;  //flag for parity marking
+    HANDLE m_handle; // handle to communication file
+    DWORD openFlag; //flag to specify how to open comm port
+    const char* pName; //name of communication device
+    bool blocking; //flag for blocking io
+    bool parityMark;  //flag for parity marking
 };
 
 
