@@ -48,6 +48,8 @@
 #include <vrj/Display/Display.h>
 #include <vrj/Display/Viewport.h>
 
+#include <vpr/Util/Debug.h>
+
 #include <boost/concept_check.hpp>
 
 
