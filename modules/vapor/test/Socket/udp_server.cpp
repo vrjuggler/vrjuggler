@@ -37,6 +37,7 @@
 
 int
 main (int argc, char* argv[]) {
+    int status;
     vpr::Uint16 port = 5432;   // Default listening port
 
     // If a command-line argument was given, use it as the port value instead
@@ -46,8 +47,9 @@ main (int argc, char* argv[]) {
     }
 
     // Create a datagram socket that will be bound to port.
-    vpr::SocketDatagram sock(vpr::InetAddr(port), vpr::InetAddr::AnyAddr);
-    int status;
+    vpr::InetAddr local(port);
+    const vpr::InetAddr& remote = vpr::InetAddr::AnyAddr;
+    vpr::SocketDatagram sock(local, remote);
 
     // Bind the socket to the port.
     if ( sock.open() && sock.bind() ) {
