@@ -44,6 +44,7 @@ import info.clearthought.layout.*;
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 
 
 public class DisplayWindowStartDialog
@@ -61,6 +62,26 @@ public class DisplayWindowStartDialog
       mResolution = resolution;
       mVisualIdField.setDocument(new HexidecimalDocument());
 
+      ConfigBroker cfg_broker = new ConfigBrokerProxy();
+      ConfigDefinition my_def =
+         cfg_broker.getRepository().get(EditorConstants.inputAreaType);
+
+      // Create a dummy config element to hand off to a new
+      // PropertyEditorPanel instance.
+      ConfigElementFactory factory =
+         new ConfigElementFactory(cfg_broker.getRepository().getAllLatest());
+      ConfigElement win_elt = factory.createUnique(my_def, ctx);
+      Object value = win_elt.getProperty(EditorConstants.lockKeyProperty, 0);
+      PropertyDefinition prop_def =
+         my_def.getPropertyDefinition(EditorConstants.lockKeyProperty);
+
+      mLockKeyEditor = new PropertyEditorPanel(ctx, value, prop_def, win_elt,
+                                               0, Color.white);
+
+      // Hang onto our dummy config element so that we can get back the value
+      // of the lock key later.
+      mWinElement = win_elt;
+
       try
       {
          jbInit();
@@ -71,6 +92,14 @@ public class DisplayWindowStartDialog
          setSpinnerModel(mBlueDepthSpinner, 1, 1, 8);
          setSpinnerModel(mAlphaDepthSpinner, 1, 1, 8);
          setSpinnerModel(mDepthBufferSpinner, 1, 1, 32);
+
+         mSleepTimeField.setValue(
+            mWinElement.getProperty(EditorConstants.sleepTimeProperty, 0)
+         );
+
+         Object start_locked =
+            mWinElement.getProperty(EditorConstants.startLockedProperty, 0);
+         mStartLockedCB.setSelected(Boolean.TRUE.equals(start_locked));
 
          // Validate the default values for the various text fields.
          validateUserInput();
@@ -94,8 +123,16 @@ public class DisplayWindowStartDialog
       this.setModal(true);
       enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 
+      mWinElement = winElt;
       mResolution = resolution;
       mVisualIdField.setDocument(new HexidecimalDocument());
+
+      PropertyDefinition prop_def =
+         winElt.getDefinition().getPropertyDefinition(EditorConstants.lockKeyProperty);
+      mLockKeyEditor =
+         new PropertyEditorPanel(ctx,
+                                 winElt.getProperty(EditorConstants.lockKeyProperty, 0),
+                                 prop_def, winElt, 0, Color.white);
 
       try
       {
@@ -122,14 +159,29 @@ public class DisplayWindowStartDialog
          mVisualIdField.setText(((Integer) fb_cfg.getProperty("visual_id", 0)).toString());
          mFSAACheckbox.setSelected(fb_cfg.getProperty("fsaa_enable", 0).equals(Boolean.TRUE));
 
-         mPositionXField.setValue(winElt.getProperty("origin", 0));
-         mPositionYField.setValue(winElt.getProperty("origin", 1));
-         mWidthField.setValue(winElt.getProperty("size", 0));
-         mHeightField.setValue(winElt.getProperty("size", 1));
+         mPositionXField.setValue(winElt.getProperty(
+            EditorConstants.originProperty, 0)
+         );
+         mPositionYField.setValue(winElt.getProperty(
+            EditorConstants.originProperty, 1)
+         );
+         mWidthField.setValue(winElt.getProperty(
+            EditorConstants.sizeProperty, 0)
+         );
+         mHeightField.setValue(winElt.getProperty(
+            EditorConstants.sizeProperty, 1)
+         );
 
          mStereoCheckbox.setSelected(winElt.getProperty("stereo", 0).equals(Boolean.TRUE));
          mBorderCheckbox.setSelected(winElt.getProperty("border", 0).equals(Boolean.TRUE));
          mHideMouseCheckbox.setSelected(winElt.getProperty("hide_mouse", 0).equals(Boolean.TRUE));
+
+         mSleepTimeField.setValue(
+            winElt.getProperty(EditorConstants.sleepTimeProperty, 0)
+         );
+         Object start_locked =
+            winElt.getProperty(EditorConstants.startLockedProperty, 0);
+         mStartLockedCB.setSelected(Boolean.TRUE.equals(start_locked));
 
          // Validate the default values for the various text fields.
          validateUserInput();
@@ -222,6 +274,21 @@ public class DisplayWindowStartDialog
       return (mHideMouseCheckbox.isSelected() ? Boolean.TRUE : Boolean.FALSE);
    }
 
+   public Object getLockKey()
+   {
+      return mWinElement.getProperty(EditorConstants.lockKeyProperty, 0);
+   }
+
+   public Boolean shouldStartLocked()
+   {
+      return (mStartLockedCB.isSelected() ? Boolean.TRUE : Boolean.FALSE);
+   }
+
+   public Integer getSleepTime()
+   {
+      return (Integer) mSleepTimeField.getValue();
+   }
+
    public static final int OK_OPTION     = JOptionPane.OK_OPTION;
    public static final int CANCEL_OPTION = JOptionPane.CANCEL_OPTION;
    public static final int CLOSED_OPTION = JOptionPane.CLOSED_OPTION;
@@ -239,31 +306,50 @@ public class DisplayWindowStartDialog
 
    private void jbInit() throws Exception
    {
+      // Columns are as follows:
+      //    0 -> panel start
+      //    1 -> window name label
+      //    2 -> spacer between window name label and window name field
+      //    3 -> window name field
+      //    4 -> panel end
       double main_size[][] =
-         {{TableLayout.MINIMUM, 5, TableLayout.FILL},
+         {{5, TableLayout.MINIMUM, 5, TableLayout.FILL, 5},
           {TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED,
            TableLayout.PREFERRED}};
       mMainLayout = new TableLayout(main_size);
 
       double bounds_size[][] =
-         {{TableLayout.MINIMUM, TableLayout.MINIMUM},
+         {{TableLayout.PREFERRED, TableLayout.PREFERRED},
           {TableLayout.PREFERRED, TableLayout.PREFERRED}};
       mBoundsPanelLayout = new TableLayout(bounds_size);
 
-      double fb_size[][] = {{TableLayout.MINIMUM, TableLayout.FILL, 5},
+      double fb_size[][] = {{TableLayout.MINIMUM, 5, TableLayout.PREFERRED},
                             {TableLayout.PREFERRED}};
       mFrameBufferPanelLayout = new TableLayout(fb_size);
 
       double fb_settings_size[][] =
-         {{TableLayout.FILL, TableLayout.MINIMUM},
+         {{TableLayout.FILL, TableLayout.PREFERRED},
           {TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED,
            TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED,
            TableLayout.PREFERRED}};
       mFBSettingsLayout = new TableLayout(fb_settings_size);
 
+      // Colums are as follows:
+      //    0 -> editor label
+      //    1 -> spacer betweeen label and editor
+      //    2 -> start for lock key and sleep time editors; end for checkbox
+      //         editor
+      //    3 -> end for sleep time editor
+      //    4 -> spacer between sleep time editor and sleep time units label
+      //    5 -> end for lock key editor; unit label for sleep time editor
+      //
+      // NOTE: Column 2 is a hack to make it appear as though the check box
+      // is two separate UI components.
       double window_props_size[][] =
-         {{TableLayout.FILL},
+         {{TableLayout.PREFERRED, 5, 20, TableLayout.MINIMUM, 5,
+           TableLayout.MINIMUM},
           {TableLayout.PREFERRED, TableLayout.PREFERRED, TableLayout.PREFERRED,
+           TableLayout.PREFERRED, TableLayout.PREFERRED,
            TableLayout.PREFERRED}};
       mWindowPropsPanelLayout = new TableLayout(window_props_size);
 
@@ -295,13 +381,13 @@ public class DisplayWindowStartDialog
       mPositionLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mPositionLabel.setLabelFor(mPositionPanel);
       mPositionLabel.setText("Position");
-      mWidthField.setMinimumSize(new Dimension(40, 21));
-      mWidthField.setPreferredSize(new Dimension(40, 21));
+      mWidthField.setMinimumSize(new Dimension(50, 21));
+      mWidthField.setPreferredSize(new Dimension(50, 21));
       mWidthField.setValue(new Integer(200));
       mWidthField.setHorizontalAlignment(SwingConstants.TRAILING);
       mSizeXLabel.setText("\u00D7");
-      mHeightField.setMinimumSize(new Dimension(40, 21));
-      mHeightField.setPreferredSize(new Dimension(40, 21));
+      mHeightField.setMinimumSize(new Dimension(50, 21));
+      mHeightField.setPreferredSize(new Dimension(50, 21));
       mHeightField.setValue(new Integer(200));
       mPositionXField.setMinimumSize(new Dimension(40, 21));
       mPositionXField.setPreferredSize(new Dimension(40, 21));
@@ -331,10 +417,22 @@ public class DisplayWindowStartDialog
       mDepthBufferLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mDepthBufferLabel.setLabelFor(mDepthBufferSpinner);
       mDepthBufferLabel.setText("Depth Buffer Size");
+      mBorderCheckbox.setHorizontalTextPosition(SwingConstants.LEFT);
       mBorderCheckbox.setSelected(true);
       mBorderCheckbox.setText("Has border");
+      mStereoCheckbox.setHorizontalTextPosition(SwingConstants.LEFT);
       mStereoCheckbox.setText("Render in stereo");
+      mHideMouseCheckbox.setHorizontalTextPosition(SwingConstants.LEFT);
       mHideMouseCheckbox.setText("Hide mouse inside window");
+      mLockKeyLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mLockKeyLabel.setText("Lock Key");
+      mStartLockedCB.setText("Start Locked");
+      mStartLockedCB.setHorizontalTextPosition(SwingConstants.LEFT);
+      mSleepTimeLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mSleepTimeLabel.setLabelFor(mSleepTimeField);
+      mSleepTimeLabel.setText("Sleep Time");
+      mSleepTimeField.setHorizontalAlignment(SwingConstants.RIGHT);
+      mSleepMSLabel.setText("ms");
       mOkButton.setEnabled(false);
       mOkButton.setMnemonic('0');
       mOkButton.setSelected(false);
@@ -356,7 +454,6 @@ public class DisplayWindowStartDialog
       mWindowPropsPanel.setBorder(mWindowPropsPanelBorder);
       mFBSettingsPanel.setBorder(mFBSettingsPanelBorder);
       mButtonPanel.setLayout(mButtonPanelLayout);
-      mButtonPanelLayout.setAlignment(FlowLayout.RIGHT);
       mVisualIdLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mVisualIdLabel.setLabelFor(mVisualIdField);
       mVisualIdLabel.setText("Visual ID");
@@ -364,18 +461,13 @@ public class DisplayWindowStartDialog
       mVisualIdField.setPreferredSize(new Dimension(28, 20));
       mVisualIdField.setToolTipText("Enter a GLX or WGL visual ID in hexadecimal notation or -1 to ignore");
       mVisualIdField.setText("-1");
-      mVisualIdField.addActionListener(new DisplayWindowStartDialog_mVisualIdField_actionAdapter(this));
-      mVisualIdField.addFocusListener(new DisplayWindowStartDialog_mVisualIdField_focusAdapter(this));
+      mVisualIdField.addActionListener(
+         new DisplayWindowStartDialog_mVisualIdField_actionAdapter(this)
+      );
+      mVisualIdField.addFocusListener(
+         new DisplayWindowStartDialog_mVisualIdField_focusAdapter(this)
+      );
       this.getContentPane().add(mMainPanel, BorderLayout.CENTER);
-      mMainPanel.add(mNameLabel, new TableLayoutConstraints(0, 0, 0, 0,
-                                                            TableLayout.RIGHT,
-                                                            TableLayout.CENTER));
-      mMainPanel.add(mNameField, new TableLayoutConstraints(2, 0, 2, 0,
-                                                            TableLayout.FULL,
-                                                            TableLayout.CENTER));
-      mMainPanel.add(mBoundsPanel, new TableLayoutConstraints(0, 1, 2, 1,
-                                                              TableLayout.FULL,
-                                                              TableLayout.FULL));
       mBoundsPanel.add(mSizeLabel, new TableLayoutConstraints(0, 0, 0, 0,
                                                             TableLayout.RIGHT,
                                                             TableLayout.CENTER));
@@ -396,19 +488,14 @@ public class DisplayWindowStartDialog
       mSizePanel.add(mWidthField, null);
       mSizePanel.add(mSizeXLabel, null);
       mSizePanel.add(mHeightField, null);
-      mFrameBufferPanel.setMinimumSize(new Dimension(450, 180));
-      mFrameBufferPanel.setPreferredSize(new Dimension(450, 180));
-      mMainPanel.add(mFrameBufferPanel,
-                     new TableLayoutConstraints(0, 2, 2, 2,
-                                                TableLayout.FULL,
-                                                TableLayout.FULL));
+      mFrameBufferPanel.setPreferredSize(new Dimension(450, 200));
       mFrameBufferPanel.add(mFBSettingsLabel,
                             new TableLayoutConstraints(0, 0, 0, 0,
-                                                       TableLayout.RIGHT,
+                                                       TableLayout.LEFT,
                                                        TableLayout.CENTER));
       mFrameBufferPanel.add(mFBSettingsPanel,
-                            new TableLayoutConstraints(1, 0, 1, 0,
-                                                       TableLayout.RIGHT,
+                            new TableLayoutConstraints(2, 0, 2, 0,
+                                                       TableLayout.FULL,
                                                        TableLayout.FULL));
       mFBSettingsPanel.add(mVisualIdLabel,
                            new TableLayoutConstraints(0, 0, 0, 0,
@@ -462,26 +549,63 @@ public class DisplayWindowStartDialog
                            new TableLayoutConstraints(0, 6, 1, 6,
                                                       TableLayout.LEFT,
                                                       TableLayout.CENTER));
-      mMainPanel.add(mWindowPropsPanel,
-                     new TableLayoutConstraints(0, 3, 2, 3,
-                                                TableLayout.FULL,
-                                                TableLayout.FULL));
       mWindowPropsPanel.add(mBorderCheckbox,
-                     new TableLayoutConstraints(0, 0, 0, 0,
-                                                TableLayout.LEFT,
+                     new TableLayoutConstraints(0, 0, 2, 0,
+                                                TableLayout.RIGHT,
                                                 TableLayout.CENTER));
       mWindowPropsPanel.add(mStereoCheckbox,
-                     new TableLayoutConstraints(0, 1, 0, 1,
-                                                TableLayout.LEFT,
+                     new TableLayoutConstraints(0, 1, 2, 1,
+                                                TableLayout.RIGHT,
                                                 TableLayout.CENTER));
       mWindowPropsPanel.add(mHideMouseCheckbox,
-                     new TableLayoutConstraints(0, 2, 0, 2,
-                                                TableLayout.LEFT,
+                     new TableLayoutConstraints(0, 2, 2, 2,
+                                                TableLayout.RIGHT,
                                                 TableLayout.CENTER));
+      mWindowPropsPanel.add(mLockKeyLabel,
+                            new TableLayoutConstraints(0, 3, 0, 3,
+                                                       TableLayoutConstraints.RIGHT,
+                                                       TableLayoutConstraints.CENTER));
+      mWindowPropsPanel.add(mLockKeyEditor,
+                            new TableLayoutConstraints(2, 3, 5, 3,
+                                                       TableLayoutConstraints.LEFT,
+                                                       TableLayoutConstraints.CENTER));
+      mWindowPropsPanel.add(mStartLockedCB,
+                            new TableLayoutConstraints(0, 4, 2, 4,
+                                                       TableLayoutConstraints.RIGHT,
+                                                       TableLayoutConstraints.CENTER));
+      mWindowPropsPanel.add(mSleepTimeLabel,
+                            new TableLayoutConstraints(0, 5, 0, 5,
+                                                       TableLayoutConstraints.RIGHT,
+                                                       TableLayoutConstraints.CENTER));
+      mWindowPropsPanel.add(mSleepTimeField,
+                            new TableLayoutConstraints(2, 5, 3, 5,
+                                                       TableLayoutConstraints.FULL,
+                                                       TableLayoutConstraints.CENTER));
+      mWindowPropsPanel.add(mSleepMSLabel,
+                            new TableLayoutConstraints(5, 5, 5, 5,
+                                                       TableLayoutConstraints.LEFT,
+                                                       TableLayoutConstraints.CENTER));
+      mMainPanel.add(mNameLabel,
+                     new TableLayoutConstraints(1, 0, 1, 0,
+                                                TableLayout.RIGHT,
+                                                TableLayout.CENTER));
+      mMainPanel.add(mNameField,
+                     new TableLayoutConstraints(3, 0, 3, 0,
+                                                TableLayout.FULL,
+                                                TableLayout.CENTER));
+      mMainPanel.add(mBoundsPanel,
+                     new TableLayoutConstraints(0, 1, 4, 1,
+                                                TableLayout.FULL,
+                                                TableLayout.FULL));
+      mMainPanel.add(mFrameBufferPanel,
+                     new TableLayoutConstraints(0, 2, 4, 2,
+                                                TableLayout.FULL,
+                                                TableLayout.FULL));
+      mMainPanel.add(mWindowPropsPanel,
+                     new TableLayoutConstraints(0, 3, 4, 3,
+                                                TableLayout.FULL,
+                                                TableLayout.FULL));
       this.getContentPane().add(mButtonPanel, BorderLayout.SOUTH);
-      mButtonPanel.add(mOkButton, null);
-      mButtonPanel.add(mCancelButton, null);
-      mButtonPanel.add(mHelpButton, null);
    }
 
    private void setupButtonPanel()
@@ -503,6 +627,7 @@ public class DisplayWindowStartDialog
    }
 
    private int status = CANCEL_OPTION;
+   private ConfigElement mWinElement = null;
    private Dimension mResolution = null;
 
    private JPanel mMainPanel = new JPanel();
@@ -548,11 +673,17 @@ public class DisplayWindowStartDialog
    private JCheckBox mBorderCheckbox = new JCheckBox();
    private JCheckBox mStereoCheckbox = new JCheckBox();
    private JCheckBox mHideMouseCheckbox = new JCheckBox();
+   private JLabel mLockKeyLabel = new JLabel();
+   private PropertyEditorPanel mLockKeyEditor = null;
+   private JCheckBox mStartLockedCB = new JCheckBox();
+   private JLabel mSleepTimeLabel = new JLabel();
+   private JFormattedTextField mSleepTimeField = new JFormattedTextField();
+   private JLabel mSleepMSLabel = new JLabel();
    private JPanel mButtonPanel = new JPanel();
+   private FlowLayout mButtonPanelLayout = new FlowLayout();
    private JButton mOkButton = new JButton();
    private JButton mCancelButton = new JButton();
    private JButton mHelpButton = new JButton();
-   private FlowLayout mButtonPanelLayout = new FlowLayout();
 
    void okPressed(ActionEvent e)
    {
