@@ -72,13 +72,12 @@ GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 namespace gadget
 {
 
-// Helper to return the index for theData array
-// given the stationNum we are dealing with and the bufferIndex
-// to get
+// Helper to return the index for theData array given the stationNum we are
+// dealing with and the bufferIndex to get.
 //! ARGS:stationNum - The number of the cube we care about
-//! ARGS:bufferIndex - the value of current, progress, or valid (it is an offset in the array)
-// XXX: We are going to say the cubes are 0 based
-
+//! ARGS:bufferIndex - the value of current, progress, or valid (it is an
+//                     offset in the array)
+// XXX: We are going to say the cubes are zero-based.
 unsigned int IntersenseAPI::getStationIndex(unsigned int stationNum,
                                             int bufferIndex)
 {
@@ -87,13 +86,12 @@ unsigned int IntersenseAPI::getStationIndex(unsigned int stationNum,
    return ret_val;
 }
 
-
-
-IntersenseAPI::IntersenseAPI() : stations(NULL),
-                                 mDone(false)
+IntersenseAPI::IntersenseAPI()
+   : stations(NULL)
+   , mDone(false)
 {
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-   << "*** IntersenseAPI::IntersenseAPI() ***\n" << vprDEBUG_FLUSH;
+      << "*** IntersenseAPI::IntersenseAPI() ***\n" << vprDEBUG_FLUSH;
 }
 
 std::string IntersenseAPI::getElementType()
@@ -104,8 +102,7 @@ std::string IntersenseAPI::getElementType()
 bool IntersenseAPI::config(jccl::ConfigElementPtr e)
 {
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-   << "*** Intersense::config() ***"
-   << std::endl << vprDEBUG_FLUSH;
+      << "*** IntersenseAPI::config() ***" << std::endl << vprDEBUG_FLUSH;
 
    // Configure the subclasses
    if( ! (Input::config(e) && Position::config(e)
@@ -132,24 +129,25 @@ bool IntersenseAPI::config(jccl::ConfigElementPtr e)
    // Create a new array of StationConfigs
    stations = new ISStationConfig[mTracker.getNumStations()];
 
-   vprASSERT(mTracker.getNumStations() == e->getNum("stations")
-   && "ERROR: IntersenseAPI is configured incorrectly. "
-   && "The number of stations specified does not match the number of embedded elements.");
+   vprASSERT(mTracker.getNumStations() == e->getNum("stations") &&
+             "ERROR: IntersenseAPI is configured incorrectly. " &&
+             "The number of stations specified does not match the number of embedded elements.");
 
    // Still print out an error, even if the above ASSERT gets compiled out for
    // an optimied build.
    if(mTracker.getNumStations() != e->getNum("stations"))
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-      << "ERROR: IntersenseAPI is configured incorrectly. "
-      << "The number of stations specified does not match the number of embedded elements."
-      << std::endl << vprDEBUG_FLUSH;
+         << "ERROR: IntersenseAPI is configured incorrectly. "
+         << "The number of stations specified does not match the number of "
+         << "embedded elements." << std::endl << vprDEBUG_FLUSH;
    }
 
    // Configure each station
    for( unsigned int i = 0; i < mTracker.getNumStations(); ++i )
    {
-      jccl::ConfigElementPtr station_config = e->getProperty<jccl::ConfigElementPtr>("stations", i);
+      jccl::ConfigElementPtr station_config =
+         e->getProperty<jccl::ConfigElementPtr>("stations", i);
 
       stations[i].enabled = station_config->getProperty<bool>("enabled");
       stations[i].stationIndex = station_config->getProperty<int>("station_index");
@@ -163,8 +161,8 @@ bool IntersenseAPI::config(jccl::ConfigElementPtr e)
    }
 
    //XXX: We currentl do not support sending a script file to the tracker since
-   //     it is so easy to screw up the whole tracker configuration/constillation
-   //     this way.
+   //     it is so easy to screw up the whole tracker
+   //     configuration/constillation this way.
    //const char* filename = e->getProperty<std::string>("script").c_str();
    //std::stringstream script;
    //std::ifstream scriptFile;
@@ -223,19 +221,19 @@ bool IntersenseAPI::startSampling()
    if (this->isActive() == true)
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-      << "gadget::IntersenseAPI was already started." << std::endl
-      << vprDEBUG_FLUSH;
-      return 0;
+         << "IntersenseAPI driver was already started." << std::endl
+         << vprDEBUG_FLUSH;
+      return false;
    }
 
    // Ensure that the thread has not already started.
    if(mThread != NULL)
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
-      << clrOutNORM(clrRED,"ERROR:")
-      << "gadget::IntersenseAPI: startSampling called, when already sampling.\n"
-      << vprDEBUG_FLUSH;
-      return 0;
+         << clrOutNORM(clrRED,"ERROR:")
+         << " gadget::IntersenseAPI::startSampling() called, when already "
+         << "sampling.\n" << vprDEBUG_FLUSH;
+      return false;
    }
 
    // Open the connection to the tracker
@@ -243,10 +241,10 @@ bool IntersenseAPI::startSampling()
    if (this->isActive() == false)
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
-      << clrOutNORM(clrRED,"ERROR:")
-      << "gadget::IntersenseAPI: mTracker.open() failed to connect to tracker.\n"
-      << vprDEBUG_FLUSH;
-      return 0;
+         << clrOutNORM(clrRED,"ERROR:")
+         << " [gadget::IntersenseAPI::startSampling()] mTracker.open() "
+         << "failed to connect to tracker.\n" << vprDEBUG_FLUSH;
+      return false;
    }
 
    // Set flag that will later allow us to stop the control loop.
@@ -254,16 +252,18 @@ bool IntersenseAPI::startSampling()
 
    // Create a new thread to handle the control
    vpr::ThreadMemberFunctor<IntersenseAPI>* memberFunctor =
-   new vpr::ThreadMemberFunctor<IntersenseAPI>(this, &IntersenseAPI::controlLoop, NULL);
+      new vpr::ThreadMemberFunctor<IntersenseAPI>(this,
+                                                  &IntersenseAPI::controlLoop,
+                                                  NULL);
    mThread = new vpr::Thread(memberFunctor);
 
    if ( ! mThread->valid() )
    {
-      return 0;   // Failed
+      return false;   // Failed
    }
    else
    {
-      return 1;   // Succeeded
+      return true;   // Succeeded
    }
 }
 
@@ -272,13 +272,13 @@ bool IntersenseAPI::sample()
    // If we are not active, then don't try to sample.
    if (!isActive())
    {
-      return 0;
+      return false;
    }
 
    // Create the data buffers to put the new data into.
-   std::vector<gadget::PositionData>   cur_pos_samples( mTracker.getNumStations() );
-   std::vector<gadget::DigitalData>    cur_digital_samples;
-   std::vector<gadget::AnalogData>     cur_analog_samples;
+   std::vector<gadget::PositionData> cur_pos_samples(mTracker.getNumStations());
+   std::vector<gadget::DigitalData>  cur_digital_samples;
+   std::vector<gadget::AnalogData>   cur_analog_samples;
 
 
    // get an initial timestamp for this entire sample. we'll copy it into
@@ -291,7 +291,6 @@ bool IntersenseAPI::sample()
    mTracker.updateData();
 
    vpr::Thread::yield();
-
 
    for ( unsigned int i = 0 ; i < (mTracker.getNumStations()); ++i )
    {
@@ -310,9 +309,10 @@ bool IntersenseAPI::sample()
                                      gmtl::Math::deg2Rad( mTracker.yRot( stationIndex ) ),
                                      gmtl::Math::deg2Rad( mTracker.xRot( stationIndex ) ) );
          gmtl::setRot( cur_pos_samples[i].mPosData, euler );
-         gmtl::setTrans( cur_pos_samples[i].mPosData, gmtl::Vec3f(mTracker.xPos( stationIndex ),
-                                                                  mTracker.yPos( stationIndex ),
-                                                                  mTracker.zPos( stationIndex )) );
+         gmtl::setTrans( cur_pos_samples[i].mPosData,
+                         gmtl::Vec3f(mTracker.xPos( stationIndex ),
+                                     mTracker.yPos( stationIndex ),
+                                     mTracker.zPos( stationIndex )) );
       }
       else
       {
@@ -323,8 +323,9 @@ bool IntersenseAPI::sample()
          gmtl::set( cur_pos_samples[i].mPosData, quatValue );
       }
 
-      // We start at the index of the first digital item (set in the config files)
-      // and we copy the digital data from this station to the Intersense device for range (min -> min+count-1)
+      // We start at the index of the first digital item (set in the config
+      // files) and we copy the digital data from this station to the
+      // InterSense device for range (min -> min+count-1).
 
       // Get the miniumum and maximum index that we should write data into.
       int min_digital = stations[i].dig_min;
@@ -332,7 +333,9 @@ bool IntersenseAPI::sample()
       if (stations[i].useDigital)
       {
          int j, k;
-         for ( j = 0, k = min_digital; (j < MAX_NUM_BUTTONS) && (k < IS_BUTTON_NUM) && (k < max_digital); j++, k++)
+         for ( j = 0, k = min_digital;
+               j < MAX_NUM_BUTTONS && k < IS_BUTTON_NUM && k < max_digital;
+               ++j, ++k)
          {
             DigitalData new_digital(mTracker.buttonState(stationIndex, j));
             new_digital.setTime();
@@ -347,7 +350,9 @@ bool IntersenseAPI::sample()
       {
          float f;
          int j, k;
-         for ( j = 0, k = min_analog; (j < MAX_ANALOG_CHANNELS) && (k < IS_ANALOG_NUM) && (k < max_analog); j++, k++)
+         for ( j = 0, k = min_analog;
+               j < MAX_ANALOG_CHANNELS && k < IS_ANALOG_NUM && k < max_analog;
+               ++j, ++k)
          {
             Analog::normalizeMinToMax(mTracker.analogData(stationIndex, j), f);
             AnalogData new_analog(f);
@@ -362,7 +367,7 @@ bool IntersenseAPI::sample()
    addDigitalSample(cur_digital_samples);
    addPositionSample(cur_pos_samples);
 
-   return 1;
+   return true;
 }
 
 bool IntersenseAPI::stopSampling()
@@ -370,16 +375,17 @@ bool IntersenseAPI::stopSampling()
    // Make sure that we are sampling in the first place.
    if (this->isActive() == false)
    {
-      return 0;
+      return false;
    }
 
    if (mThread != NULL)
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
-         << "gadget::IntersenseAPI::stopSampling(): Stopping the intersense thread... "
-         << vprDEBUG_FLUSH;
+         << "[gadget::IntersenseAPI::stopSampling()] Stopping the InterSense "
+         << "thread...\n" << vprDEBUG_FLUSH;
 
-      // Set the done flag to attempt to cause the control loop to exit naturally.
+      // Set the done flag to attempt to cause the control loop to exit
+      // naturally.
       mDone = true;
 
       mThread->join();
@@ -394,17 +400,18 @@ bool IntersenseAPI::stopSampling()
       {
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
             << clrOutNORM(clrRED,"\nERROR:")
-            << "gadget::IntersenseAPI::stopSampling(): Intersense tracker failed to stop.\n"
-            << vprDEBUG_FLUSH;
-         return 0;
+            << " [gadget::IntersenseAPI::stopSampling()] InterSense tracker "
+            << "failed to stop.\n" << vprDEBUG_FLUSH;
+         return false;
       }
 
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
-         << "*** IntersenseAPI has been shutdown. ***" << std::endl << vprDEBUG_FLUSH;
+         << "*** IntersenseAPI has been shutdown. ***" << std::endl
+         << vprDEBUG_FLUSH;
    }
-   return 1;
-}
 
+   return true;
+}
 
 void IntersenseAPI::updateData()
 {

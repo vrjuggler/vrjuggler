@@ -52,15 +52,17 @@ struct isConfig {
 };
 */
 
-class IntersenseAPIStandalone {
+class IntersenseAPIStandalone
+{
 public:
-   IntersenseAPIStandalone() : mActive(false), 
-                               mBaudRate(9600),
-                               mCurrentStation(0),
-                               mHandle(-1), 
-                               mNumStations(0),
-                               mPort(""), 
-                               mVerbose(false) 
+   IntersenseAPIStandalone()
+      : mActive(false)
+      , mBaudRate(9600)
+      , mCurrentStation(0)
+      , mHandle(-1)
+      , mNumStations(0)
+      , mPort("")
+      , mVerbose(false) 
    {;}
 
    /*
@@ -73,7 +75,7 @@ public:
    }
    */
 
-   bool open(const std::string& dso_location);
+   bool open(const std::string& dsoLocation);
    bool close();
 
    /**
@@ -85,155 +87,211 @@ public:
    //TODO: Functions are Tracker specific and require an assert of isActive
     
    void setPort(const std::string& port)
-   { mPort = port; }
+   {
+      mPort = port;
+   }
+
    void setBaudRate(const int& baud_rate)
-   { mBaudRate = baud_rate; }
+   {
+      mBaudRate = baud_rate;
+   }
+
    void setNumStations(unsigned int num)
-   { mNumStations = num; }
+   {
+      mNumStations = num;
+   }
+
    void setVerbose(bool verb)
-   { mVerbose = verb; }
+   {
+      mVerbose = verb;
+   }
    
    const std::string getPort()
-   { return mPort; }
+   {
+      return mPort;
+   }
+
    int getBaudRate()
-   { return mBaudRate; }
+   {
+      return mBaudRate;
+   }
+
    unsigned int getNumStations() 
-   { return mNumStations; }
+   {
+      return mNumStations;
+   }
+
    bool getVerbose() 
-   { return mVerbose; }
+   {
+      return mVerbose;
+   }
 
    /**
-    * Return if the Station is ON or OFF
+    * Return if the Station is ON or OFF.
     */
    bool getState(int currentStation)
-   //{ return mLocalConfigData[currentStation].State; }
-   { return mConfigData[currentStation].State; }
+   {
+//      return mLocalConfigData[currentStation].State;
+      return mConfigData[currentStation].State;
+   }
 
    /**
-    * Inertia cubes numbered 1-4.  If none is assigned the number is -1
+    * Inertia cubes numbered 1-4.  If none is assigned the number is -1.
     */
    int getInertiaCube(int currentStation) const 
-   //{ return mLocalConfigData[currentStation].InertiaCube; }
-   { return mConfigData[currentStation].InertiaCube; }
+   {
+//      return mLocalConfigData[currentStation].InertiaCube;
+      return mConfigData[currentStation].InertiaCube;
+   }
 
    /**
-    * Return the enhancment value
+    * Return the enhancment value.
     */
    int getEnhancement(int currentStation) const 
-   //{ return mLocalConfigData[currentStation].Enhancement; }
-   { return mConfigData[currentStation].Enhancement; }
+   {
+//      return mLocalConfigData[currentStation].Enhancement;
+      return mConfigData[currentStation].Enhancement;
+   }
 
    /**
-    * Return the sensitivity level. (Level 1-4)
+    * Return the sensitivity level (Level 1-4).
     */
    int getSensitivity(int currentStation) const 
-   //{ return mLocalConfigData[currentStation].Sensitivity; }
-   { return mConfigData[currentStation].Sensitivity; }
+   {
+//      return mLocalConfigData[currentStation].Sensitivity;
+      return mConfigData[currentStation].Sensitivity;
+   }
 
    /**
-    * Get the prediction time. (0-50 ms)
+    * Get the prediction time (0-50 ms).
     */
    int getPrediction(int currentStation) const 
-   //{ return mLocalConfigData[currentStation].Prediction; }
-   { return mConfigData[currentStation].Prediction; }
+   {
+//      return mLocalConfigData[currentStation].Prediction;
+      return mConfigData[currentStation].Prediction;
+   }
 
    /**
     * Returns the format of the angles. 
     * (0 == ISD_EULER; 1 == ISD_QUATERNION)
     */
    int getAngleFormat(int currentStation) const 
-   //{ return mLocalConfigData[currentStation].AngleFormat; }
-   { return mConfigData[currentStation].AngleFormat; }
+   {
+//      return mLocalConfigData[currentStation].AngleFormat;
+      return mConfigData[currentStation].AngleFormat;
+   }
 
    /**
     * Return whether the station should send time stamps or not.
     */
    bool getTimeStamped(int currentStation) const 
-   //{ return mLocalConfigData[currentStation].TimeStamped; }
-   { return mConfigData[currentStation].TimeStamped; }
+   {
+//      return mLocalConfigData[currentStation].TimeStamped;
+      return mConfigData[currentStation].TimeStamped;
+   }
 
    /**
     * Returns whether the station should send button values or not.
     */
    bool getButtons(int currentStation) const
-   //{ return mLocalConfigData[currentStation].GetButtons; }
-   { return mConfigData[currentStation].GetButtons; }
+   {
+//      return mLocalConfigData[currentStation].GetButtons;
+      return mConfigData[currentStation].GetButtons;
+   }
 
    /**
     * Returns whether the station should send analog values or not.
     */
    bool getAnalogData(int currentStation) const 
-   //{ return mLocalConfigData[currentStation].GetAnalogData; }
-   { return mConfigData[currentStation].GetAnalogData; }
-
-
+   {
+//      return mLocalConfigData[currentStation].GetAnalogData;
+      return mConfigData[currentStation].GetAnalogData;
+   }
 
    /////////////
    //
    
    /**
-    * Return if the Station is ON or OFF
+    * Return if the Station is ON or OFF.
     */
    void setState(int currentStation, bool state)
-   //{ mLocalConfigData[currentStation].State = state; }
-   { mConfigData[currentStation].State = state; }
+   {
+//      mLocalConfigData[currentStation].State = state;
+      mConfigData[currentStation].State = state;
+   }
 
    /**
-    * Inertia cubes numbered 1-4.  If none is assigned the number is -1
+    * Inertia cubes numbered 1-4.  If none is assigned the number is -1.
     */
    void setInertiaCube(int currentStation, int inertial_cube)
-   //{ mLocalConfigData[currentStation].InertiaCube = inertial_cube; }
-   { mConfigData[currentStation].InertiaCube = inertial_cube; }
+   {
+//      mLocalConfigData[currentStation].InertiaCube = inertial_cube;
+      mConfigData[currentStation].InertiaCube = inertial_cube;
+   }
 
    /**
-    * Return the enhancment value
+    * Return the enhancment value.
     */
    void setEnhancement(int currentStation, int enhancement)
-   //{ mLocalConfigData[currentStation].Enhancement = enhancement; }
-   { mConfigData[currentStation].Enhancement = enhancement; }
+   {
+//      mLocalConfigData[currentStation].Enhancement = enhancement;
+      mConfigData[currentStation].Enhancement = enhancement;
+   }
 
    /**
-    * Return the sensitivity level. (Level 1-4)
+    * Return the sensitivity level (Level 1-4).
     */
    void setSensitivity(int currentStation, int sensitivity) 
-   //{ mLocalConfigData[currentStation].Sensitivity = sensitivity; }
-   { mConfigData[currentStation].Sensitivity = sensitivity; }
+   {
+//      mLocalConfigData[currentStation].Sensitivity = sensitivity;
+      mConfigData[currentStation].Sensitivity = sensitivity;
+   }
 
    /**
-    * Get the prediction time. (0-50 ms)
+    * Get the prediction time (0-50 ms).
     */
    void setPrediction(int currentStation, int prediction)
-   //{ mLocalConfigData[currentStation].Prediction = prediction; }
-   { mConfigData[currentStation].Prediction = prediction; }
+   {
+//      mLocalConfigData[currentStation].Prediction = prediction;
+      mConfigData[currentStation].Prediction = prediction;
+   }
 
    /**
     * Returns the format of the angles. 
     * (0 == ISD_EULER; 1 == ISD_QUATERNION)
     */
    void setAngleFormat(int currentStation, int angle_format)
-   //{ mLocalConfigData[currentStation].AngleFormat = angle_format; }
-   { mConfigData[currentStation].AngleFormat = angle_format; }
+   {
+//      mLocalConfigData[currentStation].AngleFormat = angle_format;
+      mConfigData[currentStation].AngleFormat = angle_format;
+   }
 
    /**
     * Return whether the station should send time stamps or not.
     */
    void setTimeStamped(int currentStation, bool time_stamped)
-   //{ mLocalConfigData[currentStation].TimeStamped = time_stamped; }
-   { mConfigData[currentStation].TimeStamped = time_stamped; }
+   {
+//      mLocalConfigData[currentStation].TimeStamped = time_stamped;
+      mConfigData[currentStation].TimeStamped = time_stamped;
+   }
 
    /**
     * Returns whether the station should send button values or not.
     */
    void setButtons(int currentStation, bool get_buttons)
-   //{ mLocalConfigData[currentStation].GetButtons = get_buttons; }
-   { mConfigData[currentStation].GetButtons = get_buttons; }
+   {
+//      mLocalConfigData[currentStation].GetButtons = get_buttons;
+      mConfigData[currentStation].GetButtons = get_buttons;
+   }
 
    /**
     * Returns whether the station should send analog values or not.
     */
    void setAnalogData(int currentStation, bool get_analog_data)
-   //{ mLocalConfigData[currentStation].GetAnalogData = get_analog_data; }
-   { mConfigData[currentStation].GetAnalogData = get_analog_data; }
+   {
+//      mLocalConfigData[currentStation].GetAnalogData = get_analog_data;
+      mConfigData[currentStation].GetAnalogData = get_analog_data;
+   }
 
    //
    ////////////
@@ -314,65 +372,94 @@ public:
     * Get the x position of the i'th receiver. 
     */
    float xPos( const int& i )
-   { return mData.Station[i].Position[0]; }
+   {
+      return mData.Station[i].Position[0];
+   }
+
    /**
     * Gets the y position of the i'th receiver. 
     */
    float yPos( const int& i )
-   { return mData.Station[i].Position[1]; }
+   {
+      return mData.Station[i].Position[1];
+   }
+
    /**
     * Gets the z position of the i'th receiver. 
     */
    float zPos( const int& i )
-   { return mData.Station[i].Position[2]; }
+   {
+      return mData.Station[i].Position[2];
+   }
 
    /**
     * Gets the y rotation of the i'th receiver. 
     */
    float xRot( const int& i )
-   { return mData.Station[i].Orientation[2]; }
+   {
+      return mData.Station[i].Orientation[2];
+   }
+
    /**
     * Gets the y rotation of the i'th receiver. 
     */
    float yRot( const int& i )
-   { return mData.Station[i].Orientation[1]; }
+   {
+      return mData.Station[i].Orientation[1];
+   }
+
    /**
     * Gets the y rotation of the i'th receiver. 
     */
    float zRot( const int& i )
-   { return mData.Station[i].Orientation[0]; }
+   {
+      return mData.Station[i].Orientation[0];
+   }
 
    /**
     * Gets the x quaternion value of the i'th receiver. 
     */
    float xQuat( const int& i ) 
-   { return mData.Station[i].Orientation[2]; }
+   {
+      return mData.Station[i].Orientation[2];
+   }
+
    /**
     * Gets the y quaternion value of the i'th receiver. 
     */
    float yQuat( const int& i ) 
-   { return mData.Station[i].Orientation[1]; }
+   {
+      return mData.Station[i].Orientation[1];
+   }
+
    /**
     * Gets the z quaternion value of the i'th receiver. 
     */
    float zQuat( const int& i ) 
-   { return mData.Station[i].Orientation[0]; }
+   {
+      return mData.Station[i].Orientation[0];
+   }
+
    /**
     * Gets the w quaternion value of the i'th receiver. 
     */
    float wQuat( const int& i ) 
-   { return mData.Station[i].Orientation[3]; }
+   {
+      return mData.Station[i].Orientation[3];
+   }
 
    int buttonState(const unsigned int i, const unsigned int f);
 
    int analogData(const unsigned int i, const unsigned int j);
 
    bool isActive() 
-   { return mActive; }
+   {
+      return mActive;
+   }
 
 private:
    int convertPort(const std::string& port);
-private:
+
    bool                 mActive;
    int                  mBaudRate; 
    unsigned int         mCurrentStation; //0-3 for current 9/2000 IS900
@@ -388,7 +475,6 @@ private:
    
 //   isConfig                mLocalConfigData[ISD_MAX_STATIONS];
 
-   
    ISD_TRACKER_DATA_TYPE   mData;
 };
 
