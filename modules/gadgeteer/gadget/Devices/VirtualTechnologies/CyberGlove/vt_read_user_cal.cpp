@@ -165,8 +165,8 @@ CyberGloveBasic::vt_geom_in(FILE *inputfp, UserGeometry user)
   rewind(inputfp);		/* make sure we're at beginning of file */
 
   while (fgets(input_line, 81, inputfp))
-    if (found_geom =
-	(strncmp(input_line,geom_header,sizeof(geom_header)-1) == 0))
+    if ((found_geom =
+	 (strncmp(input_line,geom_header,sizeof(geom_header)-1) == 0)))
       break;
   if (!found_geom)
     return (vt_set_error("vt_read_calibration",CAL_ERROR1));
@@ -329,8 +329,8 @@ CyberGloveBasic::vt_read_glove_calibration(FILE *inputfp, CbGlove glove)
 
   /* look for the beginning of the hand calibration data */
   while (fgets(input_line,81,inputfp))
-    if (found_cal = (strncmp(input_line,glove_cal_header,
-			     sizeof(glove_cal_header)-1) == 0))
+    if ((found_cal = (strncmp(input_line,glove_cal_header,
+			     sizeof(glove_cal_header)-1) == 0)))
       break;
   if (!found_cal)
     return (vt_set_error("vt_read_calibration",CAL_ERROR1));
