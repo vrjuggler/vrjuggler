@@ -82,12 +82,12 @@ public:
    // ------------------------------------ //
    // ---- Thread specific data stuff ---- //
    // ------------------------------------ //
-   void ThreadTest::testThreadSpecificData();
+   void testThreadSpecificData();
 
    /**
    * @param arg - ptr to std::string id of thread
    */
-   void ThreadTest::tsIncCounter(void* arg);
+   void tsIncCounter(void* arg);
 
 
    static CppUnit::Test* suite()
