@@ -5,7 +5,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 
 			< rootfolder title="Juggler Team Guide" 
 				expand 
-				link="index.html"
+				link="${TEAMGUIDE}/index.html"
 				info="In depth documentation for the VR Juggler project.  Intended to be a resource for the Juggle Development Team (JDT)"
 				target="Body" 
 				image="BlackBook_Closed.gif" 
@@ -22,7 +22,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 				image="Leaf.gif" >
 			
 			< folder title="How To Build" 
-				link="build/index.html" 
+				link="${TEAMGUIDE}/build/index.html" 
 				info="What to do once you have the source" 
 				image="Battery.gif" >
 				< item title="Download Source" 
@@ -69,7 +69,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 					info="Rules for making submissions"
 					image="Leaf.gif" >
 				< item title="Coding Standard" 
-				   link="CppCodingStandard.html" 
+				   link="${TEAMGUIDE}/CppCodingStandard.html" 
 				   info="Required Reading: The Juggler Coding Standard.  Be polite, conform to the project standards.  Do your part to promote readable and maintainable coding" 
 				   image="Leaf_Script2.gif" >
 				< item title="Patches"

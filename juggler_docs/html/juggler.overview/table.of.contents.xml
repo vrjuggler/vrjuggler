@@ -5,7 +5,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 
 			< rootfolder title="Juggler Overview" 
 				expand 
-				link="index.html"
+				link="${OVERVIEW}/index.html"
 				info="Overview of VR Juggler"
 				target="Body" 
 				image="Book_Closed.gif" 
