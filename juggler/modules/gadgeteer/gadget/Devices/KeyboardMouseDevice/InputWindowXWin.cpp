@@ -196,7 +196,7 @@ void InputWindowXWin::controlLoop(void* nullParam)
       vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
          << "gadget::InputWindowXWin::controlLoop: Mouse set to initial lock. Locking it now.\n"
          << vprDEBUG_FLUSH;
-      lockMouse();                     // Lock the mouse
+      lockMouse( NULL );                     // Lock the mouse
    }
 
    // Loop on updating
