@@ -47,6 +47,7 @@ class vjSoundFactory;
 //: Base class for virtual construction of sound engines
 // Implementations of this class are registered with the device factory
 // for each device in the system
+//!PUBLIC_API:
 class vjSoundEngineConstructorBase
 {
 public:
