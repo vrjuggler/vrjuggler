@@ -223,9 +223,6 @@ protected:
    //**//vjConfigChunkDB*  mInitialChunkDB;     //: Initial chunks added to system before it is started
    //vjSemaphore       mRuntimeConfigSema;  //: Protects run-time config.  Only when this semaphore
                                           //+ is acquired can run-time config occur
-   /// Shared Memory stuff
-   vjMemPool*       sharedMemPool;
-
    /// Multi-user information
    std::vector<vjUser*>   mUsers;         //: A list of user objects in system
 
@@ -251,8 +248,6 @@ protected:
 
       //mInitialChunkDB = NULL;
       //mChunkDB = NULL;
-
-      sharedMemPool = NULL;
 
       // Print out the Juggler version number when the kernel is created.
       vjDEBUG(vjDBG_BASE, 0) << "======================================"
