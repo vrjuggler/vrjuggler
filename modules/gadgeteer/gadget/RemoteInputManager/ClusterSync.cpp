@@ -49,26 +49,26 @@ namespace gadget
    void ClusterSync::clientClusterSync(vpr::SocketStream* socket_stream)
    {
       mSocketStream = socket_stream;
-      //while ( mAccept == false )
-      //{
-      //   recieveHandshake();
-      //   createHandshake();
-      //   recieveExpectedTime();
-      //   createResponce();
-      //   clearIntervals();
-      //}     
+      while ( mAccept == false )
+      {
+         recieveHandshake();
+         createHandshake();
+         recieveExpectedTime();
+         createResponce();
+         clearIntervals();
+      }     
    }
    vpr::Interval ClusterSync::getClusterSync(vpr::SocketStream* socket_stream)
    {
       mSocketStream = socket_stream;
-      //while ( mAccept == false )
-      //{
-      //   createHandshake();
-      //   recieveHandshake();
-      //   createExpectedTime();
-      //   recieveResponce();
-      //   clearIntervals();
-      //}
+      while ( mAccept == false )
+      {
+         createHandshake();
+         recieveHandshake();
+         createExpectedTime();
+         recieveResponce();
+         clearIntervals();
+      }
       return(mDelta);
    }
 
@@ -76,13 +76,16 @@ namespace gadget
    /*inline*/ void ClusterSync::createHandshake()
    {
       mLocalSendTime.setNow();
-      if ( mLocalReceiveTime.getBaseVal() != 0 )// Makes a little more accurate
+         // If this is not the first handshake, then actually send the last receive time.
+      if ( mLocalReceiveTime.getBaseVal() != 0 )
       {
          mWriter.writeUint64(mLocalReceiveTime.getBaseVal());
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SYNC] Send Handshake: " << mLocalReceiveTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
       }
       else
       {
          mWriter.writeUint64(mLocalSendTime.getBaseVal());
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SYNC] Send Handshake: " << mLocalSendTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
       }
       sendAndClear();
    }
@@ -90,18 +93,21 @@ namespace gadget
    {
       getPacket(8);
       mLocalReceiveTime.setNow();
-      mRemoteSendTime.set(mReader->readUint64(), vpr::Interval::Base);
+      vpr::Uint64 temp =  mReader->readUint64();
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SYNC] Received Time: " << temp << "\n" << vprDEBUG_FLUSH;
+      mRemoteSendTime.set(temp, vpr::Interval::Base);
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SYNC] Received Time: " << mRemoteSendTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
    }
    /*inline*/ void ClusterSync::createExpectedTime()
    {
-      vprDEBUG(gadgetDBG_RIM,1) << "[SYNC] Calculate Expected Time: " << mRemoteSendTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SYNC] Calculate Expected Time: " << mRemoteSendTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
       mLatencyTime.set( (mLocalReceiveTime.getBaseVal()-mLocalSendTime.getBaseVal())/2, vpr::Interval::Base);
-      vprDEBUG(gadgetDBG_RIM,1) << "[SYNC] 	Latency: " << mLatencyTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SYNC] 	Latency: " << mLatencyTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
       mDelta=(mRemoteSendTime-mLocalSendTime-mLatencyTime);
-      vprDEBUG(gadgetDBG_RIM,1) << "[SYNC] 	Delta: " << mDelta.getBaseVal() << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SYNC] 	Delta: " << mDelta.getBaseVal() << "\n" << vprDEBUG_FLUSH;
       mLocalSendTime.setNow();
       mExpectedRemoteTime = mLocalSendTime + mDelta + mLatencyTime;     
-      vprDEBUG(gadgetDBG_RIM,1) << "[SYNC] 	Sent Expected Time: " << mExpectedRemoteTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SYNC] 	Sent Expected Time: " << mExpectedRemoteTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
       //mWriter.writeUint16(RIM_PACKET_MSG);
       //mWriter.writeUint16(MSG_SYNC_EXP_TIME);
       //mWriter.writeUint32(16);   //Length
@@ -110,22 +116,26 @@ namespace gadget
    }
    /*inline*/ void ClusterSync::recieveExpectedTime()
    {
-      vprDEBUG(gadgetDBG_RIM,1) << "[SYNC] Recieve Expected Time: " << mRemoteSendTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SYNC] Recieve Expected Time: " << mRemoteSendTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
       getPacket(8);
       mLocalReceiveTime.setNow();
-      vprDEBUG(gadgetDBG_RIM,1) << "[SYNC] 	Got Expected Time at: " << mLocalReceiveTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SYNC] 	Got Expected Time at: " << mLocalReceiveTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
       //vpr::Uint16 temp = mReader->readUint16();
       //temp = mReader->readUint16();
       //vpr::Uint32 length = mReader->readUint32();
       mRemoteSendTime.set(mReader->readUint64(), vpr::Interval::Base);
-      vprDEBUG(gadgetDBG_RIM,1) << "[SYNC] 	Got Expected Time: " << mRemoteSendTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
-      mErrorTime = mRemoteSendTime - mLocalReceiveTime;
-      vprDEBUG(gadgetDBG_RIM,1) << "[SYNC] 	Error of: " << mErrorTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
-
-      if ( mErrorTime.getBaseVal() == 0 )
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SYNC] 	Got Expected Time: " << mRemoteSendTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
+      if (mRemoteSendTime > mLocalReceiveTime)
+      {
+         mErrorTime = mRemoteSendTime - mLocalReceiveTime;
+      }
+      else
       {
          mErrorTime = mLocalReceiveTime - mRemoteSendTime;
       }
+      
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SYNC] 	Error of: " << mErrorTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
+
       if ( mErrorTime.getBaseVal() < mTol )
       {
          mAccept = true;
@@ -138,8 +148,8 @@ namespace gadget
    }
    /*inline*/ void ClusterSync::createResponce()
    {
-      vprDEBUG(gadgetDBG_RIM,1) << "[SYNC] Createing Responce" << "\n" << vprDEBUG_FLUSH;
-      vprDEBUG(gadgetDBG_RIM,1) << "[SYNC] 	mTol: " << mTol << " Accept?: " << mAccept << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SYNC] Createing Responce" << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SYNC] 	mTol: " << mTol << " Accept?: " << mAccept << "\n" << vprDEBUG_FLUSH;
       mWriter.writeBool(mAccept);
       sendAndClear();
    }
@@ -150,7 +160,7 @@ namespace gadget
       mAccept = mReader->readBool();
       if ( mAccept == false )
       {
-         vprDEBUG(gadgetDBG_RIM,1) << clrOutNORM(clrRED,"[SYNC]FAILED SYNC") << "\n" << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutNORM(clrRED,"[SYNC]FAILED SYNC") << "\n" << vprDEBUG_FLUSH;
       }
    }
 
