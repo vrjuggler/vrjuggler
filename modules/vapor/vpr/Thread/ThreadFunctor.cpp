@@ -54,6 +54,7 @@ namespace vpr {
     void
     vprThreadFunctorFunction (void* args) {
         BaseThreadFunctor& func = *(BaseThreadFunctor*)args;
+        vprASSERT( func.isValid() );
         func();	// Call the functor's operator ()
     }
 #elif defined(VPR_USE_PTHREADS)
@@ -72,6 +73,7 @@ namespace vpr {
             vpr_tm_inst->lock();
             vpr_tm_inst->unlock();
 
+            vprASSERT( func.isValid() );
             func();
 
 #   ifdef _PTHREADS_DRAFT_10
@@ -90,6 +92,7 @@ namespace vpr {
     void
     vprThreadFunctorFunction (void* args) {
         BaseThreadFunctor& func = *(BaseThreadFunctor*)args;
+        vprASSERT( func.isValid() );
         func();
     }
 #endif	/* VPR_USE_IRIX_SPROC */
