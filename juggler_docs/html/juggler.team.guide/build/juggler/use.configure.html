@@ -16,7 +16,7 @@
     <LI><A HREF="#quick">General Quick Start</A>
     <LI><A HREF="#autoconf">Autoconf and Autoheader</A>
     <LI><A HREF="#usage">Usage</A>
-    <LI><A HREF="#deubg">Debugging Configuration Errors</A>
+    <LI><A HREF="#debug">Debugging Configuration Errors</A>
     <LI><A HREF="#template">Template (<TT>.in</TT>) Files</A>
   </OL>
 <!-- install-web toc-end -->
@@ -277,6 +277,12 @@
     </P>
 
       <DL>
+        <DT><TT>--with-cc</TT>
+          <DD>Force the use of a C compiler other than what would be
+              detected automatically.
+        <DT><TT>--with-cxx</TT>
+          <DD>Force the use of a C++ compiler other than what would be
+              detected automatically.
         <DT><TT>--with-gcc</TT>
           <DD>Force the use of GCC as the compiler.  Currently as of
               Revision ${CONFIGURE_REV} of <TT>configure.in</TT>), use of
@@ -291,12 +297,6 @@
               the ABI.  The possible values for this are:
 
               <UL>
-                <LI>
-                  <TT>O32</TT> (<B>IRIX</B>): Use the old 32-bit ABI (the
-                  <TT>-32</TT> compiler option with the MIPSpro compilers).
-                  This is currently not supported and is not likely to be
-                  supported.
-                </LI>
                 <LI>
                   <TT>N32_M3</TT> (<B>IRIX</B>): Use the new 32-bit ABI and
                   the mips3 ISA (using MIPSpro compiler options <TT>-n32
@@ -359,9 +359,10 @@
           <DD>Give the JDK installation directory.  This is the base
               directory containing a <TT>bin</TT> subdirectory with all the
               JDK utilities (such as <TT>javac</TT> and <TT>jar</TT>).
-              <I>The default is <TT>/usr/java</TT>.</I>  In a Win32
-              environment, this option must be give using <TT>/</TT>'s as
-              the path separator rather than <TT>\</TT>'s.
+              <I>The default is the value in <TT>$JDK_HOME</TT> or
+              <TT>/usr/java</TT> if <TT>$JDK_HOME</TT> has no value.</I>
+              In a Win32 environment, this option must be give using
+              <TT>/</TT>'s as the path separator rather than <TT>\</TT>'s.
         <DT><TT>--with-pfroot=&lt;PATH&gt;</TT>
           <DD>Give the IRIS Performer installation directory.  This is
               the base directory containing an <TT>include</TT> subdirectory
@@ -440,6 +441,10 @@
               installation tree.  This option is not currently used for
               anything but may be used in the future for <TT>mtree</TT>
               directory specification files.  <I>The default is 0755.</I>
+        <DT><TT>--with-version=&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</TT>
+          <DD>Set the version number for this build.  If not specified, it
+              will be determined automatically from the contents of the
+              <TT>VERSION</TT> file.
         <DT><TT>--enable-gl-api</TT>
           <DD>Enable the OpenGL API in the library.  <I>This option cannot be
               disabled and is on by default.</I>
