@@ -490,7 +490,7 @@ namespace snx
 
       this->setAmbient( alias, sinfo.ambient );
 
-      std::cout<<"[snx]AudioWorks| DEBUG: bind() done"<<alias<<"\n"<<std::flush;
+      std::cout<<"                        bind() done...\n"<<std::flush;
 
    }
 
