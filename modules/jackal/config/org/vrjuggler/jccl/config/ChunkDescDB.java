@@ -102,6 +102,22 @@ public class ChunkDescDB
    }
 
    /**
+    * Builds the database from the given XML document. If the document's root
+    * element is a ChunkDescDB, the children are examined for ChunkDescs.
+    * ChunkDescs found in the node's tree are added to this ChunkDescDB.
+    *
+    * @param document      the XML document in which to look for ChunkDescs
+    *
+    * @throws IOException  if there is an error while building the database
+    */
+   public void build(Document document)
+      throws IOException
+   {
+      this.inputFile = null;
+      loadChunkDescs(document.getRootElement());
+   }
+
+   /**
     * Builds the database using the default input file. If the file contains an
     * XML document with the root type being &lt;ChunkDescDB&gt;, the children
     * are examined for ChunkDescs. ChunkDescs found in the node's tree are added
