@@ -221,7 +221,10 @@ public class VarValueStandardPanel
 	VarValue v = new VarValue(desc.getValType());
 	if (choice != null) {
 	    /* enumeration */
-	    String s = desc.getEnumValue((String)choice.getSelectedItem()).toString();
+            String s = null;
+            String item = (String)choice.getSelectedItem();
+            if (item != null)
+                s = desc.getEnumValue(item).toString();
 	    if ((s == null) || (s.equals("<No Selection>")))
 		s = "";
 
