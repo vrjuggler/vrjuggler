@@ -247,6 +247,9 @@ SocketImplNSPR::connect (vpr::Interval timeout) {
          if ( err == PR_WOULD_BLOCK_ERROR || err == PR_IN_PROGRESS_ERROR  ) {
             retval.setCode( Status::InProgress );
          }
+         else if ( err == PR_IO_TIMEOUT_ERROR ) {
+            retval.setCode(Status::Timeout);
+         }
          else {
             NSPR_PrintError("SocketImplNSPR::connect: Failed to connect.");
             retval.setCode(Status::Failure);
@@ -317,8 +320,13 @@ SocketImplNSPR::read_i (void* buffer, const size_t length, ssize_t& bytes_read,
 
    // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
    if ( bytes_read == -1 ) {
-      if ( PR_GetError() == PR_WOULD_BLOCK_ERROR ) {
+      PRErrorCode err_code = PR_GetError();
+
+      if ( err_code == PR_WOULD_BLOCK_ERROR ) {
          retval.setCode(Status::InProgress);
+      }
+      else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
+         retval.setCode(Status::Timeout);
       }
       else {
          retval.setCode(Status::Failure);
@@ -343,8 +351,13 @@ SocketImplNSPR::readn_i (void* buffer, const size_t length,
 
    // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
    if ( bytes_read == -1 ) {
-      if ( PR_GetError() == PR_WOULD_BLOCK_ERROR ) {
+      PRErrorCode err_code = PR_GetError();
+
+      if ( err_code == PR_WOULD_BLOCK_ERROR ) {
          retval.setCode(Status::InProgress);
+      }
+      else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
+         retval.setCode(Status::Timeout);
       }
       else {
          retval.setCode(Status::Failure);
@@ -368,8 +381,13 @@ SocketImplNSPR::write_i (const void* buffer, const size_t length,
                            NSPR_getInterval(timeout));
 
    if ( bytes_written == -1 ) {
-      if ( PR_GetError() == PR_WOULD_BLOCK_ERROR ) {
+      PRErrorCode err_code = PR_GetError();
+
+      if ( err_code == PR_WOULD_BLOCK_ERROR ) {
          retval.setCode(Status::InProgress);
+      }
+      else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
+         retval.setCode(Status::Timeout);
       }
       else {
          retval.setCode(Status::Failure);
