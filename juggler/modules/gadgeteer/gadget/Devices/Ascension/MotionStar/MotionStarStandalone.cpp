@@ -346,10 +346,10 @@ aMotionStar::sample () {
       struct timeval first, second;
 
       while(totalBytesReceived != totalBytesNeeded){
-        gettimeofday(&first);
+        gettimeofday(&first, NULL);
         bytesReceived = recv(s, (void*) lpBuffer,
                              (totalBytesNeeded - totalBytesReceived), 0);
-        gettimeofday(&second);
+        gettimeofday(&second, NULL);
 
         if (bytesReceived < 0)
           perror("recv2"), exit(1);
