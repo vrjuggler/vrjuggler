@@ -210,8 +210,17 @@ endif
 # =============================================================================
 
 # Subdirectories used for recursion through the source tree.
-SUBDIRS		= Math Config Kernel Environment Performance Input	\
-                  SharedMem Sound Sync Threads Utils
+SUBDIRS		= Math		\
+                  Config	\
+                  Kernel	\
+                  Environment	\
+                  Performance	\
+                  Input		\
+                  SharedMem	\
+                  Sound		\
+                  Sync		\
+                  Threads	\
+                  Utils
 
 # The list of ABIs supported on this platform.
 ABI_LIST	= @ABI_LIST@
