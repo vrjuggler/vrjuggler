@@ -1,6 +1,10 @@
 #ifndef CPPUNIT_EXTENSIONS_METRICREGISTRY_H_
 #define CPPUNIT_EXTENSIONS_METRICREGISTRY_H_
 
+#ifdef _WIN32
+#  include <windows.h>
+#endif
+
 #include <cppunit/TestAssert.h>
 
 #include <iostream>
@@ -119,7 +123,7 @@ public:
          else if(cur_value > old_sample)
          {
             // Only note new one if we have a "significant" version
-            float percent_diff = (cur_value-old_sample)/old_sample;
+            float percent_diff = static_cast<float>((cur_value-old_sample)/old_sample);
             if(percent_diff > soft_limit)
             {
                std::cout << "New metric for [" << test_key << "]  new value:" << cur_value << "  old value:" << old_sample
@@ -169,7 +173,7 @@ public:
          else if(cur_value < old_sample)
          {
             // Only note new one if we have a "significant" version
-            float percent_diff = (old_sample-cur_value)/old_sample;
+            float percent_diff = static_cast<float>((old_sample-cur_value)/old_sample);
             if(percent_diff > soft_limit)
             {
                std::cout << "Changed metric for [" << test_key << "]  new value:" << cur_value
@@ -226,7 +230,7 @@ protected:
       MetricMapType::iterator i( mMetricMap.begin() );
       for(; i!=mMetricMap.end(); ++i)
       {
-         int num_spaces = 65 - (*i).first.length();
+         int num_spaces = 65 - static_cast<int>((*i).first.length());
          output_file << (*i).first;
 
          for(;num_spaces >= 0; num_spaces--)
@@ -242,7 +246,11 @@ protected:
    }
 
 public:
+#ifndef _WIN32
    typedef unsigned long long TimeStamp;  /**< Type for timestamp operations */
+#else
+   typedef unsigned __int64 TimeStamp;  /**< Type for timestamp operations */
+#endif
 
    /** Return the current time value
    * @returns Microsecond timestamp
@@ -324,8 +332,8 @@ inline CppUnit::MetricRegistry::TimeStamp MetricRegistry::getCurTime()
 
 #if defined(_WIN32)
    LARGE_INTEGER count;
-   PRIntn _nt_bitShift  = 0;
-   PRInt32 _nt_highMask = 0;
+   int _nt_bitShift  = 0;
+   __int32 _nt_highMask = 0;
 
    // XXX: Implement this
    /* Sadly; nspr requires the interval to range from 1000 ticks per second
@@ -334,11 +342,11 @@ inline CppUnit::MetricRegistry::TimeStamp MetricRegistry::getCurTime()
     */
    if (QueryPerformanceCounter(&count))
    {
-      vpr::Int32 top = count.HighPart & _nt_highMask;
+      __int32 top = count.HighPart & _nt_highMask;
       top = top << (32 - _nt_bitShift);
       count.LowPart = count.LowPart >> _nt_bitShift;
       count.LowPart = count.LowPart + top;
-      mMicroSeconds = count.LowPart;
+      ret_val = count.LowPart;
    }
 /*
    else
