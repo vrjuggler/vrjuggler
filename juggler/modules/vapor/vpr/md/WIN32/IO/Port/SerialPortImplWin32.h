@@ -753,41 +753,45 @@ public:
    // ------------------------------------------------------------------------
    vpr::ReturnStatus disableParityGeneration(void);
 
-
-   // ------------------------------------------------------------------------
-   //: Enable marking of bytes with parity errors or framing errors (except
-   //+ BREAKs).  This is only active if input parity and framing error
-   //+ reporting is enabled (see getInputParityCheckState() for more
-   //+ information).  The mark is the three-byte sequence \377 \0 X where X
-   //+ is the byte received in error.  If bit stripping is enabled, a valid
-   //+ \377 byte is passed as the two-byte sequence \377 \377.
-   //
-   //! PRE: The serial port is open.
-   //! POST: Bytes with an error are marked and passed on to the reader.
-   //
-   //! RETURNS: true  - Parity error marking is enabled.
-   //! RETURNS: false - Parity error marking is disabled.
-   // ------------------------------------------------------------------------
+   /**
+    * Returns the current state of parity error marking for this serial port.
+    *
+    * @pre This serial port is open.
+    *
+    * @return true is returned if parity error marking is enabled.  false is
+    *         returned if parity error masking is disabled.
+    */
    bool getParityErrorMarkingState(void);
 
-   // ------------------------------------------------------------------------
-   //: Enable parity error and framing error marking.
-   //
-   //! PRE: The serial port is open.
-   //! POST: Parity error marking is enabled.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Enables marking of bytes with parity errors or framing errors (except
+    * BREAKs).  This is only active if input parity and framing error
+    * reporting is enabled (see enableInputParityCheck() for more
+    * information).  The mark is the three-byte sequence \377 \0 X where X
+    * is the byte received in error.  If bit stripping is enabled, a valid
+    * \377 byte is passed as the two-byte sequence \377 \377.
+    *
+    * @pre This serial port is open.
+    * @post Bytes with an error are marked and passed on to the reader.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    *
+    * @see enableInputParityCheck
+    */
    vpr::ReturnStatus enableParityErrorMarking(void);
 
-   // ------------------------------------------------------------------------
-   //: Disable parity error and framing error marking.
-   //
-   //! PRE: The serial port is open.
-   //! POST: Parity error marking is disabled.
-   //
-   //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
-   // ------------------------------------------------------------------------
+   /**
+    * Disables parity error and framing error marking.
+    *
+    * @pre This serial port is open.
+    * @post Parity error marking is disabled.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    *
+    * @see enableParityErrorMarking
+    */
    vpr::ReturnStatus disableParityErrorMarking(void);
 
    // ------------------------------------------------------------------------
