@@ -255,8 +255,10 @@ SocketImplNSPR::connect (vpr::Interval timeout) {
                PR_Poll(&poll_desc, 1, NSPR_getInterval(timeout));
 
                // If the out flags don't have PR_POLL_WRITE, then we timed out.
+               // Since we are a non-blocking socket, we tell the caller that
+               // the connection is still in progress.
                if ( ! poll_desc.out_flags & PR_POLL_WRITE ) {
-                  retval.setCode(vpr::Status::Timeout);
+                  retval.setCode(vpr::Status::InProgress);
                }
             }
          }

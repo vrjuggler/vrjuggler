@@ -247,8 +247,11 @@ SocketImplBSD::connect (vpr::Interval timeout) {
             if ( vpr::Interval::NoWait == timeout ) {
                 retval.setCode(vpr::Status::InProgress);
             }
-            else {
-                retval = m_handle->isWriteable(timeout);
+            // If we have a timeout value, wait for at most the duration of
+            // that interval.  If we time out, tell the caller that the
+            // connection is still in progress.
+            else if ( ! m_handle->isWriteable(timeout).success() ) {
+                retval.setCode(vpr::Status::InProgress);
             }
 
             m_connected      = true;
