@@ -45,10 +45,8 @@
 #include <vpr/vprConfig.h>
 
 #include <string>
-#include <cctype>
 
 #include <vpr/vprTypes.h>
-#include <vpr/Util/Assert.h>
 #include <boost/concept_check.hpp>  // for ignore_unused_variable_warning
 
 #include <vpr/IO/SerializableObject.h>    // For serializing GUID
@@ -144,16 +142,7 @@ public:
     * @param guid_string Ptr to a string that is used to inialize guid. Must
     *                    be non-NULL.
     */
-   GUID (const char* guid_string)
-   {
-      vprASSERT( (guid_string != NULL) && "Tried to initialize with NULL ptr");
-      vprASSERT( (isalpha(*guid_string) || isdigit(*guid_string)) && "Possibly invalid pointer passed to constructor");
-      if(NULL != guid_string)
-      {
-         std::string temp(guid_string);
-         fromString(temp);
-      }
-   }
+   GUID(const char* guid_string);
 
    /**
     * Generates a GUID from the given string representation of the GUID using
