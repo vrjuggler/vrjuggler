@@ -76,6 +76,8 @@ int soundpos = 0;
 float pitchbend = 1.0f;
 float cutoff = 0.2f;
 float volume = 1.0f;
+bool pause_sound = false;
+bool retriggerable = false;
 
 // our sound object...
 snx::SoundHandle kevinSound;
@@ -240,9 +242,19 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
       kevinSound.trigger();
    }
    break;
+   case 'y':
+   {
+      kevinSound.trigger( -1 );
+   }
+   break;
    case 'p':
    {
-      kevinSound.pause();
+      pause_sound = !pause_sound;
+      if (pause_sound)
+         kevinSound.pause();
+      else
+         kevinSound.unpause();
+      std::cout << "paused " << kevinSound.isPaused() << std::endl;
    }
    break;
    case 's':
@@ -256,6 +268,14 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
       soundpos -= 1;
       kevinSound.setPosition( soundpos, 0, 0 );
       std::cout<<"soundpos: "<<soundpos<<std::endl;
+   }
+   break;
+   
+   case 'r':
+   {
+      retriggerable = !retriggerable;
+      kevinSound.setRetriggerable( retriggerable );
+      std::cout<<"retriggerable: "<<kevinSound.isRetriggerable()<<std::endl;
    }
    break;
 
@@ -436,16 +456,25 @@ int main(int argc, char* argv[])
     
     cout<<"\n"<<flush;
     cout<<"sonix sample OpenGL+sound app - by kevin - kevn@vrjuggler.org\n"<<flush;
-    cout<<"       usage:  t - trigger\n"<<flush;
-    cout<<"               p - pause\n"<<flush;
-    cout<<"               s - stop\n"<<flush;
-    cout<<"               , - put 3d sound source to the left\n"<<flush;
-    cout<<"               . - put 3d sound source to the right\n"<<flush;
+    cout<<"       usage:  t - trigger single shot sound\n"<<flush;
+    cout<<"               y - trigger infinitly looping sound\n"<<flush;
+    cout<<"               p - pause/unpause sound\n"<<flush;
+    cout<<"               s - stop sound\n"<<flush;
+    cout<<"               r - toggle isRetriggerable\n"<<flush;
+    cout<<"               - - volume decrement\n"<<flush;
+    cout<<"               = - volume increment\n"<<flush;
+    cout<<"               [ - pitch decrement\n"<<flush;
+    cout<<"               ] - pitch increment\n"<<flush;
+    cout<<"               ; - lowpass filter cutoff decrement\n"<<flush;
+    cout<<"               ' - lowpass filter cutoff increment\n"<<flush;
+    cout<<"               , - move 3d sound source to the left\n"<<flush;
+    cout<<"               . - move 3d sound source to the right\n"<<flush;
     cout<<"               1 - Change subsystem to OpenAL\n"<<flush;
     cout<<"               2 - Change subsystem to AudioWorks\n"<<flush;
     cout<<"               3 - Change subsystem to None\n"<<flush;
-    cout<<"               a - configure sound object to sample.wav (OpenAL only)\n"<<flush;
-    cout<<"               b - configure sound object to drumsolo.wav (OpenAL only)\n"<<flush;
+    cout<<"               a - configure sound object to sol.wav\n"<<flush;
+    cout<<"               b - configure sound object to drumsolo.wav\n"<<flush;
+    cout<<"               c - configure sound object to suck.wav\n"<<flush;
     cout<<"\n"<<flush;
     
    // display callbacks.
