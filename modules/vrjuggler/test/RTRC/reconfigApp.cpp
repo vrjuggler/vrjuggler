@@ -493,6 +493,159 @@ bool reconfigApp::verifyDisplayProps(  vrj::Display* disp,
    return ok;
 }
 
+
+bool reconfigApp::verifyAllViewports( vrj::Display* display, jccl::ConfigChunkPtr viewportChunk )
+{
+   //Check to see if this viewport chunk matches with ANY of the display's viewports
+   bool status = false;
+   for (int i=0; i < display->getNumViewports(); i++)
+   {
+      vrj::Viewport* viewport = display->getViewport( i );
+      if (verifyViewport( viewport, viewportChunk ))
+      {
+         status = true;
+      }
+   }
+
+   return status;
+}
+
+bool reconfigApp::verifyViewport( vrj::Viewport* viewport, jccl::ConfigChunkPtr viewportChunk )
+{
+   //Verify that the display object has the specified viewport
+
+   //First, get the properties from the config chunk
+   std::string viewportName = viewportChunk->getName();
+
+   //Get origin values
+   if (viewportChunk->getNum( "origin" ) < 2 )
+   {
+      std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have origin properties\n" << std::flush;
+      return false;
+   }
+   float x_origin = viewportChunk->getProperty<float>("origin", 0);
+   float y_origin = viewportChunk->getProperty<float>("origin", 1);
+
+   //Get size values
+   if (viewportChunk->getNum( "size" ) < 2 )
+   {
+      std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have size properties\n" << std::flush;
+      return false;
+   }
+   float x_size = viewportChunk->getProperty<float>("size", 0);
+   float y_size = viewportChunk->getProperty<float>("size", 1);
+
+   //TEST size and origin
+   float xo, xs, yo, ys;
+   viewport->getOriginAndSize( xo, yo, xs, ys );
+   if ((x_size != xs) || (y_size != ys) || (x_origin != xo) || (y_origin != yo))
+   {
+      std::cout << "\tError: viewport has incorrect size and/or origin\n" << std::flush;
+      return false;
+   }
+
+   //Get view property
+   if (viewportChunk->getNum( "view" ) < 1 )
+   {
+      std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have view properties\n" << std::flush;
+      return false;
+   }
+   int view_num = viewportChunk->getProperty<int>("view", 0);
+
+   //TEST view prop
+   if (view_num != viewport->getView())
+   {
+      std::cout << "\tError: viewport has incorrect view property\n" << std::flush;
+      return false;
+   }
+
+
+   //Get cameraPos property
+   if (viewportChunk->getNum( "cameraPos" ) < 1 )
+   {
+      std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have cameraPos properties\n" << std::flush;
+      return false;
+   }
+   std::string cameraPos = viewportChunk->getProperty<std::string>("cameraPos", 0);
+
+   //TEST cameraPos property
+   //There is no camera position property for the vrj::Viewport object
+
+   //Get user property
+   if (viewportChunk->getNum( "user" ) < 1 )
+   {
+      std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have user properties\n" << std::flush;
+      return false;
+   }
+   std::string username = viewportChunk->getProperty<std::string>("user", 0);
+   if (viewport->getUser()->getName() != username)
+   {
+      std::cout << "\tError: viewport has incorrect user name\n" << std::flush;
+      return false;
+   }
+
+   //Get wandPos
+   if (viewportChunk->getNum( "wandPos" ) < 1 )
+   {
+      std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have wandPos properties\n" << std::flush;
+      return false;
+   }
+   std::string wandPos = viewportChunk->getProperty<std::string>("wandPos", 0);
+   //TEST wandPos property
+   //There is no wand position property for the vrj::Viewport object
+
+   //Get active
+   if (viewportChunk->getNum( "active" ) < 1 )
+   {
+      std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have cameraPos properties\n" << std::flush;
+      return false;
+   }
+   bool active = (viewportChunk->getProperty<int>("active", 0) == 1 ? true : false );
+
+   if (viewport->isActive() != active)
+   {
+      std::cout << "\tError: viewport has incorrect active property\n" << std::flush;
+      return false;
+   }
+
+   //drawProjections
+   if (viewportChunk->getNum( "drawProjections" ) < 1 )
+   {
+      std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have drawProjections properties\n" << std::flush;
+      return false;
+   }
+   bool drawProjections = (viewportChunk->getProperty<int>("drawProjections", 0) == 1 ? true : false );
+   //TEST drawProjections property
+   //There is no test for this property
+
+
+   //surfaceColor x 3
+   if (viewportChunk->getNum( "surfaceColor" ) < 3 )
+   {
+      std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have surfaceColor properties\n" << std::flush;
+      return false;
+   }
+   float color[3];
+   color[0] = viewportChunk->getProperty<float>("surfaceColor", 0);
+   color[1] = viewportChunk->getProperty<float>("surfaceColor", 1);
+   color[2] = viewportChunk->getProperty<float>("surfaceColor", 2);
+
+   //Also no test for this
+
+   //vert_fov
+   if (viewportChunk->getNum( "vert_fov" ) < 1 )
+   {
+      std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have vert_fov properties\n" << std::flush;
+      return false;
+   }
+   float vert_fov = viewportChunk->getProperty<float>("vert_fov", 0);
+
+   //Also no test for this
+
+   return true;
+
+}
+
 bool reconfigApp::verifyDisplayFile( std::string filename )
 {
    //Assume that the file given has the displayWindow chunk in it
@@ -567,6 +720,30 @@ bool reconfigApp::verifyDisplayFile( std::string filename )
       }
       bool active = (windowChunks[i]->getProperty<int>( "active" ) == 1 ? true : false );
 
+      //Verify the number of viewports
+      if (windowChunks[i]->getNum("sim_viewports") != display->getNumViewports())
+      {
+         std::cout << "\tError: display chunk named " << displayName << " has the wrong number of viewports\n" << std::flush;
+         return false;
+      }
+
+      //Verify all of the viewports
+      for (int j=0; j < windowChunks[i]->getNum( "sim_viewports" ); j++)
+      {
+         jccl::ConfigChunkPtr viewlist = windowChunks[i]->getProperty<jccl::ConfigChunkPtr>("sim_viewports", j);
+
+         //Get the actual simViewport chunk and check if it really contains any viewports
+         if (viewlist->getNum("simViewport") > 0)
+         {
+            jccl::ConfigChunkPtr viewport = viewlist->getProperty<jccl::ConfigChunkPtr>("simViewport", 0);
+            if (!verifyAllViewports( display, viewport ))
+            {
+               std::cout << "\tError: display chunk named " << displayName << " has an incorrect viewport\n" << std::flush;
+               return false;
+            }
+         }
+         
+      }
 
       //Run a verification check (verifyDisplayProps)
       return verifyDisplayProps( display, displayName, x_origin, y_origin, x_size, y_size, pipe_num, stereo, border, active );
@@ -634,7 +811,6 @@ bool reconfigApp::readdGFXWindow_exec()
 
 bool reconfigApp::readdGFXWindow_check()
 {
-   //Verify that both windows SimWindowX01 and SimWindowX02 have been added
    return verifyDisplayFile( "./Chunks/sim.extradisplay.01.config" ) &&
           verifyDisplayFile( "./Chunks/sim.extradisplay.02.config" );
 }
@@ -676,28 +852,11 @@ bool reconfigApp::addViewport_exec()
 
 bool reconfigApp::addViewport_check()
 {
-   //Get the chunk
-   vrj::Display* simDisplay = getDisplay( "SimWindowX02" );
-
-   if (simDisplay == NULL)
-   {
-      std::cout << "\tError: Could not find SimWindowX02 to check its viewport\n" << std::flush;
-      return false;
-   }
-
-   //Check the number of viewports
-   if (simDisplay->getNumViewports() != 2)
-   {
-      std::cout << "\tError: SimWindowX02 doesn't have 2 viewports\n" << std::flush;
-      return false;
-   }
-
-   return true;
+   return verifyDisplayFile( "./Chunks/sim.extradisplay.02.twoviews.config" );
 }
 
 bool reconfigApp::removeViewport_exec()
 {
-
    std::cout << "Beginning test for removing a viewport from a graphics window...\n" << std::flush;
 
    return swapChunkFiles( "./Chunks/sim.extradisplay.02.twoviews.config",
@@ -706,23 +865,7 @@ bool reconfigApp::removeViewport_exec()
 
 bool reconfigApp::removeViewport_check()
 {
-   //Get the SimWindowX02
-   vrj::Display* simDisplay = getDisplay( "SimWindowX02" );
-
-   if (simDisplay == NULL)
-   {
-      std::cout << "\tError: Could not find SimWindowX02 to check its viewport\n" << std::flush;
-      return false;
-   }
-
-   //Check the number of viewports
-   if (simDisplay->getNumViewports() != 1)
-   {
-      std::cout << "\tError: SimWindowX02 doesn't have 1 viewport\n" << std::flush;
-      return false;
-   }
-
-   return true;
+   return verifyDisplayFile( "./Chunks/sim.extradisplay.02.oneview.config" );
 }
 
 bool reconfigApp::resizeViewport_exec()
@@ -735,36 +878,7 @@ bool reconfigApp::resizeViewport_exec()
 
 bool reconfigApp::resizeViewport_check()
 {
-   //Get the SimWindowX02
-   vrj::Display* simDisplay = getDisplay( "SimWindowX02" );
-
-   //If we could not find the window...we have a problem to start with
-   if (simDisplay == NULL)
-   {
-      std::cout << "\tError: Could not find SimWindowX02 to check its viewport\n" << std::flush;
-      return false;
-   }
-
-   //Make sure we have one viewport
-   if (simDisplay->getNumViewports() != 1)
-   {
-      std::cout << "\tError: SimWindowX02 has an incorrect number of viewports\n" << std::flush;
-      return false;   
-   }
-
-   vrj::Viewport* simViewport = simDisplay->getViewport(0);
-
-   //Test its size
-   float xo, yo, xs, ys;
-   simViewport->getOriginAndSize(xo, yo, xs, ys);
-
-   if ((xo != 0.0f) || (yo != 0.0f) || (xs != 0.9f) || (ys != 0.9f))
-   {
-      std::cout << "\tError: SimWindowX02's viewport has an incorrect origin and/or size\n" << std::flush;
-      return false;   
-   }
-
-   return true;
+   return verifyDisplayFile( "./Chunks/sim.extradisplay.02.largerview.config" );;
 }
 
 bool reconfigApp::moveViewport_exec()
@@ -777,37 +891,7 @@ bool reconfigApp::moveViewport_exec()
 
 bool reconfigApp::moveViewport_check()
 {
-   //Get the SimWindowX02
-   vrj::Display* simDisplay = getDisplay( "SimWindowX02" );
-
-   //If we could not find the window...we have a problem to start with
-   if (simDisplay == NULL)
-   {
-      std::cout << "\tError: Could not find SimWindowX02 to check its viewport\n" << std::flush;
-      return false;
-   }
-
-   //Make sure we have one viewport
-   if (simDisplay->getNumViewports() != 1)
-   {
-      std::cout << "\tError: SimWindowX02 has an incorrect number of viewports\n" << std::flush;
-      return false;   
-   }
-
-   vrj::Viewport* simViewport = simDisplay->getViewport(0);
-
-   //Test its size
-   float xo, yo, xs, ys;
-   simViewport->getOriginAndSize(xo, yo, xs, ys);
-
-   if ((xo != 0.1f) || (yo != 0.1f) || (xs != 0.9f) || (ys != 0.9f))
-   {
-      std::cout << "\tError: SimWindowX02's viewport has an incorrect origin and/or size\n" << std::flush;
-      return false;   
-   }
-
-   return true;
-
+   return verifyDisplayFile( "./Chunks/sim.extradisplay.02.moveview.config" );
 }
 
 bool reconfigApp::enableStereoSurface_exec()
@@ -822,21 +906,31 @@ bool reconfigApp::enableStereoSurface_exec()
 
 bool reconfigApp::enableStereoSurface_check()
 {
+   //Load up the given file 
+   jccl::ConfigChunkDB fileDB ; fileDB.load( "./Chunks/sim.surfacedisplay.01.stereo.config" );
+   std::vector<jccl::ConfigChunkPtr> windowChunks;
+   fileDB.getByType( "displayWindow", windowChunks );
+
+   if (windowChunks.size() < 1)
+   {
+      std::cout << "\tError: There are no display window config chunks in the file\n" << std::flush;
+      return false;
+   }
 
    //Get the SimSurfaceX01
-   vrj::Display* surfaceDisplay = getDisplay( "SimSurfaceX01" );
+   vrj::Display* surfaceDisplay = getDisplay( windowChunks[0]->getName() );
 
    //If we could not find the window...we have a problem to start with
    if (surfaceDisplay == NULL)
    {
-      std::cout << "\tError: Could not find SimSurfaceX01 to check its viewport\n" << std::flush;
+      std::cout << "\tError: Could not find the display to check its viewport\n" << std::flush;
       return false;
    }
 
    //Make sure we have one viewport
    if (surfaceDisplay->getNumViewports() != 1)
    {
-      std::cout << "\tError: SimSurfaceX01 has an incorrect number of viewports\n" << std::flush;
+      std::cout << "\tError: " << windowChunks[0]->getName() << " has an incorrect number of viewports\n" << std::flush;
       return false;   
    }
 
@@ -844,7 +938,7 @@ bool reconfigApp::enableStereoSurface_check()
 
    if (!surfaceViewport->inStereo())
    {
-      std::cout << "\tError: SimSurfaceX01's viewport is not in stereo\n" << std::flush;
+      std::cout << "\tError: the surface viewport is not in stereo\n" << std::flush;
       return false;   
    }
 
@@ -862,20 +956,31 @@ bool reconfigApp::disableStereoSurface_exec()
 
 bool reconfigApp::disableStereoSurface_check()
 {
+   //Load up the given file 
+   jccl::ConfigChunkDB fileDB ; fileDB.load( "./Chunks/sim.surfacedisplay.01.mono.config" );
+   std::vector<jccl::ConfigChunkPtr> windowChunks;
+   fileDB.getByType( "displayWindow", windowChunks );
+
+   if (windowChunks.size() < 1)
+   {
+      std::cout << "\tError: There are no display window config chunks in the file\n" << std::flush;
+      return false;
+   }
+
    //Get the SimSurfaceX01
-   vrj::Display* surfaceDisplay = getDisplay( "SimSurfaceX01" );
+   vrj::Display* surfaceDisplay = getDisplay( windowChunks[0]->getName() );
 
    //If we could not find the window...we have a problem to start with
    if (surfaceDisplay == NULL)
    {
-      std::cout << "\tError: Could not find SimSurfaceX01 to check its viewport\n" << std::flush;
+      std::cout << "\tError: Could not find " << windowChunks[0]->getName() << " to check its viewport\n" << std::flush;
       return false;
    }
 
    //Make sure we have one viewport
    if (surfaceDisplay->getNumViewports() != 1)
    {
-      std::cout << "\tError: SimSurfaceX01 has an incorrect number of viewports\n" << std::flush;
+      std::cout << "\tError: " << windowChunks[0]->getName() << " has an incorrect number of viewports\n" << std::flush;
       return false;   
    }
 
@@ -883,7 +988,7 @@ bool reconfigApp::disableStereoSurface_check()
 
    if (surfaceViewport->inStereo())
    {
-      std::cout << "\tError: SimSurfaceX01's viewport is in stereo\n" << std::flush;
+      std::cout << "\tError: " << windowChunks[0]->getName() << "'s viewport is in stereo\n" << std::flush;
       return false;   
    }
 

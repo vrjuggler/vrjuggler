@@ -55,9 +55,8 @@ Points of interest in the Juggler 1.1 code
 * OTHER TESTS
 
 
-TODO: Change all of the _check functions to load the files that they are supposed
-      to test against and look at the chunk properties to test against what the
-      config manager(s) know about.
+TODO: 
+      Update the verifyDisplayFile test to include testing on the keyboard values. 
 
       Some tests don't test for ALL possible testable values. Update them to
       fill in these possible holes.
