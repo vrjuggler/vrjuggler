@@ -45,17 +45,10 @@
 
 #include <stdlib.h>
 #include <string>
-#include <sys/time.h>
-
-// I don't know why this is necessary, but I think something is being defined
-// incorrectly somewhere.
-#ifdef VPR_OS_IRIX
-#include <sys/endian.h>
-#endif
-
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <sys/param.h>
+#include <sys/time.h>
 
 #include <vpr/Util/Status.h>
 #include <vpr/SystemBase.h>
