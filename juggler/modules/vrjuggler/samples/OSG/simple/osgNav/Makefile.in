@@ -52,12 +52,11 @@ OPTIM_FLAGS	= @APP_OPTIM_FLAGS@
 INCLUDES	= @APP_INCLUDES@  $(OSG_INCLUDES) -I$(srcdir)
 LINK_FLAGS	=  @APP_LINK_FLAGS@ $(EXTRA_FLAGS)
 
-OSG_INCLUDES	=  -I$(OSGHOME)/include
-OSG_LIBS	= -Wl,-Bdynamic -L$(OSGHOME)/lib -losg -losgGLUT -losgUtil -losgDB
+#OSG_LIBS	= -Wl,-Bdynamic -L$(OSGHOME)/lib -losg -losgGLUT -losgUtil -losgDB
 
 # Libraries needed for linking.
 BASIC_LIBS	= @APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@ @APP_BASIC_EXT_LIBS@ @APP_VJ_LIBS_GL@ @APP_BASIC_LIBS_END@
-EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS@ @APP_EXTRA_LIBS_END@  $(OSG_LIBS)
+EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_OSG@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS@ @APP_EXTRA_LIBS_END@
 
 # Commands to execute.
 C_COMPILE	= @APP_CC@ $(CFLAGS)
@@ -84,9 +83,9 @@ osgNav@EXEEXT@: $(OBJS)
 # Clean-up targets.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend *.@OBJEXT@ wand.ilk  so_locations *.?db core*
+	rm -f Makedepend *.@OBJEXT@ osgNav.ilk  so_locations *.?db core*
 	rm -rf ii_files
 
 clobber:
 	@$(MAKE) clean
-	rm -f wand@EXEEXT@ 
+	rm -f osgNav@EXEEXT@ 

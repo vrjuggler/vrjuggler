@@ -72,6 +72,9 @@
 /* Define to use the Performer API. */
 #undef VJ_API_PERFORMER
 
+/* Define to use the OpenScenegraph API. */
+#undef VJ_API_OPENSCENEGRAPH
+
 /* Define all of the following if building on IRIX. */
 #undef VJ_OS_IRIX
 #undef _BSD_TYPES
