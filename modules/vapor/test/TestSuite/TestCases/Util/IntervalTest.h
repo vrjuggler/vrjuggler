@@ -145,7 +145,8 @@ public:
 
    void testSetNowOverhead()
    {
-      vpr::Uint32 loops(10000);
+      const vpr::Uint32 iters(100000);
+      vpr::Uint32 loops = iters;
 
       vpr::Interval time_in, time_out;
       time_in.setNow();
@@ -158,14 +159,14 @@ public:
       vpr::Interval diff = time_out - time_in;
 
       double per_call;      // Num ns per call
-      per_call = (diff.usecf()*1000.0f) / double(loops);
+      per_call = (diff.usecf()*1000.0f) / double(iters);
 
       std::cout << "vpr::Interval::setNow: overhead = " << per_call << "ns per call\n" << std::flush;
    }
 
    static Test* suite()
    {
-      TestSuite *test_suite = new TestSuite ("StatusTest");
+      TestSuite *test_suite = new TestSuite ("IntervalTest");
 
       test_suite->addTest( new TestCaller<IntervalTest>("construction", &IntervalTest::construction));
       test_suite->addTest( new TestCaller<IntervalTest>("testSet", &IntervalTest::testSet));
@@ -176,10 +177,19 @@ public:
       test_suite->addTest( new TestCaller<IntervalTest>("testMsecf", &IntervalTest::testMsecf));
       test_suite->addTest( new TestCaller<IntervalTest>("testUsec", &IntervalTest::testUsec));
       test_suite->addTest( new TestCaller<IntervalTest>("testUsecf", &IntervalTest::testUsecf));
+      
+      return test_suite;
+   }
+
+   static Test* metric_suite()
+   {
+      TestSuite *test_suite = new TestSuite ("IntervalTest_metric");
+
       test_suite->addTest( new TestCaller<IntervalTest>("testSetNowOverhead", &IntervalTest::testSetNowOverhead));
 
       return test_suite;
    }
+
 };
 
 }
