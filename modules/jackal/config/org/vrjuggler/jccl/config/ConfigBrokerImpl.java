@@ -679,19 +679,27 @@ public class ConfigBrokerImpl
       List dirs = new ArrayList();
       EnvironmentService service = new EnvironmentServiceProxy();
 
-      // Get the path from the environment
-      String path = System.getProperty("JCCL_DEFINITION_PATH",
-                                       service.getenv("JCCL_DEFINITION_PATH"));
+      // Get the .jdef search path from the environment.
+      String base_path = "${VJ_BASE_DIR}/share/vrjuggler/data/definitions";
+      String ext_path  = service.getenv("JCCL_DEFINITION_PATH");
 
-      if ( path == null )
+      String path;
+
+      // If $JCCL_DEFINITION_PATH is set, extend the base search path with its
+      // value.
+      if ( ext_path != null )
       {
-         System.err.println("WARNING: JCCL_DEFINITION_PATH is not set!");
-         path = "${VJ_BASE_DIR}/share/vrjuggler/data/definitions";
+         path = base_path + File.pathSeparator + ext_path;
+      }
+      // Otherwise, we will just use the standard base search path.
+      else
+      {
+         path = base_path;
       }
 
       path = service.expandEnvVars(path);
 
-      // Split the path on the path separator
+      // Split the path on the path separator.
       StringTokenizer tokenizer = new StringTokenizer(path,
                                                       File.pathSeparator);
       while (tokenizer.hasMoreTokens())
