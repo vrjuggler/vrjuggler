@@ -245,7 +245,7 @@ esac
 cd "$srcdir"
 UNIX_VPRROOT_ABS=`pwd`
 
-cd "$VPRROOT_ABS/../.."
+cd "$UNIX_VPRROOT_ABS/../.."
 UNIX_JUGGLERROOT_ABS=`pwd`
 cd "$topdir"
 
