@@ -172,7 +172,6 @@ public class BeanJarClassLoader extends ClassLoader
             try
             {
                path = new URL("jar:file:" + jar_file.getName() + "!/" + name);
-               System.out.println("Resource found: " + path);
                break;
             }
             catch (java.net.MalformedURLException url_ex)
