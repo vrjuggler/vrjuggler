@@ -47,8 +47,6 @@
 
 #include <jccl/Config/ConfigElementPtr.h>
 
-extern "C" GADGET_CLUSTER_PLUGIN_API(cluster::ClusterPlugin*) initPlugin();
-
 namespace gadget
 {
    class Input;
@@ -64,7 +62,6 @@ namespace cluster
 class GADGET_CLUSTER_PLUGIN_CLASS_API RemoteInputManager
    : public cluster::ClusterPlugin
 {
-   vprSingletonHeader( RemoteInputManager );
 public:
    RemoteInputManager();
    virtual ~RemoteInputManager();
