@@ -126,7 +126,7 @@ void SocketConnectorAcceptorTest::testSpawnedAcceptor_acceptor (void* arg)
       assertTestThread((ret_val.success()) && "Accepting socket failed");
 
       assertTestThread((sock->isOpen()) && "Accepted socket should be open");
-      //assertTestThread((sock->isConnected()), "Accepted socket should be connected");
+      assertTestThread((sock->isConnected()) && "Accepted socket should be connected");
 
       ret_val = sock->write(mMessageValue, mMessageLen, bytes_written);      // Send a message
       assertTestThread((ret_val.success()) && "Problem writing in acceptor");
@@ -138,8 +138,8 @@ void SocketConnectorAcceptorTest::testSpawnedAcceptor_acceptor (void* arg)
          mCondVar.wait();
       mCondVar.release();
 
-      //ret_val = sock->isConnected();
-      //assertTestThread((ret_val == false), "Socket should not still be connected");
+      bool is_connected = sock->isConnected();
+      assertTestThread((is_connected == false) && "Socket should not still be connected");
 
       ret_val = sock->close();                                // Close the socket
       assertTestThread((ret_val.success()) && "Problem closing accepted socket");
@@ -173,8 +173,8 @@ void SocketConnectorAcceptorTest::testSpawnedAcceptor_connector (void* arg)
       assertTestThread((ret_val.success()) && "Read failed");
       assertTestThread((bytes_read == mMessageLen) && "Connector recieved message of wrong size" );
 
-      //ret_val = con_sock.isConnected();
-      //assertTestThread((ret_val == false), "Socket should still be connected");
+      bool is_connected = con_sock.isConnected();
+      assertTestThread((is_connected == false) && "Socket should still be connected");
 
       con_sock.close();                                   // Close socket
 
