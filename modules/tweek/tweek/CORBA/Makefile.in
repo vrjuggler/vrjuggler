@@ -45,15 +45,31 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/tweek/CORBA
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(TWEEK_LIBRARY)
+includedir		= @includedir@/tweek/CORBA
+srcdir			= @srcdir@
+top_srcdir		= @top_srcdir@
+CXX_IDL_OPTS		= -bcxx -Wbh=.h,s=.cpp -C$(srcdir)
+CXX_IDL_INCLUDES	= -I$(top_srcdir)
+EXTRA_INCLUDES		+= -I$(srcdir)
+EXTRA_SRCS_PATH		= $(srcdir)/../idl
+INSTALL			= @INSTALL@
+SUBOBJDIR		= $(TWEEK_LIBRARY)
 
-SRCS		= Registry.cpp
+IDL_CXX_FILES	= SubjectManager.cpp SubjectManager.h	\
+                  Subject.cpp Subject.h			\
+                  Observer.cpp Observer.h
+
+SRCS		= CorbaManager.cpp		\
+                  Observer.cpp			\
+                  ObserverImpl.cpp		\
+                  SubjectManager.cpp		\
+                  SubjectManagerImpl.cpp	\
+                  Subject.cpp			\
+                  SubjectImpl.cpp
 
 include $(MKPATH)/dpp.obj.mk
+
+CLEAN_FILES	+= $(addprefix $(srcdir)/, $(IDL_CXX_FILES))
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
