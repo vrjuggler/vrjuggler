@@ -2203,8 +2203,32 @@
       Copy everything that hasn't already been matched.
    -->
    <xsl:template match="*">
-      <xsl:copy-of select="." />
-      <xsl:value-of select="$newline"/>
+      <xsl:choose>
+         <xsl:when test="name(..) = 'ConfigChunkDB'">
+            <xsl:message terminate="no">
+               <xsl:text>Updating unknown element type </xsl:text>
+               <xsl:value-of select="name(.)" />
+               <xsl:text> (this is fine for custom types)</xsl:text>
+               <xsl:value-of select="$newline"/>
+            </xsl:message>
+            <xsl:element name="{name(.)}">
+               <xsl:attribute name="name">
+                  <xsl:value-of select="@name"/>
+               </xsl:attribute>
+               <xsl:attribute name="version">
+                  <xsl:text>1</xsl:text>
+               </xsl:attribute>
+               <xsl:value-of select="$newline"/>
+               <xsl:copy-of select="./*" />
+               <xsl:value-of select="$newline"/>
+            </xsl:element>
+            <xsl:value-of select="$newline"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:copy-of select="." />
+            <xsl:value-of select="$newline"/>
+         </xsl:otherwise>
+      </xsl:choose>
    </xsl:template>
 
 
