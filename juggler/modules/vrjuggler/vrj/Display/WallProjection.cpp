@@ -35,14 +35,28 @@
 //#include <sys/types.h>
 
 #include <Kernel/vjWallProjection.h>
+#include <Kernel/vjKernel.h>
+
 #include <Math/vjMatrix.h>
 #include <Math/vjVec3.h>
 #include <Math/vjVec4.h>
-#include <Kernel/vjKernel.h>
+
+
 #include <Input/vjPosition/vjPosition.h>
 #include <Math/vjCoord.h>
 #include <Utils/vjDebug.h>
 
+#include <Config/vjConfigChunk.h>
+
+
+// Just call the base class constructor
+void vjWallProjection::config(vjConfigChunk* chunk)
+{
+   vjASSERT( ((std::string)chunk->getType() == std::string("surfaceDisplay")) ||
+             ((std::string)chunk->getType() == std::string("surfaceViewport")) );
+
+   vjProjection::config(chunk);        // Call base class config first
+}
 
 //: Recalculate the projection matrix
 // Uses a method that needs to know the distance in the screen plane

@@ -268,6 +268,9 @@ void vjGlPipe::checkForNewWindows()
 //! POST: win is rendered (In stereo if it is a stereo window)
 void vjGlPipe::renderWindow(vjGlWindow* win)
 {
+   float vp_ox, vp_oy, vp_sx, vp_sy;            // Viewport origin and size
+   vjViewport::View  view;                      // The view for the active viewport
+
    vjGlApp* theApp = glManager->getApp();       // Get application for easy access
    vjDisplay* theDisplay = win->getDisplay();   // Get the display for easy access
 
@@ -284,6 +287,17 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
    // VIEWPORT cleaning
    if(win->hasDirtyViewport())
       win->updateViewport();
+
+   // BUFFER PRE DRAW: Check if we need to clear stereo buffers
+   if(win->isStereo())
+   {
+      win->setViewBuffer(vjViewport::RIGHT_EYE);
+      theApp->bufferPreDraw();
+      win->setViewBuffer(vjViewport::LEFT_EYE);
+      theApp->bufferPreDraw();
+   }
+   else
+      theApp->bufferPreDraw();
 
    // CONTEXT INIT(): Check if we need to call contextInit()
    if(win->hasDirtyContext())
@@ -302,23 +316,28 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
 
    // --- FOR EACH VIEWPORT -- //
    vjViewport* viewport(NULL);
-
-   for(unsigned vp_num=0; vp_num < theDisplay->getNumViewports(); vp_num++)
+   unsigned num_vps = theDisplay->getNumViewports();
+   for(unsigned vp_num=0; vp_num < num_vps; vp_num++)
    {
       viewport = theDisplay->getViewport(vp_num);
+      view = viewport->getView();
+
+      // Set the glViewport to draw within
+      viewport->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
+      win->setViewport(vp_ox, vp_oy, vp_sx, vp_sy);
+
+      // Set user information
+      glManager->currentUserData()->setUser(viewport->getUser());         // Set user data
 
       // ---- SURFACE --- //
       if (viewport->isSurface())
       {
          vjSurfaceViewport* surface_vp = dynamic_cast<vjSurfaceViewport*>(viewport);
-         vjViewport::View view = surface_vp->getView();        // Get the view we are rendering
-         glManager->currentUserData()->setUser(surface_vp->getUser());         // Set user data
 
          if((vjViewport::STEREO == view) || (vjViewport::LEFT_EYE == view))      // LEFT EYE
          {
             win->setViewBuffer(vjViewport::LEFT_EYE);
             win->setProjection(surface_vp->getLeftProj());
-
             glManager->currentUserData()->setProjection(surface_vp->getLeftProj());
 
                mPerfBuffer->set(++mPerfPhase);
@@ -350,7 +369,6 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
          vjSimViewport* sim_vp = dynamic_cast<vjSimViewport*>(viewport);
 
          win->setCameraProjection(sim_vp->getCameraProj());
-         glManager->currentUserData()->setUser(sim_vp->getUser());         // Set user data
          glManager->currentUserData()->setProjection(sim_vp->getCameraProj());
 
             mPerfBuffer->set(++mPerfPhase);

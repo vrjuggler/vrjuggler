@@ -53,7 +53,8 @@ public:
    {
       vjProjection::config(chunk);
 
-      vjASSERT((std::string)chunk->getType() == std::string("simDisplay"));
+      vjASSERT( ((std::string)chunk->getType() == std::string("simDisplay")) ||
+                ((std::string)chunk->getType() == std::string("simViewport")) );
 
       // Set fov and make sure that it is not 0.0
       mVertFOV = chunk->getProperty("vert_fov");

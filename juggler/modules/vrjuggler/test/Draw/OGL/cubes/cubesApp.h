@@ -142,7 +142,7 @@ public:
    // allocation here.
    virtual void contextInit();
 
-   // Called immediately upon closing an OpenGL context 
+   // Called immediately upon closing an OpenGL context
    // (called for every window that is closed)
    // put your opengl deallocation here...
    virtual void contextClose();
@@ -186,6 +186,13 @@ public:
       myDraw(vjGlDrawManager::instance()->currentUserData()->getUser());
    }
 
+   // Clear the buffer each frame
+   virtual void bufferPreDraw()
+   {
+      glClearColor(0.0, 0.0, 0.0, 0.0);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   }
+
    /// Function called after drawing has been triggered but BEFORE it completes
    virtual void intraFrame()
    {
@@ -202,7 +209,7 @@ public:
    }
 
    //: Make sure that all our dependencies are satisfied
-   // Make sure that there are vjUsers registered with the system 
+   // Make sure that there are vjUsers registered with the system
    virtual bool depSatisfied()
    {
       // We can't start until there are users registered wth the system

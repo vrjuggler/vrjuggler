@@ -43,7 +43,7 @@ void vjViewport::config(vjConfigChunk* chunk)
        vjDEBUG(vjDBG_ERROR,0) << "ERROR: User not found named: "
                               << user_name.c_str() << std::endl
                               << vjDEBUG_FLUSH;
-      vjASSERT(false);
+      vjASSERT(false && "User not found in vjViewport::config");
     }
 
     setName(name);

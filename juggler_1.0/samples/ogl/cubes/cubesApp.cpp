@@ -145,9 +145,9 @@ void cubesApp::init()
 {
    vjDEBUG(vjDBG_ALL,0) << "---------- cubes:App:init() ---------------"
                         << std::endl << vjDEBUG_FLUSH;
-   std::vector<vjUser*> users = kernel->getUsers();   
+   std::vector<vjUser*> users = kernel->getUsers();
    int num_users = users.size();
-   vjASSERT(num_users > 0);		// Make sure that we actually have users defined
+   vjASSERT(num_users > 0);      // Make sure that we actually have users defined
 
    UserData* new_user=NULL;
    mUserData = std::vector<UserData*>(num_users);
@@ -203,7 +203,7 @@ void cubesApp::contextInit()
     }
 }
 
-//: Called immediately upon closing an OpenGL context 
+//: Called immediately upon closing an OpenGL context
 // (called for every window that is closed)
 // put your opengl deallocation here...
 void cubesApp::contextClose()
@@ -233,9 +233,6 @@ void cubesApp::myDraw(vjUser* user)
    //static const float SCALE = 10;
    static const float INCR = 0.1;
 
-   glClearColor(0.0, 0.0, 0.0, 0.0);
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
    glPushMatrix();
          // --- Push on Navigation matrix for the user --- //
 
@@ -264,11 +261,11 @@ void cubesApp::myDraw(vjUser* user)
             {
                //glColor3f(x,y,z);    // Set the color
                glColor3f(1.0, 0.0,  0.0f);
-		            glPushMatrix();
+                  glPushMatrix();
                {
                   glTranslatef( (x-0.5)*SCALE, (y-0.0)*SCALE, (z-0.5)*SCALE);
                   glScalef(2.0f, 2.0f, 2.0f);
-		            drawCube();
+                  drawCube();
                }
                glPopMatrix();
             }
