@@ -6,6 +6,12 @@
 #include <vjConfig.h>
 #define LOCK_DEBUG_STREAM
 
+#define vjDBG_BASE 0
+#define vjDBG_ALL (VJ_DBG_BASE+0)
+#define vjDBG_KERNEL (VJ_DBG_BASE+1)
+#define vjDBG_INPUT (VJ_DBG_BASE+2)
+#define vjDBG_USER 100
+
 // --------------- //
 // --- Headers --- //
 // --------------- //
@@ -16,6 +22,10 @@
 #   define vjDEBUG(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val)
 #   define vjDEBUG_BEGIN(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, 1)
 #   define vjDEBUG_END(val) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, -1)
+
+//#   define vjDEBUG(val,desc) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val)
+//#   define vjDEBUG_BEGIN(val,desc) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, 1)
+//#   define vjDEBUG_END(val,desc) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, -1)
 #else
 #   define vjDEBUG(val) if (1) ; else cout
 #   define vjDEBUG_BEGIN(val) if (1) ; else cout
