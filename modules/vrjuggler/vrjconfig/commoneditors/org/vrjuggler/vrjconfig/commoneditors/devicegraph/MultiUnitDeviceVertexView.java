@@ -256,7 +256,14 @@ public class MultiUnitDeviceVertexView
                // set up by JGraph at this stage of execution.
                this.revalidate();
 
-               mDeviceInfo.getElement().addConfigElementListener(this);
+               // Avoid adding ourselves as a listener multiple times.
+               // XXX: How can this happen?  The test for mDeviceInfo being
+               // null above should be sufficient to guarantee that this code
+               // only gets executed once per instance of this type...
+               if ( ! preview )
+               {
+                  mDeviceInfo.getElement().addConfigElementListener(this);
+               }
             }
             catch (Exception ex)
             {
