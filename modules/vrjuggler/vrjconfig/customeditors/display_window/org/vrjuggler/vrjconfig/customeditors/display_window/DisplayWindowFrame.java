@@ -639,6 +639,10 @@ public class DisplayWindowFrame
    void viewportStereoItemSelected(ActionEvent e)
    {
       mSelectedViewport.setProperty("view", 0, new Integer(STEREO));
+
+      // Since a viewport will use the stereo view, we need to enable
+      // stereoscopoic rendering for the whole display window.
+      mElement.setProperty("stereo", 0, Boolean.TRUE);
    }
 
    void viewportRemoveItemSelected(ActionEvent e)
