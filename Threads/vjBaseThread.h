@@ -165,7 +165,7 @@ public:
    //! RETURNS: -1 - Bad thread. Creation error.
    //! RETURNS: other - id of thread in Juggler
    // -----------------------------------------------------------------------
-   long getTID()
+   int32_t getTID()
    { return mThreadId; }
 
    //: Is this a valid thread?
@@ -219,17 +219,17 @@ private:    // Don't allow copy
    {;}
 
 private:
-   long  mThreadId;     // The local id for the thread.
+   int32_t  mThreadId;     // The local id for the thread.
 
    // --- STATICS ---- //
 
 private:
-   long getNextThreadId()
+   int32_t getNextThreadId()
    {
       return mNextThreadId++;
    }
 
-   static long mNextThreadId;    // Initialized to 0
+   static int32_t mNextThreadId;    // Initialized to 0
 };
 
 // Ouput operator

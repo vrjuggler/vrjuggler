@@ -3,7 +3,7 @@
 #include <Threads/vjBaseThread.h>
 #include <Threads/vjThreadManager.h>
 
-long vjBaseThread::mNextThreadId = 0;
+int32_t vjBaseThread::mNextThreadId = 0;
 
 	// ---- Ouput operator ---- //
 ostream& operator<<(ostream& out, vjBaseThread* threadPtr)
