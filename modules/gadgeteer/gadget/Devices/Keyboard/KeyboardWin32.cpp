@@ -81,7 +81,6 @@ bool KeyboardWin32::config( jccl::ConfigChunkPtr c )
    {
       mLockState = Lock_LockKey;     // Initialize to the locked state
    }
-   mLockState = Lock_LockKey;
 
    m_mouse_sensitivity = c->getProperty<float>( "msens" );
 
