@@ -128,35 +128,12 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
       However, due to VC6&#39;s poor support for templates and the C++
       standard in general, users need to be aware that it may not be possible.</para>
 
-      <para>At this time, there are two ways to build VR Juggler on Windows:</para>
-
-      <orderedlist>
-        <listitem>
-          <para>Use the Visual Studio project file</para>
-        </listitem>
-
-        <listitem>
-          <para>Use the <quote>unified</quote> command-line build system</para>
-        </listitem>
-      </orderedlist>
-
-      <para>For instructions on using the Visual Studio project file, refer to
-      the <ulink url="vc7/README.html">README.html</ulink> file located in the
-      <filename>vc7</filename> subdirectory of this directory. For
-      instructions on using the command-line build system, continue reading
+      <para>To build VR Juggler on Windows, you must use the Visual Studio
+      solution. After getting the dependencies needed to compile VR Juggler
+      (see the next section), refer to the <ulink url="vc7/README.html">README.html</ulink>
+      file located in the <filename>vc7</filename> subdirectory of this
+      directory. Do not bother to read <xref linkend="compile.section" /> in
       this document.</para>
-
-      <para>VR Juggler and all its modules have a <quote>unified</quote> build
-      system. That is, the same build system works on UNIX-based systems and
-      on Win32. To do this, we require the use of Cygwin (<ulink
-      url="http://www.cygwin.com/mirrors.html">http://www.cygwin.com/mirrors.html</ulink>)
-      to provide a build environment for all of the code found in this source
-      tree. We also require the use of an extension to Cygwin that we call
-      <quote>juggler-tools</quote>. The archive may be downloaded from <ulink
-      url="http://www.vrjuggler.org/download/juggler-tools.zip">http://www.vrjuggler.org/download/juggler-tools.zip</ulink>.
-      After being installed, the <filename>juggler-tools</filename> directory
-      should be added at the <emphasis>end</emphasis> of your path so that it
-      adds to the Cygwin environment and does not conflict with it.</para>
     </section>
   </section>
 
@@ -193,20 +170,7 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
       <listitem>
         <para>GMTL (<ulink url="http://ggt.sourceforge.net/">http://ggt.sf.net/</ulink>):
         A generic math library that makes use of C++ templates and STL
-        paradigms.</para>
-      </listitem>
-
-      <listitem>
-        <para>Doozer++ (<ulink url="http://www.sf.net/projects/doozer/">http://www.sf.net/projects/doozer/</ulink>):
-        A foundation for the development of complex build systems using
-        Autoconf and GNU make. This is the basis for the entire Juggler
-        Project build system.</para>
-      </listitem>
-
-      <listitem>
-        <para>Doozer (<ulink url="http://www.sf.net/projects/doozer/">http://www.sf.net/projects/doozer/</ulink>):
-        A foundation for rapid makefile development based on GNU make. This is
-        needed for building the sample VR Juggler applications.</para>
+        paradigms. GMTL must be installed for use with VR Juggler.</para>
       </listitem>
     </itemizedlist>
 
@@ -221,10 +185,10 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
 
       <listitem>
         <para>Java Developer Kit (<ulink url="http://java.sun.com/">http://java.sun.com/</ulink>):
-        The JDK/J2SDK is used to compile all the Java code used in the Juggler
-        Project. Without it, none of the Java code can be built. We require
-        version 1.3 or newer; we recommend version 1.4 or newer. The Java
-        Standard Edition (J2SE) can be downloaded from <ulink
+        The J2SE SDK (or JDK) is used to compile all the Java code used in the
+        Juggler Project. Without it, none of the Java code can be built. We
+        require version 1.3 or newer; we recommend version 1.4 or newer. The
+        Java Standard Edition (J2SE) can be downloaded from <ulink
         url="http://java.sun.com/j2se/">http://java.sun.com/j2se/</ulink>.</para>
       </listitem>
 
@@ -256,152 +220,15 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
     linkend="using.configure.pl" />.</para>
 
     <section>
-      <title>How to Get the Juggler Suite and External Dependencies from CVS</title>
+      <title>How to Get the Juggler Suite from CVS</title>
 
       <para>You can optionally get the Juggler Project as a source code
       tarball from the website (<ulink url="http://www.vrjuggler.org/">http://www.vrjuggler.org/</ulink>)
-      or you can follow these steps to get the code from our CVS repository.</para>
+      or you can execute the following commands from a shell to get the code
+      from our CVS repository:</para>
 
-      <orderedlist>
-        <listitem>
-          <para>Check out the &#39;juggler&#39; module using CVS.</para>
-
-          <screen>cvs -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler login
+      <screen>cvs -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler login
 cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler co juggler</screen>
-        </listitem>
-
-        <listitem>
-          <para>Get external packages that Juggler depends on. Typically you
-          will run cvs-gather.pl, found in the top-level <filename>juggler</filename>
-          directory. For most users, the follow command will do the job:</para>
-
-          <screen>./cvs-gather.pl --verbose</screen>
-
-          <para>Ideally, users can just let the command run, but sometimes a
-          password must be entered. In that event, the usual CVS password
-          prompt will appear. Each of the projects downloaded using
-          <command>cvs-gather</command> come from SourceForge, and for
-          anonymous CVS access there is no password. Hence, simply pressing
-          the <keysym>ENTER</keysym> key will allow the download to continue.</para>
-
-          <para>You can use the <command>cvs-gather</command> tool, or you can
-          read the file <filename>Gatherrc</filename> and get the packages
-          manually. If you choose not to use <command>cvs-gather</command>,
-          you must be familiar with CVS and with the use of CVS tags to check
-          out code. For more details about <command>cvs-gather</command>, see
-          <xref linkend="using.cvs-gather.section" />. If you choose to follow
-          this step as shown above, you may skip ahead to <xref
-          linkend="compile.section" />.</para>
-        </listitem>
-      </orderedlist>
-    </section>
-
-    <section id="using.cvs-gather.section">
-      <title>Using <command>cvs-gather</command></title>
-
-      <para><command>cvs-gather</command> is a utility we include in the base
-      <filename>juggler</filename> source directory to help you collect
-      third-party (external) source code that the Juggler Project needs in
-      order to build. To get help on using this tool, use one of the following
-      (the second version gives much more detailed output):</para>
-
-      <screen>./cvs-gather.pl --help
-./cvs-gather.pl --manual
-</screen>
-
-      <section>
-        <title>Standard Use of <command>cvs-gather</command></title>
-
-        <para>In most cases, <command>cvs-gather</command> can be used as
-        follows:</para>
-
-        <screen>./cvs-gather.pl
-</screen>
-
-        <para>All the output will be written to the file <filename>gather.log</filename>.
-        If you would like to see the progress of CVS as it checks out files,
-        run the command this way:</para>
-
-        <screen>./cvs-gather.pl --verbose
-</screen>
-      </section>
-
-      <section id="cvs-gather.advanced.section">
-        <title>Advanced Use of <command>cvs-gather</command></title>
-
-        <para>Use of <command>cvs-gather</command> is not required. You can
-        limit what packages are downloaded. You can even skip
-        <command>cvs-gather</command> altogether if you already have all the
-        necessary packages in your system or if you feel like getting these
-        packages manually. For a list of the package dependencies, refer to
-        the file <filename>juggler/Gatherrc</filename>. For more information
-        about the file format, refer to the <command>cvs-gather</command>
-        manual.</para>
-
-        <para>To limit which packages get downloaded through
-        <command>cvs-gather</command>, use the <option>--target</option>
-        option, as shown below:</para>
-
-        <screen>./cvs-gather --target GMTL,Doozer++</screen>
-
-        <para>or</para>
-
-        <screen>./cvs-gather --target GMTL --target Doozer++</screen>
-
-        <para>The names given as arguments to <option>--target</option> are
-        the module names listed in <filename>juggler/Gatherrc</filename>. Any
-        number of target module names may be listed.</para>
-
-        <para>For <command>cvs-gather</command> to work, it uses a
-        <quote>gather rc</quote> file. This file specifies the external
-        project CVS locations. <command>cvs-gather</command> reads these CVS
-        locations and then checks each one out locally for use in building the
-        Juggler Project. There are three possible default names for a
-        <quote>gather rc</quote> file:</para>
-
-        <orderedlist>
-          <listitem>
-            <para><filename>Gatherrc</filename> (in the working directory)</para>
-          </listitem>
-
-          <listitem>
-            <para><filename>.gatherrc</filename> (in the working directory)</para>
-          </listitem>
-
-          <listitem>
-            <para><filename>$HOME/.gatherrc</filename></para>
-          </listitem>
-        </orderedlist>
-
-        <para><command>cvs-gather</command> searches for these three files by
-        default in the order shown above. Alternatively, a user-defined file (<filename>deps.gatherrc</filename>,
-        for example) can be named on the command line as follows:</para>
-
-        <screen>./cvs-gather.pl --cfg=deps.gatherrc</screen>
-
-        <para>To simplify shared use of a single configuration file, the
-        contents of the file may be overridden on the command line or through
-        the use of an <quote>overrides</quote> file. The following shows such
-        a file that overrides the CVSROOT settings in <filename>juggler/Gatherrc</filename>:</para>
-
-        <programlisting>      #JugglerBaseStuff.CVSROOT=patrickh@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler 
-      Doozer.CVSROOT = patrickh@cvs.doozer.sourceforge.net:/cvsroot/doozer
-      Doozer++.CVSROOT = patrickh@cvs.doozer.sourceforge.net:/cvsroot/doozer
-      GMTL.CVSROOT = patrickh@cvs.ggt.sourceforge.net:/cvsroot/ggt                  </programlisting>
-
-        <para>The current <filename>Gatherrc</filename> only allows anonymous
-        CVS access. To override that, we suggest making per-user override
-        files. To use the override file, just add the argument
-        <option>--override=&#60;filename&#62;</option> when running
-        <command>cvs-gather</command>.</para>
-
-        <para>The following shows how to run <command>cvs-gather</command>
-        with your own overrides file (called <filename>my_gatheroverride</filename>):</para>
-
-        <screen>cvs-gather.pl --override=my_gatheroverride</screen>
-
-        <para>If all goes well, you&#39;ll get everything you need to compile.</para>
-      </section>
     </section>
 
     <section>
@@ -429,13 +256,23 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
       <section>
         <title>CppDOM</title>
 
-        <para>For XML processing, we use CppDOM 0.3.0 or newer. The source and
+        <para>For XML processing, we use CppDOM 0.3.2 or newer. The source and
         binary distributions for some platforms can be downloaded from <ulink
-        url="http://www.sf.net/projects/xml-cppdom">http://www.sf.net/projects/xml-cppdom/</ulink>.
+        url="http://www.sf.net/projects/xml-cppdom/">http://www.sf.net/projects/xml-cppdom/</ulink>.
         If a binary version is not available for your operating system you
         must compile and install CppDOM yourself. Note that you need SCons (<ulink
         url="http://scons.sourceforge.net/">http://scons.sourceforge.net/</ulink>)
         to build and install CppDOM.</para>
+      </section>
+
+      <section>
+        <title>GMTL</title>
+
+        <para>For high-level mathematical operations, we use GMTL 0.3.2 or
+        newer. The source distribution can be downloaded from <ulink
+        url="http://www.sf.net/projects/ggt/">http://www.sf.net/projects/ggt/</ulink>.
+        Note that you need SCons (<ulink url="http://scons.sourceforge.net/">http://scons.sourceforge.net/</ulink>)
+        to build and install GMTL.</para>
       </section>
 
       <section>
@@ -451,7 +288,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
       </section>
 
       <section>
-        <title>Java Developer Kit (JDK/J2SDK)</title>
+        <title>Java Developer Kit (also called the J2SE SDK)</title>
 
         <para>We make use of the Java programming language in addition to C++.
         Java is used exclusively for GUIs such as Tweek and VRJConfig (which
@@ -538,73 +375,6 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
         individual <command>autogen.sh</command> scripts in the various
         modules, should you need to run one individually.</para>
 
-        <section>
-          <title>Win32 Issues</title>
-
-          <para>The VR Juggler build system is <quote>unified</quote> in that
-          the same build code runs on UNIX-based systems as on Windows.
-          However, the build system is very UNIX-centric, and as a result,
-          using it on Windows is a little more complicated than we would like.
-          It does not help that Cygwin is a poor substitute for a real
-          UNIX-like environment.</para>
-
-          <section>
-            <title>Dealing with Cygwin Autoconf and Automake</title>
-
-            <para>On Win32, recent versions of Cygwin install Autoconf 2.13
-            <emphasis>and</emphasis> Autoconf 2.5x. Similarly, Automake 1.4
-            <emphasis>and</emphasis> Automake 1.5 are installed. The former
-            versions (2.13 and 1.4) are considered <quote>stable</quote> while
-            the latter are <quote>developmental</quote>. While the VR Juggler
-            build system does work with either set on UNIX-based systems, the
-            build system does not work with Automake 1.5 on Win32. At this
-            time, it is unclear why it does not work, but the following
-            provides a workaround for running <command>autogen.sh</command> on
-            Win32 using the default BASH environment:</para>
-
-            <screen>ACLOCAL=/usr/autotool/stable/bin/aclocal ./autogen.sh</screen>
-
-            <para>If you are using tcsh, use the following command instead:</para>
-
-            <screen>env ACLOCAL=/usr/autotool/stable/bin/aclocal ./autogen.sh</screen>
-          </section>
-
-          <section>
-            <title>Paths</title>
-
-            <para>Paths are a major source of confusion when building VR
-            Juggler on Win32. It is very important that everyone who tries to
-            build on Win32 read this section and understand it. The basic
-            principle is that using the VR Juggler build system works the same
-            on Windows as on UNIX-based systems. However, paths must be
-            handled specially due to the fundamental differences between
-            Windows and UNIX.</para>
-
-            <para>The most important part of dealing with paths on Win32 is
-            this: the path must be given as the full DOS drive path, but
-            <filename>/</filename> should be used instead of
-            <filename>\</filename> as the path separator. The Cygwin
-            <filename>/cygdrive</filename> paths <emphasis>cannot</emphasis>
-            be used when running the <command>configure</command> scripts.
-            This is because the paths are passed onto Windows software such as
-            Visual Studio and the Java compiler. These are not Cygwin
-            programs, and thus, they do not understand the
-            <filename>/cygdrive</filename> syntax.</para>
-
-            <para>This issue is really not that complicated if you exercise
-            some common sense and keep the following rule of thumb in mind:
-            any path that will be used by a compiler must be a DOS-style path,
-            and any path that will be used by the shell must be a Cygwin-style
-            path. In general, the only time to use a Cygwin-style path is when
-            extending your <varname>$PATH</varname> environment variable from
-            within a Cygwin shell. If you are using the DOS
-            <command>COMMAND.COM</command> shell, you <emphasis>never</emphasis>
-            use Cygwin paths for anything. In the end, it is probably easier
-            to use a DOS shell to configure and compile VR Juggler, as long as
-            you can deal with the inherent limitations of DOS shells.</para>
-          </section>
-        </section>
-
         <section id="using.configure.pl">
           <title>Using <command>configure.pl</command></title>
 
@@ -667,10 +437,11 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
 
               <note>
                 <para>You will probably have to specify the paths to your
-                local CppDOM and Boost installations using the options
-                <option>--with-cppdom</option> and <option>--with-boost</option>
-                unless they are installed in the default location (<filename>/usr/local</filename>).
-                By default, Boost 1.31 installs its header files in a
+                local CppDOM, GMTL, and Boost installations using the options
+                <option>--with-cppdom</option>, <option>--with-gmtl-prefix</option>
+                and <option>--with-boost</option> unless they are installed in
+                the default location (<filename>/usr/local</filename>). By
+                default, Boost 1.31 installs its header files in a
                 subdirectory of <filename>include</filename> called
                 <filename>boost-1_31</filename>. That is, if Boost is
                 installed in <filename>/home/user1/pkgs/boost</filename>, the
@@ -721,7 +492,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
           version downloaded into <filename>juggler/external</filename>, run
           <command>configure.pl</command> as follows:</para>
 
-          <screen>../configure.pl --with-gmtl=/usr/local</screen>
+          <screen>../configure.pl --with-gmtl-prefix=/usr/local</screen>
 
           <para>This option could of course be mixed in with those shown in
           the previous section. In this situation, all paths for the GMTL
@@ -824,8 +595,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
           </listitem>
 
           <listitem>
-            <para>OpenORB: <ulink url="http://openorb.exolab.org/">http://openorb.exolab.org/</ulink>
-            or <ulink url="http://openorb.sourceforge.net/">http://openorb.sourceforge.net/</ulink></para>
+            <para>OpenORB: <ulink url="http://openorb.sourceforge.net/">http://openorb.sourceforge.net/</ulink></para>
           </listitem>
         </itemizedlist>
 
