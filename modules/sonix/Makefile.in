@@ -12,6 +12,7 @@
 # -----------------------------------------------------------------
 #
 # ****************** <SNX heading END do not edit this line> ******************
+
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
 # VR Juggler is (C) Copyright 1998-2003 by Iowa State University
@@ -36,285 +37,189 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 #
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
 # *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Base Makefile.in for Sonix.  It requires GNU make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+# Targets are:
+#
+# world             - Build and install everything.
+# world-all-abi     - Build and install everything using all supported ABIs.
+# buildworld        - Build everything (same as 'all').
+# installworld      - Install everything (same as 'install-all').  This
+#                     requires  that 'buildworld' be successfully completed
+#                     beforehand.
+# release           - Build and install a release version.
+#
+# all               - Build everything.
+# all-abi           - Build everything using all supported ABIs.
+# debug             - Build the Sonix libraries (dynamic and static) with
+#                     debugging symbols turned on.
+# dbg               - Build the debugging, static copy of the libraries.
+# dbg-dso           - Build the debugging, dynamic shared object version of
+#                     the libraries.
+# optim             - Build the Sonix libraries (dynamic and static) with
+#                     optimization flags enabled.
+# opt               - Build the optimized, static version of the libraries.
+# opt-dso           - Build the dynamic shared object version of the
+#                     libraries.
+# profiled          - Build the Sonix libraries (dynamic and static) with
+#                     profiling flags enabled.
+# prof              - Build the profiled, static version of the libraries.
+# prof-dso          - Build the profiled, dynamic shared object version of the
+#                     libraries.
+# obj               - Build the object files using the default value for
+#                     $(OBJDIR).
+#
+# links             - Define links (for developer use only) that provide
+#                     functionality allowing the use of the $SNX_BASE_DIR
+#                     environment variable.
+# clean-links       - Remove the symlinks created by 'links'.
+#
+# hier              - Make the full directory hierarchy for the installation.
+# install-all       - Install all versions of the libraries, all header files,
+#                     the Data directory, and the test code.
+# install-all-abi   - Install every ABI possible on the target platform.
+# install           - Install the full debugging version of Sonix (with
+#                     both static and dynamic libraries). 
+# install-debug     - Same as 'install'.
+# install-dbg       - Install the debugging, static version of the libraries.
+# install-dbg-dso   - Install the debugging, dynamic shared object version of
+#                     the libraries.
+# install-optim     - Install the full optimized version of Sonix (with
+#                     both static and dynamic libraries).
+# install-opt       - Install the optimized, static version of the libraries.
+# install-opt-dso   - Install the dynamic shared object version of the
+#                     libraries.
+# install-headers   - Install only the header files.
+# install-samples   - Install only the sample code.
+# install-test      - Install only the test code.
+# install-data      - Install only the Data directory.
+#
+# docs              - Build the internal and the public documentation.
+# doc-internal      - Build only the internal documentation.
+# doc-public        - Build only the public documentation.
+#
+# clean             - Clean up everything (uses common 'clean' target).
+# cleandepend       - Clean up the dependency files (uses common 'cleandepend'
+#                     target).
+# clobber           - Clean up everything and remove the directories
+#                     containing the compiled libraries and its object files.
+#
+# info              - Print out information about the build process that may
+#                     be useful to the user.
+#
+# The default target is 'debug'.  'install' will install the debugging, static
+# version of the libraries.
+# -----------------------------------------------------------------------------
 
 default: debug
 
 # This is a hack to deal with GNU make's ignorance about defined targets.
 # Without this, the 'default' set in dpp.subdir.mk becomes the default
 # target, and that's not what we want.
-DEFAULT_SET	= 1
-SRC_MKFILES	= Makefile
+DEFAULT_SET=	1
 
+# Include common definitions.
 include @topdir@/make.defs.mk
 
-STARTTIME	:= $(shell LC_TIME=C date)
+STARTTIME:=	$(shell LC_TIME=C date)
 
-BUILD_PROF_C	= @BUILD_PROF_C@
-BUILD_PROF_CXX	= @BUILD_PROF_CXX@
+BUILD_PROF_C=	@BUILD_PROF_C@
+BUILD_PROF_CXX=	@BUILD_PROF_CXX@
 
 # If we can build both C and C++ profiled objects, we will build profiled
 # libraries.
 ifeq ($(BUILD_PROF_C), Y)
 ifeq ($(BUILD_PROF_CXX), Y)
-    BUILD_PROF_LIBS	= 1
+   BUILD_PROF_LIBS=	1
 endif
 endif
 
-includedir           = @includedir@
-instlinks            = $(topdir)/instlinks
-
-# Extra compiler and linker options needed only by this file.
-DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
-OPT_FLAGS	= -D_OPT @OPT_FLAGS@
-
-SHLIB_MAJOR	= @MAJOR_VERSION@
-SHLIB_MINOR	= @MINOR_VERSION@
-SHLIB_MICRO	= @MICRO_VERSION@
-
-ifneq (@OS_TYPE@, Win32)
-DYNAMICLIB_VER	= .$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
-endif
-
-# Add extra linking options on Darwin/OS X.
-ifeq (@PLATFORM@, Darwin)
-LDOPTS+=	-compatibility_version $(SHLIB_MAJOR).$(SHLIB_MINOR)
-LDOPTS+=	-current_version $(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
-LDOPTS+=	-flat_namespace
-endif
-
-STATICLIB_EXT	= @STATICLIB_EXT@
-DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
-
-SNX_LIB_STATIC        = $(SNX_LIBRARY).$(STATICLIB_EXT)
-SNX_LIB_DYNAMIC       = $(SNX_LIBRARY).$(DYNAMICLIB_EXT)
-SNX_PROF_LIB_STATIC	= $(SNX_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
-SNX_PROF_LIB_DYNAMIC	= $(SNX_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
-DYLIB_DEPS_SNX		= @DYLIB_DEPS@
-DYLIB_PROF_DEPS_SNX	= @DYLIB_PROF_DEPS@
-
-# setup the list of libs to be built...
-LIBS        = $(SNX_LIBRARY)
-STATIC_LIBS    = $(LIBS)
-DYNAMIC_LIBS   = $(LIBS)
+# =============================================================================
+# Lists used for various types of recursion.
+# =============================================================================
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR          = snx
-
-# needed for compiling the DSO
-EXTRA_LIBS      = @LIBS@ -lm
-
-# Version information.
-PARAM_HEADER	= snx/snxParam.h
-BRANCH		= HEAD
-CANON_NAME	= Mario
-VER_ARGS	= -f $(ROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
-                  -i $(ROOT_ABS)/$(PARAM_HEADER).in -o $(PARAM_HEADER)	\
-                  -d "`date '+%b %e, %Y %H:%M:%S'`" -n "$(CANON_NAME)"
-
-ifdef VERSION
-    VER_ARGS	+= -v $(VERSION)
-endif
-
-
-# -----------------------------------------------
-# Construct the static version of the libraries.
-# -----------------------------------------------
-$(LIBDIR)/$(SNX_LIB_STATIC) $(LIBDIR)/$(SNX_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
-ifneq (@OS_TYPE@, Win32)
-	@echo "------------------------------------------------"
-	@echo "Creating $@"
-	@echo "------------------------------------------------"
-	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
-	$(RANLIB) $@
-	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
-	@echo "------------------------------------------------"
-	@echo "$@ done"
-	@echo "------------------------------------------------"
-endif
-
-# ------------------------------------------------
-# Construct the dynamic version of the libraries.
-# ------------------------------------------------
-$(LIBDIR)/$(SNX_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
-	@echo "------------------------------------------------"
-	@echo "Creating $@"
-	@echo "------------------------------------------------"
-	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
-          $(DYLIB_DEPS_SNX)
-	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
-ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && $(RM_LN) $(SNX_LIB_STATIC) &&		\
-            $(LN_S) $(LIBDIR)/$(SNX_LIB_STATIC) ./
-endif
-	@echo "------------------------------------------------"
-	@echo "$@ done"
-	@echo "------------------------------------------------"
-
-# ------------------------------------------------
-# Construct the dynamic version of the libraries.
-# ------------------------------------------------
-$(LIBDIR)/$(SNX_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
-	@echo "------------------------------------------------"
-	@echo "Creating $@"
-	@echo "------------------------------------------------"
-	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
-          $(DYLIB_PROF_DEPS_SNX)
-	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
-	@echo "------------------------------------------------"
-	@echo "$@ done"
-	@echo "------------------------------------------------"
+SUBDIR=	snx
 
 # =============================================================================
-# Library targets.
-# =============================================================================
-
-# libs.mk calls these two...
-BEFOREBUILD	= beforebuild
-AFTERBUILD	= afterbuild
-
-# Things to do before the object files and library are built.
-beforebuild: $(PARAM_HEADER)
-
-$(PARAM_HEADER): $(ROOT_ABS)/$(PARAM_HEADER).in $(ROOT_ABS)/VERSION
-	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
-
-# Things to do after the object files and library are built.
-afterbuild:
-	@$(MAKE) links
-   
-# =============================================================================
-# Make links for developer use that provide the needed functionality for
-# the $SNX_BASE_DIR environment variable to be used when needed.  $SNX_BASE_DIR
-# should be set to $(instlinks).
-# =============================================================================
-links:
-	@echo "------------------------------------------------"
-	@echo "Setting up developer installation"
-	@echo "------------------------------------------------"
-ifdef BUILD_TYPE
-	$(MAKE) links-$(BUILD_TYPE)
-else
-	$(MAKE) links-dbg
-endif
-	@echo ""
-	@echo "---------------------------------------------------------------"
-	@echo 'You should now set $$SNX_BASE_DIR to:'
-	@cd $(instlinks) && echo "  `pwd`"
-	@echo "---------------------------------------------------------------"
-
-links-all:
-	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" installworld
-
-links-dbg:
-	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-debug
-
-links-opt:
-	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-optim
-
-links-prof:
-	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-profiled
-
-# Remove the links in $(instlinks).  We cannot do this in the global build,
-# however, because it would blow away links set up by our dependencies.
-clean-links:
-ifndef GLOBAL_BUILD
-	@echo "------------------------------------------------"
-	@echo "Removing developer installation links"
-	@echo "------------------------------------------------"
-	rm -rf $(instlinks)
-endif
-
-
-# =============================================================================
-# Installation targets.  The default (what is done by 'install') is to install
-# the static debugging version of the libraries.  The steps taken for a full
-# installation are:
+# Library targets.  The default is 'debug' as defined above.  The steps for 
+# building the 'dbg', 'dbg-dso', 'opt' and 'opt-dso' are as follows:
 #
-#     1) Create the full installation directory hierarchy.
-#     2) Install the libraries.
-#     3) Install the header files.
-#     4) Install the test programs.
-#     5) Install the contents of the Data directory.
-#     6) Install the Java-based config editor (if possible).
+#    1) Build dependencies (if necessary).
+#    2) Compile all object files that are out of date.
+#    3) Compile the actual libraries from the object files.
+#    4) Build the Java-based config editor (if necessary).
+#    5) Set up the developer installation links.
 # =============================================================================
 
-BEFOREINSTALL	= beforeinstall
-AFTERINSTALL	= afterinstall
-
-# Steps to take before beginning the installation process.  This target is
-# independent of the current ABI.
-beforeinstall:
-	@$(MAKE) hier
-
-# Make the full directory hierarchy for the installation.
-hier:
-	@echo "------------------------------------------------"
-	@echo "Making hierarchy"
-	@echo "------------------------------------------------"
-	$(SHELL) $(MKINSTALLDIRS) $(prefix)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/SNX.install.dist -p $(prefix)
-	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/SNX.include.dist -p $(prefix)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/SNX.lib.dist -p $(prefix)
-
-
-# Steps to take after the installation process is complete.  This target is
-# independent of the current ABI.
-afterinstall:
+# ------------------------------------------------
+# Build and install everything (i.e., the world).
+# ------------------------------------------------
+world:
 	@echo "==============================================================="
-	@echo "sonix installation complete"
+	@echo ">>> Sonix make world started $(STARTTIME)"
+	@echo "==============================================================="
+ifndef NO_CLEAN
+	@$(MAKE) clobber
+endif
+	@$(MAKE) $(BEFOREBUILD)
+	@$(MAKE) libs
+	@$(MAKE) BUILD_TYPE=opt $(AFTERBUILD)
+	@echo "---------------------------------------------------------------"
+	@echo "Beginning Sonix installation process"
+	@echo "---------------------------------------------------------------"
+	@$(MAKE) beforeinstall
+	@$(MAKE) install-libs
+	@$(MAKE) do-post-install
+	@echo "==============================================================="
+	@echo ">>> Sonix make world started $(STARTTIME)"
+	@echo ">>> Sonix make world completed `LTIME=C date`"
 	@echo "==============================================================="
 
-
-#PREINSTALL	= pre-install
-POSTINSTALL	= post-install
-
-# Do everything needed after installing the library binaries.
-post-install:
-	@$(MAKE) install-share
-	@$(MAKE) install-test
-	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(topdir)/sonix-config $(bindir)
-
-POSTINSTALL_HEADERS=	post-install-headers
-
-post-install-headers:
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(topdir)/snx/snxDefines.h $(includedir)/snx
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(topdir)/snx/snxParam.h $(includedir)/snx
-
-install-share:
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(ROOT_ABS)/data/*.wav $(projdatadir)/data
-	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/samples	\
-          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/src -e ".wav"
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(topdir)/samples/Makefile $(projdatadir)/src
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(ROOT_ABS)/README.txt $(projdatadir)
-
-install-test:
-
-# -------------------------------------
-# Build all versions of the libraries.
-# -------------------------------------
-buildworld: all
-
 # ------------------------------------------------------------------------
-# Do a full installation all versions of the libraries and the associated
-# files.
+# Build and install everything (i.e., the world) using all possible ABIs.
 # ------------------------------------------------------------------------
-installworld: install-all
-
-# -------------------------------------------------------------
-# Build and install everything (i.e., the world) for a release.
-# -------------------------------------------------------------
-.PHONY: release
+world-all-abi:
+	@echo "==============================================================="
+	@echo ">>> Sonix make world started on $(STARTTIME)"
+	@echo "==============================================================="
+ifndef NO_CLEAN
+	@$(MAKE) clobber
+endif
+	@$(MAKE) $(BEFOREBUILD)
+	@for abi in $(ABI_LIST) ; do					\
+            echo "------------------------------------------------" ;	\
+            echo "Building libraries using $$abi" ;			\
+            echo "------------------------------------------------" ;	\
+            $(MAKE) gadgetABI=$$abi libs ;				\
+          done
+	@$(MAKE) BUILD_TYPE=opt $(AFTERBUILD)
+	@echo "---------------------------------------------------------------"
+	@echo "Beginning Sonix installation process"
+	@echo "---------------------------------------------------------------"
+	@$(MAKE) beforeinstall
+	@for abi in $(ABI_LIST) ; do					\
+            echo "------------------------------------------------" ;	\
+            echo "Installing $$abi version of libraries" ;		\
+            echo "------------------------------------------------" ;	\
+            $(MAKE) gadgetABI=$$abi install-libs ;			\
+          done
+	@$(MAKE) do-post-install
+	@echo "==============================================================="
+	@echo ">>> Sonix make world started on $(STARTTIME)"
+	@echo ">>> Sonix make world completed on `LTIME=C date`"
+	@echo "==============================================================="
 
 # -----------------------------------------------------------------------------
 # A release is a superset of 'world' except that no profiled libraries are
@@ -332,9 +237,7 @@ ifndef NO_CLEAN
 endif
 	@$(MAKE) $(BEFOREBUILD)
 	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N libs
-ifdef GLOBAL_BUILD
-	@$(MAKE) links
-endif
+	@$(MAKE) BUILD_TYPE=opt $(AFTERBUILD)
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning Sonix release installation process"
 	@echo "---------------------------------------------------------------"
@@ -347,25 +250,52 @@ endif
           $(EXTRA_INSTALL_ARGS) $(ROOT_ABS)/COPYING.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(ROOT_ABS)/README.txt $(projdatadir)
-#	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-#          $(EXTRA_INSTALL_ARGS) $(ROOT_ABS)/RELEASE_NOTES.txt $(projdatadir)
+	@$(MAKE) BUILD_TYPE=opt afterinstall
+	@$(MAKE) BUILD_TYPE=dbg afterinstall
 	@echo "Build time: `LTIME=C date`" > $(projdatadir)/BUILD_TIME
 	@echo "==============================================================="
 	@echo ">>> Sonix make release started on $(STARTTIME)"
 	@echo ">>> Sonix make release completed on `LTIME=C date`"
 	@echo "==============================================================="
 
-include $(MKPATH)/dpp.libs.mk
+# -------------------------------------
+# Build all versions of the libraries.
+# -------------------------------------
+buildworld: all
+
+# ------------------------------------------------------------------------
+# Do a full installation all versions of the libraries and the associated
+# files.
+# ------------------------------------------------------------------------
+installworld: install-all
+
+# =============================================================================
+# Automatically generated documentation.
+# =============================================================================
+docs: doc-internal doc-public
+
+doc-internal:
+	$(MAKE) -C Doc SUBDIRS="$(SUBDIRS)" $@
+
+doc-public:
+	$(MAKE) -C Doc SUBDIRS="$(SUBDIRS)" $@
+
+# =============================================================================
+# Human-readable information about the build system.
+# =============================================================================
+info:
+	@echo "\nInfo for the make of $(SNX_LIBRARY)"
+	@echo "\nOBJDIR: $(OBJDIR)"
+	@echo "ROOT_ABS: $(ROOT_ABS)"
+	@echo "Default ABI: $(ABI)"
+	@echo "Default instruction set architecture: $(ISA)"
+	@echo "ABI list: $(ABI_LIST)"
+	@echo "DBG_BUILDDIR: $(DBG_BUILDDIR)"
+	@echo "OPT_BUILDDIR: $(OPT_BUILDDIR)"
+	@echo "Installation prefix: $(prefix)"
+	@echo "includedir: $(includedir)"
+	@echo "libdir: $(libdir)"
+	@$(SHELL) $(scriptdir)/print-targets.sh
+
 include $(MKPATH)/dpp.subdir.mk
-
-# -----------------------------------------------------------------------------
-# Clean-up.
-# -----------------------------------------------------------------------------
-include $(MKPATH)/dpp.clean.mk
-CLEAN_DIRS      += $(BUILDDIR_BASE) $(LIBDIR_NAME)
-CLOBBER_DIRS    += $(BUILDDIR_BASE) $(LIBDIR_NAME)
-
-
-# this is for "ooops! i configured in the root dir of my project..."
-cleanconfigure:
-	rm config.cache configure config.status reconfig simple_config.h make.defs.mk config.log aclocal.m4 Makefile
+include Makefile.inc

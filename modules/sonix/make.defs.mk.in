@@ -85,7 +85,7 @@
 # -----------------------------------------------------------------------------
 mtreedir=		$(topdir)/mtree
 projdatadir=		$(datadir)/sonix
-releasedir=		@SAFE_JUGGLERROOT_ABS@/release
+releasedir=		$(JUGGLERROOT_ABS)/release
 scriptdir=		$(releasedir)/scripts
 topdir=			@topdir@
 top_srcdir=		@top_srcdir@
@@ -99,9 +99,12 @@ MTREE_CMD=		@MTREE_CMD@
 PROFLIB_EXT=		_p
 PROF_OPT_FLAGS=		$(DBG_FLAGS)
 RM_LN=			@RM_LN@
-WARNS=                  2
+WARNS=			2
 ROOT_ABS=		@projectdir@
-JUGGLERROOT_ABS=	@SAFE_JUGGLERROOT_ABS@
+JUGGLERROOT_ABS=	@JUGGLERROOT_ABS@
+
+STATICLIB_EXT=          @STATICLIB_EXT@
+DYNAMICLIB_EXT=         @DYNAMICLIB_EXT@
 
 # -----------------------------------------------------------------------------
 # Extra information for the Doozer++ file common.defs.mk.
@@ -123,7 +126,7 @@ MKDEP_CXX=	$(DEPGEN_TOOL_CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 # Platform- and binary-specific options.
 # -----------------------------------------------------------------------------
 ifdef snxABI
-    dppABI=	$(snxABI)
+   dppABI=	$(snxABI)
 endif
 
 # -----------------------------------------------------------------------------
@@ -133,6 +136,6 @@ SNX_LIBRARY=		@LIB_PREFIX@sonix
 AUDIOWORKS_LIBRARY=	@LIB_PREFIX@AudioWorks
 OPENAL_LIBRARY=		@LIB_PREFIX@OpenAL
 SUBSYNTH_LIBRARY=	@LIB_PREFIX@Subsynth
-AUDIERE_LIBRARY= @LIB_PREFIX@Audiere
+AUDIERE_LIBRARY=	@LIB_PREFIX@Audiere
 
 include $(topdir)/common.defs.mk
