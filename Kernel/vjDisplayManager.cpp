@@ -16,7 +16,7 @@ void vjDisplayManager::setupHeadIndices()
    if(headProxyIndex == -1)
       cerr << "VJ ERROR: VJHead not found. Was it set in the config file." << endl;
 
-   vjDEBUG(0) << "      headIndex: " << headProxyIndex << endl;
+   vjDEBUG(0) << "headIndex: " << headProxyIndex << endl << vjDEBUG_FLUSH;
 }
 
     // notifyDrawMgr = 0; Defaults to 0
@@ -54,8 +54,8 @@ void vjDisplayManager::updateProjections()
    vjKernel::instance()->getInputManager()->GetPosData(curHeadPos, headProxyIndex);
    vjCoord  head_coord(curHeadPos);       // Create a user readable version
    
-   vjDEBUG(1) << "vjDisplayManager::updateProjections: Getting head position" << endl;
-   vjDEBUG(0) << "\tHeadPos:" << head_coord.pos << "\tHeadOr:" << head_coord.orient << endl;
+   vjDEBUG(1) << "vjDisplayManager::updateProjections: Getting head position" << endl << vjDEBUG_FLUSH;
+   vjDEBUG(0) << "\tHeadPos:" << head_coord.pos << "\tHeadOr:" << head_coord.orient << endl << vjDEBUG_FLUSH;
    
    // Compute location of left and right eyes
    float interocularDist = 2.75/12.0f;

@@ -37,13 +37,13 @@ void vjWallProjection::calcWallProjection(vjMatrix& eyePos)
    eye_pos = eye_coord.pos;
    vjVec3   eye_xformed;         // Xformed position of eyes
 
-   //vjDEBUG(0) << "vjWallProjection::calcWallProjection:  Wall Proj:\n" << *this << endl;
-   //vjDEBUG(0) << "vjWallProjection::calcWallProjection:    Base eye:" << eye_coord.pos << endl;
+   //vjDEBUG(0) << "vjWallProjection::calcWallProjection:  Wall Proj:\n" << *this << endl << vjDEBUG_FLUSH;
+   //vjDEBUG(0) << "vjWallProjection::calcWallProjection:    Base eye:" << eye_coord.pos << endl << vjDEBUG_FLUSH;
 
    // Convert eye coords into the wall's coord system
    eye_xformed.xformFull(mWallRotationMatrix, eye_pos);
 
-   //vjDEBUG(0) << "vjWallProjection::calcWallProjection:    Xformed eye:" << eye_xformed << endl;
+   //vjDEBUG(0) << "vjWallProjection::calcWallProjection:    Xformed eye:" << eye_xformed << endl << vjDEBUG_FLUSH;
 
    // Compute dist from eye to screen/edges
    eye_to_screen = mOriginToScreen + eye_xformed[VJ_Z];
@@ -65,9 +65,9 @@ void vjWallProjection::calcWallProjection(vjMatrix& eyePos)
                 near_dist, far_dist);
 
 
-   //vjDEBUG(0) << "vjWallProjection::calcWallProjection: \n\tFrustum: " << frustum << endl;
+   //vjDEBUG(0) << "vjWallProjection::calcWallProjection: \n\tFrustum: " << frustum << endl << vjDEBUG_FLUSH;
 
-   //vjDEBUG(0) << "vjWallProjection::calcWallProjection: B4 Trans:\n" << mWallRotationMatrix << endl;
+   //vjDEBUG(0) << "vjWallProjection::calcWallProjection: B4 Trans:\n" << mWallRotationMatrix << endl << vjDEBUG_FLUSH;
    viewMat.postTrans(mWallRotationMatrix, -eye_pos[VJ_X], -eye_pos[VJ_Y], -eye_pos[VJ_Z]);
 }
 
@@ -80,7 +80,7 @@ void vjWallProjection::calcWallProjection(vjMatrix& eyePos)
 //	3rd row defines up direction
 void vjWallProjection::setWallRotationMatrix()
 {
-   vjDEBUG(2) << "vjWallProjection::setWallRotationMatrix: Entering" << endl;
+   vjDEBUG(2) << "vjWallProjection::setWallRotationMatrix: Entering" << endl << vjDEBUG_FLUSH;
 
    switch (surface)
    {
@@ -106,8 +106,8 @@ void vjWallProjection::setWallRotationMatrix()
       break;
    }
 
-   vjDEBUG(2) << "vjWallProjection::setWallRotationMatrix: Matrix" << endl;
-   vjDEBUG(2) << mWallRotationMatrix << endl;   
+   vjDEBUG(2) << "vjWallProjection::setWallRotationMatrix: Matrix" << endl << vjDEBUG_FLUSH;
+   vjDEBUG(2) << mWallRotationMatrix << endl << vjDEBUG_FLUSH; 
 }
 
 
@@ -115,7 +115,7 @@ void vjWallProjection::setWallRotationMatrix()
 /*
 void vjWallProjection::calcWallProjection(vjMatrix& eyePos)
 {
-   vjDEBUG(3) << "vjWallProjection::calcWallProjection: Entering." << endl;
+   vjDEBUG(3) << "vjWallProjection::calcWallProjection: Entering." << endl << vjDEBUG_FLUSH;
 
    register float dfront, dback, dleft, dright, dceiling, dfloor;
    register float Factor, Left, Right, Top, Bottom;
@@ -138,7 +138,7 @@ void vjWallProjection::calcWallProjection(vjMatrix& eyePos)
    OrigY = 0.0f;     // Dist from floor
    OrigZ = 6.0f;     // Dist from front
 
-   //vjDEBUG(1) << "Trk EYE: " << eyePos.pos << endl;
+   //vjDEBUG(1) << "Trk EYE: " << eyePos.pos << endl << vjDEBUG_FLUSH;
 
 #if 0 // ZUP_COORDS
    eyeX = eye_coord.pos[0];
@@ -156,7 +156,7 @@ void vjWallProjection::calcWallProjection(vjMatrix& eyePos)
 
    vjDEBUG(0) << "\n    EYE: " << eyeX
             << ", " << eyeY
-            << ", " << eyeZ << endl;
+            << ", " << eyeZ << endl << vjDEBUG_FLUSH;
 
 #if 0 //ZUP_COORDS
    dfront = OrigY - eyeY;
@@ -177,7 +177,7 @@ void vjWallProjection::calcWallProjection(vjMatrix& eyePos)
            << "  dfloor:" << dfloor
            << "  dback:" << dback
            << "  dright:" << dright
-           << "  dceiling:" << dceiling << endl << flush;
+           << "  dceiling:" << dceiling << endl << flush << vjDEBUG_FLUSH;
 
    // Use ratios and similar triangles to find the frustum
    // (inser4t Diagrom here>
@@ -228,16 +228,16 @@ void vjWallProjection::calcWallProjection(vjMatrix& eyePos)
       break;
    }
 
-   vjDEBUG(2) << "Bottom, Left, Top, Right:" << Bottom << ", " << Left << ", " << Top << ", " <<  Right << endl;
+   vjDEBUG(2) << "Bottom, Left, Top, Right:" << Bottom << ", " << Left << ", " << Top << ", " <<  Right << endl << vjDEBUG_FLUSH;
    frustum.setBottomLeftTopRight(Bottom, Left, Top, Right);
    frustum.setNearFar(vjNear, vjFar);
 
 	vjDEBUG(2) << "vjWallProjection::calcWallProjection: \n\tFrustum: " << frustum
-       << endl;
+       << endl << vjDEBUG_FLUSH;
 	
-   vjDEBUG(5) << "vjWallProjection::calcWallProjection: B4 Trans:\n" << wallRotationMatrix << endl;
+   vjDEBUG(5) << "vjWallProjection::calcWallProjection: B4 Trans:\n" << wallRotationMatrix << endl << vjDEBUG_FLUSH;
    viewMat.postTrans(wallRotationMatrix, -eyeX, -eyeY, -eyeZ);
-	vjDEBUG(5) << "                                      After:\n" << viewMat << endl;
+	vjDEBUG(5) << "                                      After:\n" << viewMat << endl << vjDEBUG_FLUSH;
 }
 */
 

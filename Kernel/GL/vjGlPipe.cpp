@@ -32,7 +32,7 @@ int vjGlPipe::start()
 
    controlPid = vjThread::spawn(memberFunctor, 0);
 
-   cerr << "vjGlPipe::start: Started control loop.  " << *controlPid << endl;
+   vjDEBUG(0) << "vjGlPipe::start: Started control loop.  " << *controlPid << endl << vjDEBUG_FLUSH;
    return 1;
 }
 
@@ -133,7 +133,7 @@ void vjGlPipe::checkForNewWindows()
          newWins[winNum]->open();
          newWins[winNum]->makeCurrent();
          theApp->contextInit();              // Call context init function
-         vjDEBUG(2) << "vjGlPipe::checkForNewWindows: Just opened window:\n" << *(newWins[winNum]) << endl;
+         vjDEBUG(2) << "vjGlPipe::checkForNewWindows: Just opened window:\n" << *(newWins[winNum]) << endl << vjDEBUG_FLUSH;
          openWins.push_back(newWins[winNum]);
       }
 

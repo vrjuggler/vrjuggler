@@ -33,11 +33,11 @@ void vjDisplay::config(vjConfigChunk* chunk)
       // -- Check for error in configuration -- //
       // NOTE: If there are errors, set them to some default value
    if(sizeX <= 0)
-   {  vjDEBUG(0) << "Error: window sizeX set to: " << sizeX << ".  Setting to 100." << endl;
+   {  vjDEBUG(0) << "Error: window sizeX set to: " << sizeX << ".  Setting to 100." << endl << vjDEBUG_FLUSH;
       sizeX = 10; }
 
    if(sizeY <= 0)
-   {  vjDEBUG(0) << "Error: window sizeY set to: " << sizeY << ".  Setting to 100." << endl;
+   {  vjDEBUG(0) << "Error: window sizeY set to: " << sizeY << ".  Setting to 100." << endl << vjDEBUG_FLUSH;
       sizeY = 10; }
 
       // -- Set local window attributes --- //
