@@ -620,7 +620,7 @@ bool XMLConfigIOHandler::writeChunkDesc (XMLFormatter* f, const ChunkDesc& desc,
     }
     std::cout << "about to write defaults..." << std::endl;
     if ((ch = desc.getDefaultChunk()) != 0) {
-        std::cout << "yup, writing defaults..." << std::endl;
+        //std::cout << "yup, writing defaults..." << std::endl;
         writeBuf (f, newpad);
         writeBuf (f, "<Defaults>\n");
         retval = retval && writeConfigChunk (f, *ch, newpad + "  ");

@@ -148,8 +148,6 @@ void PerformanceMonitor::releasePerfDataBuffer (PerfDataBuffer *b) {
 //! PRE: configCanHandle(chunk) == true
 //! RETURNS: success
 bool PerformanceMonitor::configAdd(ConfigChunk* chunk) {
-//      bool networkingchanged = false;
-//      int newport;
 
     std::string s = chunk->getType();
     if (!vjstrcasecmp (s, "PerfMeasure")) {
@@ -160,9 +158,15 @@ bool PerformanceMonitor::configAdd(ConfigChunk* chunk) {
 
         Connect* new_perf_target = getConnect(perf_target_name);
         if (new_perf_target != perf_target)
-            setPerformanceTarget (NULL);
-
-        activatePerfBuffers();
+            setPerformanceTarget (new_perf_target);
+        else {
+            // setPerformanceTarget above will activatePerfBuffers,
+            // but we want to make suer that happens regardless to get
+            // any changes to the individual buffer states.
+            perf_buffers_mutex.acquire();
+            activatePerfBuffers();
+            perf_buffers_mutex.release();
+        }
         connections_mutex.release();
 
         return true;
@@ -210,6 +214,7 @@ bool PerformanceMonitor::configCanHandle(ConfigChunk* chunk) {
 
 
 void PerformanceMonitor::setPerformanceTarget (Connect* con) {
+    //std::cout << "setting performance target" << std::endl;
     if (con == perf_target)
         return;
     perf_buffers_mutex.acquire();
@@ -231,58 +236,62 @@ void PerformanceMonitor::setPerformanceTarget (Connect* con) {
     }
 
 
-void PerformanceMonitor::deactivatePerfBuffers () {
-    std::vector<buffer_element>::iterator i;
-    for (i = perf_buffers.begin(); i != perf_buffers.end(); i++) {
-        i->buffer->deactivate();
-        if (perf_target)
-            perf_target->removePeriodicCommand (i->command);
-    }
-}
-
-
-
-void PerformanceMonitor::activatePerfBuffers () {
-    // activates all perf buffers configured to do so
-    // this is still a bit on the big and bulky side.
-
-    if (perf_buffers.empty())
-        return;
-
-    if (perf_target == NULL || current_perf_config == NULL) {
-        deactivatePerfBuffers();
-        return;
+    void PerformanceMonitor::deactivatePerfBuffers () {
+        std::vector<buffer_element>::iterator i;
+        for (i = perf_buffers.begin(); i != perf_buffers.end(); i++) {
+            i->buffer->deactivate();
+            if (perf_target)
+                perf_target->removePeriodicCommand (i->command);
+        }
     }
 
-    std::vector<VarValue*> v = current_perf_config->getAllProperties ("TimingTests");
-    std::vector<buffer_element>::const_iterator b;
-    std::vector<VarValue*>::const_iterator val;
-    bool found;
-    ConfigChunk* ch;
 
-    for (b = perf_buffers.begin(); b != perf_buffers.end(); b++) {
-        found = false;
-        for (val = v.begin(); val != v.end(); val++) {
-            ch = *(*val); // this line demonstrates a subtle danger
-            if ((bool)ch->getProperty ("Enabled")) {
-                if (!vjstrncasecmp(ch->getProperty("Prefix"), b->buffer->getName()))
-                    found = true;
+
+    void PerformanceMonitor::activatePerfBuffers () {
+        // activates all perf buffers configured to do so
+        // this is still a bit on the big and bulky side.
+
+        std::cout << "activating perfbuffers" << std::endl;
+        
+        if (perf_buffers.empty())
+            return;
+        
+        if (perf_target == NULL || current_perf_config == NULL) {
+            deactivatePerfBuffers();
+            return;
+        }
+        
+        std::cout << "activating perfbuffers 2" << std::endl;
+        
+        std::vector<VarValue*> v = current_perf_config->getAllProperties ("TimingTests");
+        std::vector<buffer_element>::const_iterator b;
+        std::vector<VarValue*>::const_iterator val;
+        bool found;
+        ConfigChunk* ch;
+
+        for (b = perf_buffers.begin(); b != perf_buffers.end(); b++) {
+            found = false;
+            for (val = v.begin(); val != v.end(); val++) {
+                ch = *(*val); // this line demonstrates a subtle danger
+                if ((bool)ch->getProperty ("Enabled")) {
+                    if (!vjstrncasecmp(ch->getProperty("Prefix"), b->buffer->getName()))
+                        found = true;
+                }
+            }
+            if (found) {
+                std::cout << "adding periodic command" << std::endl;
+                b->buffer->activate();
+                perf_target->addPeriodicCommand (b->command);
+            }
+            else if (b->buffer->isActive()) {
+                b->buffer->deactivate();
+                perf_target->removePeriodicCommand (b->command);
             }
         }
-        if (found) {
-            b->buffer->activate();
-            perf_target->addPeriodicCommand (b->command);
-        }
-        else if (b->buffer->isActive()) {
-            b->buffer->deactivate();
-            perf_target->removePeriodicCommand (b->command);
+        for (val = v.begin(); val != v.end(); val++) {
+            delete (*val);
         }
     }
-    for (val = v.begin(); val != v.end(); val++) {
-        delete (*val);
-    }
-
-}
 
 
 };
