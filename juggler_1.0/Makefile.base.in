@@ -1,0 +1,36 @@
+
+#------------------------------------------
+# Base definitions needed by all Makefiles
+#------------------------------------------
+AR		= @AR@
+CC		= @CC@
+CXX		= @CXX@
+CPP		= @CPP@
+CXXCPP		= @CXXCPP@
+CFLAGS		= @CFLAGS@ ${OPTIMIZER}
+CPPFLAGS	= @CPPFLAGS@
+CXXFLAGS	= @CXXFLAGS@ ${OPTIMIZER}
+DEFS		= @DEFS@
+DEPENDFLAGS	= @DEPENDFLAGS@ @INCLUDES@ -I${VJROOT_ABS} -I${topdir}
+DEPEND_EXTRAS	= @DEPEND_EXTRAS@ ${DEFS}
+INCLUDES	= @INCLUDES@ -I${VJROOT} -I${topdir}
+LDFLAGS		= @LDFLAGS@ -L/usr/lib${LIBBITSUF} -L/usr/lib
+LIBS		= @LIBS@
+OBJDIR		= .
+
+C_COMPILE	= ${CC} ${DEFS} ${INCLUDES} ${CPPFLAGS} ${CFLAGS}
+CXX_COMPILE	= ${CXX} ${DEFS} ${INCLUDES} ${CPPFLAGS} ${CXXFLAGS}
+
+#------------------------------
+# Build rule for OBJDIR code
+#-------------------------------
+$(OBJDIR)/%.o : %.c
+	${C_COMPILE} -c -o $@ $<
+
+$(OBJDIR)/%.o : %.C
+	${CXX_COMPILE} -c -o $@ $<
+
+$(OBJDIR)/%.o : %.cpp
+	${CXX_COMPILE} -c -o $@ $<
+
+#----

@@ -1,0 +1,8 @@
+Thread Manager
+--------------
+
+
+Thread Pool
+-----------
+A pool of threads that you can just throw functions at.
+It has a wait call to see if they are all done yet.

@@ -1,0 +1,52 @@
+sub filter {
+    my $str = shift;
+
+    my $new_str = "";
+    my($retval, $retdesc) = ("", "");
+
+    foreach ( split("\n", "$str") ) {
+	$retdesc .= "$1" if $_ =~ /^\s*\t(.*)/;
+
+	if ( /^[^\t\S]*(\S+)\s*\-\s*(.*)/ ) {
+	    $new_str .= addRow("$retval", "$retdesc") if $retdesc;
+
+	    $retval = "$1";
+	    $retdesc = "$2";
+	}
+    }
+
+    $new_str .= addRow("$retval", "$retdesc");
+
+    $str = <<END_TABLE;
+<TABLE BORDER="1" CELLPADDING="2">
+  <TR>
+    <TH BGCOLOR="#dddddd">
+      <FONT SIZE="2">Return value</FONT>
+    </TH>
+    <TH BGCOLOR="#dddddd">
+      <FONT SIZE="2">Description</FONT>
+    </TH>
+  </TR>
+  $new_str
+</TABLE>
+END_TABLE
+
+    return "$str";
+}
+
+sub addRow {
+    my ($value, $descr) = @_;
+
+    my $str = <<END_ROW;
+  <TR>
+    <TD ALIGN="RIGHT">
+      <B><FONT SIZE="2">$value</FONT></B>
+    </TD>
+    <TD>
+      <FONT SIZE="2">$descr</FONT>
+    </TD>
+  </TR>
+END_ROW
+
+    return "$str";
+}
