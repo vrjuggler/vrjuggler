@@ -30,100 +30,92 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/Input/Type/Digital.h>
-#include <vrj/Input/Type/DeviceFactory.h>
+#include <gadget/Devices/DriverConfig.h>
+
+#include <vector>
+#include <string>
+
+#include <vpr/vpr.h>
+#include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
 
-using namespace vrj;
+#include <gadget/InputManager.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Digital.h>
+#include <gadget/Type/InputMixer.h>
+#include <gadget/Type/DeviceConstructor.h>
 
-class MyButtonDevice : public Digital
+
+using namespace gadget;
+
+/** The device driver class. */
+class MyButtonDevice : public InputMixer<Input, Digital>
 {
 public:
-   MyButtonDevice() : mSampleThread( NULL ) {}
-   virtual ~MyButtonDevice() { this->stopSampling(); }
-   virtual void  getData();
-public:
-   virtual void  startSampling();
-   virtual void  sample();
-   virtual void  stopSampling();
+   MyButtonDevice()
+      : mSampleThread(NULL)
+      , mRunning(false)
+   {
+      /* Do nothing. */ ;
+   }
+
+   virtual ~MyButtonDevice()
+   {
+      if ( mRunning )
+      {
+         this->stopSampling();
+      }
+   }
+
+   virtual bool config(jccl::ConfigElementPtr e);
+   virtual void updateData();
+
+   virtual int startSampling();
+   virtual int sample();
+   virtual int stopSampling();
+
    static std::string getElementType();
+
+   /**
+    * Invokes the global scope delete operator.  This is required for proper
+    * releasing of memory in DLLs on Win32.
+    */
+   void operator delete(void* p)
+   {
+      ::operator delete(p);
+   }
+
+protected:
+   /**
+    * Deletes this object.  This is an implementation of the pure virtual
+    * gadget::Input::destroy() method.
+    */
+   virtual void destroy()
+   {
+      delete this;
+   }
+
 private:
    static void   threadedSampleFunction( void* classPointer );
    int           mDigitalData;
-   vpr::Thread*     mSampleThread;
-   
+   vpr::Thread*  mSampleThread;
+   bool          mRunning;
+
    // configuration data set by config()
-   int           mPortId, mBaud;
+   std::string   mPort;
+   int           mBaud;
 };
 
-DeviceConstructor<MyButtonDevice>* this_ptr_not_used = new DeviceConstructor<MyButtonDevice>;
+/** Entry point function for the device driver plug-in. */
+extern "C" GADGET_DRIVER_API(void) initDevice(InputManager* inputMgr)
+{
+   new DeviceConstructor<MyButtonDevice>(inputMgr);
+}
 
-//: What is the name of this device?
-//  This function returns a string that should match this device's 
-//  config element name.
-static std::string  MyButtonDevice::getElementType() 
-{ 
+/** Returns a string that matches this device's configuration element type. */
+std::string MyButtonDevice::getElementType()
+{
    return std::string("MyButtonDevice");
-}
-
-// spawn a sample thread, 
-// which calls MyButtonDevice::sample() repeatedly
-void MyButtonDevice::startSampling()
-{
-   mSampleThread = new vpr::Thread(threadedSampleFunction, (void*) this, 0);
-
-   if ( ! mSampleThread->valid() )
-   {
-      return 0; // thread creation failed
-   }
-   else 
-   {
-      return 1; // thread creation success
-   }
-}
-   
-//: Record (or sample) the current data
-// this is called repeatedly by the sample thread created by startSampling()
-void MyButtonDevice::sample()
-{
-   // here you would add your code to 
-   // sample the hardware for a button press:
-   mDigitalData[progress] = 1;//rand_number_0_or_1();
-}
-
-// kill sample thread
-int MyButtonDevice::stopSampling()
-{
-   if (mSampleThread != NULL)
-   {
-      mSampleThread->kill();
-      delete mSampleThread;
-      mSampleThread = NULL;
-   }
-   return 1;
-}
-
-//: function for users to get the digital data.
-//  here we overload Digital::getDigitalData
-int MyButtonDevice::getDigitalData(int d)
-{
-   // only one button, so we ignore "d"
-   return mDigitalData[current];
-}
-
-// Our threaded sample function
-// This function is declared as a <b>static</b> member of MyButtonDevice
-// just spins... calling sample() over and over.
-void MyButtonDevice::threadedSampleFunction( void* classPointer )
-{
-   MyButtonDevice* this_ptr = static_cast<MyButtonDevice*>( classPointer );
-
-   // spin until someone kills "mSampleThread"
-   while (1)   
-   {
-     this_ptr->sample();
-     vpr::System::sleep(1); //specify some time here, so you don't waste CPU cycles
-   }
 }
 
 //: When the system detects a configuration change for your driver, it will
@@ -136,8 +128,90 @@ bool MyButtonDevice::config(jccl::ConfigElementPtr e)
      return false;
   }
 
-  mPortId = e->getProperty<int>("port");
+  mPort = e->getProperty<std::string>("port");
   mBaud = e->getProperty<int>("baud");
 
   return true;
+}
+
+void MyButtonDevice::updateData()
+{
+   if ( mRunning )
+   {
+      swapDigitalBuffers();
+   }
+}
+
+/**
+ * Spanws the sample thread, which calls MyButtonDevice::sample() repeatedly.
+ */
+int MyButtonDevice::startSampling()
+{
+   mRunning = true;
+   mSampleThread = new vpr::Thread(threadedSampleFunction, (void*) this);
+
+   if ( ! mSampleThread->valid() )
+   {
+      mRunning = false;
+      return 0; // thread creation failed
+   }
+   else
+   {
+      return 1; // thread creation success
+   }
+}
+
+/**
+ * Records (or samples) the current data.  This is called repeatedly by the
+ * sample thread created by startSampling().
+ */
+int MyButtonDevice::sample()
+{
+   int status(0);
+
+   if ( mRunning )
+   {
+      // Here you would add your code to sample the hardware for a button
+      // press:
+      std::vector<DigitalData> samples(1);
+      samples[0] = 1;
+      addDigitalSample(samples);
+
+      // Successful sample.
+      status = 1;
+   }
+
+   return status;
+}
+
+/** Kills the sample thread. */
+int MyButtonDevice::stopSampling()
+{
+   mRunning = false;
+
+   if (mSampleThread != NULL)
+   {
+      mSampleThread->kill(); // Not guaranteed to work on all platforms
+      mSampleThread->join();
+      delete mSampleThread;
+      mSampleThread = NULL;
+   }
+   return 1;
+}
+
+/**
+ * Our sampling function that is executed by the spawned sample thread.
+ * This function is declared as a static member of MyButtonDevice.  It simply
+ * calls MyButtonDevice::sample() over and over.
+ */
+void MyButtonDevice::threadedSampleFunction(void* classPointer)
+{
+   MyButtonDevice* this_ptr = static_cast<MyButtonDevice*>( classPointer );
+
+   // spin until someone kills "mSampleThread"
+   while ( this_ptr->mRunning )
+   {
+     this_ptr->sample();
+     vpr::System::sleep(1); //specify some time here, so you don't waste CPU cycles
+   }
 }
