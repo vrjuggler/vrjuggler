@@ -37,7 +37,6 @@ import javax.swing.border.*;
 
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.CustomEditor;
-import org.vrjuggler.jccl.editors.CustomEditorRegistry;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 
 public class ProxyEditor extends JPanel
