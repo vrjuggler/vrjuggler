@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../../../docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="../../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <book>
    <bookinfo>
@@ -99,206 +99,169 @@
             <title>Required Tools and Utilities for Building VR Juggler from Source</title>
             <para>This section lists the comprehensive set of software tools that we require when compiling VR Juggler from its source. If you are reading a printed version of this file, please check the website to ensure that you have the latest information. There have been several instances where bugs in third party software caused problems with compiling VR Juggler and running VR Juggler applications.</para>
             <table>
-               <title>Requirements by Platform</title>
+               <title>All Platforms</title>
                <tgroup cols="2">
-                  <colspec colname="unsup-platform-start"/>
-                  <colspec colname="unsup-platform-end"/>
-                  <spanspec nameend="unsup-platforms-end" namest="unsup-platforms-start" spanname="unsup-platforms"/>
                   <tbody>
                      <row>
-                        <entry>Platform</entry>
-                        <entry>Minimum Software Versions</entry>
+                        <entry>CVS</entry>
+                        <entry align="right">1.11</entry>
                      </row>
                      <row>
-                        <entry align="right">All</entry>
-                        <entrytbl cols="2">
-                           <tbody>
-                              <row>
-                                 <entry>CVS</entry>
-                                 <entry align="right">1.11</entry>
-                              </row>
-                              <row>
-                                 <entry>GNU make</entry>
-                                 <entry align="right">3.78</entry>
-                              </row>
-                              <row>
-                                 <entry>GNU Autoconf</entry>
-                                 <entry align="right">2.13</entry>
-                              </row>
-                              <row>
-                                 <entry>GNU Automake</entry>
-                                 <entry align="right">1.4</entry>
-                              </row>
-                              <row>
-                                 <entry>Perl</entry>
-                                 <entry align="right">5.004</entry>
-                              </row>
-                              <row>
-                                 <entry>Java 2 Platform (only for VjControl</entry>
-                                 <entry align="right">1.3.0</entry>
-                              </row>
-                           </tbody>
-                        </entrytbl>
+                        <entry>GNU make</entry>
+                        <entry align="right">3.78</entry>
                      </row>
                      <row>
-                        <entry align="right">IRIX</entry>
-                        <entrytbl cols="2">
-                           <tbody>
-                              <row>
-                                 <entry>Operating System</entry>
-                                 <entry align="right">6.5</entry>
-                              </row>
-                              <row>
-                                 <entry>MIPSpro Compilers</entry>
-                                 <entry align="right">7.3.1.1m</entry>
-                              </row>
-                           </tbody>
-                        </entrytbl>
+                        <entry>GNU Autoconf</entry>
+                        <entry align="right">2.13</entry>
                      </row>
                      <row>
-                        <entry align="right">RedHat Linux</entry>
-                        <entrytbl cols="2">
-                           <tbody>
-                              <row>
-                                 <entry>Operating System</entry>
-                                 <entry align="right">7.2</entry>
-                              </row>
-                              <row>
-                                 <entry>GCC Compilers</entry>
-                                 <entry align="right">2.96-98</entry>
-                              </row>
-                              <row>
-                                 <entry>Mesa 3D</entry>
-                                 <entry align="right">3.2</entry>
-                              </row>
-                           </tbody>
-                        </entrytbl>
+                        <entry>GNU Automake</entry>
+                        <entry align="right">1.4</entry>
                      </row>
                      <row>
-                        <entry align="right">Win32</entry>
-                        <entrytbl cols="2">
-                           <tbody>
-                              <row>
-                                 <entry>Operating System</entry>
-                                 <entry align="right">Windows NT 4.0<footnote>
-                                       <para>Windows NT 4.0 is needed only for compiling the VR Juggler libraries. Applications can be compiled against the libraries on Windows 95/98/Me.</para>
-                                    </footnote></entry>
-                              </row>
-                              <row>
-                                 <entry>Microsoft Visual Studio</entry>
-                                 <entry align="right">6.0 (SP4 or SP5)</entry>
-                              </row>
-                              <row>
-                                 <entry>Juggler Tools</entry>
-                                 <entry align="right">Latest</entry>
-                              </row>
-                              <row>
-                                 <entry>Cygwin</entry>
-                                 <entry align="right">1.3 (including Perl 5.6.1)</entry>
-                              </row>
-                           </tbody>
-                        </entrytbl>
+                        <entry>Perl</entry>
+                        <entry align="right">5.005</entry>
                      </row>
                      <row>
-                        <entry spanname="unsup-platforms">Platforms not Officially Supported</entry>
-                     </row>
-                     <row>
-                        <entry align="right">HP-UX</entry>
-                        <entrytbl cols="2">
-                           <tbody>
-                              <row>
-                                 <entry>Operating System</entry>
-                                 <entry align="right">11.00</entry>
-                              </row>
-                              <row>
-                                 <entry>aCC</entry>
-                                 <entry align="right">A.03.30</entry>
-                              </row>
-                              <row>
-                                 <entry>OpenGL</entry>
-                                 <entry align="right">1.1</entry>
-                              </row>
-                           </tbody>
-                        </entrytbl>
-                     </row>
-                     <row>
-                        <entry align="right"><trademark>Solaris</trademark><footnote id="solaris-compiler-footnote">
-                              <para>Support for the <trademark>Forte</trademark> C++ (<trademark>WorkShop</trademark> C++) development package on <trademark>Solaris</trademark> has not been tested, so only freely available GNU utilities are listed.</para>
-                           </footnote></entry>
-                        <entrytbl cols="2">
-                           <tbody>
-                              <row>
-                                 <entry>Operating System</entry>
-                                 <entry align="right">7</entry>
-                              </row>
-                              <row>
-                                 <entry>Patch Set</entry>
-                                 <entry align="right">June 7, 2001</entry>
-                              </row>
-                              <row>
-                                 <entry>GCC</entry>
-                                 <entry align="right">2.95.2, 3.0.2</entry>
-                              </row>
-                              <row>
-                                 <entry>GNU Binutils</entry>
-                                 <entry align="right">2.12</entry>
-                              </row>
-                              <row>
-                                 <entry>Mesa 3D</entry>
-                                 <entry align="right">3.2</entry>
-                              </row>
-                           </tbody>
-                        </entrytbl>
-                     </row>
-                     <row>
-                        <entry align="right"><trademark>Solaris</trademark></entry>
-                        <entrytbl cols="2">
-                           <tbody>
-                              <row>
-                                 <entry>Operating System</entry>
-                                 <entry align="right">7</entry>
-                              </row>
-                              <row>
-                                 <entry>Patch Set</entry>
-                                 <entry align="right">June 7, 2001</entry>
-                              </row>
-                              <row>
-                                 <entry>GCC</entry>
-                                 <entry align="right">2.95.2, 3.0.2</entry>
-                              </row>
-                              <row>
-                                 <entry>GNU Binutils</entry>
-                                 <entry align="right">2.12</entry>
-                              </row>
-                              <row>
-                                 <entry>Mesa 3D</entry>
-                                 <entry align="right">3.2</entry>
-                              </row>
-                           </tbody>
-                        </entrytbl>
-                     </row>
-                     <row>
-                        <entry align="right">FreeBSD</entry>
-                        <entrytbl cols="2">
-                           <tbody>
-                              <row>
-                                 <entry>Operating System</entry>
-                                 <entry align="right">4.5</entry>
-                              </row>
-                              <row>
-                                 <entry>GCC</entry>
-                                 <entry align="right">2.95.2</entry>
-                              </row>
-                              <row>
-                                 <entry>Mesa 3D</entry>
-                                 <entry align="right">3.2</entry>
-                              </row>
-                           </tbody>
-                        </entrytbl>
+                        <entry>Java 2 Platform (for Tweek and VrjConfig)</entry>
+                        <entry align="right">1.3.0</entry>
                      </row>
                   </tbody>
                </tgroup>
             </table>
+            <section>
+               <title>Officially Supported Platforms</title>
+               <table>
+                  <title>IRIX</title>
+                  <tgroup cols="2">
+                     <tbody>
+                        <row>
+                           <entry>Operating System</entry>
+                           <entry align="right">6.5</entry>
+                        </row>
+                        <row>
+                           <entry>MIPSpro Compilers</entry>
+                           <entry align="right">7.3.1.3m</entry>
+                        </row>
+                     </tbody>
+                  </tgroup>
+               </table>
+               <table>
+                  <title>RedHat Linux</title>
+                  <tgroup cols="2">
+                     <tbody>
+                        <row>
+                           <entry>Operating System</entry>
+                           <entry align="right">7.2</entry>
+                        </row>
+                        <row>
+                           <entry>GCC Compilers</entry>
+                           <entry align="right">2.96-98</entry>
+                        </row>
+                        <row>
+                           <entry>Mesa 3D</entry>
+                           <entry align="right">3.2</entry>
+                        </row>
+                     </tbody>
+                  </tgroup>
+               </table>
+               <table>
+                  <title>Win32</title>
+                  <tgroup cols="2">
+                     <tbody>
+                        <row>
+                           <entry>Operating System</entry>
+                           <entry align="right">Windows 2000/XP<footnote>
+                                 <para>Windows 2000 (or XP) is needed only for compiling the VR Juggler libraries. Applications can be compiled against the libraries on Windows 95/98/ME.</para>
+                              </footnote></entry>
+                        </row>
+                        <row>
+                           <entry>Microsoft Visual Studio</entry>
+                           <entry align="right">7 (.NET)</entry>
+                        </row>
+                        <row>
+                           <entry>Juggler Tools</entry>
+                           <entry align="right">Latest</entry>
+                        </row>
+                        <row>
+                           <entry>Cygwin</entry>
+                           <entry align="right">1.3 (including Perl 5.6.1)</entry>
+                        </row>
+                     </tbody>
+                  </tgroup>
+               </table>
+            </section>
+            <section>
+               <title>Platforms Not Officially Supported</title>
+               <table>
+                  <title><trademark>HP-UX</trademark></title>
+                  <tgroup cols="2">
+                     <tbody>
+                        <row>
+                           <entry>Operating System</entry>
+                           <entry align="right">11.00</entry>
+                        </row>
+                        <row>
+                           <entry>aCC</entry>
+                           <entry align="right">A.03.30</entry>
+                        </row>
+                        <row>
+                           <entry>OpenGL</entry>
+                           <entry align="right">1.1</entry>
+                        </row>
+                     </tbody>
+                  </tgroup>
+               </table>
+               <table>
+                  <title><trademark>Solaris</trademark></title>
+                  <tgroup cols="2">
+                     <tbody>
+                        <row>
+                           <entry>Operating System</entry>
+                           <entry align="right">7</entry>
+                        </row>
+                        <row>
+                           <entry>Patch Set</entry>
+                           <entry align="right">June 7, 2001</entry>
+                        </row>
+                        <row>
+                           <entry>GCC</entry>
+                           <entry align="right">2.95.2, 3.0.2</entry>
+                        </row>
+                        <row>
+                           <entry>GNU Binutils</entry>
+                           <entry align="right">2.12</entry>
+                        </row>
+                        <row>
+                           <entry>Mesa 3D</entry>
+                           <entry align="right">3.2</entry>
+                        </row>
+                     </tbody>
+                  </tgroup>
+               </table>
+               <note>
+                  <para>Support for the <trademark>Forte</trademark> C++ (<trademark>WorkShop</trademark> C++) development package on <trademark>Solaris</trademark> has not been tested, so only freely available GNU utilities are listed.</para>
+               </note>
+               <table>
+                  <title>FreeBSD</title>
+                  <tgroup cols="2">
+                     <tbody>
+                        <row>
+                           <entry>Operating System</entry>
+                           <entry align="right">4.5</entry>
+                        </row>
+                        <row>
+                           <entry>GCC</entry>
+                           <entry align="right">2.95.3</entry>
+                        </row>
+                        <row>
+                           <entry>Mesa 3D</entry>
+                           <entry align="right">3.2</entry>
+                        </row>
+                     </tbody>
+                  </tgroup>
+               </table>
+            </section>
          </section>
       </chapter>
       <chapter>
@@ -306,7 +269,7 @@
          <para></para>
          <section>
             <title>Introduction</title>
-            <para>There are two ways to get the VR Juggler source code:</para>
+            <para>There are twoays to get the VR Juggler source code:</para>
             <orderedlist>
                <listitem>
                   <para>Get the source directly from the CVS repository.</para>
@@ -337,13 +300,13 @@
                   <orderedlist>
                      <listitem>
                         <para><quote>Log in</quote> to the SourceForge CVS server. This step only has to be done the first time you access the repository. Afterwards, the login setting is saved in your <filename>$HOME/.cvspass</filename> file.</para>
-                        <programlisting>% cvs -d:pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler login</programlisting>
+                        <screen>% cvs -d:pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler login</screen>
                      </listitem>
                      <listitem>
                         <para>Check out a copy of the current VR Juggler source tree:If what you really want is the VR Juggler 1.0 release branch instead of the developmental main branch, use the following command:</para>
-                        <programlisting>% cvs -d:pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler checkout juggler</programlisting>
+                        <screen>% cvs -d:pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler checkout juggler</screen>
                         <para>(The string <literal>RELENG_1_0</literal> is the name of the branch in the CVS repository containing the VR Juggler 1.0 release code. <quote>RELENG</quote> means <quote>release engineering</quote>.)</para>
-                        <programlisting>% cvs -d:pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler checkout -r RELENG_1_0 juggler_1.0</programlisting>
+                        <screen>% cvs -d:pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler checkout -r RELENG_1_0 juggler_1.0</screen>
                      </listitem>
                   </orderedlist>
                   <para>Once you have the source checked out, you can use CVS as you normally would keeping in mind that you have read-only access to the repository when using anonymous access.</para>
@@ -355,12 +318,12 @@
                   <orderedlist>
                      <listitem>
                         <para>Set the environment variable <varname>$CVS_RSH</varname> to use <literal>ssh</literal>(1).</para>
-                        <programlisting>% CVS_RSH = ssh</programlisting>
+                        <screen>% CVS_RSH = ssh</screen>
                         <para>(Note that this is using the shell-independent environment variable syntax defined in the <emphasis>Getting Started Guide</emphasis>.) It is recommended that you set this environment variable in your shell's configuration appropriate configuration file or as part of an alias that configures your environment to work with the VR Juggler CVS repository.</para>
                      </listitem>
                      <listitem>
                         <para>Check out the source using your SourceForge login name.</para>
-                        <programlisting>% cvs -dlogin_name@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler checkout juggler</programlisting>
+                        <screen>% cvs -dlogin_name@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler checkout juggler</screen>
                         <para>Be sure to use the appropriate branch name.</para>
                      </listitem>
                   </orderedlist>
@@ -411,12 +374,12 @@
                   </listitem>
                   <listitem>
                      <para>Go to that directory and checkout juggler using CVS. Make sure CVS is set up and pointing to the VR Juggler repository. Refer to the <ulink url="http://sourceforge.net/cvs/?group_id=8041">SourceForge instructions</ulink> for getting VR Juggler with CVS.</para>
-                     <programlisting>% cd SRC_DIR
-% cvs checkout juggler</programlisting>
+                     <screen>% cd SRC_DIR
+% cvs checkout juggler</screen>
                   </listitem>
                   <listitem>
                      <para>Enter the newly checked-out VR Juggler source directory.</para>
-                     <programlisting>% cd SRC_DIR/juggler</programlisting>
+                     <screen>% cd SRC_DIR/juggler</screen>
                   </listitem>
                   <listitem>
                      <para>Set the environment variable <varname>VJ_BASE_DIR</varname><note>
@@ -429,29 +392,29 @@
                               </listitem>
                            </orderedlist>
                            <para>Make sure the following environment variable assignment line is in your shell's startup file:</para>
-                           <programlisting>VJ_BASE_DIR=SRC_DIR/juggler/instlinks</programlisting>
+                           <screen>VJ_BASE_DIR=SRC_DIR/juggler/instlinks</screen>
                         </note>This is required by Juggler's build system (makefiles, etc.).</para>
                   </listitem>
                   <listitem>
                      <para>Compile juggler (using the Autoconf system and GNU make):<orderedlist>
                            <listitem>
                               <para>Auto-generate the configuration script <command>configure</command>:</para>
-                              <programlisting>% autoconf</programlisting>
+                              <screen>% autoconf</screen>
                            </listitem>
                            <listitem>
                               <para>Auto-generate the <filename>vjDefine.h.in</filename> header template:</para>
-                              <programlisting>% autoheader</programlisting>
+                              <screen>% autoheader</screen>
                            </listitem>
                            <listitem>
                               <para>Configure the build. This probes the system for capabilities, generate <filename>Makefiles</filename>, etc. It <quote>configures</quote> the source tree for the current system. The <command>configure</command> script will let you change how VR Juggler compiles. For example, you could build VR Juggler without the Performer API using an option passed to the <command>configure</command> script.</para>
                               <note>
                                  <para>You can type <command>configure --help</command> for options.</para>
-                                 <programlisting>% ./configure</programlisting>
+                                 <screen>% ./configure</screen>
                               </note>
                            </listitem>
                            <listitem>
                               <para>Build (make) the distribution using GNU make. This compiles, links, and creates the final distribution tree (in the form of symbolic links).</para>
-                              <programlisting>% gmake</programlisting>
+                              <screen>% gmake</screen>
                            </listitem>
                         </orderedlist></para>
                   </listitem>
@@ -460,9 +423,9 @@
                      <orderedlist>
                         <listitem>
                            <para>Send compiler output to a different directory than the source tree. Run this in the directory you want compiler output to go. This is typically done with a subdirectory in the juggler source tree. We will call it <literal>&lt;BUILD_DIR&gt;</literal>.</para>
-                           <programlisting>% mkdir &lt;BUILD_DIR&gt;
+                           <screen>% mkdir &lt;BUILD_DIR&gt;
 % cd &lt;BUILD_DIR&gt;
-% &lt;SRC_DIR&gt;/configure</programlisting>
+% &lt;SRC_DIR&gt;/configure</screen>
                         </listitem>
                      </orderedlist>
                   </listitem>
@@ -521,9 +484,9 @@
                <title>Compiling VR Juggler</title>
                <para>Finally, the actual process of compiling (and installing) VR Juggler can begin. After taking the steps in the preceding sections, this will be an easy task (assuming that the source is stable of course). This section focuses primarily on the process when done within a DOS shell. In a BASH shell, the environment is almost identical to that on a UNIX platform, so there are no special considerations to be made.</para>
                <para>The first step, as usual, is to configure the build environment with the configure script. (This assumes that <command>configure</command> and <filename>vjDefines.h.in</filename> have already been generated.) If running in a DOS shell, <command>configure</command> must be invoked using the <command>sh</command> utility. The following will <emphasis>not</emphasis> work:</para>
-               <programlisting>&gt; ./configure [options]</programlisting>
+               <screen>&gt; ./configure [options]</screen>
                <para>Instead, it must be run as:</para>
-               <programlisting>&gt; sh ./configure [options]</programlisting>
+               <screen>&gt; sh ./configure [options]</screen>
                <para>As with the UNIX environment, it can be run from a separate build directory. Refer to <xref linkend="configure-script-chapter"/> for more information (specifically, <xref linkend="configure-script-usage-sect"/>). Options with paths should use <filename>/</filename>'s for the path separator rather than <filename>\</filename>'s. They should also be enclosed in double quotes (<quote>path/to/something</quote>) in case the path includes one or more spaces.</para>
                <para>Once configuration has completed, compiling can be done in either a DOS shell or a BASH shell using the version of GNU make in <filename>juggler-tools</filename>. <emphasis>The Cygwin B20.1 version will not work in a DOS shell.</emphasis> This is when it is especially important to have the <filename>juggler-tools</filename> directory before the Cygwin directory in the user's path.</para>
                <para>Beyond this, everything (aside from the problems listed in the next section) will be the same as in a UNIX environment.</para>
@@ -578,12 +541,12 @@
          <section>
             <title>General Quick Start</title>
             <para>When first downloading the Juggler source to compile it, users must generate the configure script and <filename>vjDefines.h.in</filename> template using <command>autoconf</command> and <command>autoheader</command>. This files are not part of the repository because they are generated using third-party tools from files in the repository (i.e., <filename>configure.in</filename> and <filename>acconfig.h</filename>). The usual way to generate the files is:</para>
-            <programlisting>% autoconf ; autoheader</programlisting>
+            <screen>% ./autogen.sh</screen>
             <para>This must be executed in the top-level Juggler source directory.</para>
             <para>Once the <literal>configure</literal> script is generated, it can be invoked by typing:</para>
-            <programlisting>% ./configure</programlisting>
+            <screen>% ./configure</screen>
             <para>To get a list of all the available options, do:</para>
-            <programlisting>% ./configure --help</programlisting>
+            <screen>% ./configure --help</screen>
          </section>
          <section id="autoconf-autoheader-sect">
             <title>Autoconf and Autoheader</title>
@@ -820,7 +783,7 @@
                <title>Advanced Use</title>
                <para>The VR Juggler configure script has been designed to work in a multi-platform environment. It allows Juggler to be built for multiple platforms using the same source tree (distributed with NFS for example) with all versions co-existing safely.</para>
                <para>To take advantage of this feature, make a directory somewhere for building the library. This directory can go anywhere, but the typical location is a subdirectory of the top-level Juggler source tree. (Note that on a Win32 platform, this directory MUST be a subdirectory of the Juggler source tree.) It can also be called whatever seems appropriate. A common name is <literal><filename></filename>build</literal>, and alternate options are <filename>build-PLATFORM</filename> where <filename>PLATFORM</filename> is the name of the platform on which VR Juggler is being built. Multiple build directories can exist side by side. They fully separate all parts of the compile process and can be removed safely at the root. After making the directory, <command>cd</command> into it and run the configure script from it. For example, if a directory called <filename>build</filename> has been created as a subdirectory of <filename>juggler</filename>, do the following:</para>
-               <programlisting>cd build ../configure [options]</programlisting>
+               <screen>cd build ../configure [options]</screen>
                <para>This will run the configure script as normal but will create a full, unique build environment as a subdirectory of <filename>build</filename>.</para>
                <para>So the question becomes <quote>To <filename>build</filename> or not to <filename>build</filename>?</quote> There are advantages to running <command>configure</command> from the top-level directory, and there are disadvantages to that method. A benefit of the simpler method is that it provides a quick start to building with no in-depth knowledge of the Juggler build system necessary. It has a <quote>familiar feel</quote> compared to other projects that use Autoconf-generated scripts for configuration. The main disadvantage of this method is that the generated files are <quote>next to</quote> the template files. As a developer, this can and has caused confusion about which file to modify. For example, it is very easy to forget that a quick modification to a <filename>Makefile</filename> will be destroyed when <command>configure</command> is run again if that change is not also made in the corresponding <filename>Makefile.in</filename>. It is also easy to want to check in a generated file when only the templates should be in the CVS repository.</para>
                <para>Similarly, there are advantages and disadvantages to creating a separate build environment. As mentioned above, building can be done for multiple operating systems using the same source tree. (This is how the NSPR API is currently built using their configure script.) In addition to building for multiple operating systems, it is possible to easily build multiple configurations from the same source tree. This is extremely useful for building different threading models and different ABI/ISA combinations to test changes in a single source tree. Also mentioned above, the entire build environment can be removed from the root. This is because all aspects of the build are separated from the source tree so that object files, makefiles, dependency files, etc. do not pollute the source tree. On the other hand, this is not a typical use of a configure script (though it is a documented method of configuration in the Autoconf documentation) and is thus not familiar to users. It can also result in complicated paths depending on where the build environment is rooted and how the path to <command>configure</command> is specified.</para>
@@ -878,12 +841,12 @@
          <section id="compile-quick-start-sect">
             <title>General Quick Start</title>
             <para>As mentioned in the introduction, Juggler requires the use of GNU make for compiling. This section provides a very short introduction to the use of make in general. It is assumed that the GNU make command is <quote>gmake</quote>. To verify that the version of GNU available is one of the known working versions, do:</para>
-            <programlisting>% gmake -v</programlisting>
+            <screen>% gmake -v</screen>
             <para>It will return something similar to the following output:</para>
-            <programlisting><emphasis>GNU Make version 3.79.1</emphasis>, by Richard Stallman and Roland McGrath.
+            <screen><emphasis>GNU Make version 3.79.1</emphasis>, by Richard Stallman and Roland McGrath.
 Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
         Free Software Foundation, Inc.
-...</programlisting>
+...</screen>
             <para>The emphasized text is the version information. For best results, this should be one of the version numbers listed in <xref linkend="required-tools-sect"/>.</para>
             <para>Most, if not all, versions of make (not just GNU make) use the following syntax for execution:</para>
             <cmdsynopsis>
@@ -1073,8 +1036,8 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
             <para>Build targets executed from the top-level directory generate the object files in a directory tree created during compilation named as <filename>obj/platform/ABI/ISA/opt|debug</filename>. It is always a subdirectory of the top-level directory in the build environment. The path to this directory is passed as an argument to the recursive make process overriding the <varname>$(OBJDIR)</varname> variable.</para>
             <para>Similarly, a subtree is made for the library binaries. It is named as <filename>lib/ISA/opt|debug</filename> (or <filename>lib32/...</filename> or <filename>lib64/...</filename> depending on the platform and the ABI). Since the library binaries are built only by the <filename>Makefile</filename> in the top-level directory, it is only used by builds from that directory.</para>
             <para>Targets such as '<literal>dbg</literal>', '<literal>opt</literal>' and '<literal>clean</literal>' are available for use in the individual subdirectories. Building a target from within a subdirectory is localized to that subdirectory. Thus, all object files would be generated in the directory where the target was run rather than in the <filename>obj</filename> subdirectory. For example, the following process would build only the object files in the <filename>Config</filename> directory:</para>
-            <programlisting>% cd Config
-% gmake opt</programlisting>
+            <screen>% cd Config
+% gmake opt</screen>
             <para>Those object files can be removed by running the '<literal>clean</literal>' target in that directory.</para>
          </section>
          <section id="makefile-vars-sect">
@@ -1319,7 +1282,7 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
                   <term>hier</term>
                   <listitem>
                      <para>Build the directory hierarchy for the installation. This is done before any of the <quote>full</quote> install targets ('<literal>installworld</literal>', '<literal>install-all-abi</literal>', '<literal>install-debug</literal>' and '<literal>install-optim</literal>') is run. This is useful for testing parts of the installation or doing partial installations. Run it before doing any testing to create the full install hierarchy and then run the selected install targets. For example, to install only the static debugging libraries with nothing else, do:</para>
-                     <programlisting>make hier install-dbg</programlisting>
+                     <screen>make hier install-dbg</screen>
                   </listitem>
                </varlistentry>
             </variablelist>
@@ -1692,18 +1655,18 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
                   <title>Using CVS to Make a Patch</title>
                   <para>If you have checked out a copy of the VR Juggler source code and have been modifying the code in that tree, making a patch (big or small) is easy. (Refer to the CVS documentation for information on how to check out a copy of VR Juggler from the CVS repository.) You can edit the checked-out file(s) all you want without retaining a backup copy because you can always get an unmodified version from the repository.</para>
                   <para>Once your work is done and you are ready to create the patch, you want to use the <command>cvs diff</command> command to get the differences between the original version and your new work. This command is a capable of doing a lot more than just creating patches, but we will focus only on that aspect of it here. Assuming a shell that allows redirection of standard output to a file, the command should be used as follows to create the patch for a single file:</para>
-                  <programlisting>% cvs diff filename filename.patch</programlisting>
+                  <screen>% cvs diff filename filename.patch</screen>
                   <para>Since CVS knows about the entire repository, you can use <command>cvs diff</command> to make a larger patch of several files, a single directory, a subtree of the larger directory tree or the entire VR Juggler source tree. You should be careful to keep only related patches together in a single file. Examples of how to perform each of these operations follow.</para>
                   <itemizedlist>
                      <listitem>
                         <para>Patching several files: You can of course use wildcard expansions here as supported by your shell.</para>
-                        <programlisting>% cvs diff filename1 filename2 ... patch</programlisting>
+                        <screen>% cvs diff filename1 filename2 ... patch</screen>
                      </listitem>
                      <listitem>
                         <para>Patching all the files in a directory (either the current directory or some subdirectory of the whole VR Juggler source tree): </para>
-                        <programlisting>% cvs diff directory_name patch</programlisting>
+                        <screen>% cvs diff directory_name patch</screen>
                         <para>Here, you can use `<filename>.</filename>' to represent the current directory as usual. If the directory you are patching contains subdirectories, CVS will recurse into those by default and perform the diff operation there as well. To prevent recursion, use the standard <option>-l</option> (local) CVS command option:</para>
-                        <programlisting>% cvs diff -l directory_name patch</programlisting>
+                        <screen>% cvs diff -l directory_name patch</screen>
                      </listitem>
                      <listitem>
                         <para>Creating a patch against the entire VR Juggler source tree works just the same as the previous method except that is executed from the top-level directory of the source tree.</para>
@@ -1713,22 +1676,22 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
                <section>
                   <title>Using <command>diff</command>(1) to Make a Patch</title>
                   <para>Instead of using CVS to get the source and make the comparison (which can be slow if your network connection to SourceForge is hurting), it is possible to make a patch the <quote>old-fashioned way</quote>. Before editing a file, however, <emphasis>make sure to save a backup copy of it</emphasis>. You need this for comparison once your modifications are complete. The common convention is to make a copy the old file with the same name and extra extension (for example, <filename>vjThread.cpp.orig</filename>). Once you are satisfied that your work is complete, use the <command>diff</command>(1) utility to create the patch as follows (assuming a shell that supports redirection of standard out to a file):</para>
-                  <programlisting>% diff [options] filename.orig filename filename.patch</programlisting>
+                  <screen>% diff [options] filename.orig filename filename.patch</screen>
                   <para>This must be repeated for every modified file. Make sure that the original file always goes <emphasis>first</emphasis>.</para>
                   <para>A nice thing about the <command>patch</command>(1) utility is that it can extract multiple patches from a single file. Submitting a single file is certain to make the developers happier than dealing with individual patch files for every file you modified. (Of course, you should not just lump all your patches into one file if they are unrelated. Use common sense when creating the patch files, and everything will be fab.) Assuming a UNIX or UNIX-like shell with redirection and appending of files, there are two ways to combine individual patches into a single file:</para>
                   <orderedlist>
                      <listitem>
                         <para>Create a patch file and append subsequent patches to it: </para>
-                        <programlisting>% diff [options] filename1.orig filename1 $HOME/my.patch
+                        <screen>% diff [options] filename1.orig filename1 $HOME/my.patch
 % diff [options] filename2.orig filename2 $HOME/my.patch
-% ...</programlisting>
+% ...</screen>
                      </listitem>
                      <listitem>
                         <para>If that does not suit you, you can use the simple yet powerful <command>cat</command>(1) command to concatenate all your distinct patch files into one big patch: </para>
-                        <programlisting>% diff [options] filename1.orig filename1 $HOME/filename1.patch
+                        <screen>% diff [options] filename1.orig filename1 $HOME/filename1.patch
 % diff [options] filename2.orig filename2 $HOME/filename2.patch
 % ...
-% cat $HOME/filename1.patch $HOME/filename2.patch ... &gt; my_big_patch</programlisting>
+% cat $HOME/filename1.patch $HOME/filename2.patch ... &gt; my_big_patch</screen>
                      </listitem>
                   </orderedlist>
                </section>
