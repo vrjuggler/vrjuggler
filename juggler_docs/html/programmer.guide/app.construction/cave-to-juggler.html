@@ -3,9 +3,11 @@
 
 <body>
 
-<h2>Porting to VR Juggler from CAVElib(TM)</h2>
+<!--NewPage-->
+<h1>Porting to VR Juggler from CAVElib(TM)</h1>
 
 <p>
+<!-- install-web toc-begin -->
 <b>Table of Contents</b>
 <ul>
    <li><a href="#idf">Init, Draw, and Frame routines</a>
@@ -19,24 +21,26 @@
       <li><a href="#JugglerCode">Form of a basic VRJuggler program</a>
    </ul>
 </ul>
+<!-- install-web toc-end -->
+
 <b>NOTE</b>: This document explains OpenGL versions of Juggler and CAVElib
 </p>
 
-<h3><a name="idf">Draw, frame, and init routines</a></h3>
+<h2><a name="idf">Draw, frame, and init routines</a></h2>
 <p>
 In CAVElib(TM) these routines are "called-back" using function pointers (C-style).
 In VR Juggler, these routines are "called-back" using an application object, a C++ class which defines these
 methods to encapsulate the functionality of the application within one C++ class object.<BR>
 </p>
 <ul>
-  <h4> In CAVElib(TM) </h4>
+  <h3> In CAVElib(TM) </h3>
   <ul>
   <li>Draw: An application's display callback function is defined by passing a function pointer to CAVEDisplay(). 
   <li>Frame: The frame function is defined with CAVEFrameFunction(). 
   <li>Init: The initialization callback is defined using CAVEInitApplication(). 
   </ul>
   
-  <h4>In VR Juggler</h4>
+  <h3>In VR Juggler</h3>
    <p>
     No C-style function pointers are nessesary, you only pass Juggler a pointer to your "application class", so
      you first derive a new application class from vjGlApp:<BR> <TT>class YourApplication : public vjGlApp { ... };</TT> then...<BR>
@@ -64,9 +68,9 @@ methods to encapsulate the functionality of the application within one C++ class
    </ul>
 </ul>
 
-<h3><a name="input">Getting input from devices</a></h3>
+<h2><a name="input">Getting input from devices</a></h2>
 <ul>
-   <h4>In CAVElib(tm)</h4>
+   <h3>In CAVElib(tm)</h3>
    For trackers you used these functions:
    <ul>
    <li>CAVEGetPosition(id,pos) 
@@ -83,7 +87,7 @@ methods to encapsulate the functionality of the application within one C++ class
    <li>CAVEButtonChange()
    </ul>
 
-   <h4>In VR Juggler:</h4>
+   <h3>In VR Juggler:</h3>
    You use the vjDevinceInterface derived classes such as:<BR>
    <ul>
       <li>vjPositionInterface&nbsp;(for trackers and other positional devices)
@@ -92,7 +96,7 @@ methods to encapsulate the functionality of the application within one C++ class
    </ul>
 </ul>
 
-<h3><a name="context">OpenGL Context Data</a></h3>
+<h2><a name="context">OpenGL Context Data</a></h2>
 <p>
 IMPORTANT!  Read this:<BR>
 VR Juggler, unlike the CAVElib, can handle drawing multiple displays in one process, so it's nessesary to
@@ -105,7 +109,7 @@ after each has become active.
 </p>
 
 
-<h3><a name="memory"> Memory </a></h3>
+<h2><a name="memory"> Memory </a></h2>
 <p>
    VR Juggler, unlike the CAVElib, has no need to manage <a href="${GLOSSARY}#shared memory">shared memory</a> with
    other Juggler instances.  Instead, running other Juggler instances and syncing them together does not work at this
@@ -113,16 +117,16 @@ after each has become active.
    malloc (we would suggest new).
 </p>
 
-<h3><a name="config">Configuration</a></h3>
+<h2><a name="config">Configuration</a></h2>
 <ul>
-   <h4>In CAVElib(tm):</h4>
+   <h3>In CAVElib(tm):</h3>
    <p>
    You had all setable parameters in one file called .caverc<BR>
    CAVElib's configuration mechanism is proprietary and useless outside of the VR system software.  
    For example an application could not store its configuration information within the .caverc file.
    </p>
 
-   <h4>In VRJuggler:</h4>
+   <h3>In VRJuggler:</h3>
    <p>
    All settable parameters could be in one or many files of any name that you want.  
    For some examples see sample configuration files that come with Juggler in juggler/Data/configFiles.<BR>
@@ -135,9 +139,9 @@ after each has become active.
    </p>
 </ul>
 
-<h3><a name="code"> Source Code </a></h3>
+<h2><a name="code"> Source Code </a></h2>
 <ul>
-   <h4><a name="CaveCode">Form of a basic CAVELib program</a></h4>
+   <h3><a name="CaveCode">Form of a basic CAVELib program</a></h3>
    <pre>
    void app_shared_init();
    void app_compute_init();
@@ -161,7 +165,7 @@ after each has become active.
    }
    </pre>
 
-   <h4><a name="JugglerCode">Form of a basic VRJuggler program</a></h4>
+   <h3><a name="JugglerCode">Form of a basic VRJuggler program</a></h3>
    <pre>
    class MyApplication
    {
