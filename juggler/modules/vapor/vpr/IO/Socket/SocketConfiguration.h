@@ -55,15 +55,15 @@ namespace vpr
    };
 }
 #else
-namespace vpr
-{
 #   include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
 #   include <vpr/md/POSIX/IO/Socket/SocketStreamImplBSD.h>
    
+namespace vpr
+{
    struct SocketConfiguration
    {
-      typedef SocketImplNSPR           SocketImplBSD;
-      typedef SocketStreamImplNSPR     SocketStreamImplBSD;
+      typedef SocketImplBSD           SocketImpl;
+      typedef SocketStreamImplBSD     SocketStreamImpl;
       typedef IOStatsStrategyAdapter<BaseIOStatsStrategy, BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
    };
 }
