@@ -117,7 +117,7 @@ public:
         // This thread tried to lock the mutex twice and a deadlock condition
         // was reported.
         else if ( retval == EDEADLK ) {
-            perror("Tried to lock mutex twice (vprMutexPosix.h:122)");
+            perror("Tried to lock mutex twice (MutexPosix.h:110)");
 
             return -1;
         }
