@@ -44,9 +44,9 @@ public class SimulatorViewportCreateDialog
    extends ViewportCreateDialog
    implements EditorConstants
 {
-   public SimulatorViewportCreateDialog(Container parent)
+   public SimulatorViewportCreateDialog(Container parent, ConfigContext ctx)
    {
-      this(parent, null, null);
+      this(parent, ctx, null);
    }
 
    public SimulatorViewportCreateDialog(Container parent, ConfigContext ctx,

@@ -47,9 +47,9 @@ public class SurfaceViewportCreateDialog
    extends ViewportCreateDialog
    implements EditorConstants
 {
-   public SurfaceViewportCreateDialog(Container parent)
+   public SurfaceViewportCreateDialog(Container parent, ConfigContext ctx)
    {
-      this(parent, null, null);
+      this(parent, ctx, null);
    }
 
    public SurfaceViewportCreateDialog(Container parent, ConfigContext ctx,
