@@ -26,6 +26,7 @@ class vjTuPerfBufReader: public vjTimedUpdate {
 
 public:
     std::vector<vjPerfDataBuffer*>   buffers;
+    vjMutex bufferslock;
 
     vjTuPerfBufReader( vjConnect *_target, 
 		       float _refresh_time );
@@ -38,6 +39,8 @@ public:
 
     void addBuffer (vjPerfDataBuffer *b);
 
+
+    void removeBuffer (vjPerfDataBuffer *b);
 
 
     bool startProcess();
