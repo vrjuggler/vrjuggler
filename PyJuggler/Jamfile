@@ -13,9 +13,17 @@
 subproject libs/python/pyjuggler ;
 
 # Declares the following targets:
-#    
-#  1. an extension module called "PyJuggler", which is
-#     built from many .cpp files. Built by default
+#
+#  1. an extension module called "vpr", which is built from many .cpp files.
+#     Built by default.
+#  2. an extension module called "jccl", which is built from many .cpp files.
+#     Built by default.
+#  3. an extension module called "gadget", which is built from many .cpp files.
+#     Built by default.
+#  4. an extension module called "__vrj", which is built from many .cpp files.
+#     Built by default.
+#  5. an extension module called "__osgapp", which is built from many .cpp
+#     files.  Built by default.
 #
 
 # Include definitions needed for Python modules
@@ -37,6 +45,7 @@ extension vpr
 
 :  # VPR dependencies
    <include>$(VJ_BASE_DIR)/include
+   <include>$(CPPDOM_ROOT)/include
    <include>$(NSPR_ROOT)/include/nspr
 
    <library-path>$(VJ_BASE_DIR)/lib
@@ -64,6 +73,7 @@ extension jccl
 
 :  # JCCL dependencies
    <include>$(VJ_BASE_DIR)/include
+   <include>$(CPPDOM_ROOT)/include
    <include>$(NSPR_ROOT)/include/nspr
 
    <library-path>$(VJ_BASE_DIR)/lib
@@ -109,6 +119,7 @@ extension gadget
 :  # Gadgeteer dependencies
    <include>src
    <include>$(VJ_BASE_DIR)/include
+   <include>$(CPPDOM_ROOT)/include
    <include>$(NSPR_ROOT)/include/nspr
 
    <library-path>$(VJ_BASE_DIR)/lib
@@ -124,10 +135,10 @@ extension gadget
    <find-library>gadget
   ;
 
-# ----- vrj -------
+# ----- __vrj -------
 
-# Declare a Python extension called vrj
-extension vrj
+# Declare a Python extension called __vrj
+extension __vrj
 :  # sources
    pyjutil/InterpreterGuard.cpp
    src/vrj/_App.cpp
@@ -140,14 +151,16 @@ extension vrj
    src/vrj/_SimViewport.cpp
    src/vrj/_User.cpp
    src/vrj/_Viewport.cpp
-   src/vrj/vrj.cpp
+   src/vrj/__vrj.cpp
   
    # dependencies
    <dll>../build/boost_python
 
 :  # VR Juggler dependencies
+   <include>.
    <include>src
    <include>$(VJ_BASE_DIR)/include
+   <include>$(CPPDOM_ROOT)/include
    <include>$(NSPR_ROOT)/include/nspr
 
    <library-path>$(VJ_BASE_DIR)/lib
@@ -163,4 +176,44 @@ extension vrj
    <find-library>gadget
    <find-library>vrj
    <find-library>vrj_ogl
+  ;
+
+# ----- osgapp -------
+
+# Declare a Python extension called __osgapp
+extension __osgapp
+:  # sources
+   pyjutil/InterpreterGuard.cpp
+   src/osgapp/_OsgApp.cpp
+   src/osgapp/__osgapp.cpp
+  
+   # dependencies
+   <dll>../build/boost_python
+
+:  # vrj::OsgApp dependencies
+   <include>.
+   <include>src
+   <include>$(VJ_BASE_DIR)/include
+   <include>$(CPPDOM_ROOT)/include
+   <include>$(NSPR_ROOT)/include/nspr
+   <include>$(OSGHOME)/include
+
+   <library-path>$(VJ_BASE_DIR)/lib
+   <library-path>$(OSGHOME)/lib
+
+   <mipspro><*><library-path>$(VJ_BASE_DIR)/lib32
+
+   <vc7><debug><library-path>$(VJ_BASE_DIR)/lib/debug
+   <vc7><debug-python><library-path>$(VJ_BASE_DIR)/lib/debug
+   <vc7><release><library-path>$(VJ_BASE_DIR)/lib/opt
+
+   <find-library>vpr
+   <find-library>jccl
+   <find-library>gadget
+   <find-library>vrj
+   <find-library>vrj_ogl
+   <find-library>osg
+   <find-library>osgProducer
+   <find-library>osgUtil
+   <find-library>osgDB
   ;

@@ -69,26 +69,40 @@ Once you have bjam, follow these simple steps:
 
    1) Move the *entire* PyJuggler source tree into the directory
       <BOOST DIR>/libs/python, where <BOOST DIR> is the base directory
-      of the Boost source tree.  With a copy of the VR Juggler source
-      tree, this path will be juggler/external/boost/libs/python.
+      of the Boost source tree for Boost 1.31 or newer.
    2) Rename the root of the PyJuggler source tree to 'pyjuggler' (case
       matters on UNIX-based platforms).  At this point, there should be
-      a directory <BOOST DIR>/libs/python that contains the subdirectories
-      src and pyjutil as well as a file named "Jamfile" that will be used
-      for compiling.
-   3) Run bjam.  Make sure to use the command 'bjam' to get the correct
+      a directory <BOOST DIR>/libs/python/pyjuggler that contains the
+      subdirectories src and pyjutil as well as a file named "Jamfile" that
+      will be used for compiling.
+   3) Set the following environment variables:
+
+         VJ_BASE_DIR: VR Juggler installation directory
+         CPPDOM_ROOT: CppDOM installation directory
+
+      If you are compiling on Windows, Solaris, or Mac OS X, you must also
+      set the following environment variable:
+
+         NSPR_ROOT: NSPR installation directory
+
+      If you want to compile in the bindings for the class vrj::OsgApp,
+      set the following environment variable:
+
+         OSGHOME: Open Scene Graph installation directory
+
+   4) Run bjam.  Make sure to use the command 'bjam' to get the correct
       build behavior.  The usage will vary from platform to platform, but
       here are the common variations:
 
          Linux, FreeBSD: bjam -sTOOLS=gcc
          IRIX: bjam -sTOOLS=mipspro
-         Windows: bjam -sTOOLS=vc7
+         Windows: bjam -sTOOLS=vc7.1
 
       On Windows, make sure the environment variable %VC7_ROOT% points
       to the Vc7 subdirectory of your MS Visual Studio .NET 2003 (or
       newer) installation.  This is critical if you have two or more
       versions of Visual Studio installed.
-   4) Install the PyJuggler files somewhere convenient and set the
+   5) Install the PyJuggler files somewhere convenient and set the
       environment variable $PYTHONPATH to include that directory.  The
       PyJuggler files must be installed in a directory named PyJuggler.
       For example, on a UNIX-based operating system, an easy place would
@@ -96,10 +110,12 @@ Once you have bjam, follow these simple steps:
       installation directory must contain the following files:
 
          __init__.py (get it from the 'dist' subdirectory)
+         vrj.py (get it from the 'dist' subdirectory)
          vpr.so (or vpr.pyd)
          jccl.so (or jccl.pyd)
          gadget.so (or gadget.pyd)
-         vrj.so (or vrj.pyd)
+         __vrj.so (or __vrj.pyd)
+         __osgapp.so (or __osgapp.pyd)
 
 For more details about how to get and use bjam, see the following page:
 
@@ -126,9 +142,9 @@ The short version of the build instructions for UNIX-based platforms
    % ../configure --with-boost-python=<Boost installation dir>
    % make
 
-This assumes that you have Boost 1.31.x installed.  If you have 1.30.x
-or a version newer than 1.31 (i.e., 1.32, 1.33, etc.), you must add
-the option --with-boost-version as follows:
+This assumes that you have Boost 1.31.x installed.  If you have a version
+newer than 1.31 (i.e., 1.32, 1.33, etc.), you must add the option
+--with-boost-version as follows:
 
    % ../configure --with-boost-python=<Boost installation dir> \
         --with-boost-version=<Boost version>
