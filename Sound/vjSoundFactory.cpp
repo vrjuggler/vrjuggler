@@ -32,6 +32,9 @@
  */
 
 #include "vjSoundFactory.h"
+
+std::vector< vjSoundEngineConstructorBase* > vjSoundFactory::mConstructors;
+
 /*
 // regged soundengines...
 std::vector< SoundEngineCreator* > vjSoundFactory::mEngineCreators;
