@@ -35,7 +35,7 @@
 
 #ifdef HAVE_CONFIG_H
 #include <vjDefines.h>
-#endif	/* HAVE_CONFIG_H */
+#endif   /* HAVE_CONFIG_H */
 
 #ifdef _DEBUG
 #   define VJ_DEBUG
@@ -44,7 +44,7 @@
 #endif
 
 #ifdef WIN32
-#define WIN32_LEAN_AND_MEAN	// Exclude rarely-used stuff from Windows headers
+#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
 #pragma warning(disable:4244)  // Converting double to float
 #pragma warning(disable:4800)  // Int forcing value to bool
 #pragma warning(disable:4101)  // unreferenced local variable
@@ -57,12 +57,12 @@
 #define strcasecmp _stricmp
 #endif
 
-#define M_PI	3.14159265358979323846
-#define M_PI_2	1.57079632679489661923
-#define M_PI_4	0.78539816339744830962
+#define M_PI   3.14159265358979323846
+#define M_PI_2 1.57079632679489661923
+#define M_PI_4 0.78539816339744830962
 
 //extern HINSTANCE g_hInst = NULL;
-#endif	/* WIN32 */
+#endif   /* WIN32 */
 
 
 /* Common C++ includes. */
@@ -78,7 +78,7 @@
 #include <math.h>
 
 //#include <Kernel/vjDebug.h>
-#endif	/* __cplusplus */
+#endif   /* __cplusplus */
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -94,9 +94,9 @@
  * Define this macro to replace calls to sginap(2) if sginap(2) is not
  * avialable.
  */
-#ifndef HAVE_SGINAP
-#   define sginap(x) (usleep(x * 333333))
-#endif
+//#ifndef HAVE_SGINAP
+//#   define sginap(x) (usleep(x * 333333))
+//#endif
 
 #ifndef HAVE_SINF
 #   define sinf(x) ((float) sin(x))
@@ -128,4 +128,4 @@
 #define VJ_MAX4(w,x,y,z) VJ_MAX2(VJ_MAX2(w,x),VJ_MAX2(y,z))
 
 
-#endif	/* _VJ_CONFIG_H_ */
+#endif   /* _VJ_CONFIG_H_ */

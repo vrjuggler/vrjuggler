@@ -86,19 +86,21 @@ void vjConfigChunkHandler::configProcessPending(bool lockIt)
                break;
             
             case vjConfigManager::vjPendingChunk::REMOVE:      // Config remove
-               removed = this->configRemove(cur_chunk);
-               if(removed)      // Was there success adding
                {
-                  remove_me = current;
-                  current++;                          // Goto next item
-                  cfg_mgr->removePending(remove_me);  // Delete previous item
-                  cfg_mgr->removeActive(cur_chunk->getProperty("name"));     // Add it to the current config                     
-                  scan_for_lost_dependants = true;    // We have to scan to see if somebody depended on that chunk
+                  bool removed = this->configRemove(cur_chunk);
+                  if(removed)      // Was there success adding
+                  {
+                     remove_me = current;
+                     current++;                          // Goto next item
+                     cfg_mgr->removePending(remove_me);  // Delete previous item
+                     cfg_mgr->removeActive(cur_chunk->getProperty("name"));     // Add it to the current config                     
+                     scan_for_lost_dependants = true;    // We have to scan to see if somebody depended on that chunk
+                  }
+                  else // Failed to remove
+                  {
+                     current++;
+                  }              
                }
-               else // Failed to remove
-               {
-                  current++;
-               }              
                break;
             
             default:

@@ -117,7 +117,7 @@ void vjPfDrawManager::draw()
 // XXX: Hack for now
 void vjPfDrawManager::callAppChanFuncs()
 {
-   for(int dispIndex=0;dispIndex<disps.size();dispIndex++)
+   for(unsigned int dispIndex=0;dispIndex<disps.size();dispIndex++)
    {
       if (disps[dispIndex].chans[pfDisp::LEFT] != NULL)
          app->appChanFunc(disps[dispIndex].chans[pfDisp::LEFT]);
@@ -160,7 +160,7 @@ void vjPfDrawManager::initDrawing()
    initPerformerApp();
 
    // ------ OPEN/ALLOCATE Pipes ------- //
-   for (int pipeNum = 0; pipeNum < numPipes; pipeNum++)
+   for (unsigned int pipeNum = 0; pipeNum < numPipes; pipeNum++)
    {
       vjDEBUG(vjDBG_DRAW_MGR,1) << "vjPfDrawManager::initDrawing: Opening Pipe." << endl << vjDEBUG_FLUSH;
       vjDEBUG(vjDBG_DRAW_MGR,1) << "\tpipe:" << pipeNum << ": " << pipeStrs[pipeNum] << endl << vjDEBUG_FLUSH;
@@ -181,7 +181,7 @@ void vjPfDrawManager::initDrawing()
    std::vector<int> mono_fb_config = getMonoFBConfig();
 
    vjDEBUG(vjDBG_DRAW_MGR,1) << "vjPfDrawManager::initDrawing: Got Stereo FB config\n" << vjDEBUG_FLUSH;
-   for(int i=0;i<stereo_fb_config.size();i++)
+   for(unsigned int i=0;i<stereo_fb_config.size();i++)
       vjDEBUG(vjDBG_DRAW_MGR,1) << "  " << stereo_fb_config[i] << endl << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_DRAW_MGR,1) << "vjPfDrawManager::initDrawing: Got Mono FB config\n" << vjDEBUG_FLUSH;
    for(i=0;i<mono_fb_config.size();i++)
@@ -292,7 +292,7 @@ void vjPfDrawManager::initDrawing()
    //                     PFCHAN_APPFUNC | PFCHAN_CULLFUNC );
 
    // ----- SETUP CHANNEL GROUP ---- //
-   for (int dispIndex=0; dispIndex<disps.size(); dispIndex++)
+   for (unsigned int dispIndex=0; dispIndex<disps.size(); dispIndex++)
    {
       pfChannel *left_ch, *right_ch;
       left_ch = disps[dispIndex].chans[pfDisp::LEFT];
@@ -505,7 +505,7 @@ void vjPfDrawManager::updatePfProjection(pfChannel* chan, vjProjection* proj, bo
 // NOTE: The "cool" STL functor search didn't work for some reason
 vjPfDrawManager::pfDisp* vjPfDrawManager::getPfDisp(pfChannel* chan)
 {
-   for(int i=0;i<disps.size();i++)
+   for(unsigned int i=0;i<disps.size();i++)
    {
       pfChannel* left_chan = disps[i].chans[pfDisp::LEFT];
       pfChannel* right_chan = disps[i].chans[pfDisp::RIGHT];

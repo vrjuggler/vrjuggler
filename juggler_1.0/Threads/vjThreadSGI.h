@@ -249,4 +249,4 @@ private:
 };
 
 
-#endif	/* _THREAD_SGI_H_ */
+#endif   /* _THREAD_SGI_H_ */
