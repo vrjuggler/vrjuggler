@@ -61,9 +61,9 @@ bool InputLogger::config( jccl::ConfigChunkPtr chunk)
    mStartStopButton.init(start_name);
    mStampButton.init(stamp_name);
 
-   vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "\n\n--- LOGGER: Configured ---\n" << vprDEBUG_FLUSH;
-   vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "StartStop: " << start_name << std::endl
-                                    << "Stamp: " << stamp_name << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL) << "\n--- LOGGER: Configured ---\n" << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL) << "StartStop: " << start_name << std::endl
+                                                     << "Stamp: " << stamp_name << std::endl << vprDEBUG_FLUSH;
 
    return true;
 }
@@ -86,32 +86,40 @@ bool InputLogger::config( jccl::ConfigChunkPtr chunk)
 void InputLogger::process()
 {
    // Get state of control keys
+   // Note, because of how this is called this sees the state one frame late
+   // ie. If toggle on is true here it is NOT true in the data being saved
    const bool start_stop_triggered(mStartStopButton->getData() == Digital::TOGGLE_ON);
    const bool stamp_triggered(mStampButton->getData() == Digital::TOGGLE_ON);
 
-   //vprDEBUG(vprDBG_ALL, 0) << "start:" << start_stop_triggered << "  stamp:" << stamp_triggered << std::endl << vprDEBUG_FLUSH;
-
-   // Check for control keys
-   if(Playing != mCurState)
+   if(0 == mSleepFramesLeft)
    {
-      if(start_stop_triggered)
+      // Check for control keys
+      if(Playing != mCurState)
       {
-         if(Recording == mCurState)
-         {  stopRecording(); }
-         else
-         {  startRecording(); }
+         if(start_stop_triggered)
+         {
+            if(Recording == mCurState)
+            {  stopRecording(); }
+            else
+            {  startRecording(); }
+         }
+         else if(stamp_triggered && (Recording == mCurState))
+         {  stampRecord(); }
       }
-      else if(stamp_triggered && (Recording == mCurState))
-      {  stampRecord(); }
+   
+      if(Recording == mCurState)
+      {
+         addRecordingSample();
+      }
+      else if(Playing == mCurState)
+      {
+         playNextSample();
+      }
    }
-
-   if(Recording == mCurState)
+   else
    {
-      addRecordingSample();
-   }
-   else if(Playing == mCurState)
-   {
-      playNextSample();
+      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "InputLogger: Sleeping: " << mSleepFramesLeft << std::endl << vprDEBUG_FLUSH;                              
+      mSleepFramesLeft--;
    }
 }
 
@@ -127,8 +135,9 @@ void InputLogger::startRecording()
 
    // -- Get recording filename
    std::cout << "/n/n------- LOGGER ------\nEnter log filename:" << std::flush;
-   std::string file_name("test_logging.xml");
-   //std::cin >> file_name;
+   std::string file_name;
+   //std::string file_name("test_logging.xml");
+   std::cin >> file_name;
    std::cout << "\nUsing file: " << file_name << std::endl;
 
    mRecordingFilename = file_name;
@@ -143,11 +152,8 @@ void InputLogger::startRecording()
 void InputLogger::stopRecording()
 {
    vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "\n--- LOGGER: stopRecording ---\n" << vprDEBUG_FLUSH;
-
-   //mRootNode->save(std::cout);
-
-   std::cout << "---- Done recording ----\n"
-             << "Saving data to: " << mRecordingFilename << std::endl;
+   vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "Done recording\n"
+                                    << "Saving data to: " << mRecordingFilename << std::endl << vprDEBUG_FLUSH;
    std::ofstream out_file;
    out_file.exceptions(std::ofstream::badbit | std::ofstream::failbit);
    try
@@ -169,6 +175,7 @@ void InputLogger::stopRecording()
    }
 
    mCurState = Inactive;
+   mSleepFramesLeft = 10;     // Wait 10 frames until we start processing anything again
 }
 
 void InputLogger::stampRecord()
@@ -222,7 +229,7 @@ void InputLogger::load(std::string logFilename)
       std::cerr << "Unknown error saving file." << std::endl;
    }
 
-   std::cout << "InputLogger: Loaded file: num_children:" << mRootNode->getChildren().size() << std::endl;
+   vprDEBUG(vprDBG_ALL,0) << "InputLogger: Loaded file: num_samples:" << mRootNode->getChildren().size() << std::endl << vprDEBUG_FLUSH;
 }
 
 /* Start playing
@@ -238,7 +245,7 @@ void InputLogger::play()
 
    if(mRootNode.get() == NULL)
    {
-      std::cout << "Logger::play: Null root node, so can't play.\n" << std::flush;
+      vprDEBUG(vprDBG_ALL,0) << "Logger::play: Null root node, so can't play.\n" << vprDEBUG_FLUSH;
       return;
    }
 
@@ -248,7 +255,7 @@ void InputLogger::play()
 
    if(mNextSample_i == mEndSample_i)
    {
-      std::cout << "Logger::play: Zero children, so can't play.\n" << std::flush;
+      vprDEBUG(vprDBG_ALL,0) << "Logger::play: Zero children, so can't play.\n" << vprDEBUG_FLUSH;
       return;
    }
 
@@ -286,7 +293,7 @@ std::string InputLogger::getStamp()
 */
 void InputLogger::addRecordingSample()
 {
-   vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "LOGGER: adding sample.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL) << "LOGGER: adding sample.\n" << vprDEBUG_FLUSH;
 
    try
    {
@@ -338,7 +345,7 @@ void InputLogger::addRecordingSample()
 */
 void InputLogger::playNextSample()
 {
-   vprDEBUG_OutputGuard(gadgetDBG_INPUT_MGR, 0, "InputLogger::playNextSample\n", "done playing sample\n");
+   vprDEBUG_OutputGuard(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL, "InputLogger::playNextSample\n", "done playing sample\n");
 
    vprASSERT(mNextSample_i != mEndSample_i && "Overran the logger sample list");
    gadget::InputManager* input_mgr = gadget::InputManager::instance();
@@ -358,7 +365,8 @@ void InputLogger::playNextSample()
       gadget::Input* dev_ptr = input_mgr->getDevice(dev_name);
       if(NULL != dev_ptr)
       {
-         vprDEBUG_OutputGuard(gadgetDBG_INPUT_MGR,0, std::string("Reading device: ") + dev_name + std::string("\n"), "done reading");
+         vprDEBUG_OutputGuard(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL, 
+                              std::string("Reading device: ") + dev_name + std::string("\n"), "done reading");
 
          vpr::XMLObjectReader xml_reader(serial_dev_node);     // Create XML reader
          xml_reader.setAttrib("rim.timestamp.delta", 0);       // Hack for now to work around RIM
@@ -366,7 +374,7 @@ void InputLogger::playNextSample()
       }
       else
       {
-         vprDEBUG(gadgetDBG_INPUT_MGR,0) << "Skipping device: [" << dev_name
+         vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_WARNING_LVL) << "Skipping device: [" << dev_name
                                          << "]  Could not find it.\n" << vprDEBUG_FLUSH;
       }
    }
@@ -375,18 +383,23 @@ void InputLogger::playNextSample()
    mNextSample_i++;
    mActiveStamp.clear();      // Clear the stamp for now
 
+   if(mNextSample_i != mEndSample_i)
+   {
+      if( (*mNextSample_i)->getName() == std::string("stamp"))
+      {
+         mActiveStamp = (*mNextSample_i)->getAttribute("id").getValue<std::string>();
+         mNextSample_i++;
+         vprDEBUG(gadgetDBG_INPUT_MGR,0) << "Logger: Got stamp: [" << mActiveStamp << "]\n" << vprDEBUG_FLUSH;
+      }
+   }
+
    if(mNextSample_i == mEndSample_i)   // If done playing
    {
       mCurState = Inactive;
+      mSleepFramesLeft = 10;     // Wait 10 frames until we start processing anything again
       vprDEBUG(gadgetDBG_INPUT_MGR,0) << "Logger: Done playing.\n" << vprDEBUG_FLUSH;
    }
-   else if( (*mNextSample_i)->getName() == std::string("stamp"))
-   {
-      mActiveStamp = (*mNextSample_i)->getAttribute("id").getValue<std::string>();
-      mNextSample_i++;
-      vprDEBUG(gadgetDBG_INPUT_MGR,0) << "Logger: Got stamp: [" << mActiveStamp << "]\n" << vprDEBUG_FLUSH;
-   }
-
+   
 }
 
 } // namespace gadget
