@@ -135,7 +135,7 @@ public:
       rootNode                = new pfGroup;          // Root of our graph
       mNavigationDCS          = new pfDCS;      // DCS to navigate with
       pfNode* world_model;
-      pfDCS*  world_model_dcs = new pfDCS;
+      pfDCS*  collisionable_modelDcs = new pfDCS;
 
       // CONFIG PARAMS
 
@@ -164,14 +164,14 @@ public:
 
       // --- CONSTRUCT SCENE GRAPH --- //
       //                           /-- sun1
-      // rootNode -- mNavigationDCS -- world_model_dcs -- world_model
-      //
+      // rootNode -- mNavigationDCS -- collisionable_modelDcs -- world_model
+      //                           \-- noncollisionable_modelDcs -- other_models
       rootNode->addChild( mNavigationDCS );
-      world_model_dcs->addChild( world_model);
-      world_model_dcs->setScale( world_dcs_scale);
-      world_model_dcs->setTrans( world_dcs_trans[0], world_dcs_trans[1], world_dcs_trans[2]);
+      collisionable_modelDcs->addChild( world_model);
+      collisionable_modelDcs->setScale( world_dcs_scale);
+      collisionable_modelDcs->setTrans( world_dcs_trans[0], world_dcs_trans[1], world_dcs_trans[2]);
       mNavigationDCS->addChild( sun1 );
-      mNavigationDCS->addChild( world_model_dcs );
+      mNavigationDCS->addChild( collisionable_modelDcs );
 
       // Configure the Navigator DCS node:
       vjMatrix initial_nav;              // Initial navigation position
@@ -185,11 +185,11 @@ public:
       // --- COLLISION DETECTORS --- //
       // Terrain collider
       //planeCollider* collide = new planeCollider;
-      pfPogoCollider*  ride_collide = new pfPogoCollider(world_model_dcs);
+      pfPogoCollider*  ride_collide = new pfPogoCollider(collisionable_modelDcs);
       mNavigator.addCollider(ride_collide);
 
       // Set the navigator's collider.
-      pfBoxCollider* correction_collide = new pfBoxCollider( world_model_dcs );
+      pfBoxCollider* correction_collide = new pfBoxCollider( collisionable_modelDcs );
       mNavigator.addCollider( correction_collide );
 
       // load these files into perfly to see just what your scenegraph
