@@ -198,12 +198,15 @@ links-opt:
 links-prof:
 	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-profiled
 
-# Remove the links in $(instlinks).
+# Remove the links in $(instlinks).  We cannot do this in the global build,
+# however, because it would blow away links set up by our dependencies.
 clean-links:
+ifndef GLOBAL_BUILD
 	@echo "------------------------------------------------"
 	@echo "Removing developer installation links"
 	@echo "------------------------------------------------"
 	rm -rf $(instlinks)
+endif
 
 
 # =============================================================================
