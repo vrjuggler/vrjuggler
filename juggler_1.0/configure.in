@@ -858,7 +858,12 @@ if test "$THREADS" = "POSIX" ; then
     dnl # working POSIX semaphores too.
     AC_CHECK_FUNC(sem_init,
         [ SEMAPHORE_SYS='POSIX' ; AC_DEFINE(VJ_POSIX_SEMAPHORES,) ],
-        AC_MSG_ERROR(*** POSIX semaphores are required for POSIX threads ***))
+        AC_CHECK_LIB(posix4, sem_init,
+            [ LIBS="$LIBS -lposix4"
+              SEMAPHORE_SYS='POSIX' ;
+              AC_DEFINE(VJ_POSIX_SEMAPHORES,)
+            ],
+            AC_MSG_ERROR(*** POSIX semaphores are required for POSIX threads ***)))
 elif test "$THREADS" = "WIN32" ; then
     dnl # Set to Win32 threading, synchronization and shared memory.
     SEMPANORE_SYS='WIN32'
