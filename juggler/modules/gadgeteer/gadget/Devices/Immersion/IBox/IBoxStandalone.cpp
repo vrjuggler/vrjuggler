@@ -14,9 +14,9 @@
 #define MIN_TIMEOUT 0.1
 
 
-#include <vjConfig.h>
+#include <gad/gadConfig.h>
 #include <stdio.h>
-#include <Input/ibox/ibox2.h>
+#include <gad/Devices/Immersion/ibox2.h>
 
 
 char SIGNON_STR[5] = "IMMC"; 
@@ -715,7 +715,7 @@ int ibox2::autosynch(){
                 port->write(SIGNON_STR, sizeof(SIGNON_STR) - 1, written);
 //                vpr::System::msleep(15); /* XXX: Artificial pause */
                 status = port->read(&temp, 1, written);
-                while(status != vpr::ReturnStatus::Failure && written != 0){
+                while(status != vpr::ReturnStatus::Fail && written != 0){
 //                        std::cerr << "2: " << temp << std::endl;
                         if(temp == *sign_ch){
                                 if(!*++sign_ch){
