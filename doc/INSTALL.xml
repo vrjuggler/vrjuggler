@@ -740,34 +740,43 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
         <title>Sonix</title>
 
         <para>Sonix wraps other audio subsystems such as OpenAL (<ulink
-        url="http://www.openal.org/">www.openal.org</ulink>) or AudioWorks (<ulink
-        url="http://www.multigen.com/">multigen.com</ulink>). One of these
-        subsystems are required in order to hear sound. Once you have all the
-        necessary source code and third-party package installations, to the
-        following from the top-level <filename>juggler</filename> directory:</para>
+        url="http://www.openal.org/">www.openal.org</ulink>), Audiere (<ulink
+        url="http://audiere.sf.net/">audiere.sf.net</ulink>), or AudioWorks (<ulink
+        url="http://www.multigen.com/">multigen.com</ulink>). At least one of
+        these packages must be installed for use by Sonix in order to hear
+        sounds in VR Juggler applications. Once you have all the necessary
+        source code and third-party package installations, add one or more of
+        the following options to your <command>configure.pl</command> command
+        line to enable the appropriate audio subsystem:</para>
 
-        <orderedlist>
+        <itemizedlist>
           <listitem>
-            <para><screen>mkdir build.sonix
-cd build.sonix</screen></para>
+            <para><option>--enable-openal --with-openal=&#60;OPENAL_PATH&#62;</option>:
+            Enable the use of OpenAL and tell the build where OpenAL is
+            installed. The default search path is <filename>/usr/local</filename>.</para>
           </listitem>
 
           <listitem>
-            <para>Choose one of the following depending on which subsystem (or
-            both) you want to enable in Sonix:</para>
-
-            <para><screen>../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-openal --with-openal=/usr/local
-../configure.pl --module=Sonix --prefix=$HOME/sonix-inst --enable-audioworks</screen></para>
+            <para><option>--enable-audiere
+            --with-audiere=&#60;AUDIERE_PATH&#62;</option>: Enable the use of
+            Audiere and tell the build where Audiere is installed. The default
+            search path is <filename>/usr/local</filename>.</para>
           </listitem>
 
           <listitem>
-            <para><screen>gmake debug install-debug</screen></para>
+            <para><option>--enable-audioworks
+            --with-audioworks=&#60;AUDIOWORKS_PATH&#62;</option>: Enable the
+            use of AudioWorks and tell the build where AudioWorks is
+            installed. The default search path is <filename>/usr</filename>.</para>
           </listitem>
+        </itemizedlist>
 
-          <listitem>
-            <para><screen>setenv SNX_BASE_DIR $HOME/sonix-inst</screen></para>
-          </listitem>
-        </orderedlist>
+        <note>
+          <para>AudioWorks and OpenAL cannot be compiled together. They depend
+          on mutually exclusive VPR threading subsystems. Warnings will be
+          printed by the Sonix configure script indicating this fact. OpenAL
+          and Audiere can be compiled together, however.</para>
+        </note>
       </section>
 
       <section id="tweek.build.section">
