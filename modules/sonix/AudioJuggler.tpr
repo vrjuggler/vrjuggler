@@ -57,3 +57,5 @@ enabled=true
 [idldialog]
 selected.flavor=false
 selected.type=2
+[io]
+defaultIgnoreMask=CVS;SCCS;rcs;RCS;Debug;build;Release;BoleroExchange

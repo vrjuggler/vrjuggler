@@ -27,10 +27,11 @@ struct ajSoundInfo
    std::string filename;
    std::string data; // TODO: i'll probably want to double buffer this...
 
+   float position[3];
+   
+   // might not need (or use) these 3 following vars...
    bool isPlaying;
    int repeat;           // number of times to repeat (static)
    int repeat_countdown; // number of times left to repeat (changes during play)
-
-   float position[3];
 };
 #endif //SOUND_INFO_DATA
