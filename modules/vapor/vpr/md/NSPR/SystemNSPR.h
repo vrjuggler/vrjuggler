@@ -62,6 +62,7 @@
 #include <prtime.h>
 #include <prnetdb.h>
 #include <prenv.h>
+#include <prsystem.h>
 
 #include <vpr/Util/ReturnStatus.h>
 #include <vpr/SystemBase.h>
@@ -138,6 +139,22 @@ public:
 
         return status;
     }
+
+    /** Returns the name of the host
+     * For example the hostname of: vapor.vrjuggler.org is "vapor"
+     */
+    static std::string getHostname()
+    {
+       char  hn_buf[SYS_INFO_BUFFER_LENGTH];
+
+       //PR_SI_HOSTNAME 
+       //PR_SI_SYSNAME
+       PRStatus ret_val = PR_GetSystemInfo( PR_SI_HOSTNAME, hn_buf, SYS_INFO_BUFFER_LENGTH );
+       if(ret_val == PR_SUCCESS)
+          return std::string(hn_buf);
+       else
+          return std::string("<hostname-lookup failed>");               
+    }    
 };
 
 }; // End of vpr namespace
