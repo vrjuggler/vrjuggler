@@ -6,8 +6,6 @@
 #define _VJ_SYNC_WRITER_
 
 #include <vjConfig.h>
-#include <iostream.h>
-#include <fstream.h>
 #include <Sync/vjMutex.h>
 
 //: an output fstream with an associated mutex, so multiple
