@@ -28,8 +28,8 @@
 #
 # -----------------------------------------------------------------
 # File:          dzr.linux.mk,v
-# Date modified: 2002/05/22 07:00:07
-# Version:       1.6
+# Date modified: 2005/02/24 15:41:29
+# Version:       1.7
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
@@ -37,7 +37,7 @@
 # Linux-specfic settings for variables such as the C and C++ compilers and any
 # platform-specfic options needed by various commands.
 #
-# dzr.linux.mk,v 1.6 2002/05/22 07:00:07 patrickh Exp
+# dzr.linux.mk,v 1.7 2005/02/24 15:41:29 patrickh Exp
 # -----------------------------------------------------------------------------
 # This file sets values for the following variables:
 #
@@ -79,6 +79,7 @@ OS_ABI_FLAGS=
 # Extensions to the basic compiler flags.
 OS_CFLAGS+=		
 OS_CXXFLAGS+=		
+OS_F77FLAGS+=		
 OS_DEBUG_FLAGS+=	
 OS_ARFLAGS+=		
 OS_LDFLAGS+=		
