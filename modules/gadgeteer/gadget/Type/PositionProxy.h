@@ -57,11 +57,14 @@ namespace gadget
 {
 
 /**
- * A proxy class to positional devices, used by the InputManager.
- * A PositionProxy always points to a positional device and subUnit number,
- * the inputgroup can therefore keep an array of these around and
- * treat them as positional devices which only return a single
- * subDevice's amount of data.  (one POS_DATA)
+ * A proxy class to positional devices, used by the Input Manager.
+ *
+ * A position proxy always points to a positional device and unit number within
+ * that device.  The Input Manager can therefore keep an array of these
+ * around and treat them as digital devices that only return a single
+ * sub-device's amount of data (one gmtl::Matrix44f).
+ *
+ * @see gagdet:;Position
  */
 class GADGET_CLASS_API PositionProxy : public TypedProxy<Position>
 {
@@ -73,7 +76,7 @@ public:
 
    /**
     * Updates the proxy's copy of the data.
-    * Copies the device data to local storage, and transform it if necessary.
+    * Copies the device data to local storage and transforms it if necessary.
     */
    virtual void updateData();
 
@@ -87,7 +90,9 @@ public:
     * Gets the positional data within the device pointed to by this proxy as a
     * matrix.  For example, getData(3.28f) will return a matrix in feet.
     *
-    * @param scaleFactor Factor to convert from meters to the desired units
+    * @param scaleFactor Factor to convert from meters to the desired units.
+    *                    This paramter is optional, and it defaults to the
+    *                    conversion from meters to feet.
     *
     * @return The position of the device as a matrix.
     */
@@ -105,7 +110,7 @@ public:
       return mUnitNum;
    }
 
-   /// Return the Position pointer held by this proxy.
+   /// Returns a pointer to the gadget::Position object held by this proxy.
    Position* getPositionPtr()
    {
       if(!mStupified)

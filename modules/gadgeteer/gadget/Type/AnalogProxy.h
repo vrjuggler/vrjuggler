@@ -50,10 +50,10 @@ namespace gadget
 /**
  * A proxy class to analog devices, used by the Input Manager.
  *
- * An AnalogProxy always points to an analog device and subUnit number.
- * The inputgroup can therefore keep an array of these around and
- * treat them as analog devices which only return a single
- * subDevice's amount of data.  (one float)
+ * An analog proxy always points to an analog  device and unit number within
+ * that device.  The Input Manager can therefore keep an array of these
+ * around and treat them as analog devices that only return a single
+ * sub-device's amount of data (one float).
  *
  * @see Analog
  */
@@ -79,7 +79,7 @@ public:
       }
    }
 
-   /** Returns time of last update. */
+   /** Returns the time of last update. */
    virtual vpr::Interval getTimeStamp() const
    {
       return mData.getTime();
@@ -102,6 +102,7 @@ public:
       }
    }
 
+   /** Returns a pointer to the gadget::Analog object that we are proxying. */
    Analog* getAnalogPtr()
    {
       if(isStupified())
@@ -114,6 +115,10 @@ public:
       }
    }
 
+   /**
+    * Returns the unit index into the analog device from which this proxy
+    * is reading data.
+    */
    int getUnit() const
    {
       return mUnitNum;

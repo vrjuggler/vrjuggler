@@ -53,9 +53,10 @@ namespace gadget
    {
    public:
       Proxy()
+         : mName("")
+         , mStupified(true)
       {
-         mStupified = true;
-         mName.clear();          // Clear the name
+         ;
       }
 
       virtual ~Proxy()
@@ -107,14 +108,14 @@ namespace gadget
       }
 
       /** Sets the name of the proxy. */
-      void setName(std::string name)
+      void setName(const std::string& name)
       {
          mName = name;
       }
 
       /**
-       * Is the proxy current stupified?
-       * If the device we are proxying doesn't exist, then this will return
+       * Is the proxy currently stupified?
+       * If the device we are proxying does not exist, then this will return
        * true.
        */
       virtual bool isStupified() const
@@ -123,15 +124,16 @@ namespace gadget
       }
 
       /**
-       * Sets the stupification state.
+       * Sets the stupification state of this proxy.
+       *
        * @param newState The new state of stupification.
        */
-      void stupify(bool newState = true)
+      void stupify(const bool newState = true)
       {
          mStupified = newState;
       }
 
-      /** Returns time of last update. */
+      /** Returns the time of last update. */
       virtual vpr::Interval getTimeStamp() const = 0;
 
    protected:
@@ -156,12 +158,12 @@ namespace gadget
        *
        * @pre devPtr must be a valid device of type DEV_TYPE.
        * @post The proxy now references the given device.  The device name we
-       *       are proxying is set to devPtr->getInstanceName()
+       *       are proxying is set to devPtr->getInstanceName().
        *
        * @param devName The name of the device at which we are pointing.
        * @param devPtr  Pointer to the device.
        */
-      virtual void set(std::string devName, DEV_TYPE* devPtr)
+      virtual void set(const std::string& devName, DEV_TYPE* devPtr)
       {
          mTypedDevice = devPtr;
          if(NULL != devPtr)
@@ -176,10 +178,9 @@ namespace gadget
       }
 
       /**
-       * Refreshes the proxy.
-       * This attempts to lookup the device that we are proxying.  If the
-       * lookup fails, then we become stupified.  If not the the proxy is
-       * pointed at this potentially new device.
+       * Refreshes the proxy.  This attempts to lookup the device that we are
+       * proxying.  If the lookup fails, then we become stupified.  If not,
+       * then the proxy is pointed at this potentially new device.
        */
       virtual bool refresh()
       {
@@ -215,7 +216,7 @@ namespace gadget
          return true;
       }
 
-      /** Get the name of the device that we are proxying. */
+      /** Returns the name of the device that we are proxying. */
       virtual std::string getDeviceName() const
       {
          return mDeviceName;

@@ -51,17 +51,14 @@ namespace gadget
 
    /**
     * Digital is the abstract base class from which devices with digital data
-    * derive.
+    * derive (through gadget::InputMixer).  This is in addition to
+    * gadget::Input.  gadget::Input provides pure virtual function constraints
+    * in the following functions: startSampling(), stopSampling(), sample(),
+    * and updateData().
     *
-    * Through gadget::InputMixer, gadget::Digital is the base class from which
-    * digital devices must derive.  This is in addition to gadget::Input.
-    * gadget::Input provides pure virtual function constraints in the
-    * following functions: startSampling(), stopSampling(), sample(), and
-    * updateData().
-    *
-    * Digital adds one new pure virtual function, getDigitalData(), for
-    * retreiving the digital data, similar to the addition for gadget::Position
-    * and gadget::Analog.
+    * gadget::Digital adds the function getDigitalData() for retreiving the
+    * received digital data.  This is similar to the additions made by
+    * gadget::Position and gadget::Analog.
     *
     * @see Input, InputMixer
     */
@@ -136,12 +133,14 @@ namespace gadget
       }
 
       /**
-       * Helper method to add a sample to the sample buffers.
-       * This MUST be called by all digital devices to add a new sample.
-       * The data samples passed in will then be modified by any local filters.
+       * Helper method to add a collection of digital samples to the sample
+       * buffers.  This MUST be called by all digital devices to add new
+       * samples.
        *
-       * @post Sample is added to the buffers and the local filters are run on
-       *       that sample.
+       * @post The given digital samples are added to the buffers.
+       *
+       * @param digSample A vector of DigitalData objects that represent the
+       *                  newest samples taken.
        */
       void addDigitalSample(const std::vector< DigitalData >& digSample)
       {
@@ -152,16 +151,20 @@ namespace gadget
       }
 
       /**
-       * Swap the digital data buffers.
+       * Swaps the digital data buffers.
        *
-       * @post If ready has values, then copy values from ready to stable.
-       *       If not, then stable keeps its old values.
+       * @post If the ready queue has values, then those values are copied from
+       *       the ready queue to the stable queue.  If not, then stable queue
+       *       is not changed.
        */
       void swapDigitalBuffers()
       {
          mDigitalSamples.swapBuffers();
       }
 
+      /**
+       * Returns the current stable sample buffers for this device.
+       */
       const SampleBuffer_t::buffer_t& getDigitalDataBuffer()
       {
          return mDigitalSamples.stableBuffer();
@@ -171,8 +174,10 @@ namespace gadget
          return std::string("Digital");
       }
 
+      /** Serializes this object. */
       virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
 
+      /** De-serializes this object. */
       virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
 
    protected:
