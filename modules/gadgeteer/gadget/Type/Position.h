@@ -46,6 +46,7 @@
 #include <gadget/Type/SampleBuffer.h>
 
 #include <vrj/Math/Matrix.h>
+#include <vpr/Util/Debug.h>
 
 namespace gadget
 {
