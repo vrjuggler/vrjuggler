@@ -275,9 +275,9 @@ std::string InetAddrBSD::getAddressString() const
    return ip_str;
 }
 
-std::string InetAddrBSD::getHostname() const
+vpr::ReturnStatus InetAddrBSD::getHostname(std::string& hostname) const
 {
-   std::string hostname;
+   vpr::ReturnStatus status;
    struct hostent* entry;
 
    entry = gethostbyaddr((const char*) &mAddr.sin_addr,
@@ -285,17 +285,18 @@ std::string InetAddrBSD::getHostname() const
 
    if ( NULL == entry )
    {
-      hostname = std::string("<hostname lookup failed>");
+      status.setCode(vpr::ReturnStatus::Fail);
       const char* error_str = hstrerror(h_errno);
       vprDEBUG(vprDBG_VPR, vprDBG_CRITICAL_LVL) 
-      << "InetAddrBSD::getHostname() ERROR: " << error_str << vprDEBUG_FLUSH;
+         << "[InetAddrBSD::getHostname()] ERROR: " << error_str
+         << vprDEBUG_FLUSH;
    }
    else
    {
       hostname = entry->h_name;
    }
 
-   return hostname;
+   return status;
 }
 
 std::vector<std::string> InetAddrBSD::getHostnames() const

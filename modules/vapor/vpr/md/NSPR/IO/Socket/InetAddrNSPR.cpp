@@ -144,9 +144,9 @@ std::string InetAddrNSPR::getAddressString() const
    return temp;
 }
 
-std::string InetAddrNSPR::getHostname () const
+vpr::ReturnStatus InetAddrNSPR::getHostname(std::string& hostname) const
 {
-   std::string hostname;
+   vpr::ReturnStatus status;
    char buffer[PR_NETDB_BUF_SIZE];
    memset(buffer, 0, PR_NETDB_BUF_SIZE);
    PRStatus ret_status;
@@ -157,14 +157,14 @@ std::string InetAddrNSPR::getHostname () const
    if ( ret_status == PR_FAILURE )
    {
       vpr::Error::outputCurrentError(std::cerr, "[InetAddrNSPR::getHostname] Failed to get host by address");
-      hostname = std::string("<hostname lookup failed>");
+      status.setCode(vpr::ReturnStatus::Fail);
    }
    else
    {
       hostname = hostent.h_name;
    }
 
-   return hostname;
+   return status;
 }
 
 std::vector<std::string> InetAddrNSPR::getHostnames() const
