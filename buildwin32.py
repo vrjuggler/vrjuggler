@@ -106,7 +106,7 @@ def setVars():
       print "ERROR: Visual Studio commands are not in your path!"
       print "Run vsvars32.bat in this shell or update the %PATH% environment"
       print "variable on your system."
-      sys.exit(2)
+      sys.exit(1)
 
    def processInput(optionDict, envVar, inputDesc, required = False):
       default_value = optionDict[envVar]
@@ -680,6 +680,22 @@ juggler_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
 if __name__ == '__main__':
    try:
       main()
+   except SystemExit, exitEx:
+      if exitEx.code == 0:
+         status = 'successful completion'
+      elif exitEx.code == 1:
+         status = 'no Visual Studio installation found'
+      elif exitEx.code == 2:
+         status = 'could not read data file required for compiling'
+      else:
+         status = 'error encountered'
+
+      print "Exiting with status %d (%s)" % (exitEx.code, status)
+      print "Press <ENTER> to quit ..."
+      sys.stdin.readline()
+
+      # Exit for real without throwing another SystemExit exception.
+      os._exit(exitEx.code)
    except:
       info = sys.exc_info()
       traceback.print_exception(info[0], info[1], info[2])
