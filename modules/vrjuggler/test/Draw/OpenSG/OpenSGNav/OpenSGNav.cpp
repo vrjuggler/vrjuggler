@@ -31,17 +31,18 @@ void OpenSGNav::init()
 
    vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::init: Called.\n" << vprDEBUG_FLUSH;
 
-   // XXX: Complete
+   // XXX: Complete initialization
    // if(!osgInitAlreadyCalled())
    OSG::osgInit(0,0);                  // Binds to primordial thread
    OpenSGNav::OSG_MAIN_ASPECT_ID = OSG::Thread::getAspect();   // Gets the base aspect id to use
 }
 
+/** Called once per context at context creation */
 void OpenSGNav::contextInit()
 {
    vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::contextInit: Called.\n" << vprDEBUG_FLUSH;
 
-   context_data* c_data = &(*mContextData);
+   context_data* c_data = &(*mContextData);  // Context specific data. Should be one copy per context
 
    // Check for thread initialized
    // This will only happen for the first initialized context per pipe
@@ -52,14 +53,17 @@ void OpenSGNav::contextInit()
       char thread_name_buffer[255];
       sprintf(thread_name_buffer, "vprThread:%d", vpr::Thread::self()->getTID());
       c_data->mOsgThread = OSG::ExternalThread::get(thread_name_buffer);
-      c_data->mOsgThread->initialize(OSG_MAIN_ASPECT_ID);     // XXX: In future this might need to be different thread
+      if(!(c_data->mOsgThread->isInitialized()))
+      {
+         c_data->mOsgThread->initialize(OSG_MAIN_ASPECT_ID);     // XXX: In future this might need to be different thread
+      }
    }
 
    // Allocate OpenSG stuff
    c_data->mWin = OSG::PassiveWindow::create();
    c_data->mCameraCartNode = OSG::Node::create();
    c_data->mCameraCartTransform = OSG::Transform::create();
-   c_data->mCamera = OSG::PerspectiveCamera::create();
+   c_data->mCamera = OSG::MatrixCamera::create();
 
    // Setup the cart, set internal transform node
    OSG::beginEditCP(c_data->mCameraCartNode);
@@ -69,7 +73,6 @@ void OpenSGNav::contextInit()
    // Setup the camera
    OSG::beginEditCP(c_data->mCamera);
       c_data->mCamera->setBeacon (c_data->mCameraCartNode);
-      c_data->mCamera->setFov    (OSG::deg2rad(60.));
       c_data->mCamera->setNear   (0.1);
       c_data->mCamera->setFar    (10000);
    OSG::endEditCP(c_data->mCamera);
@@ -107,54 +110,32 @@ void OpenSGNav::draw()
    vrj::Projection* project = userData->getProjection();
    vrj::Frustum vrj_frustum = userData->getProjection()->mFrustum;
 
-   float * vj_proj_view_mat = project->mViewMat.getFloatPtr();
+   float* vj_proj_view_mat = project->mViewMat.getFloatPtr();
    OSG::Matrix frustum_matrix, view_xform_mat;
    view_xform_mat.setValue(vj_proj_view_mat);
+
    osg::MatrixFrustum(frustum_matrix, vrj_frustum[vrj::Frustum::VJ_LEFT], vrj_frustum[vrj::Frustum::VJ_RIGHT],
                                       vrj_frustum[vrj::Frustum::VJ_BOTTOM], vrj_frustum[vrj::Frustum::VJ_TOP],
                                       vrj_frustum[vrj::Frustum::VJ_NEAR], vrj_frustum[vrj::Frustum::VJ_FAR]);
 
-   // ---- SETUP CAMERA --- //
-   // Get the viewport
-   vrj::Viewport* vp = userData->getViewport();
-   vrj::CameraProjection* sim_cam_proj(NULL);
+   OSG::Matrix full_view_matrix = frustum_matrix;
+   full_view_matrix.mult(view_xform_mat);   // Compute complete projection matrix
 
-   switch(vp->getType())
-   {
-   case vrj::Viewport::SURFACE:
-      vprASSERT(false);
-      /*
-      the_cam->home();
-      the_cam->setAdjustAspectRatioMode(osg::Camera::ADJUST_NONE);      // Tell it not to adjust the aspect ratio at all
-
-      //Set the frustrum (this is set with the matrix below)
-      //float near_val = frustum[Frustum::VJ_NEAR];
-      the_cam->setFrustum(frustum[Frustum::VJ_LEFT],   frustum[Frustum::VJ_RIGHT],
-                          frustum[Frustum::VJ_BOTTOM],  frustum[Frustum::VJ_TOP],
-                          frustum[Frustum::VJ_NEAR],             frustum[Frustum::VJ_FAR]);
-      */
-      break;
-
-   case vrj::Viewport::SIM:
-      sim_cam_proj = dynamic_cast<vrj::CameraProjection*>(project);
-      vprASSERT(sim_cam_proj != NULL && "Trying to use non-camera projection for simulator");
+   // Setup the camera
+   OSG::beginEditCP(c_data->mCamera);
       c_data->mCamera->setNear(vrj_frustum[vrj::Frustum::VJ_NEAR]);
       c_data->mCamera->setFar(vrj_frustum[vrj::Frustum::VJ_FAR]);
-      c_data->mCamera->setFov(sim_cam_proj->mVertFOV);
-      break;
-
-   default:
-      vprASSERT(false);
-      break;
-   }
+      c_data->mCamera->setProjectionMatrix( full_view_matrix );         // Set view matrix
+      c_data->mCamera->setModelviewMatrix( OSG::Matrix::identity() );   // Set projection matrix
+   OSG::endEditCP(c_data->mCamera);
 
    // --- Trigger the draw --- //
    c_data->mRenderAction->setWindow(c_data->mWin.getCPtr());
-   c_data->mRenderAction->setViewport(NULL);
+   c_data->mRenderAction->setViewport(NULL);                   // Don't know why a matrix camera needs a viewport
    c_data->mRenderAction->setCamera(c_data->mCamera.getCPtr());
-   c_data->mRenderAction->setFrustumCulling(false);    // Turn off culling for now because I don't trust the frustum setup
+   c_data->mRenderAction->setFrustumCulling(false);    // Turn off culling for now because I don't yet trust the frustum setup
 
-   c_data->mRenderAction->apply(getSceneRoot());                // Actually do the rendering
+   c_data->mRenderAction->apply(getSceneRoot());       // Actually do the rendering
 
    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
      // Set material color
@@ -188,12 +169,14 @@ void OpenSGNav::preFrame()
     //move the model around
 }
 
+/* Called once per frame, per buffer (basically context) need so that we can use subviewports */
 void OpenSGNav::bufferPreDraw()
 {
    glClearColor(0.0, 0.0, 0.0, 0.0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+/** Initialize GL state. Hold over from regular OGL apps */
 void OpenSGNav::initGLState()
 {
     std::cout << "OpenSGNav::initGLState called\n";
