@@ -292,20 +292,22 @@ DPP_HAVE_GNU_MAKE(3.78, ,
    AC_MSG_ERROR(*** The build system requires GNU make 3.78 or newer ***))
 DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 
+BUILD_JAVA='Y'
+
 # Check for the JDK.
 DPP_PATH_JAVA( , [tweek_have_java='Y'],
               [tweek_have_java='N'
                BUILD_JAVA='N'])
 
 if test "x$tweek_have_java" = "xY" ; then
-   DPP_JDK_VERSION([$JDK_HOME], [1.3], [BUILD_JAVA='Y'],
+   DPP_JDK_VERSION([$JDK_HOME], [1.3], ,
       [ BUILD_JAVA='N'
         AC_MSG_WARN([*** JDK 1.3 or newer required for Tweek Java API ***])
       ])
 
    if test "x$BUILD_JAVA" = "xY" ; then
       DPP_CHECK_JAVA_STATIC_METHOD(org.jdom.Namespace,
-         getNamespace(uri), [String uri = new String("test")], BUILD_JAVA='Y',
+         getNamespace(uri), [String uri = new String("test")], ,
          [ AC_MSG_WARN(*** JDOM required for Tweek Java API ***)
            BUILD_JAVA='N' ],
          $JDOM_JAR)
