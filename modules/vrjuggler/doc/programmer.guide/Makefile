@@ -9,11 +9,23 @@ JADE		= openjade
 JADETEX		= jadetex
 PDFJADETEX	= pdfjadetex
 RM		= rm -f
+SAXON		= $(DOCBOOK_ROOT)/saxon-6.5.1/saxon.sh
+#SAXON		= $(DOCBOOK_ROOT)/saxon-7.0/saxon.sh
 #XALAN		= $(DOCBOOK_ROOT)/xalan-j_2_3_0/bin/xalan.sh
 XALAN		= $(DOCBOOK_ROOT)/xalan-j_20020214/bin/xalan.sh
 #XALAN		= $(DOCBOOK_ROOT)/xalan-j_20020219/bin/xalan.sh
 XEP		= sh $(DOCBOOK_ROOT)/XEP/run.sh
 XSLTPROC	= /usr/bin/xsltproc
+
+SAXON_PARAMS	= "fop.extensions=1"
+
+# Use one of the following depending on what will be processing the generated
+# FO.  The first is for FOP; the second is for XEP; and the third is for
+# PassiveTeX.
+XALAN_PARAMS	= -PARAM fop.extensions "1" # -PARAM column.count "2"
+#XALAN_PARAMS	= -PARAM xep.extensions "1" # -PARAM column.count "2"
+#XALAN_PARAMS	= -PARAM passivetex.extensions "1"	\
+                  -PARAM tex.math.in.alt "latex"
 
 DOCBOOK_ROOT	= /home/vr/Juggler/docbook
 SGML_ROOT	= /usr/share/sgml/docbook
@@ -23,10 +35,21 @@ XSL_DIR		= $(DOCBOOK_ROOT)/docbook-xsl-1.48
 #TEXINPUTS	= .:$(HOME)/tex:$(HOME)/latex/passivetex:$(HOME)/latex/base:
 #TEXMF		= $(HOME)/latex
 
+XML_FILES	= guide.xml
 HTML_FILES	= guide.html
 PDF_FILES	= guide.pdf
 
 html: $(HTML_FILES)
+
+chunk-html:
+	for file in $(XML_FILES) ; do \
+	  dir=`echo $$file | sed -e 's/\.xml//'` ; \
+	  if [ ! -d $$dir ] ; then mkdir $$dir ; fi ; \
+          cur_dir=`pwd` ; \
+          cd $$dir ; \
+          $(SAXON) -i $$cur_dir/$$file -xsl $(XSL_DIR)/html/chunk.xsl $(SAXON_PARAMS); \
+          cd $$cur_dir ; \
+	done
 
 pdf: $(PDF_FILES)
 
@@ -39,7 +62,7 @@ guide.pdf: guide.xml guide.fo # guide.tex
 	$(XALAN) -in $< -xsl $(XSL_DIR)/html/docbook.xsl -out $@
 
 .xml.fo:
-	$(XALAN) -in $< -xsl $(XSL_DIR)/fo/docbook.xsl -out $@
+	$(XALAN) -in $< -xsl $(XSL_DIR)/fo/docbook.xsl -out $@ $(XALAN_PARAMS)
 
 # Generate a PDF file from an FO file using FOP.
 .fo.pdf:
