@@ -35,17 +35,11 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <vpr/Sync/Mutex.h>
+#include <string>
 
-#include <gadget/Type/KeyboardMouse/KeyEvent.h>
-#include <gadget/Type/KeyboardMouse/MouseEvent.h>
-#include <gadget/Type/KeyboardMouse/Keys.h>
-#include <gadget/Type/KeyboardMouse/Event.h>
-#include <gadget/Devices/KeyboardMouseDevice/KeyboardMouseDevice.h>
-#include <gadget/Util/Debug.h>
-
-#include <jccl/Config/ConfigElement.h>
 #include <jccl/Config/ConfigElementPtr.h>
+#include <gadget/Devices/KeyboardMouseDevice/KeyboardMouseDevice.h>
+
 
 namespace gadget
 {
@@ -65,56 +59,12 @@ public:
       Lock_KeyDown  /**< The mouse is locked due to a key being held down. */
    };
 
-   InputArea()
-      : mLockState(Unlocked), mLockStoredKey(-1), mLockToggleKey(-1),
-        mMouseSensitivity(1.0f), mSleepTimeMS(0),
-        mKeyboardMouseDevice(NULL), mKeyboardMouseDeviceName("")
-   {;}
+   InputArea();
+
    ~InputArea()
    {;}
    
-   bool config(jccl::ConfigElementPtr e)
-   {
-      // Get the lock information
-      mLockToggleKey = e->getProperty<int>("lock_key");
-      bool start_locked = e->getProperty<bool>("start_locked");
-
-      if (start_locked)
-      {
-         mLockState = Lock_LockKey;      // Initialize to the locked state
-      }
-
-      mSleepTimeMS = e->getProperty<int>("sleep_time");
-
-      // Sanity check.
-      if (mSleepTimeMS == 0)
-      {
-         mSleepTimeMS = 50;
-      }
-
-      // If we have a pointer to a window in registry, then use that
-      mKeyboardMouseDeviceName = e->getProperty<std::string>("keyboard_mouse_device_name");
-
-      KeyboardMouseDevice::KeyboardMouseDeviceRegistry::KeyboardMouseDeviceInfo event_source_info;
-      bool found_window = KeyboardMouseDevice::KeyboardMouseDeviceRegistry::instance()->getKeyboardMouseDevice(mKeyboardMouseDeviceName, event_source_info);
-      if(!found_window)
-      {
-         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-            << "NOTE: Could not find keyboard/mouse device named '"
-            << mKeyboardMouseDeviceName << "'\n" << vprDEBUG_FLUSH;
-         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-            << "No InputArea will be created for window named '"
-            << e->getName() << "'.\n" << vprDEBUG_FLUSH;
-         return false;
-      }
-      else
-      {
-         mKeyboardMouseDeviceInfo = event_source_info;
-         mKeyboardMouseDevice = mKeyboardMouseDeviceInfo.mKeyboardMouseDevice;
-      }
-
-      return true;
-   }
+   bool config(jccl::ConfigElementPtr e);
 
 protected:
    lockState    mLockState;       /**< The current state of locking. */
