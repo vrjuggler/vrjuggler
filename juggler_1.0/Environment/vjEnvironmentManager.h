@@ -17,8 +17,8 @@
 #define _VJ_ENVIRONMENT_MANAGER_H_
 
 #include <vjConfig.h>
-#include <Environment/vjNetworkConnect.h>
-
+#include <Environment/vjConnect.h>
+#include <Environment/vjTuPerfBufReader.h>
 
 
 
@@ -43,28 +43,58 @@ public:
 
 
 
+    void activate();
+    void deactivate();
+
+    //: is the EM accepting connections across the network?
+    //! RETURNS: true - EM is accepting connections
+    //! RETURNS: false - EM is not accepting connections
+    bool isAccepting();
+
+
+
+    //: registers a buffer containing perf data... 
+    void addPerfDataBuffer (vjPerfDataBuffer *v);
+
+
+
     //: allows the Environment Manager to accept connections.
     //! RETURNS: reflects succesfully grabbing a port and listening.
     bool acceptConnections();
 
 
   
-    //: stop listening for client connections & close connections
+    //: stop listening for client connections
     //! PRE:  True
-    //! POST: All connections are closed, no more are accepted.
+    //! POST: no new connections are accepted. open connections
+    //+       are not changed.
     bool rejectConnections();
 
 
 
+    //: Kills all open connections
+    void killConnections();
+
+
+
+    //: returns a pointer to a connection with the given name
+    vjConnect* getConnect (char* _name);
+
+
+
 private:
-    
     vjConfigChunkDB*          chunkdb;
-    vector<vjNetworkConnect*> connections;
+    vector<vjConnect*> connections;
+    vector<vjTimedUpdate*>    updaters;
     vjThread*                 listen_thread;
     int                       Port;
     int                       listen_socket;
-    
+    vjTuPerfBufReader*     perf_buffer_reader;
+    bool                      activated;
+    bool                      configured_to_accept;
     void controlLoop (void* nullParam);
+    void reconfigure();
+
     
 }; // end vjEnvironmentManager
 

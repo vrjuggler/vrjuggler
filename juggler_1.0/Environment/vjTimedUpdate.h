@@ -16,53 +16,76 @@
 #ifndef _VJ_TIMED_UPDATE_H_
 #define _VJ_TIMED_UPDATE_H_
 
-#include <vjConfig.h>
 #include <Threads/vjThread.h>
 #include <Threads/vjThreadFunctor.h>
-
-class vjNetworkConnect;
+#include <Environment/vjConnect.h>
 
 
 
 class vjTimedUpdate {
 
 public:
-    vjNetworkConnect*   parent;
+    //: target: the connect that this timedupdate is gonna
+    //+ report to.
+    vjConnect*   target;
     float               refresh_time;
     vjThread*           control_thread;
     char*               name;
 
-  vjTimedUpdate( vjNetworkConnect *_parent, float _refresh_time) {
-    parent = _parent;
-    refresh_time = _refresh_time;
-    control_thread = NULL;
-  }
 
-  ~vjTimedUpdate () {
-    stopProcess();
-  }
 
-  bool startProcess() {
-    // Create a new thread to handle the control
-    vjThreadMemberFunctor<vjTimedUpdate> *memberFunctor = 
-      new vjThreadMemberFunctor<vjTimedUpdate>(this, &vjTimedUpdate::controlLoop, NULL);
+    vjTimedUpdate( vjConnect *_target, float _refresh_time) {
+	target = _target;
+	refresh_time = _refresh_time;
+	control_thread = NULL;
+    }
+
+
+
+    ~vjTimedUpdate () {
+	stopProcess();
+    }
+
+
+
+    void setTarget (vjConnect* _target) {
+	// this maybe ought to stop/restart process if running...
+	cout << "----------------------------------------------------------vjTUsetTarget: targ is " << _target << endl;
+	target = _target;
+    }
+
+
+
+    bool startProcess() {
+	// Create a new thread to handle the control
+
+	if (control_thread)
+	    return 1;
+
+	vjThreadMemberFunctor<vjTimedUpdate> *memberFunctor = 
+	    new vjThreadMemberFunctor<vjTimedUpdate>(this, &vjTimedUpdate::controlLoop, NULL);
     
-    control_thread = new vjThread(memberFunctor, 0);
-    cerr << "TimedUpdate::startProcess: Just started control loop.  "
+	control_thread = new vjThread(memberFunctor, 0);
+	cerr << "TimedUpdate::startProcess: Just started control loop.  "
 	 << endl;
     
-    return (control_thread != NULL);
-    
-  }
+	return (control_thread != NULL);
+	
+    }
 
-  bool stopProcess() {
-    if (control_thread)
-	control_thread->kill();
-    return 1;
-  }
 
-  virtual void controlLoop(void* nullParam) {
-  }
+
+    bool stopProcess() {
+	if (control_thread)
+	    control_thread->kill();
+	control_thread = NULL;
+	return 1;
+    }
+
+
+
+    virtual void controlLoop(void* nullParam) {
+    }
 
 };
 
@@ -72,18 +95,20 @@ public:
 class vjTrackerTimedUpdate: public vjTimedUpdate {
 
 public:
-  //  char pname[9];
 
   vector<int> proxies;
 
-  vjTrackerTimedUpdate (vjNetworkConnect* _parent,
-		      float _refresh_time): vjTimedUpdate(_parent, 
-							_refresh_time) {
-    name = new char[9];
-    strcpy (name, "Position");
-  }
+    vjTrackerTimedUpdate (vjConnect* _target,
+			  float _refresh_time): 
+	vjTimedUpdate(_target, _refresh_time) {
 
-  virtual void controlLoop (void* nullParam);
+	name = new char[9];
+	strcpy (name, "Position");
+    }
+
+
+
+    virtual void controlLoop (void* nullParam);
 };
 
 
@@ -92,9 +117,9 @@ public:
 class vjTimedUpdateFactory {
   // parses a command line & creates an appropriate vjTimedUpdate object
 public:
-  static vjTimedUpdate* generate (vjNetworkConnect* parent, char* name) {
+  static vjTimedUpdate* generate (vjConnect* target, char* name) {
     if (!strcasecmp (name, "position"))
-      return new vjTrackerTimedUpdate(parent, 300);    
+	return new vjTrackerTimedUpdate(target, 300);    
     else
       return NULL;
   }

@@ -55,12 +55,14 @@ public:
 	    val = *(unsigned long long*)iotimer_addr;
 	else 
 	    val = *(unsigned int*)iotimer_addr;
-	//val = (val - initval)%maxval;
-	// ^-- can't do that... overflow duh.
-	if (val >= initval)
+	val = (val >= initval)?
+	    val - initval
+	    :val + (maxval - initval);
+	/*	if (val >= initval)
 	    val -= initval;
 	else
 	    val += maxval-initval;
+	*/
     }
 
 
@@ -70,38 +72,36 @@ public:
     //! 
     float operator - (const vjTimeStamp& t2) const {
 	/* returns self - t2, in usecs */
-	/*
-	if (t2.val < val)
-	    return (val - t2.val) * resolution;
-	else  // wrappedaround
-	    return (val + maxval-t2.val) * resolution;
-	*/
 	return (val - t2.val)*resolution;
     }
 
 
 
-  float usecs();
-  //  float usecs () {
-    /* returns timestamp value in usecs from intialize() */
-  //    return (val - initval) * resolution;
-  // }
-  friend ostream& operator << (ostream& out, vjTimeStamp& ts) {
-    out << ts.usecs();
-    return out;
-  }
+    float usecs();
+
+    friend ostream& operator << (ostream& out, vjTimeStamp& ts) {
+	out << ts.usecs();
+	return out;
+    }
+
+    //: returns resolution of timer in microseconds
+    float getResolution() {
+	return resolution;
+    }
+
 private:
-  static __psunsigned_t phys_addr, raddr;
-  //  static unsigned int cycleval;
-  static volatile void* iotimer_addr;
-  static volatile unsigned long long longcount;
-  static int fd, poffmask;
-  static float resolution; // in usecs.
-  static int cyclecntrsize;  // either 32 or 64 bits. depends on hardware
-  static long long initval;
+
+    static __psunsigned_t phys_addr, raddr;
+    //  static unsigned int cycleval;
+    static volatile void* iotimer_addr;
+    static volatile unsigned long long longcount;
+    static int fd, poffmask;
+    static float resolution; // in usecs.
+    static int cyclecntrsize;  // either 32 or 64 bits. depends on hardware
+    static long long initval;
     static long long maxval;
 
-  long long val; // (in clockticks; resolution*clocktics = time in usecs
+    long long val; // (in clockticks; resolution*clocktics = time in usecs
 
 };
 
@@ -125,7 +125,7 @@ public:
     static void initialize() {
 	struct timeval t;
 	gettimeofday (&t, 0);
-        //cout << "time is " << tp.tv_sec << ", " << tp.tv_usec << "\n";
+	//cout << "time is " << tp.tv_sec << ", " << tp.tv_usec << "\n";
         initval = t.tv_sec * 1000000 + t.tv_usec;
     }
 
