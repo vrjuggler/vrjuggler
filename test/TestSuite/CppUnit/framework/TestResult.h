@@ -17,25 +17,37 @@ class CppUnitException;
 class Test;
 
 
-/*
- * A TestResult collects the results of executing a test case. It is an 
- * instance of the Collecting Parameter pattern.
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * The test framework distinguishes between failures and errors.
- * A failure is anticipated and checked for with assertions. Errors are
- * unanticipated problems signified by exceptions that are not generated
- * by the framework.
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
  *
- * TestResult supplies a template method 'setSynchronizationObject ()'
- * so that subclasses can provide mutual exclusion in the face of multiple
- * threads.  This can be useful when tests execute in one thread and
- * they fill a subclass of TestResult which effects change in another 
- * thread.  To have mutual exclusion, override setSynchronizationObject ()
- * and make sure that you create an instance of ExclusiveZone at the 
- * beginning of each method.
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
  *
- * see Test
- */
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 
 class TestResult
 {

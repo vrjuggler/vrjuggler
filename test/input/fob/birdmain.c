@@ -1,100 +1,34 @@
-/****************************************************************************
-*****************************************************************************
-    birdmain.c  - Bird Talk Main
-
-    The Bird(tm) position and orientation measurement system is controled
-    via a serial RS232 communication link.  This program allows the user
-    to 'experiment' with the Bird by selecting control commands from a
-    rudimentary menuing system.  After becoming familiar with the commands
-    the user can CUT and PASTE code from the source files listed below for
-    use in their own application.
-
-    written for:    Ascension Technology Corporation
-		    PO Box 527
-		    Burlington, Vermont  05402
-
-		    802-655-7879
-
-    written by:     Jeff Finkelstein
-
-    Modification History:
-
-    10/18/90         jf  - released
-    11/5/90          jf  - removed the 'Q' and the 'M' command from the Bird
-			   initialization
-    11/6/90          jf  - added new commands to mainmenu[]
-    2/20/91          jf  - moved initialization of factory test to
-			   birdloadconfig in BIRDCMDS.c
-    4/23/91          jf  - removed ltoa() for NON-DOS applications
-    4/24/91          jf  - added initconsole and restoreconsole routines
-			   for UNIX platforms
-    4/29/91          jf  - renamed birdpositionand.. to birdposand..
-    5/20/91          jf  - add revision to Menu Header
-    6/18/91          jf  - added FOB baudrate selections
-    8/19/91          jf  - updated for prelimary release 3.0
-    9/14/91          jf  - updated fob.c..release 3.01
-    9/16/91          jf  - removed configuration menu..release 3.02
-    10/18/91         jf  - max measurement rate changed to 144..release 3.03
-    11/1/91          jf  - added chg/exm alpha max, glitch checking ..
-			   release 3.04
-    11/7/91          jf  - added exm model ..rev 3.05
-    11/28/91         eb  - main menu item 0 changed to quit to DOS
-    1/3/92           jf  - revised to revision ..rev 3.06
-		     jf  - fixed button mode shutting off problem
-    3/23/92          jf  - modified alpha min/max to tables
-    3/27/92          jf  - added rs232 to fbb command
-    4/7/92           jf  - added set xmtr type ..rev 3.07
-		     mo  - added new output modes "Quaternions"
-    4/20/92                and "Position/Quaternions"
-    5/5/92           jf  - added system test menu selection ..rev 3.08
-    6/1/92           jf  - updated examine value for new status
-			   definitions ..rev 3.09
-    10/12/92         jf  - modified printmatrix..rev 3.10
-    11/3/92          jf  - updated for UNIX compatibility ..rev 3.11
-    12/5/92          jf  - fixed bug in serpcpl getserialrecord which
-			   caused data errors.. rev 3.12
-    12/22/92         jf  - updated for Platform compatibility.. rev 3.13
-    1/13/93          jf  - serial_init now displays the comport name to
-			   to be used
-    1/27/93          jf  - merged with MULTI232 for RS232 to FBB command
-			   and Group Data Command Display
-    1/31/93          jf  - ..rev 3.14 pre release
-    2/23/93          jf  - updated for 3.14 release
-			   Now, Max RS232 to FBB Data selection is only
-			   available with the FACTORYTESTS compile switch
-    3/22/93          jf  - added note to expanded error message
-			   ..rev 3.15
-    7/7/93           jf  - updated to allow button display from multiple
-			   devices .. rev 3.16
-    10/21/93         jf  - added code to redirect the IRQ 0 (PC TIMER) to
-			   our own handler, thereby controlling the interrupt
-			   latency.  This allows a DOS Protected Mode
-			   Compiler (DPMC) to NOT swith into real mode
-			   when the IRQ0 occurs. This revision works
-			   with the MetaWare HIGH C compiler and the
-			   PHARLAP DOS Extender 386...rev 3.17
-    5/23/94          sw  - added BIRD SYSTEM STATUS check for extended/normal 
-			   address mode (in Examine Value)
-			 - Added XYZ Reference Frame in Examine Value and Change 
-			   Value command menu.
-			 - Corrected Vm and Alpha_m range tables
-    6/23/94          sw  - corrected lockout on no device on comport by 
-			   ingaging interupt handler through all of program.
-			 - Changed rev number on main screen to 3.18
-			 - Factory test of comport speed now works
-    9/22/94          sw  - Corrected PCTIMER loop error which lead to lockup
-			   on exit of program sometimes.
-			 - Corrected "Exteneded" to "Expanded" address mode
-			 - Changed rev number to reflect changes.
-    5/11/95          sw  - Address mode is only checked in examine value if 
-			   user selects a command that will require that information.
-			 - Change rev number to reflect change.
-
-
-       <<<< Copyright 1991 Ascension Technology Corporation >>>>
-*****************************************************************************
-****************************************************************************/
-#include <stdio.h>          /* general I/O */
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <stdlib.h>         /* for exit() */
 #include <math.h>           /* float math */
 #include "asctech.h"        /* Ascension Technology definitions */

@@ -10,36 +10,37 @@
 #include "TestCase.h"
 #endif
 
-/* 
- * A test caller provides access to a test case method 
- * on a test case class.  Test callers are useful when 
- * you want to run an individual test or add it to a 
- * suite.
- * 
- * Here is an example:
- * 
- * class MathTest : public TestCase {
- *         ...
- *     public:
- *         void         setUp ();
- *         void         tearDown ();
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- *         void         testAdd ();
- *         void         testSubtract ();
- * };
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
  *
- * Test *MathTest::suite () {
- *     TestSuite *suite = new TestSuite;
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
  *
- *     suite->addTest (new TestCaller<MathTest> ("testAdd", testAdd));
- *     return suite;
- * }
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
  *
- * You can use a TestCaller to bind any test method on a TestCase
- * class, as long as it returns accepts void and returns void.
- * 
- * See TestCase
- */
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
 template <class Fixture> class TestCaller : public TestCase

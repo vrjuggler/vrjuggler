@@ -1,79 +1,34 @@
-/*
-	cmdutil.h               - BIRD Command Utility Header
-
-    Modification History
-		4/29/91         jf - created from BIRDCMDS.h
-	9/16/91     jf - added showfbbconfig prototype
-	2/25/92     jf - removed showfbbconfig prototype
-	4/7/92      jf - added fprintmatrix
-	4/20/92     mo - added fprintquaternions()
-	1/26/93     jf - fixed up for new release
-	2/24/93     jf - added getaddrmode()
-	10/20/93    jf - added CMDUTIL definition
-
-*/
-
-#ifndef CMDUTIL
-#define CMDUTIL
-
-#ifdef KNR
-/*
-    Prototypes
-*/
-int readbirddata();
-int dumpbirdarray();
-int check_done();
-int checkerrorstatus();
-int displaybirddata();
-void displayerror();
-int printarray();
-int getangles();
-int getaddrmode();
-int getcrystalfreq();
-int getsystemstatus();
-int printposition();
-int printangles();
-int printmatrix();
-int printquaternions();
-int printposmatrix();
-int printposangles();
-int printposquaternions();
-
-
-#else
-
-int readbirddata(short * birddata,short numwords,short outputmode,short buttonmode);
-int dumpbirdarray(unsigned short address,unsigned char * array);
-int check_done(short outputmode);
-int checkerrorstatus(unsigned char displayon);
-int displaybirddata(short * birddata, unsigned char datamode,
-		    short buttonmode, unsigned char displayon,
-		    unsigned char displayaddr, FILE * datafilestream);
-void displayerror(unsigned char errnum,unsigned char exterrnum,
-		  unsigned char dispexpandedinfo);
-int printarray(char * dataarray,short size);
-int getangles(char * promptstrg,float * angle);
-int getaddrmode(void);
-int getcrystalfreq(void);
-int getsystemstatus(void);
-int printposition(short * birddata,short buttonmode,
-		  unsigned char displayon,FILE * datafilestream);
-int printangles(short * birddata,short buttonmode,
-		unsigned char displayon,FILE * datafilestream);
-int printmatrix(short * birddata,short buttonmode,
-		unsigned char displayon,FILE * datafilestream);
-int printquaternions(short * birddata,short buttonmode,
-		     unsigned char displayon,FILE * datafilestream);
-int printposmatrix(short * birddata,short buttonmode,
-		   unsigned char displayon,FILE * datafilestream);
-int printposangles(short * birddata,short buttonmode,
-		   unsigned char displayon,FILE * datafilestream);
-int printposquaternions(short * birddata,short buttonmode,
-			unsigned char displayon,FILE * datafilestream);
-
-#endif
-
-#endif /* CMDUTIL */
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
 

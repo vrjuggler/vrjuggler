@@ -6,37 +6,37 @@
 #include "TestCase.h"
 #endif
 
-/*
- * Orthodox performs a simple set of tests on an arbitary
- * class to make sure that it supports at least the
- * following operations:
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- *      default construction    - constructor
- *      equality/inequality     - operator== && operator!=
- *      assignment              - operator=
- *      negation                - operator!
- *      safe passage            - copy construction
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
  *
- * If operations for each of these are not declared
- * the template will not instantiate.  If it does 
- * instantiate, tests are performed to make sure
- * that the operations have correct semantics.
- *      
- * Adding an orthodox test to a suite is very 
- * easy: 
- * 
- * public: Test *suite ()  {
- *     TestSuite *suiteOfTests = new TestSuite;
- *     suiteOfTests->addTest (new ComplexNumberTest ("testAdd");
- *     suiteOfTests->addTest (new TestCaller<Orthodox<Complex> > ());
- *     return suiteOfTests;
- *  }
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
  *
- * Templated test cases be very useful when you are want to
- * make sure that a group of classes have the same form.
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
  *
- * see TestSuite
- */
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
 template <class ClassUnderTest> class Orthodox : public TestCase
