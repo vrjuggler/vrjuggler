@@ -414,10 +414,8 @@ public class TweekCore
                                    KunststoffMiniLookAndFeel.class.getName());
       KunststoffMiniLookAndFeel.setIsInstalled(true);
 
-      UIManager.installLookAndFeel("Liquid",
-                                   LiquidLookAndFeel.class.getName());
-
-      // This class installs itself with the UI Manager automatically.
+      // These install themselves with the UI Manager automatically.
+      new LiquidLookAndFeel();
       new net.sourceforge.mlf.metouia.MetouiaLookAndFeel();
 
       UIManager.installLookAndFeel("JGoodies Windows",
