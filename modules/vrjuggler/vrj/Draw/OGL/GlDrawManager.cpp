@@ -446,7 +446,8 @@ void GlDrawManager::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor)
 
             // Draw the thingy
             proj->getFrustumApexAndCorners(apex, ur, lr, ul, ll);
-            vprDEBUG(vprDBG_ALL,0) << "apex: " << apex << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL) << "apex: " << apex
+                                                        << std::endl << vprDEBUG_FLUSH;
 
             glColor4fv(&(ur_clr[0]));
             glPushMatrix();
