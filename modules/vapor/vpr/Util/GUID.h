@@ -61,7 +61,27 @@ class VPR_CLASS_API GUID
 public:
    ~GUID (void) {;}
 
+   /**
+    * Converts this GUID to its corresponding string representation.
+    */
+   std::string toString(void) const;
+
    bool operator==(const GUID& guid_obj) const;
+
+   bool operator!= (const GUID& guid_obj) const
+   {
+      return ! (*this == guid_obj);
+   }
+
+   struct StdGUID
+   {
+      vpr::Uint32 m0;
+      vpr::Uint16 m1;
+      vpr::Uint16 m2;
+      vpr::Uint8  m3;
+      vpr::Uint8  m4;
+      vpr::Uint8  m5[6];
+   };
 
 private:
    /**
@@ -70,9 +90,14 @@ private:
    GUID(void);
 
    /**
-    * Generates a GUID for the given namespace.
+    * Generates a GUID from the given struct.
     */
-//   GUID(const std::string& name);
+   GUID(const struct StdGUID& guid);
+
+   /**
+    * Generates a GUID from the given string representation.
+    */
+   GUID(const std::string& guid_string);
 
    /**
     * Generates a GUID based on the given name that is part of the namespace
@@ -87,14 +112,15 @@ private:
    {
       uuid_t leach;
 
-      struct _standard
+      struct _moz
       {
          vpr::Uint32 m0;
          vpr::Uint16 m1;
          vpr::Uint16 m2;
-         vpr::Uint16 m3;
-         vpr::Uint8  m4[6];
-      } standard;
+         vpr::Uint8 m3[8];
+      } moz;
+
+      struct StdGUID standard;
 
       struct _packed
       {
