@@ -11,6 +11,10 @@
 <body>
 
 <h1>Application Objects Overview</h1>
+<h2>
+
+<img border="0" src="../images/VP_APP_sepLine.gif" width="231" height="226"></h2>
+<p>Figure 1: Application object and virtual platform</p>
 <h2>All VR Juggler apps are objects</h2>
 <p>In VR Juggler, all applications are objects. &nbsp;VR Juggler uses the 
 
@@ -37,48 +41,40 @@ functions. &nbsp;Since VR Juggler applications are objects, developers do not wr
 In common programs, the main function signals the point where the thread of control enters the application.
 After the main function is called, the application starts performing any application processing necessary. 
 When the OS starts the program, it gives the main function some processing time.
-After the process's quantum expires, the operating system switches to another process.</p>
+After the process's quantum expires, the operating system performs a context
+switch and by switching to another process.</p>
 
 <p>
 
-In VR Juggler, we accomplish the same functionality. &nbsp;The kernel is the scheduler, and it allocates processing time to an application by 
+In VR Juggler, we accomplish the same functionality in a slightly different way. &nbsp;The
+applications correspond to processes in a normal operating system.&nbsp; The kernel
+is the scheduler, and it allocates processing time to an application by 
 invoking the methods of the application object. &nbsp;Because the kernel has additional information 
-about the resources needed by the applications, it maintains a very strict scheduling about when the application is granted processing 
-time. This is the basis to maintain coherence across each execution frame.</p>
+about the resources needed and used by the applications, it maintains a very strict scheduling about when the application is granted processing 
+time. This is the basis to maintain coherence across the system.</p>
 
-<p>
-
-Application objects can exist either linked in with the kernel startup code or alone as a dynamically 
-loadable object.</p>
-
-<img border="0" src="../images/VP_APP_sepLine.gif" width="231" height="226">
-<p>&nbsp;</p>
-<h3>Derive from gfx API base class</h3>
-<p>This allows for dynamic binding at run-time.</p>
-<p>Override methods of the base interfaces.</p>
+<h3>Application objects derive from graphics API specific base classes</h3>
+<p><img border="0" src="../images/vj_app_hier_small.gif" width="241" height="246"></p>
+<p>Figure 2: vjApp hierarchy</p>
 <p>The first step in defining an application object is to derive from the base classes that define the 
 
 kernel and draw manager interfaces the 
 
-application needs to implement. &nbsp;There is a base class for the interface that the kernel expects 
+application needs to implement. &nbsp;There is a base class for the interface that the kernel expects
+(vjApp) and a base class for each draw manager 
 
-and a base class for each draw manager 
-
-interface (see the figure)</p>
-
-<p><img border="0" src="../images/vj_app_hier_small.gif"></p>
+interface (vj*App) (see Figure 2).</p>
 
 <p>
 
-The kernel interface specifies methods for initialization, shutdown, and to give the application processing 
+The kernel interface defined in vjApp, specifies methods for initialization, shutdown, and to give the application processing 
 
 time.</p>
 
 <p>
 
-The draw manager interface for this application specifies the functions that are necessary to render 
-
-and OpenGL application. &nbsp;The interface 
+The draw manager interface specified in vj*App classes, specifies the API
+specific functions that are necessary to render the virtual environment. &nbsp;The interface 
 
 has functions for drawing the scene and for initializing context-specific information.</p>
 
@@ -88,111 +84,16 @@ The system expects all applications to implement this set of methods that the ke
 
 with the application.</p>
 
-<h3>Why are they application objects (what are the benefits)?</h3>
+<h3>Writing and application = Filling in the blanks</h3>
 
-<p>The most common approach for VR application development is to have the application define the main function 
+<p>To implement an application in VR Juggler, developers just need to &quot;fill
+in the blanks&quot; in the expected application object interfaces.</p>
 
-and have the application 
+<p>The user only needs to provide implementation for the things that they want
+to customize.</p>
 
-call library functions when needed. &nbsp;The library in this model only executes code when requested 
-
-to do so by the application because the 
-
-application is in control of the main thread of execution. This model makes the application developer 
-
-responsible to coordinate the execution 
-
-of the different components of the VR system and, therefore, responsible to create efficient, complex 
-
-applications.</p>
-
-<h4>Allow flexibility for run-time changes</h4>
-
-<p>VR Juggler, being a virtual platform, does not use this model because it needs to maintain control over 
-
-the different components to provide the 
-
-flexibility needed to make changes to the virtual platform at run-time.</p>
-
-<p>
-
-By being in control of the execution, the kernel always knows the current state of the applications, 
-
-therefore it can safely manage the run-time reconfigurations of the virtual environment. Under this 
-
-model, nearly every parameter to configure the execution environment can be 
-
-changed at run time. &nbsp;It is possible to switch applications, start new devices, reconfigure devices, 
-
-and send reconfiguration information to the 
-
-application object. &nbsp;</p>
-
-<h4>Low coupling</h4>
-
-<p>
-
-Application objects lead to a robust architecture as a result of low coupling and well defined inter-object 
-
-dependencies. &nbsp;The application interface defines 
-
-the only communication path between the application and the virtual platform. By restricting interactions 
-
-to the interfaces of the kernel, draw manager, 
-
-and application, the system restricts object inter-dependencies to those few interfaces. &nbsp;This 
-
-decreased coupling allows changes in the system to stay 
-
-local. &nbsp;Changes to one object will not affect another unless the change involves a change of the 
-
-interface of one of the objects. &nbsp;This leads to more robust 
-
-and extendable code.</p>
-
-<p>Because the application is simply an object, it is possible to dynamically load and unload applications 
-
-at run-time. &nbsp;When the virtual 
-
-platform starts up, it waits for an application to be passed to it. When the application is given to 
-
-the VR Juggler kernel at run-time, the kernel 
-
-performs a few initialization steps, and then executes the application.</p>
-
-<h4>Allows implementation changes</h4>
-
-<p>
-
-Since applications use a distinct interface to communicate with the virtual platform, changes to the 
-
-implementation of the virtual platform 
-
-do not affect the application. &nbsp;This makes it simple to make significant changes to the implementation 
-
-of the virtual platform without affecting 
-
-any applications that currently run on the platform. &nbsp;These changes could include bug fixes, performance 
-
-tuning, new device support, or any 
-
-number of other changes.</p>
-
-<p>
-
-We believe that this ability to modify the system's behavior at run-time is one of the major strengths 
-
-of VR Juggler.</p>
-
-<h4>&nbsp;</h4>
-
-<h2>Fill in the blank...</h2>
-
-<h3>Fill in the method implementation</h3>
-<h3>Users provide implementation for the 
-
-things they want</h3>
-<h3>Defaults if not impl provided</h3>
+<p>If an implementation is not specified, then a default implementation is
+used.&nbsp; In most cases, this default implementation does nothing.</p>
 
 </body>
 
