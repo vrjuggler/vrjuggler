@@ -132,6 +132,33 @@ void OsgNav::bufferPreDraw()
    glClear(GL_COLOR_BUFFER_BIT);
 }
 
+void OsgNav::initScene()
+{
+   //DeBugOut = Debug::getStream(0, 3, true, true, 1, true);
+
+   //std::cout << "---------- App:init() ---------------" << std::endl;
+   // Initialize devices
+   const std::string wand("VJWand");
+   const std::string vjhead("VJHead");
+   const std::string but0("VJButton0");
+   const std::string but1("VJButton1");
+   const std::string but2("VJButton2");
+   const std::string but3("VJButton3");
+   const std::string but4("VJButton4");
+   const std::string but5("VJButton5");
+
+   mWand.init(wand);
+   mHead.init(vjhead);
+   mButton0.init(but0);
+   mButton1.init(but1);
+   mButton2.init(but2);
+   mButton3.init(but3);
+   mButton4.init(but4);
+   mButton5.init(but5);
+
+   myInit();
+}
+
 void OsgNav::myInit()
 {
    //
@@ -174,8 +201,8 @@ void OsgNav::myInit()
    mNavTrans->addChild( mModelTrans );
 
    // run optimization over the scene graph
-   osgUtil::Optimizer optimzer;
-   optimzer.optimize(mRootNode);
+   osgUtil::Optimizer optimizer;
+   optimizer.optimize(mRootNode);
 
    // traverse the scene graph setting up all osg::GeoSet's so they will use
    // OpenGL display lists.
@@ -183,7 +210,7 @@ void OsgNav::myInit()
    //mRootNode->accept(dlv);
 }
 
-void OsgNav::initTweek( int& argc, char* argv[] )
+void OsgNav::initTweek(int& argc, char* argv[])
 {
 #ifdef USE_REMOTE_NAV
    std::cout << "\n\nSTARTING TWEEK INITIALIZATION!!\n\n" << std::flush;
