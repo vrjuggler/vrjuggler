@@ -619,6 +619,10 @@ vpr::ReturnStatus SocketImplBSD::getOption (const vpr::SocketOptions::Types opti
          case vpr::SocketOptions::MaxSegment:
             data.max_segment = opt_data.size;
             break;
+         case vpr::SocketOptions::AddMember:
+         case vpr::SocketOptions::DropMember:
+            /** Do nothing */
+            break;
       }
    }
    else
