@@ -172,7 +172,7 @@ Viewers.jar: $(VIEWERS_CLASSES)
 
 docs:
 	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT) -sourcepath $(srcdir)	\
-          -classpath $(CLASSPATH) $(DOC_PKGS)
+          -classpath "$(CLASSPATH)" $(DOC_PKGS)
 
 links:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin/beans
