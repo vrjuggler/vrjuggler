@@ -108,9 +108,9 @@ public:
    /** Set the application object for the Kernel to deal with
    *  If there is another app active, it has to stop that
    *  application first then restart all API specific Managers.
-   * @param _app - If NULL, stops current application
+   * @param newApp - If NULL, stops current application
    */
-   void setApplication(vrj::App* _app);
+   void setApplication(vrj::App* newApp);
    
    /** Load configuration data for Kernel
    * @post Config data has been read into initial buffer
@@ -186,10 +186,10 @@ protected:
    /** Changes the application in use
     * If there is another app active, it has to stop that
     *  application first then restart all API specific Managers.
-    * @param   _app - If NULL, stops current application
+    * @param   newApp - If NULL, stops current application
     * @note    This can only be called from the kernel thread
     */
-   void changeApplication(vrj::App* _app);
+   void changeApplication(vrj::App* newApp);
 
 protected:      // --- DRAW MGR ROUTINES --- //
    /** Starts the draw manager running
