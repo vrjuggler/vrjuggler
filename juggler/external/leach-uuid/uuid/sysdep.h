@@ -25,7 +25,12 @@
 #else
 #include <sys/types.h>
 #include <sys/time.h>
-#include <sys/sysinfo.h>
+
+#ifdef HAVE_SYS_SYSINFO_H
+#  include <sys/sysinfo.h>
+#else
+#  include <unistd.h>
+#endif
 #endif
 
 /* change to point to where MD5 .h's live */
