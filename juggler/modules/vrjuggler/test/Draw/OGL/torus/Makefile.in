@@ -47,5 +47,5 @@ torusApp.o: torusApp.cpp torusApp.h
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend cubes ${OBJECTS} core so_locations
+	rm -f Makedepend torus ${OBJECTS} core so_locations
 	rm -rf ./ii_files
