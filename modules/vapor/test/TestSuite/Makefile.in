@@ -52,13 +52,14 @@ srcdir		= @srcdir@
 topdir		= @topdir@
 #top_srcdir	= @top_srcdir@
 VPR_BASE_DIR	?= @APP_BASE_DIR@
+VPRROOT_ABS     = @VPRROOT_ABS@
 CPP_UNIT	= $(srcdir)/../../../../external/cppunit
 
 CXX		= @CXX@
 CFLAGS		= @CFLAGS@ $(OPTIMIZER) $(EXTRA_CFLAGS)
 CPPFLAGS	= @CPPFLAGS@
 CXXFLAGS	= @CXXFLAGS@ $(OPTIMIZER) $(EXTRA_CFLAGS)
-DEFS		= @DEFS@
+DEFS		= @DEFS@ -DGRAPH_PATH="\"$(VPRROOT_ABS)\""
 DEP_GEN_FLAG	= @DEP_GEN_FLAG@
 DEPEND_FLAGS	= @DEPEND_FLAGS@ $(INCLUDES)
 DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
