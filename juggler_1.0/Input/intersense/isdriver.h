@@ -17,11 +17,6 @@
 #include "isense.h"
 #include "serial.h"
 
-#if !defined UNIX
-#include <windows.h>
-#include <winbase.h>
-#endif
-
 #define ISLIB_VERSION 1.02
 
 #define IS300       0x01    /* 3DOF system */

@@ -43,7 +43,7 @@ void isIntersense::init()
   mHandle = 0;
   mActive = false;
   mNumStations = 2;
-
+  script = NULL;
 }
 
 bool isIntersense::open()
