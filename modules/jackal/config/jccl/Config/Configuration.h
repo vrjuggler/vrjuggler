@@ -74,11 +74,14 @@ public:
    /** Sets the filename associated with this configuration to fname. */
    void setFileName(const std::string& fname);
 
-   /** Finds an element with a given name.
-    *  @param The name of an instance of jccl::ConfigElement.
-    *  @return A jccl::ConfigElementPtr reference to a jccl::ConfigElement in
-    *          self whose name matches the argument, or a
-    *          jccl::ConfigElementPtr referring to NULL if no such exists.
+   /**
+    * Finds an element with a given name.
+    *
+    * @param name The name of an instance of jccl::ConfigElement.
+    *
+    * @return A jccl::ConfigElementPtr reference to a jccl::ConfigElement in
+    *         self whose name matches the argument, or a
+    *         jccl::ConfigElementPtr referring to NULL if no such exists.
     */
    ConfigElementPtr get(const std::string& name) const;
 
@@ -114,22 +117,28 @@ public:
    friend JCCL_API(std::istream&) operator>> (std::istream& in,
                                               Configuration& self);
 
-   /** Loads ConfigElements from the given file.
-    *  @param filename Name of the file to load.
-    *  @param parentfile Name of the "parent" file.  This is used for
-    *                    loading included.  If filename is a relative path,
-    *                    the path part of parentfile is prepended to it.
-    *  @return true if the file was found and no fatal errors occurred;
-    *          false if the file was not found or there was a fatal
-    *          error while parsing.
+   /**
+    * Loads ConfigElements from the given file.
+    *
+    * @param fname      Name of the file to load.
+    * @param parentfile Name of the "parent" file.  This is used for
+    *                   loading included.  If filename is a relative path,
+    *                   the path part of parentfile is prepended to it.
+    *
+    * @return true if the file was found and no fatal errors occurred;
+    *         false if the file was not found or there was a fatal
+    *         error while parsing.
     */
    bool load(const std::string& fname, const std::string& parentfile = "");
 
-   /** Writes ConfigElements to the given file.
-    *  This uses ConfigIO to handle writing, and uses the "default"
-    *  ConfigFile output format (currently XML).
-    *  @param filename - name of file to create & write.
-    *  @return true if succesful, false if unable to create the file.
+   /**
+    * Writes ConfigElements to the given file.
+    * This uses ConfigIO to handle writing, and uses the "default"
+    * ConfigFile output format (currently XML).
+    *
+    * @param fname The name of file to create and write.
+    *
+    * @return true if succesful, false if unable to create the file.
     */
    bool save(const std::string& fname) const;
 
