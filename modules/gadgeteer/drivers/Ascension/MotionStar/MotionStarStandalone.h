@@ -1354,6 +1354,22 @@ private:
     int getRsp(void* packet, const size_t packet_size);
 
     // ------------------------------------------------------------------------
+    //: Read exactly packet_size bytes from the server.
+    //
+    //! PRE: The socket to the server is open and is usable for reading data.
+    //! POST: A full packet is read from the server.
+    //
+    //! ARGS: packet      - A pointer to the memory block into which the
+    //+                     server's response packet will be read.
+    //! ARGS: packet_size - The size of the given memory block.
+    //! ARGS: flags       - Flags to pass to recv(2).  This defaults to 0.
+    //
+    //! RETURNS: >0 - packet_size bytes were read from the socket.
+    //! RETURNS: -1 - An error occurred.
+    // ------------------------------------------------------------------------
+    ssize_t recvn(void* packet, const size_t packet_size, const int flags = 0);
+
+    // ------------------------------------------------------------------------
     //: Print the system status as read from the server.
     //
     //! PRE: The system status has been read from the server using
