@@ -48,14 +48,16 @@ exclude(Kernel.controlLoop)
 #exclude(DisplayManager.getActiveDisplays) # Returns a vector
 #exclude(DisplayManager.getInActiveDisplays) # Returns a vector
 #exclude(DisplayManager.getAllDisplays) # Returns a vector
-#
-#Display = ReferenceType(mod, 'vrj::Display', 'vrj/Display/Display.h')
+
+Display = ReferenceType(mod, 'vrj::Display', 'vrj/Display/Display.h')
+sealed(Display)
+exclude(Display.getViewport)
+exclude(Display.mViewports)
 
 DrawManager = ReferenceType(mod, 'vrj::DrawManager', 'vrj/Draw/DrawManager.h')
-exclude(DrawManager.addDisplay)
-exclude(DrawManager.removeDisplay)
 exclude(DrawManager.setDisplayManager)
 exclude(DrawManager.getDisplayManager)
+exclude(DrawManager.outStream)
 
 SoundManager = ReferenceType(mod, 'vrj::SoundManager',
                              'vrj/Sound/SoundManager.h')
