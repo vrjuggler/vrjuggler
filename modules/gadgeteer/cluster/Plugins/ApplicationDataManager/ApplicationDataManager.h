@@ -147,7 +147,7 @@ public:
     *
     * @pre This should only be called by the ApplicationData constructor
     */
-   void addApplicationData(ApplicationData* new_user_data);
+   virtual void addSerializableObject(vpr::SerializableObject* object);
 
    /**
     * Remove the ApplicationData object from the current configuration

@@ -35,8 +35,12 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <boost/concept_check.hpp>
+
 #include <string> 
 #include <boost/concept_check.hpp>
+
+#include <vpr/Util/Assert.h>
 
 #include <jccl/RTRC/ConfigChunkHandler.h>
 #include <jccl/Config/ConfigChunkPtr.h>
@@ -44,6 +48,7 @@
 namespace vpr
 {
    class GUID;
+   class SerializableObject;
 }
 
 namespace cluster
@@ -86,6 +91,12 @@ public:
 
    virtual void sendRequests()
    {;}
+
+   virtual void addSerializableObject(vpr::SerializableObject* object)
+   {            \
+      boost::ignore_unused_variable_warning(object);
+      vprASSERT(false && "Adding a serializableObject is not supported by this plugin.");
+   }
 
    virtual bool isPluginReady()
    {
