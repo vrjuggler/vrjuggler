@@ -69,17 +69,6 @@ bool InputWindowWin32::config(jccl::ConfigElementPtr e)
 
    const char neg_one_STRING[] = "-1";
 
-   /*
-   for ( int i = 0; i < gadget::LAST_KEY; ++i )
-   {
-      mRealkeys[i] = mKeys[i] = mCurKeys[i];
-   }
-   */
-
-   // Check for a remote display
-   //std::string remote_display_name =
-   //   e->getProperty<std::string>("event_source_name");
-
    // Default to owning the window
    mUseOwnDisplay = true;
 
@@ -98,36 +87,6 @@ bool InputWindowWin32::config(jccl::ConfigElementPtr e)
    int x_disp_num = e->getProperty<int>("display_number");
    jccl::ConfigElementPtr disp_sys_elt =
       gadget::InputManager::instance()->getDisplaySystemElement();
- 
-   // Get the lock information
-   /*
-   mLockToggleKey = e->getProperty<int>("lock_key");
-   bool start_locked = e->getProperty<bool>("start_locked");
-
-   if (start_locked)
-   {
-      mLockState = Lock_LockKey;      // Initialize to the locked state
-   }
-   */
-   /*
-   mMouseSensitivity = e->getProperty<float>("mouse_sensitivity");
-   if (0.0f == mMouseSensitivity)
-   {
-      mMouseSensitivity = 0.5;
-   }
-
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-      << "Mouse Sensititivty: " << mMouseSensitivity << std::endl
-      << vprDEBUG_FLUSH;
-
-   mSleepTimeMS = e->getProperty<int>("sleep_time");
-
-   // Sanity check.
-   if (mSleepTimeMS == 0)
-   {
-      mSleepTimeMS = 50;
-   }
-   */
 
    return true;
 }
@@ -135,6 +94,11 @@ bool InputWindowWin32::config(jccl::ConfigElementPtr e)
 void InputWindowWin32::controlLoop(void* devPtr)
 {
    mControlLoopDone = false;
+	
+	vprDEBUG(gadgetDBG_INPUT_MGR, 0)
+		<< "XXXX: controlLoop1:" 
+		<< mInstName.c_str() << std::endl
+		<< vprDEBUG_FLUSH;
 
    // Open the window...
    // The Window has to be created in the same thread that
@@ -143,6 +107,16 @@ void InputWindowWin32::controlLoop(void* devPtr)
    // the window.  (And we want to receive the messages
    // in the spawned thread)
    this->createWindowWin32();
+
+	vprDEBUG(gadgetDBG_INPUT_MGR, 0)
+		<< "XXXX: controlLoop2:" 
+		<< mInstName.c_str() << std::endl
+		<< vprDEBUG_FLUSH;
+
+	vprDEBUG(gadgetDBG_INPUT_MGR, 0)
+		<< "controlLoop 3:" 
+		<< mInstName.c_str() << std::endl
+		<< vprDEBUG_FLUSH;
 
    // If we have initial locked, then we need to lock the system
    if ( mLockState == Lock_LockKey )     // Means that we are in the initially locked state
@@ -156,31 +130,22 @@ void InputWindowWin32::controlLoop(void* devPtr)
 
    // When there are messages, process them all.  Otherwise,
    // sleep for a while...
+	mExitFlag = false;
    while ( !mExitFlag )
    {
       this->sample();
 
-      // user-specified sleep time.
-      vpr::System::usleep(mSleepTimeMS * 1000);
+      // Sleep for a user-specified sleep amount of time.
+      vpr::System::msleep( mSleepTimeMS );
    }
 
-   // clean up, delete the window!
-   ::CloseWindow(mWinHandle); // send a message to the window to close
+   // Clean up, send a message to the window to close.
+   ::CloseWindow(mWinHandle);
    mControlLoopDone = true;
 }
 
-// Create a win32 window and start a thread
-// processing it's messages
 bool InputWindowWin32::startSampling()
 {
-   // XXX: Simple fix for now. We don't need to do any sampling.
-   /*
-   if (!mUseOwnDisplay)
-   {
-      return true;
-   }
-   */
-
    if ( mThread != NULL )
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
@@ -189,7 +154,7 @@ bool InputWindowWin32::startSampling()
          << "startSampling called, when already sampling.\n"
          << vprDEBUG_FLUSH;
       vprASSERT(mThread == NULL);
-      return 0;
+      return false;
    }
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
@@ -205,43 +170,13 @@ bool InputWindowWin32::startSampling()
 
    mThread = new vpr::Thread(memberFunctor);
 
-   // return success value...
+   // Ensure that we have a valid thread.
    if ( ! mThread->valid() )
    {
-      return false; // fail
+      return false;
    }
 
-   return true; // success
-}
-
-
-void InputWindowWin32::updateData()
-{
-   /*
-   vpr::Guard<vpr::Mutex> guard(mKeysLock);     // Lock access to the mKeys array
-
-   // Scale mouse values based on sensitivity
-   mKeys[gadget::MOUSE_POSX] = int(float(mKeys[gadget::MOUSE_POSX]) * mMouseSensitivity);
-   mKeys[gadget::MOUSE_NEGX] = int(float(mKeys[gadget::MOUSE_NEGX]) * mMouseSensitivity);
-   mKeys[gadget::MOUSE_POSY] = int(float(mKeys[gadget::MOUSE_POSY]) * mMouseSensitivity);
-   mKeys[gadget::MOUSE_NEGY] = int(float(mKeys[gadget::MOUSE_NEGY]) * mMouseSensitivity);
-
-   // Copy over values
-   for ( unsigned int i = 0; i < gadget::LAST_KEY; ++i )
-   {
-      mCurKeys[i] = mKeys[i];
-   }
-
-   // Re-initialize the mKeys based on current key state in realKeys
-   // Set the initial state of the mKey key counts based on the current state of the system
-   // this is to ensure that if a key is still down, we get at least one event for it
-   for ( unsigned int j = 0; j < gadget::LAST_KEY; ++j )
-   {
-      mKeys[j] = mRealkeys[j];
-   }
-
-   updateEventQueue();
-   */
+   return true;
 }
 
 bool InputWindowWin32::stopSampling()
@@ -253,18 +188,13 @@ bool InputWindowWin32::stopSampling()
       mThread->join();
       delete mThread;
       mThread = NULL;
-      //std::cout << "Stopping event window.." << std::endl;
    }
    return true;
 }
 
 
-/*********************** WINDOW STUFF ****************************/
+/*********************** WIN32 STUFF ****************************/
 
-/** 
- * Window function for the main application window. Processes all 
- * the menu selections and oter messages.
- */
 LONG APIENTRY MenuWndProc(HWND hWnd, UINT message, UINT wParam, LONG lParam)
 {
    switch ( message )
@@ -290,34 +220,31 @@ LONG APIENTRY MenuWndProc(HWND hWnd, UINT message, UINT wParam, LONG lParam)
 
 void InputWindowWin32::createWindowWin32()
 {
-   if (mUseOwnDisplay)
+	int root_height;
+
+   InitCommonControls();
+
+   m_hInst = GetModuleHandle(NULL);   // Just try to get the application's handle
+   MenuInit(m_hInst);
+
+   root_height = GetSystemMetrics(SM_CYSCREEN);
+
+   /* Create the app. window */
+   mWinHandle = CreateWindow("Gadgeteer Event Window", mInstName.c_str(),
+                              WS_OVERLAPPEDWINDOW, mX,
+                              root_height - mY - mHeight, mWidth, mHeight,
+                              (HWND) NULL, NULL, m_hInst, (LPSTR) NULL);
+   ShowWindow(mWinHandle,SW_SHOW);
+   UpdateWindow(mWinHandle);
+
+   // Attach a pointer to the device for use from the WNDPROC
+   SetWindowLong(mWinHandle, GWL_USERDATA, (LPARAM)this);
+
+   if ( NULL == mWinHandle )
    {
-      int root_height;
-
-      InitCommonControls();
-
-      m_hInst = GetModuleHandle(NULL);   // Just try to get the application's handle
-      MenuInit(m_hInst);
-
-      root_height = GetSystemMetrics(SM_CYSCREEN);
-
-      /* Create the app. window */
-      mWinHandle = CreateWindow("Gadgeteer Event Window", mInstName.c_str(),
-                                WS_OVERLAPPEDWINDOW, mX,
-                                root_height - mY - mHeight, mWidth, mHeight,
-                                (HWND) NULL, NULL, m_hInst, (LPSTR) NULL);
-      ShowWindow(mWinHandle,SW_SHOW);
-      UpdateWindow(mWinHandle);
-
-      // Attach a pointer to the device for use from the WNDPROC
-      SetWindowLong(mWinHandle, GWL_USERDATA, (LPARAM)this);
-
-      if ( NULL == mWinHandle )
-      {
-         doInternalError("Could not create InputWindowWin32!");
-      }
+      doInternalError("Could not create InputWindowWin32!");
    }
-} /*CreateWindow*/
+}
 
 BOOL InputWindowWin32::MenuInit(HINSTANCE hInstance)
 {
@@ -367,13 +294,11 @@ BOOL InputWindowWin32::MenuInit(HINSTANCE hInstance)
    return bSuccess;
 }
 
-// process the current window events
-// Called repeatedly by
-// - the controlLoop when "we own the window",
-// - the GlWindow if we "dont own the window"
 bool InputWindowWin32::sample()
 {
-   this->handleEvents();
+	// Handle all input events.
+   handleEvents();
+
    return true;
 }
 

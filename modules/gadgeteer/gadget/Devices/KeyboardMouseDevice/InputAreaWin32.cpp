@@ -35,11 +35,11 @@
 #include <iomanip>
 
 #include <vpr/vpr.h>
+#include <vpr/System.h>
 #include <vpr/Sync/Guard.h>
 
 #include <gadget/Util/Debug.h>
 
-//#include <gadget/Devices/EventWindow/InputWindowWin32.h>
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaWin32.h> // my header
 
 #ifndef GET_X_LPARAM
@@ -119,9 +119,6 @@ void InputAreaWin32::handleEvents()
       {
          have_events_to_check = false;
       }
-
-      // user-specified sleep time.
-      //vpr::System::usleep( mSleepTimeMS * 1000 );
    }
 }
 
