@@ -291,7 +291,7 @@ public:
       if (m_bound)
        {
           vprDEBUG(0,0) << "SocketImplNSPR::setLocalAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
-          status.setCode(ReturnStatus::Failure);
+          status.setCode(ReturnStatus::Fail);
        }
        else
           m_local_addr = addr;
@@ -313,7 +313,7 @@ public:
        if (m_connected)
        {
            vprDEBUG(0,0) << "SocketImplNSPR::setRemoteAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
-           status.setCode(ReturnStatus::Failure);
+           status.setCode(ReturnStatus::Fail);
        }
        else
           m_remote_addr = addr;
@@ -346,9 +346,9 @@ public:
      * @param data   A data buffer that will be used to store the value of the
      *               given option.
      *
-     * @return vpr::ReturnStatus::Success is returned if the value for the given
+     * @return vpr::ReturnStatus::Succeed is returned if the value for the given
      *         option was retrieved successfully.<br>
-     *         vpr::ReturnStatus;:Failure is returned otherwise.
+     *         vpr::ReturnStatus;:Fail is returned otherwise.
      */
     vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
                           struct vpr::SocketOptions::Data& data);
