@@ -95,6 +95,14 @@ public:
    }
 
    /**
+    * Copy constructor.
+    */
+   LibraryNSPR(const LibraryNSPR& lib) : mName(""), mLibrary(NULL)
+   {
+      copy(lib);
+   }
+
+   /**
     * Unloads the library if one has been loaded.
     */
    ~LibraryNSPR()
@@ -103,6 +111,15 @@ public:
       {
          unload();
       }
+   }
+
+   /**
+    * Overlaoded assignment operator.
+    */
+   LibraryNSPR& operator=(const LibraryNSPR& lib)
+   {
+      copy(lib);
+      return *this;
    }
 
    /**
@@ -178,6 +195,16 @@ public:
       return findSymbolAndLibrary(symbolName.c_str(), lib);
    }
    //@}
+
+protected:
+   /**
+    * Makes a copy of the given vpr::LibraryNSPR into this object.
+    */
+   void copy(const LibraryNSPR& lib)
+   {
+      this->mName    = lib.mName;
+      this->mLibrary = lib.mLibrary;
+   }
 
 private:
    std::string mName;      /**< The name of the library */
