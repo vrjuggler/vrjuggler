@@ -153,7 +153,7 @@ void _Export_DigitalProxy()
 {
     class_< gadget::DigitalProxy, pyj::gadget_DigitalProxy_Wrapper >("DigitalProxy",
          "A proxy class to digital devices used by the Input Manager.\n\n"
-         "A digital proxy always points to an digital device and a unit\n"
+         "A digital proxy always points to a digital device and a unit\n"
          "number within that device.  The Input Manager can therefore keep\n"
          "an array of these around and treat them as digital devices that\n"
          "only return a single sub-device's amount of data (one int)."
@@ -181,8 +181,8 @@ void _Export_DigitalProxy()
              "instance."
          )
         .def("set",
-             (void (gadget::TypedProxy<gadget::Digital>::*)(std::string,
-             gadget::Digital*) )&gadget::TypedProxy<gadget::Digital>::set, (void (pyj::gadget_DigitalProxy_Wrapper::*)(std::string, gadget::Digital*))&pyj::gadget_DigitalProxy_Wrapper::default_set,
+             (void (gadget::TypedProxy<gadget::Digital>::*)(std::string,gadget::Digital*) )&gadget::TypedProxy<gadget::Digital>::set,
+             (void (pyj::gadget_DigitalProxy_Wrapper::*)(std::string, gadget::Digital*))&pyj::gadget_DigitalProxy_Wrapper::default_set,
              "set(devName, devPtr)\n"
              "Sets the proxy to point to the given type-specific device.\n"
              "Pre-condition:\n"
