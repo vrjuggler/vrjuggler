@@ -48,7 +48,7 @@
 
 #include <gmtl/Matrix.h>
 #include <vpr/Util/Debug.h>
-#include <gadget/RemoteInputManager/SerializableDevice.h>
+#include <vpr/IO/SerializableObject.h>
 
 
 namespace gadget
@@ -68,7 +68,7 @@ namespace gadget
 *  Position adds one new pure virtual function, GetPosData for retreiving
 *  the positional data, similar to the addition for Analog and Digital.
 */
-class GADGET_CLASS_API Position : public SerializableDevice
+class GADGET_CLASS_API Position : public vpr::SerializableObject
 {
 public:
    typedef gadget::SampleBuffer<PositionData> SampleBuffer_t;
@@ -132,7 +132,7 @@ public:
     }
 
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
-   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader, vpr::Uint64* delta);
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
 
    const SampleBuffer_t::buffer_t& getPositionDataBuffer()
    {

@@ -96,7 +96,7 @@ bool Position::config(jccl::ConfigChunkPtr c)
 vpr::ReturnStatus Position::writeObject(vpr::ObjectWriter* writer)
 {
    //std::cout << "[Remote Input Manager] In Position write" << std::endl;
-   static long iteration=0;
+   //static long iteration=0;
 
    SampleBuffer_t::buffer_t& stable_buffer = mPosSamples.stableBuffer();
    writer->writeUint16(MSG_DATA_POS);                               // Write out the data type so that we can assert if reading in wrong place
@@ -116,7 +116,7 @@ vpr::ReturnStatus Position::writeObject(vpr::ObjectWriter* writer)
             //float pos_data[16];
             const float* pos_data = PosMatrix->getData();
             //std::cout << "WRITE " << "Iteration: " << iteration << std::endl;
-            iteration++;
+            //iteration++;
             //std::cout << "WRITE " << pos_data[0] << pos_data[1] << pos_data[4] << pos_data[5] << std::endl;
             //std::cout << "WRITE " << pos_data[4] << pos_data[5] << pos_data[6] << pos_data[7] << std::endl;
             //std::cout << "WRITE " << pos_data[8] << pos_data[9] << pos_data[10] << pos_data[11] << std::endl;
@@ -150,11 +150,14 @@ vpr::ReturnStatus Position::writeObject(vpr::ObjectWriter* writer)
 }
 
 
-vpr::ReturnStatus Position::readObject(vpr::ObjectReader* reader, vpr::Uint64* delta)
+vpr::ReturnStatus Position::readObject(vpr::ObjectReader* reader)
 {
    //std::cout << "[Remote Input Manager] In Position Read" << std::endl;
    //SampleBuffer_t::buffer_t& stable_buffer = mAnalogSamples.stableBuffer();
-   static long iteration=0;
+   //static long iteration=0;
+
+   vprASSERT(reader->attribExists("rim.timestamp.delta"));
+   vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
 
    vpr::Uint16 temp = reader->readUint16();
    vprASSERT(temp==MSG_DATA_POS && "[Remote Input Manager]Not Positional Data");
@@ -188,7 +191,7 @@ vpr::ReturnStatus Position::readObject(vpr::ObjectReader* reader, vpr::Uint64* d
          //              pos_data[12], pos_data[13], pos_data[14], pos_data[15]);
          PosMatrix.set(pos_data);
          //std::cout << "READ " << "Iteration: " << iteration << std::endl;
-         iteration++;
+         //iteration++;
          //std::cout << "READ " << pos_data[0] << pos_data[1] << pos_data[4] << pos_data[5] << std::endl;
          //std::cout << "READ " << pos_data[4] << pos_data[5] << pos_data[6] << pos_data[7] << std::endl;
          //std::cout << "READ " << pos_data[8] << pos_data[9] << pos_data[10] << pos_data[11] << std::endl;
@@ -196,11 +199,11 @@ vpr::ReturnStatus Position::readObject(vpr::ObjectReader* reader, vpr::Uint64* d
 
          timeStamp = reader->readUint64();
          //std::cout << "READ " << "TimeStamp: " << timeStamp  << std::endl;
-         //std::cout << "READ " << "    Delta: " << *delta  << std::endl;
-         //std::cout << "READ " << "    After:" << (timeStamp + *delta) << std::endl;
+         //std::cout << "READ " << "    Delta: " << delta  << std::endl;
+         //std::cout << "READ " << "    After:" << (timeStamp + delta) << std::endl;
 
          temp_pos_data.setPosition(PosMatrix);
-         temp_pos_data.setTime(vpr::Interval(timeStamp + *delta,vpr::Interval::Usec));
+         temp_pos_data.setTime(vpr::Interval(timeStamp + delta,vpr::Interval::Usec));
          //RIP MATRIX
          //gmtl::Matrix44f* TestMatrix = temp_pos_data.getPosition();
          //const float* tpos_data = TestMatrix->getData();

@@ -55,7 +55,7 @@
 
 //#include <vpr/IO/ObjectReader.h>
 //#include <vpr/IO/ObjectWriter.h>
-#include <gadget/RemoteInputManager/SerializableDevice.h>
+#include <vpr/IO/SerializableObject.h>
 
 // consider moving this
 typedef unsigned char byte;
@@ -105,7 +105,7 @@ namespace gadget
 *       frame.  Because of this, threads should not be reading data while
 *       it is being updated to the most recent copy.
 */
-class GADGET_CLASS_API Input : public SerializableDevice
+class GADGET_CLASS_API Input : public vpr::SerializableObject
 {
 public:
    /** Default Constructor
@@ -197,7 +197,7 @@ public:
       return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }
 
-   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader, vpr::Uint64* delta)
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
    {
       return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }
@@ -238,8 +238,7 @@ protected:
    int            mActive;       /**< Is the driver active? */
    int            mBaudRate;     /**< Baud rate of the device (if it is serial device) */
 
-   Input (const Input& o)
-      : SerializableDevice()
+   Input (const Input& o)      
    {;}
    void operator= (const Input& o) {;}
 };
