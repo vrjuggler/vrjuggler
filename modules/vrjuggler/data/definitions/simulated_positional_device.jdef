@@ -27,8 +27,8 @@
          <value label="Rotate Left"/>
          <value label="Rotate Up"/>
          <value label="Rotate Down"/>
-         <value label="Rotate CCW"/>
-         <value label="Rotate CW"/>
+         <value label="Rotate Counter-clockwise"/>
+         <value label="Rotate Clockwise"/>
          <allowed_type>key_modifier_pair</allowed_type>
       </property>
       <property valuetype="float" variable="false" name="initial_position">
