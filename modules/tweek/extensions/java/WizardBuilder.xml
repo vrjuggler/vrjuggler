@@ -7,6 +7,8 @@
       <dependencies>
          <jar path="${TWEEK_BASE_DIR}/bin">ui.jar</jar>
          <jar path="${TWEEK_BASE_DIR}/bin">wizard.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/bin">Devices.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/bin">ClusterWizard.jar</jar>
          <jar path="${TWEEK_BASE_DIR}/bin/beans">VRJConfig.jar</jar>
       </dependencies>
       <tree path="/Wizards/" />
