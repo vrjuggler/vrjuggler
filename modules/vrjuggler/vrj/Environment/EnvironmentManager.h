@@ -34,104 +34,107 @@
 #define _VRJ_ENVIRONMENT_MANAGER_H_
 
 #include <vrj/vrjConfig.h>
-#include <vpr/Sync/Mutex.h>
-#include <vpr/Thread/Thread.h>
+
 #include <jccl/JackalServer/JackalServer.h>
 #include <jccl/Plugins/ConfigManager/ConfigManager.h>
-//#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
 #include <jccl/Plugins/PerformanceMonitor/PerformanceMonitor.h>
+
 
 namespace vrj
 {
 
-
-
-//-------------------------------------
-//: Communications and configuration agent
-//
-//      The Environment Manager handles communications between
-//      Juggler and UI elements.  This includes data logging and
-//      interactive connections to the VR Juggler control program,
-//      Control.
-//      The EM's most important function is to communicate
-//      configuration information and changes between the GUI and
-//      the Kernel.  It is also the owner and manager of Juggler
-//      Performance measurement code.
-//      A near-future addition will be device status/data monitoring.
-//
-//      Which means that its main duties are:
-//         - handle file and socket connections
-//         - handle PerfDataBuffers
-//
-// @author  Christopher Just
-//
-// Date 2-27-98
-//---------------------------------------
-
-class VJ_CLASS_API EnvironmentManager: public jccl::ConfigChunkHandler {
+/**
+ * Communications and configuration agent.
+ * The Environment Manager handles communications between
+ * Juggler and UI elements.  This includes data logging and
+ * interactive connections to the VR Juggler control program,
+ * VjControl.
+ * The EM's most important function is to communicate
+ * configuration information and changes between the GUI and
+ * the Kernel.  It is also the owner and manager of Juggler
+ * Performance measurement code.
+ * A near-future addition will be device status/data monitoring.
+ *
+ * Which means that its main duties are:
+ *    - handle file and socket connections
+ *    - handle PerfDataBuffers
+ *
+ * @date 2-27-98
+ */
+class VJ_CLASS_API EnvironmentManager: public jccl::ConfigChunkHandler
+{
 
 public:
 
-    //: constructor
-    //! PRE: None
-    //! POST: Object is constructed
-    EnvironmentManager ()
-    {
-       jccl::JackalServer::instance()->addJackalControl(jccl::ConfigManager::instance());
-       jccl::JackalServer::instance()->addJackalControl(jccl::PerformanceMonitor::instance());
+   /**
+    * Constructor.
+    *
+    * @pre None
+    * @post Object is constructed
+    */
+   EnvironmentManager ()
+   {
+      jccl::JackalServer::instance()->addJackalControl(jccl::ConfigManager::instance());
+      jccl::JackalServer::instance()->addJackalControl(jccl::PerformanceMonitor::instance());
 
-       jccl::ConfigManager::instance()->addConfigChunkHandler(jccl::JackalServer::instance());
-       jccl::ConfigManager::instance()->addConfigChunkHandler(jccl::PerformanceMonitor::instance());
-    }
+      jccl::ConfigManager::instance()->addConfigChunkHandler(jccl::JackalServer::instance());
+      jccl::ConfigManager::instance()->addConfigChunkHandler(jccl::PerformanceMonitor::instance());
+   }
 
-    virtual ~EnvironmentManager()
-    {
-       /* Do nothing. */ ;
-    }
+   virtual ~EnvironmentManager ()
+   {
+      /* Do nothing. */ ;
+   }
 
-    jccl::ConfigManager* getConfigManager ()
-    {
-       return jccl::ConfigManager::instance();
-    }
+   jccl::ConfigManager* getConfigManager ()
+   {
+      return jccl::ConfigManager::instance();
+   }
 
-    jccl::PerformanceMonitor* getPerformanceMonitor ()
-    {
-       return jccl::PerformanceMonitor::instance();
-    }
+   jccl::PerformanceMonitor* getPerformanceMonitor ()
+   {
+      return jccl::PerformanceMonitor::instance();
+   }
 
-    //: jccl::ConfigChunkHandler stuff
-    //! PRE: configCanHandle(chunk) == true
-    //! RETURNS: success
-    virtual bool configAdd (jccl::ConfigChunkPtr chunk)
-    {
-       return false;
-    }
+   /**
+    * jccl::ConfigChunkHandler stuff.
+    *
+    * @return false
+    */
+   virtual bool configAdd (jccl::ConfigChunkPtr chunk)
+   {
+      return false;
+   }
 
-    //: Remove the chunk from the current configuration
-    //! PRE: configCanHandle(chunk) == true
-    //!RETURNS: success
-    virtual bool configRemove (jccl::ConfigChunkPtr chunk)
-    {
-       return false;
-    }
+   /**
+    * Removes the chunk from the current configuration.
+    *
+    * @return false
+    */
+   virtual bool configRemove (jccl::ConfigChunkPtr chunk)
+   {
+      return false;
+   }
 
-    //: Can the handler handle the given chunk?
-    //! RETURNS: true - Can handle it
-    //+          false - Can't handle it
-    virtual bool configCanHandle (jccl::ConfigChunkPtr chunk)
-    {
-       return false;
-    }
+   /**
+    * Can the handler handle the given chunk?
+    *
+    * @return false
+    */
+   virtual bool configCanHandle (jccl::ConfigChunkPtr chunk)
+   {
+      return false;
+   }
 
 private:
 
-    // These are needed to appease Visual C++ in its creation of DLLs.
-    EnvironmentManager(const EnvironmentManager&) {;}
-    void operator=(const EnvironmentManager&) {;}
-
-}; // end EnvironmentManager
-
-
+   // These are needed to appease Visual C++ in its creation of DLLs.
+   EnvironmentManager(const EnvironmentManager&) {;}
+   void operator=(const EnvironmentManager&) {;}
 
 };
-#endif
+
+} // End of vrj namespace
+
+
+#endif /* _VRJ_ENVIRONMENT_MANAGER_H_ */
