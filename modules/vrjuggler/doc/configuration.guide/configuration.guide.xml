@@ -7,7 +7,7 @@
 
     <subtitle>Configuration Guide</subtitle>
 
-    <releaseinfo>Version 1.1 DR4</releaseinfo>
+    <releaseinfo>Version 2.0 Alpha 1</releaseinfo>
 
     <pubdate>$Date$</pubdate>
   </bookinfo>
@@ -324,7 +324,7 @@
         <para>Proxy Aliases provide a way to introduce multiple names for a
         single Proxy. A <property>Proxy Alias</property> element contains only
         two properties: its name and the name of the Proxy it points at.<footnote><para>In
-        VR Juggler 1.1 DR4, the <property>Proxy Alias</property> element
+        VR Juggler 2.0 Alpha 1, the <property>Proxy Alias</property> element
         actually contains an <property>AliasName</property> property in
         addition to the actual element name. This redundancy is likely to be
         removed in the future. For now, it is recommended that users always
@@ -683,9 +683,9 @@
         <title>Enabling Dynamic Reconfiguration</title>
 
         <note>
-          <para>As of VR Juggler 1.1 DR4, dynamic reconfiguration is not yet
-          fully supported. Once the feature has been added, you will be able
-          to dynamically reconfigure your application through a CORBA
+          <para>As of VR Juggler 2.0 Alpha 1, dynamic reconfiguration is not
+          yet fully supported. Once the feature has been added, you will be
+          able to dynamically reconfigure your application through a CORBA
           connection.</para>
         </note>
       </section>
@@ -694,7 +694,7 @@
         <title>Logging Performance Data</title>
 
         <note>
-          <para>As of VR Juggler 1.1 DR4, peformance monitoring is not yet
+          <para>As of VR Juggler 2.0 Alpha 1, peformance monitoring is not yet
           fully supported.</para>
         </note>
       </section>
