@@ -88,8 +88,9 @@ int Kernel::start()
    vpr::ThreadMemberFunctor<Kernel>* memberFunctor =
    new vpr::ThreadMemberFunctor<Kernel>(this, &Kernel::controlLoop, NULL);
 
-   vpr::Thread* new_thread;   // I set mControlThread in Kernel::controlLoop
-   new_thread = new vpr::Thread(memberFunctor);
+   //vpr::Thread* new_thread;   // I set mControlThread in Kernel::controlLoop
+   //new_thread = 
+   new vpr::Thread(memberFunctor);
    //vprASSERT(new_thread->valid());
 
    vprDEBUG(vrjDBG_KERNEL,vprDBG_STATE_LVL) << "vjKernel::start: Just started control loop.  "
