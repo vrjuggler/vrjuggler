@@ -43,26 +43,30 @@
 #define _VPR_SOCKET_TYPES_H_
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * Socket I/O types.
  */
-namespace SocketTypes {
-    /// Possible socket domains (protocol families).
-    enum Domain {
-        LOCAL,    /**< Local socket (UNIX domain socket) */
-        INET,     /**< IPv4 socket */
-        INET6,    /**< IPv6 socket */
-        LINK      /**< Raw socket */
-    };
+namespace SocketTypes
+{
+   /// Possible socket domains (protocol families).
+   enum Domain
+   {
+      LOCAL,    /**< Local socket (UNIX domain socket) */
+      INET,     /**< IPv4 socket */
+      INET6,    /**< IPv6 socket */
+      LINK      /**< Raw socket */
+   };
 
-    /// Possible socket types.
-    enum Type {
-        STREAM,   /**< Stream socket */
-        DATAGRAM, /**< Datagram socket */
-        RAW       /**< Raw socket */
-    };
+   /// Possible socket types.
+   enum Type
+   {
+      STREAM,   /**< Stream socket */
+      DATAGRAM, /**< Datagram socket */
+      RAW       /**< Raw socket */
+   };
 }
 
 }
