@@ -1,6 +1,7 @@
 package networktest;
 
 import javax.swing.JTextArea;
+import javax.swing.text.*;
 import tweek.*;
 
 
@@ -17,7 +18,15 @@ public class WhiteboardObserverImpl extends ObserverPOA
    {
       if ( whiteboard != null )
       {
-         whiteboard.setText(whiteboard_subject.getAllText());
+         org.omg.CORBA.IntHolder offset = null, length = null;
+         org.omg.CORBA.StringHolder text = null;
+
+         whiteboard_subject.getLastChange(offset, length, text);
+
+         Document doc = whiteboard.getDocument();
+//         doc.insertString(offset.value, text.value, null);
+//         whiteboard.setText(whiteboard_subject.getAllText());
+         whiteboard.repaint();
       }
    }
 
