@@ -1,0 +1,10 @@
+#include <tweek/idl/Subject.idl>
+
+module networktest
+{
+   interface SliderSubject : tweek::Subject
+   {
+      void setValue(in long val);
+      long getValue();
+   };
+};
