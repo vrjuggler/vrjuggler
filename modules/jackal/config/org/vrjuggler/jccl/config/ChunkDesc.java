@@ -208,6 +208,7 @@ public class ChunkDesc
       newCat.setText(category);
       mDomElement.addContent(newCat);
       changeSupport.firePropertyChange("category", null, category);
+      fireCategoryAdded(getNumCategories()-1);
    }
 
    /**
@@ -458,6 +459,28 @@ public class ChunkDesc
                evt = new ChunkDescEvent(this, getName());
             }
             ((ChunkDescListener)listeners[i+1]).nameChanged(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies listeners of this chunk desc that a category has been added.
+    */
+   protected void fireCategoryAdded(int index)
+   {
+      String category = getCategory(index);
+
+      ChunkDescEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ChunkDescListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ChunkDescEvent(this, index, category);
+            }
+            ((ChunkDescListener)listeners[i+1]).categoryAdded(evt);
          }
       }
    }
