@@ -197,6 +197,13 @@ public:
     */
    void processEvents(const vpr::Interval& time_step);
 
+   /**
+   * Return the number of events pending in the system
+   */
+   vpr::Uint32 getNumPendingEvents()
+   { return mEvents.size(); }
+
+
    const vpr::sim::Clock& getClock (void) const
    {
       return mClock;
@@ -265,9 +272,10 @@ private:
    vpr::Uint32 mSleepTime;
 };
 
-} // End of sim namespace
+}; // End of sim namespace
 
-} // End of vpr namespace
+}; // End of vpr namespace
 
 
 #endif
+
