@@ -108,14 +108,6 @@ dnl # -------------------------------------------- #
 dnl # --with-pkg[=arg] and --without-pkg arguments #
 dnl # -------------------------------------------- #
 
-dnl # Override the C compiler that configure would otherwise find itself.
-AC_ARG_WITH(cc, [  --with-cc=<PATH>        Alternate C compiler ],
-            _alt_cc="$withval", _alt_cc='none')
-
-dnl # Override the C++ compiler that configure would otherwise find itself.
-AC_ARG_WITH(cxx, [  --with-cxx=<PATH>       Alternate C++ compiler ],
-            _alt_cxx="$withval", _alt_cxx='none')
-
 dnl # Force the use of GCC as the compiler.
 dnl # NOTE: This is not fully implemented yet for any platform, but it is
 dnl # partially usable on Windows.
@@ -311,74 +303,7 @@ fi
 dnl # -------------------------------------------------------------------------
 dnl # Checks for programs.
 dnl # -------------------------------------------------------------------------
-CC_ERR=''
-CXX_ERR=''
-
-_vjsave_CFLAGS="$CFLAGS"
-_vjsave_CXXFLAGS="$CXXFLAGS"
-
-dnl # If no alternate C compiler was specified, check to see if it is
-dnl # necessary to force the use of a specific compiler on a given platform.
-if test "x${_alt_cc}" = "xnone" ; then
-    CC_IRIX='cc'
-    CC_PIC_IRIX='-KPIC'
-
-    dnl # On IRIX, we have to use cc (not gcc).
-    if test "$PLATFORM" = "IRIX" ; then
-        CC_ERR='*** The library requires the IRIX MIPSpro C compiler ***'
-    fi
-dnl # Otherwise, force the use of the alternate C compiler.
-else
-    CC="${_alt_cc}"
-fi
-
-dnl # If no alternate C++ compiler was specified, check to see if it is
-dnl # necessary to force the use of a specific compiler on a given platform.
-if test "x${_alt_cxx}" = "xnone" ; then
-    CXX_HP='aCC'
-    CXX_IRIX='CC'
-    CXX_PIC_IRIX='-KPIC'
-
-    dnl # On HP-UX, we have to use the aCC C++ compiler.
-    if test "$PLATFORM" = "HP" ; then
-        CXX_ERR='*** The library requires the HP-UX aCC C++ compiler ***'
-    dnl # On Windows, we have to use the Microsoft Visual C++ compiler CL.EXE.
-    elif test "$OS_TYPE" = "Win32" -a "x$USE_GCC" != "xyes" ; then
-        CXX='cl'
-        CC="$CXX"
-        CXX_ERR='*** The library requires the MS Visual C++ compiler ***'
-    dnl # On IRIX, we have to use CC (not g++).
-    elif test "x$PLATFORM" = "xIRIX" ; then
-        CXX_ERR='*** The library requires the IRIX MIPSpro C++ compiler ***'
-    fi
-dnl # Otherwise, force the use of the alternate C++ compiler.
-else
-    CXX="${_alt_cxx}"
-fi
-
-DPP_PROG_CC($CC, , AC_MSG_ERROR($CC_ERR))
-DPP_PROG_CXX($CXX, , AC_MSG_ERROR($CXX_ERR))
-
-if test "x$GXX" = "xyes" ; then
-    dnl # If we are using GCC as the compiler, we need to be using at least
-    dnl # egcs 1.1.2.  A newer version (e.g., 2.95.2) is even better.
-    DPP_GPLUSPLUS_MODERN(AC_MSG_ERROR(*** VR Juggler requires a modern G++ ***))
-fi
-
-dnl # Now check to see if the compiler accepts the -pthread option.
-if test "x$SUBSYSTEM" != "xSPROC" -a "x$SUBSYSTEM" != "WIN32" -a \
-        "x$NSPR_THREADS_ENABLED" = "xno"
-then
-    DPP_CC_PTHREAD_ARG
-
-    if test "x$CC_ACCEPTS_PTHREAD" = "xno" ; then
-        DPP_CC_PTHREADS_ARG
-    fi
-fi
-
-dnl # Ensure that the C++ compiler we've found is capable of compiling the
-dnl # newer C++ features that we need.
-DPP_CXX_TEMPLATES(AC_MSG_ERROR(*** The library requires C++ template support ***))
+VJ_COMPILER_SETUP($SUBSYSTEM)
 
 dnl # Check for the JDK.
 DPP_PATH_JAVA
@@ -780,7 +705,7 @@ DPP_CHECK_TYPE_POSIX
 dnl # -------------------------------------------------------------------------
 dnl # Checks for library functions.
 dnl # -------------------------------------------------------------------------
-AC_CHECK_FUNCS(gettimeofday socket strcasecmp strdup strerror strtod)
+AC_CHECK_FUNCS(gettimeofday sigaction socket strcasecmp strdup strerror strtod)
 
 _vjsave_LIBS="$LIBS"
 AC_CHECK_FUNC(gethostbyname, SOCKET_LIB='',
