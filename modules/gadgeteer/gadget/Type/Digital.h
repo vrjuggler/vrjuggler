@@ -67,7 +67,7 @@ namespace gadget
    *
    * @see Input
    */
-   class Digital : public vpr::SerializableObject
+   class GADGET_CLASS_API Digital : public vpr::SerializableObject
    {
    public:
       typedef gadget::SampleBuffer<DigitalData> SampleBuffer_t;
