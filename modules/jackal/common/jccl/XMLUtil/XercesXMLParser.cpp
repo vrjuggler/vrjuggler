@@ -50,147 +50,173 @@
 #include <jccl/XMLUtil/XercesXMLError.h>
 #include <jccl/Util/Debug.h>
 
-namespace jccl {
+namespace jccl
+{
 
-XercesXMLParser::XercesXMLParser () {
-    // Xerces will have been initialized by the parser pool.
-    parser = new DOMParser;
-    parser->setValidationScheme(DOMParser::Val_Auto);
-    parser->setDoNamespaces(false);
-    error_handler = new XercesXMLError();
-    parser->setErrorHandler(error_handler);
-    parser->setCreateEntityReferenceNodes(false);
-    parser->setToCreateXMLDeclTypeNode(true);
+XercesXMLParser::XercesXMLParser ()
+{
+   // Xerces will have been initialized by the parser pool.
+   parser = new DOMParser;
+   parser->setValidationScheme(DOMParser::Val_Auto);
+   parser->setDoNamespaces(false);
+   error_handler = new XercesXMLError();
+   parser->setErrorHandler(error_handler);
+   parser->setCreateEntityReferenceNodes(false);
+   parser->setToCreateXMLDeclTypeNode(true);
 
 }
 
 
-/*virtual*/ XercesXMLParser::~XercesXMLParser () {
-    delete parser;
-    delete error_handler;
+/*virtual*/ XercesXMLParser::~XercesXMLParser ()
+{
+   delete parser;
+   delete error_handler;
 }
 
 
-bool XercesXMLParser::readFile (const std::string& file_name, DOM_Node& doc) {
-    // we duplicate a lot of code in readFile & readStream just so we can
-    // always use the 'best' version of parse - if we give it an actual
-    // file name, we get better error messages from the exceptions.
-    bool retval = true;
-    try {
-        parser->parse(file_name.c_str());
-    }
-    catch (const XMLException& e) {
-        vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
-            "XercesXMLParser threw XMLException: " << e.getMessage() <<
-            "\n" << vprDEBUG_FLUSH;
-        retval = false;
-    }
-    catch (SAXParseException& e) {
-        char* id = (DOMString(e.getSystemId())).transcode();
-        char* msg = (DOMString(e.getMessage())).transcode();
-        vprDEBUG (vprDBG_ERROR,1) << clrOutNORM (clrRED, "ERROR:") <<
-            " in file \"" << id << "\", line " << e.getLineNumber() <<
-            ", column " << e.getColumnNumber() << ": " <<
-            msg << "\n" << vprDEBUG_FLUSH;
-        delete[] id;
-        delete[] msg;
-        retval = false;
-    }
-    // Supposedly this one will never happen.
+bool XercesXMLParser::readFile (const std::string& file_name, DOM_Node& doc)
+{
+   // we duplicate a lot of code in readFile & readStream just so we can
+   // always use the 'best' version of parse - if we give it an actual
+   // file name, we get better error messages from the exceptions.
+   bool retval = true;
+   try
+   {
+      parser->parse(file_name.c_str());
+   }
+   catch ( const XMLException& e )
+   {
+      vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:")
+         << "XercesXMLParser threw XMLException: " << e.getMessage()
+         << "\n" << vprDEBUG_FLUSH;
+      retval = false;
+   }
+   catch ( SAXParseException& e )
+   {
+      char* id = (DOMString(e.getSystemId())).transcode();
+      char* msg = (DOMString(e.getMessage())).transcode();
+      vprDEBUG (vprDBG_ERROR,1) << clrOutNORM (clrRED, "ERROR:")
+         << " in file \"" << id << "\", line " << e.getLineNumber()
+         << ", column " << e.getColumnNumber() << ": "
+         << msg << "\n" << vprDEBUG_FLUSH;
+      delete[] id;
+      delete[] msg;
+      retval = false;
+   }
+   // Supposedly this one will never happen.
 //     catch (const DOM_DOMException& e) {
 //         vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
 //             "XercesXMLParser threw DOMException: " << //e.getMessage() <<
 //             "\n" << vprDEBUG_FLUSH;
 //         retval = false;
 //     }
-    catch (...) {
-        vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
-            " XercesXMLParser threw unidentified exception.\n" <<
-            vprDEBUG_FLUSH;
-        retval = false;
-    }
-    if (retval) {
-        // retval == true so we're still ok
-        // build a ConfigChunkDB out of what's in the DOM tree
-        doc = parser->getDocument();
-    }
-    return retval;
+   catch ( ... )
+   {
+      vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:")
+         << " XercesXMLParser threw unidentified exception.\n"
+         << vprDEBUG_FLUSH;
+      retval = false;
+   }
+   if ( retval )
+   {
+      // retval == true so we're still ok
+      // build a ConfigChunkDB out of what's in the DOM tree
+      doc = parser->getDocument();
+   }
+   return retval;
 }
 
 
-bool XercesXMLParser::readStream (std::istream& input, DOM_Node& doc) {
-    XercesStreamInputSource input_source (input, "</protocol>");
-    bool retval = true;
-    try {
-        parser->parse(input_source);
-    }
-    catch (const XMLException& e) {
-        vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
-            "XercesXMLParser threw XMLException: " << e.getMessage() <<
-            "\n" << vprDEBUG_FLUSH;
-        retval = false;
-    }
-    catch (SAXParseException& e) {
-        char* msg = (DOMString(e.getMessage())).transcode();
-        vprDEBUG (vprDBG_ERROR,1) << clrOutNORM (clrRED, "ERROR:") <<
-            " in file \"<unnamed stream>\", line " << e.getLineNumber() <<
-            ", column " << e.getColumnNumber() << ": " <<
-            msg << "\n" << vprDEBUG_FLUSH;
-        delete[] msg;
-        retval = false;
-    }
-    // Supposedly this one will never happen.
+bool XercesXMLParser::readStream (std::istream& input, DOM_Node& doc)
+{
+   XercesStreamInputSource input_source (input, "</protocol>");
+   bool retval = true;
+   try
+   {
+      parser->parse(input_source);
+   }
+   catch ( const XMLException& e )
+   {
+      vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:")
+         << "XercesXMLParser threw XMLException: " << e.getMessage()
+         << "\n" << vprDEBUG_FLUSH;
+      retval = false;
+   }
+   catch ( SAXParseException& e )
+   {
+      char* msg = (DOMString(e.getMessage())).transcode();
+      vprDEBUG (vprDBG_ERROR,1) << clrOutNORM (clrRED, "ERROR:")
+         << " in file \"<unnamed stream>\", line " << e.getLineNumber()
+         << ", column " << e.getColumnNumber() << ": "
+         << msg << "\n" << vprDEBUG_FLUSH;
+      delete[] msg;
+      retval = false;
+   }
+   // Supposedly this one will never happen.
 //     catch (const DOM_DOMException& e) {
 //         vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
 //             "XercesXMLParser threw DOMException: " << //e.getMessage() <<
 //             "\n" << vprDEBUG_FLUSH;
 //         retval = false;
 //     }
-    catch (...) {
-        vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") <<
-            " XercesXMLParser threw unidentified exception.\n" <<
-            vprDEBUG_FLUSH;
-        retval = false;
-    }
-    if (retval) {
-        // retval == true so we're still ok
-        // build a ConfigChunkDB out of what's in the DOM tree
-        doc = parser->getDocument();
-    }
-    return retval;
+   catch ( ... )
+   {
+      vprDEBUG(vprDBG_ERROR,1)
+         << clrOutNORM(clrRED, "ERROR:")
+         << " XercesXMLParser threw unidentified exception.\n"
+         << vprDEBUG_FLUSH;
+      retval = false;
+   }
+   if ( retval )
+   {
+      // retval == true so we're still ok
+      // build a ConfigChunkDB out of what's in the DOM tree
+      doc = parser->getDocument();
+   }
+   return retval;
 }
 
 // used for the writer...
-class vjDOMPrintFormatTarget: public XMLFormatTarget {
+class vjDOMPrintFormatTarget: public XMLFormatTarget
+{
 private:
-    std::ostream* out;
+   std::ostream* out;
 public:
-    vjDOMPrintFormatTarget (std::ostream& _out) {
-        out = &_out;
-    }
+   vjDOMPrintFormatTarget (std::ostream& _out)
+   {
+      out = &_out;
+   }
 
-    virtual ~vjDOMPrintFormatTarget () {
-    }
+   virtual ~vjDOMPrintFormatTarget ()
+   {
+   }
 
-    void writeChars (const XMLByte* const buf, const unsigned int buflen,
-                     XMLFormatter* const formatter) {
-        out->write((char*)buf, buflen);
-    }
+   void writeChars (const XMLByte* const buf, const unsigned int buflen,
+                    XMLFormatter* const formatter)
+   {
+      out->write((char*)buf, buflen);
+   }
 };
 
 
-bool XercesXMLParser::writeFile (const std::string& file_name, DOM_Node& doc) {
-    std::ofstream out (file_name.c_str());
-    if (!out)
-        return false;
-    else
-        return writeStream (out, doc);
+bool XercesXMLParser::writeFile (const std::string& file_name, DOM_Node& doc)
+{
+   std::ofstream out (file_name.c_str());
+   if ( !out )
+   {
+      return false;
+   }
+   else
+   {
+      return writeStream (out, doc);
+   }
 }
 
 
-bool XercesXMLParser::writeStream (std::ostream& output, DOM_Node& doc) {
-    output << "<Not_Implemented/>" << std::endl;
-    return false;
+bool XercesXMLParser::writeStream (std::ostream& output, DOM_Node& doc)
+{
+   output << "<Not_Implemented/>" << std::endl;
+   return false;
 }
 
-};
+} // End of jccl namespace
