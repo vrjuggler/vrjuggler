@@ -60,26 +60,26 @@ public class TransmitterTransformPanel
 
    public void setConfig(ConfigContext ctx, ConfigElement elt)
    {
-      if ( elt.getDefinition().getToken().equals(EditorConstants.position_transform_filter_type) )
+      if ( elt.getDefinition().getToken().equals(EditorConstants.POSITION_TRANSFORM_FILTER_TYPE) )
       {
          mContext = ctx;
          mElement = elt;
 
          elt.addConfigElementListener(new ElementListener());
-         String dev_units = EditorConstants.device_units_prop;
+         String dev_units = EditorConstants.DEVICE_UNITS_PROPERTY;
          mSensorUnitsEditor =
             new PropertyEditorPanel(ctx, elt.getProperty(dev_units, 0),
                                     elt.getDefinition().getPropertyDefinition(dev_units),
                                     elt, 0, Color.white);
 
-         String cust_scale = EditorConstants.custom_scale_prop;
+         String cust_scale = EditorConstants.CUSTOM_SCALE_PROPERTY;
          mCustomUnitsEditor =
             new PropertyEditorPanel(ctx, elt.getProperty(cust_scale, 0),
                                     elt.getDefinition().getPropertyDefinition(cust_scale),
                                     elt, 0, Color.white);
 
          boolean enable_custom =
-            ((Number) elt.getProperty(EditorConstants.device_units_prop, 0)).floatValue() == 0.0;
+            ((Number) elt.getProperty(EditorConstants.DEVICE_UNITS_PROPERTY, 0)).floatValue() == 0.0;
          mCustomUnitsEditor.setEnabled(enable_custom);
 
          mRotationPanel.setConfig(ctx, elt);
@@ -237,10 +237,10 @@ public class TransmitterTransformPanel
    {
       public void propertyValueChanged(ConfigElementEvent evt)
       {
-         if ( evt.getProperty().equals(EditorConstants.device_units_prop) )
+         if ( evt.getProperty().equals(EditorConstants.DEVICE_UNITS_PROPERTY) )
          {
             Object value =
-               mElement.getProperty(EditorConstants.device_units_prop, 0);
+               mElement.getProperty(EditorConstants.DEVICE_UNITS_PROPERTY, 0);
             boolean enable = ((Number) value).floatValue() == 0.0;
             mCustomUnitsEditor.setEnabled(enable);
          }

@@ -60,13 +60,13 @@ public class TransformTranslationEditor
    {
       if ( coordinateType == TRANSMITTER )
       {
-         mTranslateProp = EditorConstants.pre_translation_prop;
+         mTranslateProp = EditorConstants.PRE_TRANSLATION_PROPERTY;
          mTrackerPosLabel.setText(
             "<html>Position of the tracker transmitter from VR Juggler origin (pre-translation)</html>");
       }
       else
       {
-         mTranslateProp = EditorConstants.post_translation_prop;
+         mTranslateProp = EditorConstants.POST_TRANSLATION_PROPERTY;
          mTrackerPosLabel.setText(
             "<html>Position of the sensor from VR Juggler tracked origin (post-translation)</html>");
       }
@@ -96,7 +96,7 @@ public class TransformTranslationEditor
 
    public void setConfig(ConfigContext ctx, ConfigElement elt)
    {
-      if ( ! elt.getDefinition().getToken().equals(EditorConstants.position_transform_filter_type) )
+      if ( ! elt.getDefinition().getToken().equals(EditorConstants.POSITION_TRANSFORM_FILTER_TYPE) )
       {
          throw new IllegalArgumentException("Cannot handle config element " +
                                             "of type '" +
@@ -118,6 +118,7 @@ public class TransformTranslationEditor
       mTrackerYPosField.setValue(new Double(y_pos));
       mTrackerZPosField.setValue(new Double(z_pos));
 
+      // Would an action listener be better here?
       mTrackerXPosField.addPropertyChangeListener(new
          TransformTranslationEditor_mTrackerXPosField_propertyChangeAdapter(this));
       mTrackerYPosField.addPropertyChangeListener(new
