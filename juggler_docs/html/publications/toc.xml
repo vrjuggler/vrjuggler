@@ -1,0 +1,7 @@
+< item title="Masters Thesis-VRJuggler A.Bierbaum" info="Allen Bierbaum Masters Thesis - VRJuggler (PDF)" link="${PUB}/Bierbaum-VRJuggler-MastersThesis-final.pdf" image="Leaf.gif" >
+< item title="SIGGRAPH 2000 juggler sketch" info="SIGGRAPH 2000 sketch (one page PDF)" link="${PUB}/juggler_sketch_onepage.pdf" image="Leaf.gif" >
+< item title="IPT 2000 Juggler reconfig" info="IPT2000 Juggler reconfig (PDF)" link="${PUB}/IPT2000_JugglerReconfig-FINAL.pdf" image="Leaf.gif" >
+< item title="IPT 2000 Performance in VRjuggler (Adobe PDF format)." info="IPT 2000 (pdf format)" link="${PUB}/cj.ipt2k.pdf" image="Leaf.gif" >
+< item title="SIGGRAPH 98 VR Development Tools, 1998." info="A paper accepted at SIGGRAPH: VR Development Tools, 1998.  SIGGRAPH 98" link="${PUB}/vr.dev.tools.1998.SIGGRAPH98.pdf" image="Leaf.gif" >
+< item title="IPT 98 VR Juggler, A Framework for VR Development, 1998. " info="A paper accepted at IPT: VR Juggler: A Framework for VR Development, 1998. IPT 98" link="${PUB}/vr.juggler.framework.for.vr.dev.1998.IPT98.pdf" image="Leaf.gif" >
+< item target="_top" rtarget="NewWindow" title="VRAC 99 Learning VR Juggler.  " info="A presentation given at VRAC: Learning VR Juggler.  Virtual Reality Application Center" link="publications/howtoprogramjuggler/index.html" image="slide.gif" >

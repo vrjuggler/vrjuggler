@@ -1,0 +1,44 @@
+<head>
+</head>
+
+<body>
+
+<h1>Converting from CAVElib(TM) to VR Juggler</h1>
+
+
+
+
+<p>
+<h2>How draw, frame, and init routines differ between CAVElib and VR Juggler:</h2>
+<li>In CAVElib(TM) these routines are "called-back" using function pointers (C-style).
+<li>In VR Juggler, these routines are "called-back" using an application object, a C++ class which defines these
+methods to encapsulate the functionality of the application within one C++ class object.<BR>
+</p>
+
+<p>
+<h3>Detail Comparison:</h3>
+<li>In CAVElib(TM)
+<ul>
+  <li>- An application's display callback function is defined by passing a function pointer to CAVEDisplay(). 
+  <li>- The frame function is defined with CAVEFrameFunction(). 
+  <li>- The initialization callback is defined using CAVEInitApplication(). 
+</ul>
+
+<li>In VR Juggler, you derive a new application class from vjGlApp (for OpenGL, vjPfApp for Performer) <BR>
+  NOTE that no C-style function pointers are nessesary.
+<ul>
+  <li>- an application's display callback function is defined by simply writing a method of your derived
+    class called draw().
+  <li>- The frame function is split across 3 functions 
+  <ul>
+    <li>  - yourDerivedApp::preFrame (called before draw)
+    <li>  - yourDerivedApp::intraFrame (called during draw)
+    <li>  - yourDerivedApp::postFrame (called after draw)
+  </ul>
+  <li>- The initialization callback is defined with yourDerivedApp::init()
+</ul>
+</p>
+
+
+
+In VR Juggler
