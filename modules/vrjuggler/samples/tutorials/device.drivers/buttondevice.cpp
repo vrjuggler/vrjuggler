@@ -1,6 +1,8 @@
-#include <Input/vjInput/vjDigital.h>
-#include <Input/InputManager/vjDeviceFactory.h>
+#include <vrj/Input/Type/Digital.h>
+#include <vrj/Input/Type/DeviceFactory.h>
 #include <vpr/System.h>
+
+using namespace vrj;
 
 class MyButtonDevice : public Digital
 {
