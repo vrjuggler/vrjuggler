@@ -294,13 +294,26 @@ chunk TrackdController "TrackdController" "Configure the interface to a trackd c
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   shm_key Int 1 "SharedMemoryKey" "This is the shared memory key for the trackd information."
   end
+chunk ISenseStation "Station" "Settings for an Intersense Tracker Station"
+  enabled Bool 1 "Enabled" ""
+  stationIndex Int 1 "Station Number" ""
+  useDigital Bool 1 "Use Digital" ""
+  useAnalog Bool 1 "Use Analog" ""
+  digitalFirst Int 1 "Digital First" "The first index in the vjIsense device that this station will store digital data"
+  digitalNum Int 1 "Digital Count" "The number of digital inputs that will be stored into the vjIsense device"
+  analogFirst Int 1 "Analog First" "The first index in the vjIsense device that this station will store analog data"
+  analogNum Int 1 "Analog Count" "The number of analog inputs that will be stored into the vjIsense device"
+  end
 chunk Isense "Isense" "Intersense Tracking Devices"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   port String 1 "Port" "Serial port the Flock is attached to"
   baud Int 1 "Baud Rate" "Serial port speed"
   translate Float 3 "Translation" "(world_T_transmitter) Translation of the transmitter from Juggler coord system."
   rotate Float 3 "Rotation" "(world_T_transmitter) Rotation of the tranmitter from the Juggler coord system."
-  num Int 1 "Number of Cubes" "Number of inertia cubes in use."
+  stations EmbeddedChunk -1 "Stations" vj_enumeration { "ISenseStation" } "Settings for each Station."
+  verbose Bool 1 "Vebose Enabled" "Enable output from the Intersense Driver"
   script String 1 "Script File" "File path of script sent to the tracker on startup."
+  min Float 1 "min" "the actual analog data values range - lower bound"
+  max Float 1 "max" "the actual analog data values range - upper bound"
   end
 End

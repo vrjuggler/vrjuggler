@@ -76,6 +76,16 @@ struct vjIsense_Data {
     float analog[IS_ANALOG_NUM];
 };
 
+typedef struct {
+    int stationIndex;
+    bool enabled;
+    
+    int dig_min, dig_num;
+    int ana_min, ana_num;
+    
+    bool useDigital, useAnalog;
+} vjISStationConfig;
+
 
 // XXX: It should be virtual public, but that causes an assertion failure.  This needs to be debugged
 //class vjIsense : virtual public vjPosition, virtual public vjDigital, virtual public vjAnalog
@@ -107,11 +117,11 @@ struct vjIsense_Data {
 // See also: vjPosition
 //---------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjIsense :  public vjPosition,  public vjDigital,  public vjAnalog
+class vjIsense : public vjPosition, public vjDigital,  public vjAnalog
 {
     public:
    vjIsense();
-   ~vjIsense();
+   virtual ~vjIsense();
 
 
 //: configure the flock with a config chunk
@@ -175,12 +185,12 @@ private:
 
     int getStationIndex(int stationNum, int bufferIndex);
 
-    vjThread*   myThread;      // The thread doing the flock sampling
-
     isIntersense mTracker;
 
     vjIsense_Data mInput[3];
-
+    
+    vjISStationConfig* stations;
+    
     std::vector<int> mDigitalData;
     std::vector<int> mAnalogData;
 
@@ -195,4 +205,4 @@ private:
 
 };
 
-#endif //vjIsens_h
+#endif //vjIsense_h

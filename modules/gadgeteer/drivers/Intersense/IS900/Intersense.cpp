@@ -69,7 +69,8 @@ int vjIsense::getStationIndex(int stationNum, int bufferIndex)
 
 vjIsense::vjIsense()
 {
-   myThread = NULL;
+    vjDEBUG(vjDBG_INPUT_MGR,1) << "*** vjIsense::vjIsense() ***\n" << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_INPUT_MGR,1) << "*** vjIsense::deviceAbilities = " << deviceAbilities << " ***\n" << vjDEBUG_FLUSH;
 }
 
 bool vjIsense::config(vjConfigChunk *c)
@@ -79,6 +80,12 @@ bool vjIsense::config(vjConfigChunk *c)
 
 // read in vjPosition's, vjDigital's, and vjAnalog's config stuff,
 // --> this will be the port and baud fields
+// XXX: The problem with calling each of these is that vjInput::config(c) is called by each
+// one of them.  Therefore, we have multiple cases where vjInput::Config is being called for
+// a single object.  A possible solution is to move the vjInput::config(c) out of these base
+// classes into the highest level class (the device driver).
+// If we choose to do this, all device drivers need to be updated accordingly
+
     if (!vjPosition::config(c) || !vjDigital::config(c) || !vjAnalog::config(c))
         return false;
    
@@ -86,8 +93,25 @@ bool vjIsense::config(vjConfigChunk *c)
     vjDEBUG(vjDBG_INPUT_MGR,1) << "   vjIsense::vjIsense(vjConfigChunk*) -> vjInput::getPort() = " << vjInput::getPort() << std::endl << vjDEBUG_FLUSH;
     mTracker.setPortName( vjInput::getPort() );
     mTracker.rBaudRate() = vjInput::getBaudRate();
-    mTracker.rNumStations() = (int)  static_cast<int>(c->getProperty("num"));
-
+    mTracker.rNumStations() = c->getNum("stations");
+    
+    if(stations != NULL) delete [] stations;
+    stations = new vjISStationConfig[mTracker.rNumStations()];
+    vjConfigChunk* stationConfig = NULL;
+    for( int i = 0; i < mTracker.rNumStations(); i++)
+    {
+	 stationConfig = static_cast<vjConfigChunk*>(c->getProperty("stations", i));
+	 stations[i].enabled = static_cast<bool>(stationConfig->getProperty("enabled"));
+	 stations[i].stationIndex = static_cast<int>(stationConfig->getProperty("stationIndex"));
+	 stations[i].useDigital = static_cast<bool>(stationConfig->getProperty("useDigital"));
+	 stations[i].useAnalog = static_cast<bool>(stationConfig->getProperty("useAnalog"));
+    
+	 stations[i].dig_min = static_cast<int>(stationConfig->getProperty("digitalFirst"));
+	 stations[i].dig_num = static_cast<int>(stationConfig->getProperty("digitalNum"));
+	 stations[i].ana_min = static_cast<int>(stationConfig->getProperty("analogFirst"));
+	 stations[i].ana_num = static_cast<int>(stationConfig->getProperty("analogNum"));
+    }
+    
 // load an init script for the tracker and then pass it to mTracker
     char* filename = c->getProperty("script").cstring();
     std::strstream        script;
@@ -97,16 +121,20 @@ bool vjIsense::config(vjConfigChunk *c)
     mTracker.setScript(script.str());
     scriptFile.close();
     
+    mTracker.rVerbose() = static_cast<bool>(c->getProperty("verbose"));
+
     return true;
 }
 
 vjIsense::~vjIsense()
 {
     this->stopSampling();
+    if (stations != NULL)
+	delete [] stations;
     if (theData != NULL)
         delete [] theData;
     if (mDataTimes != NULL)
-        delete mDataTimes;
+        delete [] mDataTimes;
 }
 
 // Main thread of control for this active object
@@ -117,16 +145,25 @@ void vjIsense::controlLoop(void* nullParam)
         delete [] theData;
     if (mDataTimes != NULL)
         delete mDataTimes;
-
-// Allocate buffer space for inertia cubes
-// mugsy -> TODO: hardcode number of stations at 2(?) for a test
-// what flock does is first query number of birds, with 0 being a valid number
-//mugsy -> WARNING: added stations I've moved the problem to the wrapper class
      
     int numbuffs = (mTracker.NumStations())*3;
     theData = (vjMatrix*) new vjMatrix[numbuffs];
     mDataTimes = new vjTimeStamp[numbuffs];
 
+// Configure the stations used by the configuration
+    int j = 0;
+    for( int i = 0; i < mTracker.NumStations(); i++ )
+    {
+	j = stations[i].stationIndex;
+    
+	mTracker.getConfigState(j);
+	mTracker.rState(j) = stations[i].enabled;
+	mTracker.rAngleFormat(j) = ISD_EULER;
+	mTracker.rButtons(j) = stations[i].useDigital;
+	mTracker.rAnalogData(j) = stations[i].useAnalog;
+	mTracker.setConfigState(j);
+    }
+    
 // Reset current, progress, and valid indices
     resetIndexes();
     
@@ -157,12 +194,13 @@ int vjIsense::startSampling()
     } else {
 
 // open the tracker connection
-        mTracker.open();
-// sanity check.. make sure birds actually started
-        if (this->isActive() == false) {
-                vjDEBUG(vjDBG_INPUT_MGR,2)  << "vjIsense: mTracker.open failed to start tracker" << std::endl << vjDEBUG_FLUSH;
-                return 0;
-        }
+	mTracker.open();
+    	if (this->isActive() == false) {
+		vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
+						<< "vjIsense: mTracker.open() failed to connect to tracker.\n"
+						<< vjDEBUG_FLUSH;
+		return 0;
+    	}
 
 // Create a new thread to handle the control
         vjThreadMemberFunctor<vjIsense>* memberFunctor =
@@ -179,6 +217,8 @@ int vjIsense::startSampling()
             return 1;   // success
         }
     }
+
+    return 0;
 }
 
 int vjIsense::sample()
@@ -194,35 +234,48 @@ int vjIsense::sample()
     mTracker.updateData();   
 
 
-    int cnt_digital, cnt_analog;
+    int k;
+    int stationIndex;
+    int min, num;
 
-    for (i=0, cnt_digital = 0, cnt_analog = 0; i < (mTracker.NumStations()); i++)
+    for (i = 0 ; i < (mTracker.NumStations()); i++)
     {
-        int index = getStationIndex(i,progress);
+	int index = getStationIndex(i,progress);
+	
+	stationIndex = stations[i].stationIndex;
+	
+	if( mTracker.rAngleFormat(stationIndex) == ISD_EULER ) {
+	    theData[index].makeZYXEuler(mTracker.zRot( stationIndex ),
+					mTracker.yRot( stationIndex ),
+					mTracker.xRot( stationIndex ));
+	    theData[index].setTrans(mTracker.xPos( stationIndex ),
+  	                            mTracker.yPos( stationIndex ),
+  	                            mTracker.zPos( stationIndex ));
+	} else {
 
-        if( mTracker.rAngleFormat(i) == ISD_EULER ) {
-            theData[index].makeZYXEuler(mTracker.zRot( i ),
-                                        mTracker.yRot( i ),
-                                        mTracker.xRot( i ));
- 
-            theData[index].setTrans(mTracker.xPos( i ),
-                                    mTracker.yPos( i ),
-                                    mTracker.zPos( i ));
-        } else {
+	    vjQuat quatValue(mTracker.xQuat( stationIndex ),
+			     mTracker.yQuat( stationIndex ), 
+			     mTracker.zQuat( stationIndex ), 
+			     mTracker.wQuat( stationIndex ));
+	    theData[index].makeQuaternion(quatValue);
+	}
 
-            vjQuat quatValue(mTracker.xQuat( i ),
-                             mTracker.yQuat( i ), 
-                             mTracker.zQuat( i ), 
-                             mTracker.wQuat( i ));
-            theData[index].makeQuaternion(quatValue);
-        }
-
-        for( j = 0; j < MAX_NUM_BUTTONS; j++) 
-            mInput[current].digital[cnt_digital++] = mTracker.buttonState(i, j);
-        for( j = 0; j < MAX_ANALOG_CHANNELS; j++)
-            mInput[current].analog[cnt_analog++] = mTracker.analogData(i, j);
-
-        mDataTimes[index] = sampletime;
+// We start at the index of the first digital item (set in the config files)
+// and we copy the digital data from this station to the vjIsense device for range (min -> min+count-1)
+	min = stations[i].dig_min;
+	num = min + stations[i].dig_num;
+	if(stations[i].useDigital) {
+	    for( j = 0, k = min; (j < MAX_NUM_BUTTONS) && (k < IS_BUTTON_NUM) && (k < num); j++, k++) 
+		mInput[current].digital[k] = mTracker.buttonState(stationIndex, j);
+	}
+// Analog works the same as the digital
+	min = stations[i].ana_min;
+	num = min + stations[i].ana_num;
+	if(stations[i].useAnalog) {
+	    for( j = 0, k = min; (j < MAX_ANALOG_CHANNELS) && (k < IS_ANALOG_NUM) && (k < num); j++)
+		mInput[current].analog[k] = mTracker.analogData(stationIndex, j);
+	}
+	mDataTimes[index] = sampletime;
 
 // Transforms between the cord frames
 // See transform documentation and VR System pg 146
@@ -251,20 +304,21 @@ int vjIsense::stopSampling()
 
     if (myThread != NULL)
     {
-        vjDEBUG(vjDBG_INPUT_MGR,1) << "Stopping the intersense thread..." << vjDEBUG_FLUSH;
+	vjDEBUG(vjDBG_INPUT_MGR,1) << "vjIsense::stopSampling(): Stopping the intersense thread... " << vjDEBUG_FLUSH;
 
-        myThread->kill();
-        delete myThread;
-        myThread = NULL;
+	myThread->kill();
+	delete myThread;
+	myThread = NULL;
 
-        mTracker.close();
+	mTracker.close();
 
-// sanity check: did the flock actually stop?
-        if (this->isActive() == true)
-        {
-            vjDEBUG(vjDBG_INPUT_MGR,0) << "Intersense tracker didn't stop." << std::endl << vjDEBUG_FLUSH;
-            return 0;
-        }
+	if (this->isActive() == true)
+	{
+	    vjDEBUG(vjDBG_INPUT_MGR,0)  << clrOutNORM(clrRED,"\nERROR:")
+					<< "vjIsense::stopSampling(): Intersense tracker failed to stop.\n" 
+					<< vjDEBUG_FLUSH;
+	    return 0;
+	}
 
         vjDEBUG(vjDBG_INPUT_MGR,1) << "stopped." << std::endl << vjDEBUG_FLUSH;
     }
@@ -293,12 +347,11 @@ int vjIsense::getDigitalData( int d )
 
 float vjIsense::getAnalogData( int d )
 {
- 
+    float newValue;
     if(this->isActive() == false)
-        return 0.0;
-  
-    return mInput[current].analog[d];
- 
+	return 0.0;
+    vjAnalog::normalizeMinToMax(mInput[current].analog[d], newValue);
+    return newValue; 
 }  
 
 vjTimeStamp* vjIsense::getPosUpdateTime (int d) 
@@ -312,11 +365,12 @@ vjTimeStamp* vjIsense::getPosUpdateTime (int d)
 void vjIsense::updateData()
 {
     if (this->isActive() == false)
-        return;
+	return;
 
 // this unlocks when this object is destructed (upon return of the function)
     vjGuard<vjMutex> updateGuard(lock);
-
+    
+    
 // TODO: modify the datagrabber to get correct data
 // Copy the valid data to the current data so that both are valid
     for(int i=0;i<mTracker.NumStations();i++)
@@ -324,8 +378,6 @@ void vjIsense::updateData()
 
 // Locks and then swap the indicies
     swapCurrentIndexes();
-
-    return;
 }
 
 
