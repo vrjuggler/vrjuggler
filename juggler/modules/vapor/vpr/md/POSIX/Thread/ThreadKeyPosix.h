@@ -61,11 +61,7 @@ namespace vpr
 {
 
 // Key destructor function type.
-#ifdef _PTHREADS_DRAFT_4
-typedef pthread_destructor_t KeyDestructor;
-#else
-typedef thread_func_t        KeyDestructor;
-#endif
+typedef thread_func_t KeyDestructor;
 
 
 /**
@@ -145,11 +141,7 @@ public:
     */
    int keycreate(BaseThreadFunctor* destructor)
    {
-#ifdef _PTHREADS_DRAFT_4
-      return pthread_keycreate(&mKeyID, (KeyDestructor) destructor);
-#else
       return pthread_key_create(&mKeyID, (KeyDestructor) destructor);
-#endif
    }
 
    /**
@@ -167,14 +159,7 @@ public:
     */
    int keyfree()
    {
-#ifdef _PTHREADS_DRAFT_4
-      std::cerr << "keyfree() not supported with this POSIX threads "
-                << "implementation\n";
-
-      return -1;
-#else
       return pthread_key_delete(mKeyID);
-#endif
    }
 
    /**
@@ -214,13 +199,8 @@ public:
     */
    int getspecific(void** valuep)
    {
-#ifdef _PTHREADS_DRAFT_4
-      return pthread_getspecific(mKeyID, valuep);
-#else
       *valuep = pthread_getspecific(mKeyID);
-
       return 0;
-#endif
    }
 
 private:

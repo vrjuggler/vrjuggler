@@ -288,11 +288,7 @@ public:
 #if defined(VPR_USE_IRIX_SPROC) /* ---- SGI IPC Barrier ------ */
 extern "C" void vprThreadFunctorFunction(void* args);
 #elif defined(VPR_USE_PTHREADS)
-#  ifdef _PTHREADS_DRAFT_4
-   extern "C" void vprThreadFunctorFunction(void* args);
-#  else
-   extern "C" void* vprThreadFunctorFunction(void* args);
-#  endif
+extern "C" void* vprThreadFunctorFunction(void* args);
 #else
 extern "C" void vprThreadFunctorFunction(void* args);
 #endif  /* VPR_USE_IRIX_SPROC */
