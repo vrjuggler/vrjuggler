@@ -120,6 +120,12 @@ public class DescEnumElemPanel extends JPanel implements MouseListener {
       add (valf);
     }
 
+      Dimension d3 = getPreferredSize();
+      Dimension d4 = getMaximumSize();
+      d4.height = d3.height;
+      setMaximumSize (d4);
+
+
   }
 
   public DescEnumElemPanel (ValType t) {
@@ -174,6 +180,11 @@ public class DescEnumElemPanel extends JPanel implements MouseListener {
 
       add (valf);
     }
+
+      Dimension d3 = getPreferredSize();
+      Dimension d4 = getMaximumSize();
+      d4.height = d3.height;
+      setMaximumSize (d4);
 
   }
 

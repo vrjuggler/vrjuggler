@@ -97,7 +97,7 @@ public class VjControl {
 	    FileControl.loadMainChunkOrgTree();
 	}
 	else if (orgtreename != null) {
-	    FileControl.loadMainChunkOrgTree(orgtreename, false);
+	    FileControl.loadChunkOrgTree(orgtreename, false, Core.chunkorgtree);
 	}
 
 	//Core.rebuildAllTrees();

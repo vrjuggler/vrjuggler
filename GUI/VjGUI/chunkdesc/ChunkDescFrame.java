@@ -16,15 +16,16 @@ import javax.swing.*;
 import javax.swing.border.*;
 import VjConfig.*;
 import VjGUI.chunkdesc.*;
+import VjGUI.Core;
 
 public class ChunkDescFrame 
     extends JFrame 
     implements ActionListener, WindowListener { 
 
 
-  public interface ChunkDescFrameParent {
-    public void closedDescFrame (ChunkDescFrame f, boolean ok);
-  };
+    public interface ChunkDescFrameParent {
+	public void closedDescFrame (ChunkDescFrame f, boolean ok);
+    };
 
 
     ChunkDescFrameParent parent;
@@ -39,6 +40,7 @@ public class ChunkDescFrame
     JButton cancelbutton;
     JButton okbutton;
     boolean editable;
+    JPanel mainpanel, buttonspanel, northpanel;
 
 
     public ChunkDescFrame (ChunkDescFrameParent p, 
@@ -48,7 +50,6 @@ public class ChunkDescFrame
 
 	JScrollPane sp;
 	PropertyDescPanel t;
-	JPanel mainpanel, buttonspanel, northpanel;
 	
 	parent = p;
 	editable = _editable;
@@ -135,17 +136,48 @@ public class ChunkDescFrame
 	
 	addWindowListener (this);
 
-        pack();
-        Dimension d = properties.getPreferredSize();
-        if (d.height > 500) {
-          // the extra width is to make room for a scrollbar... but getsize
-          // on it doesn't seem to work how ye'd like...
-          //int sbwidth = sp.getVerticalScrollBar().getMaximumSize().width;
-          //System.out.println ("sbwidth: " + sbwidth);
-          setSize (d.width+42, 550);
-        }
+	//setReasonableSize();
+	//pack();
+	//Dimension d = properties.getPreferredSize();
+	//if (d.height > Core.screenHeight - 100)
+	//    setSize (d.width+42, 550);
+	
+	Dimension d = properties.getPreferredSize();
+	Dimension d2 = buttonspanel.getPreferredSize();
+	//Dimension d3 = northpanel.getPreferredSize();
+	d.width = Math.max (d.width+42, d2.width +20);
+	d.width = Math.min (d.width, Core.screenWidth);
+	d.height = Math.min (550, Core.screenHeight);
+	setSize(d);
+
+
         setVisible(true);
 
+    }
+
+
+    public void setReasonableSize() {
+	Dimension d1, d2, d3, d4, d;
+
+	validate();
+	d = new Dimension ();
+	d1 = northpanel.getPreferredSize();
+	d2 = buttonspanel.getPreferredSize();
+	d3 = properties.getPreferredSize();
+	d.height = d1.height + d2.height + d3.height +65;
+	d4 = getSize();
+	d.width = d4.width;
+
+	if (d.height > Core.screenHeight - 100) {
+	    d.height = Core.screenHeight;
+	}
+	if (d.width > Core.screenWidth) {
+	    d.width = Core.screenWidth;
+	}
+
+	System.out.println ("setting size to " + d);
+	setSize (d);
+	validate();
     }
 
 
@@ -174,20 +206,21 @@ public class ChunkDescFrame
 		PropertyDescPanel p = 
 		    (PropertyDescPanel)proppanels.elementAt(i);
 		if (p.getSelected()) {
-		    Panel par = (Panel)p.getParent();
-		    par.remove(p);
+		    properties.remove(p);
 		    proppanels.removeElementAt(i);
 		}
 		else
 		    i++;
 	    }
+	    //setReasonableSize();
 	    validate();
 	}
 	if (e.getSource() == insertbutton) {
 	    PropertyDescPanel t = new PropertyDescPanel (this, true);
 	    proppanels.addElement(t);
-	    properties.add(t);
-	    validate();      
+	    properties.add(t); 
+	    //setReasonableSize();
+	    validate();
 	}
 	if (e.getSource() == okbutton) {
 	  closeFrame (true);

@@ -155,6 +155,7 @@ public class ControlUI  extends JFrame
     public void addDescDB (ChunkDescDB db) {
 	descdb_pane.addDescDB (db.name);
 	configure_pane.updateInsertTypes();
+	orgtree_pane.updateInsertTypes();
     }
 
 
@@ -271,7 +272,7 @@ public class ControlUI  extends JFrame
 	    lnf = "javax.swing.plaf.mac.MacLookAndFeel";
 	else return;
 
-	System.out.println ("setting look n feel to : " + lnf);
+	//System.out.println ("setting look n feel to : " + lnf);
 	
 	try {
 	    UIManager.setLookAndFeel (lnf);
@@ -288,6 +289,8 @@ public class ControlUI  extends JFrame
 	//System.out.println (UIManager.getDefaults());
 	//There ought to be a better way to do this...
 	Font newfont, oldfont;
+	int i;
+	ChunkDBTreeModel dbt;
 	String keys[] = {
 	    "RadioButtonMenuItem.acceleratorFont",
 	    "Menu.font",
@@ -335,34 +338,54 @@ public class ControlUI  extends JFrame
 	if (size < 5)
 	    size = oldfont.getSize();
 	newfont = new Font (name, oldfont.getStyle(), size);
-	for (int i = 0; i < keys.length; i++) {
+	for (i = 0; i < keys.length; i++) {
 	    UIManager.put (keys[i], newfont);
 	} 
 	changeFont (this, newfont);
 
+	for (i = 0; i < Core.chunkdbs.size(); i++) {
+	    dbt = (ChunkDBTreeModel)Core.chunkdbs.elementAt (i);
+	    changeFont (dbt.tree, newfont);
+	}
+
 	if (help_frame != null)
 	    help_frame.setFont (newfont);
-	// for some reason, i need to do menuitems by hand...
 
-	/*
-	file_menu.setFont (newfont);
-	options_menu.setFont (newfont);
-	looknfeel_menu.setFont (newfont);
-	preferences_menu.setFont (newfont);
-	quit_mi.setFont (newfont);
-	lnf_win_mi.setFont (newfont);
-	lnf_java_mi.setFont (newfont);
-	lnf_motif_mi.setFont (newfont);
-	lnf_mac_mi.setFont (newfont);
-	lnf_organic1_mi.setFont (newfont);
-	editprefs_mi.setFont (newfont);
-	saveprefs_mi.setFont (newfont);
-	*/
-	changeFont (file_menu, newfont);
-	changeFont (options_menu, newfont);
-	changeFont (help_menu, newfont);
+	changeMenuBarFont (main_menubar, newfont);
+
 	validate();
     }
+
+
+
+    protected void changeMenuBarFont (JMenuBar bar, Font font) {
+	bar.setFont (font);
+	int i, c;
+	JMenu m;
+	c = bar.getMenuCount();
+	for (i = 0; i < c; i++) {
+	    m = bar.getMenu (i);
+	    changeMenuFont (m, font);
+	}
+    }
+
+
+
+    protected void changeMenuFont (JMenu menu, Font font) {
+	JMenuItem item;
+	int i, c;
+	menu.setFont (font);
+	c = menu.getItemCount();
+	for (i = 0; i < c; i++) {
+	    item = menu.getItem (i);
+	    if (item instanceof JMenu)
+		changeMenuFont ((JMenu)item, font);
+	    else
+		item.setFont (font);
+	}
+    }
+
+
 
     public static void changeFont(Component cmp, Font font) {
 	cmp.setFont(font);

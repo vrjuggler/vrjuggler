@@ -25,10 +25,14 @@ public class Core {
 
     static final boolean info_msg_to_stdout = false;
     static final boolean error_msg_to_stdout = true;
+    static public int    screenWidth;
+    static public int    screenHeight;
 
     static public void initialize () {
 	ConfigChunkDB db;
 	
+	screenWidth = 800;
+	screenHeight = 600;
 	descdbs = new Vector();
 	chunkdbs = new Vector();
 	chunkorgtree = new ChunkOrgTree();
@@ -72,77 +76,74 @@ public class Core {
     }
 
 
-
+    /*
     static public String addNewChunkDB () {
 	// creates a new db, treemodel, etc.
 	ConfigChunkDB db = new ConfigChunkDB (descdb);
-	db.setDirectory ("");
-	db.setName (createUniqueChunkDBName ("untitled"));
 	addChunkDB (db);
 	return db.name;
     }
-
+    */
 
 
     static public String createUniqueChunkDBName (String base) {
 	// returns a string, starting with base, which doesn't
 	// conflict with names of any dbs in chunkdbs.
-	int i, j, n = 0;
-	String s;
-	for (i = 0; i < chunkdbs.size(); i++) {
-	    s = ((ChunkDBTreeModel)chunkdbs.elementAt(i)).getName();
-	    if (s.startsWith (base)) {
-		try {
-		    j = Integer.parseInt (s.substring (base.length()+1));
-		    if (j >= n)
-			n = j+1;
-		}
-		catch (Exception e) {
-		   if (n < 1)
-		       n = 1;
-		}
+	int i;
+	String name;
 
-	    }
-	}
-	if (n == 0)
+	if (getChunkDBTree (base) == null)
 	    return base;
-	else
-	    return base + " " + n;
+	for (i = 2; true; i++) {
+	    name = base + " <" + i + ">";
+	    if (getChunkDBTree (name) == null)
+		return name;
+	}
     }
 
 
 
     static public String createUniqueDescDBName (String base) {
-	// returns a string, starting with base, which doesn't
-	// conflict with names of any dbs in chunkdbs.
-	int i, j, n = -1;
-	String s;
-	for (i = 0; i < descdbs.size(); i++) {
-	    s = ((ChunkDescDB)descdbs.elementAt(i)).name;
-	    if (s.startsWith (base)) {
-		try {
-		    j = Integer.parseInt (s.substring (base.length()+1));
-		    if (j >= n)
-			n = j+1;
-		}
-		catch (Exception e) {
-		   if (n < 1)
-		       n = 1;
-		}
-	    }
-	}
-	if (n == -1)
+	int i;
+	String name;
+	if (getChunkDescDB (base) == null)
 	    return base;
-	else
-	    return base + " " + n;
+	for (i = 2; true; i++) {
+	    name = base + " <" + i + ">";
+	    if (getChunkDescDB (name) == null)
+		return name;
+	}
     }
 
 
+    static public String renameChunkDB (ConfigChunkDB _db, String newbase) {
+	if (_db.name.equals (newbase))
+	    return newbase;
+	newbase = createUniqueChunkDBName (newbase);
+	ChunkDBTreeModel dbt = getChunkDBTree (_db.name);
+	ui.removeChunkDBTree (dbt);
+	_db.setName (newbase);
+	ui.addChunkDBTree (dbt);
+	return newbase;
+    }
 
-    static public void addChunkDB (ConfigChunkDB _chunkdb) {
+
+    static public String renameDescDB (ChunkDescDB _db, String newbase) {
+	if (_db.name.equals (newbase))
+	    return newbase;
+	newbase = createUniqueDescDBName (newbase);
+	ui.removeDescDB (_db.name);
+	_db.setName (newbase);
+	ui.addDescDB (_db);
+	return newbase;
+    }
+
+    static public String addChunkDB (ConfigChunkDB _chunkdb) {
+	_chunkdb.setName (createUniqueChunkDBName (_chunkdb.name));
 	ChunkDBTreeModel ctm = new ChunkDBTreeModel (_chunkdb, chunkorgtree);
 	chunkdbs.addElement (ctm);
 	ui.addChunkDBTree (ctm);
+	return _chunkdb.name;
     }
 
 

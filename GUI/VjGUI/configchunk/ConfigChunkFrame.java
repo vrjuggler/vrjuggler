@@ -64,6 +64,7 @@ public class ConfigChunkFrame extends JFrame
 	northpanel = new JPanel();
 	northpanel.setLayout (new BoxLayout (northpanel, BoxLayout.Y_AXIS));
 	p1 = new JPanel();
+	p1.setLayout (new BoxLayout (p1, BoxLayout.X_AXIS));
 	p1.add (new JLabel ("Instance Name: "));
 	p1.add (namef = new StringTextField (chunk.getName(), 25));
 	northpanel.add (p1);
