@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_FILE_HANDLE_UNIX_H_
-#define _VPR_FILE_HANDLE_UNIX_H_
+#ifndef _VPR_FILE_HANDLE_IMPL_UNIX_H_
+#define _VPR_FILE_HANDLE_IMPL_UNIX_H_
 
 #include <sys/types.h>
 #include <string>
@@ -43,7 +43,7 @@
 
 namespace vpr {
 
-class FileHandleUNIX : public FileHandle {
+class FileHandleImplUNIX : public FileHandle {
 public:
     // ------------------------------------------------------------------------
     //: Constructor.  This initializes the member variables to reasonable
@@ -55,7 +55,7 @@ public:
     //
     //! ARGS: file_name - The name of the file to be handled.
     // ------------------------------------------------------------------------
-    FileHandleUNIX(const std::string& file_name);
+    FileHandleImplUNIX(const std::string& file_name);
 
     // ------------------------------------------------------------------------
     //: Destructor.  If the file handle is in an open state, it is closed.
@@ -63,7 +63,7 @@ public:
     //! PRE: None.
     //! POST: If the file handle is still open, it is closed.
     // ------------------------------------------------------------------------
-    virtual ~FileHandleUNIX(void);
+    virtual ~FileHandleImplUNIX(void);
 
     // ========================================================================
     // vpr::BlockIO implementation.
@@ -258,10 +258,14 @@ protected:
     int setFlags(const int flags);
 
     // ------------------------------------------------------------------------
+    //: Test if the file handle is ready for reading within the timeout
+    //+ period.
     // ------------------------------------------------------------------------
     Status isReadable(const vpr::Interval timeout);
 
     // ------------------------------------------------------------------------
+    //: Test if the file handle is ready for writing within the timeout
+    //+ period.
     // ------------------------------------------------------------------------
     Status isWriteable(const vpr::Interval timeout);
 
@@ -271,4 +275,4 @@ protected:
 }; // End of vpr namespace
 
 
-#endif	/* _VPR_FILE_HANDLE_UNIX_H_ */
+#endif	/* _VPR_FILE_HANDLE_IMPL_UNIX_H_ */

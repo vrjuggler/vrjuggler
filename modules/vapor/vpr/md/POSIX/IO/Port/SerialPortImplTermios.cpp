@@ -53,7 +53,7 @@ namespace vpr {
 SerialPortImplTermios::SerialPortImplTermios (const std::string& port_name)
     : Port(port_name), m_handle(NULL)
 {
-    m_handle = new FileHandleUNIX(port_name);
+    m_handle = new FileHandleImplUNIX(port_name);
     setUpdateAction(SerialTypes::NOW);
 }
 

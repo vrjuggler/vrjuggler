@@ -137,7 +137,7 @@ SocketImplBSD::open () {
     // Otherwise, return success.
     else {
         if ( m_handle == NULL ) {
-            m_handle = new FileHandleUNIX(m_remote_addr.getAddressString());
+            m_handle = new FileHandleImplUNIX(m_remote_addr.getAddressString());
         }
 
         m_handle->m_fdesc = sock;
