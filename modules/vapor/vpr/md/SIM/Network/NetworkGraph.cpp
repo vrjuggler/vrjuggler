@@ -41,6 +41,7 @@
 
 #include <vpr/vprConfig.h>
 
+#include <fstream>
 #include <map>
 #include <boost/utility.hpp>
 #include <boost/graph/dijkstra_shortest_paths.hpp>
