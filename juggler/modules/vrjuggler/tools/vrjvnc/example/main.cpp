@@ -37,7 +37,7 @@
 //----------------------------------------
 #include <iostream>
 #include <stdlib.h>
-#include <wandApp.h>
+#include <vncApp.h>
 
       // --- Lib Stuff --- //
 #include <vrj/Kernel/Kernel.h>
@@ -46,7 +46,7 @@
 int main(int argc, char* argv[])
 {
    vrj::Kernel* kernel = vrj::Kernel::instance();           // Get the kernel
-   vrjvnc::wandApp* application = new vrjvnc::wandApp(kernel);       // Instantiate an instance of the app
+   vrjvnc::vncApp* application = new vrjvnc::vncApp(kernel);       // Instantiate an instance of the app
 
    if (argc <= 1)
    {
