@@ -377,6 +377,93 @@ public class CaveEditorPanel
    
    void mEditWallBtn_actionPerformed(ActionEvent e)
    {
+      Container owner = (Container) SwingUtilities.getRoot(this);
+      /*
+      float old_origin_x =
+         ((Number) mSelectedViewport.getProperty(ORIGIN_PROPERTY, 0)).floatValue();
+      float old_origin_y =
+         ((Number) mSelectedViewport.getProperty(ORIGIN_PROPERTY, 1)).floatValue();
+      float old_width =
+         ((Number) mSelectedViewport.getProperty(SIZE_PROPERTY, 0)).floatValue();
+      float old_height =
+         ((Number) mSelectedViewport.getProperty(SIZE_PROPERTY, 1)).floatValue();
+      */
+      int status;
+      //float origin_x = 0.0f, origin_y = 0.0f, width = 0.0f, height = 0.0f;
+      
+      Container parent =
+         (Container) SwingUtilities.getAncestorOfClass(Container.class,
+                                                       this);
+      
+      Object selected_wall = mWallList.getSelectedValue();
+      
+      if (null == selected_wall || !(selected_wall instanceof CaveWall))
+      {
+         return;
+      }
+         
+      WallEditorDialog dlg =
+         new WallEditorDialog(parent, mConfigContext, (CaveWall)selected_wall);
+
+      status = dlg.showDialog();
+      if ( status == DisplayWindowStartDialog.OK_OPTION )
+      {
+         /*
+         Rectangle bounds = dlg.getViewportBounds();
+         origin_x = (float) bounds.x / 100.0f;
+         origin_y = (float) bounds.y / 100.0f;
+         width    = (float) bounds.width / 100.0f;
+         height   = (float) bounds.height / 100.0f;
+
+         mSelectedViewport.setProperty(ORIGIN_PROPERTY, 0,
+                                       new Float(origin_x), mContext);
+         mSelectedViewport.setProperty(ORIGIN_PROPERTY, 1,
+                                       new Float(origin_y), mContext);
+         mSelectedViewport.setProperty(SIZE_PROPERTY, 0, new Float(width),
+                                       mContext);
+         mSelectedViewport.setProperty(SIZE_PROPERTY, 1, new Float(height),
+                                       mContext);
+         mSelectedViewport.setProperty(VIEW_PROPERTY, 0, dlg.getViewpoint(),
+                                       mContext);
+         mSelectedViewport.setProperty(USER_PROPERTY, 0, dlg.getUser(),
+                                       mContext);
+
+         Point3D[] corners = dlg.getCorners();
+         mSelectedViewport.setProperty(LOWER_LEFT_CORNER_PROPERTY, 0,
+                                       new Float(corners[0].x), mContext);
+         mSelectedViewport.setProperty(LOWER_LEFT_CORNER_PROPERTY, 1,
+                                       new Float(corners[0].y), mContext);
+         mSelectedViewport.setProperty(LOWER_LEFT_CORNER_PROPERTY, 2,
+                                       new Float(corners[0].z), mContext);
+         mSelectedViewport.setProperty(LOWER_RIGHT_CORNER_PROPERTY, 0,
+                                       new Float(corners[1].x), mContext);
+         mSelectedViewport.setProperty(LOWER_RIGHT_CORNER_PROPERTY, 1,
+                                       new Float(corners[1].y), mContext);
+         mSelectedViewport.setProperty(LOWER_RIGHT_CORNER_PROPERTY, 2,
+                                       new Float(corners[1].z), mContext);
+         mSelectedViewport.setProperty(UPPER_RIGHT_CORNER_PROPERTY, 0,
+                                       new Float(corners[2].x), mContext);
+         mSelectedViewport.setProperty(UPPER_RIGHT_CORNER_PROPERTY, 1,
+                                       new Float(corners[2].y), mContext);
+         mSelectedViewport.setProperty(UPPER_RIGHT_CORNER_PROPERTY, 2,
+                                       new Float(corners[2].z), mContext);
+         mSelectedViewport.setProperty(UPPER_LEFT_CORNER_PROPERTY, 0,
+                                       new Float(corners[3].x), mContext);
+         mSelectedViewport.setProperty(UPPER_LEFT_CORNER_PROPERTY, 1,
+                                       new Float(corners[3].y), mContext);
+         mSelectedViewport.setProperty(UPPER_LEFT_CORNER_PROPERTY, 2,
+                                       new Float(corners[3].z), mContext);
+
+         mSelectedViewport.setProperty(TRACKED_PROPERTY, 0, dlg.isTracked(),
+                                       mContext);
+
+         if ( dlg.isTracked() == Boolean.TRUE )
+         {
+            mSelectedViewport.setProperty(TRACKER_PROXY_PROPERTY, 0,
+                                          dlg.getTrackerProxy(), mContext);
+         }
+         */
+      }
    }
    
    public class WallComponentConverter implements ComponentConverter
