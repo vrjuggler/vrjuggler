@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/gadgetConfig.h>
+#include <cluster/Plugins/PluginConfig.h>
 #include <gadget/Util/Debug.h>
 
 #include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>

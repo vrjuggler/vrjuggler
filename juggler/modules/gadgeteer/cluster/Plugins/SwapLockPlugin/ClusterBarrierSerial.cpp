@@ -30,7 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vpr/vprConfig.h>
+#include <cluster/Plugins/PluginConfig.h>
+#include <vector>
+
 #include <vpr/System.h>
 
 #include <cluster/Plugins/SwapLockPlugin/ClusterBarrier.h>
@@ -40,8 +42,6 @@
 #include <cluster/Packets/SyncAck.h>
 
 #include <gadget/Util/Debug.h>
-
-#include <vector>
 
 #include <boost/static_assert.hpp>
 

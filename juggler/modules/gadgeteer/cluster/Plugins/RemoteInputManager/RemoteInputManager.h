@@ -33,19 +33,19 @@
 #ifndef _CLUSTER_REMOTE_INPUT_MANAGER_H
 #define _CLUSTER_REMOTE_INPUT_MANAGER_H
 
+#include <cluster/Plugins/PluginConfig.h>
+
+#include <list>
+
 #include <vpr/Util/Singleton.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/ReturnStatus.h>	
 #include <vpr/Util/Assert.h>
 
-#include <gadget/gadgetConfig.h>
 // Must implement the Abstract Base Class in order to be a manager used on the ClusterNetwork
 #include <cluster/ClusterPlugin.h>
-#include <cluster/Plugins/PluginConfig.h>
 
 #include <jccl/Config/ConfigChunkPtr.h>
-
-#include <list>
 
 extern "C" GADGET_CLUSTER_PLUGIN_API(cluster::ClusterPlugin*) initPlugin();
 
@@ -61,7 +61,8 @@ namespace cluster
    class DeviceRequest;
    class Packet;
 
-class GADGET_CLASS_API RemoteInputManager  : public cluster::ClusterPlugin
+class GADGET_CLUSTER_PLUGIN_CLASS_API RemoteInputManager
+   : public cluster::ClusterPlugin
 {
    vprSingletonHeader( RemoteInputManager );
 public:

@@ -48,7 +48,7 @@
 #ifndef _GADGET_CLUSTER_BARRIER_H
 #define _GADGET_CLUSTER_BARRIER_H
 
-#include <vpr/vprConfig.h>
+#include <cluster/Plugins/PluginConfig.h>
 //#include <vpr/System.h>
 
 #include <vector>
