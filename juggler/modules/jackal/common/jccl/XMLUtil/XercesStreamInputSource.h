@@ -45,9 +45,9 @@ namespace jccl {
 //  "&lt;/protocol&gt;").  The InputSource stops reading 
 //  <i>immediately</i> upon seeing the end of the terminator string.
 //  This is useful for grabbing sections of an XML document out of 
-//  a larger data stream, such as we have with VjControl and Juggler's
-//  Environment Manager.
-class vjXercesStreamInputSource: public InputSource {
+//  a larger data stream, such as we have with VjControl and the
+//  JackalServer.
+class XercesStreamInputSource: public InputSource {
 
     std::istream* in;
 
@@ -56,9 +56,9 @@ class vjXercesStreamInputSource: public InputSource {
 
 public:
 
-    vjXercesStreamInputSource (std::istream& _in, char const * _terminator);
+    XercesStreamInputSource (std::istream& _in, char const * _terminator);
 
-    virtual ~vjXercesStreamInputSource ();
+    virtual ~XercesStreamInputSource ();
 
     virtual BinInputStream* makeStream() const;
 
