@@ -58,6 +58,7 @@
 void OpenSGViewer::init()
 {
    vrj::OpenSGApp::init();      // Call base class init
+   mUser.init();
 }
 
 /** Called once per context at context creation */
@@ -75,6 +76,9 @@ void OpenSGViewer::draw()
 
 void OpenSGViewer::preFrame()
 {
+   // Update the user (and viewplatform with navigation strategy)
+   mUser.update();
+
    const float inc_vel(0.005f);
    const float max_vel(0.5f);
 
@@ -204,5 +208,11 @@ void OpenSGViewer::initScene(void)
    
    // --- Add scene to root node --- //
    vprDEBUG(vprDBG_ALL,0) << "OpenSGViewer::initScene finished\n" << vprDEBUG_FLUSH;
+}
+
+//! NOTE: Inherited from jccl::ConfigChunkHandler
+bool OpenSGViewer::configAdd(jccl::ConfigChunkPtr chunk)
+{
+   return true;
 }
 

@@ -1,7 +1,6 @@
-#include <User/PointAndGo.h>
+#include <Common/PointAndGo.h>
 
-#include <User/User.h>
-#include <User/SimpleWandInterface.h>
+#include <Common/User.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Coord.h>
@@ -11,6 +10,7 @@
 
 #include <iostream>
 
+/*
 void PointAndGo::initSounds()
 {
    // Make sounds the right size
@@ -19,6 +19,7 @@ void PointAndGo::initSounds()
    mSounds[NavTranslateSound].init("NavTranslateSound");
    mSounds[NavRotateSound].init("NavRotateSound");
 }
+*/
 
 /**
 * Template method for updating the view platform (navigation, etc).
@@ -27,18 +28,13 @@ void PointAndGo::initSounds()
 */
 void PointAndGo::update(User* user)
 {
-   SimpleWandInterface* wand_i
-   = dynamic_cast<SimpleWandInterface*>( user->getInterfaceMethod(SimpleWandInterface::typeID()) );
-
-   vprASSERT(wand_i != NULL);
-
    // Update delta time
    if (mLastUpdate == vpr::Interval::NoTimeout)
    {
       mLastUpdate.setNow();
    }
 
-   vpr::Interval cur_time = wand_i->getWandPos()->getTimeStamp();
+   vpr::Interval cur_time = user->getWandPos()->getTimeStamp();
    vpr::Interval delta_time = cur_time - mLastUpdate;
    mLastUpdate = cur_time;
    float delta_secs = delta_time.secf();
@@ -52,7 +48,7 @@ void PointAndGo::update(User* user)
    // --- MOVE AROUND THE MODEL --- //
    const float accelleration(1.25f);
    const float max_vel(7.0f);
-   bool do_nav( wand_i->getButton(2)->getData() == gadget::Digital::ON) ;
+   bool do_nav( user->getButton(2)->getData() == gadget::Digital::ON) ;
    //bool do_rotate = (wand_i->getButton(2)->getData() == gadget::Digital::ON);
    //bool do_stop = (wand_i->getButton(1)->getData() == gadget::Digital::ON);
    bool do_stop(false);
@@ -94,7 +90,7 @@ void PointAndGo::update(User* user)
    // -- Get wand info -- //
    gmtl::Matrix44f wandMatrix;
    gmtl::Coord3fXYZ wand_coord;
-   wandMatrix = *(wand_i->getWandPos()->getData());      // Get the wand matrix
+   wandMatrix = *(user->getWandPos()->getData());      // Get the wand matrix
    gmtl::Vec3f direction;
    gmtl::Vec3f forward_dir = gmtl::Vec3f(0.0f, 0.0f, -(mVelocity*delta_secs));
    gmtl::xform( direction, wandMatrix, forward_dir );
@@ -122,13 +118,13 @@ void PointAndGo::update(User* user)
       float sound_vol = (0.5 + (0.5f * sound_scale));  // between 0.5 and 1.0
       //std::cout << "vel: " << mVelocity  << "  scale:" << sound_scale << "  vol:" << sound_vol << std::endl << std::flush;
 
-      mSounds[NavTranslateSound].setVolume( sound_vol);  // between 0.33 and 1.0
-      mSounds[NavTranslateSound].setPosition(0.1f, 0.0f, 0.0f);     // Do this to get gain to work
-      mSounds[NavTranslateSound].trigger();
+      //mSounds[NavTranslateSound].setVolume( sound_vol);  // between 0.33 and 1.0
+      //mSounds[NavTranslateSound].setPosition(0.1f, 0.0f, 0.0f);     // Do this to get gain to work
+      //mSounds[NavTranslateSound].trigger();
    }
    else
    {
-      mSounds[NavTranslateSound].stop();
+      //mSounds[NavTranslateSound].stop();
    }
 
    if(do_nav && mAllowRotate)
@@ -139,13 +135,13 @@ void PointAndGo::update(User* user)
       float sound_vol = 0.5f + (0.5f * rotate_sound_scale);    // Scale between 0.5 and 1.
 
       //std::cout << "rot: " << y_rot  << "  scale:" << rotate_sound_scale << "  vol:" << sound_vol << std::endl << std::flush;
-      mSounds[NavRotateSound].setVolume(sound_vol);    // Scale between 0.5 and 1.0
-      mSounds[NavRotateSound].setPosition(0.1f, 0.0f, 0.0f);     // Do this to get gain to work
-      mSounds[NavRotateSound].trigger();
+      //mSounds[NavRotateSound].setVolume(sound_vol);    // Scale between 0.5 and 1.0
+      //mSounds[NavRotateSound].setPosition(0.1f, 0.0f, 0.0f);     // Do this to get gain to work
+      //mSounds[NavRotateSound].trigger();
    }
    else
    {
-      mSounds[NavRotateSound].stop();
+      //mSounds[NavRotateSound].stop();
    }
 
    gmtl::invert(mCurPosInv, mCurPos);     // Set the inverse as well
