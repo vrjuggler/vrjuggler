@@ -218,7 +218,7 @@ void JugglerWorksSoundImplementation::getPosition( const std::string& alias, flo
 /**
  * set the position of the listener
  */
-void JugglerWorksSoundImplementation::setListenerPosition( const snx::Matrix44& mat )
+void JugglerWorksSoundImplementation::setListenerPosition( const vrj::Matrix& mat )
 {
    snx::SoundImplementation::setListenerPosition( mat );
 }
@@ -226,7 +226,7 @@ void JugglerWorksSoundImplementation::setListenerPosition( const snx::Matrix44& 
 /**
  * get the position of the listener
  */
-void JugglerWorksSoundImplementation::getListenerPosition( snx::Matrix44& mat )
+void JugglerWorksSoundImplementation::getListenerPosition( vrj::Matrix& mat )
 {
    snx::SoundImplementation::getListenerPosition( mat );
 }

@@ -45,7 +45,7 @@
 #include <string>
 #include "snx/SoundInfo.h"
 #include "snx/SoundAPIInfo.h"
-#include "snx/Matrix44.h"
+#include "vrj/Math/Matrix.h"
    
 /** @interface*/
 class Isonix
@@ -122,12 +122,12 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const snx::Matrix44& mat ) = 0;
+   virtual void setListenerPosition( const vrj::Matrix& mat ) = 0;
 
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( snx::Matrix44& mat ) = 0;
+   virtual void getListenerPosition( vrj::Matrix& mat ) = 0;
 
    virtual void changeAPI( const std::string& apiName ) = 0;
    
