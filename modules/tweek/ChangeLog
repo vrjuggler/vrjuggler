@@ -1,5 +1,9 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2005-02-11 patrickh    Added the capability for Beans to notify the Tweek Java
+                       GUI about undo/redo operations and cut/copy/paste
+                       operations that they perform themselves.
+                       NEW VERSION 0.92.4
 2005-02-10 patrickh    Extended org.vrjuggler.tweek.beans.FileLoader to allow
                        save-all operations and to allow for testing for unsaved
                        changes.  Added the capability for Beans to notify the

@@ -92,6 +92,25 @@ public class FileActionGenerator
     */
    public void fireOpenPerformed(FileLoader source)
    {
+      fireOpenPerformed(source, source);
+   }
+
+   /**
+    * Generates a file open action and delivers it to all the listeners
+    * registered with this generator.  The method
+    * FileActionListener.fileOpenPerformed() is invoked on all listeners.
+    *
+    * @param source     the source of the event to be generated
+    * @param loader     a reference to the Tweek Bean implementing the
+    *                   FileLoader interface that is responsible for opening
+    *                   the file
+    *
+    * @see FileActionListener
+    *
+    * @since 0.92.4
+    */
+   public void fireOpenPerformed(Object source, FileLoader loader)
+   {
       FileActionEvent e = null;
       Object[] listeners = mListenerList.getListenerList();
       for ( int i = listeners.length - 2; i >= 0; i -= 2 )
@@ -100,7 +119,7 @@ public class FileActionGenerator
          {
             if ( e == null )
             {
-               e = new FileActionEvent(source);
+               e = new FileActionEvent(source, loader);
             }
 
             ((FileActionListener) listeners[i + 1]).fileOpenPerformed(e);
@@ -121,6 +140,25 @@ public class FileActionGenerator
     */
    public void fireChangePerformed(FileLoader source)
    {
+      fireChangePerformed(source, source);
+   }
+
+   /**
+    * Generates a file open action and delivers it to all the listeners
+    * registered with this generator.  The method
+    * FileActionListener.fileOpenPerformed() is invoked on all listeners.
+    *
+    * @param source     the source of the event to be generated
+    * @param loader     a reference to the Tweek Bean implementing the
+    *                   FileLoader interface that is responsible for opening
+    *                   the file
+    *
+    * @see FileActionListener
+    *
+    * @since 0.92.4
+    */
+   public void fireChangePerformed(Object source, FileLoader loader)
+   {
       FileActionEvent e = null;
       Object[] listeners = mListenerList.getListenerList();
       for ( int i = listeners.length - 2; i >= 0; i -= 2 )
@@ -129,7 +167,7 @@ public class FileActionGenerator
          {
             if ( e == null )
             {
-               e = new FileActionEvent(source);
+               e = new FileActionEvent(source, loader);
             }
 
             ((FileActionListener) listeners[i + 1]).fileChangePerformed(e);
@@ -150,6 +188,25 @@ public class FileActionGenerator
     */
    public void fireSavePerformed(FileLoader source)
    {
+      fireSavePerformed(source, source);
+   }
+
+   /**
+    * Generates a file save action and delivers it to all the listeners
+    * registered with this generator.  The method
+    * FileActionListener.fileSavePerformed() is invoked on all listeners.
+    *
+    * @param source     the source of the event to be generated
+    * @param loader     a reference to the Tweek Bean implementing the
+    *                   FileLoader interface that is responsible for saving
+    *                   an open file
+    *
+    * @see FileActionListener
+    *
+    * @since 0.92.4
+    */
+   public void fireSavePerformed(Object source, FileLoader loader)
+   {
       FileActionEvent e = null;
       Object[] listeners = mListenerList.getListenerList();
       for ( int i = listeners.length - 2; i >= 0; i -= 2 )
@@ -158,7 +215,7 @@ public class FileActionGenerator
          {
             if ( e == null )
             {
-               e = new FileActionEvent(source);
+               e = new FileActionEvent(source, loader);
             }
 
             ((FileActionListener) listeners[i + 1]).fileSavePerformed(e);
@@ -179,6 +236,25 @@ public class FileActionGenerator
     */
    public void fireSaveAsPerformed(FileLoader source)
    {
+      fireSaveAsPerformed(source, source);
+   }
+
+   /**
+    * Generates a file save-as action and delivers it to all the listeners
+    * registered with this generator.  The method
+    * FileActionListener.fileSaveAsPerformed() is invoked on all listeners.
+    *
+    * @param source     the source of the event to be generated
+    * @param loader     a reference to the Tweek Bean implementing the
+    *                   FileLoader interface that is responsible for saving
+    *                   an open file
+    *
+    * @see FileActionListener
+    *
+    * @since 0.92.4
+    */
+   public void fireSaveAsPerformed(Object source, FileLoader loader)
+   {
       FileActionEvent e = null;
       Object[] listeners = mListenerList.getListenerList();
       for ( int i = listeners.length - 2; i >= 0; i -= 2 )
@@ -187,7 +263,7 @@ public class FileActionGenerator
          {
             if ( e == null )
             {
-               e = new FileActionEvent(source);
+               e = new FileActionEvent(source, loader);
             }
 
             ((FileActionListener) listeners[i + 1]).fileSaveAsPerformed(e);
@@ -208,6 +284,25 @@ public class FileActionGenerator
     */
    public void fireSaveAllPerformed(FileLoader source)
    {
+      fireSaveAllPerformed(source, source);
+   }
+
+   /**
+    * Generates a file save-all action and delivers it to all the listeners
+    * registered with this generator.  The method
+    * FileActionListener.fileSaveAllPerformed() is invoked on all listeners.
+    *
+    * @param source     the source of the event to be generated
+    * @param loader     a reference to the Tweek Bean implementing the
+    *                   FileLoader interface that is responsible for having
+    *                   saved all the open files
+    *
+    * @see FileActionListener
+    *
+    * @since 0.92.4
+    */
+   public void fireSaveAllPerformed(Object source, FileLoader loader)
+   {
       FileActionEvent e = null;
       Object[] listeners = mListenerList.getListenerList();
       for ( int i = listeners.length - 2; i >= 0; i -= 2 )
@@ -216,7 +311,7 @@ public class FileActionGenerator
          {
             if ( e == null )
             {
-               e = new FileActionEvent(source);
+               e = new FileActionEvent(source, loader);
             }
 
             ((FileActionListener) listeners[i + 1]).fileSaveAllPerformed(e);
@@ -237,6 +332,25 @@ public class FileActionGenerator
     */
    public void fireClosePerformed(FileLoader source)
    {
+      fireClosePerformed(source, source);
+   }
+
+   /**
+    * Generates a file close action and delivers it to all the listeners
+    * registered with this generator.  The method
+    * FileActionListener.fileClosePerformed() is invoked on all listeners.
+    *
+    * @param source     the source of the event to be generated
+    * @param loader     a reference to the Tweek Bean implementing the
+    *                   FileLoader interface that is responsible for closing
+    *                   the file
+    *
+    * @see FileActionListener
+    *
+    * @since 0.92.4
+    */
+   public void fireClosePerformed(Object source, FileLoader loader)
+   {
       FileActionEvent e = null;
       Object[] listeners = mListenerList.getListenerList();
       for ( int i = listeners.length - 2; i >= 0; i -= 2 )
@@ -245,7 +359,7 @@ public class FileActionGenerator
          {
             if ( e == null )
             {
-               e = new FileActionEvent(source);
+               e = new FileActionEvent(source, loader);
             }
 
             ((FileActionListener) listeners[i + 1]).fileClosePerformed(e);
