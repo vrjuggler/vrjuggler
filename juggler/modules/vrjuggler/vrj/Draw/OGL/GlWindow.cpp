@@ -57,10 +57,13 @@
 #define USE_PROJECTION_MATRIX 1  /* Should we put the camera transforms on the
                                    Projection or modelview matrix */
 
+
+
 namespace vrj
 {
 
 int GlWindow::mCurMaxWinId = 0;
+vpr::Mutex GlWindow::mWinIdMutex;
 
 
 void GlWindow::config(vrj::Display* displayWindow)
@@ -181,6 +184,7 @@ void GlWindow::setCameraProjection(vrj::CameraProjection* camProj)
 
 int GlWindow::getNextWindowId()
 {
+vpr::Guard<vpr::Mutex> guard(mWinIdMutex);      // Protect the id
    return mCurMaxWinId++;
 }
 
