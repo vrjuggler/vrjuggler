@@ -1,5 +1,11 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-06-30 aronb    Added new debug output level vprDBG_CONFIG_STATUS_LVL.
+                    Changed the ordering of the levels so vprDBG_WARNING_LVL
+                    comes after vprDBG_CRITICAL_LVL and vprDBG_CONFIG_LVL
+                    comes after vprDBG_CONFIG_STATUS_LVL.
+                    vprDBG_CONFIG_STATUS_LVL is now the default level.
+                    NEW VERSION: 0.27.5
 2003-06-18 patrickh Fixed a problem where bools were not serialized correctly
                     on Darwin/Mac OS X.
                     NEW VERSION: 0.27.4
