@@ -51,7 +51,11 @@ ifeq (@OS_TYPE@, Win32)
    SRCS=	EventWindowWin32.cpp
 else
    ifeq (@PLATFORM@, Darwin)
-      SRCS=	EventWindowOSX.cpp
+      ifeq (@gadget_use_x11@, yes)
+         SRCS=	EventWindowXWin.cpp
+      else
+         SRCS=	EventWindowOSX.cpp
+      endif
    else
       SRCS=	EventWindowXWin.cpp
    endif
