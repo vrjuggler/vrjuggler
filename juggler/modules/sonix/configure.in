@@ -276,9 +276,6 @@ else
 fi
 
 
-DPP_HAVE_OPENAL( /usr/local, AC_MSG_RESULT(+ Found OpenAL), AC_MSG_ERROR(*** project requires openal, type configure --help for options***) )
-DPP_HAVE_AUDIOWORKS( /usr, AC_MSG_RESULT(+ Found AudioWorks), AC_MSG_ERROR(*** project requires audioworks, type configure --help for options***) )
-
 dnl Define the root directory for the OpenAL installation.
 dnl sound_subsystem_default="None"
 dnl AC_ARG_WITH(sound_subsystem_default,
@@ -286,13 +283,17 @@ dnl                 [  --with-sound=<PATH>   link in sound subsystems  [OpenAL, 
 dnl                 SOUND_SUBSYSTEMS="$withval", SOUND_SUBSYSTEMS=$1)
 
               
-dnl does the user want openal?
-OPENAL_API='N'
+dnl does the user want top disable openal?
 AC_ARG_ENABLE(openal,
-              [  --enable-openal   Make OpenAL subsystem available at runtime [default=$1]],
+              [  --enable-openal   Compile in OpenAL support [default=yes]],
               OPENAL_ENABLED="$enableval", OPENAL_ENABLED=$1)
 dnl append the openal stuff...
-if test "x$OPENAL_ENABLED" = "xyes" ; then
+OPENAL_API='N'
+if test "x$OPENAL_ENABLED" = "xno" ; then
+# do nothing...
+   true
+else
+   DPP_HAVE_OPENAL( /usr/local, AC_MSG_RESULT(+ Found OpenAL),  )
    if test "x$OPENAL" = "xyes" ; then
       INCLUDES="$INCLUDES $AL_INCLUDES"
       LDFLAGS="$LDFLAGS $AL_LDFLAGS"
@@ -300,17 +301,24 @@ if test "x$OPENAL_ENABLED" = "xyes" ; then
       OPENAL_API='Y'
       echo "+ added OpenAL to the compile and link paths"
    else
-      AC_MSG_ERROR(*** you've requested to use OpenAL as one of your audio subsystems, but it was not found ***)
+      if test "x$OPENAL_ENABLED" = "xyes" ; then
+         AC_MSG_ERROR(*** you requested to use OpenAL as one of your audio subsystems, but it was not found.  Aborting... ***)
+      fi
    fi
 fi
 
+
 dnl does the user want AW?
-AUDIOWORKS_API='N'
 AC_ARG_ENABLE(audioworks,
-              [  --enable-audioworks   Make AudioWorks subsystem available at runtime [default=$1]],
+              [  --enable-audioworks   Compile in AudioWorks support [default=yes]],
               AUDIOWORKS_ENABLED="$enableval", AUDIOWORKS_ENABLED=$1)
 dnl append the openal stuff...
-if test "x$AUDIOWORKS_ENABLED" = "xyes" ; then
+AUDIOWORKS_API='N'
+if test "x$AUDIOWORKS_ENABLED" = "xno" ; then
+# do nothing...
+   true
+else
+   DPP_HAVE_AUDIOWORKS( /usr, AC_MSG_RESULT(+ Found AudioWorks), )
    if test "x$AUDIOWORKS" = "xyes" ; then
       INCLUDES="$INCLUDES $AW_INCLUDES"
       LDFLAGS="$LDFLAGS $AW_LDFLAGS"
@@ -318,7 +326,9 @@ if test "x$AUDIOWORKS_ENABLED" = "xyes" ; then
       AUDIOWORKS_API='Y'
       echo "+ added AudioWorks to the compile and link paths"
    else
-      AC_MSG_ERROR(*** you've requested to use AudioWorks as one of your audio subsystems, but it was not found ***)
+      if test "x$AUDIOWORKS_ENABLED" = "xyes" ; then
+         AC_MSG_ERROR(*** you requested to use AudioWorks as one of your audio subsystems, but it was not found.  Aborting... ***)
+      fi
    fi
 fi
 
