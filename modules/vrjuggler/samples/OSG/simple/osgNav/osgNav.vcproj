@@ -34,7 +34,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Juggler.lib Juggler_ogl.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib MSVCPRTD.lib MSVCRTD.lib winmm.lib wsock32.lib osgd.lib osgGLUTd.lib osgUtild.lib osgDBd.lib opengl32.lib"
+				AdditionalDependencies="Juggler.lib Juggler_ogl.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib MSVCPRTD.lib MSVCRTD.lib winmm.lib wsock32.lib osgd.lib osgUtild.lib osgDBd.lib opengl32.lib"
 				OutputFile=".\Debug/osgNav.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(OSGHOME)/lib;$(VJ_BASE_DIR)/lib/debug;$(NSPR_ROOT)/lib"
@@ -82,7 +82,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Juggler.lib Juggler_ogl.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib MSVCPRTD.lib MSVCRTD.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wsock32.lib osg.lib osgGLUT.lib osgUtil.lib osgDB.lib glut32.lib opengl32.lib"
+				AdditionalDependencies="Juggler.lib Juggler_ogl.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib MSVCPRTD.lib MSVCRTD.lib kernel32.lib user32.lib gdi32.lib uuid.lib wsock32.lib osg.lib osgUtil.lib osgDB.lib glut32.lib opengl32.lib"
 				OutputFile=".\Release/osgNav.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(OSGHOME)/lib,$(VJ_BASE_DIR)/lib/opt,$(NSPR_ROOT)/lib"
