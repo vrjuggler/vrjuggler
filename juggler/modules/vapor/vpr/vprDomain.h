@@ -80,7 +80,16 @@ namespace vpr
 
    typedef class Selector_t<class SelectorImplSIM> Selector;
 
-   /* No serial ports for simulator mode. */
+   /* Don't allow serial ports in simulator for now.
+   * This is because IOSys is of the wrong type and there is
+   * not an easy fix for this right now.
+   */
+
+//#  ifdef VPR_OS_Win32
+//      typedef SerialPort_t<class SerialPortImplWin32>   SerialPort;
+//#  else
+//      typedef SerialPort_t<class SerialPortImplTermios> SerialPort;
+//#  endif  /* VPR_OS_Win32 */
 
 #else /* ! ifdef VPR_SIMULATOR */
 
