@@ -241,8 +241,6 @@ public:
     */
    virtual void step( const float& timeElapsed )
    {
-      assert( this->isStarted() == true && "must call startAPI prior to this function" );
-      
    }   
 
    /**
@@ -258,13 +256,38 @@ public:
     * bind: load (or reload) all associate()d sounds
     * @postconditions all sound associations are buffered by the sound API
     */
-   virtual void bindAll() = 0;
+   void bindAll()
+   {
+      std::map< std::string, aj::SoundInfo >::iterator it;
+      for( it = mSounds.begin(); it != mSounds.end(); ++it)
+      {
+         //std::cout<<"DEBUG: loading alias: "<<(*it).first<<"\n"<<std::flush;
+         this->bind( (*it).first );
+      }
+   }   
 
    /**
     * unbind: unload/deallocate all associate()d sounds.
     * @postconditions all sound associations are unbuffered by the sound API
     */
-   virtual void unbindAll() = 0;
+   void unbindAll()
+   {
+      std::map< std::string, aj::SoundInfo >::iterator it;
+      for( it = mSounds.begin(); it != mSounds.end(); ++it)
+      {
+         //std::cout<<"DEBUG: loading alias: "<<(*it).first<<"\n"<<std::flush;
+         this->unbind( (*it).first );
+      }
+      /*
+      std::map< std::string, AlSoundInfo >::iterator it;
+      for( it = mBindLookup.begin(); it != mBindLookup.end(); ++it)
+      {
+         this->unbind( (*it).first );
+      }
+
+      assert( mBindLookup.size() == 0 && "unbindAll failed" );
+      */
+   }
 
    /**
     * load/allocate the sound data this alias refers to the sound API

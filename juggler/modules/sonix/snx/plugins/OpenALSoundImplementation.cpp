@@ -275,34 +275,9 @@ void OpenALSoundImplementation::clear()
    aj::SoundImplementation::clear();
 }   
 
-/**
- * bind: load (or reload) all associate()d sounds
- * @postconditions all sound associations are buffered by the sound API
- */
-void OpenALSoundImplementation::bindAll()
-{
-   std::map< std::string, aj::SoundInfo >::iterator it;
-   for( it = mSounds.begin(); it != mSounds.end(); ++it)
-   {
-      //std::cout<<"DEBUG: loading alias: "<<(*it).first<<"\n"<<std::flush;
-      this->bind( (*it).first );
-   }
-}   
 
-/**
- * unbind: unload/deallocate all associate()d sounds.
- * @postconditions all sound associations are unbuffered by the sound API
- */
-void OpenALSoundImplementation::unbindAll()
-{
-   std::map< std::string, AlSoundInfo >::iterator it;
-   for( it = mBindLookup.begin(); it != mBindLookup.end(); ++it)
-   {
-      this->unbind( (*it).first );
-   }
 
-   assert( mBindLookup.size() == 0 && "unbindAll failed" );
-}
+
 
 
 
@@ -461,7 +436,8 @@ void OpenALSoundImplementation::unbind( const std::string& alias )
          std::cout<<"ERROR: can't trigger on next bind. alias not registered when it should be\n"<<std::flush;
       }      
    }
-     
+   
+   // if alias is bound, then unbind it...
    if (mBindLookup.count( alias ) > 0)
    {
       int err = alGetError();

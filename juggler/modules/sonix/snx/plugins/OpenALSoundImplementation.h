@@ -159,20 +159,6 @@ public:
    virtual void clear();
    
    /**
-    * bind: load (or reload) all associate()d sounds
-    * @postconditions all sound associations are buffered by the sound API
-    */
-   virtual void bindAll();
-
-   /**
-    * unbind: unload/deallocate all associate()d sounds.
-    * @postconditions all sound associations are unbuffered by the sound API
-    */
-   virtual void unbindAll();
-
-   
-   
-   /**
     * load/allocate the sound data this alias refers to the sound API
     * @postconditions the sound API has the sound buffered.
     */
