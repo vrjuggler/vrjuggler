@@ -54,6 +54,7 @@ SRCS		= InetAddrNSPR.cpp		\
 									IOSysNSPR.cpp \
                   NSPRHelpers.cpp		\
                   RWMutexNSPR.cpp		\
+									SelectorImpNSPR.cpp \
                   SocketImpNSPR.cpp		\
                   SocketStreamImpNSPR.cpp	\
                   ThreadNSPR.cpp
