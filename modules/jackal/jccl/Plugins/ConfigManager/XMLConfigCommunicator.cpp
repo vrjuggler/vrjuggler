@@ -63,17 +63,17 @@ XMLConfigCommunicator::XMLConfigCommunicator (ConfigManager* _config_manager):
 
    vprASSERT (_config_manager != 0);
 
-   config_manager = _config_manager;
+   mConfigManager = _config_manager;
    
-   config_xml_handler = (XMLConfigIOHandler*)ConfigIO::instance()->getHandler ();
-   xml_parser = XercesXMLParserPool::instance()->getParser();
+   mConfigIOHandler = (XMLConfigIOHandler*)ConfigIO::instance()->getHandler ();
+   mXMLParser = XercesXMLParserPool::instance()->getParser();
 }
 
 
 /*virtual*/ XMLConfigCommunicator::~XMLConfigCommunicator ()
 {
-   ConfigIO::instance()->releaseHandler (config_xml_handler);
-   XercesXMLParserPool::instance()->releaseParser (xml_parser);
+   ConfigIO::instance()->releaseHandler (mConfigIOHandler);
+   XercesXMLParserPool::instance()->releaseParser (mXMLParser);
 }
 
 
@@ -98,7 +98,7 @@ XMLConfigCommunicator::XMLConfigCommunicator (ConfigManager* _config_manager):
 /*virtual*/ bool XMLConfigCommunicator::readStream (Connect* con, std::istream& instream, const std::string& id)
 {
    DOM_Node doc;
-   bool retval = xml_parser->readStream (instream, doc);
+   bool retval = mXMLParser->readStream (instream, doc);
    if (retval)
    {
       retval = interpretDOM_Node (con, doc);
@@ -141,13 +141,13 @@ bool XMLConfigCommunicator::interpretDOM_Node (Connect* con, DOM_Node& doc)
             child = doc.getFirstChild();
             while (child != 0)
             {
-               retval = retval && config_xml_handler->buildChunkDB
+               retval = retval && mConfigIOHandler->buildChunkDB
                   (newchunkdb, child);
                child = child.getNextSibling();
             }
             if (retval)
             {
-               config_manager->addPendingAdds(&newchunkdb);
+               mConfigManager->addPendingAdds(&newchunkdb);
             }
          }
          else if (!strcasecmp (name, "remove_chunks"))
@@ -157,12 +157,13 @@ bool XMLConfigCommunicator::interpretDOM_Node (Connect* con, DOM_Node& doc)
             {
                // i really want to just send names of chunks, but right now
                // the ConfigManager actually needs a full chunkdb :(
-               retval = retval && config_xml_handler->buildChunkDB (newchunkdb, child);
+               retval =
+                  retval && mConfigIOHandler->buildChunkDB (newchunkdb, child);
                child = child.getNextSibling();
             }
             if (retval)
             {
-               config_manager->addPendingRemoves (&newchunkdb);
+               mConfigManager->addPendingRemoves (&newchunkdb);
             }
          }
          else if (!strcasecmp (name, "remove_descs"))
@@ -172,9 +173,9 @@ bool XMLConfigCommunicator::interpretDOM_Node (Connect* con, DOM_Node& doc)
          }
          else if (!strcasecmp (name, "request_current_chunks"))
          {
-            config_manager->lockActive();
-            ConfigChunkDB* db = new ConfigChunkDB((*(config_manager->getActiveConfig())));   // Make a copy
-            config_manager->unlockActive();
+            mConfigManager->lockActive();
+            ConfigChunkDB* db = new ConfigChunkDB((*(mConfigManager->getActiveConfig())));   // Make a copy
+            mConfigManager->unlockActive();
             
             //vprDEBUG(jcclDBG_SERVER,4) << "Connect: Sending (requested) chunkdb.\n" << vprDEBUG_FLUSH;
             //vprDEBUG(jcclDBG_SERVER,5) << *db << std::endl << vprDEBUG_FLUSH;
@@ -205,9 +206,9 @@ bool XMLConfigCommunicator::interpretDOM_Node (Connect* con, DOM_Node& doc)
     
 void XMLConfigCommunicator::configChanged ()
 {
-   config_manager->lockActive();
-   ConfigChunkDB* db = new ConfigChunkDB(*(config_manager->getActiveConfig()));   // Make a copy
-   config_manager->unlockActive();
+   mConfigManager->lockActive();
+   ConfigChunkDB* db = new ConfigChunkDB(*(mConfigManager->getActiveConfig()));   // Make a copy
+   mConfigManager->unlockActive();
    
    std::vector<Connect*>& connections 
       = JackalServer::instance()->getConnections();
