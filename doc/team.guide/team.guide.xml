@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet  type="text/css" href="http://www.vrjuggler.org/docbook_ab.css"?>
 <?morphon-document-settings
   morphon.document.settings.whitespaces.amount="3"
   morphon.document.settings.print.fixed.attributes="true"
@@ -8,6 +8,7 @@
   morphon.document.settings.relative.systemids="0"
   morphon.document.settings.endofline.type="2"
   morphon.document.settings.whitespaces.type="indent"
+  morphon.document.settings.maxlinelength="0"
 ?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <book>
@@ -426,7 +427,7 @@
             <para>Because the UNIX and Win32 environments have many striking differences, special information must be provided for using the VR Juggler build system on Windows-based platforms. This document provides all the information necessary for getting set up in a Win32 environment prior to compiling and installing VR Juggler for developmental use. This is intended primarily for developers who wish to work with the VR Juggler source and (hopefully) submit work to the VR Juggler team. Users who are doing application development on a Win32 platform may want to read it too so that they may get a better understanding of what is available as part of the Win32 support.</para>
             <section>
                <title>Necessary Tools</title>
-               <para>Developers should refer to the Win32 section of the <ulink url="http://www.vrjuggler.org/html/download/">download page</ulink> for the list of packages that must be installed. The <literal>juggler-tools</literal> package is especially important. It contains exactly the utilities used for compiling VR Juggler (aside from Visual C++, of course) including some modified versions of programs. Of note, the bundled version of <command>makedepend</command> has been modified to output UNIX-safe paths and to know about the <varname>INCLUDE</varname> environment variable used by Visual C++.</para>
+               <para>Developers should refer to the Win32 section of the <ulink url="http://www.vrjuggler.org/vrjuggler/download.php#win32">download page</ulink> for the list of packages that must be installed. The <literal>juggler-tools</literal> package is especially important. It contains exactly the utilities used for compiling VR Juggler (aside from Visual C++, of course) including some modified versions of programs. Of note, the bundled version of <command>makedepend</command> has been modified to output UNIX-safe paths and to know about the <varname>INCLUDE</varname> environment variable used by Visual C++.</para>
                <para>In addition to what is listed on the download page, the following packages are needed for Win32 development of Juggler (but not for application development):</para>
                <itemizedlist>
                   <listitem>
@@ -548,7 +549,7 @@
             <section>
                <title>Environment Variables (UNIX vs. Win32)</title>
                <para>In a UNIX environment, no environment variables have to be set for <command>configure</command> to work properly. The <varname>PATH</varname> should be reasonable and must include tools such as C and C++ compilers, a working GNU make and standard UNIX utilities such as <command>cat</command>, <command>sh</command>, <command>test</command>, etc. The configuration process can of course uses environment variables such as <varname>$CC</varname>, <varname>$CXX</varname>, <varname>$CFLAGS</varname>, etc. as it runs. Users can define values for these variables to force the configuration process to use user-defined settings. This is common in configure script use.</para>
-               <para>In a Win32 environment, some variables have to be defined for the Microsoft Visual C++ compiler to work properly. These are mentioned on the <ulink url="http://www.vrjuggler.org/html/download/">Download page</ulink>. Refer to that document to ensure that the environment is set up right for building and installing.</para>
+               <para>In a Win32 environment, some variables have to be defined for the Microsoft Visual C++ compiler to work properly. These are mentioned on the <ulink url="http://www.vrjuggler.org/vrjuggler/download.php#win32">Download page</ulink>. Refer to that document to ensure that the environment is set up right for building and installing.</para>
             </section>
             <section>
                <title>Overview</title>
