@@ -66,8 +66,7 @@ bool EventWindowOSX::config(jccl::ConfigChunkPtr c)
    //const char neg_one_STRING[] = "-1";
 
    // Done in Input --- mThread = NULL;
-   int i;
-   for (i =0; i < 256; ++i)
+   for ( int i = 0; i < gadget::LAST_KEY; ++i )
    {
       mCurKeys[i] = m_realkeys[i] = m_keys[i] = 0;
    }
@@ -161,14 +160,14 @@ void EventWindowOSX::updateData()
         */
 
         // Copy over values
-        for ( unsigned int i = 0; i < 256; ++i )
+        for ( unsigned int i = 0; i < gadget::LAST_KEY; ++i )
         {
            mCurKeys[i] = m_keys[i];
         }
 
         // Re-initialize the m_keys based on current key state in realKeys
         // Set the initial state of the m_key key counts based on the current state of the system
-        for ( unsigned int j = 0; j < 256; ++j )
+        for ( unsigned int j = 0; j < gadget::LAST_KEY; ++j )
         {
            m_keys[j] = m_realkeys[j];
         }
