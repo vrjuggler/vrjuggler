@@ -78,7 +78,8 @@ public:
     */
    void handlePacket(Packet* packet, ClusterNode* node)
    {
-      packet->action(node);
+      //packet->action(node);
+      // The SwapLockPlugin needs a lot of work currently.
    }
 
 

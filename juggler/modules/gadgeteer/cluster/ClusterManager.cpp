@@ -41,6 +41,9 @@
 #include <cluster/ClusterNetwork/ClusterNode.h>
 
 #include <cluster/Packets/EndBlock.h>
+#include <cluster/Packets/ConnectionRequest.h>
+#include <cluster/Packets/ConnectionAck.h>
+
 #include <cluster/ClusterPlugin.h>
 #include <gadget/Type/DeviceFactory.h>
 
@@ -139,16 +142,38 @@ namespace cluster
 
    void ClusterManager::handlePacket(Packet* packet, ClusterNode* node)
    {
+      // If the ClusterManager should handle this packet, then do so.
+      if (packet->getPacketType() == Header::RIM_END_BLOCK)
+      {
+         // -Set New State
+         if (node == NULL)
+         {
+            return;
+         }
+   
+         //node->setState(mNewState);
+         node->setUpdated(true);
+         return;
+      }
+      else if (packet->getPacketType() == Header::RIM_CONNECTION_REQ ||
+               packet->getPacketType() == Header::RIM_CONNECTION_ACK)
+      {
+         ClusterNetwork::instance()->handlePacket(packet, node);
+      }
+      
       vpr::GUID plugin_guid = packet->getPluginId();
       
       ClusterPlugin* temp_plugin = getPluginByGUID(plugin_guid);
-      if (NULL == temp_plugin)
+      
+      if (NULL != temp_plugin)
       {
-         packet->action(node);
+         temp_plugin->handlePacket(packet, node);
       }
       else
       {
-         temp_plugin->handlePacket(packet, node);
+	     vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
+            << "Plugin " << plugin_guid.toString() << " does not exist to handle this packet" 
+            << std::endl << vprDEBUG_FLUSH;           
       }
    }
 

@@ -86,8 +86,6 @@ namespace cluster
       std::string getManagerId() { return mManagerId;}
       bool getAck() { return mAck;}
 
-      virtual bool action(ClusterNode* node);
-   
    private:
       std::string mHostname;
       vpr::Uint16 mPort;

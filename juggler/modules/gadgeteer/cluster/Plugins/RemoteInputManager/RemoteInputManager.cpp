@@ -118,8 +118,6 @@ namespace cluster
     */
    void RemoteInputManager::handlePacket(Packet* packet, ClusterNode* node)
    {
-      //packet->action(node);
-      //packet->action(node);
       //We are only handling data packets right now.
       if ( NULL != packet && NULL != node )
       {

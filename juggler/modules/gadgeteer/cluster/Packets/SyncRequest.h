@@ -86,23 +86,6 @@ public:
    std::string getHostname() { return mHostname; }
    vpr::Uint16 getPort() { return mPort; }
    std::string getManagerId() { return mManagerId; }
-
-   virtual bool action(ClusterNode* node)
-   {
-      // - Check if SyncNode already exists
-      //   - If true delete old one (In case the other end has lost the connection)
-      // - Create a SyncNode
-      //   -(Set isConnected on new node)
-      // - Send a Sync_Ack
-
-      if (node == NULL)
-      {
-         return false;
-      }
-
-      std::cout << "Sync me, PLEASE?" << std::endl;
-      return true;
-   }
 private:
    std::string mHostname;
    vpr::Uint16 mPort;

@@ -52,7 +52,7 @@ SUBOBJDIR=	$(PLUGIN_NAME)
 C_AFTERBUILD=	plugin-dso
 
 SRCS=		SwapLockPlugin.cpp	  \
-		ClusterBarrierSerial.cpp  \
+		#ClusterBarrierSerial.cpp
 		ClusterBarrierTCP.cpp	  \
 
 ifneq (@OS_TYPE@, Win32)

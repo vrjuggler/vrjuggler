@@ -244,7 +244,8 @@ namespace cluster
       {
          return &mDelta;
       }
-      void send(Packet* out);
+      
+      vpr::ReturnStatus send(Packet* out);
 private:
       //vpr::Interval        mDelta;
       //ClusterSync          mClusterSync;
