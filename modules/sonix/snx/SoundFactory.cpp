@@ -53,7 +53,6 @@
 #include <vpr/Util/FileUtils.h>
 #include <vpr/DynLoad/LibraryFinder.h>
 
-#include <snx/PluginAPI.h>
 #include <snx/Util/Debug.h>
 #include "snx/ISoundImplementation.h"
 #include "snx/StubSoundImplementation.h" // in case lookup fails...
@@ -63,6 +62,24 @@
 
 namespace snx
 {
+
+/**
+ * Create the plugin.
+ * Symbol name to look up from the shared lib is "newPlugin".
+ */
+typedef snx::ISoundImplementation* (*newPluginFunc)(void);
+
+/**
+ * Gets the name of the plugin.
+ * Symbol name to lookup from the shared lib is "getName".
+ */
+typedef char* (*getNameFunc)(void);
+
+/**
+ * Get the version of sonix plugin was compiled against.
+ * Symbol name to lookup from the shared lib is "getVersion".
+ */
+typedef char* (*getVersionFunc)(void);
 
 vprSingletonImp(SoundFactory);
 
