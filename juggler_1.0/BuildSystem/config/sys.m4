@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          sys.m4,v
-dnl Date modified: 2001/06/29 23:47:52
-dnl Version:       1.39
+dnl Date modified: 2001/08/28 22:46:00
+dnl Version:       1.39.2.2
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -101,7 +101,7 @@ dnl     IRIXREL      - Defined to the string "IRIX5" or "IRIX6" based on the
 dnl                    determined version of IRIX.
 dnl ===========================================================================
 
-dnl sys.m4,v 1.39 2001/06/29 23:47:52 patrickh Exp
+dnl sys.m4,v 1.39.2.2 2001/08/28 22:46:00 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Based on the given target host and CPU, set up the system-specific
@@ -123,8 +123,9 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
     dnl Operating system version number only (any miscellaneous text is
     dnl stripped).  This will only contain a number and can be treated as a
     dnl float-point value.
-    dnl NOTE: It is currently not used in config.h.
+    changequote(<<, >>)
     OS_REL_NUM=`uname -r | sed -e 's/^[^0-9]*\([0-9][0-9]*\.[0-9][0-9]*\)[^0-9]*$/\1/'`
+    changequote([, ])
 
     dnl Major and minor version numbers from $OS_REL_NUM separated for use
     dnl with the C preprocessor.  Using cut(1) is kind of a hack, but at least
@@ -228,8 +229,8 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
                 OPT_FLAGS="/Ogityb$dpp_opt_level /GB"
                 LD='link /dll'
                 LDOPTS="$LDOPTS /nologo"
-                LDOPTS_DBG='/LDd /MDd /PDB:NONE'
-                LDOPTS_OPT='/LD /MD'
+                LDOPTS_DBG='/DEBUG /PDB:NONE'
+                LDOPTS_OPT='/RELEASE'
                 OBJ_NAME_FLAG='/Fo$[@]'
                 OBJ_BUILD_FLAG='/c'
                 EXE_NAME_FLAG='/OUT:$[@]'

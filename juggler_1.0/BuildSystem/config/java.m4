@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          java.m4,v
-dnl Date modified: 2001/07/02 20:48:50
-dnl Version:       1.29
+dnl Date modified: 2001/08/22 15:27:42
+dnl Version:       1.29.2.2
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -62,7 +62,7 @@ dnl     JNI_INC  - The include paths necessary for JNI.
 dnl     JNI_LIB  - The library which needs to be statically linked for JNI.
 dnl ===========================================================================
 
-dnl java.m4,v 1.29 2001/07/02 20:48:50 patrickh Exp
+dnl java.m4,v 1.29.2.2 2001/08/22 15:27:42 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Find the path to the Java installation.  Substition is performed on the
@@ -324,22 +324,6 @@ AC_DEFUN(DPP_CHECK_JAVA_STATIC_METHOD,
     DPP_LANG_SAVE
     DPP_LANG_JAVA
 
-    dpp_class_name='ConfTest'
-
-    dnl Create the .java file that will be compiled.
-    cat > $dpp_class_name.java <<STATIC_EOF
-public class $dpp_class_name {
-    public static void main (String args[]) {
-        $3;
-        $1.$2;
-    }
-};
-STATIC_EOF
-
-    if test "x$6" != "x" ; then
-        dpp_classpath="-classpath $6"
-    fi 
-
     dnl The following is basically an expansion of the AC_CACHE_CHECK macro.
     dnl This was necessary because the variable name depends on the class and
     dnl the method being checked.
@@ -357,20 +341,36 @@ STATIC_EOF
         echo $ac_n "(cached) $ac_c" 1>&AC_FD_MSG
     dnl The value was not cached.
     else
+        dpp_class_name='ConfTest'
+
+        dnl Create the .java file that will be compiled.
+        cat > $dpp_class_name.java <<STATIC_EOF
+public class $dpp_class_name {
+    public static void main (String args[]) {
+        $3;
+        $1.$2;
+    }
+};
+STATIC_EOF
+
+        if test "x$6" != "x" ; then
+            dpp_classpath="-classpath $6"
+        fi 
+
         dpp_java_compile='${JAVAC-javac} $dpp_classpath $dpp_class_name.java 1>&AC_FD_CC'
 
         dnl Try compiling the Java test file.  If it succeeded, set the
         dnl variable to 'yes'.
         if (eval $dpp_java_compile) 2>&AC_FD_CC; then
             eval "$dpp_cache_var=yes"
-            rm -f $dpp_class_name.*
         dnl If the test file failed to compile, set the variable to 'no'.
         else
             eval "$dpp_cache_var=no"
             echo "configure: failed program was:" >&AC_FD_CC
             cat $dpp_class_name.java >&AC_FD_CC
-            rm -f $dpp_class_name.*
         fi
+
+        rm -f ${dpp_class_name}.*
     fi
 
     dpp_test_result=`eval echo '$''{'$dpp_cache_var'}'`
@@ -413,23 +413,6 @@ AC_DEFUN(DPP_CHECK_JAVA_METHOD,
     DPP_LANG_SAVE
     DPP_LANG_JAVA
 
-    dpp_class_name='ConfTest'
-
-    dnl Create the .java file that will be compiled.
-    cat > $dpp_class_name.java <<NONSTATIC_EOF
-public class $dpp_class_name {
-    public static void main (String args[]) {
-        $3;
-        $1 obj = new $1();
-        obj.$2;
-    }
-};
-NONSTATIC_EOF
-
-    if test "x$5" != "x" ; then
-        dpp_classpath="-classpath $5"
-    fi 
-
     dnl The following is basically an expansion of the AC_CACHE_CHECK macro.
     dnl This was necessary because the variable name depends on the class and
     dnl the method being checked.
@@ -447,20 +430,37 @@ NONSTATIC_EOF
         echo $ac_n "(cached) $ac_c" 1>&AC_FD_MSG
     dnl The value was not cached.
     else
+        dpp_class_name='ConfTest'
+
+        dnl Create the .java file that will be compiled.
+        cat > $dpp_class_name.java <<NONSTATIC_EOF
+public class $dpp_class_name {
+    public static void main (String args[]) {
+        $3;
+        $1 obj = new $1();
+        obj.$2;
+    }
+};
+NONSTATIC_EOF
+
+        if test "x$5" != "x" ; then
+            dpp_classpath="-classpath $5"
+        fi 
+
         dpp_java_compile='${JAVAC-javac} $dpp_classpath $dpp_class_name.java 1>&AC_FD_CC'
 
         dnl Try compiling the Java test file.  If it succeeded, set the
         dnl variable to 'yes'.
         if (eval $dpp_java_compile) 2>&AC_FD_CC; then
             eval "$dpp_cache_var=yes"
-            rm -f $dpp_class_name.*
         dnl If the test file failed to compile, set the variable to 'no'.
         else
             eval "$dpp_cache_var=no"
             echo "configure: failed program was:" >&AC_FD_CC
             cat $dpp_class_name.java >&AC_FD_CC
-            rm -f $dpp_class_name.*
         fi
+
+        rm -f ${dpp_class_name}.*
     fi
 
     dpp_test_result=`eval echo '$''{'$dpp_cache_var'}'`

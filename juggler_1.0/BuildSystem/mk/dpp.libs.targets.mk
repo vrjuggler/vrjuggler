@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.libs.targets.mk,v
-# Date modified: 2001/06/29 23:47:52
-# Version:       1.5
+# Date modified: 2001/08/28 22:46:48
+# Version:       1.5.2.1
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.libs.targets.mk,v 1.5 2001/06/29 23:47:52 patrickh Exp
+# dpp.libs.targets.mk,v 1.5.2.1 2001/08/28 22:46:48 patrickh Exp
 #
 # This file <dpp.libs.targets.mk> defines many targets for use in compiling a
 # software library (or a set of libraries).  It should not be included
@@ -412,6 +412,7 @@ lib.static.dbg.build:
 ifneq ("$(STATIC_LIBS)", "")
 	@for lib in $(STATIC_LIBS) ; do					\
             $(MAKE) OBJDIR="$(DBG_BUILDDIR)/$$lib" LIBDIR="$(DBG_LIBDIR)" \
+              EXTRA_LDOPTS="$(LDOPTS_DBG)"				\
               $(DBG_LIBDIR)/$$lib.$(STATICLIB_EXT) ;			\
           done
 endif
@@ -424,6 +425,7 @@ lib.dynamic.dbg.build:
 ifneq ("$(DYNAMIC_LIBS)", "")
 	@for lib in $(DYNAMIC_LIBS) ; do				\
             $(MAKE) OBJDIR="$(DBG_BUILDDIR)/$$lib" LIBDIR="$(DBG_LIBDIR)" \
+              EXTRA_LDOPTS="$(LDOPTS_DBG)"				\
               $(DBG_LIBDIR)/$$lib.$(DYNAMICLIB_EXT) ;			\
           done
 endif
@@ -436,6 +438,7 @@ lib.static.opt.build:
 ifneq ("$(STATIC_LIBS)", "")
 	@for lib in $(STATIC_LIBS) ; do					\
             $(MAKE) OBJDIR="$(OPT_BUILDDIR)/$$lib" LIBDIR="$(OPT_LIBDIR)" \
+              EXTRA_LDOPTS="$(LDOPTS_OPT)"				\
               $(OPT_LIBDIR)/$$lib.$(STATICLIB_EXT) ;			\
           done
 endif
@@ -448,6 +451,7 @@ lib.dynamic.opt.build:
 ifneq ("$(DYNAMIC_LIBS)", "")
 	@for lib in $(DYNAMIC_LIBS) ; do				\
             $(MAKE) OBJDIR="$(OPT_BUILDDIR)/$$lib" LIBDIR="$(OPT_LIBDIR)" \
+              EXTRA_LDOPTS="$(LDOPTS_OPT)"				\
               $(OPT_LIBDIR)/$$lib.$(DYNAMICLIB_EXT) ;			\
           done
 endif
