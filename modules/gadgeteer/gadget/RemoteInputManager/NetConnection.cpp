@@ -51,7 +51,7 @@ namespace gadget
    NetConnection::NetConnection()
    {
       mSockStream = NULL;
-      
+
       //mObjectReader = new vpr::ObjectReader(new std::vector<vpr::Uint8>);
       mSendIterations = 0;
       mRecvIterations = 0;
@@ -72,7 +72,7 @@ namespace gadget
       mManagerId = vpr::GUID(manager_id); // set the id of the other computer's remote manager
       mSockStream = sock_stream;
       mSockStream->setNoDelay(true);
-      
+
       //mObjectReader = new vpr::ObjectReader(new std::vector<vpr::Uint8>);
       mSendIterations = 0;
       mRecvIterations = 0;
@@ -100,14 +100,14 @@ namespace gadget
    void NetConnection::sendNetworkData()
    {
       mSendIterations++;
-      
+
       for ( std::list<NetDevice*>::iterator i = mTransmittingDevices.begin();i != mTransmittingDevices.end();i++ )
       {
          if ( (*i)->getWasInitialized() )
          {
              vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[RIM] Sending data for device: " << (*i)->getSourceName() << "\n" << vprDEBUG_FLUSH;
              // (*i)->updateFromLocalSource();
-             
+
              mMsgPackage.createDeviceDataPacket(*i);
              mMsgPackage.sendAndClearDeviceData(mSockStream,(*i));
          }
@@ -191,8 +191,8 @@ namespace gadget
       {
          return;
       }
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Creating a device request: " 
-            << net_device->getLocalId()<< "-" << net_device->getSourceName() 
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Creating a device request: "
+            << net_device->getLocalId()<< "-" << net_device->getSourceName()
             << "\n"<< vprDEBUG_FLUSH;
       mMsgPackage.createDeviceRequest(net_device->getLocalId(), net_device->getSourceName());
       mMsgPackage.sendAndClear(mSockStream);
@@ -204,7 +204,7 @@ namespace gadget
    NetDevice* NetConnection::findNetDeviceByLocalId(VJ_NETID_TYPE local_id)
    {
       std::list<NetDevice*>::iterator i;
-   
+
       // check Receiving Devices
       for ( i = mReceivingDevices.begin(); i != mReceivingDevices.end(); i++ )
       {
@@ -213,7 +213,7 @@ namespace gadget
             return(*i);
          }
       }
-   
+
             // check Transmitting Devices
       for ( i = mTransmittingDevices.begin(); i != mTransmittingDevices.end(); i++ )
       {
@@ -222,13 +222,13 @@ namespace gadget
             return(*i);
          }
       }
-   
+
       return NULL;
    }
 
-   
+
    Input* NetConnection::getDevice(const std::string device_name)
-   {  
+   {
       for ( std::list<NetDevice*>::iterator i = mReceivingDevices.begin();
           i!= mReceivingDevices.end(); i++ )
       {
@@ -295,25 +295,25 @@ namespace gadget
    }
    void NetConnection::debugDump()
    {
-      
+
       vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         << "------ " << "Host Name: " << clrSetNORM(clrGREEN)  << mHostname << ":" << mPort 
+         << "------ " << "Host Name: " << clrSetNORM(clrGREEN)  << mHostname << ":" << mPort
          << clrRESET << " -----\n" << vprDEBUG_FLUSH;
 
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Trans./Receive \tLocalID \tRemoteID\n" << vprDEBUG_FLUSH;
-      
+
       for (std::list<NetDevice*>::iterator i = mTransmittingDevices.begin();
            i != mTransmittingDevices.end();i++)
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Transmitting:   " << (*i)->getSourceName() 
-         << " " << (*i)->getLocalId() << " " << (*i)->getRemoteId() 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Transmitting:   " << (*i)->getSourceName()
+         << " " << (*i)->getLocalId() << " " << (*i)->getRemoteId()
          << "\n" << vprDEBUG_FLUSH;
       }
       for (std::list<NetDevice*>::iterator i = mReceivingDevices.begin();
            i != mReceivingDevices.end();i++)
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Receiving:   " << (*i)->getSourceName() 
-         << " " << (*i)->getLocalId() << " " << (*i)->getRemoteId() 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Receiving:   " << (*i)->getSourceName()
+         << " " << (*i)->getLocalId() << " " << (*i)->getRemoteId()
          << "\n" << vprDEBUG_FLUSH;
       }
       vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
@@ -328,23 +328,23 @@ namespace gadget
       vprDEBUG_OutputGuard(gadgetDBG_RIM, vprDBG_CONFIG_LVL,
          std::string("[NetConnection::ConfigureReceivingNetDevice] " + device_name + "\n"),
          std::string("[END NetConnection::ConfigureReceivingNetDevice] " + device_name + "\n"));
-   
+
          //Check if we have this NetDevice Already
       NetDevice* net_device = findReceivingNetDevice(device_name);
-   
-   
+
+
       if ( net_device != NULL )  // We are already receiving data for this device
-      {  
-         vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrSetBOLD(clrRED) << "We already have an instance of: " 
+      {
+         vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrSetBOLD(clrRED) << "We already have an instance of: "
                << device_name << "\n" << clrRESET << vprDEBUG_FLUSH;
          return false;
       }
       else  // setup new structures to receive and manage data from the remote device
-      {  
+      {
          vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << "Create a new NetDevice: " << device_name << "\n"<< vprDEBUG_FLUSH;
-   
+
          NetDevice* recv_net_device = new NetDevice(device_name, this->generateLocalId());  // Create a new receiving NetDevice
-   
+
          if ( recv_net_device != NULL ) // NetDevice was created successfully
          {
             vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << "Successful, now adding to receiving NetDevices\n"<< vprDEBUG_FLUSH;
@@ -355,7 +355,7 @@ namespace gadget
          }
          else
          {
-            vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutNORM(clrRED,"Failed trying to create a NetDevice: ") 
+            vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutNORM(clrRED,"Failed trying to create a NetDevice: ")
                << device_name << "\n"<< vprDEBUG_FLUSH;
             return false;
          }
@@ -370,7 +370,7 @@ namespace gadget
          std::string("[END RIM::ConfigureTransmittingNetDevice] " + device_name + "\n"));
 
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Looking in our local Input Manager for: " << device_name << "\n" << vprDEBUG_FLUSH;
-      
+
       Input* input_ptr = gadget::InputManager::instance()->getDevice(device_name);
       NetDevice* net_device;
       if ( input_ptr != NULL )   // Device exists locally
@@ -380,7 +380,7 @@ namespace gadget
 
          net_device = new NetDevice(device_name, input_ptr, this->generateLocalId(), requester_device_id);
          net_device->setObjectWriter(gadget::InputManager::instance()->getRemoteInputManager()->getObjectWriter(device_name,input_ptr));
-         
+
          if (net_device != NULL)    // Successfully created transmitting NetDevice
          {
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Successful, now adding to transmitting NetDevices\n"<< vprDEBUG_FLUSH;
@@ -410,14 +410,14 @@ namespace gadget
             // Send an acknolegement
          mMsgPackage.createDeviceAck(net_device->getRemoteId(), net_device->getLocalId(), device_name, net_device->getRealDevice()->getBaseType());
          mMsgPackage.sendAndClear(mSockStream);
-         
+
             // Send an END_BLOCK since we are done sending data on this connection
          //mMsgPackage.createEndBlock();
          //mMsgPackage.sendAndClear(net_connection->getSockStream());
-            
+
             // Set a flag saying that we have in dead set up this NetDevice correctly
          net_device->setWasInitializedTrue();
-         vprDEBUG(gadgetDBG_RIM, vprDBG_CONFIG_LVL) << "Transmitting NetDevice, " << device_name 
+         vprDEBUG(gadgetDBG_RIM, vprDBG_CONFIG_LVL) << "Transmitting NetDevice, " << device_name
                << " has been created successfully.\n" << vprDEBUG_FLUSH;
          return true;
       }
@@ -432,7 +432,7 @@ namespace gadget
          //mMsgPackage.sendAndClear(net_connection->getSockStream());
 
          delete net_device;
-         vprDEBUG(gadgetDBG_RIM, vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED) << "ERROR: Transmitting NetDevice, " << device_name 
+         vprDEBUG(gadgetDBG_RIM, vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED) << "ERROR: Transmitting NetDevice, " << device_name
                << " could not be created!\n" << clrRESET << vprDEBUG_FLUSH;
          return false;
       }
@@ -441,28 +441,28 @@ namespace gadget
 
    vpr::ReturnStatus NetConnection::receiveNetworkPacket()
    {
-      
+
       ///////////////////////////////////////////////////////////////////////
-      //		  
-      // PARSE PACKET	  
-      //				  
+      //		
+      // PARSE PACKET	
+      //				
       //	FORM:		 vpr::Uint16		vpr::Uint16		 vpr::Uint32
       //			--------------------------------------------------------
       //			| RIM_PACKET_MSG | MSG_DEVICE_DATA |   length   | data |
       //			-------------------------------------------------------	
       //																	
       ///////////////////////////////////////////////////////////////////////
-   
+
       vprDEBUG_TSColorGuard(clrGREEN);
       vprDEBUG_OutputGuard(gadgetDBG_RIM, vprDBG_VERB_LVL,
          std::string("[RIM::receiveNetworkPacket] Read Network Packet\n"),
          std::string("[RIM::receiveNetworkPacket] END Read Network Packet\n"));
-   
+
       vpr::Uint32 bytes_read;
       NetDevice* tmp_net_device;
-   
+
          // Get the socketStream and MsgPackage for this NetConnection
-      
+
       // DELETE
       //vpr::SocketStream* socket_stream = this->net_connection->getSockStream();
       //socket_stream == mSockStream
@@ -472,18 +472,18 @@ namespace gadget
       // gadget::MsgPackage* msg_package = net_connection->getMsgPackage();
       // msg_package == mMsgPackage
       // DELETE
-   
+
       ///////////////////////////////
       // READ IN THE PACKET HEADER //
       ///////////////////////////////
 
          // Create a new vector can read the data into it
       std::vector<vpr::Uint8> packet_head(100);
-         
+
          //Read in the known length of the packet header
       vpr::ReturnStatus status = mSockStream->recvn(packet_head,RIM_HEAD_LENGTH,bytes_read);
-         
-         // If the read was not successful 
+
+         // If the read was not successful
       if (!status.success())
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrSetBOLD(clrRED) << "[RIM::receiveNetworkPacket] ERROR: Connection lost" << vprDEBUG_FLUSH;
@@ -491,18 +491,18 @@ namespace gadget
          vpr::Error::outputCurrentError(std::cout, "BlockIO readn ERROR: ");
          return(vpr::ReturnStatus::NotConnected);
       }
-   
+
          // Create a new ObjectReader to retreive our data
-      vpr::ObjectReader* head_reader = new vpr::ObjectReader(&packet_head);
-   
+      vpr::BufferObjectReader* head_reader = new vpr::BufferObjectReader(&packet_head);
+
          // Parse the data to get the Packet Header info
       vpr::Uint16 rimcode =  head_reader->readUint16();
       vpr::Uint16 opcode  =  head_reader->readUint16();
       vpr::Uint32 length  =  head_reader->readUint32();
-   
+
          // We can clear the data vector since we are done with it
       head_reader->mData->clear();
-   
+
       if (rimcode != RIM_PACKET_MSG)   // Packet not valid
       {
          this->setAllPacketsReceived();
@@ -512,7 +512,7 @@ namespace gadget
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << "OPCODE:   " << (int)opcode << "\n" << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << "LENGTH:   " << (int)length << "\n" << vprDEBUG_FLUSH;
          vprDEBUG_END(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"================================================\n") << vprDEBUG_FLUSH;
-   
+
          std::vector<vpr::Uint8> packet_data(100);
          status = mSockStream->recvn(packet_data,            // Empty the buffer and try to get valid data next time around
                                       mSockStream->availableBytes(),
@@ -525,107 +525,107 @@ namespace gadget
          packet_data.clear();
          return(vpr::ReturnStatus::Fail);
       }
-   
+
       /////////////////////////////
       // READ IN THE PACKET DATA //
       /////////////////////////////
-   
+
          // Create a new vector can read the data into it
       std::vector<vpr::Uint8> packet_data(100);
-   
+
       vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "PACKET SIZE: " << length << "\n" << vprDEBUG_FLUSH;
-   
+
          // For alignment reasons we MUST grab the device_id now if a data packet
       vpr::Uint16 device_id;
       if (opcode == MSG_DEVICE_DATA)
       {
          status = mSockStream->recvn(&device_id,2,bytes_read);
          device_id = vpr::System::Ntohs(device_id);
-         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrSetNORM(clrCYAN) 
-            << "==============DEVICE ID: " 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrSetNORM(clrCYAN)
+            << "==============DEVICE ID: "
             << device_id << "==================\n" << clrRESET << vprDEBUG_FLUSH;
-         
+
             // Must also read 2 fewer bytes since we just read two
-         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrSetNORM(clrCYAN) 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrSetNORM(clrCYAN)
             << "Reading Device Data Size: " << length-RIM_HEAD_LENGTH-2 << "\n" << clrRESET << vprDEBUG_FLUSH;
-         
+
          status = mSockStream->recvn(packet_data,length-RIM_HEAD_LENGTH-2,bytes_read);
-         
-         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrSetNORM(clrCYAN) 
+
+         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrSetNORM(clrCYAN)
             << "DONE Reading Device Data Size: " << bytes_read << "\n" << clrRESET << vprDEBUG_FLUSH;
       }
       else
       {
          status = mSockStream->recvn(packet_data,length-RIM_HEAD_LENGTH,bytes_read);
       }
-   
-   
+
+
          // Create a new ObjectReader to parse our incoming data
-      vpr::ObjectReader* data_reader = new vpr::ObjectReader(&packet_data);
-   
+      vpr::BufferObjectReader* data_reader = new vpr::BufferObjectReader(&packet_data);
+
       switch ( opcode )
       {
       case MSG_DEVICE_REQ:    // Remote device is requesting a device from the local machine
          {
             vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"[RIM Packet] MSG_DEVICE_REQ\n") << vprDEBUG_FLUSH;
-   
+
                // Have mMsgPackage receive the device request
             mMsgPackage.receiveDeviceRequest(data_reader);
-   
+
                // Try to configure the NetDevice, it will send a responce
             configureTransmittingNetDevice(mMsgPackage.getDeviceName(), mMsgPackage.getSenderId());
-   
+
             vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"[RIM Packet] END MSG_DEVICE_REQ\n") << vprDEBUG_FLUSH;
             break;
          }
       case MSG_DEVICE_ACK:
-         {      
+         {
             vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"[RIM Packet] MSG_DEVICE_ACK\n") << vprDEBUG_FLUSH;
-   
+
                // Have mMsgPackage receive the device acknoledgement
             mMsgPackage.receiveDeviceAck(data_reader);
-   
+
                // Try to find the NetDevice for the device we requested
             tmp_net_device = findNetDeviceByLocalId(mMsgPackage.getReceiverId());
-   
+
             if ( tmp_net_device != NULL )
             {
                vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Found the local device that made the request\n" << vprDEBUG_FLUSH;
-   
+
                   // Set the device servers device ID for this device
                tmp_net_device->setRemoteId(mMsgPackage.getSenderId());
-   
+
                   // Try to create a "virtual device"
                Input* new_device = BaseTypeFactory::instance()->loadNetDevice(mMsgPackage.getBaseType());
-   
+
                   // ASSERT if we can not create a "virtual device" because we have failed
                vprASSERT(new_device != NULL && "BaseTypeFactor failed to find base type");
-   
-               vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Made a new Virtual device of BaseType: " 
+
+               vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Made a new Virtual device of BaseType: "
                         << mMsgPackage.getBaseType() <<"\n" << vprDEBUG_FLUSH;
-   
-                  //Points the to virtual device type               
+
+                  //Points the to virtual device type
                tmp_net_device->setRealDevice(new_device);
-   
+
                   // Set a flag that we have configured this NetDevice correctly
                tmp_net_device->setWasInitializedTrue();
-   
+
                   // Tell the input Mangager that we may now have the device it was trying to point to
                InputManager::instance()->refreshAllProxies();
             }
             else
             {
-               vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED) 
-                     << "ERROR: Did not find a local device that made a call to the device server!" 
+               vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED)
+                     << "ERROR: Did not find a local device that made a call to the device server!"
                      << clrRESET << vprDEBUG_FLUSH;
             }
          }
-         vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"[RIM Packet] END MSG_DEVICE_ACK\n") << vprDEBUG_FLUSH;         
+         vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"[RIM Packet] END MSG_DEVICE_ACK\n") << vprDEBUG_FLUSH;
          break;
       case MSG_DEVICE_NACK:
          {
             vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"[RIM Packet] MSG_DEVICE_NACK\n") << vprDEBUG_FLUSH;
-   
+
             mMsgPackage.receiveDeviceAck(data_reader);
             tmp_net_device = findNetDeviceByLocalId(mMsgPackage.getReceiverId());
             if ( tmp_net_device != NULL )
@@ -644,12 +644,12 @@ namespace gadget
       case MSG_DEVICE_DATA:   // Data for a given device has been received
          {
             vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutNORM(clrGREEN,"[RIM Packet] DEVICE_DATA\n") << vprDEBUG_FLUSH;
-               
+
                // Try to find the NetDevice for this remote device
-            NetDevice* net_device_recvr = this->findReceivingNetDeviceByLocalId(device_id);    
+            NetDevice* net_device_recvr = this->findReceivingNetDeviceByLocalId(device_id);
             if ( net_device_recvr == NULL )
             {
-               vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutBOLD(clrRED,"ERROR NetConnection does not have a device numbered: ") 
+               vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutBOLD(clrRED,"ERROR NetConnection does not have a device numbered: ")
                      << clrOutBOLD(clrRED,device_id) << "\n" << vprDEBUG_FLUSH;
                debugDump();
                exit(0);
@@ -657,16 +657,16 @@ namespace gadget
             else
             {
                vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "Receiving data for: " << net_device_recvr->getSourceName() << "\n" << vprDEBUG_FLUSH;
-   
+
                //std::cout << "READ: " << net_device_recvr->getSourceName() << std::endl;
                mMsgPackage.receiveDeviceDataPacket(data_reader,
                                                     net_device_recvr->getRealDevice(),
                                                     this->getDelta());
             }
          }
-         vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutNORM(clrGREEN,"[RIM Packet] END DEVICE_DATA\n") << vprDEBUG_FLUSH;         
+         vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutNORM(clrGREEN,"[RIM Packet] END DEVICE_DATA\n") << vprDEBUG_FLUSH;
          break;
-      case MSG_CLUSTER_SYNC:  // Other machine is asking for a sync communication 
+      case MSG_CLUSTER_SYNC:  // Other machine is asking for a sync communication
          //mClusterSync.clientClusterSync(mSockStream);
          break;
       case MSG_END_BLOCK:
