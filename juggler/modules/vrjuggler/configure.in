@@ -477,10 +477,10 @@ if test "$OS_TYPE" = "UNIX" ; then
     DYLIB_DEPS_GL="-L\$(LIBDIR) -lvrj $REQ_EXTRA_LIBS"
     DYLIB_DEPS_PF="-L\$(LIBDIR) -lvrj $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_LIBS"
 
-    osx_frameworks='-framework AGL -framework ApplicationServices'
+    osx_frameworks=''
 
     if test "x$GADGET_USE_X11" != "xyes" ; then
-        osx_frameworks="$osx_frameworks -framework Carbon"
+        osx_frameworks="-framework AGL -framework ApplicationServices -framework Carbon"
     fi
 
     if test "x$PLATFORM" = "xDarwin" ; then
