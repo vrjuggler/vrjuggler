@@ -49,6 +49,9 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(SNX_LIBRARY)
 
+# Prefix for recursive stuff.
+DIRPRFX=	snx/
+
 SRCS=		FileIO.cpp			\
 		SoundFactory.cpp		\
 		SoundImplementation.cpp 	\
