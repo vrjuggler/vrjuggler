@@ -671,7 +671,7 @@ clean-links:
 # Steps to take before beginning the installation process.  This target is
 # independent of the current ABI.
 beforeinstall:
-	${MAKE} hier
+	@${MAKE} hier
 ifdef GROUP_NAME
 	@chgrp -R ${GROUP_NAME} ${prefix}
 endif
