@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <stdio.h> // for FILE
+#include <stdio.h>// for FILE
 
 #include <AL/al.h>
 #include <AL/alc.h>
@@ -16,7 +16,7 @@
 
 #include "ajOpenALSoundImplementation.h"
 
-ajOpenALSoundImplementation::ajOpenALSoundImplementation() : mContextId( NULL ), mDev( NULL ), mBindLookup()
+ajOpenALSoundImplementation::ajOpenALSoundImplementation() : ajSoundImplementation(), mContextId( NULL ), mDev( NULL ), mBindLookup()
 {
 }
 
@@ -33,8 +33,17 @@ ajOpenALSoundImplementation::~ajOpenALSoundImplementation()
  */
 void ajOpenALSoundImplementation::trigger( const std::string& alias, const unsigned int& looping )
 {
+   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   
    ajSoundImplementation::trigger( alias, looping );
 
+   // if sound data hasn't been loaded into sound API yet, then do so
+   if (mBindLookup.count( alias ) == 0)
+   {
+      this->bind( alias );
+   }
+   
+   // if data is bound (bind() succeeded), then play it.
    if (mBindLookup.count( alias ) > 0)
    {
       alSourcePlay( mBindLookup[alias].source );
@@ -43,6 +52,8 @@ void ajOpenALSoundImplementation::trigger( const std::string& alias, const unsig
 
 bool ajOpenALSoundImplementation::isPlaying( const std::string& alias )
 {
+   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   
    if (mBindLookup.count( alias ) > 0)
    {
       assert( alIsSource( mBindLookup[alias].source ) != AL_FALSE && "weird, shouldn't happen...\n" );
@@ -70,6 +81,8 @@ bool ajOpenALSoundImplementation::isPlaying( const std::string& alias )
  */
 void ajOpenALSoundImplementation::stop( const std::string& alias )
 {
+   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   
    ajSoundImplementation::stop( alias );
 
    if (mBindLookup.count( alias ) > 0)
@@ -85,6 +98,8 @@ void ajOpenALSoundImplementation::stop( const std::string& alias )
  */
 void ajOpenALSoundImplementation::step( const float & timeElapsed )
 {
+   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   
    ajSoundImplementation::step( timeElapsed );
 }
 
@@ -114,6 +129,8 @@ void ajOpenALSoundImplementation::remove( const std::string alias )
  */
 void ajOpenALSoundImplementation::setPosition( const std::string& alias, float x, float y, float z )
 {
+   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   
    ajSoundImplementation::setPosition( alias, x, y, z );
 
    if (mBindLookup.count( alias ) > 0)
@@ -139,6 +156,8 @@ void ajOpenALSoundImplementation::getPosition( const std::string& alias, float& 
  */
 void ajOpenALSoundImplementation::setListenerPosition( const float& x, const float& y, const float& z )
 {
+   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   
    ajSoundImplementation::setListenerPosition( x, y, z );
 
    ALfloat position[] = { x, y, z };
@@ -158,6 +177,8 @@ void ajOpenALSoundImplementation::getListenerPosition( float& x, float& y, float
  */
 void ajOpenALSoundImplementation::setListenerOrientation( const float& rad, const float& x, const float& y, const float&  z )
 {
+   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   
    //ajSoundImplementation::setListenerOrientation( rad, x, y, z );
 }
 
@@ -166,6 +187,8 @@ void ajOpenALSoundImplementation::setListenerOrientation( const float& rad, cons
  */
 void ajOpenALSoundImplementation::setListenerOrientation( const float& dirx, const float& diry, const float& dirz, const float& upx, const float& upy, const float& upz )
 {
+   assert( mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function" );
+   
    //ajSoundImplementation::setListenerOrientation( dirx, dirx, dirx, upx, upy, upz );
    ALfloat orientation[]  = { dirx, dirx, dirx, upx, upy, upz };
 	alListenerfv( AL_ORIENTATION, orientation );
@@ -228,7 +251,7 @@ void ajOpenALSoundImplementation::shutdownAPI()
 {
    if (mDev != NULL && mContextId != NULL)
    {
-      this->_unbindAll();
+      this->unbindAll();
       
       alcDestroyContext( mContextId );
 	   alcCloseDevice(  mDev  );
@@ -251,13 +274,13 @@ void ajOpenALSoundImplementation::clear()
  * bind: load (or reload) all associate()d sounds
  * @postconditions all sound associations are buffered by the sound API
  */
-void ajOpenALSoundImplementation::_bindAll()
+void ajOpenALSoundImplementation::bindAll()
 {
    std::map< std::string, ajSoundInfo >::iterator it;
    for( it = mSounds.begin(); it != mSounds.end(); ++it)
    {
       std::cout<<(*it).first<<"\n"<<std::flush;
-      this->_bind( (*it).first );
+      this->bind( (*it).first );
    }
 }   
 
@@ -265,15 +288,15 @@ void ajOpenALSoundImplementation::_bindAll()
  * unbind: unload/deallocate all associate()d sounds.
  * @postconditions all sound associations are unbuffered by the sound API
  */
-void ajOpenALSoundImplementation::_unbindAll()
+void ajOpenALSoundImplementation::unbindAll()
 {
    std::map< std::string, ajAlSoundInfo >::iterator it;
    for( it = mBindLookup.begin(); it != mBindLookup.end(); ++it)
    {
-      this->_unbind( (*it).first );
+      this->unbind( (*it).first );
    }
 
-   assert( mBindLookup.size() == 0 && "_unbindAll failed" );
+   assert( mBindLookup.size() == 0 && "unbindAll failed" );
 }
 
 
@@ -282,7 +305,7 @@ void ajOpenALSoundImplementation::_unbindAll()
  * load/allocate the sound data this alias refers to the sound API
  * @postconditions the sound API has the sound buffered.
  */
-void ajOpenALSoundImplementation::_bind( const std::string& alias )
+void ajOpenALSoundImplementation::bind( const std::string& alias )
 {
    ajSoundInfo& soundInfo = this->lookup( alias );
 
@@ -290,7 +313,7 @@ void ajOpenALSoundImplementation::_bind( const std::string& alias )
    // TODO: we want a way to force a rebind, but do we _always_ want to force it?
    if (mBindLookup.count( alias ) > 0)
    {
-      this->_unbind( alias );
+      this->unbind( alias );
    }
 
    // load the data 
@@ -337,6 +360,8 @@ void ajOpenALSoundImplementation::_bind( const std::string& alias )
 	      alSourcei( sourceID, AL_BUFFER, bufferID );
 	      alSourcei( sourceID, AL_LOOPING, AL_FALSE );
 
+         this->setPosition( alias, soundInfo.position[0], soundInfo.position[1], soundInfo.position[2] );
+         
          // store the resource IDs for later use...
          mBindLookup[alias].source = sourceID;
          mBindLookup[alias].buffer = bufferID;
@@ -350,7 +375,7 @@ void ajOpenALSoundImplementation::_bind( const std::string& alias )
  * unload/deallocate the sound data this alias refers from the sound API
  * @postconditions the sound API no longer has the sound buffered.
  */
-void ajOpenALSoundImplementation::_unbind( const std::string& alias )
+void ajOpenALSoundImplementation::unbind( const std::string& alias )
 {
    if (mBindLookup.count( alias ) > 0)
    {
@@ -359,5 +384,5 @@ void ajOpenALSoundImplementation::_unbind( const std::string& alias )
       mBindLookup.erase( alias );
    }
 
-   assert( mBindLookup.count( alias ) == 0 && "_unbind failed" );
+   assert( mBindLookup.count( alias ) == 0 && "unbind failed" );
 }

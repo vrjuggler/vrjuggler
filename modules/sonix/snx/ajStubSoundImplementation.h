@@ -9,6 +9,18 @@ class ajStubSoundImplementation : public ajSoundImplementation
 {
 public:
    /**
+    * constructor for the OpenAL implementation 
+    */
+   ajStubSoundImplementation() : ajSoundImplementation() {}
+
+   /**
+    * destructor for the OpenAL implementation
+    */
+   virtual ~ajStubSoundImplementation()
+   {
+   }
+
+   /**
     * @input alias of the sound to trigger, and number of times to play
     * @preconditions alias does not have to be associated with a loaded sound.
     * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
@@ -97,7 +109,6 @@ public:
       ajSoundImplementation::getListenerPosition( x, y, z );
    }
    
-protected:
    /**
     * start the sound API, creating any contexts or other configurations at startup
     * @postconditions sound API is ready to go.
@@ -107,6 +118,15 @@ protected:
    {
    }
 
+   /**
+     * query whether the API has been started or not
+     * @semantics return true if api has been started, false otherwise.
+     */
+   virtual bool isStarted() const
+   {
+      return true;
+   }   
+   
    /**
     * kill the sound API, deallocating any sounds, etc...
     * @postconditions sound API is ready to go.
@@ -128,7 +148,7 @@ protected:
     * bind: load (or reload) all associate()d sounds
     * @postconditions all sound associations are buffered by the sound API
     */
-   virtual void _bindAll()
+   virtual void bindAll()
    {
    }   
 
@@ -136,7 +156,7 @@ protected:
     * unbind: unload/deallocate all associate()d sounds.
     * @postconditions all sound associations are unbuffered by the sound API
     */
-   virtual void _unbindAll()
+   virtual void unbindAll()
    {
    }
 
@@ -144,7 +164,7 @@ protected:
     * load/allocate the sound data this alias refers to the sound API
     * @postconditions the sound API has the sound buffered.
     */
-   virtual void _bind( const std::string& alias )
+   virtual void bind( const std::string& alias )
    {
    }   
 
@@ -152,7 +172,7 @@ protected:
     * unload/deallocate the sound data this alias refers from the sound API
     * @postconditions the sound API no longer has the sound buffered.
     */
-   virtual void _unbind( const std::string& alias )
+   virtual void unbind( const std::string& alias )
    {
    }
    

@@ -20,5 +20,4 @@ LIBS = @AL_LDFLAGS@ @LIBOPENAL@ -lm
 include $(MKPATH)/dpp.obj.mk
 
 all: ${OBJECTS}
-	echo ${OBJECTS}
 	${CXX} ${CXXFLAGS} ${OBJECTS} ${LIBS}

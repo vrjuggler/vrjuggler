@@ -19,7 +19,16 @@ public:
    virtual ~AudioJuggler()
    {
       // release the implementation
-      delete mImplementation;
+      if (mImplementation != NULL)
+      {
+         // unload all sound data
+         mImplementation->unbindAll();
+         
+         // shutdown old api if exists
+         mImplementation->shutdownAPI();
+         delete mImplementation;
+         mImplementation = NULL;
+      }
    }
 
    /**
@@ -122,10 +131,14 @@ public:
       ajSoundImplementation* oldImpl = mImplementation;
       ajSoundFactory::createImplementation( apiName, mImplementation );
 
+      // copy sound state (doesn't do binding here)
       mImplementation->copy( *oldImpl );
 
       if (oldImpl != NULL)
       {
+         // unload all sound data
+         oldImpl->unbindAll();
+         
          // shutdown old api if exists
          oldImpl->shutdownAPI();
          delete oldImpl;
@@ -134,6 +147,9 @@ public:
 
       // startup the new API
       mImplementation->startAPI();
+
+      // load all sound data
+      mImplementation->bindAll();
    }
 
 protected:
@@ -143,6 +159,7 @@ protected:
       {
          ajSoundFactory::createImplementation( "stub", mImplementation );
          mImplementation->startAPI();
+         mImplementation->bindAll();
       }
       return *mImplementation;
    }
