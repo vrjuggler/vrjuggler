@@ -41,14 +41,13 @@
 #include <GL/glx.h>
 
 #include <vrj/Draw/OGL/GlWindow.h>
-#include <vrj/Kernel/Kernel.h>
-#include <vrj/Util/Debug.h>
-#include <vrj/Display/Display.h>
 #include <gadget/Devices/Keyboard/KeyboardXWin.h>
 
 
 namespace vrj
 {
+
+class Display;
 
 /** this simple motif-esqe definition was taken from GLUT */
 typedef struct
@@ -88,7 +87,7 @@ public:  /**** Static Helpers *****/
 
 protected:
    /* private member functions.  these get profoundly painful */
-   XVisualInfo* GetGlxVisInfo(::Display* display, int screen);
+   ::XVisualInfo* getGlxVisInfo(::Display* display, int screen);
 
    /**
     * @pre  window is an xwindow under display.
