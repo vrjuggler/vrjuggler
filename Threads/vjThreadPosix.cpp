@@ -34,7 +34,7 @@
 
 #include <vjConfig.h>
 
-#include <stdio.h>
+#include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <pthread.h>
@@ -226,7 +226,8 @@ vjThreadPosix::spawn (vjBaseThreadFunctor* functorPtr, long flags,
 
     // Inform the caller if the thread was not created successfully.
     if ( ret_val != 0 ) {
-        perror("vjThreadPosix::spawn() - Cannot create thread");
+        std::cerr << "vjThreadPosix::spawn() - Cannot create thread:"
+                  << strerror(ret_val) << std::endl;
     }
 
     return ret_val;
