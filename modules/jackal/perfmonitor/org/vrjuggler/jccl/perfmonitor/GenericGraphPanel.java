@@ -29,10 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-package VjComponents.PerfMonitor;
+package org.vrjuggler.jccl.perfmonitor;
 
 import javax.swing.*;
 

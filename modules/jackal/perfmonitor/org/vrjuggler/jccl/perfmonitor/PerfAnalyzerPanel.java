@@ -29,22 +29,19 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.PerfMonitor;
+package org.vrjuggler.jccl.perfmonitor;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.util.*;
-import java.io.File;
 import javax.swing.tree.*;
 
-import VjComponents.PerfMonitor.*;
 import VjControl.*;
 import VjComponents.UI.*;
-import VjConfig.*;
+import org.vrjuggler.jccl.config.*;
 
 
 /** PlugPanel for displaying data from PerformanceModule

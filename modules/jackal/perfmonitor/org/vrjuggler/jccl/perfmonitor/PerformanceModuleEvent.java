@@ -29,19 +29,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.perfmonitor;
+
+import java.util.EventObject;
 
 /** Event spawned by ConfigModule for add/remove databases.
  *  By becoming a ConfigModuleListener, an object can receive these
  *  events, which give information about addition or removal of
  *  ConfigChunkDBs and ChunkDescDBs.
  */
-package VjComponents.PerfMonitor;
-
-import java.util.EventObject;
-
-import VjComponents.PerfMonitor.PerfDataCollector;
-
-
 public class PerformanceModuleEvent extends EventObject {
     private PerfDataCollector collector;
     private int id;

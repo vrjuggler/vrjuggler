@@ -29,13 +29,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-package VjComponents.PerfMonitor;
+package org.vrjuggler.jccl.perfmonitor;
 
 import java.awt.event.*;
-import VjComponents.PerfMonitor.PerfDataCollector;
 import java.io.*;
 import java.util.*;
 
@@ -44,7 +40,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
 
-import VjConfig.ConfigChunk;
+import org.vrjuggler.jccl.config.ConfigChunk;
 import VjControl.*;
 import VjComponents.Network.ProtocolInputStream;
 
