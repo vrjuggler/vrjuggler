@@ -42,6 +42,9 @@ void PerfTest::testConstructTree()
 
    std::cout << "Printing tree:\n" << std::flush;
    root_node->printTree();
+
+   std::string xml_rep = root_node->getXMLRep();
+   std::cout << "\nPrinting xml tree:\n" << xml_rep;
 }
 
 void PerfTest::testNamedLookupSample()
