@@ -578,7 +578,7 @@ public class ConfigToolbar
       this.setLayout(new BorderLayout());
       titleLbl.setBackground(UIManager.getColor("textHighlight"));
       titleLbl.setFont(new java.awt.Font("Serif", 1, 18));
-      titleLbl.setForeground(Color.black);
+      titleLbl.setForeground(UIManager.getColor("textHighlightText"));
       titleLbl.setBorder(BorderFactory.createRaisedBevelBorder());
       titleLbl.setOpaque(true);
       titleLbl.setHorizontalAlignment(SwingConstants.RIGHT);
