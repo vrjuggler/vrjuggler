@@ -10,6 +10,7 @@
 #include <algorithm>
 
 #include <TestCase.h>
+#include <ThreadTestCase.h>
 #include <TestSuite.h>
 #include <TestCaller.h>
 
@@ -37,39 +38,25 @@ using namespace vpr;
 namespace vprTest
 {
 
-class SelectorTest : public TestCase
+class SelectorTest : public ThreadTestCase
 {
 public:
    SelectorTest( std::string name )
-   : TestCase (name), mThreadAssertTest(false)
+   : ThreadTestCase (name)
    {;}
 
    virtual ~SelectorTest()
    {}
 
    virtual void setUp()
-   {;}
+   {
+      //threadAssertReset();
+   }
 
    virtual void tearDown()
    {
-   }
-
-   // use this within your threads (CppUnit doesn't catch the assertTest there)
-   // then test mThreadAssertTest with assertTest in your parent func.
-   // then reset it to true.
-   void threadAssertTest( bool testcase, std::string text = std::string("none") )
-   {
-       if(!testcase)
-       {
-           mThreadAssertTest = testcase;
-           std::cerr << "threadAssertTest: " << text << std::endl;
-       }
-       //else
-       //    std::cout << "." << std::flush;
-   }
-   void testAssertReset()
-   { mThreadAssertTest = true; }
-
+      //checkThreadAssertions();
+   }   
 
    // Test an acceptor pool
    // This test is based upon the idea of having a pool of acceptors that
@@ -78,8 +65,9 @@ public:
    // accept is needed (that never should really block)
    void testAcceptorPoolSelection()
    {
-       testAssertReset();
-       mRendevousPort = 47000 + (random() % 71);     // Get a partially random port
+       threadAssertReset();
+       mRendevousPort = 30000 + (random() % 30000);     // Get a partially random port
+       
        mNumRendevousPorts = 13;
        mNumIters = 50;
        mMessageValue = std::string("The Data");
@@ -100,8 +88,8 @@ public:
        // Wait for threads
        acceptor_thread.join();
        connector_thread.join();
-
-       assertTest( mThreadAssertTest );
+       
+       checkThreadAssertions();
    }
    void testAcceptorPoolSelection_acceptor(void* arg)
    {
@@ -129,8 +117,8 @@ public:
 
       // First test selector TIMEOUT
       ret_val = selector.select(num_events, vpr::Interval(5,vpr::Interval::Usec));
-      threadAssertTest(ret_val.timeout(), "Selection did not timeout like it should");
-      threadAssertTest((0 == num_events), "Num events should have been 0");
+      assertTestThread(ret_val.timeout() && "Selection did not timeout like it should");
+      assertTestThread((0 == num_events) && "Num events should have been 0");
 
       // READY - Tell everyone that we are ready to accept
       mCondVar.acquire();
@@ -147,9 +135,9 @@ public:
           num_events = 0;
           Status ret = selector.select(num_events, vpr::Interval::NoTimeout );
 
-          threadAssertTest((ret.success()),
+          assertTestThread((ret.success()) &&
                            "Selection did not return successfully");
-          threadAssertTest((num_events == 1), "There was not only 1 event");
+          assertTestThread((num_events == 1) && "There was not only 1 event");
 
           // get an acceptor that has a connection request pending
           // (ready_acceptor)
@@ -160,27 +148,27 @@ public:
             // if selector's out flag is VPR_READ|VPR_EXCEPT
             if(selector.getOut(selector.getHandle(j)) & (vpr::Selector::Read | vpr::Selector::Except))
             {
-               threadAssertTest((acceptorTable.find(selector.getHandle(j)) != acceptorTable.end()),
+               assertTestThread((acceptorTable.find(selector.getHandle(j)) != acceptorTable.end()) &&
                                 "Handle not found int acceptor table");
                ready_acceptor = acceptorTable[selector.getHandle(j)];
                num_found += 1;
             }
           }
 
-          threadAssertTest((num_found == 1), "Wrong number of acceptors found");
-          threadAssertTest(ready_acceptor != NULL, "no ready acceptor");
+          assertTestThread((num_found == 1) && "Wrong number of acceptors found");
+          assertTestThread(ready_acceptor != NULL && "no ready acceptor");
 
           // ACCEPT connection (generate a sock)
           SocketStream sock;
           ret_val = ready_acceptor->accept(sock);
-          threadAssertTest((ret_val.success()), "Accepted socket is null");
-          threadAssertTest((sock.isOpen()), "Accepted socket should be open");
+          assertTestThread((ret_val.success()) && "Accepted socket is null");
+          assertTestThread((sock.isOpen()) && "Accepted socket should be open");
 
           // use the sock to write (send)... then close it...
           ret_val = sock.write(mMessageValue, mMessageLen, bytes_written);      // Send a message
-          threadAssertTest((ret_val.success()), "Problem writing in acceptor");
+          assertTestThread((ret_val.success()) && "Problem writing in acceptor");
           ret_val = sock.close();         // Close the socket
-          threadAssertTest((ret_val.success()), "Problem closing accepted socket");
+          assertTestThread((ret_val.success()) && "Problem closing accepted socket");
        }
 
        // Delete acceptors
@@ -213,11 +201,11 @@ public:
          vpr::SocketStream con_sock;
          std::string       data;
          ret_val = connector.connect(con_sock, remote_addr, vpr::Interval(5, vpr::Interval::Sec) );
-         threadAssertTest((ret_val.success()), "Connector can't connect");
+         assertTestThread((ret_val.success()) && "Connector can't connect");
 
          ret_val = con_sock.read(data, mMessageLen, bytes_read);   // Recieve data
-         threadAssertTest((bytes_read == mMessageLen), "Connector recieved message of wrong size" );
-         threadAssertTest((ret_val.success()), "Failure reading data");
+         assertTestThread((bytes_read == mMessageLen) && "Connector recieved message of wrong size" );
+         assertTestThread((ret_val.success()) && "Failure reading data");
 
          con_sock.close();                                   // Close socket
       }
@@ -233,8 +221,8 @@ public:
    //
    void testSendThenPoll()
    {
-       testAssertReset();
-       mRendevousPort = 47100 + (random() % 71);     // Get a partially random port
+       threadAssertReset();
+       mRendevousPort = 30000 + (random() % 30000);     // Get a partially random port       
        mNumRendevousPorts = 37;
        mNumIters = 10;
        mMessageValue = std::string("The Data");
@@ -256,7 +244,7 @@ public:
        acceptor_thread.join();
        connector_thread.join();
 
-       assertTest( mThreadAssertTest );
+       checkThreadAssertions();       
    }
    void testSendThenPoll_acceptor(void* arg)
    {
@@ -291,7 +279,7 @@ public:
       {
          SocketStream sock;
          ret_val = acceptors[i]->accept(sock);           // Accept the connection
-         threadAssertTest((ret_val.success()), "Error accepting a connection");
+         assertTestThread((ret_val.success()) && "Error accepting a connection");
          socks.push_back(sock);
          vpr::IOSys::Handle handle = sock.getHandle();         // Get the Handle to register
          handleTable[handle] = i;                              // Save handle index
@@ -299,7 +287,7 @@ public:
          selector.setIn(handle, (vpr::Selector::Read));        // Set it for waiting for VPR_READ
       }
 
-      threadAssertTest((mNumRendevousPorts == selector.getNumHandles()), "We didn't add all ports correctly to selector");
+      assertTestThread((mNumRendevousPorts == selector.getNumHandles()) && "We didn't add all ports correctly to selector");
 
       // Use selector to find the sock(s) to read on
       // Then read message after checking to verify subgroup
@@ -324,9 +312,9 @@ public:
 
           //vpr::System::msleep(50);
 
-          threadAssertTest((ret.success()),
+          assertTestThread((ret.success()) &&
                            "Selection did not return successfully");
-          threadAssertTest((num_events == mSelectedPorts.size()),
+          assertTestThread((num_events == mSelectedPorts.size()) &&
                            "There was an incorrect number of events");
           if(num_events != mSelectedPorts.size())
           {
@@ -343,27 +331,27 @@ public:
              // If have data to read
              if(selector.getOut(selector.getHandle(s_idx)) & (vpr::Selector::Read))
             {
-               threadAssertTest((handleTable.find(selector.getHandle(s_idx)) != handleTable.end()),
+               assertTestThread((handleTable.find(selector.getHandle(s_idx)) != handleTable.end()) &&
                                 "Handle not found int acceptor table");
                vpr::Uint16 sock_index = handleTable[selector.getHandle(s_idx)];
 
                //std::cout << sock_index << ", ";
 
-               threadAssertTest(sock_index == s_idx, "Indices out of sync");
-               threadAssertTest((std::find(mSelectedPorts.begin(), mSelectedPorts.end(), sock_index) != mSelectedPorts.end()),
+               assertTestThread(sock_index == s_idx && "Indices out of sync");
+               assertTestThread((std::find(mSelectedPorts.begin(), mSelectedPorts.end(), sock_index) != mSelectedPorts.end()) &&
                                 "Found a port that wasn't supposed to have data");
                num_found += 1;
 
                std::string data;
                int bytes_read;
                ret_val = socks[s_idx].read(data, mMessageLen, bytes_read);
-               threadAssertTest(ret_val.success(), "Problems reading data");
-               threadAssertTest((bytes_read == mMessageLen), "Data recieved is of wrong length");
+               assertTestThread(ret_val.success() && "Problems reading data");
+               assertTestThread((bytes_read == mMessageLen) && "Data recieved is of wrong length");
             }
           }
           //std::cout << std::endl;
 
-          threadAssertTest((num_found == mSelectedPorts.size()),
+          assertTestThread((num_found == mSelectedPorts.size()) &&
                            "Wrong number of readers found");
 
           // Tell senders that we are DONE_READING
@@ -409,9 +397,9 @@ public:
       {
          remote_addr.setAddress("localhost", (mRendevousPort+i));             // Set remote port
          ret_val = connector.connect(sockets[i], remote_addr, vpr::Interval::NoTimeout );           // Connect to the port
-         threadAssertTest((ret_val.success()), "Connector can't connect");
+         assertTestThread((ret_val.success()) && "Connector can't connect");
          ret_val = sockets[i].setNoDelay(true);
-         threadAssertTest(ret_val.success(), "Failed to set nodelay on socket");
+         assertTestThread(ret_val.success() && "Failed to set nodelay on socket");
       }
 
       // Send data in random groupings
@@ -434,10 +422,10 @@ public:
          for(j=0;j<mSelectedPorts.size();j++)
          {
             //std::cout << mSelectedPorts[j] << ", ";
-            threadAssertTest((mSelectedPorts[j] < sockets.size()));           // Make sure we are in range
+            assertTestThread((mSelectedPorts[j] < sockets.size()));           // Make sure we are in range
             ret_val = sockets[mSelectedPorts[j]].write(mMessageValue, mMessageLen, bytes_written);    // Write the data
-            threadAssertTest((mMessageLen == bytes_written), "Wrong num bytes written");
-            threadAssertTest((ret_val.success()), "Error writing data on socket");
+            assertTestThread((mMessageLen == bytes_written) && "Wrong num bytes written");
+            assertTestThread((ret_val.success()) && "Error writing data on socket");
          }
 
          //std::cout << std::endl;
@@ -480,9 +468,6 @@ public:
 
       return test_suite;
    }
-
-private:
-   bool             mThreadAssertTest; // true for no error
 
 protected:
     unsigned     mNumIters;

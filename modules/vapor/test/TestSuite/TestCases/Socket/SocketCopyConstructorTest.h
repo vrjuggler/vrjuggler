@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include <TestCase.h>
+#include <ThreadTestCase.h>
 #include <TestSuite.h>
 #include <TestCaller.h>
 
@@ -25,40 +26,21 @@
 namespace vprTest
 {
 
-class SocketCopyConstructorTest : public TestCase
+class SocketCopyConstructorTest : public ThreadTestCase
 {
 public:
    SocketCopyConstructorTest(std::string name)
-   : TestCase (name), mThreadAssertTest(false)
+   : ThreadTestCase (name)
    {;}
 
    virtual ~SocketCopyConstructorTest()
    {}
 
    virtual void setUp()
-   {
-      mThreadAssertTest = false;
-   }
+   {;}
 
    virtual void tearDown()
-   {
-   }
-
-   // use this within your threads (CppUnit doesn't catch the assertTest there)
-   // then test mThreadAssertTest with assertTest in your parent func.
-   // then reset it to true.
-   void threadAssertTest( bool testcase, std::string text = std::string("none") )
-   {
-       if(!testcase)
-       {
-           mThreadAssertTest = testcase;
-           std::cerr << "threadAssertTest: " << text << std::endl;
-       }
-       else
-           std::cout << "." << std::flush;
-   }
-   void testAssertReset()
-   { mThreadAssertTest = true; }
+   {;}
 
    // =========================================================================
    // Simple test-- only test copy unconnected socket
@@ -100,7 +82,7 @@ public:
    // =========================================================================
    void testCopyConnectedSocket()
    {
-      testAssertReset();
+      threadAssertReset();
 
       mState = NOT_READY;                        // Initialize
 
@@ -117,7 +99,7 @@ public:
       connector_thread.join();
       acceptor_thread.join();
 
-      assertTest( mThreadAssertTest );
+      checkThreadAssertions();
    }
 
    void testCopyConstructor_connector(void* arg)
@@ -132,7 +114,7 @@ public:
        vpr::SocketStream* copy_connector(NULL);
 
        result = connector_socket.open().success();
-       threadAssertTest((result != false), "Can not open connector socket");
+       assertTestThread((result != false) && "Can not open connector socket");
 
        // WAIT for READY
        mCondVar.acquire();
@@ -143,7 +125,7 @@ public:
        mCondVar.release();
 
        result1 = connector_socket.connect().success();
-       threadAssertTest((result1 != false), "connect fails");
+       assertTestThread((result1 != false) && "connect fails");
 
        copy_connector = new vpr::SocketStream (connector_socket);
 
@@ -154,9 +136,9 @@ public:
             copy_connector->close();
        }
 
-       threadAssertTest(copy_connector->getType() == connector_socket.getType());
-       threadAssertTest(copy_connector->getRemoteAddr() == connector_socket.getRemoteAddr());
-       threadAssertTest(copy_connector->getLocalAddr() == connector_socket.getLocalAddr());
+       assertTestThread(copy_connector->getType() == connector_socket.getType());
+       assertTestThread(copy_connector->getRemoteAddr() == connector_socket.getRemoteAddr());
+       assertTestThread(copy_connector->getLocalAddr() == connector_socket.getLocalAddr());
 
        connector_socket.close();
        copy_connector->close();
@@ -187,15 +169,15 @@ public:
       vpr::Status child_create_status;
 
       result = acceptor_socket.open().success();
-      threadAssertTest((result != false), "Can not open acceptor socket");
+      assertTestThread((result != false) && "Can not open acceptor socket");
 
       result = acceptor_socket.bind().success();
 
       if (result == false)
-         threadAssertTest((false), "Can not bind acceptor socket");
+         assertTestThread((false) && "Can not bind acceptor socket");
       else {
          result = acceptor_socket.listen().success();
-         threadAssertTest((result != false), "acceptor listening fails");
+         assertTestThread((result != false) && "acceptor listening fails");
          // READY - Tell everyone that we are ready to accept
             mCondVar.acquire();
             {
@@ -204,7 +186,7 @@ public:
             }
             mCondVar.release();
          child_create_status = acceptor_socket.accept(child_socket);
-         threadAssertTest(child_create_status.success() && "accept() fails");
+         assertTestThread(child_create_status.success() && "accept() fails");
       }
 
       copy_acceptor = new vpr::SocketStream (acceptor_socket);
@@ -212,16 +194,16 @@ public:
          copy_child = new vpr::SocketStream (child_socket);
       }
 
-      threadAssertTest(copy_acceptor->getType() == acceptor_socket.getType());
-      threadAssertTest(copy_acceptor->getRemoteAddr() == acceptor_socket.getRemoteAddr());
-      threadAssertTest(copy_acceptor->getLocalAddr() == acceptor_socket.getLocalAddr());
+      assertTestThread(copy_acceptor->getType() == acceptor_socket.getType());
+      assertTestThread(copy_acceptor->getRemoteAddr() == acceptor_socket.getRemoteAddr());
+      assertTestThread(copy_acceptor->getLocalAddr() == acceptor_socket.getLocalAddr());
 
       if (copy_child != NULL) {
          ssize_t bytes_written;
          copy_child->write(buffer, sizeof(buffer), bytes_written);
-         threadAssertTest(copy_child->getType() == child_socket.getType());
-         threadAssertTest(copy_child->getRemoteAddr() == child_socket.getRemoteAddr());
-         threadAssertTest(copy_child->getLocalAddr() == child_socket.getLocalAddr());
+         assertTestThread(copy_child->getType() == child_socket.getType());
+         assertTestThread(copy_child->getRemoteAddr() == child_socket.getRemoteAddr());
+         assertTestThread(copy_child->getLocalAddr() == child_socket.getLocalAddr());
       }
 
       // WAIT for close
@@ -231,7 +213,7 @@ public:
       mCondVar.release();
 
       result = acceptor_socket.close().success();
-      threadAssertTest((result != false), "acceptor close fails");
+      assertTestThread((result != false) && "acceptor close fails");
       if (child_create_status.success()) child_socket.close();
 
       copy_acceptor->close();
@@ -248,9 +230,6 @@ public:
       test_suite->addTest( new TestCaller<SocketCopyConstructorTest>("testCopyConnectedSocket", &SocketCopyConstructorTest::testCopyConnectedSocket));
       return test_suite;
    }
-
-private:
-   bool             mThreadAssertTest; // true for no error
 
 protected:
     vpr::CondVar    mCondVar;       // Condition variable
