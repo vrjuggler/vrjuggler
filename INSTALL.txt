@@ -157,7 +157,7 @@ Getting the Source Code and the Dependencies
 
      o NSPR (http://www.mozilla.org/projects/nspr/): The Netscape Portable
        Runtime, which can be used by VPR for threading and sockets (required
-       on Win32, Solaris, and Mac OS X).
+       on Win32 and Solaris).
 
      o Java Developer Kit (http://java.sun.com/): The J2SE SDK (or JDK) is
        used to compile all the Java code used in the Juggler Project. Without
@@ -187,8 +187,8 @@ Getting the Source Code and the Dependencies
    the website (http://www.vrjuggler.org/) or you can execute the following
    commands from a shell to get the code from our CVS repository:
 
- cvs -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler login
- cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler co juggler
+ cvs -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler login
+ cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co juggler
 
   Downloading Binary Dependencies
 
@@ -225,10 +225,10 @@ Getting the Source Code and the Dependencies
     Netscape Portable Runtime (NSPR)
 
    Our operating system abstraction, VPR, can make use of NSPR for operating
-   system primitives. On some platforms (IRIX, FreeBSD, Linux), the use of
-   NSPR is strictly optional. On others (Win32, Mac OS X, and Solaris), it is
-   required. Based on your local system, you should decide whether you need
-   NSPR. Binary versions of NSPR can be downloaded from
+   system primitives. On some platforms (IRIX, FreeBSD, Linux, Mac OS X), the
+   use of NSPR is strictly optional. On others (Win32, HP-UX, and Solaris),
+   it is required. Based on your local system, you should decide whether you
+   need NSPR. Binary versions of NSPR can be downloaded from
    ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases. At this time, we
    recommend the use of version 4.2 or newer.
 
