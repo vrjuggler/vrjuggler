@@ -62,6 +62,7 @@ public class PrefsDialog extends JDialog
       beanViewer       = mPrefs.getBeanViewer();
       chooserStartDir  = mPrefs.getChooserStartDir();
       chooserOpenStyle = mPrefs.getChooserOpenStyle();
+      defaultCorbaHost = mPrefs.getDefaultCorbaHost();
       defaultCorbaPort = mPrefs.getDefaultCorbaPort();
 
       try
@@ -75,6 +76,7 @@ public class PrefsDialog extends JDialog
 
       this.configComboBoxes();
 
+      mCorbaHostField.setText(String.valueOf(defaultCorbaHost));
       mCorbaPortField.setText(String.valueOf(defaultCorbaPort));
 
       switch ( chooserOpenStyle )
@@ -229,7 +231,9 @@ public class PrefsDialog extends JDialog
       mLazyInstanceButton.setSelected(mPrefs.getLazyPanelBeanInstantiation());
       mLazyInstanceButton.setText("Lazy Panel Bean Instantiaion");
       mCorbaPanel.setBorder(mCorbaBorder);
+      mCorbaPanel.setLayout(mCorbaLayout);
       mCorbaPortLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+      mCorbaPortLabel.setLabelFor(mCorbaPortField);
       mCorbaPortLabel.setText("Port Number");
       mCorbaPortField.setMaximumSize(new Dimension(2147483647, 15));
       mCorbaPortField.setMinimumSize(new Dimension(85, 17));
@@ -241,9 +245,25 @@ public class PrefsDialog extends JDialog
             corbaPortFieldChanged(e);
          }
       });
+      mCorbaHostLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+      mCorbaHostLabel.setLabelFor(mCorbaHostField);
+      mCorbaHostLabel.setText("Host Name");
+      mCorbaLayout.setColumns(2);
+      mCorbaLayout.setRows(0);
+      mCorbaHostField.setMinimumSize(new Dimension(85, 17));
+      mCorbaHostField.setPreferredSize(new Dimension(85, 17));
+      mCorbaHostField.addActionListener(new java.awt.event.ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            corbaHostFieldChanged(e);
+         }
+      });
       mGeneralPanel.add(mGenConfigPanel, BorderLayout.CENTER);
       mContentPanel.add(mGeneralPanel, null);
       mContentPanel.add(mCorbaPanel, null);
+      mCorbaPanel.add(mCorbaHostLabel, null);
+      mCorbaPanel.add(mCorbaHostField, null);
       mCorbaPanel.add(mCorbaPortLabel, null);
       mCorbaPanel.add(mCorbaPortField, null);
       mContentPanel.add(mFileChooserPanel, null);
@@ -435,7 +455,18 @@ public class PrefsDialog extends JDialog
       mPrefs.setChooserStartDir(chooserStartDir);
       mPrefs.setChooserOpenStyle(chooserOpenStyle);
       mPrefs.setLazyPanelBeanInstantiation(mLazyInstanceButton.isSelected());
+      mPrefs.setDefaultCorbaHost(defaultCorbaHost);
       mPrefs.setDefaultCorbaPort(defaultCorbaPort);
+   }
+
+   /**
+    * Action taken when the user changes the text field containing the default
+    * CORBA port.  This validates the entered port number to ensure that it is
+    * valid.
+    */
+   private void corbaHostFieldChanged(ActionEvent e)
+   {
+      defaultCorbaHost = mCorbaHostField.getText();
    }
 
    /**
@@ -445,13 +476,20 @@ public class PrefsDialog extends JDialog
     */
    private void corbaPortFieldChanged(ActionEvent e)
    {
-      int port = Integer.parseInt(mCorbaPortField.getText());
-
-      if ( port > 0 && port < 65536 )
+      try
       {
-         defaultCorbaPort = port;
+         int port = Integer.parseInt(mCorbaPortField.getText());
+
+         if ( port > 0 && port < 65536 )
+         {
+            defaultCorbaPort = port;
+         }
+         else
+         {
+            mCorbaPortField.setText(String.valueOf(defaultCorbaPort));
+         }
       }
-      else
+      catch (Exception ex)
       {
          mCorbaPortField.setText(String.valueOf(defaultCorbaPort));
       }
@@ -468,6 +506,7 @@ public class PrefsDialog extends JDialog
    private String beanViewer       = null;
    private String chooserStartDir  = GlobalPreferencesService.DEFAULT_START;
    private int    chooserOpenStyle = GlobalPreferencesService.DEFAULT_CHOOSER;
+   private String defaultCorbaHost = "";
    private int    defaultCorbaPort = 0;
 
    private GlobalPreferencesService mPrefs = null;
@@ -515,4 +554,7 @@ public class PrefsDialog extends JDialog
    private TitledBorder mCorbaBorder;
    private JLabel mCorbaPortLabel = new JLabel();
    private JTextField mCorbaPortField = new JTextField();
+   private JLabel mCorbaHostLabel = new JLabel();
+   private GridLayout mCorbaLayout = new GridLayout();
+   private JTextField mCorbaHostField = new JTextField();
 }
