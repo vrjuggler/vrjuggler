@@ -143,9 +143,6 @@
 			<File
 				RelativePath="..\..\..\modules\gadgeteer\drivers\Microsoft\SpeechRecognition\MSFTSpeechServerManager.h">
 			</File>
-			<File
-				RelativePath="..\..\..\modules\gadgeteer\drivers\Microsoft\SpeechRecognition\SpeechRecogDevices.h">
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
