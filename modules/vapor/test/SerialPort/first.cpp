@@ -56,6 +56,7 @@ main (int argc, char* argv[]) {
 
         std::cerr << "Port opened\n";
 
+        port->disableCanonicalInput();
         port->setUpdateAction(vpr::SerialTypes::NOW);
         port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
         port->enableRead();
@@ -71,7 +72,7 @@ main (int argc, char* argv[]) {
             memset((void*) &write_buffer, '\0', sizeof(write_buffer));
             sprintf(write_buffer, "%d", val);
             port->write(write_buffer, strlen(write_buffer) + 1, bytes);
-            std::cerr << "Wrote '" << write_buffer << "'\n";
+            std::cerr << "Wrote '" << write_buffer << "' (" << bytes << " bytes)\n";
         }
     }
 
