@@ -41,7 +41,7 @@
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/InputMixer.h>
-#include <gadget/Devices/Intersense/IntersenseAPI/IntersenseAPIStandalone.h>
+#include <drivers/Intersense/IntersenseAPI/IntersenseAPIStandalone.h>
 
 // maximum number of digital and analog buttons possible on a IS interface
 // box.
