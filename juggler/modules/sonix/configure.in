@@ -370,7 +370,9 @@ AC_OUTPUT(vj/Makefile
           snx/Makefile
           samples/Makefile
           samples/opengl/Makefile
-          TestSuite/Makefile
+          test/Makefile
+          test/apps/Makefile
+          test/TestSuite/Makefile
           Makefile 
           make.defs.mk
           sonix-config)
