@@ -47,8 +47,10 @@ int main(int argc, char* argv[])
    gloveApp* application = new gloveApp(kernel);    // Declare an instance of the app
 
    // Load any config files specified on the command line
-   for(int i=1;i<argc;i++)
+   for ( int i = 1; i < argc; ++i )
+   {
       kernel->loadConfigFile(argv[i]);
+   }
 
    kernel->start();
 
