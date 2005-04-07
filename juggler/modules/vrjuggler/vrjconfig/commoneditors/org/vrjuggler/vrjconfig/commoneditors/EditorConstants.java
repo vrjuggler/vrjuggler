@@ -396,4 +396,466 @@ public interface EditorConstants
 
    /** Property type wand_pos. */
    public static final String WAND_POS_PROPERTY = "wand_pos";
+
+   // Values.
+
+   /**
+    * Index for the "forward" value in the property
+    * <code>KEY_PAIR_PROPERTY</code> of the config elmeent type
+    * <code>SIM_POS_DEVICE_TYPE</code>.
+    *
+    * @see #SIM_POS_DEVICE_TYPE
+    * @see #KEY_PAIR_PROPERTY
+    */
+   public static final int FORWARD_VALUE_INDEX = 0;
+
+   /**
+    * Index for the "back" value in the property <code>KEY_PAIR_PROPERTY</code>
+    * of the config elmeent type <code>SIM_POS_DEVICE_TYPE</code>.
+    *
+    * @see #SIM_POS_DEVICE_TYPE
+    * @see #KEY_PAIR_PROPERTY
+    */
+   public static final int BACK_VALUE_INDEX = 1;
+
+   /**
+    * Index for the "left" value in the property <code>KEY_PAIR_PROPERTY</code>
+    * of the config elmeent type <code>SIM_POS_DEVICE_TYPE</code>.
+    *
+    * @see #SIM_POS_DEVICE_TYPE
+    * @see #KEY_PAIR_PROPERTY
+    */
+   public static final int LEFT_VALUE_INDEX = 2;
+
+   /**
+    * Index for the "right" value in the property
+    * <code>KEY_PAIR_PROPERTY</code> of the config elmeent type
+    * <code>SIM_POS_DEVICE_TYPE</code>.
+    *
+    * @see #SIM_POS_DEVICE_TYPE
+    * @see #KEY_PAIR_PROPERTY
+    */
+   public static final int RIGHT_VALUE_INDEX = 3;
+
+   /**
+    * Index for the "up" value in the property <code>KEY_PAIR_PROPERTY</code>
+    * of the config elmeent type <code>SIM_POS_DEVICE_TYPE</code>.
+    *
+    * @see #SIM_POS_DEVICE_TYPE
+    * @see #KEY_PAIR_PROPERTY
+    */
+   public static final int UP_VALUE_INDEX = 4;
+
+   /**
+    * Index for the "down" value in the property <code>KEY_PAIR_PROPERTY</code>
+    * of the config elmeent type <code>SIM_POS_DEVICE_TYPE</code>.
+    *
+    * @see #SIM_POS_DEVICE_TYPE
+    * @see #KEY_PAIR_PROPERTY
+    */
+   public static final int DOWN_VALUE_INDEX = 5;
+
+   /**
+    * Index for the "rotate right" value in the property
+    * <code>KEY_PAIR_PROPERTY</code> of the config elmeent type
+    * <code>SIM_POS_DEVICE_TYPE</code>.
+    *
+    * @see #SIM_POS_DEVICE_TYPE
+    * @see #KEY_PAIR_PROPERTY
+    */
+   public static final int ROTATE_RIGHT_VALUE_INDEX = 6;
+
+   /**
+    * Index for the "rotate left" value in the property
+    * <code>KEY_PAIR_PROPERTY</code> of the config elmeent type
+    * <code>SIM_POS_DEVICE_TYPE</code>.
+    *
+    * @see #SIM_POS_DEVICE_TYPE
+    * @see #KEY_PAIR_PROPERTY
+    */
+   public static final int ROTATE_LEFT_VALUE_INDEX = 7;
+
+   /**
+    * Index for the "rotate up" value in the property
+    * <code>KEY_PAIR_PROPERTY</code> of the config elmeent type
+    * <code>SIM_POS_DEVICE_TYPE</code>.
+    *
+    * @see #SIM_POS_DEVICE_TYPE
+    * @see #KEY_PAIR_PROPERTY
+    */
+   public static final int ROTATE_UP_VALUE_INDEX = 8;
+
+   /**
+    * Index for the "rotate down" value in the property
+    * <code>KEY_PAIR_PROPERTY</code> of the config elmeent type
+    * <code>SIM_POS_DEVICE_TYPE</code>.
+    *
+    * @see #SIM_POS_DEVICE_TYPE
+    * @see #KEY_PAIR_PROPERTY
+    */
+   public static final int ROTATE_DOWN_VALUE_INDEX = 9;
+
+   /**
+    * Index for the "rotate counter-clockwise" value in the property
+    * <code>KEY_PAIR_PROPERTY</code> of the config elmeent type
+    * <code>SIM_POS_DEVICE_TYPE</code>.
+    *
+    * @see #SIM_POS_DEVICE_TYPE
+    * @see #KEY_PAIR_PROPERTY
+    */
+   public static final int ROTATE_COUNTER_CLOCKWISE_VALUE_INDEX = 10;
+
+   /**
+    * Index for the "rotate clockwise" value in the property
+    * <code>KEY_PAIR_PROPERTY</code> of the config elmeent type
+    * <code>SIM_POS_DEVICE_TYPE</code>.
+    *
+    * @see #SIM_POS_DEVICE_TYPE
+    * @see #KEY_PAIR_PROPERTY
+    */
+   public static final int ROTATE_CLOCKWISE_VALUE_INDEX = 11;
+
+   /** Integer form of <code>KEY_NONE</code> value. */
+   public static final int KEY_NONE_INT_VALUE = 0;
+
+   /** String form of <code>KEY_NONE</code> value. */
+   public static final String KEY_NONE_STRING_VALUE = "KEY_NONE";
+
+   /** Integer form of <code>KEY_UP</code> value. */
+   public static final int KEY_UP_INT_VALUE = 1;
+
+   /** String form of <code>KEY_UP</code> value. */
+   public static final String KEY_UP_STRING_VALUE = "KEY_UP";
+
+   /** Integer form of <code>KEY_DOWN</code> value. */
+   public static final int KEY_DOWN_INT_VALUE = 2;
+
+   /** String form of <code>KEY_DOWN</code> value. */
+   public static final String KEY_DOWN_STRING_VALUE = "KEY_DOWN";
+
+   /** Integer form of <code>KEY_LEFT</code> value. */
+   public static final int KEY_LEFT_INT_VALUE = 3;
+
+   /** String form of <code>KEY_LEFT</code> value. */
+   public static final String KEY_LEFT_STRING_VALUE = "KEY_LEFT";
+
+   /** Integer form of <code>KEY_RIGHT</code> value. */
+   public static final int KEY_RIGHT_INT_VALUE = 4;
+
+   /** String form of <code>KEY_RIGHT</code> value. */
+   public static final String KEY_RIGHT_STRING_VALUE = "KEY_RIGHT";
+
+   /** Integer form of modifier <code>NONE</code> value. */
+   public static final int MODKEY_NONE_INT_VALUE = 0;
+
+   /** String form of modifier <code>NONE</code> value. */
+   public static final String MODKEY_NONE_STRING_VALUE = "NONE";
+
+   /** Integer form of modifier <code>CTRL</code> value. */
+   public static final int MODKEY_CTRL_INT_VALUE = 5;
+
+   /** String form of modifier <code>CTRL</code> value. */
+   public static final String MODKEY_CTRL_STRING_VALUE = "CTRL";
+
+   /** Integer form of modifier <code>SHIFT</code> value. */
+   public static final int MODKEY_SHIFT_INT_VALUE = 6;
+
+   /** String form of modifier <code>SHIFT</code> value. */
+   public static final String MODKEY_SHIFT_STRING_VALUE = "SHIFT";
+
+   /** Integer form of modifier <code>ALT</code> value. */
+   public static final int MODKEY_ALT_INT_VALUE = 7;
+
+   /** String form of modifier <code>ALT</code> value. */
+   public static final String MODKEY_ALT_STRING_VALUE = "ALT";
+
+   /** Integer form of modifier <code>ANY</code> value. */
+   public static final int MODKEY_ANY_INT_VALUE = -1;
+
+   /** String form of modifier <code>ANY</code> value. */
+   public static final String MODKEY_ANY_STRING_VALUE = "ANY";
+
+   /** Integer form of <code>KEY_1</code> value. */
+   public static final int KEY_1_INT_VALUE = 8;
+
+   /** String form of <code>KEY_1</code> value. */
+   public static final String KEY_1_STRING_VALUE = "KEY_1";
+
+   /** Integer form of <code>KEY_2</code> value. */
+   public static final int KEY_2_INT_VALUE = 9;
+
+   /** String form of <code>KEY_2</code> value. */
+   public static final String KEY_2_STRING_VALUE = "KEY_2";
+
+   /** Integer form of <code>KEY_3</code> value. */
+   public static final int KEY_3_INT_VALUE = 10;
+
+   /** String form of <code>KEY_3</code> value. */
+   public static final String KEY_3_STRING_VALUE = "KEY_3";
+
+   /** Integer form of <code>KEY_4</code> value. */
+   public static final int KEY_4_INT_VALUE = 11;
+
+   /** String form of <code>KEY_4</code> value. */
+   public static final String KEY_4_STRING_VALUE = "KEY_4";
+
+   /** Integer form of <code>KEY_5</code> value. */
+   public static final int KEY_5_INT_VALUE = 12;
+
+   /** String form of <code>KEY_5</code> value. */
+   public static final String KEY_5_STRING_VALUE = "KEY_5";
+
+   /** Integer form of <code>KEY_6</code> value. */
+   public static final int KEY_6_INT_VALUE = 13;
+
+   /** String form of <code>KEY_6</code> value. */
+   public static final String KEY_6_STRING_VALUE = "KEY_6";
+
+   /** Integer form of <code>KEY_7</code> value. */
+   public static final int KEY_7_INT_VALUE = 14;
+
+   /** String form of <code>KEY_7</code> value. */
+   public static final String KEY_7_STRING_VALUE = "KEY_7";
+
+   /** Integer form of <code>KEY_8</code> value. */
+   public static final int KEY_8_INT_VALUE = 15;
+
+   /** String form of <code>KEY_8</code> value. */
+   public static final String KEY_8_STRING_VALUE = "KEY_8";
+
+   /** Integer form of <code>KEY_9</code> value. */
+   public static final int KEY_9_INT_VALUE = 16;
+
+   /** String form of <code>KEY_9</code> value. */
+   public static final String KEY_9_STRING_VALUE = "KEY_9";
+
+   /** Integer form of <code>KEY_0</code> value. */
+   public static final int KEY_0_INT_VALUE = 17;
+
+   /** String form of <code>KEY_0</code> value. */
+   public static final String KEY_0_STRING_VALUE = "KEY_0";
+
+   /** Integer form of <code>KEY_A</code> value. */
+   public static final int KEY_A_INT_VALUE = 18;
+
+   /** String form of <code>KEY_A</code> value. */
+   public static final String KEY_A_STRING_VALUE = "KEY_A";
+
+   /** Integer form of <code>KEY_B</code> value. */
+   public static final int KEY_B_INT_VALUE = 19;
+
+   /** String form of <code>KEY_B</code> value. */
+   public static final String KEY_B_STRING_VALUE = "KEY_B";
+
+   /** Integer form of <code>KEY_C</code> value. */
+   public static final int KEY_C_INT_VALUE = 20;
+
+   /** String form of <code>KEY_C</code> value. */
+   public static final String KEY_C_STRING_VALUE = "KEY_C";
+
+   /** Integer form of <code>KEY_D</code> value. */
+   public static final int KEY_D_INT_VALUE = 21;
+
+   /** String form of <code>KEY_D</code> value. */
+   public static final String KEY_D_STRING_VALUE = "KEY_D";
+
+   /** Integer form of <code>KEY_E</code> value. */
+   public static final int KEY_E_INT_VALUE = 22;
+
+   /** String form of <code>KEY_E</code> value. */
+   public static final String KEY_E_STRING_VALUE = "KEY_E";
+
+   /** Integer form of <code>KEY_F</code> value. */
+   public static final int KEY_F_INT_VALUE = 23;
+
+   /** String form of <code>KEY_F</code> value. */
+   public static final String KEY_F_STRING_VALUE = "KEY_F";
+
+   /** Integer form of <code>KEY_G</code> value. */
+   public static final int KEY_G_INT_VALUE = 24;
+
+   /** String form of <code>KEY_G</code> value. */
+   public static final String KEY_G_STRING_VALUE = "KEY_G";
+
+   /** Integer form of <code>KEY_H</code> value. */
+   public static final int KEY_H_INT_VALUE = 25;
+
+   /** String form of <code>KEY_H</code> value. */
+   public static final String KEY_H_STRING_VALUE = "KEY_H";
+
+   /** Integer form of <code>KEY_I</code> value. */
+   public static final int KEY_I_INT_VALUE = 26;
+
+   /** String form of <code>KEY_I</code> value. */
+   public static final String KEY_I_STRING_VALUE = "KEY_I";
+
+   /** Integer form of <code>KEY_J</code> value. */
+   public static final int KEY_J_INT_VALUE = 27;
+
+   /** String form of <code>KEY_J</code> value. */
+   public static final String KEY_J_STRING_VALUE = "KEY_J";
+
+   /** Integer form of <code>KEY_K</code> value. */
+   public static final int KEY_K_INT_VALUE = 28;
+
+   /** String form of <code>KEY_K</code> value. */
+   public static final String KEY_K_STRING_VALUE = "KEY_K";
+
+   /** Integer form of <code>KEY_L</code> value. */
+   public static final int KEY_L_INT_VALUE = 29;
+
+   /** String form of <code>KEY_L</code> value. */
+   public static final String KEY_L_STRING_VALUE = "KEY_L";
+
+   /** Integer form of <code>KEY_M</code> value. */
+   public static final int KEY_M_INT_VALUE = 30;
+
+   /** String form of <code>KEY_M</code> value. */
+   public static final String KEY_M_STRING_VALUE = "KEY_M";
+
+   /** Integer form of <code>KEY_N</code> value. */
+   public static final int KEY_N_INT_VALUE = 31;
+
+   /** String form of <code>KEY_N</code> value. */
+   public static final String KEY_N_STRING_VALUE = "KEY_N";
+
+   /** Integer form of <code>KEY_O</code> value. */
+   public static final int KEY_O_INT_VALUE = 32;
+
+   /** String form of <code>KEY_O</code> value. */
+   public static final String KEY_O_STRING_VALUE = "KEY_O";
+
+   /** Integer form of <code>KEY_P</code> value. */
+   public static final int KEY_P_INT_VALUE = 33;
+
+   /** String form of <code>KEY_P</code> value. */
+   public static final String KEY_P_STRING_VALUE = "KEY_P";
+
+   /** Integer form of <code>KEY_Q</code> value. */
+   public static final int KEY_Q_INT_VALUE = 34;
+
+   /** String form of <code>KEY_Q</code> value. */
+   public static final String KEY_Q_STRING_VALUE = "KEY_Q";
+
+   /** Integer form of <code>KEY_R</code> value. */
+   public static final int KEY_R_INT_VALUE = 35;
+
+   /** String form of <code>KEY_R</code> value. */
+   public static final String KEY_R_STRING_VALUE = "KEY_R";
+
+   /** Integer form of <code>KEY_S</code> value. */
+   public static final int KEY_S_INT_VALUE = 36;
+
+   /** String form of <code>KEY_S</code> value. */
+   public static final String KEY_S_STRING_VALUE = "KEY_S";
+
+   /** Integer form of <code>KEY_T</code> value. */
+   public static final int KEY_T_INT_VALUE = 37;
+
+   /** String form of <code>KEY_T</code> value. */
+   public static final String KEY_T_STRING_VALUE = "KEY_T";
+
+   /** Integer form of <code>KEY_U</code> value. */
+   public static final int KEY_U_INT_VALUE = 38;
+
+   /** String form of <code>KEY_U</code> value. */
+   public static final String KEY_U_STRING_VALUE = "KEY_U";
+
+   /** Integer form of <code>KEY_V</code> value. */
+   public static final int KEY_V_INT_VALUE = 39;
+
+   /** String form of <code>KEY_V</code> value. */
+   public static final String KEY_V_STRING_VALUE = "KEY_V";
+
+   /** Integer form of <code>KEY_W</code> value. */
+   public static final int KEY_W_INT_VALUE = 40;
+
+   /** String form of <code>KEY_W</code> value. */
+   public static final String KEY_W_STRING_VALUE = "KEY_X";
+
+   /** Integer form of <code>KEY_X</code> value. */
+   public static final int KEY_X_INT_VALUE = 41;
+
+   /** String form of <code>KEY_X</code> value. */
+   public static final String KEY_X_STRING_VALUE = "KEY_X";
+
+   /** Integer form of <code>KEY_Y</code> value. */
+   public static final int KEY_Y_INT_VALUE = 42;
+
+   /** String form of <code>KEY_Y</code> value. */
+   public static final String KEY_Y_STRING_VALUE = "KEY_Y";
+
+   /** Integer form of <code>KEY_Z</code> value. */
+   public static final int KEY_Z_INT_VALUE = 43;
+
+   /** String form of <code>KEY_Z</code> value. */
+   public static final String KEY_Z_STRING_VALUE = "KEY_Z";
+
+   /** Integer form of <code>KEY_ESC</code> value. */
+   public static final int KEY_ESC_INT_VALUE = 44;
+
+   /** String form of <code>KEY_ESC</code> value. */
+   public static final String KEY_ESC_STRING_VALUE = "KEY_ESC";
+
+   /** Integer form of <code>MOUSE_POSX</code> value. */
+   public static final int MOUSE_POSX_INT_VALUE = 45;
+
+   /** String form of <code>MOUSE_POSX</code> value. */
+   public static final String MOUSE_POSX_STRING_VALUE = "MOUSE_POSX";
+
+   /** Integer form of <code>MOUSE_NEGX</code> value. */
+   public static final int MOUSE_NEGX_INT_VALUE = 46;
+
+   /** String form of <code>MOUSE_NEGX</code> value. */
+   public static final String MOUSE_NEGX_STRING_VALUE = "MOUSE_NEGX";
+
+   /** Integer form of <code>MOUSE_POSY</code> value. */
+   public static final int MOUSE_POSY_INT_VALUE = 47;
+
+   /** String form of <code>MOUSE_POSY</code> value. */
+   public static final String MOUSE_POSY_STRING_VALUE = "MOUSE_POSY";
+
+   /** Integer form of <code>MOUSE_NEGY</code> value. */
+   public static final int MOUSE_NEGY_INT_VALUE = 48;
+
+   /** String form of <code>MOUSE_NEGY</code> value. */
+   public static final String MOUSE_NEGY_STRING_VALUE = "MOUSE_NEGY";
+
+   /** Integer form of <code>MOUSE_BUT1</code> value. */
+   public static final int MOUSE_BUT1_INT_VALUE = 49;
+
+   /** String form of <code>MOUSE_BUT1</code> value. */
+   public static final String MOUSE_BUT1_STRING_VALUE = "MOUSE_BUT1";
+
+   /** Integer form of <code>MOUSE_BUT2</code> value. */
+   public static final int MOUSE_BUT2_INT_VALUE = 50;
+
+   /** String form of <code>MOUSE_BUT2</code> value. */
+   public static final String MOUSE_BUT2_STRING_VALUE = "MOUSE_BUT2";
+
+   /** Integer form of <code>MOUSE_BUT3</code> value. */
+   public static final int MOUSE_BUT3_INT_VALUE = 51;
+
+   /** String form of <code>MOUSE_BUT3</code> value. */
+   public static final String MOUSE_BUT3_STRING_VALUE = "MOUSE_BUT3";
+
+   /**
+    * The first allowed VR Juggler mouse button value.  Note that this is
+    * not a key value (such as <code>MOUSE_BUT3_INT_VALUE</code>) but rather
+    * the start of the range of allowed mouse buttons in
+    * [<code>FIRST_MOUSE_BUTTON</code>,&nbsp;<code>LAST_MOUSE_BUTTON</code>].
+    *
+    * @see #LAST_MOUSE_BUTTON
+    */
+   public static final int FIRST_MOUSE_BUTTON = 1;
+
+   /**
+    * The last allowed VR Juggler mouse button value.  Note that this is
+    * not a key value (such as <code>MOUSE_BUT3_INT_VALUE</code>) but rather
+    * the end of the range of allowed mouse buttons in
+    * [<code>FIRST_MOUSE_BUTTON</code>,&nbsp;<code>LAST_MOUSE_BUTTON</code>].
+    *
+    * @see #FIRST_MOUSE_BUTTON
+    */
+   public static final int LAST_MOUSE_BUTTON  = 3;
 }
