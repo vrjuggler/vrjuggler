@@ -65,4 +65,6 @@ public interface SimDeviceEditor
     * implementation.
     */
    public JComponent getEditor();
+
+   public void editorClosing();
 }
