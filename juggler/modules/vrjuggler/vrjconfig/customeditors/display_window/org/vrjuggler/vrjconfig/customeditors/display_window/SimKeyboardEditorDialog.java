@@ -117,7 +117,10 @@ public class SimKeyboardEditorDialog
    public ConfigElement showDialog()
    {
       setVisible(true);
-      return mKbdEditor.getKeyboardDeviceElement();
+      ConfigElement kbd_dev_elt = mKbdEditor.getKeyboardDeviceElement();
+      mKbdEditor.editorClosing();
+      mKbdEditor = null;
+      return kbd_dev_elt;
    }
 
    protected void processWindowEvent(WindowEvent e)
