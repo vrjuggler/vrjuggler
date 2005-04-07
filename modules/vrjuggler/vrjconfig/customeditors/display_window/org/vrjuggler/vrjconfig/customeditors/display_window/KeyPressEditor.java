@@ -441,6 +441,8 @@ public class KeyPressEditor
          case BUTTON_TYPE:
             mCurEditor = mButtonEditor;
 
+            mButtonModifierChooser.setSelectedItem(modifier_obj);
+
             if ( EditorHelpers.isJugglerMouseButton(key) )
             {
                setSelectedButton(key);
@@ -448,9 +450,8 @@ public class KeyPressEditor
             else
             {
                mButtonChooser.setValue(new Integer(1));
+               buttonValueChanged();
             }
-
-            mButtonModifierChooser.setSelectedItem(modifier_obj);
 
             break;
          case MOTION_TYPE:
