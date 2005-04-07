@@ -444,13 +444,13 @@ public class KeyPressEditor
             if ( EditorHelpers.isJugglerMouseButton(key) )
             {
                setSelectedButton(key);
-               mButtonModifierChooser.setSelectedItem(modifier_obj);
             }
             else
             {
-               mButtonModifierChooser.setSelectedItem(null);
                mButtonChooser.setValue(new Integer(1));
             }
+
+            mButtonModifierChooser.setSelectedItem(modifier_obj);
 
             break;
          case MOTION_TYPE:
@@ -458,14 +458,14 @@ public class KeyPressEditor
 
             if ( EditorHelpers.isJugglerMouseMotion(key) )
             {
-               mMotionModifierChooser.setSelectedItem(modifier_obj);
                mMotionChooser.setSelectedItem(key_obj);
             }
             else
             {
-               mMotionModifierChooser.setSelectedItem(null);
                mMotionChooser.setSelectedItem(null);
             }
+
+            mMotionModifierChooser.setSelectedItem(modifier_obj);
 
             break;
       }
