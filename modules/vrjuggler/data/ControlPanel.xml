@@ -9,7 +9,8 @@
             token="display_window"
             icon="org/vrjuggler/vrjconfig/images/display64.png"/>
    </category>
-   <editor label="Simulator" class=""
+   <editor label="Simulator"
+           class="org.vrjuggler.vrjconfig.customeditors.display_window.DisplayWindowEditorPanel"
            icon="org/vrjuggler/vrjconfig/images/simulator64.png" />
    <!--
    <editor label="Cluster" class=""
