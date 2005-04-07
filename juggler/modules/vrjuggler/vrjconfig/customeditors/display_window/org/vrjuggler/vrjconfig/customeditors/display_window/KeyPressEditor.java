@@ -431,12 +431,7 @@ public class KeyPressEditor
       {
          case KEY_TYPE:
             mCurEditor = mKeyEditor;
-
-            if ( EditorHelpers.isJugglerKey(key) )
-            {
-               mKeyField.setKeyPressText(key, modifier_obj.intValue());
-            }
-
+            mKeyField.setKeyPressText(key, modifier_obj.intValue());
             break;
          case BUTTON_TYPE:
             mCurEditor = mButtonEditor;
