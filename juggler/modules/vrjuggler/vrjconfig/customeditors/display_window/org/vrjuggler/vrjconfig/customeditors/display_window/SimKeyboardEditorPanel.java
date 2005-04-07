@@ -301,6 +301,18 @@ public class SimKeyboardEditorPanel
       return keyboardDeviceElement;
    }
 
+   public void editorClosing()
+   {
+      for ( Iterator e = mSimEditorCache.keySet().iterator(); e.hasNext(); )
+      {
+         SimDeviceEditor editor =
+            (SimDeviceEditor) mSimEditorCache.get(e.next());
+         editor.editorClosing();
+      }
+
+      mSimEditorCache.clear();
+   }
+
    private void jbInit() throws Exception
    {
       this.setLayout(mMainLayout);
