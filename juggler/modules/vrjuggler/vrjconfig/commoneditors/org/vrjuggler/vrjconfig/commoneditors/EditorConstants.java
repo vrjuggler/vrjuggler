@@ -47,354 +47,354 @@ public interface EditorConstants
 
    // Config element types (definition tokens).
 
-   /** Config element type alias. */
+   /** Config element type <code>alias</code>. */
    public static final String ALIAS_TYPE = "alias";
 
-   /** Config element type analog_device. */
+   /** Config element type <code>analog_device</code>. */
    public static final String ANALOG_DEVICE_TYPE = "analog_device";
 
-   /** Config element type analog_proxy. */
+   /** Config element type <code>analog_proxy</code>. */
    public static final String ANALOG_PROXY_TYPE = "analog_proxy";
 
-   /** Config element type command_device. */
+   /** Config element type <code>command_device</code>. */
    public static final String COMMAND_DEVICE_TYPE = "command_device";
 
-   /** Config element type data_glove (5DT). */
+   /** Config element type <code>data_glove (5DT)</code>. */
    public static final String DATA_GLOVE_TYPE = "data_glove";
 
-   /** Config element type default_simulator. */
+   /** Config element type <code>default_simulator</code>. */
    public static final String DEFAULT_SIMULATOR_TYPE = "default_simulator";
 
-   /** Config element type digital_device. */
+   /** Config element type <code>digital_device</code>. */
    public static final String DIGITAL_DEVICE_TYPE = "digital_device";
 
-   /** Config element type digital_proxy. */
+   /** Config element type <code>digital_proxy</code>. */
    public static final String DIGITAL_PROXY_TYPE = "digital_proxy";
 
-   /** Config element type display_window. */
+   /** Config element type <code>display_window</code>. */
    public static final String DISPLAY_WINDOW_TYPE = "display_window";
 
-   /** Config element type directx_joystick. */
+   /** Config element type <code>directx_joystick</code>. */
    public static final String DIRECTX_JOYSTICK_TYPE = "directx_joystick";
 
-   /** Config element type dtk. */
+   /** Config element type <code>dtk</code>. */
    public static final String DTK_TYPE = "dtk";
 
-   /** Config element type fastrak. */
+   /** Config element type <code>fastrak</code>. */
    public static final String FASTRAK_TYPE = "fastrak";
 
-   /** Config element type flock. */
+   /** Config element type <code>flock</code>. */
    public static final String FLOCK_TYPE = "flock";
 
-   /** Config element type glove_device. */
+   /** Config element type <code>glove_device</code>. */
    public static final String GLOVE_DEVICE_TYPE = "glove_device";
 
-   /** Config element type ibox. */
+   /** Config element type <code>ibox</code>. */
    public static final String IBOX_TYPE = "ibox";
 
-   /** Config element type input_area. */
+   /** Config element type <code>input_area</code>. */
    public static final String INPUT_AREA_TYPE = "input_area";
 
-   /** Config element type input_device. */
+   /** Config element type <code>input_device</code>. */
    public static final String INPUT_DEVICE_TYPE = "input_device";
 
-   /** Config element type input_window. */
+   /** Config element type <code>input_window</code>. */
    public static final String INPUT_WINDOW_TYPE = "input_window";
 
-   /** Config element type intersense. */
+   /** Config element type <code>intersense</code>. */
    public static final String INTERSENSE_TYPE = "intersense";
 
-   /** Config element type intersense_api. */
+   /** Config element type <code>intersense_api</code>. */
    public static final String INTERSENSE_API_TYPE = "intersense_api";
 
-   /** Config element type intersense_station. */
+   /** Config element type <code>intersense_station</code>. */
    public static final String INTERSENSE_STATION_TYPE = "intersense_station";
 
-   /** Config element type keyboard_mouse_device. */
+   /** Config element type <code>keyboard_mouse_device</code>. */
    public static final String KEYBOARD_MOUSE_DEVICE_TYPE =
       "keyboard_mouse_device";
 
-   /** Config element type keyboard_mouse_proxy. */
+   /** Config element type <code>keyboard_mouse_proxy</code>. */
    public static final String KEYBOARD_MOUSE_PROXY_TYPE =
       "keyboard_mouse_proxy";
 
-   /** Config element type key_modifier_pair. */
+   /** Config element type <code>key_modifier_pair</code>. */
    public static final String KEY_MODIFIER_PAIR_TYPE = "key_modifier_pair";
 
-   /** Config element type linux_joydev. */
+   /** Config element type <code>linux_joydev</code>. */
    public static final String LINUX_JOYDEV_TYPE = "linux_joydev";
 
-   /** Config element type motion_star. */
+   /** Config element type <code>motion_star</code>. */
    public static final String MOTION_STAR_TYPE = "motion_star";
 
-   /** Config element type opengl_frame_buffer_config. */
+   /** Config element type <code>opengl_frame_buffer_config</code>. */
    public static final String OPENGL_FRAME_BUFFER_TYPE =
       "opengl_frame_buffer_config";
 
-   /** Config element type pinch_glove. */
+   /** Config element type <code>pinch_glove</code>. */
    public static final String PINCH_GLOVE_TYPE = "pinch_glove";
 
-   /** Config element type positional_device. */
+   /** Config element type <code>positional_device</code>. */
    public static final String POSITIONAL_DEVICE_TYPE = "positional_device";
 
-   /** Config element type position_proxy. */
+   /** Config element type <code>position_proxy</code>. */
    public static final String POSITION_PROXY_TYPE = "position_proxy";
 
-   /** Config element type proxy. */
+   /** Config element type <code>proxy</code>. */
    public static final String PROXY_TYPE = "proxy";
 
-   /** Config element type puck_device. */
+   /** Config element type <code>puck_device</code>. */
    public static final String PUCK_DEVICE_TYPE = "puck_device";
 
    /**
-    * Config element type serial_encoder (US Digital Serial Encoder on a
-    * Barco Baron).
+    * Config element type <code>serial_encoder</code> (US Digital Serial
+    * Encoder on a Barco Baron).
     */
    public static final String SERIAL_ENCODER_TYPE = "serial_encoder";
 
-   /** Config element type simulated_analog_device. */
+   /** Config element type <code>simulated_analog_device</code>. */
    public static final String SIM_ANALOG_DEVICE_TYPE =
       "simulated_analog_device";
 
-   /** Config element type simulated_digital_device. */
+   /** Config element type <code>simulated_digital_device</code>. */
    public static final String SIM_DIGITAL_DEVICE_TYPE =
       "simulated_digital_device";
 
-   /** Config element type simulated_positional_device. */
+   /** Config element type <code>simulated_positional_device</code>. */
    public static final String SIM_POS_DEVICE_TYPE =
       "simulated_positional_device";
 
-   /** Config element type simulated_relative_position. */
+   /** Config element type <code>simulated_relative_position</code>. */
    public static final String SIM_RELATIVE_POS_DEVICE_TYPE =
       "simulated_relative_position";
 
-   /** Config element type simulator_viewport. */
+   /** Config element type <code>simulator_viewport</code>. */
    public static final String SIMULATOR_VIEWPORT_TYPE = "simulator_viewport";
 
-   /** Config element type string_device. */
+   /** Config element type <code>string_device</code>. */
    public static final String STRING_DEVICE_TYPE = "string_device";
 
-   /** Config element type surface_viewport. */
+   /** Config element type <code>surface_viewport</code>. */
    public static final String SURFACE_VIEWPORT_TYPE = "surface_viewport";
 
-   /** Config element type trackd_controller. */
+   /** Config element type <code>trackd_controller</code>. */
    public static final String TRACKD_CONTROLLER_TYPE = "trackd_controller";
 
-   /** Config element type trackd_sensor. */
+   /** Config element type <code>trackd_sensor</code>. */
    public static final String TRACKD_SENSOR_TYPE = "trackd_sensor";
 
-   /** Config element type trackd_api_controller. */
+   /** Config element type <code>trackd_api_controller</code>. */
    public static final String TRACKD_API_CONTROLLER_TYPE =
       "trackd_api_controller";
 
-   /** Config element type trackd_api_sensor. */
+   /** Config element type <code>trackd_api_sensor</code>. */
    public static final String TRACKD_API_SENSOR_TYPE = "trackd_api_sensor";
 
-   /** Config element type vrpn. */
+   /** Config element type <code>vrpn</code>. */
    public static final String VRPN_TYPE = "vrpn";
 
    // Properties.
 
-   /** Property type accum_red_size. */
+   /** Property type <code>accum_red_size</code>. */
    public static final String ACCUM_RED_SIZE_PROPERTY = "accum_red_size";
 
-   /** Property type accum_green_size. */
+   /** Property type <code>accum_green_size</code>. */
    public static final String ACCUM_GREEN_SIZE_PROPERTY = "accum_green_size";
 
-   /** Property type accum_blue_size. */
+   /** Property type <code>accum_blue_size</code>. */
    public static final String ACCUM_BLUE_SIZE_PROPERTY = "accum_blue_size";
 
-   /** Property type accum_alpha_size. */
+   /** Property type <code>accum_alpha_size</code>. */
    public static final String ACCUM_ALPHA_SIZE_PROPERTY = "accum_alpha_size";
 
-   /** Property type active. */
+   /** Property type <code>active</code>. */
    public static final String ACTIVE_PROPERTY = "active";
 
-   /** Property type analog_count. */
+   /** Property type <code>analog_count</code>. */
    public static final String ANALOG_COUNT_PROPERTY = "analog_count";
 
-   /** Property type analog_first. */
+   /** Property type <code>analog_first</code>. */
    public static final String ANALOG_FIRST_PROPERTY = "analog_first";
 
-   /** Property type auxiliary_buffer_count. */
+   /** Property type <code>auxiliary_buffer_count</code>. */
    public static final String AUX_BUFFER_COUNT_PROPERTY =
       "auxiliary_buffer_count";
 
-   /** Property type border. */
+   /** Property type <code>border</code>. */
    public static final String BORDER_PROPERTY = "border";
 
-   /** Property type button_count. */
+   /** Property type <code>button_count</code>. */
    public static final String BUTTON_COUNT_PROPERTY = "button_count";
 
-   /** Property type camera_pos. */
+   /** Property type <code>camera_pos</code>. */
    public static final String CAMERA_POS_PROPERTY = "camera_pos";
 
-   /** Property type red_size. */
+   /** Property type <code>red_size</code>. */
    public static final String COLOR_RED_SIZE_PROPERTY = "red_size";
 
-   /** Property type green_size. */
+   /** Property type <code>green_size</code>. */
    public static final String COLOR_GREEN_SIZE_PROPERTY = "green_size";
 
-   /** Property type blue_size. */
+   /** Property type <code>blue_size</code>. */
    public static final String COLOR_BLUE_SIZE_PROPERTY = "blue_size";
 
-   /** Property type alpha_size. */
+   /** Property type <code>alpha_size</code>. */
    public static final String COLOR_ALPHA_SIZE_PROPERTY = "alpha_size";
 
-   /** Property type custom_scale. */
+   /** Property type <code>custom_scale</code>. */
    public static final String CUSTOM_SCALE_PROPERTY = "custom_scale";
 
-   /** Property type decrement_keypress. */
+   /** Property type <code>decrement_keypress</code>. */
    public static final String DECREMENT_KEYPRESS_PROPERTY =
       "decrement_keypress";
 
-   /** Property type depth_buffer_size. */
+   /** Property type <code>depth_buffer_size</code>. */
    public static final String DEPTH_BUFFER_SIZE_PROPERTY = "depth_buffer_size";
 
-   /** Property type device. */
+   /** Property type <code>device</code>. */
    public static final String DEVICE_PROPERTY = "device";
 
-   /** Property type device_units. */
+   /** Property type <code>device_units</code>. */
    public static final String DEVICE_UNITS_PROPERTY = "device_units";
 
-   /** Property type digital_count. */
+   /** Property type <code>digital_count</code>. */
    public static final String DIGITAL_COUNT_PROPERTY = "digital_count";
 
-   /** Property type digital_first. */
+   /** Property type <code>digital_first</code>. */
    public static final String DIGITAL_FIRST_PROPERTY = "digital_first";
 
-   /** Property type frame_buffer_config. */
+   /** Property type <code>frame_buffer_config</code>. */
    public static final String FRAME_BUFFER_PROPERTY = "frame_buffer_config";
 
-   /** Property type fsaa_enable. */
+   /** Property type <code>fsaa_enable</code>. */
    public static final String FSAA_ENABLE_PROPERTY = "fsaa_enable";
 
-   /** Property type hide_mouse. */
+   /** Property type <code>hide_mouse</code>. */
    public static final String HIDE_MOUSE_PROPERTY = "hide_mouse";
 
-   /** Property type increment_keypress. */
+   /** Property type <code>increment_keypress</code>. */
    public static final String INCREMENT_KEYPRESS_PROPERTY =
       "increment_keypress";
 
-   /** Property type key_pair. */
+   /** Property type <code>key_pair</code>. */
    public static final String KEY_PAIR_PROPERTY = "key_pair";
 
-   /** Property type key. */
+   /** Property type <code>key</code>. */
    public static final String KEY_PROPERTY = "key";
 
-   /** Property type keyboard_mouse_proxy. */
+   /** Property type <code>keyboard_mouse_proxy</code>. */
    public static final String KEYBOARD_MOUSE_PROXY_PTR_PROPERTY =
       "keyboard_mouse_proxy";
 
-   /** Property type keyboard_mouse_device_name. */
+   /** Property type <code>keyboard_mouse_device_name</code>. */
    public static final String KEYBOARD_MOUSE_PTR_PROPERTY =
       "keyboard_mouse_device_name";
 
-   /** Property type lock_key. */
+   /** Property type <code>lock_key</code>. */
    public static final String LOCK_KEY_PROPERTY = "lock_key";
 
-   /** Property type lower_left_corner. */
+   /** Property type <code>lower_left_corner</code>. */
    public static final String LOWER_LEFT_CORNER_PROPERTY = "lower_left_corner";
 
-   /** Property type lower_right_corner. */
+   /** Property type <code>lower_right_corner</code>. */
    public static final String LOWER_RIGHT_CORNER_PROPERTY =
       "lower_right_corner";
 
-   /** Property type modifier_key. */
+   /** Property type <code>modifier_key</code>. */
    public static final String MODIFIER_KEY_PROPERTY = "modifier_key";
 
-   /** Property type origin. */
+   /** Property type <code>origin</code>. */
    public static final String ORIGIN_PROPERTY = "origin";
 
-   /** Property type position_filters. */
+   /** Property type <code>position_filters</code>. */
    public static final String POSITION_FILTERS_PROPERTY = "position_filters";
 
-   /** Property type position_transform_filter. */
+   /** Property type <code>position_transform_filter</code>. */
    public static final String POSITION_TRANSFORM_FILTER_TYPE =
       "position_transform_filter";
 
-   /** Property type pre_rotation. */
+   /** Property type <code>pre_rotation</code>. */
    public static final String PRE_ROTATION_PROPERTY = "pre_rotation";
 
-   /** Property type pre_translation. */
+   /** Property type <code>pre_translation</code>. */
    public static final String PRE_TRANSLATION_PROPERTY = "pre_translate";
 
-   /** Property type post_rotation. */
+   /** Property type <code>post_rotation</code>. */
    public static final String POST_ROTATION_PROPERTY = "post_rotation";
 
-   /** Property type post_translation. */
+   /** Property type <code>post_translation</code>. */
    public static final String POST_TRANSLATION_PROPERTY = "post_translate";
 
-   /** Property type proxy. */
+   /** Property type <code>proxy</code>. */
    public static final String PROXY_PROPERTY = "proxy";
 
-   /** Property type simulator_plugin. */
+   /** Property type <code>simulator_plugin</code>. */
    public static final String SIMULATOR_PLUGIN_PROPERTY = "simulator_plugin";
 
-   /** Property type simulator_viewports. */
+   /** Property type <code>simulator_viewports</code>. */
    public static final String SIMULATOR_VIEWPORTS_PROPERTY =
       "simulator_viewports";
 
-   /** Property type size. */
+   /** Property type <code>size</code>. */
    public static final String SIZE_PROPERTY = "size";
 
-   /** Property type sleep_time. */
+   /** Property type <code>sleep_time</code>. */
    public static final String SLEEP_TIME_PROPERTY = "sleep_time";
 
-   /** Property type stations. */
+   /** Property type <code>stations</code>. */
    public static final String STATIONS_PROPERTY = "stations";
 
-   /** Property type start_locked. */
+   /** Property type <code>start_locked</code>. */
    public static final String START_LOCKED_PROPERTY = "start_locked";
 
-   /** Property type stencil_buffer_size. */
+   /** Property type <code>stencil_buffer_size</code>. */
    public static final String STENCIL_BUFFER_SIZE_PROPERTY =
       "stencil_buffer_size";
 
-   /** Property type stereo. */
+   /** Property type <code>stereo</code>. */
    public static final String STEREO_PROPERTY = "stereo";
 
-   /** Property type surface_viewports. */
+   /** Property type <code>surface_viewports</code>. */
    public static final String SURFACE_VIEWPORTS_PROPERTY = "surface_viewports";
 
-   /** Property type tracked. */
+   /** Property type <code>tracked</code>. */
    public static final String TRACKED_PROPERTY = "tracked";
 
-   /** Property type tracker_count. */
+   /** Property type <code>tracker_count</code>. */
    public static final String TRACKER_COUNT_PROPERTY = "tracker_count";
 
-   /** Property type tracker_proxy. */
+   /** Property type <code>tracker_proxy</code>. */
    public static final String TRACKER_PROXY_PROPERTY = "tracker_proxy";
 
-   /** Property type unit. */
+   /** Property type <code>unit</code>. */
    public static final String UNIT_PROPERTY = "unit";
 
-   /** Property type upper_left_corner. */
+   /** Property type <code>upper_left_corner</code>. */
    public static final String UPPER_LEFT_CORNER_PROPERTY = "upper_left_corner";
 
-   /** Property type upper_right_corner. */
+   /** Property type <code>upper_right_corner</code>. */
    public static final String UPPER_RIGHT_CORNER_PROPERTY =
       "upper_right_corner";
 
-   /** Property type user. */
+   /** Property type <code>user</code>. */
    public static final String USER_PROPERTY = "user";
 
-   /** Property type use_analog. */
+   /** Property type <code>use_analog</code>. */
    public static final String USE_ANALOG_PROPERTY = "use_analog";
 
-   /** Property type use_digital. */
+   /** Property type <code>use_digital</code>. */
    public static final String USE_DIGITAL_PROPERTY = "use_digital";
 
-   /** Property type vertical_fov. */
+   /** Property type <code>vertical_fov</code>. */
    public static final String VERTICAL_FOV_PROPERTY = "vertical_fov";
 
-   /** Property type view. */
+   /** Property type <code>view</code>. */
    public static final String VIEW_PROPERTY = "view";
 
-   /** Property type visual_id. */
+   /** Property type <code>visual_id</code>. */
    public static final String VISUAL_ID_PROPERTY = "visual_id";
 
-   /** Property type wand_pos. */
+   /** Property type <code>wand_pos</code>. */
    public static final String WAND_POS_PROPERTY = "wand_pos";
 
    // Values.
