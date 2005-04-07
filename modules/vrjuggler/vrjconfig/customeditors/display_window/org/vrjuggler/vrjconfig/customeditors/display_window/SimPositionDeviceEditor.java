@@ -41,9 +41,6 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-import org.jgraph.event.GraphSelectionEvent;
-import org.jgraph.event.GraphSelectionListener;
-
 import info.clearthought.layout.*;
 
 import org.vrjuggler.jccl.config.*;
@@ -57,7 +54,6 @@ import org.vrjuggler.vrjconfig.commoneditors.KeyboardEditorPanel;
 public class SimPositionDeviceEditor
    extends JSplitPane
    implements SimDeviceEditor
-            , GraphSelectionListener
             , ConfigElementListener
             , EditorConstants
 {
@@ -120,8 +116,6 @@ public class SimPositionDeviceEditor
       if ( mProxyGraph != null )
       {
          this.remove(mProxyGraph);
-         mProxyGraph.getDeviceProxyEditor().getGraph().
-            removeGraphSelectionListener(this);
          mProxyGraph.editorClosing();
          mProxyGraph = null;
       }
@@ -134,8 +128,6 @@ public class SimPositionDeviceEditor
       allowed_types.add(1, repos.get(SIM_POS_DEVICE_TYPE));
 
       mProxyGraph = new ProxyEditorUI(allowed_types);
-      mProxyGraph.getDeviceProxyEditor().getGraph().
-         addGraphSelectionListener(this);
       mProxyGraph.setConfig(ctx, elt);
       this.add(mProxyGraph, JSplitPane.LEFT);
 
@@ -194,10 +186,6 @@ public class SimPositionDeviceEditor
    public void propertyValueRemoved(ConfigElementEvent e)
    {
       /* Do nothing. */ ;
-   }
-
-   public void valueChanged(GraphSelectionEvent e)
-   {
    }
 
    private void jbInit() throws Exception
