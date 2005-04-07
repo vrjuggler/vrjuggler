@@ -113,116 +113,6 @@ PfDrawManager::~PfDrawManager()
    mPfInputHandlers.clear();
 }
 
-#ifndef GET_X_LPARAM
-#  define GET_X_LPARAM(lp)   ((int)(short)LOWORD(lp))
-#endif
-#ifndef GET_Y_LPARAM
-#  define GET_Y_LPARAM(lp)   ((int)(short)HIWORD(lp))
-#endif
-
-// Helper method that forwards all events to the correct PfInputHandler.
-void handlePerformerEvents(int dev, void* val , pfuCustomEvent* pfuevent)
-{
-   boost::ignore_unused_variable_warning( dev );
-   boost::ignore_unused_variable_warning( pfuevent );
-
-#ifdef VPR_OS_Win32
-   pfuWin32Event* event = (pfuWin32Event*)val;
-   vprASSERT( event != NULL );
-
-   int cur_x = GET_X_LPARAM(event->lParam);
-   int cur_y = GET_Y_LPARAM(event->lParam);
-
-   POINT pt;
-   pt.x = cur_x;
-   pt.y = cur_y;
-   ::ClientToScreen(event->hwnd, &pt);
-
-   HWND real_window = event->hwnd;
-   TCHAR tmpName[101];
-
-   // Check for child.
-   if(GetClassName(event->hwnd, tmpName, 100) > 0)
-   {
-      if(!strcmp(tmpName,"pfChildWNDCLASS"))
-      {
-         real_window = (HWND)GetWindowLong(event->hwnd, GWL_HWNDPARENT);
-
-         if(real_window == NULL)
-         {
-            // Fall back on given window if it is not a child window.
-            real_window = event->hwnd;
-         }
-      }
-   }
-   else
-   {
-      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CRITICAL_LVL) 
-         << "[PfDrawManager::handlePerformerInput()] Unable to determine class name of win = "
-         << std::hex << event->hwnd << std::dec << std::endl << vprDEBUG_FLUSH;
-   }
-
-   MSG message;
-   message.hwnd = real_window;
-   message.lParam = event->lParam;
-   message.message = event->uMsg;
-   message.pt = pt;
-   message.time = event->time;
-   message.wParam = event->wParam;
-
-   PfInputHandler* pf_input_handler = PfDrawManager::getPfInputHandler( real_window );
-   if ( NULL != pf_input_handler )
-   {
-      pf_input_handler->handlePerformerEvent( message );
-   }
-   else
-   {
-      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CRITICAL_LVL)
-         << "[PfDrawManager::handlePerformerInput()] Got an event for an unknown window."
-         << std::endl << vprDEBUG_FLUSH;
-   }
-#else
-   ::XAnyEvent* event = (::XAnyEvent*)val;
-   vprASSERT( event != NULL );
-   PfInputHandler* pf_input_handler = PfDrawManager::getPfInputHandler( event->window );
-   vprASSERT( pf_input_handler != NULL );
-   pf_input_handler->handlePerformerEvent( *((::XEvent*)val) );
-#endif
-}
-
-// Instantiate the mPfInputMap.
-std::map< WINKEY, PfInputHandler* > PfDrawManager::mPfInputMap;
-
-void PfDrawManager::addPfInputHandler(WINKEY win, PfInputHandler* pfInput)
-{
-   vprASSERT( pfInput != NULL );
-
-   if ( mPfInputMap.find(win) == mPfInputMap.end() )     // Not already there
-   {
-      mPfInputMap[win] = pfInput;
-   }
-}
-
-void PfDrawManager::removePfInputHandler(WINKEY win)
-{
-   mPfInputMap.erase(win);     // Erase the entry in the list
-}
-
-PfInputHandler* PfDrawManager::getPfInputHandler(WINKEY win)
-{
-   std::map< WINKEY, PfInputHandler* >::iterator pfInputIter;
-   
-   pfInputIter = mPfInputMap.find(win);
-   if ( pfInputIter == mPfInputMap.end() )     // Not found
-   {
-      return NULL;
-   }
-   else
-   {
-      return(*pfInputIter).second;                 // Return the found window
-   }
-}
-
 // Configure the Performer display settings that are needed
 // - Number of pipes to allow
 // - The xpipe strings to use
@@ -297,6 +187,12 @@ void PfDrawManager::draw()
       << "[vrj::PfDrawManager::draw] calling pfFrame()\n" << vprDEBUG_FLUSH;
 
    pfFrame();
+
+   for (std::vector<PfInputHandler*>::iterator itr = mPfInputHandlers.begin() ;
+        itr != mPfInputHandlers.end() ; itr++)
+   {
+      (*itr)->handleEvents();
+   }
 }
 
 
@@ -386,6 +282,10 @@ void PfDrawManager::initAPI()
 
    // --- FORKS HERE --- //
    pfConfig();
+   
+   // Initialize shared memory for utility libraries
+   pfuInit();
+
    mPfHasForked = true;
 
    // Initialize the pipes that the system may need
@@ -730,25 +630,27 @@ void PfDrawManager::addDisplay(Display* disp)
 
    // Call pfFrame to cause the pipeWindow configured to be opened and setup.
    pfFrame();
+   
+   ////pfuInitInput( pWin, PFUINPUT_NOFORK_X );
+   //pfuInitInput( pf_disp.pWin, PFUINPUT_X );
+   ////pfPWinType( pWin, PFPWIN_TYPE_X_NOFORK );
+   //pfPWinType( pf_disp.pWin, PFPWIN_TYPE_X );
+   
+   //pfuInputHandler(&handlePerformerEvents, PFUINPUT_CATCH_ALL);
+
+   PfInputHandler* new_input_handler = new PfInputHandler(pf_disp.pWin, disp->getName());
+
+   // Configure the Performer window to accept events.
+   jccl::ConfigElementPtr display_elt = disp->getConfigElement();
+   new_input_handler->config(display_elt, disp);
+   
+   mPfInputHandlers.push_back(new_input_handler);
 
    if(pf_disp.disp->shouldHideMouse())
    {
-      //pfuCursorSel(pfuGetInvisibleCursor());
-      //pfuInit();
       pfuLoadPWinCursor(pf_disp.pWin, PFU_CURSOR_OFF);
    }
-
-   jccl::ConfigElementPtr display_elt = disp->getConfigElement();
-   std::string displayName = mPipeStrs[disp->getPipe()];
-   PfInputHandler* input_handler = new PfInputHandler(pf_disp.pWin, displayName);
-   input_handler->config(display_elt, disp);
-
-   mPfInputHandlers.push_back( input_handler );
-   PfDrawManager::addPfInputHandler(  pf_disp.pWin->getWSWindow(), input_handler );
    
-   //TODO: Move to apiInit
-   pfuInputHandler(&handlePerformerEvents, PFUINPUT_CATCH_ALL);
-
    // Dump the state
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
       << "Reconfiged the pfDrawManager.\n" << vprDEBUG_FLUSH;
@@ -1520,9 +1422,6 @@ void PFconfigPWin(pfPipeWindow* pWin)
    // Init the vj monitor modes
    pWin->open();
    pfInitGfx();
-   pfuInitInput( pWin, PFUINPUT_NOFORK_X );
-   //pfPWinType( pWin, PFPWIN_TYPE_X_NOFORK );
-   pfPWinType( pWin, PFPWIN_TYPE_X );
    
    // Call user config function
    dm->mApp->configPWin(pWin);

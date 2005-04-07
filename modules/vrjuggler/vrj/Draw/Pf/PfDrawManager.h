@@ -131,22 +131,6 @@ protected:
    */
 
 
-   /** @name Helper functions that keep track of the PfInputHandlers */
-   //@{
-public:
-   /** Adds a PfInputHandler to the map. */
-   static void addPfInputHandler(WINKEY win, PfInputHandler* pf_handler);
-
-   /** Removes a PfInputHandler from the map. */
-   static void removePfInputHandler(WINKEY win);
-
-   /** Gets the PfInputHandler we are dealing with. */
-   static PfInputHandler* getPfInputHandler(WINKEY win);
-
-protected:
-   static std::map< WINKEY, PfInputHandler* > mPfInputMap; /**< Map of all PfInputHandlers */
-   //@}
-
 public:
    /**
     * Blocks until the end of the frame.

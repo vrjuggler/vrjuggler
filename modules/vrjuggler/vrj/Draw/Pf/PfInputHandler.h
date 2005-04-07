@@ -34,15 +34,12 @@
 #define _VRJ_PF_INPUT_HANDLER_H_
 
 #include <vrj/vrjConfig.h>
-#include <vpr/vprConfig.h>
-#include <string>
+#include <vrj/Util/Debug.h>
 
 #ifndef VPR_OS_Win32
 #  include <X11/Xlib.h>
+#  include <X11/Xutil.h>
 #endif
-
-#include <Performer/pf.h>
-#include <Performer/pf/pfChannel.h>
 
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/Config/ConfigElementPtr.h>
@@ -54,7 +51,9 @@
 #endif
 
 #include <vrj/Display/Display.h>
+#include <Performer/pf.h>
 
+#include <string>
 
 namespace vrj
 {
@@ -78,7 +77,7 @@ public:
     * @param pWin        Performer window to grab events from.
     * @param displayName The name of the display.
     */
-   PfInputHandler(pfPipeWindow* pWin, const std::string& displayName);
+   PfInputHandler(pfPipeWindow* pipeWindow, const std::string& displayName);
 
    /**
     * Configures the adaptor.
@@ -96,21 +95,29 @@ public:
       mHeight = (unsigned int)height;
    }
    
-   ~PfInputHandler()
-   {;}
-   
    /**
-    * Forwards the recieved platform independent event to
-    * the base class to be handled.
+    * Grab events from Performer window and sends them to
+    * InputAreaXWin::handleEvent() or InputAreaWin32::handleEvent()
+    *
+    * @pre openConnection has been called.
     */
+   void handleEvents();
+
 #ifdef VPR_OS_Win32
-   void handlePerformerEvent(MSG message);
-#else
-   void handlePerformerEvent(::XEvent& event);
+   LRESULT CALLBACK eventCallback(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
+#endif
+
+private:
+   void openConnection();
+   
+private:
+   std::string     mName;
+   pfPipe*         mPipe;
+   pfPipeWindow*   mPipeWindow;
+#ifdef VPR_OS_Win32
+   WNDPROC         mOldWinProc;
 #endif
 };
 
 }
-
-
 #endif
