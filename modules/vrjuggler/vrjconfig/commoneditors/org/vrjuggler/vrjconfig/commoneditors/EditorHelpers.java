@@ -477,7 +477,19 @@ public abstract class EditorHelpers
       else if ( isJugglerMouseButton(key) )
       {
          int java_key = convertJugglerKeyToJava(key);
-         key_text = MouseEvent.getMouseModifiersText(java_key);
+
+         switch (key)
+         {
+            case MOUSE_BUT1_INT_VALUE:
+               key_text = "Button1";
+               break;
+            case MOUSE_BUT2_INT_VALUE:
+               key_text = "Button2";
+               break;
+            default:
+               key_text = "Button3";
+               break;
+         }
       }
       else
       {
