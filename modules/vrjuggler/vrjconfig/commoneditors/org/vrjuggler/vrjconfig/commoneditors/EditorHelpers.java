@@ -337,22 +337,21 @@ public abstract class EditorHelpers
    {
       int mod = MODKEY_ANY_INT_VALUE;
 
-      if ( javaModifiers == InputEvent.ALT_MASK ||
-           javaModifiers == InputEvent.META_MASK )
+      switch (javaModifiers)
       {
-         mod = MODKEY_ALT_INT_VALUE;
-      }
-      else if ( javaModifiers == InputEvent.CTRL_MASK )
-      {
-         mod = MODKEY_CTRL_INT_VALUE;
-      }
-      else if ( javaModifiers == InputEvent.SHIFT_MASK )
-      {
-         mod = MODKEY_SHIFT_INT_VALUE;
-      }
-      else if ( javaModifiers == 0 )
-      {
-         mod = MODKEY_NONE_INT_VALUE;
+         case InputEvent.ALT_MASK:
+         case InputEvent.META_MASK:
+            mod = MODKEY_ALT_INT_VALUE;
+            break;
+         case InputEvent.CTRL_MASK:
+            mod = MODKEY_CTRL_INT_VALUE;
+            break;
+         case InputEvent.SHIFT_MASK:
+            mod = MODKEY_SHIFT_INT_VALUE;
+            break;
+         case 0:
+            mod = MODKEY_NONE_INT_VALUE;
+            break;
       }
 
       return mod;
@@ -493,21 +492,20 @@ public abstract class EditorHelpers
       }
       else
       {
-         if ( key == MOUSE_POSX_INT_VALUE )
+         switch (key)
          {
-            key_text = "Mouse Right";
-         }
-         else if ( key == MOUSE_NEGX_INT_VALUE )
-         {
-            key_text = "Mouse Left";
-         }
-         else if ( key == MOUSE_POSY_INT_VALUE )
-         {
-            key_text = "Mouse Back";
-         }
-         else
-         {
-            key_text = "Mouse Forward";
+            case MOUSE_POSX_INT_VALUE:
+               key_text = "Mouse Right";
+               break;
+            case MOUSE_NEGX_INT_VALUE:
+               key_text = "Mouse Left";
+               break;
+            case MOUSE_POSY_INT_VALUE:
+               key_text = "Mouse Back";
+               break;
+            default:
+               key_text = "Mouse Forward";
+               break;
          }
       }
 
@@ -529,21 +527,20 @@ public abstract class EditorHelpers
    {
       String modifier_text = "";
 
-      if ( mod == MODKEY_ALT_INT_VALUE )
+      switch (mod)
       {
-         modifier_text = "Alt+";
-      }
-      else if ( mod == MODKEY_CTRL_INT_VALUE )
-      {
-         modifier_text = "Ctrl+";
-      }
-      else if ( mod == MODKEY_SHIFT_INT_VALUE )
-      {
-         modifier_text = "Shift+";
-      }
-      else if ( mod == MODKEY_ANY_INT_VALUE )
-      {
-         modifier_text = "Any Modifier+";
+         case MODKEY_ALT_INT_VALUE:
+            modifier_text = "Alt+";
+            break;
+         case MODKEY_CTRL_INT_VALUE:
+            modifier_text = "Ctrl+";
+            break;
+         case MODKEY_SHIFT_INT_VALUE:
+            modifier_text = "Shift+";
+            break;
+         case MODKEY_ANY_INT_VALUE:
+            modifier_text = "Any Modifier+";
+            break;
       }
 
       return modifier_text;
