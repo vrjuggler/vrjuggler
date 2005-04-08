@@ -32,6 +32,7 @@
 
 package org.vrjuggler.vrjconfig.customeditors.display_window;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Window;
@@ -184,8 +185,56 @@ public class SimPositionDeviceEditor
             EditorHelpers.getKeyPressText((ConfigElement) e.getSource());
          mKeyPairs[index].button.setText(press_text + " ...");
          mKeyPairs[index].button.setToolTipText(press_text);
-         this.revalidate();
-         this.repaint();
+
+         Integer key = (Integer) src_elt.getProperty(KEY_PROPERTY, 0);
+         Integer mod = (Integer) src_elt.getProperty(MODIFIER_KEY_PROPERTY, 0);
+
+         Color button_bg = UIManager.getColor("Button.background");
+
+         int unit_count = mElement.getPropertyValueCount(KEY_PAIR_PROPERTY);
+         boolean found_error = false;
+         for ( int i = 0; i < unit_count; ++i )
+         {
+            if ( i != index )
+            {
+               ConfigElement cur_unit =
+                  (ConfigElement) mElement.getProperty(KEY_PAIR_PROPERTY, i);
+               Integer cur_key =
+                  (Integer) cur_unit.getProperty(KEY_PROPERTY, 0);
+               Integer cur_mod =
+                  (Integer) cur_unit.getProperty(MODIFIER_KEY_PROPERTY, 0);
+
+               if ( key.equals(cur_key) && mod.equals(cur_mod) )
+               {
+                  mKeyPairs[i].button.setBackground(Color.red);
+                  found_error = true;
+               }
+               else
+               {
+                  mKeyPairs[i].button.setBackground(button_bg);
+               }
+            }
+         }
+
+         if ( found_error )
+         {
+            mKeyPairs[index].button.setBackground(Color.red);
+            mErrorMsgLabel.setText("Configuration contains an error: " +
+                                   "duplicate key bindings for units");
+            mBindingContainer.add(mErrorMsgLabel, BorderLayout.NORTH);
+         }
+         else
+         {
+            if ( mBindingContainer.isAncestorOf(mErrorMsgLabel) )
+            {
+               mBindingContainer.remove(mErrorMsgLabel);
+            }
+
+            mKeyPairs[index].button.setBackground(button_bg);
+         }
+
+         mBindingContainer.revalidate();
+         mBindingContainer.repaint();
       }
    }
 
@@ -618,10 +667,18 @@ public class SimPositionDeviceEditor
                                     TableLayoutConstraints.CENTER)
       );
 
+      mErrorMsgLabel.setOpaque(true);
+      mErrorMsgLabel.setBackground(Color.red);
+      mErrorMsgLabel.setForeground(Color.white);
+      mErrorMsgLabel.setFont(mErrorMsgLabel.getFont().deriveFont(Font.BOLD));
+
+      mBindingContainer.setLayout(new BorderLayout());
+      mBindingContainer.add(mKeyBindingScrollPane, BorderLayout.CENTER);
+
       this.setOneTouchExpandable(false);
       this.setOrientation(VERTICAL_SPLIT);
       this.setResizeWeight(0.5);
-      this.add(mKeyBindingScrollPane, JSplitPane.RIGHT);
+      this.add(mBindingContainer, JSplitPane.RIGHT);
    }
 
    private void openEditor(int index)
@@ -641,9 +698,11 @@ public class SimPositionDeviceEditor
    private KeyboardEditorPanel mKeyboardEditor = null;
 
    private ProxyEditorUI mProxyGraph = new ProxyEditorUI();
+   private JPanel mBindingContainer = new JPanel();
    private JPanel mKeyBindingPanel = new JPanel();
    private JScrollPane mKeyBindingScrollPane =
       new JScrollPane(mKeyBindingPanel);
+   private JLabel mErrorMsgLabel = new JLabel();
    private JPanel mTranslateBindingPanel = new JPanel();
    private JPanel mRotateBindingPanel = new JPanel();
    private KeyPair[] mKeyPairs = new KeyPair[12];
