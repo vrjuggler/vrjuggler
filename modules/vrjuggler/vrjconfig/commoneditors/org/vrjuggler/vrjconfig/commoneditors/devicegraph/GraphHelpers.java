@@ -786,4 +786,43 @@ public abstract class GraphHelpers
 
       return edge;
    }
+
+   /**
+    * Determines whether the given proxy and device can be connected through
+    * the given device unit.
+    */
+   public static boolean checkProxyDeviceConnection(ProxyInfo proxyInfo,
+                                                    DeviceInfo deviceInfo,
+                                                    UnitInfo unitInfo)
+   {
+      boolean valid = false;
+
+      ConfigDefinition dev_def   = deviceInfo.getElement().getDefinition();
+      ConfigDefinition proxy_def = proxyInfo.getElement().getDefinition();
+
+      PropertyDefinition dev_prop_def =
+         proxy_def.getPropertyDefinition(DEVICE_PROPERTY);
+
+      List allowed_types = dev_prop_def.getAllowedTypes();
+      for ( Iterator i = allowed_types.iterator(); i.hasNext(); )
+      {
+         String type = (String) i.next();
+
+         // If the device definition is of a type that the proxy is allowed to
+         // point at, then we need to check the specific unit and make sure
+         // that its type matches the proxy's type.
+         if ( dev_def.isOfType(type) )
+         {
+            Integer unit_type = UnitTypeHelpers.getUnitType(type);
+
+            if ( unitInfo.getUnitType().equals(unit_type) )
+            {
+               valid = true;
+               break;
+            }
+         }
+      }
+
+      return valid;
+   }
 }
