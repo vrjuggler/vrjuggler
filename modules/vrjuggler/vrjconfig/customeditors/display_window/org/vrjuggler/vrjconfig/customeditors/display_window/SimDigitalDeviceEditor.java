@@ -46,6 +46,8 @@ import info.clearthought.layout.*;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.ConfigElementEvent;
 import org.vrjuggler.jccl.config.event.ConfigElementListener;
+
+import org.vrjuggler.vrjconfig.commoneditors.EditorHelpers;
 import org.vrjuggler.vrjconfig.commoneditors.ProxyEditorUI;
 import org.vrjuggler.vrjconfig.commoneditors.KeyboardEditorPanel;
 
@@ -121,7 +123,10 @@ public class SimDigitalDeviceEditor
 
       for ( int i = 0; i < units; ++i )
       {
-         mUnitListModel.addElement(mElement.getProperty(KEY_PAIR_PROPERTY, i));
+         ConfigElement unit_elt =
+            (ConfigElement) mElement.getProperty(KEY_PAIR_PROPERTY, i);
+         mUnitListModel.addElement(unit_elt);
+         unit_elt.addConfigElementListener(this);
       }
    }
 
@@ -140,6 +145,15 @@ public class SimDigitalDeviceEditor
 
       if ( mElement != null )
       {
+         int units = mElement.getPropertyValueCount(KEY_PAIR_PROPERTY);
+
+         for ( int i = 0; i < units; ++i )
+         {
+            ConfigElement unit_elt =
+               (ConfigElement) mElement.getProperty(KEY_PAIR_PROPERTY, i);
+            unit_elt.removeConfigElementListener(this);
+         }
+
          mElement.removeConfigElementListener(this);
          mElement = null;
       }
@@ -152,14 +166,22 @@ public class SimDigitalDeviceEditor
 
    public void propertyValueAdded(ConfigElementEvent e)
    {
-      ConfigElement src_elt = (ConfigElement) e.getSource();
-      mUnitListModel.add(e.getIndex(),
-                         src_elt.getProperty(KEY_PAIR_PROPERTY, e.getIndex()));
+      ConfigElement new_elt = (ConfigElement) e.getValue();
+      new_elt.addConfigElementListener(this);
+      mUnitListModel.add(e.getIndex(), new_elt);
    }
 
    public void propertyValueChanged(ConfigElementEvent e)
    {
-      /* Nothing to do. */ ;
+      ConfigElement src_elt = (ConfigElement) e.getSource();
+
+      // If the changed property is in a config element of type
+      // EditorConstants.KEY_MODIFIER_PAIR_TYPE, then it is one of the digital
+      // units.  We need to refresh the list to reflect the new key binding.
+      if ( src_elt.getDefinition().getToken().equals(KEY_MODIFIER_PAIR_TYPE) )
+      {
+         mUnitList.repaint();
+      }
    }
 
    public void propertyValueOrderChanged(ConfigElementEvent e)
@@ -183,6 +205,9 @@ public class SimDigitalDeviceEditor
       {
          mUnitList.setSelectedIndex(-1);
       }
+
+      ConfigElement removed_elt = (ConfigElement) e.getValue();
+      removed_elt.removeConfigElementListener(this);
 
       mUnitListModel.removeElementAt(e.getIndex());
    }
@@ -300,7 +325,12 @@ public class SimDigitalDeviceEditor
          if ( value != null )
          {
             ConfigElement unit_elt = (ConfigElement) value;
-            setText("Unit " + index + " (" + unit_elt.getName() + ")");
+            Integer key = (Integer) unit_elt.getProperty(KEY_PROPERTY, 0);
+            Integer mod = (Integer) unit_elt.getProperty(MODIFIER_KEY_PROPERTY,
+                                                         0);
+            String text = EditorHelpers.getKeyPressText(key.intValue(),
+                                                        mod.intValue());
+            setText("Unit " + index + ": " + text);
          }
          else
          {
