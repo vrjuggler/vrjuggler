@@ -150,6 +150,17 @@ public class SimPositionDeviceEditor
 
    public void editorClosing()
    {
+      if ( mElement != null )
+      {
+         for ( int i = 0; i < mKeyPairs.length; ++i )
+         {
+            ConfigElement key_pair_elt =
+               (ConfigElement) mElement.getProperty(KEY_PAIR_PROPERTY, i);
+            key_pair_elt.removeConfigElementListener(this);
+         }
+
+         mElement = null;
+      }
    }
 
    public void nameChanged(ConfigElementEvent e)
