@@ -101,7 +101,6 @@ public class DeviceProxyGraphEditor
    public DeviceProxyGraphEditor(List allowedTypes)
    {
       mBroker = new ConfigBrokerProxy();
-      mBroker.addConfigListener(this);
 
       if ( allowedTypes == null )
       {
@@ -206,6 +205,7 @@ public class DeviceProxyGraphEditor
    public void setConfig(ConfigContext ctx, ConfigElement elt)
    {
       mContext = ctx;
+      mBroker.addConfigListener(this);
 
       List device_elts = new ArrayList(), proxy_elts = new ArrayList();
       List all_elts = mBroker.getElements(mContext);
