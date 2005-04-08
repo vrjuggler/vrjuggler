@@ -34,6 +34,12 @@ package org.vrjuggler.vrjconfig.commoneditors.devicegraph;
 
 import java.util.List;
 
+import org.jgraph.graph.DefaultGraphCell;
+import org.jgraph.graph.DefaultGraphModel;
+import org.jgraph.graph.DefaultPort;
+import org.jgraph.graph.Edge;
+import org.jgraph.graph.GraphModel;
+
 import org.vrjuggler.jccl.config.ConfigContext;
 import org.vrjuggler.jccl.config.ConfigElement;
 
@@ -70,6 +76,58 @@ public class ProxyInfo
       {
          this.aliases = aliases;
       }
+   }
+
+   /**
+    * Verifies that the given port can be a source of the given edge within
+    * the given model.  This determination is made by testing to see if the
+    * parent of the target port (which must have parent containing a
+    * <code>DeviceInfo</code> object) is used to verify that the chosen proxy
+    * is allowed to point at the device unit.
+    */
+   public boolean acceptsSource(GraphModel model, Object edge, Object port)
+   {
+      boolean accepts = false;
+
+      Object[] out_edges = DefaultGraphModel.getOutgoingEdges(model, port);
+
+      // Restrict proxies to having at most one out-going edge.  If the given
+      // edge is the same as the proxy port's out-going edge, that is fine.
+      if ( out_edges == null || out_edges.length == 0 ||
+           (out_edges.length == 1 && out_edges[0] == edge) )
+      {
+         try
+         {
+            DefaultPort unit_port  = (DefaultPort) ((Edge) edge).getTarget();
+            DefaultGraphCell dev_cell =
+               (DefaultGraphCell) unit_port.getParent();
+
+            accepts =
+               GraphHelpers.checkProxyDeviceConnection(
+                  this, (DeviceInfo) dev_cell.getUserObject(),
+                  (UnitInfo) unit_port.getUserObject()
+               );
+         }
+         // If we catch a ClassCastException at any point, then we are not
+         // working with the cells and/or user objects that we expect.
+         // Hence, the source cannot be accepted.
+         catch (ClassCastException ex)
+         {
+            /* Oh well. */ ;
+         }
+      }
+
+      return accepts;
+   }
+
+   /**
+    * Verifies that the given port can be a target of the given edge within
+    * the given model.  This always returns false because a proxy cell cannot
+    * be a target.
+    */
+   public boolean acceptsTarget(GraphModel model, Object edge, Object port)
+   {
+      return false;
    }
 
    /**
