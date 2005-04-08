@@ -62,17 +62,18 @@ public class ProxyPointerEdge
 
    /**
     * Sets the source for this edge.  If the target is the port of a vertex
-    * containing a <code>DeviceInfo</code> object, then the source must refer
-    * to a port of a vertex that holds a <code>ProxyInfo</code> object.  The
-    * <code>ConfigElement</code> of the target must be a type that the source
-    * proxy is allowed to point to.
+    * containing a <code>BaseDeviceInfo</code> object, then the source must
+    * refer to a port of a vertex that holds a <code>ProxyInfo</code> object.
+    * The <code>ConfigElement</code> of the target must be a type that the
+    * source proxy is allowed to point to.
     *
     * @see DeviceGraphModel#acceptsSource(Object,Object)
     *
     * @throws InvalidArgumentException
     *   thrown if the given source port (when not null) is for a vertex not
     *   contaning a <code>ProxyInfo</code> object or if the target (when not
-    *   null) is not for a vertex containing a <code>DeviceInfo</code> object.
+    *   null) is not for a vertex containing a <code>BaseDeviceInfo</code>
+    *   object.
     */
    public void setSource(Object port)
    {
@@ -102,7 +103,7 @@ public class ProxyPointerEdge
 
             // The new source is a graph cell holding a ProxyInfo object for a
             // proxy.  This means that the target for this edge should be a
-            // graph cell holding a DeviceInfo for a device.
+            // graph cell holding a BaseDeviceInfo for a device.
             if ( ! (proxy_cell.getUserObject() instanceof ProxyInfo) )
             {
                throw new IllegalArgumentException(
@@ -141,7 +142,7 @@ public class ProxyPointerEdge
                DefaultGraphCell dev_cell =
                   (DefaultGraphCell) dev_port.getParent();
 
-               if ( ! (dev_cell.getUserObject() instanceof DeviceInfo) )
+               if ( ! (dev_cell.getUserObject() instanceof BaseDeviceInfo) )
                {
                   throw new IllegalArgumentException(
                      "Invalid type for target's parent user object -> " +
@@ -149,7 +150,8 @@ public class ProxyPointerEdge
                   );
                }
 
-               DeviceInfo dev_info   = (DeviceInfo) dev_cell.getUserObject();
+               BaseDeviceInfo dev_info =
+                  (BaseDeviceInfo) dev_cell.getUserObject();
                ConfigElement dev_elt = dev_info.getElement();
 
                ConfigElementPointer dev_ptr =
@@ -177,17 +179,18 @@ public class ProxyPointerEdge
    /**
     * Sets the target for this edge.  If the source is the port of a vertex
     * containing a <code>ProxyInfo</code> object, then the target must refer
-    * to a port of a vertex that holds a <code>DeviceInfo</code> object.  The
-    * port of that cell corresponds with an input source for the device.  The
-    * <code>ConfigElement</code> of the target must be a type that the source
-    * proxy is allowed to point to.
+    * to a port of a vertex that holds a <code>BaseDeviceInfo</code> object.
+    * The port of that cell corresponds with an input source for the device.
+    * The <code>ConfigElement</code> of the target must be a type that the
+    * source proxy is allowed to point to.
     *
     * @see DeviceGraphModel#acceptsTarget(Object,Object)
     *
     * @throws InvalidArgumentException
     *   thrown if the given target port (when not null) is for a vertex not
-    *   contaning a <code>DeviceInfo</code> object or if the source (when not
-    *   null) is not for a vertex containing a <code>ProxyInfo</code> object.
+    *   contaning a <code>BaseDeviceInfo</code> object or if the source (when
+    *   not null) is not for a vertex containing a <code>ProxyInfo</code>
+    *   object.
     */
    public void setTarget(Object port)
    {
@@ -233,11 +236,11 @@ public class ProxyPointerEdge
                   DefaultGraphCell dev_cell =
                      (DefaultGraphCell) dev_port.getParent();
 
-                  // The new target is a graph cell holding a DeviceInfo object
-                  // for a device.  This means that the source for this edge
-                  // should be a graph cell holding a ProxyInfo object for a
-                  // proxy.
-                  if ( ! (dev_cell.getUserObject() instanceof DeviceInfo) )
+                  // The new target is a graph cell holding a BaseDeviceInfo
+                  // object for a device.  This means that the source for this
+                  // edge should be a graph cell holding a ProxyInfo object
+                  // for a proxy.
+                  if ( ! (dev_cell.getUserObject() instanceof BaseDeviceInfo) )
                   {
                      throw new IllegalArgumentException(
                         "Invalid type for parent user object -> " +
@@ -245,7 +248,8 @@ public class ProxyPointerEdge
                      );
                   }
 
-                  DeviceInfo dev_info   = (DeviceInfo) dev_cell.getUserObject();
+                  BaseDeviceInfo dev_info =
+                     (BaseDeviceInfo) dev_cell.getUserObject();
                   UnitInfo unit_info    = (UnitInfo) dev_port.getUserObject();
                   ConfigElement dev_elt = dev_info.getElement();
                   proxy_elt.setProperty(DEVICE_PROPERTY, 0, dev_elt.getName(),

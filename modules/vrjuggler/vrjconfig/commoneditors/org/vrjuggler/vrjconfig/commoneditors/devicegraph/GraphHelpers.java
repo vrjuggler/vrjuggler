@@ -792,7 +792,7 @@ public abstract class GraphHelpers
     * the given device unit.
     */
    public static boolean checkProxyDeviceConnection(ProxyInfo proxyInfo,
-                                                    DeviceInfo deviceInfo,
+                                                    BaseDeviceInfo deviceInfo,
                                                     UnitInfo unitInfo)
    {
       boolean valid = false;
