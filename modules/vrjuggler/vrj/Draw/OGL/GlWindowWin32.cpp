@@ -54,7 +54,7 @@ GlWindowWin32::GlWindowWin32()
    : mRenderContext(NULL)
    , mDeviceContext(NULL)
 {
-   /* Do nothing. */ ;
+   mUseOwnDisplay = false;
 }
 
 GlWindowWin32::~GlWindowWin32()
@@ -189,34 +189,10 @@ void GlWindowWin32::swapBuffers()
    SwapBuffers(mDeviceContext);
 }
 
+
 void GlWindowWin32::checkEvents()
 {
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
-      << "[vrj::GlWindowWin32::checkEvents()]"
-      << std::endl << vprDEBUG_FLUSH;
-
-   MSG win_message;
-
-   // Try to find messages.
-   while ( PeekMessage(&win_message, NULL, 0, 0, PM_REMOVE) )
-   {
-      // Test if quit.
-      if (win_message.message == WM_QUIT)
-      {
-         break;
-      }
-
-      TranslateMessage(&win_message);     // Translate the accelerator keys
-		
-      // If we have a valid KeyboardMouseDevice, process
-      // all keyboard/mouse events
-      if ( NULL != mKeyboardMouseDevice )
-      {
-         updKeys( win_message );
-      }
-
-      DispatchMessage(&win_message);      // Send to the WinProc
-   }
+   handleEvents();
 }
 
 void GlWindowWin32::configWindow(vrj::Display* disp)
