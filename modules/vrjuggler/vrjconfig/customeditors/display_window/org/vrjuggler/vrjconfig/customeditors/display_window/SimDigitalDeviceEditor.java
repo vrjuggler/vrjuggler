@@ -32,8 +32,10 @@
 
 package org.vrjuggler.vrjconfig.customeditors.display_window;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -125,7 +127,7 @@ public class SimDigitalDeviceEditor
       {
          ConfigElement unit_elt =
             (ConfigElement) mElement.getProperty(KEY_PAIR_PROPERTY, i);
-         mUnitListModel.addElement(unit_elt);
+         mUnitListModel.addElement(new UnitHolder(unit_elt));
          unit_elt.addConfigElementListener(this);
       }
    }
@@ -168,7 +170,8 @@ public class SimDigitalDeviceEditor
    {
       ConfigElement new_elt = (ConfigElement) e.getValue();
       new_elt.addConfigElementListener(this);
-      mUnitListModel.add(e.getIndex(), new_elt);
+      checkForErrors(new_elt, -1);
+      mUnitListModel.add(e.getIndex(), new UnitHolder(new_elt));
    }
 
    public void propertyValueChanged(ConfigElementEvent e)
@@ -180,8 +183,65 @@ public class SimDigitalDeviceEditor
       // units.  We need to refresh the list to reflect the new key binding.
       if ( src_elt.getDefinition().getToken().equals(KEY_MODIFIER_PAIR_TYPE) )
       {
+         int index = mElement.getPropertyValueIndex(KEY_PAIR_PROPERTY,
+                                                    src_elt);
+         checkForErrors(src_elt, index);
          mUnitList.repaint();
       }
+   }
+
+   private void checkForErrors(ConfigElement changedElt, int index)
+   {
+      Integer key = (Integer) changedElt.getProperty(KEY_PROPERTY, 0);
+      Integer mod = (Integer) changedElt.getProperty(MODIFIER_KEY_PROPERTY, 0);
+
+      int units = mElement.getPropertyValueCount(KEY_PAIR_PROPERTY);
+      boolean found_error = false;
+
+      for ( int i = 0; i < units; ++i )
+      {
+         if ( index != -1 && i != index )
+         {
+            ConfigElement cur_elt =
+               (ConfigElement) mElement.getProperty(KEY_PAIR_PROPERTY, i);
+            Integer cur_key =
+               (Integer) cur_elt.getProperty(KEY_PROPERTY, 0);
+            Integer cur_mod =
+               (Integer) cur_elt.getProperty(MODIFIER_KEY_PROPERTY, 0);
+
+            UnitHolder h = (UnitHolder) mUnitListModel.getElementAt(i);
+
+            if ( key.equals(cur_key) && mod.equals(cur_mod) )
+            {
+               h.hasError = true;
+               found_error = true;
+            }
+            else
+            {
+               h.hasError = false;
+            }
+         }
+      }
+
+      UnitHolder h = (UnitHolder) mUnitListModel.getElementAt(index);
+      h.hasError = found_error;
+
+      if ( found_error )
+      {
+         mErrorMsgLabel.setText("Configuration contains an error: " +
+                                "duplicate key bindings for units");
+         mBindingContainer.add(mErrorMsgLabel, BorderLayout.NORTH);
+      }
+      else
+      {
+         if ( mBindingContainer.isAncestorOf(mErrorMsgLabel) )
+         {
+            mBindingContainer.remove(mErrorMsgLabel);
+         }
+      }
+
+      mBindingContainer.revalidate();
+      mBindingContainer.repaint();
    }
 
    public void propertyValueOrderChanged(ConfigElementEvent e)
@@ -193,7 +253,9 @@ public class SimDigitalDeviceEditor
 
       for ( int i = from_index; i < to_index; ++i )
       {
-         mUnitListModel.add(i, src_elt.getProperty(KEY_PAIR_PROPERTY, i));
+         ConfigElement elt =
+            (ConfigElement) src_elt.getProperty(KEY_PAIR_PROPERTY, i);
+         mUnitListModel.add(i, new UnitHolder(elt));
       }
    }
 
@@ -248,7 +310,15 @@ public class SimDigitalDeviceEditor
                                     TableLayoutConstraints.FULL)
       );
 
-      this.add(mKeyBindingPanel, JSplitPane.RIGHT);
+      mErrorMsgLabel.setOpaque(true);
+      mErrorMsgLabel.setBackground(Color.red);
+      mErrorMsgLabel.setForeground(Color.white);
+      mErrorMsgLabel.setFont(mErrorMsgLabel.getFont().deriveFont(Font.BOLD));
+
+      mBindingContainer.setLayout(new BorderLayout());
+      mBindingContainer.add(mKeyBindingPanel, BorderLayout.CENTER);
+
+      this.add(mBindingContainer, JSplitPane.RIGHT);
    }
 
    private void selectedUnitChanged()
@@ -279,7 +349,7 @@ public class SimDigitalDeviceEditor
          }
 
          mCurEditor.setEnabled(true);
-         mCurEditor.setConfig(mContext, (ConfigElement) selected_obj);
+         mCurEditor.setConfig(mContext, ((UnitHolder) selected_obj).element);
       }
    }
 
@@ -290,10 +360,23 @@ public class SimDigitalDeviceEditor
    private KeyPressEditor mCurEditor = null;
 
    private ProxyEditorUI mProxyGraph = null;
+   private JPanel mBindingContainer = new JPanel();
+   private JLabel mErrorMsgLabel = new JLabel();
    private JPanel mKeyBindingPanel = new JPanel();
    private DefaultListModel mUnitListModel = new DefaultListModel();
    private JList mUnitList = new JList(mUnitListModel);
    private JScrollPane mUnitScrollPane = new JScrollPane(mUnitList);
+
+   private static class UnitHolder
+   {
+      public UnitHolder(ConfigElement e)
+      {
+         this.element = e;
+      }
+
+      public ConfigElement element  = null;
+      public boolean       hasError = false;
+   }
 
    private static class UnitCellRenderer
       extends JLabel
@@ -324,13 +407,19 @@ public class SimDigitalDeviceEditor
 
          if ( value != null )
          {
-            ConfigElement unit_elt = (ConfigElement) value;
+            UnitHolder h = (UnitHolder) value;
+            ConfigElement unit_elt = h.element;
             Integer key = (Integer) unit_elt.getProperty(KEY_PROPERTY, 0);
             Integer mod = (Integer) unit_elt.getProperty(MODIFIER_KEY_PROPERTY,
                                                          0);
             String text = EditorHelpers.getKeyPressText(key.intValue(),
                                                         mod.intValue());
             setText("Unit " + index + ": " + text);
+
+            if ( h.hasError )
+            {
+               setBackground(Color.red);
+            }
          }
          else
          {
