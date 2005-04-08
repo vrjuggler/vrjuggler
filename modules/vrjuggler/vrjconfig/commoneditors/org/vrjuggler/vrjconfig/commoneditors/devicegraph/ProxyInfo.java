@@ -82,8 +82,8 @@ public class ProxyInfo
     * Verifies that the given port can be a source of the given edge within
     * the given model.  This determination is made by testing to see if the
     * parent of the target port (which must have parent containing a
-    * <code>DeviceInfo</code> object) is used to verify that the chosen proxy
-    * is allowed to point at the device unit.
+    * <code>BaseDeviceInfo</code> object) is used to verify that the chosen
+    * proxy is allowed to point at the device unit.
     */
    public boolean acceptsSource(GraphModel model, Object edge, Object port)
    {
@@ -104,7 +104,7 @@ public class ProxyInfo
 
             accepts =
                GraphHelpers.checkProxyDeviceConnection(
-                  this, (DeviceInfo) dev_cell.getUserObject(),
+                  this, (BaseDeviceInfo) dev_cell.getUserObject(),
                   (UnitInfo) unit_port.getUserObject()
                );
          }

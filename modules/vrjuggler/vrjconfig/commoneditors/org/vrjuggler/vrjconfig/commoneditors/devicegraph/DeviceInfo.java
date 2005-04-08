@@ -77,7 +77,7 @@ import org.vrjuggler.vrjconfig.commoneditors.event.DeviceUnitListener;
  * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.ProxyPointerEdge
  */
 public class DeviceInfo
-   extends ConfigElementHolder
+   extends BaseDeviceInfo
    implements ConfigElementListener
 {
    /**
