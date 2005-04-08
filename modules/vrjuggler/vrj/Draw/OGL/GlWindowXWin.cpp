@@ -859,6 +859,9 @@ void GlWindowXWin::checkEvents()
          {
             return vi;
          }
+
+         // Stereo must not have been the problem, re-enable it.
+         viattrib[stereo_attrib_index] = GLX_STEREO;
       }
 
       // If we reached this point, we still do not have a usable GLX visual.
