@@ -275,7 +275,7 @@ bool IntersenseAPI::sample()
 
       if (mStations[i].useDigital)
       {
-         for ( int j = 0; j < ISD_MAX_BUTTONS; ++j )
+         for ( int j = 0; j < mStations[i].dig_num; ++j )
          {
             DigitalData new_digital(mTracker.buttonState(stationIndex, j));
             new_digital.setTime();
@@ -287,7 +287,7 @@ bool IntersenseAPI::sample()
       if (mStations[i].useAnalog)
       {
          float f;
-         for ( int j = 0; j < ISD_MAX_CHANNELS; ++j )
+         for ( int j = 0; j < mStations[i].ana_num; ++j )
          {
             Analog::normalizeMinToMax(mTracker.analogData(stationIndex, j), f);
             AnalogData new_analog(f);
