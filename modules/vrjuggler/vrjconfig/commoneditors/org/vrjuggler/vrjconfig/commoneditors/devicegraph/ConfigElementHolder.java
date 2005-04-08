@@ -32,6 +32,8 @@
 
 package org.vrjuggler.vrjconfig.commoneditors.devicegraph;
 
+import org.jgraph.graph.GraphModel;
+
 import org.vrjuggler.jccl.config.ConfigContext;
 import org.vrjuggler.jccl.config.ConfigElement;
 
@@ -47,7 +49,7 @@ import org.vrjuggler.jccl.config.ConfigElement;
  * @see org.vrjuggler.jccl.config.ConfigContext
  * @see org.jgraph.graph.DefaultGraphCell
  */
-public class ConfigElementHolder
+public abstract class ConfigElementHolder
 {
    public ConfigElementHolder(ConfigElement element, ConfigContext context)
    {
@@ -64,6 +66,20 @@ public class ConfigElementHolder
    {
       return context;
    }
+
+   /**
+    * Verifies that the given port can be a source of the given edge within
+    * the given model.
+    */
+   public abstract boolean acceptsSource(GraphModel model, Object edge,
+                                         Object port);
+
+   /**
+    * Verifies that the given port can be a target of the given edge within
+    * the given model.
+    */
+   public abstract boolean acceptsTarget(GraphModel model, Object edge,
+                                         Object port);
 
    /**
     * Override of toString() needed for proper display of this type when it
