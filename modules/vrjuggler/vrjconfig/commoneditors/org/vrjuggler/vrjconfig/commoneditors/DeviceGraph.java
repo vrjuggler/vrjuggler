@@ -167,6 +167,20 @@ public class DeviceGraph
    }
 
    /**
+    * Centralized creation of an attribute map for the line styles used for
+    * edges connecting a relative device pointing at a device proxy.
+    */
+   public static Map createRelativePtrLineStyle()
+   {
+      AttributeMap map = new AttributeMap();
+      GraphConstants.setAutoSize(map, true);
+      GraphConstants.setLineEnd(map, GraphConstants.ARROW_CLASSIC);
+      GraphConstants.setEndFill(map, false);
+      GraphConstants.setDashPattern(map, new float[]{3, 3});
+      return map;
+   }
+
+   /**
     * Centralized creation of an attribute map for graph cells that represent
     * the ConfigElement for a device.  Internally, this makes use of
     * <code>createDeviceAttributes(int,int,boolean)</code>.  It is invoked
