@@ -55,7 +55,12 @@ public class DeviceGraphModel
    implements org.vrjuggler.vrjconfig.commoneditors.EditorConstants
 {
    /**
-    * Verifies that the given port can be a source of the given edge.
+    * Verifies that the given port can be a source of the given edge.  The
+    * actual work is handed off to the user-defined object associated with
+    * the parent of <code>port</code>&mdash;if said object is of type
+    * <code>ConfigElementHolder</code>.
+    *
+    * @see ConfigElementHolder#acceptsSource(org.jgraph.graph.GraphModel,Object,Object)
     */
    public boolean acceptsSource(Object edge, Object port)
    {
@@ -80,7 +85,12 @@ public class DeviceGraphModel
    }
 
    /**
-    * Verifies that the given port can be a target of the given edge.
+    * Verifies that the given port can be a target of the given edge.  The
+    * actual work is handed off to the user-defined object associated with
+    * the parent of <code>port</code>&mdash;if said object is of type
+    * <code>ConfigElementHolder</code>.
+    *
+    * @see ConfigElementHolder#acceptsTarget(org.jgraph.graph.GraphModel,Object,Object)
     */
    public boolean acceptsTarget(Object edge, Object port)
    {
