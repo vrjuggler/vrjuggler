@@ -220,6 +220,9 @@ public interface EditorConstants
    public static final String AUX_BUFFER_COUNT_PROPERTY =
       "auxiliary_buffer_count";
 
+   /** Property type <code>base_frame_proxy</code>. */
+   public static final String BASE_FRAME_PROXY_PROPERTY = "base_frame_proxy";
+
    /** Property type <code>border</code>. */
    public static final String BORDER_PROPERTY = "border";
 
@@ -327,6 +330,9 @@ public interface EditorConstants
 
    /** Property type <code>proxy</code>. */
    public static final String PROXY_PROPERTY = "proxy";
+
+   /** Property type <code>relative_proxy</code>. */
+   public static final String RELATIVE_PROXY_PROPERTY = "relative_proxy";
 
    /** Property type <code>simulator_plugin</code>. */
    public static final String SIMULATOR_PLUGIN_PROPERTY = "simulator_plugin";
