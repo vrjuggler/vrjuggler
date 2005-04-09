@@ -93,6 +93,8 @@ public class DeviceGraphLayoutCache
                               IntersenseVertexView.class);
       factory.registerCreator(repos.get(INTERSENSE_API_TYPE),
                               IntersenseVertexView.class);
+      factory.registerCreator(repos.get(SIM_RELATIVE_POS_DEVICE_TYPE),
+                              SimRelativePosVertexView.class);
 
       // Proxy types.
       List proxy_types = ConfigUtilities.getDefinitionsOfType(all_defs,
