@@ -37,11 +37,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.jgraph.graph.DefaultGraphCell;
-import org.jgraph.graph.DefaultPort;
-import org.jgraph.graph.Edge;
-import org.jgraph.graph.GraphModel;
-
 import org.vrjuggler.jccl.config.ConfigContext;
 import org.vrjuggler.jccl.config.ConfigDefinition;
 import org.vrjuggler.jccl.config.ConfigElement;
@@ -226,51 +221,6 @@ public class DeviceInfo
       }
 
       initUnitPropHandler(ctx, devElt, unit_type_map);
-   }
-
-   /**
-    * Verifies that the given port can be a source of the given edge within
-    * the given model.  This always returns false because a device cannot be
-    * a source (typically).
-    */
-   public boolean acceptsSource(GraphModel model, Object edge, Object port)
-   {
-      return false;
-   }
-
-   /**
-    * Verifies that the given port can be a target of the given edge within
-    * the given model.  This determination is made by testing to see if the
-    * parent of the source port (which must have parent containing a
-    * <code>ProxyInfo</code> object) is used to verify that the proxy is
-    * allowed to point at the chosen device unit.
-    */
-   public boolean acceptsTarget(GraphModel model, Object edge, Object port)
-   {
-      boolean accepts = false;
-
-      try
-      {
-         DefaultPort unit_port  = (DefaultPort) port;
-         DefaultPort proxy_port = (DefaultPort) ((Edge) edge).getSource();
-         DefaultGraphCell proxy_cell =
-            (DefaultGraphCell) proxy_port.getParent();
-
-         accepts =
-            GraphHelpers.checkProxyDeviceConnection(
-               (ProxyInfo) proxy_cell.getUserObject(), this,
-               (UnitInfo) unit_port.getUserObject()
-            );
-      }
-      // If we catch a ClassCastException at any point, then we are not
-      // working with the cells and/or user objects that we expect.  Hence,
-      // the target cannot be accepted.
-      catch (ClassCastException ex)
-      {
-         /* Oh well. */ ;
-      }
-
-      return accepts;
    }
 
    /**
