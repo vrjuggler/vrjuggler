@@ -133,8 +133,17 @@ public class ProxyToDeviceEdge
             // DEVICE_PROPERTY to point to nothing.
             if ( dev_port_obj == null )
             {
-               proxy_elt.setProperty(DEVICE_PROPERTY, 0, "",
-                                     proxy_info.getContext());
+               ConfigElementPointer cur_val =
+                  (ConfigElementPointer) proxy_elt.getProperty(DEVICE_PROPERTY,
+                                                               0);
+
+               // Do not change the property value unless the new value is
+               // different than the current value.
+               if ( ! cur_val.getTarget().equals("") )
+               {
+                  proxy_elt.setProperty(DEVICE_PROPERTY, 0, "",
+                                        proxy_info.getContext());
+               }
             }
             else
             {
@@ -228,8 +237,17 @@ public class ProxyToDeviceEdge
 
                if ( dev_port == null )
                {
-                  proxy_elt.setProperty(DEVICE_PROPERTY, 0, "",
-                                        proxy_info.getContext());
+                  ConfigElementPointer cur_val =
+                     (ConfigElementPointer) proxy_elt.getProperty(DEVICE_PROPERTY,
+                                                                  0);
+
+                  // Do not change the property value unless the new value is
+                  // different than the current value.
+                  if ( ! cur_val.getTarget().equals("") )
+                  {
+                     proxy_elt.setProperty(DEVICE_PROPERTY, 0, "",
+                                           proxy_info.getContext());
+                  }
                }
                else
                {
@@ -252,16 +270,36 @@ public class ProxyToDeviceEdge
                      (BaseDeviceInfo) dev_cell.getUserObject();
                   UnitInfo unit_info    = (UnitInfo) dev_port.getUserObject();
                   ConfigElement dev_elt = dev_info.getElement();
-                  proxy_elt.setProperty(DEVICE_PROPERTY, 0, dev_elt.getName(),
-                                        proxy_info.getContext());
+
+                  ConfigElementPointer cur_dev_val =
+                     (ConfigElementPointer) proxy_elt.getProperty(DEVICE_PROPERTY,
+                                                                  0);
+
+                  // Do not change the property value unless the new value is
+                  // different than the current value.
+                  if ( ! cur_dev_val.getTarget().equals(dev_elt.getName()) )
+                  {
+                     proxy_elt.setProperty(DEVICE_PROPERTY, 0,
+                                           dev_elt.getName(),
+                                           proxy_info.getContext());
+                  }
 
                   // Aggrivatingly enough, not all proxy types have a property
                   // EditorConstants.UNIT_PROPERTY.
                   try
                   {
-                     proxy_elt.setProperty(UNIT_PROPERTY, 0,
-                                           unit_info.getUnitNumber(),
-                                           proxy_info.getContext());
+                     Object cur_unit_val = proxy_elt.getProperty(UNIT_PROPERTY,
+                                                                 0);
+
+                     Integer new_value = unit_info.getUnitNumber();
+
+                     // Do not change the property value unless the new value
+                     // is different than the current value.
+                     if ( ! new_value.equals(cur_unit_val) )
+                     {
+                        proxy_elt.setProperty(UNIT_PROPERTY, 0, new_value,
+                                              proxy_info.getContext());
+                     }
                   }
                   catch (IllegalArgumentException ex)
                   {
