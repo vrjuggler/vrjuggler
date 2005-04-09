@@ -69,7 +69,6 @@ import org.vrjuggler.vrjconfig.commoneditors.event.DeviceUnitListener;
  * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.DeviceGraphLayoutCache
  * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.DeviceGraphModel
  * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.ProxiedDeviceCellViewFactory
- * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.ProxyPointerEdge
  */
 public class DeviceInfo
    extends BaseDeviceInfo
