@@ -184,7 +184,7 @@ public class RelativeDeviceToProxyEdge
     * <code>ConfigElement</code> of the target must be a type that the source
     * relative device is allowed to point to.
     *
-    * @see DeviceGraphModel#acceptsTarget(Object,Object)
+    * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.DeviceGraphModel#acceptsTarget(Object,Object)
     *
     * @throws InvalidArgumentException
     *   thrown if the given target port (when not null) is for a vertex not

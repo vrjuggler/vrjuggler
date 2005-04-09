@@ -254,7 +254,7 @@ public abstract class GraphHelpers
     *                           auto-sized
     *
     * @see #createDeviceCell(ConfigElement,ConfigContext,int,Map,int,int,boolean)
-    * @see #createBaseDeviceCell(DeviceInfo,Map,int,int,boolean)
+    * @see #createBaseDeviceCell(BaseDeviceInfo,Map,int,int,boolean)
     */
    public static DefaultGraphCell createDeviceCell(ConfigElement devElt,
                                                    ConfigContext context,
@@ -292,7 +292,7 @@ public abstract class GraphHelpers
     * @param autoSize           flag indicating whether the new cell should be
     *                           auto-sized
     *
-    * @see #createBaseDeviceCell(DeviceInfo,Map,int,int,boolean)
+    * @see #createBaseDeviceCell(BaseDeviceInfo,Map,int,int,boolean)
     */
    public static DefaultGraphCell createDeviceCell(ConfigElement devElt,
                                                    ConfigContext context,
@@ -339,7 +339,7 @@ public abstract class GraphHelpers
     * @param autoSize           flag indicating whether the new cell should be
     *                           auto-sized
     *
-    * @see #createBaseDeviceCell(DeviceInfo,Map,int,int,boolean)
+    * @see #createBaseDeviceCell(BaseDeviceInfo,Map,int,int,boolean)
     */
    public static DefaultGraphCell createDeviceCell(ConfigElement devElt,
                                                    ConfigContext context,
@@ -375,7 +375,7 @@ public abstract class GraphHelpers
     * @param autoSize   flag indicating whether the new cell should be
     *                   auto-sized
     *
-    * @see #createBaseDeviceCell(DeviceInfo,Map,int,int,boolean)
+    * @see #createBaseDeviceCell(BaseDeviceInfo,Map,int,int,boolean)
     */
    public static DefaultGraphCell createDeviceCell(ConfigElement devElt,
                                                    ConfigContext context,
