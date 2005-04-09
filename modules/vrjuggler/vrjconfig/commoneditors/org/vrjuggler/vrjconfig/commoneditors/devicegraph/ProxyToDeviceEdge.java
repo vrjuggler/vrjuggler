@@ -51,11 +51,11 @@ import org.vrjuggler.jccl.config.PropertyDefinition;
  *
  * @see DeviceGraphModel
  */
-public class ProxyPointerEdge
+public class ProxyToDeviceEdge
    extends DefaultEdge
    implements org.vrjuggler.vrjconfig.commoneditors.EditorConstants
 {
-   public ProxyPointerEdge(Object userObject)
+   public ProxyToDeviceEdge(Object userObject)
    {
       super(userObject);
    }
