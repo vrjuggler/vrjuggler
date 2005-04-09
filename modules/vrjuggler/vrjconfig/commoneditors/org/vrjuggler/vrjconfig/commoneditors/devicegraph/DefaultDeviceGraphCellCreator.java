@@ -38,13 +38,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.jgraph.graph.DefaultGraphCell;
+import org.jgraph.graph.DefaultPort;
 
 import org.vrjuggler.jccl.config.ConfigContext;
 import org.vrjuggler.jccl.config.ConfigElement;
 import org.vrjuggler.jccl.config.PropertyDefinition;
 
+import org.vrjuggler.vrjconfig.commoneditors.DeviceGraph;
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
-import org.vrjuggler.vrjconfig.commoneditors.devicegraph.extras.SimAnalogUnitPropertyHandler;
+import org.vrjuggler.vrjconfig.commoneditors.devicegraph.extras.*;
 
 
 /**
@@ -223,6 +225,32 @@ public class DefaultDeviceGraphCellCreator
                                      b_count.intValue());
          GraphHelpers.addDevicePorts(cell, UnitConstants.POSITION,
                                      t_count.intValue());
+      }
+      else if ( token.equals(SIM_RELATIVE_POS_DEVICE_TYPE) )
+      {
+         // Get the definitions of the properties that point at device
+         // properties.
+         PropertyDefinition base_prop_def =
+            devElt.getDefinition().getPropertyDefinition(BASE_FRAME_PROXY_PROPERTY);
+         PropertyDefinition relative_prop_def =
+            devElt.getDefinition().getPropertyDefinition(RELATIVE_PROXY_PROPERTY);
+         List props = new ArrayList(2);
+         props.add(0, base_prop_def);
+         props.add(1, relative_prop_def);
+
+         // Set up the new graph cell.
+         cell =
+            GraphHelpers.createBaseDeviceCell(
+               new RelativeDeviceInfo(devElt, context, props),
+               attributes, x, y, false
+            );
+         GraphHelpers.addDevicePorts(cell, UnitConstants.POSITION, 1);
+
+         // Add the ports for the properties that point at device proxies.
+         cell.add(new DefaultPort(new ProxyPointerInfo(devElt, context,
+                                                       base_prop_def)));
+         cell.add(new DefaultPort(new ProxyPointerInfo(devElt, context,
+                                                       relative_prop_def)));
       }
 
       return cell;
