@@ -44,6 +44,7 @@ import javax.swing.*;
 import org.jgraph.graph.ConnectionSet;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.DefaultGraphModel;
+import org.jgraph.graph.DefaultPort;
 import org.jgraph.layout.JGraphLayoutAlgorithm;
 import org.jgraph.layout.SpringEmbeddedLayoutAlgorithm;
 
@@ -52,6 +53,8 @@ import org.vrjuggler.jccl.config.event.ConfigEvent;
 import org.vrjuggler.jccl.config.event.ConfigListener;
 
 import org.vrjuggler.vrjconfig.commoneditors.devicegraph.*;
+import org.vrjuggler.vrjconfig.commoneditors.devicegraph.extras.RelativeDeviceInfo;
+import org.vrjuggler.vrjconfig.commoneditors.devicegraph.extras.RelativeDeviceToProxyEdge;
 
 
 /**
@@ -503,11 +506,13 @@ public class DeviceProxyGraphEditor
       Map attributes = new HashMap();
 
       Map device_elt_map = new HashMap();
+      Map proxy_elt_map  = new HashMap();
 
       // Handle all the input devices first.
       for ( Iterator e = deviceElts.iterator(); e.hasNext(); )
       {
          ConfigElement elt = (ConfigElement) e.next();
+
          try
          {
             DefaultGraphCell cell =
@@ -544,6 +549,7 @@ public class DeviceProxyGraphEditor
             ConfigElement alias_elt = (ConfigElement) a.next();
             ConfigElementPointer proxy_ptr =
                (ConfigElementPointer) alias_elt.getProperty(PROXY_PROPERTY, 0);
+
             if ( proxy_ptr != null && proxy_ptr.getTarget() != null &&
                  proxy_ptr.getTarget().equals(elt.getName()) )
             {
@@ -555,6 +561,9 @@ public class DeviceProxyGraphEditor
          DefaultGraphCell proxy_cell =
             GraphHelpers.createProxyCell(elt, mContext, aliases, attributes);
          cells.add(proxy_cell);
+
+         // Needed for devices that are configured relative to a proxy.
+         proxy_elt_map.put(elt.getName(), proxy_cell);
 
          // Look up the cell for the device pointed to by this proxy so that
          // we can create the connection between the new proxy cell and the
@@ -583,6 +592,71 @@ public class DeviceProxyGraphEditor
                {
                   System.err.println("WARNING: Failed to connect proxy " +
                                      "to device!\n\t" + ex.getMessage());
+               }
+            }
+         }
+      }
+
+      // Handle relative devices last.
+      for ( Iterator e = deviceElts.iterator(); e.hasNext(); )
+      {
+         ConfigElement elt = (ConfigElement) e.next();
+
+         // XXX: Special case code that would be much better off somewhere
+         // else.  Unfortunately, I am too burned out on this graph stuff to
+         // care enough.  -PH 4/9/2005
+         if ( elt.getDefinition().getToken().equals(SIM_RELATIVE_POS_DEVICE_TYPE) )
+         {
+            ConfigElementPointer base_proxy_ptr =
+               (ConfigElementPointer) elt.getProperty(BASE_FRAME_PROXY_PROPERTY,
+                                                      0);
+            String base_proxy_name = base_proxy_ptr.getTarget();
+
+            ConfigElementPointer relative_proxy_ptr =
+               (ConfigElementPointer) elt.getProperty(RELATIVE_PROXY_PROPERTY,
+                                                      0);
+            String relative_proxy_name = relative_proxy_ptr.getTarget();
+
+            DefaultGraphCell base_proxy_cell =
+               (DefaultGraphCell) proxy_elt_map.get(base_proxy_name);
+            DefaultGraphCell relative_proxy_cell =
+               (DefaultGraphCell) proxy_elt_map.get(relative_proxy_name);
+
+            DefaultGraphCell dev_cell =
+               (DefaultGraphCell) device_elt_map.get(elt.getName());
+
+            for ( Iterator c = dev_cell.getChildren().iterator();
+                  c.hasNext(); )
+            {
+               Object child = c.next();
+
+               if ( child instanceof DefaultPort )
+               {
+                  Object user_obj = ((DefaultPort) child).getUserObject();
+
+                  if ( user_obj instanceof ProxyPointerInfo )
+                  {
+                     ProxyPointerInfo ptr_info = (ProxyPointerInfo) user_obj;
+                     RelativeDeviceToProxyEdge edge =
+                        new RelativeDeviceToProxyEdge();
+                     String prop_name =
+                        ptr_info.getPointerPropertyDefinition().getToken();
+
+                     if ( prop_name.equals(BASE_FRAME_PROXY_PROPERTY) )
+                     {
+                        cs.connect(edge, child,
+                                   base_proxy_cell.getFirstChild());
+                     }
+                     else
+                     {
+                        cs.connect(edge, child,
+                                   relative_proxy_cell.getFirstChild());
+                     }
+
+                     attributes.put(edge,
+                                    DeviceGraph.createRelativePtrLineStyle());
+                     cells.add(edge);
+                  }
                }
             }
          }
