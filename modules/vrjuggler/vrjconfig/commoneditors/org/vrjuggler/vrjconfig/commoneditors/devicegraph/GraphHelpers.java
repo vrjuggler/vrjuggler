@@ -473,7 +473,7 @@ public abstract class GraphHelpers
     * @see org.jgraph.graph.GraphConstants
     * @see org.jgraph.graph.AttributeMap
     */
-   public static DefaultGraphCell createBaseDeviceCell(DeviceInfo devInfo,
+   public static DefaultGraphCell createBaseDeviceCell(BaseDeviceInfo devInfo,
                                                        Map attributes,
                                                        int x, int y,
                                                        boolean autoSize)
