@@ -58,7 +58,7 @@ import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
  * <p>
  * The basic structure of a device graph is relatively straightfoward.  There
  * are three types of cells: edges, proxy vertices, and device vertices.
- * Edges must always be of type <code>ProxyPointerEdge</code>.  Proxy vertices
+ * Edges must always be of type <code>ProxyToDeviceEdge</code>.  Proxy vertices
  * have the following characteristics:
  *
  * <ul>
@@ -99,7 +99,7 @@ import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
  * @see DeviceInfo
  * @see ProxyInfo
  * @see UnitInfo
- * @see ProxyPointerEdge
+ * @see ProxyToDeviceEdge
  * @see org.jgraph.graph.DefaultGraphCell
  * @see org.jgraph.graph.DefaultPort
  */
@@ -619,7 +619,7 @@ public abstract class GraphHelpers
                                                   Map attributes)
       throws NoSuchPortException
    {
-      ProxyPointerEdge edge = null;
+      ProxyToDeviceEdge edge = null;
       ProxyInfo proxy_info = (ProxyInfo) proxyCell.getUserObject();
 
       ConfigElement proxy_elt = proxy_info.getElement();
@@ -692,7 +692,7 @@ public abstract class GraphHelpers
                                                   Map attributes)
       throws IllegalArgumentException
    {
-      ProxyPointerEdge edge = null;
+      ProxyToDeviceEdge edge = null;
       ProxyInfo proxy_info =
          (ProxyInfo) ((DefaultGraphCell) proxyPort.getParent()).getUserObject();
 
@@ -775,12 +775,12 @@ public abstract class GraphHelpers
       return new DefaultPort(unitInfo);
    }
 
-   private static ProxyPointerEdge connectPorts(DefaultPort proxyPort,
-                                                DefaultPort deviceUnitPort,
-                                                ConnectionSet cs,
-                                                Map attributes)
+   private static ProxyToDeviceEdge connectPorts(DefaultPort proxyPort,
+                                                 DefaultPort deviceUnitPort,
+                                                 ConnectionSet cs,
+                                                 Map attributes)
    {
-      ProxyPointerEdge edge = new ProxyPointerEdge("");
+      ProxyToDeviceEdge edge = new ProxyToDeviceEdge("");
       cs.connect(edge, proxyPort, deviceUnitPort);
       attributes.put(edge, DeviceGraph.createProxyLineStyle());
 
