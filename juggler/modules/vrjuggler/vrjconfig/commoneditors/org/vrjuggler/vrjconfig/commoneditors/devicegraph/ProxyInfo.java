@@ -42,13 +42,14 @@ import org.jgraph.graph.GraphModel;
 
 import org.vrjuggler.jccl.config.ConfigContext;
 import org.vrjuggler.jccl.config.ConfigElement;
+import org.vrjuggler.jccl.config.PropertyDefinition;
 
 
 /**
- * A holder for ConfigElements that is used to provide run-time identification
- * of a ConfigElement reference for a device proxy configuration.  Proper use
- * of this type is critical for proper handling of ConfigElement references
- * held in a JGraph graph model.
+ * A holder for <code>ConfigElement</code>s that is used to provide run-time
+ * identification of a <code>ConfigElement</code> reference for a device proxy
+ * configuration.  Proper use of this type is critical for proper handling of
+ * ConfigElement references held in a JGraph graph model.
  *
  * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.DeviceGraphLayoutCache
  * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.DeviceGraphModel
@@ -81,9 +82,9 @@ public class ProxyInfo
    /**
     * Verifies that the given port can be a source of the given edge within
     * the given model.  This determination is made by testing to see if the
-    * parent of the target port (which must have parent containing a
-    * <code>BaseDeviceInfo</code> object) is used to verify that the chosen
-    * proxy is allowed to point at the device unit.
+    * config element held by the parent of the target port (which must have
+    * parent containing a <code>BaseDeviceInfo</code> object) is of a type to
+    * which we are allowed to point.
     */
    public boolean acceptsSource(GraphModel model, Object edge, Object port)
    {
@@ -122,12 +123,34 @@ public class ProxyInfo
 
    /**
     * Verifies that the given port can be a target of the given edge within
-    * the given model.  This always returns false because a proxy cell cannot
-    * be a target.
+    * the given model.  This determination is made by testing to see if the
+    * source port (which must contain a user object of type
+    * <code>ProxyPointerInfo</code>) is allowed to point at our vertex.
     */
    public boolean acceptsTarget(GraphModel model, Object edge, Object port)
    {
-      return false;
+      boolean accepts = false;
+
+      try
+      {
+         DefaultPort proxy_ptr_port = (DefaultPort) ((Edge) edge).getSource();
+         ProxyPointerInfo proxy_ptr_info =
+            (ProxyPointerInfo) proxy_ptr_port.getUserObject();
+         PropertyDefinition prop_def =
+            proxy_ptr_info.getPointerPropertyDefinition();
+         String my_type = this.getElement().getDefinition().getToken();
+
+         accepts = prop_def.getAllowedTypes().contains(my_type);
+      }
+      // If we catch a ClassCastException at any point, then we are not
+      // working with the cells and/or user objects that we expect.  Hence,
+      // the target cannot be accepted.
+      catch (ClassCastException ex)
+      {
+         /* Oh well. */ ;
+      }
+
+      return accepts;
    }
 
    /**
