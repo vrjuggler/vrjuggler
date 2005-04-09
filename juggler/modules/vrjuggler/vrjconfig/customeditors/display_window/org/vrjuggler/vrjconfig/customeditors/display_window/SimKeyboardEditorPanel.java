@@ -222,7 +222,6 @@ public class SimKeyboardEditorPanel
          // Search through all the elements in this context looking for
          // simulated devices that make use of kbdElt for keyboard/mouse
          // input.
-//         System.out.println("Looking for pointers to " + kbdElt.getName());
          for ( Iterator i = elements.iterator(); i.hasNext(); )
          {
             ConfigElement proxy_elt = (ConfigElement) i.next();
@@ -238,8 +237,6 @@ public class SimKeyboardEditorPanel
                // If keyboard proxy refers to the element kbdElt, then we will
                // search for config elements for simulated devices that refer
                // to that proxy.
-//               System.out.println("Proxy: " + proxy_elt.getName());
-//               System.out.println("\tPointing at " + kbd_ptr.getTarget());
                if ( kbd_ptr != null && kbd_ptr.getTarget() != null &&
                     kbd_ptr.getTarget().equals(kbdElt.getName()) )
                {
@@ -259,16 +256,11 @@ public class SimKeyboardEditorPanel
                      // If proxy_ptr refers to proxy_elt, then we have found
                      // a simulated device config element that gets its input
                      // from kbdElt.  We need to create a holder for sim_elt
-                     // and ad it to the list model for mDeviceList.
-//                     System.out.println("\tSim Device: " + sim_elt.getName());
-//                     System.out.println("\tPointing at " +
-//                                        proxy_ptr.getTarget());
+                     // and add it to the list model for mDeviceList.
                      if ( proxy_ptr != null &&
                           proxy_ptr.getTarget() != null &&
                           proxy_ptr.getTarget().equals(proxy_elt.getName()) )
                      {
-//                        System.out.println("\t\tMatched " +
-//                                           proxy_elt.getName());
                         DeviceConfig def_cfg = new DeviceConfig(ctx, sim_elt);
                         DefaultListModel model =
                            (DefaultListModel) mDeviceList.getModel();
