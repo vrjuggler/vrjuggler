@@ -54,7 +54,6 @@ import org.vrjuggler.jccl.config.PropertyDefinition;
  * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.DeviceGraphLayoutCache
  * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.DeviceGraphModel
  * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.ProxiedDeviceCellViewFactory
- * @see org.vrjuggler.vrjconfig.commoneditors.devicegraph.ProxyPointerEdge
  */
 public class ProxyInfo
    extends ConfigElementHolder
