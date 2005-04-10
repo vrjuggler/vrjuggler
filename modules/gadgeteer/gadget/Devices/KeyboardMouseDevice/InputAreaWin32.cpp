@@ -100,12 +100,21 @@ void InputAreaWin32::handleEvents()
 
    while ( have_events_to_check )
    {
+      // Test if quit.
+      if (msg.message == WM_QUIT)
+      {
+         break;
+      }
+
       // Since we have no accelerators, no need to call
       // TranslateAccelerator here.
       ::TranslateMessage(&msg);
 
-      // do our own special handling of kb/mouse...
-      this->updKeys(msg);
+      if ( NULL != mKeyboardMouseDevice )
+      {
+         // do our own special handling of kb/mouse...
+         updKeys(msg);
+      }
 
       // send the message to the registered event handler
       ::DispatchMessage(&msg);
