@@ -81,11 +81,12 @@ public class SimRelativePosVertexView
       implements ConfigElementListener
                , EditorConstants
    {
-      private static final int PORT_COLUMN  = 1;
-      private static final int LABEL_COLUMN = 3;
+      private static final int UNIT_PORT_COLUMN  = 1;
+      private static final int LABEL_COLUMN      = 3;
+      private static final int PROXY_PORT_COLUMN = 5;
 
-      private static final int SPAN_START_COLUMN = PORT_COLUMN;
-      private static final int SPAN_END_COLUMN   = LABEL_COLUMN;
+      private static final int SPAN_START_COLUMN = UNIT_PORT_COLUMN;
+      private static final int SPAN_END_COLUMN   = PROXY_PORT_COLUMN;
 
       private static final int NAME_ROW       = 1;
       private static final int UNIT_ROW       = 2;
@@ -98,7 +99,8 @@ public class SimRelativePosVertexView
 
          double[][] sizes =
             {
-               {5, TableLayout.MINIMUM, 5, TableLayout.FILL, 5},
+               {5, TableLayout.MINIMUM, 5, TableLayout.FILL, 5,
+                TableLayout.MINIMUM, 5},
                {5, TableLayout.PREFERRED, TableLayout.PREFERRED,
                 TableLayout.PREFERRED, TableLayout.PREFERRED, 5}
             };
@@ -225,22 +227,22 @@ public class SimRelativePosVertexView
 
                this.add(
                   pos_unit_port_widget,
-                  new TableLayoutConstraints(PORT_COLUMN, UNIT_ROW,
-                                             PORT_COLUMN, UNIT_ROW,
+                  new TableLayoutConstraints(UNIT_PORT_COLUMN, UNIT_ROW,
+                                             UNIT_PORT_COLUMN, UNIT_ROW,
                                              TableLayoutConstraints.CENTER,
                                              TableLayoutConstraints.CENTER)
                );
                this.add(
                   base_port_widget,
-                  new TableLayoutConstraints(PORT_COLUMN, BASE_FRAME_ROW,
-                                             PORT_COLUMN, BASE_FRAME_ROW,
+                  new TableLayoutConstraints(PROXY_PORT_COLUMN, BASE_FRAME_ROW,
+                                             PROXY_PORT_COLUMN, BASE_FRAME_ROW,
                                              TableLayoutConstraints.CENTER,
                                              TableLayoutConstraints.CENTER)
                );
                this.add(
                   relative_port_widget,
-                  new TableLayoutConstraints(PORT_COLUMN, RELATIVE_ROW,
-                                             PORT_COLUMN, RELATIVE_ROW,
+                  new TableLayoutConstraints(PROXY_PORT_COLUMN, RELATIVE_ROW,
+                                             PROXY_PORT_COLUMN, RELATIVE_ROW,
                                              TableLayoutConstraints.CENTER,
                                              TableLayoutConstraints.CENTER)
                );
