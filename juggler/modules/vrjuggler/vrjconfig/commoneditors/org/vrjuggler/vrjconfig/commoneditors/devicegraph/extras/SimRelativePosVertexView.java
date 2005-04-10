@@ -258,12 +258,15 @@ public class SimRelativePosVertexView
                                                  relative_size.width));
                row_width += port_size.width;
 
-               int pref_width = Math.max(name_size.width, row_width);
-               int pref_height = name_size.height + unit_size.height +
-                                    port_size.height + base_size.height +
-                                    relative_size.height + 10;
+               int min_width  = Math.max(name_size.width, row_width);
+               int min_height = name_size.height + unit_size.height +
+                                   port_size.height + base_size.height +
+                                   relative_size.height + 10;
 
-               this.setPreferredSize(new Dimension(pref_width, pref_height));
+               setMinimumSize(new Dimension(min_width, min_height));
+               // XXX: Doubling the minimum width is a hack to deal with the
+               // default preferred alias row sizes not being wide enough.
+               this.setPreferredSize(new Dimension(min_width * 2, min_height));
 
                this.revalidate();
 
