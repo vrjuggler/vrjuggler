@@ -55,8 +55,24 @@
 
 #include <string>
 
+
+#ifdef VPR_OS_Win32
+typedef struct _pfuWin32Event
+{
+  HWND hwnd;
+  UINT uMsg;
+  WPARAM wParam; // we should copy this and lParam
+  LPARAM lParam;
+  double time;
+} pfuWin32Event;
+#endif
+
 namespace vrj
 {
+
+#ifdef VPR_OS_Win32
+LRESULT CALLBACK eventCallback(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
+#endif
 
 /** \class PfInputHandler PfInputHandler.h vrj/Draw/Pf/PfInputHandler.h
  *
@@ -94,7 +110,8 @@ public:
       mWidth = (unsigned int)width;
       mHeight = (unsigned int)height;
    }
-   
+
+#ifndef VPR_OS_Win32
    /**
     * Grab events from Performer window and sends them to
     * InputAreaXWin::handleEvent() or InputAreaWin32::handleEvent()
@@ -103,20 +120,15 @@ public:
     */
    void handleEvents();
 
-#ifdef VPR_OS_Win32
-   LRESULT CALLBACK eventCallback(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
-#endif
-
 private:
    void openConnection();
+#endif
+   void checkEvents();
    
 private:
    std::string     mName;
    pfPipe*         mPipe;
    pfPipeWindow*   mPipeWindow;
-#ifdef VPR_OS_Win32
-   WNDPROC         mOldWinProc;
-#endif
 };
 
 }
