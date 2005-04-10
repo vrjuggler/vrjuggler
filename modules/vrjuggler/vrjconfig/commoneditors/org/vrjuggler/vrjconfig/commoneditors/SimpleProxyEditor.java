@@ -100,9 +100,8 @@ public class SimpleProxyEditor
 
                try
                {
-                  Constructor ctor = editor_class.getConstructor(null);
                   ProxyTypeEditor editor =
-                     (ProxyTypeEditor) ctor.newInstance(null);
+                     (ProxyTypeEditor) editor_class.newInstance();
 
                   editor.setConfig(ctx, e);
                   proxy_elt.setPanel(editor);
@@ -309,8 +308,8 @@ public class SimpleProxyEditor
             Class editor_class = pickProxyTypeEditor();
             ProxyElement proxy_elt = new ProxyElement(proxy);
 
-            Constructor ctor       = editor_class.getConstructor(null);
-            ProxyTypeEditor editor = (ProxyTypeEditor) ctor.newInstance(null);
+            ProxyTypeEditor editor =
+               (ProxyTypeEditor) editor_class.newInstance();
 
             editor.setConfig(mContext, proxy);
             proxy_elt.setPanel(editor);
