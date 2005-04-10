@@ -34,6 +34,14 @@
 
 #include <vrj/Util/Debug.h>
 #include <vrj/Draw/Pf/PfInputHandler.h>
+#include <Performer/pf/pfPipeWindow.h>
+
+#ifndef GET_X_LPARAM
+#  define GET_X_LPARAM(lp)   ((int)(short)LOWORD(lp))
+#endif
+#ifndef GET_Y_LPARAM
+#  define GET_Y_LPARAM(lp)   ((int)(short)HIWORD(lp))
+#endif
 
 namespace vrj
 {
@@ -43,35 +51,19 @@ PfInputHandler::PfInputHandler(pfPipeWindow* pipeWindow, const std::string& disp
    mName = displayName;
    mPipeWindow = pipeWindow;
    mPipe = pfGetPWinPipe(mPipeWindow);
+   mUseOwnDisplay = false;
 #ifdef VPR_OS_Win32
    mWinHandle = pipeWindow->getWSWindow();
-   //mWinHandle = pfGetPWinWSWindow(pipeWindow);
 #else
    // Get the XWindow from that we are going to recieve events from.
    mXWindow = pfGetPWinWSWindow(mPipeWindow);
-#endif
-
    openConnection();
+#endif
 }
 
+#ifndef VPR_OS_Win32
 void PfInputHandler::openConnection()
 {
-#ifdef VPR_OS_Win32
-   HWND hwnd;
-
-   // Store pointer to old WndProcs
-   hwnd = pfGetWinWSWindow(pfGetPWinSelect(mPipeWindow));
-   if(hwnd == NULL)
-   {
-      displayWarningAboutNULLHWND("openWin32Input","Window");
-      initializedWins = 0;
-   }
-   else
-   {
-      //mWinHandle = hwnd;
-      mOldWndProc = SetWindowLong(hwnd, GWL_WNDPROC, (LONG) collectWin32InputWrapper);
-   }
-#else
    static Atom wm_protocols, wm_delete_window;
    
    if (!mPipe)
@@ -112,76 +104,41 @@ void PfInputHandler::openConnection()
    XSelectInput(mXDisplay, mXWindow, event_mask);
    XMapWindow(mXDisplay, mXWindow);
    XSync(mXDisplay,false);
-#endif
-}
-
-#ifdef VPR_OS_Win32
-LRESULT CALLBACK eventCallback(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
-{
-   int i;
-
-   collectWin32Input(hwnd,uMsg,wParam,lParam);
-
-   if(hwnd == mWinHandle)
-   {
-      return CallWindowProc(oldWndProc, hwnd, uMsg, wParam, lParam);
-   }
-
-   // Invoke the default window handler if none found.
-   return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 #endif
 
-#ifdef VPR_OS_Win32
-void pfuCollectWin32EventStream(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
+void PfInputHandler::checkEvents()
 {
-   HWND parentWindow = hwnd;
-   LPTSTR tmpName[101];
-   pfuWin32Event event;
-
-   event.hwnd = hwnd; /* or should this too point to the parentWindow, if any? */
-   event.uMsg = uMsg;
-   event.wParam = wParam;
-   event.lParam = lParam;
-   event.time = pfGetTime();
-
-   /* we want the inWin member of the pfuMouse to be == to the
-   * HWND for the pipe window regardless of whether or not
-   * the event occurred in the child or parent of the pipe win
-   * In theory this variable is just a bool but it's used in
-   * some sample programs to check the window id of the pipe
-   * window. gui.c works with just a bool but ...
-   */
-   if(GetClassName(hwnd,tmpName,100) > 0)
-   {
-      if(!strcmp(tmpName,"pfChildWNDCLASS"))
-      {
-         parentWindow = (HWND)GetWindowLong(hwnd,GWL_HWNDPARENT);
-      }
-      if(parentWindow == NULL)
-      {
-         parentWindow = hwnd; /* and spew error message ... */
-      }
-   }
-   else
-   {
-      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED, "ERROR:")
-         << " Unable to determine class name of win: " << std::hex << hwnd 
-         << std::dec << std::endl << vprDEBUG_FLUSH;
-   }
-
-
-   // If we have a valid KeyboardMouseDevice, process
-   // all keyboard/mouse events
-   if ( NULL != mKeyboardMouseDevice )
-   {
-      // Forward events on to subclass. The magic of inheritance :)
-      InputAreaWin32::updKeys( message );
-   }
+   handleEvents();
 }
-#else
 
+
+#ifdef VPR_OS_Win32
+LRESULT CALLBACK eventCallback(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+   switch ( message )
+   {
+      // Catch the ALT key so that it does not open the system menu.
+      case WM_SYSKEYDOWN:
+      case WM_SYSKEYUP:
+         break;
+      case WM_SYSCOMMAND:
+         return DefWindowProc(hwnd, message, wParam, lParam);
+         break;
+      case WM_DESTROY:
+         PostQuitMessage(0);
+         break;
+      // Make sure that the resize event stays around until it is processed.
+      case WM_SIZE:
+         break;
+      default:
+         return DefWindowProc(hwnd, message, wParam, lParam);
+   }
+   return 0;
+}
+#endif
+
+#ifndef VPR_OS_Win32
 void PfInputHandler::handleEvents()
 {
    XEvent		event;
@@ -226,7 +183,6 @@ void PfInputHandler::handleEvents()
          break;
       }
    }
-#endif /* VPR_OS_Win32 */
 }
-
+#endif /* VPR_OS_Win32 */
 } // End of vrj namespace
