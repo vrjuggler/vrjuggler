@@ -18,9 +18,15 @@
       <pathelement path="${topdir}/commoneditors/CommonEditors.jar" />
    </path>
 
+   <path id="jgraph.classpath">
+      <pathelement path="@JUGGLERROOT_ABS@/external/jgraph/lib/jgraph.jar" />
+      <pathelement path="@JUGGLERROOT_ABS@/external/jgraph/lib/jgraphaddons.jar" />
+   </path>
+
    <property name="tweek.classpath" refid="tweek.classpath" />
    <property name="jccl.classpath" refid="jccl.classpath" />
    <property name="table_layout_dir" value="@JUGGLERROOT_ABS@/external/TableLayout" />
+   <property name="jgraph.classpath" refid="jgraph.classpath" />
    <property name="commoneditors.classpath" refid="commoneditors.classpath" />
 
    <!-- Compile all java sources -->
@@ -35,6 +41,7 @@
             <pathelement path="${tweek.classpath}" />
             <pathelement path="${jccl.classpath}" />
             <pathelement path="${table_layout_dir}/TableLayout.jar" />
+            <pathelement path="${jgraph.classpath}" />
             <pathelement path="${commoneditors.classpath}" />
          </classpath>
       </javac>
