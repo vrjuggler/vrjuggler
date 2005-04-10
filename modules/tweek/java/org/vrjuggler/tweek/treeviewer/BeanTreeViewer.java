@@ -204,10 +204,10 @@ public class BeanTreeViewer
                   // Add the Bean to the right element of the split pane.
                   if ( m_last_panel != null )
                   {
-                     fireBeanUnfocusEvent(m_last_panel);
+                     BeanTreeViewer.this.fireBeanUnfocusEvent(m_last_panel);
                   }
 
-                  fireBeanFocusEvent(bp);
+                  BeanTreeViewer.this.fireBeanFocusEvent(bp);
                   m_last_panel = bp;
                   viewer.add(bp.getComponent(), JSplitPane.RIGHT);
                }
