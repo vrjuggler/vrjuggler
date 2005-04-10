@@ -870,7 +870,7 @@ public class ProxyEditorUI
          dialog.setModal(true);
          dialog.pack();
          dialog.setLocationRelativeTo(parent);
-         dialog.show();
+         dialog.setVisible(true);
       }
    }
 }
