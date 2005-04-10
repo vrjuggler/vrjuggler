@@ -159,7 +159,6 @@ std::string PropertyDefinition::getDefaultValueString(int index)
 
 std::ostream& operator<< (std::ostream& out, const PropertyDefinition& self)
 {
-   self.assertValid();
    self.mNode->save(out);
    return out;
 }
@@ -169,9 +168,6 @@ std::ostream& operator<< (std::ostream& out, const PropertyDefinition& self)
 // BUG (IPTHACK) - doesn't check equality of enumerations and valuelabels
 bool PropertyDefinition::operator== (const PropertyDefinition& pd) const
 {
-   assertValid();
-   pd.assertValid();
-
    std::ostringstream self_string, d_string;
    mNode->save(self_string);
    pd.mNode->save(d_string);

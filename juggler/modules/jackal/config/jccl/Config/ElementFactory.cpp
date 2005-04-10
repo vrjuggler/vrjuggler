@@ -241,7 +241,6 @@ namespace jccl
    {
       if ( d.get() != NULL )
       {
-         d->assertValid();
          return ConfigElementPtr(new ConfigElement(d));
       }
       else

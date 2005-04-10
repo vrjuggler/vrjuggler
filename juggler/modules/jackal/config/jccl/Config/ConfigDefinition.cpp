@@ -77,8 +77,6 @@ ConfigDefinition::~ConfigDefinition()
 
 std::string ConfigDefinition::getName() const
 {
-   assertValid();
-
    // This must use cppdom::Attribute::getString() because a configuration
    // definition's name may contain spaces.
    return mNode->getAttribute(tokens::LABEL).getString();
@@ -86,20 +84,16 @@ std::string ConfigDefinition::getName() const
 
 std::string ConfigDefinition::getToken() const
 {
-   assertValid();
    return mToken;
 }
 
 unsigned int ConfigDefinition::getVersion() const
 {
-   assertValid();
    return mNode->getAttribute(tokens::VERSION).getValue<unsigned int>();
 }
 
 std::string ConfigDefinition::getHelp() const
 {
-   assertValid();
-
    std::string help_str("");
    cppdom::NodePtr help_node = mNode->getChild(tokens::HELP);
 
@@ -164,8 +158,6 @@ bool ConfigDefinition::isParent(const std::string& token) const
 
 PropertyDefinition ConfigDefinition::getPropertyDefinition(const std::string& token) const
 {
-   assertValid();
-
    cppdom::HasAttributeValuePredicate attrib_pred(tokens::NAME, token);
    cppdom::NodeList prop_defs = mNode->getChildrenPred(attrib_pred);
 
@@ -228,8 +220,6 @@ PropertyDefinition ConfigDefinition::getPropertyDefinition(const std::string& to
 
 std::vector<PropertyDefinition> ConfigDefinition::getAllPropertyDefinitions() const
 {
-   assertValid();
-
    std::vector<PropertyDefinition> ret_val;
 
    cppdom::NodeList parents = mNode->getChildren(tokens::PARENT);
@@ -284,7 +274,6 @@ std::vector<PropertyDefinition> ConfigDefinition::getAllPropertyDefinitions() co
 JCCL_IMPLEMENT(std::ostream&) operator<< (std::ostream& out,
                                           const ConfigDefinition& self)
 {
-   self.assertValid();
    self.mNode->save(out);
    return out;
 }
@@ -294,9 +283,6 @@ JCCL_IMPLEMENT(std::ostream&) operator<< (std::ostream& out,
 // property definitions...
 bool ConfigDefinition::operator== (const ConfigDefinition& d) const
 {
-   assertValid();
-   d.assertValid();
-
    bool is_equal(false);
    is_equal = mNode->isEqual(d.mNode);
    /*

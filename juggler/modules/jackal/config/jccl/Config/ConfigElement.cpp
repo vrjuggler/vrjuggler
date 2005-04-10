@@ -100,7 +100,6 @@ ConfigElement::ConfigElement(const ConfigElement& c)
 
 ConfigElement::~ConfigElement()
 {
-   assertValid();
    mValid = false;
 }
 
@@ -143,9 +142,6 @@ bool ConfigElement::initFromNode(cppdom::NodePtr elementNode)
 
 ConfigElement& ConfigElement::operator=(const ConfigElement& c)
 {
-   assertValid();
-   c.assertValid();
-
    if (! (this == &c) )    // Different objects
    {
       mNode  = c.mNode;
@@ -158,9 +154,6 @@ ConfigElement& ConfigElement::operator=(const ConfigElement& c)
 
 bool ConfigElement::operator==(const ConfigElement& c) const
 {
-   assertValid();
-   c.assertValid();
-
    // Check definitions first, then check the xml node contents
    if ( mDef.get() != c.mDef.get() )
    {
@@ -184,8 +177,6 @@ bool ConfigElement::operator!=(const ConfigElement& c) const
 
 bool ConfigElement::operator<(const ConfigElement& c) const
 {
-   assertValid();
-
    std::string s1 = getName();
    std::string s2 = c.getName();
    return (s1 < s2);
@@ -377,8 +368,6 @@ ConfigElementPtr ConfigElement::getProperty_ElementPtr(const std::string& prop,
 // - For each child element, recurse to get any contained element ptrs
 std::vector<std::string> ConfigElement::getElementPtrDependencies() const
 {
-   assertValid();
-
    std::vector<std::string> dep_list;     // Create return vector
    std::string prop_token;
 
@@ -425,8 +414,6 @@ std::vector<std::string> ConfigElement::getElementPtrDependencies() const
 
 std::vector<jccl::ConfigElementPtr> ConfigElement::getChildElements() const
 {
-   assertValid();
-
    std::vector<jccl::ConfigElementPtr> embedded_list;     // Create return vector
    std::string prop_token;
 
@@ -458,14 +445,12 @@ std::vector<jccl::ConfigElementPtr> ConfigElement::getChildElements() const
 
 std::ostream& operator<<(std::ostream& out, const ConfigElement& self)
 {
-   self.assertValid();
    self.mNode->save(out);
    return out;
 }
 
 unsigned int ConfigElement::getNum(const std::string& property_token) const
 {
-   assertValid();
    return mNode->getChildren(property_token).size();
 }
 

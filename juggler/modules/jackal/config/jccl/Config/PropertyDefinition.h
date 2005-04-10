@@ -36,7 +36,6 @@
 #include <jccl/jcclConfig.h>
 #include <cppdom/cppdom.h>
 
-#include <vpr/Util/Assert.h>
 #include <jccl/Config/ConfigTokens.h>
 
 namespace jccl
@@ -80,11 +79,6 @@ public:
 
    /** Destroys a PropertyDefinition, and frees all allocated memory. */
    ~PropertyDefinition();
-
-   void assertValid() const
-   {
-      vprASSERT(mIsValid == true && "Trying to use deleted PropertyDefinition");
-   }
 
    /**
     * Returns the token (a valid XML element identifier) of this property.

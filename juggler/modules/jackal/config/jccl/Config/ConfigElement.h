@@ -75,11 +75,6 @@ public:
 
    bool isValid() const;
 
-   void assertValid() const
-   {
-      vprASSERT(mValid == true && "Trying to use deleted config element");
-   }
-
    /**
     * Initializes this element from cppdom::Node.
     * Constructs the element to reference the given element node.
