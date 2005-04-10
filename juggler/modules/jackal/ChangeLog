@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-10-2005 patrickh    Removed methods jccl::ConfigDefinition::assertValid(),
+                        jccl::ConfigElement::assertValid(), and
+                        jccl::PropertyDefinition::assertValid().
+                        NEW VERSION: 0.92.12
 Mar-30-2005 patrickh    Added the ability to change the ordering of property
                         values within a variable-valued property through the
                         Java API and the Java editor Beans.
