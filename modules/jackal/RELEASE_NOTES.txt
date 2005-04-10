@@ -10,6 +10,13 @@ For all versions:
 
 ===============================================================================
 
+ Version: 1.0 Beta 3
+Released: April XX, 2005
+
+    The methods jccl::ConfigDefinition::assertValid(),
+    jccl::ConfigElement::assertValid(), and
+    jccl::PropertyDefinition::assertValid() have been removed.
+
  Version: 0.18.0
 Released: September 17, 2004
 
