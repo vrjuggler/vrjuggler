@@ -66,11 +66,6 @@ public:
    /** Destructor. */
    ~ConfigDefinition();
 
-   void assertValid() const
-   {
-      vprASSERT(mIsValid == true && "Trying to use deleted ConfigDefinition");
-   }
-
    /** Equality operator. */
    bool operator== (const ConfigDefinition& d) const;
 
