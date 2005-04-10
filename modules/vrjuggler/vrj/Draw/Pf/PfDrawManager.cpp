@@ -75,18 +75,6 @@
 
 #include <vrj/Draw/Pf/PfDrawManager.h>
 
-#ifdef VPR_OS_Win32
-typedef struct _pfuWin32Event
-{
-  HWND hwnd;
-  UINT uMsg;
-  WPARAM wParam; // we should copy this and lParam
-  LPARAM lParam;
-  double time;
-} pfuWin32Event;
-#endif
-
-
 namespace vrj
 {
 
@@ -191,7 +179,7 @@ void PfDrawManager::draw()
    for (std::vector<PfInputHandler*>::iterator itr = mPfInputHandlers.begin() ;
         itr != mPfInputHandlers.end() ; itr++)
    {
-      (*itr)->handleEvents();
+      (*itr)->checkEvents();
    }
 }
 
