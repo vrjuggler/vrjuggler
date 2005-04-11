@@ -36,7 +36,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.jgraph.cellview.JGraphRoundRectView;
 import org.jgraph.graph.CellView;
 import org.jgraph.graph.CellViewFactory;
 import org.jgraph.graph.DefaultEdge;
@@ -52,7 +51,7 @@ import org.vrjuggler.jccl.config.ConfigDefinitionRepository;
 import org.vrjuggler.jccl.config.ConfigElement;
 import org.vrjuggler.jccl.config.ConfigUtilities;
 
-import org.vrjuggler.vrjconfig.commoneditors.devicegraph.extras.*;
+import org.vrjuggler.vrjconfig.commoneditors.devicegraph.extras.IntersenseVertexView;
 
 
 public class DeviceGraphLayoutCache
@@ -87,14 +86,10 @@ public class DeviceGraphLayoutCache
       }
 
       // Override the creators for specific device types.
-      factory.registerCreator(repos.get(SIM_POS_DEVICE_TYPE),
-                              JGraphRoundRectView.class);
       factory.registerCreator(repos.get(INTERSENSE_TYPE),
                               IntersenseVertexView.class);
       factory.registerCreator(repos.get(INTERSENSE_API_TYPE),
                               IntersenseVertexView.class);
-      factory.registerCreator(repos.get(SIM_RELATIVE_POS_DEVICE_TYPE),
-                              SimRelativePosVertexView.class);
 
       // Proxy types.
       List proxy_types = ConfigUtilities.getDefinitionsOfType(all_defs,
