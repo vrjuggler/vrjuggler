@@ -50,7 +50,7 @@ import org.vrjuggler.jccl.config.event.*;
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
 import org.vrjuggler.vrjconfig.customeditors.cave.event.*;
 
-public class CaveModel
+public class CaveModel implements EditorConstants
 {
    private List mWalls = new ArrayList();
    private ConfigContext mConfigContext = null;
@@ -160,16 +160,55 @@ public class CaveModel
       broker.addConfigListener( mBrokerChangeListener );
    }
    
-   public CaveWall makeNewWall(ConfigElement elt)
+   public CaveWall makeNewWall(String wall_name)
    {
+      // Create a default view.
+      ConfigBrokerProxy broker = new ConfigBrokerProxy();
+      ConfigDefinition vp_def = broker.getRepository().get(EditorConstants.surface_viewport_type);
+      ConfigElementFactory factory =
+         new ConfigElementFactory(broker.getRepository().getAllLatest());
+      ConfigElement default_view = factory.create(wall_name, vp_def);
+      
+      // Create corners for new wall.
       Corners new_corners = new Corners();
       List new_list = new ArrayList();
-      new_list.add(elt);
+      new_list.add(default_view);
       CaveWall new_wall = new CaveWall(this, new_corners, new_list);
       mWalls.add(new_wall);
       fireWallAdded(mWalls.size() - 1, new_wall);
 
       return new_wall;
+   }
+
+   /**
+    * Remove the specified wall from the current configuration.
+    *
+    * @param old_wall the wall to be removed
+    */
+   public void removeWall(CaveWall old_wall)
+   {
+      mWalls.remove(old_wall);
+      
+      ConfigElement left_view = old_wall.getLeftView();
+      if (null != left_view)
+      {
+         ConfigElement screen = (ConfigElement)mViewToScreenMap.get( left_view );
+         if (null != screen)
+         {
+            screen.removeProperty(SURFACE_VIEWPORTS_PROPERTY, left_view, mConfigContext);
+         }
+      }
+      
+      ConfigElement right_view = old_wall.getRightView();
+      if (null != right_view)
+      {
+         ConfigElement screen = (ConfigElement)mViewToScreenMap.get( right_view );
+         if (null != screen)
+         {
+            screen.removeProperty(SURFACE_VIEWPORTS_PROPERTY, right_view, mConfigContext);
+         }
+      }
+      fireWallRemoved(mWalls.size(), old_wall);
    }
    
    void addScreen(ConfigElement new_screen)
@@ -194,7 +233,7 @@ public class CaveModel
       
       if (null != old_screen)
       {
-         int result = old_screen.removeProperty(EditorConstants.surface_viewports_prop,
+         int result = old_screen.removeProperty(SURFACE_VIEWPORTS_PROPERTY,
                                                 view, mConfigContext);
          if (-1 == result)
          {
@@ -205,7 +244,7 @@ public class CaveModel
       // If we are not setting the screen to null.
       if (null != new_screen)
       {
-         new_screen.addProperty(EditorConstants.surface_viewports_prop, view, mConfigContext);
+         new_screen.addProperty(SURFACE_VIEWPORTS_PROPERTY, view, mConfigContext);
          mViewToScreenMap.put(view, new_screen);
       }
    }
@@ -354,6 +393,27 @@ public class CaveModel
    }
    
    /**
+    * Notifies listeners that a wall was removed.
+    */
+   protected void fireWallRemoved(int index, CaveWall wall)
+   {
+      CaveModelEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == CaveModelListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new CaveModelEvent(this, index, wall);
+            }
+            ((CaveModelListener)listeners[i+1]).wallRemoved(evt);
+         }
+      }
+   }
+ 
+   
+   /**
     * Notifies listeners that a screen was added.
     */
    protected void fireScreenAdded(int index, ConfigElement screen)
@@ -394,7 +454,7 @@ public class CaveModel
             ConfigElement elm = evt.getElement();
             List walls = new ArrayList();
 
-            if ( elm.getDefinition().getToken().equals(EditorConstants.display_window_type) )
+            if ( elm.getDefinition().getToken().equals(DISPLAY_WINDOW_TYPE) )
             {
 
 
@@ -408,7 +468,7 @@ public class CaveModel
                   mViewToScreenMap.put(view, elm);
                }
             }
-            else if ( elm.getDefinition().getToken().equals(EditorConstants.cluster_node_type) )
+            else if ( elm.getDefinition().getToken().equals(cluster_node_type) )
             {
                
                // Add all surface viewports for each node.
