@@ -63,7 +63,8 @@ public class ViewportPlacer
       mConfigElement = elt;
       
       model = new ViewportPlacerModel(new Dimension(100,100), ctx, elt);
-      this.setBorder(BorderFactory.createLineBorder(java.awt.Color.black));
+      //XXX: No border needed anymore
+      //this.setBorder(BorderFactory.createLineBorder(java.awt.Color.black));
 
       calcPanelSize();
 
@@ -124,7 +125,7 @@ public class ViewportPlacer
          if ( event.getProperty().equals("size") ||
               event.getProperty().equals("origin") )
          {
-            calcPanelSize();
+            //calcPanelSize();
          }
       }
    }
@@ -135,11 +136,12 @@ public class ViewportPlacer
    {
       int size_x  = ((Integer) mConfigElement.getProperty("size", 0)).intValue();
       int size_y  = ((Integer) mConfigElement.getProperty("size", 1)).intValue();
-      float ratio = (size_x/size_y);
+      float ratio = ((float)size_x/(float)size_y);
       System.out.println("Size: (" + size_x + ", " + size_y + ") Ratio: " + ratio);
 
       int width = (int)(ratio * 100.0f);
       
+      System.out.println("setDesktopSize: (" + width + ", 100) Ratio: " + ratio);
       Dimension desktopSize = new Dimension( width, 100 );
       this.setMinimumSize(desktopSize);
       this.setPreferredSize(desktopSize);
@@ -187,7 +189,8 @@ public class ViewportPlacer
       throws Exception
    {
       this.setLayout(baseLayout);
-      wndPlacer.setBorder(BorderFactory.createEtchedBorder());
+      //XXX: Do not need.
+      //wndPlacer.setBorder(BorderFactory.createEtchedBorder());
       this.add(wndPlacer, BorderLayout.CENTER);
    }
 
