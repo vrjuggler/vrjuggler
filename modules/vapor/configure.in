@@ -715,9 +715,10 @@ fi
 # Verify that we have a new enough version of CppDOM.
 min_cppdom_version='0.3.1'
 AC_MSG_CHECKING([whether CppDOM version is >= $min_cppdom_version])
-AC_MSG_RESULT([$cppdom_version])
-DPP_VERSION_CHECK([$cppdom_version], [$min_cppdom_version], ,
-   [AC_MSG_ERROR([*** CppDOM version $min_cppdom_version or newer is requried for VPR ***])])
+DPP_VERSION_CHECK([$cppdom_version], [$min_cppdom_version],
+   [AC_MSG_RESULT([yes (version $cppdom_version)])],
+   [AC_MSG_RESULT([no (version $cppdom_version)])
+    AC_MSG_ERROR([*** CppDOM version $min_cppdom_version or newer is requried for VPR ***])])
 
 CXXFLAGS="$CPPDOM_CXXFLAGS $CXXFLAGS $STDFLAGS $ABI_FLAGS"
 CPPFLAGS="$CPPDOM_CXXFLAGS $CPPFLAGS"
