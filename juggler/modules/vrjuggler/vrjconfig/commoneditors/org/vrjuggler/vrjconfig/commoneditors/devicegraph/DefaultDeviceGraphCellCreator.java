@@ -70,24 +70,56 @@ public class DefaultDeviceGraphCellCreator
 
       // These device types all have exactly one unit.  In this case, the
       // unit type is irrelevant.
-      if ( token.equals(SIM_POS_DEVICE_TYPE) ||
-           token.equals(KEYBOARD_MOUSE_DEVICE_TYPE) ||
-           token.equals(TRACKD_CONTROLLER_TYPE) ||
-           token.equals(TRACKD_SENSOR_TYPE) ||
-           token.equals(TRACKD_API_CONTROLLER_TYPE) ||
-           token.equals(TRACKD_API_SENSOR_TYPE) )
+      if ( token.equals(SIM_POS_DEVICE_TYPE) )
+      {
+         // Get the definition of the property that points at a
+         // keyboard/mouse proxy.
+         String prop_name = KEYBOARD_MOUSE_PROXY_PTR_PROPERTY;
+         PropertyDefinition kbd_proxy_prop_def =
+            devElt.getDefinition().getPropertyDefinition(prop_name);
+
+         List props = new ArrayList(1);
+         props.add(0, kbd_proxy_prop_def);
+
+         // Set up the new graph cell.
+         cell =
+            GraphHelpers.createBaseDeviceCell(
+               new RelativeDeviceInfo(devElt, context, props),
+               attributes, x, y, false
+            );
+
+         // Add the ports for the properties that point at device proxies.
+         cell.add(new DefaultPort(new ProxyPointerInfo(devElt, context,
+                                                       kbd_proxy_prop_def)));
+
+         GraphHelpers.addDevicePorts(cell, UnitConstants.POSITION, 1);
+      }
+      else if ( token.equals(KEYBOARD_MOUSE_DEVICE_TYPE) ||
+                token.equals(TRACKD_CONTROLLER_TYPE) ||
+                token.equals(TRACKD_SENSOR_TYPE) ||
+                token.equals(TRACKD_API_CONTROLLER_TYPE) ||
+                token.equals(TRACKD_API_SENSOR_TYPE) )
       {
          cell = GraphHelpers.createDeviceCell(devElt, context, 1, attributes,
-                                              x, y, true);
+                                              x, y, false);
       }
       else if ( token.equals(SIM_ANALOG_DEVICE_TYPE) )
       {
+         // Get the definition of the property that points at a
+         // keyboard/mouse proxy.
+         String prop_name = KEYBOARD_MOUSE_PROXY_PTR_PROPERTY;
+         PropertyDefinition kbd_proxy_prop_def =
+            devElt.getDefinition().getPropertyDefinition(prop_name);
+
+         List props = new ArrayList(1);
+         props.add(0, kbd_proxy_prop_def);
+
          Map unit_types = new HashMap();
          unit_types.put(UnitConstants.ANALOG, null);
          SimAnalogUnitPropertyHandler h = new SimAnalogUnitPropertyHandler();
          cell = GraphHelpers.createBaseDeviceCell(
-            new DeviceInfo(devElt, context, unit_types, h), attributes, x, y,
-            false
+            new RelativeDeviceInfo(devElt, context, unit_types, h, props),
+            attributes, x, y, false
          );
 
          int dec_count =
@@ -109,9 +141,29 @@ public class DefaultDeviceGraphCellCreator
       // based on a variable-valued property.
       else if ( token.equals(SIM_DIGITAL_DEVICE_TYPE) )
       {
-         cell = GraphHelpers.createDeviceCell(devElt, context,
-                                              KEY_PAIR_PROPERTY, attributes,
-                                              x, y, false);
+         // Get the definition of the property that points at a
+         // keyboard/mouse proxy.
+         String prop_name = KEYBOARD_MOUSE_PROXY_PTR_PROPERTY;
+         PropertyDefinition kbd_proxy_prop_def =
+            devElt.getDefinition().getPropertyDefinition(prop_name);
+
+         List props = new ArrayList(1);
+         props.add(0, kbd_proxy_prop_def);
+
+         // Set up the new graph cell.
+         cell =
+            GraphHelpers.createBaseDeviceCell(
+               new RelativeDeviceInfo(devElt, context, KEY_PAIR_PROPERTY,
+                                      props),
+               attributes, x, y, false
+            );
+
+         // Add the ports for the properties that point at device proxies.
+         cell.add(new DefaultPort(new ProxyPointerInfo(devElt, context,
+                                                       kbd_proxy_prop_def)));
+
+         int num_units = devElt.getPropertyValueCount(KEY_PAIR_PROPERTY);
+         GraphHelpers.addDevicePorts(cell, UnitConstants.DIGITAL, num_units);
       }
       // The Flock of Birds and MotionStar Wireless have a variable number of
       // positional units that are determined at run time by the respective
@@ -238,8 +290,8 @@ public class DefaultDeviceGraphCellCreator
       }
       else if ( token.equals(SIM_RELATIVE_POS_DEVICE_TYPE) )
       {
-         // Get the definitions of the properties that point at device
-         // properties.
+         // Get the definitions of the properties that point at a device
+         // proxy.
          PropertyDefinition base_prop_def =
             devElt.getDefinition().getPropertyDefinition(BASE_FRAME_PROXY_PROPERTY);
          PropertyDefinition relative_prop_def =
