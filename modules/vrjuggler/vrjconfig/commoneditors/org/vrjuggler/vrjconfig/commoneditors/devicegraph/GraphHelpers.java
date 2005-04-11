@@ -646,11 +646,9 @@ public abstract class GraphHelpers
       // ConfigElement.   If none is found, we cannot make a connection.
       for ( Iterator c = deviceCell.getChildren().iterator(); c.hasNext(); )
       {
-         Object child = c.next();
-
-         if ( child instanceof DefaultPort )
+         try
          {
-            DefaultPort child_port = (DefaultPort) child;
+            DefaultPort child_port = (DefaultPort) c.next();
             UnitInfo unit_info = (UnitInfo) child_port.getUserObject();
 
             if ( unit_info.getUnitType().equals(unit_type) &&
@@ -660,6 +658,9 @@ public abstract class GraphHelpers
                                    child_port, cs, attributes);
                break;
             }
+         }
+         catch (ClassCastException ex)
+         {
          }
       }
 
