@@ -69,9 +69,6 @@ bool InputWindowWin32::config(jccl::ConfigElementPtr e)
 
    const char neg_one_STRING[] = "-1";
 
-   // Default to owning the window
-   mUseOwnDisplay = true;
-
    // Get size and position
    mWidth  = e->getProperty<int>("size", 0);
    mHeight = e->getProperty<int>("size", 1);

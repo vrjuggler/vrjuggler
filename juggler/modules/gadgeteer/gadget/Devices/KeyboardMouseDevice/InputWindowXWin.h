@@ -92,10 +92,10 @@ public:
 
    InputWindowXWin()
       : mVisual(NULL),
-        mUseOwnDisplay(true),
         mScreen(-1), mX(-1), mY(-1),
         mExitFlag(false)
    {
+      mBlocking = true;
       vprASSERT(NULL == mThread);      // Should have been initialized in base constructor
    }
 
@@ -186,9 +186,6 @@ protected:
 
    ::XVisualInfo* mVisual;
    ::XSetWindowAttributes mSWA;
-
-   // --- Used with remote window --- //
-   bool                       mUseOwnDisplay;     /**< Are we using a display we manage ourselves (true) or a remote one (false). */
 
    // --- Used with local window --- //
    int          mScreen, mX, mY;    /**< screen id, x-origin, y-origin. */

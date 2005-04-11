@@ -75,7 +75,6 @@ protected:
    void lockMouse(XEvent* ev = NULL);
    void unlockMouse(XEvent* ev = NULL);
    void updateOriginAndSize(unsigned int width, unsigned int height);
-   //void resize(long width, long height);
 
 protected:
    /**
@@ -138,8 +137,6 @@ private:
     * @note Keypad keys are transformed ONLY to number keys.
     */
    gadget::Keys xKeyToKey(KeySym xKey);
-   //gadget::Keys VKKeyToKey(int vkKey);
-   //static void doInternalError( const std::string& msg );
    
 protected:
    /** Do any extra event processing needed. */
@@ -152,10 +149,10 @@ protected:
    ::Window             mXWindow;
    
    unsigned int mWidth,mHeight;
-   bool         mBlocking;   /**< Are we using a display we manage ourselves (true) or a remote one (false). */
-   Cursor       mEmptyCursor;       /**< "Blank" cursor for X. */
-   bool         mEmptyCursorSet;    /**< If true, then empty cursor has been created. */
-   int          mPrevX, mPrevY;         /**< Previous mouse location. */
+   bool         mBlocking;       /**< Are we using a display we manage ourselves (true) or a remote one (false). */
+   Cursor       mEmptyCursor;    /**< "Blank" cursor for X. */
+   bool         mEmptyCursorSet; /**< If true, then empty cursor has been created. */
+   int          mPrevX, mPrevY;  /**< Previous mouse location. */
 };
 
 } // end namespace gadget
