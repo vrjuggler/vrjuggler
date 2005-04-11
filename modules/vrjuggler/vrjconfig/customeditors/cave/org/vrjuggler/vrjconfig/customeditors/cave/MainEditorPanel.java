@@ -279,7 +279,7 @@ public class MainEditorPanel
    {
       if (CaveWall.ACTIVE_STEREO == mCaveWall.getStereoMode())
       {
-         mLeftViewEditorPanel.setConfig(mCaveWall.getStereo());
+         mLeftViewEditorPanel.setConfig(mCaveWall.getLeftView());
          mRightViewEditorPanel.setConfig(null);
          
          mActiveStereoBtn.setSelected(true);
