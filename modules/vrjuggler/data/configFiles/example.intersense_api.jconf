@@ -122,9 +122,9 @@
                <pre_translate>0.0</pre_translate>
                <pre_translate>0.0</pre_translate>
                <pre_translate>0.0</pre_translate>
-               <pre_rotation>0.0</pre_rotation>
                <pre_rotation>-90.0</pre_rotation>
                <pre_rotation>180.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
                <custom_scale>1.0</custom_scale>
                <device_units>1.0</device_units>
                <post_translate>0.0</post_translate>
