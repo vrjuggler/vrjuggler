@@ -46,7 +46,7 @@ import org.vrjuggler.jccl.config.PropertyDefinition;
 
 import org.vrjuggler.vrjconfig.commoneditors.DeviceGraph;
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
-import org.vrjuggler.vrjconfig.commoneditors.devicegraph.extras.*;
+import org.vrjuggler.vrjconfig.commoneditors.devicegraph.extras.SimAnalogUnitPropertyHandler;
 
 
 /**
