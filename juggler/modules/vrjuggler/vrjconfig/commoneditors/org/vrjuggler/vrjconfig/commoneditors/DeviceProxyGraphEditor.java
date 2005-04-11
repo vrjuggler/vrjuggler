@@ -53,8 +53,6 @@ import org.vrjuggler.jccl.config.event.ConfigEvent;
 import org.vrjuggler.jccl.config.event.ConfigListener;
 
 import org.vrjuggler.vrjconfig.commoneditors.devicegraph.*;
-import org.vrjuggler.vrjconfig.commoneditors.devicegraph.extras.RelativeDeviceInfo;
-import org.vrjuggler.vrjconfig.commoneditors.devicegraph.extras.RelativeDeviceToProxyEdge;
 
 
 /**
