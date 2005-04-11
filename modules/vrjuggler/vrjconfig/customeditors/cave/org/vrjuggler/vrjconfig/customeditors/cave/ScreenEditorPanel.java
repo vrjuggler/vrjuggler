@@ -91,7 +91,8 @@ public class ScreenEditorPanel
       mMainLayout = new TableLayout(main_size);
       this.setLayout(mMainLayout);
       
-      ViewportPlacer vp = new ViewportPlacer(mConfigContext, mConfigElement);
+      mViewportPlacer = new ViewportPlacer(mConfigContext, mConfigElement);
+      mViewportPlacer.setBorder(new ComputerScreenBorder(Color.BLACK, 5));
       mPropertiesBtn.addActionListener(new ActionListener()
          {
             public void actionPerformed(ActionEvent e)
@@ -102,10 +103,21 @@ public class ScreenEditorPanel
       
       this.add(mScreenLabel, new TableLayoutConstraints(0, 0, 0, 0, TableLayout.CENTER,
                                                         TableLayout.FULL));
-      this.add(vp, new TableLayoutConstraints(0, 1, 0, 1, TableLayout.FULL,
-                                              TableLayout.FULL));
+      this.add(mViewportPlacer, new TableLayoutConstraints(0, 1, 0, 1, TableLayout.CENTER,
+                                              TableLayout.CENTER));
       this.add(mPropertiesBtn, new TableLayoutConstraints(0, 2, 0, 2, TableLayout.FULL,
                                                TableLayout.FULL));  
+   }
+
+   public void setPlacerSize(Dimension desktopSize)
+   {
+      mViewportPlacer.setMinimumSize(desktopSize);
+      mViewportPlacer.setPreferredSize(desktopSize);
+      mViewportPlacer.setMaximumSize(desktopSize);
+      mViewportPlacer.setDesktopSize(desktopSize);
+      
+      revalidate();
+      repaint();
    }
 
    void windowPropsEditSelected(ActionEvent e)
@@ -153,6 +165,7 @@ public class ScreenEditorPanel
    
    private ConfigContext mConfigContext = null;
    private ConfigElement mConfigElement = null;
+   private ViewportPlacer mViewportPlacer = null;
    private JLabel mScreenLabel = new JLabel("Name");
    private JButton mPropertiesBtn = new JButton("Properties");
    private TableLayout mMainLayout = null;

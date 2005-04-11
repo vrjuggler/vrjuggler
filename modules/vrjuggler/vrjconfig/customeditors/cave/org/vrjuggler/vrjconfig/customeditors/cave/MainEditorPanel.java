@@ -43,8 +43,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
@@ -58,11 +56,8 @@ import info.clearthought.layout.*;
 
 public class MainEditorPanel
    extends JPanel
-   implements ChangeListener
+   implements EditorConstants
 {
-   //private WallEditorPanel mWallPanel = new WallEditorPanel();
-   private List mWalls = new ArrayList();
-   
    private JPanel mStereoPanel = new JPanel();
    private JRadioButton mActiveStereoBtn = new JRadioButton();
    private JRadioButton mPassiveStereoBtn = new JRadioButton();
@@ -73,7 +68,6 @@ public class MainEditorPanel
    private ViewEditorPanel mLeftViewEditorPanel = null;
    private ViewEditorPanel mRightViewEditorPanel = null;
    
-   private TitledBorder mWallBorder;
    private TitledBorder mStereoBorder;
    private TitledBorder mViewBorder;
    private CaveWall mCaveWall = null;
@@ -143,43 +137,20 @@ public class MainEditorPanel
                          (frame_size.height - dlg_size.height) / 2 + loc.y);
    }
    
-   public void stateChanged(ChangeEvent e)
-   {
-      /*
-      JSpinner source = (JSpinner) e.getSource();
-
-      // Using the object returned by source.getValue() seems to be safe
-      // because every change in the spinner's value creates a new object.
-      if ( source == mReportRateSpinner )
-      {
-         mElement.setProperty("report_rate", 0, source.getValue());
-      }
-      else if ( source == mMeasurementRateSpinner )
-      {
-         // NOTE: The object returned is of type Double rather than Float.
-         mElement.setProperty("measurement_rate", 0, source.getValue());
-      }
-      */
-   }
-   
    void jbInit() throws Exception
    {
-      String resourceBase = "org/vrjuggler/vrjconfig/customeditors/cave";
-      String imageBase = resourceBase + "/images";
-
       ClassLoader loader = getClass().getClassLoader();
       
       try
       {
-         mRedIcons[0] = new ImageIcon(loader.getResource(imageBase + "/one_red.png"));
-         mRedIcons[1] = new ImageIcon(loader.getResource(imageBase + "/two_red.png"));
-         mRedIcons[2] = new ImageIcon(loader.getResource(imageBase + "/three_red.png"));
+         mRedIcons[0] = new ImageIcon(loader.getResource(IMAGE_BASE + "/one_red.png"));
+         mRedIcons[1] = new ImageIcon(loader.getResource(IMAGE_BASE + "/two_red.png"));
+         mRedIcons[2] = new ImageIcon(loader.getResource(IMAGE_BASE + "/three_red.png"));
          
-         mGreenIcons[0] = new ImageIcon(loader.getResource(imageBase + "/one_green.png"));
-         mGreenIcons[1] = new ImageIcon(loader.getResource(imageBase + "/two_green.png"));
-         mGreenIcons[2] = new ImageIcon(loader.getResource(imageBase + "/three_green.png"));
+         mGreenIcons[0] = new ImageIcon(loader.getResource(IMAGE_BASE + "/one_green.png"));
+         mGreenIcons[1] = new ImageIcon(loader.getResource(IMAGE_BASE + "/two_green.png"));
+         mGreenIcons[2] = new ImageIcon(loader.getResource(IMAGE_BASE + "/three_green.png"));
          
-         mWallBorder = new TitledIconBorder("Physical Characteristics", mGreenIcons[0]);
          mViewBorder = new TitledIconBorder("View", mRedIcons[2]);
          mStereoBorder = new TitledIconBorder("Stereo/Mono", mRedIcons[1]);
       }
@@ -195,7 +166,7 @@ public class MainEditorPanel
             {
                public void actionPerformed(ActionEvent e)
                {
-                  mCaveWall.setStereoMode(CaveWall.ACTIVE_STEREO);
+                  mCaveWall.setStereoMode(CaveWall.ACTIVE_STEREO, mCaveModel.getConfigContext());
                   updateViewGUI();
                }
             });
@@ -204,7 +175,7 @@ public class MainEditorPanel
             {
                public void actionPerformed(ActionEvent e)
                {
-                  mCaveWall.setStereoMode(CaveWall.PASSIVE_STEREO);
+                  mCaveWall.setStereoMode(CaveWall.PASSIVE_STEREO, mCaveModel.getConfigContext());
                   updateViewGUI();
                }
             });
@@ -213,14 +184,12 @@ public class MainEditorPanel
             {
                public void actionPerformed(ActionEvent e)
                {
-                  mCaveWall.setStereoMode(CaveWall.MONO);
+                  mCaveWall.setStereoMode(CaveWall.MONO, mCaveModel.getConfigContext());
                   updateViewGUI();
                }
             });
 
 
-      
-      //mWallPanel.setBorder(mWallBorder);
       
       double[][] main_size = {{TableLayout.PREFERRED, TableLayout.PREFERRED},
                               {TableLayout.PREFERRED, TableLayout.PREFERRED}};
@@ -275,6 +244,21 @@ public class MainEditorPanel
                                  TableLayout.FULL));
    }
 
+   private void setStereoMode(int stereo_mode)
+   {
+      int old_stereo_mode = mCaveWall.getStereoMode();
+      
+      if (old_stereo_mode == stereo_mode)
+      {
+         return;
+      }
+      else if (CaveWall.PASSIVE_STEREO == old_stereo_mode)
+      {
+         System.out.println("Loseing a view.");
+      }
+      
+      mCaveWall.setStereoMode(stereo_mode, mCaveModel.getConfigContext());
+   }
    private void updateStereoGUI()
    {
       if (CaveWall.ACTIVE_STEREO == mCaveWall.getStereoMode())
