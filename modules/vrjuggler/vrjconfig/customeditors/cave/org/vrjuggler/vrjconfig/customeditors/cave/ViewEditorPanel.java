@@ -103,6 +103,8 @@ public class ViewEditorPanel
    public void updatePosSize(PropertyChangeEvent evt)
    {
       ConfigElement screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mView);
+      
+      validateUserInput();
 
       if (null != screen)
       {
@@ -170,13 +172,8 @@ public class ViewEditorPanel
       
       mView = view;
       
-      if (null == view)
+      if (null != mView)
       {
-         
-      }
-      else
-      {
-         mView = view;
          ConfigElement screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mView);
          
          loadPosSizeFromElement();
@@ -217,8 +214,8 @@ public class ViewEditorPanel
          int s_size_x  = ((Integer) screen.getProperty("size", 0)).intValue();
          int s_size_y  = ((Integer) screen.getProperty("size", 1)).intValue();
          
-         mPositionXField.setValue( new Integer((int)(v_origin_x * s_origin_x)) );
-         mPositionYField.setValue( new Integer((int)(v_origin_y * s_origin_y)) );
+         mPositionXField.setValue( new Integer((int)(s_origin_x + (v_origin_x * s_size_x))) );
+         mPositionYField.setValue( new Integer((int)(s_origin_y + (v_origin_y * s_size_y))) );
          mWidthField.setValue( new Integer((int)(v_size_x * s_size_x)) );
          mHeightField.setValue( new Integer((int)(v_size_y * s_size_y)) );
       }
@@ -258,7 +255,6 @@ public class ViewEditorPanel
             mScreenCB_selectionChanged(e);
          }
       });
-
       
       this.setLayout(mMainLayout);
       mSizeLabel.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -402,59 +398,31 @@ public class ViewEditorPanel
    private void validateUserInput()
    {
       boolean width_valid, height_valid, x_pos_valid, y_pos_valid;
-
-      // The name cannot be an empty string.
-      //width_valid  = ((Integer) mWidthField.getValue()).intValue() > 0;
-      //height_valid = ((Integer) mHeightField.getValue()).intValue() > 0;
-      //x_pos_valid  = ((Integer) mPositionXField.getValue()).intValue() >= 0;
-      //y_pos_valid  = ((Integer) mPositionYField.getValue()).intValue() >= 0;
       
-      /*
-      if ( width_valid && height_valid && x_pos_valid &&
-           y_pos_valid )
+      ConfigElement screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mView);
+      
+      // The name cannot be an empty string.
+      width_valid  = ((Integer) mWidthField.getValue()).intValue() > 0;
+      height_valid = ((Integer) mHeightField.getValue()).intValue() > 0;
+      x_pos_valid  = ((Integer) mPositionXField.getValue()).intValue() >= 0;
+      y_pos_valid  = ((Integer) mPositionYField.getValue()).intValue() >= 0;
+      
+      if (!width_valid)
       {
-         validateWindowBounds();
+         mWidthField.setValue( new Integer(1) );
       }
-      else
+      else if (!height_valid)
       {
+         mHeightField.setValue( new Integer(1) );
       }
-      */
-   }
-
-   /**
-    * Ensures that the bounds of the display window are within the managed
-    * area of the desktop.  If this is not the case, user confirmation is
-    * requested.
-    *
-    * @param e DocumentEvent
-    */
-   private void validateWindowBounds(/*DocumentEvent e*/)
-   {
-      /*
-      int window_width  = Integer.parseInt(mWidthField.getText());
-      int window_height = Integer.parseInt(mHeightField.getText());
-      int window_pos_x  = Integer.parseInt(mPositionXField.getText());
-      int window_pos_y  = Integer.parseInt(mPositionYField.getText());
-
-      if ( window_pos_x < 0 || window_pos_y < 0 ||
-           window_width + window_pos_x > mResolution.width ||
-           window_height + window_pos_y > mResolution.height )
+      else if (!x_pos_valid)
       {
-         int answer =
-            JOptionPane.showConfirmDialog(this,
-                                          "Do you want the window to open outside the managed area?",
-                                          "Display Window Outside Managed Area",
-                                          JOptionPane.YES_NO_OPTION,
-                                          JOptionPane.WARNING_MESSAGE);
-
-         if ( answer == JOptionPane.YES_OPTION )
-         {
-         }
-         else
-         {
-         }
+         mPositionXField.setValue( new Integer(0) );
       }
-      */
+      else if (!y_pos_valid)
+      {
+         mPositionYField.setValue( new Integer(0) );
+      }
    }
 
    class ScreenComboBoxRenderer extends JLabel implements ListCellRenderer
