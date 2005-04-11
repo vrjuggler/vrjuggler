@@ -67,7 +67,9 @@ public:
    InputWindowWin32()
       : mControlLoopDone(false)
       , mExitFlag(false)
-   {;}
+   {
+      mVlocking = true;
+   }
 
    virtual ~InputWindowWin32()
    {

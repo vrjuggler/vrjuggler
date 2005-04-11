@@ -84,7 +84,7 @@ protected:
 protected:
    HWND           mWinHandle;           /**< Window handle */
    unsigned int   mWidth, mHeight;
-   bool           mUseOwnDisplay;       /**< Are we using a display we manage ourselves (true) or a remote one (false). */
+   bool           mBlocking;       /**< Are we using a display we manage ourselves (true) or a remote one (false). */
    vpr::Mutex     mKeysLock;            /**< Must hold this lock when accessing mKeys. */
    int            mPrevX, mPrevY;       /**< Previous mouse location. */
 };
