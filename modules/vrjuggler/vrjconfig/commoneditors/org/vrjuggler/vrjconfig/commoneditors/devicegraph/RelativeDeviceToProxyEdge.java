@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-package org.vrjuggler.vrjconfig.commoneditors.devicegraph.extras;
+package org.vrjuggler.vrjconfig.commoneditors.devicegraph;
 
 import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.DefaultGraphCell;
@@ -40,9 +40,6 @@ import org.vrjuggler.jccl.config.ConfigDefinition;
 import org.vrjuggler.jccl.config.ConfigElement;
 import org.vrjuggler.jccl.config.ConfigElementPointer;
 import org.vrjuggler.jccl.config.PropertyDefinition;
-
-import org.vrjuggler.vrjconfig.commoneditors.devicegraph.ProxyInfo;
-import org.vrjuggler.vrjconfig.commoneditors.devicegraph.ProxyPointerInfo;
 
 
 /**
