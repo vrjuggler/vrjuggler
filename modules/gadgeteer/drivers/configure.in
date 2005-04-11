@@ -184,14 +184,24 @@ gadget_save_CFLAGS="$CFLAGS"
 gadget_save_CPPFLAGS="$CPPFLAGS"
 
 if test "x$trackdapi_root" != "x/usr" ; then
-   TRACKD_API_INCLUDES="-I$trackdapi_root/include"
+   TRACKD_API_INCLUDES="-I$trackdapi_root/include -I$trackdapi_root/lib"
 
-if test "x$OS_TYPE" = "xUNIX" ; then
-    TRACKD_API_LIB_FLAGS="-L$trackdapi_root/lib -ltrackdAPI"
-elif test "x$OS_TYPE" = "xWin32" ; then
-    TRACKD_API_LIB_FLAGS="/libpath:$trackdapi_root/lib trackdAPI_MT.lib"
-fi
 
+   if test "x$OS_TYPE" = "xUNIX" ; then
+      if test "x$PLATFORM" = "xIRIX" ; then
+         if test "x$ABI" = "xN32" ; then
+            TRACKD_API_LIB_FLAGS="-L$trackdapi_root/lib -ltrackdAPI_n32"
+         elif test "x$ABI" = "x64" ; then
+            TRACKD_API_LIB_FLAGS="-L$trackdapi_root/lib -ltrackdAPI_64"
+         else
+            TRACKD_API_LIB_FLAGS="-L$trackdapi_root/lib -ltrackdAPI"
+         fi
+      else
+         TRACKD_API_LIB_FLAGS="-L$trackdapi_root/lib -ltrackdAPI"
+      fi
+   elif test "x$OS_TYPE" = "xWin32" ; then
+      TRACKD_API_LIB_FLAGS="/libpath:$trackdapi_root/lib trackdAPI_MT.lib"
+   fi
 fi
 
 CFLAGS="$CFLAGS $TRACKD_API_INCLUDES"
