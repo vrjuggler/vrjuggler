@@ -111,6 +111,7 @@ public:
       mHeight = (unsigned int)height;
    }
 
+   void checkEvents();
 #ifndef VPR_OS_Win32
    /**
     * Grab events from Performer window and sends them to
@@ -123,7 +124,6 @@ public:
 private:
    void openConnection();
 #endif
-   void checkEvents();
    
 private:
    std::string     mName;
