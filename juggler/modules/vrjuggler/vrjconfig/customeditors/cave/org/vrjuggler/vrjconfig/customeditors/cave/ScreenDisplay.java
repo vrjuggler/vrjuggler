@@ -79,17 +79,96 @@ public class ScreenDisplay
    
    private void addScreen(ConfigElement elm)
    {
+      elm.addConfigElementListener(mChangeListener);
+      
       ScreenEditorPanel sep = new ScreenEditorPanel(mConfigContext, elm);
 
       int col = mTableLayout.getNumColumn();
       mTableLayout.insertColumn(col-1, TableLayout.PREFERRED);
       this.add(sep, new TableLayoutConstraints(col - 1, 0, col - 1, 0, TableLayout.FULL,
-                                               TableLayout.FULL));
+                                               TableLayout.TOP));
       mScreens.put(elm, sep);
       revalidate();
       repaint();
    }
 
+   private void removeScreen(ConfigElement elm)
+   {
+      Object obj = mScreens.remove( elm );
+      if ( null != obj && obj instanceof Component)
+      {
+         Component comp = (Component)obj;
+         int col = mTableLayout.getConstraints(comp).col1;
+         mTableLayout.deleteColumn(col);
+
+         this.remove(comp);
+         //mTableLayout.layoutContainer(mScreenDisplay);
+         this.revalidate();
+         this.repaint();
+      }
+   }
+
+   private void calcPanelSizes()
+   {
+      System.out.println("Need to calculate the size of all panels.");
+      Set screen_elms = mScreens.keySet();
+
+      int max_x = 0;
+      int max_y = 0;
+
+      for (Iterator itr = screen_elms.iterator() ; itr.hasNext() ; )
+      {
+         ConfigElement elm = (ConfigElement)itr.next();
+         int size_x = ((Number)elm.getProperty("size", 0)).intValue();
+         int size_y = ((Number)elm.getProperty("size", 1)).intValue();
+         System.out.println("Size: (" + size_x + ", " + size_y + ")");
+         if (size_x > max_x)
+         {
+            max_x = size_x;
+         }
+         if (size_y > max_y)
+         {
+            max_y = size_y;
+         }
+      }
+      
+      System.out.println("Max Size: (" + max_x + ", " + max_y + ")");
+      
+      for (Iterator itr = screen_elms.iterator() ; itr.hasNext() ; )
+      {
+         ConfigElement elm = (ConfigElement)itr.next();
+         
+         Object obj = mScreens.get( elm );
+         if ( null != obj && obj instanceof ScreenEditorPanel)
+         {
+            int size_x = ((Number)elm.getProperty("size", 0)).intValue();
+            int size_y = ((Number)elm.getProperty("size", 1)).intValue();
+         
+            float y_scale = (100.0f/(float)max_y);
+            int x = (int)(y_scale*(float)size_x);
+            int y = (int)(y_scale*(float)size_y);
+            
+            System.out.println("Adjusted Size: (" + x + ", " + y + ")");
+            ScreenEditorPanel comp = (ScreenEditorPanel)obj;
+            comp.setPlacerSize(new Dimension(x, y));
+         }
+      }
+   }
+   
+   private ChangeListener mChangeListener = new ChangeListener();
+   
+   private class ChangeListener extends ConfigElementAdapter
+   {
+      public void propertyValueChanged(ConfigElementEvent event)
+      {
+         if ( event.getProperty().equals("size") ||
+              event.getProperty().equals("origin") )
+         {
+            calcPanelSizes();
+         }
+      }
+   }
+   
    /**
     * Custom listener for changes to the config broker.
     */
@@ -123,13 +202,7 @@ public class ScreenDisplay
             ConfigElement elm = evt.getElement();
             if ( elm.getDefinition().getToken().equals(EditorConstants.display_window_type) )
             {
-               Object obj = mScreens.remove( elm );
-               if ( null != obj )
-               {
-                  mScreenDisplay.remove( (Component)obj );
-                  mScreenDisplay.revalidate();
-                  mScreenDisplay.repaint();
-               }
+               mScreenDisplay.removeScreen(elm);
             }
          }
       }
