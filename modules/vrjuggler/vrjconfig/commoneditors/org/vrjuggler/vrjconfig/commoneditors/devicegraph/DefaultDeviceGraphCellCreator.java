@@ -173,8 +173,18 @@ public class DefaultDeviceGraphCellCreator
          cell = GraphHelpers.createDeviceCell(devElt, context, proxy_types,
                                               attributes, x, y, false);
       }
+      // The SpaceBall has a fixed number of analog units (6) and digital
+      // units (12).
       else if ( token.equals(PUCK_DEVICE_TYPE) )
       {
+         List unit_list = new ArrayList(2);
+         unit_list.add(0, UnitConstants.ANALOG);
+         unit_list.add(1, UnitConstants.DIGITAL);
+         cell = GraphHelpers.createBaseDeviceCell(
+            new DeviceInfo(devElt, context, unit_list), attributes, x, y, false
+         );
+         GraphHelpers.addDevicePorts(cell, UnitConstants.ANALOG, 6);
+         GraphHelpers.addDevicePorts(cell, UnitConstants.DIGITAL, 12);
       }
       // The Ibox has a fixed number of analog and digital units (4 of both).
       else if ( token.equals(IBOX_TYPE) )
