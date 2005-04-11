@@ -48,10 +48,7 @@ import org.jgraph.graph.*;
 
 import info.clearthought.layout.*;
 
-import org.vrjuggler.jccl.config.ConfigBroker;
-import org.vrjuggler.jccl.config.ConfigBrokerProxy;
-import org.vrjuggler.jccl.config.ConfigContext;
-import org.vrjuggler.jccl.config.ConfigElement;
+import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.ConfigElementEvent;
 import org.vrjuggler.jccl.config.event.ConfigElementListener;
 
@@ -158,14 +155,17 @@ public class MultiUnitDeviceVertexView
 
                Dimension label_size = nameLabel.getPreferredSize();
 
-               int min_width = label_size.width;
+               // XXX: Artificially increase this because I don't know what I
+               // am doing.  -PH 4/11/2005
+               int min_width = label_size.width * 2;
 
-               // The extra 10 units of height is to allow some vertical
-               // breathing room.
-               int min_height = label_size.height + 10;
+               // The extra 15 units of height is to account for spacing
+               // between rows in the layout and to provide a bit of extra
+               // vertical breathing room.
+               int min_height = label_size.height + 15;
 
-               setMinimumSize(new Dimension(min_width, min_height));
-               setPreferredSize(new Dimension(min_width, min_height));
+               this.setMinimumSize(new Dimension(min_width, min_height));
+               this.setPreferredSize(new Dimension(min_width, min_height));
 
                ImageIcon add_icon = null;
                try
@@ -179,6 +179,93 @@ public class MultiUnitDeviceVertexView
                }
 
                int extra_width = min_width, extra_height = 0;
+               boolean is_relative = false;
+
+               // If our informational object is of type RelativeDeviceInfo,
+               // then we need to add components to the renderer for viewing
+               // the connection to the relative proxy.
+               if ( mDeviceInfo instanceof RelativeDeviceInfo )
+               {
+                  is_relative = true;
+                  Color label_bg = 
+                     (gradientColor != null ? gradientColor.brighter().brighter()
+                                            : this.getBackground().brighter().brighter());
+
+                  for ( Iterator c = cell.getChildren().iterator();
+                        c.hasNext(); )
+                  {
+                     try
+                     {
+                        DefaultPort child = (DefaultPort) c.next();
+                        ProxyPointerInfo ptr_info =
+                           (ProxyPointerInfo) child.getUserObject();
+                        PropertyDefinition prop_def =
+                           ptr_info.getPointerPropertyDefinition();
+                        PropertyValueDefinition value_def =
+                           prop_def.getPropertyValueDefinition(0);
+
+                        int ptr_row = mMainLayout.getNumRow();
+                        mMainLayout.insertRow(ptr_row,
+                                              TableLayoutConstraints.PREFERRED);
+                        JLabel ptr_label = new JLabel(value_def.getLabel());
+                        ptr_label.setFont(this.nameLabel.getFont());
+                        ptr_label.setBorder(
+                           BorderFactory.createLineBorder(Color.black)
+                        );
+                        ptr_label.setBackground(label_bg);
+
+                        PortComponent port_widget = createPortWidget(child);
+
+                        this.add(
+                           ptr_label,
+                           new TableLayoutConstraints(
+                              LABEL_START_COLUMN, ptr_row,
+                              LABEL_END_COLUMN, ptr_row,
+                              TableLayoutConstraints.FULL,
+                              TableLayoutConstraints.CENTER
+                           )
+                        );
+
+                        // This is a hack to avoid JGraph getting stuck
+                        // (somehow) when resizing the vertex view.
+                        if ( ! preview )
+                        {
+                           this.add(
+                              port_widget,
+                              new TableLayoutConstraints(
+                                 BUTTON0_START_COLUMN, ptr_row,
+                                 BUTTON0_END_COLUMN, ptr_row,
+                                 TableLayoutConstraints.CENTER,
+                                 TableLayoutConstraints.CENTER
+                              )
+                           );
+                        }
+
+                        Dimension ptr_label_size =
+                           ptr_label.getPreferredSize();
+                        Dimension widget_size = port_widget.getPreferredSize();
+                        int width = 15 + ptr_label_size.width +
+                                       widget_size.width;
+                        extra_height += ptr_label_size.height;
+                        extra_width = Math.max(extra_width, width);
+                     }
+                     catch (ClassCastException ex)
+                     {
+                     }
+                  }
+
+                  Dimension cur_size = this.getPreferredSize();
+                  int new_width  = Math.max(cur_size.width, extra_width);
+                  int new_height = Math.max(cur_size.height, extra_height);
+                  this.setPreferredSize(new Dimension(new_width, new_height));
+               }
+
+               // Determine whether later layout additions need to account
+               // for BUTTON0_START_COLUMN,BUTTON0_END_COLUMN being in use.
+               // mUsingButtonCol will be true if our device has variable
+               // units (the trash can icon is needed), if our device is
+               // relative to a proxy (the port widget is needed), or both.
+               mUsingButtonCol = mVariableUnits || is_relative;
 
                for ( Iterator i = mDeviceInfo.getUnitTypes().iterator();
                      i.hasNext(); )
@@ -239,16 +326,18 @@ public class MultiUnitDeviceVertexView
                   for ( Iterator c = cell.getChildren().iterator();
                         c.hasNext(); )
                   {
-                     Object child = c.next();
-
-                     if ( child instanceof DefaultPort )
+                     try
                      {
-                        DefaultPort port = (DefaultPort) child;
+                        DefaultPort port = (DefaultPort) c.next();
                         UnitInfo unit_info = (UnitInfo) port.getUserObject();
+
                         if ( unit_info.getUnitType().equals(unit_type) )
                         {
-                           addUnitRow((DefaultPort) child, false);
+                           addUnitRow(port, false);
                         }
+                     }
+                     catch (ClassCastException ex)
+                     {
                      }
                   }
                }
@@ -375,16 +464,19 @@ public class MultiUnitDeviceVertexView
 
          for ( Iterator c = children.iterator(); c.hasNext(); )
          {
-            Object child = c.next();
-            if ( child instanceof DefaultPort )
+            try
             {
-               UnitInfo cur_unit_info =
-                  (UnitInfo) ((DefaultPort) child).getUserObject();
+               DefaultPort child = (DefaultPort) c.next();
+               UnitInfo cur_unit_info = (UnitInfo) child.getUserObject();
+
                if ( searchUnitInfo.equals(cur_unit_info) )
                {
                   port = (DefaultPort) child;
                   break;
                }
+            }
+            catch (ClassCastException ex)
+            {
             }
          }
 
@@ -414,10 +506,7 @@ public class MultiUnitDeviceVertexView
          final UnitInfo unit_info = (UnitInfo) unitPort.getUserObject();
          Integer unit_type = unit_info.getUnitType();
 
-         PortComponent port_widget = new PortComponent(this.graph, unitPort);
-         port_widget.setMinimumSize(new Dimension(5, 5));
-         port_widget.setPreferredSize(new Dimension(5, 5));
-         port_widget.setForeground(nameLabel.getForeground());
+         PortComponent port_widget = createPortWidget(unitPort);
 
          JLabel name_field = new UnitLabel(unit_info);
          name_field.setFont(new Font("Dialog", Font.ITALIC,
@@ -453,7 +542,8 @@ public class MultiUnitDeviceVertexView
          {
             row             = mMainLayout.getNumRow();
             label_start_col = LABEL_START_COLUMN;
-            label_end_col   = BUTTON0_END_COLUMN;
+            label_end_col   = (mUsingButtonCol ? LABEL_END_COLUMN
+                                               : BUTTON0_END_COLUMN);
          }
 
          mMainLayout.insertRow(row, TableLayoutConstraints.PREFERRED);
@@ -658,14 +748,12 @@ public class MultiUnitDeviceVertexView
          Integer unit_type = old_unit_info.getUnitType();
          Integer unit_val  = old_unit_info.getUnitNumber();
 
-         for ( Enumeration children = device_cell.children();
-               children.hasMoreElements(); )
+         for ( Iterator c = device_cell.getChildren().iterator();
+               c.hasNext(); )
          {
-            Object child = children.nextElement();
-
-            if ( child instanceof DefaultPort )
+            try
             {
-               DefaultPort child_port = (DefaultPort) child;
+               DefaultPort child_port = (DefaultPort) c.next();
                UnitInfo unit_info     = (UnitInfo) child_port.getUserObject();
 
                // If unit_value is less than child_port's unit number, then we
@@ -694,6 +782,9 @@ public class MultiUnitDeviceVertexView
                      );
                   }
                }
+            }
+            catch (ClassCastException ex)
+            {
             }
          }
 
@@ -732,6 +823,16 @@ public class MultiUnitDeviceVertexView
          }
       }
 
+      private PortComponent createPortWidget(DefaultPort port)
+      {
+         PortComponent port_widget = new PortComponent(this.graph, port);
+         port_widget.setMinimumSize(new Dimension(5, 5));
+         port_widget.setPreferredSize(new Dimension(5, 5));
+         port_widget.setForeground(this.nameLabel.getForeground());
+
+         return port_widget;
+      }
+
       private transient CellView   mView       = null;
       private transient DeviceInfo mDeviceInfo = null;
       private transient Map        mUnitGroups = new HashMap();
@@ -756,6 +857,8 @@ public class MultiUnitDeviceVertexView
        * <code>DeviceInfo.hasVariableUnitCount()</code>.
        */
       private boolean mVariableUnits = false;
+
+      private boolean mUsingButtonCol = false;
 
       private TableLayout mMainLayout = null;
 
