@@ -545,15 +545,21 @@ public class DeviceProxyGraphEditor
                               attributes);
       }
 
+      List sim_device_types = new ArrayList();
+      sim_device_types.add(SIM_ANALOG_DEVICE_TYPE);
+      sim_device_types.add(SIM_DIGITAL_DEVICE_TYPE);
+      sim_device_types.add(SIM_POS_DEVICE_TYPE);
+
       // Handle relative devices last.
       for ( Iterator e = deviceElts.iterator(); e.hasNext(); )
       {
          ConfigElement elt = (ConfigElement) e.next();
+         ConfigDefinition def = elt.getDefinition();
 
          // XXX: Special case code that would be much better off somewhere
          // else.  Unfortunately, I am too burned out on this graph stuff to
          // care enough.  -PH 4/9/2005
-         if ( elt.getDefinition().getToken().equals(SIM_RELATIVE_POS_DEVICE_TYPE) )
+         if ( def.getToken().equals(SIM_RELATIVE_POS_DEVICE_TYPE) )
          {
             DefaultGraphCell base_proxy_cell =
                getRelativeProxyCell(elt, BASE_FRAME_PROXY_PROPERTY, allElts,
@@ -608,6 +614,46 @@ public class DeviceProxyGraphEditor
                // working with the objects we expect.
                catch (ClassCastException ex)
                {
+               }
+            }
+         }
+         // XXX: Special case code that would be much better off somewhere
+         // else.  Unfortunately, I am too burned out on this graph stuff to
+         // care enough.  -PH 4/10/2005
+         else if ( sim_device_types.contains(def.getToken()) )
+         {
+            String proxy_prop_name = KEYBOARD_MOUSE_PROXY_PTR_PROPERTY;
+            ConfigElementPointer kbd_proxy_ptr =
+               (ConfigElementPointer) elt.getProperty(proxy_prop_name, 0);
+            String kbd_proxy_name = kbd_proxy_ptr.getTarget();
+
+            DefaultGraphCell proxy_cell =
+               (DefaultGraphCell) proxy_elt_map.get(kbd_proxy_name);
+            if ( proxy_cell != null )
+            {
+               DefaultGraphCell dev_cell =
+                  (DefaultGraphCell) device_elt_map.get(elt.getName());
+
+               for ( Iterator c = dev_cell.getChildren().iterator();
+                     c.hasNext(); )
+               {
+                  Object child = c.next();
+
+                  if ( child instanceof DefaultPort )
+                  {
+                     Object user_obj = ((DefaultPort) child).getUserObject();
+
+                     if ( user_obj instanceof ProxyPointerInfo )
+                     {
+                        ProxyPointerInfo ptr_info = (ProxyPointerInfo) user_obj;
+                        RelativeDeviceToProxyEdge edge =
+                           new RelativeDeviceToProxyEdge();
+                        cs.connect(edge, child, proxy_cell.getFirstChild());
+                        attributes.put(edge,
+                                       DeviceGraph.createRelativePtrLineStyle());
+                        cells.add(edge);
+                     }
+                  }
                }
             }
          }
