@@ -555,20 +555,15 @@ public class DeviceProxyGraphEditor
          // care enough.  -PH 4/9/2005
          if ( elt.getDefinition().getToken().equals(SIM_RELATIVE_POS_DEVICE_TYPE) )
          {
-            ConfigElementPointer base_proxy_ptr =
-               (ConfigElementPointer) elt.getProperty(BASE_FRAME_PROXY_PROPERTY,
-                                                      0);
-            String base_proxy_name = base_proxy_ptr.getTarget();
-
-            ConfigElementPointer relative_proxy_ptr =
-               (ConfigElementPointer) elt.getProperty(RELATIVE_PROXY_PROPERTY,
-                                                      0);
-            String relative_proxy_name = relative_proxy_ptr.getTarget();
-
             DefaultGraphCell base_proxy_cell =
-               (DefaultGraphCell) proxy_elt_map.get(base_proxy_name);
+               getRelativeProxyCell(elt, BASE_FRAME_PROXY_PROPERTY, allElts,
+                                    device_elt_map, proxy_elt_map, cells, cs,
+                                    attributes);
+
             DefaultGraphCell relative_proxy_cell =
-               (DefaultGraphCell) proxy_elt_map.get(relative_proxy_name);
+               getRelativeProxyCell(elt, RELATIVE_PROXY_PROPERTY, allElts,
+                                    device_elt_map, proxy_elt_map, cells, cs,
+                                    attributes);
 
             DefaultGraphCell dev_cell =
                (DefaultGraphCell) device_elt_map.get(elt.getName());
@@ -576,35 +571,43 @@ public class DeviceProxyGraphEditor
             for ( Iterator c = dev_cell.getChildren().iterator();
                   c.hasNext(); )
             {
-               Object child = c.next();
-
-               if ( child instanceof DefaultPort )
+               try
                {
-                  Object user_obj = ((DefaultPort) child).getUserObject();
+                  DefaultPort child = (DefaultPort) c.next();
+                  ProxyPointerInfo ptr_info =
+                     (ProxyPointerInfo) child.getUserObject();
+                  RelativeDeviceToProxyEdge edge = null;
+                  String prop_name =
+                     ptr_info.getPointerPropertyDefinition().getToken();
 
-                  if ( user_obj instanceof ProxyPointerInfo )
+                  if ( base_proxy_cell != null &&
+                       prop_name.equals(BASE_FRAME_PROXY_PROPERTY) )
                   {
-                     ProxyPointerInfo ptr_info = (ProxyPointerInfo) user_obj;
-                     RelativeDeviceToProxyEdge edge =
-                        new RelativeDeviceToProxyEdge();
-                     String prop_name =
-                        ptr_info.getPointerPropertyDefinition().getToken();
+                     edge = new RelativeDeviceToProxyEdge();
+                     cs.connect(edge, child,
+                                base_proxy_cell.getFirstChild());
+                  }
+                  else if ( relative_proxy_cell != null &&
+                            prop_name.equals(RELATIVE_PROXY_PROPERTY) )
+                  {
+                     edge = new RelativeDeviceToProxyEdge();
+                     cs.connect(edge, child,
+                                relative_proxy_cell.getFirstChild());
+                  }
 
-                     if ( prop_name.equals(BASE_FRAME_PROXY_PROPERTY) )
-                     {
-                        cs.connect(edge, child,
-                                   base_proxy_cell.getFirstChild());
-                     }
-                     else
-                     {
-                        cs.connect(edge, child,
-                                   relative_proxy_cell.getFirstChild());
-                     }
-
+                  // If edge is non-null, then we have set up a connection
+                  // with the current child.
+                  if ( edge != null )
+                  {
                      attributes.put(edge,
                                     DeviceGraph.createRelativePtrLineStyle());
                      cells.add(edge);
                   }
+               }
+               // If any casting operations above failed, then we are not
+               // working with the objects we expect.
+               catch (ClassCastException ex)
+               {
                }
             }
          }
@@ -682,6 +685,43 @@ public class DeviceProxyGraphEditor
             }
          }
       }
+   }
+
+   // XXX: The arity of this method is ridiculous, which is probably yet
+   // another indication of badness in this class.  -PH 4/11/2005
+   private DefaultGraphCell getRelativeProxyCell(ConfigElement devElt,
+                                                 String propName, List allElts,
+                                                 Map proxyEltCellMap,
+                                                 Map deviceEltCellMap,
+                                                 List cells, ConnectionSet cs,
+                                                 Map attributes)
+   {
+      ConfigElementPointer proxy_ptr =
+         (ConfigElementPointer) devElt.getProperty(propName, 0);
+      String proxy_name = proxy_ptr.getTarget();
+
+      DefaultGraphCell proxy_cell =
+         (DefaultGraphCell) proxyEltCellMap.get(proxy_name);
+
+      // If proxy_cell is null, then it was not added to proxyEltCellMap in
+      // the loop for processing proxy elements.
+      // XXX: This probably an algorithm design flaw.  -PH 4/11/2005
+      if ( proxy_cell == null )
+      {
+         List elts = ConfigUtilities.getElementsWithName(allElts, proxy_name);
+
+         if ( ! elts.isEmpty() )
+         {
+            ConfigElement proxy_elt = (ConfigElement) elts.get(0);
+            proxy_cell = createProxyCell(proxy_elt, allElts, attributes);
+            cells.add(proxy_cell);
+            proxyEltCellMap.put(proxy_elt.getName(), proxy_cell);
+            connectProxyToDevice(proxy_elt, proxy_cell,
+                                 deviceEltCellMap, cells, cs, attributes);
+         }
+      }
+
+      return proxy_cell;
    }
 
    private ConfigBroker  mBroker      = null;
