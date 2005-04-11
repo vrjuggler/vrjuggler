@@ -51,7 +51,7 @@ PfInputHandler::PfInputHandler(pfPipeWindow* pipeWindow, const std::string& disp
    mName = displayName;
    mPipeWindow = pipeWindow;
    mPipe = pfGetPWinPipe(mPipeWindow);
-   mUseOwnDisplay = false;
+   mBlocking = false;
 #ifdef VPR_OS_Win32
    mWinHandle = pipeWindow->getWSWindow();
 #else
