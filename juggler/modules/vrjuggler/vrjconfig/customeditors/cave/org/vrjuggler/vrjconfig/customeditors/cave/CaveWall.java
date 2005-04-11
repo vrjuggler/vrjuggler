@@ -248,12 +248,149 @@ public class CaveWall implements EditorConstants
          }
       }
    }
+    
+   /** Reference to the ConfigBroker used in this object. */
+   private ConfigBroker mBroker = null; 
 
-   public void setStereoMode(int stereo)
+   /**
+    * Gets a handle to the configuration broker.
+    */
+   private ConfigBroker getBroker()
    {
+      if (mBroker == null)
+      {
+         synchronized (this)
+         {
+            if (mBroker == null)
+            {
+               mBroker = new ConfigBrokerProxy();
+            }
+         }
+      }
+      return mBroker;
+   }
+   
+   public void setStereoMode(int stereo, ConfigContext context)
+   {
+      // PASSIVE -> ACTIVE
+      //   - Remove right view
+      //   - Set stereo true on screen
+      //   - Set left view to "Stereo"
+      // PASSIVE -> MONO
+      //   - Remove right view
+      //   - Set left view to "Left Eye"
+      // MONO -> ACTIVE
+      //   - Set stereo true on screen
+      //   - Set left view to "Stereo"
+      // MONO -> PASSIVE
+      //   - Add right view
+      //   - Set right view to "Right Eye"
+      // ACTIVE -> PASSIVE
+      //   - Add right view
+      //   - Set left view to "Left Eye"
+      //   - Set right view to "Right Eye"
+      //   - Set stereo false on screen
+      // ACTIVE -> MONO
+      //   - Set left view to "Left Eye"
+      //   - Set stereo false on screen
+
       if ( stereo < 0 || stereo > MONO )
       {
          throw new IllegalArgumentException("Not a valid stereo mode: " + stereo);
+      }
+      
+      if (stereo == mStereoMode)
+      {
+         return;
+      }
+      if (PASSIVE_STEREO == mStereoMode)
+      {
+         if (stereo == ACTIVE_STEREO)
+         {
+            ConfigElement screen;
+            screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mRightView);
+            mCaveModel.getViewToScreenMap().remove(mRightView);
+            screen.removeProperty(SURFACE_VIEWPORTS_PROPERTY, mRightView, context);
+            mRightView = null;
+            
+            screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mLeftView);
+            screen.setProperty(STEREO_PROPERTY, 0, new Boolean(true), context);
+            mLeftView.setProperty(VIEW_PROPERTY, 0, new String("Stereo"));
+         }
+         else if (stereo == MONO)
+         {
+            ConfigElement screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mRightView);
+            mCaveModel.getViewToScreenMap().remove(mRightView);
+            screen.removeProperty(SURFACE_VIEWPORTS_PROPERTY, mRightView, context);
+
+            mLeftView.setProperty(VIEW_PROPERTY, 0, new String("Left Eye"));
+         }
+      }
+      if (MONO == mStereoMode)
+      {
+         if (stereo == ACTIVE_STEREO)
+         {
+            ConfigElement screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mLeftView);
+            screen.setProperty(STEREO_PROPERTY, 0, new Boolean(true), context);
+            mLeftView.setProperty(VIEW_PROPERTY, 0, new String("Stereo"));
+         }
+         else if (stereo == PASSIVE_STEREO)
+         {
+            // Get the ConfigDefinition of the proxy we want to create.
+            ConfigDefinition surface_def = getBroker().getRepository().get(SURFACE_VIEWPORT_TYPE);
+            
+            // Create a temporary list of ConfigDefinitions to pass to factory.
+            java.util.List def_list = new ArrayList();
+            def_list.add(surface_def);
+           
+            ConfigElement screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mLeftView);
+            
+            // Initialize a ConfigElementFactory with the needed 
+            // ConfigDefinition. And create a new ConfigElement.
+            ConfigElementFactory temp_factory = new ConfigElementFactory(def_list);
+            ConfigElement element = temp_factory.create("Right", surface_def);
+            mRightView = element;
+            
+            mCaveModel.getViewToScreenMap().put(mRightView, screen);
+            screen.addProperty(SURFACE_VIEWPORTS_PROPERTY, mRightView, context);
+            
+            mRightView.setProperty(VIEW_PROPERTY, 0, new String("Right Eye"));
+         }
+      }
+      if (ACTIVE_STEREO == mStereoMode)
+      {
+         if (stereo == PASSIVE_STEREO)
+         {
+            // Get the ConfigDefinition of the proxy we want to create.
+            ConfigDefinition surface_def = getBroker().getRepository().get(SURFACE_VIEWPORT_TYPE);
+            
+            // Create a temporary list of ConfigDefinitions to pass to factory.
+            java.util.List def_list = new ArrayList();
+            def_list.add(surface_def);
+           
+            ConfigElement screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mLeftView);
+            
+            // Initialize a ConfigElementFactory with the needed 
+            // ConfigDefinition. And create a new ConfigElement.
+            ConfigElementFactory temp_factory = new ConfigElementFactory(def_list);
+            ConfigElement element = temp_factory.create("Right", surface_def);
+            mRightView = element;
+            
+            mCaveModel.getViewToScreenMap().put(mRightView, screen);
+            screen.addProperty(SURFACE_VIEWPORTS_PROPERTY, mRightView, context);
+            
+            mLeftView.setProperty(VIEW_PROPERTY, 0, new String("Left Eye"));
+            mRightView.setProperty(VIEW_PROPERTY, 0, new String("Right Eye"));
+            
+            screen.setProperty(STEREO_PROPERTY, 0, new Boolean(false), context);
+         }
+         else if (stereo == MONO)
+         {
+            mLeftView.setProperty(VIEW_PROPERTY, 0, new String("Left Eye"));
+            
+            ConfigElement screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mLeftView);
+            screen.setProperty(STEREO_PROPERTY, 0, new Boolean(false), context);
+         }
       }
       
       mStereoMode = stereo;
@@ -504,11 +641,6 @@ public class CaveWall implements EditorConstants
       return mRightView;
    }
    
-   public ConfigElement getStereoView()
-   {
-      return mStereoView;
-   }
-
    public ConfigElement getLeft()
    {
       return mLeftView;
@@ -519,11 +651,6 @@ public class CaveWall implements EditorConstants
       return mRightView;
    }
    
-   public ConfigElement getStereo()
-   {
-      return mStereoView;
-   }
-
    public int hashCode()
    {
       return 0;
@@ -553,7 +680,7 @@ public class CaveWall implements EditorConstants
    {
       String str = new String("Cave Wall:");
       str = "Cave Wall: " + ((ConfigElement)mLeftView).getName()
-         + " " + ((ConfigElement)mRightView).getName() + " " + ((ConfigElement)mStereoView).getName();
+         + " " + ((ConfigElement)mRightView).getName();
 
       return str;
    }
