@@ -71,7 +71,7 @@ void InputAreaWin32::handleEvents()
 {
    MSG msg;
    bool have_events_to_check = false;
-   if ( mUseOwnDisplay )
+   if ( mBlocking )
    {
       // block until message received.
       int retval = ::GetMessage(&msg, mWinHandle, 0, 0);
