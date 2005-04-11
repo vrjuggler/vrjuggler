@@ -296,10 +296,10 @@ public class ProxyVertexView
                                         Math.max(add_size.width,
                                                  paste_size.width));
 
-               // The extra 10 units of height is to allow some vertical
+               // The extra 15 units of height is to allow some vertical
                // breathing room.
                int min_height = label_size.height + add_size.height +
-                                   paste_size.height + 10;
+                                   paste_size.height + 15;
 
                setMinimumSize(new Dimension(min_width, min_height));
                // XXX: Doubling the minimum width is a hack to deal with the
