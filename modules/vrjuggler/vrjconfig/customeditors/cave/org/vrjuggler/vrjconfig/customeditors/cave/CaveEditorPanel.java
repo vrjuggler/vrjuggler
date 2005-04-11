@@ -77,8 +77,6 @@ public class CaveEditorPanel
    private JButton mRemoveWallBtn = new JButton();
    private JButton mEditWallBtn = new JButton();
       
-   private DefaultTabDataModel mWallTabDataModel = new DefaultTabDataModel();
-   //private TabbedContainer mTabContainer = new TabbedContainer(mWallTabDataModel, TabbedContainer.TYPE_EDITOR);
    private JList mWallList = new JList();
    private MainEditorPanel mMainEditorPanel = new MainEditorPanel();
       
@@ -130,32 +128,11 @@ public class CaveEditorPanel
 
       mScreenDisplay.setConfig( ctx, mCaveModel );
      
-      /*
-      // Test all Walls to ensure that they are valid and add tabs.
-      for (Iterator itr = mCaveModel.getWalls().iterator() ; itr.hasNext() ; )
-      {
-         CaveWall cw = (CaveWall)itr.next();
-
-         TabData td = new TabData(cw, null, cw.getName(), cw.getName());
-         mWallTabDataModel.addTab(mWallTabDataModel.size(), td);
-      }
-      
-      mTabContainer.setComponentConverter(new WallComponentConverter());
-      mTabContainer.setActive(true);    
-      SingleSelectionModel ssm = mTabContainer.getSelectionModel();
-      if (mTabContainer.getTabCount() > 0)
-      {
-         ssm.setSelectedIndex(0);
-      }
-
-      mTabContainer.setMinimumSize(new Dimension(800,500));
-      mTabContainer.setPreferredSize(new Dimension(800,500));
-      mTabContainer.setMaximumSize(new Dimension(800,500));
-      */
-
       // TODO: If there is atleast one wall, select it. Otherwise default to an empty panel.
-      mMainEditorPanel.setWallConfig(mCaveModel, (CaveWall)(mCaveModel.getWalls().get(0)));
-
+      if (mCaveModel.getWalls().size() > 0)
+      {
+         mMainEditorPanel.setWallConfig(mCaveModel, (CaveWall)(mCaveModel.getWalls().get(0)));
+      }
 
       this.revalidate();
       this.repaint();
@@ -344,37 +321,27 @@ public class CaveEditorPanel
 
       if ( wall_name != null )
       {
-         ConfigBrokerProxy broker = new ConfigBrokerProxy();
-         ConfigDefinition vp_def = broker.getRepository().get(EditorConstants.surface_viewport_type);
-         ConfigElementFactory factory =
-            new ConfigElementFactory(broker.getRepository().getAllLatest());
-         ConfigElement default_view = factory.create(wall_name, vp_def);
-
-         // Make sure this add goes through successfully
-         if (! broker.add(mConfigContext, default_view))
-         {
-            JOptionPane.showMessageDialog(SwingUtilities.getAncestorOfClass(Frame.class, this),
-                                          "There are no configuration files active.",
-                                          "Error",
-                                          JOptionPane.ERROR_MESSAGE);
-            return;
-         }
-      
-         CaveWall cw = mCaveModel.makeNewWall(default_view);
+         CaveWall cw = mCaveModel.makeNewWall(wall_name);
          mWallList.setSelectedValue(cw, true);
-         editWall(cw);
-         /*
-         TabData td = new TabData(cw, null, cw.getName(), cw.getName());
-         mWallTabDataModel.addTab(mWallTabDataModel.size(), td);
-         SingleSelectionModel ssm = mTabContainer.getSelectionModel();
-         // Make sure that we select the newly created wall.
-         ssm.setSelectedIndex( mWallTabDataModel.size() - 1 );
-         */
+         
+         int status = editWall(cw);
+
+         // If the user cancels while editing, then we want to remove
+         // the new wall that we just created.
+         if ( status != DisplayWindowStartDialog.OK_OPTION )
+         {
+            mCaveModel.removeWall(cw);
+         }
       }
    }
    
    void mRemoveWallBtn_actionPerformed(ActionEvent e)
    {
+      CaveWall cw = (CaveWall)mWallList.getSelectedValue();
+      if (null != cw)
+      {
+         mCaveModel.removeWall(cw);
+      }
    }
    
    void mEditWallBtn_actionPerformed(ActionEvent e)
@@ -403,7 +370,8 @@ public class CaveEditorPanel
 
       editWall(selected_wall);
    }
-   void editWall(CaveWall selected_wall)
+   
+   int editWall(CaveWall selected_wall)
    {
       int status;
 
@@ -416,27 +384,6 @@ public class CaveEditorPanel
       status = dlg.showDialog();
       if ( status == DisplayWindowStartDialog.OK_OPTION )
       {
-         /*
-         Rectangle bounds = dlg.getViewportBounds();
-         origin_x = (float) bounds.x / 100.0f;
-         origin_y = (float) bounds.y / 100.0f;
-         width    = (float) bounds.width / 100.0f;
-         height   = (float) bounds.height / 100.0f;
-
-         mSelectedViewport.setProperty(ORIGIN_PROPERTY, 0,
-                                       new Float(origin_x), mContext);
-         mSelectedViewport.setProperty(ORIGIN_PROPERTY, 1,
-                                       new Float(origin_y), mContext);
-         mSelectedViewport.setProperty(SIZE_PROPERTY, 0, new Float(width),
-                                       mContext);
-         mSelectedViewport.setProperty(SIZE_PROPERTY, 1, new Float(height),
-                                       mContext);
-         mSelectedViewport.setProperty(VIEW_PROPERTY, 0, dlg.getViewpoint(),
-                                       mContext);
-         mSelectedViewport.setProperty(USER_PROPERTY, 0, dlg.getUser(),
-                                       mContext);
-         */
-         
          Point3D[] corners = dlg.getCorners();
          selected_wall.setCorners(corners, mConfigContext);
          selected_wall.setTracked(dlg.isTracked(), mConfigContext);
@@ -449,21 +396,10 @@ public class CaveEditorPanel
             selected_wall.setTrackerProxy(dlg.getTrackerProxy(), mConfigContext);
          }
       }
+
+      return status;
    }
    
-   public class WallComponentConverter implements ComponentConverter
-   {
-      private MainEditorPanel mMainEditorPanel = new MainEditorPanel();
-      
-      public Component getComponent(TabData data)
-      {
-         CaveWall cw = (CaveWall)data.getUserObject();
-         mMainEditorPanel.setWallConfig(mCaveModel, cw);
-
-         return mMainEditorPanel;
-      }
-   }
-
    /*
    class ScreenComboBoxRenderer extends JLabel implements ListCellRenderer
    {
@@ -522,10 +458,15 @@ public class CaveEditorPanel
       {
          mCaveModel = cm;
       }
-
+      
       public void wallAdded(CaveModelEvent evt)
       {
          fireIntervalAdded(evt.getSource(), evt.getIndex(), evt.getIndex());
+      }
+      
+      public void wallRemoved(CaveModelEvent evt)
+      {
+         fireIntervalRemoved(evt.getSource(), evt.getIndex(), evt.getIndex());
       }
 
       public void screenAdded(CaveModelEvent evt)
