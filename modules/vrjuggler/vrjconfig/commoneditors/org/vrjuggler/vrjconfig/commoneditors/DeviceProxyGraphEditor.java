@@ -691,8 +691,8 @@ public class DeviceProxyGraphEditor
    // another indication of badness in this class.  -PH 4/11/2005
    private DefaultGraphCell getRelativeProxyCell(ConfigElement devElt,
                                                  String propName, List allElts,
-                                                 Map proxyEltCellMap,
                                                  Map deviceEltCellMap,
+                                                 Map proxyEltCellMap,
                                                  List cells, ConnectionSet cs,
                                                  Map attributes)
    {
