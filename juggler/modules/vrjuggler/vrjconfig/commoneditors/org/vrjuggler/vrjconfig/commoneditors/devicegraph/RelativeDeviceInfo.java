@@ -32,7 +32,9 @@
 
 package org.vrjuggler.vrjconfig.commoneditors.devicegraph;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.DefaultGraphModel;
@@ -52,13 +54,142 @@ import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
  * relative to one or more proxies.
  */
 public class RelativeDeviceInfo
-   extends BaseDeviceInfo
+   extends DeviceInfo
 {
+   /**
+    * Creates a new <code>RelativeDeviceInfo</code> object for a device that
+    * has exactly one input source (unit) at all times.  The default device
+    * unit handler delegate is created to manage the units.
+    * 
+    * @param devElt             the device config element
+    * @param ctx                the config context that contains
+    *                           <code>devElt</code>
+    * @param pointerPropDefs    the list of
+    *                           <code>org.vrjuggler.jccl.config.PropertyDefinition</code>
+    *                           objects providing the information about the
+    *                           proxy types to which this device may be
+    *                           configured
+    */
    public RelativeDeviceInfo(ConfigElement element, ConfigContext context,
                              List pointerPropDefs)
    {
       super(element, context);
+      mPointerPropDefs = pointerPropDefs;
+   }
 
+   /**
+    * Creates a new <code>DeviceInfo</code> object and looks up the
+    * property definition for the named property if a name is provided.  The
+    * value of <code>unitPropertyName</code> may be null.  If it is non-null,
+    * then it must be the name of a property in <code>devElt</code>'s config
+    * definition.  This version of the constructor should be used when the
+    * config element has a proeprty with a variable number of values that
+    * indicate how many input sources (units) are available in the device.
+    * The default device unit handler delegate is created to manage the units.
+    *
+    * @param devElt             the device config element
+    * @param ctx                the config context that contains
+    *                           <code>devElt</code>
+    * @param unitPropertyName   the name of the property that represents
+    *                           the number of available input sources (units)
+    *                           the device has (may be null)
+    * @param pointerPropDefs    the list of
+    *                           <code>org.vrjuggler.jccl.config.PropertyDefinition</code>
+    *                           objects providing the information about the
+    *                           proxy types to which this device may be
+    *                           configured
+    *
+    * @see DefaultUnitPropertyHandler
+    */
+   public RelativeDeviceInfo(ConfigElement devElt, ConfigContext ctx,
+                             String unitPropertyName, List pointerPropDefs)
+   {
+      super(devElt, ctx, unitPropertyName);
+      mPointerPropDefs = pointerPropDefs;
+   }
+
+   /**
+    * This version of the constructor should be used when the config element
+    * has a <i>variable</i> number of input sources (units) <i>and</i> supports
+    * multiipe input source types.  The default device unit handler delegate
+    * is created to manage the units.
+    *
+    * @param devElt             the device config element
+    * @param ctx                the config context that contains
+    *                           <code>devElt</code>
+    * @param unitTypeMap        a mapping from unit types (as defined in
+    *                           <code>UnitConstants</code> to some value that
+    *                           the default device unit property handler knows
+    *                           how to manage
+    * @param pointerPropDefs    the list of
+    *                           <code>org.vrjuggler.jccl.config.PropertyDefinition</code>
+    *                           objects providing the information about the
+    *                           proxy types to which this device may be
+    *                           configured
+    *
+    * @see UnitConstants
+    * @see DefaultUnitPropertyHandler
+    */
+   public RelativeDeviceInfo(ConfigElement devElt, ConfigContext ctx,
+                             Map unitTypeMap, List pointerPropDefs)
+   {
+      super(devElt, ctx, unitTypeMap);
+      mPointerPropDefs = pointerPropDefs;
+   }
+
+   /**
+    * This version of the constructor should be used when the config element
+    * has a <i>variable</i> number of input sources (units) <i>and</i> supports
+    * multiipe input source types.  The given unit handler delegate is stored
+    * to manage the device units.
+    *
+    * @param devElt             the device config element
+    * @param ctx                the config context that contains
+    *                           <code>devElt</code>
+    * @param unitTypeMap        a mapping from unit types (as defined in
+    *                           <code>UnitConstants</code> to some value that
+    *                           the device unit property handler knows how to
+    *                           manage
+    * @param handler            the delegate for managing the device unit
+    *                           properties
+    * @param pointerPropDefs    the list of
+    *                           <code>org.vrjuggler.jccl.config.PropertyDefinition</code>
+    *                           objects providing the information about the
+    *                           proxy types to which this device may be
+    *                           configured
+    *
+    * @see UnitConstants
+    */
+   public RelativeDeviceInfo(ConfigElement devElt, ConfigContext ctx,
+                             Map unitTypeMap,
+                             DeviceUnitPropertyHandler handler,
+                             List pointerPropDefs)
+   {
+      super(devElt, ctx, unitTypeMap, handler);
+      mPointerPropDefs = pointerPropDefs;
+   }
+
+   /**
+    * This version of the constructor should be used when the config element
+    * has a <i>fixed</i> number of input sources (units) <i>and</i> supports
+    * multiipe input source types.
+    *
+    * @param devElt             the device config element
+    * @param ctx                the config context that contains
+    *                           <code>devElt</code>
+    * @param unitTypes          the list of unit types supported by this device
+    * @param pointerPropDefs    the list of
+    *                           <code>org.vrjuggler.jccl.config.PropertyDefinition</code>
+    *                           objects providing the information about the
+    *                           proxy types to which this device may be
+    *                           configured
+    *
+    * @see UnitConstants
+    */
+   public RelativeDeviceInfo(ConfigElement devElt, ConfigContext ctx,
+                             Collection unitTypes, List pointerPropDefs)
+   {
+      super(devElt, ctx, unitTypes);
       mPointerPropDefs = pointerPropDefs;
    }
 
