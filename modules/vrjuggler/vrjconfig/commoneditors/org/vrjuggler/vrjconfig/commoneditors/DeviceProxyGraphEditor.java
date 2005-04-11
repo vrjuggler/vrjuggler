@@ -46,7 +46,7 @@ import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.DefaultGraphModel;
 import org.jgraph.graph.DefaultPort;
 import org.jgraph.layout.JGraphLayoutAlgorithm;
-import org.jgraph.layout.SpringEmbeddedLayoutAlgorithm;
+import org.jgraph.layout.SugiyamaLayoutAlgorithm;
 
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.ConfigEvent;
@@ -101,6 +101,10 @@ public class DeviceProxyGraphEditor
     */
    public DeviceProxyGraphEditor(List allowedTypes)
    {
+      SugiyamaLayoutAlgorithm algo = new SugiyamaLayoutAlgorithm();
+      algo.setSpacing(new java.awt.Point(200, 200));
+      graphLayoutAlgorithm = algo;
+
       mBroker = new ConfigBrokerProxy();
 
       if ( allowedTypes == null )
@@ -774,8 +778,7 @@ public class DeviceProxyGraphEditor
    private ConfigContext mContext     = null;
    private List          allowedTypes = new ArrayList();
 
-   private JGraphLayoutAlgorithm graphLayoutAlgorithm =
-      new SpringEmbeddedLayoutAlgorithm();
+   private JGraphLayoutAlgorithm graphLayoutAlgorithm = null;
 
    private DeviceGraph graph = new DeviceGraph();
 }
