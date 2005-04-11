@@ -534,65 +534,15 @@ public class DeviceProxyGraphEditor
       for ( Iterator e = proxyElts.iterator(); e.hasNext(); )
       {
          ConfigElement elt = (ConfigElement) e.next();
-
-         // To create the graph cell for this proxy, we have to find all its
-         // aliases.
-         List aliases = new ArrayList();
-         List alias_elts =
-            ConfigUtilities.getElementsWithDefinition(allElts, ALIAS_TYPE);
-
-         // Search alias_elts for those that refer to elt.
-         for ( Iterator a = alias_elts.iterator(); a.hasNext(); )
-         {
-            ConfigElement alias_elt = (ConfigElement) a.next();
-            ConfigElementPointer proxy_ptr =
-               (ConfigElementPointer) alias_elt.getProperty(PROXY_PROPERTY, 0);
-
-            if ( proxy_ptr != null && proxy_ptr.getTarget() != null &&
-                 proxy_ptr.getTarget().equals(elt.getName()) )
-            {
-               aliases.add(alias_elt);
-            }
-         }
-
-         // Create the graph cell for this proxy.
-         DefaultGraphCell proxy_cell =
-            GraphHelpers.createProxyCell(elt, mContext, aliases, attributes);
+         DefaultGraphCell proxy_cell = createProxyCell(elt, allElts,
+                                                       attributes);
          cells.add(proxy_cell);
 
          // Needed for devices that are configured relative to a proxy.
          proxy_elt_map.put(elt.getName(), proxy_cell);
 
-         // Look up the cell for the device pointed to by this proxy so that
-         // we can create the connection between the new proxy cell and the
-         // device cell.
-         ConfigElementPointer dev_ptr =
-            (ConfigElementPointer) elt.getProperty(DEVICE_PROPERTY, 0);
-
-         if ( dev_ptr != null && dev_ptr.getTarget() != null &&
-              ! dev_ptr.getTarget().equals("") )
-         {
-            DefaultGraphCell dev_cell =
-               (DefaultGraphCell) device_elt_map.get(dev_ptr.getTarget());
-
-            // If there is no cell for the device pointed at by this proxy,
-            // we cannot make a connection.  This indicates that the user has
-            // an incomplete configuration loaded.
-            if ( dev_cell != null )
-            {
-               try
-               {
-                  cells.add(GraphHelpers.connectProxyToDevice(proxy_cell,
-                                                              dev_cell, cs,
-                                                              attributes));
-               }
-               catch (NoSuchPortException ex)
-               {
-                  System.err.println("WARNING: Failed to connect proxy " +
-                                     "to device!\n\t" + ex.getMessage());
-               }
-            }
-         }
+         connectProxyToDevice(elt, proxy_cell, device_elt_map, cells, cs,
+                              attributes);
       }
 
       // Handle relative devices last.
@@ -667,6 +617,70 @@ public class DeviceProxyGraphEditor
       if ( applyLayout )
       {
          applyGraphLayoutAlgorithm(cell_array);
+      }
+   }
+
+   private DefaultGraphCell createProxyCell(ConfigElement elt, List allElts,
+                                            Map attributes)
+   {
+      // To create the graph cell for this proxy, we have to find all its
+      // aliases.
+      List aliases = new ArrayList();
+      List alias_elts =
+         ConfigUtilities.getElementsWithDefinition(allElts, ALIAS_TYPE);
+
+      // Search alias_elts for those that refer to elt.
+      for ( Iterator a = alias_elts.iterator(); a.hasNext(); )
+      {
+         ConfigElement alias_elt = (ConfigElement) a.next();
+         ConfigElementPointer proxy_ptr =
+            (ConfigElementPointer) alias_elt.getProperty(PROXY_PROPERTY, 0);
+
+         if ( proxy_ptr != null && proxy_ptr.getTarget() != null &&
+              proxy_ptr.getTarget().equals(elt.getName()) )
+         {
+            aliases.add(alias_elt);
+         }
+      }
+
+      // Create the graph cell for this proxy.
+      return GraphHelpers.createProxyCell(elt, mContext, aliases, attributes);
+   }
+
+   private void connectProxyToDevice(ConfigElement proxyElt,
+                                     DefaultGraphCell proxyCell,
+                                     Map deviceEltCellMap, List cells,
+                                     ConnectionSet cs, Map attributes)
+   {
+      // Look up the cell for the device pointed to by this proxy so that we
+      // can create the connection between the new proxy cell and the device
+      // cell.
+      ConfigElementPointer dev_ptr =
+         (ConfigElementPointer) proxyElt.getProperty(DEVICE_PROPERTY, 0);
+
+      if ( dev_ptr != null && dev_ptr.getTarget() != null &&
+           ! dev_ptr.getTarget().equals("") )
+      {
+         DefaultGraphCell dev_cell =
+            (DefaultGraphCell) deviceEltCellMap.get(dev_ptr.getTarget());
+
+         // If there is no cell for the device pointed at by this proxy,
+         // we cannot make a connection.  This indicates that the user has
+         // an incomplete configuration loaded.
+         if ( dev_cell != null )
+         {
+            try
+            {
+               cells.add(GraphHelpers.connectProxyToDevice(proxyCell,
+                                                           dev_cell, cs,
+                                                           attributes));
+            }
+            catch (NoSuchPortException ex)
+            {
+               System.err.println("WARNING: Failed to connect proxy " +
+                                  "to device!\n\t" + ex.getMessage());
+            }
+         }
       }
    }
 
