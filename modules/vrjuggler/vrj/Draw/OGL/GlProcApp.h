@@ -37,6 +37,7 @@
 
 #include <boost/function.hpp>     // Could use function pointers, but this is a little easier to read
 
+#include <vpr/Util/Singleton.h>
 #include <vrj/Draw/OGL/GlApp.h>
 
 
@@ -55,10 +56,14 @@ class VJ_CLASS_API GlProcAppWrapper : public vrj::GlApp
 public:
    typedef boost::function0<void> callback_t;      /** Type for callbacks */
 
+protected:
    GlProcAppWrapper();
 
    virtual ~GlProcAppWrapper();
 
+   vprSingletonHeader(GlProcAppWrapper);
+
+public:
    /** @name Getters and setters for the callback methods */
    //@{
    void setDrawMethod(callback_t f)

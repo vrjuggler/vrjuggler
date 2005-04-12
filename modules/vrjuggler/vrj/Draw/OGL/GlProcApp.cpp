@@ -36,16 +36,10 @@
 #include <vrj/Draw/OGL/GlProcApp.h>
 
 
-/**
- * Set of procedures for wrapping an application using a procedural interface.
- */
-namespace
-{
-   vrj::GlProcAppWrapper proc_app_singleton;    /** The singleton application to use */
-}
-
 namespace vrj
 {
+
+vprSingletonImp(GlProcAppWrapper);
 
 GlProcAppWrapper::GlProcAppWrapper()      
    : vrj::GlApp()
@@ -108,32 +102,32 @@ void GlProcAppWrapper::draw()
 
 void VRJSetGLDrawMethod(vrj::GlProcAppWrapper::callback_t m)
 {
-   proc_app_singleton.setDrawMethod(m);
+   GlProcAppWrapper::instance()->setDrawMethod(m);
 }
 
 void VRJSetGLContextInitMethod(vrj::GlProcAppWrapper::callback_t m)
 { 
-   proc_app_singleton.setContextInitMethod(m);
+   GlProcAppWrapper::instance()->setContextInitMethod(m);
 }
    
 void VRJSetBufferPredrawMethod(vrj::GlProcAppWrapper::callback_t m)
 { 
-   proc_app_singleton.setBufferPredrawMethod(m);
+   GlProcAppWrapper::instance()->setBufferPredrawMethod(m);
 }
 
 void VRJSetPreFrameMethod(vrj::GlProcAppWrapper::callback_t m)
 {
-   proc_app_singleton.setPreFrameMethod(m);
+   GlProcAppWrapper::instance()->setPreFrameMethod(m);
 }
 
 void VRJSetIntraFrameMethod(vrj::GlProcAppWrapper::callback_t m)
 {
-   proc_app_singleton.setIntraFrameMethod(m);
+   GlProcAppWrapper::instance()->setIntraFrameMethod(m);
 }
    
 void VRJSetPostFrameMethod(vrj::GlProcAppWrapper::callback_t m)
 {
-   proc_app_singleton.setPostFrameMethod(m);
+   GlProcAppWrapper::instance()->setPostFrameMethod(m);
 }
 
 void VRJConfigure(int argc, char* argv[])
@@ -169,7 +163,7 @@ void VRJProcRunSystem()
    kernel->start();
 
    // Give the kernel an application to execute
-   kernel->setApplication(&proc_app_singleton);
+   kernel->setApplication(GlProcAppWrapper::instance());
 
    // Keep thread alive and waiting
    kernel->waitForKernelStop();
