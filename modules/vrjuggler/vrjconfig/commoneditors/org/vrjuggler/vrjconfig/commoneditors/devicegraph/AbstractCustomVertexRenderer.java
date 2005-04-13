@@ -54,7 +54,7 @@ import org.jgraph.graph.GraphConstants;
 /**
  * Basic (abstract) custom vertex renderer&mdash;based on JPanel&mdash;for use
  * with JGraph.  This code is based on examples included with
- * <a href="http://www.jgraph.com"/>JGraph</a> and JGraphAddons for creating
+ * <a href="http://www.jgraph.com/">JGraph</a> and JGraphAddons for creating
  * custom vertex renderers.
  */
 public abstract class AbstractCustomVertexRenderer
