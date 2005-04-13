@@ -44,7 +44,7 @@ GOTO ERREXIT
 :RUNJAVA
 set TWEEK_CLASSPATH=%TWEEK_BASE_DIR%\share\tweek\java\jaxen-core.jar;%TWEEK_BASE_DIR%\share\tweek\java\jaxen-jdom.jar;%TWEEK_BASE_DIR%\share\tweek\java\jdom.jar;%TWEEK_BASE_DIR%\share\tweek\java\saxpath.jar;%TWEEK_BASE_DIR%\share\tweek\java\xalan.jar;%TWEEK_BASE_DIR%\share\tweek\java\xerces.jar;%TWEEK_BASE_DIR%\share\tweek\java\xml-apis.jar;%TWEEK_BASE_DIR%\share\tweek\java\Tweek.jar;%TWEEK_BASE_DIR%\share\tweek\java\TweekBeans.jar;%TWEEK_BASE_DIR%\share\tweek\java\TweekEvents.jar;%TWEEK_BASE_DIR%\share\tweek\java\TweekNet.jar;%TWEEK_BASE_DIR%\share\tweek\java\TweekBeanDelivery.jar;%TWEEK_BASE_DIR%\share\tweek\java\TweekServices.jar;%TWEEK_BASE_DIR%\share\tweek\java\kunststoff-mod.jar;%TWEEK_BASE_DIR%\share\tweek\java\liquidlnf.jar;%TWEEK_BASE_DIR%\share\tweek\java\metouia.jar;%TWEEK_BASE_DIR%\share\tweek\java\looks.jar
 
-java -DTWEEK_BASE_DIR="%TWEEK_BASE_DIR%" -Djava.library.path="%TWEEK_BASE_DIR%\share\tweek\java\%PROCESSOR_ARCHITECTURE%" -Djava.security.policy="%TWEEK_BASE_DIR%\share\tweek\java\java.security.policy.txt" -cp "%TWEEK_CLASSPATH%" org.vrjuggler.tweek.Tweek %*
+java -Dsun.java2d.opengl=true -DTWEEK_BASE_DIR="%TWEEK_BASE_DIR%" -Djava.library.path="%TWEEK_BASE_DIR%\share\tweek\java\%PROCESSOR_ARCHITECTURE%" -Djava.security.policy="%TWEEK_BASE_DIR%\share\tweek\java\java.security.policy.txt" -cp "%TWEEK_CLASSPATH%" org.vrjuggler.tweek.Tweek %*
 GOTO DONE
 :ERREXIT
 ECHO [ERR] Tweek exiting due to previous errors.
