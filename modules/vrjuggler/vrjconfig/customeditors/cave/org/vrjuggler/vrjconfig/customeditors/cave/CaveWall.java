@@ -310,18 +310,42 @@ public class CaveWall implements EditorConstants
             ConfigElement screen;
             screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mRightView);
             mCaveModel.getViewToScreenMap().remove(mRightView);
-            screen.removeProperty(SURFACE_VIEWPORTS_PROPERTY, mRightView, context);
+
+            if (null != screen)
+            {
+               screen.removeProperty(SURFACE_VIEWPORTS_PROPERTY, mRightView, context);
+            }
+            else
+            {
+               System.out.println("No screen set for right view, so we can not remove the view.");
+            }
             mRightView = null;
             
             screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mLeftView);
-            screen.setProperty(STEREO_PROPERTY, 0, new Boolean(true), context);
+
+            if (null != screen)
+            {
+               screen.setProperty(STEREO_PROPERTY, 0, new Boolean(true), context);
+            }
+            else
+            {
+               System.out.println("No screen set for left view, so we can not enable stereo.");
+            }
             mLeftView.setProperty(VIEW_PROPERTY, 0, new String("Stereo"));
          }
          else if (stereo == MONO)
          {
             ConfigElement screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mRightView);
             mCaveModel.getViewToScreenMap().remove(mRightView);
-            screen.removeProperty(SURFACE_VIEWPORTS_PROPERTY, mRightView, context);
+
+            if (null != screen)
+            {
+               screen.removeProperty(SURFACE_VIEWPORTS_PROPERTY, mRightView, context);
+            }
+            else
+            {
+               System.out.println("No screen set for right view, so we can not remove the view.");
+            }
 
             mLeftView.setProperty(VIEW_PROPERTY, 0, new String("Left Eye"));
          }
@@ -331,7 +355,14 @@ public class CaveWall implements EditorConstants
          if (stereo == ACTIVE_STEREO)
          {
             ConfigElement screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mLeftView);
-            screen.setProperty(STEREO_PROPERTY, 0, new Boolean(true), context);
+            if (null != screen)
+            {
+               screen.setProperty(STEREO_PROPERTY, 0, new Boolean(true), context);
+            }
+            else
+            {
+               System.out.println("No screen set for left view, so we can not enable stereo.");
+            }
             mLeftView.setProperty(VIEW_PROPERTY, 0, new String("Stereo"));
          }
          else if (stereo == PASSIVE_STEREO)
@@ -352,7 +383,15 @@ public class CaveWall implements EditorConstants
             mRightView = element;
             
             mCaveModel.getViewToScreenMap().put(mRightView, screen);
-            screen.addProperty(SURFACE_VIEWPORTS_PROPERTY, mRightView, context);
+
+            if (null != screen)
+            {
+               screen.addProperty(SURFACE_VIEWPORTS_PROPERTY, mRightView, context);
+            }
+            else
+            {
+               System.out.println("No screen set for left view, so we can not just add a right.");
+            }
             
             mRightView.setProperty(VIEW_PROPERTY, 0, new String("Right Eye"));
          }
