@@ -91,8 +91,18 @@ bool Position::config(jccl::ConfigElementPtr e)
       new_filter = PositionFilterFactory::instance()->createObject(filter_id);
       if(new_filter != NULL)
       {
-         new_filter->config(cur_filter);
-         mPositionFilters.push_back(new_filter);
+         if (new_filter->config(cur_filter))
+         {
+            mPositionFilters.push_back(new_filter);
+         }
+         else
+         {
+            vprDEBUG( vprDBG_ERROR, vprDBG_CONFIG_STATUS_LVL )
+               << "   Filter [" << i << "]: Type:" << filter_id
+               << " configuration failed; " << filter_id << " will NOT "
+               << "be loaded.\n"
+               << vprDEBUG_FLUSH;
+         }
       }
       else
       {
