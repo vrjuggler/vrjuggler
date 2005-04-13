@@ -40,6 +40,7 @@
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Output.h>
+#include <gmtl/Vec.h>
 #include <gmtl/VecOps.h>
 
 #include <vpr/Util/Debug.h>
@@ -175,6 +176,11 @@ namespace gadget
                   (*itr)->getAttribute("X").getValue<double>(),
                   (*itr)->getAttribute("Y").getValue<double>(),
                   (*itr)->getAttribute("Z").getValue<double>() );
+            vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+               << "[PositionCalibrationFilter::config()] Added "
+               << alpha_value 
+               << " to the alpha vector.\n"
+               << vprDEBUG_FLUSH;
             mAlphaVec.push_back(alpha_value);
          }
          else
@@ -212,8 +218,8 @@ namespace gadget
          << mTable.size() << "x" << mTable.size() << ".\n" 
          << vprDEBUG_FLUSH;
       
-      double r_squared(100.0f);
-      double r(10.0f);
+      double r_squared(0.4f);
+      double r(0.63245553203367588f);
       mWMatrix = new double*[mTable.size()];
       for (unsigned int i = 0; i < mTable.size(); ++i)
       {
@@ -232,9 +238,9 @@ namespace gadget
                //      gmtl::length(v1 - v2) will not compile since the types 
                //      are NOT gmtl::Vec.
                gmtl::Vec3d difference = mTable[i].second - mTable[j].second;
-               double length = gmtl::length( difference );
+               //double length = gmtl::length( difference );
                mWMatrix[i][j] = gmtl::Math::sqrt( 
-                                length * length + 
+                                gmtl::dot(difference, difference) + 
                                 r_squared );
             }
             vprDEBUG(vprDBG_ALL, vprDBG_HEX_LVL)
@@ -277,7 +283,7 @@ namespace gadget
          
          gmtl::Matrix44f translation = gmtl::transpose(rotation) * itr->getPosition();
          vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-            << "[PositionCalibrationFIlter::apply()] Received tracked "
+            << "[PositionCalibrationFilter::apply()] Received tracked "
             << "position\n" << translation << "\n"
             << vprDEBUG_FLUSH;
          gmtl::Vec3d tracked_pos( translation[0][3], 
@@ -290,7 +296,7 @@ namespace gadget
          // where w[j](p) = sqrt( length( p - p[j] )^2 + R^2 )
          // where 10 <= R^2 <= 1000.
          gmtl::Vec3d real_pos(0.0f, 0.0f, 0.0f);
-         double r_squared = 100.0f;
+         double r_squared = 40.0f;
          vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
             << "[PositionCalibrationFilter::apply()] Summing real position...\n"
             << vprDEBUG_FLUSH;
@@ -301,9 +307,10 @@ namespace gadget
             //      gmtl::length(v1 - v2) will not compile since the types are 
             //      NOT gmtl::Vec.
             gmtl::Vec3d difference = tracked_pos - mTable[i].second;
-            double length = gmtl::length(difference);
+            //double length = gmtl::length(difference);
             real_pos += mAlphaVec[i] * 
-                       gmtl::Math::sqrt( length * length + r_squared ); 
+                       gmtl::Math::sqrt( gmtl::dot(difference, difference) + 
+                                         r_squared ); 
             vprDEBUG(vprDBG_ALL, vprDBG_DETAILED_LVL)
                << "[PositionCalibrationFilter::apply()] real_pos: "
                << real_pos << "\n" << vprDEBUG_FLUSH;
