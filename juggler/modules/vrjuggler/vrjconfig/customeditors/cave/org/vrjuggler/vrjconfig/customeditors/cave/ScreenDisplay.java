@@ -57,7 +57,7 @@ public class ScreenDisplay
    
    public ScreenDisplay()
    {
-      double size[][] = {{0.50, 0.50},{150}};
+      double size[][] = {{0.50, 0.50},{130}};
       mTableLayout = new TableLayout(size);
       setLayout(mTableLayout);
    }
