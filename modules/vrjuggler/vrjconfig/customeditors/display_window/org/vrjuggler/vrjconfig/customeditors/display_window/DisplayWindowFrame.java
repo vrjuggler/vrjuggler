@@ -36,10 +36,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
-import org.vrjuggler.jccl.config.ConfigBrokerProxy;
-import org.vrjuggler.jccl.config.ConfigContext;
-import org.vrjuggler.jccl.config.ConfigDefinition;
-import org.vrjuggler.jccl.config.ConfigElement;
+import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.ConfigElementAdapter;
 import org.vrjuggler.jccl.config.event.ConfigElementEvent;
 
@@ -103,8 +100,16 @@ public class DisplayWindowFrame
 
          if ( allowKbdEdit )
          {
-            mEditButton.setText("Edit Simulator Input Settings ...");
-            this.getContentPane().add(mEditButton, BorderLayout.NORTH);
+            ConfigElementPointer kbd_ptr =
+               (ConfigElementPointer) elt.getProperty(KEYBOARD_MOUSE_PTR_PROPERTY,
+                                                      0);
+
+            if ( kbd_ptr != null && kbd_ptr.getTarget() != null &&
+                 ! kbd_ptr.getTarget().equals("") )
+            {
+               mEditButton.setText("Edit Simulator Input Settings ...");
+               this.getContentPane().add(mEditButton, BorderLayout.NORTH);
+            }
          }
 
          placeMyself();
