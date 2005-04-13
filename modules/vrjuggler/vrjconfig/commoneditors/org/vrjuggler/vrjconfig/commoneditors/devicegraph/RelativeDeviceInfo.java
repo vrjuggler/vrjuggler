@@ -70,10 +70,10 @@ public class RelativeDeviceInfo
     *                           proxy types to which this device may be
     *                           configured
     */
-   public RelativeDeviceInfo(ConfigElement element, ConfigContext context,
+   public RelativeDeviceInfo(ConfigElement devElt, ConfigContext ctx,
                              List pointerPropDefs)
    {
-      super(element, context);
+      super(devElt, ctx);
       mPointerPropDefs = pointerPropDefs;
    }
 
