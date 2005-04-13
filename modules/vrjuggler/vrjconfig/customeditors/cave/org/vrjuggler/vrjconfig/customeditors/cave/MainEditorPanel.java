@@ -50,7 +50,6 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.*;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
-//import org.vrjuggler.vrjconfig.commoneditors.TransmitterTransformPanel;
 import info.clearthought.layout.*;
 
 
@@ -259,6 +258,7 @@ public class MainEditorPanel
       
       mCaveWall.setStereoMode(stereo_mode, mCaveModel.getConfigContext());
    }
+
    private void updateStereoGUI()
    {
       if (CaveWall.ACTIVE_STEREO == mCaveWall.getStereoMode())
@@ -308,39 +308,5 @@ public class MainEditorPanel
       
       this.revalidate();
       this.repaint();
-   }
-   
-   class MyCellRenderer extends JLabel implements ListCellRenderer
-   {
-      // This is the only method defined by ListCellRenderer.
-      // We just reconfigure the JLabel each time we're called.
-
-      public Component getListCellRendererComponent(JList list,
-                                                    Object value,            // value to display
-                                                    int index,               // cell index
-                                                    boolean isSelected,      // is the cell selected
-                                                    boolean cellHasFocus)    // the list and the cell have the focus
-      {
-
-         Component cmp = (Component)value;
-         if (isSelected)
-         {
-            cmp.setBackground(list.getSelectionBackground());
-            cmp.setForeground(list.getSelectionForeground());
-         }
-         else
-         {
-            cmp.setBackground(list.getBackground());
-            cmp.setForeground(list.getForeground());
-         }
-         //cmp.setEnabled(list.isEnabled());
-         //cmp.setFont(list.getFont());
-         ((JComponent)cmp).setOpaque(true);
-         ((JComponent)cmp).setMinimumSize(new Dimension(200, 200));
-         ((JComponent)cmp).setPreferredSize(new Dimension(200, 200));
-         ((JComponent)cmp).setMaximumSize(new Dimension(200, 200));
-
-         return cmp;
-      }
    }
 }
