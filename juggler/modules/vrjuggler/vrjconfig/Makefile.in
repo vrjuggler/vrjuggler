@@ -225,3 +225,5 @@ clean clobber:
 ifdef GLOBAL_BUILD
 	rm -rf $(top_srcdir)/bin
 endif
+
+cleandepend:
