@@ -96,15 +96,18 @@ public class EmbeddedElementPanel extends ExpandablePanel
       add(mNameComponent, c2);
 
       mNameComponent.setBorder(BorderFactory.createLoweredBevelBorder());
-      mNameComponent.setBackground(getBackground().brighter());
-     
+      // Save the initial background color for later use.
+      mNameComponentBG = getBackground().brighter();
+      mNameComponent.setBackground(mNameComponentBG);
+
       // The following two listeners allow the user to change the name of the
       // embedded element.
       mNameComponent.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
          {
-            mNameComponent.setBackground(getParent().getBackground());
+            // Restore the original background color.
+            mNameComponent.setBackground(mNameComponentBG);
             // Force the focus to be lost.
             mNameComponent.transferFocusUpCycle();
             // Force the focus to be transfered to the next component.
@@ -120,11 +123,12 @@ public class EmbeddedElementPanel extends ExpandablePanel
       {
          public void focusGained(FocusEvent evt)
          {
-            mNameComponent.setBackground(java.awt.Color.white);
+            mNameComponent.setBackground(Color.white);
          }
          public void focusLost(FocusEvent evt)
          {
-            mNameComponent.setBackground(getParent().getBackground());
+            // Restore the original background color.
+            mNameComponent.setBackground(mNameComponentBG);
             //stopCellEditing();
             //XXX: Change name here.
             mConfigElement.setName(mNameComponent.getText());
@@ -142,7 +146,8 @@ public class EmbeddedElementPanel extends ExpandablePanel
       return mConfigElement;
    }
 
-   private Icon                 mTypeIcon      = null;
-   private ConfigElement        mConfigElement = null;
-   private JTextField           mNameComponent = null;
+   private Icon                 mTypeIcon        = null;
+   private ConfigElement        mConfigElement   = null;
+   private JTextField           mNameComponent   = null;
+   private Color                mNameComponentBG = null;
 }
