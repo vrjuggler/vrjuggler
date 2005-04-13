@@ -43,6 +43,8 @@ if test "x$TWEEK_BASE_DIR" = "x" ; then
     exit 1
 fi
 
+EXTRA_JDK_ARGS="-Dsun.java2d.opengl=true"
+
 . $TWEEK_BASE_DIR/bin/tweek-base.sh
 
 exit $status
