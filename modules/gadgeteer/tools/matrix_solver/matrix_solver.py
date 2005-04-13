@@ -22,6 +22,12 @@ def vec_subtract(a, b):
    """
    return (a[0] - b[0], a[1] - b[1], a[2] - b[2])
    
+def vec_multiply(a, b):
+   """
+   Returns the scalar result of a dot b.
+   """
+   return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
+
 argc = len(sys.argv)
 if argc < 2 or argc > 3:
    print "Usage:  matrix_solver.py input_file [output_file]"
@@ -57,20 +63,18 @@ for e in offset_elements:
    keys_in_order.append(q)
 dbg_file.write('\nOffset Table\n')
 dbg_file.write(str(offset_table))
-# w[j](p) = sqrt( pow(length(p-p[j]), 2) + pow(R, 2) )
+# w[j](p) = sqrt( (p-p[j]) * (p-p[j]) + R^2 )
 # s.t. 10 <= pow(R, 2) <= 1000
 w_matrix_list = []
-r_squared = 100
+r_squared = 0.4
 print 'Calculating W Matrix...'
 for i in range(0, len(offset_table)):
    w_matrix_row = []
-   #p = offset_table.values()[i]
    p = offset_table[keys_in_order[i]]
    for j in range(0, len(offset_table)):
-      #pj = offset_table.values()[j]
       pj = offset_table[keys_in_order[j]]
-      p_length = length(vec_subtract(p, pj))
-      w = sqrt(p_length * p_length + r_squared)
+      p_difference = vec_subtract(p, pj)
+      w = sqrt(vec_multiply(p_difference, p_difference) + r_squared)
       w_matrix_row.append(w)
    w_matrix_list.append(w_matrix_row)
 dbg_file.write('\nW Matrix List\n')
