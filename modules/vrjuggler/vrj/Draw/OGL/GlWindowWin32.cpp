@@ -54,7 +54,7 @@ GlWindowWin32::GlWindowWin32()
    : mRenderContext(NULL)
    , mDeviceContext(NULL)
 {
-   mUseOwnDisplay = false;
+   /* Do nothing. */ ;
 }
 
 GlWindowWin32::~GlWindowWin32()
