@@ -118,8 +118,8 @@ public class DeviceGraphModel
     * Removes all the given roots from this model and any
     * <code>ConfigElement</code> objects associated with those roots.  For
     * (somewhat) finer grained control of this, see
-    * <a href="#remove(Object[],boolean)">the overload of
-    * <code>remove()</code></a> that takes a <code>booelan</code> parameter.
+    * {@linkplain #remove(Object[],boolean) the overload of
+    * <code>remove()</code>} that takes a <code>booelan</code> parameter.
     *
     * @param roots      the roots of the graph model to remove
     *
