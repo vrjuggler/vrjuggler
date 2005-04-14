@@ -395,6 +395,12 @@ public class InputWindowStartDialog
                                     TableLayoutConstraints.CENTER)
       );
       mWindowPropsPanel.add(
+         mKbdDevEditor,
+         new TableLayoutConstraints(2, 0, 5, 0,
+                                    TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mWindowPropsPanel.add(
          mLockKeyLabel,
          new TableLayoutConstraints(0, 1, 0, 1,
                                     TableLayoutConstraints.RIGHT,
