@@ -137,8 +137,7 @@ public class ProxyEditorUI
       try
       {
          initUI();
-
-         mLayoutCfgButton.setEnabled(cur_algo.createSettings() != null);
+         updateLayoutUI(cur_algo);
 
          mSelectButton.setSelected(mMarqueeHandler.isSelectionEnabled());
          mPortToggleButton.setSelected(
@@ -342,9 +341,56 @@ public class ProxyEditorUI
       mButtonBar.add(mLayoutButton);
       mButtonBar.add(mLayoutChooser);
       mButtonBar.add(mLayoutCfgButton);
+      mToolbarPanel.setLayout(new BorderLayout());
+      mToolbarPanel.add(mButtonBar, BorderLayout.CENTER);
       this.setLayout(new BorderLayout());
-      this.add(mButtonBar, BorderLayout.NORTH);
+      this.add(mToolbarPanel, BorderLayout.NORTH);
       this.add(mEditorPane, BorderLayout.CENTER);
+   }
+
+   private void updateLayoutUI(JGraphLayoutAlgorithm algo)
+   {
+      if ( algo == null )
+      {
+         mLayoutButton.setEnabled(false);
+         mLayoutCfgButton.setEnabled(false);
+
+         if ( mToolbarPanel.isAncestorOf(mLayoutHintLabel) )
+         {
+            mToolbarPanel.remove(mLayoutHintLabel);
+            mToolbarPanel.revalidate();
+            mToolbarPanel.repaint();
+         }
+      }
+      else
+      {
+         mLayoutButton.setEnabled(true);
+         mLayoutCfgButton.setEnabled(algo.createSettings() != null);
+
+         String hint = algo.getHint();
+
+         if ( hint != null && ! hint.equals("") )
+         {
+            mLayoutHintLabel.setText("<html><b>Layout hint</b>: " + hint +
+                                     "</html>");
+
+            if ( ! mToolbarPanel.isAncestorOf(mLayoutHintLabel) )
+            {
+               mToolbarPanel.add(mLayoutHintLabel, BorderLayout.SOUTH);
+               mToolbarPanel.revalidate();
+               mToolbarPanel.repaint();
+            }
+         }
+         else
+         {
+            if ( mToolbarPanel.isAncestorOf(mLayoutHintLabel) )
+            {
+               mToolbarPanel.remove(mLayoutHintLabel);
+               mToolbarPanel.revalidate();
+               mToolbarPanel.repaint();
+            }
+         }
+      }
    }
 
    private ConfigContext mContext = null;
@@ -369,6 +415,8 @@ public class ProxyEditorUI
    private ProxyEditorUI_mLayoutCfgButton_actionAdapter mLayoutBtnCfgAdapter =
       new ProxyEditorUI_mLayoutCfgButton_actionAdapter(this);
 
+   private JPanel mToolbarPanel = new JPanel();
+   private JLabel mLayoutHintLabel = new JLabel();
    private JToolBar mButtonBar = new JToolBar();
    private JButton mAddButton = new JButton();
    private JButton mRemoveButton = new JButton();
@@ -849,8 +897,7 @@ public class ProxyEditorUI
       JGraphLayoutAlgorithm cur_algo =
          (JGraphLayoutAlgorithm) mLayoutChooser.getSelectedItem();
       deviceProxyEditor.setGraphLayoutAlgorithm(cur_algo);
-
-      mLayoutCfgButton.setEnabled(cur_algo.createSettings() != null);
+      updateLayoutUI(cur_algo);
    }
 
    void mLayoutCfgButton_actionPerformed(ActionEvent actionEvent)
