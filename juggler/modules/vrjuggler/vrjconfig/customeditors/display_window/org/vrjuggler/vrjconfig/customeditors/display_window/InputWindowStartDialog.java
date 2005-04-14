@@ -562,7 +562,7 @@ public class InputWindowStartDialog
            y_pos_valid )
       {
          mOkButton.setEnabled(true);
-         validateWindowBounds();
+//         validateWindowBounds();
       }
       else
       {
@@ -574,10 +574,9 @@ public class InputWindowStartDialog
     * Ensures that the bounds of the display window are within the managed
     * area of the desktop.  If this is not the case, user confirmation is
     * requested.
-    *
-    * @param e DocumentEvent
     */
-   private void validateWindowBounds(/*DocumentEvent e*/)
+/*
+   private void validateWindowBounds()
    {
       int window_width  = Integer.parseInt(mWidthField.getText());
       int window_height = Integer.parseInt(mHeightField.getText());
@@ -605,6 +604,7 @@ public class InputWindowStartDialog
          }
       }
    }
+*/
 }
 
 class InputWindowStartDialog_mOkButton_actionAdapter
