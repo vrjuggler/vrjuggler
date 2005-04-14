@@ -127,11 +127,11 @@ public class InputWindowStartDialog
       mWinElement = winElt;
       mResolution = resolution;
 
+      String prop_name = KEYBOARD_MOUSE_PTR_PROPERTY;
       PropertyDefinition prop_def =
-         winElt.getDefinition().getPropertyDefinition(KEYBOARD_MOUSE_PTR_PROPERTY);
+         winElt.getDefinition().getPropertyDefinition(prop_name);
       mKbdDevEditor =
-         new PropertyEditorPanel(ctx,
-                                 winElt.getProperty(KEYBOARD_MOUSE_PTR_PROPERTY, 0),
+         new PropertyEditorPanel(ctx, winElt.getProperty(prop_name, 0),
                                  prop_def, winElt, 0, Color.white);
 
       prop_def =
@@ -281,13 +281,17 @@ public class InputWindowStartDialog
       mWindowPropsPanelLayout = new TableLayout(window_props_size);
 
       mBoundsPanelBorder =
-         new TitledBorder(BorderFactory.createEtchedBorder(Color.white,
-                                                           new Color(161, 161, 161)),
-                                                           "Window Bounds");
+         new TitledBorder(
+            BorderFactory.createEtchedBorder(Color.white, new Color(161, 161,
+                                                                    161)),
+            "Window Bounds"
+        );
       mWindowPropsPanelBorder =
-         new TitledBorder(BorderFactory.createEtchedBorder(Color.white,
-                                                           new Color(142, 142, 142)),
-                                                           "Window Behavior Settings");
+         new TitledBorder(
+            BorderFactory.createEtchedBorder(Color.white, new Color(142, 142,
+                                                                    142)),
+            "Window Behavior Settings"
+         );
       mMainPanel.setLayout(mMainLayout);
       mResourceLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mResourceLabel.setLabelFor(mResourceChooser);
@@ -342,66 +346,90 @@ public class InputWindowStartDialog
       mOkButton.setEnabled(false);
       mOkButton.setSelected(false);
       mOkButton.setText("OK");
-      mOkButton.addActionListener(new InputWindowStartDialog_mOkButton_actionAdapter(this));
+      mOkButton.addActionListener(
+         new InputWindowStartDialog_mOkButton_actionAdapter(this)
+      );
       mCancelButton.setText("Cancel");
-      mCancelButton.addActionListener(new InputWindowStartDialog_mCancelButton_actionAdapter(this));
+      mCancelButton.addActionListener(
+         new InputWindowStartDialog_mCancelButton_actionAdapter(this)
+      );
       mHelpButton.setEnabled(false);
       mHelpButton.setText("Help");
-      mHelpButton.addActionListener(new InputWindowStartDialog_mHelpButton_actionAdapter(this));
+      mHelpButton.addActionListener(
+         new InputWindowStartDialog_mHelpButton_actionAdapter(this)
+      );
       mBoundsPanel.setLayout(mBoundsPanelLayout);
       mBoundsPanel.setBorder(mBoundsPanelBorder);
       mWindowPropsPanel.setLayout(mWindowPropsPanelLayout);
       mWindowPropsPanel.setBorder(mWindowPropsPanelBorder);
       mButtonPanel.setLayout(mButtonPanelLayout);
       this.getContentPane().add(mMainPanel, BorderLayout.CENTER);
-      mBoundsPanel.add(mSizeLabel,
-                       new TableLayoutConstraints(0, 0, 0, 0,
-                                                  TableLayoutConstraints.RIGHT,
-                                                  TableLayoutConstraints.CENTER));
-      mBoundsPanel.add(mSizePanel,
-                       new TableLayoutConstraints(1, 0, 1, 0,
-                                                  TableLayoutConstraints.LEFT,
-                                                  TableLayoutConstraints.CENTER));
-      mBoundsPanel.add(mPositionLabel,
-                       new TableLayoutConstraints(0, 1, 0, 1,
-                                                  TableLayoutConstraints.RIGHT,
-                                                  TableLayoutConstraints.CENTER));
-      mBoundsPanel.add(mPositionPanel,
-                       new TableLayoutConstraints(1, 1, 1, 1,
-                                                  TableLayoutConstraints.LEFT,
-                                                  TableLayoutConstraints.CENTER));
-      mWindowPropsPanel.add(mKbdDevLabel,
-                            new TableLayoutConstraints(0, 0, 0, 0,
-                                                       TableLayoutConstraints.RIGHT,
-                                                       TableLayoutConstraints.CENTER));
-      mWindowPropsPanel.add(mKbdDevEditor,
-                            new TableLayoutConstraints(2, 0, 5, 0,
-                                                       TableLayoutConstraints.FULL,
-                                                       TableLayoutConstraints.CENTER));
-      mWindowPropsPanel.add(mLockKeyLabel,
-                            new TableLayoutConstraints(0, 1, 0, 1,
-                                                       TableLayoutConstraints.RIGHT,
-                                                       TableLayoutConstraints.CENTER));
-      mWindowPropsPanel.add(mLockKeyEditor,
-                            new TableLayoutConstraints(2, 1, 5, 1,
-                                                       TableLayoutConstraints.FULL,
-                                                       TableLayoutConstraints.CENTER));
-      mWindowPropsPanel.add(mStartLockedCB,
-                            new TableLayoutConstraints(0, 2, 2, 2,
-                                                       TableLayoutConstraints.RIGHT,
-                                                       TableLayoutConstraints.CENTER));
-      mWindowPropsPanel.add(mSleepTimeLabel,
-                            new TableLayoutConstraints(0, 3, 0, 3,
-                                                       TableLayoutConstraints.RIGHT,
-                                                       TableLayoutConstraints.CENTER));
-      mWindowPropsPanel.add(mSleepTimeField,
-                            new TableLayoutConstraints(2, 3, 3, 3,
-                                                       TableLayoutConstraints.FULL,
-                                                       TableLayoutConstraints.CENTER));
-      mWindowPropsPanel.add(mSleepMSLabel,
-                            new TableLayoutConstraints(5, 3, 5, 3,
-                                                       TableLayoutConstraints.LEFT,
-                                                       TableLayoutConstraints.CENTER));
+      mBoundsPanel.add(
+         mSizeLabel,
+         new TableLayoutConstraints(0, 0, 0, 0,
+                                    TableLayoutConstraints.RIGHT,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mBoundsPanel.add(
+         mSizePanel,
+         new TableLayoutConstraints(1, 0, 1, 0,
+                                    TableLayoutConstraints.LEFT,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mBoundsPanel.add(
+         mPositionLabel,
+         new TableLayoutConstraints(0, 1, 0, 1,
+                                    TableLayoutConstraints.RIGHT,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mBoundsPanel.add(
+         mPositionPanel,
+         new TableLayoutConstraints(1, 1, 1, 1,
+                                    TableLayoutConstraints.LEFT,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mWindowPropsPanel.add(
+         mKbdDevLabel,
+         new TableLayoutConstraints(0, 0, 0, 0,
+                                    TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mWindowPropsPanel.add(
+         mLockKeyLabel,
+         new TableLayoutConstraints(0, 1, 0, 1,
+                                    TableLayoutConstraints.RIGHT,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mWindowPropsPanel.add(
+         mLockKeyEditor,
+         new TableLayoutConstraints(2, 1, 5, 1,
+                                    TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mWindowPropsPanel.add(
+         mStartLockedCB,
+         new TableLayoutConstraints(0, 2, 2, 2,
+                                    TableLayoutConstraints.RIGHT,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mWindowPropsPanel.add(
+         mSleepTimeLabel,
+         new TableLayoutConstraints(0, 3, 0, 3,
+                                    TableLayoutConstraints.RIGHT,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mWindowPropsPanel.add(
+         mSleepTimeField,
+         new TableLayoutConstraints(2, 3, 3, 3,
+                                    TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mWindowPropsPanel.add(
+         mSleepMSLabel,
+         new TableLayoutConstraints(5, 3, 5, 3,
+                                    TableLayoutConstraints.LEFT,
+                                    TableLayoutConstraints.CENTER)
+      );
       mPositionPanel.add(mPositionXField, null);
       mPositionPanel.add(mPositionXLabel, null);
       mPositionPanel.add(mPositionYField, null);
@@ -561,11 +589,13 @@ public class InputWindowStartDialog
            window_height + window_pos_y > mResolution.height )
       {
          int answer =
-            JOptionPane.showConfirmDialog(this,
-                                          "Do you want the window to open outside the managed area?",
-                                          "Input Window Outside Managed Area",
-                                          JOptionPane.YES_NO_OPTION,
-                                          JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showConfirmDialog(
+               this,
+               "Do you want the window to open outside the managed area?",
+               "Input Window Outside Managed Area",
+               JOptionPane.YES_NO_OPTION,
+               JOptionPane.WARNING_MESSAGE
+            );
 
          if ( answer == JOptionPane.YES_OPTION )
          {
