@@ -90,6 +90,8 @@ public class DisplayWindowFrame
          new DisplayWindowFrame_this_configElementAdapter(this);
       mElement.addConfigElementListener(mElementListener);
 
+      mAllowKbdEdit = allowKbdEdit;
+
       try
       {
          mViewportEditor = new ViewportPlacer(this.getSize(), mContext,
@@ -98,7 +100,7 @@ public class DisplayWindowFrame
 
          jbInit();
 
-         if ( allowKbdEdit )
+         if ( mAllowKbdEdit )
          {
             ConfigElementPointer kbd_ptr =
                (ConfigElementPointer) elt.getProperty(KEYBOARD_MOUSE_PTR_PROPERTY,
@@ -107,7 +109,6 @@ public class DisplayWindowFrame
             if ( kbd_ptr != null && kbd_ptr.getTarget() != null &&
                  ! kbd_ptr.getTarget().equals("") )
             {
-               mEditButton.setText("Edit Simulator Input Settings ...");
                this.getContentPane().add(mEditButton, BorderLayout.NORTH);
             }
          }
@@ -272,6 +273,7 @@ public class DisplayWindowFrame
       mWinStereoItem.setSelected(stereo);
    }
 
+   private boolean mAllowKbdEdit = false;
    private DisplayWindowFrame_this_configElementAdapter mElementListener = null;
    private boolean mHideMouse = false;
 //   private boolean mMousePressed = false;
@@ -604,7 +606,53 @@ public class DisplayWindowFrame
 
    void displayPropertyChanged(ConfigElementEvent e)
    {
-      updateContextMenuItems();
+      // This constant name is just too long.
+      String prop_name = KEYBOARD_MOUSE_PTR_PROPERTY;
+
+      if ( mAllowKbdEdit && e.getProperty().equals(prop_name) )
+      {
+         ConfigElementPointer val =
+            (ConfigElementPointer) mElement.getProperty(prop_name, 0);
+
+         // If the config element pointer has is non-null and has a target,
+         // check its current value and determine what to do with mEditButton.
+         if ( val != null && val.getTarget() != null )
+         {
+            boolean in_layout = this.getContentPane().isAncestorOf(mEditButton);
+
+            // If mEditButton is in the content pane and the new value of the
+            // pointer is empty, then we need to remove mEditButton from the
+            // content pane.
+            if ( in_layout && val.getTarget().equals("") )
+            {
+               this.getContentPane().remove(mEditButton);
+            }
+            // if mEditButton is not in the content pane and the new value of
+            // the pointer is non-empty, then we need to add mEditButton to
+            // the content pane.
+            else if ( ! in_layout && ! val.getTarget().equals("") )
+            {
+               this.getContentPane().add(mEditButton, BorderLayout.NORTH);
+            }
+         }
+         // If the config element pointer has no value and mEditButton is in
+         // the content pane, then mEditButton must be removed from the content
+         // pane.
+         else
+         {
+            if ( this.getContentPane().isAncestorOf(mEditButton) )
+            {
+               this.getContentPane().remove(mEditButton);
+            }
+         }
+
+         this.revalidate();
+         this.repaint();
+      }
+      else
+      {
+         updateContextMenuItems();
+      }
    }
 
    protected void updateSize(Rectangle newBounds)
