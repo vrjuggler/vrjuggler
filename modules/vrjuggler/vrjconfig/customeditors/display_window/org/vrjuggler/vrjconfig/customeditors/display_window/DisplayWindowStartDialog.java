@@ -403,9 +403,8 @@ public class DisplayWindowStartDialog
       //    0 -> panel start
       //    1 -> window name label
       //    2 -> spacer between window name label and window name field
-      //    3 -> window name field start, lame space for mResourceChooser
-      //    4 -> window name field end
-      //    5 -> panel end
+      //    3 -> window name field, resource chooser
+      //    4 -> panel end
       double[][] main_size =
          {
             {5, TableLayout.MINIMUM, 5, TableLayout.FILL, 5},
