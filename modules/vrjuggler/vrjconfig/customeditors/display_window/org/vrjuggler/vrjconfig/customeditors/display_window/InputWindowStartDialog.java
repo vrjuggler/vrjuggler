@@ -243,12 +243,11 @@ public class InputWindowStartDialog
       //    0 -> panel start
       //    1 -> window name label
       //    2 -> spacer between window name label and window name field
-      //    3 -> window name field start, lame space for mResourceChooser
-      //    4 -> window name field end
-      //    5 -> panel end
+      //    3 -> window name field, resource chooser
+      //    4 -> panel end
       double[][] main_size =
          {
-            {5, TableLayout.MINIMUM, 5, 300, TableLayout.FILL, 5},
+            {5, TableLayout.MINIMUM, 5, TableLayout.FILL, 5},
             {TableLayout.PREFERRED, TableLayout.PREFERRED,
              TableLayout.PREFERRED, TableLayout.PREFERRED}
          };
@@ -293,6 +292,13 @@ public class InputWindowStartDialog
       mResourceLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mResourceLabel.setLabelFor(mResourceChooser);
       mResourceLabel.setText("Resource");
+      int max_width = 350;
+      Dimension max_size = mResourceChooser.getMaximumSize();
+      Dimension pref_size = mResourceChooser.getPreferredSize();
+      mResourceChooser.setMaximumSize(new Dimension(max_width,
+                                                    max_size.height));
+      mResourceChooser.setPreferredSize(new Dimension(max_width,
+                                                      pref_size.height));
       mNameLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mNameLabel.setLabelFor(mNameField);
       mNameLabel.setText("Window Name");
@@ -370,7 +376,7 @@ public class InputWindowStartDialog
                                                        TableLayoutConstraints.CENTER));
       mWindowPropsPanel.add(mKbdDevEditor,
                             new TableLayoutConstraints(2, 0, 5, 0,
-                                                       TableLayoutConstraints.LEFT,
+                                                       TableLayoutConstraints.FULL,
                                                        TableLayoutConstraints.CENTER));
       mWindowPropsPanel.add(mLockKeyLabel,
                             new TableLayoutConstraints(0, 1, 0, 1,
@@ -378,7 +384,7 @@ public class InputWindowStartDialog
                                                        TableLayoutConstraints.CENTER));
       mWindowPropsPanel.add(mLockKeyEditor,
                             new TableLayoutConstraints(2, 1, 5, 1,
-                                                       TableLayoutConstraints.LEFT,
+                                                       TableLayoutConstraints.FULL,
                                                        TableLayoutConstraints.CENTER));
       mWindowPropsPanel.add(mStartLockedCB,
                             new TableLayoutConstraints(0, 2, 2, 2,
@@ -415,15 +421,15 @@ public class InputWindowStartDialog
                                                 TableLayoutConstraints.RIGHT,
                                                 TableLayoutConstraints.CENTER));
       mMainPanel.add(mNameField,
-                     new TableLayoutConstraints(3, 1, 4, 1,
+                     new TableLayoutConstraints(3, 1, 3, 1,
                                                 TableLayoutConstraints.FULL,
                                                 TableLayoutConstraints.CENTER));
       mMainPanel.add(mBoundsPanel,
-                     new TableLayoutConstraints(0, 2, 5, 2,
+                     new TableLayoutConstraints(0, 2, 4, 2,
                                                 TableLayoutConstraints.FULL,
                                                 TableLayoutConstraints.FULL));
       mMainPanel.add(mWindowPropsPanel,
-                     new TableLayoutConstraints(0, 3, 5, 3,
+                     new TableLayoutConstraints(0, 3, 4, 3,
                                                 TableLayoutConstraints.FULL,
                                                 TableLayoutConstraints.FULL));
       this.getContentPane().add(mButtonPanel, BorderLayout.SOUTH);
