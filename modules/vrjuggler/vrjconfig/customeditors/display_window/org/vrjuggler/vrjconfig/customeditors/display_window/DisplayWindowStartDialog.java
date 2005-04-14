@@ -448,7 +448,7 @@ public class DisplayWindowStartDialog
       double[][] window_props_size =
          {
             {TableLayout.PREFERRED, 5, 20, TableLayout.MINIMUM, 5,
-             TableLayout.MINIMUM},
+             TableLayout.PREFERRED, 5},
             {TableLayout.PREFERRED, TableLayout.PREFERRED,
              TableLayout.PREFERRED, TableLayout.PREFERRED,
              TableLayout.PREFERRED, TableLayout.PREFERRED,
