@@ -53,13 +53,11 @@ namespace vrjTest
 {
 
 // Utility function to draw a cube
-void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
-                GLdouble z0, GLdouble z1, GLenum type );
+void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
+             GLdouble z0, GLdouble z1, GLenum type);
 
 //----------------------------------------------------
-//: Demonstration OpenGL application class
-//
-// This application simply renders a box on the wand
+// Demonstration OpenGL application class with sound
 //----------------------------------------------------
 class sonixApp : public vrj::GlApp
 {
@@ -70,7 +68,8 @@ public:
    {;}
 
    // Destructor.
-   virtual ~sonixApp (void) {
+   virtual ~sonixApp()
+   {
       /* Do nothing. */ ;
    }
 
