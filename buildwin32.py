@@ -182,7 +182,7 @@ def getDefaultVars():
                                'Directory containing the Boost C++ header tree',
                                ''))
    required.append(BuildOption('BOOST_TOOL',
-                               'The Boost.Build toolset used to compile Boost C++',
+                               'The Boost.Build toolset library name component',
                                boost_tool_fallback, False))
    required.append(BuildOption('NSPR_ROOT', 'NSPR installation directory', ''))
    required.append(BuildOption('CPPDOM_ROOT', 'CppDOM installation directory',
