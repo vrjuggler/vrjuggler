@@ -56,7 +56,7 @@ void sonixApp::preFrame()
 {
    if(mButton0->getData() == gadget::Digital::ON)
    {
-            sound.trigger();
+      sound.trigger();
    }
 }
 
@@ -82,18 +82,37 @@ void sonixApp::myDraw()
          //glColor3f(1.0f, 0.0f, 1.0f);
          float wand_color[3];
          wand_color[0] = wand_color[1] = wand_color[2] = 0.0f;
+
          if(mButton0->getData() == gadget::Digital::ON)
+         {
             wand_color[0] += 0.5f;
+         }
+
          if(mButton1->getData() == gadget::Digital::ON)
+         {
             wand_color[1] += 0.5f;
+         }
+
          if(mButton2->getData() == gadget::Digital::ON)
+         {
             wand_color[2] += 0.5f;
+         }
+
          if(mButton3->getData() == gadget::Digital::ON)
+         {
             wand_color[0] += 0.5f;
+         }
+
          if(mButton4->getData() == gadget::Digital::ON)
+         {
             wand_color[1] += 0.5f;
+         }
+
          if(mButton5->getData() == gadget::Digital::ON)
+         {
             wand_color[2] += 0.5f;
+         }
+
          glColor3fv(wand_color);
          glScalef(0.25f, 0.25f, 0.25f);
          drawCube();
@@ -102,13 +121,12 @@ void sonixApp::myDraw()
          // A little laser pointer
       glLineWidth(5.0f);
 
-
       // Draw Axis
       glDisable(GL_LIGHTING);
       glPushMatrix();
          glMultMatrixf(wandMatrix.mData);    // Goto wand position
 
-         gmtl::Vec3f x_axis(7.0f,0.0f,0.0f);
+         gmtl::Vec3f x_axis(7.0f, 0.0f, 0.0f);
          gmtl::Vec3f y_axis(0.0f, 7.0f, 0.0f);
          gmtl::Vec3f z_axis(0.0f, 0.0f, 7.0f);
          gmtl::Vec3f origin(0.0f, 0.0f, 0.0f);
@@ -129,13 +147,12 @@ void sonixApp::myDraw()
       glPopMatrix();
       glEnable(GL_LIGHTING);
    glPopMatrix();
-
 }
 
 void sonixApp::initSonix()
 {
    // initialize a sound
-   sound.init( "sol");
+   sound.init("sol");
 
    // initialize sonix with openal
    snx::sonix::instance()->changeAPI("Stub");
@@ -148,31 +165,30 @@ void sonixApp::initSonix()
    snx::sonix::instance()->changeAPI("OpenAL");
 }
 
-
 void sonixApp::initGLState()
 {
-   GLfloat light0_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
-   GLfloat light0_diffuse[] = { 0.8f,  0.8f,  0.8f,  1.0f};
-   GLfloat light0_specular[] = { 1.0f,  1.0f,  1.0f,  1.0f};
-   GLfloat light0_position[] = {0.0f, 0.75f, 0.75f, 0.0f};
+   GLfloat light0_ambient[]  = { 0.1f,  0.1f,  0.1f, 1.0f };
+   GLfloat light0_diffuse[]  = { 0.8f,  0.8f,  0.8f, 1.0f };
+   GLfloat light0_specular[] = { 1.0f,  1.0f,  1.0f, 1.0f };
+   GLfloat light0_position[] = { 0.0f, 0.75f, 0.75f, 0.0f };
 
-   GLfloat mat_ambient[] = { 0.7f, 0.7f, 0.7f, 1.0f };
-   GLfloat mat_diffuse[] = { 1.0f, 0.5f, 0.8f, 1.0f };
-   GLfloat mat_specular[] = { 1.0,  1.0,  1.0,  1.0};
-   GLfloat mat_shininess[] = { 50.0};
-   GLfloat mat_emission[] = { 1.0,  1.0,  1.0,  1.0};
-   GLfloat no_mat[] = { 0.0,  0.0,  0.0,  1.0};
+   GLfloat mat_ambient[]   = { 0.7f, 0.7f, 0.7f, 1.0f };
+   GLfloat mat_diffuse[]   = { 1.0f, 0.5f, 0.8f, 1.0f };
+   GLfloat mat_specular[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
+   GLfloat mat_shininess[] = { 50.0f };
+   GLfloat mat_emission[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
+   GLfloat no_mat[]        = { 0.0f, 0.0f, 0.0f, 1.0f };
 
-   glLightfv(GL_LIGHT0, GL_AMBIENT,  light0_ambient);
-   glLightfv(GL_LIGHT0, GL_DIFFUSE,  light0_diffuse);
-   glLightfv(GL_LIGHT0, GL_SPECULAR,  light0_specular);
-   glLightfv(GL_LIGHT0, GL_POSITION,  light0_position);
+   glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient);
+   glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
+   glLightfv(GL_LIGHT0, GL_SPECULAR, light0_specular);
+   glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
 
-   glMaterialfv( GL_FRONT, GL_AMBIENT, mat_ambient );
-   glMaterialfv( GL_FRONT,  GL_DIFFUSE, mat_diffuse );
-   glMaterialfv( GL_FRONT, GL_SPECULAR, mat_specular );
-   glMaterialfv( GL_FRONT,  GL_SHININESS, mat_shininess );
-   glMaterialfv( GL_FRONT,  GL_EMISSION, no_mat);
+   glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+   glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+   glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+   glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+   glMaterialfv(GL_FRONT, GL_EMISSION, no_mat);
 
    glEnable(GL_DEPTH_TEST);
    glEnable(GL_NORMALIZE);
@@ -182,20 +198,29 @@ void sonixApp::initGLState()
    glShadeModel(GL_SMOOTH);
 }
 
-//: Utility function for drawing a cube
+// Utility function for drawing a cube
 void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
              GLdouble z0, GLdouble z1, GLenum type)
 {
-   static GLdouble n[6][3] = {
-      {-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {1.0, 0.0, 0.0},
-      {0.0, -1.0, 0.0}, {0.0, 0.0, 1.0}, {0.0, 0.0, -1.0}
-   };
-   static GLint faces[6][4] = {
-      { 0, 1, 2, 3}, { 3, 2, 6, 7}, { 7, 6, 5, 4},
-      { 4, 5, 1, 0}, { 5, 6, 2, 1}, { 7, 4, 0, 3}
-   };
+   static GLdouble n[6][3] =
+      {
+         { -1.0, 0.0, 0.0 },
+         { 0.0, 1.0, 0.0 },
+         { 1.0, 0.0, 0.0 },
+         { 0.0, -1.0, 0.0 },
+         { 0.0, 0.0, 1.0 },
+         { 0.0, 0.0, -1.0 }
+      };
+   static GLint faces[6][4] =
+      {
+         { 0, 1, 2, 3 },
+         { 3, 2, 6, 7 },
+         { 7, 6, 5, 4 },
+         { 4, 5, 1, 0 },
+         { 5, 6, 2, 1 },
+         { 7, 4, 0, 3 }
+      };
    GLdouble v[8][3], tmp;
-   GLint i;
 
    if (x0 > x1)
    {
@@ -209,6 +234,7 @@ void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
    {
       tmp = z0; z0 = z1; z1 = tmp;
    }
+
    v[0][0] = v[1][0] = v[2][0] = v[3][0] = x0;
    v[4][0] = v[5][0] = v[6][0] = v[7][0] = x1;
    v[0][1] = v[1][1] = v[4][1] = v[5][1] = y0;
@@ -216,7 +242,7 @@ void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
    v[0][2] = v[3][2] = v[4][2] = v[7][2] = z0;
    v[1][2] = v[2][2] = v[5][2] = v[6][2] = z1;
 
-   for (i = 0; i < 6; i++)
+   for ( GLint i = 0; i < 6; ++i )
    {
       glBegin(type);
          glNormal3dv(&n[i][0]);
