@@ -176,7 +176,6 @@ void sonixApp::initGLState()
    GLfloat mat_diffuse[]   = { 1.0f, 0.5f, 0.8f, 1.0f };
    GLfloat mat_specular[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
    GLfloat mat_shininess[] = { 50.0f };
-   GLfloat mat_emission[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
    GLfloat no_mat[]        = { 0.0f, 0.0f, 0.0f, 1.0f };
 
    glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient);
