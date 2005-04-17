@@ -65,21 +65,15 @@ void sonixApp::preFrame()
 //----------------------------------------------
 void sonixApp::myDraw()
 {
-   //std::cout << "\n--- myDraw() ---\n";
-
-   //std::cout << "HeadPos:" << vrj::Coord(*mHead->getData()).pos << "\t"
-   //          << "WandPos:" << vrj::Coord(*mWand->getData()).pos << std::endl;
-
    glMatrixMode(GL_MODELVIEW);
 
       // -- Draw box on wand --- //
    gmtl::Matrix44f wandMatrix = mWand->getData();      // Get the wand matrix
 
    glPushMatrix();
-      // cout << "wand:\n" << *wandMatrix << endl;
       glPushMatrix();
          glMultMatrixf(wandMatrix.mData);  // Push the wand matrix on the stack
-         //glColor3f(1.0f, 0.0f, 1.0f);
+
          float wand_color[3];
          wand_color[0] = wand_color[1] = wand_color[2] = 0.0f;
 
