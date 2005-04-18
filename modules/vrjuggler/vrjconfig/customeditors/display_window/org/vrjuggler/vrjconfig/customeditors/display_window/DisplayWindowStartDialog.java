@@ -437,17 +437,12 @@ public class DisplayWindowStartDialog
       // Colums are as follows:
       //    0 -> editor label
       //    1 -> spacer betweeen label and editor
-      //    2 -> start for lock key and sleep time editors; end for checkbox
-      //         editor
-      //    3 -> end for sleep time editor
-      //    4 -> spacer between sleep time editor and sleep time units label
-      //    5 -> end for lock key editor; unit label for sleep time editor
-      //
-      // NOTE: Column 2 is a hack to make it appear as though the check box
-      // is two separate UI components.
+      //    2 -> start for editors; end for sleep time editor
+      //    3 -> spacer between sleep time editor and sleep time units label
+      //    4 -> end for lock key editor; unit label for sleep time editor
       double[][] window_props_size =
          {
-            {TableLayout.PREFERRED, 5, 20, TableLayout.MINIMUM, 5,
+            {TableLayout.PREFERRED, 5, TableLayout.MINIMUM, 5,
              TableLayout.PREFERRED, 5},
             {TableLayout.PREFERRED, TableLayout.PREFERRED,
              TableLayout.PREFERRED, TableLayout.PREFERRED,
@@ -547,19 +542,31 @@ public class DisplayWindowStartDialog
       mAccumAlphaDepthLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mAccumAlphaDepthLabel.setLabelFor(mAccumAlphaDepthSpinner);
       mAccumAlphaDepthLabel.setText("Accumulation Alpha Depth");
-      mBorderCheckbox.setHorizontalTextPosition(SwingConstants.LEFT);
+      mBorderLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mBorderLabel.setLabelFor(mBorderCheckbox);
+      mBorderLabel.setText("Has border");
+      mBorderCheckbox.setHorizontalTextPosition(SwingConstants.RIGHT);
       mBorderCheckbox.setSelected(true);
-      mBorderCheckbox.setText("Has border");
-      mStereoCheckbox.setHorizontalTextPosition(SwingConstants.LEFT);
-      mStereoCheckbox.setText("Render in stereo");
-      mHideMouseCheckbox.setHorizontalTextPosition(SwingConstants.LEFT);
-      mHideMouseCheckbox.setText("Hide mouse inside window");
+      mBorderCheckbox.setText("");
+      mStereoLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mStereoLabel.setLabelFor(mStereoCheckbox);
+      mStereoLabel.setText("Render in stereo");
+      mStereoCheckbox.setHorizontalTextPosition(SwingConstants.RIGHT);
+      mStereoCheckbox.setText("");
+      mHideMouseLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mHideMouseLabel.setLabelFor(mHideMouseCheckbox);
+      mHideMouseLabel.setText("Hide mouse inside window");
+      mHideMouseCheckbox.setHorizontalTextPosition(SwingConstants.RIGHT);
+      mHideMouseCheckbox.setText("");
       mKbdDevLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mKbdDevLabel.setText("Keyboard/Mouse");
       mLockKeyLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mLockKeyLabel.setText("Lock Key");
-      mStartLockedCB.setText("Start Locked");
-      mStartLockedCB.setHorizontalTextPosition(SwingConstants.LEFT);
+      mStartLockedLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mStartLockedLabel.setLabelFor(mStartLockedCB);
+      mStartLockedLabel.setText("Start Locked");
+      mStartLockedCB.setText("");
+      mStartLockedCB.setHorizontalTextPosition(SwingConstants.RIGHT);
       mSleepTimeLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mSleepTimeLabel.setLabelFor(mSleepTimeField);
       mSleepTimeLabel.setText("Sleep Time");
@@ -758,17 +765,32 @@ public class DisplayWindowStartDialog
          new TableLayoutConstraints(0, 12, 1, 12, TableLayoutConstraints.LEFT,
                                     TableLayoutConstraints.CENTER)
       );
+      mWindowPropsPanel.add(
+         mBorderLabel,
+         new TableLayoutConstraints(0, 0, 0, 0, TableLayoutConstraints.RIGHT,
+                                    TableLayoutConstraints.CENTER)
+      );
       mWindowPropsPanel.add(mBorderCheckbox,
-                     new TableLayoutConstraints(0, 0, 2, 0,
-                                                TableLayoutConstraints.RIGHT,
+                     new TableLayoutConstraints(2, 0, 2, 0,
+                                                TableLayoutConstraints.LEFT,
                                                 TableLayoutConstraints.CENTER));
+      mWindowPropsPanel.add(
+         mStereoLabel,
+         new TableLayoutConstraints(0, 1, 0, 1, TableLayoutConstraints.RIGHT,
+                                    TableLayoutConstraints.CENTER)
+      );
       mWindowPropsPanel.add(mStereoCheckbox,
-                     new TableLayoutConstraints(0, 1, 2, 1,
-                                                TableLayoutConstraints.RIGHT,
+                     new TableLayoutConstraints(2, 1, 2, 1,
+                                                TableLayoutConstraints.LEFT,
                                                 TableLayoutConstraints.CENTER));
+      mWindowPropsPanel.add(
+         mHideMouseLabel,
+         new TableLayoutConstraints(0, 2, 0, 2, TableLayoutConstraints.RIGHT,
+                                    TableLayoutConstraints.CENTER)
+      );
       mWindowPropsPanel.add(mHideMouseCheckbox,
-                     new TableLayoutConstraints(0, 2, 2, 2,
-                                                TableLayoutConstraints.RIGHT,
+                     new TableLayoutConstraints(2, 2, 2, 2,
+                                                TableLayoutConstraints.LEFT,
                                                 TableLayoutConstraints.CENTER));
       mWindowPropsPanel.add(
          mKbdDevLabel,
@@ -777,7 +799,7 @@ public class DisplayWindowStartDialog
       );
       mWindowPropsPanel.add(
          mKbdDevEditor,
-         new TableLayoutConstraints(2, 3, 5, 3, TableLayoutConstraints.FULL,
+         new TableLayoutConstraints(2, 3, 4, 3, TableLayoutConstraints.FULL,
                                     TableLayoutConstraints.CENTER)
       );
       mWindowPropsPanel.add(
@@ -787,12 +809,17 @@ public class DisplayWindowStartDialog
       );
       mWindowPropsPanel.add(
          mLockKeyEditor,
-         new TableLayoutConstraints(2, 4, 5, 4, TableLayoutConstraints.FULL,
+         new TableLayoutConstraints(2, 4, 4, 4, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mWindowPropsPanel.add(
+         mStartLockedLabel,
+         new TableLayoutConstraints(0, 5, 0, 5, TableLayoutConstraints.RIGHT,
                                     TableLayoutConstraints.CENTER)
       );
       mWindowPropsPanel.add(
          mStartLockedCB,
-         new TableLayoutConstraints(0, 5, 2, 5, TableLayoutConstraints.RIGHT,
+         new TableLayoutConstraints(2, 5, 2, 5, TableLayoutConstraints.LEFT,
                                     TableLayoutConstraints.CENTER)
       );
       mWindowPropsPanel.add(
@@ -802,12 +829,12 @@ public class DisplayWindowStartDialog
       );
       mWindowPropsPanel.add(
          mSleepTimeField,
-         new TableLayoutConstraints(2, 6, 3, 6, TableLayoutConstraints.FULL,
+         new TableLayoutConstraints(2, 6, 2, 6, TableLayoutConstraints.FULL,
                                     TableLayoutConstraints.CENTER)
       );
       mWindowPropsPanel.add(
          mSleepMSLabel,
-         new TableLayoutConstraints(5, 6, 5, 6, TableLayoutConstraints.LEFT,
+         new TableLayoutConstraints(4, 6, 4, 6, TableLayoutConstraints.LEFT,
                                     TableLayoutConstraints.CENTER)
       );
       mMainPanel.add(mResourceLabel,
@@ -922,13 +949,17 @@ public class DisplayWindowStartDialog
    private JPanel mWindowPropsPanel = new JPanel();
    private TableLayout mWindowPropsPanelLayout = null;
    private TitledBorder mWindowPropsPanelBorder;
+   private JLabel mBorderLabel = new JLabel();
    private JCheckBox mBorderCheckbox = new JCheckBox();
+   private JLabel mStereoLabel = new JLabel();
    private JCheckBox mStereoCheckbox = new JCheckBox();
+   private JLabel mHideMouseLabel = new JLabel();
    private JCheckBox mHideMouseCheckbox = new JCheckBox();
    private JLabel mKbdDevLabel = new JLabel();
    private PropertyEditorPanel mKbdDevEditor = null;
    private JLabel mLockKeyLabel = new JLabel();
    private PropertyEditorPanel mLockKeyEditor = null;
+   private JLabel mStartLockedLabel = new JLabel();
    private JCheckBox mStartLockedCB = new JCheckBox();
    private JLabel mSleepTimeLabel = new JLabel();
    private JFormattedTextField mSleepTimeField = new JFormattedTextField();
