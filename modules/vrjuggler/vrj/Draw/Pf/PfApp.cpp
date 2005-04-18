@@ -44,11 +44,6 @@ PfApp::PfApp(Kernel* kern) : App(kern)
    /* Do nothing. */ ;
 }
 
-PfApp::PfApp()
-{
-   /* Do nothing. */ ;
-}
-
 PfApp::~PfApp()
 {
    /* Do nothing. */ ;

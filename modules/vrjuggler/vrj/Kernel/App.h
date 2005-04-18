@@ -88,14 +88,10 @@ public:
     *
     * @param kern The vrj::Kernel instance that is active (so that the
     *             application has easy access to the kernel).
+    *             If NULL, defaults to value from vrj::Kernel::instance()
     */
-   App(Kernel* kern);
+   App(Kernel* kern=NULL);
 
-   /**
-    * Sets the internal kernel handle to the value returned by
-    * vrj::Kernel::instance().
-    */ 
-   App();
 
    virtual ~App()
    {

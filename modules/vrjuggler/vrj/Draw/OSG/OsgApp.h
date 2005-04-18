@@ -62,12 +62,7 @@ namespace vrj
 class OsgApp : public GlApp
 {
 public:
-   OsgApp(Kernel* kern) : GlApp(kern)
-   {
-      ;
-   }
-
-   OsgApp() : GlApp()
+   OsgApp(Kernel* kern=NULL) : GlApp(kern)
    {
       ;
    }

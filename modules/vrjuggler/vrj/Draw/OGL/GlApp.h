@@ -80,9 +80,7 @@ namespace vrj
 class VJ_CLASS_API GlApp : public App
 {
 public:
-   GlApp(Kernel* kern);
-
-   GlApp();
+   GlApp(Kernel* kern=NULL);
 
    virtual ~GlApp();
 
