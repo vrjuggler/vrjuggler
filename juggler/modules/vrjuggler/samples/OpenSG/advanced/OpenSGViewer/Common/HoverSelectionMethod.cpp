@@ -126,7 +126,7 @@ void HoverSelectionMethod::updateSelection()
    bool           does_isect(false);
    OSG::NodePtr   cur_node(mCurSelectedNode);
    
-   if(cur_node != osg::NullFC)
+   if(cur_node != OSG::NullFC)
    {
        does_isect = this->intersect(cur_node, vw_M_wand);
    }
@@ -147,7 +147,7 @@ void HoverSelectionMethod::updateSelection()
    }
    else
    {
-      mCurSelectedNode = osg::NullFC;
+      mCurSelectedNode = OSG::NullFC;
    }
 
    // -- UPDATE LOCAL STATE --- //
@@ -264,22 +264,22 @@ bool HoverSelectionMethod::intersect(OSG::NodePtr node, gmtl::Matrix44f wandWorl
    gmtl::Matrix44f plat_M_virt =  mViewer->getUser()->viewPlatform().getTransform_platMvirt();
    gmtl::Matrix44f plat_M_wand = plat_M_virt * wandWorldPos;
 
-   osg::Matrix osg_wand_pos;
+   OSG::Matrix osg_wand_pos;
    gmtl::set(osg_wand_pos, plat_M_wand);
-   osg::Pnt3f osg_wand_pos_pnt(0.0f, 0.0f, 0.0f);
+   OSG::Pnt3f osg_wand_pos_pnt(0.0f, 0.0f, 0.0f);
    osg_wand_pos.multFullMatrixPnt(osg_wand_pos_pnt);
 
-   osg::DynamicVolume bounding_volume;
+   OSG::DynamicVolume bounding_volume;
    node->getWorldVolume(bounding_volume);
 
    bool does_isect = bounding_volume.intersect(osg_wand_pos_pnt);
 
    // --- Debugging
-   osg::Matrix osg_wand_pos_vw;
+   OSG::Matrix osg_wand_pos_vw;
    gmtl::set(osg_wand_pos_vw, wandWorldPos);
    updateWandRep(osg_wand_pos_vw);        // Update the wand pos rep
 
-   osg::Pnt3f min_pnt, max_pnt;
+   OSG::Pnt3f min_pnt, max_pnt;
    bounding_volume.getBounds(min_pnt, max_pnt);
 
    gmtl::Vec3f wand_pos_pnt;
@@ -313,17 +313,17 @@ void HoverSelectionMethod::setHighlightState(bool newState)
    {
       vprASSERT(mHighlightNode->getParent() == OSG::NullFC);      // We should not have parent
 
-      osg::beginEditCP(vw_root);
+      OSG::beginEditCP(vw_root);
          vw_root->addChild(mHighlightNode);
-      osg::endEditCP(vw_root);
+      OSG::endEditCP(vw_root);
    }
    else                    // Set not highlighted
    {
       if(mHighlightNode->getParent() != OSG::NullFC)
       {
-         osg::beginEditCP(vw_root);
+         OSG::beginEditCP(vw_root);
             vw_root->subChild(mHighlightNode);
-         osg::endEditCP(vw_root);
+         OSG::endEditCP(vw_root);
       }
    }
 }
@@ -331,12 +331,12 @@ void HoverSelectionMethod::setHighlightState(bool newState)
 /** Set the current state of the grabbed */
 void HoverSelectionMethod::setHighlightColor(float r, float g, float b)
 {
-   vprASSERT (mHighlightMaterial != osg::NullFC);
+   vprASSERT (mHighlightMaterial != OSG::NullFC);
 
    // Set color based on state
-   osg::beginEditCP(mHighlightMaterial);
-      mHighlightMaterial->setDiffuse (osg::Color3f(r,g,b));     
-   osg::endEditCP(mHighlightMaterial);
+   OSG::beginEditCP(mHighlightMaterial);
+      mHighlightMaterial->setDiffuse (OSG::Color3f(r,g,b));     
+   OSG::endEditCP(mHighlightMaterial);
 }
 
 
@@ -346,37 +346,37 @@ void HoverSelectionMethod::setHighlightColor(float r, float g, float b)
 void HoverSelectionMethod::updateHighlightGeom(void)
 {
    //vprASSERT(mSelected);
-   vprASSERT(mHighlightNode != osg::NullFC);
-   vprASSERT(mCurSelectedNode != osg::NullFC);
+   vprASSERT(mHighlightNode != OSG::NullFC);
+   vprASSERT(mCurSelectedNode != OSG::NullFC);
 
     // calc the world bbox of the highlight object
-    osg::DynamicVolume vol;
+    OSG::DynamicVolume vol;
     mCurSelectedNode->getWorldVolume(vol);
 
     // We have to transform the volume back into virtual world coord system (instead of platform coord system)
     // because this bounding volume is drawn as a child of the root OSG node (which has the platform xform on it)
     gmtl::Matrix44f vw_M_plat =  mViewer->getUser()->viewPlatform().getTransform_virtMplat();
-    osg::Matrix osg_vw_M_plat;
+    OSG::Matrix osg_vw_M_plat;
     gmtl::set(osg_vw_M_plat, vw_M_plat);
 
     vol.transform(osg_vw_M_plat);      // Transform back into virtual world
 
-    osg::Pnt3f min_pt,max_pt;
+    OSG::Pnt3f min_pt,max_pt;
     vol.getBounds(min_pt, max_pt);
 
-    osg::beginEditCP(mHighlightPoints);
-       mHighlightPoints->setValue(osg::Pnt3f(min_pt[0], min_pt[1], min_pt[2]), 0);
-       mHighlightPoints->setValue(osg::Pnt3f(max_pt[0], min_pt[1], min_pt[2]), 1);
-       mHighlightPoints->setValue(osg::Pnt3f(min_pt[0], max_pt[1], min_pt[2]), 2);
-       mHighlightPoints->setValue(osg::Pnt3f(max_pt[0], max_pt[1], min_pt[2]), 3);
-       mHighlightPoints->setValue(osg::Pnt3f(min_pt[0], min_pt[1], max_pt[2]), 4);
-       mHighlightPoints->setValue(osg::Pnt3f(max_pt[0], min_pt[1], max_pt[2]), 5);
-       mHighlightPoints->setValue(osg::Pnt3f(min_pt[0], max_pt[1], max_pt[2]), 6);
-       mHighlightPoints->setValue(osg::Pnt3f(max_pt[0], max_pt[1], max_pt[2]), 7);
-    osg::endEditCP(mHighlightPoints);
+    OSG::beginEditCP(mHighlightPoints);
+       mHighlightPoints->setValue(OSG::Pnt3f(min_pt[0], min_pt[1], min_pt[2]), 0);
+       mHighlightPoints->setValue(OSG::Pnt3f(max_pt[0], min_pt[1], min_pt[2]), 1);
+       mHighlightPoints->setValue(OSG::Pnt3f(min_pt[0], max_pt[1], min_pt[2]), 2);
+       mHighlightPoints->setValue(OSG::Pnt3f(max_pt[0], max_pt[1], min_pt[2]), 3);
+       mHighlightPoints->setValue(OSG::Pnt3f(min_pt[0], min_pt[1], max_pt[2]), 4);
+       mHighlightPoints->setValue(OSG::Pnt3f(max_pt[0], min_pt[1], max_pt[2]), 5);
+       mHighlightPoints->setValue(OSG::Pnt3f(min_pt[0], max_pt[1], max_pt[2]), 6);
+       mHighlightPoints->setValue(OSG::Pnt3f(max_pt[0], max_pt[1], max_pt[2]), 7);
+    OSG::endEditCP(mHighlightPoints);
 
-    osg::beginEditCP(mHighlightNode->getCore(), osg::Geometry::PositionsFieldMask);
-    osg::endEditCP  (mHighlightNode->getCore(), osg::Geometry::PositionsFieldMask);
+    OSG::beginEditCP(mHighlightNode->getCore(), OSG::Geometry::PositionsFieldMask);
+    OSG::endEditCP  (mHighlightNode->getCore(), OSG::Geometry::PositionsFieldMask);
 }
 
 
@@ -388,31 +388,31 @@ void HoverSelectionMethod::initSelectionGeom()
    mInitialized = true;
 
    // init as needed
-   if (mHighlightMaterial == osg::NullFC)
+   if (mHighlightMaterial == OSG::NullFC)
    {
-      mHighlightMaterial = osg::SimpleMaterial::create();
+      mHighlightMaterial = OSG::SimpleMaterial::create();
 
-      osg::beginEditCP(mHighlightMaterial);
-         mHighlightMaterial->setDiffuse (osg::Color3f(0,1,0));
+      OSG::beginEditCP(mHighlightMaterial);
+         mHighlightMaterial->setDiffuse (OSG::Color3f(0,1,0));
          mHighlightMaterial->setLit     (false);
-      osg::endEditCP(mHighlightMaterial);
+      OSG::endEditCP(mHighlightMaterial);
    }
-   if (mHighlightNode == osg::NullFC)
+   if (mHighlightNode == OSG::NullFC)
    {
-      osg::GeoPTypesPtr type = osg::GeoPTypesUI8::create();
-      osg::beginEditCP(type);
+      OSG::GeoPTypesPtr type = OSG::GeoPTypesUI8::create();
+      OSG::beginEditCP(type);
          type->addValue(GL_LINE_STRIP);
          type->addValue(GL_LINES);
-      osg::endEditCP(type);
+      OSG::endEditCP(type);
 
-      osg::GeoPLengthsPtr lens = osg::GeoPLengthsUI32::create();
-      osg::beginEditCP(lens);
+      OSG::GeoPLengthsPtr lens = OSG::GeoPLengthsUI32::create();
+      OSG::beginEditCP(lens);
          lens->addValue(10);
          lens->addValue(6);
-      osg::endEditCP(lens);
+      OSG::endEditCP(lens);
 
-      osg::GeoIndicesUI32Ptr index = osg::GeoIndicesUI32::create();
-      osg::beginEditCP(index);
+      OSG::GeoIndicesUI32Ptr index = OSG::GeoIndicesUI32::create();
+      OSG::beginEditCP(index);
          // Line strip
          index->getFieldPtr()->addValue(0);
          index->getFieldPtr()->addValue(1);
@@ -432,35 +432,35 @@ void HoverSelectionMethod::initSelectionGeom()
          index->getFieldPtr()->addValue(6);
          index->getFieldPtr()->addValue(3);
          index->getFieldPtr()->addValue(7);
-      osg::endEditCP(index);
+      OSG::endEditCP(index);
 
-      mHighlightPoints = osg::GeoPositions3f::create();
-      osg::beginEditCP(mHighlightPoints);
-         mHighlightPoints->addValue(osg::Pnt3f(-1, -1, -1));
-         mHighlightPoints->addValue(osg::Pnt3f( 1, -1, -1));
-         mHighlightPoints->addValue(osg::Pnt3f(-1,  1, -1));
-         mHighlightPoints->addValue(osg::Pnt3f( 1,  1, -1));
-         mHighlightPoints->addValue(osg::Pnt3f(-1, -1,  1));
-         mHighlightPoints->addValue(osg::Pnt3f( 1, -1,  1));
-         mHighlightPoints->addValue(osg::Pnt3f(-1,  1,  1));
-         mHighlightPoints->addValue(osg::Pnt3f( 1,  1,  1));
-      osg::endEditCP(mHighlightPoints);
+      mHighlightPoints = OSG::GeoPositions3f::create();
+      OSG::beginEditCP(mHighlightPoints);
+         mHighlightPoints->addValue(OSG::Pnt3f(-1, -1, -1));
+         mHighlightPoints->addValue(OSG::Pnt3f( 1, -1, -1));
+         mHighlightPoints->addValue(OSG::Pnt3f(-1,  1, -1));
+         mHighlightPoints->addValue(OSG::Pnt3f( 1,  1, -1));
+         mHighlightPoints->addValue(OSG::Pnt3f(-1, -1,  1));
+         mHighlightPoints->addValue(OSG::Pnt3f( 1, -1,  1));
+         mHighlightPoints->addValue(OSG::Pnt3f(-1,  1,  1));
+         mHighlightPoints->addValue(OSG::Pnt3f( 1,  1,  1));
+      OSG::endEditCP(mHighlightPoints);
 
-      osg::GeometryPtr geo=osg::Geometry::create();
-      osg::beginEditCP(geo);
+      OSG::GeometryPtr geo=OSG::Geometry::create();
+      OSG::beginEditCP(geo);
          geo->setTypes     (type);
          geo->setLengths   (lens);
          geo->setIndices   (index);
          geo->setPositions (mHighlightPoints);
          geo->setMaterial  (mHighlightMaterial);
-      osg::endEditCP(geo);
-      osg::addRefCP(geo);
+      OSG::endEditCP(geo);
+      OSG::addRefCP(geo);
 
-      mHighlightNode = osg::Node::create();
-      osg::beginEditCP(mHighlightNode);
+      mHighlightNode = OSG::Node::create();
+      OSG::beginEditCP(mHighlightNode);
          mHighlightNode->setCore(geo);
-      osg::endEditCP(mHighlightNode);
-      osg::addRefCP(mHighlightNode);
+      OSG::endEditCP(mHighlightNode);
+      OSG::addRefCP(mHighlightNode);
    }
 
    initWandRep();
@@ -470,44 +470,44 @@ void HoverSelectionMethod::initWandRep()
 {
    // --- Initialize wand rep --- //
    // Create the geometyr
-   osg::NodePtr wand_rep_geode = osg::Node::create();
-   osg::GeometryPtr wand_geo = osg::makeSphereGeo(3,0.10f);
+   OSG::NodePtr wand_rep_geode = OSG::Node::create();
+   OSG::GeometryPtr wand_geo = OSG::makeSphereGeo(3,0.10f);
 
-   osg::beginEditCP(wand_rep_geode);
+   OSG::beginEditCP(wand_rep_geode);
       wand_rep_geode->setCore(wand_geo);
-   osg::endEditCP(wand_rep_geode);
+   OSG::endEditCP(wand_rep_geode);
 
    // Create the transform node
-   mWandRepTransNode = osg::Node::create();
-   mWandRepTrans = osg::Transform::create();
-   vprASSERT(mWandRepTrans != osg::NullFC);
+   mWandRepTransNode = OSG::Node::create();
+   mWandRepTrans = OSG::Transform::create();
+   vprASSERT(mWandRepTrans != OSG::NullFC);
 
-   osg::beginEditCP(mWandRepTransNode);
+   OSG::beginEditCP(mWandRepTransNode);
       mWandRepTransNode->setCore(mWandRepTrans);
       mWandRepTransNode->addChild(wand_rep_geode);
-   osg::endEditCP(mWandRepTransNode);
+   OSG::endEditCP(mWandRepTransNode);
 
    // Set material
-   osg::SimpleMaterialPtr geo_material = osg::SimpleMaterial::create();
+   OSG::SimpleMaterialPtr geo_material = OSG::SimpleMaterial::create();
 
-   osg::beginEditCP(geo_material);
+   OSG::beginEditCP(geo_material);
    {
-      geo_material->setAmbient      (osg::Color3f(0.2,0.2,0.2));
-      geo_material->setDiffuse      (osg::Color3f(0.8,0.1,0.6));
-      geo_material->setEmission     (osg::Color3f(0.0,0.0,0.0));
-      geo_material->setSpecular     (osg::Color3f(1.0,1.0,1.0));
+      geo_material->setAmbient      (OSG::Color3f(0.2,0.2,0.2));
+      geo_material->setDiffuse      (OSG::Color3f(0.8,0.1,0.6));
+      geo_material->setEmission     (OSG::Color3f(0.0,0.0,0.0));
+      geo_material->setSpecular     (OSG::Color3f(1.0,1.0,1.0));
       geo_material->setShininess    (10.0f);
       geo_material->setTransparency (0.0f);
       geo_material->setColorMaterial(GL_NONE);      // Turns off the object prim colors
    }
-   osg::endEditCP  (geo_material);
+   OSG::endEditCP  (geo_material);
 
    // assign the material to the geometry
-   osg::beginEditCP(wand_geo, osg::Geometry::MaterialFieldMask );
+   OSG::beginEditCP(wand_geo, OSG::Geometry::MaterialFieldMask );
    {
       wand_geo->setMaterial(geo_material);
    }
-   osg::endEditCP  (wand_geo, osg::Geometry::MaterialFieldMask );
+   OSG::endEditCP  (wand_geo, OSG::Geometry::MaterialFieldMask );
 }
 
 void HoverSelectionMethod::attachWandRep()
@@ -515,16 +515,16 @@ void HoverSelectionMethod::attachWandRep()
    // Attach wand rep to root (world) coord for debugging
    OSG::NodePtr vworld_root = mViewer->getWorldRoot();     // Get the world root to attach to
 
-   osg::beginEditCP(vworld_root);
+   OSG::beginEditCP(vworld_root);
       vworld_root->addChild(mWandRepTransNode);
-   osg::endEditCP(vworld_root);
+   OSG::endEditCP(vworld_root);
 }
 
 
 /*! Update the highlight for a moved object. Does not handle changing the
  object, this is done by highlightChanged().
  */
-void HoverSelectionMethod::updateWandRep(osg::Matrix osg_wand_pos)
+void HoverSelectionMethod::updateWandRep(OSG::Matrix osg_wand_pos)
 {
    if(!mWandRepAttached)
    {
@@ -532,11 +532,11 @@ void HoverSelectionMethod::updateWandRep(osg::Matrix osg_wand_pos)
       attachWandRep();
    }
 
-   vprASSERT(mWandRepTrans != osg::NullFC);
+   vprASSERT(mWandRepTrans != OSG::NullFC);
 
-   osg::beginEditCP(mWandRepTrans);
+   OSG::beginEditCP(mWandRepTrans);
       mWandRepTrans->getMatrix().setValue(osg_wand_pos);
-   osg::endEditCP(mWandRepTrans);
+   OSG::endEditCP(mWandRepTrans);
 }
 
 

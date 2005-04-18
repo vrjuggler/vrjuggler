@@ -52,7 +52,7 @@ class OpenSGHoverSelection : public GrabController
 public:
    OpenSGGrabController()
       : mInitialized(false), mCurHightlightState(false), mWandRepAttached(false),
-        mWandRepTransNode(osg::NullFC), mWandRepTrans(osg::NullFC)
+        mWandRepTransNode(OSG::NullFC), mWandRepTrans(OSG::NullFC)
    {;}
 
    virtual ~OpenSGGrabController()
@@ -99,7 +99,7 @@ protected:
    void initWandRep();
 
    /** Update the virtual rep of the wand */
-   void updateWandRep(osg::Matrix osg_wand_pos);
+   void updateWandRep(OSG::Matrix osg_wand_pos);
 
    /** Attach a wand representation to the base dataspace graph */
    void attachWandRep();
@@ -108,14 +108,14 @@ protected:     // ** Visual Rep stuff **//
    bool  mInitialized;     /**< Has everything been initialized */
    bool  mCurHightlightState; /**< The current highlighting state */
 
-   osg::NodePtr               mHighlightNode;         /**< The geometry for the highlight box */
-   osg::GeoPositions3fPtr     mHighlightPoints;       /**< The point geometry for the box */
-   osg::SimpleMaterialPtr     mHighlightMaterial;     /**< The material for the highlight geometry */
+   OSG::NodePtr               mHighlightNode;         /**< The geometry for the highlight box */
+   OSG::GeoPositions3fPtr     mHighlightPoints;       /**< The point geometry for the box */
+   OSG::SimpleMaterialPtr     mHighlightMaterial;     /**< The material for the highlight geometry */
 
 
    bool                 mWandRepAttached;
-   osg::NodePtr         mWandRepTransNode;
-   osg::TransformPtr    mWandRepTrans;
+   OSG::NodePtr         mWandRepTransNode;
+   OSG::TransformPtr    mWandRepTrans;
 };
 
 #endif //OPENSGGRABCONTROLLER_H

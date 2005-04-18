@@ -56,7 +56,7 @@
 
 namespace
 {
-   osg::UInt32 OSG_MAIN_ASPECT_ID;     /**< Local scope variable */
+   OSG::UInt32 OSG_MAIN_ASPECT_ID;     /**< Local scope variable */
 }
 
 namespace vrj
@@ -79,14 +79,14 @@ public:
          ;
       }
 
-      osg::RenderAction*         mRenderAction;    /**< The render action for the scene */
-      osg::PassiveWindowPtr      mWin;             /**< passive window to render with (the context) */
-      osg::PassiveViewportPtr    mViewport;        /**< passive viewport to render with (the context) */
-      osg::PassiveBackgroundPtr  mBackground;      /**< passive background to render with (the context) */
-      osg::MatrixCameraPtr       mCamera;
+      OSG::RenderAction*         mRenderAction;    /**< The render action for the scene */
+      OSG::PassiveWindowPtr      mWin;             /**< passive window to render with (the context) */
+      OSG::PassiveViewportPtr    mViewport;        /**< passive viewport to render with (the context) */
+      OSG::PassiveBackgroundPtr  mBackground;      /**< passive background to render with (the context) */
+      OSG::MatrixCameraPtr       mCamera;
 
       bool                       mContextThreadInitialized;
-      osg::ExternalThread*       mOsgThread;
+      OSG::ExternalThread*       mOsgThread;
    };
 
 public:
@@ -111,7 +111,7 @@ public:
     * Get the OpenSG Scene root.
     * @return NodePtr to the root of the scene to render.
     */
-   virtual osg::NodePtr getScene() = 0;
+   virtual OSG::NodePtr getScene() = 0;
 
    /**
     * Initializes OpenSG for drawing.
@@ -170,20 +170,20 @@ inline void OpenSGApp::init()
 
    // XXX: Complete initialization
    // if(!osgInitAlreadyCalled())
-   osg::osgInit(0,0);                  // Binds to primordial thread
+   OSG::osgInit(0,0);                  // Binds to primordial thread
 
 #if 0
    // Work around to disable display list caching
-   osg::FieldContainerPtr pProto = osg::Geometry::getClassType().getPrototype();
-   osg::GeometryPtr pGeoProto = osg::GeometryPtr::dcast(pProto);
+   OSG::FieldContainerPtr pProto = OSG::Geometry::getClassType().getPrototype();
+   OSG::GeometryPtr pGeoProto = OSG::GeometryPtr::dcast(pProto);
 
-   if(pGeoProto != osg::NullFC)
+   if(pGeoProto != OSG::NullFC)
    {
        pGeoProto->setDlistCache(false);
    }
 #endif
 
-   OSG_MAIN_ASPECT_ID = osg::Thread::getAspect();   // Gets the base aspect id to use
+   OSG_MAIN_ASPECT_ID = OSG::Thread::getAspect();   // Gets the base aspect id to use
 }
 
 inline void OpenSGApp::apiInit()
@@ -193,7 +193,7 @@ inline void OpenSGApp::apiInit()
                         "vrj::OpenSGApp::apiInit() exited.\n");
 
    this->initScene();
-   vprASSERT(getScene() != osg::NullFC);
+   vprASSERT(getScene() != OSG::NullFC);
 }
 
 inline void OpenSGApp::exit()
@@ -202,7 +202,7 @@ inline void OpenSGApp::exit()
                         "vrj::OpenSGApp::exit() entered.\n",
                         "vrj::OpenSGApp::exit() exited.\n");
 
-   osg::osgExit();
+   OSG::osgExit();
 }
 
 /** Called once per context at context creation */
@@ -223,7 +223,7 @@ inline void OpenSGApp::contextInit()
       char thread_name_buffer[255];
       sprintf(thread_name_buffer, "vprThread:%d",
               vpr::Thread::self()->getTID());
-      c_data->mOsgThread = osg::ExternalThread::get(thread_name_buffer);
+      c_data->mOsgThread = OSG::ExternalThread::get(thread_name_buffer);
       if(!(c_data->mOsgThread->isInitialized()))
       {
          c_data->mOsgThread->initialize(OSG_MAIN_ASPECT_ID);     // XXX: In future this might need to be different thread
@@ -231,34 +231,34 @@ inline void OpenSGApp::contextInit()
    }
 
    // Allocate OpenSG stuff
-   c_data->mWin        = osg::PassiveWindow::create();
-   c_data->mViewport   = osg::PassiveViewport::create();
-   c_data->mBackground = osg::PassiveBackground::create();
-   c_data->mCamera     = osg::MatrixCamera::create();
+   c_data->mWin        = OSG::PassiveWindow::create();
+   c_data->mViewport   = OSG::PassiveViewport::create();
+   c_data->mBackground = OSG::PassiveBackground::create();
+   c_data->mCamera     = OSG::MatrixCamera::create();
 
    // Setup the viewport
-   osg::beginEditCP(c_data->mViewport);
+   OSG::beginEditCP(c_data->mViewport);
       c_data->mViewport->setLeft(0);
       c_data->mViewport->setRight(1);
       c_data->mViewport->setBottom(0);
       c_data->mViewport->setTop(1);
       c_data->mViewport->setCamera(c_data->mCamera);
       c_data->mViewport->setBackground(c_data->mBackground);
-   osg::endEditCP  (c_data->mViewport);
+   OSG::endEditCP  (c_data->mViewport);
 
    // Setup the Window
-   osg::beginEditCP(c_data->mWin);
+   OSG::beginEditCP(c_data->mWin);
       c_data->mWin->addPort(c_data->mViewport);
-   osg::endEditCP  (c_data->mWin);
+   OSG::endEditCP  (c_data->mWin);
 
    // Setup the camera
-   osg::beginEditCP(c_data->mCamera);
+   OSG::beginEditCP(c_data->mCamera);
       c_data->mCamera->setNear(0.1);
       c_data->mCamera->setFar (10000);
-   osg::endEditCP(c_data->mCamera);
+   OSG::endEditCP(c_data->mCamera);
 
    // Could actually make one of these per thread instead of context.
-   c_data->mRenderAction = osg::RenderAction::create();
+   c_data->mRenderAction = OSG::RenderAction::create();
    // c_data->mRenderAction->setAutoFrustum(false);         // Turn off auto frustum
 
    // Initialize OpenSG's OpenGL state
@@ -298,10 +298,10 @@ inline void OpenSGApp::draw()
    vrj::Frustum vrj_frustum = userData->getProjection()->getFrustum();
 
    const float* vj_proj_view_mat = project->getViewMatrix().mData;
-   osg::Matrix frustum_matrix, view_xform_mat;
+   OSG::Matrix frustum_matrix, view_xform_mat;
    view_xform_mat.setValue(vj_proj_view_mat);
 
-   osg::MatrixFrustum(frustum_matrix,
+   OSG::MatrixFrustum(frustum_matrix,
                       vrj_frustum[vrj::Frustum::VJ_LEFT],
                       vrj_frustum[vrj::Frustum::VJ_RIGHT],
                       vrj_frustum[vrj::Frustum::VJ_BOTTOM],
@@ -309,16 +309,16 @@ inline void OpenSGApp::draw()
                       vrj_frustum[vrj::Frustum::VJ_NEAR],
                       vrj_frustum[vrj::Frustum::VJ_FAR]);
 
-   osg::Matrix full_view_matrix = frustum_matrix;
+   OSG::Matrix full_view_matrix = frustum_matrix;
    full_view_matrix.mult(view_xform_mat);   // Compute complete projection matrix
 
    // Setup the camera
-   osg::beginEditCP(c_data->mCamera);
+   OSG::beginEditCP(c_data->mCamera);
       c_data->mCamera->setNear(vrj_frustum[vrj::Frustum::VJ_NEAR]);
       c_data->mCamera->setFar(vrj_frustum[vrj::Frustum::VJ_FAR]);
       c_data->mCamera->setProjectionMatrix( frustum_matrix );  // Set projection matrix
       c_data->mCamera->setModelviewMatrix( view_xform_mat );   // Set modelview matrix
-   osg::endEditCP(c_data->mCamera);
+   OSG::endEditCP(c_data->mCamera);
 
    // Setup the viewport
    OSG::beginEditCP(c_data->mViewport);
