@@ -50,14 +50,10 @@ App::App(Kernel* kern)
    : mKernel(kern)
    , mHaveFocus(true)
 {
-   vprASSERT(kern != NULL);    // We don't want a NULL Kernel
-}
-
-App::App()
-   : mKernel(Kernel::instance())
-   , mHaveFocus(true)
-{
-   /* Do nothing. */ ;
+   if(NULL == kern)
+   {
+      mKernel = Kernel::instance();
+   }
 }
 
 bool App::configCanHandle(jccl::ConfigElementPtr element)

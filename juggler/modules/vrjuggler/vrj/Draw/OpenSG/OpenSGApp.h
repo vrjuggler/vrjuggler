@@ -90,7 +90,7 @@ public:
    };
 
 public:
-   OpenSGApp(vrj::Kernel* kern)
+   OpenSGApp(vrj::Kernel* kern=NULL)
       : GlApp(kern)
    {
       ;
