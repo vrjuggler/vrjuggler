@@ -5933,8 +5933,6 @@ private:
 private:
    std::string mFileToLoad;
 
-   OSG::NodePtr        mRootNode;
-   OSG::TransformPtr   mSceneScale;
    OSG::NodePtr        mSceneRoot;
    OSG::TransformPtr   mSceneTransform;
    OSG::NodePtr        mModelRoot;
@@ -5990,7 +5988,7 @@ public:
 
    // Setup light beacon
    OSG::Matrix light_pos;
-   light_pos.setTransform(osg::Vec3f( 2.0f, 5.0f, 4.0f));
+   light_pos.setTransform(OSG::Vec3f(2.0f, 5.0f, 4.0f));
 
    OSG::beginEditCP(light_beacon_core, OSG::Transform::MatrixFieldMask);
       light_beacon_core-&gt;setMatrix(light_pos);
@@ -6008,10 +6006,10 @@ public:
    OSG::endEditCP(mLightNode);
 
    OSG::beginEditCP(light_core);
-      light_core-&gt;setAmbient   (.9, .8, .8, 1);
-      light_core-&gt;setDiffuse   ( 0.6,  0.6,  0.6, 1);
-      light_core-&gt;setSpecular  ( 1,  1,  1, 1);
-      light_core-&gt;setDirection ( 0,  0,  1);
+      light_core-&gt;setAmbient   (0.9, 0.8, 0.8, 1);
+      light_core-&gt;setDiffuse   (0.6, 0.6, 0.6, 1);
+      light_core-&gt;setSpecular  (1, 1, 1, 1);
+      light_core-&gt;setDirection (0, 0, 1);
       light_core-&gt;setBeacon    (mLightNode);
    OSG::endEditCP(light_core);
 
@@ -6026,23 +6024,12 @@ public:
    OSG::endEditCP(mLightNode);
 
    // create the root part of the scene
-   mRootNode = OSG::Node::create();                             <co
-                id="OpenSGNav.root.create.co"
-                linkends="OpenSGNav.root.create.desc" />
-   mSceneScale = OSG::Transform::create();
    mSceneRoot = OSG::Node::create();                            <co
                 id="OpenSGNav.scene.root.create.co"
                 linkends="OpenSGNav.scene.root.create.desc" />
    mSceneTransform = OSG::Transform::create();
 
    // Set the root node
-   OSG::beginEditCP(mRootNode);
-      mRootNode-&gt;setCore(mSceneScale);
-      mRootNode-&gt;addChild(mSceneRoot);                          <co
-                id="OpenSGNav.add.scene.root.co"
-                linkends="OpenSGNav.add.scene.root.desc" />
-   OSG::endEditCP(mRootNode);
-
    OSG::beginEditCP(mSceneRoot);
       mSceneRoot-&gt;setCore(mSceneTransform);
       mSceneRoot-&gt;addChild(mLightNode);                         <co
@@ -6072,24 +6059,11 @@ public:
                 that it gets lit.</para>
               </callout>
 
-              <callout arearefs="OpenSGNav.root.create.co"
-                       id="OpenSGNav.root.create.desc">
+              <callout arearefs="OpenSGNav.scene.root.create.co"
+                       id="OpenSGNav.scene.root.create.desc">
                 <para>Then, the root note for the scene graph is created. This
                 is what will be returned to OpenSG for rendering by
                 <methodname>OpenSGNav::getScene()</methodname>.</para>
-              </callout>
-
-              <callout arearefs="OpenSGNav.scene.root.create.co"
-                       id="OpenSGNav.scene.root.create.desc">
-                <para>We also create a root node for the scene. We do this so
-                that we can give it a transformation object without affecting
-                the root of the scene graph.</para>
-              </callout>
-
-              <callout arearefs="OpenSGNav.add.scene.root.co"
-                       id="OpenSGNav.add.scene.root.desc">
-                <para>The scene root is added as a child of the root
-                node.</para>
               </callout>
 
               <callout arearefs="OpenSGNav.add.light.co"
