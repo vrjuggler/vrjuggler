@@ -81,7 +81,7 @@ public:
    virtual void initScene();
 
    /** Returns the scene root for this application. */
-   virtual osg::NodePtr getScene()
+   virtual OSG::NodePtr getScene()
    {
       return mSceneRoot;
    }
@@ -104,8 +104,8 @@ public:
 private:
    struct GrabObject
    {
-      GrabObject(osg::NodePtr node, osg::TransformPtr xform,
-                 const osg::Matrix& pos)
+      GrabObject(OSG::NodePtr node, OSG::TransformPtr xform,
+                 const OSG::Matrix& pos)
          : xformNode(node)
          , xformCore(xform)
          , homePos(pos)
@@ -114,16 +114,16 @@ private:
       }
 
       /** The transform node (parent) for the grabbable object. */
-      osg::NodePtr xformNode;
+      OSG::NodePtr xformNode;
 
       /** The transform core for the grabbable object. */
-      osg::TransformPtr xformCore;
+      OSG::TransformPtr xformCore;
 
       /**
        * The original transformation for the grabbable object.  This is used
        * for resetting the scene.
        */
-      const osg::Matrix homePos;
+      const OSG::Matrix homePos;
    };
 
    /** Initialize GL state.  Hold-over from regular OpenGL apps. */
@@ -140,7 +140,7 @@ private:
     * @return A new GrabObject instance.  It is the responsibility of the
     *         caller to release the memory.
     */
-   GrabObject* makeGrabbable(osg::NodePtr model, const osg::Matrix& modelPos);
+   GrabObject* makeGrabbable(OSG::NodePtr model, const OSG::Matrix& modelPos);
 
    void updateGrabbing(const gmtl::Matrix44f& wandMatrix);
 
@@ -159,13 +159,13 @@ private:
    //   mLightBeacon:[Transform]
    //         |
    //   mModelRoot:[mModelGroup]
-   osg::NodePtr        mSceneRoot;       /**< The root of the scene */
-   osg::TransformPtr   mSceneTransform;  /**< Transform core */
-   osg::NodePtr        mModelRoot;       /**< Root of the loaded model */
-   osg::GroupPtr       mModelGroup;
+   OSG::NodePtr        mSceneRoot;       /**< The root of the scene */
+   OSG::TransformPtr   mSceneTransform;  /**< Transform core */
+   OSG::NodePtr        mModelRoot;       /**< Root of the loaded model */
+   OSG::GroupPtr       mModelGroup;
 
-   osg::NodePtr  mLightNode;       /**< Light node to use */
-   osg::NodePtr  mLightBeacon;     /**< A beacon for the light */
+   OSG::NodePtr  mLightNode;       /**< Light node to use */
+   OSG::NodePtr  mLightBeacon;     /**< A beacon for the light */
 
    gadget::PositionInterface  mWandPos;     /**< The position of the wand */
    gadget::DigitalInterface   mButton0;     /**< Wand button 0 */
@@ -183,14 +183,14 @@ private:
 
    /** @name Highlight node management */
    //@{
-   osg::Color3f           mIntersectColor;
-   osg::Color3f           mGrabColor;
+   OSG::Color3f           mIntersectColor;
+   OSG::Color3f           mGrabColor;
 
-   osg::NodePtr           mHighlight;        /**< The node to highlight */
-   osg::NodePtr           mHighlightNode;    /**< The highlight node */
-   osg::GeoPositions3fPtr mHighlightPoints;  /**< Points for mHighlightNode */
+   OSG::NodePtr           mHighlight;        /**< The node to highlight */
+   OSG::NodePtr           mHighlightNode;    /**< The highlight node */
+   OSG::GeoPositions3fPtr mHighlightPoints;  /**< Points for mHighlightNode */
 
-   osg::SimpleMaterialPtr mHighlightMaterial;
+   OSG::SimpleMaterialPtr mHighlightMaterial;
    //@}
 };
 
