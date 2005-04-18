@@ -3049,7 +3049,12 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
                 <filename>gadget/Type/PositionProxy.h</filename>. The return
                 type of
                 <methodname>gadget::PositionProxy::getData()</methodname> is
-                <classname>gmtl::Matrix44f</classname>.</para>
+                <classname>gmtl::Matrix44f</classname>. The method
+                <methodname>gadget::PositionProxy::getData()</methodname>
+                takes an optional <type>float</type> paramter that indicates
+                the units to use for the returned transformation matrix. The
+                value must be a conversion factor from meters to the desired
+                units.</para>
               </listitem>
             </varlistentry>
 
@@ -3417,7 +3422,7 @@ head.init("VJHead");</programlisting>
           necessarily be true for all proxies. Continuing with our example of
           a <classname>gadget::PositionInterface</classname> to the user head
           proxy, the following code shows how to read the transformation
-          matrix for the user's head:</para>
+          matrix for the user's head (in feet):</para>
 
           <programlisting>gmtl::Matrix44f head_mat = head-&gt;getData();</programlisting>
 
@@ -4080,7 +4085,8 @@ private:
           configuration. We are now ready to read from the device.</para>
 
           <programlisting>...
-gmtl::Matrix44f wand_pos(mWand-&gt;getData());
+const float units = getDrawScaleFactor();
+gmtl::Matrix44f wand_pos(mWand-&gt;getData(units));
 ...</programlisting>
 
           <para>The above code shows an example of using the positional device
@@ -4286,7 +4292,8 @@ public:
              &lt;&lt; std::endl;
                  
    // -- Get Wand matrix --- //
-   gmtl::Matrix44f wand_matrix(mWand-&gt;getData());
+   const float units = getDrawScaleFactor();
+   gmtl::Matrix44f wand_matrix(mWand-&gt;getData(units));
    std::cout &lt;&lt; "Wand pos: \n" &lt;&lt; wand_matrix &lt;&lt; std::endl;
 }</programlisting>
 
@@ -5150,7 +5157,8 @@ public:
 void contextApp::draw()
 {
    // Get Wand matrix
-   gmtl::Matrix44f wand_matrix(mWand-&gt;getData());
+   const float units = getDrawScaleFactor();
+   gmtl::Matrix44f wand_matrix(mWand-&gt;getData(units));
    ...
    glPushMatrix();
       glPushMatrix();
