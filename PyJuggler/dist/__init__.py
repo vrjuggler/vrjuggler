@@ -9,7 +9,7 @@
 import string
 __all__     = ["vrj", "cluster", "gadget", "snx", "jccl", "vpr"]
 __build__   = 1
-__version__ = '0.91.0.%d' % __build__
+__version__ = '0.91.1.%d' % __build__
 __date__    = string.join(string.split('$Date$')[1:3], ' ')
 __author__  = 'Patrick Hartling <patrick@vrjuggler.org>'
 __doc__     = '''This is PyJuggler.  For information regarding PyJuggler see:

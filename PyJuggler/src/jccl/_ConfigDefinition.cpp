@@ -32,7 +32,6 @@ void _Export_ConfigDefinition()
        )
       )
       .def(init< const jccl::ConfigDefinition& >())
-      .def("assertValid", &jccl::ConfigDefinition::assertValid)
       .def("getName", &jccl::ConfigDefinition::getName,
            "getName() -> string object\n"
            "Returns the human-readable name of this definition."

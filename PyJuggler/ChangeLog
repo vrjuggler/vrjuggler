@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-18-2005 patrickh    Removed jccl.ConfigDefinition.assertValid(),
+                        jccl.ConfigElement.assertValid(), and
+                        jccl.PropertyDefinition.assertValid().
+                        NEW VERSION: 0.91.1
+
 [1.0 Beta 1 released - 12.24.2004]=============================================
 Dec-24-2004 patrickh    NEW VERSION: 0.91.0
 Dec-22-2004 patrickh    Updated to Gadgeteer 0.22.0.

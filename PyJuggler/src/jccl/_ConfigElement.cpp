@@ -86,7 +86,6 @@ void _Export_ConfigElement()
         .def(init< jccl::ConfigDefinitionPtr >())
         .def(init< const jccl::ConfigElement& >())
         .def("isValid", &jccl::ConfigElement::isValid)
-        .def("assertValid", &jccl::ConfigElement::assertValid)
         .def("getChildElement", &jccl::ConfigElement::getChildElement,
              "getChildElement(path) -> ConfigElement\n"
              "Gets a child element from a property of self.\n"

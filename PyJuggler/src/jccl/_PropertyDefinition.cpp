@@ -32,7 +32,6 @@ void _Export_PropertyDefinition()
        )
       )
       .def(init< const jccl::PropertyDefinition& >())
-      .def("assertValid", &jccl::PropertyDefinition::assertValid)
       .def("getToken", &jccl::PropertyDefinition::getToken,
            "getToken() -> string object\n"
            "Returns the token (a valid XML element identifier) of this\n"
