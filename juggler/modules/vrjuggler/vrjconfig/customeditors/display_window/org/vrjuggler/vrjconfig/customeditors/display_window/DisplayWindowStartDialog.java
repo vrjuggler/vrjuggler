@@ -590,7 +590,11 @@ public class DisplayWindowStartDialog
       mHelpButton.addActionListener(
          new DisplayWindowStartDialog_mHelpButton_actionAdapter(this)
       );
-      mFSAACheckbox.setText("Enable full-screen anti-aliasing");
+      mFSAALabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mFSAALabel.setLabelFor(mFSAACheckbox);
+      mFSAALabel.setText("Enable full-screen anti-aliasing");
+      mFSAACheckbox.setHorizontalTextPosition(SwingConstants.RIGHT);
+      mFSAACheckbox.setText("");
       mBoundsPanel.setLayout(mBoundsPanelLayout);
       mBoundsPanel.setBorder(mBoundsPanelBorder);
       mFrameBufferPanel.setLayout(mFrameBufferPanelLayout);
@@ -761,8 +765,13 @@ public class DisplayWindowStartDialog
                                     TableLayoutConstraints.CENTER)
       );
       mFrameBufferPanel.add(
+         mFSAALabel,
+         new TableLayoutConstraints(0, 12, 0, 12, TableLayoutConstraints.RIGHT,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFrameBufferPanel.add(
          mFSAACheckbox,
-         new TableLayoutConstraints(0, 12, 1, 12, TableLayoutConstraints.LEFT,
+         new TableLayoutConstraints(2, 12, 2, 12, TableLayoutConstraints.LEFT,
                                     TableLayoutConstraints.CENTER)
       );
       mWindowPropsPanel.add(
@@ -945,6 +954,7 @@ public class DisplayWindowStartDialog
    private JSpinner mAccumBlueDepthSpinner = new JSpinner();
    private JLabel mAccumAlphaDepthLabel = new JLabel();
    private JSpinner mAccumAlphaDepthSpinner = new JSpinner();
+   private JLabel mFSAALabel = new JLabel();
    private JCheckBox mFSAACheckbox = new JCheckBox();
    private JPanel mWindowPropsPanel = new JPanel();
    private TableLayout mWindowPropsPanelLayout = null;
