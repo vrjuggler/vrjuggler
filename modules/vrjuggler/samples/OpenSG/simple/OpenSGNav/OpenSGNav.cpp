@@ -116,12 +116,12 @@ void OpenSGNav::preFrame()
    gmtl::Vec3f z_dir = gmtl::Vec3f(0.0f, 0.0f, mVelocity);
    gmtl::Vec3f trans = wand_mat * z_dir;
 
-   osg::Matrix trans_mat(osg::Matrix::identity());
+   OSG::Matrix trans_mat(OSG::Matrix::identity());
    trans_mat.setTranslate(trans[0], trans[1], trans[2]);
 
-   osg::beginEditCP(mSceneTransform);
+   OSG::beginEditCP(mSceneTransform);
       mSceneTransform->getMatrix().multLeft(trans_mat);
-   osg::endEditCP(mSceneTransform);
+   OSG::endEditCP(mSceneTransform);
 }
 
 /** Initialize GL state. Hold over from regular OGL apps */
@@ -154,7 +154,7 @@ void OpenSGNav::initScene()
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
          << "[OpenSGNav::initScene()] No model specified; creating torus."
          << std::endl << vprDEBUG_FLUSH;
-      mModelRoot = osg::makeTorus(.5, 2, 16, 16);
+      mModelRoot = OSG::makeTorus(.5, 2, 16, 16);
    }
    else
    {
@@ -162,58 +162,58 @@ void OpenSGNav::initScene()
          << "[OpenSGNavGrab::initScene()] Loading '" << mFileToLoad << "' ..."
          << std::endl << vprDEBUG_FLUSH;
       mModelRoot =
-         osg::SceneFileHandler::the().read((osg::Char8*) (mFileToLoad.c_str()));
+         OSG::SceneFileHandler::the().read((OSG::Char8*) (mFileToLoad.c_str()));
    }
 
    // --- Light setup --- //
    // - Add directional light for scene
    // - Create a beacon for it and connect to that beacon
-   mLightNode   = osg::Node::create();
-   mLightBeacon = osg::Node::create();
-   osg::DirectionalLightPtr light_core = osg::DirectionalLight::create();
-   osg::TransformPtr light_beacon_core = osg::Transform::create();
+   mLightNode   = OSG::Node::create();
+   mLightBeacon = OSG::Node::create();
+   OSG::DirectionalLightPtr light_core = OSG::DirectionalLight::create();
+   OSG::TransformPtr light_beacon_core = OSG::Transform::create();
 
    // Setup light beacon
-   osg::Matrix light_pos;
-   light_pos.setTransform(osg::Vec3f(2.0f, 5.0f, 4.0f));
+   OSG::Matrix light_pos;
+   light_pos.setTransform(OSG::Vec3f(2.0f, 5.0f, 4.0f));
 
-   osg::beginEditCP(light_beacon_core, osg::Transform::MatrixFieldMask);
+   OSG::beginEditCP(light_beacon_core, OSG::Transform::MatrixFieldMask);
       light_beacon_core->setMatrix(light_pos);
-   osg::endEditCP(light_beacon_core, osg::Transform::MatrixFieldMask);
+   OSG::endEditCP(light_beacon_core, OSG::Transform::MatrixFieldMask);
 
-   osg::beginEditCP(mLightBeacon);
+   OSG::beginEditCP(mLightBeacon);
       mLightBeacon->setCore(light_beacon_core);
-   osg::endEditCP(mLightBeacon);
+   OSG::endEditCP(mLightBeacon);
 
    // Setup light node
-   osg::addRefCP(mLightNode);
-   osg::beginEditCP(mLightNode);
+   OSG::addRefCP(mLightNode);
+   OSG::beginEditCP(mLightNode);
       mLightNode->setCore(light_core);
       mLightNode->addChild(mLightBeacon);
-   osg::endEditCP(mLightNode);
+   OSG::endEditCP(mLightNode);
 
-   osg::beginEditCP(light_core);
+   OSG::beginEditCP(light_core);
       light_core->setAmbient   (0.9, 0.8, 0.8, 1);
       light_core->setDiffuse   (0.6, 0.6, 0.6, 1);
       light_core->setSpecular  (1, 1, 1, 1);
       light_core->setDirection (0, 0, 1);
       light_core->setBeacon    (mLightNode);
-   osg::endEditCP(light_core);
+   OSG::endEditCP(light_core);
 
    // --- Setup Scene -- //
    // add the loaded scene to the light node, so that it is lit by the light
-   osg::addRefCP(mModelRoot);
-   osg::beginEditCP(mLightNode);
+   OSG::addRefCP(mModelRoot);
+   OSG::beginEditCP(mLightNode);
       mLightNode->addChild(mModelRoot);
-   osg::endEditCP(mLightNode);
+   OSG::endEditCP(mLightNode);
 
    // create the root part of the scene
-   mSceneRoot = osg::Node::create();
-   mSceneTransform = osg::Transform::create();
+   mSceneRoot = OSG::Node::create();
+   mSceneTransform = OSG::Transform::create();
 
    // Set up the root node
-   osg::beginEditCP(mSceneRoot);
+   OSG::beginEditCP(mSceneRoot);
       mSceneRoot->setCore(mSceneTransform);
       mSceneRoot->addChild(mLightNode);
-   osg::endEditCP(mSceneRoot);
+   OSG::endEditCP(mSceneRoot);
 }

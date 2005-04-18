@@ -87,9 +87,9 @@ void OpenSGViewer::preFrame()
    // Update the user (and viewplatform with navigation strategy)
    mUser->update();
 
-   osg::beginEditCP(mSceneTransform); 
+   OSG::beginEditCP(mSceneTransform); 
       mSceneTransform->getMatrix().setValue( mUser->viewPlatform().getTransform_platMvirt().getData() );
-   osg::endEditCP(mSceneTransform);
+   OSG::endEditCP(mSceneTransform);
 
    // Update manipulation
    mSelectionMethod->updateSelection();
@@ -141,47 +141,47 @@ void OpenSGViewer::initScene(void)
    OSG::TransformPtr light_beacon_core = OSG::Transform::create();
    
    // Setup light beacon
-   osg::Matrix light_pos;
-   light_pos.setTransform(osg::Vec3f( 2.0f, 5.0f, 4.0f));
+   OSG::Matrix light_pos;
+   light_pos.setTransform(OSG::Vec3f( 2.0f, 5.0f, 4.0f));
    
-   osg::beginEditCP(light_beacon_core, OSG::Transform::MatrixFieldMask);
+   OSG::beginEditCP(light_beacon_core, OSG::Transform::MatrixFieldMask);
       light_beacon_core->setMatrix(light_pos);
-   osg::endEditCP(light_beacon_core, osg::Transform::MatrixFieldMask);
+   OSG::endEditCP(light_beacon_core, OSG::Transform::MatrixFieldMask);
    
-   osg::beginEditCP(mLightBeacon);
+   OSG::beginEditCP(mLightBeacon);
       mLightBeacon->setCore(light_beacon_core);
-   osg::endEditCP(mLightBeacon);
+   OSG::endEditCP(mLightBeacon);
    
    // Setup light node
-   osg::addRefCP(mLightNode);
-   osg::beginEditCP(mLightNode);
+   OSG::addRefCP(mLightNode);
+   OSG::beginEditCP(mLightNode);
       mLightNode->setCore(light_core);
       mLightNode->addChild(mLightBeacon);
-   osg::endEditCP(mLightNode);
+   OSG::endEditCP(mLightNode);
    
-   osg::beginEditCP(light_core);
+   OSG::beginEditCP(light_core);
       light_core->setAmbient   (.9, .8, .8, 1);
       light_core->setDiffuse   ( 0.6,  0.6,  0.6, 1);
       light_core->setSpecular  ( 1,  1,  1, 1);
       light_core->setDirection ( 0,  0,  1);
       light_core->setBeacon    (mLightNode);
-   osg::endEditCP(light_core);
+   OSG::endEditCP(light_core);
    
    // --- Setup Scene -- //
    // add the loaded scene to the light node, so that it is lit by the light
-   osg::addRefCP(mWorldRoot);
-   osg::beginEditCP(mLightNode);
+   OSG::addRefCP(mWorldRoot);
+   OSG::beginEditCP(mLightNode);
       mLightNode->addChild(mWorldRoot);
-   osg::endEditCP(mLightNode);
+   OSG::endEditCP(mLightNode);
    
    // create the root.
    mSceneRoot = OSG::Node::create();
    mSceneTransform = OSG::Transform::create();
    
-   osg::beginEditCP(mSceneRoot);
+   OSG::beginEditCP(mSceneRoot);
       mSceneRoot->setCore(mSceneTransform);
       mSceneRoot->addChild(mLightNode);
-   osg::endEditCP(mSceneRoot);
+   OSG::endEditCP(mSceneRoot);
    
    // --- Add scene to root node --- //
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "OpenSGViewer::initScene finished\n" << vprDEBUG_FLUSH;
