@@ -60,9 +60,7 @@ namespace vrj
 class VJ_CLASS_API PfApp : public App
 {
 public:
-   PfApp(Kernel* kern);
-
-   PfApp();
+   PfApp(Kernel* kern=NULL);
 
    virtual ~PfApp();
 
@@ -142,7 +140,7 @@ public:
     */
    virtual void drawChan(pfChannel* chan, void* chandata)
    {
-      vprDEBUG_OutputGuard(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL, 
+      vprDEBUG_OutputGuard(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL,
                            std::string("--- vrj::PfApp::drawChan() Entered ---\n"),
                            std::string("--- vrj::PfApp::drawChan() Exited ---\n"));
       this->preDrawChan(chan,chandata);

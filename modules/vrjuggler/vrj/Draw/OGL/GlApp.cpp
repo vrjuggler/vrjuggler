@@ -49,10 +49,6 @@ GlApp::GlApp(Kernel* kern) : App(kern)
    /* Do nothing. */ ;
 }
 
-GlApp::GlApp()
-{
-   /* Do nothing. */ ;
-}
 
 GlApp::~GlApp()
 {
