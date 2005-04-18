@@ -263,17 +263,12 @@ public class InputWindowStartDialog
       // Colums are as follows:
       //    0 -> editor label
       //    1 -> spacer betweeen label and editor
-      //    2 -> start for lock key and sleep time editors; end for checkbox
-      //         editor
-      //    3 -> end for sleep time editor
-      //    4 -> spacer between sleep time editor and sleep time units label
-      //    5 -> end for lock key editor; unit label for sleep time editor
-      //
-      // NOTE: Column 2 is a hack to make it appear as though the check box
-      // is two separate UI components.
+      //    2 -> start for editors; end for sleep time editor
+      //    3 -> spacer between sleep time editor and sleep time units label
+      //    4 -> end for lock key editor; unit label for sleep time editor
       double[][] window_props_size =
          {
-            {TableLayout.PREFERRED, 5, 20, TableLayout.MINIMUM, 5,
+            {TableLayout.PREFERRED, 5, TableLayout.MINIMUM, 5,
              TableLayout.MINIMUM},
             {TableLayout.PREFERRED, TableLayout.PREFERRED,
              TableLayout.PREFERRED, TableLayout.PREFERRED}
@@ -336,8 +331,11 @@ public class InputWindowStartDialog
       mKbdDevLabel.setText("Keyboard/Mouse");
       mLockKeyLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mLockKeyLabel.setText("Lock Key");
-      mStartLockedCB.setText("Start Locked");
-      mStartLockedCB.setHorizontalTextPosition(SwingConstants.LEFT);
+      mStartLockedLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mStartLockedLabel.setText("Start Locked");
+      mStartLockedLabel.setLabelFor(mStartLockedCB);
+      mStartLockedCB.setText("");
+      mStartLockedCB.setHorizontalTextPosition(SwingConstants.RIGHT);
       mSleepTimeLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mSleepTimeLabel.setLabelFor(mSleepTimeField);
       mSleepTimeLabel.setText("Sleep Time");
@@ -396,7 +394,7 @@ public class InputWindowStartDialog
       );
       mWindowPropsPanel.add(
          mKbdDevEditor,
-         new TableLayoutConstraints(2, 0, 5, 0,
+         new TableLayoutConstraints(2, 0, 4, 0,
                                     TableLayoutConstraints.FULL,
                                     TableLayoutConstraints.CENTER)
       );
@@ -408,14 +406,20 @@ public class InputWindowStartDialog
       );
       mWindowPropsPanel.add(
          mLockKeyEditor,
-         new TableLayoutConstraints(2, 1, 5, 1,
+         new TableLayoutConstraints(2, 1, 4, 1,
                                     TableLayoutConstraints.FULL,
                                     TableLayoutConstraints.CENTER)
       );
       mWindowPropsPanel.add(
-         mStartLockedCB,
-         new TableLayoutConstraints(0, 2, 2, 2,
+         mStartLockedLabel,
+         new TableLayoutConstraints(0, 2, 0, 2,
                                     TableLayoutConstraints.RIGHT,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mWindowPropsPanel.add(
+         mStartLockedCB,
+         new TableLayoutConstraints(2, 2, 2, 2,
+                                    TableLayoutConstraints.LEFT,
                                     TableLayoutConstraints.CENTER)
       );
       mWindowPropsPanel.add(
@@ -426,13 +430,13 @@ public class InputWindowStartDialog
       );
       mWindowPropsPanel.add(
          mSleepTimeField,
-         new TableLayoutConstraints(2, 3, 3, 3,
+         new TableLayoutConstraints(2, 3, 2, 3,
                                     TableLayoutConstraints.FULL,
                                     TableLayoutConstraints.CENTER)
       );
       mWindowPropsPanel.add(
          mSleepMSLabel,
-         new TableLayoutConstraints(5, 3, 5, 3,
+         new TableLayoutConstraints(4, 3, 4, 3,
                                     TableLayoutConstraints.LEFT,
                                     TableLayoutConstraints.CENTER)
       );
@@ -526,6 +530,7 @@ public class InputWindowStartDialog
    private PropertyEditorPanel mKbdDevEditor = null;
    private JLabel mLockKeyLabel = new JLabel();
    private PropertyEditorPanel mLockKeyEditor = null;
+   private JLabel mStartLockedLabel = new JLabel();
    private JCheckBox mStartLockedCB = new JCheckBox();
    private JLabel mSleepTimeLabel = new JLabel();
    private JFormattedTextField mSleepTimeField = new JFormattedTextField();
