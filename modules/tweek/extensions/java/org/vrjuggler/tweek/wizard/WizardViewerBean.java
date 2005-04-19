@@ -55,17 +55,22 @@ public class WizardViewerBean
    extends JPanel
    implements Serializable, WizardView
 {
-
+   /**
+    * Creates a new WizardViewer bean with no initial wizard.
+    */
    public WizardViewerBean()
    {
       this(new HashMap());
    }
+
    /**
     * Creates a new WizardViewer bean with no initial wizard.
+    *
+    * @param whiteBoard WhiteBoard to store data shared between WizardSteps.
     */
-   public WizardViewerBean(Map white_board)
+   public WizardViewerBean(Map whiteBoard)
    {
-      mWhiteBoard = white_board;
+      mWhiteBoard = whiteBoard;
 
       listeners = new ArrayList();
 
