@@ -49,6 +49,11 @@ public class ScreenEditorPanel
    extends JPanel
    implements EditorConstants
 {
+   private Icon mRemoveIcon = null;
+   private Icon mEditIcon = null;
+   private JButton mRemoveScreenBtn = new JButton();
+   private JButton mEditScreenBtn = new JButton();
+
    public ScreenEditorPanel(Dimension resolution)
       throws HeadlessException
    {
@@ -85,42 +90,70 @@ public class ScreenEditorPanel
 
    private void jbInit() throws Exception
    {
+      // Try to get icons for the toolbar buttons
+      try
+      {
+         ClassLoader loader = getClass().getClassLoader();
+         String img_root = "org/vrjuggler/vrjconfig/customeditors/cave/images";
+         mRemoveIcon = new ImageIcon(loader.getResource(img_root +
+                                                        "/remove_wall.gif"));
+         mEditIcon = new ImageIcon(loader.getResource(img_root +
+                                                      "/edit_wall.gif"));
+         
+         mRemoveScreenBtn.setIcon(mRemoveIcon);
+         mEditScreenBtn.setIcon(mEditIcon);
+      }
+      catch (Exception e)
+      {
+         // Ack! No icons. Use text labels instead
+         mRemoveScreenBtn.setText("Remove");
+         mEditScreenBtn.setText("Edit");
+      }
+      
+      mRemoveScreenBtn.setToolTipText("Remove screen.");
+      mRemoveScreenBtn.addActionListener(new java.awt.event.ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            mRemoveScreenBtn_actionPerformed(e);
+         }
+      });
+      
+      mEditScreenBtn.setToolTipText("Edit screen.");
+      mEditScreenBtn.addActionListener(new java.awt.event.ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            mEditScreenBtn_actionPerformed(e);
+         }
+      });
+
       double main_size[][] =
-         {{TableLayout.PREFERRED},
-          {15, 100, 15}};
+         {{TableLayout.PREFERRED, 25, 25, TableLayout.PREFERRED},
+          {15, 100, 25}};
       mMainLayout = new TableLayout(main_size);
       this.setLayout(mMainLayout);
       
       mViewportPlacer = new ViewportPlacer(mConfigContext, mConfigElement);
       mViewportPlacer.setBorder(new ComputerScreenBorder(Color.BLACK, 5));
-      mPropertiesBtn.addActionListener(new ActionListener()
-         {
-            public void actionPerformed(ActionEvent e)
-            {
-               windowPropsEditSelected(e);
-            }
-         });
       
-      this.add(mScreenLabel, new TableLayoutConstraints(0, 0, 0, 0, TableLayout.CENTER,
+      this.add(mScreenLabel, new TableLayoutConstraints(0, 0, 3, 0, TableLayout.CENTER,
                                                         TableLayout.FULL));
-      this.add(mViewportPlacer, new TableLayoutConstraints(0, 1, 0, 1, TableLayout.CENTER,
+      this.add(mViewportPlacer, new TableLayoutConstraints(0, 1, 3, 1, TableLayout.CENTER,
                                               TableLayout.CENTER));
-      this.add(mPropertiesBtn, new TableLayoutConstraints(0, 2, 0, 2, TableLayout.FULL,
+      this.add(mRemoveScreenBtn, new TableLayoutConstraints(1, 2, 1, 2, TableLayout.FULL,
+                                               TableLayout.FULL));  
+      this.add(mEditScreenBtn, new TableLayoutConstraints(2, 2, 2, 2, TableLayout.FULL,
                                                TableLayout.FULL));  
    }
-
-   public void setPlacerSize(Dimension desktopSize)
+   
+   void mRemoveScreenBtn_actionPerformed(ActionEvent e)
    {
-      mViewportPlacer.setMinimumSize(desktopSize);
-      mViewportPlacer.setPreferredSize(desktopSize);
-      mViewportPlacer.setMaximumSize(desktopSize);
-      mViewportPlacer.setDesktopSize(desktopSize);
-      
-      revalidate();
-      repaint();
+      ConfigBroker broker = new ConfigBrokerProxy();
+      broker.remove(mConfigContext, mConfigElement);
    }
-
-   void windowPropsEditSelected(ActionEvent e)
+   
+   void mEditScreenBtn_actionPerformed(ActionEvent e)
    {
       Container parent =
          (Container) SwingUtilities.getAncestorOfClass(Container.class,
@@ -162,12 +195,21 @@ public class ScreenEditorPanel
       }
    }
 
-   
+   public void setPlacerSize(Dimension desktopSize)
+   {
+      mViewportPlacer.setMinimumSize(desktopSize);
+      mViewportPlacer.setPreferredSize(desktopSize);
+      mViewportPlacer.setMaximumSize(desktopSize);
+      mViewportPlacer.setDesktopSize(desktopSize);
+      
+      revalidate();
+      repaint();
+   }
+
    private ConfigContext mConfigContext = null;
    private ConfigElement mConfigElement = null;
    private ViewportPlacer mViewportPlacer = null;
    private JLabel mScreenLabel = new JLabel("Name");
-   private JButton mPropertiesBtn = new JButton("Properties");
    private TableLayout mMainLayout = null;
 
    /** The custom listener for changes to the screen. */

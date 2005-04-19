@@ -257,8 +257,10 @@ public class WallEditorPanel
          // Ack! No icons. Use text labels instead
          mAddWallBtn.setText("Add");
          mRemoveWallBtn.setText("Remove");
-         mEditWallBtn.setText("Add");
+         mEditWallBtn.setText("Edit");
       }
+
+      mAddWallBtn.setToolTipText("Configure a new wall.");
       mAddWallBtn.addActionListener(new java.awt.event.ActionListener()
       {
          public void actionPerformed(ActionEvent e)
@@ -278,7 +280,7 @@ public class WallEditorPanel
       });
       
       mEditWallBtn.setEnabled(false);
-      mRemoveWallBtn.setToolTipText("Edit the currently selected wall.");
+      mEditWallBtn.setToolTipText("Edit the currently selected wall.");
       mEditWallBtn.addActionListener(new java.awt.event.ActionListener()
       {
          public void actionPerformed(ActionEvent e)
