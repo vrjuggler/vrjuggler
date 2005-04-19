@@ -45,8 +45,9 @@ import javax.swing.tree.*;
 
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.tweek.wizard.*;
+import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
 
-public class SelectDefinitionPanel extends JPanel
+public class SelectDefinitionPanel extends JPanel implements EditorConstants
 {
    private JPanel mDirectionsPanel = new JPanel();
    private JLabel mTitleLbl = new JLabel();
@@ -83,24 +84,9 @@ public class SelectDefinitionPanel extends JPanel
       }
    }
 
-   public class DefinitionInfo
-   {
-      private ConfigDefinition mDef;
-
-      public DefinitionInfo(ConfigDefinition def)
-      {
-         mDef = def;
-      }
-
-      public String toString()
-      {
-         return(mDef.getName());
-      }
-   }
-
    public ConfigDefinition getSelectedDefinition()
    {
-      return(((DefinitionInfo)mDefinitionList.getSelectedValue()).mDef);
+      return (ConfigDefinition)mDefinitionList.getSelectedValue();
    }
 
    public void createListModel()
@@ -108,9 +94,9 @@ public class SelectDefinitionPanel extends JPanel
       DefaultListModel list_model = new DefaultListModel();
 
       ConfigDefinitionRepository repos = getBroker().getRepository();
-      
+
       TreeSet all_defs = new TreeSet();
-      
+
       List pos_defs = repos.getSubDefinitions("positional_device");
       List dig_defs = repos.getSubDefinitions("digital_device");
       List ana_defs = repos.getSubDefinitions("analog_device");
@@ -118,13 +104,13 @@ public class SelectDefinitionPanel extends JPanel
       all_defs.addAll(pos_defs);
       all_defs.addAll(dig_defs);
       all_defs.addAll(ana_defs);
-      
+
       for(Iterator itr = all_defs.iterator() ; itr.hasNext() ; )
       {
          ConfigDefinition def = repos.get((String)itr.next());
-         list_model.addElement(new DefinitionInfo(def));
+         list_model.addElement(def);
       }
-      
+
       mDefinitionList.setModel(list_model);
    }
 
@@ -146,7 +132,7 @@ public class SelectDefinitionPanel extends JPanel
       mDefinitionListScrollPane.getViewport().add(mDefinitionList, null);
       mDefinitionListScrollPane.setBorder(BorderFactory.createLoweredBevelBorder());
       mDefinitionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
- 
+
       setLayout(new BorderLayout());
       add(mTopPanel, BorderLayout.NORTH);
       add(mDefinitionListScrollPane, BorderLayout.CENTER);
@@ -159,7 +145,7 @@ public class SelectDefinitionPanel extends JPanel
 
    /** Reference to the ConfigBroker used in this object. */
    private ConfigBroker mBroker = null;
-   
+
    /**
     * Gets a handle to the configuration broker.
     */
@@ -198,13 +184,13 @@ public class SelectDefinitionPanel extends JPanel
       public DefinitionListRenderer()
       {
          ClassLoader loader = getClass().getClassLoader();
-        
+
          // Load the icons.
-         mPositionalIcon = new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/wizard/newdevice/images/positional_devices16.png"));
-         mDigitalIcon = new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/wizard/newdevice/images/digital_devices16.png"));
-         mAnalogIcon = new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/wizard/newdevice/images/analog_devices16.png"));
+         mPositionalIcon = new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/wizard/newdevice/images/position16.png"));
+         mDigitalIcon = new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/wizard/newdevice/images/digital16.png"));
+         mAnalogIcon = new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/wizard/newdevice/images/analog16.png"));
       }
-      
+
       /**
        * Creates new TreeNodeRenderer for given value.
        *
@@ -218,7 +204,7 @@ public class SelectDefinitionPanel extends JPanel
                                                     boolean hasFocus)
       {
          //DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
-       
+
          // NOTE: DefaultTreeCellRenderer extends JLabel and returns 
          // itself, if we call the following method to set everything up
          // we can then set the Icon to whatever we want and return this.
@@ -226,32 +212,25 @@ public class SelectDefinitionPanel extends JPanel
          // either a ProxyType or a DeviceUnit which both implement the toString method.
          super.getListCellRendererComponent(list, value, index, selected, hasFocus);
 
-         /*
-         DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
-         
-         // Use the appropriate Icon.
-         if(null != parent && parent.getUserObject() instanceof String)
-         {
-            String label = (String)parent.getUserObject();
+         ConfigDefinition config_def = (ConfigDefinition)value;
 
-            // Set the correct Icon for this node in the tree.
-            if(label.equals("Positional Device"))
-            {
-               setIcon(mPositionalIcon);
-            }
-            else if(label.equals("Digital Device"))
-            {
-               setIcon(mDigitalIcon);
-            }
-            else if(label.equals("Analog Device"))
-            {
-               setIcon(mAnalogIcon);
-            }
+         // Set the correct Icon for this node in the tree.
+         if (config_def.isOfType(POSITIONAL_DEVICE_TYPE))
+         {
+            setIcon(mPositionalIcon);
          }
-         */
+         else if (config_def.isOfType(ANALOG_DEVICE_TYPE))
+         {
+            setIcon(mAnalogIcon);
+         }
+         else if (config_def.isOfType(DIGITAL_DEVICE_TYPE))
+         {
+            setIcon(mDigitalIcon);
+         }
+
+         setText(config_def.getName());
+
          return this;
       }
    }
-
-   
 }

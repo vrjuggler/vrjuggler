@@ -55,10 +55,21 @@ public class ConfigureDeviceStep
    {
       cwp = null;
    }
-   public boolean onExiting()
+
+   public void onEntered()
    {
-      return true;
+      super.onEntered();
    }
+
+   public void onExited()
+   {
+      if (!mConfigContext.containsElement(mConfigElement))
+      {
+         ConfigBroker broker = new ConfigBrokerProxy();
+         broker.add(mConfigContext, mConfigElement);
+      }
+   }
+
    /**
    * Gets the GUI component for this pane.
    */
@@ -72,7 +83,7 @@ public class ConfigureDeviceStep
          if (null != object && object instanceof ConfigDefinition &&
              null != ctx_obj && ctx_obj instanceof ConfigContext)
          {
-            ConfigContext context = (ConfigContext)ctx_obj;
+            mConfigContext = (ConfigContext)ctx_obj;
 
             ConfigDefinition def = (ConfigDefinition)object;
             String token = def.getToken();
@@ -84,7 +95,7 @@ public class ConfigureDeviceStep
             // Initialize a ConfigElementFactory with the needed 
             // ConfigDefinition. And create a new ConfigElement.
             ConfigElementFactory temp_factory = new ConfigElementFactory(def_list);
-            ConfigElement element = temp_factory.create("New " + token, def);
+            mConfigElement = temp_factory.create("New " + token, def);
             
             List list = CustomEditorRegistry.findEditors(token);
            
@@ -108,7 +119,7 @@ public class ConfigureDeviceStep
                
                JScrollPane scroll_pane = new JScrollPane();
                PropertySheet element_prop_sheet =
-                  PropertySheetFactory.instance().makeSheet(context, element, start_color);
+                  PropertySheetFactory.instance().makeSheet(mConfigContext, mConfigElement, start_color);
                
                scroll_pane.getViewport().removeAll();
                scroll_pane.getViewport().add(element_prop_sheet, null);
@@ -118,7 +129,7 @@ public class ConfigureDeviceStep
             {
                CustomEditor editor = (CustomEditor)list.get(0);
                cwp = (JComponent)editor.getPanel();
-               editor.setConfig(context, element);
+               editor.setConfig(mConfigContext, mConfigElement);
             }
          }
       }
@@ -142,4 +153,6 @@ public class ConfigureDeviceStep
     * The JPanel that makes up this pane's UI.
     */
    private transient JComponent cwp = null;
+   private transient ConfigElement mConfigElement = null;
+   private transient ConfigContext mConfigContext = null;
 }
