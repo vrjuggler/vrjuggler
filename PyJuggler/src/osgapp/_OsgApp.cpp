@@ -24,11 +24,8 @@ namespace pyj {
 
 struct vrj_OsgApp_Wrapper: vrj::OsgApp
 {
-    vrj_OsgApp_Wrapper(PyObject* self_, vrj::Kernel* p0):
+    vrj_OsgApp_Wrapper(PyObject* self_, vrj::Kernel* p0 = NULL):
         vrj::OsgApp(p0), self(self_) {}
-
-    vrj_OsgApp_Wrapper(PyObject* self_):
-        vrj::OsgApp(), self(self_) {}
 
     virtual ~vrj_OsgApp_Wrapper()
     {
@@ -562,7 +559,7 @@ void _Export_OsgApp()
          "passed into methods of this class without compatibility problems.\n\n"
          "See: vrj.GlApp"
          ,
-         init<  >(
+         init< optional< vrj::Kernel* > >(
             "__init__()\n"
             "Default constructor.  Uses vrj.Kernel.instance().\n\n"
             "__init__(kernel)\n"
@@ -571,7 +568,6 @@ void _Export_OsgApp()
             "          application has easy access to the kernel)."
          )
         )
-        .def(init< vrj::Kernel* >())
         .def_readwrite("mKernel", &vrj::App::mKernel)
         .def_readwrite("mHaveFocus", &vrj::App::mHaveFocus)
         .def("initScene", pure_virtual(&vrj::OsgApp::initScene),

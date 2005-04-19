@@ -28,11 +28,8 @@ struct vrj_App_Wrapper: vrj::App
     vrj_App_Wrapper(PyObject* self_, const vrj::App& p0):
         vrj::App(p0), self(self_) {}
 
-    vrj_App_Wrapper(PyObject* self_, vrj::Kernel* p0):
+    vrj_App_Wrapper(PyObject* self_, vrj::Kernel* p0 = NULL):
         vrj::App(p0), self(self_) {}
-
-    vrj_App_Wrapper(PyObject* self_):
-        vrj::App(), self(self_) {}
 
     virtual ~vrj_App_Wrapper()
     {
@@ -400,7 +397,7 @@ void _Export_App()
          "One time through this loop is a \"Juggler Frame.\"\n\n"
          "See also: vrj.Kernel"
          ,
-         init<  >(
+         init< optional< vrj::Kernel* > >(
             "__init__()\n"
             "Default constructor.  Uses vrj.Kernel.instance().\n\n"
             "__init__(kernel)\n"
@@ -409,7 +406,6 @@ void _Export_App()
             "          application has easy access to the kernel)."
          )
         )
-        .def(init< vrj::Kernel* >())
         .def_readwrite("mKernel", &vrj::App::mKernel)
         .def_readwrite("mHaveFocus", &vrj::App::mHaveFocus)
         .def("init", &vrj::App::init, &pyj::vrj_App_Wrapper::default_init,

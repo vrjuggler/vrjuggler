@@ -27,11 +27,8 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
     vrj_GlApp_Wrapper(PyObject* self_, const vrj::GlApp& p0):
         vrj::GlApp(p0), self(self_) {}
 
-    vrj_GlApp_Wrapper(PyObject* self_, vrj::Kernel* p0):
+    vrj_GlApp_Wrapper(PyObject* self_, vrj::Kernel* p0 = NULL):
         vrj::GlApp(p0), self(self_) {}
-
-    vrj_GlApp_Wrapper(PyObject* self_):
-        vrj::GlApp(), self(self_) {}
 
     virtual ~vrj_GlApp_Wrapper()
     {
@@ -517,7 +514,7 @@ void _Export_GlApp()
          "Note: One time through the loop is a Juggler Frame.\n\n"
          "See also: vrj.App, vrj.Kernel"
          ,
-         init<  >(
+         init< optional< vrj::Kernel*> >(
             "__init__()\n"
             "Default constructor.  Uses vrj.Kernel.instance().\n\n"
             "__init__(kernel)\n"
@@ -526,7 +523,6 @@ void _Export_GlApp()
             "          application has easy access to the kernel)."
          )
         )
-        .def(init< vrj::Kernel* >())
         .def("draw", pure_virtual(&vrj::GlApp::draw),
              "draw()\n"
              "Function that renders the scene.  Override this function with\n"
