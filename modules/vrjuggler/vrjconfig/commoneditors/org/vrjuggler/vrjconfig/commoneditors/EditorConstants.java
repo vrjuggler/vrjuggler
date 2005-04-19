@@ -49,6 +49,9 @@ public interface EditorConstants
 
    /** Config element type <code>alias</code>. */
    public static final String ALIAS_TYPE = "alias";
+   
+   /** Config element type <code>user</code>. */
+   public static final String USER_TYPE = "user";
 
    /** Config element type <code>analog_device</code>. */
    public static final String ANALOG_DEVICE_TYPE = "analog_device";
@@ -192,9 +195,18 @@ public interface EditorConstants
 
    /** Config element type <code>vrpn</code>. */
    public static final String VRPN_TYPE = "vrpn";
+   
+   /** Config element type <code>cluster_node</code>. */
+   public static final String CLUSTER_NODE_TYPE = "cluster_node";
 
    // Properties.
 
+   /** Property type <code>accum_red_size</code>. */
+   public static final String HEAD_POSITION_PROPERTY = "head_position";
+   
+   /** Property type <code>accum_red_size</code>. */
+   public static final String INTEROCULAR_DISTANCE_PROPERTY = "interocular_distance";
+   
    /** Property type <code>accum_red_size</code>. */
    public static final String ACCUM_RED_SIZE_PROPERTY = "accum_red_size";
 
@@ -402,6 +414,9 @@ public interface EditorConstants
 
    /** Property type <code>wand_pos</code>. */
    public static final String WAND_POS_PROPERTY = "wand_pos";
+   
+   /** Property type <code>display_windows</code>. */
+   public static final String DISPLAY_WINDOWS_PROPERTY = "display_windows";
 
    // Values.
 
