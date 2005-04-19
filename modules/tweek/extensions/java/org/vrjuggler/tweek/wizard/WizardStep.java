@@ -36,6 +36,7 @@
 package org.vrjuggler.tweek.wizard;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -46,12 +47,6 @@ import java.util.Map;
 public interface WizardStep
    extends Serializable
 {
-   /**
-    * Called when this step is about to be entered. This whiteboard allows
-    * information to be passed between WizardSteps.
-    */
-   public void setMap(Map whiteboard);
-   
    /**
     * Called when this step is about to be entered. Custom processing that
     * needs to be done on entry before the step is entered may be done here.
@@ -114,6 +109,17 @@ public interface WizardStep
     * @return  a list of fully-qualified class names
     */
    public List getRequiredClasses();
+   
+   /**
+    * Gets a map of data used between WizardSteps.
+    */
+   public Map getMap();
+   
+   /**
+    * Called when this step is about to be entered. This whiteboard allows
+    * information to be passed between WizardSteps.
+    */
+   public void setMap(Map whiteboard);
 
    /**
     * Gets a list of the external resources required by this wizard step in

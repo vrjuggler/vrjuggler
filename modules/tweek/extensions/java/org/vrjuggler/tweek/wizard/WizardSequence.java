@@ -36,7 +36,9 @@
 package org.vrjuggler.tweek.wizard;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
@@ -166,6 +168,19 @@ public abstract class WizardSequence
    public WizardStepIterator end()
    {
       return new Itr(size());
+   }
+
+   /**
+    * Called when this step is about to be entered. This whiteboard allows
+    * information to be passed between WizardSteps.
+    */
+   public void setMap(Map whiteboard)
+   {
+      mWhiteBoard = whiteboard;
+      for (Iterator itr = mSteps.iterator() ; itr.hasNext() ; )
+      {
+         ((WizardStep)itr.next()).setMap(whiteboard);
+      }
    }
 
    /**
