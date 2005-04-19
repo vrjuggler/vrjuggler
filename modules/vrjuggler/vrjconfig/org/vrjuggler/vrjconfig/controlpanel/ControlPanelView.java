@@ -401,6 +401,9 @@ public class ControlPanelView
          // someone may have screwed up the ControlPanel.xml file.
          catch(ClassCastException e)
          {
+            System.out.println(e);
+            e.printStackTrace();
+            
             JOptionPane.showMessageDialog(
                parent,
                "Editor associated with '" + root.getLabel() +
@@ -459,6 +462,8 @@ public class ControlPanelView
 
          Map white_board = new HashMap();
          white_board.put("context", mContext);
+
+         wizard.setMap(white_board);
          
          WizardViewerBean viewer = new WizardViewerBean(white_board);
          viewer.setWizard(wizard);

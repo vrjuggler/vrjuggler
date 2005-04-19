@@ -42,6 +42,9 @@ import java.io.FileInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.wizard.*;
 import org.vrjuggler.tweek.services.EnvironmentService;
@@ -49,7 +52,10 @@ import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 
 public class WizardLoader
 {
-   static Wizard loadWizard(String jarName)
+   private static final String STEP                   = "step";
+   private static final String SEQUENCE               = "sequence";
+
+   static public Wizard loadWizard(String jarName)
       throws IOException
    {
       Document doc = null;
@@ -108,11 +114,8 @@ public class WizardLoader
          for(java.util.Iterator itr = c.iterator() ; itr.hasNext() ; )
          {
             Element e = (Element)itr.next();
-            System.out.println(e.getAttribute("class").getValue());
-            Class test_class =
-               Class.forName(e.getAttribute("class").getValue(), true,
-                             class_loader);
-            wizard.add((WizardStep)test_class.newInstance());
+            WizardStep step = parse(class_loader, e);
+            wizard.add(step);
          }
       }
       catch(IOException ex)
@@ -126,5 +129,81 @@ public class WizardLoader
       }
 
       return wizard;
+   }
+
+   private static WizardStep parse(ClassLoader classLoader, Element root)
+   {
+      // Get the name of this configuration element
+      String name = root.getName();
+      System.out.println("Name: " + name);
+      /*
+      if (name == null)
+      {
+         throw new MissingAttributeException(NAME);
+      }
+      */
+      WizardStep step = null;
+      if (name.equals(STEP))
+      {
+         step = parseStep(classLoader, root);
+      }
+      else if (name.equals(SEQUENCE))
+      {
+         step = parseSequence(classLoader, root);
+      }
+      else
+      {
+         /*
+         throw new MissingAttributeException(NAME);
+         */
+      }
+      return step;
+   }
+
+   private static WizardStep parseStep(ClassLoader classLoader, Element root)
+   {
+      WizardStep step = null;
+      try
+      {
+         System.out.println(root.getAttribute("class").getValue());
+         Class test_class =
+            Class.forName(root.getAttribute("class").getValue(), true,
+                          classLoader);
+         step = (WizardStep)test_class.newInstance();
+      }
+      catch (Exception e)
+      {
+         System.out.println(e);
+         e.printStackTrace();
+      }
+      return step;
+   }
+   
+   private static WizardStep parseSequence(ClassLoader classLoader, Element root)
+   {
+      WizardSequence parent_step = null;
+      try
+      {
+         System.out.println(root.getAttribute("class").getValue());
+         Class test_class =
+            Class.forName(root.getAttribute("class").getValue(), true,
+                          classLoader);
+         parent_step = (WizardSequence)test_class.newInstance();
+         
+         java.util.List c = root.getChildren();
+         for(java.util.Iterator itr = c.iterator() ; itr.hasNext() ; )
+         {
+            Element e = (Element)itr.next();
+            
+            WizardStep step = parse(classLoader, e);
+            parent_step.add(step);
+         }
+      }
+      catch (Exception e)
+      {
+         System.out.println(e);
+         e.printStackTrace();
+      }
+      return parent_step;
    }
 }
