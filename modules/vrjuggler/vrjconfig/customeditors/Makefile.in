@@ -49,7 +49,8 @@ BUILD_JAVA3D_EDITOR=	@BUILD_JAVA_3D_EDITOR@
 SUBDIR=
 
 ifeq ($(BUILD_JAVA), Y)
-   SUBDIR+=	display_window	\
+   SUBDIR+=	cave		\
+   		display_window	\
 		flock		\
 		intersense	\
 		motionstar	\
