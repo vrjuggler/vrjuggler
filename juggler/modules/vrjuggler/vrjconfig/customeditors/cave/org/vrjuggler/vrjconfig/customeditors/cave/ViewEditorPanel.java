@@ -57,6 +57,7 @@ import org.vrjuggler.vrjconfig.customeditors.cave.event.*;
 
 public class ViewEditorPanel
    extends JPanel
+   implements EditorConstants
 {
    private static int VP_ELT_COUNT = 0;
    private CaveModel mCaveModel = null;
@@ -375,7 +376,7 @@ public class ViewEditorPanel
                                            "New Screen Name",
                                            JOptionPane.QUESTION_MESSAGE);
             ConfigBrokerProxy broker = new ConfigBrokerProxy();
-            ConfigDefinition vp_def = broker.getRepository().get(EditorConstants.display_window_type);
+            ConfigDefinition vp_def = broker.getRepository().get(DISPLAY_WINDOW_TYPE);
             ConfigElementFactory factory =
                new ConfigElementFactory(broker.getRepository().getAllLatest());
             ConfigElement new_screen = factory.create(screen_name, vp_def);

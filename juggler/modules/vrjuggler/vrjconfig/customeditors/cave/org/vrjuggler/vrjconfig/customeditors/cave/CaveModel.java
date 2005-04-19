@@ -164,7 +164,7 @@ public class CaveModel implements EditorConstants
    {
       // Create a default view.
       ConfigBrokerProxy broker = new ConfigBrokerProxy();
-      ConfigDefinition vp_def = broker.getRepository().get(EditorConstants.surface_viewport_type);
+      ConfigDefinition vp_def = broker.getRepository().get(SURFACE_VIEWPORT_TYPE);
       ConfigElementFactory factory =
          new ConfigElementFactory(broker.getRepository().getAllLatest());
       ConfigElement default_view = factory.create(wall_name, vp_def);
@@ -499,7 +499,7 @@ public class CaveModel implements EditorConstants
          {
             /* XXX: remove
             ConfigElement elm = evt.getElement();
-            if ( elm.getDefinition().getToken().equals(EditorConstants.display_window_type) )
+            if ( elm.getDefinition().getToken().equals(DISPLAY_WINDOW_TYPE) )
             {
                Object obj = mScreens.remove( elm );
                if ( null != obj )
