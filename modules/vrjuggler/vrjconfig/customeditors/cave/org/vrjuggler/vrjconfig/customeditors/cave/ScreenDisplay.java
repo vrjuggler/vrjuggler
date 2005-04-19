@@ -36,6 +36,7 @@ import java.awt.Component;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
@@ -53,15 +54,92 @@ public class ScreenDisplay
    private CaveModel mCaveModel = null;
    private HashMap mScreens = new HashMap();
    private BrokerChangeListener mBrokerChangeListener = null;
-   private TableLayout mTableLayout = null;
+   private TableLayout mMainPanelLayout = null;
    
+   private Icon mAddIcon = null;
+
+   private JButton mAddScreenBtn = new JButton();
+
+   private JPanel mMainPanel = new JPanel();
+   private JScrollPane mScreenScrollPanel = new JScrollPane();
+   private TableLayout mTableLayout = null;
+
    public ScreenDisplay()
    {
-      double size[][] = {{0.50, 0.50},{130}};
+      double[][] main_size = {{0.50, 0.50},{140}};
+      mMainPanelLayout = new TableLayout(main_size);
+      mMainPanel.setLayout(mMainPanelLayout);
+
+      // Try to get icons for the toolbar buttons
+      try
+      {
+         ClassLoader loader = getClass().getClassLoader();
+         String img_root = "org/vrjuggler/vrjconfig/customeditors/cave/images";
+         mAddIcon = new ImageIcon(loader.getResource(img_root +
+                                                          "/add_wall.gif"));
+         mAddScreenBtn.setIcon(mAddIcon);
+      }
+      catch (Exception e)
+      {
+         // Ack! No icons. Use text labels instead
+         mAddScreenBtn.setText("Add");
+      }
+
+      mAddScreenBtn.setToolTipText("Configure a new wall.");
+      mAddScreenBtn.addActionListener(new java.awt.event.ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            mAddScreenBtn_actionPerformed(e);
+         }
+      });
+      
+      mScreenScrollPanel.getViewport().setLayout(new BorderLayout());
+      mScreenScrollPanel.getViewport().add(mMainPanel, BorderLayout.CENTER);
+      
+      double[][] size = {{TableLayout.FILL, 25},
+                         {25, TableLayout.FILL}};
       mTableLayout = new TableLayout(size);
+      
       setLayout(mTableLayout);
+      add(mScreenScrollPanel,
+            new TableLayoutConstraints(0, 0, 0, 1,
+                                       TableLayout.FULL,
+                                       TableLayout.FULL));
+      add(mAddScreenBtn,
+            new TableLayoutConstraints(1, 0, 1, 0,
+                                       TableLayout.FULL,
+                                       TableLayout.FULL));
    }
 
+   void mAddScreenBtn_actionPerformed(ActionEvent e)
+   {
+      Frame parent =
+         (Frame) SwingUtilities.getAncestorOfClass(Frame.class, this);
+
+      String screen_name =
+         JOptionPane.showInputDialog(parent,
+                                     "Enter a name for the new screen",
+                                     "New Screen Name",
+                                     JOptionPane.QUESTION_MESSAGE);
+      ConfigBrokerProxy broker = new ConfigBrokerProxy();
+      ConfigDefinition vp_def = broker.getRepository().get(EditorConstants.display_window_type);
+      ConfigElementFactory factory =
+         new ConfigElementFactory(broker.getRepository().getAllLatest());
+      ConfigElement new_screen = factory.create(screen_name, vp_def);
+
+      // Make sure this add goes through successfully
+      if (! broker.add(mCaveModel.getConfigContext(), new_screen))
+      {
+         JOptionPane.showMessageDialog(SwingUtilities.getAncestorOfClass(Frame.class, this),
+                                       "There are no configuration files active.",
+                                       "Error",
+                                       JOptionPane.ERROR_MESSAGE);
+         return;
+      }
+      mCaveModel.addScreen(new_screen);
+   }
+   
    public void setConfig( ConfigContext ctx, CaveModel cm )
    {
       mConfigContext = ctx;
@@ -83,9 +161,9 @@ public class ScreenDisplay
       
       ScreenEditorPanel sep = new ScreenEditorPanel(mConfigContext, elm);
 
-      int col = mTableLayout.getNumColumn();
-      mTableLayout.insertColumn(col-1, TableLayout.PREFERRED);
-      this.add(sep, new TableLayoutConstraints(col - 1, 0, col - 1, 0, TableLayout.FULL,
+      int col = mMainPanelLayout.getNumColumn();
+      mMainPanelLayout.insertColumn(col-1, TableLayout.PREFERRED);
+      mMainPanel.add(sep, new TableLayoutConstraints(col - 1, 0, col - 1, 0, TableLayout.FULL,
                                                TableLayout.TOP));
       mScreens.put(elm, sep);
       revalidate();
@@ -98,11 +176,10 @@ public class ScreenDisplay
       if ( null != obj && obj instanceof Component)
       {
          Component comp = (Component)obj;
-         int col = mTableLayout.getConstraints(comp).col1;
-         mTableLayout.deleteColumn(col);
+         int col = mMainPanelLayout.getConstraints(comp).col1;
+         mMainPanelLayout.deleteColumn(col);
 
-         this.remove(comp);
-         //mTableLayout.layoutContainer(mScreenDisplay);
+         mMainPanel.remove(comp);
          this.revalidate();
          this.repaint();
       }

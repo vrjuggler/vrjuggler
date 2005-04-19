@@ -58,7 +58,6 @@ public class CaveEditorPanel
    extends JPanel
 {
    private JSplitPane mSplitPane = new JSplitPane();
-   private JScrollPane mScreenScrollPanel = new JScrollPane();
    
    private ScreenDisplay mScreenDisplay = new ScreenDisplay();
    private WallEditorPanel mWallEditorPanel = new WallEditorPanel();
@@ -82,7 +81,7 @@ public class CaveEditorPanel
       mCaveModel = new CaveModel(mConfigContext);
 
       mWallEditorPanel.setConfig(mConfigContext, mCaveModel);
-      mScreenDisplay.setConfig( ctx, mCaveModel );
+      mScreenDisplay.setConfig(mConfigContext, mCaveModel);
      
       this.revalidate();
       this.repaint();
@@ -132,11 +131,7 @@ public class CaveEditorPanel
       
       this.add(mSplitPane, BorderLayout.CENTER);
       mSplitPane.setContinuousLayout(true);
-      mSplitPane.add(mScreenScrollPanel, JSplitPane.TOP);
+      mSplitPane.add(mScreenDisplay, JSplitPane.TOP);
       mSplitPane.add(mWallEditorPanel, JSplitPane.BOTTOM);
-
-      mScreenScrollPanel.getViewport().setLayout(new BorderLayout());
-      mScreenScrollPanel.getViewport().add(mScreenDisplay, BorderLayout.CENTER);
-
    }
 }
