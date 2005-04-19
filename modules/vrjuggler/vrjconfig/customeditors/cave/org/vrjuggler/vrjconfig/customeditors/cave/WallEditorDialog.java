@@ -76,7 +76,7 @@ public class WallEditorDialog
       if ( elt == null )
       {
          ConfigBrokerProxy broker = new ConfigBrokerProxy();
-         ConfigDefinition vp_def = broker.getRepository().get(EditorConstants.surface_viewport_type);
+         ConfigDefinition vp_def = broker.getRepository().get(SURFACE_VIEWPORT_TYPE);
          ConfigElementFactory factory =
             new ConfigElementFactory(broker.getRepository().getAllLatest());
          elt = factory.create("WallEditorDialog Element " + VP_ELT_COUNT,
@@ -97,7 +97,7 @@ public class WallEditorDialog
 
       ConfigBrokerProxy broker = new ConfigBrokerProxy();
       ConfigDefinition vp_def =
-         broker.getRepository().get(EditorConstants.surface_viewport_type);
+         broker.getRepository().get(SURFACE_VIEWPORT_TYPE);
       
       //XXX: Choose left view for editing since mono, stereo, and passive stereo
       //     all use the left view Make sure to set the tracker & user for the

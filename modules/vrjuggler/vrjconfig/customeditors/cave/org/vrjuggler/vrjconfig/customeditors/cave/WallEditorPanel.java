@@ -49,7 +49,6 @@ import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
 import info.clearthought.layout.*;
 
-import org.netbeans.swing.tabcontrol.*;
 import java.awt.Color;
 
 import org.vrjuggler.vrjconfig.customeditors.cave.event.*;
