@@ -242,6 +242,8 @@ AC_CONFIG_FILES([
    commoneditors/build.xml
    commoneditors/Makefile
    customeditors/Makefile
+   customeditors/cave/build.xml
+   customeditors/cave/Makefile
    customeditors/display_window/build.xml
    customeditors/display_window/Makefile
    customeditors/flock/build.xml
