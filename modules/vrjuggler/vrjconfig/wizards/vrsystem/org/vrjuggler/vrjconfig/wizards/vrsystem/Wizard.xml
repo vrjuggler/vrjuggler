@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wizard>
+   <step title="Step 1" class="org.vrjuggler.vrjconfig.wizard.vrsystem.ChooseClusterStep" />
+   <sequence title="Sequence 1" class="org.vrjuggler.vrjconfig.wizard.vrsystem.ClusterSequence">
+     <step title="Step 1.1" class="org.vrjuggler.vrjconfig.wizard.vrsystem.NodeSettingsStep" />
+   </sequence>
+   <step title="Step 2" class="org.vrjuggler.vrjconfig.wizard.vrsystem.CurrentDevicesStep" />
+   <step title="Step 2" class="org.vrjuggler.vrjconfig.wizard.vrsystem.UserStep" />
+   <step title="Step 2" class="org.vrjuggler.vrjconfig.wizard.vrsystem.ScreenStep" />
+   <step title="Step 2" class="org.vrjuggler.vrjconfig.wizard.vrsystem.WallStep" />
+</wizard>
