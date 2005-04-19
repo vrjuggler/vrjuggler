@@ -49,6 +49,7 @@ import info.clearthought.layout.*;
 
 public class ScreenDisplay
    extends JPanel
+   implements EditorConstants
 {
    private ConfigContext mConfigContext = null;
    private CaveModel mCaveModel = null;
@@ -123,7 +124,7 @@ public class ScreenDisplay
                                      "New Screen Name",
                                      JOptionPane.QUESTION_MESSAGE);
       ConfigBrokerProxy broker = new ConfigBrokerProxy();
-      ConfigDefinition vp_def = broker.getRepository().get(EditorConstants.display_window_type);
+      ConfigDefinition vp_def = broker.getRepository().get(DISPLAY_WINDOW_TYPE);
       ConfigElementFactory factory =
          new ConfigElementFactory(broker.getRepository().getAllLatest());
       ConfigElement new_screen = factory.create(screen_name, vp_def);
@@ -265,7 +266,7 @@ public class ScreenDisplay
          {
             ConfigElement elm = evt.getElement();
             //System.out.println(elm.getDefinition().getName());
-            if ( elm.getDefinition().getToken().equals(EditorConstants.display_window_type) )
+            if ( elm.getDefinition().getToken().equals(DISPLAY_WINDOW_TYPE) )
             {
                mScreenDisplay.addScreen(elm);
             }
@@ -277,7 +278,7 @@ public class ScreenDisplay
          if (mConfigContext.contains(evt.getResource()))
          {
             ConfigElement elm = evt.getElement();
-            if ( elm.getDefinition().getToken().equals(EditorConstants.display_window_type) )
+            if ( elm.getDefinition().getToken().equals(DISPLAY_WINDOW_TYPE) )
             {
                mScreenDisplay.removeScreen(elm);
             }
