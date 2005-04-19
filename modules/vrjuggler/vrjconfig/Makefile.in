@@ -71,7 +71,7 @@ JCCL_BEAN_DIR=		@vrjconfig_bundle_jccl_beandir@
 
 INSTALL=		@INSTALL@
 
-JARS=	ClusterWizard.jar Devices.jar Simulator.jar NewDevice.jar
+JARS=	ClusterWizard.jar Devices.jar Simulator.jar NewDevice.jar VRSystem.jar
 BEANS=	VRJConfig
 
 @SET_MAKE@
@@ -88,9 +88,9 @@ ifeq ($(BUILD_JAVA), Y)
 	@echo "------------------------------------------------"
 	@echo "Building VRJConfig foundational code"
 	@echo "------------------------------------------------"
-	$(ANT)
 	@$(MAKE) -C commoneditors commoneditors
 	@$(MAKE) -C customeditors customeditors
+	$(ANT)
 	@$(MAKE) links
 else
 	@echo "------------------------------------------------"
