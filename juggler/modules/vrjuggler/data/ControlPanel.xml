@@ -16,8 +16,13 @@
    <editor label="Cluster" class=""
            icon="org/vrjuggler/vrjconfig/images/cluster64.png" />
    -->
+   <editor label="CAVE Editor" class="org.vrjuggler.vrjconfig.customeditors.cave.CaveEditor"
+           icon="org/vrjuggler/vrjconfig/images/cluster64.png" />
    <wizard label="Cluster Wizard"
            wizard_location="${VJ_BASE_DIR}/share/vrjuggler/java/ClusterWizard.jar"
+           icon="org/vrjuggler/vrjconfig/images/new_cluster_wizard64.png" />
+   <wizard label="VR System Wizard"
+           wizard_location="${VJ_BASE_DIR}/share/vrjuggler/java/VRSystem.jar"
            icon="org/vrjuggler/vrjconfig/images/new_cluster_wizard64.png" />
    <category label="Devices" title="Choose a device type"
              icon="org/vrjuggler/vrjconfig/images/devices64.png">
