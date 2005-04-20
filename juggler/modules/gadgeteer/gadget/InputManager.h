@@ -98,7 +98,7 @@ public:
       //------------------------//
       //       CONFIG API       //
       //------------------------//
-   
+
    /**
     * Adds the element to the configuration.
     * @pre configCanHandle(element) == true
@@ -144,6 +144,10 @@ private:
     */
    bool removeDevice(jccl::ConfigElementPtr element);
 
+   /** Configure the InputManager with an input manager element. */
+   bool configureInputManager(jccl::ConfigElementPtr element);
+
+
 public:
    /**
     * @name Device API.
@@ -156,7 +160,7 @@ public:
    void updateAllDevices();
 
    /**
-    * Updates all proxies by grabbing the correct data and 
+    * Updates all proxies by grabbing the correct data and
     * transforming it using the PositionFilters.
     */
    void updateAllProxies();
@@ -263,9 +267,9 @@ protected:
    tDevTableType                        mDevTable;
    std::map<std::string, Proxy*>        mProxyTable;    /**< list of proxies in the system */
 
-   /** 
+   /**
     * List of alias names for proxies.
-    * 
+    *
     * The mProxyAlias table serves as a secondary lookup for proxies.  ie. if
     * the proxy name is not found in mProxyTable, then search mProxyAliases
     * for it.
