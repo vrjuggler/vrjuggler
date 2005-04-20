@@ -34,9 +34,11 @@ package org.vrjuggler.vrjconfig.customeditors.cave;
 
 import java.awt.Component;
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.awt.Rectangle;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
@@ -64,6 +66,8 @@ public class ScreenDisplay
    private JPanel mMainPanel = new JPanel();
    private JScrollPane mScreenScrollPanel = new JScrollPane();
    private TableLayout mTableLayout = null;
+
+   private boolean mClusterConfig = false;
 
    public ScreenDisplay()
    {
@@ -115,19 +119,11 @@ public class ScreenDisplay
 
    void mAddScreenBtn_actionPerformed(ActionEvent e)
    {
-      Frame parent =
-         (Frame) SwingUtilities.getAncestorOfClass(Frame.class, this);
-
-      String screen_name =
-         JOptionPane.showInputDialog(parent,
-                                     "Enter a name for the new screen",
-                                     "New Screen Name",
-                                     JOptionPane.QUESTION_MESSAGE);
       ConfigBrokerProxy broker = new ConfigBrokerProxy();
       ConfigDefinition vp_def = broker.getRepository().get(DISPLAY_WINDOW_TYPE);
       ConfigElementFactory factory =
          new ConfigElementFactory(broker.getRepository().getAllLatest());
-      ConfigElement new_screen = factory.create(screen_name, vp_def);
+      ConfigElement new_screen = factory.create("", vp_def);
 
       // Make sure this add goes through successfully
       if (! broker.add(mCaveModel.getConfigContext(), new_screen))
@@ -139,12 +135,61 @@ public class ScreenDisplay
          return;
       }
       mCaveModel.addScreen(new_screen);
+      editScreen(new_screen);
+   }
+
+   private void editScreen(ConfigElement elm)
+   {
+      //XXX: Code reused from ScreenEditorPanel
+      Container parent =
+         (Container) SwingUtilities.getAncestorOfClass(Container.class,
+                                                       this);
+      DisplayWindowStartDialog dlg =
+         new DisplayWindowStartDialog(parent, mConfigContext, elm,
+                                      new Dimension(1280, 1024));
+                                      //mDesktopSize);
+
+      if ( dlg.showDialog() == DisplayWindowStartDialog.OK_OPTION )
+      {
+         Rectangle bounds  = dlg.getDisplayWindowBounds();
+         elm.setProperty("origin", 0, new Integer(bounds.x), mConfigContext);
+         elm.setProperty("origin", 1, new Integer(bounds.y), mConfigContext);
+         elm.setProperty("size", 0, new Integer(bounds.width), mConfigContext);
+         elm.setProperty("size", 1, new Integer(bounds.height), mConfigContext);
+
+         ConfigElement fb_cfg =
+            (ConfigElement) elm.getProperty("frame_buffer_config", 0);
+         fb_cfg.setProperty("visual_id", 0, dlg.getVisualID(), mConfigContext);
+         fb_cfg.setProperty("red_size", 0, dlg.getRedDepth(), mConfigContext);
+         fb_cfg.setProperty("green_size", 0, dlg.getGreenDepth(), mConfigContext);
+         fb_cfg.setProperty("blue_size", 0, dlg.getBlueDepth(), mConfigContext);
+         fb_cfg.setProperty("alpha_size", 0, dlg.getAlphaDepth(), mConfigContext);
+         fb_cfg.setProperty("depth_buffer_size", 0, dlg.getDepthBufferSize(),
+                            mConfigContext);
+         fb_cfg.setProperty("fsaa_enable", 0, dlg.getFSAAEnable(), mConfigContext);
+
+         elm.setName(dlg.getDisplayWindowTitle());
+         elm.setProperty("stereo", 0, dlg.inStereo(), mConfigContext);
+         elm.setProperty("border", 0, dlg.hasBorder(), mConfigContext);
+
+         elm.setProperty(LOCK_KEY_PROPERTY, 0, dlg.getLockKey(),
+                              mConfigContext);
+         elm.setProperty(START_LOCKED_PROPERTY, 0,
+                              dlg.shouldStartLocked(), mConfigContext);
+         elm.setProperty(SLEEP_TIME_PROPERTY, 0, dlg.getSleepTime(),
+                              mConfigContext);
+      }
    }
    
    public void setConfig( ConfigContext ctx, CaveModel cm )
    {
+      setConfig(ctx, cm, false);
+   }
+   public void setConfig( ConfigContext ctx, CaveModel cm, boolean clusterConfig )
+   {
       mConfigContext = ctx;
       mCaveModel = cm;
+      mClusterConfig = clusterConfig;
       
       for ( Iterator itr = mCaveModel.getScreens().iterator() ; itr.hasNext() ; )
       {

@@ -76,6 +76,8 @@ public class ScreenEditorPanel
       mConfigContext = ctx;
       mConfigElement = elm;
 
+      mConfigElement.addConfigElementListener(mChangeListener);
+
       try
       {
          jbInit();
@@ -181,7 +183,6 @@ public class ScreenEditorPanel
          fb_cfg.setProperty("depth_buffer_size", 0, dlg.getDepthBufferSize(),
                             mConfigContext);
          fb_cfg.setProperty("fsaa_enable", 0, dlg.getFSAAEnable(), mConfigContext);
-
          mConfigElement.setName(dlg.getDisplayWindowTitle());
          mConfigElement.setProperty("stereo", 0, dlg.inStereo(), mConfigContext);
          mConfigElement.setProperty("border", 0, dlg.hasBorder(), mConfigContext);
