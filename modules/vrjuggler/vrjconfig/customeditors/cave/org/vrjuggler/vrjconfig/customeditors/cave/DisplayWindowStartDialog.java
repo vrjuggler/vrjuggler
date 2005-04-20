@@ -36,6 +36,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
@@ -160,7 +162,24 @@ public class DisplayWindowStartDialog
          mResourceChooser.setEnabled(false);
 
          mNameField.setText(winElt.getName());
-
+         
+         javax.swing.event.DocumentListener myListener = new javax.swing.event.DocumentListener()
+            {
+               public void changedUpdate(DocumentEvent e)
+               {
+                  validateUserInput();
+               }
+               public void insertUpdate(DocumentEvent e)
+               {
+                  validateUserInput();
+               }
+               public void removeUpdate(DocumentEvent e)
+               {
+                  validateUserInput();
+               }
+            };
+         mNameField.getDocument().addDocumentListener(myListener);
+         
          ConfigElement fb_cfg =
             (ConfigElement) winElt.getProperty("frame_buffer_config", 0);
 
