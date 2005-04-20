@@ -65,18 +65,12 @@ class CommandProxy;
 class GADGET_CLASS_API BaseDeviceInterface
 {
 public:
-   BaseDeviceInterface(const BaseDeviceInterface& other)
-      : mProxyPtr(other.mProxyPtr),
-        mProxyName(other.mProxyName),
-        mNameSet(other.mNameSet)
-   {
-      BaseDeviceInterface::addDevInterface(this);    // Keep reference to the interface
-   }
-
-public:
    BaseDeviceInterface();
 
    virtual ~BaseDeviceInterface();
+
+   /** Copy constructor. */
+   BaseDeviceInterface(const BaseDeviceInterface& other);
 
    /**
     * Initializes the object.
@@ -88,6 +82,7 @@ public:
    /**
     * Refreshes the interface based on the current configuration.
     *
+    * This method is called by refreshAllDevices when system
     * @post (mProxyIndex == -1) ==> Proxy not initialized yet.<br>
     *       (mProxyIndex != -1) ==> mProxyName has name of device && local
     *       proxy pointer is set to the device.
@@ -222,6 +217,7 @@ public:
          }
       }
 
+      // If either one of the proxy pointers are NULL, then use a dummy
       if((NULL == mProxyPtr) || (NULL == mTypeSpecificProxy))
       {
          mTypeSpecificProxy = &mDummyProxy;
