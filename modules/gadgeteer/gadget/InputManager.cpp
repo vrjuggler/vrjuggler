@@ -198,7 +198,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
    vprASSERT(configCanHandle(element));
 
    bool ret_val = false;      // Flag to return success
-   
+
    if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(element))
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
@@ -209,7 +209,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
    else if (element->getID() == std::string( "input_window" ))
    {
       // Get the KeyboardMouseDevice that this window should send events to.
-      std::string keyboard_mouse_device_name = 
+      std::string keyboard_mouse_device_name =
          element->getProperty<std::string>( "keyboard_mouse_device_name" );
 
       // Get the KeyboardMouseDevice ConfigElement.
@@ -221,11 +221,11 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       jccl::ConfigElementPtr keyboard_mouse_element
          = cfg_mgr->getActiveConfig()->get( keyboard_mouse_device_name );
       cfg_mgr->unlockActive();
-      
+
       // If a KeyboardMouseDevice with this name exists and is remote, we do not want
       // to start this device and open a window since this KeyboardMouseDevice will
       // be invalid.
-      if (NULL != keyboard_mouse_element.get() && 
+      if (NULL != keyboard_mouse_element.get() &&
          cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig( keyboard_mouse_element ))
       {
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
@@ -263,243 +263,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
    }
    else if(element->getID() == std::string("input_manager"))
    {
-      vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
-                                       std::string("Handling input_manager element:\n"),
-                                       std::string("-- end state -- \n"));
-
-      // Keep this up to date with the version of the element definition we're
-      // expecting to handle.
-      const unsigned int cur_version(2);
-
-      // If the element version is less than cur_version, we will not try to
-      // proceed.  Instead, we'll print an error message and return false so
-      // that the Config Manager knows this element wasn't consumed.
-      if ( element->getVersion() < cur_version )
-      {
-         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-            << clrOutBOLD(clrRED, "ERROR")
-            << " [gadget::InputManager::configAdd()] Element named '"
-            << element->getName() << "'" << std::endl << vprDEBUG_FLUSH;
-         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-            << "is version " << element->getVersion()
-            << ", but we require at least version " << cur_version
-            << std::endl << vprDEBUG_FLUSH;
-         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-            << "Ignoring this element and moving on." << std::endl
-            << vprDEBUG_FLUSH;
-         ret_val = false;
-      }
-      // We got the right version of the config element and can proceed.
-      else
-      {
-         const std::string driver_path_prop_name("driver_path");
-         const int path_count(element->getNum(driver_path_prop_name));
-         std::vector<fs::path> search_path(path_count);
-
-         for ( unsigned int i = 0; i < search_path.size(); ++i )
-         {
-            std::string temp_str =
-               vpr::replaceEnvVars(element->getProperty<std::string>(driver_path_prop_name, i));
-
-            try
-            {
-               search_path[i] = fs::path(temp_str, fs::native);
-            }
-            catch(fs::filesystem_error& fsEx)
-            {
-               vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-                  << clrOutNORM(clrRED, "ERROR:")
-                  << "[gadget::InputManager::configAdd()] File system "
-                  << "exception caught while converting\n" << vprDEBUG_FLUSH;
-               vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-                  << "'" << temp_str << "'\n" << vprDEBUG_FLUSH;
-               vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-                  << "to a Boost.Filesystem path.\n" << vprDEBUG_FLUSH;
-               vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-                  << fsEx.what() << std::endl << vprDEBUG_FLUSH;
-            }
-         }
-
-         // Append a default driver search path to search_path.
-         const std::string gadget_base_dir("GADGET_BASE_DIR");
-         const std::string vj_base_dir("VJ_BASE_DIR");
-         std::string base_dir;
-         bool append_default(true);
-
-         // Try get to the value of $GADGET_BASE_DIR first.  If that fails,
-         // fall back on $VJ_BASE_DIR.
-         if ( ! vpr::System::getenv(gadget_base_dir, base_dir).success() )
-         {
-            if ( ! vpr::System::getenv(vj_base_dir, base_dir).success() )
-            {
-               // If neither $GADGET_BASE_DIR nor $VJ_BASE_DIR is set, then
-               // we cannot append a default driver search path.
-               append_default = false;
-            }
-         }
-
-         if ( append_default )
-         {
-#if defined(VPR_OS_IRIX) && defined(_ABIN32)
-            const std::string bit_suffix("32");
-#elif defined(VPR_OS_IRIX) && defined(_ABI64)
-            const std::string bit_suffix("64");
-#else
-            const std::string bit_suffix("");
-#endif
-
-            fs::path default_search_dir =
-               fs::path(base_dir, fs::native) /
-                  (std::string("lib") + bit_suffix) /
-                  std::string("gadgeteer") / std::string("drivers");
-
-            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
-               << "[gadget::InputManager::configAdd()] Appending default "
-               << "search path '"
-               << default_search_dir.native_directory_string() << "'\n"
-               << vprDEBUG_FLUSH;
-
-            search_path.push_back(default_search_dir);
-         }
-
-         // --- Load device driver dsos -- //
-         // - Load individual drivers
-         const std::string driver_prop_name("driver");
-         const std::string get_version_func("getGadgeteerVersion");
-         const std::string driver_init_func("initDevice");
-
-         int driver_count = element->getNum(driver_prop_name);
-         std::string driver_dso_name;
-
-         for ( int i = 0; i < driver_count; ++i )
-         {
-            driver_dso_name =
-               element->getProperty<std::string>(driver_prop_name, i);
-
-            if ( ! driver_dso_name.empty() )
-            {
-               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-                  << "[gadget::InputManager::configAdd()] Loading driver DSO '"
-                  << driver_dso_name << "'\n" << vprDEBUG_FLUSH;
-
-               vpr::LibraryPtr dso =
-                  vpr::LibraryLoader::findDSO(driver_dso_name, search_path);
-
-               if ( dso.get() != NULL )
-               {
-                  vpr::ReturnStatus version_status;
-                  VersionCheckCallable version_functor;
-                  version_status =
-                     vpr::LibraryLoader::findEntryPoint(dso, get_version_func,
-                                                        version_functor);
-
-                  if ( ! version_status.success() )
-                  {
-                     vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-                        << clrOutBOLD(clrRED, "ERROR")
-                        << ": Version mismatch while loading driver DSO '"
-                        << driver_dso_name << "'\n" << vprDEBUG_FLUSH;
-                     vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-                        << "This driver will not be usable.\n"
-                        << vprDEBUG_FLUSH;
-                  }
-                  else
-                  {
-                     vpr::ReturnStatus load_status;
-                     DriverInitCallable init_functor(this);
-                     load_status =
-                        vpr::LibraryLoader::findEntryPoint(dso,
-                                                           driver_init_func,
-                                                           init_functor);
-
-                     if ( load_status.success() )
-                     {
-                        mLoadedDrivers.push_back(dso);
-                     }
-                  }
-               }
-               else
-               {
-                  vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-                     << clrOutBOLD(clrRED, "ERROR")
-                     << ": Failed to find driver DSO '" << driver_dso_name
-                     << "'\n" << vprDEBUG_FLUSH;
-               }
-            }
-         }
-
-         // - Load driver directory
-         const std::string dir_prop_name("driver_scan_path");
-         int dir_count = element->getNum(dir_prop_name);
-         std::string driver_dir;
-
-#if defined(VPR_OS_Win32)
-         const std::string driver_ext("dll");
-#elif defined(VPR_OS_Darwin)
-         const std::string driver_ext("dylib");
-#else
-         const std::string driver_ext("so");
-#endif
-
-         for ( int i = 0; i < dir_count; ++i )
-         {
-            driver_dir = vpr::replaceEnvVars(element->getProperty<std::string>(dir_prop_name, i));
-
-            // The vpr::LibraryFinder will throw an exception if driver_dir is
-            // (somehow) an invalid path.
-            try
-            {
-               fs::path drv_path(driver_dir, fs::native);
-
-               if ( fs::exists(drv_path) )
-               {
-                  vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-                     << "[gadget::InputManager::configAdd()] Searching for "
-                     << "driver DSOs in '" << driver_dir << "'\n"
-                     << vprDEBUG_FLUSH;
-
-                  vpr::LibraryFinder finder(driver_dir, driver_ext);
-                  vpr::LibraryFinder::LibraryList libs = finder.getLibraries();
-                  DriverInitCallable functor(this);
-
-                  for ( vpr::LibraryFinder::LibraryList::iterator lib = libs.begin();
-                        lib != libs.end();
-                        ++lib )
-                  {
-                     vpr::ReturnStatus load_status;
-                     load_status =
-                        vpr::LibraryLoader::findEntryPoint(*lib,
-                                                           driver_init_func,
-                                                           functor);
-                     
-                     if ( load_status.success() )
-                     {
-                        mLoadedDrivers.push_back(*lib);
-                     }
-                  }
-               }
-               else
-               {
-                  vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-                     << clrOutBOLD(clrYELLOW, "WARNING:")
-                     << " [gadget::InputManager::configAdd()] Invalid "
-                     << "directory for driver dso's: " << driver_dir
-                     << std::endl << vprDEBUG_FLUSH;
-               }
-            }
-            catch(fs::filesystem_error& fsEx)
-            {
-               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-                  << clrOutNORM(clrRED, "ERROR:")
-                  << " [gadget::InputManager::configAdd()] File system "
-                  << "exception caught!\n" << vprDEBUG_FLUSH;
-               vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-                  << fsEx.what() << std::endl << vprDEBUG_FLUSH;
-            }
-         }
-
-         ret_val = true;
-      }
+      ret_val = configureInputManager(element);
    }
 
    //DumpStatus();                      // Dump the status
@@ -584,7 +348,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 //  It is recognized device, proxy, or alias.
 bool InputManager::configCanHandle(jccl::ConfigElementPtr element)
 {           // NEED TO FIX!!!!
-   return ( (DeviceFactory::instance()->recognizeDevice(element) && 
+   return ( (DeviceFactory::instance()->recognizeDevice(element) &&
              !cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(element)) ||
             ProxyFactory::instance()->recognizeProxy(element) ||
             recognizeProxyAlias(element) ||
@@ -673,7 +437,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
    // Tell the factory to load the proxy
    // NOTE: The config for the proxy registers it with the input manager
-   new_proxy = ProxyFactory::instance()->loadProxy(element);   
+   new_proxy = ProxyFactory::instance()->loadProxy(element);
 
    // Check for success
    if(NULL == new_proxy)
@@ -742,7 +506,7 @@ GADGET_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr
       }
       out << std::endl;
    }
- 
+
    out << std::endl;
 
    // Dump Alias list
@@ -830,7 +594,7 @@ Input* InputManager::getDevice(const std::string& deviceName)
    if(ret_dev != mDevTable.end())
    {
       return ret_dev->second;
-   }   
+   }
    return NULL;
 }
 
@@ -900,6 +664,258 @@ bool InputManager::removeDevice(const std::string& instName)
 
    return true;
 }
+
+bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
+{
+   bool have_bad_elt = (element->getID() != std::string("input_manager"));
+   vprASSERT(!have_bad_elt);
+   if(have_bad_elt)
+   {
+      return false;
+   }
+
+   bool ret_val = false;
+
+   vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+                                          std::string("Handling input_manager element:\n"),
+                                          std::string("-- end state -- \n"));
+
+   // Keep this up to date with the version of the element definition we're
+   // expecting to handle.
+   const unsigned int cur_version(2);
+
+   // If the element version is less than cur_version, we will not try to
+   // proceed.  Instead, we'll print an error message and return false so
+   // that the Config Manager knows this element wasn't consumed.
+   if ( element->getVersion() < cur_version )
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR")
+         << " [gadget::InputManager::configAdd()] Element named '"
+         << element->getName() << "'" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << "is version " << element->getVersion()
+         << ", but we require at least version " << cur_version
+         << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << "Ignoring this element and moving on." << std::endl
+         << vprDEBUG_FLUSH;
+      ret_val = false;
+   }
+   // We got the right version of the config element and can proceed.
+   else
+   {
+      const std::string driver_path_prop_name("driver_path");
+      const int path_count(element->getNum(driver_path_prop_name));
+      std::vector<fs::path> search_path(path_count);
+
+      for ( unsigned int i = 0; i < search_path.size(); ++i )
+      {
+         std::string temp_str =
+            vpr::replaceEnvVars(element->getProperty<std::string>(driver_path_prop_name, i));
+
+         try
+         {
+            search_path[i] = fs::path(temp_str, fs::native);
+         }
+         catch(fs::filesystem_error& fsEx)
+         {
+            vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+               << clrOutNORM(clrRED, "ERROR:")
+               << "[gadget::InputManager::configAdd()] File system "
+               << "exception caught while converting\n" << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+               << "'" << temp_str << "'\n" << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+               << "to a Boost.Filesystem path.\n" << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+               << fsEx.what() << std::endl << vprDEBUG_FLUSH;
+         }
+      }
+
+      // Append a default driver search path to search_path.
+      const std::string gadget_base_dir("GADGET_BASE_DIR");
+      const std::string vj_base_dir("VJ_BASE_DIR");
+      std::string base_dir;
+      bool append_default(true);
+
+      // Try get to the value of $GADGET_BASE_DIR first.  If that fails,
+      // fall back on $VJ_BASE_DIR.
+      if ( ! vpr::System::getenv(gadget_base_dir, base_dir).success() )
+      {
+         if ( ! vpr::System::getenv(vj_base_dir, base_dir).success() )
+         {
+            // If neither $GADGET_BASE_DIR nor $VJ_BASE_DIR is set, then
+            // we cannot append a default driver search path.
+            append_default = false;
+         }
+      }
+
+      if ( append_default )
+      {
+#if defined(VPR_OS_IRIX) && defined(_ABIN32)
+         const std::string bit_suffix("32");
+#elif defined(VPR_OS_IRIX) && defined(_ABI64)
+         const std::string bit_suffix("64");
+#else
+         const std::string bit_suffix("");
+#endif
+
+         fs::path default_search_dir =
+            fs::path(base_dir, fs::native) /
+               (std::string("lib") + bit_suffix) /
+               std::string("gadgeteer") / std::string("drivers");
+
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
+            << "[gadget::InputManager::configAdd()] Appending default "
+            << "search path '"
+            << default_search_dir.native_directory_string() << "'\n"
+            << vprDEBUG_FLUSH;
+
+         search_path.push_back(default_search_dir);
+      }
+
+      // --- Load device driver dsos -- //
+      // - Load individual drivers
+      const std::string driver_prop_name("driver");
+      const std::string get_version_func("getGadgeteerVersion");
+      const std::string driver_init_func("initDevice");
+
+      int driver_count = element->getNum(driver_prop_name);
+      std::string driver_dso_name;
+
+      for ( int i = 0; i < driver_count; ++i )
+      {
+         driver_dso_name =
+            element->getProperty<std::string>(driver_prop_name, i);
+
+         if ( ! driver_dso_name.empty() )
+         {
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+               << "[gadget::InputManager::configAdd()] Loading driver DSO '"
+               << driver_dso_name << "'\n" << vprDEBUG_FLUSH;
+
+            vpr::LibraryPtr dso =
+               vpr::LibraryLoader::findDSO(driver_dso_name, search_path);
+
+            if ( dso.get() != NULL )
+            {
+               vpr::ReturnStatus version_status;
+               VersionCheckCallable version_functor;
+               version_status =
+                  vpr::LibraryLoader::findEntryPoint(dso, get_version_func,
+                                                     version_functor);
+
+               if ( ! version_status.success() )
+               {
+                  vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                     << clrOutBOLD(clrRED, "ERROR")
+                     << ": Version mismatch while loading driver DSO '"
+                     << driver_dso_name << "'\n" << vprDEBUG_FLUSH;
+                  vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                     << "This driver will not be usable.\n"
+                     << vprDEBUG_FLUSH;
+               }
+               else
+               {
+                  vpr::ReturnStatus load_status;
+                  DriverInitCallable init_functor(this);
+                  load_status =
+                     vpr::LibraryLoader::findEntryPoint(dso,
+                                                        driver_init_func,
+                                                        init_functor);
+
+                  if ( load_status.success() )
+                  {
+                     mLoadedDrivers.push_back(dso);
+                  }
+               }
+            }
+            else
+            {
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                  << clrOutBOLD(clrRED, "ERROR")
+                  << ": Failed to find driver DSO '" << driver_dso_name
+                  << "'\n" << vprDEBUG_FLUSH;
+            }
+         }
+      }
+
+      // - Load driver directory
+      const std::string dir_prop_name("driver_scan_path");
+      int dir_count = element->getNum(dir_prop_name);
+      std::string driver_dir;
+
+#if defined(VPR_OS_Win32)
+      const std::string driver_ext("dll");
+#elif defined(VPR_OS_Darwin)
+      const std::string driver_ext("dylib");
+#else
+      const std::string driver_ext("so");
+#endif
+
+      for ( int i = 0; i < dir_count; ++i )
+      {
+         driver_dir = vpr::replaceEnvVars(element->getProperty<std::string>(dir_prop_name, i));
+
+         // The vpr::LibraryFinder will throw an exception if driver_dir is
+         // (somehow) an invalid path.
+         try
+         {
+            fs::path drv_path(driver_dir, fs::native);
+
+            if ( fs::exists(drv_path) )
+            {
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                  << "[gadget::InputManager::configAdd()] Searching for "
+                  << "driver DSOs in '" << driver_dir << "'\n"
+                  << vprDEBUG_FLUSH;
+
+               vpr::LibraryFinder finder(driver_dir, driver_ext);
+               vpr::LibraryFinder::LibraryList libs = finder.getLibraries();
+               DriverInitCallable functor(this);
+
+               for ( vpr::LibraryFinder::LibraryList::iterator lib = libs.begin();
+                     lib != libs.end();
+                     ++lib )
+               {
+                  vpr::ReturnStatus load_status;
+                  load_status =
+                     vpr::LibraryLoader::findEntryPoint(*lib,
+                                                        driver_init_func,
+                                                        functor);
+
+                  if ( load_status.success() )
+                  {
+                     mLoadedDrivers.push_back(*lib);
+                  }
+               }
+            }
+            else
+            {
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                  << clrOutBOLD(clrYELLOW, "WARNING:")
+                  << " [gadget::InputManager::configAdd()] Invalid "
+                  << "directory for driver dso's: " << driver_dir
+                  << std::endl << vprDEBUG_FLUSH;
+            }
+         }
+         catch(fs::filesystem_error& fsEx)
+         {
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+               << clrOutNORM(clrRED, "ERROR:")
+               << " [gadget::InputManager::configAdd()] File system "
+               << "exception caught!\n" << vprDEBUG_FLUSH;
+            vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+               << fsEx.what() << std::endl << vprDEBUG_FLUSH;
+         }
+      }
+
+      ret_val = true;
+   }
+
+}
+
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -1014,7 +1030,7 @@ bool InputManager::addProxy(Proxy* proxy)
          << " but it is already in the proxy table.\n" << vprDEBUG_FLUSH;
       return false;
    }
-   
+
    mProxyTable[proxy_name] = proxy;
    return true;
 }
