@@ -914,6 +914,7 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
       ret_val = true;
    }
 
+   return ret_val;
 }
 
 
