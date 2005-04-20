@@ -52,6 +52,14 @@ BaseDeviceInterface::~BaseDeviceInterface()
 }
 
 
+BaseDeviceInterface::BaseDeviceInterface(const BaseDeviceInterface& other)
+      : mProxyPtr(other.mProxyPtr),
+        mProxyName(other.mProxyName),
+        mNameSet(other.mNameSet)
+{
+   BaseDeviceInterface::addDevInterface(this);    // Keep reference to the interface
+}
+
 void BaseDeviceInterface::init(const std::string& proxyName)
 {
    mProxyName = proxyName;    // Set the name
@@ -69,7 +77,7 @@ void BaseDeviceInterface::refresh()
    if(!mNameSet)
    { return; }
 
-   mProxyPtr = InputManager::instance()->getProxy(mProxyName); 
+   mProxyPtr = InputManager::instance()->getProxy(mProxyName);
 
    if (NULL == mProxyPtr)
    {
@@ -92,13 +100,13 @@ void BaseDeviceInterface::refresh()
       //   << "DeviceInterface now able to find proxy: "
       //   << mProxyName.c_str() << "               [ "
       //   << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]" << std::endl << vprDEBUG_FLUSH;
-      
+
       //std::string device_name("");
       //Input* deviceptr = mProxyPtr->getProxiedInputDevice();
       //if (NULL != deviceptr)
       //{
       //   device_name = deviceptr->getInstanceName();
-      //}                                             
+      //}
 
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_STATUS_LVL)
          << "DeviceInterface found proxy: " << std::setiosflags(std::ios::right)
@@ -121,7 +129,9 @@ void BaseDeviceInterface::removeDevInterface(BaseDeviceInterface* dev)
    vprASSERT(found_dev != mAllocatedDevices.end() && "Tried to remove non-registered interface");
 
    if(mAllocatedDevices.end() != found_dev)
+   {
       mAllocatedDevices.erase(found_dev);
+   }
 }
 
 void BaseDeviceInterface::refreshAllDevices()
