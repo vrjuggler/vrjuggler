@@ -54,11 +54,6 @@
 
 #include <vrj/Draw/OGL/GlApp.h>
 
-namespace
-{
-   OSG::UInt32 OSG_MAIN_ASPECT_ID;     /**< Local scope variable */
-}
-
 namespace vrj
 {
 
@@ -157,6 +152,8 @@ public:
 
 protected:
    vrj::GlContextData<context_data>  mContextData;  /**< OpenSG context data */
+
+   OSG::UInt32 OSG_MAIN_ASPECT_ID;
 };
 
 // Handle any initialization needed before API
