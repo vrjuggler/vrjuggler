@@ -41,7 +41,6 @@
 #include <vpr/Sync/CondVar.h>
 #include <vpr/Sync/Semaphore.h>
 
-
 namespace vrj
 {
    class GlDrawManager;
@@ -104,6 +103,16 @@ public:
    void stop()
    {
       mControlExit = 1;     // Set the control loop exit flag
+      
+      // We don't actually need to call completeRender() or completeSwap()
+      // since we don't care about when they complete. We only care about
+      // joining the thread
+      triggerRender();
+      //completeRender();
+      triggerSwap();
+      //completeSwap();
+
+      mActiveThread->join();
    }
 
 public:     // --------- Triggering functions ------ //
