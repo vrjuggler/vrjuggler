@@ -177,12 +177,6 @@ void GlDrawManager::main(void* nullParam)
 
       // -- Done rendering --- //
       drawDoneSema.release();
-
-      // Allow run-time config
-      //**//mRuntimeConfigSema.release();
-         // This is the time that reconfig can happen
-      // configProcessPending();
-      //**//mRuntimeConfigSema.acquire();
    }
 }
 
@@ -374,6 +368,11 @@ void GlDrawManager::closeAPI()
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL) << "vrj::GlDrawManager::closeAPI\n" << vprDEBUG_FLUSH;
 
    mRunning = false;
+   
+   // We must allow our control thread to fall through and die naturally.
+   drawTriggerSema.release(); 	 
+   drawDoneSema.acquire();
+   mControlThread->join();
 
    // Stop and delete all pipes
    unsigned int pipe_num;
@@ -381,21 +380,12 @@ void GlDrawManager::closeAPI()
    for (pipe_num = 0; pipe_num < pipes.size(); ++pipe_num)
    {
       pipes[pipe_num]->stop();
-      pipes[pipe_num]->triggerRender();
-      pipes[pipe_num]->completeRender();
-      pipes[pipe_num]->triggerSwap();
-      pipes[pipe_num]->completeSwap();
       
       vrj::GlPipe* old_pipe = pipes[pipe_num];
       
       pipes.erase(std::remove(pipes.begin(), pipes.end(), old_pipe));
       delete old_pipe;
    }
-   
-   // After stopping all pipes we must allow our control thread
-   // to fall through and die naturally.
-   drawTriggerSema.release(); 	 
-   drawDoneSema.acquire();
 
    // TODO: We must fix the closing of EventWindows and GlWindows before we can do this.
    // Close and delete all glWindows
