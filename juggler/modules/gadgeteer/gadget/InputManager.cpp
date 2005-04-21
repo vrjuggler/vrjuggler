@@ -691,7 +691,7 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
          << clrOutBOLD(clrRED, "ERROR")
-         << " [gadget::InputManager::configAdd()] Element named '"
+         << ": [gadget::InputManager::configureInputManager()] Element named '"
          << element->getName() << "'" << std::endl << vprDEBUG_FLUSH;
       vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
          << "is version " << element->getVersion()
@@ -721,9 +721,10 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
          catch(fs::filesystem_error& fsEx)
          {
             vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-               << clrOutNORM(clrRED, "ERROR:")
-               << "[gadget::InputManager::configAdd()] File system "
-               << "exception caught while converting\n" << vprDEBUG_FLUSH;
+               << clrOutNORM(clrRED, "ERROR")
+               << ": [gadget::InputManager::configureInputManager()] File "
+               << "system exception caught while converting\n"
+               << vprDEBUG_FLUSH;
             vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
                << "'" << temp_str << "'\n" << vprDEBUG_FLUSH;
             vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
@@ -767,8 +768,8 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
                std::string("gadgeteer") / std::string("drivers");
 
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
-            << "[gadget::InputManager::configAdd()] Appending default "
-            << "search path '"
+            << "[gadget::InputManager::configureInputManager()] Appending "
+            << "default search path '"
             << default_search_dir.native_directory_string() << "'\n"
             << vprDEBUG_FLUSH;
 
@@ -792,8 +793,8 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
          if ( ! driver_dso_name.empty() )
          {
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-               << "[gadget::InputManager::configAdd()] Loading driver DSO '"
-               << driver_dso_name << "'\n" << vprDEBUG_FLUSH;
+               << "[gadget::InputManager::configureInputManager()] Loading "
+               << "driver DSO '" << driver_dso_name << "'\n" << vprDEBUG_FLUSH;
 
             vpr::LibraryPtr dso = vpr::LibraryLoader::findDSO(driver_dso_name,
                                                               search_path);
@@ -866,8 +867,8 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
             if ( fs::exists(drv_path) )
             {
                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-                  << "[gadget::InputManager::configAdd()] Searching for "
-                  << "driver DSOs in '" << driver_dir << "'\n"
+                  << "[gadget::InputManager::configureInputManager()] "
+                  << "Searching for driver DSOs in '" << driver_dir << "'\n"
                   << vprDEBUG_FLUSH;
 
                vpr::LibraryFinder finder(driver_dir, driver_ext);
@@ -892,18 +893,18 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
             else
             {
                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-                  << clrOutBOLD(clrYELLOW, "WARNING:")
-                  << " [gadget::InputManager::configAdd()] Invalid "
-                  << "directory for driver dso's: " << driver_dir
+                  << clrOutBOLD(clrYELLOW, "WARNING")
+                  << ": [gadget::InputManager::configureInputManager()] "
+                  << "Invalid directory for driver DSOs: " << driver_dir
                   << std::endl << vprDEBUG_FLUSH;
             }
          }
          catch(fs::filesystem_error& fsEx)
          {
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-               << clrOutNORM(clrRED, "ERROR:")
-               << " [gadget::InputManager::configAdd()] File system "
-               << "exception caught!\n" << vprDEBUG_FLUSH;
+               << clrOutNORM(clrRED, "ERROR")
+               << ": [gadget::InputManager::configureInputManager()] File "
+               << "system exception caught!\n" << vprDEBUG_FLUSH;
             vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                << fsEx.what() << std::endl << vprDEBUG_FLUSH;
          }
