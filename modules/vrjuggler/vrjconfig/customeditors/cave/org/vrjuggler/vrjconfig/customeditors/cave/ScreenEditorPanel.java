@@ -162,8 +162,7 @@ public class ScreenEditorPanel
                                                        this);
       DisplayWindowStartDialog dlg =
          new DisplayWindowStartDialog(parent, mConfigContext, mConfigElement,
-                                      new Dimension(1280, 1024));
-                                      //mDesktopSize);
+                                      new Dimension(1280, 1024), mClusterConfig);
 
       if ( dlg.showDialog() == DisplayWindowStartDialog.OK_OPTION )
       {
@@ -206,7 +205,13 @@ public class ScreenEditorPanel
       revalidate();
       repaint();
    }
-
+   
+   public void setClusterConfig(boolean clusterConfig)
+   {
+      mClusterConfig = clusterConfig;
+   }
+   
+   private boolean mClusterConfig = false;
    private ConfigContext mConfigContext = null;
    private ConfigElement mConfigElement = null;
    private ViewportPlacer mViewportPlacer = null;

@@ -291,6 +291,7 @@ public class WallEditorPanel
    
    void mAddWallBtn_actionPerformed(ActionEvent e)
    {
+      /*
       Frame parent =
          (Frame) SwingUtilities.getAncestorOfClass(Frame.class, this);
 
@@ -299,10 +300,10 @@ public class WallEditorPanel
                                      "Enter a name for the new wall",
                                      "New Wall Name",
                                      JOptionPane.QUESTION_MESSAGE);
-
-      if ( wall_name != null )
-      {
-         CaveWall cw = mCaveModel.makeNewWall(wall_name);
+      */
+      //if ( wall_name != null )
+      //{
+         CaveWall cw = mCaveModel.makeNewWall("");
          mWallList.setSelectedValue(cw, true);
          
          int status = editWall(cw);
@@ -313,7 +314,7 @@ public class WallEditorPanel
          {
             mCaveModel.removeWall(cw);
          }
-      }
+      //}
    }
    
    void mRemoveWallBtn_actionPerformed(ActionEvent e)
@@ -365,6 +366,7 @@ public class WallEditorPanel
       status = dlg.showDialog();
       if ( status == DisplayWindowStartDialog.OK_OPTION )
       {
+         selected_wall.setName(dlg.getWallName());
          Point3D[] corners = dlg.getCorners();
          selected_wall.setCorners(corners, mConfigContext);
          selected_wall.setTracked(dlg.isTracked(), mConfigContext);
