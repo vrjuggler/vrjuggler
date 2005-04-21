@@ -677,8 +677,8 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
    bool ret_val = false;
 
    vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
-                                          std::string("Handling input_manager element:\n"),
-                                          std::string("-- end state -- \n"));
+                                    std::string("Handling input_manager element:\n"),
+                                    std::string("-- end state -- \n"));
 
    // Keep this up to date with the version of the element definition we're
    // expecting to handle.
@@ -795,8 +795,8 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
                << "[gadget::InputManager::configAdd()] Loading driver DSO '"
                << driver_dso_name << "'\n" << vprDEBUG_FLUSH;
 
-            vpr::LibraryPtr dso =
-               vpr::LibraryLoader::findDSO(driver_dso_name, search_path);
+            vpr::LibraryPtr dso = vpr::LibraryLoader::findDSO(driver_dso_name,
+                                                              search_path);
 
             if ( dso.get() != NULL )
             {
@@ -821,8 +821,7 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
                   vpr::ReturnStatus load_status;
                   DriverInitCallable init_functor(this);
                   load_status =
-                     vpr::LibraryLoader::findEntryPoint(dso,
-                                                        driver_init_func,
+                     vpr::LibraryLoader::findEntryPoint(dso, driver_init_func,
                                                         init_functor);
 
                   if ( load_status.success() )
@@ -881,8 +880,7 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
                {
                   vpr::ReturnStatus load_status;
                   load_status =
-                     vpr::LibraryLoader::findEntryPoint(*lib,
-                                                        driver_init_func,
+                     vpr::LibraryLoader::findEntryPoint(*lib, driver_init_func,
                                                         functor);
 
                   if ( load_status.success() )
@@ -916,8 +914,6 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
 
    return ret_val;
 }
-
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   * * * * * * * * * * * * * * * * * * * * * * * * * * * *
