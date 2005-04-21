@@ -54,11 +54,12 @@ public class SelectDefinitionStep
    }
    public boolean onExiting()
    {
-      ConfigDefinition def = cwp.getSelectedDefinition();
-      mWhiteBoard.put("device_definition", def);
-      return true;
+      //ConfigDefinition def = cwp.getSelectedDefinition();
+      //mWhiteBoard.put("device_definition", def);
+      return cwp.onExiting();
       //return(cwp.loadFile());
    }
+
    /**
    * Gets the GUI component for this pane.
    */

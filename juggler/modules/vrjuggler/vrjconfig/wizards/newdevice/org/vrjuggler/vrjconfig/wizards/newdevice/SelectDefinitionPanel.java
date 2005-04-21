@@ -32,9 +32,12 @@
 package org.vrjuggler.vrjconfig.wizard.newdevice;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.*;
+import java.awt.Frame;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -44,8 +47,11 @@ import javax.swing.*;
 import javax.swing.tree.*;
 
 import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.editors.*;
 import org.vrjuggler.tweek.wizard.*;
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
+import org.vrjuggler.vrjconfig.commoneditors.SimpleEditorDialog;
+import org.vrjuggler.vrjconfig.controlpanel.CustomEditorDialog;
 
 public class SelectDefinitionPanel extends JPanel implements EditorConstants
 {
@@ -57,6 +63,8 @@ public class SelectDefinitionPanel extends JPanel implements EditorConstants
    private JList mDefinitionList = new JList();
    private JScrollPane mDefinitionListScrollPane = new JScrollPane();
    private Map mWhiteBoard;
+   private ConfigContext mConfigContext = null;
+   private ConfigElement mConfigElement = null;
 
    public SelectDefinitionPanel()
    {
@@ -87,6 +95,97 @@ public class SelectDefinitionPanel extends JPanel implements EditorConstants
    public ConfigDefinition getSelectedDefinition()
    {
       return (ConfigDefinition)mDefinitionList.getSelectedValue();
+   }
+
+   public boolean onExiting()
+   {
+      if (null == mDefinitionList.getSelectedValue())
+      {
+         return false;
+      }
+
+      mConfigContext = (ConfigContext)mWhiteBoard.get("context");
+      
+      ConfigDefinition def = getSelectedDefinition();
+      String token = getSelectedDefinition().getToken();
+
+      if (null == mConfigElement)
+      {
+         // Create a temporary list of ConfigDefinitions to pass to factory.
+         java.util.List def_list = new ArrayList();
+         def_list.add(def);
+        
+         // Initialize a ConfigElementFactory with the needed 
+         // ConfigDefinition. And create a new ConfigElement.
+         ConfigElementFactory temp_factory = new ConfigElementFactory(def_list);
+         mConfigElement = temp_factory.create("New " + token, def);
+      }
+
+      List list = CustomEditorRegistry.findEditors(token);
+     
+      Color start_color = new Color(160, 160, 180);
+
+      Object color = UIManager.get( "window" );
+      if(null != color && color instanceof Color)
+      {
+         start_color = (Color)color;
+      }
+      else
+      {
+         System.out.println("Could not get the desktop color from the  UIManager.");
+      }
+
+      if(null == list || list.size() == 0)
+      {
+         System.out.println("No CustomEditors registered for token: " + token);
+         
+         JScrollPane scroll_pane = new JScrollPane();
+         PropertySheet element_prop_sheet =
+            PropertySheetFactory.instance().makeSheet(mConfigContext, mConfigElement, start_color);
+         
+         scroll_pane.getViewport().removeAll();
+         scroll_pane.getViewport().add(element_prop_sheet, null);
+         
+         Frame parent = 
+            (Frame) SwingUtilities.getAncestorOfClass(Frame.class,
+                                                      SelectDefinitionPanel.this);
+         SimpleEditorDialog dlg = new SimpleEditorDialog(parent,
+                                                               scroll_pane,
+                                                               mConfigElement.getDefinition().getName() + " Editor");
+         int status = dlg.showDialog();
+
+         if ( status == SimpleEditorDialog.CANCEL_OPTION )
+         {
+            mConfigElement = null;
+            return false;
+         }
+      }
+      else
+      {
+         CustomEditor editor = (CustomEditor)list.get(0);
+         editor.setConfig(mConfigContext, mConfigElement);
+         
+         Frame parent = 
+            (Frame) SwingUtilities.getAncestorOfClass(Frame.class,
+                                                      SelectDefinitionPanel.this);
+         CustomEditorDialog dlg = new CustomEditorDialog(parent,
+                                                         editor);
+         int status = dlg.showDialog();
+
+         if ( status == CustomEditorDialog.CANCEL_OPTION )
+         {
+            mConfigElement = null;
+            return false;
+         }
+      }
+      
+      if (!mConfigContext.containsElement(mConfigElement))
+      {
+         ConfigBroker broker = new ConfigBrokerProxy();
+         broker.add(mConfigContext, mConfigElement);
+      }
+
+      return true;
    }
 
    public void createListModel()
