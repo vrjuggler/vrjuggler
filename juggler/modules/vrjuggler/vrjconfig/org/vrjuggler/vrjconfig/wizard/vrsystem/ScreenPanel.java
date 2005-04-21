@@ -84,6 +84,11 @@ public class ScreenPanel extends JPanel implements EditorConstants
          mDeviceIcon.setText("");
       }
    }
+
+   public void setClusterConfig(boolean clusterConfig)
+   {
+      mScreenDisplay.setClusterConfig(clusterConfig);
+   }
    
    private void jbInit() throws Exception
    {

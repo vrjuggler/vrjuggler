@@ -65,8 +65,8 @@ public class ChooseClusterStep
       if (cwp == null)
       {
          cwp = new ChooseClusterPanel();
+         cwp.init(mWhiteBoard);
       }
-      cwp.init(mWhiteBoard);
       return cwp;
    }
 

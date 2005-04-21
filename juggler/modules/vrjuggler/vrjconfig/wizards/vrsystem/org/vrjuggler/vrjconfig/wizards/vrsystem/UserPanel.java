@@ -121,6 +121,20 @@ public class UserPanel extends JPanel implements EditorConstants
       add(mTopPanel, BorderLayout.NORTH);
       add(mBottomPanel, BorderLayout.CENTER);
    }
+
+   private ConfigElement getElementNamed(String name)
+   {
+      List elms = getBroker().getElements(mConfigContext);
+      List matches = ConfigUtilities.getElementsWithName(elms, name);
+      if (matches.size() > 0)
+      {
+         return (ConfigElement)matches.get(0);
+      }
+      else
+      {
+         return null;
+      }
+   }
    
    public void init(Map whiteboard)
    {
@@ -152,20 +166,37 @@ public class UserPanel extends JPanel implements EditorConstants
       // Initialize a ConfigElementFactory with the needed 
       // ConfigDefinition. And create a new ConfigElement.
       ConfigElementFactory temp_factory = new ConfigElementFactory(def_list);
-      if (null == mUserElement)
+      if (!mConfigContext.containsElementNamed("VJUser"))
       {
          mUserElement = temp_factory.create("VJUser", user_def);
          getBroker().add(mConfigContext, mUserElement);
       }
-      if (null == mHeadElement)
+      else if(null == mUserElement)
+      {
+         System.out.println("XXX: mUserElement should not be null unless UserPanel is being created multiple times.");
+         mUserElement = getElementNamed("VJUser");
+      }
+      
+      if (!mConfigContext.containsElementNamed("VJHead"))
       {
          mHeadElement = temp_factory.create("VJHead", alias_def);
          getBroker().add(mConfigContext, mHeadElement);
       }
-      if (null == mWandElement)
+      else if(null == mHeadElement)
+      {
+         System.out.println("XXX: mHeadElement should not be null unless UserPanel is being created multiple times.");
+         mHeadElement = getElementNamed("VJHead");
+      }
+      
+      if (!mConfigContext.containsElementNamed("VJWand"))
       {
          mWandElement = temp_factory.create("VJWand", alias_def);
          getBroker().add(mConfigContext, mWandElement);
+      }
+      else if(null == mWandElement)
+      {
+         System.out.println("XXX: mWandElement should not be null unless UserPanel is being created multiple times.");
+         mUserElement = getElementNamed("VJWand");
       }
 
       Object value = mUserElement.getProperty(INTEROCULAR_DISTANCE_PROPERTY, 0);
