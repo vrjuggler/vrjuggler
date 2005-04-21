@@ -81,7 +81,7 @@ int main(void )
     for (float i=0;i<70;i++) {
 	thePool->startFunc((vpr::thread_func_t)doIt);      
     }
-    thePool->barrier();
+    thePool->wait();
 
     std::cerr << "\n\nPast the barrier:" << counter << "\n\n" << std::flush;
 
@@ -90,7 +90,7 @@ int main(void )
     for (float z=0;z<30;z++) {
 	thePool->startFunc((vpr::thread_func_t)doIt);
     }
-    thePool->barrier();
+    thePool->wait();
   
     DebugLock.acquire();
 	std::cout << "\n\nCounter: " << counter << std::endl << std::flush;
