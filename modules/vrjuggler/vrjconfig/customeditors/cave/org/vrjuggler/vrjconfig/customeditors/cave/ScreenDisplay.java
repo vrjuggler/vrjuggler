@@ -144,10 +144,12 @@ public class ScreenDisplay
       Container parent =
          (Container) SwingUtilities.getAncestorOfClass(Container.class,
                                                        this);
+
+      System.out.println("Creating dialog: " + mClusterConfig);
       DisplayWindowStartDialog dlg =
          new DisplayWindowStartDialog(parent, mConfigContext, elm,
-                                      new Dimension(1280, 1024));
-                                      //mDesktopSize);
+                                      new Dimension(1280, 1024),
+                                      mClusterConfig);
 
       if ( dlg.showDialog() == DisplayWindowStartDialog.OK_OPTION )
       {
@@ -183,13 +185,8 @@ public class ScreenDisplay
    
    public void setConfig( ConfigContext ctx, CaveModel cm )
    {
-      setConfig(ctx, cm, false);
-   }
-   public void setConfig( ConfigContext ctx, CaveModel cm, boolean clusterConfig )
-   {
       mConfigContext = ctx;
       mCaveModel = cm;
-      mClusterConfig = clusterConfig;
       
       for ( Iterator itr = mCaveModel.getScreens().iterator() ; itr.hasNext() ; )
       {
@@ -199,6 +196,17 @@ public class ScreenDisplay
       mBrokerChangeListener = new BrokerChangeListener(this);
       ConfigBrokerProxy broker = new ConfigBrokerProxy();
       broker.addConfigListener( mBrokerChangeListener );
+   }
+
+   public void setClusterConfig(boolean clusterConfig)
+   {
+      mClusterConfig = clusterConfig;
+      System.out.println("ScreenDisplay: mClusterConfig: " + mClusterConfig);
+      Collection col = mScreens.values();
+      for (Iterator itr = col.iterator() ; itr.hasNext() ; )
+      {
+         ((ScreenEditorPanel)itr.next()).setClusterConfig(clusterConfig);
+      }
    }
    
    private void addScreen(ConfigElement elm)
@@ -212,6 +220,9 @@ public class ScreenDisplay
       mMainPanel.add(sep, new TableLayoutConstraints(col - 1, 0, col - 1, 0, TableLayout.FULL,
                                                TableLayout.TOP));
       mScreens.put(elm, sep);
+
+      sep.setClusterConfig(mClusterConfig);
+
       revalidate();
       repaint();
    }

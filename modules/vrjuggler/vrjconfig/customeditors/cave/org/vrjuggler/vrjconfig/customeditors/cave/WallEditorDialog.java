@@ -38,6 +38,8 @@ import java.beans.*;
 import java.util.Iterator;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import info.clearthought.layout.*;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
@@ -400,7 +402,12 @@ public class WallEditorDialog
    {
       return mConversionFactor.doubleValue();
    }
-
+   
+   public String getWallName()
+   {
+      return mNameField.getText();
+   }
+   
    protected void initUI()
    {
       mButtonPanel.setLayout(mButtonPanelLayout);
@@ -441,7 +448,8 @@ public class WallEditorDialog
                                TableLayout.PREFERRED}};
 
       double[][] phys_size = {{TableLayout.PREFERRED, 10, TableLayout.PREFERRED},
-                              {TableLayout.PREFERRED, 5, TableLayout.PREFERRED,
+                              {TableLayout.PREFERRED, TableLayout.PREFERRED,
+                               5, TableLayout.PREFERRED,
                                5, TableLayout.PREFERRED, TableLayout.PREFERRED,
                                TableLayout.PREFERRED, TableLayout.PREFERRED,
                                TableLayout.PREFERRED, TableLayout.PREFERRED,
@@ -497,6 +505,23 @@ public class WallEditorDialog
          mCornerXField.setValue(new Float(0.0));
          mCornerYField.setValue(new Float(0.0));
          mCornerZField.setValue(new Float(0.0));
+         mNameField.setText(mCaveWall.getName());
+         javax.swing.event.DocumentListener myListener = new javax.swing.event.DocumentListener()
+            {
+               public void changedUpdate(DocumentEvent e)
+               {
+                  validateUserInput();
+               }
+               public void insertUpdate(DocumentEvent e)
+               {
+                  validateUserInput();
+               }
+               public void removeUpdate(DocumentEvent e)
+               {
+                  validateUserInput();
+               }
+            };
+         mNameField.getDocument().addDocumentListener(myListener);
       }
       catch(Exception e)
       {
@@ -598,6 +623,13 @@ public class WallEditorDialog
       mHelpButton.addActionListener(new WallEditorDialog_mHelpButton_actionAdapter(this));
       mMainPanel.setLayout(mMainPanelLayout);
 
+      mNameLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mNameLabel.setLabelFor(mNameField);
+      mNameLabel.setText("Wall Name");
+      mNameField.setMinimumSize(new Dimension(60, 21));
+      mNameField.setPreferredSize(new Dimension(60, 21));
+      mNameField.setText("Cave Wall");
+
       mCornerPanel.setLayout(mCornerPanelLayout);
       mUnitsLabel.setLabelFor(mUnitsComboBox);
       mUnitsLabel.setText("Physical Units");
@@ -674,69 +706,77 @@ public class WallEditorDialog
       mUserLabel.setLabelFor(mUserEditor);
       mUserLabel.setText("User");
       mCornerChooser.addActionListener(new WallEditorDialog_mCornerChooser_actionAdapter(this));
-      
-      mMainPanel.add(mSurfaceTypeLabel,
+
+      mMainPanel.add(mNameLabel,
                      new TableLayoutConstraints(0, 0, 0, 0,
+                                                TableLayout.RIGHT,
+                                                TableLayout.CENTER));
+      mMainPanel.add(mNameField,
+                     new TableLayoutConstraints(2, 0, 2, 0,
+                                                TableLayout.FULL,
+                                                TableLayout.CENTER));      
+      mMainPanel.add(mSurfaceTypeLabel,
+                     new TableLayoutConstraints(0, 1, 0, 1,
                                                 TableLayout.LEFT,
                                                 TableLayout.FULL));
       mMainPanel.add(mSurfaceTypeChooser,
-                     new TableLayoutConstraints(2, 0, 2, 0,
+                     new TableLayoutConstraints(2, 1, 2, 1,
                                                 TableLayout.FULL,
                                                 TableLayout.FULL));
       mMainPanel.add(mTrackerProxyLabel,
-                     new TableLayoutConstraints(0, 2, 0, 2,
+                     new TableLayoutConstraints(0, 3, 0, 3,
                                                 TableLayout.LEFT,
                                                 TableLayout.FULL));
       mMainPanel.add(mTrackerProxyEditor,
-                     new TableLayoutConstraints(2, 2, 2, 2,
+                     new TableLayoutConstraints(2, 3, 2, 3,
                                                 TableLayout.FULL,
                                                 TableLayout.FULL));
       mMainPanel.add(mUnitsLabel,
-                     new TableLayoutConstraints(0, 4, 0, 4,
-                                                TableLayout.LEFT,
-                                                TableLayout.FULL));
-      mMainPanel.add(mUnitsComboBox,
-                     new TableLayoutConstraints(2, 4, 2, 4,
-                                                TableLayout.FULL,
-                                                TableLayout.FULL));
-      mMainPanel.add(mPlaneLabel,
                      new TableLayoutConstraints(0, 5, 0, 5,
                                                 TableLayout.LEFT,
                                                 TableLayout.FULL));
-      mMainPanel.add(mPlanePanel,
+      mMainPanel.add(mUnitsComboBox,
                      new TableLayoutConstraints(2, 5, 2, 5,
                                                 TableLayout.FULL,
                                                 TableLayout.FULL));
+      mMainPanel.add(mPlaneLabel,
+                     new TableLayoutConstraints(0, 6, 0, 6,
+                                                TableLayout.LEFT,
+                                                TableLayout.FULL));
+      mMainPanel.add(mPlanePanel,
+                     new TableLayoutConstraints(2, 7, 2, 7,
+                                                TableLayout.FULL,
+                                                TableLayout.FULL));
       mMainPanel.add(mCustomPlanePanel,
-                     new TableLayoutConstraints(2, 6, 2, 6,
+                     new TableLayoutConstraints(2, 7, 2, 7,
                                                 TableLayout.FULL,
                                                 TableLayout.FULL));
       mMainPanel.add(mCornerLabel,
-                     new TableLayoutConstraints(0, 7, 0, 7,
-                                                TableLayout.LEFT,
-                                                TableLayout.FULL));
-      mMainPanel.add(mCornerPanel,
-                     new TableLayoutConstraints(2, 7, 2, 8,
-                                                TableLayout.FULL,
-                                                TableLayout.FULL));
-      mMainPanel.add(mCornerIconLabel,
                      new TableLayoutConstraints(0, 8, 0, 8,
                                                 TableLayout.LEFT,
                                                 TableLayout.FULL));
-      mMainPanel.add(mDimensionsLabel,
+      mMainPanel.add(mCornerPanel,
+                     new TableLayoutConstraints(2, 8, 2, 9,
+                                                TableLayout.FULL,
+                                                TableLayout.FULL));
+      mMainPanel.add(mCornerIconLabel,
                      new TableLayoutConstraints(0, 9, 0, 9,
                                                 TableLayout.LEFT,
                                                 TableLayout.FULL));
-      mMainPanel.add(mDimensionsPanel,
-                     new TableLayoutConstraints(2, 9, 2, 9,
-                                                TableLayout.FULL,
-                                                TableLayout.FULL));
-      mMainPanel.add(mUserLabel,
+      mMainPanel.add(mDimensionsLabel,
                      new TableLayoutConstraints(0, 10, 0, 10,
                                                 TableLayout.LEFT,
                                                 TableLayout.FULL));
-      mMainPanel.add(mUserEditor,
+      mMainPanel.add(mDimensionsPanel,
                      new TableLayoutConstraints(2, 10, 2, 10,
+                                                TableLayout.FULL,
+                                                TableLayout.FULL));
+      mMainPanel.add(mUserLabel,
+                     new TableLayoutConstraints(0, 11, 0, 11,
+                                                TableLayout.LEFT,
+                                                TableLayout.FULL));
+      mMainPanel.add(mUserEditor,
+                     new TableLayoutConstraints(2, 11, 2, 11,
                                                 TableLayout.FULL,
                                                 TableLayout.FULL));
       mCornerPanel.add(mCornerChooser,
@@ -766,16 +806,18 @@ public class WallEditorDialog
    
    protected final void validateUserInput()
    {
-      boolean user_set, custom_valid;
+      boolean name_valid, user_set, custom_valid;
       boolean enabled;
-
+      
+      // The name cannot be an empty string.
+      name_valid   = ! mNameField.getText().equals("");
       String user = ((ConfigElementPointer) getUser()).getTarget();
       user_set = (user != null && !user.equals(""));
       custom_valid = validateCustomInput();
 
       // All of the above conditions must be true in order for the OK button
       // to be enabled.
-      enabled = user_set && custom_valid;
+      enabled = name_valid && user_set && custom_valid;
       mOkButton.setEnabled(enabled);
    }
    
@@ -831,6 +873,8 @@ public class WallEditorDialog
 
    private ImageIcon[][] mCornerIcons = new ImageIcon[7][4];
 
+   private JLabel mNameLabel = new JLabel();
+   private JTextField mNameField = new JTextField();
    private TableLayout mPhysicalCharPanelLayout = null;
 //   private TitledBorder mPhysicalCharPanelBorder;
    private JComboBox mUnitsComboBox = new JComboBox();
