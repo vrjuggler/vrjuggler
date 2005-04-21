@@ -303,6 +303,10 @@ public class CaveWall implements EditorConstants
       {
          return;
       }
+      
+      PropertyDefinition prop_def = mLeftView.getDefinition().getPropertyDefinition(VIEW_PROPERTY);
+      Map enums = prop_def.getEnums();
+      
       if (PASSIVE_STEREO == mStereoMode)
       {
          if (stereo == ACTIVE_STEREO)
@@ -331,7 +335,7 @@ public class CaveWall implements EditorConstants
             {
                System.out.println("No screen set for left view, so we can not enable stereo.");
             }
-            mLeftView.setProperty(VIEW_PROPERTY, 0, new String("Stereo"));
+            mLeftView.setProperty(VIEW_PROPERTY, 0, enums.get("Stereo"));
          }
          else if (stereo == MONO)
          {
@@ -347,7 +351,7 @@ public class CaveWall implements EditorConstants
                System.out.println("No screen set for right view, so we can not remove the view.");
             }
 
-            mLeftView.setProperty(VIEW_PROPERTY, 0, new String("Left Eye"));
+            mLeftView.setProperty(VIEW_PROPERTY, 0, enums.get("Left Eye"));
          }
       }
       if (MONO == mStereoMode)
@@ -363,7 +367,7 @@ public class CaveWall implements EditorConstants
             {
                System.out.println("No screen set for left view, so we can not enable stereo.");
             }
-            mLeftView.setProperty(VIEW_PROPERTY, 0, new String("Stereo"));
+            mLeftView.setProperty(VIEW_PROPERTY, 0, enums.get("Stereo"));
          }
          else if (stereo == PASSIVE_STEREO)
          {
@@ -393,7 +397,9 @@ public class CaveWall implements EditorConstants
                System.out.println("No screen set for left view, so we can not just add a right.");
             }
             
-            mRightView.setProperty(VIEW_PROPERTY, 0, new String("Right Eye"));
+
+            mLeftView.setProperty(VIEW_PROPERTY, 0, enums.get("Left Eye"));
+            mRightView.setProperty(VIEW_PROPERTY, 0, enums.get("Right Eye"));
          }
       }
       if (ACTIVE_STEREO == mStereoMode)
@@ -418,14 +424,14 @@ public class CaveWall implements EditorConstants
             mCaveModel.getViewToScreenMap().put(mRightView, screen);
             screen.addProperty(SURFACE_VIEWPORTS_PROPERTY, mRightView, context);
             
-            mLeftView.setProperty(VIEW_PROPERTY, 0, new String("Left Eye"));
-            mRightView.setProperty(VIEW_PROPERTY, 0, new String("Right Eye"));
+            mLeftView.setProperty(VIEW_PROPERTY, 0, enums.get("Left Eye"));
+            mRightView.setProperty(VIEW_PROPERTY, 0, enums.get("Right Eye"));
             
             screen.setProperty(STEREO_PROPERTY, 0, new Boolean(false), context);
          }
          else if (stereo == MONO)
          {
-            mLeftView.setProperty(VIEW_PROPERTY, 0, new String("Left Eye"));
+            mLeftView.setProperty(VIEW_PROPERTY, 0, enums.get("Left Eye"));
             
             ConfigElement screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mLeftView);
             screen.setProperty(STEREO_PROPERTY, 0, new Boolean(false), context);
@@ -433,6 +439,9 @@ public class CaveWall implements EditorConstants
       }
       
       mStereoMode = stereo;
+
+      // Use the setName function to set the names of the surface_viewports.
+      setName(mName);
    }
 
    public int getStereoMode()
@@ -581,6 +590,25 @@ public class CaveWall implements EditorConstants
    public String getName()
    {
       return mName;
+   }
+
+   public void setName(String name)
+   {
+      mName = name;
+      
+      if ( ACTIVE_STEREO == mStereoMode)
+      {
+         mLeftView.setName(mName + " (Stereo)");
+      }
+      if ( MONO == mStereoMode)
+      {
+         mLeftView.setName(mName + " (Mono)");
+      }
+      if ( PASSIVE_STEREO == mStereoMode)
+      {
+         mLeftView.setName(mName + " (Left Eye)");
+         mRightView.setName(mName + " (Right Eye)");
+      }
    }
    
    public void updateWidthHeight()

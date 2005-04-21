@@ -48,10 +48,13 @@ import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 
+import org.vrjuggler.vrjconfig.commoneditors.ConfigPtrComboBoxModel;
+
 public class DisplayWindowStartDialog
    extends JDialog
    implements EditorConstants
 {
+   /*
    public DisplayWindowStartDialog(Container parent, ConfigContext ctx,
                                    Dimension resolution)
       throws HeadlessException
@@ -125,12 +128,23 @@ public class DisplayWindowStartDialog
       this.pack();
       this.setLocationRelativeTo(parent);
    }
-
+   */
    public DisplayWindowStartDialog(Container parent, ConfigContext ctx,
                                    ConfigElement winElt, Dimension resolution)
+   {
+      this(parent, ctx, winElt, resolution, false);
+   }
+
+   public DisplayWindowStartDialog(Container parent, ConfigContext ctx,
+                                   ConfigElement winElt, Dimension resolution,
+                                   boolean clusterConfig)
       throws HeadlessException
    {
       super();
+      
+      mClusterConfig = clusterConfig;
+      mConfigContext = ctx;
+
       this.setTitle(winElt.getName() + " Properties");
       this.setModal(true);
       enableEvents(AWTEvent.WINDOW_EVENT_MASK);
@@ -359,7 +373,7 @@ public class DisplayWindowStartDialog
             {5, TableLayout.MINIMUM, 5, 300, TableLayout.FILL, 5},
             {TableLayout.PREFERRED, TableLayout.PREFERRED,
              TableLayout.PREFERRED, TableLayout.PREFERRED,
-             TableLayout.PREFERRED}
+             TableLayout.PREFERRED, TableLayout.PREFERRED}
          };
       mMainLayout = new TableLayout(main_size);
 
@@ -434,6 +448,15 @@ public class DisplayWindowStartDialog
       mNameField.setMinimumSize(new Dimension(60, 21));
       mNameField.setPreferredSize(new Dimension(60, 21));
       mNameField.setText("Display Window");
+      mNodeLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mNodeLabel.setLabelFor(mNameField);
+      mNodeLabel.setText("Cluster Node");
+      mNodeComboBox.setMinimumSize(new Dimension(60, 21));
+      mNodeComboBox.setPreferredSize(new Dimension(60, 21));
+      //mNodeComboBox.setText("Display Window");
+      mNodeComboBoxModel = new ConfigPtrComboBoxModel(mConfigContext);
+      mNodeComboBoxModel.addElementType(CLUSTER_NODE_TYPE);
+      mNodeComboBox.setModel(mNodeComboBoxModel);
       mSizeLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mSizeLabel.setLabelFor(mSizePanel);
       mSizeLabel.setText("Size");
@@ -670,16 +693,27 @@ public class DisplayWindowStartDialog
                      new TableLayoutConstraints(3, 1, 4, 1,
                                                 TableLayout.FULL,
                                                 TableLayout.CENTER));
+      if (mClusterConfig)
+      {
+         mMainPanel.add(mNodeLabel,
+                        new TableLayoutConstraints(1, 2, 1, 2,
+                                                   TableLayout.RIGHT,
+                                                   TableLayout.CENTER));
+         mMainPanel.add(mNodeComboBox,
+                        new TableLayoutConstraints(3, 2, 4, 2,
+                                                   TableLayout.FULL,
+                                                   TableLayout.CENTER));
+      }
       mMainPanel.add(mBoundsPanel,
-                     new TableLayoutConstraints(0, 2, 5, 2,
-                                                TableLayout.FULL,
-                                                TableLayout.FULL));
-      mMainPanel.add(mFrameBufferPanel,
                      new TableLayoutConstraints(0, 3, 5, 3,
                                                 TableLayout.FULL,
                                                 TableLayout.FULL));
-      mMainPanel.add(mWindowPropsPanel,
+      mMainPanel.add(mFrameBufferPanel,
                      new TableLayoutConstraints(0, 4, 5, 4,
+                                                TableLayout.FULL,
+                                                TableLayout.FULL));
+      mMainPanel.add(mWindowPropsPanel,
+                     new TableLayoutConstraints(0, 5, 5, 5,
                                                 TableLayout.FULL,
                                                 TableLayout.FULL));
       this.getContentPane().add(mButtonPanel, BorderLayout.SOUTH);
@@ -714,14 +748,21 @@ public class DisplayWindowStartDialog
 
    private int status = CANCEL_OPTION;
    private ConfigElement mWinElement = null;
+   private ConfigContext mConfigContext = null;
    private Dimension mResolution = null;
-
+   
+   private boolean mClusterConfig = false;
    private JPanel mMainPanel = new JPanel();
    private TableLayout mMainLayout = null;
    private JLabel mResourceLabel = new JLabel();
    private JComboBox mResourceChooser = new JComboBox();
    private JLabel mNameLabel = new JLabel();
    private JTextField mNameField = new JTextField();
+   
+   private JLabel mNodeLabel = new JLabel();
+   private JComboBox mNodeComboBox = new JComboBox();
+   private ConfigPtrComboBoxModel mNodeComboBoxModel = null;
+   
    private JPanel mBoundsPanel = new JPanel();
    private TableLayout mBoundsPanelLayout = null;
    private TitledBorder mBoundsPanelBorder;
