@@ -146,8 +146,15 @@ public:
     */
    OneThread* getThread();
 
-   /** Waits until all threads are done doing their work. */
-   void barrier()
+   /**
+    * Waits until all threads are done doing their work.
+    *
+    * @note This was renamed from \c barrier() in version 0.92.1 to deal with
+    *       a case where that name is a preprocessor macro.
+    *
+    * @since 0.92.1
+    */
+   void wait()
    {
       finishedLock.acquire();      // Get the lock that means threads done
       finishedLock.release();      // Reset it to done

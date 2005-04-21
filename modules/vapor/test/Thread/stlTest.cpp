@@ -92,7 +92,7 @@ int main(void)
     for (int i=0;i<15;i++) {
 	thePool->startFunc((vpr::thread_func_t)doIt, (void*)&(params[i]));      
     }
-    thePool->barrier();
+    thePool->wait();
 //*/
 //--------------------------------------------------------
     gettimeofday(&endTime, NULL);	    // Get ending time
