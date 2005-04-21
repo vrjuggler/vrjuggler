@@ -52,7 +52,7 @@ import org.vrjuggler.jccl.editors.*;
 import org.vrjuggler.jccl.config.event.*;
 import org.vrjuggler.tweek.wizard.*;
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
-import org.vrjuggler.vrjconfig.commoneditors.NonCustomEditorDialog;
+import org.vrjuggler.vrjconfig.commoneditors.SimpleEditorDialog;
 import org.vrjuggler.vrjconfig.controlpanel.CustomEditorDialog;
 import org.vrjuggler.vrjconfig.controlpanel.WizardLoader;
 import info.clearthought.layout.*;
@@ -345,12 +345,12 @@ public class CurrentDevicesPanel extends JPanel implements EditorConstants, Conf
             Frame parent = 
                (Frame) SwingUtilities.getAncestorOfClass(Frame.class,
                                                          CurrentDevicesPanel.this);
-            NonCustomEditorDialog dlg = new NonCustomEditorDialog(parent,
+            SimpleEditorDialog dlg = new SimpleEditorDialog(parent,
                                                                   scroll_pane,
                                                                   elm.getDefinition().getName() + " Editor");
             int status = dlg.showDialog();
 
-            if ( status == NonCustomEditorDialog.CANCEL_OPTION )
+            if ( status == SimpleEditorDialog.CANCEL_OPTION )
             {
                //mToolbar.doUndoUntil(save_point);
             }
