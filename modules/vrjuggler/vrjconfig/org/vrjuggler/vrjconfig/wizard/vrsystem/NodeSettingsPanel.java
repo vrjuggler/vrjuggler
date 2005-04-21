@@ -38,6 +38,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.vrjconfig.commoneditors.ConfigPtrListModel;
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
 
 public class NodeSettingsPanel extends JPanel implements EditorConstants
@@ -58,7 +59,7 @@ public class NodeSettingsPanel extends JPanel implements EditorConstants
    private JLabel lblHostname = new JLabel();
    private GridLayout entryPanelGridLayout = new GridLayout();
    private JTextField txtHostname = new JTextField();
-   private NodeListModel mNodesListModel = null;
+   private ConfigPtrListModel mNodesListModel = null;
    private JList lstNodes = new JList();
 
    private ConfigContext mContext = null;
@@ -177,7 +178,7 @@ public class NodeSettingsPanel extends JPanel implements EditorConstants
       // Create a context
       mContext = (ConfigContext)mWhiteBoard.get("context");
 
-      mNodesListModel = new NodeListModel(mContext);
+      mNodesListModel = new ConfigPtrListModel(mContext);
       mNodesListModel.addElementType(CLUSTER_NODE_TYPE);
       mBroker.addConfigListener(mNodesListModel);
       lstNodes.setModel(mNodesListModel);
