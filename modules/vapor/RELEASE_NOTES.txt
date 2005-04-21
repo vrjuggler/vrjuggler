@@ -9,7 +9,12 @@ For all versions:
 ===============================================================================
 
  Version: 1.0.0
-Released: <month> <day>, 2003
+Released: <month> <day>, 2005
+
+ Version: 1.0 Beta 3
+Released: May <day>, 2005
+    Required changes when upgrading from all previous versions:
+       * vpr::ThreadPool::barrier() is now vpr::ThreadPool::wait().
 
  Version: 0.26.0
 Released: January 13, 2003
