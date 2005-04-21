@@ -58,7 +58,7 @@ public class UserStep
    {
       super.onEntering();
       
-      if (mUserPanel == null)
+      if (null == mUserPanel)
       {
          mUserPanel = new UserPanel();
          mUserPanel.init(mWhiteBoard);
