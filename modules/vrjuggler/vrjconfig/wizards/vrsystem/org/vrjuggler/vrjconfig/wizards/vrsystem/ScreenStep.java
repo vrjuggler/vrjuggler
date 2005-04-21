@@ -63,6 +63,9 @@ public class ScreenStep
          mScreenPanel = new ScreenPanel();
          mScreenPanel.init(mWhiteBoard);
       }
+      Object obj = mWhiteBoard.get("cluster_configuration");
+      boolean val = ((Boolean)obj).booleanValue();
+      mScreenPanel.setClusterConfig(val);
    }
 
    public void onExited()
