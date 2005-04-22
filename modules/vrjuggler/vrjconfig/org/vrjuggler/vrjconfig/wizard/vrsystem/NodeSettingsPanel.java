@@ -37,6 +37,8 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
+import info.clearthought.layout.*;
+
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.vrjconfig.commoneditors.ConfigPtrListModel;
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
@@ -44,35 +46,31 @@ import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
 public class NodeSettingsPanel extends JPanel implements EditorConstants
 {
    BorderLayout baseLayout = new BorderLayout();
-   JPanel mCenterPanel = new JPanel();
-   BorderLayout mCenterLayout = new BorderLayout();
-   private JPanel mLeftCenterPanel = new JPanel();
-   private BorderLayout mLeftCenterBorderLayout = new BorderLayout();
+   JPanel mLowerPanel = new JPanel();
+   private TableLayout mLowerPanelLayout = null;
 
-   private Box menuBox;
-
-   private JPanel mMenuPanel = new JPanel();
+   private Icon mAddIcon = null;
+   private Icon mRemoveIcon = null;
+   private Icon mDisabledRemoveIcon = null;
+   
    private JScrollPane mListScrollPane1 = new JScrollPane();
    private JButton mAddNodeBtn = new JButton();
-   private JButton removeNode = new JButton();
-   private JPanel entryPanel = new JPanel();
-   private JLabel lblHostname = new JLabel();
-   private GridLayout entryPanelGridLayout = new GridLayout();
-   private JTextField txtHostname = new JTextField();
+   private JButton mRemoveNodeBtn = new JButton();
+   private JLabel mHostnameLabel = new JLabel();
+   private JTextField mHostnameField = new JTextField();
+   
    private ConfigPtrListModel mNodesListModel = null;
    private JList lstNodes = new JList();
 
    private ConfigContext mContext = null;
    private ConfigBroker mBroker = null;
-   private Component topSpacer;
    private TitledBorder titledBorder1;
-   private JPanel jPanel3 = new JPanel();
-   private JPanel jPanel2 = new JPanel();
-   private JPanel directionsPanel = new JPanel();
-   private JLabel jLabel2 = new JLabel();
-   private BorderLayout borderLayout1 = new BorderLayout();
-   private JLabel lblTitle = new JLabel();
-   private JLabel lblDirections = new JLabel();
+   private JPanel mDirectionsPanel = new JPanel();
+   private TableLayout mDirectionsPanelLayout= null;
+   private JLabel mTitleLabel = new JLabel();
+   private JLabel mDirectionsLabel = new JLabel();
+   private JLabel mIconLabel = new JLabel();
+   private Icon mClusterIcon = null;
 
    private Map mWhiteBoard;
 
@@ -86,14 +84,19 @@ public class NodeSettingsPanel extends JPanel implements EditorConstants
       {
          e.printStackTrace();
       }
-
+      // Try to get icons for the toolbar buttons
       try
       {
-         jLabel2.setIcon(new ImageIcon(this.getClass().getClassLoader().getResource("org/vrjuggler/vrjconfig/wizard/cluster/images/ClusterIcon.png")));
+         ClassLoader loader = getClass().getClassLoader();
+         mClusterIcon = new ImageIcon(loader.getResource(COMMON_IMG_ROOT +
+                                                          "/ClusterIcon.png"));
+         
+         mIconLabel.setIcon(mClusterIcon);
       }
-      catch(NullPointerException exp)
+      catch (Exception e)
       {
-         jLabel2.setText("");
+         // Ack! No icons. Use text labels instead
+         mIconLabel.setText("");
       }
    }
 
@@ -102,13 +105,49 @@ public class NodeSettingsPanel extends JPanel implements EditorConstants
       titledBorder1 = new TitledBorder("");
       this.setLayout(baseLayout);
 
-      menuBox = Box.createVerticalBox();
-      topSpacer = Box.createVerticalStrut(8);
+      double[][] lower_size = {{TableLayout.PREFERRED, TableLayout.FILL, 25},
+                              {25, 25, TableLayout.FILL}};
+      mLowerPanelLayout = new TableLayout(lower_size);
+      
+      mLowerPanel.setLayout(mLowerPanelLayout);
+      
+      
+      
+      double[][] dir_size = {{TableLayout.FILL, TableLayout.PREFERRED},
+                              {TableLayout.PREFERRED, TableLayout.FILL}};
+      mDirectionsPanelLayout = new TableLayout(dir_size);
+      mDirectionsPanel.setLayout(mDirectionsPanelLayout);
+      
+      // Try to get icons for the toolbar buttons
+      try
+      {
+         ClassLoader loader = getClass().getClassLoader();
+         mAddIcon = new ImageIcon(loader.getResource(COMMON_IMG_ROOT +
+                                                          "/add.gif"));
+         mRemoveIcon = new ImageIcon(loader.getResource(COMMON_IMG_ROOT +
+                                                          "/remove.gif"));
+         mDisabledRemoveIcon = new ImageIcon(loader.getResource(COMMON_IMG_ROOT +
+                                                          "/remove_disabled.gif"));
+         
+         mAddNodeBtn.setIcon(mAddIcon);
+         mRemoveNodeBtn.setIcon(mRemoveIcon);
+         mRemoveNodeBtn.setDisabledIcon(mDisabledRemoveIcon);
+      }
+      catch (Exception e)
+      {
+         // Ack! No icons. Use text labels instead
+         mAddNodeBtn.setText("Add");
+         mRemoveNodeBtn.setText("Remove");
+      }
 
+
+      
+      /*
       mAddNodeBtn.setMaximumSize(new Dimension(130, 33));
       mAddNodeBtn.setMinimumSize(new Dimension(130, 33));
       mAddNodeBtn.setPreferredSize(new Dimension(130, 33));
       mAddNodeBtn.setText("Add Node");
+      */
       mAddNodeBtn.addActionListener(new java.awt.event.ActionListener()
          {
             public void actionPerformed(ActionEvent e)
@@ -116,56 +155,72 @@ public class NodeSettingsPanel extends JPanel implements EditorConstants
                mAddNodeBtn_actionPerformed(e);
             }
          });
-      removeNode.setMaximumSize(new Dimension(130, 33));
-      removeNode.setMinimumSize(new Dimension(130, 33));
-      removeNode.setPreferredSize(new Dimension(130, 33));
-      removeNode.setText("Remove Node");
-      removeNode.addActionListener(new java.awt.event.ActionListener()
+      /*
+      mRemoveNodeBtn.setMaximumSize(new Dimension(130, 33));
+      mRemoveNodeBtn.setMinimumSize(new Dimension(130, 33));
+      mRemoveNodeBtn.setPreferredSize(new Dimension(130, 33));
+      mRemoveNodeBtn.setText("Remove Node");
+      */
+      mRemoveNodeBtn.addActionListener(new java.awt.event.ActionListener()
          {
             public void actionPerformed(ActionEvent e)
             {
-               removeNode();
+               mRemoveNode();
             }
          });
-      lblHostname.setText("Hostname");
-      mLeftCenterPanel.setLayout(mLeftCenterBorderLayout);
-      entryPanel.setLayout(entryPanelGridLayout);
-      entryPanelGridLayout.setColumns(2);
-      txtHostname.addActionListener(new java.awt.event.ActionListener()
+      mHostnameLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mHostnameLabel.setLabelFor(mHostnameField);
+      mHostnameLabel.setText("Hostname:");
+
+      mHostnameField.addActionListener(new java.awt.event.ActionListener()
          {
             public void actionPerformed(ActionEvent e)
             {
                mAddNodeBtn_actionPerformed(e);
             }
          });
-      directionsPanel.setBorder(BorderFactory.createEtchedBorder());
-      directionsPanel.setLayout(borderLayout1);
-      jLabel2.setIcon(new ImageIcon("/home/users/aronb/Source/ClusterWizard/images/ClusterIcon.png"));
-      lblTitle.setFont(new java.awt.Font("Serif", 1, 20));
-      lblTitle.setHorizontalAlignment(SwingConstants.LEFT);
-      lblTitle.setText("Add Cluster Nodes");
-      lblDirections.setText("Click on the add button to add nodes to your cluster configuration.");
-      this.mMenuPanel.add(menuBox, BorderLayout.CENTER);
-      menuBox.add(mAddNodeBtn, null);
-      menuBox.add(topSpacer, null);
-      menuBox.add(removeNode, null);
+      mDirectionsPanel.setBorder(BorderFactory.createEtchedBorder());
+      mTitleLabel.setFont(new java.awt.Font("Serif", 1, 20));
+      mTitleLabel.setHorizontalAlignment(SwingConstants.LEFT);
+      mTitleLabel.setText("Add Cluster Nodes");
+      mDirectionsLabel.setText("Click on the add button to add nodes to your cluster configuration.");
       baseLayout.setHgap(5);
       baseLayout.setVgap(5);
-      mCenterPanel.setLayout(mCenterLayout);
-      this.add(mCenterPanel, BorderLayout.CENTER);
-      mCenterPanel.add(mLeftCenterPanel,  BorderLayout.CENTER);
-      mLeftCenterPanel.add(entryPanel,  BorderLayout.NORTH);
-      entryPanel.add(lblHostname, null);
-      entryPanel.add(txtHostname, null);
-      mLeftCenterPanel.add(mListScrollPane1,  BorderLayout.CENTER);
+      mLowerPanel.add(mHostnameLabel,
+                             new TableLayoutConstraints(0, 0, 0, 0,
+                                                        TableLayout.FULL,
+                                                        TableLayout.FULL));
+      mLowerPanel.add(mHostnameField,
+                             new TableLayoutConstraints(1, 0, 1, 0,
+                                                        TableLayout.FULL,
+                                                        TableLayout.FULL));
+      mLowerPanel.add(mListScrollPane1,
+                             new TableLayoutConstraints(0, 1, 1, 2,
+                                                        TableLayout.FULL,
+                                                        TableLayout.FULL));
+      mLowerPanel.add(mAddNodeBtn,
+                             new TableLayoutConstraints(2, 0, 2, 0,
+                                                        TableLayout.FULL,
+                                                        TableLayout.FULL));
+      mLowerPanel.add(mRemoveNodeBtn,
+                             new TableLayoutConstraints(2, 1, 2, 1,
+                                                        TableLayout.FULL,
+                                                        TableLayout.FULL));
+      this.add(mLowerPanel, BorderLayout.CENTER);
       mListScrollPane1.getViewport().add(lstNodes, null);
-      mCenterPanel.add(mMenuPanel,  BorderLayout.EAST);
-      directionsPanel.add(jPanel3, BorderLayout.EAST);
-      jPanel3.add(jLabel2, null);
-      directionsPanel.add(jPanel2, BorderLayout.CENTER);
-      jPanel2.add(lblTitle, null);
-      jPanel2.add(lblDirections, null);
-      this.add(directionsPanel, BorderLayout.NORTH);
+      mDirectionsPanel.add(mTitleLabel,
+                             new TableLayoutConstraints(0, 0, 0, 0,
+                                                        TableLayout.FULL,
+                                                        TableLayout.FULL));
+      mDirectionsPanel.add(mDirectionsLabel,
+                             new TableLayoutConstraints(0, 1, 0, 1,
+                                                        TableLayout.FULL,
+                                                        TableLayout.FULL));
+      mDirectionsPanel.add(mIconLabel,
+                             new TableLayoutConstraints(1, 0, 1, 1,
+                                                        TableLayout.FULL,
+                                                        TableLayout.FULL));
+      this.add(mDirectionsPanel, BorderLayout.NORTH);
    }
 
    public void init(Map whiteboard)
@@ -183,12 +238,12 @@ public class NodeSettingsPanel extends JPanel implements EditorConstants
       mBroker.addConfigListener(mNodesListModel);
       lstNodes.setModel(mNodesListModel);
 
-      txtHostname.setText("");
+      mHostnameField.setText("");
    }
 
    private void mAddNodeBtn_actionPerformed(ActionEvent e)
    {
-      String host_name = txtHostname.getText().trim();
+      String host_name = mHostnameField.getText().trim();
       String element_name = "Node(" + host_name + ")";
       java.util.List elts = mBroker.getElements(mContext);
       java.util.List matches = ConfigUtilities.getElementsWithDefinition(elts, element_name);
@@ -202,7 +257,7 @@ public class NodeSettingsPanel extends JPanel implements EditorConstants
          element.setProperty("host_name",0,host_name);
          element.setProperty("listen_port",0,"7000");
       }
-      txtHostname.setText("");
+      mHostnameField.setText("");
    }
 
    private void createClusterManagerElement()
@@ -220,7 +275,7 @@ public class NodeSettingsPanel extends JPanel implements EditorConstants
       mBroker.add(mContext, cluster_manager);
    }
 
-   private void removeNode()
+   private void mRemoveNode()
    {
       String old_node = (String)lstNodes.getSelectedValue();
 

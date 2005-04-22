@@ -56,8 +56,8 @@ public class ChooseClusterPanel extends JPanel
    private JLabel mDeviceIcon = new JLabel();
    private JPanel mClusterPanel = new JPanel();
    private ButtonGroup mClusterGroup = new ButtonGroup();
-   private JRadioButton mClusterBtn = new JRadioButton();
    private JRadioButton mNoClusterBtn = new JRadioButton();
+   private JRadioButton mClusterBtn = new JRadioButton();
    private Map mWhiteBoard;
 
    public ChooseClusterPanel()
@@ -86,8 +86,8 @@ public class ChooseClusterPanel extends JPanel
    {
       mTitleLbl.setFont(new java.awt.Font("Serif", 1, 20));
       mTitleLbl.setHorizontalAlignment(SwingConstants.LEFT);
-      mTitleLbl.setText("Add New Input Device Wizard");
-      mDirectionsLbl.setText("Select the type of input device you want to add.");
+      mTitleLbl.setText("Virtual Reality Configuration Wizard");
+      mDirectionsLbl.setText("Select the type of VR system you want to configure.");
 
       mDirectionsPanel.add(mTitleLbl, null);
       mDirectionsPanel.add(mDirectionsLbl, null);
@@ -103,10 +103,10 @@ public class ChooseClusterPanel extends JPanel
       
       // Put the radio buttons in a column in a panel.
       mClusterPanel.setLayout(new GridLayout(0, 1));
-      mClusterGroup.add(mClusterBtn);
       mClusterGroup.add(mNoClusterBtn);
-      mClusterPanel.add(mClusterBtn);
+      mClusterGroup.add(mClusterBtn);
       mClusterPanel.add(mNoClusterBtn);
+      mClusterPanel.add(mClusterBtn);
       
       mNoClusterBtn.setSelected(true);
       
