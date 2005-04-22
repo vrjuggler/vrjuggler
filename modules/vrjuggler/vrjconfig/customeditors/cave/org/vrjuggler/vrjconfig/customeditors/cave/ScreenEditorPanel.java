@@ -96,11 +96,10 @@ public class ScreenEditorPanel
       try
       {
          ClassLoader loader = getClass().getClassLoader();
-         String img_root = "org/vrjuggler/vrjconfig/customeditors/cave/images";
-         mRemoveIcon = new ImageIcon(loader.getResource(img_root +
-                                                        "/remove_wall.gif"));
-         mEditIcon = new ImageIcon(loader.getResource(img_root +
-                                                      "/edit_wall.gif"));
+         mRemoveIcon = new ImageIcon(loader.getResource(COMMON_IMG_ROOT +
+                                                        "/remove.gif"));
+         mEditIcon = new ImageIcon(loader.getResource(COMMON_IMG_ROOT +
+                                                      "/edit.gif"));
          
          mRemoveScreenBtn.setIcon(mRemoveIcon);
          mEditScreenBtn.setIcon(mEditIcon);
