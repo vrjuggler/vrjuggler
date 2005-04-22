@@ -79,9 +79,8 @@ public class ScreenDisplay
       try
       {
          ClassLoader loader = getClass().getClassLoader();
-         String img_root = "org/vrjuggler/vrjconfig/customeditors/cave/images";
-         mAddIcon = new ImageIcon(loader.getResource(img_root +
-                                                          "/add_wall.gif"));
+         mAddIcon = new ImageIcon(loader.getResource(COMMON_IMG_ROOT +
+                                                          "/add.gif"));
          mAddScreenBtn.setIcon(mAddIcon);
       }
       catch (Exception e)
