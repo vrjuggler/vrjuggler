@@ -139,22 +139,21 @@ public class CurrentDevicesPanel extends JPanel implements EditorConstants, Conf
       mTitleLbl.setHorizontalAlignment(SwingConstants.LEFT);
       mTitleLbl.setText("Device Manager");
       mDirectionsLbl.setText("All currently configured input devices are listed below.");
-
+      
       // Try to get icons for the toolbar buttons
       try
       {
          ClassLoader loader = getClass().getClassLoader();
-         String img_root = "org/vrjuggler/vrjconfig/customeditors/cave/images";
-         mAddIcon = new ImageIcon(loader.getResource(img_root +
-                                                          "/add_wall.gif"));
-         mRemoveIcon = new ImageIcon(loader.getResource(img_root +
-                                                          "/remove_wall.gif"));
-         mDisabledRemoveIcon = new ImageIcon(loader.getResource(img_root +
-                                                          "/disabled_remove_wall.gif"));
-         mEditIcon = new ImageIcon(loader.getResource(img_root +
-                                                          "/edit_wall.gif"));
-         mDisabledEditIcon = new ImageIcon(loader.getResource(img_root +
-                                                          "/disabled_edit_wall.gif"));
+         mAddIcon = new ImageIcon(loader.getResource(COMMON_IMG_ROOT +
+                                                          "/add.gif"));
+         mRemoveIcon = new ImageIcon(loader.getResource(COMMON_IMG_ROOT +
+                                                          "/remove.gif"));
+         mDisabledRemoveIcon = new ImageIcon(loader.getResource(COMMON_IMG_ROOT +
+                                                          "/remove_disabled.gif"));
+         mEditIcon = new ImageIcon(loader.getResource(COMMON_IMG_ROOT +
+                                                          "/edit.gif"));
+         mDisabledEditIcon = new ImageIcon(loader.getResource(COMMON_IMG_ROOT +
+                                                          "/edit_disabled.gif"));
          
          mAddDeviceBtn.setIcon(mAddIcon);
          mRemoveDeviceBtn.setIcon(mRemoveIcon);
