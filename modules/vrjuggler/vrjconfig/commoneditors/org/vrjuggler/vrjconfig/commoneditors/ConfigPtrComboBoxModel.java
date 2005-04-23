@@ -98,7 +98,9 @@ public class ConfigPtrComboBoxModel
 
       for(int i = 0; i < matches.size() ; i++)
       {
-         this.addElement(((ConfigElement)matches.get(i)).getName());
+         this.addElement((ConfigElement)matches.get(i));
       }
+
+      addElement("None");
    }
 }
