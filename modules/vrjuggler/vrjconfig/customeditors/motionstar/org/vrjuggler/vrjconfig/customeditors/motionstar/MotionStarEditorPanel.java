@@ -400,6 +400,7 @@ public class MotionStarEditorPanel
          {
             mAddressField.setForeground(Color.red);
          }
+         mElement.setProperty("address", 0, mAddressField.getText(), mContext);
       }
    }
 }
