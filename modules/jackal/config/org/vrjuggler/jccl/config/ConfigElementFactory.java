@@ -155,15 +155,10 @@ public class ConfigElementFactory
          {
             PropertyValueDefinition prop_value_def = (PropertyValueDefinition)itr.next();
 
-            // If the property does not contain ConfigElements, create this
-            // value normally.
-            if (! prop_type.equals(ConfigElement.class))
-            {
-               prop_values.add(prop_value_def.getDefaultValue());
-            }
+
             // This property value should be a configuration element. Get the
             // appropriate definition and create the element from it.
-            else
+            if (prop_type.equals(ConfigElement.class))
             {
                // Create a new configuration element from the first allowed type
                String allowed_type = propDef.getAllowedType(0);
@@ -172,6 +167,19 @@ public class ConfigElementFactory
                // Build up a default name
                String name = propDef.getName() + " " + prop_values.size();
                prop_values.add(create(name, def));
+            }
+            // If the property is a ConfigElementPointer then we can not
+            // use the default value since it will be the same reference
+            // for all ConfigElement properties.
+            else if (prop_type.equals(ConfigElementPointer.class))
+            {
+               prop_values.add(new ConfigElementPointer(""));
+            }
+            // If the property does not contain ConfigElements, create this
+            // value normally.
+            else
+            {
+               prop_values.add(prop_value_def.getDefaultValue());
             }
          }
       }
