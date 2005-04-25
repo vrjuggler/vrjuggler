@@ -55,6 +55,7 @@ public class CaveModel implements EditorConstants
    private List mWalls = new ArrayList();
    private ConfigContext mConfigContext = null;
    private BrokerChangeListener mBrokerChangeListener = null;
+   private ElementChangeListener mElementChangeListener = null;
    private Vector mScreens = new Vector();
    private Map mScreenToNodeMap = new HashMap();
    private Map mViewToScreenMap = new HashMap();
@@ -83,6 +84,12 @@ public class CaveModel implements EditorConstants
 
       ConfigBrokerProxy broker = new ConfigBrokerProxy();
       List elements = broker.getElements(mConfigContext);
+      
+      // Make sure to create the change listener before trying
+      // to add them to ConfigElements' listener lists.
+      mElementChangeListener = new ElementChangeListener();
+      mBrokerChangeListener = new BrokerChangeListener();
+      broker.addConfigListener( mBrokerChangeListener );
       
       List display_windows = ConfigUtilities.getElementsWithDefinition(elements, "display_window");
       List cluster_nodes = ConfigUtilities.getElementsWithDefinition(elements, "cluster_node");
@@ -115,6 +122,8 @@ public class CaveModel implements EditorConstants
       for (Iterator node_itr = cluster_nodes.iterator() ; node_itr.hasNext(); )
       {
          ConfigElement node = (ConfigElement)node_itr.next();
+         node.addConfigElementListener(mElementChangeListener);
+         System.out.println("YYY: Adding listener for node: " + node.getName());
          List windows = node.getPropertyValues("display_windows");
          
          for (Iterator winds = windows.iterator() ; winds.hasNext(); )
@@ -155,11 +164,26 @@ public class CaveModel implements EditorConstants
          CaveWall new_wall = new CaveWall(this, new_corners, (List)sorter.getValues(new_corners));
          mWalls.add(new_wall);
       }
-
-      mBrokerChangeListener = new BrokerChangeListener(this);
-      broker.addConfigListener( mBrokerChangeListener );
    }
-   
+
+   public void moveScreenToNode(ConfigElement screen, ConfigElement new_node)
+   {
+      ConfigBroker broker = new ConfigBrokerProxy();
+      ConfigElement old_node = (ConfigElement)mScreenToNodeMap.get(screen);
+
+      broker.remove(mConfigContext, screen);
+
+      if (null != old_node)
+      {
+         old_node.removeProperty(DISPLAY_WINDOWS_PROPERTY, screen, mConfigContext);
+      }
+      if (null != new_node)
+      {
+         new_node.addProperty(DISPLAY_WINDOWS_PROPERTY, screen, mConfigContext);
+         mScreenToNodeMap.put(screen, new_node);
+      }
+   }
+
    public CaveWall makeNewWall(String wall_name)
    {
       // Create a default view.
@@ -211,10 +235,20 @@ public class CaveModel implements EditorConstants
       fireWallRemoved(mWalls.size(), old_wall);
    }
    
-   void addScreen(ConfigElement new_screen)
+   void addScreen(ConfigElement newScreen)
    {
-      mScreens.add(new_screen);
-      fireScreenAdded(mScreens.size() - 1, new_screen);
+      mScreens.add(newScreen);
+      java.lang.Exception e = new java.lang.Exception("TEST");
+      e.printStackTrace();
+      fireScreenAdded(mScreens.size() - 1, newScreen);
+   }
+   
+   void removeScreen(ConfigElement oldScreen)
+   {
+      mScreens.remove(oldScreen);
+      java.lang.Exception e = new java.lang.Exception("TEST");
+      e.printStackTrace();
+      fireScreenRemoved(mScreens.size() - 1, oldScreen);
    }
    
    public List getWalls()
@@ -412,7 +446,6 @@ public class CaveModel implements EditorConstants
       }
    }
  
-   
    /**
     * Notifies listeners that a screen was added.
     */
@@ -432,6 +465,26 @@ public class CaveModel implements EditorConstants
          }
       }
    }
+   
+   /**
+    * Notifies listeners that a screen was removed.
+    */
+   protected void fireScreenRemoved(int index, ConfigElement screen)
+   {
+      CaveModelEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == CaveModelListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new CaveModelEvent(this, index, screen);
+            }
+            ((CaveModelListener)listeners[i+1]).screenRemoved(evt);
+         }
+      }
+   }
 
    /**
     * Custom listener for changes to the config broker.
@@ -439,77 +492,47 @@ public class CaveModel implements EditorConstants
    private class BrokerChangeListener
       implements ConfigListener
    {
-      private CaveModel mCaveModel = null;
-
-      public BrokerChangeListener(CaveModel cm)
-      {
-         mCaveModel = cm;
-      }
-
       public void configElementAdded(ConfigEvent evt)
       {
-         /*
          if (mConfigContext.contains(evt.getResource()))
          {
             ConfigElement elm = evt.getElement();
-            List walls = new ArrayList();
-
             if ( elm.getDefinition().getToken().equals(DISPLAY_WINDOW_TYPE) )
             {
-
-
-               // Add all surface viewports for the local machine.
-               List views = elm.getPropertyValues("surface_viewports");
-               
-               for (Iterator v_itr = views.iterator() ; v_itr.hasNext() ; )
-               {
-                  ConfigElement view = (ConfigElement)v_itr.next();
-                  walls.add(view);
-                  mViewToScreenMap.put(view, elm);
-               }
+               addScreen(elm);
             }
-            else if ( elm.getDefinition().getToken().equals(cluster_node_type) )
-            {
-               
-               // Add all surface viewports for each node.
-               List windows = elm.getPropertyValues("display_windows");
-               
-               for (Iterator winds = windows.iterator() ; winds.hasNext(); )
-               {
-                  ConfigElement win = (ConfigElement)winds.next();
-                  List views = win.getPropertyValues("surface_viewports");
-               
-                  for (Iterator v_itr = views.iterator() ; v_itr.hasNext() ; )
-                  {
-                     ConfigElement view = (ConfigElement)v_itr.next();
-                     walls.add(view, win);
-                     mViewToScreenMap.put(view, win);
-                  }
-               }
-            }
-
-            // XXX: Do something with this.
          }
-         */
       }
 
       public void configElementRemoved(ConfigEvent evt)
       {
          if (mConfigContext.contains(evt.getResource()))
          {
-            /* XXX: remove
             ConfigElement elm = evt.getElement();
             if ( elm.getDefinition().getToken().equals(DISPLAY_WINDOW_TYPE) )
             {
-               Object obj = mScreens.remove( elm );
-               if ( null != obj )
-               {
-                  mScreenDisplay.remove( (Component)obj );
-                  mScreenDisplay.revalidate();
-                  mScreenDisplay.repaint();
-               }
+               removeScreen(elm);
             }
-            */
+         }
+      }
+   }
+   
+   private class ElementChangeListener
+      extends ConfigElementAdapter
+   {
+      public void propertyValueAdded(ConfigElementEvent evt)
+      {
+         if (DISPLAY_WINDOWS_PROPERTY == evt.getProperty())
+         {
+            addScreen((ConfigElement)evt.getValue());
+         }
+      }
+
+      public void propertyValueRemoved(ConfigElementEvent evt)
+      {
+         if (DISPLAY_WINDOWS_PROPERTY == evt.getProperty())
+         {
+            removeScreen((ConfigElement)evt.getValue());
          }
       }
    }

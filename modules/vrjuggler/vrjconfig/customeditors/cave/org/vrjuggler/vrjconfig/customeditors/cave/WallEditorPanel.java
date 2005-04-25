@@ -382,54 +382,6 @@ public class WallEditorPanel
       return status;
    }
    
-   /*
-   class ScreenComboBoxRenderer extends JLabel implements ListCellRenderer
-   {
-      private CaveModel mCaveModel = null;
-      
-      public ScreenComboBoxRenderer(CaveModel cm)
-      {
-         mCaveModel = cm;
-
-         setOpaque(true);
-         setHorizontalAlignment(CENTER);
-         setVerticalAlignment(CENTER);
-      }
-
-      public Component getListCellRendererComponent( JList list,
-                                                     Object value,
-                                                     int index,
-                                                     boolean isSelected,
-                                                     boolean cellHasFocus)
-      {
-         if (isSelected)
-         {
-            setBackground(list.getSelectionBackground());
-            setForeground(list.getSelectionForeground());
-         }
-         else
-         {
-            setBackground(list.getBackground());
-            setForeground(list.getForeground());
-         }
-         
-         ConfigElement screen = (ConfigElement)value;
-         ConfigElement node = (ConfigElement)mCaveModel.getScreenToNodeMap().get( screen );
-
-         if (null != node)
-         {
-            setText( node.getName() + ":" + screen.getName() );
-         }
-         else
-         {
-            setText( "local:" + screen.getName() );
-         }
-            
-         return this;
-      }
-   }
-   */
-   
    public class WallListModel
       extends AbstractListModel
       implements CaveModelListener
