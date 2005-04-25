@@ -334,7 +334,7 @@ public class ConfigElement implements ConfigElementPointerListener
 
       // Notify listeners of the change
       firePropertyValueChanged(name, index, old_value);
-      System.out.println("setProperty("+name+","+index+","+value+")");
+      System.out.println(getName() + " setProperty("+name+","+index+","+value+")");
    }
 
    /**
@@ -840,9 +840,18 @@ public class ConfigElement implements ConfigElementPointerListener
 
    /**
     * Adds the given listener to be notified when this config element changes.
+    * 
+    * @throws IllegalArgumentException
+    *             if listener is null
     */
    public void addConfigElementListener(ConfigElementListener listener)
+      throws IllegalArgumentException
    {
+      if (null == listener)
+      {
+         throw new IllegalArgumentException("Can not add a null ConfigElementListener.");
+      }
+
       listenerList.add(ConfigElementListener.class, listener);
    }
 
