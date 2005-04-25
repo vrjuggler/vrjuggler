@@ -54,6 +54,7 @@ public class ScreenEditorPanel
    private JButton mRemoveScreenBtn = new JButton();
    private JButton mEditScreenBtn = new JButton();
 
+   /*
    public ScreenEditorPanel(Dimension resolution)
       throws HeadlessException
    {
@@ -68,13 +69,15 @@ public class ScreenEditorPanel
          e.printStackTrace();
       }
    }
+   */
 
-   public ScreenEditorPanel(ConfigContext ctx, ConfigElement elm)
+   public ScreenEditorPanel(ConfigContext ctx, ConfigElement elm, CaveModel caveModel)
       throws HeadlessException
    {
       super();
       mConfigContext = ctx;
       mConfigElement = elm;
+      mCaveModel = caveModel;
 
       mConfigElement.addConfigElementListener(mChangeListener);
 
@@ -161,7 +164,8 @@ public class ScreenEditorPanel
                                                        this);
       DisplayWindowStartDialog dlg =
          new DisplayWindowStartDialog(parent, mConfigContext, mConfigElement,
-                                      new Dimension(1280, 1024), mClusterConfig);
+                                      new Dimension(1280, 1024), mCaveModel,
+                                      mClusterConfig);
 
       if ( dlg.showDialog() == DisplayWindowStartDialog.OK_OPTION )
       {
@@ -191,6 +195,12 @@ public class ScreenEditorPanel
                               dlg.shouldStartLocked(), mConfigContext);
          mConfigElement.setProperty(SLEEP_TIME_PROPERTY, 0, dlg.getSleepTime(),
                               mConfigContext);
+         
+         if (mClusterConfig)
+         {
+            ConfigElement node = dlg.getSelectedNode();
+            mCaveModel.moveScreenToNode(mConfigElement, node);
+         }
       }
    }
 
@@ -213,6 +223,7 @@ public class ScreenEditorPanel
    private boolean mClusterConfig = false;
    private ConfigContext mConfigContext = null;
    private ConfigElement mConfigElement = null;
+   private CaveModel mCaveModel = null;
    private ViewportPlacer mViewportPlacer = null;
    private JLabel mScreenLabel = new JLabel("Name");
    private TableLayout mMainLayout = null;

@@ -43,4 +43,5 @@ public interface CaveModelListener
    public void wallAdded(CaveModelEvent evt);
    public void wallRemoved(CaveModelEvent evt);
    public void screenAdded(CaveModelEvent evt);
+   public void screenRemoved(CaveModelEvent evt);
 }
