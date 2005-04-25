@@ -319,6 +319,9 @@ public class SimpleProxyEditor
             // if its editor was successfully created and configured.
             // Otherwise, there is no point in holding onto it.
             ((DefaultListModel) mProxyList.getModel()).addElement(proxy_elt);
+
+            // Make sure to select the new proxy.
+            mProxyList.setSelectedValue(proxy_elt, true);
          }
          catch(Exception ex)
          {
