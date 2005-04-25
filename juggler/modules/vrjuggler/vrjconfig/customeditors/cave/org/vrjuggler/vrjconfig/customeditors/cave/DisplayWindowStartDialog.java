@@ -49,6 +49,7 @@ import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 
 import org.vrjuggler.vrjconfig.commoneditors.ConfigPtrComboBoxModel;
+import org.vrjuggler.vrjconfig.commoneditors.ConfigPtrComboBoxRenderer;
 
 public class DisplayWindowStartDialog
    extends JDialog
@@ -130,14 +131,15 @@ public class DisplayWindowStartDialog
    }
    */
    public DisplayWindowStartDialog(Container parent, ConfigContext ctx,
-                                   ConfigElement winElt, Dimension resolution)
+                                   ConfigElement winElt, Dimension resolution,
+                                   CaveModel caveModel)
    {
-      this(parent, ctx, winElt, resolution, false);
+      this(parent, ctx, winElt, resolution, caveModel, false);
    }
 
    public DisplayWindowStartDialog(Container parent, ConfigContext ctx,
                                    ConfigElement winElt, Dimension resolution,
-                                   boolean clusterConfig)
+                                   CaveModel caveModel, boolean clusterConfig)
       throws HeadlessException
    {
       super();
@@ -165,7 +167,7 @@ public class DisplayWindowStartDialog
       mLockKeyEditor =
          new PropertyEditorPanel(ctx, winElt.getProperty(LOCK_KEY_PROPERTY, 0),
                                  prop_def, winElt, 0, Color.white);
-
+      
       try
       {
          jbInit();
@@ -176,6 +178,17 @@ public class DisplayWindowStartDialog
          mResourceChooser.setEnabled(false);
 
          mNameField.setText(winElt.getName());
+
+         ConfigElement node = (ConfigElement)caveModel.getScreenToNodeMap().get(winElt);
+         
+         if (null != node)
+         {
+            mNodeComboBox.setSelectedItem(node);
+         }
+         else
+         {
+            mNodeComboBox.setSelectedItem("None");
+         }
          
          javax.swing.event.DocumentListener myListener = new javax.swing.event.DocumentListener()
             {
@@ -238,6 +251,19 @@ public class DisplayWindowStartDialog
       this.setResizable(false);
       this.pack();
       this.setLocationRelativeTo(parent);
+   }
+
+   public ConfigElement getSelectedNode()
+   {
+      Object obj = mNodeComboBox.getSelectedItem();
+      if (obj instanceof ConfigElement)
+      {
+         return (ConfigElement)obj;
+      }
+      else
+      {
+         return null;
+      }
    }
 
    private void setSpinnerModel(JSpinner spinner, int value, int min, int max)
@@ -453,10 +479,12 @@ public class DisplayWindowStartDialog
       mNodeLabel.setText("Cluster Node");
       mNodeComboBox.setMinimumSize(new Dimension(60, 21));
       mNodeComboBox.setPreferredSize(new Dimension(60, 21));
-      //mNodeComboBox.setText("Display Window");
       mNodeComboBoxModel = new ConfigPtrComboBoxModel(mConfigContext);
       mNodeComboBoxModel.addElementType(CLUSTER_NODE_TYPE);
       mNodeComboBox.setModel(mNodeComboBoxModel);
+      ConfigPtrComboBoxRenderer node_combo_box_renderer
+         = new ConfigPtrComboBoxRenderer();
+      mNodeComboBox.setRenderer(node_combo_box_renderer);
       mSizeLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mSizeLabel.setLabelFor(mSizePanel);
       mSizeLabel.setText("Size");

@@ -46,6 +46,8 @@ import javax.swing.table.*;
 import javax.swing.event.*;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.*;
+import org.vrjuggler.vrjconfig.customeditors.cave.event.CaveModelAdapter;
+import org.vrjuggler.vrjconfig.customeditors.cave.event.CaveModelEvent;
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
 import info.clearthought.layout.*;
 
@@ -56,7 +58,7 @@ public class ScreenDisplay
    private ConfigContext mConfigContext = null;
    private CaveModel mCaveModel = null;
    private HashMap mScreens = new HashMap();
-   private BrokerChangeListener mBrokerChangeListener = null;
+   private CaveModelListener mCaveModelListener = null;
    private TableLayout mMainPanelLayout = null;
    
    private Icon mAddIcon = null;
@@ -89,7 +91,7 @@ public class ScreenDisplay
          mAddScreenBtn.setText("Add");
       }
 
-      mAddScreenBtn.setToolTipText("Configure a new wall.");
+      mAddScreenBtn.setToolTipText("Configure a new screen.");
       mAddScreenBtn.addActionListener(new java.awt.event.ActionListener()
       {
          public void actionPerformed(ActionEvent e)
@@ -124,20 +126,26 @@ public class ScreenDisplay
          new ConfigElementFactory(broker.getRepository().getAllLatest());
       ConfigElement new_screen = factory.create("", vp_def);
 
-      // Make sure this add goes through successfully
-      if (! broker.add(mCaveModel.getConfigContext(), new_screen))
+      int status = editScreen(new_screen);
+      
+      // If we are configuring a cluster we do not want to add the new
+      // screen to the ConfigBroker since it will end up being an
+      // embedded ConfigElement.
+      if ( !mClusterConfig && status == DisplayWindowStartDialog.OK_OPTION )
       {
-         JOptionPane.showMessageDialog(SwingUtilities.getAncestorOfClass(Frame.class, this),
-                                       "There are no configuration files active.",
-                                       "Error",
-                                       JOptionPane.ERROR_MESSAGE);
-         return;
+         // Make sure this add goes through successfully
+         if (! broker.add(mCaveModel.getConfigContext(), new_screen))
+         {
+            JOptionPane.showMessageDialog(SwingUtilities.getAncestorOfClass(Frame.class, this),
+                                          "There are no configuration files active.",
+                                          "Error",
+                                          JOptionPane.ERROR_MESSAGE);
+            return;
+         }
       }
-      mCaveModel.addScreen(new_screen);
-      editScreen(new_screen);
    }
 
-   private void editScreen(ConfigElement elm)
+   private int editScreen(ConfigElement elm)
    {
       //XXX: Code reused from ScreenEditorPanel
       Container parent =
@@ -148,9 +156,11 @@ public class ScreenDisplay
       DisplayWindowStartDialog dlg =
          new DisplayWindowStartDialog(parent, mConfigContext, elm,
                                       new Dimension(1280, 1024),
-                                      mClusterConfig);
+                                      mCaveModel, mClusterConfig);
 
-      if ( dlg.showDialog() == DisplayWindowStartDialog.OK_OPTION )
+      int status = dlg.showDialog();
+
+      if ( status == DisplayWindowStartDialog.OK_OPTION )
       {
          Rectangle bounds  = dlg.getDisplayWindowBounds();
          elm.setProperty("origin", 0, new Integer(bounds.x), mConfigContext);
@@ -179,7 +189,15 @@ public class ScreenDisplay
                               dlg.shouldStartLocked(), mConfigContext);
          elm.setProperty(SLEEP_TIME_PROPERTY, 0, dlg.getSleepTime(),
                               mConfigContext);
+         
+         if (mClusterConfig)
+         {
+            ConfigElement node = dlg.getSelectedNode();
+            mCaveModel.moveScreenToNode(elm, node);
+         }
       }
+
+      return status;
    }
    
    public void setConfig( ConfigContext ctx, CaveModel cm )
@@ -192,9 +210,8 @@ public class ScreenDisplay
          addScreen( (ConfigElement)itr.next() );
       }
 
-      mBrokerChangeListener = new BrokerChangeListener(this);
-      ConfigBrokerProxy broker = new ConfigBrokerProxy();
-      broker.addConfigListener( mBrokerChangeListener );
+      mCaveModelListener = new CaveModelListener(this);
+      mCaveModel.addCaveModelListener( mCaveModelListener );
    }
 
    public void setClusterConfig(boolean clusterConfig)
@@ -212,7 +229,7 @@ public class ScreenDisplay
    {
       elm.addConfigElementListener(mChangeListener);
       
-      ScreenEditorPanel sep = new ScreenEditorPanel(mConfigContext, elm);
+      ScreenEditorPanel sep = new ScreenEditorPanel(mConfigContext, elm, mCaveModel);
 
       int col = mMainPanelLayout.getNumColumn();
       mMainPanelLayout.insertColumn(col-1, TableLayout.PREFERRED);
@@ -303,41 +320,25 @@ public class ScreenDisplay
    }
    
    /**
-    * Custom listener for changes to the config broker.
+    * Custom listener for changes to the cave model.
     */
-   private class BrokerChangeListener
-      implements ConfigListener
+   private class CaveModelListener
+      extends CaveModelAdapter
    {
       private ScreenDisplay mScreenDisplay = null;
 
-      public BrokerChangeListener(ScreenDisplay sd)
+      public CaveModelListener(ScreenDisplay sd)
       {
          mScreenDisplay = sd;
       }
-
-      public void configElementAdded(ConfigEvent evt)
+      public void screenAdded(CaveModelEvent evt)
       {
-         if (mConfigContext.contains(evt.getResource()))
-         {
-            ConfigElement elm = evt.getElement();
-            //System.out.println(elm.getDefinition().getName());
-            if ( elm.getDefinition().getToken().equals(DISPLAY_WINDOW_TYPE) )
-            {
-               mScreenDisplay.addScreen(elm);
-            }
-         }
+         mScreenDisplay.addScreen((ConfigElement)evt.getValue());
       }
 
-      public void configElementRemoved(ConfigEvent evt)
+      public void screenRemoved(CaveModelEvent evt)
       {
-         if (mConfigContext.contains(evt.getResource()))
-         {
-            ConfigElement elm = evt.getElement();
-            if ( elm.getDefinition().getToken().equals(DISPLAY_WINDOW_TYPE) )
-            {
-               mScreenDisplay.removeScreen(elm);
-            }
-         }
+         mScreenDisplay.removeScreen((ConfigElement)evt.getValue());
       }
    }
 }
