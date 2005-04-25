@@ -72,9 +72,6 @@ public class MainEditorPanel
    private CaveWall mCaveWall = null;
    private CaveModel mCaveModel = null;
 
-   private Icon[] mRedIcons = new ImageIcon[3];
-   private Icon[] mGreenIcons = new ImageIcon[3];
-   
    public void setWallConfig(CaveModel cm, CaveWall in_wall)
    {
       mCaveModel = cm;
@@ -142,16 +139,8 @@ public class MainEditorPanel
       
       try
       {
-         mRedIcons[0] = new ImageIcon(loader.getResource(IMAGE_BASE + "/one_red.png"));
-         mRedIcons[1] = new ImageIcon(loader.getResource(IMAGE_BASE + "/two_red.png"));
-         mRedIcons[2] = new ImageIcon(loader.getResource(IMAGE_BASE + "/three_red.png"));
-         
-         mGreenIcons[0] = new ImageIcon(loader.getResource(IMAGE_BASE + "/one_green.png"));
-         mGreenIcons[1] = new ImageIcon(loader.getResource(IMAGE_BASE + "/two_green.png"));
-         mGreenIcons[2] = new ImageIcon(loader.getResource(IMAGE_BASE + "/three_green.png"));
-         
-         mViewBorder = new TitledIconBorder("View", mRedIcons[2]);
-         mStereoBorder = new TitledIconBorder("Stereo/Mono", mRedIcons[1]);
+         mViewBorder = new TitledBorder("View");
+         mStereoBorder = new TitledBorder("Stereo/Mono");
       }
       catch (NullPointerException ex)
       {
