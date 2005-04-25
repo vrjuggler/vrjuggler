@@ -32,73 +32,56 @@
 
 package org.vrjuggler.vrjconfig.commoneditors;
 
+import java.awt.Component;
 import java.util.*;
 import javax.swing.*;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.ConfigEvent;
 import org.vrjuggler.jccl.config.event.ConfigListener;
 
-public class ConfigPtrListModel
-   extends DefaultListModel
-   implements ConfigListener
+
+public class ConfigPtrComboBoxRenderer extends JLabel implements ListCellRenderer
 {
-   ConfigBroker mBroker = null;
-   ConfigContext mContext = null;
-   List mElementTypes = new ArrayList();
-
-   public ConfigPtrListModel(ConfigContext context)
+   public ConfigPtrComboBoxRenderer()
    {
-      mBroker = new ConfigBrokerProxy();
-      mContext = context;
-
-      update();
+      setOpaque(true);
+      setVerticalAlignment(CENTER);
    }
 
-   public void addElementType(String element_type)
+   public Component getListCellRendererComponent( JList list,
+                                                  Object value,
+                                                  int index,
+                                                  boolean isSelected,
+                                                  boolean cellHasFocus)
    {
-      mElementTypes.add(element_type);
-      update();
-   }
-
-   public void removeElementType(String element_type)
-   {
-      mElementTypes.remove(element_type);
-      update();
-   }
-
-   public void removeAllElementTypes()
-   {
-      mElementTypes.clear();
-      update();
-   }
-
-   public void configElementAdded(ConfigEvent evt)
-   {
-      update();
-      fireIntervalAdded(evt.getSource(), 0, getSize());
-   }
-
-   public void configElementRemoved(ConfigEvent evt)
-   {
-      update();
-      fireIntervalRemoved(evt.getSource(), 0, getSize());
-   }
-
-   public void update()
-   {
-      this.removeAllElements();
-      List matches = new ArrayList();
-      List elts = mBroker.getElements(mContext);
-
-      for(Iterator i = mElementTypes.iterator() ; i.hasNext() ;)
+      if (isSelected)
       {
-         String temp_type = (String)i.next();
-         matches.addAll(ConfigUtilities.getElementsWithDefinition(elts, temp_type));
+         setBackground(list.getSelectionBackground());
+         setForeground(list.getSelectionForeground());
+      }
+      else
+      {
+         setBackground(list.getBackground());
+         setForeground(list.getForeground());
       }
 
-      for(int i = 0; i < matches.size() ; i++)
+      // If a ConfigElement is given use its name, otherwise
+      // use the given String.
+      if (null == value)
       {
-         this.addElement(((ConfigElement)matches.get(i)).getName());
+         setText("None");
       }
+      else if (value instanceof ConfigElement)
+      {
+         ConfigElement elm = (ConfigElement)value;
+         setText(elm.getName());
+      }
+      else
+      {
+         setText((String)value);
+      }
+         
+      return this;
    }
 }
+
