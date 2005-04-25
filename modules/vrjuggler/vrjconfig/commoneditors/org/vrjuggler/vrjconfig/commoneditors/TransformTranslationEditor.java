@@ -40,6 +40,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.DecimalFormat;
 import javax.swing.*;
 import org.vrjuggler.jccl.config.ConfigElement;
 import org.vrjuggler.jccl.config.ConfigContext;
@@ -84,6 +85,10 @@ public class TransformTranslationEditor
       {
          mTrackerPosUnitsChooser.addItem(mTranslationUnits[i].name);
       }
+      
+      mTrackerXPosField = new JFormattedTextField(new DecimalFormat("#.######"));
+      mTrackerYPosField = new JFormattedTextField(new DecimalFormat("#.######"));
+      mTrackerZPosField = new JFormattedTextField(new DecimalFormat("#.######"));
 
       try
       {
@@ -138,7 +143,7 @@ public class TransformTranslationEditor
       mTrackerXPosLabel.setLabelFor(mTrackerXPosField);
       mTrackerXPosLabel.setText("X:");
       mTrackerPosUnitsLabel.setLabelFor(mTrackerPosUnitsChooser);
-      mTrackerPosUnitsLabel.setText("Measurement Units:");
+      mTrackerPosUnitsLabel.setText("Specify position in:");
       mTrackerXPosField.setHorizontalAlignment(SwingConstants.TRAILING);
       mTrackerXPosField.setPreferredSize(new Dimension(75, 22));
       mTrackerYPosLabel.setLabelFor(mTrackerYPosField);
@@ -223,11 +228,11 @@ public class TransformTranslationEditor
    private JLabel mTrackerXPosLabel = new JLabel();
    private JComboBox mTrackerPosUnitsChooser = new JComboBox();
    private JLabel mTrackerPosUnitsLabel = new JLabel();
-   private JFormattedTextField mTrackerXPosField = new JFormattedTextField();
+   private JFormattedTextField mTrackerXPosField = null;
    private JLabel mTrackerYPosLabel = new JLabel();
-   private JFormattedTextField mTrackerYPosField = new JFormattedTextField();
+   private JFormattedTextField mTrackerYPosField = null;
    private JLabel mTrackerZPosLabel = new JLabel();
-   private JFormattedTextField mTrackerZPosField = new JFormattedTextField();
+   private JFormattedTextField mTrackerZPosField = null;
    private GridBagLayout mTrackerPosPanelLayout = new GridBagLayout();
    private GridBagLayout mTranslationPanelLayout = new GridBagLayout();
 
