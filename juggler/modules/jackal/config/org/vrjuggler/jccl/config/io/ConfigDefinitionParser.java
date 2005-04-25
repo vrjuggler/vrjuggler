@@ -327,7 +327,12 @@ public class ConfigDefinitionParser
       {
          throw new MissingAttributeException(DEFAULTVALUE);
       }
+      
       // Convert the object to the correct type
+      // NOTE: The default value for a ConfigElementPointer is not
+      //       valid since we do not want to keep a reference to
+      //       the same ConfigElementPointer for all properties
+      //       that point at other elements.
       Object defaultvalue = convertTo(defaultvalue_str, valuetype);
 
       if (defaultvalue == null)
