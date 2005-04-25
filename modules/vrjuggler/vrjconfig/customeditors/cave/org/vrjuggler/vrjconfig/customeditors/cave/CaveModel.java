@@ -94,9 +94,6 @@ public class CaveModel implements EditorConstants
       List display_windows = ConfigUtilities.getElementsWithDefinition(elements, "display_window");
       List cluster_nodes = ConfigUtilities.getElementsWithDefinition(elements, "cluster_node");
       
-      //System.out.println("Display Windows: " + display_windows);
-      //System.out.println("Cluster Nodes: " + cluster_nodes);
-      
       List walls = new ArrayList();
 
       // Add all surface viewports for the local machine.
@@ -123,7 +120,6 @@ public class CaveModel implements EditorConstants
       {
          ConfigElement node = (ConfigElement)node_itr.next();
          node.addConfigElementListener(mElementChangeListener);
-         System.out.println("YYY: Adding listener for node: " + node.getName());
          List windows = node.getPropertyValues("display_windows");
          
          for (Iterator winds = windows.iterator() ; winds.hasNext(); )
@@ -238,16 +234,12 @@ public class CaveModel implements EditorConstants
    void addScreen(ConfigElement newScreen)
    {
       mScreens.add(newScreen);
-      java.lang.Exception e = new java.lang.Exception("TEST");
-      e.printStackTrace();
       fireScreenAdded(mScreens.size() - 1, newScreen);
    }
    
    void removeScreen(ConfigElement oldScreen)
    {
       mScreens.remove(oldScreen);
-      java.lang.Exception e = new java.lang.Exception("TEST");
-      e.printStackTrace();
       fireScreenRemoved(mScreens.size() - 1, oldScreen);
    }
    

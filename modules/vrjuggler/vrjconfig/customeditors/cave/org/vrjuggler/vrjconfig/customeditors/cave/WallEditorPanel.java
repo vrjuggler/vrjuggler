@@ -406,6 +406,9 @@ public class WallEditorPanel
       public void screenAdded(CaveModelEvent evt)
       {;}
       
+      public void screenRemoved(CaveModelEvent evt)
+      {;}
+      
       public Object getElementAt(int index)
       {
          if ( index >= 0 && index < mCaveModel.getWalls().size() )
