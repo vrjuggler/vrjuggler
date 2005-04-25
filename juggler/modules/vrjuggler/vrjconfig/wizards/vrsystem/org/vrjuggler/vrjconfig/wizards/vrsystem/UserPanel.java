@@ -33,27 +33,18 @@ package org.vrjuggler.vrjconfig.wizard.vrsystem;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.*;
-import java.awt.Frame;
-import java.io.IOException;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
 
 import org.vrjuggler.jccl.config.*;
-import org.vrjuggler.jccl.editors.*;
-import org.vrjuggler.jccl.config.event.*;
-import org.vrjuggler.tweek.wizard.*;
+import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
-import org.vrjuggler.vrjconfig.controlpanel.CustomEditorDialog;
-import org.vrjuggler.vrjconfig.controlpanel.WizardLoader;
 import info.clearthought.layout.*;
 
 public class UserPanel extends JPanel implements EditorConstants
@@ -109,6 +100,9 @@ public class UserPanel extends JPanel implements EditorConstants
       mTopPanel.setBorder(BorderFactory.createEtchedBorder());
       mTopPanel.add(mDirectionsPanel, BorderLayout.CENTER);
       mTopPanel.add(mDeviceIcon, BorderLayout.EAST);
+      
+      mHeadLabel.setText("Head Proxy");
+      mWandLabel.setText("Wand Proxy");
 
       double[][] bottom_size = {{0.2, 0.3, 0.3, 0.2},
                                 {TableLayout.FILL, TableLayout.PREFERRED,
@@ -173,51 +167,49 @@ public class UserPanel extends JPanel implements EditorConstants
       }
       else if(null == mUserElement)
       {
-         System.out.println("XXX: mUserElement should not be null unless UserPanel is being created multiple times.");
          mUserElement = getElementNamed("VJUser");
       }
       
-      if (!mConfigContext.containsElementNamed("VJHead"))
+      if (mConfigContext.containsElementNamed("VJHead"))
+      {
+         mHeadElement = getElementNamed("VJHead");
+      }
+      else
       {
          mHeadElement = temp_factory.create("VJHead", alias_def);
          getBroker().add(mConfigContext, mHeadElement);
       }
-      else if(null == mHeadElement)
-      {
-         System.out.println("XXX: mHeadElement should not be null unless UserPanel is being created multiple times.");
-         mHeadElement = getElementNamed("VJHead");
-      }
       
-      if (!mConfigContext.containsElementNamed("VJWand"))
+      if (mConfigContext.containsElementNamed("VJWand"))
+      {
+         mWandElement = getElementNamed("VJWand");
+      }
+      else
       {
          mWandElement = temp_factory.create("VJWand", alias_def);
          getBroker().add(mConfigContext, mWandElement);
       }
-      else if(null == mWandElement)
-      {
-         System.out.println("XXX: mWandElement should not be null unless UserPanel is being created multiple times.");
-         mUserElement = getElementNamed("VJWand");
-      }
 
-      Object value = mUserElement.getProperty(INTEROCULAR_DISTANCE_PROPERTY, 0);
-      PropertyDefinition prop_def =
+      // Setting up the interoccular distance editor.
+      Object distance_value = mUserElement.getProperty(INTEROCULAR_DISTANCE_PROPERTY, 0);
+      PropertyDefinition distance_prop_def =
          user_def.getPropertyDefinition(INTEROCULAR_DISTANCE_PROPERTY);
-      mDistanceEditor = new PropertyEditorPanel(mConfigContext, value, prop_def, mUserElement,
+      mDistanceEditor = new PropertyEditorPanel(mConfigContext, distance_value, distance_prop_def, mUserElement,
                                               0, Color.white);
-      String label = prop_def.getPropertyValueDefinition(0).getLabel();
+      String label = distance_prop_def.getPropertyValueDefinition(0).getLabel();
       mDistanceLabel.setText(label);
       
-      value = mHeadElement.getProperty(PROXY_PROPERTY, 0);
-      prop_def = alias_def.getPropertyDefinition(PROXY_PROPERTY);
-      mHeadEditor = new PropertyEditorPanel(mConfigContext, value, prop_def, mHeadElement,
+      // Set up the VJHead alias editor.
+      Object head_value = mHeadElement.getProperty(PROXY_PROPERTY, 0);
+      PropertyDefinition head_prop_def = alias_def.getPropertyDefinition(PROXY_PROPERTY);
+      mHeadEditor = new PropertyEditorPanel(mConfigContext, head_value, head_prop_def, mHeadElement,
                                               0, Color.white);
-      mHeadLabel.setText("Head Proxy");
       
-      value = mWandElement.getProperty(PROXY_PROPERTY, 0);
-      prop_def = alias_def.getPropertyDefinition(PROXY_PROPERTY);
-      mWandEditor = new PropertyEditorPanel(mConfigContext, value, prop_def, mWandElement,
+      // Set up the VJWand alias editor.
+      Object wand_value = mWandElement.getProperty(PROXY_PROPERTY, 0);
+      PropertyDefinition wand_prop_def = alias_def.getPropertyDefinition(PROXY_PROPERTY);
+      mWandEditor = new PropertyEditorPanel(mConfigContext, wand_value, wand_prop_def, mWandElement,
                                               0, Color.white);
-      mWandLabel.setText("Wand Proxy");
       
       mBottomPanel.add(mDistanceLabel,
                              new TableLayoutConstraints(1, 1, 1, 1,

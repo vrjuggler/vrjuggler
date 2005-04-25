@@ -94,10 +94,8 @@ public class ScreenPanel extends JPanel implements EditorConstants
    {
       mTitleLbl.setFont(new java.awt.Font("Serif", 1, 20));
       mTitleLbl.setHorizontalAlignment(SwingConstants.LEFT);
-      mTitleLbl.setText("User Settings");
-      mDirectionsLbl.setText("In order for VR Juggler to know how to "
-            + "display graphics from the users point of view, you must "
-            + "set the following values.");
+      mTitleLbl.setText("Displays Settings");
+      mDirectionsLbl.setText("Configure each of your graphics card outputs.");
       
       mDirectionsPanel.add(mTitleLbl, null);
       mDirectionsPanel.add(mDirectionsLbl, null);
