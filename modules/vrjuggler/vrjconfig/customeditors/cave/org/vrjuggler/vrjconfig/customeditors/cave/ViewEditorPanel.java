@@ -435,7 +435,6 @@ public class ViewEditorPanel
          mCaveModel = cm;
 
          setOpaque(true);
-         setHorizontalAlignment(CENTER);
          setVerticalAlignment(CENTER);
       }
 
@@ -518,7 +517,7 @@ public class ViewEditorPanel
          mTags.clear();
 
          mTags.add("None");
-         mTags.add("New Screen");
+         //mTags.add("New Screen");
          mTags.addAll(mCaveModel.getScreens());
       }
    }
