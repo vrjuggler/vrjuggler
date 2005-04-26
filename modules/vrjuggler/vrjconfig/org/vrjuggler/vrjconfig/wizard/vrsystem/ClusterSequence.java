@@ -61,6 +61,10 @@ public class ClusterSequence
          System.out.println("WhiteBoard is null.");
       }
       Object obj = mWhiteBoard.get("cluster_configuration");
+      if (null == obj)
+      {
+         return true;
+      }
       boolean val = ((Boolean)obj).booleanValue();
       return val;
    }
