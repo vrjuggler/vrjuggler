@@ -35,6 +35,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -52,9 +53,9 @@ public class UserPanel extends JPanel implements EditorConstants
    private JPanel mBottomPanel = new JPanel();
    private TableLayout mBottomPanelLayout = null;
    private JLabel mDeviceIcon = new JLabel();
-   private JPanel mDirectionsPanel = new JPanel();
+   private JPanel mDirectionsPanel = new JPanel(new BorderLayout());
    private JLabel mTitleLbl = new JLabel();
-   private JLabel mDirectionsLbl = new JLabel();
+   private JTextArea mDirectionsLbl = new JTextArea();
    private JPanel mTopPanel = new JPanel();
    private ConfigContext mConfigContext = null;
    private Map mWhiteBoard = null;
@@ -87,14 +88,17 @@ public class UserPanel extends JPanel implements EditorConstants
    private void jbInit() throws Exception
    {
       mTitleLbl.setFont(new java.awt.Font("Serif", 1, 20));
-      mTitleLbl.setHorizontalAlignment(SwingConstants.LEFT);
+      mTitleLbl.setHorizontalAlignment(SwingConstants.CENTER);
       mTitleLbl.setText("User Settings");
       mDirectionsLbl.setText("In order for VR Juggler to know how to "
             + "display graphics from the users point of view, you must "
             + "set the following values.");
+      mDirectionsLbl.setLineWrap(true);
+      mDirectionsLbl.setEditable(false);
+      mDirectionsLbl.setBackground(mTitleLbl.getBackground());
       
-      mDirectionsPanel.add(mTitleLbl, null);
-      mDirectionsPanel.add(mDirectionsLbl, null);
+      mDirectionsPanel.add(mTitleLbl, BorderLayout.NORTH);
+      mDirectionsPanel.add(mDirectionsLbl, BorderLayout.CENTER);
 
       mTopPanel.setLayout(new BorderLayout());
       mTopPanel.setBorder(BorderFactory.createEtchedBorder());

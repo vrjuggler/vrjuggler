@@ -49,9 +49,9 @@ import org.vrjuggler.tweek.wizard.*;
 
 public class ChooseClusterPanel extends JPanel
 {
-   private JPanel mDirectionsPanel = new JPanel();
+   private JPanel mDirectionsPanel = new JPanel(new BorderLayout());
    private JLabel mTitleLbl = new JLabel();
-   private JLabel mDirectionsLbl = new JLabel();
+   private JTextArea mDirectionsLbl = new JTextArea();
    private JPanel mTopPanel = new JPanel();
    private JLabel mDeviceIcon = new JLabel();
    private JPanel mClusterPanel = new JPanel();
@@ -85,12 +85,15 @@ public class ChooseClusterPanel extends JPanel
    private void jbInit() throws Exception
    {
       mTitleLbl.setFont(new java.awt.Font("Serif", 1, 20));
-      mTitleLbl.setHorizontalAlignment(SwingConstants.LEFT);
+      mTitleLbl.setHorizontalAlignment(SwingConstants.CENTER);
       mTitleLbl.setText("Virtual Reality Configuration Wizard");
       mDirectionsLbl.setText("Select the type of VR system you want to configure.");
+      mDirectionsLbl.setLineWrap(true);
+      mDirectionsLbl.setEditable(false);
+      mDirectionsLbl.setBackground(mTitleLbl.getBackground());
 
-      mDirectionsPanel.add(mTitleLbl, null);
-      mDirectionsPanel.add(mDirectionsLbl, null);
+      mDirectionsPanel.add(mTitleLbl, BorderLayout.NORTH);
+      mDirectionsPanel.add(mDirectionsLbl, BorderLayout.CENTER);
 
       mTopPanel.setLayout(new BorderLayout());
       mTopPanel.setBorder(BorderFactory.createEtchedBorder());

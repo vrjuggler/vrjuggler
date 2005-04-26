@@ -68,7 +68,7 @@ public class NodeSettingsPanel extends JPanel implements EditorConstants
    private JPanel mDirectionsPanel = new JPanel();
    private TableLayout mDirectionsPanelLayout= null;
    private JLabel mTitleLabel = new JLabel();
-   private JLabel mDirectionsLabel = new JLabel();
+   private JTextArea mDirectionsLabel = new JTextArea();
    private JLabel mIconLabel = new JLabel();
    private Icon mClusterIcon = null;
 
@@ -181,9 +181,13 @@ public class NodeSettingsPanel extends JPanel implements EditorConstants
          });
       mDirectionsPanel.setBorder(BorderFactory.createEtchedBorder());
       mTitleLabel.setFont(new java.awt.Font("Serif", 1, 20));
-      mTitleLabel.setHorizontalAlignment(SwingConstants.LEFT);
+      mTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
       mTitleLabel.setText("Add Cluster Nodes");
       mDirectionsLabel.setText("Click on the add button to add nodes to your cluster configuration.");
+      mDirectionsLabel.setLineWrap(true);
+      mDirectionsLabel.setEditable(false);
+      mDirectionsLabel.setBackground(mTitleLabel.getBackground());
+      
       baseLayout.setHgap(5);
       baseLayout.setVgap(5);
       mLowerPanel.add(mHostnameLabel,
