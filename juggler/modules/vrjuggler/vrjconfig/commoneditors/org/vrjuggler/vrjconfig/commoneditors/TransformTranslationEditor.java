@@ -64,13 +64,15 @@ public class TransformTranslationEditor
       {
          mTranslateProp = PRE_TRANSLATION_PROPERTY;
          mTrackerPosLabel.setText(
-            "<html>Position of the tracker transmitter from VR Juggler origin (pre-translation)</html>");
+            "<html>Position of the tracker transmitter from VR Juggler origin (pre-translation) "
+            + " <p>(e.g. the distance from the choosen VR Juggler origin to the MotionStar&reg; transmitter)</html>");
       }
       else
       {
          mTranslateProp = POST_TRANSLATION_PROPERTY;
          mTrackerPosLabel.setText(
-            "<html>Position of the sensor from VR Juggler tracked origin (post-translation)</html>");
+            "<html>Position of the sensor from VR Juggler tracked origin (post-translation)"
+            + " <p>(e.g. the distance from right between your eyes to the tracking sensor)</html>");
       }
 
       // Initially set up the conversion factors to convert from meters to
