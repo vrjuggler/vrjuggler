@@ -35,6 +35,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.*;
+import java.awt.Font;
 import java.awt.Frame;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -67,9 +68,9 @@ public class CurrentDevicesPanel extends JPanel implements EditorConstants, Conf
    private TableLayout mRightPanelLayout = null;
    private JPanel mRightPanel = new JPanel();
 
-   private JPanel mDirectionsPanel = new JPanel();
+   private JPanel mDirectionsPanel = new JPanel(new BorderLayout());
    private JLabel mTitleLbl = new JLabel();
-   private JLabel mDirectionsLbl = new JLabel();
+   private JTextArea mDirectionsLbl = new JTextArea();
    private JPanel mTopPanel = new JPanel();
    private JLabel mDeviceIcon = new JLabel();
    private JList mDeviceList = new JList();
@@ -136,9 +137,21 @@ public class CurrentDevicesPanel extends JPanel implements EditorConstants, Conf
    private void jbInit() throws Exception
    {
       mTitleLbl.setFont(new java.awt.Font("Serif", 1, 20));
-      mTitleLbl.setHorizontalAlignment(SwingConstants.LEFT);
-      mTitleLbl.setText("Device Manager");
-      mDirectionsLbl.setText("All currently configured input devices are listed below.");
+      mTitleLbl.setHorizontalAlignment(SwingConstants.CENTER);
+      mTitleLbl.setText("Input Device Manager");
+      mDirectionsLbl.setText("All currently configured input devices such as "
+                           + "trackers and button devices are listed below.");
+      mDirectionsLbl.setLineWrap(true);
+      mDirectionsLbl.setEditable(false);
+      mDirectionsLbl.setBackground(mTitleLbl.getBackground());
+
+      mDirectionsPanel.add(mTitleLbl, BorderLayout.NORTH);
+      mDirectionsPanel.add(mDirectionsLbl, BorderLayout.CENTER);
+      
+      mTopPanel.setLayout(new BorderLayout());
+      mTopPanel.setBorder(BorderFactory.createEtchedBorder());
+      mTopPanel.add(mDirectionsPanel, BorderLayout.CENTER);
+      mTopPanel.add(mDeviceIcon, BorderLayout.EAST);
       
       // Try to get icons for the toolbar buttons
       try
@@ -198,14 +211,6 @@ public class CurrentDevicesPanel extends JPanel implements EditorConstants, Conf
          }
       });
 
-      mDirectionsPanel.add(mTitleLbl, null);
-      mDirectionsPanel.add(mDirectionsLbl, null);
-
-      mTopPanel.setLayout(new BorderLayout());
-      mTopPanel.setBorder(BorderFactory.createEtchedBorder());
-      mTopPanel.add(mDirectionsPanel, BorderLayout.CENTER);
-      mTopPanel.add(mDeviceIcon, BorderLayout.EAST);
-
       mDeviceListScrollPane.getViewport().add(mDeviceList, null);
       mDeviceListScrollPane.setBorder(BorderFactory.createLoweredBevelBorder());
       mDeviceList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -215,15 +220,18 @@ public class CurrentDevicesPanel extends JPanel implements EditorConstants, Conf
             {
                if (e.getValueIsAdjusting() == false)
                {
-                  if (mDeviceList.getSelectedIndex() == -1)
-                  {
-                     mRemoveDeviceBtn.setEnabled(false);
-                     mEditDeviceBtn.setEnabled(false);
-                  }
-                  else
+                  // We need to ensure that the selected item is
+                  // a valid ConfigDefinition.
+                  if (mDeviceList.getSelectedIndex() != -1 &&
+                      mDeviceList.getSelectedValue() instanceof ConfigDefinition)
                   {
                      mRemoveDeviceBtn.setEnabled(true);
                      mEditDeviceBtn.setEnabled(true);
+                  }
+                  else
+                  {
+                     mRemoveDeviceBtn.setEnabled(false);
+                     mEditDeviceBtn.setEnabled(false);
                   }
                }
             }
@@ -437,11 +445,19 @@ public class CurrentDevicesPanel extends JPanel implements EditorConstants, Conf
       
       public Object getElementAt(int index)
       {
+         if (0 == mDeviceList.size())
+         {
+            return "[No input devices, click the add button to configure a new device.]";
+         }
          return mDeviceList.get(index);
       }
 
       public int getSize()
       {
+         if (0 == mDeviceList.size())
+         {
+            return 1;
+         }
          return mDeviceList.size();
       }
    }
@@ -494,6 +510,16 @@ public class CurrentDevicesPanel extends JPanel implements EditorConstants, Conf
          // either a ProxyType or a DeviceUnit which both implement the toString method.
          super.getListCellRendererComponent(list, value, index, selected, hasFocus);
 
+         if (value instanceof String)
+         {
+            setText((String)value);
+            if (!getFont().isItalic())
+            {
+               setFont(getFont().deriveFont(Font.BOLD + Font.ITALIC));
+            }
+            return this;
+         }
+         
          ConfigDefinition config_def = ((ConfigElement)value).getDefinition();
 
          // Set the correct Icon for this node in the tree.

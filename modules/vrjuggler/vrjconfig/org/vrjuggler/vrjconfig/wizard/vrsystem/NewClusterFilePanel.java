@@ -98,7 +98,7 @@ public class NewClusterFilePanel extends JPanel
       this.setLayout(baseLayout);
       directionsPanel.setBorder(BorderFactory.createEtchedBorder());
       lblTitle.setFont(new java.awt.Font("Serif", 1, 20));
-      lblTitle.setHorizontalAlignment(SwingConstants.LEFT);
+      lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
       lblTitle.setText("New Cluster Config File");
       lblDirections.setText("Select the file that you want to create.");
       jLabel2.setIcon(new ImageIcon("/home/users/aronb/Source/ClusterWizard/images/ClusterIcon.png"));
