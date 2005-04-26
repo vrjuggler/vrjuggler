@@ -730,7 +730,10 @@ class CoordFrameRenderer
                                                  boolean cellHasFocus)
    {
       int selected_index = ((Integer) value).intValue();
-
+      
+      // Make sure to disable JLabel whrn JList is disabled.
+      setEnabled(list.isEnabled());
+      
       if ( isSelected )
       {
          setBackground(list.getSelectionBackground());
