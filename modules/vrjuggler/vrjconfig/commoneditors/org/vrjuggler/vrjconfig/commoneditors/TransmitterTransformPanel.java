@@ -198,12 +198,12 @@ public class TransmitterTransformPanel
                                                    new Insets(0, 3, 0, 0),
                                                    0, 0));
       this.add(mRotationPanel,
-               new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0,
+               new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
                                       GridBagConstraints.CENTER,
                                       GridBagConstraints.BOTH,
                                       new Insets(0, 0, 0, 0), 0, 30));
       this.add(mTranslationPanel,
-               new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
+               new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0,
                                       GridBagConstraints.CENTER,
                                       GridBagConstraints.HORIZONTAL,
                                       new Insets(0, 0, 2, 0), 0, 0));
