@@ -26,6 +26,6 @@
          <help></help>
          <value label="Length" defaultvalue="10.0"/>
       </property>
-      <upgrade_transformi/>
+      <upgrade_transform/>
    </definition_version>
 </definition>
