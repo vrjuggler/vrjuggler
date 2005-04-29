@@ -82,7 +82,7 @@
    </xsl:template>
 
    <xsl:template match="jconf:configuration">
-      <xsl:copy select="jconf:configuration">
+      <xsl:copy>
 
          <!-- XXX: Why doesn't xsl:copy copy these two attributes? -->
          <xsl:attribute name="name">
@@ -102,7 +102,7 @@
    </xsl:template>
 
    <xsl:template match="jconf:elements">
-      <xsl:copy select=".">
+      <xsl:copy>
          <xsl:apply-templates />
       </xsl:copy>
    </xsl:template>
@@ -325,7 +325,7 @@
          <xsl:copy-of select="./jconf:display_system" />
 
          <xsl:for-each select="./jconf:display_windows">
-            <xsl:copy select=".">
+            <xsl:copy>
                <xsl:apply-templates />
             </xsl:copy>
          </xsl:for-each>
@@ -341,7 +341,7 @@
       need to be updated.
    -->
    <xsl:template match="jconf:cluster_node">
-      <xsl:copy select=".">
+      <xsl:copy>
          <xsl:attribute name="name">
             <xsl:value-of select="@name" />
          </xsl:attribute>
@@ -352,7 +352,7 @@
          <xsl:copy-of select="./jconf:display_system" />
 
          <xsl:for-each select="./jconf:display_windows">
-            <xsl:copy select=".">
+            <xsl:copy>
                <xsl:apply-templates />
             </xsl:copy>
          </xsl:for-each>
