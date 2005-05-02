@@ -1,5 +1,6 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2005-05-02 patrickh    Allow idlj to be used as the IDL-to-Java compiler.
 2005-04-01 patrickh    Updated the interface
                        org.vrjuggler.tweek.beans.BeanFocusChangeListener to use
                        a more modern approach.  The method beanFocusChanged()
