@@ -407,8 +407,9 @@ if test "x$tweek_have_java" = "xY" ; then
       ])
 
    DPP_CHECK_JNI([$JDK_HOME], ,
-                 [BUILD_JAVA='N'
-                  AC_MSG_WARN([*** JNI is required for Tweek Java API ***])])
+      [BUILD_JNI='N'
+       AC_MSG_WARN([*** NOTE: Not building JNI extensions to Tweek Java API ***])
+      ])
 
    # If we are building the Tweek Java code, we should try to enable building
    # the Java test suite too.
@@ -1295,6 +1296,7 @@ AC_SUBST(RM_LN)
 AC_SUBST(VPR_SUBSYSTEM)
 
 AC_SUBST(BUILD_JAVA)
+AC_SUBST(BUILD_JNI)
 AC_SUBST(JAVA_IDL)
 AC_SUBST(JAVA_IDL_OPTS)
 AC_SUBST(JAVA_IDL_GENDIR_OPT)

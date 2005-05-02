@@ -97,6 +97,8 @@ BEANS=		Viewers
 _LOCAL_CLEAN=		_clean
 JAVA_AFTERBUILD=	java_afterbuild
 
+BUILD_JNI=		@BUILD_JNI@
+
 ifeq (@PLATFORM@, Darwin)
    JNILIB_EXT=		jnilib
 else
@@ -119,11 +121,13 @@ java_afterbuild:
 	@echo "Building java sources"
 	@echo "------------------------------------------------"
 	$(ANT)
+ifeq ($(BUILD_JNI), Y)
 	$(MAKE) $(TWEEK_JNI_LIB)
+endif
 
 _clean:
 	$(ANT) clean
-	rm -f jni_getenv.$(OBJEXT) $(TWEEK_JNI_LILB)
+	rm -f jni_getenv.$(OBJEXT) $(TWEEK_JNI_LIB)
 
 # -----------------------------------------------------------------------------
 # JNI targets.  These are simple because they can be.
@@ -163,9 +167,11 @@ endif	# if OS_TYPE == UNIX
 	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) $(srcdir)/java.security.policy.txt $(javadir)
 	$(SHELL) $(MKINSTALLDIRS) $(javadir)/$(ARCH)
+ifeq ($(BUILD_JNI), Y)
 	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(EXEC_PERMS)		\
           $(GROUP_OPT_UNIX) $(topdir)/java/$(TWEEK_JNI_LIB)		\
           $(javadir)/$(ARCH)
+endif
 	for jar in $(JARS) ;						\
           do								\
               $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
@@ -214,9 +220,11 @@ ifeq (@PLATFORM@, Darwin)
 	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) $(srcdir)/java.security.policy.txt		\
           $(bundle_javadir)
+ifeq ($(BUILD_JNI), Y)
 	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(EXEC_PERMS)		\
           $(GROUP_OPT_UNIX) $(topdir)/java/$(TWEEK_JNI_LIB)		\
           $(bundle_javadir)
+endif
 	for jar in $(JARS) ;						\
           do								\
               $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
