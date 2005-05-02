@@ -999,16 +999,27 @@ else
    # XXX: Need to support more than one IDL compiler for Java by recognizing
    # the name of the compiler and defining options for it below.  Blah.
    if test "x${_idl_java}" != "x" ; then
-      AC_MSG_CHECKING([execute bit on ${_idl_java}])
+      case ${_idl_java} in
+         # Absolute path to IDL-to_Java compiler.
+         /*)
+            AC_MSG_CHECKING([execute bit on ${_idl_java}])
 
-      if test -x "${_idl_java}" ; then
-          JAVA_IDL="${_idl_java}"
-          APP_JAVA_IDL="$JAVA_IDL"
-          APP_JAVA_IDL_INST="$JAVA_IDL"
-          AC_MSG_RESULT(yes)
-      else
-          AC_MSG_RESULT(no)
-      fi
+            if test -x "${_idl_java}" ; then
+               JAVA_IDL="${_idl_java}"
+               AC_MSG_RESULT(yes)
+            else
+               AC_MSG_RESULT(no)
+            fi
+            ;;
+         *)
+            AC_CHECK_PROG(JAVA_IDL, [${_idl_java}], [${_idl_java}], 'no')
+            ;;
+      esac
+
+      java_idl_name="$JAVA_IDL"
+      APP_JAVA_IDL="$JAVA_IDL"
+      APP_JAVA_IDL_INST="$JAVA_IDL"
+      config_java_idl="$JAVA_IDL"
    else
       JAVA_IDL='no'
    fi
@@ -1018,15 +1029,28 @@ if test "x$JAVA_IDL" = "xno" ; then
    BUILD_JAVA='N'
    AC_MSG_WARN(*** Cannot perform IDL-to-Java conversion ***)
 else
-   if test "x$java_idl_name" = "xJacORB" ; then
-      JAVA_IDL_OPTS=''
-      JAVA_IDL_GENDIR_OPT='-d '
-      JAVA_IDL_INCFLAG='-I'
-   else
-      JAVA_IDL_OPTS='-emitAll'
-      JAVA_IDL_GENDIR_OPT='-td '
-      JAVA_IDL_INCFLAG='-i '
-   fi
+   case $java_idl_name in
+      JacORB)
+         JAVA_IDL_NAME="JacORB"
+         JAVA_IDL_OPTS=''
+         JAVA_IDL_GENDIR_OPT='-d '
+         JAVA_IDL_INCFLAG='-I'
+         JAVA_IDL_CLIENT_OPTS='-noskel'
+         JAVA_IDL_SERVER_OPTS=''
+         ;;
+      *idlj)
+         JAVA_IDL_NAME="IDLJ"
+         JAVA_IDL_OPTS=''
+         JAVA_IDL_GENDIR_OPT='-td '
+         JAVA_IDL_INCFLAG='-i '
+         JAVA_IDL_CLIENT_OPTS='-fclient'
+         JAVA_IDL_SERVER_OPTS='-fallTIE'
+         ;;
+      *)
+         JAVA_IDL_NAME="Unknown"
+         AC_MSG_WARN([*** WARNING: Unknown IDL-to-Java compiler $java_idl_name **])
+         ;;
+   esac
 fi
 
 case $java_orb_name in
@@ -1297,10 +1321,13 @@ AC_SUBST(VPR_SUBSYSTEM)
 
 AC_SUBST(BUILD_JAVA)
 AC_SUBST(BUILD_JNI)
+AC_SUBST(JAVA_IDL_NAME)
 AC_SUBST(JAVA_IDL)
 AC_SUBST(JAVA_IDL_OPTS)
 AC_SUBST(JAVA_IDL_GENDIR_OPT)
 AC_SUBST(JAVA_IDL_INCFLAG)
+AC_SUBST(JAVA_IDL_CLIENT_OPTS)
+AC_SUBST(JAVA_IDL_SERVER_OPTS)
 AC_SUBST(JAVA_ORB_JAR)
 
 AC_SUBST(BUILD_JAVA_TEST_SUITE)

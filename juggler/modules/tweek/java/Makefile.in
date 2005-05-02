@@ -56,6 +56,8 @@ INSTALL=		@INSTALL@
 INSTALL_FILES=		
 JAVA_IDL_OPTS=		@JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(IDL_GENDIR)
 JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
+JAVA_IDL_CLIENT_OPTS=	@JAVA_IDL_CLIENT_OPTS@
+JAVA_IDL_SERVER_OPTS=	@JAVA_IDL_SERVER_OPTS@
 
 LAF_DIR=		$(JUGGLERROOT_ABS)/external/swing-laf
 KUNSTSTOFF_SRCDIR=	$(LAF_DIR)/kunststoff/sources
@@ -142,10 +144,18 @@ $(TWEEK_JNI_LIB): jni_getenv.$(OBJEXT)
 # Extra targets.
 # -----------------------------------------------------------------------------
 Subject.java: Subject.idl
-	$(JAVA_IDL) $(JAVA_IDL_OPTS) -noskel $(JAVA_IDL_INCLUDES) $<
+	$(JAVA_IDL) $(JAVA_IDL_OPTS) $(JAVA_IDL_CLIENT_OPTS)		\
+          $(JAVA_IDL_INCLUDES) $<
 
 SubjectManager.java: SubjectManager.idl
-	$(JAVA_IDL) $(JAVA_IDL_OPTS) -noskel $(JAVA_IDL_INCLUDES) $<
+	$(JAVA_IDL) $(JAVA_IDL_OPTS) $(JAVA_IDL_CLIENT_OPTS)		\
+          $(JAVA_IDL_INCLUDES) $<
+
+ifeq (@JAVA_IDL_NAME@, IDLJ)
+Observer.java: Observer.idl
+	$(JAVA_IDL) $(JAVA_IDL_OPTS) $(JAVA_IDL_SERVER_OPTS)		\
+          $(JAVA_IDL_INCLUDES) $<
+endif
 
 # This cannot be named 'install' because Doozer++ already defines that.
 tweek-install:
