@@ -406,7 +406,7 @@ if test "x$tweek_have_java" = "xY" ; then
         AC_MSG_WARN([*** JDK 1.4 or newer required for Tweek Java API ***])
       ])
 
-   DPP_CHECK_JNI([$JDK_HOME], ,
+   DPP_CHECK_JNI([$JDK_HOME], [BUILD_JNI='Y'],
       [BUILD_JNI='N'
        AC_MSG_WARN([*** NOTE: Not building JNI extensions to Tweek Java API ***])
       ])
