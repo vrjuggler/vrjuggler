@@ -54,7 +54,8 @@ GlWindowWin32::GlWindowWin32()
    : mRenderContext(NULL)
    , mDeviceContext(NULL)
 {
-   /* Do nothing. */ ;
+   // Event processing is not blocking.
+   mBlocking = false;
 }
 
 GlWindowWin32::~GlWindowWin32()
