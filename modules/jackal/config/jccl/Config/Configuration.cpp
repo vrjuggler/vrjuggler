@@ -32,6 +32,7 @@
 
 #include <jccl/jcclConfig.h>
 
+#include <fstream>
 #include <sys/types.h>
 
 #include <vpr/vpr.h>
@@ -173,7 +174,8 @@ std::istream& operator>>(std::istream& in, Configuration& self)
    return in;
 }
 
-bool Configuration::load(const std::string& filename, const std::string& parentfile)
+bool Configuration::load(const std::string& filename,
+                         const std::string& parentfile)
 {
    vprDEBUG(jcclDBG_CONFIG, vprDBG_STATE_LVL)
       << "[jccl::Configuration::load()] Loading file '" << filename
@@ -186,14 +188,16 @@ bool Configuration::load(const std::string& filename, const std::string& parentf
                            std::string("\n"),
                         std::string(""));
 
-   cppdom::DocumentPtr cfg_doc(ElementFactory::instance()->createXMLDocument());
+   // XXX: Previously, this used ElementFactory::createXMLDocument(), but for
+   // some reason, that caused error reporting to be totally useless.
+   cppdom::Document cfg_doc(cppdom::ContextPtr(new cppdom::Context()));
    bool status(false);
 
    try
    {
-      cfg_doc->loadFile(mFileName);
+      cfg_doc.loadFile(mFileName);
 
-      cppdom::NodePtr cfg_node(cfg_doc->getChild(tokens::CONFIGURATION));
+      cppdom::NodePtr cfg_node(cfg_doc.getChild(tokens::CONFIGURATION));
       vprASSERT(cfg_node.get() != NULL);
 
       // Save the configuration node for later use.
@@ -228,14 +232,51 @@ bool Configuration::load(const std::string& filename, const std::string& parentf
    }
    catch (cppdom::Error& xml_e)
    {
-      cppdom::Location where(cfg_doc->getContext()->getLocation());
+      cppdom::Location where(cfg_doc.getContext()->getLocation());
       std::string errmsg = xml_e.getStrError();
+
+      int line_num = where.getLine() + 1;
+      int pos      = where.getPos() + 1;
 
       // print out where the error occured
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED, "Configuration: XMLError:") << mFileName
-         << ": line " << where.getLine() << " at position " << where.getPos()
-         << ": error: " << errmsg.c_str() << std::endl << vprDEBUG_FLUSH;
+         << clrOutBOLD(clrRED, "Configuration XML Error:") << " "
+         << mFileName << ": line " << line_num << " at position " << pos
+         << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << "Error: " << errmsg << std::endl << vprDEBUG_FLUSH;
+
+      // Print out the actual failed XML.
+      std::ifstream errfile(mFileName.c_str());
+      if ( errfile )
+      {
+         char linebuffer[1024];
+         for ( int i = 0; i < line_num && ! errfile.eof(); ++i )
+         {
+            errfile.getline(linebuffer, 1024);
+         }
+
+         if ( pos >= 80 )
+         {
+            pos %= 80;
+         }
+
+         std::string err_line(linebuffer + (where.getPos() - pos));
+         if (err_line.length() >= 79)
+         {
+            err_line.erase(79);
+         }
+
+         std::cout << err_line << std::endl;
+         std::cout << linebuffer << std::endl;
+
+         for ( int i = 2; i < pos; ++i )
+         {
+            std::cout << " ";
+         }
+
+         std::cout << '^' << std::endl;
+      }
    }
 
    return status;
