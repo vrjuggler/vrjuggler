@@ -59,9 +59,9 @@ namespace vpr
  *
  * @return The expanded version of \p str is returned.
  */
-extern VPR_API(std::string) replaceEnvVars(const std::string str,
-                                           const std::string startStr,
-                                           const std::string endStr);
+extern VPR_API(std::string) replaceEnvVars(const std::string& str,
+                                           const std::string& startStr,
+                                           const std::string& endStr);
 
 /**
  * Replace all environment variable strings embedded in \p str.
@@ -72,7 +72,7 @@ extern VPR_API(std::string) replaceEnvVars(const std::string str,
  *
  * @return The expanded version of \p str is returned.
  */
-extern VPR_API(std::string) replaceEnvVars(const std::string str);
+extern VPR_API(std::string) replaceEnvVars(const std::string& str);
 
 } // namespace vpr
 
