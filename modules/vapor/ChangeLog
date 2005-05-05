@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2005-05-04 patrickh Updated to support Mac OS X 10.4 (Darwin 8.0).
+                    NEW VERSION: 0.92.2
 2005-04-21 patrickh Renamed vpr::ThreadPool::barrier() to
                     vpr::ThreadPool::wait() to fix compile errors on Gentoo
                     Linux.
