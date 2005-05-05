@@ -68,6 +68,8 @@
 #  include <vpr/md/POSIX/Thread/ThreadPosix.h>
 #  include <vpr/md/POSIX/Thread/ThreadKeyPosix.h>
 
+#undef _POSIX_C_SOURCE
+
 /* NSPR */
 #elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
 #  include <vpr/md/NSPR/Thread/ThreadNSPR.h>

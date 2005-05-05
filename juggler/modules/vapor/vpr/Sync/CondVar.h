@@ -60,6 +60,9 @@
 #endif
 
 #  include <vpr/md/POSIX/Sync/CondVarPosix.h>
+
+#undef _POSIX_C_SOURCE
+
 #elif VPR_THREAD_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
 #  include <vpr/md/NSPR/Sync/CondVarNSPR.h>
 #endif   /* VPR_IRIX_SPROC */
