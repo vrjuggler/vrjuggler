@@ -486,7 +486,14 @@ if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
 #    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
     CXXFLAGS="$CXXFLAGS -w2"
 elif test "x$PLATFORM" = "xDarwin" ; then
-    CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -fexport-coalesced"
+    changequote(<<, >>)
+    vpr_gcc_major=`echo $dpp_gcc_ver | sed -e 's/^\([0-9]*\)\..*/\1/'`
+    changequote([, ])
+
+    # GCC 4.0 in Darwin removed -fexport-coalesced.
+    if test $vpr_gcc_major -lt 4 ; then
+       CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -fexport-coalesced"
+    fi
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     vc_cflags='/QIfdiv /QI0f'
     vc_cxxflags='/GR /GX /EHc /QIfdiv /QI0f'
