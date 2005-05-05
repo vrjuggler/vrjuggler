@@ -41,6 +41,13 @@
 
 namespace vrj
 {
+   SoundManagerSonix::SoundManagerSonix()
+      : vrj::SoundManager()
+      , mLastFrameTime(0, vpr::Interval::Sec)
+   {
+      /* Do nothing. */ ;
+   }
+
    /**
     * Adds the element to the configuration.
     * @pre configCanHandle(element) == true
@@ -182,8 +189,23 @@ namespace vrj
    /** Enables a frame to be drawn. */
    void SoundManagerSonix::update()
    {
-      float time_delta = 0.1f; // TODO: get real time since last frame...
-      snx::sonix::instance()->step(time_delta);
+      const vpr::Interval cur_time(vpr::Interval::now());
+      const vpr::Interval delta(cur_time - mLastFrameTime);
+      float delta_sec(0.0f);
+
+      if ( cur_time > mLastFrameTime )
+      {
+         delta_sec = delta.secf();
+
+         if ( delta_sec > 1.0f )
+         {
+            delta_sec = 1.0f;
+         }
+      }
+
+      mLastFrameTime = cur_time;
+
+      snx::sonix::instance()->step(delta_sec);
    }
 
    /**
