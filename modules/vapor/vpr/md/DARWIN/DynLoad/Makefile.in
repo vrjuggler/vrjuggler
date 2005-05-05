@@ -57,7 +57,7 @@ INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VPR_LIBRARY)
 
 ifneq (@SUBSYSTEM@, NSPR)
-ifeq (@PLATFORM@, Darwin)
+ifeq (@USE_DYLD@, Y)
    SRCS=	LibraryDYLD.cpp
 endif
 endif

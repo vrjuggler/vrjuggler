@@ -63,7 +63,7 @@ namespace vpr
    typedef LibraryNSPR Library;
 }
 
-#elif defined(VPR_OS_Darwin)
+#elif defined(VPR_OS_Darwin) && VPR_OS_RELEASE_MAJOR < 8
 #include <vpr/md/DARWIN/DynLoad/LibraryDYLD.h>
 
 namespace vpr
