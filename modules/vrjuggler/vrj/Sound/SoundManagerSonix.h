@@ -34,6 +34,7 @@
 #define _VRJUGGLER_SONIX_SOUND_MANAGER_
 
 #include <vrj/vrjConfig.h>
+#include <vpr/Util/Interval.h>
 #include <vrj/Sound/SoundManager.h>
 
 namespace vrj
@@ -45,6 +46,8 @@ namespace vrj
    class SoundManagerSonix : public SoundManager
    {
    public:
+      SoundManagerSonix();
+
       /**
        * Adds the element to the configuration.
        * @pre configCanHandle(element) == true
@@ -72,6 +75,9 @@ namespace vrj
        * @post The frame has been rendered.
        */
       virtual void sync();
+
+   private:
+      vpr::Interval mLastFrameTime;
    };
 } // end namespace
 
