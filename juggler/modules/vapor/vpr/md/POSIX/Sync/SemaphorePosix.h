@@ -60,7 +60,7 @@
 
 #include <vpr/Util/ReturnStatus.h>
 
-#if defined(VPR_OS_Darwin) && VPR_OS_RELEASE_MAJOR <= 7
+#if defined(VPR_OS_Darwin) && VPR_OS_RELEASE_MAJOR <= 8
 #define VPR_USE_NAMED_SEMAPHORE 1
 #endif
 
