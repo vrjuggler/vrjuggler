@@ -167,9 +167,10 @@ void ConfigManager::loadRemoteReconfig()
    const std::string init_func("initPlugin");
    Callable functor(this);
    vpr::ReturnStatus status;
-   status = vpr::LibraryLoader::findDSOAndLookup(reconfig_dso, search_path,
-                                                 init_func, functor,
-                                                 mRemoteRtrcPlugin);
+   status = vpr::LibraryLoader::findDSOAndCallEntryPoint(reconfig_dso,
+                                                         search_path,
+                                                         init_func, functor,
+                                                         mRemoteRtrcPlugin);
 
    if ( ! status.success() )
    {

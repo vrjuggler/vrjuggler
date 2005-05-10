@@ -804,7 +804,7 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
                vpr::ReturnStatus version_status;
                VersionCheckCallable version_functor;
                version_status =
-                  vpr::LibraryLoader::findEntryPoint(dso, get_version_func,
+                  vpr::LibraryLoader::callEntryPoint(dso, get_version_func,
                                                      version_functor);
 
                if ( ! version_status.success() )
@@ -822,7 +822,7 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
                   vpr::ReturnStatus load_status;
                   DriverInitCallable init_functor(this);
                   load_status =
-                     vpr::LibraryLoader::findEntryPoint(dso, driver_init_func,
+                     vpr::LibraryLoader::callEntryPoint(dso, driver_init_func,
                                                         init_functor);
 
                   if ( load_status.success() )
@@ -881,7 +881,7 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
                {
                   vpr::ReturnStatus load_status;
                   load_status =
-                     vpr::LibraryLoader::findEntryPoint(*lib, driver_init_func,
+                     vpr::LibraryLoader::callEntryPoint(*lib, driver_init_func,
                                                         functor);
 
                   if ( load_status.success() )
