@@ -694,7 +694,7 @@ namespace cluster
                      vpr::ReturnStatus version_status;
                      VersionCheckCallable version_functor;
                      version_status =
-                        vpr::LibraryLoader::findEntryPoint(dso,
+                        vpr::LibraryLoader::callEntryPoint(dso,
                                                            get_version_func,
                                                            version_functor);
 
@@ -713,7 +713,7 @@ namespace cluster
                         vpr::ReturnStatus load_status;
                         PluginInitCallable init_functor(this);
                         load_status =
-                           vpr::LibraryLoader::findEntryPoint(dso,
+                           vpr::LibraryLoader::callEntryPoint(dso,
                                                               plugin_init_func,
                                                               init_functor);
 
