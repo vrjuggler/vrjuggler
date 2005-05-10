@@ -164,8 +164,9 @@ namespace vrj
       const std::string perf_mon_dso("corba_perf_mon");
       const std::string init_func("initPlugin");
       Callable functor(this);
-      vpr::LibraryLoader::findDSOAndLookup(perf_mon_dso, search_path,
-                                           init_func, functor, mPluginDSO);
+      vpr::LibraryLoader::findDSOAndCallEntryPoint(perf_mon_dso, search_path,
+                                                   init_func, functor,
+                                                   mPluginDSO);
    }
 
    void PerformanceMediator::setPerfPlugin(vrj::PerfPlugin* plugin)
