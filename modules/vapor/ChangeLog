@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2005-05-10 patrickh Renamed functions in vpr::LibraryLoader to use more logical
+                    names.  The old function names have been retained for
+                    backwards compatibility.
+                    NEW VERSION: 0.92.3
 2005-05-04 patrickh Updated to support Mac OS X 10.4 (Darwin 8.0).
                     NEW VERSION: 0.92.2
 2005-04-21 patrickh Renamed vpr::ThreadPool::barrier() to
