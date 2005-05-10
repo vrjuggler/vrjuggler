@@ -122,22 +122,23 @@ vpr::LibraryPtr LibraryLoader::findDSO(const std::string& dsoBaseName,
    return dso;
 }
 
-vpr::ReturnStatus LibraryLoader::findDSOAndLookup(const std::string& dsoBaseName,
-                                                  const std::vector<std::string>& searchPath,
-                                                  const std::string& funcName,
-                                                  boost::function1<bool, void*> callback,
-                                                  vpr::LibraryPtr& dso)
+vpr::ReturnStatus LibraryLoader::findDSOAndCallEntryPoint(const std::string& dsoBaseName,
+                                                          const std::vector<std::string>& searchPath,
+                                                          const std::string& funcName,
+                                                          boost::function1<bool, void*> callback,
+                                                          vpr::LibraryPtr& dso)
 {
    std::vector<fs::path> fs_path;
    makeBoostFsVector(searchPath, fs_path);
-   return findDSOAndLookup(dsoBaseName, fs_path, funcName, callback, dso);
+   return findDSOAndCallEntryPoint(dsoBaseName, fs_path, funcName, callback,
+                                   dso);
 }
 
-vpr::ReturnStatus LibraryLoader::findDSOAndLookup(const std::string& dsoBaseName,
-                                                  const std::vector<fs::path>& searchPath,
-                                                  const std::string& funcName,
-                                                  boost::function1<bool, void*> callback,
-                                                  vpr::LibraryPtr& dso)
+vpr::ReturnStatus LibraryLoader::findDSOAndCallEntryPoint(const std::string& dsoBaseName,
+                                                          const std::vector<fs::path>& searchPath,
+                                                          const std::string& funcName,
+                                                          boost::function1<bool, void*> callback,
+                                                          vpr::LibraryPtr& dso)
 {
    vpr::ReturnStatus status;
    bool load_attempted(false);
@@ -148,7 +149,7 @@ vpr::ReturnStatus LibraryLoader::findDSOAndLookup(const std::string& dsoBaseName
    {
       try
       {
-         status = findEntryPoint(dso, funcName, callback);
+         status = callEntryPoint(dso, funcName, callback);
          load_attempted = true;
       }
       catch(fs::filesystem_error& fsEx)
@@ -171,9 +172,9 @@ vpr::ReturnStatus LibraryLoader::findDSOAndLookup(const std::string& dsoBaseName
          << "[vpr::LibraryLoader::findDSOAndLookup()] Falling back on run-time loader search for '"
          << dso_name << "'\n" << vprDEBUG_FLUSH;
       vpr::LibraryPtr temp_dso = vpr::LibraryPtr(new vpr::Library(dso_name));
-      status = findEntryPoint(temp_dso, funcName, callback);
+      status = callEntryPoint(temp_dso, funcName, callback);
 
-      // If findEntryPoint succeeded, then store the vpr::LibraryPtr object
+      // If callEntryPoint succeeded, then store the vpr::LibraryPtr object
       // in the return storage.  Otherwise, we let it go out of scope and get
       // deleted.
       if ( ! status.failure() )
@@ -185,7 +186,7 @@ vpr::ReturnStatus LibraryLoader::findDSOAndLookup(const std::string& dsoBaseName
    return status;
 }
 
-vpr::ReturnStatus LibraryLoader::findEntryPoint(vpr::LibraryPtr dso,
+vpr::ReturnStatus LibraryLoader::callEntryPoint(vpr::LibraryPtr dso,
                                                 const std::string& funcName,
                                                 boost::function1<bool, void*> callback)
 {

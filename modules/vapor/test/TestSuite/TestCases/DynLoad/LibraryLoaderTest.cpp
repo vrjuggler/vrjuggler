@@ -72,23 +72,23 @@ public:
    }
 };
 
-void LibraryLoaderTest::findEntryPointTestRaw()
+void LibraryLoaderTest::callEntryPointTestRaw()
 {
    vpr::ReturnStatus status;
 
    vpr::LibraryPtr dso(new vpr::Library(mModules[0].first));
-   status = vpr::LibraryLoader::findEntryPoint(dso, mModules[0].second,
+   status = vpr::LibraryLoader::callEntryPoint(dso, mModules[0].second,
                                                (bool(*)(void*)) rawCallback);
    CPPUNIT_ASSERT(status.success());
 }
 
-void LibraryLoaderTest::findEntryPointTestFunctor()
+void LibraryLoaderTest::callEntryPointTestFunctor()
 {
    vpr::ReturnStatus status;
 
    LoaderFunctor functor;
    vpr::LibraryPtr dso(new vpr::Library(mModules[1].first));
-   status = vpr::LibraryLoader::findEntryPoint(dso, mModules[1].second,
+   status = vpr::LibraryLoader::callEntryPoint(dso, mModules[1].second,
                                                functor);
    CPPUNIT_ASSERT(status.success());
 }
@@ -108,26 +108,26 @@ void LibraryLoaderTest::findDSOTest()
    CPPUNIT_ASSERT(dso2.get() != NULL);
 }
 
-void LibraryLoaderTest::findDSOAndLookupTest()
+void LibraryLoaderTest::findDSOAndCallEntryPointTest()
 {
    vpr::ReturnStatus status;
    vpr::LibraryPtr dso1, dso2;
    std::vector<std::string> path1(1);
 
    path1[0] = std::string(MODULE_DIR);
-   status = vpr::LibraryLoader::findDSOAndLookup("loadermod1", path1,
-                                                 mModules[0].second,
-                                                 (bool(*)(void*)) rawCallback,
-                                                 dso1);
+   status = vpr::LibraryLoader::findDSOAndCallEntryPoint("loadermod1", path1,
+                                                         mModules[0].second,
+                                                         (bool(*)(void*)) rawCallback,
+                                                         dso1);
    CPPUNIT_ASSERT(status.success());
    CPPUNIT_ASSERT(dso1.get() != NULL);
 
    std::vector<fs::path> path2(1);
    path2[0] = fs::path(std::string(MODULE_DIR), fs::native);
-   status = vpr::LibraryLoader::findDSOAndLookup("loadermod1", path2,
-                                                 mModules[0].second,
-                                                 (bool(*)(void*)) rawCallback,
-                                                 dso2);
+   status = vpr::LibraryLoader::findDSOAndCallEntryPoint("loadermod1", path2,
+                                                         mModules[0].second,
+                                                         (bool(*)(void*)) rawCallback,
+                                                         dso2);
    CPPUNIT_ASSERT(status.success());
    CPPUNIT_ASSERT(dso2.get() != NULL);
 }
@@ -137,13 +137,13 @@ void LibraryLoaderTest::multiLoadTest()
    vpr::ReturnStatus status;
 
    vpr::LibraryPtr dso1(new vpr::Library(mModules[0].first));
-   status = vpr::LibraryLoader::findEntryPoint(dso1, mModules[0].second,
+   status = vpr::LibraryLoader::callEntryPoint(dso1, mModules[0].second,
                                                (bool(*)(void*)) rawCallback);
    CPPUNIT_ASSERT(status.success());
 
    LoaderFunctor functor;
    vpr::LibraryPtr dso2(new vpr::Library(mModules[1].first));
-   status = vpr::LibraryLoader::findEntryPoint(dso2, mModules[1].second,
+   status = vpr::LibraryLoader::callEntryPoint(dso2, mModules[1].second,
                                                functor);
    CPPUNIT_ASSERT(status.success());
 }
@@ -154,7 +154,7 @@ void LibraryLoaderTest::loadFailureTest()
 
    vpr::Debug::instance()->disableOutput();
       vpr::LibraryPtr dso(new vpr::Library("loadFailureTest"));
-      status = vpr::LibraryLoader::findEntryPoint(dso, "notThere",
+      status = vpr::LibraryLoader::callEntryPoint(dso, "notThere",
                                                   (bool(*)(void*)) rawCallback);
       CPPUNIT_ASSERT(status.failure());
    vpr::Debug::instance()->enableOutput();
@@ -166,7 +166,7 @@ void LibraryLoaderTest::lookupFailureTest()
 
    vpr::Debug::instance()->disableOutput();
       vpr::LibraryPtr dso1(new vpr::Library(mModules[0].first));
-      status = vpr::LibraryLoader::findEntryPoint(dso1, "lookupFailureTest",
+      status = vpr::LibraryLoader::callEntryPoint(dso1, "lookupFailureTest",
                                                   (bool(*)(void*)) rawCallback);
       CPPUNIT_ASSERT(status.failure());
    vpr::Debug::instance()->enableOutput();
@@ -186,10 +186,10 @@ void LibraryLoaderTest::findFailureTest()
 
    CPPUNIT_ASSERT(dso2.get() == NULL);
    vpr::Debug::instance()->disableOutput();
-      status = vpr::LibraryLoader::findDSOAndLookup("findFailureTest", path,
-                                                    "notThere",
-                                                    (bool(*)(void*)) rawCallback,
-                                                    dso2);
+      status = vpr::LibraryLoader::findDSOAndCallEntryPoint("findFailureTest",
+                                                            path, "notThere",
+                                                            (bool(*)(void*)) rawCallback,
+                                                            dso2);
    vpr::Debug::instance()->enableOutput();
    CPPUNIT_ASSERT(status.failure());
    CPPUNIT_ASSERT(dso2.get() == NULL);
