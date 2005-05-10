@@ -16,6 +16,14 @@ Released: May <day>, 2005
     Required changes when upgrading from all previous versions:
        * vpr::ThreadPool::barrier() is now vpr::ThreadPool::wait().
 
+    Recommended changes when upgrading from all previous versions:
+       * The following functions in vpr::LibraryLoader are deprecated:
+
+            vpr::LibraryLoader::findDSOAndLookup()
+               Use vpr::LibraryLoader::findDSOAndCallEntryPoint() instead
+            vpr::LibraryLoader::findEntryPoint()
+               Use vpr::LibraryLoader::callEntryPoint() instead
+
  Version: 0.26.0
 Released: January 13, 2003
     Required changes when upgrading from all previous versions:

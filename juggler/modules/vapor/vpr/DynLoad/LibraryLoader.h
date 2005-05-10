@@ -123,13 +123,17 @@ public:
     * @param dso         A reference to a vpr::LibraryPtr object through which
     *                    the loaded DSO will be returned to the caller.
     *
-    * @see makeFullDSOName, findEntryPoint
+    * @see makeFullDSOName, callEntryPoint
+    *
+    * @note This method was renamed from findDSOAndLookup() in VPR 0.92.3.
+    *
+    * @since 0.92.3
     */
-   static vpr::ReturnStatus findDSOAndLookup(const std::string& dsoBaseName,
-                                             const std::vector<std::string>& searchPath,
-                                             const std::string& funcName,
-                                             boost::function1<bool, void*> callback,
-                                             vpr::LibraryPtr& dso);
+   static vpr::ReturnStatus findDSOAndCallEntryPoint(
+      const std::string& dsoBaseName,
+      const std::vector<std::string>& searchPath, const std::string& funcName,
+      boost::function1<bool, void*> callback, vpr::LibraryPtr& dso
+   );
 
    /**
     * Searches for a dynamic shared object (DSO) with the "base" name given in
@@ -152,13 +156,18 @@ public:
     * @param dso         A reference to a vpr::LibraryPtr object through which
     *                    the loaded DSO will be returned to the caller.
     *
-    * @see makeFullDSOName, findEntryPoint
+    * @see makeFullDSOName, callEntryPoint
+    *
+    * @note This method was renamed from findDSOAndLookup() in VPR 0.92.3.
+    *
+    * @since 0.92.3
     */
-   static vpr::ReturnStatus findDSOAndLookup(const std::string& dsoBaseName,
-                                             const std::vector<boost::filesystem::path>& searchPath,
-                                             const std::string& funcName,
-                                             boost::function1<bool, void*> callback,
-                                             vpr::LibraryPtr& dso);
+   static vpr::ReturnStatus findDSOAndCallEntryPoint(
+      const std::string& dsoBaseName,
+      const std::vector<boost::filesystem::path>& searchPath,
+      const std::string& funcName, boost::function1<bool, void*> callback,
+      vpr::LibraryPtr& dso
+   );
 
    /**
     * Looks up the named function, and invokes the given callback with
@@ -168,6 +177,12 @@ public:
     * the vpr::Library object to handle platform-specific issues.  It is
     * assumed that by this point, the file has been found on the local file
     * system and is ready to be loaded or is already loaded.
+    *
+    * This method is essentially just a wrapper around invoking
+    * vpr::Library::findSymbol() and handling possible errors associated
+    * with doing so.  In many cases, it is better to call
+    * vpr::Library::findSymbol() directly to avoid the complications of using
+    * the callback to handle invoking the entry point function.
     *
     * @pre vpr::LibraryPtr contains a pointer to a valid vpr::Library object.
     * @post The DSO is loaded.
@@ -180,8 +195,12 @@ public:
     *                 that will be invoked as a callback to initialize the
     *                 DSO.  It will be passed a void* pointer to the
     *                 initialization function looked up in the DSO.
+    *
+    * @note This method was renamed from findEntryPoint() in VPR 0.92.3.
+    *
+    * @since 0.92.3
     */
-   static vpr::ReturnStatus findEntryPoint(vpr::LibraryPtr dso,
+   static vpr::ReturnStatus callEntryPoint(vpr::LibraryPtr dso,
                                            const std::string& funcName,
                                            boost::function1<bool, void*> callback);
 
@@ -199,6 +218,51 @@ public:
     * @param dsoBaseName The base name of the DSO to be loaded.
     */
    static std::string makeFullDSOName(const std::string& dsoBaseName);
+
+   /**
+    * @deprecated This function is deprecated and will be removed in VPR 1.2.
+    *             Use findDSOAndCallEntryPoint() instead.
+    *
+    * @see findDSOAndCallEntryPoint
+    */
+   static vpr::ReturnStatus findDSOAndLookup(const std::string& dsoBaseName,
+                                             const std::vector<std::string>& searchPath,
+                                             const std::string& funcName,
+                                             boost::function1<bool, void*> callback,
+                                             vpr::LibraryPtr& dso)
+   {
+      return findDSOAndCallEntryPoint(dsoBaseName, searchPath, funcName,
+                                      callback, dso);
+   }
+
+   /**
+    * @deprecated This function is deprecated and will be removed in VPR 1.2.
+    *             Use findDSOAndCallEntryPoint() instead.
+    *
+    * @see findDSOAndCallEntryPoint
+    */
+   static vpr::ReturnStatus findDSOAndLookup(const std::string& dsoBaseName,
+                                             const std::vector<boost::filesystem::path>& searchPath,
+                                             const std::string& funcName,
+                                             boost::function1<bool, void*> callback,
+                                             vpr::LibraryPtr& dso)
+   {
+      return findDSOAndCallEntryPoint(dsoBaseName, searchPath, funcName,
+                                      callback, dso);
+   }
+
+   /**
+    * @deprecated This function is deprecated and will be removed in VPR 1.2.
+    *             Use callEntryPoint() instead.
+    *
+    * @see callEntryPoint
+    */
+   static vpr::ReturnStatus findEntryPoint(vpr::LibraryPtr dso,
+                                           const std::string& funcName,
+                                           boost::function1<bool, void*> callback)
+   {
+      return callEntryPoint(dso, funcName, callback);
+   }
 
 private:
    static void makeBoostFsVector(const std::vector<std::string>& strVec,
