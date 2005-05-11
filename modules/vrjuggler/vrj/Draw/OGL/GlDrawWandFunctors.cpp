@@ -36,6 +36,10 @@
 
 #include <vrj/Draw/OGL/GlDrawWandFunctors.h>
 
+#include <gmtl/Vec.h>
+#include <gmtl/Output.h>
+#include <gmtl/VecOps.h>
+#include <vector>
 
 namespace vrj
 {
@@ -53,7 +57,7 @@ void GlDrawConeWandFunctor::draw(vrj::User* user)
    const float height = 0.6f;
    const int slices = 6;
    const int stacks = 1;
-   
+
    glColor3f(0.0f, 1.0f, 0.0f);
    gluQuadricDrawStyle(mQuadObj, (GLenum) GLU_FILL);
    gluQuadricNormals(mQuadObj, (GLenum) GLU_SMOOTH);
@@ -65,60 +69,132 @@ void GlDrawRightAngleWandFunctor::draw(vrj::User* user)
    boost::ignore_unused_variable_warning(user);
 
    static GLfloat VertexData[] = {
-      0.0140000f, -0.140000f, 0.0140000f, 0.0140000f, 0.028000f, 0.0140000f, -0.0140000f, 0.028000f, 0.0140000f, 
-      -0.0140000f, -0.140000f, 0.0140000f, 0.0140000f, -0.140000f, -0.0140000f, 
-      0.0140000f, 0.00000f, -0.0140000f, 0.0140000f, 0.028000f, 0.0140000f, 
-      0.0140000f, -0.140000f, 0.0140000f, -0.0140000f, -0.140000f, -0.0140000f, 
-      -0.0140000f, 0.00000f, -0.0140000f, 0.0140000f, 0.00000f, -0.0140000f, 
-      0.0140000f, -0.140000f, -0.0140000f, -0.0140000f, -0.140000f, 0.0140000f, 
-      -0.0140000f, 0.028000f, 0.0140000f, -0.0140000f, 0.00000f, -0.0140000f, 
-      -0.0140000f, -0.140000f, -0.0140000f, -0.0140000f, -0.140000f, -0.0140000f, 
-      0.0140000f, -0.140000f, -0.0140000f, 0.0140000f, -0.140000f, 0.0140000f, 
-      -0.0140000f, -0.140000f, 0.0140000f, -0.0140000f, 0.028000f, 0.0140000f, 
-      0.0140000f, 0.028000f, 0.0140000f, 0.028000f, 0.056000f, -0.042000f, 
-      -0.028000f, 0.056000f, -0.042000f, 0.028000f, 0.042000f, -0.042000f, 
-      -0.028000f, 0.042000f, -0.042000f, -0.028000f, 0.056000f, -0.042000f, 
-      0.028000f, 0.056000f, -0.042000f, 0.0140000f, 0.028000f, 0.0140000f, 
-      0.0140000f, 0.00000f, -0.0140000f, 0.028000f, 0.042000f, -0.042000f, 
-      0.0140000f, 0.028000f, 0.0140000f, 0.028000f, 0.042000f, -0.042000f, 
-      0.028000f, 0.056000f, -0.042000f, -0.0140000f, 0.028000f, 0.0140000f, 
-      -0.028000f, 0.056000f, -0.042000f, -0.028000f, 0.042000f, -0.042000f, 
-      -0.028000f, 0.042000f, -0.042000f, -0.0140000f, 0.00000f, -0.0140000f, 
-      -0.0140000f, 0.028000f, 0.0140000f, 0.028000f, 0.042000f, -0.042000f, 
-      0.0140000f, 0.00000f, -0.0140000f, -0.0140000f, 0.00000f, -0.0140000f, 
+      0.0140000f, -0.140000f, 0.0140000f, 0.0140000f, 0.028000f, 0.0140000f, -0.0140000f, 0.028000f, 0.0140000f,
+      -0.0140000f, -0.140000f, 0.0140000f, 0.0140000f, -0.140000f, -0.0140000f,
+      0.0140000f, 0.00000f, -0.0140000f, 0.0140000f, 0.028000f, 0.0140000f,
+      0.0140000f, -0.140000f, 0.0140000f, -0.0140000f, -0.140000f, -0.0140000f,
+      -0.0140000f, 0.00000f, -0.0140000f, 0.0140000f, 0.00000f, -0.0140000f,
+      0.0140000f, -0.140000f, -0.0140000f, -0.0140000f, -0.140000f, 0.0140000f,
+      -0.0140000f, 0.028000f, 0.0140000f, -0.0140000f, 0.00000f, -0.0140000f,
+      -0.0140000f, -0.140000f, -0.0140000f, -0.0140000f, -0.140000f, -0.0140000f,
+      0.0140000f, -0.140000f, -0.0140000f, 0.0140000f, -0.140000f, 0.0140000f,
+      -0.0140000f, -0.140000f, 0.0140000f, -0.0140000f, 0.028000f, 0.0140000f,
+      0.0140000f, 0.028000f, 0.0140000f, 0.028000f, 0.056000f, -0.042000f,
+      -0.028000f, 0.056000f, -0.042000f, 0.028000f, 0.042000f, -0.042000f,
+      -0.028000f, 0.042000f, -0.042000f, -0.028000f, 0.056000f, -0.042000f,
+      0.028000f, 0.056000f, -0.042000f, 0.0140000f, 0.028000f, 0.0140000f,
+      0.0140000f, 0.00000f, -0.0140000f, 0.028000f, 0.042000f, -0.042000f,
+      0.0140000f, 0.028000f, 0.0140000f, 0.028000f, 0.042000f, -0.042000f,
+      0.028000f, 0.056000f, -0.042000f, -0.0140000f, 0.028000f, 0.0140000f,
+      -0.028000f, 0.056000f, -0.042000f, -0.028000f, 0.042000f, -0.042000f,
+      -0.028000f, 0.042000f, -0.042000f, -0.0140000f, 0.00000f, -0.0140000f,
+      -0.0140000f, 0.028000f, 0.0140000f, 0.028000f, 0.042000f, -0.042000f,
+      0.0140000f, 0.00000f, -0.0140000f, -0.0140000f, 0.00000f, -0.0140000f,
       -0.028000f, 0.042000f, -0.042000f
    };
-   static GLint Indices[] = {
-      0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7, 8, 9, 10, 8, 
-      10, 11, 12, 13, 14, 12, 14, 15, 16, 17, 18, 16, 18, 19, 20, 21, 
-      22, 20, 22, 23, 24, 25, 26, 24, 26, 27, 28, 29, 30, 31, 32, 33, 
-      34, 35, 36, 37, 38, 39, 40, 41, 42, 40, 42, 43
+   static GLuint Indices[] = {
+      0, 1, 2,
+      0, 2, 3,
+      4, 5, 6,
+      4, 6, 7,
+      8, 9, 10,
+      8, 10, 11,
+      12, 13, 14,
+      12, 14, 15,
+      16, 17, 18,
+      16, 18, 19,
+      20, 21, 22,
+      20, 22, 23,
+      24, 25, 26,
+      24, 26, 27,
+      28, 29, 30,
+      31, 32, 33,
+      34, 35, 36,
+      37, 38, 39,
+      40, 41, 42,
+      40, 42, 43
    };
 
-   glEnableClientState(GL_VERTEX_ARRAY);
-   glVertexPointer(3, GL_FLOAT, 0, VertexData);
+   static GLfloat NormData[] = {
+      0, -0, 0.004704,
+      0, 0, 0.004704,
+      0.00392, 0, 0,
+      0.004704, 0, 0,
+      0, 0, -0.00392,
+      0, 0, -0.00392,
+      0.004704, 0, 0,
+      0.00392, 0, 0,
+      0, -0.000784, 0,
+      0, -0.000784, 0,
+      0, 0.001568, 0.000784,
+      3.16352e-11, 0.003136, 0.001568,
+      0, 0, -0.000784,
+      0, 0, -0.000784,
+      0.00196, -0.000392, 0.000392,
+      0.000784, 1.58176e-11, 0.000196,
+      0.000784, -1.58176e-11, 0.000196,
+      0.00196, -0.000392, 0.000392,
+      4.84511e-11, -0.000784, -0.001176,
+      0, -0.001568, -0.002352
+   };
+
+   unsigned num_tris(20);
+
+#if 0
+   // USED to generate normals
+   static bool first_time(true);
+
+   if(first_time)
+   {
+      first_time = false;
+
+      unsigned j;       // vertex offset
+      std::vector<gmtl::Vec3f> norms;
+
+      // For each triangle
+      for(unsigned i=0;i<num_tris;i++)
+      {
+         j = 3*Indices[(i*3)+0];
+         gmtl::Vec3f v1(VertexData[j], VertexData[j+1], VertexData[j+2]);
+         j = 3*Indices[(i*3)+1];
+         gmtl::Vec3f v2(VertexData[j], VertexData[j+1], VertexData[j+2]);
+         j = 3*Indices[(i*3)+2];
+         gmtl::Vec3f v3(VertexData[j], VertexData[j+1], VertexData[j+2]);
+         gmtl::Vec3f normal;
+         normal = gmtl::cross(normal, gmtl::Vec3f(v2-v1), gmtl::Vec3f(v3-v1));
+         norms.push_back(normal);
+         std::cout << i << ": " << normal << std::endl;
+      }
+   }
+
+   glPushAttrib(GL_LIGHTING_BIT);
+   glDisable(GL_LIGHTING);
+   glColor3f(1.0,0.0f,0.0f);
+   glBegin(GL_LINES);
+      for(unsigned i=0;i<20;i++)
+      {
+         gmtl::Vec3f norm;    norm.set(&(NormData[(i*3)]));
+         //norm = norms[i];
+         gmtl::Vec3f v0;      v0.set( &(VertexData[3*Indices[(i*3)+0]]));
+         gmtl::Vec3f v1 = v0+norm;
+         glVertex3fv(v0.getData());
+         glVertex3fv(v1.getData());
+      }
+   glEnd();
+   glPopAttrib();
+#endif
 
    glColor3f(0.00000f, 1.00000f, 0.00000f);
-   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &Indices[0]);
-   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &Indices[3]);
-   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &Indices[6]);
-   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &Indices[9]);
-   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &Indices[12]);
-   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &Indices[15]);
-   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &Indices[18]);
-   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &Indices[21]);
-   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &Indices[24]);
-   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &Indices[27]);
-   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &Indices[30]);
-   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &Indices[33]);
-   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &Indices[36]);
-   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &Indices[39]);
-   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &Indices[42]);
-   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &Indices[45]);
-   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &Indices[48]);
-   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &Indices[51]);
-   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &Indices[54]);
-   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, &Indices[57]);
+
+   glBegin(GL_TRIANGLES);
+   for(unsigned i=0;i<20;i++)
+   {
+      glNormal3fv(&(NormData[i*3]));
+      glVertex3fv(&(VertexData[3*Indices[(i*3)+0]]));
+      glVertex3fv(&(VertexData[3*Indices[(i*3)+1]]));
+      glVertex3fv(&(VertexData[3*Indices[(i*3)+2]]));
+   }
+   glEnd();
 }
 
 }
