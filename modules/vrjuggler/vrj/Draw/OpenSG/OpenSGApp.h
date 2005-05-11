@@ -282,6 +282,7 @@ inline void OpenSGApp::draw()
                         "vrj::OpenSGApp::draw() exited.\n");
 
    glClear(GL_DEPTH_BUFFER_BIT);
+   glPushAttrib(GL_ALL_ATTRIB_BITS);
 
    context_data* c_data = &(*mContextData);
 
@@ -335,6 +336,8 @@ inline void OpenSGApp::draw()
    glMatrixMode(GL_PROJECTION);
    glPopMatrix();
    glMatrixMode(GL_MODELVIEW);
+
+   glPopAttrib();    // Pop the attribute store
 
    FINFO(("Frame done on Window %lx.\n", c_data->mWin.getCPtr() ));
 }
