@@ -153,17 +153,7 @@ if test "x$BUILD_JAVA" = "xN" ; then
    AC_MSG_WARN([*** VRJConfig requires the JDK -- it will not be built ***])
 fi
 
-# Make sure ant is available to build the java sources
-if test "x$BUILD_JAVA" = "xY"; then
-   ANT_HOME=$UNIX_JUGGLERROOT_ABS/external/ant
-   AC_PATH_PROG([ANT], [ant], [no], [${ANT_HOME}/bin])
-   if test "x$ANT" == "xno"; then
-      AC_MSG_WARN([*** VRJConfig requires ant to build the java sources -- it will not be built ***])
-      BUILD_JAVA='N'
-   else
-      ANT="JAVA_HOME=\"$JDK_HOME\" \"$ANT\""
-   fi
-fi
+ANT="JAVA_HOME=\"$JDK_HOME\" \"$UNIX_JUGGLERROOT_ABS/external/ant/bin/ant\" --noconfig"
 
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
 DPP_PERL_VER(5.004, , , [AC_MSG_ERROR([*** Perl is required ***])])
@@ -637,6 +627,7 @@ AC_SUBST(VJROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
 AC_SUBST(VJ_SHARE_DIR)
 
+AC_SUBST(ANT)
 AC_SUBST(EXTRA_LDFLAGS)
 AC_SUBST(RM_LN)
 AC_SUBST(VPR_SUBSYSTEM)
