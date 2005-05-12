@@ -129,18 +129,7 @@ else
     BUILD_JAVA='Y'
 fi
 
-# If we're building the editor JavaBeans, we should build the test cases too.
-if test "x$BUILD_JAVA" = "xY" ; then
-    # Check for the ant build program
-    ANT_HOME=$UNIX_JUGGLERROOT_ABS/external/ant
-    AC_PATH_PROG([ANT], [ant], [no], [${ANT_HOME}/bin])
-    if test "x$ANT" == "xno"; then
-      AC_MSG_WARN([*** Can't find the java build tool ant. Editor JavaBeans will not be built ***])
-      BUILD_JAVA='N'
-    else
-      ANT="JAVA_HOME=\"$JDK_HOME\" \"$ANT\""
-    fi
-fi
+ANT="JAVA_HOME=\"$JDK_HOME\" \"$UNIX_JUGGLERROOT_ABS/external/ant/bin/ant\" --noconfig"
 
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
 DPP_PERL_VER([5.004], , , [AC_MSG_ERROR([*** Perl is required ***])])
@@ -244,6 +233,7 @@ AC_SUBST(JUGGLERROOT_ABS)
 AC_SUBST(HAVE_TWEEK_CXX)
 AC_SUBST(HAVE_TWEEK_JAVA)
 
+AC_SUBST(ANT)
 AC_SUBST(EXTRA_LDFLAGS)
 AC_SUBST(RM_LN)
 
