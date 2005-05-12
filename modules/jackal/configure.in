@@ -176,15 +176,7 @@ if test "x$BUILD_JAVA" = "xY" ; then
         ],
         [$JUNIT_JAR])
 
-    # Check for the ant build program
-    ANT_HOME=$UNIX_JUGGLERROOT_ABS/external/ant
-    AC_PATH_PROG([ANT], [ant], [no], [${ANT_HOME}/bin])
-    if test "x$ANT" == "xno"; then
-      AC_MSG_WARN([*** Can't find the java build tool ant. Editor JavaBeans will not be built ***])
-      BUILD_JAVA='N'
-    else
-      ANT="JAVA_HOME=\"$JDK_HOME\" \"$ANT\""
-    fi
+    ANT="JAVA_HOME=\"$JDK_HOME\" \"$UNIX_JUGGLERROOT_ABS/external/ant/bin/ant\" --noconfig"
 fi
 
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
@@ -396,11 +388,11 @@ AC_SUBST(VPR_SUBSYSTEM)
 
 AC_SUBST(BUILD_CXX)
 
+AC_SUBST(ANT)
 AC_SUBST(EXTRA_LDFLAGS)
 AC_SUBST(RM_LN)
 
 AC_SUBST(BUILD_JAVA)
-#AC_SUBST(JDOM_JAR)
 
 AC_SUBST(BUILD_JAVA_TEST_SUITE)
 AC_SUBST(JUNIT_JAR)
