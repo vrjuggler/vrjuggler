@@ -425,17 +425,7 @@ if test "x$tweek_have_java" = "xY" ; then
    fi
 fi
 
-# Check for the ant build program
-if test "x$BUILD_JAVA" = "xY"; then
-   ANT_HOME=$UNIX_JUGGLERROOT_ABS/external/ant
-   AC_PATH_PROG([ANT], [ant], [no], [${ANT_HOME}/bin])
-   if test "x$ANT" == "xno"; then
-      AC_MSG_WARN([*** Can't find the java build tool ant. The Tweek Java API will not be built ***])
-      BUILD_JAVA='N'
-   else
-      ANT="JAVA_HOME=\"$JDK_HOME\" \"$ANT\""
-   fi
-fi
+ANT="JAVA_HOME=\"$JDK_HOME\" \"$UNIX_JUGGLERROOT_ABS/external/ant/bin/ant\" --noconfig"
 
 if test "x$python_root" != "xnone" ; then
    python_bin_dir="$python_root/bin"
@@ -1126,6 +1116,7 @@ AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(TWEEKROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
 
+AC_SUBST(ANT)
 AC_SUBST(BUILD_CXX)
 AC_SUBST(CXX_IDL_CMD)
 AC_SUBST(CXX_IDL_OPTS)
