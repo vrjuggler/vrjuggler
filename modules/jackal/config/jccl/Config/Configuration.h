@@ -57,7 +57,7 @@ public:
     *  This performs a shallow copy - this & cfg contain the same
     *  instances of ConfigElement.
     */
-   Configuration(Configuration& cfg);
+   Configuration(const Configuration& cfg);
 
    /** Destructor.
     *  Note that since we use ConfigElementPtrs for memory management,
@@ -173,7 +173,7 @@ protected:
 
    /** All the configuration elements contained in this configuration. */
    std::vector<ConfigElementPtr> mElements;
-private:   
+private:
    cppdom::NodePtr mConfigurationNode;
 };
 

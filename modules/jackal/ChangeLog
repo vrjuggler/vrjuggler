@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-13-2005 allenb      Make the copy constructor on jccl::Configuration
+                        use a const ref.
+                        NEW VERSION: 0.92.13
 Apr-10-2005 patrickh    Removed methods jccl::ConfigDefinition::assertValid(),
                         jccl::ConfigElement::assertValid(), and
                         jccl::PropertyDefinition::assertValid().
