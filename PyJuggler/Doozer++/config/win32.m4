@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          win32.m4,v
-dnl Date modified: 2004/07/02 11:35:54
-dnl Version:       1.18
+dnl Date modified: 2005/01/08 22:44:39
+dnl Version:       1.19
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -55,7 +55,7 @@ dnl     DPP_USING_MSVCCC - Set to either 'yes' or 'no' depending on whether
 dnl                        msvccc will be used as the compiler.
 dnl ===========================================================================
 
-dnl win32.m4,v 1.18 2004/07/02 11:35:54 patrickh Exp
+dnl win32.m4,v 1.19 2005/01/08 22:44:39 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Define path conversion (DOS to UNIX and UNIX to DOS) subroutines.

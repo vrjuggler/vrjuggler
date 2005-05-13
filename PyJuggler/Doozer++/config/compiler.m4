@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          compiler.m4,v
-dnl Date modified: 2004/12/02 06:12:15
-dnl Version:       1.42
+dnl Date modified: 2005/01/08 22:44:39
+dnl Version:       1.43
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -132,7 +132,7 @@ dnl     WIN32
 dnl     _MBCS
 dnl ===========================================================================
 
-dnl compiler.m4,v 1.42 2004/12/02 06:12:15 patrickh Exp
+dnl compiler.m4,v 1.43 2005/01/08 22:44:39 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Check if the given compiler accepts a given flag.  This can be used for

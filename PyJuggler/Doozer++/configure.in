@@ -1,5 +1,5 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -21,12 +21,12 @@
 #
 # -----------------------------------------------------------------
 # File:          configure.in,v
-# Date modified: 2004/01/29 04:28:55
-# Version:       1.8
+# Date modified: 2005/01/08 22:44:38
+# Version:       1.9
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-AC_REVISION([1.8])
+AC_REVISION([1.9])
 AC_INIT([config/general.m4])
 AC_CONFIG_AUX_DIR([scripts])
 

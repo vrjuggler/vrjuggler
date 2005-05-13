@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          ace.m4,v
-dnl Date modified: 2004/10/21 15:59:18
-dnl Version:       1.15
+dnl Date modified: 2005/03/20 17:17:12
+dnl Version:       1.17
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -51,11 +51,11 @@ dnl     ACE_LDFLAGS  - The compiler argument to add the ACE library path and
 dnl                    libraries.
 dnl ===========================================================================
 
-dnl	ace.m4,v 1.15 2004/10/21 15:59:18 patrickh Exp
+dnl	ace.m4,v 1.17 2005/03/20 17:17:12 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Usage:
-dnl     DPP_HAVE_ACE(version [, action-if-found [, action-if-not-found]]])
+dnl     DPP_HAVE_ACE(required-version [, action-if-found [, action-if-not-found]]])
 dnl
 dnl Arguments:
 dnl     ace-root            - Default ACE root directory.
@@ -171,7 +171,7 @@ dnl
 dnl Arguments:
 dnl     ace-include-dirs    - Space-separated list of directories that might
 dnl                           contain the ACE heder files.
-dnl     version             - Minimum required version.
+dnl     required-version    - Minimum required version.
 dnl     action-if-found     - Action to take if the version requirement is
 dnl                           met.
 dnl     action-if-not-found - Action to take if the version requirement is not
@@ -226,8 +226,7 @@ AC_DEFUN([DPP_ACE_VER],
 
    dpp_ace_ver="${dpp_ace_ver_major}.${dpp_ace_ver_minor}.${dpp_ace_ver_patch}"
 
-   DPP_VERSION_CHECK_MSG([ACE], [$dpp_ace_ver], $2,
-                         [dpp_cv_ace_version_okay], $3, $4)
+   DPP_VERSION_CHECK_MSG_NO_CACHE([ACE], [$dpp_ace_ver], [$2], [$3], [$4])
 
    ACE_VER="$dpp_ace_ver_major"
 ])

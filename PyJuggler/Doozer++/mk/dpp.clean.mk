@@ -1,5 +1,5 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.clean.mk,v
-# Date modified: 2004/01/29 04:28:00
-# Version:       1.12
+# Date modified: 2005/02/16 17:38:43
+# Version:       1.15
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.clean.mk,v 1.12 2004/01/29 04:28:00 patrickh Exp
+# dpp.clean.mk,v 1.15 2005/02/16 17:38:43 patrickh Exp
 #
 # This include file <dpp.clean.mk> handles clean-up operations.  It adds a
 # 'clean' target and a 'cleandepend' target.
@@ -66,8 +66,12 @@ clean:
 ifdef SUBDIR
 	@$(MAKE) RECTARGET="$@" recursive
 endif
+ifneq ($(CLEAN_FILES), )
 	rm -f $(CLEAN_FILES)
+endif
+ifneq ($(CLEAN_DIRS), )
 	rm -rf $(CLEAN_DIRS)
+endif
 ifdef _LOCAL_CLEAN
 	@$(MAKE) _clean
 endif
@@ -86,8 +90,12 @@ clobber:
 ifdef SUBDIR
 	@$(MAKE) DO_CLEANDEPEND=1 RECTARGET="$@" recursive
 endif
+ifneq ($(CLOBBER_FILES), )
 	rm -f $(CLOBBER_FILES)
+endif
+ifneq ($(CLOBBER_DIRS), )
 	rm -rf $(CLOBBER_DIRS)
+endif
 ifdef _LOCAL_CLOBBER
 	@$(MAKE) _clobber
 endif

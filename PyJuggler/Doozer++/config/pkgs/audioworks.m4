@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          audioworks.m4,v
-dnl Date modified: 2004/10/21 15:59:18
-dnl Version:       1.15
+dnl Date modified: 2005/01/08 22:44:41
+dnl Version:       1.16
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -49,7 +49,7 @@ dnl     AUDIOWORKS__LDFLAGS  - Extra linker flags for the AudioWorks library
 dnl                            directory.
 dnl ===========================================================================
 
-dnl audioworks.m4,v 1.15 2004/10/21 15:59:18 patrickh Exp
+dnl audioworks.m4,v 1.16 2005/01/08 22:44:41 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has AudioWorks installed.  This

@@ -1,5 +1,5 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -21,13 +21,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.libs.mk,v
-# Date modified: 2004/04/04 16:38:04
-# Version:       1.16
+# Date modified: 2005/01/08 22:44:42
+# Version:       1.17
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.libs.mk,v 1.16 2004/04/04 16:38:04 patrickh Exp
+# dpp.libs.mk,v 1.17 2005/01/08 22:44:42 patrickh Exp
 #
 # This file <dpp.libs.mk> defines many targets for use in compiling a software
 # library (or a set of libraries).  An including makefile can take advantage

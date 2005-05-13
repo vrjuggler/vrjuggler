@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          nspr.m4,v
-dnl Date modified: 2004/07/02 11:35:55
-dnl Version:       1.38
+dnl Date modified: 2005/03/20 17:17:12
+dnl Version:       1.40
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -81,7 +81,7 @@ dnl     PLC_LIB_STATIC        - Full path to the static NSPR PLC library.
 dnl     PLDS_LIB_STATIC       - Full path to the static NSPR PLDS library.
 dnl ===========================================================================
 
-dnl nspr.m4,v 1.38 2004/07/02 11:35:55 patrickh Exp
+dnl nspr.m4,v 1.40 2005/03/20 17:17:12 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl State that NSPR threads are in use within NSPR.
@@ -254,12 +254,12 @@ dnl ---------------------------------------------------------------------------
 dnl Make sure that the installed NSPR is at least the given version.
 dnl
 dnl Usage:
-dnl     DPP_NSPR_VER(nspr-root, nspr-inc, version [, action-if-not-found])
+dnl     DPP_NSPR_VER(nspr-root, nspr-inc, required-version [, action-if-not-found])
 dnl
 dnl Arguments:
 dnl     nspr-root           - Root directory of the NSPR installation.
 dnl     nspr-inc            - Directory with NSPR headers.
-dnl     version             - Minimum required version.
+dnl     required-version    - Minimum required version.
 dnl     action-if-not-found - Action to take if the version requirement is not
 dnl                           met.
 dnl ---------------------------------------------------------------------------
@@ -320,8 +320,7 @@ AC_DEFUN([DPP_NSPR_VER],
 
       dpp_nspr_ver="${dpp_nspr_ver_major}.${dpp_nspr_ver_minor}.${dpp_nspr_ver_patch}"
 
-      DPP_VERSION_CHECK_MSG(NSPR, $dpp_nspr_ver, $3,
-                            dpp_cv_nspr_version_okay, , $4)
+      DPP_VERSION_CHECK_MSG_NO_CACHE([NSPR], [$dpp_nspr_ver], [$3], , [$4])
 
       NSPR_VER="$dpp_nspr_ver_major"
    fi

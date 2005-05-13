@@ -1,5 +1,9 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
+2005-03-20 patrickh     Introduced DPP_VERSION_CHECK_MSG_NO_CACHE.
+                        NEW VERSION: 2.0.1
+
+[2.0.0 released - 2.16.2005]===================================================
 2004-12-02 patrickh     Improved support for the Intel C/C++ compiler.
                         NEW VERSION: 1.99.20
 2004-12-02 patrickh     DPP_PROG_CC and DPP_PROG_CXX no longer call

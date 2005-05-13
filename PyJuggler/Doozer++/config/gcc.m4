@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          gcc.m4,v
-dnl Date modified: 2004/07/02 11:35:54
-dnl Version:       1.18
+dnl Date modified: 2005/03/20 17:17:12
+dnl Version:       1.20
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -56,7 +56,7 @@ dnl               be "no" or the empty string.  This is set by the
 dnl               DPP_WITH_GCC macro.
 dnl ===========================================================================
 
-dnl gcc.m4,v 1.18 2004/07/02 11:35:54 patrickh Exp
+dnl gcc.m4,v 1.20 2005/03/20 17:17:12 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Force the use of GCC as the compiler suite.
@@ -125,8 +125,7 @@ AC_DEFUN([DPP_GPLUSPLUS_VER],
    AC_REQUIRE([DPP_PROG_CXX])
 
    dpp_gcc_ver=`$CXX -dumpversion` 
-   DPP_VERSION_CHECK_MSG([$CXX], [$dpp_gcc_ver], [$1],
-                         [dpp_cv_CXX_is_egcs], , [$2])
+   DPP_VERSION_CHECK_MSG_NO_CACHE([$CXX], [$dpp_gcc_ver], [$1], , , [$2])
 ])
 
 dnl ---------------------------------------------------------------------------

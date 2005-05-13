@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          posix.m4,v
-dnl Date modified: 2004/07/02 11:35:54
-dnl Version:       1.16
+dnl Date modified: 2005/01/08 22:44:39
+dnl Version:       1.17
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -41,7 +41,7 @@ dnl     DPP_CHECK_TYPE_POSIX - Check for POSIX types such as uint32_t and
 dnl                            int64_t.
 dnl ===========================================================================
 
-dnl posix.m4,v 1.16 2004/07/02 11:35:54 patrickh Exp
+dnl posix.m4,v 1.17 2005/01/08 22:44:39 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Check for POSIX types such as uint32_t and int64_t.

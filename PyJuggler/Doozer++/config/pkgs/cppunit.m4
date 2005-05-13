@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          cppunit.m4,v
-dnl Date modified: 2004/10/21 15:59:18
-dnl Version:       1.17
+dnl Date modified: 2005/03/20 17:18:18
+dnl Version:       1.19
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -50,7 +50,7 @@ dnl     CPPUNIT_EXTRA_LIBS - Extra libraries that are needed for linking
 dnl                          against the CppUnit library directory.
 dnl ===========================================================================
 
-dnl cppunit.m4,v 1.17 2004/10/21 15:59:18 patrickh Exp
+dnl cppunit.m4,v 1.19 2005/03/20 17:18:18 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has CppUnit installed.  This
@@ -128,9 +128,8 @@ AC_DEFUN([DPP_HAVE_CPPUNIT],
          min_cppunit_version=ifelse([$1], ,0.0.1,$1)
          CPPUNIT_VERSION=`$CPPUNIT_CONFIG --version`
 
-         AC_MSG_CHECKING([whether CppUnit version is >= $min_cppunit_version])
-         AC_MSG_RESULT([$CPPUNIT_VERSION])
-         DPP_VERSION_CHECK([$CPPUNIT_VERSION], [$min_cppunit_version], , [$4])
+         DPP_VERSION_CHECK_MSG_NO_CACHE([CppUnit], [$CPPUNIT_VERSION],
+                                        [$min_cppunit_version], , [$4])
       fi
 
       CXXFLAGS="$CXXFLAGS $ABI_FLAGS"

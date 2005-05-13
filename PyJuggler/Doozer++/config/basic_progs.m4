@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          basic_progs.m4,v
-dnl Date modified: 2004/07/02 11:35:54
-dnl Version:       1.17
+dnl Date modified: 2005/03/20 17:17:12
+dnl Version:       1.19
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -49,7 +49,7 @@ dnl Variables defined:
 dnl     GMAKE                - The GNU make executable.
 dnl ===========================================================================
 
-dnl basic_progs.m4,v 1.17 2004/07/02 11:35:54 patrickh Exp
+dnl basic_progs.m4,v 1.19 2005/03/20 17:17:12 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Test for basic programs need by most, if not all, build systems.
@@ -115,10 +115,10 @@ dnl ---------------------------------------------------------------------------
 dnl Test if the host system has at least the given version of GNU make.
 dnl
 dnl Usage:
-dnl     DPP_HAVE_GNU_MAKE(version [, action-if-found [, action-if-not-found [, path]]])
+dnl     DPP_HAVE_GNU_MAKE(required-version [, action-if-found [, action-if-not-found [, path]]])
 dnl
 dnl Arguments:
-dnl     version             - The minimum required version of GNU make.
+dnl     required-version    - The minimum required version of GNU make.
 dnl     action-if-found     - The action(s) to take if a suitable version of
 dnl                           GNU make is found.  This argument is optional.
 dnl     action-if-not-found - The action(s) to take if a suitable version of
@@ -163,8 +163,8 @@ AC_DEFUN([DPP_HAVE_GNU_MAKE],
    dpp_gmake_ver=`$GMAKE --version | grep 'GNU Make' | sed -e "$dpp_gmake_ver_exp1" -e "$dpp_gmake_ver_exp2"`
    changequote([, ])
 
-   DPP_VERSION_CHECK_MSG([GNU make], [$dpp_gmake_ver], $1,
-                         [dpp_cv_gmake_version_okay], $2, $3)
+   DPP_VERSION_CHECK_MSG_NO_CACHE([GNU make], [$dpp_gmake_ver], [$1], [$2],
+                                  [$3])
 
    AC_SUBST(GMAKE)
 ])

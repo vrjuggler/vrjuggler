@@ -9,7 +9,7 @@ For all versions:
 ===============================================================================
 
  Version: 2.0.0
-Released: <month> <day>, 2004
+Released: February 16, 2005
 
     Differences from 1.x:
         * Command-line arguments such as --with-oglroot in Doozer++ 1.x are

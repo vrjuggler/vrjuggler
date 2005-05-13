@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          dynload.m4,v
-dnl Date modified: 2004/01/29 04:28:37
-dnl Version:       1.4
+dnl Date modified: 2005/01/08 22:44:39
+dnl Version:       1.5
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -40,7 +40,7 @@ dnl                    operating system's dynamic code loading library (if one
 dnl                    is required at all).
 dnl ===========================================================================
 
-dnl dynload.m4,v 1.4 2004/01/29 04:28:37 patrickh Exp
+dnl dynload.m4,v 1.5 2005/01/08 22:44:39 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determines what library, if any, is required to perform dynamic loading of

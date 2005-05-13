@@ -1,5 +1,5 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -21,13 +21,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.info.mk,v
-# Date modified: 2004/01/29 04:28:00
-# Version:       1.3
+# Date modified: 2005/01/08 22:44:42
+# Version:       1.4
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.info.mk,v 1.3 2004/01/29 04:28:00 patrickh Exp
+# dpp.info.mk,v 1.4 2005/01/08 22:44:42 patrickh Exp
 #
 # This file <dpp.info.mk> is intended to be used by build systems that want to
 # give users an easy way to find out about all the possible targets.  It

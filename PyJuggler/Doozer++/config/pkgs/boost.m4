@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          boost.m4,v
-dnl Date modified: 2004/10/21 15:59:18
-dnl Version:       1.24
+dnl Date modified: 2005/03/20 17:18:17
+dnl Version:       1.26
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -43,17 +43,17 @@ dnl     BOOST_INCLUDES - Extra include path for the Boost header directory.
 dnl     BOOST_LDFLAGS  - Extra library path for the Boost libraries.
 dnl ===========================================================================
 
-dnl boost.m4,v 1.24 2004/10/21 15:59:18 patrickh Exp
+dnl boost.m4,v 1.26 2005/03/20 17:18:17 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has Boost installed.  This adds the
 dnl command-line argument --with-boost.
 dnl
 dnl Usage:
-dnl     DPP_HAVE_BOOST(version, boost-root [, boost-inc, [, action-if-found [, action-if-not-found]]])
+dnl     DPP_HAVE_BOOST(required-version, boost-root [, boost-inc, [, action-if-found [, action-if-not-found]]])
 dnl
 dnl Arguments:
-dnl     version             - Minimum required version.
+dnl     required-version    - Minimum required version.
 dnl     boost-root          - The default directory where the Boost
 dnl                           installation is rooted.  This directory should
 dnl                           contain an include/boost directory with the Boost
@@ -136,9 +136,8 @@ AC_DEFUN([DPP_HAVE_BOOST],
          dpp_boost_major=`expr $BOOST_VERSION / 100000`
          dpp_boost_version="$dpp_boost_major.$dpp_boost_minor.$dpp_boost_patch"
 
-         AC_MSG_CHECKING([whether Boost version is >= $1])
-         AC_MSG_RESULT([$dpp_boost_version])
-         DPP_VERSION_CHECK([$dpp_boost_version], [$1], , [dpp_have_boost=no])
+         DPP_VERSION_CHECK_MSG_NO_CACHE([Boost], [$dpp_boost_version], [$1], ,
+                                        [dpp_have_boost=no])
       else
          dpp_have_boost='no'
          AC_MSG_WARN([$boost_version is not readable.

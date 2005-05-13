@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          icc.m4,v
-dnl Date modified: 2004/12/02 07:08:00
-dnl Version:       1.4
+dnl Date modified: 2005/01/08 22:44:39
+dnl Version:       1.5
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -59,7 +59,7 @@ dnl     ICPC    - This is set to "yes" if the Intel C++ compiler is the C++
 dnl               compiler being used.
 dnl ===========================================================================
 
-dnl icc.m4,v 1.4 2004/12/02 07:08:00 patrickh Exp
+dnl icc.m4,v 1.5 2005/01/08 22:44:39 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Force the use of the Intel compiler.

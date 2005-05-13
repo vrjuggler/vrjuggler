@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          general.m4,v
-dnl Date modified: 2004/12/02 07:08:00
-dnl Version:       1.75
+dnl Date modified: 2005/03/20 17:15:00
+dnl Version:       1.81
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -39,14 +39,17 @@ dnl                             variables defined by DPP_INIT.
 dnl     DPP_VERSION_CHECK     - Compare two version numbers.
 dnl     DPP_VERSION_CHECK_MSG - Wrap a call to DPP_VERSION_CHECK inside a call
 dnl                             to AC_CACHE_CHECK. 
+dnl     DPP_VERSION_CHECK_MSG_NO_CACHE
+dnl                           -  Wrap a call to DPP_VERSION_CHECK with calls
+dnl                              to AC_MSG_CHECKING and AC_MSG_RESULT.
 dnl     DPP_GEN_RECONFIG      - Generate a script called 'reconfig' that will
 dnl                             reconfigure a build directory from scratch.
 dnl ===========================================================================
 
-dnl general.m4,v 1.75 2004/12/02 07:08:00 patrickh Exp
+dnl general.m4,v 1.81 2005/03/20 17:15:00 patrickh Exp
 
 dnl Set the version of Doozer++.
-define(DPP_DPPVERSION, 1.99.22)
+define(DPP_DPPVERSION, 2.0.1)
 
 dnl ---------------------------------------------------------------------------
 dnl Change the dots in NUMBER into commas.
@@ -179,6 +182,11 @@ dnl ---------------------------------------------------------------------------
 dnl Wrap a call to DPP_VERSION_CHECK inside a call to AC_CACHE_CHECK.  This is
 dnl a helper macro to simplify user-level code down to the bare minimum.
 dnl
+dnl NOTE: This uses AC_CACHE_CHECK to speed up the version check process, but
+dnl       caching version numbers is not always a good idea.  Either avoid
+dnl       using an dnl Autoconf cache file (recommended since Autoconf 2.50)
+dnl       or use DPP_VERSION_CHECK directly.
+dnl
 dnl Usage:
 dnl     DPP_VERSION_CHECK_MSG(pkg-name, known-version, required-version, cache_var [, action-if-found [, action-if-not-found]])
 dnl
@@ -201,9 +209,7 @@ dnl ---------------------------------------------------------------------------
 AC_DEFUN([DPP_VERSION_CHECK_MSG],
 [
    AC_CACHE_CHECK([whether $1 version is >= $3], [$4],
-      [DPP_VERSION_CHECK([$2], [$3], [$4="$2"],
-         [$4='no'
-          AC_MSG_RESULT([$2])])])
+                  [DPP_VERSION_CHECK([$2], [$3], [$4="$2"], [$4='no'])])
 
    dnl Successful version comparison.  Note that $4 is a variable name, not
    dnl the result of evaluating a variable.  As such, we have to prepend a '$'
@@ -216,6 +222,40 @@ AC_DEFUN([DPP_VERSION_CHECK_MSG],
       ifelse([$6], , :, [$6])
       true
    fi
+])
+
+dnl ---------------------------------------------------------------------------
+dnl Wrap a call to DPP_VERSION_CHECK with calls to AC_MSG_CHECKING and
+dnl AC_MSG_RESULT.  This is a helper macro to simplify user-level code down to
+dnl the bare minimum.  No caching is performed.
+dnl
+dnl Since: 2.0.1
+dnl
+dnl Usage:
+dnl     DPP_VERSION_CHECK_MSG_NO_CACHE(pkg-name, known-version, required-version, [, action-if-found [, action-if-not-found]])
+dnl
+dnl Arguments:
+dnl     pkg-name            - The name of the package whose version number
+dnl                           will be tested.
+dnl     known-version       - The known version number to be tested.  It must
+dnl                           be of the form major.minor[.patch]
+dnl     required-version    - The minimum required version number.  It must
+dnl                           be of the form major.minor[.patch]
+dnl     action-if-found     - The action to take if the known version number
+dnl                           is at least the required version number.  This
+dnl                           is optional.
+dnl     action-if-not-found - The action to take if the known version number
+dnl                           is not at least the required version number.
+dnl                           This is optional.
+dnl ---------------------------------------------------------------------------
+AC_DEFUN([DPP_VERSION_CHECK_MSG_NO_CACHE],
+[
+   AC_MSG_CHECKING([whether $1 version is >= $3])
+   DPP_VERSION_CHECK([$2], [$3],
+                     [AC_MSG_RESULT([yes (version $2)])
+                      $4],
+                     [AC_MSG_RESULT([no (version $2)])
+                      $5])
 ])
 
 dnl ---------------------------------------------------------------------------

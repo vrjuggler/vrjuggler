@@ -1,5 +1,5 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.libs.targets.mk,v
-# Date modified: 2004/02/28 19:51:49
-# Version:       1.36
+# Date modified: 2005/01/08 22:44:43
+# Version:       1.37
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.libs.targets.mk,v 1.36 2004/02/28 19:51:49 patrickh Exp
+# dpp.libs.targets.mk,v 1.37 2005/01/08 22:44:43 patrickh Exp
 #
 # This file <dpp.libs.targets.mk> defines many targets for use in compiling a
 # software library (or a set of libraries).  It should not be included
