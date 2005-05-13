@@ -45,6 +45,7 @@
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
 
+#include <gadget/Type/Position/PositionUnitConversion.h>
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/AnalogInterface.h>
 #include <gadget/Type/DigitalInterface.h>
@@ -93,7 +94,7 @@ public:
 
    virtual float getDrawScaleFactor()
    {
-      return 1.0f;
+      return gadget::PositionUnitConversion::ConvertToFeet;
    }
 
    void setModelFileName(std::string filename)
