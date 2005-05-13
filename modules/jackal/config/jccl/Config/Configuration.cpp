@@ -53,7 +53,7 @@ namespace jccl
 Configuration::Configuration()
 {}
 
-Configuration::Configuration(Configuration& db)
+Configuration::Configuration(const Configuration& db)
 {
    *this = db;
 }
@@ -120,13 +120,13 @@ bool Configuration::remove(const std::string& name)
 std::ostream& operator<<(std::ostream& out, const Configuration& self)
 {
    cppdom::NodePtr cfg_node;
-   
+
    // TODO: Find a better way of doing this, the java side seems to be able to
    // do it just fine.
    out << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
    out << "<?" << tokens::SETTINGS_INSTRUCTION << " "
        << tokens::CFG_VERSION_ATTR << "=\"" << tokens::CFG_VERSION << "\"?>";
-   
+
    self.createConfigurationNode(cfg_node);
    cfg_node->save(out);
    return out;
@@ -137,7 +137,7 @@ std::istream& operator>>(std::istream& in, Configuration& self)
    // Create a new XML document
    cppdom::DocumentPtr cfg_doc(ElementFactory::instance()->createXMLDocument());
    cppdom::ContextPtr context_ptr = cfg_doc->getContext();
-   
+
    // Load the document from the input stream.
    cfg_doc->load(in, context_ptr);
 
@@ -201,7 +201,7 @@ bool Configuration::load(const std::string& filename,
       vprASSERT(cfg_node.get() != NULL);
 
       // Save the configuration node for later use.
-      
+
       mConfigurationNode = cfg_node;
 
       cppdom::NodePtr def_path_node(cfg_node->getChild(tokens::DEFINITION_PATH));
