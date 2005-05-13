@@ -3,12 +3,12 @@
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="directx_joystick" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="DirectX Joystick">
       <abstract>false</abstract>
-      <help>Element for configuring a DirectX joystick input device.  This device is only available on Windows. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0b1/configuring_vr_juggler/apcs05.html"&gt;more on DirectX joystick&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0b1/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <help>Element for configuring a DirectX joystick input device.  This device is only available on Windows. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0b3/configuring_vr_juggler/apcs05.html"&gt;more on DirectX joystick&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0b3/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>digital_device</parent>
       <parent>analog_device</parent>
       <category>/Devices</category>
       <property valuetype="integer" variable="true" name="axis_buttons">
-         <help>Indices of analog axes that should be added as extra buttons.  This is useful, for example, when the analog axis is a hat switch that should be treated as a button instead.  The identified axes will be &lt;i&gt;appended&lt;/i&gt; to the base set of digital button inputs. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0b1/configuring_vr_juggler/apcs05.html"&gt;more ...&lt;/a&gt;)</help>
+         <help>Indices of analog axes that should be added as extra buttons.  This is useful, for example, when the analog axis is a hat switch that should be treated as a button instead.  The identified axes will be &lt;i&gt;appended&lt;/i&gt; to the base set of digital button inputs. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0b3/configuring_vr_juggler/apcs05.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Axis Buttons" defaultvalue="0"/>
       </property>
       <property valuetype="float" variable="false" name="min">
