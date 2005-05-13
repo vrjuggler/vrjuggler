@@ -351,7 +351,16 @@ if test "x$ac_cv_boost__python__handle_in_boost_python" = "xyes" ; then
    fi
 
    if test "x$PLATFORM" = "xDarwin" ; then
-      BOOST_PYTHON_CXXFLAGS="$BOOST_PYTHON_CXXFLAGS -Wno-long-double -no-cpp-precomp -fcoalesce-templates"
+      changequote(<<, >>)
+      pyj_gcc_major=`echo $dpp_gcc_ver | sed -e 's/^\([0-9]*\)\..*/\1/'`
+      changequote([, ])
+
+      BOOST_PYTHON_CXXFLAGS="$BOOST_PYTHON_CXXFLAGS -Wno-long-double -no-cpp-precomp"
+
+      #  GCC 4.0 in Darwin removed -fcoalesce-templates.
+      if test $pyj_gcc_major -lt 4 ; then
+         BOOST_PYTHON_CXXFLAGS="$BOOST_PYTHON_CXXFLAGS -fcoalesce-templates"
+      fi
    fi
 
    BOOST_PYTHON_INCLUDES="$BOOST_PYTHON_INCLUDE_OPTS"
