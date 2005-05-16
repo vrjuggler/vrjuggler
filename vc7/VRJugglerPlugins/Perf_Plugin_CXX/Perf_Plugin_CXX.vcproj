@@ -30,12 +30,12 @@
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="1"
-				DisableSpecificWarnings="4244;4251;4275;4311;4312"/>
+				DisableSpecificWarnings="4244;4251;4275;4290;4311;4312"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rtd.lib omnithread30_rtd.lib omniDynamic$(OMNIORB_VERSION)_rtd.lib vrj_d.lib jccl_d.lib tweek_d.lib vpr_d.lib cppdom_d.lib libnspr4.lib $(NOINHERIT)"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rtd.lib omnithread$(OMNITHREAD_VERSION)_rtd.lib omniDynamic$(OMNIORB_VERSION)_rtd.lib vrj_d.lib jccl_d.lib tweek_d.lib vpr_d.lib cppdom_d.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/corba_perf_mon_d.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\VPR\DebugDLL;..\..\Tweek_CXX\DebugDLL;..\..\JCCL\DebugDLL;..\..\VRJuggler\DebugDLL;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
@@ -84,12 +84,12 @@
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4244;4251;4275;4311;4312"/>
+				DisableSpecificWarnings="4244;4251;4275;4290;4311;4312"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread30_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib vrj.lib jccl.lib tweek.lib vpr.lib cppdom.lib libnspr4.lib $(NOINHERIT)"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib vrj.lib jccl.lib tweek.lib vpr.lib cppdom.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/corba_perf_mon.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\VPR\ReleaseDLL;..\..\Tweek_CXX\ReleaseDLL;..\..\JCCL\ReleaseDLL;..\..\VRJuggler\ReleaseDLL;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
