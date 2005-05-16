@@ -44,8 +44,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fstream>
+#include <boost/concept_check.hpp>
+#include <boost/filesystem/exception.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/version.hpp>
 
 #include <vpr/Util/Assert.h>
+#include <vpr/Util/Debug.h>
 #include <snx/FileIO.h>
 
 namespace snx
@@ -56,17 +62,20 @@ namespace FileIO
 
 bool fileExists(const char* name)
 {
-   if (name == NULL) return false;
-      
-   FILE* file = ::fopen( name, "r" );
-   if (file == NULL)
+   if (name == NULL)
    {
       return false;
    }
-   else
+
+   try
    {
-      ::fclose( file );
-      return true;
+      boost::filesystem::path file_path(name, boost::filesystem::native);
+      return boost::filesystem::exists(file_path);
+   }
+   catch (boost::filesystem::filesystem_error& ex)
+   {
+      boost::ignore_unused_variable_warning(ex);
+      return false;
    }
 }
    
@@ -75,8 +84,41 @@ int fileSize(const char* filename)
    if (filename == NULL) return 0;
    
    if (!fileExists( filename ))
+   {
       return 0;
+   }
 
+   // Boost.Filesystem in Boost 1.32.0 has a function that returns the
+   // size of a file.  Prefer its use over the other mess.
+#if BOOST_VERSION >= 103200
+   try
+   {
+      boost::filesystem::path file_path(filename, boost::filesystem::native);
+      return boost::filesystem::file_size(file_path);
+   }
+   catch (boost::filesystem::filesystem_error& ex)
+   {
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR") << ": Could not get size of file '"
+         << filename << "': " << ex.what() << std::endl << vprDEBUG_FLUSH;
+      return 0;
+   }
+#else /* BOOST_VERSION < 103200 */
+#if defined(_MSC_VER) && _MSC_VER >= 14
+   FILE* fh = new FILE;
+   ::fopen_s(&fh, filename, "rb");
+   vprASSERT(fh != NULL); 
+
+   int size(0);
+
+   if ( fseek(fh, 0, SEEK_END) == 0 )
+   {
+      return ftell(fh);
+   }
+
+   delete fh;
+   return size;
+#else /* ! _MSC_VER || _MSC_VER < 14 */
    FILE* fh = fopen( filename, "rb" );
    vprASSERT(fh != NULL); 
 
@@ -88,6 +130,8 @@ int fileSize(const char* filename)
    {
       return 0;
    }
+#endif
+#endif  /* BOOST_VERSION >= 103200 */
 }
 
 void fileLoad(const char* filename, std::vector<unsigned char>& data)
@@ -95,15 +139,27 @@ void fileLoad(const char* filename, std::vector<unsigned char>& data)
    if (filename == NULL) return;
    
    if (!fileExists( filename ))
+   {
       return;
+   }
 
    int size = fileSize( filename );
    data.resize( size );
-   
+
+#if defined(_MSC_VER) && _MSC_VER >= 14
+   FILE* fh = new FILE;
+   ::fopen_s(&fh, filename, "rb");
+#else
    FILE* fh = fopen( filename, "rb" );
+#endif
+
    unsigned int file_length = fread( &data[0], 1, data.size(), fh );
    vprASSERT(file_length == data.size());
    fclose( fh );
+
+#if defined(_MSC_VER) && _MSC_VER >= 14
+   delete fh;
+#endif
 }
 
 // Read one byte of data from the file stream
