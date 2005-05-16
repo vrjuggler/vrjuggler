@@ -402,38 +402,80 @@ vpr::ReturnStatus FastrakStandalone::trackerInit()
 
       if ( mConf.found & (1<<(TIP+station)) )
       {
-         len = sprintf(buf, "N%c,%.2f,%.2f,%.2f\r", c,
-                       psp->tip[0], psp->tip[1], psp->tip[2]);
+#if defined(_MSC_VER) && _MSC_VER >= 14
+         len = _snprintf_s(buf, sizeof(buf),
+#elif defined(_MSC_VER)
+         len = sprintf(buf, sizeof(buf),
+#elif defined(HAVE_SNPRINTF)
+         len = sprintf(buf, sizeof(buf),
+#else
+         len = sprintf(buf,
+#endif
+                       "N%c,%.2f,%.2f,%.2f\r", c, psp->tip[0], psp->tip[1],
+                       psp->tip[2]);
          mSerialPort->write(buf, len, bytes_written);
       }
 
       if ( mConf.found & (1<<(INC+station)) )
       {
-         len = sprintf(buf, "I%c,%.2f\r", c, psp->inc);
+#if defined(_MSC_VER) && _MSC_VER >= 14
+         len = _snprintf_s(buf, sizeof(buf),
+#elif defined(_MSC_VER)
+         len = sprintf(buf, sizeof(buf),
+#elif defined(HAVE_SNPRINTF)
+         len = sprintf(buf, sizeof(buf),
+#else
+         len = sprintf(buf,
+#endif
+                       "I%c,%.2f\r", c, psp->inc);
          mSerialPort->write(buf, len, bytes_written);
       }
 
       if ( mConf.found & (1<<(HEM+station)) )
       {
-         len = sprintf(buf, "H%c,%.2f,%.2f,%.2f\r", c,
-                       psp->hem[0], psp->hem[1], psp->hem[2]);
+#if defined(_MSC_VER) && _MSC_VER >= 14
+         len = _snprintf_s(buf, sizeof(buf),
+#elif defined(_MSC_VER)
+         len = sprintf(buf, sizeof(buf),
+#elif defined(HAVE_SNPRINTF)
+         len = sprintf(buf, sizeof(buf),
+#else
+         len = sprintf(buf,
+#endif
+                       "H%c,%.2f,%.2f,%.2f\r", c, psp->hem[0], psp->hem[1],
+                       psp->hem[2]);
          mSerialPort->write(buf, len, bytes_written);
       }
 
       if ( mConf.found & (1<<(TMF+station)) )
       {
-         len = sprintf(buf, "r%c,%.2f,%.2f,%.2f\r", c,
-                       psp->tmf[0],
-                       psp->tmf[1],
+#if defined(_MSC_VER) && _MSC_VER >= 14
+         len = _snprintf_s(buf, sizeof(buf),
+#elif defined(_MSC_VER)
+         len = sprintf(buf, sizeof(buf),
+#elif defined(HAVE_SNPRINTF)
+         len = sprintf(buf, sizeof(buf),
+#else
+         len = sprintf(buf,
+#endif
+                       "r%c,%.2f,%.2f,%.2f\r", c, psp->tmf[0], psp->tmf[1],
                        psp->tmf[2]);
          mSerialPort->write(buf, len, bytes_written);
       }
 
       if ( mConf.found & (1<<(ARF+station)) )
       {
-         len = sprintf(buf, "A%c,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\r",
-                       c,
-                       psp->arf[0], psp->arf[1], psp->arf[2], psp->arf[3],
+#if defined(_MSC_VER) && _MSC_VER >= 14
+         len = _snprintf_s(buf, sizeof(buf),
+#elif defined(_MSC_VER)
+         len = sprintf(buf, sizeof(buf),
+#elif defined(HAVE_SNPRINTF)
+         len = sprintf(buf, sizeof(buf),
+#else
+         len = sprintf(buf,
+#endif
+                       "A%c,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\r",
+                       c, psp->arf[0], psp->arf[1], psp->arf[2], psp->arf[3],
                        psp->arf[4], psp->arf[5], psp->arf[6], psp->arf[7],
                        psp->arf[8]);
          mSerialPort->write(buf, len, bytes_written);
