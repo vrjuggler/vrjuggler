@@ -75,7 +75,7 @@ public:
    /**
     *
     */
-   vpr::ReturnStatus getMaxSegmentSize(vpr::Int32& size)
+   vpr::ReturnStatus getMaxSegmentSize(size_t& size)
    {
       vpr::SocketOptions::Data option;
       vpr::ReturnStatus retval;

@@ -88,8 +88,9 @@ TSObjectProxy<ProfileManager::ThreadProfileData>  ProfileManager::mThreadData;
       }
       else
       {
-         unsigned num_threads = vpr::ThreadManager::instance()->getNumThreads();
-         for(unsigned t=0;t<num_threads;t++)
+         std::vector<Thread*>::size_type num_threads =
+            vpr::ThreadManager::instance()->getNumThreads();
+         for(std::vector<Thread*>::size_type t = 0; t < num_threads; ++t)
          {
             vpr::Thread* thread = vpr::ThreadManager::instance()->getThread(t);
             std::cout << "Print thread: " << (void*)thread << std::endl;
