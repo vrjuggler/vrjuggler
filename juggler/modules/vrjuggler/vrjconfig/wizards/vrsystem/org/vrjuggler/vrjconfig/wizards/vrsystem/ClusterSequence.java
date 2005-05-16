@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  * 
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package org.vrjuggler.vrjconfig.wizard.vrsystem;
+package org.vrjuggler.vrjconfig.wizards.vrsystem;
 
 import java.util.*;
 import javax.swing.*;
