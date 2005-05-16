@@ -43,8 +43,8 @@ default: all
 include @topdir@/make.defs.mk
 include @topdir@/java.defs.mk
 
-jardir=			$(beandir)/customeditors
-bundle_jardir=		$(bundle_vrj_beandir)/customeditors
+jardir=			$(beandir)/wizards
+bundle_jardir=		$(bundle_vrj_beandir)/wizards
 
 srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
