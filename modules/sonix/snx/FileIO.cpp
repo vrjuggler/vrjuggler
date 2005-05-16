@@ -104,7 +104,7 @@ int fileSize(const char* filename)
       return 0;
    }
 #else /* BOOST_VERSION < 103200 */
-#if defined(_MSC_VER) && _MSC_VER >= 14
+#if defined(_MSC_VER) && _MSC_VER >= 1400
    FILE* fh = new FILE;
    ::fopen_s(&fh, filename, "rb");
    vprASSERT(fh != NULL); 
@@ -118,7 +118,7 @@ int fileSize(const char* filename)
 
    delete fh;
    return size;
-#else /* ! _MSC_VER || _MSC_VER < 14 */
+#else /* ! _MSC_VER || _MSC_VER < 1400 */
    FILE* fh = fopen( filename, "rb" );
    vprASSERT(fh != NULL); 
 
@@ -146,7 +146,7 @@ void fileLoad(const char* filename, std::vector<unsigned char>& data)
    int size = fileSize( filename );
    data.resize( size );
 
-#if defined(_MSC_VER) && _MSC_VER >= 14
+#if defined(_MSC_VER) && _MSC_VER >= 1400
    FILE* fh = new FILE;
    ::fopen_s(&fh, filename, "rb");
 #else
@@ -157,7 +157,7 @@ void fileLoad(const char* filename, std::vector<unsigned char>& data)
    vprASSERT(file_length == data.size());
    fclose( fh );
 
-#if defined(_MSC_VER) && _MSC_VER >= 14
+#if defined(_MSC_VER) && _MSC_VER >= 1400
    delete fh;
 #endif
 }
