@@ -37,6 +37,8 @@
     beans
         customeditors
         ..
+        wizards
+        ..
     ..
     java
     ..
