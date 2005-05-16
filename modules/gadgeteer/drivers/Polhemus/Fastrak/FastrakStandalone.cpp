@@ -116,15 +116,15 @@ int FastrakStandalone::Read(int len)
          continue;
       else if ( !status.success() )
       {
-	 tempBuf[len - rem] = '\0';
+         tempBuf[len - rem] = '\0';
          memcpy(mTrackerBuf, tempBuf, 256);
          return len - rem;
       }
       if ( (rem -= bytes_read) == 0 )
       {
-	 tempBuf[len] = '\0';
+         tempBuf[len] = '\0';
          memcpy(mTrackerBuf, tempBuf, 256);
-      	 return len;
+         return len;
       }
 
       cp += bytes_read;
@@ -158,10 +158,11 @@ void FastrakStandalone::readloop(void *unused)
 
       Read(mConf.len);
 
-      vpr::System::msleep(10);  //The Polhemus docs state that you won't get more
-      				//than 100 samples a second best case (with one
-      				//station), so I figure this is safe, and it help
-      				//with performance.
+      // The Polhemus docs state that you won't get more than 100 samples a
+      // second best case (with one station), so I figure this is safe, and
+      // it help with performance.
+      vpr::System::msleep(10);
+
       mDoFlush = false;
 //      if ( getppid() == 1 )
 //      {
@@ -179,7 +180,8 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
    //Set to non-continuous mode
    if (!(retval = mSerialPort->write("c", 1, bytes_written)).success())
    {
-      fprintf(stderr, "[FastrakStandalone] Failure setting non-continuous mode for tracker");
+      fprintf(stderr,
+              "[FastrakStandalone] Failure setting non-continuous mode for tracker");
       return vpr::ReturnStatus::Fail;
    }
 
@@ -190,7 +192,8 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
    //Set to non-continuous and request status
    if (!(retval = mSerialPort->write("S", 1, bytes_written)).success())
    {
-      fprintf(stderr, "[FastrakStandalone] Failure writing status command to tracker");
+      fprintf(stderr,
+              "[FastrakStandalone] Failure writing status command to tracker");
       return vpr::ReturnStatus::Fail;
    }
 
@@ -206,13 +209,14 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
       {
          if (retval == vpr::ReturnStatus::Timeout  ||
             retval == vpr::ReturnStatus::WouldBlock)
-	 {
+         {
             ++numElapsedWaits;
-	    continue;
-	 }
+            continue;
+         }
 
-   	 fprintf(stderr, "[FastrakStandalone] Failure reading status byte from tracker");
-	 return retval;
+         fprintf(stderr,
+                 "[FastrakStandalone] Failure reading status byte from tracker");
+         return retval;
       }
 
       /* Read next byte and try matching status reply's prefix: */
@@ -221,41 +225,64 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
       {
          case 0: // Haven't matched anything
             if (input == '2')
+            {
                state = 1;
+            }
             break;
          case 1: // Have matched '2'
             if (input == '2')
+            {
                state = 2;
-	    else if (input >= '1'  &&  input <= '4')
+            }
+            else if (input >= '1'  &&  input <= '4')
+            {
                state = 3;
-	    else
+            }
+            else
+            {
                state = 0;
+            }
             break;
          case 2: // Have matched '22'
             if (input == 'S')
+            {
                state = 4;
-	    else if (input == '2')
+            }
+            else if (input == '2')
+            {
                state = 2;
-	    else if (input >= '1'  &&  input <= '4')
+            }
+            else if (input >= '1'  &&  input <= '4')
+            {
                state = 3;
-	    else
+            }
+            else
+            {
                state = 0;
+            }
             break;
          case 3: // Have matched 2[1,3,4]
             if (input == 'S')
+            {
                state = 4;
+            }
             else if (input == '2')
+            {
                state = 1;
-	    else
+            }
+            else
+            {
                state = 0;
+            }
             break;
       }
 
       if (numPasses++ > 1000)
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
-            << "[FastrakStandalone] Tracker appears to be stuck in continuous mode. You may need to"
-	    " manually reset if the software reset doesn't work. Attempting reset..."
+            << "[FastrakStandalone] Tracker appears to be stuck in "
+            << "continuous mode. You may need to manually reset if the "
+            << "software reset doesn't work. Attempting reset..."
             << std::endl << vprDEBUG_FLUSH;
          return vpr::ReturnStatus::Fail;
       }
@@ -264,7 +291,8 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
    /* Fail if we timed out while trying to match the prefix: */
    if (state != 4)
    {
-      fprintf(stderr, "[FastrakStandalone] Failure getting status message from tracker)");
+      fprintf(stderr,
+              "[FastrakStandalone] Failure getting status message from tracker)");
       return vpr::ReturnStatus::Fail;
    }
 
@@ -281,14 +309,15 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
       {
          if (retval == vpr::ReturnStatus::Timeout  ||
             retval == vpr::ReturnStatus::WouldBlock)
-	 {
+         {
             vpr::System::msleep(100);//Sleep for 0.1 seconds
             ++numElapsedWaits;
-	    continue;
-	 }
+            continue;
+         }
 
-   	 fprintf(stderr, "[FastrakStandalone] Failure reading second round status byte from tracker\n");
-	 return retval;
+         fprintf(stderr,
+                 "[FastrakStandalone] Failure reading second round status byte from tracker\n");
+         return retval;
       }
 
       char input = *cPtr;
@@ -297,17 +326,27 @@ vpr::ReturnStatus FastrakStandalone::readStatus()
       {
          case 0: // Haven't matched anything
             if (input == '\r')
+            {
                state = 1;
+            }
             else
+            {
                state = 0;
+            }
             break;
          case 1: // Have matched CR
             if (input == 10)
+            {
                state=2;
+            }
             else if(input==13)
+            {
                state=1;
+            }
             else
+            {
                state=0;
+            }
             break;
       }
    }
@@ -346,8 +385,8 @@ vpr::ReturnStatus FastrakStandalone::trackerInit()
       if ( !(retval = readStatus()).success() )
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_WARNING_LVL)
-	    << "[FastrakStandalone] Not able to read status from tracker "
-	    << std::endl << vprDEBUG_FLUSH;
+            << "[FastrakStandalone] Not able to read status from tracker "
+            << std::endl << vprDEBUG_FLUSH;
          return retval;
       }
    }
@@ -610,7 +649,7 @@ int FastrakStandalone::getCoords(unsigned int stations, float *vecXYZ,
             memset((void *)vecXYZ, 0, 3*sizeof (float));
          }
 
-   	 vecXYZ += 3;
+         vecXYZ += 3;
          if ( psp->rec & (1<<Ang) )
          {
             cp = (unsigned char *)mTrackerBuf + psp->angoff;
