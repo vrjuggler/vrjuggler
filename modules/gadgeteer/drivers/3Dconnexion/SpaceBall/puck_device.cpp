@@ -556,7 +556,8 @@ int basePuckSerial::portWrite(HandleType handle, unsigned char* buffer,
 {
 #if defined(WIN32)
 
-    for (int i = 0; i < bufferSize; i++)
+    int i;
+    for (i = 0; i < bufferSize; i++)
 	if (!TransmitCommChar(handle, buffer[i]))
 	{
 	    puckSleep(0.01);
