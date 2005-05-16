@@ -261,7 +261,11 @@ void InputLogger::stampRecord()
    std::cout << "/n/n------- LOGGER ------\nEnter stamp id:" << std::flush;
    std::string stamp_id;
    //std::cin >> stamp_id;
+#if defined(_MSC_VER) && _MSC_VER >= 1400
+   scanf_s("%s", tag_name);
+#else
    scanf("%s", tag_name);
+#endif
    stamp_id = std::string(tag_name);
    std::cout << "\nStamping with: " << stamp_id << std::endl;
 
