@@ -136,7 +136,7 @@ public:
       }
       else
       {
-         size = -1;
+         size = 0;
       }
 
       return retval;
@@ -170,7 +170,7 @@ public:
       }
       else
       {
-         size = -1;
+         size = 0;
       }
 
       return retval;
