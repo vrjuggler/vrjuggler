@@ -42,6 +42,9 @@
    <target name="dist" depends="compile">
        <jar destfile="NewDeviceWizard.jar" basedir=".">
          <include name="org/**" />
+         <fileset dir="${srcdir}">
+            <include name="org/vrjuggler/vrjconfig/wizards/newdevice/Wizard.xml" />
+         </fileset>
       </jar>
    </target>
 
