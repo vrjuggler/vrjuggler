@@ -622,8 +622,8 @@ public class WallEditorDialog
       mHelpButton.setText("Help");
       mHelpButton.addActionListener(new WallEditorDialog_mHelpButton_actionAdapter(this));
       mMainPanel.setLayout(mMainPanelLayout);
-
-      mNameLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      
+      mNameLabel.setHorizontalAlignment(SwingConstants.LEADING);
       mNameLabel.setLabelFor(mNameField);
       mNameLabel.setText("Wall Name");
       mNameField.setMinimumSize(new Dimension(60, 21));
