@@ -46,6 +46,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.event.*;
+import info.clearthought.layout.*;
 
 /**
  * Bean implementation of the WizardView interface. This step will allow the
@@ -113,6 +114,10 @@ public class WizardViewerBean
     */
    public boolean moveNext()
    {
+      if (null != mCurrentStep && null != mCurrentStep.getStepLabel())
+      {
+         mCurrentStep.getStepLabel().setForeground(Color.GRAY);
+      }
       // First try to get the next step since this might throw an exception
       WizardStep destStep = mWizardIterator.next();
       if (! visit(destStep))
@@ -121,6 +126,10 @@ public class WizardViewerBean
          // to the iterator.
          mWizardIterator.previous();
          return false;
+      }
+      if (null != mCurrentStep.getStepLabel())
+      {
+         mCurrentStep.getStepLabel().setForeground(Color.YELLOW);
       }
       backBtn.setEnabled(hasPrev());
       if (hasNext())
@@ -146,6 +155,10 @@ public class WizardViewerBean
     */
    public boolean movePrev()
    {
+      if (null != mCurrentStep && null != mCurrentStep.getStepLabel())
+      {
+         mCurrentStep.getStepLabel().setForeground(Color.BLACK);
+      }
       // First try to get the previous step since this might throw an exception
       WizardStep destStep = mWizardIterator.previous();
       if (! visit(destStep))
@@ -154,6 +167,10 @@ public class WizardViewerBean
          // to the iterator.
          mWizardIterator.next();
          return false;
+      }
+      if (null != mCurrentStep.getStepLabel())
+      {
+         mCurrentStep.getStepLabel().setForeground(Color.YELLOW);
       }
       backBtn.setEnabled(hasPrev());
       finishBtn.setEnabled(false);
@@ -248,6 +265,12 @@ public class WizardViewerBean
          backBtn.setEnabled(false);
          nextBtn.setEnabled(false);
          finishBtn.setEnabled(false);
+         
+         for (WizardStepIterator itr = wizard.iterator() ; itr.hasNext() ; )
+         {
+            WizardStep step = (WizardStep)itr.next();
+            mStepsPanel.add(step.getStepLabel());
+         }
 
          // Display the first step if the wizard is not empty
          if (mWizardIterator.hasNext())
@@ -381,11 +404,33 @@ public class WizardViewerBean
    JButton backBtn = new JButton();
    JButton finishBtn = new JButton();
    JButton cancelBtn = new JButton();
+   JLayeredPane mLayeredPane = new JLayeredPane();
+   JPanel mStepsPanel = new JPanel();
    JLabel imageLbl = new JLabel();
    JLabel titleLbl = new JLabel();
 
    private void jbInit() throws Exception
    {
+      double[][] main_size =
+      {
+         {TableLayout.FILL},
+         {115, TableLayout.FILL}
+      };
+      TableLayout tl = new TableLayout(main_size);
+      mLayeredPane.setLayout(tl);
+
+      mStepsPanel.setLayout(new BoxLayout(mStepsPanel, BoxLayout.PAGE_AXIS));
+      mStepsPanel.setOpaque(false);
+      mLayeredPane.add(mStepsPanel, new TableLayoutConstraints(0, 1, 0, 1,
+                              TableLayout.LEFT,
+                              TableLayout.TOP));
+      mLayeredPane.putLayer(mStepsPanel, JLayeredPane.PALETTE_LAYER.intValue());
+      
+      mLayeredPane.add(imageLbl, new TableLayoutConstraints(0, 0, 0, 1,
+                           TableLayout.LEFT,
+                           TableLayout.TOP));
+      mLayeredPane.putLayer(imageLbl, JLayeredPane.DEFAULT_LAYER.intValue());
+            
       this.setLayout(baseLayout);
       buttonPnl.setLayout(buttonLayout);
       buttonLayout.setAlignment(FlowLayout.RIGHT);
@@ -437,7 +482,7 @@ public class WizardViewerBean
       this.add(buttonPnl, BorderLayout.SOUTH);
       buttonPnl.add(nextBtn, null);
       buttonPnl.add(finishBtn, null);
-      this.add(imageLbl, BorderLayout.WEST);
+      this.add(mLayeredPane/*imageLbl*/, BorderLayout.WEST);
       this.add(titleLbl, BorderLayout.NORTH);
    }
 

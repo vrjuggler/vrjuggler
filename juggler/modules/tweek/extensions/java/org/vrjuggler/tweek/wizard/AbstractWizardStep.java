@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 
 /**
  * This class provides a skeletal implementation of the WizardStep interface to
@@ -60,6 +62,8 @@ public abstract class AbstractWizardStep
       // This will always work, since if the index lookup fails, it will return
       // -1 which will give us a substring from 0 - exactly what we want.
       mName = className.substring(className.lastIndexOf('.') + 1);
+
+      mStepLabel.setText(mName);
    }
    
    /**
@@ -127,6 +131,7 @@ public abstract class AbstractWizardStep
    public void setName(String name)
    {
       mName = name;
+      mStepLabel.setText(mName);
    }
 
    /**
@@ -137,6 +142,16 @@ public abstract class AbstractWizardStep
    public String getName()
    {
       return mName;
+   }
+   
+   /**
+    * Gets the label that represents this WizardStep.
+    *
+    * @return  this step's label
+    */
+   public JComponent getStepLabel()
+   {
+      return mStepLabel;
    }
 
    /**
@@ -242,6 +257,11 @@ public abstract class AbstractWizardStep
     * The name of this step.
     */
    protected String mName;
+
+   /**
+    * The label used to represent this WizardStep.
+    */
+   protected JLabel mStepLabel = new JLabel();
 
    /**
     * The parent WizardStep.
