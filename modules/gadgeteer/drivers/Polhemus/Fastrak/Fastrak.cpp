@@ -127,10 +127,10 @@ bool Fastrak::config(jccl::ConfigElementPtr fastrakElement)
 
    // port
    std::string port = fastrakElement->getProperty<std::string>("port");
-#if defined(_MSC_VER) && _MSC_VER >= 14
+#if defined(_MSC_VER) && _MSC_VER >= 1400
    strncpy_s(conf.port, sizeof(conf.port), port.c_str(), port.length());
 #else
-   strncpy(conf.port, sizeof(conf.port), port.c_str());
+   strncpy(conf.port, port.c_str(), sizeof(conf.port));
 #endif
 
    conf.found |= 1<<DEV;

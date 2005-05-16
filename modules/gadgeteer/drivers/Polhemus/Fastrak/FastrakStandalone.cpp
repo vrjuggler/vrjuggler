@@ -441,12 +441,12 @@ vpr::ReturnStatus FastrakStandalone::trackerInit()
 
       if ( mConf.found & (1<<(TIP+station)) )
       {
-#if defined(_MSC_VER) && _MSC_VER >= 14
+#if defined(_MSC_VER) && _MSC_VER >= 1400
          len = _snprintf_s(buf, sizeof(buf),
 #elif defined(_MSC_VER)
-         len = sprintf(buf, sizeof(buf),
+         len = _snprintf(buf, sizeof(buf),
 #elif defined(HAVE_SNPRINTF)
-         len = sprintf(buf, sizeof(buf),
+         len = snprintf(buf, sizeof(buf),
 #else
          len = sprintf(buf,
 #endif
@@ -457,12 +457,12 @@ vpr::ReturnStatus FastrakStandalone::trackerInit()
 
       if ( mConf.found & (1<<(INC+station)) )
       {
-#if defined(_MSC_VER) && _MSC_VER >= 14
+#if defined(_MSC_VER) && _MSC_VER >= 1400
          len = _snprintf_s(buf, sizeof(buf),
 #elif defined(_MSC_VER)
-         len = sprintf(buf, sizeof(buf),
+         len = _snprintf(buf, sizeof(buf),
 #elif defined(HAVE_SNPRINTF)
-         len = sprintf(buf, sizeof(buf),
+         len = snprintf(buf, sizeof(buf),
 #else
          len = sprintf(buf,
 #endif
@@ -472,12 +472,12 @@ vpr::ReturnStatus FastrakStandalone::trackerInit()
 
       if ( mConf.found & (1<<(HEM+station)) )
       {
-#if defined(_MSC_VER) && _MSC_VER >= 14
+#if defined(_MSC_VER) && _MSC_VER >= 1400
          len = _snprintf_s(buf, sizeof(buf),
 #elif defined(_MSC_VER)
-         len = sprintf(buf, sizeof(buf),
+         len = _snprintf(buf, sizeof(buf),
 #elif defined(HAVE_SNPRINTF)
-         len = sprintf(buf, sizeof(buf),
+         len = snprintf(buf, sizeof(buf),
 #else
          len = sprintf(buf,
 #endif
@@ -488,12 +488,12 @@ vpr::ReturnStatus FastrakStandalone::trackerInit()
 
       if ( mConf.found & (1<<(TMF+station)) )
       {
-#if defined(_MSC_VER) && _MSC_VER >= 14
+#if defined(_MSC_VER) && _MSC_VER >= 1400
          len = _snprintf_s(buf, sizeof(buf),
 #elif defined(_MSC_VER)
-         len = sprintf(buf, sizeof(buf),
+         len = _snprintf(buf, sizeof(buf),
 #elif defined(HAVE_SNPRINTF)
-         len = sprintf(buf, sizeof(buf),
+         len = snprintf(buf, sizeof(buf),
 #else
          len = sprintf(buf,
 #endif
@@ -504,12 +504,12 @@ vpr::ReturnStatus FastrakStandalone::trackerInit()
 
       if ( mConf.found & (1<<(ARF+station)) )
       {
-#if defined(_MSC_VER) && _MSC_VER >= 14
+#if defined(_MSC_VER) && _MSC_VER >= 1400
          len = _snprintf_s(buf, sizeof(buf),
 #elif defined(_MSC_VER)
-         len = sprintf(buf, sizeof(buf),
+         len = _snprintf(buf, sizeof(buf),
 #elif defined(HAVE_SNPRINTF)
-         len = sprintf(buf, sizeof(buf),
+         len = snprintf(buf, sizeof(buf),
 #else
          len = sprintf(buf,
 #endif
