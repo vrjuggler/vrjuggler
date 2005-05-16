@@ -111,9 +111,9 @@ namespace SocketOptions
       bool          reuse_addr;
       bool          keep_alive;
       bool          no_delay;
-      Uint32        max_segment;
-      Uint32        recv_buffer_size;
-      Uint32        send_buffer_size;
+      size_t        max_segment;
+      size_t        recv_buffer_size;
+      size_t        send_buffer_size;
       struct Linger linger;
       InetAddr      mcast_if;
       Uint8         mcast_ttl;

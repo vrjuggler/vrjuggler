@@ -123,7 +123,7 @@ public:
    /**
     *
     */
-   vpr::ReturnStatus getRecvBufferSize(Int32& size)
+   vpr::ReturnStatus getRecvBufferSize(size_t& size)
    {
       vpr::SocketOptions::Data opt;
       vpr::ReturnStatus retval;
@@ -157,7 +157,7 @@ public:
    /**
     *
     */
-   vpr::ReturnStatus getSendBufferSize(int& size)
+   vpr::ReturnStatus getSendBufferSize(size_t& size)
    {
       vpr::SocketOptions::Data opt;
       vpr::ReturnStatus retval;

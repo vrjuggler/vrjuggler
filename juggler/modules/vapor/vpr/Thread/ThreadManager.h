@@ -109,7 +109,7 @@ public:
       return mThreads.size();
    }
 
-   Thread* getThread(unsigned int i)
+   Thread* getThread(const std::vector<Thread*>::size_type i)
    {
       return mThreads[i];
    }
