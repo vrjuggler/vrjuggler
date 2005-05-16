@@ -258,6 +258,13 @@ AC_CONFIG_FILES([
    customeditors/proxyeditor/Makefile
    customeditors/surfacedisplayeditor/build.xml
    customeditors/surfacedisplayeditor/Makefile
+   wizards/Makefile
+   wizards/cluster/build.xml
+   wizards/cluster/Makefile
+   wizards/newdevice/build.xml
+   wizards/newdevice/Makefile
+   wizards/vrsystem/build.xml
+   wizards/vrsystem/Makefile
    ])
 
 AC_OUTPUT
