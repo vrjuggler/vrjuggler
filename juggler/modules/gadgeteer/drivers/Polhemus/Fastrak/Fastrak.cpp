@@ -126,7 +126,13 @@ bool Fastrak::config(jccl::ConfigElementPtr fastrakElement)
    struct perstation *psp;
 
    // port
-   strcpy(conf.port, (fastrakElement->getProperty<std::string>("port")).c_str());
+   std::string port = fastrakElement->getProperty<std::string>("port");
+#if defined(_MSC_VER) && _MSC_VER >= 14
+   strncpy_s(conf.port, sizeof(conf.port), port.c_str(), port.length());
+#else
+   strncpy(conf.port, sizeof(conf.port), port.c_str());
+#endif
+
    conf.found |= 1<<DEV;
 
    // baud
