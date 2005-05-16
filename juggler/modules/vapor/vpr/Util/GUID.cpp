@@ -106,7 +106,14 @@ std::string GUID::toString() const
    std::string guid_str;
    char guid_c_str[37];
 
-#ifdef HAVE_SNPRINTF
+   // Visual C++ 8.0 deprecates _snprintf() and provides _snprintf_s()
+   // instead.
+#if defined(_MSC_VER) && _MSC_VER >= 14
+   _snprintf_s(guid_c_str, 37,
+   // Visual C++ 7.0 and 7.1 have _snprintf()
+#elif defined(_MSC_VER)
+   _snprintf(guid_c_str, 37,
+#elif defined(HAVE_SNPRINTF)
    snprintf(guid_c_str, 37,
 #else
    sprintf(guid_c_str,
@@ -261,7 +268,11 @@ void GUID::fromString(const std::string& guid_string)
 
    // The array of vpr::Uint32's is used to avoid alignment problems on
    // architectures such as MIPS.
+#if defined(_MSC_VER) && _MSC_VER >= 14
+   sscanf_s(guid_string.c_str(),
+#else
    sscanf(guid_string.c_str(),
+#endif
           "%08x-%04hx-%04hx-%02x%02x-%02x%02x%02x%02x%02x%02x",
           &mGuid.moz.m0, &mGuid.moz.m1, &mGuid.moz.m2,
           &m3[0], &m3[1], &m3[2], &m3[3], &m3[4], &m3[5], &m3[6], &m3[7]);
