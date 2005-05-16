@@ -39,6 +39,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.swing.JComponent;
 
 /**
  * Interface for a step within a wizard sequence. This is the basic type that
@@ -86,6 +87,13 @@ public interface WizardStep
     * @return  this step's name
     */
    public String getName();
+   
+   /**
+    * Gets the label that represents this WizardStep.
+    *
+    * @return  this step's label
+    */
+   public JComponent getStepLabel();
 
    /**
     * Gets the parent wizard step that this step is contained in. This provides
