@@ -175,27 +175,6 @@ public class ScreenEditorPanel
          mConfigElement.setProperty("size", 0, new Integer(bounds.width), mConfigContext);
          mConfigElement.setProperty("size", 1, new Integer(bounds.height), mConfigContext);
 
-         ConfigElement fb_cfg =
-            (ConfigElement) mConfigElement.getProperty("frame_buffer_config", 0);
-         fb_cfg.setProperty("visual_id", 0, dlg.getVisualID(), mConfigContext);
-         fb_cfg.setProperty("red_size", 0, dlg.getRedDepth(), mConfigContext);
-         fb_cfg.setProperty("green_size", 0, dlg.getGreenDepth(), mConfigContext);
-         fb_cfg.setProperty("blue_size", 0, dlg.getBlueDepth(), mConfigContext);
-         fb_cfg.setProperty("alpha_size", 0, dlg.getAlphaDepth(), mConfigContext);
-         fb_cfg.setProperty("depth_buffer_size", 0, dlg.getDepthBufferSize(),
-                            mConfigContext);
-         fb_cfg.setProperty("fsaa_enable", 0, dlg.getFSAAEnable(), mConfigContext);
-         mConfigElement.setName(dlg.getDisplayWindowTitle());
-         mConfigElement.setProperty("stereo", 0, dlg.inStereo(), mConfigContext);
-         mConfigElement.setProperty("border", 0, dlg.hasBorder(), mConfigContext);
-
-         mConfigElement.setProperty(LOCK_KEY_PROPERTY, 0, dlg.getLockKey(),
-                              mConfigContext);
-         mConfigElement.setProperty(START_LOCKED_PROPERTY, 0,
-                              dlg.shouldStartLocked(), mConfigContext);
-         mConfigElement.setProperty(SLEEP_TIME_PROPERTY, 0, dlg.getSleepTime(),
-                              mConfigContext);
-         
          if (mClusterConfig)
          {
             ConfigElement node = dlg.getSelectedNode();
