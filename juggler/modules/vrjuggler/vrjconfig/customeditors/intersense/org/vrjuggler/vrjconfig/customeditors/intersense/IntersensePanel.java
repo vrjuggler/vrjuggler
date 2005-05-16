@@ -55,8 +55,6 @@ public class IntersensePanel extends JPanel implements CustomEditor
    private JPanel mTopSectionPanel = new JPanel();
    private GridLayout mInfoPanelLayout = new GridLayout();
    
-   private JLabel               mBaudLbl        = new JLabel();
-   private PropertyEditorPanel  mBaudEditor     = null;
    private JLabel               mPortLbl        = new JLabel();
    private PropertyEditorPanel  mPortEditor     = null;
    private JLabel               mDriverLbl      = new JLabel();
@@ -256,7 +254,6 @@ public class IntersensePanel extends JPanel implements CustomEditor
        
       ImageIcon wand = new ImageIcon("/home/users/aronb/JavaTesting/Intersense/wand1.jpg");
       this.setLayout(new BorderLayout());
-      mBaudLbl.setText("Baud:");
       mPortLbl.setText("Port:");
       mDriverLbl.setText("Driver:");
       mStationsTable.setBackground(UIManager.getColor("Menu"));
@@ -351,10 +348,7 @@ public class IntersensePanel extends JPanel implements CustomEditor
       mBroker = new ConfigBrokerProxy();
 
       ConfigDefinition cfg_def = mConfigElement.getDefinition();
-
-      mBaudEditor = new PropertyEditorPanel(mConfigContext, mConfigElement.getProperty("baud", 0),
-                                            cfg_def.getPropertyDefinition("baud"),
-                                            mConfigElement, 0, getBackground());
+      
       mPortEditor = new PropertyEditorPanel(mConfigContext, mConfigElement.getProperty("port", 0),
                                             cfg_def.getPropertyDefinition("port"),
                                             mConfigElement, 0, getBackground());
@@ -367,8 +361,6 @@ public class IntersensePanel extends JPanel implements CustomEditor
       mDeviceInfoPanel.add(mDriverEditor, null);
       mDeviceInfoPanel.add(mPortLbl, null);
       mDeviceInfoPanel.add(mPortEditor, null);
-      mDeviceInfoPanel.add(mBaudLbl, null);
-      mDeviceInfoPanel.add(mBaudEditor, null);
    }
 
    /** Reference to the ConfigBroker used in this object. */
