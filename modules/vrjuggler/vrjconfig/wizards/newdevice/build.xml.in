@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="newdevice" default="dist" basedir=".">
+   <property name="srcdir" location="@srcdir@" />
+   <property name="topdir" location="@topdir@" />
+   <property name="debug" value="on" />
+   <property name="optimize" value="off" />
+
+   <path id="tweek.classpath">
+      <pathelement path="@TWEEK_JARS@" />
+      <pathelement path="@TWEEK_EXT_JARS@" />
+   </path>
+
+   <path id="jccl.classpath">
+      <pathelement path="@JCCL_JARS@" />
+   </path>
+
+   <path id="commoneditors.classpath">
+      <pathelement path="${topdir}/commoneditors/CommonEditors.jar" />
+   </path>
+
+   <property name="tweek.classpath" refid="tweek.classpath" />
+   <property name="jccl.classpath" refid="jccl.classpath" />
+   <property name="commoneditors.classpath" refid="commoneditors.classpath" />
+
+   <!-- Compile all java sources -->
+   <target name="compile">
+      <javac destdir="."
+             deprecation="on"
+             debug="${debug}"
+             optimize="${optimize}">
+         <src path="${srcdir}" />
+         <include name="org/**"/>
+         <classpath>
+            <pathelement path="${tweek.classpath}" />
+            <pathelement path="${jccl.classpath}" />
+            <pathelement path="${commoneditors.classpath}" />
+         </classpath>
+      </javac>
+   </target>
+
+   <!-- Create the distribution jar -->
+   <target name="dist" depends="compile">
+       <jar destfile="NewDeviceWizard.jar" basedir=".">
+         <include name="org/**" />
+      </jar>
+   </target>
+
+   <!-- Clean up -->
+   <target name="clean">
+      <delete failonerror="false">
+         <fileset dir="org" includes="**/*.class" />
+      </delete>
+      <delete file="NewDeviceWizard.jar" failonerror="false" />
+   </target>
+</project>
