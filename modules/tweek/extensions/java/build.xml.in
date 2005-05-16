@@ -4,12 +4,22 @@
    <property name="topdir" location="@topdir@" />
    <property name="debug" value="on" />
    <property name="optimize" value="off" />
+   
+   <property name="jdomdir" value="@JUGGLERROOT_ABS@/external/jdom" />
 
    <path id="tweek.classpath">
       <pathelement path="${topdir}/java" />
+      <pathelement path="${jdomdir}/build/jdom.jar" />
+      <pathelement path="${jdomdir}/lib/jaxen-core.jar" />
+      <pathelement path="${jdomdir}/lib/jaxen-jdom.jar" />
+      <pathelement path="${jdomdir}/lib/saxpath.jar" />
+      <pathelement path="${jdomdir}/lib/xalan.jar" />
+      <pathelement path="${jdomdir}/lib/xerces.jar" />
+      <pathelement path="${jdomdir}/lib/xml-apis.jar" />
    </path>
 
    <property name="tweek.classpath" refid="tweek.classpath" />
+   <property name="table_layout_dir" value="@JUGGLERROOT_ABS@/external/TableLayout" />
 
    <!-- Compile all java sources -->
    <target name="compile">
@@ -21,6 +31,7 @@
          <include name="org/vrjuggler/tweek/**"/>
          <classpath>
             <pathelement path="${tweek.classpath}" />
+            <pathelement path="${table_layout_dir}/TableLayout.jar" />
          </classpath>
       </javac>
    </target>
