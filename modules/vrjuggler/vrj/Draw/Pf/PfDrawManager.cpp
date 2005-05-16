@@ -138,9 +138,10 @@ bool PfDrawManager::configDisplaySystem(jccl::ConfigElementPtr element)
 
       if(mPipeStrs[i] == cur_disp_name)    // Use display env
       {
-         const char env_var[] = "DISPLAY";
-         char* display_env = getenv(env_var);
-         if ( display_env != NULL )
+         std::string display_env;
+         vpr::System::getenv("DISPLAY", display_env);
+
+         if ( ! display_env.empty() )
          {
             mPipeStrs[i] = display_env;
          }
