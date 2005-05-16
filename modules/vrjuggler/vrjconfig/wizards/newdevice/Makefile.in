@@ -89,10 +89,6 @@ ifneq ($(BEANS), )
                 $(EXTRA_INSTALL_ARGS)					\
                 $(topdir)/wizards/newdevice/$$bean.jar		\
                 $(jardir) || exit 1 ;					\
-              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
-                $(EXTRA_INSTALL_ARGS)					\
-                $(top_srcdir)/wizards/newdevice/$$bean.xml	\
-                $(jardir) || exit 1;					\
           done
 endif
 ifeq (@PLATFORM@, Darwin)
@@ -112,10 +108,6 @@ ifneq ($(BEANS), )
                 $(EXTRA_INSTALL_ARGS)					\
                 $(topdir)/wizards/newdevice/$$bean.jar		\
                 $(bundle_jardir) || exit 1 ;				\
-              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
-                $(EXTRA_INSTALL_ARGS)					\
-                $(top_srcdir)/wizards/newdevice/$$bean.xml	\
-                $(bundle_jardir) || exit 1;				\
           done
 endif
 endif
