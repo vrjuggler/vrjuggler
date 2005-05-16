@@ -37,61 +37,61 @@
 
 <body>
    <h2>MotionStar Wireless&reg; configuration steps:</h2>
+      
+      <h3><u><b>Hardware Settings</b></u></h3>
+      
+      <h4>Server Address</h4>
+      Set server address (IP address or host name).  If the value entered
+      is not a valid host name or IP address, it will be displayed in
+      <font color="#ff0000">red</font> text.  This does not necessarily
+      indicate an error -- it is simply an indication that an error
+      might occur when the VR Juggler application is run.
 
-   <ol>
-      <li>
-         Set server address (IP address or host name).  If the value entered
-         is not a valid host name or IP address, it will be displayed in
-         <font color="#ff0000">red</font> text.  This does not necessarily
-         indicate an error -- it is simply an indication that an error
-         might occur when the VR Juggler application is run.
-      </li>
-      <li>
-         Set server listening port (TCP&nbsp;=&nbsp;6000,
-         UDP&nbsp;=&nbsp;5000).  TCP is generally the best option.
-      </li>
-      <li>
-         Indicate whether the named chassis is a master or a slave.  The
-         chassis will only be a slave when multiple packs are used.  In that
-         case, there will be one master chassis and one or more slaves.
-      </li>
-      <li>
-         Set the hemisphere of the transmitter within which the user(s) will
-         be operating.
-      </li>
-      <li>
-         Set the data format to be used by the sensors.  Currently,
-         <i>only</i> the format <b>Position and Angles</b> is known to work
-         reliably.
-      </li>
-      <li>
-         Choose the sample mode.  Using <b>Run Continuous</b> will be the
-         most efficient because the driver will not have to make repeated
-         requests for samples, thereby saving bandwidth and computation
-         cycles on the MotionStar chassis and on the machine where the
-         Gadgeteer driver is running.
-      </li>
-      <li>
-         Set the report rate for the sensors.  This determines how frequently
-         the sensors send data to the MotionStar chassis.  A value of 1
-         indicates that they should send data every cycle.  A value of 2
-         indicates that they should send data every other cycle, and so on.
-      </li>
-      <li>
-         Set the measurement rate for the chassis.  This value depends on
-         the configuration of the hardware.  The factory default is 86.1.
-         An invalid value will have a negative impact on the quality of the
-         tracking data.
-      </li>
-      <li>
-         <i>CLUSTER ONLY</i>: Set the cluster node where the MotionStar
-         Wireless&reg; device driver will be run.
-      </li>
-   </ol>
+      <h4>Server Network Port</h4>
+      Set server listening port (TCP&nbsp;=&nbsp;6000,
+      UDP&nbsp;=&nbsp;5000).  TCP is generally the best option.
 
-   <h3>Transmitter Settings</h3>
+      <h4>Is Master?</h4>
+      Indicate whether the named chassis is a master or a slave.  The
+      chassis will only be a slave when multiple packs are used.  In that
+      case, there will be one master chassis and one or more slaves.
 
-   <p>
+      <h4>Hemisphere</h4>
+      Set the hemisphere of the transmitter within which the user(s) will
+      be operating. The Front hemisphere is located on the side of the
+      Ascension logo.
+
+      <h4>Data Format</h4>
+      Set the data format to be used by the sensors.  Currently,
+      <i>only</i> the format <b>Position and Angles</b> is known to work
+      reliably.
+
+      <h4>Sampling Mode</h4>
+      Choose the sample mode.  Using <b>Run Continuous</b> will be the
+      most efficient because the driver will not have to make repeated
+      requests for samples, thereby saving bandwidth and computation
+      cycles on the MotionStar chassis and on the machine where the
+      Gadgeteer driver is running.
+ 
+      <h4>Sensor Report Rate</h4>
+      Set the report rate for the sensors.  This determines how frequently
+      the sensors send data to the MotionStar chassis.  A value of 1
+      indicates that they should send data every cycle.  A value of 2
+      indicates that they should send data every other cycle, and so on.
+ 
+      <h4>Chassis Mesaurement Rate</h4>
+      Set the measurement rate for the chassis.  This value depends on
+      the configuration of the hardware.  The factory default is 86.1.
+      An invalid value will have a negative impact on the quality of the
+      tracking data.
+
+      <h4>Device Host</h4>
+      <i>CLUSTER ONLY</i>: Set the cluster node where the MotionStar
+      Wireless&reg; device driver will be run.
+
+      <h3><u><b>Transmitter Settings</b></u></h3>
+
+      <p>
       Under the <b>Transmitter</b>, you will find the settings for the
       placement of the MotionStar Wireless&reg; transmitter (the big,
       heavy black box).  The orientation and position of the transmitter
@@ -101,38 +101,36 @@
       left.  Refer to Page 132 of the <i>MotionStar Wireless&reg;
       Installation and Operation Guide</i> (910006-A Rev C, published
       May 23, 2001).
-   </p>
+      </p>
 
-   <ol>
-      <li>
-         Set the physical units of the data returned by the sensors.
-         Currently, the MotionStar Wireless&reg; tracking system
-         <i>only</i> returns data in <b>Inches</b>.
-      </li>
-      <li>
-         Configure the position and orientation of the MotionStar
-         Wireless&reg; transmitter (the large black box) relative to the
-         VR Juggler coordinate frame.  This process configures what is known
-         as a "position transform filter."  The panels titled "Orientation"
-         and "Position" present an easy way to perform this task.
+      <p>
+      Configure the position and orientation of the MotionStar
+      Wireless&reg; transmitter (the large black box) relative to the
+      VR Juggler coordinate frame.  This process configures what is known
+      as a "position transform filter."  The panels titled "Orientation"
+      and "Position" present an easy way to perform this task.
+      </p>
+   
+      <h4>Orientation</h4>
+      First, choose the coordinate frame rotation from the
+      <b>Transmitter Coordinate Frame</b> list.  To enter the X, Y, and
+      Z rotation values directly, click the <b>Manual Entry</b> button
+      and fill in the values to the right of the list.
 
-         <p>
-            First, choose the coordinate frame rotation from the
-            <b>Transmitter Coordinate Frame</b> list.  To enter the X, Y, and
-            Z rotation values directly, click the <b>Manual Entry</b> button
-            and fill in the values to the right of the list.
-         </p>
 
-         <p>
-            Next, set the position of the transmitter relative to the
-            chosen VR Juggler origin.  The units can be entered as
-            meters, centimeters, feet, or inches.  Make sure to pick the
-            units before entering the location value.
-         </p>
-      </li>
-   </ol>
+      <h4>Position</h4>
+      Next, set the position of the transmitter relative to the
+      chosen VR Juggler origin.  The units can be entered as
+      meters, centimeters, feet, or inches.  Make sure to pick the
+      units before entering the location value.
 
-   <h3>Sensor Settings</h3>
+
+      <h4>Tracker Units</h4>
+      Set the physical units of the data returned by the sensors.
+      Currently, the MotionStar Wireless&reg; tracking system
+      <i>only</i> returns data in <b>Inches</b>.
+
+   <h3><u><b>Sensor Settings</b></u></h3>
 
    <ol>
       <li>
