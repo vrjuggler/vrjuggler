@@ -46,6 +46,7 @@
 #include <sstream>
 #include <boost/concept_check.hpp>
 
+#include <vpr/System.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Thread/TSObjectProxy.h>
@@ -90,10 +91,12 @@ Debug::Debug()
    debugLevel = 2;      // Should actually try to read env variable
    mUseThreadLocal = false;   // Initially set to false
 
-   char* debug_lev = getenv("VPR_DEBUG_NFY_LEVEL");
-   if(debug_lev != NULL)
+   std::string debug_lev;
+   vpr::System::getenv("VPR_DEBUG_NFY_LEVEL", debug_lev);
+
+   if ( ! debug_lev.empty() )
    {
-      debugLevel = atoi(debug_lev);
+      debugLevel = atoi(debug_lev.c_str());
       std::cout << "VPR_DEBUG_NFY_LEVEL: Set to " << debugLevel << std::endl
                 << std::flush;
    }
@@ -104,15 +107,18 @@ Debug::Debug()
       std::cout << "VPR_DEBUG_NFY_LEVEL: Defaults to " << debugLevel
                 << std::endl << std::flush;
    }
+
    std::cout << "--------------------------------------------------------" << std::endl;
    std::cout << "For more or less debug output change VPR_DEBUG_NFY_LEVEL" << std::endl;
    std::cout << "--------------------------------------------------------" << std::endl;
 
-   char* debug_enable = getenv("VPR_DEBUG_ENABLE");
-   if(debug_enable != NULL)
+   std::string debug_enable;
+   vpr::System::getenv("VPR_DEBUG_ENABLE", debug_enable);
+
+   if ( ! debug_enable.empty() )
    {
-      unsigned debug_enable_val = atoi(debug_enable);
-      if(debug_enable_val)
+      unsigned int debug_enable_val = atoi(debug_enable.c_str());
+      if ( debug_enable_val != 0 )
       {
          mDebugEnabled = true;
       }
@@ -133,9 +139,10 @@ Debug::Debug()
    }
 
    // Check to see if there is a default Debug target
-   char* debug_file_ptr = getenv("VPR_DEBUG_FILE");
+   std::string debug_file_ptr;
+   vpr::System::getenv("VPR_DEBUG_FILE", debug_file_ptr);
 
-   if (NULL != debug_file_ptr)
+   if ( ! debug_file_ptr.empty() )
    {
       std::string debug_file(debug_file_ptr);
       if ("stderr" == debug_file)
@@ -361,8 +368,13 @@ bool Debug::isCategoryAllowed(const vpr::DebugCategory& catId)
 void Debug::updateAllowedCategories()
 {
    // Get the environment variables
-   char* dbg_allow_cats_env = getenv("VPR_DEBUG_ALLOW_CATEGORIES");
-   char* dbg_disallow_cats_env = getenv("VPR_DEBUG_DISALLOW_CATEGORIES");
+   const std::string allow_var("VPR_DEBUG_ALLOW_CATEGORIES");
+   std::string dbg_allow_cats;
+   vpr::System::getenv(allow_var, dbg_allow_cats);
+
+   const std::string disallow_var("VPR_DEBUG_DISALLOW_CATEGORIES");
+   std::string dbg_disallow_cats;
+   vpr::System::getenv(disallow_var, dbg_disallow_cats);
 
    if(getLevel() >= vprDBG_VERB_LVL)
    {
@@ -388,7 +400,7 @@ void Debug::updateAllowedCategories()
    //    - Disable auto-showing of all
    //    - For each current category
    //       - Check if it should be enabled
-   if(dbg_allow_cats_env != NULL)
+   if ( ! dbg_allow_cats.empty() )
    {
      (*cat_all).second.mAllowed = false;       // Disable the showing of all for now
 
@@ -399,14 +411,12 @@ void Debug::updateAllowedCategories()
                    << std::endl;
       }
 
-      std::string dbg_cats(dbg_allow_cats_env);
-
       // For each currently known category name
       category_map_t::iterator i;
       for ( i = mCategories.begin(); i != mCategories.end(); ++i )
       {
          std::string cat_name = (*i).second.mName;
-         if (dbg_cats.find(cat_name) != std::string::npos )    // Found one
+         if (dbg_allow_cats.find(cat_name) != std::string::npos )    // Found one
          {
             if(getLevel() >= vprDBG_CONFIG_LVL)
             {
@@ -438,7 +448,7 @@ void Debug::updateAllowedCategories()
    }
 
    // --- Setup dis-allowed categories --- //
-   if(dbg_disallow_cats_env != NULL)
+   if ( ! dbg_disallow_cats.empty() )
    {
       if(getLevel() >= vprDBG_CONFIG_LVL)
       {
@@ -446,8 +456,6 @@ void Debug::updateAllowedCategories()
                    << "Updating dis-allowed categories. (If blank, then none dis-allowed.)"
                    << std::endl;
       }
-
-      std::string dbg_disallow_cats(dbg_disallow_cats_env);
 
       // For each currently known category name
       category_map_t::iterator i;
