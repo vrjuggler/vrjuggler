@@ -74,7 +74,7 @@ def guessBoostToolset(reattempt = False):
    (cl_stdin, cl_stdout, cl_stderr) = os.popen3('cl')
    cl_version_line = cl_stderr.readline()
 
-   cl_ver_match = re.compile(r'Compiler Version ((\d+)\.(\d+)\.(\d+)) for')
+   cl_ver_match = re.compile(r'Compiler Version ((\d+)\.(\d+)\.(\d+))')
    ver_string_match = cl_ver_match.search(cl_version_line)
 
    if ver_string_match is not None:
@@ -84,9 +84,12 @@ def guessBoostToolset(reattempt = False):
       if cl_major == 13 and cl_minor < 10:
          vs_ver = '.NET 2002'
          boost_tool_guess = 'vc7'
-      else:
+      elif cl_major == 13 and cl_minor >= 10:
          vs_ver = '.NET 2003'
          boost_tool_guess = 'vc71'
+      else:
+         vs_ver = '2005'
+         boost_tool_guess = 'vc80'
 
       printStatus("It appears that we will be using Visual Studio " + vs_ver)
    else:
@@ -106,7 +109,9 @@ def guessBoostToolset(reattempt = False):
       if not reattempt:
          # Common installation directories for Visual Studio 7.x.
          vs_dirs = [r'C:\Program Files\Microsoft Visual Studio .NET',
-                    r'C:\Program Files\Microsoft Visual Studio .NET 2003']
+                    r'C:\Program Files\Microsoft Visual Studio .NET 2003',
+                    r'C:\Program Files\Microsoft Visual Studio 8'
+                   ]
 
          for d in vs_dirs:
             if os.path.exists(d):
