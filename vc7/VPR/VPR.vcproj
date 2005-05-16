@@ -130,6 +130,9 @@
 				RelativePath="..\..\modules\vapor\vpr\Thread\BaseThread.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\BlockIO.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\Util\Debug.cpp">
 			</File>
 			<File
