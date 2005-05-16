@@ -63,7 +63,8 @@ SUBDIR=		Port		\
 		Socket		\
 		Stats
 
-SRCS=		XMLObjectReader.cpp	\
+SRCS=		BlockIO.cpp		\
+		XMLObjectReader.cpp	\
 		XMLObjectWriter.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk

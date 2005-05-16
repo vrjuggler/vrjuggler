@@ -530,32 +530,7 @@ public:
     * @return \c true is returned if reading will block;
     *         \c false otherwise.
     */
-   bool isReadBlocked(const vpr::Interval& timeout = vpr::Interval::NoWait)
-   {
-      bool is_blocked;
-      vpr::Selector selector;
-      vpr::IOSys::Handle handle;
-      vpr::Uint16 num_events;
-      vpr::ReturnStatus status;
-
-      handle = getHandle();
-      selector.addHandle(handle);
-      selector.setIn(handle, vpr::Selector::Read);
-
-      // Test the handle to get its read state.
-      status = selector.select(num_events, timeout);
-
-      if ( num_events == 1 )
-      {
-         is_blocked = false;
-      }
-      else
-      {
-         is_blocked = true;
-      }
-
-      return is_blocked;
-   }
+   bool isReadBlocked(const vpr::Interval& timeout = vpr::Interval::NoWait);
 
    /**
     * Tests if writing to this I/O device will block.
@@ -571,32 +546,7 @@ public:
     * @return \c true is returned if writing will block;
     *         \c false otherwise.
     */
-   bool isWriteBlocked(const vpr::Interval& timeout = vpr::Interval::NoWait)
-   {
-      bool is_blocked;
-      vpr::Selector selector;
-      vpr::IOSys::Handle handle;
-      vpr::Uint16 num_events;
-      vpr::ReturnStatus status;
-
-      handle = getHandle();
-      selector.addHandle(handle);
-      selector.setIn(handle, vpr::Selector::Write);
-
-      // Test the handle to get its write state.
-      status = selector.select(num_events, timeout);
-
-      if ( num_events == 1 )
-      {
-         is_blocked = false;
-      }
-      else
-      {
-         is_blocked = true;
-      }
-
-      return is_blocked;
-   }
+   bool isWriteBlocked(const vpr::Interval& timeout = vpr::Interval::NoWait);
 
    /**
     * Sets the IO stats strategy to use.
@@ -627,13 +577,7 @@ protected:
     * @post The open mode is set to blocking; the open state is set to false;
     *       and the blocking mode for reads and writes is set to true.
     */
-   BlockIO()
-      : mOpen(false)
-      , mBlocking(true)
-      , mStatsStrategy(NULL)
-   {
-      /* Do nothing. */ ;
-   }
+   BlockIO();
 
    /**
     * Constructor.
@@ -645,14 +589,7 @@ protected:
     *
     * @param name The name for this device.
     */
-   BlockIO(const std::string& name)
-      : mName(name)
-      , mOpen(false)
-      , mBlocking(true)
-      , mStatsStrategy(NULL)
-   {
-      /* Do nothing. */ ;
-   }
+   BlockIO(const std::string& name);
 
    /**
     * Copy constructor.
@@ -660,14 +597,7 @@ protected:
     * @param other A constant reference to another vpr::BlockIO object used
     *              as the source for the copy.
     */
-   BlockIO(const BlockIO& other)
-      : mName(other.mName)
-      , mOpen(other.mOpen)
-      , mBlocking(other.mBlocking)
-      , mStatsStrategy(NULL)
-   {
-      /* Do nothing. */ ;
-   }
+   BlockIO(const BlockIO& other);
 
    /**
     * Destructor.
@@ -675,52 +605,21 @@ protected:
     * @pre None.
     * @post None.
     */
-   virtual ~BlockIO()
-   {
-      /* Do nothing. */ ;
-   }
+   virtual ~BlockIO();
 
    /**
     * Read strategy.
     */
    virtual vpr::ReturnStatus read_s(void* buffer, const vpr::Uint32 length,
                                     vpr::Uint32& bytesRead,
-                                    const vpr::Interval timeout = vpr::Interval::NoTimeout)
-   {
-      vpr::ReturnStatus status;
-
-      if(mStatsStrategy != NULL)
-      {
-         mStatsStrategy->read_s(status, buffer, length, bytesRead, timeout);
-      }
-      else
-      {
-         status = read_i(buffer, length, bytesRead, timeout);
-      }
-
-      return status;
-   }
+                                    const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Read strategy.
     */
    virtual vpr::ReturnStatus readn_s(void* buffer, const vpr::Uint32 length,
                                      vpr::Uint32& bytesRead,
-                                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
-   {
-      vpr::ReturnStatus status;
-
-      if(mStatsStrategy != NULL)
-      {
-         mStatsStrategy->readn_s(status, buffer, length, bytesRead, timeout);
-      }
-      else
-      {
-         status = readn_i(buffer, length, bytesRead, timeout);
-      }
-
-      return status;
-   }
+                                     const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Write strategy.
@@ -728,22 +627,7 @@ protected:
    virtual vpr::ReturnStatus write_s(const void* buffer,
                                      const vpr::Uint32 length,
                                      vpr::Uint32& bytesWritten,
-                                     const vpr::Interval timeout = vpr::Interval::NoTimeout)
-   {
-      vpr::ReturnStatus status;
-
-      if(mStatsStrategy != NULL)
-      {
-         mStatsStrategy->write_s(status, buffer, length, bytesWritten,
-                                 timeout);
-      }
-      else
-      {
-          status = write_i(buffer, length, bytesWritten, timeout);
-      }
-
-      return status;
-   }
+                                     const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
    /**
     * Implementation of the read() template method.  This reads at most the
