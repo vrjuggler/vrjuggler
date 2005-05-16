@@ -51,7 +51,7 @@ import org.vrjuggler.jccl.editors.*;
 import org.vrjuggler.tweek.wizard.*;
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
 import org.vrjuggler.vrjconfig.commoneditors.SimpleEditorDialog;
-import org.vrjuggler.vrjconfig.controlpanel.CustomEditorDialog;
+import org.vrjuggler.vrjconfig.commoneditors.CustomEditorDialog;
 
 public class SelectDefinitionPanel extends JPanel implements EditorConstants
 {
