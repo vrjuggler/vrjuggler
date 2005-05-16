@@ -71,7 +71,7 @@ JCCL_BEAN_DIR=		@vrjconfig_bundle_jccl_beandir@
 
 INSTALL=		@INSTALL@
 
-JARS=	ClusterWizard.jar Devices.jar Simulator.jar NewDevice.jar VRSystem.jar
+JARS=	
 BEANS=	VRJConfig
 
 @SET_MAKE@
