@@ -42,6 +42,9 @@
    <target name="dist" depends="compile">
        <jar destfile="ClusterWizard.jar" basedir=".">
          <include name="org/**" />
+         <fileset dir="${srcdir}">
+            <include name="org/vrjuggler/vrjconfig/wizards/cluster/Wizard.xml" />
+         </fileset>
       </jar>
    </target>
 

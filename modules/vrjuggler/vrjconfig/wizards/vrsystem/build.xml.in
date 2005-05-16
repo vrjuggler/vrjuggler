@@ -48,6 +48,9 @@
    <target name="dist" depends="compile">
        <jar destfile="VRSystemWizard.jar" basedir=".">
          <include name="org/**" />
+         <fileset dir="${srcdir}">
+            <include name="org/vrjuggler/vrjconfig/wizards/vrsystem/Wizard.xml" />
+         </fileset>
       </jar>
    </target>
 
