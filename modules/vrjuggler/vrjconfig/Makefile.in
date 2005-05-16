@@ -90,6 +90,7 @@ ifeq ($(BUILD_JAVA), Y)
 	@echo "------------------------------------------------"
 	@$(MAKE) -C commoneditors commoneditors
 	@$(MAKE) -C customeditors customeditors
+	@$(MAKE) -C wizards wizards
 	$(ANT)
 	@$(MAKE) links
 else
@@ -159,6 +160,7 @@ ifeq (@PLATFORM@, Darwin)
 	$(SHELL) $(MKINSTALLDIRS) $(bundle_jccl_javadir)
 	$(SHELL) $(MKINSTALLDIRS) $(bundle_vrj_beandir)
 	$(SHELL) $(MKINSTALLDIRS) $(bundle_vrj_beandir)/customeditors
+	$(SHELL) $(MKINSTALLDIRS) $(bundle_vrj_beandir)/wizards
 	$(SHELL) $(MKINSTALLDIRS) $(bundle_vrj_javadir)
 	$(SHELL) $(MKINSTALLDIRS) $(bundle_vrj_datadir)
 	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(EXEC_PERMS)		\
@@ -217,11 +219,13 @@ endif
 endif
 	@$(MAKE) -C commoneditors install-commoneditors
 	@$(MAKE) -C customeditors install-customeditors
+	@$(MAKE) -C wizards install-wizards
 	
 clean clobber:
 	$(ANT) clean
 	$(MAKE) -C commoneditors clean
 	$(MAKE) -C customeditors clean
+	$(MAKE) -C wizards clean
 ifdef GLOBAL_BUILD
 	rm -rf $(top_srcdir)/bin
 endif
