@@ -1,0 +1,121 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Makefile.in for vrjuggler/vrjconfig/wizards/newdevice.  It requires
+# GNU make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+default: all
+
+# Include common definitions.
+include @topdir@/make.defs.mk
+include @topdir@/java.defs.mk
+
+jardir=			$(beandir)/wizards
+bundle_jardir=		$(bundle_vrj_beandir)/wizards
+
+srcdir=			@srcdir@
+top_srcdir=		@top_srcdir@
+INSTALL=		@INSTALL@
+
+BEANS=			NewDeviceWizard
+
+# -----------------------------------------------------------------------------
+# Uses ant to build the java classes and JARs
+# -----------------------------------------------------------------------------
+build-editor:
+	@echo "------------------------------------------------"
+	@echo "Building New Device Wizard Java sources"
+	@echo "------------------------------------------------"
+	$(ANT)
+
+clean clobber:
+	$(ANT) clean
+
+# -----------------------------------------------------------------------------
+# Extra targets.
+# -----------------------------------------------------------------------------
+
+# This cannot be named 'install' because Doozer++ already defines that.
+install-editor:
+	@echo "------------------------------------------------"
+	@echo "Installing the New Device Wizard code base"
+	@echo "------------------------------------------------"
+ifneq ($(JARS), )
+	for jar in $(JARS) ;						\
+          do								\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS)					\
+                $(topdir)/wizards/newdevice/$$jar $(javadir) ||	\
+                exit 1;							\
+          done
+endif
+ifneq ($(BEANS), )
+	for bean in $(BEANS) ;						\
+          do								\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS)					\
+                $(topdir)/wizards/newdevice/$$bean.jar		\
+                $(jardir) || exit 1 ;					\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS)					\
+                $(top_srcdir)/wizards/newdevice/$$bean.xml	\
+                $(jardir) || exit 1;					\
+          done
+endif
+ifeq (@PLATFORM@, Darwin)
+ifneq ($(JARS), )
+	for jar in $(JARS) ;						\
+          do								\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS)					\
+                $(topdir)/wizards/newdevice/$$jar		\
+                $(bundle_vrj_javadir) || exit 1 ;			\
+          done
+endif
+ifneq ($(BEANS), )
+	for bean in $(BEANS) ;						\
+          do								\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS)					\
+                $(topdir)/wizards/newdevice/$$bean.jar		\
+                $(bundle_jardir) || exit 1 ;				\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS)					\
+                $(top_srcdir)/wizards/newdevice/$$bean.xml	\
+                $(bundle_jardir) || exit 1;				\
+          done
+endif
+endif
