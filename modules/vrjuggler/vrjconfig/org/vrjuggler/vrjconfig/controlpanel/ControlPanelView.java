@@ -45,6 +45,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.jdom.input.*;
 import org.jdom.Document;
 
+import org.vrjuggler.vrjconfig.commoneditors.CustomEditorDialog;
+
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.*;
 import org.vrjuggler.jccl.editors.net.TinyBrowser;
