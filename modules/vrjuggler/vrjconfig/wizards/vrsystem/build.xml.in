@@ -24,6 +24,7 @@
 
    <property name="tweek.classpath" refid="tweek.classpath" />
    <property name="jccl.classpath" refid="jccl.classpath" />
+   <property name="table_layout_dir" value="@JUGGLERROOT_ABS@/external/TableLayout" />
    <property name="commoneditors.classpath" refid="commoneditors.classpath" />
    <property name="caveeditor.classpath" refid="caveeditor.classpath" />
 
@@ -38,6 +39,7 @@
          <classpath>
             <pathelement path="${tweek.classpath}" />
             <pathelement path="${jccl.classpath}" />
+            <pathelement path="${table_layout_dir}/TableLayout.jar" />
             <pathelement path="${commoneditors.classpath}" />
             <pathelement path="${caveeditor.classpath}" />
          </classpath>
