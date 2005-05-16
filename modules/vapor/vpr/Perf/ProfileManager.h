@@ -184,9 +184,9 @@ namespace vpr
       static ProfileSampleResult getSampleResult()
       {
          ProfileSampleResult sample_time_map;
-         unsigned int num_threads =
+         std::vector<Thread*>::size_type num_threads =
             vpr::ThreadManager::instance()->getNumThreads();
-         for ( unsigned int t = 0; t < num_threads; ++t )
+         for ( std::vector<Thread*>::size_type t = 0; t < num_threads; ++t )
          {
             vpr::Thread* thread = vpr::ThreadManager::instance()->getThread(t);
             getSampleResultRecursively(sample_time_map, getRootNode(thread));
