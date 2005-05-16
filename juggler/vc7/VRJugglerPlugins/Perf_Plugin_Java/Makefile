@@ -30,7 +30,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-ANT=		..\..\..\external\ant\bin\ant.bat
+ANT=		..\..\..\external\ant\bin\ant
 IDL=		..\..\..\external\JacORB\idl.bat
 IDL_OPTS=	
 IDL_INCLUDES=	-I..\..\..\modules\tweek				\
