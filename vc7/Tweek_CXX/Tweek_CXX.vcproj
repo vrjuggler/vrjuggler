@@ -34,7 +34,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rtd.lib omnithread30_rtd.lib omniDynamic$(OMNIORB_VERSION)_rtd.lib vpr_d.lib libnspr4.lib $(NOINHERIT)"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rtd.lib omnithread$(OMNITHREAD_VERSION)_rtd.lib omniDynamic$(OMNIORB_VERSION)_rtd.lib vpr_d.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/tweek_d.dll"
 				Version="0.92.0"
 				LinkIncremental="2"
@@ -94,7 +94,7 @@ $(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\idl -I../../modules/tweek ..
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread30_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib vpr.lib libnspr4.lib $(NOINHERIT)"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib vpr.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/tweek.dll"
 				Version="0.92.0"
 				LinkIncremental="1"
