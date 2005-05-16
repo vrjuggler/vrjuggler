@@ -315,6 +315,17 @@ def postProcessOptions(options):
             os.environ['OMNIORB_VERSION'] = match.group(1)
             break
 
+      omnithread_glob = os.path.join(os.environ['OMNIORB_LIB'],
+                                     'omnithread*_rt.lib')
+      libs = glob.glob(omnithread_glob)
+      omnithread_ver_re = re.compile(r'omnithread(\d\d)_rt.lib')
+
+      for l in libs:
+         match = omnithread_ver_re.search(l)
+         if match is not None:
+            os.environ['OMNITHREAD_VERSION'] = match.group(1)
+            break
+
 def writeCacheFile(optionDict):
    cache_file = open(getCacheFileName(), 'w')
    for k, v in optionDict.iteritems():
