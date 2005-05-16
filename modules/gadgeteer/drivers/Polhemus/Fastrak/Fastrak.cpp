@@ -439,9 +439,10 @@ bool Fastrak::startSampling()
    if ( mFastrakDev.open().success() )
    {
       if (mFastrakDev.trackerInit().failure())
-	      return status;
-   
-      
+      {
+         return status;
+      }
+
       mExitFlag = false;
       vpr::ThreadMemberFunctor<Fastrak>* member_thread =
          new vpr::ThreadMemberFunctor<Fastrak>(this, &Fastrak::controlLoop, NULL);
