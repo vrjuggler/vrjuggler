@@ -54,8 +54,7 @@ import org.vrjuggler.jccl.config.event.*;
 import org.vrjuggler.tweek.wizard.*;
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
 import org.vrjuggler.vrjconfig.commoneditors.SimpleEditorDialog;
-import org.vrjuggler.vrjconfig.controlpanel.CustomEditorDialog;
-import org.vrjuggler.vrjconfig.controlpanel.WizardLoader;
+import org.vrjuggler.vrjconfig.commoneditors.CustomEditorDialog;
 import info.clearthought.layout.*;
 
 public class CurrentDevicesPanel extends JPanel implements EditorConstants, ConfigListener
