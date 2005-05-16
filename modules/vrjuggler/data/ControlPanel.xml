@@ -3,7 +3,7 @@
    <category label="Display" title="Choose a display"
              icon="org/vrjuggler/vrjconfig/images/display64.png">
       <wizard label="Test wizard"
-              wizard_location="${VJ_BASE_DIR}/share/vrjuggler/java/ClusterWizard.jar"
+              wizard_location="${VJ_BASE_DIR}/share/vrjuggler/beans/wizards/ClusterWizard.jar"
               icon="org/vrjuggler/vrjconfig/images/simulator64.png" />
       <type label="Display Window" title="Choose a display window"
             token="display_window"
@@ -19,15 +19,15 @@
    <editor label="CAVE Editor" class="org.vrjuggler.vrjconfig.customeditors.cave.CaveEditor"
            icon="org/vrjuggler/vrjconfig/images/cluster64.png" />
    <wizard label="Cluster Wizard"
-           wizard_location="${VJ_BASE_DIR}/share/vrjuggler/java/ClusterWizard.jar"
+           wizard_location="${VJ_BASE_DIR}/share/vrjuggler/beans/wizards/ClusterWizard.jar"
            icon="org/vrjuggler/vrjconfig/images/new_cluster_wizard64.png" />
    <wizard label="VR System Wizard"
-           wizard_location="${VJ_BASE_DIR}/share/vrjuggler/java/VRSystem.jar"
+           wizard_location="${VJ_BASE_DIR}/share/vrjuggler/beans/wizards/VRSystemWizard.jar"
            icon="org/vrjuggler/vrjconfig/images/new_cluster_wizard64.png" />
    <category label="Devices" title="Choose a device type"
              icon="org/vrjuggler/vrjconfig/images/devices64.png">
       <wizard label="Add Device Wizard"
-              wizard_location="${VJ_BASE_DIR}/share/vrjuggler/java/NewDevice.jar"
+              wizard_location="${VJ_BASE_DIR}/share/vrjuggler/beans/wizards/NewDeviceWizard.jar"
               icon="org/vrjuggler/vrjconfig/images/new_device_wizard64.png" />
       <type label="Analog" title="Choose an analog device"
             token="analog_device"
