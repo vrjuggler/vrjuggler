@@ -63,9 +63,6 @@ public class IntersenseModel implements ConfigListener, ConfigElementListener
    /** Name of serial port tracker is connected to. */
    private String          mPortName            = null;
 
-   /** Baud for communication with tracker. */
-   private Integer         mBaud                = null;
-
    /** PositionFilter that translates and rotates position input into VR Juggler coordinate space. */
    private ConfigElement   mPositionFilter      = null;
 
@@ -115,24 +112,6 @@ public class IntersenseModel implements ConfigListener, ConfigElementListener
    }
 
    /**
-    * Returns the baud at which communication with tracker takes place.
-    */
-   public Integer getBaud()
-   {
-      return mBaud;
-   }
-
-   /**
-    * Specifies the baud at which communication with the tracker will take place.
-    * 
-    * @param baud speed of communication with tracker
-    */
-   public void setBaud(Integer baud)
-   {
-      mBaud = baud;
-   }
-
-   /**
     * Returns a list of all station models associated with this Intersense device.
     */
    public List getStationModels()
@@ -160,7 +139,6 @@ public class IntersenseModel implements ConfigListener, ConfigElementListener
       System.out.println("================================");
 
       // Get general information about tracker.
-      mBaud = (Integer)mISenseConfigElement.getProperty("baud",0);
       mPortName = (String)mISenseConfigElement.getProperty("port",0);
       mDriverLocation = (String)mISenseConfigElement.getProperty("driver",0);
       
