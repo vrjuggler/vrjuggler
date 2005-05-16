@@ -168,27 +168,7 @@ public class ScreenDisplay
          elm.setProperty("size", 0, new Integer(bounds.width), mConfigContext);
          elm.setProperty("size", 1, new Integer(bounds.height), mConfigContext);
 
-         ConfigElement fb_cfg =
-            (ConfigElement) elm.getProperty("frame_buffer_config", 0);
-         fb_cfg.setProperty("visual_id", 0, dlg.getVisualID(), mConfigContext);
-         fb_cfg.setProperty("red_size", 0, dlg.getRedDepth(), mConfigContext);
-         fb_cfg.setProperty("green_size", 0, dlg.getGreenDepth(), mConfigContext);
-         fb_cfg.setProperty("blue_size", 0, dlg.getBlueDepth(), mConfigContext);
-         fb_cfg.setProperty("alpha_size", 0, dlg.getAlphaDepth(), mConfigContext);
-         fb_cfg.setProperty("depth_buffer_size", 0, dlg.getDepthBufferSize(),
-                            mConfigContext);
-         fb_cfg.setProperty("fsaa_enable", 0, dlg.getFSAAEnable(), mConfigContext);
-
          elm.setName(dlg.getDisplayWindowTitle());
-         elm.setProperty("stereo", 0, dlg.inStereo(), mConfigContext);
-         elm.setProperty("border", 0, dlg.hasBorder(), mConfigContext);
-
-         elm.setProperty(LOCK_KEY_PROPERTY, 0, dlg.getLockKey(),
-                              mConfigContext);
-         elm.setProperty(START_LOCKED_PROPERTY, 0,
-                              dlg.shouldStartLocked(), mConfigContext);
-         elm.setProperty(SLEEP_TIME_PROPERTY, 0, dlg.getSleepTime(),
-                              mConfigContext);
          
          if (mClusterConfig)
          {
