@@ -633,10 +633,12 @@ def generateAntBuildFiles():
    mods.append(AntTarget(r'modules\jackal\plugins\corba_rtrc',
                          r'JCCL_Java\RTRC_Plugin_Java', 'build.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig', 'VRJConfig',
-                         'build.xml'))
+                         'build.xml', r'vc7\VRJConfig'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\commoneditors',
                          r'VRJConfig\commoneditors',
                          'build-commoneditors.xml'))
+   mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\cave',
+                         'VRJConfig', 'build-cave.xml', r'vc7\VRJConfig'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\display_window',
                          'VRJConfig', 'build-display_window.xml',
                          r'vc7\VRJConfig'))
@@ -656,6 +658,15 @@ def generateAntBuildFiles():
                          r'vc7\VRJConfig'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\surfacedisplayeditor',
                          'VRJConfig', 'build-surfacedisplayeditor.xml',
+                         r'vc7\VRJConfig'))
+   mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\wizards\cluster',
+                         'VRJConfig', 'build-wizard-cluster.xml',
+                         r'vc7\VRJConfig'))
+   mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\wizards\newdevice',
+                         'VRJConfig', 'build-wizard-newdevice.xml',
+                         r'vc7\VRJConfig'))
+   mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\wizards\vrsystem',
+                         'VRJConfig', 'build-wizard-vrsystem.xml',
                          r'vc7\VRJConfig'))
    mods.append(AntTarget(r'modules\vrjuggler\plugins\corba_perf_mon',
                          r'VRJugglerPlugins\Perf_Plugin_Java', 'build.xml'))
@@ -1187,15 +1198,6 @@ def installVRJConfig(prefix):
    if os.path.exists(os.path.join(jardir, 'VRJConfig.jar')):
       printStatus("Installing VRJConfig ...")
 
-      # XXX: Enumerating these JAR files is really a pain.  These lists should
-      # be constructed using a glob.
-      lib_jars = [
-         'ClusterWizard.jar',
-         'Devices.jar',
-         'NewDevice.jar',
-         'Simulator.jar'
-      ]
-
       vrjconfig_src = os.path.join(gJugglerDir, 'modules', 'vrjuggler',
                                    'vrjconfig')
       bean_jars = [
@@ -1206,6 +1208,7 @@ def installVRJConfig(prefix):
 
       custom_editor_src = os.path.join(vrjconfig_src, 'customeditors')
       custom_editors = [
+         ('cave', 'DisplayWindowEditor'),
          ('display_window', 'DisplayWindowEditor'),
          ('flock', 'FlockEditor'),
          ('intersense', 'IntersenseEditor'),
@@ -1215,10 +1218,17 @@ def installVRJConfig(prefix):
          ('surfacedisplayeditor', 'SurfaceDisplayEditor')
       ]
 
+      wizard_src = os.path.join(vrjconfig_src, 'wizards')
+      wizards = [
+         ('cluster', 'ClusterWizard'),
+         ('newdevice', 'NewDeviceWizard'),
+         ('vrsystem', 'VRSystemWizard'),
+      ]
+
       # Install JAR files that act as reusable Java class libraries.
       destdir = os.path.join(prefix, 'share', 'vrjuggler', 'java')
       mkinstalldirs(destdir)
-      for j in lib_jars + common_editors:
+      for j in common_editors:
          jar_file = os.path.join(jardir, j)
          if os.path.exists(jar_file):
             shutil.copy2(jar_file, destdir)
@@ -1242,6 +1252,14 @@ def installVRJConfig(prefix):
          xml_file = os.path.join(custom_editor_src, e[0], e[1] + '.xml')
          if os.path.exists(jar_file):
             shutil.copy2(xml_file, destdir)
+            shutil.copy2(jar_file, destdir)
+
+      # Install any wizards that were compiled.
+      destdir = os.path.join(prefix, 'share', 'vrjuggler', 'beans', 'wizards')
+      mkinstalldirs(destdir)
+      for e in wizards:
+         jar_file = os.path.join(jardir, e[1] + '.jar')
+         if os.path.exists(jar_file):
             shutil.copy2(jar_file, destdir)
 
       # Install vrjconfig.bat.

@@ -35,8 +35,8 @@ ANT=		..\..\external\ant\bin\ant
 all: java
 
 java:
-	$(ANT)
 	$(ANT) -f commoneditors\build-commoneditors.xml
+	$(ANT) -f build-cave.xml
 	$(ANT) -f build-display_window.xml
 	$(ANT) -f build-flock.xml
 	$(ANT) -f build-intersense.xml
@@ -44,10 +44,15 @@ java:
 	$(ANT) -f build-pinchglove.xml
 	$(ANT) -f build-proxyeditor.xml
 	-$(ANT) -f build-surfacedisplayeditor.xml
+	$(ANT) -f build-wizard-cluster.xml
+	$(ANT) -f build-wizard-newdevice.xml
+	$(ANT) -f build-wizard-vrsystem.xml
+	$(ANT)
 
 clean:
 	$(ANT) clean
 	$(ANT) -f commoneditors\build-commoneditors.xml clean
+	$(ANT) -f build-cave.xml clean
 	$(ANT) -f build-display_window.xml clean
 	$(ANT) -f build-flock.xml clean
 	$(ANT) -f build-intersense.xml clean
@@ -55,3 +60,6 @@ clean:
 	$(ANT) -f build-pinchglove.xml clean
 	$(ANT) -f build-proxyeditor.xml clean
 	$(ANT) -f build-surfacedisplayeditor.xml clean
+	$(ANT) -f build-wizard-cluster.xml clean
+	$(ANT) -f build-wizard-newdevice.xml clean
+	$(ANT) -f build-wizard-vrsystem.xml clean
