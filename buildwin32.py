@@ -1208,7 +1208,7 @@ def installVRJConfig(prefix):
 
       custom_editor_src = os.path.join(vrjconfig_src, 'customeditors')
       custom_editors = [
-         ('cave', 'DisplayWindowEditor'),
+         ('cave', 'CaveEditor'),
          ('display_window', 'DisplayWindowEditor'),
          ('flock', 'FlockEditor'),
          ('intersense', 'IntersenseEditor'),
