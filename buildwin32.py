@@ -711,6 +711,11 @@ def makeTree(prefix):
 def installDir(startDir, destDir, allowedExts = None, disallowedExts = None,
                disallowedFiles = None):
    cwd = os.getcwd()
+
+   # Make sure that destDir specifies an absolute path.
+   if not os.path.isabs(destDir):
+      destDir = os.path.abspath(destDir)
+
    mkinstalldirs(destDir)
 
    os.chdir(startDir)
