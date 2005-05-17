@@ -119,6 +119,7 @@ def guessBoostToolset(reattempt = False):
                printStatus("      " + d)
                vs_path = [os.path.join(d, r'Common7\IDE'),
                           os.path.join(d, r'VC7\BIN'),
+                          os.path.join(d, r'VC\BIN'),
                           os.path.join(d, r'Common7\Tools'),
                           os.path.join(d, r'Common7\Tools\bin\prerelease'),
                           os.path.join(d, r'Common7\Tools\bin')]
