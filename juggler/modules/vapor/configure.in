@@ -443,7 +443,7 @@ fi
 # is included through sys/time.h, the usual AC_CHECK_TYPE method will not work.
 AC_CACHE_CHECK([for timeval], [ac_cv_has_timeval],
     [AC_TRY_COMPILE([#include <sys/time.h> ],
-                    [ timeval var; ],
+                    [ struct timeval var; ],
                     [ac_cv_has_timeval='yes'],
                     [ac_cv_has_timeval='no'])])
 
@@ -456,7 +456,7 @@ fi
 # is included through sys/time.h, the usual AC_CHECK_TYPE method will not work.
 AC_CACHE_CHECK([for timezone], [ac_cv_has_timezone],
     [AC_TRY_COMPILE([#include <sys/time.h> ],
-                    [ timezone var; ],
+                    [ struct timezone var; ],
                     [ac_cv_has_timezone='yes'],
                     [ac_cv_has_timezone='no'])])
 
