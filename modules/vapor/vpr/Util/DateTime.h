@@ -78,7 +78,7 @@ public:
     */
    void setNow()
    {
-      struct timeval tv;
+      vpr::TimeVal tv;
 
       vpr::System::gettimeofday(&tv);
       mSeconds      = tv.tv_sec;

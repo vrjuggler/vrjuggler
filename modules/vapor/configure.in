@@ -439,6 +439,32 @@ if test "x$ac_cv_has_sigset_t" = "xno" ; then
               [Define to unsigned int if the sigset_t type is not available.])
 fi
 
+# The following checks for availability of the timeval type.  Since it is
+# is included through sys/time.h, the usual AC_CHECK_TYPE method will not work.
+AC_CACHE_CHECK([for timeval], [ac_cv_has_timeval],
+    [AC_TRY_COMPILE([#include <sys/time.h> ],
+                    [ timeval var; ],
+                    [ac_cv_has_timeval='yes'],
+                    [ac_cv_has_timeval='no'])])
+
+if test "x$ac_cv_has_timeval" = "xyes" ; then
+    AC_DEFINE(HAVE_TIMEVAL, ,
+              [Define if the timeval type is available.])
+fi
+
+# The following checks for availability of the timezone type.  Since it is
+# is included through sys/time.h, the usual AC_CHECK_TYPE method will not work.
+AC_CACHE_CHECK([for timezone], [ac_cv_has_timezone],
+    [AC_TRY_COMPILE([#include <sys/time.h> ],
+                    [ timezone var; ],
+                    [ac_cv_has_timezone='yes'],
+                    [ac_cv_has_timezone='no'])])
+
+if test "x$ac_cv_has_timezone" = "xyes" ; then
+    AC_DEFINE(HAVE_TIMEZONE, ,
+              [Define if the timezone type is available.])
+fi
+
 # The following checks for availability of the in_addr_t type.  Since it is
 # supposed to be defined in netinet/in.h, the usual AC_CHECK_TYPE method will
 # not work.
