@@ -45,9 +45,49 @@
 #include <vpr/vprConfig.h>
 #include <string>
 
+#ifdef HAVE_SYS_TIME_H
+#include <sys/time.h>
+#endif
+
 
 namespace vpr
 {
+
+#if defined(HAVE_TIMEVAL) && ! defined(VPR_OS_Win32)
+/**
+ * @since 0.92.4
+ */
+typedef timeval TimeVal;
+#else
+/** \struct TimeVal SystemBase.h vpr/System.h
+ *
+ * A data structure for storing the time value returned by
+ * vpr::System::gettimeofday().
+ *
+ * @since 0.92.4
+ */
+struct TimeVal
+{
+   long tv_sec;           /**< Seconds since Jan. 1, 1970 */
+   long tv_usec;          /**< and microseconds */
+};
+#endif
+
+#ifdef HAVE_TIMEZONE
+typedef timezone TimeZone;
+#else
+/** \struct TimeZone SystemBase.h vpr/System.h
+ *
+ * A data structure for storing the time zone returned by
+ * vpr::System::gettimeofday().  This is only defined on platforms that
+ * do not defined the \c gettimeofday(3) function.
+ */
+struct TimeZone
+{
+   int tv_minuteswest;    /**< Minutes west of Greenwich */
+   int tv_dsttime;        /**< Type of dst correction */
+};
+#endif
 
 /** \class SystemBase SystemBase.h vpr/SystemBase.h
  *

@@ -112,7 +112,7 @@ public:
     * @param tzp Storage for the time zone.  This parameter is optional and
     *            defaults to NULL.
     */
-   static int gettimeofday(struct timeval* tp, struct timezone* tzp = NULL)
+   static int gettimeofday(vpr::TimeVal* tp, vpr::TimeZone* tzp = NULL)
    {
       return ::gettimeofday(tp, tzp);
    }

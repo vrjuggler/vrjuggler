@@ -163,11 +163,10 @@ void Interval::setNowReal()
       mMicroSeconds = vpr::Uint64(cur_time.tv_usec) + storage;
    }
 #else    // Default to POSIX time setting
-   timeval cur_time;
+   vpr::TimeVal cur_time;
    vpr::System::gettimeofday(&cur_time);
    vpr::Uint64 storage = vpr::Uint64(1000000u) * vpr::Uint64(cur_time.tv_sec);
    mMicroSeconds = vpr::Uint64(cur_time.tv_usec) + storage;
-
 #endif
 }
 

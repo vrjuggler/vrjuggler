@@ -51,10 +51,6 @@
 
 #include <vpr/vprConfig.h>
 
-#ifdef VPR_OS_Win32
-#  include <winsock2.h>    /* For struct timeval */
-#endif
-
 #include <stdlib.h>
 #include <string.h>
 #include <string>
@@ -63,48 +59,10 @@
 #include <prenv.h>
 #include <prthread.h>      /* For PR_Sleep() */
 #include <prsystem.h>
-#include <boost/concept_check.hpp>
 
 #include <vpr/Util/ReturnStatus.h>
 #include <vpr/vprTypes.h>
 #include <vpr/SystemBase.h>
-
-
-#ifndef HAVE_GETTIMEOFDAY
-#  ifndef VPR_OS_Win32
-/** \struct timeval SystemNSPR.h vpr/System.h
- *
- * A data structure for storing the time value returned by
- * vpr::SystemNSPR::gettimeofday().  This is only defined on Windows where
- * there is no timeval struct.
- *
- * @note This is in the global namespace to mimic the POSIX visibility and
- *       usage.
- */
-struct timeval
-{
-   long tv_sec;           /**< Seconds since Jan. 1, 1970 */
-   long tv_usec;          /**< and microseconds */
-};
-#  endif
-
-/** \struct timezone SystemNSPR.h vpr/System.h
- *
- * A data structure for storing the time zone returned by
- * vpr::SystemNSPR::gettimeofday().  This is only defined on platforms that
- * do not defined the \c gettimeofday(3) function.
- *
- * @note This is in the global namespace to mimic the POSIX visibility and
- *       usage.
- */
-struct timezone
-{
-   int tv_minuteswest;    /**< Minutes west of Greenwich */
-   int tv_dsttime;        /**< Type of dst correction */
-};
-#else
-#  include <sys/time.h>
-#endif
 
 
 namespace vpr
@@ -115,7 +73,7 @@ namespace vpr
  * Low-level operating system feature abstractions using NSPR functionality.
  * This is typedef'd to vpr::System.
  */
-class SystemNSPR : public SystemBase
+class VPR_CLASS_API SystemNSPR : public SystemBase
 {
 public:
    /**
@@ -155,16 +113,7 @@ public:
     * @param tzp Storage for the time zone.  This parameter is optional and
     *            is ignored by this implementation.
     */
-   static int gettimeofday(struct timeval* tp, struct timezone* tzp = NULL)
-   {
-      boost::ignore_unused_variable_warning(tzp);
-      PRTime now = PR_Now();
-
-      tp->tv_sec  = now / 1000000;
-      tp->tv_usec = now % 1000000;
-
-      return 0;
-   }
+   static int gettimeofday(vpr::TimeVal* tp, vpr::TimeZone* tzp = NULL);
 
    /** @name Host-to-network byte order conversions */
    //@{
