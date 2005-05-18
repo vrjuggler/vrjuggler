@@ -254,7 +254,10 @@ inline void OsgApp::draw()
 {
    glClear(GL_DEPTH_BUFFER_BIT);
 
-   glPushAttrib(GL_ALL_ATTRIB_BITS);
+   // Users have reported problems with OpenGL reporting stack underflow
+   // problems when the texture attribute bit is pushed here, so we push all
+   // attributes *except* GL_TEXTURE_BIT.
+   glPushAttrib(GL_ALL_ATTRIB_BITS & ~GL_TEXTURE_BIT);
    glPushAttrib(GL_TRANSFORM_BIT);
    glPushAttrib(GL_VIEWPORT_BIT);
 
