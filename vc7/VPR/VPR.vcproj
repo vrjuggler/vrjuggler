@@ -217,6 +217,9 @@
 				RelativePath="..\..\modules\vapor\vpr\SystemBase.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\md\NSPR\SystemNSPR.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\vapor\vpr\Thread\TSObject.cpp">
 			</File>
 			<File
