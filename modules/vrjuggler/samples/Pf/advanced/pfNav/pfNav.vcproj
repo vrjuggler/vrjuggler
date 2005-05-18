@@ -213,9 +213,6 @@
 				RelativePath="..\nav\StopWatch.h">
 			</File>
 			<File
-				RelativePath="StopWatch.h">
-			</File>
-			<File
 				RelativePath="..\nav\collider.h">
 			</File>
 			<File
