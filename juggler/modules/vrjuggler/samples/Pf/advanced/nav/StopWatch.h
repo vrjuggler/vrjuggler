@@ -145,7 +145,7 @@ inline StopWatch::StopWatch(const int& averageFpsRefreshRate) :
 #ifndef WIN32
 	inline void StopWatch::getTime( double& num )
     {
-	struct timeval tv;
+	vpr::TimeVal tv;
         vpr::System::gettimeofday(&tv);
 	
 	// compose sec with microsec for sec.millisec
