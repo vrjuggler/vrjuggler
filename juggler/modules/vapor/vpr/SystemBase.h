@@ -57,7 +57,7 @@ namespace vpr
 /**
  * @since 0.92.4
  */
-typedef timeval TimeVal;
+typedef struct timeval TimeVal;
 #else
 /** \struct TimeVal SystemBase.h vpr/System.h
  *
@@ -74,7 +74,7 @@ struct TimeVal
 #endif
 
 #ifdef HAVE_TIMEZONE
-typedef timezone TimeZone;
+typedef struct timezone TimeZone;
 #else
 /** \struct TimeZone SystemBase.h vpr/System.h
  *
