@@ -261,10 +261,11 @@ bool InputWindowXWin::openLocalWindow()
    mXDisplay = XOpenDisplay(mXDisplayString.c_str());    // Open display on given XDisplay
    if (NULL == mXDisplay)
    {
-      vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
-         <<  clrOutNORM(clrRED,"ERROR")
-         << ": [gadget::InputWindowXWin::openTheWindow()] failed to open display"
-         << mXDisplayString << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         <<  clrOutNORM(clrRED, "ERROR")
+         << ": [gadget::InputWindowXWin::openTheWindow()] "
+         << "Failed to open display '" << mXDisplayString << "'" << std::endl
+         << vprDEBUG_FLUSH;
       return 0;
    }
 
