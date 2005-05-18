@@ -59,7 +59,7 @@ int main (int argc, char **argv)
     unsigned int random_seed;
 
 #ifdef vprtest_RANDOM_SEED
-    timeval cur_time;
+    vpr::TimeVal cur_time;
     vpr::System::gettimeofday(&cur_time);
     random_seed = cur_time.tv_usec;
     vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "timeval.usec: " << cur_time.tv_usec << std::endl << vprDEBUG_FLUSH;
