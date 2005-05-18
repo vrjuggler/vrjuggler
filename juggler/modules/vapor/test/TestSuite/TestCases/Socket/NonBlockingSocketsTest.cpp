@@ -378,7 +378,7 @@ void NonBlockingSocketTest::testConnect2NonBlockingSocketsUsingSelect()
    CPPUNIT_ASSERT( status.success() && "Problem writing in acceptor" );
 
    // s:    write the max size...
-   int size;
+   size_t size;
    status = spawned_socket.getSendBufferSize( size );
    CPPUNIT_ASSERT( status.success() && "couldn't get the max size for sending data with socket" );
    message.resize( size );
