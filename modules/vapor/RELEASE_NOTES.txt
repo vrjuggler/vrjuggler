@@ -24,6 +24,11 @@ Released: May <day>, 2005
             vpr::LibraryLoader::findEntryPoint()
                Use vpr::LibraryLoader::callEntryPoint() instead
 
+       * Users of vpr::System::gettimeofday() should update use of
+         struct timeval and struct timezone to use vpr::TimeVal and
+         vpr::TimeZone instead.  Compile errors will be seen on Windows
+         due to undefined types or type mismatches.
+
  Version: 0.26.0
 Released: January 13, 2003
     Required changes when upgrading from all previous versions:

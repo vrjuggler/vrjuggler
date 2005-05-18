@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2005-05-18 patrickh Fixed header file pollution on Windows resulting from
+                    winsock2.h being included by vpr/md/NSPR/SystemNSPR.h.
+                    NEW VERSION: 0.92.4
 2005-05-10 patrickh Renamed functions in vpr::LibraryLoader to use more logical
                     names.  The old function names have been retained for
                     backwards compatibility.
