@@ -330,25 +330,45 @@ void Kernel::changeApplication(App* newApp)
 
    vprASSERT(vpr::Thread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
    jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
-   // EXIT Previous application
-   if(mApp != NULL)
+
+   // Quick out if for some reason the user calls setApplication with
+   // the same application that is running.
+   if (newApp == mApp)
+   {
+      return;
+   }
+
+   // XXX: TODO: Free resources (ie closeContext())
+
+   // If the new application is NULL OR
+   // we have an old draw manager and it is different from the new one, stop it.
+   if (NULL == newApp || NULL != mDrawManager && newApp->getDrawManager() != mDrawManager)
+   {
+      stopDrawManager();
+      cfg_mgr->removeConfigElementHandler(mDrawManager);
+      cfg_mgr->removeConfigElementHandler(mSoundManager);
+   }
+
+   // If we have an old application, exit it.
+   if (NULL != mApp)
    {
       cfg_mgr->removeConfigElementHandler(mApp);
       mApp->exit();
-      mApp = NULL;      // ASSERT: We have no handles to the application any more (ie. the app could be deleted)
-   }  // Done with old app
+   }
 
-   // SET NEW APPLICATION
-   if(newApp != NULL)        // We were given an app
+   // Start using the new application.
+   // NOTE: The kernel no longer has a reference to the old application
+   //       so it can be safely deleted.
+   mApp = newApp;
+
+   // If we have a new application
+   if (NULL != mApp)
    {
-      mApp = newApp;
-      DrawManager* new_draw_mgr = mApp->getDrawManager();
-      vprASSERT(NULL != new_draw_mgr);
-
-      if (new_draw_mgr != mDrawManager)      // Have NEW draw manager
+      // If the new application uses a different draw manager.
+      if(mApp->getDrawManager() != mDrawManager)
       {
-         stopDrawManager();                           // Stop old one
-         cfg_mgr->removeConfigElementHandler(mDrawManager);
+         mDrawManager = mApp->getDrawManager();
+         vprASSERT(NULL != mDrawManager);
 
          mDrawManager = mApp->getDrawManager();             // Get the new draw manager
          mSoundManager = mApp->getSoundManager();           // Get the new sound manager
@@ -356,18 +376,13 @@ void Kernel::changeApplication(App* newApp)
          cfg_mgr->addConfigElementHandler(mSoundManager);   // Tell config manager about them
          startDrawManager(true);                      // Start the new one
       }
-      else     // SAME draw manager
+      else
       {
          startDrawManager(false);                     // Start new app
       }
       // Now handle configuration
       cfg_mgr->addConfigElementHandler(mApp);
       cfg_mgr->refreshPendingList();                  // New managers, so we may be able to handle config requests now
-   }
-   else                 // No app, clear to NULL
-   {
-      stopDrawManager();
-      mApp = NULL;
    }
 }
 
@@ -380,7 +395,7 @@ void Kernel::initSignalButtons()
 // Check the signal buttons to see if anything has been triggered.
 void Kernel::checkSignalButtons()
 {
-   if(mStopKernelSignalButton->getData() == gadget::Digital::ON)
+   if(mStopKernelSignalButton->getData() == gadget::Digital::TOGGLE_ON)
    {
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
          << "Stop kernel signal button pressed: Kernel will exit.\n"
