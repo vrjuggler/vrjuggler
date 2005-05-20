@@ -1,5 +1,11 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-19-2005 aronb       Fixed a bug where the Draw Manager could direct an
+                        application object to render after the kernel told the
+                        application object that it was being closed.  This
+                        fixes a general problem with OpenSG-based applications
+                        crashing when exited through the kernel.
+                        NEW VERSION: 1.1.171
 May-11-2005 allenb      Updated OpenSG app to protect GL state with push/pop
                         attrib.
                         Added normals to the default sim wand drawing code.
