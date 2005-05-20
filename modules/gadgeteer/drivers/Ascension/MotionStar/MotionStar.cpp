@@ -82,6 +82,7 @@ void MotionStar::controlLoop(void* nullParam)
    while ( !mExitFlag )
    {
       sample();
+      vpr::Thread::yield();
    }
 }
 
