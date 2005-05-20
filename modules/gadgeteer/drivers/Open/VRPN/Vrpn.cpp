@@ -239,10 +239,12 @@ void Vrpn::readLoop(void *nullParam)
       {
          tracker->mainloop();
       }
+
       if ( mButtonNumber > 0 )
       {
          button->mainloop();
       }
+      vpr::Thread::yield();
    }
 }
 
