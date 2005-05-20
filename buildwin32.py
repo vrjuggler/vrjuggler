@@ -1177,7 +1177,7 @@ def main():
       devenv_cmd = r'%s' % os.path.join(os.getenv('VSINSTALLDIR', ''),
                                         'devenv.exe')
 
-   solution_file = r'%s' % os.path.join(juggler_dir, 'vc7', 'Juggler.sln')
+   solution_file = r'"%s"' % os.path.join(juggler_dir, 'vc7', 'Juggler.sln')
 
    try:
       status = os.spawnl(os.P_WAIT, devenv_cmd, 'devenv', solution_file)
