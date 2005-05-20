@@ -1875,8 +1875,7 @@ class GuiFrontEnd:
       (devenv_cmd_no_exe, ext) = os.path.splitext(devenv_cmd)
       devenv_cmd_no_exe = '"%s"' % (devenv_cmd_no_exe)
 
-      #solution_file = r'%s' % os.path.join(gJugglerDir, 'vc7', 'Juggler.sln')
-      solution_file = r'%s' % os.path.join('vc7', 'Juggler.sln')
+      solution_file = r'"%s"' % os.path.join(gJugglerDir, 'vc7', 'Juggler.sln')
       build_args = r'/build Debug'
 
       if self.mRoot.CommandFrame.OpenVSCheck.Variable.get() == "No":
