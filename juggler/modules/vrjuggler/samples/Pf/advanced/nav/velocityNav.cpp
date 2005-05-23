@@ -39,7 +39,7 @@
 
 velocityNav::velocityNav()
    : mVelocity(0.0f, 0.0f , 0.0f)
-   , mVelocityFromGravityAccumulator(0.0f,0.0f,0.0f)
+   , mVelocityFromGravityAccumulator(0.0f, 0.0f, 0.0f)
    , mMaxVelocity(2500.0f)
    , mDamping(1.0f)
    , mAcceleration(10.0f)
@@ -80,18 +80,17 @@ velocityNav::velocityNav()
    setResetActionCombo(reset_combo);
 }
 
-
 // Set the action buttons that can be used
 void velocityNav::setActionButtons(std::vector<std::string> action_btn_names)
 {
    // Make sure list is long enough
-   while(action_btn_names.size() > mActionButtons.size())
+   while ( action_btn_names.size() > mActionButtons.size() )
    {
       mActionButtons.push_back(new gadget::DigitalInterface());
    }
 
    // Update all the entries
-   for(unsigned int i=0;i<action_btn_names.size();i++)
+   for ( unsigned int i = 0; i < action_btn_names.size(); ++i )
    {
       mActionButtons[i]->init(action_btn_names[i]);
    }
@@ -100,15 +99,16 @@ void velocityNav::setActionButtons(std::vector<std::string> action_btn_names)
 // Set the name of the pos device that is used in navigation
 void velocityNav::setNavPosControl(std::string wand_dev)
 {
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << clrOutNORM(clrGREEN,"Setting Nav Pos Control: ")
-                        << wand_dev.c_str() << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << clrOutNORM(clrGREEN, "Setting Nav Pos Control: ")
+      << wand_dev << std::endl << vprDEBUG_FLUSH;
    mNavWand.init(wand_dev);
 }
 
 void velocityNav::updateInteraction()
 {
    // If we are not supposed to be active, then don't run
-   if(!this->isActive())
+   if ( ! this->isActive() )
    {
       return;
    }
@@ -120,25 +120,34 @@ void velocityNav::updateInteraction()
    mRotating = checkForAction(mActionButtons, mRotateCombo);
 
    // Braking
-   if(mBraking)
-   { mDamping = 0.85f; }
+   if ( mBraking )
+   {
+      mDamping = 0.85f;
+   }
    else
-   { mDamping = 1.0f; }
+   {
+      mDamping = 1.0f;
+   }
 
    // Stopping -- NOTE: This must go after braking
-   if(mStopping)
+   if ( mStopping )
    {
       setDamping(0.0f);
    }
 
    // Accelerate Forward
-   // TODO: add other directions to accelerate. (since it's hard coded to forward (0,0,-x) here...)
-   if(mAcceleratingForward)
-   { accelerate(gmtl::Vec3f(0.0f, 0.0f, -mAcceleration)); }
+   // TODO: add other directions to accelerate. (since it's hard coded to
+   // forward (0,0,-x) here...)
+   if ( mAcceleratingForward )
+   {
+      accelerate(gmtl::Vec3f(0.0f, 0.0f, -mAcceleration));
+   }
 
    // Resetting
-   if(mResetting)
+   if ( mResetting )
+   {
       this->reset();
+   }
 
    // Rotating
    gmtl::Matrix44f rot_mat = mNavWand->getData();
@@ -149,7 +158,7 @@ void velocityNav::updateInteraction()
    setRotationalAcceleration(rot_mat);
 
    // Output visual feedback
-   if(mAcceleratingForward)
+   if ( mAcceleratingForward )
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrCYAN,"velNav: Accelerating Forward")
@@ -157,30 +166,34 @@ void velocityNav::updateInteraction()
          << vprDEBUG_FLUSH;
    }
 
-   if(mBraking)
+   if ( mBraking )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << clrOutNORM(clrCYAN,"velNav: Braking")
-                           << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrCYAN,"velNav: Braking") << std::endl
+         << vprDEBUG_FLUSH;
    }
 
-   if(mStopping)
+   if ( mStopping )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << clrOutNORM(clrCYAN,"velNav: Stopping")
-                           << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrCYAN,"velNav: Stopping") << std::endl
+         << vprDEBUG_FLUSH;
    }
 
-   if(mResetting)
+   if ( mResetting )
    {
       gmtl::Vec3f hpos;
       gmtl::setTrans(hpos, mHomePos);
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << clrOutNORM(clrCYAN,"velNav: Resetting") << " to "
-                           << hpos << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrCYAN,"velNav: Resetting") << " to "
+         << hpos << std::endl << vprDEBUG_FLUSH;
    }
 
-   if(mRotating)
+   if ( mRotating )
    {
-       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << clrOutNORM(clrCYAN,"velNav: Rotating")
-                            << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrCYAN,"velNav: Rotating") << std::endl
+         << vprDEBUG_FLUSH;
    }
 }
 
@@ -188,20 +201,21 @@ void velocityNav::update()
 {
    //stopWatch.stop();
    //stopWatch.start();
-   
+
    vpr::Interval cur_time = mNavWand->getTimeStamp();
    vpr::Interval diff_time(cur_time-mLastTimeStamp);
-      
+
    mTimeDelta = diff_time.secf();
 
    /* Cluster Sync Debug code
    std::cout << "Delta: " << diff_time.getBaseVal() << std::endl;
-   std::cout << "Current: " << cur_time.getBaseVal() << "Last: " << mLastTimeStamp.getBaseVal() << "\n" << std::endl;
+   std::cout << "Current: " << cur_time.getBaseVal() << "Last: "
+             << mLastTimeStamp.getBaseVal() << "\n" << std::endl;
    */
-      
+
    mLastTimeStamp = cur_time;
 
-   if(mTimeDelta > 2.0f)    // If the time is greater than 2 seconds ( 1/2 fps)
+   if ( mTimeDelta > 2.0f ) // If the time is greater than 2 seconds ( 1/2 fps)
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrCYAN,"VelNav: timeInstant too large: ")
@@ -210,11 +224,14 @@ void velocityNav::update()
       //stopWatch.start();
    }
 
-   //vprDEBUG_BEGIN(vprDBG_ALL,0) << "VelNav: ----- Update ----\n" << vprDEBUG_FLUSH;
-   //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "VelNav: timeInstant: " << mTimeDelta << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG_BEGIN(vprDBG_ALL,0)
+   //   << "VelNav: ----- Update ----\n" << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+   //   << "VelNav: timeInstant: " << mTimeDelta << std::endl
+   //   << vprDEBUG_FLUSH;
 
    // If we are not supposed to be active, then don't run
-   if(!this->isActive())
+   if ( ! this->isActive() )
    {
       return;
    }
@@ -223,11 +240,15 @@ void velocityNav::update()
    // do navigations...
    //////////////////////////////////
    // Define axes, in Juggler/OpenGL coordinate system (right handed)
-   gmtl::Vec3f       trackerZaxis(0.0f, 0.0f, 1.0f);
-   gmtl::Vec3f       trackerXaxis(1.0f, 0.0f, 0.0f);
-   gmtl::Vec3f       trackerYaxis(0.0f, 1.0f, 0.0f);
-   const gmtl::Vec3f gravity_meters_per_second(0.0f, -9.8f, 0.0f); //9.8 m/s (METERS)
-   gmtl::Vec3f       gravity(0.0f, -9.8f, 0.0f); // to be set by switch (mUnits == METERS)
+   gmtl::Vec3f trackerZaxis(0.0f, 0.0f, 1.0f);
+   gmtl::Vec3f trackerXaxis(1.0f, 0.0f, 0.0f);
+   gmtl::Vec3f trackerYaxis(0.0f, 1.0f, 0.0f);
+
+   // 9.8 m/s (METERS)
+   const gmtl::Vec3f gravity_meters_per_second(0.0f, -9.8f, 0.0f);
+
+   // to be set by switch (mUnits == METERS)
+   gmtl::Vec3f  gravity(0.0f, -9.8f, 0.0f);
 
    switch (mUnits)
    {
@@ -242,15 +263,18 @@ void velocityNav::update()
 
    if ((mAllowRot) && (mRotating))
    {
-      this->scaled_rotate(mRotationalAcceleration);     // Interpolates the rotation, and updates mCurPos matrix
+      // Interpolates the rotation, and updates mCurPos matrix
+      this->scaled_rotate(mRotationalAcceleration);
    }
 
    if (mMode == DRIVE)
    {
       // get the axes of the tracking/pointing device
-      // NOTE: constrain to the Y axis in GROUND mode (no flying/hopping or diving faster than gravity allows)
+      // NOTE: constrain to the Y axis in GROUND mode (no flying/hopping or
+      // diving faster than gravity allows)
       gmtl::Matrix44f constrainedToY;
-      //mRotationalAcceleration.constrainRotAxis(false, true, false, constrainedToY);
+      //mRotationalAcceleration.constrainRotAxis(false, true, false,
+      //                                         constrainedToY);
       gmtl::EulerAngleXYZf euler(0.0f, gmtl::makeYRot(mRotationalAcceleration),
                                  0.0f);
       gmtl::setRot(constrainedToY, euler); // Only allow Yaw (rot y)
@@ -272,19 +296,25 @@ void velocityNav::update()
 
    if (mMode == DRIVE)           // if DRIVING --> we have GRAVITY
    {
-      // add the velocity this timeslice/frame by the acceleration from gravity.
+      // add the velocity this timeslice/frame by the acceleration from
+      // gravity.
       velocityAccumulator += mVelocityFromGravityAccumulator;
 
-      //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "velNav: drive: gravAccum: " << mVelocityFromGravityAccumulator << vprDEBUG_FLUSH;
+      //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      //        << "velNav: drive: gravAccum: "
+      //        << mVelocityFromGravityAccumulator << vprDEBUG_FLUSH;
 
       // recalculate the current downward velocity from gravity.
-      // this vector then is accumulated with the rest of the velocity vectors each frame.
-      
+      // this vector then is accumulated with the rest of the velocity vectors
+      // each frame.
+
       //mVelocityFromGravityAccumulator += (gravity * mTimeDelta);
       mVelocityFromGravityAccumulator += (gravity * mTimeDelta);
 
-      //vprDEBUG_CONT(vprDBG_ALL,0) << " new vel: " << velocityAccumulator
-      //                          << " new grav: " << mVelocityFromGravityAccumulator << std::endl << vprDEBUG_FLUSH;
+      //vprDEBUG_CONT(vprDBG_ALL,0)
+      //   << " new vel: " << velocityAccumulator
+      //   << " new grav: " << mVelocityFromGravityAccumulator << std::endl
+      //   << vprDEBUG_FLUSH;
    }
    if (mAllowTrans)
    {
@@ -298,20 +328,28 @@ void velocityNav::update()
    mVelocity -= (mVelocity * (1.0f - mDamping));
 
    // navigation just calculated navigator's next velocity
-   // now convert accumulated velocity to distance traveled this frame (by cancelling out time)
-   // NOTE: this is not the final distance, since we still have to do collision correction.
+   // now convert accumulated velocity to distance traveled this frame (by
+   // cancelling out time)
+   // NOTE: this is not the final distance, since we still have to do
+   // collision correction.
    gmtl::Vec3f distanceToMove = velocityAccumulator * mTimeDelta;
 
-   //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "velNav: distToMove = velAcum * instant: " << velocityAccumulator << " * " << mTimeDelta << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+   //   << "velNav: distToMove = velAcum * instant: " << velocityAccumulator
+   //   << " * " << mTimeDelta << std::endl << vprDEBUG_FLUSH;
 
    // --- TRANSLATION and COLLISION DETECTION --- //
-   bool     did_collide;               // Did we collide with anything
-   gmtl::Vec3f total_correction;          // The total correction on the movement (in modelspace)
+   bool did_collide;               // Did we collide with anything
+
+   // The total correction on the movement (in modelspace)
+   gmtl::Vec3f total_correction;
    navTranslate(distanceToMove,did_collide,total_correction);
 
    if(did_collide)      // If we hit something, stop falling
    {
-      //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Did collide: Setting gravAccum to 0,0,0\n" << vprDEBUG_FLUSH;
+      //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      //        << "Did collide: Setting gravAccum to 0,0,0\n"
+      //        << vprDEBUG_FLUSH;
       mVelocityFromGravityAccumulator.set(0.0f, 0.0f, 0.0f);
    }
    //vprDEBUG_END(vprDBG_ALL,0) << "---------------------\n" << vprDEBUG_FLUSH;
@@ -338,14 +376,16 @@ void velocityNav::scaled_rotate(gmtl::Matrix44f rot_mat)
    // If we don't have two identity matrices, then interpolate between them
    if(transformIdent != rot_mat)
    {
-      gmtl::slerp(slerp_rot, 0.04f, source_rot, goal_rot ); // Transform part way there
+      // Transform part way there
+      gmtl::slerp(slerp_rot, 0.04f, source_rot, goal_rot );
       gmtl::set(transform, slerp_rot); // Create the transform matrix to use
    }
    else
    {
       gmtl::identity(transform);
    }
-   navigator::navRotate(transform);                   // update the mCurPos navigation matrix
+
+   navigator::navRotate(transform); // update the mCurPos navigation matrix
 }
 
 // accel = velocity per second
@@ -353,12 +393,11 @@ void velocityNav::scaled_rotate(gmtl::Matrix44f rot_mat)
 //        and get rid of mVelocity weirdness.
 void velocityNav::accelerate(const gmtl::Vec3f& accel)
 {
-   if(gmtl::length(mVelocity) < mMaxVelocity)
+   if ( gmtl::length(mVelocity) < mMaxVelocity )
    {
       mVelocity += (accel * mTimeDelta);
    }
 }
-
 
 void velocityNav::stop()
 {
