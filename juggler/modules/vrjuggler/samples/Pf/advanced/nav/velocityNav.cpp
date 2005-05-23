@@ -204,7 +204,7 @@ void velocityNav::update()
    if(mTimeDelta > 2.0f)    // If the time is greater than 2 seconds ( 1/2 fps)
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrCYAN,"VelNav: timeInstant to large: ")
+         << clrOutNORM(clrCYAN,"VelNav: timeInstant too large: ")
          << mTimeDelta << std::endl << vprDEBUG_FLUSH;
       //stopWatch.stop();    // Get a REALLY small delta time
       //stopWatch.start();
