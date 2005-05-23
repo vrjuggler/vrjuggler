@@ -457,14 +457,14 @@ bool Kernel::configAdd(jccl::ConfigElementPtr element)
 
    vprASSERT(configCanHandle(element));
 
+   bool result(false);
+
    if(std::string("user") == element_type)
    {
-      return addUser(element);
+      result = addUser(element);
    }
-   else
-   {
-      return false;
-   }
+
+   return result;
 }
 
 bool Kernel::configRemove(jccl::ConfigElementPtr element)
@@ -473,14 +473,14 @@ bool Kernel::configRemove(jccl::ConfigElementPtr element)
 
    vprASSERT(configCanHandle(element));
 
+   bool result(false);
+
    if(std::string("user") == element_type)
    {
-      return removeUser(element);
+      result = removeUser(element);
    }
-   else
-   {
-      return false;
-   }
+
+   return result;
 }
 
 // Adds a new user to the kernel.
