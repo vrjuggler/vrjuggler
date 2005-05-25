@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          java.m4,v
-dnl Date modified: 2005/03/20 17:17:12
-dnl Version:       1.53
+dnl Date modified: 2005/05/02 21:55:31
+dnl Version:       1.54
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -58,7 +58,7 @@ dnl     JNI_LIB  - The library which needs to be statically linked for JNI.
 dnl     JCPS     - Java classpath separator character (: on UNIX, ; on Win32).
 dnl ===========================================================================
 
-dnl java.m4,v 1.53 2005/03/20 17:17:12 patrickh Exp
+dnl java.m4,v 1.54 2005/05/02 21:55:31 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Find the path to the Java installation.  Substition is performed on the
@@ -279,6 +279,15 @@ AC_DEFUN([DPP_CHECK_JNI],
 
    JNI_EXTRA_LIBS=$4
 
+   case $target_cpu in
+      i*86)
+         dpp_jni_arch=i386
+         ;;
+      *)
+         dpp_jni_arch="$target_cpu"
+         ;;
+   esac
+
    case "$PLATFORM" in
       AIX)
          : ${JNI_INC=-I$JNI_INC_PATH -I$JNI_INC_PATH/aix}
@@ -289,7 +298,7 @@ AC_DEFUN([DPP_CHECK_JNI],
          ;;
       FreeBSD)
          : ${JNI_INC=-I$JNI_INC_PATH -I$JNI_INC_PATH/freebsd}
-         : ${JNI_LDFLAGS=-L$JDK_HOME/jre/lib/i386/${dpp_java_threads}_threads -L$JDK_HOME/jre/lib/i386/classic -L$JDK_HOME/jre/lib/i386 -L$JDK_HOME/jre/lib/i386/client}
+         : ${JNI_LDFLAGS=-L$JDK_HOME/jre/lib/$dpp_jni_arch/${dpp_java_threads}_threads -L$JDK_HOME/jre/lib/$dpp_jni_arch/classic -L$JDK_HOME/jre/lib/$dpp_jni_arch -L$JDK_HOME/jre/lib/$dpp_jni_arch/client}
          : ${JVM_LIB=jvm}
          JNI_EXTRA_LIBS="$JNI_EXTRA_LIBS -pthread"
          ;;
@@ -305,14 +314,14 @@ AC_DEFUN([DPP_CHECK_JNI],
          ;;
       Linux)
          : ${JNI_INC=-I$JNI_INC_PATH -I$JNI_INC_PATH/linux}
-         : ${JNI_LDFLAGS=-L$JDK_HOME/jre/lib/i386/${dpp_java_threads}_threads -L$JDK_HOME/jre/lib/i386/classic -L$JDK_HOME/jre/lib/i386 -L$JDK_HOME/jre/lib/i386/client}
+         : ${JNI_LDFLAGS=-L$JDK_HOME/jre/lib/$dpp_jni_arch/${dpp_java_threads}_threads -L$JDK_HOME/jre/lib/$dpp_jni_arch/classic -L$JDK_HOME/jre/lib/$dpp_jni_arch -L$JDK_HOME/jre/lib/$dpp_jni_arch/client -L$JDK_HOME/jre/lib/$dpp_jni_arch/server}
          : ${JVM_LIB=jvm}
          ;;
       alpha-osf)
          ;;
       Solaris)
          : ${JNI_INC=-I$JNI_INC_PATH -I$JNI_INC_PATH/solaris}
-         : ${JNI_LDFLAGS=-L$JDK_HOME/jre/lib/i386/${dpp_java_threads}_threads -L$JDK_HOME/jre/lib/i386}
+         : ${JNI_LDFLAGS=-L$JDK_HOME/jre/lib/$dpp_jni_arch/${dpp_java_threads}_threads -L$JDK_HOME/jre/lib/$dpp_jni_arch}
          : ${JVM_LIB=jvm}
          ;;
       Win*)
