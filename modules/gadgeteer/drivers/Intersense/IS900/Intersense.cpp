@@ -178,7 +178,7 @@ void Intersense::controlLoop(void* nullParam)
 
         mTracker.getConfigState(j);
         mTracker.rState(j) = stations[i].enabled;
-        mTracker.rAngleFormat(j) = ISD_EULER;
+        mTracker.rAngleFormat(j) = ISD_QUATERNION;
         mTracker.rButtons(j) = stations[i].useDigital;
         mTracker.rAnalogData(j) = stations[i].useAnalog;
         mTracker.setConfigState(j);
