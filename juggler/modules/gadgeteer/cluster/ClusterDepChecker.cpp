@@ -134,7 +134,7 @@ void ClusterDepChecker::debugOutDependencies(jccl::ConfigElementPtr element,
    }
    else if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig( element ))
    {
-      std::string device_host = element->getProperty<std::string>( "device_host ");
+      std::string device_host = element->getProperty<std::string>( "device_host");
       gadget::Node* node = cluster::ClusterManager::instance()->getNetwork()->getNodeByName( device_host );
 
       vprDEBUG_NEXT( vprDBG_ALL, dbg_lvl ) << "1: "
