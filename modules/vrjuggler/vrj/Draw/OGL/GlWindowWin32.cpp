@@ -133,7 +133,16 @@ bool GlWindowWin32::open()
 
    // Create the rendering context and make it current
    mRenderContext = wglCreateContext(mDeviceContext);
-   vprASSERT(mRenderContext != NULL);
+
+   if ( NULL == mRenderContext )
+   {
+      vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+         << "ERROR: [vrj::GlWindowWin32::open()] wglCreateContext() failed "
+         << "with error code " << GetLastError() << std::endl
+         << vprDEBUG_FLUSH;
+      return false;
+   }
+
    wglMakeCurrent(mDeviceContext, mRenderContext);
 
    // Register the window with the window list
