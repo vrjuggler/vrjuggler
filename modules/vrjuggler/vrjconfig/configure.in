@@ -239,6 +239,7 @@ AC_CONFIG_FILES([
    Info.plist
    java.defs.mk
    make.defs.mk
+   vrjconfig.sh
    commoneditors/build.xml
    commoneditors/Makefile
    customeditors/Makefile
@@ -266,5 +267,7 @@ AC_CONFIG_FILES([
    wizards/vrsystem/build.xml
    wizards/vrsystem/Makefile
    ])
+
+AC_CONFIG_COMMANDS([vrjconfig.sh permission setting], [chmod a+x vrjconfig.sh])
 
 AC_OUTPUT

@@ -121,7 +121,7 @@ do-install:
 	@echo "------------------------------------------------"
 ifeq (@OS_TYPE@, UNIX)
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(VJROOT_ABS)/vrjconfig.sh $(bindir)/vrjconfig
+          $(EXTRA_INSTALL_ARGS) $(topdir)/vrjconfig.sh $(bindir)/vrjconfig
 else
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           $(VJROOT_ABS)/vrjconfig.bat $(bindir)/vrjconfig.bat
