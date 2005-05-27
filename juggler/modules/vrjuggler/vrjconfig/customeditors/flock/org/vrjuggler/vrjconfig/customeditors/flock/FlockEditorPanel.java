@@ -40,6 +40,7 @@ import javax.swing.border.TitledBorder;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 import org.vrjuggler.vrjconfig.commoneditors.DeviceTypeEditor;
+import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
 import org.vrjuggler.vrjconfig.commoneditors.SimpleProxyEditor;
 import org.vrjuggler.vrjconfig.commoneditors.SerialPortChooser;
 import org.vrjuggler.vrjconfig.commoneditors.TransmitterTransformPanel;
@@ -48,6 +49,7 @@ import org.vrjuggler.vrjconfig.commoneditors.TransmitterTransformPanel;
 public class FlockEditorPanel
    extends JPanel
    implements DeviceTypeEditor
+            , EditorConstants
 {
    public FlockEditorPanel()
    {
@@ -281,8 +283,25 @@ public class FlockEditorPanel
                                       GridBagConstraints.CENTER,
                                       GridBagConstraints.BOTH,
                                       new Insets(0, 0, 2, 0), 0, 0));
-      mTabbedPane.add(mPosXformFilterPanel, "Transmitter");
-      mTabbedPane.add(mProxyEditorPanel, "Sensors");
+
+      // Try to get icons for the toolbar buttons.
+      try
+      {
+         ClassLoader loader = getClass().getClassLoader();
+         mTransIcon = new ImageIcon(loader.getResource(COMMON_IMG_ROOT +
+                                                       "/transmitter16.png"));
+         mPositionIcon = new ImageIcon(loader.getResource(COMMON_IMG_ROOT +
+                                                          "/position16.png"));
+      }
+      catch (Exception e)
+      {
+         // Ack! No icons. Use text labels instead
+      }
+
+      mTabbedPane.addTab("Transmitter", mTransIcon, mPosXformFilterPanel,
+                         "Transmitter Settings");
+      mTabbedPane.addTab("Sensors", mPositionIcon, mProxyEditorPanel,
+                         "Sensor Settings");
    }
 
    private ConfigContext mContext = null;
@@ -311,7 +330,9 @@ public class FlockEditorPanel
    private GridBagLayout mHardwarePanelLayout = new GridBagLayout();
    private GridBagLayout mRealHardwarePanelLayout = new GridBagLayout();
    private GridBagLayout mMainLayout = new GridBagLayout();
-   private JTabbedPane mTabbedPane = new JTabbedPane();
+   private JTabbedPane mTabbedPane = new JTabbedPane(JTabbedPane.BOTTOM );
+   private Icon mTransIcon = null;
+   private Icon mPositionIcon = null;
 
    void mPortEditor_actionPerformed(ActionEvent actionEvent)
    {
