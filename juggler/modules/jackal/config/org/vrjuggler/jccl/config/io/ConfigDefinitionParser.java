@@ -41,6 +41,8 @@ import org.vrjuggler.jccl.config.*;
  * it) from an XML document.
  */
 public class ConfigDefinitionParser
+   implements ConfigIOConstants
+            , ConfigDefinitionConstants
 {
    public ConfigDefinitionParser()
    {}
@@ -426,9 +428,7 @@ public class ConfigDefinitionParser
                                   "' for type " + type);
       }
    }
-
-   private static final Namespace DEF_NS = Namespace.getNamespace("http://www.vrjuggler.org/jccl/xsd/3.1/definition");
-
+/*
    private static final String ABSTRACT               = "abstract";
    private static final String ALLOWED_TYPE           = "allowed_type";
    private static final String CATEGORY               = "category";
@@ -457,4 +457,5 @@ public class ConfigDefinitionParser
    private static final String STRING                 = "string";
    private static final String CONFIG_ELEMENT         = "configelement";
    private static final String CONFIG_ELEMENT_POINTER = "configelementpointer";
+*/
 }
