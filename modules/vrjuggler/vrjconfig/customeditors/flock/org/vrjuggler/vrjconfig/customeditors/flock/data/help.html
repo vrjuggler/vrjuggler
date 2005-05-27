@@ -38,43 +38,42 @@
 <body>
    <h2>Flock of Birds&reg; configuration steps:</h2>
 
-   <ol>
-      <li>
-         Set the serial port to which the Flock of Birds is connected.
-      </li>
-      <li>
-         Set the baud for the serial port.
-      </li>
-      <li>
-         Set the hemisphere of the transmitter within which the user(s) will
-         be operating.
-      </li>
-      <li>
-         Set the Fast Bird Bus (FBB) address of the master bird.  This is
-         determined by the DIP switch settings on the birds.  With EPROM
-         version 3.67 or newer, this value will be detected automatically by
-         the device driver.  Otherwise, it must be set correctly here.
-      </li>
-      <li>
-         Set the addressing mode.  This will depend on the type of Flock
-         hardware being used.  With EPROM verrsion 3.67 or newer, this value
-         will be detected automatically by the device driver.  Otherwise, it
-         must be set correctly here.
-      </li>
-      <li>
-         Set the filter.  This value is currently <i>ignored</i> by the device
-         driver.
-      </li>
-      <li>
-         <i>CLUSTER ONLY</i>: Set the cluster node where the Flock of
-         Birds&reg; is physically attached.  This determines which node
-         will run the device driver.
-      </li>
-   </ol>
+      <h3><u><b>Hardware Settings</b></u></h3>
+      
+      <h4>Serial Port</h4>
+      Set the serial port to which the Flock of Birds is connected.
 
-   <h3>Transmitter Settings</h3>
+      <h4>Baud</h4>
+      Set the baud for the serial port.
 
-   <p>
+      <h4>Hemisphere</h4>
+      Set the hemisphere of the transmitter within which the user(s) will
+      be operating.
+
+      <h4>Master Address</h4>
+      Set the Fast Bird Bus (FBB) address of the master bird.  This is
+      determined by the DIP switch settings on the birds.  With EPROM
+      version 3.67 or newer, this value will be detected automatically by
+      the device driver.  Otherwise, it must be set correctly here.
+
+      <h4>Addressing Mode</h4>
+      Set the addressing mode.  This will depend on the type of Flock
+      hardware being used.  With EPROM verrsion 3.67 or newer, this value
+      will be detected automatically by the device driver.  Otherwise, it
+      must be set correctly here.
+
+      <h4>Filter</h4>
+      Set the filter.  This value is currently <i>ignored</i> by the device
+      driver.
+
+      <h4>Device Host</h4>
+      <i>CLUSTER ONLY</i>: Set the cluster node where the Flock of
+      Birds&reg; is physically attached.  This determines which node
+      will run the device driver.
+
+      <h3><u><b>Transmitter Settings</b></u></h3>
+
+      <p>
       Under the <b>Transmitter</b>, you will find the settings for the
       placement of the Flock of Birds&reg; transmitter (a small white cube
       or a big, heavy black box).  The orientation and position of the
@@ -84,39 +83,35 @@
       front face.  Refer to Page 142 of the <i>Flock of Birds&reg;
       Installation and Operation Guide</i> (910141 Rev A1, published January
       31, 2002).
-   </p>
+      </p>
 
-   <ol>
-      <li>
-         Set the physical units of the data returned by the sensors.
-         Currently, the Flock of Birds tracking system <i>only</i> returns
-         inches, but the device driver always reinterprets this as
-         <b>Feet</b>.  Therefore, <b>Feet</b> must be chosen.
-      </li>
-      <li>
-         Configure the position and orientation of the Flock of Birds&reg;
-         transmitter (the large black box) relative to the VR Juggler
-         coordinate frame.  This process configures what is known as a
-         "position transform filter."  The panels titled "Orientation" and
-         "Position" present an easy way to perform this task.
+      <p>
+      Configure the position and orientation of the Flock of Birds&reg;
+      transmitter (the large black box) relative to the VR Juggler
+      coordinate frame.  This process configures what is known as a
+      "position transform filter."  The panels titled "Orientation" and
+      "Position" present an easy way to perform this task.
+      </p>
 
-         <p>
-            First, choose the coordinate frame rotation from the
-            <b>Transmitter Coordinate Frame</b> list.  To enter the X, Y, and
-            Z rotation values directly, click the <b>Manual Entry</b> button
-            and fill in the values to the right of the list.
-         </p>
+      <h4>Orientatino</h4>
+      First, choose the coordinate frame rotation from the
+      <b>Transmitter Coordinate Frame</b> list.  To enter the X, Y, and
+      Z rotation values directly, click the <b>Manual Entry</b> button
+      and fill in the values to the right of the list.
 
-         <p>
-            Next, set the position of the transmitter relative to the
-            chosen VR Juggler origin.  The units can be entered as
-            meters, centimeters, feet, or inches.  Make sure to pick the
-            units before entering the location value.
-         </p>
-      </li>
-   </ol>
+      <h4>Position</h4>
+      Next, set the position of the transmitter relative to the
+      chosen VR Juggler origin.  The units can be entered as
+      meters, centimeters, feet, or inches.  Make sure to pick the
+      units before entering the location value.
 
-   <h3>Sensor Settings</h3>
+      <h4>Tracker Units</h4>
+      Set the physical units of the data returned by the sensors.
+      Currently, the Flock of Birds tracking system <i>only</i> returns
+      inches, but the device driver always reinterprets this as
+      <b>Feet</b>.  Therefore, <b>Feet</b> must be chosen.
+
+   <h3><u><b>Sensor Settings</b></u></h3>
 
    <ol>
       <li>
