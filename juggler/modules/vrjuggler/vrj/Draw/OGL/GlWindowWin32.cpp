@@ -234,7 +234,7 @@ void GlWindowWin32::configWindow(vrj::Display* disp)
        }
    }
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
-      << "glxWindow::config: display name is: "
+      << "[vrj::GlWindowWin32::configWindow()] display name is: "
       << mXDisplayName << std::endl << vprDEBUG_FLUSH;
 }
 
