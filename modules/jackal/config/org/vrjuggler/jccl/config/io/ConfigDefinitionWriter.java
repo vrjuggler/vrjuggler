@@ -248,6 +248,8 @@ public class ConfigDefinitionWriter
       if ( enums.keySet().size() > 0 )
       {
          Element enum_parent = new Element(ENUMERATION, DEF_NS);
+         enum_parent.setAttribute(EDITABLE,
+                                  String.valueOf(propDef.enumIsEditable()));
 
          for (Iterator itr = enums.keySet().iterator(); itr.hasNext();)
          {
@@ -305,6 +307,7 @@ public class ConfigDefinitionWriter
    private static final String DEFINITION             = "definition";
    private static final String DEFINITION_VERSION     = "definition_version";
    private static final String ENUMERATION            = "enumeration";
+   private static final String EDITABLE               = "editable";
    private static final String ENUM_VALUE             = "enum";
    private static final String HELP                   = "help";
    private static final String LABEL                  = "label";
