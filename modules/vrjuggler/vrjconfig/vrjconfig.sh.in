@@ -34,9 +34,22 @@
 
 # Shell script for running Tweek under JDK 1.x using the 'java' command.
 
-# We have to have $VJ_BASE_DIR set.
 if test "x$VJ_BASE_DIR" = "x" ; then
-    echo "FATAL ERROR: VJ_BASE_DIR environment variable not set!"
+   prefix='@prefix@'
+   echo "NOTE: Setting VJ_BASE_DIR to $prefix"
+   VJ_BASE_DIR="$prefix"
+   export VJ_BASE_DIR
+fi
+
+# We have to have $VJ_BASE_DIR set.
+if test ! -d "$VJ_BASE_DIR" ; then
+    echo "FATAL ERROR: VJ_BASE_DIR directory ($VJ_BASE_DIR) does not exist!"
+    exit 1
+fi
+
+# Sanity check the $VJ_BASE_DIR setting.
+if test ! -d "$VJ_BASE_DIR/share/vrjuggler/beans" ; then
+    echo "FATAL ERROR: Directory $VJ_BASE_DIR/share/vrjuggler/beans does not exist!"
     exit 1
 fi
 
