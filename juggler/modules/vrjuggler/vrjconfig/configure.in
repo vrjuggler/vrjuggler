@@ -268,6 +268,6 @@ AC_CONFIG_FILES([
    wizards/vrsystem/Makefile
    ])
 
-AC_CONFIG_COMMANDS([vrjconfig.sh permission setting], [chmod a+x vrjconfig.sh])
+AC_CONFIG_COMMANDS([permission setting], [chmod a+x vrjconfig.sh])
 
 AC_OUTPUT
