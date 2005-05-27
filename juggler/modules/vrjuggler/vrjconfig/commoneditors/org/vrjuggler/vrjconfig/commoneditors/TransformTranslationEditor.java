@@ -65,7 +65,7 @@ public class TransformTranslationEditor
          mTranslateProp = PRE_TRANSLATION_PROPERTY;
          mTrackerPosLabel.setText(
             "<html>Position of the tracker transmitter from VR Juggler origin (pre-translation) "
-            + " <p>(e.g. the distance from the choosen VR Juggler origin to the MotionStar&reg; transmitter)</html>");
+            + " <p>(e.g. the distance from the choosen VR Juggler origin to the transmitter)</html>");
       }
       else
       {
