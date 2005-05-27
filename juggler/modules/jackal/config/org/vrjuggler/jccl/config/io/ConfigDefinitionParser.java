@@ -428,34 +428,4 @@ public class ConfigDefinitionParser
                                   "' for type " + type);
       }
    }
-/*
-   private static final String ABSTRACT               = "abstract";
-   private static final String ALLOWED_TYPE           = "allowed_type";
-   private static final String CATEGORY               = "category";
-   private static final String DEFAULTVALUE           = "defaultvalue";
-   private static final String DEFINITION             = "definition";
-   private static final String DEFINITION_VERSION     = "definition_version";
-   private static final String ENUMERATION            = "enumeration";
-   private static final String EDITABLE               = "editable";
-   private static final String ENUM_VALUE             = "enum";
-   private static final String HELP                   = "help";
-   private static final String LABEL                  = "label";
-   private static final String NAME                   = "name";
-   private static final String ICON_PATH              = "icon_path";
-   private static final String PARENT                 = "parent";
-   private static final String PROPERTY               = "property";
-   private static final String UPGRADE_TRANSFORM      = "upgrade_transform";
-   private static final String VALUE                  = "value";
-   private static final String VALUETYPE              = "valuetype";
-   private static final String VARIABLE               = "variable";
-   private static final String VERSION                = "version";
-
-   // Types
-   private static final String BOOLEAN                = "boolean";
-   private static final String INTEGER                = "integer";
-   private static final String FLOAT                  = "float";
-   private static final String STRING                 = "string";
-   private static final String CONFIG_ELEMENT         = "configelement";
-   private static final String CONFIG_ELEMENT_POINTER = "configelementpointer";
-*/
 }
