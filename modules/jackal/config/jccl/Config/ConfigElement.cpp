@@ -576,7 +576,7 @@ std::string ConfigElement::getPropertyString(const std::string& prop, int ind) c
          << clrOutBOLD(clrRED, "ERROR")
          << ": [jccl::ConfigElement::getPropertyString()] Invalid property '"
          << prop << "' requested!\n" << vprDEBUG_FLUSH;
-      vprASSERT(false && "Invalid property requested.  Bad programmer");
+      vprASSERT(false && "Invalid property requested.");
    }
    else
    {
