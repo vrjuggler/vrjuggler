@@ -93,7 +93,7 @@ void vncApp::preFrame()
    mPrevFrameStartTime.setNow();
    mFrameRate.addSample(frame_time.secf());
 
-   if((mFrameCount % 50) == 1)
+   if ( (mFrameCount % 50) == 1 )
    {
       mDesktop->printStats();
 
@@ -112,16 +112,17 @@ void vncApp::preFrame()
 
    // Put your pre frame computations here.
 
-   /*
-       std::cout  << "Wand Buttons:"
-              << " 0:" << mButton0->getData()
-              << " 1:" << mButton1->getData()
-              << " 2:" << mButton2->getData()
-              << " 3:" << mButton3->getData()
-              << " 4:" << mButton4->getData()
-              << " 5:" << mButton5->getData() << std::endl;
-             */
-   if(we_have_focus)
+/*
+   std::cout << "Wand Buttons:"
+             << " 0: " << mButton0->getData()
+             << " 1: " << mButton1->getData()
+             << " 2: " << mButton2->getData()
+             << " 3: " << mButton3->getData()
+             << " 4: " << mButton4->getData()
+             << " 5: " << mButton5->getData()
+             << std::endl;
+*/
+   if ( we_have_focus )
    {
       gmtl::Matrix44f wandMatrix;
       wandMatrix = mWand->getData();      // Get the wand matrix
@@ -131,10 +132,12 @@ void vncApp::preFrame()
       // - Translate along that direction
       float velocity(0.0f);
       float rotation(0.0f);
-      if(mButton0->getData())
+      if ( mButton0->getData() )
+      {
          velocity = 0.05f;
+      }
 
-      if(mButton1->getData())
+      if ( mButton1->getData() )
       {
          const float rot_scale(0.01f);
          float y_rot = gmtl::makeYRot<float>(wandMatrix);
@@ -143,7 +146,7 @@ void vncApp::preFrame()
                        gmtl::makeRot<gmtl::Matrix44f>(gmtl::EulerAngleXYZf(0.0f,rotation,0.0f)));
       }
 
-      if(velocity > 0.0f)
+      if ( velocity > 0.0f )
       {
          gmtl::Vec3f Zdir = gmtl::Vec3f(0.0f, 0.0f, velocity);
          gmtl::Vec3f direction(wandMatrix * Zdir);
@@ -151,7 +154,7 @@ void vncApp::preFrame()
       }
 
       // Check logger play button
-      if(mLoggerPlayButton->getData() == gadget::Digital::TOGGLE_ON)
+      if ( mLoggerPlayButton->getData() == gadget::Digital::TOGGLE_ON )
       {
          std::cout << "\n\n------ Log Play Button hit ----\n" << std::flush;
          gadget::InputManager* input_mgr = gadget::InputManager::instance();
@@ -162,7 +165,6 @@ void vncApp::preFrame()
          logger->play();
       }
    }
-
 }
 
 void vncApp::bufferPreDraw()
@@ -174,9 +176,10 @@ void vncApp::bufferPreDraw()
 void vncApp::contextPreDraw()
 {
    if ( mEmbeddedGUI )
-   {  mDesktop->contextPreDraw(); }
+   {
+      mDesktop->contextPreDraw();
+   }
 }
-
 
 //----------------------------------------------
 //  Draw the scene.  A box on the end of the wand
@@ -210,18 +213,36 @@ void vncApp::draw()
 
          float wand_color[3];
          wand_color[0] = wand_color[1] = wand_color[2] = 0.0f;
-         if(mButton0->getData() == gadget::Digital::ON)
+         if ( mButton0->getData() == gadget::Digital::ON )
+         {
             wand_color[0] += 0.5f;
-         if(mButton1->getData() == gadget::Digital::ON)
+         }
+
+         if ( mButton1->getData() == gadget::Digital::ON )
+         {
             wand_color[1] += 0.5f;
-         if(mButton2->getData() == gadget::Digital::ON)
+         }
+
+         if ( mButton2->getData() == gadget::Digital::ON )
+         {
             wand_color[2] += 0.5f;
-         if(mButton3->getData() == gadget::Digital::ON)
+         }
+
+         if ( mButton3->getData() == gadget::Digital::ON )
+         {
             wand_color[0] += 0.5f;
-         if(mButton4->getData() == gadget::Digital::ON)
+         }
+
+         if ( mButton4->getData() == gadget::Digital::ON )
+         {
             wand_color[1] += 0.5f;
-         if(mButton5->getData() == gadget::Digital::ON)
+         }
+
+         if ( mButton5->getData() == gadget::Digital::ON )
+         {
             wand_color[2] += 0.5f;
+         }
+
          glColor3fv(wand_color);
          drawCube();
       glPopMatrix();
@@ -231,34 +252,36 @@ void vncApp::draw()
 
       // VNC GUI
       if ( mEmbeddedGUI )
-      {  mDesktop->draw(); }
+      {
+         mDesktop->draw();
+      }
    }
    glPopMatrix();
 }
 
 void vncApp::initGLState()
 {
-   GLfloat light0_ambient[] = { 0.2f,  0.2f,  0.2f,  1.0f};
-   GLfloat light0_diffuse[] = { 0.8f,  0.8f,  0.8f,  1.0f};
-   GLfloat light0_specular[] = { 1.0f,  1.0f,  1.0f,  1.0f};
-   GLfloat light0_position[] = {0.5f, 0.75f, 0.75f, 0.0f};
+   GLfloat light0_ambient[]  = { 0.2f,  0.2f,  0.2f, 1.0f };
+   GLfloat light0_diffuse[]  = { 0.8f,  0.8f,  0.8f, 1.0f };
+   GLfloat light0_specular[] = { 1.0f,  1.0f,  1.0f, 1.0f };
+   GLfloat light0_position[] = { 0.5f, 0.75f, 0.75f, 0.0f };
 
-   GLfloat mat_ambient[] = { 0.7, 0.7,  0.7,  1.0};
-   GLfloat mat_diffuse[] = { 1.0,  0.5,  0.8,  1.0};
-   GLfloat mat_specular[] = { 1.0,  1.0,  1.0,  1.0};
-   GLfloat mat_shininess[] = { 50.0};
-   GLfloat no_mat[] = { 0.0,  0.0,  0.0,  1.0};
+   GLfloat mat_ambient[]   = { 0.7f, 0.7f, 0.7f, 1.0f };
+   GLfloat mat_diffuse[]   = { 1.0f, 0.5f, 0.8f, 1.0f };
+   GLfloat mat_specular[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
+   GLfloat mat_shininess[] = { 50.0f };
+   GLfloat no_mat[]        = { 0.0f, 0.0f, 0.0f, 1.0f };
 
-   glLightfv(GL_LIGHT0, GL_AMBIENT,  light0_ambient);
-   glLightfv(GL_LIGHT0, GL_DIFFUSE,  light0_diffuse);
-   glLightfv(GL_LIGHT0, GL_SPECULAR,  light0_specular);
-   glLightfv(GL_LIGHT0, GL_POSITION,  light0_position);
+   glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient);
+   glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
+   glLightfv(GL_LIGHT0, GL_SPECULAR, light0_specular);
+   glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
 
-   glMaterialfv( GL_FRONT, GL_AMBIENT, mat_ambient );
-   glMaterialfv( GL_FRONT,  GL_DIFFUSE, mat_diffuse );
-   glMaterialfv( GL_FRONT, GL_SPECULAR, mat_specular );
-   glMaterialfv( GL_FRONT,  GL_SHININESS, mat_shininess );
-   glMaterialfv( GL_FRONT,  GL_EMISSION, no_mat);
+   glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+   glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+   glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+   glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+   glMaterialfv(GL_FRONT, GL_EMISSION, no_mat);
 
    glEnable(GL_DEPTH_TEST);
    glEnable(GL_NORMALIZE);
@@ -272,26 +295,27 @@ void vncApp::initGLState()
 void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
              GLdouble z0, GLdouble z1, GLenum type)
 {
-   static GLdouble n[6][3] = {
-      {-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {1.0, 0.0, 0.0},
-      {0.0, -1.0, 0.0}, {0.0, 0.0, 1.0}, {0.0, 0.0, -1.0}
+   static GLdouble n[6][3] =
+   {
+      { -1.0, 0.0, 0.0 }, { 0.0, 1.0, 0.0 }, { 1.0, 0.0, 0.0 },
+      { 0.0, -1.0, 0.0 }, { 0.0, 0.0, 1.0 }, { 0.0, 0.0, -1.0 }
    };
-   static GLint faces[6][4] = {
-      { 0, 1, 2, 3}, { 3, 2, 6, 7}, { 7, 6, 5, 4},
-      { 4, 5, 1, 0}, { 5, 6, 2, 1}, { 7, 4, 0, 3}
+   static GLint faces[6][4] =
+   {
+      { 0, 1, 2, 3 }, { 3, 2, 6, 7 }, { 7, 6, 5, 4 },
+      { 4, 5, 1, 0 }, { 5, 6, 2, 1 }, { 7, 4, 0, 3 }
    };
    GLdouble v[8][3], tmp;
-   GLint i;
 
-   if (x0 > x1)
+   if ( x0 > x1 )
    {
       tmp = x0; x0 = x1; x1 = tmp;
    }
-   if (y0 > y1)
+   if ( y0 > y1 )
    {
       tmp = y0; y0 = y1; y1 = tmp;
    }
-   if (z0 > z1)
+   if ( z0 > z1 )
    {
       tmp = z0; z0 = z1; z1 = tmp;
    }
@@ -302,7 +326,7 @@ void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
    v[0][2] = v[3][2] = v[4][2] = v[7][2] = z0;
    v[1][2] = v[2][2] = v[5][2] = v[6][2] = z1;
 
-   for (i = 0; i < 6; i++)
+   for ( GLint i = 0; i < 6; ++i )
    {
       glBegin(type);
          glNormal3dv(&n[i][0]);
