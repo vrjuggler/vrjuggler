@@ -93,7 +93,7 @@ void vncApp::preFrame()
    mPrevFrameStartTime.setNow();
    mFrameRate.addSample(frame_time.secf());
 
-   if ( (mFrameCount % 50) == 1 )
+   if ( (mFrameCount % 50) == 1 && mEmbeddedGUI )
    {
       mDesktop->printStats();
 
