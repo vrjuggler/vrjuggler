@@ -1,6 +1,9 @@
 Overview
 --------
 
+   NOTE: This application does not currently compile on Windows due to
+         use of X11 data types in the VNC client code.
+
 This example creates a VNC desktop viewer and draws it using OpenGL.
 
 The example allows the user to grab, move, and resize the VNC desktop
