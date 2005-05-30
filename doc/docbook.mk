@@ -228,17 +228,17 @@ endif
 	for file in $(XML_FILES) ; do \
             dir=`echo $$file | sed -e 's/\.xml//'` ; \
             if [ ! -d $$dir ] ; then mkdir $$dir ; fi ; \
-            cur_dir=`pwd` ; \
-            cd $$dir ; \
-            $(ENV) $(SAXON) -i $$cur_dir/$$file -xsl $(CHUNK_HTML_XSL) \
-              $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS) ; \
-            cd $$cur_dir ; \
             if [ ! -z "$(INSTALL_FILES)" ]; then \
                 cp $(INSTALL_FILES) $$dir ; \
             fi ; \
             if [ ! -z "$(INSTALL_DIRS)" ]; then \
                 cp -r $(INSTALL_DIRS) $$dir ; \
             fi ; \
+            cur_dir=`pwd` ; \
+            cd $$dir ; \
+            $(ENV) $(SAXON) -i $$cur_dir/$$file -xsl $(CHUNK_HTML_XSL) \
+              $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS) ; \
+            cd $$cur_dir ; \
           done
 
 %.fo: %.xml
