@@ -72,6 +72,7 @@ public:
    vncApp(vrj::Kernel* kern)
       : vrj::GlApp(kern)
       , mFrameRate(vpr::Interval(1, vpr::Interval::Sec))
+      , mDesktop(NULL)
       , mEmbeddedGUI(false)
    {
       ;
