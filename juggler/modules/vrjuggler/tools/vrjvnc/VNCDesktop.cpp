@@ -61,10 +61,13 @@ static int getNearestMultipleOfTwo(int value)
 VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
                        const std::string& password,
                        const float& desktopSideLength)
-   : mVncIf(hostname, port, password), mVncThreadFunctor(NULL),
-     mVncThread(NULL), mHaveKeyboard(false),
-     mDesktopWandIsect(false), mDesktopGrabbed(false),
-     mTextureData(NULL)
+   : mVncIf(hostname, port, password)
+   , mVncThreadFunctor(NULL)
+   , mVncThread(NULL)
+   , mHaveKeyboard(false)
+   , mDesktopWandIsect(false)
+   , mDesktopGrabbed(false)
+   , mTextureData(NULL)
 {
    mSelectState = Nothing;
    mActiveState = Normal;
@@ -76,18 +79,18 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
    mTexWidth  = getNearestMultipleOfTwo(mVncIf.getWidth());       // Create a texture of multiple
    mTexHeight = getNearestMultipleOfTwo(mVncIf.getHeight());      // of two sized
 
-   mMaxTexCoordX = float(mVncWidth)/float(mTexWidth);             // Compute the tex coords for the desktop
-   mMaxTexCoordY = float(mVncHeight)/float(mTexHeight);
+   mMaxTexCoordX = float(mVncWidth) / float(mTexWidth);           // Compute the tex coords for the desktop
+   mMaxTexCoordY = float(mVncHeight) / float(mTexHeight);
 
    // Set initial desktop size based on aspect ratio of the vnc desktop
-   float aspect_ratio = float(mVncWidth)/float(mVncHeight);
+   float aspect_ratio = float(mVncWidth) / float(mVncHeight);
    mDesktopWidth = desktopSideLength;
    mDesktopHeight = desktopSideLength/aspect_ratio;
 
    vprASSERT((mVncWidth <= mTexWidth) && (mVncHeight <= mTexHeight));   // Make sure tex is large enough
 
-   mMaxSize = mDesktopWidth*1.75f;
-   mMinSize = mDesktopWidth*0.50f;
+   mMaxSize = mDesktopWidth * 1.75f;
+   mMinSize = mDesktopWidth * 0.50f;
    mIncSize = 0.02f;
 
    std::cout << "max size: " << mMaxSize << std::endl;
@@ -237,16 +240,18 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
                                "VNCDesktop::update() done.\n");
 
    // --------- UPDATE NAV AND DESKTOP MATRICES ----------------------- //
-   // Do all intersection testing and stuff in the local coordinate frame so we don't have
-   // to deal with rotations and translations of the desktop.
-   // Just transform the wand into the local frame and we are set to go with minimal effort.
+   // Do all intersection testing and stuff in the local coordinate frame so
+   // we don't have to deal with rotations and translations of the desktop.
+   // Just transform the wand into the local frame and we are set to go with
+   // minimal effort.
 
-   // Get the point position of the wand and construct a ray that shoots out of the wand.
+   // Get the point position of the wand and construct a ray that shoots out
+   // of the wand.
    const float max_ray_length(100.0f);
 
    // Compute the wand xform in the local desktop coordinate frame
    //   wand_vnc = vnc_M_vw * vw_M_world
-   gmtl::Matrix44f desktop_M_world;                               // inv(wMvw*vwMvnc) -- nav*desktop
+   gmtl::Matrix44f desktop_M_world;       // inv(wMvw*vwMvnc) -- nav*desktop
    const gmtl::Matrix44f wand_mat_world(mWand->getData());
    gmtl::Matrix44f world_M_desktop = navMatrix*m_vworld_M_desktop;
    gmtl::invertFull_orig(desktop_M_world, world_M_desktop);
@@ -254,7 +259,9 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
 
    const gmtl::Point3f wand_point(gmtl::makeTrans<gmtl::Point3f>(wand_mat));
    const gmtl::Vec3f ray_vector(0.0f, 0.0f, -max_ray_length);
-   mWandRay.setOrigin(gmtl::makeTrans<gmtl::Point3f>(wand_mat) );          // For now set it long.  Clip later.
+
+   // For now set it long.  Clip later.
+   mWandRay.setOrigin(gmtl::makeTrans<gmtl::Point3f>(wand_mat));
    mWandRay.setDir(wand_mat*ray_vector);
 
    // Find ray intersection on the z=0 plane
@@ -272,7 +279,8 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    if ( ray_intersects )
    {
       mIsectPoint = (mWandRay.mOrigin + (mWandRay.mDir*t_isect));
-      vprASSERT(gmtl::Math::isEqual(mIsectPoint[2], 0.0f, 0.01f) && "Point should be on z=0 plane");
+      vprASSERT(gmtl::Math::isEqual(mIsectPoint[2], 0.0f, 0.01f) &&
+                "Point should be on z=0 plane");
 
       // Compute drawing objects
       mWandRay.setDir(mWandRay.getDir()*t_isect);     // Scale it back
@@ -283,15 +291,15 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
 
    // Get button states
    bool select_button_state = mLeftButton->getData();
-   bool things_grabbed = ((mSelectState > GrabBegin) && (mSelectState < GrabEnd));
+   bool things_grabbed = (mSelectState > GrabBegin && mSelectState < GrabEnd);
 
    // Check for transition states
    // - If have some, then update them and early exit from this method
    const float roll_inc(0.05f);
-   if(RollingUp == mActiveState)
+   if ( RollingUp == mActiveState )
    {
       mRollUpPercent += roll_inc;
-      if (mRollUpPercent >= 1.0f)      // If finished rolling up
+      if ( mRollUpPercent >= 1.0f )      // If finished rolling up
       {
          mActiveState = RolledUp;
          mDesktopHeight = 0.0f;
@@ -305,10 +313,10 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
 
       updateDesktopParameters();
    }
-   else if(RollingDown == mActiveState)
+   else if ( RollingDown == mActiveState )
    {
       mRollUpPercent -= roll_inc;
-      if(mRollUpPercent <= 0.0f)    // Finished unrolling
+      if ( mRollUpPercent <= 0.0f )    // Finished unrolling
       {
          mActiveState = Normal;
          mDesktopHeight = mOriginalHeight;
@@ -322,7 +330,8 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       updateDesktopParameters();
    }
    // --- CHECK SELECTIONS --- //
-   else if((!things_grabbed) && ray_intersects)    // If nothing grabbed then check for input
+   // If nothing grabbed then check for input
+   else if ( ! things_grabbed && ray_intersects )
    {
       // Check for selecting the main desktop box
       if ( gmtl::isInVolume(mDesktopBox, mIsectPoint) )
@@ -331,18 +340,28 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          int button_mask(0);
 
          if ( mLeftButton->getData() )
-         {  button_mask |= rfbButton1Mask; }
+         {
+            button_mask |= rfbButton1Mask;
+         }
          if ( mMiddleButton->getData())
-         {  button_mask |= rfbButton2Mask; }
+         {
+            button_mask |= rfbButton2Mask;
+         }
          if ( mRightButton->getData() )
-         {  button_mask |= rfbButton3Mask; }
+         {
+            button_mask |= rfbButton3Mask;
+         }
 
          // Translate that point into the coordinates VNC wants to see.
          //
-         // vnc x,y desktop point just like x desktop.  origin upper left, y increases going down
+         // vnc x,y desktop point just like x desktop.  origin upper left,
+         // y increases going down
          //     The valid range is [0,mVncWidth or mVncHeight]
-         float vnc_x = mIsectPoint[gmtl::Xelt] * mDesktopToVncWidthScale;                          // Scale
-         float vnc_y = -(mIsectPoint[gmtl::Yelt] - mDesktopHeight) * mDesktopToVncHeightScale;     // Flip and scale
+         // Scale
+         float vnc_x = mIsectPoint[gmtl::Xelt] * mDesktopToVncWidthScale;
+         // Flip and scale
+         float vnc_y = -(mIsectPoint[gmtl::Yelt] - mDesktopHeight) *
+                          mDesktopToVncHeightScale;
 
          mVncIf.pointerEvent(int(vnc_x), int(vnc_y), button_mask);
 
@@ -353,19 +372,18 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          mSelectState = Desktop;
       }
       // ---- Check corner selection --- //
-      else if( gmtl::isInVolume(mURCorner, mIsectPoint))
+      else if ( gmtl::isInVolume(mURCorner, mIsectPoint) )
       {
-         if(select_button_state)
+         if ( select_button_state )
          {
-            if(mActiveState == Normal)
+            if ( mActiveState == Normal )
             {
                std::cout << "Rolling up\n";
                mActiveState = RollingUp;
                mRollUpPercent = 0.0f;
                mOriginalHeight = mDesktopHeight;
             }
-            else
-            if(RolledUp == mActiveState)
+            else if ( RolledUp == mActiveState )
             {
                std::cout << "Rolling down\n";
                mActiveState = RollingDown;
@@ -374,55 +392,63 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          }
          else     // Just select it
          {
-            if(URCornerSelect != mSelectState)
+            if ( URCornerSelect != mSelectState )
+            {
                std:: cout << "State: URCornerSelect" << std::endl;
+            }
             mSelectState = URCornerSelect;
          }
       }
-      else if( gmtl::isInVolume(mULCorner, mIsectPoint))
+      else if ( gmtl::isInVolume(mULCorner, mIsectPoint) )
       {
-         if(select_button_state)
+         if ( select_button_state )
          {
          }
          else     // Just select it
          {
-            if(ULCornerSelect != mSelectState)
+            if ( ULCornerSelect != mSelectState )
+            {
                std:: cout << "State: ULCornerSelect" << std::endl;
+            }
             mSelectState = ULCornerSelect;
          }
       }
-      else if( gmtl::isInVolume(mLLCorner, mIsectPoint))
+      else if ( gmtl::isInVolume(mLLCorner, mIsectPoint) )
       {
-         if(select_button_state)
+         if ( select_button_state )
          {
             mSelectState = LLCornerGrab;
             mCornerGrabPoint = mIsectPoint;
          }
          else     // Just select it
          {
-            if(LLCornerSelect != mSelectState)
+            if ( LLCornerSelect != mSelectState )
+            {
                std:: cout << "State: LLCornerSelect" << std::endl;
+            }
             mSelectState = LLCornerSelect;
          }
       }
-      else if( gmtl::isInVolume(mLRCorner, mIsectPoint))
+      else if ( gmtl::isInVolume(mLRCorner, mIsectPoint))
       {
-         if(select_button_state)
+         if ( select_button_state )
          {
             mSelectState = LRCornerGrab;        // Set to grab state
             mCornerGrabPoint = mIsectPoint;
          }
          else     // Just select it
          {
-            if(LRCornerSelect != mSelectState)
+            if ( LRCornerSelect != mSelectState )
+            {
                std:: cout << "State: LRCornerSelect" << std::endl;
+            }
             mSelectState = LRCornerSelect;
          }
       }
       // ---- Check border selection --- //
-      else if( gmtl::isInVolume(mTopBorder, mIsectPoint))
+      else if ( gmtl::isInVolume(mTopBorder, mIsectPoint) )
       {
-         if(select_button_state)
+         if ( select_button_state )
          {
             mSelectState = TopBorderGrab;
             m_wandMdesktop_grab = wand_mat;
@@ -430,14 +456,16 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          }
          else     // Just select it
          {
-            if(TopBorderSelect != mSelectState)
+            if ( TopBorderSelect != mSelectState )
+            {
                std:: cout << "State: TopBorderSelect" << std::endl;
+            }
             mSelectState = TopBorderSelect;
          }
       }
-      else if( gmtl::isInVolume(mBottomBorder, mIsectPoint))
+      else if ( gmtl::isInVolume(mBottomBorder, mIsectPoint) )
       {
-         if(select_button_state)
+         if ( select_button_state )
          {
             mSelectState = BottomBorderGrab;
             m_wandMdesktop_grab = wand_mat;
@@ -445,14 +473,16 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          }
          else     // Just select it
          {
-            if(BottomBorderSelect != mSelectState)
+            if ( BottomBorderSelect != mSelectState )
+            {
                std:: cout << "State: BottomBorderSelect" << std::endl;
+            }
             mSelectState = BottomBorderSelect;
          }
       }
-      else if( gmtl::isInVolume(mLeftBorder, mIsectPoint))
+      else if ( gmtl::isInVolume(mLeftBorder, mIsectPoint) )
       {
-         if(select_button_state)
+         if ( select_button_state )
          {
             mSelectState = LeftBorderGrab;
             m_wandMdesktop_grab = wand_mat;
@@ -460,14 +490,16 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          }
          else     // Just select it
          {
-            if(LeftBorderSelect != mSelectState)
+            if ( LeftBorderSelect != mSelectState )
+            {
                std:: cout << "State: LeftBorderSelect" << std::endl;
+            }
             mSelectState = LeftBorderSelect;
          }
       }
-      else if( gmtl::isInVolume(mRightBorder, mIsectPoint))
+      else if ( gmtl::isInVolume(mRightBorder, mIsectPoint) )
       {
-         if(select_button_state)
+         if ( select_button_state )
          {
             mSelectState = RightBorderGrab;
             m_wandMdesktop_grab = wand_mat;
@@ -475,35 +507,37 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          }
          else     // Just select it
          {
-            if(RightBorderSelect != mSelectState)
+            if ( RightBorderSelect != mSelectState )
+            {
                std:: cout << "State: RightBorderSelect" << std::endl;
+            }
             mSelectState = RightBorderSelect;
          }
       }
-
       else     // Default to resetting to nothing
       {
          mSelectState = Nothing;
       }
    }
    // --- Resizing
-   else if(things_grabbed) // Grab state is active
+   else if ( things_grabbed ) // Grab state is active
    {
-      if(LRCornerGrab == mSelectState)
+      if ( LRCornerGrab == mSelectState )
       {
          // Compute the desired change in height and width
          float delta_w = mIsectPoint[0] - mCornerGrabPoint[0];       // now - grab
          float delta_h =  mCornerGrabPoint[1] - mIsectPoint[1];      // Grab - now
 
          // Transform opposite of change in height to make it look right
-         m_vworld_M_desktop *= gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(0.0f, -delta_h, 0.0f));
+         m_vworld_M_desktop *=
+            gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(0.0f, -delta_h, 0.0f));
          mDesktopWidth += delta_w;
          mDesktopHeight += delta_h;
 
          // Reset grab point. x becomes new isect. y stays same.
          mCornerGrabPoint[0] = mIsectPoint[0];
       }
-      else if(LLCornerGrab == mSelectState)
+      else if ( LLCornerGrab == mSelectState )
       {
          // Compute the desired change in height and width
          float delta_w =  mCornerGrabPoint[0] - mIsectPoint[0];      // grab - now
@@ -513,49 +547,58 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          m_vworld_M_desktop *= gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(-delta_w, -delta_h, 0.0f));
          mDesktopWidth += delta_w;
          mDesktopHeight += delta_h;
-         // Don't reset grab point. Both stay same since we transformed to get them to be the same
+         // Don't reset grab point. Both stay same since we transformed to get
+         // them to be the same
          //mCornerGrabPoint[0] = mIsectPoint[0];
       }
       // --- Moving - Rotation and translation --- //
-      else if((LeftBorderGrab == mSelectState) || (RightBorderGrab == mSelectState) ||
-              (TopBorderGrab == mSelectState) || (BottomBorderGrab == mSelectState))
+      else if ( LeftBorderGrab == mSelectState ||
+                RightBorderGrab == mSelectState ||
+                TopBorderGrab == mSelectState ||
+                BottomBorderGrab == mSelectState )
       {
-         // Compute desired pos and then figure out how to get the desktop to there
+         vprDEBUG(vprDBG_ALL, 0) << "Moving or something\n" << vprDEBUG_FLUSH;
+         // Compute desired pos and then figure out how to get the desktop to
+         // there
          gmtl::Matrix44f desired_pos = (wand_mat * m_wandMdesktop_grab);
          m_vworld_M_desktop *= desired_pos;
       }
 
       // Get out of grab states if possible
       if(!select_button_state)
-            mSelectState = Nothing;
+      {
+         mSelectState = Nothing;
+      }
    } // grab states
 
    updateDesktopParameters();
 
-
    // - While there are rectangle updates to process
    //    - Combine the retangles
    mHasRectUpdate = false;
-   if(mVncIf.getFramebufferUpdate(mUpdateRect))
+   if ( mVncIf.getFramebufferUpdate(mUpdateRect) )
    {
       mHasRectUpdate = true;
       Rectangle temp_rect;
-      while( mVncIf.getFramebufferUpdate(temp_rect))
+      while ( mVncIf.getFramebufferUpdate(temp_rect) )
       {
          mUpdateRect.merge(temp_rect);
       }
 
       // Compute texture upload stats
-      const double one_mb(1024.0*1024.0);
-      double tex_size_mb = (mUpdateRect.width*mUpdateRect.height*8.0*1.0)/one_mb;
+      const double one_mb(1024.0 * 1024.0);
+      double tex_size_mb =
+         (mUpdateRect.width * mUpdateRect.height * 8.0 * 1.0) / one_mb;
       mTextureUploadRate.addSample(tex_size_mb);
       mTextureUpdateCount.addSample(tex_size_mb);
    }
 
    // Check status of focus
    enum Focus focus_val(NOT_IN_FOCUS);
-   if(mSelectState != Nothing)
+   if ( mSelectState != Nothing )
+   {
       focus_val = IN_FOCUS;
+   }
 
    return focus_val;
 }
@@ -575,10 +618,12 @@ void VNCDesktop::updateDesktopTexture()
    // - Set the correct pixel transfer params
    // - Load the texture
    // - Add to texture stats
-   if(mHasRectUpdate)
+   if ( mHasRectUpdate )
    {
+      // Start of source buffer
       const char* src = mVncIf.getFramebuffer() +
-                        (((mUpdateRect.y * mVncWidth) + mUpdateRect.x)*bytes_per_pixel);    // Start of source buffer
+                        (((mUpdateRect.y * mVncWidth) + mUpdateRect.x) *
+                        bytes_per_pixel);
 
       // Set the OpenGL row length.  This is used to skip data after each line
       // of pixels is read.
@@ -591,17 +636,20 @@ void VNCDesktop::updateDesktopTexture()
                       (GLsizei)mUpdateRect.width, (GLsizei)mUpdateRect.height,
                       GL_RGBA, GL_UNSIGNED_BYTE, src);
 
-      glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);      // Reset to default since this is a "strange" param
+      // Reset to default since this is a "strange" param
+      glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
    }
 
 #else
 
    // If there are updates, consume them and then update the entire buffer
    Rectangle bogus_rect;
-   if(mVncIf.getFramebufferUpdate(bogus_rect))
+   if ( mVncIf.getFramebufferUpdate(bogus_rect) )
    {
-      while( mVncIf.getFramebufferUpdate(bogus_rect))
-      { /* Nothing */; }
+      while( mVncIf.getFramebufferUpdate(bogus_rect) )
+      {
+         /* Nothing */;
+      }
 
       // Initial texture load
       // XXX: I don't think GL_RGBA should be hard-coded since VNC may not
@@ -646,7 +694,7 @@ void VNCDesktop::contextPreDraw()
 
    // Check if we need to allocate a texture object
    // XXX: This should really move to contextInit or somewhere like that
-   if(0 == (*mTexInfo).id)
+   if ( 0 == (*mTexInfo).id )
    {
       // Allocate texture data
       vprASSERT( NULL != mTextureData );     // Already allocated
@@ -665,8 +713,8 @@ void VNCDesktop::contextPreDraw()
       // XXX: I don't think GL_RGBA should be hard-coded since VNC may not
       // actually use 8 bytes per pixel.
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (GLsizei) mTexWidth,
-            (GLsizei) mTexHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-            (GLubyte*) mTextureData);
+                   (GLsizei) mTexHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                   (GLubyte*) mTextureData);
    }
    else
    {
@@ -689,12 +737,13 @@ void VNCDesktop::draw()
       << "VNCDesktop::draw() entered\n" << vprDEBUG_FLUSH;
 
    // -- Const colors to choose from --//
-   // Put them here so we don't have to change a bunch of code below to change the visuals
-   const gmtl::Vec3f micro_gui_blue(0.39f,0.51f,0.77f);
-   const gmtl::Vec3f micro_gui_blue_selected(0.39f,0.71f,0.97f);
-   const gmtl::Vec3f micro_gui_yellow(0.97f,0.92f,0.22f);
-   const gmtl::Vec3f micro_gui_yellow_selected(0.97f,0.4f,0.22f);
-   const gmtl::Vec3f ximian_orange(0.98f,0.70f,0.098f);
+   // Put them here so we don't have to change a bunch of code below to change
+   // the visuals
+   const gmtl::Vec3f micro_gui_blue(0.39f, 0.51f, 0.77f);
+   const gmtl::Vec3f micro_gui_blue_selected(0.39f, 0.71f, 0.97f);
+   const gmtl::Vec3f micro_gui_yellow(0.97f, 0.92f, 0.22f);
+   const gmtl::Vec3f micro_gui_yellow_selected(0.97f, 0.4f, 0.22f);
+   const gmtl::Vec3f ximian_orange(0.98f, 0.70f, 0.098f);
 
    const gmtl::Vec3f corner_color(micro_gui_yellow);
    const gmtl::Vec3f corner_color_selected(micro_gui_yellow_selected);
@@ -717,28 +766,36 @@ void VNCDesktop::draw()
       //**//drawSphere(0.25f, mIsectPoint);
 
       // Draw the desktop corners and borders
-      setColorIfState(corner_color_selected, corner_color, LLCornerSelect, LLCornerGrab);
+      setColorIfState(corner_color_selected, corner_color, LLCornerSelect,
+                      LLCornerGrab);
       drawBox(mLLCorner);
-      setColorIfState(corner_color_selected, corner_color, LRCornerSelect, LRCornerGrab);
+      setColorIfState(corner_color_selected, corner_color, LRCornerSelect,
+                      LRCornerGrab);
       drawBox(mLRCorner);
-      setColorIfState(corner_color_selected, corner_color, URCornerSelect, URCornerGrab);
+      setColorIfState(corner_color_selected, corner_color, URCornerSelect,
+                      URCornerGrab);
       drawBox(mURCorner);
-      setColorIfState(corner_color_selected, corner_color, ULCornerSelect, ULCornerGrab);
+      setColorIfState(corner_color_selected, corner_color, ULCornerSelect,
+                      ULCornerGrab);
       drawBox(mULCorner);
 
-      setColorIfState(border_color_selected, border_color, LeftBorderSelect, LeftBorderSelect);
+      setColorIfState(border_color_selected, border_color, LeftBorderSelect,
+                      LeftBorderSelect);
       drawCylinder(mLeftBorder,1);
-      setColorIfState(border_color_selected, border_color, RightBorderSelect, RightBorderSelect);
+      setColorIfState(border_color_selected, border_color, RightBorderSelect,
+                      RightBorderSelect);
       drawCylinder(mRightBorder,1);
-      setColorIfState(border_color_selected, border_color, TopBorderSelect, TopBorderSelect);
+      setColorIfState(border_color_selected, border_color, TopBorderSelect,
+                      TopBorderSelect);
       drawCylinder(mTopBorder,0);
-      setColorIfState(border_color_selected, border_color, BottomBorderSelect, BottomBorderSelect);
+      setColorIfState(border_color_selected, border_color, BottomBorderSelect,
+                      BottomBorderSelect);
       drawCylinder(mBottomBorder,0);
 
       glDisable(GL_LIGHTING);    // The stuff below doesn't like the light...
 
       // Draw the ray (if we are pointing at the desktop. ie. it is in focus)
-      if(Nothing != mSelectState)
+      if ( Nothing != mSelectState )
       {
          glPushMatrix();
             gmtl::Vec3f ray_start = mWandRay.getOrigin();
@@ -764,12 +821,15 @@ void VNCDesktop::draw()
 
       // --- COMPUTE TEX Coords --- //
       // Rolling texcoord should vary between 0.0 and mMaxTexCoordY
-      float min_tex_coordY = 0.0f;                                      // Default to full
-      if((RollingDown == mActiveState) || (RollingUp == mActiveState))
-         min_tex_coordY += mRollUpPercent*mMaxTexCoordY;              // [0.0,mMaxTexCoordY]
+      float min_tex_coordY = 0.0f;            // Default to full
+      if ( RollingDown == mActiveState || RollingUp == mActiveState )
+      {
+         min_tex_coordY += mRollUpPercent*mMaxTexCoordY;  // [0.0,mMaxTexCoordY]
+      }
 
       glBegin(GL_QUADS);
-        // Draw quad, counter counter clockwise from bottom left hand corner (0,0)
+         // Draw quad, counter counter clockwise from bottom left hand corner
+         // (0,0)
          glTexCoord2f(0.0f, mMaxTexCoordY);           // LL
          glVertex3f(0.0f, 0.0f, 0.0f);
 
@@ -808,8 +868,12 @@ void VNCDesktop::draw()
 
 void VNCDesktop::printStats()
 {
-   std::cout << "Texture upload/sec: mean: " << mTextureUploadRate.getMean()  << std::endl; // << "  sta: " << mTextureUploadRate.getSTA() << std::endl;
-   std::cout << "Texture counts:     mean: " << mTextureUpdateCount.getMean() << std::endl; //<< "  sta: " << mTextureUpdateCount.getSTA() << std::endl;
+   std::cout << "Texture upload/sec: mean: " << mTextureUploadRate.getMean()
+             // << "  sta: " << mTextureUploadRate.getSTA()
+             << std::endl;
+   std::cout << "Texture counts:     mean: " << mTextureUpdateCount.getMean()
+             //<< "  sta: " << mTextureUpdateCount.getSTA()
+             << std::endl;
 }
 
 void VNCDesktop::drawSphere(float radius, gmtl::Point3f offset, int parts)
@@ -820,11 +884,15 @@ void VNCDesktop::drawSphere(float radius, gmtl::Point3f offset, int parts)
    glPopMatrix();
 }
 
-void VNCDesktop::drawCylinder(const gmtl::AABoxf& cyBox, unsigned majorAxis, unsigned slices )
+void VNCDesktop::drawCylinder(const gmtl::AABoxf& cyBox, unsigned majorAxis,
+                              unsigned slices)
 {
    // Find the axis to use for non major axis stuff (like radius)
    unsigned non_major = majorAxis+1;
-   if(3 == non_major) non_major = 0;
+   if ( 3 == non_major )
+   {
+      non_major = 0;
+   }
    const float radius((cyBox.mMax[non_major] - cyBox.mMin[non_major])/2.0f);
 
    // Compute the point at the center of the base of this cylinder
@@ -832,15 +900,21 @@ void VNCDesktop::drawCylinder(const gmtl::AABoxf& cyBox, unsigned majorAxis, uns
    gmtl::Point3f center_base(temp_point / 2.0f);     // Average 2 points
    center_base[majorAxis] = cyBox.mMin[majorAxis];             // Project down to the min side of major axis
 
-   //std::cout << " cy: box: " << cyBox << "   major:" << majorAxis << "   center:" << center_base << std::endl;
+   //std::cout << " cy: box: " << cyBox << "   major:" << majorAxis
+   //          << "   center:" << center_base << std::endl;
    float height = cyBox.mMax[majorAxis] - cyBox.mMin[majorAxis];
 
    glPushMatrix();
-      glTranslatef(center_base.mData[0], center_base.mData[1], center_base.mData[2] );
-      if(0 == majorAxis)
+      glTranslatef(center_base.mData[0], center_base.mData[1],
+                   center_base.mData[2]);
+      if ( 0 == majorAxis )
+      {
          glRotatef(90.0f, 0.0f, 1.0f, 0.0f);    // Rotate to x-axis
-      else if(1 == majorAxis)
+      }
+      else if ( 1 == majorAxis )
+      {
          glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);   // Rotate to y-axis
+      }
 
       gluCylinder(mCylinderQuad, radius, radius, height, slices, 1);
    glPopMatrix();
@@ -850,7 +924,8 @@ void VNCDesktop::drawBox(const gmtl::AABoxf& box)
 {
    // Define the normals for the box faces.
    // left, top, right, bottom, front, back
-   static GLfloat normals[6][3] = {
+   static GLfloat normals[6][3] =
+   {
       { -1.0, 0.0, 0.0 }, { 0.0, 1.0, 0.0 }, { 1.0, 0.0, 0.0 },
       { 0.0, -1.0, 0.0 }, { 0.0, 0.0, 1.0 }, { 0.0, 0.0, -1.0 }
    };
@@ -858,7 +933,8 @@ void VNCDesktop::drawBox(const gmtl::AABoxf& box)
    // Define the array indices for the cube faces.  These will be used to
    // access values in the v array declared below.
    // left,
-   static GLint faces[6][4] = {
+   static GLint faces[6][4] =
+   {
       { 0, 1, 2, 3 }, { 3, 2, 6, 7 }, { 7, 6, 5, 4 },
       { 4, 5, 1, 0 }, { 5, 6, 2, 1 }, { 7, 4, 0, 3 }
    };
@@ -891,6 +967,5 @@ void VNCDesktop::drawBox(const gmtl::AABoxf& box)
       glEnd();
    }
 }
-
 
 } // End of vrjvnc namespace

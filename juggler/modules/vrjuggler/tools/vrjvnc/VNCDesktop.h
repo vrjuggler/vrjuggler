@@ -124,16 +124,22 @@ protected:     // Helpers
 
    void drawBox(const gmtl::AABoxf& box);
 
-   void drawCylinder(const gmtl::AABoxf& cyBox, unsigned majorAxis, unsigned slices=5);
+   void drawCylinder(const gmtl::AABoxf& cyBox, unsigned majorAxis,
+                     unsigned slices = 5);
 
-   inline void setColorIfState(gmtl::Vec3f true_color, gmtl::Vec3f false_color, Selection state1, Selection state2)
+   void setColorIfState(const gmtl::Vec3f& true_color,
+                        const gmtl::Vec3f& false_color,
+                        Selection state1, Selection state2)
    {
-      if((mSelectState == state1) || (mSelectState == state2))
-         glColor3fv( true_color.mData );
+      if ( mSelectState == state1 || mSelectState == state2 )
+      {
+         glColor3fv(true_color.mData);
+      }
       else
-         glColor3fv( false_color.mData);
+      {
+         glColor3fv(false_color.mData);
+      }
    }
-
 
 private:
    VNCInterface                         mVncIf;
