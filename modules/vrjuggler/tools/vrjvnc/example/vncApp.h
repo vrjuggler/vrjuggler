@@ -58,8 +58,8 @@ namespace vrjvnc
 class VNCDesktop;
 
 // Utility function to draw a cube
-void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
-                GLdouble z0, GLdouble z1, GLenum type );
+void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
+             GLdouble z0, GLdouble z1, GLenum type);
 
 /**
  * This application demonstrates how to use VNC within a VR Juggler
@@ -116,7 +116,9 @@ public:
    //
    // This is called once after OGL is initialized
    virtual void apiInit()
-   {;}
+   {
+      /* Do nothing. */ ;
+   }
 
    // Function that is called immediately after a new OGL context is created.
    // This is called for every display window that is opened.  Initialize GL
