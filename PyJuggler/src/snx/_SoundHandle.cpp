@@ -117,7 +117,7 @@ struct snx_SoundHandle_Wrapper: snx_SoundHandle_Adapter
         return snx::SoundHandle::isPaused();
     }
 
-    void setAmbient(bool p0) {
+    void setAmbient(const bool p0) {
         call_method< void >(self, "setAmbient", p0);
     }
 
