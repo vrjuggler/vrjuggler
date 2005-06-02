@@ -47,6 +47,8 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VJ_LIBRARY)
 
+EXTRA_CXXFLAGS+= -DVJ_ROOT_DIR="\"$(instprefix)\""
+
 SRCS=		App.cpp		\
 		Kernel.cpp	\
 		User.cpp

@@ -706,11 +706,21 @@ Kernel::Kernel()
       }
       // Neither $JCCL_CFG_PATH nor $VJ_CFG_PATH is set, so use what basically
       // amounts to a hard-coded default.
-      else
+      else if ( vpr::System::getenv("VJ_BASE_DIR", cfg_path).success() )
       {
          cfg_path = "${VJ_BASE_DIR}/" VJ_SHARE_DIR "/data/configFiles";
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
             << "Neither JCCL_CFG_PATH nor VJ_CFG_PATH is set.\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Defaulting to " << cfg_path << std::endl << vprDEBUG_FLUSH;
+         cfg_path = vpr::replaceEnvVars(cfg_path);
+      }
+      else
+      {
+         cfg_path = VJ_ROOT_DIR VJ_SHARE_DIR "/data/configFiles";
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "JCCL_CFG_PATH, VJ_CFG_PATH, and VJ_BASE_DIR are not set.\n"
             << vprDEBUG_FLUSH;
          vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
             << "Defaulting to " << cfg_path << std::endl << vprDEBUG_FLUSH;
