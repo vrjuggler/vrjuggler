@@ -262,7 +262,7 @@ sub runDepScript($$$)
    }
    else
    {
-      warn "WARNING: Could not find $script_name to execcute!\n";
+      warn "WARNING: Could not find $script_name to execute!\n";
    }
 
    return $result or undef;
