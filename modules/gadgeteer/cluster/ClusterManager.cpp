@@ -627,7 +627,6 @@ namespace cluster
             const std::string gadget_base_dir( "GADGET_BASE_DIR" );
             const std::string vj_base_dir( "VJ_BASE_DIR" );
             std::string base_dir;
-            bool append_default( true );
 
             // Try get to the value of $GADGET_BASE_DIR first.  If that fails,
             // fall back on $VJ_BASE_DIR.
@@ -636,34 +635,31 @@ namespace cluster
                if ( !vpr::System::getenv( vj_base_dir, base_dir ).success() )
                {
                   // If neither $GADGET_BASE_DIR nor $VJ_BASE_DIR is set, then
-                  // we cannot append a default plug-in search path.
-                  append_default = false;
+                  // we can append a default driver search path.
+                  base_dir = VJ_ROOT_DIR;
                }
             }
 
-            if ( append_default )
-            {
 #if defined(VPR_OS_IRIX) && defined(_ABIN32)
-               const std::string bit_suffix("32");
+            const std::string bit_suffix("32");
 #elif defined(VPR_OS_IRIX) && defined(_ABI64)
-               const std::string bit_suffix("64");
+            const std::string bit_suffix("64");
 #else
-               const std::string bit_suffix("");
+            const std::string bit_suffix("");
 #endif
 
-               fs::path default_search_dir =
-                  fs::path(base_dir, fs::native) /
-                     (std::string("lib") + bit_suffix) /
-                     std::string("gadgeteer") / std::string("plugins");
+            fs::path default_search_dir =
+               fs::path(base_dir, fs::native) /
+                  (std::string("lib") + bit_suffix) /
+                  std::string("gadgeteer") / std::string("plugins");
 
-               vprDEBUG( gadgetDBG_RIM, vprDBG_VERB_LVL )
-                  << "[cluster::ClusterManager::configAdd()] Appending "
-                  << "default search path '"
-                  << default_search_dir.native_directory_string() << "'\n"
-                  << vprDEBUG_FLUSH;
+            vprDEBUG( gadgetDBG_RIM, vprDBG_VERB_LVL )
+               << "[cluster::ClusterManager::configAdd()] Appending "
+               << "default search path '"
+               << default_search_dir.native_directory_string() << "'\n"
+               << vprDEBUG_FLUSH;
 
-               search_path.push_back( default_search_dir );
-            }
+            search_path.push_back( default_search_dir );
 
             // --- Load cluster plugin dsos -- //
             // - Load individual plugins
