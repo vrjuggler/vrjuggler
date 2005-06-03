@@ -561,7 +561,7 @@ END_IRIX_DIST
     elif test "x$4" != "x" ; then
         cat >>${_lib_file} <<END_ISA_DIST
 .
-    lib
+    lib$LIBBITSUF
         $4
             debug
             ..
