@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          sys.m4,v
-dnl Date modified: 2005/01/08 22:44:39
-dnl Version:       1.61
+dnl Date modified: 2005/06/03 13:57:58
+dnl Version:       1.62
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -58,7 +58,7 @@ dnl     IRIXREL      - Defined to the string "IRIX5" or "IRIX6" based on the
 dnl                    determined version of IRIX.
 dnl ===========================================================================
 
-dnl sys.m4,v 1.61 2005/01/08 22:44:39 patrickh Exp
+dnl sys.m4,v 1.62 2005/06/03 13:57:58 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Based on the given detected host and CPU, set up the system-specific
@@ -219,12 +219,23 @@ AC_DEFUN([DPP_SYSTEM_SETUP],
          dnl If no ABI has been set yet, default to ELF with whatever the
          dnl CPU architecture is.
          if test "x$ABI" = "x" ; then
-            DPP_ABI_CFG('ELF', $target_cpu)
+            case $target_cpu in
+               x86_64)
+                  DPP_ABI_CFG('ELF', "$target_cpu", '64')
+                  ;;
+               *)
+                  DPP_ABI_CFG('ELF', "$target_cpu")
+                  ;;
+            esac
+
          fi
 
          case $target_cpu in
             *86)
                ABI_LIST='ELF_i386'
+               ;;
+            x86_64)
+               ABI_LIST='ELF_x64'
                ;;
             *)
                ABI_LIST="ELF_$target_cpu"
