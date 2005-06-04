@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          abi.m4,v
-dnl Date modified: 2005/01/08 22:44:39
-dnl Version:       1.17
+dnl Date modified: 2005/06/03 13:57:58
+dnl Version:       1.18
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -74,7 +74,7 @@ dnl                    that Autconf performs.
 dnl     DPP_ABI_TYPE - The argument given to --with-abi.
 dnl ===========================================================================
 
-dnl abi.m4,v 1.17 2005/01/08 22:44:39 patrickh Exp
+dnl abi.m4,v 1.18 2005/06/03 13:57:58 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Define a macro DPP_ABI_CFG for setting up the configuration parameters
@@ -115,6 +115,8 @@ AC_DEFUN([DPP_ABI_SETUP],
    dnl     64_M3         - On IRIX, use 64-bit mips3 binaries
    dnl     64_M4         - On IRIX, use 64-bit mips4 binaries
    dnl     ELF_i386      - On an i386 OS (e.g., Linux/i386), use ELF binaries
+   dnl     ELF_x86_64    - On an AMD64/x86_64/x64 OS (e.g., Linux/amd64), use
+   dnl                     ELF binaries
    dnl     WIN32_i386    - On an i386 Win32 OS, use Win32 binaries
    dnl     COFF_ALPHA    - On an Alpha, use COFF binaries
    dnl     ELF_ALPHA     - On an Alpha, use ELF binaries
@@ -123,7 +125,7 @@ AC_DEFUN([DPP_ABI_SETUP],
    dnl     DARWIN_PPC    - On Darwin, use PowerPC binaries
    dnl -----------------------------------------------------------------------
    AC_ARG_WITH(abi,
-               [  --with-abi=<N32_M3|N32_M4|64_M3|64_M4|ELF_i386|WIN32_i386|COFF_ALPHA|ELF_ALPHA|HP|HP64|DARWIN_PPC>
+               [  --with-abi=<N32_M3|N32_M4|64_M3|64_M4|ELF_i386|ELF_x86_64|WIN32_i386|COFF_ALPHA|ELF_ALPHA|HP|HP64|DARWIN_PPC>
                           Define the Application Binary
                           Interface to use],
                DPP_ABI_TYPE="$withval")
@@ -150,6 +152,9 @@ AC_DEFUN([DPP_ABI_SETUP],
          ;;
       xELF_i386)
          DPP_ABI_CFG('ELF', 'i386')
+         ;;
+      xELF_x86_64)
+         DPP_ABI_CFG('ELF', 'x86_64', '64')
          ;;
       xWIN32_i386)
          DPP_ABI_CFG('WIN32')
