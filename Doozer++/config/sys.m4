@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          sys.m4,v
-dnl Date modified: 2005/06/03 13:57:58
-dnl Version:       1.62
+dnl Date modified: 2005/06/03 14:12:24
+dnl Version:       1.63
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -58,7 +58,7 @@ dnl     IRIXREL      - Defined to the string "IRIX5" or "IRIX6" based on the
 dnl                    determined version of IRIX.
 dnl ===========================================================================
 
-dnl sys.m4,v 1.62 2005/06/03 13:57:58 patrickh Exp
+dnl sys.m4,v 1.63 2005/06/03 14:12:24 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Based on the given detected host and CPU, set up the system-specific
@@ -81,7 +81,7 @@ AC_DEFUN([DPP_SYSTEM_SETUP],
    dnl stripped).  This will only contain a number and can be treated as a
    dnl float-point value.
    changequote(<<, >>)
-   OS_REL_NUM=`uname -r | sed -e 's/^[^0-9]*\([0-9][0-9]*\.[0-9][0-9]*\)[^0-9]*$/\1/'`
+   OS_REL_NUM=`uname -r | sed -e 's/^[^0-9]*\([0-9][0-9]*\.[0-9][0-9]*\)[ .a-zA-Z_0-9-]*$/\1/'`
    changequote([, ])
 
    dnl Major and minor version numbers from $OS_REL_NUM separated for use
