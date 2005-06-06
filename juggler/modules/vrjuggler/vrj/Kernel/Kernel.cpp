@@ -683,8 +683,22 @@ Kernel::Kernel()
       << std::endl << vprDEBUG_FLUSH;
 
    // Load in the configuration definitions
-   std::string def_path("${VJ_BASE_DIR}/" VJ_SHARE_DIR "/data/definitions");
+   std::string def_path;
+   if ( vpr::System::getenv("VJ_BASE_DIR", def_path).success() )
+   {
+      def_path = "${VJ_BASE_DIR}/" VJ_SHARE_DIR "/data/definitions";
+   }
+   else
+   {
+      def_path = VJ_ROOT_DIR "/" VJ_SHARE_DIR "/data/definitions";
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "Loading Definitions: VJ_BASE_DIR is not set.\n"
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "Defaulting to " << def_path << std::endl << vprDEBUG_FLUSH;
+   }
    jccl::ElementFactory::instance()->loadDefs(def_path);
+
 
    // Set up a default configuration path if the user does not already have
    // one defined in the environment variable $JCCL_CFG_PATH.  If that
@@ -718,7 +732,7 @@ Kernel::Kernel()
       }
       else
       {
-         cfg_path = VJ_ROOT_DIR VJ_SHARE_DIR "/data/configFiles";
+         cfg_path = VJ_ROOT_DIR "/" VJ_SHARE_DIR "/data/configFiles";
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
             << "JCCL_CFG_PATH, VJ_CFG_PATH, and VJ_BASE_DIR are not set.\n"
             << vprDEBUG_FLUSH;
