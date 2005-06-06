@@ -35,6 +35,9 @@
 #include <sstream>
 #include <fstream>
 
+#include <vpr/vpr.h>
+#include <vpr/System.h>
+
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
 #include <gmtl/MatrixOps.h>
@@ -188,6 +191,9 @@ void Intersense::controlLoop(void* nullParam)
     while (!mExitFlag)
     {
         this->sample();
+        //TODO: Find a way to eliminate this sleep. This was added because
+        //      the CPU was getting pegged too fast with samples.
+        vpr::System::msleep(50);
     }
 }
 
