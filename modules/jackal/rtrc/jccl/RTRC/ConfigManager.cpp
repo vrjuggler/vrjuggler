@@ -127,7 +127,7 @@ void ConfigManager::loadRemoteReconfig()
             << "JCCL_BASE_DIR environment variable not set.\n"
             << vprDEBUG_FLUSH;
          vprDEBUG_NEXT(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
-            << "Using VJ_BASE_PATH instead.\n" << vprDEBUG_FLUSH;
+            << "Using VJ_BASE_DIR instead.\n" << vprDEBUG_FLUSH;
       }
       else
       {
@@ -137,9 +137,8 @@ void ConfigManager::loadRemoteReconfig()
             << "Neither JCCL_BASE_DIR nor VJ_BASE_DIR is set."
             << std::endl << vprDEBUG_FLUSH;
          vprDEBUG_NEXT(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
-            << "Using default " VJ_ROOT_DIR " instead"
+            << "Using default " << base_dir << " instead."
             << std::endl << vprDEBUG_FLUSH;
-         return;
       }
    }
 
