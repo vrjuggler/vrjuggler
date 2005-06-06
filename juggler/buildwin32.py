@@ -270,6 +270,8 @@ def setVars():
    return options
 
 def postProcessOptions(options):
+   os.environ['instprefix'] = options['prefix'].replace('\\', '\\\\')
+
    # Check for Boost 1.32 Visual C++ toolset names.
    match = re.compile(r'vc-(\d)_(\d)').match(options['BOOST_TOOL'])
 
