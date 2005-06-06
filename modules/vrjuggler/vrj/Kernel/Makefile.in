@@ -41,13 +41,12 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir=	@includedir@/vrj/Kernel
-srcdir=		@srcdir@
-top_srcdir=	@top_srcdir@
-INSTALL=	@INSTALL@
-SUBOBJDIR=	$(VJ_LIBRARY)
-
-EXTRA_CXXFLAGS+= -DVJ_ROOT_DIR="\"$(instprefix)\""
+includedir=		@includedir@/vrj/Kernel
+srcdir=			@srcdir@
+top_srcdir=		@top_srcdir@
+INSTALL=		@INSTALL@
+SUBOBJDIR=		$(VJ_LIBRARY)
+EXTRA_CXXFLAGS+=	-DVJ_ROOT_DIR="\"$(instprefix)\""
 
 SRCS=		App.cpp		\
 		Kernel.cpp	\

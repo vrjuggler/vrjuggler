@@ -40,12 +40,12 @@ default: all
 # Include common definitions here.
 include @topdir@/make.defs.mk
 
-includedir=	@includedir@/jccl/RTRC
-srcdir=		@srcdir@
-top_srcdir=	@top_srcdir@
-INSTALL=	@INSTALL@
-SUBOBJDIR=	$(JCCL_RTRC_LIBRARY)
-EXTRA_CXXFLAGS+= -DVJ_ROOT_DIR="\"$(instprefix)\""
+includedir=		@includedir@/jccl/RTRC
+srcdir=			@srcdir@
+top_srcdir=		@top_srcdir@
+INSTALL=		@INSTALL@
+SUBOBJDIR=		$(JCCL_RTRC_LIBRARY)
+EXTRA_CXXFLAGS+=	-DVJ_ROOT_DIR="\"$(instprefix)\""
 
 SRCS= \
 	ConfigElementHandler.cpp	\
