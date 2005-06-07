@@ -12,7 +12,7 @@ For all versions:
 Released: <month> <day>, 2005
 
  Version: 1.0 Beta 3
-Released: May <day>, 2005
+Released: June 7, 2005
     Required changes when upgrading from all previous versions:
        * vpr::ThreadPool::barrier() is now vpr::ThreadPool::wait().
 
