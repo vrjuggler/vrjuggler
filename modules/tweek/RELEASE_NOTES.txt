@@ -9,7 +9,7 @@ For all versions:
 ===============================================================================
 
  Version: 1.0 Beta 3 (0.93.0)
-Released: April XX, 2005
+Released: June 7, 2005
    Required changes when upgrading from all previous versions:
        * The interface org.vrjuggler.tweek.beans.FileLoader has two new
          methods: hasUnsavedChanges() and saveAllRequested().
