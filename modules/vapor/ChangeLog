@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+[1.0 Beta 3 released - 6.7.2005]===============================================
+2005-06-06 patrickh NEW VERSION: 0.93.0
 2005-05-18 patrickh Fixed header file pollution on Windows resulting from
                     winsock2.h being included by vpr/md/NSPR/SystemNSPR.h.
                     NEW VERSION: 0.92.4
