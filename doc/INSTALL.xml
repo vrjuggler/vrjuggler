@@ -4,7 +4,7 @@
 <article>
   <articleinfo>
     <title>Building and Installing the Juggler Project (Version
-    1.1/2.0)</title>
+    2.1/2.2)</title>
 
     <authorgroup>
       <author>
@@ -18,9 +18,9 @@
   <section>
     <title>Introduction</title>
 
-    <para>You have downloaded the source code for Version 1.1 of the Juggler
-    Project. This is the code that will become VR Juggler 2.0, and it is the
-    code that is used to create the VR juggler 2.0 pre-releases. Please be
+    <para>You have downloaded the source code for Version 2.1 of the Juggler
+    Project. This is the code that will become VR Juggler 2.2, and it is the
+    code that is used to create the VR juggler 2.2 pre-releases. Please be
     aware that this code represents a work in progress, and if you acquired it
     directly from CVS rather than using a pre-packaged source code snapshot,
     the code may have bugs affecting compilation and execution.</para>
@@ -111,10 +111,10 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
         occur when using the MIPSpro Compilers Version 7.3.1.1m. We have found
         upgrading to Version 7.3.1.3m (or newer) fixes the problems.</para>
 
-        <para>A new feature of VR Juggler 1.1 is support for GCC on IRIX.
-        Users who do not have MIPSpro or cannot upgrade can compile and run VR
-        Juggler (without OpenGL Performer support) using the version of GCC
-        distributed by SGI. It can be downloaded from <ulink
+        <para>A new feature of VR Juggler 1.1 and newer is support for GCC on
+        IRIX. Users who do not have MIPSpro or cannot upgrade can compile and
+        run VR Juggler (without OpenGL Performer support) using the version of
+        GCC distributed by SGI. It can be downloaded from <ulink
         url="http://freeware.sgi.com/index-by-alpha.html">http://freeware.sgi.com/index-by-alpha.html</ulink>
         for free. When configuring the source with
         <command>configure.pl</command> (described later), use the option
@@ -125,8 +125,8 @@ BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
     <section>
       <title>Important Note for Win32 Users</title>
 
-      <para>VR Juggler 1.1 uses a lot of C++ features not supported by Visual
-      Studio 6.0. Microsoft <ulink
+      <para>VR Juggler 1.1 and newer use a lot of C++ features not supported
+      by Visual Studio 6.0. Microsoft <ulink
       url="http://support.microsoft.com/default.aspx?scid=http://support.microsoft.com:80/support/kb/articles/q243/4/51.asp&amp;NoWebContent=1">acknowledges</ulink>
       the issues concerning noncompliance to the C++ Standard with Visual
       Studio 6.0, and it appears that they have no plans to fix these
@@ -473,7 +473,7 @@ cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co juggler<
               when you must tell the module configure scripts where all the
               package dependencies are found.</para>
 
-              <screen>../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-java-orb=JDK</screen>
+              <screen>../configure.pl --prefix=$HOME/vrjuggler-2.2 --with-java-orb=JDK</screen>
 
               <important>
                 <para>You will probably have to specify the paths to your

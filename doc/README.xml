@@ -19,13 +19,13 @@
 
     <para>Congratulations, you have downloaded the source code to the Juggler
     Project, open source software for virtual reality from the <ulink
-    url="http://www.vrac.iastate.edu/">Virtual Reality Applications Center</ulink>
-    at <ulink url="http://www.iastate.edu/">Iowa State University</ulink>.
-    Within this document, you will find information about the new VR Juggler
-    2.0 directory structure including descriptions of all the component
-    modules that make up the Juggler Project. Instructions for building the
-    individual modules can be found within the specific module directories and
-    on the VR Juggler website.</para>
+    url="http://www.vrac.iastate.edu/">Virtual Reality Applications
+    Center</ulink> at <ulink url="http://www.iastate.edu/">Iowa State
+    University</ulink>. Within this document, you will find information about
+    the new VR Juggler 2.x directory structure including descriptions of all
+    the component modules that make up the Juggler Project. Instructions for
+    building the individual modules can be found within the specific module
+    directories and on the VR Juggler website.</para>
   </section>
 
   <section>
@@ -131,7 +131,8 @@
 
         <para>As mentioned above, all the other modules depend on VPR, so it
         must be compiled before anything else. For more information on
-        compiling VPR, refer to <filename>modules/vapor/INSTALL.txt</filename>.</para>
+        compiling VPR, refer to
+        <filename>modules/vapor/INSTALL.txt</filename>.</para>
       </section>
     </section>
 
@@ -157,7 +158,8 @@
         <para>To build the JCCL C++ library, CppDOM is required for parsing
         XML. CppDOM is a lightweight XML parser written in C++ and designed to
         provide an interface similar to JDOM. More information can be found at
-        <ulink url="http://xml-cppdom.sourceforge.net/">http://xml-cppdom.sourceforge.net/</ulink>.</para>
+        <ulink
+        url="http://xml-cppdom.sourceforge.net/">http://xml-cppdom.sourceforge.net/</ulink>.</para>
 
         <para>To build the configuration editor JavaBeans, JDOM and the Tweek
         Java API are required. Tweek is another module in the Juggler Project,
@@ -268,8 +270,9 @@
   </section>
 
   <section>
-    <title>VR Juggler 2.0</title>
+    <title>VR Juggler 2.x</title>
 
-    <para>TODO... (this is the version number of the next release of Juggler)</para>
+    <para>TODO... (this is the version number of the next release of
+    Juggler)</para>
   </section>
 </article>
