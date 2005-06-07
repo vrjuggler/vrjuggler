@@ -114,7 +114,7 @@ VPR_PROF_LIB_DYNAMIC=	$(VPR_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 PARAM_HEADER=	vpr/vprParam.h
 PARAM_SOURCE=	vpr/vprParam.cpp
 BRANCH=		HEAD
-CANON_NAME=	Alpine Powder
+CANON_NAME=	Manwe
 VER_ARGS=	-f $(VPRROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
 		-n "$(CANON_NAME)" -d "`date '+%b %e, %Y %H:%M:%S'`"
 

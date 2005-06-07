@@ -106,7 +106,7 @@ GADGET_PROF_LIB_DYNAMIC=	$(GADGET_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 PARAM_HEADER=	gadget/gadgetParam.h
 PARAM_SOURCE=	gadget/gadgetParam.cpp
 BRANCH=		HEAD
-CANON_NAME=	Dr Claw
+CANON_NAME=	Varda
 VER_ARGS=	-f $(GADGETROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@		\
 		-b $(BRANCH) -n "$(CANON_NAME)"				\
 		-d "`date '+%b %e, %Y %H:%M:%S'`"
