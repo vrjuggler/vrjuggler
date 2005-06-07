@@ -37,7 +37,7 @@
 # that is actually run.
 # -----------------------------------------------------------------------------
 
-AC_INIT([Gadgeteer Device Drivers], [0.93],
+AC_INIT([Gadgeteer Device Drivers], [1.1],
         [vrjuggler-devel@lists.sourceforge.net])
 AC_PREREQ([2.53])
 AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2005 by Iowa State University])
