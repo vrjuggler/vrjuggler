@@ -74,13 +74,13 @@
 #define PACKAGE_NAME "Tweek"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Tweek 0.92"
+#define PACKAGE_STRING "Tweek 0.93"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "tweek"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.92"
+#define PACKAGE_VERSION "0.93"
 
 /* Define to include the main CORBA header file -- for example:
    <omniORB3/CORBA.h> */
