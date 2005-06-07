@@ -10,7 +10,7 @@ For all versions:
 
 ===============================================================================
 
-Version: 2.0 Beta 3 (1.1.170-0)
+Version: 2.0 Beta 3 (1.1.172-0)
 Released: June 7, 2005
 
     Please refer to the following to get started with VR Juggler 2.0 Beta 2:
