@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd"
+            name="button_device">
+   <definition_version version="1" label="My Button Device">
+      <help>Configuration for simple one-button device.</help>
+      <parent>digital_device</parent>
+      <category>/Devices/Digital</category>
+      <property valuetype="string" variable="false" name="port">
+         <help>Serial port to which this device is connected.</help>
+         <value label="Port" defaultvalue="/dev/ttyd1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="baud">
+         <help>Serial port speed.</help>
+         <value label="Baud" defaultvalue="38400"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

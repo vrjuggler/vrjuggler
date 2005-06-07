@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding = "Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="7.00"
+	Name="VR Juggler CORBA Performance Monitoring Plug-in (C++)"
+	ProjectGUID="{323DC371-8232-48E9-BB85-1DD5C1E3FEEE}"
+	Keyword="Win32Proj">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="DebugDLL"
+			IntermediateDirectory="DebugDLL"
+			ConfigurationType="2"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories=".;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNIORB_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;..\..\..\modules\vrjuggler;..\..\..\modules\vrjuggler\plugins;..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\tweek;..\..\VPR;..\..\Tweek_CXX;..\..\Tweek_CXX\tweek\idl;..\..\JCCL;..\..\VRJuggler"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_USRDLL;_VRJ_PLUGIN_BUILD_;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1;USE_core_stub_in_nt_dll;USE_core_stub_in_nt_dll_NOT_DEFINED_Subject"
+				MinimalRebuild="FALSE"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				BufferSecurityCheck="FALSE"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="0"
+				WarningLevel="2"
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4244;4251;4275;4290;4311;4312"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rtd.lib omnithread$(OMNITHREAD_VERSION)_rtd.lib omniDynamic$(OMNIORB_VERSION)_rtd.lib vrj_d.lib jccl_d.lib tweek_d.lib vpr_d.lib cppdom_d.lib libnspr4.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/corba_perf_mon_d.dll"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\..\VPR\DebugDLL;..\..\Tweek_CXX\DebugDLL;..\..\JCCL\DebugDLL;..\..\VRJuggler\DebugDLL;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)/corba_perf_mon_d.pdb"
+				SubSystem="1"
+				ImportLibrary="$(OutDir)/corba_perf_mon_d.lib"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"
+				Description="Generating C++ code from CORBA IDL..."
+				CommandLine="$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -I..\..\..\modules\tweek -C. -I..\..\..\modules\vrjuggler\plugins ..\..\..\modules\vrjuggler\plugins\corba_perf_mon\idl\PerformanceMonitorSubject.idl"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="ReleaseDLL"
+			IntermediateDirectory="ReleaseDLL"
+			ConfigurationType="2"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				InlineFunctionExpansion="1"
+				OmitFramePointers="TRUE"
+				AdditionalIncludeDirectories=".;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNIORB_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;..\..\..\modules\vrjuggler;..\..\..\modules\vrjuggler\plugins;..\..\..\modules\vapor;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\..\modules\tweek;..\..\VPR;..\..\Tweek_CXX;..\..\Tweek_CXX\tweek\idl;..\..\JCCL;..\..\VRJuggler"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_USRDLL;_VRJ_PLUGIN_BUILD_;_OPT;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1;USE_core_stub_in_nt_dll;USE_core_stub_in_nt_dll_NOT_DEFINED_Subject"
+				StringPooling="TRUE"
+				MinimalRebuild="FALSE"
+				RuntimeLibrary="2"
+				BufferSecurityCheck="FALSE"
+				EnableFunctionLevelLinking="TRUE"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="0"
+				WarningLevel="2"
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4244;4251;4275;4290;4311;4312"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib vrj.lib jccl.lib tweek.lib vpr.lib cppdom.lib libnspr4.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/corba_perf_mon.dll"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\..\VPR\ReleaseDLL;..\..\Tweek_CXX\ReleaseDLL;..\..\JCCL\ReleaseDLL;..\..\VRJuggler\ReleaseDLL;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
+				GenerateDebugInformation="FALSE"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				ImportLibrary="$(OutDir)/corba_perf_mon.lib"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"
+				Description="Generating C++ code from CORBA IDL..."
+				CommandLine="$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -I..\..\..\modules\tweek -C. -I..\..\..\modules\vrjuggler\plugins ..\..\..\modules\vrjuggler\plugins\corba_perf_mon\idl\PerformanceMonitorSubject.idl"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+		</Configuration>
+	</Configurations>
+	<Files>
+		<Filter
+			Name="Source Files"
+			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\plugins\corba_perf_mon\CorbaPerfPlugin.cpp">
+			</File>
+			<File
+				RelativePath="PerformanceMonitorSubject.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\plugins\corba_perf_mon\PerformanceMonitorSubjectImpl.cpp">
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc">
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\plugins\corba_perf_mon\CorbaPerfPlugin.h">
+			</File>
+			<File
+				RelativePath="PerformanceMonitorSubject.h">
+			</File>
+			<File
+				RelativePath="..\..\..\modules\vrjuggler\plugins\corba_perf_mon\PerformanceMonitorSubjectImpl.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="Resource Files"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+		</Filter>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

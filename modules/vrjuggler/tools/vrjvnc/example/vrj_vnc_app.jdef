@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="vrj_vnc_app" icon_path="" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="VNC Desktop Connection">
+      <abstract>false</abstract>
+      <help>Configuration for an application utliizing VRJ VNC.</help>
+      <parent></parent>
+      <category>/Application-Specific</category>
+      <property valuetype="boolean" variable="false" name="embedded_gui">
+         <help>Enables or disables the embedding of a 2D GUI in the 3D space.</help>
+         <value label="Embedded GUI" defaultvalue="false"/>
+      </property>
+      <property valuetype="string" variable="false" name="vnc_host">
+         <help>The host where the VNC server with the Tweek GUI is running.</help>
+         <value label="Hostname" defaultvalue=""/>
+      </property>
+      <property valuetype="integer" variable="false" name="vnc_port">
+         <help>The port number on which the VNC server is listening for client connections.  This usually begins at 5900 for Windows and 5901 for X11.</help>
+         <value label="Port Number" defaultvalue="5901"/>
+      </property>
+      <property valuetype="string" variable="false" name="vnc_password">
+         <help>The password needed to access the desktop being managed by the VNC server.  This shouldn't be a valuable password since it is stored in plain text.</help>
+         <value label="Password" defaultvalue=""/>
+      </property>
+      <property valuetype="float" variable="false" name="vnc_desktop_side_length">
+         <help></help>
+         <value label="Length" defaultvalue="10.0"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

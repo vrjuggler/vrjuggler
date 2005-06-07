@@ -1,0 +1,97 @@
+# ***************** <VPR heading BEGIN do not edit this line> *****************
+#
+# VR Juggler Portable Runtime
+#
+# Original Authors:
+#   Allen Bierbaum, Patrick Hartling, Kevin Meinert, Carolina Cruz-Neira
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# ****************** <VPR heading END do not edit this line> ******************
+
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+default: libs
+
+include @topdir@/test/TestSuite/test.defs.mk
+
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+SUBOBJDIR=	modules
+
+LIB_PREFIX=	@LIB_PREFIX@
+DYNAMICLIB_EXT=	@DYNAMICLIB_EXT@
+
+SRCS=		DsoLoaderModule1.c	\
+		DsoLoaderModule2.c	\
+		LibraryLoaderModule1.c	\
+		LibraryLoaderModule2.c	\
+		c_module.c		\
+		cxx_module.cpp
+
+include $(MKPATH)/dpp.obj.mk
+
+libs:
+	-mkdir -p $(OBJDIR)
+	$(MAKE) $(LIB_PREFIX)dsomod1.$(DYNAMICLIB_EXT)		\
+          $(LIB_PREFIX)dsomod2.$(DYNAMICLIB_EXT)		\
+          loadermod1.$(DYNAMICLIB_EXT)				\
+          loadermod1_d.$(DYNAMICLIB_EXT)			\
+          loadermod2.$(DYNAMICLIB_EXT)				\
+          $(LIB_PREFIX)cmod.$(DYNAMICLIB_EXT)			\
+          $(LIB_PREFIX)cxxmod.$(DYNAMICLIB_EXT)
+
+$(LIB_PREFIX)dsomod1.$(DYNAMICLIB_EXT): $(OBJDIR)/DsoLoaderModule1.$(OBJEXT)
+	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG)		\
+          $(OBJDIR)/DsoLoaderModule1.$(OBJEXT)
+
+$(LIB_PREFIX)dsomod2.$(DYNAMICLIB_EXT): $(OBJDIR)/DsoLoaderModule2.$(OBJEXT)
+	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG)		\
+          $(OBJDIR)/DsoLoaderModule2.$(OBJEXT)
+
+loadermod1.$(DYNAMICLIB_EXT): $(OBJDIR)/LibraryLoaderModule1.$(OBJEXT)
+	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG)		\
+          $(OBJDIR)/LibraryLoaderModule1.$(OBJEXT)
+
+loadermod1_d.$(DYNAMICLIB_EXT): $(OBJDIR)/LibraryLoaderModule1.$(OBJEXT)
+	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG)		\
+          $(OBJDIR)/LibraryLoaderModule1.$(OBJEXT)
+
+loadermod2.$(DYNAMICLIB_EXT): $(OBJDIR)/LibraryLoaderModule2.$(OBJEXT)
+	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG)		\
+          $(OBJDIR)/LibraryLoaderModule2.$(OBJEXT)
+
+$(LIB_PREFIX)cmod.$(DYNAMICLIB_EXT): $(OBJDIR)/c_module.$(OBJEXT)
+	$(C_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/c_module.$(OBJEXT)
+
+$(LIB_PREFIX)cxxmod.$(DYNAMICLIB_EXT): $(OBJDIR)/cxx_module.$(OBJEXT)
+	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG)		\
+          $(OBJDIR)/cxx_module.$(OBJEXT)

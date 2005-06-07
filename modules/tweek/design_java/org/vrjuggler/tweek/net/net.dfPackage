@@ -1,0 +1,46 @@
+package id3x5spctylgvb1ctypq8gk;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:design#Class#id1m3nactylgvb1ctypqazk.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.vrjuggler.tweek.net.corba:oiref> 
+*/
+class reference {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.net.CommunicationEvent:oiref><oihard>
+@__modelType reference 
+*/
+class reference60 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.net.CommException:oiref><oihard>
+@__modelType reference 
+*/
+class reference61 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.net.CommunicationListener:oiref><oihard>
+@__modelType reference 
+*/
+class reference62 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:design#Class#id1m3nactylgvb1ctypqazk.diagram:oiref>=10,10,105,61,1:oigroup>
+<oigroup:<oiref:java#Class#org.vrjuggler.tweek.net.CommunicationListener:oiref>=10,330,200,105,1:oigroup>
+<oigroup:<oiref:java#Class#org.vrjuggler.tweek.net.CommException:oiref>=230,10,200,92,1:oigroup>
+<oigroup:<oiref:java#Class#org.vrjuggler.tweek.net.CommunicationEvent:oiref>=10,110,200,179,1:oigroup> 
+*/
+class __positions {
+}

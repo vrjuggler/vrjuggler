@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="position_calibration_filter" icon_path="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Position Calibration Filter">
+      <abstract>false</abstract>
+      <help>Applies a calibration table to each tracked position.</help>
+      <parent/>
+      <category>/Gadgeteer/</category>
+      <property valuetype="string" variable="false" name="calibration_file">
+         <help>The name of the file that contains the calibration table.</help>
+         <value label="Calibration File Name" defaultvalue=""/>
+      </property>
+      <upgrade_transform />
+   </definition_version>
+</definition>
+

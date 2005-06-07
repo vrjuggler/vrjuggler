@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <alias name="VJButton0" version="1">
+         <proxy>Button0Proxy</proxy>
+      </alias>
+      <alias name="VJButton1" version="1">
+         <proxy>Button1Proxy</proxy>
+      </alias>
+      <alias name="VJButton2" version="1">
+         <proxy>Button2Proxy</proxy>
+      </alias>
+      <alias name="VJButton3" version="1">
+         <proxy>Button3Proxy</proxy>
+      </alias>
+      <alias name="VJButton4" version="1">
+         <proxy>Button4Proxy</proxy>
+      </alias>
+      <alias name="VJButton5" version="1">
+         <proxy>Button5Proxy</proxy>
+      </alias>
+      <digital_proxy name="Button0Proxy" version="1">
+         <device>SimWandButtons</device>
+         <unit>0</unit>
+      </digital_proxy>
+      <digital_proxy name="Button2Proxy" version="1">
+         <device>SimWandButtons</device>
+         <unit>2</unit>
+      </digital_proxy>
+      <digital_proxy name="Button1Proxy" version="1">
+         <device>SimWandButtons</device>
+         <unit>1</unit>
+      </digital_proxy>
+      <digital_proxy name="Button3Proxy" version="1">
+         <device>SimWandButtons</device>
+         <unit>3</unit>
+      </digital_proxy>
+      <digital_proxy name="Button4Proxy" version="1">
+         <device>SimWandButtons</device>
+         <unit>4</unit>
+      </digital_proxy>
+      <digital_proxy name="Button5Proxy" version="1">
+         <device>SimWandButtons</device>
+         <unit>5</unit>
+      </digital_proxy>
+      <keyboard_mouse_device name="Wand Keyboard" version="1">
+         <mouse_sensitivity>0.02</mouse_sensitivity>
+         <device_host />
+      </keyboard_mouse_device>
+      <input_window name="Wand Input Window" version="1">
+         <origin>0</origin>
+         <origin>0</origin>
+         <size>1280</size>
+         <size>1000</size>
+         <display_number>4</display_number>
+         <keyboard_mouse_device_name>Wand Keyboard</keyboard_mouse_device_name>
+         <lock_key>KEY_W</lock_key>
+         <start_locked>true</start_locked>
+         <sleep_time>50</sleep_time>
+      </input_window>
+      <simulated_digital_device name="SimWandButtons" version="2">
+         <keyboard_mouse_proxy>Wand Keyboard Proxy</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 0" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>MOUSE_BUT1</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 1" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>MOUSE_BUT3</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 2" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>MOUSE_NEGY</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 3" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>MOUSE_POSX</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 4" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>MOUSE_POSY</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 5" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>MOUSE_NEGX</key>
+            </key_modifier_pair>
+         </key_pair>
+         <device_host />
+      </simulated_digital_device>
+      <keyboard_mouse_proxy name="Wand Keyboard Proxy" version="1">
+         <device>Wand Keyboard</device>
+      </keyboard_mouse_proxy>
+   </elements>
+</configuration>
+

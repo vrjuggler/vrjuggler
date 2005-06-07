@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="gadget_logger" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Gadgeteer Logger">
+      <abstract>false</abstract>
+      <help/>
+      <parent/>
+      <category>/Gadgeteer/Logger</category>
+      <property valuetype="configelementpointer" variable="false" name="start_digital">
+         <help>This is the digital device that when triggered causes the logging to start.</help>
+         <value label="Start Logging"/>
+         <allowed_type>DigProxy</allowed_type>
+         <allowed_type>proxyAlias</allowed_type>
+      </property>
+      <property valuetype="configelementpointer" variable="false" name="stamp_digital">
+         <help/>
+         <value label="Stamp Log"/>
+         <allowed_type>DigProxy</allowed_type>
+         <allowed_type>proxyAlias</allowed_type>
+      </property>
+      <property valuetype="integer" variable="false" name="max_framerate">
+         <help>Maximum number of frames per second that you want the application to execute at while collecting logging data. This is useful for decreasing the amount of data logged (ie. keeps the file smaller). A value of -1 means do not limit the frame rate.  Run as fast as possible.</help>
+         <value label="Max Framerate" defaultvalue="-1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="compress_factor">
+         <help>The is the compression factor to use.  The number means the number of equivalent frames to allow in a row.
+
+         So for example a rate of:
+
+         0 - Means allow no duplications (maximum compression)
+         5 - Allow 5 frames of equivalence (medium compression)
+         1000 - Allow full duplication (basically no compression)</help>
+         <value label="Compression value" defaultvalue="0"/>
+      </property>
+      <property valuetype="string" variable="true" name="ignore_elems">
+         <help/>
+         <value label="Element name" defaultvalue=""/>
+      </property>
+      <property valuetype="string" variable="true" name="ignore_attribs">
+         <help/>
+         <value label="Attribute Name" defaultvalue=""/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

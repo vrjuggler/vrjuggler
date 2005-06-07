@@ -1,0 +1,90 @@
+# **************** <Tweek heading BEGIN do not edit this line> ****************
+# Tweek
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+# **************** <Tweek heading END do not edit this line> ******************
+
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+if test "x$TWEEK_BASE_DIR" = "x" ; then
+   echo "FATAL ERROR: TWEEK_BASE_DIR environment variable not set!"
+   exit 1
+fi
+
+# Make sure tweek-config is executable
+if test ! -x "$TWEEK_BASE_DIR/bin/tweek-config" ; then
+   echo "FATAL ERROR: Cannot execute tweek-config!"
+   exit 1
+fi
+
+# If the environment variable JDK_HOME is not set, default it to /usr/java.
+if test "x$JDK_HOME" = "x" ; then
+   echo "WARNING: Setting JDK_HOME environment variable to /usr/java"
+   JDK_HOME='/usr/java' ; export JDK_HOME
+fi
+
+# Make sure that $JDK_HOME/bin/java exists and is executable.  If it is not,
+# exit with an error message and status 1.
+if test ! -x "$JDK_HOME/bin/java" ; then
+   echo "ERROR: Could not find java executable $JDK_HOME/bin/java"
+   status=1
+# Otherwise, start up Tweek and exit with status 0.
+else
+
+   # Java classpath separator character.
+   JCPS="@JCPS@"
+
+   TWEEK_JARS=`$TWEEK_BASE_DIR/bin/tweek-config --jars`
+   CLASSPATH="${TWEEK_JARS}${JCPS}${CLASSPATH}"
+   export CLASSPATH
+
+   # If using an ORB other than that distributed with the JDK, these must be
+   # defined appropriately.
+   ORB_CLASS_PROP=@ORB_CLASS_PROP@
+   ORB_SINGLETON_CLASS_PROP=@ORB_SINGLETON_CLASS_PROP@
+   
+   if test "x$ORB_CLASS_PROP" != "x"; then
+      ORBClass_PROP="-Dorg.omg.CORBA.ORBClass=$ORB_CLASS_PROP"
+   fi
+   if test "x$ORB_SINGLETON_CLASS_PROP" != "x"; then
+      ORBSingletonClass_PROP="-Dorg.omg.CORBA.ORBSingletonClass=$ORB_SINGLETON_CLASS_PROP"
+   fi
+
+   if test `uname` = "Darwin" ; then
+      : ${APP_NAME='Tweek'}
+      plaf="-Xdock:name=$APP_NAME -Dapple.laf.useScreenMenuBar=true"
+      plaf="$plaf -Dcom.apple.mrj.application.apple.menu.about.name=$APP_NAME"
+   fi
+
+   arch='@target_cpu@'
+   $JDK_HOME/bin/java $ORBClass_PROP $ORBSingletonClass_PROP -Djava.library.path="$TWEEK_BASE_DIR/share/tweek/java/$arch" -Djava.security.policy="$TWEEK_BASE_DIR/share/tweek/java/java.security.policy.txt" $plaf -DTWEEK_BASE_DIR="${TWEEK_BASE_DIR}" $EXTRA_JDK_ARGS org.vrjuggler.tweek.Tweek "$@"
+   status=0
+fi

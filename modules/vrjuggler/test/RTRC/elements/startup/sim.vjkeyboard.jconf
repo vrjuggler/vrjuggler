@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Configuration" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd" xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
+<elements>
+<alias name="VJKeyboard" version="1"><proxy>MainSimEventWindow</proxy></alias></elements>
+</configuration>

@@ -1,0 +1,61 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# =============================================================================
+# This file <java.defs.mk> provides variable information shared by all
+# makefiles in the VR Juggler source tree used for building Java code.  It
+# requires GNU make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+# All makefiles in the source tree that build Java code should include this
+# file after make.defs.mk for maximum information sharing.
+# -----------------------------------------------------------------------------
+# Variables defined here are:
+#
+# beandir
+# javadir
+# bundleroot
+# bundle_beandir
+# bundle_javadir
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Base variables needed by all makefiles.
+# -----------------------------------------------------------------------------
+beandir=		$(projdatadir)/beans
+javadir=		$(projdatadir)/java
+
+bundleroot=		$(prefix)/VRJConfig.app
+bundle_bindir=          $(bundleroot)/Contents/MacOS
+bundle_javadir=		$(bundleroot)/Contents/Resources/Java
+bundle_vrj_beandir=	$(bundle_javadir)/share/vrjuggler/beans
+bundle_vrj_javadir=	$(bundle_javadir)/share/vrjuggler/java

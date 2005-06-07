@@ -1,0 +1,96 @@
+package id2dx08d6gs390yd6gt2nvb;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#userPfApp:oiref><oihard>
+@__modelType reference 
+*/
+class reference4 {
+}/**
+@__ref <oiref:cpp#Class#userOglApp:oiref><oihard>
+@__modelType reference 
+*/
+class reference5 {
+}/**
+@__ref <oiref:cpp#Class#userOpenSGApp:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#id3vpe2dazpbhwvdazpfpif.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Draw:oiref> 
+*/
+class reference1 {
+}/**
+@__ref <oiref:design#Class#id4v1ykdazpbhwvdazpfpj0.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Kernel:oiref> 
+*/
+class reference2 {
+}/**
+@__ref <oiref:design#Class#id17o1mdazpbhwvdazpfpks.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Util:oiref> 
+*/
+class reference3 {
+}/**
+@__ref <oiref:design#Class#id2jsdazpbhwvdazpfpep.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Display:oiref> 
+*/
+class reference6 {
+}/**
+@__ref <oiref:design#Class#id4mdvwdazpbhwvdazpfpk6.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Test:oiref> 
+*/
+class reference7 {
+}/**
+@__ref <oiref:design#Class#idx8tbdazpbhwvdazpfpjl.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Sound:oiref> 
+*/
+class reference8 {
+}/**
+@__ref <oiref:design#Class#id4wtxvdazpbhwvdazs5t8s.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#design_examples:oiref> 
+*/
+class reference9 {
+}/**
+@__ref <oiref:cpp#Class#userOsgApp:oiref><oihard>
+@__modelType reference 
+*/
+class reference10 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:design#Class#id3vpe2dazpbhwvdazpfpif.diagram:oiref>=356,295,102,117,1:oigroup>
+<oigroup:<oiref:design#Class#id1whbsd6i83xp3d6i89ct4.diagram:oiref>=741,368,165,115,1:oigroup>
+<oigroup:<oiref:cpp#Class#userPfApp:oiref>=472,269,122,170,1:oigroup>
+<oigroup:<oiref:design#Class#id2cx5d6gs390yd6gt2rvd.diagram:oiref>=83,83,64,52,1:oigroup>
+<oigroup:<oiref:design#Class#id4v1ykdazpbhwvdazpfpj0.diagram:oiref>=613,312,148,179,1:oigroup>
+<oigroup:<oiref:design#Class#id1z8gkd6gs390yd6gt2rru.diagram:oiref>=1,1,69,111,1:oigroup>
+<oigroup:<oiref:design#Class#id17o1mdazpbhwvdazpfpks.diagram:oiref>=560,19,54,75,1:oigroup>
+<oigroup:<oiref:cpp#Class#userOpenSGApp:oiref>=364,43,186,212,1:oigroup>
+<oigroup:<oiref:design#Class#id2jsdazpbhwvdazpfpep.diagram:oiref>=189,408,157,179,1:oigroup>
+<oigroup:<oiref:design#Class#idx8tbdazpbhwvdazpfpjl.diagram:oiref>=189,148,156,117,1:oigroup>
+<oigroup:<oiref:design#Class#id4mdvwdazpbhwvdazpfpk6.diagram:oiref>=263,2,89,127,1:oigroup>
+<oigroup:<oiref:cpp#Class#userOglApp:oiref>=607,104,153,196,1:oigroup>
+
+*/
+class __positions {
+}

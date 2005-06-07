@@ -1,0 +1,518 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Specialized include file for the top-level makefile.  Targets and variables
+# needed for building the whole source tree are provided here.  This file
+# should only be included by the top-level makefile.  It is written in such a
+# way that no assumptions are made by this file about what the including file
+# provides except that it includes make.defs.mk.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+# Variables whose values are specific to this file.
+includedir=	@includedir@
+instlinks=	$(topdir)/instlinks
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+
+# Extra compiler and linker options needed only by this file.
+DBG_FLAGS=	-D_DEBUG @DBG_FLAGS@
+OPT_FLAGS=	-D_OPT -DNDEBUG @OPT_FLAGS@
+
+# =============================================================================
+# Build and installation directory naming and ownership information.
+# =============================================================================
+DEFAULT_DIR=	$(OPT_DIR)
+
+# If we have a name for the install group, define group-setting options for
+# UNIX commands (chown(1), chgrp(1)) and for local Perl scripts
+# (makefiles-gen.pl in particular).
+ifdef GROUP_NAME
+   _GROUP_OPT_PL=	--gname="$(GROUP_NAME)"
+endif
+
+# --------------------------------------------
+# Library build information.
+# --------------------------------------------
+
+SHLIB_MAJOR=	@MAJOR_VERSION@
+SHLIB_MINOR=	@MAJOR_VERSION@
+SHLIB_MICRO=	@MICRO_VERSION@
+
+ifneq (@OS_TYPE@, Win32)
+DYNAMICLIB_VER=	.$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
+# But we will name the static libraries differently than the dynamic libraries.
+else
+STATIC_SUFFIX=	_s
+endif
+
+STATICLIB_EXT=	@STATICLIB_EXT@
+DYNAMICLIB_EXT=	@DYNAMICLIB_EXT@
+
+# Add extra linking options on Darwin/OS X.
+ifeq (@PLATFORM@, Darwin)
+LDOPTS+=	-Wl,-dylib_compatibility_version,$(SHLIB_MAJOR).$(SHLIB_MINOR)
+LDOPTS+=	-Wl,-dylib_current_version,$(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
+LDOPTS_DBG=	-g
+LDOPTS_OPT=	-Wl,-x
+endif
+
+# Full list of the libraries to build.
+LIBS=		$(VJ_LIBRARY)
+
+ifeq ($(GL_API), Y)
+   LIBS+=	$(GL_LIBRARY)
+endif
+
+ifeq ($(PF_API), Y)
+   LIBS+=	$(PF_LIBRARY)
+endif
+
+STATIC_LIBS=	$(LIBS)
+DYNAMIC_LIBS=	$(LIBS)
+
+# Dependencies for each of the various dynamic libraries we build.
+DYLIB_DEPS_VJ=		@DYLIB_DEPS_VJ@
+DYLIB_DEPS_GL=		@DYLIB_DEPS_GL@
+DYLIB_DEPS_PF=		@DYLIB_DEPS_PF@
+DYLIB_PROF_DEPS_VJ=	@DYLIB_PROF_DEPS_VJ@
+DYLIB_PROF_DEPS_GL=	@DYLIB_PROF_DEPS_GL@
+DYLIB_PROF_DEPS_PF=	@DYLIB_PROF_DEPS_PF@
+
+VJ_LIB_STATIC=		$(VJ_LIBRARY)$(STATIC_SUFFIX).$(STATICLIB_EXT)
+VJ_LIB_DYNAMIC=		$(VJ_LIBRARY).$(DYNAMICLIB_EXT)
+VJ_PROF_LIB_STATIC=	$(VJ_LIBRARY)$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT)
+VJ_PROF_LIB_DYNAMIC=	$(VJ_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
+GL_LIB_STATIC=		$(GL_LIBRARY)$(STATIC_SUFFIX).$(STATICLIB_EXT)
+GL_LIB_DYNAMIC=		$(GL_LIBRARY).$(DYNAMICLIB_EXT)
+GL_PROF_LIB_STATIC=	$(GL_LIBRARY)$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT)
+GL_PROF_LIB_DYNAMIC=	$(GL_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
+PF_LIB_STATIC=		$(PF_LIBRARY)$(STATIC_SUFFIX).$(STATICLIB_EXT)
+PF_LIB_DYNAMIC=		$(PF_LIBRARY).$(DYNAMICLIB_EXT)
+PF_PROF_LIB_STATIC=	$(PF_LIBRARY)$(PROFLIB_EXT)$(STATIC_SUFFIX).$(STATICLIB_EXT)
+PF_PROF_LIB_DYNAMIC=	$(PF_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
+
+# Version information.
+PARAM_HEADER=	vrj/vrjParam.h
+PARAM_SOURCE=	vrj/vrjParam.cpp
+BRANCH=		VRJ_RELENG_2_0_BRANCH
+CANON_NAME=	Terrible Twos
+VER_ARGS=	-f $(VJROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@		\
+		-b $(BRANCH) -n "$(CANON_NAME)"				\
+		-d "`date '+%b %e, %Y %H:%M:%S'`"
+
+ifdef VERSION
+   VER_ARGS+=	-v $(VERSION)
+endif
+
+# =============================================================================
+# Library targets.
+# =============================================================================
+
+BEFOREBUILD=	beforebuild
+AFTERBUILD=	afterbuild
+
+# Things to do before the object files and library are built.
+beforebuild:
+	@$(MAKE) $(PARAM_HEADER)
+	@$(MAKE) $(PARAM_SOURCE)
+
+$(PARAM_HEADER): $(VJROOT_ABS)/$(PARAM_HEADER).in $(VJROOT_ABS)/VERSION
+	@$(SHELL) $(scriptdir)/make-ver.sh -o $@		\
+          -i $(VJROOT_ABS)/$@.in $(VER_ARGS)
+
+$(PARAM_SOURCE): $(PARAM_HEADER) $(VJROOT_ABS)/$(PARAM_SOURCE).in
+	@$(SHELL) $(scriptdir)/make-ver.sh -o $@		\
+          -i $(VJROOT_ABS)/$@.in $(VER_ARGS)
+
+# Things to do after the object files and library are built.
+afterbuild:
+	@$(MAKE) links
+	@echo ""
+	@echo "---------------------------------------------------------------"
+	@echo 'You must now set $$VJ_BASE_DIR to:'
+	@cd $(instlinks) && echo "  `pwd`"
+	@echo ""
+	@echo 'and extend your path to include $$VJ_BASE_DIR/bin'
+	@echo "---------------------------------------------------------------"
+
+# -----------------------------------------------
+# Construct the static version of the libraries.
+# -----------------------------------------------
+$(LIBDIR)/$(VJ_LIB_STATIC) $(LIBDIR)/$(VJ_PROF_LIB_STATIC)		\
+$(LIBDIR)/$(GL_LIB_STATIC) $(LIBDIR)/$(GL_PROF_LIB_STATIC)		\
+$(LIBDIR)/$(PF_LIB_STATIC) $(LIBDIR)/$(PF_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
+	$(RANLIB) $@
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+# ------------------------------------------------
+# Construct the dynamic version of the libraries.
+# ------------------------------------------------
+$(LIBDIR)/$(VJ_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+ifeq (@PLATFORM@, Darwin)
+	ld -dynamic -m -r -d -bind_at_load -o $(@:.dylib=.lo)		\
+          $(OBJDIR)/*.$(OBJEXT)
+	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
+          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(@:.dylib=.lo) $(DYLIB_DEPS_VJ)
+	rm -f $(@:.dylib=.lo)
+else
+	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
+          $(DYLIB_DEPS_VJ)
+endif
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(VJ_LIBRARY).* .
+else
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
+endif
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+$(LIBDIR)/$(VJ_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+ifeq (@PLATFORM@, Darwin)
+	ld -dynamic -m -r -d -bind_at_load -o $(@:.dylib=.lo)		\
+          $(OBJDIR)/*.$(OBJEXT)
+	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
+          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(@:.dylib=.lo)		\
+          $(DYLIB_PROF_DEPS_VJ)
+	rm -f $(@:.dylib=.lo)
+else
+	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
+          $(DYLIB_PROF_DEPS_VJ)
+endif
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(VJ_LIBRARY)$(PROFLIB_EXT).* .
+else
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
+endif
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+$(LIBDIR)/$(GL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+ifeq (@PLATFORM@, Darwin)
+	ld -dynamic -m -r -d -bind_at_load -o $(@:.dylib=.lo)		\
+          $(OBJDIR)/*.$(OBJEXT)
+	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
+          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(@:.dylib=.lo) $(DYLIB_DEPS_GL)
+	rm -f $(@:.dylib=.lo)
+else
+	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
+          $(DYLIB_DEPS_GL)
+endif
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(GL_LIBRARY).* .
+else
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
+endif
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+$(LIBDIR)/$(GL_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+ifeq (@PLATFORM@, Darwin)
+	ld -dynamic -m -r -d -bind_at_load -o $(@:.dylib=.lo)		\
+          $(OBJDIR)/*.$(OBJEXT)
+	$(CXX) $(EXTRA_LDOPTS) -Wl,-dynamic -nostartfiles -Wl,-dylib	\
+          -Wl,-ldylib1.o $(LDOPTS) -o $@ $(@:.dylib=.lo)		\
+          $(DYLIB_PROF_DEPS_GL)
+	rm -f $(@:.dylib=.lo)
+else
+	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
+          $(DYLIB_PROF_DEPS_GL)
+endif
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(GL_LIBRARY)$(PROFLIB_EXT).* .
+else
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
+endif
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+$(LIBDIR)/$(PF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
+            $(DYLIB_DEPS_PF)
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(PF_LIBRARY).* .
+else
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
+endif
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+$(LIBDIR)/$(PF_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(CXX_DLL) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
+            $(DYLIB_PROF_DEPS_PF)
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/$(PF_LIBRARY)$(PROFLIB_EXT).* .
+else
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
+endif
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+# =============================================================================
+# Make links for developer use that provide the needed functionality for
+# the $VJ_BASE_DIR environment variable to be used when needed.  $VJ_BASE_DIR
+# should be set to $(instlinks).
+# =============================================================================
+links:
+	@echo "------------------------------------------------"
+	@echo "Setting up developer installation"
+	@echo "------------------------------------------------"
+ifdef BUILD_TYPE
+	$(MAKE) links-$(BUILD_TYPE)
+else
+	$(MAKE) links-dbg
+endif
+
+links-all:
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" installworld
+
+links-dbg:
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-debug
+
+links-opt:
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-optim
+
+links-prof:
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-profiled
+
+links-prof-libs:
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-prof
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-prof-dso
+
+# Remove the links in $(instlinks).
+clean-links:
+ifndef GLOBAL_BUILD
+	@echo "------------------------------------------------"
+	@echo "Removing developer installation links"
+	@echo "------------------------------------------------"
+	rm -rf $(instlinks)
+endif
+
+# =============================================================================
+# Installation targets.  The default (what is done by 'install') is to install
+# the static debugging version of the libraries.  The steps taken for a full
+# installation are:
+#
+#     1) Create the full installation directory hierarchy.
+#     2) Install the libraries.
+#     3) Install the header files.
+#     4) Install the test programs.
+#     5) Install the contents of the data directory.
+# =============================================================================
+
+BEFOREINSTALL=	beforeinstall
+AFTERINSTALL=	afterinstall
+
+# Steps to take before beginning the installation process.  This target is
+# independent of the current ABI.
+beforeinstall:
+	@$(MAKE) hier
+
+# Make the full directory hierarchy for the installation.
+hier:
+	@echo "------------------------------------------------"
+	@echo "Making hierarchy"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.install.dist -p $(prefix)
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.data.dist -p $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.include.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.lib.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.java.dist -p $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.samples.dist -p $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.test.dist -p $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.tools.dist -p $(projdatadir)
+
+# Steps to take after the installation process is complete.  This target is
+# independent of the current ABI.
+afterinstall:
+	@echo "==============================================================="
+	@echo "VR Juggler installation complete"
+	@echo "==============================================================="
+
+PREINSTALL=	pre-install
+POSTINSTALL=	post-install
+
+pre-install:
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.lib.dist -p $(prefix)
+
+# Do everything needed after installing the library binaries.
+post-install:
+	@$(MAKE) install-samples
+	@$(MAKE) install-test
+	@$(MAKE) install-tools
+	@$(MAKE) install-data
+	@$(MAKE) install-m4
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(topdir)/vrjuggler-config $(bindir)
+
+PREINSTALL_HEADERS=	pre-install-headers
+POSTINSTALL_HEADERS=	post-install-headers
+
+pre-install-headers:
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.include.dist -p $(prefix)
+
+post-install-headers:
+	$(MAKE) install-headers-deprecated
+
+install-headers-deprecated:
+	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) -e .h -o $(includedir)/deprecated		\
+          -i $(VJROOT_ABS)/deprecated $(EXTRA_INSTALL_ARGS)
+
+# Install the sample applications.
+install-samples:
+	@echo "------------------------------------------------"
+	@echo "Installing sample applications"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.samples.dist -p $(projdatadir)
+	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/samples	\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/samples	\
+          $(EXTRA_INSTALL_ARGS)
+	$(PERL) $(scriptdir)/makefiles-gen.pl				\
+          --vars="$(topdir)/VARS.pl" --startdir="$(top_srcdir)/samples"	\
+          --mode="$(FILE_PERMS)" $(_GROUP_OPT_PL) --srcdir="."		\
+          --prefix="$(projdatadir)/samples"
+
+# Install the test programs.
+install-test:
+	@echo "------------------------------------------------"
+	@echo "Installing test programs"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.test.dist -p $(projdatadir)
+	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/test	\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/test	\
+          $(EXTRA_INSTALL_ARGS)
+	$(PERL) $(scriptdir)/makefiles-gen.pl --mode="$(FILE_PERMS)"	\
+          --prefix="$(projdatadir)/test" --vars="$(topdir)/VARS.pl"	\
+          --startdir="$(top_srcdir)/test" $(_GROUP_OPT_PL) --srcdir="."
+
+# Install the user tools code.
+install-tools:
+	@echo "------------------------------------------------"
+	@echo "Installing user tools"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.tools.dist -p $(projdatadir)
+	$(PERL) $(scriptdir)/install-src.pl -i $(top_srcdir)/tools	\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/tools	\
+          $(EXTRA_INSTALL_ARGS)
+	$(PERL) $(scriptdir)/makefiles-gen.pl				\
+          --prefix="$(projdatadir)/tools" --vars="$(topdir)/VARS.pl"	\
+          --startdir="$(top_srcdir)/tools" --mode="$(FILE_PERMS)"	\
+          $(_GROUP_OPT_PL) --srcdir="."
+
+# Install the standard data files.
+install-data:
+	@echo "------------------------------------------------"
+	@echo "Installing standard data files"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.data.dist -p $(projdatadir)
+	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/data	\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/data	\
+          -v "$(topdir)/VARS.pl" $(EXTRA_INSTALL_ARGS)
+	$(PERL) $(scriptdir)/makefiles-gen.pl --mode="$(FILE_PERMS)"	\
+          --prefix="$(projdatadir)" --vars="$(topdir)/VARS.pl"		\
+          --files="$(top_srcdir)/vrj.appdefs.mk.in" $(_GROUP_OPT_PL)	\
+          --srcdir="."
+
+install-m4:
+	@echo "------------------------------------------------"
+	@echo "Installing Autoconf m4 macros"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(datadir)/aclocal
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(JUGGLERROOT_ABS)/macros/vrj.m4	\
+          $(datadir)/aclocal
+
+# =============================================================================
+# Clean-up targets.  '_clean' removes all the files in the build directories.  
+# '_clobber' removes the $(BUILDDIR_BASE) and $(LIBDIR_NAME) directories.
+# =============================================================================
+_clobber:
+	@$(MAKE) cleandepend
+	@$(MAKE) clean-links
+
+# Define $(_LOCAL_CLOBBER) to inform the shared 'clobber' target that there is
+# a '_clobber' target to be run besides the standard target.
+_LOCAL_CLOBBER=	1
+
+include $(MKPATH)/dpp.libs.mk
+include $(MKPATH)/dpp.clean.mk
+
+CLEAN_FILES+=	$(PARAM_HEADER)
+CLEAN_DIRS+=	$(BUILDDIR_BASE) $(LIBDIR_NAME)
+CLOBBER_DIRS+=	$(BUILDDIR_BASE) $(LIBDIR_NAME)

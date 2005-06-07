@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <analog_proxy name="AnaProxy 0" version="1">
+         <device>SimAnalogDevice</device>
+         <unit>0</unit>
+      </analog_proxy>
+      <analog_proxy name="AnaProxy 1" version="1">
+         <device>SimAnalogDevice</device>
+         <unit>1</unit>
+      </analog_proxy>
+      <simulated_analog_device name="SimAnalogDevice" version="2">
+         <keyboard_mouse_proxy>Wand Keyboard Proxy</keyboard_mouse_proxy>
+         <increment_keypress>
+            <key_modifier_pair name="Increment Keypress 0" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_Q</key>
+            </key_modifier_pair>
+         </increment_keypress>
+         <increment_keypress>
+            <key_modifier_pair name="Increment Keypress 1" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_W</key>
+            </key_modifier_pair>
+         </increment_keypress>
+         <increment_keypress>
+            <key_modifier_pair name="Increment Keypress 2" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_E</key>
+            </key_modifier_pair>
+         </increment_keypress>
+         <increment_keypress>
+            <key_modifier_pair name="Increment Keypress 3" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_R</key>
+            </key_modifier_pair>
+         </increment_keypress>
+         <decrement_keypress>
+            <key_modifier_pair name="Decrement Keypress 0" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_A</key>
+            </key_modifier_pair>
+         </decrement_keypress>
+         <decrement_keypress>
+            <key_modifier_pair name="Decrement Keypress 1" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_S</key>
+            </key_modifier_pair>
+         </decrement_keypress>
+         <decrement_keypress>
+            <key_modifier_pair name="Decrement Keypress 2" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_D</key>
+            </key_modifier_pair>
+         </decrement_keypress>
+         <decrement_keypress>
+            <key_modifier_pair name="Decrement Keypress 3" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_F</key>
+            </key_modifier_pair>
+         </decrement_keypress>
+         <delta>1.0</delta>
+         <min>0.0</min>
+         <max>255.0</max>
+         <initial_value>0.0</initial_value>
+         <device_host />
+      </simulated_analog_device>
+      <alias name="VJAnalog0" version="1">
+         <proxy>AnaProxy 0</proxy>
+      </alias>
+      <alias name="VJAnalog1" version="1">
+         <proxy>AnaProxy 1</proxy>
+      </alias>
+   </elements>
+</configuration>
+

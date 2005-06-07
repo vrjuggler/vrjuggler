@@ -1,0 +1,132 @@
+package id6ta7tcydggdmycydgjhn7;
+
+/**
+@version 2.0
+@__modelType diagram 
+@__hiddenLink MemberLink#<oiref:cpp#Member#vrj::App#kernel:oiref>
+@__hiddenLink MemberLink#<oiref:cpp#Member#vrj::Kernel#mNewApp:oiref>
+@__hiddenLink MemberLink#<oiref:cpp#Member#vrj::Kernel#mApp:oiref>
+@__hiddenLink MemberLink#<oiref:cpp#Member#vrj::App#mKernel:oiref>
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#jccl::ConfigChunkHandler:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#vrj::Kernel:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#data:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#mApp:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#mNewApp:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#mNewAppSet:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#mControlThread:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#mSysFactory:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#mInputManager:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#mDrawManager:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#mDisplayManager:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#environmentManager:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#mSoundManager:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#perfBuffer:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#performanceEnabled:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#sharedMemPool:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#mUsers:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#vprSingletonHeader#(#vrj::Kernel#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#getThread#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#getUsers#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#getUser#(#std::string#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#getSoundManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#getEnvironmentManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#getInputManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#getSysFactory#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#start#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#initConfig#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#controlLoop#(#void*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#setApplication#(#vrj::App*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#loadChunkDescFile#(#std::string#)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#stop#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#isRunning#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#waitForKernelStop#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#loadConfigFile#(#const char*#)#:oiref>
+@hideAttributes
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#addUser#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#removeUser#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#updateFrameData#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#initSignalButtons#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#changeApplication#(#vrj::App*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#checkSignalButtons#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#startDrawManager#(#bool#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#stopDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#vprSingletonHeader#(#Kernel#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#operator=#(#const vrj::Kernel&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#$$constructor$$#(#const vrj::Kernel&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#removeUser#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#addUser#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::Kernel#getUser#(#const std::string&#)#:oiref>
+*/
+class reference1 {
+}/**
+@__ref <oiref:cpp#Class#vrj::App:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#vrj::App#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#setFocus#(#bool#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#focusChanged#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#haveFocus#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#reset#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#postFrame#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#depSatisfied#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#intraFrame#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#preFrame#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#exit#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#apiInit#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#init#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#vrj::Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#kernel:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#mHaveFocus:oiref> 
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#getSoundManager#(##)#:oiref>
+@hideAttributes
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$destructor$$#(##)#:oiref>
+*/
+class reference2 {
+}/**
+@__ref <oiref:cpp#Class#Managers:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference22 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Extends#Managers#jccl::ConfigChunkHandler:oiref>=295,190,295,175:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::App#mKernel:oiref>=410,244,175,244:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::Kernel#mNewApp:oiref>=700,430,250,430:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::Kernel:oiref>=10,190,230,170,0:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::App#jccl::ConfigChunkHandler:oiref>=510,190,346,132:oigroup>
+<oigroup:<oiref:design#Class#id6ta7tcydggdmycydgjhn7.node.link:oiref>=:oigroup>
+<oigroup:<oiref:cpp#Class#jccl::ConfigChunkHandler:oiref>=220,10,190,122,1:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::Kernel#jccl::ConfigChunkHandler:oiref>=110,190,283,132:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::Kernel#mNewApp:oiref>=0,0,32,15,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::App#kernel:oiref>=250,345,700,345:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::Kernel#mApp:oiref>=700,516,250,516:oigroup>
+<oigroup:<oiref:cpp#Class#Managers:oiref>=220,190,150,165,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::Kernel#mApp:oiref>=0,0,32,15,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=410,190,182,148,1:oigroup>
+*/
+class __positions {
+}

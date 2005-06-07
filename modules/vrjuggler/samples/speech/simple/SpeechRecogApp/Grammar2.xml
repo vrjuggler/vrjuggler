@@ -1,0 +1,44 @@
+<GRAMMAR LANGID="409">
+    <DEFINE>
+        <ID NAME="VID_Hello" VAL="1"/>
+        <ID NAME="VID_Goodbye" VAL="2"/>
+        <ID NAME="VID_Buy" VAL="3"/>
+        <ID NAME="VID_DoNotWant" VAL="4"/>
+        <ID NAME="VID_GetOutOfWay" VAL="5"/>
+    </DEFINE>
+    <RULE ID="VID_Hello" TOPLEVEL="ACTIVE">
+        <P>
+            <L>
+                <P>Hello</P>
+            </L>
+        </P>
+    </RULE>
+    <RULE ID="VID_Goodbye" TOPLEVEL="ACTIVE">
+        <P>
+            <L>
+                <P>Goodbye</P>
+            </L>
+        </P>
+    </RULE>
+    <RULE ID="VID_Buy" TOPLEVEL="ACTIVE">
+        <P>
+            <L>
+                <P>I would like to buy this</P>
+            </L>
+        </P>
+    </RULE>
+    <RULE ID="VID_DoNotWant" TOPLEVEL="ACTIVE">
+        <P>
+            <L>
+                <P>I do not want that</P>
+            </L>
+        </P>
+    </RULE>
+    <RULE ID="VID_GetOutOfWay" TOPLEVEL="ACTIVE">
+        <P>
+            <L>
+                <P>Get out of my way</P>
+            </L>
+        </P>
+    </RULE>
+</GRAMMAR>

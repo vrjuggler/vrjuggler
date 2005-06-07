@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <display_window name="SimWindowX02" version="4">
+         <origin>100</origin>
+         <origin>0</origin>
+         <size>150</size>
+         <size>150</size>
+         <pipe>0</pipe>
+         <frame_buffer_config>
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="1">
+               <visual_id>-1</visual_id>
+               <red_size>1</red_size>
+               <green_size>1</green_size>
+               <blue_size>1</blue_size>
+               <alpha_size>1</alpha_size>
+               <depth_buffer_size>1</depth_buffer_size>
+               <fsaa_enable>false</fsaa_enable>
+            </opengl_frame_buffer_config>
+         </frame_buffer_config>
+         <stereo>false</stereo>
+         <border>false</border>
+         <hide_mouse>false</hide_mouse>
+         <active>true</active>
+         <simulator_viewports>
+            <simulator_viewport name="Contained Sim Viewports 0" version="3">
+               <origin>0.1</origin>
+               <origin>0.1</origin>
+               <size>0.9</size>
+               <size>0.9</size>
+               <view>Left Eye</view>
+               <user>User1</user>
+               <active>true</active>
+               <vertical_fov>0.0</vertical_fov>
+               <simulator_plugin>
+                  <default_simulator name="simPlugIn" version="3">
+                     <camera_pos>SimCam1 Proxy</camera_pos>
+                     <wand_pos>VJWand</wand_pos>
+                     <draw_projections>false</draw_projections>
+                     <surface_color>0.0</surface_color>
+                     <surface_color>0.0</surface_color>
+                     <surface_color>0.0</surface_color>
+                     <head_model>${VJ_BASE_DIR}/share/vrjuggler/data/models/head.flt</head_model>
+                     <wand_model>${VJ_BASE_DIR}/share/vrjuggler/data/models/wand.flt</wand_model>
+                  </default_simulator>
+               </simulator_plugin>
+            </simulator_viewport>
+         </simulator_viewports>
+      </display_window>
+   </elements>
+</configuration>
+

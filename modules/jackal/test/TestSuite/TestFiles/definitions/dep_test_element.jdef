@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="" icon_path="" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Test Element">
+      <help>The basic element type used for testing.</help>
+      <parent/>
+      <property valuetype="configelement" variable="false" name="child_element">
+         <help>This is a simple child element test.</help>
+         <allowed_type>child_elt_test_1</allowed_type>
+      </property>
+      <property valuetype="configelementpointer" variable="false" name="eltPtrProp">
+         <help>This points to an element of type dependent_elt_2</help>
+         <allowed_type>dependent_elt_2</allowed_type>
+      </property>
+      <property valuetype="configelement" variable="false" name="childEltWithPtrProp">
+         <help>This child element has an element pointer.</help>
+         <allowed_type>child_elt_test_3</allowed_type>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

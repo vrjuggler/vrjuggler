@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="trackd_api_controller" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="TrackdAPI Controller">
+      <abstract>false</abstract>
+      <help>Configure the interface to a trackdAPI controller memory area.</help>
+      <parent>digital_device</parent>
+      <parent>analog_device</parent>
+      <category>/Devices</category>
+      <property valuetype="integer" variable="false" name="shared_memory_key">
+         <help>This is the shared memory key for the trackd information.</help>
+         <value label="Shared Memory Key" defaultvalue="4127"/>
+      </property>
+      <property valuetype="float" variable="false" name="min">
+         <help>The lower bound for the range of valid values for the analog data.</help>
+         <value label="Range Minimum" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="max">
+         <help>The upper bound for the range fo valid values for the analog data.</help>
+         <value label="Range Maximum" defaultvalue="255.0"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

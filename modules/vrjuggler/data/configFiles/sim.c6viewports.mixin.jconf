@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <display_window name="C6 Surfaces" version="4">
+         <origin>50</origin>
+         <origin>100</origin>
+         <size>800</size>
+         <size>600</size>
+         <pipe>0</pipe>
+         <frame_buffer_config>
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="2">
+               <visual_id>-1</visual_id>
+               <red_size>1</red_size>
+               <green_size>1</green_size>
+               <blue_size>1</blue_size>
+               <alpha_size>1</alpha_size>
+               <auxiliary_buffer_count>0</auxiliary_buffer_count>
+               <depth_buffer_size>1</depth_buffer_size>
+               <stencil_buffer_size>1</stencil_buffer_size>
+               <accum_red_size>1</accum_red_size>
+               <accum_green_size>1</accum_green_size>
+               <accum_blue_size>1</accum_blue_size>
+               <accum_alpha_size>1</accum_alpha_size>
+               <fsaa_enable>false</fsaa_enable>
+            </opengl_frame_buffer_config>
+         </frame_buffer_config>
+         <stereo>false</stereo>
+         <border>true</border>
+         <hide_mouse>false</hide_mouse>
+         <active>true</active>
+         <surface_viewports>
+            <surface_viewport name="right surface" version="2">
+               <origin>0.5</origin>
+               <origin>0.333</origin>
+               <size>0.25</size>
+               <size>0.333</size>
+               <view>Left Eye</view>
+               <lower_left_corner>1.524</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_left_corner>-1.524</lower_left_corner>
+               <lower_right_corner>1.524</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <lower_right_corner>1.524</lower_right_corner>
+               <upper_right_corner>1.524</upper_right_corner>
+               <upper_right_corner>3.048</upper_right_corner>
+               <upper_right_corner>1.524</upper_right_corner>
+               <upper_left_corner>1.524</upper_left_corner>
+               <upper_left_corner>3.048</upper_left_corner>
+               <upper_left_corner>-1.524</upper_left_corner>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+         <surface_viewports>
+            <surface_viewport name="front surface" version="2">
+               <origin>0.25</origin>
+               <origin>0.333</origin>
+               <size>0.25</size>
+               <size>0.333</size>
+               <view>Left Eye</view>
+               <lower_left_corner>-1.524</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_left_corner>-1.524</lower_left_corner>
+               <lower_right_corner>1.524</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <lower_right_corner>-1.524</lower_right_corner>
+               <upper_right_corner>1.524</upper_right_corner>
+               <upper_right_corner>3.048</upper_right_corner>
+               <upper_right_corner>-1.524</upper_right_corner>
+               <upper_left_corner>-1.524</upper_left_corner>
+               <upper_left_corner>3.048</upper_left_corner>
+               <upper_left_corner>-1.524</upper_left_corner>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+         <surface_viewports>
+            <surface_viewport name="left surface" version="2">
+               <origin>0.0</origin>
+               <origin>0.333</origin>
+               <size>0.25</size>
+               <size>0.333</size>
+               <view>Left Eye</view>
+               <lower_left_corner>-1.524</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_left_corner>1.524</lower_left_corner>
+               <lower_right_corner>-1.524</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <lower_right_corner>-1.524</lower_right_corner>
+               <upper_right_corner>-1.524</upper_right_corner>
+               <upper_right_corner>3.048</upper_right_corner>
+               <upper_right_corner>-1.524</upper_right_corner>
+               <upper_left_corner>-1.524</upper_left_corner>
+               <upper_left_corner>3.048</upper_left_corner>
+               <upper_left_corner>1.524</upper_left_corner>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+         <surface_viewports>
+            <surface_viewport name="floor surface" version="2">
+               <origin>0.25</origin>
+               <origin>0.0</origin>
+               <size>0.25</size>
+               <size>0.333</size>
+               <view>Left Eye</view>
+               <lower_left_corner>-1.524</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_left_corner>1.524</lower_left_corner>
+               <lower_right_corner>1.524</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <lower_right_corner>1.524</lower_right_corner>
+               <upper_right_corner>1.524</upper_right_corner>
+               <upper_right_corner>0.0</upper_right_corner>
+               <upper_right_corner>-1.524</upper_right_corner>
+               <upper_left_corner>-1.524</upper_left_corner>
+               <upper_left_corner>0.0</upper_left_corner>
+               <upper_left_corner>-1.524</upper_left_corner>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+         <surface_viewports>
+            <surface_viewport name="top surface" version="2">
+               <origin>0.25</origin>
+               <origin>0.666</origin>
+               <size>0.25</size>
+               <size>0.333</size>
+               <view>Left Eye</view>
+               <lower_left_corner>-1.524</lower_left_corner>
+               <lower_left_corner>3.048</lower_left_corner>
+               <lower_left_corner>-1.524</lower_left_corner>
+               <lower_right_corner>1.524</lower_right_corner>
+               <lower_right_corner>3.048</lower_right_corner>
+               <lower_right_corner>-1.524</lower_right_corner>
+               <upper_right_corner>1.524</upper_right_corner>
+               <upper_right_corner>3.048</upper_right_corner>
+               <upper_right_corner>1.524</upper_right_corner>
+               <upper_left_corner>-1.524</upper_left_corner>
+               <upper_left_corner>3.048</upper_left_corner>
+               <upper_left_corner>1.524</upper_left_corner>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+         <surface_viewports>
+            <surface_viewport name="entrance surface" version="2">
+               <origin>0.75</origin>
+               <origin>0.333</origin>
+               <size>0.25</size>
+               <size>0.333</size>
+               <view>Left Eye</view>
+               <lower_left_corner>1.524</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_left_corner>1.524</lower_left_corner>
+               <lower_right_corner>-1.524</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <lower_right_corner>1.524</lower_right_corner>
+               <upper_right_corner>-1.524</upper_right_corner>
+               <upper_right_corner>3.048</upper_right_corner>
+               <upper_right_corner>1.524</upper_right_corner>
+               <upper_left_corner>1.524</upper_left_corner>
+               <upper_left_corner>3.048</upper_left_corner>
+               <upper_left_corner>1.524</upper_left_corner>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+         <keyboard_mouse_device_name />
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
+      </display_window>
+   </elements>
+</configuration>
+

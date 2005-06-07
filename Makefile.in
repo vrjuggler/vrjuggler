@@ -1,0 +1,89 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+.PHONY: release
+
+default: debug
+
+bindir=		@bindir@
+datadir=	@datadir@
+exec_prefix=	@exec_prefix@
+libdir=		@libdir@
+libexecdir=	@libexecdir@
+prefix=		@prefix@
+releasedir=	$(JUGGLERROOT_ABS)/release
+sbindir=	@sbindir@
+scriptdir=	$(releasedir)/scripts
+srcdir=		@srcdir@
+sysconfdir=	@sysconfdir@
+topdir=		@topdir@
+
+MAKEFLAGS+=	--no-print-directory
+JUGGLERROOT_ABS=@JUGGLERROOT_ABS@
+
+#@SET_MAKE@
+
+DIRS=		@JUGGLER_PROJECTS@
+
+debug dbg dbg-dso optim opt opt-dso profiled prof prof-dso release	\
+world install-debug install-optim install-profiled links clean-links:
+	$(MAKE) GLOBAL_BUILD=1 RECTARGET="$@"				\
+          instlinks="$(topdir)/instlinks" recursive
+
+build buildworld:
+	$(MAKE) GLOBAL_BUILD=1 RECTARGET="buildworld"			\
+          instlinks="$(topdir)/instlinks" recursive
+
+install installworld:
+	$(MAKE) GLOBAL_BUILD=1 RECTARGET="installworld" recursive
+
+install-deps:
+	$(MAKE) -C external $@
+
+regen:
+	@for dir in $(DIRS) ; do		\
+            (cd $$dir && ./config.status) ;	\
+          done
+
+clobber:
+	$(MAKE) GLOBAL_BUILD=1 RECTARGET="$@" recursive
+	rm -rf instlinks
+
+clean cleandepend:
+	$(MAKE) GLOBAL_BUILD=1 RECTARGET="$@" recursive
+
+recursive:
+	@for dir in $(DIRS) ; do \
+            echo "=====> $$dir" ; \
+            PATH="$(topdir)/instlinks/bin":$$PATH $(MAKE) -C $$dir -f Makefile.pre $(RECTARGET) || exit 1; \
+            echo "<===== $$dir" ; \
+          done

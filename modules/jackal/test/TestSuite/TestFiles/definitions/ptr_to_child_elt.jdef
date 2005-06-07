@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="ptr_to_child_elt" icon_path="" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Pointer to Child">
+      <help>This element is to be used as a container for a pointer to a child element.</help>
+      <parent/>
+      <property valuetype="configelementpointer" variable="false" name="eltPtr">
+         <help>This should point to a child element in another element.</help>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

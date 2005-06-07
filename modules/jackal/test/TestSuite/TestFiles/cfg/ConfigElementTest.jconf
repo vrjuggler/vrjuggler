@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               name="Enumeration Test Configuration"
+               xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd"
+               xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
+   <elements>
+      <element_type_2 name="Element2" version="1">
+         <single_int>21</single_int>
+      </element_type_2>
+      <element_type_1 name="Element1" version="1">
+         <single_int>21</single_int>
+         <single_float>21.75</single_float>
+         <single_bool>false</single_bool>
+         <var_int>12</var_int>
+         <var_int>21</var_int>
+         <var_float>12.21</var_float>
+         <var_float>19.75</var_float>
+         <single_string>test string</single_string>
+         <single_ptr>Element2</single_ptr>
+         <embedded_elt>
+            <element_type_2 name="embedded_elt 0" version="1">
+               <single_int>17</single_int>
+            </element_type_2>
+         </embedded_elt>
+      </element_type_1>
+   </elements>
+</configuration>

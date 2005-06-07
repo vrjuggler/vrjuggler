@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/beanlist.xsd">
+   <service name="ConfigBroker">
+      <file name="${JCCL_BASE_DIR}/share/jccl/beans/jccl_config.jar"
+            class="org.vrjuggler.jccl.config.ConfigBrokerImpl" />
+   </service>
+</beanlist>

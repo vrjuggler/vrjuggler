@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE schema SYSTEM "http://www.w3.org/1999/XMLSchema.dtd">
+
+<!-- Jackal configuration schema for configuration file format v3.0 -->
+<!-- $Id$ -->
+
+<xs:schema targetNamespace="http://www.vrjuggler.org/jccl/xsd/3.0/configuration"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
+
+   <xs:element name="configuration">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="include" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="definition_path" type="definition_path" minOccurs="0"/>
+            <xs:element name="elements" type="elements" />
+         </xs:sequence>
+         <!-- The name must be a valid XML name token. -->
+         <xs:attribute name="name" type="xs:string" use="required" />
+      </xs:complexType>
+   </xs:element>
+
+   <!-- The type for the definition path. -->
+   <xs:complexType name="definition_path">
+      <xs:sequence>
+         <xs:element name="dir" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
+      </xs:sequence>
+   </xs:complexType>
+
+   <!-- The type for the elements list. -->
+   <xs:complexType name="elements">
+      <xs:sequence>
+         <xs:any namespace="##any"
+                 minOccurs="0"
+                 maxOccurs="unbounded"
+                 processContents="lax" />
+      </xs:sequence>
+   </xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <input_manager name="Input Manager" version="2">
+         <driver>MotionStar_drv</driver>
+      </input_manager>
+      <motion_star name="Motion Star master" version="2">
+         <address>mstar</address>
+         <server_port>6000</server_port>
+         <is_master>false</is_master>
+         <hemisphere>Front</hemisphere>
+         <data_format>Position and Angles</data_format>
+         <mode>Run Continuous</mode>
+         <report_rate>1</report_rate>
+         <measurement_rate>86.1</measurement_rate>
+         <position_filters>
+            <position_transform_filter name="Position Filter 0" version="1">
+               <pre_translate>2.065</pre_translate>
+               <pre_translate>-0.0762</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>90.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>180.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>0.0254</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+         <device_host />
+      </motion_star>
+      <alias name="VJHead" version="1">
+         <proxy>HeadProxy</proxy>
+      </alias>
+      <alias name="VJWand" version="1">
+         <proxy>WandProxy</proxy>
+      </alias>
+      <position_proxy name="HeadProxy" version="1">
+         <device>Motion Star master</device>
+         <unit>1</unit>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>-0.0826008</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0509016</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>-90.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+      </position_proxy>
+      <position_proxy name="WandProxy" version="1">
+         <device>Motion Star master</device>
+         <unit>0</unit>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>-90.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+      </position_proxy>
+   </elements>
+</configuration>
+

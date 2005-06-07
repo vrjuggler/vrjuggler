@@ -1,0 +1,133 @@
+# **************** <Tweek heading BEGIN do not edit this line> ****************
+# Tweek
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+# **************** <Tweek heading END do not edit this line> ******************
+
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Makefile.in for extensions/java.  It requires GNU make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+default: all
+
+# Include common definitions.
+include @topdir@/make.defs.mk
+include @topdir@/java.defs.mk
+
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+
+INSTALL=	@INSTALL@
+INSTALL_FILES=	
+
+# Java targets
+JARS=		wizard.jar ui.jar
+BEANS=		
+
+_LOCAL_CLEAN=	1
+JAVA_AFTERBUILD=java_afterbuild
+
+include $(MKPATH)/dpp.obj.mk
+
+# -----------------------------------------------------------------------------
+# Uses ant to build the java classes and JARs
+# -----------------------------------------------------------------------------
+java_afterbuild:
+	@echo "------------------------------------------------"
+	@echo "Building java sources"
+	@echo "------------------------------------------------"
+	$(ANT)
+
+_clean:
+	$(ANT) clean
+
+
+# -----------------------------------------------------------------------------
+# Extra targets
+# -----------------------------------------------------------------------------
+
+# This cannot be named 'install' because Doozer++ already defines that.
+extensions-install:
+	@echo "------------------------------------------------"
+	@echo "Installing the Tweek extensions"
+	@echo "------------------------------------------------"
+	$(MTREE_CMD) -Ude -f $(mtreedir)/TWEEK.java.dist -p $(projdatadir)
+ifneq ($(JARS), )
+	for jar in $(JARS) ;						\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $(topdir)/extensions/java/$$jar	\
+                $(javadir) ;						\
+          done
+endif
+ifneq ($(BEANS), )
+	for bean in $(BEANS) ;						\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $(topdir)/extensions/java/$$bean.jar	\
+                $(beandir) ;						\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX)					\
+                $(top_srcdir)/extensions/java/$$bean.xml $(beandir) ;	\
+          done
+endif
+ifeq (@PLATFORM@, Darwin)
+ifneq ($(JARS), )
+	for jar in $(JARS) ;						\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $(topdir)/extensions/java/$$jar	\
+                $(bundle_javadir) ;					\
+          done
+endif
+ifneq ($(BEANS), )
+	for bean in $(BEANS) ;						\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $(topdir)/extensions/java/$$bean.jar	\
+                $(bundle_beandir) ;					\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX)					\
+                $(top_srcdir)/extensions/java/$$bean.xml		\
+                $(bundle_beandir) ;					\
+          done
+endif
+endif
+
+ifdef GLOBAL_BUILD
+   CLEAN_DIRS+=	$(top_srcdir)/bin
+endif
+
+include Makefile.inc

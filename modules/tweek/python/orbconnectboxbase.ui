@@ -1,0 +1,458 @@
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>OrbConnectBoxBase</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>OrbConnectBoxBase</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>427</width>
+            <height>498</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>ORB Connections</string>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QGroupBox">
+            <property name="name">
+                <cstring>groupBox1</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>GroupBoxPanel</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="title">
+                <string>Naming Service Connection</string>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout18</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLayoutWidget">
+                            <property name="name">
+                                <cstring>layout16</cstring>
+                            </property>
+                            <vbox>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <widget class="QLabel">
+                                    <property name="name">
+                                        <cstring>textLabel6</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Naming Service Host</string>
+                                    </property>
+                                    <property name="alignment">
+                                        <set>AlignVCenter|AlignRight</set>
+                                    </property>
+                                    <property name="buddy" stdset="0">
+                                        <cstring>hostLineEdit</cstring>
+                                    </property>
+                                </widget>
+                                <widget class="QLabel">
+                                    <property name="name">
+                                        <cstring>textLabel7</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Naming Service Port</string>
+                                    </property>
+                                    <property name="alignment">
+                                        <set>AlignVCenter|AlignRight</set>
+                                    </property>
+                                    <property name="buddy" stdset="0">
+                                        <cstring>lineEdit2</cstring>
+                                    </property>
+                                </widget>
+                                <widget class="QLabel">
+                                    <property name="name">
+                                        <cstring>textLabel8</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>IIOP Version</string>
+                                    </property>
+                                    <property name="alignment">
+                                        <set>AlignVCenter|AlignRight</set>
+                                    </property>
+                                    <property name="buddy" stdset="0">
+                                        <cstring>iiopVersionLineEdit</cstring>
+                                    </property>
+                                </widget>
+                                <widget class="QLabel">
+                                    <property name="name">
+                                        <cstring>textLabel9</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Naming Service Subcontext</string>
+                                    </property>
+                                    <property name="buddy" stdset="0">
+                                        <cstring>subcontextLineEdit</cstring>
+                                    </property>
+                                </widget>
+                            </vbox>
+                        </widget>
+                        <widget class="QLayoutWidget">
+                            <property name="name">
+                                <cstring>layout17</cstring>
+                            </property>
+                            <vbox>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <widget class="QLineEdit">
+                                    <property name="name">
+                                        <cstring>hostLineEdit</cstring>
+                                    </property>
+                                    <property name="minimumSize">
+                                        <size>
+                                            <width>150</width>
+                                            <height>0</height>
+                                        </size>
+                                    </property>
+                                    <property name="alignment">
+                                        <set>AlignLeft</set>
+                                    </property>
+                                </widget>
+                                <widget class="QLineEdit">
+                                    <property name="name">
+                                        <cstring>portLineEdit</cstring>
+                                    </property>
+                                    <property name="minimumSize">
+                                        <size>
+                                            <width>70</width>
+                                            <height>0</height>
+                                        </size>
+                                    </property>
+                                    <property name="maximumSize">
+                                        <size>
+                                            <width>70</width>
+                                            <height>32767</height>
+                                        </size>
+                                    </property>
+                                    <property name="alignment">
+                                        <set>AlignLeft</set>
+                                    </property>
+                                </widget>
+                                <widget class="QLineEdit">
+                                    <property name="name">
+                                        <cstring>iiopVersionLineEdit</cstring>
+                                    </property>
+                                    <property name="minimumSize">
+                                        <size>
+                                            <width>40</width>
+                                            <height>0</height>
+                                        </size>
+                                    </property>
+                                    <property name="maximumSize">
+                                        <size>
+                                            <width>40</width>
+                                            <height>32767</height>
+                                        </size>
+                                    </property>
+                                    <property name="alignment">
+                                        <set>AlignLeft</set>
+                                    </property>
+                                </widget>
+                                <widget class="QLineEdit">
+                                    <property name="name">
+                                        <cstring>subcontextLineEdit</cstring>
+                                    </property>
+                                    <property name="maximumSize">
+                                        <size>
+                                            <width>120</width>
+                                            <height>32767</height>
+                                        </size>
+                                    </property>
+                                    <property name="alignment">
+                                        <set>AlignLeft</set>
+                                    </property>
+                                </widget>
+                            </vbox>
+                        </widget>
+                    </hbox>
+                </widget>
+                <spacer>
+                    <property name="name">
+                        <cstring>spacer6</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>16</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout19</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <spacer>
+                            <property name="name">
+                                <cstring>spacer7</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Expanding</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>141</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>connectPushButton</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>false</bool>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Connect</string>
+                            </property>
+                            <property name="default">
+                                <bool>true</bool>
+                            </property>
+                        </widget>
+                        <spacer>
+                            <property name="name">
+                                <cstring>spacer8</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Expanding</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>130</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                    </hbox>
+                </widget>
+            </vbox>
+        </widget>
+        <widget class="QGroupBox">
+            <property name="name">
+                <cstring>groupBox2</cstring>
+            </property>
+            <property name="title">
+                <string>Subject Manager Choice</string>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QListBox">
+                    <item>
+                        <property name="text">
+                            <string>New Item</string>
+                        </property>
+                    </item>
+                    <property name="name">
+                        <cstring>subjMgrListBox</cstring>
+                    </property>
+                </widget>
+                <widget class="QTable">
+                    <column>
+                        <property name="text">
+                            <string>Properties</string>
+                        </property>
+                    </column>
+                    <property name="name">
+                        <cstring>subjMgrInfoTable</cstring>
+                    </property>
+                    <property name="numRows">
+                        <number>0</number>
+                    </property>
+                    <property name="numCols">
+                        <number>1</number>
+                    </property>
+                    <property name="readOnly">
+                        <bool>true</bool>
+                    </property>
+                    <property name="selectionMode">
+                        <enum>NoSelection</enum>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Subject Manager identifying information</string>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout22</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <spacer>
+                    <property name="name">
+                        <cstring>spacer10</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>81</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>okPushButton</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string>OK</string>
+                    </property>
+                    <property name="default">
+                        <bool>false</bool>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>cancelPushButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Cancel</string>
+                    </property>
+                </widget>
+                <spacer>
+                    <property name="name">
+                        <cstring>spacer11</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>110</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+            </hbox>
+        </widget>
+    </vbox>
+</widget>
+<connections>
+    <connection>
+        <sender>cancelPushButton</sender>
+        <signal>clicked()</signal>
+        <receiver>OrbConnectBoxBase</receiver>
+        <slot>reject()</slot>
+    </connection>
+    <connection>
+        <sender>portLineEdit</sender>
+        <signal>lostFocus()</signal>
+        <receiver>OrbConnectBoxBase</receiver>
+        <slot>verifyInput()</slot>
+    </connection>
+    <connection>
+        <sender>iiopVersionLineEdit</sender>
+        <signal>lostFocus()</signal>
+        <receiver>OrbConnectBoxBase</receiver>
+        <slot>verifyInput()</slot>
+    </connection>
+    <connection>
+        <sender>hostLineEdit</sender>
+        <signal>lostFocus()</signal>
+        <receiver>OrbConnectBoxBase</receiver>
+        <slot>verifyInput()</slot>
+    </connection>
+    <connection>
+        <sender>portLineEdit</sender>
+        <signal>returnPressed()</signal>
+        <receiver>OrbConnectBoxBase</receiver>
+        <slot>verifyInput()</slot>
+    </connection>
+    <connection>
+        <sender>iiopVersionLineEdit</sender>
+        <signal>returnPressed()</signal>
+        <receiver>OrbConnectBoxBase</receiver>
+        <slot>verifyInput()</slot>
+    </connection>
+    <connection>
+        <sender>hostLineEdit</sender>
+        <signal>returnPressed()</signal>
+        <receiver>OrbConnectBoxBase</receiver>
+        <slot>verifyInput()</slot>
+    </connection>
+    <connection>
+        <sender>okPushButton</sender>
+        <signal>clicked()</signal>
+        <receiver>OrbConnectBoxBase</receiver>
+        <slot>accept()</slot>
+    </connection>
+    <connection>
+        <sender>connectPushButton</sender>
+        <signal>clicked()</signal>
+        <receiver>OrbConnectBoxBase</receiver>
+        <slot>tryConnect()</slot>
+    </connection>
+    <connection>
+        <sender>subjMgrListBox</sender>
+        <signal>clicked(QListBoxItem*)</signal>
+        <receiver>OrbConnectBoxBase</receiver>
+        <slot>subjMgrSelected()</slot>
+    </connection>
+    <connection>
+        <sender>subjMgrListBox</sender>
+        <signal>doubleClicked(QListBoxItem*)</signal>
+        <receiver>OrbConnectBoxBase</receiver>
+        <slot>accept()</slot>
+    </connection>
+</connections>
+<slots>
+    <slot>verifyInput()</slot>
+    <slot>tryConnect()</slot>
+    <slot>subjMgrSelected()</slot>
+</slots>
+<pixmapinproject/>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

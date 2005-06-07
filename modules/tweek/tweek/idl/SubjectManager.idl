@@ -1,0 +1,124 @@
+/***************** <Tweek heading BEGIN do not edit this line> ****************
+ * Tweek
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ ***************** <Tweek heading END do not edit this line> *****************/
+
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#ifndef _TWEEK_SUBJECT_MANAGER_IDL_
+#define _TWEEK_SUBJECT_MANAGER_IDL_
+
+#include <tweek/idl/Subject.idl>
+
+
+module tweek
+{
+
+/**
+ * The interface to Tweek SubjectManager instances.  Subject Managers are
+ * accessed by remote code to acquire CORBA references to remote objects.  The
+ * intent of the Subject Manager is to reduce the amount of CORBA programming
+ * done by users of the language-specific Tweek APIs.
+ */
+interface SubjectManager
+{
+   /**
+    * A container used to transport information about subjects registered with
+    * the Subject Manager.
+    */
+   struct RegisteredSubject
+   {
+      string  subject_name;  /**< The name of the subject. */
+      Subject subject_ref;   /**< A reference to the subject. */
+   };
+
+   /**
+    * A simple key/value pair container for passing around informational
+    * items about the Subject Manager.
+    */
+   struct SubjectMgrInfoItem
+   {
+      string key;
+      string value;
+   };
+
+   /** A list of registered subjects. */
+   typedef sequence<RegisteredSubject> SubjectList;
+
+   /**
+    * A list of informational items relating to the Subject Manager instance.
+    */
+   typedef sequence<SubjectMgrInfoItem> SubjectManagerInfoList;
+
+   /**
+    * Returns the named Tweek Subject reference to the caller if the Subject
+    * is registered.  If not, a reference equal to CORBA::nil() is returned.
+    *
+    * @param name The name of the subject to look up.
+    *
+    * @return A reference to the requested subject or a reference equal to
+    *         CORBA::nil() if the requested subject does not exist.
+    */
+   Subject getSubject(in string name);
+
+   /**
+    * Returns a sequence of all the registered Tweek Subjects packaged in the
+    * structure RegisteredSubject.
+    *
+    * @return A complete list of all subjects registered with this Subject
+    *         Manager instance is returned.
+    */
+   SubjectList getAllSubjects();
+
+   /**
+    * Returns a sequence of key/value pairs that provide site-specific
+    * information about a given Subject Manager servant.
+    *
+    * @return A complete list of all informational items about this Subject
+    *         Manager instance.
+    */
+   SubjectManagerInfoList getInfo();
+
+   /**
+    * Returns the name of this Subject Manager reference as it is registered
+    * with the CORBA Naming Service.
+    *
+    * @note It might be possible for client code to look this up some other
+    *       way, so this method may not really be needed except as a
+    *       convenience.
+    */
+   string getName();
+};
+
+};
+
+#endif /* _TWEEK_SUBJECT_MANAGER_IDL_ */

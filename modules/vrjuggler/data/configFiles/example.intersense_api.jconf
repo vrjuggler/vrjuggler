@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <input_manager name="InterSense API IM" version="2">
+         <driver>IntersenseAPI_drv</driver>
+      </input_manager>
+      <alias name="VJWand" version="1">
+         <proxy>Wand Proxy</proxy>
+      </alias>
+      <position_proxy name="Wand Proxy" version="1">
+         <device>Isense1</device>
+         <unit>0</unit>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>-90.0</post_rotation>
+               <post_rotation>-90.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+      </position_proxy>
+      <position_proxy name="Head Proxy" version="1">
+         <device>Isense1</device>
+         <unit>1</unit>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>-90.0</post_rotation>
+               <post_rotation>90.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+      </position_proxy>
+      <digital_proxy name="Button 0 Proxy" version="1">
+         <device>Isense1</device>
+         <unit>0</unit>
+      </digital_proxy>
+      <digital_proxy name="Button 1 Proxy" version="1">
+         <device>Isense1</device>
+         <unit>1</unit>
+      </digital_proxy>
+      <digital_proxy name="Button 2 Proxy" version="1">
+         <device>Isense1</device>
+         <unit>2</unit>
+      </digital_proxy>
+      <digital_proxy name="Button 3 Proxy" version="1">
+         <device>Isense1</device>
+         <unit>3</unit>
+      </digital_proxy>
+      <analog_proxy name="Analog 0 Proxy" version="1">
+         <device>Isense1</device>
+         <unit>0</unit>
+      </analog_proxy>
+      <alias name="VJHead" version="1">
+         <proxy>Head Proxy</proxy>
+      </alias>
+      <alias name="VJButton0" version="1">
+         <proxy>Button 0 Proxy</proxy>
+      </alias>
+      <alias name="VJButton1" version="1">
+         <proxy>Button 1 Proxy</proxy>
+      </alias>
+      <alias name="VJButton2" version="1">
+         <proxy>Button 2 Proxy</proxy>
+      </alias>
+      <alias name="VJButton3" version="1">
+         <proxy>Button 3 Proxy</proxy>
+      </alias>
+      <intersense_api name="Isense1" version="2">
+         <driver>libisense</driver>
+         <port>/dev/ttyd1</port>
+         <stations>
+            <intersense_station name="Stations 0" version="1">
+               <enabled>false</enabled>
+               <station_index>0</station_index>
+               <use_digital>false</use_digital>
+               <use_analog>false</use_analog>
+               <digital_first>0</digital_first>
+               <digital_count>4</digital_count>
+               <analog_first>0</analog_first>
+               <analog_count>2</analog_count>
+            </intersense_station>
+         </stations>
+         <stations>
+            <intersense_station name="Stations 1" version="1">
+               <enabled>false</enabled>
+               <station_index>1</station_index>
+               <use_digital>false</use_digital>
+               <use_analog>false</use_analog>
+               <digital_first>0</digital_first>
+               <digital_count>0</digital_count>
+               <analog_first>0</analog_first>
+               <analog_count>0</analog_count>
+            </intersense_station>
+         </stations>
+         <verbose>false</verbose>
+         <min>0.0</min>
+         <max>255.0</max>
+         <position_filters>
+            <position_transform_filter name="Position Transform 0" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>-90.0</pre_rotation>
+               <pre_rotation>180.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+         <device_host />
+      </intersense_api>
+      <alias name="VJAnalog0" version="1">
+         <proxy>Analog 0 Proxy</proxy>
+      </alias>
+   </elements>
+</configuration>
+

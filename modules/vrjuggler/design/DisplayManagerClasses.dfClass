@@ -1,0 +1,82 @@
+package idfsycyax23xmcyazuj6j;
+
+/**
+@version 2.0
+@__modelType diagram 
+@__hiddenLink MemberLink#<oiref:cpp#Member#vrj::DisplayManager#mInactiveDisplays:oiref>
+@__hiddenLink MemberLink#<oiref:cpp#Member#vrj::Viewport#mDisplay:oiref>
+@__hiddenLink MemberLink#<oiref:cpp#Member#vrj::Projection#mViewport:oiref>
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#vrj::DisplayManager:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#vrj::Display:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference52 {
+}/**
+@__ref <oiref:cpp#Class#vrj::Kernel:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference53 {
+}/**
+@__ref <oiref:cpp#Class#vrj::Viewport:oiref><oihard>
+@__modelType reference
+@__imported
+@hideAttributes
+@hideClasses
+@hideOperations*/
+class reference1 {
+}/**
+@__ref <oiref:cpp#Class#vrj::Projection:oiref><oihard>
+@__modelType reference
+@__imported
+@hideClasses
+@hideOperations
+@hideAttributes 
+*/
+class reference2 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options filter.d1.state = on
+filter.e.state = on
+filter.d2.state = on 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Class#vrj::DisplayManager:oiref>=240,10,180,60,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::Projection:oiref>=350,100,111,68,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::Viewport#mDisplay:oiref>=470,140,380,140:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::Viewport:oiref>=190,100,102,68,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::Viewport#mRightProj:oiref>=314,101,32,15,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::Viewport#mLeftProj:oiref>=292,155,350,155:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::Display:oiref>=20,100,110,46,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::Kernel#mDisplayManager:oiref>=190,40,240,40:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::DisplayManager#mActiveDisplays:oiref>=41,81,30,15,0:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::Kernel#mDisplayManager:oiref>=204,23,32,15,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::Viewport#mRightProj:oiref>=292,127,350,127:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::Viewport#mDisplay:oiref>=0,0,32,15,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::DisplayManager#mActiveDisplays:oiref>=330,70,75,100:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::Display#mViewports:oiref>=130,123,190,123:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::Display#mViewports:oiref>=156,104,30,15,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::DisplayManager#mInactiveDisplays:oiref>=302,142,283,254:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::Projection#mViewport:oiref>=680,140,559,135:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::Kernel:oiref>=10,10,180,60,0:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::Viewport#mLeftProj:oiref>=314,129,32,15,0:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::DisplayManager#mInactiveDisplays:oiref>=0,0,30,15,0:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::Projection#mViewport:oiref>=563,116,32,15,0:oigroup>
+*/
+class __positions {
+}

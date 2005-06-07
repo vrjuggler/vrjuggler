@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="position_proxy" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position642.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Position Proxy">
+      <abstract>false</abstract>
+      <help>Used to access a single positional input source</help>
+      <parent>proxy</parent>
+      <category>/Proxies</category>
+      <property valuetype="configelementpointer" variable="false" name="device">
+         <help>The device the proxy points to</help>
+         <value label="Device"/>
+         <allowed_type>positional_device</allowed_type>
+      </property>
+      <property valuetype="integer" variable="false" name="unit">
+         <help>The unit in the device this proxy attaches to</help>
+         <value label="Unit" defaultvalue="0"/>
+      </property>
+      <property valuetype="configelement" variable="true" name="position_filters">
+         <help>This is a list of all the filters that are to be applied to the postional device data. The filters are applied in the order that they are specified in this configuration.</help>
+         <value label="Position Filter"/>
+         <allowed_type>position_transform_filter</allowed_type>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

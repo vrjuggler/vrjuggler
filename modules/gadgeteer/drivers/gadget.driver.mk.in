@@ -1,0 +1,148 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# =============================================================================
+# This file <gadget.driver.mk> provides variable assignments based on the
+# results of running an Autoconf-based configure script.  It is installed with
+# the Gadgeteer data files so that users can include it in their driver plug-in
+# makefiles.  All the variables and targets needed to compile and link driver
+# plug-ins are defined here.  Users only need to name their driver
+#
+# Required variables:
+# DRIVER_NAME - The base name of the driver (e.g., MotionStar)
+# SRCS        - The list of all C/C++source files that must be compiled.  This
+#               can mix C and C++ sources with different file extensions.
+#
+# Generated for use on @PLATFORM@
+# =============================================================================
+
+# $Id$
+
+default: driver-dso
+
+# Don't require that the user has $GADGET_BASE_DIR set as an environment
+# variable.  We'll assume that if $VJ_BASE_DIR is set, it points to the place
+# where Gadgeteer is installed as well.
+GADGET_BASE_DIR?=	$(VJ_BASE_DIR)
+DZR_BASE_DIR?=		$(GADGET_BASE_DIR)/share/Doozer
+
+# -----------------------------------------------------------------------------
+# Base variables for compiling and linking.
+# -----------------------------------------------------------------------------
+CC=			@CC@
+CXX=			@CXX@
+CFLAGS_DYNLIB=		@CFLAGS_DYNLIB@
+CC_PROF_FLAGS=		@CC_PROF_FLAGS@
+CXXFLAGS_DYNLIB=	@CXXFLAGS_DYNLIB@
+CXX_PROF_FLAGS= 	@CXX_PROF_FLAGS@
+C_DLL=			@C_DLL@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
+CXX_DLL=		@CXX_DLL@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
+C_PLUGIN=		@C_PLUGIN@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
+CXX_PLUGIN=		@CXX_PLUGIN@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
+DEP_GEN_FLAG=		@DEP_GEN_FLAG@
+DYLIB_NAME_FLAG=	@DYLIB_NAME_FLAG@
+JDK_HOME=		@JDK_HOME@
+LD=			@LD@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
+LDOPTS=			@LDOPTS@ $(DPP_EXTRA_LDOPTS) $(EXTRA_LDOPTS)	\
+			$(DSOVERSIONOPTS)
+LDOPTS_DBG=		@LDOPTS_DBG@ $(EXTRA_LDOPTS_DBG)
+LDOPTS_OPT=		@LDOPTS_OPT@ $(EXTRA_LDOPTS_OPT)
+LDOPTS_PROF=		@LDOPTS_PROF@ $(EXTRA_LDOPTS_PROF)
+OBJDIR?=		.
+PROFLIB_EXT=		_p
+PROF_OPT_FLAGS=		$(DBG_FLAGS)
+
+# -----------------------------------------------------------------------------
+# Plug-in related settings.
+# -----------------------------------------------------------------------------
+DYNAMICLIB_EXT=         @DYNAMICLIB_EXT@
+OBJEXT=			@OBJEXT@
+OBJ_BUILD_FLAG=		@OBJ_BUILD_FLAG@
+OBJ_NAME_FLAG=		@OBJ_NAME_FLAG@
+OS_TYPE=		@OS_TYPE@
+
+# SGI-specific dynamic-shared-object information.
+DSOREGFILE=		@DSOREGFILE@
+DSOVERSION=		@DSOVERSION@
+DSOVERSIONOPTS=		@DSOVERSIONOPTS@
+
+# -----------------------------------------------------------------------------
+# Extensions to the base Doozer compiler and linker flags that are required
+# for building Gadgeteer device driver plug-ins.
+# -----------------------------------------------------------------------------
+EXTRA_CFLAGS+=		@CFLAGS@ $(OPTIMIZER) $(CFLAGS_DYNLIB) $(EXTRA_DEFS)
+EXTRA_CXXFLAGS+=	@CXXFLAGS@ $(OPTIMIZER) $(CXXFLAGS_DYNLIB) $(EXTRA_DEFS)
+EXTRA_DEFS=		@DEFS@ -D_GADGET_DRIVER_BUILD_
+EXTRA_DEPENDFLAGS+=	@DEPEND_FLAGS@ $(EXTRA_INCLUDES)
+EXTRA_INCLUDES+=	@INCLUDES@ $(shell gadgeteer-config --includes)
+EXTRA_LDFLAGS+=		@LDFLAGS@ @EXTRA_LDFLAGS@
+EXTRA_LIBS+=		@LIBS@
+
+# -----------------------------------------------------------------------------
+# Helper utilities.
+# -----------------------------------------------------------------------------
+LN_S=			@LN_S@
+MAKEDEPEND=		@MAKEDEPEND@
+PERL=			@PERL@
+RANLIB=			@RANLIB@
+RM_LN=			@RM_LN@
+
+# -----------------------------------------------------------------------------
+# Common code for driver DSOs.
+# -----------------------------------------------------------------------------
+ifeq ($(BUILD_TYPE), dbg)
+   BUILD_TYPE_EXT=	_d
+   DEBUG_APP=		TRUE
+   OPTIM_APP=		FALSE
+   EXTRA_DEFS+=		-D_DEBUG
+else
+   BUILD_TYPE_EXT=	
+   DEBUG_APP=		FALSE
+   OPTIM_APP=		TRUE
+   EXTRA_DEFS+=		-D_OPT -DNDEBUG
+endif
+
+DSO_DRIVER_DEPS=	$(shell gadgeteer-config --libs)		\
+			$(shell gadgeteer-config --extra-libs)
+
+DRIVER_DSO=	$(DRIVER_NAME)_drv$(BUILD_TYPE_EXT).$(DYNAMICLIB_EXT)
+DYLIB_DEPS=	$(PRE_DSO_DRIVER_DEPS) $(DSO_DRIVER_DEPS)		\
+		$(POST_DSO_DRIVER_DEPS)
+
+# It is critical that this be included before the $(DRIVER_DSO) target below.
+include $(DZR_BASE_DIR)/mk/dzr.lib.mk
+driver-dso: $(DRIVER_DSO)
+
+$(DRIVER_DSO): $(OBJS)
+	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJS) $(DYLIB_DEPS)
+
+CLOBBER_FILES+=	$(DRIVER_DSO)

@@ -1,0 +1,119 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Makefile.in for vrjuggler/samples/OSG/simple/osgNav
+# This requires GNU make.
+# -----------------------------------------------------------------------------
+
+all: osgNav@EXEEXT@
+
+APP_NAME=	osgNav@EXEEXT@
+
+# Basic options.
+srcdir=		@srcdir@
+SRCS=		OsgNav.cpp main.cpp
+
+NO_DEPEND=	YES
+
+include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
+include $(DZR_BASE_DIR)/ext/tweek/dzr.tweek.mk
+
+EXTRA_INCLUDES+=	-I$(OSGHOME)/include
+EXTRA_LIBS+=		@APP_EXTRA_LIBS_OSG@ 
+
+CXX_GEN_DIR=		.
+PYTHON_GEN_DIR=		remotenav/Server
+
+vpath %.idl $(srcdir)/remotenav/Subject/idl
+vpath %.cpp $(CXX_GEN_DIR)
+vpath %.h $(CXX_GEN_DIR)
+vpath %.py $(PYTHON_GEN_DIR)
+
+ifeq ($(TWEEK_HAVE_CXX), Y)
+CXX_IDL=		$(TWEEK_IDL_CXX)
+CXX_IDL_OPTS=		$(TWEEK_IDLFLAGS_CXX)			\
+			$(TWEEK_IDL_GENDIR_CXX)$(CXX_GEN_DIR)
+CXX_IDL_INCLUDES=	
+
+EXTRA_CXXFLAGS+=	$(TWEEK_CXX_FLAGS)
+EXTRA_INCLUDES+=	-I$(CXX_GEN_DIR)
+EXTRA_LIBS+=		$(TWEEK_LIBS) $(TWEEK_EXTRA_LIBS_MIN)
+
+IDL_CXX_FILES=		RemoteNavSubject.cpp RemoteNavSubject.h
+
+# Need to not do this unless target is "remote"
+SRCS+=			RemoteNavSubject.cpp
+endif
+
+# Build python stuff
+ifeq ($(TWEEK_HAVE_PYTHON), Y)
+PYTHON_IDL=		$(TWEEK_IDL_PYTHON)
+PYTHON_IDL_OPTS=	$(TWEEK_IDLFLAGS_PYTHON)			\
+			$(TWEEK_IDL_GENDIR_PYTHON)$(PYTHON_GEN_DIR)
+PYTHON_IDL_INCLUDES=	
+
+IDL_PYTHON_FILES=	RemoteNavSubject_idl.py
+endif
+
+# -----------------------------------------------------------------------------
+# Application build targets.
+# -----------------------------------------------------------------------------
+all:
+	$(MAKE) $(APP_NAME)
+
+remote:
+	$(MAKE) cxx_idl
+#	$(MAKE) python_idl
+	$(MAKE) NO_DEPEND=0 cxx
+	$(MAKE) $(APP_NAME)
+#	$(MAKE) python
+#	-$(MAKE) install
+
+osgNav@EXEEXT@: $(OBJS)
+	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
+
+cxx_idl: $(IDL_CXX_FILES)
+
+%.cpp %.h: %.idl
+	$(CXX_IDL) $(CXX_IDL_OPTS) $(CXX_IDL_INCLUDES) $<
+
+python_idl: $(IDL_PYTHON_FILES)
+
+%.py: %.idl
+	$(PYTHON_IDL) $(PYTHON_IDL_OPTS) $(PYTHON_IDL_INCLUDES) $<
+
+cxx: $(OBJS)
+
+CLEAN_FILES+=	$(addprefix $(CXX_GEN_DIR)/, $(IDL_CXX_FILES))		\
+		$(addprefix $(PYTHON_GEN_DIR)/, $(IDL_PYTHON_FILES))

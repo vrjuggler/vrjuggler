@@ -1,0 +1,40 @@
+package id1tghqdb6wvtgodb6wwyoa;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#tweek::SubjectImpl:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#tweek::SubjectImpl#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::SubjectImpl#$$destructor$$#(##)#:oiref>
+@hideClasses
+@hideAttributes 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#FloatSubjectImpl:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference1 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Class#tweek::SubjectImpl:oiref>=10,10,250,192,0:oigroup>
+<oigroup:<oiref:cpp#Extends#FloatSubjectImpl#tweek::SubjectImpl:oiref>=141,240,141,202:oigroup>
+<oigroup:<oiref:cpp#Class#FloatSubjectImpl:oiref>=50,240,169,128,1:oigroup>
+*/
+class __positions {
+}

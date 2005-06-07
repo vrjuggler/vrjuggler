@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.0/beanlist.xsd">
+  <viewer name="Tree Viewer">
+    <file name="${TWEEK_BASE_DIR}/share/tweek/beans/Viewers.jar" 
+          class="org.vrjuggler.tweek.treeviewer.BeanTreeViewer" />
+  </viewer>
+  <viewer name="Icon Viewer">
+    <file name="${TWEEK_BASE_DIR}/share/tweek/beans/Viewers.jar" 
+          class="org.vrjuggler.tweek.iconviewer.BeanIconViewer" />
+  </viewer>
+</beanlist>

@@ -1,0 +1,144 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# =============================================================================
+# This file <make.defs.mk> provides variable information shared by all
+# makefiles in the VR Juggler source tree.  It requires GNU make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+# All makefiles in the source tree should include this file for maximum
+# information sharing.
+# -----------------------------------------------------------------------------
+# Variables defined here are:
+#
+# mtreedir      - Base directory containing the mtree directory hierarchy
+#                 specifications.
+# projdatadir   - Project-specific data directory.  This is a subdirectory
+#                 of $(datadir).
+# releasedir    - The absolute path to the release directory.
+# scriptdir     - The path to the directory containing scripts used in the
+#                 build and install/release process.
+# topdir        - The top of the build tree.
+# VJROOT_ABS    - The absolute path to the root of the VR Juggler source tree.
+# VJ_SHARE_DIR  - The name of the directory where the VR Juggler data files,
+#                 test programs, and sample apps are installed.  This is
+#                 only the name of the directory, not the full path to it.
+#
+# DPP_SCRIPTDIR - The directory containing Doozer++ helper scripts.
+# MKDEPS_CC     - Compiler for C dependencies.
+# MKDEPS_CXX    - Compiler for CXX dependencies.
+# MKINSTALLDIRS - Path to shell script for making directories.
+# MKPATH        - Path to shared dpp.*.mk file directory.
+# MTREE_CMD     - Path to a BSD-compatible mtree.
+#
+# ABI           - Application Binary Interface type.  This may be used for
+#                 other binary types when supported by the operating system
+#                 (e.g., "ELF", "N32" or "64").
+# ISA           - Instruction Set Architecture.  This may be used for other
+#                 binary types when supported by the operating system (e.g.,
+#                 "mips3" or "i386").
+# LIBBITSUF     - Suffix for the library path used by the linker on IRIX only.
+#                 For n32 binaries, it will be 32.  For 64-bit binaries, it
+#                 will be 64.
+#
+# VJ_LIBRARY    - The base name of the core Juggler library that will be built
+#                 with no file extension.
+# GL_LIBRARY    - The base name of the OpenGL Juggler API library with no file
+#                 extension.
+# PF_LIBRARY    - The base name of the Performer Juggler API library with no
+#                 file extension.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Base variables needed by all makefiles.
+# -----------------------------------------------------------------------------
+mtreedir=		$(topdir)/mtree
+projdatadir=		$(datadir)/vrjuggler
+releasedir=		@JUGGLERROOT_ABS@/release
+scriptdir=		$(releasedir)/scripts
+topdir=			@topdir@
+top_srcdir=		@top_srcdir@
+instprefix=		@prefix@
+
+DPP_SCRIPTDIR=		$(JUGGLERROOT_ABS)/Doozer++/scripts
+MAKEFLAGS+=		--no-print-directory
+DEPGEN_TOOL_CC=		@CC@
+DEPGEN_TOOL_CXX=	@CXX@
+MKINSTALLDIRS=		$(scriptdir)/mkinstalldirs
+MKPATH=			$(JUGGLERROOT_ABS)/Doozer++/mk
+MTREE_CMD=		@MTREE_CMD@
+PROFLIB_EXT=		_p
+PROF_OPT_FLAGS=		$(DBG_FLAGS)
+RM_LN=			@RM_LN@
+WARNS=			2
+VJROOT_ABS=		@VJROOT_ABS@
+JUGGLERROOT_ABS=	@JUGGLERROOT_ABS@
+VJ_SHARE_DIR=		@VJ_SHARE_DIR@
+
+GL_API=			@OPENGL_API@
+
+ifndef NO_PERFORMER
+   PF_API=		@PERFORMER_API@
+endif
+
+# -----------------------------------------------------------------------------
+# Extra information for the Doozer++ file common.defs.mk.
+# -----------------------------------------------------------------------------
+EXTRA_CFLAGS=		$(CFLAGS_DYNLIB)
+EXTRA_CXXFLAGS=		$(CXXFLAGS_DYNLIB)
+EXTRA_DEFS=		-DVJ_SHARE_DIR="\"$(VJ_SHARE_DIR)\"" -D_VRJ_BUILD_
+EXTRA_DEPEND_FLAGS=	-I$(VJROOT_ABS)
+EXTRA_INCLUDES=		-I$(top_srcdir)
+EXTRA_LDFLAGS=		@EXTRA_LDFLAGS@
+
+# -----------------------------------------------------------------------------
+# Makedepend commands.  Doozer++ uses $(MKDEP_C) and $(MKDEP_CXX).
+# -----------------------------------------------------------------------------
+MKDEP_C=	$(DEPGEN_TOOL_CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+MKDEP_CXX=	$(DEPGEN_TOOL_CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
+
+# -----------------------------------------------------------------------------
+# Platform- and binary-specific options.
+# -----------------------------------------------------------------------------
+ifdef vjABI
+    dppABI=	$(vjABI)
+endif
+
+# -----------------------------------------------------------------------------
+# Library names.
+# -----------------------------------------------------------------------------
+VJ_LIBRARY=	@LIB_PREFIX@vrj
+GL_LIBRARY=	@LIB_PREFIX@vrj_ogl
+PF_LIBRARY=	@LIB_PREFIX@vrj_pf
+
+include $(topdir)/common.defs.mk

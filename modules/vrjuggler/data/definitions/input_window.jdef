@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="input_window" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Input Window">
+      <help>Configures a window that accepts keyboard and mouse events as input.</help>
+      <parent>input_area</parent>
+      <category>/Devices</category>
+      <property valuetype="integer" variable="false" name="origin">
+         <help>Window origin (lower left is 0,0)</help>
+         <value label="X" defaultvalue="0"/>
+         <value label="Y" defaultvalue="0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="size">
+         <help>The dimensions (width and height) of the window in pixels.</help>
+         <value label="Width" defaultvalue="100"/>
+         <value label="Height" defaultvalue="100"/>
+      </property>
+      <property valuetype="integer" variable="false" name="display_number">
+         <help>The number of the display on which the input window will be opened. (-1 for local)</help>
+         <value label="Display Number" defaultvalue="0"/>
+      </property>
+      <upgrade_transform>
+      </upgrade_transform>
+   </definition_version>
+</definition>

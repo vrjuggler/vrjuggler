@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="vrpn" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="VRPN">
+      <abstract>false</abstract>
+      <help>Configure an interface to an external VRPN server.</help>
+      <parent>positional_device</parent>
+      <parent>digital_device</parent>
+      <category>/Devices</category>
+      <property valuetype="string" variable="false" name="tracker_server">
+         <help>Tracker server.</help>
+         <value label="Tracker Server" defaultvalue="Tracker0@localhost"/>
+      </property>
+      <property valuetype="string" variable="false" name="button_server">
+         <help>Button server.</help>
+         <value label="Button Server" defaultvalue="Button0@localhost"/>
+      </property>
+      <property valuetype="integer" variable="false" name="tracker_count">
+         <help>Number of trackers supported by Vrpn server.</help>
+         <value label="Number of trackers" defaultvalue="2"/>
+      </property>
+      <property valuetype="integer" variable="false" name="button_count">
+         <help>Number of buttons supported by Vrpn server.</help>
+         <value label="Number of buttons" defaultvalue="1"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

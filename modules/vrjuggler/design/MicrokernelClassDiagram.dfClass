@@ -1,0 +1,250 @@
+package id1bxjecyax23xmcyaxlllw;
+
+/**
+@version 2.0
+@__modelType diagram 
+@__hiddenLink MemberLink#<oiref:cpp#Member#vrj::DrawManager#mDisplayManager:oiref>
+@__hiddenLink MemberLink#<oiref:cpp#Member#vrj::DisplayManager#mDrawManager:oiref>
+@__hiddenLink MemberLink#<oiref:cpp#Member#vrj::Kernel#mNewApp:oiref>
+@__hiddenLink MemberLink#<oiref:cpp#Member#vrj::App#kernel:oiref>
+@__hiddenLink <oiref:cpp#Extends#vrj::Kernel#jccl::ConfigChunkHandler:oiref>
+@__hiddenLink <oiref:cpp#Extends#gadget::InputManager#jccl::ConfigChunkHandler:oiref>
+@__hiddenLink <oiref:cpp#Extends#vrj::DisplayManager#jccl::ConfigChunkHandler:oiref>
+@__hiddenLink <oiref:cpp#Extends#vrj::EnvironmentManager#jccl::ConfigChunkHandler:oiref>
+@__hiddenLink <oiref:cpp#Extends#vrj::DrawManager#jccl::ConfigChunkHandler:oiref>
+@__hiddenLink <oiref:cpp#Extends#vrj::App#jccl::ConfigChunkHandler:oiref>
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#vrj::GlDrawManager:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#vrj::GlApp:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference17 {
+}/**
+@__ref <oiref:cpp#Class#vrj::PfApp:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference18 {
+}/**
+@__ref <oiref:cpp#Class#vrj::PfDrawManager:oiref><oihard>
+@__modelType reference
+@__imported
+@hideClasses 
+*/
+class reference19 {
+}/**
+@__ref <oiref:cpp#Class#vrj::App:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference20 {
+}/**
+@__ref <oiref:cpp#Class#vrj::DrawManager:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference21 {
+}/**
+@__ref <oiref:cpp#Class#vrj::Kernel:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference22 {
+}/**
+@__ref <oiref:cpp#Class#vrj::DisplayManager:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference23 {
+}/**
+@__ref <oiref:cpp#Class#gadget::InputManager:oiref><oihard>
+@__modelType reference
+@__imported
+@hideClasses 
+*/
+class reference24 {
+}/**
+@__ref <oiref:cpp#Class#vrj::EnvironmentManager:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference25 {
+}/**
+@__ref <oiref:design#Class#id334n7cyax23xmcyaxz5hz.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#System 
+Primitives:oiref>
+@__imported 
+*/
+class reference28 {
+}/**
+@__ref <oiref:design#Class#id4wy83cyax23xmcyaxzx8n.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#SGI Primitives:oiref>
+@__imported 
+*/
+class reference30 {
+}/**
+@__ref <oiref:design#Class#id1ya1lcyax23xmcyay0g8m.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Win32 Primitives:oiref>
+@__imported 
+*/
+class reference32 {
+}/**
+@__ref <oiref:cpp#Class#jccl::ConfigChunkHandler:oiref><oihard>
+@__modelType reference
+@__imported
+@__hidden*/
+class reference36 {
+}/**
+@__ref <oiref:design#Class#id1bxjecyax23xmcyaxlllw.node:oiref><oihard>
+@__modelType reference 
+*/
+class reference37 {
+}/**
+@__ref <oiref:design#Class#id1bxjecyax23xmcyaxlllw.node38:oiref><oihard>
+@__modelType reference 
+*/
+class reference39 {
+}/**
+@__ref <oiref:cpp#Class#jccl::ConfigManager:oiref><oihard>
+@__modelType reference
+@__imported
+@hideClasses 
+*/
+class reference44 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options filter.c.state = off
+filter.d1.state = on
+filter.d2.state = on
+filter.e.state = on 
+*/
+class __options {
+}/**
+@__positions <oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::GlDrawManager#mApp:oiref>=85,63,32,13,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::Kernel#lnkConfigManager:oiref>=270,426,211,426:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::DisplayManager#mDrawManager:oiref>=1152,260,941,10,743,10,539,48:oigroup>
+<oigroup:<oiref:cpp#Classvrj::jGlApp:oiref>=80,80,83,90,1:oigroup>
+<oigroup:<oiref:design#Class#id334n7cyax23xmcyaxz5hz.diagram.link:oiref>=383,572,383,620:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::EnvironmentManager:oiref>=630,580,155,98,1:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::DrawManager#jccl::ConfigChunkHandler:oiref>=559,210,804,179:oigroup>
+<oigroup:<oiref:design#Class#id1bxjecyax23xmcyaxlllw.node38.link:oiref>=850,420,803,412:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=121,159,195,210:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::DisplayManager:oiref>=630,330,173,92,1:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::Kernel#jccl::ConfigChunkHandler:oiref>=489,380,832,179:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::Kernel#environmentManager:oiref>=340,478,695,580:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::Kernel:oiref>=270,380,173,92,1:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=150,210,173,92,1:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::GlDrawManager:oiref>=570,80,149,90,0:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::PfDrawManager#vrj::DrawManager:oiref>=494,172,494,260:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::PfDrawManager#app:oiref>=205,63,32,13,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=80,80,83,79,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::Kernel#mNewApp:oiref>=460,400,260,400,199,292:oigroup>
+<oigroup:<oiref:design#Class#id1bxjecyax23xmcyaxlllw.node38:oiref>=850,410,142,30,0:oigroup>
+<oigroup:<oiref:design#Class#id4wy83cyax23xmcyaxzx8n.diagram:oiref>=200,620,105,57,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::Kernel#mDisplayManager:oiref>=443,401,630,401:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::Kernel#mApp:oiref>=247,302,32,13,0:oigroup>
+<oigroup:<oiref:cpp#Extends#gadget::InputManager#jccl::ConfigChunkHandler:oiref>=860,380,860,179:oigroup>
+<oigroup:<oiref:cpp#Class#jccl::ConfigChunkHandler:oiref>=750,100,171,79,1:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::App#jccl::ConfigChunkHandler:oiref>=175,210,777,179:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::Kernel#lnkjccl::ConfigManager:oiref>=270,421,178,421:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::PfApp:oiref>=200,80,83,79,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::DrawManager#mDisplayManager:oiref>=539,66,754,20,930,20,1101,260:oigroup>
+<oigroup:<oiref:design#Class#id1bxjecyax23xmcyaxlllw.node38.link40:oiref>=850,430,803,471:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::PfDrawManager#app:oiref>=457,80,390,50,280,50,241,80:oigroup>
+<oigroup:<oiref:cpp#Class#jccl::ConfigManager:oiref>=60,380,151,96,1:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::DrawManager:oiref>=450,260,173,92,1:oigroup>
+<oigroup:<oiref:design#Class#id1bxjecyax23xmcyaxlllw.node38.link41:oiref>=871,490,761,580:oigroup>
+<oigroup:<oiref:design#Class#id1bxjecyax23xmcyaxlllw.node:oiref>=650,200,145,40,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::Kernel#mApp:oiref>=283,380,283,302:oigroup>
+<oigroup:<oiref:cpp#Class#gadget::InputManager:oiref>=630,440,173,109,1:oigroup>
+<oigroup:<oiref:design#Class#id334n7cyax23xmcyaxz5hz.diagram:oiref>=260,520,147,52,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::Kernel#mInputManager:oiref>=594,443,32,13,0:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::PfApp#vrj::App:oiref>=241,159,241,210:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::EnvironmentManager#jccl::ConfigChunkHandler:oiref>=961,510,898,179:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::App#mKernel:oiref>=293,363,32,13,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::Kernel#mInputManager:oiref>=443,460,630,460:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::PfDrawManager:oiref>=390,80,148,92,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::Kernel#mDisplayManager:oiref>=594,384,32,13,0:oigroup>
+<oigroup:<oiref:design#Class#id1bxjecyax23xmcyaxlllw.node.link42:oiref>=650,230,623,278:oigroup>
+<oigroup:<oiref:design#Class#id1ya1lcyax23xmcyay0g8m.diagram:oiref>=360,620,124,57,1:oigroup>
+<oigroup:<oiref:design#Class#id334n7cyax23xmcyaxz5hz.diagram.link34:oiref>=279,572,279,620:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::App#kernel:oiref>=158,292,180,470,460,462:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::GlDrawManager#mApp:oiref>=644,80,570,20,160,20,121,80:oigroup>
+<oigroup:<oiref:design#Class#id1bxjecyax23xmcyaxlllw.node.link43:oiref>=650,210,538,154:oigroup>
+<oigroup:<oiref:design#Class#id1bxjecyax23xmcyaxlllw.node.link:oiref>=684,200,684,170:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::DisplayManager#jccl::ConfigChunkHandler:oiref>=875,260,875,179:oigroup>
+<oigroup:<oiref:design#Class#id334n7cyax23xmcyaxz5hz.diagram.link35:oiref>=315,472,315,520:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::App#mKernel:oiref>=303,302,336,380:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::Kernel#mDrawManager:oiref>=389,380,536,352:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::Kernel#mDrawManager:oiref>=411,352,32,13,0:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::GlDrawManager#vrj::DrawManager:oiref>=596,170,596,260:oigroup>
+
+*/
+class __positions {
+}/**
+@shapeType Note
+@__modelType node
+@name Note1
+@text External Managers 
+*/
+class node {
+/**
+@shapeType NoteLink
+@__modelType link
+@__ref <oiref:cpp#Class#vrj::GlDrawManager:oiref><oihard> 
+*/
+class link {
+}/**
+@shapeType NoteLink
+@__modelType link
+@__ref <oiref:cpp#Class#vrj::DrawManager:oiref><oihard> 
+*/
+class link42 {
+}/**
+@shapeType NoteLink
+@__modelType link
+@__ref <oiref:cpp#Class#vrj::PfDrawManager:oiref><oihard> 
+*/
+class link43 {
+}}/**
+@shapeType Note
+@__modelType node
+@name Note2
+@text Internal Managers 
+*/
+class node38 {
+/**
+@shapeType NoteLink
+@__modelType link
+@__ref <oiref:cpp#Class#vrj::DisplayManager:oiref><oihard> 
+*/
+class link {
+}/**
+@shapeType NoteLink
+@__modelType link
+@__ref <oiref:cpp#Class#gadget::InputManager:oiref><oihard> 
+*/
+class link40 {
+}/**
+@shapeType NoteLink
+@__modelType link
+@__ref <oiref:cpp#Class#vrj::EnvironmentManager:oiref><oihard> 
+*/
+class link41 {
+}}

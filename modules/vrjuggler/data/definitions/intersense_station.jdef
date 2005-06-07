@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="intersense_station" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/IS_logo.gif" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="InterSense Station">
+      <abstract>false</abstract>
+      <help>Settings for an InterSense tracker station.</help>
+      <parent/>
+      <category>/Devices/Positional</category>
+      <property valuetype="boolean" variable="false" name="enabled">
+         <help>Used to enable or disable the InterSense station that this config element configures.</help>
+         <value label="Enabled" defaultvalue="false"/>
+      </property>
+      <property valuetype="integer" variable="false" name="station_index">
+         <help>The index of the physical tracker station that is associated with this config element. The value is the address of the station as determined by the hardware configuration.</help>
+         <value label="Station Number" defaultvalue="1"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="use_digital">
+         <help>Indicates whether any digital buttons associated with this station should be sampled.</help>
+         <value label="Use Digital" defaultvalue="true"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="use_analog">
+         <help>Indicates whether any analog inputs (such as joysticks) associated with this station should be sampled.</help>
+         <value label="Use Analog" defaultvalue="true"/>
+      </property>
+      <property valuetype="integer" variable="false" name="digital_first">
+         <help>In the case of the InterSense IS-900 driver, this defines the starting point in the array of stored digital data samples received from this station.  With the InterSense API driver, the value of this property is ignored and should be set to 0.</help>
+         <value label="Digital First" defaultvalue="0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="digital_count">
+         <help>The number of digital input sources associated with this station. The value of this property must be used in conjunction with digital_first for correct handling of multiple conifgured stations.</help>
+         <value label="Digital Count" defaultvalue="0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="analog_first">
+         <help>In the case of the InterSense IS-900 driver, this defines the starting point in the array of stored analog data samples received from this station.  With the InterSense API driver, the value of this property is ignored and should be set to 0.</help>
+         <value label="Analog First" defaultvalue="0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="analog_count">
+         <help>The number of analog input sources associated with this station. The value of this property must be used in conjunction with analog_first for correct handling of multiple conifgured stations.</help>
+         <value label="Analog Count" defaultvalue="0"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

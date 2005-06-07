@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="surfacedisplayeditor" default="dist" basedir=".">
+   <property name="srcdir" location="@srcdir@" />
+   <property name="topdir" location="@topdir@" />
+   <property name="debug" value="on" />
+   <property name="optimize" value="off" />
+
+   <path id="tweek.classpath">
+      <pathelement path="@TWEEK_JARS@" />
+      <pathelement path="@TWEEK_EXT_JARS@" />
+      <pathelement path="@JAVA3D_JAR@" />
+   </path>
+
+   <path id="jccl.classpath">
+      <pathelement path="@JCCL_JARS@" />
+   </path>
+
+   <property name="tweek.classpath" refid="tweek.classpath" />
+   <property name="jccl.classpath" refid="jccl.classpath" />
+
+   <!-- Compile all java sources -->
+   <target name="compile">
+      <javac destdir="."
+             deprecation="on"
+             debug="${debug}"
+             optimize="${optimize}">
+         <src path="${srcdir}" />
+         <include name="org/**"/>
+         <classpath>
+            <pathelement path="${tweek.classpath}" />
+            <pathelement path="${jccl.classpath}" />
+            <!-- <pathelement path="/home/users/aronb/Source/CurrentJuggler/juggler/build_linux_rh80/instlinks/bin/ui.jar" /> -->
+         </classpath>
+      </javac>
+   </target>
+
+   <!-- Create the distribution jar -->
+   <target name="dist" depends="compile">
+       <jar destfile="SurfaceDisplayEditor.jar" basedir=".">
+         <include name="org/**" />
+<!--
+         <fileset dir="${srcdir}">
+            <include name="org/vrjuggler/vrjconfig/images/*" />
+            <include name="org/vrjuggler/vrjconfig/ui/images/*" />
+            <include name="LICENSE-java-laf.txt" />
+         </fileset>
+-->
+      </jar>
+   </target>
+
+
+   <!-- Clean up -->
+   <target name="clean">
+      <delete failonerror="false">
+         <fileset dir="org" includes="**/*.class" />
+      </delete>
+      <delete file="SurfaceDisplayEditor.jar" failonerror="false" />
+   </target>
+</project>

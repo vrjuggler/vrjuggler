@@ -1,0 +1,166 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Specialized include file for the top-level makefile.  Targets and variables
+# needed for building the whole source tree are provided here.  This file
+# should only be included by the top-level makefile.  It is written in such a
+# way that no assumptions are made by this file about what the including file
+# provides except that it includes make.defs.mk.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+# Variables whose values are specific to this file.
+includedir=	@includedir@
+instlinks=	$(topdir)/instlinks
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+
+# Extra compiler and linker options needed only by this file.
+DBG_FLAGS=	-D_DEBUG @DBG_FLAGS@
+OPT_FLAGS=	-D_OPT -DNDEBUG @OPT_FLAGS@
+
+HAVE_TWEEK_CXX=	@HAVE_TWEEK_CXX@
+BUILD_JAVA=	@BUILD_JAVA@
+
+# =============================================================================
+# Build and installation directory naming and ownership information.
+# =============================================================================
+DEFAULT_DIR=	$(OPT_DIR)
+
+# If we have a name for the install group, define group-setting options for
+# UNIX commands (chown(1), chgrp(1)) and for local Perl scripts
+# (makefiles-gen.pl in particular).
+ifdef GROUP_NAME
+    _GROUP_OPT_PL=	--gname="$(GROUP_NAME)"
+endif
+
+# =============================================================================
+# Library targets.
+# =============================================================================
+
+BEFOREBUILD=	beforebuild
+AFTERBUILD=	afterbuild
+
+# Things to do before the object files and library are built.
+beforebuild:
+	@$(MKINSTALLDIRS) $(DSO_PLUGIN_DIR)
+
+# Things to do after the object files and library are built.
+afterbuild:
+	@$(MAKE) links
+
+# =============================================================================
+# Make links for developer use that provide the needed functionality for
+# the $JCCL_BASE_DIR environment variable to be used when needed.
+# $JCCL_BASE_DIR should be set to $(instlinks).
+# =============================================================================
+links:
+	@echo "------------------------------------------------"
+	@echo "Setting up developer installation"
+	@echo "------------------------------------------------"
+ifdef BUILD_TYPE
+	$(MAKE) links-$(BUILD_TYPE)
+else
+	$(MAKE) links-dbg
+endif
+
+links-all:
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" installworld
+
+links-dbg:
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-debug
+
+links-opt:
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-optim
+
+links-prof:
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-profiled
+
+links-prof-libs:
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-prof
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-prof-dso
+
+# Remove the links in $(instlinks).  We cannot do this in the global build,
+# however, because it would blow away links set up by our dependencies.
+clean-links:
+ifndef GLOBAL_BUILD
+	@echo "------------------------------------------------"
+	@echo "Removing developer installation links"
+	@echo "------------------------------------------------"
+	rm -rf $(instlinks)
+endif
+
+# =============================================================================
+# Installation targets.  The default (what is done by 'install') is to install
+# the static debugging version of the libraries.  The steps taken for a full
+# installation are:
+#
+#     1) Create the full installation directory hierarchy.
+#     2) Install the libraries.
+#     3) Install the header files.
+#     4) Install the test programs.
+#     5) Install the contents of the data directory.
+#     6) Install the Java-based config editor (if possible).
+# =============================================================================
+
+BEFOREINSTALL=	beforeinstall
+
+# Steps to take before beginning the installation process.  This target is
+# independent of the current ABI.
+beforeinstall:
+	if [ -d $(DSO_PLUGIN_DIR) ] ; then				\
+          $(PERL) $(scriptdir)/install-dir.pl -m $(EXEC_PERMS)		\
+            $(GROUP_OPT_UNIX) -e .so,.dll,.dylib $(EXTRA_INSTALL_ARGS)	\
+            -o $(libdir)$(LIBBITSUF)/$(DSO_PLUGIN_SUBDIR) -i		\
+            $(DSO_PLUGIN_DIR) ;						\
+        fi
+
+# =============================================================================
+# Clean-up targets.
+# =============================================================================
+_clobber:
+	@$(MAKE) cleandepend
+	@$(MAKE) clean-links
+
+# Define $(_LOCAL_CLEAN) and $(_LOCAL_CLOBBER) to inform the shared 'clean'
+# and 'clobber' targets that there is a '_clean' target and a '_clobber'
+# target to be run besides the standard targets.
+_LOCAL_CLOBBER=	1
+
+include $(MKPATH)/dpp.libs.mk
+include $(MKPATH)/dpp.clean.mk
+include plugin.defs.mk
+
+CLEAN_DIRS+=	$(BUILDDIR_BASE) $(LIBDIR_NAME)
+CLOBBER_DIRS+=	$(BUILDDIR_BASE) $(LIBDIR_NAME)

@@ -1,0 +1,27 @@
+Microsoft Visual Studio Solution File, Format Version 7.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetworkTestBean (C++)", "NetworkTestBean\NetworkTest_CXX.vcproj", "{D07F580C-1FB3-45EB-84E2-113FD7CD2D83}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetworkTestBean (Java)", "NetworkTestBean\NetworkTest_Java.vcproj", "{7506244E-1D87-4642-B560-82A0BA674A7D}"
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		ConfigName.0 = Debug
+		ConfigName.1 = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{D07F580C-1FB3-45EB-84E2-113FD7CD2D83}.Debug.ActiveCfg = Debug|Win32
+		{D07F580C-1FB3-45EB-84E2-113FD7CD2D83}.Debug.Build.0 = Debug|Win32
+		{D07F580C-1FB3-45EB-84E2-113FD7CD2D83}.Release.ActiveCfg = Release|Win32
+		{D07F580C-1FB3-45EB-84E2-113FD7CD2D83}.Release.Build.0 = Release|Win32
+		{7506244E-1D87-4642-B560-82A0BA674A7D}.Debug.ActiveCfg = Debug|Win32
+		{7506244E-1D87-4642-B560-82A0BA674A7D}.Debug.Build.0 = Debug|Win32
+		{7506244E-1D87-4642-B560-82A0BA674A7D}.Release.ActiveCfg = Release|Win32
+		{7506244E-1D87-4642-B560-82A0BA674A7D}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

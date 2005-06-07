@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="opengl_frame_buffer_config" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="OpenGL Frame Buffer Configuration">
+      <abstract>false</abstract>
+      <help/>
+      <parent/>
+      <category>/Display</category>
+      <property valuetype="integer" variable="false" name="visual_id">
+         <help>The specific GLX or WGL visual ID to be used.  Setting a value other than -1 causes the remaining frame buffer settings to be ignored.  The value given for this property must be one of the available visuals named in the output from glxinfo or wglinfo.  The value must be entered in base 10 as an integer.  A value of -1 indicates that this setting should be ignored.</help>
+         <value label="Visual ID" defaultvalue="-1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="red_size">
+         <help>The minimum number of bits to use per pixel for the red channel.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+         <value label="Red Channel Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="green_size">
+         <help>The minimum number of bits to use per pixel for the green channel.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+         <value label="Green Channel Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="blue_size">
+         <help>The minimum number of bits to use per pixel for the blue channel.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+         <value label="Blue Channel Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="alpha_size">
+         <help>The minimum number of bits to use per pixel for the alpha channel.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+         <value label="Alpha Channel Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="depth_buffer_size">
+         <help>The minimum size of the depth buffer.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+         <value label="Depth Buffer Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="fsaa_enable">
+         <help>Toggles the use of full-screen anti-aliasing.  This may not be available with all OpenGL implementations.</help>
+         <value label="Enable FSAA" defaultvalue="false"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+   <definition_version version="2" label="OpenGL Frame Buffer Configuration">
+      <abstract>false</abstract>
+      <help/>
+      <parent/>
+      <category>/Display</category>
+      <property valuetype="integer" variable="false" name="visual_id">
+         <help>The specific GLX or WGL visual ID to be used.  Setting a value other than -1 causes the remaining frame buffer settings to be ignored.  The value given for this property must be one of the available visuals named in the output from glxinfo or wglinfo.  The value must be entered in base 10 as an integer.  A value of -1 indicates that this setting should be ignored.</help>
+         <value label="Visual ID" defaultvalue="-1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="red_size">
+         <help>The minimum number of bits to use per pixel for the red channel in the color buffer.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+         <value label="Color Buffer Red Channel Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="green_size">
+         <help>The minimum number of bits to use per pixel for the green channel in the color buffer.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+         <value label="Color Buffer Green Channel Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="blue_size">
+         <help>The minimum number of bits to use per pixel for the blue channel in the color buffer.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+         <value label="Color Buffer Blue Channel Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="alpha_size">
+         <help>The minimum number of bits to use per pixel for the alpha channel in the color buffer.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+         <value label="Color Buffer Alpha Channel Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="auxiliary_buffer_count">
+         <help>The number of desired auxiliary buffers.  The smallest number of available buffers greater than or equal to the requested size will be used.</help>
+         <value label="Number of Auxillary Buffers" defaultvalue="0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="depth_buffer_size">
+         <help>The minimum size of the depth buffer.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+         <value label="Depth Buffer Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="stencil_buffer_size">
+         <help>The minimum size of the stencil buffer.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+         <value label="Stencil Buffer Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="accum_red_size">
+         <help>The minimum number of bits to use per pixel for the blue channel in the accumulation buffer.  A value of 0 indicates a preference for visuals with no red accumulation buffer.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+         <value label="Accumulation Buffer Red Channel Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="accum_green_size">
+         <help>The minimum number of bits to use per pixel for the blue channel in the accumulation buffer.  A value of 0 indicates a preference for visuals with no green accumulation buffer.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+         <value label="Accumulation Buffer Green Channel Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="accum_blue_size">
+         <help>The minimum number of bits to use per pixel for the blue channel in the accumulation buffer.  A value of 0 indicates a preference for visuals with no blue accumulation buffer.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+         <value label="Accumulation Buffer Blue Channel Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="accum_alpha_size">
+         <help>The minimum number of bits to use per pixel for the blue channel in the accumulation buffer.  A value of 0 indicates a preference for visuals with no alpha accumulation buffer.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+         <value label="Accumulation Buffer Alpha Channel Size" defaultvalue="1"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="fsaa_enable">
+         <help>Toggles the use of multisampling (also known as full-screen anti-aliasing).  This may not be available with all OpenGL implementations.</help>
+         <value label="Enable Multisampling" defaultvalue="false"/>
+      </property>
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+
+            <xsl:template match="jconf:opengl_frame_buffer_config">
+               <xsl:element namespace="{$jconf}" name="opengl_frame_buffer_config">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">2</xsl:attribute>
+                  <xsl:copy-of select="./*"/>
+                  <xsl:element namespace="{$jconf}" name="auxiliary_buffer_count">
+                     <xsl:text>0</xsl:text>
+                  </xsl:element>
+                  <xsl:element namespace="{$jconf}" name="stencil_buffer_size">
+                     <xsl:text>1</xsl:text>
+                  </xsl:element>
+                  <xsl:element namespace="{$jconf}" name="accum_red_size">
+                     <xsl:text>1</xsl:text>
+                  </xsl:element>
+                  <xsl:element namespace="{$jconf}" name="accum_green_size">
+                     <xsl:text>1</xsl:text>
+                  </xsl:element>
+                  <xsl:element namespace="{$jconf}" name="accum_blue_size">
+                     <xsl:text>1</xsl:text>
+                  </xsl:element>
+                  <xsl:element namespace="{$jconf}" name="accum_alpha_size">
+                     <xsl:text>1</xsl:text>
+                  </xsl:element>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
+   </definition_version>
+</definition>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="input_area" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Input Area">
+      <help>Configures a window that accepts keyboard and mouse events as input.</help>
+      <parent></parent>
+      <category>/Devices</category>
+      <property valuetype="configelementpointer" variable="false" name="keyboard_mouse_device_name">
+         <help>Points to the keyboard/mouse input handler to which this device will feed keyboard and mouse events from the winodwing system.</help>
+         <value label="Keyboard/Mouse Input Handler"/>
+         <allowed_type>keyboard_mouse_device</allowed_type>
+      </property>
+      <property valuetype="integer" variable="false" name="lock_key">
+         <help>The key that will lock the mouse to the window</help>
+         <value label="Lock Key" defaultvalue="0"/>
+         <enumeration editable="false">
+            <enum label="KEY_NONE" value="0"/>
+            <enum label="KEY_UP" value="1"/>
+            <enum label="KEY_DOWN" value="2"/>
+            <enum label="KEY_LEFT" value="3"/>
+            <enum label="KEY_RIGHT" value="4"/>
+            <enum label="KEY_CTRL" value="5"/>
+            <enum label="KEY_SHIFT" value="6"/>
+            <enum label="KEY_ALT" value="7"/>
+            <enum label="KEY_1" value="8"/>
+            <enum label="KEY_2" value="9"/>
+            <enum label="KEY_3" value="10"/>
+            <enum label="KEY_4" value="11"/>
+            <enum label="KEY_5" value="12"/>
+            <enum label="KEY_6" value="13"/>
+            <enum label="KEY_7" value="14"/>
+            <enum label="KEY_8" value="15"/>
+            <enum label="KEY_9" value="16"/>
+            <enum label="KEY_0" value="17"/>
+            <enum label="KEY_A" value="18"/>
+            <enum label="KEY_B" value="19"/>
+            <enum label="KEY_C" value="20"/>
+            <enum label="KEY_D" value="21"/>
+            <enum label="KEY_E" value="22"/>
+            <enum label="KEY_F" value="23"/>
+            <enum label="KEY_G" value="24"/>
+            <enum label="KEY_H" value="25"/>
+            <enum label="KEY_I" value="26"/>
+            <enum label="KEY_J" value="27"/>
+            <enum label="KEY_K" value="28"/>
+            <enum label="KEY_L" value="29"/>
+            <enum label="KEY_M" value="30"/>
+            <enum label="KEY_N" value="31"/>
+            <enum label="KEY_O" value="32"/>
+            <enum label="KEY_P" value="33"/>
+            <enum label="KEY_Q" value="34"/>
+            <enum label="KEY_R" value="35"/>
+            <enum label="KEY_S" value="36"/>
+            <enum label="KEY_T" value="37"/>
+            <enum label="KEY_U" value="38"/>
+            <enum label="KEY_V" value="39"/>
+            <enum label="KEY_W" value="40"/>
+            <enum label="KEY_X" value="41"/>
+            <enum label="KEY_Y" value="42"/>
+            <enum label="KEY_Z" value="43"/>
+            <enum label="KEY_ESC" value="44"/>
+            <enum label="MOUSE_POSX" value="45"/>
+            <enum label="MOUSE_NEGX" value="46"/>
+            <enum label="MOUSE_POSY" value="47"/>
+            <enum label="MOUSE_NEGY" value="48"/>
+            <enum label="MOUSE_BUT1" value="49"/>
+            <enum label="MOUSE_BUT2" value="50"/>
+            <enum label="MOUSE_BUT3" value="51"/>
+         </enumeration>
+      </property>
+      <property valuetype="boolean" variable="false" name="start_locked">
+         <help>Do we start with the window locked??</help>
+         <value label="Start Locked" defaultvalue="false"/>
+      </property>
+      <property valuetype="integer" variable="false" name="sleep_time">
+         <help>This is the number of milliseconds that the event update loop should sleep between updates.</help>
+         <value label="Sleep Time" defaultvalue="75"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

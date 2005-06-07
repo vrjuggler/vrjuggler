@@ -1,0 +1,64 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# =============================================================================
+# This file <driver.defs.mk> provides variable information shared by all
+# makefiles in the Gadgeteer Devices source tree.  It requires GNU make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+# Variables defined here are:
+#
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Common code for driver DSOs.
+# -----------------------------------------------------------------------------
+ifeq ($(BUILD_TYPE), dbg)
+   BUILD_TYPE_EXT=	_d
+endif
+
+LIBDIR_NAME?=	lib$(LIBBITSUF)
+
+# $(LIBDIR_BASE) is the base directory where the libraries will be built.
+LIBDIR_BASE?=	$(topdir)/$(LIBDIR_NAME)
+
+DSO_DRIVER_SUBDIR=	gadgeteer/drivers
+DSO_DRIVER_DIR=		$(LIBDIR_BASE)/$(DSO_DRIVER_SUBDIR)
+
+DRIVER_DSO=	$(DRIVER_NAME)_drv$(BUILD_TYPE_EXT).$(DYNAMICLIB_EXT)
+DYLIB_DEPS=	$(PRE_DSO_DRIVER_DEPS) @DSO_DRIVER_DEPS@ $(POST_DSO_DRIVER_DEPS)
+
+driver-dso: $(DSO_DRIVER_DIR)/$(DRIVER_DSO)
+
+$(DSO_DRIVER_DIR)/$(DRIVER_DSO): $(OBJECTS)
+	$(CXX_PLUGIN) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJECTS) $(DYLIB_DEPS)

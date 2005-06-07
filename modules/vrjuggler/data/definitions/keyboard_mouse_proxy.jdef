@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="keyboard_mouse_proxy" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/event_window642.png" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Keyboard/Mouse Proxy">
+      <help>This proxy points to a keyboard/mouse input handler. As with other input device types, a proxy is required to be able to read data from the keyboard/mouse input handler. This type will be used by the simulator and by VR Juggler application object authors who want to use keyboard and/or mouse input in their applications.</help>
+      <parent>proxy</parent>
+      <category>/Proxies</category>
+      <property valuetype="configelementpointer" variable="false" name="device">
+         <help>The keyboard/mouse input handler that is being proxied.</help>
+         <value label="Device"/>
+         <allowed_type>keyboard_mouse_device</allowed_type>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

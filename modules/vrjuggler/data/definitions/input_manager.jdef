@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="input_manager" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Input Manager">
+      <abstract>false</abstract>
+      <help>Configuration of the Gadgeteer Input Manager.</help>
+      <parent/>
+      <category>/Input</category>
+      <property valuetype="string" variable="true" name="driver">
+         <help>Each value is the full path to a driver DSO (.so or .dll, usually).  The path may make use of environment variables.  For example: ${VJ_BASE_DIR}/lib/gadgeteer/drivers/libPinchGlove.so.</help>
+         <value label="DSO Path" defaultvalue=""/>
+      </property>
+      <property valuetype="string" variable="true" name="driver_directory">
+         <help>This property defines zero or more directories containing dynamically loadable device drivers.  Within the directory, all driver DSOs that are discovered at runtime will be loaded.</help>
+         <value label="DSO directory" defaultvalue=""/>
+      </property>
+      <property valuetype="string" variable="true" name="dso_file_extension">
+         <help>Define the file extension used on dynamically loaded modules.  On most UNIX systems, the value will be "so".  On Win32, the value will be "dll".  Note that the value must not contain the "." that separates the module name from its extension.</help>
+         <value label="DSO file extension" defaultvalue="so"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+   <definition_version version="2" label="Input Manager">
+      <abstract>false</abstract>
+      <help>Configuration of the Gadgeteer Input Manager.</help>
+      <parent/>
+      <category>/Input</category>
+      <property valuetype="string" variable="true" name="driver_path">
+         <help>Each value adds to the path where dynamically loadable driver objects can be found.  The path may make use of environment variables.  For example: ${VJ_BASE_DIR}/lib/gadgeteer/drivers.  If no values are set for this property, the default search path will be ${VJ_BASE_DIR}/lib{,32,64}/gadgeteer/drivers depending on the compile-time application binary interface (ABI).</help>
+         <value label="DSO Path" defaultvalue=""/>
+      </property>
+      <property valuetype="string" variable="true" name="driver">
+         <help>The base name of a dynamically loadable driver object.  For example: PinchGlove_drv</help>
+         <value label="Driver module" defaultvalue=""/>
+         <enumeration editable="true">
+            <enum label="DataGlove_drv" value="DataGlove_drv"/>
+            <enum label="DirectXJoystick_drv" value="DirectXJoystick_drv"/>
+            <enum label="Fastrak_drv" value="Fastrak_drv"/>
+            <enum label="Flock_drv" value="Flock_drv"/>
+            <enum label="IBox_drv" value="IBox_drv"/>
+            <enum label="IS900_drv" value="IS900_drv"/>
+            <enum label="IntersenseAPI_drv" value="IntersenseAPI_drv"/>
+            <enum label="LinuxJoydev_drv" value="LinuxJoydev_drv"/>
+            <enum label="MSFTSpeechRecog_drv" value="MSFTSpeechRecog_drv"/>
+            <enum label="MotionStar_drv" value="MotionStar_drv"/>
+            <enum label="PinchGlove_drv" value="PinchGlove_drv"/>
+            <enum label="SerialEncoder_drv" value="SerialEncoder_drv"/>
+            <enum label="SpaceBall_drv" value="SpaceBall_drv"/>
+            <enum label="ThreeDMouse_drv" value="ThreeDMouse_drv"/>
+            <enum label="Trackd_drv" value="Trackd_drv"/>
+            <enum label="TrackdAPI_drv" value="TrackdAPI_drv"/>
+            <enum label="VRPN_drv" value="VRPN_drv"/>
+         </enumeration>
+      </property>
+      <property valuetype="string" variable="true" name="driver_scan_path">
+         <help>This property defines zero or more directories containing dynamically loadable device drivers.  Within the directory, all driver DSOs that are discovered at runtime will be loaded.</help>
+         <value label="DSO directory" defaultvalue=""/>
+      </property>
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+
+            <xsl:template match="jconf:input_manager">
+               <xsl:element namespace="{$jconf}" name="input_manager">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">2</xsl:attribute>
+                  <xsl:if test="count(./jconf:driver) &gt; 0">
+                     <xsl:element namespace="{$jconf}" name="driver_path">
+                        <xsl:call-template name="get-path">
+                           <xsl:with-param name="original" select="./jconf:driver"/>
+                           <xsl:with-param name="path_sep"><xsl:text>/</xsl:text></xsl:with-param>
+                        </xsl:call-template>
+                     </xsl:element>
+                  </xsl:if>
+                  <xsl:apply-templates select="./*"/>
+               </xsl:element>
+            </xsl:template>
+
+            <xsl:template match="jconf:driver">
+               <xsl:variable name="no_ext">
+                  <xsl:choose>
+                     <xsl:when test="contains(., '.dll')">
+                        <xsl:value-of select="substring-before(., '.dll')"/>
+                     </xsl:when>
+                     <xsl:when test="contains(., '.dylib')">
+                        <xsl:value-of select="substring-before(., '.dylib')"/>
+                     </xsl:when>
+                     <xsl:otherwise>
+                        <xsl:value-of select="substring-before(., '.so')"/>
+                     </xsl:otherwise>
+                  </xsl:choose>
+               </xsl:variable>
+
+               <xsl:element namespace="{$jconf}" name="driver">
+                  <xsl:call-template name="strip-path">
+                     <xsl:with-param name="original" select="$no_ext"/>
+                     <xsl:with-param name="path_sep"><xsl:text>/</xsl:text></xsl:with-param>
+                  </xsl:call-template>
+               </xsl:element>
+            </xsl:template>
+
+            <xsl:template match="jconf:driver_directory">
+               <xsl:element namespace="{$jconf}" name="driver_scan_path">
+                  <xsl:value-of select="."/>
+               </xsl:element>
+            </xsl:template>
+
+            <xsl:template name="get-path">
+               <xsl:param name="original"/>
+               <xsl:param name="path_sep"/>
+               <xsl:variable name="driver_name">
+                  <xsl:call-template name="strip-path">
+                     <xsl:with-param name="original" select="$original"/>
+                     <xsl:with-param name="path_sep" select="$path_sep"/>
+                  </xsl:call-template>
+               </xsl:variable>
+               <xsl:value-of select="substring-before($original, $driver_name)"/>
+            </xsl:template>
+
+            <xsl:template name="strip-path">
+               <xsl:param name="original"/>
+               <xsl:param name="path_sep"/>
+               <xsl:variable name="last">
+                  <xsl:choose>
+                     <xsl:when test="contains($original, $path_sep)">
+                        <xsl:choose>
+                           <xsl:when test="contains(substring-after($original, $path_sep), $path_sep)">
+                              <xsl:call-template name="strip-path">
+                                 <xsl:with-param name="original"><xsl:value-of select="substring-after($original, $path_sep)"/></xsl:with-param>
+                                 <xsl:with-param name="path_sep"><xsl:value-of select="$path_sep"/></xsl:with-param>
+                              </xsl:call-template>
+                           </xsl:when>
+                           <xsl:otherwise>
+                              <xsl:value-of select="substring-after($original, $path_sep)"/>
+                           </xsl:otherwise>
+                        </xsl:choose>
+                     </xsl:when>
+                     <xsl:otherwise>
+                        <xsl:text></xsl:text>
+                     </xsl:otherwise>
+                  </xsl:choose>
+               </xsl:variable>
+               <xsl:value-of select="$last"/>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
+   </definition_version>
+</definition>

@@ -1,0 +1,51 @@
+#!/bin/sh
+
+: ${JACORB_PATH=.}
+
+if test "x$JAVA_HOME" = "x" ; then
+   echo "ERROR: JAVA_HOME environment variable not set!"
+   exit 1
+fi
+
+# Converts path to a Win32 style path if we're in Cygwin
+fixpath()
+{
+   if test "x$CYGWIN" != "x"; then
+      echo `cygpath -w "$1" | sed -e 's/\\\\/\//g'`
+   else
+      echo "$1"
+   fi
+}
+
+JACORB_ARGS=
+
+# Process all but the last argument for 
+while ( test $# -gt 1 ); do
+   case $1 in
+      -I)
+         shift
+         JACORB_ARGS="$JACORB_ARGS -I `fixpath $1`"
+         shift
+         ;;
+      -I*)
+         INCLUDE=`echo $1 | sed -e 's/^-I\(.*\)/\1/'`
+         shift
+         INCLUDE=`fixpath $INCLUDE`
+         JACORB_ARGS="$JACORB_ARGS -I$INCLUDE"
+         ;;
+      -d)
+         shift
+         JACORB_ARGS="$JACORB_ARGS -d `fixpath $1`"
+         shift
+         ;;
+      *)
+         JACORB_ARGS="$JACORB_ARGS $1"
+         shift
+         ;;
+   esac
+done
+
+# The last argument must be the file to process
+IDL_FILE=`fixpath $1`
+
+$JAVA_HOME/bin/java  -classpath $JACORB_PATH/idl.jar:$JACORB_PATH/logkit-1.2.jar org.jacorb.idl.parser ${JACORB_ARGS} ${IDL_FILE}

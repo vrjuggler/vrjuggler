@@ -1,0 +1,79 @@
+package id4s2p1cyax23xmcyb00neu;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#vrj::App:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#vrj::Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#reset#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#haveFocus#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configCanHandle#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#depSatisfied#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configAdd#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configRemove#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#focusChanged#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#kernel:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#mHaveFocus:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::App#setFocus#(#bool#)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::App#getDrawManager#(##)#:oiref>
+@hideProperties
+@hideAttributes
+@__hiddenMember <oiref:cpp#Member#vrj::App#configCanHandle#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#setFocus#(#bool#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configRemove#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configAdd#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#getSoundManager#(##)#:oiref> 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#id4s2p1cyax23xmcyb00neu.node:oiref><oihard>
+@__modelType reference 
+*/
+class reference54 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:design#Class#id4s2p1cyax23xmcyb00neu.node.link:oiref>=230,120,190,120:oigroup>
+<oigroup:<oiref:design#Class#id4s2p1cyax23xmcyb00neu.node:oiref>=230,20,230,170,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,50,180,230,0:oigroup>
+*/
+class __positions {
+}/**
+@shapeType Note
+@__modelType node
+@name Note1
+@text class MyApp : public vrj::App
+{
+   void init();
+   void apiInit();
+   void exit();
+   void preFrame();
+        .
+        .
+        .
+}; 
+*/
+class node {
+/**
+@shapeType NoteLink
+@__modelType link
+@__ref <oiref:cpp#Class#vrj::App:oiref><oihard> 
+*/
+class link {
+}}

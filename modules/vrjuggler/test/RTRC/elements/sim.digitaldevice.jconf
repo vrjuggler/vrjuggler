@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <simulated_digital_device name="ExtraDigitalDevice" version="1">
+         <event_window_proxy>WandEventWindowProxy</event_window_proxy>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 0" version="1">
+               <modifier_key>ANY</modifier_key>
+               <key>49</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 1" version="1">
+               <modifier_key>ANY</modifier_key>
+               <key>50</key>
+            </key_modifier_pair>
+         </key_pair>
+         <device_host />
+      </simulated_digital_device>
+   </elements>
+</configuration>
+

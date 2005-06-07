@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <simulated_digital_device name="SimWandButtons02" version="1">
+         <event_window_proxy>WandEventWindowProxy</event_window_proxy>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 0" version="1">
+               <modifier_key>ANY</modifier_key>
+               <key>49</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 1" version="1">
+               <modifier_key>ANY</modifier_key>
+               <key>50</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 2" version="1">
+               <modifier_key>ANY</modifier_key>
+               <key>51</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 3" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>10</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 4" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>11</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 5" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>12</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 6" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>13</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 7" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>14</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 8" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>15</key>
+            </key_modifier_pair>
+         </key_pair>
+         <device_host />
+      </simulated_digital_device>
+   </elements>
+</configuration>
+

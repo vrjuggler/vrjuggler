@@ -1,0 +1,92 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# ------------------------------------------------------------------------------
+# This file is imported via require by the Perl script
+# release/scripts/makefiles-gen.pl.  It populates the %VARS hash with
+# values used in generating Makefiles from Makefile.in templates at
+# installation time.  Any @...@ symbols in the Makefile.in's found in the 
+# directories samples and test are to be replaced by these values during the
+# installation process.  All values should be in single quotes to prevent
+# expansion of possible variable strings by Perl.
+#
+# Generated for use on @PLATFORM@
+# ------------------------------------------------------------------------------
+
+$VARS{'CC'}              = '@CC@';
+$VARS{'C_DLL'}           = '@C_DLL@';
+$VARS{'C_PLUGIN'}        = '@C_PLUGIN@';
+$VARS{'CFLAGS'}          = '@CFLAGS@';
+$VARS{'CFLAGS_DYNLIB'}   = '@CFLAGS_DYNLIB@';
+$VARS{'CC_PROF_FLAGS'}   = '@CC_PROF_FLAGS@';
+$VARS{'CXX'}             = '@CXX@';
+$VARS{'CXX_DLL'}         = '@CXX_DLL@';
+$VARS{'CXX_PLUGIN'}      = '@CXX_PLUGIN@';
+$VARS{'CXXFLAGS'}        = '@CXXFLAGS@';
+$VARS{'CXXFLAGS_DYNLIB'} = '@CXXFLAGS_DYNLIB@';
+$VARS{'CXX_PROF_FLAGS'}  = '@CXX_PROF_FLAGS@';
+$VARS{'DEFS'}            = '@DEFS@';
+$VARS{'DEP_GEN_FLAG'}    = '@DEP_GEN_FLAG@';
+$VARS{'DEPEND_EXTRAS'}   = '@DEPEND_EXTRAS@';
+$VARS{'DEPEND_FLAGS'}    = '@DEPEND_FLAGS@';
+$VARS{'INCLUDES'}        = '@INCLUDES@';
+$VARS{'JDK_HOME'}        = '@JDK_HOME@';
+
+$VARS{'DYLIB_NAME_FLAG'} = '@DYLIB_NAME_FLAG@';
+$VARS{'DYNAMICLIB_EXT'}  = '@DYNAMICLIB_EXT@';
+$VARS{'OBJEXT'}          = '@OBJEXT@';
+$VARS{'OBJ_BUILD_FLAG'}  = '@OBJ_BUILD_FLAG@';
+$VARS{'OBJ_NAME_FLAG'}   = '@OBJ_NAME_FLAG@';
+$VARS{'PLATFORM'}        = '@PLATFORM@';
+$VARS{'LIBBITSUF'}       = '@LIBBITSUF@';
+
+$VARS{'DSOREGFILE'}      = '@DSOREGFILE@';
+$VARS{'DSOVERSION'}      = '@DSOVERSION@';
+$VARS{'DSOVERSIONOPTS'}  = '@DSOVERSIONOPTS@';
+
+$VARS{'LD'}              = '@LD@';
+$VARS{'LDFLAGS'}         = '@LDFLAGS@';
+$VARS{'EXTRA_LDFLAGS'}   = '@EXTRA_LDFLAGS@';
+$VARS{'LDOPTS'}          = '@LDOPTS@';
+$VARS{'LDOPTS_DBG'}      = '@LDOPTS_DBG@';
+$VARS{'LDOPTS_OPT'}      = '@LDOPTS_OPT@';
+$VARS{'LDOPTS_PROF'}     = '@LDOPTS_PROF@';
+$VARS{'LIBS'}            = '@LIBS@';
+$VARS{'OS_TYPE'}         = '@OS_TYPE@';
+
+$VARS{'LN_S'}            = '@LN_S@';
+$VARS{'MAKEDEPEND'}      = '@MAKEDEPEND@';
+$VARS{'PERL'}            = '@PERL@';
+$VARS{'RANLIB'}          = '@RANLIB@';
+$VARS{'RM_LN'}           = '@RM_LN@';
+
+1;

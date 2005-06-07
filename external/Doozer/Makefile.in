@@ -1,0 +1,81 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+# Doozer
+#
+# Original Authors:
+#   Patrick Hartling, Kevin Meinert
+# -----------------------------------------------------------------------------
+# VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          Makefile.in,v
+# Date modified: 2002/02/14 18:02:50
+# Version:       1.7
+# -----------------------------------------------------------------
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+prefix=		@prefix@
+srcdir=		@srcdir@
+
+INSTALL=	@INSTALL@
+
+MK_PREFIX=	@MK_PREFIX@
+
+SRCS=		dzr.app.mk			\
+		dzr.aw.mk			\
+		dzr.clean.mk			\
+		dzr.dep.mk			\
+		dzr.freebsd.mk			\
+		dzr.glapp.aw.mk			\
+		dzr.glapp.mk			\
+		dzr.glapp.sl.mk			\
+		dzr.glswitcher.app.aw.mk	\
+		dzr.glswitcher.app.mk		\
+		dzr.glswitcher.app.sl.mk	\
+		dzr.hosttype.mk			\
+		dzr.irix.mk			\
+		dzr.juggler.glapp.mk		\
+		dzr.juggler.mk			\
+		dzr.juggler.pfapp.mk		\
+		dzr.juggler.switcher.mk		\
+		dzr.lib.mk			\
+		dzr.linux.mk			\
+		dzr.obj.mk			\
+		dzr.pfapp.aw.mk			\
+		dzr.pfapp.mk			\
+		dzr.pfapp.sl.mk			\
+		dzr.pfswitcher.app.aw.mk	\
+		dzr.pfswitcher.app.mk		\
+		dzr.pfswitcher.app.sl.mk	\
+		dzr.sl.mk			\
+		flt2pfb.mk			\
+		Makefile.advanced-template	\
+		Makefile.application-template	\
+		Makefile.library-template
+
+install:
+	@$(srcdir)/mkinstalldirs $(prefix)
+	@for file in $(SRCS) ; do 					\
+            new_file=`echo $$file | sed -e 's/^dzr/$(MK_PREFIX)/'` ;	\
+            echo "$$file --> $(prefix)/$$new_file" ;			\
+            $(INSTALL) -m 644 $$file $(prefix)/$$new_file ;		\
+          done

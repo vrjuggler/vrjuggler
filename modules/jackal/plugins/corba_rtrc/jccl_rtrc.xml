@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd">
+   <service name="RTRCDataSourceBroker">
+      <file name="${TWEEK_BASE_DIR}/share/jccl/beans/jccl_rtrc.jar"
+            class="org.vrjuggler.jccl.rtrc.RTRCDataSourceBrokerImpl"/>
+      <dependencies>
+         <bean>ConfigBroker</bean>
+      </dependencies>
+   </service>
+</beanlist>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="opensg_viewer_file_info" icon_path="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="OpenSG Viewer File Info">
+      <abstract>false</abstract>
+      <help />
+      <parent />
+      <category>/Application/OpenSG Viewer/</category>
+      <property valuetype="string" variable="false" name="filename">
+         <help>The name of the file to load.</help>
+         <value label="File name" defaultvalue="" />
+      </property>
+      <property valuetype="boolean" variable="false" name="grabbable">
+         <help>Is the file supposed to be a grabbable node?</help>
+         <value label="Grabbable?" defaultvalue="false" />
+      </property>
+      <property valuetype="float" variable="false" name="trans">
+         <help>The translation offset of the model loaded.</help>
+         <value label="X" defaultvalue="0.0" />
+         <value label="Y" defaultvalue="0.0" />
+         <value label="Z" defaultvalue="0.0" />
+      </property>
+      <property valuetype="float" variable="false" name="rot">
+         <help>The rotation of the model loaded.</help>
+         <value label="X-axis rotation" defaultvalue="0.0" />
+         <value label="Y-axis rotation" defaultvalue="0.0" />
+         <value label="Z-axis rotation" defaultvalue="0.0" />
+      </property>
+      <upgrade_transform />
+   </definition_version>
+</definition>
+

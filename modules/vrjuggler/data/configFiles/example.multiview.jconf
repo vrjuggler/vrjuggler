@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="/home/patrick/src/Juggler/main/juggler/build.linux.posix.gcc34/modules/vrjuggler/samples/OpenSG/advanced/OpenSGNavGrab/example.multiview.jconf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <display_window name="DisplayWindow0" version="4">
+         <origin>50</origin>
+         <origin>275</origin>
+         <size>800</size>
+         <size>400</size>
+         <pipe>0</pipe>
+         <frame_buffer_config>
+            <opengl_frame_buffer_config name="frame_buffer_config 0" version="2">
+               <visual_id>-1</visual_id>
+               <red_size>1</red_size>
+               <green_size>1</green_size>
+               <blue_size>1</blue_size>
+               <alpha_size>1</alpha_size>
+               <auxiliary_buffer_count>0</auxiliary_buffer_count>
+               <depth_buffer_size>1</depth_buffer_size>
+               <stencil_buffer_size>1</stencil_buffer_size>
+               <accum_red_size>1</accum_red_size>
+               <accum_green_size>1</accum_green_size>
+               <accum_blue_size>1</accum_blue_size>
+               <accum_alpha_size>1</accum_alpha_size>
+               <fsaa_enable>false</fsaa_enable>
+            </opengl_frame_buffer_config>
+         </frame_buffer_config>
+         <stereo>false</stereo>
+         <border>true</border>
+         <hide_mouse>false</hide_mouse>
+         <active>true</active>
+         <simulator_viewports>
+            <simulator_viewport name="Simulator Viewport 0" version="3">
+               <origin>0.5</origin>
+               <origin>0.0</origin>
+               <size>0.5</size>
+               <size>1.0</size>
+               <view>1</view>
+               <user>User1</user>
+               <active>true</active>
+               <vertical_fov>80.0</vertical_fov>
+               <simulator_plugin>
+                  <default_simulator name="Simulator Plug-in" version="3">
+                     <camera_pos>SimCam1 Proxy</camera_pos>
+                     <wand_pos>VJWand</wand_pos>
+                     <draw_projections>false</draw_projections>
+                     <surface_color>0.2</surface_color>
+                     <surface_color>0.3</surface_color>
+                     <surface_color>0.4</surface_color>
+                     <head_model>${VJ_BASE_DIR}/share/vrjuggler/data/models/head.flt</head_model>
+                     <wand_model>${VJ_BASE_DIR}/share/vrjuggler/data/models/wand.flt</wand_model>
+                  </default_simulator>
+               </simulator_plugin>
+            </simulator_viewport>
+         </simulator_viewports>
+         <surface_viewports>
+            <surface_viewport name="Surface Viewport 0" version="2">
+               <origin>0.0</origin>
+               <origin>0.0</origin>
+               <size>0.5</size>
+               <size>1.0</size>
+               <view>1</view>
+               <lower_left_corner>-1.524390243902439</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_left_corner>-1.524390243902439</lower_left_corner>
+               <lower_right_corner>1.524390243902439</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <lower_right_corner>-1.524390243902439</lower_right_corner>
+               <upper_right_corner>1.524390243902439</upper_right_corner>
+               <upper_right_corner>3.048780487804878</upper_right_corner>
+               <upper_right_corner>-1.524390243902439</upper_right_corner>
+               <upper_left_corner>-1.524390243902439</upper_left_corner>
+               <upper_left_corner>3.048780487804878</upper_left_corner>
+               <upper_left_corner>-1.524390243902439</upper_left_corner>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+         <keyboard_mouse_device_name />
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
+      </display_window>
+   </elements>
+</configuration>
+

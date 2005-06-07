@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="corba_performance_monitor" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="CORBA Remote Performance Monitoring">
+      <abstract>false</abstract>
+      <help/>
+      <parent/>
+      <category>/Config</category>
+      <property valuetype="string" variable="false" name="naming_service_host">
+         <help>The name of the host computer where the CORBA Naming Service is running.</help>
+         <value label="Naming Service host" defaultvalue="localhost"/>
+      </property>
+      <property valuetype="integer" variable="false" name="naming_service_port">
+         <help>The port on which the CORBA Naming Service is listening for incoming connections.</help>
+         <value label="Naming Service port number" defaultvalue="2809"/>
+      </property>
+      <property valuetype="string" variable="false" name="iiop_version">
+         <help>The version of the Internet Inter-ORB Protocol (IIOP) used for communication with the Naming Service.  This is usually 1.0 or 1.2.</help>
+         <value label="IIOP Version" defaultvalue="1.0"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

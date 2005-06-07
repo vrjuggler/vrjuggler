@@ -1,0 +1,112 @@
+# **************** <Tweek heading BEGIN do not edit this line> ****************
+# Tweek
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+# **************** <Tweek heading END do not edit this line> ******************
+
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+default: run
+
+# Basic options.
+srcdir			= @srcdir@
+JAVAC_FLAGS		= -classpath "$(CLASSPATH)" -sourcepath "$(srcdir)" -d .
+JAVA_IDL_OPTS		= @JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
+JAVA_IDL_INCLUDES	= @JAVA_IDL_INCFLAG@$(TWEEK_BASE_DIR)/include
+JCPS			= @JCPS@
+
+JDOM_JAR		= @JDOM_JAR@
+JAVA_ORB_JAR		= @JAVA_ORB_JAR@
+JUNIT_JAR		= @JUNIT_JAR@
+TWEEK_JARS		= $(TWEEK_BASE_DIR)/bin/TweekServices.jar$(JCPS)$(TWEEK_BASE_DIR)/bin/TweekNet.jar$(JCPS)$(TWEEK_BASE_DIR)/bin/TweekEvents.jar$(JCPS)$(TWEEK_BASE_DIR)/bin/TweekBeans.jar
+
+CLASSPATH		= $(JDOM_JAR)$(JCPS)$(JUNIT_JAR)$(JCPS)$(TWEEK_JARS)$(JCPS)$(JAVA_ORB_JAR)
+
+# Commands to execute.
+JAVA			= @JAVA@
+JAVA_COMPILE		= @JAVAC@ $(JAVAC_FLAGS)
+JAVA_IDL		= @APP_JAVA_IDL@
+JAR			= @JAR@
+
+VPATH		= @srcdir@:@srcdir@/tweektest:@srcdir@/tweek:$(TWEEK_BASE_DIR)/include/tweek/idl
+
+#IDL_JAVA_FILES	=
+
+CLASSES		= AllTests.class				\
+                  tweektest/BeanLoaderTest.class		\
+                  tweektest/BeanRegistryTest.class		\
+                  tweektest/GlobalPreferencesServiceTest.class
+GENERIC_CLASSES	= tweektest/beans/GenericBean.class
+
+BEAN_JARS	= GenericBean.jar
+
+# -----------------------------------------------------------------------------
+# Application build targets.
+# -----------------------------------------------------------------------------
+all:
+#	$(MAKE) java_idl
+	$(MAKE) java
+
+run: $(CLASSES) $(BEAN_JARS)
+	cp $(srcdir)/*.xml .
+	$(JAVA) -classpath "$(CLASSPATH)$(JCPS)." AllTests
+
+java_idl: $(IDL_JAVA_FILES)
+
+java: $(CLASSES)
+
+GenericBean.jar: $(GENERIC_CLASSES)
+	$(JAR) cvf $@ $(GENERIC_CLASSES)
+
+#install:
+#	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/share/tweek/beans
+#	cp $(srcdir)/NetworkTestBean.xml $(TWEEK_BASE_DIR)/share/tweek/beans
+
+# Suffix rules for building object files.
+.SUFFIXES: .java .class .idl
+
+.java.class:
+	$(JAVA_COMPILE) $<
+
+.idl.java:
+	$(JAVA_IDL) $(JAVA_IDL_OPTS) $(JAVA_IDL_INCLUDES) $<
+
+# -----------------------------------------------------------------------------
+# Clean-up targets.
+# -----------------------------------------------------------------------------
+clean:
+	rm -f Makedepend *.@OBJEXT@ tweektest.ilk  so_locations *.?db	\
+          core* $(addprefix $(srcdir)/tweektest/, $(IDL_JAVA_FILES))
+	rm -rf ii_files $(srcdir)/tweek
+
+clobber:
+	@$(MAKE) clean
+	rm -f $(BEAN_JARS) $(TEST_CLASSES)

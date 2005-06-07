@@ -1,0 +1,90 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Makefile.docs for JCCL.  It requires GNU make.
+# This is used only to generate and install documentation and other files
+# related to the JCCL website.
+# -----------------------------------------------------------------------------
+
+srcdir=		.
+JDK_HOME?=	/usr/java
+
+# List the packages for which JavaDoc documentation will be generated.
+BASE_PKG=	org.vrjuggler.jccl
+DOC_PKGS=	$(BASE_PKG).config		\
+		$(BASE_PKG).config.event	\
+		$(BASE_PKG).config.io		\
+		$(BASE_PKG).config.undo		\
+		$(BASE_PKG).editors		\
+		$(BASE_PKG).editors.event	\
+		$(BASE_PKG).rtrc		\
+		jccl
+SRC_PATH=	$(srcdir)/config:$(srcdir)/editors:$(srcdir)/plugins/corba_rtrc
+JDOM_DIR=	../../external/jdom
+TL_DIR=		../../external/TableLayout
+CLASSPATH=	$(TL_DIR)/TableLayout.jar:$(JDOM_DIR)/build/jdom.jar:$(TWEEK_BASE_DIR)/share/tweek/java/Tweek.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekBeans.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekEvents.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekNet.jar:$(TWEEK_BASE_DIR)/share/tweek/java/TweekServices.jar:$(TWEEK_BASE_DIR)/share/tweek/java/ui.jar
+
+JACORB_DIR=	../../external/JacORB
+IDL=		$(JACORB_DIR)/idl
+
+include doc/version.mk
+
+webroot=	$(HOME)/public_html/jugglerweb
+instdir=	jccl/$(PROJECT_NUMBER)
+doc_prefix=	$(webroot)/$(instdir)
+DOC_ROOT=	programmer.reference.java
+APP_NAME=	JCCL Java API
+
+docs:
+	JAVA_HOME=$(JDK_HOME) JACORB_PATH=$(JACORB_DIR) $(IDL)		\
+          -d temp -I../tweek plugins/corba_rtrc/idl/*.idl
+	@echo '<html><body>Contains classes that are generated automatically by an IDL-to-Java compiler from the JCCL remote run-time reconfiguration IDL sources.</body></html>' >temp/jccl/package.html
+	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT)				\
+          -sourcepath $(SRC_PATH):temp -classpath "$(CLASSPATH)"	\
+          -windowtitle "$(APP_NAME) v$(PROJECT_NUMBER)"			\
+          -doctitle "$(APP_NAME) v$(PROJECT_NUMBER)"			\
+          -header "<p><b>$(APP_NAME)</b><br>v$(PROJECT_NUMBER)</p>"	\
+          -bottom "<font size=1>Copyright &copy; 1998&ndash;2005 Iowa State University. All rights reserved.</font>" \
+          -link "http://java.sun.com/j2se/1.4.2/docs/api/"		\
+          -link "http://www.vrjuggler.org/tweek/$(PROJECT_NUMBER)/programmer.reference.java" \
+          -link "http://www.jdom.org/docs/apidocs/" 			\
+          $(DOC_PKGS)
+	rm -rf temp
+
+install-docs:
+	mkdir -p $(doc_prefix)
+	rm -rf $(doc_prefix)/$(DOC_ROOT)
+	mv $(DOC_ROOT) $(doc_prefix)
+
+clobber:
+	rm -rf $(DOC_ROOT)

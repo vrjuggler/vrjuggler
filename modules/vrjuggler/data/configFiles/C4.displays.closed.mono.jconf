@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <display_system name="Pipe Setup" version="1">
+         <number_of_pipes>4</number_of_pipes>
+         <x11_pipes>mammoth:0.0</x11_pipes>
+         <x11_pipes>mammoth:1.0</x11_pipes>
+         <x11_pipes>mammoth:2.0</x11_pipes>
+         <x11_pipes>mammoth:1.0</x11_pipes>
+         <x11_pipes>snow:0.0</x11_pipes>
+      </display_system>
+      <display_window name="RightScreen" version="4">
+         <origin>1280</origin>
+         <origin>0</origin>
+         <size>1280</size>
+         <size>1024</size>
+         <pipe>1</pipe>
+         <frame_buffer_config>
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="2">
+               <visual_id>-1</visual_id>
+               <red_size>8</red_size>
+               <green_size>8</green_size>
+               <blue_size>8</blue_size>
+               <alpha_size>8</alpha_size>
+               <auxiliary_buffer_count>0</auxiliary_buffer_count>
+               <depth_buffer_size>16</depth_buffer_size>
+               <stencil_buffer_size>1</stencil_buffer_size>
+               <accum_red_size>1</accum_red_size>
+               <accum_green_size>1</accum_green_size>
+               <accum_blue_size>1</accum_blue_size>
+               <accum_alpha_size>1</accum_alpha_size>
+               <fsaa_enable>false</fsaa_enable>
+            </opengl_frame_buffer_config>
+         </frame_buffer_config>
+         <stereo>false</stereo>
+         <border>false</border>
+         <hide_mouse>true</hide_mouse>
+         <active>true</active>
+         <surface_viewports>
+            <surface_viewport name="RightScreen viewport" version="2">
+               <origin>0.0</origin>
+               <origin>0.0</origin>
+               <size>1.0</size>
+               <size>1.0</size>
+               <view>Left Eye</view>
+               <lower_left_corner>1.8288</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_left_corner>-1.8288</lower_left_corner>
+               <lower_right_corner>1.8288</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <lower_right_corner>1.8288</lower_right_corner>
+               <upper_right_corner>1.8288</upper_right_corner>
+               <upper_right_corner>2.7432</upper_right_corner>
+               <upper_right_corner>1.8288</upper_right_corner>
+               <upper_left_corner>1.8288</upper_left_corner>
+               <upper_left_corner>2.7432</upper_left_corner>
+               <upper_left_corner>-1.8288</upper_left_corner>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+         <keyboard_mouse_device_name />
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
+      </display_window>
+      <display_window name="LeftScreen" version="4">
+         <origin>1280</origin>
+         <origin>0</origin>
+         <size>1280</size>
+         <size>1024</size>
+         <pipe>2</pipe>
+         <frame_buffer_config>
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="2">
+               <visual_id>-1</visual_id>
+               <red_size>8</red_size>
+               <green_size>8</green_size>
+               <blue_size>8</blue_size>
+               <alpha_size>8</alpha_size>
+               <auxiliary_buffer_count>0</auxiliary_buffer_count>
+               <depth_buffer_size>16</depth_buffer_size>
+               <stencil_buffer_size>1</stencil_buffer_size>
+               <accum_red_size>1</accum_red_size>
+               <accum_green_size>1</accum_green_size>
+               <accum_blue_size>1</accum_blue_size>
+               <accum_alpha_size>1</accum_alpha_size>
+               <fsaa_enable>false</fsaa_enable>
+            </opengl_frame_buffer_config>
+         </frame_buffer_config>
+         <stereo>false</stereo>
+         <border>false</border>
+         <hide_mouse>true</hide_mouse>
+         <active>true</active>
+         <surface_viewports>
+            <surface_viewport name="LeftScreen viewport" version="2">
+               <origin>0.0</origin>
+               <origin>0.0</origin>
+               <size>1.0</size>
+               <size>1.0</size>
+               <view>Left Eye</view>
+               <lower_left_corner>-1.8288</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_left_corner>1.8288</lower_left_corner>
+               <lower_right_corner>-1.8288</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <lower_right_corner>-1.8288</lower_right_corner>
+               <upper_right_corner>-1.8288</upper_right_corner>
+               <upper_right_corner>2.7432</upper_right_corner>
+               <upper_right_corner>-1.8288</upper_right_corner>
+               <upper_left_corner>-1.8288</upper_left_corner>
+               <upper_left_corner>2.7432</upper_left_corner>
+               <upper_left_corner>1.8288</upper_left_corner>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+         <keyboard_mouse_device_name />
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
+      </display_window>
+      <display_window name="FrontScreen" version="4">
+         <origin>1280</origin>
+         <origin>0</origin>
+         <size>1280</size>
+         <size>1024</size>
+         <pipe>0</pipe>
+         <frame_buffer_config>
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="2">
+               <visual_id>-1</visual_id>
+               <red_size>8</red_size>
+               <green_size>8</green_size>
+               <blue_size>8</blue_size>
+               <alpha_size>8</alpha_size>
+               <auxiliary_buffer_count>0</auxiliary_buffer_count>
+               <depth_buffer_size>16</depth_buffer_size>
+               <stencil_buffer_size>1</stencil_buffer_size>
+               <accum_red_size>1</accum_red_size>
+               <accum_green_size>1</accum_green_size>
+               <accum_blue_size>1</accum_blue_size>
+               <accum_alpha_size>1</accum_alpha_size>
+               <fsaa_enable>false</fsaa_enable>
+            </opengl_frame_buffer_config>
+         </frame_buffer_config>
+         <stereo>false</stereo>
+         <border>false</border>
+         <hide_mouse>true</hide_mouse>
+         <active>true</active>
+         <surface_viewports>
+            <surface_viewport name="FrontScreen viewport" version="2">
+               <origin>0.0</origin>
+               <origin>0.0</origin>
+               <size>1.0</size>
+               <size>1.0</size>
+               <view>Left Eye</view>
+               <lower_left_corner>-1.8288</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_left_corner>-1.8288</lower_left_corner>
+               <lower_right_corner>1.8288</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <lower_right_corner>-1.8288</lower_right_corner>
+               <upper_right_corner>1.8288</upper_right_corner>
+               <upper_right_corner>2.7432</upper_right_corner>
+               <upper_right_corner>-1.8288</upper_right_corner>
+               <upper_left_corner>-1.8288</upper_left_corner>
+               <upper_left_corner>2.7432</upper_left_corner>
+               <upper_left_corner>-1.8288</upper_left_corner>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+         <keyboard_mouse_device_name />
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
+      </display_window>
+      <display_window name="FloorScreen" version="4">
+         <origin>0</origin>
+         <origin>0</origin>
+         <size>1280</size>
+         <size>1024</size>
+         <pipe>1</pipe>
+         <frame_buffer_config>
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="2">
+               <visual_id>-1</visual_id>
+               <red_size>8</red_size>
+               <green_size>8</green_size>
+               <blue_size>8</blue_size>
+               <alpha_size>8</alpha_size>
+               <auxiliary_buffer_count>0</auxiliary_buffer_count>
+               <depth_buffer_size>16</depth_buffer_size>
+               <stencil_buffer_size>1</stencil_buffer_size>
+               <accum_red_size>1</accum_red_size>
+               <accum_green_size>1</accum_green_size>
+               <accum_blue_size>1</accum_blue_size>
+               <accum_alpha_size>1</accum_alpha_size>
+               <fsaa_enable>false</fsaa_enable>
+            </opengl_frame_buffer_config>
+         </frame_buffer_config>
+         <stereo>false</stereo>
+         <border>false</border>
+         <hide_mouse>true</hide_mouse>
+         <active>true</active>
+         <surface_viewports>
+            <surface_viewport name="FloorScreen viewport" version="2">
+               <origin>0.0</origin>
+               <origin>0.0</origin>
+               <size>1.0</size>
+               <size>1.0</size>
+               <view>Left Eye</view>
+               <lower_left_corner>-1.8288</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_left_corner>1.8288</lower_left_corner>
+               <lower_right_corner>1.8288</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <lower_right_corner>1.8288</lower_right_corner>
+               <upper_right_corner>1.8288</upper_right_corner>
+               <upper_right_corner>0.0</upper_right_corner>
+               <upper_right_corner>-1.8288</upper_right_corner>
+               <upper_left_corner>-1.8288</upper_left_corner>
+               <upper_left_corner>0.0</upper_left_corner>
+               <upper_left_corner>-1.8288</upper_left_corner>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+         <keyboard_mouse_device_name />
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
+      </display_window>
+   </elements>
+</configuration>
+

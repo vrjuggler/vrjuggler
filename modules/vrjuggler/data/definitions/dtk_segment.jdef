@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="dtk_segment" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="DTK Memory Segment">
+      <abstract>false</abstract>
+      <help>Configuration for a DTK memory segment.</help>
+      <parent/>
+      <category>/Devices</category>
+      <property valuetype="string" variable="false" name="segment_name">
+         <help>The name of the memory segment.</help>
+         <value label="Segment Name" defaultvalue=""/>
+      </property>
+      <property valuetype="string" variable="false" name="host_name">
+         <help>The name of the host.</help>
+         <value label="Host Name" defaultvalue=""/>
+      </property>
+      <property valuetype="string" variable="false" name="data_type">
+         <help>This property is only used when the "input type" property is set to custom.</help>
+         <value label="Data Type" defaultvalue="1"/>
+         <enumeration editable="false">
+            <enum label="Integers" value="1"/>
+            <enum label="Floats" value="2"/>
+            <enum label="Bytes" value="3"/>
+            <enum label="CString" value="4"/>
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="item_count">
+         <help>This property is only used when thi "input type" property is set to custom.</help>
+         <value label="Item Count" defaultvalue="0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="input_type">
+         <help>This determines the type of input expected at this memory segment.</help>
+         <value label="Input Type" defaultvalue="2"/>
+         <enumeration editable="false">
+            <enum label="Position Euler ZYX" value="1"/>
+            <enum label="Position Euler XYZ" value="2"/>
+            <enum label="Position Quat" value="3"/>
+            <enum label="Digital" value="4"/>
+            <enum label="Analog" value="5"/>
+            <enum label="Custom" value="6"/>
+         </enumeration>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

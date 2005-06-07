@@ -1,0 +1,58 @@
+package id3dri6dcexs8m6dcezvg7s;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#vrj::App:oiref><oihard>
+@__modelType reference
+@__imported
+@hideAttributes
+@__hiddenMember <oiref:cpp#Member#vrj::App#configRemove#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configAdd#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#depSatisfied#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configCanHandle#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#reset#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#haveFocus#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#focusChanged#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#setFocus#(#bool#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#getSoundManager#(##)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#vrj::App#configAdd#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configRemove#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configCanHandle#(#jccl::ConfigElementPtr#)#:oiref>
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#vrj::GlApp:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$destructor$$#(##)#:oiref>
+@hideAttributes
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#getDrawManager#(##)#:oiref> 
+*/
+class reference1 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=300,120,250,120:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=300,10,230,250,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,20,240,200,0:oigroup>
+*/
+class __positions {
+}

@@ -1,0 +1,127 @@
+package id4efd7cyax23xmcyb0797n;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#vrj::App:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#vrj::Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#reset#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#haveFocus#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#focusChanged#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#setFocus#(#bool#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configCanHandle#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#depSatisfied#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configAdd#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configRemove#(#jccl::ConfigChunkPtr#)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#vrj::App#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#getSoundManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$destructor$$#(##)#:oiref>
+@hideAttributes
+@__hiddenMember <oiref:cpp#Member#vrj::App#configCanHandle#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configAdd#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configRemove#(#jccl::ConfigElementPtr#)#:oiref>
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#vrj::GlApp:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::GlApp#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$constructor$$#(#vrj::Kernel*#)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#pipePreDraw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#contextClose#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$destructor$$#(##)#:oiref>
+@hideAttributes
+*/
+class reference55 {
+}/**
+@__ref <oiref:cpp#Class#vrj::PfApp:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$constructor$$#(#vrj::Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#preForkInit#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#appChanFunc#(#pfChannel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#configPWin#(#pfPipeWindow*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#getFrameBufferAttrs#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#preDrawChan#(#pfChannel*#void*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#postDrawChan#(#pfChannel*#void*#)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$destructor$$#(##)#:oiref>
+@hideAttributes
+*/
+class reference56 {
+}/**
+@__ref <oiref:cpp#Class#vrj::OsgApp:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#pipePreDraw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#configSceneView#(#osgUtil::SceneView*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#contextInit#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#init#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#draw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#contextClose#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#contextPreDraw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#bufferPreDraw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OsgApp#$$constructor$$#(##)#:oiref>
+@hideAttributes
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#vrj::OpenSGApp:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#vrj::OpenSGApp#$$constructor$$#(#vrj::Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OpenSGApp#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OpenSGApp#init#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OpenSGApp#apiInit#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OpenSGApp#contextInit#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OpenSGApp#contextPreDraw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OpenSGApp#contextPostDraw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OpenSGApp#draw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::OpenSGApp#bufferPreDraw#(##)#:oiref> 
+@hideAttributes
+@hideClasses
+@__hiddenMember <oiref:cpp#Member#vrj::OpenSGApp#exit#(##)#:oiref>
+*/
+class reference7 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options filter.f.state = off
+filter.d1.state = on
+filter.e.state = off
+filter.d2.state = off 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Extends#vrj::OsgApp#vrj::GlApp:oiref>=130,430,130,390:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::PfApp:oiref>=292,250,160,110,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::OpenSGApp:oiref>=200,430,200,110,0:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::OpenSGApp#vrj::GlApp:oiref>=236,430,236,390:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::PfApp#vrj::App:oiref>=333,250,333,210:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=80,250,192,140,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::OsgApp:oiref>=10,430,170,110,0:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=233,250,233,210:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=194,10,180,200,0:oigroup>
+
+*/
+class __positions {
+}

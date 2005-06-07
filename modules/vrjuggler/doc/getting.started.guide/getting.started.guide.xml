@@ -1,0 +1,2531 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<book>
+  <bookinfo>
+    <title>VR Juggler</title>
+
+    <subtitle>Getting Started Guide</subtitle>
+
+    <copyright>
+      <year>2001–2005</year>
+
+      <holder>Iowa State University</holder>
+    </copyright>
+
+    <legalnotice>
+      <para>Permission is granted to copy, distribute and/or modify this
+      document under the terms of the GNU Free Documentation License, Version
+      1.2 or any later version published by the Free Software Foundation; with
+      the Invariant Sections being <xref linkend="appendix.gfdl" />, with no
+      Front-Cover Texts, and with no Back-Cover Texts. A copy of the license
+      is included in <xref linkend="appendix.gfdl" />.</para>
+    </legalnotice>
+
+    <releaseinfo>Version 2.0 Beta 3</releaseinfo>
+
+    <pubdate>$Date$</pubdate>
+  </bookinfo>
+
+  <preface>
+    <title>Preface</title>
+
+    <para>This book is for people who are just getting started with VR
+    Juggler. It guides new users through getting and installing VR Juggler,
+    configuring users' environment to use it, and compiling and running a
+    sample application.</para>
+
+    <para>The prerequisites for reading this book are minimal. They
+    are:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Some experience with a command-line interface (i.e., a shell
+        such as tcsh or the DOS shell)</para>
+      </listitem>
+
+      <listitem>
+        <para>Creating and browsing directories</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Those users who want to get more involved with VR Juggler to do more
+    than just run applications should be aware right away of the following
+    prerequisites:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Knowledge of C++ and object-oriented design</para>
+      </listitem>
+
+      <listitem>
+        <para>Knowledge of one of VR Juggler's currently supported graphics
+        APIs (<ulink url="http://www.opengl.org/">OpenGL</ulink>, <ulink
+        url="http://www.sgi.com/software/performer/">OpenGL Performer</ulink>,
+        <ulink url="http://www.opensg.org/">OpenSG</ulink>, or <ulink
+        url="http://www.openscenegraph.org/">Open Scene Graph</ulink>)</para>
+      </listitem>
+    </itemizedlist>
+  </preface>
+
+  <chapter id="chapter.vrj.install">
+    <title>Installing VR Juggler</title>
+
+    <para>As with most Open Source projects, VR Juggler is distributed as
+    compressed archive files using popular formats. Installing a distribution
+    requires very little effort, but you do need to know how to use archiving
+    utilities to extract the installation tree. Automation of the installation
+    is a goal of the VR Juggler team, but we are still finalizing the details
+    of cross-platform installation management. Before reading further, you
+    should know where you want to install VR Juggler, and you should make sure
+    that you have access to write to that directory.</para>
+
+    <section>
+      <title>Installing from a Compressed TAR File</title>
+
+      <para>The TAR (Tape ARchive) format has been around for a long, long
+      time in the UNIX world. It is simply a collection of files in a
+      directory tree that are lumped into a single file suitable for writing
+      to a tape or for downloading. The format is a standard, and the
+      <command>tar</command>(1) utility is available on every UNIX-based
+      platform and on Win32. A free version can be downloaded from <ulink
+      url="http://www.gnu.org/">the GNU Project</ulink>. A compressed TAR file
+      is made for each VR Juggler distribution, and some distributions come in
+      other formats as well. You can always count on the availability of a TAR
+      file, though. The TAR files are compressed using either GZIP or BZIP2,
+      both of which are standard compression formats. The
+      <command>gzip</command>(1) utility is freely available from the GNU
+      Project, and the <command>bzip2</command>(1) utility can be downloaded
+      for free from <ulink url="http://sources.redhat.com/bzip2/">RedHat,
+      Inc.</ulink>. The GNU version of TAR has the GZIP and BZIP2 algorithms
+      built in. The compression algorithm used can be determined by the file
+      extension. Files compressed with GZIP end in <filename>.gz</filename>;
+      files compressed with BZIP2 end in <filename>.bz2</filename>.</para>
+
+      <para>Once you have downloaded a VR Juggler TAR distribution, you can
+      unpack it one of two ways depending on what your platform's version of
+      TAR supports. Before extracting the installation tree, make sure that
+      your current directory is the one where you want to install VR Juggler.
+      If your version of TAR does not have GZIP built in (it does not support
+      the <option>-z</option> option), the following command will do the
+      decompression and extraction:</para>
+
+      <screen>% gzip -cd vrjuggler-distribution.tar.gz | tar -xvf -</screen>
+
+      <para>For versions of TAR without built-in BZIP2 support (there is no
+      <option>-j</option> option) the command is similar:</para>
+
+      <screen>% bzip2 -cd vrjuggler-distribution.tar.bz2 | tar -xvf -</screen>
+
+      <para>Here, you should fill in
+      <filename>vrjuggler-distribution.tar.gz</filename> (or
+      <filename>vrjuggler-distribution.tar.bz2</filename>) with the name of
+      the VR Juggler distribution file you downloaded. The above commands will
+      work with any shell that supports redirection of standard output to a
+      pipe. If that looks too scary, you can separate the decompression and
+      extraction into two commands (for GZIP):</para>
+
+      <screen>% gunzip vrjuggler-distribution.tar.gz
+% tar -xvf vrjuggler-distribution.tar</screen>
+
+      <para>or for BZIP2:</para>
+
+      <screen>% bunzip2 vrjuggler-distribution.tar.bz2
+% tar -xvf vrjuggler-distribution.tar</screen>
+
+      <para>Note that the distribution file in the second command does not
+      have the <filename>.gz</filename> extension after
+      <command>gzip</command>(1) is run. These steps also work if your version
+      of <command>tar</command>(1) supports the <option>-z</option> option
+      (<option>-j</option> for BZIP2), but you can simplify your work if that
+      option is supported. The following illustrates how to decompress and
+      extract a TAR file compressed with GZIP all in one step:</para>
+
+      <screen>% tar -xzvf vrjuggler-distribution.tar.gz</screen>
+
+      <para>The following would be used for a TAR file compressed with
+      BZIP2:</para>
+
+      <screen>% tar -xjvf vrjuggler-distribution.tar.bz2</screen>
+
+      <para>In either case, while the command runs, you will see the name of
+      each file as it is written to disk. This is because of the
+      <option>-v</option> option to <command>tar</command>(1) that tells it to
+      be verbose in its efforts. <command>tar</command>(1) takes care of
+      creating all the directories in the installation tree, so you only need
+      to have the base directory (for example,
+      <filename>/usr/local</filename>) when you start. For more information
+      about these utilities, please refer to the <command>tar</command>(1) and
+      <command>gzip</command>(1) manual pages.</para>
+    </section>
+
+    <section>
+      <title>Installing from a ZIP File (Win32 only)</title>
+
+      <para>On the Win32 family of platforms, the ZIP format rules. In the old
+      days, you would use the PKZIP utility to uncompress and extract a ZIP
+      file. Nowadays, most people use <ulink
+      url="http://www.winzip.com/">WinZip</ulink> or some other comparable
+      graphical interface. This documentation covers only the use of WinZip
+      when extracting a ZIP file.</para>
+
+      <para>Once you have downloaded the VR Juggler ZIP file, the easiest way
+      to extract it is to double-click on its icon in the open folder window
+      as shown in <xref linkend="figure.windows.temp.folder.view" />.</para>
+
+      <figure id="figure.windows.temp.folder.view">
+        <title>Windows Folder View of ZIP File</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center" fileref="figures/Window.Download.png"
+                       format="PNG" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Double-clicking opens the main WinZip window, as shown in <xref
+      linkend="figure.winzip.main" />.</para>
+
+      <figure id="figure.winzip.main">
+        <title>Open WinZip Window</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center" fileref="figures/Window.WinZip.png"
+                       format="PNG" scalefit="1" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Note that in this screen shot, the <guibutton>Extract</guibutton>
+      button is highlighted. Click this button to open the following window.
+      Note that in this screen shot, the <guibutton>Extract</guibutton> button
+      is highlighted. Click this button to open the dialog box shown in <xref
+      linkend="figure.winzip.extract" />.</para>
+
+      <figure id="figure.winzip.extract">
+        <title>WinZip Extract Dialog</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="figures/Window.WinZip.Extract.png"
+                       format="PNG" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>In this window, choose the directory where VR Juggler will be
+      installed and click <guibutton>Extract</guibutton>. WinZip will then
+      proceed to extract the ZIP file into the directory you named. That is
+      all there is to it.</para>
+    </section>
+
+    <section>
+      <title>Installing from a Disk Image (Mac OS X only)</title>
+
+      <para>The preferred Internet distribution format for Mac OS X is the
+      disk image (file extension <filename>.dmg</filename>). Double-clicking
+      on the <filename>.dmg</filename> file mounts the disk image which can
+      then be opened. Pre-compiled versions of VR Juggler for Mac OS X are
+      distributed in this manner. Within the mounted disk image, there is an
+      installer program for the VR Juggler release (file extension
+      <filename>.pkg</filename>)<footnote>
+          <para>Unfortunately, the complexity of VR Juggler prevents it from
+          being installed using the preferred drag-and-drop method.</para>
+        </footnote>.</para>
+
+      <important>
+        <para>Before installing, read any HTML files included with the VR
+        Juggler distribution. These will contain relevant information about
+        updating an existing VR Juggler installation or how to use the VR
+        Juggler installer that is not covered here.</para>
+      </important>
+
+      <para>Double-clicking on the VR Juggler installer will install VR
+      Juggler. The VR Juggler libraries will be installed to
+      <filename>/usr/local</filename>, and the dependencies will be installed
+      to <filename>/usr/local/vrjuggler-deps</filename>. The application
+      bundles for the Tweek Java GUI and <application>VRJConfig</application>
+      will be installed to <filename>/Applications</filename>. Finally, the
+      file <filename>~/.MacOSX/environment.plist</filename> will be updated to
+      set the VR Juggler-related environment variables (see <xref
+      linkend="chapter.envvar" />).</para>
+
+      <note>
+        <para>The application bundles for the Tweek Java GUI and
+        <application>VRJConfig</application> are still in the early stages of
+        development. For convenience, the command line versions of these
+        applications are also installed. Running <command>tweek</command> or
+        <command>vrjconfig</command> from a terminal window will start those
+        applications just as would be done on other operating systems. At some
+        point, the command line verrsions of these applications will probably
+        be removed on Mac OS X in favor of exclusive use of the application
+        bundles.</para>
+      </note>
+    </section>
+  </chapter>
+
+  <chapter id="chapter.envvar">
+    <title>Environment Variables</title>
+
+    <para>There are several <firstterm>environment variables</firstterm> that
+    affect the way VR Juggler works. Some of these are required to compile and
+    run applications while others are optional. This chapter lists all such
+    variables and explains their meanings and uses.</para>
+
+    <section>
+      <title>How to Set Environment Variables</title>
+
+      <para>The syntax for setting or changing an environment variable varies
+      with operating systems and shell interpreters. Instead of choosing one
+      style of syntax that is specific to a particular shell type, we define
+      our own syntax which you must then translate to your shell's specific
+      syntax. Before defining this syntax, we present the method used to set
+      environment variables in the three most common types of shells. We also
+      provide a quick overview of how to set environment variables using
+      Win32-based GUIs.</para>
+
+      <section>
+        <title>Common Conventions and Background</title>
+
+        <para>A convention used throughout this book is to name the variables
+        using all capital letters. In almost all cases, regardless of the
+        shell, this is the naming convention used for environment
+        variables.</para>
+
+        <para>Setting a path with an environment variable can require special
+        syntax. Because of this, the method for doing so may vary from shell
+        to shell. Paths are important with VR Juggler when looking up the path
+        to a shared library (dynamically linked library). For each shell, the
+        syntax for setting a path is given.</para>
+
+        <para>Referring to environment variables can also vary from shell to
+        shell. An example of how to print the value of an environment variable
+        will be given for each shell. An example of how to refer to an
+        environment variable is also provided as these two operations may vary
+        even within one kind of shell!</para>
+
+        <para>In all shells, an environment variable is only available within
+        that single shell instance. That is, setting an environment variable
+        at a command prompt only affects that specific shell and will not be
+        available from other concurrent or future shells. To make a setting
+        <quote>permanent</quote>, it should be done in file read by all shell
+        instances when they are started. This is addressed briefly as
+        appropriate for each shell type.</para>
+      </section>
+
+      <section id="section.envvar.csh">
+        <title>C-Style Shells (csh, tcsh)</title>
+
+        <para>In a C-style shell (i.e., one whose interface is based on the C
+        programming language), setting environment variables is done using the
+        built-in command <command>setenv</command>. It is used as
+        follows:</para>
+
+        <screen>% setenv &lt;VARIABLE_NAME&gt; &lt;value&gt;</screen>
+
+        <para>where the string <literal>&lt;VARIABLE_NAME&gt;</literal>
+        represents the name of the variable you are going to set and
+        <literal>&lt;value&gt;</literal> represents the value assigned to that
+        variable. Both are required. If the named variable did not exist
+        before, it will pop into existence. Otherwise, you overwrite the old
+        setting with the new one.</para>
+
+        <para>To print the value of an environment variable, use the following
+        command:</para>
+
+        <screen>% printenv &lt;VARIABLE_NAME&gt;</screen>
+
+        <para>Referring to a variable, however, is done using the following
+        syntax:</para>
+
+        <screen>% cd $VARIABLE_NAME/bin</screen>
+
+        <para>Paths are specified as a colon-separated list. An example of
+        this is:</para>
+
+        <screen>% printenv PATH
+/bin:/sbin:/usr/bin:/usr/sbin</screen>
+
+        <para>For these types of shells, a <quote>permanent</quote> setting
+        for a given variable should usually be done in your .cshrc file or in
+        your <filename>.login</filename> file, both of which should be in your
+        home directory. In most cases, it is better to use
+        <filename>.cshrc</filename> because it is evaluated for every shell
+        instance.</para>
+      </section>
+
+      <section id="section.envvar.sh">
+        <title>sh-Derived Shells (sh, ksh, bash, zsh, etc.)</title>
+
+        <para>In a shell based on sh, setting environment variables is done
+        using the built-in command <command>export</command>. It is used as
+        follows:</para>
+
+        <screen>% export &lt;VARIABLE_NAME&gt;=&lt;value&gt;</screen>
+
+        <para>or</para>
+
+        <screen>% &lt;VARIABLE_NAME&gt;=&lt;value&gt;
+% export &lt;VARIABLE_NAME&gt;</screen>
+
+        <para>Here, the string <literal>&lt;VARIABLE_NAME&gt;</literal>
+        represents the name of the variable you are going to set and
+        <literal>&lt;value&gt;</literal> represents the value assigned to that
+        variable. Both are required. Note that there is no space between the
+        variable name and its value. If the named variable did not exist
+        before, it will pop into existence. Otherwise, you overwrite the old
+        setting with the new one. If the variable was already among your
+        current shell's environment variables, the export command is not
+        necessary.</para>
+
+        <para>To print the value of an environment variable, use the following
+        command:</para>
+
+        <screen>% echo $VARIABLE_NAME</screen>
+
+        <para>Getting the value of a variable works the same way.</para>
+
+        <para>Paths are specified as a colon-separated list. An example of
+        this is:</para>
+
+        <screen>% echo $PATH
+/bin:/sbin:/usr/bin:/usr/sbin</screen>
+
+        <para>For these types of shells, a <quote>permanent</quote> setting
+        for a given variable should usually be done in the
+        <filename>.profile</filename> file in your home directory or in your
+        shell's <quote>rc</quote> file. Different shells have different names
+        for this file. Examples are <filename>.bashrc</filename> for BASH and
+        <filename>.zshrc</filename> for Zsh. Please refer to your shell's
+        documentation for more information. In any case, the file will be in
+        your home directory.</para>
+      </section>
+
+      <section id="section.envvar.dos">
+        <title>DOS Shell</title>
+
+        <para>The typical syntax for setting an environment variable from the
+        command line (in a DOS shell window) under Win32 is:</para>
+
+        <screen>C:\&gt; set &lt;VARIABLE_NAME&gt;=&lt;value&gt;</screen>
+
+        <para>Here, <literal>&lt;VARIABLE_NAME&gt;</literal> is the name of
+        the environment variable to be set, and
+        <literal>&lt;value&gt;</literal> is the value being assigned to that
+        variable. If the named variable did not exist before, it will pop into
+        existence. Otherwise, you overwrite the old setting with the new
+        one.</para>
+
+        <para>To print the value of an environment variable, use the following
+        command:</para>
+
+        <screen>C:\&gt; set &lt;VARIABLE_NAME&gt;</screen>
+
+        <para>Referring to a variable, however, is done using the following
+        syntax:</para>
+
+        <screen>C:\&gt; cd %VARIABLE_NAME%\bin</screen>
+
+        <para>Paths are specified as a semicolon-separated list. An example of
+        this is:</para>
+
+        <screen>C:\&gt; set PATH
+C:\WINDOWS;C:\bin;C:\</screen>
+
+        <para>For some versions of Windows, a <quote>permanent</quote> setting
+        for a given variable should usually be done in
+        <filename>C:\AUTOEXEC.BAT</filename>. In newer versions (Windows ME in
+        particular) and in the Windows NT line of operating systems, the
+        setting is done using the Control Panel. Please refer to the next
+        section for more information on that method.</para>
+      </section>
+
+      <section>
+        <title>Win 32 GUI</title>
+
+        <para>Before reading this section, please be sure to have read <xref
+        linkend="section.envvar.dos" />. This is necessary because the Win32
+        GUI for setting environment variables is simply a front-end to that
+        older method and thus uses the same conventions and syntax. The
+        versions of Windows to which this subsection applies are indicated
+        individually since each is a little different. For more detailed
+        information, please refer to the Windows online help system and search
+        for <quote>environment variables</quote>.</para>
+
+        <section>
+          <title>Windows 2000 and Windows XP</title>
+
+          <para>In the Control Panel, open the <guiicon>System</guiicon> icon.
+          Under the <guilabel>Advanced</guilabel> tab, there is a button
+          labeled <guibutton>Environment Variables</guibutton>, shown in <xref
+          linkend="figure.win2k.sysprops" /> (the Windows XP version is shown
+          in <xref linkend="figure.winxp.sysprops" />). Clicking this button
+          opens the dialog box shown in <xref
+          linkend="figure.win2k.envvars" />. Here, you can set variables for
+          yourself and, if you have the access privileges, for all
+          users.</para>
+
+          <figure id="figure.win2k.sysprops">
+            <title>Windows 2000 System Properties Dialog</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata align="center"
+                           fileref="figures/Window.SystemProperties.png"
+                           format="PNG" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <figure id="figure.winxp.sysprops">
+            <title>Windows XP System Properties Dialog</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata align="center"
+                           fileref="figures/Window.SystemProperties.winxp.png"
+                           format="PNG" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <figure id="figure.win2k.envvars">
+            <title>Windows Environment Variable Editor Dialog</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata align="center"
+                           fileref="figures/Window.EnvironmentVariables.png"
+                           format="PNG" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para>To set up VR Juggler, the environment variable
+          <envar>VJ_BASE_DIR</envar> needs to be set, probably for all users,
+          though it depends very much on local system requirements. For this
+          example, let us say that the Win32 version of VR Juggler is
+          installed in the <filename>D:\</filename> directory. As such, we
+          will set <envar>VJ_BASE_DIR</envar> as shown in <xref
+          linkend="figure.win2k.envvar.set" />. <envar>VJ_DEPS_DIR</envar> is
+          set similarly.</para>
+
+          <figure id="figure.win2k.envvar.set">
+            <title>Setting <envar>VJ_BASE_DIR</envar> on Windows</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata align="center"
+                           fileref="figures/Window.EnvironmentVariables.VJ_BASE_DIR.png"
+                           format="PNG" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </section>
+
+        <section>
+          <title>Windows NT 4.0</title>
+
+          <para>In the Control Panel, open the <guiicon>System</guiicon> icon.
+          The window that is opened has a tab labeled <guilabel>Environment
+          Variables</guilabel>. Here, you can set variables for yourself and,
+          if you have the access privileges, for all users. The GUI is similar
+          to that shown above for Windows 2000.</para>
+        </section>
+      </section>
+
+      <section>
+        <title>Mac OS X</title>
+
+        <para>On Mac OS X, environment variables can be set in two different
+        ways, just as on Windows. They can be set as <quote>global</quote>
+        environment variables available to all applications launched from the
+        Finder, or they can be set within a Terminal window for use within
+        that shell and by all applications launched from that shell. Refer to
+        Apple's Technical Q&amp;A <ulink
+        url="http://developer.apple.com/qa/qa2001/qa1067.html">QA1067</ulink>
+        document for details on how to set global environment variables for
+        use by the Mac OS X desktop interface. To set an environment variable
+        within a Terminal window, refer to either <xref
+        linkend="section.envvar.csh" /> or <xref
+        linkend="section.envvar.sh" /> depending on the user's chosen shell
+        (the default is tcsh).</para>
+      </section>
+
+      <section>
+        <title>Syntax Used in this Document</title>
+
+        <para>To avoid tying this documentation to a single style of
+        environment variable creation, assignment and reference, the following
+        syntax will be used exclusively from this point onward. Please read
+        this carefully before proceeding.</para>
+
+        <section>
+          <title>Naming Environment Variables</title>
+
+          <para>When naming an environment variable in the plain text of this
+          document, the variable will be referred to by its name only. For
+          example, to talk about the environment variable containing your
+          path, we will talk about it as <envar>PATH</envar>.</para>
+        </section>
+
+        <section>
+          <title>Creating/Setting Environment Variables</title>
+
+          <para>The syntax to set an environment variable is:</para>
+
+          <screen>% &lt;VARIABLE_NAME&gt; = &lt;value&gt;</screen>
+
+          <para>Setting an environment variable also creates it if it is not
+          already present in the current shell's environment.</para>
+        </section>
+
+        <section>
+          <title>Printing an the Value of an Environment Variable</title>
+
+          <para>Printing an environment variable's value to standard output
+          (stdout) is done as follows:</para>
+
+          <screen>% echo $VARIABLE_NAME
+value</screen>
+        </section>
+
+        <section>
+          <title>Referring to the Value of an Environment Variable</title>
+
+          <para>To get the value of an environment variable when it needs to
+          be expanded, the following syntax will be used:</para>
+
+          <screen>% cd $VARIABLE_NAME/bin</screen>
+
+          <para>Here, the reference to the value is
+          <envar>$VARIABLE_NAME</envar>.</para>
+        </section>
+      </section>
+    </section>
+
+    <section id="section.envvars.required">
+      <title>Required Environment Variables</title>
+
+      <variablelist>
+        <varlistentry>
+          <term>VJ_BASE_DIR</term>
+
+          <listitem>
+            <para>The environment variable <envar>VJ_BASE_DIR</envar> tells a
+            VR Juggler application where to find important data files. It is
+            required to compile and run any Juggler application. It should be
+            set to the base directory of the installed VR Juggler library. For
+            example, if you downloaded a UNIX version of VR Juggler 2.0 and
+            extracted it to the directory <filename>/home/software</filename>,
+            you would set <envar>VJ_BASE_DIR</envar> with this command:</para>
+
+            <screen>% VJ_BASE_DIR = /home/software/vrjuggler-2.0</screen>
+
+            <para>The last component of the path depends on the particular
+            version of Juggler you have downloaded.</para>
+
+            <para>If you downloaded and built VR Juggler from the source code,
+            the compilation creates a directory called
+            <filename>instlinks</filename> which can be used as a VR Juggler
+            base:</para>
+
+            <screen>% VJ_BASE_DIR = $HOME/juggler/my_build_dir/instlinks</screen>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>VJ_DEPS_DIR</term>
+
+          <listitem>
+            <para>This variable provides the path to the complete set of
+            bundled VR Juggler dependencies (Boost, CppDOM, OpenAL, etc.). It
+            is used by scripts such as <command>vrjuggler-config</command> and
+            by the Visual C++ project files that come with the sample
+            applications. If you downloaded the dependencies as a separate
+            package, set this environment variable to the path where that
+            package was installed. If the dependencies are bundled in the same
+            tree as VR Juggler, then this environment variable does not have
+            to be set.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>PATH</term>
+
+          <listitem>
+            <para>To compile any of the sample applications, the
+            <envar>$VJ_BASE_DIR/bin</envar> directory must be added to your
+            <envar>PATH</envar> as follows:</para>
+
+            <screen>% PATH = $PATH:$VJ_BASE_DIR/bin</screen>
+
+            <para>Depending on your shell, you may need to run the
+            <command>rehash</command> command after executing the
+            above.</para>
+
+            <para>Windows users must also include the directories
+            <filename>$VJ_DEPS_DIR/bin</filename>,
+            <filename>$VJ_DEPS_DIR/lib</filename>, and
+            <filename>$VJ_BASE_DIR/lib</filename> in their <envar>PATH</envar>
+            setting. This is so that the DLLs for VR Juggler and its
+            dependencies will be found when an application is executed.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>JDK_HOME</term>
+
+          <listitem>
+            <para>The <envar>JDK_HOME</envar> environment variable is required
+            by the script that starts VRJConfig, the VR Juggler configuration
+            program. If Java is installed on your system,
+            <envar>JDK_HOME</envar> may already be set. If not, it needs to be
+            set to the base of the Java installation.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>LD_LIBRARY_PATH (UNIX/Linux only)</term>
+
+          <term>DYLD_LIBRARY_PATH (Darwin/Mac OS X only)</term>
+
+          <term>LD_LIBRARYN32_PATH (IRIX only)</term>
+
+          <term>LD_LIBRARY64_PATH (IRIX only)</term>
+
+          <listitem>
+            <para>UNIX/Linux systems use these environment variables to find
+            dynamically loaded libraries, such as
+            <filename>libvrj.so</filename>. Unless you are building everything
+            with static libraries, you will need to set these to include the
+            VR Juggler library directory (under <envar>VJ_BASE_DIR</envar>).
+            IRIX supports several Application Binary Interfaces (ABIs). VR
+            Juggler supports only the N32 and 64 formats, and there are
+            different library path variables for each. The N32 ABI uses the
+            <envar>LD_LIBRARYN32_PATH</envar> variable, and the 64 ABI uses
+            <envar>LD_LIBRARY64_PATH</envar>. An example of setting the
+            library path is as follows:</para>
+
+            <screen>% LD_LIBRARY_PATH = $VJ_BASE_DIR/lib</screen>
+
+            <para>If you have <envar>VJ_DEPS_DIR</envar> set and it is not the
+            same as <envar>VJ_BASE_DIR</envar>, then
+            <envar>$VJ_DEPS_DIR/lib</envar> also needs to be in
+            <envar>LD_LIBRARY_PATH</envar>.</para>
+
+            <note>
+              <para>On some SGI systems running IRIX, users of the MIPSpro
+              Compilers (version 7.3) may need to add another directory as
+              follows:</para>
+
+              <screen>% LD_LIBRARY_PATH = $LD_LIBRARY_PATH:/usr/lib32/cmplrs:$VJ_BASE_DIR/lib32</screen>
+            </note>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section id="section.envvars.optional">
+      <title>Optional Related Environment Variables</title>
+
+      <variablelist>
+        <varlistentry>
+          <term>VJ_CFG_PATH</term>
+
+          <listitem>
+            <para>This variable provides a search path for looking up
+            configuration files. It lists one or more directories where VR
+            Juggler configuration files may be found. At run time, this path
+            will be used to find configuration files that are not named using
+            absolute paths. This variable is set using a platform-specific
+            format. On Windows, DOS paths should be used, and they must be
+            separated by the semi-colon (;) character. On UNIX variants and
+            Mac OS X, the paths should be separated by the colon (:)
+            character. This is exactly the way that the <envar>$PATH</envar>
+            environment variable would be set on all of these platforms. If
+            not set, the default search path for configuration files is
+            <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>.</para>
+
+            <note>
+              <para>The configuration files are loaded by the module JCCL, and
+              it will recognize the environment variable
+              <envar>JCCL_CFG_PATH</envar>. If <envar>JCCL_CFG_PATH</envar> is
+              set, it takes precedence over <envar>VJ_CFG_PATH</envar>.</para>
+            </note>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>JCCL_DEFINITION_PATH</term>
+
+          <listitem>
+            <para>This variable <emphasis>augments</emphasis> the search path
+            for JCCL definition files (those files with the extension
+            <filename>.jdef</filename>). It is set using a platform-specific
+            format. On Windows, DOS paths should be used, and they must be
+            separated by the semi-colon (;) character. On UNIX variants and
+            Mac OS X, the paths should be separated by the colon (:)
+            character. This is exactly the way that the <envar>PATH</envar>
+            environment variable would be set on these platforms.</para>
+
+            <para>The default search path for configuration files is always
+            <filename>$VJ_BASE_DIR/share/vrjuggler/data/definitions</filename>.
+            Setting the environment variable
+            <envar>JCCL_DEFINITION_PATH</envar> appends directories to the
+            default search path. It is not possible to change the default
+            search path without changing the value of
+            <envar>VJ_BASE_DIR</envar>.</para>
+
+            <sidebar>
+              <para>Python programmers will find this sort of behavior
+              familiar. This functionality is based on the way that the Python
+              environment variables <envar>PYTHONHOME</envar> and
+              <envar>PYTHONPATH</envar> behave. In this case,
+              <envar>PYTHONHOME</envar> corresponds to
+              <envar>VJ_BASE_DIR</envar>, and <envar>PYTHONPATH</envar>
+              corresponds with <envar>JCCL_DEFINITION_PATH</envar>. Indeed,
+              the behavior of <envar>JCCL_DEFINITION_PATH</envar> was inspired
+              by the handling of <envar>PYTHONPATH</envar> by the Python
+              interpreter.</para>
+            </sidebar>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>SNX_BASE_DIR</term>
+
+          <listitem>
+            <para>The environment variable that defines the root directory of
+            a Sonix installation. At run time, Sonix uses this variable to
+            search for plug-ins. If it is not set, Sonix plug-in loading may
+            fail. In genereal, it will be set to the same value as
+            <envar>VJ_BASE_DIR</envar>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>VPR_DEBUG_NFY_LEVEL</term>
+
+          <listitem>
+            <para>This variable can be used to control the amount of
+            diagnostic information a VR Juggler application outputs. Its value
+            is a number between 0 (only very important messages are printed)
+            and 7 (vast amounts of data) inclusive. Non-hackers are advised to
+            use levels 0 through 3, as higher debug levels become increasingly
+            cryptic and <emphasis>can severely impact application
+            performance</emphasis>. The default is level 1—only errors and
+            critical information are output. An example of setting a value for
+            this variable is:</para>
+
+            <screen>% VPR_DEBUG_NFY_LEVEL = 3</screen>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>VPR_DEBUG_ALLOW_CATEGORIES</term>
+
+          <listitem>
+            <para>This variable can be used to control which components of VR
+            Juggler are allowed to output diagnostic data. If for some reason
+            you set <envar>VPR_DEBUG_NFY_LEVEL</envar> to 5 or higher, this
+            variable can be used to filter the output. The value of
+            <envar>VPR_DEBUG_CATEGORIES</envar> is a space-separated list of
+            Juggler debug component names (defined in
+            <filename>$VJ_BASE_DIR/include/vrj/Util/Debug.h</filename>,
+            <filename>$VJ_BASE_DIR/include/vpr/Util/Debug.h</filename>,
+            <filename>$VJ_BASE_DIR/include/tweek/Util/Debug.h</filename>,
+            <filename>$VJ_BASE_DIR/include/jccl/Util/Debug.h</filename>, and
+            <filename>$VJ_BASE_DIR/include/gadget/Util/Debug.h</filename>).
+            The default value is <quote>DBG_ALL</quote>, which performs no
+            filtering whatsoever. Examples of setting it are as
+            follows:</para>
+
+            <screen>% VPR_DEBUG_ALLOW_CATEGORIES = DBG_ERROR
+% VPR_DEBUG_ALLOW_CATEGORIES = "DBG_KERNEL DBG_INPUT_MGR DBG_DRAW_MGR"
+% VPR_DEBUG_ALLOW_CATEGORIES = "DBG_CONFIG DBG_RECONFIGURATION"</screen>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>VPR_DEBUG_DISALLOW_CATEGORIES</term>
+
+          <listitem>
+            <para>This variable is basically the opposite of
+            <envar>VPR_DEBUG_ALLOW_CATEGORIES</envar>. Instead of specifying
+            which debugging categories you want to see, you specify which ones
+            you <emphasis>do not</emphasis> want to see. Its default value is
+            empty which means that no debugging categories are excluded.
+            Examples of setting it are as follows:</para>
+
+            <screen>% VPR_DEBUG_DISALLOW_CATEGORIES = DBG_ERROR
+% VPR_DEBUG_DISALLOW_CATEGORIES = "DBG_KERNEL DBG_INPUT_MGR DBG_DRAW_MGR"
+% VPR_DEBUG_DISALLOW_CATEGORIES = "DBG_CONFIG DBG_RECONFIGURATION"</screen>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>NO_RTRC_PLUGIN</term>
+
+          <listitem>
+            <para>Setting this environment variable to any value will prevent
+            the <ulink url="http://www.vrjuggler.org/jccl/">JCCL</ulink>
+            Config Manager from attempting to load the remote run-time
+            reconfiguration plug-in. This plug-in is used to allow VRJConfig
+            to connect to a running VR Juggler application so that the
+            application may be reconfigured on the fly.</para>
+
+            <para>Setting this environment variable is useful in two
+            scenarios: when using SPROC threads on IRIX and when using <ulink
+            url="http://www.vrjuggler.org/pyjuggler/">PyJuggler</ulink> on Mac
+            OS X. The current implementation of the remote run-time
+            reconfiguration plug-in is based on <ulink
+            url="http://omniorb.sourceforge.net/">omniORB</ulink>, which
+            cannot be used with SPROC threads. In that case, there will not be
+            a plug-in available to load, and setting this enviornment variable
+            ultimately prevents the IRIX run-time loader from printing a nasty
+            message saying as much. On Mac OS X, static data initialization in
+            omniORB fails when the omniORB libraries are loaded into the
+            Python interpreter application space, and this leads to a crash.
+            Setting this environment variable allows PyJuggler applications to
+            run correctly.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>NO_PERF_PLUGIN</term>
+
+          <listitem>
+            <para>Setting this environment variable to any value will prevent
+            the VR Juggler Performance Mediator from attempting to load the
+            remote performance visualization plug-in. This plug-in is used to
+            allow a JavaBean loaded by the <ulink
+            url="http://www.vrjuggler.org/tweek/">Tweek</ulink> Java GUI to
+            connect to a running VR Juggler application and display live
+            performance metrics.</para>
+
+            <para>Setting this environment variable is useful in two
+            scenarios: when using SPROC threads on IRIX and when using <ulink
+            url="http://www.vrjuggler.org/pyjuggler/">PyJuggler</ulink> on Mac
+            OS X. The current implementation of the remote performance
+            visualization plug-in is based on <ulink
+            url="http://omniorb.sourceforge.net/">omniORB</ulink>, which
+            cannot be used with SPROC threads. In that case, there will not be
+            a plug-in available to load, and setting this enviornment variable
+            ultimately prevents the IRIX run-time loader from printing a nasty
+            message saying as much. On Mac OS X, static data initialization in
+            omniORB fails when the omniORB libraries are loaded into the
+            Python interpreter application space, and this leads to a crash.
+            Setting this environment variable allows PyJuggler applications to
+            run correctly.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </chapter>
+
+  <chapter>
+    <title>VR Juggler Sample Applications</title>
+
+    <para>VR Juggler comes with several sample applications in its
+    <filename>samples</filename> directory tree. Many of them are very simple
+    and are designed to demonstrate a specific feature of VR Juggler or a
+    technique to use when writing your own applications. This chapter lists
+    the current sample applications as of this writing and gives a quick
+    description of what you as a potential developer might find interesting in
+    the code. Those users who just want to run applications can safely skip
+    this chapter.</para>
+
+    <section>
+      <title>Tutorial Applications</title>
+
+      <para>Some sample applications designed for getting started with VR
+      Juggler are found in
+      <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple</filename>.
+      All of these applications were designed to be used as part of courses
+      teaching people how to write VR Juggler applications using OpenGL. They
+      contain clear comments explaining what the code is doing, and they are
+      intended to be as simple as possible. These tutorials are as
+      follows:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>simpleInput: An application that demonstrates how to get input
+          from devices. No graphics are rendered with this application. It is
+          intended to be a starting point for getting an understanding of how
+          user input is queried.</para>
+        </listitem>
+
+        <listitem>
+          <para>SimpleApp: A very simple OpenGL application that draws a small
+          cube in space and draws the coordinate axes for the cube.</para>
+        </listitem>
+
+        <listitem>
+          <para>contextApp: An application demonstrating how to use OpenGL
+          display lists in VR Juggler applications. This extends SimpleApp by
+          using a display list to draw a cube and by moving the cube with the
+          wand.</para>
+        </listitem>
+
+        <listitem>
+          <para>ConfigApp: A relatively simple application that demonstrates
+          how user-level code can take advantage of the VR Juggler
+          configuration system, JCCL.</para>
+        </listitem>
+
+        <listitem>
+          <para>MPApp: A more complex OpenGL application that demonstrates how
+          to do multi-processing in VR Juggler applications. As it exists in
+          its distributed form, no multi-processing is done. A more detailed
+          lesson is available that explains how to extend the application to
+          employ multi-processing techniques.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>For a step-by-step lesson how to use these applications to learn
+      VR Juggler application programming, please refer to the
+      <emphasis>Programmer's Guide</emphasis>. It contains sections explaining
+      each of the above applications in great detail. Each lesson ends with an
+      exercise where the reader extends the application to include some new
+      functionality.</para>
+    </section>
+
+    <section>
+      <title>Advanced OpenGL Performer Applications</title>
+
+      <para>Examples of OpenGL Performer applications can be found in
+      <filename>$VJ_BASE_DIR/share/vrjuggler/samples/Pf/advanced</filename>.
+      These are for more advanced developers who are familiar with Performer
+      and some of the more complicated aspects of VR Juggler. There are two
+      main programs to be found there:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>pfNav: A starting point for basic VR Juggler Performer
+          applications that need to load a model and navigate through it.
+          Users implement their application by inheriting from a provided
+          class, <classname>simplePfNav</classname>. This may be a good place
+          for intermediate-level users of OpenGL Performer to start because
+          <classname>simplePfNav</classname> hides many of the complicated
+          details (which actually makes that class far from simple).</para>
+        </listitem>
+
+        <listitem>
+          <para>pfConfigNav: A more advanced example of a VR Juggler Performer
+          application that can be given its model through a VR Juggler
+          configuration element.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+  </chapter>
+
+  <chapter id="chapter.app.compile">
+    <title>Compiling a VR Juggler Sample Program</title>
+
+    <para>Now that you have VR Juggler installed and you have your environment
+    all configured, it is time for the fun to begin. No, seriously. You are
+    now ready to compile and run VR Juggler applications, and that is the
+    whole point, right? This chapter explains how to compile the applications
+    provided in the directory
+    <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple</filename>.</para>
+
+    <section>
+      <title>Required Reading</title>
+
+      <para>Before reading any further, make sure you have already read the
+      instructions on how to install VR Juggler (in <xref
+      linkend="chapter.vrj.install" />) and on how to configure your
+      environment (in <xref linkend="chapter.envvar" />). That information
+      will not be repeated, and it is assumed that you already know what we
+      mean by <envar>VJ_BASE_DIR</envar>. You should also have a basic
+      understanding of how <command>make</command>(1) works, but in these
+      examples, nothing more will be necessary than typing
+      <literal>make</literal> on the command line. Refer to the
+      <command>make</command>(1) manual page for more information about
+      it.</para>
+    </section>
+
+    <section>
+      <title>Compiling an Application</title>
+
+      <para>There are two ways to compile VR Juggler applications: from the
+      command line or with Microsoft Visual Studio. Compiling an application
+      on the command line requires the use of GNU make (often installed as
+      <command>gmake</command>) so that it will work on all supported
+      platforms including Win32. Using Microsoft Visual Studio will only work
+      on Win32.</para>
+
+      <section>
+        <title>Compiling from the Command Line</title>
+
+        <para>All the sample programs in
+        <filename>$VJ_BASE_DIR/share/vrjuggler/samples</filename> use the same
+        basic steps to compile unless otherwise noted. Always refer to the top
+        of the sample application's <filename>Makefile</filename> for
+        information that may be specific to building that application. In
+        general, though, all applications' makefiles require the GNU version
+        of the <command>make</command>(1) utility, sometimes installed as
+        <command>gmake</command>.</para>
+
+        <para>The example used here will be the MPApp tutorial application
+        found in
+        <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple/MPApp</filename>.
+        It is an OpenGL-based application that will compile and run on all
+        platforms supported by VR Juggler. Begin by changing into the
+        directory
+        <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple/MPApp</filename>
+        in a command shell.</para>
+
+        <para>To compile MPApp, simply enter the following:</para>
+
+        <screen>% gmake</screen>
+
+        <para>The compile process will then begin. As noted above, the use of
+        GNU make is required to use the distributed makefiles. With Cygwin,
+        GNU make is simply <command>make</command>. If you have your system
+        set up properly, it will complete with an executable
+        <filename>MPApp</filename> file (or <filename>MPApp.exe</filename> on
+        Win32) in the directory. Now that you have a program compiled, it is
+        time to learn how to run it. (Readers who are not using Visual Studio
+        can skip ahead to <xref linkend="chapter.app.running" />.)</para>
+      </section>
+
+      <section>
+        <title>Compiling Using Microsoft Visual Studio</title>
+
+        <note>
+          <para>Remember that the Netscape Portable Runtime (NSPR) is
+          <emphasis>required</emphasis> to use VR Juggler on Windows. Its DLL
+          directory must be in your path (via the <envar>PATH</envar>
+          environment variable) for proper application execution. The NSPR can
+          be downloaded from the <ulink
+          url="http://www.mozilla.org/projects/nspr">NSPR home page</ulink>.
+          If the pre-compiled VR Juggler dependencies are installed, then NSPR
+          is already available.</para>
+        </note>
+
+        <para>All OpenGL sample applications are shipped with pre-configured
+        Microsoft Visual C++ projects. This is done to help new users get
+        started with compiling VR Juggler applications and to give experienced
+        Visual Studio users a starting place for their application
+        development. To use the workspace for the MPApp application, begin by
+        opening the folder containing the source code and double-clicking on
+        <filename>MPApp.vcproj</filename>.</para>
+
+        <figure>
+          <title>Selecting the Visual C++ Project File</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center" fileref="figures/MPApp.dir.png"
+                         format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Visual Studio will open, and the MPApp project will be loaded.
+        The unexpanded class view will appear as shown in <xref
+        linkend="figure.visual.studio.start" /> when Visual Studio first
+        loads.</para>
+
+        <figure id="figure.visual.studio.start">
+          <title>MPApp Project</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center" fileref="figures/MPApp.visual.c++.png"
+                         format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>In some cases, it may be necessary to change the default project
+        properties. The project properties dialog can be opened in several
+        ways. For example, right-clicking on the project name in the Solution
+        Explorer brings up the menu shown in <xref
+        linkend="figure.visual.studio.menu.project" />. We are interested in
+        changing the project's properties, so we select the
+        <guimenuitem>Properties</guimenuitem> item from the popup menu.</para>
+
+        <figure id="figure.visual.studio.menu.project">
+          <title>Project Menu</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center"
+                         fileref="figures/MPApp.visual.c++.properties.png"
+                         format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Under the MPApp project settings, the path(s) to the VR Juggler
+        C++ dependencies must be filled in. This means setting paths to find
+        headers and libraries. All the Visual C++ project files shipped with
+        VR Juggler refer to the VR Juggler C++ dependency installation via the
+        <envar>VJ_DEPS_DIR</envar> environment variable. If this is not set or
+        cannot be used, the paths must be filled in manually.</para>
+
+        <para>Once the program properties are set, compile the application.
+        Under the <guimenu>Build</guimenu> menu, choose the <guimenuitem>Build
+        MPApp</guimenuitem> item as shown in <xref
+        linkend="figure.visual.studio.menu.build" />. Visual C++ will compile
+        the application, and if you have everything configured properly on
+        your computer, the compiling will complete successfully.</para>
+
+        <figure id="figure.visual.studio.menu.build">
+          <title>Build <filename>MPApp.exe</filename></title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center"
+                         fileref="figures/MPApp.visual.c++.build.png"
+                         format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>For the remainder of this book, much of the discussion will
+        concentrate on running applications from the command line rather than
+        from the Visual Studio GUI. Readers can follow whichever method they
+        prefer.</para>
+      </section>
+    </section>
+  </chapter>
+
+  <chapter id="chapter.app.running">
+    <title>Running a VR Juggler Sample Program</title>
+
+    <para>It is important to note that the same VR Juggler application can be
+    run in simulator mode or in a full-scale VR system with no modifications.
+    What does change is the configuration files used when starting the
+    program. In
+    <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>, you
+    can find many basic configuration files including those for running in
+    simulator using a mouse and keyboard to simulate VR input devices and some
+    example files based on those used for the VRAC C4 system. In the
+    directory, you will see some files with names containing
+    <quote>mixin</quote>. These are special files that provide a specific
+    capability not necessarily needed by all applications. They can be mixed
+    in (hence the name) with other configuration files as needed. The
+    configuration files found in the <filename>configFiles</filename>
+    directory will be referenced in the examples provided, so be sure you know
+    where they are.</para>
+
+    <section id="section.required.reading">
+      <title>Required Reading</title>
+
+      <para>Before reading any further, make sure you have already read the
+      instructions on how to install VR Juggler (see <xref
+      linkend="chapter.vrj.install" />) and on how to configure your
+      environment (see <xref linkend="chapter.envvar" />). That information
+      will not be repeated, and it is assumed that you already know what we
+      mean by <envar>VJ_BASE_DIR</envar> and <envar>LD_LIBRARY_PATH</envar>,
+      to name two environment variables. At this point, it is also assumed
+      that you already have compiled an application (MPApp in the case of the
+      examples provided), so you should be sure to have read about how to
+      compile a sample VR Juggler application (in <xref
+      linkend="chapter.app.compile" />) before proceeding.</para>
+    </section>
+
+    <section id="section.running.simulator">
+      <title>Running an Application with a Simulator Configuration</title>
+
+      <para>Running in <quote>simulator mode</quote> means that your input is
+      simulated and your display windows may have limited functionality. (By
+      <quote>simulated input</quote>, we mean that input is provided through
+      windows that take keyboard and mouse input and translate that into
+      transformations in the virtual world.) Simulator viewports are limited
+      primarily in that they cannot display stereo graphics. It is important
+      to note that a simulator viewport is a special kind of VR Juggler
+      viewport within a display window. Instead of basing its viewpoint on the
+      head position of one of the users, the viewpoint is controlled by a
+      separate camera that is just another positional device. Within a
+      simulator viewport, VR Juggler draws certain objects to help visualize
+      the environment. For example, the heads of users are represented as blue
+      ellipsoids with gray eyes, and a wand (if present) is drawn as a green
+      pointing device. Besides these common simulator objects, display
+      surfaces can be drawn. These represent projection screens or HMD viewing
+      projections and are drawn as translucent rectangles.</para>
+
+      <para>As mentioned, several simulator configuration files are provided
+      with a VR Juggler distribution. These files provide a complete
+      simulation of an immersive environment. Please note that this
+      documentation reflects the state of the configuration files at the time
+      the documentation was written. For more information about the
+      configuration files and how to view or modify the configuration, refer
+      to the <emphasis>VRJConfig Guide</emphasis>. (Using VRJConfig is the
+      best way to find out how a specific configuration file is set up.) The
+      configuration files of interest for simulator mode are as
+      follows:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><filename>sim.base.jconf</filename> - The basic configuration
+          file needed by all applications when run in simulator mode. It
+          defines commonly used VR Juggler concepts that are beyond the scope
+          of this particular book. It also defines simulated head movement
+          using the keyboard. For now, it is sufficient to know that it is
+          required to run the sample applications in simulator mode.</para>
+
+          <para>This file also contains the basic simulator display
+          configuration file needed by all applications when run in simulator
+          mode. It defines the display windows where the rendering magic
+          occurs. Two simulator display windows are configured by this file: a
+          small one that is active by default and a larger one that is
+          inactive initially.</para>
+        </listitem>
+
+        <listitem>
+          <para><filename>sim.analog.wandmixin.jconf</filename> - A
+          <quote>mix-in</quote> configuration file that defines simulated
+          analog input using the keyboard. This is only required for
+          applications where analog input is used and needs to be simulated
+          when in simulator mode.</para>
+        </listitem>
+
+        <listitem>
+          <para><filename>sim.analog.mixin.jconf</filename> - This version of
+          the analog simulator opens its own window. See the previous file
+          (<filename>sim.analog.wandmixin.jconf</filename>) for other
+          details.</para>
+        </listitem>
+
+        <listitem>
+          <para><filename>sim.c6displays.mixin.jconf</filename> - A
+          <quote>mix-in</quote> configuration file that defines the surface
+          displays of VRAC's C6. This is not required for any application but
+          can be used to test opening multiple display windows (each
+          containing either a surface or a simulator viewport) before running
+          in a multi-screen VR system.</para>
+        </listitem>
+
+        <listitem>
+          <para><filename>sim.digital.glove.mixin.jconf</filename> - A
+          <quote>mix-in</quote> configuration file that defines simulated
+          digital glove input using the keyboard. This is only required for
+          applications where digital glove input is used and needs to be
+          simulated when in simulator mode.</para>
+        </listitem>
+
+        <listitem>
+          <para><filename>sim.glove.mixin.jconf</filename> - A
+          <quote>mix-in</quote> configuration file that defines simulated
+          gesture-based glove input using the keyboard. This is only required
+          for applications where gesture-based glove input is used and needs
+          to be simulated when in simulator mode.</para>
+        </listitem>
+
+        <listitem>
+          <para><filename>sim.wand.mixin.jconf</filename> - A
+          <quote>mix-in</quote> configuration file that defines simulated wand
+          input using the mouse. This is only required for applications where
+          wand input is used and needs to be simulated when in simulator
+          mode.</para>
+        </listitem>
+
+        <listitem>
+          <para><filename>standalone.jconf</filename> - A configuration file
+          that stands on its own and combines the functionality of
+          <filename>sim.base.jconf</filename> and
+          <filename>sim.wand.mixin.jconf</filename>. Note that it uses a
+          single display window for all input.</para>
+
+          <note>
+            <para>At the time of this writing, this configuration file only
+            works with OpenGL, OpenSG, and Open Scene Graph applications on
+            UNIX, Win32, and Mac OS X. It will not work with OpenGL
+            Performer.</para>
+          </note>
+        </listitem>
+      </itemizedlist>
+
+      <para>For the MPApp application, we need the base configuration file and
+      the wand mix-in configuration file.</para>
+
+      <section>
+        <title>Starting the Application</title>
+
+        <para>Now it is time to run the application—finally! Make sure that
+        all your environment variables are set properly before trying to start
+        the application. Once you are ready, specify the name of the
+        application and all the configuration files it needs. An example of
+        this is:</para>
+
+        <screen>% MPApp sim.base.jconf sim.wand.mixin.jconf</screen>
+
+        <para>You will notice that no paths are specified for finding the
+        configuration files. The full paths to the configuration files is not
+        necessary because the default search path will correctly find these
+        files in
+        <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>.
+        Beginning users will typically want to reference the example
+        configuration files in that directory. As you get more comfortable
+        with VR Juggler and its configuration system, you may want to make
+        your own modified files and put them in the directory
+        <filename>$HOME/.vjconfig</filename>. The environment variable
+        <envar>VJ_CFG_PATH</envar> is useful in providing a search path for
+        finding your configuration files. (Refer to <xref
+        linkend="section.envvars.optional" /> for more information on using
+        <envar>VJ_CFG_PATH</envar>). To simplify running applications, you may
+        want to make a shell script (or batch file as appropriate) that does
+        all the work of passing configuration files and common command-line
+        arguments.</para>
+
+        <para>As the application starts, you will see a status output printed
+        to the console (more or less depending on how you have
+        <envar>VPR_DEBUG_NFY_LEVEL</envar>,
+        <envar>VPR_DEBUG_ALLOW_CATEGORIES</envar>, and
+        <envar>VPR_DEBUG_DISALLOW_CATEGORIES</envar> set), and then one
+        moderately sized simulator display window will open on the left side
+        of your screen while three blank keyboard input windows open on the
+        right side of your screen. The display window will be titled
+        <quote>SimWindow1</quote>, and the keyboard input windows will be
+        titled <quote>Head Keyboard</quote>, <quote>Sim View Cameras
+        Control</quote> and <quote>Wand Keyboard</quote> (in order from the
+        top of the display to the bottom). Do not worry that the keyboard
+        windows are black—that is normal. The display window will have an
+        animated blue mesh, a cyan ellipsoid, and a green pointer. The mesh is
+        what you have come to see; the ellipsoid is the user's head; and the
+        pointer is the user's hand. In <xref
+        linkend="figure.MPApp.running" />, we show what this looks on a RedHat
+        Linux 7.2 desktop for comparison with what you are seeing. Note that
+        the head and wand are only rendered in the simulator windows. They are
+        present because head and wand input are being simulated, and it is
+        typically quite helpful to see the results of that simulated input. To
+        exit the application, press <keysym>ESC</keysym> in the window titled
+        <quote>Head Window</quote>.</para>
+
+        <figure id="figure.MPApp.running">
+          <title>MPApp running on a Linux desktop with multiple input
+          windows</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center"
+                         fileref="figures/MPApp.thumbnail.multi.png"
+                         format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>With VR Juggler 1.1/2.0, it is possible to use a single window
+        for graphics and for input. To use such a configuration, execute MPApp
+        as follows:</para>
+
+        <screen>% MPApp standalone.jconf</screen>
+
+        <para>This time, only a single window opens, as shown in <xref
+        linkend="figure.MPApp.running.single" />. It shows the same graphics
+        as before, but now it is configured to take keyboard and mouse input.
+        To exit, press <keysym>ESC</keysym> in the graphics window.</para>
+
+        <figure id="figure.MPApp.running.single">
+          <title>MPApp running on a Linux desktop with one window</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center"
+                         fileref="figures/MPApp.thumbnail.single.png"
+                         format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <section>
+          <title>Running an Application on Windows from Within Visual
+          Studio</title>
+
+          <para>To run MPApp from within the Visual Studio IDE, the program
+          arguments must be set first. This is done by opening the properties
+          dialog for the project. In this dialog box, choose the
+          <guilabel>Debugging</guilabel> item. There will be an empty text
+          entry field under the heading <guilabel>Command
+          Arguments</guilabel>. Here, enter the full paths to the VR Juggler
+          configuration files that will be used to run the torus application.
+          To use the <envar>VJ_BASE_DIR</envar> environment variable (or any
+          other environment variable), makefile syntax must be used. In other
+          words, to load <filename>somefile.jconf</filename>, use
+          <filename>$(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\somefile.jconf</filename>.
+          As was stated above, the full path need not be specified, so
+          referencing <envar>VJ_BASE_DIR</envar> in the path to the example
+          configuration files will not be necessary in most cases.. In <xref
+          linkend="figure.visual.studio.dialog.project.settings" />, we see
+          the use of <filename>standalone.jconf</filename> as the single
+          command argument to MPApp.</para>
+
+          <figure id="figure.visual.studio.dialog.project.settings">
+            <title>Setting Command Arguments</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata align="center"
+                           fileref="figures/MPApp.visual.c++.args.png"
+                           format="PNG" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para>With the application already compiled, execute the MPApp
+          program by choosing the <guimenuitem>Start</guimenuitem> item from
+          the <guimenu>Debug</guimenu> menu, shown below in <xref
+          linkend="figure.visual.studio.menu.debug.execute" />.</para>
+
+          <figure id="figure.visual.studio.menu.debug.execute">
+            <title>Execute <filename>MPApp.exe</filename></title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata align="center"
+                           fileref="figures/MPApp.visual.c++.run.png"
+                           format="PNG" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </section>
+
+        <section>
+          <title>Running an Application on Mac OS X with the X Window
+          System</title>
+
+          <para>Running a VR Juggler application on Mac OS X is slightly
+          different if VR Juggler was compiled against <ulink
+          url="http://www.apple.com/macosx/x11/">X11 for OS X</ulink>. Before
+          starting the VR Juggler application, X11 must be running. This can
+          be accomplished by double-clicking on the X11 icon in the
+          Applications folder. By default, X11 will open a standard xterm when
+          it starts. In this xterm, the <envar>$DISPLAY</envar> environment
+          variable will be set correctly, and it is recommended that VR
+          Juggler applications be launched from this xterm. From this xterm,
+          set the necessary environment variables as described earlier in
+          <xref linkend="section.envvars.required" />. Once this is done, the
+          application can be executed from the command line just as described
+          in the previous section.</para>
+
+          <para>MPApp is shown executing on a Mac OS X desktop in <xref
+          linkend="figure.MPApp.running.single.OSX" />. Note that in the dock,
+          the X11 icon is activated and that the application menu is for an
+          X11 application. This truly is an X11 application running on OS
+          X.</para>
+
+          <figure id="figure.MPApp.running.single.OSX">
+            <title>MPApp running on Mac OS X using X11 with one window</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata align="center"
+                           fileref="figures/MPApp-OSX.thumbnail.single.png"
+                           format="PNG" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </section>
+      </section>
+
+      <section>
+        <title>Basic Desktop Configuration Controls</title>
+
+        <para>So now you are probably wondering what you can do with this
+        fancy application. Both of the preceding configurations use the same
+        keyboard/mouse mappings; they vary only in which windows accept the
+        keyboard and mouse input. Using the multi-window configuration, head
+        movement is done with the keyboard in <quote>Head Keyboard</quote>;
+        camera movement is done with the keyboard in <quote>Sim View Cameras
+        Control</quote>; and wand movement is done with the keyboard and mouse
+        in <quote>Wand Keyboard</quote>. Using the single-window
+        configuration, all input is done with the keyboard and mouse in
+        <quote>Sim Window</quote>. Note, however, that for the single-window
+        configuration, the camera is attached to the user's head for an
+        over-the-shoulder view, and hence, it does not move separately from
+        the head. For information on how to verify these settings and to view
+        the current configuration, refer to the <emphasis>VRJConfig
+        Guide</emphasis>. The following list of tables provides all the
+        keyboard and mouse controls for the simulator when using these
+        particular configuration files. Note that it is possible to
+        reconfigure the simulator to suit your preferences. This is provided
+        mainly for those who just want something that works now.</para>
+
+        <table>
+          <title>Moving the simulated head</title>
+
+          <tgroup cols="2">
+            <thead>
+              <row>
+                <entry>Transformation</entry>
+
+                <entry>Key Press</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry align="left">Move head backward</entry>
+
+                <entry align="left">2 on keypad</entry>
+              </row>
+
+              <row>
+                <entry align="left">Move head left</entry>
+
+                <entry align="left">4 on keypad</entry>
+              </row>
+
+              <row>
+                <entry align="left">Move head right</entry>
+
+                <entry align="left">6 on keypad</entry>
+              </row>
+
+              <row>
+                <entry align="left">Move head forward</entry>
+
+                <entry align="left">8 on keypad</entry>
+              </row>
+
+              <row>
+                <entry align="left">Move head down</entry>
+
+                <entry align="left">7 on keypad</entry>
+              </row>
+
+              <row>
+                <entry align="left">Move head up</entry>
+
+                <entry align="left">9 on keypad</entry>
+              </row>
+
+              <row>
+                <entry align="left">Turn head up</entry>
+
+                <entry align="left">CTRL+2 on keypad</entry>
+              </row>
+
+              <row>
+                <entry align="left">Turn head left</entry>
+
+                <entry align="left">CTRL+4 on keypad</entry>
+              </row>
+
+              <row>
+                <entry align="left">Turn head right</entry>
+
+                <entry align="left">CTRL+6 on keypad</entry>
+              </row>
+
+              <row>
+                <entry align="left">Turn head down</entry>
+
+                <entry align="left">CTRL+8 on keypad</entry>
+              </row>
+
+              <row>
+                <entry align="left">Rotate head clockwise</entry>
+
+                <entry align="left">1 on keypad</entry>
+              </row>
+
+              <row>
+                <entry align="left">Rotate head counter-clockwise</entry>
+
+                <entry align="left">3 on keypad</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <table>
+          <title>Moving the simulated wand</title>
+
+          <tgroup cols="2">
+            <thead>
+              <row>
+                <entry>Transformation</entry>
+
+                <entry>Mouse Input/Key Press</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>Move wand backward</entry>
+
+                <entry>ALT+move mouse backward</entry>
+              </row>
+
+              <row>
+                <entry>Move wand forward</entry>
+
+                <entry>ALT+move mouse forward</entry>
+              </row>
+
+              <row>
+                <entry>Move wand left</entry>
+
+                <entry>CTRL+move mouse left</entry>
+              </row>
+
+              <row>
+                <entry>Move wand right</entry>
+
+                <entry>CTRL+move mouse right</entry>
+              </row>
+
+              <row>
+                <entry>Move wand up</entry>
+
+                <entry>CTRL+move mouse forward</entry>
+              </row>
+
+              <row>
+                <entry>Move wand down</entry>
+
+                <entry>CTRL+move mouse backward</entry>
+              </row>
+
+              <row>
+                <entry>Rotate wand left</entry>
+
+                <entry>SHIFT+move mouse left</entry>
+              </row>
+
+              <row>
+                <entry>Rotate wand right</entry>
+
+                <entry>SHIFT+move mouse right</entry>
+              </row>
+
+              <row>
+                <entry>Rotate wand up</entry>
+
+                <entry>SHIFT+move mouse backward</entry>
+              </row>
+
+              <row>
+                <entry>Rotate wand down</entry>
+
+                <entry>SHIFT+move mouse forward</entry>
+              </row>
+
+              <row>
+                <entry>Rotate wand clockwise</entry>
+
+                <entry>Right arrow</entry>
+              </row>
+
+              <row>
+                <entry>Rotate wand counter-clockwise</entry>
+
+                <entry>Left arrow</entry>
+              </row>
+
+              <row>
+                <entry>Wand button #1</entry>
+
+                <entry>Left mouse button</entry>
+              </row>
+
+              <row>
+                <entry>Wand button #2</entry>
+
+                <entry>Middle mouse button</entry>
+              </row>
+
+              <row>
+                <entry>Wand button #3</entry>
+
+                <entry>Right mouse button</entry>
+              </row>
+
+              <row>
+                <entry>Wand button #4</entry>
+
+                <entry>4</entry>
+              </row>
+
+              <row>
+                <entry>Wand button #5</entry>
+
+                <entry>5</entry>
+              </row>
+
+              <row>
+                <entry>Wand button #6</entry>
+
+                <entry>6</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <table>
+          <title>Moving the camera (multi-window configuration only)</title>
+
+          <tgroup cols="2">
+            <thead>
+              <row>
+                <entry>Transformation</entry>
+
+                <entry>Key Press</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry>Move camera backward</entry>
+
+                <entry>2 on keypad</entry>
+              </row>
+
+              <row>
+                <entry>Move camera left</entry>
+
+                <entry>4 on keypad</entry>
+              </row>
+
+              <row>
+                <entry>Move camera right</entry>
+
+                <entry>6 on keypad</entry>
+              </row>
+
+              <row>
+                <entry>Move camera forward</entry>
+
+                <entry>8 on keypad</entry>
+              </row>
+
+              <row>
+                <entry>Move camera down</entry>
+
+                <entry>7 on keypad</entry>
+              </row>
+
+              <row>
+                <entry>Move camera up</entry>
+
+                <entry>9 on keypad</entry>
+              </row>
+
+              <row>
+                <entry>Turn camera up</entry>
+
+                <entry>CTRL+2 on keypad</entry>
+              </row>
+
+              <row>
+                <entry>Turn camera left</entry>
+
+                <entry>CTRL+4 on keypad</entry>
+              </row>
+
+              <row>
+                <entry>Turn camera right</entry>
+
+                <entry>CTRL+6 on keypad</entry>
+              </row>
+
+              <row>
+                <entry>Turn camera down</entry>
+
+                <entry>CTRL+8 on keypad</entry>
+              </row>
+
+              <row>
+                <entry>Rotate camera clockwise</entry>
+
+                <entry>1 on keypad</entry>
+              </row>
+
+              <row>
+                <entry>Rotate camera counter-clockwise</entry>
+
+                <entry>3 on keypad</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>Before continuing on to running an application in a full-scale
+        VR system, we provide two asides: using a simulated glove and using a
+        simulated analog device. The examples provided thus far have not
+        discussed this because the information was not relevant to the
+        particular sample application being used. Knowing how to use these
+        simulated devices is important, however, and it is treated separately
+        as a reference for your future endeavors in running VR Juggler
+        applications.</para>
+      </section>
+
+      <section>
+        <title>Using a Simulated Glove</title>
+
+        <para>If you include the <filename>sim.glove.mixin.jconf</filename>
+        file, your application will also have access to a simulated glove,
+        with position and gesture inputs. The glove is controlled by a window
+        titled <quote>Glove Keyboard</quote>. This window lets you control the
+        glove position and selected gesture. Movement control of the glove
+        uses the mouse and is the same as that of the wand. The mouse buttons
+        are used to select gestures. The mapping of the gesture numbers to
+        actual hand positions is controlled by the <quote>training
+        file</quote> for the sim glove. The default training file is
+        <filename>$VJ_BASE_DIR/share/vrjuggler/data/gesture/simpleSimGestures.dat</filename>.</para>
+      </section>
+
+      <section>
+        <title>Using a Simulated Analog Device</title>
+
+        <para>If you include the
+        <filename>sim.analog.wandmixin.jconf</filename> file, your application
+        will also have access to a set of four analog devices (devices with a
+        value in a range from 0.0 to 1.0). The analog devices are also
+        controlled using the <quote>Wand Keyboard</quote> window which means
+        that their configuration file requires the wand configuration
+        file.</para>
+
+        <note>
+          <para>A separate file, <filename>sim.analog.mixin.jconf</filename>,
+          is provided for analog input from a separate simulator
+          window.</para>
+        </note>
+
+        <para>The key presses used for controlling the analog devices are
+        listed in <xref linkend="table.sim.analog.keys" />.</para>
+
+        <table id="table.sim.analog.keys">
+          <title>Analog Device Simulator Keys</title>
+
+          <tgroup cols="2">
+            <thead>
+              <row>
+                <entry align="center">Analog Device Action</entry>
+
+                <entry align="center">Key Press</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry align="left">VJAnalog0 increase</entry>
+
+                <entry align="center">Q</entry>
+              </row>
+
+              <row>
+                <entry align="left">VJAnalog0 decrease</entry>
+
+                <entry align="center">A</entry>
+              </row>
+
+              <row>
+                <entry align="left">VJAnalog1 increase</entry>
+
+                <entry align="center">W</entry>
+              </row>
+
+              <row>
+                <entry align="left">VJAnalog1 decrease</entry>
+
+                <entry align="center">S</entry>
+              </row>
+
+              <row>
+                <entry align="left">VJAnalog2 increase</entry>
+
+                <entry align="center">E</entry>
+              </row>
+
+              <row>
+                <entry align="left">VJAnalog2 decrease</entry>
+
+                <entry align="center">D</entry>
+              </row>
+
+              <row>
+                <entry align="left">VJAnalog3 increase</entry>
+
+                <entry align="center">R</entry>
+              </row>
+
+              <row>
+                <entry align="left">VJAnalog3 decrease</entry>
+
+                <entry align="center">F</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+    </section>
+
+    <section>
+      <title>Running an Application in a VR System</title>
+
+      <para>Running an application full-scale in a VR system is more
+      complicated than running in simulator mode. The reason for this is that
+      VR systems tend to differ in configuration and in available hardware. VR
+      Juggler is flexible enough to handle most any configuration you throw at
+      it, but those configurations need to be put together first. Examples of
+      configuration files used in VRAC's C4 system are provided, and they are
+      used in this documentation. It should be noted, however, that for any
+      particular system, custom configuration files will probably have to be
+      written. The idea behind this section is to provide a basic
+      understanding of what is needed to get started with running in a VR
+      system.</para>
+
+      <para>The example configuration files in the directory
+      <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>
+      modeled after those used for VRAC's C4 system are as follows:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><filename>C4.closed.jconf</filename> - The single
+          configuration file that includes the other configuration files
+          necessary for loading a VR Juggler application in the C4 in its
+          closed configuration with full tracking and stereoscopic
+          graphics.</para>
+        </listitem>
+
+        <listitem>
+          <para><filename>C4.closed.mono.jconf</filename> - The single
+          configuration file that includes the other configuration files
+          necessary for loading a VR Juggler application in the C4 in its
+          closed configuration with full tracking and monoscopic
+          graphics.</para>
+        </listitem>
+
+        <listitem>
+          <para><filename>C4.base.jconf</filename> - The basic configuration
+          file needed by all applications when run in the C4. It defines
+          commonly used VR Juggler concepts that are beyond the scope of this
+          particular book.</para>
+        </listitem>
+
+        <listitem>
+          <para><filename>C4.displays.closed.jconf</filename> - The basic
+          display configuration file needed to run with all four walls active
+          and rendering stereoscopic graphics. This defines only the four
+          surface displays to be opened. The corners are configured for the
+          closed position of the moveable walls.</para>
+        </listitem>
+
+        <listitem>
+          <para><filename>C4.displays.closed.mono.jconf</filename> - The basic
+          display configuration file needed to run with all four walls active
+          and rendering monoscopic graphics. This defines only the four
+          surface displays to be opened. The corners are configured for the
+          closed position of the moveable walls.</para>
+        </listitem>
+
+        <listitem>
+          <para><filename>C4.mstar.jconf</filename> - The Ascension MotionStar
+          configuration file that defines which bird provides input for the
+          head and for the wand.</para>
+        </listitem>
+
+        <listitem>
+          <para><filename>C4.rfwand.jconf</filename> - The radio frequency
+          wireless mouse that acts as a wand.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Running the application is the same as in simulator mode except
+      that the configuration files given on the command line are different.
+      For example, to run MPApp in the C4 with stereoscopic graphics, the
+      following command would be used:</para>
+
+      <screen>% MPApp C4.closed.jconf</screen>
+    </section>
+  </chapter>
+
+  <appendix id="appendix.gfdl">
+    <title>GNU Free Documentation License</title>
+
+    <subtitle>Version 1.2, November 2002</subtitle>
+
+    <blockquote id="fsf-copyright">
+      <title>FSF Copyright note</title>
+
+      <para>Copyright (C) 2000,2001,2002 Free Software Foundation, Inc. 59
+      Temple Place, Suite 330, Boston, MA 02111-1307 USA Everyone is permitted
+      to copy and distribute verbatim copies of this license document, but
+      changing it is not allowed.</para>
+    </blockquote>
+
+    <section id="gfdl-0">
+      <title>PREAMBLE</title>
+
+      <para>The purpose of this License is to make a manual, textbook, or
+      other functional and useful document "free" in the sense of freedom: to
+      assure everyone the effective freedom to copy and redistribute it, with
+      or without modifying it, either commercially or noncommercially.
+      Secondarily, this License preserves for the author and publisher a way
+      to get credit for their work, while not being considered responsible for
+      modifications made by others.</para>
+
+      <para>This License is a kind of "copyleft", which means that derivative
+      works of the document must themselves be free in the same sense. It
+      complements the GNU General Public License, which is a copyleft license
+      designed for free software.</para>
+
+      <para>We have designed this License in order to use it for manuals for
+      free software, because free software needs free documentation: a free
+      program should come with manuals providing the same freedoms that the
+      software does. But this License is not limited to software manuals; it
+      can be used for any textual work, regardless of subject matter or
+      whether it is published as a printed book. We recommend this License
+      principally for works whose purpose is instruction or reference.</para>
+    </section>
+
+    <section id="gfdl-1">
+      <title>APPLICABILITY AND DEFINITIONS</title>
+
+      <para id="gfdl-doc">This License applies to any manual or other work, in
+      any medium, that contains a notice placed by the copyright holder saying
+      it can be distributed under the terms of this License. Such a notice
+      grants a world-wide, royalty-free license, unlimited in duration, to use
+      that work under the conditions stated herein. The "Document", below,
+      refers to any such manual or work. Any member of the public is a
+      licensee, and is addressed as "you". You accept the license if you copy,
+      modify or distribute the work in a way requiring permission under
+      copyright law.</para>
+
+      <para id="gfdl-mod-ver">A "Modified Version" of the Document means any
+      work containing the Document or a portion of it, either copied verbatim,
+      or with modifications and/or translated into another language.</para>
+
+      <para id="gfdl-secnd-sect">A "Secondary Section" is a named appendix or
+      a front-matter section of the Document that deals exclusively with the
+      relationship of the publishers or authors of the Document to the
+      Document's overall subject (or to related matters) and contains nothing
+      that could fall directly within that overall subject. (Thus, if the
+      Document is in part a textbook of mathematics, a Secondary Section may
+      not explain any mathematics.) The relationship could be a matter of
+      historical connection with the subject or with related matters, or of
+      legal, commercial, philosophical, ethical or political position
+      regarding them.</para>
+
+      <para id="gfdl-inv-sect">The "Invariant Sections" are certain Secondary
+      Sections whose titles are designated, as being those of Invariant
+      Sections, in the notice that says that the Document is released under
+      this License. If a section does not fit the above definition of
+      Secondary then it is not allowed to be designated as Invariant. The
+      Document may contain zero Invariant Sections. If the Document does not
+      identify any Invariant Sections then there are none.</para>
+
+      <para id="gfdl-cov-text">The "Cover Texts" are certain short passages of
+      text that are listed, as Front-Cover Texts or Back-Cover Texts, in the
+      notice that says that the Document is released under this License. A
+      Front-Cover Text may be at most 5 words, and a Back-Cover Text may be at
+      most 25 words.</para>
+
+      <para id="gfdl-transparent">A "Transparent" copy of the Document means a
+      machine-readable copy, represented in a format whose specification is
+      available to the general public, that is suitable for revising the
+      document straightforwardly with generic text editors or (for images
+      composed of pixels) generic paint programs or (for drawings) some widely
+      available drawing editor, and that is suitable for input to text
+      formatters or for automatic translation to a variety of formats suitable
+      for input to text formatters. A copy made in an otherwise Transparent
+      file format whose markup, or absence of markup, has been arranged to
+      thwart or discourage subsequent modification by readers is not
+      Transparent. An image format is not Transparent if used for any
+      substantial amount of text. A copy that is not "Transparent" is called
+      "Opaque".</para>
+
+      <para>Examples of suitable formats for Transparent copies include plain
+      ASCII without markup, Texinfo input format, LaTeX input format, SGML or
+      XML using a publicly available DTD, and standard-conforming simple HTML,
+      PostScript or PDF designed for human modification. Examples of
+      transparent image formats include PNG, XCF and JPG. Opaque formats
+      include proprietary formats that can be read and edited only by
+      proprietary word processors, SGML or XML for which the DTD and/or
+      processing tools are not generally available, and the machine-generated
+      HTML, PostScript or PDF produced by some word processors for output
+      purposes only.</para>
+
+      <para id="gfdl-title-page">The "Title Page" means, for a printed book,
+      the title page itself, plus such following pages as are needed to hold,
+      legibly, the material this License requires to appear in the title page.
+      For works in formats which do not have any title page as such, "Title
+      Page" means the text near the most prominent appearance of the work's
+      title, preceding the beginning of the body of the text.</para>
+
+      <para id="gfdl-entitled">A section "Entitled XYZ" means a named subunit
+      of the Document whose title either is precisely XYZ or contains XYZ in
+      parentheses following text that translates XYZ in another language.
+      (Here XYZ stands for a specific section name mentioned below, such as
+      "Acknowledgements", "Dedications", "Endorsements", or "History".) To
+      "Preserve the Title" of such a section when you modify the Document
+      means that it remains a section "Entitled XYZ" according to this
+      definition.</para>
+
+      <para>The Document may include Warranty Disclaimers next to the notice
+      which states that this License applies to the Document. These Warranty
+      Disclaimers are considered to be included by reference in this License,
+      but only as regards disclaiming warranties: any other implication that
+      these Warranty Disclaimers may have is void and has no effect on the
+      meaning of this License.</para>
+    </section>
+
+    <section id="gfdl-2">
+      <title>VERBATIM COPYING</title>
+
+      <para>You may copy and distribute the Document in any medium, either
+      commercially or noncommercially, provided that this License, the
+      copyright notices, and the license notice saying this License applies to
+      the Document are reproduced in all copies, and that you add no other
+      conditions whatsoever to those of this License. You may not use
+      technical measures to obstruct or control the reading or further copying
+      of the copies you make or distribute. However, you may accept
+      compensation in exchange for copies. If you distribute a large enough
+      number of copies you must also follow the conditions in section
+      3.</para>
+
+      <para>You may also lend copies, under the same conditions stated above,
+      and you may publicly display copies.</para>
+    </section>
+
+    <section id="gfdl-3">
+      <title>COPYING IN QUANTITY</title>
+
+      <para>If you publish printed copies (or copies in media that commonly
+      have printed covers) of the Document, numbering more than 100, and the
+      Document's license notice requires Cover Texts, you must enclose the
+      copies in covers that carry, clearly and legibly, all these Cover Texts:
+      Front-Cover Texts on the front cover, and Back-Cover Texts on the back
+      cover. Both covers must also clearly and legibly identify you as the
+      publisher of these copies. The front cover must present the full title
+      with all words of the title equally prominent and visible. You may add
+      other material on the covers in addition. Copying with changes limited
+      to the covers, as long as they preserve the title of the Document and
+      satisfy these conditions, can be treated as verbatim copying in other
+      respects.</para>
+
+      <para>If the required texts for either cover are too voluminous to fit
+      legibly, you should put the first ones listed (as many as fit
+      reasonably) on the actual cover, and continue the rest onto adjacent
+      pages.</para>
+
+      <para>If you publish or distribute Opaque copies of the Document
+      numbering more than 100, you must either include a machine-readable
+      Transparent copy along with each Opaque copy, or state in or with each
+      Opaque copy a computer-network location from which the general
+      network-using public has access to download using public-standard
+      network protocols a complete Transparent copy of the Document, free of
+      added material. If you use the latter option, you must take reasonably
+      prudent steps, when you begin distribution of Opaque copies in quantity,
+      to ensure that this Transparent copy will remain thus accessible at the
+      stated location until at least one year after the last time you
+      distribute an Opaque copy (directly or through your agents or retailers)
+      of that edition to the public.</para>
+
+      <para>It is requested, but not required, that you contact the authors of
+      the Document well before redistributing any large number of copies, to
+      give them a chance to provide you with an updated version of the
+      Document.</para>
+    </section>
+
+    <section id="gfdl-4">
+      <title>MODIFICATIONS</title>
+
+      <para>You may copy and distribute a Modified Version of the Document
+      under the conditions of sections 2 and 3 above, provided that you
+      release the Modified Version under precisely this License, with the
+      Modified Version filling the role of the Document, thus licensing
+      distribution and modification of the Modified Version to whoever
+      possesses a copy of it. In addition, you must do these things in the
+      Modified Version:</para>
+
+      <orderedlist id="gfdl-modif-cond" numeration="upperalpha">
+        <title>GNU FDL Modification Conditions</title>
+
+        <listitem>
+          <simpara>Use in the Title Page (and on the covers, if any) a title
+          distinct from that of the Document, and from those of previous
+          versions (which should, if there were any, be listed in the History
+          section of the Document). You may use the same title as a previous
+          version if the original publisher of that version gives
+          permission.</simpara>
+        </listitem>
+
+        <listitem>
+          <simpara>List on the Title Page, as authors, one or more persons or
+          entities responsible for authorship of the modifications in the
+          Modified Version, together with at least five of the principal
+          authors of the Document (all of its principal authors, if it has
+          fewer than five), unless they release you from this
+          requirement.</simpara>
+        </listitem>
+
+        <listitem>
+          <simpara>State on the Title page the name of the publisher of the
+          Modified Version, as the publisher.</simpara>
+        </listitem>
+
+        <listitem>
+          <simpara>Preserve all the copyright notices of the
+          Document.</simpara>
+        </listitem>
+
+        <listitem>
+          <simpara>Add an appropriate copyright notice for your modifications
+          adjacent to the other copyright notices.</simpara>
+        </listitem>
+
+        <listitem>
+          <simpara>Include, immediately after the copyright notices, a license
+          notice giving the public permission to use the Modified Version
+          under the terms of this License, in the form shown in the <link
+          linkend="gfdl-addendum">Addendum</link> below.</simpara>
+        </listitem>
+
+        <listitem>
+          <simpara>Preserve in that license notice the full lists of Invariant
+          Sections and required Cover Texts given in the Document's license
+          notice.</simpara>
+        </listitem>
+
+        <listitem>
+          <simpara>Include an unaltered copy of this License.</simpara>
+        </listitem>
+
+        <listitem>
+          <simpara>Preserve the section Entitled "History", Preserve its
+          Title, and add to it an item stating at least the title, year, new
+          authors, and publisher of the Modified Version as given on the Title
+          Page. If there is no section Entitled "History" in the Document,
+          create one stating the title, year, authors, and publisher of the
+          Document as given on its Title Page, then add an item describing the
+          Modified Version as stated in the previous sentence.</simpara>
+        </listitem>
+
+        <listitem>
+          <simpara>Preserve the network location, if any, given in the
+          Document for public access to a Transparent copy of the Document,
+          and likewise the network locations given in the Document for
+          previous versions it was based on. These may be placed in the
+          "History" section. You may omit a network location for a work that
+          was published at least four years before the Document itself, or if
+          the original publisher of the version it refers to gives
+          permission.</simpara>
+        </listitem>
+
+        <listitem>
+          <simpara>For any section Entitled "Acknowledgements" or
+          "Dedications", Preserve the Title of the section, and preserve in
+          the section all the substance and tone of each of the contributor
+          acknowledgements and/or dedications given therein.</simpara>
+        </listitem>
+
+        <listitem>
+          <simpara>Preserve all the Invariant Sections of the Document,
+          unaltered in their text and in their titles. Section numbers or the
+          equivalent are not considered part of the section titles.</simpara>
+        </listitem>
+
+        <listitem>
+          <simpara>Delete any section Entitled "Endorsements". Such a section
+          may not be included in the Modified Version.</simpara>
+        </listitem>
+
+        <listitem>
+          <simpara>Do not retitle any existing section to be Entitled
+          "Endorsements" or to conflict in title with any Invariant
+          Section.</simpara>
+        </listitem>
+
+        <listitem>
+          <simpara>Preserve any Warranty Disclaimers.</simpara>
+        </listitem>
+      </orderedlist>
+
+      <para>If the Modified Version includes new front-matter sections or
+      appendices that qualify as Secondary Sections and contain no material
+      copied from the Document, you may at your option designate some or all
+      of these sections as invariant. To do this, add their titles to the list
+      of Invariant Sections in the Modified Version's license notice. These
+      titles must be distinct from any other section titles.</para>
+
+      <para>You may add a section Entitled "Endorsements", provided it
+      contains nothing but endorsements of your Modified Version by various
+      parties--for example, statements of peer review or that the text has
+      been approved by an organization as the authoritative definition of a
+      standard.</para>
+
+      <para>You may add a passage of up to five words as a Front-Cover Text,
+      and a passage of up to 25 words as a Back-Cover Text, to the end of the
+      list of Cover Texts in the Modified Version. Only one passage of
+      Front-Cover Text and one of Back-Cover Text may be added by (or through
+      arrangements made by) any one entity. If the Document already includes a
+      cover text for the same cover, previously added by you or by arrangement
+      made by the same entity you are acting on behalf of, you may not add
+      another; but you may replace the old one, on explicit permission from
+      the previous publisher that added the old one.</para>
+
+      <para>The author(s) and publisher(s) of the Document do not by this
+      License give permission to use their names for publicity for or to
+      assert or imply endorsement of any Modified Version.</para>
+    </section>
+
+    <section id="gfdl-5">
+      <title>COMBINING DOCUMENTS</title>
+
+      <para>You may combine the Document with other documents released under
+      this License, under the terms defined in <link linkend="gfdl-4">section
+      4</link> above for modified versions, provided that you include in the
+      combination all of the Invariant Sections of all of the original
+      documents, unmodified, and list them all as Invariant Sections of your
+      combined work in its license notice, and that you preserve all their
+      Warranty Disclaimers.</para>
+
+      <para>The combined work need only contain one copy of this License, and
+      multiple identical Invariant Sections may be replaced with a single
+      copy. If there are multiple Invariant Sections with the same name but
+      different contents, make the title of each such section unique by adding
+      at the end of it, in parentheses, the name of the original author or
+      publisher of that section if known, or else a unique number. Make the
+      same adjustment to the section titles in the list of Invariant Sections
+      in the license notice of the combined work.</para>
+
+      <para>In the combination, you must combine any sections Entitled
+      "History" in the various original documents, forming one section
+      Entitled "History"; likewise combine any sections Entitled
+      "Acknowledgements", and any sections Entitled "Dedications". You must
+      delete all sections Entitled "Endorsements".</para>
+    </section>
+
+    <section id="gfdl-6">
+      <title>COLLECTIONS OF DOCUMENTS</title>
+
+      <para>You may make a collection consisting of the Document and other
+      documents released under this License, and replace the individual copies
+      of this License in the various documents with a single copy that is
+      included in the collection, provided that you follow the rules of this
+      License for verbatim copying of each of the documents in all other
+      respects.</para>
+
+      <para>You may extract a single document from such a collection, and
+      distribute it individually under this License, provided you insert a
+      copy of this License into the extracted document, and follow this
+      License in all other respects regarding verbatim copying of that
+      document.</para>
+    </section>
+
+    <section id="gfdl-7">
+      <title>AGGREGATION WITH INDEPENDENT WORKS</title>
+
+      <para>A compilation of the Document or its derivatives with other
+      separate and independent documents or works, in or on a volume of a
+      storage or distribution medium, is called an "aggregate" if the
+      copyright resulting from the compilation is not used to limit the legal
+      rights of the compilation's users beyond what the individual works
+      permit. When the Document is included in an aggregate, this License does
+      not apply to the other works in the aggregate which are not themselves
+      derivative works of the Document.</para>
+
+      <para>If the Cover Text requirement of section 3 is applicable to these
+      copies of the Document, then if the Document is less than one half of
+      the entire aggregate, the Document's Cover Texts may be placed on covers
+      that bracket the Document within the aggregate, or the electronic
+      equivalent of covers if the Document is in electronic form. Otherwise
+      they must appear on printed covers that bracket the whole
+      aggregate.</para>
+    </section>
+
+    <section id="gfdl-8">
+      <title>TRANSLATION</title>
+
+      <para>Translation is considered a kind of modification, so you may
+      distribute translations of the Document under the terms of section 4.
+      Replacing Invariant Sections with translations requires special
+      permission from their copyright holders, but you may include
+      translations of some or all Invariant Sections in addition to the
+      original versions of these Invariant Sections. You may include a
+      translation of this License, and all the license notices in the
+      Document, and any Warranty Disclaimers, provided that you also include
+      the original English version of this License and the original versions
+      of those notices and disclaimers. In case of a disagreement between the
+      translation and the original version of this License or a notice or
+      disclaimer, the original version will prevail.</para>
+
+      <para>If a section in the Document is Entitled "Acknowledgements",
+      "Dedications", or "History", the requirement (section 4) to Preserve its
+      Title (section 1) will typically require changing the actual
+      title.</para>
+    </section>
+
+    <section id="gfdl-9">
+      <title>TERMINATION</title>
+
+      <para>You may not copy, modify, sublicense, or distribute the Document
+      except as expressly provided for under this License. Any other attempt
+      to copy, modify, sublicense or distribute the Document is void, and will
+      automatically terminate your rights under this License. However, parties
+      who have received copies, or rights, from you under this License will
+      not have their licenses terminated so long as such parties remain in
+      full compliance.</para>
+    </section>
+
+    <section id="gfdl-10">
+      <title>FUTURE REVISIONS OF THIS LICENSE</title>
+
+      <para>The Free Software Foundation may publish new, revised versions of
+      the GNU Free Documentation License from time to time. Such new versions
+      will be similar in spirit to the present version, but may differ in
+      detail to address new problems or concerns. See
+      http://www.gnu.org/copyleft/.</para>
+
+      <para>Each version of the License is given a distinguishing version
+      number. If the Document specifies that a particular numbered version of
+      this License "or any later version" applies to it, you have the option
+      of following the terms and conditions either of that specified version
+      or of any later version that has been published (not as a draft) by the
+      Free Software Foundation. If the Document does not specify a version
+      number of this License, you may choose any version ever published (not
+      as a draft) by the Free Software Foundation.</para>
+    </section>
+
+    <section id="gfdl-addendum">
+      <title>ADDENDUM: How to use this License for your documents</title>
+
+      <para>To use this License in a document you have written, include a copy
+      of the License in the document and put the following copyright and
+      license notices just after the title page:</para>
+
+      <blockquote id="copyright-sample">
+        <title>Sample Invariant Sections list</title>
+
+        <para>Copyright (c) YEAR YOUR NAME. Permission is granted to copy,
+        distribute and/or modify this document under the terms of the GNU Free
+        Documentation License, Version 1.2 or any later version published by
+        the Free Software Foundation; with no Invariant Sections, no
+        Front-Cover Texts, and no Back-Cover Texts. A copy of the license is
+        included in the section entitled "GNU Free Documentation
+        License".</para>
+      </blockquote>
+
+      <para>If you have Invariant Sections, Front-Cover Texts and Back-Cover
+      Texts, replace the "with...Texts." line with this:</para>
+
+      <blockquote id="inv-cover-sample">
+        <title>Sample Invariant Sections list</title>
+
+        <para>with the Invariant Sections being LIST THEIR TITLES, with the
+        Front-Cover Texts being LIST, and with the Back-Cover Texts being
+        LIST.</para>
+      </blockquote>
+
+      <para>If you have Invariant Sections without Cover Texts, or some other
+      combination of the three, merge those two alternatives to suit the
+      situation.</para>
+
+      <para>If your document contains nontrivial examples of program code, we
+      recommend releasing these examples in parallel under your choice of free
+      software license, such as the GNU General Public License, to permit
+      their use in free software.</para>
+    </section>
+  </appendix>
+</book>

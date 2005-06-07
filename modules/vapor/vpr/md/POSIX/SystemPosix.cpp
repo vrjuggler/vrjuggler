@@ -1,0 +1,180 @@
+/****************** <VPR heading BEGIN do not edit this line> *****************
+ *
+ * VR Juggler Portable Runtime
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Patrick Hartling, Kevin Meinert, Carolina Cruz-Neira
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
+ ****************** <VPR heading END do not edit this line> ******************/
+
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#include <vpr/vprConfig.h>
+
+#include <stdlib.h>
+#include <string.h>
+#include <sys/utsname.h>
+
+#include <vpr/md/POSIX/SystemPosix.h>
+
+
+namespace vpr
+{
+
+int SystemPosix::usleep(vpr::Uint32 micro)
+{
+#ifdef VPR_OS_Linux
+   ::usleep(micro);
+   return 0;  // usleep can't report failure, so assume success.
+#else
+   return ::usleep(micro);
+#endif
+}
+
+int SystemPosix::msleep(vpr::Uint32 milli)
+{
+   // usleep() cannot sleep for more than 1 second, so we have to work
+   // around that here.  First, we sleep for N seconds.
+   if ( milli >= 1000 )
+   {
+      SystemPosix::sleep(milli / 1000);
+   }
+
+   // Then we finish off by sleeping for (N mod 1000) milliseconds.
+   return SystemPosix::usleep((milli % 1000) * 1000);
+}
+
+vpr::Uint64 SystemPosix::Ntohll(vpr::Uint64 conversion)
+{
+   vpr::Uint64 ret_val;
+   
+   if (isLittleEndian())
+   {
+      *((vpr::Uint32*)(&ret_val) + 1) = SystemPosix::Ntohl(*((vpr::Uint32*)(&conversion)));
+      *( ((vpr::Uint32*)(&ret_val))) = SystemPosix::Ntohl( *( ((vpr::Uint32*)(&conversion))+1) );
+   }
+   else
+   {
+      *((vpr::Uint32*)(&ret_val)) = SystemPosix::Ntohl(*((vpr::Uint32*)(&conversion)));
+      *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemPosix::Ntohl( *( ((vpr::Uint32*)(&conversion))+1) );
+   }
+   return ret_val;
+}
+
+vpr::Uint64 SystemPosix::Htonll(vpr::Uint64 conversion)
+{
+   vpr::Uint64 ret_val;
+   if (isLittleEndian())
+   {
+      *((vpr::Uint32*)(&ret_val) + 1) = SystemPosix::Htonl(*((vpr::Uint32*)(&conversion)));
+      *( ((vpr::Uint32*)(&ret_val))) = SystemPosix::Htonl( *( ((vpr::Uint32*)(&conversion))+1) );
+   }
+   else
+   {
+      *((vpr::Uint32*)(&ret_val)) = SystemPosix::Htonl(*((vpr::Uint32*)(&conversion)));
+      *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemPosix::Htonl( *( ((vpr::Uint32*)(&conversion))+1) );
+   }
+   return ret_val;
+}
+
+vpr::ReturnStatus SystemPosix::getenv(const std::string& name,
+                                      std::string& result)
+{
+   char* val;
+   ReturnStatus status;
+
+   val = ::getenv(name.c_str());
+
+   if ( val != NULL )
+   {
+      result = val;
+   }
+   else
+   {
+      status.setCode(ReturnStatus::Fail);
+   }
+
+   return status;
+}
+
+vpr::ReturnStatus SystemPosix::setenv(const std::string& name,
+                                      const std::string& value)
+{
+   std::string set_value(name);
+   set_value += "=";
+   set_value += value;
+
+   ReturnStatus status;
+
+   // Purposely leak memory since putenv(3) may want to hold on to the
+   // pointer we pass.
+   char* env_str = strdup(set_value.c_str());
+   int ret_val = ::putenv(env_str);
+
+   if ( ret_val == 0 )
+   {
+      status.setCode(ReturnStatus::Succeed);
+   }
+   else
+   {
+      status.setCode(ReturnStatus::Fail);
+   }
+
+   return status;
+}
+
+std::string SystemPosix::getHostname()
+{
+   struct utsname buffer;
+
+   if ( uname(&buffer) == 0 )
+   {
+      char* temp;
+      temp = strchr(buffer.nodename, '.');
+
+      // If the node name contains the full host, dots and all, truncate it
+      // at the first dot.
+      if ( temp != NULL )
+      {
+         *temp = '\0';
+      }
+
+      return std::string(buffer.nodename);
+   }
+   else
+   {
+      return std::string("<hostname-lookup failed>");
+   }
+}
+
+} // End of vpr namespace

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <alias name="VJWand" version="1">
+         <proxy>RelativeWand Proxy</proxy>
+      </alias>
+      <alias name="VJButton0" version="1">
+         <proxy>Button0Proxy</proxy>
+      </alias>
+      <alias name="VJButton2" version="1">
+         <proxy>Button2Proxy</proxy>
+      </alias>
+      <alias name="VJButton1" version="1">
+         <proxy>Button1Proxy</proxy>
+      </alias>
+      <alias name="VJHead" version="1">
+         <proxy>Head Proxy</proxy>
+      </alias>
+      <position_proxy name="Wand Proxy" version="1">
+         <device>TrackdSensorDev</device>
+         <unit>1</unit>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+      </position_proxy>
+      <position_proxy name="Head Proxy" version="1">
+         <device>TrackdSensorDev</device>
+         <unit>0</unit>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+      </position_proxy>
+      <position_proxy name="RelativeWand Proxy" version="1">
+         <device>SimRelativePosition1</device>
+         <unit>0</unit>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+      </position_proxy>
+      <digital_proxy name="Button0Proxy" version="1">
+         <device>TrackdControllerDev</device>
+         <unit>0</unit>
+      </digital_proxy>
+      <digital_proxy name="Button2Proxy" version="1">
+         <device>TrackdControllerDev</device>
+         <unit>2</unit>
+      </digital_proxy>
+      <digital_proxy name="Button1Proxy" version="1">
+         <device>TrackdControllerDev</device>
+         <unit>1</unit>
+      </digital_proxy>
+      <display_system name="Pipe Setup" version="1">
+         <number_of_pipes>1</number_of_pipes>
+         <x11_pipes>-1</x11_pipes>
+         <x11_pipes>:0.1</x11_pipes>
+         <x11_pipes>:0.1</x11_pipes>
+         <x11_pipes>:0.0</x11_pipes>
+         <x11_pipes>:0.0</x11_pipes>
+         <x11_pipes>:0.0</x11_pipes>
+         <x11_pipes>:0.0</x11_pipes>
+         <x11_pipes>:0.0</x11_pipes>
+      </display_system>
+      <user name="User1" version="1">
+         <head_position>VJHead</head_position>
+         <interocular_distance>0.069</interocular_distance>
+      </user>
+      <simulated_relative_position name="SimRelativePosition1" version="1">
+         <base_frame_proxy>Head Proxy</base_frame_proxy>
+         <relative_proxy>Wand Proxy</relative_proxy>
+         <device_host />
+      </simulated_relative_position>
+      <input_manager name="Input Manager" version="2">
+         <driver>Trackd_drv</driver>
+      </input_manager>
+      <trackd_sensor name="TrackdSensorDev" version="1">
+         <shared_memory_key>4148</shared_memory_key>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>0.3048</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+         <device_host />
+      </trackd_sensor>
+      <trackd_controller name="TrackdControllerDev" version="1">
+         <shared_memory_key>4147</shared_memory_key>
+         <min>0.0</min>
+         <max>0.0</max>
+         <device_host />
+      </trackd_controller>
+   </elements>
+</configuration>
+

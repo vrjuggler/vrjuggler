@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <sound_manager_sonix name="VR Juggler Sonix Sound Manager" version="1">
+         <api>OpenAL</api>
+         <listener_position>0.0</listener_position>
+         <listener_position>0.0</listener_position>
+         <listener_position>0.0</listener_position>
+         <file_search_path>.</file_search_path>
+         <sound>
+            <sound name="bump" version="2">
+               <filename>${VJ_BASE_DIR}/share/vrjuggler/data/sounds/bump.wav</filename>
+               <ambient>false</ambient>
+               <retriggerable>false</retriggerable>
+               <streaming>true</streaming>
+               <loop>1</loop>
+               <pitch_bend>1.0</pitch_bend>
+               <cutoff>1.0</cutoff>
+               <volume>1.0</volume>
+               <position>0.0</position>
+               <position>0.0</position>
+               <position>0.0</position>
+            </sound>
+         </sound>
+         <sound>
+            <sound name="step" version="2">
+               <filename>${VJ_BASE_DIR}/share/vrjuggler/data/sounds/footstep.wav</filename>
+               <ambient>false</ambient>
+               <retriggerable>false</retriggerable>
+               <streaming>true</streaming>
+               <loop>1</loop>
+               <pitch_bend>1.0</pitch_bend>
+               <cutoff>1.0</cutoff>
+               <volume>1.0</volume>
+               <position>0.0</position>
+               <position>0.0</position>
+               <position>0.0</position>
+            </sound>
+         </sound>
+         <sound>
+            <sound name="ambience" version="2">
+               <filename>${VJ_BASE_DIR}/share/vrjuggler/data/sounds/ambience.wav</filename>
+               <ambient>false</ambient>
+               <retriggerable>false</retriggerable>
+               <streaming>true</streaming>
+               <loop>1</loop>
+               <pitch_bend>1.0</pitch_bend>
+               <cutoff>1.0</cutoff>
+               <volume>1.0</volume>
+               <position>0.0</position>
+               <position>0.0</position>
+               <position>0.0</position>
+            </sound>
+         </sound>
+         <sound>
+            <sound name="accel" version="2">
+               <filename>${VJ_BASE_DIR}/share/vrjuggler/data/sounds/accel.wav</filename>
+               <ambient>false</ambient>
+               <retriggerable>false</retriggerable>
+               <streaming>true</streaming>
+               <loop>1</loop>
+               <pitch_bend>1.0</pitch_bend>
+               <cutoff>1.0</cutoff>
+               <volume>1.0</volume>
+               <position>0.0</position>
+               <position>0.0</position>
+               <position>0.0</position>
+            </sound>
+         </sound>
+         <sound>
+            <sound name="land" version="2">
+               <filename>${VJ_BASE_DIR}/share/vrjuggler/data/sounds/land.wav</filename>
+               <ambient>false</ambient>
+               <retriggerable>false</retriggerable>
+               <streaming>true</streaming>
+               <loop>1</loop>
+               <pitch_bend>1.0</pitch_bend>
+               <cutoff>1.0</cutoff>
+               <volume>1.0</volume>
+               <position>0.0</position>
+               <position>0.0</position>
+               <position>0.0</position>
+            </sound>
+         </sound>
+         <sound>
+            <sound name="stop" version="2">
+               <filename>${VJ_BASE_DIR}/share/vrjuggler/data/sounds/stop.wav</filename>
+               <ambient>false</ambient>
+               <retriggerable>false</retriggerable>
+               <streaming>true</streaming>
+               <loop>1</loop>
+               <pitch_bend>1.0</pitch_bend>
+               <cutoff>1.0</cutoff>
+               <volume>1.0</volume>
+               <position>0.0</position>
+               <position>0.0</position>
+               <position>0.0</position>
+            </sound>
+         </sound>
+      </sound_manager_sonix>
+   </elements>
+</configuration>
+

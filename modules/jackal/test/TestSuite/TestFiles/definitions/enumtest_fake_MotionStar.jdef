@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="enumtest_fake_MotionStar" icon_path="" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="enumtest_fake_MotionStar">
+      <help>Toy definition for the enums test</help>
+      <parent/>
+      <property valuetype="string" variable="false" name="address">
+         <help>Hostname or IP address of the server.</help>
+         <value label="Server address" defaultvalue=""/>
+      </property>
+      <property valuetype="integer" variable="false" name="server_port">
+         <help>The port on the server to which the client connects.  (UDP -&gt; 5000, TCP -&gt; 6000)</help>
+         <value label="Server port number" defaultvalue="6000"/>
+         <enumeration editable="false">
+            <enum label="UDP Port" value="5000"/>
+            <enum label="TCP Port" value="6000"/>
+         </enumeration>
+      </property>
+      <property valuetype="boolean" variable="false" name="server_type">
+         <help>The type of this server chassis.</help>
+         <value label="Server type" defaultvalue="true"/>
+         <enumeration editable="false">
+            <enum label="Master" value="true"/>
+            <enum label="Slave" value="false"/>
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="hemisphere">
+         <help>Transmitter hemisphere to use.</help>
+         <value label="Transmitter hemisphere" defaultvalue="0"/>
+         <enumeration editable="false">
+            <enum label="Front" value="0"/>
+            <enum label="Aft" value="1"/>
+            <enum label="Upper" value="2"/>
+            <enum label="Lower" value="3"/>
+            <enum label="Left" value="4"/>
+            <enum label="Right" value="5"/>
+         </enumeration>
+      </property>
+      <property valuetype="float" variable="false" name="translate">
+         <help>(world_T_transmitter) Translation of the transmitter from Juggler coord system.</help>
+         <value label="Transmitter X translation" defaultvalue="0.0"/>
+         <value label="Transmitter Y translation" defaultvalue="0.0"/>
+         <value label="Transmitter Z translation" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="rotate">
+         <help>(world_T_transmitter) Rotation of the tranmitter from the Juggler coord system.</help>
+         <value label="Transmitter X rotation" defaultvalue="0.0"/>
+         <value label="Transmitter Y rotation" defaultvalue="0.0"/>
+         <value label="Transmitter Z rotation" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="num">
+         <help>Number of birds connected to this chassis.</help>
+         <value label="Number of birds" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="data_format">
+         <help>Data format for the birds.</help>
+         <value label="Bird data format" defaultvalue="4"/>
+         <enumeration editable="false">
+            <enum label="No Data" value="0"/>
+            <enum label="Position" value="1"/>
+            <enum label="Angles" value="2"/>
+            <enum label="Matrix" value="3"/>
+            <enum label="Position and Angles" value="4"/>
+            <enum label="Position and Matrix" value="5"/>
+            <enum label="Quaternion" value="7"/>
+            <enum label="Position and Quaternion" value="8"/>
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="mode">
+         <help>The sample mode for the running driver.</help>
+         <value label="Sample mode" defaultvalue="0"/>
+         <enumeration editable="false">
+            <enum label="Run Continuous" value="0"/>
+            <enum label="Sample Individually" value="1"/>
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="report_rate">
+         <help>Report rate for the birds (0-255).  This should usually be 1.</help>
+         <value label="Report rate" defaultvalue="1"/>
+      </property>
+      <property valuetype="float" variable="false" name="measurement_rate">
+         <help>Measurement rate for the chassis.</help>
+         <value label="Measurement rate" defaultvalue="68.3"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" xmlns:ns1="http://www.w3.org/2001/XMLSchema-instance" ns1:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="A configuration">
+   <elements>
+      <vrj_vnc_app name="VRJ VNC Application" version="1">
+         <embedded_gui>true</embedded_gui>
+         <vnc_host>localhost</vnc_host>
+         <vnc_port>5901</vnc_port>
+         <vnc_password>vncpass</vnc_password>
+         <vnc_desktop_side_length>10.0</vnc_desktop_side_length>
+      </vrj_vnc_app>
+   </elements>
+</configuration>

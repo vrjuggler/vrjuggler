@@ -1,0 +1,654 @@
+#!/usr/bin/env perl
+
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+use 5.004;
+
+use strict 'vars';
+use vars qw($ECHO_CXXFLAGS $ECHO_EXEC_PREFIX $ECHO_EXTRA_LIBS $ECHO_LIBS
+            $ECHO_PREFIX);
+use vars qw($exec_prefix $EXEC_PREFIX_SET $prefix $PREFIX_SET $LIBBITSUF
+            $VRJ_ABI_FLAGS $VRJ_ISA_FLAGS $Win32 %LIBS);
+
+use File::Basename;
+use Getopt::Long;
+
+sub usage($);
+sub normalizePath($);
+sub runDepScript($$$);
+sub make_CXXFLAGS($;$);
+sub make_INCLUDES($);
+sub make_LDFLAGS($;$$$);
+sub make_EXTRA_LDFLAGS($;$$$);
+sub handleOptArg($$);
+sub stripDuplicateCompilerArgs($);
+sub stripDuplicateLibraryArgs($);
+sub groupLibdirArgs($);
+
+usage(1) if $#ARGV == -1;
+
+my @DEP_SCRIPTS = (['sonix-config', 'SNX_BASE_DIR'],
+                   ['gadgeteer-config', 'GADGET_BASE_DIR'],
+                   ['jccl-config', 'JCCL_BASE_DIR'],
+                   ['vpr-config', 'VPR_BASE_DIR']
+                  );
+
+my $vrj_default_abi = qq(@ABI@);
+my $vrj_default_isa = qq(@ISA@);
+my $vrj_n32_flags   = qq(@vrj_n32_flags@);
+my $vrj_64_flags    = qq(@vrj_64_flags@);
+$LIBBITSUF          = qq(@LIBBITSUF@);
+
+my $use_gcc = '@USE_GCC@';
+
+$VRJ_ABI_FLAGS = '';
+
+if ( $vrj_default_abi =~ /n32/i )
+{
+   $VRJ_ABI_FLAGS = "$vrj_n32_flags";
+}
+elsif ( $vrj_default_abi =~ /64/ )
+{
+   $VRJ_ABI_FLAGS = "$vrj_64_flags";
+}
+
+$VRJ_ISA_FLAGS = '';
+
+# If we are not using GCC and a known ISA is defined, add define the ISA
+# argument for the compiler and linker.
+if ( $use_gcc !~ /^y/i && $vrj_default_isa =~ /^mips[34]/ )
+{
+   $VRJ_ISA_FLAGS = "-$vrj_default_isa";
+}
+
+# Set up variables used to determine what the real prefix is.  This is
+# important when this script has been installed.
+$Win32 = (defined($ENV{'OS'}) && $ENV{'OS'} =~ /^win/i);
+
+# Set the location of the collection of dependencies.  If $VJ_DEPS_DIR is
+# not defined, then $deps_dir will be an empty string.  If the dependencies
+# are installed in $VJ_BASE_DIR, then the user gets the right compiler and
+# linker path options for free.  Otherwise, it is up to the user to provide
+# those paths.
+my $deps_dir = "$ENV{'VJ_DEPS_DIR'}" if defined($ENV{'VJ_DEPS_DIR'});
+
+# Get the directory where this script is located.
+my $base_dir = (fileparse("$0"))[1];
+
+# If we are on Windows and $base_dir contains \'s, set $path_sep to \.
+# Otherwise, we use / for the path separator.
+my $path_sep = (($Win32 && $base_dir =~ /\\/) ? "\\" : "/");
+
+$base_dir =~ s|${path_sep}+$||o;     # Strip off the trailing slash(es)
+$base_dir =~ s|${path_sep}+bin$||io; # If the path ends in "/bin", strip it
+
+# Strip extra slashes from $base_dir.
+normalizePath(\$base_dir);
+
+# If we are on Windows, make sure that $base_dir is a full DOS path.
+if ( $Win32  && $base_dir !~ /^[A-Za-z]:/ )
+{
+   chomp($base_dir = `cygpath -w $base_dir`);
+   $base_dir =~ s|\\|/|g;   # We want / as the path separator
+}
+
+# $exec_prefix may refer to $prefix, so it must be set after $prefix is
+# defined.
+$prefix      = "$base_dir";
+$exec_prefix = qq(@exec_prefix@);
+
+$ECHO_PREFIX      = 0;
+$ECHO_EXEC_PREFIX = 0;
+$PREFIX_SET       = 0;
+$EXEC_PREFIX_SET  = 0;
+$ECHO_CXXFLAGS    = 0;
+$ECHO_LIBS        = 0;
+$ECHO_EXTRA_LIBS  = 0;
+
+my $script_help    = 0;
+my $print_min      = 0;
+my $echo_includes  = 0;
+my $echo_subsystem = 0;
+my $echo_version   = 0;
+my $echo_static    = 0;
+my $echo_profiled  = 0;
+my $use_linker     = 0;
+
+my $cxxflags_arg   = '';
+my $libs_arg       = '';
+my $extra_libs_arg = '';
+
+GetOptions('help|?' => \$script_help, 'min' => \$print_min,
+           'version' => \$echo_version, 'subsystem' => \$echo_subsystem,
+           'prefix:s' => \&handleOptArg, 'exec-prefix:s' => \&handleOptArg,
+           'cxxflags:s' => \&handleOptArg, 'includes' => \$echo_includes,
+           'libs:s' => \&handleOptArg, 'extra-libs:s' => \&handleOptArg,
+           'linker' => \$use_linker, 'static' => \$echo_static,
+           'profiled' => \$echo_profiled);
+
+usage(0) if $script_help;
+
+# Determine which library's linker options will be printed.
+%LIBS = ();
+
+# Use what is left on the command line.  Ultimately, only "vrj", "vrj_ogl",
+# and "vrj_pf" will be recognized.
+if ( $#ARGV != -1 )
+{
+   foreach ( @ARGV )
+   {
+      s/Juggler/vrj/;  # Backwards compatibility for versions prior to 1.1.146
+      $LIBS{"$_"} = 1;
+   }
+}
+# Fall back on printing the dependencies for OpenGL applications.
+else
+{
+   $LIBS{'vrj'} = 1;
+   $LIBS{'vrj_ogl'} = 1;
+}
+
+# Print out the requested information.
+print "$prefix\n" if $ECHO_PREFIX;
+print "$exec_prefix\n" if $ECHO_EXEC_PREFIX;
+print "@VPR_SUBSYSTEM@\n" if $echo_subsystem;
+print "@MAJOR_VERSION@.@MINOR_VERSION@.@MICRO_VERSION@\n" if $echo_version;
+
+if ( $ECHO_CXXFLAGS || $echo_includes )
+{
+   my $cxxflags = make_CXXFLAGS("$cxxflags_arg", $print_min);
+   my $includes = make_INCLUDES("$cxxflags");
+   print "$cxxflags\n" if $ECHO_CXXFLAGS;
+   print "$includes\n" if $echo_includes;
+}
+
+if ( $ECHO_LIBS )
+{
+   my $ldflags = make_LDFLAGS("$libs_arg", $echo_static, $echo_profiled,
+                              $use_linker);
+   print "$ldflags\n";
+}
+
+if ( $ECHO_EXTRA_LIBS )
+{
+   my $extra_ldflags = make_EXTRA_LDFLAGS("$extra_libs_arg", $use_linker,
+                                          $echo_static, $print_min);
+   print "$extra_ldflags\n";
+}
+
+exit(0);
+
+# =============================================================================
+# Subroutines follow.
+# =============================================================================
+
+sub usage ($)
+{
+    print <<EOF;
+Usage: $0 [LIBRARIES] [OPTIONS]
+
+Libraries (prints the linker options for one or more of these libraries):
+        vrj (base library)
+        vrj_ogl (OpenGL Draw Manager)
+        vrj_pf (Performer Draw Manager)
+
+Options:
+        [--prefix[=DIR]]        Print the installation prefix or set an
+                                alternate prefix to use when printing paths
+        [--exec-prefix[=DIR]]   Print the executable prefix or set an
+                                alternate executable prefix to use when
+                                printing paths
+        [--version]             Print the installed VR Juggler's version number
+        [--cxxflags [N32|64]]   Print the VR Juggler-specific flags for the C++
+                                compiler
+        [--includes]            Print out only the header path extension
+                                arguments
+        [--libs [N32|64]]       Print the basic VR Juggler-specific libraries
+        [--extra-libs [N32|64]] Print the extra linker options needed for
+                                making an executable
+        [--linker]              Print libraries as direct arguments to the
+                                linker rather than to the compiler
+        [--static]              Print the library arguments using static
+                                linking flags
+        [--profiled]            Print the profiled library names
+        [--subsystem]           Print the VPR OS abstraction layer being used
+EOF
+
+    exit($_[0]);
+}
+
+sub normalizePath($)
+{
+   my $path_ref = shift;
+
+   # If we are on Windows and $base_dir contains \'s, set $path_sep to \.
+   # Otherwise, we use / for the path separator.
+   my $path_sep = (($Win32 && $$path_ref =~ /\\/) ? "\\" : "/");
+
+   while ( $$path_ref =~ m|${path_sep}{2,}|o )
+   {
+      $$path_ref =~ s|${path_sep}{2,}|${path_sep}|go;
+   }
+
+   $$path_ref =~ s|${path_sep}+$||go;
+}
+
+sub runDepScript($$$)
+{
+   my $script_name = shift;
+   my $base_dir    = shift;
+   my $args        = shift;
+
+   my $result = `$script_name $args`;
+   my $status = $?;
+
+   if ( $status != 0 )
+   {
+      if ( -x "$base_dir/bin/$script_name" )
+      {
+         $result = `$base_dir/bin/$script_name $args`;
+         $status = $?;
+      }
+   }
+
+   if ( $status == 0 )
+   {
+      chomp($result);
+   }
+   else
+   {
+      warn "WARNING: Could not find $script_name to execute!\n";
+   }
+
+   return $result or undef;
+}
+
+sub make_CXXFLAGS ($;$)
+{
+   my $cxxflags_arg = shift;
+   my $print_min    = shift || 0;
+
+   my $dep_cxxflags = '';
+
+   unless ( $print_min )
+   {
+      my $script_info;
+      foreach $script_info ( @DEP_SCRIPTS )
+      {
+         my $result = runDepScript($$script_info[0], $ENV{"$$script_info[1]"},
+                                   "--min --cxxflags $cxxflags_arg");
+         $dep_cxxflags = "$result $dep_cxxflags" if $result;
+      }
+   }
+
+   # Default setting from configure.
+   my $vrj_extra_cxxflags = qq(@vrj_extra_cxxflags@);
+
+   if ( $cxxflags_arg =~ /n32/i )
+   {
+      $vrj_extra_cxxflags = "$vrj_extra_cxxflags $vrj_n32_flags $VRJ_ISA_FLAGS";
+   }
+   elsif ( $cxxflags_arg =~ /64/ )
+   {
+      $vrj_extra_cxxflags = "$vrj_extra_cxxflags $vrj_64_flags $VRJ_ISA_FLAGS";
+   }
+   elsif ( "$cxxflags_arg" eq '' )
+   {
+      $vrj_extra_cxxflags = "$vrj_extra_cxxflags $VRJ_ABI_FLAGS $VRJ_ISA_FLAGS";
+   }
+
+   my $vrj_extra_includes     = '';
+#   my $vrj_extra_include_dirs = qq(@vrj_extra_include_dirs@);
+
+#   if ( "$vrj_extra_include_dirs" ne "" )
+#   {
+#      my $dir;
+#      foreach $dir ( split(/\s+/, "$vrj_extra_include_dirs") )
+#      {
+#         $vrj_extra_includes .= " -I@includedir@/$dir";
+#      }
+#   }
+
+   my $cxxflags = qq(@vrj_cxxflags@ $dep_cxxflags $vrj_extra_cxxflags ) .
+                  qq(-I@includedir@ $vrj_extra_includes);
+   $cxxflags   .= " -I$deps_dir/include" if $deps_dir;
+
+   # Strip out extra whitespace.
+   $cxxflags =~ s/\s{2,}/ /g;
+
+   return stripDuplicateCompilerArgs("$cxxflags");
+}
+
+sub make_INCLUDES ($)
+{
+   my(@compiler_flags) = split(/\s+/, "$_[0]");
+   return join(" ", grep(/^-I/, @compiler_flags));
+}
+
+sub make_LDFLAGS ($;$$$)
+{
+   my $libs_arg       = shift;
+   my $echo_static    = shift || 0;  # Echo static linking flags
+   my $echo_profiled  = shift || 0;  # Echo profiled libraries
+   my $use_linker     = shift || 0;  # Use flags for direct use of the linker
+
+   my $static_begin = '';
+   my $static_end   = '';
+
+   if ( $echo_static )
+   {
+      $static_begin = qq(@APP_LINK_STATIC_ON@);
+      $static_end   = qq(@APP_LINK_STATIC_OFF@);
+   }
+
+   my $ldflags = '';
+
+   if ( $libs_arg =~ /n32/i )
+   {
+      $ldflags   = "$vrj_n32_flags $VRJ_ISA_FLAGS";
+      $LIBBITSUF = '32';
+   }
+   elsif ( $libs_arg =~ /64/ )
+   {
+      $ldflags   = "$vrj_64_flags $VRJ_ISA_FLAGS";
+      $LIBBITSUF = '64';
+   }
+   elsif ( "$libs_arg" eq '' )
+   {
+      $ldflags = "$VRJ_ABI_FLAGS $VRJ_ISA_FLAGS";
+   }
+
+   $ldflags .= ($use_linker ? qq( @vrj_ldflags_linker@)
+                            : qq( @vrj_ldflags_compiler@));
+
+   # Determine what VR Juggler libraries will be printed.
+   my $vrj_libs = '';
+
+   if ( $LIBS{'vrj'} )
+   {
+      $vrj_libs = ($echo_profiled ? qq(@vrj_prof_lib@) : qq(@vrj_lib@));
+   }
+
+   if ( $LIBS{'vrj_ogl'} )
+   {
+      $vrj_libs .= ($echo_profiled ? qq( @vrj_ogl_prof_lib@)
+                                   : qq( @vrj_ogl_lib@));
+   }
+
+   if ( $LIBS{'vrj_pf'} )
+   {
+      $vrj_libs .= ($echo_profiled ? qq( @vrj_pf_prof_lib@)
+                                   : qq( @vrj_pf_lib@));
+   }
+
+   my $full_ldflags = "$ldflags $static_begin $vrj_libs $static_end";
+   $full_ldflags    =~ s/\s{2,}/ /g;
+
+   return groupLibdirArgs(stripDuplicateLibraryArgs("$full_ldflags"));
+}
+
+sub make_EXTRA_LDFLAGS ($;$$$)
+{
+   my $extra_libs_arg = shift;
+   my $use_linker     = shift || 0;
+   my $use_static     = shift || 0;
+   my $print_min      = shift || 0;
+
+   my $dep_libs       = '';
+   my $dep_extra_libs = '';
+
+   unless ( $print_min )
+   {
+      my $linker_arg = ($use_linker ? '--linker' : '');
+      my $static_arg = ($use_static ? '--static' : '');
+
+      my $script_info;
+      foreach $script_info ( @DEP_SCRIPTS )
+      {
+         my $cur_dep_libs =
+            runDepScript($$script_info[0], $ENV{"$$script_info[1]"},
+                         "--min --libs $extra_libs_arg $linker_arg $static_arg");
+         $dep_libs .= " $cur_dep_libs";
+
+         my $cur_dep_extra_libs =
+            runDepScript($$script_info[0], $ENV{"$$script_info[1]"},
+                         "--min --extra-libs $extra_libs_arg $linker_arg $static_arg");
+         $dep_extra_libs .= " $cur_dep_extra_libs";
+      }
+   }
+
+   if ( $extra_libs_arg =~ /n32/i )
+   {
+      $LIBBITSUF = '32';
+   }
+   elsif ( $extra_libs_arg =~ /64/ )
+   {
+      $LIBBITSUF = '64';
+   }
+
+   # Determine what dependency libraries will be printed.
+   my $extra_libs = '';
+
+   # This one is first because it depends on libraries returned by the
+   # following two.
+   if ( $LIBS{'vrj_pf'} )
+   {
+      $extra_libs = qq(@vrj_pf_extra_libs@);
+   }
+
+   if ( $LIBS{'vrj_ogl'} || $LIBS{'vrj_pf'} )
+   {
+      $extra_libs .= qq( @vrj_ogl_extra_libs@);
+   }
+
+   # This one is last because it will probably contain things such as the
+   # X11 libraries and the math library.
+   if ( $LIBS{'vrj'} || $LIBS{'vrj_pf'} )
+   {
+      $extra_libs .= qq( @vrj_extra_libs@);
+   }
+
+   # Only add the "internal" dependencies when we want the basic vrj
+   # library.
+   if ( $LIBS{'vrj'} )
+   {
+      $extra_libs = "$dep_libs $extra_libs";
+   }
+
+   my $extra_ldflags = ($use_linker ? qq(@vrj_extra_ldflags_linker@)
+                                    : qq(@vrj_extra_ldflags_compiler@));
+   $extra_ldflags = "-L$deps_dir/lib$LIBBITSUF $extra_ldflags" if $deps_dir;
+
+   my $full_extra_ldflags = "$extra_ldflags $extra_libs $dep_extra_libs";
+   $full_extra_ldflags    =~ s/\s{2,}/ /g;
+
+   return groupLibdirArgs(stripDuplicateLibraryArgs("$full_extra_ldflags"));
+}
+
+# Subroutine for handling command-line parameters that have an optional
+# argument.
+sub handleOptArg ($$)
+{
+   my $name  = shift;
+   my $value = shift || '';
+
+   SWITCH:
+   {
+      if ( "$name" eq "prefix" )
+      {
+         # If $value is defined, we set $prefix to its value.  The value of
+         # $prefix will not be printed in this case.
+         if ( $value )
+         {
+            $prefix      = "$value";
+            $ECHO_PREFIX = 0;
+            $PREFIX_SET  = 1;
+         }
+         # If $value is undefined, that means that --prefix was specified, but
+         # no value was given.  In that case, we just want to print the
+         # prefix.
+         else
+         {
+            $ECHO_PREFIX = 1;
+         }
+
+         last SWITCH;
+      }
+
+      if ( "$name" eq "exec-prefix" )
+      {
+         # If $value is defined, we set $exec_prefix to its value.  The value
+         # of $exec_prefix will not be printed in this case.
+         if ( $value )
+         {
+            $exec_prefix      = "$value";
+            $EXEC_PREFIX_SET  = 1;
+            $ECHO_EXEC_PREFIX = 0;
+         }
+         # If $value is undefined, that means that --exec-prefix was specified,
+         # but no value was given.  In that case, we just want to print the
+         # exec prefix.
+         else
+         {
+            $ECHO_EXEC_PREFIX = 1;
+         }
+
+         last SWITCH;
+      }
+
+      if ( "$name" eq "cxxflags" )
+      {
+         $ECHO_CXXFLAGS = 1;
+         $cxxflags_arg  = $value;
+         last SWITCH;
+      }
+
+      if ( "$name" eq "libs" )
+      {
+         $ECHO_LIBS = 1;
+         $libs_arg  = $value;
+         last SWITCH;
+      }
+
+      if ( "$name" eq "extra-libs" )
+      {
+         $ECHO_EXTRA_LIBS = 1;
+         $extra_libs_arg  = $value;
+         last SWITCH;
+      }
+   }
+}
+
+# This is a fairly brute-force method for removing duplicated arguments from
+# the given string.  It should not be used for argument lists such as those
+# passed to the linker where functionality can be turned on and off (for
+# example, the repeated use of -Wl,-Bstatic ... -Wl,-Bdynamic for selective
+# static linking).
+sub stripDuplicateCompilerArgs($)
+{
+   my @arg_list   = split(/\s+/, "$_[0]");
+   my %known_args = ();
+   my @new_args   = ();
+
+   foreach ( @arg_list )
+   {
+      next if exists($known_args{"$_"});  # Skip previously seen arguments
+      $known_args{"$_"} = 1;              # Register this argument
+      push(@new_args, "$_");              # Add the argument to the new list
+   }
+
+   return join(" ", @new_args);
+}
+
+# This function processes the given list of linker arguments and removes
+# duplicate references to libraries.  Library dependencies are identified as
+# -l arguments, *.lib file references, or -pthread(s) arguments.  The
+# duplicates are removed in reverse order so that the last appearance of an
+# argument is the version that is retained.
+sub stripDuplicateLibraryArgs($)
+{
+   my @arg_list   = split(/\s+/, "$_[0]");
+   my %known_args = ();
+   my @new_args   = ();
+
+   my $arg;
+   foreach $arg ( reverse(@arg_list) )
+   {
+      # Only look at arguments that name library dependencies.  All others
+      # will be retained no matter what.
+      if ( $arg =~ /^-l/ || $arg =~ /\.lib$/ || $arg =~ /^-pthread/ )
+      {
+         next if exists($known_args{"$arg"});
+         $known_args{"$arg"} = 1;
+      }
+
+      unshift(@new_args, "$arg");
+   }
+
+   return join(" ", @new_args);
+}
+
+# This function processes the given list of linker arguments and does two
+# things:
+#
+#    1. Removes duplicate paths to library directories.
+#    2. Groups all paths to library directories so that they are at the
+#       beginning of the link line.
+#
+# All other arguments are retained exactly as they came in.
+sub groupLibdirArgs($)
+{
+   my @arg_list    = split(/\s+/, "$_[0]");
+   my %known_args  = ();
+   my @libdir_args = ();
+   my @new_args    = ();
+
+   my $arg;
+   foreach $arg ( @arg_list )
+   {
+      # Only look at arguments that name library directories.  All others
+      # will be retained no matter what.
+      if ( $arg =~ /^-L/ || $arg =~ /^[-\/]libpath/i )
+      {
+         next if exists($known_args{"$arg"});
+         $known_args{"$arg"} = 1;
+         push(@libdir_args, "$arg");
+      }
+      else
+      {
+         push(@new_args, "$arg");
+      }
+   }
+
+   return join(" ", @libdir_args, @new_args);
+}

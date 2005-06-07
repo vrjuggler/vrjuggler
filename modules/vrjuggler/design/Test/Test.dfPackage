@@ -1,0 +1,67 @@
+package id4mdvwdazpbhwvdazpfpk6;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#vrj::test::TestSuite:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#vrj::test::TestRunner:oiref><oihard>
+@__modelType reference 
+*/
+class reference32 {
+}/**
+@__ref <oiref:cpp#Class#vrj::test::Test:oiref><oihard>
+@__modelType reference 
+*/
+class reference33 {
+}/**
+@__ref <oiref:cpp#Class#vrj::test::TestCase:oiref><oihard>
+@__modelType reference 
+*/
+class reference34 {
+}/**
+@__ref <oiref:cpp#Class#vrj::test::Message:oiref><oihard>
+@__modelType reference 
+*/
+class reference35 {
+}/**
+@__ref <oiref:cpp#Class#vrj::test::TestFailure:oiref><oihard>
+@__modelType reference 
+*/
+class reference36 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:MemberLink#<oiref:cpp#Member#vrj::test::Test#lnkTestFailure:oiref>=498,158,630,158:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::test::TestRunner:oiref>=20,30,200,348,1:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::test::Test:oiref>=350,70,148,229,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::test::TestRunner#mTests:oiref>=220,156,350,156:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::test::Message:oiref>=710,370,200,398,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::test::TestRunner#mTestFailures:oiref>=596,185,30,22,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::test::TestFailure#mMessage:oiref>=830,382,910,382:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::test::TestFailure#mFailedTest:oiref>=502,88,32,22,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::test::TestFailure#mFailedTest:oiref>=630,114,498,114:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::test::TestSuite:oiref>=10,650,142,88,1:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::test::TestCase#vrj::test::Test:oiref>=254,380,424,299:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::test::TestRunner#mTestFailures:oiref>=220,202,630,202:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::test::TestRunner#mTests:oiref>=316,139,30,22,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::test::TestCase:oiref>=180,380,148,178,1:oigroup>
+<oigroup:Composite#stereotype#MemberLink#<oiref:cpp#Member#vrj::test::Test#lnkTestFailure:oiref>=519,132,91,22,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::test::TestFailure:oiref>=630,40,200,354,1:oigroup>
+*/
+class __positions {
+}

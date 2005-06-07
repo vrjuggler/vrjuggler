@@ -1,0 +1,110 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# vrj.appdefs.mk.in use by all VR Juggler application makefiles.
+# This requires GNU make.
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+DZR_BASE_DIR?=		$(VJ_BASE_DIR)/share/Doozer
+
+CC=			@APP_CC@
+CXX=			@APP_CXX@
+LD=			@APP_LINK@
+CXX_PLUGIN=		@APP_CXX_PLUGIN@
+
+ABI=			@ABI@
+ISA=			@ISA@
+
+ifneq ($(ABI),)
+   # XXX: In general, we need to convert $(ABI) to a lower-case value to
+   # match what Doozer expects for $(OS_ABI).  This little hack should be good
+   # enough for now, though.  -PH 4/21/2004
+   ifeq ($(ABI), N32)
+      OS_ABI?=		n32
+   else
+      OS_ABI?=		$(ABI)
+   endif
+endif
+
+ifneq ($(ISA),)
+   OS_ISA?=		$(ISA)
+endif
+
+# Set to either 'dbg' or 'opt'.  We default to 'dbg'.
+BUILD_TYPE?=		dbg
+
+EXTRA_CFLAGS+=		@APP_CFLAGS@
+EXTRA_CXXFLAGS+=	@APP_CXXFLAGS@ @APP_DEFS@
+#EXTRA_INCLUDES+=		@APP_INCLUDES@
+EXTRA_LDFLAGS+=		@APP_LINK_FLAGS@
+
+EXTRA_DEBUG_FLAGS+=	@APP_DEBUG_CFLAGS@
+EXTRA_OPTIM_FLAGS+=	@APP_OPTIM_CFLAGS@
+
+LINKALL_ON=		@APP_LINKALL_ON@
+LINKALL_OFF=		@APP_LINKALL_OFF@
+
+STATIC_ON=		@APP_LINK_STATIC_ON@
+STATIC_OFF=		@APP_LINK_STATIC_OFF@
+
+EXTRA_LIBS+=		@APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
+			@APP_BASIC_LIBS_END@ @APP_EXTRA_LIBS@		\
+			$(NULL)
+
+include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
+include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.mk
+
+ifeq ($(HOSTTYPE), Win32)
+PLUGIN_DEFS=		-DVRJ_APP_PLUGIN="extern \"C\" _declspec(dllexport)"
+else
+PLUGIN_DEFS=		-DVRJ_APP_PLUGIN="extern \"C\""
+endif
+
+ifdef BUILD_PLUGIN
+EXTRA_CFLAGS+=		-DBUILD_AS_VRJ_PLUGIN $(PLUGIN_DEFS)
+EXTRA_CXXFLAGS+=	-DBUILD_AS_VRJ_PLUGIN $(PLUGIN_DEFS)
+endif
+
+ifeq ($(BUILD_TYPE), dbg)
+PLUGIN_TYPE_SUFFIX=	_d
+endif
+
+PLUGIN_NAME=		$(APP_NAME)$(PLUGIN_TYPE_SUFFIX)$(OS_SHLIB_EXT)
+
+$(PLUGIN_NAME): $(OBJS)
+	$(CXX_PLUGIN) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
+
+plugin:
+	$(MAKE) BUILD_PLUGIN=1 $(OBJS)
+	$(MAKE) BUILD_PLUGIN=1 $(PLUGIN_NAME)

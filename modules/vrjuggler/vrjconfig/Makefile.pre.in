@@ -1,0 +1,77 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+.NOTPARALLEL: Makefile
+
+default: debug ;
+
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+
+CONFIGURE_ARGS=	@CONFIGURE_ARGS@
+CFG_SHELL=	@CFG_SHELL@
+
+DPP_CFG_DIR=	$(top_srcdir)/Doozer++/config
+DPP_PKG_DIR=	$(top_srcdir)/Doozer++/config/pkgs
+VJ_M4_DIR=	$(top_srcdir)/macros
+EXT_M4_DIR=	$(top_srcdir)/external/macros
+
+DPP_CFG_DEPS=	basic_progs.m4 general.m4 install.m4 java.m4 perl.m4 sys.m4
+VJ_M4_DEPS=	jccl.m4 tweek.m4
+
+M4_DEPS=	$(addprefix $(DPP_CFG_DIR)/, $(DPP_CFG_DEPS))		\
+		$(addprefix $(DPP_PKG_DIR)/, $(DPP_PKG_DEPS))		\
+		$(addprefix $(VJ_M4_DIR)/, $(VJ_M4_DEPS))		\
+		$(addprefix $(EXT_M4_DIR)/, $(EXT_M4_DEPS))
+
+vpath configure $(srcdir)
+vpath %.ac $(srcdir)
+vpath %.in $(srcdir)
+
+# These are necessary to deal with the last-resort rule at the end of the file.
+Makefile.pre: ;
+configure.in: ;
+Makefile.in: ;
+Makefile.inc.in: ;
+make.defs.mk.in: ;
+$(M4_DEPS): ;
+
+configure: configure.in $(M4_DEPS)
+	cd $(srcdir) && ./autogen.sh
+
+config.status: configure ;
+
+Makefile: configure config.status Makefile.in make.defs.mk.in
+	$(CFG_SHELL) $(srcdir)/configure $(CONFIGURE_ARGS)
+
+%:: Makefile
+	@$(MAKE) -f Makefile $@

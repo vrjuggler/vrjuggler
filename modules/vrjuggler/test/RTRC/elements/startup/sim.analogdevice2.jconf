@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Configuration" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd" xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
+<elements>
+<simulated_analog_device name="AnalogDevice2" version="1"><event_window_proxy></event_window_proxy><increment_keypress><key_modifier_pair name="Increment Keypress 0" version="1"><modifier_key>NONE</modifier_key><key>1</key>
+</key_modifier_pair></increment_keypress><decrement_keypress><key_modifier_pair name="Decrement Keypress 0" version="1"><modifier_key>NONE</modifier_key><key>2</key>
+</key_modifier_pair></decrement_keypress><delta>1.0</delta><min>0.0</min>
+<max>50.0</max>
+<initial_value>0.0</initial_value>
+<device_host/>
+</simulated_analog_device></elements>
+</configuration>

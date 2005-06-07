@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="position_transform_filter" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Position Transform Filter">
+      <abstract>false</abstract>
+      <help>Configure the positional transformation matrix.  Applied as: Sensor_base = preT*preR*Scale*Sensor*postT*postR</help>
+      <parent/>
+      <category>/Gadgeteer</category>
+      <property valuetype="float" variable="false" name="pre_translate">
+         <help>Pre translate the sensor data.</help>
+         <value label="Pre Trans X" defaultvalue="0.0"/>
+         <value label="Pre Trans Y" defaultvalue="0.0"/>
+         <value label="Pre Trans Z" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="pre_rotation">
+         <help>base_T_sensor rotation (euler angles measured in degrees in the base coordinate system)</help>
+         <value label="Pre Rot X" defaultvalue="0.0"/>
+         <value label="Pre Rot Y" defaultvalue="0.0"/>
+         <value label="Pre Rot Z" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="custom_scale">
+         <help>This is the value used if the device units are set to custom. When the device data is scaled by this value, it should result in units of meters (which is what VR Juggler uses internally).</help>
+         <value label="Custom scale" defaultvalue="1.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="device_units">
+         <help>Select the units in which the device returns data.  This enumeration value will be used to convert from your device units into meters.</help>
+         <value label="Device Units" defaultvalue="1.0"/>
+         <enumeration editable="false">
+            <enum label="Custom" value="0.0"/>
+            <enum label="Meters" value="1.0"/>
+            <enum label="Centimeters" value="0.01"/>
+            <enum label="Feet" value="0.3048"/>
+            <enum label="Inches" value="0.0254"/>
+         </enumeration>
+      </property>
+      <property valuetype="float" variable="false" name="post_translate">
+         <help>base_T_sensor translation. In units of the current sensor data.</help>
+         <value label="Post Trans X" defaultvalue="0.0"/>
+         <value label="Post Trans Y" defaultvalue="0.0"/>
+         <value label="Post Trans Z" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="post_rotation">
+         <help>base_T_sensor rotation (euler angles measured in degrees in the base coordinate system)</help>
+         <value label="Post Rot X" defaultvalue="0.0"/>
+         <value label="Post Rot Y" defaultvalue="0.0"/>
+         <value label="Post Rot Z" defaultvalue="0.0"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

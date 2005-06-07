@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="flock" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/fob.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Flock of Birds">
+      <abstract>false</abstract>
+      <help>Configuration for Ascension Flock of Birds</help>
+      <parent>positional_device</parent>
+      <category>/Devices</category>
+      <property valuetype="string" variable="false" name="port">
+         <help>The name of the serial port to which the Flock is connected. The name to use will be based on platform-specific conventions such as COM1, /dev/ttyS0, /dev/ttyd2, etc.</help>
+         <value label="Serial Port" defaultvalue="/dev/ttyd1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="baud">
+         <help>Serial port speed.</help>
+         <value label="Baud" defaultvalue="38400"/>
+      </property>
+      <property valuetype="integer" variable="false" name="number_of_birds">
+         <help>Number of birds in the Flock.</help>
+         <value label="Number of Birds" defaultvalue="2"/>
+      </property>
+      <property valuetype="configelement" variable="true" name="position_filters">
+         <help>This is a list of all the filters that are to be applied to the postional device data. The filters are applied in the order that they are specified in this configuration.</help>
+         <value label="Position Filter"/>
+         <allowed_type>position_transform_filter</allowed_type>
+      </property>
+      <property valuetype="string" variable="false" name="calibration_file">
+         <help>Name of a tracker calibration file</help>
+         <value label="Calibration file" defaultvalue="${VJ_BASE_DIR}/share/gadgeteer/data/calibration.table"/>
+      </property>
+      <property valuetype="integer" variable="false" name="hemisphere">
+         <help>Flock Hemisphere</help>
+         <value label="Hemisphere" defaultvalue="3"/>
+         <enumeration editable="false">
+            <enum label="FRONT_HEM" value="0"/>
+            <enum label="AFT_HEM" value="1"/>
+            <enum label="UPPER_HEM" value="2"/>
+            <enum label="LOWER_HEM" value="3"/>
+            <enum label="LEFT_HEM" value="4"/>
+            <enum label="RIGHT_HEM" value="5"/>
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="filter">
+         <help>Filter</help>
+         <value label="Filter" defaultvalue="0"/>
+         <enumeration editable="false">
+            <enum label="AC_NARROW" value="0"/>
+            <enum label="AC_WIDE" value="1"/>
+            <enum label="DC_FILTER" value="2"/>
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="sync_style">
+         <help>sync style. See flock man pg 82</help>
+         <value label="Synchronous" defaultvalue="0"/>
+         <enumeration editable="false">
+            <enum label="NoSync" value="0"/>
+            <enum label="CRT_Above_72Hz" value="1"/>
+            <enum label="CRT_Below_72hz" value="2"/>
+         </enumeration>
+      </property>
+      <property valuetype="boolean" variable="false" name="blocking">
+         <help>Run in blocking mode or non-blocking mode.</help>
+         <value label="Blocking" defaultvalue="true"/>
+      </property>
+      <property valuetype="string" variable="false" name="report">
+         <help>Q-(every cycle) R-(every other cycle) S-(every 8 cycles) T-(every 32 cycles)</help>
+         <value label="Report Frequency" defaultvalue="R"/>
+         <enumeration editable="false">
+            <enum label="Every Cycle" value="Q"/>
+            <enum label="Every Other Cycle" value="R"/>
+            <enum label="Every 8 Cycles" value="S"/>
+            <enum label="Every 32 Cycles" value="T"/>
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="transmitter_id">
+         <help>Id of the transmitter</help>
+         <value label="Transmitter ID" defaultvalue="3"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="extended_range">
+         <help>Does an extended range transmitter exist?</help>
+         <value label="Extended Range" defaultvalue="false"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+   <definition_version version="2" label="Flock of Birds">
+      <abstract>false</abstract>
+      <help>Configuration for Ascension Flock of Birds.</help>
+      <parent>positional_device</parent>
+      <category>/Devices</category>
+      <property valuetype="string" variable="false" name="port">
+         <help>The name of the serial port to which the Flock is connected. The name to use will be based on platform-specific conventions such as COM1, /dev/ttyS0, /dev/ttyd2, etc.</help>
+         <value label="Serial Port" defaultvalue="/dev/ttyd1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="baud">
+         <help>Serial port speed.</help>
+         <value label="Baud" defaultvalue="38400"/>
+      </property>
+      <property valuetype="integer" variable="false" name="hemisphere">
+         <help>The transmitter hemisphere in which the sensors will be tracked.</help>
+         <value label="Hemisphere" defaultvalue="3"/>
+         <enumeration editable="false">
+            <enum label="Front" value="0"/>
+            <enum label="Rear" value="1"/>
+            <enum label="Upper" value="2"/>
+            <enum label="Lower" value="3"/>
+            <enum label="Left" value="4"/>
+            <enum label="Right" value="5"/>
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="master_address">
+         <help></help>
+         <value label="Master Address" defaultvalue="1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="addressing_mode">
+         <help></help>
+         <value label="Addressing Mode" defaultvalue="0"/>
+         <enumeration editable="false">
+            <enum label="Normal" value="0"/>
+            <enum label="Extended" value="1"/>
+            <enum label="Super Extended" value="2"/>
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="filter">
+         <help>Filter</help>
+         <value label="Filter" defaultvalue="0"/>
+         <enumeration editable="false">
+            <enum label="AC_NARROW" value="0"/>
+            <enum label="AC_WIDE" value="1"/>
+            <enum label="DC_FILTER" value="2"/>
+         </enumeration>
+      </property>
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+           
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+           
+            <xsl:template match="jconf:flock">
+               <xsl:variable name="hemi">
+                  <xsl:value-of select="./jconf:hemisphere"/>
+               </xsl:variable>
+
+               <xsl:element namespace="{$jconf}" name="flock">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">2</xsl:attribute>
+                  <xsl:copy-of select="./jconf:port"/>
+                  <xsl:copy-of select="./jconf:baud"/>
+                  <xsl:element namespace="{$jconf}" name="hemisphere">
+                     <xsl:choose>
+                        <xsl:when test="$hemi = 'FRONT_HEM'">
+                           <xsl:text>Front</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="$hemi = 'AFT_HEM'">
+                           <xsl:text>Rear</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="$hemi = 'UPPER_HEM'">
+                           <xsl:text>Upper</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="$hemi = 'LOWER_HEM'">
+                           <xsl:text>Lower</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="$hemi = 'LEFT_HEM'">
+                           <xsl:text>Left</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="$hemi = 'RIGHT_HEM'">
+                           <xsl:text>Right</xsl:text>
+                        </xsl:when>
+                        <xsl:otherwise>
+                           <xsl:value-of select="$hemi"/>
+                        </xsl:otherwise>
+                     </xsl:choose>
+                  </xsl:element>
+                  <xsl:element namespace="{$jconf}" name="addressing_mode">
+                     <xsl:text>Normal</xsl:text>
+                  </xsl:element>
+                  <xsl:element namespace="{$jconf}" name="master_address">
+                     <xsl:text>1</xsl:text>
+                  </xsl:element>
+                  <xsl:copy-of select="./jconf:filter"/>
+                  <xsl:copy-of select="./jconf:position_filters"/>
+                  <xsl:copy-of select="./jconf:device_host"/>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
+   </definition_version>
+</definition>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.0/beanlist.xsd">
+  <guipanel name="Prefs Test Bean">
+    <file name="${TWEEK_BASE_DIR}/share/tweek/beans/PrefsTestBean.jar" 
+          class="prefstestbean.PrefsTestBean" />
+    <tree path="/" />
+  </guipanel>
+</beanlist>

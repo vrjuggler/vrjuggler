@@ -1,0 +1,77 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# =============================================================================
+# This file <make.defs.mk> provides variable information shared by all
+# makefiles in the VRJConfig source tree.  It requires GNU make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+# All makefiles in the source tree should include this file for maximum
+# information sharing.
+# -----------------------------------------------------------------------------
+# Variables defined here are:
+#
+# projdatadir   - Project-specific data directory.  This is a subdirectory
+#                 of $(datadir).
+# releasedir    - The absolute path to the release directory.
+# scriptdir     - The path to the directory containing scripts used in the
+#                 build and install/release process.
+# topdir        - The top of the build tree.
+# VJROOT_ABS    - The absolute path to the root of the VR Juggler source tree.
+#
+# ANT           - Path to ant
+# DPP_SCRIPTDIR - The directory containing Doozer++ helper scripts.
+# MKINSTALLDIRS - Path to shell script for making directories.
+# MKPATH        - Path to shared dpp.*.mk file directory.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Base variables needed by all makefiles.
+# -----------------------------------------------------------------------------
+projdatadir=		$(datadir)/vrjuggler
+releasedir=		@JUGGLERROOT_ABS@/release
+scriptdir=		$(releasedir)/scripts
+topdir=			@topdir@
+top_srcdir=		@top_srcdir@
+
+ANT=			@ANT@
+DPP_SCRIPTDIR=		$(JUGGLERROOT_ABS)/Doozer++/scripts
+MAKEFLAGS+=		--no-print-directory
+MKINSTALLDIRS=		$(scriptdir)/mkinstalldirs
+MKPATH=			$(JUGGLERROOT_ABS)/Doozer++/mk
+RM_LN=			@RM_LN@
+WARNS=			2
+VJROOT_ABS=		@VJROOT_ABS@
+JUGGLERROOT_ABS=	@JUGGLERROOT_ABS@
+
+include $(topdir)/common.defs.mk

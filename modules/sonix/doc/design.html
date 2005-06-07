@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<!-- Standard header -->
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="keywords" content="VR, Virtual Reality, Audio, 
+               juggler, vrjuggler, sound, audio, abstraction, API, virtual,
+               metaverse, vis, sim, vis/sim, vissim, 3D,
+               games, game, engine, object oriented,
+               opensource, kevin, meinert, 
+               carolina, cruz, allen, bierbaum, patrick,
+               hartling, chris, just">
+   <meta name="description" content="VR Juggler sound abstraction 
+            - SONIX (cross platform open source audio abstraction)">
+   <meta name="Content-Language" content="en">
+   <meta name="author" content="Kevin Meinert">
+   <meta name="ROBOTS" content="ALL">
+   <meta name="AUDIENCE" content="All">
+   <meta name="revisit-after" content="20 days">
+   <meta name="generator" content="Kevin's Brain!">
+   <meta name="distribution" content="global">
+
+<link rel="stylesheet" type="text/css" href="base_style.css">
+<!-- Standard header end -->
+
+<HTML>
+
+<HEAD>
+<TITLE>VR Juggler sound abstraction - SONIX (cross platform open source sound abstraction)</TITLE>
+</HEAD>
+
+<BODY>
+   <H1><b class="blue">::|&nbsp;</b>SONIX</H1>
+   <small><B class="puke">the VRJUGGLER</B><BR>
+   highlevel simple sound abstraction</small><BR>
+   <HR>
+   <b class="blue">&nbsp;:&nbsp;design&nbsp;:&nbsp;</b>
+   
+   <dl>
+   <dt>- Adaptor   (snx::SoundImplementation)
+   <dd>provides a common interface to the underlying sound API.
+  </dl>
+
+   <dl>
+   <dt>- Prototype (snx::SoundImplementation)
+   <dd>each sound implementation can be cloned, preserving its engine setup state
+  </dl>
+
+   <dl>
+   <dt>- Store/plugin-method (snx::SoundFactory)
+   <dd>each sound impl is registered with a Store. The Store allows
+       users to select items from its inventory.
+       The Store is also an "Abstract Factory"
+   </dl>
+
+   <dl>
+   <dt>- Abstract Factory (snx::SoundFactory)
+   <dd>The Store can create new instances of the requested sound
+       implementation.  The Abstract Factory consults its Store of
+       registered objects, and if found, makes a clone of that object
+       (Prototype pattern).  The Abstract Factory is used to configure
+       the Bridge.
+   </dl>
+   
+   <dl>
+   <dt>- Bridge (snx::sonix interface class / snx::SoundImplementation)
+   <dd>snx::sonix class is the audio system abstraction which is decoupled 
+       from its implementation SoundImplementation.  This way the two 
+       can vary independently.  Bridge also facilitates run-time 
+       configuration of the sound API.
+   </dl>
+   
+   <dl>
+   <dt>- Proxy (std::string)
+   <dd>refer to actual sounds with a std::string Proxy.  This allows you
+      to generically control a sound for any sound API.  The snx::sonix
+       class acts as Mediator between every Proxy method and the actual
+       SoundImplementation Adaptor.
+   </dl>
+
+   <HR>
+   <a href="index.html">intro&nbsp;<b class="blue">|</b>&nbsp;<a href="design.html"><b>design</b>&nbsp;<b class="blue">|</b>&nbsp;<a href="requirements.html">requirements</a>
+
+</BODY>
+</HTML>

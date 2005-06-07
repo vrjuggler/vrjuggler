@@ -1,0 +1,38 @@
+                              Tweek Release Notes
+                              -------------------
+
+For all versions:
+
+    - See the ChangeLog for more system-level changes that do not directly
+      affect applications.
+
+===============================================================================
+
+ Version: 1.0 Beta 3 (0.93.0)
+Released: June 7, 2005
+   Required changes when upgrading from all previous versions:
+       * The interface org.vrjuggler.tweek.beans.FileLoader has two new
+         methods: hasUnsavedChanges() and saveAllRequested().
+       * The interface org.vrjuggler.tweek.beans.BeanFocusChangeListener had
+         its method beanFocusChanged() split into beanFocused() and
+         beanUnfocused().  Along with this, the constants
+         org.vrjuggler.tweek.beans.BeanFocusChangeEvent.BEAN_FOCUSED and
+         org.vrjuggler.tweek.beans.BeanFocusChangeEvent.BEAN_UNFOCUSED have
+         been removed.
+
+ Version: 0.13.4
+Released: February 2, 2003
+   New feature:
+       * The C++ API can be built and used on Windows.
+
+ Version: 0.11.0
+Released: September 10, 2002
+   Required changes when upgrading from all previous versions:
+       * The interface org.vrjuggler.tweek.net.CommunicationListener has
+         changed.  The method connectionStateChanged() has been replaced by
+         two methods: connectionOpened() and connectionClosed().  To update,
+         simply move the code in connectionStateChanged() used to handle
+         newly opened connections into connectionOpened().  Similarly, move
+         the code used to handle disconnections into connectionClosed().
+
+===============================================================================

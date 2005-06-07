@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="test_element" icon_path="" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="chuck">
+      <help>wood chuckin'</help>
+      <parent/>
+      <property valuetype="integer" variable="false" name="test_prop_int">
+         <help>discrete property</help>
+         <value label="I'm an int" defaultvalue="1029384756"/>
+      </property>
+      <property valuetype="float" variable="false" name="test_prop_float">
+         <help>variable property</help>
+         <value label="I'm a float" defaultvalue="3.1459"/>
+      </property>
+      <property valuetype="string" variable="false" name="test_prop_string">
+         <help>string property</help>
+         <value label="I'm a string" defaultvalue="upchuck"/>
+      </property>
+      <property valuetype="string" variable="false" name="test_prop_multi">
+         <help>multi property</help>
+         <value label="I'm a string too" defaultvalue="woodchuck"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="test_prop_bool">
+         <help>boolean property</help>
+         <value label="Am I Chuck?" defaultvalue="true"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

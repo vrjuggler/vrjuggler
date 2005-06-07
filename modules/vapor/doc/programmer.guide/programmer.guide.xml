@@ -1,0 +1,3487 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<book>
+  <bookinfo>
+    <title>VR Juggler Portable Runtime</title>
+
+    <subtitle>Programmer's Guide</subtitle>
+
+    <copyright>
+      <year>2003–2005</year>
+
+      <holder>Iowa State University</holder>
+    </copyright>
+
+    <legalnotice>
+      <para>Permission is granted to copy, distribute and/or modify this
+      document under the terms of the GNU Free Documentation License, Version
+      1.2 or any later version published by the Free Software Foundation; with
+      the Invariant Sections being <xref linkend="appendix.gfdl" />, with no
+      Front-Cover Texts, and with no Back-Cover Texts. A copy of the license
+      is included in <xref linkend="appendix.gfdl" />.</para>
+    </legalnotice>
+
+    <releaseinfo>Verrsion 1.0 Beta 3</releaseinfo>
+
+    <pubdate>$Date$</pubdate>
+  </bookinfo>
+
+  <preface>
+    <title>Vaporous Programming</title>
+
+    <para>For those developers new to the <ulink
+    url="http://www.vrjuggler.org/vapor/">VR Juggler Portable Runtime</ulink>
+    (VPR), VPR provides an cross-platform, object-oriented abstraction layer
+    to common operating system features. VPR is the key to the portability of
+    Gadgeteer, Tweek, VR Juggler, and other middleware written at the Virtual
+    Reality Applications Center. It has been in development since January
+    1997, and it has grown to be a highly portable, robust tool. Software
+    written on top of VPR can be compiled on IRIX, Linux, Windows, FreeBSD,
+    and Solaris, usually without modification.</para>
+
+    <para>Internally, VPR wraps platform-specific APIs such as BSD sockets,
+    POSIX threads, and Win32 overlapped I/O. Depending upon how it is
+    compiled, it may also wrap the <ulink
+    url="http://www.mozilla.org/projects/nspr/index.html">Netscape Portable
+    Runtime</ulink> (<glossterm linkend="gloss.nspr">NSPR</glossterm>),
+    another cross-platform OS abstraction layer written in C. By wrapping
+    NSPR, VPR provides developers with an object-oriented interface and gains
+    even better portability. These details are all hidden behind the classes
+    that make up VPR, and users of VPR do not need to worry about
+    platform-specific details as a result.</para>
+
+    <para>VPR is basically a collection of utility classes. As such, the
+    biggest part of using VPR is knowing the interface for a given class. In
+    this book, we provide high-level information about various pieces of VPR
+    in hopes of making VPR easier to use. The book itself is designed so that
+    readers can focus on what they need to know about VPR classes. For
+    example, someone who wants to learn about using the VPR thread abstraction
+    can go straight to that part of the book (i.e., <xref
+    linkend="part.multi-threading" />). Within each part, however, the
+    chapters build up the concepts incrementally, so it is advisable, for
+    example, to understand the basics of VPR I/O before trying to learn about
+    the serial port abstraction.</para>
+  </preface>
+
+  <part id="part.io">
+    <title>Input/Output</title>
+
+    <partintro>
+      <para>To begin, we will cover the components of VPR that will be used
+      for I/O programming. This includes how to use VPR sockets and serial
+      ports. We assume that the reader has at least some familiarity with
+      operating system programming, in particular with serial device I/O and
+      socket I/O.</para>
+    </partintro>
+
+    <chapter id="chapter.buffered.io">
+      <title>Buffered I/O</title>
+
+      <indexterm zone="chapter.buffered.io">
+        <primary>input/output abstraction</primary>
+      </indexterm>
+
+      <para>One of the largest components of VPR is its I/O abstraction. All
+      I/O classes (file handles, serial ports, and sockets) share the base
+      class <classname>vpr::BlockIO</classname><indexterm>
+          <primary>classes</primary>
+
+          <secondary>vpr::BlockIO</secondary>
+        </indexterm>. Reads and writes are performed using contiguous blocks
+      of memory (buffers). This design provides an API that closely resembles
+      that of the underlying operating system (with methods called
+      <methodname>read()</methodname> and <methodname>write()</methodname>),
+      but it is in contrast to stream-oriented I/O that is usually seen in
+      C++. Streams could be written on top of the buffered I/O classes, but
+      thus far, the need has not arisen. With this in mind, the design
+      provides an API that is immediately familiar to programmers used to
+      POSIX-based interfaces, but the API may seem clumsy to C++ programmers
+      who are accustomed to using <type>std::ostream</type> and
+      friends.</para>
+
+      <para>Readers interested in the implementation of the I/O component of
+      VPR are referred to <xref linkend="appendix.io.impl" />. We discuss the
+      use of the VPR socket abstraction, and we provide some insight into how
+      the abstraction is implemented. By providing some implementation
+      details, it is our hope that the online API reference will be easier to
+      understand and navigate.</para>
+
+      <section>
+        <title>Opening and Closing</title>
+
+        <para>Opening and closing I/O devices is quite simple. There are two
+        methods for performing these actions:
+        <methodname>vpr::BlockIO::open()</methodname> and
+        <methodname>vpr::BlockIO::close()</methodname>. However, at the
+        <classname>vpr::BlockIO</classname> level, these methods are pure
+        virtual (i.e., abstract), and thus, the implementation varies
+        depending on the actual I/O device, be it a socket, serial port, or
+        file descriptor. Regardless of the implementation, the preconditions
+        for <methodname>vpr::BlockIO::open()</methodname> state that the
+        device must not already be open. For
+        <methodname>vpr::BlockIO::close()</methodname>, the device must be
+        open before an attempt is made to close it.</para>
+
+        <section>
+          <title>Setting Attributes for Opening</title>
+
+          <para>Prior to opening an I/O device, some attributes can be set.
+          These in turn affect how the device is opened. In the general case
+          of <classname>vpr::BlockIO</classname><indexterm>
+              <primary>classes</primary>
+
+              <secondary>vpr::BlockIO</secondary>
+            </indexterm>, the only attribute that is available determines
+          whether the device will be opened in blocking mode or non-blocking
+          mode. By default, all devices open in blocking mode, and in most
+          cases, this is the desired mode.</para>
+        </section>
+
+        <section>
+          <title>Blocking Versus Non-Blocking</title>
+
+          <para>The decision to use blocking or non-blocking I/O depends on
+          the needs of the application or library being developed on top of
+          VPR. While the decision can be made before opening the device, it
+          can also be made after the device is open using the methods
+          <methodname>vpr::BlockIO::enableBlocking()</methodname> and
+          <methodname>vpr::BlockIO::enableNonBlocking()</methodname>.
+          Typically, the blocking/non-blocking state should be set exactly
+          once (either before or after opening the device). In some cases, it
+          is not possible to change the state after a critical <quote>point of
+          no return.</quote> Refer to <xref
+          linkend="section.fixed.socket.blocking" /> for more information on
+          this.</para>
+        </section>
+      </section>
+
+      <section>
+        <title>Reading and Writing</title>
+
+        <para>Reads and writes occur using the <methodname>read()</methodname>
+        and <methodname>write()</methodname> methods respectively. These
+        methods are overloaded for common data structures that may be used to
+        store the information being read or written. For example, strings are
+        used frequently in I/O handling, so the type std::string can be used
+        for easy management of string data. When reading <varname>n</varname>
+        bytes, the <classname>std::string</classname> object will be resized
+        internally by <methodname>read()</methodname> to ensure that it has
+        enough room to store the full buffer. The same is true for the
+        <methodname>read()</methodname> variant that takes a
+        <classname>std::vector&lt;vpr::Unit8&gt;</classname> object reference.
+        This overloaded version of <methodname>read()</methodname> is helpful
+        when dealing in arrays of bytes. Of course, the lowest level variant
+        of <methodname>read()</methodname> is the version that takes a
+        <type>void*</type> buffer. In this case, the buffer pointed to must
+        have at least <varname>n</varname> bytes of contiguous storage prior
+        to calling <methodname>read()</methodname>.</para>
+
+        <para>There is also a special method called
+        <methodname>readn()</methodname> that guarantees that
+        <varname>n</varname> bytes will be read. (The
+        <methodname>read()</methodname> method only guarantees that it read
+        <emphasis>at most</emphasis> <varname>n</varname> bytes.) As such,
+        <methodname>readn()</methodname> is a blocking call, even when a
+        non-blocking data source is being used behind the scenes. It will not
+        return until all <varname>n</varname> bytes have been read or an error
+        occurs while reading.</para>
+
+        <para>Writing to an I/O object works as one might expect. The same
+        overloads are available for <methodname>write()</methodname> as are
+        available for <methodname>read()</methodname> and
+        <methodname>readn()</methodname>. The buffer passed in to
+        <methodname>write()</methodname> must be at least as big as the amount
+        of data to be written (in bytes), or a memory access error can
+        occur.</para>
+
+        <tip>
+          <para>Always make sure that the buffer size matches the amount of
+          data to be read or written. Buffer overflows have long been a source
+          of security problems in software, and they can be avoided by
+          managing memory carefully.</para>
+        </tip>
+      </section>
+
+      <section>
+        <title>Statistics Collection</title>
+
+        <indexterm>
+          <primary>input/output abstraction</primary>
+
+          <secondary>built-in statistics collection</secondary>
+        </indexterm>
+
+        <para>All the I/O classes in VPR have built-in statistics collection
+        capabilities. By default, the code is not activated so as to prevent
+        unwanted overhead. However, it can be enabled quite simply using the
+        method <methodname>vpr::BlockIO::setIOStatStrategy()</methodname>.
+        This method takes a single parameter, a statistics collection object,
+        and invokes the correct methods whenever I/O occurs. Within the
+        specific implementation, any form of statistics related to reading and
+        writing of data may be collected.</para>
+
+        <para>From the name of the method in
+        <classname>vpr::BlockIO</classname>, we see the first indication that
+        a Strategy pattern <xref linkend="ref.design.patterns" /> is used to
+        implement the pluggable statistics collection code. All statistics
+        strategy classes must derive from
+        <classname>vpr::BaseIOStatsStrategy</classname><indexterm>
+            <primary>classes</primary>
+
+            <secondary>vpr::BaseIOStatsStrategy</secondary>
+          </indexterm>, and strategies can be mixed using the templated class
+        <classname>vpr::IOStatsStratgeyAdapter&lt;S,
+        T&gt;</classname><indexterm>
+            <primary>classes</primary>
+
+            <secondary>vpr::IOStatsStrategyAdapter&lt;S, T&gt;</secondary>
+          </indexterm>. Currently, the only strategy class is
+        <classname>vpr::BandwidthIOStatsStrategy</classname>, used for
+        collecting information about bandwidth usage of a given I/O
+        object.</para>
+      </section>
+    </chapter>
+
+    <chapter id="chapter.vpr.sockets">
+      <title>Sockets</title>
+
+      <indexterm zone="chapter.vpr.sockets">
+        <primary>socket abstraction</primary>
+      </indexterm>
+
+      <para>Socket programming can be a very difficult task, and the API used
+      to write network code is difficult to understand in and of itself. The
+      purpose of the VPR socket abstraction is thus two-fold: it abstracts the
+      platform-specific API, and it aims to simplify the interface so that
+      developers can focus on protocol implementations.</para>
+
+      <note>
+        <para>Readers not familiar with socket programming should consult a
+        reference manual (<xref linkend="ref.unix.network.programming" /> is
+        recommended). We do not attempt to explain the ins and outs of socket
+        programming. Instead, we assume that readers are familiar with
+        socket-level I/O and the ideas involved with various types of network
+        communication.</para>
+      </note>
+
+      <para>The socket abstraction follows the concepts set forth by the
+      <glossterm linkend="gloss.bsd.sockets">BSD sockets</glossterm> API,
+      which was also the model for the Winsock API used on Windows. In VPR,
+      two types of sockets may be instantiated: stream-oriented (TCP,
+      <classname>vpr::SocketStream</classname><indexterm>
+          <primary>classes</primary>
+
+          <secondary>vpr::SocketStream</secondary>
+        </indexterm>) and datagram (UDP,
+      <classname>vpr::SocketDatagram</classname><indexterm>
+          <primary>classes</primary>
+
+          <secondary>vpr::SocketDatagram</secondary>
+        </indexterm>). The helper class <classname>vpr::InetAddr</classname>
+      makes use of Internet Protocol (v4) addresses easier. Built on top of
+      <classname>vpr::SocketStream</classname> are two classes that make
+      writing client/server code easier:
+      <classname>vpr::SocketConnector</classname><indexterm>
+          <primary>classes</primary>
+
+          <secondary>vpr::SocketConnector</secondary>
+        </indexterm> and <classname>vpr::SocketAcceptor</classname><indexterm>
+          <primary>classes</primary>
+
+          <secondary>vpr::SocketAcceptor</secondary>
+        </indexterm>. Finally, VPR provides cross-platform data conversion
+      functions (see <xref linkend="chapter.data.marshaling" />) to deal with
+      endian issues.</para>
+
+      <para>We begin our discussion by diving right into the common features
+      of sockets, as collected in the class
+      <classname>vpr::Socket</classname><indexterm>
+          <primary>classes</primary>
+
+          <secondary>vpr::Socket</secondary>
+        </indexterm>. We assume that readers already have an understanding of
+      the buffered I/O concepts (see <xref linkend="chapter.buffered.io" />)
+      used in VPR I/O programming. The following sections cover
+      datagram-oriented sockets and stream-oriented sockets respectively. We
+      will conclude this chapter with a review of the high-level patterns
+      implemented for simplifying the authoring of client/server
+      architectures.</para>
+
+      <section id="section.inet.address">
+        <title>Internet Addresses</title>
+
+        <indexterm>
+          <primary>sockets</primary>
+
+          <secondary>Internet addresses</secondary>
+        </indexterm>
+
+        <para>All socket code written using the VPR socket abstraction must
+        use Internet Protocol (IP) addresses. The class
+        vpr::InetAddr<indexterm>
+            <primary>classes</primary>
+
+            <secondary>vpr::InetAddr</secondary>
+          </indexterm> neatly abstracts the low-level details of using
+        Internet addresses<footnote>
+            <para>The current implementation of
+            <classname>vpr::InetAddr</classname> only supports IPv4, though
+            support for IPv6 will be added when the need arises.</para>
+          </footnote>. This class encapsulates both the IP address and the
+        port number. It manages all the endian issues and the lookup of host
+        names as necessary.</para>
+
+        <para>When constructed, a new <classname>vpr::InetAddr</classname> is
+        initialized to the constant value
+        <constant>vpr::InetAddr::AnyAddr</constant><indexterm>
+            <primary>constants</primary>
+
+            <secondary>vpr::InetAddr::AnyAddr</secondary>
+          </indexterm>. This value corresponds with the OS-level constant
+        <constant>INADDR_ANY</constant>. Typically, either a host name, a port
+        number, or both must be set after the object is constructed. Such
+        details will vary depending on the application needs. The IP address
+        can be set using a symbolic host name (which will be resolved through
+        DNS queries) or using the human-readable <quote>dotted-decimal</quote>
+        notation. The port number is set using the native byte ordering; it is
+        converted internally to network byte order. It is also possible to set
+        the host name and port number together in a single string that uses
+        the format <quote>host:port</quote>. This format is convenient when
+        the values for the host name and port come in as string values.</para>
+      </section>
+
+      <section>
+        <title>Socket Commonalities</title>
+
+        <indexterm>
+          <primary>sockets</primary>
+
+          <secondary>common features of</secondary>
+        </indexterm>
+
+        <para>At the lowest level, all sockets have several things in common.
+        For example, all sockets must be opened before they are used, and they
+        must be closed when communication is complete. During communication,
+        data is read from and written to a socket, and reads and writes may be
+        blocking (synchronous) or non-blocking (asynchronous). All sockets are
+        bound to a local address, and <emphasis>connected</emphasis> sockets
+        have a remote address<footnote>
+            <para>Unconnected sockets may send data to a different destination
+            at every write. They may also receive data from any remote
+            address.</para>
+          </footnote>.</para>
+
+        <note>
+          <para>It is important to note that a socket does not have to be
+          stream-oriented to be in a connected state. A datagram-oriented
+          socket may be <quote>connected</quote> to a remote address so that
+          it has a default destination. This alleviates the need to specify
+          the destination address at every send.</para>
+        </note>
+
+        <para>These commonalities are collected into the class
+        <classname>vpr::Socket</classname><indexterm>
+            <primary>classes</primary>
+
+            <secondary>vpr::Socket</secondary>
+          </indexterm>, which serves as the base interface for datagram- and
+        stream-oriented sockets. The API for this class includes methods such
+        as <methodname>open()</methodname>, <methodname>close()</methodname>,
+        <methodname>send()</methodname>, <methodname>recv()</methodname>, and
+        <methodname>connect()</methodname>. Note that
+        <methodname>recv()</methodname> and <methodname>send()</methodname>
+        are provided as analogues to <methodname>read()</methodname> and
+        <methodname>write()</methodname> respectively. These are included
+        because the BSD sockets API defines the system calls
+        <function>recv</function>(2) and <function>send</function>(2), in
+        addition to <function>read</function>(2) and
+        <function>write</function>(2), for use with socket file descriptors.
+        The extra methods are thus provided to give programmers already
+        familiar with the BSD sockets API an easily recognizable
+        interface.</para>
+
+        <section>
+          <title>Uses of <classname>vpr::Socket</classname></title>
+
+          <indexterm>
+            <primary>vpr::Socket</primary>
+
+            <secondary>polymorphism and</secondary>
+          </indexterm>
+
+          <para>Instances of <classname>vpr::Socket</classname> cannot be
+          created because the constructors are not public. Instances of the
+          concrete types <classname>vpr::SocketDatagram</classname><indexterm>
+              <primary>classes</primary>
+
+              <secondary>vpr::SocketDatagram</secondary>
+            </indexterm> and
+          <classname>vpr::SocketStream</classname><indexterm>
+              <primary>classes</primary>
+
+              <secondary>vpr::SocketStream</secondary>
+            </indexterm> can be used polymorphically as instances of
+          <classname>vpr::Socket</classname> (and
+          <classname>vpr::BlockIO</classname>, of course). Because the basic
+          operations such as <methodname>read()</methodname> and
+          <methodname>write()</methodname> are defined by the base class,
+          using the concrete socket types polymorphically could be a
+          convenient mechanism for mixing socket communication protocols in an
+          application.</para>
+        </section>
+
+        <section id="section.fixed.socket.blocking">
+          <title>Fixed Blocking State</title>
+
+          <indexterm>
+            <primary>sockets</primary>
+
+            <secondary>blocking semantics</secondary>
+          </indexterm>
+
+          <para>Due to the semantics of sockets on Windows NT, the VPR socket
+          abstraction contains a slight variation of the behavior that is
+          available on UNIX-based systems. In Windows, once a call to
+          <methodname>read()</methodname>, <methodname>write()</methodname>,
+          <methodname>accept()</methodname>, etc., is made, the blocking state
+          of the socket is fixed<footnote>
+              <para>UNIX-based systems allow the blocking state to be changed
+              from blocking to non-blocking or vice versa at any time.</para>
+            </footnote>. That is, if the socket is a blocking socket, it will
+          forever remain in a blocking socket after one of these calls. The
+          same is true for non-blocking sockets. Furthermore, for a
+          stream-oriented socket that is accepting connections, the sockets
+          created as clients connect inherit the blocking state of the
+          accepting socket. The full list of methods that fix the blocking
+          state is as follows:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para><methodname>vpr::Socket::read()</methodname>,
+              <methodname>vpr::Socket::readn()</methodname>,
+              <methodname>vpr::Socket::recv()</methodname>,
+              <methodname>vpr::Socket::recvn()</methodname>,
+              <methodname>vpr::SocketDatagram::recvfrom()</methodname></para>
+            </listitem>
+
+            <listitem>
+              <para><methodname>vpr::Socket::write()</methodname>,
+              <methodname>vpr::Socket::send()</methodname>,
+              <methodname>vpr::SocketDatagram::sendto()</methodname></para>
+            </listitem>
+
+            <listitem>
+              <para><methodname>vpr::SocketStream::accept()</methodname></para>
+            </listitem>
+
+            <listitem>
+              <para><methodname>vpr::SocketStream::connect()</methodname></para>
+            </listitem>
+          </itemizedlist>
+
+          <para>The <ulink url="http://www.mozilla.org/projects/nspr/">NSPR
+          documentation</ulink> has a more complete description of this issue.
+          We must implement our socket abstraction in this way in order to
+          provide consistent semantics (not just consistent syntax) across
+          platforms.</para>
+        </section>
+      </section>
+
+      <section id="section.datagram.sockets">
+        <title>Datagram-Oriented Sockets</title>
+
+        <indexterm zone="section.datagram.sockets">
+          <primary>sockets</primary>
+
+          <secondary>datagram</secondary>
+        </indexterm>
+
+        <para>The class <classname>vpr::SocketDatagram</classname><indexterm>
+            <primary>classes</primary>
+
+            <secondary>vpr::SocketDatagram</secondary>
+          </indexterm> provides VPR's abstraction to datagram-oriented
+        sockets, typically known as UDP (user datagram protocol) sockets.
+        Indeed, this class wraps the underlying operating system's
+        implementation of UDP sockets. The interface for
+        <classname>vpr::SocketDatagram</classname> extends
+        <classname>vpr::Socket</classname><indexterm>
+            <primary>classes</primary>
+
+            <secondary>vpr::Socket</secondary>
+          </indexterm> to include the methods
+        <methodname>sendto()</methodname> and
+        <methodname>recvfrom()</methodname>, overloaded in the same way as
+        <methodname>read()</methodname> and <methodname>write()</methodname>.
+        As with the operating system API, these methods are used to send a
+        message to a specific destination address or to receive a message from
+        a specific remote address, respectively.</para>
+      </section>
+
+      <section id="section.stream.sockets">
+        <title>Stream-Oriented Sockets</title>
+
+        <indexterm zone="section.datagram.sockets">
+          <primary>sockets</primary>
+
+          <secondary>stream</secondary>
+        </indexterm>
+
+        <para>The class <classname>vpr::SocketStream</classname><indexterm>
+            <primary>classes</primary>
+
+            <secondary>vpr::SocketStream</secondary>
+          </indexterm> wraps the use of TCP (transmission control protocol)
+        sockets. TCP sockets are also known more abstractly as stream-oriented
+        sockets. All such sockets must be connected to a specific peer, and
+        thus there is no interface comparable to
+        <methodname>vpr::SocketDatagram::sendto()</methodname> or
+        <methodname>vpr::SocketDatagram::recvfrom()</methodname>.</para>
+
+        <para>In order for connections to be made, a socket must be listening
+        for incoming connection requests. For that purpose, vpr::SocketStream
+        introduces the methods <methodname>listen()</methodname> (to put a
+        socket into a listening state) and <methodname>accept()</methodname>
+        (for accepting new connections). These work the same way as the system
+        calls after which they are named. However,
+        <methodname>accept()</methodname> is somewhat unique in that it takes
+        an unopened <classname>vpr::SocketStream</classname> object as a
+        parameter. The object reference is <quote>set up</quote> when a
+        successful connection occurs. Thus, when
+        <methodname>vpr::SocketStream::accept()</methodname> returns
+        successfully, the caller can be certain that the
+        <classname>vpr::SocketStream</classname> reference passed in is now a
+        valid, connected socket.</para>
+
+        <para>Finally, since stream-oriented sockets always have an accepting
+        socket that handles incoming connection requests,
+        <classname>vpr::SocketStream</classname> provides a convenience method
+        called <methodname>openServer()</methodname>. This can be used in
+        place of the usual open-bind-listen sequence of calls for setting up
+        an accepting (server) socket. Use of this method is not required for
+        putting a socket into a listening state; rather, it exists to shorten
+        user code slightly. The drawback of using it is that, in the case of
+        failure, the returned status will not tell the caller what stage of
+        setting up the listening socket failed.</para>
+      </section>
+
+      <section id="section.acceptor.connector">
+        <title>The Acceptor/Connector Pattern</title>
+
+        <indexterm zone="section.acceptor.connector">
+          <primary>sockets</primary>
+
+          <secondary>acceptor/connector pattern</secondary>
+        </indexterm>
+
+        <para>Building on the foundation of stream-oriented, connected
+        sockets, VPR implements the Acceptor/Connector Pattern <xref
+        linkend="ref.network.patterns" />. The classes used in the
+        implementation are
+        <classname>vpr::SocketAcceptor</classname><indexterm>
+            <primary>classes</primary>
+
+            <secondary>vpr::SocketAcceptor</secondary>
+          </indexterm> and
+        <classname>vpr::SocketConnector</classname><indexterm>
+            <primary>classes</primary>
+
+            <secondary>vpr::SocketConnector</secondary>
+          </indexterm>. This pattern captures the concepts used in writing
+        stream-oriented network software. The software may use a client/server
+        protocol or a peer-to-peer protocol, but in either case, an initial
+        connection must be made to an accepting socket.</para>
+
+        <section>
+          <title>The Acceptor</title>
+
+          <para>The acceptor is created using a
+          <classname>vpr::InetAddr</classname> object that specifies the
+          address on which the acceptor listens for incoming connection
+          requests. Once opened, the acceptor is ready to accept new
+          connections. The call to
+          <methodname>vpr::SocketAcceptor::accept()</methodname> uses the same
+          arguments and behavior as
+          <methodname>vpr::SocketStream::accept()</methodname>, so programmers
+          already familiar with setting up an accepting socket with
+          <classname>vpr::SocketStream</classname> will find
+          <classname>vpr::SocketAcceptor</classname> very easy to use.</para>
+        </section>
+
+        <section>
+          <title>The Connector</title>
+
+          <para>The connector is designed to make non-blocking connections
+          easy to manage. Depending on the arguments passed to
+          <methodname>vpr::SocketConnector::connect()</methodname>, a socket
+          may be put into non-blocking mode if it is not already set as such.
+          Thus, a connection can be made <quote>in the background</quote> if
+          necessary. However, due to the semantics described in <xref
+          linkend="section.fixed.socket.blocking" />, after a background
+          connection is made, the socket must remain in non-blocking mode for
+          the duration of its lifetime.</para>
+        </section>
+      </section>
+    </chapter>
+
+    <chapter id="chapter.vpr.serial-ports">
+      <title>Serial Ports</title>
+
+      <indexterm zone="chapter.vpr.serial-ports">
+        <primary>serial port abstraction</primary>
+      </indexterm>
+
+      <para>Most input devices used for virtual reality systems today make use
+      of a computer's serial port for data communication. In our experience,
+      serial port programming is not much different than other I/O
+      programming. Implementing the communication protocol used by a given
+      device tends to be the hard part, and that will likely be the case
+      regardless of the underlying hardware.</para>
+
+      <para>The VPR serial port abstraction is based on the concepts
+      implemented by the standard termios serial interface used by most modern
+      UNIX-based operating systems <xref linkend="ref.advanced.prog.unix" />.
+      As such, the API allows enabling and disabling of a subset of the serial
+      device features that can be manipulated using termios directly. To
+      provide cross-platform semantics, however, some termios features are not
+      included because there is no corresponding capability with Win32
+      overlapped I/O. Furthermore, any termios settings that relate only to
+      modems are not included in the VPR serial port abstraction.</para>
+
+      <section>
+        <title>Interface Overview</title>
+
+        <para>In termios, serial ports are configured by setting or clearing a
+        wide variety of bits in various data structures. Based on this, the
+        VPR serial port API includes methods for enabling a feature, disabling
+        a feature, and testing the current status of a feature. For example,
+        the following methods deal with the hardware flow control bit:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><methodname>enableHardwareFlowControl()</methodname>:
+            Enables hardware flow control (if it was not already
+            enabled)</para>
+          </listitem>
+
+          <listitem>
+            <para><methodname>disableHardwareFlowControl()</methodname>:
+            Disables hardware flow control (if it was not already
+            disabled)</para>
+          </listitem>
+
+          <listitem>
+            <para><methodname>getHardwareFlowControlState()</methodname>:
+            Returns the current state of hardware flow control (true for on,
+            false for off)</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>When changing the enabled state of a serial port feature, the
+        change may not take effect immediately. This is determined by the
+        update action setting, which is manipulated by
+        <methodname>vpr::SerialPort::setUpdateAction()</methodname>. There are
+        three possible states (corresponding to the enumerated type
+        <type>vpr::SerialTypes::UpdateActionOption</type>):</para>
+
+        <orderedlist>
+          <listitem>
+            <para>Now: Perform the change immediately</para>
+          </listitem>
+
+          <listitem>
+            <para>Drain: Perform the change after all output is
+            transmitted</para>
+          </listitem>
+
+          <listitem>
+            <para>Flush: Perform the change after all output is transmitted
+            and discard all unread input</para>
+          </listitem>
+        </orderedlist>
+
+        <para>The right setting to use may depend on the specific hardware or
+        on the desired behavior.</para>
+      </section>
+
+      <section>
+        <title>Abstraction Details</title>
+
+        <para>The serial port abstraction is handled differently than the
+        other I/O abstraction components. We wrap two serial port interfaces:
+        termios and Win32 overlapped I/O<footnote>
+            <para>This is the only Win32-native code in VPR. All other Win32
+            interfaces are handled by NSPR.</para>
+          </footnote>. Because NSPR does not provide a serial port layer, we
+        have to allow the termios to be used with NSPR on UNIX-based
+        platforms. While this makes the implementation a little clumsy and the
+        build system a little more complicated, it has little if any impact on
+        users. The point of the abstraction is to hide the low-level details
+        to provide a consistent interface across platforms.</para>
+      </section>
+    </chapter>
+
+    <chapter id="chapter.data.marshaling">
+      <title>Data Marshaling</title>
+
+      <indexterm zone="chapter.vpr.serial-ports">
+        <primary>object serialization</primary>
+      </indexterm>
+
+      <para>Network communication involves the transfer of data between
+      computers, and for it to work, the two computers must be able to talk to
+      each other using the same language. This must occur even if the two have
+      different internal representations of the data they hold. Thus, the data
+      must be marshaled into a common format when it is sent out and
+      demarshaled into the local native format when it is received. VPR
+      provides some helper functions and utility classes to simplify the
+      efforts of network programmers.</para>
+
+      <section>
+        <title>Endian Conversion</title>
+
+        <indexterm>
+          <primary>byte order</primary>
+
+          <secondary>host/network conversion</secondary>
+        </indexterm>
+
+        <para>A very common data marshaling activity is the conversion of a
+        multi-byte data unit from host byte order to network byte order. Such
+        conversions are necessary for elements of data that occupy 16 or more
+        bits. In VPR terms, that means the types <type>vpr::Int16</type>,
+        <type>vpr::int32</type>, <type>vpr::Int64</type>, and the unsigned
+        variants thereof. The interface
+        <classname>vpr::System</classname><indexterm>
+            <primary>classes</primary>
+
+            <secondary>vpr::System</secondary>
+          </indexterm> provides conversion functions from host to network byte
+        order and vice versa for all of these types. All the functions operate
+        in terms of the unsigned version of the aforementioned integer types,
+        but they work with the signed versions as well since they simply
+        manipulate the actual bits. The full list of functions is as
+        follows:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><methodname>vpr::System::Htons()</methodname>: Converts a
+            16-bit integer from host to network byte order.</para>
+          </listitem>
+
+          <listitem>
+            <para><methodname>vpr::System::Ntohs()</methodname>: Converts a
+            16-bit integer from network to host byte order.</para>
+          </listitem>
+
+          <listitem>
+            <para><methodname>vpr::System::Htonl()</methodname>: Converts a
+            32-bit integer from host to network byte order.</para>
+          </listitem>
+
+          <listitem>
+            <para><methodname>vpr::System::Ntohl()</methodname>: Converts a
+            32-bit integer from network to host byte order.</para>
+          </listitem>
+
+          <listitem>
+            <para><methodname>vpr::System::Htonll()</methodname>: Converts a
+            64-bit integer from host to network byte order.</para>
+          </listitem>
+
+          <listitem>
+            <para><methodname>vpr::System::Ntohll()</methodname>: Converts a
+            64-bit integer from network to host byte order.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Single-precision floating-point values (which occupy 32 bits of
+        memory) can be converted using
+        <methodname>vpr::System::Htonl()</methodname> and
+        <methodname>vpr::System::Ntohl()</methodname>. Similarly,
+        double-precision floating-point values (which occupy 64 bits of
+        memory) can be converted using
+        <methodname>vpr::System::Htonll()</methodname> and
+        <methodname>vpr::System::Nothll()</methodname>.</para>
+
+        <note>
+          <para>Programmers already familiar with the operating system-level
+          calls such as <function>ntohs(3)</function> and
+          <function>htonl(3)</function> may wonder why the above functions are
+          named with a capital letter (i.e.,
+          <methodname>vpr::System::Htonl()</methodname> versus
+          <methodname>vpr::System::htonl()</methodname>). We have used this
+          naming convention because the byte order conversion functions are
+          preprocessor macros on some platforms, and the C preprocessor cannot
+          tell the difference between a method declaration and the use of a
+          macro. In other words, the code would not compile on platforms where
+          the functions are really macros.</para>
+        </note>
+      </section>
+
+      <section>
+        <title>Object Serialization</title>
+
+        <indexterm>
+          <primary>object serialization</primary>
+        </indexterm>
+
+        <para>Serializing objects is more complicated than dealing with
+        individual integer variables, but ultimately, a class is composed of
+        other data types. If the internal data types can be serialized, then
+        the object that holds them can be serialized as well. To enable this
+        functionality, VPR defines the interface
+        <classname>vpr::SerializableObject</classname><indexterm>
+            <primary>classes</primary>
+
+            <secondary>vpr::SerializableObject</secondary>
+          </indexterm>. It operates in terms of two other interfaces:
+        <classname>vpr::ObjectReader</classname><indexterm>
+            <primary>classes</primary>
+
+            <secondary>vpr::ObjectReader</secondary>
+          </indexterm> and <classname>vpr::ObjectWriter</classname><indexterm>
+            <primary>classes</primary>
+
+            <secondary>vpr::ObjectWriter</secondary>
+          </indexterm>. Together, these allow an object and all the data it
+        aggregates to be serialized into an array of bytes that can be sent
+        over the network. Once received, the array can be de-serialized into a
+        duplicate of the original object.</para>
+
+        <para>The basic idea behind the object serialization interface in VPR
+        is the same as in Java (see the API documentation on
+        <classname>java.io.Serializable</classname>). An class identifies
+        itself as being serializable by adding
+        <classname>vpr::SerializableObject</classname> to its list of parent
+        classes. Two pure virtual methods must then be implemented:
+        <methodname>readObject()</methodname> and
+        <methodname>writeObject()</methodname>. When a class instance must be
+        serialized, <methodname>writeObject()</methodname> is invoked with an
+        argument that provides the class with a
+        <classname>vpr::ObjectWriter</classname> instance. The implementation
+        of <methodname>writeObject()</methodname> would then add the instance
+        data to the object writer and return. De-serializing an object occurs
+        in <methodname>readObject()</methodname> using an instance of
+        <classname>vpr::ObjectReader</classname>. A full class hierarchy can
+        be serialized and de-serialized through polymorphism. The derived
+        classes must simply call the parent class'
+        <methodname>writeObject()</methodname> and
+        <methodname>readObject()</methodname> methods, thus following the
+        class hierarchy up to the first class that identified itself as
+        serializable.</para>
+
+        <para>Because vpr::ObjectReader and vpr::ObjectWriter are abstract
+        types, the actual implementation of these may vary. This is similar to
+        the way that Java can serialize an object to a variety of data
+        streams. Currently, VPR can serialize a class to an array of bytes
+        (<classname>vpr::BufferObjectReader</classname><indexterm>
+            <primary>classes</primary>
+
+            <secondary>vpr::BufferObjectReader</secondary>
+          </indexterm> and
+        <classname>vpr::BufferObjectWriter</classname><indexterm>
+            <primary>classes</primary>
+
+            <secondary>vpr::BufferObjectWriter</secondary>
+          </indexterm>) or to XML
+        (<classname>vpr::XMLObjectReader</classname><indexterm>
+            <primary>classes</primary>
+
+            <secondary>vpr::XMLObjectReader</secondary>
+          </indexterm> and
+        <classname>vpr::XMLObjectWriter</classname><indexterm>
+            <primary>classes</primary>
+
+            <secondary>vpr::XMLObjectWriter</secondary>
+          </indexterm>). The array of bytes is suitable for network
+        transmission and makes sharing of classes between hosts easy.</para>
+      </section>
+    </chapter>
+  </part>
+
+  <part id="part.multi-threading">
+    <title>Multi-Threading</title>
+
+    <partintro>
+      <para>In this part, we present the capabilities VPR provides for writing
+      cross-platform multi-threaded software. It is assumed that readers
+      already know the basics of multi-threaded programming including the
+      definition of <firstterm>thread of control</firstterm><indexterm>
+          <primary>thread of control</primary>
+        </indexterm>. What is described here is how to use the VPR thread
+      interface, <classname>vpr::Thread</classname>, not how to write
+      multi-threaded software. For that reason, it is recommended that readers
+      be familiar with the following publications before continuing:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><ulink
+          url="http://www.oreilly.com/catalog/pthread/"><emphasis>Pthreads
+          Programming</emphasis></ulink> by Bradford Nichols, Dick Buttlar,
+          and Jacqueline Proulx Farrell.</para>
+        </listitem>
+
+        <listitem>
+          <para>The <function>sproc(2)</function> manual page on IRIX or on
+          <ulink
+          url="http://techpubs.sgi.com/library/tpl/cgi-bin/getdoc.cgi?coll=0650&amp;db=man&amp;fname=/usr/share/catman/p_man/cat2/standard/nsproc.z&amp;srch=sproc">SGI's
+          technical publications site</ulink>.</para>
+        </listitem>
+
+        <listitem>
+          <para>The <function>pthread(3)</function> manual page for your
+          operating system. The pthread functions are part of a POSIX standard
+          and will be the same across platforms.</para>
+        </listitem>
+      </itemizedlist>
+    </partintro>
+
+    <chapter id="chapter.threads">
+      <title>Creating Threads</title>
+
+      <para>When considering multi-threaded programming, it is important to
+      know that with great power comes great responsibility. The power is
+      being able to provide multiple threads of control in a single
+      application. The responsibility is making sure those threads get along
+      with each other and do not step on each other's data. VR Juggler is a
+      multi-threaded library which makes it very powerful and very
+      complex.</para>
+
+      <para>As a cross-platform framework, VR Juggler uses an internal
+      threading abstraction that provides a uniform interface to
+      platform-specific threading implementations. That cross-platform
+      interface is available to programmers to make applications
+      multi-threaded without tying them to a specific operating system's
+      threading implementation.</para>
+
+      <section id="section.vprThread">
+        <title>Threads: Using <classname>vpr::Thread</classname></title>
+
+        <indexterm zone="section.vprThread">
+          <primary>multi-threading</primary>
+
+          <secondary>vpr::Thread</secondary>
+        </indexterm>
+
+        <indexterm zone="section.vprThread">
+          <primary>vpr::Thread</primary>
+        </indexterm>
+
+        <para>The threading interface in VPR is modeled after the POSIX thread
+        specification of POSIX.1b (formerly POSIX.4). The main difference is
+        that VPR's interface is object-oriented while POSIX threads (pthreads)
+        are procedural. The basic principles are exactly the same, however. A
+        function (or class method) is provided to the
+        <classname>vpr::Thread</classname> class, and that function is
+        executed in a thread of control that is independent of the creating
+        thread.</para>
+
+        <para>Threads are spawned (initialized and begin execution) when the
+        <classname>vpr::Thread</classname> constructor is called. That is,
+        when instantiating a <classname>vpr::Thread</classname> object, a new
+        thread of execution is created. The semantics of threads says that a
+        thread can begin execution at any time after being created, and this
+        is true with <classname>vpr::Thread</classname>s. Do not make any
+        assumptions about when the thread will begin running. It may happen
+        before or after the constructor returns the
+        <classname>vpr::Thread</classname> object.</para>
+
+        <para>To pass arguments to threads, the common mechanism of
+        encapsulating them in a C++ <type>struct</type> must be used. The
+        function executed by the thread takes only a single argument of type
+        <type>void*</type>. An argument is not required, of course, but to
+        pass more than one argument to a thread, the best way to do this is to
+        create a structure and pass a pointer to it to the
+        <classname>vpr::Thread</classname> constructor.</para>
+
+        <para>Once a <classname>vpr::Thread</classname> object is created, it
+        acts as an interface into controlling the thread it encapsulates.
+        Thread signals can be sent, priority changes can be made, execution
+        can be suspended, etc. This interface is the focus of this
+        section.</para>
+
+        <para>We begin our discussion of creating threads with VPR by
+        explaining the use of the class <classname>vpr::Thread</classname>.
+        Use of <classname>vpr::Thread</classname> is intended to be easy.
+        Multi-threaded programming has enough complications without having a
+        difficult API as well. In almost all cases, thread creation can be
+        done in a single step, executed one of two ways:</para>
+
+        <orderedlist>
+          <listitem>
+            <para>Pass a function pointer to the
+            <classname>vpr::Thread</classname> constructor along with any
+            argument that should be passed to the function when the thread is
+            created</para>
+          </listitem>
+
+          <listitem>
+            <para>Pass a <glossterm>functor</glossterm><indexterm>
+                <primary>functor</primary>
+              </indexterm> to the <classname>vpr::Thread</classname>
+            constructor</para>
+          </listitem>
+        </orderedlist>
+
+        <para>The second appears easier, but to create the functor, an
+        argument to the function executed by the thread may still have to be
+        passed. The presence of the argument depends on the specific function
+        being run by the thread. In addition to the function pointer or
+        functor, parameters such as the priority and the stack size may be
+        passed to the <classname>vpr::Thread</classname> constructor, but the
+        defaults for the constructor are quite reasonable.</para>
+
+        <para>A minor issue with creating a <classname>vpr::Thread</classname>
+        is the concept of functors. The topic of functors will be put off
+        until the next section. For now, just think of them as wrappers around
+        function pointers.</para>
+
+        <para>Before writing code that uses
+        <classname>vpr::Thread</classname>s, make sure that the header file
+        <filename>vpr/Thread/Thread.h</filename> is included. Never include
+        the platform-specific headers such as
+        <filename>vpr/md/POSIX/Thread/ThreadPosix.h</filename>. The single
+        file <filename>vpr/Thread/Thread.h</filename> is all that is
+        required.</para>
+
+        <section>
+          <title>Creating Threads</title>
+
+          <indexterm>
+            <primary>vpr::Thread</primary>
+
+            <secondary>creating</secondary>
+          </indexterm>
+
+          <para>The following example illustrates how to create a thread that
+          will execute a function called <function>run()</function> that takes
+          no arguments. The prototype for <function>run()</function>
+          is:</para>
+
+          <programlisting>void run(void* args);</programlisting>
+
+          <para>This will be the same across all platforms. The thread
+          creation code is then:</para>
+
+          <programlisting>vpr::Thread* thread;
+
+thread = new vpr::Thread(run);</programlisting>
+
+          <para>At this point, a newly spawned thread is executing the code in
+          <function>run()</function>. It is advisable to hang onto the
+          variable <varname>thread</varname> so that the thread may be
+          controlled as necessary.</para>
+
+          <para>That was pretty easy. What if you want to pass one or more
+          arguments to <function>run()</function> so that its behavior can be
+          modified based on some variables? Not surprisingly, that is fairly
+          easy too. As mentioned above, if there is more than one argument to
+          pass to the thread function, they will have to be collected into a
+          <type>struct</type>, and pointer to that struct will have to be
+          passed. A common way to do this is as follows:</para>
+
+          <programlisting>struct ThreadArgs
+{
+   int id;
+   char name[40];
+   // And so on...
+};
+
+void someFunc()
+{
+   // Other code ...
+
+   ThreadArgs* args;
+   vpr::Thread* thread;
+
+   args = new ThreadArgs();
+
+   // Fill in the elements of args ...
+
+   thread = new vpr::Thread(run, (void*) args);
+}</programlisting>
+
+          <para>When creating a single thread, this works beautifully. If
+          multiple threads are needed, all taking the same type of argument,
+          there must be a separate argument structure instance for each one. A
+          bunch of pointers can be declared, or the same pointer can be reused
+          over and over. The address passed to each thread will be unique
+          either way. Using this method requires that the argument memory be
+          released before the thread exits, of course.</para>
+        </section>
+
+        <section>
+          <title>Waiting for a Thread to Complete</title>
+
+          <indexterm>
+            <primary>vpr::Thread</primary>
+
+            <secondary>joining threads</secondary>
+          </indexterm>
+
+          <para>Once we have a thread running, it is often useful to
+          synchronize another thread so that its execution halts until the
+          running thread has completed. This is called <quote>joining
+          threads</quote>. The following example illustrates how this can be
+          done:</para>
+
+          <programlisting>vpr::Thread* thread;
+
+thread = new vpr::Thread(run);
+
+// Do other things while the thread is going ...
+
+thread-&gt;join();
+
+// Now that the thread is done, continue.</programlisting>
+
+          <para>Here, the creator of thread can be another
+          <classname>vpr::Thread</classname>, or it can be the main thread of
+          execution. In other words, any thread can create more threads and
+          control them. What happens in this example is that thread is created
+          and begins running. Meanwhile, the creator thread continues to do
+          some more work and then must wait for <varname>thread</varname> to
+          finish its work before continuing. It calls the
+          <methodname>join()</methodname> method, a blocking call, and it will
+          not return until <varname>thread</varname> has completed.</para>
+
+          <para>While it is not demonstrated here, the
+          <methodname>join()</methodname> method can take a single argument of
+          type <type>void**</type>. It is a pointer to a pointer where the
+          exit status of the joined thread is stored. The operating system
+          fills the pointed to pointer with the exit status when the thread
+          exits.</para>
+        </section>
+
+        <section>
+          <title>Suspending and Resuming a Thread's Execution</title>
+
+          <indexterm>
+            <primary>vpr::Thread</primary>
+
+            <secondary>suspend, resume</secondary>
+          </indexterm>
+
+          <para>Sometimes, it may be necessary to suspend the execution of a
+          running thread and resume it again later. There are two methods in
+          the <classname>vpr::Thread</classname> interface that do just this.
+          Assuming that there is already a running thread pointed to by the
+          object <varname>thread</varname>, it can be suspended as
+          follows:</para>
+
+          <programlisting>thread-&gt;suspend();</programlisting>
+
+          <para>Resuming execution of the suspended thread is just as
+          easy:</para>
+
+          <programlisting>thread-&gt;resume();</programlisting>
+
+          <para>On successful completion, both methods return
+          <constant>vpr::ReturnStatus::Succeed</constant>. If the operation
+          could not be performed for some reason,
+          <constant>vpr::ReturnStatus::Fail</constant> is returned to indicate
+          error status.</para>
+        </section>
+
+        <section>
+          <title>Getting and Setting a Thread's Priority</title>
+
+          <indexterm>
+            <primary>vpr::Thread</primary>
+
+            <secondary>priority</secondary>
+          </indexterm>
+
+          <para>Changing the priority of a thread tells the underlying
+          operating system how important a thread is and gives it hints about
+          how to schedule the threads. If no value for the priority is given
+          to the constructor, all <classname>vpr::Thread</classname>s are
+          created with the default priority for all threads. Values higher
+          than 0 for the priority request a higher priority when the thread is
+          created.</para>
+
+          <para>Besides being able to set the priority when the thread is
+          created, it is possible to query and to adjust the priority of a
+          running thread. Assuming that there is already a running thread
+          pointed to by the object <varname>thread</varname>, its priority can
+          be requested as follows:</para>
+
+          <programlisting>int prio;
+
+thread-&gt;getPrio(&amp;prio);</programlisting>
+
+          <para>The thread's priority is stored in <varname>prio</varname> and
+          returned via the pointer passed to the
+          <methodname>getPrio()</methodname> method. Setting that thread's
+          priority is also easy:</para>
+
+          <programlisting>int prio;
+
+// Assign some priority value to prio ...
+
+thread-&gt;setPrio(prio);</programlisting>
+
+          <para>On successful completion, both methods return
+          <constant>vpr::ReturnStatus::Succeed</constant>. If the operation
+          could not be performed for some reason,
+          <constant>vpr::ReturnStatus::Fail</constant> is returned to indicate
+          error status.</para>
+        </section>
+
+        <section>
+          <title>Sending Signals to a Thread</title>
+
+          <indexterm>
+            <primary>vpr::Thread</primary>
+
+            <secondary>sending signals</secondary>
+          </indexterm>
+
+          <para>On UNIX-based systems, a signal is sent to a process using the
+          <function>kill(2)</function> system call. With POSIX threads,
+          signals are sent using <function>pthread_kill(3)</function>. VPR's
+          thread interface implements these ideas using a
+          <methodname>kill()</methodname><methodname></methodname> method.
+          There are two ways to call this method: with an argument naming the
+          signal to be delivered to the thread or without an argument which
+          cancels the thread's execution. The first of these is described in
+          this section, and the second is described in the next
+          section.</para>
+
+          <para>A problem does arise here, unfortunately. Signals are not
+          supported on all operating systems (notably, Win32). The interface
+          is consistent, but code written on IRIX will not compile on Win32
+          if, for example, it sends a <constant>SIGHUP</constant> to a thread.
+          An improved thread interface is being designed to overcome problems
+          such as this one. For now, we describe this part of the interface as
+          though it is supported completely on all platforms.</para>
+
+          <para>As usual, assume there is a running thread, a pointer to which
+          is stored in <varname>thread</varname>. To send it a signal
+          (<constant>SIGINT</constant>, for example), use the
+          following:</para>
+
+          <programlisting>thread-&gt;kill(SIGINT);</programlisting>
+
+          <para>The signal will be delivered to the thread by the operating
+          system, and the thread is expected to handle it properly. This
+          version of the <methodname>kill()</methodname> method returns
+          <constant>vpr::ReturnStatus::Succeed</constant> if the signal is
+          sent successfully. Otherwise,
+          <constant>vpr::ReturnStatus::Fail</constant> is returned to indicate
+          that an error occurred.</para>
+        </section>
+
+        <section>
+          <title>Canceling a Thread's Execution</title>
+
+          <indexterm>
+            <primary>vpr::Thread</primary>
+
+            <secondary>canceling</secondary>
+          </indexterm>
+
+          <para>As described in the previous section, using the
+          <methodname>kill()</methodname> method with no argument cancels the
+          execution of the thread. When using POSIX threads, this is actually
+          implemented using <methodname>pthread_cancel(3)</methodname>. On
+          IRIX with SPROC threads, a <constant>SIGKILL</constant> is sent to
+          the thread to end its execution forcibly. The syntax for using this
+          method is basically the same as in the previous section, but it is
+          repeated to make that clear. Again assuming that there is a running
+          thread with a pointer to its <classname>vpr::Thread</classname>
+          object stored in <varname>thread</varname>, use the
+          following:</para>
+
+          <programlisting>thread-&gt;kill();</programlisting>
+
+          <para>Unlike the syntax used to send a signal to a thread, this
+          version of <methodname>kill()</methodname> does not have a return
+          value.</para>
+
+          <para>Users of POSIX threads may be wondering if the
+          <classname>vpr::Thread</classname> API provides a way to set
+          cancellation points in the code. Unfortunately, it does not at this
+          time. Extending the interface in this way is being considered, but
+          cancellation points do not have meaning with all thread
+          implementations.</para>
+        </section>
+
+        <section>
+          <title>Requesting the Current Thread's Identifier</title>
+
+          <indexterm>
+            <primary>vpr::Thread</primary>
+
+            <secondary>self</secondary>
+          </indexterm>
+
+          <para>Lastly, it is common to request the currently running thread's
+          identifier. This only makes sense when called from a point on that
+          thread's flow of execution. (In POSIX threads, this is the notion of
+          <quote>self</quote>. For IRIX SPROC threads, this means getting the
+          process ID.) The <classname>vpr::Thread</classname> API provides a
+          static method that can be called at any time in the thread that is
+          currently running. It returns a pointer to a
+          <classname>vpr::BaseThread</classname> (the basic type from which
+          <classname>vpr::Thread</classname> inherits its interface). The
+          syntax is as follows:</para>
+
+          <programlisting>vpr::BaseThread* my_id;
+
+my_id = vpr::Thread::self();</programlisting>
+
+          <para>The returned pointer can then be used to perform all of the
+          previously described operations on the current thread.</para>
+        </section>
+
+        <section>
+          <title>The Gory Details</title>
+
+          <indexterm>
+            <primary>vpr::Thread</primary>
+
+            <secondary>details</secondary>
+          </indexterm>
+
+          <para>The current threading implementation in VPR is a little
+          difficult to understand. The code is not complicated at all, but
+          because all platform-specific implementations are referred to as
+          <classname>vpr::Thread</classname>s, the details can get lost in the
+          shuffle. To begin, the current list of platform-specific thread
+          implementation wrapper classes are:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para><classname>vpr::ThreadSGI</classname>: A wrapper around
+              IRIX SPROC threads (refer to the <function>sproc(2)</function>
+              manual page for more information)</para>
+            </listitem>
+
+            <listitem>
+              <para><classname>vpr::ThreadPosix</classname>: A wrapper around
+              POSIX threads (both Draft 4 and Draft 10 of the standard are
+              supported)</para>
+            </listitem>
+
+            <listitem>
+              <para><classname>vpr::ThreadNSPR</classname>: A wrapper around
+              Netscape Portable Runtime threads</para>
+            </listitem>
+          </itemizedlist>
+
+          <para>The interface itself is defined in
+          <classname>vpr::BaseThread</classname>, and all of the above classes
+          inherit from that class.</para>
+
+          <para>The threading implementation used is chosen when VPR is
+          compiled. To use a certain type of thread system, be sure that the
+          version of VPR in use was compiled with the type of threads desired.
+          When the VPR build is configured, preprocessor
+          <function>#define</function> statements are made in
+          <filename>vpr/vprDefines.h</filename> that describe the threading
+          system to use. Based on that, the header file
+          <filename>vpr/Thread/Thread.h</filename> makes several
+          <type>typedef</type>s that set up one of the platform-specific
+          thread implementations to act as the
+          <classname>vpr::Thread</classname> interface. For example, if
+          compiling on Win32, the class <classname>vpr::ThreadNSPR</classname>
+          is <type>typedef</type>'d to be <classname>vpr::Thread</classname>.
+          Since the interface is consistent among all the wrappers, everything
+          works as though that was the way it was written to behave.</para>
+
+          <para>The current implementation is modeled after the POSIX thread
+          API for the most part. When designing it, we approached it with the
+          idea that having a more complete API was more important than having
+          a <quote>lowest-common-denominator</quote> API. That is, just
+          because not all threading implementations support a specific feature
+          does not mean that the API should suffer by not having that feature.
+          Whether this was a good approach or not is an open debate.</para>
+
+          <note>
+            <para>VPR has a wrapper around <ulink
+            url="http://www.mozilla.org/projects/nspr/index.html">Netscape
+            Portable Runtime</ulink> (NSPR) threads<indexterm>
+                <primary>NSPR</primary>
+              </indexterm>. We have removed the Win32-specific threads because
+            NSPR already supports that implementation. Further implementations
+            may be removed in favor of using what NSPR offers. Doing this will
+            offload much of our efforts onto the NSPR. NSPR threads do not
+            support all the features we have, however, because they took the
+            lowest-common-denominator approach. As with all technology, there
+            is a trade-off in relieving some of our work load by using an
+            existing cross-platform thread implementation: our interface
+            becomes limited to what features that implementation provides. It
+            remains to be seen exactly how much of VPR's threading subsystem
+            will be removed, and those programmers who choose to use it should
+            be careful to watch the mailing lists for discussions and
+            announcements about changes.</para>
+          </note>
+        </section>
+      </section>
+
+      <section id="section.thread.functors">
+        <title>Thread Functors</title>
+
+        <indexterm>
+          <primary>vpr::BaseThreadFunctor</primary>
+
+          <seealso>vpr::ThreadMemberFunctor, vpr::ThreadRunFunctor,
+          vpr::ThreadNonMemberFunctor</seealso>
+        </indexterm>
+
+        <para>In this section, we explain the concept and use of <glossterm
+        linkend="gloss.functor">functors</glossterm>. A functor is a
+        high-level concept that encapsulates something quite simple. A functor
+        is defined as <quote>something that performs an operation or a
+        function.</quote> While this is not very detailed, it is clear and
+        concise. In VPR functors can be used as the code executed by a thread
+        (refer to <xref linkend="section.vprThread" /> for more detail on the
+        topic of <classname>vpr::Thread</classname>s). This section describes
+        how to use functors for exactly that purpose.</para>
+
+        <section>
+          <title>High-Level Description</title>
+
+          <indexterm>
+            <primary>vpr::BaseThreadFunctor</primary>
+
+            <secondary>description of</secondary>
+          </indexterm>
+
+          <indexterm>
+            <primary>functor</primary>
+
+            <secondary>use with vpr::Thread</secondary>
+
+            <seealso>vpr::Thread</seealso>
+          </indexterm>
+
+          <para>As mentioned, a functor<indexterm>
+              <primary>functor</primary>
+            </indexterm> is used in VPR with
+          <classname>vpr::Thread</classname>s<indexterm>
+              <primary>classes</primary>
+
+              <secondary>vpr::Thread</secondary>
+            </indexterm>. VPR's threads can execute two types of functions:
+          normal C/C++ functions and class methods or functors. The former was
+          described in the section about using
+          <classname>vpr::Thread</classname>s, and the latter is described
+          here. The use of functors is given more attention because the
+          concept may be foreign to some programmers. Those who already know
+          about functors can skip this short description and go straight to
+          the section on using functors.</para>
+
+          <para>In VPR, a functor is simply another object type that happens
+          to encapsulate a user-defined function. The details on how this is
+          done are not important here, but they are provided later for those
+          who are interested. What is important to know is that a functor can
+          be thought of as a normal function. When using them, programmers
+          simply implement a function and then pass the function pointer (and
+          the function's optional argument) to the functor's constructor. The
+          object does the rest.</para>
+
+          <para>Observant readers may have noticed the parenthetical phrase in
+          the previous paragraph mentioning a function's optional argument.
+          Note that <quote>argument</quote> is singular meaning that only one
+          parameter can be passed to the function that will be run by the
+          created thread. The type of that argument is the wonderfully vague
+          <type>void*</type>, an artifact of basing the threading subsystem on
+          C libraries. As discussed in the section on using
+          <classname>vpr::Thread</classname>s, if there is a need to pass
+          multiple arguments, they must be encapsulated in a struct or a
+          comparable object.</para>
+
+          <para>Once a functor object exists, it is passed to the
+          <classname>vpr::Thread</classname> constructor, and the new thread
+          will execute the functor (which knows about the function). The end
+          result is the same as using a normal C/C++ function or a static
+          class member function, but there is one special benefit: with
+          functors, non-static class member functions can be passed. In many
+          cases, there arises a need to run a member function in a separate
+          thread, but making it static is infeasible or awkward. Thus, it
+          would be best to pass a non-static member function to the created
+          thread. To get access to the non-static data members, however, the
+          C++ <varname>this</varname> pointer must be available to the thread.
+          By using a VPR functor, that is all handled behind the scenes so
+          that passing a non-static member function is straightforward.</para>
+
+          <para>Before getting into specifics, there is a header file that
+          must be included to use VPR thread functors. In this case, the
+          header is <filename>vpr/Thread/ThreadFunctor.h</filename>. Within
+          this header, <classname>vpr::BaseThreadFunctor</classname> is
+          declared as an abstract base class. It has two subclasses
+          implementing its interface:
+          <classname>vpr::ThreadMemberFunctor</classname> and
+          <classname>vpr::ThreadNonMemberFunctor</classname>. Both of these
+          subclasses will be discussed in turn next.</para>
+        </section>
+
+        <section id="section.using.vprThreadMemberFunctor">
+          <title><classname>vpr::ThreadMemberFunctor</classname></title>
+
+          <indexterm>
+            <primary>vpr::ThreadMemberFunctor</primary>
+
+            <secondary>use</secondary>
+          </indexterm>
+
+          <para>This implementation of
+          <classname>vpr::BaseThreadFunctor</classname> is for all functions
+          that fall into the rather elite category of being non-static class
+          member functions. To be more specific, those member functions
+          (heretofore referred to as <quote>methods</quote>) must have the
+          following prototype:</para>
+
+          <programlisting>void methodName(void* arg);</programlisting>
+
+          <para>Those readers with experience in multi-threaded programming
+          will recognize this prototype instantly. It is no different than
+          that used in common threading implementations. Constructing the
+          functor to use this method, however, is quite different than what
+          readers may have seen before.</para>
+
+          <para>Say there is a class <classname>MyObject</classname> with a
+          method <methodname>run()</methodname> having the appropriate
+          prototype that will be executed by a
+          <classname>vpr::Thread</classname><indexterm>
+              <primary>classes</primary>
+
+              <secondary>vpr::Thread</secondary>
+            </indexterm> object. In this case, <methodname>run()</methodname>
+          takes an argument that is a pointer to a
+          <emphasis>user-defined</emphasis> type <type>thread_args_t</type>.
+          Also assume that there is an instance of
+          <classname>MyObject</classname> pointed to by the variable
+          <varname>my_obj</varname>. The following code creates the
+          <classname>vpr::ThreadMemberFunctor</classname> object that will
+          encapsulate the method:</para>
+
+          <programlisting>vpr::ThreadMemberFunctor&lt;MyObject&gt;* my_functor;
+thread_args_t* args;
+vpr::Thread* thread;
+
+args = new thread_args_t();
+
+// Fill in the arguments to be passed to the thread...
+
+my_functor = new vpr::ThreadMemberFunctor&lt;MyObject&gt;(my_obj, &amp;MyObject::run, (void*) args);
+thread = new vpr::Thread(my_functor);</programlisting>
+
+          <para>The important thing to note in this example is that
+          <classname>vpr::ThreadMemberFunctor</classname> is a template class.
+          When creating the functor instance, the class must be specified as
+          the template parameter. (If you do not understand this syntax, take
+          a look at a C++ book that covers the current C++ standard.) Also
+          note that when creating the new <classname>vpr::Thread</classname>
+          object, the argument structure is not passed to the constructor. The
+          argument to <methodname>run()</methodname> is packaged up with the
+          function in the functor object <varname>my_functor</varname>. Once
+          this code has executed, a new thread is spawned that will run the
+          <methodname>run()</methodname> method given the provided argument
+          structure.</para>
+
+          <para>The <classname>vpr::BaseThreadFunctor</classname> interface
+          defines an extra method <methodname>setArg()</methodname><indexterm>
+              <primary>vpr::BaseThreadFunctor</primary>
+
+              <secondary>setArg() method</secondary>
+            </indexterm> that allows the function's argument to be set after
+          the functor object is created. The argument to the constructor
+          providing the function's argument is optional and will default to
+          <constant>NULL</constant> if not specified. At a later time, should
+          there be an argument to provide, the following can be used:</para>
+
+          <programlisting>thread_args_t* args = new thread_args_t();
+
+// Fill in args ...
+
+my_functor-&gt;setArg(args);</programlisting>
+
+          <para>This assumes that there is already a functor object
+          instantiated called <varname>my_functor</varname>. Alternatively,
+          <methodname>setArg()</methodname> could be used to remove a
+          previously defined argument by passing
+          <constant>NULL</constant>.</para>
+
+          <para>The last thing to note is that a lot of memory is being
+          allocated dynamically in the example code. Be careful to deallocate
+          the memory when it is no longer needed.</para>
+        </section>
+
+        <section id="section.using.vprThreadRunFunctor">
+          <title><classname>vpr::ThreadRunFunctor</classname></title>
+
+          <indexterm>
+            <primary>vpr::ThreadRunFunctor</primary>
+
+            <secondary>use</secondary>
+          </indexterm>
+
+          <para>An extension to the concept of
+          <classname>vpr::ThreadMemberFunctor</classname> has been written to
+          handle a situation that often arises. Typically, a class will have
+          data members that define the state of a class instance. Thus, when
+          using a member functor to create a thread, the object passed to the
+          <classname>vpr::ThreadMemberFunctor</classname> constructor probably
+          has all the state information that is required for the thread to
+          execute. In this case, the single <type>void*</type> parameter held
+          by the functor is ignored entirely when the thread executes.</para>
+
+          <para>To address this case (and to simplify user code), the class
+          <classname>vpr::ThreadRunFunctor</classname> exists. A class that
+          implements the <quote>runnable</quote> concept can be used to create
+          a thread with <classname>vpr::ThreadRunFunctor</classname>. Such a
+          class has a public method named <methodname>run()</methodname> that
+          takes no parameters and has a <type>void</type> return type. The
+          declaration of a runnable class would thus appear similar to the
+          following:</para>
+
+          <programlisting>class MyClass
+{
+public:
+   void run();
+
+   // Other public methods ...
+
+private:
+   // Some internal data members ...
+};</programlisting>
+
+          <para>To create a thread using this class, the code would appear as
+          follows (assuming the existence of a heap-allocated variable
+          <varname>my_obj</varname> of type <type>MyClass*</type>):</para>
+
+          <programlisting>vpr::ThreadRunFunctor&lt;MyClass&gt;* my_functor =
+   new vpr::ThreadRunFunctor&lt;MyClass&gt;(my_obj);
+vpr::Thread* my_thread = new vpr::Thread(my_functor);</programlisting>
+
+          <para>The spawned thread will execute the method
+          <methodname>MyClass::run()</methodname>.</para>
+
+          <para>While the above code is much simpler than what was presented
+          in <xref linkend="section.using.vprThreadMemberFunctor" />, there is
+          one major drawback. Namely, the <methodname>run()</methodname>
+          method must be public, and it could therefore be invoked outside the
+          scope of an executing thread. This would have to be the case if VPR
+          provided an abstract base class such as
+          <classname>Runnable</classname> (similar to the Java interface
+          <interfacename>Runnable</interfacename>) with a pure virtual method
+          named <methodname>run()</methodname>. If the visibility of the
+          member function executed by the thread is a concern, use
+          <classname>vpr::ThreadMemberFunctor</classname>.</para>
+        </section>
+
+        <section>
+          <title><classname>vpr::ThreadNonMemberFunctor</classname></title>
+
+          <indexterm>
+            <primary>vpr::ThreadNonMemberFunctor</primary>
+
+            <secondary>use</secondary>
+          </indexterm>
+
+          <para>This implementation of
+          <classname>vpr::BaseThreadFunctor</classname> is the complement of
+          the set of functions contained by
+          <classname>vpr::ThreadMemberFunctor</classname>. It is used for
+          normal C/C++ functions and for static class member functions. There
+          is nothing terribly interesting about this class, and its use is
+          straightforward. The following example, an adaptation of that
+          presented in the previous section, shows how to use this interface
+          rather than passing a function pointer and an argument to the
+          <classname>vpr::Thread</classname><indexterm>
+              <primary>classes</primary>
+
+              <secondary>vpr::Thread</secondary>
+            </indexterm> constructor. In this case, assume that the function
+          <function>run()</function> is appropriately defined for use
+          here.</para>
+
+          <programlisting>vpr::ThreadNonMemberFunctor* my_functor;
+thread_args_t* args;
+vpr::Thread* thread;
+
+args = new thread_args_t();
+
+// Fill in the arguments to be passed to the thread...
+
+my_functor = new vpr::ThreadNonMemberFunctor(run, (void*) args);
+thread = new vpr::Thread(my_functor);</programlisting>
+
+          <para>That is all there is to it. Programmers end up doing more work
+          than if they had just passed the function pointer and the associated
+          argument to the <classname>vpr::Thread</classname> constructor
+          directly, but the <classname>vpr::Thread</classname> constructor is
+          relieved of some work. (The reason for this is described below.)
+          Thus, either way is equally efficient, and what you use is up to
+          you.</para>
+        </section>
+
+        <section>
+          <title>The Gory Details</title>
+
+          <indexterm>
+            <primary>vpr::BaseThreadFunctor</primary>
+
+            <secondary>details</secondary>
+          </indexterm>
+
+          <indexterm>
+            <primary>vpr::ThreadMemberFunctor</primary>
+
+            <secondary>details</secondary>
+          </indexterm>
+
+          <indexterm>
+            <primary>vpr::ThreadRunFunctor</primary>
+
+            <secondary>details</secondary>
+          </indexterm>
+
+          <indexterm>
+            <primary>vpr::ThreadNonMemberFunctor</primary>
+
+            <secondary>details</secondary>
+          </indexterm>
+
+          <para>The magic behind these functors is done by overloading
+          <methodname>operator()</methodname> for
+          <classname>vpr::BaseThreadFunctor</classname> objects. Both
+          implementations of the interface store the function pointer (and
+          optional argument pointer), and when
+          <methodname>vpr::BaseThreadFunctor::operator()</methodname> is
+          invoked, they call the function and pass the argument if there is
+          one. There is a little more magic with the
+          <classname>vpr::ThreadMemberFunctor</classname>, however, that
+          allows it to work with the non-static methods of a given
+          class.</para>
+
+          <para>The class <classname>vpr::ThreadMemberFunctor</classname>
+          works its extra-special magic through the use of a template and one
+          of C++'s dustier operators, ::*. This operator is used to point to a
+          member of a class. In this case, it points to the method that will
+          be executed by the thread. When used in conjunction with the
+          provided class instance (the <varname>this</varname> pointer), the
+          non-static method can be invoked by the functor.</para>
+
+          <para>One interesting thing to note about
+          <classname>vpr::Thread</classname>s is that they deal only in
+          functors. More specifically, they deal only with objects that
+          subsume to <classname>vpr::BaseThreadFunctor</classname>. If a
+          function pointer and its argument are passed directly to the
+          <classname>vpr::Thread</classname> constructor, a
+          <classname>vpr::ThreadNonMemberFunctor</classname> object is created
+          to package those arguments. That new functor is then used internally
+          by the thread. Thus, whether you choose to create a non-member
+          functor or to pass the function pointer and associated argument, the
+          same code will be executed.</para>
+        </section>
+      </section>
+    </chapter>
+
+    <chapter id="chapter.synchronization">
+      <title>Synchronization</title>
+
+      <para>When multiple processes or threads have access to the same data,
+      synchronization of reads and writes becomes an important concern. For
+      example, if one thread writes to a shared variable when another thread
+      is reading, the value read will be corrupted. If two threads try to
+      write to the same shared variable at the same time, one of the two
+      writes will be lost. These situations can lead to unexpected, and often
+      undesirable, program execution. For that reason, it is important to
+      understand how to protect access to shared data so that the
+      multi-threaded software will execute correctly.</para>
+
+      <section id="section.using.vprSemaphore">
+        <title>Semaphores: Using <classname>vpr::Semaphore</classname></title>
+
+        <indexterm>
+          <primary>vpr::Semaphore</primary>
+        </indexterm>
+
+        <para>The most important part of multi-threaded programming is proper
+        thread synchronization so that access to shared data is controlled.
+        Doing so results in consistency among all threads. Semaphores are a
+        very common synchronization mechanism and have been used widely in
+        concurrent systems. This section describes the cross-platform
+        semaphore interface provided with and used by VPR. It does not explain
+        what semaphores are or how to use them—it is assumed that readers are
+        already familiar with the topic lest they probably would not be
+        reading this chapter at all.</para>
+
+        <section>
+          <title>High-Level Description</title>
+
+          <indexterm>
+            <primary>vpr::Semaphore</primary>
+
+            <secondary>description of</secondary>
+          </indexterm>
+
+          <para>As with threads, a cross-platform abstraction layer has been
+          written to provide a consistent way to use semaphores on all
+          supported platforms. The primary goal behind the interface design is
+          to provide the common <emphasis>P</emphasis> (acquire) and
+          <emphasis>V</emphasis> (release) operations. The interface does
+          include methods for read/write semaphores, but as of this writing,
+          that part of the interface is not complete. Because of that, the use
+          section does not cover that part of the interface. When the
+          implementation is complete, this section will be expanded.</para>
+
+          <para>As always, there is a header file that must be included to use
+          <classname>vpr::Semaphore</classname>. This time around, the file is
+          <filename>vpr/Sync/Semaphore.h</filename>. Do not include any of the
+          platform-specific implementation files. That is all handled
+          appropriately within
+          <filename>vpr/Sync/Semaphore.h</filename>.</para>
+        </section>
+
+        <section>
+          <title>Creating a Semaphore</title>
+
+          <indexterm>
+            <primary>vpr::Semaphore</primary>
+
+            <secondary>creating</secondary>
+          </indexterm>
+
+          <para>When creating a <classname>vpr::Semaphore</classname> object,
+          give the initial value that represents the number of resources being
+          controlled by the semaphore. If no value is given, the default is 1
+          which of course gives a binary semaphore. Binary semaphores are
+          better known as mutexes (see <xref
+          linkend="section.using.vprMutex" /> for more information about mutex
+          use in VPR). An example of creating a simple semaphore to control
+          access to five resources is as follows:</para>
+
+          <programlisting>vpr::Semaphore sema(5);</programlisting>
+
+          <para>This creates a semaphore capable of controlling concurrent
+          access to five resources. At some point, if there is a need to
+          change the number of resources, a method called
+          <methodname>reset()</methodname><indexterm>
+              <primary>vpr::Semaphore</primary>
+
+              <secondary>reset() method</secondary>
+            </indexterm> is provided. Pass the new number of resources, and
+          the semaphore object is updated appropriately:</para>
+
+          <programlisting>sema.reset(4);</programlisting>
+
+          <para>The semaphore <varname>sema</varname> now controls access to
+          only four resources.</para>
+        </section>
+
+        <section>
+          <title>Locking a Semaphore</title>
+
+          <indexterm>
+            <primary>vpr::Semaphore</primary>
+
+            <secondary>locking</secondary>
+          </indexterm>
+
+          <para>When a thread needs to acquire access to shared data, it locks
+          a semaphore. In the <classname>vpr::Semaphore</classname> interface,
+          this is accomplished using the <methodname>acquire()</methodname>
+          method:</para>
+
+          <programlisting>sema.acquire();</programlisting>
+
+          <para>As expected, <methodname>acquire()</methodname> is a blocking
+          call, so if the semaphore's value is less than or equal to 0, the
+          thread requesting the lock will block until the semaphore's value is
+          greater than 0. If the lock is acquired,
+          <constant>vpr::ReturnStatus::Succeed</constant> is returned. If the
+          attempt to lock the semaphore fails for some reason,
+          <constant>vpr::ReturnStatus::Fail</constant> is returned.</para>
+        </section>
+
+        <section>
+          <title>Releasing a Locked Semaphore</title>
+
+          <indexterm>
+            <primary>vpr::Semaphore</primary>
+
+            <secondary>releasing</secondary>
+          </indexterm>
+
+          <para>Finally, when access to the critical section is complete, the
+          semaphore is released using the <methodname>release()</methodname>
+          method:</para>
+
+          <programlisting>sema.release();</programlisting>
+
+          <para>If the locked semaphore is released successfully,
+          <constant>vpr::ReturnStatus::Succeed</constant> is returned.
+          Otherwise, <constant>vpr::ReturnStatus::Fail</constant> is
+          returned.</para>
+        </section>
+
+        <section>
+          <title>The Gory Details</title>
+
+          <indexterm>
+            <primary>vpr::Semaphore</primary>
+
+            <secondary>details</secondary>
+          </indexterm>
+
+          <para>Those who have read the Gory Details section for
+          <classname>vpr::Thread</classname>s will find this section very
+          familiar. As with <classname>vpr::Thread</classname>s, there are
+          several platform-specific semaphore implementation wrapper
+          classes:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para><classname>vpr::SemaphoreSGI</classname>: A wrapper around
+              IRIX shared-arena semaphores (refer to the
+              <function>usnewsema(3P)</function> and related manual pages for
+              more information)</para>
+            </listitem>
+
+            <listitem>
+              <para><classname>vpr::SemaphorePosix</classname>: A wrapper
+              around POSIX real-time semaphores (POSIX.1b, formerly
+              POSIX.4)</para>
+            </listitem>
+
+            <listitem>
+              <para><classname>vpr::SemaphoreNSPR</classname>: An
+              implementation of semaphores using NSPR primitives</para>
+            </listitem>
+          </itemizedlist>
+
+          <para>Unlike <classname>vpr::Thread</classname>, however, there is
+          no base interface from which these implementations inherit.
+          Performance decreases caused by virtual functions are avoided this
+          way.</para>
+
+          <para>The semaphore implementation used is chosen when VPR is
+          compiled and will always match the thread implementation being used.
+          When the VPR build is configured, preprocessor
+          <symbol>#define</symbol> statements are made in
+          <filename>vpr/vprDefines.h</filename> that describe the threading
+          system and thus the semaphores to use. Based on that, the header
+          file <filename>vpr/Sync/Semaphore.h</filename> makes several
+          <type>typedef</type>s that set up one of the platform-specific
+          implementations to act as the <classname>vpr::Semaphore</classname>
+          interface. For example, if compiling on Linux, the class
+          <classname>vpr::SempahorePosix</classname> is <type>typedef</type>'d
+          to <classname>vpr::Semaphore</classname>. Since the interface is
+          consistent among all the wrappers, everything works as though that
+          was the way it was written to behave.</para>
+        </section>
+      </section>
+
+      <section id="section.using.vprMutex">
+        <title>Mutual Exclusion: Using
+        <classname>vpr::Mutex</classname></title>
+
+        <indexterm>
+          <primary>vpr::Mutex</primary>
+        </indexterm>
+
+        <para>In addition to cross-platform semaphores, VPR provides an
+        abstraction for cross-platform mutexes. Mutexes are a special type of
+        semaphore known as a binary semaphore. Exactly one thread can hold the
+        lock at any time. This very short section, however, is not about
+        mutexes but rather about the <classname>vpr::Mutex</classname>
+        interface provided with and used by VPR.</para>
+
+        <section>
+          <title>High-Level Description</title>
+
+          <indexterm>
+            <primary>vpr::Mutex</primary>
+
+            <secondary>description of</secondary>
+          </indexterm>
+
+          <para>The cross-platform mutex abstraction in VPR is critical for
+          synchronizing access to shared data. Those who have read the section
+          on <classname>vpr::Semaphore</classname><indexterm>
+              <primary>classes</primary>
+
+              <secondary>vpr::Semaphore</secondary>
+            </indexterm> will find this section very, very familiar. The
+          interface for <classname>vpr::Mutex</classname> is a subset of that
+          for <classname>vpr::Semaphore</classname> since mutexes are binary
+          semaphores. They can be locked and unlocked. That is all there is to
+          know. The <classname>vpr::Mutex</classname> interface does include
+          some methods for read/write mutexes, but this implementation is
+          incomplete and is not documented here for that reason. When the
+          implementation is finished, this documentation will be
+          expanded.</para>
+
+          <para>The header file to include for using
+          <classname>vpr::Mutex</classname> is
+          <filename>vpr/Sync/Mutex.h</filename>. As with other classes
+          discussed in this chapter, it is important not to include the
+          platform-specific header files.</para>
+        </section>
+
+        <section>
+          <title>Creating a Mutex</title>
+
+          <indexterm>
+            <primary>vpr::Mutex</primary>
+
+            <secondary>creating</secondary>
+          </indexterm>
+
+          <para>When creating a <classname>vpr::Mutex</classname> object,
+          there are no special parameters to pass or considerations to be
+          made. An example of creating a mutex is as follows:</para>
+
+          <programlisting>vpr::Mutex mutex;</programlisting>
+
+          <para>There is nothing more to say this time.</para>
+        </section>
+
+        <section>
+          <title>Locking a Mutex</title>
+
+          <indexterm>
+            <primary>vpr::Mutex</primary>
+
+            <secondary>locking</secondary>
+          </indexterm>
+
+          <para>When a thread needs to acquire access to shared data, it can
+          lock a mutex. In the <classname>vpr::Mutex</classname> interface,
+          this is accomplished using the <methodname>acquire()</methodname>
+          method:</para>
+
+          <programlisting>mutex.acquire();</programlisting>
+
+          <para>As expected, <methodname>acquire()</methodname> is a blocking
+          call, so if the mutex is already locked by another thread, the
+          thread requesting the lock will block until the mutex is released by
+          the other thread. If the lock is acquired,
+          <constant>vpr::ReturnStatus::Succeed</constant> is returned. If the
+          attempt to lock the semaphore fails for some reason,
+          <constant>vpr::ReturnStatus::Fail</constant> is returned.</para>
+        </section>
+
+        <section>
+          <title>Attempting to Lock a Mutex</title>
+
+          <indexterm>
+            <primary>vpr::Mutex</primary>
+
+            <secondary>locking</secondary>
+
+            <tertiary>without blocking</tertiary>
+          </indexterm>
+
+          <para>If there is a need to lock a mutex only when the call would
+          <emphasis>not</emphasis> block, a method is provided to do this. It
+          is called <methodname>tryAcquire()</methodname>, and it will not
+          block if the mutex is already locked. It works as follows:</para>
+
+          <programlisting>mutex.tryAcquire();</programlisting>
+
+          <para>If the mutex is locked,
+          <constant>vpr::ReturnStatus::Succeed</constant> is returned.
+          Otherwise, <constant>vpr::ReturnStatus::Fail</constant> is returned.
+          The call does not block.</para>
+        </section>
+
+        <section>
+          <title>Testing the State of a Mutex</title>
+
+          <indexterm>
+            <primary>vpr::Mutex</primary>
+
+            <secondary>testing state</secondary>
+          </indexterm>
+
+          <para>In addition to conditional locking, the state of a mutex can
+          be tested to see if it is locked or unlocked. This is done using the
+          <methodname>test()</methodname> method as follows:</para>
+
+          <programlisting>int state = mutex.test();</programlisting>
+
+          <para>If the mutex is <emphasis>not</emphasis> locked,
+          <constant>vpr::ReturnStatus::Fail</constant> is returned. Otherwise,
+          <constant>vpr::ReturnStatus::Succeed</constant> is returned.</para>
+        </section>
+
+        <section>
+          <title>Releasing a Locked Mutex</title>
+
+          <indexterm>
+            <primary>vpr::Mutex</primary>
+
+            <secondary>releasing</secondary>
+          </indexterm>
+
+          <para>When access to the critical section is complete, a locked
+          mutex is released using the <methodname>release()</methodname>
+          method:</para>
+
+          <programlisting>mutex.release();</programlisting>
+
+          <para>If the locked mutex is released successfully,
+          <constant>vpr::ReturnStatus::Succeed</constant> is returned.
+          Otherwise, <constant>vpr::ReturnStatus::Fail</constant> is
+          returned.</para>
+        </section>
+
+        <section>
+          <title>The Gory Details</title>
+
+          <indexterm>
+            <primary>vpr::Mutex</primary>
+
+            <secondary>details</secondary>
+          </indexterm>
+
+          <para>Those who have read the Gory Details sections for
+          <classname>vpr::Thread</classname>s or for
+          <classname>vpr::Semaphore</classname>s will find this last section
+          very familiar (and probably uninteresting at this point). As with
+          <classname>vpr::Thread</classname>s and
+          <classname>vpr::Semaphore</classname>s, there are several
+          platform-specific mutex implementation wrapper classes:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para><classname>vpr::MutexSGI</classname>: A wrapper around
+              IRIX shared-arena mutexes (refer to the
+              <function>usnewlock(3P)</function> and related manual pages for
+              more information)</para>
+            </listitem>
+
+            <listitem>
+              <para><classname>vpr::MutexPosix</classname>: A wrapper around
+              POSIX real-time mutexes (POSIX.1b, formerly POSIX.4)</para>
+            </listitem>
+
+            <listitem>
+              <para><classname>vpr::MutexNSPR</classname>: A wrapper around
+              NSPR mutexes</para>
+            </listitem>
+          </itemizedlist>
+
+          <para>Similar to <classname>vpr::Semaphore</classname>, there is no
+          base interface from which these implementations inherit. Performance
+          issues caused by virtual functions are avoided by doing this.</para>
+
+          <para>The mutex implementation used is chosen when VPR is compiled
+          and will always match the thread implementation being used. When the
+          VPR build is configured, preprocessor <symbol>#define</symbol>
+          statements are made in <filename>vpr/vprDefines.h</filename> that
+          describe the threading system and thus the mutexes to use. Based on
+          that, the header file <filename>vpr/Sync/Mutex.h</filename> makes
+          several <type>typedef</type>s that set up one of the
+          platform-specific implementations to act as the
+          <classname>vpr::Mutex</classname> interface. For example, if
+          compiling on Solaris, the class
+          <classname>vpr::MutexPosix</classname> is <type>typedef</type>'d to
+          be <classname>vpr::Mutex</classname>. Since the interface is
+          consistent among all the wrappers, everything works as though that
+          was the way it was written to behave.</para>
+        </section>
+      </section>
+
+      <section id="section.using.vprCondVar">
+        <title>Condition Variables: Using
+        <classname>vpr::CondVar</classname></title>
+
+        <indexterm>
+          <primary>vpr::CondVar</primary>
+        </indexterm>
+
+        <para>Condition variables are a helpful extension to mutexes. Every
+        condition variable has an associated mutex, and thus they can be used
+        to control mutually exclusive access to some resource. A condition
+        variable adds the ability to test a condition and wait for its state
+        to change in some meaningful way. Waiting threads are awakened when
+        the state of the variable changes or when a time interval expires.
+        When awoken, the relevant condition is tested. If the state has
+        changed to the desired result, the thread continues its execution. If
+        not, it goes back into the waiting state until it is awakened again to
+        repeat the process.</para>
+
+        <section>
+          <title>High-Level Description</title>
+
+          <indexterm>
+            <primary>vpr::CondVar</primary>
+
+            <secondary>description of</secondary>
+          </indexterm>
+
+          <para>The interface for
+          <classname>vpr::CondVar</classname><indexterm>
+              <primary>classes</primary>
+
+              <secondary>vpr::CondVar</secondary>
+            </indexterm> is very similar to that of
+          <classname>vpr::Mutex</classname><indexterm>
+              <primary>classes</primary>
+
+              <secondary>vpr::Mutex</secondary>
+            </indexterm>. This is because every instance of
+          <classname>vpr::CondVar</classname> contains an instance of
+          <classname>vpr::Mutex</classname>. Thus, acquiring and releasing a
+          condition variable actually acquires and releases the contained
+          mutex.</para>
+
+          <para>The header file to include for using
+          <classname>vpr::CondVar</classname> is
+          <filename>vpr/Sync/CondVar.h</filename>. As with other classes
+          discussed in this chapter, it is important not to include the
+          platform-specific header files.</para>
+        </section>
+
+        <section>
+          <title>Creating a Condition Variable</title>
+
+          <indexterm>
+            <primary>vpr::CondVar</primary>
+
+            <secondary>creating</secondary>
+          </indexterm>
+
+          <para>When creating a <classname>vpr::CondVar</classname> object,
+          there are no special parameters to pass or considerations to be
+          made. An example of creating a condition variable is as
+          follows:</para>
+
+          <programlisting>vpr::CondVar cv;</programlisting>
+
+          <para>In addition to the <classname>vpr::CondVar</classname>
+          instance, there is usually some associated variable whose value will
+          be tested and modified by various threads. For our purposes, we will
+          use a boolean variable:</para>
+
+          <programlisting>bool state_var;</programlisting>
+        </section>
+
+        <section>
+          <title>Locking a Condition Variable</title>
+
+          <indexterm>
+            <primary>vpr::CondVar</primary>
+
+            <secondary>locking</secondary>
+          </indexterm>
+
+          <para>When a thread needs to acquire access to shared data, it can
+          lock a condition variable. In the
+          <classname>vpr::CondVar</classname> interface, this is accomplished
+          using the <methodname>acquire()</methodname> method:</para>
+
+          <programlisting>cv.acquire();</programlisting>
+
+          <para>As expected, <methodname>acquire()</methodname> is a blocking
+          call, so if the condition variable's mutex is already locked by
+          another thread, the thread requesting the lock will block until the
+          mutex is released by the other thread. If the lock is acquired,
+          <constant>vpr::ReturnStatus::Succeed</constant> is returned. If the
+          attempt to lock the semaphore fails for some reason,
+          <constant>vpr::ReturnStatus::Fail</constant> is returned.</para>
+        </section>
+
+        <section>
+          <title>Releasing a Locked Condition Variable</title>
+
+          <indexterm>
+            <primary>vpr::CondVar</primary>
+
+            <secondary>releasing</secondary>
+          </indexterm>
+
+          <para>When access to the critical section is complete, a locked
+          condition variable is released using the
+          <methodname>release()</methodname> method:</para>
+
+          <programlisting>cv.release();</programlisting>
+
+          <para>If the locked condition variable is released successfully,
+          <constant>vpr::ReturnStatus::Succeed</constant> is returned.
+          Otherwise, <constant>vpr::ReturnStatus::Fail</constant> is
+          returned.</para>
+
+          <para>Prior to calling
+          <methodname>vpr::CondVar::release()</methodname>, it is almost
+          always necessary to call
+          <methodname>vpr::CondVar::signal()</methodname> (or
+          <methodname>vpr::CondVar::broadcast()</methodname>) to inform any
+          waiting threads that the condition on which they are waiting may
+          have changed. The next section describes this procedure in greater
+          detail.</para>
+        </section>
+
+        <section>
+          <title>Putting Condition Variables to Use</title>
+
+          <para>So far, we have seen how to lock and unlock a condition
+          variable, but we have not seen how to <emphasis>use</emphasis> a
+          condition variable. Let us say that we have two threads running
+          concurrently. One thread is performing an operation, and the other
+          thread must wait until that operation is complete. Condition
+          variables work wonderfully in such a situation. For the following
+          description, we will call the first thread the worker thread and the
+          second thread the waiting thread. For the example, we will use the
+          condition variable <varname>cv</varname> and the boolean flag
+          <varname>state_var</varname>, introduced above. Initially,
+          <varname>state_var</varname> will be set to <literal>false</literal>
+          to indicate that the worker thread has not done its job yet.</para>
+
+          <section>
+            <title>The Waiting Thread</title>
+
+            <para>While it may seem more logical to focus on the worker thread
+            first, our example will flow better if we start with the waiting
+            thread. That way, the waiting thread can be in its waiting state
+            (at least conceptually) when we talk about the worker thread. The
+            waiting thread will of course be waiting for the condition (the
+            value of <varname>state_var</varname>) to change.</para>
+
+            <para>In order for the waiting thread to be waiting, it must have
+            tested the value of <varname>state_var</varname>. Because
+            <varname>state_var</varname> is shared data, the condition
+            variable must be locked before it can read the current value of
+            <varname>state_var</varname>. Depending on the current value, the
+            waiting thread will either wait or continue its execution. The
+            usual process for doing this is shown below:</para>
+
+            <programlisting>cv.acquire();
+{
+   while ( state_var == false )
+   {
+      cv.wait();
+   }
+}
+cv.release();</programlisting>
+
+            <para>The call to <methodname>vpr::CondVar::wait()</methodname> is
+            special: the mutex associated with <varname>cv</varname> is
+            unlocked so that other threads can manipulate
+            <varname>state_var</varname>, but the waiting thread will block.
+            When the waiting thread is awakened, it will regain the lock it
+            previously held on the condition variable. The thread will test
+            <varname>state_var</varname> again, and if its value is now
+            <literal>true</literal>, the waiting thread will exit the loop and
+            release the condition variable. If the value of
+            <varname>state_var</varname> is still <literal>false</literal>,
+            the waiting thread will go back to its waiting state.</para>
+          </section>
+
+          <section>
+            <title>The Worker Thread</title>
+
+            <para>The worker thread has some task to perform that is critical
+            to the proper execution of the two active threads. In order to
+            inform the waiting thread about the current status of the task, we
+            will use the condition variable <varname>cv</varname> and the
+            boolean flag <varname>state_var</varname>, shown above. While the
+            worker thread is performing its task, it must hold the lock on the
+            condition variable, as shown below:</para>
+
+            <programlisting>cv.acquire();
+{
+   // Perform our critical task ...
+
+   state_var = true;
+   cv.signal();
+}
+cv.release();</programlisting>
+
+            <para>Once the <quote>critical task</quote> is complete, the value
+            of <varname>state_var</varname> is changed to
+            <literal>true</literal> to indicate that the job is done. Then,
+            <methodname>vpr::CondVar::signal()</methodname> is invoked. This
+            will wake up the waiting thread, and the condition variable is
+            released. The result is that the waiting thread will wake up to
+            discover that the job has been completed, and it will continue
+            with its execution.</para>
+
+            <note>
+              <para>The method <methodname>vpr::CondVar::signal()</methodname>
+              will wake up at most one waiting thread. Which thread is
+              awakened is determined by the operating system scheduling
+              algorithms. To wake up all threads, use
+              <methodname>vpr::CondVar::broadcast()</methodname>. Of course,
+              each waiting thread will have to wait its turn to get exclusive
+              access to test the condition, but this can be useful when it is
+              known that many threads are all waiting on the same
+              result.</para>
+            </note>
+          </section>
+        </section>
+      </section>
+    </chapter>
+
+    <chapter id="chapter.signal.handling">
+      <title>Signal Handling</title>
+
+      <para>VPR contains an abstraction for allowing cross-platform signal
+      handling. The interface is based on that used in the <ulink
+      url="http://www.cs.wustl.edu/~schmidt/ACE.html">ADAPTIVE Communication
+      Environment</ulink> (ACE). The basic idea is that a set of signals is
+      associated with a signal handler. The handler is registered with the
+      operating system, and whenever one of the signals in the signal set is
+      delivered to the process (thread), the handler is invoked.</para>
+
+      <para>The signal set is encapsulated within an instance of
+      <classname>vpr::SignalSet</classname>, and a signal handler is simply a
+      callback function. The two are combined using the concept of a signal
+      action which is implemented in the class
+      <classname>vpr::SignalAction</classname>. The signal action registers
+      the handler for the given set of signals with the operating
+      system.</para>
+
+      <para>At this time, the signal handling abstraction has not been put
+      into use in any Juggler Project code. As such, it is not well tested,
+      and it should be considered a work in progress.</para>
+    </chapter>
+  </part>
+
+  <part>
+    <title>Miscellaneous Utilities</title>
+
+    <chapter id="chapter.sim.sockets">
+      <title>Simulated Sockets</title>
+
+      <para>The simulated sockets (often referred to as <quote>sim
+      sockets</quote>) in VPR are designed to allow testing of network
+      algorithms without requiring the use of a physical computer network. All
+      communication between <quote>nodes</quote> occurs in memory by
+      simulating the actual process of sending and receiving data on a
+      network. This is done through a discrete event simulation where the
+      events are the arrival of a message (packet) at a node in the network.
+      Because we have chosen the message arrival event as the step size, the
+      simulation can proceed at a very high rate. Within the network, timing
+      calculations are performed so that messages are delivered based on the
+      constraints of the network (bandwidth and transmission latency are the
+      primary constraints in the current version).</para>
+
+      <section>
+        <title>Sim Socket Interface</title>
+
+        <para>The interface for sim sockets is identical to that of the
+        operating system abstraction layer for sockets, namely
+        <classname>vpr::Socket</classname>,
+        <classname>vpr::SocketStream</classname>, and
+        <classname>vpr::SocketDatagram</classname>. Indeed, user code actually
+        uses instances of those classes. The use of sim sockets versus real
+        sockets is made when VPR is compiled, in the same way that the
+        threading abstraction (NSPR versus POSIX versus SPROC) is chosen at
+        compile time. Ideally, user code should not have to change at all to
+        use sim sockets, thus making it possible to test network algorithms
+        with exactly the same code as would be used with real sockets.</para>
+
+        <para>Of course, the real world is not ideal. While it is very true
+        that most code does not have to change to use sim sockets, there is
+        one major exception. Because the sim sockets are based on an
+        event-driven simulation, something must be driving the simulation.
+        When using sim sockets, user code must have a separate thread running
+        that makes use of the singleton
+        <classname>vpr::sim::Controller</classname>. The thread contains a
+        loop that invokes
+        <methodname>vpr::sim::Controller::processNextEvent()</methodname> or
+        <methodname>vpr::sim::Controller::processEvents()</methodname> at each
+        iteration.</para>
+
+        <para>Another aspect of the current sim socket implementation is that
+        it is designed to execute in a single thread using non-blocking socket
+        semantics. We have chosen this design because we felt that the
+        complexity of writing a multi-threaded socket simulation that allowed
+        sockets to block would be far too difficult. Future versions may allow
+        blocking or non-blocking semantics to be chosen by user code, but such
+        a feature is not expected in the near future.</para>
+      </section>
+
+      <section>
+        <title>Sim Socket Implementation</title>
+
+        <para>The implementation of the sim socket code is based on the <ulink
+        url="http://www.boost.org/libs/graph/doc/">Boost Graph
+        Library</ulink>. Vertices represent network nodes (also known as
+        hosts), and edges represent network lines. The network topology is
+        constructed using output from the <ulink
+        url="http://www.geocities.com/ResearchTriangle/3867/sourcecode.html">Tiers
+        software</ulink>. Once constructed, an in-memory network serves as the
+        backend for the higher level socket API. Messages (blocks of memory)
+        are passed between nodes until they reach their destination.</para>
+      </section>
+    </chapter>
+
+    <chapter id="chapter.guid">
+      <title>Globally Unique Identifiers</title>
+
+      <para>Globally unique identifiers (GUIDs), also known as universally
+      unique identifiers (UUIDs), provide 128-bit identifiers that are
+      guaranteed to be unique (speaking statistically). These are based on an
+      Internet draft written by Paul L. Leach at Microsoft. The likelihood of
+      two identifiers being the same varies depending on the generation
+      mechanism used. In VPR, we define the type
+      <classname>vpr::GUID</classname><indexterm>
+          <primary>classes</primary>
+
+          <secondary>vpr::GUID</secondary>
+        </indexterm> as a cross-platform wrapper around the process of
+      generating GUIDs and the process of serializing GUIDs for network
+      transmission.</para>
+
+      <section>
+        <title>GUID Creation</title>
+
+        <para>Creating GUIDs is easy. The default
+        <classname>vpr::GUID</classname> constructor will create a
+        <quote>null</quote> GUID. A fresh identifier can be generated by
+        invoking the method <methodname>vpr::GUID::generate()</methodname> on
+        the newly created null GUID. To create a constant GUID, the string
+        representation of the GUID can be passed to the
+        <classname>vpr::GUID</classname> constructor. Such a string can be
+        created using a command-line utility such as
+        <command>uuidgen</command>.</para>
+
+        <para>The GUID specification describes creating identifiers using a
+        <quote>namespace</quote> concept. The last
+        <classname>vpr::GUID</classname> constructor takes two arguments: a
+        namespace GUID and a string name. The namespace GUID is the same for
+        all GUIDs created in the namespace. The string name is used to create
+        a hash value that makes the GUID unique for that name within the
+        namespace. The full algorithm and semantics of GUID namespaces are
+        beyond the scope of this document, but the functionality is provided
+        to offer a complete (cross-platform) implementation of the
+        specification.</para>
+      </section>
+
+      <section>
+        <title>GUID Operations</title>
+
+        <para>The <classname>vpr::GUID</classname> interface provides
+        overloaded methods for comparison operations (equality and less-than)
+        between two <classname>vpr::GUID</classname> instances. A function is
+        also provided for generating a hash value for a given GUID so that
+        they may be used in STL indexed containers.</para>
+
+        <para>Serialization of <classname>vpr::GUID</classname> objects uses
+        the same mechanisms described in <xref
+        linkend="chapter.data.marshaling" />.</para>
+      </section>
+    </chapter>
+
+    <chapter id="chapter.intervals">
+      <title>Intervals</title>
+
+      <para>The <classname>vpr::Interval</classname><indexterm>
+          <primary>classes</primary>
+
+          <secondary>vpr::Interval</secondary>
+        </indexterm> class defines a high-resolution interval that is based on
+      an unsigned, always-increasing counter. These intervals are only valid
+      for about twelve (12) hours, which implies that they are only useful for
+      a range of roughly six hours. When the internal counter reaches its
+      maximum value, the interval overflows. The overloaded
+      <methodname>operator-</methodname> will deal with overflows so that two
+      intervals can be compared.</para>
+
+      <section>
+        <title>Interval Creation</title>
+
+        <para>Intervals are constructed with a constant value and a time unit,
+        either microseconds, milliseconds, or seconds. Otherwise, an empty
+        interval (whose internal counter is initialized to zero) can be
+        created using the default value. The internal counter of any interval
+        instance is modified using one of the <quote>setter</quote>
+        methods.</para>
+      </section>
+
+      <section>
+        <title>Interval Operations</title>
+
+        <para>The set methods take various forms. For example, the method
+        <methodname>vpr::Interval::setNow()</methodname> sets the internal
+        counter to the current time. The variants of
+        <methodname>vpr::Interval::set()</methodname> (including
+        <methodname>vpr::Interval::setf()</methodname> and
+        <methodname>vpr::Interval::setd()</methodname>) set the counter to an
+        explicit value. As with the constructor, these take a second argument
+        that determines the time units. There are helper methods such as
+        <methodname>vpr::Interval::sec(vpr::Uint64)</methodname> and
+        <methodname>vpr::Interval::usecf(float)</methodname> that use the
+        correct time unit internally. Use of these can be less error prone
+        than giving both the time and the unit, but which version to use is up
+        to the user.</para>
+
+        <para>The value of an interval is queried to return using a specific
+        time unit. For example,
+        <methodname>vpr::Interval::msecf()</methodname> returns the interval
+        value as a floating-point number representing milliseconds. The
+        <quote>base</quote> counter value can be returned. Conceptually, this
+        is a unit-less value. Strictly speaking, its units are defined by
+        platform-specific details that determine how accurate the counter can
+        be.</para>
+
+        <para>Mathematical operations can be performed on
+        <classname>vpr::Interval</classname> instances. The allow addition,
+        subtraction, and comparison. As mentioned above, the overloaded
+        subtraction operator will deal with overflow to allow proper
+        comparison of two <classname>vpr::Interval</classname> instances.
+        However, users should always bear in mind the fact that the intervals
+        are only good for ranges of about six (6) hours.</para>
+      </section>
+    </chapter>
+
+    <chapter id="chapter.singleton">
+      <title>Singletons</title>
+
+      <para>A <firstterm>singleton</firstterm> is a common design pattern
+      <xref linkend="ref.design.patterns" />. In VPR, the class
+      <classname>vpr::Singleton&lt;T&gt;<indexterm>
+          <primary>classes</primary>
+
+          <secondary>vpr::Singleton&lt;T&gt;</secondary>
+        </indexterm></classname> provides a template-based implementation of
+      this pattern. An example of its use is as follows:</para>
+
+      <programlisting linenumbering="numbered">class MySingleton : public vpr::Singleton&lt;MySingleton&gt;
+{
+public:
+   // Public operations ...
+   void doSomething()
+   {
+      // Do something ...
+   }
+
+private:
+   // Required so that vpr::Singleton can instantiate this class.
+   friend class vpr::Singleton&lt;MySingleton&gt;;
+
+   // Prevent instantiation by user code.
+   MySingleton()
+   {
+      // Some constructor actions ...
+   }
+
+   // Prevent copying.
+   MySingleton(const MySingleton&amp; o)
+   {
+      ;
+   }
+
+   MySingleton&amp; operator=(const MySingleton&amp; o)
+   {
+      ;
+   }
+};</programlisting>
+
+      <para>Getting a reference to the singleton (and calling the
+      <methodname>doSomething()</methodname> method) is then done using the
+      following syntax:</para>
+
+      <programlisting>MySingleton::instance()-&gt;doSomething();</programlisting>
+
+      <para>There is some old code in
+      <filename>vpr/Util/Singleton.h</filename> for a singleton implementation
+      based on macros defined by the C preprocessor. We maintain this code for
+      backwards compatibility, but we recommend that new code use the
+      template-based implementation described above.</para>
+    </chapter>
+
+    <chapter id="chapter.factory">
+      <title>Factories</title>
+
+      <para></para>
+    </chapter>
+
+    <chapter>
+      <title id="chapter.perfmon">Performance Monitoring</title>
+
+      <para>The Performance Monitoring part of the VPR library enables users
+      to obtain and use performance metrics easily. The basic concept for
+      VPR's performance monitoring is that there is a manager that is in
+      charge of keeping track of all the different data coming in. This is
+      called the Profile Manager (from the class
+      <classname>vpr::ProfileManager</classname>).</para>
+
+      <para>The Profile Manager keeps a one-to-many tree of the different
+      metrics (instances of <classname>vpr::ProfileSample</classname>) being
+      used. When the Profile Manager starts profiling a section of code, it
+      looks to see if it had been profiled before and if so adds another
+      sample to that profile otherwise it is added to the tree . Upon the
+      completion of the function the destructor asks the Profile Manager to
+      stop profiling.</para>
+
+      <para>Along with being able to keep track of the named profiles, there
+      is an ability to keep a specified number of samples so the Profile
+      Manager will keep more than just the last sample obtained. There are
+      also two macros provided for ease of use and to minimize the
+      intrusiveness of the API. These are the
+      <methodname>VPR_PROFILE_GUARD(name)</methodname> and
+      <methodname>VPR_PROFILE_GUARD_HISTORY(name, queue_size)</methodname>
+      macros. These can be simply added at the top of functions that are to be
+      profiled. Also, these macros give the ability at compile time to disable
+      all profiling by way of the variable
+      <varname>VPR_DISABLE_PROFILE</varname>. All of the profiling data is
+      obtained by using the <classname>vpr::Interval</classname> class to
+      measure the time spent in a particular piece of code using the highest
+      precision timer available to the VPR.</para>
+
+      <para>Calls may be made to
+      <methodname>vpr::ProfileManager::startProfile("name")</methodname> and
+      to <methodname>vpr::ProfileManager::stopProfile()</methodname> so that
+      just a certain part of the code may be profiled. A name needs to be
+      specified when a profile is started but when
+      <methodname>vpr::ProfileManager::stopProfile()</methodname> is called it
+      simply stops the last profile that was started. Starts and stops can be
+      nested within a function or even a program as long as their is a
+      corresponding start with every stop.</para>
+
+      <para>An iterator class is provided to allow the user to use the
+      captured data for statistic calculations, overloaded output stream
+      operator for printing out, etc. The iterator class is what the user can
+      use to collect information about the tree structure and interpreting the
+      tree structure for hierarchical calls within the profiles. For profiles
+      that contain more than one sample there are functions provided to get
+      the short term average. Also, to quickly just print out the statistics
+      at any point the user may call
+      <function>VPR_PROFILE_RESULTS()</function> and the current status of all
+      profiles will be printed out via
+      <classname>vpr::DEBUG</classname>.</para>
+    </chapter>
+  </part>
+
+  <part>
+    <title>Appendices</title>
+
+    <appendix id="appendix.io.impl">
+      <title>I/O Implementation Information</title>
+
+      <para>All of the buffered I/O code is based around a Bridge pattern
+      <xref linkend="ref.design.patterns" />, though the actual implementation
+      of the bridge is not as straightforward as described in the literature.
+      However, the implementation can be divided into the platform-specific
+      wrapper classes (e.g.,
+      <classname>vpr::SocketStreamImplNSPR</classname><indexterm>
+          <primary>classes</primary>
+
+          <secondary>vpr::SocketStreamImplNSPR</secondary>
+        </indexterm>) and <quote>containers</quote> for those classes (e.g.,
+      <classname>vpr::SocketStream_t&lt;T&gt;</classname><indexterm>
+          <primary>classes</primary>
+
+          <secondary>vpr::SocketStream_t&lt;T&gt;</secondary>
+        </indexterm>). Ultimately, the type seen in user code (e.g.,
+      <classname>vpr::SocketStream</classname><indexterm>
+          <primary>classes</primary>
+
+          <secondary>vpr::SocketStream</secondary>
+        </indexterm>) is a <token>typedef</token> for a specific container
+      class instantiation.</para>
+
+      <para>The <token>typedef</token> is based on the concept of a
+      platform-specific <quote>domain</quote>, as specified in the header
+      <filename>vpr/vprDomain.h</filename>. These domains allow a form of
+      parameterization of VPR components using the C preprocessor. For
+      example, when compiling on IRIX with SPROC threads, the domain defines
+      the use of the SPROC threading subsystem, BSD sockets, and termios
+      serial I/O. When compiling on Windows, where only NSPR is used, the
+      domain specifies the use of native Win32 serial I/O and NSPR for
+      everything else. Moreover, the simulated sockets can be mixed with any
+      of the threading subsystems using this paradigm.</para>
+    </appendix>
+
+    <appendix id="appendix.gfdl">
+      <title>GNU Free Documentation License</title>
+
+      <subtitle>Version 1.2, November 2002</subtitle>
+
+      <blockquote id="fsf-copyright">
+        <title>FSF Copyright note</title>
+
+        <para>Copyright (C) 2000,2001,2002 Free Software Foundation, Inc. 59
+        Temple Place, Suite 330, Boston, MA 02111-1307 USA Everyone is
+        permitted to copy and distribute verbatim copies of this license
+        document, but changing it is not allowed.</para>
+      </blockquote>
+
+      <section id="gfdl-0">
+        <title>PREAMBLE</title>
+
+        <para>The purpose of this License is to make a manual, textbook, or
+        other functional and useful document "free" in the sense of freedom:
+        to assure everyone the effective freedom to copy and redistribute it,
+        with or without modifying it, either commercially or noncommercially.
+        Secondarily, this License preserves for the author and publisher a way
+        to get credit for their work, while not being considered responsible
+        for modifications made by others.</para>
+
+        <para>This License is a kind of "copyleft", which means that
+        derivative works of the document must themselves be free in the same
+        sense. It complements the GNU General Public License, which is a
+        copyleft license designed for free software.</para>
+
+        <para>We have designed this License in order to use it for manuals for
+        free software, because free software needs free documentation: a free
+        program should come with manuals providing the same freedoms that the
+        software does. But this License is not limited to software manuals; it
+        can be used for any textual work, regardless of subject matter or
+        whether it is published as a printed book. We recommend this License
+        principally for works whose purpose is instruction or
+        reference.</para>
+      </section>
+
+      <section id="gfdl-1">
+        <title>APPLICABILITY AND DEFINITIONS</title>
+
+        <para id="gfdl-doc">This License applies to any manual or other work,
+        in any medium, that contains a notice placed by the copyright holder
+        saying it can be distributed under the terms of this License. Such a
+        notice grants a world-wide, royalty-free license, unlimited in
+        duration, to use that work under the conditions stated herein. The
+        "Document", below, refers to any such manual or work. Any member of
+        the public is a licensee, and is addressed as "you". You accept the
+        license if you copy, modify or distribute the work in a way requiring
+        permission under copyright law.</para>
+
+        <para id="gfdl-mod-ver">A "Modified Version" of the Document means any
+        work containing the Document or a portion of it, either copied
+        verbatim, or with modifications and/or translated into another
+        language.</para>
+
+        <para id="gfdl-secnd-sect">A "Secondary Section" is a named appendix
+        or a front-matter section of the Document that deals exclusively with
+        the relationship of the publishers or authors of the Document to the
+        Document's overall subject (or to related matters) and contains
+        nothing that could fall directly within that overall subject. (Thus,
+        if the Document is in part a textbook of mathematics, a Secondary
+        Section may not explain any mathematics.) The relationship could be a
+        matter of historical connection with the subject or with related
+        matters, or of legal, commercial, philosophical, ethical or political
+        position regarding them.</para>
+
+        <para id="gfdl-inv-sect">The "Invariant Sections" are certain
+        Secondary Sections whose titles are designated, as being those of
+        Invariant Sections, in the notice that says that the Document is
+        released under this License. If a section does not fit the above
+        definition of Secondary then it is not allowed to be designated as
+        Invariant. The Document may contain zero Invariant Sections. If the
+        Document does not identify any Invariant Sections then there are
+        none.</para>
+
+        <para id="gfdl-cov-text">The "Cover Texts" are certain short passages
+        of text that are listed, as Front-Cover Texts or Back-Cover Texts, in
+        the notice that says that the Document is released under this License.
+        A Front-Cover Text may be at most 5 words, and a Back-Cover Text may
+        be at most 25 words.</para>
+
+        <para id="gfdl-transparent">A "Transparent" copy of the Document means
+        a machine-readable copy, represented in a format whose specification
+        is available to the general public, that is suitable for revising the
+        document straightforwardly with generic text editors or (for images
+        composed of pixels) generic paint programs or (for drawings) some
+        widely available drawing editor, and that is suitable for input to
+        text formatters or for automatic translation to a variety of formats
+        suitable for input to text formatters. A copy made in an otherwise
+        Transparent file format whose markup, or absence of markup, has been
+        arranged to thwart or discourage subsequent modification by readers is
+        not Transparent. An image format is not Transparent if used for any
+        substantial amount of text. A copy that is not "Transparent" is called
+        "Opaque".</para>
+
+        <para>Examples of suitable formats for Transparent copies include
+        plain ASCII without markup, Texinfo input format, LaTeX input format,
+        SGML or XML using a publicly available DTD, and standard-conforming
+        simple HTML, PostScript or PDF designed for human modification.
+        Examples of transparent image formats include PNG, XCF and JPG. Opaque
+        formats include proprietary formats that can be read and edited only
+        by proprietary word processors, SGML or XML for which the DTD and/or
+        processing tools are not generally available, and the
+        machine-generated HTML, PostScript or PDF produced by some word
+        processors for output purposes only.</para>
+
+        <para id="gfdl-title-page">The "Title Page" means, for a printed book,
+        the title page itself, plus such following pages as are needed to
+        hold, legibly, the material this License requires to appear in the
+        title page. For works in formats which do not have any title page as
+        such, "Title Page" means the text near the most prominent appearance
+        of the work's title, preceding the beginning of the body of the
+        text.</para>
+
+        <para id="gfdl-entitled">A section "Entitled XYZ" means a named
+        subunit of the Document whose title either is precisely XYZ or
+        contains XYZ in parentheses following text that translates XYZ in
+        another language. (Here XYZ stands for a specific section name
+        mentioned below, such as "Acknowledgements", "Dedications",
+        "Endorsements", or "History".) To "Preserve the Title" of such a
+        section when you modify the Document means that it remains a section
+        "Entitled XYZ" according to this definition.</para>
+
+        <para>The Document may include Warranty Disclaimers next to the notice
+        which states that this License applies to the Document. These Warranty
+        Disclaimers are considered to be included by reference in this
+        License, but only as regards disclaiming warranties: any other
+        implication that these Warranty Disclaimers may have is void and has
+        no effect on the meaning of this License.</para>
+      </section>
+
+      <section id="gfdl-2">
+        <title>VERBATIM COPYING</title>
+
+        <para>You may copy and distribute the Document in any medium, either
+        commercially or noncommercially, provided that this License, the
+        copyright notices, and the license notice saying this License applies
+        to the Document are reproduced in all copies, and that you add no
+        other conditions whatsoever to those of this License. You may not use
+        technical measures to obstruct or control the reading or further
+        copying of the copies you make or distribute. However, you may accept
+        compensation in exchange for copies. If you distribute a large enough
+        number of copies you must also follow the conditions in section
+        3.</para>
+
+        <para>You may also lend copies, under the same conditions stated
+        above, and you may publicly display copies.</para>
+      </section>
+
+      <section id="gfdl-3">
+        <title>COPYING IN QUANTITY</title>
+
+        <para>If you publish printed copies (or copies in media that commonly
+        have printed covers) of the Document, numbering more than 100, and the
+        Document's license notice requires Cover Texts, you must enclose the
+        copies in covers that carry, clearly and legibly, all these Cover
+        Texts: Front-Cover Texts on the front cover, and Back-Cover Texts on
+        the back cover. Both covers must also clearly and legibly identify you
+        as the publisher of these copies. The front cover must present the
+        full title with all words of the title equally prominent and visible.
+        You may add other material on the covers in addition. Copying with
+        changes limited to the covers, as long as they preserve the title of
+        the Document and satisfy these conditions, can be treated as verbatim
+        copying in other respects.</para>
+
+        <para>If the required texts for either cover are too voluminous to fit
+        legibly, you should put the first ones listed (as many as fit
+        reasonably) on the actual cover, and continue the rest onto adjacent
+        pages.</para>
+
+        <para>If you publish or distribute Opaque copies of the Document
+        numbering more than 100, you must either include a machine-readable
+        Transparent copy along with each Opaque copy, or state in or with each
+        Opaque copy a computer-network location from which the general
+        network-using public has access to download using public-standard
+        network protocols a complete Transparent copy of the Document, free of
+        added material. If you use the latter option, you must take reasonably
+        prudent steps, when you begin distribution of Opaque copies in
+        quantity, to ensure that this Transparent copy will remain thus
+        accessible at the stated location until at least one year after the
+        last time you distribute an Opaque copy (directly or through your
+        agents or retailers) of that edition to the public.</para>
+
+        <para>It is requested, but not required, that you contact the authors
+        of the Document well before redistributing any large number of copies,
+        to give them a chance to provide you with an updated version of the
+        Document.</para>
+      </section>
+
+      <section id="gfdl-4">
+        <title>MODIFICATIONS</title>
+
+        <para>You may copy and distribute a Modified Version of the Document
+        under the conditions of sections 2 and 3 above, provided that you
+        release the Modified Version under precisely this License, with the
+        Modified Version filling the role of the Document, thus licensing
+        distribution and modification of the Modified Version to whoever
+        possesses a copy of it. In addition, you must do these things in the
+        Modified Version:</para>
+
+        <orderedlist id="gfdl-modif-cond" numeration="upperalpha">
+          <title>GNU FDL Modification Conditions</title>
+
+          <listitem>
+            <simpara>Use in the Title Page (and on the covers, if any) a title
+            distinct from that of the Document, and from those of previous
+            versions (which should, if there were any, be listed in the
+            History section of the Document). You may use the same title as a
+            previous version if the original publisher of that version gives
+            permission.</simpara>
+          </listitem>
+
+          <listitem>
+            <simpara>List on the Title Page, as authors, one or more persons
+            or entities responsible for authorship of the modifications in the
+            Modified Version, together with at least five of the principal
+            authors of the Document (all of its principal authors, if it has
+            fewer than five), unless they release you from this
+            requirement.</simpara>
+          </listitem>
+
+          <listitem>
+            <simpara>State on the Title page the name of the publisher of the
+            Modified Version, as the publisher.</simpara>
+          </listitem>
+
+          <listitem>
+            <simpara>Preserve all the copyright notices of the
+            Document.</simpara>
+          </listitem>
+
+          <listitem>
+            <simpara>Add an appropriate copyright notice for your
+            modifications adjacent to the other copyright notices.</simpara>
+          </listitem>
+
+          <listitem>
+            <simpara>Include, immediately after the copyright notices, a
+            license notice giving the public permission to use the Modified
+            Version under the terms of this License, in the form shown in the
+            <link linkend="gfdl-addendum">Addendum</link> below.</simpara>
+          </listitem>
+
+          <listitem>
+            <simpara>Preserve in that license notice the full lists of
+            Invariant Sections and required Cover Texts given in the
+            Document's license notice.</simpara>
+          </listitem>
+
+          <listitem>
+            <simpara>Include an unaltered copy of this License.</simpara>
+          </listitem>
+
+          <listitem>
+            <simpara>Preserve the section Entitled "History", Preserve its
+            Title, and add to it an item stating at least the title, year, new
+            authors, and publisher of the Modified Version as given on the
+            Title Page. If there is no section Entitled "History" in the
+            Document, create one stating the title, year, authors, and
+            publisher of the Document as given on its Title Page, then add an
+            item describing the Modified Version as stated in the previous
+            sentence.</simpara>
+          </listitem>
+
+          <listitem>
+            <simpara>Preserve the network location, if any, given in the
+            Document for public access to a Transparent copy of the Document,
+            and likewise the network locations given in the Document for
+            previous versions it was based on. These may be placed in the
+            "History" section. You may omit a network location for a work that
+            was published at least four years before the Document itself, or
+            if the original publisher of the version it refers to gives
+            permission.</simpara>
+          </listitem>
+
+          <listitem>
+            <simpara>For any section Entitled "Acknowledgements" or
+            "Dedications", Preserve the Title of the section, and preserve in
+            the section all the substance and tone of each of the contributor
+            acknowledgements and/or dedications given therein.</simpara>
+          </listitem>
+
+          <listitem>
+            <simpara>Preserve all the Invariant Sections of the Document,
+            unaltered in their text and in their titles. Section numbers or
+            the equivalent are not considered part of the section
+            titles.</simpara>
+          </listitem>
+
+          <listitem>
+            <simpara>Delete any section Entitled "Endorsements". Such a
+            section may not be included in the Modified Version.</simpara>
+          </listitem>
+
+          <listitem>
+            <simpara>Do not retitle any existing section to be Entitled
+            "Endorsements" or to conflict in title with any Invariant
+            Section.</simpara>
+          </listitem>
+
+          <listitem>
+            <simpara>Preserve any Warranty Disclaimers.</simpara>
+          </listitem>
+        </orderedlist>
+
+        <para>If the Modified Version includes new front-matter sections or
+        appendices that qualify as Secondary Sections and contain no material
+        copied from the Document, you may at your option designate some or all
+        of these sections as invariant. To do this, add their titles to the
+        list of Invariant Sections in the Modified Version's license notice.
+        These titles must be distinct from any other section titles.</para>
+
+        <para>You may add a section Entitled "Endorsements", provided it
+        contains nothing but endorsements of your Modified Version by various
+        parties--for example, statements of peer review or that the text has
+        been approved by an organization as the authoritative definition of a
+        standard.</para>
+
+        <para>You may add a passage of up to five words as a Front-Cover Text,
+        and a passage of up to 25 words as a Back-Cover Text, to the end of
+        the list of Cover Texts in the Modified Version. Only one passage of
+        Front-Cover Text and one of Back-Cover Text may be added by (or
+        through arrangements made by) any one entity. If the Document already
+        includes a cover text for the same cover, previously added by you or
+        by arrangement made by the same entity you are acting on behalf of,
+        you may not add another; but you may replace the old one, on explicit
+        permission from the previous publisher that added the old one.</para>
+
+        <para>The author(s) and publisher(s) of the Document do not by this
+        License give permission to use their names for publicity for or to
+        assert or imply endorsement of any Modified Version.</para>
+      </section>
+
+      <section id="gfdl-5">
+        <title>COMBINING DOCUMENTS</title>
+
+        <para>You may combine the Document with other documents released under
+        this License, under the terms defined in <link
+        linkend="gfdl-4">section 4</link> above for modified versions,
+        provided that you include in the combination all of the Invariant
+        Sections of all of the original documents, unmodified, and list them
+        all as Invariant Sections of your combined work in its license notice,
+        and that you preserve all their Warranty Disclaimers.</para>
+
+        <para>The combined work need only contain one copy of this License,
+        and multiple identical Invariant Sections may be replaced with a
+        single copy. If there are multiple Invariant Sections with the same
+        name but different contents, make the title of each such section
+        unique by adding at the end of it, in parentheses, the name of the
+        original author or publisher of that section if known, or else a
+        unique number. Make the same adjustment to the section titles in the
+        list of Invariant Sections in the license notice of the combined
+        work.</para>
+
+        <para>In the combination, you must combine any sections Entitled
+        "History" in the various original documents, forming one section
+        Entitled "History"; likewise combine any sections Entitled
+        "Acknowledgements", and any sections Entitled "Dedications". You must
+        delete all sections Entitled "Endorsements".</para>
+      </section>
+
+      <section id="gfdl-6">
+        <title>COLLECTIONS OF DOCUMENTS</title>
+
+        <para>You may make a collection consisting of the Document and other
+        documents released under this License, and replace the individual
+        copies of this License in the various documents with a single copy
+        that is included in the collection, provided that you follow the rules
+        of this License for verbatim copying of each of the documents in all
+        other respects.</para>
+
+        <para>You may extract a single document from such a collection, and
+        distribute it individually under this License, provided you insert a
+        copy of this License into the extracted document, and follow this
+        License in all other respects regarding verbatim copying of that
+        document.</para>
+      </section>
+
+      <section id="gfdl-7">
+        <title>AGGREGATION WITH INDEPENDENT WORKS</title>
+
+        <para>A compilation of the Document or its derivatives with other
+        separate and independent documents or works, in or on a volume of a
+        storage or distribution medium, is called an "aggregate" if the
+        copyright resulting from the compilation is not used to limit the
+        legal rights of the compilation's users beyond what the individual
+        works permit. When the Document is included in an aggregate, this
+        License does not apply to the other works in the aggregate which are
+        not themselves derivative works of the Document.</para>
+
+        <para>If the Cover Text requirement of section 3 is applicable to
+        these copies of the Document, then if the Document is less than one
+        half of the entire aggregate, the Document's Cover Texts may be placed
+        on covers that bracket the Document within the aggregate, or the
+        electronic equivalent of covers if the Document is in electronic form.
+        Otherwise they must appear on printed covers that bracket the whole
+        aggregate.</para>
+      </section>
+
+      <section id="gfdl-8">
+        <title>TRANSLATION</title>
+
+        <para>Translation is considered a kind of modification, so you may
+        distribute translations of the Document under the terms of section 4.
+        Replacing Invariant Sections with translations requires special
+        permission from their copyright holders, but you may include
+        translations of some or all Invariant Sections in addition to the
+        original versions of these Invariant Sections. You may include a
+        translation of this License, and all the license notices in the
+        Document, and any Warranty Disclaimers, provided that you also include
+        the original English version of this License and the original versions
+        of those notices and disclaimers. In case of a disagreement between
+        the translation and the original version of this License or a notice
+        or disclaimer, the original version will prevail.</para>
+
+        <para>If a section in the Document is Entitled "Acknowledgements",
+        "Dedications", or "History", the requirement (section 4) to Preserve
+        its Title (section 1) will typically require changing the actual
+        title.</para>
+      </section>
+
+      <section id="gfdl-9">
+        <title>TERMINATION</title>
+
+        <para>You may not copy, modify, sublicense, or distribute the Document
+        except as expressly provided for under this License. Any other attempt
+        to copy, modify, sublicense or distribute the Document is void, and
+        will automatically terminate your rights under this License. However,
+        parties who have received copies, or rights, from you under this
+        License will not have their licenses terminated so long as such
+        parties remain in full compliance.</para>
+      </section>
+
+      <section id="gfdl-10">
+        <title>FUTURE REVISIONS OF THIS LICENSE</title>
+
+        <para>The Free Software Foundation may publish new, revised versions
+        of the GNU Free Documentation License from time to time. Such new
+        versions will be similar in spirit to the present version, but may
+        differ in detail to address new problems or concerns. See
+        http://www.gnu.org/copyleft/.</para>
+
+        <para>Each version of the License is given a distinguishing version
+        number. If the Document specifies that a particular numbered version
+        of this License "or any later version" applies to it, you have the
+        option of following the terms and conditions either of that specified
+        version or of any later version that has been published (not as a
+        draft) by the Free Software Foundation. If the Document does not
+        specify a version number of this License, you may choose any version
+        ever published (not as a draft) by the Free Software
+        Foundation.</para>
+      </section>
+
+      <section id="gfdl-addendum">
+        <title>ADDENDUM: How to use this License for your documents</title>
+
+        <para>To use this License in a document you have written, include a
+        copy of the License in the document and put the following copyright
+        and license notices just after the title page:</para>
+
+        <blockquote id="copyright-sample">
+          <title>Sample Invariant Sections list</title>
+
+          <para>Copyright (c) YEAR YOUR NAME. Permission is granted to copy,
+          distribute and/or modify this document under the terms of the GNU
+          Free Documentation License, Version 1.2 or any later version
+          published by the Free Software Foundation; with no Invariant
+          Sections, no Front-Cover Texts, and no Back-Cover Texts. A copy of
+          the license is included in the section entitled "GNU Free
+          Documentation License".</para>
+        </blockquote>
+
+        <para>If you have Invariant Sections, Front-Cover Texts and Back-Cover
+        Texts, replace the "with...Texts." line with this:</para>
+
+        <blockquote id="inv-cover-sample">
+          <title>Sample Invariant Sections list</title>
+
+          <para>with the Invariant Sections being LIST THEIR TITLES, with the
+          Front-Cover Texts being LIST, and with the Back-Cover Texts being
+          LIST.</para>
+        </blockquote>
+
+        <para>If you have Invariant Sections without Cover Texts, or some
+        other combination of the three, merge those two alternatives to suit
+        the situation.</para>
+
+        <para>If your document contains nontrivial examples of program code,
+        we recommend releasing these examples in parallel under your choice of
+        free software license, such as the GNU General Public License, to
+        permit their use in free software.</para>
+      </section>
+    </appendix>
+  </part>
+
+  <bibliography>
+    <biblioentry id="ref.design.patterns">
+      <abbrev>Gam95</abbrev>
+
+      <authorgroup>
+        <author>
+          <firstname>Erich</firstname>
+
+          <surname>Gamma</surname>
+        </author>
+
+        <author>
+          <firstname>Richard</firstname>
+
+          <surname>Helm</surname>
+        </author>
+
+        <author>
+          <firstname>Ralph</firstname>
+
+          <surname>Johnson</surname>
+        </author>
+
+        <author>
+          <firstname>John</firstname>
+
+          <surname>Vlissides</surname>
+        </author>
+      </authorgroup>
+
+      <title>Design Patterns</title>
+
+      <subtitle>Elements of Reusable Object-Oriented Software</subtitle>
+
+      <publisher>
+        <publishername>Addison-Wesley</publishername>
+      </publisher>
+
+      <pubdate>1995</pubdate>
+    </biblioentry>
+
+    <biblioentry id="ref.pthreads.programming">
+      <abbrev>Nic96</abbrev>
+
+      <authorgroup>
+        <author>
+          <firstname>Bradford</firstname>
+
+          <surname>Nichols</surname>
+        </author>
+
+        <author>
+          <firstname>Dick</firstname>
+
+          <surname>Buttlar</surname>
+        </author>
+
+        <author>
+          <firstname>Jacqueline</firstname>
+
+          <othername>Proulx</othername>
+
+          <surname>Farrell</surname>
+        </author>
+      </authorgroup>
+
+      <title>Pthreads Programming</title>
+
+      <subtitle>A POSIX Standard for Better Multiprocessing</subtitle>
+
+      <publisher>
+        <publishername>O'Reilly &amp; Associates</publishername>
+      </publisher>
+
+      <pubdate>1996</pubdate>
+    </biblioentry>
+
+    <biblioentry id="ref.network.patterns">
+      <abbrev>Sch00</abbrev>
+
+      <author>
+        <firstname>Douglas</firstname>
+
+        <surname>Schmidt</surname>
+      </author>
+
+      <title>Pattern-Oriented Software Architecture</title>
+
+      <volumenum>Volume 2</volumenum>
+
+      <subtitle>Patterns for Concurrent and Networked Objects</subtitle>
+
+      <publisher>
+        <publishername>John Wiley &amp; Sons</publishername>
+      </publisher>
+
+      <pubdate>2000</pubdate>
+    </biblioentry>
+
+    <biblioentry id="ref.advanced.prog.unix">
+      <abbrev>Ste92</abbrev>
+
+      <author>
+        <firstname>W. Richard</firstname>
+
+        <surname>Stevens</surname>
+      </author>
+
+      <title>Advanced Programming in the UNIX Environment</title>
+
+      <publisher>
+        <publishername>Addison-Wesley</publishername>
+      </publisher>
+
+      <pubdate>1992</pubdate>
+    </biblioentry>
+
+    <biblioentry id="ref.unix.network.programming">
+      <abbrev>Ste98</abbrev>
+
+      <author>
+        <firstname>W. Richard</firstname>
+
+        <surname>Stevens</surname>
+      </author>
+
+      <title>UNIX Network Programming</title>
+
+      <volumenum>Volume 1</volumenum>
+
+      <subtitle>Network APIs: Sockets and XTI</subtitle>
+
+      <edition>Second Edition</edition>
+
+      <publisher>
+        <publishername>Prentice-Hall PTR</publishername>
+      </publisher>
+
+      <pubdate>1998</pubdate>
+    </biblioentry>
+  </bibliography>
+
+  <glossary>
+    <title>Glossary of Terms</title>
+
+    <glossdiv>
+      <title>B</title>
+
+      <glossentry id="gloss.bsd.sockets">
+        <glossterm>BSD sockets</glossterm>
+
+        <glossdef>
+          <para>The socket programming interface introduced with the Berkeley
+          Software Distribution version of the UNIX operating system. It is
+          made up of a collection of system calls that allow highly flexible
+          socket programming. Most UNIX variants in use today use the BSD
+          sockets API. Moreover, the Winsock API used on Windows is based on
+          this API.</para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>F</title>
+
+      <glossentry id="gloss.functor">
+        <glossterm>functor</glossterm>
+
+        <glosssee>Something that performs an operation or function. In the
+        scope of object-oriented programming, a functor is an object that
+        behaves similarly to a function pointer in C.</glosssee>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>N</title>
+
+      <glossentry id="gloss.nspr">
+        <glossterm>Netscape Portable Runtime</glossterm>
+
+        <acronym>NSPR</acronym>
+
+        <glossdef>
+          <para>More information can be found at <ulink
+          url="http://www.mozilla.org/projects/nspr/index.html">http://www.mozilla.org/projects/nspr/index.html</ulink></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+  </glossary>
+
+  <index></index>
+</book>

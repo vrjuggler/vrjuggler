@@ -1,0 +1,141 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# TweekQt is (C) Copyright 2003-2005 by Patrick Hartling
+#
+# This application is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of
+# the License, or (at your option) any later version.
+#
+# This application is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this application; if not, write to the Free Software Foundation,
+# Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Makefile.in for tweek/python.  It requires GNU make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+default: all
+
+# Include common definitions.
+include @topdir@/make.defs.mk
+
+srcdir=			@srcdir@
+top_srcdir=		@top_srcdir@
+EXTRA_SRCS_PATH=	$(srcdir)/../tweek/idl
+INSTALL=		@INSTALL@
+INSTALL_FILES=
+IDL_GENDIR=		.
+PYTHON_IDL_OPTS=	@PYTHON_IDL_OPTS@ @PYTHON_IDL_GENDIR_OPT@$(IDL_GENDIR)
+PYTHON_IDL_INCLUDES=	@PYTHON_IDL_INCFLAG@$(top_srcdir)
+PYTHON_VER=		@PYTHON_VER@
+PY_PKG_DIR=		$(libdir)/python$(PYTHON_VER)/site-packages
+PYUIC=			@PYUIC@
+
+IDL_PYTHON_FILES=	SubjectManager_idl.py	\
+			Subject_idl.py		\
+			Observer_idl.py
+
+UI_FILES=		pytweek/aboutbox.ui		\
+			pytweek/globalprefsdialog.ui	\
+			pytweek/orbdisconnectboxbase.ui	\
+			pytweek/orbconnectboxbase.ui	\
+			pytweek/tweekframebase.ui
+PY_FILES=		$(UI_FILES:.ui=.py)
+
+include $(MKPATH)/dpp.idl.mk
+
+# -----------------------------------------------------------------------------
+# Extra targets.
+# -----------------------------------------------------------------------------
+beforebuild:
+	$(MKINSTALLDIRS) pytweek
+
+afterbuild:
+
+qt-gui: $(PY_FILES) pytweek/net.py
+
+vpath %.ui $(srcdir)
+vpath %.h $(srcdir)
+vpath %.py.in $(srcdir)/pytweek
+
+pytweek/%.py: %.ui
+	$(PYUIC) $< > $@
+
+pytweek/net.py: net.py.in
+	cat $< | sed -e 's/=PYTHON_ORB_MODULE=/@PYTHON_ORB_MODULE@/' > $@
+
+Observer_idl.py: Observer.idl
+	$(PYTHON_IDL) $(PYTHON_IDL_OPTS) $(PYTHON_IDL_INCLUDES) $<
+
+Subject_idl.py: Subject.idl
+	$(PYTHON_IDL) $(PYTHON_IDL_OPTS) $(PYTHON_IDL_INCLUDES) $<
+
+SubjectManager_idl.py: SubjectManager.idl
+	$(PYTHON_IDL) $(PYTHON_IDL_OPTS) $(PYTHON_IDL_INCLUDES) $<
+
+tweek-idl-install:
+	@echo "------------------------------------------------"
+	@echo "Installing the IDL-generated Python code"
+	@echo "------------------------------------------------"
+	$(MKINSTALLDIRS) $(PY_PKG_DIR)/tweek
+	$(MKINSTALLDIRS) $(PY_PKG_DIR)/tweek__POA
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) $(IDL_GENDIR)/*_idl.py $(PY_PKG_DIR)
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) $(IDL_GENDIR)/tweek/* $(PY_PKG_DIR)/tweek
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) $(IDL_GENDIR)/tweek__POA/*			\
+          $(PY_PKG_DIR)/tweek__POA
+
+# This cannot be named 'install' because Doozer++ already defines that.
+# Note that tweek-qt.py cannot be installed as a symlink.  Python seems to
+# get confused when a symlink to a script is used.
+tweek-gui-install:
+	@$(MAKE) install-ui
+	@$(MAKE) install-data
+
+install-ui:
+	@echo "------------------------------------------------"
+	@echo "Installing the TweekQt code base"
+	@echo "------------------------------------------------"
+	$(MKINSTALLDIRS) $(PY_PKG_DIR)/pytweek
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+          $(TWEEKROOT_ABS)/python/tweek-qt.py $(bindir)/tweek-qt
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) $(srcdir)/pytweek/*.py $(PY_PKG_DIR)/pytweek
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) pytweek/*.py $(PY_PKG_DIR)/pytweek
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/TWEEK.python.dist -p $(projdatadir)
+
+install-data:
+	@echo "------------------------------------------------"
+	@echo "Installing the TweekQt data files"
+	@echo "------------------------------------------------"
+	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) -i $(TWEEKROOT_ABS)/python/images		\
+          -o $(projdatadir)/python/images -v "$(topdir)/VARS.pl"	\
+          $(EXTRA_INSTALL_ARGS)
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) $(TWEEKROOT_ABS)/python/*.txt		\
+          $(projdatadir)/python
+
+CLEAN_DIRS+=	tweek tweek__POA
+
+include Makefile.inc

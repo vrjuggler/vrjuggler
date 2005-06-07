@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jccl_config" default="dist" basedir=".">
+   <property name="srcdir" location="@srcdir@" />
+   <property name="topdir" location="@topdir@" />
+   <property name="debug" value="on" />
+   <property name="optimize" value="off" />
+
+   <path id="tweek.classpath">
+      <pathelement path="@TWEEK_JARS@" />
+      <pathelement path="@TWEEK_EXT_JARS@" />
+   </path>
+
+   <path id="jccl_config.classpath">
+      <pathelement path="${topdir}/config/jccl_config.jar" />
+   </path>
+
+   <property name="tweek.classpath" refid="tweek.classpath" />
+   <property name="jccl_config.classpath" refid="jccl_config.classpath" />
+   <property name="table_layout_dir" value="@JUGGLERROOT_ABS@/external/TableLayout" />
+   
+   <!-- Compile all java sources -->
+   <target name="compile">
+      <javac destdir="."
+             deprecation="on"
+             debug="${debug}"
+             optimize="${optimize}">
+         <src path="${srcdir}" />
+         <include name="org/vrjuggler/jccl/editors/**"/>
+         <classpath>
+            <pathelement path="${tweek.classpath}" />
+            <pathelement path="${jccl_config.classpath}" />
+            <pathelement path="${table_layout_dir}/TableLayout.jar" />
+         </classpath>
+      </javac>
+   </target>
+
+   <!-- Create the distribution jar -->
+   <target name="dist" depends="compile">
+      <jar destfile="jccl_editors.jar" basedir=".">
+         <include name="org/vrjuggler/jccl/editors/**"/>
+         <fileset dir="${srcdir}"
+                  includes="org/vrjuggler/jccl/editors/images/*" />
+      </jar>
+   </target>
+
+   <!-- Clean up -->
+   <target name="clean">
+      <delete failonerror="false">
+         <fileset dir="org" includes="**/*.class" />
+      </delete>
+      <delete file="jccl_editors.jar" failonerror="false" />
+   </target>
+</project>

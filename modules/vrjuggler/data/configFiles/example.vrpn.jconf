@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <input_manager name="Input Manager" version="2">
+         <driver>VRPN_drv</driver>
+      </input_manager>
+      <alias name="VJHead" version="1">
+         <proxy>HeadProxy</proxy>
+      </alias>
+      <alias name="VJWand" version="1">
+         <proxy>WandProxy</proxy>
+      </alias>
+      <position_proxy name="HeadProxy" version="1">
+         <device>Vrpn</device>
+         <unit>1</unit>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>90.0</post_rotation>
+               <post_rotation>-90.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+      </position_proxy>
+      <position_proxy name="WandProxy" version="1">
+         <device>Vrpn</device>
+         <unit>0</unit>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>90.0</post_rotation>
+               <post_rotation>-90.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+      </position_proxy>
+      <vrpn name="Vrpn" version="1">
+         <tracker_server>Tracker0@alpha.cs.ucl.ac.uk</tracker_server>
+         <button_server>Button0@alpha.cs.ucl.ac.uk</button_server>
+         <tracker_count>2</tracker_count>
+         <button_count>4</button_count>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.42672</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>90.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+         <device_host />
+      </vrpn>
+      <digital_proxy name="Button0Proxy" version="1">
+         <device>Vrpn</device>
+         <unit>0</unit>
+      </digital_proxy>
+      <digital_proxy name="Button1Proxy" version="1">
+         <device>Vrpn</device>
+         <unit>1</unit>
+      </digital_proxy>
+      <digital_proxy name="Button2Proxy" version="1">
+         <device>Vrpn</device>
+         <unit>2</unit>
+      </digital_proxy>
+      <digital_proxy name="Button3Proxy" version="1">
+         <device>Vrpn</device>
+         <unit>3</unit>
+      </digital_proxy>
+      <alias name="VJButton0" version="1">
+         <proxy>Button0Proxy</proxy>
+      </alias>
+      <alias name="VJButton1" version="1">
+         <proxy>Button1Proxy</proxy>
+      </alias>
+      <alias name="VJButton2" version="1">
+         <proxy>Button2Proxy</proxy>
+      </alias>
+      <alias name="VJButton3" version="1">
+         <proxy>Button3Proxy</proxy>
+      </alias>
+   </elements>
+</configuration>
+

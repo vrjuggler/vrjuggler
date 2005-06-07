@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="fastrak" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Fastrak">
+      <abstract>false</abstract>
+      <help>Polhemus Fastrak 3D tracker.</help>
+      <parent>positional_device</parent>
+      <parent>digital_device</parent>
+      <category>/Devices/Positional</category>
+      <property valuetype="string" variable="false" name="port">
+         <help>Serial port the fastrack is associated to.</help>
+         <value label="Port number" defaultvalue="/dev/ttyd0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="baud">
+         <help>Serial port speed.</help>
+         <value label="Baud rate" defaultvalue="38400"/>
+      </property>
+      <property valuetype="integer" variable="false" name="button">
+         <help>Stylus mode: CONT = continuous with start/stop on button, ONCE = button action -&gt; send info, MOUSE = continuous, MONCE = when asked</help>
+         <value label="Button mode" defaultvalue="0"/>
+         <enumeration editable="false">
+            <enum label="CONT" value="0"/>
+            <enum label="ONCE" value="1"/>
+            <enum label="MOUSE" value="2"/>
+            <enum label="MONCE" value="3"/>
+         </enumeration>
+      </property>
+      <property valuetype="boolean" variable="false" name="rec1">
+         <help/>
+         <value label="Pos" defaultvalue="false"/>
+         <value label="Ang" defaultvalue="false"/>
+         <value label="But" defaultvalue="false"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="rec2">
+         <help/>
+         <value label="Pos" defaultvalue="false"/>
+         <value label="Ang" defaultvalue="false"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="rec3">
+         <help/>
+         <value label="Pos" defaultvalue="false"/>
+         <value label="Ang" defaultvalue="false"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="rec4">
+         <help/>
+         <value label="Pos" defaultvalue="false"/>
+         <value label="Ang" defaultvalue="false"/>
+      </property>
+      <property valuetype="float" variable="false" name="tip1">
+         <help>Tip-Offsets: FT manual p. 140</help>
+         <value label="x" defaultvalue="0.0"/>
+         <value label="y" defaultvalue="0.0"/>
+         <value label="z" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="tip2">
+         <help>Tip-Offsets: FT manual p. 140</help>
+         <value label="x" defaultvalue="0.0"/>
+         <value label="y" defaultvalue="0.0"/>
+         <value label="z" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="tip3">
+         <help>Tip-Offsets: FT manual p. 140</help>
+         <value label="x" defaultvalue="0.0"/>
+         <value label="y" defaultvalue="0.0"/>
+         <value label="z" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="tip4">
+         <help>Tip-Offsets: FT manual p. 140</help>
+         <value label="x" defaultvalue="0.0"/>
+         <value label="y" defaultvalue="0.0"/>
+         <value label="z" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="inc1">
+         <help>Increments: FT manual p. 93</help>
+         <value label="st 1 Increment" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="inc2">
+         <help>Increments: FT manual p. 93</help>
+         <value label="st 2 Increment" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="inc3">
+         <help>Increments: FT manual p. 93</help>
+         <value label="st 3 Increment" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="inc4">
+         <help>Increments: FT manual p. 93</help>
+         <value label="st 4 Increment" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="hem1">
+         <help>Hemisphere of Operation: FT manual p. 88</help>
+         <value label="x" defaultvalue="0.0"/>
+         <value label="y" defaultvalue="0.0"/>
+         <value label="z" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="hem2">
+         <help>Hemisphere of Operation: FT manual p. 88</help>
+         <value label="x" defaultvalue="0.0"/>
+         <value label="y" defaultvalue="0.0"/>
+         <value label="z" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="hem3">
+         <help>Hemisphere of Operation: FT manual p. 88</help>
+         <value label="x" defaultvalue="0.0"/>
+         <value label="y" defaultvalue="0.0"/>
+         <value label="z" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="hem4">
+         <help>Hemisphere of Operation: FT manual p. 88</help>
+         <value label="x" defaultvalue="0.0"/>
+         <value label="y" defaultvalue="0.0"/>
+         <value label="z" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="arf1">
+         <help>Alignment Reference Frame: FT manual p. 47</help>
+         <value label="Ox" defaultvalue="0.0"/>
+         <value label="Oy" defaultvalue="0.0"/>
+         <value label="Oz" defaultvalue="0.0"/>
+         <value label="Xx" defaultvalue="0.0"/>
+         <value label="Xy" defaultvalue="0.0"/>
+         <value label="Xz" defaultvalue="0.0"/>
+         <value label="Yx" defaultvalue="0.0"/>
+         <value label="Yy" defaultvalue="0.0"/>
+         <value label="Yz" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="arf2">
+         <help>Alignment Reference Frame: FT manual p. 47</help>
+         <value label="Ox" defaultvalue="0.0"/>
+         <value label="Oy" defaultvalue="0.0"/>
+         <value label="Oz" defaultvalue="0.0"/>
+         <value label="Xx" defaultvalue="0.0"/>
+         <value label="Xy" defaultvalue="0.0"/>
+         <value label="Xz" defaultvalue="0.0"/>
+         <value label="Yx" defaultvalue="0.0"/>
+         <value label="Yy" defaultvalue="0.0"/>
+         <value label="Yz" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="arf3">
+         <help>Alignment Reference Frame: FT manual p. 47</help>
+         <value label="Ox" defaultvalue="0.0"/>
+         <value label="Oy" defaultvalue="0.0"/>
+         <value label="Oz" defaultvalue="0.0"/>
+         <value label="Xx" defaultvalue="0.0"/>
+         <value label="Xy" defaultvalue="0.0"/>
+         <value label="Xz" defaultvalue="0.0"/>
+         <value label="Yx" defaultvalue="0.0"/>
+         <value label="Yy" defaultvalue="0.0"/>
+         <value label="Yz" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="arf4">
+         <help>Alignment Reference Frame: FT manual p. 47</help>
+         <value label="Ox" defaultvalue="0.0"/>
+         <value label="Oy" defaultvalue="0.0"/>
+         <value label="Oz" defaultvalue="0.0"/>
+         <value label="Xx" defaultvalue="0.0"/>
+         <value label="Xy" defaultvalue="0.0"/>
+         <value label="Xz" defaultvalue="0.0"/>
+         <value label="Yx" defaultvalue="0.0"/>
+         <value label="Yy" defaultvalue="0.0"/>
+         <value label="Yz" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="tmf1">
+         <help>Transmitter Mounting Frame: FT manual p. 59</help>
+         <value label="head" defaultvalue="0.0"/>
+         <value label="pitch" defaultvalue="0.0"/>
+         <value label="roll" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="tmf2">
+         <help>Transmitter Mounting Frame: FT manual p. 59</help>
+         <value label="head" defaultvalue="0.0"/>
+         <value label="pitch" defaultvalue="0.0"/>
+         <value label="roll" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="tmf3">
+         <help>Transmitter Mounting Frame: FT manual p. 59</help>
+         <value label="head" defaultvalue="0.0"/>
+         <value label="pitch" defaultvalue="0.0"/>
+         <value label="roll" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="tmf4">
+         <help>Transmitter Mounting Frame: FT manual p. 59</help>
+         <value label="head" defaultvalue="0.0"/>
+         <value label="pitch" defaultvalue="0.0"/>
+         <value label="roll" defaultvalue="0.0"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

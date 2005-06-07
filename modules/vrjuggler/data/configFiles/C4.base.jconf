@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <alias name="VJHead" version="1">
+         <proxy>HeadProxy</proxy>
+      </alias>
+      <user name="User1" version="1">
+         <head_position>VJHead</head_position>
+         <interocular_distance>0.069</interocular_distance>
+      </user>
+      <digital_proxy name="VJSystemStopKernelProxy" version="1">
+         <device>DigitalSystemControls</device>
+         <unit>0</unit>
+      </digital_proxy>
+      <digital_proxy name="VJAppExitProxy" version="1">
+         <device>AppDigitalSim</device>
+         <unit>0</unit>
+      </digital_proxy>
+      <alias name="VJAppExit" version="1">
+         <proxy>VJAppExitProxy</proxy>
+      </alias>
+      <alias name="VJSystemStopKernel" version="1">
+         <proxy>VJSystemStopKernelProxy</proxy>
+      </alias>
+      <simulated_digital_device name="DigitalSystemControls" version="2">
+         <keyboard_mouse_proxy>Main Sim Input Window</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 0" version="1">
+               <modifier_key>ANY</modifier_key>
+               <key>KEY_ESC</key>
+            </key_modifier_pair>
+         </key_pair>
+         <device_host />
+      </simulated_digital_device>
+      <keyboard_mouse_proxy name="Main Sim Input Window" version="1">
+         <device>Exit Keyboard</device>
+      </keyboard_mouse_proxy>
+      <keyboard_mouse_device name="Exit Keyboard" version="1">
+         <mouse_sensitivity>1.0</mouse_sensitivity>
+         <device_host />
+      </keyboard_mouse_device>
+      <input_window name="Exit Input Window" version="1">
+         <origin>0</origin>
+         <origin>0</origin>
+         <size>200</size>
+         <size>100</size>
+         <display_number>7</display_number>
+         <keyboard_mouse_device_name>Exit Keyboard</keyboard_mouse_device_name>
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
+      </input_window>
+      <corba_remote_reconfig name="CORBA Remote Run-Time Reconfiguration" version="1">
+         <naming_service_host>localhost</naming_service_host>
+         <naming_service_port>2809</naming_service_port>
+         <iiop_version>1.0</iiop_version>
+      </corba_remote_reconfig>
+   </elements>
+</configuration>
+

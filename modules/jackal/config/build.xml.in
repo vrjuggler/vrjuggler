@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jccl_config" default="dist" basedir=".">
+   <property name="srcdir" location="@srcdir@" />
+   <property name="debug" value="on" />
+   <property name="optimize" value="off" />
+
+   <path id="tweek.classpath">
+      <pathelement path="@TWEEK_JARS@" />
+   </path>
+
+   <!-- Compile all java sources -->
+   <target name="compile">
+      <javac destdir="."
+             deprecation="on"
+             debug="${debug}"
+             optimize="${optimize}">
+         <src path="${srcdir}" />
+         <include name="org/vrjuggler/jccl/config/**"/>
+         <classpath refid="tweek.classpath" />
+      </javac>
+   </target>
+
+   <!-- Create the distribution jar -->
+   <target name="dist" depends="compile">
+      <jar destfile="jccl_config.jar" basedir=".">
+         <include name="org/vrjuggler/jccl/config/**"/>
+         <fileset dir="${srcdir}" includes="org/vrjuggler/jccl/config/xslt/*.xsl" />
+         <fileset dir="${srcdir}" includes="org/vrjuggler/jccl/config/images/*" />
+      </jar>
+   </target>
+
+   <!-- Clean up -->
+   <target name="clean">
+      <delete failonerror="false">
+         <fileset dir="org" includes="**/*.class" />
+      </delete>
+      <delete file="jccl_config.jar" failonerror="false" />
+   </target>
+</project>

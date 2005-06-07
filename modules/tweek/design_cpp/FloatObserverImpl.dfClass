@@ -1,0 +1,41 @@
+package id1zwvcdb6wvtgodb6xmmh3;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#tweek.ObserverPOA:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:java#Member#tweek.ObserverPOA#_invoke#(#java.lang.String#org.omg.CORBA.portable.InputStream#org.omg.CORBA.portable.ResponseHandler#)#:oiref>
+@__hiddenMember <oiref:java#Member#tweek.ObserverPOA#_all_interfaces#(#org.omg.PortableServer.POA#byte[]#)#:oiref>
+@__hiddenMember <oiref:java#Member#tweek.ObserverPOA#_this#(#org.omg.CORBA.ORB#)#:oiref>
+@hideAttributes 
+*/
+class reference {
+}/**
+@__ref <oiref:java#Class#FloatObserverImpl:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:java#Member#FloatObserverImpl#$$constructor$$#(#example.FloatSubject#)#:oiref> 
+*/
+class reference5 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:java#Class#tweek.ObserverPOA:oiref>=10,10,270,160,0:oigroup>
+<oigroup:<oiref:java#Implements#FloatObserverImpl#tweek.ObserverPOA:oiref>=150,210,150,170:oigroup>
+<oigroup:<oiref:java#Class#FloatObserverImpl:oiref>=40,210,220,120,0:oigroup>
+*/
+class __positions {
+}

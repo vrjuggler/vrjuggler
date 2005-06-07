@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>jconf</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>jconf.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>VR Juggler configuration file</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+		</dict>
+	</array>
+	<key>CFBundleExecutable</key>
+	<string>JavaApplicationStub</string>
+	<key>CFBundleGetInfoString</key>
+	<string>VRJConfig v1.0.0. Copyright &#x00A9; 1998&#2013;2005 Iowa State University</string>
+	<key>CFBundleIconFile</key>
+	<string>vrjconfig.icns</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>VRJConfig</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.19.0</string>
+	<key>Java</key>
+	<dict>
+		<key>ClassPath</key>
+		<string>@tweek_java_api_jars_bundle@</string>
+		<key>JVMVersion</key>
+		<string>1.4+</string>
+		<key>MainClass</key>
+		<string>org.vrjuggler.tweek.Tweek</string>
+		<key>Properties</key>
+		<dict>
+			<key>TWEEK_BASE_DIR</key>
+			<string>$JAVAROOT</string>
+			<key>JCCL_BASE_DIR</key>
+			<string>$JAVAROOT</string>
+			<key>VJ_BASE_DIR</key>
+			<string>$JAVAROOT</string>
+			<key>apple.laf.useScreenMenuBar</key>
+			<string>true</string>
+			<key>java.security.policy</key>
+			<string>$JAVAROOT/java.security.policy.txt</string>
+			<key>tweek.bundle</key>
+			<string>true</string>
+			<key>java.library.path</key>
+			<string>$JAVAROOT</string>
+		</dict>
+		<key>VMOptions</key>
+		<string>-Xss1m -Xmx512m</string>
+		<key>Arguments</key>
+		<string>--beanpath=VRJConfig.app/Contents/Resources/Java/share/jccl/beans --beanpath=VRJConfig.app/Contents/Resources/Java/share/vrjuggler/beans --defaultbean=Configuration&#160;Editor</string>
+	</dict>
+</dict>
+</plist>

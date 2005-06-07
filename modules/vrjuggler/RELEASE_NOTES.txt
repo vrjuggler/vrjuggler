@@ -1,0 +1,591 @@
+                           VR Juggler Release Notes
+                           ------------------------
+
+For all versions:
+
+    - See the ChangeLog for more system-level changes that do not directly
+      affect applications.
+    - See the Known Bugs page on the VR Juggler website (www.vrjuggler.org)
+      for the current list of bugs.
+
+===============================================================================
+
+Version: 2.0 Beta 3 (1.1.170-0)
+Released: June 7, 2005
+
+    Please refer to the following to get started with VR Juggler 2.0 Beta 2:
+
+       http://www.vrjuggler.org/twiki_public/bin/view/Juggler/MigratingToVrjTwo
+
+    In general, there are no required application or configuration changes
+    to update from VR Juggler 2.0 Beta 2 to 2.0 Beta 3.  To update from
+    2.0 Alpha 4, please refer to the instructions below for VR Juggler 2.0
+    Beta 1.  All users updating to 2.0 Beta 3 should read the following
+    carefully:
+
+       * Users of OpenSG and VR Juggler with application objects derived
+         from vrj::OpenSGApp should verify three things:
+
+          1) If vrj::App::getDrawScaleFactor() is overridden, make sure
+             that the method returns the correct scaling value.
+          2) Requests for position matrices from gadget::PositionInterface
+             (or gadget::PositionProxy) objects should use the same
+             conversion factor that is returned by getDrawScaleFactor().
+          3) The application scene graph does not have an extraneous scale
+             node left over from older VR Juggler releases.  There is no
+             need to perform manual scene scaling to handle proper
+             rendering.
+
+       * More parameters can now be configured in the OpenGL frame
+         buffer settings for display windows.  Users are encouraged to
+         load all local .jconf files containing display_window config
+         elements into VRJConfig to be updated.  (After the automatic
+         update, click the "Save All" button to save the updates.)  The
+         update is not required, but it is recommended.
+
+Version: 2.0 Beta 2 (1.1.167-0)
+Released: January 18, 2005
+
+    Please refer to the following to get started with VR Juggler 2.0 Beta 2:
+
+       http://www.vrjuggler.org/twiki_public/bin/view/Juggler/MigratingToVrjTwo
+
+    There are no required application or configuration changes to update
+    from VR Juggler 2.0 Beta 1 to 2.0 Beta 2.  To update from 2.0 Alpha 4,
+    please refer to the instructions below for VR Juggler 2.0 Beta 1.
+
+    This release includes many bug fixes and feature enhancements &
+    additions to VRJConfig.  In particular, custom editors have been
+    added for configuring Ascension MotionStar Wireless and Ascension
+    Flock of Birds devices.  All bugs reported with VR Juggler 2.0 Beta 1
+    have been fixed.
+
+Version: 2.0 Beta 1 (1.1.166-0)
+Released: December 24, 2004
+
+    Please refer to the following to get started with VR Juggler 2.0 Beta 1:
+
+       http://www.vrjuggler.org/twiki_public/bin/view/Juggler/MigratingToVrjTwo
+
+    Required application and configuration changes for upgrading from all
+    previous versions (including 2.0 Alpha 1 up through 2.0 Alpha 4):
+
+        * XSLT has been added to allow upgrading from old configuration
+          files easier. The following directory contains a collection of
+          XSLT stylesheets that can be used for updating XML-based
+          VR Juggler/JCCL configuration files.  The update process is
+          iterative with each step corresponding to one release of VR Juggler.
+
+             $VJ_BASE_DIR/share/vrjuggler/data/xslt/
+
+          All .jconf files created for VR Juggler 2.0 Alpha 4 or any version
+          of the code since that release must be updated using the script
+          2.0a4-2.0b1.xsl.  Changes were made since 2.0 Alpha 4 that cannot
+          be expressed with the automated updating built in to VRJConfig.
+
+        * After you have performed the update, you should load the migrated
+          configuration file using VRJConfig to complete the update process
+          and to review your configuration.  Some additions to the XML
+          content may be made automatically, and generic identifiers are
+          often used for these additions.  Using VRJConfig, you can make
+          customizations for your specific configuration.
+
+        * Custom configuration definitions (.jdef files) must be updated to
+          versrion 3.1 of the definition file format.  Use the following
+          XSLT to perform the update on all your custom .jdef files:
+
+             $VJ_BASE_DIR/share/jccl/tools/xmlupdate/jdef_3.0-3.1.xsl
+
+        * gadget::EventWindow has been renamed to use the more meaningful
+          name gadget::KeyboardMouse.  Application objects using
+          gadget::EventWindowInterface must simply change the name of the
+          type to gadget::KeyboardMouseInterface.
+
+        * The method vrj::OpenSGApp::getSceneRoot() has been renamed to
+          vrj::OpenSGApp::getScene() to be in line with the OpenGL Performer
+          and OSG application object base classes.
+
+        * The use of GMTL 0.4.5 may require application changes to fix
+          compile errors.  Refer to the following explanation of what to
+          do if uses of gmtl::Vec* cause compile errors:
+
+             http://sourceforge.net/mailarchive/message.php?msg_id=9550350
+
+         * The Sonix class sonix is now in the snx namespace.  To update,
+           change calls to snx::sonix or add 'using namespace snx;' to your
+           code.
+
+         * VPR_PROFILE() has been renamed to VPR_PROFILE_GUARD().
+           VPR_PROFILE_HISTORY() has been renamed to
+           VPR_PROFILE_GUARD_HISTORY().
+
+         * The pseudo-device TweekGadget has been removed from Gadgeteer.
+           Its sole purpose was to work around the lack of support for
+           shared application-specific data in a cluster configuration.
+           That feature has existed since VR Juggler 2.0 Alpha 1, and
+           therefore, TweekGadget had out-lived its usefullness a long
+           time ago.  Users of TweekGadget must switch their code to use
+           the Tweek Java and C++ APIs directly in conjunction with the
+           Gadgeteer type cluster::UserData<T> for sharing arbitrary
+           application-specific data structures.  Programmer's unfamiliar
+           with the direct use of the Tweek C++ and Java APIs are
+           referred to the Tweek /Programmer's Guide/:
+
+              http://www.vrjuggler.org/tweek/docs.php
+
+Version: 2.0 Alpha 4 (1.1.150-0)
+Released: April 28, 2004
+
+    Please refer to the following to get started with VR Juggler 2.0 Alpha 4:
+
+       http://www.vrjuggler.org/twiki_public/bin/view/Juggler/MigratingToVrjTwo
+
+    Required application and configuration changes for upgrading from all
+    previous versions (including 2.0 Alpha 1 up through 2.0 Alpha 3):
+
+        * XSLT has been added to allow upgrading from old configuration
+          files easier. The following directory contains a collection of
+          XSLT stylesheets that can be used for updating XML-based
+          VR Juggler/JCCL configuration files.  The update process is
+          iterative with each step corresponding to one release of VR Juggler.
+
+               $VJ_BASE_DIR/share/vrjuggler/data/xslt/
+
+        * After you have performed the update, you should load the generated
+          configuration file using VRJConfig and review your configuration.
+          Some additions to the XML content may be made, and generic
+          identifiers are often used for these additions.  Using VRJConfig,
+          you can make customizations for your specific configuration.
+
+
+                            Performance Monitoring
+                            ======================
+
+     Added the ability to acquire performance statistics in order to analyze
+     the different parts of your application and VR Juggler. The interface
+     is very clean and easy to use. There are three macros that can be used:
+
+
+         * VPR_PROFILE("MyDraw")
+
+            - Creates a guard that adds a timesample to the entry in the
+              profile tree with the given name.
+
+         * VPR_PROFILE_HISTORY("MyDraw", num)
+
+            - Creates a guard that adds a timesample to the entry in the
+              profile tree with the given name and also keep a record
+              of the past num samples.
+
+         * VPR_PROFILE_RESULTS()
+
+            - Prints the profile tree: giving the number of calls, total time,
+              average time, and last num samples.
+
+
+                           Run Time Reconfiguration
+                           ========================
+
+     Implemented the CORBA-based remote run-time reconfiguration feature of
+     VRJConfig which had been missing for quite a while.  VR Juggler now has
+     an exceptionally robust, multi-language architecture for reconfiguring
+     running applications with external tools. The C++/CORBA part of the
+     remote reconfiguration feature is loaded as a plug-in at run time.
+     This allows us to distribute pre-compiled code without requiring that
+     everyone have omniORB installed just to be able to try out VR Juggler.
+     Improved the ability of various parts of the C++ code to be
+     reconfigurable.  Most notably ensuring that device drivers can be
+     reconfigured correctly.
+
+                                  VRJConfig
+                                  =========
+
+     Replaced the old JTreeTable with a much better looking TableLayout that
+     visualizes the structure of the configuration in a more useful manner.
+     Implemented are the much-desired features of drag & drop, copy & paste,
+     and undo/redo. You can now drag configuration elements between
+     configuration contexts.
+
+
+                          Config Element Versioning
+                          =========================
+
+     Automatic updating of out-of-date configuration elements has been added.
+     VRJConfig can detect when a configuration element is out of date with
+     respect to its definition. Through the magic of XSLT, the configuration
+     element can be transformed into the new version automatically.  This means
+     that manual updating of configuration files will be a thing of the past
+     for about 99% of the cases.  (XSLT is not perfect, but it works pretty
+     darn well.)  With the addition of XML Schema support for structural
+     validation of XML input, we are now reaching a point where the full
+     potential of XML is being realized for VR Juggler.
+
+
+                    Config Element Definition Inheritance
+                    =====================================
+
+     Work has been completed for adding inheritance to configuration
+     definitions.  VRJConfig can now handle configuration elements in a more
+     abstract manner.  For example, consider the following snippets of
+     configuration definition files (input_device.jdef,
+     positional_device.jdef, and flock.jdef):
+
+         <definition name="input_device" ...>
+           <definition_version version="1" ...>
+             <property name="device_host" ...>
+               ...
+             </property>
+           </definition_version>
+         </deinition>
+
+         <definition name="positional_device" ...>
+           <definition_version version="1" ...>
+             <parent>input_device</parent>
+             <property name="position_filters" ...>
+               ...
+             </property>
+           </definition_version>
+         </definition>
+
+         <definition name="flock" ...>
+           <definition_version version="1" ...>
+             <parent>positional_device</parent>
+               ...
+           </definition_version>
+         </definition>
+
+     The configuration element for the Ascension Flock of Birds inherits from
+     'positional_device' which in turn inherits from 'input_device'.  Thus,
+     it gets the properties of device_host (needed for the cluster support)
+     and position_filters (needed for all positional devices) automatically
+     without having to redefine them.  VRJConfig can now handle instances of
+     the 'flock' element type as instances of 'positional_device' or
+     'input_device'.  There are a lot of benefits of this capability,
+     although the most useful one for many users is that custom configuration
+     elements can now be integrated into the configuration editing process
+     seamlessly.  For example, if you are writing your own device driver,
+     you can make its configuration definition inherit from the appropriate
+     base types, and then proxy pointers, custom editors, etc. can handle
+     your definition type without requiring modification to the "core" files
+     that come with a VR Juggler distribution.
+
+
+                          VRJConfig - Custom Editors
+                          ==========================
+
+     Much work has been put into the design of high-level editors for
+     complex tasks such as device configuration including proxies, aliases,
+     and screen placement for projection VR systems.  These pieces
+     are still being worked on and represent some of the most cutting-edge
+     features of VRJConfig.  In the case of device configuration, the first
+     custom editor developed was for the Intersense tracking system. You
+     can create a VR Juggler configuration from the ground up using a very
+     intuitive interface that greatly simplifies the complexity of this task.
+
+
+                             VRJConfig - Wizards
+                             ===================
+
+     Wizards have been added into VRJConfig to simplify the creation of
+     general purpose configurations. These include a wizard that steps
+     the user through all steps necessary to create a clustered simulator
+     configuration. This is a rather new feature and will be expanded
+     in the future.
+
+
+                           Building Device Drivers
+                           =======================
+
+     Related to people writing their own device drivers, the Gadgeteer
+     build system has been revamped to make it much, much easier for users to
+     compile their device driver plug-ins with all the correct options.  It
+     is now possible for developers to write a *four-line* makefile that will
+     build a device driver correctly on all supported platforms.
+
+
+                VR Juggler dynamic application loader/launcher
+                ==============================================
+
+     The basic idea with this application is to allow remote launching of
+     dynamically loaded VR Juggler application objects.  In other words, it
+     realizes a goal we have had for a long time: a VR Juggler daemon.  If
+     you would like to check it out, it is in the VR Juggler Toolbox CVS
+     repository in the module 'vrjugglerd' (go to http://vrjtoolbox.sf.net/
+     if you're not familiar with the VR Juggler Toolbox).
+
+     The vrjugglerd application is quite simple--surprisingly so.  At this
+     time, it loads application objects written in C++, but it has been
+     designed to allow loading of code from other languages.  In particular,
+     Python and .NET are the two primary non-C++ language options, and support
+     for dynamically loading application objects written in those language
+     platforms will be added very soon.
+
+     Below is an example configuration element that shows how to dynamically
+     load an application using vrjugglerd.
+
+
+         <vrjuggler_app_loader name="Cubes Loader" version="1">
+           <app_object>
+             <vrj_cpp_app name="Cubes App" version="1">
+               <search_path>${VJ_BASE_DIR}/share/vrjuggler/test/Draw/OGL/cubes</search_path>
+               <application>cubes</application>
+             </vrj_cpp_app>
+           </app_object>
+         </vrjuggler_app_loader>
+
+
+     This configuration element indicates that a shared library containing
+     the code for the cubes application will be loaded. This version of
+     cubes has no main() function whatsoever--it is simply a shared
+     library (DLL) with a well-defined entry point that returns a
+     vrj::App*. With this configuration file, it is assumed that vrjugglerd
+     has already loaded a configuration for displays and input devices, but
+     the vrjugglerd configuration can specify additional files to be loaded
+     for use with the application object.  (Among other things, this allows
+     dynamic inclusion of application-specific config elements to allow the
+     newly loaded application object to be configured as necessary.)
+
+     VRJConfig connects to a running vrjugglerd and sends the config element
+     in the attached file to vrjugglerd.  As a result, the code for cubes is
+     loaded dynamically from disk, a new GL window is opened, and the VR
+     Juggler kernel control loop starts executing the dynamically loaded
+     code.  (All of this can be done from the command line instead, but
+     that's not nearly as interesting.)
+
+
+                                 Build System
+                                 ============
+
+     There have been a few major changes to the build system of VR Juggler
+     in order to try to make the process easier for the end user.
+
+         * External Dependencies
+
+             - The cvs-gather script is no longer being used to pull anything
+               from different CVS repositories into a checked out copy of the
+               Juggler Project source.
+
+             - Doozer and Doozer++ come with the VR Juggler source during a
+               CVS checkout.  Both are on vendor branches that will be updated
+               as the need presents itself.
+
+             - GMTL, on the other hand, must now be installed externally prior
+               to building VR Juggler.  Similar to CppDOM, GMTL requires SCons
+               to be installed, but since the GMTL C++ interface is entirely
+               in headers, there is nothing to build.
+
+         * Windows Build
+
+             - Cygwin is no longer required for any part of building the
+               Juggler Project--including VR Juggler applications.
+
+             - The code is built now using a Visual Studio solution that ties
+               together a bunch of Visual C++ projects.
+
+             - Unlike the Cygwin build, the Visual Studio build supports both
+               debug and release binaries.
+
+Version: 2.0 Alpha 3 (1.1.143-1)
+Released: September 22, 2003
+
+    Please refer to the following to get started with VR Juggler 2.0 Alpha 3:
+
+       http://www.vrjuggler.org/twiki_public/bin/view/Juggler/MigratingToVrjTwo
+
+    VR Juggler Alpha 3 is being released in order to allow the VR Juggler user
+    community access to a stabilized snapshot of the current code base. There
+    have been no additional features added to VR Juggler since VR Juggler
+    Alpha 2. Also there have been no API changes since the Alpha 2 release.
+
+Version: 2.0 Alpha 2 (1.1.143)
+Released: July 1, 2003
+
+    Please refer to the following to get started with VR Juggler 2.0 Alpha 2:
+
+       http://www.vrjuggler.org/twiki_public/bin/view/Juggler/MigratingToVrjTwo
+
+    Required application and configuration changes for upgrading from all
+    previous versions (including 1.1.x up through 2.0 Alpha 1):
+        * KeyboardWindows are now referred to as EventWindows.
+
+            NOTE: DisplayWindows which contain sim_viewports are required to
+                  have the act_as_event_source property enabled.
+
+        * The ClusterManager loads ClusterPlugins on demand now. The
+          ClusterManager chunk must contain a lit of plugins which it should
+          load. For example if you wish to load the RemoteInputManager,
+          ApplicationDataManager, StartBarrierPlugin, and the
+          SwapLockTCPPlugin you would have the following:
+
+            <ClusterManager name="SouthPark Cluster">
+              <cluser_nodes>cartman</cluster_nodes>
+              <cluser_nodes>kenny</cluster_nodes>
+              <cluser_nodes>stan</cluster_nodes>
+              <cluser_nodes>kyle</cluster_nodes>
+              <cluser_nodes>chef</cluster_nodes>
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libApplicationDataManager.so</clusterPlugin>
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libRemoteInputManager.so</clusterPlugin>
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libStartBarrierPlugin.so</clusterPlugin>
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libSwapLockTCPPlugin.so</clusterPlugin>
+            </ClusterManager>
+
+          On Win32, it would appear as:
+
+            <ClusterManager name="SouthPark Cluster">
+              <cluser_nodes>cartman</cluster_nodes>
+                  ...
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/ApplicationDataManager.dll</clusterPlugin>
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/RemoteInputManager.dll</clusterPlugin>
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/StartBarrierPlugin.dll</clusterPlugin>
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/SwapLockTCPPlugin.dll</clusterPlugin>
+            </ClusterManager>
+
+          On Mac OS X, it would appear as:
+
+            <ClusterManager name="SouthPark Cluster">
+              <cluser_nodes>cartman</cluster_nodes>
+                  ...
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libApplicationDataManager.dylib</clusterPlugin>
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libRemoteInputManager.dylib</clusterPlugin>
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libStartBarrierPlugin.dylib</clusterPlugin>
+              <clusterPlugin>${VJ_BASE_DIR}/lib/gadgeteer/plugins/libSwapLockTCPPlugin.dylib</clusterPlugin>
+            </ClusterManager>
+
+        * ClusterPlugins have the following functionality:
+            * RemoteInputManager
+               - Synchronize device data across a cluster
+               - Act as a device server for any number of machines.
+            * ApplicationDataManager
+               - Synchronize arbitrary data structures created in the
+                 developers application code across the cluster.
+            * StartBarrierPlugin
+               - Enforce a strict barrier that will force all nodes to begin
+                 calling the vrj::App callback functions at the same time.
+            * SwapLockTCPPlugin
+               - Provide SwapLock to minimize tearing across multiple displays
+                 using TCP/IP socket connection.
+            * SwapLockWiredPlugin
+               - Provide SwapLock to minimize tearing across multiple displays
+                 using a kernel module, a parallel port, and a simple external
+                 AND gate.
+        * VR Juggler now supports custom simulators which can be created by the
+          user to meet their specific needs. Each DrawManager has also been
+          given its own "default" simulator.
+        * XSLT has been added in:
+
+            $VJ_BASE_DIR/share/vrjuggler/data/xslt/2.0a1-2.0a2.xsl
+
+          which will provide an easy method to later convert configuration
+          files from VR Juggler Alpha1 to a new release.
+
+        * Update to require Boost 1.30
+
+
+ Version: 2.0 Alpha 1 (1.1.135)
+Released: March 15, 2003
+
+    Required application and configuration changes for upgrading from all
+    previous versions (including 1.1.x up through 1.1 DR3):
+        * Gadgeteer loads device drivers on demand now.  An InputManager
+          chunk must be added to tell the Input Manager what driver(s) to
+          load at runtime.  For example, to load the Flock of Birds driver
+          and the Immersion IBox driver on a UNIX system, add the following
+          to the appropriate configuration file:
+
+            <InputManager name="Input Manager">
+              <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/Flock_drv.so</driver>
+              <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/IBox_drv.so</driver>
+            </InputManager>
+
+          On Win32, it would appear as:
+
+            <InputManager name="Input Manager">
+              <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/Flock_drv.dll</driver>
+              <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/IBox_drv.dll</driver>
+            </InputManager>
+
+          All drivers except simulator devices and keyboards must be loaded
+          this way on all platforms.  For multiple instances of these, be
+          sure to name each <InputManager> block uniquely.
+        * In configuration files, all values representing physical units
+          (corner positions, translation values, etc.) must be specified in
+          meters.
+        * All position devices now use a list of filters to transform the
+          positional data read from the device.  Correct configuration of
+          a device's filter(s) is necessary to inform the Gadgeteer Input
+          Manager of what units (feet, inches, meters) the device driver
+          returns.
+        * gadget::PositionInterface::getData() now returns a copy of a
+          gmtl::Matrix44f instead of a pointer to the object.  The method
+          also takes an optional argument that tells what measurement units
+          the application wants.  The default is feet.
+
+ Version: 1.1 DR3 (1.1.128)
+Released: September 29, 2002
+
+    Required application and configuration changes for upgrading from all
+    previous versions (including 1.1.x up through 1.1 DR2):
+        * The configuration file format has changed to an XML-based format.
+          There is an upgrade path using the cfgupdater script and various
+          XSLT stylesheets. Please follow the steps in the Porting Guide
+          for further details.
+
+ Version: 1.1.92 (dev build)
+Released: April 10, 2002
+
+    Required application and configuration changes for upgrading from all
+    previous versions (including 1.1.x up through 1.1.91):
+        * The directory containing miscellaneous data files has been
+          renamed from "Data" to "data".
+
+ Version: 1.1.91 (dev build)
+Released: October 16, 2001
+
+    Required application and configuration changes for upgrading from all
+    previous versions (including 1.1.x up through 1.1.90):
+        * The script juggler-config is now called vrjuggler-config.
+        * vjDEBUG has been replaced with vprDEBUG.  The levels and
+          categories are now prefixed with "vrj" instead of "vj".  The
+          category formerly called vjDBG_ALL is now vprDBG_ALL.
+
+ Version: 1.1.90 (dev build)
+Released: September 21, 2001
+
+    Required application changes for upgrading from all previous versions
+    (including 1.1.x up through 1.1.89):
+        * The directory structure for the source tree has been completely
+          reorganized.  All source and header files are now rooted in the
+          vrj directory.  The Kernel directory has been separated into
+          "Kernel", "Draw", and "Displays".  The Draw directory now contains
+          the API-specific application headers in the directories OGL (for
+          OpenGL), OSG (for OpenScenegraph), and Pf (for Performer).  In
+          addition, the files and classes no longer have the "vj" prefix
+          because the vrj namespace has been put into use.  Easy upgrading
+          from 1.0 and 1.1.x builds prior to 1.1.90 can be done using the
+          compatibility headers in the "deprecated" tree.  Simply add
+          -I$(VJ_BASE_DIR)/include/deprecated to your application's makefile
+          and recompile.  For a complete upgrade to the new structure and
+          naming convention, consult the following web page:
+
+             http://www.vrjuggler.org/<fill in path>/
+
+ Version: 1.1 (dev build)
+Started: April 13, 2001
+
+    Required application and configuration changes for upgrading from older
+    versions:
+        * Introduced window viewports.  This means all config files from old
+          version are incompatible.  The new chunk type to use is displayWindow.
+          The old chunk types (simDisplay & surfaceDisplay) can not be used.
+        * vjGlApp::bufferPreDraw() - New interface function for OpenGL-based
+          apps.  Must use if going to use multiviewport code.
+
+        * Performer now has some support for run-time reconfiguration.  This
+          has the following new implications:
+            - numpipes must be set correctly in the display config chunk
+            - Sometimes black windows will appear on unused pipes.
+        * Performer applications running on Linux must use the pfStat library
+          in tools/pfStatLinux otherwise there will be an unresolved symbol
+          when running applications.  This is due to a bug in Linux performer.
+
+===============================================================================

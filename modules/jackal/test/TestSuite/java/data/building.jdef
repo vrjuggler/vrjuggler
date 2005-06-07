@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="building" icon_path="" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Building">
+      <help>This is a building.</help>
+      <parent/>
+      <category>/Locations</category>
+      <property valuetype="configelementpointer" variable="true" name="occupant">
+         <help>A person in this building.</help>
+         <value label="Occupant"/>
+         <allowed_type>person</allowed_type>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

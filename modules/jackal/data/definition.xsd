@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE schema SYSTEM "http://www.w3.org/1999/XMLSchema.dtd">
+
+<!-- JCCL definition schema for definition file format v3.1 -->
+<!-- $Id$ -->
+
+<xs:schema targetNamespace="http://www.vrjuggler.org/jccl/xsd/3.1/definition"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+           xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition">
+
+   <!--
+      The following import will be needed when the XSLT schema is written. Until
+      then, we don't need it.
+
+      <xs:import namespace="http://www.w3.org/1999/XSL/Transform" />
+   -->
+
+   <xs:element name="definition">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element name="definition_version" type="definition_version" minOccurs="1" maxOccurs="unbounded" />
+         </xs:sequence>
+         <!-- The name must be a valid XML name token. -->
+         <xs:attribute name="name" type="xs:NCName" use="required" />
+         <xs:attribute name="icon_path" type="xs:token" />
+      </xs:complexType>
+   </xs:element>
+
+   <!-- The type for an individual version of a definition. -->
+   <xs:complexType name="definition_version">
+      <xs:sequence>
+         <xs:element name="abstract" type="xs:boolean" minOccurs="0" maxOccurs="1" default="false" />
+         <xs:element name="help" type="xs:token" />
+         <xs:element name="parent" type="parent" minOccurs="0" maxOccurs="unbounded" />
+         <xs:element name="category" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+         <xs:element name="property" type="property" minOccurs="0" maxOccurs="unbounded" />
+         <xs:element name="upgrade_transform" type="upgrade_transform" />
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:positiveInteger" use="required" />
+      <xs:attribute name="label" type="xs:token" use="required" />
+   </xs:complexType>
+
+   <!--
+      The type for a parent element. It is defined as being an XML token or
+      empty for the situation where the element does not have a parent.
+   -->
+   <xs:simpleType name="parent">
+      <xs:union>
+         <xs:simpleType>
+            <xs:restriction base="xs:NCName" />
+         </xs:simpleType>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="" />
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:union>
+   </xs:simpleType>
+
+   <!--
+      The property type. This type could use some work so that it's really a
+      choice between the different ways a property can be formed. For example,
+      a property whose valuetype is "configelement" should be required to
+      have at least one allowed_type child.
+   -->
+   <xs:complexType name="property">
+      <xs:sequence>
+         <xs:element name="help" type="xs:token" />
+         <xs:element name="value" type="value" minOccurs="1" maxOccurs="unbounded" />
+         <xs:element name="allowed_type" type="xs:NCName" minOccurs="0" maxOccurs="unbounded" />
+         <xs:element name="enumeration" type="enumeration" minOccurs="0" maxOccurs="1" />
+      </xs:sequence>
+      <xs:attribute name="valuetype" type="valuetype" use="required" />
+      <xs:attribute name="variable" type="xs:boolean" use="required" />
+      <xs:attribute name="name" type="xs:NCName" use="required" />
+   </xs:complexType>
+
+   <!-- The valuetype type. -->
+   <xs:simpleType name="valuetype">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="boolean" />
+         <xs:enumeration value="configelement" />
+         <xs:enumeration value="configelementpointer" />
+         <xs:enumeration value="float" />
+         <xs:enumeration value="integer" />
+         <xs:enumeration value="string" />
+      </xs:restriction>
+   </xs:simpleType>
+
+   <!--
+      The value element. This needs to be worked on so that the default value
+      is constrained to the type that the property is defining.
+   -->
+   <xs:complexType name="value">
+      <xs:attribute name="label" type="xs:token" use="required" />
+      <xs:attribute name="defaultvalue" type="xs:anySimpleType" use="optional" />
+   </xs:complexType>
+
+   <!--
+      The enumeration element.
+   -->
+   <xs:complexType name="enumeration">
+      <xs:sequence>
+         <xs:element name="enum" type="enum" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+      <xs:attribute name="editable" type="xs:boolean" use="optional" default="false" />
+   </xs:complexType>
+
+   <!--
+      The enum element. This needs to be worked on so that the value is
+      constrained to the type that the property is defining.
+   -->
+   <xs:complexType name="enum">
+      <xs:attribute name="label" type="xs:token" use="required" />
+      <xs:attribute name="value" type="xs:anySimpleType" use="required" />
+   </xs:complexType>
+
+   <!--
+      The upgrade_transform element simple contains an XSLT.
+   -->
+   <xs:complexType name="upgrade_transform">
+      <xs:sequence>
+         <!--
+            A schema for XSLT does not yet exist, so just accept any element in
+            the schema namespace until it is written.
+            <xs:element ref="xsl:stylesheet" />
+         -->
+         <xs:any namespace="http://www.w3.org/1999/XSL/Transform"
+                 minOccurs="0"
+                 maxOccurs="1"
+                 processContents="lax" />
+      </xs:sequence>
+   </xs:complexType>
+
+</xs:schema>

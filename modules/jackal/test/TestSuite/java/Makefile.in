@@ -1,0 +1,92 @@
+default: all
+
+# Basic options.
+srcdir=		@srcdir@
+ARCH=		$(shell uname -p)
+JAVAC_FLAGS=	-classpath "$(CLASSPATH)" -sourcepath "$(srcdir)" -d .
+JCPS=		@JCPS@
+
+JUNIT_JAR=	@JUNIT_JAR@
+
+JCCL_JARS=	$(shell $(JCCL_BASE_DIR)/bin/jccl-config --jars)
+TWEEK_JARS=	$(shell $(JCCL_BASE_DIR)/bin/tweek-config --jars)
+CLASSPATH=	$(JUNIT_JAR)$(JCPS)$(TWEEK_JARS)$(JCPS)$(JCCL_JARS)$(JCPS)
+
+# Commands to execute.
+JAVA_COMPILE=	@JAVAC@ $(JAVAC_FLAGS)
+JAR=		@JAR@
+
+VPATH=		@srcdir@:@srcdir@/test
+
+#IDL_JAVA_FILES=
+
+RUNNER= \
+	AllTests
+
+TESTCASES = \
+	test.CategoryTest		     \
+	test.ConfigurationReaderTest	     \
+	test.ConfigDefinitionTest	     \
+	test.ConfigDefinitionReaderTest      \
+	test.ConfigDefinitionRepositoryTest  \
+	test.ConfigElementTest		     \
+	test.ConfigElementFactoryTest	     \
+	test.PropertyDefinitionTest
+
+RUNNER_CLASSES=		$(addsuffix .class, $(RUNNER))
+TESTCASE_CLASSES=	$(addsuffix .class, $(subst .,/,$(TESTCASES)))
+
+CLASSES=		$(RUNNER_CLASSES) $(TESTCASE_CLASSES)
+
+
+# -----------------------------------------------------------------------------
+# Application build targets.
+# -----------------------------------------------------------------------------
+all:
+	$(MAKE) java
+
+run: $(CLASSES)
+	java -classpath "$(CLASSPATH)$(JCPS)." 				\
+          -Djava.library.path="$(JCCL_BASE_DIR)/share/tweek/java/$(ARCH)" \
+          -DJCCL_BASE_DIR="$(JCCL_BASE_DIR)"				\
+          -DDATA_DIR="$(srcdir)/data" AllTests
+
+run-text: $(CLASSES)
+	java -classpath "$(CLASSPATH)$(JCPS)." 				\
+          -Djava.library.path="$(JCCL_BASE_DIR)/share/tweek/java/$(ARCH)" \
+          -DJCCL_BASE_DIR="$(JCCL_BASE_DIR)"				\
+          -DDATA_DIR="$(srcdir)/data" junit.textui.TestRunner AllTests
+
+java:
+	$(MAKE) tests
+	$(MAKE) runner
+
+runner: $(TESTCASE_CLASSES) $(RUNNER_CLASSES)
+
+tests: $(TESTCASE_CLASSES)
+
+install:
+	echo "Nothing to install. This makefile is for tests only!"
+
+# Suffix rules for building object files.
+.SUFFIXES: .java .class .idl
+
+vpath %.java 	$(srcdir)
+vpath %.java 	$(srcdir)/test
+vpath %.class	.
+vpath %.class  ./test
+
+%.class: %.java
+	$(JAVA_COMPILE) $<
+
+test/%.class: %.java
+	$(JAVA_COMPILE) $<
+
+# -----------------------------------------------------------------------------
+# Clean-up targets.
+# -----------------------------------------------------------------------------
+clean:
+	rm -f $(CLASSES)
+
+clobber:
+	@$(MAKE) clean

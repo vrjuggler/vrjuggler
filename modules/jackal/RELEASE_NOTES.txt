@@ -1,0 +1,148 @@
+                              JCCL Release Notes
+                              ------------------
+
+For all versions:
+
+    - See the ChangeLog for more system-level changes that do not directly
+      affect applications.
+    - See the Known Bugs page on the VR Juggler website (www.vrjuggler.org)
+      for the current list of bugs.
+
+===============================================================================
+
+ Version: 1.0 Beta 3
+Released: June 7, 2005
+
+    The methods jccl::ConfigDefinition::assertValid(),
+    jccl::ConfigElement::assertValid(), and
+    jccl::PropertyDefinition::assertValid() have been removed.
+
+ Version: 0.18.0
+Released: September 17, 2004
+
+    The config definition file format is now at version 3.1.  To update
+    from version 3.0, use the transform code in the file
+    tools/xmlupdate/jdef_3.0-3.1.xsl.  Updating to version 3.1 is required
+    for .jdef files to be loaded by the C++ and the Java code.
+
+ Version: 0.2.0
+Released: May 23, 2002
+
+    Major refactoring and re-writing of file-handling code in both the Java
+    and the C++ aspects of JCCL has occurred.  The following describes the
+    changes and explains what must be done to update from all previous
+    versions.
+
+    JCCL now uses CppDOM for C++ XML handling and JDOM for Java XML.  There
+    are several aspects to this major change to JCCL:
+
+        1. Config file format update
+        2. API change
+        3. Code simplification
+        4. VjControl internal semantic differences
+
+    The build documentation in juggler/INSTALL.{txt,html} has been
+    updated to explain the requirements and how to configure the build.
+
+    Config File Format
+    ------------------
+
+    The config files now require *no* user-level parsing.  This is an
+    important change because it allows us to provide a much smoother
+    upgrade path for future changes to the basic file format and to the
+    structure of individual chunks.  We can now use XSLT to transform
+    config files with a stylesheet, thereby upgrading them.  All of the
+    sample configuration files have been updated to use the new format.
+
+    Updating Existing XML Config Files
+    ----------------------------------
+
+    If you have custom XML-based config files that you want to update to
+    the new changes, a Python script is available under tools/xmlupdate
+    that will do the job.  Please refer to the README.txt in that
+    directory for details.  At this time, the script only updates config
+    chunk files, not chunk descriptions.
+
+    Even after running the Python script and making hand modifications, it
+    is recommended that config files be loaded and saved with the new
+    VjControl.  You'll need to open each chunk individually (including
+    embedded chunks) and click the "OK" button to commit any in-memory
+    modifications.  The main reason this is necessary is because
+    enumerations are not yet fully supported the way they had been.  Right
+    now, the enumeration value is written to the config file instead of the
+    symbolic name.  This will be fixed in the future.
+
+    API Change
+    ----------
+
+    As part of this major change to JCCL, the jccl::ConfigChunk API has
+    changed slightly.  The deprecated method jccl::ConfigChunk::getType()
+    has finally been removed in favor of jccl::ConfigChunk::getDescToken().
+    If you get a compile failure because getType() is undefined, change
+    the code to use getDescToken().
+
+    A more interesting change it that the getProperty() method now takes a
+    template parameter.  For example, previous code would have looked like
+    this:
+
+        std::string prop_val = (std::string) chunk->getProperty("thingy");
+
+    OR
+
+        std::string prop_val = static_cast<std::string>(chunk->getProperty("thingy"));
+
+    The same functionality is now realized as:
+
+        std::string prop_val = chunk->getProperty<std::string>("thingy");
+
+    The template parameter can be anything, but the most familiar types
+    will be among the following:
+
+        * int, unsigned int, long, short, etc.
+        * bool
+        * float
+        * std::string
+        * jccl::ConfigChunkPtr
+
+    *** IMPORTANT NOTE: If you have any code that uses getProperty("name"),
+    you must change it to use getName() instead.  "name" has not a property
+    of a chunk since the original conversion to XML.  Code that uses
+    getProperty("name") will cause an assertion failure.
+
+ Version: 0.0.1 (dev build)
+Started: September 5, 2001
+
+    Separated JCCL (Juggler Configuration and Control Library) from the
+    VR Juggler core.  It includes the following basic features:
+
+        * Configuration file system, using XML-based data files that are
+          parsed into ConfigChunks and ChunkDescs.
+
+        * The Jackal Server, which can be added to an appliation to provide
+          network-based monitoring and reconfiguration.
+
+        * VjControl, client application for the Jackal Server.  VjControl is
+          an extensible, componentized Java application.
+
+        * Dynamic reconfiguration support code, imported from VR Juggler 
+          Kernel, which allows the Jackal Server to reconfigure a running
+          application in response to commands from VjControl.
+
+        * Performance measurement library, which allows applications to
+          timestamp parts of their source code.  The Jackal Server can
+          write performance measurement information to a log file or send
+          it across the network to VjControl.
+
+    JCCL has the following external dependencies:
+
+        * VPR (VR Juggler Portable Runtime) version 0.4.  See
+          www.vrjuggler.org for information.
+
+        * CppDOM.  See www.sourceforge.net/projects/xml-cppdom for
+          information.
+
+        * Java Development Kit 1.2 or better.  See java.sun.com.
+
+        * JDOM.  See www.jdom.org
+
+===============================================================================

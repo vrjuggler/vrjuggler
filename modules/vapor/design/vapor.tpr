@@ -1,0 +1,97 @@
+[Project]
+Language=cpp
+Root.0=/home/users/allenb/Source/vapor/vpr
+Root.0.access=writable
+Root.0.file_types=cpp_source;cpp_header
+Root.0.package_prefix=
+Root.1=$PROJECT_DIR$
+Root.1.access=writable
+Root.1.file_types=diagram
+Root.1.package_prefix=
+Version=3.0
+Root.0.srcControlEnabled=false
+Root.0.srcControlProject=
+Root.1.srcControlEnabled=false
+Root.1.srcControlProject=
+Root.2=/usr/java/jdk1.3.1/jre/lib/rt.jar
+Root.2.access=import
+Root.2.non_removable=
+Root.2.package_prefix=
+[lioeditor]
+options.font_size=11
+scheme.cpp.colors=def
+scheme.cpp.colors.classic.cchar=0xffff -1 -1
+scheme.cpp.colors.classic.comment=0xc0c0c0 -1 2
+scheme.cpp.colors.classic.keyword1=0xffffff -1 -1
+scheme.cpp.colors.classic.keyword2=-1 -1 -1
+scheme.cpp.colors.classic.lcomment=0xc0c0c0 -1 2
+scheme.cpp.colors.classic.lgutter=-1 0xe0e0e0 0
+scheme.cpp.colors.classic.naviselect=0xffffff 0x808080 0
+scheme.cpp.colors.classic.normal=0xffff00 0x80 0
+scheme.cpp.colors.classic.number=0xff00ff -1 -1
+scheme.cpp.colors.classic.oper=0xff00 -1 -1
+scheme.cpp.colors.classic.preprocessor=0x8000 -1 -1
+scheme.cpp.colors.classic.select=0x80 0xc0c0c0 0
+scheme.cpp.colors.classic.string=0xffff -1 -1
+scheme.cpp.colors.classic.userselect=0xffffff 0x808080 0
+scheme.cpp.colors.def.cchar=0x800000 -1 -1
+scheme.cpp.colors.def.comment=0x8000 -1 -1
+scheme.cpp.colors.def.keyword1=0x80 -1 -1
+scheme.cpp.colors.def.keyword2=0xff -1 -1
+scheme.cpp.colors.def.lcomment=0x8000 -1 -1
+scheme.cpp.colors.def.lgutter=-1 0xe0e0e0 0
+scheme.cpp.colors.def.naviselect=0x0 0xc0d6e6 0
+scheme.cpp.colors.def.normal=0x0 0xffffff 0
+scheme.cpp.colors.def.number=0x800000 -1 -1
+scheme.cpp.colors.def.oper=0x0 -1 -1
+scheme.cpp.colors.def.preprocessor=0x808000 -1 1
+scheme.cpp.colors.def.select=0xffffff 0x80 -1
+scheme.cpp.colors.def.string=0x800000 0xffffff -1
+scheme.cpp.colors.def.userselect=0x0 0xc0c0c0 0
+scheme.cpp.colors.ocean.cchar=0x800080 -1 -1
+scheme.cpp.colors.ocean.comment=0x8080 -1 -1
+scheme.cpp.colors.ocean.keyword1=-1 -1 -1
+scheme.cpp.colors.ocean.keyword2=0xff -1 -1
+scheme.cpp.colors.ocean.lcomment=0x8080 -1 -1
+scheme.cpp.colors.ocean.lgutter=-1 0xe0e0e0 0
+scheme.cpp.colors.ocean.naviselect=0xffffff 0x808080 0
+scheme.cpp.colors.ocean.normal=0x0 0xffff 0
+scheme.cpp.colors.ocean.number=0x808000 -1 -1
+scheme.cpp.colors.ocean.oper=-1 -1 -1
+scheme.cpp.colors.ocean.preprocessor=0x8000 -1 -1
+scheme.cpp.colors.ocean.select=0xffff 0xff 0
+scheme.cpp.colors.ocean.string=0x800080 -1 -1
+scheme.cpp.colors.ocean.userselect=0xffffff 0x808080 0
+scheme.cpp.colors.twilight.cchar=0xffff00 -1 -1
+scheme.cpp.colors.twilight.comment=0xff00 -1 2
+scheme.cpp.colors.twilight.keyword1=0xffff -1 -1
+scheme.cpp.colors.twilight.keyword2=-1 -1 -1
+scheme.cpp.colors.twilight.lcomment=0xff00 -1 2
+scheme.cpp.colors.twilight.lgutter=-1 0xe0e0e0 0
+scheme.cpp.colors.twilight.naviselect=0xffffff 0x808080 0
+scheme.cpp.colors.twilight.normal=0xffffff 0x0 0
+scheme.cpp.colors.twilight.number=0xff00ff -1 -1
+scheme.cpp.colors.twilight.oper=0xc0c0c0 -1 -1
+scheme.cpp.colors.twilight.preprocessor=0x8000 -1 -1
+scheme.cpp.colors.twilight.select=0x0 0xff 0
+scheme.cpp.colors.twilight.string=0xffff00 -1 -1
+scheme.cpp.colors.twilight.userselect=0xffffff 0x808080 0
+scheme.cpp.tab_size=3
+[model]
+alphaSort=true
+showDiagramContents=false
+showPackagesFirst=true
+[autoformat]
+cpp.cStyleComment.forceShortOneLines=true
+cpp.indentStyle=3
+cpp.indentWidth=3
+[codegen]
+cpp.blueprint.declaration_file_prologue= #ifndef %FILE_NAME%_%FILE_EXT%\n  #define %FILE_NAME%_%FILE_EXT%\n
+cpp.blueprint.definition_file_prologue=#include %Header_File%\n
+cpp.includeStatementChar=angleBrackets
+[diagram]
+openInNewTab=true
+[parser]
+cpp.skip_standard_directories=false
+[newDiagramExpert]
+includeInCurrentDiagram=false

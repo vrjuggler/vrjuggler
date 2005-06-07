@@ -1,0 +1,319 @@
+<head>
+<title>Compiling the Juggler Suite Using Visual Studio 7.x</title>
+</head>
+
+<body>
+
+<h1>Table of Contents</h1>
+
+<ul>
+  <li><a href="#intro">Introduction</a></li>
+  <li><a href="#install_python">Install Python</a></li>
+  <li><a href="#run_buildwin32_py">Run <tt>buildwin32.py</tt></a></li>
+  <li><a href="#choose_configuration">Choose a Configuration to Build</a></li>
+  <li><a href="#install_vrj">Install VR Juggler</a></li>
+  <li><a href="#install_deps">Install VR Juggler Dependencies</a></li>
+</ul>
+
+<a name="intro"><h1>1. Introduction to Compiling and Installing VR
+Juggler</h1></a>
+
+<p>
+Building VR Juggler (both the C++ and the Java code) on Windows is
+straightforward.  A Visual Studio solution has been created that collects
+each of the redistributable entities into Visual C++ projects.  An overview
+of the steps for building and installing VR Juggler on Windows follow:
+</p>
+
+<ol>
+  <li>
+    Install <a href="http://www.python.org/">Python</a> 2.2 or newer.
+  </li>
+  <li>
+    Run <tt>buildwin32.py</tt> and fill in at least the paths to the
+    required dependencies.
+  </li>
+  <li>
+    In Visual Studio, choose the configuration(s) to build.
+  </li>
+  <li>
+    Install the compiled libraries, tools, and (optionally) dependencies.
+  </li>
+</ol>
+
+<p>
+Each of the above steps is described in more detail below.
+</p>
+
+<a name="install_python"><h1>2. Install Python</h1></a>
+
+<p>
+In order to <a href="#run_buildwin32_py">run the helper script
+<tt>buildwin32.py</tt></a>, you must have
+<a href="http://www.python.org/">Python</a> 2.2 or newer installed on your
+system.  Visit the Python website for
+<a href="http://www.python.org/download/">download and install
+instructions</a>.
+</p>
+
+<a name="run_buildwin32_py"><h1>3. Run <tt>buildwin32.py</tt></h1></a>
+
+<p>
+Once you have Python installed, you can open the folder containing the
+Juggler Project source in Windows Explorer and double-click on the
+icon for the script <tt>buildwin32.py</tt>.  This script simplifies the
+process of building VR Juggler on Windows by setting up paths and
+environment variables based on input that you provide.  It then starts
+Visual Studio for you, and when the build is complete, it will perform
+all the necessary installation steps&mdash;including installation of
+VR Juggler's C++ dependencies into a convenient, centralized location.
+</p>
+
+<blockquote>
+<b>NOTE:</b> For the build to work correctly, you must use the
+<tt>buildwin32.py</tt> script.  It does more than just set environment
+variables.
+</blockquote>
+
+<p>
+Regarding the environment variables, the remainder of this
+section describes each of the required and optional environment variables
+used by the Visual Studio build.  You can read through them to get a
+better understanding of what <tt>buildwin32.py</tt> expects from your
+answers to its questions, or you can
+<a href="#choose_configuration">skip to the next section</a>.
+</p>
+
+<h2>3.1. Set Environment Variables</h2>
+
+<p>
+Prior to starting the Visual Studio GUI, several environment variables
+must be set.  If you run the Python script <tt>buildwin32.py</tt>, all of
+the necessary environment variables will be set (and cached) based on
+responses you provide to several questions.
+
+These variables provide paths to external dependencies of the Juggler
+source code.  There are some environment variables that are required for
+successful compilation of the Juggler source, and there are some that are
+optional for getting additional code to compile.
+</p>
+
+<h3>3.1.1. Required Environment Variables</h3>
+
+<p>
+The required environment variables are as follows:
+</p>
+
+<dl>
+  <dt><tt>BOOST_ROOT</tt></dt>
+  <dd>
+    The root directory of an installed copy of
+    <a href="http://www.boost.org/">Boost</a> 1.31.0 or newer.  This must
+    contain a directory named <tt>lib</tt> that contains <i>at least</i>
+    compiled versions of the Boost.Filesystem library.  Refer to the relevant
+    <a href="http://www.boost.org/more/getting_started.html#Build_Install">Boost
+    documentation</a> for instructions on how to get and install Boost.
+  </dd>
+  <dt><tt>BOOST_INCLUDES</tt></dt>
+  <dd>
+    The directory containing the root of the Boost header tree.  For a
+    Boost 1.31.0 installation, this will normally be set to the value of
+    <tt>%BOOST_ROOT%\include\boost-1_31</tt>.  The requirement here is
+    that the value of this environment variable must be the full path to
+    a directory that contains a sub-directory named <tt>boost</tt>, in
+    which the Boost headers will be found.
+  </dd>
+  <dt><tt>BOOST_TOOL</tt></dt>
+  <dd>
+    The name of the Boost Jam toolset used to compile Boost.  Generally,
+    this will be either <tt>vc7</tt> or <tt>vc71</tt>, but it depends on
+    how Boost was compiled.  To determine which toolset was used, look at
+    the names of the libraries in <tt>%BOOST_ROOT%\lib</tt>.  For example,
+    the name of the Boost.Filesystem DLL may be
+    <tt>boost_filesystem-<b>vc7</b>-mt-1_31.dll</tt> where the
+    <tt>vc7</tt> part of the file name is the value to use for this
+    setting.
+
+    <blockquote>
+      <b>NOTE:</b> There is some inconsistency between the name of the
+      toolset specified when running <tt>bjam</tt> to compile and install
+      Boost.  For example, the name of the Visual C++ 7.1 toolset is
+      <tt>vc7_1</tt>, but the compiled libraries names contain the
+      substring <tt>vc71</tt>.  <i>The value to use is the substring in the
+      library name.</i>
+    </blockquote>
+  </dd>
+  <dt><tt>BOOST_VERSION</tt></dt>
+  <dd>
+    The version of Boost against which the Juggler code will be compiled.
+    However, this string must use underscores (<tt>_</tt>) instead of
+    periods (<tt>.</tt>), and it should only reference the major and
+    minor version number.  For example, if you are compiling against Boost
+    1.31.2, this environment variable would be set to <tt>1_31</tt>.
+  </dd>
+  <dt><tt>NSPR_ROOT</tt></dt>
+  <dd>
+    The root directory of an installed copy of
+    <a href="http://www.mozilla.org/projects/nspr/">NSPR</a> 4.2 or newer.
+    This must contain a directory named <tt>lib</tt> and a directory
+    named <tt>include</tt>.
+  </dd>
+  <dt><tt>CPPDOM_ROOT</tt></dt>
+  <dd>
+    The root directory of an installed copy of
+    <a href="http://www.sourceforge.net/projects/xml-cppdom/">CppDOM</a>
+    0.3.2 or newer.  This must contain a directory named <tt>lib</tt> and a
+    directory named <tt>include</tt>.  Within <tt>lib</tt>, there must exist
+    the different builds of CppDOM: release DLL (<tt>cppdom.lib</tt> and
+    <tt>cppdom.dll</tt>), debug DLL (<tt>cppddom_d.lib</tt> and
+    <tt>cppdom_d.dll</tt>), static release (<tt>cppdom_s.lib</tt>), and
+    static debug (<tt>cppdom_s_d.lib</tt>).
+  </dd>
+  <dt><tt>GMTL_ROOT</tt></dt>
+  <dd>
+    The root directory of an installed copy of
+    <a href="http://www.sourceforge.net/projects/ggt/">GMTL</a>
+    0.3.2 or newer.  This must contain a directory named <tt>include</tt>
+    which in turn has a subdirectory named <tt>gmtl</tt> containing the
+    GMTL header files.
+  </dd>
+</dl>
+
+<a name="opt_env_vars"><h3>3.1.2. Optional Environment Variables</h3></a>
+
+<p>
+The optional environment variables are as follows:
+</p>
+
+<dl>
+  <dt><tt>JAVA_HOME</tt></dt>
+  <dd>
+    The root directory of a <a href="http://java.sun.com/j2se/">Java 2 SDK</a>
+    installation.  It is highly recommended that version 1.4.2 or newer be
+    installed.  Version 1.3.1 is the minimum required version.
+  </dd>
+  <dt><tt>JOGL_HOME</tt></dt>
+  <dd>
+    The root directory of a <a href="http://jogl.dev.java.net">Jogl</a>
+    installation.  This directory must contain two files: <tt>jogl.jar</tt>
+    and <tt>jogl-demos-util.jar</tt>.  The default value is
+    <tt>%JAVA_HOME%</tt>.  The minimum required version of Jogl is 1.0.
+  </dd>
+  <dt><tt>JAVA3D_HOME</tt></dt>
+  <dd>
+    The root directory of a
+    <a href="http://java.sun.com/products/java-media/3D/">Java 3D API</a>
+    installation.  Typically, this will be the same as <tt>%JAVA_HOME%</tt>,
+    but that may not always be the case.  The minimum required version of
+    the Java 3D API is 1.3.1.
+  </dd>
+  <dt><tt>PFROOT</tt></dt>
+  <dd>
+    The root directory of an
+    <a href="http://www.sgi.com/software/performer/">OpenGL Performer</a> 3.x
+    installation.  This directory must contain the sub-directories
+    <tt>Include</tt> and <tt>Lib</tt>.  This is the normal structure for a
+    standard OpenGL Performer installation.  This variable is normally set
+    automatically by the OpenGL Performer installation wizard.
+  </dd>
+  <dt><tt>OMNIORB_ROOT</tt></dt>
+  <dd>
+    The root directory of an
+    <a href="http://omniorb.sourceforge.net/">omniORB</a> 4.0.x installation.
+    This directory must contain the sub-directories <tt>bin</tt>,
+    <tt>include</tt>, and <tt>lib</tt>.
+  </dd>
+  <dt><tt>MS_SPEECH_SDK_ROOT</tt></dt>
+  <dd>
+    The root directory of a
+    <a href="http://www.microsoft.com/speech/download/sdk51/">Microsoft Speech
+    SDK</a> installation.  This directory must contain the sub-directories
+    <tt>include</tt> and <tt>lib\i386</tt>.
+  </dd>
+  <dt><tt>VRPN_ROOT</tt></dt>
+  <dd>
+    The root directory of a
+    <a href="http://www.cs.unc.edu/Research/vrpn/">VRPN</a> 6.04 or newer
+    tree.  This directory must contain the sub-directories <tt>quat</tt>
+    and <tt>vrpn</tt>.  In each of those, there must be a sub-directory
+    named <tt>pc_win32</tt>, and within it, there must be sub-directories
+    named <tt>Debug</tt> and <tt>Release</tt>.  These contain the compiled
+    version of the appropriate library.  This is the normal directory
+    structure seen after VRPN is compiled successfully.
+  </dd>
+  <dt><tt>AUDIERE_ROOT</tt></dt>
+  <dd>
+    The root directory of an
+    <a href="http://audiere.sourceforge.net/">Audiere</a> 1.9.3 or newer
+    installation.
+  </dd>
+  <dt><tt>OPENAL_ROOT</tt></dt>
+  <dd>
+    The root directory of an
+    <a href="http://www.openal.org/downloads.html">OpenAL SDK</a> 1.0 or newer
+    installation.  The SDK can be
+    <a href="http://developer.creative.com/landing.asp?cat=1&sbcat=31&top=38">downloaded
+    from Creative Labs</a>.
+  </dd>
+  <dt><tt>TRACKD_API_ROOT</tt></dt>
+  <dd>
+    The root directory of a Trackd API installation.
+  </dd>
+</dl>
+
+<a name="choose_configuration"><h1>4. Choose a Configuration to Build</h1></a>
+
+<p>
+After you answer the questions asked by <tt>buildwin32.py</tt>, the script
+will start up the version of Visual Studio that you have in your path (or
+that it detected on your system if your environment does not have the
+<tt>devenv.exe</tt> command in your path).  Inside the Visual Studio GUI,
+you must choose the configuration that you want to build.
+</p>
+
+<p>
+The chosen target should be either "Debug" or "Release".  Otherwise, select
+"Batch Build" under the "Build" menu and compile everything all at once.  If
+you choose to build everything but do not have all the
+<a href="#opt_env_vars">optional dependencies</a>, some optional targets
+such as device drivers or Java features may fail to build.  If this is not
+acceptable, you must <a href="#run_buildwin32_py">go back to Step 3</a>
+and run <tt>buildwin32.py</tt> again.
+</p>
+
+<a name="install_vrj"><h1>5. Install VR Juggler</h1></a>
+
+<p>
+After successfully compiling VR Juggler, <tt>buildwin32.py</tt> will ask
+if you want to install VR Juggler.  On Windows, you must install VR Juggler
+to be able to build and run applications.  Working out of the development
+tree is not possible the way it is on other platforms.  If you answer
+"yes" to the question of installing VR Juggler, <tt>buildwin32.py</tt> will
+go through the full process of installing everything that was compiled.
+</p>
+
+<a name="install_deps"><h1>6. Install VR Juggler Dependencies</h1></a>
+
+<p>
+After VR Juggler is installed, you will be given the option to install
+VR Juggler's C++ dependencies.  This includes NSPR, CppDOM, Boost, GMTL,
+and any optional packages that were available for compiling additional
+features.  If you answer "yes" to this question, the dependencies will
+be installed to a location of your choice (which can be the same as the
+VR Juggler installation directory).  This gives you a convenient,
+single location for referencing all dependencies from application project
+files.
+</p>
+
+<blockquote>
+<b>NOTE:</b> The sample and test applications reference the environment
+variable <tt>%VJ_DEPS_DIR%</tt>, so it is highly recommended that you
+install the dependencies to a single location unless you have already done
+so.
+</blockquote>
+
+<p>
+<font size="-1"><i>$Id$</i></font>
+</p>
+
+</body>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd">
+   <generic name="PinchGloveEditor">
+      <file name="${VJ_BASE_DIR}/share/vrjuggler/beans/customeditors/PinchGloveEditor.jar"
+            class="org.vrjuggler.vrjconfig.customeditors.pinchglove.PinchGlovePanel"/>
+      <dependencies>
+         <bean>ConfigBroker</bean>
+         <jar path="${JCCL_BASE_DIR}/share/jccl/beans">jccl_editors.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/share/tweek/java">ui.jar</jar>
+         <jar path="${VJ_BASE_DIR}/share/vrjuggler/java">CommonEditors.jar</jar>
+      </dependencies>
+   </generic>
+</beanlist>

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="motion_star" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/motionstar.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="MotionStar">
+      <abstract>false</abstract>
+      <help>Ascension MotionStar server chassis configuration</help>
+      <parent>positional_device</parent>
+      <category>/Devices/Positional</category>
+      <property valuetype="string" variable="false" name="address">
+         <help>Hostname or IP address of the server.</help>
+         <value label="Server Address" defaultvalue=""/>
+      </property>
+      <property valuetype="integer" variable="false" name="server_port">
+         <help>The port on the server to which the client connects.  (UDP -&gt; 5000, TCP -&gt; 6000)</help>
+         <value label="Server Port" defaultvalue="6000"/>
+         <enumeration editable="false">
+            <enum label="UDP Port" value="5000"/>
+            <enum label="TCP Port" value="6000"/>
+         </enumeration>
+      </property>
+      <property valuetype="boolean" variable="false" name="server_type">
+         <help>The type of this server chassis.</help>
+         <value label="Server Type" defaultvalue="true"/>
+         <enumeration editable="false">
+            <enum label="Master" value="1"/>
+            <enum label="Slave" value="0"/>
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="hemisphere">
+         <help>Transmitter hemisphere to use.</help>
+         <value label="Hemisphere" defaultvalue="0"/>
+         <enumeration editable="false">
+            <enum label="Front" value="0"/>
+            <enum label="Aft" value="1"/>
+            <enum label="Upper" value="2"/>
+            <enum label="Lower" value="3"/>
+            <enum label="Left" value="4"/>
+            <enum label="Right" value="5"/>
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="number_of_birds">
+         <help>Number of sensors connected to this chassis.</help>
+         <value label="Number of Birds" defaultvalue="2"/>
+      </property>
+      <property valuetype="integer" variable="false" name="data_format">
+         <help>Data format for the sensors.</help>
+         <value label="Data Format" defaultvalue="4"/>
+         <enumeration editable="false">
+            <enum label="No Data" value="0"/>
+            <enum label="Position" value="1"/>
+            <enum label="Angles" value="2"/>
+            <enum label="Matrix" value="3"/>
+            <enum label="Position and Angles" value="4"/>
+            <enum label="Position and Matrix" value="5"/>
+            <enum label="Quaternion" value="7"/>
+            <enum label="Position and Quaternion" value="8"/>
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="mode">
+         <help>The sample mode for the running driver.</help>
+         <value label="Sample Mode" defaultvalue="0"/>
+         <enumeration editable="false">
+            <enum label="Run Continuous" value="0"/>
+            <enum label="Sample Individually" value="1"/>
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="report_rate">
+         <help>Report rate for the sensors (0-255).  This should usually be 1.</help>
+         <value label="Bird Report Rate" defaultvalue="1"/>
+      </property>
+      <property valuetype="float" variable="false" name="measurement_rate">
+         <help>Measurement rate for the chassis.</help>
+         <value label="Chassis Measurement Rate" defaultvalue="0.0"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+   <definition_version version="2" label="MotionStar Wireless">
+      <abstract>false</abstract>
+      <help>Ascension MotionStar Wireless server chassis configuration.  One instance of this driver is needed for each pack that will be used. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0b3/configuring_vr_juggler/apas02.html"&gt;more on MotionStar&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0b3/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
+      <parent>positional_device</parent>
+      <category>/Devices/Positional</category>
+      <property valuetype="string" variable="false" name="address">
+         <help>Host name or IP address of the server to which this driver will connect. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0b3/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Server Address" defaultvalue=""/>
+      </property>
+      <property valuetype="integer" variable="false" name="server_port">
+         <help>The port on the server to which the client connects.  UDP -&gt; 5000, TCP -&gt; 6000 (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0b3/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Server Port" defaultvalue="6000"/>
+         <enumeration editable="false">
+            <enum label="UDP Port" value="5000"/>
+            <enum label="TCP Port" value="6000"/>
+         </enumeration>
+      </property>
+      <property valuetype="boolean" variable="false" name="is_master">
+         <help>Is this server chassis a master?  A slave chassis will be used in a multi-pack configuration. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0b3/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Is master?" defaultvalue="true"/>
+      </property>
+      <property valuetype="integer" variable="false" name="hemisphere">
+         <help>Transmitter hemisphere to use. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0b3/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Hemisphere" defaultvalue="0"/>
+         <enumeration editable="false">
+            <enum label="Front" value="0"/>
+            <enum label="Aft" value="1"/>
+            <enum label="Upper" value="2"/>
+            <enum label="Lower" value="3"/>
+            <enum label="Left" value="4"/>
+            <enum label="Right" value="5"/>
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="data_format">
+         <help>Data format for the sensors. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0b3/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Data Format" defaultvalue="4"/>
+         <enumeration editable="false">
+            <enum label="No Data" value="0"/>
+            <enum label="Position" value="1"/>
+            <enum label="Angles" value="2"/>
+            <enum label="Matrix" value="3"/>
+            <enum label="Position and Angles" value="4"/>
+            <enum label="Position and Matrix" value="5"/>
+            <enum label="Quaternion" value="7"/>
+            <enum label="Position and Quaternion" value="8"/>
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="mode">
+         <help>The sample mode for the running driver.  This should almost always be set to "Run Continuous" (0). (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0b3/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Sample Mode" defaultvalue="0"/>
+         <enumeration editable="false">
+            <enum label="Run Continuous" value="0"/>
+            <enum label="Sample Individually" value="1"/>
+         </enumeration>
+      </property>
+      <property valuetype="integer" variable="false" name="report_rate">
+         <help>Report rate for the sensors (0-255).  This should usually be 1. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0b3/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Bird Report Rate" defaultvalue="1"/>
+      </property>
+      <property valuetype="float" variable="false" name="measurement_rate">
+         <help>Measurement rate for the chassis.  This must be set to a valid value based on the configuration of the hardware and the allowed values documented in the MotionStar Wireless manual. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0b3/configuring_vr_juggler/apas02.html"&gt;more ...&lt;/a&gt;)</help>
+         <value label="Chassis Measurement Rate" defaultvalue="86.1"/>
+      </property>
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+
+            <xsl:template match="jconf:motion_star">
+               <xsl:element namespace="{$jconf}" name="motion_star">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">2</xsl:attribute>
+                  <xsl:copy-of select="jconf:address"/>
+                  <xsl:copy-of select="jconf:server_port"/>
+                  <xsl:element namespace="{$jconf}" name="is_master">
+                     <xsl:variable name="server_type">
+                        <xsl:value-of select="jconf:server_type"/>
+                     </xsl:variable>
+                     <xsl:choose>
+                        <xsl:when test="$server_type = 'Master'">
+                           <xsl:text>true</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="$server_type = '1'">
+                           <xsl:text>true</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="$server_type = 'true'">
+                           <xsl:text>true</xsl:text>
+                        </xsl:when>
+                        <xsl:otherwise>
+                           <xsl:text>false</xsl:text>
+                        </xsl:otherwise>
+                     </xsl:choose>
+                  </xsl:element>
+                  <xsl:copy-of select="jconf:hemisphere"/>
+                  <xsl:copy-of select="jconf:position_filters"/>
+                  <xsl:copy-of select="jconf:data_format"/>
+                  <xsl:copy-of select="jconf:mode"/>
+                  <xsl:copy-of select="jconf:report_rate"/>
+                  <xsl:copy-of select="jconf:measurement_rate"/>
+                  <xsl:copy-of select="jconf:device_host"/>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
+   </definition_version>
+</definition>

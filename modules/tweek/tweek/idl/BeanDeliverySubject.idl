@@ -1,0 +1,99 @@
+/***************** <Tweek heading BEGIN do not edit this line> ****************
+ * Tweek
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ ***************** <Tweek heading END do not edit this line> *****************/
+
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+ *
+ * Original Authors:
+ *   Allen Bierbaum, Christopher Just,
+ *   Patrick Hartling, Kevin Meinert,
+ *   Carolina Cruz-Neira, Albert Baker
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#ifndef _TWEEK_BEAN_DELIVERY_SUBJECT_IDL_
+#define _TWEEK_BEAN_DELIVERY_SUBJECT_IDL_
+
+#include <tweek/idl/Subject.idl>
+
+
+module tweek
+{
+   typedef sequence<string> BeanNameList;
+   typedef sequence<octet> BeanStream;
+
+   /**
+    * A handy container for all information relating to a JavaBean, including
+    * the complete Java JAR file that contains the Bean.
+    */
+   struct BeanInfo
+   {
+      /** The symbolic (i.e., canonical) name of the JavaBean. */
+      string name;
+
+      /**
+       * The name of the class within the delivered JAR file that can be used
+       * for getting information about the contained JavaBean.
+       */
+      string introspectorClassName;
+
+      /** The complete contents of the named JAR file. */
+      BeanStream jarFile;
+   };
+
+   /**
+    * The interface that is used to manage information about JavaBeans that
+    * can be delivered from the server to a client.
+    */
+   interface BeanDeliverySubject : tweek::Subject
+   {
+      /** Returns a list of all the Beans currently known to this subject. */
+      BeanNameList getAllBeanNames();
+
+      /**
+       * Returns all the relevant information for the named JavaBean, including
+       * the complete JAR file.
+       *
+       * @param beanName The name of the JavaBean whose information will be
+       *                 returned.
+       */
+      BeanInfo getBean(in string beanName);
+
+      /** Determines if the subject has an "active" JavaBean or not. */
+      boolean hasActiveBean();
+
+      /**
+       * Returns all the relevant information for the current "active"
+       * JavaBean.
+       *
+       * @pre A JavaBean has been marked as active within the subject.
+       */
+      BeanInfo getActiveBeanInfo();
+   };
+};
+
+
+#endif /* _TWEEK_BEAN_DELIVERY_SUBJECT_IDL_ */

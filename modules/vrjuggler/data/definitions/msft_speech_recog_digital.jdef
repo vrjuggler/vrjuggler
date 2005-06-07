@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="msft_speech_recog_digital" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/IntersenseEditor.jar!/org/vrjuggler/vrjconfig/customeditors/intersense/images/IS_logo.gif" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Microsoft Speech API (Command)">
+      <abstract>false</abstract>
+      <help>Microsoft Speech API command-driven speech recognition device</help>
+      <parent>command_device</parent>
+      <category>/Devices</category>
+      <property valuetype="string" variable="false" name="grammar_file">
+         <help/>
+         <value label="Grammar XML File Location" defaultvalue=""/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

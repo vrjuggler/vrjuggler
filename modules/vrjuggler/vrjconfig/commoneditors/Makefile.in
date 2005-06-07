@@ -1,0 +1,125 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Makefile.in for vrjuggler/vrjconfig/commoneditors.  It requires GNU make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+default: all
+
+# Include common definitions.
+include @topdir@/make.defs.mk
+include @topdir@/java.defs.mk
+
+jardir=			$(javadir)
+
+srcdir=			@srcdir@
+top_srcdir=		@top_srcdir@
+EXTRA_SRCS_PATH=	$(srcdir)/../tweek/idl
+INSTALL=		@INSTALL@
+INSTALL_FILES=		
+JAVA_IDL_OPTS=		@JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
+JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
+
+JARS=			CommonEditors.jar
+
+JGRAPH_DIR=		$(JUGGLERROOT_ABS)/external/jgraph/lib
+JGRAPH_JARS=		$(JGRAPH_DIR)/jgraph.jar		\
+			$(JGRAPH_DIR)/jgraphaddons.jar
+JOGL_JARS=		@JOGL_JARS@
+
+_LOCAL_CLEAN=		1
+
+include $(MKPATH)/dpp.obj.mk
+
+# -----------------------------------------------------------------------------
+# Uses ant to build the java classes and JARs
+# -----------------------------------------------------------------------------
+commoneditors:
+	@echo "------------------------------------------------"
+	@echo "Building Common Editors java sources"
+	@echo "------------------------------------------------"
+	$(ANT)
+
+_clean:
+	$(ANT) clean
+
+# -----------------------------------------------------------------------------
+# Extra targets.
+# -----------------------------------------------------------------------------
+
+# This cannot be named 'install' because Doozer++ already defines that.
+install-commoneditors:
+	@echo "------------------------------------------------"
+	@echo "Installing the Common Editors code base"
+	@echo "------------------------------------------------"
+ifneq ($(JARS), )
+	for jar in $(JARS) ;						\
+          do								\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS)					\
+                $(topdir)/commoneditors/$$jar $(jardir) || exit 1;	\
+          done
+endif
+	for jar in $(JGRAPH_JARS) ;					\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $$jar $(javadir) ;			\
+          done
+	for jar in `echo "$(JOGL_JARS)" | sed -e 's/$(JCPS)/ /g'` ;	\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $$jar $(javadir) ;			\
+          done
+ifeq (@PLATFORM@, Darwin)
+ifneq ($(JARS), )
+	for jar in $(JARS) ;						\
+          do								\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS)					\
+                $(topdir)/commoneditors/$$jar $(bundle_vrj_javadir) ||	\
+                exit 1 ;						\
+          done
+endif
+	for jar in $(JGRAPH_JARS) ;					\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $$jar $(bundle_vrj_javadir) ;		\
+          done
+	for jar in `echo "$(JOGL_JARS)" | sed -e 's/$(JCPS)/ /g'` ;	\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $$jar $(bundle_vrj_javadir) ;		\
+          done
+endif

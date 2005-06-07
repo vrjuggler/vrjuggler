@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <simulated_positional_device name="SimHeadPos" version="2">
+         <event_window_proxy>MainSimEventWindow</event_window_proxy>
+         <key_pair>
+            <key_modifier_pair name="Forward" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>15</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Back" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>9</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Left" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>11</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Right" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>13</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Up" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>16</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Down" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>14</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Right" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>13</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Left" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>11</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Up" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>9</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Down" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>15</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot CCW" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>8</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot CW" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>10</key>
+            </key_modifier_pair>
+         </key_pair>
+         <initial_position>0.0</initial_position>
+         <initial_position>1.8288</initial_position>
+         <initial_position>0.0</initial_position>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <translation_delta>0.05</translation_delta>
+         <rotation_delta>0.5</rotation_delta>
+         <translation_coordinate_system>1</translation_coordinate_system>
+         <rotation_coordinate_system>0</rotation_coordinate_system>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+         <device_host />
+      </simulated_positional_device>
+   </elements>
+</configuration>
+

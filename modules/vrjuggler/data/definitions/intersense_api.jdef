@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="intersense_api" icon_path="jar:file:${VJ_BASE_DIR}/share/vrjuggler/beans/customeditors/IntersenseEditor.jar!/org/vrjuggler/vrjconfig/customeditors/intersense/images/IS_logo.gif" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="InterSense API">
+      <abstract>false</abstract>
+      <help>Configuration for all InterSense tracking devices.</help>
+      <parent>positional_device</parent>
+      <parent>digital_device</parent>
+      <parent>analog_device</parent>
+      <category>/Devices</category>
+      <property valuetype="string" variable="false" name="driver">
+         <help>The full path to the InterSense driver DLL (from InterSense Corp.) that will be used for communicating with the hardware. The DLL name must not include the platform-specific file extension (such as .so, .dll, .dylib, etc.)</help>
+         <value label="InterSense DLL Path" defaultvalue=""/>
+      </property>
+      <property valuetype="string" variable="false" name="port">
+         <help>The name of the serial port (/dev/ttyS0, COM1, etc.) to which the InterSense tracker is attached.</help>
+         <value label="Serial Port" defaultvalue="/dev/ttyd1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="baud">
+         <help>Serial port speed.</help>
+         <value label="Baud" defaultvalue="115200"/>
+      </property>
+      <property valuetype="configelement" variable="true" name="stations">
+         <help>Settings for each Station.</help>
+         <value label="Stations"/>
+         <allowed_type>intersense_station</allowed_type>
+      </property>
+      <property valuetype="boolean" variable="false" name="verbose">
+         <help>Enable output from the InterSense Driver</help>
+         <value label="Verbose Enabled" defaultvalue="false"/>
+      </property>
+      <property valuetype="string" variable="false" name="script">
+         <help>File path of script sent to the tracker on startup.</help>
+         <value label="Script File" defaultvalue=""/>
+      </property>
+      <property valuetype="float" variable="false" name="min">
+         <help>The lower bound for the range of valid values for the analog data.</help>
+         <value label="Range Minimum" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="max">
+         <help>The upper bound for the range of valid values for the analog data.</help>
+         <value label="Range Maximum" defaultvalue="1.0"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+   <definition_version version="2" label="InterSense API">
+      <abstract>false</abstract>
+      <help>Configuration for all InterSense tracking devices.</help>
+      <parent>positional_device</parent>
+      <parent>digital_device</parent>
+      <parent>analog_device</parent>
+      <category>/Devices</category>
+      <property valuetype="string" variable="false" name="driver">
+         <help>The full path to the InterSense driver DLL (from InterSense Corp.) that will be used for communicating with the hardware. The DLL name must not include the platform-specific file extension (such as .so, .dll, .dylib, etc.)</help>
+         <value label="InterSense DLL Path" defaultvalue=""/>
+      </property>
+      <property valuetype="string" variable="false" name="port">
+         <help>The name of the serial port (/dev/ttyS0, COM1, etc.) to which the InterSense tracker is attached.</help>
+         <value label="Serial Port" defaultvalue="/dev/ttyd1"/>
+      </property>
+      <property valuetype="configelement" variable="true" name="stations">
+         <help>Settings for each Station.</help>
+         <value label="Stations"/>
+         <allowed_type>intersense_station</allowed_type>
+      </property>
+      <property valuetype="boolean" variable="false" name="verbose">
+         <help>Enable output from the InterSense Driver</help>
+         <value label="Verbose Enabled" defaultvalue="false"/>
+      </property>
+      <property valuetype="float" variable="false" name="min">
+         <help>The lower bound for the range of valid values for the analog data.</help>
+         <value label="Range Minimum" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="max">
+         <help>The upper bound for the range of valid values for the analog data.</help>
+         <value label="Range Maximum" defaultvalue="1.0"/>
+      </property>
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+           
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+           
+            <xsl:template match="jconf:intersense_api">
+               <xsl:element namespace="{$jconf}" name="intersense_api">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">2</xsl:attribute>
+                  <xsl:copy-of select="./jconf:driver"/>
+                  <xsl:copy-of select="./jconf:port"/>
+                  <xsl:copy-of select="./jconf:stations"/>
+                  <xsl:copy-of select="./jconf:verbose"/>
+                  <xsl:copy-of select="./jconf:min"/>
+                  <xsl:copy-of select="./jconf:max"/>
+                  <xsl:copy-of select="./jconf:position_filters"/>
+                  <xsl:copy-of select="./jconf:device_host"/>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
+   </definition_version>
+</definition>

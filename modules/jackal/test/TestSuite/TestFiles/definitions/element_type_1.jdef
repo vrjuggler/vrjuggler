@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="element_type_1" icon_path="" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="ElementType1">
+      <help>Element Type 1</help>
+      <parent/>
+      <property valuetype="integer" variable="false" name="single_int">
+         <help>Single int</help>
+         <value label="Int" defaultvalue="0"/>
+      </property>
+      <property valuetype="float" variable="false" name="single_float">
+         <help>single float</help>
+         <value label="Float" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="single_bool">
+         <help>single boolean</help>
+         <value label="Bool" defaultvalue="false"/>
+      </property>
+      <property valuetype="integer" variable="true" name="var_int">
+         <help>var int</help>
+         <value label="Variable Int" defaultvalue="0"/>
+      </property>
+      <property valuetype="float" variable="true" name="var_float">
+         <help>var float</help>
+         <value label="Variable Float" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="string" variable="false" name="single_string">
+         <help>Single string</help>
+         <value label="String" defaultvalue=""/>
+      </property>
+      <property valuetype="configelementpointer" variable="false" name="single_ptr">
+         <help/>
+         <value label="Pointer" defaultvalue=""/>
+      </property>
+      <property valuetype="configelement" variable="false" name="embedded_elt">
+         <help>Embedded Element</help>
+         <value label="Child" defaultvalue=""/>
+         <allowed_type>element_type_2</allowed_type>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

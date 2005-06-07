@@ -1,0 +1,16 @@
+$Id$
+
+3Dconnexion "puck device" driver
+	Submitted by Daniel R. Harms < dharms at acuitiv dot com >
+
+Imported files:
+	puck_device.cpp puck_device.h
+
+Imported by:
+
+	cvs import juggler/modules/gadgeteer/drivers/3Dconnexion/SpaceBall \
+		ACUITIV DHARMS_20050215
+
+Files off the vendor branch:
+	puck_device.cpp
+		Revision 1.2: Changes to silence GCC compile-time warnings.

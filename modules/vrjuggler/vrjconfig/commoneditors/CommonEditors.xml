@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd">
+   <service name="PositionalDeviceEditor">
+      <file name="${VJ_BASE_DIR}/share/vrjuggler/java/CommonEditors.jar"
+            class="org.vrjuggler.vrjconfig.commoneditors.PositionalDeviceEditor"/>
+      <dependencies>
+         <bean>ConfigBroker</bean>
+         <jar path="${JCCL_BASE_DIR}/share/jccl/beans">jccl_editors.jar</jar>
+         <jar path="${VJ_BASE_DIR}/share/tweek/java">ui.jar</jar>
+         <jar path="${VJ_BASE_DIR}/share/vrjuggler/java">jogl-demos-data.jar</jar>
+         <jar path="${VJ_BASE_DIR}/share/vrjuggler/java">jogl-demos.jar</jar>
+         <jar path="${VJ_BASE_DIR}/share/vrjuggler/java">jogl-demos-util.jar</jar>
+         <jar path="${VJ_BASE_DIR}/share/vrjuggler/java">jogl.jar</jar>
+      </dependencies>
+   </service>
+</beanlist>

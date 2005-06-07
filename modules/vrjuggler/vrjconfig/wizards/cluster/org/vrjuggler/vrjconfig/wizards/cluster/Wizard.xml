@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wizard>
+   <step title="Step 1" class="org.vrjuggler.vrjconfig.wizards.cluster.NewClusterFileStep" />
+   <step title="Step 2" class="org.vrjuggler.vrjconfig.wizards.cluster.SimClusterSequence" />
+</wizard>

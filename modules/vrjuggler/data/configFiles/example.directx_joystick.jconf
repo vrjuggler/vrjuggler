@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="C:\cygwin\home\patrick\win_joystick.jconf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <directx_joystick name="Logitech Dual Action" version="1">
+         <min>0.0</min>
+         <max>255.0</max>
+         <device_host />
+      </directx_joystick>
+      <input_manager name="IM DirectX Joystick" version="2">
+         <driver>DirectXJoystick_drv</driver>
+      </input_manager>
+      <digital_proxy name="DigitalProxy0" version="1">
+         <device>Logitech Dual Action</device>
+         <unit>0</unit>
+      </digital_proxy>
+      <digital_proxy name="DigitalProxy1" version="1">
+         <device>Logitech Dual Action</device>
+         <unit>1</unit>
+      </digital_proxy>
+      <digital_proxy name="DigitalProxy2" version="1">
+         <device>Logitech Dual Action</device>
+         <unit>2</unit>
+      </digital_proxy>
+      <digital_proxy name="DigitalProxy3" version="1">
+         <device>Logitech Dual Action</device>
+         <unit>3</unit>
+      </digital_proxy>
+      <digital_proxy name="DigitalProxy4" version="1">
+         <device>Logitech Dual Action</device>
+         <unit>4</unit>
+      </digital_proxy>
+      <digital_proxy name="DigitalProxy5" version="1">
+         <device>Logitech Dual Action</device>
+         <unit>5</unit>
+      </digital_proxy>
+      <digital_proxy name="DigitalProxy6" version="1">
+         <device>Logitech Dual Action</device>
+         <unit>6</unit>
+      </digital_proxy>
+      <digital_proxy name="DigitalProxy7" version="1">
+         <device>Logitech Dual Action</device>
+         <unit>7</unit>
+      </digital_proxy>
+      <digital_proxy name="DigitalProxy8" version="1">
+         <device>Logitech Dual Action</device>
+         <unit>8</unit>
+      </digital_proxy>
+      <digital_proxy name="DigitalProxy9" version="1">
+         <device>Logitech Dual Action</device>
+         <unit>9</unit>
+      </digital_proxy>
+      <digital_proxy name="DigitalProxy10" version="1">
+         <device>Logitech Dual Action</device>
+         <unit>10</unit>
+      </digital_proxy>
+      <digital_proxy name="DigitalProxy11" version="1">
+         <device>Logitech Dual Action</device>
+         <unit>11</unit>
+      </digital_proxy>
+      <analog_proxy name="AnalogProxy0" version="1">
+         <device>Logitech Dual Action</device>
+         <unit>0</unit>
+      </analog_proxy>
+      <analog_proxy name="AnalogProxy1" version="1">
+         <device>Logitech Dual Action</device>
+         <unit>1</unit>
+      </analog_proxy>
+      <analog_proxy name="AnalogProxy2" version="1">
+         <device>Logitech Dual Action</device>
+         <unit>2</unit>
+      </analog_proxy>
+      <analog_proxy name="AnalogProxy3" version="1">
+         <device>Logitech Dual Action</device>
+         <unit>3</unit>
+      </analog_proxy>
+      <analog_proxy name="AnalogProxy4" version="1">
+         <device>Logitech Dual Action</device>
+         <unit>4</unit>
+      </analog_proxy>
+      <analog_proxy name="AnalogProxy5" version="1">
+         <device>Logitech Dual Action</device>
+         <unit>5</unit>
+      </analog_proxy>
+      <alias name="VJButton0" version="1">
+         <proxy>DigitalProxy0</proxy>
+      </alias>
+      <alias name="VJButton1" version="1">
+         <proxy>DigitalProxy1</proxy>
+      </alias>
+      <alias name="VJButton2" version="1">
+         <proxy>DigitalProxy2</proxy>
+      </alias>
+      <alias name="VJButton3" version="1">
+         <proxy>DigitalProxy3</proxy>
+      </alias>
+      <alias name="VJButton4" version="1">
+         <proxy>DigitalProxy4</proxy>
+      </alias>
+      <alias name="VJButton5" version="1">
+         <proxy>DigitalProxy5</proxy>
+      </alias>
+      <alias name="VJButton6" version="1">
+         <proxy>DigitalProxy6</proxy>
+      </alias>
+      <alias name="VJButton7" version="1">
+         <proxy>DigitalProxy7</proxy>
+      </alias>
+      <alias name="VJButton8" version="1">
+         <proxy>DigitalProxy8</proxy>
+      </alias>
+      <alias name="VJButton9" version="1">
+         <proxy>DigitalProxy9</proxy>
+      </alias>
+      <alias name="VJButton10" version="1">
+         <proxy>DigitalProxy10</proxy>
+      </alias>
+      <alias name="VJButton11" version="1">
+         <proxy>DigitalProxy11</proxy>
+      </alias>
+      <alias name="VJAxis0" version="1">
+         <proxy>AnalogProxy0</proxy>
+      </alias>
+      <alias name="VJAxis1" version="1">
+         <proxy>AnalogProxy1</proxy>
+      </alias>
+      <alias name="VJAxis2" version="1">
+         <proxy>AnalogProxy2</proxy>
+      </alias>
+      <alias name="VJAxis3" version="1">
+         <proxy>AnalogProxy3</proxy>
+      </alias>
+      <alias name="VJAxis4" version="1">
+         <proxy>AnalogProxy4</proxy>
+      </alias>
+      <alias name="VJAxis5" version="1">
+         <proxy>AnalogProxy5</proxy>
+      </alias>
+   </elements>
+</configuration>
+

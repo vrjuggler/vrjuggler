@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="display_window" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="2" label="Display Window">
+      <abstract>false</abstract>
+      <help>This is display window. It contains viewports.</help>
+      <parent/>
+      <category>/Display</category>
+      <property valuetype="integer" variable="false" name="origin">
+         <help>Window origin (lower left screen is 0,0)</help>
+         <value label="X" defaultvalue="0"/>
+         <value label="Y" defaultvalue="0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="size">
+         <help>Window size</help>
+         <value label="Width" defaultvalue="200"/>
+         <value label="Height" defaultvalue="200"/>
+      </property>
+      <property valuetype="integer" variable="false" name="pipe">
+         <help>Graphics pipe. Zero-based reference to the display system configuration element.</help>
+         <value label="Pipe" defaultvalue="0"/>
+      </property>
+      <property valuetype="configelement" variable="false" name="frame_buffer_config">
+         <help>Configuration of this display's frame buffer.</help>
+         <value label="Frame Buffer Configuration"/>
+         <allowed_type>opengl_frame_buffer_config</allowed_type>
+      </property>
+      <property valuetype="boolean" variable="false" name="stereo">
+         <help>Should this window render in stereo?</help>
+         <value label="In Stereo" defaultvalue="false"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="border">
+         <help>Should the window have a border?</help>
+         <value label="Use border" defaultvalue="true"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="act_as_event_source">
+         <help>Should this window also be an event window device?</help>
+         <value label="Act as event window device?" defaultvalue="false"/>
+      </property>
+      <property valuetype="configelement" variable="false" name="event_window_device">
+         <help>Configuration of this event window device.</help>
+         <value label="Event Window Configuration"/>
+         <allowed_type>event_window</allowed_type>
+      </property>
+      <property valuetype="boolean" variable="false" name="active">
+         <help>Is the window supposed to be active?</help>
+         <value label="Use this window?" defaultvalue="true"/>
+      </property>
+      <property valuetype="configelement" variable="true" name="simulator_viewports">
+         <help>The simulator viewports to put in this window.</help>
+         <value label="Contained Sim Viewport"/>
+         <allowed_type>simulator_viewport</allowed_type>
+      </property>
+      <property valuetype="configelement" variable="true" name="surface_viewports">
+         <help>The surface viewports to put in this window.</help>
+         <value label="Contained Surface Viewport"/>
+         <allowed_type>surface_viewport</allowed_type>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+   <definition_version version="3" label="Display Window">
+      <abstract>false</abstract>
+      <help>This is display window. It contains viewports.</help>
+      <parent/>
+      <category>/Display</category>
+      <property valuetype="integer" variable="false" name="origin">
+         <help>Window origin (lower left screen is 0,0)</help>
+         <value label="X" defaultvalue="0"/>
+         <value label="Y" defaultvalue="0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="size">
+         <help>Window size</help>
+         <value label="Width" defaultvalue="200"/>
+         <value label="Height" defaultvalue="200"/>
+      </property>
+      <property valuetype="integer" variable="false" name="pipe">
+         <help>Graphics pipe. Zero-based reference to the display system configuration element.</help>
+         <value label="Pipe" defaultvalue="0"/>
+      </property>
+      <property valuetype="configelement" variable="false" name="frame_buffer_config">
+         <help>Configuration of this display's frame buffer.</help>
+         <value label="Frame Buffer Configuration"/>
+         <allowed_type>opengl_frame_buffer_config</allowed_type>
+      </property>
+      <property valuetype="boolean" variable="false" name="stereo">
+         <help>Should this window render in stereo?</help>
+         <value label="In Stereo" defaultvalue="false"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="border">
+         <help>Should the window have a border?</help>
+         <value label="Use border" defaultvalue="true"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="hide_mouse">
+         <help>Should the window show the mouse pointer?</help>
+         <value label="Hide Mouse Pointer" defaultvalue="false"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="act_as_event_source">
+         <help>Should this window also be an event window device?</help>
+         <value label="Act as event window device?" defaultvalue="false"/>
+      </property>
+      <property valuetype="configelement" variable="false" name="event_window_device">
+         <help>Configuration of this event window device.</help>
+         <value label="Event Window Configuration"/>
+         <allowed_type>event_window</allowed_type>
+      </property>
+      <property valuetype="boolean" variable="false" name="active">
+         <help>Is the window supposed to be active?</help>
+         <value label="Use this window?" defaultvalue="true"/>
+      </property>
+      <property valuetype="configelement" variable="true" name="simulator_viewports">
+         <help>The simulator viewports to put in this window.</help>
+         <value label="Contained Sim Viewport"/>
+         <allowed_type>simulator_viewport</allowed_type>
+      </property>
+      <property valuetype="configelement" variable="true" name="surface_viewports">
+         <help>The surface viewports to put in this window.</help>
+         <value label="Contained Surface Viewport"/>
+         <allowed_type>surface_viewport</allowed_type>
+      </property>
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+
+            <xsl:template match="jconf:display_window">
+               <xsl:element namespace="{$jconf}" name="display_window">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">3</xsl:attribute>
+                  <xsl:copy-of select="./*"/>
+                  <xsl:element namespace="{$jconf}" name="hide_mouse">
+                     <xsl:text>false</xsl:text>
+                  </xsl:element>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
+   </definition_version>
+   <definition_version version="4" label="Display Window">
+      <abstract>false</abstract>
+      <help>This is display window. It contains viewports.</help>
+      <parent>input_area</parent>
+      <category>/Display</category>
+      <property valuetype="integer" variable="false" name="origin">
+         <help>Window origin (lower left screen is 0,0)</help>
+         <value label="X" defaultvalue="0"/>
+         <value label="Y" defaultvalue="0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="size">
+         <help>Window size</help>
+         <value label="Width" defaultvalue="200"/>
+         <value label="Height" defaultvalue="200"/>
+      </property>
+      <property valuetype="integer" variable="false" name="pipe">
+         <help>Graphics pipe. Zero-based reference to the display system configuration element.</help>
+         <value label="Pipe" defaultvalue="0"/>
+      </property>
+      <property valuetype="configelement" variable="false" name="frame_buffer_config">
+         <help>Configuration of this display's frame buffer.</help>
+         <value label="Frame Buffer Configuration"/>
+         <allowed_type>opengl_frame_buffer_config</allowed_type>
+      </property>
+      <property valuetype="boolean" variable="false" name="stereo">
+         <help>Should this window render in stereo?</help>
+         <value label="In Stereo" defaultvalue="false"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="border">
+         <help>Should the window have a border?</help>
+         <value label="Use border" defaultvalue="true"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="hide_mouse">
+         <help>Should the window show the mouse pointer?</help>
+         <value label="Hide Mouse Pointer" defaultvalue="false"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="active">
+         <help>Is the window supposed to be active?</help>
+         <value label="Use this window?" defaultvalue="true"/>
+      </property>
+      <property valuetype="configelement" variable="true" name="simulator_viewports">
+         <help>The simulator viewports to put in this window.</help>
+         <value label="Contained Sim Viewport"/>
+         <allowed_type>simulator_viewport</allowed_type>
+      </property>
+      <property valuetype="configelement" variable="true" name="surface_viewports">
+         <help>The surface viewports to put in this window.</help>
+         <value label="Contained Surface Viewport"/>
+         <allowed_type>surface_viewport</allowed_type>
+      </property>      
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+
+            <xsl:template match="jconf:display_window">
+               <xsl:element namespace="{$jconf}" name="display_window">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">4</xsl:attribute>
+                  <xsl:copy-of select="./jconf:origin[1]"/>
+                  <xsl:copy-of select="./jconf:origin[2]"/>
+                  <xsl:copy-of select="./jconf:size[1]"/>
+                  <xsl:copy-of select="./jconf:size[2]"/>
+                  <xsl:copy-of select="./jconf:pipe"/>
+                  <xsl:copy-of select="./jconf:frame_buffer_config"/>
+                  <xsl:copy-of select="./jconf:stereo"/>
+                  <xsl:copy-of select="./jconf:border"/>
+                  <xsl:copy-of select="./jconf:hide_mouse"/>
+                  <xsl:copy-of select="./jconf:active"/>
+                  <xsl:for-each select="./jconf:simulator_viewports">
+                     <xsl:copy-of select="."/>
+                  </xsl:for-each>
+                  <xsl:for-each select="./jconf:surface_viewports">
+                     <xsl:copy-of select="."/>
+                  </xsl:for-each>
+                  <xsl:variable name="is_event_source">
+                     <xsl:value-of select="./jconf:act_as_event_source"/>
+                  </xsl:variable>
+                  <xsl:element namespace="{$jconf}" name="keyboard_mouse_device_name">
+                     <xsl:choose>
+                        <xsl:when test="$is_event_source = 'true'">
+                           <xsl:value-of select="./jconf:event_window_device/jconf:event_window/@name" /><xsl:text> KM Dev</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="$is_event_source = '1'">
+                           <xsl:value-of select="./jconf:event_window_device/jconf:event_window/@name" /><xsl:text> KM Dev</xsl:text>
+                        </xsl:when>
+                        <xsl:otherwise>
+                           <xsl:text/>
+                        </xsl:otherwise>
+                     </xsl:choose>
+                  </xsl:element>
+                  <xsl:copy-of select="./jconf:event_window_device/jconf:event_window/jconf:lock_key"/>
+                  <xsl:copy-of select="./jconf:event_window_device/jconf:event_window/jconf:start_locked"/>
+                  <xsl:copy-of select="./jconf:event_window_device/jconf:event_window/jconf:sleep_time"/>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
+   </definition_version>
+</definition>

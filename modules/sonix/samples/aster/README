@@ -1,0 +1,50 @@
+Aster
+asteroids... first person shooter style.
+
+kevin meinert - kevin@vrsource.org
+Public domain
+
+Features:
+- mouselook (no pointer with warp) rotate camera
+- straef
+- air hockey physics
+- alternate keyboard controls (works without mouse)
+- 2 gun turrets on either side...
+
+Usage/Keys:
+
+   -------------------------------------------
+       W                    accel
+     A S D          straef  decel  straef
+   -------------------------------------------
+       up                   accel
+   left  right      rotate         rotate
+      down                  decel
+   -------------------------------------------
+   mouse(x,y) axes          rotate
+   left mouse button        fire
+   -------------------------------------------
+   <SPACEBAR>               fire
+   -------------------------------------------
+        f             fullscreen toggle
+   -------------------------------------------
+
+
+TODO: 
+  - pretty models and textures... (use a model loader)
+  - keep score
+  - keep track of lives (ships)
+  - die when collide with asteroid (no collision performed yet)
+  - add a top-down 2D map or radar screen
+  - let the top down 2D map be one additional way to play the game
+
+
+BUILD:
+  - make sure SNX_BASE_DIR is set to where sonix is installed.
+    typically I do this:
+      setenv SNX_BASE_DIR /usr/share/sonix-installed/
+      setenv LD_LIBRARY_PATH /usr/lib:/usr/local/lib:"$SNX_BASE_DIR"/lib
+
+  - you'll need opengl and glut.
+  - type make
+  

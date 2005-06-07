@@ -1,0 +1,292 @@
+# ***************** <SNX heading BEGIN do not edit this line> *****************
+#
+# sonix
+#
+# Original Authors:
+#   Kevin Meinert, Carolina Cruz-Neira
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# ****************** <SNX heading END do not edit this line> ******************
+
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Base Makefile.in for Sonix.  It requires GNU make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+# Targets are:
+#
+# world             - Build and install everything.
+# world-all-abi     - Build and install everything using all supported ABIs.
+# buildworld        - Build everything (same as 'all').
+# installworld      - Install everything (same as 'install-all').  This
+#                     requires  that 'buildworld' be successfully completed
+#                     beforehand.
+# release           - Build and install a release version.
+#
+# all               - Build everything.
+# all-abi           - Build everything using all supported ABIs.
+# debug             - Build the Sonix libraries (dynamic and static) with
+#                     debugging symbols turned on.
+# dbg               - Build the debugging, static copy of the libraries.
+# dbg-dso           - Build the debugging, dynamic shared object version of
+#                     the libraries.
+# optim             - Build the Sonix libraries (dynamic and static) with
+#                     optimization flags enabled.
+# opt               - Build the optimized, static version of the libraries.
+# opt-dso           - Build the dynamic shared object version of the
+#                     libraries.
+# profiled          - Build the Sonix libraries (dynamic and static) with
+#                     profiling flags enabled.
+# prof              - Build the profiled, static version of the libraries.
+# prof-dso          - Build the profiled, dynamic shared object version of the
+#                     libraries.
+# obj               - Build the object files using the default value for
+#                     $(OBJDIR).
+#
+# links             - Define links (for developer use only) that provide
+#                     functionality allowing the use of the $SNX_BASE_DIR
+#                     environment variable.
+# clean-links       - Remove the symlinks created by 'links'.
+#
+# hier              - Make the full directory hierarchy for the installation.
+# install-all       - Install all versions of the libraries, all header files,
+#                     the Data directory, and the test code.
+# install-all-abi   - Install every ABI possible on the target platform.
+# install           - Install the full debugging version of Sonix (with
+#                     both static and dynamic libraries). 
+# install-debug     - Same as 'install'.
+# install-dbg       - Install the debugging, static version of the libraries.
+# install-dbg-dso   - Install the debugging, dynamic shared object version of
+#                     the libraries.
+# install-optim     - Install the full optimized version of Sonix (with
+#                     both static and dynamic libraries).
+# install-opt       - Install the optimized, static version of the libraries.
+# install-opt-dso   - Install the dynamic shared object version of the
+#                     libraries.
+# install-headers   - Install only the header files.
+# install-samples   - Install only the sample code.
+# install-data      - Install only the Data directory.
+#
+# docs              - Build the internal and the public documentation.
+# doc-internal      - Build only the internal documentation.
+# doc-public        - Build only the public documentation.
+#
+# clean             - Clean up everything (uses common 'clean' target).
+# cleandepend       - Clean up the dependency files (uses common 'cleandepend'
+#                     target).
+# clobber           - Clean up everything and remove the directories
+#                     containing the compiled libraries and its object files.
+#
+# info              - Print out information about the build process that may
+#                     be useful to the user.
+#
+# The default target is 'debug'.  'install' will install the debugging, static
+# version of the libraries.
+# -----------------------------------------------------------------------------
+
+default: debug
+
+# This is a hack to deal with GNU make's ignorance about defined targets.
+# Without this, the 'default' set in dpp.subdir.mk becomes the default
+# target, and that's not what we want.
+DEFAULT_SET=	1
+
+# Include common definitions.
+include @topdir@/make.defs.mk
+
+STARTTIME:=	$(shell LC_TIME=C date)
+
+BUILD_PROF_C=	@BUILD_PROF_C@
+BUILD_PROF_CXX=	@BUILD_PROF_CXX@
+
+# If we can build both C and C++ profiled objects, we will build profiled
+# libraries.
+ifeq ($(BUILD_PROF_C), Y)
+ifeq ($(BUILD_PROF_CXX), Y)
+   BUILD_PROF_LIBS=	1
+endif
+endif
+
+# =============================================================================
+# Lists used for various types of recursion.
+# =============================================================================
+
+# Subdirectories used for recursion through the source tree.
+SUBDIR=	snx
+
+# =============================================================================
+# Library targets.  The default is 'debug' as defined above.  The steps for 
+# building the 'dbg', 'dbg-dso', 'opt' and 'opt-dso' are as follows:
+#
+#    1) Build dependencies (if necessary).
+#    2) Compile all object files that are out of date.
+#    3) Compile the actual libraries from the object files.
+#    4) Build the Java-based config editor (if necessary).
+#    5) Set up the developer installation links.
+# =============================================================================
+
+# ------------------------------------------------
+# Build and install everything (i.e., the world).
+# ------------------------------------------------
+world:
+	@echo "==============================================================="
+	@echo ">>> Sonix make world started $(STARTTIME)"
+	@echo "==============================================================="
+ifndef NO_CLEAN
+	@$(MAKE) clobber
+endif
+	@$(MAKE) $(BEFOREBUILD)
+	@$(MAKE) libs
+	@$(MAKE) BUILD_TYPE=all $(AFTERBUILD)
+	@echo "---------------------------------------------------------------"
+	@echo "Beginning Sonix installation process"
+	@echo "---------------------------------------------------------------"
+	@$(MAKE) beforeinstall
+	@$(MAKE) install-libs
+	@$(MAKE) do-post-install
+	@echo "==============================================================="
+	@echo ">>> Sonix make world started $(STARTTIME)"
+	@echo ">>> Sonix make world completed `LTIME=C date`"
+	@echo "==============================================================="
+
+# ------------------------------------------------------------------------
+# Build and install everything (i.e., the world) using all possible ABIs.
+# ------------------------------------------------------------------------
+world-all-abi:
+	@echo "==============================================================="
+	@echo ">>> Sonix make world started on $(STARTTIME)"
+	@echo "==============================================================="
+ifndef NO_CLEAN
+	@$(MAKE) clobber
+endif
+	@$(MAKE) $(BEFOREBUILD)
+	@for abi in $(ABI_LIST) ; do					\
+            echo "------------------------------------------------" ;	\
+            echo "Building libraries using $$abi" ;			\
+            echo "------------------------------------------------" ;	\
+            $(MAKE) gadgetABI=$$abi libs ;				\
+          done
+	@$(MAKE) BUILD_TYPE=all $(AFTERBUILD)
+	@echo "---------------------------------------------------------------"
+	@echo "Beginning Sonix installation process"
+	@echo "---------------------------------------------------------------"
+	@$(MAKE) beforeinstall
+	@for abi in $(ABI_LIST) ; do					\
+            echo "------------------------------------------------" ;	\
+            echo "Installing $$abi version of libraries" ;		\
+            echo "------------------------------------------------" ;	\
+            $(MAKE) gadgetABI=$$abi install-libs ;			\
+          done
+	@$(MAKE) do-post-install
+	@echo "==============================================================="
+	@echo ">>> Sonix make world started on $(STARTTIME)"
+	@echo ">>> Sonix make world completed on `LTIME=C date`"
+	@echo "==============================================================="
+
+# -----------------------------------------------------------------------------
+# A release is a superset of 'world' except that no profiled libraries are
+# built.  Beyond this, the change log, release notes, etc. are installed.
+# A special case is required for releases made in the "global" build.  Namely,
+# the developer installation ("instlinks") must be created so that subsequent
+# targets can find headers properly.
+# -----------------------------------------------------------------------------
+release:
+	@echo "==============================================================="
+	@echo ">>> Sonix make release started on $(STARTTIME)"
+	@echo "==============================================================="
+ifndef NO_CLEAN
+	@$(MAKE) clobber
+endif
+	@$(MAKE) $(BEFOREBUILD)
+	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N libs
+	@$(MAKE) BUILD_TYPE=opt $(AFTERBUILD)
+	@echo "---------------------------------------------------------------"
+	@echo "Beginning Sonix release installation process"
+	@echo "---------------------------------------------------------------"
+	@$(MAKE) beforeinstall
+	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N install-libs
+	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N do-post-install
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(ROOT_ABS)/ChangeLog $(projdatadir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(JUGGLERROOT_ABS)/COPYING.txt $(projdatadir)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS) $(ROOT_ABS)/README.txt $(projdatadir)
+	@echo "Build time: `LTIME=C date`" > $(projdatadir)/BUILD_TIME
+	@echo "==============================================================="
+	@echo ">>> Sonix make release started on $(STARTTIME)"
+	@echo ">>> Sonix make release completed on `LTIME=C date`"
+	@echo "==============================================================="
+
+# -------------------------------------
+# Build all versions of the libraries.
+# -------------------------------------
+buildworld: all
+
+# ------------------------------------------------------------------------
+# Do a full installation all versions of the libraries and the associated
+# files.
+# ------------------------------------------------------------------------
+installworld: install-all
+
+# =============================================================================
+# Automatically generated documentation.
+# =============================================================================
+docs: doc-internal doc-public
+
+doc-internal:
+	$(MAKE) -C Doc SUBDIRS="$(SUBDIRS)" $@
+
+doc-public:
+	$(MAKE) -C Doc SUBDIRS="$(SUBDIRS)" $@
+
+# =============================================================================
+# Human-readable information about the build system.
+# =============================================================================
+info:
+	@echo "\nInfo for the make of $(SNX_LIBRARY)"
+	@echo "\nOBJDIR: $(OBJDIR)"
+	@echo "ROOT_ABS: $(ROOT_ABS)"
+	@echo "Default ABI: $(ABI)"
+	@echo "Default instruction set architecture: $(ISA)"
+	@echo "ABI list: $(ABI_LIST)"
+	@echo "DBG_BUILDDIR: $(DBG_BUILDDIR)"
+	@echo "OPT_BUILDDIR: $(OPT_BUILDDIR)"
+	@echo "Installation prefix: $(prefix)"
+	@echo "includedir: $(includedir)"
+	@echo "libdir: $(libdir)"
+	@$(SHELL) $(scriptdir)/print-targets.sh
+
+include $(MKPATH)/dpp.subdir.mk
+include Makefile.inc

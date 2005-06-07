@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <keyboard_mouse_proxy name="GloveKeyProxy" version="1">
+         <device>Glove Keyboard</device>
+      </keyboard_mouse_proxy>
+      <position_proxy name="GlovePos Proxy" version="1">
+         <device>SimGlovePos</device>
+         <unit>0</unit>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+      </position_proxy>
+      <position_proxy name="Right GlovePos Proxy" version="1">
+         <device>Right SimGlovePos</device>
+         <unit>0</unit>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+      </position_proxy>
+      <simulated_positional_device name="SimGlovePos" version="3">
+         <keyboard_mouse_proxy>GloveKeyProxy</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="Forward" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>MOUSE_NEGY</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Back" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>MOUSE_POSY</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Left" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>MOUSE_NEGX</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Right" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>MOUSE_POSX</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Up" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>MOUSE_NEGY</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Down" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>MOUSE_POSY</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Right" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>MOUSE_NEGX</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Left" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>MOUSE_POSX</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Up" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>MOUSE_NEGY</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Down" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>MOUSE_POSY</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot CCW" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>MOUSE_BUT1</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot CW" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>MOUSE_BUT3</key>
+            </key_modifier_pair>
+         </key_pair>
+         <initial_position>-0.4572</initial_position>
+         <initial_position>1.524</initial_position>
+         <initial_position>0.0</initial_position>
+         <initial_rotation>-90.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <translation_delta>0.02</translation_delta>
+         <rotation_delta>0.1</rotation_delta>
+         <translation_coordinate_system>Global</translation_coordinate_system>
+         <rotation_coordinate_system>Local</rotation_coordinate_system>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+         <device_host />
+      </simulated_positional_device>
+      <simulated_positional_device name="Right SimGlovePos" version="3">
+         <keyboard_mouse_proxy>GloveKeyProxy</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="Forward" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>KEY_UP</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Back" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>KEY_DOWN</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Left" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>KEY_LEFT</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Right" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>KEY_RIGHT</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Up" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>KEY_DOWN</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Down" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>KEY_UP</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Right" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_LEFT</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Left" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_RIGHT</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Up" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_DOWN</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Down" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_UP</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot CCW" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_A</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot CW" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_Z</key>
+            </key_modifier_pair>
+         </key_pair>
+         <initial_position>0.4572</initial_position>
+         <initial_position>1.524</initial_position>
+         <initial_position>0.0</initial_position>
+         <initial_rotation>-90.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <translation_delta>0.02</translation_delta>
+         <rotation_delta>0.1</rotation_delta>
+         <translation_coordinate_system>Global</translation_coordinate_system>
+         <rotation_coordinate_system>Local</rotation_coordinate_system>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+         <device_host />
+      </simulated_positional_device>
+      <alias name="LeftThumb" version="1">
+         <proxy>DigitalLeftThumb</proxy>
+      </alias>
+      <alias name="LeftIndex" version="1">
+         <proxy>DigitalLeftIndex</proxy>
+      </alias>
+      <alias name="LeftMiddle" version="1">
+         <proxy>DigitalLeftMiddle</proxy>
+      </alias>
+      <alias name="LeftRing" version="1">
+         <proxy>DigitalLeftRing</proxy>
+      </alias>
+      <alias name="LeftPinky" version="1">
+         <proxy>DigitalLeftPinky</proxy>
+      </alias>
+      <alias name="RightThumb" version="1">
+         <proxy>DigitalRightThumb</proxy>
+      </alias>
+      <alias name="RightIndex" version="1">
+         <proxy>DigitalRightIndex</proxy>
+      </alias>
+      <alias name="RightMiddle" version="1">
+         <proxy>DigitalRightMiddle</proxy>
+      </alias>
+      <alias name="RightRing" version="1">
+         <proxy>DigitalRightRing</proxy>
+      </alias>
+      <alias name="RightPinky" version="1">
+         <proxy>DigitalRightPinky</proxy>
+      </alias>
+      <alias name="VJGlove" version="1">
+         <proxy>Glove Proxy</proxy>
+      </alias>
+      <keyboard_mouse_device name="Glove Keyboard" version="1">
+         <mouse_sensitivity>2.0</mouse_sensitivity>
+         <device_host />
+      </keyboard_mouse_device>
+      <input_window name="Glove Input Window" version="1">
+         <origin>800</origin>
+         <origin>320</origin>
+         <size>200</size>
+         <size>200</size>
+         <display_number>0</display_number>
+         <keyboard_mouse_device_name>Glove Keyboard</keyboard_mouse_device_name>
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>0</sleep_time>
+      </input_window>
+      <digital_proxy name="DigitalLeftThumb" version="1">
+         <device>SimDigitalGlove</device>
+         <unit>0</unit>
+      </digital_proxy>
+      <digital_proxy name="DigitalLeftIndex" version="1">
+         <device>SimDigitalGlove</device>
+         <unit>1</unit>
+      </digital_proxy>
+      <digital_proxy name="DigitalLeftMiddle" version="1">
+         <device>SimDigitalGlove</device>
+         <unit>2</unit>
+      </digital_proxy>
+      <digital_proxy name="DigitalLeftRing" version="1">
+         <device>SimDigitalGlove</device>
+         <unit>3</unit>
+      </digital_proxy>
+      <digital_proxy name="DigitalLeftPinky" version="1">
+         <device>SimDigitalGlove</device>
+         <unit>4</unit>
+      </digital_proxy>
+      <digital_proxy name="DigitalRightThumb" version="1">
+         <device>SimDigitalGlove</device>
+         <unit>6</unit>
+      </digital_proxy>
+      <digital_proxy name="DigitalRightIndex" version="1">
+         <device>SimDigitalGlove</device>
+         <unit>7</unit>
+      </digital_proxy>
+      <digital_proxy name="DigitalRightMiddle" version="1">
+         <device>SimDigitalGlove</device>
+         <unit>8</unit>
+      </digital_proxy>
+      <digital_proxy name="DigitalRightRing" version="1">
+         <device>SimDigitalGlove</device>
+         <unit>9</unit>
+      </digital_proxy>
+      <digital_proxy name="DigitalRightPinky" version="1">
+         <device>SimDigitalGlove</device>
+         <unit>10</unit>
+      </digital_proxy>
+      <simulated_digital_glove name="SimDigitalGlove" version="3">
+         <keyboard_mouse_proxy>GloveKeyProxy</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 1" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_1</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 2" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_2</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 3" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_3</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 4" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_4</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 5" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_5</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 6" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_6</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 7" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_7</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 8" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_8</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 9" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_9</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 10" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <left_glove_position>GlovePos Proxy</left_glove_position>
+         <right_glove_position>Right GlovePos Proxy</right_glove_position>
+         <device_host />
+      </simulated_digital_glove>
+      <glove_proxy name="Glove Proxy" version="1">
+         <device>SimDigitalGlove</device>
+         <unit>0</unit>
+         <visible>true</visible>
+      </glove_proxy>
+      <glove_proxy name="Right Glove Proxy" version="1">
+         <device>SimDigitalGlove</device>
+         <unit>1</unit>
+         <visible>true</visible>
+      </glove_proxy>
+   </elements>
+</configuration>
+

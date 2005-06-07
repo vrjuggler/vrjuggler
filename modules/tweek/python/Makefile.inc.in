@@ -1,0 +1,41 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# TweekQt is (C) Copyright 2003-2005 by Patrick Hartling
+#
+# This application is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of
+# the License, or (at your option) any later version.
+#
+# This application is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this application; if not, write to the Free Software Foundation,
+# Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+BUILD_PYTHON_GUI=	@BUILD_PYTHON_GUI@
+
+tweek-python:
+ifeq ($(BUILD_PYTHON_GUI), Y)
+	@echo "------------------------------------------------"
+	@echo "Setting up for the Tweek Python GUI"
+	@echo "------------------------------------------------"
+	@$(MAKE) beforebuild
+	@$(MAKE) qt-gui
+	@$(MAKE) afterbuild
+else
+	@echo "------------------------------------------------"
+	@echo "Tweek Python GUI skipped"
+	@echo "------------------------------------------------"
+endif

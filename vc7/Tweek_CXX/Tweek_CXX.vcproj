@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding = "Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="7.00"
+	Name="Tweek C++ API"
+	ProjectGUID="{0FBA5DC5-0D51-4394-9615-A60B0F570B66}"
+	Keyword="Win32Proj">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="DebugDLL"
+			IntermediateDirectory="DebugDLL"
+			ConfigurationType="2"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories=".;tweek\idl;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNIORB_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;..\..\modules\vapor;..\..\modules\tweek;..\VPR"
+				PreprocessorDefinitions="WIN32;_CONSOLE;_DEBUG;_USRDLL;_TWEEK_BUILD_;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1"
+				MinimalRebuild="FALSE"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="0"
+				WarningLevel="2"
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="1"
+				DisableSpecificWarnings="4244;4251;4275;4290;4311;4312"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rtd.lib omnithread$(OMNITHREAD_VERSION)_rtd.lib omniDynamic$(OMNIORB_VERSION)_rtd.lib vpr_d.lib libnspr4.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/tweek_d.dll"
+				Version="0.93.0"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;..\VPR\DebugDLL"
+				ModuleDefinitionFile="..\..\modules\tweek\corba_exports.def"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)/tweek_d.pdb"
+				SubSystem="1"
+				ImportLibrary="$(OutDir)/tweek_d.lib"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"
+				Description="Generating C++ stubs from CORBA IDL..."
+				CommandLine="mkdir tweek\idl
+$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\idl -I../../modules/tweek ../../modules/tweek/tweek/idl/SubjectManager.idl
+$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\idl -I../../modules/tweek ../../modules/tweek/tweek/idl/Subject.idl
+$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\idl -I../../modules/tweek ../../modules/tweek/tweek/idl/Observer.idl
+$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\idl -I../../modules/tweek ../../modules/tweek/tweek/idl/BeanDeliverySubject.idl
+"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="ReleaseDLL"
+			IntermediateDirectory="ReleaseDLL"
+			ConfigurationType="2"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				InlineFunctionExpansion="1"
+				OmitFramePointers="TRUE"
+				AdditionalIncludeDirectories=".;tweek\idl;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNIORB_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;..\..\modules\vapor;..\..\modules\tweek;..\VPR"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_USRDLL;_TWEEK_BUILD_;_OPT;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1"
+				StringPooling="TRUE"
+				RuntimeLibrary="2"
+				BufferSecurityCheck="FALSE"
+				EnableFunctionLevelLinking="TRUE"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="0"
+				WarningLevel="2"
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4244;4251;4275;4290;4311;4312"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib vpr.lib libnspr4.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/tweek.dll"
+				Version="0.93.0"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\VPR\ReleaseDLL;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;"
+				ModuleDefinitionFile="..\..\modules\tweek\corba_exports.def"
+				GenerateDebugInformation="FALSE"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				ImportLibrary="$(OutDir)/tweek.lib"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"
+				Description="Generating C++ stubs from CORBA IDL..."
+				CommandLine="mkdir tweek\idl
+$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\idl -I../../modules/tweek ../../modules/tweek/tweek/idl/SubjectManager.idl
+$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\idl -I../../modules/tweek ../../modules/tweek/tweek/idl/Subject.idl
+$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\idl -I../../modules/tweek ../../modules/tweek/tweek/idl/Observer.idl
+$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\idl -I../../modules/tweek ../../modules/tweek/tweek/idl/BeanDeliverySubject.idl
+"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+		</Configuration>
+	</Configurations>
+	<Files>
+		<Filter
+			Name="Source Files"
+			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
+			<File
+				RelativePath="tweek\idl\BeanDeliverySubject.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\tweek\tweek\CORBA\BeanDeliverySubjectImpl.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\tweek\tweek\CORBA\CorbaHelpers.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\tweek\tweek\CORBA\CorbaManager.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\tweek\tweek\Client\CorbaService.cpp">
+			</File>
+			<File
+				RelativePath="tweek\idl\Observer.cpp">
+			</File>
+			<File
+				RelativePath="tweek\idl\Subject.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\tweek\tweek\CORBA\SubjectImpl.cpp">
+			</File>
+			<File
+				RelativePath="tweek\idl\SubjectManager.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\tweek\tweek\CORBA\SubjectManagerImpl.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\tweek\tweek\Util\Version.cpp">
+			</File>
+			<File
+				RelativePath="tweek\tweekParam.cpp">
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc">
+			<File
+				RelativePath="tweek\idl\BeanDeliverySubject.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\tweek\tweek\CORBA\BeanDeliverySubjectImpl.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\tweek\tweek\CORBA\CorbaHelpers.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\tweek\tweek\CORBA\CorbaManager.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\tweek\tweek\Client\CorbaService.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\tweek\tweek\Util\Debug.h">
+			</File>
+			<File
+				RelativePath="tweek\idl\Observer.h">
+			</File>
+			<File
+				RelativePath="tweek\idl\Subject.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\tweek\tweek\CORBA\SubjectImpl.h">
+			</File>
+			<File
+				RelativePath="tweek\idl\SubjectManager.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\tweek\tweek\CORBA\SubjectManagerImpl.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\tweek\tweek\Util\Version.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\tweek\tweek\tweek.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\tweek\tweek\tweekConfig.h">
+			</File>
+			<File
+				RelativePath="tweek\tweekDefines.h">
+			</File>
+			<File
+				RelativePath="tweek\tweekParam.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="Resource Files"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+		</Filter>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

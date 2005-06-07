@@ -1,0 +1,177 @@
+AUTHOR of Liquid L&F:
+Miroslav Lazarevic (Mickey) - mikeai@sezampro.yu, mikey@ptt.yu
+
+What is LiquidLnF?
+
+This is a new look and feel for Java GUI applications based on Swing. 
+It is based on Mosfet's Liquid 0.9.6-pre4 theme for KDE 3.x. 
+I want to thanks to Daniel for this great widget theme which I adopted
+for use in Java GUI apps. His work is under BSD license.
+
+This project is powered by Sourceforge.net!
+
+
+INSTALL NOTES:
+
+If you are downloaded source: You'll need Ant to build it.
+To create dist files just call Ant's batch script in source base directory.
+To create only jar file in dist directory call Ant's batch file with jar 
+as parameter.
+
+If you downloaded binary in zip file:
+Unpack archive liquidlnf-0.1.x.zip.
+Put LiquidLnF file in your CLASSPATH (jre/lib/ext recommended) and copy 
+swing.properties from zip file into jre/lib. 
+Start SwingSet2.jar demo included with JDK or start any other Java GUI app 
+to test your configuration.
+
+
+WHAT'S NEW:
+I bring new feature to Java GUI apps.
+I made a scrollBar to behave like in KDE 3.1.x when you using scroll button of
+your mouse. If you have activated both scrollbars in a frame, you can scroll a 
+horizontal scrollbar holding Alt key while you rotate wheel on the mouse.
+
+
+FAQ:
+
+Q: How to set my app to use LiquidLnF without swing.properties file?
+
+A1: You can find answer in Sun's Java tutorial.
+
+A2: Put next lines in main method of your Java GUI app:
+    try {
+	javax.swing.UIManager.setLookAndFeel("com.birosoft.liquid.LiquidLookAndFeel");
+    } catch (Exception e) {}
+
+
+CHANGES LOG:
+
+Version 0.2.2
+
+- Fixed border for JPasswordField component.
+- Fixed keyboard actions bug for ComboBoxes. Thanks to Dominik Schwald <d.schwald@nextbyte.de>
+
+Version 0.2.1
+
+- Fixed bug when JSeparator orientation needs to be a vertical. Thanks to Adrian 
+  Tarau <ady@level7.ro>.
+- new look of JList. List's rows look now like table's rows which was introduced
+  in previous version. Thanks to Adrian Tarau.
+- LiquidLookAndFeel.setDefaultTableBackgroundMode(boolean) is deprecated. You 
+  should use LiquidLookAndFeel.setDefaultRowBackgroundMode(boolean) from now.
+- Fixed look of JToggleButton when it is used on toolbars. Thanks to Adrian Tarau.
+
+Version 0.2.0
+
+- new look of JTable introduced. Every second row of table has same background 
+  color and no borders between cells. If you want to all rows has one color 
+  you need set LiquidLookAndFeel.setDefaultTableBackgroundMode(false) in main 
+  method of yours application or in class where you use JTable swing component
+
+- changed look of checkbox and radiobutton so disabled item of those components
+  are dimmed. It's also improved state of these components when mouse cursor is 
+  over them
+
+- disabled sliders are grayed now
+
+- fixed bug for LiquidToolBarUI. If you are using more than one toolbar now each 
+  of them is properly recognized by LiquidLnF.
+
+- CheckBoxMenuItem and RadioButtonMenuItem have different look now.
+
+
+Version 0.1.9.1
+
+- ensure that building is independent of some previous LiquidLnF.jar installed
+  in jre/lib/ext
+
+- bugfix of "java.lang.NoClassDefFoundError: com/birosoft/liquid/TableHeaderUI"
+
+- fix for use of Liquid L&F in applets
+
+Version 0.1.9
+
+- Minor change in LiquidTabbedPane
+
+- Fixed bug with JTable.AUTO_RESIZE_OFF when horizontal scrollbar must be used by
+  JTable. Tanks to Carlos Antonio de Oliveira Nunes Junior <carlos.nunes@choose.com.br>
+  for report of this bug.
+
+- Fixed caption drawing of internal frame (Netbeans MDI mode looks ok now).
+
+Version 0.1.8
+
+- LiquidListBorder introduced
+
+- Shroted name for LiquidL&F (it's just Liquid). Thanks to Nathan Fiedler <nfiedler@bluemarsh.com>
+
+- LiquidFocusCellHighlightBorder introduced
+
+- Bugfix in LiquidSplitPaneDivider when window of another app overlap Java app
+  window which contain JSplitPane component.
+
+- Look of selected cell in a selected row of JTable changed
+
+Version 0.1.7
+
+- fixed some colors. Now GUI editing in Netbeans looks better.
+
+- fixed bug in LiquidTableHeader's createUI() method 
+  (thanks to Sebastian Clau� <sc2@inf.tu-dresden.de>).
+
+- Liquid extending BasicLookAndFeel now instead MetalLookAndFeel. Changing of L&F
+  inside application from Liquid to Metal now looks much better. 
+  But some stuff in this area are very strange for me. For the example in SwingSet2 
+  app when change from Metal to Liquid TableHeader is still like in Metal. 
+  Only changing of L&F when table demo is active changes look of table header is
+  proper. Does anybody knows is this bug in JDK or in LiquidLnF? 
+
+Version 0.1.6
+
+- Fixed bug of background painting when MenuItem has a icon.
+
+- Fixed bug in JTabbedPaneUI when update() method called instead some paint methods
+  (noticed in Swing JTabbed palette of Netbeans)
+
+- JSplitPane divider implemented. It seems that KDE has not one-touchable dividers.
+  I don't know what to do with it at this time. Any suggestion?
+
+Version 0.1.5
+
+- Fixed bug in JTabbedPaneUI because TabbedPane.contentBorderInsets was set to 
+  (5,0,5,0). Now TabbedPane.contentBorderInsets property has default value for 
+  TOP placement (5,0,0,0) and can dynamically change its state if user changes 
+  tab placement interactivelly.
+
+- Fixed toolbar.png file.
+
+- Added LiquidTableHeaderUI so now JTable headers look like Mosfet's Liquid table
+  headers.
+
+Version 0.1.4
+
+- JTabbedPaneUI now fully looks like in Mosfet's Liquid KDE theme. Only top & bottom
+  placement of tabs are properlly rendered. I don't need left and right placement
+  in my apps and there is no such placement in KDE 3.x either.
+
+- Fixed bug in toolbar's handler rendering.
+
+Version 0.1.3
+
+- thanks to Ralph Vince to make me notice that JToggleButtons don't behave like 
+  expected. Now JToggleButtons behave properlly.
+
+Version 0.1.2
+
+- editable JCombobox now rendered fine
+
+- disabled focus painting when instance of JButton is too small
+
+Version 0.1.1
+
+- behavior of JScrollBar thumb corrected when it's size has to be smallest
+
+Version 0.1.0
+
+- initial release posted to Sourceforge.net

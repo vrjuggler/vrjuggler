@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="simulated_glove_gesture" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="2" label="Glove Gesture Simulator">
+      <abstract>false</abstract>
+      <help>Simulate glove gesture device</help>
+      <parent>glove_device</parent>
+      <category>/Devices/Simulator</category>
+      <property valuetype="configelementpointer" variable="false" name="event_window_proxy">
+         <help>The event window to use.</help>
+         <value label="Event Window Proxy"/>
+         <allowed_type>event_window_proxy</allowed_type>
+      </property>
+      <property valuetype="configelement" variable="true" name="key_presses">
+         <help/>
+         <value label="Key Presses"/>
+         <allowed_type>key_modifier_pair</allowed_type>
+      </property>
+      <property valuetype="string" variable="false" name="trained_filename">
+         <help>The name of the trained gesture file.  Used to get simulated values.</help>
+         <value label="Trained File Name" defaultvalue="${VJ_BASE_DIR}/share/gadgeteer/data/gesture/simpleSimGestures.dat"/>
+      </property>
+      <property valuetype="configelementpointer" variable="false" name="glove_position">
+         <help>The position proxy for the glove position.</help>
+         <value label="Glove Position"/>
+         <allowed_type>position_proxy</allowed_type>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+   <definition_version version="3" label="Glove Gesture Simulator">
+      <abstract>false</abstract>
+      <help>Simulate glove gesture device</help>
+      <parent>glove_device</parent>
+      <category>/Devices/Simulator</category>
+      <property valuetype="configelementpointer" variable="false" name="keyboard_mouse_proxy">
+         <help>The proxy to the keyboard/mouse input handler to use.</help>
+         <value label="Keyboard/Mouse Proxy"/>
+         <allowed_type>keyboard_mouse_proxy</allowed_type>
+      </property>
+      <property valuetype="configelement" variable="true" name="key_presses">
+         <help/>
+         <value label="Key Presses"/>
+         <allowed_type>key_modifier_pair</allowed_type>
+      </property>
+      <property valuetype="string" variable="false" name="trained_filename">
+         <help>The name of the trained gesture file.  Used to get simulated values.</help>
+         <value label="Trained File Name" defaultvalue="${VJ_BASE_DIR}/share/gadgeteer/data/gesture/simpleSimGestures.dat"/>
+      </property>
+      <property valuetype="configelementpointer" variable="false" name="glove_position">
+         <help>The position proxy for the glove position.</help>
+         <value label="Glove Position"/>
+         <allowed_type>position_proxy</allowed_type>
+      </property>
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+
+            <xsl:template match="jconf:simulated_glove_gesture">
+               <xsl:element namespace="{$jconf}" name="simulated_glove_gesture">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">
+                     <xsl:text>3</xsl:text>
+                  </xsl:attribute>
+                  <xsl:element namespace="{$jconf}" name="keyboard_mouse_proxy">
+                     <xsl:value-of select="./jconf:event_window_proxy"/>
+                  </xsl:element>
+                  <xsl:for-each select="./jconf:key_presses">
+                     <xsl:copy-of select="."/>
+                  </xsl:for-each>
+                  <xsl:copy-of select="./jconf:trained_filename"/>
+                  <xsl:copy-of select="./jconf:glove_position"/>
+                  <xsl:copy-of select="./jconf:device_host"/>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
+   </definition_version>
+</definition>

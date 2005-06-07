@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="pinch_glove" icon_path="jar:file:${VJ_BASE_DIR}/share/vrjuggler/beans/customeditors/PinchGloveEditor.jar!/org/vrjuggler/vrjconfig/customeditors/pinchglove/images/PinchGloveIcon.png" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
+   <definition_version version="1" label="Pinch Glove">
+      <abstract>false</abstract>
+      <help>Configuration for the PinchGlove</help>
+      <parent>glove_device</parent>
+      <parent>digital_device</parent>
+      <category>/Devices/Glove</category>
+      <property valuetype="string" variable="false" name="port">
+         <help>Serial port that the PinchGlove is connected to</help>
+         <value label="Port" defaultvalue="/dev/ttyd1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="baud">
+         <help>Serial port speed</help>
+         <value label="Baud Rate" defaultvalue="9600"/>
+      </property>
+      <property valuetype="configelementpointer" variable="false" name="glove_position">
+         <help>The position proxy for the glove position. i.e. the tracker on the glove.</help>
+         <value label="Glove Position"/>
+         <allowed_type>alias</allowed_type>
+         <allowed_type>position_proxy</allowed_type>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

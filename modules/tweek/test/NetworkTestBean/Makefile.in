@@ -1,0 +1,125 @@
+# **************** <Tweek heading BEGIN do not edit this line> ****************
+# Tweek
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+# **************** <Tweek heading END do not edit this line> ******************
+
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Makefile.in for tweek/test/NetworkTest.  It requires GNU make.
+# -----------------------------------------------------------------------------
+
+APP_NAME=	server@EXEEXT@
+
+all:
+	$(MAKE) cxx_idl
+	$(MAKE) java_idl
+	$(MAKE) NO_DEPEND=0 cxx
+	$(MAKE) $(APP_NAME)
+	$(MAKE) java
+	$(MAKE) NetworkTestBean.jar
+	-$(MAKE) install
+
+# Basic options.
+srcdir=		@srcdir@
+NO_DEPEND=	YES
+
+IDL_CXX_FILES=	SliderSubject.cpp SliderSubject.h		\
+		WhiteboardSubject.cpp WhiteboardSubject.h
+IDL_JAVA_FILES=	SliderSubject.java	\
+		WhiteboardSubject.java
+
+base_srcs=	SliderSubjectImpl.cpp		\
+		WhiteboardSubjectImpl.cpp	\
+		main.cpp
+idl_srcs=	$(filter-out $(base_srcs), $(notdir $(wildcard $(CXX_GEN_DIR)/*.cpp)))
+
+SRCS=		$(base_srcs) $(idl_srcs)
+JAVA_SRCS=	networktest/NetworkTest.java			\
+		networktest/SliderObserverImpl.java		\
+		networktest/SliderSubjectHolder.java		\
+		networktest/WhiteboardObserverImpl.java		\
+		networktest/WhiteboardSubjectHolder.java
+ALL_CLASSES=	networktest/*.class
+
+include $(TWEEK_BASE_DIR)/share/tweek/tweek.appdefs.mk
+
+CXX_GEN_DIR=		.
+CXX_IDL=		$(TWEEK_IDL_CXX)
+CXX_IDL_OPTS=		$(TWEEK_IDLFLAGS_CXX)			\
+			$(TWEEK_IDL_GENDIR_CXX)$(CXX_GEN_DIR)
+CXX_IDL_INCLUDES=	
+EXTRA_INCLUDES+=	-I$(CXX_GEN_DIR)
+
+JAVA_GEN_DIR=		$(srcdir)
+JAVA_IDL=		$(TWEEK_IDL_JAVA)
+JAVA_IDL_OPTS=		$(TWEEK_IDLFLAGS_JAVA)			\
+			$(TWEEK_IDL_GENDIR_JAVA)$(JAVA_GEN_DIR)
+JAVA_IDL_INCLUDES=	
+
+vpath %.idl $(srcdir)
+vpath %.cpp $(CXX_GEN_DIR)
+vpath %.h $(CXX_GEN_DIR)
+vpath %.java $(JAVA_GEN_DIR)
+
+# -----------------------------------------------------------------------------
+# Application build targets.
+# -----------------------------------------------------------------------------
+cxx_idl: $(IDL_CXX_FILES)
+
+%.cpp %.h: %.idl
+	$(CXX_IDL) $(CXX_IDL_OPTS) $(CXX_IDL_INCLUDES) $<
+
+java_idl: $(IDL_JAVA_FILES)
+
+%.java: %.idl
+	$(JAVA_IDL) $(JAVA_IDL_OPTS) $(JAVA_IDL_INCLUDES) $<
+
+cxx: $(OBJS)
+
+java: $(CLASSES)
+
+server@EXEEXT@: $(OBJS)
+	$(LINK) $(LINK_OUT)$@ $(OBJS) $(TWEEK_LIBS) $(EXTRA_LIBS) $(LIBS)
+
+NetworkTestBean.jar: $(JAVA_CLASSES)
+	$(JAR) cvf $@ $(ALL_CLASSES)
+
+install:
+	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/share/tweek/beans
+	cp $(srcdir)/NetworkTestBean.xml $(TWEEK_BASE_DIR)/share/tweek/beans
+
+CLEAN_FILES+=	$(addprefix $(srcdir)/, $(IDL_CXX_FILES))		\
+		$(addprefix $(srcdir)/networktest/, $(IDL_JAVA_FILES))	\
+		$(CLASSES) tweek/*.class
+CLEAN_DIRS+=	$(srcdir)/tweek
+CLOBBER_FILES+=	NetworkTestBean.jar

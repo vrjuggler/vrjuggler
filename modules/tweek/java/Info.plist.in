@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>JavaApplicationStub</string>
+	<key>CFBundleGetInfoString</key>
+	<string>Tweek JavaBean Loader v0.19.0. Copyright &#x00A9; 1998&#x2013;2005 Iowa State University</string>
+	<key>CFBundleIconFile</key>
+	<string>tweek.icns</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>Tweek</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.19.0</string>
+	<key>Java</key>
+	<dict>
+		<key>ClassPath</key>
+		<string>@tweek_java_api_jars_bundle@</string>
+		<key>JVMVersion</key>
+		<string>1.4+</string>
+		<key>MainClass</key>
+		<string>org.vrjuggler.tweek.Tweek</string>
+		<key>Properties</key>
+		<dict>
+			<key>TWEEK_BASE_DIR</key>
+			<string>$JAVAROOT</string>
+			<key>apple.laf.useScreenMenuBar</key>
+			<string>true</string>
+			<key>java.security.policy</key>
+			<string>$JAVAROOT/java.security.policy.txt</string>
+			<key>tweek.bundle</key>
+			<string>true</string>
+			<key>java.library.path</key>
+			<string>$JAVAROOT</string>
+		</dict>
+		<key>VMOptions</key>
+		<string>-Xss1m -Xmx512m</string>
+	</dict>
+</dict>
+</plist>

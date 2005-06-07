@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--JBuilder XML Project-->
+<project>
+  <property category="debug.0" name="SmartStepRedefineClasses" value="0"/>
+  <property category="debug.0" name="SmartStepSkipStaticInitializers" value="0"/>
+  <property category="debug.0" name="SmartStepSkipSynthetics" value="0"/>
+  <property category="generalFormatting" name="blockIndent" value="3"/>
+  <property category="generalFormatting" name="continuationIndent" value="3"/>
+  <property category="generalFormatting" name="tabSize" value="3"/>
+  <property category="idl" name="ProcessIDL" value="false"/>
+  <property category="javaFormatting" name="InstanceVisibility" value="2"/>
+  <property category="javaFormatting" name="classBraceNextLine" value="1"/>
+  <property category="javaFormatting" name="methodBraceNextLine" value="1"/>
+  <property category="javaFormatting" name="otherBraceNextLine" value="1"/>
+  <property category="runtime.0" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
+  <property category="runtime.0" name="ConfigurationName" value="Tweek"/>
+  <property category="runtime.0" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
+  <property category="runtime.0" name="application.class" value="org.vrjuggler.tweek.Tweek"/>
+  <property category="runtime.0" name="application.vmparameters" value="-DTWEEK_BASE_DIR=/home/patrick/src/Juggler/main/juggler/build.freebsd.posix.gcc33/instlinks"/>
+  <property category="runtime.0" name="test.harness" value="junit.textui.TestRunner"/>
+  <property category="sys" name="AuthorLabel" value="@author"/>
+  <property category="sys" name="BackupPath" value="bak"/>
+  <property category="sys" name="BeansInstantiate" value="false"/>
+  <property category="sys" name="BraceStyle" value="1"/>
+  <property category="sys" name="CheckStable" value="1"/>
+  <property category="sys" name="Company" value="VRAC"/>
+  <property category="sys" name="CompanyLabel" value="Company:"/>
+  <property category="sys" name="Copyright" value="Copyright (c) 1998-2005"/>
+  <property category="sys" name="CopyrightLabel" value="Copyright:"/>
+  <property category="sys" name="DefaultPath" value="."/>
+  <property category="sys" name="Description" value=""/>
+  <property category="sys" name="DescriptionLabel" value="Description:"/>
+  <property category="sys" name="DocPath" value="doc"/>
+  <property category="sys" name="EventMatch" value="false"/>
+  <property category="sys" name="EventStyle" value="1"/>
+  <property category="sys" name="ExcludeClassEnabled" value="0"/>
+  <property category="sys" name="IncludeTestPath" value="1"/>
+  <property category="sys" name="InstanceVisibility" value="2"/>
+  <property category="sys" name="JDK" value="java version 1.4.1_02-b06"/>
+  <property category="sys" name="JbxEventListener0" value="org.vrjuggler.tweek.net.CommunicationListener"/>
+  <property category="sys" name="JbxEventListener1" value="org.vrjuggler.tweek.beans.BeanInstantiationListener"/>
+  <property category="sys" name="LastTag" value="113"/>
+  <property category="sys" name="Libraries" value="JDOM;Metouia LAF 1.0;JGoodies Looks;JUnit"/>
+  <property category="sys" name="MakeStable" value="0"/>
+  <property category="sys" name="OutPath" value="classes"/>
+  <property category="sys" name="SourcePath" value=".;../test/TestSuite/java;../../../external/swing-laf/kunststoff/sources;../../../build.freebsd.posix.gcc33/modules/tweek/java"/>
+  <property category="sys" name="TestPath" value="../test/TestSuite/java"/>
+  <property category="sys" name="Title" value="Tweek JavaBean Loader"/>
+  <property category="sys" name="TitleLabel" value="Title:"/>
+  <property category="sys" name="Version" value="1.0"/>
+  <property category="sys" name="VersionLabel" value="@since"/>
+  <property category="sys" name="WorkingDirectory" value="."/>
+  <node name="com.incors.plaf" type="Package"/>
+  <node name="com.incors.plaf.kunststoff" type="Package"/>
+  <node name="com.incors.plaf.kunststoff.mini" type="Package"/>
+  <node name="com.incors.plaf.kunststoff.themes" type="Package"/>
+  <node name="org.vrjuggler.tweek" type="Package"/>
+  <node name="org.vrjuggler.tweek.beandelivery" type="Package"/>
+  <node name="org.vrjuggler.tweek.beans" type="Package"/>
+  <node name="org.vrjuggler.tweek.beans.loader" type="Package"/>
+  <node name="org.vrjuggler.tweek.event" type="Package"/>
+  <node name="org.vrjuggler.tweek.gui" type="Package"/>
+  <node name="org.vrjuggler.tweek.iconviewer" type="Package"/>
+  <node name="org.vrjuggler.tweek.net" type="Package"/>
+  <node name="org.vrjuggler.tweek.net.corba" type="Package"/>
+  <node name="org.vrjuggler.tweek.services" type="Package"/>
+  <node name="org.vrjuggler.tweek.text" type="Package"/>
+  <node name="org.vrjuggler.tweek.treeviewer" type="Package"/>
+  <node name="tweek" type="Package"/>
+  <node name="tweek.SubjectManagerPackage" type="Package"/>
+</project>

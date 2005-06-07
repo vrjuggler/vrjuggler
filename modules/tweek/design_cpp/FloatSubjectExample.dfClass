@@ -1,0 +1,82 @@
+package id2f3qud9n8n6afd9n9679p;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#FloatSubject:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference {
+}/**
+@__ref <oiref:idl#Class#tweek::Subject:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference3 {
+}/**
+@__ref <oiref:idl#Class#example::FloatSubject:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference8 {
+}/**
+@__ref <oiref:cpp#Class#FloatSubjectImpl:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#FloatSubjectImpl#$$constructor$$#(##)#:oiref> 
+*/
+class reference9 {
+}/**
+@__ref <oiref:cpp#Class#tweek::SubjectImpl:oiref><oihard>
+@__modelType reference
+@__imported
+@hideClasses
+@hideAttributes
+@__hiddenMember <oiref:cpp#Member#tweek::SubjectImpl#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#tweek::SubjectImpl#$$destructor$$#(##)#:oiref> 
+*/
+class reference10 {
+}/**
+@__ref <oiref:java#Class#FloatObserverImpl:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:java#Member#FloatObserverImpl#$$constructor$$#(#example.FloatSubject#)#:oiref>*/
+class reference15 {
+}/**
+@__ref <oiref:java#Class#tweek.ObserverPOA:oiref><oihard>
+@__modelType reference
+@__imported
+@hideAttributes
+@__hiddenMember <oiref:java#Member#tweek.ObserverPOA#_this#(#org.omg.CORBA.ORB#)#:oiref>
+@__hiddenMember <oiref:java#Member#tweek.ObserverPOA#_invoke#(#java.lang.String#org.omg.CORBA.portable.InputStream#org.omg.CORBA.portable.ResponseHandler#)#:oiref>
+@__hiddenMember <oiref:java#Member#tweek.ObserverPOA#_all_interfaces#(#org.omg.PortableServer.POA#byte[]#)#:oiref>*/
+class reference17 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Extends#FloatSubjectImpl#tweek::SubjectImpl:oiref>=371,260,371,220:oigroup>
+<oigroup:<oiref:idl#Extends#example::FloatSubject#tweek::Subject:oiref>=110,220,110,187:oigroup>
+<oigroup:<oiref:java#Class#FloatObserverImpl:oiref>=570,220,230,120,0:oigroup>
+<oigroup:<oiref:cpp#Class#FloatSubjectImpl:oiref>=280,260,182,150,0:oigroup>
+<oigroup:<oiref:cpp#Class#FloatSubject:oiref>=120,230,164,143,0:oigroup>
+<oigroup:<oiref:idl#Class#example::FloatSubject:oiref>=30,220,146,113,1:oigroup>
+<oigroup:<oiref:java#Implements#FloatObserverImpl#tweek.ObserverPOA:oiref>=685,220,685,180:oigroup>
+<oigroup:<oiref:java#Class#tweek.ObserverPOA:oiref>=550,20,270,160,0:oigroup>
+<oigroup:<oiref:idl#Class#tweek::Subject:oiref>=50,20,130,167,0:oigroup>
+<oigroup:<oiref:cpp#Class#tweek::SubjectImpl:oiref>=240,20,250,200,0:oigroup>
+
+*/
+class __positions {
+}

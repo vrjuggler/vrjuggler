@@ -1,0 +1,31 @@
+                           Gadgeteer Release Notes
+                           -----------------------
+
+For all versions:
+
+    - See the ChangeLog for more system-level changes that do not directly
+      affect applications.
+    - See the Known Bugs page on the VR Juggler website (www.vrjuggler.org)
+      for the current list of bugs.
+
+===============================================================================
+
+ Version: 0.18.0
+Released: October 11, 2004
+    Required changes when upgrading from all previous versions:
+        * Device driver plug-ins must include the following as an exported
+          function:
+
+             GADGET_DRIVER_EXPORT(vpr::Uint32) getGadgeteerVersion()
+             {
+                return __GADGET_version;
+             }
+
+        * Cluster plug-ins must include the following as an exported
+          function:
+
+             GADGET_CLUSTER_PLUGIN_EXPORT(vpr::Uint32) getGadgeteerVersion()
+             {
+                return __GADGET_version;
+             }
+

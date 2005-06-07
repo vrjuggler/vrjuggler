@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <event_window name="Head Event Window" version="2">
+         <event_source_name />
+         <mouse_sensitivity>1.0</mouse_sensitivity>
+         <lock_key>0</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
+         <origin>950</origin>
+         <origin>850</origin>
+         <size>300</size>
+         <size>100</size>
+         <display_number>0</display_number>
+         <device_host />
+      </event_window>
+   </elements>
+</configuration>
+

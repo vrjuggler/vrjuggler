@@ -1,0 +1,73 @@
+package id2au7qcyau46y0cyavefvd;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#vrj::App:oiref><oihard>
+@__modelType reference
+@__imported
+@hideAttributes
+@__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::App#setFocus#(#bool#)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::App#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#reset#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#haveFocus#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#focusChanged#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configCanHandle#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#depSatisfied#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configAdd#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configRemove#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#vrj::Kernel*#)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#vrj::App#getSoundManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#setFocus#(#bool#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configCanHandle#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configAdd#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configRemove#(#jccl::ConfigElementPtr#)#:oiref>
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#vrj::PfApp:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::PfApp#getScene#(##)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::PfApp#getFrameBufferAttrs#(##)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::PfApp#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$constructor$$#(#vrj::Kernel*#)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#getFrameBufferAttrs#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$destructor$$#(##)#:oiref>
+*/
+class reference3 {
+}/**
+@__ref <oiref:cpp#Class#userPfApp:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference4 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Extends#vrj::PfApp#vrj::App:oiref>=110,260,110,210:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::PfApp:oiref>=20,260,180,190,0:oigroup>
+<oigroup:<oiref:cpp#Extends#userPfApp#vrj::PfApp:oiref>=280,356,200,356:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=20,10,180,200,0:oigroup>
+<oigroup:<oiref:cpp#Class#userPfApp:oiref>=280,270,122,173,1:oigroup>
+*/
+class __positions {
+}

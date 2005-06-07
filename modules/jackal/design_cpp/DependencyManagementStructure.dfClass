@@ -1,0 +1,58 @@
+package id3cmw6dddi6kmidddiclio;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#jccl::DependencyManager:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#jccl::DependencyManager#mDefaultChecker:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::DependencyManager#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::DependencyManager#debugOutDependencies#(#ConfigChunkPtr#int#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::DependencyManager#findDepChecker#(#ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::DependencyManager#debugDump#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::DependencyManager#vprSingletonHeader#(#DependencyManager#)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#jccl::DependencyManager#debugOutDependencies#(#ConfigElementPtr#int#)#:oiref>
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#jccl::DepChecker:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#jccl::DepChecker#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::DepChecker#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::DepChecker#debugOutDependencies#(#ConfigChunkPtr#int#)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#jccl::DepChecker#debugOutDependencies#(#ConfigElementPtr#int#)#:oiref>
+@hideAttributes
+*/
+class reference2 {
+}/**
+@__ref <oiref:cpp#Class#ConcreteDepChecker:oiref><oihard>
+@__modelType reference
+@__imported
+@hideAttributes*/
+class reference3 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Extends#ConcreteDepChecker#jccl::DepChecker:oiref>=510,180,510,140:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jccl::DependencyManager#mDepCheckers:oiref>=300,96,400,96:oigroup>
+<oigroup:<oiref:cpp#Class#jccl::DependencyManager:oiref>=10,10,290,130,0:oigroup>
+<oigroup:<oiref:cpp#Class#jccl::DepChecker:oiref>=400,10,220,130,0:oigroup>
+<oigroup:<oiref:cpp#Class#ConcreteDepChecker:oiref>=410,180,200,140,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jccl::DependencyManager#mDefaultChecker:oiref>=300,53,400,53:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jccl::DependencyManager#mDepCheckers:oiref>=366,77,30,15,0:oigroup>
+*/
+class __positions {
+}
