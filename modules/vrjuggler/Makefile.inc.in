@@ -67,7 +67,7 @@ endif
 # --------------------------------------------
 
 SHLIB_MAJOR=	@MAJOR_VERSION@
-SHLIB_MINOR=	@MAJOR_VERSION@
+SHLIB_MINOR=	@MINOR_VERSION@
 SHLIB_MICRO=	@MICRO_VERSION@
 
 ifneq (@OS_TYPE@, Win32)
