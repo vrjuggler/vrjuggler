@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2005-06-07 patrickh    VR Juggler 2.0 branch created.
+                       NEW VERSION: 1.1.0
+
 [1.0 Beta 3 released - 6.7.2005]===============================================
 2005-06-07 patrickh    NEW VERSION: 0.93.0
 2005-05-02 patrickh    Allow idlj to be used as the IDL-to-Java compiler.
