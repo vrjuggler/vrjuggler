@@ -488,7 +488,7 @@ void GlDrawManager::outStream(std::ostream& out)
 } // end vrj namespace
 
 
-#if  defined(VPR_OS_Win32)
+#if  defined(VPR_OS_Windows)
 #  include <vrj/Draw/OGL/GlWindowWin32.h>
 #elif defined(VPR_OS_Darwin) && ! defined(VRJ_USE_X11)
 #  include <vrj/Draw/OGL/GlWindowOSX.h>
@@ -501,7 +501,7 @@ namespace vrj
 
 vrj::GlWindow* GlDrawManager::getGLWindow()
 {
-#if  defined(VPR_OS_Win32)
+#if  defined(VPR_OS_Windows)
    return new vrj::GlWindowWin32;
 #elif defined(VPR_OS_Darwin) && ! defined(VRJ_USE_X11)
    return new vrj::GlWindowOSX;
