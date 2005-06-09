@@ -220,7 +220,7 @@ void InputWindowWin32::createWindowWin32()
    UpdateWindow(mWinHandle);
 
    // Attach a pointer to the device for use from the WNDPROC
-   SetWindowLong(mWinHandle, GWL_USERDATA, (LPARAM)this);
+   SetWindowLongPtr(mWinHandle, GWLP_USERDATA, (LPARAM)this);
 
    if ( NULL == mWinHandle )
    {
