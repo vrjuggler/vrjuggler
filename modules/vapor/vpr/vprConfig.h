@@ -80,7 +80,7 @@
 #   define VPR_OPT
 #endif
 
-#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 /* Exclude rarely-used stuff from Windows headers */
 #define WIN32_LEAN_AND_MEAN
 
@@ -90,7 +90,7 @@
 #include <windows.h>
 
 /* extern HINSTANCE g_hInst = NULL; */
-#endif   /* WIN32 */
+#endif   /* WIN32 || WIN64 */
 
 
 /* Common C++ includes. */
