@@ -60,7 +60,7 @@
 #include <snx/SoundInfo.h>
 #include <snx/SoundAPIInfo.h>
 
-#if defined(WIN32) || defined(__APPLE__)
+#if defined(WIN32) || defined(WIN64) || defined(__APPLE__)
 #  include <al.h>
 #  include <alc.h>
 #else

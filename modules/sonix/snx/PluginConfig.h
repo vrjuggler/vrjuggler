@@ -64,7 +64,7 @@
  * implementation.
  * ----------------------------------------------------------------------------
  */
-#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 
 #   if defined(__GNUC__)
 #       undef _declspec
@@ -105,7 +105,7 @@
 #   define SNX_PLUGIN_CALLBACK_DECL
 #   define SNX_PLUGIN_STATIC_CALLBACK(__x) static __x
 
-#endif	/* WIN32 */
+#endif	/* WIN32 || WIN64 */
 
 #ifdef _SNX_PLUGIN_BUILD_
 #   define SNX_PLUGIN_API(__type)	SNX_PLUGIN_EXPORT(__type)

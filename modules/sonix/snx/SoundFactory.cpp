@@ -113,7 +113,7 @@ SoundFactory::SoundFactory()
    snx_lib_dir += std::string("/opt");
 #endif
 
-#if defined(VPR_OS_Win32)
+#if defined(VPR_OS_Windows)
    const std::string driver_ext("dll");
 #elif defined(VPR_OS_Darwin)
    const std::string driver_ext("dylib");
