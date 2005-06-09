@@ -657,6 +657,8 @@ AC_CONFIG_FILES([
    samples/OGL/ext/Makefile
    samples/OGL/ext/proceduralApp/Makefile
    samples/OSG/Makefile
+   samples/OSG/advanced/Makefile
+   samples/OSG/advanced/OSGNavGrab/Makefile
    samples/OSG/simple/Makefile
    samples/OSG/simple/osgNav/Makefile
    samples/OpenSG/Makefile
