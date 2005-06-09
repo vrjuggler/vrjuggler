@@ -56,14 +56,14 @@
 #endif 
 
 // Windows
-#ifdef WIN32 
+#if defined(WIN32) || defined(WIN64)
 /* Go with only minimal files */
 #   define WIN32_LEAN_AND_MEAN
 
 /* Turn off: identifier truncated to 255 characters in the debug information */
 #   pragma warning(disable:4786)
 #   include <windows.h>
-#endif /* WIN32 */
+#endif /* WIN32 || WIN64 */
 
 /**
  ** ----------------------------------------------------------------------------
@@ -71,7 +71,7 @@
  ** JCCL_EXTERN for the prototype and JCCL_IMPLEMENT for the implementation.
  ** ----------------------------------------------------------------------------
  **/
-#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 #if defined(__GNUC__)
 #    undef _declspec
 #    define _declspec(x) __declspec(x)
@@ -111,7 +111,7 @@
 #define JCCL_CALLBACK_DECL
 #define JCCL_STATIC_CALLBACK(__x) static __x
 
-#endif	/* #ifdef WIN32 */
+#endif	/* WIN32 || WIN64 */
 
 # ifdef _JCCL_BUILD_
 #    define JCCL_API(__type)	JCCL_EXPORT(__type)

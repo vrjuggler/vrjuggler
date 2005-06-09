@@ -49,7 +49,7 @@
  * implementation.
  * ----------------------------------------------------------------------------
  */
-#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 
 #   if defined(__GNUC__)
 #       undef _declspec
@@ -90,7 +90,7 @@
 #   define JCCL_PLUGIN_CALLBACK_DECL
 #   define JCCL_PLUGIN_STATIC_CALLBACK(__x) static __x
 
-#endif	/* WIN32 */
+#endif	/* WIN32 || WIN64 */
 
 #ifdef _JCCL_PLUGIN_BUILD_
 #   define JCCL_PLUGIN_API(__type)	JCCL_PLUGIN_EXPORT(__type)
