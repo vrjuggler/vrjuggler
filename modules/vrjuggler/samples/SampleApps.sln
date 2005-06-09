@@ -31,6 +31,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sonixApp", "sound\simple\so
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "soundManager", "sound\simple\soundManager\soundManager.vcproj", "{F050E588-7326-496A-9D60-50C7C3FEEE0C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OsgNavGrab", "OSG\advanced\OSGNavGrab\OsgNavGrab.vcproj", "{F92580AC-6925-464A-90D1-C1BA12A3784C}"
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		ConfigName.0 = Debug
@@ -103,6 +105,10 @@ Global
 		{F050E588-7326-496A-9D60-50C7C3FEEE0C}.Debug.Build.0 = Debug|Win32
 		{F050E588-7326-496A-9D60-50C7C3FEEE0C}.Release.ActiveCfg = Release|Win32
 		{F050E588-7326-496A-9D60-50C7C3FEEE0C}.Release.Build.0 = Release|Win32
+		{F92580AC-6925-464A-90D1-C1BA12A3784C}.Debug.ActiveCfg = Debug|Win32
+		{F92580AC-6925-464A-90D1-C1BA12A3784C}.Debug.Build.0 = Debug|Win32
+		{F92580AC-6925-464A-90D1-C1BA12A3784C}.Release.ActiveCfg = Release|Win32
+		{F92580AC-6925-464A-90D1-C1BA12A3784C}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
