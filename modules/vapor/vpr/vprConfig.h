@@ -156,7 +156,7 @@ namespace std
  * VPR_EXTERN for the prototype and VPR_IMPLEMENT for the implementation.
  * ----------------------------------------------------------------------------
  */
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 
 #   if defined(__GNUC__)
 #       undef _declspec
@@ -215,7 +215,7 @@ namespace std
 #   define VPR_CALLBACK_DECL
 #   define VPR_STATIC_CALLBACK(__x) static __x
 
-#endif  /* VPR_OS_Win32 */
+#endif  /* VPR_OS_Windows */
 
 #ifdef _VPR_BUILD_
 #   define VPR_API(__type)      VPR_EXPORT(__type)

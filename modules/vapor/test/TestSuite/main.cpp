@@ -1,6 +1,6 @@
 #include <vpr/vprConfig.h>
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 #include <winsock2.h>
 #endif
 
@@ -70,7 +70,7 @@ int main (int argc, char **argv)
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << " Random seed: " << random_seed << std::endl
                           << vprDEBUG_FLUSH;
 
-#ifndef VPR_OS_Win32
+#ifndef VPR_OS_Windows
    srandom(random_seed);
 #endif
    srand(random_seed);

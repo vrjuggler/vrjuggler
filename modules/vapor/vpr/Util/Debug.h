@@ -94,7 +94,7 @@
 #define clrCYAN "36"
 #define clrWHITE "37"
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 #  define clrESC ""
 #  define clrCONTROL_CHARS(font, color) ""
 #  define clrSetNORM(color) ""
