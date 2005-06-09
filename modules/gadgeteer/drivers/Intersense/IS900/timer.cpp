@@ -17,7 +17,7 @@
 #include "isense.h"
 #include "timer.h"
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 #include <sys\timeb.h>
 #else
 #include <sys/timeb.h>
