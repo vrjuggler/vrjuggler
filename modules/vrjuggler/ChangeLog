@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jun-10-2005 patrickh    Removed the VR Juggler 1.0 compatibility headers.
+                        NEW VERSION: 2.1.2
 Jun-09-2005 patrickh    Updated to support Windows 64-bit edition.
                         NEW VERSION: 2.1.1
 Jun-07-2005 patrickh    VR Juggler 2.0 branch created.

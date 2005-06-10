@@ -38,30 +38,6 @@
 /set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
 .
     include
-        deprecated
-            Input
-                InputManager
-                ..
-                vjGesture
-                ..
-                vjGlove
-                ..
-                vjInput
-                ..
-                vjPosition
-                ..
-            ..
-            Kernel
-                GL
-                ..
-                OSG
-                ..
-                Pf
-                ..
-            ..
-            Math
-            ..
-        ..
         vrj
             Display
             ..

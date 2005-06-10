@@ -417,18 +417,9 @@ post-install:
           $(EXTRA_INSTALL_ARGS) $(topdir)/vrjuggler-config $(bindir)
 
 PREINSTALL_HEADERS=	pre-install-headers
-POSTINSTALL_HEADERS=	post-install-headers
 
 pre-install-headers:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.include.dist -p $(prefix)
-
-post-install-headers:
-	$(MAKE) install-headers-deprecated
-
-install-headers-deprecated:
-	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
-          $(GROUP_OPT_UNIX) -e .h -o $(includedir)/deprecated		\
-          -i $(VJROOT_ABS)/deprecated $(EXTRA_INSTALL_ARGS)
 
 # Install the sample applications.
 install-samples:
