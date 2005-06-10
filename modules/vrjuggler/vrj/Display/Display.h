@@ -209,7 +209,7 @@ public:
     *
     * @param vpNum The integer identifier of the requested viewport.
     */
-   vrj::Viewport* getViewport(const int vpNum)
+   vrj::Viewport* getViewport(const std::vector<vrj::Viewport*>::size_type vpNum)
    {
       return mViewports[vpNum];
    }

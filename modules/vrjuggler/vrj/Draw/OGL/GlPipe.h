@@ -65,7 +65,7 @@ public:
     *
     * @note All contained windows SHOULD have the same pipe number.
     */
-   GlPipe(int num, GlDrawManager* glMgr)
+   GlPipe(size_t num, GlDrawManager* glMgr)
       : mActiveThread(NULL)
       , mPipeNum(num)
       , mControlExit(0)
@@ -207,7 +207,7 @@ private:
    vpr::Thread*   mActiveThread;    /**< The thread running this object */
    bool           mThreadRunning;   /**< Do we have a running thread? */
 
-   int            mPipeNum;         /**< The id of the pipe */
+   size_t         mPipeNum;         /**< The id of the pipe */
 
    std::vector<GlWindow*>  mNewWins;         /**< List of windows still to be opened on current pipe */
    vpr::Mutex              mNewWinLock;      /**< Lock for accessing the newWin list */

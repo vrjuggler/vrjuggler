@@ -249,9 +249,10 @@ void GlDrawManager::addDisplay(Display* disp)
 
 
    // -- Finish Simulator setup
-   int num_vp(disp->getNumViewports());
+   std::vector<vrj::Viewport*>::size_type num_vp(disp->getNumViewports());
+   std::vector<vrj::Viewport*>::size_type i;
 
-   for (int i = 0 ; i < num_vp ; i++)
+   for ( i = 0 ; i < num_vp ; ++i )
    {
       Viewport* vp = disp->getViewport(i);
 
