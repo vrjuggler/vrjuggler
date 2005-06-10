@@ -759,7 +759,7 @@ def installDir(startDir, destDir, allowedExts = None, disallowedExts = None,
    os.chdir(cwd)
 
 def installLibs(srcRoot, destdir,
-                buildPlatforms = ['Win32'],
+                buildPlatforms = ['Win32', 'x64'],
                 buildTypes = ['ReleaseDLL', 'DebugDLL', 'Release', 'Debug'],
                 extensions = ['.dll', '.lib']):
    for p in buildPlatforms:
@@ -862,12 +862,14 @@ def installTweekJava(prefix):
          shutil.copy2(os.path.join(srcdir, j), destdir)
 
       # Install the tweek_jni DLL.
-      dll = os.path.join(srcdir, 'tweek_jni', 'Win32', 'ReleaseDLL',
-                         'tweek_jni.dll')
-      arch = os.environ['PROCESSOR_ARCHITECTURE']
-      destdir = os.path.join(destdir, arch)
-      mkinstalldirs(destdir)
-      shutil.copy2(dll, destdir)
+      for p in ['Win32', 'x64']:
+         dll = os.path.join(srcdir, 'tweek_jni', p, 'ReleaseDLL',
+                            'tweek_jni.dll')
+         if os.path.exists(dll):
+            arch = os.environ['PROCESSOR_ARCHITECTURE']
+            destdir = os.path.join(destdir, arch)
+            mkinstalldirs(destdir)
+            shutil.copy2(dll, destdir)
 
       destdir = os.path.join(prefix, 'share', 'tweek', 'beans')
       mkinstalldirs(destdir)
