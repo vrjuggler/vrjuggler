@@ -75,7 +75,6 @@ docs:
           -link "http://www.vrjuggler.org/jccl/1.0-beta3/programmer.reference.java" \
           -link "http://www.jdom.org/docs/apidocs/" 			\
           -link "http://www.jgraph.com/doc/jgraph/" 			\
-          -link "http://www.jgraph.com/doc/jgraphaddons/"		\
           $(DOC_PKGS)
 
 install-docs:
