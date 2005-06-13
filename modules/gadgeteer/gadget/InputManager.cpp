@@ -753,7 +753,8 @@ bool InputManager::configureInputManager(jccl::ConfigElementPtr element)
 
 #if defined(VPR_OS_IRIX) && defined(_ABIN32)
       const std::string bit_suffix("32");
-#elif defined(VPR_OS_IRIX) && defined(_ABI64)
+#elif defined(VPR_OS_IRIX) && defined(_ABI64) || \
+      defined(VPR_OS_Linux) && defined(__x86_64__)
       const std::string bit_suffix("64");
 #else
       const std::string bit_suffix("");
