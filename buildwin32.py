@@ -1163,6 +1163,10 @@ def installVRJuggler(prefix):
    srcdir  = os.path.join(gJugglerDir, 'vc7', 'VRJuggler', 'vrj')
    installDir(srcdir, destdir, ['.h'])
 
+   destdir = os.path.join(prefix, 'include', 'deprecated')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'vrjuggler', 'deprecated')
+   installDir(srcdir, destdir, ['.h'])
+
    destdir = os.path.join(prefix, 'lib')
    srcroot = os.path.join(gJugglerDir, 'vc7', 'VRJuggler')
    installLibs(srcroot, destdir)
