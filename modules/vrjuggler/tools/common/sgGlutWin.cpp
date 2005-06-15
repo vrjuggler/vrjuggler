@@ -72,8 +72,8 @@ int sgGlutWin::createWindow(int xo, int yo, int xs, int ys, char* name, unsigned
 		  << "Version: " << glGetString(GL_VERSION) << endl
 		  << "Ext: " << glGetString(GL_EXTENSIONS) << endl;
 
-#ifdef WIN32
-	cout << "------ Win32 ------\n" << endl;
+#if defiend(WIN32) || defined(WIN64)
+	cout << "------ Windows ------\n" << endl;
 	PIXELFORMATDESCRIPTOR  pfd;
 	HDC  hdc;
 	int  iPixelFormat;

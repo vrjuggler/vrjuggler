@@ -7,7 +7,7 @@
 // http://www.bigfoot.com/~KevinMeinert/html/software/index.html
 // -- Kevin Meinert, kevinmeinert@bigfoot.com
 //////////////////////////////////////////////////////////////////////////////
-#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 #  include <windows.h>
 #endif
 

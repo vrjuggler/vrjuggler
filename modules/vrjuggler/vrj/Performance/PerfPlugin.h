@@ -74,11 +74,11 @@ namespace vrj
        */
       virtual void disable() = 0;
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
       /**
        * Overlaod delete so that we can delete our memory correctly.  This is
-       * necessary for DLLs on Win32 to release memory from the correct memory
-       * space.  All subclasses must overload delete similarly.
+       * necessary for DLLs on Windows to release memory from the correct
+       * memory space.  All subclasses must overload delete similarly.
        */
       void operator delete(void* p)
       {

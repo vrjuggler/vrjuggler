@@ -111,7 +111,7 @@ std::string FileIO::resolvePathForName(const char* filename)
 /** Is n an absolute path name? */
 bool FileIO::isAbsolutePathName(const std::string& n)
 {
-#ifdef WIN32
+#ifdef VPR_OS_Windows
     return ((n.length() > 0) && (n[0] == '\\'))
         || ((n.length() > 2) && (n[1] == ':') && (n[2] == '\\'));
 #else
@@ -135,7 +135,7 @@ std::string FileIO::demangleFileName(const std::string& n,
          {
             lastslash = i;
          }
-#ifdef WIN32
+#ifdef VPR_OS_Windows
          if (parentfile[i] == '\\')
          {
             lastslash = i;

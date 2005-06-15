@@ -122,7 +122,7 @@ bool GlWindowWin32::open()
    }
 
    // Attach a pointer to the device for use from the WNDPROC
-   SetWindowLong(mWinHandle, GWL_USERDATA, (LPARAM) this);
+   SetWindowLongPtr(mWinHandle, GWLP_USERDATA, (LPARAM) this);
 
    // We have a valid window, so... Create the context
    mDeviceContext = GetDC(mWinHandle);            // Store the device context
