@@ -184,6 +184,9 @@ private:
       * for resetting the scene.
       */
       const osg::Matrix homePos;
+
+      osg::Matrix xformStart;
+      osg::Matrix xformSaved;
    };
 
    /**
