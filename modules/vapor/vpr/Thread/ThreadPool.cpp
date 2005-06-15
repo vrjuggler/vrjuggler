@@ -55,7 +55,7 @@
 #  include <sys/time.h>
 #endif
 
-#ifndef VPR_OS_Win32
+#ifndef VPR_OS_Windows
 #  include <sys/resource.h>
 #endif
 

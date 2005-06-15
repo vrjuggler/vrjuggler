@@ -15,7 +15,7 @@ void XMLReaderWriterTest::testBasicWriteRead()
    const vpr::Uint8  data_uint8(21);
    const vpr::Uint16 data_uint16(1221);
    const vpr::Uint32 data_uint32(12211975);
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    const vpr::Uint64 data_uint64(122119757911221);
 #else
    const vpr::Uint64 data_uint64(122119757911221ll);

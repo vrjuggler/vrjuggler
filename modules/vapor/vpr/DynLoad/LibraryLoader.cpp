@@ -64,7 +64,7 @@ static const std::string DSO_NAME_EXT("_d");
 static const std::string DSO_NAME_EXT("");
 #endif
 
-#if defined(VPR_OS_Win32)
+#if defined(VPR_OS_Windows)
 static const std::string PATH_SEP("\\");
 static const std::string DSO_FILE_EXT(".dll");
 #else

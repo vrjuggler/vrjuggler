@@ -108,8 +108,16 @@
 /* Define as the return type of signal handlers (`int' or `void'). */
 #define RETSIGTYPE void
 
-/* Define if building on a Win32 platform. */
-#define VPR_OS_Win32 
+/* Define if building on a Windows platform. */
+#define VPR_OS_Windows
+
+/* Define if building on the Win32 platform. */
+#ifdef WIN32
+#  define VPR_OS_Win32 
+/* Define if building on the Win64 platform. */
+#elif defined(WIN64)
+#  define VPR_OS_Win64
+#endif
 
 /* Define if using the Netscape Portable Runtime. */
 #define VPR_USE_NSPR 

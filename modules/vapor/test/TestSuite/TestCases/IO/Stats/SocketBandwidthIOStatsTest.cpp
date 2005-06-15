@@ -28,7 +28,7 @@ namespace vprTest
 void SocketBandwidthIOStatsTest::testBandwidth()
 {
    threadAssertReset();
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    long rand_num(rand());
 #else
    long rand_num(random());

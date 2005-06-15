@@ -44,7 +44,7 @@
 
 #include <vpr/vprConfig.h>
 
-#ifndef VPR_OS_Win32
+#ifndef VPR_OS_Windows
 #include <sys/time.h>
 #endif
 
@@ -120,7 +120,7 @@ public:
       mEndTime = 0;
    }
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    double wallclock()
    {
       return ((double)GetTickCount())/1000.0f;

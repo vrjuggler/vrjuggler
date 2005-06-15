@@ -40,7 +40,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( SelectorTest );
 void SelectorTest::testAcceptorPoolSelection ()
 {
     threadAssertReset();
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 	long rand_num(rand());
 #else
 	long rand_num(random());
@@ -180,7 +180,7 @@ void SelectorTest::testAcceptorPoolSelection_connector( void* arg )
    // Connect randomly to the rendevous ports
    for(unsigned int i=0;i<mNumIters;i++)
    {
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
       long rand_num(rand());
 #else
       long rand_num(random());
@@ -204,7 +204,7 @@ void SelectorTest::testAcceptorPoolSelection_connector( void* arg )
 void SelectorTest::testSendThenPoll ()
 {
     threadAssertReset();
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 	long rand_num(rand());
 #else
 	long rand_num(random());
@@ -364,7 +364,7 @@ void SelectorTest::testSendThenPoll_acceptor (void* arg)
     }
 }
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 // SGI STL extension adapted from GCC's ext/algorithm.
 template<typename _InputIter, typename _RandomAccessIter, typename _Distance>
 _RandomAccessIter
@@ -414,7 +414,7 @@ void SelectorTest::testSendThenPoll_connector (void* arg)
    vpr::SocketConnector connector;           // Connect to acceptor
    std::vector<vpr::SocketStream> sockets;                        // The sockets that we are using.
    std::vector<vpr::Uint16> port_indicies(mNumRendevousPorts);     // This vector holds a list of valid indices to send data to
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    std::vector<vpr::Uint16>::iterator k;
    vpr::Uint16 val;
 
@@ -455,7 +455,7 @@ void SelectorTest::testSendThenPoll_connector (void* arg)
    // - Wait for recievers to say that it was good
    for(i=0;i<mNumIters;i++)
    {
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
       long rand_num(rand());
 #else
       long rand_num(random());
@@ -466,7 +466,7 @@ void SelectorTest::testSendThenPoll_connector (void* arg)
 
       mSelectedPorts = std::vector<vpr::Uint16>(num_ports, 0);          // Replace old data with new of given size
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
       random_sample(port_indicies.begin(), port_indicies.end(),      // Select the random subset
                     mSelectedPorts.begin(), mSelectedPorts.end());
 #else
