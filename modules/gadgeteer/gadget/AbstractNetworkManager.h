@@ -136,7 +136,7 @@ public:
    /**
     * Get the number of nodes in network.
     */
-   int getNumNodes()
+   size_t getNumNodes()
    {
       return mNodes.size();
    }
