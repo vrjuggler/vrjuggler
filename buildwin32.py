@@ -759,12 +759,14 @@ def installDir(startDir, destDir, allowedExts = None, disallowedExts = None,
    os.chdir(cwd)
 
 def installLibs(srcRoot, destdir,
+                buildPlatforms = ['Win32'],
                 buildTypes = ['ReleaseDLL', 'DebugDLL', 'Release', 'Debug'],
                 extensions = ['.dll', '.lib']):
-   for t in buildTypes:
-      srcdir = os.path.join(srcRoot, t)
-      if os.path.exists(srcdir):
-         installDir(srcdir, destdir, extensions)
+   for p in buildPlatforms:
+      for t in buildTypes:
+         srcdir = os.path.join(srcRoot, p, t)
+         if os.path.exists(srcdir):
+            installDir(srcdir, destdir, extensions)
 
 def installExternal(prefix):
    # Install Doozer (even though it probably won't be used).
@@ -860,7 +862,8 @@ def installTweekJava(prefix):
          shutil.copy2(os.path.join(srcdir, j), destdir)
 
       # Install the tweek_jni DLL.
-      dll = os.path.join(srcdir, 'tweek_jni', 'ReleaseDLL', 'tweek_jni.dll')
+      dll = os.path.join(srcdir, 'tweek_jni', 'Win32', 'ReleaseDLL',
+                         'tweek_jni.dll')
       arch = os.environ['PROCESSOR_ARCHITECTURE']
       destdir = os.path.join(destdir, arch)
       mkinstalldirs(destdir)
@@ -1070,12 +1073,16 @@ def installSonixPlugins(prefix):
    destdir_opt = os.path.join(prefix, 'lib', 'snx', 'plugins', 'opt')
 
    srcroot = os.path.join(gJugglerDir, 'vc7', 'Sonix', 'OpenAL')
-   installLibs(srcroot, destdir_dbg, ['DebugDLL'], ['.dll'])
-   installLibs(srcroot, destdir_opt, ['ReleaseDLL'], ['.dll'])
+   installLibs(srcroot, destdir_dbg, buildTypes = ['DebugDLL'],
+               extensions = ['.dll'])
+   installLibs(srcroot, destdir_opt, buildTypes = ['ReleaseDLL'],
+               extensions = ['.dll'])
 
    srcroot = os.path.join(gJugglerDir, 'vc7', 'Sonix', 'Audiere')
-   installLibs(srcroot, destdir_dbg, ['DebugDLL'], ['.dll'])
-   installLibs(srcroot, destdir_opt, ['ReleaseDLL'], ['.dll'])
+   installLibs(srcroot, destdir_dbg, buildTypes = ['DebugDLL'],
+               extensions = ['.dll'])
+   installLibs(srcroot, destdir_opt, buildTypes = ['ReleaseDLL'],
+               extensions = ['.dll'])
 
 def installGadgeteer(prefix):
    printStatus("Installing Gadgeteer headers, libraries, and samples ...")
@@ -1882,7 +1889,7 @@ class GuiFrontEnd:
       devenv_cmd_no_exe = '"%s"' % (devenv_cmd_no_exe)
 
       solution_file = r'"%s"' % os.path.join(gJugglerDir, 'vc7', 'Juggler.sln')
-      build_args = r'/build Debug'
+      build_args = r'/build DebugDLL'
 
       if self.mRoot.CommandFrame.OpenVSCheck.Variable.get() == "No":
          cmd = devenv_cmd_no_exe + ' ' + solution_file + ' ' + build_args

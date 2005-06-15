@@ -11,9 +11,9 @@
 	</Platforms>
 	<Configurations>
 		<Configuration
-			Name="Debug|Win32"
-			OutputDirectory="DebugDLL"
-			IntermediateDirectory="DebugDLL"
+			Name="DebugDLL|Win32"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
@@ -38,7 +38,7 @@
 				OutputFile="$(OutDir)/tweek_d.dll"
 				Version="0.93.0"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;..\VPR\DebugDLL"
+				AdditionalLibraryDirectories="&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				ModuleDefinitionFile="..\..\modules\tweek\corba_exports.def"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/tweek_d.pdb"
@@ -68,9 +68,9 @@ $(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\idl -I../../modules/tweek ..
 				Name="VCWebDeploymentTool"/>
 		</Configuration>
 		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="ReleaseDLL"
-			IntermediateDirectory="ReleaseDLL"
+			Name="ReleaseDLL|Win32"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
@@ -98,7 +98,7 @@ $(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\idl -I../../modules/tweek ..
 				OutputFile="$(OutDir)/tweek.dll"
 				Version="0.93.0"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\VPR\ReleaseDLL;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;"
+				AdditionalLibraryDirectories="&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;..\VPR\$(OutDir)&quot;"
 				ModuleDefinitionFile="..\..\modules\tweek\corba_exports.def"
 				GenerateDebugInformation="FALSE"
 				SubSystem="1"
