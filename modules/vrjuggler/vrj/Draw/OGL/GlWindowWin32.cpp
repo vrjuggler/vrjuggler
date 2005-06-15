@@ -36,6 +36,8 @@
 
 #include <jccl/Config/ConfigElement.h>
 
+#include <vpr/vpr.h>
+#include <vpr/System.h>
 #include <vpr/Util/Assert.h>
 #include <gadget/InputManager.h>
 #include <vrj/Util/Debug.h>
@@ -239,8 +241,9 @@ void GlWindowWin32::configWindow(vrj::Display* disp)
    if (mXDisplayName == neg_one_STRING)    // Use display env
    {
        const std::string DISPLAY_str("DISPLAY");
-       const char* d = getenv(DISPLAY_str.c_str());
-       if (NULL != d)
+       std::string d;
+       vpr::System::getenv(DISPLAY_str, d);
+       if ( ! d.empty() )
        {
           mXDisplayName = std::string( d );
        }
