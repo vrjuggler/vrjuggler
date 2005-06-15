@@ -44,6 +44,8 @@
 #include <gmtl/Xforms.h>
 #include <gmtl/Math.h>
 
+#include <string>
+
 OsgNavGrab::OsgNavGrab(vrj::Kernel* kern, int& argc, char** argv) : vrj::OsgApp(kern)
 {
    mFileToLoad = std::string("");
@@ -156,7 +158,7 @@ void OsgNavGrab::updateGrabbing(const gmtl::Matrix44f& wandMatrix)
    const osg::Matrix& nav_mat(mNavTrans->getMatrix());
    osg::Matrix vw_M_w;
    nav_mat.inverse(vw_M_w);
-
+   
    // Transform the wand matrix from real world coordinates into virtual world
    // coordinates.
    osg::Matrix osg_wandMatrix(
@@ -165,9 +167,11 @@ void OsgNavGrab::updateGrabbing(const gmtl::Matrix44f& wandMatrix)
             wandMatrix[2][0],wandMatrix[2][1],wandMatrix[2][2],wandMatrix[2][3],
             wandMatrix[3][0],wandMatrix[3][1],wandMatrix[3][2],wandMatrix[3][3]);
    const osg::Matrix wand_matrix = vw_M_w * osg_wandMatrix;
-
+   
    const osg::Vec3 wand_point(wand_matrix.getTrans());
-
+   
+   const osg::Matrix wand_matrix_rowmajor(wandMatrix.mData);
+   
    // Only perform the intersection testing when we are not already grabbing
    // an object.
    if ( mGrabbedObj == NULL )
@@ -203,6 +207,8 @@ void OsgNavGrab::updateGrabbing(const gmtl::Matrix44f& wandMatrix)
         mButton1->getData() == gadget::Digital::ON )
    {
       mGrabbedObj = mIntersectedObj;
+      mGrabbedObj->xformStart.set(mGrabbedObj->xformCore->getMatrix());  // save start matrix
+      mGrabbedObj->xformSaved.invert(wand_matrix_rowmajor); // save inverted wand matrix
    }
    // We cannot be grabbing anything unless button 1 is pressed.
    else if ( mButton1->getData() != gadget::Digital::ON )
@@ -214,11 +220,15 @@ void OsgNavGrab::updateGrabbing(const gmtl::Matrix44f& wandMatrix)
    // by mGrabbedObj.
    if ( mGrabbedObj != NULL )
    {
-      osg::Matrix new_xlate = mGrabbedObj->xformCore->getMatrix(); // could be a bug... ?take old and apply...or
-                             // just apply
-      new_xlate.makeTranslate(wand_point);
-      mGrabbedObj->xformCore->setMatrix(new_xlate);
-
+      osg::Matrix new_xform;
+      new_xform.set(mGrabbedObj->xformStart);
+      
+      //new_xform.set(wandMatrix.mData);
+      new_xform.postMult(mGrabbedObj->xformSaved);
+      
+      new_xform.postMult(wand_matrix_rowmajor);
+      
+      mGrabbedObj->xformCore->setMatrix(new_xform);
    }
 }
 
