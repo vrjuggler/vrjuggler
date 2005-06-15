@@ -366,8 +366,8 @@ void GlPipe::renderWindow(GlWindow* win)
 
    // --- FOR EACH VIEWPORT -- //
    Viewport* viewport = NULL;
-   unsigned num_vps = the_display->getNumViewports();
-   for (unsigned vp_num=0; vp_num < num_vps; vp_num++)
+   size_t num_vps = the_display->getNumViewports();
+   for ( size_t vp_num = 0; vp_num < num_vps; ++vp_num )
    {
       viewport = the_display->getViewport(vp_num);
 
