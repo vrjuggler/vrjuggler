@@ -46,7 +46,7 @@
 #include <iostream>
 #include <stdio.h>// for FILE
 
-#if defined(WIN32) || defined(__APPLE__)
+#if defined(WIN32) || defined(WIN64) || defined(__APPLE__)
 #  include <al.h>
 #  include <alc.h>
 #  include <alut.h>
@@ -182,7 +182,7 @@ bool OpenALSoundImplementation::isPlaying( const std::string& alias )
 
       ALint state( AL_INITIAL ); // initialized
 
-#if defined(VPR_OS_Win32) || defined(VPR_OS_Darwin)
+#if defined(VPR_OS_Windows) || defined(VPR_OS_Darwin)
       alGetSourcei(mBindLookup[alias].source, AL_SOURCE_STATE, &state);
 #else
       alGetSourceiv(mBindLookup[alias].source, AL_SOURCE_STATE, &state);
@@ -211,7 +211,7 @@ bool OpenALSoundImplementation::isPaused( const std::string& alias )
    {
       vprASSERT(alIsSource(mBindLookup[alias].source) != AL_FALSE && "weird, shouldn't happen...\n");
       ALint state( AL_INITIAL ); // initialized
-#if defined(VPR_OS_Win32) || defined(VPR_OS_Darwin)
+#if defined(VPR_OS_Windows) || defined(VPR_OS_Darwin)
       alGetSourcei(mBindLookup[alias].source, AL_SOURCE_STATE, &state);
 #else
       alGetSourceiv(mBindLookup[alias].source, AL_SOURCE_STATE, &state);
@@ -401,7 +401,7 @@ void OpenALSoundImplementation::setVolume( const std::string& alias, float amoun
    snx::SoundImplementation::setVolume( alias, amount );
    if (mBindLookup.count( alias ) > 0 && mSounds.count( alias ) > 0)
    {
-#if defined(WIN32) || defined(__APPLE__)
+#if defined(WIN32) || defined(WIN64) || defined(__APPLE__)
       alSourcef( mBindLookup[alias].source, AL_GAIN, amount );
 #else
       alSourcef( mBindLookup[alias].source, AL_GAIN_LINEAR_LOKI, amount );
@@ -416,7 +416,7 @@ void OpenALSoundImplementation::setCutoff( const std::string& alias, float amoun
    if (mBindLookup.count( alias ) > 0 && mSounds.count( alias ) > 0)
    {
       // @todo: cutoff is not defined in openal, use gain instead... :(
-#if defined(WIN32) || defined(__APPLE__)
+#if defined(WIN32) || defined(WIN64) || defined(__APPLE__)
       alSourcef( mBindLookup[alias].source, AL_GAIN, amount );
 #else
       alSourcef( mBindLookup[alias].source, AL_GAIN_LINEAR_LOKI, amount );
@@ -584,12 +584,12 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          // OpenAL defines AL_FORMAT_WAVE_EXT.  Other platforms set the format
          // specifier in alut helper functions.
          ALenum format;
-#if defined(VPR_OS_Win32) || defined(VPR_OS_Darwin)
+#if defined(VPR_OS_Windows) || defined(VPR_OS_Darwin)
          ALvoid* data;
          ALsizei size, freq;
 
          // Macintosh does not have the loop parameter in its alutLoadWAVFile().
-#if defined(VPR_OS_Win32)
+#if defined(VPR_OS_Windows)
          ALboolean loop;
          alutLoadWAVFile((ALbyte*) soundInfo.filename.c_str(), &format, &data, &size, &freq, &loop);
 #elif defined(VPR_OS_Darwin)
