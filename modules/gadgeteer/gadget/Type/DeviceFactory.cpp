@@ -51,7 +51,7 @@
 #include <gadget/Devices/Sim/SimDigitalGlove.h>
 #include <gadget/Devices/KeyboardMouseDevice/KeyboardMouseDevice.h>
 
-#if defined(VPR_OS_Win32)
+#if defined(VPR_OS_Windows)
 #  include <gadget/Devices/KeyboardMouseDevice/InputWindowWin32.h>
 #elif defined(VPR_OS_Darwin) && ! defined(GADGET_USE_X11)
 #  include <gadget/Devices/KeyboardMouseDevice/InputWindowOSX.h>
@@ -126,7 +126,7 @@ void DeviceFactory::loadKnownDevices()
          << clrOutBOLD(clrRED,"ERROR:") << "Failed to load the known device KeyboardMouseDevice."
          << std::endl << vprDEBUG_FLUSH;
    }
-#if defined(VPR_OS_Win32)
+#if defined(VPR_OS_Windows)
    DeviceConstructor<InputWindowWin32>* key_win32 =
       new DeviceConstructor<InputWindowWin32>(input_mgr);
    if( (NULL == key_win32))

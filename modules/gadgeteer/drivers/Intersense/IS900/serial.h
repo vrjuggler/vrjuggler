@@ -19,7 +19,7 @@
 
 #define RX_BUFFER_SIZE 1024
 
-#if defined VPR_OS_Win32
+#if defined VPR_OS_Windows
 
 #include <windows.h>
 #include <winbase.h>

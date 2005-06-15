@@ -49,7 +49,7 @@
  * implementation.
  * ----------------------------------------------------------------------------
  */
-#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 
 #   if defined(__GNUC__)
 #       undef _declspec
@@ -90,7 +90,7 @@
 #   define GADGET_DRIVER_CALLBACK_DECL
 #   define GADGET_DRIVER_STATIC_CALLBACK(__x) static __x
 
-#endif	/* WIN32 */
+#endif	/* WIN32 || WIN64 */
 
 #ifdef _GADGET_DRIVER_BUILD_
 #   define GADGET_DRIVER_API(__type)	GADGET_DRIVER_EXPORT(__type)
