@@ -216,7 +216,13 @@ Thread* ThreadNSPR::self()
 std::ostream& Thread::outStream(std::ostream& out)
 {
    out.setf(std::ios::right);
-   out << std::setw(7) << std::setfill('0') << getpid() << "/";
+   out << std::setw(7) << std::setfill('0')
+#ifdef VPR_OS_Windows
+       << _getpid()
+#else
+       << getpid()
+#endif
+       << "/";
    out.unsetf(std::ios::right);
    BaseThread::outStream(out);
    out << std::setfill(' ');
