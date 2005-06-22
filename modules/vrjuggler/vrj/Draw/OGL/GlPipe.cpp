@@ -164,9 +164,6 @@ void GlPipe::controlLoop(void* nullParam)
    // Loop until flag set
    while (!mControlExit)
    {
-      checkForWindowsToClose();  // Checks for closing windows
-      checkForNewWindows();      // Checks for new windows to open
-
       // --- handle EVENTS for the windows --- //
       // XXX: This may have to be here because of need to get open window event (Win32)
       // otherwise I would like to move it to being after the swap to get better performance
@@ -206,6 +203,8 @@ void GlPipe::controlLoop(void* nullParam)
 
          mSwapCompleteSema.release();
       }
+      checkForWindowsToClose();  // Checks for closing windows
+      checkForNewWindows();      // Checks for new windows to open
    }
 
    mThreadRunning = false;     // We are not running
