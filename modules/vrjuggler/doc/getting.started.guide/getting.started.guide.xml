@@ -881,17 +881,18 @@ value</screen>
             <para>Setting this environment variable is useful in two
             scenarios: when using SPROC threads on IRIX and when using <ulink
             url="http://www.vrjuggler.org/pyjuggler/">PyJuggler</ulink> on Mac
-            OS X. The current implementation of the remote run-time
-            reconfiguration plug-in is based on <ulink
+            OS X 10.3 (<quote>Panther</quote>). The current implementation of
+            the remote run-time reconfiguration plug-in is based on <ulink
             url="http://omniorb.sourceforge.net/">omniORB</ulink>, which
             cannot be used with SPROC threads. In that case, there will not be
             a plug-in available to load, and setting this enviornment variable
             ultimately prevents the IRIX run-time loader from printing a nasty
-            message saying as much. On Mac OS X, static data initialization in
-            omniORB fails when the omniORB libraries are loaded into the
-            Python interpreter application space, and this leads to a crash.
-            Setting this environment variable allows PyJuggler applications to
-            run correctly.</para>
+            message saying as much. On Mac OS X 10.3, static data
+            initialization in omniORB fails when the omniORB libraries are
+            loaded into the Python interpreter application space, and this
+            leads to a crash. Setting this environment variable allows
+            PyJuggler applications to run correctly. This crash does not occur
+            with PyJuggler on Mac OS X 10.4 (<quote>Tiger</quote>).</para>
           </listitem>
         </varlistentry>
 
@@ -910,17 +911,18 @@ value</screen>
             <para>Setting this environment variable is useful in two
             scenarios: when using SPROC threads on IRIX and when using <ulink
             url="http://www.vrjuggler.org/pyjuggler/">PyJuggler</ulink> on Mac
-            OS X. The current implementation of the remote performance
-            visualization plug-in is based on <ulink
+            OS X 10.3 (<quote>Panther</quote>). The current implementation of
+            the remote performance visualization plug-in is based on <ulink
             url="http://omniorb.sourceforge.net/">omniORB</ulink>, which
             cannot be used with SPROC threads. In that case, there will not be
             a plug-in available to load, and setting this enviornment variable
             ultimately prevents the IRIX run-time loader from printing a nasty
-            message saying as much. On Mac OS X, static data initialization in
-            omniORB fails when the omniORB libraries are loaded into the
-            Python interpreter application space, and this leads to a crash.
-            Setting this environment variable allows PyJuggler applications to
-            run correctly.</para>
+            message saying as much. On Mac OS X 10.3, static data
+            initialization in omniORB fails when the omniORB libraries are
+            loaded into the Python interpreter application space, and this
+            leads to a crash. Setting this environment variable allows
+            PyJuggler applications to run correctly. This crash does not occur
+            with PyJuggler on Mac OS X 10.4 (<quote>Tiger</quote>).</para>
           </listitem>
         </varlistentry>
       </variablelist>
