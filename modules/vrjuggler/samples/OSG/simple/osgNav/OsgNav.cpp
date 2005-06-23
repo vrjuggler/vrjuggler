@@ -174,8 +174,8 @@ void OsgNav::myInit()
 
    mNavigator.init();
 
-   mRootNode->addChild( mNoNav );
-   mRootNode->addChild( mNavTrans );
+   mRootNode->addChild(mNoNav.get());
+   mRootNode->addChild(mNavTrans.get());
 
    //Load the model
    std::cout << "Attempting to load file: " << mFileToLoad << "... ";
@@ -187,22 +187,22 @@ void OsgNav::myInit()
    //This can be used if the model orientation needs to change
    mModelTrans->preMult( osg::Matrix::rotate( gmtl::Math::deg2Rad( -90.0f ), 1.0f, 0.0f, 0.0f) );
 
-   if(NULL == mModel)
+   if ( ! mModel.isValid() )
    {
       std::cout << "ERROR: Could not load file: " << mFileToLoad << std::endl;
    }
    else
    {
       // Add model to the transform
-      mModelTrans->addChild(mModel);
+      mModelTrans->addChild(mModel.get());
    }
    
    // Add the transform to the tree
-   mNavTrans->addChild( mModelTrans );
+   mNavTrans->addChild(mModelTrans.get());
 
    // run optimization over the scene graph
    osgUtil::Optimizer optimizer;
-   optimizer.optimize(mRootNode);
+   optimizer.optimize(mRootNode.get());
 
    // traverse the scene graph setting up all osg::GeoSet's so they will use
    // OpenGL display lists.
