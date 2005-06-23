@@ -412,11 +412,39 @@ void AudiereSoundImplementation::bind( const std::string& alias )
    // are we streaming this sound from disk?
    if(soundInfo.streaming)
    {
-      trackMap[alias] = audiere::OpenSound(mDev.get(), soundInfo.filename.c_str());
+      audiere::OutputStream* stream =
+         audiere::OpenSound(mDev.get(), soundInfo.filename.c_str());
+
+      if ( NULL != stream )
+      {
+         trackMap[alias] = stream;
+      }
+      else
+      {
+         vprDEBUG(snxDBG, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": [AudiereSoundImplementation::bind()] Failed to load";
+         vprDEBUG_NEXTnl(snxDBG, vprDBG_WARNING_LVL)
+            << "'" << soundInfo.filename << "'\n" << vprDEBUG_FLUSH;
+      }
    }else
    {
-      effectMap[alias] = audiere::OpenSoundEffect(mDev.get(), soundInfo.filename.c_str(), audiere::SINGLE);
+      audiere::SoundEffect* effect =
+         audiere::OpenSoundEffect(mDev.get(), soundInfo.filename.c_str(),
+                                  audiere::SINGLE);
 
+      if ( NULL != effect )
+      {
+         effectMap[alias] = effect;
+      }
+      else
+      {
+         vprDEBUG(snxDBG, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING")
+            << ": [AudiereSoundImplementation::bind()] Failed to load";
+         vprDEBUG_NEXTnl(snxDBG, vprDBG_WARNING_LVL)
+            << "'" << soundInfo.filename << "'\n" << vprDEBUG_FLUSH;
+      }
    }
 
    // was it playing?  if so, then start it up again...
