@@ -84,7 +84,7 @@ public:
 
    virtual osg::Group* getScene()
    {
-      return mRootNode;
+      return mRootNode.get();
    }
 
    virtual void configSceneView(osgUtil::SceneView* newSceneViewer)
@@ -146,11 +146,11 @@ public:
    }
 
 private:
-   osg::Group*             mRootNode;
-   osg::Group*             mNoNav;
-   osg::MatrixTransform*   mNavTrans;
-   osg::MatrixTransform*   mModelTrans;
-   osg::Node*              mModel;
+   osg::ref_ptr<osg::Group>           mRootNode;
+   osg::ref_ptr<osg::Group>           mNoNav;
+   osg::ref_ptr<osg::MatrixTransform> mNavTrans;
+   osg::ref_ptr<osg::MatrixTransform> mModelTrans;
+   osg::ref_ptr<osg::Node>            mModel;
 
    OsgNavigator  mNavigator;       /** Navigation class */
 
