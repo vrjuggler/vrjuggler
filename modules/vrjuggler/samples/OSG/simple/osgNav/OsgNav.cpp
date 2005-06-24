@@ -187,7 +187,7 @@ void OsgNav::myInit()
    //This can be used if the model orientation needs to change
    mModelTrans->preMult( osg::Matrix::rotate( gmtl::Math::deg2Rad( -90.0f ), 1.0f, 0.0f, 0.0f) );
 
-   if ( ! mModel.isValid() )
+   if ( ! mModel.valid() )
    {
       std::cout << "ERROR: Could not load file: " << mFileToLoad << std::endl;
    }
