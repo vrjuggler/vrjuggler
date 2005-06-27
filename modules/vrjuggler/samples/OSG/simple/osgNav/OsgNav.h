@@ -124,7 +124,8 @@ public:
    // Function called after ApplicationData syncronization but before draw()
    virtual void latePreFrame();
    
-   //: Function called after drawing has been triggered but BEFORE it completes<BR><BR>
+   //: Function called after drawing has been triggered but BEFORE it
+   // completes<BR><BR>
    //
    // called once during each frame
    virtual void intraFrame()
@@ -132,7 +133,8 @@ public:
       // Put your intra frame computations here.
    }
 
-   //: Function called before updating trackers but after the frame is drawn<BR><BR>
+   //: Function called before updating trackers but after the frame is
+   // drawn<BR><BR>
    //
    // called once after every frame
    virtual void postFrame()
