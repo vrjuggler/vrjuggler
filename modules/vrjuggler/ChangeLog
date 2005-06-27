@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jun-27-2005 aronb       Ensure that we close each OpenGL window and its
+                        associated context.
 Jun-15-2005 patrickh    Updated to support Windows 64-bit edition.
                         NEW VERSION: 1.1.173
 
