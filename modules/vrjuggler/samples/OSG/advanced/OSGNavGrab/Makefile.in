@@ -43,8 +43,6 @@ APP_NAME=	OsgNavGrab@EXEEXT@
 srcdir=		@srcdir@
 SRCS=		OsgNavGrab.cpp main.cpp
 
-NO_DEPEND=	YES
-
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
 include $(DZR_BASE_DIR)/ext/tweek/dzr.tweek.mk
@@ -58,6 +56,5 @@ EXTRA_LIBS+=		@APP_EXTRA_LIBS_OSG@
 all:
 	$(MAKE) $(APP_NAME)
 
-osgNavGrab@EXEEXT@: $(OBJS)
+OsgNavGrab@EXEEXT@: $(OBJS)
 	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
-
