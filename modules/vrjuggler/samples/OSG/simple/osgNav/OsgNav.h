@@ -61,7 +61,7 @@
 #include <vrj/Draw/OSG/OsgApp.h>
 
 /**
- * Demonstration Open Scene Graph application class
+ * Demonstration Open Scene Graph application class.
  */
 class OsgNav : public vrj::OsgApp
 {
@@ -73,9 +73,11 @@ public:
       /* Do nothing. */ ;
    }
 
-   // Execute any initialization needed before the API is started<BR><BR>
-   //
-   // This is called once before OGL is initialized
+   /**
+    * Execute any initialization needed before the API is started.
+    *
+    * This is called once before OSG is initialized.
+    */
    virtual void initScene();
 
    void myInit();
@@ -116,27 +118,32 @@ public:
    //  }
    //------------------------------------
 
-   //: Function called after tracker update but before start of drawing<BR><BR>
-   //
-   // called once before every frame.
+   /**
+    * Function called after tracker update but before start of drawing.
+    *
+    * Called once before every frame.
+    */
    virtual void preFrame();
 
-   // Function called after ApplicationData syncronization but before draw()
+   /** Function called after ApplicationData syncronization but before draw() */
    virtual void latePreFrame();
    
-   //: Function called after drawing has been triggered but BEFORE it
-   // completes<BR><BR>
-   //
-   // called once during each frame
+   /**
+    * Function called after drawing has been triggered but BEFORE it
+    * completes.
+    *
+    * Called once during each frame.
+    */
    virtual void intraFrame()
    {
       // Put your intra frame computations here.
    }
 
-   //: Function called before updating trackers but after the frame is
-   // drawn<BR><BR>
-   //
-   // called once after every frame
+   /**
+    * Function called before updating trackers but after the frame is drawn.
+    *
+    * Called once after every frame.
+    */
    virtual void postFrame()
    {
       // Put your post frame computations here.
@@ -154,19 +161,20 @@ private:
    osg::ref_ptr<osg::MatrixTransform> mModelTrans;
    osg::ref_ptr<osg::Node>            mModel;
 
-   OsgNavigator  mNavigator;       /** Navigation class */
+   OsgNavigator  mNavigator;       /**< Navigation class */
 
    std::string mFileToLoad;
 
-   vpr::Interval           mLastPreFrameTime;   /**< Time of the start of the last preframe */
+   /** Time of the start of the last preframe */
+   vpr::Interval mLastPreFrameTime;
 
 #ifdef TWEEK_HAVE_CXX
    tweek::CorbaManager mCorbaManager;
 #endif
 
 public:
-   gadget::PositionInterface  mWand;     // the Wand
-   gadget::PositionInterface  mHead;     // the head
+   gadget::PositionInterface  mWand;     /**< the wand */
+   gadget::PositionInterface  mHead;     /**< the head */
    gadget::DigitalInterface   mButton0;
    gadget::DigitalInterface   mButton1;
    gadget::DigitalInterface   mButton2;
