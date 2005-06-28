@@ -63,7 +63,7 @@ void doFunc(void*);
 
 int main(int argc, char* argv[])
 {
-   if(argc <= 1)
+   if ( argc <= 1 )
    {
       std::cout << "Usage: testSelfPerformance <num_threads>\n" << std::flush;
       exit(1);
@@ -72,9 +72,9 @@ int main(int argc, char* argv[])
    int num_threads = atoi(argv[1]);
    std::cout << "Using num_threads: " << num_threads << std::endl;
 
-   for(int thread_num=0;thread_num < num_threads;thread_num++)
+   for ( int thread_num = 0; thread_num < num_threads; ++thread_num )
    {
-      vpr::Thread* new_thread = new vpr::Thread(doFunc, (void*)(thread_num));
+      vpr::Thread* new_thread = new vpr::Thread(doFunc, (void*) thread_num);
 
       // Increment the thread count
       thread_count_mutex.acquire();
@@ -84,42 +84,46 @@ int main(int argc, char* argv[])
 
    // Wait until all threads exited
    // NOTE: Don't have to guard because I am just looking
-   while(thread_count != 0)
-   {;}
-
-   double total_avg(0.0f);
-   for(int x=0;x<num_threads;x++)
+   while ( thread_count != 0 )
    {
-      total_avg += timers[x].getTiming()/(double)num_reps;
+      ;
    }
 
-   total_avg /= (double)num_threads;
+   double total_avg(0.0f);
+   for ( int x = 0; x < num_threads; ++x )
+   {
+      total_avg += timers[x].getTiming() / (double) num_reps;
+   }
 
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "AVERAGE TIMING: " << total_avg*1000.0f << "ms"
-                          << std::endl << vprDEBUG_FLUSH;
+   total_avg /= (double) num_threads;
+
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << "AVERAGE TIMING: " << total_avg*1000.0f << "ms" << std::endl
+      << vprDEBUG_FLUSH;
+
+   return 0;
 }
-
 
 void doFunc(void* void_thread_num)
 {
    int thread_num = (int)void_thread_num;
 
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Thread: " << thread_num << ": Entering.\n"
-                           << vprDEBUG_FLUSH;
-         
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << "Thread: " << thread_num << ": Entering.\n" << vprDEBUG_FLUSH;
+
    vpr::BaseThread* my_thread;
 
-   timers[thread_num].startTiming();      
-   for(long rep=0;rep<num_reps;rep++)
+   timers[thread_num].startTiming();
+   for ( long rep = 0; rep < num_reps; ++rep )
    {
       my_thread = vpr::Thread::self();
    }
-   timers[thread_num].stopTiming();     
-   
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Thread: " << thread_num
-                           << ": Exiting: Avg Time of: "
-                           << ((timers[thread_num].getTiming()/(double)num_reps)*1000.0f)
-                           << "ms" << std::endl << vprDEBUG_FLUSH;
+   timers[thread_num].stopTiming();
+
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << "Thread: " << thread_num << ": Exiting: Avg Time of: "
+      << ((timers[thread_num].getTiming()/(double)num_reps)*1000.0f)
+      << "ms" << std::endl << vprDEBUG_FLUSH;
    thread_count_mutex.acquire();
       thread_count--;               // Removing us from the number there
    thread_count_mutex.release();

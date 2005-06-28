@@ -58,9 +58,9 @@ vpr::Mutex create_mutex;
 
 void doFunc(void*);
 
-int main(void)
+int main()
 {
-   vpr::TSObjectProxy<int>    tsCounter;     // Allocate a thread specific counter
+   vpr::TSObjectProxy<int> tsCounter;     // Allocate a thread specific counter
 
    vpr::Thread* new_thread = new vpr::Thread(doFunc, (void*)(&tsCounter));
 
@@ -68,31 +68,35 @@ int main(void)
       threads_created++;
    create_mutex.release();
 
-   while(1)
+   while ( true )
    {
       ;
    }
-}
 
+   return 0;
+}
 
 void doFunc(void* TSCounterPtr)
 {
-   int i;
-   vpr::TSObjectProxy<int>&  ts_counter = *(static_cast<vpr::TSObjectProxy<int>*>(TSCounterPtr));
+   vpr::TSObjectProxy<int>& ts_counter =
+      *(static_cast<vpr::TSObjectProxy<int>*>(TSCounterPtr));
 
    create_mutex.acquire();
       num_threads_to_create -= 1;
    create_mutex.release();
 
-   for ( i = 0; i < 3; i++ ) {
+   for ( int i = 0; i < 3; ++i )
+   {
       create_mutex.acquire();
          // All the threads we want have been created.
-         if ( num_threads_to_create == 0 ) {
-               vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "All " << threads_created
-                                       << " threads created\n"
-                                       << vprDEBUG_FLUSH;
+         if ( num_threads_to_create == 0 )
+         {
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               << "All " << threads_created << " threads created\n"
+               << vprDEBUG_FLUSH;
          }
-         else if ( num_threads_to_create > 0 ) {
+         else if ( num_threads_to_create > 0 )
+         {
             vpr::Thread* new_thread = new vpr::Thread(doFunc, TSCounterPtr);
             threads_created++;
          }
@@ -100,25 +104,29 @@ void doFunc(void* TSCounterPtr)
    }
 
    (*ts_counter) = 0;
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Starting with: " << *ts_counter << std::endl
-                           << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << "Starting with: " << *ts_counter << std::endl << vprDEBUG_FLUSH;
 
-   while((*ts_counter) < 1000)
+   while ( *ts_counter < 1000 )
    {
-      for(i=0;i<1000;i++)
+      for ( int i = 0; i < 1000; ++i )
+      {
          float x = sin((float) i);
+      }
       (*ts_counter)++;
    }
 
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Finished counting: Final val:" << *ts_counter
-                           << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << "Finished counting: Final val:" << *ts_counter << std::endl
+      << vprDEBUG_FLUSH;
 
    create_mutex.acquire();
       threads_exited++;
 
-      if ( threads_exited == threads_created ) {
-          vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "All threads have finished execution\n"
-                                  << vprDEBUG_FLUSH;
+      if ( threads_exited == threads_created )
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << "All threads have finished execution\n" << vprDEBUG_FLUSH;
       }
    create_mutex.release();
 }
