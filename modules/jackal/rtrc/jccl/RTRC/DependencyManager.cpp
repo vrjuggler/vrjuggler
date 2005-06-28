@@ -31,10 +31,14 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <jccl/jcclConfig.h>
+
 #include <iomanip>
-#include <jccl/RTRC/DependencyManager.h>
+#include <algorithm>
+#include <typeinfo>
+
 #include <jccl/Util/Debug.h>
 #include <jccl/Config/ConfigElement.h>
+#include <jccl/RTRC/DependencyManager.h>
 
 
 namespace jccl
@@ -50,6 +54,10 @@ DependencyManager::DependencyManager(): mDepCheckers(), mDefaultChecker()
    //debugDump();
 }
 
+DependencyManager::~DependencyManager()
+{
+   mDepCheckers.clear();
+}
 
 void DependencyManager::registerChecker(DepChecker* checker)
 {
@@ -65,6 +73,25 @@ void DependencyManager::registerChecker(DepChecker* checker)
    debugDump();
 }
 
+void DependencyManager::unregisterChecker(DepChecker* checker)
+{
+   vprASSERT(checker != NULL);
+   std::vector<DepChecker*>::iterator c = std::find(mDepCheckers.begin(),
+                                                    mDepCheckers.end(),
+                                                    checker);
+   if ( c != mDepCheckers.end() )
+   {
+      mDepCheckers.erase(c);
+      vprDEBUG(jcclDBG_RECONFIG, vprDBG_CONFIG_LVL)
+         << "DependencyManager: Unregistered: "
+         << std::setiosflags(std::ios::right) << std::setw(25)
+         << std::setfill(' ') << checker->getCheckerName().c_str()
+         << std::resetiosflags(std::ios::right)
+         << "  type: " << typeid(*checker).name() << std::endl
+         << vprDEBUG_FLUSH;
+      debugDump();
+   }
+}
 
 bool DependencyManager::isSatisfied(ConfigElementPtr element)
 {

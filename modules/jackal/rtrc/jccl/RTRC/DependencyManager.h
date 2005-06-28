@@ -35,7 +35,7 @@
 
 #include <jccl/jcclConfig.h>
 #include <vector>
-#include <typeinfo>
+
 #include <vpr/Util/Singleton.h>
 #include <jccl/RTRC/DepChecker.h>
 #include <jccl/Config/ConfigElementPtr.h>
@@ -64,10 +64,15 @@ private:
    /** Constructor. Private since this is a singleton. */
    DependencyManager ();
 
+   ~DependencyManager();
+
 public:
 
    /** Registers a new dependency checker. */
    void registerChecker (DepChecker* checker);
+
+   /** Un-registers a new dependency checker. */
+   void unregisterChecker(DepChecker* checker);
 
    /** Checks if dependencies are satisfied for the given element.
     *  @return true iff dependencies for element are satisfied.
