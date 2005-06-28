@@ -160,7 +160,7 @@ DPP_PROG_LINKER
 # -----------------------------------------------------------------------------
 VPR_PATH([0.92.3], , [AC_MSG_ERROR([*** VPR required for Gadgeteer ***])])
 VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
-JCCL_PATH_CXX([0.17.2], ,
+JCCL_PATH_CXX([1.1.2], ,
               [AC_MSG_ERROR([*** JCCL C++ API required for Gadgeteer ***])])
 
 gadsave_CPPFLAGS="$CPPFLAGS"

@@ -35,7 +35,8 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <cluster/ClusterNetwork.h>
+#include <list>
+#include <map>
 
 #include <vpr/Util/GUID.h>
 #include <vpr/Util/Singleton.h>
@@ -44,8 +45,9 @@
 #include <jccl/Config/ConfigElementPtr.h>
 #include <jccl/RTRC/ConfigElementHandler.h>
 
-#include <list>
-#include <map>
+#include <cluster/ClusterDepChecker.h>
+#include <cluster/ClusterNetwork.h>
+
 
 namespace gadget
 {
@@ -249,6 +251,8 @@ public:
    }
 
 private:
+   ClusterDepChecker            mDepChecker;
+
    std::list<ClusterPlugin*>    mPlugins;            /**< List of Plugins.*/
    vpr::Mutex                   mPluginsLock;        /**< Lock on plugins list.*/
    std::string                  mBarrierMachineName; /**< Name of the barrier machine.*/

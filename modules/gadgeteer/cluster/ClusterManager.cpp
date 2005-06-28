@@ -48,7 +48,6 @@
 
 #include <cluster/ClusterNetwork.h>
 #include <cluster/ClusterPlugin.h>
-#include <cluster/ClusterDepChecker.h>
 #include <cluster/ClusterManager.h>
 #include <cluster/Packets/EndBlock.h>
 
@@ -160,11 +159,13 @@ namespace cluster
    {
       mClusterNetwork = new ClusterNetwork();
       jccl::ConfigManager::instance()->addConfigElementHandler( mClusterNetwork );
-      jccl::DependencyManager::instance()->registerChecker( new ClusterDepChecker() );
+      jccl::DependencyManager::instance()->registerChecker(&mDepChecker);
    }
 
    ClusterManager::~ClusterManager()
-   {;}
+   {
+      jccl::DependencyManager::instance()->unregisterChecker(&mDepChecker);
+   }
 
    bool ClusterManager::isClusterReady()
    {

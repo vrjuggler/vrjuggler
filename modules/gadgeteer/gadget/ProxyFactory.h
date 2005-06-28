@@ -36,10 +36,13 @@
 
 #include <gadget/gadgetConfig.h>
 #include <vector>
-#include <gadget/Type/Proxy.h>
-#include <jccl/Config/ConfigElementPtr.h>
+
 #include <vpr/Util/Singleton.h>
+#include <jccl/Config/ConfigElementPtr.h>
 #include <jccl/RTRC/DependencyManager.h>
+
+#include <gadget/ProxyDepChecker.h>
+#include <gadget/Type/Proxy.h>
 
 
 namespace gadget
@@ -162,8 +165,9 @@ private:
    int findConstructor(jccl::ConfigElementPtr element);
 
 private:
-   std::vector<ProxyConstructorBase*> mConstructors;   /**<  List of the proxy constructors */
+   ProxyDepChecker mDepChecker;
 
+   std::vector<ProxyConstructorBase*> mConstructors;   /**< List of the proxy constructors */
 
    vprSingletonHeaderWithInitFunc(ProxyFactory,loadKnownProxies);
 };

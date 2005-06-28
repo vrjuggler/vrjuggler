@@ -35,6 +35,8 @@
 #include <iomanip>
 #include <typeinfo>
 
+#include <jccl/Config/ConfigElement.h>
+
 #include <gadget/Type/AnalogProxy.h>
 #include <gadget/Type/DigitalProxy.h>
 #include <gadget/Type/PositionProxy.h>
@@ -43,10 +45,9 @@
 #include <gadget/Type/KeyboardMouseProxy.h>
 #include <gadget/Type/CommandProxy.h>
 #include <gadget/Type/StringProxy.h>
-#include <gadget/ProxyDepChecker.h>
-#include <gadget/ProxyFactory.h>
 #include <gadget/Util/Debug.h>
-#include <jccl/Config/ConfigElement.h>
+
+#include <gadget/ProxyFactory.h>
 
 
 namespace gadget
@@ -65,6 +66,7 @@ ProxyConstructor<PROXY>::ProxyConstructor()
 // Register all the proxies that I know about
 void ProxyFactory::loadKnownProxies()
 {
+   // XXX: Memory leaks!
    ProxyConstructor<AnalogProxy>* analog_proxy = new ProxyConstructor<AnalogProxy>;
    ProxyConstructor<DigitalProxy>* digital_proxy = new ProxyConstructor<DigitalProxy>;
    ProxyConstructor<PositionProxy>* pos_proxy = new ProxyConstructor<PositionProxy>;
@@ -87,7 +89,7 @@ void ProxyFactory::loadKnownProxies()
    }
 
 
-   jccl::DependencyManager::instance()->registerChecker(new ProxyDepChecker());
+   jccl::DependencyManager::instance()->registerChecker(&mDepChecker);
 }
 
 void ProxyFactory::registerProxy(ProxyConstructorBase* constructor)
