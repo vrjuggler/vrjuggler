@@ -123,7 +123,10 @@ void doIt(void* param)
 template<class T>
 void dumpVector(std::vector<T>& theVector)
 {
-    for(std::vector<T>::iterator i = theVector.begin(); i != theVector.end(); i++)
+    typename std::vector<T>::iterator i;
+    for ( i = theVector.begin(); i != theVector.end(); ++i )
+    {
 	std::cout << "\n" << *i;
+    }
     std::cout << std::endl;
 }
