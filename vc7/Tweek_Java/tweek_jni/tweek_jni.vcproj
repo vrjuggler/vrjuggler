@@ -36,6 +36,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/tweek_jni.dll"
+				Version="1.1.1"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
 				SubSystem="1"
