@@ -64,9 +64,6 @@
 #include <vpr/Sync/Guard.h>
 #include <vpr/Util/Debug.h>
 
-// XXX: There is a bug that causes a memory leak
-//   - We never delete the Functors
-
 
 namespace vpr
 {
@@ -96,6 +93,18 @@ ThreadPool::ThreadPool (int numToStartWith) : readyThreads(0)
    }
 }
 
+ThreadPool::~ThreadPool()
+{
+   OneThread* cur_thread = listHead;
+   while ( cur_thread != NULL )
+   {
+      delete cur_thread->thread;
+      cur_thread->thread = NULL;
+      OneThread* old_thread = cur_thread;
+      cur_thread = cur_thread->next;
+      delete old_thread;
+   }
+}
 
 /* Why did I have to hard code number in sproc group?
   Why aren't I tracking the number of threads started? */
