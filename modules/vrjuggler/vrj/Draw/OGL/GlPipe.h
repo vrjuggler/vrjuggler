@@ -103,27 +103,7 @@ public:
     * Stops the pipe.
     * @post Flag is set to tell pipe to stop rendering.
     */
-   void stop()
-   {
-      // Close all open windows/contexts.
-      std::vector<GlWindow*> windows = getOpenWindows();
-      for (std::vector<GlWindow*>::iterator itr = windows.begin() ; itr != windows.end() ; itr++)
-      {
-         removeWindow(*itr);
-      }
-
-      mControlExit = 1;     // Set the control loop exit flag
-      
-      // We don't actually need to call completeRender() or completeSwap()
-      // since we don't care about when they complete. We only care about
-      // joining the thread
-      triggerRender();
-      //completeRender();
-      triggerSwap();
-      //completeSwap();
-
-      mActiveThread->join();
-   }
+   void stop();
 
 public:     // --------- Triggering functions ------ //
    /**
