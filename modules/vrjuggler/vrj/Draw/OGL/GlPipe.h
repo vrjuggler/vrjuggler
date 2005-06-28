@@ -66,7 +66,8 @@ public:
     * @note All contained windows SHOULD have the same pipe number.
     */
    GlPipe(size_t num, GlDrawManager* glMgr)
-      : mActiveThread(NULL)
+      : mControlFunctor(NULL)
+      , mActiveThread(NULL)
       , mPipeNum(num)
       , mControlExit(0)
       , mGlDrawManager(glMgr)
@@ -77,6 +78,8 @@ public:
    {
       mThreadRunning = false;
    }
+
+   ~GlPipe();
 
    /**
     * Starts the pipe running.
@@ -211,6 +214,7 @@ private:
    void operator=(const GlPipe&) {;}
 
 private:
+   vpr::ThreadMemberFunctor<GlPipe>* mControlFunctor;
    vpr::Thread*   mActiveThread;    /**< The thread running this object */
    bool           mThreadRunning;   /**< Do we have a running thread? */
 

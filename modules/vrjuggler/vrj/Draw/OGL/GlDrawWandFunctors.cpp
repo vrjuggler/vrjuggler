@@ -49,6 +49,15 @@ GlDrawConeWandFunctor::GlDrawConeWandFunctor()
 {
 }
 
+GlDrawConeWandFunctor::~GlDrawConeWandFunctor()
+{
+   if ( NULL != mQuadObj )
+   {
+      gluDeleteQuadric(mQuadObj);
+      mQuadObj = NULL;
+   }
+}
+
 void GlDrawConeWandFunctor::draw(vrj::User* user)
 {
    boost::ignore_unused_variable_warning(user);

@@ -53,6 +53,21 @@
 namespace vrj
 {
 
+SurfaceViewport::~SurfaceViewport()
+{
+   if ( NULL != mLeftProj )
+   {
+      delete mLeftProj;
+      mLeftProj = NULL;
+   }
+
+   if ( NULL != mRightProj )
+   {
+      delete mRightProj;
+      mRightProj = NULL;
+   }
+}
+
 void SurfaceViewport::config(jccl::ConfigElementPtr element)
 {
    vprASSERT(element.get() != NULL);
@@ -85,6 +100,16 @@ void SurfaceViewport::config(jccl::ConfigElementPtr element)
    if(mTracked)
    {
       mTrackerProxyName = element->getProperty<std::string>("tracker_proxy");
+   }
+
+   if ( NULL != mLeftProj )
+   {
+      delete mLeftProj;
+   }
+
+   if ( NULL != mRightProj )
+   {
+      delete mRightProj;
    }
 
    // Create Projection objects

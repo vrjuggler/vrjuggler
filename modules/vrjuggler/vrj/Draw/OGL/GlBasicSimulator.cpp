@@ -73,6 +73,18 @@ GlBasicSimulator::GlBasicSimulator()
 GlBasicSimulator::~GlBasicSimulator()
 {
    gluDeleteQuadric(mQuadObj);
+
+   if ( NULL != mDrawWandFunctor )
+   {
+      delete mDrawWandFunctor;
+      mDrawWandFunctor = NULL;
+   }
+
+   if ( NULL != mDrawHeadFunctor )
+   {
+      delete mDrawHeadFunctor;
+      mDrawHeadFunctor = NULL;
+   }
 }
 
 /*

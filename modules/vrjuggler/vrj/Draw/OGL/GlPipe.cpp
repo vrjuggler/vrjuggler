@@ -55,6 +55,20 @@
 namespace vrj
 {
 
+GlPipe::~GlPipe()
+{
+   if ( NULL != mActiveThread )
+   {
+      delete mActiveThread;
+      mActiveThread = NULL;
+   }
+
+   if ( NULL != mControlFunctor )
+   {
+      delete mControlFunctor;
+      mControlFunctor = NULL;
+   }
+}
 
 /**
  * Starts the pipe running.
@@ -65,10 +79,10 @@ int GlPipe::start()
     vprASSERT(mThreadRunning == false);        // We should not be running yet
 
     // Create a new thread to call the control loop
-    vpr::ThreadMemberFunctor<GlPipe>* memberFunctor =
-         new vpr::ThreadMemberFunctor<GlPipe>(this, &GlPipe::controlLoop, NULL);
+    mControlFunctor =
+      new vpr::ThreadMemberFunctor<GlPipe>(this, &GlPipe::controlLoop, NULL);
 
-    mActiveThread = new vpr::Thread(memberFunctor);
+    mActiveThread = new vpr::Thread(mControlFunctor);
 
     vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
        << "[vrj::GlPipe::start()] Started control loop. " << mActiveThread
