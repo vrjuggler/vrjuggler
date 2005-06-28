@@ -97,6 +97,7 @@ void DeviceFactory::loadKnownDevices()
 
 #endif /* STATIC_DRIVERS */
 
+   // XXX: Memory leaks!
    DeviceConstructor<SimAnalog>* sim_analog = new DeviceConstructor<SimAnalog>(input_mgr);
    DeviceConstructor<SimDigital>* sim_digital = new DeviceConstructor<SimDigital>(input_mgr);
    DeviceConstructor<SimPosition>* sim_position = new DeviceConstructor<SimPosition>(input_mgr);
