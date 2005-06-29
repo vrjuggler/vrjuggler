@@ -233,11 +233,7 @@ protected:
 protected:
    GlDrawManager();
 
-   virtual ~GlDrawManager()
-   {
-      // XXX: Need to shut down the control thread and free the memory pointed
-      // to by mMemberFunctor and mControlThread.
-   }
+   virtual ~GlDrawManager();
 
    GlDrawManager(const GlDrawManager& o)
       : DrawManager(o)
