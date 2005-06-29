@@ -41,23 +41,28 @@ namespace gadget
 {
 
 BaseDeviceInterface::BaseDeviceInterface()
-: mProxyPtr(NULL), mProxyName("UnInitialized"), mNameSet(false)
+   : mProxyPtr(NULL)
+   , mProxyName("UnInitialized")
+   , mNameSet(false)
 {
-   BaseDeviceInterface::addDevInterface(this);    // Keep reference to the interface
+   // Keep reference to the interface.
+   BaseDeviceInterface::addDevInterface(this);
 }
 
 BaseDeviceInterface::~BaseDeviceInterface()
 {
-   BaseDeviceInterface::removeDevInterface(this);     // Remove it from the list of active interfaces;
+   // Remove it from the list of active interfaces.
+   BaseDeviceInterface::removeDevInterface(this);
 }
 
 
 BaseDeviceInterface::BaseDeviceInterface(const BaseDeviceInterface& other)
-      : mProxyPtr(other.mProxyPtr),
-        mProxyName(other.mProxyName),
-        mNameSet(other.mNameSet)
+   : mProxyPtr(other.mProxyPtr)
+   , mProxyName(other.mProxyName)
+   , mNameSet(other.mNameSet)
 {
-   BaseDeviceInterface::addDevInterface(this);    // Keep reference to the interface
+   // Keep reference to the interface.
+   BaseDeviceInterface::addDevInterface(this);
 }
 
 void BaseDeviceInterface::init(const std::string& proxyName)
@@ -67,15 +72,17 @@ void BaseDeviceInterface::init(const std::string& proxyName)
    refresh();                 // Refresh the name
 }
 
-
-//! NOTE: If the interface does not have an initialized mProxyName, then don't try to refresh it
+// NOTE: If the interface does not have an initialized mProxyName, then
+// don't try to refresh it.
 void BaseDeviceInterface::refresh()
 {
    Proxy* prev_proxy_ptr = mProxyPtr;    // Keep track of previous value
 
    // If it is not initialized, then don't try
-   if(!mNameSet)
-   { return; }
+   if ( ! mNameSet )
+   {
+      return;
+   }
 
    mProxyPtr = InputManager::instance()->getProxy(mProxyName);
 
@@ -91,7 +98,8 @@ void BaseDeviceInterface::refresh()
          << "   referencing device interface will be stupefied to point at dummy device."
          << std::endl << vprDEBUG_FLUSH;
    }
-   else if((NULL != mProxyPtr) && (NULL == prev_proxy_ptr))   // ASSERT: We have just gotten a valid proxy to point to
+   // ASSERT: We have just gotten a valid proxy to point to
+   else if((NULL != mProxyPtr) && (NULL == prev_proxy_ptr))
    {
       const int item_width(25+12);
       //const int type_width(20);
@@ -99,7 +107,8 @@ void BaseDeviceInterface::refresh()
       //vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_STATUS_LVL)
       //   << "DeviceInterface now able to find proxy: "
       //   << mProxyName.c_str() << "               [ "
-      //   << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]" << std::endl << vprDEBUG_FLUSH;
+      //   << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]"
+      //   << std::endl << vprDEBUG_FLUSH;
 
       //std::string device_name("");
       //Input* deviceptr = mProxyPtr->getProxiedInputDevice();
@@ -109,26 +118,31 @@ void BaseDeviceInterface::refresh()
       //}
 
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_STATUS_LVL)
-         << "DeviceInterface found proxy: " << std::setiosflags(std::ios::right)
+         << "DeviceInterface found proxy: "
+         << std::setiosflags(std::ios::right)
          << std::setfill(' ') << std::setw(item_width) << mProxyName
          << std::resetiosflags(std::ios::right) << "  ";
-      vprDEBUG_CONTnl(vprDBG_ALL,vprDBG_CONFIG_STATUS_LVL) << "[ " << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]";
-      vprDEBUG_CONTnl(vprDBG_ALL,vprDBG_CONFIG_STATUS_LVL) << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG_CONTnl(vprDBG_ALL,vprDBG_CONFIG_STATUS_LVL)
+         << "[ " << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]";
+      vprDEBUG_CONTnl(vprDBG_ALL,vprDBG_CONFIG_STATUS_LVL)
+         << std::endl << vprDEBUG_FLUSH;
    }
 }
 
-
 void BaseDeviceInterface::addDevInterface(BaseDeviceInterface* dev)
-{ mAllocatedDevices.push_back(dev); }
+{
+   mAllocatedDevices.push_back(dev);
+}
 
 void BaseDeviceInterface::removeDevInterface(BaseDeviceInterface* dev)
 {
    // Attempt to find the device, if found, erase it, if not, then assert
-   std::vector<BaseDeviceInterface*>::iterator found_dev
-         = std::find(mAllocatedDevices.begin(), mAllocatedDevices.end(), dev);
-   vprASSERT(found_dev != mAllocatedDevices.end() && "Tried to remove non-registered interface");
+   std::vector<BaseDeviceInterface*>::iterator found_dev =
+      std::find(mAllocatedDevices.begin(), mAllocatedDevices.end(), dev);
+   vprASSERT(found_dev != mAllocatedDevices.end() &&
+             "Tried to remove non-registered interface");
 
-   if(mAllocatedDevices.end() != found_dev)
+   if ( mAllocatedDevices.end() != found_dev )
    {
       mAllocatedDevices.erase(found_dev);
    }
@@ -136,13 +150,13 @@ void BaseDeviceInterface::removeDevInterface(BaseDeviceInterface* dev)
 
 void BaseDeviceInterface::refreshAllDevices()
 {
-   for(unsigned int i=0;i<mAllocatedDevices.size();i++)
+   for ( unsigned int i = 0; i < mAllocatedDevices.size(); ++i )
    {
       BaseDeviceInterface* dev = mAllocatedDevices[i];
       dev->refresh();
    }
 }
 
-std::vector<BaseDeviceInterface*> BaseDeviceInterface::mAllocatedDevices = std::vector<BaseDeviceInterface*>();
+std::vector<BaseDeviceInterface*> BaseDeviceInterface::mAllocatedDevices;
 
 } // End of gadget namespace
