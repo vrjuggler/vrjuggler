@@ -56,43 +56,46 @@ namespace gadget
 // Initialize the singleton ptr
 vprSingletonImpWithInitFunc( ProxyFactory, loadKnownProxies );
 
-template <class PROXY>
-ProxyConstructor<PROXY>::ProxyConstructor()
+ProxyConstructorBase::ProxyConstructorBase()
+   : boost::enable_shared_from_this<ProxyConstructorBase>()
 {
-   ProxyFactory::instance()->registerProxy(this);
+   /* Do nothing. */ ;
 }
 
+ProxyConstructorBase::~ProxyConstructorBase()
+{
+   /* Do nothing. */ ;
+}
+
+template<typename PROXY>
+boost::shared_ptr<ProxyConstructorBase> ProxyConstructor<PROXY>::create()
+{
+   boost::shared_ptr< ProxyConstructor<PROXY> > px(new ProxyConstructor());
+   ProxyFactory::instance()->registerProxy(px);
+   return px;
+}
+
+ProxyFactory::~ProxyFactory()
+{
+   mConstructors.clear();
+}
 
 // Register all the proxies that I know about
 void ProxyFactory::loadKnownProxies()
 {
-   // XXX: Memory leaks!
-   ProxyConstructor<AnalogProxy>* analog_proxy = new ProxyConstructor<AnalogProxy>;
-   ProxyConstructor<DigitalProxy>* digital_proxy = new ProxyConstructor<DigitalProxy>;
-   ProxyConstructor<PositionProxy>* pos_proxy = new ProxyConstructor<PositionProxy>;
-   ProxyConstructor<GloveProxy>* glove_proxy = new ProxyConstructor<GloveProxy>;
-//   ProxyConstructor<GestureProxy>* gesture_proxy = new ProxyConstructor<GestureProxy>;
-   ProxyConstructor<KeyboardMouseProxy>* keyboard_mouse_proxy = new ProxyConstructor<KeyboardMouseProxy>;
-   ProxyConstructor<CommandProxy>* command_proxy = new ProxyConstructor<CommandProxy>;
-   ProxyConstructor<StringProxy>* string_proxy = new ProxyConstructor<StringProxy>;
-
-   if( (NULL == analog_proxy) ||
-       (NULL == digital_proxy) ||
-       (NULL == pos_proxy) ||
-       (NULL == glove_proxy) ||
-//       (NULL == gesture_proxy) ||
-       (NULL == keyboard_mouse_proxy) ||
-       (NULL == command_proxy) ||
-       (NULL == string_proxy)  )
-   {
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Error allocating proxy constructor.\n" << vprDEBUG_FLUSH;
-   }
-
+   ProxyConstructor<AnalogProxy>::create();
+   ProxyConstructor<DigitalProxy>::create();
+   ProxyConstructor<PositionProxy>::create();
+   ProxyConstructor<GloveProxy>::create();
+//   ProxyConstructor<GestureProxy>::create();
+   ProxyConstructor<KeyboardMouseProxy>::create();
+   ProxyConstructor<CommandProxy>::create();
+   ProxyConstructor<StringProxy>::create();
 
    jccl::DependencyManager::instance()->registerChecker(&mDepChecker);
 }
 
-void ProxyFactory::registerProxy(ProxyConstructorBase* constructor)
+void ProxyFactory::registerProxy(boost::shared_ptr<ProxyConstructorBase> constructor)
 {
    mConstructors.push_back(constructor);     // Add the constructor to the list
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
@@ -122,7 +125,7 @@ Proxy* ProxyFactory::loadProxy(jccl::ConfigElementPtr element)
    int index = findConstructor(element);
 
    Proxy* new_proxy;
-   ProxyConstructorBase* constructor = mConstructors[index];
+   boost::shared_ptr<ProxyConstructorBase> constructor = mConstructors[index];
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
       << "[gadget::ProxyFactory::loadProxy] Loading proxy: "

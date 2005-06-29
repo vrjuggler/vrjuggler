@@ -36,6 +36,8 @@
 
 #include <gadget/gadgetConfig.h>
 #include <vector>
+#include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 #include <vpr/Util/Singleton.h>
 #include <jccl/Config/ConfigElementPtr.h>
@@ -55,17 +57,17 @@ namespace gadget
  * for each proxy type in the system.
  */
 class ProxyConstructorBase
+   : public boost::enable_shared_from_this<ProxyConstructorBase>
 {
-public:
+protected:
    /**
     * Constructor.
     * @post We have been registered with the proxy factory.
     */
-   ProxyConstructorBase()
-   {;}
+   ProxyConstructorBase();
 
-   virtual ~ProxyConstructorBase()
-   {;}
+public:
+   virtual ~ProxyConstructorBase();
 
    /**
     * Creates the proxy.
@@ -86,7 +88,12 @@ template <class PROXY>
 class ProxyConstructor : public ProxyConstructorBase
 {
 public:
-   ProxyConstructor();
+   static boost::shared_ptr<ProxyConstructorBase> create();
+
+   virtual ~ProxyConstructor()
+   {
+      /* Do nothing. */ ;
+   }
 
    /**
     * Creates the proxy.
@@ -113,6 +120,13 @@ public:
    {
       return PROXY::getElementType();
    }
+
+protected:
+   ProxyConstructor()
+      : ProxyConstructorBase()
+   {
+      /* Do nothing. */ ;
+   }
 };
 
 
@@ -127,6 +141,8 @@ private:
    /** Singleton so must be private. */
    ProxyFactory() {;}
 
+   ~ProxyFactory();
+
    /**
     * Registers the proxies that the system knows about.
     * @post All known proxies are registered with this factory.
@@ -134,7 +150,7 @@ private:
    void loadKnownProxies();
 
 public:
-   void registerProxy(ProxyConstructorBase* constructor);
+   void registerProxy(boost::shared_ptr<ProxyConstructorBase> constructor);
 
    /**
     * Queries if the factory knows about the given proxy.
@@ -167,7 +183,8 @@ private:
 private:
    ProxyDepChecker mDepChecker;
 
-   std::vector<ProxyConstructorBase*> mConstructors;   /**< List of the proxy constructors */
+   /** List of all the proxy constructors. */
+   std::vector< boost::shared_ptr<ProxyConstructorBase> > mConstructors;
 
    vprSingletonHeaderWithInitFunc(ProxyFactory,loadKnownProxies);
 };
