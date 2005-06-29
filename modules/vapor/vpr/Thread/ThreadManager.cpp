@@ -47,23 +47,24 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/Thread/ThreadManager.h>
 
-namespace vpr {
+namespace vpr
+{
 
-//ThreadManager* ThreadManager::_instance = NULL;
 vprSingletonImp(ThreadManager);
-
 
 /**
  * Called when a thread has been added to the system.
  */
 void ThreadManager::addThread(Thread* thread)
 {
-   vprASSERT(mThreadVectorMutex.test()==1); // Assert manager locked
+   vprASSERT(mThreadVectorMutex.test() == 1); // Assert manager locked
    vprASSERT(thread->getTID() >= 0);
 
    // Insert thread into local table
-   while ((int)mThreads.size() <= thread->getTID())
-   { mThreads.push_back(NULL); }
+   while ( (int) mThreads.size() <= thread->getTID() )
+   {
+      mThreads.push_back(NULL);
+   }
    mThreads[thread->getTID()] = thread;
 
    debugDump();               // Dump current state
@@ -75,10 +76,9 @@ void ThreadManager::addThread(Thread* thread)
 void ThreadManager::removeThread(Thread* thread)
 {
    vprASSERT(mThreadVectorMutex.test()==1); // Assert manager locked
-   vprASSERT((thread->getTID() >= 0) && (thread->getTID() < (int)mThreads.size()));
-   mThreads[(unsigned int)thread->getTID()] = NULL;
+   vprASSERT(thread->getTID() >= 0 && thread->getTID() < (int) mThreads.size());
+   mThreads[(unsigned int) thread->getTID()] = NULL;
 }
-
 
 /**
  * Dumps the state of the manager to debug.
@@ -88,20 +88,18 @@ void ThreadManager::debugDump()
    vprDEBUG(vprDBG_VPR, vprDBG_VERB_LVL)
       << "------- Thread Manager DUMP -------\n" << vprDEBUG_FLUSH;
    vprDEBUG_BEGIN(vprDBG_VPR, vprDBG_STATE_LVL) << "--- Thread List ----\n";
-   for (unsigned int i=0;i<mThreads.size();i++)
+   for ( unsigned int i = 0; i < mThreads.size(); ++i )
    {
       if (mThreads[i] != NULL)
       {
-         vprDEBUGnl(vprDBG_VPR, vprDBG_STATE_LVL) << i << ": ["
-                                                << (void*)mThreads[i] << "] "
-                                                //<< std::endl;
-                                                << mThreads[i] << std::endl;
+         vprDEBUGnl(vprDBG_VPR, vprDBG_STATE_LVL)
+            << i << ": [" << (void*)mThreads[i] << "] " << mThreads[i]
+            << std::endl;
       }
       else
       {
-         vprDEBUGnl(vprDBG_VPR, vprDBG_STATE_LVL) << i << ": ["
-                                                << (void*)mThreads[i]
-                                                << "] No thread\n";
+         vprDEBUGnl(vprDBG_VPR, vprDBG_STATE_LVL)
+            << i << ": [" << (void*)mThreads[i] << "] No thread\n";
       }
    }
 
@@ -109,4 +107,4 @@ void ThreadManager::debugDump()
                                               << vprDEBUG_FLUSH;
 }
 
-}; // End of vpr namespace
+} // End of vpr namespace
