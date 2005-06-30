@@ -149,8 +149,11 @@ void AudiereSoundImplementation::trigger(const std::string& alias,
  //     mCurrentTrack->play();
       // Set audiere to loop indefinly if that is requested other wise play
       // only once.
-      trackMap[alias]->setRepeat(looping == -1);
-      trackMap[alias]->play();
+      if ( trackMap.count(alias) > 0 )
+      {
+         trackMap[alias]->setRepeat(looping == -1);
+         trackMap[alias]->play();
+      }
    }
    else
    {
