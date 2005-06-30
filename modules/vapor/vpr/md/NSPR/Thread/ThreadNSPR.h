@@ -290,9 +290,20 @@ private:
     */
    void startThread(void* null_param);
 
-   PRThread*          mThread;    /**<  PRThread data structure for this thread */
-   BaseThreadFunctor* mUserThreadFunctor;     /**< The functor to call when
-                                                   the thread starts */
+   PRThread* mThread;    /**<  PRThread data structure for this thread */
+
+   /** The functor to call when the thread starts. */
+   vpr::BaseThreadFunctor* mUserThreadFunctor;
+
+   /**
+    * Flag indicating if we allocated mUserThreadFunctor and therefore must
+    * delete it ourselves.
+    */
+   bool mDeleteFunctor;
+
+   /** Memory handed off to PR_CreateThread() as the thread function. */
+   vpr::ThreadMemberFunctor<vpr::ThreadNSPR>* mStartFunctor;
+
    VPRThreadPriority  mPriority;
    VPRThreadScope     mScope;
    VPRThreadState     mState;
