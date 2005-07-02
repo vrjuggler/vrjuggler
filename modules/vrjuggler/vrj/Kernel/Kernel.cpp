@@ -620,7 +620,6 @@ void Kernel::stopDrawManager()
    if(mDrawManager != NULL)
    {
       mDrawManager->closeAPI();
-      delete mDrawManager;
       mDrawManager = NULL;
       mDisplayManager->setDrawManager(NULL);
    }
