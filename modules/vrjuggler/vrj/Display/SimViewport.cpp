@@ -46,6 +46,21 @@
 namespace vrj
 {
 
+SimViewport::~SimViewport()
+{
+   if ( NULL != mLeftProj )
+   {
+      delete mLeftProj;
+      mLeftProj = NULL;
+   }
+
+   if ( NULL != mRightProj )
+   {
+      delete mRightProj;
+      mRightProj = NULL;
+   }
+}
+
    /**  Configure the simulator */
 void SimViewport::config(jccl::ConfigElementPtr element)
 {
@@ -58,11 +73,21 @@ void SimViewport::config(jccl::ConfigElementPtr element)
 
    const float vert_fov = element->getProperty<float>("vertical_fov");
 
+   if ( NULL != mLeftProj )
+   {
+      delete mLeftProj;
+   }
+
    mLeftProj = new CameraProjection;
    ((CameraProjection*) mLeftProj)->setVerticalFOV(vert_fov);
    mLeftProj->config(element);
    mLeftProj->setEye(Projection::LEFT);
    mLeftProj->setViewport(this);
+
+   if ( NULL != mRightProj )
+   {
+      delete mRightProj;
+   }
 
    mRightProj = new CameraProjection;
    ((CameraProjection*) mRightProj)->setVerticalFOV(vert_fov);

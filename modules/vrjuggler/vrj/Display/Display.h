@@ -67,8 +67,7 @@ public:
       ;
    }
 
-   virtual ~Display()
-   {;}
+   virtual ~Display();
 
 public:
    /**

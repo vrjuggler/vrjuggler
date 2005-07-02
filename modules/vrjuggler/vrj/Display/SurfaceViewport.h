@@ -54,10 +54,12 @@ namespace vrj
 class SurfaceViewport : public Viewport
 {
 public:
-   SurfaceViewport() :  mTracked(false)
+   SurfaceViewport()
+      : Viewport()
+      , mTracked(false)
    {;}
 
-   virtual ~SurfaceViewport() {}
+   virtual ~SurfaceViewport();
 
 public:
    /**
