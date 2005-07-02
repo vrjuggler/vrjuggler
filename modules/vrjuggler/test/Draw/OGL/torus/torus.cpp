@@ -80,14 +80,9 @@ int main(int argc, char* argv[])
 
    kernel->setApplication(application);         // Set application
 
-   /*
-   while(1)
-   {  
-      vpr::Thread::yield();
-   }
-   */
-
    kernel->waitForKernelStop();
+
+   delete application;
 
    return 0;
 }

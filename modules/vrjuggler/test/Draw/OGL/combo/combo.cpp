@@ -101,5 +101,9 @@ int main(int argc, char* argv[])
    kernel->stop();
    kernel->waitForKernelStop();
 
+   delete wand_app;
+   delete cubes_app;
+   delete torus_app;
+
    return 0;
 }
