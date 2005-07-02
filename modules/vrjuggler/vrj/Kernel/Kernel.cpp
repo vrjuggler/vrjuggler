@@ -87,11 +87,12 @@ int Kernel::start()
    initSignalButtons();    // Initialize the signal buttons that may be pressed
 
    // Create a new thread to handle the control
-   vpr::ThreadMemberFunctor<Kernel>* memberFunctor =
-      new vpr::ThreadMemberFunctor<Kernel>(this, &Kernel::controlLoop, NULL);
+   mControlFunctor = new vpr::ThreadMemberFunctor<Kernel>(this,
+                                                          &Kernel::controlLoop,
+                                                          NULL);
 
    // mControlThread is set in controlLoop().
-   new vpr::Thread(memberFunctor);
+   new vpr::Thread(mControlFunctor);
 
    vprDEBUG(vrjDBG_KERNEL,vprDBG_STATE_LVL)
       << "vrj::Kernel::start(): Just started control loop." << std::endl
@@ -650,6 +651,7 @@ Kernel::Kernel()
    , mNewAppSet(false)
    , mIsRunning(false)
    , mExitFlag(false)
+   , mControlFunctor(NULL)
    , mControlThread(NULL)
    , mInputManager(NULL)
    , mDrawManager(NULL)
@@ -743,6 +745,34 @@ Kernel::Kernel()
 
       jccl::ParseUtil::setCfgSearchPath(cfg_path);
    }
+}
+
+Kernel::~Kernel()
+{
+   if ( NULL != mPerformanceMediator )
+   {
+      delete mPerformanceMediator;
+      mPerformanceMediator = NULL;
+   }
+
+   if ( NULL != mControlThread )
+   {
+      delete mControlThread;
+      mControlThread = NULL;
+   }
+
+   if ( NULL != mControlFunctor )
+   {
+      delete mControlFunctor;
+      mControlFunctor = NULL;
+   }
+
+   for ( std::vector<vrj::User*>::iterator i = mUsers.begin(); i != mUsers.end(); ++i )
+   {
+      delete *i;
+   }
+
+   mUsers.clear();
 }
 
 }
