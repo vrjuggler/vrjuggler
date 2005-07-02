@@ -76,6 +76,27 @@ GlDrawManager::GlDrawManager()
 {
 }
 
+GlDrawManager::~GlDrawManager()
+{
+   if ( mRunning )
+   {
+      closeAPI();
+      mControlThread->join();
+   }
+
+   if ( NULL != mControlThread )
+   {
+      delete mControlThread;
+      mControlThread = NULL;
+   }
+
+   if ( NULL != mMemberFunctor )
+   {
+      delete mMemberFunctor;
+      mMemberFunctor = NULL;
+   }
+}
+
 /** Sets the app the draw should interact with. */
 void GlDrawManager::setApp(App* _app)
 {
