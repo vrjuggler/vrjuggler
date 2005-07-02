@@ -779,9 +779,9 @@ void OpenALSoundImplementation::unbind( const std::string& alias )
       }
       else
       {
-         vpr::DebugOutputGuard output7(snxDBG, vprDBG_CONFIG_LVL,
-                                       std::string("ERROR: can't trigger on next bind. alias not registered when it should be\n"),
-                                       std::string("\n"));
+         vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+            << "ERROR: can't trigger on next bind. alias not registered "
+            << "when it should be\n" << vprDEBUG_FLUSH;
       }
    }
 
@@ -793,17 +793,15 @@ void OpenALSoundImplementation::unbind( const std::string& alias )
       err = alGetError();
       if (err != AL_NO_ERROR)
       {
-         vpr::DebugOutputGuard output8(snxDBG, vprDBG_CONFIG_LVL,
-                                       std::string("ERROR: unbind() deleting source\n"),
-                                       std::string("\n"));
+         vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+            << "ERROR: unbind() deleting source\n" << vprDEBUG_FLUSH;
       }
       alDeleteBuffers( 1, &mBindLookup[alias].buffer );
       err = alGetError();
       if (err != AL_NO_ERROR)
       {
-         vpr::DebugOutputGuard output9(snxDBG, vprDBG_CONFIG_LVL,
-                                       std::string("ERROR: unbind() deleting buffer\n"),
-                                       std::string("\n"));
+         vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+            << "ERROR: unbind() deleting buffer\n" << vprDEBUG_FLUSH;
       }
       mBindLookup.erase( alias );
    }
