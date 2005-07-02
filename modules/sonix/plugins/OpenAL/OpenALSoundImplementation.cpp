@@ -106,40 +106,33 @@ namespace snx
 snx::SoundFactoryReg<OpenALSoundImplementation> openAlRegistrator( "OpenAL" );
 #endif
 
-void OpenALSoundImplementation::step( const float & timeElapsed )
+OpenALSoundImplementation::OpenALSoundImplementation()
+   : snx::SoundImplementation()
+   , mBindLookup()
+   , mContextId(NULL)
+   , mDev(NULL)
 {
-   vprASSERT(mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function");
-   
-   snx::SoundImplementation::step( timeElapsed );
-}
-
-
-void OpenALSoundImplementation::remove( const std::string& alias )
-{
-   snx::SoundImplementation::remove( alias );
-}
-OpenALSoundImplementation::OpenALSoundImplementation() : snx::SoundImplementation(), mBindLookup(), mContextId( NULL ), mDev( NULL )
-{
-   // TODO: set up the defaults for openal...
-   //mSoundAPIInfo.
+   /* Do nothing. */ ;
 }
 
 OpenALSoundImplementation::~OpenALSoundImplementation()
 {
    this->shutdownAPI();
-}  
+}
 
 /**
  * @input alias of the sound to trigger, and number of times to play
  * @preconditions alias does not have to be associated with a loaded sound.
- * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
+ * @postconditions if it is, then the loaded sound is triggered.  if it isn't
+ *                 then nothing happens.
  * @semantics Triggers a sound
  */
-void OpenALSoundImplementation::trigger( const std::string& alias, const int& looping )
+void OpenALSoundImplementation::trigger(const std::string& alias,
+                                        const int& looping)
 {
-   
-   vprASSERT(mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function");
-   
+   vprASSERT(mContextId != NULL && mDev != NULL &&
+             "startAPI must be called prior to this function");
+
    snx::SoundImplementation::trigger( alias, looping );
 
    // if sound data hasn't been loaded into sound API yet, then do so
@@ -147,7 +140,7 @@ void OpenALSoundImplementation::trigger( const std::string& alias, const int& lo
    {
       this->bind( alias );
    }
-   
+
    // if data is bound (bind() succeeded), then play it.
    if (mBindLookup.count( alias ) > 0)
    {
@@ -156,7 +149,7 @@ void OpenALSoundImplementation::trigger( const std::string& alias, const int& lo
       bool is_paused = this->isPaused( alias );
       if (is_paused || retriggerable || is_not_playing)
       {
-         // @todo: handle ability to loop openal sounds n number of times.  
+         // @todo: handle ability to loop openal sounds n number of times.
          //        only once or infinite is supported by OpenAL.
          if (looping == -1 || looping > 1)
          {
@@ -166,7 +159,7 @@ void OpenALSoundImplementation::trigger( const std::string& alias, const int& lo
          {
             alSourcei( mBindLookup[alias].source, AL_LOOPING, false );
          }
-         
+
          alSourcePlay( mBindLookup[alias].source );
       }
    }
@@ -174,11 +167,13 @@ void OpenALSoundImplementation::trigger( const std::string& alias, const int& lo
 
 bool OpenALSoundImplementation::isPlaying( const std::string& alias )
 {
-   vprASSERT(mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function");
-   
+   vprASSERT(mContextId != NULL && mDev != NULL &&
+             "startAPI must be called prior to this function");
+
    if (mBindLookup.count( alias ) > 0)
    {
-      vprASSERT(alIsSource(mBindLookup[alias].source) != AL_FALSE && "weird, shouldn't happen...\n");
+      vprASSERT(alIsSource(mBindLookup[alias].source) != AL_FALSE &&
+                "weird, shouldn't happen...\n");
 
       ALint state( AL_INITIAL ); // initialized
 
@@ -188,7 +183,7 @@ bool OpenALSoundImplementation::isPlaying( const std::string& alias )
       alGetSourceiv(mBindLookup[alias].source, AL_SOURCE_STATE, &state);
 #endif
 
-      switch(state) 
+      switch(state)
       {
          case AL_PLAYING:
          case AL_PAUSED:
@@ -205,18 +200,22 @@ bool OpenALSoundImplementation::isPlaying( const std::string& alias )
 /** if the sound is paused, then return true. */
 bool OpenALSoundImplementation::isPaused( const std::string& alias )
 {
-   vprASSERT(mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function");
-   
+   vprASSERT(mContextId != NULL && mDev != NULL &&
+             "startAPI must be called prior to this function");
+
    if (mBindLookup.count( alias ) > 0)
    {
-      vprASSERT(alIsSource(mBindLookup[alias].source) != AL_FALSE && "weird, shouldn't happen...\n");
+      vprASSERT(alIsSource(mBindLookup[alias].source) != AL_FALSE &&
+                "weird, shouldn't happen...\n");
       ALint state( AL_INITIAL ); // initialized
 #if defined(VPR_OS_Windows) || defined(VPR_OS_Darwin)
       alGetSourcei(mBindLookup[alias].source, AL_SOURCE_STATE, &state);
 #else
       alGetSourceiv(mBindLookup[alias].source, AL_SOURCE_STATE, &state);
 #endif
-      //std::cout<<"state: "<<state<<(AL_PAUSED == state)<<(AL_PLAYING == state)<<(AL_STOPPED == state)<<std::endl;
+      //std::cout << "state: " << state << (AL_PAUSED == state)
+      //          << (AL_PLAYING == state) << (AL_STOPPED == state)
+      //          << std::endl;
       return bool( AL_PAUSED == state );
    }
 
@@ -228,8 +227,9 @@ bool OpenALSoundImplementation::isPaused( const std::string& alias )
  */
 void OpenALSoundImplementation::pause( const std::string& alias )
 {
-   vprASSERT(mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function");
-   
+   vprASSERT(mContextId != NULL && mDev != NULL &&
+             "startAPI must be called prior to this function");
+
    if (mBindLookup.count( alias ) > 0)
    {
       alSourcePause( mBindLookup[alias].source );
@@ -241,8 +241,9 @@ void OpenALSoundImplementation::pause( const std::string& alias )
  */
 void OpenALSoundImplementation::unpause( const std::string& alias )
 {
-   vprASSERT(mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function");
-   
+   vprASSERT(mContextId != NULL && mDev != NULL &&
+             "startAPI must be called prior to this function");
+
    if (mBindLookup.count( alias ) > 0)
    {
       if (this->isPaused( alias ))
@@ -258,8 +259,9 @@ void OpenALSoundImplementation::unpause( const std::string& alias )
  */
 void OpenALSoundImplementation::stop( const std::string& alias )
 {
-   vprASSERT(mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function");
-   
+   vprASSERT(mContextId != NULL && mDev != NULL &&
+             "startAPI must be called prior to this function");
+
    snx::SoundImplementation::stop( alias );
 
    if (mBindLookup.count( alias ) > 0)
@@ -274,7 +276,8 @@ void OpenALSoundImplementation::stop( const std::string& alias )
  * when listener moves...
  * or is the sound positional - changes volume as listener nears or retreats..
  */
-void OpenALSoundImplementation::setAmbient( const std::string& alias, bool ambient )
+void OpenALSoundImplementation::setAmbient(const std::string& alias,
+                                           bool ambient)
 {
    snx::SoundImplementation::setAmbient( alias, ambient );
    if (mBindLookup.count( alias ) > 0 && mSounds.count( alias ) > 0)
@@ -290,7 +293,7 @@ void OpenALSoundImplementation::setAmbient( const std::string& alias, bool ambie
          float pos[3] = { 0, 0, 0 };
          alSourcef( mBindLookup[alias].source, AL_SOURCE_RELATIVE, AL_FALSE );
          alSourcefv( mBindLookup[alias].source, AL_POSITION, pos );
-      }      
+      }
    }
 }
 
@@ -298,32 +301,42 @@ void OpenALSoundImplementation::setAmbient( const std::string& alias, bool ambie
  * associate a name (alias) to the description
  * @preconditions provide an alias and a SoundInfo which describes the sound
  * @postconditions alias will point to loaded sound data
- * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
+ * @semantics associate an alias to sound data.  later this alias can be used
+ *            to operate on this sound data.
  */
-void OpenALSoundImplementation::configure( const std::string& alias, const snx::SoundInfo& description )
+void OpenALSoundImplementation::configure(const std::string& alias,
+                                          const snx::SoundInfo& description)
 {
    snx::SoundImplementation::configure( alias, description );
 }
 
-/**
- * set sound's 3D position 
- */
-void OpenALSoundImplementation::setPosition( const std::string& alias, float x, float y, float z )
+void OpenALSoundImplementation::remove(const std::string& alias)
 {
-   vprASSERT(mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function");
+   snx::SoundImplementation::remove( alias );
+}
+
+/**
+ * set sound's 3D position
+ */
+void OpenALSoundImplementation::setPosition(const std::string& alias, float x,
+                                            float y, float z)
+{
+   vprASSERT(mContextId != NULL && mDev != NULL &&
+             "startAPI must be called prior to this function");
    snx::SoundImplementation::setPosition( alias, x, y, z );
 
    if (mBindLookup.count( alias ) > 0)
    {
       if (this->isAmbient( alias ) == false)
       {
-         // @todo openal has a bug where SOURCE_RELATIVE set to true causes 
+         // @todo openal has a bug where SOURCE_RELATIVE set to true causes
          // GAIN_LINEAR_LOKI not to work at position == 0,0,0
-         
-         // @todo openal also has a bug where SOURCE_RELATIVE set to true causes
-         // PITCH not to work at position != 0,0,0
-         
-         // this is not a good thing, since we can't write a hack that will work!...
+
+         // @todo openal also has a bug where SOURCE_RELATIVE set to true
+         // causes PITCH not to work at position != 0,0,0
+
+         // this is not a good thing, since we can't write a hack that will
+         // work!...
 
          float pos[3] = { x, y, z };
          alSourcefv( mBindLookup[alias].source, AL_POSITION, pos );
@@ -337,7 +350,8 @@ void OpenALSoundImplementation::setPosition( const std::string& alias, float x, 
  * @input alias is a name that has been associate()d with some sound data
  * @output x,y,z are returned in OpenGL coordinates.
  */
-void OpenALSoundImplementation::getPosition( const std::string& alias, float& x, float& y, float& z )
+void OpenALSoundImplementation::getPosition(const std::string& alias,
+                                            float& x, float& y, float& z)
 {
    snx::SoundImplementation::getPosition( alias, x, y, z );
 }
@@ -345,10 +359,11 @@ void OpenALSoundImplementation::getPosition( const std::string& alias, float& x,
 /**
  * set the position of the listener
  */
-void OpenALSoundImplementation::setListenerPosition( const gmtl::Matrix44f& mat )
+void OpenALSoundImplementation::setListenerPosition(const gmtl::Matrix44f& mat)
 {
-   vprASSERT(mContextId != NULL && mDev != NULL && "startAPI must be called prior to this function");
-   
+   vprASSERT(mContextId != NULL && mDev != NULL &&
+             "startAPI must be called prior to this function");
+
    snx::SoundImplementation::setListenerPosition( mat );
 
    // extract position from the matrix
@@ -363,8 +378,10 @@ void OpenALSoundImplementation::setListenerPosition( const gmtl::Matrix44f& mat 
    gmtl::xform( up_modified, mat, up );
 
    // openal wants a pair of 3 tuples: { forward, up }
-   ALfloat orientation[]  = { forward_modified[0], forward_modified[1], forward_modified[2],
-                             up_modified[0], up_modified[1], up_modified[2] };
+   ALfloat orientation[] =
+      { forward_modified[0], forward_modified[1], forward_modified[2],
+        up_modified[0], up_modified[1], up_modified[2]
+      };
 
    // set position
    alListenerfv( AL_POSITION, position.getData() );
@@ -382,21 +399,25 @@ void OpenALSoundImplementation::getListenerPosition( gmtl::Matrix44f& mat )
 }
 
 /** 1 is no change.  2 is really high, 0 is really low. */
-void OpenALSoundImplementation::setPitchBend( const std::string& alias, float amount )
+void OpenALSoundImplementation::setPitchBend(const std::string& alias,
+                                             float amount)
 {
    snx::SoundImplementation::setPitchBend( alias, amount );
    if (mBindLookup.count( alias ) > 0 && mSounds.count( alias ) > 0)
    {
       // zero or less is not legal.
-      if (amount <= 0.0f) 
+      if (amount <= 0.0f)
+      {
          amount = 0.001f;
-      
+      }
+
       alSourcef( mBindLookup[alias].source, AL_PITCH, amount );
    }
 }
 
 /** 0 - 1.  use 0 for mute, use 1 for unmute... */
-void OpenALSoundImplementation::setVolume( const std::string& alias, float amount )
+void OpenALSoundImplementation::setVolume(const std::string& alias,
+                                          float amount)
 {
    snx::SoundImplementation::setVolume( alias, amount );
    if (mBindLookup.count( alias ) > 0 && mSounds.count( alias ) > 0)
@@ -405,12 +426,13 @@ void OpenALSoundImplementation::setVolume( const std::string& alias, float amoun
       alSourcef( mBindLookup[alias].source, AL_GAIN, amount );
 #else
       alSourcef( mBindLookup[alias].source, AL_GAIN_LINEAR_LOKI, amount );
-#endif      
+#endif
    }
 }
 
 /** 1 is no change.  0 is total cutoff. */
-void OpenALSoundImplementation::setCutoff( const std::string& alias, float amount )
+void OpenALSoundImplementation::setCutoff(const std::string& alias,
+                                          float amount)
 {
    snx::SoundImplementation::setCutoff( alias, amount );
    if (mBindLookup.count( alias ) > 0 && mSounds.count( alias ) > 0)
@@ -420,25 +442,27 @@ void OpenALSoundImplementation::setCutoff( const std::string& alias, float amoun
       alSourcef( mBindLookup[alias].source, AL_GAIN, amount );
 #else
       alSourcef( mBindLookup[alias].source, AL_GAIN_LINEAR_LOKI, amount );
-#endif      
+#endif
    }
-}  
-
+}
 
 /**
  * start the sound API, creating any contexts or other configurations at startup
  * @postconditions sound API is ready to go.
- * 
- * @semantics this function should be called before using the other functions in the class.
+ *
+ * @semantics this function should be called before using the other functions
+ *            in the class.
  */
 int OpenALSoundImplementation::startAPI()
 {
    if (mContextId == NULL && mDev == NULL)
    {
       mDev = alcOpenDevice( NULL );
-      if (mDev == NULL) 
+      if (mDev == NULL)
       {
-         vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| ERROR: Could not open device\n") << vprDEBUG_FLUSH;
+         vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+            << clrOutNORM(clrYELLOW, "OpenAL| ERROR: Could not open device\n")
+            << vprDEBUG_FLUSH;
          return 0;
       }
 
@@ -447,17 +471,18 @@ int OpenALSoundImplementation::startAPI()
 
       // create context
       mContextId = alcCreateContext( mDev, attrlist );
-      if (mContextId == NULL) 
+      if (mContextId == NULL)
       {
          std::string err = (char*)alGetString( alcGetError( mDev ) );
-         vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| ERROR:")
+         vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+            << clrOutNORM(clrYELLOW, "OpenAL| ERROR:")
             << "Could not open context: " << err << "\n" << vprDEBUG_FLUSH;
          return 0;
       }
 
       // make context active...
       alcMakeContextCurrent( mContextId );
-      
+
       vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
          << clrOutNORM(clrYELLOW, "OpenAL| NOTICE:")
          << " OpenAL API started: [dev=0x" << std::hex << mDev
@@ -465,11 +490,11 @@ int OpenALSoundImplementation::startAPI()
    }
    else
    {
-      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| WARNING: startAPI called when API is already started\n") << vprDEBUG_FLUSH;
-   }      
+      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+         << clrOutNORM(clrYELLOW, "OpenAL| WARNING: startAPI called when API is already started\n")
+         << vprDEBUG_FLUSH;
+   }
 
-  
-   
    // init the listener...
    this->setListenerPosition( mListenerPos );
 
@@ -481,7 +506,8 @@ int OpenALSoundImplementation::startAPI()
 /**
  * kill the sound API, deallocating any sounds, etc...
  * @postconditions sound API is ready to go.
- * @semantics this function could be called any time, the function could be called multiple times, so it should be smart.
+ * @semantics this function could be called any time, the function could be
+ *            called multiple times, so it should be smart.
  */
 void OpenALSoundImplementation::shutdownAPI()
 {
@@ -494,7 +520,7 @@ void OpenALSoundImplementation::shutdownAPI()
          << vprDEBUG_FLUSH;
       return;
    }
-   
+
    this->unbindAll();
 
    if (mContextId != NULL)
@@ -514,7 +540,7 @@ void OpenALSoundImplementation::shutdownAPI()
       << clrOutNORM(clrYELLOW, "OpenAL| NOTICE:")
       << " OpenAL API closed: [dev=0x" << std::hex << mDev << ",ctx=0x"
       << mContextId << std::dec << "]\n" << vprDEBUG_FLUSH;
-}   
+}
 
 /**
  * clear all associate()tions.
@@ -523,13 +549,7 @@ void OpenALSoundImplementation::shutdownAPI()
 void OpenALSoundImplementation::clear()
 {
    snx::SoundImplementation::clear();
-}   
-
-
-
-
-
-
+}
 
 /**
  * load/allocate the sound data this alias refers to the sound API
@@ -537,25 +557,29 @@ void OpenALSoundImplementation::clear()
  */
 void OpenALSoundImplementation::bind( const std::string& alias )
 {
-   // need to initialize the get error thingie, otherwise it can misreport errors...
-   int err = alGetError(); 
+   // need to initialize the get error thingie, otherwise it can misreport
+   // errors...
+   int err = alGetError();
 
    if (this->isStarted() == false)
    {
-      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "[snx]OpenAL| ERROR: API not started, bind() failed\n") << vprDEBUG_FLUSH;
+      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+         << clrOutNORM(clrYELLOW, "[snx]OpenAL| ERROR: API not started, bind() failed\n")
+         << vprDEBUG_FLUSH;
       return;
    }
-   
+
    snx::SoundInfo& soundInfo = this->lookup( alias );
 
    // if alias is already bound, then unbind it...
-   // TODO: we want a way to force a rebind, but do we _always_ want to force it?
+   // TODO: we want a way to force a rebind, but do we _always_ want to force
+   // it?
    if (mBindLookup.count( alias ) > 0)
    {
       this->unbind( alias );
    }
 
-   // load the data 
+   // load the data
    switch (soundInfo.datasource)
    {
       default:
@@ -565,7 +589,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          ALuint sourceID( 0 );
 
          // open the file as readonly binary
-         if (!snx::FileIO::fileExists( soundInfo.filename.c_str() )) 
+         if (!snx::FileIO::fileExists( soundInfo.filename.c_str() ))
          {
             vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
                << clrOutNORM(clrYELLOW, "ERROR:") <<" OpenAL| alias '"
@@ -577,23 +601,27 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          // read the data from the file.
          vpr::DebugOutputGuard output1(snxDBG, vprDBG_CONFIG_LVL,
                                        std::string("[snx]OpenAL| NOTIFY: loading: ") +
-                                          soundInfo.filename+std::string("... \n"),
+                                          soundInfo.filename +
+                                          std::string("... \n"),
                                        std::string("\n"));
 
-         // This file loading bit is complicated because only the Linux version of
-         // OpenAL defines AL_FORMAT_WAVE_EXT.  Other platforms set the format
-         // specifier in alut helper functions.
+         // This file loading bit is complicated because only the Linux version
+         // of OpenAL defines AL_FORMAT_WAVE_EXT.  Other platforms set the
+         // format specifier in alut helper functions.
          ALenum format;
 #if defined(VPR_OS_Windows) || defined(VPR_OS_Darwin)
          ALvoid* data;
          ALsizei size, freq;
 
-         // Macintosh does not have the loop parameter in its alutLoadWAVFile().
+         // Macintosh does not have the loop parameter in its
+         // alutLoadWAVFile().
 #if defined(VPR_OS_Windows)
          ALboolean loop;
-         alutLoadWAVFile((ALbyte*) soundInfo.filename.c_str(), &format, &data, &size, &freq, &loop);
+         alutLoadWAVFile((ALbyte*) soundInfo.filename.c_str(), &format, &data,
+                         &size, &freq, &loop);
 #elif defined(VPR_OS_Darwin)
-         alutLoadWAVFile((ALbyte*) soundInfo.filename.c_str(), &format, &data, &size, &freq);
+         alutLoadWAVFile((ALbyte*) soundInfo.filename.c_str(), &format, &data,
+                         &size, &freq);
 #endif
 
          // Copy the memory in data into mBindLookup[alias].data.
@@ -612,8 +640,9 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          if (err != AL_NO_ERROR)
          {
             vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
-               << clrOutNORM(clrYELLOW, "ERROR:") << "Could not gen a buffer [err="
-               << err << "]\n" << vprDEBUG_FLUSH;
+               << clrOutNORM(clrYELLOW, "ERROR:")
+               << "Could not gen a buffer [err=" << err << "]\n"
+               << vprDEBUG_FLUSH;
             switch (err)
             {
                case AL_INVALID_VALUE:
@@ -635,12 +664,14 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          }
 
          // put the data into an OpenAL buffer
-         alBufferData(bufferID, format, &(mBindLookup[alias].data[0]), mBindLookup[alias].data.size(), 0);
+         alBufferData(bufferID, format, &(mBindLookup[alias].data[0]),
+                      mBindLookup[alias].data.size(), 0);
          err = alGetError();
          if (err != AL_NO_ERROR)
          {
             vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
-               << clrOutNORM(clrYELLOW, "OpenAL| ERROR:") <<" Could not buffer data [bufferID="
+               << clrOutNORM(clrYELLOW, "OpenAL| ERROR:")
+               << " Could not buffer data [bufferID="
                << bufferID << ",err=" << err << "]\n" << vprDEBUG_FLUSH;
             switch (err)
             {
@@ -671,21 +702,24 @@ void OpenALSoundImplementation::bind( const std::string& alias )
                      << clrOutNORM(clrYELLOW, "       unknown error\n")
                      << vprDEBUG_FLUSH;
                   break;
-            }            
+            }
             alDeleteBuffers( 1, &bufferID );
             mBindLookup.erase( alias );
             break;
          }
          else
          {
-            //std::cerr << "DEBUG: buffered data success [bufferID="<<bufferID<<"]\n" << std::flush;
+            //std::cerr << "DEBUG: buffered data success [bufferID="
+            //          << bufferID << "]\n";
          }
 
          // associate a source with the buffer
          alGenSources( 1, &sourceID );
          if (alGetError() != AL_NO_ERROR)
          {
-            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| ERROR: Could not generate a source\n") << vprDEBUG_FLUSH;
+            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+               << clrOutNORM(clrYELLOW, "OpenAL| ERROR: Could not generate a source\n")
+               << vprDEBUG_FLUSH;
             alDeleteBuffers( 1, &bufferID );
             mBindLookup.erase( alias );
             break;
@@ -695,14 +729,15 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          // store the resource IDs for later use...
          mBindLookup[alias].source = sourceID;
          mBindLookup[alias].buffer = bufferID;
-         
+
          // set some defaults...
          alSourcei( sourceID, AL_LOOPING, AL_FALSE );
          alSourcef( sourceID, AL_MIN_GAIN, 0.0f ); // off
          alSourcef( sourceID, AL_MAX_GAIN, 1.0f ); // full
-         
+
          this->setAmbient( alias, soundInfo.ambient );
-         this->setPosition( alias, soundInfo.position[0], soundInfo.position[1], soundInfo.position[2] );
+         this->setPosition(alias, soundInfo.position[0],
+                           soundInfo.position[1], soundInfo.position[2]);
          break;
       }
    }
@@ -711,10 +746,12 @@ void OpenALSoundImplementation::bind( const std::string& alias )
    if (soundInfo.triggerOnNextBind == true)
    {
       soundInfo.triggerOnNextBind = false; // done...
-      vpr::DebugOutputGuard output6(snxDBG, vprDBG_CONFIG_LVL, std::string("NOTIFY: triggering reconfigured sound\n"), std::string("\n"));
+      vpr::DebugOutputGuard output6(snxDBG, vprDBG_CONFIG_LVL,
+                                    std::string("NOTIFY: triggering reconfigured sound\n"),
+                                    std::string("\n"));
       this->trigger( alias, soundInfo.repeat );
    }
-}   
+}
 
 /**
  * unload/deallocate the sound data this alias refers from the sound API
@@ -724,26 +761,30 @@ void OpenALSoundImplementation::unbind( const std::string& alias )
 {
    if (this->isStarted() == false)
    {
-      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "[snx]OpenAL| ERROR: API not started, unbind() failed\n") << vprDEBUG_FLUSH;
+      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+         << clrOutNORM(clrYELLOW, "[snx]OpenAL| ERROR: API not started, unbind() failed\n")
+         << vprDEBUG_FLUSH;
       return;
    }
- 
+
    // is it currently playing?  if so, stop it
    if (this->isPlaying( alias ) == true)
    {
       this->stop( alias );
-      
+
       // should trigger next time, since we just stopped it
       if (mSounds.count( alias ) > 0)
       {
-         mSounds[alias].triggerOnNextBind = true; 
+         mSounds[alias].triggerOnNextBind = true;
       }
       else
       {
-         vpr::DebugOutputGuard output7(snxDBG, vprDBG_CONFIG_LVL, std::string("ERROR: can't trigger on next bind. alias not registered when it should be\n"), std::string("\n"));
-      }      
+         vpr::DebugOutputGuard output7(snxDBG, vprDBG_CONFIG_LVL,
+                                       std::string("ERROR: can't trigger on next bind. alias not registered when it should be\n"),
+                                       std::string("\n"));
+      }
    }
-   
+
    // if alias is bound, then unbind it...
    if (mBindLookup.count( alias ) > 0)
    {
@@ -752,18 +793,30 @@ void OpenALSoundImplementation::unbind( const std::string& alias )
       err = alGetError();
       if (err != AL_NO_ERROR)
       {
-         vpr::DebugOutputGuard output8(snxDBG, vprDBG_CONFIG_LVL, std::string("ERROR: unbind() deleting source\n"), std::string("\n"));
+         vpr::DebugOutputGuard output8(snxDBG, vprDBG_CONFIG_LVL,
+                                       std::string("ERROR: unbind() deleting source\n"),
+                                       std::string("\n"));
       }
       alDeleteBuffers( 1, &mBindLookup[alias].buffer );
       err = alGetError();
       if (err != AL_NO_ERROR)
       {
-         vpr::DebugOutputGuard output9(snxDBG, vprDBG_CONFIG_LVL, std::string("ERROR: unbind() deleting buffer\n"), std::string("\n"));
+         vpr::DebugOutputGuard output9(snxDBG, vprDBG_CONFIG_LVL,
+                                       std::string("ERROR: unbind() deleting buffer\n"),
+                                       std::string("\n"));
       }
       mBindLookup.erase( alias );
    }
-   
+
    vprASSERT(mBindLookup.count(alias) == 0 && "unbind failed");
+}
+
+void OpenALSoundImplementation::step(const float& timeElapsed)
+{
+   vprASSERT(mContextId != NULL && mDev != NULL &&
+             "startAPI must be called prior to this function");
+
+   snx::SoundImplementation::step(timeElapsed);
 }
 
 } // end namespace
