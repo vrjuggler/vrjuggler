@@ -15,11 +15,6 @@
          <help>Serial port speed</help>
          <value label="Baud Rate" defaultvalue="38400"/>
       </property>
-      <property valuetype="configelement" variable="true" name="position_filters">
-         <help>This is a list of all the filters that are to be applied to the postional device data. The filters are applied in the order that they are specified in this configuration.</help>
-         <value label="Position Filter"/>
-         <allowed_type>position_transform_filter</allowed_type>
-      </property>
       <upgrade_transform/>
    </definition_version>
 </definition>
