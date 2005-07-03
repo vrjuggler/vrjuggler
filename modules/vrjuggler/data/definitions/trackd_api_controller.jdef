@@ -3,20 +3,20 @@
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="trackd_api_controller" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="TrackdAPI Controller">
       <abstract>false</abstract>
-      <help>Configure the interface to a trackdAPI controller memory area.</help>
+      <help>Configure the interface to a trackdAPI controller memory area. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas05.html"&gt;more on TrackdAPI&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>digital_device</parent>
       <parent>analog_device</parent>
       <category>/Devices</category>
       <property valuetype="integer" variable="false" name="shared_memory_key">
-         <help>This is the shared memory key for the trackd information.</help>
+         <help>This is the shared memory key for the trackd information. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas05.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Shared Memory Key" defaultvalue="4127"/>
       </property>
       <property valuetype="float" variable="false" name="min">
-         <help>The lower bound for the range of valid values for the analog data.</help>
+         <help>The lower bound for the range of valid values for the analog data. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas05.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Range Minimum" defaultvalue="0.0"/>
       </property>
       <property valuetype="float" variable="false" name="max">
-         <help>The upper bound for the range fo valid values for the analog data.</help>
+         <help>The upper bound for the range fo valid values for the analog data. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/apas05.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Range Maximum" defaultvalue="255.0"/>
       </property>
       <upgrade_transform/>
