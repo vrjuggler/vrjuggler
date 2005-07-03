@@ -3,37 +3,37 @@
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="default_simulator" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="3" label="Default Simulator">
       <abstract>false</abstract>
-      <help>Standard VR Juggler simulator setup.</help>
+      <help>Standard VR Juggler simulator setup. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html#section.viewports.simulator"&gt;more on the default simulator plug-in&lt;/a&gt;)</help>
       <parent>simulator_plugin</parent>
       <category>/Display/Simulator</category>
       <property valuetype="configelementpointer" variable="false" name="camera_pos">
-         <help>This is the position proxy that controls the simulator view.</help>
+         <help>This is the position proxy that controls the simulator view. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html#section.viewports.simulator"&gt;more ...&lt;/a&gt;)</help>
          <value label="Camera Position"/>
          <allowed_type>position_proxy</allowed_type>
          <allowed_type>alias</allowed_type>
       </property>
       <property valuetype="configelementpointer" variable="false" name="wand_pos">
-         <help>This is the position proxy for the wand to use in the simulator.</help>
+         <help>This is the position proxy for the wand to use in the simulator. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html#section.viewports.simulator"&gt;more ...&lt;/a&gt;)</help>
          <value label="Wand Position"/>
          <allowed_type>position_proxy</allowed_type>
          <allowed_type>alias</allowed_type>
       </property>
       <property valuetype="boolean" variable="false" name="draw_projections">
-         <help>Should projections be drawn in the simulator?</help>
+         <help>Should projections be drawn in the simulator? (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html#section.viewports.simulator"&gt;more ...&lt;/a&gt;)</help>
          <value label="Draw Projections" defaultvalue="false"/>
       </property>
       <property valuetype="float" variable="false" name="surface_color">
-         <help>What color should the surfaces be?</help>
+         <help>What color should the surfaces be? (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html#section.viewports.simulator"&gt;more ...&lt;/a&gt;)</help>
          <value label="Red" defaultvalue="0.0"/>
          <value label="Green" defaultvalue="0.0"/>
          <value label="Blue" defaultvalue="0.0"/>
       </property>
       <property valuetype="string" variable="false" name="head_model">
-         <help>This is the full path to the model used for the head while using Performer.</help>
+         <help>This is the full path to the model used for the head while using Performer. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html#section.viewports.simulator"&gt;more ...&lt;/a&gt;)</help>
          <value label="Head Model" defaultvalue="${VJ_BASE_DIR}/share/vrjuggler/data/models/head.flt"/>
       </property>
       <property valuetype="string" variable="false" name="wand_model">
-         <help>This is the full path to the model used for the wand while using Performer.</help>
+         <help>This is the full path to the model used for the wand while using Performer. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch03s06.html#section.viewports.simulator"&gt;more ...&lt;/a&gt;)</help>
          <value label="Wand Model" defaultvalue="${VJ_BASE_DIR}/share/vrjuggler/data/models/wand.flt"/>
       </property>
       <upgrade_transform/>

@@ -7,12 +7,12 @@
       <parent></parent>
       <category>/Devices</category>
       <property valuetype="configelementpointer" variable="false" name="keyboard_mouse_device_name">
-         <help>Points to the keyboard/mouse input handler to which this device will feed keyboard and mouse events from the winodwing system.</help>
+         <help>Points to the keyboard/mouse input handler to which this device will feed keyboard and mouse events from the winodwing system. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on input windows&lt;/a&gt;)</help>
          <value label="Keyboard/Mouse Input Handler"/>
          <allowed_type>keyboard_mouse_device</allowed_type>
       </property>
       <property valuetype="integer" variable="false" name="lock_key">
-         <help>The key that will lock the mouse to the window</help>
+         <help>The key that will lock the mouse to the window. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on input windows&lt;/a&gt;)</help>
          <value label="Lock Key" defaultvalue="0"/>
          <enumeration editable="false">
             <enum label="KEY_NONE" value="0"/>
@@ -70,11 +70,11 @@
          </enumeration>
       </property>
       <property valuetype="boolean" variable="false" name="start_locked">
-         <help>Do we start with the window locked??</help>
+         <help>Do we start with the window locked? (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on input windows&lt;/a&gt;)</help>
          <value label="Start Locked" defaultvalue="false"/>
       </property>
       <property valuetype="integer" variable="false" name="sleep_time">
-         <help>This is the number of milliseconds that the event update loop should sleep between updates.</help>
+         <help>This is the number of milliseconds that the event update loop should sleep between updates. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on input windows&lt;/a&gt;)</help>
          <value label="Sleep Time" defaultvalue="75"/>
       </property>
       <upgrade_transform/>

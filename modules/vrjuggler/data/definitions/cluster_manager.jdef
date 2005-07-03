@@ -24,15 +24,15 @@
    </definition_version>
    <definition_version version="2" label="Cluster Manager Configuration">
       <abstract>false</abstract>
-      <help>All Cluster Manager configuration settings.</help>
+      <help>All Cluster Manager configuration settings. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch04s02.html"&gt;more on Cluster Manager&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch04.html"&gt;more on VR Juggler clusters&lt;/a&gt;)</help>
       <parent/>
       <category>/Cluster</category>
       <property valuetype="string" variable="true" name="plugin_path">
-         <help>Each value adds to the path where dynamically loadable plugin objects can be found.  The path may make use of environment variables.  For example: ${VJ_BASE_DIR}/lib/gadgeteer/plugins.  If no values are set for this property, the default search path will be ${VJ_BASE_DIR}/lib{,32,64}/gadgeteer/plugins depending on the compile-time application binary interface (ABI).</help>
+         <help>Each value adds to the path where dynamically loadable plugin objects can be found.  The path may make use of environment variables.  For example: &lt;tt&gt;${VJ_BASE_DIR}/lib/gadgeteer/plugins&lt;/tt&gt;.  If no values are set for this property, the default search path will be &lt;tt&gt;${VJ_BASE_DIR}/lib{,32,64}/gadgeteer/plugins&lt;/tt&gt; depending on the compile-time application binary interface (ABI). (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch04s02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="DSO Path" defaultvalue=""/>
       </property>
       <property valuetype="string" variable="true" name="plugin">
-         <help>The names of the cluster plugins to load.</help>
+         <help>The names of the cluster plugins to load. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch04s02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Plugin" defaultvalue=""/>
          <enumeration editable="true">
             <enum label="ApplicationDataManager" value="ApplicationDataManager"/>
@@ -43,7 +43,7 @@
          </enumeration>
       </property>
       <property valuetype="configelementpointer" variable="true" name="cluster_node">
-         <help>The list of all active nodes in the cluster.</help>
+         <help>The list of all active nodes in the cluster. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch04s02.html"&gt;more ...&lt;/a&gt;)</help>
          <value label="Machine"/>
          <allowed_type>cluster_node</allowed_type>
       </property>

@@ -67,16 +67,16 @@
    </definition_version>
    <definition_version version="3" label="Simulated Positional Device">
       <abstract>false</abstract>
-      <help>A simulated positional device. Gets input from a keyboard/mouse proxy.</help>
+      <help>A simulated positional device. Gets input from a keyboard/mouse proxy. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more on simulator devices&lt;/a&gt;, &lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02.html"&gt;more on input devices&lt;/a&gt;)</help>
       <parent>positional_device</parent>
       <category>/Devices/Positional</category>
       <property valuetype="configelementpointer" variable="false" name="keyboard_mouse_proxy">
-         <help>The proxy to the keyboard/mouse input handler to use for user input.</help>
+         <help>The proxy to the keyboard/mouse input handler to use for user input. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
          <value label="Keyboard/Mouse Proxy"/>
          <allowed_type>keyboard_mouse_proxy</allowed_type>
       </property>
       <property valuetype="configelement" variable="false" name="key_pair">
-         <help>Keys for moving and rotating the simulated device.</help>
+         <help>Keys for moving and rotating the simulated device. (&lt;a href="http://www.infiscape.com/~patrick/vrjuggler-config/2.0/configuring_vr_juggler/ch02s02.html#section.sim.devices"&gt;more ...&lt;/a&gt;)</help>
          <value label="Forward"/>
          <value label="Back"/>
          <value label="Left"/>
@@ -92,13 +92,13 @@
          <allowed_type>key_modifier_pair</allowed_type>
       </property>
       <property valuetype="float" variable="false" name="initial_position">
-         <help>Initial position</help>
+         <help>Initial position for the simulated device.</help>
          <value label="X" defaultvalue="0.0"/>
          <value label="Y" defaultvalue="0.0"/>
          <value label="Z" defaultvalue="0.0"/>
       </property>
       <property valuetype="float" variable="false" name="initial_rotation">
-         <help>Initial Euler rotation</help>
+         <help>Initial Euler rotation for the simulated device.</help>
          <value label="X Axis" defaultvalue="0.0"/>
          <value label="Y Axis" defaultvalue="0.0"/>
          <value label="Z Axis" defaultvalue="0.0"/>
