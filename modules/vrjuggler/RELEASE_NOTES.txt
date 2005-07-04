@@ -10,10 +10,28 @@ For all versions:
 
 ===============================================================================
 
-Version: 2.0 Beta 3 (1.1.172-0)
+ Version: 2.0.0
+Released: July 5, 2005
+    Please refer to the following to get started with VR Juggler 2.0.0:
+
+       http://www.vrjuggler.org/twiki_public/bin/view/Juggler/MigratingToVrjTwo
+
+    In general, there are no required application or configuration changes
+    to update from VR Juggler 2.0 Beta 3 to 2.0.0.  To update from
+    2.0 Alpha 4, please refer to the instructions below for VR Juggler 2.0
+    Beta 1.
+
+    New in this release:
+       * Support for Windows XP x64 Edition.
+       * Improved stabilitiy for Open Scene Graph applications, especially
+         in multi-threaded, multi-pipe configurations.
+       * OpenGL display windows are closed cleanly now, and overrides of
+         vrj::GlApp::contextClose() are invoked.
+
+ Version: 2.0 Beta 3 (1.1.172-0)
 Released: June 7, 2005
 
-    Please refer to the following to get started with VR Juggler 2.0 Beta 2:
+    Please refer to the following to get started with VR Juggler 2.0 Beta 3:
 
        http://www.vrjuggler.org/twiki_public/bin/view/Juggler/MigratingToVrjTwo
 
@@ -43,7 +61,7 @@ Released: June 7, 2005
          update, click the "Save All" button to save the updates.)  The
          update is not required, but it is recommended.
 
-Version: 2.0 Beta 2 (1.1.167-0)
+ Version: 2.0 Beta 2 (1.1.167-0)
 Released: January 18, 2005
 
     Please refer to the following to get started with VR Juggler 2.0 Beta 2:
@@ -60,7 +78,7 @@ Released: January 18, 2005
     Flock of Birds devices.  All bugs reported with VR Juggler 2.0 Beta 1
     have been fixed.
 
-Version: 2.0 Beta 1 (1.1.166-0)
+ Version: 2.0 Beta 1 (1.1.166-0)
 Released: December 24, 2004
 
     Please refer to the following to get started with VR Juggler 2.0 Beta 1:
@@ -133,7 +151,7 @@ Released: December 24, 2004
 
               http://www.vrjuggler.org/tweek/docs.php
 
-Version: 2.0 Alpha 4 (1.1.150-0)
+ Version: 2.0 Alpha 4 (1.1.150-0)
 Released: April 28, 2004
 
     Please refer to the following to get started with VR Juggler 2.0 Alpha 4:
@@ -385,7 +403,7 @@ Released: April 28, 2004
              - Unlike the Cygwin build, the Visual Studio build supports both
                debug and release binaries.
 
-Version: 2.0 Alpha 3 (1.1.143-1)
+ Version: 2.0 Alpha 3 (1.1.143-1)
 Released: September 22, 2003
 
     Please refer to the following to get started with VR Juggler 2.0 Alpha 3:
@@ -397,7 +415,7 @@ Released: September 22, 2003
     have been no additional features added to VR Juggler since VR Juggler
     Alpha 2. Also there have been no API changes since the Alpha 2 release.
 
-Version: 2.0 Alpha 2 (1.1.143)
+ Version: 2.0 Alpha 2 (1.1.143)
 Released: July 1, 2003
 
     Please refer to the following to get started with VR Juggler 2.0 Alpha 2:
