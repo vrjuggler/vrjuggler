@@ -150,6 +150,18 @@ private:
    void loadKnownProxies();
 
 public:
+   /**
+    * Registers a proxy constructor object with this factory.  In
+    * Gadgeteer 1.0, the type of \p constructor was a raw pointer to a
+    * gadget::ProxyConstructorBase object.
+    *
+    * @param constructor The proxy constructor object that will be used later
+    *                    to create a specialization of gadget::Proxy.
+    *
+    * @see loadProxy()
+    *
+    * @since 1.1.2
+    */
    void registerProxy(boost::shared_ptr<ProxyConstructorBase> constructor);
 
    /**
