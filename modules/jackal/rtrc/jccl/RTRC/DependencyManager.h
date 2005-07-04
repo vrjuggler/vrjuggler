@@ -71,7 +71,11 @@ public:
    /** Registers a new dependency checker. */
    void registerChecker (DepChecker* checker);
 
-   /** Un-registers a new dependency checker. */
+   /**
+    * Un-registers a new dependency checker.
+    *
+    * @since 1.1.2
+    */
    void unregisterChecker(DepChecker* checker);
 
    /** Checks if dependencies are satisfied for the given element.
@@ -105,6 +109,8 @@ private:
 
    /** Default dependency checker. */
    DepChecker mDefaultChecker;
+
+   friend struct vpr::detail::Deleter<DependencyManager>;
 
    vprSingletonHeader(DependencyManager);
 
