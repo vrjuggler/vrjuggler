@@ -317,7 +317,7 @@ int DisplayManager::closeDisplay(Display* disp, bool notifyDrawMgr)
    }
 
    // Remove it from local data structures
-   unsigned int num_before_close = mActiveDisplays.size() + mInactiveDisplays.size();
+   size_t num_before_close = mActiveDisplays.size() + mInactiveDisplays.size();
    mActiveDisplays.erase( std::remove(mActiveDisplays.begin(), mActiveDisplays.end(), disp),
                           mActiveDisplays.end());
    mInactiveDisplays.erase( std::remove(mInactiveDisplays.begin(), mInactiveDisplays.end(), disp),

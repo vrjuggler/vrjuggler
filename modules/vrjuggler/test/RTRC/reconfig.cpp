@@ -39,7 +39,7 @@
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Display/Projection.h>
 
-#ifndef WIN32
+#ifndef VPR_OS_Windows
 #include <sched.h>
 #endif
 

@@ -60,11 +60,11 @@
 #include <vpr/IO/Port/SerialPort_t.h>
 
 #if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
-#  ifdef VPR_OS_Win32
+#  ifdef VPR_OS_Windows
 #     include <vpr/md/WIN32/IO/Port/SerialPortImplWin32.h>
 #  else
 #     include <vpr/md/POSIX/IO/Port/SerialPortImplTermios.h>
-#  endif  /* VPR_OS_Win32 */
+#  endif  /* VPR_OS_Windows */
 #elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #  include <vpr/md/POSIX/IO/Port/SerialPortImplTermios.h>
 #endif

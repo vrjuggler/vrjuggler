@@ -434,21 +434,30 @@ public class ConfigToolbar
                   String res_name = expandEnvVars(res_file.getAbsolutePath());
                   System.out.println("Opening included resource: "+res_name);
 
-                  FileDataSource data_source =
-                     FileDataSource.open(res_name,
-                                         getBroker().getRepository());
-                  broker.add(res_name, data_source);
-                  ctx.add(res_name);
-
-                  // Look through the elements in the newly loaded file and
-                  // see if any of them are include directives
-                  java.util.List includes = data_source.getIncludes();
-                  for (Iterator itr = includes.iterator(); itr.hasNext(); )
+                  try
                   {
-                     // Make sure the file reference it created relative to the
-                     // current file
-                     urls.push(new File(res_file.getParentFile().getAbsolutePath(),
-                                        (String)itr.next()));
+                     FileDataSource data_source =
+                        FileDataSource.open(res_name,
+                                            getBroker().getRepository());
+                     broker.add(res_name, data_source);
+                     ctx.add(res_name);
+
+                     // Look through the elements in the newly loaded file and
+                     // see if any of them are include directives
+                     java.util.List includes = data_source.getIncludes();
+                     for (Iterator itr = includes.iterator(); itr.hasNext(); )
+                     {
+                        // Make sure the file reference it created relative to
+                        // the current file.
+                        urls.push(
+                           new File(res_file.getParentFile().getAbsolutePath(),
+                           (String)itr.next())
+                        );
+                     }
+                  }
+                  catch (IOException ioe)
+                  {
+                     showLoadErrorMessage(res_name, ioe);
                   }
                }
             }
@@ -715,6 +724,16 @@ public class ConfigToolbar
       }
 
       return mParentFrame;
+   }
+
+   private void showLoadErrorMessage(String fileName, Exception ex)
+   {
+      JOptionPane.showMessageDialog(getParentFrame(),
+         "Caught an I/O exception while trying to load\n" + fileName + "\n" +
+            ex.getMessage() + "\n" +
+            "The contents of this file will not be available!",
+         "Config File Load Failure",
+         JOptionPane.WARNING_MESSAGE);
    }
 
    // JBuilder GUI variables

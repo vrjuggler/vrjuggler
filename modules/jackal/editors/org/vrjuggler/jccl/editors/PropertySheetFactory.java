@@ -271,7 +271,7 @@ public class PropertySheetFactory extends PropertyComponent
 
       final String prop_token = propDef.getToken();
 
-      // Create an action listener that decrements the proeprty value by 1.
+      // Create an action listener that decrements the property value by 1.
       // The notion of "up" relates to how this information is presented in
       // the GUI.
       up_button.addActionListener(new ActionListener()
@@ -431,7 +431,7 @@ public class PropertySheetFactory extends PropertyComponent
          for ( int i = 0; i < components.length; ++i )
          {
             TableLayoutConstraints tlc = tl.getConstraints(components[i]);
-            if ( tlc.row1 >= startRow && tlc.row1 <= endRow )
+            if ( tlc.row1 <= endRow )
             {
                // The "Up" button must be disabled when it is in the starting
                // row for a variable list of values.  Otherwise, it can be

@@ -36,7 +36,7 @@
 #include <vrj/vrjConfig.h>
 #include <vrj/Util/Debug.h>
 
-#ifndef VPR_OS_Win32
+#ifndef VPR_OS_Windows
 #  include <X11/Xlib.h>
 #  include <X11/Xutil.h>
 #endif
@@ -44,7 +44,7 @@
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/Config/ConfigElementPtr.h>
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 #  include <gadget/Devices/KeyboardMouseDevice/InputAreaWin32.h>
 #else
 #  include <gadget/Devices/KeyboardMouseDevice/InputAreaXWin.h>
@@ -56,7 +56,7 @@
 #include <string>
 
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 typedef struct _pfuWin32Event
 {
   HWND hwnd;
@@ -70,7 +70,7 @@ typedef struct _pfuWin32Event
 namespace vrj
 {
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 LRESULT CALLBACK eventCallback(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
 #endif
 
@@ -79,7 +79,7 @@ LRESULT CALLBACK eventCallback(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
  * Performer input handler.
  */
 class PfInputHandler
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    : public gadget::InputAreaWin32
 #else
    : public gadget::InputAreaXWin
@@ -112,7 +112,7 @@ public:
    }
 
    void checkEvents();
-#ifndef VPR_OS_Win32
+#ifndef VPR_OS_Windows
    /**
     * Grab events from Performer window and sends them to
     * InputAreaXWin::handleEvent() or InputAreaWin32::handleEvent()

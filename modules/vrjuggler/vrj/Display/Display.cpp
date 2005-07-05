@@ -44,6 +44,18 @@
 namespace vrj
 {
 
+Display::~Display()
+{
+   for ( std::vector<vrj::Viewport*>::iterator i = mViewports.begin();
+         i != mViewports.end();
+         ++i )
+   {
+      delete *i;
+   }
+
+   mViewports.clear();
+}
+
 void Display::updateProjections(const float positionScale)
 {
    for(unsigned i=0;i<mViewports.size();i++)
@@ -51,7 +63,6 @@ void Display::updateProjections(const float positionScale)
       mViewports[i]->updateProjections(positionScale);
    }
 }
-
 
 void Display::setOriginAndSize(const int originX, const int originY,
                                const int width, const int height,

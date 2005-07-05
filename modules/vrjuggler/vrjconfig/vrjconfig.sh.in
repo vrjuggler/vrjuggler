@@ -75,7 +75,8 @@ if test "x$JCCL_DEFINITION_PATH" != "x" ; then
    export JCCL_DEFINITION_PATH
 fi
 
-EXTRA_JDK_ARGS="-Dsun.java2d.opengl=True -DJCCL_BASE_DIR=${JCCL_BASE_DIR} -DVJ_BASE_DIR=${VJ_BASE_DIR} $jccl_def_arg"
+#EXTRA_JDK_ARGS="-Dsun.java2d.opengl=True -DJCCL_BASE_DIR=${JCCL_BASE_DIR} -DVJ_BASE_DIR=${VJ_BASE_DIR} $jccl_def_arg"
+EXTRA_JDK_ARGS="-DJCCL_BASE_DIR=${JCCL_BASE_DIR} -DVJ_BASE_DIR=${VJ_BASE_DIR} $jccl_def_arg"
 
 APP_NAME='VRJConfig'
 

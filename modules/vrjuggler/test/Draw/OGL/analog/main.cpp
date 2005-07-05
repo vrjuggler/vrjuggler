@@ -80,5 +80,7 @@ int main( int argc, char* argv[] )
    std::cout << "Press ESC to exit\n" << std::flush;
    kernel->waitForKernelStop();
 
+   delete application;
+
    return 0;
 }

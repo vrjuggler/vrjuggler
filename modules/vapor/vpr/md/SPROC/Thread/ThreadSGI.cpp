@@ -59,7 +59,10 @@ namespace vpr
 ThreadSGI::ThreadSGI(BaseThread::VPRThreadPriority priority,
                      BaseThread::VPRThreadScope scope,
                      BaseThread::VPRThreadState state, size_t stackSize)
-   : mUserThreadFunctor(NULL), mRunning(false)
+   : mUserThreadFunctor(NULL)
+   , mDeleteFunctor(false)
+   , mStartFunctor(NULL)
+   , mRunning(false)
 {
 }
 
@@ -71,10 +74,13 @@ ThreadSGI::ThreadSGI(thread_func_t func, void* arg,
                      BaseThread::VPRThreadPriority priority,
                      BaseThread::VPRThreadScope scope,
                      BaseThread::VPRThreadState state, size_t stackSize)
-   : mUserThreadFunctor(NULL), mRunning(false)
+   : mUserThreadFunctor(NULL)
+   , mDeleteFunctor(false)
+   , mStartFunctor(NULL)
+   , mRunning(false)
 {
    // Create the thread functor to start.
-   // XXX: Memory leak.
+   mDeleteFunctor = true;
    setFunctor(new ThreadNonMemberFunctor(func, arg));
    start();
 }
@@ -87,7 +93,10 @@ ThreadSGI::ThreadSGI(BaseThreadFunctor* functorPtr,
                      BaseThread::VPRThreadPriority priority,
                      BaseThread::VPRThreadScope scope,
                      BaseThread::VPRThreadState state, size_t stackSize)
-   : mUserThreadFunctor(NULL), mRunning(false)
+   : mUserThreadFunctor(NULL)
+   , mDeleteFunctor(false)
+   , mStartFunctor(NULL)
+   , mRunning(false)
 {
    setFunctor(functorPtr);
    start();
@@ -100,6 +109,18 @@ ThreadSGI::~ThreadSGI()
       unregisterThread();
    }
    ThreadManager::instance()->unlock();
+
+   if ( NULL != mStartFunctor )
+   {
+      delete mStartFunctor;
+      mStartFunctor = NULL;
+   }
+
+   if ( mDeleteFunctor )
+   {
+      delete mUserThreadFunctor;
+      mUserThreadFunctor = NULL;
+   }
 }
 
 void ThreadSGI::setFunctor(BaseThreadFunctor* functorPtr)
@@ -126,14 +147,12 @@ vpr::ReturnStatus ThreadSGI::start()
    }
    else
    {
-      // XXX: Memory leak.
-      ThreadMemberFunctor<ThreadSGI>* start_functor
-                  = new ThreadMemberFunctor<ThreadSGI>(this,
-                                                       &ThreadSGI::startThread,
-                                                       NULL);
+      mStartFunctor =
+         new ThreadMemberFunctor<ThreadSGI>(this, &ThreadSGI::startThread,
+                                            NULL);
 
       // Spawn the thread.
-      status = spawn(start_functor);
+      status = spawn(mStartFunctor);
 
       if ( status.success() )
       {

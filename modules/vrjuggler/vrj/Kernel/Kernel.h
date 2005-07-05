@@ -281,6 +281,7 @@ protected:
 
    bool               mIsRunning;        /**< Flag for wether the kernel is currently running */
    bool               mExitFlag;         /**< Set true when the kernel should exit */
+   vpr::ThreadMemberFunctor<vrj::Kernel>* mControlFunctor;
    vpr::Thread*       mControlThread;    /**< The thread in control of me */
    vpr::CondVar       mExitWaitCondVar;  /**< Cond var for waiting for exit */
 
@@ -312,8 +313,7 @@ protected:
    Kernel(const vrj::Kernel& k) : jccl::ConfigElementHandler(k) {;}
    void operator=(const vrj::Kernel&) {;}
 
-   virtual ~Kernel()
-   {;}
+   virtual ~Kernel();
 
    vprSingletonHeader( Kernel );
 };

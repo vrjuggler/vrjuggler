@@ -1,5 +1,15 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+[1.0.0 released - 7.5.2005]====================================================
+2005-07-05 patrickh NEW VERSION: 1.0.0
+2005-06-15 patrickh Updated to support Windows 64-bit edition.
+                    The preprocessor symbol VPR_OS_Windows is now used to
+                    identify the Windows operating system.  VPR_OS_Win32 is
+                    used to identify Win32; VPR_OS_Win64 identifies Win64.
+                    NEW VERSION: 0.93.1
+
+[1.0 Beta 3 released - 6.7.2005]===============================================
+2005-06-06 patrickh NEW VERSION: 0.93.0
 2005-05-18 patrickh Fixed header file pollution on Windows resulting from
                     winsock2.h being included by vpr/md/NSPR/SystemNSPR.h.
                     NEW VERSION: 0.92.4

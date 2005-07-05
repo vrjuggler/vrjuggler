@@ -19,7 +19,7 @@ namespace vprTest
 
 CPPUNIT_TEST_SUITE_REGISTRATION(LibraryLoaderTest);
 
-#if defined(VPR_OS_Win32)
+#if defined(VPR_OS_Windows)
 static const std::string MODULE1("loadermod1.dll");
 static const std::string MODULE2("loadermod2.dll");
 #elif defined(VPR_OS_Darwin)
@@ -30,7 +30,7 @@ static const std::string MODULE1("loadermod1.so");
 static const std::string MODULE2("loadermod2.so");
 #endif
 
-#if defined(VPR_OS_Win32)
+#if defined(VPR_OS_Windows)
 static const std::string PATH_SEP("\\");
 #else
 static const std::string PATH_SEP("/");

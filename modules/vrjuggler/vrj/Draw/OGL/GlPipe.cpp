@@ -55,6 +55,20 @@
 namespace vrj
 {
 
+GlPipe::~GlPipe()
+{
+   if ( NULL != mActiveThread )
+   {
+      delete mActiveThread;
+      mActiveThread = NULL;
+   }
+
+   if ( NULL != mControlFunctor )
+   {
+      delete mControlFunctor;
+      mControlFunctor = NULL;
+   }
+}
 
 /**
  * Starts the pipe running.
@@ -65,10 +79,10 @@ int GlPipe::start()
     vprASSERT(mThreadRunning == false);        // We should not be running yet
 
     // Create a new thread to call the control loop
-    vpr::ThreadMemberFunctor<GlPipe>* memberFunctor =
-         new vpr::ThreadMemberFunctor<GlPipe>(this, &GlPipe::controlLoop, NULL);
+    mControlFunctor =
+      new vpr::ThreadMemberFunctor<GlPipe>(this, &GlPipe::controlLoop, NULL);
 
-    mActiveThread = new vpr::Thread(memberFunctor);
+    mActiveThread = new vpr::Thread(mControlFunctor);
 
     vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
        << "[vrj::GlPipe::start()] Started control loop. " << mActiveThread
@@ -164,9 +178,6 @@ void GlPipe::controlLoop(void* nullParam)
    // Loop until flag set
    while (!mControlExit)
    {
-      checkForWindowsToClose();  // Checks for closing windows
-      checkForNewWindows();      // Checks for new windows to open
-
       // --- handle EVENTS for the windows --- //
       // XXX: This may have to be here because of need to get open window event (Win32)
       // otherwise I would like to move it to being after the swap to get better performance
@@ -206,9 +217,35 @@ void GlPipe::controlLoop(void* nullParam)
 
          mSwapCompleteSema.release();
       }
+      checkForWindowsToClose();  // Checks for closing windows
+      checkForNewWindows();      // Checks for new windows to open
    }
 
    mThreadRunning = false;     // We are not running
+}
+
+void GlPipe::stop()
+{
+   // Close all open windows/contexts.
+   std::vector<GlWindow*> windows = getOpenWindows();
+   for ( std::vector<GlWindow*>::iterator itr = windows.begin();
+         itr != windows.end();
+         ++itr )
+   {
+      removeWindow(*itr);
+   }
+
+   mControlExit = 1;     // Set the control loop exit flag
+   
+   // We don't actually need to call completeRender() or completeSwap()
+   // since we don't care about when they complete. We only care about
+   // joining the thread
+   triggerRender();
+   //completeRender();
+   triggerSwap();
+   //completeSwap();
+
+   mActiveThread->join();
 }
 
 /**
@@ -366,8 +403,8 @@ void GlPipe::renderWindow(GlWindow* win)
 
    // --- FOR EACH VIEWPORT -- //
    Viewport* viewport = NULL;
-   unsigned num_vps = the_display->getNumViewports();
-   for (unsigned vp_num=0; vp_num < num_vps; vp_num++)
+   size_t num_vps = the_display->getNumViewports();
+   for ( size_t vp_num = 0; vp_num < num_vps; ++vp_num )
    {
       viewport = the_display->getViewport(vp_num);
 

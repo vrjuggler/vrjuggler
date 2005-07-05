@@ -213,12 +213,41 @@ public class PropertyEditorPanel extends PropertyComponent
          }
       }
    }
+
    public void propertyValueOrderChanged(ConfigElementEvent evt)
-   {;}
+   {
+      // Update mPropIndex to reflect the new ordering if mPropIndex falls
+      // within the range of the reordered values.  Remember that "index0" is
+      // not guaranteed to be less than "index1," so we have to check range
+      // twice.
+      if ( evt.getProperty().equals(mPropName) &&
+           evt.getIndex0() <= mPropIndex && mPropIndex <= evt.getIndex1() ||
+           evt.getIndex1() <= mPropIndex && mPropIndex <= evt.getIndex0() )
+      {
+         Object value = mEditor.getValue();
+         mPropIndex = mConfigElement.getPropertyValueIndex(mPropName, value);
+      }
+   }
+
    public void propertyValueAdded(ConfigElementEvent evt)
-   {;}
+   {
+      // If a value was inserted before our value, mPropIndex must be
+      // incremented.
+      if ( evt.getProperty().equals(mPropName) && evt.getIndex() < mPropIndex )
+      {
+         mPropIndex++;
+      }
+   }
+
    public void propertyValueRemoved(ConfigElementEvent evt)
-   {;}
+   {
+      // If a value was removed before our value, mPropIndex must be
+      // decremented.
+      if ( evt.getProperty().equals(mPropName) && evt.getIndex() < mPropIndex )
+      {
+         mPropIndex--;
+      }
+   }
    
    /**
     * When it has been requested to stop editing the cell, validate that the

@@ -59,7 +59,7 @@
 #   define GADGET_OPT
 #endif
 
-#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 /* Exclude rarely-used stuff from Windows headers */
 #define WIN32_LEAN_AND_MEAN
 
@@ -68,7 +68,7 @@
 
 #include <windows.h>
 
-#endif   /* WIN32 */
+#endif   /* WIN32 || WIN64 */
 
 /*
  * ----------------------------------------------------------------------------
@@ -77,7 +77,7 @@
  * implementation.
  * ----------------------------------------------------------------------------
  */
-#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 
 #   if defined(__GNUC__)
 #       undef _declspec
@@ -118,7 +118,7 @@
 #   define GADGET_CALLBACK_DECL
 #   define GADGET_STATIC_CALLBACK(__x) static __x
 
-#endif	/* WIN32 */
+#endif	/* WIN32 || WIN64 */
 
 #ifdef _GADGET_BUILD_
 #   define GADGET_API(__type)	GADGET_EXPORT(__type)

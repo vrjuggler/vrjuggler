@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.obj-common.mk,v
-# Date modified: 2005/01/08 22:44:43
-# Version:       1.22
+# Date modified: 2005/06/18 15:00:08
+# Version:       1.23
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.obj-common.mk,v 1.22 2005/01/08 22:44:43 patrickh Exp
+# dpp.obj-common.mk,v 1.23 2005/06/18 15:00:08 patrickh Exp
 #
 # This file <dpp.obj-subdir.mk> is intended to be used by makefiles that need
 # to build object files AND to recurse into subdirectories.  It defines
@@ -100,99 +100,18 @@ ifneq ($(OBJDIR), .)
    endif
 endif
 
-# Set the default warning levels for C and C++.  The variable $(WARNS) is for
-# coarse-grained settings.
+# Set the default warning levels for C, C++, Objective-C, and Objective-C++.
+# The variable $(WARNS) is for coarse-grained settings.
 WARNS?=		0
 C_WARNS?=	$(WARNS)
 CXX_WARNS?=	$(WARNS)
+OBJC_WARNS?=	$(WARNS)
+OBJCXX_WARNS?=	$(WARNS)
 
-ifeq ($(C_WARNS), 0)
-   C_WARN_FLAGS=		$(C_WARNS_LEVEL_0)
-else
-   ifeq ($(C_WARNS), 1)
-      C_WARN_FLAGS=		$(C_WARNS_LEVEL_1)
-   else
-      ifeq ($(C_WARNS), 2)
-         C_WARN_FLAGS=		$(C_WARNS_LEVEL_2)
-      else
-         ifeq ($(C_WARNS), 3)
-            C_WARN_FLAGS=	$(C_WARNS_LEVEL_3)
-         else
-            ifeq ($(C_WARNS), 4)
-               C_WARN_FLAGS=	$(C_WARNS_LEVEL_4)
-            else
-               C_WARN_FLAGS=	$(C_WARNS_LEVEL_5)
-            endif  # C_WARNS == 4
-         endif  # C_WARNS == 3
-      endif  # C_WARNS == 2
-   endif  # C_WARNS == 1
-endif  # C_WARNS == 0
-
-ifeq ($(CXX_WARNS), 0)
-   CXX_WARN_FLAGS=		$(CXX_WARNS_LEVEL_0)
-else
-   ifeq ($(CXX_WARNS), 1)
-      CXX_WARN_FLAGS=		$(CXX_WARNS_LEVEL_1)
-   else
-      ifeq ($(CXX_WARNS), 2)
-         CXX_WARN_FLAGS=	$(CXX_WARNS_LEVEL_2)
-      else
-         ifeq ($(CXX_WARNS), 3)
-            CXX_WARN_FLAGS=	$(CXX_WARNS_LEVEL_3)
-         else
-            ifeq ($(CXX_WARNS), 4)
-               CXX_WARN_FLAGS=	$(CXX_WARNS_LEVEL_4)
-            else
-               CXX_WARN_FLAGS=	$(CXX_WARNS_LEVEL_5)
-            endif  # CXX_WARNS == 4
-         endif  # CXX_WARNS == 3
-      endif  # CXX_WARNS == 2
-   endif  # CXX_WARNS == 1
-endif  # CXX_WARNS == 0
-
-ifeq ($(OBJCXX_WARNS), 0)
-   OBJCXX_WARN_FLAGS=			$(OBJCXX_WARNS_LEVEL_0)
-else
-   ifeq ($(OBJCXX_WARNS), 1)
-      OBJCXX_WARN_FLAGS=		$(OBJCXX_WARNS_LEVEL_1)
-   else
-      ifeq ($(OBJCXX_WARNS), 2)
-         OBJCXX_WARN_FLAGS=		$(OBJCXX_WARNS_LEVEL_2)
-      else
-         ifeq ($(OBJCXX_WARNS), 3)
-            OBJCXX_WARN_FLAGS=		$(OBJCXX_WARNS_LEVEL_3)
-         else
-            ifeq ($(OBJCXX_WARNS), 4)
-               OBJCXX_WARN_FLAGS=	$(OBJCXX_WARNS_LEVEL_4)
-            else
-               OBJCXX_WARN_FLAGS=	$(OBJCXX_WARNS_LEVEL_5)
-            endif  # OBJCXX_WARNS == 4
-         endif  # OBJCXX_WARNS == 3
-      endif  # OBJCXX_WARNS == 2
-   endif  # OBJCXX_WARNS == 1
-endif  # OBJCXX_WARNS == 0
-
-ifeq ($(OBJC_WARNS), 0)
-   OBJC_WARN_FLAGS=		$(OBJC_WARNS_LEVEL_0)
-else
-   ifeq ($(OBJC_WARNS), 1)
-      OBJC_WARN_FLAGS=		$(OBJC_WARNS_LEVEL_1)
-   else
-      ifeq ($(OBJC_WARNS), 2)
-         OBJC_WARN_FLAGS=	$(OBJC_WARNS_LEVEL_2)
-      else
-         ifeq ($(OBJC_WARNS), 3)
-            OBJC_WARN_FLAGS=	$(OBJC_WARNS_LEVEL_3)
-         else
-            ifeq ($(OBJC_WARNS), 4)
-               OBJC_WARN_FLAGS=	$(OBJC_WARNS_LEVEL_4)
-            else
-               OBJC_WARN_FLAGS=	$(OBJC_WARNS_LEVEL_5)
-            endif  # OBJC_WARNS == 4
-         endif  # OBJC_WARNS == 3
-      endif  # OBJC_WARNS == 2
-   endif  # OBJC_WARNS == 1
-endif  # OBJC_WARNS == 0
+C_WARNS_FLAGS=		$(C_WARNS_LEVEL_$(C_WARNS))
+CXX_WARN_FLAGS=		$(CXX_WARNS_LEVEL_$(CXX_WARNS))
+OBJC_WARN_FLAGS=	$(OBJC_WARNS_LEVEL_$(OBJC_WARNS))
+OBJCXX_WARN_FLAGS=	$(OBJCXX_WARNS_LEVEL_$(OBJCXX_WARNS))
 
 vpath %.h $(srcdir) $(EXTRA_SRCS_PATH)
 vpath %.hh $(srcdir) $(EXTRA_SRCS_PATH)

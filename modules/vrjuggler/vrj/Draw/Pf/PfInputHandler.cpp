@@ -52,7 +52,7 @@ PfInputHandler::PfInputHandler(pfPipeWindow* pipeWindow, const std::string& disp
    mPipeWindow = pipeWindow;
    mPipe = pfGetPWinPipe(mPipeWindow);
    mBlocking = false;
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    mWinHandle = pipeWindow->getWSWindow();
 #else
    // Get the XWindow from that we are going to recieve events from.
@@ -61,7 +61,7 @@ PfInputHandler::PfInputHandler(pfPipeWindow* pipeWindow, const std::string& disp
 #endif
 }
 
-#ifndef VPR_OS_Win32
+#ifndef VPR_OS_Windows
 void PfInputHandler::openConnection()
 {
    static Atom wm_protocols, wm_delete_window;
@@ -113,7 +113,7 @@ void PfInputHandler::checkEvents()
 }
 
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 LRESULT CALLBACK eventCallback(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
    switch ( message )
@@ -138,7 +138,7 @@ LRESULT CALLBACK eventCallback(HWND hwnd, UINT message, WPARAM wParam, LPARAM lP
 }
 #endif
 
-#ifndef VPR_OS_Win32
+#ifndef VPR_OS_Windows
 void PfInputHandler::handleEvents()
 {
    XEvent		event;
@@ -184,5 +184,5 @@ void PfInputHandler::handleEvents()
       }
    }
 }
-#endif /* VPR_OS_Win32 */
+#endif /* VPR_OS_Windows */
 } // End of vrj namespace

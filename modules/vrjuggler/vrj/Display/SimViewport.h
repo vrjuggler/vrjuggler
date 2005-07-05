@@ -65,10 +65,7 @@ public:
       ;
    }
 
-   virtual ~SimViewport()
-   {
-      ;
-   }
+   virtual ~SimViewport();
 
 public:
    /** Configures the simulator. */

@@ -47,7 +47,7 @@
 #include <iostream>
 #include <iomanip>
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 #  include <process.h>
 #endif
 

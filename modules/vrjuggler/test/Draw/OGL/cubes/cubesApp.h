@@ -283,7 +283,7 @@ public:
    {
       // We can't start until there are users registered wth the system
       // We rely upon users to keep track of the multi-user data structure
-      int num_users = vrj::Kernel::instance()->getUsers().size();
+      size_t num_users = vrj::Kernel::instance()->getUsers().size();
       return (num_users > 0);
    }
 

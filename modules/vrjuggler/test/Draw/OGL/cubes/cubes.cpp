@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
       std::cout<<"\n"<<std::flush;
       std::cout<<"\n"<<std::flush;
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
       // Create a stringstream to format the output.
       std::stringstream error_output;
       error_output << "Usage: "<< argv[0]
@@ -91,6 +91,8 @@ int main(int argc, char* argv[])
    kernel->setApplication(application);         // Set application
 
    kernel->waitForKernelStop();
+
+   delete application;
 
    return 0;
 }

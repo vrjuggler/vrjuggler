@@ -63,11 +63,11 @@ bool SgiImporter::import(const char* const filename, Image& image)
 		//if rgb, then we need to do the loading
 		image.free();
 		
-		#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 		ifstream hRGBFile( filename, ios::in | ios::nocreate | ios::binary, filebuf::openprot );
-		#else
+#else
 		ifstream hRGBFile( filename, ios::in | ios::nocreate, filebuf::openprot );
-		#endif
+#endif
 		
 		// why would ifstream mangle this pointer?  that violates const-ness. (you probably need to recompile clean)
 		assert( filename != NULL && "This should never happen, ifstream's constructor mangled the filename address" );

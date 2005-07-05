@@ -59,7 +59,7 @@ extern "C" {
 }
 #endif  /* VPR_USE_LEACH_UUID */
 
-#if defined(VPR_OS_Win32)
+#if defined(VPR_OS_Windows)
 #  include <rpc.h>
 #elif defined(HAVE_UUID_H)
 #  include <uuid.h>
@@ -168,7 +168,7 @@ GUID::GUID(const GUID& nsGuid, const std::string& name)
 void GUID::generate()
 {
 // Windows DCE UUID.
-#if defined(VPR_OS_Win32)
+#if defined(VPR_OS_Windows)
    UuidCreate((UUID*) &mGuid.standard);
 // DCE 1.1 UUID.
 #elif defined(VPR_USE_DCE_1_1_UUID)

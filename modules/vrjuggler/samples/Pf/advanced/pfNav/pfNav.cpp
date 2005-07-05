@@ -111,5 +111,8 @@ int main(int argc, char* argv[])
     kernel->setApplication( application );    // Set up the kernel
 
    kernel->waitForKernelStop();
+
+   delete application;
+
    return 0;
 }

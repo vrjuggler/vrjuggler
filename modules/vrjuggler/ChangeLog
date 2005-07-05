@@ -1,5 +1,15 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[2.0.0 released - 7.5.2005]====================================================
+Jul-07-2005 patrickh    NEW VERSION: 2.0.0
+Jun-27-2005 aronb       Ensure that we close each OpenGL window and its
+                        associated context.
+Jun-24-2005 patrickh    Use osg::ref_ptr<osgUtil::SceneView> in vrj::OsgApp.
+Jun-15-2005 patrickh    Updated to support Windows 64-bit edition.
+                        NEW VERSION: 1.1.173
+
+[2.0 Beta 3 released - 6.7.2005]===============================================
+Jun-07-2005 patrickh    NEW VERSION: 1.1.172
 May-19-2005 aronb       Fixed a bug where the Draw Manager could direct an
                         application object to render after the kernel told the
                         application object that it was being closed.  This

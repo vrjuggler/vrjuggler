@@ -47,7 +47,7 @@
 #include <vrj/Draw/Pf/PfUtil.h>
 #include <vrj/Util/Debug.h>
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 #  define WINKEY HWND
 #else
 #  define WINKEY ::Window

@@ -11,9 +11,9 @@
 	</Platforms>
 	<Configurations>
 		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="ReleaseDLL"
-			IntermediateDirectory="ReleaseDLL"
+			Name="ReleaseDLL|Win32"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
@@ -36,6 +36,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="$(NOINHERIT)"
 				OutputFile="$(OutDir)/tweek_jni.dll"
+				Version="1.0.0"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
 				SubSystem="1"

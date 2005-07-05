@@ -75,16 +75,10 @@ int main(int argc, char* argv[])
 
    kernel->start();
 
-   /*
-   for(int i=0;i<20;i++)
-   {
-      usleep(50000);
-      std::cout << i << "." << std::flush;
-   }
-   */
-
    kernel->setApplication(application);
    kernel->waitForKernelStop();
+
+   delete application;
 
    return 0;
 }
