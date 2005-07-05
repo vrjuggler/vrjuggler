@@ -58,7 +58,7 @@
 namespace snx
 {
 
-/** \stuct SoundInfo SoundInfo.h snx/SoundInfo.h
+/** \struct SoundInfo SoundInfo.h snx/SoundInfo.h
  *
  * Informational type that describes one sound entry.  Typically, user code
  * will fill in the members of an instance and pass it to a snx::SoundHandle
