@@ -62,15 +62,26 @@ public:
       : thread(NULL)
       , next(NULL)
       , functor(NULL)
+      , deleteFunctor(false)
       , threadWait(0)
    {
       ;
+   }
+
+   ~OneThread()
+   {
+      if ( deleteFunctor )
+      {
+         delete functor;
+         functor = NULL;
+      }
    }
 
 public:
    Thread* thread;               //! Handle of the thread process
    OneThread* next;              //! -> next vprOneThread ready to run
    BaseThreadFunctor* functor;   //! -> function thread is to call
+   bool deleteFunctor;           //! Flag indicating whether we delete functor
    Semaphore threadWait;         //! thread waits for work here
 };
 
@@ -96,16 +107,15 @@ public:
    /** Constructor. */
    ThreadPool(int numToStartWith = 1);
 
+   ~ThreadPool();
+
    /**
     * Gives a function to the processes.  Start a function going
     * asynchronously.  Called by master process.
     */
    void startFunc(thread_func_t func, void* arg = NULL)
    {
-      // XXX: Memory leak!
-      ThreadNonMemberFunctor* non_mem_functor =
-         new ThreadNonMemberFunctor(func, arg);
-      this->startFunc(non_mem_functor);
+      this->startFunc(new ThreadNonMemberFunctor(func, arg), true);
    }
 
    void startFunc(BaseThreadFunctor* theFunctor, void* argument)
@@ -114,10 +124,12 @@ public:
       this->startFunc(theFunctor);
    }
 
-   void startFunc(BaseThreadFunctor* theFunctor)
+   void startFunc(BaseThreadFunctor* theFunctor,
+                  const bool deleteFunctor = false)
    {
       OneThread* theThread = getThread();
 
+      theThread->deleteFunctor = deleteFunctor;
       theThread->functor = theFunctor;     /* set address of func to exec */
       theThread->threadWait.release();     /* wake up sleeping process */
       //delete theFunctor;

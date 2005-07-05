@@ -89,7 +89,7 @@ void Interval::setNow()
 //
 void Interval::setNowReal()
 {
-#if defined(VPR_OS_Win32)
+#if defined(VPR_OS_Windows)
    LARGE_INTEGER count, counts_per_sec;
 
    QueryPerformanceFrequency(&counts_per_sec);

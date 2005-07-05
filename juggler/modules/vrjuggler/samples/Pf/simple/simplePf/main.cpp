@@ -83,5 +83,7 @@ int main(int argc, char* argv[])
 
    kernel->waitForKernelStop();
 
+   delete application;
+
    return 0;
 }

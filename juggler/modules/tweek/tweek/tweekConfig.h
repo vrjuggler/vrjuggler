@@ -63,7 +63,7 @@
 #   define TWEEK_OPT
 #endif
 
-#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 /* Exclude rarely-used stuff from Windows headers */
 #define WIN32_LEAN_AND_MEAN
 
@@ -73,7 +73,7 @@
 #include <windows.h>
 
 /* extern HINSTANCE g_hInst = NULL; */
-#endif   /* WIN32 */
+#endif   /* WIN32 || WIN64 */
 
 /*
  * ----------------------------------------------------------------------------
@@ -81,7 +81,7 @@
  * TWEEK_EXTERN for the prototype and TWEEK_IMPLEMENT for the implementation.
  * ----------------------------------------------------------------------------
  */
-#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 
 #   if defined(__GNUC__)
 #       undef _declspec
@@ -122,7 +122,7 @@
 #   define TWEEK_CALLBACK_DECL
 #   define TWEEK_STATIC_CALLBACK(__x) static __x
 
-#endif	/* WIN32 */
+#endif	/* WIN32 || WIN64 */
 
 #ifdef _TWEEK_BUILD_
 #   define TWEEK_API(__type)		TWEEK_EXPORT(__type)

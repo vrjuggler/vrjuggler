@@ -61,6 +61,8 @@ ThreadNSPR::ThreadNSPR(VPRThreadPriority priority, VPRThreadScope scope,
                        VPRThreadState state, PRUint32 stackSize)
    : mThread(NULL)
    , mUserThreadFunctor(NULL)
+   , mDeleteFunctor(false)
+   , mStartFunctor(NULL)
    , mPriority(priority)
    , mScope(scope)
    , mState(state)
@@ -75,12 +77,14 @@ ThreadNSPR::ThreadNSPR(thread_func_t func, void* arg,
                        VPRThreadState state, PRUint32 stackSize)
    : mThread(NULL)
    , mUserThreadFunctor(NULL)
+   , mDeleteFunctor(false)
+   , mStartFunctor(NULL)
    , mPriority(priority)
    , mScope(scope)
    , mState(state)
    , mStackSize(stackSize)
 {
-   // XXX: Memory leak.
+   mDeleteFunctor = true;
    setFunctor(new ThreadNonMemberFunctor(func, arg));
    start();
 }
@@ -92,6 +96,8 @@ ThreadNSPR::ThreadNSPR(BaseThreadFunctor* functorPtr,
                        VPRThreadState state, PRUint32 stackSize)
    : mThread(NULL)
    , mUserThreadFunctor(NULL)
+   , mDeleteFunctor(false)
+   , mStartFunctor(NULL)
    , mPriority(priority)
    , mScope(scope)
    , mState(state)
@@ -109,6 +115,18 @@ ThreadNSPR::~ThreadNSPR()
       unregisterThread();
    }
    ThreadManager::instance()->unlock();
+
+   if ( NULL != mStartFunctor )
+   {
+      delete mStartFunctor;
+      mStartFunctor = NULL;
+   }
+
+   if ( mDeleteFunctor )
+   {
+      delete mUserThreadFunctor;
+      mUserThreadFunctor = NULL;
+   }
 }
 
 void ThreadNSPR::setFunctor(BaseThreadFunctor* functorPtr)
@@ -148,17 +166,17 @@ vpr::ReturnStatus ThreadNSPR::start()
 
       // Store the member functor and create the functor for spawning to our
       // start routine.
-      // XXX: Memory leak.
-      ThreadMemberFunctor<ThreadNSPR>* start_functor =
+      mStartFunctor = 
          new ThreadMemberFunctor<ThreadNSPR>(this, &ThreadNSPR::startThread,
                                              NULL);
 
       // Finally create the thread.
       // - On success --> The start method registers the actual thread info
       mThreadStartCompleted = false;      // Initialize registration flag (uses cond var for this)
-      PRThread* ret_thread = PR_CreateThread(PR_USER_THREAD, vprThreadFunctorFunction,
-                                (void*) start_functor, nspr_prio, nspr_scope,
-                                nspr_state, (PRUint32) mStackSize);
+      PRThread* ret_thread =
+         PR_CreateThread(PR_USER_THREAD, vprThreadFunctorFunction,
+                         (void*) mStartFunctor, nspr_prio, nspr_scope,
+                         nspr_state, (PRUint32) mStackSize);
 
       // Inform the caller if the thread was not created successfully.
       if ( NULL == ret_thread )
@@ -216,7 +234,13 @@ Thread* ThreadNSPR::self()
 std::ostream& Thread::outStream(std::ostream& out)
 {
    out.setf(std::ios::right);
-   out << std::setw(7) << std::setfill('0') << getpid() << "/";
+   out << std::setw(7) << std::setfill('0')
+#ifdef VPR_OS_Windows
+       << _getpid()
+#else
+       << getpid()
+#endif
+       << "/";
    out.unsetf(std::ios::right);
    BaseThread::outStream(out);
    out << std::setfill(' ');

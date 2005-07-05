@@ -37,7 +37,7 @@
 # that is actually run.
 # -----------------------------------------------------------------------------
 
-AC_INIT([JCCL Plug-Ins], [0.1], [vrjuggler-devel@lists.sourceforge.net])
+AC_INIT([JCCL Plug-Ins], [1.0], [vrjuggler-devel@lists.sourceforge.net])
 AC_PREREQ([2.53])
 AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2005 by Iowa State University])
 AC_CONFIG_SRCDIR([Makefile.in])

@@ -28,7 +28,7 @@
 
 
 
-#if defined(WIN32)
+#if defined(WIN32) || defined(WIN64)
 # include <windows.h>
 #else
 # include <termios.h> 
@@ -120,7 +120,7 @@ class basePuck
 
   protected:
 
-#if defined(WIN32)
+#if defined(WIN32) || defined(WIN64)
     /// Generic file descriptor
     typedef HANDLE HandleType;
 #else
@@ -187,7 +187,7 @@ class basePuckSerial : public basePuck
     /** Device Manipulation
     */
     //@{
-#if defined(WIN32)
+#if defined(WIN32) || defined(WIN64)
     /// The port's original timeout settings
     COMMTIMEOUTS _oldTimeouts;
     /// An overlapped io event

@@ -31,11 +31,11 @@
 #include <stdio.h>
 #include <fcntl.h>
 
-#if defined(WIN32)
+#if defined(WIN32) || defined(WIN64)
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <io.h>
-#else                 /*  ! defined (WIN32)    */
+#else                 /*  ! defined (WIN32) && ! defined (WIN64)    */
 # include <ctype.h>
 # include <stropts.h>		                 // for ioctl
 # include <unistd.h>
@@ -347,7 +347,7 @@ basePuck::~basePuck()
 
 void basePuck::puckSleep(const float seconds)
 {
-#if defined(WIN32)
+#if defined(WIN32) || defined(WIN64)
     Sleep(1000 * seconds);
 #else
     usleep(static_cast<int>(1000000 * seconds));
@@ -364,7 +364,7 @@ basePuckSerial::~basePuckSerial()
 
 bool basePuckSerial::portOpen(const char *name, int opts, HandleType &handle)
 {
-#if defined(WIN32)
+#if defined(WIN32) || defined(WIN64)
 
     handle = CreateFile( name, opts, 0, NULL, OPEN_EXISTING,
 			FILE_FLAG_OVERLAPPED | FILE_FLAG_NO_BUFFERING,
@@ -381,7 +381,7 @@ bool basePuckSerial::portOpen(const char *name, int opts, HandleType &handle)
 	return true;
     } 
 
-#else            /*    ! defined (WIN32)   */
+#else            /*    ! defined (WIN32) && ! defined (WIN64)   */
 
     handle = open(name, opts);
     if (handle < 0)
@@ -398,7 +398,7 @@ bool basePuckSerial::portOpen(const char *name, int opts, HandleType &handle)
 
 bool basePuckSerial::portClose(HandleType handle)
 {
-#if defined(WIN32)
+#if defined(WIN32) || defined(WIN64)
 
     if (!SetCommTimeouts(handle, &_oldTimeouts))
     {
@@ -407,7 +407,7 @@ bool basePuckSerial::portClose(HandleType handle)
     CloseHandle(handle);
     return true;
 
-#else            /*    ! defined (WIN32)   */
+#else            /*    ! defined (WIN32) && ! defined (WIN64)   */
 
     // discard pending output to avoid handshaking interference
     tcflush(handle, TCIOFLUSH);
@@ -420,7 +420,7 @@ bool basePuckSerial::portClose(HandleType handle)
 int basePuckSerial::portRead(HandleType handle, unsigned char* buffer, 
 			     int bufferSize)
 {
-#if defined(WIN32)
+#if defined(WIN32) || defined(WIN64)
 
 #if 0
 //Check error status...
@@ -543,7 +543,7 @@ int basePuckSerial::portRead(HandleType handle, unsigned char* buffer,
 	return 0;
     }
 
-#else            /*    ! defined (WIN32)   */
+#else            /*    ! defined (WIN32) && ! defined (WIN64)   */
 
     return read(handle, buffer, bufferSize); 
     // blocks until data w/ CR available
@@ -554,7 +554,7 @@ int basePuckSerial::portRead(HandleType handle, unsigned char* buffer,
 int basePuckSerial::portWrite(HandleType handle, unsigned char* buffer, 
 			      int bufferSize)
 {
-#if defined(WIN32)
+#if defined(WIN32) || defined(WIN64)
 
     int i;
     for (i = 0; i < bufferSize; i++)
@@ -566,7 +566,7 @@ int basePuckSerial::portWrite(HandleType handle, unsigned char* buffer,
 	}
     return i;
 
-#else            /*    ! defined (WIN32)   */
+#else            /*    ! defined (WIN32) && ! defined (WIN64)   */
 
     return write(handle, buffer, bufferSize);
 
@@ -671,7 +671,7 @@ void spaceMouse::init(const string devName, const string portName,
 int spaceMouse::puckOpen()
 {
     int options;
-#if defined(WIN32)
+#if defined(WIN32) || defined(WIN64)
     options = GENERIC_READ | GENERIC_WRITE;
 #else
     options = O_RDWR | O_NDELAY;
@@ -928,7 +928,7 @@ void spaceMouse::puckSensitivity()
 
 int spaceMouse::portConfigure()
 {
-#if defined(WIN32)
+#if defined(WIN32) || defined(WIN64)
 
     DCB dcb;
     FillMemory(&dcb, sizeof(dcb), 0);
@@ -1015,7 +1015,7 @@ int spaceMouse::portConfigure()
  
     return 1;
 
-#else                                 /* #if !defined(WIN32) */
+#else                                 /* #if !defined(WIN32) && !defined(WIN64) */
 
 
 #if defined(HP) || defined(HPUX)
@@ -1496,7 +1496,7 @@ int spaceBall4000FLX::puckConfigure()
 int spaceBall4000FLX::puckOpen()
 {
     int options;
-#if defined(WIN32)
+#if defined(WIN32) || defined(WIN64)
     options = GENERIC_READ | GENERIC_WRITE;
 #else
     options = O_RDWR | O_NONBLOCK | O_NOCTTY;
@@ -1622,7 +1622,7 @@ void spaceBall4000FLX::puckSensitivity()
 int spaceBall4000FLX::portConfigure()
 {
 
-#if defined(WIN32)
+#if defined(WIN32) || defined(WIN64)
 
     DCB dcb;
     FillMemory(&dcb, sizeof(dcb), 0);
@@ -1713,7 +1713,7 @@ int spaceBall4000FLX::portConfigure()
     puckSleep(1);
     return 1;
 
-#else                              /* #if !defined(WIN32) */
+#else                              /* #if !defined(WIN32) && !defined(WIN64) */
 
 
 #if defined(HP) || defined(HPUX)

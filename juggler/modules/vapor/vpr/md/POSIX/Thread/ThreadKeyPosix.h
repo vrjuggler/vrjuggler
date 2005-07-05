@@ -77,6 +77,7 @@ public:
     * @see keycreate
     */
    ThreadKeyPosix()
+      : mDestructor(NULL)
    {
       keycreate(NULL);
    }
@@ -91,6 +92,7 @@ public:
     * @param arg        Argument to be passed to destructor.
     */
    ThreadKeyPosix(thread_func_t destructor, void* arg)
+      : mDestructor(NULL)
    {
       keycreate(destructor, arg);
    }
@@ -104,6 +106,7 @@ public:
     * @param destructor The destructor function for the key.
     */
    ThreadKeyPosix(BaseThreadFunctor* destructor)
+      : mDestructor(NULL)
    {
       keycreate(destructor);
    }
@@ -114,6 +117,11 @@ public:
    ~ThreadKeyPosix()
    {
       keyfree();
+
+      if ( NULL != mDestructor )
+      {
+         delete mDestructor;
+      }
    }
 
    /**
@@ -137,11 +145,8 @@ public:
     */
    int keycreate(thread_func_t destructor, void* arg)
    {
-      // XXX: Memory leak!
-      ThreadNonMemberFunctor* NonMemFunctor =
-         new ThreadNonMemberFunctor(destructor, arg);
-
-      return keycreate(NonMemFunctor);
+      mDestructor = new ThreadNonMemberFunctor(destructor, arg);
+      return keycreate(mDestructor);
    }
 
    /**
@@ -223,6 +228,8 @@ public:
 
 private:
    pthread_key_t mKeyID;        /**< Thread key ID */
+
+   vpr::ThreadNonMemberFunctor* mDestructor;
 };
 
 } // End of vpr namespace

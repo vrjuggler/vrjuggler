@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          java.m4,v
-dnl Date modified: 2005/05/02 21:55:31
-dnl Version:       1.54
+dnl Date modified: 2005/07/01 14:31:04
+dnl Version:       1.55
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -58,7 +58,7 @@ dnl     JNI_LIB  - The library which needs to be statically linked for JNI.
 dnl     JCPS     - Java classpath separator character (: on UNIX, ; on Win32).
 dnl ===========================================================================
 
-dnl java.m4,v 1.54 2005/05/02 21:55:31 patrickh Exp
+dnl java.m4,v 1.55 2005/07/01 14:31:04 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Find the path to the Java installation.  Substition is performed on the
@@ -282,6 +282,9 @@ AC_DEFUN([DPP_CHECK_JNI],
    case $target_cpu in
       i*86)
          dpp_jni_arch=i386
+         ;;
+      x86_64)
+         dpp_jni_arch=amd64
          ;;
       *)
          dpp_jni_arch="$target_cpu"

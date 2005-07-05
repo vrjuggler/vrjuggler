@@ -58,13 +58,13 @@
 #define PACKAGE_NAME "JCCL"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "JCCL 0.92"
+#define PACKAGE_STRING "JCCL 1.0"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "jccl"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.92"
+#define PACKAGE_VERSION "1.0"
 
 /* Define if performance-gathering code will be used. */
 /* #undef USE_JCCL_PERF */

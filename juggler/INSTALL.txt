@@ -1,6 +1,6 @@
 
 
-Building and Installing the Juggler Project (Version 1.1/2.0)
+Building and Installing the Juggler Project (Version 2.0)
 
 
 The Juggler Team
@@ -41,13 +41,7 @@ The Juggler Team
 
 Introduction
 
- You have downloaded the source code for Version 1.1 of the Juggler Project.
- This is the code that will become VR Juggler 2.0, and it is the code that
- is used to create the VR juggler 2.0 pre-releases. Please be aware that
- this code represents a work in progress, and if you acquired it directly
- from CVS rather than using a pre-packaged source code snapshot, the code
- may have bugs affecting compilation and execution.
-
+ You have downloaded the source code for Version 2.0 of the Juggler Project.
  This document explains how to build the modules of the Juggler Project from
  the source code. We begin by explaining some issues related to specific
  operating systems. We then explain how to get the source code from our CVS
@@ -127,21 +121,21 @@ MIPSpro Compiler Version
  using the MIPSpro Compilers Version 7.3.1.1m. We have found upgrading to
  Version 7.3.1.3m (or newer) fixes the problems.
 
- A new feature of VR Juggler 1.1 is support for GCC on IRIX. Users who do
- not have MIPSpro or cannot upgrade can compile and run VR Juggler (without
- OpenGL Performer support) using the version of GCC distributed by SGI. It
- can be downloaded from http://freeware.sgi.com/index-by-alpha.html for
- free. When configuring the source with configure.pl (described later), use
- the option --with-gcc.
+ A new feature of VR Juggler 1.1 and newer is support for GCC on IRIX. Users
+ who do not have MIPSpro or cannot upgrade can compile and run VR Juggler
+ (without OpenGL Performer support) using the version of GCC distributed by
+ SGI. It can be downloaded from http://freeware.sgi.com/index-by-alpha.html
+ for free. When configuring the source with configure.pl (described later),
+ use the option --with-gcc.
 
 
 Important Note for Win32 Users
 
- VR Juggler 1.1 uses a lot of C++ features not supported by Visual Studio
- 6.0. Microsoft acknowledges the issues concerning noncompliance to the C++
- Standard with Visual Studio 6.0, and it appears that they have no plans to
- fix these problems. Therefore, we require the use of Visual Studio 7.x
- (.NET 2002 or 2003) to compile the source code.
+ VR Juggler 1.1 and newer use a lot of C++ features not supported by Visual
+ Studio 6.0. Microsoft acknowledges the issues concerning noncompliance to
+ the C++ Standard with Visual Studio 6.0, and it appears that they have no
+ plans to fix these problems. Therefore, we require the use of Visual Studio
+ 7.x (.NET 2002 or 2003) to compile the source code.
 
 
 Getting the Source Code and the Dependencies

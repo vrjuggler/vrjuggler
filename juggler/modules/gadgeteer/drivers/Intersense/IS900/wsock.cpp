@@ -46,7 +46,7 @@ static int  wsockGetLastError (void);
 ******************************************************************************/
 static int  wsockGetLastError (void)
 {
-#if defined _Windows || defined __WIN32__ || defined WINDOWS || defined WIN32
+#if defined _Windows || defined __WIN32__ || defined WINDOWS || defined WIN32 || defined WIN64
     return WSAGetLastError();
 #endif
 
@@ -87,7 +87,7 @@ void WSAManage( int close )
 {
    boost::ignore_unused_variable_warning(close);
 
-#if defined _Windows || defined __WIN32__ || defined WINDOWS || defined WIN32
+#if defined _Windows || defined __WIN32__ || defined WINDOWS || defined WIN32 || defined WIN64
 
     WORD wVersionRequested;
     WSADATA wsaData;
@@ -226,7 +226,7 @@ int wsockConfigChannel( SOCKET wsocket )
     }
 
     /* setup for non-blockin operation */
-#if defined _Windows || defined __WIN32__ || defined WINDOWS || defined WIN32
+#if defined _Windows || defined __WIN32__ || defined WINDOWS || defined WIN32 || defined WIN64
     {
     BOOL tndelay_opt = TRUE;
 
@@ -330,7 +330,7 @@ int wsockBroadcastReadByte( wsockType *wsock, char *c )
     wsock->data.dwRead = 0;
     wsock->data.dwReturned = 0;
 /*
-#if defined _Windows || defined __WIN32__ || defined WINDOWS || defined WIN32
+#if defined _Windows || defined __WIN32__ || defined WINDOWS || defined WIN32 || defined WIN64
     int fromlen = sizeof(struct sockaddr_in);
     wsock->data.dwRead = recvfrom(wsock->data.msgsock,
         wsock->data.buf, sizeof(wsock->data.buf), 0,
@@ -346,7 +346,7 @@ int wsockBroadcastReadByte( wsockType *wsock, char *c )
 */
     if(wsock->data.dwRead == SOCKET_ERROR)
     {
-#if defined _Windows || defined __WIN32__ || defined WINDOWS || defined WIN32
+#if defined _Windows || defined __WIN32__ || defined WINDOWS || defined WIN32 || defined WIN64
         int lasterr;
 
         lasterr = wsockGetLastError();
@@ -394,7 +394,7 @@ const char *wsockErrorStrings( int err )
 {
    boost::ignore_unused_variable_warning(err);
 
-#if defined _Windows || defined __WIN32__ || defined WINDOWS || defined WIN32
+#if defined _Windows || defined __WIN32__ || defined WINDOWS || defined WIN32 || defined WIN64
 
     switch(err)
     {

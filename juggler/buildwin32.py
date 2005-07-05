@@ -369,7 +369,7 @@ def generateVersionHeaders():
                self.__genParamFile(output, template)
 
       version_re      = re.compile(r'((\d+)\.(\d+)\.(\d+)-(\d+))\s')
-      branch_re       = re.compile(r'BRANCH\s*=\s*(\w+)')
+      branch_re       = re.compile(r'BRANCH\s*=\s*([\w\d-]+)')
       canon_name_re   = re.compile(r'CANON_NAME\s*=\s*(\S.+)')
       vernum_re       = re.compile(r'@VER_NUMBER@')
       major_vernum_re = re.compile(r'@MAJOR_VER_NUMBER@')
@@ -402,7 +402,7 @@ def generateVersionHeaders():
          for line in params:
             match = self.branch_re.match(line)
             if match is not None:
-               branch_name = match.group(1)
+               branch = match.group(1)
                continue
 
             match = self.canon_name_re.match(line)
@@ -759,12 +759,14 @@ def installDir(startDir, destDir, allowedExts = None, disallowedExts = None,
    os.chdir(cwd)
 
 def installLibs(srcRoot, destdir,
+                buildPlatforms = ['Win32', 'x64'],
                 buildTypes = ['ReleaseDLL', 'DebugDLL', 'Release', 'Debug'],
                 extensions = ['.dll', '.lib']):
-   for t in buildTypes:
-      srcdir = os.path.join(srcRoot, t)
-      if os.path.exists(srcdir):
-         installDir(srcdir, destdir, extensions)
+   for p in buildPlatforms:
+      for t in buildTypes:
+         srcdir = os.path.join(srcRoot, p, t)
+         if os.path.exists(srcdir):
+            installDir(srcdir, destdir, extensions)
 
 def installExternal(prefix):
    # Install Doozer (even though it probably won't be used).
@@ -860,11 +862,14 @@ def installTweekJava(prefix):
          shutil.copy2(os.path.join(srcdir, j), destdir)
 
       # Install the tweek_jni DLL.
-      dll = os.path.join(srcdir, 'tweek_jni', 'ReleaseDLL', 'tweek_jni.dll')
-      arch = os.environ['PROCESSOR_ARCHITECTURE']
-      destdir = os.path.join(destdir, arch)
-      mkinstalldirs(destdir)
-      shutil.copy2(dll, destdir)
+      for p in ['Win32', 'x64']:
+         dll = os.path.join(srcdir, 'tweek_jni', p, 'ReleaseDLL',
+                            'tweek_jni.dll')
+         if os.path.exists(dll):
+            arch = os.environ['PROCESSOR_ARCHITECTURE']
+            destdir = os.path.join(destdir, arch)
+            mkinstalldirs(destdir)
+            shutil.copy2(dll, destdir)
 
       destdir = os.path.join(prefix, 'share', 'tweek', 'beans')
       mkinstalldirs(destdir)
@@ -1070,12 +1075,16 @@ def installSonixPlugins(prefix):
    destdir_opt = os.path.join(prefix, 'lib', 'snx', 'plugins', 'opt')
 
    srcroot = os.path.join(gJugglerDir, 'vc7', 'Sonix', 'OpenAL')
-   installLibs(srcroot, destdir_dbg, ['DebugDLL'], ['.dll'])
-   installLibs(srcroot, destdir_opt, ['ReleaseDLL'], ['.dll'])
+   installLibs(srcroot, destdir_dbg, buildTypes = ['DebugDLL'],
+               extensions = ['.dll'])
+   installLibs(srcroot, destdir_opt, buildTypes = ['ReleaseDLL'],
+               extensions = ['.dll'])
 
    srcroot = os.path.join(gJugglerDir, 'vc7', 'Sonix', 'Audiere')
-   installLibs(srcroot, destdir_dbg, ['DebugDLL'], ['.dll'])
-   installLibs(srcroot, destdir_opt, ['ReleaseDLL'], ['.dll'])
+   installLibs(srcroot, destdir_dbg, buildTypes = ['DebugDLL'],
+               extensions = ['.dll'])
+   installLibs(srcroot, destdir_opt, buildTypes = ['ReleaseDLL'],
+               extensions = ['.dll'])
 
 def installGadgeteer(prefix):
    printStatus("Installing Gadgeteer headers, libraries, and samples ...")
@@ -1161,6 +1170,10 @@ def installVRJuggler(prefix):
    installDir(srcdir, destdir, ['.h'])
 
    srcdir  = os.path.join(gJugglerDir, 'vc7', 'VRJuggler', 'vrj')
+   installDir(srcdir, destdir, ['.h'])
+
+   destdir = os.path.join(prefix, 'include', 'deprecated')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'vrjuggler', 'deprecated')
    installDir(srcdir, destdir, ['.h'])
 
    destdir = os.path.join(prefix, 'lib')
@@ -1878,7 +1891,7 @@ class GuiFrontEnd:
       devenv_cmd_no_exe = '"%s"' % (devenv_cmd_no_exe)
 
       solution_file = r'"%s"' % os.path.join(gJugglerDir, 'vc7', 'Juggler.sln')
-      build_args = r'/build Debug'
+      build_args = r'/build DebugDLL'
 
       if self.mRoot.CommandFrame.OpenVSCheck.Variable.get() == "No":
          cmd = devenv_cmd_no_exe + ' ' + solution_file + ' ' + build_args

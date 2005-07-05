@@ -197,7 +197,7 @@ public:
    }
 
 protected:
-   vrj::GlContextData< osgUtil::SceneView* > sceneViewer;
+   vrj::GlContextData< osg::ref_ptr<osgUtil::SceneView> > sceneViewer;
 };
 
 inline void OsgApp::contextInit()
@@ -205,8 +205,8 @@ inline void OsgApp::contextInit()
    unsigned int unique_context_id = GlDrawManager::instance()->getCurrentContext();
 
    // --- Create new context specific scene viewer -- //
-   osgUtil::SceneView* new_sv = new osgUtil::SceneView;
-   this->configSceneView(new_sv);            // Configure the new viewer
+   osg::ref_ptr<osgUtil::SceneView> new_sv(new osgUtil::SceneView);
+   this->configSceneView(new_sv.get());            // Configure the new viewer
    new_sv->getState()->setContextID(unique_context_id);
 
    // This will eventually be changed to no light and all lighting will be handled
@@ -271,9 +271,9 @@ inline void OsgApp::draw()
    glPushMatrix();
 
 
-   osgUtil::SceneView* sv(NULL);
+   osg::ref_ptr<osgUtil::SceneView> sv;
    sv = (*sceneViewer);    // Get context specific scene viewer
-   vprASSERT( sv != NULL);
+   vprASSERT(sv.get() != NULL);
 
    GlDrawManager*    gl_manager;    /**< The openGL manager that we are rendering for. */
    gl_manager = GlDrawManager::instance();

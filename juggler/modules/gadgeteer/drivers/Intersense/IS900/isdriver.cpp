@@ -18,7 +18,7 @@
 #include <vpr/vpr.h>
 #include "isense.h"
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 #include <windows.h>
 #include <winbase.h>
 #include <windowsx.h>
@@ -99,11 +99,11 @@ BOOL ISD_detectTrackerOld(InterSenseTrackerType *tracker/*, DWORD commPort*/)
 */
 ///////////////////////////////////////////////////////////////////
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
     ISD_printf(tracker, "Please wait ");
 #endif
 
-#if !defined VPR_OS_Win32
+#if !defined VPR_OS_Windows
             ISD_printf(tracker, ".");
 #endif
 
@@ -233,11 +233,11 @@ BOOL ISD_detectTracker(InterSenseTrackerType *tracker, std::string com_port, int
 
     *///////////////////////////////////////////////////////////////////
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
     ISD_printf(tracker, "Please wait ");
 #endif
 
-#if !defined VPR_OS_Win32
+#if !defined VPR_OS_Windows
             ISD_printf(tracker, ".");
 #endif
 

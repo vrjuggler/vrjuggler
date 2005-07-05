@@ -49,6 +49,15 @@
 #include <map>
 #include <string>
 #include <vector>
+
+#if defined(WIN32) || defined(WIN64) || defined(__APPLE__)
+#  include <al.h>
+#  include <alc.h>
+#else
+#  include <AL/al.h>
+#  include <AL/alc.h>
+#endif
+
 #include <gmtl/Math.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
@@ -60,13 +69,6 @@
 #include <snx/SoundInfo.h>
 #include <snx/SoundAPIInfo.h>
 
-#if defined(WIN32) || defined(__APPLE__)
-#  include <al.h>
-#  include <alc.h>
-#else
-#  include <AL/al.h>
-#  include <AL/alc.h>
-#endif
 
 namespace snx
 {
@@ -74,9 +76,9 @@ namespace snx
 class OpenALSoundImplementation : public snx::SoundImplementation
 {
 public:
-    
+
    /**
-    * constructor for the OpenAL implementation 
+    * constructor for the OpenAL implementation
     */
    OpenALSoundImplementation();
 
@@ -92,15 +94,16 @@ public:
    {
       OpenALSoundImplementation* temp = new OpenALSoundImplementation;
       newCopy = temp;
-      
+
       // copy state, so that we return a true "clone"
       temp->copy( *this );
    }
-   
+
    /**
     * @input alias of the sound to trigger, and number of times to play
     * @preconditions alias does not have to be associated with a loaded sound.
-    * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
+    * @postconditions if it is, then the loaded sound is triggered.  if it
+    *                 isn't then nothing happens.
     * @semantics Triggers a sound
     */
    virtual void trigger( const std::string& alias, const int& looping = 0);
@@ -109,7 +112,7 @@ public:
      * is the sound currently playing?
      */
    bool isPlaying( const std::string& alias );
-   
+
    /**
     * @semantics stop the sound
     * @input alias of the sound to be stopped
@@ -122,7 +125,8 @@ public:
    virtual void pause( const std::string& alias );
 
    /**
-    * resume playback from a paused state.  does nothing if sound was not paused.
+    * resume playback from a paused state.  does nothing if sound was not
+    * paused.
     */
    virtual void unpause( const std::string& alias );
 
@@ -143,7 +147,8 @@ public:
     * ambient or positional sound.
     * is the sound ambient - attached to the listener, doesn't change volume
     * when listener moves...
-    * or is the sound positional - changes volume as listener nears or retreats..
+    * or is the sound positional - changes volume as listener nears or
+    * retreats..
     */
    virtual void setAmbient( const std::string& alias, bool setting = false );
 
@@ -156,20 +161,20 @@ public:
    /** 1 is no change.  0 is total cutoff. */
    void setCutoff( const std::string& alias, float amount );
 
-   
-  
    /**
-    * set sound's 3D position 
+    * set sound's 3D position
     */
-   virtual void setPosition( const std::string& alias, float x, float y, float z );
+   virtual void setPosition(const std::string& alias, float x, float y,
+                            float z);
 
    /**
     * get sound's 3D position
     * @input alias is a name that has been associate()d with some sound data
     * @output x,y,z are returned in OpenGL coordinates.
     */
-   virtual void getPosition( const std::string& alias, float& x, float& y, float& z );
-   
+   virtual void getPosition(const std::string& alias, float& x, float& y,
+                            float& z);
+
    /**
     * set the position of the listener
     */
@@ -179,23 +184,26 @@ public:
     * get the position of the listener
     */
    virtual void getListenerPosition( gmtl::Matrix44f& mat );
-   
+
 public:
    /**
-    * start the sound API, creating any contexts or other configurations at startup
+    * start the sound API, creating any contexts or other configurations at
+    * startup
     * @postconditions sound API is ready to go.
-    * @semantics this function should be called before using the other functions in the class.
+    * @semantics this function should be called before using the other
+    *            functions in the class.
     */
    virtual int startAPI();
 
    /*
     * configure the sound API global settings
     */
-   
+
    /**
     * kill the sound API, deallocating any sounds, etc...
     * @postconditions sound API is ready to go.
-    * @semantics this function could be called any time, the function could be called multiple times, so it should be smart.
+    * @semantics this function could be called any time, the function could be
+    *            called multiple times, so it should be smart.
     */
    virtual void shutdownAPI();
 
@@ -216,13 +224,17 @@ public:
 
    /**
      * configure/reconfigure a sound
-     * configure: associate a name (alias) to the description if not already done
+     * configure: associate a name (alias) to the description if not already
+     *            done
      * reconfigure: change properties of the sound to the descriptino provided.
-     * @preconditions provide an alias and a SoundInfo which describes the sound
+     * @preconditions provide an alias and a SoundInfo which describes the
+     *                sound
      * @postconditions alias will point to loaded sound data
-     * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
+     * @semantics associate an alias to sound data.  later this alias can be
+     *            used to operate on this sound data.
      */
-   virtual void configure( const std::string& alias, const snx::SoundInfo& description );
+   virtual void configure(const std::string& alias,
+                          const snx::SoundInfo& description);
 
    /**
      * remove a configured sound, any future reference to the alias will not
@@ -235,7 +247,7 @@ public:
     * @semantics any existing aliases will be stubbed. sounds will be unbind()ed
     */
    virtual void clear();
-   
+
    /**
     * load/allocate the sound data this alias refers to the sound API
     * @postconditions the sound API has the sound buffered.
@@ -250,7 +262,8 @@ public:
 
    /**
     * take a time step of [timeElapsed] seconds.
-    * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
+    * @semantics call once per sound frame (doesn't have to be same as your
+    *            graphics frame)
     * @input time elapsed since last frame
     */
    virtual void step( const float & timeElapsed );
@@ -277,16 +290,20 @@ protected:
 private:
     /** @link dependency */
     /*#  snx::SoundInfo lnkSoundInfo; */
-   
+
    struct AlSoundInfo
    {
-      AlSoundInfo() : source( 0 ), buffer( 0 ), data()
+      AlSoundInfo()
+         : source(0)
+         , buffer(0)
+         , data()
       {
       }
 
       ALuint source, buffer;
       std::vector<unsigned char> data; // TODO: use the source snx::SoundInfo
-                                       // instead of this separate copy of the data...
+                                       // instead of this separate copy of the
+                                       // data...
    };
    std::map< std::string, AlSoundInfo > mBindLookup;
    ALCcontext* mContextId;

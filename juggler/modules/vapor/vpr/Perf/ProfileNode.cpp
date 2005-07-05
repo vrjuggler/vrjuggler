@@ -49,13 +49,13 @@
 namespace vpr
 {
 
-   ProfileNode::ProfileNode( const char * name, const unsigned int queue_size) :
-   mName( name ),
-      mTotalCalls( 0 ),
-      mRecursionCounter( 0 ),
-      mParent( NULL ),
-      mChild( NULL ),
-      mSibling( NULL )
+   ProfileNode::ProfileNode(const char* name, const unsigned int queue_size)
+      : mName(name)
+      , mTotalCalls(0)
+      , mRecursionCounter(0)
+      , mParent(NULL)
+      , mChild(NULL)
+      , mSibling(NULL)
    {
       mTotalTime.secf(0.0f);
       mMaxHistorySize = queue_size;
@@ -63,7 +63,7 @@ namespace vpr
       reset();
    }
 
-   ProfileNode::~ProfileNode( void )
+   ProfileNode::~ProfileNode()
    {
       delete mChild;
       delete mSibling;
@@ -85,7 +85,7 @@ namespace vpr
       else
       {
          ProfileNode* last_child = mChild;
-         while(last_child->mSibling)   // Iterate down the list
+         while ( last_child->mSibling )   // Iterate down the list
          {
             last_child = last_child->mSibling;
          }
@@ -94,7 +94,7 @@ namespace vpr
       }
    }
 
-   ProfileNode* ProfileNode::getChild( const char* nodeName )
+   ProfileNode* ProfileNode::getChild(const char* nodeName)
    {
       // Try to find this sub node by iterating through children
       ProfileNode* child = mChild;
@@ -110,7 +110,7 @@ namespace vpr
       return NULL;
    }
 
-   ProfileNode* ProfileNode::getNamedChild( const char* nodeName)
+   ProfileNode* ProfileNode::getNamedChild(const char* nodeName)
    {
       std::string needed_name(nodeName);
 
@@ -129,7 +129,8 @@ namespace vpr
       return NULL;
    }
 
-   ProfileNode* ProfileNode::getSubNode( const char* profileName, const unsigned int queueSize )
+   ProfileNode* ProfileNode::getSubNode(const char* profileName,
+                                        const unsigned int queueSize)
    {
       // Try to find this sub node
       ProfileNode* child = mChild;
@@ -148,14 +149,15 @@ namespace vpr
       return node;
    }
 
-
    // Print us, then our children, then our siblings
-   void ProfileNode::printTree(unsigned depth)
+   void ProfileNode::printTree(unsigned int depth)
    {
-      std::string indent_str(depth*3,' ');
-      if(0 == depth)
+      std::string indent_str(depth * 3, ' ');
+      if ( 0 == depth )
       {
-         vprDEBUG(vprDBG_ALL, 0) << clrSetBOLD(clrGREEN) << "--- [PROFILE STATS] ---" << clrRESET << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, 0) << clrSetBOLD(clrGREEN)
+            << "--- [PROFILE STATS] ---" << clrRESET << std::endl
+            << vprDEBUG_FLUSH;
       }
 
       vprDEBUG(vprDBG_ALL, 0) << indent_str
@@ -176,13 +178,16 @@ namespace vpr
          << clrOutBOLD(clrYELLOW, " history: ")
          << s.str() << std::endl << vprDEBUG_FLUSH;
 
-      if(getChild() != NULL)
-      { getChild()->printTree(depth+1); }
+      if ( getChild() != NULL )
+      {
+         getChild()->printTree(depth+1);
+      }
 
-      if(getSibling() != NULL)
-      { getSibling()->printTree(depth); }
+      if ( getSibling() != NULL )
+      {
+         getSibling()->printTree(depth);
+      }
    }
-
 
    // Just make use of the helper method
    std::string ProfileNode::getXMLRep()
@@ -193,19 +198,20 @@ namespace vpr
    }
 
    // Recursively build up simple xml rep of this stuff.
-   void ProfileNode::getXMLRep(std::stringstream& s, const unsigned depth)
+   void ProfileNode::getXMLRep(std::stringstream& s, const unsigned int depth)
    {
       std::string indent_str(depth*3,' ');
 
       s << indent_str
-        << "<profile_node name=\"" << getName() << "\" total_calls=\"" << getTotalCalls()
+        << "<profile_node name=\"" << getName()
+        << "\" total_calls=\"" << getTotalCalls()
         << "\" total_time=\"" << getTotalTime().msecf()
         << "\" average=\"" << getAverage().msecf()
         << "\" sta=\"" << getSTA().msecf()
         << "\">\n";
 
       NodeHistoryRange p = getNodeHistoryRange();
-      if(p.first != p.second)
+      if ( p.first != p.second )
       {
          s << indent_str << "  ";
          for ( ; p.first != p.second; p.first++ )
@@ -217,20 +223,23 @@ namespace vpr
 
       std::string child_xml_rep, sibling_xml_rep;
 
-      if(getChild() != NULL)
-      { getChild()->getXMLRep(s, depth+1); }
+      if ( getChild() != NULL )
+      {
+         getChild()->getXMLRep(s, depth + 1);
+      }
       s << indent_str << "</profile_node>\n";
 
-      if(getSibling() != NULL)
-      { getSibling()->getXMLRep(s, depth); }
+      if ( getSibling() != NULL )
+      {
+         getSibling()->getXMLRep(s, depth);
+      }
    }
 
-
-   void  ProfileNode::reset( void )
+   void ProfileNode::reset()
    {
       mTotalCalls = 0;
-      mTotalTime.set(0,vpr::Interval::Base);
-      mLastSample.set(0,vpr::Interval::Base);
+      mTotalTime.set(0, vpr::Interval::Base);
+      mLastSample.set(0, vpr::Interval::Base);
       mHistory.clear();
 
       if ( mChild )
@@ -244,7 +253,7 @@ namespace vpr
       }
    }
 
-   void  ProfileNode::startSample( void )
+   void ProfileNode::startSample()
    {
       mTotalCalls++;
       if ( mRecursionCounter++ == 0 )
@@ -253,17 +262,19 @@ namespace vpr
       }
    }
 
-   bool  ProfileNode::stopSample( void )
+   bool ProfileNode::stopSample()
    {
       if ( --mRecursionCounter == 0 && mTotalCalls != 0 )
       {
          mLastSample.setNow();
          mLastSample -= mStartTime;
-         if(0 != mMaxHistorySize)
+         if ( 0 != mMaxHistorySize )
          {
             mHistory.push_front(mLastSample);
-            if(mHistory.size() > mMaxHistorySize)
-            { mHistory.resize(mMaxHistorySize); }
+            if ( mHistory.size() > mMaxHistorySize )
+            {
+               mHistory.resize(mMaxHistorySize);
+            }
          }
          mTotalTime += mLastSample;
       }
@@ -273,30 +284,36 @@ namespace vpr
 
    vpr::Interval ProfileNode::getAverage()
    {
-      if(getTotalCalls() == 0)
-      { return vpr::Interval(); }
+      if ( getTotalCalls() == 0 )
+      {
+         return vpr::Interval();
+      }
       else
-      { return vpr::Interval(getTotalTime().getBaseVal()/mTotalCalls, vpr::Interval::Base); }
+      {
+         return vpr::Interval(getTotalTime().getBaseVal() / mTotalCalls,
+                              vpr::Interval::Base);
+      }
    }
 
    vpr::Interval ProfileNode::getSTA()
    {
       // If we are making no history or have no history yet
-      if((0 == mMaxHistorySize) || mHistory.empty())
+      if ( 0 == mMaxHistorySize || mHistory.empty() )
       {
          return mLastSample;
       }
       else
       {
          vpr::Interval sta_interval;
-         for(std::deque<vpr::Interval>::iterator i=mHistory.begin(); i!=mHistory.end(); ++i)
-         { sta_interval += *i; }
-         sta_interval.set(sta_interval.getBaseVal()/mHistory.size(), vpr::Interval::Base);
+         std::deque<vpr::Interval>::iterator i;
+         for ( i = mHistory.begin(); i != mHistory.end(); ++i )
+         {
+            sta_interval += *i;
+         }
+         sta_interval.set(sta_interval.getBaseVal() / mHistory.size(),
+                          vpr::Interval::Base);
          return sta_interval;
       }
    }
 
-
 } // end vpr namespace
-
-

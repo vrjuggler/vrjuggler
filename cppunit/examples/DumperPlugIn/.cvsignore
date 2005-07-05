@@ -1,6 +1,0 @@
-*.Tags.WW
-Debug DebugNtTimer Release ReleaseDll DebugDLL DebugPlugIn ReleasePlugIn
-*.ncb *.opt
-Makefile.in Makefile
-.deps
-.libs

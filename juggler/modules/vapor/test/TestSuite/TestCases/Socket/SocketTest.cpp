@@ -357,7 +357,7 @@ void SocketTest::sameAddressOpenBindCloseTest()
 {
    int openSuccess( 0 ), closeSuccess( 0 ), bindSuccess( 0 );
    vpr::InetAddr local_addr;
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    long rand_num(rand());
 #else
    long rand_num(random());
@@ -388,7 +388,7 @@ void SocketTest::sameAddressOpenBindDestructTest()
 {
    int openSuccess( 0 ), bindSuccess( 0 );
    vpr::InetAddr local_addr;
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    long rand_num(rand());
 #else
    long rand_num(random());
@@ -420,7 +420,7 @@ void SocketTest::differentAddressOpenBindCloseTest()
 {
    int openSuccess( 0 ), closeSuccess( 0 ), bindSuccess( 0 );
    vpr::InetAddr local_addr;
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    long rand_num(rand());
 #else
    long rand_num(random());
@@ -949,7 +949,7 @@ void SocketTest::testReadn ()
    for ( unsigned int i = 0; i < 20; i += pkt_size )
    {
       memset((void*) buffer, 0, sizeof(buffer));
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
       sprintf(buffer, "%04d", i);
 #else
       snprintf(buffer, sizeof(buffer), "%04d", i);

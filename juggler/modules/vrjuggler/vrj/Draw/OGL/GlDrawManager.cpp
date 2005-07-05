@@ -76,6 +76,27 @@ GlDrawManager::GlDrawManager()
 {
 }
 
+GlDrawManager::~GlDrawManager()
+{
+   if ( mRunning )
+   {
+      closeAPI();
+      mControlThread->join();
+   }
+
+   if ( NULL != mControlThread )
+   {
+      delete mControlThread;
+      mControlThread = NULL;
+   }
+
+   if ( NULL != mMemberFunctor )
+   {
+      delete mMemberFunctor;
+      mMemberFunctor = NULL;
+   }
+}
+
 /** Sets the app the draw should interact with. */
 void GlDrawManager::setApp(App* _app)
 {
@@ -249,9 +270,10 @@ void GlDrawManager::addDisplay(Display* disp)
 
 
    // -- Finish Simulator setup
-   int num_vp(disp->getNumViewports());
+   std::vector<vrj::Viewport*>::size_type num_vp(disp->getNumViewports());
+   std::vector<vrj::Viewport*>::size_type i;
 
-   for (int i = 0 ; i < num_vp ; i++)
+   for ( i = 0 ; i < num_vp ; ++i )
    {
       Viewport* vp = disp->getViewport(i);
 
@@ -488,7 +510,7 @@ void GlDrawManager::outStream(std::ostream& out)
 } // end vrj namespace
 
 
-#if  defined(VPR_OS_Win32)
+#if  defined(VPR_OS_Windows)
 #  include <vrj/Draw/OGL/GlWindowWin32.h>
 #elif defined(VPR_OS_Darwin) && ! defined(VRJ_USE_X11)
 #  include <vrj/Draw/OGL/GlWindowOSX.h>
@@ -501,7 +523,7 @@ namespace vrj
 
 vrj::GlWindow* GlDrawManager::getGLWindow()
 {
-#if  defined(VPR_OS_Win32)
+#if  defined(VPR_OS_Windows)
    return new vrj::GlWindowWin32;
 #elif defined(VPR_OS_Darwin) && ! defined(VRJ_USE_X11)
    return new vrj::GlWindowOSX;

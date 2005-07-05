@@ -1,8 +1,0 @@
-DATE       AUTHOR   CHANGE
----------- -------- -----------------------------------------------------------
-2004-07-08 patrickh Added an example application written in VB.NET.
-2004-07-06 patrickh Added an example application written in Managed C++.
-2004-07-06 patrickh VRJ.NET now works on Windows.
-2004-05-24 patrickh Regenerated all bindings using GCC-XML 0.6 to improve the
-                    portability of the code.
-2004-05-24          Change log started.

@@ -14,10 +14,8 @@
 #ifndef BMV_TEXT_H
 #define BMV_TEXT_H
 
-#ifdef WIN32
-
+#if defined(WIN32) || defined(WIN64)
 #include <windows.h>
-
 #endif
 
 #include <string>

@@ -22,7 +22,7 @@
 #include <vpr/vpr.h>
 
 /* if not Win32 then it must be UNIX, no other OS is supported  */
-//#if !defined __WIN32__ && !defined WIN32 && !defined _Windows && !defined _WIN32
+//#if !defined __WIN32__ && !defined WIN32 && !defined _Windows && !defined _WIN32 && !defined _WIN64
 //#define UNIX 
 
 /* Following defines the flavor of UNIX the program should be compiled for.
@@ -85,7 +85,7 @@
 #define FALSE   0
 #endif
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
 #include <windows.h>
 #else
 

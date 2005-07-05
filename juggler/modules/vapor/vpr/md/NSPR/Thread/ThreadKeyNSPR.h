@@ -75,6 +75,7 @@ public:
     * @see keycreate
     */
    ThreadKeyNSPR()
+      : mDestructor(NULL)
    {
       keycreate(NULL);
    }
@@ -89,6 +90,7 @@ public:
     * @param arg        Argument to be passed to destructor.
     */
    ThreadKeyNSPR(thread_func_t destructor, void* arg)
+      : mDestructor(NULL)
    {
       keycreate(destructor, arg);
    }
@@ -102,6 +104,7 @@ public:
     * @param destructor The destructor function for the key.
     */
    ThreadKeyNSPR(BaseThreadFunctor* destructor)
+      : mDestructor(NULL)
    {
       keycreate(destructor);
    }
@@ -112,6 +115,11 @@ public:
    ~ThreadKeyNSPR()
    {
       keyfree();
+
+      if ( NULL != mDestructor )
+      {
+         delete mDestructor;
+      }
    }
 
    /**
@@ -135,11 +143,8 @@ public:
     */
    int keycreate(thread_func_t destructor, void* arg)
    {
-      // XXX: Memory leak!
-      ThreadNonMemberFunctor* NonMemFunctor =
-         new ThreadNonMemberFunctor(destructor, arg);
-
-      return keycreate(NonMemFunctor);
+      mDestructor = new ThreadNonMemberFunctor(destructor, arg);
+      return keycreate(mDestructor);
    }
 
    /**
@@ -223,6 +228,7 @@ public:
 
 private:
    PRUintn mKeyID;        /**< Thread key ID */
+   vpr::ThreadNonMemberFunctor* mDestructor;
 };
 
 } // End of vpr namespace

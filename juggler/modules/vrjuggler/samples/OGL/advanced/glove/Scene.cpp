@@ -30,9 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
+#include <vrj/vrjConfig.h>
 
 #include <iostream>
 #include <GL/gl.h>

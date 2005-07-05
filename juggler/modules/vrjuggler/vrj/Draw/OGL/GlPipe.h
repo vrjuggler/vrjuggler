@@ -65,8 +65,9 @@ public:
     *
     * @note All contained windows SHOULD have the same pipe number.
     */
-   GlPipe(int num, GlDrawManager* glMgr)
-      : mActiveThread(NULL)
+   GlPipe(size_t num, GlDrawManager* glMgr)
+      : mControlFunctor(NULL)
+      , mActiveThread(NULL)
       , mPipeNum(num)
       , mControlExit(0)
       , mGlDrawManager(glMgr)
@@ -77,6 +78,8 @@ public:
    {
       mThreadRunning = false;
    }
+
+   ~GlPipe();
 
    /**
     * Starts the pipe running.
@@ -100,20 +103,7 @@ public:
     * Stops the pipe.
     * @post Flag is set to tell pipe to stop rendering.
     */
-   void stop()
-   {
-      mControlExit = 1;     // Set the control loop exit flag
-      
-      // We don't actually need to call completeRender() or completeSwap()
-      // since we don't care about when they complete. We only care about
-      // joining the thread
-      triggerRender();
-      //completeRender();
-      triggerSwap();
-      //completeSwap();
-
-      mActiveThread->join();
-   }
+   void stop();
 
 public:     // --------- Triggering functions ------ //
    /**
@@ -204,10 +194,11 @@ private:
    void operator=(const GlPipe&) {;}
 
 private:
+   vpr::ThreadMemberFunctor<GlPipe>* mControlFunctor;
    vpr::Thread*   mActiveThread;    /**< The thread running this object */
    bool           mThreadRunning;   /**< Do we have a running thread? */
 
-   int            mPipeNum;         /**< The id of the pipe */
+   size_t         mPipeNum;         /**< The id of the pipe */
 
    std::vector<GlWindow*>  mNewWins;         /**< List of windows still to be opened on current pipe */
    vpr::Mutex              mNewWinLock;      /**< Lock for accessing the newWin list */

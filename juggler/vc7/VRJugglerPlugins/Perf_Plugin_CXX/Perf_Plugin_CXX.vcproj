@@ -11,9 +11,9 @@
 	</Platforms>
 	<Configurations>
 		<Configuration
-			Name="Debug|Win32"
-			OutputDirectory="DebugDLL"
-			IntermediateDirectory="DebugDLL"
+			Name="DebugDLL|Win32"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
@@ -37,8 +37,9 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rtd.lib omnithread$(OMNITHREAD_VERSION)_rtd.lib omniDynamic$(OMNIORB_VERSION)_rtd.lib vrj_d.lib jccl_d.lib tweek_d.lib vpr_d.lib cppdom_d.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/corba_perf_mon_d.dll"
+				Version="1.0.0"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\VPR\DebugDLL;..\..\Tweek_CXX\DebugDLL;..\..\JCCL\DebugDLL;..\..\VRJuggler\DebugDLL;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;..\..\VPR\$(OutDir)&quot;;&quot;..\..\Tweek_CXX\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\VRJuggler\$(OutDir)&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/corba_perf_mon_d.pdb"
 				SubSystem="1"
@@ -62,9 +63,9 @@
 				Name="VCWebDeploymentTool"/>
 		</Configuration>
 		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="ReleaseDLL"
-			IntermediateDirectory="ReleaseDLL"
+			Name="ReleaseDLL|Win32"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
@@ -91,8 +92,9 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread$(OMNITHREAD_VERSION)_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib vrj.lib jccl.lib tweek.lib vpr.lib cppdom.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/corba_perf_mon.dll"
+				Version="1.0.0"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\VPR\ReleaseDLL;..\..\Tweek_CXX\ReleaseDLL;..\..\JCCL\ReleaseDLL;..\..\VRJuggler\ReleaseDLL;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;..\..\VPR\$(OutDir)&quot;;&quot;..\..\Tweek_CXX\$(OutDir)&quot;;&quot;..\..\JCCL\$(OutDir)&quot;;&quot;..\..\VRJuggler\$(OutDir)&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;;&quot;$(BOOST_ROOT)\lib&quot;"
 				GenerateDebugInformation="FALSE"
 				SubSystem="1"
 				OptimizeReferences="2"

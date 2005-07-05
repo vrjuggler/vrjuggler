@@ -39,7 +39,7 @@ void SystemTest::LongConversions ()
 
 void SystemTest::LongLongConversions()
 {
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    vpr::Uint64 start_val(0xDEAD1234BEEF5678);
 #else
    vpr::Uint64 start_val(0xDEAD1234BEEF5678ll);
@@ -51,7 +51,7 @@ void SystemTest::LongLongConversions()
    new_val = vpr::System::Ntohll(net_val);
    CPPUNIT_ASSERT(new_val == start_val);
 
-#ifdef VPR_OS_Win32
+#ifdef VPR_OS_Windows
    CPPUNIT_ASSERT(0xFACE1234CAFE5678 == vpr::System::Ntohll(vpr::System::Htonll(0xFACE1234CAFE5678)));
    CPPUNIT_ASSERT(0xADB0BD0DEC211975 == vpr::System::Ntohll(vpr::System::Htonll(0xADB0BD0DEC211975)));
 #else

@@ -1,4 +1,0 @@
-#!/bin/sh
-
-dir=`dirname $0`
-perl $dir/install-web.pl $*

@@ -86,11 +86,11 @@ namespace vpr
    * not an easy fix for this right now.
    */
 
-//#  ifdef VPR_OS_Win32
+//#  ifdef VPR_OS_Windows
 //      typedef SerialPort_t<class SerialPortImplWin32>   SerialPort;
 //#  else
 //      typedef SerialPort_t<class SerialPortImplTermios> SerialPort;
-//#  endif  /* VPR_OS_Win32 */
+//#  endif  /* VPR_OS_Windows */
 
 #else /* ! ifdef VPR_SIMULATOR */
 
@@ -129,11 +129,11 @@ namespace vpr
    typedef class Selector_t<class SelectorImplNSPR> Selector;
 #endif
 
-#  ifdef VPR_OS_Win32
+#  ifdef VPR_OS_Windows
       typedef SerialPort_t<class SerialPortImplWin32>   SerialPort;
 #  else
       typedef SerialPort_t<class SerialPortImplTermios> SerialPort;
-#  endif  /* VPR_OS_Win32 */
+#  endif  /* VPR_OS_Windows */
 
 /* POSIX and SPROC */
 #else
